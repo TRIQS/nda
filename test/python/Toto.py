@@ -2,7 +2,7 @@
 
 import unittest
 
-from app4triqs import Toto
+from nda import Toto
 from pytriqs.archive import *
 from pytriqs.utility import mpi
 

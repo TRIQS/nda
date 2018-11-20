@@ -17,11 +17,11 @@ Installation steps
 
 #. Download the sources from github::
 
-     $ git clone https://github.com/triqs/app4triqs.git app4triqs.src
+     $ git clone https://github.com/triqs/nda.git nda.src
 
 #. Create an empty build directory where you will compile the code::
 
-     $ mkdir app4triqs.build && cd app4triqs.build
+     $ mkdir nda.build && cd nda.build
 
 #. Make sure that you have added the TRIQS and Cpp2Py installation to your environment variables::
 
@@ -30,7 +30,7 @@ Installation steps
 
 #. In the build directory call cmake::
 
-     $ cmake ../app4triqs.src
+     $ cmake ../nda.src
 
 #. Compile the code, run the tests and install the application::
 
@@ -43,20 +43,20 @@ Version compatibility
 
 Be careful that the version of the TRIQS library and of the solver must be
 compatible (more information on the :ref:`TRIQS website <triqslibs:versions>`).
-As app4triqs is still in alpha phase (unstable), it can only be compiled against the
+As nda is still in alpha phase (unstable), it can only be compiled against the
 unstable branch of triqs.
 
 Custom CMake options
 --------------------
 
-Functionality of ``app4triqs`` can be tweaked using extra compile-time options passed to CMake::
+Functionality of ``nda`` can be tweaked using extra compile-time options passed to CMake::
 
-    cmake -DOPTION1=value1 -DOPTION2=value2 ... ../app4triqs.src
+    cmake -DOPTION1=value1 -DOPTION2=value2 ... ../nda.src
 
 +-----------------------------------------------------------------------+-----------------------------------------------+
 | Options                                                               | Syntax                                        |
 +=======================================================================+===============================================+
-| Specify an installation path other than path_to_triqs                 | -DCMAKE_INSTALL_PREFIX=path_to_app4triqs      |
+| Specify an installation path other than path_to_triqs                 | -DCMAKE_INSTALL_PREFIX=path_to_nda      |
 +-----------------------------------------------------------------------+-----------------------------------------------+
 | Build the documentation locally                                       | -DBuild_Documentation=ON                      |
 +-----------------------------------------------------------------------+-----------------------------------------------+

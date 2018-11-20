@@ -1,22 +1,22 @@
 file(GLOB_RECURSE sources *.cpp)
-add_library(app4triqs_c ${sources})
+add_library(nda_c ${sources})
 
 # Link against triqs and use headers with SYSTEM flag for better warning messages
-target_link_libraries(app4triqs_c PUBLIC triqs)
-target_include_directories(app4triqs_c SYSTEM PUBLIC ${TRIQS_ROOT}/include)
+target_link_libraries(nda_c PUBLIC triqs)
+target_include_directories(nda_c SYSTEM PUBLIC ${TRIQS_ROOT}/include)
 
-target_compile_options(app4triqs_c PUBLIC -std=c++17 -fPIC)
-target_include_directories(app4triqs_c PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/c++>)
-target_compile_definitions(app4triqs_c PRIVATE
-				APP4TRIQS_GIT_HASH=${APP4TRIQS_GIT_HASH}
+target_compile_options(nda_c PUBLIC -std=c++17 -fPIC)
+target_include_directories(nda_c PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/c++>)
+target_compile_definitions(nda_c PRIVATE
+				NDA_GIT_HASH=${NDA_GIT_HASH}
 			    	TRIQS_GIT_HASH=${TRIQS_GIT_HASH}
-				$<$<CONFIG:Debug>:APP4TRIQS_DEBUG>
+				$<$<CONFIG:Debug>:NDA_DEBUG>
 			        $<$<CONFIG:Debug>:TRIQS_ARRAYS_ENFORCE_BOUNDCHECK>
 			 	)
 
 # Install library and headers
-install(TARGETS app4triqs_c EXPORT app4triqs-targets DESTINATION lib)
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include/app4triqs FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
+install(TARGETS nda_c EXPORT nda-targets DESTINATION lib)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include/nda FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
 
 
 # ========= Static Analyzer Checks ==========
@@ -31,7 +31,7 @@ if(ANALYZE_SOURCES)
   # Run clang-tidy if found
   if(CLANG_TIDY_EXECUTABLE)
     message(STATUS "clang-tidy found: ${CLANG_TIDY_EXECUTABLE}")
-    set_target_properties(app4triqs_c PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXECUTABLE}")
+    set_target_properties(nda_c PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXECUTABLE}")
   else()
     message(STATUS "clang-tidy not found in $PATH. Please consider installing clang-tidy for additional checks!")
   endif()
@@ -40,7 +40,7 @@ if(ANALYZE_SOURCES)
   if(CPPCHECK_EXECUTABLE)
     message(STATUS "cppcheck found: ${CPPCHECK_EXECUTABLE}")
     add_custom_command(
-	TARGET app4triqs_c
+	TARGET nda_c
 	COMMAND ${CPPCHECK_EXECUTABLE}
 	  --enable=warning,style,performance,portability
 	  --std=c++14
@@ -66,8 +66,8 @@ if(ASAN)
   endif()
   list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/share/cmake)
   find_package(libasan_rt REQUIRED)
-  target_compile_options(app4triqs_c PUBLIC -fsanitize=address -fno-omit-frame-pointer)
-  target_link_libraries(app4triqs_c INTERFACE "-fsanitize=address -fno-omit-frame-pointer -fuse-ld=gold")
+  target_compile_options(nda_c PUBLIC -fsanitize=address -fno-omit-frame-pointer)
+  target_link_libraries(nda_c INTERFACE "-fsanitize=address -fno-omit-frame-pointer -fuse-ld=gold")
 endif()
 
 # Undefined Behavior Sanitizer
@@ -78,6 +78,6 @@ if(UBSAN)
   endif()
   list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/share/cmake)
   find_package(libubsan_rt REQUIRED)
-  target_compile_options(app4triqs_c PUBLIC -fsanitize=undefined -fno-omit-frame-pointer -fno-sanitize=vptr)
-  target_link_libraries(app4triqs_c INTERFACE "-fsanitize=undefined -fno-omit-frame-pointer -fuse-ld=gold")
+  target_compile_options(nda_c PUBLIC -fsanitize=undefined -fno-omit-frame-pointer -fno-sanitize=vptr)
+  target_link_libraries(nda_c INTERFACE "-fsanitize=undefined -fno-omit-frame-pointer -fuse-ld=gold")
 endif()

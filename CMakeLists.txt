@@ -1,6 +1,6 @@
 # Start configuration
 cmake_minimum_required(VERSION 2.8.12)
-project(app4triqs CXX)
+project(nda CXX)
 if(POLICY CMP0074)
   cmake_policy(SET CMP0074 NEW)
 endif()
@@ -31,25 +31,25 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT OR (NOT IS_ABSOLUTE ${CMAKE_INSTA
 endif()
 message(STATUS "-------- INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX} --------")
 
-# Use git to detect app4triqs version and git hash
+# Use git to detect nda version and git hash
 execute_process(COMMAND bash "-c" "${TRIQS_GIT_EXECUTABLE} describe | sed \"s/-\\([0-9]*\\)-.*/.\\1/g\""
  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
- OUTPUT_VARIABLE   APP4TRIQS_VERSION
+ OUTPUT_VARIABLE   NDA_VERSION
  OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-if(NOT APP4TRIQS_VERSION)
-  set(APP4TRIQS_VERSION 0.1)
+if(NOT NDA_VERSION)
+  set(NDA_VERSION 0.1)
 endif()
-triqs_get_git_hash_of_source_dir(APP4TRIQS_GIT_HASH)
-MESSAGE(STATUS "app4triqs version : ${APP4TRIQS_VERSION}")
-message(STATUS "Git hash: ${APP4TRIQS_GIT_HASH}")
+triqs_get_git_hash_of_source_dir(NDA_GIT_HASH)
+MESSAGE(STATUS "nda version : ${NDA_VERSION}")
+message(STATUS "Git hash: ${NDA_GIT_HASH}")
 
-# Build and install the app4triqs library
-add_subdirectory(c++/app4triqs)
+# Build and install the nda library
+add_subdirectory(c++/nda)
 
-# Build and install the app4triqs python module
+# Build and install the nda python module
 if(${TRIQS_WITH_PYTHON_SUPPORT})
-  add_subdirectory(python/app4triqs)
+  add_subdirectory(python/nda)
 endif()
 
 # Tests
@@ -78,8 +78,8 @@ if(BUILD_DEBIAN_PACKAGE)
     message(FATAL_ERROR "CMAKE_INSTALL_PREFIX must be /usr for packaging")
   endif()
   SET(CPACK_GENERATOR "DEB")
-  SET(CPACK_PACKAGE_VERSION ${APP4TRIQS_VERSION})
-  SET(CPACK_PACKAGE_CONTACT "https://github.com/TRIQS/app4triqs")
+  SET(CPACK_PACKAGE_VERSION ${NDA_VERSION})
+  SET(CPACK_PACKAGE_CONTACT "https://github.com/TRIQS/nda")
   EXECUTE_PROCESS(COMMAND dpkg --print-architecture OUTPUT_VARIABLE CMAKE_DEBIAN_PACKAGE_ARCHITECTURE OUTPUT_STRIP_TRAILING_WHITESPACE)
   SET(CPACK_DEBIAN_PACKAGE_DEPENDS "triqs (>= 1.5), cpp2py (>= 1.5)")
   SET(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)

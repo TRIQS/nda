@@ -21,5 +21,5 @@ Reference manual
 .. toctree::
    :maxdepth: 5
 
-   cpp2rst_generated/app4triqs/toto
-   cpp2rst_generated/app4triqs/chain
+   cpp2rst_generated/nda/toto
+   cpp2rst_generated/nda/chain

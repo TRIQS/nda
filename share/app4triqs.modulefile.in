@@ -1,13 +1,13 @@
 #%Module1.0
 #
-# To be installed as ${MODULEPATH}/app4triqs/@APP4TRIQS_VERSION@
+# To be installed as ${MODULEPATH}/nda/@NDA_VERSION@
 
-set     name        app4triqs
-set     version     @APP4TRIQS_VERSION@
+set     name        nda
+set     version     @NDA_VERSION@
 set     root        @CMAKE_INSTALL_PREFIX@
-set     git_hash    @APP4TRIQS_GIT_HASH@
+set     git_hash    @NDA_GIT_HASH@
 
-set     url         "https://github.com/TRIQS/app4triqs"
+set     url         "https://github.com/TRIQS/nda"
 set     description "An example application using cpp2py and triqs."
 
 module-whatis   "$description"
@@ -24,12 +24,12 @@ proc ModulesHelp { } {
 # under a different name in your setup.
 prereq cpp2py/@CPP2PY_VERSION@
 
-# Only one version of app4triqs can be loaded at a time
+# Only one version of nda can be loaded at a time
 conflict $name
 
-setenv          APP4TRIQS_ROOT      $root
-setenv          APP4TRIQS_VERSION   $version
-setenv          APP4TRIQS_GIT_HASH  $git_hash
+setenv          NDA_ROOT      $root
+setenv          NDA_VERSION   $version
+setenv          NDA_GIT_HASH  $git_hash
 
 prepend-path    PATH                $root/bin
 prepend-path    CPLUS_INCLUDE_PATH  $root/include
