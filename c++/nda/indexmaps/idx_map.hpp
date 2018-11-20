@@ -1,6 +1,8 @@
 #pragma once
-#include "./layout.hpp"
 #include <vector>
+#include <array>
+
+#include "./layout.hpp"
 #include "./slice_worker.hpp"
 #include "./bound_check_worker.hpp"
 #include "./idx_map_iterator.hpp"
