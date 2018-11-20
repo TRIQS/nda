@@ -1,1 +1,7 @@
-doc/ChangeLog.md
+Version 0.1
+-----------
+
+Some Changes 
+~~~~~~~~~~~~
+
+* ...

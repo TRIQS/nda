@@ -6,7 +6,7 @@ set(all_tests toto)
 
 foreach(t ${all_tests})
   add_executable(${t} ${CMAKE_CURRENT_SOURCE_DIR}/${t}.cpp)
-  target_link_libraries(${t} app4triqs_c gtest)
+  target_link_libraries(${t} nda_c gtest)
   add_test(${t} ${CMAKE_CURRENT_BINARY_DIR}/${t})
   # Run clang-tidy if found
   if(CLANG_TIDY_EXECUTABLE)

@@ -1,7 +1,7 @@
 #pragma once
 #include <triqs/gfs.hpp>
 
-namespace app4triqs {
+namespace nda {
 
   /**
    * A very useful and important class
@@ -65,4 +65,4 @@ namespace app4triqs {
    */
   int chain(int i, int j);
 
-} // namespace app4triqs
+} // namespace nda

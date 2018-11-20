@@ -1,4 +1,4 @@
-# app4triqs
+# nda
 
 An example application using cpp2py and triqs
 ---------------------------------------------
@@ -10,13 +10,13 @@ To use this skeleton for a new triqs application, the following steps are necess
 * Run the following commands (replacing myuser and mynewapp accordingly)
 
 ```bash
-git clone https://github.com/triqs/app4triqs --branch unstable mynewapp
+git clone https://github.com/triqs/nda --branch unstable mynewapp
 cd mynewapp
 git remote set-url origin https://github.com/myuser/mynewapp
-find . -type f | grep -v .git | xargs sed -i 's/app4triqs/mynewapp/g; s/APP4TRIQS/MYNEWAPP/g'
-find . | grep -v .git | xargs rename 's/app4triqs/mytriqsapp/'
+find . -type f | grep -v .git | xargs sed -i 's/nda/mynewapp/g; s/NDA/MYNEWAPP/g'
+find . | grep -v .git | xargs rename 's/nda/mytriqsapp/'
 git add -A
-git commit -m "Create mynewapp from github.com/triqs/app4triqs skeleton"
+git commit -m "Create mynewapp from github.com/triqs/nda skeleton"
 git push
 ```
 
