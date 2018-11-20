@@ -2,7 +2,7 @@
 file(GLOB all_h5_files *.h5)
 file(COPY ${all_h5_files} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-set(all_tests Toto chain)
+set(all_tests)
 
 foreach(t ${all_tests})
   add_test(NAME ${t} COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/${t}.py)

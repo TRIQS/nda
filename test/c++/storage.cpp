@@ -1,10 +1,11 @@
-#include "gtest.h"
+#include "gtest.h" // NOLINT
 #include <memory>
 
 #define TRIQS_DEBUG_ARRAYS_MEMORY
 
 #include <nda/storages/handle.hpp>
-#include <triqs/test_tools/arrays.hpp>
+#include <nda/test_tools.hpp>
+//#include <triqs/test_tools/arrays.hpp>
 
 using namespace nda::mem;
 
@@ -22,7 +23,7 @@ void print(rtable_t const &ta) {
 }
 
 // test the rtable
-TEST(rtable, base) {
+TEST(rtable, base) { // NOLINT
 
   rtable_t ta(5);
 
@@ -85,7 +86,7 @@ class Ref : public ::testing::Test {
   }
 };
 
-TEST_F(Ref, HR) {
+TEST_F(Ref, HR) { // NOLINT
 
   handle<int, 'R'> h{10};
 
@@ -99,7 +100,7 @@ TEST_F(Ref, HR) {
 }
 
 // ---- Contruct R B
-TEST_F(Ref, HBR) {
+TEST_F(Ref, HBR) { // NOLINT
 
   handle<int, 'R'> h{10};
 
@@ -115,7 +116,7 @@ TEST_F(Ref, HBR) {
 }
 
 // ---- Construct R, S
-TEST_F(Ref, HSR) {
+TEST_F(Ref, HSR) { // NOLINT
 
   handle<int, 'R'> h{10};
 
@@ -130,7 +131,7 @@ TEST_F(Ref, HSR) {
 
 
 // ---- More complex 
-TEST_F(Ref, HSRS) {
+TEST_F(Ref, HSRS) { // NOLINT
 
   handle<int, 'R'> h{10};
 
@@ -159,7 +160,7 @@ struct Number {
   };
 };
 
-TEST_F(Ref, HR_with_cd) {
+TEST_F(Ref, HR_with_cd) { // NOLINT
   { handle<Number, 'R'> h{5}; }
   EXPECT_EQ(Number::c, 0);
 }
@@ -172,7 +173,7 @@ void release_sp(void *x) {
   delete p;
 }
 
-TEST_F(Ref, HR_with_sharedPtr) {
+TEST_F(Ref, HR_with_sharedPtr) { // NOLINT
   {
     handle<Number, 'S'> s;
     s.id = globals::rtable.get();
@@ -182,4 +183,4 @@ TEST_F(Ref, HR_with_sharedPtr) {
   EXPECT_EQ(Number::c, 0);
 }
 
-MAKE_MAIN;
+MAKE_MAIN; // NOLINT
