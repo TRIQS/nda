@@ -36,7 +36,7 @@ namespace nda::details {
     w.N = 0;
     std::stringstream fs;
     (w.g(fs, args), ...); // folding with , operator ...
-    NDA_KEY_ERROR << " key out of domain \n" << fs.str();
+    throw std::runtime_error( " key out of domain \n" + fs.str());
   }
 
 } // namespace nda::details

@@ -20,11 +20,8 @@
  ******************************************************************************/
 #pragma once
 #include <ostream>
-#include <triqs/utility/iterator_facade.hpp>
-#include <triqs/utility/exceptions.hpp>
 
-#define NDA_RUNTIME_ERROR TRIQS_RUNTIME_ERROR
-#define NDA_KEY_ERROR TRIQS_RUNTIME_ERROR
+#include <nda/exceptions.hpp>
 
 namespace nda {
 
@@ -78,23 +75,43 @@ namespace nda {
       return os;
     }
 
-    // FIXME : REMOVE FACADE
-    class const_iterator : public triqs::utility::iterator_facade<const_iterator, const long, std::forward_iterator_tag, const long> {
+     // Iterator on the range (for for loop e.g.)
+    class const_iterator {
+      long last, pos, step;
+
       public:
+      using value_type        = long;
+      using iterator_category = std::forward_iterator_tag;
+      using pointer           = value_type *;
+      using difference_type   = std::ptrdiff_t;
+      using reference         = value_type const &;
+
       const_iterator(range const *r, bool atEnd) {
         last = r->last();
         step = r->step();
         pos  = (atEnd ? last : r->first());
       }
 
-      private:
-      long last, pos, step;
-      friend class triqs::utility::iterator_facade<const_iterator, const long, std::forward_iterator_tag, const long>;
-      void increment() { pos += step; }
-      bool equal(const_iterator const &other) const { return (other.pos == pos); }
-      long dereference() const { return pos; }
+      const_iterator &operator++() {
+        pos += step;
+        return *this;
+      }
+
+      const_iterator operator++(int) {
+        const_iterator c = *this;
+        pos += step;
+        return c;
+      }
+
+      bool operator==(const_iterator const &other) const { return (other.pos == this->pos); }
+      bool operator!=(const_iterator const &other) const { return (!operator==(other)); }
+
+      long operator*() const { return pos; }
+      long operator->() const { return operator*(); }
+
     };
 
+    //---------
     const_iterator begin() const { return const_iterator(this, false); }
     const_iterator end() const { return const_iterator(this, true); }
     const_iterator cbegin() const { return const_iterator(this, false); }

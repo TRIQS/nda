@@ -1,5 +1,10 @@
 # nda
 
+
+cmake ~/src/nda -DANALYZE_SOURCE=ON -DUBSAN=ON -DASAN=ON
+
+
+
 An example application using cpp2py and triqs
 ---------------------------------------------
 

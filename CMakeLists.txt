@@ -20,30 +20,6 @@ add_compile_options(-Wall
 		     $<$<CONFIG:Debug>:-ggdb3>
 		     )
 
-# Load Dependencies
-find_package(TRIQS 2.0 REQUIRED)
-find_package(Cpp2Py 1.5 REQUIRED)
-
-# Default Install directory to TRIQS_ROOT if not given or invalid.
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT OR (NOT IS_ABSOLUTE ${CMAKE_INSTALL_PREFIX}))
-  message(STATUS "No install prefix given (or invalid). Defaulting to TRIQS_ROOT")
-  set(CMAKE_INSTALL_PREFIX ${TRIQS_ROOT} CACHE PATH "default install path" FORCE)
-endif()
-message(STATUS "-------- INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX} --------")
-
-# Use git to detect nda version and git hash
-execute_process(COMMAND bash "-c" "${TRIQS_GIT_EXECUTABLE} describe | sed \"s/-\\([0-9]*\\)-.*/.\\1/g\""
- WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
- OUTPUT_VARIABLE   NDA_VERSION
- OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-if(NOT NDA_VERSION)
-  set(NDA_VERSION 0.1)
-endif()
-triqs_get_git_hash_of_source_dir(NDA_GIT_HASH)
-MESSAGE(STATUS "nda version : ${NDA_VERSION}")
-message(STATUS "Git hash: ${NDA_GIT_HASH}")
-
 # Build and install the nda library
 add_subdirectory(c++/nda)
 
@@ -72,17 +48,3 @@ if(Build_Documentation)
   endif()
 endif()
 
-option(BUILD_DEBIAN_PACKAGE "Build a deb package" OFF)
-if(BUILD_DEBIAN_PACKAGE)
-  if(NOT CMAKE_INSTALL_PREFIX STREQUAL "/usr")
-    message(FATAL_ERROR "CMAKE_INSTALL_PREFIX must be /usr for packaging")
-  endif()
-  SET(CPACK_GENERATOR "DEB")
-  SET(CPACK_PACKAGE_VERSION ${NDA_VERSION})
-  SET(CPACK_PACKAGE_CONTACT "https://github.com/TRIQS/nda")
-  EXECUTE_PROCESS(COMMAND dpkg --print-architecture OUTPUT_VARIABLE CMAKE_DEBIAN_PACKAGE_ARCHITECTURE OUTPUT_STRIP_TRAILING_WHITESPACE)
-  SET(CPACK_DEBIAN_PACKAGE_DEPENDS "triqs (>= 1.5), cpp2py (>= 1.5)")
-  SET(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
-  SET(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
-  INCLUDE(CPack)
-endif()
