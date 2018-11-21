@@ -61,13 +61,14 @@ endif()
 # Address Sanitizer
 option(ASAN OFF "Compile library and executables with LLVM Address Sanitizer")
 if(ASAN)
-  if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    message(FATAL_ERROR "Address Sanitizer Checks currently not compatible with OSX.")
-  endif()
+ #if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+ #  message(FATAL_ERROR "Address Sanitizer Checks currently not compatible with OSX.")
+ # endif()
   list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/share/cmake)
   find_package(libasan_rt REQUIRED)
   target_compile_options(nda_c PUBLIC -fsanitize=address -fno-omit-frame-pointer)
-  target_link_libraries(nda_c INTERFACE "-fsanitize=address -fno-omit-frame-pointer -fuse-ld=gold")
+  target_link_libraries(nda_c INTERFACE "-fsanitize=address -fno-omit-frame-pointer ")
+  #target_link_libraries(nda_c INTERFACE "-fsanitize=address -fno-omit-frame-pointer -fuse-ld=gold")
 endif()
 
 # Undefined Behavior Sanitizer

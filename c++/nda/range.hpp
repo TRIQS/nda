@@ -19,7 +19,6 @@
  *
  ******************************************************************************/
 #pragma once
-#include <triqs/utility/iterator_facade.hpp>
 
 namespace nda {
 
@@ -84,20 +83,44 @@ namespace nda {
     /// FIXME : deprecate ?
     //range operator+(long shift) const { return range(first_ + shift, last_ + shift, step_); }
 
-    class const_iterator : public triqs::utility::iterator_facade<const_iterator, const long, std::forward_iterator_tag, const long> {
+    // Iterator on the range (for for loop e.g.)
+    class const_iterator {
+      long last, pos, step;
+
       public:
+      using value_type        = long;
+      using iterator_category = std::forward_iterator_tag;
+      using pointer           = value_type *;
+      using difference_type   = std::ptrdiff_t;
+      using reference         = value_type const &;
+
       const_iterator(range const *r, bool atEnd) {
         last = r->last();
         step = r->step();
         pos  = (atEnd ? last : r->first());
       }
 
+      const_iterator &operator++() {
+        pos += step;
+        return *this;
+      }
+
+      const_iterator operator++(int) {
+        Iter c = self();
+        pos += step;
+        return *this;
+      }
+
+      bool operator==(Iter const &other) const { return (other.pos == this->pos); }
+      bool operator!=(Iter const &other) const { return (!operator==(other)); }
+
+      long operator*() const { return pos; }
+      long operator->() const { return operator*(); }
+
       private:
-      long last, pos, step;
-      void increment() { pos += step; }
-      bool equal(const_iterator const &other) const { return (other.pos == pos); }
-      long dereference() const { return pos; }
     };
+
+    //---------
 
     const_iterator begin() const { return const_iterator(this, false); }
     const_iterator end() const { return const_iterator(this, true); }
