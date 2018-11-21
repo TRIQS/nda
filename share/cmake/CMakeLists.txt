@@ -4,7 +4,7 @@ install(
   FILES
     ${CMAKE_CURRENT_BINARY_DIR}/nda-config.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/nda-config-version.cmake
-  DESTINATION share/cmake
+  DESTINATION lib/cmake/nda
 )
 
-install(EXPORT nda-targets DESTINATION share/cmake)
+install(EXPORT nda-targets DESTINATION lib/cmake/nda)
