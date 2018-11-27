@@ -1,4 +1,4 @@
-#include "gtest.h" // NOLINT
+#include <gtest/gtest.h> // NOLINT
 #include <memory>
 
 #define TRIQS_DEBUG_ARRAYS_MEMORY

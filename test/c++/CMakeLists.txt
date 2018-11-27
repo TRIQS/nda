@@ -2,7 +2,35 @@
 file(GLOB all_h5_files *.h5)
 file(COPY ${all_h5_files} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
+# The list of all c++ tests
 set(all_tests idx_map storage)
+
+#=== build gtest as an external project ===
+
+include(ExternalProject)
+set(GTEST_ROOT ${CMAKE_BINARY_DIR}/gtest)
+ExternalProject_Add(gtest_project
+  PREFIX gtest
+  GIT_REPOSITORY https://github.com/abseil/googletest
+  GIT_TAG release-1.8.1
+  ## In case you cannot clone gtest, comment the two lines
+  ## above and point the SOURCE_DIR below to the downloaded gtest sources
+  #SOURCE_DIR path_to_gtest_sources
+  CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${GTEST_ROOT}
+)
+
+# Create the imported gtest target
+add_library(gtest STATIC IMPORTED)
+add_dependencies(gtest gtest_project)
+set_target_properties(gtest PROPERTIES
+  IMPORTED_LOCATION ${GTEST_ROOT}/lib64/libgtest.a
+  INTERFACE_LINK_LIBRARIES pthread
+  ## Populating the INTERFACE_INCLUDE_DIRECTORIES won't work
+  ## as the directory does not yet exist
+  INTERFACE_COMPILE_OPTIONS "-isystem;${GTEST_ROOT}/include"
+)
+
+#=== Add all tests and register them for the static analyzer checks ===
 
 foreach(t ${all_tests})
   add_executable(${t} ${CMAKE_CURRENT_SOURCE_DIR}/${t}.cpp)
