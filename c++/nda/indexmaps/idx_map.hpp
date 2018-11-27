@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <array>
+#include <numeric>
 
 #include "./layout.hpp"
 #include "./slice_worker.hpp"
@@ -63,7 +64,7 @@ namespace nda {
     auto const &strides() const { return _strides; }
 
     /// Total number of elements (products of lengths in each dimension).
-    long size() const { return product_of_elements(_lengths); }
+    long size() const { return std::accumulate(_lengths.cbegin(), _lengths.cend(), 1, std::multiplies<long>()); }
 
     /// Shift from origin
     long offset() const { return _offset; }
