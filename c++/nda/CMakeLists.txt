@@ -1,10 +1,6 @@
 file(GLOB_RECURSE sources *.cpp)
 add_library(nda_c ${sources})
 
-# Link against triqs and use headers with SYSTEM flag for better warning messages
-target_link_libraries(nda_c PUBLIC triqs)
-target_include_directories(nda_c SYSTEM PUBLIC ${TRIQS_ROOT}/include)
-
 target_compile_options(nda_c PUBLIC -std=c++17 -fPIC)
 target_include_directories(nda_c PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/c++>)
 target_compile_definitions(nda_c PRIVATE
