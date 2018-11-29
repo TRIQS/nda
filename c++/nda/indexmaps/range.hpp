@@ -51,31 +51,31 @@ namespace nda {
 
        @warning the second element is excluded: range(0,3) is 0,1,2, like in Python.
     */
-    range(long first__, long last__, long step__ = 1) : first_(first__), last_(last__), step_(step__) {}
+    range(long first__, long last__, long step__ = 1) noexcept : first_(first__), last_(last__), step_(step__) {}
 
     // range (N) is equivalent to range(0,N,1)
-    explicit range(long i) : range(0, i, 1) {}
+    explicit range(long i) noexcept : range(0, i, 1) {}
 
     ///first index of the range
-    long first() const { return first_; }
+    long first() const noexcept { return first_; }
 
     ///last index of the range (is excluded from the list of indices)
-    long last() const { return last_; }
+    long last() const noexcept { return last_; }
 
     ///step between two indices
-    long step() const { return step_; }
+    long step() const noexcept { return step_; }
 
     ///number of indices in the range
-    long size() const { return (last_ - first_) / step_; }
+    long size() const noexcept { return (last_ - first_) / step_; }
 
     //range operator+(long shift) const { return range(first_ + shift, last_ + shift, step_); }
 
-    friend inline std::ostream &operator<<(std::ostream &os, const range &r) {
+    friend inline std::ostream &operator<<(std::ostream &os, const range &r) noexcept {
       os << "range(" << r.first() << "," << r.last() << "," << r.step() << ")";
       return os;
     }
 
-     // Iterator on the range (for for loop e.g.)
+    // Iterator on the range (for for loop e.g.)
     class const_iterator {
       long last, pos, step;
 
@@ -86,41 +86,40 @@ namespace nda {
       using difference_type   = std::ptrdiff_t;
       using reference         = value_type const &;
 
-      const_iterator(range const *r, bool atEnd) {
+      const_iterator(range const *r, bool atEnd) noexcept {
         last = r->last();
         step = r->step();
         pos  = (atEnd ? last : r->first());
       }
 
-      const_iterator &operator++() {
+      const_iterator &operator++() noexcept {
         pos += step;
         return *this;
       }
 
-      const_iterator operator++(int) {
+      const_iterator operator++(int) noexcept {
         const_iterator c = *this;
         pos += step;
         return c;
       }
 
-      bool operator==(const_iterator const &other) const { return (other.pos == this->pos); }
-      bool operator!=(const_iterator const &other) const { return (!operator==(other)); }
+      bool operator==(const_iterator const &other) const noexcept { return (other.pos == this->pos); }
+      bool operator!=(const_iterator const &other) const noexcept { return (!operator==(other)); }
 
-      long operator*() const { return pos; }
-      long operator->() const { return operator*(); }
-
+      long operator*() const noexcept { return pos; }
+      long operator->() const noexcept { return operator*(); }
     };
 
     //---------
-    const_iterator begin() const { return const_iterator(this, false); }
-    const_iterator end() const { return const_iterator(this, true); }
-    const_iterator cbegin() const { return const_iterator(this, false); }
-    const_iterator cend() const { return const_iterator(this, true); }
+    const_iterator begin() const noexcept { return const_iterator(this, false); }
+    const_iterator end() const noexcept { return const_iterator(this, true); }
+    const_iterator cbegin() const noexcept { return const_iterator(this, false); }
+    const_iterator cend() const noexcept { return const_iterator(this, true); }
   };
 
   // ------------------   foreach   --------------------------------------
 
-  template <typename F> void foreach (range const &r, F && f) {
+  template <typename F> void foreach (range const &r, F && f) noexcept {
     long i = r.first(), last = r.last(), step = r.step();
     for (; i < last; i += step) std::forward<F>(f)(i);
   }
@@ -133,15 +132,13 @@ namespace nda {
   /// Ellipsis can be provided in place of [[range]], as in python. The type `ellipsis` is similar to [[range_all]] except that it is implicitly repeated to as much as necessary.
   struct ellipsis : range_all {};
 
-  inline std::ostream &operator<<(std::ostream &os, const range_all &r) { return os << "_"; }
-  inline std::ostream &operator<<(std::ostream &os, const ellipsis &r) { return os << "___"; }
+  inline std::ostream &operator<<(std::ostream &os, const range_all &r) noexcept { return os << "_"; }
+  inline std::ostream &operator<<(std::ostream &os, const ellipsis &r) noexcept { return os << "___"; }
 
-
-  namespace vars { 
+  namespace vars {
     static inline constexpr range_all _;
     static inline constexpr ellipsis ___;
-  }
-
+  } // namespace vars
 
   // FIXME : Keep for backward if necessary or kill
   // for the case A(i, ellipsis) where A is of dim 1...

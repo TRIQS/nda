@@ -1,2 +1,2 @@
-Checks: '-*,modernize-*,cppcoreguidelines-*'
+Checks: '-*,modernize-*,cppcoreguidelines-*,-cppcoreguidelines-no-malloc,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-pro-bounds-constant-array-index'
 HeaderFilterRegex: 'nda'

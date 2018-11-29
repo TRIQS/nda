@@ -160,6 +160,35 @@ namespace nda {
     } ///
     // const &, &, && 
 
+    private:
+
+    /// PULL OUT ! in array and view ....
+
+   template <typename... Args> static FORCEINLINE decltype(auto) _call_ (Self && self, Args const &... args) {
+      static constexpr int Number_of_Arguments = sizeof...(Args);
+      if constexpr (Number_of_Arguments == 0) return make_const_view(*this);
+      if constexpr (clef::is_any_lazy_v<Args...>) { // Is it a lazy call ?
+        if constexpr (R >= 0) static_assert(Number_of_Arguments == R, "Incorrect number of parameters in call");
+        return make_expr_call(std::forward<Self>(self), std::forward<Args>(args)...);
+      } else {                  // not lazy
+        if constexpr (R >= 0) { // If Rank is given at compile time, we check the number of arguments
+          static constexpr bool ellipsis_is_present = ((std::is_same_v<Args, ellipsis> ? 1 : 0) + ...);
+          static_assert((Number_of_Arguments == R) or (ellipsis_is_present and (Number_of_Arguments <= R)), "Incorrect number of parameters in call");
+        }
+        auto idx_sliced = _idx_m.slice(args...);                     // we call the index map
+        if constexpr (std::is_same_v<decltype(idx_sliced), idx_map>) // Case 1 : we got a slice
+          return _nda<T, idx_sliced::_Rank, make_const_view_flavor_t(Flavor), Algebra>{std::move(idx_sliced), _storage};
+        else
+          return _storage[idx_sliced]; // Case 2: we got a long, hence access a element
+      }
+    }
+  
+  public:
+
+   template <typename... Args> decltype(auto) operator()(Args const &... args) const & {
+     return _call_(*this, args...);
+   }
+
 
 
     template <typename... Args> decltype(auto) operator()(Args const &... args) const & {

@@ -27,8 +27,8 @@ TEST(idxstat, ConstructStatic) { // NOLINT
   idx_map<3> i1{{1, 2, 3}, layout::C};
 
   std::cerr << i1 << std::endl;
-  EXPECT_TRUE(i1.lengths() == (ma(1, 2, 3)));
-  EXPECT_TRUE(i1.strides() == (ma(6, 3, 1)));
+  EXPECT_TRUE(i1.lengths() == (ma(1, 2, 3)));//NOLINT
+  EXPECT_TRUE(i1.strides() == (ma(6, 3, 1)));//NOLINT
 }
 
 //-----------------------
@@ -36,9 +36,9 @@ TEST(idxstat, ConstructStatic) { // NOLINT
 TEST(idxstat, eval) { // NOLINT
 
   idx_map<3> i1{{2, 7, 3}, layout::C};
-  EXPECT_TRUE(i1.strides() == (ma(21, 3, 1)));
+  EXPECT_TRUE(i1.strides() == (ma(21, 3, 1)));//NOLINT
 
-  EXPECT_EQ(i1(1, 3, 2), 21 * 1 + 3 * 3 + 2 * 1);
+  EXPECT_EQ(i1(1, 3, 2), 21 * 1 + 3 * 3 + 2 * 1);//NOLINT
 }
 
 //-----------------------
@@ -47,7 +47,7 @@ TEST(idxstat, boundcheck) { // NOLINT
 
   idx_map<3> i1{{2, 7, 3}, layout::C};
   //i1(21, 3, 18);
-  EXPECT_THROW(i1(21, 3, 18), std::exception);
+  EXPECT_THROW(i1(21, 3, 18), std::exception);//NOLINT
 }
 
 //-----------------------
@@ -62,10 +62,10 @@ TEST(idxstat, slice) { // NOLINT
 
   std::cerr << i2 << std::endl;
   std::cerr << c2 << std::endl;
-  EXPECT_TRUE(i2 == c2);
+  EXPECT_TRUE(i2 == c2);//NOLINT
 
   idx_map<3> i3 = i1(_, _, _);
-  EXPECT_TRUE(i3 == i1);
+  EXPECT_TRUE(i3 == i1);//NOLINT
 }
 
 //-----------------------
@@ -79,10 +79,10 @@ TEST(idxstat, ellipsis) { // NOLINT
 
   std::cerr << i2 << std::endl;
   std::cerr << c2 << std::endl;
-  EXPECT_TRUE(i2 == c2);
+  EXPECT_TRUE(i2 == c2);//NOLINT
 
   idx_map<3> i3 = i1(___);
-  EXPECT_TRUE(i3 == i1);
+  EXPECT_TRUE(i3 == i1);//NOLINT
 }
 
 //-----------------------
@@ -97,7 +97,7 @@ TEST(idxstat, ellipsis2) { // NOLINT
 
   std::cerr << i2 << std::endl;
   std::cerr << c2 << std::endl;
-  EXPECT_TRUE(i2 == c2);
+  EXPECT_TRUE(i2 == c2);//NOLINT
 }
 
 //----------- Iterator ------------
@@ -109,11 +109,13 @@ TEST(idxstat, iteratorC) { // NOLINT
   std::cerr << i1 << std::endl;
 
   int pos = 0;
-  for (auto p : i1) { EXPECT_EQ(p, pos++); }
+  for (auto p : i1) { 
+    EXPECT_EQ(p, pos++);//NOLINT 
+  }
 
   pos = 0;
   for (auto [p, i] : enumerate_indices(i1)) {
-    EXPECT_EQ(p, pos++);
+    EXPECT_EQ(p, pos++);//NOLINT
     std::cerr << i << std::endl;
   }
 }
@@ -126,7 +128,7 @@ TEST(idxstat, iteratorD) { // NOLINT
 
   int pos = 0;
   for (auto [p, i] : enumerate_indices_in_layout_order(i1)) {
-    EXPECT_EQ(p, pos++);
+    EXPECT_EQ(p, pos++);//NOLINT
     std::cerr << i << std::endl;
   }
 }

@@ -28,13 +28,12 @@
 #include <sstream>
 #include <stdlib.h>
 
-#define NDA_ERROR(CLASS, NAME) throw nda::runtime_error{} << " at " << __FILE__ << " : " << __LINE__ << "\n\n"
-#define NDA_RUNTIME_ERROR NDA_ERROR(nda::runtime_error, "runtime error")
+#define NDA_RUNTIME_ERROR throw nda::runtime_error{} << "Error at " << __FILE__ << " : " << __LINE__ << "\n\n"
 
-#define NDA_ASSERT(X)                                                                                                                                \
-  if (!(X)) NDA_RUNTIME_ERROR << BOOST_PP_STRINGIZE(X);
-#define NDA_ASSERT2(X, ...)                                                                                                                          \
-  if (!(X)) NDA_RUNTIME_ERROR << BOOST_PP_STRINGIZE(X) << "\n " << __VA_ARGS__;
+/*#define NDA_ASSERT(X)                                                                                                                                \*/
+  //if (!(X)) NDA_RUNTIME_ERROR << BOOST_PP_STRINGIZE(X);
+//#define NDA_ASSERT2(X, ...)                                                                                                                          \
+  //if (!(X)) NDA_RUNTIME_ERROR << BOOST_PP_STRINGIZE(X) << "\n " << __VA_ARGS__;
 
 namespace nda {
 
@@ -44,18 +43,23 @@ namespace nda {
     mutable std::string _what;
 
     public:
-    runtime_error() throw() : std::exception() {} // _trace = utility::stack_trace(); }
-    runtime_error(runtime_error const &e) throw() : acc(e.acc.str()), _trace(e._trace), _what(e._what) {}
-    virtual ~runtime_error() throw() {}
+    runtime_error() noexcept : std::exception() {} // _trace = utility::stack_trace(); }
+
+    runtime_error(runtime_error const &e) noexcept : acc(e.acc.str()), _trace(e._trace), _what(e._what) {}
+
+    virtual ~runtime_error() noexcept {}
+
     template <typename T> runtime_error &operator<<(T const &x) {
       acc << x;
       return *this;
     }
+
     runtime_error &operator<<(const char *mess) {
       (*this) << std::string(mess);
       return *this;
     } // to limit code size
-    virtual const char *what() const throw() {
+
+    virtual const char *what() const noexcept {
       std::stringstream out;
       out << acc.str() << "\n.. Error occurred on node ";
       //if (mpi::is_initialized()) out << mpi::communicator().rank() << "\n";
@@ -63,6 +67,7 @@ namespace nda {
       _what = out.str();
       return _what.c_str();
     }
-    //virtual const char *trace() const throw() { return _trace.c_str(); }
+
+    //virtual const char *trace() const noexcept { return _trace.c_str(); }
   };
-}
+} // namespace nda
