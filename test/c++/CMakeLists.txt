@@ -22,8 +22,15 @@ ExternalProject_Add(gtest_project
 # Create the imported gtest target
 add_library(gtest STATIC IMPORTED)
 add_dependencies(gtest gtest_project)
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+ set(LIBTEST ${GTEST_ROOT}/lib/libgtest.a)
+else ()
+ set(LIBTEST ${GTEST_ROOT}/lib64/libgtest.a)
+endif()
+
 set_target_properties(gtest PROPERTIES
-  IMPORTED_LOCATION ${GTEST_ROOT}/lib64/libgtest.a
+  IMPORTED_LOCATION ${LIBTEST}
   INTERFACE_LINK_LIBRARIES pthread
   ## Populating the INTERFACE_INCLUDE_DIRECTORIES won't work
   ## as the directory does not yet exist
