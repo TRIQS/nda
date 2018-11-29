@@ -30,37 +30,37 @@ TEST(rtable, base) { // NOLINT
   print(ta);
 
   auto c1 = ta.get();
-  EXPECT_EQ(c1, 1);
+  EXPECT_EQ(c1, 1);//NOLINT
   print(ta);
 
   auto c2 = ta.get();
-  EXPECT_EQ(c2, 2);
+  EXPECT_EQ(c2, 2);//NOLINT
   print(ta);
 
   ta.incref(c1);
-  EXPECT_EQ(ta.nrefs()[c1], 2);
+  EXPECT_EQ(ta.nrefs()[c1], 2);//NOLINT
   print(ta);
 
   ta.decref(c1);
   print(ta);
 
   auto c3 = ta.get();
-  EXPECT_EQ(c3, 3);
+  EXPECT_EQ(c3, 3);//NOLINT
   print(ta);
 
   ta.decref(c1);
   print(ta);
 
   auto c4 = ta.get();
-  EXPECT_EQ(c4, 1);
+  EXPECT_EQ(c4, 1);//NOLINT
   print(ta);
 
   auto c5 = ta.get();
-  EXPECT_EQ(c5, 4);
+  EXPECT_EQ(c5, 4);//NOLINT
   print(ta);
 
   auto c6 = ta.get();
-  EXPECT_EQ(c6, 5);
+  EXPECT_EQ(c6, 5);//NOLINT
   print(ta);
 
   ta.decref(c6);
@@ -81,8 +81,8 @@ TEST(rtable, base) { // NOLINT
 class Ref : public ::testing::Test {
   protected:
   void TearDown() override {
-    EXPECT_TRUE(globals::rtable.empty());
-    EXPECT_TRUE(globals::alloc.empty());
+    EXPECT_TRUE(globals::rtable.empty());//NOLINT
+    EXPECT_TRUE(globals::alloc.empty());//NOLINT
   }
 };
 
@@ -96,7 +96,7 @@ TEST_F(Ref, HR) { // NOLINT
   h.data[2] = 89;
   handle<int, 'R'> h3{h};
   h.data[2] = 0;
-  EXPECT_EQ(h3.data[2], 89);
+  EXPECT_EQ(h3.data[2], 89);//NOLINT
 }
 
 // ---- Contruct R B
@@ -112,7 +112,7 @@ TEST_F(Ref, HBR) { // NOLINT
   b.data[2] = 89;
   handle<int, 'R'> h2{b};
   b.data[2] = 0;
-  EXPECT_EQ(h2.data[2], 89);
+  EXPECT_EQ(h2.data[2], 89);//NOLINT
 }
 
 // ---- Construct R, S
@@ -122,7 +122,7 @@ TEST_F(Ref, HSR) { // NOLINT
 
   handle<int, 'S'> s{h};
 
-  EXPECT_EQ(s.nref(), 2);
+  EXPECT_EQ(s.nref(), 2);//NOLINT
 }
 
 
@@ -136,14 +136,14 @@ TEST_F(Ref, HSRS) { // NOLINT
   handle<int, 'R'> h{10};
 
   handle<int, 'S'> s{h};
-  EXPECT_EQ(s.nref(), 2);
+  EXPECT_EQ(s.nref(), 2);//NOLINT
 
   s = handle<int, 'S'>{h};
-  EXPECT_EQ(s.nref(), 2);
+  EXPECT_EQ(s.nref(), 2);//NOLINT
 
   handle<int, 'S'> s2{h};
   s = s2;
-  EXPECT_EQ(s.nref(), 3);
+  EXPECT_EQ(s.nref(), 3);//NOLINT
 }
 
 // ---- check with something that is constructed/destructed.
@@ -162,7 +162,7 @@ struct Number {
 
 TEST_F(Ref, HR_with_cd) { // NOLINT
   { handle<Number, 'R'> h{5}; }
-  EXPECT_EQ(Number::c, 0);
+  EXPECT_EQ(Number::c, 0);//NOLINT
 }
 
 // --- check with a shared_ptr
@@ -180,7 +180,7 @@ TEST_F(Ref, HR_with_sharedPtr) { // NOLINT
     s.sptr = (void *)new std::shared_ptr<Number>{new Number{}};
     s.release_fnt = (void*)release_sp;
   }
-  EXPECT_EQ(Number::c, 0);
+  EXPECT_EQ(Number::c, 0);//NOLINT
 }
 
 MAKE_MAIN; // NOLINT

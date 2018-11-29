@@ -52,7 +52,7 @@ namespace nda::allocators {
     mallocator &operator=(mallocator const &) = delete;
     mallocator &operator=(mallocator &&) = default;
 
-    blk_t allocate(size_t s) { return {(char *)malloc(s), s}; }
+    blk_t allocate(size_t s) { return {(char *)malloc(s), s}; } //NOLINT
 
     void deallocate(blk_t b) { free(b.ptr); }
   };
