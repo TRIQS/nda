@@ -73,6 +73,25 @@ namespace nda {
     }
     template <typename... Args> FORCEINLINE void operator()(Args const &... args) { this->assign(A(args...), f(args...)); }
   };
+ 
+  template <typename Self, typename... Args> static FORCEINLINE decltype(auto) _call_ (Self && self, Args const &... args) {
+      static constexpr int Number_of_Arguments = sizeof...(Args);
+      if constexpr (Number_of_Arguments == 0) return make_const_view(*this);
+      if constexpr (clef::is_any_lazy_v<Args...>) { // Is it a lazy call ?
+        if constexpr (R >= 0) static_assert(Number_of_Arguments == R, "Incorrect number of parameters in call");
+        return make_expr_call(std::forward<Self>(self), std::forward<Args>(args)...);
+      } else {                  // not lazy
+        if constexpr (R >= 0) { // If Rank is given at compile time, we check the number of arguments
+          static constexpr bool ellipsis_is_present = ((std::is_same_v<Args, ellipsis> ? 1 : 0) + ...);
+          static_assert((Number_of_Arguments == R) or (ellipsis_is_present and (Number_of_Arguments <= R)), "Incorrect number of parameters in call");
+        }
+        auto idx_sliced = _idx_m.slice(args...);                     // we call the index map
+        if constexpr (std::is_same_v<decltype(idx_sliced), idx_map>) // Case 1 : we got a slice
+          return _nda<T, idx_sliced::_Rank, make_const_view_flavor_t(Flavor), Algebra>{std::move(idx_sliced), _storage};
+        else
+          return _storage[idx_sliced]; // Case 2: we got a long, hence access a element
+      }
+    }
 
   //---------------
    // Algebra_t not needed in this impl. class:
@@ -96,7 +115,7 @@ namespace nda {
 
     // ------------------------------- constructors --------------------------------------------
 
-    _nda_impl() {}
+    _nda_impl() = default;
 
     _nda_impl(_idx_m_t IM, storage_t ST) : _idx_m(std::move(IM)), _storage(std::move(ST)) {}
 
@@ -116,6 +135,7 @@ namespace nda {
     _nda_impl(_nda_impl &&X)      = default;
 
     // ------------------------------- ==  --------------------------------------------
+    // FIXME : P ULL OUT AS TEMPLATE 
     // at your own risk with floating value, but it is useful for int, string, etc....
     // in particular for tests
     friend bool operator==(_nda_impl const &A, _nda_impl const &B) {
@@ -162,27 +182,9 @@ namespace nda {
 
     private:
 
-    /// PULL OUT ! in array and view ....
+    /// PULL OUT ! in array and view .... STATIC 
 
-   template <typename... Args> static FORCEINLINE decltype(auto) _call_ (Self && self, Args const &... args) {
-      static constexpr int Number_of_Arguments = sizeof...(Args);
-      if constexpr (Number_of_Arguments == 0) return make_const_view(*this);
-      if constexpr (clef::is_any_lazy_v<Args...>) { // Is it a lazy call ?
-        if constexpr (R >= 0) static_assert(Number_of_Arguments == R, "Incorrect number of parameters in call");
-        return make_expr_call(std::forward<Self>(self), std::forward<Args>(args)...);
-      } else {                  // not lazy
-        if constexpr (R >= 0) { // If Rank is given at compile time, we check the number of arguments
-          static constexpr bool ellipsis_is_present = ((std::is_same_v<Args, ellipsis> ? 1 : 0) + ...);
-          static_assert((Number_of_Arguments == R) or (ellipsis_is_present and (Number_of_Arguments <= R)), "Incorrect number of parameters in call");
-        }
-        auto idx_sliced = _idx_m.slice(args...);                     // we call the index map
-        if constexpr (std::is_same_v<decltype(idx_sliced), idx_map>) // Case 1 : we got a slice
-          return _nda<T, idx_sliced::_Rank, make_const_view_flavor_t(Flavor), Algebra>{std::move(idx_sliced), _storage};
-        else
-          return _storage[idx_sliced]; // Case 2: we got a long, hence access a element
-      }
-    }
-  
+    
   public:
 
    template <typename... Args> decltype(auto) operator()(Args const &... args) const & {

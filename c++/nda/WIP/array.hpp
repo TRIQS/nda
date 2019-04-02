@@ -27,22 +27,21 @@
 namespace nda { 
 
 
-  enum class flavor_t { Regular, View, SharedView, ConstView, SharedConstView};
-  enum class algebra_t { Array, Matrix};
+  enum class flavor_enum_t { Regular, View, SharedView, ConstView, SharedConstView};
+  enum class algebra_enum_t { Array, Matrix, Vector};
 
-  constexpr flavor_t make_const_flavor(flavor_t f) { 
-    switch (f) : 
-    case (Regular) : return ConstView;
-		     //...
-
+  constexpr flavor_enum_t make_const_flavor(flavor_enum_t f) { 
+    switch (f) { 
+      case (Regular) : return ConstView;
+    }
   }
 
   // an implementation class
-  template<typename T, int Rank, flavor_t Flavor> class _nda_impl { 
+  template<typename T, int Rank, flavor_enum_t Flavor> class _nda_impl { 
 
   };
 
-  template<typename T, int Rank, flavor_t Flavor, algebra_t Algebra> class _nda { 
+  template<typename T, int Rank, flavor_enum_t Flavor, algebra_enum_t Algebra> class _impl_base { 
 
 
    
@@ -104,6 +103,7 @@ namespace nda {
     this->storage_ = X.storage_;
    }
 
+   // TRAP IT
    // rebind the other view, iif this is const, and the other is not.
    template <typename To, bool C = IsConst> ENABLE_IFC(C) rebind(array_view<ValueType, Rank, To, Borrowed, !IsConst> const& X) {
     this->indexmap_ = X.indexmap_;
@@ -126,6 +126,7 @@ namespace nda {
     return transposed_view(a,  mini_vector<int, Rank>{is...});
    }
 
+   // OUT AS TEMPLATE MATCH
    friend view_type transposed_view(array_view const& a, mini_vector<int, Rank> const& perm) {
     return {transpose(a.indexmap_, perm), a.storage_};
    }
