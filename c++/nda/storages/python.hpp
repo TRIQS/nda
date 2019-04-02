@@ -21,7 +21,6 @@
  *
  ******************************************************************************/
 #pragma once
-#include "./python.hpp"
 #include <cpp2py/pyref.hpp>
 #include <triqs/utility/exceptions.hpp>
 
