@@ -40,7 +40,9 @@ namespace nda::mem {
     void release(int_t p) { // the counter p in not in use
       ta[p] = nac;          // freelist advance by 1 :
       nac   = p;
+#ifdef NDA_DEBUG_MEMORY
       std::cerr << "released " << p << " nac = " << nac << std::endl;
+#endif
     }
 
     public:
@@ -49,10 +51,13 @@ namespace nda::mem {
     }
 
     ~rtable_t() {
+#ifdef NDA_DEBUG_MEMORY
       if (!empty()) std::cerr << "Error detected in reference counting ! No all refs have been rereferenced\n";
+#endif
     }
 
-    // For checking purpose only. Check that the chain of nac is a complete permutation of the vector
+    // Separated from the destructor for testing purpose only. 
+    // Check that the chain of nac is a complete permutation of the vector
     bool empty() const {
       std::vector<bool> m(ta.size(), true);
       m[0]    = false;
@@ -77,21 +82,25 @@ namespace nda::mem {
       nac    = ta[nac];
       ta[r]  = 1;
       if (nac == ta.size()) { ta.push_back(ta.size() + 1); }
+#ifdef NDA_DEBUG_MEMORY
       std::cerr << "got " << r << " nac = " << nac << std::endl;
+#endif
       return r;
     }
 
     // access to the refs
-    std::vector<int_t> const &nrefs() const { return ta; }
+    std::vector<int_t> const &nrefs() const noexcept { return ta; }
 
     // increase the counter number p
-    void incref(long p) { ++ta[p]; }
+    void incref(long p) noexcept { ++ta[p]; }
 
     // decrease the counter number p. Return true iif it has reached 0.
     // If it has reached 0, it also releases the counter.
-    bool decref(long p) {
+    bool decref(long p) noexcept {
       --ta[p];
+#ifdef NDA_DEBUG_MEMORY
       std::cerr << "decref " << p << " nref : " << ta[p] << "  nac = " << nac << std::endl;
+#endif
       bool reached0 = (ta[p] == 0);
       if (reached0) release(p);
       return reached0;

@@ -54,7 +54,7 @@ namespace nda::allocators {
 
     blk_t allocate(size_t s) { return {(char *)malloc(s), s}; } //NOLINT
 
-    void deallocate(blk_t b) { free(b.ptr); }
+    void deallocate(blk_t b) noexcept { free(b.ptr); }
   };
 
   // -------------------------  Stack allocator ----------------------------
@@ -80,12 +80,12 @@ namespace nda::allocators {
       return {p1, s};
     }
 
-    void deallocate(blk_t b) {
+    void deallocate(blk_t b) noexcept {
       if (b.ptr + b.s == p) p = b.ptr; // roll back iif at top of the stack
       // otherwise ?
     }
 
-    bool owns(blk_t b) { return b.ptr >= d and b.ptr < d + Size; }
+    bool owns(blk_t b) noexcept { return b.ptr >= d and b.ptr < d + Size; }
   };
 
   // -------------------------  Free_list allocator ----------------------------
@@ -116,14 +116,14 @@ namespace nda::allocators {
       return parent.allocate(s);
     }
 
-    void deallocate(blk_t b) {
+    void deallocate(blk_t b) noexcept {
       if (not size_is_ok(b.s)) return parent.deallocate(b);
       auto *p = (node *)b.ptr;
       p->next = root;
       root    = p;
     }
 
-    bool owns(blk_t b) { return size_is_ok(b) or parent.owns(b); }
+    bool owns(blk_t b) noexcept { return size_is_ok(b) or parent.owns(b); }
   };
 
   // -------------------------  segregator allocator ----------------------------
@@ -142,8 +142,8 @@ namespace nda::allocators {
     segregator &operator=(segregator &&) = default;
 
     blk_t allocate(size_t s) { return s <= Threshold ? small.allocate(s) : big.allocate(s); }
-    void deallocate(blk_t b) { return b.s <= Threshold ? small.deallocate(b) : big.deallocate(b); }
-    bool owns(blk_t b) { return small.owns(b) or big.owns(b); }
+    void deallocate(blk_t b) noexcept { return b.s <= Threshold ? small.deallocate(b) : big.deallocate(b); }
+    bool owns(blk_t b) noexcept { return small.owns(b) or big.owns(b); }
   };
 
   // -------------------------  fallback allocator ----------------------------
@@ -165,14 +165,14 @@ namespace nda::allocators {
       return r;
     }
 
-    void deallocate(blk_t b) {
+    void deallocate(blk_t b) noexcept {
       if (A::owns(b))
         A::deallocate(b);
       else
         F::deallocate(b);
     }
 
-    bool owns(blk_t b) { return A::owns(b) or F::owns(b); }
+    bool owns(blk_t b) noexcept { return A::owns(b) or F::owns(b); }
   };
 
   // -------------------------   allocator with statistics ----------------------------
@@ -205,7 +205,7 @@ namespace nda::allocators {
       return b;
     }
 
-    void deallocate(blk_t b) {
+    void deallocate(blk_t b) noexcept {
       memory_used -= b.s;
       if (memory_used < 0) {
         std::cerr << "Allocator : memory_used <0 : " << memory_used << " b.s = " << b.s << " b.ptr = " << (void *)b.ptr;
@@ -214,9 +214,9 @@ namespace nda::allocators {
       A::deallocate(b);
     }
 
-    bool owns(blk_t b) { return A::owns(b); }
+    bool owns(blk_t b) noexcept { return A::owns(b); }
 
-    long get_memory_used() const { return memory_used; }
+    long get_memory_used() const noexcept { return memory_used; }
   };
 
 } // namespace nda::allocators

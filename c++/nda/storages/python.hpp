@@ -22,7 +22,6 @@
  ******************************************************************************/
 #pragma once
 #include <cpp2py/pyref.hpp>
-#include <triqs/utility/exceptions.hpp>
 
 // SHOULD ONLY BE INCLUDED in a python module.
 
@@ -33,18 +32,11 @@
 #include "Python.h"
 #include <numpy/arrayobject.h>
 
-namespace nda {
+namespace nda::mem {
 
-  // ----------------  Utilities -------------------
+  // -------------  make_handle ------------
 
   static void py_decref(PyObject *x) { PY_DECREF(x); }
-
-  template <typename T> static void delete_pycapsule(PyObject *capsule) {
-    handle<T, 'S'> *handle = static_cast<handle<T, 'S'> *>(PyCapsule_GetPointer(capsule, "guard"));
-    handle->decref();
-    delete handle;
-  }
-  // -------------  make_handle ------------
 
   // Take a handle on a numpy. numpy is a borrowed Python ref.
   // implemented only in Python module, not in triqs cpp
@@ -52,12 +44,12 @@ namespace nda {
 
     _import_array();
 
-    if (obj == NULL) TRIQS_RUNTIME_ERROR << " Can not build an mem_blk_handle from a NULL PyObject *";
+    if (obj == NULL) throw std::runtime_error(" Can not build an mem_blk_handle from a NULL PyObject *");
+    if (!PyArray_Check(obj)) throw std::runtime_error("Internal error : ref_counter construct from pyo : obj is not an array");
     Py_INCREF(obj); // assume borrowed
-    if (!PyArray_Check(obj)) TRIQS_RUNTIME_ERROR << "Internal error : ref_counter construct from pyo : obj is not an array";
     PyArrayObject *arr = (PyArrayObject *)(obj);
 
-    handle<'S'> r;
+    handle<'S'> r; // empty
     r.data        = (T *)PyArray_DATA(arr);
     r.size        = size_t(PyArray_SIZE(arr));
     r.id          = r.rtable.get();
@@ -69,9 +61,14 @@ namespace nda {
   // ------------------  make_pycapsule  ----------------------------------------------------
   // make a pycapsule out of the shared handle to return to Python
 
+  template <typename T> static void delete_pycapsule(PyObject *capsule) {
+    handle<T, 'S'> *handle = static_cast<handle<T, 'S'> *>(PyCapsule_GetPointer(capsule, "guard"));
+    handle->decref();
+    delete handle;
+  }
+
   template <typename T> PyObject *make_pycapsule(handle<T, 'S'> const &h) {
-    h.incref();
-    void *keep = new handle<T, 'S'>{h};
+    void *keep = new handle<T, 'S'>{h}; // a new reference
     return PyCapsule_New(keep, "guard", &delete_pycapsule<T>);
   }
 
@@ -79,4 +76,4 @@ namespace nda {
 
   template <typename T> PyObject *make_pycapsule(handle<'B'> const &h) = delete; // Can not return a borrowed view to Python
 
-} // namespace nda
+} // namespace nda::mem
