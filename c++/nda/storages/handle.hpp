@@ -26,7 +26,7 @@
 #include "./allocators.hpp"
 #include "./rtable.hpp"
 
-#define FORCEINLINE __inline__ __attribute__((always_inline))
+#define FORCEINLINE [[gnu::always_inline]]
 #define restrict __restrict__
 
 namespace nda::mem {
@@ -44,9 +44,7 @@ namespace nda::mem {
   //using allocator1_t = allocators::stack_allocator<10000>; //mallocator;
   //using allocator1_t = allocators::free_list<stack_allocator<10000>, 1, 200>; //mallocator;
 
-#define TRIQS_DEBUG_ARRAYS_MEMORY
-
-#ifndef TRIQS_DEBUG_ARRAYS_MEMORY
+#ifndef NDA_DEBUG_MEMORY
   using allocator_t = allocator1_t;
 #else
   using allocator_t = allocators::stats<allocator1_t>;
@@ -61,12 +59,14 @@ namespace nda::mem {
     FORCEINLINE T const &get() const { return x; }
   };
 
-  // -------------- Utilities ---------------------------
+  // -------------- Global table  ---------------------------
 
   struct globals {
     static inline allocator_t alloc; // global allocator for arrays.
     static inline rtable_t rtable;   // the table of the ref counter.
   };
+
+  // -------------- Decide if type T will need to be constructed/destructed
 
   template <typename T>
   constexpr bool requires_construction_and_destruction = (not(std::is_arithmetic_v<T> || is_complex<T>::value || std::is_pod_v<T>));
@@ -90,6 +90,8 @@ namespace nda::mem {
     handle(T *p, size_t s) : data(p), size(s) {}
     handle(handle<T, 'R'> const &x) : data(x.data), size(x.size) {}
     handle(handle<T, 'S'> const &x) : data(x.data), size(x.size) {}
+
+    T &operator[](long i) const noexcept { return data[i]; }
   };
 
   // ------------------  Shared -------------------------------------
@@ -108,22 +110,24 @@ namespace nda::mem {
     using release_fnt_t = void (*)(void *);
 
     void decref() noexcept {
-      if (!id) return;
+      if (!id) return;                         // id=0 is the default constructed state. No cleaning there
       if (!globals::rtable.decref(id)) return; // if the ref count is still > 0
       if (sptr) {                              // the memory was a foreign lib, release it
         (*(release_fnt_t)release_fnt)(sptr);
         return;
       }
-      // Now we destroy object if needed and deallocate memory
+      // Now we need to clean memory. First We destroy object if needed
       if constexpr (requires_construction_and_destruction<T>) {
         for (size_t i = 0; i < size; ++i) data[i].~T();
       }
+      // and now dellocate the memory block
       globals::alloc.deallocate({(char *)data, size * sizeof(T)});
     }
 
     void incref() noexcept { globals::rtable.incref(id); }
 
-    FORCEINLINE void _copy(handle const &x) { // to save code below
+    // basic part of copy, no ref handling here
+    FORCEINLINE void _copy(handle const &x) noexcept {
       data        = x.data;
       size        = x.size;
       id          = x.id;
@@ -169,8 +173,14 @@ namespace nda::mem {
       incref(); // to count for this
     }
 
-    long nref() const { return globals::rtable.nrefs()[id]; }
+    long nref() const noexcept { return globals::rtable.nrefs()[id]; }
+    T &operator[](long i) const noexcept { return data[i]; }
   };
+
+  // ------------------  Simple tag -------------------------------------
+
+  struct do_not_initialize_t {};
+  inline static constexpr do_not_initialize_t do_not_initialize{};
 
   // ------------------  Regular -------------------------------------
 
@@ -187,10 +197,6 @@ namespace nda::mem {
 
     // Using copy and move
     handle &operator=(handle const &x) noexcept { *this = handle{*this}; }
-
-    struct do_not_initialize_t {};
-    static constexpr do_not_initialize_t do_not_initialize{};
-
     // set up a memory block of the correct size. No init.
     handle(long s, do_not_initialize_t) {
       if (s == 0) return;                              // no size, nullptr
@@ -223,13 +229,18 @@ namespace nda::mem {
     }
 
     // if the block was used by a shared block, we need to clean it like a shared block too.
-    ~handle() noexcept {
-      if (id and (!globals::rtable.decref(id))) return;
-      if constexpr (requires_construction_and_destruction<T>) {
+    ~handle() noexcept(noexcept(std::declval<T>().~T())) { // noexcept iif ~T is no except !
+      // different from shared.
+      // If id ==0 , we want to deallocate here
+      // if id !=0, we dellocate only if decref is true
+      if (id and (!globals::rtable.decref(id))) return;         // do NOT dellocate
+      if constexpr (requires_construction_and_destruction<T>) { // if we need to call a destructor, call it.
         for (size_t i = 0; i < size; ++i) data[i].~T();
       }
       globals::alloc.deallocate({(char *)data, size * sizeof(T)}); // dellocate the memory block
     }
+
+    T &operator[](long i) const noexcept { return data[i]; }
   };
 
 } // namespace nda::mem

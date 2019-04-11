@@ -1,7 +1,7 @@
 #include <gtest/gtest.h> // NOLINT
 #include <memory>
 
-#define TRIQS_DEBUG_ARRAYS_MEMORY
+#define NDA_DEBUG_MEMORY
 
 #include <nda/storages/handle.hpp>
 #include <nda/test_tools.hpp>
