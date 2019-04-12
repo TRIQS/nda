@@ -73,15 +73,17 @@ namespace nda {
     }
     template <typename... Args> FORCEINLINE void operator()(Args const &... args) { this->assign(A(args...), f(args...)); }
   };
- 
-  template <typename Self, typename... Args> static FORCEINLINE decltype(auto) _call_ (Self && self, Args const &... args) {
+
+  // NO EXCEPT ? if stogage is [],  
+  template <typename Self, typename... Args> static FORCEINLINE decltype(auto) _call_ (Self && self, Args const &... args) noexcept {
       static constexpr int Number_of_Arguments = sizeof...(Args);
       if constexpr (Number_of_Arguments == 0) return make_const_view(*this);
       if constexpr (clef::is_any_lazy_v<Args...>) { // Is it a lazy call ?
         if constexpr (R >= 0) static_assert(Number_of_Arguments == R, "Incorrect number of parameters in call");
         return make_expr_call(std::forward<Self>(self), std::forward<Args>(args)...);
       } else {                  // not lazy
-        if constexpr (R >= 0) { // If Rank is given at compile time, we check the number of arguments
+      // FIXME : Clean this else, return before ?
+      	if constexpr (R >= 0) { // If Rank is given at compile time, we check the number of arguments
           static constexpr bool ellipsis_is_present = ((std::is_same_v<Args, ellipsis> ? 1 : 0) + ...);
           static_assert((Number_of_Arguments == R) or (ellipsis_is_present and (Number_of_Arguments <= R)), "Incorrect number of parameters in call");
         }
