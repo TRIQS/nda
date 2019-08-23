@@ -267,42 +267,10 @@ namespace nda {
     }
     // template<typename Fnt> friend void triqs_clef_auto_assign (_nda_impl & x, Fnt f) { assign_foreach(x,f);}
 
-    // ------------------------------- Iterators --------------------------------------------
-    using const_iterator = iterator_adapter<true, typename IndexMapType::iterator, StorageType>;
-    using iterator       = iterator_adapter<false, typename IndexMapType::iterator, StorageType>;
-    const_iterator begin() const { return const_iterator(indexmap(), storage(), false); }
-    const_iterator end() const { return const_iterator(indexmap(), storage(), true); }
-    const_iterator cbegin() const { return const_iterator(indexmap(), storage(), false); }
-    const_iterator cend() const { return const_iterator(indexmap(), storage(), true); }
-    iterator begin() { return iterator(indexmap(), storage(), false); }
-    iterator end() { return iterator(indexmap(), storage(), true); }
-
-    protected:
-    // ------------------------------- resize --------------------------------------------
-    //
-    void resize(domain_type const &d) {
-      _idx_m = IndexMapType(d, _idx_m.memory_layout());
-      // build a new one with the lengths of IND BUT THE SAME layout !
-      // optimisation. Construct a storage only if the new index is not compatible (size mismatch).
-      if (_storage.size() != _idx_m.domain().number_of_elements()) _storage = StorageType(_idx_m.domain().number_of_elements());
-    }
-
-    template <typename Xtype> void resize_and_clone_data(Xtype const &X) {
-      _idx_m = X.indexmap();
-      _storage  = X.storage().clone();
-    }
-
-    //  BOOST Serialization
+     protected:
+      //  BOOST Serialization
     friend class boost::serialization::access;
     template <class Archive> void serialize(Archive &ar, const unsigned int version) { ar &_storage &_idx_m; }
 
-    // pretty print of the array
-    friend std::ostream &operator<<(std::ostream &out, const _nda_impl &A) {
-      if (A.storage().size() == 0)
-        out << "empty ";
-      else
-        pretty_print(out, A);
-      return out;
-    }
-  };
+   };
 } // namespace nda
