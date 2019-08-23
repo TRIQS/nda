@@ -23,6 +23,8 @@
 #pragma once
 #include <vector>
 
+#define NDA_DEBUG_MEMORY
+
 namespace nda::mem {
 
   // -------------- ref count table -----------------------
@@ -97,6 +99,10 @@ namespace nda::mem {
     // decrease the counter number p. Return true iif it has reached 0.
     // If it has reached 0, it also releases the counter.
     bool decref(long p) noexcept {
+<<<<<<< HEAD
+=======
+      if (p>=ta.size()) throw std::runtime_error("NONO");
+>>>>>>> refs/remotes/origin/unstable
       --ta[p];
 #ifdef NDA_DEBUG_MEMORY
       std::cerr << "decref " << p << " nref : " << ta[p] << "  nac = " << nac << std::endl;

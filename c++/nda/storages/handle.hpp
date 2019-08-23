@@ -26,7 +26,10 @@
 #include "./allocators.hpp"
 #include "./rtable.hpp"
 
-#define FORCEINLINE [[gnu::always_inline]]
+#define FORCEINLINE __inline__ __attribute__((always_inline))
+
+//#define FORCEINLINE inline [[gnu::always_inline]]
+
 #define restrict __restrict__
 
 namespace nda::mem {
@@ -69,7 +72,8 @@ namespace nda::mem {
   // -------------- Decide if type T will need to be constructed/destructed
 
   template <typename T>
-  constexpr bool requires_construction_and_destruction = (not(std::is_arithmetic_v<T> || is_complex<T>::value || std::is_pod_v<T>));
+  constexpr bool requires_construction_and_destruction = (not(std::is_arithmetic_v<T> || std::is_pod_v<T>));
+  //constexpr bool requires_construction_and_destruction = (not(std::is_arithmetic_v<T> || is_complex<T>::value || std::is_pod_v<T>));
 
   // -------------- handle ---------------------------
 
@@ -82,6 +86,8 @@ namespace nda::mem {
   // ------------------  Borrowed -------------------------------------
 
   template <typename T> struct handle<T, 'B'> {
+
+    using value_type = T; // FIXME : TRIQS
 
     T *restrict data = nullptr; // start of data
     size_t size      = 0;       // size of the memory block. Invariant : >0 iif data !=0
@@ -98,6 +104,8 @@ namespace nda::mem {
 
   template <typename T> struct handle<T, 'S'> {
 
+    using value_type = T; // FIXME : TRIQS
+
     T *restrict data = nullptr; // start of data
     size_t size      = 0;       // size of the memory block. Invariant : >0 iif data !=0
     long id          = 0;       // the id in the counter ref table : 0 means no counter allocated.
@@ -106,7 +114,6 @@ namespace nda::mem {
     void *sptr        = nullptr; // A foreign library shared ptr
     void *release_fnt = nullptr; // void (*)(void *) : release function of the foreign sptr
 
-    private:
     using release_fnt_t = void (*)(void *);
 
     void decref() noexcept {
@@ -125,6 +132,7 @@ namespace nda::mem {
     }
 
     void incref() noexcept { globals::rtable.incref(id); }
+    private:
 
     // basic part of copy, no ref handling here
     FORCEINLINE void _copy(handle const &x) noexcept {
@@ -168,6 +176,7 @@ namespace nda::mem {
 
     // Cross construction from Regular. When constructing a shared_view from a regular type.
     handle(handle<T, 'R'> const &x) noexcept : data(x.data), size(x.size) {
+      //if (x.data==nullptr) std::throw("Can not take a view of an empty array");
       if (!x.id) x.id = globals::rtable.get();
       id = x.id;
       incref(); // to count for this
@@ -186,17 +195,62 @@ namespace nda::mem {
 
   template <typename T> struct handle<T, 'R'> {
 
+    using value_type = T; // FIXME : TRIQS
+
+    static constexpr bool _destructor_of_T_is_no_except = noexcept(std::declval<T>().~T());
+
     T *restrict data = nullptr; // start of data
     size_t size      = 0;       // size of the memory block. Invariant : >0 iif data !=0
     mutable long id  = 0;       // the id in the counter ref table : 0 means no counter.
                                 // must be mutable for the cross construction of S. Cf S.
 
-    handle()                    = default;
-    handle(handle &&x) noexcept = default;
-    handle &operator=(handle &&x) noexcept = default;
+    private:
+    void decref() const noexcept(_destructor_of_T_is_no_except) {
+      if (data == nullptr) return; // nothing to do
+      // If id ==0 , we want to deallocate here
+      // if id !=0, we dellocate only if rtable decref is true
+      if (id and (!globals::rtable.decref(id))) return;         // do NOT dellocate
+      if constexpr (requires_construction_and_destruction<T>) { // if we need to call a destructor, call it.
+        for (size_t i = 0; i < size; ++i) data[i].~T();
+      }
+      globals::alloc.deallocate({(char *)data, size * sizeof(T)}); // dellocate the memory block
+    }
+    public:
 
+<<<<<<< HEAD
     // Using copy and move
     handle &operator=(handle const &x) noexcept { *this = handle{*this}; }
+=======
+    // if the block was used by a shared block, we need to clean it like a shared block too.
+    ~handle() noexcept(_destructor_of_T_is_no_except) { // noexcept iif ~T is no except !
+      decref();
+    }
+
+    handle() = default;
+
+    handle(handle &&x) noexcept {
+      data   = x.data;
+      size   = x.size;
+      id     = x.id;
+      x.data = nullptr; // x is destructible with no operation
+    }
+
+    handle &operator=(handle &&x) noexcept {
+      decref();
+      data   = x.data;
+      size   = x.size;
+      id     = x.id;
+      x.data = nullptr; // x is destructible with no operation
+      return *this;
+    }
+
+    // Using copy and move
+    handle &operator=(handle const &x) noexcept {
+      *this = handle{x};
+      return *this;
+    }
+
+>>>>>>> refs/remotes/origin/unstable
     // set up a memory block of the correct size. No init.
     handle(long s, do_not_initialize_t) {
       if (s == 0) return;                              // no size, nullptr
@@ -228,6 +282,7 @@ namespace nda::mem {
       for (size_t i = 0; i < size; ++i) new (data + i) T(x.data[i]); // placement new
     }
 
+<<<<<<< HEAD
     // if the block was used by a shared block, we need to clean it like a shared block too.
     ~handle() noexcept(noexcept(std::declval<T>().~T())) { // noexcept iif ~T is no except !
       // different from shared.
@@ -239,6 +294,8 @@ namespace nda::mem {
       }
       globals::alloc.deallocate({(char *)data, size * sizeof(T)}); // dellocate the memory block
     }
+=======
+>>>>>>> refs/remotes/origin/unstable
 
     T &operator[](long i) const noexcept { return data[i]; }
   };

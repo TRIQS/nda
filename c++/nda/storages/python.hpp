@@ -24,23 +24,22 @@
 #include <cpp2py/pyref.hpp>
 
 // SHOULD ONLY BE INCLUDED in a python module.
-
 #ifndef PYTHON_NUMPY_VERSION_LT_17
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #endif
-
 #include "Python.h"
 #include <numpy/arrayobject.h>
+#include <cpp2py/pyref.hpp>
 
 namespace nda::mem {
 
   // -------------  make_handle ------------
 
-  static void py_decref(PyObject *x) { PY_DECREF(x); }
+  static void py_decref(void *x) { Py_DECREF((PyObject *)x); }
 
   // Take a handle on a numpy. numpy is a borrowed Python ref.
   // implemented only in Python module, not in triqs cpp
-  template <typename T> handle<T, 'S'> make_handle(PyObject *ob) {
+  template <typename T> handle<T, 'S'> make_handle(PyObject *obj) {
 
     _import_array();
 
@@ -49,12 +48,12 @@ namespace nda::mem {
     Py_INCREF(obj); // assume borrowed
     PyArrayObject *arr = (PyArrayObject *)(obj);
 
-    handle<'S'> r; // empty
+    handle<T, 'S'> r; // empty
     r.data        = (T *)PyArray_DATA(arr);
     r.size        = size_t(PyArray_SIZE(arr));
-    r.id          = r.rtable.get();
-    r.sptr        = ob;
-    r.release_fnt = &py_decref;
+    r.id          = globals::rtable.get();
+    r.sptr        = obj;
+    r.release_fnt = (void*)&py_decref;
     return r;
   }
 
@@ -62,18 +61,22 @@ namespace nda::mem {
   // make a pycapsule out of the shared handle to return to Python
 
   template <typename T> static void delete_pycapsule(PyObject *capsule) {
-    handle<T, 'S'> *handle = static_cast<handle<T, 'S'> *>(PyCapsule_GetPointer(capsule, "guard"));
-    handle->decref();
+    handle<T, 'S'> *handle = static_cast<nda::mem::handle<T, 'S'> *>(PyCapsule_GetPointer(capsule, "guard"));
+    std::cerr << "decapsulate : nrefs" << handle->nref() << "\n";
+    //handle->decref();
     delete handle;
   }
 
-  template <typename T> PyObject *make_pycapsule(handle<T, 'S'> const &h) {
-    void *keep = new handle<T, 'S'>{h}; // a new reference
+  template <typename T> PyObject *make_pycapsule(handle<T, 'S'> h) {
+    //h.incref();
+    std::cerr << "capsulate : nrefs" << h.nref() << "\n";
+    void *keep = new handle<T, 'S'>{std::move(h)}; // a new reference
+
     return PyCapsule_New(keep, "guard", &delete_pycapsule<T>);
   }
 
   template <typename T> PyObject *make_pycapsule(handle<T, 'R'> const &h) { return make_pycapsule(handle<T, 'S'>{h}); }
 
-  template <typename T> PyObject *make_pycapsule(handle<'B'> const &h) = delete; // Can not return a borrowed view to Python
+  template <typename T> PyObject *make_pycapsule(handle<T, 'B'> const &h) = delete; // Can not return a borrowed view to Python
 
 } // namespace nda::mem

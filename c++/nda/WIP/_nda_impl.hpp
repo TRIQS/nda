@@ -73,15 +73,17 @@ namespace nda {
     }
     template <typename... Args> FORCEINLINE void operator()(Args const &... args) { this->assign(A(args...), f(args...)); }
   };
- 
-  template <typename Self, typename... Args> static FORCEINLINE decltype(auto) _call_ (Self && self, Args const &... args) {
+
+  // NO EXCEPT ? if stogage is [],  
+  template <typename Self, typename... Args> static FORCEINLINE decltype(auto) _call_ (Self && self, Args const &... args) noexcept {
       static constexpr int Number_of_Arguments = sizeof...(Args);
       if constexpr (Number_of_Arguments == 0) return make_const_view(*this);
       if constexpr (clef::is_any_lazy_v<Args...>) { // Is it a lazy call ?
         if constexpr (R >= 0) static_assert(Number_of_Arguments == R, "Incorrect number of parameters in call");
         return make_expr_call(std::forward<Self>(self), std::forward<Args>(args)...);
       } else {                  // not lazy
-        if constexpr (R >= 0) { // If Rank is given at compile time, we check the number of arguments
+      // FIXME : Clean this else, return before ?
+      	if constexpr (R >= 0) { // If Rank is given at compile time, we check the number of arguments
           static constexpr bool ellipsis_is_present = ((std::is_same_v<Args, ellipsis> ? 1 : 0) + ...);
           static_assert((Number_of_Arguments == R) or (ellipsis_is_present and (Number_of_Arguments <= R)), "Incorrect number of parameters in call");
         }
@@ -265,42 +267,10 @@ namespace nda {
     }
     // template<typename Fnt> friend void triqs_clef_auto_assign (_nda_impl & x, Fnt f) { assign_foreach(x,f);}
 
-    // ------------------------------- Iterators --------------------------------------------
-    using const_iterator = iterator_adapter<true, typename IndexMapType::iterator, StorageType>;
-    using iterator       = iterator_adapter<false, typename IndexMapType::iterator, StorageType>;
-    const_iterator begin() const { return const_iterator(indexmap(), storage(), false); }
-    const_iterator end() const { return const_iterator(indexmap(), storage(), true); }
-    const_iterator cbegin() const { return const_iterator(indexmap(), storage(), false); }
-    const_iterator cend() const { return const_iterator(indexmap(), storage(), true); }
-    iterator begin() { return iterator(indexmap(), storage(), false); }
-    iterator end() { return iterator(indexmap(), storage(), true); }
-
-    protected:
-    // ------------------------------- resize --------------------------------------------
-    //
-    void resize(domain_type const &d) {
-      _idx_m = IndexMapType(d, _idx_m.memory_layout());
-      // build a new one with the lengths of IND BUT THE SAME layout !
-      // optimisation. Construct a storage only if the new index is not compatible (size mismatch).
-      if (_storage.size() != _idx_m.domain().number_of_elements()) _storage = StorageType(_idx_m.domain().number_of_elements());
-    }
-
-    template <typename Xtype> void resize_and_clone_data(Xtype const &X) {
-      _idx_m = X.indexmap();
-      _storage  = X.storage().clone();
-    }
-
-    //  BOOST Serialization
+     protected:
+      //  BOOST Serialization
     friend class boost::serialization::access;
     template <class Archive> void serialize(Archive &ar, const unsigned int version) { ar &_storage &_idx_m; }
 
-    // pretty print of the array
-    friend std::ostream &operator<<(std::ostream &out, const _nda_impl &A) {
-      if (A.storage().size() == 0)
-        out << "empty ";
-      else
-        pretty_print(out, A);
-      return out;
-    }
-  };
+   };
 } // namespace nda
