@@ -4,9 +4,9 @@
 #define TRIQS_DEBUG_ARRAYS_MEMORY
 #define NDA_ENFORCE_BOUNDCHECK
 
-#include <nda/indexmaps/idx_map.hpp>
-#include <nda/indexmaps/for_each.hpp>
-#include <nda/indexmaps/io.hpp>
+#include <nda/indexmap/idx_map.hpp>
+#include <nda/indexmap/for_each.hpp>
+#include <nda/indexmap/io.hpp>
 
 #include <nda/test_tools.hpp>
 
