@@ -32,7 +32,7 @@ namespace triqs::arrays {
     struct indexmap_storage_pair {};
   } // namespace Tag
 
-  template <char OP, typename LHS, typename RHS> void _assignment_delegation(LHS &lhs, RHS const &rhs) {
+  template <char OP, typename LHS, typename RHS> void _assignment_delegation(LHS &lhs, RHS const &rhs) noexcept(!_global_constexpr_check_bounds) {
 
     static_assert(!LHS::is_const, "Cannot assign to a const view !");
     static_assert((!std::is_const<typename LHS::value_type>::value), "Assignment : The value type of the LHS is const and cannot be assigned to !");
@@ -57,59 +57,62 @@ namespace triqs::arrays {
         if (!indexmaps::compatible_for_assignment(lhs.indexmap(), rhs.indexmap()))
           TRIQS_RUNTIME_ERROR << "Size mismatch in operation " << OP << " : LHS " << lhs << " \n RHS = " << rhs;
       }
-      
+
       // FIXME : use overload !!  _nda<U, Rank, ....> : NO !!! EXpressions !!!
       // FIXME : DYNAMICAL ?
-      auto l = [&lhs, &rhs](auto const &... args) [[gnu::always_inline]] {
-          if constexpr (OP == 'E') { lhs(args...) = rhs(args...); }
-          if constexpr (OP == 'A') { lhs(args...) += rhs(args...); }
-          if constexpr (OP == 'S') { lhs(args...) -= rhs(args...); }
-          if constexpr (OP == 'M') { lhs(args...) *= rhs(args...); }
-          if constexpr (OP == 'D') { lhs(args...) /= rhs(args...); }
-        };
+      auto l = [&lhs, &rhs ](auto const &... args) [[gnu::always_inline]] {
+        if constexpr (OP == 'E') { lhs(args...) = rhs(args...); }
+        if constexpr (OP == 'A') { lhs(args...) += rhs(args...); }
+        if constexpr (OP == 'S') { lhs(args...) -= rhs(args...); }
+        if constexpr (OP == 'M') { lhs(args...) *= rhs(args...); }
+        if constexpr (OP == 'D') { lhs(args...) /= rhs(args...); }
+      };
 
       if constexpr (rhs_is_isp and (OP == 'E')) {
         if (indexmaps::raw_copy_possible(lhs.indexmap(), rhs.indexmap())) {
           storages::memcopy(lhs.data_start(), rhs.data_start(), rhs.indexmap().domain().number_of_elements());
-        } else 
-         _foreach(lhs, l);
-      }
-      else _foreach(lhs, l);
+        } else
+          _foreach(lhs, l);
+      } else
+        _foreach(lhs, l);
     }
 
     // RHS is a scalar for LHS
     else {
       // if LHS is a matrix, the unit has a specific interpretation.
       if constexpr (MutableMatrix<LHS>::value and (OP == 'A' || OP == 'S' || OP == 'E')) {
-	
-	// Check the matrix is square
-	if constexpr (_global_constexpr_check_bounds) { 
-	  if (first_dim(lhs) != second_dim(lhs)) NDA_ERROR << "Not square";
-	}
 
-          if constexpr (OP == 'E') { // first put 0 everywhere
-	    for (long i = 0; i < first_dim(lhs); ++i) 
-                for (long j = 0; j < first_dim(lhs); ++j) {
-		  if constexpr (is_scalar_or_convertible<RHS>::value)  lhs(i,j) = 0; 
-	          else  lhs(i,j) = RHS{0 * rhs}; //FIXME : improve this 
-		}
-	  }
-	 // Diagonal
-         for (long i = 0; i < first_dim(lhs); ++i) {
-                if constexpr (OP == 'E') lhs(i,i) = rhs;
-	        if constexpr (OP == 'A') lhs(i,i) += rhs;
-                if constexpr (OP == 'S') lhs(i,i) -= rhs;
-	    }
-	  }
-      } else { // LHS is not a matrix
-        auto l = [](auto &&... args) [[gnu::always_inline]] {
-          if constexpr (OP == 'E') { lhs(args...) = rhs; }
-          if constexpr (OP == 'A') { lhs(args...) += rhs; }
-          if constexpr (OP == 'S') { lhs(args...) -= rhs; }
-          if constexpr (OP == 'M') { lhs(args...) *= rhs; }
-          if constexpr (OP == 'D') { lhs(args...) /= rhs; }
-        };
-        _foreach(lhs, l);
+        // Check the matrix is square
+        if constexpr (_global_constexpr_check_bounds) {
+          if (first_dim(lhs) != second_dim(lhs)) NDA_ERROR << "Not square";
+        }
+
+        if constexpr (OP == 'E') { // first put 0 everywhere
+          for (long i = 0; i < first_dim(lhs); ++i)
+            for (long j = 0; j < first_dim(lhs); ++j) {
+              if constexpr (is_scalar_or_convertible<RHS>::value)
+                lhs(i, j) = 0;
+              else
+                lhs(i, j) = RHS{0 * rhs}; //FIXME : improve this
+            }
+        }
+        // Diagonal
+        for (long i = 0; i < first_dim(lhs); ++i) {
+          if constexpr (OP == 'E') lhs(i, i) = rhs;
+          if constexpr (OP == 'A') lhs(i, i) += rhs;
+          if constexpr (OP == 'S') lhs(i, i) -= rhs;
+        }
       }
     }
+    else { // LHS is not a matrix
+      auto l = [](auto &&... args) [[gnu::always_inline]] {
+        if constexpr (OP == 'E') { lhs(args...) = rhs; }
+        if constexpr (OP == 'A') { lhs(args...) += rhs; }
+        if constexpr (OP == 'S') { lhs(args...) -= rhs; }
+        if constexpr (OP == 'M') { lhs(args...) *= rhs; }
+        if constexpr (OP == 'D') { lhs(args...) /= rhs; }
+      };
+      _foreach(lhs, l);
+    }
   }
+} // namespace triqs::arrays

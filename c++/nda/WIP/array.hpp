@@ -19,175 +19,79 @@
  *
  ******************************************************************************/
 #pragma once
-#include <triqs/utility/first_include.hpp>
-#include "indexmaps/cuboid/map.hpp"
-#include "indexmaps/cuboid/slice.hpp"
-#include "impl/indexmap_storage_pair.hpp"
-#include "impl/assignment.hpp"
-namespace nda { 
+#include "./array_view.hpp"
 
+namespace nda {
 
-  enum class flavor_enum_t { Regular, View, SharedView, ConstView, SharedConstView};
-  enum class algebra_enum_t { Array, Matrix, Vector};
+  // ---------------------- array--------------------------------
 
-  constexpr flavor_enum_t make_const_flavor(flavor_enum_t f) { 
-    switch (f) { 
-      case (Regular) : return ConstView;
+  template <typename ValueType, int Rank> class array<ValueType, Rank> : tag::array {
+    static_assert(!std::is_const<ValueType>::value, "no const type");
+
+    public:
+    using value_t   = ValueType;
+    using storage_t = mem::handle<ValueType, 'R'>;
+    using idx_m_t   = idx_map<Rank>;
+    using shape_t   = idx_map<Rank>::l_t;
+
+    using regular_type    = array<ValueType, Rank>;
+    using view_type       = array_view<ValueType, Rank>;
+    using const_view_type = array_view<ValueType const, Rank>;
+
+    //static constexpr int rank      = Rank;
+    //static constexpr bool is_const = IsConst;
+    // value_type not in concept
+
+    private:
+    idx_m_t _idx_m;
+    storage_t _storage;
+
+    // ------------------------------- constructors --------------------------------------------
+
+    /// Empty array
+    array() = default;
+
+    /// Copy constructor. Makes a deep copy
+    array(array const &x) : _idx_m(x.indexmap(), x.storage()) {}
+
+    /// Move
+    array(array &&X) = default;
+
+    /// Construct from an indexmap and a storage handle. Always make a new copy.
+    template <char RBS> array(idx_map<Rank> im, mem::handle<ValueType, RBS> st) : _idx_m(std::move(im)), _storage(std::move(st)) {}
+
+    /// Build from anything that has an indexmap and a storage compatible with this class
+    template <typename T> array(T const &X) : array(X.indexmap(), X.storage()) {}
+
+    /// Empty array.
+    //explicit array(layout_t<Rank> ml = layout_t<Rank>{}) : array(ml) {}
+
+    /// From a shape
+    explicit array(shape_t const &shape) : _idx_m(shape), _storage(_idx_m.size()) {}
+
+    /// From a shape and a layout
+    explicit array(shape_t const &shape, layout_t<Rank> ml) : _idx_m(shape, ml), _storage(_idx_m.size()) {}
+
+    /// From shape and a Lambda to initialize the element
+    template <typename InitLambda>
+    explicit array(shape_t const &shape, layout_t<Rank> ml, InitLambda &&lambda)
+       : _idx_m(shape, ml), _storage{_idx_m.size(), mem::do_not_initialize} {
+      nda::for_each(_idx_m.lengths(), [&](auto const &... x) { _storage.init_raw(_idx_m(x...), lambda(x...)); });
     }
-  }
-
-  // an implementation class
-  template<typename T, int Rank, flavor_enum_t Flavor> class _nda_impl { 
-
-  };
-
-  template<typename T, int Rank, flavor_enum_t Flavor, algebra_enum_t Algebra> class _impl_base { 
+    
+    /// From shape and a Lambda to initialize the element
+    template <typename InitLambda>
+    explicit array(shape_t const &shape, InitLambda &&lambda) : array(shape, std::forward<InitLambda>(lambda)){}
 
 
-   
+    /// For lengths as integer and optionally layout::C_t or Fortran_t
+    template <typename... T> explicit array(long i0, T... is) : _idx_m{i0, is...}, _storage{_idx_m.size()} {}
 
-
-  }; 
-
-
-
- template <typename ValueType, int Rank, typename TraversalOrder= void, bool Borrowed = false, bool IsConst = false> class array_view;
- template <typename ValueType, int Rank, typename TraversalOrder= void> class array;
-
- // ---------------------- array_view  --------------------------------
-
-#define IMPL_TYPE                                                                                                                \
- indexmap_storage_pair<indexmaps::cuboid::map<Rank,TraversalOrder>, storages::shared_block<ValueType, Borrowed>, TraversalOrder, IsConst, true, \
-                       Tag::array_view>
-
- template <typename ValueType, int Rank, typename TraversalOrder, bool Borrowed, bool IsConst>
-  class array_view: Tag::array_view, TRIQS_CONCEPT_TAG_NAME(MutableArray), public IMPL_TYPE {
-   static_assert( Rank>0, " Rank must be >0");
-
-   public:
-   using indexmap_type = typename IMPL_TYPE::indexmap_type;
-   using storage_type = typename IMPL_TYPE::storage_type;
-   using regular_type = array<ValueType, Rank, TraversalOrder>;
-   using view_type = array_view<ValueType, Rank, TraversalOrder>;
-   using const_view_type = array_view<ValueType, Rank, TraversalOrder, false, true>;
-   using weak_view_type = array_view<ValueType, Rank, TraversalOrder, true>;
-
-   /// Build from an IndexMap and a storage
-   template <typename S> array_view(indexmap_type const& Ind, S const& Mem) : IMPL_TYPE(Ind, Mem) {}
-
-   /// Copy constructor
-   array_view(array_view const& X) : IMPL_TYPE(X.indexmap(), X.storage()) {}
-
-   /// Build from anything that has an indexmap and a storage compatible with this class
-   template <typename ISP> array_view(const ISP& X) : IMPL_TYPE(X.indexmap(), X.storage()) {
-    // to be activated
-    static_assert(IsConst || (!ISP::is_const), "Cannot construct a non const view from a const one !");
-   }
-
-#ifdef TRIQS_WITH_PYTHON_SUPPORT
-   /// Build from a numpy.array (X is a borrowed reference) : throws if X is not a numpy.array 
-   explicit array_view (PyObject * X): IMPL_TYPE(X, false, "array_view "){}
-#endif
-
-   array_view () = default;
-
-   // Move
-   array_view(array_view && X) noexcept { this->swap_me(X); }
-
-   /// Swap
-   friend void swap( array_view & A, array_view & B) { A.swap_me(B);}
-
-   /// Rebind the view
-   void rebind(array_view const& X) {
-    this->indexmap_ = X.indexmap_;
-    this->storage_ = X.storage_;
-   }
-
-   // TRAP IT
-   // rebind the other view, iif this is const, and the other is not.
-   template <typename To, bool C = IsConst> ENABLE_IFC(C) rebind(array_view<ValueType, Rank, To, Borrowed, !IsConst> const& X) {
-    this->indexmap_ = X.indexmap_;
-    this->storage_ = X.storage_;
-   }
-
-   /// Assignment. The size of the array MUST match exactly, except in the empty case 
-   template<typename RHS> array_view & operator=(RHS const & X) { triqs_arrays_assign_delegation(*this,X); return *this; }
-
-   ///
-   array_view & operator=(array_view const & X) { triqs_arrays_assign_delegation(*this,X); return *this; } //without this, the standard = is synthetized...
-
-   // Move assignment not defined : will use the copy = since view must copy data
-
-   TRIQS_DEFINE_COMPOUND_OPERATORS(array_view);
-   // to forbid serialization of views...
-   //template<class Archive> void serialize(Archive & ar, const unsigned int version) = delete;
-
-   template <typename... INT> friend view_type transposed_view(array_view const& a, INT... is) {
-    return transposed_view(a,  mini_vector<int, Rank>{is...});
-   }
-
-   // OUT AS TEMPLATE MATCH
-   friend view_type transposed_view(array_view const& a, mini_vector<int, Rank> const& perm) {
-    return {transpose(a.indexmap_, perm), a.storage_};
-   }
-
-   friend view_type c_ordered_transposed_view(array_view const& a) {
-    return transposed_view(a, a.indexmap().memory_layout().get_memory_positions());
-   }
- };
-#undef IMPL_TYPE
-
- template <typename ValueType, int Rank, typename TraversalOrder = void, bool Borrowed = false>
- using array_const_view = array_view<ValueType, Rank, TraversalOrder, Borrowed, true>;
-
- //------------------------------- array ---------------------------------------------------
-
-#define IMPL_TYPE                                                                                                                \
- indexmap_storage_pair<indexmaps::cuboid::map<Rank,TraversalOrder>, storages::shared_block<ValueType>, TraversalOrder, false, false, Tag::array_view>
-
- template <typename ValueType, int Rank, typename TraversalOrder>
- class array : Tag::array, TRIQS_CONCEPT_TAG_NAME(MutableArray), public IMPL_TYPE {
-  public:
-  using value_type = typename IMPL_TYPE::value_type;
-  using storage_type = typename IMPL_TYPE::storage_type;
-  using indexmap_type = typename IMPL_TYPE::indexmap_type;
-  using regular_type = array<ValueType, Rank, TraversalOrder>;
-  using view_type = array_view<ValueType, Rank, TraversalOrder>;
-  using const_view_type = array_view<ValueType, Rank, TraversalOrder, false, true>;
-  using weak_view_type = array_view<ValueType, Rank, TraversalOrder, true>;
-
-  /// Empty array.
-  explicit array(memory_layout_t<Rank> ml = memory_layout_t<Rank>{}) : IMPL_TYPE(ml) {}
-
-  /// From a domain
-  explicit array(typename indexmap_type::domain_type const& dom, memory_layout_t<Rank> ml = memory_layout_t<Rank>{})
-     : IMPL_TYPE(indexmap_type(dom, ml)) {}
-
- /// From shape
-  template<typename InitLambda>
-   explicit array(typename indexmap_type::domain_type const& dom, InitLambda && lambda)
-     : IMPL_TYPE(tags::_with_lambda_init{}, indexmap_type(dom), std::forward<InitLambda>(lambda)) {}
-
-#define IMPL(z, NN, unused)                                \
-    explicit array (BOOST_PP_ENUM_PARAMS(BOOST_PP_INC(NN), size_t I_),memory_layout_t<Rank> ml = memory_layout_t<Rank>{}): \
-    IMPL_TYPE(indexmap_type(mini_vector<size_t,BOOST_PP_INC(NN)>(BOOST_PP_ENUM_PARAMS(BOOST_PP_INC(NN), I_)),ml)) {\
-     static_assert(IMPL_TYPE::rank-1==NN,"array : incorrect number of variables in constructor");}
-    BOOST_PP_REPEAT(ARRAY_NRANK_MAX , IMPL, nil)
-#undef IMPL
-
-    // Makes a true (deep) copy of the data. 
-    array(const array & X): IMPL_TYPE(X.indexmap(),X.storage().clone()) {}
-
-    // Move
-    explicit array(array && X) noexcept{ this->swap_me(X); } 
-
-    // Makes a true (deep) copy of the data. 
-    explicit array(const array & X, memory_layout_t<Rank> ml): array(X.indexmap().domain(), ml){
-      triqs_arrays_assign_delegation(*this,X);
-    }
+    // Makes a true (deep) copy of the data with a different layout
+    explicit array(array const &X, layout_t<Rank> ml) : array(X.indexmap(), ml) { triqs_arrays_assign_delegation(*this, X); }
 
     // from a temporary storage and an indexmap. Used for reshaping a temporary array
-    explicit array(typename indexmap_type::domain_type const& dom, storage_type&& sto, memory_layout_t<Rank> ml = memory_layout_t<Rank>{})
+    explicit array(typename indexmap_type::domain_type const &dom, storage_type &&sto, layout_t<Rank> ml = layout_t<Rank>{})
        : IMPL_TYPE(indexmap_type(dom, ml), std::move(sto)) {}
 
     /** 
@@ -197,11 +101,10 @@ namespace nda {
      *  - a expression : e.g. array<int> A = B+ 2*C;
      */
     template <typename T>
-    array(const T& X,
-          std14::enable_if_t<ImmutableCuboidArray<T>::value && std::is_convertible<typename T::value_type, value_type>::value,
-                             memory_layout_t<Rank>> ml)
-       : IMPL_TYPE(indexmap_type(X.domain(), ml)) {
-     triqs_arrays_assign_delegation(*this, X);
+    array(T const &X, layout_t<Rank> ml) //
+       REQUIRES(ImmutableCuboidArray<T>::value &&std::is_convertible<typename T::value_type, value_type>::value)
+       : array{get_shape(X), ml} {
+      triqs_arrays_assign_delegation(*this, X);
     }
 
     /** 
@@ -211,99 +114,122 @@ namespace nda {
      *  - a expression : e.g. array<int> A = B+ 2*C;
      */
     template <typename T>
-    array(const T& X,
-          std14::enable_if_t<ImmutableCuboidArray<T>::value && std::is_convertible<typename T::value_type, value_type>::value, void*> _unused = nullptr )
-       : IMPL_TYPE(indexmap_type(X.domain(), get_memory_layout<Rank, T>::invoke(X))) {
-     triqs_arrays_assign_delegation(*this, X);
+    array(T const &X) //
+       REQUIRES(ImmutableCuboidArray<T>::value &&std::is_convertible<typename T::value_type, value_type>::value)
+       : array{get_shape(X), get_memory_layout<Rank, T>::invoke(X)} {
+      triqs_arrays_assign_delegation(*this, X);
     }
 
-
-#ifdef TRIQS_WITH_PYTHON_SUPPORT
-    ///Build from a numpy.array X (or any object from which numpy can make a numpy.array). Makes a copy.
-    explicit array (PyObject * X): IMPL_TYPE(X, true, "array "){}
-#endif
-
-    // build from a init_list
-    template<typename T, int R=Rank>
-     array(std::initializer_list<T> const & l, std14::enable_if_t<(R==1) && std::is_constructible<value_type, T>::value> * dummy =0):
-      IMPL_TYPE(indexmap_type(mini_vector<size_t,1>(l.size()),memory_layout_t<Rank>())) {
-       size_t i=0;
-       for (auto const & x : l) (*this)(i++) = x;
-      }
-
-    template<typename T, int R=Rank>
-     array (std::initializer_list<std::initializer_list<T>> const & l, std14::enable_if_t<(R==2) && std::is_constructible<value_type, T>::value > * dummy =0):
-      IMPL_TYPE(memory_layout_t<Rank>()) {
-       size_t i=0,j=0; int s=-1;
-       for (auto const & l1 : l) { if (s==-1) s= l1.size(); else if (s != l1.size()) TRIQS_RUNTIME_ERROR << "initializer list not rectangular !";}
-       IMPL_TYPE::resize(typename IMPL_TYPE::domain_type (mini_vector<size_t,2>(l.size(),s)));
-       for (auto const & l1 : l) {
-	for (auto const & x : l1) { (*this)(i,j++) = x;}
-	j=0; ++i;
-       }
-      }
-
-    /** 
-     * Resizes the array. NB : all references to the storage is invalidated.
-     * Does not initialize the array by default: to resize and init, do resize(IND).init()
-     *
-     */
-    template<typename ... Args>
-    array & resize (Args && ... args) { 
-     static_assert(std::is_copy_constructible<ValueType>::value, "Can not resize an array if its value_type is not copy constructible");
-     IMPL_TYPE::resize(indexmaps::cuboid::domain_t<IMPL_TYPE::rank>(args...)); return *this; 
+    /// Constructor from an initializer list for Rank 1
+    template <typename T>
+    array(std::initializer_list<T> const &l) //
+       REQUIRES((Rank == 1) and std::is_constructible<value_type, T>::value >)
+       : array{shape_t{l.size()}} {
+      long i = 0;
+      for (auto const &x : l) (*this)(i++) = x;
     }
 
-    /// Assignement resizes the array.  All references to the storage are therefore invalidated.
-    array & operator=(const array & X) { IMPL_TYPE::resize_and_clone_data(X); return *this; }
+    /// Constructor from an initializer list of list for Rank 2
+    template <typename T, int R = Rank>
+    array(std::initializer_list<std::initializer_list<T>> const &l) //
+       REQUIRES((Rank == 2) and std::is_constructible<value_type, T>::value >) {
+      long i = 0, j = 0;
+      int s = -1;
+      for (auto const &l1 : l) {
+        if (s == -1)
+          s = l1.size();
+        else if (s != l1.size())
+          throw std::runtime_error("initializer list not rectangular !");
+      }
+      this->resize(shape_t{l.size(), s});
+      for (auto const &l1 : l) {
+        for (auto const &x : l1) { (*this)(i, j++) = x; }
+        j = 0;
+        ++i;
+      }
+    }
+
+    //------------------ Assignment -------------------------
 
     /// Move assignment
-    array & operator=(array && X) noexcept{ this->swap_me(X); return *this;}
+    array &operator=(array &&x) = default;
 
-    /// Swap
-    friend void swap( array & A, array & B) { A.swap_me(B);}
+    /// Assignment. Copys the storage. All references to the storage are therefore invalidated.
+    array &operator=(array const &X) = default;
 
     /** 
      * Assignement resizes the array (if necessary).
      * All references to the storage are therefore invalidated.
      * NB : to avoid that, do make_view(A) = X instead of A = X
      */
-    template<typename RHS> 
-     array & operator=(const RHS & X) { 
+    template <typename RHS> array &operator=(RHS const &X) {
       static_assert(ImmutableCuboidArray<RHS>::value, "Assignment : RHS not supported");
-      IMPL_TYPE::resize(X.domain());
-      triqs_arrays_assign_delegation(*this,X);
-      return *this; 
-     }
+      resize(get_shape(X));
+      triqs_arrays_assign_delegation(*this, X);
+      return *this;
+    }
+
+    //------------------ resize  -------------------------
+    /** 
+     * Resizes the array. NB : all references to the storage is invalidated.
+     * Does not initialize the array
+     * Content is undefined
+     */
+    template <typename... Args> void resize(Args const &... args) {
+      static_assert(std::is_copy_constructible<ValueType>::value, "Can not resize an array if its value_type is not copy constructible");
+      _idx_m = idx_map<Rank>(shape_t<Rank>(args...), _idx_m.memory_layout());
+      // build a new one with the lengths of IND BUT THE SAME layout !
+      // optimisation. Construct a storage only if the new index is not compatible (size mismatch).
+      if (_storage.size != _idx_m.size()) _storage = mem::handle<ValueType, 'R'>{_idx_m.size()};
+    }
+
+    // ------------------------------- data access --------------------------------------------
+
+    // The Index Map object
+    idx_map<Rank> const &indexmap() const { return _idx_m; }
+
+    // The storage handle
+    mem::handle<ValueType, S_B> const &storage() const { return _storage; }
+    mem::handle<ValueType, S_B> &storage() { return _storage; }
+
+    // Memory layout
+    layout_t<Rank> const &layout() const { return _idx_m.layout(); }
+
+    /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
+    ValueType const *restrict data_start() const { return _storage.data + _idx_m.offset(); }
+
+    /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
+    ValueType *restrict data_start() { return _storage.data + _idx_m.offset(); }
+
+    /// FIXME : auto : type is not good ...
+    //auto const &shape() const { return _idx_m.lengths(); }
+
+    /// FIXME same as shape()[i] : redondant
+    //size_t shape(size_t i) const { return _idx_m.lengths()[i]; }
+
+    /// Number of elements in the array
+    long size() const { return _idx_m.size(); }
+
+    /// FIXME : REMOVE size ? TRIVIAL
+    bool is_empty() const { return size() == 0; }
+
+    // ------------------------------- Iterators --------------------------------------------
+
+    using const_iterator = iterator_adapter<true, idx_map<Rank>::iterator, storage_t>;
+    using iterator       = iterator_adapter<false, idx_map<Rank>::iterator, storage_t>;
+    const_iterator begin() const { return const_iterator(indexmap(), storage(), false); }
+    const_iterator end() const { return const_iterator(indexmap(), storage(), true); }
+    const_iterator cbegin() const { return const_iterator(indexmap(), storage(), false); }
+    const_iterator cend() const { return const_iterator(indexmap(), storage(), true); }
+    iterator begin() { return iterator(indexmap(), storage(), false); }
+    iterator end() { return iterator(indexmap(), storage(), true); }
+
+    // ------------------------------- Operations --------------------------------------------
 
     TRIQS_DEFINE_COMPOUND_OPERATORS(array);
+    // to forbid serialization of views...
+    //template<class Archive> void serialize(Archive & ar, const unsigned int version) = delete;
+  };
 
-    template <typename... INT> friend const_view_type transposed_view(array const& a, INT... is) {
-     return transposed_view(a(), is...);
-    };
-    template <typename... INT> friend view_type transposed_view(array& a, INT... is) {
-     return transposed_view(a(), is...);
-    };
-
-  };//array class
-
-#undef IMPL_TYPE
-
- //----------------------------------------------------------------------------------
-
- // how to build the view type ....
- template <class V, int R, typename TraversalOrder, bool Borrowed, bool IsConst>
- struct ISPViewType<V, R, TraversalOrder, Tag::array_view, Borrowed, IsConst> {
-  using type = array_view<V, R, TraversalOrder, Borrowed, IsConst>;
- };
-}}//namespace triqs::arrays
-
-// The std::swap is WRONG for a view because of the copy/move semantics of view.
-// Use swap instead (the correct one, found by ADL).
-namespace std {
-template <typename V, typename To1, typename To2, int R, bool B1, bool B2, bool C1, bool C2>
-void swap(triqs::arrays::array_view<V, R, To1, B1, C1>& a, triqs::arrays::array_view<V, R, To2, B2, C2>& b) = delete;
-}
-
-#include "./expression_template/array_algebra.hpp"
+} // namespace nda
 
