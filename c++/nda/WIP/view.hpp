@@ -21,18 +21,24 @@ namespace nda {
   template<typename T, int Rank, flavor_enum_t Flavor, algebra_enum_t Algebra> class _array: Tag::array_view, TRIQS_CONCEPT_TAG_NAME(MutableArray) {
 
    public:
+
    using indexmap_type = typename IMPL_TYPE::indexmap_type;
    using storage_type = typename IMPL_TYPE::storage_type;
+   
+   using storage_t             = mem::handle<T, (Flavor== StorageType;
+    using idx_m_t            = IndexMapType;
+ 
+   
    using regular_type = array<ValueType, Rank, TraversalOrder>;
    using view_type = array_view<ValueType, Rank, TraversalOrder>;
    using const_view_type = array_view<ValueType, Rank, TraversalOrder, false, true>;
    using weak_view_type = array_view<ValueType, Rank, TraversalOrder, true>;
 
    /// Build from an IndexMap and a storage
-   template <typename S> _array(idx_map const& Ind, S const& Mem) : IMPL_TYPE(Ind, Mem) {}
+   template <typename S> _array(idx_map const& Ind,S const& Mem) : IMPL_TYPE(Ind, Mem) {}
 
    /// Copy constructor
-   array_view(array_view const& X) : IMPL_TYPE(X.indexmap(), X.storage()) {}
+   array_view(array_view const& X) : _idx_m(X.indexmap(), _storage(X.storage)   : IMPL_TYPE(X.indexmap(), X.storage()) {}
 
    /// Build from anything that has an indexmap and a storage compatible with this class
    template <typename ISP> array_view(const ISP& X) : IMPL_TYPE(X.indexmap(), X.storage()) {

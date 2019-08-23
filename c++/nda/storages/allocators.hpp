@@ -202,11 +202,14 @@ namespace nda::allocators {
     blk_t allocate(size_t s) {
       blk_t b     = A::allocate(s);
       memory_used = memory_used + b.s;
+//      std::cerr<< "Allocating "<< b.s << "Total = "<< memory_used << "\n";
       return b;
     }
 
     void deallocate(blk_t b) noexcept {
       memory_used -= b.s;
+  //    std::cerr<< "Deallocating "<< b.s << "Total = "<< memory_used << "\n";
+
       if (memory_used < 0) {
         std::cerr << "Allocator : memory_used <0 : " << memory_used << " b.s = " << b.s << " b.ptr = " << (void *)b.ptr;
         std::abort();
