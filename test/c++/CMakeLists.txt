@@ -9,6 +9,10 @@ set(all_tests idx_map storage nda_basic)
 
 include(ExternalProject)
 set(GTEST_ROOT ${CMAKE_BINARY_DIR}/gtest)
+find_package(gtest)
+if (GTEST_FOUND) 
+ message(STATUS "Found gtest ")
+else()
 ExternalProject_Add(gtest_project
   PREFIX gtest
   GIT_REPOSITORY https://github.com/abseil/googletest
@@ -18,6 +22,7 @@ ExternalProject_Add(gtest_project
   #SOURCE_DIR path_to_gtest_sources
   CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${GTEST_ROOT} -DCMAKE_INSTALL_LIBDIR=lib
 )
+endif()
 
 # Create the imported gtest target
 add_library(gtest STATIC IMPORTED)

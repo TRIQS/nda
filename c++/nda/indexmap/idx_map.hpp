@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include <tuple>
+#include <algorithm>
 #include <array>
 #include <numeric>
 
@@ -214,8 +216,8 @@ namespace nda {
      *      if one argument is a range, or ellipsis : the sliced idx_map
      *      else : the linear position (long)
      *
-     * */
-    template <typename... Args> auto operator()(Args const &... args) const noexcept(enforce_bound_check) {
+     */
+    template <typename... Args> FORCEINLINE auto operator()(Args const &... args) const noexcept(enforce_bound_check) {
 
       static_assert(((((std::is_base_of_v<range_tag, Args> or std::is_constructible_v<long, Args>) ? 0 : 1) + ...) == 0),
                     "Slice arguments must be convertible to range, Ellipsis, or long");
@@ -235,7 +237,7 @@ namespace nda {
         return _offset
            + call_impl(std::make_index_sequence<sizeof...(Args)>{}, args...); // NB do not use index_sequence_for : one instantation only by # args.
       } else {                                                                // otherwise we make a  new sliced idx_map
-        return slice_static::slice(std::make_index_sequence<Rank - n_args_long>{}, std::make_index_sequence<n_args_long>{},
+        return slice_static::slice(std::make_index_sequence<Rank - n_args_long>{}, std::make_index_sequence<Rank>{},
                                    std::make_index_sequence<sizeof...(Args)>{}, *this, args...);
       }
     }
