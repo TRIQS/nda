@@ -87,7 +87,7 @@ namespace nda {
     template <char RBS> array(idx_map<Rank> const &idx, mem::handle<ValueType, RBS> mem_handle) : _idx_m(idx), _storage(std::move(mem_handle)) {}
 
     /// Construct from anything that has an indexmap and a storage compatible with this class
-    template <typename T> array(T const &a) : array(a.indexmap(), a.storage()) {}
+    //template <typename T> array(T const &a) REQUIRES(XXXX): array(a.indexmap(), a.storage()) {}
 
     // --- with memory layout
 
@@ -249,50 +249,56 @@ namespace nda {
 
     /// DOC
     template <typename... T> decltype(auto) operator()(T const &... x) const & {
-      static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
-                    "Incorrect number of parameters in call");
+      if constexpr (sizeof...(T) == 0)
+        return view_t{*this};
+      else {
 
-      if constexpr (sizeof...(T) == 0) return view_t{*this};
+        static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
+                      "Incorrect number of parameters in call");
+        //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
 
-      //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
-
-      auto idx_or_pos = _idx_m(x...);                                                     // we call the index map
-      if constexpr (std::is_same_v<decltype(idx_or_pos), long>)                           // Case 1: we got a long, hence access a element
-        return _storage[idx_or_pos];                                                      //
-      else                                                                                // Case 2: we got a slice
-        return array_view<ValueType, idx_or_pos.rank()>{std::move(idx_or_pos), _storage}; //
+        auto idx_or_pos = _idx_m(x...);                                                     // we call the index map
+        if constexpr (std::is_same_v<decltype(idx_or_pos), long>)                           // Case 1: we got a long, hence access a element
+          return _storage[idx_or_pos];                                                      //
+        else                                                                                // Case 2: we got a slice
+          return array_view<ValueType, idx_or_pos.rank()>{std::move(idx_or_pos), _storage}; //
+      }
     }
 
     ///
     template <typename... T> decltype(auto) operator()(T const &... x) & {
-      static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
-                    "Incorrect number of parameters in call");
+      if constexpr (sizeof...(T) == 0)
+        return view_t{*this};
+      else {
 
-      if constexpr (sizeof...(T) == 0) return view_t{*this};
+        static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
+                      "Incorrect number of parameters in call");
+        //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
 
-      //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
-
-      auto idx_or_pos = _idx_m(x...);                                                     // we call the index map
-      if constexpr (std::is_same_v<decltype(idx_or_pos), long>)                           // Case 1: we got a long, hence access a element
-        return _storage[idx_or_pos];                                                      //
-      else                                                                                // Case 2: we got a slice
-        return array_view<ValueType, idx_or_pos.rank()>{std::move(idx_or_pos), _storage}; //
+        auto idx_or_pos = _idx_m(x...);                                                     // we call the index map
+        if constexpr (std::is_same_v<decltype(idx_or_pos), long>)                           // Case 1: we got a long, hence access a element
+          return _storage[idx_or_pos];                                                      //
+        else                                                                                // Case 2: we got a slice
+          return array_view<ValueType, idx_or_pos.rank()>{std::move(idx_or_pos), _storage}; //
+      }
     }
-
+    
     ///
     template <typename... T> decltype(auto) operator()(T const &... x) && {
-      static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
-                    "Incorrect number of parameters in call");
+      if constexpr (sizeof...(T) == 0)
+        return view_t{*this};
+      else {
 
-      if constexpr (sizeof...(T) == 0) return view_t{*this};
+        static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
+                      "Incorrect number of parameters in call");
+        //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(std::move(*this), std::forward<T>(x)...);
 
-      //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(std::move(*this), std::forward<T>(x)...);
-
-      auto idx_or_pos = _idx_m(x...);                                                     // we call the index map
-      if constexpr (std::is_same_v<decltype(idx_or_pos), long>)                           // Case 1: we got a long, hence access a element
-        return ValueType{_storage[idx_or_pos]};                                           // We return a VALUE here, the array is about be destroyed.
-      else                                                                                // Case 2: we got a slice
-        return array_view<ValueType, idx_or_pos.rank()>{std::move(idx_or_pos), _storage}; //
+        auto idx_or_pos = _idx_m(x...);                           // we call the index map
+        if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
+          return ValueType{_storage[idx_or_pos]};                 // We return a VALUE here, the array is about be destroyed.
+        else                                                      // Case 2: we got a slice
+          return array_view<ValueType, idx_or_pos.rank()>{std::move(idx_or_pos), _storage}; //
+      }
     }
 
     // ------------------------------- data access --------------------------------------------

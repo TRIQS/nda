@@ -29,10 +29,17 @@ if(${TRIQS_WITH_PYTHON_SUPPORT})
 endif()
 
 # Tests
-option(Build_Tests "Build tests" ON)
+option(Build_Tests "Tests" ON)
 if(Build_Tests)
   enable_testing()
   add_subdirectory(test)
+endif()
+
+# Benchmarks
+option(Build_Bench "Benchmarks" ON)
+if(Build_Bench)
+  enable_testing()
+  add_subdirectory(benchmarks)
 endif()
 
 # Additional configuration files

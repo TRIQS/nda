@@ -24,7 +24,7 @@ namespace nda {
   template <typename ValueType, int Rank> class array;
 
   // detects ellipsis in a argument pack
-  template <typename... T> constexpr bool ellipsis_is_present = ((std::is_same_v<T, ellipsis> ? 1 : 0) + ...);
+  template <typename... T> constexpr bool ellipsis_is_present = ((std::is_same_v<T, ellipsis> ? 1 : 0) + ... + 0); // +0 because it can be empty
 
   // ---------------------- array_view  --------------------------------
 
@@ -64,37 +64,66 @@ namespace nda {
     /// Construct an empty view.
     array_view() = default;
 
-    /// Construct from an indexmap and a storage handle
-    array_view(idx_map<Rank> im, mem::handle<value_t, 'B'> st) : _idx_m(std::move(im)), _storage(std::move(st)) {
-    }
-
-    /// Move
+    ///
     array_view(array_view &&) = default;
 
-    /// Copy constructor
+    /// Shallow copy. It copies the *view*, not the data.
     array_view(array_view const &) = default;
 
-    /// Build from anything that has an indexmap and a storage compatible with this class
-    template <typename T> explicit array_view(T const &X) : array_view(X.indexmap(), X.storage()) {
-      // to be activated
-      //static_assert(IsConst || (!ISP::is_const), "Cannot construct a non const view from a const one !");
-    }
+    /** 
+     * Construct a view of T const from a view of T
+     * @param v a view 
+     *
+     * NB : Only valid when ValueType is const
+     */
+    array_view(array_view<value_t, Rank> const &v) REQUIRES(is_const) : array_view(v.indexmap(), v.storage()) {}
+
+    /**
+     *  [Advanced] From an indexmap and a storage handle
+     *  @param idx index map
+     *  @st  storage (memory handle)
+     */
+    array_view(idx_map<Rank> idx, storage_t st) : _idx_m(std::move(idx)), _storage(std::move(st)) {}
+
+    /** 
+     * From anything that has an indexmap and a storage compatible with this class
+     * @tparam T an array/array_view or matrix/vector type
+     * @param a array or view
+     *
+     * NB : short cut for array_view (x.indexmap(), x.storage())
+     * Allows cross construction of array_view from matrix/matrix view e.g.
+     */
+    template <typename T> explicit array_view(T const &a) : array_view(a.indexmap(), a.storage()) {}
 
     // Move assignment not defined : will use the copy = since view must copy data
 
     // ------------------------------- assign --------------------------------------------
 
-    /// Assignment. The size of the array MUST match exactly, except in the empty case
-    template <typename RHS> array_view &operator=(RHS const &X) {
-      triqs_arrays_assign_delegation(*this, X);
+    /**
+     * @tparam RHS Can be 
+     * 	              - an object modeling the concept NDArray
+     * 	              - a type from which ValueType is constructible
+     * @param rhs
+     *
+     * Copies the content of rhs into the view.
+     * Pseudo code : 
+     *     for all i,j,k,l,... : this[i,j,k,l] = rhs(i,j,k,l)
+     *
+     * The dimension of RHS must be large enough or behaviour is undefined.
+     * 
+     * If NDA_BOUNDCHECK is defined, the bounds are checked.
+     */
+    template <typename RHS> array_view &operator=(RHS const &rhs) {
+      //nda::assignment(*this, X);
       return *this;
     }
 
-    ///
-    array_view &operator=(array_view const &X) {
-      triqs_arrays_assign_delegation(*this, X);
+    /// A special case of the general operator
+    /// [C++ oddity : this case must be explicitly coded too]
+    array_view &operator=(array_view const &rhs) {
+      //nda::assignment(*this, X);
       return *this;
-    } //without this, the standard = is synthetized...
+    }
 
     // ------------------------------- rebind --------------------------------------------
 
@@ -119,52 +148,57 @@ namespace nda {
     /// DOC
     template <typename... T> decltype(auto) operator()(T const &... x) const & {
 
-      static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
-                    "Incorrect number of parameters in call");
+      if constexpr (sizeof...(T) == 0)
+        return view_t{*this};
+      else {
 
-      if constexpr (sizeof...(T) == 0) return view_t{*this};
+        static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
+                      "Incorrect number of parameters in call");
+        //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
 
-      //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
-
-      auto idx_or_pos = _idx_m(x...);                           // we call the index map
-      if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
-        return _storage[idx_or_pos];                            //
-      else                                                      // Case 2: we got a slice
-        return view_t{std::move(idx_or_pos), _storage};         //
+        auto idx_or_pos = _idx_m(x...);                           // we call the index map
+        if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
+          return _storage[idx_or_pos];                            //
+        else                                                      // Case 2: we got a slice
+          return view_t{std::move(idx_or_pos), _storage};         //
+      }
     }
-
     ///
     template <typename... T> decltype(auto) operator()(T const &... x) & {
 
-      static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
-                    "Incorrect number of parameters in call");
+      if constexpr (sizeof...(T) == 0)
+        return view_t{*this};
+      else {
 
-      if constexpr (sizeof...(T) == 0) return view_t{*this};
+        static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
+                      "Incorrect number of parameters in call");
+        //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
 
-      //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
-
-      auto idx_or_pos = _idx_m(x...);                           // we call the index map
-      if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
-        return _storage[idx_or_pos];                            //
-      else                                                      // Case 2: we got a slice
-        return view_t{std::move(idx_or_pos), _storage};         //
+        auto idx_or_pos = _idx_m(x...);                           // we call the index map
+        if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
+          return _storage[idx_or_pos];                            //
+        else                                                      // Case 2: we got a slice
+          return view_t{std::move(idx_or_pos), _storage};         //
+      }
     }
 
     ///
     template <typename... T> decltype(auto) operator()(T const &... x) && {
 
-      static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
-                    "Incorrect number of parameters in call");
+      if constexpr (sizeof...(T) == 0)
+        return view_t{*this};
+      else {
 
-      if constexpr (sizeof...(T) == 0) return view_t{*this};
+        static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
+                      "Incorrect number of parameters in call");
+        //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(std::move(*this), std::forward<T>(x)...);
 
-      //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(std::move(*this), std::forward<T>(x)...);
-
-      auto idx_or_pos = _idx_m(x...);                           // we call the index map
-      if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
-        return _storage[idx_or_pos];                            // We return a REFERENCE here. Ok since underlying array is still alive
-      else                                                      // Case 2: we got a slice
-        return view_t{std::move(idx_or_pos), _storage};         //
+        auto idx_or_pos = _idx_m(x...);                           // we call the index map
+        if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
+          return _storage[idx_or_pos];                            // We return a REFERENCE here. Ok since underlying array is still alive
+        else                                                      // Case 2: we got a slice
+          return view_t{std::move(idx_or_pos), _storage};         //
+      }
     }
 
     // ------------------------------- data access --------------------------------------------
