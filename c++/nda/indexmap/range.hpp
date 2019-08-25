@@ -132,8 +132,8 @@ namespace nda {
   /// Ellipsis can be provided in place of [[range]], as in python. The type `ellipsis` is similar to [[range_all]] except that it is implicitly repeated to as much as necessary.
   struct ellipsis : range_all {};
 
-  inline std::ostream &operator<<(std::ostream &os, const range_all &r) noexcept { return os << "_"; }
-  inline std::ostream &operator<<(std::ostream &os, const ellipsis &r) noexcept { return os << "___"; }
+  inline std::ostream &operator<<(std::ostream &os, range_all) noexcept { return os << "_"; }
+  inline std::ostream &operator<<(std::ostream &os, ellipsis) noexcept { return os << "___"; }
 
   namespace vars {
     static inline constexpr range_all _;

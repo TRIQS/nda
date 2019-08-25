@@ -32,15 +32,13 @@ namespace nda {
     using value_t   = ValueType;
     using storage_t = mem::handle<ValueType, 'R'>;
     using idx_m_t   = idx_map<Rank>;
-    using shape_t   = idx_map<Rank>::l_t;
 
-    using regular_type    = array<ValueType, Rank>;
-    using view_type       = array_view<ValueType, Rank>;
-    using const_view_type = array_view<ValueType const, Rank>;
+    using regular_t    = array<ValueType, Rank>;
+    using view_t       = array_view<ValueType, Rank>;
+    using const_view_t = array_view<ValueType const, Rank>;
 
-    //static constexpr int rank      = Rank;
-    //static constexpr bool is_const = IsConst;
-    // value_type not in concept
+    static constexpr int rank      = Rank;
+    static constexpr bool is_const = false;
 
     private:
     idx_m_t _idx_m;
@@ -51,46 +49,42 @@ namespace nda {
     /// Empty array
     array() = default;
 
-    /// Copy constructor. Makes a deep copy
+    /// Copy constructor. 
+    /// Makes a deep copy, array is a regular type
     array(array const &x) : _idx_m(x.indexmap(), x.storage()) {}
 
-    /// Move
+    /// 
     array(array &&X) = default;
 
-    /// Construct from an indexmap and a storage handle. Always make a new copy.
+    /// From an indexmap and a storage handle. Always make a new copy.
     template <char RBS> array(idx_map<Rank> im, mem::handle<ValueType, RBS> st) : _idx_m(std::move(im)), _storage(std::move(st)) {}
 
     /// Build from anything that has an indexmap and a storage compatible with this class
     template <typename T> array(T const &X) : array(X.indexmap(), X.storage()) {}
 
-    /// Empty array.
-    //explicit array(layout_t<Rank> ml = layout_t<Rank>{}) : array(ml) {}
-
     /// From a shape
-    explicit array(shape_t const &shape) : _idx_m(shape), _storage(_idx_m.size()) {}
+    explicit array(shape_t<Rank> const &shape) : _idx_m(shape), _storage(_idx_m.size()) {}
 
     /// From a shape and a layout
-    explicit array(shape_t const &shape, layout_t<Rank> ml) : _idx_m(shape, ml), _storage(_idx_m.size()) {}
+    explicit array(shape_t<Rank> const &shape, layout_t<Rank> ml) : _idx_m(shape, ml), _storage(_idx_m.size()) {}
 
     /// From shape and a Lambda to initialize the element
     template <typename InitLambda>
-    explicit array(shape_t const &shape, layout_t<Rank> ml, InitLambda &&lambda)
+    explicit array(shape_t<Rank> const &shape, layout_t<Rank> ml, InitLambda &&lambda)
        : _idx_m(shape, ml), _storage{_idx_m.size(), mem::do_not_initialize} {
       nda::for_each(_idx_m.lengths(), [&](auto const &... x) { _storage.init_raw(_idx_m(x...), lambda(x...)); });
     }
-    
-    /// From shape and a Lambda to initialize the element
-    template <typename InitLambda>
-    explicit array(shape_t const &shape, InitLambda &&lambda) : array(shape, std::forward<InitLambda>(lambda)){}
 
+    /// From shape and a Lambda to initialize the element
+    template <typename InitLambda> explicit array(shape_t<Rank> const &shape, InitLambda &&lambda) : array(shape, std::forward<InitLambda>(lambda)) {}
 
     /// For lengths as integer and optionally layout::C_t or Fortran_t
     template <typename... T> explicit array(long i0, T... is) : _idx_m{i0, is...}, _storage{_idx_m.size()} {}
 
-    // Makes a true (deep) copy of the data with a different layout
+    /// Makes a true (deep) copy of the data with a different layout
     explicit array(array const &X, layout_t<Rank> ml) : array(X.indexmap(), ml) { triqs_arrays_assign_delegation(*this, X); }
 
-    // from a temporary storage and an indexmap. Used for reshaping a temporary array
+    /// From a temporary storage and an indexmap. Used for reshaping a temporary array
     explicit array(typename indexmap_type::domain_type const &dom, storage_type &&sto, layout_t<Rank> ml = layout_t<Rank>{})
        : IMPL_TYPE(indexmap_type(dom, ml), std::move(sto)) {}
 
@@ -124,7 +118,7 @@ namespace nda {
     template <typename T>
     array(std::initializer_list<T> const &l) //
        REQUIRES((Rank == 1) and std::is_constructible<value_type, T>::value >)
-       : array{shape_t{l.size()}} {
+       : array{shape_t<Rank>{l.size()}} {
       long i = 0;
       for (auto const &x : l) (*this)(i++) = x;
     }
@@ -141,7 +135,7 @@ namespace nda {
         else if (s != l1.size())
           throw std::runtime_error("initializer list not rectangular !");
       }
-      this->resize(shape_t{l.size(), s});
+      this->resize(shape_t<Rank>{l.size(), s});
       for (auto const &l1 : l) {
         for (auto const &x : l1) { (*this)(i, j++) = x; }
         j = 0;
@@ -183,17 +177,73 @@ namespace nda {
       if (_storage.size != _idx_m.size()) _storage = mem::handle<ValueType, 'R'>{_idx_m.size()};
     }
 
+    // -------------------------------  operator () --------------------------------------------
+
+    // one can factorize the last part in a private static method, but I find clearer to have the repetition
+    // here. In particular to check the && case carefully.
+
+    /// DOC
+    template <typename... T> decltype(auto) operator()(T const &... x) const & {
+
+      static_assert((Rank == -1) or (sizeof...(T) == R) or (ellipsis_is_present<Args...> and (sizeof...(T) <= R)),
+                    "Incorrect number of parameters in call");
+
+      if constexpr (sizeof...(T) == 0) return view_t{*this};
+
+      //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
+
+      auto idx_sliced_or_position = _idx_m.slice(x...);         // we call the index map
+      if constexpr (std::is_same_v<decltype(idx_sliced), long>) // Case 1: we got a long, hence access a element
+        return _storage[idx_sliced];                            //
+      else                                                      // Case 2: we got a slice
+        return view_t{std::move(idx_sliced), _storage};         //
+    }
+
+    ///
+    template <typename... T> decltype(auto) operator()(T const &... x) & {
+
+      static_assert((Rank == -1) or (sizeof...(T) == R) or (ellipsis_is_present<Args...> and (sizeof...(T) <= R)),
+                    "Incorrect number of parameters in call");
+
+      if constexpr (sizeof...(T) == 0) return view_t{*this};
+
+      //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
+
+      auto idx_sliced_or_position = _idx_m.slice(args...);      // we call the index map
+      if constexpr (std::is_same_v<decltype(idx_sliced), long>) // Case 1: we got a long, hence access a element
+        return _storage[idx_sliced];                            //
+      else                                                      // Case 2: we got a slice
+        return view_t{std::move(idx_sliced), _storage};         //
+    }
+
+    ///
+    template <typename... T> decltype(auto) operator()(T const &... x) && {
+
+      static_assert((Rank == -1) or (sizeof...(T) == R) or (ellipsis_is_present<Args...> and (sizeof...(T) <= R)),
+                    "Incorrect number of parameters in call");
+
+      if constexpr (sizeof...(T) == 0) return view_t{*this};
+
+      //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(std::move(*this), std::forward<T>(x)...);
+
+      auto idx_sliced_or_position = _idx_m.slice(args...);      // we call the index map
+      if constexpr (std::is_same_v<decltype(idx_sliced), long>) // Case 1: we got a long, hence access a element
+        return ValueType{_storage[idx_sliced]};                 // We return a VALUE here, the array is about be destroyed.
+      else                                                      // Case 2: we got a slice
+        return view_t{std::move(idx_sliced), _storage};         //
+    }
+
     // ------------------------------- data access --------------------------------------------
 
     // The Index Map object
     idx_map<Rank> const &indexmap() const { return _idx_m; }
 
     // The storage handle
-    mem::handle<ValueType, S_B> const &storage() const { return _storage; }
-    mem::handle<ValueType, S_B> &storage() { return _storage; }
+    mem::handle<ValueType, 'R'> const &storage() const { return _storage; }
+    mem::handle<ValueType, 'R'> &storage() { return _storage; }
 
     // Memory layout
-    layout_t<Rank> const &layout() const { return _idx_m.layout(); }
+    auto layout() const { return _idx_m.layout(); }
 
     /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
     ValueType const *restrict data_start() const { return _storage.data + _idx_m.offset(); }

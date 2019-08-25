@@ -70,28 +70,50 @@ namespace nda::details {
 
     //
     //    N_of_P
-    //    long, long , Range, long , Range
+    //    long, long , Ellipsis long , Range
     //     10100
 
-    constexpr int N_of_P(uint64_t args_as_bits, int P) {
+      // detail function use in the implementation  of process below
+    static constexpr int ellipsis_correction(int n, int ellipsis_position, int ellipsis_length) {
+      if (n <= ellipsis_position) return n;
+      if (n >= ellipsis_position + ellipsis_length) return n - ellipsis_length + 1;
+      return ellipsis_position;
+    }
+
+    static constexpr int N_of_P(uint64_t args_as_bits, int P, int ellipsis_position, int ellipsis_length) {
       for (int n = 0, c = 0; n < 64; ++n) {
-        c += (args_as_bits & (1 << n));
+	int true_n = ellipsis_correction(n, ellipsis_position, ellipsis_length);
+        c += (args_as_bits & (1 << true_n));
         if (c == P) return n;
       }
     }
 
-    template <typename ArgsTie, size_t... P, size_t... N>
-    FORCEINLINE void process_impl(std::index_sequence<P...>, std::index_sequence<N...>, ArgsTie argstie) {
+    FORCEINLINE long get_offset(long R, long s_N) {return R * s_N;}
+    FORCEINLINE long get_offset(range const &R, long s_N) { return R.first() * s_N;}
+    FORCEINLINE long get_offset(range_all R, long s_N) { return 0;}
+
+    FORCEINLINE long get_l(range const &R, long l_N) {
+      return ((R.last() == -1 ? l_N : R.last()) - R.first() + R.step() - 1) / R.step(); // python behaviour
+    }
+    FORCEINLINE long get_l(range_all, long l_N) { return l_N; }
+    
+    FORCEINLINE long get_s(range const &R, long s_N) { return s_N * R.step(); }
+    FORCEINLINE long get_s(range_all, long s_N) { return s_N; }
+
+    template <uint64_t args_as_bits, typename ArgsTie, size_t... P>
+    FORCEINLINE void process_impl(std::index_sequence<P...>, ArgsTie const & argstie) {
+      ((lo[P] = get_l(std::get<N_of_P(args_as_bits, P)>(argstie), li[N_of_P(args_as_bits, P)])), ...);
+      ((so[P] = get_s(std::get<N_of_P(args_as_bits, P)>(argstie), si[N_of_P(args_as_bits, P)])), ...);
+    }
+
+    template <int Rank, typename... Args> FORCEINLINE void process_static(Args const &... args) {
+      constexpr uint64_t args_as_bits = (((std::is_same_v<Args, range> or std::is_same_v<Args, ellipsis>) ? (1 << N) : 0) + ...);
+      long offset = (get_offset(arg, get<N>(si)) + ...);
+      process_impl(std::make_index_sequence<Rank>{}, std::tie(args...));
 
       // ellipsis
-      constexpr uint64_t args_as_bits = ((std::is_same_v<Args, range> ? (1 << N) : 0) + ...);
-      ((lo[P] = get_l(std::get<N_of_P(args_as_bits, P)>(argstie), li[N_of_P(args_as_bits, P)])), ...);
-
-      offset = (get_offset(arg, get<N>(si)) + ...);
-
-      // P(N) = n_range_ellipsis_before<Args...>(N);   std::integer_sequence<N1,N2,N3>  // seq of P
-      (lo[P] = get_l(arg, li[N]), ...);
     }
+
 
     // detail function use in the implementation  of process below
     static constexpr size_t idx_map_compute_index(size_t Is, int EllipsisPosition, int EllipsisLength) {
@@ -113,6 +135,9 @@ namespace nda::details {
       }
     }
 
+    // --------------  process_dynamic --------------------
+
+    
     // implementation of process_dyn
     template <size_t IStart, typename TuArgs, size_t... Is> FORCEINLINE void process_partial_impl(std::index_sequence<Is...>, TuArgs &&tuargs) {
       ((*this) << ... << std::get<Is + IStart>(tuargs));

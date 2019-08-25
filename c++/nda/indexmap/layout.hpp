@@ -23,25 +23,7 @@
 #pragma once
 namespace nda {
 
-  // FIXME : Optimisation : replace vector with a vector with SSO.
-  template <typename T, int Rank> struct vec_or_array_t { using type = std::array<T, Rank>; };
-  template <typename T> struct vec_or_array_t<T, -1> { using type = std::vector<T>; };
-
-  template <typename T, int Rank> using vec_or_array = typename vec_or_array_t<T, Rank>::type;
-
-  template <int Rank> class _rank_injector {
-    public:
-    static constexpr int rank() { return Rank; }
-  };
-
-  template <> class _rank_injector<-1> {
-    int _rank = 0;
-
-    public:
-    int rank() const { return _rank; }
-  };
-
-   namespace layout {
+    namespace layout {
 
     inline struct C_t {
     } C;
