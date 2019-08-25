@@ -19,7 +19,7 @@ namespace nda {
     */
   template <int Rank, bool WithIndices = false, typename TraversalOrder = traversal::C_t> class idx_map_iterator {
     idx_map<Rank> const *im = nullptr;
-    using idx_t             = vec_or_array<long, Rank>;
+    using idx_t             = std::array<long, Rank>;
     idx_t idx;
     long pos = 0;
 
@@ -74,9 +74,10 @@ namespace nda {
             p = v;
           } else if constexpr (std::is_same_v<TraversalOrder, traversal::Fortran_t>) {
             p = im->rank() - v - 1;
-          } else if constexpr (std::is_same_v<TraversalOrder, traversal::Dynamical_t>) {
-            p = im->layout()[v];
-          }
+          } 
+	  //else if constexpr (std::is_same_v<TraversalOrder, traversal::Dynamical_t>) {
+          //  p = im->layout()[v];
+          //}
 
           if (idx[p] < im->lengths()[p] - 1) {
             ++(idx[p]);

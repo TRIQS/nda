@@ -3,8 +3,7 @@
 #include <array>
 #include <numeric>
 
-#include "./layout.hpp"
-#include "./slice_worker.hpp"
+#include "./slice_static.hpp"
 #include "./bound_check_worker.hpp"
 #include "./idx_map_iterator.hpp"
 #include "./for_each.hpp"
@@ -15,157 +14,193 @@ namespace boost::serialization {
 
 namespace nda {
 
-  /// ------------ General definitions -----------------
-
-  ///
-  static constexpr int DynamicalRank = -1;
-
   /// Type of all shapes
   template <int Rank> using shape_t = std::array<long, Rank>;
 
   /// Shape factory
-  template <typename... T> shape_t<sizeof...(T)> make_shape(T... args) { return {args...}; }
+  template <typename... T> shape_t<sizeof...(T)> make_shape(T... args) noexcept { return {args...}; }
+
+  namespace layout {
+
+    inline struct C_t {
+    } C;
+    inline struct Fortran_t { } Fortran; } // namespace layout
+
+  /// Type of layout (the general categories which are invariant by slicing).
+  //enum class layout { C, Fortran, Custom};
 
   // -----------------------------------------------------------------------------------
   /**
    *
-   * The map of the indices to linear index long.
+   * The map of the indices to linear index.
    *
   ` * It is a set of lengths and strides for each dimensions, and a shift.
    *
-   * Rank = -1 : Rank is dynamical, with accessor rank()
    *
    * */
-  template <int Rank> class idx_map : public _rank_injector<Rank> {
+  template <int Rank> class idx_map {
 
-    //static constexpr int _Rank_in_tpl = Rank;
-    using l_t = vec_or_array<long, Rank>;
-    l_t _lengths, _strides;
-    layout_t<Rank> _layout;
+    static_assert(Rank < 64, "Rank must be < 64"); // constraint of slice implementation. ok...
+
+    std::array<long, Rank> len, str;
     long _offset = 0;
+    //using layout_t = std::array<int, Rank>;
 
     public:
-    static constexpr bool is_rank_dynamical() { return Rank == -1; }
+    // ----------------  Accessors -------------------------
 
-    // ----------------  Access lengths, strides, layout, offset -------------------------
+    /// Rank of the map (number of arguments)
+    static constexpr int rank() noexcept { return Rank; }
 
     /** 
      * Lengths of each dimension.
-     * @return std::array<long, Rank> if Rank > 0 else std::vector<long>
-     *
-     * */
-    auto const &lengths() const { return _lengths; }
+     */
+    std::array<long, Rank> const &lengths() const noexcept { return len; }
 
     /** 
      * Strides of each dimension.
-     * @return std::array<long, Rank> if Rank > 0 else std::vector<long>
-     *
-     * */
-    auto const &strides() const { return _strides; }
+     */
+    std::array<long, Rank> const &strides() const noexcept { return str; }
 
     /// Total number of elements (products of lengths in each dimension).
-    long size() const { return std::accumulate(_lengths.cbegin(), _lengths.cend(), 1, std::multiplies<long>()); }
+    long size() const noexcept { return std::accumulate(len.cbegin(), len.cend(), 1, std::multiplies<long>()); }
 
     /// Shift from origin
-    long offset() const { return _offset; }
+    long offset() const noexcept { return _offset; }
 
     /// Is the data contiguous in memory ?
-    bool is_contiguous() const {
-      int slowest_index = _layout[0];
-      return (_strides[slowest_index] * _lengths[slowest_index] == size());
+    bool is_contiguous() const noexcept {
+      int slowest_index = std::distance(str.begin(), std::min_element(str.begin(), str.end())); // index with minimal stride
+      return (str[slowest_index] * len[slowest_index] == size());
     }
 
-    layout_t<Rank> const &layout() const { return _layout; }
+    ///
+    bool is_layout_C() const noexcept {
+      bool r = true;
+      for (int i = 1; i < rank(); ++i) r &= (str[i - 1] >= str[i]);
+      return r;
+    }
+
+    ///
+    bool is_layout_Fortran() const noexcept {
+      bool r = true;
+      for (int i = 1; i < rank(); ++i) r &= (str[i - 1] <= str[i]);
+      return r;
+    }
+
+    /**
+     * Computes the layout. 
+     * Return an array/vector layout such that
+     * layout[0] is the slowest index (i.e. largest stride)
+     * layout[rank] the fastest index (i.e. smallest stride)\
+     * 
+     * NB. Not very quick, it sorts the strides
+     */
+    std::array<int, Rank> layout() const noexcept {
+      std::array<int, Rank> lay;
+      std::array<std::pair<int, int>, Rank> lay1;
+      // Compute the permutation
+      for (int i = 0; i < rank(); ++i) lay1[i] = {str[i], i};
+      std::sort(lay1.begin(), lay1.end());
+      for (int i = 0; i < rank(); ++i) lay[i] = lay1[i].second;
+      return lay;
+    }
 
     // ----------------  Constructors -------------------------
 
     /// Default constructor. Lengths and Strides are not initiliazed.
     idx_map() = default;
 
-    private: // for slicing only
-    idx_map(int r) : _layout(r) {
-      if constexpr (is_rank_dynamical()) {
-        _lengths.resize(r);
-        _strides.resize(r);
-      }
-    }
-
-    // all friend with each other (for slicing).
-    template <int> friend class idx_map;
-
-    public:
-    /// Copy
+    ///
     idx_map(idx_map const &) = default;
 
-    /// Move
+    ///
     idx_map(idx_map &&) = default;
 
-    /// Copy =
+    ///
     idx_map &operator=(idx_map const &) = default;
 
-    /// Move =
+    ///
     idx_map &operator=(idx_map &&) = default;
 
     /** 
-     * Construction from the length, the stride, offset, ml
+     * Construction from the lengths, the strides, offset
      * @param lengths
      * @param strides
-     * @param layout
      * @param offset
-     * */
-    idx_map(l_t const &lengths, l_t const &strides, long offset, layout_t<Rank> const &layout)
-       : _lengths(lengths), _strides(strides), _layout(layout), _offset(offset) {}
+     */
+    idx_map(std::array<long, Rank> const &lengths, std::array<long, Rank> const &strides, long offset) noexcept
+       : len(lengths), str(strides), _offset(offset) {}
 
-    /// From the lengths and the layout. A compact set of indices, in layout order
-    idx_map(l_t const &lengths, layout_t<Rank> const &layout) : _lengths(lengths), _layout(layout) {
+    /** 
+     * Construction from the lengths, the strides, offset
+     * @param lengths
+     * @param strides
+     * @param offset
+     */
+    idx_map(std::array<long, Rank> const &lengths, std::array<int, Rank> const &layout) noexcept : len(lengths) {
+      len = lengths;
       // compute the strides for a compact array
-      long str = 1;
+      long s = 1;
       for (int v = this->rank() - 1; v >= 0; --v) { // rank() is constexpr ...
-        int u       = _layout[v];
-        _strides[u] = str;
-        str *= _lengths[u];
+        int u  = layout[v];
+        str[u] = s;
+        s *= len[u];
       }
       assert(str == size());
     }
 
     /// From the lengths. A compact set of indices, in C
-    idx_map(l_t const &lengths, layout::C_t) : idx_map{lengths, layout_t<Rank>{layout::C, int(lengths.size())}} {}
+    idx_map(std::array<long, Rank> const &lengths, layout::C_t) noexcept {
+      len    = lengths;
+      long s = 1;
+      for (int v = this->rank() - 1; v >= 0; --v) { // rank() is constexpr ...
+        str[v] = s;
+        s *= len[v];
+      }
+    }
 
     /// From the lengths. A compact set of indices, in Fortran
-    idx_map(l_t const &lengths, layout::Fortran_t) : idx_map{lengths, layout_t<Rank>{layout::Fortran, int(lengths.size())}} {}
-
-    /// From the lengths. A compact set of indices, in C order
-    idx_map(l_t const &lengths) : idx_map{lengths, layout::C} {}
-
-    /// Cross construction
-    template <int R> explicit idx_map(idx_map<R> const &m) {
-      if constexpr (is_rank_dynamical()) {                            // accept anything
-        static_assert(R != -1, "Internal error : should not happen"); // should not match
-        this->_rank = m.rank();
-        _lengths.resize(this->_rank);
-        _strides.resize(this->_rank);
-      } else {                            // this has static rank
-        if constexpr (m.is_dynamical()) { //
-          if (m.rank() != Rank) NDA_RUNTIME_ERROR << "Can not construct from a dynamical rank " << m.rank() << " while expecting " << Rank;
-        } else {
-          static_assert(R == Rank, "array : mismatch rank in construction, with static rank");
-        }
+    idx_map(std::array<long, Rank> const &lengths, layout::Fortran_t) noexcept {
+      len    = lengths;
+      long s = 1;
+      for (int v = 0; v < this->rank(); --v) { // rank() is constexpr ...
+        str[v] = s;
+        s *= len[v];
       }
-      for (int u = 0; u < this->rank() - 1; ++u) {
-        _lengths[u] = m.lengths()[u];
-        _strides[u] = m.strides()[u];
-        _layout[u]  = m.layout()[u];
+    }
+
+    /// From the lengths. A compact set of indices, in C order.
+    idx_map(std::array<long, Rank> const &lengths) noexcept : idx_map{lengths, layout::C} {}
+
+    /**
+     * @param idx An index map with dynamical rank
+     *
+     * NB : Throws if idx has the correct rank or throws
+     */
+    /*  idx_map(idx_map_dyn const &m) {
+      if (m.rank() != Rank) NDA_RUNTIME_ERROR << "Can not construct from a dynamical rank " << m.rank() << " while expecting " << Rank;
+      for (int u = 0; u < rank(); ++u) {
+        len[u] = m.lengths()[u];
+        str[u] = m.strides()[u];
       }
       _offset = m.offset();
     }
+*/
 
     // ----------------  Call operator -------------------------
 
     private:
     // call implementation
-    template <typename... Args, size_t... Is> FORCEINLINE long call_impl(std::index_sequence<Is...>, Args const &... args) const {
-      return ((args * _strides[Is]) + ...);
+    template <typename... Args, size_t... Is> FORCEINLINE long call_impl(std::index_sequence<Is...>, Args const &... args) const noexcept {
+      return ((args * str[Is]) + ...);
     }
+
+#ifdef NDA_ENFORCE_BOUNDCHECK
+    static constexpr bool enforce_bound_check = false;
+#else
+    static constexpr bool enforce_bound_check = true;
+#endif
 
     public:
     /**
@@ -177,55 +212,30 @@ namespace nda {
      *      else : the linear position (long)
      *
      * */
-    template <typename... Args> auto operator()(Args const &... args) const {
+    template <typename... Args> auto operator()(Args const &... args) const noexcept(enforce_bound_check) {
 
       static_assert(((((std::is_base_of_v<range_tag, Args> or std::is_constructible_v<long, Args>) ? 0 : 1) + ...) == 0),
                     "Slice arguments must be convertible to range, Ellipsis, or long");
 
-      static constexpr int n_args_range_ellipsis = ((std::is_same_v<Args, range> or std::is_same_v<Args, ellipsis>)+...);
+      static constexpr int n_args_ellipsis = ((std::is_same_v<Args, ellipsis>)+...);
+      static constexpr int n_args_long     = (std::is_constructible_v<long, Args> + ...);
+
+      static_assert(n_args_ellipsis <= 1, "Only one ellipsis argument is authorized");
+      static_assert((sizeof...(Args) <= Rank), "Incorrect number of arguments in array call ");
+      static_assert((n_args_ellipsis == 1) or (sizeof...(Args) == Rank), "Incorrect number of arguments in array call ");
 
 #ifdef NDA_ENFORCE_BOUNDCHECK
-      details::assert_in_bounds(this->rank(), _lengths.data(), args...);
-
-      if constexpr (n_args_range_ellipsis == 0) {
-        if constexpr (is_rank_dynamical()) {
-          if (sizeof...(Args) != this->rank())
-            NDA_RUNTIME_ERROR << "Incorrect number of argument in array call : expected " << this->rank() << " got  " << sizeof...(Args);
-        } else {
-          static_assert((sizeof...(Args) == Rank), "Incorrect number of argument in array call ");
-        }
-      }
+      details::assert_in_bounds(rank(), len.data(), args...);
 #endif
 
-      // === Case 1 :  no range, ellipsis, we simply compute the linear position
-      if constexpr (n_args_range_ellipsis == 0) {
-        return _offset + call_impl(std::index_sequence_for<Args...>{}, args...);
-      } else {
-        // === Case 2 : there is a range/ellipsis in the arguments : we make a slice
-
-        static constexpr int n_args_long = (std::is_constructible_v<long, Args> + ...);
-
-        // result : argument is ignored in the static case. cf private constructor.
-        idx_map<(is_rank_dynamical() ? DynamicalRank : Rank - n_args_long)> result{this->rank() - n_args_long};
-
-        vec_or_array<int, Rank> imap;
-        if constexpr (is_rank_dynamical()) { imap.resize(this->rank()); }
-
-        auto w = details::slice_worker{_lengths.data(), _strides.data(), result._lengths.data(), result._strides.data(), imap.data(), result._offset};
-        if constexpr (is_rank_dynamical()) {
-          w.process_dynamic(this->rank(), args...);
-        } else {
-          w.process_static<Rank>(args...);
-        }
-
-        // Compute the new layout
-        for (int i = 0, j = 0; j < this->rank(); ++j) {
-          auto k = imap[_layout[j]];
-          if (k != -1) result._layout[i++] = k;
-        }
-        return result;
+      if constexpr (n_args_long == Rank) { // no range, ellipsis, we simply compute the linear position
+        return _offset
+           + call_impl(std::make_index_sequence<sizeof...(Args)>{}, args...); // NB do not use index_sequence_for : one instantation only by # args.
+      } else {                                                                // otherwise we make a  new sliced idx_map
+        return slice_static::slice(std::make_index_sequence<Rank - n_args_long>{}, std::make_index_sequence<n_args_long>{},
+                                   std::make_index_sequence<sizeof...(Args)>{}, *this, args...);
       }
-    } // namespace nda
+    }
 
     // ----------------  Iterator -------------------------
 
@@ -237,9 +247,7 @@ namespace nda {
     typename iterator::end_sentinel_t cend() const { return {}; }
 
     // ----------------  Comparison -------------------------
-    bool operator==(idx_map const &x) {
-      return (_lengths == x._lengths) and (_strides == x._strides) and (_layout == x._layout) and (_offset == x._offset);
-    }
+    bool operator==(idx_map const &x) { return (len == x.len) and (str == x.str) and (_offset == x._offset); }
 
     bool operator!=(idx_map const &x) { return !(operator==(x)); }
 
@@ -247,19 +255,19 @@ namespace nda {
     private:
     //  BOOST Serialization
     friend class boost::serialization::access;
-    template <class Archive> void serialize(Archive &ar, const unsigned int version) { ar &_lengths &_strides &_offset &_layout; }
-  }; // namespace nda
+    template <class Archive> void serialize(Archive &ar, const unsigned int) { ar &len &str &_offset; }
+
+  }; // idx_map class
 
   // ---------------- Transposition -------------------------
 
-  template <int Rank> idx_map<Rank> transpose(idx_map<Rank> const &m, std::array<int, Rank> const &perm) {
-    typename idx_map<Rank>::l_t l, s, lay;
-    for (int u = 0; u < m.rank(); ++u) {
-      l[perm[u]] = m.lengths()[u];
-      s[perm[u]] = m.strides()[u];
-      lay[u]     = perm[m.layout()[u]]; // FIXME : EXPLAIN
+  template <int Rank> idx_map<Rank> transpose(idx_map<Rank> const &idx, std::array<int, Rank> const &perm) {
+    std::array<long, Rank> l, s;
+    for (int u = 0; u < idx.rank(); ++u) {
+      l[perm[u]] = idx.lengths()[u];
+      s[perm[u]] = idx.strides()[u];
     }
-    return {l, s, m.offset(), lay};
+    return {l, s, idx.offset()};
   }
 
   // ----------------  More complex iterators -------------------------
@@ -276,13 +284,12 @@ namespace nda {
   // for (auto [pos, idx] : enumerate(idxmap)) : iterate on position and indices
   template <int Rank> _changed_iter<Rank, true, traversal::C_t> enumerate_indices(idx_map<Rank> const &x) { return {&x}; }
 
-  template <int Rank> _changed_iter<Rank, false, traversal::Dynamical_t> in_layout_order(idx_map<Rank> const &x) { return {&x}; }
-  template <int Rank> _changed_iter<Rank, true, traversal::Dynamical_t> enumerate_indices_in_layout_order(idx_map<Rank> const &x) { return {&x}; }
+  //template <int Rank> _changed_iter<Rank, false, traversal::Dynamical_t> in_layout_order(idx_map<Rank> const &x) { return {&x}; }
+  //template <int Rank> _changed_iter<Rank, true, traversal::Dynamical_t> enumerate_indices_in_layout_order(idx_map<Rank> const &x) { return {&x}; }
 
   // ----------------  foreach  -------------------------
 
   template <int R, typename... Args> FORCEINLINE void for_each(idx_map<R> const &idx, Args &&... args) {
-    // FIXME : Dynamical
     for_each(idx.lengths(), std::forward<Args>(args)...);
   }
 

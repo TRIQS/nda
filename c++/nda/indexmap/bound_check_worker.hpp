@@ -23,9 +23,9 @@ namespace nda::details {
       if (error_code & (1ull << N)) fs << "argument " << N << " = " << key << " is not within [0," << lengths[N] << "[\n";
       N++;
     }
-    void g(std::stringstream &fs, range) { ++N; }
-    void g(std::stringstream &fs, range_all) { ++N; }
-    void g(std::stringstream &fs, ellipsis) { N += ellipsis_loss + 1; }
+    void g(std::stringstream &, range) { ++N; }
+    void g(std::stringstream &, range_all) { ++N; }
+    void g(std::stringstream &, ellipsis) { N += ellipsis_loss + 1; }
   };
 
   template <typename... Args> void assert_in_bounds(int rank, long const *lengths, Args const &... args) {
