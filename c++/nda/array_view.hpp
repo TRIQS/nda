@@ -1,7 +1,6 @@
 #pragma once
 #include "./indexmap/idx_map.hpp"
 #include "./storage/handle.hpp"
-#include "./impl.hpp"
 
 //#include "impl/assignment.hpp"
 
@@ -21,13 +20,19 @@ namespace nda {
     struct array : regular {};
   } // namespace tag
 
+  // forward
+  template <typename ValueType, int Rank> class array;
+
+  // detects ellipsis in a argument pack
+  template <typename... T> constexpr bool ellipsis_is_present = ((std::is_same_v<T, ellipsis> ? 1 : 0) + ...);
+
   // ---------------------- array_view  --------------------------------
 
   // Try to put the const/mutable in the TYPE
 
   //template <typename ValueType, int Rank, cm_e ConstMutable = Mutable, mem_policy_e MemPolicy = Borrowed>
-  template <typename ValueType, int Rank, mem_policy_e MemPolicy = Borrowed>
-  class array_view : tag::array_view, // any other useful tags
+  template <typename ValueType, int Rank, mem_policy_e MemPolicy = mem_policy_e::Borrowed>
+  class array_view : tag::array_view // any other useful tags
   {
     //static_assert(!std::is_const<ValueType>::value, "no const type");
 
@@ -38,7 +43,7 @@ namespace nda {
 
     static constexpr mem_policy_e mem_policy = MemPolicy;
     using storage_t                          = mem::handle<value_t, (mem_policy == mem_policy_e::Shared ? 'S' : 'B')>;
-    using idx_m_t                            = idx_map<Rank>;
+    using idx_map_t                          = idx_map<Rank>;
 
     using regular_t    = array<value_t, Rank>;
     using view_t       = array_view<value_t, Rank>;
@@ -50,17 +55,17 @@ namespace nda {
     // static std::string hdf5_scheme() { return "array<" + triqs::h5::get_hdf5_scheme<value_t>() + "," + std::to_string(rank) + ">"; }
 
     private:
-    idx_m_t _idx_m;
+    idx_map_t _idx_m;
     storage_t _storage;
 
+    public:
     // ------------------------------- constructors --------------------------------------------
 
     /// Construct an empty view.
     array_view() = default;
 
     /// Construct from an indexmap and a storage handle
-    template <char RBS> array_view(idx_map<Rank> im, mem::handle<value_t, RBS> st) : _idx_m(std::move(im)), _storage(std::move(st)) {
-      static_assert((mem_policy == mem_policy_e::Borrowed) or (RBS != 'B'), "Can not construct a shared view from a Borrowed one");
+    array_view(idx_map<Rank> im, mem::handle<value_t, 'B'> st) : _idx_m(std::move(im)), _storage(std::move(st)) {
     }
 
     /// Move
@@ -100,66 +105,66 @@ namespace nda {
     }
 
     /// Rebind
-    void rebind(array_view<value_t_no_const, Rank> const &X) REQUIRES(is_const) { // REQUIRES otherwise it is the same function
+    void rebind(array_view<value_t const, Rank> const &X) REQUIRES(!is_const) { // REQUIRES otherwise it is the same function
       _idx_m   = X._idx_m;
       _storage = X._storage;
     }
     //check https://godbolt.org/z/G_QRCU
 
     // -------------------------------  operator () --------------------------------------------
-   
+
     // one can factorize the last part in a private static method, but I find clearer to have the repetition
-    // here. In particular to check the && case carefully. 
+    // here. In particular to check the && case carefully.
 
     /// DOC
     template <typename... T> decltype(auto) operator()(T const &... x) const & {
 
-      static_assert((Rank == -1) or (sizeof...(T) == R) or (ellipsis_is_present<Args...> and (sizeof...(T) <= R)),
+      static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
                     "Incorrect number of parameters in call");
 
       if constexpr (sizeof...(T) == 0) return view_t{*this};
 
       //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
 
-      auto idx_sliced_or_position = _idx_m.slice(x...);         // we call the index map
-      if constexpr (std::is_same_v<decltype(idx_sliced), long>) // Case 1: we got a long, hence access a element
-        return _storage[idx_sliced];                            //
+      auto idx_or_pos = _idx_m(x...);                           // we call the index map
+      if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
+        return _storage[idx_or_pos];                            //
       else                                                      // Case 2: we got a slice
-        return view_t{std::move(idx_sliced), _storage};         //
+        return view_t{std::move(idx_or_pos), _storage};         //
     }
 
     ///
     template <typename... T> decltype(auto) operator()(T const &... x) & {
 
-      static_assert((Rank == -1) or (sizeof...(T) == R) or (ellipsis_is_present<Args...> and (sizeof...(T) <= R)),
+      static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
                     "Incorrect number of parameters in call");
 
       if constexpr (sizeof...(T) == 0) return view_t{*this};
 
       //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
 
-      auto idx_sliced_or_position = _idx_m.slice(args...);      // we call the index map
-      if constexpr (std::is_same_v<decltype(idx_sliced), long>) // Case 1: we got a long, hence access a element
-        return _storage[idx_sliced];                            //
+      auto idx_or_pos = _idx_m(x...);                           // we call the index map
+      if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
+        return _storage[idx_or_pos];                            //
       else                                                      // Case 2: we got a slice
-        return view_t{std::move(idx_sliced), _storage};         //
+        return view_t{std::move(idx_or_pos), _storage};         //
     }
 
     ///
     template <typename... T> decltype(auto) operator()(T const &... x) && {
 
-      static_assert((Rank == -1) or (sizeof...(T) == R) or (ellipsis_is_present<Args...> and (sizeof...(T) <= R)),
+      static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
                     "Incorrect number of parameters in call");
 
       if constexpr (sizeof...(T) == 0) return view_t{*this};
 
       //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(std::move(*this), std::forward<T>(x)...);
 
-      auto idx_sliced_or_position = _idx_m.slice(args...);      // we call the index map
-      if constexpr (std::is_same_v<decltype(idx_sliced), long>) // Case 1: we got a long, hence access a element
-        return _storage[idx_sliced];                            // We return a REFERENCE here. Ok since underlying array is still alive
+      auto idx_or_pos = _idx_m(x...);                           // we call the index map
+      if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
+        return _storage[idx_or_pos];                            // We return a REFERENCE here. Ok since underlying array is still alive
       else                                                      // Case 2: we got a slice
-        return view_t{std::move(idx_sliced), _storage};         //
+        return view_t{std::move(idx_or_pos), _storage};         //
     }
 
     // ------------------------------- data access --------------------------------------------
@@ -175,10 +180,10 @@ namespace nda {
     auto layout() const { return _idx_m.layout(); }
 
     /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
-    ValueType const *restrict data_start() const { return _storage.data + _idx_m.offset(); }
+    ValueType const *data_start() const { return _storage.data + _idx_m.offset(); }
 
     /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
-    ValueType *restrict data_start() { return _storage.data + _idx_m.offset(); }
+    ValueType *data_start() { return _storage.data + _idx_m.offset(); }
 
     /// Shape of the array
     shape_t<Rank> const &shape() const { return _idx_m.lengths(); }

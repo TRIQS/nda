@@ -1,13 +1,9 @@
-#include <gtest/gtest.h> // NOLINT
-#include <memory>
-
 #define NDA_ENFORCE_BOUNDCHECK
+#include <gtest/gtest.h> // NOLINT
 
 #include <nda/indexmap/idx_map.hpp>
 #include <nda/indexmap/for_each.hpp>
 #include <nda/indexmap/io.hpp>
-
-#include <nda/test_tools.hpp>
 
 nda::range _;
 nda::ellipsis ___;
@@ -151,4 +147,7 @@ TEST(idxstat, for_each) { // NOLINT
 // Different construction
 // Cross constrution
 
-MAKE_MAIN;
+int main(int argc, char **argv) {
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}

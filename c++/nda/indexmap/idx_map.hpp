@@ -173,6 +173,9 @@ namespace nda {
     /// From the lengths. A compact set of indices, in C order.
     idx_map(std::array<long, Rank> const &lengths) noexcept : idx_map{lengths, layout::C} {}
 
+    // trap
+    template <int R> idx_map(std::array<long, R>) { static_assert(R == Rank, "WRONG"); }
+
     /**
      * @param idx An index map with dynamical rank
      *
