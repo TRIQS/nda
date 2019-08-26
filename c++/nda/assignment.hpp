@@ -12,8 +12,6 @@ namespace nda::details {
   template <typename LHS, typename RHS> void assignment(LHS &lhs, RHS const &rhs) {
 
     static_assert(!LHS::is_const, "Cannot assign to a const view !");
-    static_assert(std::is_assignable_v<typename LHS::value_t, typename RHS::value_t>,
-                  "Assignment impossible for the type of RHS into the type of LHS");
 
     // if RHS is mpi_lazy
     //if constexpr (std::is_base_of_v<mpi_lazy_array_tag, RHS>) {
@@ -22,7 +20,9 @@ namespace nda::details {
     //}
 
     // special case: we may have a direct memcopy
-    if constexpr (is_regular_or_view_v<LHS>) {
+    if constexpr (is_regular_or_view_v<LHS> and is_regular_or_view_v<RHS>) {
+      static_assert(std::is_assignable_v<typename LHS::value_t &, typename RHS::value_t>,
+                    "Assignment impossible for the type of RHS into the type of LHS");
 
 #ifdef NDA_DEBUG
       if (lhs.indexmap().lengths() != rhs.indexmap().lengths())
@@ -32,30 +32,29 @@ namespace nda::details {
          std::is_trivially_copyable_v<typename LHS::value_t> and std::is_same_v<typename LHS::value_t, typename RHS::value_t>;
 
       if constexpr (can_consider_memcpy) {
+        // if idx_map have the same len and strides and are contiguous.
         if ((lhs.indexmap().lengths() == rhs.indexmap().lengths()) and (lhs.indexmap().strides() == rhs.indexmap().strides())
             and (lhs.indexmap().is_contiguous())) {
-          auto *p1 = lhs.data_start(), *p2 = rhs.data_start();
-          long s = rhs.indexmap().size();
+          auto *p1       = lhs.data_start();
+          const auto *p2 = rhs.data_start();
+          long s         = rhs.indexmap().size();
           if (std::abs(p2 - p1) > s) { // guard against overlapping of data
             std::memcpy(p1, p2, s * sizeof(typename LHS::value_t));
           } else {
-            for (long i = 0; i < s; ++i) p1[i] = p2[i];
+            for (long i = 0; i < s; ++i) p1[i] = p2[i]; // not really correct. We have NO protection if data overlap.
           }
-          return;
+          return; // we could memcopy, we are done.
         }
       } // non memcpy, we continue
     }
 
     // general case if RHS is not a scalar (can be isp, expression...)
     if constexpr (not is_scalar_for_v<RHS, LHS>) {
-
-      //static constexpr bool rhs_is_a_container = std::is_base_of_v<tag::regular_or_view, RHS>;
-
+      static_assert(std::is_assignable_v<typename LHS::value_t &, typename RHS::value_t>,
+                    "Assignment impossible for the type of RHS into the type of LHS");
       auto l = [&lhs, &rhs](auto const &... args) { lhs(args...) = rhs(args...); };
       nda::for_each(lhs.indexmap().lengths(), l);
-    }
-
-    else {
+    } else {
       // RHS is a scalar for LHS
       // if LHS is a matrix, the unit has a specific interpretation.
 

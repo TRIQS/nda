@@ -205,10 +205,10 @@ namespace nda {
     auto layout() const { return _idx_m.layout(); }
 
     /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
-    ValueType const *data_start() const { return _storage.data + _idx_m.offset(); }
+    ValueType const *data_start() const { return _storage.data() + _idx_m.offset(); }
 
     /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
-    ValueType *data_start() { return _storage.data + _idx_m.offset(); }
+    ValueType *data_start() { return _storage.data() + _idx_m.offset(); }
 
     /// Shape of the array
     shape_t<Rank> const &shape() const { return _idx_m.lengths(); }

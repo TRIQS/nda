@@ -29,17 +29,27 @@ TEST(NDA, View) {
   EXPECT_EQ(v(1), a(1, 1, 2));
 }
 
+// -------------------------------------
+
 TEST(NDA, Assign) {
   nda::array<long, 2> A(3, 3);
 
+  A()=0; 
+ 
   nda::array<long, 2> B;
   B = A;
   
-  //EXPECT_ARRAY_NEAR(A,B);
+  EXPECT_ARRAY_NEAR(A,B);
+  A(0, 2) = 87;
 
+  EXPECT_EQ(A.indexmap().layout() , B.indexmap().layout());
+   
   B = A(); // no resize
+  
+  EXPECT_EQ(A.indexmap().layout() , B.indexmap().layout());
+  EXPECT_EQ(A.indexmap().strides() , B.indexmap().strides());
 
-  //EXPECT_ARRAY_NEAR(A,B);
+  EXPECT_ARRAY_NEAR(A,B);
   EXPECT_EQ(B.shape(), (myshape_t<2>{3, 3}));
 }
 
