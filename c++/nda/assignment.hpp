@@ -49,7 +49,7 @@ namespace nda::details {
     // general case if RHS is not a scalar (can be isp, expression...)
     if constexpr (not is_scalar_for_v<RHS, LHS>) {
 
-      static constexpr bool rhs_is_a_container = std::is_base_of_v<tag::regular_or_view, RHS>;
+      //static constexpr bool rhs_is_a_container = std::is_base_of_v<tag::regular_or_view, RHS>;
 
       auto l = [&lhs, &rhs](auto const &... args) { lhs(args...) = rhs(args...); };
       nda::for_each(lhs.indexmap().lengths(), l);
@@ -59,7 +59,7 @@ namespace nda::details {
       // RHS is a scalar for LHS
       // if LHS is a matrix, the unit has a specific interpretation.
 
-      if constexpr (is_matrix_or_view_v<LHS>) {
+      if constexpr (is_matrix_regular_v<LHS> or is_matrix_view_v<LHS>) {
         // FIXME : Foreach on diagonal only !
         // WRITE THE LLOP !SAME in compound op !!
         auto l = [&lhs, &rhs](auto &&x1, auto &&x2) {

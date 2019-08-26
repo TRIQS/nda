@@ -49,11 +49,11 @@ template <typename X, typename Y>::testing::AssertionResult complex_are_close(X 
 
 // Arrays are equal
 template <typename X, typename Y>::testing::AssertionResult array_are_equal(X const &x, Y const &y) {
-  if (x.domain() != y.domain())
+  if (x.shape() != y.shape())
     return ::testing::AssertionFailure() << "Comparing two arrays of different size "
                                          << "\n X = " << x << "\n Y = " << y;
 
-  if (x.domain().number_of_elements() == 0 || max_element(abs(x - y)) == 0)
+  if (x.size() == 0 || max_element(abs(x - y)) == 0)
     return ::testing::AssertionSuccess();
   else
     return ::testing::AssertionFailure() << "max_element(abs(x-y)) = " << max_element(abs(x - y)) << "\n X = " << x << "\n Y = " << y;
@@ -66,11 +66,11 @@ template <typename X, typename Y>::testing::AssertionResult array_are_equal(X co
 template <typename X, typename Y>::testing::AssertionResult array_are_close(X const &x1, Y const &y1, double precision = 1.e-10) {
   nda::array<typename X::value_t, X::rank> x = x1;
   nda::array<typename X::value_t, X::rank> y = y1;
-  if (x.domain() != y.domain())
+  if (x.shape() != y.shape())
     return ::testing::AssertionFailure() << "Comparing two arrays of different size "
                                          << "\n X = " << x << "\n Y = " << y;
 
-  if (x.domain().number_of_elements() == 0 || max_element(abs(x - y)) < precision)
+  if (x.size() == 0 || max_element(abs(x - y)) < precision)
     return ::testing::AssertionSuccess();
   else
     return ::testing::AssertionFailure() << "max_element(abs(x-y)) = " << max_element(abs(x - y)) << "\n X = " << x << "\n Y = " << y;
@@ -83,7 +83,7 @@ template <typename X>::testing::AssertionResult array_almost_zero(X const &x1) {
   double precision                                        = 1.e-10;
   nda::array<typename X::value_t, X::rank> x = x1;
 
-  if (x.domain().number_of_elements() == 0 || max_element(abs(x)) < precision)
+  if (x.size() == 0 || max_element(abs(x)) < precision)
     return ::testing::AssertionSuccess();
   else
     return ::testing::AssertionFailure() << "max_element(abs(x-y)) = " << max_element(abs(x)) << "\n X = " << x;

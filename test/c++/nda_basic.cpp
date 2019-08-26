@@ -10,6 +10,8 @@ TEST(NDA, Create1) {
   EXPECT_EQ(A.shape(), (myshape_t<2>{3, 3}));
 }
 
+// -------------------------------------
+
 TEST(NDA, View) {
   nda::array<long, 3> a(3, 3, 4);
 
@@ -26,6 +28,23 @@ TEST(NDA, View) {
   a(1,1,2) = -28;
   EXPECT_EQ(v(1), a(1, 1, 2));
 }
+
+TEST(NDA, Assign) {
+  nda::array<long, 2> A(3, 3);
+
+  nda::array<long, 2> B;
+  B = A;
+  
+  //EXPECT_ARRAY_NEAR(A,B);
+
+  B = A(); // no resize
+
+  //EXPECT_ARRAY_NEAR(A,B);
+  EXPECT_EQ(B.shape(), (myshape_t<2>{3, 3}));
+}
+
+
+
 /*
 // -------------------------------------
 

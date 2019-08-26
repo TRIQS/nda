@@ -25,7 +25,7 @@ namespace nda {
 
   // ---------------------- array--------------------------------
 
-  template <typename ValueType, int Rank> class array : tag::array {
+  template <typename ValueType, int Rank> class array : tag::concepts::_array, tag::containers::_array {
     static_assert(!std::is_const<ValueType>::value, "no const type");
 
     public:
@@ -115,7 +115,7 @@ namespace nda {
     //array(T const &X, layout_t<Rank> ml) //
     //REQUIRES(ImmutableCuboidArray<T>::value and std::is_convertible<typename T::value_t, value_t>::value)
     //: array{get_shape(X), ml} {
-    //nda::assignment(*this, X);
+    //nda::details::assignment(*this, X);
     //}
 
     /** 
@@ -221,12 +221,12 @@ namespace nda {
      * All references to the storage are therefore invalidated.
      * NB : to avoid that, do make_view(A) = X instead of A = X
      */
-    //template <typename RHS> array &operator=(RHS const &X) {
-    //static_assert(ImmutableCuboidArray<RHS>::value, "Assignment : RHS not supported");
-    //resize(get_shape(X));
-    //nda::assignment(*this, X);
-    //return *this;
-    //}
+    template <typename RHS> array &operator=(RHS const &X) {
+      static_assert(is_ndarray_v<RHS>, "Assignment : RHS not supported");
+      resize(get_shape(X));
+      nda::details::assignment(*this, X);
+      return *this;
+    }
 
     //------------------ resize  -------------------------
     /** 
@@ -235,6 +235,7 @@ namespace nda {
      * Content is undefined
      */
     template <typename... Args> void resize(Args const &... args) {
+      static_assert(sizeof...(args) == Rank, "Incorrect number of arguments for resize. Should be Rank");
       static_assert(std::is_copy_constructible<ValueType>::value, "Can not resize an array if its value_t is not copy constructible");
       _idx_m = idx_map<Rank>(shape_t<Rank>(args...), _idx_m.layout());
       // build a new one with the lengths of IND BUT THE SAME layout !
@@ -282,7 +283,7 @@ namespace nda {
           return array_view<ValueType, idx_or_pos.rank()>{std::move(idx_or_pos), _storage}; //
       }
     }
-    
+
     ///
     template <typename... T> decltype(auto) operator()(T const &... x) && {
       if constexpr (sizeof...(T) == 0)
