@@ -24,8 +24,7 @@ namespace nda {
 
   //template <typename ValueType, int Rank, cm_e ConstMutable = Mutable, mem_policy_e MemPolicy = Borrowed>
   template <typename ValueType, int Rank, mem_policy_e MemPolicy = mem_policy_e::Borrowed>
-  class array_view : tag::array_view // any other useful tags
-  {
+  class array_view : tag::concepts::_array, tag::containers::_array_view {
     //static_assert(!std::is_const<ValueType>::value, "no const type");
 
     public:
@@ -106,14 +105,14 @@ namespace nda {
      * If NDA_BOUNDCHECK is defined, the bounds are checked.
      */
     template <typename RHS> array_view &operator=(RHS const &rhs) {
-      //nda::assignment(*this, X);
+      nda::details::assignment(*this, rhs);
       return *this;
     }
 
     /// A special case of the general operator
     /// [C++ oddity : this case must be explicitly coded too]
     array_view &operator=(array_view const &rhs) {
-      //nda::assignment(*this, X);
+      nda::details::assignment(*this, rhs);
       return *this;
     }
 
