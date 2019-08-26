@@ -51,7 +51,7 @@ namespace nda {
     array() = default;
 
     /// Makes a deep copy, since array is a regular type
-    array(array const &x) : _idx_m(x.indexmap(), x.storage()) {}
+    array(array const &x) : _idx_m(x.indexmap()), _storage(x.storage()) {}
 
     ///
     array(array &&X) = default;
@@ -221,10 +221,11 @@ namespace nda {
      * All references to the storage are therefore invalidated.
      * NB : to avoid that, do make_view(A) = X instead of A = X
      */
-    template <typename RHS> array &operator=(RHS const &X) {
+    template <typename RHS> array &operator=(RHS const &rhs) {
       static_assert(is_ndarray_v<RHS>, "Assignment : RHS not supported");
-      resize(get_shape(X));
-      nda::details::assignment(*this, X);
+      resize(rhs.shape());
+      //resize(get_shape(X));
+      nda::details::assignment(*this, rhs);
       return *this;
     }
 
@@ -237,10 +238,14 @@ namespace nda {
     template <typename... Args> void resize(Args const &... args) {
       static_assert(sizeof...(args) == Rank, "Incorrect number of arguments for resize. Should be Rank");
       static_assert(std::is_copy_constructible<ValueType>::value, "Can not resize an array if its value_t is not copy constructible");
-      _idx_m = idx_map<Rank>(shape_t<Rank>(args...), _idx_m.layout());
+      resize(shape_t<Rank>{args...});
+    }
+
+    void resize(shape_t<Rank> const &shape) {
+      _idx_m = idx_map<Rank>(shape, _idx_m.layout());
       // build a new one with the lengths of IND BUT THE SAME layout !
       // optimisation. Construct a storage only if the new index is not compatible (size mismatch).
-      if (_storage.size != _idx_m.size()) _storage = mem::handle<ValueType, 'R'>{_idx_m.size()};
+      if (_storage.size() != _idx_m.size()) _storage = mem::handle<ValueType, 'R'>{_idx_m.size()};
     }
 
     // -------------------------------  operator () --------------------------------------------
@@ -318,7 +323,7 @@ namespace nda {
     ValueType const *data_start() const { return _storage.data + _idx_m.offset(); }
 
     /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
-    ValueType *data_start() { return _storage.data + _idx_m.offset(); }
+    ValueType *data_start() { return _storage.data() + _idx_m.offset(); }
 
     /// FIXME : auto : type is not good ...
     shape_t<Rank> const &shape() const { return _idx_m.lengths(); }
@@ -352,4 +357,3 @@ namespace nda {
   }; // namespace nda
 
 } // namespace nda
-

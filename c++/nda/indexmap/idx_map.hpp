@@ -103,7 +103,7 @@ namespace nda {
       std::array<std::pair<int, int>, Rank> lay1;
       // Compute the permutation
       for (int i = 0; i < rank(); ++i) lay1[i] = {str[i], i};
-      std::sort(lay1.begin(), lay1.end());
+      std::sort(lay1.begin(), lay1.end(), std::greater<>{});
       for (int i = 0; i < rank(); ++i) lay[i] = lay1[i].second;
       return lay;
     }

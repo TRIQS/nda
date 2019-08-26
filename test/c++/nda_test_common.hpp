@@ -4,7 +4,7 @@
 
 #define NDA_BOUNDCHECK
 #define NDA_ENFORCE_BOUNDCHECK
-#include <nda/array.hpp>
+#include <nda.hpp>
 #include <nda/gtest_tools.hpp>
 
 template <int R> using myshape_t = nda::shape_t<R>;

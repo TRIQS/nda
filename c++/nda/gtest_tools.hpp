@@ -28,7 +28,6 @@
 #include <sstream>
 #include <gtest/gtest.h> // NOLINT
 
-
 /*#if H5_VERSION_GE(1, 8, 9)*/
 //#include <triqs/h5/serialization.hpp>
 //#endif
@@ -70,17 +69,23 @@ template <typename X, typename Y>::testing::AssertionResult array_are_close(X co
     return ::testing::AssertionFailure() << "Comparing two arrays of different size "
                                          << "\n X = " << x << "\n Y = " << y;
 
-  if (x.size() == 0 || max_element(abs(x - y)) < precision)
+  // both x, y are contiguous, I check with basic tools instead of max_element(abs(x - y))
+  if (x.size() == 0) return ::testing::AssertionSuccess();
+  using std::abs;
+  using std::max;
+  auto max_diff = abs(*x.data_start() - *y.data_start());
+  for (long i = 0; i < x.size(); ++i) max_diff = max(max_diff, abs(x.data_start()[i] - y.data_start()[i]));
+  if (max_diff<  precision)
     return ::testing::AssertionSuccess();
   else
-    return ::testing::AssertionFailure() << "max_element(abs(x-y)) = " << max_element(abs(x - y)) << "\n X = " << x << "\n Y = " << y;
+    return ::testing::AssertionFailure() << "max_element(abs(x-y)) = " << max_diff << "\n X = " << x << "\n Y = " << y;
 }
 
 #define EXPECT_ARRAY_NEAR(X, ...) EXPECT_TRUE(array_are_close(X, __VA_ARGS__))
 
 // Arrays is almost 0
 template <typename X>::testing::AssertionResult array_almost_zero(X const &x1) {
-  double precision                                        = 1.e-10;
+  double precision                           = 1.e-10;
   nda::array<typename X::value_t, X::rank> x = x1;
 
   if (x.size() == 0 || max_element(abs(x)) < precision)
@@ -106,33 +111,33 @@ template <typename X, typename Y>::testing::AssertionResult generic_are_near(X c
 
 //template <typename T> T rw_h5(T const &x, std::string filename = "ess", std::string name = "x") {
 
-  //namespace h5 = triqs::h5;
-  //T y; // must be default constructible
+//namespace h5 = triqs::h5;
+//T y; // must be default constructible
 
-  //{
-    //h5::file file(filename + ".h5", H5F_ACC_TRUNC);
-    //h5_write(file, name, x);
-  //}
+//{
+//h5::file file(filename + ".h5", H5F_ACC_TRUNC);
+//h5_write(file, name, x);
+//}
 
-  //{
-    //h5::file file(filename + ".h5", H5F_ACC_RDONLY);
-    //h5_read(file, name, y);
-  //}
+//{
+//h5::file file(filename + ".h5", H5F_ACC_RDONLY);
+//h5_read(file, name, y);
+//}
 
 //#if H5_VERSION_GE(1, 8, 9)
 
 ////#define TRIQS_TEST_USE_H5_SERIA
 //#ifdef TRIQS_TEST_USE_H5_SERIA
 
-  //std::cerr << "Checking H5 serialization/deserialization of \n " << triqs::utility::demangle(typeid(x).name()) << std::endl;
-  //auto s  = triqs::h5::serialize(x);
-  //T x2    = triqs::h5::deserialize<T>(s);
-  //auto s2 = triqs::h5::serialize(x);
-  //std::cerr << "Length of serialization string " << first_dim(s) << std::endl;
-  //EXPECT_EQ_ARRAY(s, s2); // << "Test h5 save, load, save, compare has failed !";
+//std::cerr << "Checking H5 serialization/deserialization of \n " << triqs::utility::demangle(typeid(x).name()) << std::endl;
+//auto s  = triqs::h5::serialize(x);
+//T x2    = triqs::h5::deserialize<T>(s);
+//auto s2 = triqs::h5::serialize(x);
+//std::cerr << "Length of serialization string " << first_dim(s) << std::endl;
+//EXPECT_EQ_ARRAY(s, s2); // << "Test h5 save, load, save, compare has failed !";
 //#endif
 
 //#endif
 
-  //return y;
+//return y;
 //}
