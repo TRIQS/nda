@@ -298,11 +298,4 @@ namespace nda {
     for_each(idx.lengths(), std::forward<Args>(args)...);
   }
 
-  // FIXME : clean at the end
-  //template <int R1, int R2> bool compatible_for_assignment(idx_map<R1> const &m1, idx_map<R2> const &m2) { return m1.lengths() == m2.lengths(); }
-
-  //template <int R1, int R2> bool raw_copy_possible(idx_map<R1> const &m1, idx_map<R2> const &m2) {
-  //  return ((m1.layout() == m2.layout()) && m1.is_contiguous() && m2.is_contiguous() && (m1.size() == m2.size()));
-  //}
-
 } // namespace nda

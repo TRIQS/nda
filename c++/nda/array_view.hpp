@@ -1,8 +1,8 @@
 #pragma once
 #include "./indexmap/idx_map.hpp"
 #include "./storage/handle.hpp"
-
-//#include "impl/assignment.hpp"
+#include "./concepts.hpp"
+#include "./assignment.hpp"
 
 namespace nda {
 
@@ -11,14 +11,6 @@ namespace nda {
 
   // Const or Mutable
   enum class cm_e { Const, Mutable };
-
-  namespace tag {
-    struct regular_or_view {};
-    struct regular : regular_or_view {};
-    struct view : regular_or_view {};
-    struct array_view : view {};
-    struct array : regular {};
-  } // namespace tag
 
   // forward
   template <typename ValueType, int Rank> class array;
