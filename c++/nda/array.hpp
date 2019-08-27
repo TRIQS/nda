@@ -172,14 +172,14 @@ namespace nda {
 
     private: // impl. detail for next function
     template <typename T> static shape_t<2> _comp_shape_from_list_list(std::initializer_list<std::initializer_list<T>> const &ll) {
-      int s = -1;
+      long s = -1;
       for (auto const &l1 : ll) {
         if (s == -1)
           s = l1.size();
         else if (s != l1.size())
           throw std::runtime_error("initializer list not rectangular !");
       }
-      return {ll.size(), s};
+      return {long(ll.size()), s};
     }
 
     public:
@@ -309,14 +309,14 @@ namespace nda {
 
     // ------------------------------- data access --------------------------------------------
 
-    // The Index Map object
+    /// The Index Map object
     idx_map<Rank> const &indexmap() const { return _idx_m; }
 
-    // The storage handle
+    /// The storage handle
     mem::handle<ValueType, 'R'> const &storage() const { return _storage; }
     mem::handle<ValueType, 'R'> &storage() { return _storage; }
 
-    // Memory layout
+    /// Memory layout
     auto layout() const { return _idx_m.layout(); }
 
     /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
@@ -325,28 +325,30 @@ namespace nda {
     /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
     ValueType *data_start() { return _storage.data() + _idx_m.offset(); }
 
-    /// FIXME : auto : type is not good ...
+    /// Shape of the array
     shape_t<Rank> const &shape() const { return _idx_m.lengths(); }
 
-    /// FIXME same as shape()[i] : redondant
-    //size_t shape(size_t i) const { return _idx_m.lengths()[i]; }
+    /// Same as shape()[i]
+    [[deprecated]] size_t shape(size_t i) const { return _idx_m.lengths()[i]; }
 
     /// Number of elements in the array
     long size() const { return _idx_m.size(); }
 
-    /// FIXME : REMOVE size ? TRIVIAL
-    bool is_empty() const { return size() == 0; }
+    /// size() == 0
+    [[deprecated]] bool is_empty() const { return size() == 0; }
 
     // ------------------------------- Iterators --------------------------------------------
 
-    //using const_iterator = iterator_adapter<true, idx_map<Rank>::iterator, storage_t>;
-    //using iterator       = iterator_adapter<false, idx_map<Rank>::iterator, storage_t>;
-    //const_iterator begin() const { return const_iterator(indexmap(), storage(), false); }
-    //const_iterator end() const { return const_iterator(indexmap(), storage(), true); }
-    //const_iterator cbegin() const { return const_iterator(indexmap(), storage(), false); }
-    //const_iterator cend() const { return const_iterator(indexmap(), storage(), true); }
-    //iterator begin() { return iterator(indexmap(), storage(), false); }
-    //iterator end() { return iterator(indexmap(), storage(), true); }
+    using const_iterator = iterator_adapter<ValueType const, idx_map_t>;
+    using iterator       = iterator_adapter<ValueType, idx_map_t>;
+
+    const_iterator begin() const { return {indexmap().cbegin(), storage().data()}; }
+    const_iterator cbegin() const { return {indexmap().cbegin(), storage().data()}; }
+    iterator begin() { return {indexmap().cbegin(), storage().data()}; }
+
+    typename const_iterator::end_sentinel_t end() const { return {}; }
+    typename const_iterator::end_sentinel_t cend() const { return {}; }
+    typename iterator::end_sentinel_t end() { return {}; }
 
     // ------------------------------- Operations --------------------------------------------
 
@@ -354,6 +356,6 @@ namespace nda {
 
     // to forbid serialization of views...
     //template<class Archive> void serialize(Archive & ar, const unsigned int version) = delete;
-  }; // namespace nda
+  };
 
 } // namespace nda

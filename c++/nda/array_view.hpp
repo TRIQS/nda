@@ -3,6 +3,7 @@
 #include "./storage/handle.hpp"
 #include "./concepts.hpp"
 #include "./assignment.hpp"
+#include "./iterator_adapter.hpp"
 
 namespace nda {
 
