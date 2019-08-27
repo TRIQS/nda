@@ -146,15 +146,39 @@ BENCHMARK(direct3)->Arg(30)->Arg(300);
 
 // ==========================================================
 
-static void direct_1d(benchmark::State &state) {
+static void view8(benchmark::State &state) {
   const int N = state.range(0);
-  nda::array<double, 1> A(N);
-  //A() = 0;
+  nda::array<double, 8> A(N, N, N, N, 2, 2, 2, 2);
 
   while (state.KeepRunning()) {
-    for (int i = 0; i < N - 1; ++i) A(i) = fnt(i);
+    for (int i = 0; i < N - 1; ++i) benchmark::DoNotOptimize(A(i, i, i, i, ___)(0, 0, 0, 0) = fnt(i));
   }
 }
-BENCHMARK(direct_1d)->Arg(30)->Arg(300);
+BENCHMARK(view8)->Arg(30);
+
+// ---------------------------------
+
+static void direct8(benchmark::State &state) {
+  const int N = state.range(0);
+  nda::array<double, 8> A(N, N, N, N, 2, 2, 2, 2);
+
+  while (state.KeepRunning()) {
+    for (int i = 0; i < N - 1; ++i) benchmark::DoNotOptimize(A(i, i, i, i, 0, 0, 0, 0) = fnt(i));
+  }
+}
+BENCHMARK(direct8)->Arg(30);
+
+// ==========================================================
+
+//static void direct_1d(benchmark::State &state) {
+  //const int N = state.range(0);
+  //nda::array<double, 1> A(N);
+  ////A() = 0;
+
+  //while (state.KeepRunning()) {
+    //for (int i = 0; i < N - 1; ++i) A(i) = fnt(i);
+  //}
+//}
+//BENCHMARK(direct_1d)->Arg(30)->Arg(300);
 
 BENCHMARK_MAIN();
