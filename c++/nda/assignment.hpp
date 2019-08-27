@@ -78,4 +78,66 @@ namespace nda::details {
       }
     }
   }
+
+  // ===========================  compound assignment ===========================================================
+
+  template <char OP, typename LHS, typename RHS> void compound_assign_impl(LHS &lhs, RHS const &rhs) {
+
+    static_assert(!LHS::is_const, "Cannot assign to a const view !");
+    static_assert((!std::is_const<typename LHS::value_type>::value), "Assignment : The value type of the LHS is const and cannot be assigned to !");
+    static_assert(std::is_assignable_v<typename LHS::value_t &, typename RHS::value_t>,
+                  "Assignment impossible for the type of RHS into the type of LHS");
+
+    static_assert(
+       (!((OP == 'M' || OP == 'D') and (is_matrix_view_v<LHS> or is_matrix_regular_v<LHS>) and (not is_scalar_for_v<RHS, LHS>))),
+       "*= and /= operator for non scalar RHS are deleted for a type modeling MutableMatrix (e.g. matrix, matrix_view) matrix, because this is ambiguous");
+
+    //// if RHS is mpi_lazy
+    //if constexpr (std::is_base_of_v<mpi_lazy_array_tag, RHS>) {
+    //impl_assign_from_lazy_array(lhs, rhs);
+    // return
+    //}
+
+    // general case if RHS is not a scalar (can be isp, expression...)
+    if constexpr (not is_scalar_for_v<RHS, LHS>) {
+
+      static_assert(is_ndarray_v<RHS>, "Error");
+
+#ifdef NDA_DEBUG
+      if constexpr (is_regular_or_view_v<RHS>) {
+        if (!indexmaps::compatible_for_assignment(lhs.indexmap(), rhs.indexmap()))
+          TRIQS_RUNTIME_ERROR << "Size mismatch in operation " << OP << " : LHS " << lhs << " \n RHS = " << rhs;
+      }
+#endif
+      auto l = [&lhs, &rhs](auto const &... args) {
+        if constexpr (OP == 'A') { lhs(args...) += rhs(args...); }
+        if constexpr (OP == 'S') { lhs(args...) -= rhs(args...); }
+        if constexpr (OP == 'M') { lhs(args...) *= rhs(args...); }
+        if constexpr (OP == 'D') { lhs(args...) /= rhs(args...); }
+      };
+      nda::for_each(lhs.indexmap().lengths(), l);
+    }
+
+    // RHS is a scalar for LHS
+    else {
+      // if LHS is a matrix, the unit has a specific interpretation.
+      if constexpr ((is_matrix_view_v<LHS> or is_matrix_regular_v<LHS>)and(OP == 'A' || OP == 'S')) {
+        if (lhs.shape()[0] != lhs.shape()[1]) NDA_RUNTIME_ERROR << "Adding a number to a matrix only works if the matrix is square !";
+        long s = lhs.shape()[0];
+        for (long i = 0; i < s; ++i) { // diagonal only
+          if constexpr (OP == 'A') { lhs(i, i) += rhs; }
+          if constexpr (OP == 'S') { lhs(i, i) -= rhs; }
+        }
+      } else { // LHS is not a matrix
+        long s = lhs.size();
+        for (long i = 0; i < s; ++i) {
+          if constexpr (OP == 'A') { lhs.data_start()[i] += rhs; }
+          if constexpr (OP == 'S') { lhs.data_start()[i] -= rhs; }
+          if constexpr (OP == 'M') { lhs.data_start()[i] *= rhs; }
+          if constexpr (OP == 'D') { lhs.data_start()[i] /= rhs; }
+        }
+      }
+    }
+  }
+
 } // namespace nda::details
