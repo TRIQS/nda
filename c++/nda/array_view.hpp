@@ -30,7 +30,6 @@ namespace nda {
 
     public:
     using value_t                  = std::remove_const_t<ValueType>;
-    static constexpr bool is_const = std::is_const_v<ValueType>;
     using value_as_template_arg_t  = ValueType;
 
     static constexpr mem_policy_e mem_policy = MemPolicy;
@@ -42,11 +41,16 @@ namespace nda {
     using const_view_t = array_view<value_t const, Rank>;
 
     static constexpr int rank = Rank;
+    static constexpr bool is_view = true;
+    static constexpr bool is_const = std::is_const_v<ValueType>;
 
     // FIXME : h5
     // static std::string hdf5_scheme() { return "array<" + triqs::h5::get_hdf5_scheme<value_t>() + "," + std::to_string(rank) + ">"; }
 
     private:
+
+    template<int R> using my_view_template_t = array_view<value_t, R>;
+    
     idx_map_t _idx_m;
     storage_t _storage;
 
@@ -132,118 +136,12 @@ namespace nda {
     }
     //check https://godbolt.org/z/G_QRCU
 
-    // -------------------------------  operator () --------------------------------------------
-
-    // one can factorize the last part in a private static method, but I find clearer to have the repetition
-    // here. In particular to check the && case carefully.
-
-    /// DOC
-    template <typename... T> decltype(auto) operator()(T const &... x) const & {
-
-      if constexpr (sizeof...(T) == 0)
-        return view_t{*this};
-      else {
-
-        static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
-                      "Incorrect number of parameters in call");
-        //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
-
-        auto idx_or_pos = _idx_m(x...);                           // we call the index map
-        if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
-          return _storage[idx_or_pos];                            //
-        else                                                      // Case 2: we got a slice
-          return view_t{std::move(idx_or_pos), _storage};         //
-      }
-    }
-    ///
-    template <typename... T> decltype(auto) operator()(T const &... x) & {
-
-      if constexpr (sizeof...(T) == 0)
-        return view_t{*this};
-      else {
-
-        static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
-                      "Incorrect number of parameters in call");
-        //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
-
-        auto idx_or_pos = _idx_m(x...);                           // we call the index map
-        if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
-          return _storage[idx_or_pos];                            //
-        else                                                      // Case 2: we got a slice
-          return view_t{std::move(idx_or_pos), _storage};         //
-      }
-    }
-
-    ///
-    template <typename... T> decltype(auto) operator()(T const &... x) && {
-
-      if constexpr (sizeof...(T) == 0)
-        return view_t{*this};
-      else {
-
-        static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
-                      "Incorrect number of parameters in call");
-        //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(std::move(*this), std::forward<T>(x)...);
-
-        auto idx_or_pos = _idx_m(x...);                           // we call the index map
-        if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
-          return _storage[idx_or_pos];                            // We return a REFERENCE here. Ok since underlying array is still alive
-        else                                                      // Case 2: we got a slice
-          return view_t{std::move(idx_or_pos), _storage};         //
-      }
-    }
-
-    // ------------------------------- data access --------------------------------------------
-
-    // The Index Map object
-    idx_map<Rank> const &indexmap() const { return _idx_m; }
-
-    // The storage handle
-    storage_t const &storage() const { return _storage; }
-    storage_t &storage() { return _storage; }
-
-    // Memory layout
-    auto layout() const { return _idx_m.layout(); }
-
-    /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
-    ValueType const *data_start() const { return _storage.data() + _idx_m.offset(); }
-
-    /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
-    ValueType *data_start() { return _storage.data() + _idx_m.offset(); }
-
-    /// Shape of the array
-    shape_t<Rank> const &shape() const { return _idx_m.lengths(); }
-
-    /// Number of elements in the array
-    long size() const { return _idx_m.size(); }
-
-    /// FIXME : REMOVE size ? TRIVIAL
-    [[deprecated]] bool is_empty() const { return size() == 0; }
-
-    /// FIXME same as shape()[i] : redondant
-    [[deprecated]] long shape(size_t i) const { return _idx_m.lengths()[i]; }
-
-    // ------------------------------- Iterators --------------------------------------------
-
-    //using const_iterator = iterator_adapter<true, idx_map<Rank>::iterator, storage_t>;
-    //using iterator       = iterator_adapter<false, idx_map<Rank>::iterator, storage_t>;
-    //const_iterator begin() const { return const_iterator(indexmap(), storage(), false); }
-    //const_iterator end() const { return const_iterator(indexmap(), storage(), true); }
-    //const_iterator cbegin() const { return const_iterator(indexmap(), storage(), false); }
-    //const_iterator cend() const { return const_iterator(indexmap(), storage(), true); }
-    //iterator begin() { return iterator(indexmap(), storage(), false); }
-    //iterator end() { return iterator(indexmap(), storage(), true); }
-
-    // ------------------------------- Operations --------------------------------------------
-
-    //    TRIQS_DEFINE_COMPOUND_OPERATORS(array_view);
-
-    // to forbid serialization of views...
-    //template<class Archive> void serialize(Archive & ar, const unsigned int version) = delete;
+    //----------------------------------------------------
+    
+#include "./_regular_view_common.hpp"
   };
 
   /// Aliases
   template <typename ValueType, int Rank, mem_policy_e MemPolicy> using array_const_view = array_view<ValueType const, Rank, MemPolicy>;
 
 } // namespace nda
-
