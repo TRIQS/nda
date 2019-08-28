@@ -66,7 +66,7 @@ namespace nda {
     [[deprecated]] operator bool() const { return (*this) == end_sentinel_t{}; }
 
     // FIXME after bench
-    //decltype(auto) indices() const { return it.indices(); }
+    decltype(auto) indices() const { return it.indices(); }
 
     typename IdxMap::iterator const &indexmap_iterator() const { return it; }
   };

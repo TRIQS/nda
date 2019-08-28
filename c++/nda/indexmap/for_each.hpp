@@ -26,7 +26,7 @@ namespace nda {
   // ----------------  for_each  -------------------------
 
   // C style
-  template <int I, typename F, size_t R> FORCEINLINE void for_each_impl(std::array<long, R> const & idx_lengths, F &&f, traversal::C_t) {
+  template <int I, typename F, size_t R> FORCEINLINE void for_each_impl(std::array<long, R> idx_lengths, F &&f, traversal::C_t) {
     if constexpr (I == R)
       f();
     else {
@@ -37,7 +37,7 @@ namespace nda {
   }
 
   // Fortran style
-  template <int I, typename F, size_t R> FORCEINLINE void for_each_impl(std::array<long, R> const & idx_lengths, F &&f, traversal::Fortran_t) {
+  template <int I, typename F, size_t R> FORCEINLINE void for_each_impl(std::array<long, R> idx_lengths, F &&f, traversal::Fortran_t) {
     if constexpr (I == R)
       f();
     else {
@@ -48,12 +48,12 @@ namespace nda {
   }
  
   ///
-  template <typename F, size_t R> FORCEINLINE void for_each(std::array<long, R> const & idx_lengths, F &&f) {
+  template <typename F, size_t R> FORCEINLINE void for_each(std::array<long, R> idx_lengths, F &&f) {
     for_each_impl<0>(idx_lengths, f, traversal::C);
   }
 
   ///
-  template <typename F, size_t R, typename Traversal> FORCEINLINE void for_each(std::array<long, R> const & idx_lengths, F &&f, Traversal tr) {
+  template <typename F, size_t R, typename Traversal> FORCEINLINE void for_each(std::array<long, R> idx_lengths, F &&f, Traversal tr) {
     for_each_impl<0>(idx_lengths, f, tr);
   }
 
