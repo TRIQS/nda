@@ -22,10 +22,11 @@ namespace nda {
     using idx_t             = std::array<long, Rank>;
     idx_t idx;
     long pos = 0;
+    std::array<long, Rank> len,strides;
 
     public:
     idx_map_iterator() = default;
-    idx_map_iterator(idx_map<Rank> const *im_ptr) : im(im_ptr), pos(im->offset()) {
+    idx_map_iterator(idx_map<Rank> const *im_ptr) : im(im_ptr), pos(im->offset()), len(im->lengths()), strides(im->strides()) {
       for (int u = 0; u < im->rank(); ++u) idx[u] = 0;
     }
 
@@ -40,7 +41,7 @@ namespace nda {
 
     bool operator==(end_sentinel_t) const {
       if constexpr (Rank == 1) // faster implementation
-        return idx[0] == im->lengths()[0];
+        return idx[0] == len[0];
       else
         return pos == -1;
     }
@@ -62,7 +63,7 @@ namespace nda {
 
       if constexpr (Rank == 1) { // faster implementation
         ++(idx[0]);
-        pos += im->strides()[0];
+        pos += strides[0];
         return *this;
       } else {
 
@@ -79,13 +80,13 @@ namespace nda {
           //  p = im->layout()[v];
           //}
 
-          if (idx[p] < im->lengths()[p] - 1) {
+          if (idx[p] < len[p] - 1) {
             ++(idx[p]);
-            pos += im->strides()[p];
+            pos += strides[p];
             return *this;
           }
           idx[p] = 0;
-          pos -= (im->lengths()[p] - 1) * im->strides()[p];
+          pos -= (len[p] - 1) * strides[p];
         }
         pos = -1;
         return *this;

@@ -30,7 +30,8 @@ namespace nda {
     if constexpr (I == R)
       f();
     else {
-      for (int i = 0; i < idx_lengths[I]; ++i) {
+      long imax = idx_lengths[I];
+      for (int i = 0; i < imax; ++i) {
         for_each_impl<I + 1>(idx_lengths, [ i, f ](auto &&... x) __attribute__((always_inline)) { return f(i, x...); }, traversal::C);
       }
     }

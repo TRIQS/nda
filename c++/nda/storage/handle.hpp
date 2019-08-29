@@ -190,7 +190,8 @@ namespace nda::mem {
       }
     }
 
-    T &operator[](long i) const noexcept { return _data[i]; }
+    T &operator[](long i) noexcept { return _data[i]; }
+    T const &operator[](long i) const noexcept { return _data[i]; }
 
     bool is_null() const noexcept {
 #ifdef NDA_DEBUG
@@ -329,7 +330,8 @@ namespace nda::mem {
       incref();
     }
 
-    T &operator[](long i) const noexcept { return _data[i]; }
+    T &operator[](long i) noexcept { return _data[i]; }
+    T const &operator[](long i) const noexcept { return _data[i]; }
 
     bool is_null() const noexcept {
 #ifdef NDA_DEBUG
@@ -364,7 +366,8 @@ namespace nda::mem {
     handle(handle<T, 'R'> const &x) noexcept : _parent(&x), _data(x.data()), _size(x.size()) {}
     handle(handle<T, 'S'> const &x) noexcept : _data(x.data()), _size(x.size()) {}
 
-    T &operator[](long i) const noexcept { return _data[i]; }
+    T &operator[](long i) noexcept { return _data[i]; }
+    T const &operator[](long i) const noexcept { return _data[i]; }
 
     bool is_null() const noexcept { return _data == nullptr; }
 
