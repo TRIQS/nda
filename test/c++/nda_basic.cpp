@@ -14,6 +14,11 @@ TEST(NDA, Create1) {
 
 // -------------------------------------
 
+void f(nda::array_view<long,1> v) { 
+  std::cout  << "View "<<v<<std::endl;;
+}
+
+
 TEST(NDA, View) {
   nda::array<long, 3> a(3, 3, 4);
 
@@ -21,7 +26,10 @@ TEST(NDA, View) {
     for (int j = 0; j < 3; ++j)
       for (int k = 0; k < 4; ++k) a(i, j, k) = i + 10 * j + 100 * k;
 
-  auto v = a(_, 1, 2);
+  nda::array_view<long,1> v = a(_, 1, 2);
+
+  std::cerr << v.indexmap() <<std::endl;
+  f(v);
 
   EXPECT_EQ(v.shape(), (myshape_t<1>{3}));
 

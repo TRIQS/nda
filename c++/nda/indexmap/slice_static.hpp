@@ -136,8 +136,8 @@ namespace nda::slice_static {
     uint64_t r = 0;
 
     if (flags::has_contiguous(fl) and range_are_grouped_in_memory_and_fastest) r |= flags::contiguous;
-    if (flags::has_contiguous(fl) and range_are_grouped_in_memory) r |= flags::strided;
-    if (flags::has_fastest_stride_is_one(fl) and (not args_is_range[layout_in[P - 1]])) r |= flags::fastest_stride_is_one;
+    if (flags::has_strided(fl) and range_are_grouped_in_memory) r |= flags::strided;
+    if (flags::has_smallest_stride_is_one(fl) and (not args_is_range[layout_in[P - 1]])) r |= flags::smallest_stride_is_one;
 
     return r;
   }

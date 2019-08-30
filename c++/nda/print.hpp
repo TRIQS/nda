@@ -25,7 +25,7 @@ namespace nda {
                << "  Offset   : " << x.offset() << "\n"
                << "  Layout   : " << x.layout << "\n"
                << "  Flags   :  " << (flags::has_contiguous(x.flags) ? "contiguous   " : " ") << (flags::has_strided(x.flags) ? "strided   " : " ")
-               << (flags::has_fastest_stride_is_one(x.flags) ? "fastest_stride_is_one   " : " ")
+               << (flags::has_smallest_stride_is_one(x.flags) ? "smallest_stride_is_one   " : " ")
                << (flags::has_zero_offset(x.flags) ? "zero_offset   " : " ") << "\n";
   }
 
