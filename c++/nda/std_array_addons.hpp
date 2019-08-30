@@ -19,10 +19,28 @@
  *
  ******************************************************************************/
 #pragma once
-#include "./macros.hpp"
-#include "./exceptions.hpp"
-#include <vector>
-#include <iostream>
+#include <array>
+#include <utility>
+
+// missing part of std ...
+namespace nda {
+
+  template <typename T, size_t... Is> constexpr std::array<T, sizeof...(Is)> make_initialized_array_impl(T v, std::index_sequence<Is...>) {
+    return {(Is ? v : v)...};
+  } // always v, just a trick to have the pack
+
+  /**
+   * @tparam R 
+   * @tparam T
+   * make a std::array<T, R> initialized to v
+   */
+  template <int R, typename T> constexpr std::array<T, R> make_initialized_array(T v) {
+    return make_initialized_array_impl(v, std::make_index_sequence<R>{});
+  }
+
+} // namespace nda
+/*
+
 
 namespace triqs::utility {
 
@@ -31,7 +49,7 @@ namespace triqs::utility {
   //template<class Archive> void serialize(Archive & ar, const unsigned int version) { ar & TRIQS_MAKE_NVP("_data",_data); }
 
   // implement serialization for std::array
-  template <class Archive, class T, std::size_t N> void serialize(Archive &ar, std::array<T, N> &a, const unsigned int /* version */) {
+  template <class Archive, class T, std::size_t N> void serialize(Archive &ar, std::array<T, N> &a, const unsigned int ) {
     ar &*static_cast<T(*)[N]>(static_cast<void *>(a.data()));
   }
 
@@ -164,3 +182,4 @@ namespace triqs::utility {
   }
 
 } // namespace triqs::utility
+*/

@@ -1,4 +1,5 @@
 #include "./range.hpp"
+#include "./permutation.hpp"
 
 #define FORCEINLINE __inline__ __attribute__((always_inline))
 
@@ -29,7 +30,7 @@ namespace nda::slice_static {
   //  q               0      1      2                   3     4
   // Expanded Args = long, long, range, range, range, long, range
   //  n 	            0      1      2     3      4      5     6
-  // ellipsis_position = 2, ellipsis_position + ellipsis_length  = 5
+  // e_pos = 2, e_pos + e_len  = 5
   // n will be 0 1 2 3 4 5 6
   // q will be 0 1 2 2 2 3 4
   // argbits 00101
@@ -37,65 +38,67 @@ namespace nda::slice_static {
   // since P < 4
 
   // Impl detail.
-  template <typename... Args, size_t... Is> constexpr int impl_ellipsis_position(std::index_sequence<Is...>) {
+  template <typename... Args, size_t... Is> constexpr int impl_e_pos(std::index_sequence<Is...>) {
     // We know that there is at most one ellipsis.
     int r = ((std::is_same_v<Args, ellipsis> ? int(Is) + 1 : 0) + ...); // position + 1 or 0
     return (r == 0 ? 128 : r - 1);
   }
 
   // position of the ellipsis in the argument list if there is an ellipsis or 128 if not
-  template <typename... Args> constexpr int compute_ellipsis_position() {
-    return impl_ellipsis_position<Args...>(std::index_sequence_for<Args...>{});
-  }
+  template <typename... Args> constexpr int compute_e_pos() { return impl_e_pos<Args...>(std::index_sequence_for<Args...>{}); }
 
   // Q given N
-  constexpr int Q_of_N(int n, int ellipsis_position, int ellipsis_length) {
-    if (n <= ellipsis_position) return n; // if no ellipsis, ellipsis_position is 128 = infty
-    if (n >= (ellipsis_position + ellipsis_length))
-      return n - (ellipsis_length - 1);
+  constexpr int Q_of_N(int n, int e_pos, int e_len) {
+    if (n <= e_pos) return n; // if no ellipsis, e_pos is 128 = infty
+    if (n >= (e_pos + e_len))
+      return n - (e_len - 1);
     else
-      return ellipsis_position;
-  }
-
-  // map P or L -> N and Q
-  // The map depends on the position and len of the ellipsis
-  // N, Q < 64 : returns them in a single int (< 64*64).
-  // NB : if args_as_bits is inverted ( reverse 1 <-> 0), it finds the maps L -> N Q instead of P-> N Q
-  constexpr int QN_of_P(uint64_t args_as_bits, int P, int ellipsis_position, int ellipsis_length) {
-    // we need to find the P th non long argument, but also correct for the ellipsis
-    // so q iterate on the arguments, n on the dimensions of the original idx_map
-    for (int n = 0, c = -1; n < 64; ++n) {
-      int q = Q_of_N(n, ellipsis_position, ellipsis_length);
-      if (args_as_bits & (1ull << q)) ++c; // c count the number of non long we encounter
-      if (c == P) return n + 64 * q;
-    }          // it must stop by construction because P < rank of the output idx_map.
-    return -1; // remove warning
+      return e_pos;
   }
 
   // map P -> N
-  constexpr int N_of_P(uint64_t args_as_bits, int P, int ellipsis_position, int ellipsis_length) {
-    return QN_of_P(args_as_bits, P, ellipsis_position, ellipsis_length) % 64;
-  }
-  // map P -> Q
-  constexpr int Q_of_P(uint64_t args_as_bits, int P, int ellipsis_position, int ellipsis_length) {
-    return QN_of_P(args_as_bits, P, ellipsis_position, ellipsis_length) / 64;
-  }
-
-  constexpr uint64_t sliced_layout(uint64_t layout, uint64_t args_as_bits, int e_pos, int e_len) {
-    // I have a layout  P0 P1 P2 P3 : I know
-    // need to sort at at compile time ...
-    // inverse permutation of layout
-
-    uint64_t r = 0;
-    int p      = 0;
-    int rank = permutations::size_of_permutation(layout);
-    //uint64_t inverse_layout = permutations::inverse(layout);
-    for (int i = 0; i < rank; ++i) {
-      int n = permutations::apply(layout, n); // traverse the N element in the order of the layout. Slowest first.
-      int q = Q_of_N(args_as_bits, n, e_pos, e_len);
-      if (args_as_bits & (1ull << q)) r += permutations::encode(p++, P);
+  template <int RankN, int RankP, size_t RankQ>
+  constexpr std::array<int, RankP> N_of_P(std::array<bool, RankQ> const &args_as_bits, int e_pos, int e_len) {
+    auto result = nda::make_initialized_array<RankP>(0);
+    // we need to find the P th non long argument, but also correct for the ellipsis
+    // so q iterate on the arguments, n on the dimensions of the original idx_map
+    for (int n = 0, c = 0; n < RankN; ++n) {
+      int q = Q_of_N(n, e_pos, e_len);
+      if (args_as_bits[q]) result[c++] = n;
     }
-    return r;
+    return result;
+  }
+
+  // map P -> Q : almost the same as before except I store Q
+  template <int RankN, int RankP, size_t RankQ>
+  constexpr std::array<int, RankP> Q_of_P(std::array<bool, RankQ> const &args_as_bits, int e_pos, int e_len) {
+    auto result = nda::make_initialized_array<RankP>(0);
+    for (int n = 0, c = 0; n < RankN; ++n) {
+      int q = Q_of_N(n, e_pos, e_len);
+      if (args_as_bits[q]) result[c++] = q;
+    }
+    return result;
+  }
+
+  // map P-> N given N->P : use 0xF as the invalid
+  template <int RankN, int RankP> constexpr std::array<int, RankN> P_of_N(std::array<int, RankP> const &n_of_p) {
+    auto result = nda::make_initialized_array<RankN>(-1);
+    for (int p = 0; p < RankP; ++p) {
+      result[n_of_p[p]] = p;
+      return result;
+    }
+  }
+
+  template <int RankP, int RankN>
+  constexpr std::array<int, RankP> sliced_layout(std::array<int, RankN> const &layout, std::array<int, RankP> const &n_of_p) {
+    auto result = nda::make_initialized_array<RankP>(0);
+    auto p_of_n = P_of_N<RankN>(n_of_p);
+    for (int i = 0, ip = 0; i < RankP; ++i) {
+      int n = layout[n]; // n traverses the N in the order of the layout. Slowest first.
+      int p = p_of_n[n]; // N -> P
+      if (p != -1) result[ip] = p;
+    }
+    return result;
   }
 
   // Small pieces of code for the fold in functions below, with dispatch on type.
@@ -120,16 +123,23 @@ namespace nda::slice_static {
 #define PRINT(...) debug<__VA_ARGS__>().zozo;
 
   // main function: slice the idx_map
-  template <int R, uint64_t Layout, uint64_t Flags, size_t... N, size_t... P, size_t... Q, typename... Args>
-  FORCEINLINE auto slice(std::index_sequence<P...>, std::index_sequence<N...>, std::index_sequence<Q...>, idx_map<R, Layout, Flags> const &idx,
-                         Args const &... args) {
+  template <typename IdxMap, size_t... N, size_t... P, size_t... Q, typename... Args>
+  FORCEINLINE auto slice(std::index_sequence<P...>, std::index_sequence<N...>, std::index_sequence<Q...>, IdxMap const &idx, Args const &... args) {
+    static_assert(IdxMap::rank() == sizeof...(N), "Internal error");
 
-    static constexpr int e_len          = R - sizeof...(Args) + 1; // len of ellipsis : how many ranges are missing
-    static constexpr int e_pos          = compute_ellipsis_position<Args...>();
+    static constexpr int Rank           = IdxMap::rank();
+    static constexpr int e_len          = Rank - sizeof...(Args) + 1; // len of ellipsis : how many ranges are missing
+    static constexpr int e_pos          = compute_e_pos<Args...>();
     static constexpr int rank_of_result = sizeof...(P);
 
-    // compute the bit pattern for the argument, cf above
-    constexpr uint64_t args_as_bits = (((std::is_same_v<Args, range> or std::is_base_of_v<range_all, Args>) ? (1 << Q) : 0) + ...);
+    // Pattern of the arguments. 1 for a range/range_all/ellipsis, 0 for long
+    static constexpr std::array<bool, sizeof...(Q)> args_as_bits{(std::is_same_v<Args, range> or std::is_base_of_v<range_all, Args>)...};
+
+    static constexpr std::array<int, rank_of_result> n_of_p = N_of_P<Rank, rank_of_result>(args_as_bits, e_pos, e_len);
+    static constexpr std::array<int, rank_of_result> q_of_p = Q_of_P<Rank, rank_of_result>(args_as_bits, e_pos, e_len);
+
+    static_assert(n_of_p.size() == rank_of_result, "Oops"); // sanity check
+    static_assert(q_of_p.size() == rank_of_result, "Oops");
 
     auto argstie = std::tie(args...);
 
@@ -137,11 +147,8 @@ namespace nda::slice_static {
 
     long offset = idx.offset() + (get_offset(std::get<Q_of_N(N, e_pos, e_len)>(argstie), std::get<N>(idx.strides())) + ... + 0);
 
-    std::array<long, rank_of_result> len{
-       get_l(std::get<Q_of_P(args_as_bits, P, e_pos, e_len)>(argstie), std::get<N_of_P(args_as_bits, P, e_pos, e_len)>(idx.lengths()))...};
-
-    std::array<long, rank_of_result> str{
-       get_s(std::get<Q_of_P(args_as_bits, P, e_pos, e_len)>(argstie), std::get<N_of_P(args_as_bits, P, e_pos, e_len)>(idx.strides()))...};
+    std::array<long, rank_of_result> len{get_l(std::get<q_of_p[P]>(argstie), std::get<n_of_p[P]>(idx.lengths()))...};
+    std::array<long, rank_of_result> str{get_s(std::get<q_of_p[P]>(argstie), std::get<n_of_p[P]>(idx.strides()))...};
 
     // FIXME
     //return idx_map<rank_of_result, sliced_layout(Layout, bitsP, rank_of_result, e_pos, e_len), slided_flags(Flags)>{len, str, offset};

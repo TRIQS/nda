@@ -65,7 +65,8 @@ namespace nda {
     long _offset = 0;
 
     public:
-    static constexpr uint64_t layout = (Layout == 0 ? permutations::identity(Rank) : Layout); // 0 is C layout
+    static constexpr std::array<int, Rank> layout =
+       (Layout == 0 ? permutations::identity<Rank>() : permutations::decode<Rank>(Layout)); // 0 is C layout
 
     static constexpr bool ce_is_contiguous() { return Flags & flags::is_contiguous; }
     static constexpr bool ce_fastest_stride_is_one() { return Flags & flags::fastest_stride_is_one; }
@@ -100,15 +101,15 @@ namespace nda {
     }
 
     ///
-    static constexpr bool is_layout_C() { return (layout == permutations::identity(Rank)); }
+    static constexpr bool is_layout_C() { return (layout == permutations::identity<Rank>()); }
 
     ///
-    static constexpr bool is_layout_Fortran() { return (layout == permutations::reverse_identity(Rank)); }
+    static constexpr bool is_layout_Fortran() { return (layout == permutations::reverse_identity<Rank>()); }
 
     ///
     bool check_layout() const noexcept {
       bool r = true;
-      for (int i = 1; i < rank(); ++i) r &= (str[permutations::apply(layout, i - 1)] <= str[permutations::apply(layout, i)]); // runtime
+      for (int i = 1; i < rank(); ++i) r &= (str[layout[i - 1]] <= str[layout[i]]); // runtime
       return r;
     }
 
@@ -152,7 +153,7 @@ namespace nda {
       long s = 1;
 
       for (int v = this->rank() - 1; v >= 0; --v) { // rank() is constexpr ...
-        int u  = permutations::apply(layout, v);    // runtime but fast
+        int u  = layout[v];
         str[u] = s;
         s *= len[u];
       }
@@ -180,7 +181,7 @@ namespace nda {
     // ----------------  Call operator -------------------------
 
     private:
-    static constexpr int position_fastest_index = permutations::apply(layout, Rank-1); // by definition
+    static constexpr int position_fastest_index = layout[Rank - 1]; // by definition
 
     // call implementation
     template <typename... Args, size_t... Is> FORCEINLINE long call_impl(std::index_sequence<Is...>, Args const &... args) const noexcept {
@@ -271,12 +272,12 @@ namespace nda {
   //// ----------------  More complex iterators -------------------------
 
   //template <int Rank, bool WithIndices, typename TraversalOrder> struct _changed_iter {
-    //idx_map<Rank> const *im;
-    //using iterator = idx_map_iterator<Rank, WithIndices, TraversalOrder>;
-    //iterator begin() const { return {im}; }
-    //iterator cbegin() const { return {im}; }
-    //typename iterator::end_sentinel_t end() const { return {}; }
-    //typename iterator::end_sentinel_t cend() const { return {}; }
+  //idx_map<Rank> const *im;
+  //using iterator = idx_map_iterator<Rank, WithIndices, TraversalOrder>;
+  //iterator begin() const { return {im}; }
+  //iterator cbegin() const { return {im}; }
+  //typename iterator::end_sentinel_t end() const { return {}; }
+  //typename iterator::end_sentinel_t cend() const { return {}; }
   //};
 
   //// for (auto [pos, idx] : enumerate(idxmap)) : iterate on position and indices
