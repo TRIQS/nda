@@ -1,5 +1,4 @@
 #pragma once
-#include "./permutation.hpp"
 namespace nda {
 
   /**
@@ -14,23 +13,15 @@ namespace nda {
     using idx_t               = std::array<long, Rank>;
     idx_t idx;
     long pos = 0;
-    std::array<long, Rank> len, strides;
-    //std::array<int, Rank> permu = permutation::as_array(IdxMap::layout);
-
-    long posmax0, posmax1;
+    std::array<long, Rank> len,strides;
 
     public:
     idx_map_iterator() = default;
     idx_map_iterator(IdxMap const *im_ptr) : im(im_ptr), pos(im->offset()), len(im->lengths()), strides(im->strides()) {
-      //for (int u = 0; u < im->rank(); ++u) idx[u] = 0;
-      posmax0 = pos + len[0] * strides[0];
-     if constexpr(Rank==2) { 
-       posmax1 =       pos + len[1] * strides[1];
-     }
+      for (int u = 0; u < im->rank(); ++u) idx[u] = 0;
     }
 
-    using difference_type = std::ptrdiff_t;
-    //using value_type        = long;
+    using difference_type   = std::ptrdiff_t;
     using value_type        = std::conditional_t<WithIndices, std::pair<long, idx_t const &>, long>;
     using iterator_category = std::forward_iterator_tag;
     using pointer           = value_type *;
@@ -41,13 +32,7 @@ namespace nda {
 
     bool operator==(end_sentinel_t) const {
       if constexpr (Rank == 1) // faster implementation
-      //  return idx[0] == len[0];
-     return pos == posmax0;
-      else if constexpr (Rank == 1) // faster implementation
-      { 
-	return pos 
-       
-      }
+        return idx[0] == len[0];
       else
         return pos == -1;
     }
@@ -68,25 +53,15 @@ namespace nda {
     idx_map_iterator &operator++() {
 
       if constexpr (Rank == 1) { // faster implementation
-        //++(idx[0]);
+        ++(idx[0]);
         pos += strides[0];
         return *this;
-      } else
-     
-     if constexpr(Rank==2) { 
-
-       pos1 += strides[1];
-       if (pos1 != posmax1) return *this; 
-       pos1 = 0;
-       pos0 += strides[0]; 
-       return  *this;
-     }
-       else 
-      {
+      } else {
 
         // traverse : fastest index first, then slowest..
-        for (int v = Rank - 1; v >= 0; --v) {
-          int p = v; //permutations::apply(im->layout, v);
+        for (int v = im->rank() - 1; v >= 0; --v) {
+
+          int p = v;
           if (idx[p] < len[p] - 1) {
             ++(idx[p]);
             pos += strides[p];
