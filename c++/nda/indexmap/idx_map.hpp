@@ -5,10 +5,15 @@
 #include <array>
 #include <numeric>
 
+namespace nda {
+  template <int Rank, uint64_t Layout = 0, uint64_t Flags = 0> class idx_map;
+}
+
 #include "./slice_static.hpp"
 #include "./bound_check_worker.hpp"
 #include "./idx_map_iterator.hpp"
 #include "./for_each.hpp"
+#include "./permutation.hpp"
 
 namespace boost::serialization {
   class access;
@@ -22,33 +27,50 @@ namespace nda {
   /// Shape factory
   template <typename... T> shape_t<sizeof...(T)> make_shape(T... args) noexcept { return {args...}; }
 
-  namespace layout {
-
-    inline struct C_t {
-    } C;
-    inline struct Fortran_t { } Fortran; } // namespace layout
-
-  /// Type of layout (the general categories which are invariant by slicing).
-  //enum class layout { C, Fortran, Custom};
+  namespace flags {
+    static constexpr uint64_t is_contiguous         = 0x1; // CamelCase convention for the Flags
+    static constexpr uint64_t fastest_stride_is_one = 0x2;
+    static constexpr uint64_t has_zero_offset       = 0x4;
+  } // namespace flags
 
   // -----------------------------------------------------------------------------------
   /**
    *
    * The map of the indices to linear index.
    *
-  ` * It is a set of lengths and strides for each dimensions, and a shift.
+   * It is a set of lengths and strides for each dimensions, and a shift.
    *
+   * @tparam Rank : rank of the index map
+   * 
+   * @tparam Layout : a permutation for the memory layout of the array
+   *    
+   *    Layout[0] : the slowest index,
+   *    Layout[Rank-1] : the fastest index
+   *    Example :
+   *        012 : C the last index is the fastest
+   *        210 : Fortran, the first index is the fastest
+   *        120 : storage (i,j,k) is : index j is slowest, then k, then i
+   *    
+   *    NB : Layout = 0 is the default and it is means 0 order
+   *
+   * @tparam Flags : additional information known at compile time, as bit pattern/
+   * 	isContiguous & fastestStrideIsOne 
    *
    * */
-  template <int Rank> class idx_map {
+  template <int Rank, uint64_t Layout, uint64_t Flags> class idx_map {
 
     static_assert(Rank < 64, "Rank must be < 64"); // constraint of slice implementation. ok...
 
     std::array<long, Rank> len, str;
     long _offset = 0;
-    //using layout_t = std::array<int, Rank>;
 
     public:
+    static constexpr uint64_t layout = (Layout == 0 ? permutations::identity(Rank) : Layout); // 0 is C layout
+
+    static constexpr bool ce_is_contiguous() { return Flags & flags::is_contiguous; }
+    static constexpr bool ce_fastest_stride_is_one() { return Flags & flags::fastest_stride_is_one; }
+    static constexpr bool ce_has_zero_offset() { return Flags & flags::has_zero_offset; }
+
     // ----------------  Accessors -------------------------
 
     /// Rank of the map (number of arguments)
@@ -72,40 +94,22 @@ namespace nda {
 
     /// Is the data contiguous in memory ?
     bool is_contiguous() const noexcept {
+      if constexpr (ce_is_contiguous()) return true;
       int slowest_index = std::distance(str.begin(), std::min_element(str.begin(), str.end())); // index with minimal stride
       return (str[slowest_index] * len[slowest_index] == size());
     }
 
     ///
-    bool is_layout_C() const noexcept {
-      bool r = true;
-      for (int i = 1; i < rank(); ++i) r &= (str[i - 1] >= str[i]);
-      return r;
-    }
+    static constexpr bool is_layout_C() { return (layout == permutations::identity(Rank)); }
 
     ///
-    bool is_layout_Fortran() const noexcept {
-      bool r = true;
-      for (int i = 1; i < rank(); ++i) r &= (str[i - 1] <= str[i]);
-      return r;
-    }
+    static constexpr bool is_layout_Fortran() { return (layout == permutations::reverse_identity(Rank)); }
 
-    /**
-     * Computes the layout. 
-     * Return an array/vector layout such that
-     * layout[0] is the slowest index (i.e. largest stride)
-     * layout[rank] the fastest index (i.e. smallest stride)\
-     * 
-     * NB. Not very quick, it sorts the strides
-     */
-    std::array<int, Rank> layout() const noexcept {
-      std::array<int, Rank> lay;
-      std::array<std::pair<int, int>, Rank> lay1;
-      // Compute the permutation
-      for (int i = 0; i < rank(); ++i) lay1[i] = {str[i], i};
-      std::sort(lay1.begin(), lay1.end(), std::greater<>{});
-      for (int i = 0; i < rank(); ++i) lay[i] = lay1[i].second;
-      return lay;
+    ///
+    bool check_layout() const noexcept {
+      bool r = true;
+      for (int i = 1; i < rank(); ++i) r &= (str[permutations::apply(layout, i - 1)] <= str[permutations::apply(layout, i)]); // runtime
+      return r;
     }
 
     // ----------------  Constructors -------------------------
@@ -125,6 +129,9 @@ namespace nda {
     ///
     idx_map &operator=(idx_map &&) = default;
 
+    /// Construction from a similar idx_map, but with different flags
+    template <uint64_t Flags2> idx_map(idx_map<Rank, Layout, Flags2> const &idx) : len(idx.lengths()), str(idx.strides()), _offset(idx.offset()) {}
+
     /** 
      * Construction from the lengths, the strides, offset
      * @param lengths
@@ -140,43 +147,20 @@ namespace nda {
      * @param strides
      * @param offset
      */
-    idx_map(std::array<long, Rank> const &lengths, std::array<int, Rank> const &layout) noexcept : len(lengths) {
-      len = lengths;
+    idx_map(std::array<long, Rank> const &lengths) noexcept : len(lengths) {
       // compute the strides for a compact array
       long s = 1;
+
       for (int v = this->rank() - 1; v >= 0; --v) { // rank() is constexpr ...
-        int u  = layout[v];
+        int u  = permutations::apply(layout, v);    // runtime but fast
         str[u] = s;
         s *= len[u];
       }
       assert(str == size());
     }
 
-    /// From the lengths. A compact set of indices, in C
-    idx_map(std::array<long, Rank> const &lengths, layout::C_t) noexcept {
-      len    = lengths;
-      long s = 1;
-      for (int v = this->rank() - 1; v >= 0; --v) { // rank() is constexpr ...
-        str[v] = s;
-        s *= len[v];
-      }
-    }
-
-    /// From the lengths. A compact set of indices, in Fortran
-    idx_map(std::array<long, Rank> const &lengths, layout::Fortran_t) noexcept {
-      len    = lengths;
-      long s = 1;
-      for (int v = 0; v < this->rank(); --v) { // rank() is constexpr ...
-        str[v] = s;
-        s *= len[v];
-      }
-    }
-
-    /// From the lengths. A compact set of indices, in C order.
-    idx_map(std::array<long, Rank> const &lengths) noexcept : idx_map{lengths, layout::C} {}
-
-    // trap
-    template <int R> idx_map(std::array<long, R>) { static_assert(R == Rank, "WRONG"); }
+    // trap for incorrect calls. For R = Rank, the non template has priority
+    template <int R> idx_map(std::array<long, R> const &) { static_assert(R == Rank, "Rank of the argument incorrect in idx_map construction"); }
 
     /**
      * @param idx An index map with dynamical rank
@@ -191,14 +175,19 @@ namespace nda {
       }
       _offset = m.offset();
     }
-*/
+    */
 
     // ----------------  Call operator -------------------------
 
     private:
+    static constexpr int position_fastest_index = permutations::apply(layout, Rank-1); // by definition
+
     // call implementation
     template <typename... Args, size_t... Is> FORCEINLINE long call_impl(std::index_sequence<Is...>, Args const &... args) const noexcept {
-      return ((args * str[Is]) + ...);
+      if constexpr (ce_fastest_stride_is_one())
+        return (((Is != position_fastest_index) ? args * str[Is] : args) + ...);
+      else
+        return ((args * str[Is]) + ...);
     }
 
 #ifdef NDA_ENFORCE_BOUNDCHECK
@@ -234,9 +223,13 @@ namespace nda {
 #endif
 
       if constexpr (n_args_long == Rank) { // no range, ellipsis, we simply compute the linear position
-        return _offset
-           + call_impl(std::make_index_sequence<sizeof...(Args)>{}, args...); // NB do not use index_sequence_for : one instantation only by # args.
-      } else {                                                                // otherwise we make a  new sliced idx_map
+        auto _fold = call_impl(std::make_index_sequence<sizeof...(Args)>{},
+                               args...); // NB do not use index_sequence_for : one instantation only by # args.
+        if (ce_has_zero_offset())        // zero offset optimization
+          return _fold;
+        else
+          return _offset + _fold;
+      } else { // otherwise we make a  new sliced idx_map
         return slice_static::slice(std::make_index_sequence<Rank - n_args_long>{}, std::make_index_sequence<Rank>{},
                                    std::make_index_sequence<sizeof...(Args)>{}, *this, args...);
       }
@@ -244,7 +237,7 @@ namespace nda {
 
     // ----------------  Iterator -------------------------
 
-    using iterator = idx_map_iterator<Rank>;
+    using iterator = idx_map_iterator<idx_map<Rank, Layout, Flags>>;
 
     iterator begin() const { return {this}; }
     iterator cbegin() const { return {this}; }
@@ -275,19 +268,19 @@ namespace nda {
     return {l, s, idx.offset()};
   }
 
-  // ----------------  More complex iterators -------------------------
+  //// ----------------  More complex iterators -------------------------
 
-  template <int Rank, bool WithIndices, typename TraversalOrder> struct _changed_iter {
-    idx_map<Rank> const *im;
-    using iterator = idx_map_iterator<Rank, WithIndices, TraversalOrder>;
-    iterator begin() const { return {im}; }
-    iterator cbegin() const { return {im}; }
-    typename iterator::end_sentinel_t end() const { return {}; }
-    typename iterator::end_sentinel_t cend() const { return {}; }
-  };
+  //template <int Rank, bool WithIndices, typename TraversalOrder> struct _changed_iter {
+    //idx_map<Rank> const *im;
+    //using iterator = idx_map_iterator<Rank, WithIndices, TraversalOrder>;
+    //iterator begin() const { return {im}; }
+    //iterator cbegin() const { return {im}; }
+    //typename iterator::end_sentinel_t end() const { return {}; }
+    //typename iterator::end_sentinel_t cend() const { return {}; }
+  //};
 
-  // for (auto [pos, idx] : enumerate(idxmap)) : iterate on position and indices
-  template <int Rank> _changed_iter<Rank, true, traversal::C_t> enumerate_indices(idx_map<Rank> const &x) { return {&x}; }
+  //// for (auto [pos, idx] : enumerate(idxmap)) : iterate on position and indices
+  //template <int Rank> _changed_iter<Rank, true, traversal::C_t> enumerate_indices(idx_map<Rank> const &x) { return {&x}; }
 
   //template <int Rank> _changed_iter<Rank, false, traversal::Dynamical_t> in_layout_order(idx_map<Rank> const &x) { return {&x}; }
   //template <int Rank> _changed_iter<Rank, true, traversal::Dynamical_t> enumerate_indices_in_layout_order(idx_map<Rank> const &x) { return {&x}; }

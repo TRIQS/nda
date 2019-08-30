@@ -1,7 +1,7 @@
 // ------------------------------- data access --------------------------------------------
 
 // The Index Map object
-idx_map<Rank> const &indexmap() const { return _idx_m; }
+auto const &indexmap() const { return _idx_m; }
 
 // The storage handle
 storage_t const &storage() const { return _storage; }

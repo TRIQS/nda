@@ -52,12 +52,25 @@ namespace nda {
   }
 */
 
+  namespace permutations {
+
+    inline to_string(uint64_t perm) {
+      std::stringstream fs;
+      int s = size_of_permutation(perm);
+      fs << "[" << apply(perm, 0);
+      for (int i = 1; i < s; ++i) fs << ',' << apply(perm, i);
+      fs << "]";
+      return fs.str();
+    }
+
+  } // namespace permutations
+
   // idx_map
   template <int Rank> std::ostream &operator<<(std::ostream &out, idx_map<Rank> const &x) {
     return out << "  Lengths  : " << x.lengths() << "\n"
                << "  Strides  : " << x.strides() << "\n"
                << "  Offset   : " << x.offset() << "\n"
-               << "  Layout   : " << x.layout() << "\n";
+               << "  Layout   : " << permutations::to_string(x.layout) << "\n";
   }
 
 } // namespace nda

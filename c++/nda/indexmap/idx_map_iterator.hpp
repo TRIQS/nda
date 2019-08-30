@@ -1,15 +1,6 @@
 #pragma once
+#include "./permutation.hpp"
 namespace nda {
-
-  namespace traversal {
-
-    inline struct C_t {
-    } C;
-    inline struct Fortran_t {
-    } Fortran;
-    inline struct Dynamical_t { } Dynamical; } // namespace traversal
-
-  template <int Rank> class idx_map; //forward
 
   /**
     * Iterator on the idx_map.
@@ -17,20 +8,29 @@ namespace nda {
     * Output can be
     * It is given by a permutation, with the same convention as IndexOrder.
     */
-  template <int Rank, bool WithIndices = false, typename TraversalOrder = traversal::C_t> class idx_map_iterator {
-    idx_map<Rank> const *im = nullptr;
-    using idx_t             = std::array<long, Rank>;
+  template <typename IdxMap, bool WithIndices = false> class idx_map_iterator {
+    IdxMap const *im          = nullptr;
+    static constexpr int Rank = IdxMap::rank();
+    using idx_t               = std::array<long, Rank>;
     idx_t idx;
     long pos = 0;
-    std::array<long, Rank> len,strides;
+    std::array<long, Rank> len, strides;
+    //std::array<int, Rank> permu = permutation::as_array(IdxMap::layout);
+
+    long posmax0, posmax1;
 
     public:
     idx_map_iterator() = default;
-    idx_map_iterator(idx_map<Rank> const *im_ptr) : im(im_ptr), pos(im->offset()), len(im->lengths()), strides(im->strides()) {
-      for (int u = 0; u < im->rank(); ++u) idx[u] = 0;
+    idx_map_iterator(IdxMap const *im_ptr) : im(im_ptr), pos(im->offset()), len(im->lengths()), strides(im->strides()) {
+      //for (int u = 0; u < im->rank(); ++u) idx[u] = 0;
+      posmax0 = pos + len[0] * strides[0];
+     if constexpr(Rank==2) { 
+       posmax1 =       pos + len[1] * strides[1];
+     }
     }
 
-    using difference_type   = std::ptrdiff_t;
+    using difference_type = std::ptrdiff_t;
+    //using value_type        = long;
     using value_type        = std::conditional_t<WithIndices, std::pair<long, idx_t const &>, long>;
     using iterator_category = std::forward_iterator_tag;
     using pointer           = value_type *;
@@ -41,7 +41,13 @@ namespace nda {
 
     bool operator==(end_sentinel_t) const {
       if constexpr (Rank == 1) // faster implementation
-        return idx[0] == len[0];
+      //  return idx[0] == len[0];
+     return pos == posmax0;
+      else if constexpr (Rank == 1) // faster implementation
+      { 
+	return pos 
+       
+      }
       else
         return pos == -1;
     }
@@ -62,24 +68,25 @@ namespace nda {
     idx_map_iterator &operator++() {
 
       if constexpr (Rank == 1) { // faster implementation
-        ++(idx[0]);
+        //++(idx[0]);
         pos += strides[0];
         return *this;
-      } else {
+      } else
+     
+     if constexpr(Rank==2) { 
+
+       pos1 += strides[1];
+       if (pos1 != posmax1) return *this; 
+       pos1 = 0;
+       pos0 += strides[0]; 
+       return  *this;
+     }
+       else 
+      {
 
         // traverse : fastest index first, then slowest..
-        for (int v = im->rank() - 1; v >= 0; --v) {
-
-          int p;
-          if constexpr (std::is_same_v<TraversalOrder, traversal::C_t>) {
-            p = v;
-          } else if constexpr (std::is_same_v<TraversalOrder, traversal::Fortran_t>) {
-            p = im->rank() - v - 1;
-          } 
-	  //else if constexpr (std::is_same_v<TraversalOrder, traversal::Dynamical_t>) {
-          //  p = im->layout()[v];
-          //}
-
+        for (int v = Rank - 1; v >= 0; --v) {
+          int p = v; //permutations::apply(im->layout, v);
           if (idx[p] < len[p] - 1) {
             ++(idx[p]);
             pos += strides[p];
