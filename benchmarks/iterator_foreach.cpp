@@ -54,7 +54,7 @@ BENCHMARK(pointer_1A);
 static void pointer_1B(benchmark::State &state) {
   nda::array<double, 1> a(N1);
 
-  const long s0 = a.indexmap().strides()[0];
+  //const long s0 = a.indexmap().strides()[0];
   const long l0 = a.indexmap().lengths()[0];
 
   while (state.KeepRunning()) {
@@ -100,7 +100,7 @@ static void pointer_2A(benchmark::State &state) {
 
   const long l0 = a.indexmap().lengths()[0];
   const long l1 = a.indexmap().lengths()[1];
-  auto len =  a.indexmap().lengths();
+ // auto len =  a.indexmap().lengths();
   auto str =  a.indexmap().strides();
   while (state.KeepRunning()) {
     double *__restrict__ p = &(a(0, 0));
