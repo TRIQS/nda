@@ -5,6 +5,8 @@ static_assert(!std::is_pod<nda::array<long, 2>>::value, "POD pb");
 
 // ==============================================================
 
+
+
 TEST(NDA, Create1) {
   nda::array<long, 2> A(3, 3);
   EXPECT_EQ(A.shape(), (myshape_t<2>{3, 3}));
@@ -26,10 +28,11 @@ TEST(NDA, View) {
     for (int j = 0; j < 3; ++j)
       for (int k = 0; k < 4; ++k) a(i, j, k) = i + 10 * j + 100 * k;
 
-  nda::array_view<long,1> v = a(_, 1, 2);
+  auto v = a(_, 1, 2);
+  //nda::array_view<long,1> v = a(_, 1, 2);
 
-  std::cerr << v.indexmap() <<std::endl;
-  f(v);
+  //std::cerr << v.indexmap() <<std::endl;
+  //f(v);
 
   EXPECT_EQ(v.shape(), (myshape_t<1>{3}));
 

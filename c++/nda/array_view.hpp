@@ -9,6 +9,7 @@ namespace nda {
 
   // forward
   template <typename ValueType, int Rank> class array;
+  template <typename ValueType, int Rank, uint64_t Flags = 0, uint64_t Layout = 0> class array_view;
 
   // detects ellipsis in a argument pack
   template <typename... T> constexpr bool ellipsis_is_present = ((std::is_same_v<T, ellipsis> ? 1 : 0) + ... + 0); // +0 because it can be empty
@@ -17,14 +18,12 @@ namespace nda {
 
   // Try to put the const/mutable in the TYPE
 
-  //template <typename ValueType, int Rank, cm_e ConstMutable = Mutable, mem_policy_e MemPolicy = Borrowed>
-  template <typename ValueType, int Rank, mem_policy_e MemPolicy = mem_policy_e::Borrowed>
+  template <typename ValueType, int Rank, uint64_t Flags, uint64_t Layout>
   class array_view : tag::concepts::_array, tag::containers::_array_view {
-    //static_assert(!std::is_const<ValueType>::value, "no const type");
 
     public:
-    using value_t                  = std::remove_const_t<ValueType>;
-    using value_as_template_arg_t  = ValueType;
+    using value_t                 = std::remove_const_t<ValueType>;
+    using value_as_template_arg_t = ValueType;
 
     using storage_t = mem::handle<value_t, 'B'>;
     using idx_map_t = idx_map<Rank, Layout, Flags>;
@@ -41,7 +40,7 @@ namespace nda {
     // static std::string hdf5_scheme() { return "array<" + triqs::h5::get_hdf5_scheme<value_t>() + "," + std::to_string(rank) + ">"; }
 
     private:
-    template <typename IdxMap> using my_view_template_t = array_view<value_t, IdxMap::rank(), IdxMap::flags, permutations::encode(IdxMap::layout)>;
+    template <typename IdxMap> using my_view_template_t = array_view<value_t, IdxMap::rank(),IdxMap::flags , permutations::encode(IdxMap::layout)>;
 
     idx_map_t _idx_m;
     storage_t _storage;
@@ -81,7 +80,8 @@ namespace nda {
      * NB : short cut for array_view (x.indexmap(), x.storage())
      * Allows cross construction of array_view from matrix/matrix view e.g.
      */
-    template <typename T> explicit array_view(T const &a) : array_view(a.indexmap(), a.storage()) {}
+    template <typename T> //explicit
+    array_view(T const &a) : array_view(a.indexmap(), a.storage()) {}
 
     // Move assignment not defined : will use the copy = since view must copy data
 
@@ -129,10 +129,25 @@ namespace nda {
     //check https://godbolt.org/z/G_QRCU
 
     //----------------------------------------------------
-    
+
 #include "./_regular_view_common.hpp"
   };
 
+/*
+  template <typename ValueType, int Rank, uint64_t Flags, uint64_t Layout> class array_view : public array_view<ValueType, Rank, 0, Layout> {
+
+    using B = array_view<ValueType, Rank, 0, Layout>;
+
+    public:
+   
+    using B::B;
+    using B::operator=;
+
+    // redefine oeprator() 
+ // add a cross constructor
+
+  };
+*/
   /// Aliases
   template <typename ValueType, int Rank, uint64_t Flags = 0, uint64_t Layout = 0>
   using array_const_view = array_view<ValueType const, Rank, Layout, Flags>;
