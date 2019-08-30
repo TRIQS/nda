@@ -1,4 +1,5 @@
 #pragma once
+#include <ostream>
 
 // FIXME : MOVE THIS
 namespace std { // For ADL
@@ -17,6 +18,20 @@ namespace std { // For ADL
 
 namespace nda {
 
+  // idx_map
+  template <int Rank, uint64_t Layout, uint64_t Flags> std::ostream &operator<<(std::ostream &out, idx_map<Rank, Layout, Flags> const &x) {
+    return out << "  Lengths  : " << x.lengths() << "\n"
+               << "  Strides  : " << x.strides() << "\n"
+               << "  Offset   : " << x.offset() << "\n"
+               << "  Layout   : " << x.layout << "\n"
+               << "  Flags   :  " << (flags::has_contiguous(x.flags) ? "contiguous   " : " ") << (flags::has_strided(x.flags) ? "strided   " : " ")
+               << (flags::has_fastest_stride_is_one(x.flags) ? "fastest_stride_is_one   " : " ")
+               << (flags::has_zero_offset(x.flags) ? "zero_offset   " : " ") << "\n";
+  }
+
+  // ==============================================
+
+  // array
   template <typename A> std::ostream &operator<<(std::ostream &out, A const &a) REQUIRES(is_regular_or_view_v<A>) {
 
     if constexpr (A::rank == 1) {

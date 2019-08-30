@@ -31,7 +31,7 @@ namespace nda {
     public:
     using value_t   = ValueType;
     using storage_t = mem::handle<ValueType, 'R'>;
-    using idx_map_t = idx_map<Rank, 0, flags::is_contiguous | flags::has_zero_offset | flags::fastest_stride_is_one>;
+    using idx_map_t = idx_map<Rank, 0, flags::contiguous | flags::zero_offset | flags::fastest_stride_is_one>;
 
     using regular_t    = array<ValueType, Rank>;
     using view_t       = array_view<ValueType, Rank>;

@@ -8,6 +8,8 @@ static_assert(!std::is_pod<nda::array<long, 2>>::value, "POD pb");
 TEST(NDA, Create1) {
   nda::array<long, 2> A(3, 3);
   EXPECT_EQ(A.shape(), (myshape_t<2>{3, 3}));
+
+  std::cerr << A.indexmap() <<std::endl;
 }
 
 // -------------------------------------

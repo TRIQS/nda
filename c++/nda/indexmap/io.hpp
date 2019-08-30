@@ -27,7 +27,7 @@ namespace std {
 
   template <typename T, size_t N> std::ostream &operator<<(std::ostream &out, std::array<T, N> const &v) {
     out << "(";
-    for (size_t i = 0; i < N; ++i) out << (i == 0 ? "" : " ") << int(v[i]);
+    for (size_t i = 0; i < N; ++i) out << (i == 0 ? "" : " ") << v[i];
     out << ")";
     return out;
   }
@@ -51,7 +51,7 @@ namespace nda {
     return out;
   }
 */
-/*
+  /*
   namespace permutations {
 
     inline std::to_string(uint64_t perm) {
@@ -65,12 +65,4 @@ namespace nda {
 
   } // namespace permutations
 */
-  // idx_map
-  template <int Rank> std::ostream &operator<<(std::ostream &out, idx_map<Rank> const &x) {
-    return out << "  Lengths  : " << x.lengths() << "\n"
-               << "  Strides  : " << x.strides() << "\n"
-               << "  Offset   : " << x.offset() << "\n"
-               << "  Layout   : " << x.layout << "\n";
-  }
-
-} // namespace nda
+ } // namespace nda

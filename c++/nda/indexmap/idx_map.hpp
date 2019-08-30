@@ -7,7 +7,21 @@
 
 namespace nda {
   template <int Rank, uint64_t Layout = 0, uint64_t Flags = 0> class idx_map;
-}
+
+  namespace flags {
+    static constexpr uint64_t contiguous            = 0x1; // CamelCase convention for the Flags
+    static constexpr uint64_t fastest_stride_is_one = 0x2;
+    static constexpr uint64_t strided               = 0x4;
+    static constexpr uint64_t zero_offset           = 0x8;
+
+    static constexpr bool has_contiguous(uint64_t f) { return f & flags::contiguous; }
+    static constexpr bool has_fastest_stride_is_one(uint64_t f) { return f & flags::fastest_stride_is_one; }
+    static constexpr bool has_strided(uint64_t f) { return f & flags::strided; }
+    static constexpr bool has_zero_offset(uint64_t f) { return f & flags::zero_offset; }
+
+  } // namespace flags
+
+} // namespace nda
 
 #include "./slice_static.hpp"
 #include "./bound_check_worker.hpp"
@@ -26,12 +40,6 @@ namespace nda {
 
   /// Shape factory
   template <typename... T> shape_t<sizeof...(T)> make_shape(T... args) noexcept { return {args...}; }
-
-  namespace flags {
-    static constexpr uint64_t is_contiguous         = 0x1; // CamelCase convention for the Flags
-    static constexpr uint64_t fastest_stride_is_one = 0x2;
-    static constexpr uint64_t has_zero_offset       = 0x4;
-  } // namespace flags
 
   // -----------------------------------------------------------------------------------
   /**
@@ -68,9 +76,7 @@ namespace nda {
     static constexpr std::array<int, Rank> layout =
        (Layout == 0 ? permutations::identity<Rank>() : permutations::decode<Rank>(Layout)); // 0 is C layout
 
-    static constexpr bool ce_is_contiguous() { return Flags & flags::is_contiguous; }
-    static constexpr bool ce_fastest_stride_is_one() { return Flags & flags::fastest_stride_is_one; }
-    static constexpr bool ce_has_zero_offset() { return Flags & flags::has_zero_offset; }
+    static constexpr uint64_t flags = Flags;
 
     // ----------------  Accessors -------------------------
 
@@ -95,7 +101,7 @@ namespace nda {
 
     /// Is the data contiguous in memory ?
     bool is_contiguous() const noexcept {
-      if constexpr (ce_is_contiguous()) return true;
+      if constexpr (flags::has_contiguous(Flags)) return true;
       int slowest_index = std::distance(str.begin(), std::min_element(str.begin(), str.end())); // index with minimal stride
       return (str[slowest_index] * len[slowest_index] == size());
     }
@@ -185,7 +191,7 @@ namespace nda {
 
     // call implementation
     template <typename... Args, size_t... Is> FORCEINLINE long call_impl(std::index_sequence<Is...>, Args const &... args) const noexcept {
-      if constexpr (ce_fastest_stride_is_one())
+      if constexpr (flags::has_fastest_stride_is_one(Flags))
         return (((Is != position_fastest_index) ? args * str[Is] : args) + ...);
       else
         return ((args * str[Is]) + ...);
@@ -225,8 +231,8 @@ namespace nda {
 
       if constexpr (n_args_long == Rank) { // no range, ellipsis, we simply compute the linear position
         auto _fold = call_impl(std::make_index_sequence<sizeof...(Args)>{},
-                               args...); // NB do not use index_sequence_for : one instantation only by # args.
-        if (ce_has_zero_offset())        // zero offset optimization
+                               args...);   // NB do not use index_sequence_for : one instantation only by # args.
+        if (flags::has_zero_offset(Flags)) // zero offset optimization
           return _fold;
         else
           return _offset + _fold;
