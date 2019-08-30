@@ -115,7 +115,43 @@ namespace nda::slice_static {
     return layout;
   }
 
-  // ------------  Small pieces of code for the fold in functions below, with dispatch on type.
+  // -------------- are all the range/ellipsis grouped ? -----------
+  // args_is_range : as before
+  // layout : the layout of idx_map to be slided
+  // the P : number of 1 in args_is_range (rank of sliced map)
+  // fl : flags of the idx_map to be sliced
+  //
+  template <size_t Q, size_t N>
+  constexpr uint64_t slice_flags(std::array<bool, Q> const &args_is_range, std::array<int, N> const &layout_in, int P, uint64_t fl) {
+    // count the number of times 10 appears args_in_range
+    // we must traverse in the order of the layout ! (in memory order, slowest to fastest)
+    int n_10_pattern = 0;
+    for (size_t i = 1; i < Q; ++i) {
+      int n = layout_in[i];
+      if (args_is_range[n - 1] and (not args_is_range[n])) ++n_10_pattern;
+    }
+    bool range_are_grouped_in_memory             = (n_10_pattern <= 1);
+    bool range_are_grouped_in_memory_and_fastest = (n_10_pattern == 0);
+
+    uint64_t r = 0;
+
+    if (flags::has_contiguous(fl) and range_are_grouped_in_memory_and_fastest) r |= flags::contiguous;
+    if (flags::has_contiguous(fl) and range_are_grouped_in_memory) r |= flags::strided;
+    if (flags::has_fastest_stride_is_one(fl) and (not args_is_range[layout_in[P - 1]])) r |= flags::fastest_stride_is_one;
+
+    return r;
+  }
+
+  // -------------- are all the range/ellipsis grouped ? -----------
+  template <size_t Q> constexpr bool slice_(std::array<bool, Q> const &args_is_range) {
+    // count the number of times 10 appears args_in_range
+    int n_10_pattern = 0;
+    for (size_t i = 1; i < Q; ++i)
+      if (args_is_range[i - 1] and (not args_is_range[i])) ++n_10_pattern;
+    return (n_10_pattern <= 1);
+  }
+
+  // ------------  Small pieces of code for the fold in functions below, with dispatch on type --------------------------------------
   // offset
   // first arg : the n-th argument (after expansion of the ellipsis)
   // second arg : s_n  : stride[n] of the idx_map
@@ -138,7 +174,8 @@ namespace nda::slice_static {
   template <int... R> struct debug {};
 #define PRINT(...) debug<__VA_ARGS__>().zozo;
 
-  // ----------------------------- slice of index map
+  // ----------------------------- slice of index map ----------------------------------------------
+
   // Ns, Ps, Qs : sequence indices for size N, P, Q
   // IdxMap : type of the indexmap idx
   // Arg : arguments of the slice
@@ -176,7 +213,7 @@ namespace nda::slice_static {
     std::array<long, P> str{get_s(std::get<q_of_p[Ps]>(argstie), std::get<n_of_p[Ps]>(idxm.strides()))...};
 
     static constexpr std::array<int, P> layout = sliced_layout(IdxMap::layout, n_of_p);
-    static constexpr uint64_t flags            = 0;
+    static constexpr uint64_t flags            = slice_flags(args_is_range, IdxMap::layout, P, IdxMap::flags);
 
     return idx_map<P, permutations::encode(layout), flags>{len, str, offset};
   }

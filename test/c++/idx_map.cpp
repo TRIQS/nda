@@ -1,9 +1,7 @@
 #define NDA_ENFORCE_BOUNDCHECK
 #include <gtest/gtest.h> // NOLINT
 
-#include <nda/indexmap/idx_map.hpp>
-#include <nda/indexmap/for_each.hpp>
-#include <nda/indexmap/io.hpp>
+#include <nda.hpp>
 
 nda::range _;
 nda::ellipsis ___;
