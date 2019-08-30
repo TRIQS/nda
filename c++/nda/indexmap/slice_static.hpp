@@ -2,10 +2,6 @@
 
 #define FORCEINLINE __inline__ __attribute__((always_inline))
 
-namespace nda {
-  template <int Rank> class idx_map;
-};
-
 namespace nda::slice_static {
 
   // Notations
@@ -85,6 +81,23 @@ namespace nda::slice_static {
     return QN_of_P(args_as_bits, P, ellipsis_position, ellipsis_length) / 64;
   }
 
+  constexpr uint64_t sliced_layout(uint64_t layout, uint64_t args_as_bits, int e_pos, int e_len) {
+    // I have a layout  P0 P1 P2 P3 : I know
+    // need to sort at at compile time ...
+    // inverse permutation of layout
+
+    uint64_t r = 0;
+    int p      = 0;
+    int rank = permutations::size_of_permutation(layout);
+    //uint64_t inverse_layout = permutations::inverse(layout);
+    for (int i = 0; i < rank; ++i) {
+      int n = permutations::apply(layout, n); // traverse the N element in the order of the layout. Slowest first.
+      int q = Q_of_N(args_as_bits, n, e_pos, e_len);
+      if (args_as_bits & (1ull << q)) r += permutations::encode(p++, P);
+    }
+    return r;
+  }
+
   // Small pieces of code for the fold in functions below, with dispatch on type.
   // offset
   FORCEINLINE long get_offset(long R, long s_N) { return R * s_N; }
@@ -104,11 +117,11 @@ namespace nda::slice_static {
   long get_s(long, long) = delete; // can not happen
 
   template <int... R> struct debug {};
-  #define PRINT(...) debug<__VA_ARGS__>().zozo;
+#define PRINT(...) debug<__VA_ARGS__>().zozo;
 
   // main function: slice the idx_map
-  template <int R, size_t... N, size_t... P, size_t... Q, typename... Args>
-  FORCEINLINE auto slice(std::index_sequence<P...>, std::index_sequence<N...>, std::index_sequence<Q...>, idx_map<R> const &idx,
+  template <int R, uint64_t Layout, uint64_t Flags, size_t... N, size_t... P, size_t... Q, typename... Args>
+  FORCEINLINE auto slice(std::index_sequence<P...>, std::index_sequence<N...>, std::index_sequence<Q...>, idx_map<R, Layout, Flags> const &idx,
                          Args const &... args) {
 
     static constexpr int e_len          = R - sizeof...(Args) + 1; // len of ellipsis : how many ranges are missing
@@ -116,7 +129,7 @@ namespace nda::slice_static {
     static constexpr int rank_of_result = sizeof...(P);
 
     // compute the bit pattern for the argument, cf above
-    constexpr uint64_t bitsP = (((std::is_same_v<Args, range> or std::is_base_of_v<range_all, Args >) ? (1 << Q) : 0) + ...);
+    constexpr uint64_t args_as_bits = (((std::is_same_v<Args, range> or std::is_base_of_v<range_all, Args>) ? (1 << Q) : 0) + ...);
 
     auto argstie = std::tie(args...);
 
@@ -125,12 +138,14 @@ namespace nda::slice_static {
     long offset = idx.offset() + (get_offset(std::get<Q_of_N(N, e_pos, e_len)>(argstie), std::get<N>(idx.strides())) + ... + 0);
 
     std::array<long, rank_of_result> len{
-       get_l(std::get<Q_of_P(bitsP, P, e_pos, e_len)>(argstie), std::get<N_of_P(bitsP, P, e_pos, e_len)>(idx.lengths()))...};
+       get_l(std::get<Q_of_P(args_as_bits, P, e_pos, e_len)>(argstie), std::get<N_of_P(args_as_bits, P, e_pos, e_len)>(idx.lengths()))...};
 
     std::array<long, rank_of_result> str{
-       get_s(std::get<Q_of_P(bitsP, P, e_pos, e_len)>(argstie), std::get<N_of_P(bitsP, P, e_pos, e_len)>(idx.strides()))...};
+       get_s(std::get<Q_of_P(args_as_bits, P, e_pos, e_len)>(argstie), std::get<N_of_P(args_as_bits, P, e_pos, e_len)>(idx.strides()))...};
 
-    return idx_map<rank_of_result>{len, str, offset};
+    // FIXME
+    //return idx_map<rank_of_result, sliced_layout(Layout, bitsP, rank_of_result, e_pos, e_len), slided_flags(Flags)>{len, str, offset};
+    return idx_map<rank_of_result, 0, 0>{len, str, offset};
   }
 
 } // namespace nda::slice_static

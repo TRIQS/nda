@@ -16,7 +16,7 @@ template <typename... INT> std::array<long, sizeof...(INT)> ma(INT... i) { retur
 
 TEST(idxstat, Construct) { // NOLINT
 
-  idx_map<3> i1{{1, 2, 3}, layout::C};
+  idx_map<3> i1{{1, 2, 3}};
 
   std::cerr << i1 << std::endl;
   EXPECT_TRUE(i1.lengths() == (ma(1, 2, 3))); //NOLINT
@@ -27,7 +27,7 @@ TEST(idxstat, Construct) { // NOLINT
 
 TEST(idxstat, eval) { // NOLINT
 
-  idx_map<3> i1{{2, 7, 3}, layout::C};
+  idx_map<3> i1{{2, 7, 3}};
   EXPECT_TRUE(i1.strides() == (ma(21, 3, 1))); //NOLINT
 
   EXPECT_EQ(i1(1, 3, 2), 21 * 1 + 3 * 3 + 2 * 1); //NOLINT
@@ -37,7 +37,7 @@ TEST(idxstat, eval) { // NOLINT
 
 TEST(idxstat, boundcheck) { // NOLINT
 
-  idx_map<3> i1{{2, 7, 3}, layout::C};
+  idx_map<3> i1{{2, 7, 3}};
   //i1(21, 3, 18);
   EXPECT_THROW(i1(21, 3, 18), std::exception); //NOLINT
 }
@@ -46,7 +46,7 @@ TEST(idxstat, boundcheck) { // NOLINT
 
 TEST(idxstat, slice) { // NOLINT
 
-  idx_map<3> i1{{1, 2, 3}, layout::C};
+  idx_map<3> i1{{1, 2, 3}};
 
   idx_map<1> i2 = i1(0, _, 2);
 
@@ -64,7 +64,7 @@ TEST(idxstat, slice) { // NOLINT
 
 TEST(idxstat, ellipsis) { // NOLINT
 
-  idx_map<3> i1{{1, 2, 3}, layout::C};
+  idx_map<3> i1{{1, 2, 3}};
   idx_map<2> i2 = i1(0, ___);
 
   idx_map<2> c2{{2, 3}, {3, 1}, 0};
@@ -81,7 +81,7 @@ TEST(idxstat, ellipsis) { // NOLINT
 
 TEST(idxstat, ellipsis2) { // NOLINT
 
-  idx_map<5> i1{{1, 2, 3, 4, 5}, layout::C};
+  idx_map<5> i1{{1, 2, 3, 4, 5}};
   std::cerr << i1 << std::endl;
 
   idx_map<2> i2 = i1(0, ___, 3, 2);
@@ -106,10 +106,10 @@ TEST(idxstat, iteratorC) { // NOLINT
   }
 
   pos = 0;
-  for (auto [p, i] : enumerate_indices(i1)) {
-    EXPECT_EQ(p, pos++); //NOLINT
-    std::cerr << i << std::endl;
-  }
+  //for (auto [p, i] : enumerate_indices(i1)) {
+    //EXPECT_EQ(p, pos++); //NOLINT
+    //std::cerr << i << std::endl;
+  //}
 }
 /*
 TEST(idxstat, iteratorD) { // NOLINT
@@ -135,13 +135,13 @@ TEST(idxstat, for_each) { // NOLINT
     EXPECT_EQ(fs.str(), "000 001 002 010 011 012 ");
   }
 
-  {
-    std::stringstream fs;
-    auto l = [&fs](int i, int j, int k) { fs << i << j << k << " "; };
+  //{
+    //std::stringstream fs;
+    //auto l = [&fs](int i, int j, int k) { fs << i << j << k << " "; };
 
-    for_each(std::array<long, 3>{1, 2, 3}, l, traversal::Fortran);
-    EXPECT_EQ(fs.str(), "000 010 001 011 002 012 ");
-  }
+    //for_each(std::array<long, 3>{1, 2, 3}, l, traversal::Fortran);
+    //EXPECT_EQ(fs.str(), "000 010 001 011 002 012 ");
+  //}
 }
 
 // Different construction

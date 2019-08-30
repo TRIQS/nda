@@ -5,7 +5,7 @@ nda::range_all _;
 nda::ellipsis ___;
 
 using namespace nda;
-const int N1 = 200, N2 = 300;
+const int N1 = 1000, N2 = 1000;
 
 // -------------------------------- 1d ---------------------------------------
 
@@ -59,7 +59,7 @@ static void pointer_1B(benchmark::State &state) {
 
   while (state.KeepRunning()) {
     double *__restrict__ p = &(a(0));
-    for (long i0 = 0; i0 < l0; ++i0) benchmark::DoNotOptimize(p[i0 * s0] = 10 * i0);
+    for (long i0 = 0; i0 < l0; ++i0) benchmark::DoNotOptimize(p[i0] = 10 * i0);
   }
 }
 BENCHMARK(pointer_1B);
@@ -100,12 +100,14 @@ static void pointer_2A(benchmark::State &state) {
 
   const long l0 = a.indexmap().lengths()[0];
   const long l1 = a.indexmap().lengths()[1];
-
+  auto len =  a.indexmap().lengths();
+  auto str =  a.indexmap().strides();
   while (state.KeepRunning()) {
     double *__restrict__ p = &(a(0, 0));
     for (long i0 = 0; i0 < l0; ++i0)
       for (long i1 = 0; i1 < l1; ++i1)
-        benchmark::DoNotOptimize(p[a.indexmap().offset() + i0 * a.indexmap().strides()[0] + i1 * a.indexmap().strides()[1]] = 10 * i0 + i1);
+        benchmark::DoNotOptimize(p[a.indexmap().offset() + i0 * str[0] + i1 * str[1]] = 10 * i0 + i1);
+       // benchmark::DoNotOptimize(p[a.indexmap().offset() + i0 * str[0] + i1 * str[1]] = 10 * i0 + i1);
   }
 }
 BENCHMARK(pointer_2A);
@@ -122,7 +124,7 @@ static void pointer_2B(benchmark::State &state) {
   while (state.KeepRunning()) {
     double *__restrict__ p = &(a(0, 0));
     for (long i0 = 0; i0 < l0; ++i0)
-      for (long i1 = 0; i1 < l1; ++i1) benchmark::DoNotOptimize(p[offset + i0 * s0 + i1 * s1] = 10 * i0 + i1);
+      for (long i1 = 0; i1 < l1; ++i1) benchmark::DoNotOptimize(p[offset + i0 * s0 + i1 * s1] = 10 );
   }
 }
 BENCHMARK(pointer_2B);
@@ -132,10 +134,11 @@ static void pointer_2C(benchmark::State &state) {
 
   const long l0 = a.indexmap().lengths()[0];
   const long l1 = a.indexmap().lengths()[1];
+  const long l0l1 = l0 * l1;
 
   while (state.KeepRunning()) {
     double *__restrict__ p = &(a(0, 0));
-    for (long i = 0; i < l0 * l1; ++i) benchmark::DoNotOptimize(p[i] = 10 * i);
+    for (long i = 0; i < l0l1; ++i) benchmark::DoNotOptimize(p[i] = 10 );
   }
 }
 BENCHMARK(pointer_2C);

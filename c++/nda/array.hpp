@@ -31,7 +31,7 @@ namespace nda {
     public:
     using value_t   = ValueType;
     using storage_t = mem::handle<ValueType, 'R'>;
-    using idx_map_t = idx_map<Rank>;
+    using idx_map_t = idx_map<Rank, 0, flags::is_contiguous | flags::has_zero_offset | flags::fastest_stride_is_one>;
 
     using regular_t    = array<ValueType, Rank>;
     using view_t       = array_view<ValueType, Rank>;
@@ -39,11 +39,11 @@ namespace nda {
 
     static constexpr int rank      = Rank;
     static constexpr bool is_const = false;
-    static constexpr bool is_view = false;
+    static constexpr bool is_view  = false;
 
     private:
-    template<int R> using my_view_template_t = array_view<value_t, R>;
-    
+    template <int R> using my_view_template_t = array_view<value_t, R>;
+
     idx_map_t _idx_m;
     storage_t _storage;
 
@@ -245,7 +245,7 @@ namespace nda {
     }
 
     void resize(shape_t<Rank> const &shape) {
-      _idx_m = idx_map<Rank>(shape, _idx_m.layout());
+      _idx_m = idx_map<Rank>(shape);
       // build a new one with the lengths of IND BUT THE SAME layout !
       // optimisation. Construct a storage only if the new index is not compatible (size mismatch).
       if (_storage.size() != _idx_m.size()) _storage = mem::handle<ValueType, 'R'>{_idx_m.size()};
@@ -253,8 +253,7 @@ namespace nda {
 
     // --------------------------
 
- #include "./_regular_view_common.hpp"
-
+#include "./_regular_view_common.hpp"
   };
 
 } // namespace nda
