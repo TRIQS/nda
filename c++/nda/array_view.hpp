@@ -7,12 +7,6 @@
 
 namespace nda {
 
-  // Memory Policy
-  enum class mem_policy_e { Borrowed, Shared };
-
-  // Const or Mutable
-  enum class cm_e { Const, Mutable };
-
   // forward
   template <typename ValueType, int Rank> class array;
 
@@ -32,25 +26,23 @@ namespace nda {
     using value_t                  = std::remove_const_t<ValueType>;
     using value_as_template_arg_t  = ValueType;
 
-    static constexpr mem_policy_e mem_policy = MemPolicy;
-    using storage_t                          = mem::handle<value_t, (mem_policy == mem_policy_e::Shared ? 'S' : 'B')>;
-    using idx_map_t                          = idx_map<Rank>;
+    using storage_t = mem::handle<value_t, 'B'>;
+    using idx_map_t = idx_map<Rank, Layout, Flags>;
 
     using regular_t    = array<value_t, Rank>;
-    using view_t       = array_view<value_t, Rank>;
-    using const_view_t = array_view<value_t const, Rank>;
+    using view_t       = array_view<value_t, Rank, Flags, Layout>;
+    using const_view_t = array_view<value_t const, Rank, Flags, Layout>;
 
-    static constexpr int rank = Rank;
-    static constexpr bool is_view = true;
+    static constexpr int rank      = Rank;
+    static constexpr bool is_view  = true;
     static constexpr bool is_const = std::is_const_v<ValueType>;
 
     // FIXME : h5
     // static std::string hdf5_scheme() { return "array<" + triqs::h5::get_hdf5_scheme<value_t>() + "," + std::to_string(rank) + ">"; }
 
     private:
+    template <typename IdxMap> using my_view_template_t = array_view<value_t, IdxMap::rank(), IdxMap::flags, permutations::encode(IdxMap::layout)>;
 
-    template<int R> using my_view_template_t = array_view<value_t, R>;
-    
     idx_map_t _idx_m;
     storage_t _storage;
 
@@ -79,7 +71,7 @@ namespace nda {
      *  @param idx index map
      *  @st  storage (memory handle)
      */
-    array_view(idx_map<Rank> idx, storage_t st) : _idx_m(std::move(idx)), _storage(std::move(st)) {}
+    array_view(idx_map<Rank, Layout, Flags> idx, storage_t st) : _idx_m(std::move(idx)), _storage(std::move(st)) {}
 
     /** 
      * From anything that has an indexmap and a storage compatible with this class
@@ -142,6 +134,7 @@ namespace nda {
   };
 
   /// Aliases
-  template <typename ValueType, int Rank, mem_policy_e MemPolicy> using array_const_view = array_view<ValueType const, Rank, MemPolicy>;
+  template <typename ValueType, int Rank, uint64_t Flags = 0, uint64_t Layout = 0>
+  using array_const_view = array_view<ValueType const, Rank, Layout, Flags>;
 
 } // namespace nda

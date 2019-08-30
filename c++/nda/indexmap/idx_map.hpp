@@ -9,13 +9,13 @@ namespace nda {
   template <int Rank, uint64_t Layout = 0, uint64_t Flags = 0> class idx_map;
 
   namespace flags {
-    static constexpr uint64_t contiguous            = 0x1; // CamelCase convention for the Flags
-    static constexpr uint64_t fastest_stride_is_one = 0x2;
-    static constexpr uint64_t strided               = 0x4;
-    static constexpr uint64_t zero_offset           = 0x8;
+    static constexpr uint64_t smallest_stride_is_one = 0x1;
+    static constexpr uint64_t strided                = 0x2;
+    static constexpr uint64_t contiguous             = 0x3; // smallest_stride_is_one and strided 
+    static constexpr uint64_t zero_offset            = 0x4;
 
     static constexpr bool has_contiguous(uint64_t f) { return f & flags::contiguous; }
-    static constexpr bool has_fastest_stride_is_one(uint64_t f) { return f & flags::fastest_stride_is_one; }
+    static constexpr bool has_smallest_stride_is_one(uint64_t f) { return f & flags::smallest_stride_is_one; }
     static constexpr bool has_strided(uint64_t f) { return f & flags::strided; }
     static constexpr bool has_zero_offset(uint64_t f) { return f & flags::zero_offset; }
 
@@ -191,7 +191,7 @@ namespace nda {
 
     // call implementation
     template <typename... Args, size_t... Is> FORCEINLINE long call_impl(std::index_sequence<Is...>, Args const &... args) const noexcept {
-      if constexpr (flags::has_fastest_stride_is_one(Flags))
+      if constexpr (flags::has_smallest_stride_is_one(Flags))
         return (((Is != position_fastest_index) ? args * str[Is] : args) + ...);
       else
         return ((args * str[Is]) + ...);

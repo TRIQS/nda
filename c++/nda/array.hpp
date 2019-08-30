@@ -31,7 +31,7 @@ namespace nda {
     public:
     using value_t   = ValueType;
     using storage_t = mem::handle<ValueType, 'R'>;
-    using idx_map_t = idx_map<Rank, 0, flags::contiguous | flags::zero_offset | flags::fastest_stride_is_one>;
+    using idx_map_t = idx_map<Rank, 0, flags::contiguous | flags::zero_offset | flags::smallest_stride_is_one>;
 
     using regular_t    = array<ValueType, Rank>;
     using view_t       = array_view<ValueType, Rank>;
@@ -42,7 +42,7 @@ namespace nda {
     static constexpr bool is_view  = false;
 
     private:
-    template <int R> using my_view_template_t = array_view<value_t, R>;
+    template <typename IdxMap> using my_view_template_t = array_view<value_t, IdxMap::rank(), IdxMap::flags, permutations::encode(IdxMap::layout)>;
 
     idx_map_t _idx_m;
     storage_t _storage;

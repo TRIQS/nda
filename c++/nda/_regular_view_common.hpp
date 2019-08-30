@@ -16,10 +16,10 @@ ValueType const *data_start() const { return _storage.data() + _idx_m.offset(); 
 /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
 ValueType *data_start() { return _storage.data() + _idx_m.offset(); }
 
-/// Shape of this 
+/// Shape of this
 shape_t<Rank> const &shape() const { return _idx_m.lengths(); }
 
-/// Number of elements 
+/// Number of elements
 long size() const { return _idx_m.size(); }
 
 /// size() == 0
@@ -33,7 +33,8 @@ long size() const { return _idx_m.size(); }
 // one can factorize the last part in a private static method, but I find clearer to have the repetition
 // here. In particular to check the && case carefully.
 
-/// DOC
+/// _call_<FLAGS>
+
 template <typename... T> decltype(auto) operator()(T const &... x) const & {
   if constexpr (sizeof...(T) == 0)
     return view_t{*this};
@@ -43,11 +44,11 @@ template <typename... T> decltype(auto) operator()(T const &... x) const & {
                   "Incorrect number of parameters in call");
     //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
 
-    auto idx_or_pos = _idx_m(x...);                                                  // we call the index map
-    if constexpr (std::is_same_v<decltype(idx_or_pos), long>)                        // Case 1: we got a long, hence access a element
-      return _storage[idx_or_pos];                                                   //
-    else                                                                             // Case 2: we got a slice
-      return my_view_template_t<idx_or_pos.rank()>{std::move(idx_or_pos), _storage}; //
+    auto idx_or_pos = _idx_m(x...);                           // we call the index map
+    if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
+      return _storage[idx_or_pos];                            //
+    else                                                      // Case 2: we got a slice
+      return my_view_template_t<decltype(idx_or_pos)>{std::move(idx_or_pos), _storage}; //
   }
 }
 
@@ -61,11 +62,11 @@ template <typename... T> decltype(auto) operator()(T const &... x) & {
                   "Incorrect number of parameters in call");
     //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
 
-    auto idx_or_pos = _idx_m(x...);                                                  // we call the index map
-    if constexpr (std::is_same_v<decltype(idx_or_pos), long>)                        // Case 1: we got a long, hence access a element
-      return _storage[idx_or_pos];                                                   //
-    else                                                                             // Case 2: we got a slice
-      return my_view_template_t<idx_or_pos.rank()>{std::move(idx_or_pos), _storage}; //
+    auto idx_or_pos = _idx_m(x...);                           // we call the index map
+    if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
+      return _storage[idx_or_pos];                            //
+    else                                                      // Case 2: we got a slice
+      return my_view_template_t<decltype(idx_or_pos)>{std::move(idx_or_pos), _storage}; //
   }
 }
 
@@ -86,7 +87,7 @@ template <typename... T> decltype(auto) operator()(T const &... x) && {
       else                                                    //
         return ValueType{_storage[idx_or_pos]};               // We return a VALUE here, the array is about be destroyed.
     else                                                      // Case 2: we got a slice
-      return my_view_template_t<idx_or_pos.rank()>{std::move(idx_or_pos), _storage}; //
+      return my_view_template_t<decltype(idx_or_pos)>{std::move(idx_or_pos), _storage}; //
   }
 }
 
