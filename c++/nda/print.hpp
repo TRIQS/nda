@@ -62,4 +62,13 @@ namespace nda {
     return out;
   }
 
+  // ==============================================
+  
+  template <char OP, typename L> std::ostream &operator<<(std::ostream &sout, expr_unary<OP, L> const &expr) { return sout << OP << expr.l; }
+
+  template <char OP, typename L, typename R> std::ostream &operator<<(std::ostream &sout, expr<OP, L, R> const &expr) {
+    return sout << "(" << expr.l << " " << OP << " " << expr.r << ")";
+  }
+
+
 } // namespace nda

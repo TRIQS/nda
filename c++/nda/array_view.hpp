@@ -1,25 +1,41 @@
 #pragma once
 #include "./indexmap/idx_map.hpp"
 #include "./storage/handle.hpp"
-#include "./concepts.hpp"
+#include "./traits.hpp"
 #include "./assignment.hpp"
 #include "./iterator_adapter.hpp"
 
 namespace nda {
 
-  // forward
+  // ---------------------- declare array and view  --------------------------------
+
   template <typename ValueType, int Rank> class array;
   template <typename ValueType, int Rank, uint64_t Flags = 0, uint64_t Layout = 0> class array_view;
 
-  // detects ellipsis in a argument pack
+  // ---------------------- concept  --------------------------------
+
+  template <typename ValueType, int Rank> inline constexpr bool is_ndarray_v<array<ValueType, Rank>> = true;
+
+  template <typename ValueType, int Rank, uint64_t Flags, uint64_t Layout>
+  inline constexpr bool is_ndarray_v<array_view<ValueType, Rank, Flags, Layout>> = true;
+
+  // ---------------------- algebra --------------------------------
+
+  template <typename ValueType, int Rank> inline constexpr char get_algebra<array<ValueType, Rank>> = 'A';
+
+  template <typename ValueType, int Rank, uint64_t Flags, uint64_t Layout>
+  inline constexpr char get_algebra<array_view<ValueType, Rank, Flags, Layout>> = 'A';
+
+  // ---------------------- details  --------------------------------
+
+  // impl details : detects ellipsis in a argument pack
   template <typename... T> constexpr bool ellipsis_is_present = ((std::is_same_v<T, ellipsis> ? 1 : 0) + ... + 0); // +0 because it can be empty
 
   // ---------------------- array_view  --------------------------------
 
   // Try to put the const/mutable in the TYPE
 
-  template <typename ValueType, int Rank, uint64_t Flags, uint64_t Layout>
-  class array_view : tag::concepts::_array, tag::containers::_array_view {
+  template <typename ValueType, int Rank, uint64_t Flags, uint64_t Layout> class array_view : tag::containers::_array_view {
 
     public:
     using value_t                 = std::remove_const_t<ValueType>;
@@ -40,7 +56,7 @@ namespace nda {
     // static std::string hdf5_scheme() { return "array<" + triqs::h5::get_hdf5_scheme<value_t>() + "," + std::to_string(rank) + ">"; }
 
     private:
-    template <typename IdxMap> using my_view_template_t = array_view<value_t, IdxMap::rank(),IdxMap::flags , permutations::encode(IdxMap::layout)>;
+    template <typename IdxMap> using my_view_template_t = array_view<value_t, IdxMap::rank(), IdxMap::flags, permutations::encode(IdxMap::layout)>;
 
     idx_map_t _idx_m;
     storage_t _storage;
