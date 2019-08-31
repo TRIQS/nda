@@ -25,7 +25,7 @@ namespace nda {
 
   // ---------------------- array--------------------------------
 
-  template <typename ValueType, int Rank> class array : tag::concepts::_array, tag::containers::_array {
+  template <typename ValueType, int Rank> class array :  tag::containers::_array {
     static_assert(!std::is_const<ValueType>::value, "no const type");
 
     public:
@@ -168,7 +168,7 @@ namespace nda {
     template <typename T>
     array(std::initializer_list<T> const &l) //
        REQUIRES((Rank == 1) and std::is_constructible_v<value_t, T>)
-       : array{shape_t<Rank>{l.size()}} {
+       : array{shape_t<Rank>{long(l.size())}} {
       long i = 0;
       for (auto const &x : l) (*this)(i++) = x;
     }

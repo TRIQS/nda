@@ -1,7 +1,6 @@
 #pragma once
 #include <cstring>
 #include "./traits.hpp"
-#include "./concepts.hpp"
 
 //https://godbolt.org/g/tkNLoE
 // https://godbolt.org/g/SqrgBH
@@ -50,7 +49,7 @@ namespace nda::details {
 
     // general case if RHS is not a scalar (can be isp, expression...)
     if constexpr (not is_scalar_for_v<RHS, LHS>) {
-      static_assert(std::is_assignable_v<typename LHS::value_t &, typename RHS::value_t>,
+      static_assert(std::is_assignable_v<typename LHS::value_t &, get_value_t<RHS>>,
                     "Assignment impossible for the type of RHS into the type of LHS");
       auto l = [&lhs, &rhs](auto const &... args) { lhs(args...) = rhs(args...); };
       nda::for_each(lhs.indexmap().lengths(), l);

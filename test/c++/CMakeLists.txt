@@ -3,7 +3,7 @@ file(GLOB all_h5_files *.h5)
 file(COPY ${all_h5_files} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 # The list of all c++ tests
-set(all_tests idx_map storage nda_basic)
+set(all_tests idx_map storage nda_basic nda_expr_template)
 
 #=== build gtest as an external project ===
 
