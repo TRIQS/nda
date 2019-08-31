@@ -6,6 +6,7 @@ namespace nda {
   template <char OP, typename L>
   struct expr_unary;
 
+  // algebra
   template <char OP, typename L, typename R>
   constexpr char get_algebra<expr<OP, L, R>> = expr<OP, L, R>::algebra;
 
@@ -20,7 +21,6 @@ namespace nda {
   inline constexpr bool is_ndarray_v<expr_unary<OP, L>> = true;
 
   // helpers
-
   template <typename L, typename R>
   constexpr bool rank_is_one() {
     using L_t = std::decay_t<L>; // L, R can be lvalue references
@@ -38,6 +38,9 @@ namespace nda {
   template <char OP, typename L, typename R>
   struct expr {
 
+    L l;
+    R r;
+
     using L_t = std::decay_t<L>; // L, R can be lvalue references
     using R_t = std::decay_t<R>;
 
@@ -45,9 +48,6 @@ namespace nda {
     static constexpr bool r_is_scalar = nda::is_scalar_v<R_t>;
 
     static constexpr char algebra = (l_is_scalar ? get_algebra<R_t> : get_algebra<L_t>);
-
-    L l;
-    R r;
 
     constexpr auto shape() const {
       if constexpr (l_is_scalar) {
@@ -60,11 +60,9 @@ namespace nda {
       }
     }
 
-    //constexpr int rank() const { return shape().size(); }
-
-    // REALLY NEEDED ?
-    template <typename LL, typename RR>
-    expr(LL &&l_, RR &&r_) : l(std::forward<LL>(l_)), r(std::forward<RR>(r_)) {}
+    //// REALLY NEEDED ?
+    //template <typename LL, typename RR>
+    //expr(LL &&l_, RR &&r_) : l(std::forward<LL>(l_)), r(std::forward<RR>(r_)) {}
 
     // FIXME Clef
     template <typename... Args>
