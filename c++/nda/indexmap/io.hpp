@@ -25,7 +25,8 @@
 
 namespace std {
 
-  template <typename T, size_t N> std::ostream &operator<<(std::ostream &out, std::array<T, N> const &v) {
+  template <typename T, size_t N>
+  std::ostream &operator<<(std::ostream &out, std::array<T, N> const &v) {
     out << "(";
     for (size_t i = 0; i < N; ++i) out << (i == 0 ? "" : " ") << v[i];
     out << ")";
@@ -65,4 +66,4 @@ namespace nda {
 
   } // namespace permutations
 */
- } // namespace nda
+} // namespace nda

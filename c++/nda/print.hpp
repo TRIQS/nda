@@ -3,9 +3,13 @@
 
 // FIXME : MOVE THIS
 namespace std { // For ADL
-  template <typename T, size_t R> std::ostream &operator<<(std::ostream &out, std::array<T, R> const &a) { return out << to_string(a); }
+  template <typename T, size_t R>
+  std::ostream &operator<<(std::ostream &out, std::array<T, R> const &a) {
+    return out << to_string(a);
+  }
 
-  template <typename T, size_t R> std::string to_string(std::array<T, R> const &a) {
+  template <typename T, size_t R>
+  std::string to_string(std::array<T, R> const &a) {
     std::stringstream fs;
     fs << "(";
     for (int i = 0; i < R; ++i) fs << (i == 0 ? "" : " ") << a[i];
@@ -19,7 +23,8 @@ namespace std { // For ADL
 namespace nda {
 
   // idx_map
-  template <int Rank, uint64_t Layout, uint64_t Flags> std::ostream &operator<<(std::ostream &out, idx_map<Rank, Layout, Flags> const &x) {
+  template <int Rank, uint64_t Layout, uint64_t Flags>
+  std::ostream &operator<<(std::ostream &out, idx_map<Rank, Layout, Flags> const &x) {
     return out << "  Lengths  : " << x.lengths() << "\n"
                << "  Strides  : " << x.strides() << "\n"
                << "  Offset   : " << x.offset() << "\n"
@@ -32,7 +37,8 @@ namespace nda {
   // ==============================================
 
   // array
-  template <typename A> std::ostream &operator<<(std::ostream &out, A const &a) REQUIRES(is_regular_or_view_v<A>) {
+  template <typename A>
+  std::ostream &operator<<(std::ostream &out, A const &a) REQUIRES(is_regular_or_view_v<A>) {
 
     if constexpr (A::rank == 1) {
       out << "[";
@@ -63,12 +69,15 @@ namespace nda {
   }
 
   // ==============================================
-  
-  template <char OP, typename L> std::ostream &operator<<(std::ostream &sout, expr_unary<OP, L> const &expr) { return sout << OP << expr.l; }
 
-  template <char OP, typename L, typename R> std::ostream &operator<<(std::ostream &sout, expr<OP, L, R> const &expr) {
-    return sout << "(" << expr.l << " " << OP << " " << expr.r << ")";
+  template <char OP, typename L>
+  std::ostream &operator<<(std::ostream &sout, expr_unary<OP, L> const &expr) {
+    return sout << OP << expr.l;
   }
 
+  template <char OP, typename L, typename R>
+  std::ostream &operator<<(std::ostream &sout, expr<OP, L, R> const &expr) {
+    return sout << "(" << expr.l << " " << OP << " " << expr.r << ")";
+  }
 
 } // namespace nda

@@ -32,8 +32,10 @@ namespace nda::mem {
 
   // -------------- Traits ---------------------------
 
-  template <typename T> struct is_complex : std::false_type {};
-  template <typename T> struct is_complex<std::complex<T>> : std::true_type {};
+  template <typename T>
+  struct is_complex : std::false_type {};
+  template <typename T>
+  struct is_complex<std::complex<T>> : std::true_type {};
 
   // -------------- Allocation Functions ---------------------------
 
@@ -44,7 +46,8 @@ namespace nda::mem {
   // -------------- Utilities ---------------------------
 
   // To have aligned objects, use aligner<T, alignment> instead of T in constructor and get
-  template <typename T, int Al> struct alignas(Al) aligner {
+  template <typename T, int Al>
+  struct alignas(Al) aligner {
     T x;
     T &get() noexcept { return x; }
     T const &get() const noexcept { return x; }
@@ -65,7 +68,8 @@ namespace nda::mem {
    * S : Share (shared memory ownership)
    * B : Borrowed (no memory ownership)
    */
-  template <typename T, char rbs> struct handle;
+  template <typename T, char rbs>
+  struct handle;
 
   // ------------------  Regular -------------------------------------
 
@@ -75,7 +79,8 @@ namespace nda::mem {
   struct init_zero_t {};
   inline static constexpr init_zero_t init_zero{};
 
-  template <typename T> struct handle<T, 'R'> {
+  template <typename T>
+  struct handle<T, 'R'> {
     private:
     T *_data     = nullptr; // Pointer to the start of the memory block
     size_t _size = 0;       // Size of the memory block. Invariant: size > 0 iif data != 0
@@ -204,7 +209,10 @@ namespace nda::mem {
     bool has_shared_memory() const noexcept { return _id != 0; }
 
     // Helper function for construction of array<T> when T is not default constructible
-    template <typename U> void init_raw(long i, U &&x) { new (_data + i) T{std::forward<U>(x)}; }
+    template <typename U>
+    void init_raw(long i, U &&x) {
+      new (_data + i) T{std::forward<U>(x)};
+    }
 
     // A const-handle does not entail T const data
     T *data() const noexcept { return _data; }
@@ -214,7 +222,8 @@ namespace nda::mem {
 
   // ------------------  Shared -------------------------------------
 
-  template <typename T> struct handle<T, 'S'> {
+  template <typename T>
+  struct handle<T, 'S'> {
     static_assert(std::is_nothrow_destructible_v<T>, "nda::mem::handle requires the value_type to have a non-throwing constructor");
 
     private:
@@ -352,7 +361,8 @@ namespace nda::mem {
 
   // ------------------  Borrowed -------------------------------------
 
-  template <typename T> struct handle<T, 'B'> {
+  template <typename T>
+  struct handle<T, 'B'> {
     private:
     handle<T, 'R'> const *_parent = nullptr; // Parent, Required for regular->shared promotion in Python Converter
     T *_data                      = nullptr; // Pointer to the start of the memory block

@@ -6,12 +6,13 @@
 #include <numeric>
 
 namespace nda {
-  template <int Rank, uint64_t Layout = 0, uint64_t Flags = 0> class idx_map;
+  template <int Rank, uint64_t Layout = 0, uint64_t Flags = 0>
+  class idx_map;
 
   namespace flags {
     static constexpr uint64_t smallest_stride_is_one = 0x1;
     static constexpr uint64_t strided                = 0x2;
-    static constexpr uint64_t contiguous             = 0x3; // smallest_stride_is_one and strided 
+    static constexpr uint64_t contiguous             = 0x3; // smallest_stride_is_one and strided
     static constexpr uint64_t zero_offset            = 0x4;
 
     static constexpr bool has_contiguous(uint64_t f) { return f & flags::contiguous; }
@@ -36,10 +37,14 @@ namespace boost::serialization {
 namespace nda {
 
   /// Type of all shapes
-  template <int Rank> using shape_t = std::array<long, Rank>;
+  template <int Rank>
+  using shape_t = std::array<long, Rank>;
 
   /// Shape factory
-  template <typename... T> shape_t<sizeof...(T)> make_shape(T... args) noexcept { return {args...}; }
+  template <typename... T>
+  shape_t<sizeof...(T)> make_shape(T... args) noexcept {
+    return {args...};
+  }
 
   // -----------------------------------------------------------------------------------
   /**
@@ -65,7 +70,8 @@ namespace nda {
    * 	isContiguous & fastestStrideIsOne 
    *
    * */
-  template <int Rank, uint64_t Layout, uint64_t Flags> class idx_map {
+  template <int Rank, uint64_t Layout, uint64_t Flags>
+  class idx_map {
 
     static_assert(Rank < 64, "Rank must be < 64"); // constraint of slice implementation. ok...
 
@@ -137,7 +143,8 @@ namespace nda {
     idx_map &operator=(idx_map &&) = default;
 
     /// Construction from a similar idx_map, but with different flags
-    template <uint64_t Flags2> idx_map(idx_map<Rank, Layout, Flags2> const &idx) : len(idx.lengths()), str(idx.strides()), _offset(idx.offset()) {}
+    template <uint64_t Flags2>
+    idx_map(idx_map<Rank, Layout, Flags2> const &idx) : len(idx.lengths()), str(idx.strides()), _offset(idx.offset()) {}
 
     /** 
      * Construction from the lengths, the strides, offset
@@ -167,7 +174,10 @@ namespace nda {
     }
 
     // trap for incorrect calls. For R = Rank, the non template has priority
-    template <int R> idx_map(std::array<long, R> const &) { static_assert(R == Rank, "Rank of the argument incorrect in idx_map construction"); }
+    template <int R>
+    idx_map(std::array<long, R> const &) {
+      static_assert(R == Rank, "Rank of the argument incorrect in idx_map construction");
+    }
 
     /**
      * @param idx An index map with dynamical rank
@@ -190,7 +200,8 @@ namespace nda {
     static constexpr int position_fastest_index = layout[Rank - 1]; // by definition
 
     // call implementation
-    template <typename... Args, size_t... Is> FORCEINLINE long call_impl(std::index_sequence<Is...>, Args const &... args) const noexcept {
+    template <typename... Args, size_t... Is>
+    FORCEINLINE long call_impl(std::index_sequence<Is...>, Args const &... args) const noexcept {
       if constexpr (flags::has_smallest_stride_is_one(Flags))
         return (((Is != position_fastest_index) ? args * str[Is] : args) + ...);
       else
@@ -213,7 +224,8 @@ namespace nda {
      *      else : the linear position (long)
      *
      */
-    template <typename... Args> FORCEINLINE auto operator()(Args const &... args) const noexcept(enforce_bound_check) {
+    template <typename... Args>
+    FORCEINLINE auto operator()(Args const &... args) const noexcept(enforce_bound_check) {
 
       static_assert(((((std::is_base_of_v<range_tag, Args> or std::is_constructible_v<long, Args>) ? 0 : 1) + ...) == 0),
                     "Slice arguments must be convertible to range, Ellipsis, or long");
@@ -260,13 +272,17 @@ namespace nda {
     private:
     //  BOOST Serialization
     friend class boost::serialization::access;
-    template <class Archive> void serialize(Archive &ar, const unsigned int) { ar &len &str &_offset; }
+    template <class Archive>
+    void serialize(Archive &ar, const unsigned int) {
+      ar &len &str &_offset;
+    }
 
   }; // idx_map class
 
   // ---------------- Transposition -------------------------
 
-  template <int Rank> idx_map<Rank> transpose(idx_map<Rank> const &idx, std::array<int, Rank> const &perm) {
+  template <int Rank>
+  idx_map<Rank> transpose(idx_map<Rank> const &idx, std::array<int, Rank> const &perm) {
     std::array<long, Rank> l, s;
     for (int u = 0; u < idx.rank(); ++u) {
       l[perm[u]] = idx.lengths()[u];
@@ -294,7 +310,8 @@ namespace nda {
 
   // ----------------  foreach  -------------------------
 
-  template <int R, typename... Args> FORCEINLINE void for_each(idx_map<R> const &idx, Args &&... args) {
+  template <int R, typename... Args>
+  FORCEINLINE void for_each(idx_map<R> const &idx, Args &&... args) {
     for_each(idx.lengths(), std::forward<Args>(args)...);
   }
 

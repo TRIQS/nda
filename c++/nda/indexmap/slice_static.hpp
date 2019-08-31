@@ -39,7 +39,8 @@ namespace nda::slice_static {
 
   // ----------     Computation of the position of the ellipsis in the args ----------------------
   namespace impl {
-    template <typename... Args, size_t... Is> constexpr int ellipsis_position(std::index_sequence<Is...>) {
+    template <typename... Args, size_t... Is>
+    constexpr int ellipsis_position(std::index_sequence<Is...>) {
       // We know that there is at most one ellipsis.
       int r = ((std::is_same_v<Args, ellipsis> ? int(Is) + 1 : 0) + ...); // position + 1 or 0
       return (r == 0 ? 128 : r - 1);
@@ -47,7 +48,10 @@ namespace nda::slice_static {
   } // namespace impl
 
   // position of the ellipsis in the argument list if there is an ellipsis or 128 if not
-  template <typename... Args> constexpr int ellipsis_position() { return impl::ellipsis_position<Args...>(std::index_sequence_for<Args...>{}); }
+  template <typename... Args>
+  constexpr int ellipsis_position() {
+    return impl::ellipsis_position<Args...>(std::index_sequence_for<Args...>{});
+  }
 
   //  ------------ Relation  n -> q, given the position and length of the ellipsis -----------
   // e_pos : ellipsis position
@@ -81,7 +85,8 @@ namespace nda::slice_static {
   // ------------- The map  p-> n -------------------------
   // same as before except that it returns p-> q instead of p-> n
   //
-  template <int N, int P, size_t Q> constexpr std::array<int, P> q_of_p_map(std::array<bool, Q> const &args_is_range, int e_pos, int e_len) {
+  template <int N, int P, size_t Q>
+  constexpr std::array<int, P> q_of_p_map(std::array<bool, Q> const &args_is_range, int e_pos, int e_len) {
     auto result = nda::make_initialized_array<P>(0);
     for (int n = 0, c = 0; n < N; ++n) {
       int q = q_of_n(n, e_pos, e_len);
@@ -94,7 +99,8 @@ namespace nda::slice_static {
   // n_of_p : the map n->p
   // return the (pseudo) inverse map
   // n -> p or -1 if n is the index of a long argument
-  template <size_t N, size_t P> constexpr std::array<int, N> p_of_n_map(std::array<int, P> const &n_of_p) {
+  template <size_t N, size_t P>
+  constexpr std::array<int, N> p_of_n_map(std::array<int, P> const &n_of_p) {
     auto result = nda::make_initialized_array<N>(-1);
     for (size_t p = 0; p < P; ++p) result[n_of_p[p]] = p;
     return result;
@@ -104,7 +110,8 @@ namespace nda::slice_static {
   // layout : the permutation layout. layout[0] : slowest, etc...
   // n_of_p : the map p-> n
   // return : the new layout of the sliced map
-  template <size_t P, size_t N> constexpr std::array<int, P> sliced_layout(std::array<int, N> const &layout_in, std::array<int, P> const &n_of_p) {
+  template <size_t P, size_t N>
+  constexpr std::array<int, P> sliced_layout(std::array<int, N> const &layout_in, std::array<int, P> const &n_of_p) {
     auto layout = nda::make_initialized_array<P>(0);
     auto p_of_n = p_of_n_map<N>(n_of_p);     // reverse the map
     for (size_t i = 0, ip = 0; i < N; ++i) { // i : index of the n
@@ -143,7 +150,8 @@ namespace nda::slice_static {
   }
 
   // -------------- are all the range/ellipsis grouped ? -----------
-  template <size_t Q> constexpr bool slice_(std::array<bool, Q> const &args_is_range) {
+  template <size_t Q>
+  constexpr bool slice_(std::array<bool, Q> const &args_is_range) {
     // count the number of times 10 appears args_in_range
     int n_10_pattern = 0;
     for (size_t i = 1; i < Q; ++i)
@@ -171,7 +179,8 @@ namespace nda::slice_static {
   FORCEINLINE long get_s(range_all, long s_n) { return s_n; }
 
   // temporary debug
-  template <int... R> struct debug {};
+  template <int... R>
+  struct debug {};
 #define PRINT(...) debug<__VA_ARGS__>().zozo;
 
   // ----------------------------- slice of index map ----------------------------------------------

@@ -60,7 +60,7 @@ namespace nda::allocators {
     mallocator &operator=(mallocator const &) = delete;
     mallocator &operator=(mallocator &&) = default;
 
-    blk_t allocate(size_t s) { return {(char *)malloc(s), s}; } //NOLINT
+    blk_t allocate(size_t s) { return {(char *)malloc(s), s}; }                    //NOLINT
     blk_t allocate_zero(size_t s) { return {(char *)calloc(s, sizeof(char)), s}; } //NOLINT
 
     void deallocate(blk_t b) noexcept { free(b.ptr); }
@@ -69,7 +69,8 @@ namespace nda::allocators {
   // -------------------------  Bucket allocator ----------------------------
   //
   //
-  template <int ChunkSize> class bucket {
+  template <int ChunkSize>
+  class bucket {
     static constexpr int TotalChunkSize = 64 * ChunkSize;
     std::unique_ptr<char[]> _start      = std::make_unique<char[]>(TotalChunkSize);
     char *p                             = _start.get();
@@ -124,7 +125,8 @@ namespace nda::allocators {
   // -------------------------  Multiple bucket allocator ----------------------------
   //
   //
-  template <int ChunkSize> class multiple_bucket {
+  template <int ChunkSize>
+  class multiple_bucket {
 
     using b_t = bucket<ChunkSize>;
     std::vector<b_t> bu_vec;                // an ordered vector of buckets
@@ -186,7 +188,8 @@ namespace nda::allocators {
   //
   // Allocates on a fixed size stack, FIFO style
   //
-  template <size_t Size> class stack {
+  template <size_t Size>
+  class stack {
     char d[Size]; // stack piece
     char *p = d;  // current position
 
@@ -223,7 +226,8 @@ namespace nda::allocators {
   //
   // Using a free list technique
   //
-  template <typename Parent, size_t Smin, size_t Smax> class free_list {
+  template <typename Parent, size_t Smin, size_t Smax>
+  class free_list {
     Parent parent;
     struct node {
       node *next;
@@ -261,7 +265,8 @@ namespace nda::allocators {
   //
   // Dispatch according to size to two allocators
   //
-  template <size_t Threshold, typename A, typename B> class segregator {
+  template <size_t Threshold, typename A, typename B>
+  class segregator {
     A small;
     B big;
 
@@ -281,7 +286,8 @@ namespace nda::allocators {
   //
   // Fallback for composition
   //
-  template <typename A, typename F> class fallback : A, F {
+  template <typename A, typename F>
+  class fallback : A, F {
 
     public:
     fallback()                 = default;
@@ -307,7 +313,8 @@ namespace nda::allocators {
   };
 
   // -------------------------  dress allocator with leak_checking ----------------------------
-  template <typename A> class leak_check : A {
+  template <typename A>
+  class leak_check : A {
 
     long memory_used = 0;
 
@@ -351,7 +358,8 @@ namespace nda::allocators {
   };
 
   // ------------------------- gather statistics for a generic allocator ----------------------------
-  template <typename A> class stats : A {
+  template <typename A>
+  class stats : A {
 
     std::vector<uint64_t> hist = std::vector<uint64_t>(65, 0);
 

@@ -26,7 +26,8 @@ namespace nda {
 
   // remap the idx_map iterator into an iterator
   // ValueType can be const
-  template <typename ValueType, typename IdxMap> class iterator_adapter : public std::iterator<std::forward_iterator_tag, ValueType> {
+  template <typename ValueType, typename IdxMap>
+  class iterator_adapter : public std::iterator<std::forward_iterator_tag, ValueType> {
 
     ValueType *_data = 0;
     typename IdxMap::iterator it;

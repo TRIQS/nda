@@ -8,7 +8,8 @@
 namespace nda::details {
 
   // implementation of the assignment operator of the containers
-  template <typename LHS, typename RHS> void assignment(LHS &lhs, RHS const &rhs) {
+  template <typename LHS, typename RHS>
+  void assignment(LHS &lhs, RHS const &rhs) {
 
     static_assert(!LHS::is_const, "Cannot assign to a const view !");
 
@@ -80,7 +81,8 @@ namespace nda::details {
 
   // ===========================  compound assignment ===========================================================
 
-  template <char OP, typename LHS, typename RHS> void compound_assign_impl(LHS &lhs, RHS const &rhs) {
+  template <char OP, typename LHS, typename RHS>
+  void compound_assign_impl(LHS &lhs, RHS const &rhs) {
 
     static_assert(!LHS::is_const, "Cannot assign to a const view !");
     static_assert((!std::is_const<typename LHS::value_type>::value), "Assignment : The value type of the LHS is const and cannot be assigned to !");

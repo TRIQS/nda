@@ -25,7 +25,8 @@ namespace nda {
 
   // ---------------------- array--------------------------------
 
-  template <typename ValueType, int Rank> class array :  tag::containers::_array {
+  template <typename ValueType, int Rank>
+  class array : tag::containers::_array {
     static_assert(!std::is_const<ValueType>::value, "no const type");
 
     public:
@@ -42,7 +43,8 @@ namespace nda {
     static constexpr bool is_view  = false;
 
     private:
-    template <typename IdxMap> using my_view_template_t = array_view<value_t, IdxMap::rank(), IdxMap::flags, permutations::encode(IdxMap::layout)>;
+    template <typename IdxMap>
+    using my_view_template_t = array_view<value_t, IdxMap::rank(), IdxMap::flags, permutations::encode(IdxMap::layout)>;
 
     idx_map_t _idx_m;
     storage_t _storage;
@@ -65,7 +67,8 @@ namespace nda {
      * 
      * @param i0, is ... lengths in each dimensions
      */
-    template <typename... Int> explicit array(long i0, Int... is) {
+    template <typename... Int>
+    explicit array(long i0, Int... is) {
       //    template <typename... Int> explicit array(long i0, Int... is) : _idx_m{{i0, is...}}, _storage{_idx_m.size()} {
       static_assert(sizeof...(Int) + 1 == Rank, "Incorrect number of arguments : should be exactly Rank. ");
       _idx_m   = idx_map_t{{i0, is...}};
@@ -87,7 +90,8 @@ namespace nda {
      * @param mem_handle  memory handle
      * NB: make a new copy.
      */
-    template <char RBS> array(idx_map<Rank> const &idx, mem::handle<ValueType, RBS> mem_handle) : _idx_m(idx), _storage(std::move(mem_handle)) {}
+    template <char RBS>
+    array(idx_map<Rank> const &idx, mem::handle<ValueType, RBS> mem_handle) : _idx_m(idx), _storage(std::move(mem_handle)) {}
 
     /// Construct from anything that has an indexmap and a storage compatible with this class
     //template <typename T> array(T const &a) REQUIRES(XXXX): array(a.indexmap(), a.storage()) {}
@@ -174,7 +178,8 @@ namespace nda {
     }
 
     private: // impl. detail for next function
-    template <typename T> static shape_t<2> _comp_shape_from_list_list(std::initializer_list<std::initializer_list<T>> const &ll) {
+    template <typename T>
+    static shape_t<2> _comp_shape_from_list_list(std::initializer_list<std::initializer_list<T>> const &ll) {
       long s = -1;
       for (auto const &l1 : ll) {
         if (s == -1)
@@ -224,7 +229,8 @@ namespace nda {
      * All references to the storage are therefore invalidated.
      * NB : to avoid that, do make_view(A) = X instead of A = X
      */
-    template <typename RHS> array &operator=(RHS const &rhs) {
+    template <typename RHS>
+    array &operator=(RHS const &rhs) {
       static_assert(is_ndarray_v<RHS>, "Assignment : RHS not supported");
       resize(rhs.shape());
       //resize(get_shape(X));
@@ -238,7 +244,8 @@ namespace nda {
      * Does not initialize the array
      * Content is undefined
      */
-    template <typename... Args> void resize(Args const &... args) {
+    template <typename... Args>
+    void resize(Args const &... args) {
       static_assert(sizeof...(args) == Rank, "Incorrect number of arguments for resize. Should be Rank");
       static_assert(std::is_copy_constructible<ValueType>::value, "Can not resize an array if its value_t is not copy constructible");
       resize(shape_t<Rank>{args...});

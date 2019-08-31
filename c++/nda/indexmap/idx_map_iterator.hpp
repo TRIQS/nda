@@ -7,13 +7,14 @@ namespace nda {
     * Output can be
     * It is given by a permutation, with the same convention as IndexOrder.
     */
-  template <typename IdxMap, bool WithIndices = false> class idx_map_iterator {
+  template <typename IdxMap, bool WithIndices = false>
+  class idx_map_iterator {
     IdxMap const *im          = nullptr;
     static constexpr int Rank = IdxMap::rank();
     using idx_t               = std::array<long, Rank>;
     idx_t idx;
     long pos = 0;
-    std::array<long, Rank> len,strides;
+    std::array<long, Rank> len, strides;
 
     public:
     idx_map_iterator() = default;
