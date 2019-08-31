@@ -36,7 +36,8 @@ namespace nda::mem {
 
   // Take a handle on a numpy. numpy is a borrowed Python ref.
   // implemented only in Python module, not in triqs cpp
-  template <typename T> handle<T, 'S'> make_handle(PyObject *obj) {
+  template <typename T>
+  handle<T, 'S'> make_handle(PyObject *obj) {
 
     _import_array();
 
@@ -60,7 +61,8 @@ namespace nda::mem {
   // ------------------  delete_pycapsule  ----------------------------------------------------
 
   // Properly delete the handle<T, 'S'> in a PyCapsule
-  template <typename T> static void delete_pycapsule(PyObject *capsule) {
+  template <typename T>
+  static void delete_pycapsule(PyObject *capsule) {
     handle<T, 'S'> *handle = static_cast<nda::mem::handle<T, 'S'> *>(PyCapsule_GetPointer(capsule, "guard"));
     //std::cerr << "decapsulate : "<< handle->id << "  "<< handle->data << "  nrefs" << handle->nref() << "\n";
     delete handle;
@@ -69,12 +71,14 @@ namespace nda::mem {
   // ------------------  make_pycapsule,   ----------------------------------------------------
 
   // Make a pycapsule out of the shared handle to return to Python
-  template <typename T> PyObject *make_pycapsule(handle<T, 'R'>  const &h) {
+  template <typename T>
+  PyObject *make_pycapsule(handle<T, 'R'> const &h) {
     void *keep = new handle<T, 'S'>{h}; // a new reference
     return PyCapsule_New(keep, "guard", &delete_pycapsule<T>);
   }
 
-  template <typename T> PyObject *make_pycapsule(handle<T, 'B'> const &h) {
+  template <typename T>
+  PyObject *make_pycapsule(handle<T, 'B'> const &h) {
     if (h.parent() == nullptr) throw std::runtime_error("Can not return to python a view on something else than an nda::array");
     void *keep = new handle<T, 'S'>{*h.parent()}; // a new reference
     return PyCapsule_New(keep, "guard", &delete_pycapsule<T>);

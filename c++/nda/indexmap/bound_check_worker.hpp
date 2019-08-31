@@ -28,7 +28,8 @@ namespace nda::details {
     void g(std::stringstream &, ellipsis) { N += ellipsis_loss + 1; }
   };
 
-  template <typename... Args> void assert_in_bounds(int rank, long const *lengths, Args const &... args) {
+  template <typename... Args>
+  void assert_in_bounds(int rank, long const *lengths, Args const &... args) {
     bound_check_worker w{lengths};
     w.ellipsis_loss = rank - sizeof...(Args); // len of ellipsis : how many ranges are missing
     (w.f(args), ...);                         // folding with , operator ...
@@ -36,7 +37,7 @@ namespace nda::details {
     w.N = 0;
     std::stringstream fs;
     (w.g(fs, args), ...); // folding with , operator ...
-    throw std::runtime_error( " key out of domain \n" + fs.str());
+    throw std::runtime_error(" key out of domain \n" + fs.str());
   }
 
 } // namespace nda::details

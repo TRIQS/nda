@@ -116,7 +116,6 @@ namespace nda {
 
       long operator*() const { return pos; }
       long operator->() const { return operator*(); }
-
     };
 
     //---------
@@ -128,7 +127,8 @@ namespace nda {
   };
 
   /// Apply the lambda F to
-  template <typename F> void foreach (range const &r, F const &f) {
+  template <typename F>
+  void foreach (range const &r, F const &f) {
     long i = r.first(), last = r.last(), step = r.step();
     for (; i < last; i += step) f(i);
   }

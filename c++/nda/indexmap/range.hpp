@@ -119,7 +119,8 @@ namespace nda {
 
   // ------------------   foreach   --------------------------------------
 
-  template <typename F> void foreach (range const &r, F && f) noexcept {
+  template <typename F>
+  void foreach (range const &r, F && f) noexcept {
     long i = r.first(), last = r.last(), step = r.step();
     for (; i < last; i += step) std::forward<F>(f)(i);
   }

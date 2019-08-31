@@ -49,7 +49,8 @@ namespace nda {
 
     virtual ~runtime_error() noexcept {}
 
-    template <typename T> runtime_error &operator<<(T const &x) {
+    template <typename T>
+    runtime_error &operator<<(T const &x) {
       acc << x;
       return *this;
     }

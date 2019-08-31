@@ -26,36 +26,39 @@ namespace nda {
   // ----------------  for_each  -------------------------
 
   // C style
-  template <int I, typename F, size_t R> FORCEINLINE void for_each_impl(std::array<long, R> idx_lengths, F &&f) {
+  template <int I, typename F, size_t R>
+  FORCEINLINE void for_each_impl(std::array<long, R> idx_lengths, F &&f) {
     if constexpr (I == R)
       f();
     else {
       long imax = idx_lengths[I];
       for (int i = 0; i < imax; ++i) {
-        for_each_impl<I + 1>(idx_lengths, [ i, f ](auto &&... x) __attribute__((always_inline)) { return f(i, x...); });
+        for_each_impl<I + 1>(
+           idx_lengths, [ i, f ](auto &&... x) __attribute__((always_inline)) { return f(i, x...); });
       }
     }
   }
 
   //// Fortran style
   //template <int I, typename F, size_t R> FORCEINLINE void for_each_impl(std::array<long, R> idx_lengths, F &&f, traversal::Fortran_t) {
-    //if constexpr (I == R)
-      //f();
-    //else {
-      //for (int i = 0; i < idx_lengths[R - I - 1]; ++i) {
-        //for_each_impl<I + 1>(idx_lengths, [ i, f ](auto &&... x) __attribute__((always_inline)) { return f(x..., i); }, traversal::Fortran);
-      //}
-    //}
+  //if constexpr (I == R)
+  //f();
+  //else {
+  //for (int i = 0; i < idx_lengths[R - I - 1]; ++i) {
+  //for_each_impl<I + 1>(idx_lengths, [ i, f ](auto &&... x) __attribute__((always_inline)) { return f(x..., i); }, traversal::Fortran);
   //}
- 
+  //}
+  //}
+
   ///
-  template <typename F, size_t R> FORCEINLINE void for_each(std::array<long, R> idx_lengths, F &&f) {
+  template <typename F, size_t R>
+  FORCEINLINE void for_each(std::array<long, R> idx_lengths, F &&f) {
     for_each_impl<0>(idx_lengths, f);
   }
 
   ///
   //template <typename F, size_t R, typename Traversal> FORCEINLINE void for_each(std::array<long, R> idx_lengths, F &&f, Traversal tr) {
-    //for_each_impl<0>(idx_lengths, f, tr);
+  //for_each_impl<0>(idx_lengths, f, tr);
   //}
 
 } // namespace nda

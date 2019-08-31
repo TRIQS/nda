@@ -36,7 +36,8 @@ using dcomplex = std::complex<double>;
 //using triqs::clef::placeholder;
 
 // Complex are close
-template <typename X, typename Y>::testing::AssertionResult complex_are_close(X const &x, Y const &y, double precision = 1.e-10) {
+template <typename X, typename Y>
+::testing::AssertionResult complex_are_close(X const &x, Y const &y, double precision = 1.e-10) {
   using std::abs;
   if (abs(x - y) < precision)
     return ::testing::AssertionSuccess();
@@ -47,7 +48,8 @@ template <typename X, typename Y>::testing::AssertionResult complex_are_close(X 
 #define EXPECT_COMPLEX_NEAR(X, ...) EXPECT_TRUE(complex_are_close(X, __VA_ARGS__))
 
 // Arrays are equal
-template <typename X, typename Y>::testing::AssertionResult array_are_equal(X const &x, Y const &y) {
+template <typename X, typename Y>
+::testing::AssertionResult array_are_equal(X const &x, Y const &y) {
   if (x.shape() != y.shape())
     return ::testing::AssertionFailure() << "Comparing two arrays of different size "
                                          << "\n X = " << x << "\n Y = " << y;
@@ -62,7 +64,8 @@ template <typename X, typename Y>::testing::AssertionResult array_are_equal(X co
 #define EXPECT_ARRAY_EQ(X, Y) EXPECT_TRUE(array_are_equal(X, Y));
 
 // Arrays are close
-template <typename X, typename Y>::testing::AssertionResult array_are_close(X const &x1, Y const &y1, double precision = 1.e-10) {
+template <typename X, typename Y>
+::testing::AssertionResult array_are_close(X const &x1, Y const &y1, double precision = 1.e-10) {
   nda::array<typename X::value_t, X::rank> x = x1;
   nda::array<typename X::value_t, X::rank> y = y1;
   if (x.shape() != y.shape())
@@ -75,7 +78,7 @@ template <typename X, typename Y>::testing::AssertionResult array_are_close(X co
   using std::max;
   auto max_diff = abs(*x.data_start() - *y.data_start());
   for (long i = 0; i < x.size(); ++i) max_diff = max(max_diff, abs(x.data_start()[i] - y.data_start()[i]));
-  if (max_diff<  precision)
+  if (max_diff < precision)
     return ::testing::AssertionSuccess();
   else
     return ::testing::AssertionFailure() << "max_element(abs(x-y)) = " << max_diff << "\n X = " << x << "\n Y = " << y;
@@ -84,7 +87,8 @@ template <typename X, typename Y>::testing::AssertionResult array_are_close(X co
 #define EXPECT_ARRAY_NEAR(X, ...) EXPECT_TRUE(array_are_close(X, __VA_ARGS__))
 
 // Arrays is almost 0
-template <typename X>::testing::AssertionResult array_almost_zero(X const &x1) {
+template <typename X>
+::testing::AssertionResult array_almost_zero(X const &x1) {
   double precision                           = 1.e-10;
   nda::array<typename X::value_t, X::rank> x = x1;
 
@@ -96,7 +100,8 @@ template <typename X>::testing::AssertionResult array_almost_zero(X const &x1) {
 
 #define EXPECT_ARRAY_ZERO(X) EXPECT_TRUE(array_almost_zero(X))
 //
-template <typename X, typename Y>::testing::AssertionResult generic_are_near(X const &x, Y const &y) {
+template <typename X, typename Y>
+::testing::AssertionResult generic_are_near(X const &x, Y const &y) {
   double precision = 1.e-12;
   using std::abs;
   if (abs(x - y) > precision)

@@ -25,7 +25,8 @@
 // missing part of std ...
 namespace nda {
 
-  template <typename T, size_t... Is> constexpr std::array<T, sizeof...(Is)> make_initialized_array_impl(T v, std::index_sequence<Is...>) {
+  template <typename T, size_t... Is>
+  constexpr std::array<T, sizeof...(Is)> make_initialized_array_impl(T v, std::index_sequence<Is...>) {
     return {(Is ? v : v)...};
   } // always v, just a trick to have the pack
 
@@ -34,7 +35,8 @@ namespace nda {
    * @tparam T
    * make a std::array<T, R> initialized to v
    */
-  template <int R, typename T> constexpr std::array<T, R> make_initialized_array(T v) {
+  template <int R, typename T>
+  constexpr std::array<T, R> make_initialized_array(T v) {
     return make_initialized_array_impl(v, std::make_index_sequence<R>{});
   }
 

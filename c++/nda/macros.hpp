@@ -36,7 +36,18 @@
 
 #define FORCEINLINE __inline__ __attribute__((always_inline))
 
-
-#define EXPECTS(X) if(!(X)){ std::cerr << "Precondition " << AS_STRING(X) << " violated at " << __FILE__ << ":" << __LINE__ << "\n"; std::terminate(); }
-#define ASSERT(X) if(!(X)){ std::cerr << "Assertion " << AS_STRING(X) << " violated at " << __FILE__ << ":" << __LINE__ << "\n"; std::terminate(); }
-#define ENSURES(X) if(!(X)){ std::cerr << "Postcondition " << AS_STRING(X) << " violated at " << __FILE__ << ":" << __LINE__ << "\n"; std::terminate(); }
+#define EXPECTS(X)                                                                                                                                   \
+  if (!(X)) {                                                                                                                                        \
+    std::cerr << "Precondition " << AS_STRING(X) << " violated at " << __FILE__ << ":" << __LINE__ << "\n";                                          \
+    std::terminate();                                                                                                                                \
+  }
+#define ASSERT(X)                                                                                                                                    \
+  if (!(X)) {                                                                                                                                        \
+    std::cerr << "Assertion " << AS_STRING(X) << " violated at " << __FILE__ << ":" << __LINE__ << "\n";                                             \
+    std::terminate();                                                                                                                                \
+  }
+#define ENSURES(X)                                                                                                                                   \
+  if (!(X)) {                                                                                                                                        \
+    std::cerr << "Postcondition " << AS_STRING(X) << " violated at " << __FILE__ << ":" << __LINE__ << "\n";                                         \
+    std::terminate();                                                                                                                                \
+  }
