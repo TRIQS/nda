@@ -14,6 +14,14 @@ namespace nda {
   template <typename ValueType, int Rank, uint64_t Flags = 0, uint64_t Layout = 0>
   class array_view;
 
+  // ---------------------- is_array_or_view_container  --------------------------------
+
+  template <typename ValueType, int Rank>
+  inline constexpr bool is_regular_or_view_v<array<ValueType, Rank>> = true;
+
+  template <typename ValueType, int Rank, uint64_t Flags, uint64_t Layout>
+  inline constexpr bool is_regular_or_view_v<array_view<ValueType, Rank, Flags, Layout>> = true;
+
   // ---------------------- concept  --------------------------------
 
   template <typename ValueType, int Rank>
@@ -41,7 +49,7 @@ namespace nda {
   // Try to put the const/mutable in the TYPE
 
   template <typename ValueType, int Rank, uint64_t Flags, uint64_t Layout>
-  class array_view : tag::containers::_array_view {
+  class array_view {
 
     public:
     using value_t                 = std::remove_const_t<ValueType>;

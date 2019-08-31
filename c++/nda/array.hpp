@@ -26,7 +26,7 @@ namespace nda {
   // ---------------------- array--------------------------------
 
   template <typename ValueType, int Rank>
-  class array : tag::containers::_array {
+  class array {
     static_assert(!std::is_const<ValueType>::value, "no const type");
 
     public:

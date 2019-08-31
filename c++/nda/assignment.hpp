@@ -58,7 +58,7 @@ namespace nda::details {
       // RHS is a scalar for LHS
       // if LHS is a matrix, the unit has a specific interpretation.
 
-      if constexpr (is_matrix_regular_v<LHS> or is_matrix_view_v<LHS>) {
+      if constexpr (get_algebra<LHS> == 'M') {
         // FIXME : Foreach on diagonal only !
         // WRITE THE LLOP !SAME in compound op !!
         auto l = [&lhs, &rhs](auto &&x1, auto &&x2) {
@@ -90,7 +90,7 @@ namespace nda::details {
                   "Assignment impossible for the type of RHS into the type of LHS");
 
     static_assert(
-       (!((OP == 'M' || OP == 'D') and (is_matrix_view_v<LHS> or is_matrix_regular_v<LHS>) and (not is_scalar_for_v<RHS, LHS>))),
+       (!((OP == 'M' || OP == 'D') and (get_algebra<LHS> == 'M') and (not is_scalar_for_v<RHS, LHS>))),
        "*= and /= operator for non scalar RHS are deleted for a type modeling MutableMatrix (e.g. matrix, matrix_view) matrix, because this is ambiguous");
 
     //// if RHS is mpi_lazy
@@ -122,7 +122,7 @@ namespace nda::details {
     // RHS is a scalar for LHS
     else {
       // if LHS is a matrix, the unit has a specific interpretation.
-      if constexpr ((is_matrix_view_v<LHS> or is_matrix_regular_v<LHS>)and(OP == 'A' || OP == 'S')) {
+      if constexpr ((get_algebra<LHS> == 'M') and (OP == 'A' || OP == 'S')) {
         if (lhs.shape()[0] != lhs.shape()[1]) NDA_RUNTIME_ERROR << "Adding a number to a matrix only works if the matrix is square !";
         long s = lhs.shape()[0];
         for (long i = 0; i < s; ++i) { // diagonal only
