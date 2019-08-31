@@ -23,6 +23,8 @@ namespace nda {
 
   // Recognize the containers
 
+BALBLAB A
+
   template <typename T>
   inline constexpr bool is_regular_v = std::is_base_of_v<tag::containers::_regular, T>;
   template <typename T>
