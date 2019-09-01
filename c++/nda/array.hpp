@@ -18,6 +18,7 @@
  * TRIQS. If not, see <http://www.gnu.org/licenses/>.
  *
  ******************************************************************************/
+
 #pragma once
 #include "./array_view.hpp"
 
@@ -25,7 +26,14 @@ namespace nda {
 
   // Class template argument deduction
   template <typename T>
-  array(T)->array<get_value_t<T>, get_rank<T>>;
+  array(T)->array<get_value_t<std::decay_t<T>>, get_rank<std::decay_t<T>>>;
+
+  namespace details {
+    template <typename R, typename Initializer, size_t... Is>
+    inline constexpr bool _is_a_good_lambda(std::index_sequence<Is...>) {
+      return std::is_invocable_r_v<R, Initializer, long(Is)...>;
+    }
+  } // namespace details
 
   // ---------------------- array--------------------------------
 
@@ -100,65 +108,28 @@ namespace nda {
     /// Construct from anything that has an indexmap and a storage compatible with this class
     //template <typename T> array(T const &a) REQUIRES(XXXX): array(a.indexmap(), a.storage()) {}
 
-    // --- with memory layout
-
-    /** 
-     * Construct with the given shape and the memory layout ml
-     * @param shape  Shape of the array (lengths in each dimension)
-     * @param ml Memory layout
-     */
-    explicit array(shape_t<Rank> const &shape, std::array<int, Rank> ml) : _idx_m(shape, ml), _storage(_idx_m.size()) {}
-
-    // FIXME : Template o
-    /**
-     * Construct from a copy of X, with a new memory layout
-     * @param a array
-     */
-    //explicit array(array const &X, layout_t<Rank> ml) : array(X.indexmap(), ml) { triqs_arrays_assign_delegation(*this, X); }
-
     /** 
      * Build a new array from x.shape() and fill it with by evaluating x. 
      * T should model NdArray
      */
     template <typename T>
-    array(T const &x) REQUIRES(is_ndarray_v<T> and std::is_convertible_v<get_value_t<T>, value_t>) : array{get_shape(x), ml} {
+    array(T const &x) REQUIRES(is_ndarray_v<T> ) : array{x.shape()} {
+      static_assert(std::is_convertible_v<get_value_t<T>, value_t>, "Can not construct the array. ValueType can be constructed from the value_t of the argument");
       nda::details::assignment(*this, x);
     }
 
     /** 
-     * Build a new array from X.domain() and fill it with by evaluating X. X can be : 
-     *  - another type of array, array_view, matrix,.... (any <IndexMap, Storage> pair)
-     *  - the memory layout will be deduced from X if possible, or default constructed
-     *  - a expression : e.g. array<int> A = B+ 2*C;
-     */
-    //template <typename T>
-    //array(T const &X) //
-    //REQUIRES(ImmutableCuboidArray<T>::value and std::is_convertible<typename T::value_t, value_t>::value)
-    //: array(X, get_memory_layout<Rank, T>::invoke(X)) {}
-
-    // --- with initializers
-
-    /**
-     * Construct from shape and a Lambda to initialize the element on site. 
+     * [Advanced] From a shape and a storage handle (for reshaping)
      *
      * @param shape  Shape of the array (lengths in each dimension)
-     * @param initializer A function/lambda.
-     *
-     * a(i,j,k,l) is initialized to initializer(i,j,k,l)
-     *
-     * EXAMPLE ?
-     *
-     * NB : Work even for non copy constructible ValueType.
+     * @param mem_handle  memory handle
+     * NB: make a new copy.
      */
-    //template <typename Initializer>
-    //explicit array(shape_t<Rank> const &shape, Initializer &&initializer) : array(shape, std::forward<Initializer>(initializer)) {}
+    /// From a temporary storage and an indexmap. Used for reshaping a temporary array
+    template <char RBS>
+    array(shape_t<Rank> const &shape, mem::handle<ValueType, RBS> mem_handle) : array(idx_map_t{shape}, mem_handle) {}
 
-    ///// From shape and a Lambda to initialize the element
-    //template <typename InitLambda>
-    //explicit array(shape_t<Rank> const &shape, layout_t<Rank> ml, InitLambda &&lambda)
-    //: _idx_m(shape, ml), _storage{_idx_m.size(), mem::do_not_initialize} {
-    //nda::for_each(_idx_m.lengths(), [&](auto const &... x) { _storage.init_raw(_idx_m(x...), lambda(x...)); });
-    //}
+    // --- with initializers
 
     /**
      * Construct from the initializer list 
@@ -212,9 +183,26 @@ namespace nda {
       }
     }
 
-    /// From a temporary storage and an indexmap. Used for reshaping a temporary array
-    //explicit array(typename indexmap_t::domain_t const &dom, storage_t &&sto, layout_t<Rank> ml = layout_t<Rank>{})
-    //: IMPL_TYPE(indexmap_t(dom, ml), std::move(sto)) {}
+    /**
+     * [Advanced] Construct from shape and a Lambda to initialize the elements. 
+     *
+     * @tparam Initializer A lambda callable on Rank longs and whose return is convertible to ValueType
+     *
+     * @param shape  Shape of the array (lengths in each dimension)
+     * @param initializer The lambda
+     *
+     * a(i,j,k,l) is initialized to initializer(i,j,k,l) at construction.
+     * Specially useful for non trivially constructible type
+     *
+     * @example array_init0.cpp
+     *
+     */
+    template <typename Initializer>
+    explicit array(shape_t<Rank> const &shape, Initializer initializer)
+       REQUIRES(details::_is_a_good_lambda<ValueType, Initializer>(std::make_index_sequence<Rank>()))
+       : _idx_m(shape), _storage{_idx_m.size(), mem::do_not_initialize} {
+      nda::for_each(_idx_m.lengths(), [&](auto const &... x) { _storage.init_raw(_idx_m(x...), lambda(x...)); });
+    }
 
     //------------------ Assignment -------------------------
 

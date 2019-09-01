@@ -66,11 +66,12 @@ namespace nda {
   }
 
   /// Get the first element of the array as a(0,0,0....) (i.e. also work for non containers, just with the concept !).
+  template <typename A>
   auto get_first_element(A const &a) { return _get_first_element_impl(std::make_index_sequence<get_rank<A>>{}, a); }
 
   /// A trait to get the return_t of the (long, ... long) for an object with ndarray concept
   template <typename A>
-  using get_value_t = decltype(get_first_element(std::declval<A const>{}));
+  using get_value_t = decltype(get_first_element(std::declval<A const>()));
 
   // --------------------------- Algebra ------------------------
 

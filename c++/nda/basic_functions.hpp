@@ -13,8 +13,4 @@ namespace nda {
   }
   //template <typename A> regular_t<A> make_regular(A &&x) REQUIRES(is_ndarray_v<A>) { return std::forward<A>(x); }
 
-
-  // the automatically generated once. Cf file, with vim commands
-#include "./mapped_functions.hxx"
-
 } // namespace nda

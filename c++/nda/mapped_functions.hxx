@@ -20,7 +20,7 @@
     return nda::map(                                     
        [](auto const &x) {                              
          using std::X;                                 
-         return X(a);                                 
+         return X(x);                                 
        })(std::forward<A>(a));                         
   }
 
@@ -39,7 +39,7 @@ isnan
   template <typename A>                                 
   auto X(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) { 
     return nda::map(                                     
-       [](auto const &x) {return X(a); },                                            
+       [](auto const &x) {return X(x); },                                            
        std::forward<A>(a));                         
   }
 
@@ -56,7 +56,7 @@ abs2
     return nda::map(                                     
        [](auto const &x) {                              
          using std::X;                                 
-         return X(a);                                 
+         return X(x);                                 
        },                                            
        std::forward<A>(a));                         
   }
@@ -83,7 +83,7 @@ template <typename A>
 auto abs(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
   return nda::map([](auto const &x) {
     using std::abs;
-    return abs(a);
+    return abs(x);
   })(std::forward<A>(a));
 }
 
@@ -92,7 +92,7 @@ template <typename A>
 auto real(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
   return nda::map([](auto const &x) {
     using std::real;
-    return real(a);
+    return real(x);
   })(std::forward<A>(a));
 }
 
@@ -101,7 +101,7 @@ template <typename A>
 auto imag(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
   return nda::map([](auto const &x) {
     using std::imag;
-    return imag(a);
+    return imag(x);
   })(std::forward<A>(a));
 }
 
@@ -110,7 +110,7 @@ template <typename A>
 auto floor(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
   return nda::map([](auto const &x) {
     using std::floor;
-    return floor(a);
+    return floor(x);
   })(std::forward<A>(a));
 }
 
@@ -119,7 +119,7 @@ template <typename A>
 auto conj(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
   return nda::map([](auto const &x) {
     using std::conj;
-    return conj(a);
+    return conj(x);
   })(std::forward<A>(a));
 }
 
@@ -128,20 +128,20 @@ template <typename A>
 auto isnan(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
   return nda::map([](auto const &x) {
     using std::isnan;
-    return isnan(a);
+    return isnan(x);
   })(std::forward<A>(a));
 }
 
 /// Maps conj_r onto the array
 template <typename A>
 auto conj_r(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
-  return nda::map([](auto const &x) { return conj_r(a); }, std::forward<A>(a));
+  return nda::map([](auto const &x) { return conj_r(x); }, std::forward<A>(a));
 }
 
 /// Maps abs2 onto the array
 template <typename A>
 auto abs2(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
-  return nda::map([](auto const &x) { return abs2(a); }, std::forward<A>(a));
+  return nda::map([](auto const &x) { return abs2(x); }, std::forward<A>(a));
 }
 
 /// Maps exp onto the array
@@ -150,7 +150,7 @@ auto exp(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::dec
   return nda::map(
      [](auto const &x) {
        using std::exp;
-       return exp(a);
+       return exp(x);
      },
      std::forward<A>(a));
 }
@@ -161,7 +161,7 @@ auto cos(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::dec
   return nda::map(
      [](auto const &x) {
        using std::cos;
-       return cos(a);
+       return cos(x);
      },
      std::forward<A>(a));
 }
@@ -172,7 +172,7 @@ auto sin(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::dec
   return nda::map(
      [](auto const &x) {
        using std::sin;
-       return sin(a);
+       return sin(x);
      },
      std::forward<A>(a));
 }
@@ -183,7 +183,7 @@ auto tan(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::dec
   return nda::map(
      [](auto const &x) {
        using std::tan;
-       return tan(a);
+       return tan(x);
      },
      std::forward<A>(a));
 }
@@ -194,7 +194,7 @@ auto cosh(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::de
   return nda::map(
      [](auto const &x) {
        using std::cosh;
-       return cosh(a);
+       return cosh(x);
      },
      std::forward<A>(a));
 }
@@ -205,7 +205,7 @@ auto sinh(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::de
   return nda::map(
      [](auto const &x) {
        using std::sinh;
-       return sinh(a);
+       return sinh(x);
      },
      std::forward<A>(a));
 }
@@ -216,7 +216,7 @@ auto tanh(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::de
   return nda::map(
      [](auto const &x) {
        using std::tanh;
-       return tanh(a);
+       return tanh(x);
      },
      std::forward<A>(a));
 }
@@ -227,7 +227,7 @@ auto acos(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::de
   return nda::map(
      [](auto const &x) {
        using std::acos;
-       return acos(a);
+       return acos(x);
      },
      std::forward<A>(a));
 }
@@ -238,7 +238,7 @@ auto asin(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::de
   return nda::map(
      [](auto const &x) {
        using std::asin;
-       return asin(a);
+       return asin(x);
      },
      std::forward<A>(a));
 }
@@ -249,7 +249,7 @@ auto atan(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::de
   return nda::map(
      [](auto const &x) {
        using std::atan;
-       return atan(a);
+       return atan(x);
      },
      std::forward<A>(a));
 }
@@ -260,7 +260,7 @@ auto log(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::dec
   return nda::map(
      [](auto const &x) {
        using std::log;
-       return log(a);
+       return log(x);
      },
      std::forward<A>(a));
 }
@@ -271,7 +271,7 @@ auto sqrt(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::de
   return nda::map(
      [](auto const &x) {
        using std::sqrt;
-       return sqrt(a);
+       return sqrt(x);
      },
      std::forward<A>(a));
 }

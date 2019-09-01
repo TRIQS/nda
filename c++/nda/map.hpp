@@ -34,7 +34,7 @@ namespace nda {
 
   // algebra
   template <typename F, typename... A>
-  constexpr char get_algebra<expr_call<F, A...>> = _impl_find_common_algebra(get_algebra<A>);
+  constexpr char get_algebra<expr_call<F, A...>> = _impl_find_common_algebra(get_algebra<A>...);
 
   // NdArray concept
   template <typename F, typename... A>
@@ -51,12 +51,12 @@ namespace nda {
     std::tuple<const A...> a; // tuple of array (ref) on which f is applied
 
     private: // FIXME C++20 lambda implementation details
-    template <bool Parent, size_t... Is, typename... Args>
-    [[gnu::always_inline]] void _call(std::index_sequence<Is...>, Args const &... args) {
+    template <size_t... Is, typename... Args>
+    [[gnu::always_inline]] auto _call(std::index_sequence<Is...>, Args const &... args) const {
       return f(std::get<Is>(a)(args...)...);
     }
     template <size_t... Is, typename Args>
-    [[gnu::always_inline]] void _call_bra(std::index_sequence<Is...>, Args const &... args) {
+    [[gnu::always_inline]] auto _call_bra(std::index_sequence<Is...>, Args const &args) const {
       return f(std::get<Is>(a)[args]...);
     }
 
@@ -72,7 +72,8 @@ namespace nda {
       return _call_bra(std::make_index_sequence<sizeof...(A)>{}, args);
     }
 
-    auto const &shape() const { return std::get<0>(a); }
+    // FIXME copy needed for the && case only. Overload ?
+    auto shape() const { return std::get<0>(a).shape(); }
 
     long size() const { return a.size(); }
   };
@@ -86,8 +87,8 @@ namespace nda {
 
     template <typename A0, typename... A>
     expr_call<F, A0, A...> operator()(A0 &&a0, A &&... a) const {
-      EXPECT(((a.shape() == a0.shape()) && ...)); // same shape
-      return {f, std::forward<A0>(a0), std::forward<A>(a)...};
+      EXPECTS(((a.shape() == a0.shape()) && ...)); // same shape
+      return {f, {std::forward<A0>(a0), std::forward<A>(a)...}};
     }
   };
 
