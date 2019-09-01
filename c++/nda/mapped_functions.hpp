@@ -29,8 +29,8 @@ namespace nda {
   ///
   inline bool isnan(std::complex<double> const &z) { return std::isnan(z.real()) or std::isnan(z.imag()); }
 
-  ///
-  inline bool any(bool x) { return x; } // for generic codes
+  /// FIXME ??
+  //  inline bool any(bool x) { return x; } // for generic codes
 
   /// pow for integer
   template <typename T>

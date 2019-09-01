@@ -30,6 +30,8 @@
 //#include <nda/matrix.hpp>
 //#include <nda/vector.hpp>
 
+#include <nda/functions.hpp>
+
 #include <nda/arithmetic.hpp>
 #include <nda/map.hpp>
 #include <nda/fold.hpp>
