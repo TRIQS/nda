@@ -61,14 +61,13 @@ namespace nda {
    
   0- Make sure the }// namesapce is still the last line 
   1 -select the pattern of your choice 
+     V}
   2- put it register t :
       "ty
-  3- select the macro 
-      mz"bywG"tPVG:s/X/\=@b/g'z
-      (mark z; yank word in "b; go to end; Paste "t; remplate X-> word from "b; return to z)
-  4- and put it in "a
-      "ay
-  5- select the list of function to map below (abs, ...) or only the one you want to add
+  3- define the macro 
+      :let @a = '"bywG"tPVG:s/X/\=@b/g'
+      (yank word in "b; go to end; Paste "t; remplate X-> word from "b)
+  4- select the list of function to map below (abs, ...) or only the one you want to add
      V}k
   6- use : and say
     :  <..> normal @a
@@ -84,7 +83,7 @@ namespace nda {
          return X(a);                                 
        })(std::forward<A>(a));                         
   }
-  
+
   ---------------
 
 abs
@@ -103,7 +102,7 @@ isnan
        [](auto const &x) {return X(a); },                                            
        std::forward<A>(a));                         
   }
-  
+
   ---------------
  
 conj_r
@@ -121,7 +120,7 @@ abs2
        },                                            
        std::forward<A>(a));                         
   }
-  
+
   ---------------
 
 exp
@@ -137,7 +136,204 @@ atan
 log
 sqrt
 
-
 */
 
-} // namespace nda DO NOT add a line below this (cf vim macro above)
+  /// Maps abs onto the array
+  template <typename A>
+  auto abs(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+    return nda::map([](auto const &x) {
+      using std::abs;
+      return abs(a);
+    })(std::forward<A>(a));
+  }
+
+  /// Maps real onto the array
+  template <typename A>
+  auto real(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+    return nda::map([](auto const &x) {
+      using std::real;
+      return real(a);
+    })(std::forward<A>(a));
+  }
+
+  /// Maps imag onto the array
+  template <typename A>
+  auto imag(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+    return nda::map([](auto const &x) {
+      using std::imag;
+      return imag(a);
+    })(std::forward<A>(a));
+  }
+
+  /// Maps floor onto the array
+  template <typename A>
+  auto floor(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+    return nda::map([](auto const &x) {
+      using std::floor;
+      return floor(a);
+    })(std::forward<A>(a));
+  }
+
+  /// Maps conj onto the array
+  template <typename A>
+  auto conj(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+    return nda::map([](auto const &x) {
+      using std::conj;
+      return conj(a);
+    })(std::forward<A>(a));
+  }
+
+  /// Maps isnan onto the array
+  template <typename A>
+  auto isnan(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+    return nda::map([](auto const &x) {
+      using std::isnan;
+      return isnan(a);
+    })(std::forward<A>(a));
+  }
+
+  /// Maps conj_r onto the array
+  template <typename A>
+  auto conj_r(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+    return nda::map([](auto const &x) { return conj_r(a); }, std::forward<A>(a));
+  }
+
+  /// Maps abs2 onto the array
+  template <typename A>
+  auto abs2(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+    return nda::map([](auto const &x) { return abs2(a); }, std::forward<A>(a));
+  }
+
+  /// Maps exp onto the array
+  template <typename A>
+  auto exp(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+    return nda::map(
+       [](auto const &x) {
+         using std::exp;
+         return exp(a);
+       },
+       std::forward<A>(a));
+  }
+
+  /// Maps cos onto the array
+  template <typename A>
+  auto cos(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+    return nda::map(
+       [](auto const &x) {
+         using std::cos;
+         return cos(a);
+       },
+       std::forward<A>(a));
+  }
+
+  /// Maps sin onto the array
+  template <typename A>
+  auto sin(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+    return nda::map(
+       [](auto const &x) {
+         using std::sin;
+         return sin(a);
+       },
+       std::forward<A>(a));
+  }
+
+  /// Maps tan onto the array
+  template <typename A>
+  auto tan(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+    return nda::map(
+       [](auto const &x) {
+         using std::tan;
+         return tan(a);
+       },
+       std::forward<A>(a));
+  }
+
+  /// Maps cosh onto the array
+  template <typename A>
+  auto cosh(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+    return nda::map(
+       [](auto const &x) {
+         using std::cosh;
+         return cosh(a);
+       },
+       std::forward<A>(a));
+  }
+
+  /// Maps sinh onto the array
+  template <typename A>
+  auto sinh(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+    return nda::map(
+       [](auto const &x) {
+         using std::sinh;
+         return sinh(a);
+       },
+       std::forward<A>(a));
+  }
+
+  /// Maps tanh onto the array
+  template <typename A>
+  auto tanh(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+    return nda::map(
+       [](auto const &x) {
+         using std::tanh;
+         return tanh(a);
+       },
+       std::forward<A>(a));
+  }
+
+  /// Maps acos onto the array
+  template <typename A>
+  auto acos(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+    return nda::map(
+       [](auto const &x) {
+         using std::acos;
+         return acos(a);
+       },
+       std::forward<A>(a));
+  }
+
+  /// Maps asin onto the array
+  template <typename A>
+  auto asin(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+    return nda::map(
+       [](auto const &x) {
+         using std::asin;
+         return asin(a);
+       },
+       std::forward<A>(a));
+  }
+
+  /// Maps atan onto the array
+  template <typename A>
+  auto atan(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+    return nda::map(
+       [](auto const &x) {
+         using std::atan;
+         return atan(a);
+       },
+       std::forward<A>(a));
+  }
+
+  /// Maps log onto the array
+  template <typename A>
+  auto log(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+    return nda::map(
+       [](auto const &x) {
+         using std::log;
+         return log(a);
+       },
+       std::forward<A>(a));
+  }
+
+  /// Maps sqrt onto the array
+  template <typename A>
+  auto sqrt(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+    return nda::map(
+       [](auto const &x) {
+         using std::sqrt;
+         return sqrt(a);
+       },
+       std::forward<A>(a));
+  }
+
+} // namespace nda
