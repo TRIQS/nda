@@ -1,81 +1,18 @@
-#include "./test_common.hpp"
+#include "./nda_test_common.hpp"
 
-static_assert(!std::is_pod<nda::array<long, 2>>::value, "POD pb");
-//static_assert(is_scalar_for<int, matrix<std::complex<double>>>::type::value == 1, "oops");
+static_assert(!std::is_pod<triqs::arrays::array<long, 2>>::value, "POD pb");
+static_assert(is_scalar_for<int, matrix<std::complex<double>>>::type::value == 1, "oops");
 
 // ==============================================================
 
-
-
 TEST(NDA, Create1) {
-  nda::array<long, 2> A(3, 3);
+  array<long, 2> A(3, 3);
   EXPECT_EQ(A.shape(), (myshape_t<2>{3, 3}));
-
-  std::cerr << A.indexmap() <<std::endl;
 }
 
 // -------------------------------------
 
-void f(nda::array_view<long,1> v) { 
-  std::cout  << "View "<<v<<std::endl;;
-}
-
-
-TEST(NDA, View) {
-  nda::array<long, 3> a(3, 3, 4);
-
-  for (int i = 0; i < 3; ++i)
-    for (int j = 0; j < 3; ++j)
-      for (int k = 0; k < 4; ++k) a(i, j, k) = i + 10 * j + 100 * k;
-
-  auto v = a(_, 1, 2);
-  //nda::array_view<long,1> v = a(_, 1, 2);
-
-  //std::cerr << v.indexmap() <<std::endl;
-  //f(v);
-
-  EXPECT_EQ(v.shape(), (myshape_t<1>{3}));
-
-  EXPECT_EQ(a(1, 1, 2), 1 + 10 * 1 + 100 * 2);
-
-  a(1, 1, 2) = -28;
-  EXPECT_EQ(v(1), a(1, 1, 2));
-}
-
-// -------------------------------------
-
-TEST(NDA, Assign) {
-  nda::array<long, 2> A(3, 3);
-
-  A() = 0;
-
-  nda::array<long, 2> B;
-  B = A;
-
-  EXPECT_ARRAY_NEAR(A, B);
-  A(0, 2) = 87;
-
-  B = A(); // no resize
-
-  EXPECT_EQ(A.indexmap().strides(), B.indexmap().strides());
-
-  EXPECT_ARRAY_NEAR(A, B);
-  EXPECT_EQ(B.shape(), (myshape_t<2>{3, 3}));
-}
-
-// -------------------------------------
-
-TEST(NDA, Iterator1) {
-  nda::array<long, 2> A{{0, 1, 2}, {3, 4, 5}};
-
-  int i = 0;
-  for (auto x : A) EXPECT_EQ(x, i++);
-}
-
-/*
-// -------------------------------------
-
-TEST(NDA, CreateResize) {
+TEST(NDA, Resize) {
 
   array<long, 2> A;
   A.resize(make_shape(3, 3));
@@ -200,34 +137,6 @@ TEST(NDA, SwapView) {
   EXPECT_EQ(VV, (vector<double>{4, 4}));
 }
 
-// ----------------------------------
-
-// FIXME Rename as BLAS_SWAP (swap of blas). Only for vector of same size
-TEST(NDA, DeepSwap) {
-  auto V = vector<double>{3, 3, 3};
-  auto W = vector<double>{4, 4, 4};
-
-  deep_swap(V, W);
-
-  // V , W are swapped
-  EXPECT_EQ(V, (vector<double>{4, 4, 4}));
-  EXPECT_EQ(W, (vector<double>{3, 3, 3}));
-}
-// ----------------------------------
-
-TEST(NDA, DeepSwapView) {
-  auto V = vector<double>{3, 3, 3};
-  auto W = vector<double>{4, 4, 4, 4};
-
-  auto VV = V(range(0, 2));
-  auto WW = W(range(0, 2));
-
-  deep_swap(VV, WW);
-
-  // VV, WW swapped
-  EXPECT_EQ(WW, (vector<double>{3, 3}));
-  EXPECT_EQ(VV, (vector<double>{4, 4}));
-}
 
 // ==============================================================
 
@@ -240,38 +149,6 @@ TEST(NDA, Print) {
   EXPECT_PRINT("\n[[0,1,2]\n [10,11,12]]", A);
 }
 
-// ==============================================================
-
-TEST(NDA, Ellipsis) {
-  array<long, 3> A(2, 3, 4);
-  A() = 7;
-
-  assert_all_close(A(0, ___), A(0, _, _), 1.e-15);
-
-  array<long, 4> B(2, 3, 4, 5);
-  B() = 8;
-
-  assert_all_close(B(0, ___, 3), B(0, _, _, 3), 1.e-15);
-  assert_all_close(B(0, ___, 2, 3), B(0, _, 2, 3), 1.e-15);
-  assert_all_close(B(___, 2, 3), B(_, _, 2, 3), 1.e-15);
-}
-
-// ==============================================================
-
-template <typename ArrayType> auto sum0(ArrayType const &A) {
-  array<typename ArrayType::value_type, ArrayType::rank - 1> res = A(0, ___);
-  for (size_t u = 1; u < A.shape()[0]; ++u) res += A(u, ___);
-  return res;
-}
-
-TEST(NDA, Ellipsis2) {
-  array<double, 2> A(5, 2);
-  A() = 2;
-  array<double, 3> B(5, 2, 3);
-  B() = 3;
-  assert_all_close(sum0(A), array<double, 1>{10, 10}, 1.e-15);
-  assert_all_close(sum0(B), array<double, 2>{{15, 15, 15}, {15, 15, 15}}, 1.e-15);
-}
 
 // ==============================================================
 
@@ -334,5 +211,5 @@ TEST(NDA, ConvertibleCR) {
   // can not do the reverse !
   static_assert(!std::is_convertible<array<dcomplex, 2>, array<double, 2>>::value, "oops");
 }
-*/
+
 MAKE_MAIN

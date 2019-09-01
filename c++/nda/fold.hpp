@@ -37,7 +37,7 @@ namespace nda {
     decltype(f(r, get_value_t<A>{})) r2 = r;
     // to take into account that f may be double,double -> double, while one passes 0 (an int...)
     // R = int, R2= double in such case, and the result will be a double, or narrowing will occur
-    nda::foreach (a.indexmap().lengths(), [&a,&r2](auto &&... args) { r2 = f(r2, a(args...)); });
+    nda::for_each (a.shape(), [&a,&r2, &f](auto &&... args) { r2 = f(r2, a(args...)); });
     return r2;
   }
 

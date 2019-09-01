@@ -34,7 +34,7 @@ namespace nda {
 
   /// pow for integer
   template <typename T>
-  T pow(T x, int n) REQUIRES(std::is_integral<T>) {
+  T pow(T x, int n) REQUIRES(std::is_integral_v<T>) {
     T r = 1;
     for (int i = 0; i < n; ++i) r *= x;
     return r;
@@ -47,12 +47,10 @@ namespace nda {
   /// Map pow on Ndarray
   template <typename A>
   auto pow(A &&a, int n) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
-    return nda::map(
-       [n](auto const &x) {
-         using std::pow;
-         return pow(a, n);
-       },
-       std::forward<A>(a));
+    return nda::map([n](auto const &x) {
+      using std::pow;
+      return pow(x, n);
+    })(std::forward<A>(a));
   }
 
   // the automatically generated once. Cf file, with vim commands

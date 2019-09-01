@@ -16,7 +16,7 @@ namespace nda {
     return fold([](auto const &a, auto const &b) {
       using std::max;
       return max(a, b);
-    })(a, get_first_element(a));
+    }, a, get_first_element(a));
   }
 
   /**
@@ -29,7 +29,7 @@ namespace nda {
     return fold([](auto const &a, auto const &b) {
       using std::min;
       return min(a, b);
-    })(a, get_first_element(a));
+    }, a, get_first_element(a));
   }
 
   /**
