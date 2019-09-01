@@ -1,6 +1,6 @@
 # Start configuration
 cmake_minimum_required(VERSION 2.8.12)
-project(nda CXX)
+project(nda C CXX)
 if(POLICY CMP0074)
   cmake_policy(SET CMP0074 NEW)
 endif()
@@ -22,6 +22,9 @@ add_compile_options(-Wall
 
 # Build and install the nda library
 add_subdirectory(c++/nda)
+
+# Build and install the h5 library
+add_subdirectory(h5)
 
 # Build and install the nda python module
 if(${TRIQS_WITH_PYTHON_SUPPORT})
