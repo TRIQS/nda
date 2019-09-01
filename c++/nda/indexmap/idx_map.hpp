@@ -209,9 +209,9 @@ namespace nda {
     }
 
 #ifdef NDA_ENFORCE_BOUNDCHECK
-    static constexpr bool enforce_bound_check = false;
-#else
     static constexpr bool enforce_bound_check = true;
+#else
+    static constexpr bool enforce_bound_check = false;
 #endif
 
     public:

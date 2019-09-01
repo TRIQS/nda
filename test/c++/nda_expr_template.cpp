@@ -25,8 +25,8 @@ TEST(NDA, ExprTemplateArray) {
 
   nda::array<int, 1> A(3), B(3), C;
   nda::array<double, 1> D;
-  B() = 2;
-  A() = 3;
+  B = 2;
+  A = 3;
 
   C = A + B;
   EXPECT_ARRAY_NEAR(C, nda::array<int, 1>{5, 5, 5});

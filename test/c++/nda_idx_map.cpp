@@ -33,12 +33,12 @@ TEST(idxstat, eval) { // NOLINT
 
 //-----------------------
 
-TEST(idxstat, boundcheck) { // NOLINT
+//TEST(idxstat, boundcheck) { // NOLINT
 
-  idx_map<3> i1{{2, 7, 3}};
-  //i1(21, 3, 18);
-  EXPECT_THROW(i1(21, 3, 18), std::exception); //NOLINT
-}
+  //idx_map<3> i1{{2, 7, 3}};
+  ////i1(21, 3, 18);
+  ////EXPECT_THROW(i1(21, 3, 18), std::exception); //NOLINT
+//}
 
 //-----------------------
 

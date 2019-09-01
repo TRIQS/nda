@@ -31,7 +31,6 @@ real
 imag
 floor
 conj
-isnan
 
  ---------  pattern 2 : same, no using std::-------
 
@@ -47,8 +46,9 @@ isnan
  
 conj_r
 abs2
+isnan
 
-  ---------  pattern 3 : mapping with matrix excluded -------
+---------  pattern 3 : mapping with matrix excluded -------
 
   /// Maps X onto the array
   template <typename A>                                 
@@ -127,7 +127,6 @@ auto conj(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
 template <typename A>
 auto isnan(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
   return nda::map([](auto const &x) {
-    using std::isnan;
     return isnan(x);
   })(std::forward<A>(a));
 }
@@ -275,4 +274,3 @@ auto sqrt(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::de
      },
      std::forward<A>(a));
 }
-

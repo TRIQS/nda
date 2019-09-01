@@ -219,9 +219,8 @@ namespace nda {
      */
     template <typename RHS>
     array &operator=(RHS const &rhs) {
-      static_assert(is_ndarray_v<RHS>, "Assignment : RHS not supported");
-      resize(rhs.shape());
-      //resize(get_shape(X));
+      static_assert(is_ndarray_v<RHS> or is_scalar_for_v<RHS,array> , "Assignment : RHS not supported");
+      if constexpr (is_ndarray_v<RHS>) resize(rhs.shape());
       nda::details::assignment(*this, rhs);
       return *this;
     }

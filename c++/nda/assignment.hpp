@@ -25,7 +25,7 @@ namespace nda::details {
                     "Assignment impossible for the type of RHS into the type of LHS");
 
 #ifdef NDA_DEBUG
-      if (lhs.indexmap().lengths() != rhs.indexmap().lengths())
+      if (lhs.shape() != rhs.shape())
         NDA_RUNTIME_ERROR << "Size mismatch in operation " << OP << " : LHS " << lhs << " \n RHS = " << rhs;
 #endif
       constexpr bool can_consider_memcpy =
@@ -33,7 +33,7 @@ namespace nda::details {
 
       if constexpr (can_consider_memcpy) {
         // if idx_map have the same len and strides and are contiguous.
-        if ((lhs.indexmap().lengths() == rhs.indexmap().lengths()) and (lhs.indexmap().strides() == rhs.indexmap().strides())
+        if ((lhs.shape() == rhs.shape()) and (lhs.indexmap().strides() == rhs.indexmap().strides())
             and (lhs.indexmap().is_contiguous())) {
           auto *p1       = lhs.data_start();
           const auto *p2 = rhs.data_start();
@@ -53,7 +53,7 @@ namespace nda::details {
       static_assert(std::is_assignable_v<typename LHS::value_t &, get_value_t<RHS>>,
                     "Assignment impossible for the type of RHS into the type of LHS");
       auto l = [&lhs, &rhs](auto const &... args) { lhs(args...) = rhs(args...); };
-      nda::for_each(lhs.indexmap().lengths(), l);
+      nda::for_each(lhs.shape(), l);
     } else {
       // RHS is a scalar for LHS
       // if LHS is a matrix, the unit has a specific interpretation.
@@ -71,10 +71,10 @@ namespace nda::details {
               lhs(x1, x2) = RHS{0 * rhs}; //FIXME : improve this
           }
         }; // end lambda l
-        nda::for_each(lhs.indexmap().lengths(), l);
+        nda::for_each(lhs.shape(), l);
       } else { // LHS is not a matrix
         auto l = [&lhs, &rhs](auto const &... args) { lhs(args...) = rhs; };
-        nda::for_each(lhs.indexmap().lengths(), l);
+        nda::for_each(lhs.shape(), l);
       }
     }
   }
@@ -116,7 +116,7 @@ namespace nda::details {
         if constexpr (OP == 'M') { lhs(args...) *= rhs(args...); }
         if constexpr (OP == 'D') { lhs(args...) /= rhs(args...); }
       };
-      nda::for_each(lhs.indexmap().lengths(), l);
+      nda::for_each(lhs.shape(), l);
     }
 
     // RHS is a scalar for LHS
