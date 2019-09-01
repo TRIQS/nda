@@ -34,10 +34,11 @@
 #include <nda/map.hpp>
 #include <nda/fold.hpp>
 
+#include <nda/mapped_functions.hpp>
+#include <nda/algorithms.hpp>
+
 #include <nda/print.hpp>
 
-//#include <nda/math_functions.hpp>
-//#include <nda/algorithms.hpp>
 
 // HDF5 interface
 //#include <nda/h5/simple_read_write.hpp>

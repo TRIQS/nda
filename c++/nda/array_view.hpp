@@ -2,6 +2,7 @@
 #include "./indexmap/idx_map.hpp"
 #include "./storage/handle.hpp"
 #include "./traits.hpp"
+#include "./basic_functions.hpp"
 #include "./assignment.hpp"
 #include "./iterator_adapter.hpp"
 
