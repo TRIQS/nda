@@ -66,7 +66,7 @@ namespace nda {
   }
 
   /// Get the first element of the array as a(0,0,0....) (i.e. also work for non containers, just with the concept !).
-  auto get_first_element(A const & a) { return _get_first_element_impl(std::make_index_sequence<get_rank<A>>{}, a);}
+  auto get_first_element(A const &a) { return _get_first_element_impl(std::make_index_sequence<get_rank<A>>{}, a); }
 
   /// A trait to get the return_t of the (long, ... long) for an object with ndarray concept
   template <typename A>
@@ -78,13 +78,5 @@ namespace nda {
   template <typename A>
   inline constexpr char get_algebra = 'N';
 
-  // --------------------------- make_regular ------------------------
-  // FIXME MOVE THIS : A function, not a traits
-  // general make_regular
-  template <typename A>
-  typename A::regular_t make_regular(A &&x) REQUIRES(is_ndarray_v<A>) {
-    return std::forward<A>(x);
-  }
-  //template <typename A> regular_t<A> make_regular(A &&x) REQUIRES(is_ndarray_v<A>) { return std::forward<A>(x); }
 
 } // namespace nda
