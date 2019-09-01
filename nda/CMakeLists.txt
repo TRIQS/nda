@@ -2,7 +2,7 @@ file(GLOB_RECURSE sources *.cpp)
 add_library(nda_c ${sources})
 
 target_compile_options(nda_c PUBLIC -std=c++17 -fPIC)
-target_include_directories(nda_c PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/c++>)
+target_include_directories(nda_c PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>)
 target_compile_definitions(nda_c PRIVATE
 				NDA_GIT_HASH=${NDA_GIT_HASH}
 			    	TRIQS_GIT_HASH=${TRIQS_GIT_HASH}

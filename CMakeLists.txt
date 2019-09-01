@@ -21,7 +21,7 @@ add_compile_options(-Wall
 		     )
 
 # Build and install the nda library
-add_subdirectory(c++/nda)
+add_subdirectory(nda)
 
 # Build and install the h5 library
 add_subdirectory(h5)
