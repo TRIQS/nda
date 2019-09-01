@@ -23,9 +23,9 @@
 
 namespace nda {
 
-  // deduction rule
+  // Class template argument deduction
   template <typename T>
-  array(T)->container<get_value_t<T>, get_rank<T>>;
+  array(T)->array<get_value_t<T>, get_rank<T>>;
 
   // ---------------------- array--------------------------------
 
