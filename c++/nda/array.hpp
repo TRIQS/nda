@@ -31,7 +31,7 @@ namespace nda {
   namespace details {
     template <typename R, typename Initializer, size_t... Is>
     inline constexpr bool _is_a_good_lambda(std::index_sequence<Is...>) {
-      return std::is_invocable_r_v<R, Initializer, long(Is)...>;
+      return std::is_invocable_r_v<R, Initializer, std::conditional_t<Is, long, long>...>;
     }
   } // namespace details
 
@@ -201,7 +201,7 @@ namespace nda {
     explicit array(shape_t<Rank> const &shape, Initializer initializer)
        REQUIRES(details::_is_a_good_lambda<ValueType, Initializer>(std::make_index_sequence<Rank>()))
        : _idx_m(shape), _storage{_idx_m.size(), mem::do_not_initialize} {
-      nda::for_each(_idx_m.lengths(), [&](auto const &... x) { _storage.init_raw(_idx_m(x...), lambda(x...)); });
+      nda::for_each(_idx_m.lengths(), [&](auto const &... x) { _storage.init_raw(_idx_m(x...), initializer(x...)); });
     }
 
     //------------------ Assignment -------------------------

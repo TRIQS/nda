@@ -1,30 +1,25 @@
-#define TRIQS_ARRAYS_ENFORCE_BOUNDCHECK
-#include <triqs/test_tools/arrays.hpp>
-#include <cmath>
-#include <limits>
-#include <triqs/arrays/array.hpp>
-#include <triqs/arrays/asserts.hpp>
+#include "./test_common.hpp"
 #include <vector>
 #include <map>
 #include <algorithm>
 
-template <typename T> using vector_t = triqs::arrays::vector<T>;
+template <typename T> using vector_t = nda::array<T,1>;
 
 // A few examples paying with STL containers and algorithms
 
 // ==============================================================
 
-// We can put arrays in simple containers (there are regular types)
+// We can put nda::arrays in simple containers (there are regular types)
 TEST(STL, Containers) {
 
-  array<long, 2> A(2, 3);
+  nda::array<long, 2> A(2, 3);
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 3; ++j) A(i, j) = 10 * i + j;
 
-  std::vector<array<long, 2>> VV;
+  std::vector<nda::array<long, 2>> VV;
   VV.push_back(A);
 
-  std::map<std::string, array<long, 2>> MAP;
+  std::map<std::string, nda::array<long, 2>> MAP;
   MAP["1"] = A;
 }
 
@@ -38,7 +33,7 @@ TEST(STL, Vector) {
 
   // Trying to put a vector in an array
 
-  array<int, 1> B(V.size()), C(V.size());
+  nda::array<int, 1> B(V.size()), C(V.size());
   // copy to B. Iterators on array are STL compliant so STL algorithms work.
   std::copy(V.begin(), V.end(), B.begin());
 
@@ -55,7 +50,7 @@ TEST(STL, Vector) {
 
 TEST(STL, Algo1) {
 
-  array<int, 1> B{1, 34, 2, 6, 23, 189, 8, 4};
+  nda::array<int, 1> B{1, 34, 2, 6, 23, 189, 8, 4};
 
   auto te = [](int x) { return (x < 25); };
 
@@ -65,7 +60,7 @@ TEST(STL, Algo1) {
 
   std::replace_if(B.begin(), B.end(), te, 0);
 
-  EXPECT_EQ(B, (array<int, 1>{0, 34, 0, 0, 0, 189, 0, 0}));
+  EXPECT_EQ(B, (nda::array<int, 1>{0, 34, 0, 0, 0, 189, 0, 0}));
 }
 
 // ==============================================================
