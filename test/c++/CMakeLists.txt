@@ -3,7 +3,7 @@ file(GLOB all_h5_files *.h5)
 file(COPY ${all_h5_files} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 # The list of all c++ tests
-set(all_tests idx_map storage nda_basic nda_expr_template)
+set(all_tests idx_map storage basic expr_template)
 
 #=== build gtest as an external project ===
 
@@ -38,8 +38,9 @@ set_target_properties(gtest PROPERTIES
 
 #=== Add all tests and register them for the static analyzer checks ===
 
-foreach(t ${all_tests})
-  add_executable(${t} ${CMAKE_CURRENT_SOURCE_DIR}/${t}.cpp)
+foreach(t1 ${all_tests})
+  set(t nda_${t1})
+  add_executable(${t} ${CMAKE_CURRENT_SOURCE_DIR}/${t1}.cpp)
   target_link_libraries(${t} nda_c gtest)
   add_test(${t} ${CMAKE_CURRENT_BINARY_DIR}/${t})
   # Run clang-tidy if found

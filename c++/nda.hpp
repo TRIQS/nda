@@ -31,13 +31,11 @@
 //#include <nda/vector.hpp>
 
 #include <nda/arithmetic.hpp>
-
+#include <nda/map.hpp>
+#include <nda/fold.hpp>
 
 #include <nda/print.hpp>
 
-//
-//#include <nda/functional/map.hpp>
-//#include <nda/functional/fold.hpp>
 //#include <nda/math_functions.hpp>
 //#include <nda/algorithms.hpp>
 
