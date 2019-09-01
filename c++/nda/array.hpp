@@ -23,6 +23,10 @@
 
 namespace nda {
 
+  // deduction rule
+  template <typename T>
+  array(T)->container<get_value_t<T>, get_rank<T>>;
+
   // ---------------------- array--------------------------------
 
   template <typename ValueType, int Rank>
@@ -113,17 +117,13 @@ namespace nda {
     //explicit array(array const &X, layout_t<Rank> ml) : array(X.indexmap(), ml) { triqs_arrays_assign_delegation(*this, X); }
 
     /** 
-     * Build a new array from X.domain() and fill it with by evaluating X. X can be : 
-     *  - another type of array, array_view, matrix,.... (any <IndexMap, Storage> pair)
-     *  - the memory layout will be as given (ml)
-     *  - a expression : e.g. array<int> A = B+ 2*C;
+     * Build a new array from x.shape() and fill it with by evaluating x. 
+     * T should model NdArray
      */
-    //template <typename T>
-    //array(T const &X, layout_t<Rank> ml) //
-    //REQUIRES(ImmutableCuboidArray<T>::value and std::is_convertible<typename T::value_t, value_t>::value)
-    //: array{get_shape(X), ml} {
-    //nda::details::assignment(*this, X);
-    //}
+    template <typename T>
+    array(T const &x) REQUIRES(is_ndarray_v<T> and std::is_convertible_v<get_value_t<T>, value_t>) : array{get_shape(x), ml} {
+      nda::details::assignment(*this, x);
+    }
 
     /** 
      * Build a new array from X.domain() and fill it with by evaluating X. X can be : 

@@ -31,7 +31,6 @@
 #define REQUIRES(...) requires(__VA_ARGS__)
 #endif
 
-#define NDA_DEPRECATED(Message) __attribute__((deprecated(AS_STRING(Message))))
 #define NDA_PRINT(X) std::cerr << AS_STRING(X) << " = " << X << "      at " << __FILE__ << ":" << __LINE__ << '\n'
 
 #define FORCEINLINE __inline__ __attribute__((always_inline))

@@ -1,26 +1,29 @@
 #pragma once
 namespace nda {
 
+  // binary expression
   template <char OP, typename L, typename R>
   struct expr;
+  
+  // unary expression
   template <char OP, typename L>
   struct expr_unary;
 
-  // algebra
+  // algebra 
   template <char OP, typename L, typename R>
   constexpr char get_algebra<expr<OP, L, R>> = expr<OP, L, R>::algebra;
 
   template <char OP, typename L>
   inline constexpr bool get_algebra<expr_unary<OP, L>> = expr_unary<OP, L>::algebra;
 
-  // tag concept
+  // Both model NdArray concept
   template <char OP, typename L, typename R>
   inline constexpr bool is_ndarray_v<expr<OP, L, R>> = true;
 
   template <char OP, typename L>
   inline constexpr bool is_ndarray_v<expr_unary<OP, L>> = true;
 
-  // helpers
+  // true iif rank or L and R is one (or they are scalar)
   template <typename L, typename R>
   constexpr bool rank_is_one() {
     using L_t = std::decay_t<L>; // L, R can be lvalue references
@@ -123,6 +126,8 @@ namespace nda {
     // FIXME clef
     //TRIQS_CLEF_IMPLEMENT_LAZY_CALL(); // can not simply capture in () and dispatch becuase of && case. Cf macro def.
 
+    // FIXME 
+    // [long] ? 1d only ? strided only ?
     // Overload with _long ? long ? lazy ?
     /// [ ] is the same as (). Enable for Vectors only
     template <typename Arg>

@@ -80,4 +80,11 @@ namespace nda {
     return sout << "(" << expr.l << " " << OP << " " << expr.r << ")";
   }
 
+  // ==============================================
+
+  template <typename F, typename... A>
+  std::ostream &operator<<(std::ostream &out, expr_call<F, A...> const &x) {
+    return out << "mapped"; //array<value_type, std::decay_t<A>::rank>(x);
+  }
+
 } // namespace nda
