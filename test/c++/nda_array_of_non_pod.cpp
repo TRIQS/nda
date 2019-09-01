@@ -1,18 +1,11 @@
-#define TRIQS_ARRAYS_ENFORCE_BOUNDCHECK
-#include <triqs/test_tools/arrays.hpp>
-#include <cmath>
-#include <limits>
-#include <triqs/arrays.hpp>
-#include <triqs/arrays/asserts.hpp>
-
-using namespace triqs::arrays;
+#include "./test_common.hpp"
 
 // ==============================================================
 
 // a little non copyable object
 struct A {
   int i        = 2;
-  A() = default;
+  A()          = default;
   A(A const &) = delete;
   A(A &&)      = default;
   A &operator=(A const &) = delete;
@@ -25,9 +18,9 @@ struct A {
 
 TEST(NDA, NonDefaultConstructible) {
 
-  array<A, 2> a(make_shape(2, 2), [](int i, int j) { return i + 10 * j; });
-  // array<A,2> a( {2,2}, [](int i, int j) { return i+ 10*j;});
-  array<A, 1> a1(make_shape(2), [](int i) { return i; });
+  nda::array<A, 2> a({2,2}, [](int i, int j) { return i + 10 * j; });
+  // nda::array<A,2> a( {2,2}, [](int i, int j) { return i+ 10*j;});
+  nda::array<A, 1> a1(nda::make_shape(2), [](int i) { return i; });
 
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 2; ++j) { EXPECT_EQ(a(i, j).i, i + 10 * j); }
@@ -36,7 +29,7 @@ TEST(NDA, NonDefaultConstructible) {
   //auto b= a;
 
   // view is ok
-  auto b = a();
+  //auto b = a();
 
   //a.resize(3,3); // does not compile
 }
@@ -44,10 +37,9 @@ TEST(NDA, NonDefaultConstructible) {
 // ==============================================================
 
 TEST(NDA, array_of_non_copyable) {
-  std::vector<array<A, 1>> a(2);
+  std::vector<nda::array<A, 1>> a(2);
   a.emplace_back(2);
 }
-
 
 // ==============================================================
 
@@ -60,7 +52,7 @@ struct S {
 
 TEST(NDA, non_numeric1) {
 
-  array<S, 2> A(2, 2);
+  nda::array<S, 2> A(2, 2);
 
   S s0{1.0, 2.0, 3};
   int p = 0;
@@ -77,19 +69,19 @@ TEST(NDA, non_numeric1) {
 
 TEST(NDA, array_of_array) {
 
-  array<array<double, 1>, 2> a(2, 2);
-  array<double, 1> a0{1,2,3};
+  nda::array<nda::array<int, 1>, 2> a(2, 2);
+  nda::array<int, 1> a0{1, 2, 3};
 
   a() = a0;
 
-  EXPECT_EQ(a(1,0), a0);
+  EXPECT_EQ(a(1, 0), a0);
 }
 
 // ---------------------------------------
 
 TEST(NDA, matrix_of_function) {
 
-  matrix<std::function<double(double)>> F(2, 2);
+  nda::array<std::function<double(double)>, 2> F(2, 2);
 
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 2; ++j) {
@@ -102,8 +94,5 @@ TEST(NDA, matrix_of_function) {
 }
 
 // ==============================================================
-
-
-
 
 MAKE_MAIN
