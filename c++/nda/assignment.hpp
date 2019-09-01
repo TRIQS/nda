@@ -85,9 +85,9 @@ namespace nda::details {
   void compound_assign_impl(LHS &lhs, RHS const &rhs) {
 
     static_assert(!LHS::is_const, "Cannot assign to a const view !");
-    static_assert((!std::is_const<typename LHS::value_type>::value), "Assignment : The value type of the LHS is const and cannot be assigned to !");
-    static_assert(std::is_assignable_v<typename LHS::value_t &, typename RHS::value_t>,
-                  "Assignment impossible for the type of RHS into the type of LHS");
+    static_assert((!std::is_const<typename LHS::value_t>::value), "Assignment : The value type of the LHS is const and cannot be assigned to !");
+    //static_assert(std::is_assignable_v<typename LHS::value_t &, typename RHS::value_t>,
+                  //"Assignment impossible for the type of RHS into the type of LHS");
 
     static_assert(
        (!((OP == 'M' || OP == 'D') and (get_algebra<LHS> == 'M') and (not is_scalar_for_v<RHS, LHS>))),
