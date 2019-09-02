@@ -1,33 +1,26 @@
-" Clean 
+" Clean after START  
 normal /STARTjdGo
 
-" Find the pattern -> "t register
-normal /PATTERN12jV}"ty	
+function! DoOnePattern(num)
 
-" List into "d register
-normal /LIST1w"dy$
+ " Find the pattern -> "t register
+ execute "normal! /PATTERN".a:num."2jV}\"ty"	
 
-" for all element in the list, paste the "t at the end and replace
-for i in split(@d)
-  execute "normal! G\"tP:.,$s/X/".i."/ge"
-endfor  
+ " List into "d register
+ execute "normal! /LIST".a:num."w\"dy$"
 
-" SAME for 2 and 3
+ " for all element in the list, paste the "t at the end of the file and replace from there till the end X by i
+ for i in split(@d)
+  execute "normal! G\"tP:.,$s/X/".i."/g"
+ endfor  
 
-normal /PATTERN22jV}"ty	
-normal /LIST2w"dy$
-
-for i in split(@d)
-  execute "normal! G\"tP:.,$s/X/".i."/ge"
-endfor  
+endfunction
 
 
-normal /PATTERN32jV}"ty	
-normal /LIST3w"dy$
+call DoOnePattern(1)
+call DoOnePattern(2)
+call DoOnePattern(3)
 
-for i in split(@d)
-  execute "normal! G\"tP:.,$s/X/".i."/ge"
-endfor  
-
+"Clang format
 normal ==
 
