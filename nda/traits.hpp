@@ -79,5 +79,10 @@ namespace nda {
   template <typename A>
   inline constexpr char get_algebra = 'N';
 
+  // ---------------------- details  --------------------------------
+
+  // impl details : detects ellipsis in a argument pack
+  template <typename... T>
+  constexpr bool ellipsis_is_present = ((std::is_same_v<T, ellipsis> ? 1 : 0) + ... + 0); // +0 because it can be empty
 
 } // namespace nda
