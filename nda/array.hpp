@@ -28,10 +28,14 @@ namespace nda {
   template <typename T>
   array(T)->array<get_value_t<std::decay_t<T>>, get_rank<std::decay_t<T>>>;
 
+  // FIXME : in array as static ?
   namespace details {
+
+    template<int Is> using _long_anyway = long; // to unpack below
+
     template <typename R, typename Initializer, size_t... Is>
     inline constexpr bool _is_a_good_lambda(std::index_sequence<Is...>) {
-      return std::is_invocable_r_v<R, Initializer, std::conditional_t<Is, long, long>...>;
+      return std::is_invocable_r_v<R, Initializer, _long_anyway<Is>...>;
     }
   } // namespace details
 
