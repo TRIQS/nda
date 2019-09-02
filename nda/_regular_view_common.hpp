@@ -1,13 +1,13 @@
 // ------------------------------- data access --------------------------------------------
 
-// The Index Map object
+/// The Index Map object
 auto const &indexmap() const { return _idx_m; }
 
-// The storage handle
+/// The storage handle
 storage_t const &storage() const { return _storage; }
 storage_t &storage() { return _storage; }
 
-// Memory layout
+/// Memory layout
 auto layout() const { return _idx_m.layout(); }
 
 /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
@@ -33,8 +33,13 @@ long size() const { return _idx_m.size(); }
 // one can factorize the last part in a private static method, but I find clearer to have the repetition
 // here. In particular to check the && case carefully.
 
-/// _call_<FLAGS>
-
+/**
+ * Access the array, make a lazy expression or slice of it depending on the arguments
+ *
+ * @tparam T Can be long, range, range_all or ellipsis, of clef lazy (placeholder or expression)
+ * @param x
+ * @example array_call
+ */
 template <typename... T> decltype(auto) operator()(T const &... x) const & {
   if constexpr (sizeof...(T) == 0)
     return view_t{*this};
@@ -93,34 +98,61 @@ template <typename... T> decltype(auto) operator()(T const &... x) && {
 
 // ------------------------------- Iterators --------------------------------------------
 
+///
 using const_iterator = iterator_adapter<ValueType const, idx_map_t>;
+
+///
 using iterator       = iterator_adapter<ValueType, idx_map_t>;
 
+///
 const_iterator begin() const { return {indexmap().cbegin(), storage().data()}; }
+///
 const_iterator cbegin() const { return {indexmap().cbegin(), storage().data()}; }
+///
 iterator begin() { return {indexmap().cbegin(), storage().data()}; }
 
+///
 typename const_iterator::end_sentinel_t end() const { return {}; }
+///
 typename const_iterator::end_sentinel_t cend() const { return {}; }
+///
 typename iterator::end_sentinel_t end() { return {}; }
 
 // ------------------------------- Operations --------------------------------------------
 
+// FIXME : find a way to regroup on the same page in RST ?
+
+/**
+ * @tparam RHS A scalar or a type modeling NdArray
+ * @param rhs
+ */
 template <typename RHS> auto &operator+=(RHS const &rhs) {
   static_assert(not is_const, "Can not assign to a const view");
   details::compound_assign_impl<'A'>(*this, rhs);
   return *this;
 }
+/**
+ * @tparam RHS A scalar or a type modeling NdArray
+ * @param rhs
+ */
 template <typename RHS> auto &operator-=(RHS const &rhs) {
   static_assert(not is_const, "Can not assign to a const view");
   details::compound_assign_impl<'S'>(*this, rhs);
   return *this;
 }
+/**
+ * @tparam RHS A scalar or a type modeling NdArray
+ * @param rhs
+ */
 template <typename RHS> auto &operator*=(RHS const &rhs) {
   static_assert(not is_const, "Can not assign to a const view");
   details::compound_assign_impl<'M'>(*this, rhs);
   return *this;
 }
+/**
+ * @tparam RHS A scalar or a type modeling NdArray
+ * @param rhs
+ */
 template <typename RHS> auto &operator/=(RHS const &rhs) {
   static_assert(not is_const, "Can not assign to a const view");
   details::compound_assign_impl<'D'>(*this, rhs);

@@ -39,12 +39,6 @@ namespace nda {
   template <typename ValueType, int Rank, uint64_t Flags, uint64_t Layout>
   inline constexpr char get_algebra<array_view<ValueType, Rank, Flags, Layout>> = 'A';
 
-  // ---------------------- details  --------------------------------
-
-  // impl details : detects ellipsis in a argument pack
-  template <typename... T>
-  constexpr bool ellipsis_is_present = ((std::is_same_v<T, ellipsis> ? 1 : 0) + ... + 0); // +0 because it can be empty
-
   // ---------------------- array_view  --------------------------------
 
   // Try to put the const/mutable in the TYPE
@@ -53,15 +47,18 @@ namespace nda {
   class array_view {
 
     public:
-    using value_t                 = std::remove_const_t<ValueType>;
-    using value_as_template_arg_t = ValueType;
-
+    /// ValueType, without const if any
+    using value_t = std::remove_const_t<ValueType>;
+    ///
+    using regular_t    = array<value_t, Rank>;
+    ///
+    using view_t       = array_view<value_t, Rank, Flags, Layout>;
+    ///
+    using const_view_t = array_view<value_t const, Rank, Flags, Layout>;
+    
+    //using value_as_template_arg_t = ValueType;
     using storage_t = mem::handle<value_t, 'B'>;
     using idx_map_t = idx_map<Rank, Layout, Flags>;
-
-    using regular_t    = array<value_t, Rank>;
-    using view_t       = array_view<value_t, Rank, Flags, Layout>;
-    using const_view_t = array_view<value_t const, Rank, Flags, Layout>;
 
     static constexpr int rank      = Rank;
     static constexpr bool is_view  = true;
@@ -90,41 +87,34 @@ namespace nda {
     array_view(array_view const &) = default;
 
     /** 
-     * Construct a view of T const from a view of T
-     * @param v a view 
+     * From a view of non const ValueType.
+     * Only valid when ValueType is const
      *
-     * NB : Only valid when ValueType is const
+     * @param v a view 
      */
     array_view(array_view<value_t, Rank> const &v) REQUIRES(is_const) : array_view(v.indexmap(), v.storage()) {}
 
     /**
      *  [Advanced] From an indexmap and a storage handle
-     *  @param idx index map
+     *  @param idxm index map
      *  @st  storage (memory handle)
      */
-    array_view(idx_map<Rank, Layout, Flags> idx, storage_t st) : _idx_m(std::move(idx)), _storage(std::move(st)) {}
+    array_view(idx_map<Rank, Layout, Flags> const &idxm, storage_t st) : _idx_m(idxm), _storage(std::move(st)) {}
 
     /** 
-     * From anything that has an indexmap and a storage compatible with this class
-     * @tparam T an array/array_view or matrix/vector type
-     * @param a array or view
+     * From other containers and view : array, matrix, matrix_view.
      *
-     * NB : short cut for array_view (x.indexmap(), x.storage())
-     * Allows cross construction of array_view from matrix/matrix view e.g.
+     * @tparam A an array/array_view or matrix/vector type
+     * @param a array or view
      */
-    template <typename T> //explicit
-    array_view(T const &a) : array_view(a.indexmap(), a.storage()) {}
+    template <typename A> //explicit
+    array_view(A const &a) REQUIRES(is_regular_or_view_v<A>) : array_view(a.indexmap(), a.storage()) {}
 
     // Move assignment not defined : will use the copy = since view must copy data
 
     // ------------------------------- assign --------------------------------------------
 
     /**
-     * @tparam RHS Can be 
-     * 	              - an object modeling the concept NDArray
-     * 	              - a type from which ValueType is constructible
-     * @param rhs
-     *
      * Copies the content of rhs into the view.
      * Pseudo code : 
      *     for all i,j,k,l,... : this[i,j,k,l] = rhs(i,j,k,l)
@@ -132,6 +122,9 @@ namespace nda {
      * The dimension of RHS must be large enough or behaviour is undefined.
      * 
      * If NDA_BOUNDCHECK is defined, the bounds are checked.
+     *
+     * @tparam RHS A scalar or an object modeling the concept NDArray
+     * @param rhs Right hand side of the = operation
      */
     template <typename RHS>
     array_view &operator=(RHS const &rhs) {
@@ -139,7 +132,7 @@ namespace nda {
       return *this;
     }
 
-    /// A special case of the general operator
+    /// Same as the general case
     /// [C++ oddity : this case must be explicitly coded too]
     array_view &operator=(array_view const &rhs) {
       nda::details::assignment(*this, rhs);
@@ -149,15 +142,16 @@ namespace nda {
     // ------------------------------- rebind --------------------------------------------
 
     /// Rebind the view
-    void rebind(array_view<value_t, Rank> const &X) {
-      _idx_m   = X._idx_m;
-      _storage = X._storage;
+    void rebind(array_view<value_t, Rank> const &a) { //value_t is NEVER const 
+      _idx_m   = a._idx_m;
+      _storage = a._storage;
     }
 
-    /// Rebind
-    void rebind(array_view<value_t const, Rank> const &X) REQUIRES(!is_const) { // REQUIRES otherwise it is the same function
-      _idx_m   = X._idx_m;
-      _storage = X._storage;
+    /// Rebind view 
+    void rebind(array_view<value_t const, Rank> const &a) { 
+      static_assert(is_const, "Can not rebind a view of const ValueType to a view of ValueType"); 
+      _idx_m   = a._idx_m;
+      _storage = a._storage;
     }
     //check https://godbolt.org/z/G_QRCU
 
