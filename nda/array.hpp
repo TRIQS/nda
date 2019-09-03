@@ -113,7 +113,7 @@ namespace nda {
      * @param x 
      */
     template <typename A>
-    array(T const &x) REQUIRES(is_ndarray_v<A>) : array{x.shape()} {
+    array(A const &x) REQUIRES(is_ndarray_v<A>) : array{x.shape()} {
       static_assert(std::is_convertible_v<get_value_t<A>, value_t>,
                     "Can not construct the array. ValueType can be constructed from the value_t of the argument");
       nda::details::assignment(*this, x);
@@ -235,7 +235,7 @@ namespace nda {
       static_assert((std::is_convertible_v<Int, long> and ...), "Arguments must be convertible to long");
       static_assert(sizeof...(is) + 1 == Rank, "Incorrect number of arguments for resize. Should be Rank");
       static_assert(std::is_copy_constructible_v<ValueType>, "Can not resize an array if its value_t is not copy constructible");
-      resize(shape_t<Rank>{args...});
+      resize(shape_t<Rank>{i0, is...});
     }
 
     /** 

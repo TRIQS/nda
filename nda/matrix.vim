@@ -1,3 +1,10 @@
+" A special little script to deduce matrix.hxx from array.hxx and same for
+" views. The file are quite close, 
+" we just register the command to go from one to another
+" in order to port quickly any changes
+" Section BEGIN_REMOVE_FOR_MATRIX ... END_REMOVE_FOR_MATRIX are removed
+" Section UNCOMMENT_FOR_MATRIX : next block is uncommented
+"
 normal 6GdG
 :r array.hpp
 
@@ -10,7 +17,7 @@ normal 6GdG
 :%s/Rank, //g
 :%s/Rank/2/g
 
-" 
+" array-> matrix
 :%s/array/matrix/g
 
 %s/2 == 2 and//g

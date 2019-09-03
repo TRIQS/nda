@@ -1,4 +1,3 @@
-
 " This function finds all occurrences of 
 "  VIMEXPAND A B C D
 "  WHATEVER BLOCK
@@ -28,6 +27,8 @@ function! VimExpandSimple()
   normal ==
 endfunction
 
+"----------------------------------------------------------------
+"
 "Same but arguments A, B, C are now pairs separated by comma (NO SPACE
 function! VimExpand2Simple()
   " Clean after START  
