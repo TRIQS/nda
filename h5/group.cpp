@@ -5,7 +5,7 @@
 #include <hdf5.h>
 #include <hdf5_hl.h>
 
-static_assert(std::is_same<hid_t, long>::value or std::is_same<hid_t, int>::value, "Internal error");
+static_assert(std::is_same<hid_t, int64_t>::value or std::is_same<hid_t, int>::value, "Internal error");
 
 using namespace std::string_literals;
 
