@@ -4,7 +4,7 @@
 //   :source matrix.vim
 
 #pragma once
-#include "./matrix_view.hpp"
+#include "matrix_view.hpp"
 
 namespace nda {
 
@@ -14,7 +14,7 @@ namespace nda {
   matrix(T)->matrix<get_value_t<std::decay_t<T>>>;
 
   // DELETED_CODE
-
+  
   // ---------------------- matrix--------------------------------
 
   template <typename ValueType>
@@ -75,7 +75,7 @@ namespace nda {
     }
 
     /** 
-     * Construct with the given shape
+          * Construct with the given shape
      * 
      * @param shape  Shape of the matrix (lengths in each dimension)
      */
