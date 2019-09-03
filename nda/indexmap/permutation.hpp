@@ -14,14 +14,14 @@ namespace nda::permutations {
   template <size_t Rank>
   constexpr std::array<int, Rank> decode(uint64_t binary_representation) {
     auto result = nda::make_initialized_array<Rank>(0);
-    for (int i = 0; i < Rank; ++i) result[i] = (binary_representation >> (4 * i)) & 0b1111ull;
+    for (int i = 0; i < int(Rank); ++i) result[i] = (binary_representation >> (4 * i)) & 0b1111ull;
     return result;
   }
 
   template <size_t Rank>
   constexpr uint64_t encode(std::array<int, Rank> const &permutation) {
     uint64_t result = 0;
-    for (int i = 0; i < Rank; ++i) result += (permutation[i] >> (4 * i)) & 0b1111ull;
+    for (int i = 0; i < int(Rank); ++i) result += (permutation[i] >> (4 * i)) & 0b1111ull;
     return result;
   }
 

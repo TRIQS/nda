@@ -20,6 +20,14 @@ add_compile_options(-Wall
 		     $<$<CONFIG:Debug>:-ggdb3>
 		     )
 
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+add_compile_options(-fconcepts -Wno-sign-compare)
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+endif()
+
+
 # Build and install the nda library
 add_subdirectory(nda)
 

@@ -5,13 +5,13 @@
 #include <hdf5.h>
 #include <hdf5_hl.h>
 
-//static_assert(std::is_same<hid_t, long>::value or std::is_same<hid_t, int>::value, "Internal error");
+static_assert(std::is_same<hid_t, long>::value or std::is_same<hid_t, int>::value, "Internal error");
 
 using namespace std::string_literals;
 
 namespace h5 {
 
-  static_assert(std::is_same<::hid_t, hid_t>::value, "Internal error");
+  //static_assert(std::is_same<::hid_t, hid_t>::value, "Internal error");
 
   group::group(h5::file f) : h5_object() {
     id = H5Gopen2(f, "/", H5P_DEFAULT);
@@ -111,21 +111,21 @@ namespace h5 {
 
   // C callbacks for the next functions using H5Literate
   extern "C" {
-  herr_t get_group_elements_name_ds(hid_t loc_id, const char *name, const H5L_info_t *info, void *opdata) {
+  herr_t get_group_elements_name_ds(::hid_t loc_id, const char *name, const H5L_info_t *info, void *opdata) {
     H5O_info_t object_info;
     herr_t err = H5Oget_info_by_name(loc_id, name, &object_info, H5P_DEFAULT);
     if (err < 0) throw std::runtime_error("get_group_elements_name_ds internal");
     if (object_info.type == H5O_TYPE_DATASET) static_cast<std::vector<std::string> *>(opdata)->push_back(name);
     return 0;
   }
-  herr_t get_group_elements_name_grp(hid_t loc_id, const char *name, const H5L_info_t *info, void *opdata) {
+  herr_t get_group_elements_name_grp(::hid_t loc_id, const char *name, const H5L_info_t *info, void *opdata) {
     H5O_info_t object_info;
     herr_t err = H5Oget_info_by_name(loc_id, name, &object_info, H5P_DEFAULT);
     if (err < 0) throw std::runtime_error("get_group_elements_name_grp internal");
     if (object_info.type == H5O_TYPE_GROUP) static_cast<std::vector<std::string> *>(opdata)->push_back(name);
     return 0;
   }
-  herr_t get_group_elements_name_ds_grp(hid_t loc_id, const char *name, const H5L_info_t *info, void *opdata) {
+  herr_t get_group_elements_name_ds_grp(::hid_t loc_id, const char *name, const H5L_info_t *info, void *opdata) {
     H5O_info_t object_info;
     herr_t err = H5Oget_info_by_name(loc_id, name, &object_info, H5P_DEFAULT);
     if (err < 0) throw std::runtime_error("get_group_elements_name_grp internal");
@@ -138,21 +138,21 @@ namespace h5 {
 
   std::vector<std::string> group::get_all_subgroup_names() const {
     std::vector<std::string> grp_name;
-    int r = H5Literate(id, H5_INDEX_NAME, H5_ITER_NATIVE, NULL, get_group_elements_name_grp, static_cast<void *>(&grp_name));
+    int r = H5Literate(::hid_t(id), H5_INDEX_NAME, H5_ITER_NATIVE, NULL, get_group_elements_name_grp, static_cast<void *>(&grp_name));
     if (r != 0) throw std::runtime_error("Iteration over subgroups of group " + name() + "failed");
     return grp_name;
   }
 
   std::vector<std::string> group::get_all_dataset_names() const {
     std::vector<std::string> ds_name;
-    int r = H5Literate(id, H5_INDEX_NAME, H5_ITER_NATIVE, NULL, get_group_elements_name_ds, static_cast<void *>(&ds_name));
+    int r = H5Literate(::hid_t(id), H5_INDEX_NAME, H5_ITER_NATIVE, NULL, get_group_elements_name_ds, static_cast<void *>(&ds_name));
     if (r != 0) throw std::runtime_error("Iteration over datasets of group " + name() + "failed");
     return ds_name;
   }
 
   std::vector<std::string> group::get_all_subgroup_dataset_names() const {
     std::vector<std::string> ds_name;
-    int r = H5Literate(id, H5_INDEX_NAME, H5_ITER_NATIVE, NULL, get_group_elements_name_ds_grp, static_cast<void *>(&ds_name));
+    int r = H5Literate(::hid_t(id), H5_INDEX_NAME, H5_ITER_NATIVE, NULL, get_group_elements_name_ds_grp, static_cast<void *>(&ds_name));
     if (r != 0) throw std::runtime_error("Iteration over datasets of group " + name() + "failed");
     return ds_name;
   }

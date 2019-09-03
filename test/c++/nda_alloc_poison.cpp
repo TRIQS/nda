@@ -8,15 +8,16 @@
 
 TEST(Array, Poison) {
 
-  long *p;
+#if defined(__has_feature)
+#if __has_feature(address_sanitizer)
+
   {
+   long *p;
     nda::array<long, 2> A(3, 3);
     A() = 3;
     p   = &(A(0, 0));
   }
 
-#if defined(__has_feature)
-#if __has_feature(address_sanitizer)
   EXPECT_EQ(__asan_address_is_poisoned(p), 1);
 #endif
 #endif
