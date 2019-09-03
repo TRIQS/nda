@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "./h5object.hpp"
 
 namespace h5 {
