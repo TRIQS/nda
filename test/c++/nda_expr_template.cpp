@@ -31,6 +31,9 @@ TEST(NDA, ExprTemplateArray) {
   C = A + B;
   EXPECT_ARRAY_NEAR(C, nda::array<int, 1>{5, 5, 5});
 
+  C = 2*A + B;
+  EXPECT_ARRAY_NEAR(C, nda::array<int, 1>{8, 8, 8});
+
   C = A * B;
   EXPECT_ARRAY_NEAR(C, nda::array<int, 1>{6, 6, 6});
 
