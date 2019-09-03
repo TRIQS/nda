@@ -1,5 +1,5 @@
 # The list of benchss
-set(all_benchs view iterator_foreach expr_temp) 
+set(all_benchs view iterator_foreach loop1d loop2d loop3d) 
 
 #=== build google benchmark as an external project ===
 

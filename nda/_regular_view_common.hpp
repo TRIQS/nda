@@ -42,7 +42,7 @@ long size() const { return _idx_m.size(); }
  */
 template <typename... T> decltype(auto) operator()(T const &... x) const & {
   if constexpr (sizeof...(T) == 0)
-    return view_t{*this};
+    return view_t{_idx_m, _storage};
   else {
 
     static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
@@ -60,7 +60,7 @@ template <typename... T> decltype(auto) operator()(T const &... x) const & {
 ///
 template <typename... T> decltype(auto) operator()(T const &... x) & {
   if constexpr (sizeof...(T) == 0)
-    return view_t{*this};
+    return view_t{_idx_m, _storage};
   else {
 
     static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
@@ -78,7 +78,7 @@ template <typename... T> decltype(auto) operator()(T const &... x) & {
 ///
 template <typename... T> decltype(auto) operator()(T const &... x) && {
   if constexpr (sizeof...(T) == 0)
-    return view_t{*this};
+    return view_t{_idx_m, _storage};
   else {
 
     static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
