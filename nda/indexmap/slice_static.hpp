@@ -221,10 +221,11 @@ namespace nda::slice_static {
     std::array<long, P> len{get_l(std::get<q_of_p[Ps]>(argstie), std::get<n_of_p[Ps]>(idxm.lengths()))...};
     std::array<long, P> str{get_s(std::get<q_of_p[Ps]>(argstie), std::get<n_of_p[Ps]>(idxm.strides()))...};
 
-    static constexpr std::array<int, P> layout = sliced_layout(IdxMap::layout, n_of_p);
-    static constexpr uint64_t flags            = slice_flags(args_is_range, IdxMap::layout, P, IdxMap::flags);
+    //static constexpr std::array<int, P> layout = sliced_layout(IdxMap::layout, n_of_p);
+    //static constexpr uint64_t flags            = slice_flags(args_is_range, IdxMap::layout, P, IdxMap::flags);
 
-    return idx_map<P, permutations::encode(layout), flags>{len, str, offset};
+    return idx_map<P, 0, 0>{len, str, offset};
+    //return idx_map<P, permutations::encode(layout), flags>{len, str, offset};
   }
 
 } // namespace nda::slice_static

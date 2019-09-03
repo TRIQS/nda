@@ -24,6 +24,7 @@ namespace nda {
 
 } // namespace nda
 
+#include "../macros.hpp"
 #include "./slice_static.hpp"
 #include "./bound_check_worker.hpp"
 #include "./idx_map_iterator.hpp"
@@ -170,7 +171,7 @@ namespace nda {
         str[u] = s;
         s *= len[u];
       }
-      assert(str == size());
+     ENSURES(s == size());
     }
 
     // trap for incorrect calls. For R = Rank, the non template has priority

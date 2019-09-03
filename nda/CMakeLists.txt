@@ -12,8 +12,7 @@ target_compile_definitions(nda_c PRIVATE
 
 # Install library and headers
 install(TARGETS nda_c EXPORT nda-targets DESTINATION lib)
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
-
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h" PATTERN "*.hxx")
 
 # ========= Static Analyzer Checks ==========
 
