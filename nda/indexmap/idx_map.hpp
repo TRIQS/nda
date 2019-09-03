@@ -198,15 +198,26 @@ namespace nda {
     // ----------------  Call operator -------------------------
 
     private:
-    static constexpr int position_fastest_index = layout[Rank - 1]; // by definition
+    //static constexpr int position_fastest_index = layout[Rank - 1]; // by definition
+
+    template<size_t Is> FORCEINLINE long __get(long arg) const noexcept {
+     if constexpr (Is == layout[Rank - 1]) return arg;
+     else return arg*std::get<Is>(str);
+    }
 
     // call implementation
     template <typename... Args, size_t... Is>
-    FORCEINLINE long call_impl(std::index_sequence<Is...>, Args const &... args) const noexcept {
+    FORCEINLINE long call_impl(std::index_sequence<Is...>, Args ...args) const noexcept {
+      //if constexpr (flags::has_smallest_stride_is_one(Flags))
+        ////return (((Is != position_fastest_index) ? args * str[Is] : args) + ...);
+        //return (((Is != position_fastest_index) ? args * std::get<Is>(str) : args) + ...);
+      //else
+        //return ((args * std::get<Is>(str)) + ...);
       if constexpr (flags::has_smallest_stride_is_one(Flags))
-        return (((Is != position_fastest_index) ? args * str[Is] : args) + ...);
+        //return (((Is != position_fastest_index) ? args * str[Is] : args) + ...);
+        return (__get<Is>(args) + ...);
       else
-        return ((args * str[Is]) + ...);
+        return ((args * std::get<Is>(str)) + ...);
     }
 
 #ifdef NDA_ENFORCE_BOUNDCHECK

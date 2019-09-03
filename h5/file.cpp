@@ -62,6 +62,7 @@ namespace h5 {
 
   // -------------------------
 
+  // FIXME : NOT USED ??
   static h5_object memory_file_from_buffer(std::vector<unsigned char> const &buf) {
 
     proplist fapl = H5Pcreate(H5P_FILE_ACCESS);
