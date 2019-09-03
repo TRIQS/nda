@@ -16,7 +16,7 @@ if(NOT HDF5_FOUND)
 endif()
 
 if(HDF5_IS_PARALLEL)
- message(FATAL_ERROR "parallel(MPI) hdf5 is detected. The standard version is preferred.")
+  message(WARNING "parallel(MPI) hdf5 is detected. The standard version is preferred.")
 endif(HDF5_IS_PARALLEL)
 
 if(HDF5_HL_LIBRARIES)    # CMake 3.6.0 and later puts libhdf5_hl into a separate variable
@@ -31,17 +31,28 @@ execute_process(COMMAND ${HDF5_DIFF_EXECUTABLE} --version OUTPUT_VARIABLE diff_o
 string(REGEX MATCHALL "[0-9]+.[0-9]+.[0-9]+" HDF5_VERSION "${diff_output}")
 message(STATUS "hdf5 version: ${HDF5_VERSION}")
 
-add_library(__hdf5 INTERFACE)
-target_include_directories(__hdf5 SYSTEM INTERFACE ${HDF5_INCLUDE_DIRS})
-target_link_libraries(__hdf5 INTERFACE ${HDF5_LIBRARIES})
-target_compile_options(__hdf5 INTERFACE ${HDF5_DEFINITIONS})
+#if(PythonSupport)
+ #if(NOT "${PYTHON_H5PY_HDF5VERSION}" STREQUAL "${HDF5_VERSION}")
+ #message(FATAL_ERROR "The HDF5 version of the h5py (${PYTHON_H5PY_HDF5VERSION}) is different from the hdf5 library found for C++ (${HDF5_VERSION}). You MUST have the same version.")
+ #endif()
+#endif()
+
+add_library(hdf5 INTERFACE)
+target_include_directories(hdf5 SYSTEM INTERFACE ${HDF5_INCLUDE_DIRS})
+target_link_libraries(hdf5 INTERFACE ${HDF5_LIBRARIES})
+target_compile_options(hdf5 INTERFACE ${HDF5_DEFINITIONS})
+
+#add_library(__hdf5 INTERFACE)
+#target_include_directories(__hdf5 SYSTEM INTERFACE ${HDF5_INCLUDE_DIRS})
+#target_link_libraries(__hdf5 INTERFACE ${HDF5_LIBRARIES})
+#target_compile_options(__hdf5 INTERFACE ${HDF5_DEFINITIONS})
 
 # -------- Now build our interface -------------------------------
 
 
-add_library(h5_interface h5object.cpp file.cpp group.cpp 
+add_library(h5_interface h5object.cpp file.cpp group.cpp
 			 array_interface.cpp
-                         stl/string.cpp stl/vector.cpp  
+                         stl/string.cpp stl/vector.cpp
 			 )
 
 target_link_libraries(h5_interface PRIVATE __hdf5 )

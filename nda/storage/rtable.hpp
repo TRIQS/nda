@@ -58,7 +58,7 @@ namespace nda::mem {
     long get() noexcept {
 
       // NEVER yield 0, id=0 is associated with the null-handle
-      for (long i = 1; i < _refcounts.size(); ++i) {
+      for (long i = 1; i < long(_refcounts.size()); ++i) {
         if (_refcounts[i] == 0) {
           _refcounts[i] = 1;
           return i;

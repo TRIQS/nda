@@ -9,8 +9,8 @@ set(all_tests nda_idx_map nda_storage nda_basic nda_expr_template nda_map nda_al
 
 include(ExternalProject)
 set(GTEST_ROOT ${CMAKE_BINARY_DIR}/gtest)
-find_package(gtest)
-if (GTEST_FOUND) 
+#find_package(gtest)
+if (GTEST_FOUND)
  message(STATUS "Found gtest ")
 else()
 ExternalProject_Add(gtest_project

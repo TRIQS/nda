@@ -30,11 +30,6 @@
 
 #define NDA_RUNTIME_ERROR throw nda::runtime_error{} << "Error at " << __FILE__ << " : " << __LINE__ << "\n\n"
 
-/*#define NDA_ASSERT(X)                                                                                                                                \*/
-//if (!(X)) NDA_RUNTIME_ERROR << BOOST_PP_STRINGIZE(X);
-//#define NDA_ASSERT2(X, ...)                                                                                                                          \
-  //if (!(X)) NDA_RUNTIME_ERROR << BOOST_PP_STRINGIZE(X) << "\n " << __VA_ARGS__;
-
 namespace nda {
 
   class runtime_error : public std::exception {
