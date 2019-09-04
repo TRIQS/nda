@@ -141,6 +141,13 @@ namespace nda {
     static inline constexpr ellipsis ___;
   } // namespace vars
 
+  // ---------------------- details  --------------------------------
+
+  // impl details : detects ellipsis in a argument pack
+  template <typename... T>
+  constexpr bool ellipsis_is_present = ((std::is_same_v<T, ellipsis> ? 1 : 0) + ... + 0); // +0 because it can be empty
+
+
   // FIXME : Keep for backward if necessary or kill
   // for the case A(i, ellipsis) where A is of dim 1...
   //inline int operator*(ellipsis, int) { return 0; }

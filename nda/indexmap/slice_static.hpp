@@ -126,10 +126,10 @@ namespace nda::slice_static {
   // args_is_range : as before
   // layout : the layout of idx_map to be slided
   // the P : number of 1 in args_is_range (rank of sliced map)
-  // fl : flags of the idx_map to be sliced
+  // fl : guarantees of the idx_map to be sliced
   //
   template <size_t Q, size_t N>
-  constexpr uint64_t slice_flags(std::array<bool, Q> const &args_is_range, std::array<int, N> const &layout_in, int P, uint64_t fl) {
+  constexpr uint64_t slice_guarantees(std::array<bool, Q> const &args_is_range, std::array<int, N> const &layout_in, int P, uint64_t fl) {
     // count the number of times 10 appears args_in_range
     // we must traverse in the order of the layout ! (in memory order, slowest to fastest)
     int n_10_pattern = 0;
@@ -142,9 +142,9 @@ namespace nda::slice_static {
 
     uint64_t r = 0;
 
-    if (flags::has_contiguous(fl) and range_are_grouped_in_memory_and_fastest) r |= flags::contiguous;
-    if (flags::has_strided(fl) and range_are_grouped_in_memory) r |= flags::strided;
-    if (flags::has_smallest_stride_is_one(fl) and (not args_is_range[layout_in[P - 1]])) r |= flags::smallest_stride_is_one;
+    if (guarantee::has_contiguous(fl) and range_are_grouped_in_memory_and_fastest) r |= guarantee::contiguous;
+    if (guarantee::has_strided(fl) and range_are_grouped_in_memory) r |= guarantee::strided;
+    if (guarantee::has_smallest_stride_is_one(fl) and (not args_is_range[layout_in[P - 1]])) r |= guarantee::smallest_stride_is_one;
 
     return r;
   }
@@ -188,8 +188,8 @@ namespace nda::slice_static {
   // Ns, Ps, Qs : sequence indices for size N, P, Q
   // IdxMap : type of the indexmap idx
   // Arg : arguments of the slice
-  // returns : a new sliced idx_map, with computed rank, layout and flags
-  //
+  // returns : a new sliced idx_map, with computed rank, layout 
+//
   template <size_t... Ns, size_t... Ps, size_t... Qs, typename IdxMap, typename... Args>
   FORCEINLINE auto slice(std::index_sequence<Ps...>, std::index_sequence<Ns...>, std::index_sequence<Qs...>, IdxMap const &idxm,
                          Args const &... args) {
@@ -221,11 +221,15 @@ namespace nda::slice_static {
     std::array<long, P> len{get_l(std::get<q_of_p[Ps]>(argstie), std::get<n_of_p[Ps]>(idxm.lengths()))...};
     std::array<long, P> str{get_s(std::get<q_of_p[Ps]>(argstie), std::get<n_of_p[Ps]>(idxm.strides()))...};
 
-    //static constexpr std::array<int, P> layout = sliced_layout(IdxMap::layout, n_of_p);
-    //static constexpr uint64_t flags            = slice_flags(args_is_range, IdxMap::layout, P, IdxMap::flags);
 
-    return idx_map<P, 0, 0>{len, str, offset};
-    //return idx_map<P, permutations::encode(layout), flags>{len, str, offset};
+    //static constexpr std::array<int, P> layout = sliced_layout(IdxMap::layout, n_of_p);
+    
+    // TO BE MOVED OUT in another function : the array/array_view will call it directly 
+    // NOT IMPLEMENTED
+    //static constexpr uint64_t guarantees            = slice_guarantees(args_is_range, IdxMap::layout, P, get_guarantee<IdxMap::flags);
+
+    return idx_map<P, 0>{len, str, offset};
+    //return idx_map<P, permutations::encode(layout)>{len, str, offset};
   }
 
 } // namespace nda::slice_static

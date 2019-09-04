@@ -28,7 +28,7 @@ namespace nda {
 
   // ---------------------- array--------------------------------
 
-  template <typename ValueType, int Rank>
+  template <typename ValueType, int Rank, uint64_t Layout>
   class array {
     static_assert(!std::is_const<ValueType>::value, "ValueType can not be const. WHY ?");
 
@@ -43,7 +43,9 @@ namespace nda {
     using const_view_t = array_view<ValueType const, Rank>;
 
     using storage_t = mem::handle<ValueType, 'R'>;
-    using idx_map_t = idx_map<Rank, 0, flags::contiguous | flags::zero_offset | flags::smallest_stride_is_one>;
+    using idx_map_t = idx_map<Rank, Layout>; 
+    
+    static constexpr uint64_t guarantees = guarantee::contiguous | guarantee::zero_offset | guarantee::smallest_stride_is_one;
 
     static constexpr int rank      = Rank;
     static constexpr bool is_const = false;
@@ -51,7 +53,7 @@ namespace nda {
 
     private:
     template <typename IdxMap>
-    using my_view_template_t = array_view<value_t, IdxMap::rank(), IdxMap::flags, permutations::encode(IdxMap::layout)>;
+    using my_view_template_t = array_view<value_t, IdxMap::rank(), 0, permutations::encode(IdxMap::layout)>;
 
     idx_map_t _idx_m;
     storage_t _storage;

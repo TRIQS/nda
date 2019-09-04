@@ -23,15 +23,15 @@ namespace std { // For ADL
 namespace nda {
 
   // idx_map
-  template <int Rank, uint64_t Layout, uint64_t Flags>
-  std::ostream &operator<<(std::ostream &out, idx_map<Rank, Layout, Flags> const &x) {
+  template <int Rank, uint64_t Layout>
+  std::ostream &operator<<(std::ostream &out, idx_map<Rank, Layout> const &x) {
     return out << "  Lengths  : " << x.lengths() << "\n"
                << "  Strides  : " << x.strides() << "\n"
                << "  Offset   : " << x.offset() << "\n"
-               << "  Layout   : " << x.layout << "\n"
-               << "  Flags   :  " << (flags::has_contiguous(x.flags) ? "contiguous   " : " ") << (flags::has_strided(x.flags) ? "strided   " : " ")
-               << (flags::has_smallest_stride_is_one(x.flags) ? "smallest_stride_is_one   " : " ")
-               << (flags::has_zero_offset(x.flags) ? "zero_offset   " : " ") << "\n";
+               << "  Layout   : " << x.layout << "\n";
+               //<< "  Flags   :  " << (guarantee::has_contiguous(guar) ? "contiguous   " : " ") << (guarantee::has_strided(guar) ? "strided   " : " ")
+               //<< (guarantee::has_smallest_stride_is_one(guar) ? "smallest_stride_is_one   " : " ")
+               //<< (guarantee::has_zero_offset(guar) ? "zero_offset   " : " ") << "\n";
   }
 
   // ==============================================
