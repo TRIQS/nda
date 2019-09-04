@@ -18,21 +18,14 @@ set(BUILD_SHARED_LIBS OFF)
 add_compile_options(-Wall
 		     $<$<CONFIG:Debug>:-Og>
 		     $<$<CONFIG:Debug>:-ggdb3>
+		     $<$<CXX_COMPILER_ID:GNU>:-fconcepts>
 		     )
-
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-add_compile_options(-fconcepts -Wno-sign-compare)
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-endif()
-
 
 # Build and install the nda library
 add_subdirectory(c++/nda)
 
 # Build and install the h5 library
-add_subdirectory(h5)
+add_subdirectory(c++/h5)
 
 # Build and install the nda python module
 if(${TRIQS_WITH_PYTHON_SUPPORT})
