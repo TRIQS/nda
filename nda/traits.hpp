@@ -79,10 +79,29 @@ namespace nda {
   template <typename A>
   inline constexpr char get_algebra = 'N';
 
-  // ---------------------- details  --------------------------------
+  // ---------------------- Guarantees at compile time for some optimization  --------------------------------
+  namespace guarantee {
 
-  // impl details : detects ellipsis in a argument pack
-  template <typename... T>
-  constexpr bool ellipsis_is_present = ((std::is_same_v<T, ellipsis> ? 1 : 0) + ... + 0); // +0 because it can be empty
+    static constexpr uint64_t smallest_stride_is_one = 0x1;
+    static constexpr uint64_t strided                = 0x2;
+    static constexpr uint64_t contiguous             = 0x3; // smallest_stride_is_one and strided
+    static constexpr uint64_t zero_offset            = 0x4;
+
+    static constexpr bool has_contiguous(uint64_t f) { return f & contiguous; }
+    static constexpr bool has_smallest_stride_is_one(uint64_t f) { return f & smallest_stride_is_one; }
+    static constexpr bool has_strided(uint64_t f) { return f & strided; }
+    static constexpr bool has_zero_offset(uint64_t f) { return f & zero_offset; }
+
+  } // namespace guarantee
+
+  template <typename A>
+  inline constexpr uint64_t get_guarantee = 0;
+
+  // ---------------------- linear index  --------------------------------
+
+  // A small vehicule for the linear index for optimized case
+  struct _linear_index_t {
+    long value;
+  };
 
 } // namespace nda

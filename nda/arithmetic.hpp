@@ -23,6 +23,13 @@ namespace nda {
   template <char OP, typename L>
   inline constexpr bool is_ndarray_v<expr_unary<OP, L>> = true;
 
+  // Both propagate the guarantees
+  template <char OP, typename L, typename R>
+  inline constexpr uint64_t get_guarantee<expr<OP, L, R>> = get_guarantee<L> &get_guarantee<R>;
+
+  template <char OP, typename L>
+  inline constexpr uint64_t get_guarantee<expr_unary<OP, L>> = get_guarantee<L>;
+
   // true iif rank or L and R is one (or they are scalar)
   template <typename L, typename R>
   constexpr bool rank_is_one() {

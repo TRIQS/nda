@@ -5,26 +5,16 @@
 #include <array>
 #include <numeric>
 
+#include "../macros.hpp"
+#include "../traits.hpp"
+
 namespace nda {
-  template <int Rank, uint64_t Layout = 0, uint64_t Flags = 0>
+
+  template <int Rank, uint64_t Layout = 0>
   class idx_map;
 
-  namespace flags {
-    static constexpr uint64_t smallest_stride_is_one = 0x1;
-    static constexpr uint64_t strided                = 0x2;
-    static constexpr uint64_t contiguous             = 0x3; // smallest_stride_is_one and strided
-    static constexpr uint64_t zero_offset            = 0x4;
+}
 
-    static constexpr bool has_contiguous(uint64_t f) { return f & flags::contiguous; }
-    static constexpr bool has_smallest_stride_is_one(uint64_t f) { return f & flags::smallest_stride_is_one; }
-    static constexpr bool has_strided(uint64_t f) { return f & flags::strided; }
-    static constexpr bool has_zero_offset(uint64_t f) { return f & flags::zero_offset; }
-
-  } // namespace flags
-
-} // namespace nda
-
-#include "../macros.hpp"
 #include "./slice_static.hpp"
 #include "./bound_check_worker.hpp"
 #include "./idx_map_iterator.hpp"
@@ -67,11 +57,8 @@ namespace nda {
    *    
    *    NB : Layout = 0 is the default and it is means 0 order
    *
-   * @tparam Flags : additional information known at compile time, as bit pattern/
-   * 	isContiguous & fastestStrideIsOne 
-   *
    * */
-  template <int Rank, uint64_t Layout, uint64_t Flags>
+  template <int Rank, uint64_t Layout>
   class idx_map {
 
     static_assert(Rank < 64, "Rank must be < 64"); // constraint of slice implementation. ok...
@@ -82,8 +69,6 @@ namespace nda {
     public:
     static constexpr std::array<int, Rank> layout =
        (Layout == 0 ? permutations::identity<Rank>() : permutations::decode<Rank>(Layout)); // 0 is C layout
-
-    static constexpr uint64_t flags = Flags;
 
     // ----------------  Accessors -------------------------
 
@@ -108,7 +93,6 @@ namespace nda {
 
     /// Is the data contiguous in memory ?
     bool is_contiguous() const noexcept {
-      if constexpr (flags::has_contiguous(Flags)) return true;
       int slowest_index = std::distance(str.begin(), std::min_element(str.begin(), str.end())); // index with minimal stride
       return (str[slowest_index] * len[slowest_index] == size());
     }
@@ -142,10 +126,6 @@ namespace nda {
 
     ///
     idx_map &operator=(idx_map &&) = default;
-
-    /// Construction from a similar idx_map, but with different flags
-    template <uint64_t Flags2>
-    idx_map(idx_map<Rank, Layout, Flags2> const &idx) : len(idx.lengths()), str(idx.strides()), _offset(idx.offset()) {}
 
     /** 
      * Construction from the lengths, the strides, offset
@@ -198,23 +178,18 @@ namespace nda {
     // ----------------  Call operator -------------------------
 
     private:
-    //static constexpr int position_fastest_index = layout[Rank - 1]; // by definition
-
-    template<size_t Is> FORCEINLINE long __get(long arg) const noexcept {
-     if constexpr (Is == layout[Rank - 1]) return arg;
-     else return arg*std::get<Is>(str);
+    template <size_t Is>
+    FORCEINLINE long __get(long arg) const noexcept {
+      if constexpr (Is == layout[Rank - 1])
+        return arg;
+      else
+        return arg * std::get<Is>(str);
     }
 
     // call implementation
-    template <typename... Args, size_t... Is>
-    FORCEINLINE long call_impl(std::index_sequence<Is...>, Args ...args) const noexcept {
-      //if constexpr (flags::has_smallest_stride_is_one(Flags))
-        ////return (((Is != position_fastest_index) ? args * str[Is] : args) + ...);
-        //return (((Is != position_fastest_index) ? args * std::get<Is>(str) : args) + ...);
-      //else
-        //return ((args * std::get<Is>(str)) + ...);
-      if constexpr (flags::has_smallest_stride_is_one(Flags))
-        //return (((Is != position_fastest_index) ? args * str[Is] : args) + ...);
+    template <uint64_t Guarantee, typename... Args, size_t... Is>
+    FORCEINLINE long call_impl(std::index_sequence<Is...>, Args... args) const noexcept {
+      if constexpr (guarantee::has_smallest_stride_is_one(Guarantee))
         return (__get<Is>(args) + ...);
       else
         return ((args * std::get<Is>(str)) + ...);
@@ -236,8 +211,8 @@ namespace nda {
      *      else : the linear position (long)
      *
      */
-    template <typename... Args>
-    FORCEINLINE auto operator()(Args const &... args) const noexcept(enforce_bound_check) {
+    template <uint64_t Guarantee, typename... Args>
+    FORCEINLINE auto slice_or_position(Args const &... args) const noexcept(enforce_bound_check) {
 
       static_assert(((((std::is_base_of_v<range_tag, Args> or std::is_constructible_v<long, Args>) ? 0 : 1) + ...) == 0),
                     "Slice arguments must be convertible to range, Ellipsis, or long");
@@ -254,9 +229,9 @@ namespace nda {
 #endif
 
       if constexpr (n_args_long == Rank) { // no range, ellipsis, we simply compute the linear position
-        auto _fold = call_impl(std::make_index_sequence<sizeof...(Args)>{},
-                               args...);   // NB do not use index_sequence_for : one instantation only by # args.
-        if (flags::has_zero_offset(Flags)) // zero offset optimization
+        auto _fold = call_impl<Guarantee>(std::make_index_sequence<sizeof...(Args)>{},
+                               args...);           // NB do not use index_sequence_for : one instantation only by # args.
+        if (guarantee::has_zero_offset(Guarantee)) // zero offset optimization
           return _fold;
         else
           return _offset + _fold;
@@ -266,9 +241,15 @@ namespace nda {
       }
     }
 
+    // FIXME kept for the test for the moment
+    template <typename... Args>
+    FORCEINLINE auto operator()(Args const &... args) const noexcept(enforce_bound_check) {
+      return slice_or_position<0>(args...);
+    }
+
     // ----------------  Iterator -------------------------
 
-    using iterator = idx_map_iterator<idx_map<Rank, Layout, Flags>>;
+    using iterator = idx_map_iterator<idx_map<Rank, Layout>>;
 
     iterator begin() const { return {this}; }
     iterator cbegin() const { return {this}; }

@@ -1,7 +1,6 @@
 #pragma once
-#include "./indexmap/idx_map.hpp"
 #include "./storage/handle.hpp"
-#include "./traits.hpp"
+#include "./indexmap/idx_map.hpp"
 #include "./basic_functions.hpp"
 #include "./assignment.hpp"
 #include "./iterator_adapter.hpp"
@@ -10,9 +9,9 @@ namespace nda {
 
   // ---------------------- declare array and view  --------------------------------
 
-  template <typename ValueType, int Rank>
+  template <typename ValueType, int Rank, uint64_t Layout = 0>
   class array;
-  template <typename ValueType, int Rank, uint64_t Flags = 0, uint64_t Layout = 0>
+  template <typename ValueType, int Rank, uint64_t Guarantees = 0, uint64_t Layout = 0>
   class array_view;
 
   // ---------------------- is_array_or_view_container  --------------------------------
@@ -20,49 +19,62 @@ namespace nda {
   template <typename ValueType, int Rank>
   inline constexpr bool is_regular_or_view_v<array<ValueType, Rank>> = true;
 
-  template <typename ValueType, int Rank, uint64_t Flags, uint64_t Layout>
-  inline constexpr bool is_regular_or_view_v<array_view<ValueType, Rank, Flags, Layout>> = true;
+  template <typename ValueType, int Rank, uint64_t Guarantees, uint64_t Layout>
+  inline constexpr bool is_regular_or_view_v<array_view<ValueType, Rank, Guarantees, Layout>> = true;
 
   // ---------------------- concept  --------------------------------
 
-  template <typename ValueType, int Rank>
-  inline constexpr bool is_ndarray_v<array<ValueType, Rank>> = true;
+  template <typename ValueType, int Rank, uint64_t Layout>
+  inline constexpr bool is_ndarray_v<array<ValueType, Rank, Layout>> = true;
 
-  template <typename ValueType, int Rank, uint64_t Flags, uint64_t Layout>
-  inline constexpr bool is_ndarray_v<array_view<ValueType, Rank, Flags, Layout>> = true;
+  template <typename ValueType, int Rank, uint64_t Guarantees, uint64_t Layout>
+  inline constexpr bool is_ndarray_v<array_view<ValueType, Rank, Guarantees, Layout>> = true;
 
   // ---------------------- algebra --------------------------------
 
-  template <typename ValueType, int Rank>
-  inline constexpr char get_algebra<array<ValueType, Rank>> = 'A';
+  template <typename ValueType, int Rank, uint64_t Layout>
+  inline constexpr char get_algebra<array<ValueType, Rank, Layout>> = 'A';
 
-  template <typename ValueType, int Rank, uint64_t Flags, uint64_t Layout>
-  inline constexpr char get_algebra<array_view<ValueType, Rank, Flags, Layout>> = 'A';
+  template <typename ValueType, int Rank, uint64_t Guarantees, uint64_t Layout>
+  inline constexpr char get_algebra<array_view<ValueType, Rank, Guarantees, Layout>> = 'A';
+
+  // ---------------------- guarantees --------------------------------
+
+  template <typename ValueType, int Rank>
+  inline constexpr uint64_t get_guarantee<array<ValueType, Rank>> = array<ValueType, Rank>::guarantees;
+
+  template <typename ValueType, int Rank, uint64_t Guarantees, uint64_t Layout>
+  inline constexpr uint64_t get_guarantee<array_view<ValueType, Rank, Guarantees, Layout>> = Guarantees;
 
   // ---------------------- array_view  --------------------------------
 
   // Try to put the const/mutable in the TYPE
 
-  template <typename ValueType, int Rank, uint64_t Flags, uint64_t Layout>
+  template <typename ValueType, int Rank, uint64_t Guarantees, uint64_t Layout>
   class array_view {
 
     public:
     /// ValueType, without const if any
     using value_t = std::remove_const_t<ValueType>;
     ///
-    using regular_t    = array<value_t, Rank>;
+    using regular_t = array<value_t, Rank, Layout>;
     ///
-    using view_t       = array_view<value_t, Rank, Flags, Layout>;
+    using view_t = array_view<value_t, Rank, Guarantees, Layout>;
     ///
-    using const_view_t = array_view<value_t const, Rank, Flags, Layout>;
-    
+    using const_view_t = array_view<value_t const, Rank, Guarantees, Layout>;
+
     //using value_as_template_arg_t = ValueType;
     using storage_t = mem::handle<value_t, 'B'>;
-    using idx_map_t = idx_map<Rank, Layout, Flags>;
+    using idx_map_t = idx_map<Rank, Layout>;
 
     static constexpr int rank      = Rank;
     static constexpr bool is_view  = true;
     static constexpr bool is_const = std::is_const_v<ValueType>;
+
+    static constexpr uint64_t guarantees = Guarantees; // for the generic shared with array
+ 
+    // fIXME : FIRST STEP.
+    static_assert(Guarantees ==0, "Not implemented");
 
     // FIXME : h5
     // static std::string hdf5_scheme() { return "array<" + triqs::h5::get_hdf5_scheme<value_t>() + "," + std::to_string(rank) + ">"; }
@@ -99,7 +111,7 @@ namespace nda {
      *  @param idxm index map
      *  @st  storage (memory handle)
      */
-    array_view(idx_map<Rank, Layout, Flags> const &idxm, storage_t st) : _idx_m(idxm), _storage(std::move(st)) {}
+    array_view(idx_map<Rank, Layout> const &idxm, storage_t st) : _idx_m(idxm), _storage(std::move(st)) {}
 
     /** 
      * From other containers and view : array, matrix, matrix_view.
@@ -176,7 +188,7 @@ namespace nda {
   };
 */
   /// Aliases
-  template <typename ValueType, int Rank, uint64_t Flags = 0, uint64_t Layout = 0>
-  using array_const_view = array_view<ValueType const, Rank, Layout, Flags>;
+  template <typename ValueType, int Rank, uint64_t Guarantees = 0, uint64_t Layout = 0>
+  using array_const_view = array_view<ValueType const, Rank, Layout, Guarantees>;
 
 } // namespace nda
