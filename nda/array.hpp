@@ -247,7 +247,7 @@ namespace nda {
      *
      * @param shape  New shape of the array (lengths in each dimension)
      */
-    void resize(shape_t<Rank> const &shape) {
+    [[gnu::noinline]] void resize(shape_t<Rank> const &shape) {
       _idx_m = idx_map<Rank>(shape);
       // Construct a storage only if the new index is not compatible (size mismatch).
       if (_storage.size() != _idx_m.size()) _storage = mem::handle<ValueType, 'R'>{_idx_m.size()};
