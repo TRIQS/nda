@@ -6,7 +6,7 @@ nda::range_all _;
 nda::ellipsis ___;
 
 using namespace nda;
-const int N1 = 5; //, N2 = 1000;
+const int N1 = 10; //, N2 = 1000;
 
 class ABC_3d : public benchmark::Fixture {
   public:
@@ -28,8 +28,12 @@ class ABC_3d : public benchmark::Fixture {
     while (state.KeepRunning()) { F(a, b, c); }                                                                                                      \
   }
 
+// retest with view
 // -----------------------------------------------------------------------
-[[gnu::noinline]] void ex_tmp(nda::array<double, 3> &a, nda::array<double, 3> &b, nda::array<double, 3> &c) { a = 2 * b + c; }
+[[gnu::noinline]] void ex_tmp(nda::array<double, 3> &a, nda::array<double, 3> &b, nda::array<double, 3> &c) {
+ 
+  static_assert(guarantee::has_contiguous(get_guarantee<std::decay_t<decltype(2*b+c)>>), "EEE");
+  a = 2*b + c; }
 
 [[gnu::noinline]] void ex_tmp_manual_loop(nda::array<double, 3> &a, nda::array<double, 3> &b, nda::array<double, 3> &c) {
   const long l0 = a.shape()[0];
@@ -72,7 +76,8 @@ class ABC_3d : public benchmark::Fixture {
   double *pb = &(b(0, 0, 0));
   double *pa = &(a(0, 0, 0));
   double *pc = &(c(0, 0, 0));
-  for (long i = 0; i < s; ++i) { pa[i] = 2 * pb[i] + pc[i]; }
+  //for (long i = 0; i < s; ++i) { a.storage()[i] =  b.storage()[i] + c.storage()[i]; }
+  for (long i = 0; i < s; ++i) { pa[i] =  2*pb[i] + pc[i]; }
 }
 
 // -----------------------------------------------------------------------

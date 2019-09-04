@@ -25,10 +25,10 @@ namespace nda {
 
   // Both propagate the guarantees
   template <char OP, typename L, typename R>
-  inline constexpr uint64_t get_guarantee<expr<OP, L, R>> = get_guarantee<L> &get_guarantee<R>;
-
+  inline constexpr uint64_t get_guarantee<expr<OP, L, R>> = expr<OP, L, R>::guarantees;
+  
   template <char OP, typename L>
-  inline constexpr uint64_t get_guarantee<expr_unary<OP, L>> = get_guarantee<L>;
+  inline constexpr uint64_t get_guarantee<expr_unary<OP, L>> = get_guarantee<std::decay_t<L>>;
 
   // true iif rank or L and R is one (or they are scalar)
   template <typename L, typename R>
@@ -58,6 +58,8 @@ namespace nda {
     static constexpr bool r_is_scalar = nda::is_scalar_v<R_t>;
 
     static constexpr char algebra = (l_is_scalar ? get_algebra<R_t> : get_algebra<L_t>);
+
+    static constexpr uint64_t guarantees = (l_is_scalar ? (~0ull) : get_guarantee<L_t>) & (r_is_scalar ? (~0ull) : get_guarantee<R_t>);
 
     constexpr auto shape() const {
       if constexpr (l_is_scalar) {

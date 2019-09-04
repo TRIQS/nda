@@ -52,8 +52,18 @@ namespace nda::details {
     if constexpr (not is_scalar_for_v<RHS, LHS>) {
       static_assert(std::is_assignable_v<typename LHS::value_t &, get_value_t<RHS>>,
                     "Assignment impossible for the type of RHS into the type of LHS");
-      auto l = [&lhs, &rhs](auto const &... args) { lhs(args...) = rhs(args...); };
-      nda::for_each(lhs.shape(), l);
+
+      if constexpr (guarantee::has_contiguous(get_guarantee<LHS>) and guarantee::has_contiguous(get_guarantee<RHS>)) {
+        // They must have the same size ! or EXPECT is wrong
+        // FIXME FOR OFFSET
+        // a linear computation
+        long L = lhs.size();
+        for (long i = 0; i < L; ++i) lhs(_linear_index_t{i}) = rhs(_linear_index_t{i});
+
+      } else {
+        auto l = [&lhs, &rhs](auto const &... args) { lhs(args...) = rhs(args...); };
+        nda::for_each(lhs.shape(), l);
+      }
     } else {
       // RHS is a scalar for LHS
       // if LHS is a matrix, the unit has a specific interpretation.
