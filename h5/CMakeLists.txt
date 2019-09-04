@@ -37,15 +37,15 @@ message(STATUS "hdf5 version: ${HDF5_VERSION}")
  #endif()
 #endif()
 
-add_library(hdf5 INTERFACE)
-target_include_directories(hdf5 SYSTEM INTERFACE ${HDF5_INCLUDE_DIRS})
-target_link_libraries(hdf5 INTERFACE ${HDF5_LIBRARIES})
-target_compile_options(hdf5 INTERFACE ${HDF5_DEFINITIONS})
+#add_library(hdf5 INTERFACE)
+#target_include_directories(hdf5 SYSTEM INTERFACE ${HDF5_INCLUDE_DIRS})
+#target_link_libraries(hdf5 INTERFACE ${HDF5_LIBRARIES})
+#target_compile_options(hdf5 INTERFACE ${HDF5_DEFINITIONS})
 
-#add_library(__hdf5 INTERFACE)
-#target_include_directories(__hdf5 SYSTEM INTERFACE ${HDF5_INCLUDE_DIRS})
-#target_link_libraries(__hdf5 INTERFACE ${HDF5_LIBRARIES})
-#target_compile_options(__hdf5 INTERFACE ${HDF5_DEFINITIONS})
+add_library(__hdf5 INTERFACE)
+target_include_directories(__hdf5 SYSTEM INTERFACE ${HDF5_INCLUDE_DIRS})
+target_link_libraries(__hdf5 INTERFACE ${HDF5_LIBRARIES})
+target_compile_options(__hdf5 INTERFACE ${HDF5_DEFINITIONS})
 
 # -------- Now build our interface -------------------------------
 
