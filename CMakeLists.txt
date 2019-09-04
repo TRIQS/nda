@@ -29,7 +29,7 @@ endif()
 
 
 # Build and install the nda library
-add_subdirectory(nda)
+add_subdirectory(c++/nda)
 
 # Build and install the h5 library
 add_subdirectory(h5)
