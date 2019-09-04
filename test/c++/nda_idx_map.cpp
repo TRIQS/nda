@@ -1,7 +1,7 @@
 #define NDA_ENFORCE_BOUNDCHECK
 #include <gtest/gtest.h> // NOLINT
 
-#include <nda.hpp>
+#include <nda/nda.hpp>
 
 nda::range _;
 nda::ellipsis ___;

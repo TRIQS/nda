@@ -1,5 +1,5 @@
 
-#include <nda.hpp>
+#include <nda/nda.hpp>
 #include <benchmark/benchmark.h>
 
 nda::range_all _;
