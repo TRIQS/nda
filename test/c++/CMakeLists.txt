@@ -6,7 +6,7 @@ endforeach()
 
 # List of all tests
 #file(GLOB_RECURSE all_tests RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
-set(all_tests nda_idx_map nda_storage nda_basic nda_expr_template nda_map nda_alloc_poison nda_algorithms nda_arithmetic nda_array_of_non_pod nda_iterators nda_bound_check ) #nda_h5  nda_stl )
+set(all_tests nda_idx_map nda_storage nda_basic nda_expr_template nda_map nda_alloc_poison nda_algorithms nda_arithmetic nda_array_of_non_pod nda_iterators nda_bound_check nda_h5 )# nda_stl )
 
 #=== build gtest as an external project ===
 
@@ -38,13 +38,15 @@ set_target_properties(gtest PROPERTIES
   ## as the directory does not yet exist
   INTERFACE_COMPILE_OPTIONS "-isystem;${GTEST_ROOT}/include"
 )
+ 
+# =================== END BUILD gtest =============================
 
 foreach(test ${all_tests})
   get_filename_component(test_name ${test} NAME_WE)
   get_filename_component(test_dir ${test} DIRECTORY)
   add_executable(${test_name} ${test})
   set_property(TARGET ${test_name} PROPERTY RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test_dir})
-  target_link_libraries(${test_name} nda_c gtest pthread project_warnings)
+  target_link_libraries(${test_name} nda_c h5_interface gtest pthread project_warnings)
   add_test(NAME ${test_name} COMMAND ${test_name} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test_dir})
   # Run clang-tidy if found
   if(CLANG_TIDY_EXECUTABLE)
