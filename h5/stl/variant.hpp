@@ -4,10 +4,9 @@
 // LEAVE in TRIQS for the moment.
 
 #include <triqs/utility/variant.hpp>
-#include "./group.hpp"
+#include "../group.hpp"
 #include "./string.hpp"
-#include "./generic.hpp"
-#include "./type_correspondance.hpp"
+#include "../generic.hpp"
 
 namespace h5 {
 

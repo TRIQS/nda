@@ -43,7 +43,7 @@
 
 
 // HDF5 interface
-//#include <nda/h5/simple_read_write.hpp>
+#include <nda/h5/simple_read_write.hpp>
 //#include <nda/h5/array_of_non_basic.hpp>
 
 // Regrouping indices

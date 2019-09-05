@@ -45,6 +45,7 @@ namespace nda {
     using storage_t = mem::handle<ValueType, 'R'>;
     using idx_map_t = idx_map<Rank, Layout>; 
     
+//    static constexpr uint64_t layout = Layout;
     static constexpr uint64_t guarantees = guarantee::contiguous | guarantee::zero_offset | guarantee::smallest_stride_is_one;
 
     static constexpr int rank      = Rank;

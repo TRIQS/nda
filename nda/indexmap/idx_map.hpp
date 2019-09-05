@@ -98,10 +98,10 @@ namespace nda {
     }
 
     ///
-    static constexpr bool is_layout_C() { return (layout == permutations::identity<Rank>()); }
+    static constexpr bool is_layout_C() { return (permutations::encode(layout) == permutations::encode(permutations::identity<Rank>()));} // (layout == permutations::identity<Rank>()); }
 
     ///
-    static constexpr bool is_layout_Fortran() { return (layout == permutations::reverse_identity<Rank>()); }
+    static constexpr bool is_layout_Fortran() { return (permutations::encode(layout) == permutations::encode(permutations::reverse_identity<Rank>()));} //(layout == permutations::reverse_identity<Rank>()); }
 
     ///
     bool check_layout() const noexcept {

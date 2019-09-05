@@ -17,6 +17,9 @@ namespace nda {
   // ---------------------- is_array_or_view_container  --------------------------------
 
   template <typename ValueType, int Rank>
+  inline constexpr bool is_regular_v<array<ValueType, Rank>> = true;
+
+  template <typename ValueType, int Rank>
   inline constexpr bool is_regular_or_view_v<array<ValueType, Rank>> = true;
 
   template <typename ValueType, int Rank, uint64_t Guarantees, uint64_t Layout>
@@ -72,6 +75,7 @@ namespace nda {
     static constexpr bool is_const = std::is_const_v<ValueType>;
 
     static constexpr uint64_t guarantees = Guarantees; // for the generic shared with array
+//    static constexpr uint64_t layout = Layout;
  
     // fIXME : FIRST STEP.
     static_assert(Guarantees ==0, "Not implemented");

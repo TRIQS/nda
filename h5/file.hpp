@@ -54,4 +54,6 @@ namespace h5 {
     std::vector<unsigned char> as_buffer() const;
   };
 
+  h5_object memory_file_from_buffer(std::vector<unsigned char> const &buf);
+
 } // namespace h5

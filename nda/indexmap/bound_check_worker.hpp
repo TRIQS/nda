@@ -1,6 +1,35 @@
 
 namespace nda::details {
 
+  class my_runtime_error : public std::exception {
+    std::stringstream acc;
+    std::string _trace;
+    mutable std::string _what;
+
+    public:
+    my_runtime_error() throw() : std::exception() {} // _trace = }//utility::stack_trace(); }
+    my_runtime_error(my_runtime_error const &e) throw() : acc(e.acc.str()), _trace(e._trace), _what(e._what) {}
+    virtual ~my_runtime_error() throw() {}
+    template <typename T>
+    my_runtime_error &operator<<(T const &x) {
+      acc << x;
+      return *this;
+    }
+    my_runtime_error &operator<<(const char *mess) {
+      (*this) << std::string(mess);
+      return *this;
+    } // to limit code size
+    virtual const char *what() const throw() {
+      std::stringstream out;
+      out << acc.str() << "\n.. Error occurred on node ";
+      //if (mpi::is_initialized()) out << mpi::communicator().rank() << "\n";
+      if (getenv("TRIQS_SHOW_EXCEPTION_TRACE")) out << ".. C++ trace is : " << trace() << "\n";
+      _what = out.str();
+      return _what.c_str();
+    }
+    virtual const char *trace() const throw() { return _trace.c_str(); }
+  };
+
   // -------------------- bound_check_worker ---------------------
   //
   // A worker that checks all arguments and gather potential errors in error_code
@@ -37,7 +66,8 @@ namespace nda::details {
     w.N = 0;
     std::stringstream fs;
     (w.g(fs, args), ...); // folding with , operator ...
-    throw std::runtime_error(" key out of domain \n" + fs.str());
+    std::string s = " key out of domain \n" + fs.str();
+    throw my_runtime_error() << "EEE"; //s.c_str());
   }
 
 } // namespace nda::details
