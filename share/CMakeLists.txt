@@ -5,11 +5,6 @@ if(NOT IS_SUBPROJECT
   AND NOT CMAKE_INSTALL_PREFIX STREQUAL "/usr/local"
 )
 
-  if(PythonSupport)
-    set(EXPORT_PYTHON_PATH "export PYTHONPATH=${CMAKE_INSTALL_PREFIX}/${PYTHON_LIB_DEST_ROOT}:$PYTHONPATH")
-    set(MODFILE_PYTHON_PATH "prepend-path    PYTHONPATH          $root/${PYTHON_LIB_DEST_ROOT}")
-  endif()
-
   configure_file(${PROJECT_NAME}.modulefile.in ${PROJECT_NAME}.modulefile @ONLY)
   configure_file(${PROJECT_NAME}vars.sh.in ${PROJECT_NAME}vars.sh @ONLY)
 

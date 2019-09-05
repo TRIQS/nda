@@ -30,4 +30,3 @@ setenv          @PROJECT_NAME@_GIT_HASH  $git_hash
 prepend-path    PATH                $root/bin
 prepend-path    LD_LIBRARY_PATH     $root/lib
 prepend-path    CMAKE_PREFIX_PATH   $root
-@MODFILE_PYTHON_PATH@

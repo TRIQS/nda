@@ -2,9 +2,9 @@ name: build
 
 on:
   push:
-    branches: [ notriqs, '[0-9]+.[0-9]+.x' ]
+    branches: [ cpp_only_notriqs, '[0-9]+.[0-9]+.x' ]
   pull_request:
-    branches: [ notriqs, '[0-9]+.[0-9]+.x' ]
+    branches: [ cpp_only_notriqs, '[0-9]+.[0-9]+.x' ]
   workflow_call:
   workflow_dispatch:
 
@@ -73,6 +73,7 @@ jobs:
         openmpi-doc
         python3-dev
         python3-mako
+        python3-matplotlib
         python3-mpi4py
         python3-numpy
         python3-pip
