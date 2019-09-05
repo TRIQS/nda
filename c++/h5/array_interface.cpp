@@ -85,7 +85,7 @@ namespace h5::details {
 
   //--------------------------------------------------------
 
-  h5_lengths_type get_lengths_and_h5type(group g, std::string const &name) {
+  h5_lengths_type get_h5_lengths_type(group g, std::string const &name) {
 
     dataset ds = g.open_dataset(name);
 

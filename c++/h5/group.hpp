@@ -37,7 +37,7 @@ namespace h5 {
     void write_hdf5_scheme_as_string(const char *a);
 
     /// Write the triqs tag of the group if it is an object.
-    template <typename T> void write_hdf5_scheme(T const &obj) { write_hdf5_scheme_as_string(::h5::get_hdf5_scheme<T>().c_str()); }
+    template <typename T> void write_hdf5_scheme(T const &) { write_hdf5_scheme_as_string(::h5::get_hdf5_scheme<T>().c_str()); }
 
     /// Read the triqs tag of the group if it is an object. Returns the empty string "" if attribute is not present
     std::string read_hdf5_scheme() const;
@@ -46,7 +46,7 @@ namespace h5 {
     void assert_hdf5_scheme_as_string(const char *tag_expected, bool ignore_if_absent = false) const;
 
     /// Asserts that the tag of the group is the same as for T. Throws H5_ERROR if
-    template <typename T> void assert_hdf5_scheme(T const &x, bool ignore_if_absent = false) const {
+    template <typename T> void assert_hdf5_scheme(T const &, bool ignore_if_absent = false) const {
       assert_hdf5_scheme_as_string(get_hdf5_scheme<T>().c_str(), ignore_if_absent);
     }
 

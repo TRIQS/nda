@@ -11,12 +11,12 @@ namespace h5 {
 
   namespace details {
     template <typename... T, std::size_t... Is>
-    void h5_write_tuple_impl(group gr, std::string const &name, std::tuple<T...> const &tpl, std::index_sequence<Is...>) {
+    void h5_write_tuple_impl(group gr, std::string const &, std::tuple<T...> const &tpl, std::index_sequence<Is...>) {
       (h5_write(gr, std::to_string(Is), std::get<Is>(tpl)), ...);
     }
 
     template <typename... T, std::size_t... Is>
-    void h5_read_tuple_impl(group gr, std::string const &name, std::tuple<T...> &tpl, std::index_sequence<Is...>) {
+    void h5_read_tuple_impl(group gr, std::string const &, std::tuple<T...> &tpl, std::index_sequence<Is...>) {
       if (gr.get_all_subgroup_dataset_names().size() != sizeof...(Is))
         throw std::runtime_error ("ERROR in std::tuple h5_read: Tuple size incompatible to number of group elements");
       (h5_read(gr, std::to_string(Is), std::get<Is>(tpl)), ...);

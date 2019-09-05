@@ -83,7 +83,7 @@ namespace nda {
   // ==============================================
 
   template <typename F, typename... A>
-  std::ostream &operator<<(std::ostream &out, expr_call<F, A...> const &x) {
+  std::ostream &operator<<(std::ostream &out, expr_call<F, A...> const &) {
     return out << "mapped"; //array<value_type, std::decay_t<A>::rank>(x);
   }
 

@@ -144,7 +144,7 @@ TEST(Array, H5RealIntoComplex) {
 
   // READ the file
   {
-    C() = 89 + 9j; // put garbage in it
+    C() = 89.0 + 9i; // put garbage in it
     h5::file file("ess_real_complex.h5", 'r');
     h5::group top(file);
     h5_read(top, "D", C);
@@ -153,7 +153,7 @@ TEST(Array, H5RealIntoComplex) {
 }
 
 // ==============================================================
-
+/*
 // -----------------------------------------------------
 // Testing h5 for std vector
 // -----------------------------------------------------
@@ -184,6 +184,8 @@ TEST(Array, H5StdVector) {
   for (size_t i = 0; i < v.size(); ++i) EXPECT_EQ(v[i], v2[i]);
   for (size_t i = 0; i < vc.size(); ++i) EXPECT_EQ(vc[i], vc2[i]);
 }
+
+*/
 
 // ==============================================================
 /*
