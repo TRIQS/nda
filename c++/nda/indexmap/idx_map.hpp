@@ -212,7 +212,7 @@ namespace nda {
      *
      */
     template <uint64_t Guarantee, typename... Args>
-    FORCEINLINE auto slice_or_position(Args const &... args) const noexcept(enforce_bound_check) {
+    FORCEINLINE auto slice_or_position(Args const &... args) const noexcept(!enforce_bound_check) {
 
       static_assert(((((std::is_base_of_v<range_tag, Args> or std::is_constructible_v<long, Args>) ? 0 : 1) + ...) == 0),
                     "Slice arguments must be convertible to range, Ellipsis, or long");
@@ -243,7 +243,7 @@ namespace nda {
 
     // FIXME kept for the test for the moment
     template <typename... Args>
-    FORCEINLINE auto operator()(Args const &... args) const noexcept(enforce_bound_check) {
+    FORCEINLINE auto operator()(Args const &... args) const noexcept(!enforce_bound_check) {
       return slice_or_position<0>(args...);
     }
 
