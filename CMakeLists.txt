@@ -1,36 +1,91 @@
-# Start configuration
-cmake_minimum_required(VERSION 2.8.12)
-project(nda C CXX)
+# ##############################################################################
+#
+# app4triqs - An example application using triqs and cpp2py
+#
+# Copyright (C) ...
+#
+# app4triqs is free software: you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
+#
+# app4triqs is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+# A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# app4triqs (in the file COPYING.txt in this directory). If not, see
+# <http://www.gnu.org/licenses/>.
+#
+# ##############################################################################
+
+cmake_minimum_required(VERSION 3.0.2 FATAL_ERROR)
 if(POLICY CMP0074)
   cmake_policy(SET CMP0074 NEW)
 endif()
+
+# ############
+# Define Project
+project(APP4TRIQS VERSION 2.2.0 LANGUAGES CXX)
+
+# Get the git hash & print status
+execute_process(COMMAND git rev-parse HEAD OUTPUT_VARIABLE PROJECT_GIT_HASH OUTPUT_STRIP_TRAILING_WHITESPACE)
+message(STATUS "${PROJECT_NAME} version : ${PROJECT_VERSION}")
+message(STATUS "${PROJECT_NAME} Git hash: ${PROJECT_GIT_HASH}")
+
+# Assert that Install directory is given and invalid.
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT OR (NOT IS_ABSOLUTE ${CMAKE_INSTALL_PREFIX}))
+  message(FATAL_ERROR "No install prefix given (or invalid)")
+endif()
+message(STATUS "-------- CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX} --------")
+
+# ############
+# Options
 
 # Default to Release build type
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Type of build" FORCE)
 endif()
-message( STATUS "-------- BUILD-TYPE: ${CMAKE_BUILD_TYPE} --------")
+message(STATUS "-------- BUILD-TYPE: ${CMAKE_BUILD_TYPE} --------")
 
 # Build static libraries
 set(BUILD_SHARED_LIBS OFF)
 
-# Enable compiler warnings for the whole project
-add_compile_options(-Wall
-		     $<$<CONFIG:Debug>:-Og>
-		     $<$<CONFIG:Debug>:-ggdb3>
-		     $<$<CXX_COMPILER_ID:GNU>:-fconcepts>
-		     )
+# Export the list of compile-commands into compile_commands.json
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Build and install the nda library
-add_subdirectory(c++/nda)
+# Global compiler options
+add_compile_options(
+  $<$<CONFIG:Debug>:-Og>
+  $<$<CONFIG:Debug>:-ggdb3>
+  $<$<CXX_COMPILER_ID:GNU>:-fconcepts>
+)
+
+# Create an Interface target for compiler warnings
+add_library(project_warnings INTERFACE)
+install(TARGETS project_warnings EXPORT app4triqs-targets)
+target_compile_options(project_warnings
+  INTERFACE
+    -Wall
+    -Wextra
+    -Wshadow
+    -Wpedantic
+    -Wno-sign-compare
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-gcc-compat>
+)
+
+# #############
+# Load Dependencies
+
+
+# #############
+# Build Project
+
+# Build and install the app4triqs library
+add_subdirectory(c++/app4triqs)
 
 # Build and install the h5 library
 add_subdirectory(c++/h5)
-
-# Build and install the nda python module
-if(${TRIQS_WITH_PYTHON_SUPPORT})
-  add_subdirectory(python/nda)
-endif()
 
 # Tests
 option(Build_Tests "Tests" ON)
@@ -46,16 +101,31 @@ if(Build_Bench)
   add_subdirectory(benchmarks)
 endif()
 
+# Build the documentation
+option(Build_Documentation "Build documentation" OFF)
+if(Build_Documentation)
+  message(STATUS "Documentation Build enabled")
+  add_subdirectory(doc)
+endif()
+
 # Additional configuration files
 add_subdirectory(share)
 
-option(Build_Documentation "Build documentation" OFF)
-if(Build_Documentation)
-  if(NOT TRIQS_WITH_DOCUMENTATION)
-    message(WARNING "TRIQS library has not been compiled with its documentation! Cannot build documentation.")
-  else()
-    message(STATUS "Documentation Build enabled")
-    add_subdirectory(doc)
+# #############
+# Debian Package
+
+option(BUILD_DEBIAN_PACKAGE "Build a deb package" OFF)
+if(BUILD_DEBIAN_PACKAGE)
+  if(NOT CMAKE_INSTALL_PREFIX STREQUAL "/usr")
+    message(FATAL_ERROR "CMAKE_INSTALL_PREFIX must be /usr for packaging")
   endif()
+  set(CPACK_PACKAGE_NAME app4triqs)
+  set(CPACK_GENERATOR "DEB")
+  set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+  set(CPACK_PACKAGE_CONTACT "https://github.com/TRIQS/app4triqs")
+  execute_process(COMMAND dpkg --print-architecture OUTPUT_VARIABLE CMAKE_DEBIAN_PACKAGE_ARCHITECTURE OUTPUT_STRIP_TRAILING_WHITESPACE)
+  set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+  set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
+  include(CPack)
 endif()
 

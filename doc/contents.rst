@@ -1,25 +1,12 @@
-.. _contents:
-
-Documentation
-=============
-
-Contents
---------
+Table of contents
+=================
 
 .. toctree::
-   :maxdepth: 5
+   :maxdepth: 2
 
    index
    install
+   documentation
    issues
    changelog
    about
-
-Reference manual
-----------------
-
-.. toctree::
-   :maxdepth: 5
-
-   cpp2rst_generated/nda/toto
-   cpp2rst_generated/nda/chain

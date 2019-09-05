@@ -1,20 +1,24 @@
+# This file allows other CMake Projects to find us
+# We provide general project information
+# and reestablish the exported CMake Targets
+
 # Multiple inclusion guard
-if (NOT NDA_FOUND) 
-set(NDA_FOUND True)
+if(NOT APP4TRIQS_FOUND)
+set(APP4TRIQS_FOUND True)
 
 # version
-set(NDA_VERSION @NDA_VERSION@)
-set(NDA_GIT_HASH @NDA_GIT_HASH@)
+set(APP4TRIQS_VERSION @PROJECT_VERSION@)
+set(APP4TRIQS_GIT_HASH @PROJECT_GIT_HASH@)
 
-# Root of the installation 
-set(NDA_ROOT  @CMAKE_INSTALL_PREFIX@)
+# Root of the installation
+set(APP4TRIQS_ROOT  @CMAKE_INSTALL_PREFIX@)
 
-# include the exported targets of this project 
-include(@CMAKE_INSTALL_PREFIX@/share/cmake/nda-targets.cmake)
+# Include the exported targets of this project
+include(@CMAKE_INSTALL_PREFIX@/lib/cmake/app4triqs/app4triqs-targets.cmake)
 
-MESSAGE(STATUS "Found NDAConfig.cmake with version ${NDA_VERSION}, hash = ${NDA_GIT_HASH}")
+message(STATUS "Found app4triqs-config.cmake with version @PROJECT_VERSION@, hash = @PROJECT_GIT_HASH@")
 
-# Documentation
-set(NDA_WITH_DOCUMENTATION @Build_Documentation@)
+# Was the Project built with Documentation?
+set(APP4TRIQS_WITH_DOCUMENTATION @Build_Documentation@)
 
-endif (NOT NDA_FOUND) 
+endif()

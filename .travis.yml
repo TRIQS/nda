@@ -4,45 +4,39 @@ sudo: required
 dist: xenial
 
 compiler:
-  - gcc
-  #- clang
+  #- gcc
+  - clang
 
 before_install:
-  - sudo add-apt-repository 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial main' -y
+  - sudo add-apt-repository 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-8 main' -y
   - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
   - sudo apt-get update
   - sudo rm -f /var/lib/apt/lists/lock /var/cache/apt/archives/lock /var/lib/dpkg/lock # Avoid the occasional apt-get install failure for xenial image
-  - sudo apt-get install -y --allow-unauthenticated g++-7 clang-7
-  - export LIBRARY_PATH=/usr/lib/llvm-7/lib:$LIBRARY_PATH
-  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7
-  - sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-7 60 --slave /usr/bin/clang++ clang++ /usr/bin/clang++-7
-  - sudo apt-get install -y --allow-unauthenticated libboost-all-dev cmake git libgfortran3 gfortran openmpi-bin openmpi-common openmpi-doc libopenmpi-dev libblas-dev liblapack-dev libfftw3-dev libgmp-dev hdf5-tools libhdf5-serial-dev python-h5py python-dev python-numpy python-scipy python-jinja2 python-virtualenv python-matplotlib python-tornado python-zmq python-mpi4py python-mako clang-format-7 libclang-7-dev python-clang-7 python-sphinx libjs-mathjax valgrind libnfft3-dev
+  - sudo apt-get install -y --allow-unauthenticated g++-8 clang-8
+  - export LIBRARY_PATH=/usr/lib/llvm-8/lib:$LIBRARY_PATH
+  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 60 --slave /usr/bin/g++ g++ /usr/bin/g++-8
+  - sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-8 60 --slave /usr/bin/clang++ clang++ /usr/bin/clang++-8
+  - sudo apt-get install -y --allow-unauthenticated cmake git hdf5-tools libblas-dev libboost-all-dev libfftw3-dev libgfortran3 libhdf5-serial-dev libgmp-dev liblapack-dev libopenmpi-dev libclang-8-dev python-clang-8 python-dev python-h5py python-mako python-matplotlib python-mpi4py python-numpy python-scipy python-sphinx libjs-mathjax libnfft3-dev
 
 install: true
 
 script:
   - export INSTALL_DIR=$HOME/root_install # We should install outside the repository
-  # ===== Set up Cpp2Py
-  - git clone https://github.com/triqs/cpp2py
-  - mkdir cpp2py/build && cd cpp2py/build
-  - cmake .. -DCMAKE_CXX_COMPILER=/usr/bin/${CXX} -DPYTHON_INTERPRETER=/usr/bin/python -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR
-  - make -j8 install
-  - source $INSTALL_DIR/share/cpp2pyvars.sh
   # ===== Set up TRIQS
   - cd $TRAVIS_BUILD_DIR
   - git clone https://github.com/TRIQS/triqs --branch unstable
   - mkdir triqs/build && cd triqs/build
-  - cmake .. -DCMAKE_CXX_COMPILER=/usr/bin/${CXX} -DBuild_Tests=OFF -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR
-  - make -j8 install
+  - cmake .. -DCMAKE_CXX_COMPILER=/usr/bin/${CXX} -DBuild_Tests=OFF -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR -DASAN=ON -DUBSAN=ON
+  - make -j2 install
   - source $INSTALL_DIR/share/triqsvars.sh
   # ===== Set up nda and test
   - cd $TRAVIS_BUILD_DIR
   - mkdir build && cd build
   - cmake .. -DCMAKE_CXX_COMPILER=/usr/bin/${CXX} -DASAN=ON -DUBSAN=ON
-  - export UBSAN_SYMBOLIZER_PATH=/usr/lib/llvm-7/bin/llvm-symbolizer
-  - export ASAN_SYMBOLIZER_PATH=/usr/lib/llvm-7/bin/llvm-symbolizer
+  - export UBSAN_SYMBOLIZER_PATH=/usr/lib/llvm-8/bin/llvm-symbolizer
+  - export ASAN_SYMBOLIZER_PATH=/usr/lib/llvm-8/bin/llvm-symbolizer
   - export UBSAN_OPTIONS=symbolize=1:print_stacktrace=1
   - export ASAN_OPTIONS=symbolize=1:detect_leaks=0
   - export CTEST_OUTPUT_ON_FAILURE=1
-  - make -j8 && make test
+  - make -j2 && make test

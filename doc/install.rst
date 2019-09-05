@@ -2,35 +2,34 @@
 
 .. _install:
 
-Installation
-============
+Compiling app4triqs from source
+===============================
 
 
-Prerequisite
--------------------
+Prerequisites
+-------------
 
-#. The :ref:`TRIQS <triqslibs:welcome>` toolbox (see :ref:`TRIQS installation instruction <triqslibs:installation>`).
-   In the following, we will suppose that it is installed in the ``path_to_triqs`` directory.
+#. The :ref:`TRIQS <triqslibs:welcome>` library, see :ref:`TRIQS installation instruction <triqslibs:installation>`.
+   In the following, we assume that TRIQS is installed in the directory ``path_to_triqs``.
 
 Installation steps
 ------------------
 
-#. Download the sources from github::
+#. Download the source code of the latest stable version by cloning the ``TRIQS/app4triqs`` repository from GitHub::
 
-     $ git clone https://github.com/triqs/nda.git nda.src
+     $ git clone https://github.com/TRIQS/app4triqs app4triqs.src
 
-#. Create an empty build directory where you will compile the code::
+#. Create and move to a new directory where you will compile the code::
 
-     $ mkdir nda.build && cd nda.build
+     $ mkdir app4triqs.build && cd app4triqs.build
 
-#. Make sure that you have added the TRIQS and Cpp2Py installation to your environment variables::
+#. Ensure that your shell contains the TRIQS environment variables by sourcing the ``triqsvars.sh`` file from your TRIQS installation::
 
-     $ source path_to_triqs/share/cpp2pyvarsh.sh
      $ source path_to_triqs/share/triqsvarsh.sh
 
-#. In the build directory call cmake::
+#. In the build directory call cmake, including any additional custom CMake options, see below::
 
-     $ cmake ../nda.src
+     $ cmake ../app4triqs.src
 
 #. Compile the code, run the tests and install the application::
 
@@ -41,22 +40,34 @@ Installation steps
 Version compatibility
 ---------------------
 
-Be careful that the version of the TRIQS library and of the solver must be
-compatible (more information on the :ref:`TRIQS website <triqslibs:versions>`).
-As nda is still in alpha phase (unstable), it can only be compiled against the
-unstable branch of triqs.
+Keep in mind that the version of ``app4triqs`` must be compatible with your TRIQS library version,
+see :ref:`TRIQS website <triqslibs:versions>`.
+In particular the Major and Minor Version numbers have to be the same.
+To use a particular version, go into the directory with the sources, and look at all available versions::
+
+     $ cd app4triqs.src && git tag
+
+Checkout the version of the code that you want::
+
+     $ git checkout 2.1.0
+
+and follow steps 2 to 4 above to compile the code.
 
 Custom CMake options
 --------------------
 
-Functionality of ``nda`` can be tweaked using extra compile-time options passed to CMake::
+The compilation of ``app4triqs`` can be configured using CMake-options::
 
-    cmake -DOPTION1=value1 -DOPTION2=value2 ... ../nda.src
+    cmake ../app4triqs.src -DOPTION1=value1 -DOPTION2=value2 ... ../app4triqs.src
 
-+-----------------------------------------------------------------------+-----------------------------------------------+
-| Options                                                               | Syntax                                        |
-+=======================================================================+===============================================+
-| Specify an installation path other than path_to_triqs                 | -DCMAKE_INSTALL_PREFIX=path_to_nda      |
-+-----------------------------------------------------------------------+-----------------------------------------------+
-| Build the documentation locally                                       | -DBuild_Documentation=ON                      |
-+-----------------------------------------------------------------------+-----------------------------------------------+
++-----------------------------------------------------------------+-----------------------------------------------+
+| Options                                                         | Syntax                                        |
++=================================================================+===============================================+
+| Specify an installation path other than path_to_triqs           | -DCMAKE_INSTALL_PREFIX=path_to_app4triqs      |
++-----------------------------------------------------------------+-----------------------------------------------+
+| Build in Debugging Mode                                         | -DCMAKE_BUILD_TYPE=Debug                      |
++-----------------------------------------------------------------+-----------------------------------------------+
+| Disable testing (not recommended)                               | -DBuild_Tests=OFF                             |
++-----------------------------------------------------------------+-----------------------------------------------+
+| Build the documentation                                         | -DBuild_Documentation=ON                      |
++-----------------------------------------------------------------+-----------------------------------------------+
