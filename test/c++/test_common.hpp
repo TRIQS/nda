@@ -7,6 +7,8 @@
 #include <nda.hpp>
 #include <nda/gtest_tools.hpp>
 
+using namespace std::complex_literals;
+
 template <int R> using myshape_t = nda::shape_t<R>;
 
 // variables for the test
