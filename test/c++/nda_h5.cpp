@@ -1,21 +1,14 @@
 #define TRIQS_ARRAYS_ENFORCE_BOUNDCHECK
-#include <triqs/test_tools/arrays.hpp>
-#include <cmath>
-#include <limits>
-#include <triqs/arrays.hpp>
-#include <triqs/arrays/asserts.hpp>
-
-using namespace triqs::arrays;
-namespace h5 = triqs::h5;
-
+#include "./test_common.hpp"
+#include <h5.hpp>
 // ==============================================================
 
 TEST(Array, H5) {
 
-  array<long, 2> A(2, 3), B, Af(FORTRAN_LAYOUT), Bf(FORTRAN_LAYOUT);
-  array<double, 2> D(2, 3), D2;
-  array<dcomplex, 1> C(5), C2;
-  dcomplex z(1, 2);
+  nda::array<long, 2> A(2, 3), B;
+  nda::array<double, 2> D(2, 3), D2;
+  nda::array<dcomplex, 1> C(5), C2;
+  //dcomplex z(1, 2);
 
   for (int i = 0; i < 5; ++i) C(i) = dcomplex(i, i);
 
@@ -24,20 +17,18 @@ TEST(Array, H5) {
       A(i, j) = 10 * i + j;
       D(i, j) = A(i, j) / 10.0;
     }
-  Af = A;
 
   // WRITE the file
   {
-    h5::file file("ess.h5", H5F_ACC_TRUNC);
+    h5::file file("ess.h5", 'w');
     h5::group top(file);
 
     h5_write(top, "A", A);
-    h5_write(top, "Af", Af);
     h5_write(top, "C", C);
     h5_write(top, "D", D);
-    h5_write(top, "S", "");
-    h5_write(top, "A_slice", A(range(), range(1, 3)));
-    h5_write(top, "empty", array<double, 2>(0, 10));
+    h5::h5_write(top, "S", "");
+    h5_write(top, "A_slice", A(nda::range(), nda::range(1, 3)));
+    h5_write(top, "empty", nda::array<double, 2>(0, 10));
 
     // add some attribute to A
     auto id = top.open_dataset("A");
@@ -75,18 +66,15 @@ TEST(Array, H5) {
     EXPECT_EQ(att1, 12);
     EXPECT_EQ(att2, 8.9);
 
-    h5_read(top, "Af", Bf);
-    EXPECT_EQ_ARRAY(Af, Bf);
-
     h5_read(top, "D", D2);
     EXPECT_ARRAY_NEAR(D, D2);
 
     h5_read(top, "C", C2);
     EXPECT_ARRAY_NEAR(C, C2);
 
-    array<long, 2> a_sli;
+    nda::array<long, 2> a_sli;
     h5_read(top, "A_slice", a_sli);
-    EXPECT_EQ_ARRAY(a_sli, A(range(), range(1, 3)));
+    EXPECT_EQ_ARRAY(a_sli, A(nda::range(), nda::range(1, 3)));
 
     double xxx = 0;
     h5_read(top, "x", xxx);
@@ -96,9 +84,9 @@ TEST(Array, H5) {
     h5_read(top, "s", s2);
     EXPECT_EQ(s2, "a nice chain");
 
-    array<double, 2> empty(5, 5);
+    nda::array<double, 2> empty(5, 5);
     h5_read(top, "empty", empty);
-    EXPECT_EQ_ARRAY(empty, (array<double, 2>(0, 10)));
+    EXPECT_EQ_ARRAY(empty, (nda::array<double, 2>(0, 10)));
   }
 }
 
@@ -106,8 +94,8 @@ TEST(Array, H5) {
 
 TEST(Array, H5ArrayString) {
 
-  // array of string
-  array<std::string, 1> A(2), B;
+  // nda::array of string
+  nda::array<std::string, 1> A(2), B;
   A(0) = "Nice String";
   A(1) = "another";
 
@@ -117,7 +105,7 @@ TEST(Array, H5ArrayString) {
   V1.push_back("de");
 
   // writing
-  h5::file file("test_array_string.h5", H5F_ACC_TRUNC);
+  h5::file file("test_nda::array_string.h5", 'w');
   h5::group top(file);
 
   h5_write(top, "A", A);
@@ -136,27 +124,27 @@ TEST(Array, H5ArrayString) {
 // ==============================================================
 
 // -----------------------------------------------------
-// Testing the loading of array of double into complex
+// Testing the loading of nda::array of double into complex
 // -----------------------------------------------------
 
 TEST(Array, H5RealIntoComplex) {
 
-  array<double, 2> D(2, 3);
-  array<dcomplex, 2> C(2, 3);
+  nda::array<double, 2> D(2, 3);
+  nda::array<dcomplex, 2> C(2, 3);
 
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 3; ++j) { D(i, j) = 10 * i + j; }
 
   // WRITE the file
   {
-    h5::file file("ess_real_complex.h5", H5F_ACC_TRUNC);
+    h5::file file("ess_real_complex.h5", 'w');
     h5::group top(file);
     h5_write(top, "D", D);
   }
 
   // READ the file
   {
-    C() = 89 + 9_j; // put garbage in it
+    C() = 89 + 9j; // put garbage in it
     h5::file file("ess_real_complex.h5", 'r');
     h5::group top(file);
     h5_read(top, "D", C);
@@ -179,7 +167,7 @@ TEST(Array, H5StdVector) {
   std::vector<std::complex<double>> vc2;
 
   {
-    h5::file file1("test_std_vector.h5", H5F_ACC_TRUNC);
+    h5::file file1("test_std_vector.h5", 'w');
     // do we need this top ?
     h5::group top(file1);
     h5_write(top, "vdouble", v);
@@ -187,7 +175,7 @@ TEST(Array, H5StdVector) {
   }
 
   {
-    h5::file file2("test_std_vector.h5", H5F_ACC_RDONLY);
+    h5::file file2("test_std_vector.h5", 'r');
     h5::group top2(file2);
     h5_read(top2, "vdouble", v2);
     h5_read(top2, "vcomplex", vc2);
@@ -198,18 +186,20 @@ TEST(Array, H5StdVector) {
 }
 
 // ==============================================================
-
+/*
 // -----------------------------------------------------
-// Testing h5 for an array of matrix
+// Testing h5 for an nda::array of matrix
 // -----------------------------------------------------
 
 TEST(BlockMatrixH5, S1) {
 
-  array<matrix<double>, 1> V{matrix<double>{{1, 2}, {3, 4}}, matrix<double>{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}}};
+  nda::array<matrix<double>, 1> V{matrix<double>{{1, 2}, {3, 4}}, matrix<double>{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}}};
 
   auto W = rw_h5(V, "block_mat");
 
   EXPECT_EQ(first_dim(V), first_dim(W));
   for (int i = 0; i < first_dim(V); ++i) EXPECT_ARRAY_NEAR(V(i), W(i));
 }
+
+*/
 MAKE_MAIN

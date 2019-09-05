@@ -1,3 +1,4 @@
+#pragma once
 namespace h5 { 
 
   // a class T has either :
@@ -14,12 +15,12 @@ namespace h5 {
     static std::string invoke() { return T::hdf5_scheme(); }
   };
 
-#define AS_STRING(X) AS_STRING2(X)
-#define AS_STRING2(X) #X
+#define H5_AS_STRING(X) H5_AS_STRING2(X)
+#define H5_AS_STRING2(X) #X
 
 #define TRIQS_SPECIALIZE_HDF5_SCHEME2(X, Y)                                                                                                          \
   template <> struct hdf5_scheme_impl<X> {                                                                                                           \
-    static std::string invoke() { return AS_STRING(Y); }                                                                                             \
+    static std::string invoke() { return H5_AS_STRING(Y); }                                                                                             \
   };
 
 #define TRIQS_SPECIALIZE_HDF5_SCHEME(X) TRIQS_SPECIALIZE_HDF5_SCHEME2(X, X)

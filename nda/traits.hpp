@@ -36,11 +36,17 @@ namespace nda {
   template <typename S, typename A>
   inline constexpr bool is_scalar_for_v = (is_scalar_v<typename A::value_t> ? is_scalar_or_convertible_v<S> : std::is_same_v<S, typename A::value_t>);
 
+  // ---------------------------  is_regular------------------------
+
+  // Impl. trait to match the containers in requires. Match all regular containers (array, matrix)
+  template <typename A>
+  inline constexpr bool is_regular_or_view_v = false;
+
   // ---------------------------  is_regular_or_view_v------------------------
 
   // Impl. trait to match the containers in requires. Match all containers (array, matrix, view)
   template <typename A>
-  inline constexpr bool is_regular_or_view_v = false;
+  inline constexpr bool is_regular_v = false;
 
   // --------------------------- Ndarray concept------------------------
 

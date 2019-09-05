@@ -20,18 +20,19 @@
  ******************************************************************************/
 #pragma once
 
-#include "./h5/base_public.hpp"
 #include "./h5/file.hpp"
 #include "./h5/group.hpp"
+#include "./h5/scheme.hpp"
 #include "./h5/scalar.hpp"
-#include "./h5/string.hpp"
-#include "./h5/vector.hpp"
-#include "./h5/map.hpp"
-#include "./h5/pair.hpp"
-#include "./h5/tuple.hpp"
-#include "./h5/optional.hpp"
 #include "./h5/generic.hpp"
-#include "./h5/variant.hpp"
+#include "./h5/stl/string.hpp"
+#include "./h5/stl/vector.hpp"
+#include "./h5/stl/map.hpp"
+#include "./h5/stl/pair.hpp"
+#include "./h5/stl/tuple.hpp"
+#include "./h5/stl/optional.hpp"
+
+//#include "./h5/stl/variant.hpp"
 
 // FIXME : Why all these include by default ?
 

@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 #include <string>
 
@@ -55,7 +56,7 @@ namespace h5::details {
   h5_lengths_type get_h5_lengths_type(group g, std::string const &name);
 
   // Write the view of the array to the group
-  void write(group g, std::string const &name, h5_array_view const &a, bool compress);
+  void write(group g, std::string const &name, h5_array_view const &a, bool compress =false);
 
   // INTERNAL [python interface only]
   // Same as before, but if lt = get_h5_lengths_type(g,name) has already been computed

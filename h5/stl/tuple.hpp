@@ -1,6 +1,6 @@
 #pragma once
 #include <tuple>
-#include "./group.hpp"
+#include "../group.hpp"
 #include "./string.hpp"
 
 namespace h5 {
@@ -18,7 +18,7 @@ namespace h5 {
     template <typename... T, std::size_t... Is>
     void h5_read_tuple_impl(group gr, std::string const &name, std::tuple<T...> &tpl, std::index_sequence<Is...>) {
       if (gr.get_all_subgroup_dataset_names().size() != sizeof...(Is))
-        H5_ERROR << "ERROR in std::tuple h5_read: Tuple size incompatible to number of group elements";
+        throw std::runtime_error ("ERROR in std::tuple h5_read: Tuple size incompatible to number of group elements");
       (h5_read(gr, std::to_string(Is), std::get<Is>(tpl)), ...);
     }
 

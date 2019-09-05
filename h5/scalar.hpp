@@ -5,7 +5,7 @@ namespace h5 {
 
   namespace details {
 
-    template <typename S> h5_array_view h5_array_view_from_scalar(S &&s) { return {hdf5_type<S>, (void *)(&s), 0, false}; }
+    template <typename S> h5_array_view h5_array_view_from_scalar(S &&s) { return {hdf5_type<S>, (void *)(&s), 0}; }
   } // namespace details
 
   template <typename T> std::enable_if_t<std::is_arithmetic_v<T>> h5_write(group g, std::string const &name, T const &x) {
