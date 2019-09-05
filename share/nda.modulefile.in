@@ -20,7 +20,7 @@ proc ModulesHelp { } {
     puts stderr "Git hash:    $git_hash"
 }
 
-# Only one version of app4triqs can be loaded at a time
+# Only one version of nda can be loaded at a time
 conflict $name
 
 setenv          NDA_ROOT      $root
@@ -31,4 +31,4 @@ prepend-path    PATH                $root/bin
 prepend-path    CPLUS_INCLUDE_PATH  $root/include
 prepend-path    LIBRARY_PATH        $root/lib
 prepend-path    LD_LIBRARY_PATH     $root/lib
-prepend-path    CMAKE_PREFIX_PATH   $root/lib/cmake/app4triqs
+prepend-path    CMAKE_PREFIX_PATH   $root/lib/cmake/nda

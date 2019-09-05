@@ -19,9 +19,9 @@ extensions = ['sphinx.ext.autodoc',
 
 source_suffix = '.rst'
 
-project = u'APP4TRIQS - An example triqs application'
+project = u'NDA - An example triqs application'
 copyright = u'2017-2018 N. Wentzell, O. Parcollet 2018-2019 The Simons Foundation, authors: N. Wentzell, D. Simons, H. Strand, O. Parcollet'
-version = '@APP4TRIQS_VERSION@'
+version = '@NDA_VERSION@'
 
 mathjax_path = "@TRIQS_MATHJAX_PATH@/MathJax.js?config=default"
 templates_path = ['@PROJECT_SOURCE_DIR@/doc/_templates']
@@ -29,15 +29,15 @@ templates_path = ['@PROJECT_SOURCE_DIR@/doc/_templates']
 html_theme = 'triqs'
 html_theme_path = ['@TRIQS_THEMES_PATH@']
 html_show_sphinx = False
-html_context = {'header_title': 'app4triqs',
+html_context = {'header_title': 'nda',
                 'header_subtitle': 'An example application using cpp2py and <a class="triqs" style="font-size: 12px" href="https://triqs.github.io">TRIQS</a>',
                 'header_links': [['Install', 'install'],
                                  ['Documentation', 'documentation'],
                                  ['Issues', 'issues'],
-                                 ['About app4triqs', 'about']]}
+                                 ['About nda', 'about']]}
 html_static_path = ['@PROJECT_SOURCE_DIR@/doc/_static']
 html_sidebars = {'index': ['sideb.html', 'searchbox.html']}
 
-htmlhelp_basename = 'APP4TRIQSdoc'
+htmlhelp_basename = 'NDAdoc'
 
 intersphinx_mapping = {'python': ('http://docs.python.org/2.7', None), 'triqslibs': ('https://triqs.github.io/triqs/latest', None)}

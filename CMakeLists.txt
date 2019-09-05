@@ -1,20 +1,20 @@
 # ##############################################################################
 #
-# app4triqs - An example application using triqs and cpp2py
+# nda - An example application using triqs and cpp2py
 #
 # Copyright (C) ...
 #
-# app4triqs is free software: you can redistribute it and/or modify it under the
+# nda is free software: you can redistribute it and/or modify it under the
 # terms of the GNU General Public License as published by the Free Software
 # Foundation, either version 3 of the License, or (at your option) any later
 # version.
 #
-# app4triqs is distributed in the hope that it will be useful, but WITHOUT ANY
+# nda is distributed in the hope that it will be useful, but WITHOUT ANY
 # WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
 # A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License along with
-# app4triqs (in the file COPYING.txt in this directory). If not, see
+# nda (in the file COPYING.txt in this directory). If not, see
 # <http://www.gnu.org/licenses/>.
 #
 # ##############################################################################
@@ -26,7 +26,7 @@ endif()
 
 # ############
 # Define Project
-project(APP4TRIQS VERSION 2.2.0 LANGUAGES CXX)
+project(NDA VERSION 2.2.0 LANGUAGES CXX)
 
 # Get the git hash & print status
 execute_process(COMMAND git rev-parse HEAD OUTPUT_VARIABLE PROJECT_GIT_HASH OUTPUT_STRIP_TRAILING_WHITESPACE)
@@ -63,7 +63,7 @@ add_compile_options(
 
 # Create an Interface target for compiler warnings
 add_library(project_warnings INTERFACE)
-install(TARGETS project_warnings EXPORT app4triqs-targets)
+install(TARGETS project_warnings EXPORT nda-targets)
 target_compile_options(project_warnings
   INTERFACE
     -Wall
@@ -81,8 +81,8 @@ target_compile_options(project_warnings
 # #############
 # Build Project
 
-# Build and install the app4triqs library
-add_subdirectory(c++/app4triqs)
+# Build and install the nda library
+add_subdirectory(c++/nda)
 
 # Build and install the h5 library
 add_subdirectory(c++/h5)
@@ -119,10 +119,10 @@ if(BUILD_DEBIAN_PACKAGE)
   if(NOT CMAKE_INSTALL_PREFIX STREQUAL "/usr")
     message(FATAL_ERROR "CMAKE_INSTALL_PREFIX must be /usr for packaging")
   endif()
-  set(CPACK_PACKAGE_NAME app4triqs)
+  set(CPACK_PACKAGE_NAME nda)
   set(CPACK_GENERATOR "DEB")
   set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
-  set(CPACK_PACKAGE_CONTACT "https://github.com/TRIQS/app4triqs")
+  set(CPACK_PACKAGE_CONTACT "https://github.com/TRIQS/nda")
   execute_process(COMMAND dpkg --print-architecture OUTPUT_VARIABLE CMAKE_DEBIAN_PACKAGE_ARCHITECTURE OUTPUT_STRIP_TRAILING_WHITESPACE)
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
   set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)

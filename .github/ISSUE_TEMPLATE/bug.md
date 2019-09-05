@@ -37,7 +37,7 @@ https://groups.google.com/a/flatironinstitute.org/forum/#!forum/triqs
 
 You can get this information from copy and pasting the output of
 ```bash
-python -c "from app4triqs.version import *; show_version(); show_git_hash();"
+python -c "from nda.version import *; show_version(); show_git_hash();"
 ```
 from the command line. Also, please include the OS and what version of the OS you're running.
 
