@@ -26,7 +26,7 @@ endif()
 
 # ############
 # Define Project
-project(NDA VERSION 2.2.0 LANGUAGES CXX)
+project(NDA VERSION 2.2.0 LANGUAGES C CXX)
 
 # Get the git hash & print status
 execute_process(COMMAND git rev-parse HEAD OUTPUT_VARIABLE PROJECT_GIT_HASH OUTPUT_STRIP_TRAILING_WHITESPACE)
