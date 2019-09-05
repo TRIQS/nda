@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include <app4triqs/app4triqs.hpp>
+#include <nda/nda.hpp>
 
-using namespace app4triqs;
+using namespace nda;
 
 TEST(Toto, Add) { // NOLINT
 

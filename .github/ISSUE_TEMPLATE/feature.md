@@ -23,7 +23,7 @@ Why are we doing this? What use cases does it support? What is the expected outc
 ### Describe alternatives you've considered
 
 A clear and concise description of the alternative solutions you've considered.
-Be sure to explain why the existing customizability of app4triqs isn't suitable for this feature.
+Be sure to explain why the existing customizability of nda isn't suitable for this feature.
 
 ### Additional context
 

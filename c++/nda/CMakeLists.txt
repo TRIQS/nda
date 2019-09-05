@@ -2,18 +2,18 @@ file(GLOB_RECURSE sources *.cpp)
 add_library(nda_c ${sources})
 
 # Link against dependencies
-target_link_libraries(app4triqs_c PRIVATE project_warnings)
+target_link_libraries(nda_c PRIVATE project_warnings)
 
 # Configure compilation
-target_compile_options(app4triqs_c PUBLIC -fPIC -std=c++17)
-target_include_directories(app4triqs_c PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/c++>)
-target_compile_definitions(app4triqs_c PUBLIC
-				APP4TRIQS_GIT_HASH=${PROJECT_GIT_HASH}
-				$<$<CONFIG:Debug>:APP4TRIQS_DEBUG>
+target_compile_options(nda_c PUBLIC -fPIC -std=c++17)
+target_include_directories(nda_c PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/c++>)
+target_compile_definitions(nda_c PUBLIC
+				NDA_GIT_HASH=${PROJECT_GIT_HASH}
+				$<$<CONFIG:Debug>:NDA_DEBUG>
 			  )
 
 # Install library and headers
-install(TARGETS app4triqs_c EXPORT app4triqs-targets DESTINATION lib)
+install(TARGETS nda_c EXPORT nda-targets DESTINATION lib)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
 
 
@@ -61,8 +61,8 @@ set(sanitizers "")
 option(ASAN OFF "Compile library and executables with LLVM Address Sanitizer")
 if(ASAN)
   list(APPEND sanitizers asan)
-  target_compile_options(app4triqs_c PRIVATE -fsanitize=address -fno-omit-frame-pointer -ggdb3)
-  target_link_libraries(app4triqs_c INTERFACE "-fsanitize=address -fno-omit-frame-pointer")
+  target_compile_options(nda_c PRIVATE -fsanitize=address -fno-omit-frame-pointer -ggdb3)
+  target_link_libraries(nda_c INTERFACE "-fsanitize=address -fno-omit-frame-pointer")
   if(NOT DEFINED ENV{ASAN_OPTIONS})
     message(WARNING "ASAN_OPTIONS is not set. Consider setting ASAN_OPTIONS=symbolize=1:detect_leaks=0 when running tests")
   endif()
@@ -72,8 +72,8 @@ endif()
 option(UBSAN OFF "Compile library and executables with LLVM Undefined Behavior Sanitizer")
 if(UBSAN)
   list(APPEND sanitizers ubsan)
-  target_compile_options(app4triqs_c PUBLIC -fsanitize=undefined -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fno-omit-frame-pointer -ggdb3)
-  target_link_libraries(app4triqs_c INTERFACE "-fsanitize=undefined -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fno-omit-frame-pointer")
+  target_compile_options(nda_c PUBLIC -fsanitize=undefined -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fno-omit-frame-pointer -ggdb3)
+  target_link_libraries(nda_c INTERFACE "-fsanitize=undefined -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fno-omit-frame-pointer")
   if(NOT DEFINED ENV{UBSAN_OPTIONS})
     message(WARNING "UBSAN_OPTIONS is not set. Consider setting UBSAN_OPTIONS=symbolize=1:print_stacktrace=1:halt_on_error=1 when running tests")
   endif()
@@ -83,6 +83,6 @@ if(sanitizers)
   list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
   find_package(sanitizer REQUIRED ${sanitizers})
   if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
-    target_link_libraries(app4triqs_c INTERFACE "-fuse-ld=gold")
+    target_link_libraries(nda_c INTERFACE "-fuse-ld=gold")
   endif()
 endif()
