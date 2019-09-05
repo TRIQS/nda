@@ -5,7 +5,7 @@
 set     name        nda
 set     version     @NDA_VERSION@
 set     root        @CMAKE_INSTALL_PREFIX@
-set     git_hash    @NDA_GIT_HASH@
+set     git_hash    @PROJECT_GIT_HASH@
 
 set     url         "https://github.com/TRIQS/nda"
 set     description "An example application using cpp2py and triqs."
@@ -20,11 +20,7 @@ proc ModulesHelp { } {
     puts stderr "Git hash:    $git_hash"
 }
 
-# You may need to edit the next line if cpp2py module is installed
-# under a different name in your setup.
-prereq cpp2py/@CPP2PY_VERSION@
-
-# Only one version of nda can be loaded at a time
+# Only one version of app4triqs can be loaded at a time
 conflict $name
 
 setenv          NDA_ROOT      $root
@@ -35,5 +31,4 @@ prepend-path    PATH                $root/bin
 prepend-path    CPLUS_INCLUDE_PATH  $root/include
 prepend-path    LIBRARY_PATH        $root/lib
 prepend-path    LD_LIBRARY_PATH     $root/lib
-prepend-path    PYTHONPATH          $root/@CPP2PY_PYTHON_LIB_DEST_ROOT@
-prepend-path    CMAKE_PREFIX_PATH   $root/share/cmake
+prepend-path    CMAKE_PREFIX_PATH   $root/lib/cmake/app4triqs

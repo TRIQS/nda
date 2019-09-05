@@ -1,8 +1,11 @@
-# Copy reference h5 files to binary dir
-file(GLOB all_h5_files *.h5)
-file(COPY ${all_h5_files} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+# Copy h5 files to binary dir
+file(GLOB_RECURSE all_h5_ref_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.ref.h5)
+foreach(file ${all_h5_ref_files})
+  configure_file(${file} ${file} COPYONLY)
+endforeach()
 
-# The list of all c++ tests
+# List of all tests
+#file(GLOB_RECURSE all_tests RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 set(all_tests nda_idx_map nda_storage nda_basic nda_expr_template nda_map nda_alloc_poison nda_algorithms nda_arithmetic nda_array_of_non_pod nda_iterators nda_h5  nda_bound_check nda_stl )
 
 #=== build gtest as an external project ===
@@ -36,35 +39,28 @@ set_target_properties(gtest PROPERTIES
   INTERFACE_COMPILE_OPTIONS "-isystem;${GTEST_ROOT}/include"
 )
 
-#=== Add all tests and register them for the static analyzer checks ===
-
-foreach(t ${all_tests})
-  #string(REPLACE ".cpp" "" t ${t1})  
-
-  add_executable(${t} ${CMAKE_CURRENT_SOURCE_DIR}/${t}.cpp)
-  target_link_libraries(${t} nda_c gtest)
-  add_test(${t} ${CMAKE_CURRENT_BINARY_DIR}/${t})
+foreach(test ${all_tests})
+  get_filename_component(test_name ${test} NAME_WE)
+  get_filename_component(test_dir ${test} DIRECTORY)
+  add_executable(${test_name} ${test})
+  set_property(TARGET ${test_name} PROPERTY RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test_dir})
+  target_link_libraries(${test_name} app4triqs_c gtest pthread project_warnings)
+  add_test(NAME ${test_name} COMMAND ${test_name} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test_dir})
   # Run clang-tidy if found
   if(CLANG_TIDY_EXECUTABLE)
-    set_target_properties(${t} PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXECUTABLE}")
+    set_target_properties(${test_name} PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXECUTABLE}")
   endif()
   # Run cppcheck if found
   if(CPPCHECK_EXECUTABLE)
     add_custom_command(
-      TARGET ${t}
+      TARGET ${test_name}
       COMMAND ${CPPCHECK_EXECUTABLE}
       --enable=warning,style,performance,portability
       --std=c++14
       --template=gcc
       --verbose
       --quiet
-      ${CMAKE_CURRENT_SOURCE_DIR}/${t}.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.cpp
     )
   endif()
 endforeach()
-
-# Set UBSan Options for all tests
-set_property(TEST ${all_tests} PROPERTY
-  ENVIRONMENT
-    UBSAN_OPTIONS=print_stacktrace=1:halt_on_error=1:$ENV{UBSAN_OPTIONS}
-)
