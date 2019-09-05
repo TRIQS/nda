@@ -50,7 +50,7 @@ endif()
 # -- c2py --
 # h5 also pulls in c2py (via FetchContent); the NOT TARGET guard makes resolution
 # order-independent so that whichever project configures c2py first wins.
-if((PythonSupport OR (NOT IS_SUBPROJECT AND Build_Documentation)) AND NOT TARGET c2py)
+if(NOT IS_SUBPROJECT AND Build_Documentation AND NOT TARGET c2py)
   external_dependency(c2py
     GIT_REPO https://github.com/flatironinstitute/c2py
     GIT_TAG unstable

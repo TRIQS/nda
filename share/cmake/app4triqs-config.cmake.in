@@ -32,10 +32,4 @@ message(STATUS "Found @PROJECT_NAME@-config.cmake with version @PROJECT_VERSION@
 # Was the Project built with Documentation?
 set(@PROJECT_NAME@_WITH_DOCUMENTATION @Build_Documentation@ CACHE BOOL "Was @PROJECT_NAME@ build with documentation?")
 
-# Was the Project built with PythonSupport?
-set(@PROJECT_NAME@_WITH_PYTHON_SUPPORT @PythonSupport@ CACHE BOOL "Was @PROJECT_NAME@ build with python support?")
-if(@PythonSupport@)
-  set(@PROJECT_NAME@_MODULE_DIR @CMAKE_INSTALL_PREFIX@/@PYTHON_LIB_DEST_ROOT@ CACHE BOOL "The @PROJECT_NAME@ python module directory")
-endif()
-
 endif()
