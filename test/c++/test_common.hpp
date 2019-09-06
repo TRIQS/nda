@@ -4,7 +4,7 @@
 
 #define NDA_BOUNDCHECK
 #define NDA_ENFORCE_BOUNDCHECK
-#include <nda.hpp>
+#include <nda/nda.hpp>
 #include <nda/gtest_tools.hpp>
 
 using namespace std::complex_literals;

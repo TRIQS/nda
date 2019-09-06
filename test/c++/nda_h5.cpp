@@ -1,6 +1,6 @@
 #define TRIQS_ARRAYS_ENFORCE_BOUNDCHECK
 #include "./test_common.hpp"
-#include <h5.hpp>
+#include <h5/h5.hpp>
 // ==============================================================
 
 TEST(Array, H5) {
