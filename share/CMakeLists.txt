@@ -13,7 +13,7 @@ install(
 message(STATUS "***************************************************************")
 message(STATUS "* Use:                                                         ")
 message(STATUS "*                                                              ")
-message(STATUS "*   source ${CMAKE_INSTALL_PREFIX}/share/ndavars.sh      ")
+message(STATUS "*   source ${CMAKE_INSTALL_PREFIX}/share/ndavars.sh            ")
 message(STATUS "*                                                              ")
 message(STATUS "* to set up the environment variables                          ")
 message(STATUS "***************************************************************")
