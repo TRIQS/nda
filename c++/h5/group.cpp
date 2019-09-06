@@ -1,4 +1,4 @@
-#include <vector>
+#include <vector+>
 #include "./group.hpp"
 #include "./stl/string.hpp"
 
@@ -61,7 +61,7 @@ namespace h5 {
   }
 
   group group::open_group(std::string const &key) const {
-    if (key.empty()) return group{h5_object::from_borrowed(id)};
+    if (key.empty()) return *this;
     if (!has_key(key)) throw std::runtime_error("no subgroup " + key + " in the group");
     hid_t sg = H5Gopen2(id, key.c_str(), H5P_DEFAULT);
     if (sg < 0) throw std::runtime_error("Error in opening the subgroup " + key);
@@ -77,7 +77,7 @@ namespace h5 {
   }
 
   group group::create_group(std::string const &key, bool delete_if_exists) const {
-    if (key.empty()) return group{h5_object::from_borrowed(id)};
+    if (key.empty()) return *this;
     unlink_key_if_exists(key);
     hid_t id_g = H5Gcreate2(id, key.c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
     if (id_g < 0) throw std::runtime_error("Cannot create the subgroup " + key + " of the group" + name());

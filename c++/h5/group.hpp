@@ -100,4 +100,15 @@ namespace h5 {
     std::vector<std::string> get_all_subgroup_dataset_names() const;
   };
 
+    //------------- read iff a key exists ------------------
+
+  template <typename T> inline int h5_try_read(group fg, std::string key, T &t) {
+    if (fg.has_key(key)) {
+      h5_read(fg, key, t);
+      return 1;
+    }
+    return 0;
+  }
+
+
 } // namespace h5
