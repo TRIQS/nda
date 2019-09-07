@@ -17,7 +17,8 @@ namespace h5::array_interface {
   // the dataspace corresponding to the array. Contiguous data only...
   dataspace get_data_space(h5_array_view const &v) {
 
-    dataspace ds = H5Screate_simple(v.slab.rank(), v.slab.count.data(), NULL);
+    dataspace ds = H5Screate_simple(v.slab.rank(), v.L_tot.data(), NULL);
+//    dataspace ds = H5Screate_simple(v.slab.rank(), v.slab.count.data(), NULL);
     if (!ds.is_valid()) throw std::runtime_error("Cannot create the dataset");
 
     herr_t err = H5Sselect_hyperslab(ds, H5S_SELECT_SET, v.slab.offset.data(), v.slab.stride.data(), v.slab.count.data(),
@@ -29,13 +30,13 @@ namespace h5::array_interface {
 
   //--------------------------------------------------------
 
-  dataset write(group g, std::string const &name, h5_array_view const &v, bool compress) {
+  void write(group g, std::string const &name, h5_array_view const &v, bool compress) {
 
     g.unlink_key_if_exists(name);
 
     bool is_scalar = (v.rank() == 0);
 
-    dataspace d_space = (is_scalar ? dataspace(H5Screate(H5S_SCALAR)) : get_data_space(v));
+    dataspace file_dspace = H5Screate_simple(v.slab.rank(), v.slab.count.data(), NULL);
 
     // FIXME : is it a good idea ??
     proplist cparms = H5P_DEFAULT;
@@ -48,10 +49,11 @@ namespace h5::array_interface {
       H5Pset_deflate(cparms, 8);
     }
 
-    dataset ds = H5Dcreate2(g, name.c_str(), v.ty, d_space, H5P_DEFAULT, cparms, H5P_DEFAULT);
+    dataset ds = H5Dcreate2(g, name.c_str(), v.ty, file_dspace, H5P_DEFAULT, cparms, H5P_DEFAULT);
     if (!ds.is_valid()) throw std::runtime_error("Cannot create the dataset " + name + " in the group" + g.name());
 
-    if (H5Sget_simple_extent_npoints(d_space) > 0) { // avoid writing empty arrays
+    dataspace mem_d_space = (is_scalar ? dataspace(H5Screate(H5S_SCALAR)) : get_data_space(v));
+    if (H5Sget_simple_extent_npoints(mem_d_space) > 0) { // avoid writing empty arrays
       // CHECK IS SCALAR OK HERE ?
 
       //herr_t err;
@@ -59,10 +61,11 @@ namespace h5::array_interface {
       //err = H5Dwrite(ds, v.ty, H5S_ALL, H5S_ALL, H5P_DEFAULT, v.start);
       //else
       //err = H5Dwrite(ds, v.ty, d_space, H5S_ALL, H5P_DEFAULT, v.start);
-      herr_t err = H5Dwrite(ds, v.ty, d_space, H5S_ALL, H5P_DEFAULT, v.start);
+      herr_t err = H5Dwrite(ds, v.ty, mem_d_space, H5S_ALL, H5P_DEFAULT, v.start);
       if (err < 0) throw std::runtime_error("Error writing the scalar dataset " + name + " in the group" + g.name());
     }
-    return ds;
+    if (v.is_complex) h5_write_attribute(ds, "__complex__", "1");
+    
   }
 
   //-------------------------------------------------------------
@@ -99,7 +102,7 @@ namespace h5::array_interface {
 
     //  get the type from the file
     datatype ty = H5Dget_type(ds);
-    return {std::move(dims_out), ty};
+    return {std::move(dims_out), ty, has_complex_attribute};
   }
 
   //--------------------------------------------------------

@@ -166,7 +166,7 @@ TEST(Array, H5ArrayString) {
 // -----------------------------------------------------
 // Testing the loading of nda::array of double into complex
 // -----------------------------------------------------
-
+/*
 TEST(Array, H5RealIntoComplex) {
 
   nda::array<double, 2> D(2, 3);
@@ -191,7 +191,7 @@ TEST(Array, H5RealIntoComplex) {
     EXPECT_ARRAY_NEAR(C, D);
   }
 }
-
+*/
 // ==============================================================
 /*
 // -----------------------------------------------------

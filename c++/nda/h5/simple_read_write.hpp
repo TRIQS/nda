@@ -35,25 +35,40 @@ namespace nda {
     //     stride[0]        =   L[rank-1] * L[rank-2] * L[1] * strides_h5 [0]
     //     size             =   L[rank-1] * L[rank-2] * L[1] * L[0]
 
+   //   stride  = 3 1
+    // h5 stride = 1  1
+    // Ltot  = 4 1
+
     inline std::pair<v_t, v_t> get_L_tot_and_strides_h5(long const *stri, int rank, long total_size) {
       v_t Ltot(rank), strides_h5(rank);
-     
+
       for (int u = 0; u < rank; ++u) strides_h5[u] = stri[u];
 
-      long L0 = total_size;
+      //long L0 = total_size;
       for (int u = rank - 2; u >= 0; --u) {
         // L[u+1] as  gcd of size and stride[u] ... stride[0]
-        long L = L0;
+        long L = strides_h5[u]; //L0;
         // L becomes the  gcd
-        for (int v = u; v >= 0; --v) { L = std::gcd(L, strides_h5[v]); }
+        for (int v = u-1; v >= 0; --v) { L = std::gcd(L, strides_h5[v]); }
         // divides
         for (int v = u; v >= 0; --v) {
           strides_h5[v] /= L;
-          L0 /= L;
+          //L0 /= L;
         }
         Ltot[u + 1] = L;
       }
-      Ltot[0] = L0;
+      Ltot[0] = total_size;//L0;
+
+      std::cout  << " ------- RESULT ------- "<< std::endl;
+	for (int u =0; u<rank; ++u) 
+	{
+NDA_PRINT(u);
+NDA_PRINT(stri[u]);
+NDA_PRINT(Ltot[u]);
+NDA_PRINT(strides_h5[u]);
+	}
+      std::cout  << "------- END RESULT --------- "<< std::endl;
+
       return {Ltot, strides_h5};
     }
   } // namespace h5_details
@@ -79,32 +94,25 @@ namespace nda {
         return h5::hdf5_type<typename get_value_t<A>::value_type>;
       }
     };
+    std::cout  << a <<std::endl;
+    h5::array_interface::h5_array_view v{_get_ty(), (void *)(a.data_start()), A::rank, is_complex};
 
-    h5::array_interface::h5_array_view v{_get_ty(), (void *)(a.data_start()), A::rank + (is_complex ? 1 : 0)};
-
-    auto [L_tot, strides_h5] =  h5_details::get_L_tot_and_strides_h5(a.indexmap().strides().data(), A::rank, a.size());
+    auto [L_tot, strides_h5] = h5_details::get_L_tot_and_strides_h5(a.indexmap().strides().data(), A::rank, a.size());
 
     for (int u = 0; u < A::rank; ++u) {
 
-      NDA_PRINT(u);
-      NDA_PRINT(L_tot[u]);
-      NDA_PRINT(strides_h5[u]);
+     /* NDA_PRINT(u);*/
+      //NDA_PRINT(L_tot[u]);
+      //NDA_PRINT(strides_h5[u]);
 
-      v.slab.count[u] = a.shape()[u];
+      v.slab.count[u]  = a.shape()[u];
       v.slab.stride[u] = strides_h5[u];
-      v.L_tot[u]        = L_tot[u];
+      v.L_tot[u]       = L_tot[u];
     }
 
-    if (is_complex) {
-      v.slab.count[A::rank] = 2; // stride is already one
-      v.L_tot[A::rank]      = 2;
-    }
-
-    auto ds = h5::array_interface::write(g, name, v, true);
-
-    if (is_complex) h5_write_attribute(ds, "__complex__", "1");
+    h5::array_interface::write(g, name, v, true);
   }
-  
+
   /*
    * Read an array or a view from an hdf5 file
    * ArrayType The type of the array/matrix/vector, etc..
@@ -123,9 +131,11 @@ namespace nda {
 
     static constexpr bool is_complex = is_complex_v<typename A::value_t>;
 
-    if (lt.rank() != A::rank) NDA_RUNTIME_ERROR << " h5 read of nda::array : incorrect rank. In file: " << lt.rank() << "  In memory " << A::rank;
+    int rank_in_file = lt.rank() - (is_complex ? 1 : 0);
+    if (rank_in_file != A::rank)
+      NDA_RUNTIME_ERROR << " h5 read of nda::array : incorrect rank. In file: " << rank_in_file << "  In memory " << A::rank;
     shape_t<A::rank> L;
-    for (int u = 0; u < A::rank; ++u) L[u] = lt.lengths[u];
+    for (int u = 0; u < A::rank; ++u) L[u] = lt.lengths[u]; // NB : correct for complex
 
     if constexpr (is_regular_v<A>) {
       if (a.shape() != L) a.resize(L);
@@ -137,18 +147,13 @@ namespace nda {
       // NOTION OF hyperslab vs nda strides ...
     }
 
-    h5::array_interface::h5_array_view v{h5::hdf5_type<get_value_t<A>>, (void *)(a.data_start()), A::rank + (is_complex ? 1 : 0)};
+    h5::array_interface::h5_array_view v{h5::hdf5_type<get_value_t<A>>, (void *)(a.data_start()), A::rank, is_complex};
     for (int u = 0; u < A::rank; ++u) {
       v.slab.count[u] = L[u];
-      v.L_tot[u]       = L[u];
-    }
-    if (is_complex) {
-      v.slab.count[A::rank] = 2; // stride is already one
-      v.L_tot[A::rank]      = 2;
+      v.L_tot[u]      = L[u];
     }
 
     h5::array_interface::read(g, name, v, lt);
   }
-
 
 } // namespace nda

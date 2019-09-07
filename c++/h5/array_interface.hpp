@@ -21,6 +21,7 @@ namespace h5::array_interface {
   struct h5_lengths_type {
     v_t lengths;
     datatype ty;
+    bool has_complex_attribute;
 
     int rank() const { return lengths.size(); }
   };
@@ -53,9 +54,13 @@ namespace h5::array_interface {
     void *start;    // start of data. It MUST be a pointer of T* with ty = hdf5_type<T>
     v_t L_tot;      // lengths of the parent contiguous array
     hyperslab slab; // hyperslab
+    bool is_complex;
 
     // Constructor : unique to enforce the proper sizes of array
-    h5_array_view(datatype ty, void *start, int rank) : ty(ty), start(start), L_tot(rank), slab(rank) {}
+    h5_array_view(datatype ty, void *start, int rank, bool is_complex)
+       : ty(ty), start(start), L_tot(rank + is_complex), slab(rank, is_complex), is_complex(is_complex) {
+      if (is_complex) L_tot[rank] = 2;
+    }
 
     int rank() const { return slab.rank(); }
   };
@@ -64,7 +69,7 @@ namespace h5::array_interface {
   h5_lengths_type get_h5_lengths_type(group g, std::string const &name);
 
   // Write the view of the array to the group
-  dataset write(group g, std::string const &name, h5_array_view const &a, bool compress = false);
+  void write(group g, std::string const &name, h5_array_view const &a, bool compress = false);
 
   // INTERNAL [python interface only]
   // Same as before, but if lt = get_h5_lengths_type(g,name) has already been computed
@@ -80,4 +85,4 @@ namespace h5::array_interface {
   // Read as attribute
   void read_attribute(hid_t id, std::string const &name, h5_array_view v);
 
-} // namespace h5::details
+} // namespace h5::array_interface
