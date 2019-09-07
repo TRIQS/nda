@@ -37,11 +37,9 @@ namespace h5::array_interface {
 
     g.unlink_key_if_exists(name);
 
-    bool is_scalar = (v.rank() == 0);
-
     // Some properties for the dataset : add compression
     proplist cparms = H5P_DEFAULT;
-    if (compress and !is_scalar) {
+    if (compress and (v.rank() != 0)) {
       int n_dims = v.rank();
       hsize_t chunk_dims[n_dims];
       for (int i = 0; i < v.rank(); ++i) chunk_dims[i] = std::max(v.slab.count[i], hsize_t{1});
