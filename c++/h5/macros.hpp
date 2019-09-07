@@ -31,22 +31,22 @@
 #define H5_REQUIRES(...) requires(__VA_ARGS__)
 #endif
 
-#define H5_PRINT(X) std::cerr << AS_STRING(X) << " = " << X << "      at " << __FILE__ << ":" << __LINE__ << '\n'
+#define H5_PRINT(X) std::cerr << H5_AS_STRING(X) << " = " << X << "      at " << __FILE__ << ":" << __LINE__ << '\n'
 
 #define H5_FORCEINLINE __inline__ __attribute__((always_inline))
 
 #define H5_EXPECTS(X)                                                                                                                                \
   if (!(X)) {                                                                                                                                        \
-    std::cerr << "Precondition " << AS_STRING(X) << " violated at " << __FILE__ << ":" << __LINE__ << "\n";                                          \
+    std::cerr << "Precondition " << H5_AS_STRING(X) << " violated at " << __FILE__ << ":" << __LINE__ << "\n";                                          \
     std::terminate();                                                                                                                                \
   }
 #define H5_ASSERT(X)                                                                                                                                 \
   if (!(X)) {                                                                                                                                        \
-    std::cerr << "Assertion " << AS_STRING(X) << " violated at " << __FILE__ << ":" << __LINE__ << "\n";                                             \
+    std::cerr << "Assertion " << H5_AS_STRING(X) << " violated at " << __FILE__ << ":" << __LINE__ << "\n";                                             \
     std::terminate();                                                                                                                                \
   }
 #define H5_ENSURES(X)                                                                                                                                \
   if (!(X)) {                                                                                                                                        \
-    std::cerr << "Postcondition " << AS_STRING(X) << " violated at " << __FILE__ << ":" << __LINE__ << "\n";                                         \
+    std::cerr << "Postcondition " << H5_AS_STRING(X) << " violated at " << __FILE__ << ":" << __LINE__ << "\n";                                         \
     std::terminate();                                                                                                                                \
   }

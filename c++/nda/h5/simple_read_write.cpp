@@ -3,7 +3,7 @@
 
 namespace nda::h5_details {
 
-  using v_t = h5::array_interface::v_t; // the proper vector type for the h5 interface
+  using v_t = h5::v_t; // the proper vector type for the h5 interface
 
   // given the lengths and strides, return a L_tot. One function for all ranks (save code).
   // Assume layout is C.

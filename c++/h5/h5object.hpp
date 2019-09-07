@@ -11,6 +11,7 @@ namespace h5 {
   // not by the users of the library.
   using hid_t   = int64_t;
   using hsize_t = unsigned long long;
+  using v_t = std::vector<hsize_t>;
 
   // Correspondance T -> hdf5 type
   template <typename T> hid_t hdf5_type;

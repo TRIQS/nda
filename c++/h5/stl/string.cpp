@@ -2,6 +2,7 @@
 #include <hdf5.h>
 #include <hdf5_hl.h>
 #include <vector>
+#include <numeric>
 
 namespace h5 {
 
@@ -19,7 +20,7 @@ namespace h5 {
     datatype dt     = str_datatype(value.size() + 1);
     dataspace space = H5Screate(H5S_SCALAR);
     // FIXME : remove create_dataset
-    dataset ds      = g.create_dataset(name, dt, space);
+    dataset ds = g.create_dataset(name, dt, space);
 
     auto err = H5Dwrite(ds, dt, H5S_ALL, H5S_ALL, H5P_DEFAULT, (void *)(value.c_str()));
     if (err < 0) throw std::runtime_error("Error writing the string named" + name + " in the group" + g.name());
@@ -82,6 +83,105 @@ namespace h5 {
     if (err < 0) throw std::runtime_error("Cannot read the attribute " + name);
 
     s.append(&(buf.front()));
+  }
+
+  // -------------------------------------------------------------------
+  // the string datatype
+  datatype char_buf::dtype() const {
+    datatype dt = H5Tcopy(H5T_C_S1);
+    H5Tset_size(dt, lengths.back());
+    return dt;
+  }
+
+  // the dataspace (without last dim, which is the string).
+  dataspace char_buf::dspace() const {
+    dataspace ds = H5Screate_simple(lengths.size() - 1, lengths.data(), NULL); // rank is size of length - 1
+    if (!ds.is_valid()) throw make_runtime_error("Cannot create the dataset");
+    return ds;
+  }
+
+  // -----------   WRITE  ------------
+
+  void h5_write(group g, std::string const &name, char_buf const &cb) {
+    auto dt     = cb.dtype();
+    auto dspace = cb.dspace();
+
+    h5::dataset ds = g.create_dataset(name, dt, dspace);
+
+    auto err = H5Dwrite(ds, dt, dspace, H5S_ALL, H5P_DEFAULT, (void *)cb.buffer.data());
+    if (err < 0) throw make_runtime_error("Error writing the vector<string> ", name, " in the group", g.name());
+  }
+
+  // -----------   WRITE  ATTRIBUTE ------------
+
+  void h5_write_attribute(hid_t id, std::string const &name, char_buf const &cb) {
+    auto dt     = cb.dtype();
+    auto dspace = cb.dspace();
+
+    attribute attr = H5Acreate2(id, name.c_str(), dt, dspace, H5P_DEFAULT, H5P_DEFAULT);
+    if (!attr.is_valid()) throw make_runtime_error("Cannot create the attribute ", name);
+
+    herr_t status = H5Awrite(attr, dt, (void *)cb.buffer.data());
+    if (status < 0) throw make_runtime_error("Cannot write the attribute ", name);
+  }
+
+  // -----------  READ  ------------
+
+  void h5_read(group g, std::string const &name, char_buf &_cb) {
+    dataset ds            = g.open_dataset(name);
+    h5::dataspace d_space = H5Dget_space(ds);
+    datatype ty           = H5Dget_type(ds);
+
+    char_buf cb_out;
+
+    int dim = H5Sget_simple_extent_ndims(d_space);
+    cb_out.lengths.resize(dim);
+    H5Sget_simple_extent_dims(d_space, cb_out.lengths.data(), NULL);
+
+    size_t size = H5Tget_size(ty);
+
+    cb_out.lengths.push_back(size); //  2 ?? last one is size of the string +1
+    long ltot = std::accumulate(cb_out.lengths.begin(), cb_out.lengths.end(), 1, std::multiplies<>());
+    cb_out.buffer.resize(ltot, 0x00);
+
+    H5_PRINT(ltot);
+    H5_PRINT(cb_out.lengths.size());
+    H5_PRINT(cb_out.lengths[0]);
+    H5_PRINT(cb_out.lengths[1]);
+    H5_PRINT(cb_out.buffer.size());
+    H5_PRINT(size);
+
+    auto err = H5Dread(ds, cb_out.dtype(), cb_out.dspace(), H5S_ALL, H5P_DEFAULT, (void *)cb_out.buffer.data());
+    if (err < 0) throw make_runtime_error("Error reading the vector<string> ", name, " in the group", g.name());
+
+    _cb = std::move(cb_out);
+  }
+
+  // ----- read attribute -----
+
+  void h5_read_attribute(hid_t id, std::string const &name, char_buf &_cb) {
+
+    attribute attr = H5Aopen(id, name.c_str(), H5P_DEFAULT);
+    if (!attr.is_valid()) throw make_runtime_error("Cannot open the attribute ", name);
+
+    dataspace d_space = H5Aget_space(attr);
+
+    char_buf cb_out;
+
+    int dim = H5Sget_simple_extent_ndims(d_space);
+    cb_out.lengths.resize(dim);
+    H5Sget_simple_extent_dims(d_space, cb_out.lengths.data(), NULL);
+
+    size_t size = H5Aget_storage_size(attr);
+    cb_out.lengths.push_back(size + 1); // last one is size of the string +1
+
+    long ltot = std::accumulate(cb_out.lengths.begin(), cb_out.lengths.end(), 1, std::multiplies<>());
+    cb_out.buffer.resize(0x00);
+
+    auto err = H5Aread(attr, cb_out.dtype(), (void *)cb_out.buffer.data());
+    if (err < 0) throw make_runtime_error("Cannot read the attribute ", name);
+
+    _cb = std::move(cb_out);
   }
 
 } // namespace h5

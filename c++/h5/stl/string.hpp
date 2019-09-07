@@ -46,4 +46,23 @@ namespace h5 {
 
   inline void h5_read_attribute(hid_t id, std::string const &name, char *s) = delete;
 
+  // char_buf contains an n dimensional array of strings as fixed size strings, flatten in a 1d array of char.
+  // the last dimension is the max length of the strings + 1, because of the ending 0 in C !
+  struct char_buf {
+    std::vector<char> buffer;
+    v_t lengths;
+
+    // the string datatype
+    datatype dtype() const;
+
+    // the dataspace (without last dim, which is the string).
+    dataspace dspace() const;
+  };
+
+  // technical functions
+  void h5_write(group g, std::string const &name, char_buf const &cb);
+  void h5_write_attribute(hid_t id, std::string const &name, char_buf const &cb);
+  void h5_read(group g, std::string const &name, char_buf &_cb);
+  void h5_read_attribute(hid_t id, std::string const &name, char_buf &_cb);
+
 } // namespace h5

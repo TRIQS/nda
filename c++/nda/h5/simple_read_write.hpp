@@ -23,6 +23,9 @@ namespace nda {
   void h5_write(h5::group g, std::string const &name, A const &a) REQUIRES(is_regular_or_view_v<A>) {
     static_assert(std::is_same_v<std::string, get_value_t<A>> or is_scalar_v<get_value_t<A>>, "Only array on basic types or strings");
 
+    if constexpr (std::is_same_v<typename A::value_t, std::string>) { // special case of string. Like vector of string
+//      h5_write(g, name, to_char_buf(a))); 
+    } 
     static constexpr bool is_complex = is_complex_v<typename A::value_t>;
 
     h5_details::write(g, name, h5::hdf5_type<get_value_t<A>>, (void *)(a.data_start()), A::rank, is_complex, a.indexmap().lengths().data(), a.indexmap().strides().data(),

@@ -5,17 +5,8 @@
 
 #include "./group.hpp"
 
-/*
- * 2) write : pass Ltot + slab for the memory <-> memory dataspace (2 overload)
- *
- *    read : idem : pass data Ltot + slab
- * 
- *    string : share code with vector of string !
- */
-
 namespace h5::array_interface {
 
-  using v_t = std::vector<hsize_t>;
 
   // Stores the hdf5 type and the dims
   struct h5_lengths_type {
