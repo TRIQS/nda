@@ -15,10 +15,11 @@ namespace h5::array_interface {
 
   //------------------------------------------------
   // the dataspace corresponding to the array. Contiguous data only...
-  dataspace get_data_space(h5_array_view const &v) {
+  dataspace make_mem_dpace(h5_array_view const &v) {
+
+    if (v.rank() == 0) return H5Screate(H5S_SCALAR);
 
     dataspace ds = H5Screate_simple(v.slab.rank(), v.L_tot.data(), NULL);
-//    dataspace ds = H5Screate_simple(v.slab.rank(), v.slab.count.data(), NULL);
     if (!ds.is_valid()) throw std::runtime_error("Cannot create the dataset");
 
     herr_t err = H5Sselect_hyperslab(ds, H5S_SELECT_SET, v.slab.offset.data(), v.slab.stride.data(), v.slab.count.data(),
@@ -28,6 +29,8 @@ namespace h5::array_interface {
     return ds;
   }
 
+  //-------------------------------------------------------
+  //                    write
   //--------------------------------------------------------
 
   void write(group g, std::string const &name, h5_array_view const &v, bool compress) {
@@ -36,11 +39,9 @@ namespace h5::array_interface {
 
     bool is_scalar = (v.rank() == 0);
 
-    dataspace file_dspace = H5Screate_simple(v.slab.rank(), v.slab.count.data(), NULL);
-
-    // FIXME : is it a good idea ??
+    // Some properties for the dataset : add compression
     proplist cparms = H5P_DEFAULT;
-    if (compress and !is_scalar) { // if we wish to compress, yes by default ?
+    if (compress and !is_scalar) {
       int n_dims = v.rank();
       hsize_t chunk_dims[n_dims];
       for (int i = 0; i < v.rank(); ++i) chunk_dims[i] = std::max(v.slab.count[i], hsize_t{1});
@@ -49,23 +50,22 @@ namespace h5::array_interface {
       H5Pset_deflate(cparms, 8);
     }
 
+    // dataspace for the dataset in the file
+    dataspace file_dspace = H5Screate_simple(v.slab.rank(), v.slab.count.data(), NULL);
+
+    // create the dataset in the file
     dataset ds = H5Dcreate2(g, name.c_str(), v.ty, file_dspace, H5P_DEFAULT, cparms, H5P_DEFAULT);
     if (!ds.is_valid()) throw std::runtime_error("Cannot create the dataset " + name + " in the group" + g.name());
 
-    dataspace mem_d_space = (is_scalar ? dataspace(H5Screate(H5S_SCALAR)) : get_data_space(v));
+    // memory data space
+    dataspace mem_d_space =  make_mem_dpace(v);
     if (H5Sget_simple_extent_npoints(mem_d_space) > 0) { // avoid writing empty arrays
-      // CHECK IS SCALAR OK HERE ?
-
-      //herr_t err;
-      //if (is_scalar)
-      //err = H5Dwrite(ds, v.ty, H5S_ALL, H5S_ALL, H5P_DEFAULT, v.start);
-      //else
-      //err = H5Dwrite(ds, v.ty, d_space, H5S_ALL, H5P_DEFAULT, v.start);
       herr_t err = H5Dwrite(ds, v.ty, mem_d_space, H5S_ALL, H5P_DEFAULT, v.start);
       if (err < 0) throw std::runtime_error("Error writing the scalar dataset " + name + " in the group" + g.name());
     }
+
+    // If we are dealing with complex, we had the attribute
     if (v.is_complex) h5_write_attribute(ds, "__complex__", "1");
-    
   }
 
   //-------------------------------------------------------------
@@ -74,18 +74,17 @@ namespace h5::array_interface {
 
     if (H5LTfind_attribute(id, name.c_str()) != 0) throw std::runtime_error("The attribute " + name + " is already present. Can not overwrite");
 
-    bool is_scalar    = (v.rank() == 0);
-    dataspace d_space = (is_scalar ? dataspace(H5Screate(H5S_SCALAR)) : get_data_space(v));
+    dataspace mem_d_space = make_mem_dpace(v);
 
-    //if (!is_scalar) throw std::runtime_error("Non scalar attribute not implemented");
-
-    attribute attr = H5Acreate2(id, name.c_str(), v.ty, d_space, H5P_DEFAULT, H5P_DEFAULT);
+    attribute attr = H5Acreate2(id, name.c_str(), v.ty, mem_d_space, H5P_DEFAULT, H5P_DEFAULT);
     if (!attr.is_valid()) throw std::runtime_error("Cannot create the attribute " + name);
 
-    auto status = H5Awrite(attr, v.ty, v.start);
-    if (status < 0) throw std::runtime_error("Cannot write the attribute " + name);
+    herr_t err = H5Awrite(attr, v.ty, v.start);
+    if (err < 0) throw std::runtime_error("Cannot write the attribute " + name);
   }
 
+  //-------------------------------------------------------
+  //                    READ
   //--------------------------------------------------------
 
   h5_lengths_type get_h5_lengths_type(group g, std::string const &name) {
@@ -118,20 +117,16 @@ namespace h5::array_interface {
                                + " while the array stored in the hdf5 file has type = " + get_name_of_h5_type(lt.ty));
 
     if (lt.rank() != v.rank())
-      throw std::runtime_error("h5 read. Rank mismatch : expecting a rank " + std::to_string(v.rank())
+      throw std::runtime_error("h5 read. Rank mismatch : expecting in file a rank " + std::to_string(v.rank())
                                + " while the array stored in the hdf5 file has rank = " + std::to_string(lt.rank()));
 
     //if (lt.lengths != v.slab.count)
     //throw std::runtime_error("h5 read. Lengths mismatch : expecting a rank " + std::to_string(v.rank())
     //+ " while the array stored in the hdf5 file has rank = " + std::to_string(lt.rank()));
 
+    dataspace mem_d_space = make_mem_dpace(v);
     if (H5Sget_simple_extent_npoints(file_d_space) > 0) {
-      // NO DISTINCTION SCALAR like for write
-      herr_t err;
-      if (v.rank() == 0)
-        err = H5Dread(ds, v.ty, H5S_ALL, file_d_space, H5P_DEFAULT, v.start);
-      else
-        err = H5Dread(ds, v.ty, get_data_space(v), file_d_space, H5P_DEFAULT, v.start);
+      herr_t err = H5Dread(ds, v.ty, mem_d_space, file_d_space, H5P_DEFAULT, v.start);
       if (err < 0) throw std::runtime_error("Error reading the scalar dataset " + name + " in the group" + g.name());
     }
   }
@@ -157,4 +152,4 @@ namespace h5::array_interface {
     if (err < 0) throw std::runtime_error("Cannot read the attribute " + name);
   }
 
-} // namespace h5::details
+} // namespace h5::array_interface

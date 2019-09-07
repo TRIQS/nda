@@ -34,8 +34,7 @@ namespace h5 {
   template <> hid_t hdf5_type<double>      = H5T_NATIVE_DOUBLE;
   template <> hid_t hdf5_type<long double> = H5T_NATIVE_LDOUBLE;
 
-  // FIXME complex double is like a double, but another ID to differentiate them. Never dereferenced.
-  template <> hid_t hdf5_type<std::complex<double>> = H5Tcopy(H5T_NATIVE_DOUBLE);
+  template <> hid_t hdf5_type<std::complex<double>> = H5T_NATIVE_DOUBLE;
 
   // bool. Use a lambda to initialize it.
   template <>

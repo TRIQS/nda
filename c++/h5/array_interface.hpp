@@ -71,9 +71,7 @@ namespace h5::array_interface {
   // Write the view of the array to the group
   void write(group g, std::string const &name, h5_array_view const &a, bool compress = false);
 
-  // INTERNAL [python interface only]
-  // Same as before, but if lt = get_h5_lengths_type(g,name) has already been computed
-  // it can be passed here to avoid a second call.
+  // EXPLAIN
   void read(group g, std::string const &name, h5_array_view v, h5_lengths_type lt);
 
   // Read the data into the view.

@@ -33,41 +33,30 @@ namespace nda {
     //     stride[rank -2]  =   L[rank-1] * strides_h5 [rank -2]
     //     stride[rank -3]  =   L[rank-1] * L[rank-2] * strides_h5 [rank -3]
     //     stride[0]        =   L[rank-1] * L[rank-2] * L[1] * strides_h5 [0]
-    //     size             =   L[rank-1] * L[rank-2] * L[1] * L[0]
-
-   //   stride  = 3 1
-    // h5 stride = 1  1
-    // Ltot  = 4 1
 
     inline std::pair<v_t, v_t> get_L_tot_and_strides_h5(long const *stri, int rank, long total_size) {
       v_t Ltot(rank), strides_h5(rank);
-
       for (int u = 0; u < rank; ++u) strides_h5[u] = stri[u];
+      Ltot[0] = total_size;
 
-      //long L0 = total_size;
       for (int u = rank - 2; u >= 0; --u) {
         // L[u+1] as  gcd of size and stride[u] ... stride[0]
-        long L = strides_h5[u]; //L0;
+        long L = strides_h5[u];
         // L becomes the  gcd
-        for (int v = u-1; v >= 0; --v) { L = std::gcd(L, strides_h5[v]); }
+        for (int v = u - 1; v >= 0; --v) { L = std::gcd(L, strides_h5[v]); }
         // divides
-        for (int v = u; v >= 0; --v) {
-          strides_h5[v] /= L;
-          //L0 /= L;
-        }
+        for (int v = u; v >= 0; --v) { strides_h5[v] /= L; }
         Ltot[u + 1] = L;
       }
-      Ltot[0] = total_size;//L0;
 
-      std::cout  << " ------- RESULT ------- "<< std::endl;
-	for (int u =0; u<rank; ++u) 
-	{
-NDA_PRINT(u);
-NDA_PRINT(stri[u]);
-NDA_PRINT(Ltot[u]);
-NDA_PRINT(strides_h5[u]);
-	}
-      std::cout  << "------- END RESULT --------- "<< std::endl;
+      std::cout << " ------- RESULT ------- " << std::endl;
+      for (int u = 0; u < rank; ++u) {
+        NDA_PRINT(u);
+        NDA_PRINT(stri[u]);
+        NDA_PRINT(Ltot[u]);
+        NDA_PRINT(strides_h5[u]);
+      }
+      std::cout << "------- END RESULT --------- " << std::endl;
 
       return {Ltot, strides_h5};
     }
@@ -94,17 +83,11 @@ NDA_PRINT(strides_h5[u]);
         return h5::hdf5_type<typename get_value_t<A>::value_type>;
       }
     };
-    std::cout  << a <<std::endl;
     h5::array_interface::h5_array_view v{_get_ty(), (void *)(a.data_start()), A::rank, is_complex};
 
     auto [L_tot, strides_h5] = h5_details::get_L_tot_and_strides_h5(a.indexmap().strides().data(), A::rank, a.size());
 
-    for (int u = 0; u < A::rank; ++u) {
-
-     /* NDA_PRINT(u);*/
-      //NDA_PRINT(L_tot[u]);
-      //NDA_PRINT(strides_h5[u]);
-
+    for (int u = 0; u < A::rank; ++u) { // size of lhs may be size of hte rhs vector + 1 if complex. Can not simply use =
       v.slab.count[u]  = a.shape()[u];
       v.slab.stride[u] = strides_h5[u];
       v.L_tot[u]       = L_tot[u];
@@ -143,8 +126,6 @@ NDA_PRINT(strides_h5[u]);
       if (a.shape() != L)
         NDA_RUNTIME_ERROR << "Error trying to read from an hdf5 file to a view. Dimension mismatch"
                           << "\n in file  : " << L << "\n in view  : " << a.shape();
-      if (!a.indexmap().is_contiguous()) NDA_RUNTIME_ERROR << " Non contiguous view : h5 read not implemented yet";
-      // NOTION OF hyperslab vs nda strides ...
     }
 
     h5::array_interface::h5_array_view v{h5::hdf5_type<get_value_t<A>>, (void *)(a.data_start()), A::rank, is_complex};
