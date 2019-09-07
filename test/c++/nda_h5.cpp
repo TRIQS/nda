@@ -1,6 +1,9 @@
 #define TRIQS_ARRAYS_ENFORCE_BOUNDCHECK
 #include "./test_common.hpp"
 #include <h5/h5.hpp>
+
+// FIXME  RENAME THIS FILE
+#include <nda/h5/simple_read_write.hpp>
 // ==============================================================
 
 TEST(Array, H5) {
@@ -51,35 +54,47 @@ TEST(Array, H5) {
     h5_write(G, "A2", A);
   }
 
+    std::cout  << " WRITE DON"<< std::endl;
+  
   // READ the file
   {
     h5::file file("ess.h5", 'r');
     h5::group top(file);
-
+    std::cout  << " UUU"<< std::endl;
+ 
     h5_read(top, "A", B);
     EXPECT_EQ_ARRAY(A, B);
+    std::cout  << " UUU"<< std::endl;
 
     // read the attributes of A
     auto id     = top.open_dataset("A");
     int att1    = h5::h5_read_attribute<int>(id, "AttrOfA1");
     double att2 = h5::h5_read_attribute<double>(id, "AttrOfA2");
+    
+    std::cout  << " UUU"<< std::endl;
+    
     EXPECT_EQ(att1, 12);
+    std::cout  << " UUU"<< std::endl;
     EXPECT_EQ(att2, 8.9);
 
     h5_read(top, "D", D2);
     EXPECT_ARRAY_NEAR(D, D2);
+    std::cout  << " UUU D"<< std::endl;
 
     h5_read(top, "C", C2);
     EXPECT_ARRAY_NEAR(C, C2);
 
+    std::cout  << " UUU C"<< std::endl;
     nda::array<long, 2> a_sli;
     h5_read(top, "A_slice", a_sli);
     EXPECT_EQ_ARRAY(a_sli, A(nda::range(), nda::range(1, 3)));
 
+    std::cout  << " UUU"<< std::endl;
     double xxx = 0;
     h5_read(top, "x", xxx);
     EXPECT_DOUBLE_EQ(xxx, 2.3);
 
+    std::cout  << " UUU"<< std::endl;
     std::string s2("----------------------------------");
     h5_read(top, "s", s2);
     EXPECT_EQ(s2, "a nice chain");
@@ -91,6 +106,30 @@ TEST(Array, H5) {
 }
 
 // ==============================================================
+
+TEST(Vector, String) {
+
+  // vector of string
+  std::vector<std::string> V1, V2;
+  V1.push_back("abcd");
+  V1.push_back("de");
+
+  // writing
+  h5::file file("test_nda::array_string.h5", 'w');
+  h5::group top(file);
+
+  h5_write(top, "V", V1);
+
+  // rereading
+  h5_read(top, "V", V2);
+
+  //comparing
+  for (int i = 0; i < 2; ++i) {
+    EXPECT_EQ(V1[i], V2[i]);
+  }
+}
+  /*
+  // ==============================================================
 
 TEST(Array, H5ArrayString) {
 
@@ -121,6 +160,7 @@ TEST(Array, H5ArrayString) {
     EXPECT_EQ(A(i), B(i));
   }
 }
+*/
 // ==============================================================
 
 // -----------------------------------------------------
