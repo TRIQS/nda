@@ -6,6 +6,67 @@
 #include <nda/h5/simple_read_write.hpp>
 // ==============================================================
 
+template <typename T>
+void one_test(std::string name, T fact) {
+
+  nda::array<T, 2> a(2,3), b;
+
+  for (int i = 0; i < 2; ++i)
+    for (int j = 0; j < 3; ++j) { a(i, j) = fact * (10 * i + j); }
+  
+  std::string filename = "ess_ " + name + ".h5";
+  std::cout  << filename <<std::endl;
+  // WRITE the file
+  {
+    h5::file file(filename, 'w');
+    h5::group top(file);
+    top.create_group("G");
+
+    h5_write(top, "A", a);
+
+    // add some attribute to A
+    auto id = top.open_dataset("A");
+    h5_write_attribute(id, "AttrOfA1", 12);
+    h5_write_attribute(id, "AttrOfA2", 8.9);
+
+    // in a subgroup
+    auto G = top.open_group("G");
+    h5_write(G, "A2", a);
+  }
+
+  // READ the file
+  {
+    h5::file file(filename, 'r');
+    h5::group top(file);
+
+    h5_read(top, "A", b);
+    EXPECT_EQ_ARRAY(a, b);
+
+    auto c = a;
+    c()    = 0;
+    h5_read(top, "G/A2", c);
+    EXPECT_EQ_ARRAY(a, c);
+
+    // read the attributes of A
+    auto id     = top.open_dataset("A");
+    int att1    = h5::h5_read_attribute<int>(id, "AttrOfA1");
+    double att2 = h5::h5_read_attribute<double>(id, "AttrOfA2");
+    EXPECT_EQ(att1, 12);
+    EXPECT_EQ(att2, 8.9);
+  }
+}
+
+//------------------------------------
+TEST(Basic, Int) { one_test<int>("int", 1); }
+
+TEST(Basic, Long) { one_test<long>("long", 1); }
+
+TEST(Basic, Double) { one_test<double>("double", 1.5); }
+
+TEST(Basic, Dcomplex) { one_test<dcomplex>("dcomplex", (1.0 + 1.0i)); }
+
+//------------------------------------
+
 TEST(Array, H5) {
 
   nda::array<long, 2> A(2, 3), B;
@@ -54,47 +115,47 @@ TEST(Array, H5) {
     h5_write(G, "A2", A);
   }
 
-    std::cout  << " WRITE DON"<< std::endl;
-  
+  std::cout << " WRITE DON" << std::endl;
+
   // READ the file
   {
     h5::file file("ess.h5", 'r');
     h5::group top(file);
-    std::cout  << " UUU"<< std::endl;
- 
+    std::cout << " UUU" << std::endl;
+
     h5_read(top, "A", B);
     EXPECT_EQ_ARRAY(A, B);
-    std::cout  << " UUU"<< std::endl;
+    std::cout << " UUU" << std::endl;
 
     // read the attributes of A
     auto id     = top.open_dataset("A");
     int att1    = h5::h5_read_attribute<int>(id, "AttrOfA1");
     double att2 = h5::h5_read_attribute<double>(id, "AttrOfA2");
-    
-    std::cout  << " UUU"<< std::endl;
-    
+
+    std::cout << " UUU" << std::endl;
+
     EXPECT_EQ(att1, 12);
-    std::cout  << " UUU"<< std::endl;
+    std::cout << " UUU" << std::endl;
     EXPECT_EQ(att2, 8.9);
 
     h5_read(top, "D", D2);
     EXPECT_ARRAY_NEAR(D, D2);
-    std::cout  << " UUU D"<< std::endl;
+    std::cout << " UUU D" << std::endl;
 
     h5_read(top, "C", C2);
     EXPECT_ARRAY_NEAR(C, C2);
 
-    std::cout  << " UUU C"<< std::endl;
+    std::cout << " UUU C" << std::endl;
     nda::array<long, 2> a_sli;
     h5_read(top, "A_slice", a_sli);
     EXPECT_EQ_ARRAY(a_sli, A(nda::range(), nda::range(1, 3)));
 
-    std::cout  << " UUU"<< std::endl;
+    std::cout << " UUU" << std::endl;
     double xxx = 0;
     h5_read(top, "x", xxx);
     EXPECT_DOUBLE_EQ(xxx, 2.3);
 
-    std::cout  << " UUU"<< std::endl;
+    std::cout << " UUU" << std::endl;
     std::string s2("----------------------------------");
     h5_read(top, "s", s2);
     EXPECT_EQ(s2, "a nice chain");
@@ -124,11 +185,9 @@ TEST(Vector, String) {
   h5_read(top, "V", V2);
 
   //comparing
-  for (int i = 0; i < 2; ++i) {
-    EXPECT_EQ(V1[i], V2[i]);
-  }
+  for (int i = 0; i < 2; ++i) { EXPECT_EQ(V1[i], V2[i]); }
 }
-  /*
+/*
   // ==============================================================
 
 TEST(Array, H5ArrayString) {
