@@ -40,6 +40,17 @@ namespace nda {
     return make_initialized_array_impl(v, std::make_index_sequence<R>{});
   }
 
+ /**
+  * Convert a std::array to a 
+  * @tparam Type
+  *
+  std::vector<T> to_vector() const {
+    std::vector<T> V(R);
+    for (int i = 0; i < R; ++i) V[i] = _data[i];
+    return V;
+  }
+*/
+
 } // namespace nda
 /*
 
