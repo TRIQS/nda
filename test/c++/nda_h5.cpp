@@ -7,15 +7,23 @@
 // ==============================================================
 
 template <typename T>
-void one_test(std::string name, T fact) {
+void one_test(std::string name, T scalar) {
 
-  nda::array<T, 2> a(2,3), b;
+  nda::array<T, 1> a(5), a_check;
+  nda::array<T, 2> b(2, 3), b_check;
+  nda::array<T, 3> c(2, 3, 4), c_check;
+
+  for (int i = 0; i < 5; ++i) { a(i) = scalar * (10 * i); }
 
   for (int i = 0; i < 2; ++i)
-    for (int j = 0; j < 3; ++j) { a(i, j) = fact * (10 * i + j); }
-  
+    for (int j = 0; j < 3; ++j) { b(i, j) = scalar * (10 * i + j); }
+
+  for (int i = 0; i < 2; ++i)
+    for (int j = 0; j < 3; ++j)
+      for (int k = 0; k < 4; ++k) { c(i, j, k) = scalar * (10 * i + 100 * j); }
+
   std::string filename = "ess_" + name + ".h5";
-  std::cout  << filename <<std::endl;
+  std::cout << filename << std::endl;
   // WRITE the file
   {
     h5::file file(filename, 'w');
@@ -23,6 +31,9 @@ void one_test(std::string name, T fact) {
     top.create_group("G");
 
     h5_write(top, "A", a);
+    h5_write(top, "B", b);
+    h5_write(top, "C", c);
+    h5_write(top, "scalar", scalar);
 
     // add some attribute to A
     auto id = top.open_dataset("A");
@@ -39,13 +50,21 @@ void one_test(std::string name, T fact) {
     h5::file file(filename, 'r');
     h5::group top(file);
 
-    h5_read(top, "A", b);
-    EXPECT_EQ_ARRAY(a, b);
+    h5_read(top, "A", a_check);
+    EXPECT_EQ_ARRAY(a, a_check);
 
-    auto c = a;
-    c()    = 0;
-    h5_read(top, "G/A2", c);
-    EXPECT_EQ_ARRAY(a, c);
+    h5_read(top, "B", b_check);
+    EXPECT_EQ_ARRAY(b, b_check);
+
+    h5_read(top, "C", c_check);
+    EXPECT_EQ_ARRAY(c, c_check);
+
+    EXPECT_EQ(scalar, h5::h5_read<T>(top, "scalar"));
+
+    auto d = a;
+    d()    = 0;
+    h5_read(top, "G/A2", d);
+    EXPECT_EQ_ARRAY(a, d);
 
     // read the attributes of A
     auto id     = top.open_dataset("A");
@@ -64,6 +83,48 @@ TEST(Basic, Long) { one_test<long>("long", 1); }
 TEST(Basic, Double) { one_test<double>("double", 1.5); }
 
 TEST(Basic, Dcomplex) { one_test<dcomplex>("dcomplex", (1.0 + 1.0i)); }
+
+//------------------------------------
+
+TEST(Basic, Empty) {
+
+  nda::array<long, 2> a(0, 10);
+  {
+    h5::file file("ess_empty.h5", 'w');
+    //h5::group top(file);
+    h5_write(file, "A", a);
+  }
+  {
+    h5::file file("ess.h5", 'r');
+    h5::group top(file);
+    nda::array<double, 2> empty(5, 5);
+    h5_read(top, "empty", empty);
+    EXPECT_EQ_ARRAY(empty, (nda::array<double, 2>(0, 10)));
+  }
+}
+
+//------------------------------------
+
+TEST(Basic, String) {
+
+  nda::array<long, 2> a(0, 10);
+  {
+    h5::file file("ess_string.h5", 'w');
+    h5_write(file, "s", std::string("a nice chain"));
+  }
+  {
+    h5::file file("ess.h5", 'r');
+    nda::array<double, 2> empty(5, 5);
+
+    std::string s2("----------------------------------");
+    h5_read(file, "s", s2);
+    EXPECT_EQ(s2, "a nice chain");
+
+    std::string s3; //empty
+    h5_read(file, "s", s3);
+    EXPECT_EQ(s3, "a nice chain");
+  }
+}
 
 //------------------------------------
 

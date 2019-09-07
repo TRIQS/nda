@@ -61,7 +61,7 @@ namespace nda {
     // FIXME : not very pretty, do better here, but that was the arrays way
     if constexpr (A::rank > 2) {
       out << "[";
-      for (size_t j = 0; j < a.size(); ++j) out << a.data_start[j];
+      for (size_t j = 0; j < a.size(); ++j) out << a.data_start()[j];
       out << "]";
     }
 
