@@ -5,7 +5,15 @@
 
 #include "./group.hpp"
 
-namespace h5::details {
+/*
+ * 2) write : pass Ltot + slab for the memory <-> memory dataspace (2 overload)
+ *
+ *    read : idem : pass data Ltot + slab
+ * 
+ *    string : share code with vector of string !
+ */
+
+namespace h5::array_interface {
 
   using v_t = std::vector<hsize_t>;
 
@@ -43,11 +51,11 @@ namespace h5::details {
   struct h5_array_view {
     datatype ty;    // HDF5 type
     void *start;    // start of data. It MUST be a pointer of T* with ty = hdf5_type<T>
-    hyperslab slab; //
+    v_t L_tot;      // lengths of the parent contiguous array
+    hyperslab slab; // hyperslab
 
     // Constructor : unique to enforce the proper sizes of array
-    // rank the rank a priori, it will +=1 if ty is complex
-    h5_array_view(datatype ty, void *start, int rank) : ty(ty), start(start), slab(rank, is_complex(ty)) {}
+    h5_array_view(datatype ty, void *start, int rank) : ty(ty), start(start), L_tot(rank), slab(rank) {}
 
     int rank() const { return slab.rank(); }
   };
@@ -56,7 +64,7 @@ namespace h5::details {
   h5_lengths_type get_h5_lengths_type(group g, std::string const &name);
 
   // Write the view of the array to the group
-  void write(group g, std::string const &name, h5_array_view const &a, bool compress =false);
+  dataset write(group g, std::string const &name, h5_array_view const &a, bool compress = false);
 
   // INTERNAL [python interface only]
   // Same as before, but if lt = get_h5_lengths_type(g,name) has already been computed
@@ -64,7 +72,7 @@ namespace h5::details {
   void read(group g, std::string const &name, h5_array_view v, h5_lengths_type lt);
 
   // Read the data into the view.
-  inline void read(group g, std::string const &name, h5_array_view v) { read(g, name, v, get_h5_lengths_type(g, name)); }
+  //inline void read(group g, std::string const &name, h5_array_view v) { read(g, name, v, get_h5_lengths_type(g, name)); }
 
   // Write as attribute
   void write_attribute(hid_t id, std::string const &name, h5_array_view v);

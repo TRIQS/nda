@@ -15,9 +15,6 @@ namespace h5 {
   template <typename T> hid_t hdf5_type;
 
   //
-  bool is_complex(hid_t dt);
-
-  //
   template <typename T> struct _is_complex : std::false_type {};
   template <typename T> struct _is_complex<std::complex<T>> : std::true_type {};
   template <typename T> constexpr bool is_complex_v = _is_complex<T>::value;

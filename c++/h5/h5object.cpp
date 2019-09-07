@@ -47,11 +47,6 @@ namespace h5 {
     return bool_enum_h5type;
   }();
 
-  //----------------------------------
-
-  // a simple function to tell if dt is complex (it is a copy, hence not == but H5Tequal is true)
-  bool is_complex(hid_t dt) { return H5Tequal(dt, H5T_NATIVE_DOUBLE) and (dt == H5T_NATIVE_DOUBLE); }
-
   // -----------------------   Reference counting ---------------------------
 
   // xdecref, xincref manipulate the the ref, but ignore invalid (incl. 0) id.
