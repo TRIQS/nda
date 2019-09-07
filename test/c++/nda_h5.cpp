@@ -241,8 +241,7 @@ TEST(Vector, String) {
   for (int i = 0; i < 2; ++i) { EXPECT_EQ(V1[i], V2[i]); }
 }
 
-/*
-  // ==============================================================
+// ==============================================================
 
 TEST(Array, H5ArrayString) {
 
@@ -251,29 +250,46 @@ TEST(Array, H5ArrayString) {
   A(0) = "Nice String";
   A(1) = "another";
 
-  // vector of string
-  std::vector<std::string> V1, V2;
-  V1.push_back("abcd");
-  V1.push_back("de");
+  // writing
+  h5::file file("test_nda::array_string.h5", 'w');
+  h5::group top(file);
+
+  h5_write(top, "A", A);
+
+  // rereading
+  h5_read(top, "A", B);
+
+  //comparing
+  for (int i = 0; i < 2; ++i) { EXPECT_EQ(A(i), B(i)); }
+}
+
+// ==============================================================
+// not yet implemented
+
+/*
+ * TEST(Array, H5ArrayString2) {
+
+  // nda::array of string
+  nda::array<std::string, 2> A(2, 2), B;
+  A(0,0) = "Nice String";
+  A(1,0) = "another";
+  A(1,1) = "really";
+  A(0,1) = "nice";
 
   // writing
   h5::file file("test_nda::array_string.h5", 'w');
   h5::group top(file);
 
   h5_write(top, "A", A);
-  h5_write(top, "V", V1);
 
   // rereading
   h5_read(top, "A", B);
-  h5_read(top, "V", V2);
 
   //comparing
-  for (int i = 0; i < 2; ++i) {
-    EXPECT_EQ(V1[i], V2[i]);
-    EXPECT_EQ(A(i), B(i));
-  }
+  for (int i = 0; i < 2; ++i) { EXPECT_EQ(A, B); }
 }
 */
+
 // ==============================================================
 
 // -----------------------------------------------------
