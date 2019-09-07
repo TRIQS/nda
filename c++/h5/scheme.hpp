@@ -1,4 +1,6 @@
 #pragma once
+#include "./macros.hpp"
+
 namespace h5 { 
 
   // a class T has either :
@@ -14,9 +16,6 @@ namespace h5 {
   template <typename T> struct hdf5_scheme_impl {
     static std::string invoke() { return T::hdf5_scheme(); }
   };
-
-#define H5_AS_STRING(X) H5_AS_STRING2(X)
-#define H5_AS_STRING2(X) #X
 
 #define TRIQS_SPECIALIZE_HDF5_SCHEME2(X, Y)                                                                                                          \
   template <> struct hdf5_scheme_impl<X> {                                                                                                           \

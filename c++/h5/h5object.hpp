@@ -1,6 +1,7 @@
 #pragma once
 #include <complex>
 #include <sstream>
+#include "./macros.hpp"
 
 namespace h5 {
 

@@ -27,10 +27,11 @@
 #include "./h5/generic.hpp"
 #include "./h5/stl/string.hpp"
 #include "./h5/stl/vector.hpp"
-#include "./h5/stl/map.hpp"
-#include "./h5/stl/pair.hpp"
-#include "./h5/stl/tuple.hpp"
-#include "./h5/stl/optional.hpp"
+
+//#include "./h5/stl/map.hpp"
+//#include "./h5/stl/pair.hpp"
+//#include "./h5/stl/tuple.hpp"
+//#include "./h5/stl/optional.hpp"
 
 //#include "./h5/stl/variant.hpp"
 

@@ -27,14 +27,14 @@ namespace nda::h5_details {
       Ltot[u + 1] = L;
     }
 
-    std::cout << " ------- RESULT ------- " << std::endl;
-    for (int u = 0; u < rank; ++u) {
-      NDA_PRINT(u);
-      NDA_PRINT(stri[u]);
-      NDA_PRINT(Ltot[u]);
-      NDA_PRINT(strides_h5[u]);
-    }
-    std::cout << "------- END RESULT --------- " << std::endl;
+    //std::cout << " ------- RESULT ------- " << std::endl;
+    //for (int u = 0; u < rank; ++u) {
+      //NDA_PRINT(u);
+      //NDA_PRINT(stri[u]);
+      //NDA_PRINT(Ltot[u]);
+      //NDA_PRINT(strides_h5[u]);
+    //}
+    //std::cout << "------- END RESULT --------- " << std::endl;
 
     return {Ltot, strides_h5};
   }
