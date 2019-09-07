@@ -14,7 +14,7 @@ void one_test(std::string name, T fact) {
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 3; ++j) { a(i, j) = fact * (10 * i + j); }
   
-  std::string filename = "ess_ " + name + ".h5";
+  std::string filename = "ess_" + name + ".h5";
   std::cout  << filename <<std::endl;
   // WRITE the file
   {
