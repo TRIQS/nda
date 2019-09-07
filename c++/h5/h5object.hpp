@@ -14,7 +14,7 @@ namespace h5 {
   using v_t = std::vector<hsize_t>;
 
   // Correspondance T -> hdf5 type
-  template <typename T> hid_t hdf5_type;
+  template <typename T> hid_t hdf5_type =0; // 0 means "type unknown to hdf5"
 
   //
   template <typename T> struct _is_complex : std::false_type {};

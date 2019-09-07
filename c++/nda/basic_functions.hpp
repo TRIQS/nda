@@ -13,4 +13,6 @@ namespace nda {
   }
   //template <typename A> regular_t<A> make_regular(A &&x) REQUIRES(is_ndarray_v<A>) { return std::forward<A>(x); }
 
+#include "./basic_functions.hxx"
+
 } // namespace nda

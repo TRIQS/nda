@@ -75,10 +75,10 @@ namespace nda {
     static constexpr bool is_const = std::is_const_v<ValueType>;
 
     static constexpr uint64_t guarantees = Guarantees; // for the generic shared with array
-//    static constexpr uint64_t layout = Layout;
- 
+                                                       //    static constexpr uint64_t layout = Layout;
+
     // fIXME : FIRST STEP.
-    static_assert(Guarantees ==0, "Not implemented");
+    static_assert(Guarantees == 0, "Not implemented");
 
     // FIXME : h5
     // static std::string hdf5_scheme() { return "array<" + triqs::h5::get_hdf5_scheme<value_t>() + "," + std::to_string(rank) + ">"; }
@@ -126,6 +126,24 @@ namespace nda {
     template <typename A> //explicit
     array_view(A const &a) REQUIRES(is_regular_or_view_v<A>) : array_view(a.indexmap(), a.storage()) {}
 
+    /** 
+     * [Advanced] From a pointer to contiguous data, and a shape.
+     * NB : no control obvious on the dimensions given.  
+     *
+     * @param p Pointer to the data
+     * @param shape Shape of the view (contiguous)
+     */
+    array_view(std::array<long, Rank> const &shape, value_t *p) : array_view(idx_map_t{shape}, p) {}
+
+    /** 
+     * [Advanced] From a pointer to data, and an idx_map 
+     * NB : no control obvious on the dimensions given.  
+     *
+     * @param p Pointer to the data 
+     * @param idxm Index Map (view can be non contiguous). If the offset is non zero, the view starts at p + idxm.offset()
+     */
+    array_view(idx_map<Rank, Layout> const &idxm, ValueType *p) : _idx_m(idxm), _storage{p, size_t(idxm.size() + idxm.offset())} {}
+
     // Move assignment not defined : will use the copy = since view must copy data
 
     // ------------------------------- assign --------------------------------------------
@@ -158,14 +176,14 @@ namespace nda {
     // ------------------------------- rebind --------------------------------------------
 
     /// Rebind the view
-    void rebind(array_view<value_t, Rank> const &a) { //value_t is NEVER const 
+    void rebind(array_view<value_t, Rank> const &a) { //value_t is NEVER const
       _idx_m   = a._idx_m;
       _storage = a._storage;
     }
 
-    /// Rebind view 
-    void rebind(array_view<value_t const, Rank> const &a) { 
-      static_assert(is_const, "Can not rebind a view of const ValueType to a view of ValueType"); 
+    /// Rebind view
+    void rebind(array_view<value_t const, Rank> const &a) {
+      static_assert(is_const, "Can not rebind a view of const ValueType to a view of ValueType");
       _idx_m   = a._idx_m;
       _storage = a._storage;
     }

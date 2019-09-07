@@ -20,7 +20,7 @@ void one_test(std::string name, T scalar) {
 
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 3; ++j)
-      for (int k = 0; k < 4; ++k) { c(i, j, k) = scalar * (i + 10 * j+ 100 * k); }
+      for (int k = 0; k < 4; ++k) { c(i, j, k) = scalar * (i + 10 * j + 100 * k); }
 
   std::string filename = "ess_" + name + ".h5";
   // WRITE the file
@@ -339,20 +339,26 @@ TEST(Array, H5StdVector) {
 }
 
 // ==============================================================
-/*
+
 // -----------------------------------------------------
 // Testing h5 for an nda::array of matrix
 // -----------------------------------------------------
 
 TEST(BlockMatrixH5, S1) {
 
-  nda::array<matrix<double>, 1> V{matrix<double>{{1, 2}, {3, 4}}, matrix<double>{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}}};
+  using mat_t = nda::array<double, 2>;
+  nda::array<mat_t, 1> W, V{mat_t{{1, 2}, {3, 4}}, mat_t{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}}};
 
-  auto W = rw_h5(V, "block_mat");
+  {
+    h5::file file1("ess_non_pod.h5", 'w');
+    h5_write(file1, "block_mat", V);
+  }
+
+  {
+    h5::file file2("ess_non_pod.h5", 'r');
+    h5_read(file2, "block_mat", W);
+  }
 
   EXPECT_EQ(first_dim(V), first_dim(W));
   for (int i = 0; i < first_dim(V); ++i) EXPECT_ARRAY_NEAR(V(i), W(i));
 }
-
-*/
-MAKE_MAIN
