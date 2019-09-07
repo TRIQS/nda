@@ -74,7 +74,7 @@ void one_test(std::string name, T scalar) {
     EXPECT_EQ(att2, 8.9);
   }
 }
-
+ 
 //------------------------------------
 TEST(Basic, Int) { one_test<int>("int", 1); }
 
@@ -248,6 +248,7 @@ TEST(Vector, String) {
   //comparing
   for (int i = 0; i < 2; ++i) { EXPECT_EQ(V1[i], V2[i]); }
 }
+
 /*
   // ==============================================================
 
