@@ -1,4 +1,4 @@
-#define TRIQS_ARRAYS_ENFORCE_BOUNDCHECK
+#define NDA_ENFORCE_BOUNDCHECK
 #include "./test_common.hpp"
 #include <h5/h5.hpp>
 
@@ -20,10 +20,9 @@ void one_test(std::string name, T scalar) {
 
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 3; ++j)
-      for (int k = 0; k < 4; ++k) { c(i, j, k) = scalar * (10 * i + 100 * j); }
+      for (int k = 0; k < 4; ++k) { c(i, j, k) = scalar * (i + 10 * j+ 100 * k); }
 
   std::string filename = "ess_" + name + ".h5";
-  std::cout << filename << std::endl;
   // WRITE the file
   {
     h5::file file(filename, 'w');
@@ -74,7 +73,7 @@ void one_test(std::string name, T scalar) {
     EXPECT_EQ(att2, 8.9);
   }
 }
- 
+
 //------------------------------------
 TEST(Basic, Int) { one_test<int>("int", 1); }
 
@@ -107,13 +106,13 @@ TEST(Basic, Empty) {
 
 TEST(Basic, String) {
 
-  nda::array<long, 2> a(0, 10);
   {
     h5::file file("ess_string.h5", 'w');
     h5_write(file, "s", std::string("a nice chain"));
+    h5_write(file, "sempty", "");
   }
   {
-    h5::file file("ess.h5", 'r');
+    h5::file file("ess_string.h5", 'r');
     nda::array<double, 2> empty(5, 5);
 
     std::string s2("----------------------------------");
@@ -123,6 +122,10 @@ TEST(Basic, String) {
     std::string s3; //empty
     h5_read(file, "s", s3);
     EXPECT_EQ(s3, "a nice chain");
+
+    std::string s4; //empty
+    h5_read(file, "sempty", s4);
+    EXPECT_EQ(s4, "");
   }
 }
 
@@ -176,47 +179,36 @@ TEST(Array, H5) {
     h5_write(G, "A2", A);
   }
 
-  std::cout << " WRITE DON" << std::endl;
-
   // READ the file
   {
     h5::file file("ess.h5", 'r');
     h5::group top(file);
-    std::cout << " UUU" << std::endl;
 
     h5_read(top, "A", B);
     EXPECT_EQ_ARRAY(A, B);
-    std::cout << " UUU" << std::endl;
 
     // read the attributes of A
     auto id     = top.open_dataset("A");
     int att1    = h5::h5_read_attribute<int>(id, "AttrOfA1");
     double att2 = h5::h5_read_attribute<double>(id, "AttrOfA2");
 
-    std::cout << " UUU" << std::endl;
-
     EXPECT_EQ(att1, 12);
-    std::cout << " UUU" << std::endl;
     EXPECT_EQ(att2, 8.9);
 
     h5_read(top, "D", D2);
     EXPECT_ARRAY_NEAR(D, D2);
-    std::cout << " UUU D" << std::endl;
 
     h5_read(top, "C", C2);
     EXPECT_ARRAY_NEAR(C, C2);
 
-    std::cout << " UUU C" << std::endl;
     nda::array<long, 2> a_sli;
     h5_read(top, "A_slice", a_sli);
     EXPECT_EQ_ARRAY(a_sli, A(nda::range(), nda::range(1, 3)));
 
-    std::cout << " UUU" << std::endl;
     double xxx = 0;
     h5_read(top, "x", xxx);
     EXPECT_DOUBLE_EQ(xxx, 2.3);
 
-    std::cout << " UUU" << std::endl;
     std::string s2("----------------------------------");
     h5_read(top, "s", s2);
     EXPECT_EQ(s2, "a nice chain");
@@ -314,7 +306,7 @@ TEST(Array, H5RealIntoComplex) {
 }
 */
 // ==============================================================
-/*
+
 // -----------------------------------------------------
 // Testing h5 for std vector
 // -----------------------------------------------------
@@ -345,8 +337,6 @@ TEST(Array, H5StdVector) {
   for (size_t i = 0; i < v.size(); ++i) EXPECT_EQ(v[i], v2[i]);
   for (size_t i = 0; i < vc.size(); ++i) EXPECT_EQ(vc[i], vc2[i]);
 }
-
-*/
 
 // ==============================================================
 /*

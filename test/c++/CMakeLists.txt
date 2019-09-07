@@ -9,7 +9,8 @@ endforeach()
 
 # List of all tests
 #file(GLOB_RECURSE all_tests RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
-set(all_tests nda_idx_map nda_storage nda_basic nda_expr_template nda_map nda_alloc_poison nda_algorithms nda_arithmetic nda_array_of_non_pod nda_iterators nda_bound_check nda_h5 )# nda_stl )
+set(all_tests nda_idx_map nda_storage nda_basic nda_expr_template nda_map nda_alloc_poison nda_algorithms 
+         nda_arithmetic nda_array_of_non_pod nda_iterators nda_bound_check nda_h5 nda_h5_slice )# nda_stl )
 
 foreach(test ${all_tests})
   get_filename_component(test_name ${test} NAME_WE)
