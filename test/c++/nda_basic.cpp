@@ -9,7 +9,7 @@ static_assert(!std::is_pod<nda::array<long, 2>>::value, "POD pb");
 
 TEST(NDA, Create1) {
   nda::array<long, 2> A(3, 3);
-  EXPECT_EQ(A.shape(), (myshape_t<2>{3, 3}));
+  EXPECT_EQ(A.shape(), (nda::shape_t<2>{3, 3}));
 
   std::cerr << A.indexmap() <<std::endl;
 }
@@ -34,7 +34,7 @@ TEST(NDA, View) {
   //std::cerr << v.indexmap() <<std::endl;
   //f(v);
 
-  EXPECT_EQ(v.shape(), (myshape_t<1>{3}));
+  EXPECT_EQ(v.shape(), (nda::shape_t<1>{3}));
 
   EXPECT_EQ(a(1, 1, 2), 1 + 10 * 1 + 100 * 2);
 
@@ -60,7 +60,7 @@ TEST(NDA, Assign) {
   EXPECT_EQ(A.indexmap().strides(), B.indexmap().strides());
 
   EXPECT_ARRAY_NEAR(A, B);
-  EXPECT_EQ(B.shape(), (myshape_t<2>{3, 3}));
+  EXPECT_EQ(B.shape(), (nda::shape_t<2>{3, 3}));
 }
 
 // -------------------------------------
@@ -79,17 +79,17 @@ TEST(NDA, CreateResize) {
 
   array<long, 2> A;
   A.resize(make_shape(3, 3));
-  EXPECT_EQ(A.shape(), (myshape_t<2>{3, 3}));
+  EXPECT_EQ(A.shape(), (nda::shape_t<2>{3, 3}));
 
   matrix<double> M;
   M.resize(3, 3);
 
-  EXPECT_EQ(M.shape(), (myshape_t<2>{3, 3}));
+  EXPECT_EQ(M.shape(), (nda::shape_t<2>{3, 3}));
 
   vector<double> V;
   V.resize(10);
 
-  EXPECT_EQ(V.shape(), (myshape_t<1>{10}));
+  EXPECT_EQ(V.shape(), (nda::shape_t<1>{10}));
 }
 
 // ==============================================================
@@ -99,20 +99,20 @@ TEST(NDA, InitList) {
   // 1d
   array<double, 1> A = {1, 2, 3, 4};
 
-  EXPECT_EQ(A.shape(), (myshape_t<1>{4}));
+  EXPECT_EQ(A.shape(), (nda::shape_t<1>{4}));
 
   for (int i = 0; i < 4; ++i) EXPECT_EQ(A(i), i + 1);
 
   // 2d
   array<double, 2> B = {{1, 2}, {3, 4}, {5, 6}};
 
-  EXPECT_EQ(B.shape(), (myshape_t<2>{3, 2}));
+  EXPECT_EQ(B.shape(), (nda::shape_t<2>{3, 2}));
   for (int i = 0; i < 3; ++i)
     for (int j = 0; j < 2; ++j) EXPECT_EQ(B(i, j), j + 2 * i + 1);
 
   // matrix
   matrix<double> M = {{1, 2}, {3, 4}, {5, 6}};
-  EXPECT_EQ(M.shape(), (myshape_t<2>{3, 2}));
+  EXPECT_EQ(M.shape(), (nda::shape_t<2>{3, 2}));
 
   for (int i = 0; i < 3; ++i)
     for (int j = 0; j < 2; ++j) EXPECT_EQ(M(i, j), j + 2 * i + 1);
@@ -127,7 +127,7 @@ TEST(NDA, MoveConstructor) {
   array<double, 1> B(std::move(A));
 
   EXPECT_TRUE(A.is_empty());
-  EXPECT_EQ(B.shape(), (myshape_t<1>{3}));
+  EXPECT_EQ(B.shape(), (nda::shape_t<1>{3}));
   for (int i = 0; i < 3; ++i) EXPECT_EQ(B(i), 9);
 }
 
@@ -142,7 +142,7 @@ TEST(NDA, MoveAssignment) {
   B = std::move(A);
 
   EXPECT_TRUE(A.is_empty());
-  EXPECT_EQ(B.shape(), (myshape_t<1>{3}));
+  EXPECT_EQ(B.shape(), (nda::shape_t<1>{3}));
   for (int i = 0; i < 3; ++i) EXPECT_EQ(B(i), 9);
 }
 

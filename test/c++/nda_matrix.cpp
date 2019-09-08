@@ -1,7 +1,18 @@
-#include "./nda_test_common.hpp"
+#include "./test_common.hpp"
+
+#include <nda/matrix.hxx>
+
+TEST(Matrix, Create1) {
+  nda::matrix<long> A(3, 3);
+  EXPECT_EQ(A.shape(), (nda::shape_t<2>{3, 3}));
+
+  std::cerr << A.indexmap() <<std::endl;
+}
+
+
 
 /// Matrix specific tests
-
+/*
 template <typename T> class immutable_diagonal_matrix_view : TRIQS_CONCEPT_TAG_NAME(ImmutableMatrix) {
   array_view<T, 1> data;
 
@@ -68,4 +79,4 @@ TEST(Matrix, TransposeDagger) {
       EXPECT_COMPLEX_NEAR(bt(i, j), B(j, i));
     }
 }
-MAKE_MAIN
+*/

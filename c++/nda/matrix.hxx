@@ -2,9 +2,8 @@
 //   To regenerate the file, use in this buffer the vim script
 //
 //   :source matrix.vim
-
 #pragma once
-#include "matrix_view.hpp"
+#include "./matrix_view.hxx"
 
 namespace nda {
 
@@ -14,10 +13,10 @@ namespace nda {
   matrix(T)->matrix<get_value_t<std::decay_t<T>>>;
 
   // DELETED_CODE
-  
+
   // ---------------------- matrix--------------------------------
 
-  template <typename ValueType>
+  template <typename ValueType, uint64_t Layout>
   class matrix {
     static_assert(!std::is_const<ValueType>::value, "ValueType can not be const. WHY ?");
 
@@ -32,7 +31,10 @@ namespace nda {
     using const_view_t = matrix_view<ValueType const>;
 
     using storage_t = mem::handle<ValueType, 'R'>;
-    using idx_map_t = idx_map<0, flags::contiguous | flags::zero_offset | flags::smallest_stride_is_one>;
+    using idx_map_t = idx_map<2, Layout>;
+
+    //    static constexpr uint64_t layout = Layout;
+    static constexpr uint64_t guarantees = guarantee::contiguous | guarantee::zero_offset | guarantee::smallest_stride_is_one;
 
     static constexpr int rank      = 2;
     static constexpr bool is_const = false;
@@ -40,7 +42,7 @@ namespace nda {
 
     private:
     template <typename IdxMap>
-    using my_view_template_t = matrix_view<value_t, IdxMap::rank(), IdxMap::flags, permutations::encode(IdxMap::layout)>;
+    using my_view_template_t = matrix_view<value_t, 0, permutations::encode(IdxMap::layout)>;
 
     idx_map_t _idx_m;
     storage_t _storage;
@@ -75,7 +77,7 @@ namespace nda {
     }
 
     /** 
-          * Construct with the given shape
+     * Construct with the given shape
      * 
      * @param shape  Shape of the matrix (lengths in each dimension)
      */
@@ -102,7 +104,7 @@ namespace nda {
      * @param x 
      */
     template <typename A>
-    matrix(T const &x) REQUIRES(is_ndmatrix_v<A>) : matrix{x.shape()} {
+    matrix(A const &x) REQUIRES(is_ndarray_v<A>) : matrix{x.shape()} {
       static_assert(std::is_convertible_v<get_value_t<A>, value_t>,
                     "Can not construct the matrix. ValueType can be constructed from the value_t of the argument");
       nda::details::assignment(*this, x);
@@ -187,8 +189,8 @@ namespace nda {
      */
     template <typename RHS>
     matrix &operator=(RHS const &rhs) {
-      static_assert(is_ndmatrix_v<RHS> or is_scalar_for_v<RHS, matrix>, "Assignment : RHS not supported");
-      if constexpr (is_ndmatrix_v<RHS>) resize(rhs.shape());
+      static_assert(is_ndarray_v<RHS> or is_scalar_for_v<RHS, matrix>, "Assignment : RHS not supported");
+      if constexpr (is_ndarray_v<RHS>) resize(rhs.shape());
       nda::details::assignment(*this, rhs);
       return *this;
     }
@@ -208,7 +210,7 @@ namespace nda {
       static_assert((std::is_convertible_v<Int, long> and ...), "Arguments must be convertible to long");
       static_assert(sizeof...(is) + 1 == 2, "Incorrect number of arguments for resize. Should be 2");
       static_assert(std::is_copy_constructible_v<ValueType>, "Can not resize an matrix if its value_t is not copy constructible");
-      resize(shape_t<2>{args...});
+      resize(shape_t<2>{i0, is...});
     }
 
     /** 
@@ -218,7 +220,7 @@ namespace nda {
      *
      * @param shape  New shape of the matrix (lengths in each dimension)
      */
-    void resize(shape_t<2> const &shape) {
+    [[gnu::noinline]] void resize(shape_t<2> const &shape) {
       _idx_m = idx_map<2>(shape);
       // Construct a storage only if the new index is not compatible (size mismatch).
       if (_storage.size() != _idx_m.size()) _storage = mem::handle<ValueType, 'R'>{_idx_m.size()};
