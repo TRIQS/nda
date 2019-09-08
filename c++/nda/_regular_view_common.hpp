@@ -17,7 +17,7 @@ ValueType const *data_start() const { return _storage.data() + _idx_m.offset(); 
 ValueType *data_start() { return _storage.data() + _idx_m.offset(); }
 
 /// Shape of this
-shape_t<Rank> const &shape() const { return _idx_m.lengths(); }
+shape_t<rank> const &shape() const { return _idx_m.lengths(); }
 
 /// Number of elements
 long size() const { return _idx_m.size(); }
@@ -49,7 +49,7 @@ template <typename... T> decltype(auto) operator()(T const &... x) const & {
     return view_t{_idx_m, _storage};
   else {
 
-    static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
+    static_assert((rank == -1) or (sizeof...(T) == rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank)),
                   "Incorrect number of parameters in call");
     //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
 
@@ -67,7 +67,7 @@ template <typename... T> decltype(auto) operator()(T const &... x) & {
     return view_t{_idx_m, _storage};
   else {
 
-    static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
+    static_assert((rank == -1) or (sizeof...(T) == rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank)),
                   "Incorrect number of parameters in call");
     //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
 
@@ -85,7 +85,7 @@ template <typename... T> decltype(auto) operator()(T const &... x) && {
     return view_t{_idx_m, _storage};
   else {
 
-    static_assert((Rank == -1) or (sizeof...(T) == Rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= Rank)),
+    static_assert((rank == -1) or (sizeof...(T) == rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank)),
                   "Incorrect number of parameters in call");
     //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(std::move(*this), std::forward<T>(x)...);
 
