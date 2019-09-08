@@ -6,7 +6,7 @@
 " Section UNCOMMENT_FOR_MATRIX : next block is uncommented
 "
 normal 5GdG
-:r array_view.hpp
+:r c++/nda/array_view.hpp
 
 :silent
 
