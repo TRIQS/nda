@@ -118,7 +118,7 @@ namespace nda {
     template <typename A>
     array(A const &x) REQUIRES(is_ndarray_v<A>) : array{x.shape()} {
       static_assert(std::is_convertible_v<get_value_t<A>, value_t>,
-                    "Can not construct the array. ValueType can be constructed from the value_t of the argument");
+                    "Can not construct the array. ValueType can not be constructed from the value_t of the argument");
       nda::details::assignment(*this, x);
     }
 

@@ -20,13 +20,13 @@ namespace nda::details {
     //}
 
     // special case: we may have a direct memcopy
-    if constexpr (is_regular_or_view_v<LHS> and is_regular_or_view_v<RHS>) {
+    if constexpr (is_regular_or_view_v<LHS> and is_regular_or_view_v<RHS> and not is_scalar_for_v<RHS, LHS>){ // the last case for array of array
       static_assert(std::is_assignable_v<typename LHS::value_t &, typename RHS::value_t>,
                     "Assignment impossible for the type of RHS into the type of LHS");
 
 #ifdef NDA_DEBUG
       if (lhs.shape() != rhs.shape())
-        NDA_RUNTIME_ERROR << "Size mismatch in operation " << OP << " : LHS " << lhs << " \n RHS = " << rhs;
+        NDA_RUNTIME_ERROR << "Size mismatch in = " << " : LHS " << lhs << " \n RHS = " << rhs;
 #endif
       constexpr bool can_consider_memcpy =
          std::is_trivially_copyable_v<typename LHS::value_t> and std::is_same_v<typename LHS::value_t, typename RHS::value_t>;
@@ -114,12 +114,12 @@ namespace nda::details {
 
       static_assert(is_ndarray_v<RHS>, "Error");
 
-#ifdef NDA_DEBUG
-      if constexpr (is_regular_or_view_v<RHS>) {
-        if (!indexmaps::compatible_for_assignment(lhs.indexmap(), rhs.indexmap()))
-          TRIQS_RUNTIME_ERROR << "Size mismatch in operation " << OP << " : LHS " << lhs << " \n RHS = " << rhs;
-      }
-#endif
+//#ifdef NDA_DEBUG
+      //if constexpr (is_regular_or_view_v<RHS>) {
+        //if (!indexmaps::compatible_for_assignment(lhs.indexmap(), rhs.indexmap()))
+          //TRIQS_RUNTIME_ERROR << "Size mismatch in operation " << OP << " : LHS " << lhs << " \n RHS = " << rhs;
+      //}
+//#endif
       auto l = [&lhs, &rhs](auto const &... args) {
         if constexpr (OP == 'A') { lhs(args...) += rhs(args...); }
         if constexpr (OP == 'S') { lhs(args...) -= rhs(args...); }

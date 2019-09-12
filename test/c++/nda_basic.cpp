@@ -1,45 +1,17 @@
 #include "./test_common.hpp"
 
+#include <nda/matrix.hxx>
+
 static_assert(!std::is_pod<nda::array<long, 2>>::value, "POD pb");
 //static_assert(is_scalar_for<int, matrix<std::complex<double>>>::type::value == 1, "oops");
 
 // ==============================================================
 
-
-
 TEST(NDA, Create1) {
   nda::array<long, 2> A(3, 3);
   EXPECT_EQ(A.shape(), (nda::shape_t<2>{3, 3}));
 
-  std::cerr << A.indexmap() <<std::endl;
-}
-
-// -------------------------------------
-
-void f(nda::array_view<long,1> v) { 
-  std::cout  << "View "<<v<<std::endl;;
-}
-
-
-TEST(NDA, View) {
-  nda::array<long, 3> a(3, 3, 4);
-
-  for (int i = 0; i < 3; ++i)
-    for (int j = 0; j < 3; ++j)
-      for (int k = 0; k < 4; ++k) a(i, j, k) = i + 10 * j + 100 * k;
-
-  auto v = a(_, 1, 2);
-  //nda::array_view<long,1> v = a(_, 1, 2);
-
-  //std::cerr << v.indexmap() <<std::endl;
-  //f(v);
-
-  EXPECT_EQ(v.shape(), (nda::shape_t<1>{3}));
-
-  EXPECT_EQ(a(1, 1, 2), 1 + 10 * 1 + 100 * 2);
-
-  a(1, 1, 2) = -28;
-  EXPECT_EQ(v(1), a(1, 1, 2));
+  std::cerr << A.indexmap() << std::endl;
 }
 
 // -------------------------------------
@@ -72,21 +44,20 @@ TEST(NDA, Iterator1) {
   for (auto x : A) EXPECT_EQ(x, i++);
 }
 
-/*
 // -------------------------------------
 
 TEST(NDA, CreateResize) {
 
-  array<long, 2> A;
-  A.resize(make_shape(3, 3));
+  nda::array<long, 2> A;
+  A.resize({3, 3});
   EXPECT_EQ(A.shape(), (nda::shape_t<2>{3, 3}));
 
-  matrix<double> M;
+  nda::array<double, 2> M;
   M.resize(3, 3);
 
   EXPECT_EQ(M.shape(), (nda::shape_t<2>{3, 3}));
 
-  vector<double> V;
+  nda::array<long, 1> V;
   V.resize(10);
 
   EXPECT_EQ(V.shape(), (nda::shape_t<1>{10}));
@@ -97,21 +68,21 @@ TEST(NDA, CreateResize) {
 TEST(NDA, InitList) {
 
   // 1d
-  array<double, 1> A = {1, 2, 3, 4};
+  nda::array<double, 1> A = {1, 2, 3, 4};
 
   EXPECT_EQ(A.shape(), (nda::shape_t<1>{4}));
 
   for (int i = 0; i < 4; ++i) EXPECT_EQ(A(i), i + 1);
 
   // 2d
-  array<double, 2> B = {{1, 2}, {3, 4}, {5, 6}};
+  nda::array<double, 2> B = {{1, 2}, {3, 4}, {5, 6}};
 
   EXPECT_EQ(B.shape(), (nda::shape_t<2>{3, 2}));
   for (int i = 0; i < 3; ++i)
     for (int j = 0; j < 2; ++j) EXPECT_EQ(B(i, j), j + 2 * i + 1);
 
   // matrix
-  matrix<double> M = {{1, 2}, {3, 4}, {5, 6}};
+  nda::matrix<double> M = {{1, 2}, {3, 4}, {5, 6}};
   EXPECT_EQ(M.shape(), (nda::shape_t<2>{3, 2}));
 
   for (int i = 0; i < 3; ++i)
@@ -121,12 +92,12 @@ TEST(NDA, InitList) {
 // ==============================================================
 
 TEST(NDA, MoveConstructor) {
-  array<double, 1> A(3);
+  nda::array<double, 1> A(3);
   A() = 9;
 
-  array<double, 1> B(std::move(A));
+  nda::array<double, 1> B(std::move(A));
 
-  EXPECT_TRUE(A.is_empty());
+  EXPECT_TRUE(A.size() == 0);
   EXPECT_EQ(B.shape(), (nda::shape_t<1>{3}));
   for (int i = 0; i < 3; ++i) EXPECT_EQ(B(i), 9);
 }
@@ -135,17 +106,17 @@ TEST(NDA, MoveConstructor) {
 
 TEST(NDA, MoveAssignment) {
 
-  array<double, 1> A(3);
+  nda::array<double, 1> A(3);
   A() = 9;
 
-  array<double, 1> B;
+  nda::array<double, 1> B;
   B = std::move(A);
 
   EXPECT_TRUE(A.is_empty());
   EXPECT_EQ(B.shape(), (nda::shape_t<1>{3}));
   for (int i = 0; i < 3; ++i) EXPECT_EQ(B(i), 9);
 }
-
+/*
 // ===================== SWAP =========================================
 
 TEST(NDA, Swap) {
@@ -228,11 +199,12 @@ TEST(NDA, DeepSwapView) {
   EXPECT_EQ(WW, (vector<double>{3, 3}));
   EXPECT_EQ(VV, (vector<double>{4, 4}));
 }
+*/
 
 // ==============================================================
 
 TEST(NDA, Print) {
-  array<long, 2> A(2, 3), B;
+  nda::array<long, 2> A(2, 3), B;
 
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 3; ++j) A(i, j) = 10 * i + j;
@@ -243,36 +215,38 @@ TEST(NDA, Print) {
 // ==============================================================
 
 TEST(NDA, Ellipsis) {
-  array<long, 3> A(2, 3, 4);
+  nda::array<long, 3> A(2, 3, 4);
   A() = 7;
 
-  assert_all_close(A(0, ___), A(0, _, _), 1.e-15);
+  EXPECT_ARRAY_NEAR(A(0, ___), A(0, _, _), 1.e-15);
 
-  array<long, 4> B(2, 3, 4, 5);
+  nda::array<long, 4> B(2, 3, 4, 5);
   B() = 8;
 
-  assert_all_close(B(0, ___, 3), B(0, _, _, 3), 1.e-15);
-  assert_all_close(B(0, ___, 2, 3), B(0, _, 2, 3), 1.e-15);
-  assert_all_close(B(___, 2, 3), B(_, _, 2, 3), 1.e-15);
+  EXPECT_ARRAY_NEAR(B(0, ___, 3), B(0, _, _, 3), 1.e-15);
+  EXPECT_ARRAY_NEAR(B(0, ___, 2, 3), B(0, _, 2, 3), 1.e-15);
+  EXPECT_ARRAY_NEAR(B(___, 2, 3), B(_, _, 2, 3), 1.e-15);
 }
+
 
 // ==============================================================
 
 template <typename ArrayType> auto sum0(ArrayType const &A) {
-  array<typename ArrayType::value_type, ArrayType::rank - 1> res = A(0, ___);
+  nda::array<typename ArrayType::value_t, ArrayType::rank - 1> res = A(0, ___);
   for (size_t u = 1; u < A.shape()[0]; ++u) res += A(u, ___);
   return res;
 }
 
 TEST(NDA, Ellipsis2) {
-  array<double, 2> A(5, 2);
+  nda::array<double, 2> A(5, 2);
   A() = 2;
-  array<double, 3> B(5, 2, 3);
+  nda::array<double, 3> B(5, 2, 3);
   B() = 3;
-  assert_all_close(sum0(A), array<double, 1>{10, 10}, 1.e-15);
-  assert_all_close(sum0(B), array<double, 2>{{15, 15, 15}, {15, 15, 15}}, 1.e-15);
+  EXPECT_ARRAY_NEAR(sum0(A), nda::array<double, 1>{10, 10}, 1.e-15);
+  EXPECT_ARRAY_NEAR(sum0(B), nda::array<double, 2>{{15, 15, 15}, {15, 15, 15}}, 1.e-15);
 }
 
+/*
 // ==============================================================
 
 TEST(NDA, AssignVectorArray) {
@@ -290,29 +264,30 @@ TEST(NDA, AssignVectorArray) {
   EXPECT_ARRAY_NEAR(Va, array<double, 1>{2, 3, 4, 5, 6});
 }
 
+*/
 // ===========   Cross construction  ===================================================
 
 TEST(Array, CrossConstruct1) {
-  vector<int> Vi(3);
+  nda::array<int, 1> Vi(3);
   Vi() = 3;
-  vector<double> Vd(Vi);
+  nda::array<double, 1> Vd(Vi);
   EXPECT_ARRAY_NEAR(Vd, Vi);
 }
 
 // ------------------
 TEST(Array, CrossConstruct2) {
 
-  array<long, 2> A(2, 3);
+  nda::array<long, 2> A(2, 3);
 
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 3; ++j) A(i, j) = 10 * i + j;
 
-  std::vector<array<long, 2>> V(3, A);
+  std::vector<nda::array<long, 2>> V(3, A);
 
-  std::vector<array_view<long, 2>> W;
+  std::vector<nda::array_view<long, 2>> W;
   for (auto &x : V) W.push_back(x);
 
-  std::vector<array_view<long, 2>> W2(W);
+  std::vector<nda::array_view<long, 2>> W2(W);
 
   for (int i = 1; i < 3; ++i) V[i] *= i;
 
@@ -322,17 +297,22 @@ TEST(Array, CrossConstruct2) {
 
 TEST(NDA, ConvertibleCR) {
 
-  array<double, 2> A(2, 2);
-  array<dcomplex, 2> B(2, 2);
+  nda::array<double, 2> A(2, 2);
+  nda::array<dcomplex, 2> B(2, 2);
 
   //A = B; // should not compile
+
   B = A;
 
-  // can convert an array of double to an array of complex
-  static_assert(std::is_convertible<array<double, 2>, array<dcomplex, 2>>::value, "oops");
+  auto c = nda::array<dcomplex, 2>{A};
 
+  // can convert an array of double to an array of complex
+  static_assert(std::is_constructible_v<nda::array<dcomplex, 2>, nda::array<double, 2>>, "oops");
+
+#ifndef __clang__
   // can not do the reverse !
-  static_assert(!std::is_convertible<array<dcomplex, 2>, array<double, 2>>::value, "oops");
+  static_assert(not std::is_constructible_v<nda::array<double, 2>, nda::array<dcomplex, 2>>, "oops");
+  // EXCEPT that clang REQUIRES is not enough to see this (not part of SFINAE). Test on gcc ...
+#endif
+
 }
-*/
-MAKE_MAIN

@@ -20,6 +20,7 @@ namespace nda::permutations {
 
   template <size_t Rank>
   constexpr uint64_t encode(std::array<int, Rank> const &permutation) {
+    // make sure it is a permutation ?
     uint64_t result = 0;
     for (int i = 0; i < int(Rank); ++i) result += (permutation[i] >> (4 * i)) & 0b1111ull;
     return result;

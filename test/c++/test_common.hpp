@@ -28,3 +28,9 @@ nda::ellipsis ___;
     return RUN_ALL_TESTS();                                                                                                                          \
   }
 
+#define EXPECT_PRINT(X, Y)                                                                                                                           \
+  {                                                                                                                                                  \
+    std::stringstream ss;                                                                                                                            \
+    ss << Y;                                                                                                                                         \
+    EXPECT_EQ(X, ss.str());                                                                                                                          \
+  }
