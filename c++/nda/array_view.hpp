@@ -58,16 +58,18 @@ namespace nda {
 
     public:
     /// ValueType, without const if any
-    using value_t = std::remove_const_t<ValueType>;
+    using value_t = ValueType;// std::remove_const_t<ValueType>;
+    //using value_no_const_t =std::remove_const_t<ValueType>;
+
     ///
-    using regular_t = array<value_t, Rank, Layout>;
+    using regular_t = array<ValueType, Rank, Layout>;
     ///
-    using view_t = array_view<value_t, Rank, Guarantees, Layout>;
+    using view_t = array_view<ValueType, Rank, Guarantees, Layout>;
     ///
-    using const_view_t = array_view<value_t const, Rank, Guarantees, Layout>;
+    using const_view_t = array_view<ValueType const, Rank, Guarantees, Layout>;
 
     //using value_as_template_arg_t = ValueType;
-    using storage_t = mem::handle<value_t, 'B'>;
+    using storage_t = mem::handle<ValueType, 'B'>;
     using idx_map_t = idx_map<Rank, Layout>;
 
     static constexpr int rank      = Rank;
@@ -81,11 +83,11 @@ namespace nda {
     static_assert(Guarantees == 0, "Not implemented");
 
     // FIXME : h5
-    // static std::string hdf5_scheme() { return "array<" + triqs::h5::get_hdf5_scheme<value_t>() + "," + std::to_string(rank) + ">"; }
+    // static std::string hdf5_scheme() { return "array<" + triqs::h5::get_hdf5_scheme<ValueType>() + "," + std::to_string(rank) + ">"; }
 
     private:
     template <typename IdxMap>
-    using my_view_template_t = array_view<value_t, IdxMap::rank(), IdxMap::flags, permutations::encode(IdxMap::layout)>;
+    using my_view_template_t = array_view<ValueType, IdxMap::rank(), IdxMap::flags, permutations::encode(IdxMap::layout)>;
 
     idx_map_t _idx_m;
     storage_t _storage;
@@ -108,7 +110,7 @@ namespace nda {
      *
      * @param v a view 
      */
-    array_view(array_view<value_t, Rank> const &v) REQUIRES(is_const) : array_view(v.indexmap(), v.storage()) {}
+    array_view(array_view<ValueType, Rank> const &v) REQUIRES(is_const) : array_view(v.indexmap(), v.storage()) {}
 
     /**
      *  [Advanced] From an indexmap and a storage handle
@@ -133,7 +135,7 @@ namespace nda {
      * @param p Pointer to the data
      * @param shape Shape of the view (contiguous)
      */
-    array_view(std::array<long, Rank> const &shape, value_t *p) : array_view(idx_map_t{shape}, p) {}
+    array_view(std::array<long, Rank> const &shape, ValueType *p) : array_view(idx_map_t{shape}, p) {}
 
     /** 
      * [Advanced] From a pointer to data, and an idx_map 
@@ -142,7 +144,8 @@ namespace nda {
      * @param p Pointer to the data 
      * @param idxm Index Map (view can be non contiguous). If the offset is non zero, the view starts at p + idxm.offset()
      */
-    array_view(idx_map<Rank, Layout> const &idxm, ValueType *p) : _idx_m(idxm), _storage{p, size_t(idxm.size() + idxm.offset())} {}
+    array_view(idx_map<Rank, Layout> const &idxm, ValueType *p) : _idx_m(idxm), _storage{p} {}
+    //array_view(idx_map<Rank, Layout> const &idxm, ValueType *p) : _idx_m(idxm), _storage{p, size_t(idxm.size() + idxm.offset())} {}
 
     // Move assignment not defined : will use the copy = since view must copy data
 
@@ -182,7 +185,7 @@ namespace nda {
     }
 
     /// Rebind view
-    void rebind(array_view<value_t const, Rank> const &a) {
+    void rebind(array_view<value_t const, Rank> const &a) REQUIRES (!is_const) {
       static_assert(is_const, "Can not rebind a view of const ValueType to a view of ValueType");
       _idx_m   = a._idx_m;
       _storage = a._storage;

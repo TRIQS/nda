@@ -86,21 +86,21 @@ TEST_F(Ref, HR) { // NOLINT
   EXPECT_EQ(h3.data()[2], 89); //NOLINT
 }
 
-// ---- Contruct R B
-TEST_F(Ref, HBR) { // NOLINT
+//// ---- Contruct R B
+//TEST_F(Ref, HBR) { // NOLINT
 
-  handle<int, 'R'> h{10};
+  //handle<int, 'R'> h{10};
 
-  handle<int, 'B'> b{h};
-  handle<int, 'B'> b2;
-  b2 = h;
+  //handle<int, 'B'> b{h};
+  //handle<int, 'B'> b2;
+  //b2 = h;
 
-  // make sure it is a copy
-  b.data()[2] = 89;
-  handle<int, 'R'> h2{b};
-  b.data()[2] = 0;
-  EXPECT_EQ(h2.data()[2], 89); //NOLINT
-}
+  //// make sure it is a copy
+  //b.data()[2] = 89;
+  //handle<int, 'R'> h2{b};
+  //b.data()[2] = 0;
+  //EXPECT_EQ(h2.data()[2], 89); //NOLINT
+//}
 
 // ---- Construct R, S
 TEST_F(Ref, HSR) { // NOLINT

@@ -25,6 +25,7 @@ if(HDF5_HL_LIBRARIES)    # CMake 3.6.0 and later puts libhdf5_hl into a separate
 endif(HDF5_HL_LIBRARIES)
 
 message(STATUS "HDF5_LIBRARIES = ${HDF5_LIBRARIES}")
+message(STATUS "HDF5_INCLUDE_DIRS = ${HDF5_INCLUDE_DIRS}")
 
 # Get hdf5 version and add a definition HDF5_LT_189 if version < 1.8.9
 execute_process(COMMAND ${HDF5_DIFF_EXECUTABLE} --version OUTPUT_VARIABLE diff_output)
