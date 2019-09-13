@@ -1,8 +1,8 @@
 #include <cstddef>
 #include <type_traits>
 
-#include "./handle.hpp"
 #include "./allocators.hpp"
+#include "./rtable.hpp"
 
 namespace nda::mem {
 

@@ -52,13 +52,14 @@ namespace nda::mem {
     T &get() noexcept { return x; }
     T const &get() const noexcept { return x; }
   };
+ 
+  // ------------------  tag and var for constructors -------------------------------------
 
-  // -------------- Global table  ---------------------------
+  struct do_not_initialize_t {};
+  inline static constexpr do_not_initialize_t do_not_initialize{};
 
-  struct globals {
-    static constexpr bool init_dcmplx = true; // initialize dcomplex to 0 globally
-    static rtable_t rtable;                   // the table of the ref counter.
-  };
+  struct init_zero_t {};
+  inline static constexpr init_zero_t init_zero{};
 
   // -------------- handle ---------------------------
 
@@ -71,13 +72,7 @@ namespace nda::mem {
   template <typename T, char rbs>
   struct handle;
 
-  // ------------------  Regular -------------------------------------
-
-  struct do_not_initialize_t {};
-  inline static constexpr do_not_initialize_t do_not_initialize{};
-
-  struct init_zero_t {};
-  inline static constexpr init_zero_t init_zero{};
+  // ------------------  HEAP -------------------------------------
 
   template <typename T>
   struct handle<T, 'R'> {
@@ -178,23 +173,6 @@ namespace nda::mem {
         for (size_t i = 0; i < size; ++i) new (_data + i) T();
       }
     }
-
-    //// Construct by making a clone of the data
-    //handle(handle<T, 'B'> const &x) : handle(x.size(), do_not_initialize) {
-      //if (is_null()) return; // nothing to do for null handle
-      //if constexpr (std::is_trivially_copyable_v<T>) {
-        //std::memcpy(_data, x.data(), x.size() * sizeof(T));
-      //} else {
-        //for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]); // placement new
-      //}
-    //}
-
-    //// Construct by making a clone of the data
-    //handle(handle<T, 'S'> const &x) : handle(handle<T, 'B'>{x}) {}
-
-    //// Construct by making a clone of the data
-    //handle(handle const &x) : handle(handle<T, 'B'>{x}) {}
-
 
     // Construct by making a clone of the data
     handle(handle const &x) : handle(x.size(), do_not_initialize) {
@@ -389,19 +367,12 @@ namespace nda::mem {
     private:
     handle<T0, 'R'> const *_parent = nullptr; // Parent, Required for regular->shared promotion in Python Converter
     T *_data                       = nullptr; // Pointer to the start of the memory block
-    //size_t _size                   = 0;       // Size of the memory block. Invariant: size > 0 iif data != 0
 
     public:
     using value_type = T;
 
     handle() = default;
    
-    //handle(T *ptr, size_t s) noexcept : _data(ptr), _size(s) {}
-    //handle(handle<T, 'B'> const &x) = default;
-    //handle(handle<T0, 'R'> const &x) noexcept : _parent(&x), _data(x.data()), _size(x.size()) {}
-    //handle(handle<T0, 'S'> const &x) noexcept : _data(x.data()), _size(x.size()) {}
-    //handle(handle<T0, 'B'> const &x) noexcept REQUIRES(std::is_const_v<T>) : _data(x.data()), _size(x.size()) {}
-
     handle(T *ptr) noexcept : _data(ptr) {}
     handle(handle<T, 'B'> const &x) = default;
     
@@ -419,7 +390,6 @@ namespace nda::mem {
     // A const-handle does not entail T const data
     T *data() const noexcept { return _data; }
 
-   // long size() const noexcept { return _size; }
   };
 
 } // namespace nda::mem

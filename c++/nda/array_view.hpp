@@ -1,5 +1,5 @@
 #pragma once
-#include "./storage/handle.hpp"
+#include "./storage/policies.hpp"
 #include "./indexmap/idx_map.hpp"
 #include "./basic_functions.hpp"
 #include "./assignment.hpp"
@@ -69,7 +69,7 @@ namespace nda {
     using const_view_t = array_view<ValueType const, Rank, Guarantees, Layout>;
 
     //using value_as_template_arg_t = ValueType;
-    using storage_t = mem::handle<ValueType, 'B'>;
+    using storage_t = mem::borrowed::handle<ValueType>;
     using idx_map_t = idx_map<Rank, Layout>;
 
     static constexpr int rank      = Rank;

@@ -42,7 +42,7 @@ namespace nda {
     ///
     using const_view_t = array_view<ValueType const, Rank>;
 
-    using storage_t = mem::handle<ValueType, 'R'>;
+    using storage_t = mem::heap::handle<ValueType>;
     using idx_map_t = idx_map<Rank, Layout>; 
     
 //    static constexpr uint64_t layout = Layout;
@@ -102,8 +102,8 @@ namespace nda {
      * @param mem_handle  memory handle
      * NB: make a new copy.
      */
-    template <char RBS>
-    array(idx_map<Rank> const &idxm, mem::handle<ValueType, RBS> mem_handle) : _idx_m(idxm), _storage(std::move(mem_handle)) {}
+    //template <char RBS>
+    //array(idx_map<Rank> const &idxm, mem::handle<ValueType, RBS> mem_handle) : _idx_m(idxm), _storage(std::move(mem_handle)) {}
 
     /// Construct from anything that has an indexmap and a storage compatible with this class
     //template <typename T> array(T const &a) REQUIRES(XXXX): array(a.indexmap(), a.storage()) {}
@@ -129,8 +129,8 @@ namespace nda {
      * @param shape  Shape of the array (lengths in each dimension)
      * @param mem_handle  memory handle
      */
-    template <char RBS>
-    array(shape_t<Rank> const &shape, mem::handle<ValueType, RBS> mem_handle) : array(idx_map_t{shape}, mem_handle) {}
+    //template <char RBS>
+    //array(shape_t<Rank> const &shape, mem::handle<ValueType, RBS> mem_handle) : array(idx_map_t{shape}, mem_handle) {}
 
     // --- with initializers
 
