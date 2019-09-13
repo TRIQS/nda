@@ -7,8 +7,8 @@ auto const &indexmap() const { return _idx_m; }
 storage_t const &storage() const { return _storage; }
 storage_t &storage() { return _storage; }
 
-/// Memory layout
-auto layout() const { return _idx_m.layout(); }
+/// Memory stride_order
+auto stride_order() const { return _idx_m.stride_order(); }
 
 /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
 ValueType const *data_start() const { return _storage.data(); }
@@ -66,7 +66,7 @@ FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) {
     // case 2 : we have to make a slice
     else {
       // Static rank
-      auto const [offset, idxm] = slice_static::slice_layout(self._idx_m, x...);
+      auto const [offset, idxm] = slice_static::slice_stride_order(self._idx_m, x...);
 
       return my_view_template_t<decltype(idxm)>{std::move(idxm), {self._storage, offset}};
     }

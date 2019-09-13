@@ -9,9 +9,9 @@ namespace nda {
 
   // ---------------------- declare array and view  --------------------------------
 
-  template <typename ValueType, int Rank, uint64_t Layout = 0>
+  template <typename ValueType, int Rank, uint64_t StrideOrder = 0>
   class array;
-  template <typename ValueType, int Rank, layout_info_e LayoutInfo = layout_info_e::none, uint64_t Layout = 0>
+  template <typename ValueType, int Rank, layout_info_e LayoutInfo = layout_info_e::none, uint64_t StrideOrder = 0>
   class array_view;
 
   // ---------------------- is_array_or_view_container  --------------------------------
@@ -22,36 +22,36 @@ namespace nda {
   template <typename ValueType, int Rank>
   inline constexpr bool is_regular_or_view_v<array<ValueType, Rank>> = true;
 
-  template <typename ValueType, int Rank, layout_info_e LayoutInfo, uint64_t Layout>
-  inline constexpr bool is_regular_or_view_v<array_view<ValueType, Rank, LayoutInfo, Layout>> = true;
+  template <typename ValueType, int Rank, layout_info_e LayoutInfo, uint64_t StrideOrder>
+  inline constexpr bool is_regular_or_view_v<array_view<ValueType, Rank, LayoutInfo, StrideOrder>> = true;
 
   // ---------------------- concept  --------------------------------
 
-  template <typename ValueType, int Rank, uint64_t Layout>
-  inline constexpr bool is_ndarray_v<array<ValueType, Rank, Layout>> = true;
+  template <typename ValueType, int Rank, uint64_t StrideOrder>
+  inline constexpr bool is_ndarray_v<array<ValueType, Rank, StrideOrder>> = true;
 
-  template <typename ValueType, int Rank, layout_info_e LayoutInfo, uint64_t Layout>
-  inline constexpr bool is_ndarray_v<array_view<ValueType, Rank, LayoutInfo, Layout>> = true;
+  template <typename ValueType, int Rank, layout_info_e LayoutInfo, uint64_t StrideOrder>
+  inline constexpr bool is_ndarray_v<array_view<ValueType, Rank, LayoutInfo, StrideOrder>> = true;
 
   // ---------------------- algebra --------------------------------
 
-  template <typename ValueType, int Rank, uint64_t Layout>
-  inline constexpr char get_algebra<array<ValueType, Rank, Layout>> = 'A';
+  template <typename ValueType, int Rank, uint64_t StrideOrder>
+  inline constexpr char get_algebra<array<ValueType, Rank, StrideOrder>> = 'A';
 
-  template <typename ValueType, int Rank, layout_info_e LayoutInfo, uint64_t Layout>
-  inline constexpr char get_algebra<array_view<ValueType, Rank, LayoutInfo, Layout>> = 'A';
+  template <typename ValueType, int Rank, layout_info_e LayoutInfo, uint64_t StrideOrder>
+  inline constexpr char get_algebra<array_view<ValueType, Rank, LayoutInfo, StrideOrder>> = 'A';
 
   // ---------------------- get_layout_info --------------------------------
 
   template <typename ValueType, int Rank>
   inline constexpr layout_info_e get_layout_info<array<ValueType, Rank>> = array<ValueType, Rank>::idx_map_t::layout_info;
 
-  template <typename ValueType, int Rank, layout_info_e LayoutInfo, uint64_t Layout>
-  inline constexpr layout_info_e get_layout_info<array_view<ValueType, Rank, LayoutInfo, Layout>> = LayoutInfo;
+  template <typename ValueType, int Rank, layout_info_e LayoutInfo, uint64_t StrideOrder>
+  inline constexpr layout_info_e get_layout_info<array_view<ValueType, Rank, LayoutInfo, StrideOrder>> = LayoutInfo;
 
   // ---------------------- array_view  --------------------------------
 
-  template <typename ValueType, int Rank, layout_info_e LayoutInfo, uint64_t Layout>
+  template <typename ValueType, int Rank, layout_info_e LayoutInfo, uint64_t StrideOrder>
   class array_view {
 
     public:
@@ -59,28 +59,28 @@ namespace nda {
     using value_t = ValueType; 
 
     ///
-    using regular_t = array<ValueType, Rank, Layout>;
+    using regular_t = array<ValueType, Rank, StrideOrder>;
     ///
-    using view_t = array_view<ValueType, Rank, LayoutInfo, Layout>;
+    using view_t = array_view<ValueType, Rank, LayoutInfo, StrideOrder>;
     ///
-    using const_view_t = array_view<ValueType const, Rank, LayoutInfo, Layout>;
+    using const_view_t = array_view<ValueType const, Rank, LayoutInfo, StrideOrder>;
 
     //using value_as_template_arg_t = ValueType;
     using storage_t = mem::borrowed::handle<ValueType>;
-    using idx_map_t = idx_map<Rank, Layout, LayoutInfo>;
+    using idx_map_t = idx_map<Rank, StrideOrder, LayoutInfo>;
 
     static constexpr int rank      = Rank;
     static constexpr bool is_view  = true;
     static constexpr bool is_const = std::is_const_v<ValueType>;
 
-    //    static constexpr uint64_t layout = Layout;
+    //    static constexpr uint64_t stride_order = StrideOrder;
 
     // FIXME : h5
     // static std::string hdf5_scheme() { return "array<" + triqs::h5::get_hdf5_scheme<ValueType>() + "," + std::to_string(rank) + ">"; }
 
     private:
     template <typename IdxMap>
-    using my_view_template_t = array_view<ValueType, IdxMap::rank(), IdxMap::layout_info, permutations::encode(IdxMap::layout)>;
+    using my_view_template_t = array_view<ValueType, IdxMap::rank(), IdxMap::layout_info, permutations::encode(IdxMap::stride_order)>;
 
     idx_map_t _idx_m;
     storage_t _storage;
@@ -138,7 +138,7 @@ namespace nda {
      * @param idxm Index Map (view can be non contiguous). If the offset is non zero, the view starts at p + idxm.offset()
      */
     array_view(idx_map_t const &idxm, ValueType *p) : _idx_m(idxm), _storage{p} {}
-    //array_view(idx_map<Rank, Layout> const &idxm, ValueType *p) : _idx_m(idxm), _storage{p, size_t(idxm.size() + idxm.offset())} {}
+    //array_view(idx_map<Rank, StrideOrder> const &idxm, ValueType *p) : _idx_m(idxm), _storage{p, size_t(idxm.size() + idxm.offset())} {}
 
     // Move assignment not defined : will use the copy = since view must copy data
 
@@ -191,9 +191,9 @@ namespace nda {
   };
 
   /*
-  template <typename ValueType, int Rank, uint64_t Flags, uint64_t Layout> class array_view : public array_view<ValueType, Rank, 0, Layout> {
+  template <typename ValueType, int Rank, uint64_t Flags, uint64_t StrideOrder> class array_view : public array_view<ValueType, Rank, 0, StrideOrder> {
 
-    using B = array_view<ValueType, Rank, 0, Layout>;
+    using B = array_view<ValueType, Rank, 0, StrideOrder>;
 
     public:
    
@@ -206,7 +206,7 @@ namespace nda {
   };
 */
   /// Aliases
-  template <typename ValueType, int Rank, layout_info_e LayoutInfo = layout_info_e::none, uint64_t Layout = 0>
-  using array_const_view = array_view<ValueType const, Rank, LayoutInfo, Layout>;
+  template <typename ValueType, int Rank, layout_info_e LayoutInfo = layout_info_e::none, uint64_t StrideOrder = 0>
+  using array_const_view = array_view<ValueType const, Rank, LayoutInfo, StrideOrder>;
 
 } // namespace nda

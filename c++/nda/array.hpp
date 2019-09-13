@@ -28,7 +28,7 @@ namespace nda {
 
   // ---------------------- array--------------------------------
 
-  template <typename ValueType, int Rank, uint64_t Layout>
+  template <typename ValueType, int Rank, uint64_t StrideOrder>
   class array {
     static_assert(!std::is_const<ValueType>::value, "ValueType can not be const. WHY ?");
 
@@ -38,15 +38,15 @@ namespace nda {
     ///
     using regular_t = array<ValueType, Rank>;
     ///
-    using view_t = array_view<ValueType, Rank, layout_info_e::contiguous, Layout>;
+    using view_t = array_view<ValueType, Rank, layout_info_e::contiguous, StrideOrder>;
     ///
-    using const_view_t = array_view<ValueType const, Rank,layout_info_e::contiguous, Layout>;
+    using const_view_t = array_view<ValueType const, Rank,layout_info_e::contiguous, StrideOrder>;
 
     using storage_t = mem::heap::handle<ValueType>;
-    using idx_map_t = idx_map<Rank, Layout, layout_info_e::contiguous>; 
+    using idx_map_t = idx_map<Rank, StrideOrder, layout_info_e::contiguous>; 
     
-//    static constexpr uint64_t layout = Layout;
-  //  static constexpr layout_info_e layout= layout_info_e::contiguous;
+//    static constexpr uint64_t stride_order = StrideOrder;
+  //  static constexpr layout_info_e stride_order= layout_info_e::contiguous;
 
     static constexpr int rank      = Rank;
     static constexpr bool is_const = false;
@@ -54,7 +54,7 @@ namespace nda {
 
     private:
     template <typename IdxMap>
-    using my_view_template_t = array_view<value_t, IdxMap::rank(), IdxMap::layout_info, permutations::encode(IdxMap::layout)>;
+    using my_view_template_t = array_view<value_t, IdxMap::rank(), IdxMap::layout_info, permutations::encode(IdxMap::stride_order)>;
 
     idx_map_t _idx_m;
     storage_t _storage;

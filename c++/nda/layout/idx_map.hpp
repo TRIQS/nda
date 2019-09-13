@@ -10,7 +10,7 @@
 
 namespace nda {
 
-  template <int Rank, uint64_t Layout, layout_info_e LayoutInfo>
+  template <int Rank, uint64_t StrideOrder, layout_info_e LayoutInfo>
   class idx_map;
 
 }
@@ -47,19 +47,19 @@ namespace nda {
    *
    * @tparam Rank : rank of the index map
    * 
-   * @tparam Layout : a permutation for the memory layout of the array
+   * @tparam StrideOrder : a permutation for the memory stride_order of the array
    *    
-   *    Layout[0] : the slowest index,
-   *    Layout[Rank-1] : the fastest index
+   *    StrideOrder[0] : the slowest index,
+   *    StrideOrder[Rank-1] : the fastest index
    *    Example :
    *        012 : C the last index is the fastest
    *        210 : Fortran, the first index is the fastest
    *        120 : storage (i,j,k) is : index j is slowest, then k, then i
    *    
-   *    NB : Layout = 0 is the default and it is means 0 order
+   *    NB : StrideOrder = 0 is the default and it is means 0 order
    *
    * */
-  template <int Rank, uint64_t Layout, layout_info_e LayoutInfo>
+  template <int Rank, uint64_t StrideOrder, layout_info_e LayoutInfo>
   class idx_map {
 
     static_assert(Rank < 64, "Rank must be < 64"); // constraint of slice implementation. ok...
@@ -71,10 +71,10 @@ namespace nda {
     static constexpr layout_info_e layout_info=LayoutInfo;
    
     // DEBUG ONLY 
-    static constexpr uint64_t layout_encoded = Layout;
+    static constexpr uint64_t stride_order_encoded = StrideOrder;
 
-    static constexpr std::array<int, Rank> layout =
-       (Layout == 0 ? permutations::identity<Rank>() : permutations::decode<Rank>(Layout)); // 0 is C layout
+    static constexpr std::array<int, Rank> stride_order =
+       (StrideOrder == 0 ? permutations::identity<Rank>() : permutations::decode<Rank>(StrideOrder)); // 0 is C stride_order
 
     // ----------------  Accessors -------------------------
 
@@ -101,19 +101,19 @@ namespace nda {
     }
 
     ///
-    static constexpr bool is_layout_C() {
-      return (permutations::encode(layout) == permutations::encode(permutations::identity<Rank>()));
-    } // (layout == permutations::identity<Rank>()); }
+    static constexpr bool is_stride_order_C() {
+      return (permutations::encode(stride_order) == permutations::encode(permutations::identity<Rank>()));
+    } // (stride_order == permutations::identity<Rank>()); }
 
     ///
-    static constexpr bool is_layout_Fortran() {
-      return (permutations::encode(layout) == permutations::encode(permutations::reverse_identity<Rank>()));
-    } //(layout == permutations::reverse_identity<Rank>()); }
+    static constexpr bool is_stride_order_Fortran() {
+      return (permutations::encode(stride_order) == permutations::encode(permutations::reverse_identity<Rank>()));
+    } //(stride_order == permutations::reverse_identity<Rank>()); }
 
     ///
-    bool check_layout() const noexcept {
+    bool check_stride_order() const noexcept {
       bool r = true;
-      for (int i = 1; i < rank(); ++i) r &= (str[layout[i - 1]] <= str[layout[i]]); // runtime
+      for (int i = 1; i < rank(); ++i) r &= (str[stride_order[i - 1]] <= str[stride_order[i]]); // runtime
       return r;
     }
 
@@ -139,7 +139,7 @@ namespace nda {
      * @param idxm
      */
     template<layout_info_e LayoutInfo2>
-    idx_map(idx_map<Rank, Layout, LayoutInfo2> const & idxm)  noexcept : len(idxm.lengths()), str(idxm.strides()) {}
+    idx_map(idx_map<Rank, StrideOrder, LayoutInfo2> const & idxm)  noexcept : len(idxm.lengths()), str(idxm.strides()) {}
 
     /** 
      * Construction from the lengths, the strides
@@ -158,7 +158,7 @@ namespace nda {
       long s = 1;
 
       for (int v = this->rank() - 1; v >= 0; --v) { // rank() is constexpr ...
-        int u  = layout[v];
+        int u  = stride_order[v];
         str[u] = s;
         s *= len[u];
       }
@@ -176,7 +176,7 @@ namespace nda {
     private:
     template <size_t Is>
     FORCEINLINE long __get(long arg) const noexcept {
-      if constexpr (Is == layout[Rank - 1])
+      if constexpr (Is == stride_order[Rank - 1])
         return arg;
       else
         return arg * std::get<Is>(str);
@@ -214,7 +214,7 @@ namespace nda {
 
     // ----------------  Iterator -------------------------
 
-    using iterator = idx_map_iterator<idx_map<Rank, Layout, LayoutInfo>>;
+    using iterator = idx_map_iterator<idx_map<Rank, StrideOrder, LayoutInfo>>;
 
     iterator begin() const { return {this}; }
     iterator cbegin() const { return {this}; }
@@ -240,8 +240,8 @@ namespace nda {
   // ---------------- Transposition -------------------------
 
  // FIXME COMPUTE THE CORRECT LAYOUT !!
-  //template <int Rank, uint64_t Layout, layout_info_e LayoutInfo>
-  //idx_map<Rank, Layout, LayoutInfo> transpose(idx_map<Rank, Layout, LayoutInfo> const &idx, std::array<int, Rank> const &perm) {
+  //template <int Rank, uint64_t StrideOrder, layout_info_e LayoutInfo>
+  //idx_map<Rank, StrideOrder, LayoutInfo> transpose(idx_map<Rank, StrideOrder, LayoutInfo> const &idx, std::array<int, Rank> const &perm) {
     //std::array<long, Rank> l, s;
     //for (int u = 0; u < idx.rank(); ++u) {
       //l[perm[u]] = idx.lengths()[u];
@@ -264,13 +264,13 @@ namespace nda {
   //// for (auto [pos, idx] : enumerate(idxmap)) : iterate on position and indices
   //template <int Rank> _changed_iter<Rank, true, traversal::C_t> enumerate_indices(idx_map<Rank> const &x) { return {&x}; }
 
-  //template <int Rank> _changed_iter<Rank, false, traversal::Dynamical_t> in_layout_order(idx_map<Rank> const &x) { return {&x}; }
-  //template <int Rank> _changed_iter<Rank, true, traversal::Dynamical_t> enumerate_indices_in_layout_order(idx_map<Rank> const &x) { return {&x}; }
+  //template <int Rank> _changed_iter<Rank, false, traversal::Dynamical_t> in_stride_order_order(idx_map<Rank> const &x) { return {&x}; }
+  //template <int Rank> _changed_iter<Rank, true, traversal::Dynamical_t> enumerate_indices_in_stride_order_order(idx_map<Rank> const &x) { return {&x}; }
 
   // ----------------  foreach  -------------------------
 
-/*  template <int Rank, uint64_t Layout, layout_info_e LayoutInfo, typename... Args>*/
-  //FORCEINLINE void for_each(idx_map<Rank, Layout, LayoutInfo> const &idx, Args &&... args) {
+/*  template <int Rank, uint64_t StrideOrder, layout_info_e LayoutInfo, typename... Args>*/
+  //FORCEINLINE void for_each(idx_map<Rank, StrideOrder, LayoutInfo> const &idx, Args &&... args) {
     //for_each(idx.lengths(), std::forward<Args>(args)...);
   /*}*/
 
