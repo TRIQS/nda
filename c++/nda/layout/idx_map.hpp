@@ -64,7 +64,6 @@ namespace nda {
     static_assert(Rank < 64, "Rank must be < 64"); // constraint of slice implementation. ok...
 
     std::array<long, Rank> len, str;
-    long _offset = 0;
 
     public:
     static constexpr std::array<int, Rank> layout =
@@ -87,9 +86,6 @@ namespace nda {
 
     /// Total number of elements (products of lengths in each dimension).
     long size() const noexcept { return std::accumulate(len.cbegin(), len.cend(), 1, std::multiplies<long>()); }
-
-    /// Shift from origin
-    long offset() const noexcept { return _offset; }
 
     /// Is the data contiguous in memory ?
     bool is_contiguous() const noexcept {
@@ -128,19 +124,17 @@ namespace nda {
     idx_map &operator=(idx_map &&) = default;
 
     /** 
-     * Construction from the lengths, the strides, offset
+     * Construction from the lengths, the strides
      * @param lengths
      * @param strides
-     * @param offset
      */
-    idx_map(std::array<long, Rank> const &lengths, std::array<long, Rank> const &strides, long offset) noexcept
-       : len(lengths), str(strides), _offset(offset) {}
+    idx_map(std::array<long, Rank> const &lengths, std::array<long, Rank> const &strides) noexcept
+       : len(lengths), str(strides) {}
 
     /** 
-     * Construction from the lengths, the strides, offset
+     * Construction from the lengths, the strides
      * @param lengths
      * @param strides
-     * @param offset
      */
     idx_map(std::array<long, Rank> const &lengths) noexcept : len(lengths) {
       // compute the strides for a compact array
@@ -159,21 +153,6 @@ namespace nda {
     idx_map(std::array<long, R> const &) {
       static_assert(R == Rank, "Rank of the argument incorrect in idx_map construction");
     }
-
-    /**
-     * @param idx An index map with dynamical rank
-     *
-     * NB : Throws if idx has the correct rank or throws
-     */
-    /*  idx_map(idx_map_dyn const &m) {
-      if (m.rank() != Rank) NDA_RUNTIME_ERROR << "Can not construct from a dynamical rank " << m.rank() << " while expecting " << Rank;
-      for (int u = 0; u < rank(); ++u) {
-        len[u] = m.lengths()[u];
-        str[u] = m.strides()[u];
-      }
-      _offset = m.offset();
-    }
-    */
 
     // ----------------  Call operator -------------------------
 
@@ -231,10 +210,7 @@ namespace nda {
       if constexpr (n_args_long == Rank) { // no range, ellipsis, we simply compute the linear position
         auto _fold = call_impl<Guarantee>(std::make_index_sequence<sizeof...(Args)>{},
                                args...);           // NB do not use index_sequence_for : one instantation only by # args.
-        if (guarantee::has_zero_offset(Guarantee)) // zero offset optimization
           return _fold;
-        else
-          return _offset + _fold;
       } else { // otherwise we make a  new sliced idx_map
         return slice_static::slice(std::make_index_sequence<Rank - n_args_long>{}, std::make_index_sequence<Rank>{},
                                    std::make_index_sequence<sizeof...(Args)>{}, *this, args...);
@@ -257,7 +233,7 @@ namespace nda {
     typename iterator::end_sentinel_t cend() const { return {}; }
 
     // ----------------  Comparison -------------------------
-    bool operator==(idx_map const &x) { return (len == x.len) and (str == x.str) and (_offset == x._offset); }
+    bool operator==(idx_map const &x) { return (len == x.len) and (str == x.str); }
 
     bool operator!=(idx_map const &x) { return !(operator==(x)); }
 
@@ -267,7 +243,7 @@ namespace nda {
     friend class boost::serialization::access;
     template <class Archive>
     void serialize(Archive &ar, const unsigned int) {
-      ar &len &str &_offset;
+      ar &len &str;
     }
 
   }; // idx_map class
@@ -281,7 +257,7 @@ namespace nda {
       l[perm[u]] = idx.lengths()[u];
       s[perm[u]] = idx.strides()[u];
     }
-    return {l, s, idx.offset()};
+    return {l, s};
   }
 
   //// ----------------  More complex iterators -------------------------

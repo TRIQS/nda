@@ -52,7 +52,7 @@ namespace nda::mem {
     T &get() noexcept { return x; }
     T const &get() const noexcept { return x; }
   };
- 
+
   // ------------------  tag and var for constructors -------------------------------------
 
   struct do_not_initialize_t {};
@@ -178,9 +178,9 @@ namespace nda::mem {
     handle(handle const &x) : handle(x.size(), do_not_initialize) {
       if (is_null()) return; // nothing to do for null handle
       if constexpr (std::is_trivially_copyable_v<T>) {
-	std::memcpy(_data, x.data(), x.size() * sizeof(T));
+        std::memcpy(_data, x.data(), x.size() * sizeof(T));
       } else {
-	for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]); // placement new
+        for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]); // placement new
       }
     }
 
@@ -188,9 +188,9 @@ namespace nda::mem {
     handle(handle<T, 'S'> const &x) : handle(x.size(), do_not_initialize) {
       if (is_null()) return; // nothing to do for null handle
       if constexpr (std::is_trivially_copyable_v<T>) {
-	std::memcpy(_data, x.data(), x.size() * sizeof(T));
+        std::memcpy(_data, x.data(), x.size() * sizeof(T));
       } else {
-	for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]); // placement new
+        for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]); // placement new
       }
     }
 
@@ -372,13 +372,15 @@ namespace nda::mem {
     using value_type = T;
 
     handle() = default;
-   
+
     handle(T *ptr) noexcept : _data(ptr) {}
     handle(handle<T, 'B'> const &x) = default;
+
+    handle(handle<T, 'B'> const &x, long offset) noexcept : _data(x.data() + offset) {}
     
-    handle(handle<T0, 'R'> const &x) noexcept : _parent(&x), _data(x.data()) {}
-    handle(handle<T0, 'S'> const &x) noexcept : _data(x.data()) {}
-    handle(handle<T0, 'B'> const &x) noexcept REQUIRES(std::is_const_v<T>) : _data(x.data()) {}
+    handle(handle<T0, 'R'> const &x, long offset=0) noexcept : _parent(&x), _data(x.data() + offset) {}
+    handle(handle<T0, 'S'> const &x, long offset=0) noexcept : _data(x.data() + offset) {}
+    handle(handle<T0, 'B'> const &x, long offset=0) noexcept REQUIRES(std::is_const_v<T>) : _data(x.data() + offset) {}
 
     T &operator[](long i) noexcept { return _data[i]; }
     T const &operator[](long i) const noexcept { return _data[i]; }
@@ -389,7 +391,6 @@ namespace nda::mem {
 
     // A const-handle does not entail T const data
     T *data() const noexcept { return _data; }
-
   };
 
 } // namespace nda::mem

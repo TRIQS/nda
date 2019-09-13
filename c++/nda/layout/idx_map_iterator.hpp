@@ -18,7 +18,7 @@ namespace nda {
 
     public:
     idx_map_iterator() = default;
-    idx_map_iterator(IdxMap const *im_ptr) : im(im_ptr), pos(im->offset()), len(im->lengths()), strides(im->strides()) {
+    idx_map_iterator(IdxMap const *im_ptr) : im(im_ptr), len(im->lengths()), strides(im->strides()) {
       for (int u = 0; u < im->rank(); ++u) idx[u] = 0;
     }
 

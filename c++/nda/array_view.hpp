@@ -1,6 +1,6 @@
 #pragma once
 #include "./storage/policies.hpp"
-#include "./indexmap/idx_map.hpp"
+#include "./layout/idx_map.hpp"
 #include "./basic_functions.hpp"
 #include "./assignment.hpp"
 #include "./iterator_adapter.hpp"
