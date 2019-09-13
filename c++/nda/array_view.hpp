@@ -51,15 +51,12 @@ namespace nda {
 
   // ---------------------- array_view  --------------------------------
 
-  // Try to put the const/mutable in the TYPE
-
   template <typename ValueType, int Rank, layout_info_e LayoutInfo, uint64_t Layout>
   class array_view {
 
     public:
-    /// ValueType, without const if any
-    using value_t = ValueType; // std::remove_const_t<ValueType>;
-    //using value_no_const_t =std::remove_const_t<ValueType>;
+    /// ValueType
+    using value_t = ValueType; 
 
     ///
     using regular_t = array<ValueType, Rank, Layout>;
