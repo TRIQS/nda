@@ -110,7 +110,8 @@ namespace nda::slice_static {
   // n_of_p : the map p-> n
   // return : the new layout of the sliced map
   template <size_t P, size_t N>
-  constexpr std::array<int, P> sliced_layout(std::array<int, N> const &layout_in, std::array<int, P> const &n_of_p) {
+  constexpr std::array<int, P> sliced_mem_layout(std::array<int, N> const &layout_in, std::array<int, P> const &n_of_p) {
+    //if (layout_in == 0) return 0; // quick decision C-> C
     auto layout = nda::make_initialized_array<P>(0);
     auto p_of_n = p_of_n_map<N>(n_of_p);     // reverse the map
     for (size_t i = 0, ip = 0; i < N; ++i) { // i : index of the n
@@ -128,7 +129,8 @@ namespace nda::slice_static {
   // fl : guarantees of the idx_map to be sliced
   //
   template <size_t Q, size_t N>
-  constexpr uint64_t slice_guarantees(std::array<bool, Q> const &args_is_range, std::array<int, N> const &layout_in, int P, uint64_t fl) {
+  constexpr layout_info_e slice_layout_info(std::array<bool, Q> const &args_is_range, std::array<int, N> const &layout_in, int P,
+                                            layout_info_e layout_info) {
     // count the number of times 10 appears args_in_range
     // we must traverse in the order of the layout ! (in memory order, slowest to fastest)
     int n_10_pattern = 0;
@@ -139,13 +141,13 @@ namespace nda::slice_static {
     bool range_are_grouped_in_memory             = (n_10_pattern <= 1);
     bool range_are_grouped_in_memory_and_fastest = (n_10_pattern == 0);
 
-    uint64_t r = 0;
+    layout_info_e r = layout_info_e::none;
 
-    if (guarantee::has_contiguous(fl) and range_are_grouped_in_memory_and_fastest) r |= guarantee::contiguous;
-    if (guarantee::has_strided(fl) and range_are_grouped_in_memory) r |= guarantee::strided;
-    if (guarantee::has_smallest_stride_is_one(fl) and (not args_is_range[layout_in[P - 1]])) r |= guarantee::smallest_stride_is_one;
+    if ((layout_info & layout_info_e::contiguous) and range_are_grouped_in_memory_and_fastest) r = r | layout_info_e::contiguous;
+    if ((layout_info & layout_info_e::strided_1d) and range_are_grouped_in_memory) r = r | layout_info_e::strided_1d;
+    if ((layout_info & layout_info_e::smallest_stride_is_one) and (not args_is_range[layout_in[P - 1]])) r = r | layout_info_e::smallest_stride_is_one;
 
-    return r;
+    return layout_info_e{r};
   }
 
   // -------------- are all the range/ellipsis grouped ? -----------
@@ -222,15 +224,13 @@ namespace nda::slice_static {
     std::array<long, P> len{get_l(std::get<q_of_p[Ps]>(argstie), std::get<n_of_p[Ps]>(idxm.lengths()))...};
     std::array<long, P> str{get_s(std::get<q_of_p[Ps]>(argstie), std::get<n_of_p[Ps]>(idxm.strides()))...};
 
-    //static constexpr std::array<int, P> layout = sliced_layout(IdxMap::layout, n_of_p);
+    static constexpr std::array<int, P> mem_layout = sliced_mem_layout(IdxMap::layout, n_of_p);
 
-    // TO BE MOVED OUT in another function : the array/array_view will call it directly
-    // NOT IMPLEMENTED
-    //static constexpr uint64_t guarantees            = slice_guarantees(args_is_range, IdxMap::layout, P, get_guarantee<IdxMap::flags);
+    static constexpr layout_info_e li = layout_info_e::none; //slice_layout_info(args_is_range, IdxMap::layout, P, IdxMap::layout_info);
 
     long offset = (get_offset(std::get<q_of_n(Ns, e_pos, e_len)>(argstie), std::get<Ns>(idxm.strides())) + ... + 0);
 
-    return std::make_pair(offset, idx_map<P, 0>{len, str});
+    return std::make_pair(offset, idx_map<P, permutations::encode(mem_layout), li>{len, str});
     //return idx_map<P, permutations::encode(layout)>{len, str, offset};
   }
 

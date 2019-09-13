@@ -10,7 +10,7 @@
 
 namespace nda {
 
-  template <int Rank, uint64_t Layout = 0>
+  template <int Rank, uint64_t Layout, layout_info_e LayoutInfo>
   class idx_map;
 
 }
@@ -59,7 +59,7 @@ namespace nda {
    *    NB : Layout = 0 is the default and it is means 0 order
    *
    * */
-  template <int Rank, uint64_t Layout>
+  template <int Rank, uint64_t Layout, layout_info_e LayoutInfo>
   class idx_map {
 
     static_assert(Rank < 64, "Rank must be < 64"); // constraint of slice implementation. ok...
@@ -67,6 +67,9 @@ namespace nda {
     std::array<long, Rank> len, str;
 
     public:
+    
+    static constexpr layout_info_e layout_info=LayoutInfo;
+    
     static constexpr std::array<int, Rank> layout =
        (Layout == 0 ? permutations::identity<Rank>() : permutations::decode<Rank>(Layout)); // 0 is C layout
 
@@ -129,6 +132,13 @@ namespace nda {
     idx_map &operator=(idx_map &&) = default;
 
     /** 
+     * From an idxmap with other info flags
+     * @param idxm
+     */
+    template<layout_info_e LayoutInfo2>
+    idx_map(idx_map<Rank, Layout, LayoutInfo2> const & idxm)  noexcept : len(idxm.lengths()), str(idxm.strides()) {}
+
+    /** 
      * Construction from the lengths, the strides
      * @param lengths
      * @param strides
@@ -170,9 +180,9 @@ namespace nda {
     }
 
     // call implementation
-    template <uint64_t Guarantee, typename... Args, size_t... Is>
+    template <typename... Args, size_t... Is>
     FORCEINLINE long call_impl(std::index_sequence<Is...>, Args... args) const noexcept {
-      if constexpr (guarantee::has_smallest_stride_is_one(Guarantee))
+      if constexpr (LayoutInfo & layout_info_e::smallest_stride_is_one)
         return (__get<Is>(args) + ...);
       else
         return ((args * std::get<Is>(str)) + ...);
@@ -196,12 +206,12 @@ namespace nda {
 #else
        noexcept(true) {
 #endif
-      return call_impl<0>(std::make_index_sequence<sizeof...(Args)>{}, args...);
+      return call_impl(std::make_index_sequence<sizeof...(Args)>{}, args...);
     }
 
     // ----------------  Iterator -------------------------
 
-    using iterator = idx_map_iterator<idx_map<Rank, Layout>>;
+    using iterator = idx_map_iterator<idx_map<Rank, Layout, LayoutInfo>>;
 
     iterator begin() const { return {this}; }
     iterator cbegin() const { return {this}; }
@@ -226,15 +236,16 @@ namespace nda {
 
   // ---------------- Transposition -------------------------
 
-  template <int Rank>
-  idx_map<Rank> transpose(idx_map<Rank> const &idx, std::array<int, Rank> const &perm) {
-    std::array<long, Rank> l, s;
-    for (int u = 0; u < idx.rank(); ++u) {
-      l[perm[u]] = idx.lengths()[u];
-      s[perm[u]] = idx.strides()[u];
-    }
-    return {l, s};
-  }
+ // FIXME COMPUTE THE CORRECT LAYOUT !!
+  //template <int Rank, uint64_t Layout, layout_info_e LayoutInfo>
+  //idx_map<Rank, Layout, LayoutInfo> transpose(idx_map<Rank, Layout, LayoutInfo> const &idx, std::array<int, Rank> const &perm) {
+    //std::array<long, Rank> l, s;
+    //for (int u = 0; u < idx.rank(); ++u) {
+      //l[perm[u]] = idx.lengths()[u];
+      //s[perm[u]] = idx.strides()[u];
+    //}
+    //return {l, s};
+  //}
 
   //// ----------------  More complex iterators -------------------------
 
@@ -255,9 +266,9 @@ namespace nda {
 
   // ----------------  foreach  -------------------------
 
-  template <int R, typename... Args>
-  FORCEINLINE void for_each(idx_map<R> const &idx, Args &&... args) {
-    for_each(idx.lengths(), std::forward<Args>(args)...);
-  }
+/*  template <int Rank, uint64_t Layout, layout_info_e LayoutInfo, typename... Args>*/
+  //FORCEINLINE void for_each(idx_map<Rank, Layout, LayoutInfo> const &idx, Args &&... args) {
+    //for_each(idx.lengths(), std::forward<Args>(args)...);
+  /*}*/
 
 } // namespace nda

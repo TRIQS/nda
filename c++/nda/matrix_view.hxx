@@ -3,7 +3,7 @@
 //
 //   :source c++/nda/matrix_view.vim
 #pragma once
-#include "./storage/handle.hpp"
+#include "./storage/policies.hpp"
 #include "./layout/idx_map.hpp"
 #include "./basic_functions.hpp"
 #include "./assignment.hpp"
@@ -15,7 +15,7 @@ namespace nda {
 
   template <typename ValueType, uint64_t Layout = 0>
   class matrix;
-  template <typename ValueType, uint64_t Guarantees = 0, uint64_t Layout = 0>
+  template <typename ValueType, layout_info_e LayoutInfo = layout_info_e::none, uint64_t Layout = 0>
   class matrix_view;
 
   // ---------------------- is_matrix_or_view_container  --------------------------------
@@ -26,70 +26,68 @@ namespace nda {
   template <typename ValueType>
   inline constexpr bool is_regular_or_view_v<matrix<ValueType>> = true;
 
-  template <typename ValueType, uint64_t Guarantees, uint64_t Layout>
-  inline constexpr bool is_regular_or_view_v<matrix_view<ValueType, Guarantees, Layout>> = true;
+  template <typename ValueType, layout_info_e LayoutInfo, uint64_t Layout>
+  inline constexpr bool is_regular_or_view_v<matrix_view<ValueType, LayoutInfo, Layout>> = true;
 
   // ---------------------- concept  --------------------------------
 
   template <typename ValueType, uint64_t Layout>
   inline constexpr bool is_ndarray_v<matrix<ValueType, Layout>> = true;
 
-  template <typename ValueType, uint64_t Guarantees, uint64_t Layout>
-  inline constexpr bool is_ndarray_v<matrix_view<ValueType, Guarantees, Layout>> = true;
+  template <typename ValueType, layout_info_e LayoutInfo, uint64_t Layout>
+  inline constexpr bool is_ndarray_v<matrix_view<ValueType, LayoutInfo, Layout>> = true;
 
   // ---------------------- algebra --------------------------------
 
   template <typename ValueType, uint64_t Layout>
   inline constexpr char get_algebra<matrix<ValueType, Layout>> = 'A';
 
-  template <typename ValueType, uint64_t Guarantees, uint64_t Layout>
-  inline constexpr char get_algebra<matrix_view<ValueType, Guarantees, Layout>> = 'A';
+  template <typename ValueType, layout_info_e LayoutInfo, uint64_t Layout>
+  inline constexpr char get_algebra<matrix_view<ValueType, LayoutInfo, Layout>> = 'A';
 
-  // ---------------------- guarantees --------------------------------
+  // ---------------------- get_layout_info --------------------------------
 
   template <typename ValueType>
-  inline constexpr uint64_t get_guarantee<matrix<ValueType>> = matrix<ValueType>::guarantees;
+  inline constexpr layout_info_e get_layout_info<matrix<ValueType>> = matrix<ValueType>::idx_map_t::layout_info;
 
-  template <typename ValueType, uint64_t Guarantees, uint64_t Layout>
-  inline constexpr uint64_t get_guarantee<matrix_view<ValueType, Guarantees, Layout>> = Guarantees;
+  template <typename ValueType, layout_info_e LayoutInfo, uint64_t Layout>
+  inline constexpr layout_info_e get_layout_info<matrix_view<ValueType, LayoutInfo, Layout>> = LayoutInfo;
 
   // ---------------------- matrix_view  --------------------------------
 
   // Try to put the const/mutable in the TYPE
 
-  template <typename ValueType, uint64_t Guarantees, uint64_t Layout>
+  template <typename ValueType, layout_info_e LayoutInfo, uint64_t Layout>
   class matrix_view {
 
     public:
     /// ValueType, without const if any
-    using value_t = std::remove_const_t<ValueType>;
+    using value_t = ValueType; // std::remove_const_t<ValueType>;
+    //using value_no_const_t =std::remove_const_t<ValueType>;
+
     ///
-    using regular_t = matrix<value_t, Layout>;
+    using regular_t = matrix<ValueType, Layout>;
     ///
-    using view_t = matrix_view<value_t, Guarantees, Layout>;
+    using view_t = matrix_view<ValueType, LayoutInfo, Layout>;
     ///
-    using const_view_t = matrix_view<value_t const, Guarantees, Layout>;
+    using const_view_t = matrix_view<ValueType const, LayoutInfo, Layout>;
 
     //using value_as_template_arg_t = ValueType;
-    using storage_t = mem::handle<value_t, 'B'>;
-    using idx_map_t = idx_map<2, Layout>;
+    using storage_t = mem::borrowed::handle<ValueType>;
+    using idx_map_t = idx_map<2, Layout, LayoutInfo>;
 
     static constexpr int rank      = 2;
     static constexpr bool is_view  = true;
     static constexpr bool is_const = std::is_const_v<ValueType>;
 
-    static constexpr uint64_t guarantees = Guarantees; // for the generic shared with matrix
-                                                       //    static constexpr uint64_t layout = Layout;
-
-    // fIXME : FIRST STEP.
-    static_assert(Guarantees == 0, "Not implemented");
+    //    static constexpr uint64_t layout = Layout;
 
     // FIXME : h5
-    // static std::string hdf5_scheme() { return "matrix<" + triqs::h5::get_hdf5_scheme<value_t>() + "," + std::to_string(rank) + ">"; }
+    // static std::string hdf5_scheme() { return "matrix<" + triqs::h5::get_hdf5_scheme<ValueType>() + "," + std::to_string(rank) + ">"; }
 
     private:
     template <typename IdxMap>
-    using my_view_template_t = matrix_view<value_t, IdxMap::flags, permutations::encode(IdxMap::layout)>;
+    using my_view_template_t = matrix_view<ValueType, IdxMap::flags, permutations::encode(IdxMap::layout)>;
 
     idx_map_t _idx_m;
     storage_t _storage;
@@ -112,14 +110,14 @@ namespace nda {
      *
      * @param v a view 
      */
-    matrix_view(matrix_view<value_t> const &v) REQUIRES(is_const) : matrix_view(v.indexmap(), v.storage()) {}
+    matrix_view(matrix_view<ValueType> const &v) REQUIRES(is_const) : matrix_view(v.indexmap(), v.storage()) {}
 
     /**
      *  [Advanced] From an indexmap and a storage handle
      *  @param idxm index map
      *  @st  storage (memory handle)
      */
-    matrix_view(idx_map<2, Layout> const &idxm, storage_t st) : _idx_m(idxm), _storage(std::move(st)) {}
+    matrix_view(idx_map_t const &idxm, storage_t st) : _idx_m(idxm), _storage(std::move(st)) {}
 
     /** 
      * From other containers and view : matrix, matrix, matrix_view.
@@ -137,7 +135,7 @@ namespace nda {
      * @param p Pointer to the data
      * @param shape Shape of the view (contiguous)
      */
-    matrix_view(std::array<long, 2> const &shape, value_t *p) : matrix_view(idx_map_t{shape}, p) {}
+    matrix_view(std::array<long, 2> const &shape, ValueType *p) : matrix_view(idx_map_t{shape}, p) {}
 
     /** 
      * [Advanced] From a pointer to data, and an idx_map 
@@ -146,7 +144,8 @@ namespace nda {
      * @param p Pointer to the data 
      * @param idxm Index Map (view can be non contiguous). If the offset is non zero, the view starts at p + idxm.offset()
      */
-    matrix_view(idx_map<2, Layout> const &idxm, ValueType *p) : _idx_m(idxm), _storage{p, size_t(idxm.size() + idxm.offset())} {}
+    matrix_view(idx_map_t const &idxm, ValueType *p) : _idx_m(idxm), _storage{p} {}
+    //matrix_view(idx_map<2,Layout> const &idxm, ValueType *p) : _idx_m(idxm), _storage{p, size_t(idxm.size() + idxm.offset())} {}
 
     // Move assignment not defined : will use the copy = since view must copy data
 
@@ -186,7 +185,7 @@ namespace nda {
     }
 
     /// Rebind view
-    void rebind(matrix_view<value_t const> const &a) {
+    void rebind(matrix_view<value_t const> const &a) REQUIRES(!is_const) {
       static_assert(is_const, "Can not rebind a view of const ValueType to a view of ValueType");
       _idx_m   = a._idx_m;
       _storage = a._storage;
@@ -214,7 +213,7 @@ namespace nda {
   };
 */
   /// Aliases
-  template <typename ValueType, uint64_t Guarantees = 0, uint64_t Layout = 0>
-  using matrix_const_view = matrix_view<ValueType const, Layout, Guarantees>;
+  template <typename ValueType, layout_info_e LayoutInfo = layout_info_e::none, uint64_t Layout = 0>
+  using matrix_const_view = matrix_view<ValueType const, LayoutInfo, Layout>;
 
 } // namespace nda

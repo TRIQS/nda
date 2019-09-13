@@ -73,7 +73,9 @@ namespace nda {
 
   /// Get the first element of the array as a(0,0,0....) (i.e. also work for non containers, just with the concept !).
   template <typename A>
-  auto get_first_element(A const &a) { return _get_first_element_impl(std::make_index_sequence<get_rank<A>>{}, a); }
+  auto get_first_element(A const &a) {
+    return _get_first_element_impl(std::make_index_sequence<get_rank<A>>{}, a);
+  }
 
   /// A trait to get the return_t of the (long, ... long) for an object with ndarray concept
   template <typename A>
@@ -86,20 +88,28 @@ namespace nda {
   inline constexpr char get_algebra = 'N';
 
   // ---------------------- Guarantees at compile time for some optimization  --------------------------------
-  namespace guarantee {
 
-    static constexpr uint64_t smallest_stride_is_one = 0x1;
-    static constexpr uint64_t strided                = 0x2;
-    static constexpr uint64_t contiguous             = 0x3; // smallest_stride_is_one and strided
-
-    static constexpr bool has_contiguous(uint64_t f) { return f & contiguous; }
-    static constexpr bool has_smallest_stride_is_one(uint64_t f) { return f & smallest_stride_is_one; }
-    static constexpr bool has_strided(uint64_t f) { return f & strided; }
-
-  } // namespace guarantee
+  enum class layout_info_e : uint64_t {
+    none                   = 0x0,
+    strided_1d             = 0x1,
+    smallest_stride_is_one = 0x2,
+    contiguous             = strided_1d | smallest_stride_is_one
+  };
 
   template <typename A>
-  inline constexpr uint64_t get_guarantee = 0;
+  inline constexpr layout_info_e get_layout_info = layout_info_e::none;
+
+  // & operator for the layout_info_e
+  constexpr layout_info_e operator|(layout_info_e a, layout_info_e b) { return layout_info_e(uint64_t(a) | uint64_t(b)); }
+  constexpr bool operator&(layout_info_e a, layout_info_e b) { return uint64_t(a) & uint64_t(b); }
+  //bool operator|=(layout_info_e & a, layout_info_e b) { return a = layout_info_e(uint64_t(a) | uint64_t(b));}
+
+  template <typename A>
+  constexpr bool has_layout_contiguous = (get_layout_info<A> & layout_info_e::contiguous);
+  template <typename A>
+  constexpr bool has_layout_strided_1d = (get_layout_info<A> & layout_info_e::strided_1d);
+  template <typename A>
+  constexpr bool has_layout_smallest_stride_is_one = (get_layout_info<A> & layout_info_e::smallest_stride_is_one);
 
   // ---------------------- linear index  --------------------------------
 

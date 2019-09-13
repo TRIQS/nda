@@ -38,15 +38,15 @@ namespace nda {
     ///
     using regular_t = array<ValueType, Rank>;
     ///
-    using view_t = array_view<ValueType, Rank>;
+    using view_t = array_view<ValueType, Rank, layout_info_e::contiguous, Layout>;
     ///
-    using const_view_t = array_view<ValueType const, Rank>;
+    using const_view_t = array_view<ValueType const, Rank,layout_info_e::contiguous, Layout>;
 
     using storage_t = mem::heap::handle<ValueType>;
-    using idx_map_t = idx_map<Rank, Layout>; 
+    using idx_map_t = idx_map<Rank, Layout, layout_info_e::contiguous>; 
     
 //    static constexpr uint64_t layout = Layout;
-    static constexpr uint64_t guarantees = guarantee::contiguous | guarantee::smallest_stride_is_one;
+  //  static constexpr layout_info_e layout= layout_info_e::contiguous;
 
     static constexpr int rank      = Rank;
     static constexpr bool is_const = false;
@@ -54,7 +54,7 @@ namespace nda {
 
     private:
     template <typename IdxMap>
-    using my_view_template_t = array_view<value_t, IdxMap::rank(), 0, permutations::encode(IdxMap::layout)>;
+    using my_view_template_t = array_view<value_t, IdxMap::rank(), IdxMap::layout_info, permutations::encode(IdxMap::layout)>;
 
     idx_map_t _idx_m;
     storage_t _storage;
@@ -249,7 +249,7 @@ namespace nda {
      * @param shape  New shape of the array (lengths in each dimension)
      */
     [[gnu::noinline]] void resize(shape_t<Rank> const &shape) {
-      _idx_m = idx_map<Rank>(shape);
+      _idx_m = idx_map_t(shape);
       // Construct a storage only if the new index is not compatible (size mismatch).
       if (_storage.size() != _idx_m.size()) _storage = mem::handle<ValueType, 'R'>{_idx_m.size()};
     }
