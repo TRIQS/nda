@@ -83,7 +83,7 @@ namespace nda {
 
     private:
     template <typename IdxMap>
-    using my_view_template_t = array_view<ValueType, IdxMap::rank(), IdxMap::flags, permutations::encode(IdxMap::layout)>;
+    using my_view_template_t = array_view<ValueType, IdxMap::rank(), IdxMap::layout_info, permutations::encode(IdxMap::layout)>;
 
     idx_map_t _idx_m;
     storage_t _storage;

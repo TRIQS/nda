@@ -122,43 +122,36 @@ namespace nda::slice_static {
     return layout;
   }
 
-  // -------------- are all the range/ellipsis grouped ? -----------
-  // args_is_range : as before
+  // -------------- Slice the layout info flags-----------
+  // args_is_range_all : for each q, True iif the args is a range_all or an ellipsis [NO range here !]
   // layout : the layout of idx_map to be slided
-  // the P : number of 1 in args_is_range (rank of sliced map)
-  // fl : guarantees of the idx_map to be sliced
+  // Nlast : position, in q, of the argument corresponding to the fastest stride
+  // layout_info : to be sliced
   //
   template <size_t Q, size_t N>
-  constexpr layout_info_e slice_layout_info(std::array<bool, Q> const &args_is_range, std::array<int, N> const &layout_in, int P,
-                                            layout_info_e layout_info) {
-    // count the number of times 10 appears args_in_range
+  constexpr layout_info_e slice_layout_info(bool has_only_rangeall_and_long, std::array<bool, Q> const &args_is_range_all, int Nlast,
+                                            std::array<int, N> const &layout_in, layout_info_e layout_info) {
+
+    if (not has_only_rangeall_and_long) return layout_info_e::none;
+    // count the number of times 1 0 appears args_in_range
     // we must traverse in the order of the layout ! (in memory order, slowest to fastest)
     int n_10_pattern = 0;
     for (size_t i = 1; i < Q; ++i) {
       int n = layout_in[i];
-      if (args_is_range[n - 1] and (not args_is_range[n])) ++n_10_pattern;
+      if (args_is_range_all[n - 1] and (not args_is_range_all[n])) ++n_10_pattern;
     }
-    bool range_are_grouped_in_memory             = (n_10_pattern <= 1);
-    bool range_are_grouped_in_memory_and_fastest = (n_10_pattern == 0);
+    bool rangeall_are_grouped_in_memory             = (n_10_pattern <= 1);
+    bool rangeall_are_grouped_in_memory_and_fastest = (n_10_pattern == 0);
+    bool last_is_rangeall                           = args_is_range_all[Nlast];
 
     layout_info_e r = layout_info_e::none;
 
-    if ((layout_info & layout_info_e::contiguous) and range_are_grouped_in_memory_and_fastest) r = r | layout_info_e::contiguous;
-    if ((layout_info & layout_info_e::strided_1d) and range_are_grouped_in_memory) r = r | layout_info_e::strided_1d;
-    if ((layout_info & layout_info_e::smallest_stride_is_one) and (not args_is_range[layout_in[P - 1]])) r = r | layout_info_e::smallest_stride_is_one;
+    if ((layout_info & layout_info_e::contiguous) and rangeall_are_grouped_in_memory_and_fastest) r = r | layout_info_e::contiguous;
+    if ((layout_info & layout_info_e::strided_1d) and rangeall_are_grouped_in_memory) r = r | layout_info_e::strided_1d;
+    if ((layout_info & layout_info_e::smallest_stride_is_one) and last_is_rangeall) r = r | layout_info_e::smallest_stride_is_one;
 
-    return layout_info_e{r};
+    return r;
   }
-
-  // -------------- are all the range/ellipsis grouped ? -----------
-  //template <size_t Q>
-  //constexpr bool slice_(std::array<bool, Q> const &args_is_range) {
-  //// count the number of times 10 appears args_in_range
-  //int n_10_pattern = 0;
-  //for (size_t i = 1; i < Q; ++i)
-  //if (args_is_range[i - 1] and (not args_is_range[i])) ++n_10_pattern;
-  //return (n_10_pattern <= 1);
-  //}
 
   // ------------  Small pieces of code for the fold in functions below, with dispatch on type --------------------------------------
   // offset
@@ -210,6 +203,7 @@ namespace nda::slice_static {
 
     // Pattern of the arguments. 1 for a range/range_all/ellipsis, 0 for long
     static constexpr std::array<bool, Q> args_is_range{(std::is_same_v<Args, range> or std::is_base_of_v<range_all, Args>)...};
+    static constexpr std::array<bool, Q> args_is_range_all{(std::is_base_of_v<range_all, Args>)...};
 
     static constexpr std::array<int, P> n_of_p = n_of_p_map<N, P>(args_is_range, e_pos, e_len);
     static constexpr std::array<int, P> q_of_p = q_of_p_map<N, P>(args_is_range, e_pos, e_len);
@@ -226,7 +220,11 @@ namespace nda::slice_static {
 
     static constexpr std::array<int, P> mem_layout = sliced_mem_layout(IdxMap::layout, n_of_p);
 
-    static constexpr layout_info_e li = layout_info_e::none; //slice_layout_info(args_is_range, IdxMap::layout, P, IdxMap::layout_info);
+    // Compute the new layout_info
+    static constexpr bool has_only_rangeall_and_long = ((std::is_constructible_v<long, Args> or std::is_base_of_v<range_all, Args>)and...);
+
+    static constexpr layout_info_e li = slice_layout_info(has_only_rangeall_and_long, args_is_range_all, q_of_n(IdxMap::layout[N - 1], e_pos, e_len),
+                                                          IdxMap::layout, IdxMap::layout_info);
 
     long offset = (get_offset(std::get<q_of_n(Ns, e_pos, e_len)>(argstie), std::get<Ns>(idxm.strides())) + ... + 0);
 

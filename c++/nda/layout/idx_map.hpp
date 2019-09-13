@@ -69,7 +69,10 @@ namespace nda {
     public:
     
     static constexpr layout_info_e layout_info=LayoutInfo;
-    
+   
+    // DEBUG ONLY 
+    static constexpr uint64_t layout_encoded = Layout;
+
     static constexpr std::array<int, Rank> layout =
        (Layout == 0 ? permutations::identity<Rank>() : permutations::decode<Rank>(Layout)); // 0 is C layout
 
