@@ -11,7 +11,7 @@ namespace nda {
   // BEGIN_REMOVE_FOR_MATRIX
   // Class template argument deduction
   template <typename T>
-  array(T)->array<get_value_t<std::decay_t<T>>, get_rank<std::decay_t<T>>>;
+  basic_array(T)->basic_array<get_value_t<std::decay_t<T>>, get_rank<std::decay_t<T>>, 0, 'A', mem::heap>;
 
   // FIXME : in array as static ?
   namespace details {
@@ -28,25 +28,25 @@ namespace nda {
 
   // ---------------------- array--------------------------------
 
-  template <typename ValueType, int Rank, uint64_t StrideOrder>
-  class array {
+  template <typename ValueType, int Rank, uint64_t StrideOrder, char Algebra, typename ContainerPolicy>
+  class basic_array {
     static_assert(!std::is_const<ValueType>::value, "ValueType can not be const. WHY ?");
 
     public:
     ///
     using value_t = ValueType;
     ///
-    using regular_t = array<ValueType, Rank>;
+    using regular_t = basic_array;
     ///
-    using view_t = array_view<ValueType, Rank, layout_info_e::contiguous, StrideOrder>;
+    using view_t = basic_array_view<ValueType, Rank, StrideOrder, layout_info_e::contiguous, Algebra, default_accessor, mem::borrowed>;
     ///
-    using const_view_t = array_view<ValueType const, Rank,layout_info_e::contiguous, StrideOrder>;
+    using const_view_t = basic_array_view<ValueType const, Rank, StrideOrder, layout_info_e::contiguous, Algebra, default_accessor, mem::borrowed>;
 
     using storage_t = mem::heap::handle<ValueType>;
-    using idx_map_t = idx_map<Rank, StrideOrder, layout_info_e::contiguous>; 
-    
-//    static constexpr uint64_t stride_order = StrideOrder;
-  //  static constexpr layout_info_e stride_order= layout_info_e::contiguous;
+    using idx_map_t = idx_map<Rank, StrideOrder, layout_info_e::contiguous>;
+
+    //    static constexpr uint64_t stride_order = StrideOrder;
+    //  static constexpr layout_info_e stride_order= layout_info_e::contiguous;
 
     static constexpr int rank      = Rank;
     static constexpr bool is_const = false;
@@ -54,7 +54,8 @@ namespace nda {
 
     private:
     template <typename IdxMap>
-    using my_view_template_t = array_view<value_t, IdxMap::rank(), IdxMap::layout_info, permutations::encode(IdxMap::stride_order)>;
+    using my_view_template_t = basic_array_view<ValueType, IdxMap::rank(), permutations::encode(IdxMap::stride_order), IdxMap::layout_info, Algebra,
+                                                default_accessor, mem::borrowed>;
 
     idx_map_t _idx_m;
     storage_t _storage;
@@ -63,13 +64,13 @@ namespace nda {
     // ------------------------------- constructors --------------------------------------------
 
     /// Empty array
-    array() = default;
+    basic_array() = default;
 
     /// Makes a deep copy, since array is a regular type
-    array(array const &x) : _idx_m(x.indexmap()), _storage(x.storage()) {}
+    basic_array(basic_array const &x) : _idx_m(x.indexmap()), _storage(x.storage()) {}
 
     ///
-    array(array &&X) = default;
+    basic_array(basic_array &&X) = default;
 
     /** 
      * Construct with a shape [i0, is ...]. 
@@ -79,7 +80,7 @@ namespace nda {
      * @example array_constructors
      */
     template <typename... Int>
-    explicit array(long i0, Int... is) {
+    explicit basic_array(long i0, Int... is) {
       static_assert((std::is_convertible_v<Int, long> and ...), "Arguments must be convertible to long");
       static_assert(sizeof...(Int) + 1 == Rank, "Incorrect number of arguments : should be exactly Rank. ");
       _idx_m   = idx_map_t{{i0, is...}};
@@ -93,7 +94,7 @@ namespace nda {
      * 
      * @param shape  Shape of the array (lengths in each dimension)
      */
-    explicit array(shape_t<Rank> const &shape) : _idx_m(shape), _storage(_idx_m.size()) {}
+    explicit basic_array(shape_t<Rank> const &shape) : _idx_m(shape), _storage(_idx_m.size()) {}
 
     /** 
      * [Advanced] Construct from an indexmap and a storage handle.
@@ -106,7 +107,7 @@ namespace nda {
     //array(idx_map<Rank> const &idxm, mem::handle<ValueType, RBS> mem_handle) : _idx_m(idxm), _storage(std::move(mem_handle)) {}
 
     /// Construct from anything that has an indexmap and a storage compatible with this class
-    //template <typename T> array(T const &a) REQUIRES(XXXX): array(a.indexmap(), a.storage()) {}
+    //template <typename T> basic_array(T const &a) REQUIRES(XXXX): basic_array(a.indexmap(), a.storage()) {}
 
     /** 
      * From any type modeling NdArray
@@ -116,7 +117,7 @@ namespace nda {
      * @param x 
      */
     template <typename A>
-    array(A const &x) REQUIRES(is_ndarray_v<A>) : array{x.shape()} {
+    basic_array(A const &x) REQUIRES(is_ndarray_v<A>) : basic_array{x.shape()} {
       static_assert(std::is_convertible_v<get_value_t<A>, value_t>,
                     "Can not construct the array. ValueType can not be constructed from the value_t of the argument");
       nda::details::assignment(*this, x);
@@ -130,7 +131,7 @@ namespace nda {
      * @param mem_handle  memory handle
      */
     //template <char RBS>
-    //array(shape_t<Rank> const &shape, mem::handle<ValueType, RBS> mem_handle) : array(idx_map_t{shape}, mem_handle) {}
+    //basic_array(shape_t<Rank> const &shape, mem::handle<ValueType, RBS> mem_handle) : basic_array(idx_map_t{shape}, mem_handle) {}
 
     // --- with initializers
 
@@ -144,9 +145,9 @@ namespace nda {
      * @requires Rank == 1 and ValueType is constructible from T
      */
     template <typename T>
-    array(std::initializer_list<T> const &l) //
+    basic_array(std::initializer_list<T> const &l) //
        REQUIRES((Rank == 1) and std::is_constructible_v<value_t, T>)
-       : array{shape_t<Rank>{long(l.size())}} {
+       : basic_array{shape_t<Rank>{long(l.size())}} {
       long i = 0;
       for (auto const &x : l) (*this)(i++) = x;
     }
@@ -174,9 +175,9 @@ namespace nda {
      * @requires Rank == 2 and ValueType is constructible from T
      */
     template <typename T>
-    array(std::initializer_list<std::initializer_list<T>> const &ll) //
+    basic_array(std::initializer_list<std::initializer_list<T>> const &ll) //
        REQUIRES((Rank == 2) and std::is_constructible_v<value_t, T>)
-       : array(_comp_shape_from_list_list(ll)) {
+       : basic_array(_comp_shape_from_list_list(ll)) {
       long i = 0, j = 0;
       for (auto const &l1 : ll) {
         for (auto const &x : l1) { (*this)(i, j++) = x; }
@@ -195,7 +196,7 @@ namespace nda {
      * @param initializer The lambda
      */
     template <typename Initializer>
-    explicit array(shape_t<Rank> const &shape, Initializer initializer)
+    explicit basic_array(shape_t<Rank> const &shape, Initializer initializer)
        REQUIRES(details::_is_a_good_lambda_for_init<ValueType, Initializer>(std::make_index_sequence<Rank>()))
        : _idx_m(shape), _storage{_idx_m.size(), mem::do_not_initialize} {
       nda::for_each(_idx_m.lengths(), [&](auto const &... x) { _storage.init_raw(_idx_m(x...), initializer(x...)); });
@@ -204,10 +205,10 @@ namespace nda {
     //------------------ Assignment -------------------------
 
     ///
-    array &operator=(array &&x) = default;
+    basic_array &operator=(basic_array &&x) = default;
 
     /// Deep copy (array is a regular type). Invalidates all references to the storage.
-    array &operator=(array const &X) = default;
+    basic_array &operator=(basic_array const &X) = default;
 
     /** 
      * Resizes the array (if necessary).
@@ -216,8 +217,8 @@ namespace nda {
      * @tparam RHS A scalar or an object modeling NdArray
      */
     template <typename RHS>
-    array &operator=(RHS const &rhs) {
-      static_assert(is_ndarray_v<RHS> or is_scalar_for_v<RHS, array>, "Assignment : RHS not supported");
+    basic_array &operator=(RHS const &rhs) {
+      static_assert(is_ndarray_v<RHS> or is_scalar_for_v<RHS, basic_array>, "Assignment : RHS not supported");
       if constexpr (is_ndarray_v<RHS>) resize(rhs.shape());
       nda::details::assignment(*this, rhs);
       return *this;

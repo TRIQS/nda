@@ -1,7 +1,5 @@
 #include "./test_common.hpp"
 
-#include <nda/matrix.hxx>
-
 TEST(Matrix, Create1) {
   nda::matrix<long> A(3, 3);
   EXPECT_EQ(A.shape(), (nda::shape_t<2>{3, 3}));
