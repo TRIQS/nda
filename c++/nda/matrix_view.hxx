@@ -4,7 +4,7 @@
 //   :source c++/nda/matrix_view.vim
 #pragma once
 #include "./storage/handle.hpp"
-#include "./indexmap/idx_map.hpp"
+#include "./layout/idx_map.hpp"
 #include "./basic_functions.hpp"
 #include "./assignment.hpp"
 #include "./iterator_adapter.hpp"

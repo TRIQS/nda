@@ -11,10 +11,10 @@ storage_t &storage() { return _storage; }
 auto layout() const { return _idx_m.layout(); }
 
 /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
-ValueType const *data_start() const { return _storage.data() + _idx_m.offset(); }
+ValueType const *data_start() const { return _storage.data(); }
 
 /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
-ValueType *data_start() { return _storage.data() + _idx_m.offset(); }
+ValueType *data_start() { return _storage.data(); }
 
 /// Shape of this
 shape_t<rank> const &shape() const { return _idx_m.lengths(); }
@@ -37,6 +37,34 @@ long size() const { return _idx_m.size(); }
 decltype(auto) operator()(_linear_index_t x) const { return _storage[x.value]; }
 decltype(auto) operator()(_linear_index_t x) { return _storage[x.value]; }
 
+private:
+
+// impl of call
+
+template <typename... T>
+FORCEINLINE decltype(auto) __call__impl(T const &... x) const {
+  if constexpr (sizeof...(T) == 0)
+    return view_t{_idx_m, _storage};
+  else {
+
+    static_assert((rank == -1) or (sizeof...(T) == rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank)),
+                  "Incorrect number of parameters in call");
+    //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
+
+    auto idx_or_pos = _idx_m.template slice_or_position<guarantees>(x...); // we call the index map
+
+    if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
+      return _storage[idx_or_pos];                            //
+    else {                                                    // Case 2: we got a slice
+      auto const &[offset, idxm] = idx_or_pos;
+      return my_view_template_t<decltype(idxm)>{std::move(idxm), {_storage, offset}}; //
+    }
+  }
+}
+
+public:
+
+
 /**
  * Access the array, make a lazy expression or slice of it depending on the arguments
  *
@@ -44,7 +72,8 @@ decltype(auto) operator()(_linear_index_t x) { return _storage[x.value]; }
  * @param x
  * @example array_call
  */
-template <typename... T> decltype(auto) operator()(T const &... x) const & {
+template <typename... T>
+decltype(auto) operator()(T const &... x) const & {
   if constexpr (sizeof...(T) == 0)
     return view_t{_idx_m, _storage};
   else {
@@ -53,16 +82,20 @@ template <typename... T> decltype(auto) operator()(T const &... x) const & {
                   "Incorrect number of parameters in call");
     //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
 
-    auto idx_or_pos = _idx_m.template slice_or_position<guarantees>(x...);              // we call the index map
-    if constexpr (std::is_same_v<decltype(idx_or_pos), long>)                           // Case 1: we got a long, hence access a element
-      return _storage[idx_or_pos];                                                      //
-    else                                                                                // Case 2: we got a slice
-      return my_view_template_t<decltype(idx_or_pos)>{std::move(idx_or_pos), _storage}; //
+    auto idx_or_pos = _idx_m.template slice_or_position<guarantees>(x...); // we call the index map
+
+    if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
+      return _storage[idx_or_pos];                            //
+    else {                                                    // Case 2: we got a slice
+      auto const &[offset, idxm] = idx_or_pos;
+      return my_view_template_t<decltype(idxm)>{std::move(idxm), {_storage, offset}}; //
+    }
   }
 }
 
 ///
-template <typename... T> decltype(auto) operator()(T const &... x) & {
+template <typename... T>
+decltype(auto) operator()(T const &... x) & {
   if constexpr (sizeof...(T) == 0)
     return view_t{_idx_m, _storage};
   else {
@@ -71,16 +104,20 @@ template <typename... T> decltype(auto) operator()(T const &... x) & {
                   "Incorrect number of parameters in call");
     //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
 
-    auto idx_or_pos = _idx_m.template slice_or_position<guarantees>(x...);              // we call the index map
-    if constexpr (std::is_same_v<decltype(idx_or_pos), long>)                           // Case 1: we got a long, hence access a element
-      return _storage[idx_or_pos];                                                      //
-    else                                                                                // Case 2: we got a slice
-      return my_view_template_t<decltype(idx_or_pos)>{std::move(idx_or_pos), _storage}; //
+    auto idx_or_pos = _idx_m.template slice_or_position<guarantees>(x...); // we call the index map
+
+    if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
+      return _storage[idx_or_pos];                            //
+    else {                                                    // Case 2: we got a slice
+      auto const &[offset, idxm] = idx_or_pos;
+      return my_view_template_t<decltype(idxm)>{std::move(idxm), {_storage, offset}}; //
+    }
   }
 }
 
 ///
-template <typename... T> decltype(auto) operator()(T const &... x) && {
+template <typename... T>
+decltype(auto) operator()(T const &... x) && {
   if constexpr (sizeof...(T) == 0)
     return view_t{_idx_m, _storage};
   else {
@@ -96,8 +133,10 @@ template <typename... T> decltype(auto) operator()(T const &... x) && {
         return _storage[idx_or_pos];                          // We return a REFERENCE here. Ok since underlying array is still alive
       else                                                    //
         return ValueType{_storage[idx_or_pos]};               // We return a VALUE here, the array is about be destroyed.
-    else                                                      // Case 2: we got a slice
-      return my_view_template_t<decltype(idx_or_pos)>{std::move(idx_or_pos), _storage}; //
+    else {                                                    // Case 2: we got a slice
+      auto const &[offset, idxm] = idx_or_pos;
+      return my_view_template_t<decltype(idxm)>{std::move(idxm), {_storage, offset}}; //
+    }
   }
 }
 
@@ -107,7 +146,7 @@ template <typename... T> decltype(auto) operator()(T const &... x) && {
 using const_iterator = iterator_adapter<ValueType const, idx_map_t>;
 
 ///
-using iterator       = iterator_adapter<ValueType, idx_map_t>;
+using iterator = iterator_adapter<ValueType, idx_map_t>;
 
 ///
 const_iterator begin() const { return {indexmap().cbegin(), storage().data()}; }
@@ -131,7 +170,8 @@ typename iterator::end_sentinel_t end() { return {}; }
  * @tparam RHS A scalar or a type modeling NdArray
  * @param rhs
  */
-template <typename RHS> auto &operator+=(RHS const &rhs) {
+template <typename RHS>
+auto &operator+=(RHS const &rhs) {
   static_assert(not is_const, "Can not assign to a const view");
   details::compound_assign_impl<'A'>(*this, rhs);
   return *this;
@@ -140,7 +180,8 @@ template <typename RHS> auto &operator+=(RHS const &rhs) {
  * @tparam RHS A scalar or a type modeling NdArray
  * @param rhs
  */
-template <typename RHS> auto &operator-=(RHS const &rhs) {
+template <typename RHS>
+auto &operator-=(RHS const &rhs) {
   static_assert(not is_const, "Can not assign to a const view");
   details::compound_assign_impl<'S'>(*this, rhs);
   return *this;
@@ -149,7 +190,8 @@ template <typename RHS> auto &operator-=(RHS const &rhs) {
  * @tparam RHS A scalar or a type modeling NdArray
  * @param rhs
  */
-template <typename RHS> auto &operator*=(RHS const &rhs) {
+template <typename RHS>
+auto &operator*=(RHS const &rhs) {
   static_assert(not is_const, "Can not assign to a const view");
   details::compound_assign_impl<'M'>(*this, rhs);
   return *this;
@@ -158,7 +200,8 @@ template <typename RHS> auto &operator*=(RHS const &rhs) {
  * @tparam RHS A scalar or a type modeling NdArray
  * @param rhs
  */
-template <typename RHS> auto &operator/=(RHS const &rhs) {
+template <typename RHS>
+auto &operator/=(RHS const &rhs) {
   static_assert(not is_const, "Can not assign to a const view");
   details::compound_assign_impl<'D'>(*this, rhs);
   return *this;

@@ -27,8 +27,7 @@ namespace nda {
   std::ostream &operator<<(std::ostream &out, idx_map<Rank, Layout> const &x) {
     return out << "  Lengths  : " << x.lengths() << "\n"
                << "  Strides  : " << x.strides() << "\n"
-               << "  Offset   : " << x.offset() << "\n"
-               << "  Layout   : " << x.layout << "\n";
+               << "  MemoryLayout   : " << x.layout << "\n";
                //<< "  Flags   :  " << (guarantee::has_contiguous(guar) ? "contiguous   " : " ") << (guarantee::has_strided(guar) ? "strided   " : " ")
                //<< (guarantee::has_smallest_stride_is_one(guar) ? "smallest_stride_is_one   " : " ")
                //<< (guarantee::has_zero_offset(guar) ? "zero_offset   " : " ") << "\n";
