@@ -11,8 +11,8 @@ namespace nda {
       using element_type = T;
       using pointer      = T *;
       using reference    = T &;
-      reference access(pointer p, std::ptrdiff_t i) const noexcept { return p[i]; }
-      pointer offset(pointer p, std::ptrdiff_t i) const noexcept { return p + i; }
+      static reference access(pointer p, std::ptrdiff_t i) noexcept { return p[i]; }
+      static pointer offset(pointer p, std::ptrdiff_t i) noexcept { return p + i; }
     };
   };
 
@@ -23,8 +23,8 @@ namespace nda {
       using element_type = T;
       using pointer      = T *__restrict;
       using reference    = T &;
-      reference access(pointer p, std::ptrdiff_t i) const noexcept { return p[i]; }
-      pointer offset(pointer p, std::ptrdiff_t i) const noexcept { return p + i; }
+      static reference access(pointer p, std::ptrdiff_t i) noexcept { return p[i]; }
+      static pointer offset(pointer p, std::ptrdiff_t i) noexcept { return p + i; }
     };
   };
   // atomic ?
