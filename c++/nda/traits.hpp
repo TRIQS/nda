@@ -91,12 +91,10 @@ namespace nda {
     static constexpr uint64_t smallest_stride_is_one = 0x1;
     static constexpr uint64_t strided                = 0x2;
     static constexpr uint64_t contiguous             = 0x3; // smallest_stride_is_one and strided
-    static constexpr uint64_t zero_offset            = 0x4;
 
     static constexpr bool has_contiguous(uint64_t f) { return f & contiguous; }
     static constexpr bool has_smallest_stride_is_one(uint64_t f) { return f & smallest_stride_is_one; }
     static constexpr bool has_strided(uint64_t f) { return f & strided; }
-    static constexpr bool has_zero_offset(uint64_t f) { return f & zero_offset; }
 
   } // namespace guarantee
 

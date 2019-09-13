@@ -97,7 +97,8 @@ TEST(NDA, MoveConstructor) {
 
   nda::array<double, 1> B(std::move(A));
 
-  EXPECT_TRUE(A.size() == 0);
+  EXPECT_TRUE(A.is_empty());
+  EXPECT_TRUE(A.size() != 0);
   EXPECT_EQ(B.shape(), (nda::shape_t<1>{3}));
   for (int i = 0; i < 3; ++i) EXPECT_EQ(B(i), 9);
 }
