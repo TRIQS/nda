@@ -91,12 +91,12 @@ TEST(Basic, Empty) {
   {
     h5::file file("ess_empty.h5", 'w');
     //h5::group top(file);
-    h5_write(file, "A", a);
+    h5_write(file, "empty", a);
   }
   {
-    h5::file file("ess.h5", 'r');
+    h5::file file("ess_empty.h5", 'r');
     h5::group top(file);
-    nda::array<double, 2> empty(5, 5);
+    nda::array<long, 2> empty(5, 5);
     h5_read(top, "empty", empty);
     EXPECT_EQ_ARRAY(empty, (nda::array<double, 2>(0, 10)));
   }
@@ -148,7 +148,7 @@ TEST(Array, H5) {
 
   // WRITE the file
   {
-    h5::file file("ess.h5", 'w');
+    h5::file file("ess_gal.h5", 'w');
     h5::group top(file);
 
     h5_write(top, "A", A);
@@ -181,7 +181,7 @@ TEST(Array, H5) {
 
   // READ the file
   {
-    h5::file file("ess.h5", 'r');
+    h5::file file("ess_gal.h5", 'r');
     h5::group top(file);
 
     h5_read(top, "A", B);
@@ -213,9 +213,6 @@ TEST(Array, H5) {
     h5_read(top, "s", s2);
     EXPECT_EQ(s2, "a nice chain");
 
-    nda::array<double, 2> empty(5, 5);
-    h5_read(top, "empty", empty);
-    EXPECT_EQ_ARRAY(empty, (nda::array<double, 2>(0, 10)));
   }
 }
 

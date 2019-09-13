@@ -46,7 +46,7 @@ namespace nda {
     using idx_map_t = idx_map<Rank, Layout>; 
     
 //    static constexpr uint64_t layout = Layout;
-    static constexpr uint64_t guarantees = guarantee::contiguous | guarantee::zero_offset | guarantee::smallest_stride_is_one;
+    static constexpr uint64_t guarantees = guarantee::contiguous | guarantee::smallest_stride_is_one;
 
     static constexpr int rank      = Rank;
     static constexpr bool is_const = false;

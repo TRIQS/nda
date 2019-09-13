@@ -23,10 +23,12 @@ shape_t<rank> const &shape() const { return _idx_m.lengths(); }
 long size() const { return _idx_m.size(); }
 
 /// size() == 0
-[[deprecated]] bool is_empty() const { return size() == 0; }
+//[[deprecated]] 
+bool is_empty() const { return _storage.is_null(); }
 
 /// Same as shape()[i]
-[[deprecated]] long shape(int i) const { return _idx_m.lengths()[i]; }
+//[[deprecated]] 
+long shape(int i) const { return _idx_m.lengths()[i]; }
 
 // -------------------------------  operator () --------------------------------------------
 
