@@ -29,6 +29,15 @@
 
 namespace nda::mem {
 
+  class rtable_t;
+
+    // -------------- Global table  ---------------------------
+
+  struct globals {
+    static constexpr bool init_dcmplx = true; // initialize dcomplex to 0 globally
+    static rtable_t rtable;                   // the table of the ref counter.
+  };
+
   // -------------- ref count table -----------------------
 
   // A simple table of counters to count the references to a memory block (handle, cf below).
