@@ -6,7 +6,7 @@ namespace nda::h5_details {
   using v_t = h5::v_t; // the proper vector type for the h5 interface
 
   // given the lengths and strides, return a L_tot. One function for all ranks (save code).
-  // Assume layout is C.
+  // Assume stride_order is C.
   // use stride[rank -1]  =   strides_h5 [rank -1]
   //     stride[rank -2]  =   L[rank-1] * strides_h5 [rank -2]
   //     stride[rank -3]  =   L[rank-1] * L[rank-2] * strides_h5 [rank -3]

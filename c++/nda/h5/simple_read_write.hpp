@@ -91,7 +91,7 @@ namespace nda {
   template <typename A>
   void h5_read(h5::group g, std::string const &name, A &a) REQUIRES(is_regular_or_view_v<A>) {
 
-    static_assert(std::decay_t<decltype(a.indexmap())>::is_layout_C(), "Not implemented");
+    static_assert(std::decay_t<decltype(a.indexmap())>::is_stride_order_C(), "Not implemented");
 
     // first case array of string
     if constexpr (std::is_same_v<typename A::value_t, std::string>) { // special case of string. Like vector of string

@@ -16,7 +16,7 @@ namespace nda {
 
   // ---------------------- matrix--------------------------------
 
-  template <typename ValueType, uint64_t Layout>
+  template <typename ValueType, uint64_t StrideOrder>
   class matrix {
     static_assert(!std::is_const<ValueType>::value, "ValueType can not be const. WHY ?");
 
@@ -26,15 +26,15 @@ namespace nda {
     ///
     using regular_t = matrix<ValueType>;
     ///
-    using view_t = matrix_view<ValueType, layout_info_e::contiguous, Layout>;
+    using view_t = matrix_view<ValueType, layout_info_e::contiguous, StrideOrder>;
     ///
-    using const_view_t = matrix_view<ValueType const, layout_info_e::contiguous, Layout>;
+    using const_view_t = matrix_view<ValueType const, layout_info_e::contiguous, StrideOrder>;
 
     using storage_t = mem::heap::handle<ValueType>;
-    using idx_map_t = idx_map<2, Layout, layout_info_e::contiguous>;
+    using idx_map_t = idx_map<2, StrideOrder, layout_info_e::contiguous>;
 
-    //    static constexpr uint64_t layout = Layout;
-    //  static constexpr layout_info_e layout= layout_info_e::contiguous;
+    //    static constexpr uint64_t stride_order = StrideOrder;
+    //  static constexpr layout_info_e stride_order= layout_info_e::contiguous;
 
     static constexpr int rank      = 2;
     static constexpr bool is_const = false;
@@ -42,7 +42,7 @@ namespace nda {
 
     private:
     template <typename IdxMap>
-    using my_view_template_t = matrix_view<value_t, IdxMap::layout_info, permutations::encode(IdxMap::layout)>;
+    using my_view_template_t = matrix_view<value_t, IdxMap::layout_info, permutations::encode(IdxMap::stride_order)>;
 
     idx_map_t _idx_m;
     storage_t _storage;

@@ -44,8 +44,8 @@ namespace std {
 
 namespace nda {
 
-  /* // layout_t
-  template <int Rank> std::ostream &operator<<(std::ostream &out, layout_t<Rank> const &s) {
+  /* // stride_order_t
+  template <int Rank> std::ostream &operator<<(std::ostream &out, stride_order_t<Rank> const &s) {
     out << "(";
     for (int i = 0; i < s.rank(); ++i) out << (i == 0 ? "" : " ") << int(s.as_permutation()[i]);
     out << ")";

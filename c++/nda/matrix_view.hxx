@@ -13,9 +13,9 @@ namespace nda {
 
   // ---------------------- declare matrix and view  --------------------------------
 
-  template <typename ValueType, uint64_t Layout = 0>
+  template <typename ValueType, uint64_t StrideOrder = 0>
   class matrix;
-  template <typename ValueType, layout_info_e LayoutInfo = layout_info_e::none, uint64_t Layout = 0>
+  template <typename ValueType, layout_info_e LayoutInfo = layout_info_e::none, uint64_t StrideOrder = 0>
   class matrix_view;
 
   // ---------------------- is_matrix_or_view_container  --------------------------------
@@ -26,38 +26,38 @@ namespace nda {
   template <typename ValueType>
   inline constexpr bool is_regular_or_view_v<matrix<ValueType>> = true;
 
-  template <typename ValueType, layout_info_e LayoutInfo, uint64_t Layout>
-  inline constexpr bool is_regular_or_view_v<matrix_view<ValueType, LayoutInfo, Layout>> = true;
+  template <typename ValueType, layout_info_e LayoutInfo, uint64_t StrideOrder>
+  inline constexpr bool is_regular_or_view_v<matrix_view<ValueType, LayoutInfo, StrideOrder>> = true;
 
   // ---------------------- concept  --------------------------------
 
-  template <typename ValueType, uint64_t Layout>
-  inline constexpr bool is_ndarray_v<matrix<ValueType, Layout>> = true;
+  template <typename ValueType, uint64_t StrideOrder>
+  inline constexpr bool is_ndarray_v<matrix<ValueType, StrideOrder>> = true;
 
-  template <typename ValueType, layout_info_e LayoutInfo, uint64_t Layout>
-  inline constexpr bool is_ndarray_v<matrix_view<ValueType, LayoutInfo, Layout>> = true;
+  template <typename ValueType, layout_info_e LayoutInfo, uint64_t StrideOrder>
+  inline constexpr bool is_ndarray_v<matrix_view<ValueType, LayoutInfo, StrideOrder>> = true;
 
   // ---------------------- algebra --------------------------------
 
-  template <typename ValueType, uint64_t Layout>
-  inline constexpr char get_algebra<matrix<ValueType, Layout>> = 'A';
+  template <typename ValueType, uint64_t StrideOrder>
+  inline constexpr char get_algebra<matrix<ValueType, StrideOrder>> = 'A';
 
-  template <typename ValueType, layout_info_e LayoutInfo, uint64_t Layout>
-  inline constexpr char get_algebra<matrix_view<ValueType, LayoutInfo, Layout>> = 'A';
+  template <typename ValueType, layout_info_e LayoutInfo, uint64_t StrideOrder>
+  inline constexpr char get_algebra<matrix_view<ValueType, LayoutInfo, StrideOrder>> = 'A';
 
   // ---------------------- get_layout_info --------------------------------
 
   template <typename ValueType>
   inline constexpr layout_info_e get_layout_info<matrix<ValueType>> = matrix<ValueType>::idx_map_t::layout_info;
 
-  template <typename ValueType, layout_info_e LayoutInfo, uint64_t Layout>
-  inline constexpr layout_info_e get_layout_info<matrix_view<ValueType, LayoutInfo, Layout>> = LayoutInfo;
+  template <typename ValueType, layout_info_e LayoutInfo, uint64_t StrideOrder>
+  inline constexpr layout_info_e get_layout_info<matrix_view<ValueType, LayoutInfo, StrideOrder>> = LayoutInfo;
 
   // ---------------------- matrix_view  --------------------------------
 
   // Try to put the const/mutable in the TYPE
 
-  template <typename ValueType, layout_info_e LayoutInfo, uint64_t Layout>
+  template <typename ValueType, layout_info_e LayoutInfo, uint64_t StrideOrder>
   class matrix_view {
 
     public:
@@ -66,28 +66,28 @@ namespace nda {
     //using value_no_const_t =std::remove_const_t<ValueType>;
 
     ///
-    using regular_t = matrix<ValueType, Layout>;
+    using regular_t = matrix<ValueType, StrideOrder>;
     ///
-    using view_t = matrix_view<ValueType, LayoutInfo, Layout>;
+    using view_t = matrix_view<ValueType, LayoutInfo, StrideOrder>;
     ///
-    using const_view_t = matrix_view<ValueType const, LayoutInfo, Layout>;
+    using const_view_t = matrix_view<ValueType const, LayoutInfo, StrideOrder>;
 
     //using value_as_template_arg_t = ValueType;
     using storage_t = mem::borrowed::handle<ValueType>;
-    using idx_map_t = idx_map<2, Layout, LayoutInfo>;
+    using idx_map_t = idx_map<2, StrideOrder, LayoutInfo>;
 
     static constexpr int rank      = 2;
     static constexpr bool is_view  = true;
     static constexpr bool is_const = std::is_const_v<ValueType>;
 
-    //    static constexpr uint64_t layout = Layout;
+    //    static constexpr uint64_t stride_order = StrideOrder;
 
     // FIXME : h5
     // static std::string hdf5_scheme() { return "matrix<" + triqs::h5::get_hdf5_scheme<ValueType>() + "," + std::to_string(rank) + ">"; }
 
     private:
     template <typename IdxMap>
-    using my_view_template_t = matrix_view<ValueType, IdxMap::flags, permutations::encode(IdxMap::layout)>;
+    using my_view_template_t = matrix_view<ValueType, IdxMap::flags, permutations::encode(IdxMap::stride_order)>;
 
     idx_map_t _idx_m;
     storage_t _storage;
@@ -145,7 +145,7 @@ namespace nda {
      * @param idxm Index Map (view can be non contiguous). If the offset is non zero, the view starts at p + idxm.offset()
      */
     matrix_view(idx_map_t const &idxm, ValueType *p) : _idx_m(idxm), _storage{p} {}
-    //matrix_view(idx_map<2,Layout> const &idxm, ValueType *p) : _idx_m(idxm), _storage{p, size_t(idxm.size() + idxm.offset())} {}
+    //matrix_view(idx_map<2,StrideOrder> const &idxm, ValueType *p) : _idx_m(idxm), _storage{p, size_t(idxm.size() + idxm.offset())} {}
 
     // Move assignment not defined : will use the copy = since view must copy data
 
@@ -198,9 +198,9 @@ namespace nda {
   };
 
   /*
-  template <typename ValueType, uint64_t Flags, uint64_t Layout> class matrix_view : public matrix_view<ValueType, 0, Layout> {
+  template <typename ValueType, uint64_t Flags, uint64_t StrideOrder> class matrix_view : public matrix_view<ValueType, 0, StrideOrder> {
 
-    using B = matrix_view<ValueType, 0, Layout>;
+    using B = matrix_view<ValueType, 0, StrideOrder>;
 
     public:
    
@@ -213,7 +213,7 @@ namespace nda {
   };
 */
   /// Aliases
-  template <typename ValueType, layout_info_e LayoutInfo = layout_info_e::none, uint64_t Layout = 0>
-  using matrix_const_view = matrix_view<ValueType const, LayoutInfo, Layout>;
+  template <typename ValueType, layout_info_e LayoutInfo = layout_info_e::none, uint64_t StrideOrder = 0>
+  using matrix_const_view = matrix_view<ValueType const, LayoutInfo, StrideOrder>;
 
 } // namespace nda
