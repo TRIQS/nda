@@ -38,33 +38,40 @@ decltype(auto) operator()(_linear_index_t x) const { return _storage[x.value]; }
 decltype(auto) operator()(_linear_index_t x) { return _storage[x.value]; }
 
 private:
+// impl of call. Only different case is if Self is &&
 
-// impl of call
+template <bool SelfIsRvalue, typename Self, typename... T>
+FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) {
 
-template <typename... T>
-FORCEINLINE decltype(auto) __call__impl(T const &... x) const {
+  //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
+  // else
   if constexpr (sizeof...(T) == 0)
-    return view_t{_idx_m, _storage};
+    return view_t{self._idx_m, self._storage};
   else {
+    static_assert(((((std::is_base_of_v<range_tag, T> or std::is_constructible_v<long, T>) ? 0 : 1) + ...) == 0),
+                  "Slice arguments must be convertible to range, Ellipsis, or long");
 
-    static_assert((rank == -1) or (sizeof...(T) == rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank)),
-                  "Incorrect number of parameters in call");
-    //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
+    static constexpr int n_args_long = (std::is_constructible_v<long, T> + ...);
 
-    auto idx_or_pos = _idx_m.template slice_or_position<guarantees>(x...); // we call the index map
+    // case 1 : all arguments are long, we simply compute the offset
+    if constexpr (n_args_long == rank) {         // no range, ellipsis, we simply compute the linear position
+      long offset = self._idx_m(x...);           // compute the offset
+      if constexpr (is_view or not SelfIsRvalue) //
+        return self._storage[offset];            // We return a REFERENCE here. Ok since underlying array is still alive
+      else                                       //
+        return ValueType{self._storage[offset]}; // We return a VALUE here, the array is about be destroyed.
+    }
+    // case 2 : we have to make a slice
+    else {
+      // Static rank
+      auto const [offset, idxm] = slice_static::slice_layout(self._idx_m, x...);
 
-    if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
-      return _storage[idx_or_pos];                            //
-    else {                                                    // Case 2: we got a slice
-      auto const &[offset, idxm] = idx_or_pos;
-      return my_view_template_t<decltype(idxm)>{std::move(idxm), {_storage, offset}}; //
+      return my_view_template_t<decltype(idxm)>{std::move(idxm), {self._storage, offset}};
     }
   }
 }
 
 public:
-
-
 /**
  * Access the array, make a lazy expression or slice of it depending on the arguments
  *
@@ -74,70 +81,25 @@ public:
  */
 template <typename... T>
 decltype(auto) operator()(T const &... x) const & {
-  if constexpr (sizeof...(T) == 0)
-    return view_t{_idx_m, _storage};
-  else {
-
-    static_assert((rank == -1) or (sizeof...(T) == rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank)),
-                  "Incorrect number of parameters in call");
-    //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
-
-    auto idx_or_pos = _idx_m.template slice_or_position<guarantees>(x...); // we call the index map
-
-    if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
-      return _storage[idx_or_pos];                            //
-    else {                                                    // Case 2: we got a slice
-      auto const &[offset, idxm] = idx_or_pos;
-      return my_view_template_t<decltype(idxm)>{std::move(idxm), {_storage, offset}}; //
-    }
-  }
+  static_assert((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank)),
+                "Incorrect number of parameters in call");
+  return __call__impl<false>(*this, x...);
 }
 
 ///
 template <typename... T>
 decltype(auto) operator()(T const &... x) & {
-  if constexpr (sizeof...(T) == 0)
-    return view_t{_idx_m, _storage};
-  else {
-
-    static_assert((rank == -1) or (sizeof...(T) == rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank)),
-                  "Incorrect number of parameters in call");
-    //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
-
-    auto idx_or_pos = _idx_m.template slice_or_position<guarantees>(x...); // we call the index map
-
-    if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
-      return _storage[idx_or_pos];                            //
-    else {                                                    // Case 2: we got a slice
-      auto const &[offset, idxm] = idx_or_pos;
-      return my_view_template_t<decltype(idxm)>{std::move(idxm), {_storage, offset}}; //
-    }
-  }
+  static_assert((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank)),
+                "Incorrect number of parameters in call");
+  return __call__impl<false>(*this, x...);
 }
 
 ///
 template <typename... T>
 decltype(auto) operator()(T const &... x) && {
-  if constexpr (sizeof...(T) == 0)
-    return view_t{_idx_m, _storage};
-  else {
-
-    static_assert((rank == -1) or (sizeof...(T) == rank) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank)),
-                  "Incorrect number of parameters in call");
-    //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(std::move(*this), std::forward<T>(x)...);
-
-    auto idx_or_pos = _idx_m.template slice_or_position<guarantees>(x...); // we call the index map
-
-    if constexpr (std::is_same_v<decltype(idx_or_pos), long>) // Case 1: we got a long, hence access a element
-      if constexpr (is_view)                                  //
-        return _storage[idx_or_pos];                          // We return a REFERENCE here. Ok since underlying array is still alive
-      else                                                    //
-        return ValueType{_storage[idx_or_pos]};               // We return a VALUE here, the array is about be destroyed.
-    else {                                                    // Case 2: we got a slice
-      auto const &[offset, idxm] = idx_or_pos;
-      return my_view_template_t<decltype(idxm)>{std::move(idxm), {_storage, offset}}; //
-    }
-  }
+  static_assert((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank)),
+                "Incorrect number of parameters in call");
+  return __call__impl<true>(*this, x...);
 }
 
 // ------------------------------- Iterators --------------------------------------------
