@@ -23,7 +23,7 @@ normal 5GdG
 :%s/is_ndmatrix_v/is_ndarray_v/ge
 :%s/IdxMap::rank(),//ge
 :%s/std::matrix<long>/std::array<long,2>/ge
-:%s/idx_map<Layout>/idx_map<2,Layout>/g
+:%s/idx_map<Layout/idx_map<2,Layout/g
 
 %s/2 == 2 and//g
 

@@ -11,7 +11,7 @@ namespace nda {
 
   template <typename ValueType, int Rank, uint64_t Layout = 0>
   class array;
-  template <typename ValueType, int Rank, uint64_t Guarantees = 0, uint64_t Layout = 0>
+  template <typename ValueType, int Rank, layout_info_e LayoutInfo = layout_info_e::none, uint64_t Layout = 0>
   class array_view;
 
   // ---------------------- is_array_or_view_container  --------------------------------
@@ -22,65 +22,61 @@ namespace nda {
   template <typename ValueType, int Rank>
   inline constexpr bool is_regular_or_view_v<array<ValueType, Rank>> = true;
 
-  template <typename ValueType, int Rank, uint64_t Guarantees, uint64_t Layout>
-  inline constexpr bool is_regular_or_view_v<array_view<ValueType, Rank, Guarantees, Layout>> = true;
+  template <typename ValueType, int Rank, layout_info_e LayoutInfo, uint64_t Layout>
+  inline constexpr bool is_regular_or_view_v<array_view<ValueType, Rank, LayoutInfo, Layout>> = true;
 
   // ---------------------- concept  --------------------------------
 
   template <typename ValueType, int Rank, uint64_t Layout>
   inline constexpr bool is_ndarray_v<array<ValueType, Rank, Layout>> = true;
 
-  template <typename ValueType, int Rank, uint64_t Guarantees, uint64_t Layout>
-  inline constexpr bool is_ndarray_v<array_view<ValueType, Rank, Guarantees, Layout>> = true;
+  template <typename ValueType, int Rank, layout_info_e LayoutInfo, uint64_t Layout>
+  inline constexpr bool is_ndarray_v<array_view<ValueType, Rank, LayoutInfo, Layout>> = true;
 
   // ---------------------- algebra --------------------------------
 
   template <typename ValueType, int Rank, uint64_t Layout>
   inline constexpr char get_algebra<array<ValueType, Rank, Layout>> = 'A';
 
-  template <typename ValueType, int Rank, uint64_t Guarantees, uint64_t Layout>
-  inline constexpr char get_algebra<array_view<ValueType, Rank, Guarantees, Layout>> = 'A';
+  template <typename ValueType, int Rank, layout_info_e LayoutInfo, uint64_t Layout>
+  inline constexpr char get_algebra<array_view<ValueType, Rank, LayoutInfo, Layout>> = 'A';
 
-  // ---------------------- guarantees --------------------------------
+  // ---------------------- get_layout_info --------------------------------
 
   template <typename ValueType, int Rank>
-  inline constexpr uint64_t get_guarantee<array<ValueType, Rank>> = array<ValueType, Rank>::guarantees;
+  inline constexpr layout_info_e get_layout_info<array<ValueType, Rank>> = array<ValueType, Rank>::idx_map_t::layout_info;
 
-  template <typename ValueType, int Rank, uint64_t Guarantees, uint64_t Layout>
-  inline constexpr uint64_t get_guarantee<array_view<ValueType, Rank, Guarantees, Layout>> = Guarantees;
+  template <typename ValueType, int Rank, layout_info_e LayoutInfo, uint64_t Layout>
+  inline constexpr layout_info_e get_layout_info<array_view<ValueType, Rank, LayoutInfo, Layout>> = LayoutInfo;
 
   // ---------------------- array_view  --------------------------------
 
   // Try to put the const/mutable in the TYPE
 
-  template <typename ValueType, int Rank, uint64_t Guarantees, uint64_t Layout>
+  template <typename ValueType, int Rank, layout_info_e LayoutInfo, uint64_t Layout>
   class array_view {
 
     public:
     /// ValueType, without const if any
-    using value_t = ValueType;// std::remove_const_t<ValueType>;
+    using value_t = ValueType; // std::remove_const_t<ValueType>;
     //using value_no_const_t =std::remove_const_t<ValueType>;
 
     ///
     using regular_t = array<ValueType, Rank, Layout>;
     ///
-    using view_t = array_view<ValueType, Rank, Guarantees, Layout>;
+    using view_t = array_view<ValueType, Rank, LayoutInfo, Layout>;
     ///
-    using const_view_t = array_view<ValueType const, Rank, Guarantees, Layout>;
+    using const_view_t = array_view<ValueType const, Rank, LayoutInfo, Layout>;
 
     //using value_as_template_arg_t = ValueType;
     using storage_t = mem::borrowed::handle<ValueType>;
-    using idx_map_t = idx_map<Rank, Layout>;
+    using idx_map_t = idx_map<Rank, Layout, LayoutInfo>;
 
     static constexpr int rank      = Rank;
     static constexpr bool is_view  = true;
     static constexpr bool is_const = std::is_const_v<ValueType>;
 
-    static constexpr uint64_t guarantees = Guarantees; // for the generic shared with array
-                                                       //    static constexpr uint64_t layout = Layout;
-
-    // fIXME : FIRST STEP.
-    static_assert(Guarantees == 0, "Not implemented");
+    //    static constexpr uint64_t layout = Layout;
 
     // FIXME : h5
     // static std::string hdf5_scheme() { return "array<" + triqs::h5::get_hdf5_scheme<ValueType>() + "," + std::to_string(rank) + ">"; }
@@ -117,7 +113,7 @@ namespace nda {
      *  @param idxm index map
      *  @st  storage (memory handle)
      */
-    array_view(idx_map<Rank, Layout> const &idxm, storage_t st) : _idx_m(idxm), _storage(std::move(st)) {}
+    array_view(idx_map_t const &idxm, storage_t st) : _idx_m(idxm), _storage(std::move(st)) {}
 
     /** 
      * From other containers and view : array, matrix, matrix_view.
@@ -144,7 +140,7 @@ namespace nda {
      * @param p Pointer to the data 
      * @param idxm Index Map (view can be non contiguous). If the offset is non zero, the view starts at p + idxm.offset()
      */
-    array_view(idx_map<Rank, Layout> const &idxm, ValueType *p) : _idx_m(idxm), _storage{p} {}
+    array_view(idx_map_t const &idxm, ValueType *p) : _idx_m(idxm), _storage{p} {}
     //array_view(idx_map<Rank, Layout> const &idxm, ValueType *p) : _idx_m(idxm), _storage{p, size_t(idxm.size() + idxm.offset())} {}
 
     // Move assignment not defined : will use the copy = since view must copy data
@@ -185,7 +181,7 @@ namespace nda {
     }
 
     /// Rebind view
-    void rebind(array_view<value_t const, Rank> const &a) REQUIRES (!is_const) {
+    void rebind(array_view<value_t const, Rank> const &a) REQUIRES(!is_const) {
       static_assert(is_const, "Can not rebind a view of const ValueType to a view of ValueType");
       _idx_m   = a._idx_m;
       _storage = a._storage;
@@ -213,7 +209,7 @@ namespace nda {
   };
 */
   /// Aliases
-  template <typename ValueType, int Rank, uint64_t Guarantees = 0, uint64_t Layout = 0>
-  using array_const_view = array_view<ValueType const, Rank, Layout, Guarantees>;
+  template <typename ValueType, int Rank, layout_info_e LayoutInfo = layout_info_e::none, uint64_t Layout = 0>
+  using array_const_view = array_view<ValueType const, Rank, LayoutInfo, Layout>;
 
 } // namespace nda

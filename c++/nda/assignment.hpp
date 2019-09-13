@@ -18,7 +18,6 @@ namespace nda::details {
     //impl_assign_from_lazy_array(lhs, rhs);
     //return;
     //}
-
     // special case: we may have a direct memcopy
     if constexpr (is_regular_or_view_v<LHS> and is_regular_or_view_v<RHS> and not is_scalar_for_v<RHS, LHS>){ // the last case for array of array
       static_assert(std::is_assignable_v<typename LHS::value_t &, typename RHS::value_t>,
@@ -53,7 +52,8 @@ namespace nda::details {
       static_assert(std::is_assignable_v<typename LHS::value_t &, get_value_t<RHS>>,
                     "Assignment impossible for the type of RHS into the type of LHS");
 
-      if constexpr (guarantee::has_contiguous(get_guarantee<LHS>) and guarantee::has_contiguous(get_guarantee<RHS>)) {
+      if constexpr (has_layout_contiguous<LHS> and has_layout_contiguous<RHS>) {
+	
         // They must have the same size ! or EXPECT is wrong
         // FIXME FOR OFFSET
         // a linear computation

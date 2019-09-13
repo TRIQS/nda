@@ -26,15 +26,15 @@ namespace nda {
     ///
     using regular_t = matrix<ValueType>;
     ///
-    using view_t = matrix_view<ValueType>;
+    using view_t = matrix_view<ValueType, layout_info_e::contiguous, Layout>;
     ///
-    using const_view_t = matrix_view<ValueType const>;
+    using const_view_t = matrix_view<ValueType const, layout_info_e::contiguous, Layout>;
 
-    using storage_t = mem::handle<ValueType, 'R'>;
-    using idx_map_t = idx_map<2, Layout>;
+    using storage_t = mem::heap::handle<ValueType>;
+    using idx_map_t = idx_map<2, Layout, layout_info_e::contiguous>;
 
     //    static constexpr uint64_t layout = Layout;
-    static constexpr uint64_t guarantees = guarantee::contiguous |  guarantee::smallest_stride_is_one;
+    //  static constexpr layout_info_e layout= layout_info_e::contiguous;
 
     static constexpr int rank      = 2;
     static constexpr bool is_const = false;
@@ -42,7 +42,7 @@ namespace nda {
 
     private:
     template <typename IdxMap>
-    using my_view_template_t = matrix_view<value_t, 0, permutations::encode(IdxMap::layout)>;
+    using my_view_template_t = matrix_view<value_t, IdxMap::layout_info, permutations::encode(IdxMap::layout)>;
 
     idx_map_t _idx_m;
     storage_t _storage;
@@ -90,8 +90,8 @@ namespace nda {
      * @param mem_handle  memory handle
      * NB: make a new copy.
      */
-    template <char RBS>
-    matrix(idx_map<2> const &idxm, mem::handle<ValueType, RBS> mem_handle) : _idx_m(idxm), _storage(std::move(mem_handle)) {}
+    //template <char RBS>
+    //matrix(idx_map<2> const &idxm, mem::handle<ValueType, RBS> mem_handle) : _idx_m(idxm), _storage(std::move(mem_handle)) {}
 
     /// Construct from anything that has an indexmap and a storage compatible with this class
     //template <typename T> matrix(T const &a) REQUIRES(XXXX): matrix(a.indexmap(), a.storage()) {}
@@ -106,7 +106,7 @@ namespace nda {
     template <typename A>
     matrix(A const &x) REQUIRES(is_ndarray_v<A>) : matrix{x.shape()} {
       static_assert(std::is_convertible_v<get_value_t<A>, value_t>,
-                    "Can not construct the matrix. ValueType can be constructed from the value_t of the argument");
+                    "Can not construct the matrix. ValueType can not be constructed from the value_t of the argument");
       nda::details::assignment(*this, x);
     }
 
@@ -117,8 +117,8 @@ namespace nda {
      * @param shape  Shape of the matrix (lengths in each dimension)
      * @param mem_handle  memory handle
      */
-    template <char RBS>
-    matrix(shape_t<2> const &shape, mem::handle<ValueType, RBS> mem_handle) : matrix(idx_map_t{shape}, mem_handle) {}
+    //template <char RBS>
+    //matrix(shape_t<2> const &shape, mem::handle<ValueType, RBS> mem_handle) : matrix(idx_map_t{shape}, mem_handle) {}
 
     // --- with initializers
 
@@ -221,7 +221,7 @@ namespace nda {
      * @param shape  New shape of the matrix (lengths in each dimension)
      */
     [[gnu::noinline]] void resize(shape_t<2> const &shape) {
-      _idx_m = idx_map<2>(shape);
+      _idx_m = idx_map_t(shape);
       // Construct a storage only if the new index is not compatible (size mismatch).
       if (_storage.size() != _idx_m.size()) _storage = mem::handle<ValueType, 'R'>{_idx_m.size()};
     }
