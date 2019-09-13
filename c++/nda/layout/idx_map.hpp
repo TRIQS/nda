@@ -15,8 +15,9 @@ namespace nda {
 
 }
 
-#include "./slice_static.hpp"
+#include "./range.hpp"
 #include "./bound_check_worker.hpp"
+#include "./slice_static.hpp"
 #include "./idx_map_iterator.hpp"
 #include "./for_each.hpp"
 #include "./permutation.hpp"
@@ -94,10 +95,14 @@ namespace nda {
     }
 
     ///
-    static constexpr bool is_layout_C() { return (permutations::encode(layout) == permutations::encode(permutations::identity<Rank>()));} // (layout == permutations::identity<Rank>()); }
+    static constexpr bool is_layout_C() {
+      return (permutations::encode(layout) == permutations::encode(permutations::identity<Rank>()));
+    } // (layout == permutations::identity<Rank>()); }
 
     ///
-    static constexpr bool is_layout_Fortran() { return (permutations::encode(layout) == permutations::encode(permutations::reverse_identity<Rank>()));} //(layout == permutations::reverse_identity<Rank>()); }
+    static constexpr bool is_layout_Fortran() {
+      return (permutations::encode(layout) == permutations::encode(permutations::reverse_identity<Rank>()));
+    } //(layout == permutations::reverse_identity<Rank>()); }
 
     ///
     bool check_layout() const noexcept {
@@ -128,8 +133,7 @@ namespace nda {
      * @param lengths
      * @param strides
      */
-    idx_map(std::array<long, Rank> const &lengths, std::array<long, Rank> const &strides) noexcept
-       : len(lengths), str(strides) {}
+    idx_map(std::array<long, Rank> const &lengths, std::array<long, Rank> const &strides) noexcept : len(lengths), str(strides) {}
 
     /** 
      * Construction from the lengths, the strides
@@ -145,7 +149,7 @@ namespace nda {
         str[u] = s;
         s *= len[u];
       }
-     ENSURES(s == size());
+      ENSURES(s == size());
     }
 
     // trap for incorrect calls. For R = Rank, the non template has priority
@@ -174,12 +178,6 @@ namespace nda {
         return ((args * std::get<Is>(str)) + ...);
     }
 
-#ifdef NDA_ENFORCE_BOUNDCHECK
-    static constexpr bool enforce_bound_check = true;
-#else
-    static constexpr bool enforce_bound_check = false;
-#endif
-
     public:
     /**
      * Number of variables must be exactly the rank or are optionally
@@ -190,37 +188,15 @@ namespace nda {
      *      else : the linear position (long)
      *
      */
-    template <uint64_t Guarantee, typename... Args>
-    FORCEINLINE auto slice_or_position(Args const &... args) const noexcept(!enforce_bound_check) {
-
-      static_assert(((((std::is_base_of_v<range_tag, Args> or std::is_constructible_v<long, Args>) ? 0 : 1) + ...) == 0),
-                    "Slice arguments must be convertible to range, Ellipsis, or long");
-
-      static constexpr int n_args_ellipsis = ((std::is_same_v<Args, ellipsis>)+...);
-      static constexpr int n_args_long     = (std::is_constructible_v<long, Args> + ...);
-
-      static_assert(n_args_ellipsis <= 1, "Only one ellipsis argument is authorized");
-      static_assert((sizeof...(Args) <= Rank), "Incorrect number of arguments in array call ");
-      static_assert((n_args_ellipsis == 1) or (sizeof...(Args) == Rank), "Incorrect number of arguments in array call ");
-
-#ifdef NDA_ENFORCE_BOUNDCHECK
-      details::assert_in_bounds(rank(), len.data(), args...);
-#endif
-
-      if constexpr (n_args_long == Rank) { // no range, ellipsis, we simply compute the linear position
-        auto _fold = call_impl<Guarantee>(std::make_index_sequence<sizeof...(Args)>{},
-                               args...);           // NB do not use index_sequence_for : one instantation only by # args.
-          return _fold;
-      } else { // otherwise we make a  new sliced idx_map
-        return slice_static::slice(std::make_index_sequence<Rank - n_args_long>{}, std::make_index_sequence<Rank>{},
-                                   std::make_index_sequence<sizeof...(Args)>{}, *this, args...);
-      }
-    }
-
-    // FIXME kept for the test for the moment
     template <typename... Args>
-    FORCEINLINE auto operator()(Args const &... args) const noexcept(!enforce_bound_check) {
-      return slice_or_position<0>(args...);
+    FORCEINLINE auto operator()(Args const &... args) const
+#ifdef NDA_ENFORCE_BOUNDCHECK
+       noexcept(false) {
+      details::assert_in_bounds(rank(), len.data(), args...);
+#else
+       noexcept(true) {
+#endif
+      return call_impl<0>(std::make_index_sequence<sizeof...(Args)>{}, args...);
     }
 
     // ----------------  Iterator -------------------------

@@ -1,4 +1,3 @@
-#include "./range.hpp"
 #include "./permutation.hpp"
 
 #define FORCEINLINE __inline__ __attribute__((always_inline))
@@ -150,14 +149,14 @@ namespace nda::slice_static {
   }
 
   // -------------- are all the range/ellipsis grouped ? -----------
-  template <size_t Q>
-  constexpr bool slice_(std::array<bool, Q> const &args_is_range) {
-    // count the number of times 10 appears args_in_range
-    int n_10_pattern = 0;
-    for (size_t i = 1; i < Q; ++i)
-      if (args_is_range[i - 1] and (not args_is_range[i])) ++n_10_pattern;
-    return (n_10_pattern <= 1);
-  }
+  //template <size_t Q>
+  //constexpr bool slice_(std::array<bool, Q> const &args_is_range) {
+  //// count the number of times 10 appears args_in_range
+  //int n_10_pattern = 0;
+  //for (size_t i = 1; i < Q; ++i)
+  //if (args_is_range[i - 1] and (not args_is_range[i])) ++n_10_pattern;
+  //return (n_10_pattern <= 1);
+  //}
 
   // ------------  Small pieces of code for the fold in functions below, with dispatch on type --------------------------------------
   // offset
@@ -183,16 +182,20 @@ namespace nda::slice_static {
   struct debug {};
 #define PRINT(...) debug<__VA_ARGS__>().zozo;
 
-  // ----------------------------- slice of index map ----------------------------------------------
+  // ----------------------------- slice of index map  : implementation function ----------------------------------------------
 
   // Ns, Ps, Qs : sequence indices for size N, P, Q
   // IdxMap : type of the indexmap idx
   // Arg : arguments of the slice
-  // returns : a new sliced idx_map, with computed rank, layout
+  // returns : a pair:  (offset, new sliced layout)
   //
   template <size_t... Ns, size_t... Ps, size_t... Qs, typename IdxMap, typename... Args>
-  FORCEINLINE auto slice(std::index_sequence<Ps...>, std::index_sequence<Ns...>, std::index_sequence<Qs...>, IdxMap const &idxm,
-                         Args const &... args) {
+  FORCEINLINE auto slice_layout_impl(std::index_sequence<Ps...>, std::index_sequence<Ns...>, std::index_sequence<Qs...>, IdxMap const &idxm,
+                                     Args const &... args) {
+
+#ifdef NDA_ENFORCE_BOUNDCHECK
+    details::assert_in_bounds(idxm.rank(), idxm.lengths().data(), args...);
+#endif
 
     static_assert(IdxMap::rank() == sizeof...(Ns), "Internal error");
     static_assert(sizeof...(Args) == sizeof...(Qs), "Internal error");
@@ -225,31 +228,47 @@ namespace nda::slice_static {
     // NOT IMPLEMENTED
     //static constexpr uint64_t guarantees            = slice_guarantees(args_is_range, IdxMap::layout, P, get_guarantee<IdxMap::flags);
 
-    long offset  = (get_offset(std::get<q_of_n(Ns, e_pos, e_len)>(argstie), std::get<Ns>(idxm.strides())) + ... + 0);
-    
+    long offset = (get_offset(std::get<q_of_n(Ns, e_pos, e_len)>(argstie), std::get<Ns>(idxm.strides())) + ... + 0);
+
     return std::make_pair(offset, idx_map<P, 0>{len, str});
     //return idx_map<P, permutations::encode(layout)>{len, str, offset};
   }
 
   // ----------------------------- slice of index map ----------------------------------------------
+  //
+  template <typename IdxMap, typename... T>
+  FORCEINLINE decltype(auto) slice_layout(IdxMap const &idxm, T const &... x) {
 
-/*  // Ns, Ps, Qs : sequence indices for size N, P, Q*/
-  //// IdxMap : type of the indexmap idx
-  //// Arg : arguments of the slice
-  //// returns : a new sliced idx_map, with computed rank, layout
-  ////
+    static constexpr int n_args_ellipsis = ((std::is_same_v<T, ellipsis>)+...);
+    static constexpr int n_args_long     = (std::is_constructible_v<long, T> + ...);
+
+    static_assert(n_args_ellipsis <= 1, "Only one ellipsis argument is authorized");
+    static_assert((sizeof...(T) <= IdxMap::rank()), "Incorrect number of arguments in array call ");
+    static_assert((n_args_ellipsis == 1) or (sizeof...(T) == IdxMap::rank()), "Incorrect number of arguments in array call ");
+
+    return slice_layout_impl(std::make_index_sequence<IdxMap::rank() - n_args_long>{}, std::make_index_sequence<IdxMap::rank()>{},
+                             std::make_index_sequence<sizeof...(T)>{}, idxm, x...);
+  }
+
+  // ----------------------------- slice of index map ----------------------------------------------
+
+  //   Ns, Ps, Qs : sequence indices for size N, P, Q
+  // IdxMap : type of the indexmap idx
+  // Arg : arguments of the slice
+  // returns : a new sliced idx_map, with computed rank, layout
+  //
   //template <size_t... Ns, typename IdxMap, typename... Args>
   //FORCEINLINE auto offset_of_slice(std::index_sequence<Ps...>, IdxMap const &idxm, Args const &... args) {
 
-    //static_assert(IdxMap::rank() == sizeof...(Ns), "Internal error");
-    //static constexpr int N     = sizeof...(Ns);
-    //static constexpr int Q     = sizeof...(Args);
-    //static constexpr int e_len = N - Q + 1; // len of ellipsis : how many ranges are missing
-    //static constexpr int e_pos = ellipsis_position<Args...>();
+  //static_assert(IdxMap::rank() == sizeof...(Ns), "Internal error");
+  //static constexpr int N     = sizeof...(Ns);
+  //static constexpr int Q     = sizeof...(Args);
+  //static constexpr int e_len = N - Q + 1; // len of ellipsis : how many ranges are missing
+  //static constexpr int e_pos = ellipsis_position<Args...>();
 
-    //auto argstie = std::tie(args...);
-    //long offset  = idxm.offset() + (get_offset(std::get<q_of_n(Ns, e_pos, e_len)>(argstie), std::get<Ns>(idxm.strides())) + ... + 0);
-    //return offset;
-  /*}*/
+  //auto argstie = std::tie(args...);
+  //long offset  = idxm.offset() + (get_offset(std::get<q_of_n(Ns, e_pos, e_len)>(argstie), std::get<Ns>(idxm.strides())) + ... + 0);
+  //return offset;
+  //}
 
 } // namespace nda::slice_static

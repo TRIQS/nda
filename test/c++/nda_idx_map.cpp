@@ -5,10 +5,14 @@
 
 nda::range _;
 nda::ellipsis ___;
+using nda::slice_static::slice_layout;
 
 using namespace nda;
 
-template <typename... INT> std::array<long, sizeof...(INT)> ma(INT... i) { return {i...}; }
+template <typename... INT>
+std::array<long, sizeof...(INT)> ma(INT... i) {
+  return {i...};
+}
 
 //-----------------------
 
@@ -35,9 +39,9 @@ TEST(idxstat, eval) { // NOLINT
 
 //TEST(idxstat, boundcheck) { // NOLINT
 
-  //idx_map<3> i1{{2, 7, 3}};
-  ////i1(21, 3, 18);
-  ////EXPECT_THROW(i1(21, 3, 18), std::exception); //NOLINT
+//idx_map<3> i1{{2, 7, 3}};
+////i1(21, 3, 18);
+////EXPECT_THROW(i1(21, 3, 18), std::exception); //NOLINT
 //}
 
 //-----------------------
@@ -46,16 +50,18 @@ TEST(idxstat, slice) { // NOLINT
 
   idx_map<3> i1{{1, 2, 3}};
 
-  idx_map<1> i2 = i1(0, _, 2);
+  auto [offset2, i2] = slice_layout(i1, 0, _, 2);
 
-  idx_map<1> c2{{2}, {3}, 2};
+  idx_map<1> c2{{2}, {3}};
 
   std::cerr << i2 << std::endl;
   std::cerr << c2 << std::endl;
   EXPECT_TRUE(i2 == c2); //NOLINT
+  EXPECT_EQ(offset2, 2); //NOLINT
 
-  idx_map<3> i3 = i1(_, _, _);
+  auto [offset3, i3] = slice_layout(i1, _, _, _);
   EXPECT_TRUE(i3 == i1); //NOLINT
+  EXPECT_EQ(offset3, 0); //NOLINT
 }
 
 //-----------------------
@@ -63,16 +69,18 @@ TEST(idxstat, slice) { // NOLINT
 TEST(idxstat, ellipsis) { // NOLINT
 
   idx_map<3> i1{{1, 2, 3}};
-  idx_map<2> i2 = i1(0, ___);
+  auto [offset2, i2] = slice_layout(i1, 0, ___);
 
-  idx_map<2> c2{{2, 3}, {3, 1}, 0};
+  idx_map<2> c2{{2, 3}, {3, 1}};
 
   std::cerr << i2 << std::endl;
   std::cerr << c2 << std::endl;
   EXPECT_TRUE(i2 == c2); //NOLINT
+  EXPECT_EQ(offset2, 0); //NOLINT
 
-  idx_map<3> i3 = i1(___);
+  auto [offset3, i3] = slice_layout(i1, ___);
   EXPECT_TRUE(i3 == i1); //NOLINT
+  EXPECT_EQ(offset3, 0); //NOLINT
 }
 
 //-----------------------
@@ -82,12 +90,13 @@ TEST(idxstat, ellipsis2) { // NOLINT
   idx_map<5> i1{{1, 2, 3, 4, 5}};
   std::cerr << i1 << std::endl;
 
-  idx_map<2> i2 = i1(0, ___, 3, 2);
-  idx_map<2> c2{{2, 3}, {60, 20}, i1(0, 0, 0, 3, 2)};
+  auto [offset2, i2] = slice_layout(i1, 0, ___, 3, 2);
+  idx_map<2> c2{{2, 3}, {60, 20}};
 
   std::cerr << i2 << std::endl;
   std::cerr << c2 << std::endl;
-  EXPECT_TRUE(i2 == c2); //NOLINT
+  EXPECT_TRUE(i2 == c2);                 //NOLINT
+  EXPECT_EQ(offset2, i1(0, 0, 0, 3, 2)); //NOLINT
 }
 
 //----------- Iterator ------------
@@ -105,8 +114,8 @@ TEST(idxstat, iteratorC) { // NOLINT
 
   pos = 0;
   //for (auto [p, i] : enumerate_indices(i1)) {
-    //EXPECT_EQ(p, pos++); //NOLINT
-    //std::cerr << i << std::endl;
+  //EXPECT_EQ(p, pos++); //NOLINT
+  //std::cerr << i << std::endl;
   //}
 }
 /*
@@ -134,11 +143,11 @@ TEST(idxstat, for_each) { // NOLINT
   }
 
   //{
-    //std::stringstream fs;
-    //auto l = [&fs](int i, int j, int k) { fs << i << j << k << " "; };
+  //std::stringstream fs;
+  //auto l = [&fs](int i, int j, int k) { fs << i << j << k << " "; };
 
-    //for_each(std::array<long, 3>{1, 2, 3}, l, traversal::Fortran);
-    //EXPECT_EQ(fs.str(), "000 010 001 011 002 012 ");
+  //for_each(std::array<long, 3>{1, 2, 3}, l, traversal::Fortran);
+  //EXPECT_EQ(fs.str(), "000 010 001 011 002 012 ");
   //}
 }
 
