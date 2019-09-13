@@ -59,7 +59,7 @@ FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) {
     if constexpr (n_args_long == rank) {         // no range, ellipsis, we simply compute the linear position
       long offset = self._idx_m(x...);           // compute the offset
       if constexpr (is_view or not SelfIsRvalue) //
-        return self._storage[offset];            // We return a REFERENCE here. Ok since underlying array is still alive
+        return AccessorPolicy::template accessor<ValueType>::access(self._storage. data(), offset);            // We return a REFERENCE here. Ok since underlying array is still alive
       else                                       //
         return ValueType{self._storage[offset]}; // We return a VALUE here, the array is about be destroyed.
     }

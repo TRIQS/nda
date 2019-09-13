@@ -53,6 +53,9 @@ namespace nda {
     static constexpr bool is_view  = false;
 
     private:
+    // details for the common code with view
+    using AccessorPolicy = default_accessor;
+
     template <typename IdxMap>
     using my_view_template_t = basic_array_view<ValueType, IdxMap::rank(), permutations::encode(IdxMap::stride_order), IdxMap::layout_info, Algebra,
                                                 default_accessor, mem::borrowed>;
