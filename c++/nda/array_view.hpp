@@ -1,9 +1,9 @@
 #pragma once
-#include "./storage/policies.hpp"
-#include "./layout/idx_map.hpp"
-#include "./basic_functions.hpp"
-#include "./assignment.hpp"
-#include "./iterator_adapter.hpp"
+#include "storage/policies.hpp"
+#include "layout/idx_map.hpp"
+#include "basic_functions.hpp"
+#include "assignment.hpp"
+#include "iterator_adapter.hpp"
 
 namespace nda {
 
