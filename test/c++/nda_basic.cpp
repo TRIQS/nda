@@ -1,7 +1,5 @@
 #include "./test_common.hpp"
 
-#include <nda/matrix.hxx>
-
 static_assert(!std::is_pod<nda::array<long, 2>>::value, "POD pb");
 //static_assert(is_scalar_for<int, matrix<std::complex<double>>>::type::value == 1, "oops");
 

@@ -40,13 +40,19 @@ namespace nda {
 
   // Impl. trait to match the containers in requires. Match all regular containers (array, matrix)
   template <typename A>
-  inline constexpr bool is_regular_or_view_v = false;
+  inline constexpr bool is_regular_v = false;
+
+  // ---------------------------  is_view_v------------------------
+
+  // Impl. trait to match the containers in requires. Match all containers (array, matrix, view)
+  template <typename A>
+  inline constexpr bool is_view_v = false;
 
   // ---------------------------  is_regular_or_view_v------------------------
 
   // Impl. trait to match the containers in requires. Match all containers (array, matrix, view)
   template <typename A>
-  inline constexpr bool is_regular_v = false;
+  inline constexpr bool is_regular_or_view_v = is_regular_v<A> or is_view_v<A>;
 
   // --------------------------- Ndarray concept------------------------
 

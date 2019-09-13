@@ -1,7 +1,5 @@
 #include "./test_common.hpp"
 
-#include <nda/matrix.hxx>
-
 // -------------------------------------
 
 TEST(View, ChangeData) {

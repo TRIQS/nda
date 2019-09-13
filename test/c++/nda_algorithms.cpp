@@ -55,7 +55,7 @@ TEST(NDA, Algo1) {
   EXPECT_EQ(sum(A), 36);
   EXPECT_EQ(min_element(B), -2);
   EXPECT_EQ(sum(B), 0);
-  EXPECT_EQ(nda::array(A + 10 * B), (nda::array<int, 2>{{1, -7, -15}, {12, 4, -4}, {23, 15, 7}}));
+  EXPECT_EQ((nda::array<int, 2>{A + 10 * B}), (nda::array<int, 2>{{1, -7, -15}, {12, 4, -4}, {23, 15, 7}}));
   EXPECT_EQ(max_element(A + 10 * B), 23);
 }
 
