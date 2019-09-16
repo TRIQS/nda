@@ -23,12 +23,12 @@ namespace h5 {
   // FIXME : CLEAN THIS
   // Special case of vector < string >
 
-  H5_SPECIALIZE_HDF5_SCHEME2(std::vector<std::string>, vector<string>);
+  H5_SPECIALIZE_FORMAT2(std::vector<std::string>, vector<string>);
 
   template <typename T>
-  struct hdf5_scheme_impl<std::vector<T>> {
+  struct hdf5_format_impl<std::vector<T>> {
     static std::string invoke() { return "PythonListWrap"; }
-    //static std::string invoke() { return "std::vector<" + get_hdf5_scheme<T>() + ">"; }
+    //static std::string invoke() { return "std::vector<" + get_hdf5_format<T>() + ">"; }
   };
 
   // ----------------------------------------------------------------------------
@@ -65,7 +65,7 @@ namespace h5 {
     } else { // generic type
 
       auto gr = g.create_group(name);
-      h5_write_attribute(gr, "format", get_hdf5_scheme(v));
+      h5_write_attribute(gr, "format", get_hdf5_format(v));
       for (int i = 0; i < v.size(); ++i) h5_write(gr, std::to_string(i), v[i]);
     }
   }

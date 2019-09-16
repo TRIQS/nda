@@ -25,7 +25,7 @@
 
 namespace h5 {
 
-  template <typename T1, typename T2> struct hdf5_scheme_impl<std::pair<T1, T2>> {
+  template <typename T1, typename T2> struct hdf5_format_impl<std::pair<T1, T2>> {
     static std::string invoke() { return "PythonTupleWrap"; }
   };
 
@@ -34,7 +34,7 @@ namespace h5 {
    */
   template <typename T1, typename T2> void h5_write(group f, std::string const &name, std::pair<T1, T2> const &p) {
     auto gr = f.create_group(name);
-    gr.write_hdf5_scheme(p);
+    gr.write_hdf5_format(p);
     h5_write(gr, "0", p.first);
     h5_write(gr, "1", p.second);
   }

@@ -1,6 +1,6 @@
 #pragma once
 #include "./file.hpp"
-#include "./scheme.hpp"
+#include "./format.hpp"
 
 namespace h5 {
 

@@ -5,7 +5,7 @@
 
 namespace h5 {
 
-  template <typename... T> struct hdf5_scheme_impl<std::tuple<T...>> {
+  template <typename... T> struct hdf5_format_impl<std::tuple<T...>> {
     static std::string invoke() { return "PythonTupleWrap"; }
   };
 
@@ -29,7 +29,7 @@ namespace h5 {
    */
   template <typename... T> void h5_write(group f, std::string const &name, std::tuple<T...> const &tpl) {
     auto gr = f.create_group(name);
-    gr.write_hdf5_scheme(tpl);
+    gr.write_hdf5_format(tpl);
     h5_write_tuple_impl(gr, name, tpl, std::index_sequence_for<T...>{});
   }
 

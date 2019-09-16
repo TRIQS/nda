@@ -13,7 +13,7 @@ namespace h5 {
   // forward
   hid_t H5Dget_type(hid_t);
 
-  template <typename... T> struct hdf5_scheme_impl<std::variant<T...>> { static std::string invoke() = delete; };
+  template <typename... T> struct hdf5_format_impl<std::variant<T...>> { static std::string invoke() = delete; };
 
   /**
    */
@@ -29,7 +29,7 @@ namespace h5 {
     if constexpr (sizeof...(T) > 0)
       h5_read_variant_helper<VT, T...>(v, dt, gr, name);
     else
-      H5_ERROR << " Error in h5_read: std::variant<...> not compatible with TRIQS_HDF5_data_scheme \n";
+      H5_ERROR << " Error in h5_read: std::variant<...> not compatible with TRIQS_HDF5_data_format \n";
   }
 
   /**

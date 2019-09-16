@@ -2,7 +2,7 @@
 
 #include "./h5/file.hpp"
 #include "./h5/group.hpp"
-#include "./h5/scheme.hpp"
+#include "./h5/format.hpp"
 #include "./h5/scalar.hpp"
 #include "./h5/generic.hpp"
 #include "./h5/stl/string.hpp"
