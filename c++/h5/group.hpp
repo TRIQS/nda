@@ -5,50 +5,35 @@
 namespace h5 {
 
   /**
-  *  \brief A local derivative of Group.
-  *  Rationale : use ADL for h5_read/h5_write, catch and rethrow exception, add some policy for opening/creating
-  */
+   *  A HDF5 group
+   */
   class group : public h5_object {
 
     public:
-    group() = default; // for python converter only
-
-    ///
-    group(group const &) = default;
+    // FIXME Do we need this ?
+    //group() = default; // for python converter only
 
     /// Takes the "/" group at the top of the file
     group(h5::file f);
 
-    /**
-   * Takes ownership of the id [expert only]
-   * id can be :
-   *  - a file : in this case, make a group on /
-   *  - a group : in this case, take the id of the group. DOES NOT take ownership of the ref
-   */
+    ///
+    group(group const &) = default;
+
+    private:
+    /*
+     * Takes ownership of the id [expert only]
+     * id can be :
+     *  - a file : in this case, make a group on /
+     *  - a group : in this case, take the id of the group. DOES NOT take ownership of the ref
+     */
     group(hid_t id_);
 
     // [expert only]. If not present, the obj is casted to hid_t and there is a ref. leak
     group(h5_object obj);
 
+    public:
     /// Name of the group
     std::string name() const;
-
-    /// Write the triqs tag
-    void write_hdf5_scheme_as_string(const char *a);
-
-    /// Write the triqs tag of the group if it is an object.
-    template <typename T> void write_hdf5_scheme(T const &) { write_hdf5_scheme_as_string(::h5::get_hdf5_scheme<T>().c_str()); }
-
-    /// Read the triqs tag of the group if it is an object. Returns the empty string "" if attribute is not present
-    std::string read_hdf5_scheme() const;
-
-    /// Asserts that the tag of the group is the same as for T. Throws H5_ERROR if
-    void assert_hdf5_scheme_as_string(const char *tag_expected, bool ignore_if_absent = false) const;
-
-    /// Asserts that the tag of the group is the same as for T. Throws H5_ERROR if
-    template <typename T> void assert_hdf5_scheme(T const &, bool ignore_if_absent = false) const {
-      assert_hdf5_scheme_as_string(get_hdf5_scheme<T>().c_str(), ignore_if_absent);
-    }
 
     ///
     bool has_key(std::string const &key) const;
@@ -100,15 +85,15 @@ namespace h5 {
     std::vector<std::string> get_all_subgroup_dataset_names() const;
   };
 
-    //------------- read iff a key exists ------------------
+  //------------- read iff a key exists ------------------
 
-  template <typename T> inline int h5_try_read(group fg, std::string key, T &t) {
+  template <typename T>
+  inline int h5_try_read(group fg, std::string key, T &t) {
     if (fg.has_key(key)) {
       h5_read(fg, key, t);
       return 1;
     }
     return 0;
   }
-
 
 } // namespace h5

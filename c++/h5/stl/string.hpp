@@ -4,7 +4,7 @@
 
 namespace h5 {
 
-  TRIQS_SPECIALIZE_HDF5_SCHEME2(std::string, string);
+  H5_SPECIALIZE_HDF5_SCHEME2(std::string, string);
 
   /**
   * \brief Write a string  into an hdf5 file

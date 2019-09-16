@@ -75,12 +75,6 @@ namespace h5 {
     return *this;
   }
 
-  h5_object::~h5_object() {
-    // debug : to check the ref counting. Ok in tests.
-    //if (H5Iis_valid(id)) std::cerr << "closing h5 object id = " << id << " # ref = "<< H5Iget_ref(id) << std::endl;
-    xdecref(id);
-  }
-
   void h5_object::close() {
     xdecref(id);
     id = 0;

@@ -8,8 +8,11 @@
 
 namespace h5 {
 
-  //------------------  to_char_buf ------------------------------
+  // FIXME : vector of vector string unused. 
+  // REMOVE CODE but KEEP IT in the history at final cleaning
 
+  //------------------  to_char_buf ------------------------------
+  
   // copy to the buffer, with each string having the same length
   char_buf to_char_buf(std::vector<std::string> const &v) {
 
@@ -85,19 +88,20 @@ namespace h5 {
 
   // -----------   WRITE  ------------
 
-  void h5_write(group g, std::string const &name, std::vector<std::string> const &v) { return h5_write(g, name, to_char_buf(v)); }
-  void h5_write(group g, std::string const &name, std::vector<std::vector<std::string>> const &v) { return h5_write(g, name, to_char_buf(v)); }
+//  void h5_write(group g, std::string const &name, std::vector<std::string> const &v) { return h5_write(g, name, to_char_buf(v)); }
+//  void h5_write(group g, std::string const &name, std::vector<std::vector<std::string>> const &v) { return h5_write(g, name, to_char_buf(v)); }
 
   // -----------   WRITE  ATTRIBUTE ------------
 
   void h5_write_attribute(hid_t id, std::string const &name, std::vector<std::string> const &v) { h5_write_attribute(id, name, to_char_buf(v)); }
 
-  void h5_write_attribute(hid_t id, std::string const &name, std::vector<std::vector<std::string>> const &v) {
-    h5_write_attribute(id, name, to_char_buf(v));
-  }
+  //void h5_write_attribute(hid_t id, std::string const &name, std::vector<std::vector<std::string>> const &v) {
+    //h5_write_attribute(id, name, to_char_buf(v));
+  //}
 
   // -----------  READ  ------------
 
+  /*
   void h5_read(group g, std::string const &name, std::vector<std::string> &v) {
     char_buf cb;
     h5_read(g, name, cb);
@@ -109,7 +113,7 @@ namespace h5 {
     h5_read(g, name, cb);
     from_char_buf(cb, v);
   }
-
+*/
   // -----------   READ  ATTRIBUTE ------------
 
   void h5_read_attribute(hid_t id, std::string const &name, std::vector<std::string> &v) {
@@ -118,9 +122,10 @@ namespace h5 {
     from_char_buf(cb, v);
   }
 
-  void h5_read_attribute(hid_t id, std::string const &name, std::vector<std::vector<std::string>> &v) {
-    char_buf cb;
-    h5_read_attribute(id, name, cb);
-    from_char_buf(cb, v);
-  }
+  //void h5_read_attribute(hid_t id, std::string const &name, std::vector<std::vector<std::string>> &v) {
+    //char_buf cb;
+    //h5_read_attribute(id, name, cb);
+    //from_char_buf(cb, v);
+  //}
+
 } // namespace h5

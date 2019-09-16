@@ -16,51 +16,52 @@ namespace h5 {
   // Correspondance T -> hdf5 type
   template <typename T> hid_t hdf5_type =0; // 0 means "type unknown to hdf5"
 
-  //
+  // impl trait to detect complex numbers
   template <typename T> struct _is_complex : std::false_type {};
   template <typename T> struct _is_complex<std::complex<T>> : std::true_type {};
   template <typename T> constexpr bool is_complex_v = _is_complex<T>::value;
 
-  //
+  // impl
   template <typename... T> std::runtime_error make_runtime_error(T const &... x) {
     std::stringstream fs;
     (fs << ... << x);
     return std::runtime_error{fs.str()};
   }
 
-  //------------- general hdf5 object ------------------
-  // HDF5 uses a reference counting system, similar to python.
-  // This is a handle to an HDF5 Object, with the proper ref. counting
-  // using a RAII pattern.
-  // We are going to store the id of the various h5 object in such a wrapper
-  // to provide clean decref, and h5_exception safety.
-  // DO NOT DOCUMENT : not for users
+  /*
+   * A handle to the a general HDF5 object
+   *
+   * HDF5 uses a reference counting system, similar to python.
+   * h5_object handles the proper reference couting (similar to pybind11::object e.g.)
+   * using a RAII pattern (hence exception safety).
+   */
   class h5_object {
 
     protected:
     hid_t id = 0;
 
     public:
-    // make an h5_object when the id is now owned (simply inc. the ref).
+    
+    /// make an h5_object from a simple borrowed ref (simply inc. the ref).
     static h5_object from_borrowed(hid_t id);
 
-    /// Constructor from an owned id (or 0). It will NOT incref, it takes ownership
+    /// Constructor from an owned id (or 0). It steals (take ownership) of the reference.
     h5_object(hid_t id = 0) : id(id) {}
 
     /// A new ref. No deep copy.
     h5_object(h5_object const &x);
 
-    /// Steal the reference
+    /// Steals the reference
     h5_object(h5_object &&x) noexcept : id(x.id) { x.id = 0; }
 
-    ///
-    h5_object &operator=(h5_object const &x) { return operator=(h5_object(x)); } //rewriting with the next overload
+    /// Copy the reference and incref
+    h5_object &operator=(h5_object const &x) { return operator=(h5_object(x)); } 
 
-    ///
-    h5_object &operator=(h5_object &&x) noexcept; //steals the ref, after properly decref its own.
+    /// Steals the ref.
+    h5_object &operator=(h5_object &&x) noexcept; 
 
-    ///
-    ~h5_object();
+    /// 
+    ~h5_object() { close();}
 
     /// Release the HDF5 handle and reset the object to default state (id =0).
     void close();
@@ -74,7 +75,8 @@ namespace h5 {
 
   //-----------------------------
 
-  // simple but useless aliases
+  // simple but useful aliases. It does NOT check the h5 type of the object.
+  // FIXME : derive and make a check ??
   using dataset   = h5_object;
   using datatype  = h5_object;
   using dataspace = h5_object;

@@ -5,11 +5,10 @@
 namespace h5 {
 
   /**
-  *  @brief A little handler for the HDF5 file
-  *
-  *  The class is basically a pointer to the file.
-  *  Hence copy is very cheap.
-  */
+   *  A little handler for the HDF5 file
+   *
+   *  The class is basically a pointer to the file.
+   */
   class file : public h5_object {
 
     public:
@@ -17,7 +16,9 @@ namespace h5 {
      * Open the file
      *
      * @param name  name of the file
+     *
      * @param mode  Opening mode
+     * 
      *       - 'r' : Read Only (HDF5 flag H5F_ACC_RDONLY)
      *       - 'w' : Write Only (HDF5 flag H5F_ACC_TRUNC)
      *       - 'a' : Append (HDF5 flag  H5F_ACC_RDWR)
@@ -25,35 +26,33 @@ namespace h5 {
      */
     file(const char *name, char mode);
 
-    ///
+    /// 
     file(std::string const &name, char mode) : file(name.c_str(), mode) {}
 
     /// Name of the file
     std::string name() const;
 
     protected:
-    // Internal : from an hdf5 id.
-    file(hid_t id);
+    file() = default;
+
   };
 
   /**
-  *  @brief A file in a memory buffer
-  *  
-  *
-  */
+   * An hdf5 file in memory buffer
+   */
   class memory_file : public file {
 
     public:
-    /// Construct a writable file in memory with a buffer
+
+    /// A writable file in memory with a buffer
     memory_file();
 
-    /// Construct a read_only file on top on the buffer.
+    /// A read_only file on top on the buffer.
     memory_file(std::vector<unsigned char> const &buf);
 
     /// Get a copy of the buffer
     std::vector<unsigned char> as_buffer() const;
   };
 
-  h5_object memory_file_from_buffer(std::vector<unsigned char> const &buf);
 
 } // namespace h5

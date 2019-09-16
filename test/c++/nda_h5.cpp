@@ -85,6 +85,24 @@ TEST(Basic, Dcomplex) { one_test<dcomplex>("dcomplex", (1.0 + 1.0i)); }
 
 //------------------------------------
 
+TEST(Basic, GroupAttribute) {
+
+  {
+    h5::file file("ess_group_attr.h5", 'w');
+    auto g = h5::group(file).create_group("mygroup");
+    h5_write_attribute(g, "Scheme","MYTAGTYPE"); 
+  }
+  {
+    h5::file file("ess_group_attr.h5", 'r');
+    h5::group top(file);
+    auto g = top.open_group("mygroup");
+    std::string s;
+    h5::h5_read_attribute(g, "Scheme",s);
+    EXPECT_EQ(s, std::string{"MYTAGTYPE"});
+  }
+}
+//------------------------------------
+
 TEST(Basic, Empty) {
 
   nda::array<long, 2> a(0, 10);

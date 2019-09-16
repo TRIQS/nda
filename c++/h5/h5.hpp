@@ -1,23 +1,3 @@
-/*******************************************************************************
- *
- * TRIQS: a Toolbox for Research in Interacting Quantum Systems
- *
- * Copyright (C) 2011-2013 by O. Parcollet
- *
- * TRIQS is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- *
- * TRIQS is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License along with
- * TRIQS. If not, see <http://www.gnu.org/licenses/>.
- *
- ******************************************************************************/
 #pragma once
 
 #include "./h5/file.hpp"
@@ -32,7 +12,6 @@
 //#include "./h5/stl/pair.hpp"
 //#include "./h5/stl/tuple.hpp"
 //#include "./h5/stl/optional.hpp"
-
 //#include "./h5/stl/variant.hpp"
 
 // Correction of a bug in STL : 
@@ -47,8 +26,6 @@ namespace std { // has to be in the right namespace for ADL !
   template <typename T> std::complex<T> operator/(std::complex<T> const &a, long b) { return a / T(b); }
   template <typename T> std::complex<T> operator/(long a, std::complex<T> const &b) { return T(a) / b; }
 } // namespace std
-
-// FIXME : Why all these include by default ?
 
 // FIXME : Still needed ?
 // for python code generator, we need to know what has to been included.

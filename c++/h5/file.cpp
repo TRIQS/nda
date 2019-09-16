@@ -27,15 +27,11 @@ namespace h5 {
 
   //---------------------------------------------
 
-  file::file(hid_t id_) : h5_object(h5_object(id_)) {}
-
-  //---------------------------------------------
-
   std::string file::name() const { // same function as for group
     char _n[1];
     ssize_t size = H5Fget_name(id, _n, 1); // first call, get the size only
     std::vector<char> buf(size + 1, 0x00);
-    H5Fget_name(id, buf.data(), size);// now get the name
+    H5Fget_name(id, buf.data(), size); // now get the name
     std::string res = "";
     res.append(&(buf.front()));
     return res;
@@ -43,26 +39,21 @@ namespace h5 {
 
   // ======================= MEMORY FILE  ============================
 
-  static hid_t make_memory_file() {
+  memory_file::memory_file() {
+
     proplist fapl = H5Pcreate(H5P_FILE_ACCESS);
     CHECK_OR_THROW((fapl >= 0), "creating fapl");
 
     auto err = H5Pset_fapl_core(fapl, (size_t)(64 * 1024), false);
     CHECK_OR_THROW((err >= 0), "setting core file driver in fapl.");
 
-    hid_t f = H5Fcreate("MemoryBuffer", 0, H5P_DEFAULT, fapl);
-    CHECK_OR_THROW((H5Iis_valid(f)), "created core file");
-
-    return f;
+    this->id = H5Fcreate("MemoryBuffer", 0, H5P_DEFAULT, fapl);
+    CHECK_OR_THROW((this->is_valid()), "created core file");
   }
 
   // -------------------------
 
-  memory_file::memory_file() : file(make_memory_file()) {}
-
-  // -------------------------
-
-  h5_object memory_file_from_buffer(std::vector<unsigned char> const &buf) {
+  memory_file::memory_file(std::vector<unsigned char> const &buf) {
 
     proplist fapl = H5Pcreate(H5P_FILE_ACCESS);
     CHECK_OR_THROW((fapl >= 0), "creating fapl");
@@ -73,10 +64,8 @@ namespace h5 {
     err = H5Pset_file_image(fapl, (void *)buf.data(), buf.size());
     CHECK_OR_THROW((err >= 0), "set file image in fapl.");
 
-    h5_object f = H5Fopen("MemoryBuffer", H5F_ACC_RDONLY, fapl);
-    CHECK_OR_THROW((f.is_valid()), "opened received file image file");
-
-    return f;
+    this->id = H5Fopen("MemoryBuffer", H5F_ACC_RDONLY, fapl);
+    CHECK_OR_THROW((this->is_valid()), "opened received file image file");
   }
 
   // -------------------------
