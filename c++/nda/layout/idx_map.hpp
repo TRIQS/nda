@@ -117,6 +117,10 @@ namespace nda {
       return r;
     }
 
+    long min_stride() const noexcept { 
+      return str[stride_order[Rank-1]];
+    }
+
     // ----------------  Constructors -------------------------
 
     /// Default constructor. Lengths and Strides are not initiliazed.
