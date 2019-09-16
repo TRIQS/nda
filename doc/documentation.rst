@@ -28,14 +28,3 @@ C++ reference manual
    :maxdepth: 5
 
    cpp2rst_generated/contents
-
-Python reference manual
------------------------
-
-.. automodule:: nda 
-   :members:
-
-.. autoclass:: nda.nda_module.Toto
-   :members:
-
-.. autofunction:: nda.nda_module.chain
