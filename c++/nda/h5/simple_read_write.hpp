@@ -72,7 +72,7 @@ namespace nda {
 
       // if (a.is_empty()) return;
       auto g2 = g.create_group(name);
-      //g2.write_hdf5_scheme(a);
+      //g2.write_hdf5_format(a);
       auto sha = a.shape();
       h5_write(g2, "shape", nda::array_view<long, 1>{{long(sha.size())}, sha.data()});
       auto make_name = [](auto i0, auto... is) { return (std::to_string(i0) + ... + ("_" + std::to_string(is))); };
