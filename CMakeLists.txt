@@ -43,6 +43,8 @@ message(STATUS "-------- CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX} --------"
 # Options
 
 add_subdirectory(mdspan)
+add_subdirectory(pybind11)
+#find_package(pybind11 CONFIG)
 
 # Default to Release build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -88,6 +90,10 @@ add_subdirectory(c++/nda)
 
 # Build and install the h5 library
 add_subdirectory(c++/h5)
+
+# Build and install the python module
+include(cmake/FindPython.cmake)
+add_subdirectory(python/nda)
 
 # Tests
 option(Build_Tests "Tests" ON)
