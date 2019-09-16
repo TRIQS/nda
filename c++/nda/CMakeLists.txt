@@ -41,7 +41,7 @@ if(ANALYZE_SOURCES)
 	TARGET nda_c
 	COMMAND ${CPPCHECK_EXECUTABLE}
 	  --enable=warning,style,performance,portability
-	  --std=c++14
+	  --std=c++17
 	  --template=gcc
 	  --verbose
 	  --quiet
@@ -56,33 +56,16 @@ endif()
 
 # ========= Dynamic Analyzer Checks ==========
 
-set(sanitizers "")
-# Address Sanitizer
 option(ASAN OFF "Compile library and executables with LLVM Address Sanitizer")
-if(ASAN)
-  list(APPEND sanitizers asan)
-  target_compile_options(nda_c PRIVATE -fsanitize=address -fno-omit-frame-pointer -ggdb3)
-  target_link_libraries(nda_c INTERFACE "-fsanitize=address -fno-omit-frame-pointer")
-  if(NOT DEFINED ENV{ASAN_OPTIONS})
-    message(WARNING "ASAN_OPTIONS is not set. Consider setting ASAN_OPTIONS=symbolize=1:detect_leaks=0 when running tests")
-  endif()
-endif()
-
-# Undefined Behavior Sanitizer
 option(UBSAN OFF "Compile library and executables with LLVM Undefined Behavior Sanitizer")
-if(UBSAN)
-  list(APPEND sanitizers ubsan)
-  target_compile_options(nda_c PUBLIC -fsanitize=undefined -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fno-omit-frame-pointer -ggdb3)
-  target_link_libraries(nda_c INTERFACE "-fsanitize=undefined -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fno-omit-frame-pointer")
-  if(NOT DEFINED ENV{UBSAN_OPTIONS})
-    message(WARNING "UBSAN_OPTIONS is not set. Consider setting UBSAN_OPTIONS=symbolize=1:print_stacktrace=1:halt_on_error=1 when running tests")
-  endif()
-endif()
 
-if(sanitizers)
-  list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
-  find_package(sanitizer REQUIRED ${sanitizers})
-  if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
-    target_link_libraries(nda_c INTERFACE "-fuse-ld=gold")
-  endif()
+if(ASAN)
+  find_package(sanitizer REQUIRED "asan")
+  target_link_libraries(nda_c PUBLIC asan)
+  install(TARGETS asan EXPORT nda-targets)
+endif()
+if(UBSAN)
+  find_package(sanitizer REQUIRED "ubsan")
+  target_link_libraries(nda_c PUBLIC ubsan)
+  install(TARGETS ubsan EXPORT nda-targets)
 endif()

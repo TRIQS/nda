@@ -4,7 +4,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/conf.py.in ${CMAKE_CURRENT_BINARY_DIR
 # -----------------------------------------------------------------------------
 # Create an optional target that allows us to regenerate the C++ doc with c++2rst
 # -----------------------------------------------------------------------------
-foreach(t nda_c triqs)
+foreach(t nda_c)
   get_property(INCLUDE_DIRS TARGET ${t} PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
   get_property(SYSTEM_INCLUDE_DIRS TARGET ${t} PROPERTY INTERFACE_SYSTEM_INCLUDE_DIRECTORIES)
   if(SYTEM_INCLUDE_DIRS)
@@ -48,7 +48,6 @@ foreach(example ${ExampleList})
   get_filename_component(d ${example} DIRECTORY)
   add_executable(doc_${f} EXCLUDE_FROM_ALL ${example})
   set_property(TARGET doc_${f} PROPERTY RUNTIME_OUTPUT_DIRECTORY ${d})
-  target_link_libraries(doc_${f} triqs)
   add_custom_command(TARGET doc_${f}
    COMMAND doc_${f} > ${CMAKE_CURRENT_SOURCE_DIR}/${d}/${f}.output 2>/dev/null
    WORKING_DIRECTORY ${d}
@@ -63,15 +62,11 @@ endforeach()
 add_custom_target(docs_sphinx ALL)
 add_custom_command(
   TARGET docs_sphinx
-  COMMAND PYTHONPATH=${CMAKE_BINARY_DIR}/python:$ENV{PYTHONPATH} ${TRIQS_SPHINXBUILD_EXECUTABLE} -c . -j8 -b html ${CMAKE_CURRENT_SOURCE_DIR} html
+  COMMAND PYTHONPATH=${CMAKE_BINARY_DIR}/python:$ENV{PYTHONPATH} sphinx-build -c . -j8 -b html ${CMAKE_CURRENT_SOURCE_DIR} html
 )
 
 option(Sphinx_Only "When building the documentation, skip the Python Modules and the generation of C++ Api and example outputs" OFF)
 if(NOT Sphinx_Only)
-  # Autodoc usage requires the python modules to be built first
-  get_property(CPP2PY_MODULES_LIST GLOBAL PROPERTY CPP2PY_MODULES_LIST)
-  add_dependencies(docs_sphinx ${CPP2PY_MODULES_LIST})
-
   # Generation of C++ Api and Example Outputs
   add_dependencies(docs_sphinx docs_cpp2rst docs_example_output)
 endif()

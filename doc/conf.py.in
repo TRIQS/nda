@@ -1,21 +1,16 @@
 # -*- coding: utf-8 -*-
 #
-# TRIQS documentation build configuration file
+# documentation build configuration file
 
 import sys
-sys.path.insert(0, "@TRIQS_SPHINXEXT_PATH@/autorun")
-sys.path.insert(0, "@TRIQS_SPHINXEXT_PATH@/numpydoc")
-
 extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.mathjax',
               'sphinx.ext.intersphinx',
               'sphinx.ext.doctest',
               'sphinx.ext.todo',
               'sphinx.ext.viewcode',
-              'sphinx.ext.autosummary',
-              'numpydoc',
-              'plot_directive',
-              'autorun']
+              'sphinx.ext.autosummary'
+              ]
 
 source_suffix = '.rst'
 
@@ -23,11 +18,11 @@ project = u'NDA - An example triqs application'
 copyright = u'2017-2018 N. Wentzell, O. Parcollet 2018-2019 The Simons Foundation, authors: N. Wentzell, D. Simons, H. Strand, O. Parcollet'
 version = '@NDA_VERSION@'
 
-mathjax_path = "@TRIQS_MATHJAX_PATH@/MathJax.js?config=default"
+mathjax_path = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5"
 templates_path = ['@PROJECT_SOURCE_DIR@/doc/_templates']
 
 html_theme = 'triqs'
-html_theme_path = ['@TRIQS_THEMES_PATH@']
+html_theme_path = ['@PROJECT_SOURCE_DIR@/doc/themes']
 html_show_sphinx = False
 html_context = {'header_title': 'nda',
                 'header_subtitle': 'An example application using cpp2py and <a class="triqs" style="font-size: 12px" href="https://triqs.github.io">TRIQS</a>',
