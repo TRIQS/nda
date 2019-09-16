@@ -52,11 +52,11 @@ namespace nda {
   // ---------------------- algebra --------------------------------
 
   template <typename ValueType, int Rank, uint64_t StrideOrder, char Algebra, typename ContainerPolicy>
-  inline constexpr char get_algebra<basic_array<ValueType, Rank, StrideOrder, Algebra, ContainerPolicy>> = 'A';
+  inline constexpr char get_algebra<basic_array<ValueType, Rank, StrideOrder, Algebra, ContainerPolicy>> = Algebra;
 
   template <typename ValueType, int Rank, uint64_t StrideOrder, layout_info_e LayoutInfo, char Algebra, typename AccessorPolicy,
             typename OwningPolicy>
-  inline constexpr char get_algebra<basic_array_view<ValueType, Rank, StrideOrder, LayoutInfo, Algebra, AccessorPolicy, OwningPolicy>> = 'A';
+  inline constexpr char get_algebra<basic_array_view<ValueType, Rank, StrideOrder, LayoutInfo, Algebra, AccessorPolicy, OwningPolicy>> = Algebra;
 
   // ---------------------- get_layout_info --------------------------------
 
@@ -85,6 +85,8 @@ namespace nda {
     using view_t = basic_array_view<ValueType, Rank, StrideOrder, LayoutInfo, Algebra, AccessorPolicy, OwningPolicy>;
     ///
     using const_view_t = basic_array_view<ValueType const, Rank, StrideOrder, LayoutInfo, Algebra, AccessorPolicy, OwningPolicy>;
+    ///
+    using no_const_view_t = basic_array_view<std::remove_const_t<ValueType>, Rank, StrideOrder, LayoutInfo, Algebra, AccessorPolicy, OwningPolicy>;
 
     //using value_as_template_arg_t = ValueType;
     using storage_t = typename OwningPolicy::template handle<ValueType>;
@@ -200,10 +202,10 @@ namespace nda {
     }
 
     /// Rebind view
-    void rebind(const_view_t const &a) REQUIRES(!is_const) {
-      static_assert(is_const, "Can not rebind a view of const ValueType to a view of ValueType");
-      _idx_m   = a._idx_m;
-      _storage = a._storage;
+    void rebind(no_const_view_t const &a) REQUIRES(is_const) {
+      //static_assert(is_const, "Can not rebind a view of const ValueType to a view of ValueType");
+      _idx_m   = idx_map_t{a.indexmap()};
+      _storage = storage_t{a.storage()};
     }
     //check https://godbolt.org/z/G_QRCU
 
