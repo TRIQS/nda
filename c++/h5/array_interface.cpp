@@ -67,7 +67,7 @@ namespace h5::array_interface {
 
   void write(group g, std::string const &name, h5_array_view const &v, bool compress) {
 
-    g.unlink_key_if_exists(name);
+    g.unlink(name);
 
     // Some properties for the dataset : add compression
     proplist cparms = H5P_DEFAULT;

@@ -25,7 +25,6 @@ namespace h5 {
 
   group::group(hid_t id_) : group(h5_object(id_)) {}
 
-
   std::string group::name() const {
     char _n[1];
     ssize_t size = H5Iget_name(id, _n, 1); // first call, get the size only
@@ -38,8 +37,11 @@ namespace h5 {
 
   bool group::has_key(std::string const &key) const { return H5Lexists(id, key.c_str(), H5P_DEFAULT); }
 
-  void group::unlink_key_if_exists(std::string const &key) const {
-    if (!has_key(key)) return;
+  void group::unlink(std::string const &key, bool error_if_absent) const {
+    if (!has_key(key)) {
+      if (error_if_absent) throw std::runtime_error("The key " + key + " is not present in the group " + name());
+      return;
+    }
     //auto err = H5Gunlink(id, key.c_str()); // deprecated function
     auto err = H5Ldelete(id, key.c_str(), H5P_DEFAULT);
     if (err < 0) throw std::runtime_error("Cannot unlink object " + key + " in group " + name());
@@ -63,7 +65,7 @@ namespace h5 {
 
   group group::create_group(std::string const &key, bool delete_if_exists) const {
     if (key.empty()) return *this;
-    unlink_key_if_exists(key);
+    unlink(key);
     hid_t id_g = H5Gcreate2(id, key.c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
     if (id_g < 0) throw std::runtime_error("Cannot create the subgroup " + key + " of the group" + name());
     return group(id_g);
@@ -76,7 +78,7 @@ namespace h5 {
   * NB : It unlinks the dataset if it exists.
   */
   dataset group::create_dataset(std::string const &key, datatype ty, dataspace sp, hid_t pl) const {
-    unlink_key_if_exists(key);
+    unlink(key);
     dataset ds = H5Dcreate2(id, key.c_str(), ty, sp, H5P_DEFAULT, pl, H5P_DEFAULT);
     if (!ds.is_valid()) throw std::runtime_error("Cannot create the dataset " + key + " in the group" + name());
     return ds;

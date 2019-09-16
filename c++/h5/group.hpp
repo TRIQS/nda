@@ -5,7 +5,7 @@
 namespace h5 {
 
   /**
-   *  A HDF5 group
+   *  HDF5 group
    */
   class group : public h5_object {
 
@@ -35,45 +35,66 @@ namespace h5 {
     /// Name of the group
     std::string name() const;
 
-    ///
+    /**
+     * True iff key is a subgroup of this.
+     *
+     * @param key
+     */
     bool has_key(std::string const &key) const;
 
-    ///
-    void unlink_key_if_exists(std::string const &key) const;
+    /**
+     * Unlinks the subgroup key if it exists
+     * No error is thrown if key does not exists
+     * NB : unlink is almost a remove, but it does not really remove from the file (memory is not freed).
+     * After unlinking a large object, a h5repack may be needed. Cf HDF5 documentation.
+     *
+     * @param key The name of the subgroup to be removed.
+     * @param error_if_absent If True, throws an error if the key is missing.
+     */
+    void unlink(std::string const &key, bool error_if_absent = false) const;
 
     /**
-   * \brief Open a subgroup.
-   * \param key  The name of the subgroup. If empty, return this group.
-   *
-   * Throws if it does not exist.
-   */
+     * Open a subgroup.
+     * Throws std::runtime_error if it does not exist.
+     *
+     * @param key  The name of the subgroup. If empty, return this group
+     */
     group open_group(std::string const &key) const;
 
-    /// Open an existing DataSet. Throw if it does not exist.
-    dataset open_dataset(std::string const &key) const;
-
     /**
-   * \brief Create a subgroup.
-   * \param key  The name of the subgroup. If empty, return this group.
-   * \param delete_if_exists  Unlink the group if it exists
-   */
+     * Create a subgroup in this group
+     * 
+     * @param key  The name of the subgroup. If empty, return this group.
+     * @param delete_if_exists  Unlink the group if it exists
+     */
     group create_group(std::string const &key, bool delete_if_exists = true) const;
 
     /**
-   * \brief Create a dataset.
-   * \param key The name of the subgroup
-   *
-   * NB : It unlinks the dataset if it exists.
-   */
-    dataset create_dataset(std::string const &key, datatype ty, dataspace sp, hid_t pl) const;
+     * Open a existing DataSet in the group.
+     * Throws std::runtime_error if it does not exist.
+     *
+     * @param key  The name of the subgroup. If empty, return this group
+     */
+    dataset open_dataset(std::string const &key) const;
 
     /**
-   * \brief Create a dataset.
-   * \param key The name of the subgroup
-   *
-   * NB : It unlinks the dataset if it exists.
-   */
+     * Create a dataset in this group
+     * 
+     * @param key  The name of the dataset. 
+     * @param ty Datatype
+     * @param sp Dataspace
+     */
     dataset create_dataset(std::string const &key, datatype ty, dataspace sp) const;
+
+    /**
+     * Create a dataset in this group
+     * 
+     * @param key  The name of the dataset. 
+     * @param ty Datatype
+     * @param sp Dataspace
+     * @param pl Property list
+     */
+    dataset create_dataset(std::string const &key, datatype ty, dataspace sp, hid_t pl) const;
 
     /// Returns all names of subgroup of  G
     std::vector<std::string> get_all_subgroup_names() const;
@@ -84,16 +105,5 @@ namespace h5 {
     /// Returns all names of dataset of G
     std::vector<std::string> get_all_subgroup_dataset_names() const;
   };
-
-  //------------- read iff a key exists ------------------
-
-  template <typename T>
-  inline int h5_try_read(group fg, std::string key, T &t) {
-    if (fg.has_key(key)) {
-      h5_read(fg, key, t);
-      return 1;
-    }
-    return 0;
-  }
 
 } // namespace h5
