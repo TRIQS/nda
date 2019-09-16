@@ -4,6 +4,8 @@
 #include <hdf5.h>
 #include <hdf5_hl.h>
 
+#include <numeric>
+
 #include <iostream> // DEBUG
 
 namespace h5::array_interface {
@@ -28,6 +30,36 @@ namespace h5::array_interface {
 
     return ds;
   }
+
+  //------------------------------------------------
+
+  std::pair<v_t, v_t> get_L_tot_and_strides_h5(long const *stri, int rank, long total_size) {
+    v_t Ltot(rank), strides_h5(rank);
+    for (int u = 0; u < rank; ++u) strides_h5[u] = stri[u];
+    Ltot[0] = total_size;
+
+    for (int u = rank - 2; u >= 0; --u) {
+      // L[u+1] as  gcd of size and stride[u] ... stride[0]
+      long L = strides_h5[u];
+      // L becomes the  gcd
+      for (int v = u - 1; v >= 0; --v) { L = std::gcd(L, strides_h5[v]); }
+      // divides
+      for (int v = u; v >= 0; --v) { strides_h5[v] /= L; }
+      Ltot[u + 1] = L;
+    }
+
+    //std::cout << " ------- RESULT ------- " << std::endl;
+    //for (int u = 0; u < rank; ++u) {
+      //NDA_PRINT(u);
+      //NDA_PRINT(stri[u]);
+      //NDA_PRINT(Ltot[u]);
+      //NDA_PRINT(strides_h5[u]);
+    //}
+    //std::cout << "------- END RESULT --------- " << std::endl;
+
+    return {Ltot, strides_h5};
+  }
+
 
   //-------------------------------------------------------
   //                    write

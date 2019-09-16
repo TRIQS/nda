@@ -56,6 +56,15 @@ namespace h5::array_interface {
     int rank() const { return slab.rank(); }
   };
 
+  //------------------------------------------------
+  // given the lengths and strides, return a L_tot. One function for all ranks (save code).
+  // Assume stride_order is C.
+  // use stride[rank -1]  =   strides_h5 [rank -1]
+  //     stride[rank -2]  =   L[rank-1] * strides_h5 [rank -2]
+  //     stride[rank -3]  =   L[rank-1] * L[rank-2] * strides_h5 [rank -3]
+  //     stride[0]        =   L[rank-1] * L[rank-2] * L[1] * strides_h5 [0]
+  std::pair<v_t, v_t> get_L_tot_and_strides_h5(long const *stri, int rank, long total_size);
+ 
   // Retrieve lengths and hdf5 type from a file
   h5_lengths_type get_h5_lengths_type(group g, std::string const &name);
 

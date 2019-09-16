@@ -58,5 +58,6 @@ add_library(h5_interface h5object.cpp file.cpp group.cpp
 
 target_link_libraries(h5_interface PRIVATE __hdf5 )
 target_compile_options(h5_interface PUBLIC -std=c++17)
+target_include_directories(h5_interface PUBLIC ${CMAKE_SOURCE_DIR}/c++)
 
 

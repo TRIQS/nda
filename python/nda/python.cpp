@@ -1,11 +1,14 @@
 #include <Python.h>
 #include <numpy/arrayobject.h>
 
-#include "./group.hpp"
-#include "./scalar.hpp"
-#include "./string.hpp"
-#include "./array_interface.hpp"
-#include "./python.hpp"
+#include "python.hpp"
+#include <h5/group.hpp>
+#include <h5/scalar.hpp>
+#include <h5/stl/string.hpp>
+#include <h5/array_interface.hpp>
+
+#include <hdf5.h>
+#include <hdf5_hl.h>
 
 namespace h5 {
 
@@ -44,7 +47,7 @@ namespace h5 {
   int h5_c_size(datatype t) {
     if (h5_c_size_table.empty()) init_h5_c_size_table();
     auto _end = h5_c_size_table.end();
-    auto pos  = std::find_if(h5_c_size_table.begin(), _end, [](auto const &x) { return x.hdf5_type == t; });
+    auto pos  = std::find_if(h5_c_size_table.begin(), _end, [t](auto const &x) { return x.hdf5_type == t; });
     if (pos == _end) std::runtime_error("HDF5/Python Internal Error : can not find the numpy type from the HDF5 type");
     return pos->c_size;
   }
@@ -52,15 +55,16 @@ namespace h5 {
   //---------------------------------------
 
   struct h5_py_type_t {
-    datatype hdf5_type;   // type in hdf5
-    NPY_TYPES numpy_type; // For a Python object, we will always use the numpy type
+    datatype hdf5_type; // type in hdf5
+    int numpy_type;     // For a Python object, we will always use the numpy type
+    size_t size;
   };
 
   std::vector<h5_py_type_t> h5_py_type_table;
 
   static void init_h5py() {
     h5_py_type_table = std::vector<h5_py_type_t>{
-       {hdf5_type<bool>, NPY_BOOL, sizeof(bool)},
+       //  {hdf5_type<bool>, NPY_BOOL, sizeof(bool)},
        {hdf5_type<char>, NPY_STRING, sizeof(char)},
        {hdf5_type<signed char>, NPY_BYTE, sizeof(signed char)},
        {hdf5_type<unsigned char>, NPY_UBYTE, sizeof(unsigned char)},
@@ -82,19 +86,24 @@ namespace h5 {
   }
 
   // h5 -> numpy type conversion
-  NPY_TYPES h5_to_npy(datatype t) {
+  int h5_to_npy(datatype t) {
+
     if (h5_py_type_table.empty()) init_h5py();
     auto _end = h5_py_type_table.end();
-    auto pos  = std::find_if(h5_py_type_table.begin(), _end, [](auto const &x) { return x.hdf5_type == t; });
+    auto pos  = std::find_if(h5_py_type_table.begin(), _end, [t](auto const &x) {
+      // 	H5_PRINT(x.hdf5_type); H5_PRINT(t);
+
+      return H5Tequal(x.hdf5_type, t) > 0;
+    });
     if (pos == _end) std::runtime_error("HDF5/Python Internal Error : can not find the numpy type from the HDF5 type");
     return pos->numpy_type;
   }
 
   // numpy -> h5 type conversion
-  datatype npy_to_h5(NPY_TYPES t) {
+  datatype npy_to_h5(int t) {
     if (h5_py_type_table.empty()) init_h5py();
     auto _end = h5_py_type_table.end();
-    auto pos  = std::find_if(h5_py_type_table.begin(), _end, [](auto const &x) { return x.numpy_type == t; });
+    auto pos  = std::find_if(h5_py_type_table.begin(), _end, [t](auto const &x) { return x.numpy_type == t; });
     if (pos == _end) std::runtime_error("HDF5/Python Internal Error : can not find the numpy type from the HDF5 type");
     return pos->hdf5_type;
   }
@@ -102,7 +111,7 @@ namespace h5 {
   //--------------------------------------
 
   // Make a h5_array_view from the numpy object
-  static h5_array_view make_av_from_py(PyArrayObject *arr_obj) {
+  static array_interface::h5_array_view make_av_from_py(PyArrayObject *arr_obj) {
 
 #ifdef PYTHON_NUMPY_VERSION_LT_17
     int elementsType = arr_obj->descr->type_num;
@@ -114,70 +123,102 @@ namespace h5 {
     datatype dt     = npy_to_h5(elementsType);
     bool is_complex = (elementsType == NPY_CDOUBLE) or (elementsType == NPY_CLONGDOUBLE) or (elementsType == NPY_FLOAT);
 
-    h5_array_view res{dt, PyArray_DATA(arr_obj), rank};
+    array_interface::h5_array_view res{dt, PyArray_DATA(arr_obj), rank, is_complex};
+
+    std::vector<long> c_strides(rank, 0);
+    long total_size = 1;
 
     for (int i = 0; i < rank; ++i) {
 #ifdef PYTHON_NUMPY_VERSION_LT_17
       res.slab.count[i] = size_t(arr_obj->dimensions[i]);
-      res.slab.stride[i] = std::ptrdiff_t(arr_obj->strides[i]) / h5_c_size(dt);
+      c_strides[i]      = std::ptrdiff_t(arr_obj->strides[i]) / h5_c_size(dt);
 #else
       res.slab.count[i] = size_t(PyArray_DIMS(arr_obj)[i]);
-      res.slab.stride[i] = std::ptrdiff_t(PyArray_STRIDES(arr_obj)[i]) / h5_c_size(dt);
+      c_strides[i]      = std::ptrdiff_t(PyArray_STRIDES(arr_obj)[i]) / h5_c_size(dt);
 #endif
+      total_size *= res.slab.count[i];
     }
+
+    std::tie(res.L_tot, res.slab.stride) = h5::array_interface::get_L_tot_and_strides_h5(c_strides.data(), rank, total_size);
+    //H5_PRINT(dt);
+    //H5_PRINT(elementsType);
+    //H5_PRINT(PyArray_DESCR(arr_obj)->type_num);
 
     return res;
   }
 
   // -------------------------
+  static void import_numpy() {
+    static bool init = false;
+    if (!init) {
+      _import_array();
+      init = true;
+    }
+  }
+  // -------------------------
 
-  void write(group g, std::string const &name, PyObject *ob) {
+  void h5_write_bare(group g, std::string const &name, py::object ob1) {
+
+    import_numpy();
+
+    PyObject *ob = ob1.ptr();
 
     // if numpy
     if (PyArray_Check(ob)) {
       PyArrayObject *arr_obj = (PyArrayObject *)ob;
       write(g, name, make_av_from_py(arr_obj));
     } else if (PyFloat_Check(ob)) {
+      H5_PRINT(PyFloat_AsDouble(ob));
       h5_write(g, name, PyFloat_AsDouble(ob));
+    } else if (PyInt_Check(ob)) {
+      H5_PRINT(PyInt_AsLong(ob));
+      h5_write(g, name, long(PyInt_AsLong(ob)));
     } else if (PyLong_Check(ob)) {
-      h5_write(g, name, PyLong_AsLong(ob));
+      H5_PRINT(PyLong_AsLong(ob));
+      h5_write(g, name, long(PyLong_AsLong(ob)));
     } else if (PyString_Check(ob)) {
       h5_write(g, name, (const char *)PyString_AsString(ob));
     } else if (PyComplex_Check(ob)) {
       h5_write(g, name, std::complex<double>{PyComplex_RealAsDouble(ob), PyComplex_ImagAsDouble(ob)});
     } else {
       // Error !
+      std::cout << " ERRR" << std::endl;
       PyErr_SetString(PyExc_RuntimeError, "The Python object can not be written in HDF5");
+      throw pybind11::error_already_set();
     }
   }
 
   // -------------------------
 
-  PyObject *read(group g, std::string const &name) noexcept { // There should be no errors from h5 reading
+  PyObject *h5_read_bare1(group g, std::string const &name) { // There should be no errors from h5 reading
+    import_numpy();
 
-    h5_lengths_type lt = get_lengths_and_h5type(g, name);
+    array_interface::h5_lengths_type lt = array_interface::get_h5_lengths_type(g, name);
+    H5_PRINT(lt.ty);
 
+    // USE H5Tget_class for systematic check
     if (lt.rank() == 0) { // it is a scalar
-      if (lt.ty == hdf5_type<double>) {
+      if (H5Tequal(lt.ty, hdf5_type<double>) > 0) {
         double x;
         h5_read(g, name, x);
         return PyFloat_FromDouble(x);
       }
-      if (lt.ty == hdf5_type<long>) { // or other int ...
+      if (H5Tequal(lt.ty, hdf5_type<long>) > 0) { // or other int ...
         long x;
         h5_read(g, name, x);
         return PyLong_FromLong(x);
       }
-      if (lt.ty == hdf5_type<std::string>) {
+      if (H5Tget_class(lt.ty) == H5T_STRING) {
         std::string x;
         h5_read(g, name, x);
         return PyString_FromString(x.c_str());
       }
-      if (lt.ty == hdf5_type<std::complex<double>>) {
+      if (H5Tequal(lt.ty, hdf5_type<std::complex<double>>) > 0) {
         std::complex<double> x;
         h5_read(g, name, x);
         return PyComplex_FromDoubles(x.real(), x.imag());
       }
+      std::cout << " CAN NOT READ" << std::endl;
       std::abort(); // WE SHOULD COVER all types
     }
     // it is an array
@@ -185,13 +226,25 @@ namespace h5 {
     std::copy(lt.lengths.begin(), lt.lengths.end(), L.begin()); //npy_intp and size_t may differ, so I can not use =
     int elementsType = h5_to_npy(lt.ty);
 
+    //for (int i =0; i < L.size() ; ++i)
+    //H5_PRINT(L[i]);
+
+    //H5_PRINT(lt.ty);
+    //H5_PRINT(elementsType);
+
     // make a new numpy array
-    ob = PyArray_SimpleNewFromDescr(int(L.size()), &L[0], PyArray_DescrFromType(elementsType));
+    PyObject *ob = PyArray_SimpleNewFromDescr(int(L.size()), &L[0], PyArray_DescrFromType(elementsType));
     // leave the error set up in Python if any
 
     // read from the file
     // CATCH error
-    read(g, name, make_av_from_py(lt.ty, (PyArrayObject *)ob), lt);
+    read(g, name, make_av_from_py((PyArrayObject *)ob), lt);
+    return ob;
+  }
+
+  py::object h5_read_bare(group g, std::string const &name) { // There should be no errors from h5 reading
+
+    return py::reinterpret_steal<py::object>(h5_read_bare1(g, name));
   }
 
 } // namespace h5

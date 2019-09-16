@@ -19,3 +19,10 @@
 #set(PYTHON_LIB_DEST ${CPP2PY_PYTHON_LIB_DEST_ROOT}/nda)
 #install(TARGETS toto_module DESTINATION ${PYTHON_LIB_DEST})
 #install(FILES ${PYTHON_SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/version.py DESTINATION ${PYTHON_LIB_DEST})
+
+
+pybind11_add_module(_h5py _h5py.cpp)
+
+target_sources(_h5py PRIVATE python)
+target_link_libraries(_h5py  PRIVATE __hdf5 h5_interface python_and_numpy)  #gtest_main project_warnings)
+target_compile_options(_h5py PRIVATE "-Wno-register") # C++17 
