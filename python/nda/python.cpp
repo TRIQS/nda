@@ -60,7 +60,11 @@ namespace h5 {
     size_t size;
   };
 
+  //--------------------------------------
+
   std::vector<h5_py_type_t> h5_py_type_table;
+
+  //--------------------------------------
 
   static void init_h5py() {
     h5_py_type_table = std::vector<h5_py_type_t>{
@@ -85,19 +89,25 @@ namespace h5 {
     };
   }
 
+  //--------------------------------------
+
   // h5 -> numpy type conversion
-  int h5_to_npy(datatype t) {
+  int h5_to_npy(datatype t, bool is_complex) {
 
     if (h5_py_type_table.empty()) init_h5py();
     auto _end = h5_py_type_table.end();
-    auto pos  = std::find_if(h5_py_type_table.begin(), _end, [t](auto const &x) {
-      // 	H5_PRINT(x.hdf5_type); H5_PRINT(t);
-
-      return H5Tequal(x.hdf5_type, t) > 0;
-    });
+    auto pos  = std::find_if(h5_py_type_table.begin(), _end, [t](auto const &x) { return H5Tequal(x.hdf5_type, t) > 0; });
     if (pos == _end) std::runtime_error("HDF5/Python Internal Error : can not find the numpy type from the HDF5 type");
-    return pos->numpy_type;
+    int res = pos->numpy_type;
+    if (is_complex) {
+      if (res == NPY_DOUBLE) res = NPY_CDOUBLE;
+      if (res == NPY_FLOAT) res = NPY_CFLOAT;
+      if (res == NPY_LONGDOUBLE) res = NPY_CLONGDOUBLE;
+    }
+    return res;
   }
+
+  //--------------------------------------
 
   // numpy -> h5 type conversion
   datatype npy_to_h5(int t) {
@@ -120,12 +130,11 @@ namespace h5 {
     int elementsType = PyArray_DESCR(arr_obj)->type_num;
     int rank         = PyArray_NDIM(arr_obj);
 #endif
-    datatype dt     = npy_to_h5(elementsType);
-    bool is_complex = (elementsType == NPY_CDOUBLE) or (elementsType == NPY_CLONGDOUBLE) or (elementsType == NPY_FLOAT);
+    datatype dt           = npy_to_h5(elementsType);
+    const bool is_complex = (elementsType == NPY_CDOUBLE) or (elementsType == NPY_CLONGDOUBLE) or (elementsType == NPY_CFLOAT);
 
     array_interface::h5_array_view res{dt, PyArray_DATA(arr_obj), rank, is_complex};
-
-    std::vector<long> c_strides(rank, 0);
+    std::vector<long> c_strides(rank + is_complex, 0);
     long total_size = 1;
 
     for (int i = 0; i < rank; ++i) {
@@ -139,10 +148,12 @@ namespace h5 {
       total_size *= res.slab.count[i];
     }
 
-    std::tie(res.L_tot, res.slab.stride) = h5::array_interface::get_L_tot_and_strides_h5(c_strides.data(), rank, total_size);
-    //H5_PRINT(dt);
-    //H5_PRINT(elementsType);
-    //H5_PRINT(PyArray_DESCR(arr_obj)->type_num);
+    // be careful to consider the last dim if complex, but do NOT copy it
+    auto [Ltot, stri] = h5::array_interface::get_L_tot_and_strides_h5(c_strides.data(), rank + is_complex, total_size * (is_complex ? 2 : 1));
+    for (int i = 0; i < rank; ++i) {
+      res.L_tot[i]       = Ltot[i];
+      res.slab.stride[i] = stri[i];
+    }
 
     return res;
   }
@@ -168,21 +179,16 @@ namespace h5 {
       PyArrayObject *arr_obj = (PyArrayObject *)ob;
       write(g, name, make_av_from_py(arr_obj));
     } else if (PyFloat_Check(ob)) {
-      H5_PRINT(PyFloat_AsDouble(ob));
       h5_write(g, name, PyFloat_AsDouble(ob));
     } else if (PyInt_Check(ob)) {
-      H5_PRINT(PyInt_AsLong(ob));
       h5_write(g, name, long(PyInt_AsLong(ob)));
     } else if (PyLong_Check(ob)) {
-      H5_PRINT(PyLong_AsLong(ob));
       h5_write(g, name, long(PyLong_AsLong(ob)));
     } else if (PyString_Check(ob)) {
       h5_write(g, name, (const char *)PyString_AsString(ob));
     } else if (PyComplex_Check(ob)) {
       h5_write(g, name, std::complex<double>{PyComplex_RealAsDouble(ob), PyComplex_ImagAsDouble(ob)});
     } else {
-      // Error !
-      std::cout << " ERRR" << std::endl;
       PyErr_SetString(PyExc_RuntimeError, "The Python object can not be written in HDF5");
       throw pybind11::error_already_set();
     }
@@ -194,16 +200,17 @@ namespace h5 {
     import_numpy();
 
     array_interface::h5_lengths_type lt = array_interface::get_h5_lengths_type(g, name);
-    H5_PRINT(lt.ty);
 
-    // USE H5Tget_class for systematic check
-    if (lt.rank() == 0) { // it is a scalar
-      if (H5Tequal(lt.ty, hdf5_type<double>) > 0) {
+    // First case, we have a scalar
+    if (lt.rank() == 0) {
+      if (H5Tget_class(lt.ty) == H5T_FLOAT) {
+        //if (H5Tequal(lt.ty, hdf5_type<double>) > 0) {
         double x;
         h5_read(g, name, x);
         return PyFloat_FromDouble(x);
       }
-      if (H5Tequal(lt.ty, hdf5_type<long>) > 0) { // or other int ...
+      if (H5Tget_class(lt.ty) == H5T_INTEGER) {
+        // if (H5Tequal(lt.ty, hdf5_type<long>) > 0) {
         long x;
         h5_read(g, name, x);
         return PyLong_FromLong(x);
@@ -213,31 +220,32 @@ namespace h5 {
         h5_read(g, name, x);
         return PyString_FromString(x.c_str());
       }
-      if (H5Tequal(lt.ty, hdf5_type<std::complex<double>>) > 0) {
-        std::complex<double> x;
-        h5_read(g, name, x);
-        return PyComplex_FromDoubles(x.real(), x.imag());
-      }
-      std::cout << " CAN NOT READ" << std::endl;
-      std::abort(); // WE SHOULD COVER all types
+      // Default case : error, we can not read
+      PyErr_SetString(PyExc_RuntimeError, "h5_read to Python: unknown scalar type");
+      throw pybind11::error_already_set();
     }
-    // it is an array
-    std::vector<npy_intp> L(lt.rank());                         // check
-    std::copy(lt.lengths.begin(), lt.lengths.end(), L.begin()); //npy_intp and size_t may differ, so I can not use =
-    int elementsType = h5_to_npy(lt.ty);
 
-    //for (int i =0; i < L.size() ; ++i)
-    //H5_PRINT(L[i]);
+    // A scalar complex is a special case
+    if ((lt.rank() == 1) and lt.has_complex_attribute) {
+      std::complex<double> z;
+      h5_read(g, name, z);
+      return PyComplex_FromDoubles(z.real(), z.imag());
+    }
 
-    //H5_PRINT(lt.ty);
-    //H5_PRINT(elementsType);
+    // Last case : it is an array
+
+    std::vector<npy_intp> L(lt.rank());                            // Make the lengths
+    std::copy(lt.lengths.begin(), lt.lengths.end(), L.begin());    //npy_intp and size_t may differ, so I can not use =
+    int elementsType = h5_to_npy(lt.ty, lt.has_complex_attribute); // element_type in Python from the hdf5 type and complex tag
+    if (lt.has_complex_attribute)
+      L.pop_back(); // remove the last dim which is 2 in complex case,
+                    // since we are going to build a array of complex
 
     // make a new numpy array
     PyObject *ob = PyArray_SimpleNewFromDescr(int(L.size()), &L[0], PyArray_DescrFromType(elementsType));
-    // leave the error set up in Python if any
+    if (PyErr_Occurred()) throw pybind11::error_already_set(); // in case of allocation error
 
     // read from the file
-    // CATCH error
     read(g, name, make_av_from_py((PyArrayObject *)ob), lt);
     return ob;
   }

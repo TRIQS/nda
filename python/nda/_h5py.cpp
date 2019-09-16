@@ -6,6 +6,9 @@
 using namespace pybind11::literals;
 namespace py = pybind11;
 
+// get all keys
+// read/write string attribute
+
 PYBIND11_MODULE(_h5py, m) {
 
   // File
