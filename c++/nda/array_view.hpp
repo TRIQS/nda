@@ -19,11 +19,11 @@ namespace nda {
 
   // ---------------------- User aliases  --------------------------------
 
-  template <typename ValueType, int Rank>
-  using array = basic_array<ValueType, Rank, C_layout, 'A', heap>;
+  template <typename ValueType, int Rank, typename Layout = C_layout>
+  using array = basic_array<ValueType, Rank, Layout, 'A', heap>;
 
-  template <typename ValueType, int Rank>
-  using array_view = basic_array_view<ValueType, Rank, C_stride_layout, 'A', default_accessor, borrowed>;
+  template <typename ValueType, int Rank, typename Layout = C_stride_layout> 
+  using array_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed>;
 
   template <typename ValueType, typename Layout = C_layout> // CLayout or FLayout
   using matrix = basic_array<ValueType, 2, Layout, 'M', heap>;
@@ -55,15 +55,15 @@ namespace nda {
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   inline constexpr char get_algebra<basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>> = Algebra;
 
-  // ---------------------- get_layout_prop --------------------------------
+  // ---------------------- get_layout_info --------------------------------
 
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
-  inline constexpr layout_prop_e get_layout_prop<basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>> =
-     basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>::idx_map_t::layout_prop;
+  inline constexpr layout_info_t get_layout_info<basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>> =
+     basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>::idx_map_t::layout_info;
 
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
-  inline constexpr layout_prop_e get_layout_prop<basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>> =
-     basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>::idx_map_t::layout_prop;
+  inline constexpr layout_info_t get_layout_info<basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>> =
+     basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>::idx_map_t::layout_info;
 
   // ---------------------- basic_array_view  --------------------------------
 

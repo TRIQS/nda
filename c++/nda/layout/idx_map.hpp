@@ -41,6 +41,9 @@ namespace nda {
   template <int Rank>
   constexpr uint64_t Fortran_stride_order = nda::permutations::encode(nda::permutations::reverse_identity<Rank>());
 
+  template <int Rank>
+  constexpr uint64_t C_stride_order = nda::permutations::encode(nda::permutations::identity<Rank>());
+
   // -----------------------------------------------------------------------------------
   /**
    *
@@ -71,11 +74,13 @@ namespace nda {
 
     public:
     // main property : idx_map<Rank, stride_order_encoded, layout_prop> is THIS
-    static constexpr layout_prop_e layout_prop     = LayoutProp;
-    static constexpr uint64_t stride_order_encoded = StrideOrder;
-
     static constexpr std::array<int, Rank> stride_order =
        (StrideOrder == 0 ? permutations::identity<Rank>() : permutations::decode<Rank>(StrideOrder)); // 0 is C stride_order
+    static constexpr uint64_t stride_order_encoded  = permutations::encode(stride_order);
+    static constexpr uint64_t stride_order_as_given = StrideOrder;
+
+    static constexpr layout_prop_e layout_prop = LayoutProp;
+    static constexpr layout_info_t layout_info = layout_info_t{stride_order_encoded, layout_prop};
 
     // ----------------  Accessors -------------------------
 
@@ -142,7 +147,10 @@ namespace nda {
      * @param idxm
      */
     template <layout_prop_e LayoutProp2>
-    idx_map(idx_map<Rank, StrideOrder, LayoutProp2> const &idxm) noexcept : len(idxm.lengths()), str(idxm.strides()) {}
+    idx_map(idx_map<Rank, StrideOrder, LayoutProp2> const &idxm) noexcept : len(idxm.lengths()), str(idxm.strides()) {
+      static_assert(is_degradable(LayoutProp2, LayoutProp),
+                    "Can not construct the view: it would violate some compile time guarantees about the layout");
+    }
 
     /** 
      * Construction from the lengths, the strides
@@ -159,12 +167,24 @@ namespace nda {
     idx_map(std::array<long, Rank> const &lengths) noexcept : len(lengths) {
       // compute the strides for a compact array
       long s = 1;
+      NDA_PRINT(Fortran_stride_order<3>);
+      NDA_PRINT(stride_order);
+      NDA_PRINT(stride_order_as_given);
+      NDA_PRINT(stride_order_encoded);
+      NDA_PRINT(nda::permutations::reverse_identity<Rank>());
+      NDA_PRINT(nda::permutations::encode(nda::permutations::reverse_identity<Rank>()));
 
       for (int v = this->rank() - 1; v >= 0; --v) { // rank() is constexpr ...
-        int u  = stride_order[v];
+        int u = stride_order[v];
+        NDA_PRINT(v);
+        NDA_PRINT(u);
+        NDA_PRINT(s);
+
         str[u] = s;
         s *= len[u];
       }
+      NDA_PRINT(s);
+      NDA_PRINT(size());
       ENSURES(s == size());
     }
 
@@ -239,6 +259,14 @@ namespace nda {
     }
 
   }; // idx_map class
+
+
+  //// DEBUG 
+  //template <int Rank, uint64_t SO1, layout_prop_e LP1,  uint64_t SO2, layout_prop_e LP2>
+  //bool operator ==(idx_map<Rank, SO1, LP1> const & i1, idx_map<Rank, SO2, LP2> const & i2) { 
+    //if constexpr((LP1 != LP2) or ((SO1 != SO2)) return false;
+    //else
+
 
   // ---------------- Transposition -------------------------
 

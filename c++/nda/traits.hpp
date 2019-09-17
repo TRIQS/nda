@@ -102,20 +102,44 @@ namespace nda {
     contiguous             = strided_1d | smallest_stride_is_one
   };
 
-  template <typename A>
-  inline constexpr layout_prop_e get_layout_prop = layout_prop_e::none;
+  // Whether we can degrade the property. It is a partial order.
+  // contiguous -> strided_1d  -> none
+  // contiguous -> smallest_stride_is_one  -> none
+  //
+  inline constexpr bool is_degradable(layout_prop_e from , layout_prop_e into) { 
+    if (from == layout_prop_e::contiguous) return true;
+    if (from == layout_prop_e::none) return (into == layout_prop_e::none);
+    return ( (into == layout_prop_e::none) or (into == from));
+  }
 
-  // & operator for the layout_prop_e
+  //  operator for the layout_prop_e
   constexpr layout_prop_e operator|(layout_prop_e a, layout_prop_e b) { return layout_prop_e(uint64_t(a) | uint64_t(b)); }
+
   constexpr bool operator&(layout_prop_e a, layout_prop_e b) { return uint64_t(a) & uint64_t(b); }
   //bool operator|=(layout_prop_e & a, layout_prop_e b) { return a = layout_prop_e(uint64_t(a) | uint64_t(b));}
 
+  struct layout_info_t {
+    uint64_t stride_order = 0;
+    layout_prop_e prop    = layout_prop_e::none;
+  };
+
+  // Combining layout_info
+  constexpr layout_info_t operator|(layout_info_t a, layout_info_t b) {
+    if (a.stride_order == b.stride_order)
+      return layout_info_t{a.stride_order, layout_prop_e(uint64_t(a.prop) | uint64_t(b.prop))};
+    else
+      return layout_info_t{uint64_t(-1), layout_prop_e::none}; // -1 is undefined stride_order, it corresponds to no permutation
+  }
+
   template <typename A>
-  constexpr bool has_layout_contiguous = (get_layout_prop<A> & layout_prop_e::contiguous);
+  inline constexpr layout_info_t get_layout_info = layout_info_t{};
+
   template <typename A>
-  constexpr bool has_layout_strided_1d = (get_layout_prop<A> & layout_prop_e::strided_1d);
+  constexpr bool has_layout_contiguous = (get_layout_info<A>.prop & layout_prop_e::contiguous);
   template <typename A>
-  constexpr bool has_layout_smallest_stride_is_one = (get_layout_prop<A> & layout_prop_e::smallest_stride_is_one);
+  constexpr bool has_layout_strided_1d = (get_layout_info<A>.prop & layout_prop_e::strided_1d);
+  template <typename A>
+  constexpr bool has_layout_smallest_stride_is_one = (get_layout_info<A>.prop & layout_prop_e::smallest_stride_is_one);
 
   // ---------------------- linear index  --------------------------------
 
