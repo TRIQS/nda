@@ -97,7 +97,7 @@ namespace h5 {
     if (h5_py_type_table.empty()) init_h5py();
     auto _end = h5_py_type_table.end();
     auto pos  = std::find_if(h5_py_type_table.begin(), _end, [t](auto const &x) { return H5Tequal(x.hdf5_type, t) > 0; });
-    if (pos == _end) std::runtime_error("HDF5/Python Internal Error : can not find the numpy type from the HDF5 type");
+    if (pos == _end) throw std::runtime_error("HDF5/Python Internal Error : can not find the numpy type from the HDF5 type");
     int res = pos->numpy_type;
     if (is_complex) {
       if (res == NPY_DOUBLE) res = NPY_CDOUBLE;
