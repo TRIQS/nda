@@ -227,10 +227,10 @@ TEST(NDA, Ellipsis) {
   EXPECT_ARRAY_NEAR(B(___, 2, 3), B(_, _, 2, 3), 1.e-15);
 }
 
-
 // ==============================================================
 
-template <typename ArrayType> auto sum0(ArrayType const &A) {
+template <typename ArrayType>
+auto sum0(ArrayType const &A) {
   nda::array<typename ArrayType::value_t, ArrayType::rank - 1> res = A(0, ___);
   for (size_t u = 1; u < A.shape()[0]; ++u) res += A(u, ___);
   return res;
@@ -245,25 +245,6 @@ TEST(NDA, Ellipsis2) {
   EXPECT_ARRAY_NEAR(sum0(B), nda::array<double, 2>{{15, 15, 15}, {15, 15, 15}}, 1.e-15);
 }
 
-/*
-// ==============================================================
-
-TEST(NDA, AssignVectorArray) {
-
-  vector<double> V;
-  array<double, 1> Va(5);
-  for (int i = 0; i < 5; ++i) Va(i) = i + 2;
-
-  V = Va / 2.0;
-  EXPECT_ARRAY_NEAR(V, array<double, 1>{1.0, 1.5, 2.0, 2.5, 3.0});
-  EXPECT_ARRAY_NEAR(Va, array<double, 1>{2, 3, 4, 5, 6});
-
-  V = Va;
-  EXPECT_ARRAY_NEAR(V, array<double, 1>{2, 3, 4, 5, 6});
-  EXPECT_ARRAY_NEAR(Va, array<double, 1>{2, 3, 4, 5, 6});
-}
-
-*/
 // ===========   Cross construction  ===================================================
 
 TEST(Array, CrossConstruct1) {
@@ -313,5 +294,28 @@ TEST(NDA, ConvertibleCR) {
   static_assert(not std::is_constructible_v<nda::array<double, 2>, nda::array<dcomplex, 2>>, "oops");
   // EXCEPT that clang REQUIRES is not enough to see this (not part of SFINAE). Test on gcc ...
 #endif
-
 }
+
+// =============================================================
+
+TEST(Assign, CrossStrideOrder) {
+
+  // check that = is ok, specially in the contiguous case where we have linear optimisation
+  // which should NOT be used in this case ...
+
+  nda::array<long, 3> a(2, 3, 4);
+  nda::array<long, 3, nda::F_layout> af(2, 3, 4);
+
+  for (int i = 0; i < 2; ++i)
+    for (int j = 0; j < 3; ++j)
+      for (int k = 0; k < 4; ++k) { a(i, j, k) = i + 10 * j + 100 * k; }
+
+  af = a;
+
+  for (int i = 0; i < 2; ++i)
+    for (int j = 0; j < 3; ++j)
+      for (int k = 0; k < 4; ++k) { EXPECT_EQ(af(i, j, k), i + 10 * j + 100 * k); }
+}
+
+
+

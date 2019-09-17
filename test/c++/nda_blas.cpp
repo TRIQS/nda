@@ -4,24 +4,6 @@
 //#include <nda/blas/gemv.hpp>
 //#include <nda/blas/ger.hpp>
 
-/*
-TEST(NDA, Blas1) {
-
-  placeholder<0> i_;
-  placeholder<1> j_;
-
-  vector<dcomplex> V(5), V2(5);
-  V[i_] << i_;
-  V2() = -1;
-
-  auto Vc = V;
-  nda::blas::axpy(2.0, V, V2);
-
-  EXPECT_ARRAY_NEAR(V, Vc); // no change
-  EXPECT_ARRAY_NEAR(V2, array<dcomplex, 1>{-1, 1, 3, 5, 7});
-}
-*/
-
 //----------------------------
 
 TEST(NDA, Blas3R) {

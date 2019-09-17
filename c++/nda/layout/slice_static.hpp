@@ -113,11 +113,11 @@ namespace nda::slice_static {
   constexpr std::array<int, P> sliced_mem_stride_order(std::array<int, N> const &stride_order_in, std::array<int, P> const &n_of_p) {
     //if (stride_order_in == 0) return 0; // quick decision C-> C
     auto stride_order = nda::make_initialized_array<P>(0);
-    auto p_of_n = p_of_n_map<N>(n_of_p);     // reverse the map
-    for (size_t i = 0, ip = 0; i < N; ++i) { // i : index of the n
-      int n = stride_order_in[i];                  // n traverses the N in the order of the stride_order. Slowest first.
-      int p = p_of_n[n];                     // n->p or -1 is n is a long argument
-      if (p != -1) stride_order[ip++] = p;         // if p is fine, it is the next
+    auto p_of_n       = p_of_n_map<N>(n_of_p); // reverse the map
+    for (size_t i = 0, ip = 0; i < N; ++i) {   // i : index of the n
+      int n = stride_order_in[i];              // n traverses the N in the order of the stride_order. Slowest first.
+      int p = p_of_n[n];                       // n->p or -1 is n is a long argument
+      if (p != -1) stride_order[ip++] = p;     // if p is fine, it is the next
     }
     return stride_order;
   }
@@ -186,7 +186,7 @@ namespace nda::slice_static {
   //
   template <size_t... Ns, size_t... Ps, size_t... Qs, typename IdxMap, typename... Args>
   FORCEINLINE auto slice_stride_order_impl(std::index_sequence<Ps...>, std::index_sequence<Ns...>, std::index_sequence<Qs...>, IdxMap const &idxm,
-                                     Args const &... args) {
+                                           Args const &... args) {
 
 #ifdef NDA_ENFORCE_BOUNDCHECK
     details::assert_in_bounds(idxm.rank(), idxm.lengths().data(), args...);
@@ -223,8 +223,8 @@ namespace nda::slice_static {
     // Compute the new layout_prop
     static constexpr bool has_only_rangeall_and_long = ((std::is_constructible_v<long, Args> or std::is_base_of_v<range_all, Args>)and...);
 
-    static constexpr layout_prop_e li = slice_layout_prop(has_only_rangeall_and_long, args_is_range_all, q_of_n(IdxMap::stride_order[N - 1], e_pos, e_len),
-                                                          IdxMap::stride_order, IdxMap::layout_prop);
+    static constexpr layout_prop_e li = slice_layout_prop(
+       has_only_rangeall_and_long, args_is_range_all, q_of_n(IdxMap::stride_order[N - 1], e_pos, e_len), IdxMap::stride_order, IdxMap::layout_prop);
 
     long offset = (get_offset(std::get<q_of_n(Ns, e_pos, e_len)>(argstie), std::get<Ns>(idxm.strides())) + ... + 0);
 
@@ -245,7 +245,7 @@ namespace nda::slice_static {
     static_assert((n_args_ellipsis == 1) or (sizeof...(T) == IdxMap::rank()), "Incorrect number of arguments in array call ");
 
     return slice_stride_order_impl(std::make_index_sequence<IdxMap::rank() - n_args_long>{}, std::make_index_sequence<IdxMap::rank()>{},
-                             std::make_index_sequence<sizeof...(T)>{}, idxm, x...);
+                                   std::make_index_sequence<sizeof...(T)>{}, idxm, x...);
   }
 
   // ----------------------------- slice of index map ----------------------------------------------
