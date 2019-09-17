@@ -10,11 +10,6 @@
 
 namespace h5::array_interface {
 
-  std::string get_name_of_h5_type(hid_t ty) {
-
-    return std::to_string(ty); // FIXME : implement a table hid_t -> name
-  }
-
   //------------------------------------------------
   // the dataspace corresponding to the array. Contiguous data only...
   dataspace make_mem_dpace(h5_array_view const &v) {

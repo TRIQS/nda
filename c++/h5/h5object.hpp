@@ -11,18 +11,23 @@ namespace h5 {
   // not by the users of the library.
   using hid_t   = int64_t;
   using hsize_t = unsigned long long;
-  using v_t = std::vector<hsize_t>;
+  using v_t     = std::vector<hsize_t>;
 
   // Correspondance T -> hdf5 type
-  template <typename T> hid_t hdf5_type =0; // 0 means "type unknown to hdf5"
+  template <typename T>
+  hid_t hdf5_type = 0; // 0 means "type unknown to hdf5"
 
   // impl trait to detect complex numbers
-  template <typename T> struct _is_complex : std::false_type {};
-  template <typename T> struct _is_complex<std::complex<T>> : std::true_type {};
-  template <typename T> constexpr bool is_complex_v = _is_complex<T>::value;
+  template <typename T>
+  struct _is_complex : std::false_type {};
+  template <typename T>
+  struct _is_complex<std::complex<T>> : std::true_type {};
+  template <typename T>
+  constexpr bool is_complex_v = _is_complex<T>::value;
 
   // impl
-  template <typename... T> std::runtime_error make_runtime_error(T const &... x) {
+  template <typename... T>
+  std::runtime_error make_runtime_error(T const &... x) {
     std::stringstream fs;
     (fs << ... << x);
     return std::runtime_error{fs.str()};
@@ -41,7 +46,6 @@ namespace h5 {
     hid_t id = 0;
 
     public:
-    
     /// make an h5_object from a simple borrowed ref (simply inc. the ref).
     static h5_object from_borrowed(hid_t id);
 
@@ -55,13 +59,13 @@ namespace h5 {
     h5_object(h5_object &&x) noexcept : id(x.id) { x.id = 0; }
 
     /// Copy the reference and incref
-    h5_object &operator=(h5_object const &x) { return operator=(h5_object(x)); } 
+    h5_object &operator=(h5_object const &x) { return operator=(h5_object(x)); }
 
     /// Steals the ref.
-    h5_object &operator=(h5_object &&x) noexcept; 
+    h5_object &operator=(h5_object &&x) noexcept;
 
-    /// 
-    ~h5_object() { close();}
+    ///
+    ~h5_object() { close(); }
 
     /// Release the HDF5 handle and reset the object to default state (id =0).
     void close();
@@ -82,5 +86,10 @@ namespace h5 {
   using dataspace = h5_object;
   using proplist  = h5_object;
   using attribute = h5_object;
+
+  // ------------------------------
+
+  // A function to get the name of a datatype in clear (for error messages)
+  std::string get_name_of_h5_type(datatype ty);
 
 }; // namespace h5
