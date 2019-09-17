@@ -11,7 +11,7 @@ TEST(View, ChangeData) {
 
   auto v = a(_, 1, 2);
 
-  EXPECT_EQ( (nda::slice_static::slice_layout_info(true, std::array<bool, 3>{1,0,0}, 2, std::array<int, 3>{0,1,2}, nda::layout_info_e::contiguous)),   nda::layout_info_e::strided_1d);
+  EXPECT_EQ( (nda::slice_static::slice_layout_prop(true, std::array<bool, 3>{1,0,0}, 2, std::array<int, 3>{0,1,2}, nda::layout_prop_e::contiguous)),   nda::layout_prop_e::strided_1d);
 
   EXPECT_EQ(v.shape(), (nda::shape_t<1>{3}));
 

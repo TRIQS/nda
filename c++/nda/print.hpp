@@ -23,13 +23,13 @@ namespace std { // For ADL
 namespace nda {
 
   // idx_map
-  template <int Rank, uint64_t StrideOrder, layout_info_e LayoutInfo>
-  std::ostream &operator<<(std::ostream &out, idx_map<Rank, StrideOrder, LayoutInfo> const &x) {
+  template <int Rank, uint64_t StrideOrder, layout_prop_e LayoutProp>
+  std::ostream &operator<<(std::ostream &out, idx_map<Rank, StrideOrder, LayoutProp> const &x) {
     return out << "  Lengths  : " << x.lengths() << "\n"
                << "  Strides  : " << x.strides() << "\n"
                << "  MemoryStrideOrder   : " << x.stride_order << "\n"
-               << "  Flags   :  " << (LayoutInfo & layout_info_e::contiguous ? "contiguous   " : " ") << (LayoutInfo & layout_info_e::strided_1d ? "strided_1d   " : " ")
-               << (LayoutInfo & layout_info_e::smallest_stride_is_one ? "smallest_stride_is_one   " : " " )<< "\n";
+               << "  Flags   :  " << (LayoutProp & layout_prop_e::contiguous ? "contiguous   " : " ") << (LayoutProp & layout_prop_e::strided_1d ? "strided_1d   " : " ")
+               << (LayoutProp & layout_prop_e::smallest_stride_is_one ? "smallest_stride_is_one   " : " " )<< "\n";
   }
 
   // ==============================================
