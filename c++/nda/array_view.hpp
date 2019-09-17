@@ -20,15 +20,15 @@ namespace nda {
   // ---------------------- User aliases  --------------------------------
 
   template <typename ValueType, int Rank>
-  using array = basic_array<ValueType, Rank, C_contiguous_layout, 'A', heap>;
+  using array = basic_array<ValueType, Rank, C_layout, 'A', heap>;
 
   template <typename ValueType, int Rank>
-  using array_view = basic_array_view<ValueType, Rank, C_layout, 'A', default_accessor, borrowed>;
+  using array_view = basic_array_view<ValueType, Rank, C_stride_layout, 'A', default_accessor, borrowed>;
 
-  template <typename ValueType, typename Layout = C_contiguous_layout> // CLayout or FLayout
+  template <typename ValueType, typename Layout = C_layout> // CLayout or FLayout
   using matrix = basic_array<ValueType, 2, Layout, 'M', heap>;
 
-  template <typename ValueType, typename Layout = C_layout>
+  template <typename ValueType, typename Layout = C_stride_layout>
   using matrix_view = basic_array_view<ValueType, 2, Layout, 'M', default_accessor, borrowed>;
 
   // ---------------------- is_array_or_view_container  --------------------------------

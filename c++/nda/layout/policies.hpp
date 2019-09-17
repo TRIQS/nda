@@ -3,22 +3,22 @@
 
 namespace nda {
 
-  struct C_contiguous_layout {
+  struct C_layout {
     template <int Rank>
     using mapping = idx_map<Rank, 0, layout_info_e::contiguous>;
   };
 
-  struct F_contiguous_layout {
+  struct F_layout {
     template <int Rank>
     using mapping = idx_map<Rank, Fortran_stride_order<Rank>, layout_info_e::contiguous>;
   };
 
-  struct C_layout {
+  struct C_stride_layout {
     template <int Rank>
     using mapping = idx_map<Rank, 0, layout_info_e::none>;
   };
 
-  struct F_layout {
+  struct F_stride_layout {
     template <int Rank>
     using mapping = idx_map<Rank, Fortran_stride_order<Rank>, layout_info_e::none>;
   };

@@ -39,7 +39,7 @@ TEST(NDA, Blas3R) {
 //----------------------------
 TEST(NDA, Blas3R_f) {
 
-  nda::matrix<double, nda::F_contiguous_layout> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3(2, 2);
+  nda::matrix<double, nda::F_layout> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3(2, 2);
   M3 = 0;
 
   nda::blas::gemm(1.0, M1, M2, 1.0, M3);
@@ -76,7 +76,7 @@ TEST(NDA, Blas3C) {
 
 //----------------------------
 TEST(NDA, Blas3Cf) {
-  nda::matrix<dcomplex, nda::F_contiguous_layout> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3(2, 2);
+  nda::matrix<dcomplex, nda::F_layout> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3(2, 2);
   M3 = 0;
 
   nda::blas::gemm(1.0, M1, M2, 1.0, M3);
