@@ -1,12 +1,14 @@
 #include "test_common.hpp"
 
 #include <nda/blas/gemm.hpp>
-//#include <nda/blas/gemv.hpp>
-//#include <nda/blas/ger.hpp>
+#include <nda/blas/gemv.hpp>
+#include <nda/blas/ger.hpp>
+
+using nda::F_layout;
 
 //----------------------------
 
-TEST(NDA, Blas3R) {
+TEST(BLAS, gemm) {
 
   nda::matrix<double> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3(2, 2);
   M3 = 0;
@@ -19,24 +21,14 @@ TEST(NDA, Blas3R) {
 }
 
 //----------------------------
-TEST(NDA, Blas3R_f) {
+TEST(BLAS, gemmF) {
 
-  nda::matrix<double, nda::F_layout> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3(2, 2);
+  nda::matrix<double, F_layout> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3(2, 2);
   M3 = 0;
 
   nda::blas::gemm(1.0, M1, M2, 1.0, M3);
-  NDA_PRINT(M3);
-
-  auto mcheck = nda::matrix<double>{{1, 1}, {3, 3}};
-  NDA_PRINT(mcheck);
-  NDA_PRINT(mcheck(1, 0));
-  NDA_PRINT((M3 - mcheck)(1, 0));
-  auto max_diff = max_element(abs(M3 - mcheck));
-  NDA_PRINT(max_diff);
-  EXPECT_ARRAY_NEAR(M3, mcheck);
 
   nda::array<double, 2> M3copy{M3};
-  NDA_PRINT(M3copy);
 
   EXPECT_ARRAY_NEAR(M1, nda::matrix<double>{{0, 1}, {1, 2}});
   EXPECT_ARRAY_NEAR(M2, nda::matrix<double>{{1, 1}, {1, 1}});
@@ -44,7 +36,7 @@ TEST(NDA, Blas3R_f) {
 }
 
 //----------------------------
-TEST(NDA, Blas3C) {
+TEST(BLAS, zgemm) {
 
   nda::matrix<dcomplex> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3(2, 2);
   M3 = 0;
@@ -57,8 +49,8 @@ TEST(NDA, Blas3C) {
 }
 
 //----------------------------
-TEST(NDA, Blas3Cf) {
-  nda::matrix<dcomplex, nda::F_layout> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3(2, 2);
+TEST(BLAS, gemmCF) {
+  nda::matrix<dcomplex, F_layout> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3(2, 2);
   M3 = 0;
 
   nda::blas::gemm(1.0, M1, M2, 1.0, M3);
@@ -68,22 +60,52 @@ TEST(NDA, Blas3Cf) {
   EXPECT_ARRAY_NEAR(M3, nda::matrix<dcomplex>{{1, 1}, {3, 3}});
 }
 
-/*
+// ==============================================================
+
+TEST(BLAS, gemv) {
+
+  nda::matrix<double, F_layout> A(5, 5), Ac(5, 5);
+  nda::array<double, 1> MC(5), MB(5);
+
+  for (int i = 0; i < 5; ++i)
+    for (int j = 0; j < 5; ++j) A(i, j) = i + 2 * j + 1;
+
+  Ac = A;
+
+  MC() = 1;
+  MB() = 0;
+  nda::range R(1, 3);
+
+  // FIXME IMPLEMENT
+  //matrix_view<double> Acw = A.transpose();
+
+  auto MB_w = MB(R); // view !
+
+  nda::blas::gemv(1, A(R, R), MC(R), 0, MB_w);
+  EXPECT_ARRAY_NEAR(MB, nda::array<double, 1>{0, 10, 12, 0, 0});
+
+  nda::blas::gemv(1, Ac(R, R), MC(R), 0, MB_w);
+  EXPECT_ARRAY_NEAR(MB, nda::array<double, 1>{0, 10, 12, 0, 0});
+
+  //blas::gemv(1, Acw(R, R), MC(R), 0, MB_w);
+  //EXPECT_ARRAY_NEAR(MB, vector<double>{0, 9, 13, 0, 0});
+}
+
 //----------------------------
-TEST(NDA, Blas2) {
-  placeholder<0> i_;
-  nda::matrix<double> M(2, 2, FORTRAN_LAYOUT);
-  M() = 0;
-  vector<double> V(2);
-  V[i_] << i_ + 1;
+TEST(BLAS, ger) {
+
+  nda::matrix<double, F_layout> M(2, 2);
+  M = 0;
+  nda::array<double, 1> V{1, 2};
 
   nda::blas::ger(1.0, V, V, M);
   EXPECT_ARRAY_NEAR(M, nda::matrix<double>{{1, 2}, {2, 4}});
 }
 
+/*
 //----------------------------
 
-TEST(NDA, Blas3InvMat) {
+TEST(BLAS, Blas3InvMat) {
   placeholder<0> i_;
   placeholder<1> j_;
 
@@ -98,7 +120,7 @@ TEST(NDA, Blas3InvMat) {
 // ==================DEEP SWAP for vectors============================================
 
 // FIXME Rename as BLAS_SWAP (swap of blas). Only for vector of same size
-TEST(NDA, DeepSwap) {
+TEST(BLAS, DeepSwap) {
   auto V = vector<double>{3, 3, 3};
   auto W = vector<double>{4, 4, 4};
 
