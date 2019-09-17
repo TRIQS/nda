@@ -1,7 +1,7 @@
 // ------------------------------- data access --------------------------------------------
 
 /// The Index Map object
-auto const &indexmap() const { return _idx_m; }
+constexpr auto const &indexmap() const { return _idx_m; }
 
 /// The storage handle
 storage_t const &storage() const { return _storage; }
@@ -29,6 +29,8 @@ bool is_empty() const { return _storage.is_null(); }
 /// Same as shape()[i]
 //[[deprecated]] 
 long shape(int i) const { return _idx_m.lengths()[i]; }
+
+long extent(int i) const { return _idx_m.lengths()[i]; }
 
 // -------------------------------  operator () --------------------------------------------
 

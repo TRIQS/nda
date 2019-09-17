@@ -101,8 +101,13 @@ typedef struct { double real, imag; } _lapack_complex_double;
 
 #endif
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
+
 lapack_complex_float lapack_make_complex_float( float re, float im );
 lapack_complex_double lapack_make_complex_double( double re, double im );
+
+#pragma clang diagnostic pop
 
 #endif
 

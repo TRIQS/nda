@@ -25,11 +25,11 @@ namespace nda {
   template <typename ValueType, int Rank>
   using array_view = basic_array_view<ValueType, Rank, 0, layout_info_e::none, 'A', default_accessor, mem::borrowed>;
 
-  template <typename ValueType>
-  using matrix = basic_array<ValueType, 2, 0, 'M', mem::heap>;
+  template <typename ValueType, char C_F = 'C'>  // CLayout or FLayout
+  using matrix = basic_array<ValueType, 2, (C_F == 'F' ? 1: 0) , 'M', mem::heap>;
 
-  template <typename ValueType>
-  using matrix_view = basic_array_view<ValueType, 2, 0, layout_info_e::none, 'M', default_accessor, mem::borrowed>;
+  template <typename ValueType, char C_F = 'C'>
+  using matrix_view = basic_array_view<ValueType, 2,(C_F == 'F' ? 1: 0) , layout_info_e::none, 'M', default_accessor, mem::borrowed>;
 
   // ---------------------- is_array_or_view_container  --------------------------------
 
@@ -76,8 +76,9 @@ namespace nda {
   class basic_array_view {
 
     public:
-    /// ValueType
+    /// ValueType FIXME 
     using value_t = ValueType;
+    using value_type = ValueType;
 
     ///
     using regular_t = basic_array<ValueType, Rank, StrideOrder, Algebra, mem::heap>;

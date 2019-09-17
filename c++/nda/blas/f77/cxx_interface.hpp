@@ -25,7 +25,7 @@
 
 #include <complex>
 
-namespace triqs::arrays::blas::f77 {
+namespace nda::blas::f77 {
   // typedef std::complex<double> dcomplex;
 
   void axpy(int N, double alpha, const double *x, int incx, double *Y, int incy);
@@ -56,29 +56,4 @@ namespace triqs::arrays::blas::f77 {
   void swap(int N, double *x, int incx, double *Y, int incy);
   void swap(int N, std::complex<double> *x, int incx, std::complex<double> *Y, int incy);
 
-} // namespace triqs::arrays::blas::f77
-
-namespace triqs::arrays::lapack::f77 {
-
-  void gelss(int M, int N, int NRHS, double *A, int LDA, double *B, int LDB, double *S, double RCOND, int &RANK, double *WORK, int LWORK, int &INFO);
-  void gelss(int M, int N, int NRHS, std::complex<double> *A, int LDA, std::complex<double> *B, int LDB, double *S, double RCOND, int &RANK,
-             std::complex<double> *WORK, int LWORK, double *RWORK, int &INFO);
-
-  void gesvd(const char &JOBU, const char &JOBVT, int M, int N, double *A, int LDA, double *S, double *U, int LDU, double *VT, int LDVT, double *WORK,
-             int LWORK, int &INFO);
-  void gesvd(const char &JOBU, const char &JOBVT, int M, int N, std::complex<double> *A, int LDA, double *S, std::complex<double> *U, int LDU,
-             std::complex<double> *VT, int LDVT, std::complex<double> *WORK, int LWORK, double *RWORK, int &INFO);
-
-  void getrf(int M, int N, double *A, int LDA, int *ipiv, int &info);
-  void getrf(int M, int N, std::complex<double> *A, int LDA, int *ipiv, int &info);
-
-  void getri(int N, double *A, int LDA, int *ipiv, double *work, int lwork, int &info);
-  void getri(int N, std::complex<double> *A, int LDA, int *ipiv, std::complex<double> *work, int lwork, int &info);
-
-  void gtsv(int N, int NRHS, double *DL, double *D, double *DU, double *B, int LDB, int &info);
-  void gtsv(int N, int NRHS, std::complex<double> *DL, std::complex<double> *D, std::complex<double> *DU, std::complex<double> *B, int LDB,
-            int &info);
-
-  void stev(char J, int N, double *D, double *E, double *Z, int ldz, double *work, int &info);
-
-} // namespace triqs::arrays::lapack::f77
+} // namespace nda::blas::f77

@@ -74,15 +74,13 @@ template <typename X, typename Y>
 
   // both x, y are contiguous, I check with basic tools instead of max_element(abs(x - y))
   if (x.size() == 0) return ::testing::AssertionSuccess();
-  using std::abs;
-  using std::max;
-  auto max_diff = abs(*x.data_start() - *y.data_start());
-  for (long i = 0; i < x.size(); ++i) max_diff = max(max_diff, abs(x.data_start()[i] - y.data_start()[i]));
+  auto max_diff = max_element(abs(x - y));
   if (max_diff < precision)
     return ::testing::AssertionSuccess();
   else
     return ::testing::AssertionFailure() << "max_element(abs(x-y)) = " << max_diff << "\n X = " << x << "\n Y = " << y;
 }
+
 
 #define EXPECT_ARRAY_NEAR(X, ...) EXPECT_TRUE(array_are_close(X, __VA_ARGS__))
 

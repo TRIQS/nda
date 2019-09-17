@@ -1,6 +1,6 @@
 #include "./test_common.hpp"
 
-#include <nda/blas_lapack/qcache.hpp>
+#include <nda/blas/qcache.hpp>
 
 using nda::qcache;
 

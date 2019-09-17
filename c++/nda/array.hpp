@@ -35,6 +35,8 @@ namespace nda {
     public:
     ///
     using value_t = ValueType;
+    using value_type = ValueType;
+
     ///
     using regular_t = basic_array;
     ///

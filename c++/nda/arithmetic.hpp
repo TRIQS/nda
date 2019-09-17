@@ -23,7 +23,7 @@ namespace nda {
   template <char OP, typename L>
   inline constexpr bool is_ndarray_v<expr_unary<OP, L>> = true;
 
-  // Both propagate the guarantees
+  // Get the layout info recursively
   template <char OP, typename L, typename R>
   inline constexpr layout_info_e get_layout_info<expr<OP, L, R>> = expr<OP, L, R>::layout_info;
 
