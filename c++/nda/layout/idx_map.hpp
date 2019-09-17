@@ -167,24 +167,11 @@ namespace nda {
     idx_map(std::array<long, Rank> const &lengths) noexcept : len(lengths) {
       // compute the strides for a compact array
       long s = 1;
-      NDA_PRINT(Fortran_stride_order<3>);
-      NDA_PRINT(stride_order);
-      NDA_PRINT(stride_order_as_given);
-      NDA_PRINT(stride_order_encoded);
-      NDA_PRINT(nda::permutations::reverse_identity<Rank>());
-      NDA_PRINT(nda::permutations::encode(nda::permutations::reverse_identity<Rank>()));
-
       for (int v = this->rank() - 1; v >= 0; --v) { // rank() is constexpr ...
         int u = stride_order[v];
-        NDA_PRINT(v);
-        NDA_PRINT(u);
-        NDA_PRINT(s);
-
         str[u] = s;
         s *= len[u];
       }
-      NDA_PRINT(s);
-      NDA_PRINT(size());
       ENSURES(s == size());
     }
 
