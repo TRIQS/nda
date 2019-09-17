@@ -1,7 +1,7 @@
 #pragma once
 #include "./handle.hpp"
 
-namespace nda::mem {
+namespace nda {
 
   // Policy classes
   struct heap {
