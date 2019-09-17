@@ -15,7 +15,7 @@ namespace nda::blas {
   struct _is_blas_lapack<std::complex<double>> : std::true_type {};
 
   template <typename T>
-  inline constexpr bool is_blas_lapack_v<T> = _is_blas_lapack<std::remove_const_t<T>>{};
+  inline constexpr bool is_blas_lapack_v = _is_blas_lapack<std::remove_const_t<T>>::value;
 
   // check all A have the same element_type
   template <typename A0, typename... A>
@@ -30,18 +30,18 @@ namespace nda::blas {
   // returns the # of rows of the matrix *seen* as fortran matrix
   template <typename MatrixType>
   size_t get_n_rows(MatrixType const &A) {
-    return (A.is_stride_order_Fortran() ? first_dim(A) : second_dim(A));
+    return (A.indexmap().is_stride_order_Fortran() ? first_dim(A) : second_dim(A));
   }
 
   // returns the # of cols of the matrix *seen* as fortran matrix
   template <typename MatrixType>
   size_t get_n_cols(MatrixType const &A) {
-    return (A.is_stride_order_Fortran() ? second_dim(A) : first_dim(A));
+    return (A.indexmap().is_stride_order_Fortran() ? second_dim(A) : first_dim(A));
   }
 
   // LDA in lapack jargon
   template <typename MatrixType>
   int get_ld(MatrixType const &A) {
-    return A.indexmap().strides()[A.is_stride_order_Fortran() ? 1 : 0];
+    return A.indexmap().strides()[A.indexmap().is_stride_order_Fortran() ? 1 : 0];
   }
 } // namespace nda::blas

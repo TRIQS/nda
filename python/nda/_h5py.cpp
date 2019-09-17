@@ -1,5 +1,4 @@
 #include <pybind11/pybind11.h>
-
 #include <h5/h5.hpp>
 #include "python.hpp"
 
@@ -18,7 +17,6 @@ PYBIND11_MODULE(_h5py, m) {
      .def(py::init<std::string const &, char>(), "Constructor", "name"_a, "mode"_a)
      .def_property_readonly("name", &h5::file::name, "Name of the file");
 
- 
   // Group
   py::class_<h5::group> Group(m, "Group");
 

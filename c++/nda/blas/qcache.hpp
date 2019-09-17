@@ -69,17 +69,20 @@ namespace nda {
     _qcache(_qcache const &) = delete;
     void operator=(_qcache const &) = delete;
 
-    view_t operator()() const { return _view; }
+    constexpr view_t operator()() const { return _view; }
 
     // for test only
-    bool use_copy() const { return need_copy;}
-
+    bool use_copy() const { return need_copy; }
   };
 
   template <typename A>
-  _qcache<A&> qcache(A & a) { return _qcache<A&>{a,false};}
+  _qcache<A &> qcache(A &a) {
+    return _qcache<A &>{a, false};
+  }
 
   template <typename A>
-  _qcache<A&> reflexive_qcache(A & a) { return _qcache<A&>{a,true};}
+  _qcache<A &> reflexive_qcache(A &a) {
+    return _qcache<A &>{a, true};
+  }
 
 } // namespace nda

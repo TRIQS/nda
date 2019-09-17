@@ -51,12 +51,13 @@ namespace nda::details {
     if constexpr (not is_scalar_for_v<RHS, LHS>) {
       static_assert(std::is_assignable_v<typename LHS::value_t &, get_value_t<RHS>>,
                     "Assignment impossible for the type of RHS into the type of LHS");
-
-      if constexpr (has_layout_contiguous<LHS> and has_layout_contiguous<RHS>) {
+// FIXME 
+      if constexpr (0 and has_layout_contiguous<LHS> and has_layout_contiguous<RHS>) {
 	
         // They must have the same size ! or EXPECT is wrong
         // FIXME FOR OFFSET
         // a linear computation
+	  NDA_PRINT("LINEAR INDEX  !!");
         long L = lhs.size();
         for (long i = 0; i < L; ++i) lhs(_linear_index_t{i}) = rhs(_linear_index_t{i});
 

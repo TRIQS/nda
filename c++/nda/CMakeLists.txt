@@ -17,6 +17,31 @@ install(TARGETS nda_c EXPORT nda-targets DESTINATION lib)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
 
 
+# ---------------------------------
+# Lapack
+# ---------------------------------
+
+## --------- FIXME _______________
+
+message(STATUS "-------- Lapack detection -------------")
+
+find_package(LAPACK REQUIRED)
+
+message(STATUS "Lapack libraries : ${LAPACK_LIBRARIES}")
+message(STATUS "Lapack vendor : ${BLA_VENDOR}")
+
+list(REMOVE_DUPLICATES LAPACK_LIBRARIES)
+add_library(blas_lapack INTERFACE)
+target_link_libraries(blas_lapack INTERFACE ${LAPACK_LIBRARIES})
+target_compile_options(blas_lapack INTERFACE ${LAPACK_LINKER_FLAGS})
+
+target_link_libraries(nda_c PRIVATE blas_lapack)
+
+## ?? FIXME : WHAT IS THIS ?
+install(TARGETS blas_lapack EXPORT  nda-targets)
+
+
+
 # ========= Static Analyzer Checks ==========
 
 option(ANALYZE_SOURCES OFF "Run static analyzer checks if found (clang-tidy, cppcheck)")
