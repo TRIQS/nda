@@ -1,13 +1,10 @@
 #pragma once
-#include <pybind11/pybind11.h>
-
 #include <h5/array_interface.hpp>
-namespace py = pybind11;
+#include <Python.h>
 
 namespace h5 {
 
-  void h5_write_bare(group g, std::string const &name, py::object ob);
-
-  py::object h5_read_bare(group g, std::string const &name);
+  void h5_write_bare(group g, std::string const &name, PyObject *ob);
+  PyObject *h5_read_bare(group g, std::string const &name);
 
 } // namespace h5
