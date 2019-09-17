@@ -168,11 +168,9 @@ namespace h5 {
   }
   // -------------------------
 
-  void h5_write_bare(group g, std::string const &name, py::object ob1) {
+  void h5_write_bare(group g, std::string const &name, PyObject * ob) {
 
     import_numpy();
-
-    PyObject *ob = ob1.ptr();
 
     // if numpy
     if (PyArray_Check(ob)) {
@@ -190,13 +188,13 @@ namespace h5 {
       h5_write(g, name, std::complex<double>{PyComplex_RealAsDouble(ob), PyComplex_ImagAsDouble(ob)});
     } else {
       PyErr_SetString(PyExc_RuntimeError, "The Python object can not be written in HDF5");
-      throw pybind11::error_already_set();
+      return;
     }
   }
 
   // -------------------------
 
-  PyObject *h5_read_bare1(group g, std::string const &name) { // There should be no errors from h5 reading
+  PyObject *h5_read_bare(group g, std::string const &name) { // There should be no errors from h5 reading
     import_numpy();
 
     array_interface::h5_lengths_type lt = array_interface::get_h5_lengths_type(g, name);
@@ -222,7 +220,7 @@ namespace h5 {
       }
       // Default case : error, we can not read
       PyErr_SetString(PyExc_RuntimeError, "h5_read to Python: unknown scalar type");
-      throw pybind11::error_already_set();
+      return NULL;
     }
 
     // A scalar complex is a special case
@@ -243,16 +241,12 @@ namespace h5 {
 
     // make a new numpy array
     PyObject *ob = PyArray_SimpleNewFromDescr(int(L.size()), &L[0], PyArray_DescrFromType(elementsType));
-    if (PyErr_Occurred()) throw pybind11::error_already_set(); // in case of allocation error
+    if (PyErr_Occurred()) return NULL;
+    // in case of allocation error
 
     // read from the file
     read(g, name, make_av_from_py((PyArrayObject *)ob), lt);
     return ob;
-  }
-
-  py::object h5_read_bare(group g, std::string const &name) { // There should be no errors from h5 reading
-
-    return py::reinterpret_steal<py::object>(h5_read_bare1(g, name));
   }
 
 } // namespace h5
