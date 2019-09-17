@@ -139,11 +139,11 @@ namespace h5::array_interface {
     // Checks
     if (H5Tequal(v.ty, lt.ty) <= 0)
       throw std::runtime_error("h5 read. Type mismatch : expecting a " + get_name_of_h5_type(v.ty)
-                               + " while the array stored in the hdf5 file has type = " + get_name_of_h5_type(lt.ty));
+                               + " while the array stored in the hdf5 file has type " + get_name_of_h5_type(lt.ty));
 
     if (lt.rank() != v.rank())
       throw std::runtime_error("h5 read. Rank mismatch : expecting in file a rank " + std::to_string(v.rank())
-                               + " while the array stored in the hdf5 file has rank = " + std::to_string(lt.rank()));
+                               + " while the array stored in the hdf5 file has rank " + std::to_string(lt.rank()));
 
     //if (lt.lengths != v.slab.count)
     //throw std::runtime_error("h5 read. Lengths mismatch : expecting a rank " + std::to_string(v.rank())
