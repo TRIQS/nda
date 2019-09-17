@@ -38,6 +38,9 @@ namespace nda {
     return {args...};
   }
 
+  template<int Rank> 
+   constexpr uint64_t Fortran_stride_order = nda::permutations::encode(nda::permutations::reverse_identity<Rank>());
+
   // -----------------------------------------------------------------------------------
   /**
    *
@@ -67,10 +70,9 @@ namespace nda {
     std::array<long, Rank> len, str;
 
     public:
-    
-    static constexpr layout_info_e layout_info=LayoutInfo;
    
-    // DEBUG ONLY 
+    // main property : idx_map<Rank, stride_order_encoded, layout_info> is THIS
+    static constexpr layout_info_e layout_info=LayoutInfo;
     static constexpr uint64_t stride_order_encoded = StrideOrder;
 
     static constexpr std::array<int, Rank> stride_order =

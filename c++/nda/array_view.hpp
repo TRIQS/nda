@@ -1,6 +1,7 @@
 #pragma once
 #include "storage/policies.hpp"
 #include "layout/idx_map.hpp"
+#include "layout/policies.hpp"
 #include "basic_functions.hpp"
 #include "assignment.hpp"
 #include "accessors.hpp"
@@ -10,88 +11,82 @@ namespace nda {
 
   // ---------------------- declare array and view  --------------------------------
 
-  template <typename ValueType, int Rank, uint64_t StrideOrder, char Algebra, typename ContainerPolicy>
+  template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
   class basic_array;
 
-  template <typename ValueType, int Rank, uint64_t StrideOrder, layout_info_e LayoutInfo, char Algebra, typename AccessorPolicy,
-            typename OwningPolicy>
+  template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   class basic_array_view;
 
   // ---------------------- User aliases  --------------------------------
 
   template <typename ValueType, int Rank>
-  using array = basic_array<ValueType, Rank, 0, 'A', mem::heap>;
+  using array = basic_array<ValueType, Rank, C_contiguous_layout, 'A', heap>;
 
   template <typename ValueType, int Rank>
-  using array_view = basic_array_view<ValueType, Rank, 0, layout_info_e::none, 'A', default_accessor, mem::borrowed>;
+  using array_view = basic_array_view<ValueType, Rank, C_layout, 'A', default_accessor, borrowed>;
 
-  template <typename ValueType, char C_F = 'C'>  // CLayout or FLayout
-  using matrix = basic_array<ValueType, 2, (C_F == 'F' ? 1: 0) , 'M', mem::heap>;
+  template <typename ValueType, typename Layout = C_contiguous_layout> // CLayout or FLayout
+  using matrix = basic_array<ValueType, 2, Layout, 'M', heap>;
 
-  template <typename ValueType, char C_F = 'C'>
-  using matrix_view = basic_array_view<ValueType, 2,(C_F == 'F' ? 1: 0) , layout_info_e::none, 'M', default_accessor, mem::borrowed>;
+  template <typename ValueType, typename Layout = C_layout>
+  using matrix_view = basic_array_view<ValueType, 2, Layout, 'M', default_accessor, borrowed>;
 
   // ---------------------- is_array_or_view_container  --------------------------------
 
-  template <typename ValueType, int Rank, uint64_t StrideOrder, char Algebra, typename ContainerPolicy>
-  inline constexpr bool is_regular_v<basic_array<ValueType, Rank, StrideOrder, Algebra, ContainerPolicy>> = true;
+  template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
+  inline constexpr bool is_regular_v<basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>> = true;
 
-  template <typename ValueType, int Rank, uint64_t StrideOrder, layout_info_e LayoutInfo, char Algebra, typename AccessorPolicy,
-            typename OwningPolicy>
-  inline constexpr bool is_view_v<basic_array_view<ValueType, Rank, StrideOrder, LayoutInfo, Algebra, AccessorPolicy, OwningPolicy>> = true;
+  template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
+  inline constexpr bool is_view_v<basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>> = true;
 
   // ---------------------- concept  --------------------------------
 
-  template <typename ValueType, int Rank, uint64_t StrideOrder, char Algebra, typename ContainerPolicy>
-  inline constexpr bool is_ndarray_v<basic_array<ValueType, Rank, StrideOrder, Algebra, ContainerPolicy>> = true;
+  template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
+  inline constexpr bool is_ndarray_v<basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>> = true;
 
-  template <typename ValueType, int Rank, uint64_t StrideOrder, layout_info_e LayoutInfo, char Algebra, typename AccessorPolicy,
-            typename OwningPolicy>
-  inline constexpr bool is_ndarray_v<basic_array_view<ValueType, Rank, StrideOrder, LayoutInfo, Algebra, AccessorPolicy, OwningPolicy>> = true;
+  template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
+  inline constexpr bool is_ndarray_v<basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>> = true;
 
   // ---------------------- algebra --------------------------------
 
-  template <typename ValueType, int Rank, uint64_t StrideOrder, char Algebra, typename ContainerPolicy>
-  inline constexpr char get_algebra<basic_array<ValueType, Rank, StrideOrder, Algebra, ContainerPolicy>> = Algebra;
+  template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
+  inline constexpr char get_algebra<basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>> = Algebra;
 
-  template <typename ValueType, int Rank, uint64_t StrideOrder, layout_info_e LayoutInfo, char Algebra, typename AccessorPolicy,
-            typename OwningPolicy>
-  inline constexpr char get_algebra<basic_array_view<ValueType, Rank, StrideOrder, LayoutInfo, Algebra, AccessorPolicy, OwningPolicy>> = Algebra;
+  template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
+  inline constexpr char get_algebra<basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>> = Algebra;
 
   // ---------------------- get_layout_info --------------------------------
 
-  template <typename ValueType, int Rank, uint64_t StrideOrder, char Algebra, typename ContainerPolicy>
-  inline constexpr layout_info_e get_layout_info<basic_array<ValueType, Rank, StrideOrder, Algebra, ContainerPolicy>> =
-     basic_array<ValueType, Rank, StrideOrder, Algebra, ContainerPolicy>::idx_map_t::layout_info;
+  template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
+  inline constexpr layout_info_e get_layout_info<basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>> =
+     basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>::idx_map_t::layout_info;
 
-  template <typename ValueType, int Rank, uint64_t StrideOrder, layout_info_e LayoutInfo, char Algebra, typename AccessorPolicy,
-            typename OwningPolicy>
-  inline constexpr layout_info_e get_layout_info<basic_array_view<ValueType, Rank, StrideOrder, LayoutInfo, Algebra, AccessorPolicy, OwningPolicy>> =
-     LayoutInfo;
+  template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
+  inline constexpr layout_info_e get_layout_info<basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>> =
+     basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>::idx_map_t::layout_info;
 
   // ---------------------- basic_array_view  --------------------------------
 
-  template <typename ValueType, int Rank, uint64_t StrideOrder, layout_info_e LayoutInfo, char Algebra, typename AccessorPolicy,
-            typename OwningPolicy>
+  template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   class basic_array_view {
 
     public:
-    /// ValueType FIXME 
-    using value_t = ValueType;
+    /// ValueType FIXME
+    using value_t    = ValueType;
     using value_type = ValueType;
-
-    ///
-    using regular_t = basic_array<ValueType, Rank, StrideOrder, Algebra, mem::heap>;
-    ///
-    using view_t = basic_array_view<ValueType, Rank, StrideOrder, LayoutInfo, Algebra, AccessorPolicy, OwningPolicy>;
-    ///
-    using const_view_t = basic_array_view<ValueType const, Rank, StrideOrder, LayoutInfo, Algebra, AccessorPolicy, OwningPolicy>;
-    ///
-    using no_const_view_t = basic_array_view<std::remove_const_t<ValueType>, Rank, StrideOrder, LayoutInfo, Algebra, AccessorPolicy, OwningPolicy>;
 
     //using value_as_template_arg_t = ValueType;
     using storage_t = typename OwningPolicy::template handle<ValueType>;
-    using idx_map_t = idx_map<Rank, StrideOrder, LayoutInfo>;
+    using idx_map_t = typename Layout::template mapping<Rank>;
+
+    ///
+    using regular_t = basic_array<ValueType, Rank, layout<idx_map_t::stride_order_encoded, layout_info_e::contiguous>, Algebra, heap>;
+    ///
+    using view_t = basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
+    ///
+    using const_view_t = basic_array_view<ValueType const, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
+    ///
+    using no_const_view_t = basic_array_view<std::remove_const_t<ValueType>, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
 
     static constexpr int rank      = Rank;
     static constexpr bool is_view  = true;
@@ -104,8 +99,8 @@ namespace nda {
 
     private:
     template <typename IdxMap>
-    using my_view_template_t = basic_array_view<ValueType, IdxMap::rank(), permutations::encode(IdxMap::stride_order), IdxMap::layout_info, Algebra,
-                                                AccessorPolicy, OwningPolicy>;
+    using my_view_template_t =
+       basic_array_view<ValueType, IdxMap::rank(), layout<IdxMap::stride_order_encoded, IdxMap::layout_info>, Algebra, AccessorPolicy, OwningPolicy>;
 
     idx_map_t _idx_m;
     storage_t _storage;

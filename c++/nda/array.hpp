@@ -11,7 +11,7 @@ namespace nda {
   // BEGIN_REMOVE_FOR_MATRIX
   // Class template argument deduction
   template <typename T>
-  basic_array(T)->basic_array<get_value_t<std::decay_t<T>>, get_rank<std::decay_t<T>>, 0, 'A', mem::heap>;
+  basic_array(T)->basic_array<get_value_t<std::decay_t<T>>, get_rank<std::decay_t<T>>, C_contiguous_layout, 'A', heap>;
 
   // FIXME : in array as static ?
   namespace details {
@@ -28,24 +28,24 @@ namespace nda {
 
   // ---------------------- array--------------------------------
 
-  template <typename ValueType, int Rank, uint64_t StrideOrder, char Algebra, typename ContainerPolicy>
+  template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
   class basic_array {
     static_assert(!std::is_const<ValueType>::value, "ValueType can not be const. WHY ?");
 
     public:
     ///
-    using value_t = ValueType;
+    using value_t    = ValueType;
     using value_type = ValueType;
 
     ///
     using regular_t = basic_array;
     ///
-    using view_t = basic_array_view<ValueType, Rank, StrideOrder, layout_info_e::contiguous, Algebra, default_accessor, mem::borrowed>;
+    using view_t = basic_array_view<ValueType, Rank, Layout, Algebra, default_accessor, borrowed>;
     ///
-    using const_view_t = basic_array_view<ValueType const, Rank, StrideOrder, layout_info_e::contiguous, Algebra, default_accessor, mem::borrowed>;
+    using const_view_t = basic_array_view<ValueType const, Rank, Layout, Algebra, default_accessor, borrowed>;
 
-    using storage_t = mem::heap::handle<ValueType>;
-    using idx_map_t = idx_map<Rank, StrideOrder, layout_info_e::contiguous>;
+    using storage_t = heap::handle<ValueType>;
+    using idx_map_t = typename Layout::template mapping<Rank>;
 
     //    static constexpr uint64_t stride_order = StrideOrder;
     //  static constexpr layout_info_e stride_order= layout_info_e::contiguous;
@@ -59,8 +59,8 @@ namespace nda {
     using AccessorPolicy = default_accessor;
 
     template <typename IdxMap>
-    using my_view_template_t = basic_array_view<ValueType, IdxMap::rank(), permutations::encode(IdxMap::stride_order), IdxMap::layout_info, Algebra,
-                                                default_accessor, mem::borrowed>;
+    using my_view_template_t = basic_array_view<ValueType, IdxMap::rank(), layout<IdxMap::stride_order_encoded, IdxMap::layout_info>, Algebra,
+                                                default_accessor, borrowed>;
 
     idx_map_t _idx_m;
     storage_t _storage;
