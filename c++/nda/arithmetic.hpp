@@ -25,10 +25,10 @@ namespace nda {
 
   // Get the layout info recursively
   template <char OP, typename L, typename R>
-  inline constexpr layout_info_e get_layout_info<expr<OP, L, R>> = expr<OP, L, R>::layout_info;
+  inline constexpr layout_prop_e get_layout_prop<expr<OP, L, R>> = expr<OP, L, R>::layout_prop;
 
   template <char OP, typename L>
-  inline constexpr layout_info_e get_layout_info<expr_unary<OP, L>> = get_layout_info<std::decay_t<L>>;
+  inline constexpr layout_prop_e get_layout_prop<expr_unary<OP, L>> = get_layout_prop<std::decay_t<L>>;
 
   // true iif rank or L and R is one (or they are scalar)
   template <typename L, typename R>
@@ -59,8 +59,8 @@ namespace nda {
 
     static constexpr char algebra = (l_is_scalar ? get_algebra<R_t> : get_algebra<L_t>);
 
-    static constexpr layout_info_e layout_info =
-       (l_is_scalar ? get_layout_info<R_t> : (r_is_scalar ? get_layout_info<L_t> : get_layout_info<R_t> | get_layout_info<L_t>));
+    static constexpr layout_prop_e layout_prop =
+       (l_is_scalar ? get_layout_prop<R_t> : (r_is_scalar ? get_layout_prop<L_t> : get_layout_prop<R_t> | get_layout_prop<L_t>));
 
     constexpr auto shape() const {
       if constexpr (l_is_scalar) {

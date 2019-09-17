@@ -18,7 +18,7 @@ std::array<long, sizeof...(INT)> ma(INT... i) {
 
 TEST(idxstat, Construct) { // NOLINT
 
-  idx_map<3, 0, layout_info_e::none> i1{{1, 2, 3}};
+  idx_map<3, 0, layout_prop_e::none> i1{{1, 2, 3}};
 
   std::cerr << i1 << std::endl;
   EXPECT_TRUE(i1.lengths() == (ma(1, 2, 3))); //NOLINT
@@ -29,7 +29,7 @@ TEST(idxstat, Construct) { // NOLINT
 
 TEST(idxstat, eval) { // NOLINT
 
-  idx_map<3, 0, layout_info_e::none> i1{{2, 7, 3}};
+  idx_map<3, 0, layout_prop_e::none> i1{{2, 7, 3}};
   EXPECT_TRUE(i1.strides() == (ma(21, 3, 1))); //NOLINT
 
   EXPECT_EQ(i1(1, 3, 2), 21 * 1 + 3 * 3 + 2 * 1); //NOLINT
@@ -39,7 +39,7 @@ TEST(idxstat, eval) { // NOLINT
 
 //TEST(idxstat, boundcheck) { // NOLINT
 
-//idx_map<3, 0, layout_info_e::none> i1{{2, 7, 3}};
+//idx_map<3, 0, layout_prop_e::none> i1{{2, 7, 3}};
 ////i1(21, 3, 18);
 ////EXPECT_THROW(i1(21, 3, 18), std::exception); //NOLINT
 //}
@@ -48,11 +48,11 @@ TEST(idxstat, eval) { // NOLINT
 
 TEST(idxstat, slice) { // NOLINT
 
-  idx_map<3, 0, layout_info_e::none> i1{{1, 2, 3}};
+  idx_map<3, 0, layout_prop_e::none> i1{{1, 2, 3}};
 
   auto [offset2, i2] = slice_stride_order(i1, 0, _, 2);
 
-  idx_map<1, 0, layout_info_e::none> c2{{2}, {3}};
+  idx_map<1, 0, layout_prop_e::none> c2{{2}, {3}};
 
   std::cerr << i2 << std::endl;
   std::cerr << c2 << std::endl;
@@ -68,10 +68,10 @@ TEST(idxstat, slice) { // NOLINT
 
 TEST(idxstat, ellipsis) { // NOLINT
 
-  idx_map<3, 0, layout_info_e::none> i1{{1, 2, 3}};
+  idx_map<3, 0, layout_prop_e::none> i1{{1, 2, 3}};
   auto [offset2, i2] = slice_stride_order(i1, 0, ___);
 
-  idx_map<2, 0, layout_info_e::none> c2{{2, 3}, {3, 1}};
+  idx_map<2, 0, layout_prop_e::none> c2{{2, 3}, {3, 1}};
 
   std::cerr << i2 << std::endl;
   std::cerr << c2 << std::endl;
@@ -87,11 +87,11 @@ TEST(idxstat, ellipsis) { // NOLINT
 
 TEST(idxstat, ellipsis2) { // NOLINT
 
-  idx_map<5, 0, layout_info_e::none> i1{{1, 2, 3, 4, 5}};
+  idx_map<5, 0, layout_prop_e::none> i1{{1, 2, 3, 4, 5}};
   std::cerr << i1 << std::endl;
 
   auto [offset2, i2] = slice_stride_order(i1, 0, ___, 3, 2);
-  idx_map<2, 0, layout_info_e::none> c2{{2, 3}, {60, 20}};
+  idx_map<2, 0, layout_prop_e::none> c2{{2, 3}, {60, 20}};
 
   std::cerr << i2 << std::endl;
   std::cerr << c2 << std::endl;
@@ -103,7 +103,7 @@ TEST(idxstat, ellipsis2) { // NOLINT
 
 TEST(idxstat, iteratorC) { // NOLINT
 
-  idx_map<3, 0, layout_info_e::none> i1{{2, 3, 4}};
+  idx_map<3, 0, layout_prop_e::none> i1{{2, 3, 4}};
 
   std::cerr << i1 << std::endl;
 
@@ -121,7 +121,7 @@ TEST(idxstat, iteratorC) { // NOLINT
 /*
 TEST(idxstat, iteratorD) { // NOLINT
 
-  idx_map<3, 0, layout_info_e::none> i1{{1, 2, 3}, stride_order::Fortran};
+  idx_map<3, 0, layout_prop_e::none> i1{{1, 2, 3}, stride_order::Fortran};
 
   std::cerr << i1 << std::endl;
 

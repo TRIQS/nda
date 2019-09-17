@@ -126,13 +126,13 @@ namespace nda::slice_static {
   // args_is_range_all : for each q, True iif the args is a range_all or an ellipsis [NO range here !]
   // stride_order : the stride_order of idx_map to be slided
   // Nlast : position, in q, of the argument corresponding to the fastest stride
-  // layout_info : to be sliced
+  // layout_prop : to be sliced
   //
   template <size_t Q, size_t N>
-  constexpr layout_info_e slice_layout_info(bool has_only_rangeall_and_long, std::array<bool, Q> const &args_is_range_all, int Nlast,
-                                            std::array<int, N> const &stride_order_in, layout_info_e layout_info) {
+  constexpr layout_prop_e slice_layout_prop(bool has_only_rangeall_and_long, std::array<bool, Q> const &args_is_range_all, int Nlast,
+                                            std::array<int, N> const &stride_order_in, layout_prop_e layout_prop) {
 
-    if (not has_only_rangeall_and_long) return layout_info_e::none;
+    if (not has_only_rangeall_and_long) return layout_prop_e::none;
     // count the number of times 1 0 appears args_in_range
     // we must traverse in the order of the stride_order ! (in memory order, slowest to fastest)
     int n_10_pattern = 0;
@@ -144,11 +144,11 @@ namespace nda::slice_static {
     bool rangeall_are_grouped_in_memory_and_fastest = (n_10_pattern == 0);
     bool last_is_rangeall                           = args_is_range_all[Nlast];
 
-    layout_info_e r = layout_info_e::none;
+    layout_prop_e r = layout_prop_e::none;
 
-    if ((layout_info & layout_info_e::contiguous) and rangeall_are_grouped_in_memory_and_fastest) r = r | layout_info_e::contiguous;
-    if ((layout_info & layout_info_e::strided_1d) and rangeall_are_grouped_in_memory) r = r | layout_info_e::strided_1d;
-    if ((layout_info & layout_info_e::smallest_stride_is_one) and last_is_rangeall) r = r | layout_info_e::smallest_stride_is_one;
+    if ((layout_prop & layout_prop_e::contiguous) and rangeall_are_grouped_in_memory_and_fastest) r = r | layout_prop_e::contiguous;
+    if ((layout_prop & layout_prop_e::strided_1d) and rangeall_are_grouped_in_memory) r = r | layout_prop_e::strided_1d;
+    if ((layout_prop & layout_prop_e::smallest_stride_is_one) and last_is_rangeall) r = r | layout_prop_e::smallest_stride_is_one;
 
     return r;
   }
@@ -220,11 +220,11 @@ namespace nda::slice_static {
 
     static constexpr std::array<int, P> mem_stride_order = sliced_mem_stride_order(IdxMap::stride_order, n_of_p);
 
-    // Compute the new layout_info
+    // Compute the new layout_prop
     static constexpr bool has_only_rangeall_and_long = ((std::is_constructible_v<long, Args> or std::is_base_of_v<range_all, Args>)and...);
 
-    static constexpr layout_info_e li = slice_layout_info(has_only_rangeall_and_long, args_is_range_all, q_of_n(IdxMap::stride_order[N - 1], e_pos, e_len),
-                                                          IdxMap::stride_order, IdxMap::layout_info);
+    static constexpr layout_prop_e li = slice_layout_prop(has_only_rangeall_and_long, args_is_range_all, q_of_n(IdxMap::stride_order[N - 1], e_pos, e_len),
+                                                          IdxMap::stride_order, IdxMap::layout_prop);
 
     long offset = (get_offset(std::get<q_of_n(Ns, e_pos, e_len)>(argstie), std::get<Ns>(idxm.strides())) + ... + 0);
 

@@ -48,7 +48,7 @@ namespace nda {
     using idx_map_t = typename Layout::template mapping<Rank>;
 
     //    static constexpr uint64_t stride_order = StrideOrder;
-    //  static constexpr layout_info_e stride_order= layout_info_e::contiguous;
+    //  static constexpr layout_prop_e stride_order= layout_prop_e::contiguous;
 
     static constexpr int rank      = Rank;
     static constexpr bool is_const = false;
@@ -59,7 +59,7 @@ namespace nda {
     using AccessorPolicy = default_accessor;
 
     template <typename IdxMap>
-    using my_view_template_t = basic_array_view<ValueType, IdxMap::rank(), layout<IdxMap::stride_order_encoded, IdxMap::layout_info>, Algebra,
+    using my_view_template_t = basic_array_view<ValueType, IdxMap::rank(), layout<IdxMap::stride_order_encoded, IdxMap::layout_prop>, Algebra,
                                                 default_accessor, borrowed>;
 
     idx_map_t _idx_m;

@@ -55,15 +55,15 @@ namespace nda {
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   inline constexpr char get_algebra<basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>> = Algebra;
 
-  // ---------------------- get_layout_info --------------------------------
+  // ---------------------- get_layout_prop --------------------------------
 
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
-  inline constexpr layout_info_e get_layout_info<basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>> =
-     basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>::idx_map_t::layout_info;
+  inline constexpr layout_prop_e get_layout_prop<basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>> =
+     basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>::idx_map_t::layout_prop;
 
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
-  inline constexpr layout_info_e get_layout_info<basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>> =
-     basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>::idx_map_t::layout_info;
+  inline constexpr layout_prop_e get_layout_prop<basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>> =
+     basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>::idx_map_t::layout_prop;
 
   // ---------------------- basic_array_view  --------------------------------
 
@@ -80,7 +80,7 @@ namespace nda {
     using idx_map_t = typename Layout::template mapping<Rank>;
 
     ///
-    using regular_t = basic_array<ValueType, Rank, layout<idx_map_t::stride_order_encoded, layout_info_e::contiguous>, Algebra, heap>;
+    using regular_t = basic_array<ValueType, Rank, layout<idx_map_t::stride_order_encoded, layout_prop_e::contiguous>, Algebra, heap>;
     ///
     using view_t = basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
     ///
@@ -100,7 +100,7 @@ namespace nda {
     private:
     template <typename IdxMap>
     using my_view_template_t =
-       basic_array_view<ValueType, IdxMap::rank(), layout<IdxMap::stride_order_encoded, IdxMap::layout_info>, Algebra, AccessorPolicy, OwningPolicy>;
+       basic_array_view<ValueType, IdxMap::rank(), layout<IdxMap::stride_order_encoded, IdxMap::layout_prop>, Algebra, AccessorPolicy, OwningPolicy>;
 
     idx_map_t _idx_m;
     storage_t _storage;
