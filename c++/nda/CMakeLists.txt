@@ -1,7 +1,7 @@
 file(GLOB_RECURSE sources *.cpp)
 add_library(nda_c ${sources})
 
-# Link against dependencies
+# Enable warnings
 target_link_libraries(nda_c PRIVATE project_warnings)
 
 # Configure compilation
@@ -17,67 +17,49 @@ install(TARGETS nda_c EXPORT nda-targets DESTINATION lib)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
 
 
-# ---------------------------------
-# Lapack
-# ---------------------------------
-
-## --------- FIXME _______________
-
-message(STATUS "-------- Lapack detection -------------")
-
-find_package(LAPACK REQUIRED)
-
-message(STATUS "Lapack libraries : ${LAPACK_LIBRARIES}")
-message(STATUS "Lapack vendor : ${BLA_VENDOR}")
-
-list(REMOVE_DUPLICATES LAPACK_LIBRARIES)
-add_library(blas_lapack INTERFACE)
-target_link_libraries(blas_lapack INTERFACE ${LAPACK_LIBRARIES})
-target_compile_options(blas_lapack INTERFACE ${LAPACK_LINKER_FLAGS})
-
-target_link_libraries(nda_c PRIVATE blas_lapack)
-
-install(TARGETS blas_lapack EXPORT  nda-targets)
-
-# ---------------------------------
-# MPI :FIXME SAME AS TRIQS
-# ---------------------------------
+# ========= Additional Depdencies ==========
 
 message(STATUS "-------- MPI detection -------------")
-# We use MPI in C only, not the C++ bindings.
-find_package(MPI)
 
-if(NOT MPI_C_FOUND)
- message(FATAL_ERROR "TRIQS requires MPI")
-endif()
-message(STATUS "MPI C compiler : ${MPI_C_COMPILER}")
-message(STATUS "MPI_COMPILE_FLAGS : ${MPI_C_COMPILE_FLAGS} ")
-message(STATUS "MPI_C_INCLUDE_PATH : ${MPI_C_INCLUDE_PATH}")
-message(STATUS "MPI_C_LIBRARIES : ${MPI_C_LIBRARIES}")
-message(STATUS "MPI_CXX_LIBRARIES : ${MPI_CXX_LIBRARIES}")
+find_package(MPI REQUIRED)
 
-# FIXME : we should not link to CXX lib, but openmpi uses them by default apparently on Linux
-
-separate_arguments(MPI_C_COMPILE_FLAGS) # Convert to list
-
+# Create an interface target
 add_library(mpi INTERFACE)
 target_include_directories(mpi SYSTEM INTERFACE ${MPI_C_INCLUDE_PATH})
-target_link_libraries(mpi INTERFACE ${MPI_C_LIBRARIES} ${MPI_CXX_LIBRARIES})
+target_link_libraries(mpi INTERFACE ${MPI_C_LIBRARIES})
+separate_arguments(MPI_C_COMPILE_FLAGS) # Convert to list
 target_compile_options(mpi INTERFACE ${MPI_C_COMPILE_FLAGS})
 
+# Link against interface target and export
 target_link_libraries(nda_c PUBLIC mpi)
-target_include_directories(nda_c SYSTEM PUBLIC ${MPI_C_INCLUDE_PATH})
 install(TARGETS mpi EXPORT nda-targets)
 
-if(NOT MPIEXEC_EXECUTABLE) # Backward compatibility for older FindMPI.cmake
+# Backward compatibility for older FindMPI.cmake
+if(NOT MPIEXEC_EXECUTABLE)
   set(MPIEXEC_EXECUTABLE ${MPIEXEC} CACHE FILENAME "MPI Executable")
 endif()
+
 # Compatibility to Open-MPI 3.0.0: check whether MPI executable has option --oversubscribe and add it 
 execute_process(COMMAND ${MPIEXEC_EXECUTABLE} --oversubscribe ${MPIEXEC_NUMPROC_FLAG} 4 ${MPIEXEC_PREFLAGS} ls ${MPIEXEC_POSTFLAGS} RESULT_VARIABLE HAS_NO_OVERSUBSCRIBE OUTPUT_QUIET ERROR_QUIET)
 if(NOT HAS_NO_OVERSUBSCRIBE)
   list(APPEND MPIEXEC_PREFLAGS --oversubscribe)
   set(MPIEXEC_PREFLAGS ${MPIEXEC_PREFLAGS} CACHE STRING "These flags will be directly before the executable that is being run by mpiexec." FORCE)
 endif()
+
+
+message(STATUS "-------- Lapack detection -------------")
+
+find_package(LAPACK REQUIRED)
+
+# Create an interface target
+add_library(blas_lapack INTERFACE)
+list(REMOVE_DUPLICATES LAPACK_LIBRARIES)
+target_link_libraries(blas_lapack INTERFACE ${LAPACK_LIBRARIES})
+target_compile_options(blas_lapack INTERFACE ${LAPACK_LINKER_FLAGS})
+
+# Link against interface target and export
+target_link_libraries(nda_c PRIVATE blas_lapack)
+install(TARGETS blas_lapack EXPORT nda-targets)
 
 
 # ========= Static Analyzer Checks ==========
