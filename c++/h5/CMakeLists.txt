@@ -78,12 +78,12 @@ option(ASAN OFF "Compile library and executables with LLVM Address Sanitizer")
 option(UBSAN OFF "Compile library and executables with LLVM Undefined Behavior Sanitizer")
 
 if(ASAN)
-  find_package(sanitizer REQUIRED "asan")
+  // Already found by nda
   target_link_libraries(h5_interface PUBLIC asan)
   install(TARGETS asan EXPORT hdf5-targets)
 endif()
 if(UBSAN)
-  find_package(sanitizer REQUIRED "ubsan")
+  // Already found by nda
   target_link_libraries(h5_interface PUBLIC ubsan)
   install(TARGETS ubsan EXPORT hdf5-targets)
 endif()
