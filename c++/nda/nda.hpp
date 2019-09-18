@@ -23,6 +23,8 @@
 // for python code generator, we need to know what to include...
 #define TRIQS_INCLUDED_ARRAYS
 
+#include "std_complex_missing_ops.hpp"
+
 // The basic classes
 #include <nda/array.hpp>
 #include <nda/array_view.hpp>

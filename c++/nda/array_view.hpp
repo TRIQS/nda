@@ -6,6 +6,7 @@
 #include "assignment.hpp"
 #include "accessors.hpp"
 #include "iterator_adapter.hpp"
+#include "mpi.hpp"
 
 namespace nda {
 
