@@ -53,5 +53,3 @@ BENCH_ABC_1d(ex_tmp);
 BENCH_ABC_1d(ex_tmp_manual_loop);
 BENCH_ABC_1d(for_loop);
 BENCH_ABC_1d(pointers);
-
-BENCHMARK_MAIN();

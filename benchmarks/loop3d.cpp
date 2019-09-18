@@ -86,5 +86,3 @@ BENCH_ABC_3d(ex_tmp_manual_loop);
 BENCH_ABC_3d(for_loop);
 BENCH_ABC_3d(pointers3dloop);
 BENCH_ABC_3d(pointers1dloop);
-
-BENCHMARK_MAIN();
