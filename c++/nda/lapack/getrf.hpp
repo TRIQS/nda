@@ -27,24 +27,25 @@
 #include "tools.hpp"
 #include "qcache.hpp"
 
-namespace triqs::arrays::lapack {
-
-  using namespace blas_lapack_tools;
+namespace nda::lapack {
 
   /**
-  * Calls getrf on a matrix or view
-  * Takes care of making temporary copies if necessary
-  */
-  template <typename MT>
-  typename std::enable_if<is_blas_lapack_type<typename MT::value_type>::value, int>::type getrf(MT &A, arrays::vector<int> &ipiv,
-                                                                                                bool assert_fortran_order = false) {
-    if (assert_fortran_order && A.memory_layout_is_c()) TRIQS_RUNTIME_ERROR << "matrix passed to getrf is not in Fortran order";
-    reflexive_qcache<MT> Ca(A);
-    auto dm = std::min(first_dim(Ca()), second_dim(Ca()));
+   * Calls getrf on a matrix or view
+   * @tparam M
+   * @param m
+   * @param ipiv
+   * @param assert_fortran_order Ensure the matrix is in Fortran Order 
+   */
+  template <typename M>
+  int getrf(M &m, array<int, 1> &ipiv, bool assert_fortran_order = false) REQUIRES(is_regular_or_view_v<M> and (M::rank == 2)) {
+    static_assert(is_blas_lapack_v<M>, "Matrices must have the same element type and it must be double, complex ...");
+    if (assert_fortran_order && m.indexmap().is_stride_order_Fortran()) TRIQS_RUNTIME_ERROR << "matrix passed to getrf is not in Fortran order";
+    auto Ca = reflexive_qcache(m);
+    auto dm = std::min(Ca().extent(0), Ca().extent(1));
     if (ipiv.size() < dm) ipiv.resize(dm);
     int info;
     f77::getrf(get_n_rows(Ca()), get_n_cols(Ca()), Ca().data_start(), get_ld(Ca()), ipiv.data_start(), info);
     return info;
   }
 
-} // namespace triqs::arrays::lapack
+} // namespace nda::lapack
