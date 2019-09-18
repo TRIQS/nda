@@ -1,5 +1,6 @@
 #include <type_traits>
 
+
 #include <H5Ipublic.h>
 #include <H5Fpublic.h>
 #include <H5Gpublic.h>
@@ -36,6 +37,8 @@ namespace h5 {
   template <> hid_t hdf5_type<long double> = H5T_NATIVE_LDOUBLE;
 
   template <> hid_t hdf5_type<std::complex<double>> = H5T_NATIVE_DOUBLE;
+  template <> hid_t hdf5_type<std::complex<long double>> = H5T_NATIVE_LDOUBLE;
+  template <> hid_t hdf5_type<std::complex<float>> = H5T_NATIVE_FLOAT;
 
   // bool. Use a lambda to initialize it.
   template <>
