@@ -59,8 +59,8 @@ namespace nda {
     using AccessorPolicy = default_accessor;
 
     template <typename IdxMap>
-    using my_view_template_t = basic_array_view<ValueType, IdxMap::rank(), layout<IdxMap::stride_order_encoded, IdxMap::layout_prop>, Algebra,
-                                                default_accessor, borrowed>;
+    using my_view_template_t =
+       basic_array_view<ValueType, IdxMap::rank(), layout<IdxMap::stride_order_encoded, IdxMap::layout_prop>, Algebra, default_accessor, borrowed>;
 
     idx_map_t _idx_m;
     storage_t _storage;
@@ -126,6 +126,19 @@ namespace nda {
       static_assert(std::is_convertible_v<get_value_t<A>, value_t>,
                     "Can not construct the array. ValueType can not be constructed from the value_t of the argument");
       nda::details::assignment(*this, x);
+    }
+
+    /** 
+     * [Advanced] From any type which has a .shape() and can be assigned from
+     * Used for simple lazy operations, like mpi, and or other lazy transformation.
+     * Constructs from x.shape() and use assign. Cf code
+     * 
+     * @tparam Lazy A type modeling NdArray
+     * @param lazy 
+     */
+    template <typename Lazy>
+    basic_array(Lazy const &lazy) REQUIRES(is_assign_rhs<Lazy>) : basic_array{lazy.shape()} {
+      assign(*this, lazy);
     }
 
     /** 
@@ -226,6 +239,20 @@ namespace nda {
       static_assert(is_ndarray_v<RHS> or is_scalar_for_v<RHS, basic_array>, "Assignment : RHS not supported");
       if constexpr (is_ndarray_v<RHS>) resize(rhs.shape());
       nda::details::assignment(*this, rhs);
+      return *this;
+    }
+
+    /** 
+     * [Advanced] Assign from any type which has a .shape() and can be assigned from
+     * Used for simple lazy operations, like mpi, and or other lazy transformation.
+     * 
+     * @tparam Lazy A type modeling NdArray
+     * @param lazy 
+     */
+    template <typename Lazy>
+    basic_array &operator=(Lazy const &lazy) REQUIRES(is_assign_rhs<Lazy>) {
+      resize(lazy.shape());
+      assign(*this, lazy);
       return *this;
     }
 

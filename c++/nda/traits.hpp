@@ -63,6 +63,17 @@ namespace nda {
   //template <typename T>
   //inline constexpr bool is_2d_ndarray_v = is_ndarray_v<T> and ((get_rank<T>) == 2);
 
+  // --------------------------- concept : is_assign_rhs------------------------
+  // Mark classes which are NOT nd_array but have :
+  // .shape()
+  // can be put at the RHS of assignment or used in construction of array
+  /// A trait to mark classes modeling the Ndarray concept
+  template <typename T>
+  inline constexpr bool is_assign_rhs = false;
+
+  //template <typename T>
+  //inline constexpr bool is_2d_ndarray_v = is_ndarray_v<T> and ((get_rank<T>) == 2);
+
   // --------------------------- get_rank ------------------------
 
   /// A trait to get the rank of an object with ndarray concept
@@ -106,10 +117,10 @@ namespace nda {
   // contiguous -> strided_1d  -> none
   // contiguous -> smallest_stride_is_one  -> none
   //
-  inline constexpr bool is_degradable(layout_prop_e from , layout_prop_e into) { 
+  inline constexpr bool is_degradable(layout_prop_e from, layout_prop_e into) {
     if (from == layout_prop_e::contiguous) return true;
     if (from == layout_prop_e::none) return (into == layout_prop_e::none);
-    return ( (into == layout_prop_e::none) or (into == from));
+    return ((into == layout_prop_e::none) or (into == from));
   }
 
   //  operator for the layout_prop_e

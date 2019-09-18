@@ -1,5 +1,7 @@
 #pragma once
 
+#include "std_complex_missing_ops.hpp"
+
 #include "./h5/file.hpp"
 #include "./h5/group.hpp"
 #include "./h5/format.hpp"
@@ -13,19 +15,6 @@
 //#include "./h5/stl/tuple.hpp"
 //#include "./h5/stl/optional.hpp"
 //#include "./h5/stl/variant.hpp"
-
-// Correction of a bug in STL : 
-namespace std { // has to be in the right namespace for ADL !
-
-  template <typename T> std::complex<T> operator+(std::complex<T> const &a, long b) { return a + T(b); }
-  template <typename T> std::complex<T> operator+(long a, std::complex<T> const &b) { return T(a) + b; }
-  template <typename T> std::complex<T> operator-(std::complex<T> const &a, long b) { return a - T(b); }
-  template <typename T> std::complex<T> operator-(long a, std::complex<T> const &b) { return T(a) - b; }
-  template <typename T> std::complex<T> operator*(std::complex<T> const &a, long b) { return a * T(b); }
-  template <typename T> std::complex<T> operator*(long a, std::complex<T> const &b) { return T(a) * b; }
-  template <typename T> std::complex<T> operator/(std::complex<T> const &a, long b) { return a / T(b); }
-  template <typename T> std::complex<T> operator/(long a, std::complex<T> const &b) { return T(a) / b; }
-} // namespace std
 
 // FIXME : Still needed ?
 // for python code generator, we need to know what has to been included.
