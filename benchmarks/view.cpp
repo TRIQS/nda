@@ -180,5 +180,3 @@ BENCHMARK(direct8)->Arg(30);
   //}
 //}
 //BENCHMARK(direct_1d)->Arg(30)->Arg(300);
-
-BENCHMARK_MAIN();

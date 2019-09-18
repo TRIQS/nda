@@ -168,5 +168,3 @@ static void foreach_manual_simple(benchmark::State &state) {
 }
 BENCHMARK(foreach_manual_simple);
 */
-
-BENCHMARK_MAIN();

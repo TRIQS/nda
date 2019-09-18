@@ -72,5 +72,3 @@ BENCH_ABC_2d(ex_tmp_manual_loop);
 BENCH_ABC_2d(for_loop);
 BENCH_ABC_2d(pointers2dloop);
 BENCH_ABC_2d(pointers1dloop);
-
-BENCHMARK_MAIN();
