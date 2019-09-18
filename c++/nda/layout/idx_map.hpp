@@ -128,7 +128,9 @@ namespace nda {
     // ----------------  Constructors -------------------------
 
     /// Default constructor. Lengths and Strides are not initiliazed.
-    idx_map() = default;
+    idx_map() {
+      for (int u = 0; u < Rank; ++u) len[u] = 0; // to have the proper invariant of the array : shape = (0,0,...) and pointer is null
+    }
 
     ///
     idx_map(idx_map const &) = default;
