@@ -39,7 +39,7 @@ namespace nda {
     int root;            //
     bool all;
 
-    /// compute the shape of the target array
+    /// compute the shape of the target array. WARNING : MAKES A MPI CALL.
     auto shape() const {
       auto dims      = ref.shape();
       long slow_size = dims[0];
@@ -62,7 +62,7 @@ namespace nda {
     int root;            //
     bool all;
 
-    /// compute the shape of the target array
+    /// compute the shape of the target array. WARNING : MAKES A MPI CALL.
     auto shape() const {
       auto dims      = ref.shape();
       long slow_size = dims[0];
@@ -141,12 +141,13 @@ namespace nda {
     auto D          = mpi::mpi_type<typename A::value_type>::get();
 
     bool in_place = (lhs.data_start() == lazy_op.ref.data_start());
+    auto sha = lazy_op.shape(); // WARNING : Keep this out of the if condition (shape USES MPI) !
 
     // some checks.
     if (in_place) {
       if (rhs_n_elem != lhs.size()) NDA_RUNTIME_ERROR << "mpi reduce of array : same pointer to data start, but different number of elements !";
     } else { // check no overlap
-      if ((c.rank() == root) || lazy_op.all) resize_or_check_if_view(lhs, lazy_op.shape());
+      if ((c.rank() == root) || lazy_op.all) resize_or_check_if_view(lhs, sha);
       if (std::abs(lhs.data_start() - lazy_op.ref.data_start()) < rhs_n_elem) NDA_RUNTIME_ERROR << "mpi reduce of array : overlapping arrays !";
     }
 
@@ -173,7 +174,8 @@ namespace nda {
 
     static_assert(has_layout_contiguous<A>, "Non contigous view in mpi_broadcast are not implemented");
 
-    resize_or_check_if_view(lhs, lazy_op.shape());
+    auto sha = lazy_op.shape(); // WARNING : Keep this out of any if condition (shape USES MPI) !
+    resize_or_check_if_view(lhs, sha);
 
     auto c           = lazy_op.c;
     auto slow_size   = lazy_op.ref.extent(0);
@@ -205,7 +207,8 @@ namespace nda {
     int sendcount   = lazy_op.ref.size();
     auto D          = mpi::mpi_type<typename A::value_type>::get();
 
-    if (lazy_op.all || (lazy_op.c.rank() == lazy_op.root)) resize_or_check_if_view(lhs, lazy_op.shape());
+    auto sha = lazy_op.shape(); // WARNING : Keep this out of the if condition (shape USES MPI) !
+    if (lazy_op.all || (lazy_op.c.rank() == lazy_op.root)) resize_or_check_if_view(lhs, sha);
 
     void *lhs_p       = lhs.data_start();
     const void *rhs_p = lazy_op.ref.data_start();
