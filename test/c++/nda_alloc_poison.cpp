@@ -10,9 +10,8 @@ TEST(Array, Poison) {
 
 #if defined(__has_feature)
 #if __has_feature(address_sanitizer)
-
+  long *p;
   {
-   long *p;
     nda::array<long, 2> A(3, 3);
     A() = 3;
     p   = &(A(0, 0));
