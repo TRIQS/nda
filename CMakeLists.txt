@@ -119,7 +119,6 @@ endif()
 # Benchmarks
 option(Build_Bench "Benchmarks" ON)
 if(Build_Bench AND NOT ASAN AND NOT UBSAN)
-  enable_testing()
   add_subdirectory(benchmarks)
 endif()
 

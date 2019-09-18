@@ -1,4 +1,5 @@
 # Build google benchmark
+set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "")
 add_subdirectory(google_benchmark EXCLUDE_FROM_ALL)
 
 # The list of benchs
