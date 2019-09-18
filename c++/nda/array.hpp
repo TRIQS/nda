@@ -284,7 +284,7 @@ namespace nda {
     [[gnu::noinline]] void resize(shape_t<Rank> const &shape) {
       _idx_m = idx_map_t(shape);
       // Construct a storage only if the new index is not compatible (size mismatch).
-      if (_storage.size() != _idx_m.size()) _storage = mem::handle<ValueType, 'R'>{_idx_m.size()};
+      if (_storage.is_null() or (_storage.size() != _idx_m.size())) _storage = mem::handle<ValueType, 'R'>{_idx_m.size()};
     }
 
     // --------------------------
