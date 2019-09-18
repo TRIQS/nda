@@ -78,10 +78,8 @@ namespace h5::array_interface {
     // dataspace for the dataset in the file
     dataspace file_dspace = H5Screate_simple(v.slab.rank(), v.slab.count.data(), NULL);
 
-    H5_PRINT(v.ty);
-    H5_PRINT(hdf5_type<int>);
     // create the dataset in the file
-    dataset ds = H5Dcreate2(hid_t(g), name.c_str(), v.ty, file_dspace, H5P_DEFAULT, cparms, H5P_DEFAULT);
+    dataset ds = H5Dcreate2(g, name.c_str(), v.ty, file_dspace, H5P_DEFAULT, cparms, H5P_DEFAULT);
     if (!ds.is_valid()) throw std::runtime_error("Cannot create the dataset " + name + " in the group" + g.name());
 
     // memory data space

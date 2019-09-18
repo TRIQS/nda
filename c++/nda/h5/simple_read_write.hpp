@@ -56,7 +56,6 @@ namespace nda {
    */
   template <typename A>
   void h5_write(h5::group g, std::string const &name, A const &a) REQUIRES(is_regular_or_view_v<A>) {
-    H5_PRINT(h5::hdf5_type<int>);
 
     // first case array of string
     if constexpr (std::is_same_v<typename A::value_t, std::string>) { // special case of string. Like vector of string

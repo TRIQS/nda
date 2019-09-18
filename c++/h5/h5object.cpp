@@ -1,6 +1,5 @@
 #include <type_traits>
 
-
 #include <H5Ipublic.h>
 #include <H5Fpublic.h>
 #include <H5Gpublic.h>
