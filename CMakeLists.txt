@@ -41,10 +41,7 @@ message(STATUS "-------- CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX} --------"
 
 # ############
 # Options
-
-add_subdirectory(mdspan)
-add_subdirectory(pybind11)
-#find_package(pybind11 CONFIG)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 # Default to Release build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -80,7 +77,7 @@ target_compile_options(project_warnings
 
 # #############
 # Load Dependencies
-
+add_subdirectory(mdspan)
 
 # #############
 # Build Project
@@ -91,8 +88,6 @@ add_subdirectory(c++/nda)
 # Build and install the h5 library
 add_subdirectory(c++/h5)
 
-# Build and install the python module
-include(cmake/FindPython.cmake)
 add_subdirectory(python/nda)
 
 # Tests
@@ -104,10 +99,7 @@ endif()
 
 # Benchmarks
 option(Build_Bench "Benchmarks" ON)
-if(Build_Bench)
-  if (ASAN OR UBSAN) 
-   MESSAGE(FATAL_ERROR "No ! I refuse to compile the benchmarks with sanitizers !!")
-  endif()
+if(Build_Bench AND NOT ASAN AND NOT UBSAN )
   enable_testing()
   add_subdirectory(benchmarks)
 endif()

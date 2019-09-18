@@ -1,8 +1,12 @@
+find_package(Python) 
+
 # We MUST make another library and link the module
 # since the visibility is different for pybind11 modules (= hidden)
 # and it must be the same for the h5_interface and the rest of the h5 files
 add_library(h5_interface_python python)
 target_link_libraries(h5_interface_python PRIVATE h5_interface __hdf5 python_and_numpy)
+
+add_subdirectory(pybind11)
 
 # Then the module and link __hdf5_python to it
 pybind11_add_module(_h5py _h5py.cpp)
