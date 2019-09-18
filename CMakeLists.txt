@@ -41,6 +41,8 @@ message(STATUS "-------- CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX} --------"
 
 # ############
 # Options
+
+# Make additional Find Modules available
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 # Default to Release build type
@@ -75,9 +77,24 @@ target_compile_options(project_warnings
     $<$<CXX_COMPILER_ID:Clang>:-Wno-gcc-compat>
 )
 
-# #############
-# Load Dependencies
-add_subdirectory(mdspan)
+# ---------------------------------
+# Resolve Clang Linktime Problems
+# CMake will adjust any linker flags from '-L path_to/mylib.so' to -lmylib
+# if the proper mylib.so is automatically found by the linker, i.e.
+# the directory comes first in LIBRARY_PATH.
+# The clang linker however ignores LIBRARY_PATH.
+# We thus explicitly add the content of LIBRARY_PATH to the LDFLAGS
+# FIXME For future cmake versions we should populate the
+# INTERFACE_LINK_DIRECTORIES of the triqs target
+# ---------------------------------
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" AND DEFINED ENV{LIBRARY_PATH})
+  string(REPLACE ":" ";" LINK_DIRS $ENV{LIBRARY_PATH})
+  foreach(dir ${LINK_DIRS})
+    string(APPEND CMAKE_SHARED_LINKER_FLAGS " -L${dir}")
+    string(APPEND CMAKE_MODULE_LINKER_FLAGS " -L${dir}")
+    string(APPEND CMAKE_EXE_LINKER_FLAGS " -L${dir}")
+  endforeach()
+endif()
 
 # #############
 # Build Project
@@ -88,10 +105,12 @@ add_subdirectory(c++/nda)
 # Build and install the h5 library
 add_subdirectory(c++/h5)
 
-add_subdirectory(python/nda)
+# Build and install the Python modules
+add_subdirectory(python/pybind11)
+add_subdirectory(python/h5)
 
 # Tests
-option(Build_Tests "Tests" ON)
+option(Build_Tests "Build tests" ON)
 if(Build_Tests)
   enable_testing()
   add_subdirectory(test)
@@ -99,7 +118,7 @@ endif()
 
 # Benchmarks
 option(Build_Bench "Benchmarks" ON)
-if(Build_Bench AND NOT ASAN AND NOT UBSAN )
+if(Build_Bench AND NOT ASAN AND NOT UBSAN)
   enable_testing()
   add_subdirectory(benchmarks)
 endif()

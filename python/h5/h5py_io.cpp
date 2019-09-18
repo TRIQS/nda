@@ -1,7 +1,7 @@
 #include <Python.h>
 #include <numpy/arrayobject.h>
 
-#include "python.hpp"
+#include "h5py_io.hpp"
 #include <h5/group.hpp>
 #include <h5/scalar.hpp>
 #include <h5/stl/string.hpp>

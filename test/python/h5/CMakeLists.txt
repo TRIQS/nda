@@ -5,7 +5,7 @@ macro(add_python_test testname)
 
  set(testname ${testname})
  add_test(py_${testname} ${PYTHON_INTERPRETER} ${CMAKE_CURRENT_SOURCE_DIR}/${testname}.py)
- set_property(TEST py_${testname} PROPERTY ENVIRONMENT PYTHONPATH=${CMAKE_BINARY_DIR}/python/nda:./:$ENV{PYTHONPATH})
+ set_property(TEST py_${testname} PROPERTY ENVIRONMENT PYTHONPATH=${CMAKE_BINARY_DIR}/python/h5:./:$ENV{PYTHONPATH})
 
  if(SANITIZER_RT_PRELOAD)
    set_property(TEST py_${testname} APPEND PROPERTY ENVIRONMENT ${SANITIZER_RT_PRELOAD})
