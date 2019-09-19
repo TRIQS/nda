@@ -1,17 +1,25 @@
-#include "./nda_test_common.hpp"
-#include <triqs/arrays/linalg/det_and_inverse.hpp>
-#include "triqs/arrays/blas_lapack/gtsv.hpp"
-#include <triqs/arrays/blas_lapack/stev.hpp>
-#include <triqs/arrays/blas_lapack/gelss.hpp>
-#include <triqs/arrays/blas_lapack/gesvd.hpp>
-#include <triqs/arrays/linalg/eigenelements.hpp>
-#include <triqs/utility/numeric_ops.hpp>
-#include <triqs/utility/complex_ops.hpp>
+#include "test_common.hpp"
+#include "nda/blas/gemm.hpp"
+//#include <nda/linalg/det_and_inverse.hpp>
+//#include "nda/blas_lapack/gtsv.hpp"
+//#include <nda/blas_lapack/stev.hpp>
+//#include <nda/blas_lapack/gelss.hpp>
+//#include <nda/blas_lapack/gesvd.hpp>
+//#include <nda/linalg/eigenelements.hpp>
 
-template <typename T, typename O1, typename O2, typename O3> void test_matmul(O1 o1, O2 o2, O3 o3, bool all = false) {
-  matrix<T> M1(2, 3, o1);
-  matrix<T> M2(3, 4, o2);
-  matrix<T> M3(o3), M4;
+using nda::matrix;
+using nda::range;
+using nda::matrix_view;
+using nda::matrix;
+using nda::C_layout;
+using nda::F_layout;
+namespace blas = nda::blas;
+
+template <typename T, typename L1, typename L2, typename L3>
+void test_matmul() {
+  matrix<T, L1> M1(2, 3);
+  matrix<T, L2> M2(3, 4);
+  matrix<T, L2> M3;
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 3; ++j) { M1(i, j) = i + j; }
   for (int i = 0; i < 3; ++i)
@@ -19,27 +27,28 @@ template <typename T, typename O1, typename O2, typename O3> void test_matmul(O1
 
   M3 = M1 * M2; //matmul(M1,M2);
 
-  M4   = M3;
-  M4() = 0;
+  auto M4 = M3;
+  M4 = 0;
   for (int i = 0; i < 2; ++i)
     for (int k = 0; k < 3; ++k)
       for (int j = 0; j < 4; ++j) M4(i, j) += M1(i, k) * M2(k, j);
   EXPECT_ARRAY_NEAR(M4, M3, 1.e-13);
 
   // recheck gemm_generic
-  blas::gemm_generic(1, M1, M2, 0, M4);
+  blas::generic::gemm(1, M1, M2, 0, M4);
   EXPECT_ARRAY_NEAR(M4, M3, 1.e-13);
 }
 
-template <typename T> void all_test_matmul() {
-  test_matmul<T>(C_LAYOUT, C_LAYOUT, C_LAYOUT);
-  test_matmul<T>(C_LAYOUT, C_LAYOUT, FORTRAN_LAYOUT);
-  test_matmul<T>(C_LAYOUT, FORTRAN_LAYOUT, FORTRAN_LAYOUT);
-  test_matmul<T>(C_LAYOUT, FORTRAN_LAYOUT, C_LAYOUT);
-  test_matmul<T>(FORTRAN_LAYOUT, FORTRAN_LAYOUT, FORTRAN_LAYOUT);
-  test_matmul<T>(FORTRAN_LAYOUT, C_LAYOUT, FORTRAN_LAYOUT);
-  test_matmul<T>(FORTRAN_LAYOUT, FORTRAN_LAYOUT, C_LAYOUT);
-  test_matmul<T>(FORTRAN_LAYOUT, C_LAYOUT, C_LAYOUT);
+template <typename T>
+void all_test_matmul() {
+  test_matmul<T, C_layout, C_layout, C_layout>();
+  test_matmul<T, C_layout, C_layout, F_layout>();
+  test_matmul<T, C_layout, F_layout, F_layout>();
+  test_matmul<T, C_layout, F_layout, C_layout>();
+  test_matmul<T, F_layout, F_layout, F_layout>();
+  test_matmul<T, F_layout, C_layout, F_layout>();
+  test_matmul<T, F_layout, F_layout, C_layout>();
+  test_matmul<T, F_layout, C_layout, C_layout>();
 }
 
 TEST(Matmul, Double) { all_test_matmul<double>(); }
@@ -62,7 +71,7 @@ TEST(Matmul, Promotion) {
 TEST(Matmul, Cache) {
   // testing with view for possible cache issue
 
-  array<std::complex<double>, 3> TMPALL(2, 2, 5);
+  nda::array<std::complex<double>, 3> TMPALL(2, 2, 5);
   TMPALL() = -1;
   matrix_view<std::complex<double>> TMP(TMPALL(range(), range(), 2));
   matrix<std::complex<double>> M1(2, 2), Res(2, 2);
@@ -80,9 +89,7 @@ TEST(Matmul, Cache) {
 
 TEST(Matmul, Alias) {
 
-  auto _ = range{};
-
-  array<dcomplex, 3> A(10, 2, 2);
+  nda::array<dcomplex, 3> A(10, 2, 2);
   A() = -1;
 
   A(4, _, _) = 1;
@@ -100,61 +107,28 @@ TEST(Matmul, Alias) {
   B1() = 2;
   B2() = 3;
 
-  B1 = make_clone(B1) * B2;
+  B1 = make_regular(B1) * B2;
   EXPECT_ARRAY_NEAR(B1, matrix<double>{{6, 0}, {0, 6}});
 }
 
 // ==============================================================
-
-TEST(Matvecmul, Double) {
-
-  matrix<double> A(5, 5, FORTRAN_LAYOUT), Ac(5, 5);
-  vector<double> MC(5), MB(5);
-
-  for (int i = 0; i < 5; ++i)
-    for (int j = 0; j < 5; ++j) A(i, j) = i + 2 * j + 1;
-
-  Ac = A;
-
-  MC() = 1;
-  MB() = 0;
-  range R(1, 3);
-
-  MB(R) = A(R, R) * MC(R);
-
-  EXPECT_ARRAY_NEAR(MB, vector<double>{0, 10, 12, 0, 0});
-
-  matrix_view<double> Acw = A.transpose();
-
-  auto MB_w = MB(R); // view !
-
-  blas::gemv(1, A(R, R), MC(R), 0, MB_w);
-  EXPECT_ARRAY_NEAR(MB, vector<double>{0, 10, 12, 0, 0});
-
-  blas::gemv(1, Ac(R, R), MC(R), 0, MB_w);
-  EXPECT_ARRAY_NEAR(MB, vector<double>{0, 10, 12, 0, 0});
-
-  blas::gemv(1, Acw(R, R), MC(R), 0, MB_w);
-  EXPECT_ARRAY_NEAR(MB, vector<double>{0, 9, 13, 0, 0});
-}
-
-// ==============================================================
-
+/*
 TEST(Matvecmul, Promotion) {
 
   matrix<int> Ai   = {{1, 2}, {3, 4}};
   matrix<double> A = {{1, 2}, {3, 4}};
-  vector<int> Ci, B     = {1, 1};
-  vector<double> Cd, Bd = {1, 1};
+  nda::array<int,1> Ci, B     = {1, 1};
+  nda::array<double,1> Cd, Bd = {1, 1};
 
   Cd = A * B;
   Ci = Ai * B;
 
   EXPECT_ARRAY_NEAR(Cd, Ci, 1.e-13);
 }
-
+*/
 // ==============================================================
-
+/*
+ *
 TEST(NDA, MatrixInverse) {
 
   matrix<double> W(3, 3, FORTRAN_LAYOUT), Wi(3, 3, FORTRAN_LAYOUT), A(FORTRAN_LAYOUT);
@@ -191,12 +165,14 @@ TEST(NDA, MatrixInverse) {
 }
 // ========================= tridiag matrix STEV  =====================================
 
-template <typename T> void check_eig(matrix<T> M, matrix_view<T> vectors, vector_view<double> values) {
+template <typename T>
+void check_eig(matrix<T> M, matrix_view<T> vectors, vector_view<double> values) {
   auto _ = range();
   for (auto i : range(0, first_dim(M))) { EXPECT_ARRAY_NEAR(M * vectors(i, _), values(i) * vectors(i, _), 1.e-13); }
 }
 
-template <typename Md, typename Me> void test(Md d, Me e) {
+template <typename Md, typename Me>
+void test(Md d, Me e) {
   using value_t = typename Me::value_type;
   using triqs::utility::conj;
 
@@ -370,7 +346,7 @@ TEST(blas_lapack, gelss) {
 
 TEST(eigenelements, test1) {
 
-  auto test = [](auto && A) {
+  auto test = [](auto &&A) {
     auto w = linalg::eigenelements(make_clone(A));
     check_eig(A, w.second(), w.first());
   };
@@ -384,7 +360,7 @@ TEST(eigenelements, test1) {
         A(j, i) = A(i, j);
       }
     test(A);
-    
+
     A()     = 0;
     A(0, 1) = 1;
     A(1, 0) = 1;
@@ -425,4 +401,4 @@ TEST(eigenelements, test1) {
     test(M);
   }
 }
-MAKE_MAIN
+*/

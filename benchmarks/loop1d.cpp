@@ -11,7 +11,7 @@ class ABC_1d : public benchmark::Fixture {
   public:
   nda::array<double, 1> a, b, c;
 
-  void SetUp(const ::benchmark::State &state) {
+  void SetUp(const ::benchmark::State &) {
     a.resize(N1);
     b.resize(N1);
     c.resize(N1);
@@ -19,7 +19,7 @@ class ABC_1d : public benchmark::Fixture {
     c = 0;
   }
 
-  void TearDown(const ::benchmark::State &state) {}
+  void TearDown(const ::benchmark::State &) {}
 };
 
 #define BENCH_ABC_1d(F)                                                                                                                              \

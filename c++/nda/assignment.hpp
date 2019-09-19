@@ -13,11 +13,6 @@ namespace nda::details {
 
     static_assert(!LHS::is_const, "Cannot assign to a const view !");
 
-    // if RHS is mpi_lazy
-    //if constexpr (std::is_base_of_v<mpi_lazy_array_tag, RHS>) {
-    //impl_assign_from_lazy_array(lhs, rhs);
-    //return;
-    //}
     // special case: we may have a direct memcopy
     if constexpr (is_regular_or_view_v<LHS> and is_regular_or_view_v<RHS> and not is_scalar_for_v<RHS, LHS>) { // the last case for array of array
       static_assert(std::is_assignable_v<typename LHS::value_t &, typename RHS::value_t>,

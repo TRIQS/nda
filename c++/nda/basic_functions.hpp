@@ -8,7 +8,7 @@ namespace nda {
   // FIXME MOVE THIS : A function, not a traits
   // general make_regular
   template <typename A>
-  typename A::regular_t make_regular(A &&x) REQUIRES(is_ndarray_v<A>) {
+  typename std::decay_t<A>::regular_t make_regular(A &&x) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
     return std::forward<A>(x);
   }
   //template <typename A> regular_t<A> make_regular(A &&x) REQUIRES(is_ndarray_v<A>) { return std::forward<A>(x); }
