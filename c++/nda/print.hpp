@@ -28,8 +28,9 @@ namespace nda {
     return out << "  Lengths  : " << x.lengths() << "\n"
                << "  Strides  : " << x.strides() << "\n"
                << "  MemoryStrideOrder   : " << x.stride_order << "\n"
-               << "  Flags   :  " << (LayoutProp & layout_prop_e::contiguous ? "contiguous   " : " ") << (LayoutProp & layout_prop_e::strided_1d ? "strided_1d   " : " ")
-               << (LayoutProp & layout_prop_e::smallest_stride_is_one ? "smallest_stride_is_one   " : " " )<< "\n";
+               << "  Flags   :  " << (LayoutProp & layout_prop_e::contiguous ? "contiguous   " : " ")
+               << (LayoutProp & layout_prop_e::strided_1d ? "strided_1d   " : " ")
+               << (LayoutProp & layout_prop_e::smallest_stride_is_one ? "smallest_stride_is_one   " : " ") << "\n";
   }
 
   // ==============================================
@@ -64,6 +65,17 @@ namespace nda {
     }
 
     return out;
+  }
+
+  // ==============================================
+  template <typename S, int Rank>
+  std::ostream &operator<<(std::ostream &sout, scalar_array<S, Rank> const &expr) {
+    return sout << expr.s;
+  }
+
+  template <typename S>
+  std::ostream &operator<<(std::ostream &sout, scalar_matrix<S> const &expr) {
+    return sout << expr.s;
   }
 
   // ==============================================

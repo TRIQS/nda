@@ -5,7 +5,7 @@ namespace nda {
 
   struct C_layout {
     template <int Rank>
-    using mapping = idx_map<Rank, 0, layout_prop_e::contiguous>;
+    using mapping = idx_map<Rank, C_stride_order<Rank>, layout_prop_e::contiguous>;
   };
 
   struct F_layout {
@@ -15,7 +15,7 @@ namespace nda {
 
   struct C_stride_layout {
     template <int Rank>
-    using mapping = idx_map<Rank, 0, layout_prop_e::none>;
+    using mapping = idx_map<Rank, C_stride_order<Rank>, layout_prop_e::none>;
   };
 
   struct F_stride_layout {
