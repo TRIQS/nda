@@ -82,7 +82,7 @@ namespace nda::mem {
     }
 
     // access to the refs
-    std::vector<int_t> const &refcounts() const noexcept { return _refcounts; }
+    [[nodiscard]] std::vector<int_t> const &refcounts() const noexcept { return _refcounts; }
 
     // increase the counter number p
     void incref(long id) noexcept {

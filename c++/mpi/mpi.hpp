@@ -100,16 +100,16 @@ namespace mpi {
   template <typename Tag, typename T> struct lazy {
     T const &rhs;
     communicator c;
-    int root;
-    bool all;
+    int root{};
+    bool all{};
   };
 
   template <typename T> struct lazy<tag::reduce, T> {
     T const &rhs;
     communicator c;
-    int root;
-    bool all;
-    MPI_Op op;
+    int root{};
+    bool all{};
+    MPI_Op op{};
   };
 
   // ----------------------------------------

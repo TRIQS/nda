@@ -90,18 +90,18 @@ namespace nda {
     /** 
      * Lengths of each dimension.
      */
-    std::array<long, Rank> const &lengths() const noexcept { return len; }
+    [[nodiscard]] std::array<long, Rank> const &lengths() const noexcept { return len; }
 
     /** 
      * Strides of each dimension.
      */
-    std::array<long, Rank> const &strides() const noexcept { return str; }
+    [[nodiscard]] std::array<long, Rank> const &strides() const noexcept { return str; }
 
     /// Total number of elements (products of lengths in each dimension).
-    long size() const noexcept { return std::accumulate(len.cbegin(), len.cend(), 1, std::multiplies<long>()); }
+    [[nodiscard]] long size() const noexcept { return std::accumulate(len.cbegin(), len.cend(), 1, std::multiplies<long>()); }
 
     /// Is the data contiguous in memory ?
-    bool is_contiguous() const noexcept {
+    [[nodiscard]] bool is_contiguous() const noexcept {
       int slowest_index = std::distance(str.begin(), std::min_element(str.begin(), str.end())); // index with minimal stride
       return (str[slowest_index] * len[slowest_index] == size());
     }
@@ -117,13 +117,13 @@ namespace nda {
     } //(stride_order == permutations::reverse_identity<Rank>()); }
 
     ///
-    bool check_stride_order() const noexcept {
+    [[nodiscard]] bool check_stride_order() const noexcept {
       bool r = true;
       for (int i = 1; i < rank(); ++i) r &= (str[stride_order[i - 1]] <= str[stride_order[i]]); // runtime
       return r;
     }
 
-    long min_stride() const noexcept { return str[stride_order[Rank - 1]]; }
+    [[nodiscard]] long min_stride() const noexcept { return str[stride_order[Rank - 1]]; }
 
     // ----------------  Constructors -------------------------
 
@@ -187,7 +187,7 @@ namespace nda {
 
     private:
     template <size_t Is>
-    FORCEINLINE long __get(long arg) const noexcept {
+    [[nodiscard]] [[nodiscard]] [[nodiscard]] [[nodiscard]] [[nodiscard]] FORCEINLINE long __get(long arg) const noexcept {
       if constexpr (Is == stride_order[Rank - 1])
         return arg;
       else
@@ -196,7 +196,7 @@ namespace nda {
 
     // call implementation
     template <typename... Args, size_t... Is>
-    FORCEINLINE long call_impl(std::index_sequence<Is...>, Args... args) const noexcept {
+    [[nodiscard]] [[nodiscard]] [[nodiscard]] [[nodiscard]] [[nodiscard]] [[nodiscard]] [[nodiscard]] [[nodiscard]] [[nodiscard]] FORCEINLINE long call_impl(std::index_sequence<Is...>, Args... args) const noexcept {
       if constexpr (LayoutProp & layout_prop_e::smallest_stride_is_one)
         return (__get<Is>(args) + ...);
       else
@@ -228,10 +228,10 @@ namespace nda {
 
     using iterator = idx_map_iterator<idx_map<Rank, StrideOrder, LayoutProp>>;
 
-    iterator begin() const { return {this}; }
-    iterator cbegin() const { return {this}; }
-    typename iterator::end_sentinel_t end() const { return {}; }
-    typename iterator::end_sentinel_t cend() const { return {}; }
+    [[nodiscard]] iterator begin() const { return {this}; }
+    [[nodiscard]] iterator cbegin() const { return {this}; }
+    [[nodiscard]] typename iterator::end_sentinel_t end() const { return {}; }
+    [[nodiscard]] typename iterator::end_sentinel_t cend() const { return {}; }
 
     // ----------------  Comparison -------------------------
     bool operator==(idx_map const &x) { return (len == x.len) and (str == x.str); }

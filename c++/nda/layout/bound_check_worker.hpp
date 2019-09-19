@@ -5,7 +5,7 @@ namespace nda::details {
   //
   // A worker that checks all arguments and gather potential errors in error_code
   struct bound_check_worker {
-    long const *lengths; // length of input slice
+    long const *lengths{}; // length of input slice
     uint32_t error_code = 0;
     int ellipsis_loss   = 0;
     int N               = 0;

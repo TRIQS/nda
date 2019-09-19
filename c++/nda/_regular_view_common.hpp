@@ -1,36 +1,36 @@
 // ------------------------------- data access --------------------------------------------
 
 /// The Index Map object
-constexpr auto const &indexmap() const { return _idx_m; }
+[[nodiscard]] constexpr auto const &indexmap() const { return _idx_m; }
 
 /// The storage handle
-storage_t const &storage() const { return _storage; }
+[[nodiscard]] storage_t const &storage() const { return _storage; }
 storage_t &storage() { return _storage; }
 
 /// Memory stride_order
-auto stride_order() const { return _idx_m.stride_order(); }
+[[nodiscard]] auto stride_order() const { return _idx_m.stride_order(); }
 
 /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
-ValueType const *data_start() const { return _storage.data(); }
+[[nodiscard]] ValueType const *data_start() const { return _storage.data(); }
 
 /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
 ValueType *data_start() { return _storage.data(); }
 
 /// Shape of this
-shape_t<rank> const &shape() const { return _idx_m.lengths(); }
+[[nodiscard]] shape_t<rank> const &shape() const { return _idx_m.lengths(); }
 
 /// Number of elements
-long size() const { return _idx_m.size(); }
+[[nodiscard]] long size() const { return _idx_m.size(); }
 
 /// size() == 0
 //[[deprecated]] 
-bool is_empty() const { return _storage.is_null(); }
+[[nodiscard]] bool is_empty() const { return _storage.is_null(); }
 
 /// Same as shape()[i]
 //[[deprecated]] 
-long shape(int i) const { return _idx_m.lengths()[i]; }
+[[nodiscard]] long shape(int i) const { return _idx_m.lengths()[i]; }
 
-long extent(int i) const { return _idx_m.lengths()[i]; }
+[[nodiscard]] long extent(int i) const { return _idx_m.lengths()[i]; }
 
 // -------------------------------  operator () --------------------------------------------
 
@@ -115,16 +115,16 @@ using const_iterator = iterator_adapter<ValueType const, idx_map_t>;
 using iterator = iterator_adapter<ValueType, idx_map_t>;
 
 ///
-const_iterator begin() const { return {indexmap().cbegin(), storage().data()}; }
+[[nodiscard]] const_iterator begin() const { return {indexmap().cbegin(), storage().data()}; }
 ///
-const_iterator cbegin() const { return {indexmap().cbegin(), storage().data()}; }
+[[nodiscard]] const_iterator cbegin() const { return {indexmap().cbegin(), storage().data()}; }
 ///
 iterator begin() { return {indexmap().cbegin(), storage().data()}; }
 
 ///
-typename const_iterator::end_sentinel_t end() const { return {}; }
+[[nodiscard]] typename const_iterator::end_sentinel_t end() const { return {}; }
 ///
-typename const_iterator::end_sentinel_t cend() const { return {}; }
+[[nodiscard]] typename const_iterator::end_sentinel_t cend() const { return {}; }
 ///
 typename iterator::end_sentinel_t end() { return {}; }
 

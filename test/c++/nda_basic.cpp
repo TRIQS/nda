@@ -265,7 +265,7 @@ TEST(Array, CrossConstruct2) { //NOLINT
   std::vector<nda::array<long, 2>> V(3, A);
 
   std::vector<nda::array_view<long, 2>> W;
-  for (auto &x : V) W.push_back(x);
+  for (auto &x : V) W.emplace_back(x);
 
   std::vector<nda::array_view<long, 2>> W2(W);
 

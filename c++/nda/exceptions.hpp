@@ -26,7 +26,7 @@
 #include <exception>
 #include <string>
 #include <sstream>
-#include <stdlib.h>
+#include <cstdlib>
 
 #define NDA_RUNTIME_ERROR throw nda::runtime_error{} << "Error at " << __FILE__ << " : " << __LINE__ << "\n\n"
 
@@ -42,7 +42,7 @@ namespace nda {
 
     runtime_error(runtime_error const &e) noexcept : acc(e.acc.str()), _trace(e._trace), _what(e._what) {}
 
-    virtual ~runtime_error() noexcept {}
+    ~runtime_error() noexcept override = default;
 
     template <typename T>
     runtime_error &operator<<(T const &x) {
@@ -55,7 +55,7 @@ namespace nda {
       return *this;
     } // to limit code size
 
-    virtual const char *what() const noexcept {
+    const char *what() const noexcept override {
       std::stringstream out;
       out << acc.str() << "\n.. Error occurred on node ";
       //if (mpi::is_initialized()) out << mpi::communicator().rank() << "\n";

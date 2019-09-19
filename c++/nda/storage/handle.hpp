@@ -341,7 +341,7 @@ namespace nda::mem {
     T &operator[](long i) noexcept { return _data[i]; }
     T const &operator[](long i) const noexcept { return _data[i]; }
 
-    bool is_null() const noexcept {
+    [[nodiscard]] bool is_null() const noexcept {
 #ifdef NDA_DEBUG
       // Check the Invariants in Debug Mode
       EXPECTS((_data == nullptr) == (_size == 0));
@@ -350,12 +350,12 @@ namespace nda::mem {
       return _data == nullptr;
     }
 
-    long refcount() const noexcept { return globals::rtable.refcounts()[_id]; }
+    [[nodiscard]] long refcount() const noexcept { return globals::rtable.refcounts()[_id]; }
 
     // A constant handle does not entail T const data
-    T *data() const noexcept { return _data; }
+    [[nodiscard]] T *data() const noexcept { return _data; }
 
-    long size() const noexcept { return _size; }
+    [[nodiscard]] long size() const noexcept { return _size; }
   };
 
   // ------------------  Borrowed -------------------------------------
@@ -385,12 +385,12 @@ namespace nda::mem {
     T &operator[](long i) noexcept { return _data[i]; }
     T const &operator[](long i) const noexcept { return _data[i]; }
 
-    bool is_null() const noexcept { return _data == nullptr; }
+    [[nodiscard]] bool is_null() const noexcept { return _data == nullptr; }
 
-    handle<T0, 'R'> const *parent() const { return _parent; }
+    [[nodiscard]] handle<T0, 'R'> const *parent() const { return _parent; }
 
     // A const-handle does not entail T const data
-    T *data() const noexcept { return _data; }
+    [[nodiscard]] T *data() const noexcept { return _data; }
   };
 
 } // namespace nda::mem
