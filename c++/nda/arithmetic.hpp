@@ -62,7 +62,7 @@ namespace nda {
     static constexpr layout_info_t layout_info =
        (l_is_scalar ? get_layout_info<R_t> : (r_is_scalar ? get_layout_info<L_t> : get_layout_info<R_t> | get_layout_info<L_t>));
 
-    constexpr auto shape() const {
+    [[nodiscard]] constexpr auto shape() const {
       if constexpr (l_is_scalar) {
         return r.shape();
       } else if constexpr (r_is_scalar) {

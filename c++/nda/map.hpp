@@ -52,7 +52,7 @@ namespace nda {
 
     private: // FIXME C++20 lambda implementation details
     template <size_t... Is, typename... Args>
-    [[gnu::always_inline]] auto _call(std::index_sequence<Is...>, Args const &... args) const {
+    [[gnu::always_inline]] [[nodiscard]] [[nodiscard]] [[nodiscard]] [[nodiscard]] auto _call(std::index_sequence<Is...>, Args const &... args) const {
       return f(std::get<Is>(a)(args...)...);
     }
     template <size_t... Is, typename Args>
@@ -73,9 +73,9 @@ namespace nda {
     }
 
     // FIXME copy needed for the && case only. Overload ?
-    auto shape() const { return std::get<0>(a).shape(); }
+    [[nodiscard]] auto shape() const { return std::get<0>(a).shape(); }
 
-    long size() const { return a.size(); }
+    [[nodiscard]] long size() const { return a.size(); }
   };
 
   /*

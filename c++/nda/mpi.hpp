@@ -18,9 +18,9 @@ namespace nda {
 
     A const &ref;        // the array in reference
     mpi::communicator c; // mpi comm
-    int root;            //
-    bool all;
-    MPI_Op op;
+    int root{};            //
+    bool all{};
+    MPI_Op op{};
 
     /// compute the shape of the target array
     auto shape() const { return ref.shape(); }
@@ -36,8 +36,8 @@ namespace nda {
 
     A const &ref;        // the array in reference
     mpi::communicator c; // mpi comm
-    int root;            //
-    bool all;
+    int root{};            //
+    bool all{};
 
     /// compute the shape of the target array. WARNING : MAKES A MPI CALL.
     auto shape() const {
@@ -59,8 +59,8 @@ namespace nda {
 
     A const &ref;        // the array in reference
     mpi::communicator c; // mpi comm
-    int root;            //
-    bool all;
+    int root{};            //
+    bool all{};
 
     /// compute the shape of the target array. WARNING : MAKES A MPI CALL.
     auto shape() const {

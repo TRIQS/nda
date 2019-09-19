@@ -82,7 +82,7 @@ namespace nda {
       return c;
     }
 
-    idx_t const &indices() const { return idx; }
+    [[nodiscard]] idx_t const &indices() const { return idx; }
   };
 
 } // namespace nda

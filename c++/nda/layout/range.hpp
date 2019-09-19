@@ -57,16 +57,16 @@ namespace nda {
     explicit range(long i) noexcept : range(0, i, 1) {}
 
     ///first index of the range
-    long first() const noexcept { return first_; }
+    [[nodiscard]] long first() const noexcept { return first_; }
 
     ///last index of the range (is excluded from the list of indices)
-    long last() const noexcept { return last_; }
+    [[nodiscard]] long last() const noexcept { return last_; }
 
     ///step between two indices
-    long step() const noexcept { return step_; }
+    [[nodiscard]] long step() const noexcept { return step_; }
 
     ///number of indices in the range
-    long size() const noexcept { return (last_ - first_) / step_; }
+    [[nodiscard]] long size() const noexcept { return (last_ - first_) / step_; }
 
     //range operator+(long shift) const { return range(first_ + shift, last_ + shift, step_); }
 
@@ -111,10 +111,10 @@ namespace nda {
     };
 
     //---------
-    const_iterator begin() const noexcept { return const_iterator(this, false); }
-    const_iterator end() const noexcept { return const_iterator(this, true); }
-    const_iterator cbegin() const noexcept { return const_iterator(this, false); }
-    const_iterator cend() const noexcept { return const_iterator(this, true); }
+    [[nodiscard]] const_iterator begin() const noexcept { return const_iterator(this, false); }
+    [[nodiscard]] const_iterator end() const noexcept { return const_iterator(this, true); }
+    [[nodiscard]] const_iterator cbegin() const noexcept { return const_iterator(this, false); }
+    [[nodiscard]] const_iterator cend() const noexcept { return const_iterator(this, true); }
   };
 
   // ------------------   foreach   --------------------------------------
