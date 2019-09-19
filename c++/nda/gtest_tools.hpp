@@ -68,6 +68,7 @@ template <typename X, typename Y>
 ::testing::AssertionResult array_are_close(X const &x1, Y const &y1, double precision = 1.e-10) {
   nda::array<typename X::value_t, X::rank> x = x1;
   nda::array<typename X::value_t, X::rank> y = y1;
+  
   if (x.shape() != y.shape())
     return ::testing::AssertionFailure() << "Comparing two arrays of different size "
                                          << "\n X = " << x << "\n Y = " << y;

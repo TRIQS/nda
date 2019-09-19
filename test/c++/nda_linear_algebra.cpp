@@ -7,33 +7,34 @@
 //#include <nda/blas_lapack/gesvd.hpp>
 //#include <nda/linalg/eigenelements.hpp>
 
-using nda::matrix;
-using nda::range;
-using nda::matrix_view;
-using nda::matrix;
 using nda::C_layout;
 using nda::F_layout;
+using nda::matrix;
+using nda::matrix_view;
+using nda::range;
 namespace blas = nda::blas;
 
 template <typename T, typename L1, typename L2, typename L3>
 void test_matmul() {
   matrix<T, L1> M1(2, 3);
   matrix<T, L2> M2(3, 4);
-  matrix<T, L2> M3;
+  matrix<T, L2> M3, M3b;
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 3; ++j) { M1(i, j) = i + j; }
   for (int i = 0; i < 3; ++i)
     for (int j = 0; j < 4; ++j) { M2(i, j) = 1 + i - j; }
 
-  M3 = M1 * M2; //matmul(M1,M2);
+  if constexpr (nda::blas::is_blas_lapack_v<T>) { blas::gemm(1, M1, M2, 0, M3b); }
+  M3 = M1 * M2;
 
   auto M4 = M3;
-  M4 = 0;
+  M4      = 0;
   for (int i = 0; i < 2; ++i)
     for (int k = 0; k < 3; ++k)
       for (int j = 0; j < 4; ++j) M4(i, j) += M1(i, k) * M2(k, j);
-  EXPECT_ARRAY_NEAR(M4, M3, 1.e-13);
 
+  EXPECT_ARRAY_NEAR(M4, M3, 1.e-13);
+  if constexpr (nda::blas::is_blas_lapack_v<T>) { EXPECT_ARRAY_NEAR(M4, M3b, 1.e-13); }
   // recheck gemm_generic
   blas::generic::gemm(1, M1, M2, 0, M4);
   EXPECT_ARRAY_NEAR(M4, M3, 1.e-13);
@@ -57,6 +58,7 @@ TEST(Matmul, Int) { all_test_matmul<long>(); }
 
 //-------------------------------------------------------------
 
+
 TEST(Matmul, Promotion) {
   matrix<double> C, D, A = {{1.0, 2.3}, {3.1, 4.3}};
   matrix<int> B     = {{1, 2}, {3, 4}};
@@ -66,6 +68,8 @@ TEST(Matmul, Promotion) {
   D = A * Bd;
   EXPECT_ARRAY_NEAR(A * B, A * Bd, 1.e-13);
 }
+
+
 //-------------------------------------------------------------
 
 TEST(Matmul, Cache) {
@@ -82,9 +86,10 @@ TEST(Matmul, Cache) {
   Res(0, 0) = 8;
   Res(1, 1) = 16.64;
   TMP()     = 0;
-  TMP()     = M1 * (M1 + 2.0);
+  TMP()     = matrix<std::complex<double>> {M1 * (M1 + 2.0)};
   EXPECT_ARRAY_NEAR(TMP(), Res, 1.e-13);
 }
+
 //-------------------------------------------------------------
 
 TEST(Matmul, Alias) {
@@ -110,6 +115,7 @@ TEST(Matmul, Alias) {
   B1 = make_regular(B1) * B2;
   EXPECT_ARRAY_NEAR(B1, matrix<double>{{6, 0}, {0, 6}});
 }
+
 
 // ==============================================================
 /*

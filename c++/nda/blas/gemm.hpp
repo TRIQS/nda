@@ -16,8 +16,11 @@ namespace nda::blas {
       resize_or_check_if_view(c, make_shape(a.extent(0), b.extent(1)));
       c() = 0;
       for (int i = 0; i < a.extent(0); ++i)
-        for (int k = 0; k < a.extent(1); ++k)
-          for (int j = 0; j < b.extent(1); ++j) c(i, j) = alpha * a(i, k) * b(k, j) + beta * c(i, j);
+        for (int j = 0; j < b.extent(1); ++j) {
+          typename A::value_type acc = 0;
+          for (int k = 0; k < a.extent(1); ++k) acc += alpha * a(i, k) * b(k, j);
+          c(i, j) = acc + beta * c(i, j);
+        }
     }
   } // namespace generic
 
@@ -59,8 +62,24 @@ namespace nda::blas {
       int m        = (trans_a == 'N' ? get_n_rows(Ca()) : get_n_cols(Ca()));
       int n        = (trans_b == 'N' ? get_n_cols(Cb()) : get_n_rows(Cb()));
       int k        = (trans_a == 'N' ? get_n_cols(Ca()) : get_n_rows(Ca()));
+      //NDA_PRINT(trans_a);
+      //NDA_PRINT(trans_b);
+      //NDA_PRINT(m);
+      //NDA_PRINT(n);
+      //NDA_PRINT(k);
+      //NDA_PRINT(get_ld(Ca()));
+      //NDA_PRINT(get_ld(Cb()));
+      //NDA_PRINT(get_ld(Cc()));
+      //NDA_PRINT(Ca().indexmap());
+      //NDA_PRINT(Cb().indexmap());
+      //NDA_PRINT(Cc().indexmap());
+      //NDA_PRINT(Ca());
+      //NDA_PRINT(Cb());
+      //NDA_PRINT(Cb().indexmap().is_stride_order_Fortran());
       f77::gemm(trans_a, trans_b, m, n, k, alpha, Ca().data_start(), get_ld(Ca()), Cb().data_start(), get_ld(Cb()), beta, Cc().data_start(),
                 get_ld(Cc()));
+      //NDA_PRINT(Cc());
+      //NDA_PRINT(c);
     } else {
       auto Ca      = qcache(a);
       auto Cb      = qcache(b);
