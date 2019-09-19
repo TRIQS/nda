@@ -12,7 +12,7 @@ namespace nda::blas {
     // largely suboptimal
     template <typename A, typename B, typename Out>
     void gemm(typename A::value_type alpha, A const &a, B const &b, typename A::value_type beta, Out &c) {
-      if (a.extent(1) != b.extent(0)) NDA_RUNTIME_ERROR << "gemm generic : dimension mismatch " << get_shape(a) << get_shape(b);
+      if (a.extent(1) != b.extent(0)) NDA_RUNTIME_ERROR << "gemm generic : dimension mismatch " << a.extent(1) << b.extent(0);
       resize_or_check_if_view(c, make_shape(a.extent(0), b.extent(1)));
       c() = 0;
       for (int i = 0; i < a.extent(0); ++i)

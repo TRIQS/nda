@@ -65,7 +65,7 @@ namespace h5 {
 
   group group::create_group(std::string const &key, bool delete_if_exists) const {
     if (key.empty()) return *this;
-    unlink(key);
+    if (delete_if_exists) unlink(key); 
     hid_t id_g = H5Gcreate2(id, key.c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
     if (id_g < 0) throw std::runtime_error("Cannot create the subgroup " + key + " of the group" + name());
     return group(id_g);
@@ -98,21 +98,21 @@ namespace h5 {
 
   // C callbacks for the next functions using H5Literate
   extern "C" {
-  herr_t get_group_elements_name_ds(::hid_t loc_id, const char *name, const H5L_info_t *info, void *opdata) {
+  herr_t get_group_elements_name_ds(::hid_t loc_id, const char *name, const H5L_info_t *, void *opdata) {
     H5O_info_t object_info;
     herr_t err = H5Oget_info_by_name(loc_id, name, &object_info, H5P_DEFAULT);
     if (err < 0) throw std::runtime_error("get_group_elements_name_ds internal");
     if (object_info.type == H5O_TYPE_DATASET) static_cast<std::vector<std::string> *>(opdata)->push_back(name);
     return 0;
   }
-  herr_t get_group_elements_name_grp(::hid_t loc_id, const char *name, const H5L_info_t *info, void *opdata) {
+  herr_t get_group_elements_name_grp(::hid_t loc_id, const char *name, const H5L_info_t *, void *opdata) {
     H5O_info_t object_info;
     herr_t err = H5Oget_info_by_name(loc_id, name, &object_info, H5P_DEFAULT);
     if (err < 0) throw std::runtime_error("get_group_elements_name_grp internal");
     if (object_info.type == H5O_TYPE_GROUP) static_cast<std::vector<std::string> *>(opdata)->push_back(name);
     return 0;
   }
-  herr_t get_group_elements_name_ds_grp(::hid_t loc_id, const char *name, const H5L_info_t *info, void *opdata) {
+  herr_t get_group_elements_name_ds_grp(::hid_t loc_id, const char *name, const H5L_info_t *, void *opdata) {
     H5O_info_t object_info;
     herr_t err = H5Oget_info_by_name(loc_id, name, &object_info, H5P_DEFAULT);
     if (err < 0) throw std::runtime_error("get_group_elements_name_grp internal");

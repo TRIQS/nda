@@ -5,7 +5,7 @@ static_assert(!std::is_pod<nda::array<long, 2>>::value, "POD pb");
 
 // ==============================================================
 
-TEST(NDA, Create1) {
+TEST(NDA, Create1) { //NOLINT
   nda::array<long, 2> A(3, 3);
   EXPECT_EQ(A.shape(), (nda::shape_t<2>{3, 3}));
 
@@ -14,7 +14,7 @@ TEST(NDA, Create1) {
 
 // -------------------------------------
 
-TEST(NDA, Assign) {
+TEST(NDA, Assign) { //NOLINT
   nda::array<long, 2> A(3, 3);
 
   A() = 0;
@@ -35,7 +35,7 @@ TEST(NDA, Assign) {
 
 // -------------------------------------
 
-TEST(NDA, Iterator1) {
+TEST(NDA, Iterator1) { //NOLINT
   nda::array<long, 2> A{{0, 1, 2}, {3, 4, 5}};
 
   int i = 0;
@@ -44,7 +44,7 @@ TEST(NDA, Iterator1) {
 
 // -------------------------------------
 
-TEST(NDA, CreateResize) {
+TEST(NDA, CreateResize) { //NOLINT
 
   nda::array<long, 2> A;
   A.resize({3, 3});
@@ -63,7 +63,7 @@ TEST(NDA, CreateResize) {
 
 // ==============================================================
 
-TEST(NDA, InitList) {
+TEST(NDA, InitList) { //NOLINT
 
   // 1d
   nda::array<double, 1> A = {1, 2, 3, 4};
@@ -89,7 +89,7 @@ TEST(NDA, InitList) {
 
 // ==============================================================
 
-TEST(NDA, MoveConstructor) {
+TEST(NDA, MoveConstructor) { //NOLINT
   nda::array<double, 1> A(3);
   A() = 9;
 
@@ -103,7 +103,7 @@ TEST(NDA, MoveConstructor) {
 
 // ==============================================================
 
-TEST(NDA, MoveAssignment) {
+TEST(NDA, MoveAssignment) { //NOLINT
 
   nda::array<double, 1> A(3);
   A() = 9;
@@ -118,7 +118,7 @@ TEST(NDA, MoveAssignment) {
 /*
 // ===================== SWAP =========================================
 
-TEST(NDA, Swap) {
+TEST(NDA, Swap) { //NOLINT
   auto V = vector<double>{3, 3, 3};
   auto W = vector<double>{4, 4, 4, 4};
 
@@ -131,7 +131,7 @@ TEST(NDA, Swap) {
 
 // ----------------------------------
 
-TEST(NDA, StdSwap) { // same are triqs swap for regular types
+TEST(NDA, StdSwap) { // same are triqs swap for regular types //NOLINT
 
   auto V = vector<double>{3, 3, 3};
   auto W = vector<double>{4, 4, 4, 4};
@@ -150,7 +150,7 @@ TEST(NDA, StdSwap) { // same are triqs swap for regular types
 
 // ----------------------------------
 
-TEST(NDA, SwapView) {
+TEST(NDA, SwapView) { //NOLINT
 
   auto V = vector<double>{3, 3, 3};
   auto W = vector<double>{4, 4, 4, 4};
@@ -173,7 +173,7 @@ TEST(NDA, SwapView) {
 // ----------------------------------
 
 // FIXME Rename as BLAS_SWAP (swap of blas). Only for vector of same size
-TEST(NDA, DeepSwap) {
+TEST(NDA, DeepSwap) { //NOLINT
   auto V = vector<double>{3, 3, 3};
   auto W = vector<double>{4, 4, 4};
 
@@ -185,7 +185,7 @@ TEST(NDA, DeepSwap) {
 }
 // ----------------------------------
 
-TEST(NDA, DeepSwapView) {
+TEST(NDA, DeepSwapView) { //NOLINT
   auto V = vector<double>{3, 3, 3};
   auto W = vector<double>{4, 4, 4, 4};
 
@@ -202,7 +202,7 @@ TEST(NDA, DeepSwapView) {
 
 // ==============================================================
 
-TEST(NDA, Print) {
+TEST(NDA, Print) { //NOLINT
   nda::array<long, 2> A(2, 3), B;
 
   for (int i = 0; i < 2; ++i)
@@ -213,7 +213,7 @@ TEST(NDA, Print) {
 
 // ==============================================================
 
-TEST(NDA, Ellipsis) {
+TEST(NDA, Ellipsis) { //NOLINT
   nda::array<long, 3> A(2, 3, 4);
   A() = 7;
 
@@ -236,7 +236,7 @@ auto sum0(ArrayType const &A) {
   return res;
 }
 
-TEST(NDA, Ellipsis2) {
+TEST(NDA, Ellipsis2) { //NOLINT
   nda::array<double, 2> A(5, 2);
   A() = 2;
   nda::array<double, 3> B(5, 2, 3);
@@ -247,7 +247,7 @@ TEST(NDA, Ellipsis2) {
 
 // ===========   Cross construction  ===================================================
 
-TEST(Array, CrossConstruct1) {
+TEST(Array, CrossConstruct1) { //NOLINT
   nda::array<int, 1> Vi(3);
   Vi() = 3;
   nda::array<double, 1> Vd(Vi);
@@ -255,7 +255,7 @@ TEST(Array, CrossConstruct1) {
 }
 
 // ------------------
-TEST(Array, CrossConstruct2) {
+TEST(Array, CrossConstruct2) { //NOLINT
 
   nda::array<long, 2> A(2, 3);
 
@@ -275,7 +275,7 @@ TEST(Array, CrossConstruct2) {
 }
 // =============================================================
 
-TEST(NDA, ConvertibleCR) {
+TEST(NDA, ConvertibleCR) { //NOLINT
 
   nda::array<double, 2> A(2, 2);
   nda::array<dcomplex, 2> B(2, 2);
@@ -298,7 +298,7 @@ TEST(NDA, ConvertibleCR) {
 
 // =============================================================
 
-TEST(Assign, CrossStrideOrder) {
+TEST(Assign, CrossStrideOrder) { //NOLINT
 
   // check that = is ok, specially in the contiguous case where we have linear optimisation
   // which should NOT be used in this case ...

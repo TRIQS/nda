@@ -11,7 +11,7 @@ class ABC_2d : public benchmark::Fixture {
   public:
   nda::array<double, 2> a, b, c;
 
-  void SetUp(const ::benchmark::State &state) {
+  void SetUp(const ::benchmark::State &) {
     a.resize(N1, N1);
     b.resize(N1, N1);
     c.resize(N1, N1);
@@ -19,7 +19,7 @@ class ABC_2d : public benchmark::Fixture {
     c = 0;
   }
 
-  void TearDown(const ::benchmark::State &state) {}
+  void TearDown(const ::benchmark::State &) {}
 };
 
 #define BENCH_ABC_2d(F)                                                                                                                              \
@@ -45,7 +45,7 @@ class ABC_2d : public benchmark::Fixture {
 }
 
 [[gnu::noinline]] void pointers2dloop(nda::array<double, 2> &a, nda::array<double, 2> &b, nda::array<double, 2> &c) {
-  const long s   = a.size();
+  //const long s   = a.size();
   const long st0 = a.indexmap().strides()[0];
   const long l0  = a.shape()[0];
   const long l1  = a.shape()[1];

@@ -42,7 +42,7 @@ namespace mpi {
 
     // MPICH does not allow Init without argc, argv, so we do not allow default constructors
     // for portability, cf #133
-    environment(int argc, char *argv[]) {
+    environment(int argc, char *argv[]) { // NOLINT
       if (!is_initialized()) MPI_Init(&argc, &argv);
     }
     ~environment() { MPI_Finalize(); }
@@ -59,21 +59,21 @@ namespace mpi {
 
     communicator(MPI_Comm c) : _com(c) {}
 
-    MPI_Comm get() const noexcept { return _com; }
+    [[nodiscard]] MPI_Comm get() const noexcept { return _com; }
 
-    int rank() const {
+    [[nodiscard]] int rank() const {
       int num;
       MPI_Comm_rank(_com, &num);
       return num;
     }
 
-    int size() const {
+    [[nodiscard]] int size() const {
       int num;
       MPI_Comm_size(_com, &num);
       return num;
     }
 
-    communicator split(int color, int key = 0) const {
+    [[nodiscard]] communicator split(int color, int key = 0) const {
       communicator c;
       MPI_Comm_split(_com, color, key, &c._com);
       return c;

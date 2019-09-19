@@ -68,10 +68,10 @@ namespace h5::array_interface {
     proplist cparms = H5P_DEFAULT;
     if (compress and (v.rank() != 0)) {
       int n_dims = v.rank();
-      hsize_t chunk_dims[n_dims];
+      std::vector<hsize_t> chunk_dims(n_dims);
       for (int i = 0; i < v.rank(); ++i) chunk_dims[i] = std::max(v.slab.count[i], hsize_t{1});
       cparms = H5Pcreate(H5P_DATASET_CREATE);
-      H5Pset_chunk(cparms, n_dims, chunk_dims);
+      H5Pset_chunk(cparms, n_dims, chunk_dims.data());
       H5Pset_deflate(cparms, 8);
     }
 
