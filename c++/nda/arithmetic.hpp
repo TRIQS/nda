@@ -3,6 +3,13 @@
 
 namespace nda {
 
+  // Scalar matrix and array
+  template <typename S, int Rank>
+  struct scalar_array;
+
+  template <typename S>
+  struct scalar_matrix;
+
   // binary expression
   template <char OP, typename L, typename R>
   struct expr;
@@ -25,6 +32,12 @@ namespace nda {
   template <char OP, typename L>
   inline constexpr bool is_ndarray_v<expr_unary<OP, L>> = true;
 
+  template <typename S, int Rank>
+  inline constexpr bool is_ndarray_v<scalar_array<S, Rank>> = true;
+
+  template <typename S>
+  inline constexpr bool is_ndarray_v<scalar_matrix<S>> = true;
+
   // Get the layout info recursively
   template <char OP, typename L, typename R>
   inline constexpr layout_info_t get_layout_info<expr<OP, L, R>> = expr<OP, L, R>::layout_info;
@@ -32,16 +45,12 @@ namespace nda {
   template <char OP, typename L>
   inline constexpr layout_info_t get_layout_info<expr_unary<OP, L>> = get_layout_info<std::decay_t<L>>;
 
-  // true iif rank or L and R is one (or they are scalar)
-  template <typename L, typename R>
-  constexpr bool rank_is_one() {
-    using L_t = std::decay_t<L>; // L, R can be lvalue references
-    using R_t = std::decay_t<R>;
-    if constexpr (nda::is_scalar_v<L_t> || nda::is_scalar_v<R_t>)
-      return true;
-    else
-      return ((get_rank<L_t> == 1) and (get_rank<R_t> == 1));
-  }
+  template <typename S, int Rank>
+  inline constexpr layout_info_t get_layout_info<scalar_array<S, Rank>> = layout_info_t{0, layout_prop_e::none};
+
+  template <typename S>
+  inline constexpr layout_info_t get_layout_info<scalar_matrix<S>> = layout_info_t{}; // NOT contiguous, we disable the linear optimisation of assign
+
   // -------------------------------------------------------------------------------------------
   //                         A simple type for scalar_matrix, scalar_array, scalar_vector
   // -------------------------------------------------------------------------------------------
@@ -51,7 +60,7 @@ namespace nda {
     S const s;
     shape_t<Rank> _shape;
 
-    [[nodiscard]] shape_t<Rank> const & shape() const { return _shape;}
+    [[nodiscard]] shape_t<Rank> const &shape() const { return _shape; }
 
     template <typename T>
     S operator[](T &&) const {
@@ -62,8 +71,9 @@ namespace nda {
     S operator()(T &&...) const {
       return s;
     }
-
   };
+
+  //----------------------
 
   template <typename S>
   struct scalar_matrix {
@@ -71,9 +81,9 @@ namespace nda {
 
     shape_t<2> _shape;
 
-    [[nodiscard]] shape_t<2> const & shape() const { return _shape;}
+    [[nodiscard]] shape_t<2> const &shape() const { return _shape; }
 
-   template <typename T>
+    template <typename T>
     S operator[](T &&) const {
       return s;
     }
@@ -125,12 +135,10 @@ namespace nda {
 
       // We simply implement all cases
       if constexpr (OP == '+') { // we KNOW that l and r are NOT scalar (cf operator +,- impl).
-        return l(args...) + r(args...); 
+        return l(args...) + r(args...);
       }
 
-      if constexpr (OP == '-') { 
-        return l(args...) - r(args...);
-      }
+      if constexpr (OP == '-') { return l(args...) - r(args...); }
 
       if constexpr (OP == '*') {
         static_assert(algebra != 'M', "Should not occur");
@@ -156,12 +164,22 @@ namespace nda {
     // FIXME clef
     //TRIQS_CLEF_IMPLEMENT_LAZY_CALL(); // can not simply capture in () and dispatch becuase of && case. Cf macro def.
 
+    private: // detail for operator [] below
+    static constexpr bool rank_is_one() {
+      if constexpr (nda::is_scalar_v<L_t> || nda::is_scalar_v<R_t>)
+        return true;
+      else
+        return ((get_rank<L_t> == 1) and (get_rank<R_t> == 1));
+    }
+
+    public:
     // FIXME
     // [long] ? 1d only ? strided only ?
     // Overload with _long ? long ? lazy ?
     /// [ ] is the same as (). Enable for Vectors only
     template <typename Arg>
-    auto operator[](Arg const &arg) const REQUIRES(rank_is_one<L, R>()) {
+    auto operator[](Arg const &arg) const {
+      static_assert(rank_is_one(), "operator[] only available for array of rank 1");
       return operator()(std::forward<Arg>(arg));
     }
 
@@ -287,7 +305,7 @@ namespace nda {
     using L_t = std::decay_t<L>; // L, R can be lvalue references
     using R_t = std::decay_t<R>;
 
-   if constexpr (is_scalar_v<L_t>) {
+    if constexpr (is_scalar_v<L_t>) {
       if constexpr (get_algebra<R_t> == 'M')
         return expr<'-', scalar_matrix<L_t>, R>{scalar_matrix<L_t>{l, r.shape()}, std::forward<R>(r)};
       else
@@ -358,7 +376,7 @@ namespace nda {
   //------------  lazy inverse
 
   template <class A>
-  expr<'/', A, int> inverse(A &&a) REQUIRES(is_ndarray_v<A> and (get_algebra<A> != 'M')) {
+  expr<'/', A, int> inverse(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
     return {1, std::forward<A>(a)};
   }
 

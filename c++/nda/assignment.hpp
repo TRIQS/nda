@@ -49,7 +49,7 @@ namespace nda::details {
       if constexpr ((get_layout_info<LHS>.stride_order == get_layout_info<RHS>.stride_order)  // same stride order and both contiguous ...
                     and has_layout_contiguous<LHS> and has_layout_contiguous<RHS>) {
         // They must have the same size ! or EXPECT is wrong
-        NDA_PRINT("Assignment : linear computation optimisation");
+      //  NDA_PRINT("Assignment : linear computation optimisation");
         long L = lhs.size();
         for (long i = 0; i < L; ++i) lhs(_linear_index_t{i}) = rhs(_linear_index_t{i});
 
