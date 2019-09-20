@@ -129,6 +129,7 @@ namespace nda {
   constexpr bool operator&(layout_prop_e a, layout_prop_e b) { return uint64_t(a) & uint64_t(b); }
   //bool operator|=(layout_prop_e & a, layout_prop_e b) { return a = layout_prop_e(uint64_t(a) | uint64_t(b));}
 
+  // FIXME : I need a NONE for stride_order. For the scalars ...
   struct layout_info_t {
     uint64_t stride_order = 0;
     layout_prop_e prop    = layout_prop_e::none;
