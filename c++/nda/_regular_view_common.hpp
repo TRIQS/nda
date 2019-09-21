@@ -141,8 +141,6 @@ typename iterator::end_sentinel_t end() { return {}; }
 
 // ------------------------------- Operations --------------------------------------------
 
-// FIXME : find a way to regroup on the same page in RST ?
-
 /**
  * @tparam RHS A scalar or a type modeling NdArray
  * @param rhs
@@ -150,8 +148,7 @@ typename iterator::end_sentinel_t end() { return {}; }
 template <typename RHS>
 auto &operator+=(RHS const &rhs) {
   static_assert(not is_const, "Can not assign to a const view");
-  compound_assign_from<'A'>(*this, rhs);
-  return *this;
+  return operator=(*this + rhs);
 }
 /**
  * @tparam RHS A scalar or a type modeling NdArray
@@ -160,8 +157,7 @@ auto &operator+=(RHS const &rhs) {
 template <typename RHS>
 auto &operator-=(RHS const &rhs) {
   static_assert(not is_const, "Can not assign to a const view");
-  compound_assign_from<'S'>(*this, rhs);
-  return *this;
+  return operator=(*this - rhs);
 }
 /**
  * @tparam RHS A scalar or a type modeling NdArray
@@ -170,8 +166,7 @@ auto &operator-=(RHS const &rhs) {
 template <typename RHS>
 auto &operator*=(RHS const &rhs) {
   static_assert(not is_const, "Can not assign to a const view");
-  compound_assign_from<'M'>(*this, rhs);
-  return *this;
+  return operator=(*this * rhs);
 }
 /**
  * @tparam RHS A scalar or a type modeling NdArray
@@ -180,6 +175,5 @@ auto &operator*=(RHS const &rhs) {
 template <typename RHS>
 auto &operator/=(RHS const &rhs) {
   static_assert(not is_const, "Can not assign to a const view");
-  compound_assign_from<'D'>(*this, rhs);
-  return *this;
+  return operator=(*this / rhs);
 }
