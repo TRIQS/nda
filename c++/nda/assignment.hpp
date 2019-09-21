@@ -2,12 +2,8 @@
 #include <cstring>
 #include "./traits.hpp"
 
-//https://godbolt.org/g/tkNLoE
-// https://godbolt.org/g/SqrgBH
-
 namespace nda {
 
-  // implementation of the assignment operator for the container
   // Case where RHS has NdArray concept, but RHS is not a scalar (i.e. LHS:element_type, it could still be
   // an array in case of array of array
   template <typename LHS, typename RHS>
@@ -42,35 +38,52 @@ namespace nda {
   }
 
   // -----------------------------------------------------
-  // implementation of the assignment operator for the container
-  // Case where RHS has NdArray concept, but RHS is not a scalar (i.e. LHS:element_type, it could still be
-  // an array in case of array of array
+  // RHS is a scalar for LHS (could be an array of array).
+
+  namespace details {
+
+    // assign to a scalar, for array, no distinction for Matrix Algebra yet.
+    // isolate this part which is reused in assign_from below
+    template <typename LHS, typename RHS>
+    void assign_from_scalar_array(LHS &lhs, RHS const &rhs) {
+      // LHS is not a matrix, we simply do a multiple for... for loop on each dimension
+      // we make a special implementation if the array is 1d strided or contiguous
+      if constexpr (has_layout_strided_1d<LHS>) { // possibly contiguous
+        const long L             = lhs.size();
+        auto *__restrict const p = lhs.data_start(); // no alias possible here !
+        if constexpr (has_layout_contiguous<LHS>) {
+          for (long i = 0; i < L; ++i) p[i] = rhs;
+        } else {
+          const long s = lhs.indexmap().min_stride();
+          for (long i = 0; i < L; i += s) p[i] = rhs;
+        }
+      } else {
+        auto l = [&lhs, &rhs](auto const &... args) { lhs(args...) = rhs; };
+        nda::for_each(lhs.shape(), l);
+      }
+    }
+  } // namespace details
+
+  // -----------------------------------------------------
+  // RHS is a scalar for LHS (could be an array of array).
   template <typename LHS, typename RHS>
   void assign_from(LHS &lhs, RHS const &rhs) REQUIRES(is_scalar_for_v<RHS, LHS>) {
 
     static_assert(is_regular_or_view_v<LHS>, "Internal error : LHS must a container");
     static_assert(!LHS::is_const, "Cannot assign to a const view !");
 
-    // RHS is a scalar for LHS
-    // if LHS is a matrix, the unit has a specific interpretation.
-
-    if constexpr (get_algebra<LHS> == 'M') {
-      // FIXME : Foreach on diagonal only !
-      // WRITE THE LLOP !SAME in compound op !!
-      auto l = [&lhs, &rhs](auto &&x1, auto &&x2) {
-        if (x1 == x2)
-          lhs(x1, x2) = rhs;
-        else {
-          if constexpr (is_scalar_or_convertible_v<RHS>)
-            lhs(x1, x2) = 0;
-          else
-            lhs(x1, x2) = RHS{0 * rhs}; //FIXME : improve this
-        }
-      }; // end lambda l
-      nda::for_each(lhs.shape(), l);
-    } else { // LHS is not a matrix
-      auto l = [&lhs, &rhs](auto const &... args) { lhs(args...) = rhs; };
-      nda::for_each(lhs.shape(), l);
+    if constexpr (get_algebra<LHS> != 'M') {
+      details::assign_from_scalar_array(lhs, rhs);
+    } else { // LHS is not a matrix. A scalar has to be interpreted as a unit matrix
+      // FIXME : A priori faster to put 0 everywhere and then change the diag to avoid the if.
+      // FIXME : Benchmark and confirm
+      if constexpr (is_scalar_or_convertible_v<RHS>)
+        details::assign_from_scalar_array(lhs, 0);
+      else
+        details::assign_from_scalar_array(lhs, RHS{0 * rhs}); //FIXME : improve this
+      // on diagonal only
+      const long imax = lhs.extent(0);
+      for (long i = 0; i < imax; ++i) lhs(i, i) = rhs;
     }
   }
 
