@@ -119,25 +119,42 @@ decltype(auto) operator()(T const &... x) && {
 
 // ------------------------------- Iterators --------------------------------------------
 
-///
-using const_iterator = iterator_adapter<ValueType const, idx_map_t>;
+static constexpr int iterator_rank = (idx_map_t::layout_prop & layout_prop_e::strided_1d ? 1 : Rank);
 
 ///
-using iterator = iterator_adapter<ValueType, idx_map_t>;
+using const_iterator = array_iterator<iterator_rank, ValueType const, typename AccessorPolicy::template accessor<ValueType>::pointer>;
 
 ///
-[[nodiscard]] const_iterator begin() const { return {indexmap().cbegin(), storage().data()}; }
+using iterator = array_iterator<iterator_rank, ValueType, typename AccessorPolicy::template accessor<ValueType>::pointer>;
+
+private:
+template <typename Iterator>
+[[nodiscard]] auto _make_iterator(bool at_end) const {
+  //if constexpr (iterator_rank == Rank)
+ //NDA_PRINT("USING general iterator");
+  //else 
+//NDA_PRINT("USING 1d iterator");
+    
+    if constexpr (iterator_rank == Rank)
+    return Iterator{indexmap().lengths(), indexmap().strides(), storage().data(), at_end};
+  else
+    return Iterator{std::array<long, 1>{size()}, std::array<long, 1>{indexmap().min_stride()}, storage().data(), at_end};
+}
+
+public:
 ///
-[[nodiscard]] const_iterator cbegin() const { return {indexmap().cbegin(), storage().data()}; }
+[[nodiscard]] const_iterator begin() const { return _make_iterator<const_iterator>(false); }
 ///
-iterator begin() { return {indexmap().cbegin(), storage().data()}; }
+[[nodiscard]] const_iterator cbegin() const { return _make_iterator<const_iterator>(false); }
+///
+iterator begin() { return _make_iterator<iterator>(false); }
 
 ///
-[[nodiscard]] typename const_iterator::end_sentinel_t end() const { return {}; }
+[[nodiscard]] const_iterator end() const { return _make_iterator<const_iterator>(true); }
 ///
-[[nodiscard]] typename const_iterator::end_sentinel_t cend() const { return {}; }
+[[nodiscard]] const_iterator cend() const { return _make_iterator<const_iterator>(true); }
 ///
-typename iterator::end_sentinel_t end() { return {}; }
+iterator end() { return _make_iterator<iterator>(true); }
 
 // ------------------------------- Operations --------------------------------------------
 
@@ -166,7 +183,7 @@ auto &operator-=(RHS const &rhs) {
 template <typename RHS>
 auto &operator*=(RHS const &rhs) {
   static_assert(not is_const, "Can not assign to a const view");
-  return operator=(*this * rhs);
+  return operator=(*this *rhs);
 }
 /**
  * @tparam RHS A scalar or a type modeling NdArray

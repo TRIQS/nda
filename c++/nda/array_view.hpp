@@ -5,7 +5,7 @@
 #include "basic_functions.hpp"
 #include "assignment.hpp"
 #include "accessors.hpp"
-#include "iterator_adapter.hpp"
+#include "iterators.hpp"
 #include "mpi.hpp"
 
 namespace nda {
@@ -15,7 +15,7 @@ namespace nda {
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
   class basic_array;
 
-  template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
+  template <typename ValueType, int Rank, typename Layout, char Algebra = 'A', typename AccessorPolicy = nda::default_accessor, typename OwningPolicy= nda::borrowed>
   class basic_array_view;
 
   // ---------------------- User aliases  --------------------------------

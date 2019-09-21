@@ -18,7 +18,6 @@ namespace nda {
 #include "./range.hpp"
 #include "./bound_check_worker.hpp"
 #include "./slice_static.hpp"
-#include "./idx_map_iterator.hpp"
 #include "./for_each.hpp"
 #include "./permutation.hpp"
 
@@ -224,14 +223,14 @@ namespace nda {
       return call_impl(std::make_index_sequence<sizeof...(Args)>{}, args...);
     }
 
-    // ----------------  Iterator -------------------------
+    //// ----------------  Iterator -------------------------
 
-    using iterator = idx_map_iterator<idx_map<Rank, StrideOrder, LayoutProp>>;
+    //using iterator = idx_map_iterator<idx_map<Rank, StrideOrder, LayoutProp>>;
 
-    [[nodiscard]] iterator begin() const { return {this}; }
-    [[nodiscard]] iterator cbegin() const { return {this}; }
-    [[nodiscard]] typename iterator::end_sentinel_t end() const { return {}; }
-    [[nodiscard]] typename iterator::end_sentinel_t cend() const { return {}; }
+    //[[nodiscard]] iterator begin() const { return {this}; }
+    //[[nodiscard]] iterator cbegin() const { return {this}; }
+    //[[nodiscard]] typename iterator::end_sentinel_t end() const { return {}; }
+    //[[nodiscard]] typename iterator::end_sentinel_t cend() const { return {}; }
 
     // ----------------  Comparison -------------------------
     bool operator==(idx_map const &x) { return (len == x.len) and (str == x.str); }
