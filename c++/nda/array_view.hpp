@@ -23,7 +23,7 @@ namespace nda {
   template <typename ValueType, int Rank, typename Layout = C_layout>
   using array = basic_array<ValueType, Rank, Layout, 'A', heap>;
 
-  template <typename ValueType, int Rank, typename Layout = C_stride_layout> 
+  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
   using array_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed>;
 
   template <typename ValueType, typename Layout = C_layout> // CLayout or FLayout
@@ -179,14 +179,14 @@ namespace nda {
      */
     template <typename RHS>
     basic_array_view &operator=(RHS const &rhs) {
-      nda::details::assignment(*this, rhs);
+      assign_from(*this, rhs);
       return *this;
     }
 
     /// Same as the general case
     /// [C++ oddity : this case must be explicitly coded too]
     basic_array_view &operator=(basic_array_view const &rhs) {
-      nda::details::assignment(*this, rhs);
+      assign_from(*this, rhs);
       return *this;
     }
 
