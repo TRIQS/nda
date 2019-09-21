@@ -39,11 +39,13 @@ ValueType *data_start() { return _storage.data(); }
 
 // Internal only. A special case for optimization
 decltype(auto) operator()(_linear_index_t x) const {
+  //NDA_PRINT(idx_map_t::layout_prop);
   if constexpr (idx_map_t::layout_prop == layout_prop_e::strided_1d) return _storage[x.value * _idx_m.min_stride()];
   if constexpr (idx_map_t::layout_prop == layout_prop_e::contiguous) return _storage[x.value]; // min_stride is 1
   // other case : should not happen, let it be a compilation error.
 }
 decltype(auto) operator()(_linear_index_t x) {
+  //NDA_PRINT(idx_map_t::layout_prop);
   if constexpr (idx_map_t::layout_prop == layout_prop_e::strided_1d) return _storage[x.value * _idx_m.min_stride()];
   if constexpr (idx_map_t::layout_prop == layout_prop_e::contiguous) return _storage[x.value]; // min_stride is 1
   // other case : should not happen, let it be a compilation error.

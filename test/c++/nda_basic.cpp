@@ -14,23 +14,88 @@ TEST(NDA, Create1) { //NOLINT
 
 // -------------------------------------
 
-TEST(NDA, Assign) { //NOLINT
-  nda::array<long, 2> A(3, 3);
-
-  A() = 0;
-
+TEST(Assign, Contiguous) { //NOLINT
+  nda::array<long, 2> A{{1, 2}, {3, 4}, {5, 6}};
   nda::array<long, 2> B;
   B = A;
 
   EXPECT_ARRAY_NEAR(A, B);
-  A(0, 2) = 87;
 
-  B = A(); // no resize
+  A(0, 1) = 87;
+  B       = A(); // no resize
 
   EXPECT_EQ(A.indexmap().strides(), B.indexmap().strides());
 
   EXPECT_ARRAY_NEAR(A, B);
-  EXPECT_EQ(B.shape(), (nda::shape_t<2>{3, 3}));
+  EXPECT_EQ(B.shape(), (nda::shape_t<2>{3, 2}));
+}
+
+// -------------------------------------
+
+TEST(Assign, Strided) { //NOLINT
+  nda::array<long, 3> A(3, 5, 9);
+  nda::array<long, 1> B;
+
+  for (int i = 0; i < A.extent(0); ++i)
+    for (int j = 0; j < A.extent(1); ++j)
+      for (int k = 0; k < A.extent(2); ++k) A(i, j, k) = 1 + i + 10 * j + 100 * k;
+
+  NDA_PRINT(A.shape());
+
+  B = A(_, 0, 1);
+  for (int i = 0; i < A.extent(0); ++i) EXPECT_EQ(A(i, 0, 1), B(i));
+
+  B = A(1, _, 2);
+  for (int i = 0; i < A.extent(1); ++i) EXPECT_EQ(A(1, i, 2), B(i));
+
+  B = A(1, 3, _);
+
+  for (int i = 0; i < A.extent(2); ++i) EXPECT_EQ(A(1, 3, i), B(i));
+
+  EXPECT_EQ(nda::slice_static::slice_layout_prop(true, std::array<bool, 3>{1, 0, 0}, 2, std::array<int, 3>{0, 1, 2}, nda::layout_prop_e::contiguous),
+            nda::layout_prop_e::strided_1d);
+  EXPECT_EQ(nda::slice_static::slice_layout_prop(true, std::array<bool, 3>{0, 1, 0}, 2, std::array<int, 3>{0, 1, 2}, nda::layout_prop_e::contiguous),
+            nda::layout_prop_e::strided_1d);
+  EXPECT_EQ(nda::slice_static::slice_layout_prop(true, std::array<bool, 3>{0, 0, 1}, 2, std::array<int, 3>{0, 1, 2}, nda::layout_prop_e::contiguous),
+            nda::layout_prop_e::contiguous);
+
+  static_assert(nda::get_layout_info<decltype(A(1, 3, _))>.prop == nda::layout_prop_e::contiguous);
+  static_assert(nda::get_layout_info<decltype(A(1, _, 2))>.prop == nda::layout_prop_e::strided_1d);
+  static_assert(nda::get_layout_info<decltype(A(_, 0, 1))>.prop == nda::layout_prop_e::strided_1d);
+}
+
+// -------------------------------------
+
+TEST(Assign, Strided2) { //NOLINT
+  nda::array<long, 3> A(3, 5, 9);
+  nda::array<long, 1> B;
+
+  for (int i = 0; i < A.extent(0); ++i)
+    for (int j = 0; j < A.extent(1); ++j)
+      for (int k = 0; k < A.extent(2); ++k) A(i, j, k) = 1 + i + 10 * j + 100 * k;
+
+  B.resize(20);
+  B = 0;
+
+  static_assert(nda::get_layout_info<decltype(B(range(0, 2 * A.extent(0), 2)))>.prop == nda::layout_prop_e::strided_1d);
+  
+  B(range(0, 2 * A.extent(0), 2)) = A(_, 0, 1);
+  NDA_PRINT(B);
+  NDA_PRINT(A(_, 0, 1));
+
+  for (int i = 0; i < A.extent(0); ++i) EXPECT_EQ(A(i, 0, 1), B(2 * i));
+
+  B(range(0, 2 * A.extent(1), 2)) = A(1, _, 2);
+  NDA_PRINT(B);
+  NDA_PRINT(A(1, _, 2));
+
+  for (int i = 0; i < A.extent(1); ++i) EXPECT_EQ(A(1, i, 2), B(2 * i));
+
+  B(range(0, 2 * A.extent(2), 2)) = A(1, 3, _);
+  NDA_PRINT(B);
+  NDA_PRINT(A(1, 3, _));
+
+  for (int i = 0; i < A.extent(2); ++i) EXPECT_EQ(A(1, 3, i), B(2 * i));
 }
 
 // -------------------------------------
@@ -115,6 +180,7 @@ TEST(NDA, MoveAssignment) { //NOLINT
   EXPECT_EQ(B.shape(), (nda::shape_t<1>{3}));
   for (int i = 0; i < 3; ++i) EXPECT_EQ(B(i), 9);
 }
+
 /*
 // ===================== SWAP =========================================
 
@@ -316,6 +382,3 @@ TEST(Assign, CrossStrideOrder) { //NOLINT
     for (int j = 0; j < 3; ++j)
       for (int k = 0; k < 4; ++k) { EXPECT_EQ(af(i, j, k), i + 10 * j + 100 * k); }
 }
-
-
-

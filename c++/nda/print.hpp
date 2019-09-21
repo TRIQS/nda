@@ -22,15 +22,18 @@ namespace std { // For ADL
 
 namespace nda {
 
+  std::ostream &operator<<(std::ostream &out, layout_prop_e p) {
+    return out << (p & layout_prop_e::contiguous ? "contiguous   " : " ") << (p & layout_prop_e::strided_1d ? "strided_1d   " : " ")
+               << (p & layout_prop_e::smallest_stride_is_one ? "smallest_stride_is_one   " : " ");
+  }
+
   // idx_map
   template <int Rank, uint64_t StrideOrder, layout_prop_e LayoutProp>
   std::ostream &operator<<(std::ostream &out, idx_map<Rank, StrideOrder, LayoutProp> const &x) {
     return out << "  Lengths  : " << x.lengths() << "\n"
                << "  Strides  : " << x.strides() << "\n"
                << "  MemoryStrideOrder   : " << x.stride_order << "\n"
-               << "  Flags   :  " << (LayoutProp & layout_prop_e::contiguous ? "contiguous   " : " ")
-               << (LayoutProp & layout_prop_e::strided_1d ? "strided_1d   " : " ")
-               << (LayoutProp & layout_prop_e::smallest_stride_is_one ? "smallest_stride_is_one   " : " ") << "\n";
+               << "  Flags   :  " << LayoutProp << "\n";
   }
 
   // ==============================================

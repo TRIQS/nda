@@ -132,7 +132,12 @@ namespace nda::slice_static {
   constexpr layout_prop_e slice_layout_prop(bool has_only_rangeall_and_long, std::array<bool, Q> const &args_is_range_all, int Nlast,
                                             std::array<int, N> const &stride_order_in, layout_prop_e layout_prop) {
 
-    if (not has_only_rangeall_and_long) return layout_prop_e::none;
+    if (not has_only_rangeall_and_long) {
+      if (Q == 1) // rank one is special. Alyways at least 1d strided
+        return layout_prop_e::strided_1d;
+      else
+        return layout_prop_e::none;
+    }
     // count the number of times 1 0 appears args_in_range
     // we must traverse in the order of the stride_order ! (in memory order, slowest to fastest)
     int n_10_pattern = 0;
