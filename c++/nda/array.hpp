@@ -125,7 +125,7 @@ namespace nda {
     basic_array(A const &x) REQUIRES(is_ndarray_v<A>) : basic_array{x.shape()} {
       static_assert(std::is_convertible_v<get_value_t<A>, value_t>,
                     "Can not construct the array. ValueType can not be constructed from the value_t of the argument");
-      nda::details::assignment(*this, x);
+      assign_from(*this, x);
     }
 
     /** 
@@ -133,12 +133,12 @@ namespace nda {
      * Used for simple lazy operations, like mpi, and or other lazy transformation.
      * Constructs from x.shape() and use assign. Cf code
      * 
-     * @tparam Lazy A type modeling NdArray
+     * @tparam Lazy A type modeling IsAssignRHS
      * @param lazy 
      */
     template <typename Lazy>
     basic_array(Lazy const &lazy) REQUIRES(is_assign_rhs<Lazy>) : basic_array{lazy.shape()} {
-      assign(*this, lazy);
+      assign_from(*this, lazy);
     }
 
     /** 
@@ -238,7 +238,7 @@ namespace nda {
     basic_array &operator=(RHS const &rhs) {
       static_assert(is_ndarray_v<RHS> or is_scalar_for_v<RHS, basic_array>, "Assignment : RHS not supported");
       if constexpr (is_ndarray_v<RHS>) resize(rhs.shape());
-      nda::details::assignment(*this, rhs);
+      assign_from(*this, rhs);
       return *this;
     }
 
@@ -252,7 +252,7 @@ namespace nda {
     template <typename Lazy>
     basic_array &operator=(Lazy const &lazy) REQUIRES(is_assign_rhs<Lazy>) {
       resize(lazy.shape());
-      assign(*this, lazy);
+      assign_from(*this, lazy);
       return *this;
     }
 

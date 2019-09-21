@@ -23,11 +23,11 @@ ValueType *data_start() { return _storage.data(); }
 [[nodiscard]] long size() const { return _idx_m.size(); }
 
 /// size() == 0
-//[[deprecated]] 
+//[[deprecated]]
 [[nodiscard]] bool is_empty() const { return _storage.is_null(); }
 
 /// Same as shape()[i]
-//[[deprecated]] 
+//[[deprecated]]
 [[nodiscard]] long shape(int i) const { return _idx_m.lengths()[i]; }
 
 [[nodiscard]] long extent(int i) const { return _idx_m.lengths()[i]; }
@@ -38,8 +38,16 @@ ValueType *data_start() { return _storage.data(); }
 // here. In particular to check the && case carefully.
 
 // Internal only. A special case for optimization
-decltype(auto) operator()(_linear_index_t x) const { return _storage[x.value]; }
-decltype(auto) operator()(_linear_index_t x) { return _storage[x.value]; }
+decltype(auto) operator()(_linear_index_t x) const {
+  if constexpr (idx_map_t::layout_prop == layout_prop_e::strided_1d) return _storage[x.value * _idx_m.min_stride()];
+  if constexpr (idx_map_t::layout_prop == layout_prop_e::contiguous) return _storage[x.value]; // min_stride is 1
+  // other case : should not happen, let it be a compilation error.
+}
+decltype(auto) operator()(_linear_index_t x) {
+  if constexpr (idx_map_t::layout_prop == layout_prop_e::strided_1d) return _storage[x.value * _idx_m.min_stride()];
+  if constexpr (idx_map_t::layout_prop == layout_prop_e::contiguous) return _storage[x.value]; // min_stride is 1
+  // other case : should not happen, let it be a compilation error.
+}
 
 private:
 // impl of call. Only different case is if Self is &&
@@ -61,9 +69,10 @@ FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) {
     if constexpr (n_args_long == rank) {         // no range, ellipsis, we simply compute the linear position
       long offset = self._idx_m(x...);           // compute the offset
       if constexpr (is_view or not SelfIsRvalue) //
-        return AccessorPolicy::template accessor<ValueType>::access(self._storage. data(), offset);            // We return a REFERENCE here. Ok since underlying array is still alive
-      else                                       //
-        return ValueType{self._storage[offset]}; // We return a VALUE here, the array is about be destroyed.
+        return AccessorPolicy::template accessor<ValueType>::access(self._storage.data(),
+                                                                    offset); // We return a REFERENCE here. Ok since underlying array is still alive
+      else                                                                   //
+        return ValueType{self._storage[offset]};                             // We return a VALUE here, the array is about be destroyed.
     }
     // case 2 : we have to make a slice
     else {
@@ -139,7 +148,7 @@ typename iterator::end_sentinel_t end() { return {}; }
 template <typename RHS>
 auto &operator+=(RHS const &rhs) {
   static_assert(not is_const, "Can not assign to a const view");
-  details::compound_assign_impl<'A'>(*this, rhs);
+  compound_assign_from<'A'>(*this, rhs);
   return *this;
 }
 /**
@@ -149,7 +158,7 @@ auto &operator+=(RHS const &rhs) {
 template <typename RHS>
 auto &operator-=(RHS const &rhs) {
   static_assert(not is_const, "Can not assign to a const view");
-  details::compound_assign_impl<'S'>(*this, rhs);
+  compound_assign_from<'S'>(*this, rhs);
   return *this;
 }
 /**
@@ -159,7 +168,7 @@ auto &operator-=(RHS const &rhs) {
 template <typename RHS>
 auto &operator*=(RHS const &rhs) {
   static_assert(not is_const, "Can not assign to a const view");
-  details::compound_assign_impl<'M'>(*this, rhs);
+  compound_assign_from<'M'>(*this, rhs);
   return *this;
 }
 /**
@@ -169,6 +178,6 @@ auto &operator*=(RHS const &rhs) {
 template <typename RHS>
 auto &operator/=(RHS const &rhs) {
   static_assert(not is_const, "Can not assign to a const view");
-  details::compound_assign_impl<'D'>(*this, rhs);
+  compound_assign_from<'D'>(*this, rhs);
   return *this;
 }

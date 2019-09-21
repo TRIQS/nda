@@ -131,7 +131,7 @@ namespace nda {
   // --------------------- mpi_lazy_reduce -----------------------
   //
   template <typename LHS, typename A>
-  void assign(LHS &lhs, mpi_lazy_reduce<A> const &lazy_op) {
+  void assign_from(LHS &lhs, mpi_lazy_reduce<A> const &lazy_op) {
 
     static_assert(has_layout_contiguous<A>, "Non contigous view in mpi_broadcast are not implemented");
 
@@ -170,7 +170,7 @@ namespace nda {
   // ----------------------- mpi_lazy_scatter ------------------------------------
 
   template <typename LHS, typename A>
-  void assign(LHS &lhs, mpi_lazy_scatter<A> const &lazy_op) {
+  void assign_from(LHS &lhs, mpi_lazy_scatter<A> const &lazy_op) {
 
     static_assert(has_layout_contiguous<A>, "Non contigous view in mpi_broadcast are not implemented");
 
@@ -197,7 +197,7 @@ namespace nda {
   // ----------------------- mpi_lazy_gather ------------------------------------
 
   template <typename LHS, typename A>
-  void assign(LHS &lhs, mpi_lazy_gather<A> const &lazy_op) {
+  void assign_from(LHS &lhs, mpi_lazy_gather<A> const &lazy_op) {
 
     static_assert(has_layout_contiguous<A>, "Non contigous view in mpi_broadcast are not implemented");
 
