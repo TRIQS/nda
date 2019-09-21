@@ -12,8 +12,10 @@ using namespace std::complex_literals;
 template <int R> using myshape_t = nda::shape_t<R>;
 
 // variables for the test
-nda::range _;
+nda::range_all _;
 nda::ellipsis ___;
+
+using nda::range;
 
 #define MAKE_MAIN_MPI                                                                                                                                \
   int main(int argc, char **argv) {                                                                                                                  \

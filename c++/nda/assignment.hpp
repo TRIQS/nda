@@ -28,7 +28,8 @@ namespace nda {
     // If LHS and RHS are both 1d strided order or contiguous, and have the same stride order
     // we can make a 1d loop
     if constexpr ((get_layout_info<LHS>.stride_order == get_layout_info<RHS>.stride_order) // same stride order and both contiguous ...
-                  and has_layout_contiguous<LHS> and has_layout_contiguous<RHS>) {
+                  and has_layout_strided_1d<LHS> and has_layout_strided_1d<RHS>) {
+                  //and has_layout_contiguous<LHS> and has_layout_contiguous<RHS>) {
       //  NDA_PRINT("Assignment : linear computation optimisation");
       long L = lhs.size();
       for (long i = 0; i < L; ++i) lhs(_linear_index_t{i}) = rhs(_linear_index_t{i});
