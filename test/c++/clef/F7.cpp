@@ -8,9 +8,9 @@ struct F7 {
   CLEF_IMPLEMENT_LAZY_CALL(F7);
 
   template <typename Fnt>
-  friend void triqs_clef_auto_assign(F7 &x, Fnt f) {
+  friend void clef_auto_assign(F7 &x, Fnt f) {
     x.v++;
-    std::cerr << " called triqs_clef_auto_assign " << f(1, 2, 3, 4, 5, 6, 7) << std::endl;
+    std::cerr << " called clef_auto_assign " << f(1, 2, 3, 4, 5, 6, 7) << std::endl;
   }
   friend std::ostream &operator<<(std::ostream &out, F7 const &) { return out << "F7"; }
 };
