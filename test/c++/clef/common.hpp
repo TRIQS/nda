@@ -28,7 +28,7 @@ struct F1 {
 
   int operator()(int x) const { return 10 * x; }
 
-  TRIQS_CLEF_IMPLEMENT_LAZY_CALL(F1);
+  CLEF_IMPLEMENT_LAZY_CALL(F1);
 
   template <typename Fnt> friend void triqs_clef_auto_assign(F1 &x, Fnt f) {
     x.v = f(x.v);
@@ -44,7 +44,7 @@ struct F2 {
 
   double operator()(double x, double y) const { return 10 * x + y; }
 
-  TRIQS_CLEF_IMPLEMENT_LAZY_CALL(F2);
+  CLEF_IMPLEMENT_LAZY_CALL(F2);
 
   template <typename Fnt> friend void triqs_clef_auto_assign(F2 const &, Fnt f) {
     std::cerr << " called F2 triqs_clef_auto_assign " << f(10, 20) << std::endl;

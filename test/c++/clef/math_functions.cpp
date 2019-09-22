@@ -11,9 +11,9 @@ namespace clef {
 
     template <typename T> typename std::enable_if<!clef::is_any_lazy<T>::value, T>::type inc(T const &x) { return x + 1; }
 
-    TRIQS_CLEF_MAKE_FNT_LAZY(bar);
-    TRIQS_CLEF_MAKE_FNT_LAZY(inc);
-    TRIQS_CLEF_MAKE_FNT_LAZY(foo);
+    CLEF_MAKE_FNT_LAZY(bar);
+    CLEF_MAKE_FNT_LAZY(inc);
+    CLEF_MAKE_FNT_LAZY(foo);
 } 
 
 #define _TEST_3(EXPR)                                                                                                                                \
