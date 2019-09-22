@@ -45,10 +45,8 @@ namespace clef {
   // If T is a lvalue reference, pack it into a reference_wrapper, unless force_copy_in_expr<T>::value == true
   // If T is an rvalue reference, we store it as the type (using move semantics).
   template <typename T>
-  struct force_copy_in_expr : std::false_type {};
-  template <typename T>
-  struct force_copy_in_expr<T const> : force_copy_in_expr<T> {};
-
+  constexpr bool force_copy_in_expr = false;
+  
   // --------------------
 
   template <class T>
@@ -56,7 +54,7 @@ namespace clef {
     using type = T;
   };
   template <class T>
-  struct expr_storage_impl<T &> : std::conditional<force_copy_in_expr<T>::value, typename std::remove_const<T>::type, std::reference_wrapper<T>> {};
+  struct expr_storage_impl<T &> : std::conditional<force_copy_in_expr<std::remove_const_t<T>>, std::remove_const_t<T>, std::reference_wrapper<T>> {};
   template <class T>
   struct expr_storage_impl<T &&> {
     using type = T;
@@ -112,7 +110,7 @@ namespace clef {
 
   // _ph will always be copied (they are empty anyway).
   template <int N>
-  struct force_copy_in_expr<_ph<N>> : std::true_type {};
+  constexpr bool force_copy_in_expr<_ph<N>> =true;
 
   // represent a couple (_ph, value).
   template <int N, typename U>
@@ -196,7 +194,7 @@ namespace clef {
   
   // if we want that subexpression are copied ?
   template <typename Tag, typename... T>
-  struct force_copy_in_expr<expr<Tag, T...>> : std::true_type {};
+  constexpr bool force_copy_in_expr<expr<Tag, T...>> = true;
 
   template <typename Tag, typename... T>
   using expr_node_t = expr<Tag, expr_storage_t<T>...>;
@@ -459,7 +457,7 @@ namespace clef {
   constexpr bool is_lazy<make_fun_impl<Expr, Is...>> =  (ph_set<make_fun_impl<Expr, Is...>>::value != 0);
   
   template <typename Expr, int... Is>
-  struct force_copy_in_expr<make_fun_impl<Expr, Is...>> : std::true_type {};
+  constexpr bool force_copy_in_expr<make_fun_impl<Expr, Is...>>  = true;
 
   template <typename Expr, typename... Phs>
   [[gnu::always_inline]] make_fun_impl<std::decay_t<Expr>, Phs::index...> make_function(Expr &&ex, Phs...) {
