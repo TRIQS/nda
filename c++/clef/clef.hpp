@@ -326,6 +326,7 @@ namespace clef {
   template <typename T, typename... Pairs>
   decltype(auto) eval(T const &ex, Pairs const &... pairs);
 
+#if 0
   // _ph
   template <int N, int i, typename T, typename... Pairs>
   struct evaluator<_ph<N>, pair<i, T>, Pairs...> {
@@ -341,6 +342,30 @@ namespace clef {
     static constexpr bool is_lazy = false;
     [[gnu::always_inline]] T operator()(_ph<N>, pair<N, T> const &p, Pairs const &...) const { return p.rhs; }
   };
+
+#else
+
+  template <int N, int... Is, typename... T>
+  struct evaluator<_ph<N>, pair<Is, T>...> {
+    private:
+    template <size_t... Ps>
+    static constexpr int get_position_of_N(std::index_sequence<Ps...>) {
+      return ((Is == N ? int(Ps) + 1 : 0) + ...) - 1;
+    }
+    static constexpr int N_position = get_position_of_N(std::make_index_sequence<sizeof...(Is)>{});
+
+    public:
+    static constexpr bool is_lazy = (N_position == -1);
+
+    [[gnu::always_inline]] decltype(auto) operator()(_ph<N>, pair<Is, T> const &... pairs) const {
+      if constexpr (not is_lazy) { // N is one of the Is
+        return std::get<N_position>(std::tie(pairs...)).rhs;
+      } else { // N is not one of the Is
+        return _ph<N>{};
+      }
+    }
+  };
+#endif
 
   // any object hold by reference wrapper is redirected to the evaluator of the object
   template <typename T, typename... Contexts>
@@ -672,51 +697,32 @@ namespace clef {
   *  taking expressions (at least one argument has to be an expression)
   *  The lookup happens by ADL, so IT MUST BE USED IN THE clef namespace
   * --------------------------------------------------------------------------------------------------- */
-  //#define CLEF_MAKE_FNT_LAZY1(name)                                                                                                              \
-  //struct name##_lazy_impl {                                                                                                                          \
-    //template <typename... A>                                                                                                                         \
-    //decltype(auto) operator()(A &&... __a) const {                                                                                                   \
-      //return name(std::forward<A>(__a)...);                                                                                                          \
-    //}                                                                                                                                                \
-  //};                                                                                                                                                 \
-  //template <typename... A>                                                                                                                           \
-  //auto name(A &&... __a) DECL_AND_RETURN(make_expr_call(name##_lazy_impl(), std::forward<A>(__a)...))
-
 #define CLEF_MAKE_FNT_LAZY(name)                                                                                                                     \
   template <typename... A>                                                                                                                           \
   auto name(A &&... __a) REQUIRES(is_any_lazy<A...>) {                                                                                               \
     return make_expr_call([](auto const &... __b) -> decltype(auto) { return name(__b...); }, std::forward<A>(__a)...);                              \
   }
 
-#define CLEF_EXTEND_FNT_LAZY(FUN, TRAIT)                                                                                                             \
-  template <typename A>                                                                                                                              \
-  std::enable_if_t<TRAIT<A>::value, clef::expr_node_t<clef::tags::function, clef::FUN##_lazy_impl, A>> FUN(A &&__a) {                                \
-    return {clef::tags::function{}, clef::FUN##_lazy_impl{}, std::forward<A>(__a)};                                                                  \
-  }
-
 #define CLEF_IMPLEMENT_LAZY_METHOD(TY, name)                                                                                                         \
-  struct __clef_lazy_method_impl_##TY##_##name {                                                                                                     \
-    template <typename X, typename... A>                                                                                                             \
-    decltype(auto) operator()(X &&__x, A &&... __a) const {                                                                                          \
-      return __x.name(std::forward<A>(__a)...);                                                                                                      \
-    }                                                                                                                                                \
-    friend std::ostream &operator<<(std::ostream &out, __clef_lazy_method_impl_##TY##_##name const &) {                                              \
-      return out << "apply_method:" << AS_STRING(name);                                                                                              \
-    }                                                                                                                                                \
-  };                                                                                                                                                 \
   template <typename... A>                                                                                                                           \
-  auto name(A &&... a) DECL_AND_RETURN(make_expr_call(__clef_lazy_method_impl_##TY##_##name{}, *this, std::forward<A>(a)...))
+  auto name(A &&... __a) REQUIRES(is_any_lazy<A...>) {                                                                                               \
+    return make_expr_call([](auto &&__obj, auto &&... __b) -> decltype(auto) { return __obj.name(__b...); }, *this, std::forward<A>(__a)...);        \
+  }
 
 #define CLEF_IMPLEMENT_LAZY_CALL(...)                                                                                                                \
   template <typename... Args>                                                                                                                        \
-        auto operator()(Args &&... args) const &DECL_AND_RETURN(make_expr_call(*this, std::forward<Args>(args)...))                                  \
+  auto operator()(Args &&... args) const &REQUIRES(clef::is_any_lazy<Args...>) {                                                                     \
+    return make_expr_call(*this, std::forward<Args>(args)...);                                                                                       \
+  }                                                                                                                                                  \
                                                                                                                                                      \
-           template <typename... Args>                                                                                                               \
-           auto operator()(Args &&... args)                                                                                                          \
-        & DECL_AND_RETURN(make_expr_call(*this, std::forward<Args>(args)...))                                                                        \
+  template <typename... Args>                                                                                                                        \
+     auto operator()(Args &&... args) & REQUIRES(clef::is_any_lazy<Args...>) {                                                                       \
+    return make_expr_call(*this, std::forward<Args>(args)...);                                                                                       \
+  }                                                                                                                                                  \
                                                                                                                                                      \
-             template <typename... Args>                                                                                                             \
-             auto operator()(Args &&... args)                                                                                                        \
-     && DECL_AND_RETURN(make_expr_call(std::move(*this), std::forward<Args>(args)...))
+  template <typename... Args>                                                                                                                        \
+     auto operator()(Args &&... args) && REQUIRES(clef::is_any_lazy<Args...>) {                                                                      \
+    return make_expr_call(std::move(*this), std::forward<Args>(args)...);                                                                            \
+  }
 
 } // namespace clef
