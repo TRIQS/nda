@@ -29,7 +29,7 @@ TEST(Clef, F7) {
   F7 f(7), g(8), h(7);
 
   auto str = to_string(eval(f(x1_, x2_, x3_, x4_, x5_, x6_, x7_), x_ = 1, y_ = 2));
-  EXPECT_EQ(str, "F7(1, 2, _3, _4, _5, _6, _7)");
+  EXPECT_EQ(str, "lambda(1, 2, _3, _4, _5, _6, _7)");
 
   // Check compilation speed...
   f(x1_, x2_, x3_, x4_, x5_, x6_, x7_) << x1_ + x2_ + x3_ + x4_ + x5_ + x6_ + x7_;
