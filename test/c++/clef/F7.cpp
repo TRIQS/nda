@@ -5,7 +5,7 @@ struct F7 {
   F7(double v_) : v(v_) {}
   double operator()(int i1, int, int, int, int, int, int) const { return 10 * i1; }
 
-  TRIQS_CLEF_IMPLEMENT_LAZY_CALL(F7);
+  CLEF_IMPLEMENT_LAZY_CALL(F7);
 
   template <typename Fnt>
   friend void triqs_clef_auto_assign(F7 &x, Fnt f) {

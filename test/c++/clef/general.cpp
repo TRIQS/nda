@@ -90,7 +90,7 @@ struct Obj {
   double my_method(double d) const { return 2 * d; }
 
   // CLEF overload
-  TRIQS_CLEF_IMPLEMENT_LAZY_METHOD(Obj, my_method);
+  CLEF_IMPLEMENT_LAZY_METHOD(Obj, my_method);
 
   // Just to print itself nicely in the expressions
   friend std::ostream &operator<<(std::ostream &out, Obj const &) { return out << "Obj"; }
