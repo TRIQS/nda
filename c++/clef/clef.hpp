@@ -28,12 +28,11 @@
 
 namespace clef {
 
-  template <typename T>
-  struct remove_cv_ref : std::remove_cv<typename std::remove_reference<T>::type> {};
+  //template <typename T>
+  //struct remove_cv_ref : std::remove_cv<typename std::remove_reference<T>::type> {};
 
   using ull_t = unsigned long long;
   namespace tags {
-    struct function_class {};
     struct function {};
     struct subscript {};
     struct terminal {};
@@ -49,6 +48,8 @@ namespace clef {
   struct force_copy_in_expr : std::false_type {};
   template <typename T>
   struct force_copy_in_expr<T const> : force_copy_in_expr<T> {};
+
+  // --------------------
 
   template <class T>
   struct expr_storage_impl {
@@ -177,12 +178,13 @@ namespace clef {
     // assignement is in general deleted
     expr &operator=(expr const &) = delete; // no ordinary assignment
     expr &operator=(expr &&) = default;     // move assign ok
+
     // however, this is ok in the case f(i,j) = expr, where f is a clef::function
-    template <typename RHS, typename CH = childs_t>
-    void operator=(RHS const &rhs) {
-      static_assert(std::is_base_of<tags::function_class, std::tuple_element_t<0, CH>>::value, "NO");
-      *this << rhs;
-    }
+    //template <typename RHS, typename CH = childs_t>
+    //void operator=(RHS const &rhs) {
+    //static_assert(std::is_base_of<tags::function_class, std::tuple_element_t<0, CH>>::value, "NO");
+    //*this << rhs;
+    //}
   };
   // set some traits
   template <typename Tag, typename... T>
@@ -455,16 +457,16 @@ namespace clef {
   struct force_copy_in_expr<make_fun_impl<Expr, Is...>> : std::true_type {};
 
   template <typename Expr, typename... Phs>
-  [[gnu::always_inline]] make_fun_impl<typename remove_cv_ref<Expr>::type, Phs::index...> make_function(Expr &&ex, Phs...) {
+  [[gnu::always_inline]] make_fun_impl<std::decay_t<Expr>, Phs::index...> make_function(Expr &&ex, Phs...) {
     return {std::forward<Expr>(ex)};
   }
 
-  namespace result_of {
-    template <typename Expr, typename... Phs>
-    struct make_function {
-      using type = make_fun_impl<typename remove_cv_ref<Expr>::type, Phs::index...>;
-    };
-  } // namespace result_of
+  //namespace result_of {
+  //template <typename Expr, typename... Phs>
+  //struct make_function {
+  //using type = make_fun_impl<std::decay_t<Expr>, Phs::index...>;
+  //};
+  //} // namespace result_of
 
   template <typename Expr, int... Is, typename... Pairs>
   struct evaluator<make_fun_impl<Expr, Is...>, Pairs...> {
@@ -503,37 +505,32 @@ namespace clef {
   *  --------------------------------------------------------------------------------------------------- */
 
   // by default it is deleted = not implemented : every class has to define it...
-  //template<typename T, typename F> void triqs_clef_auto_assign (T,F) = delete;
+  //template<typename T, typename F> void clef_auto_assign (T,F) = delete;
 
   // remove the ref_wrapper, terminal ...
   template <typename T, typename F>
-  [[gnu::always_inline]] void triqs_clef_auto_assign(std::reference_wrapper<T> R, F &&f) {
-    triqs_clef_auto_assign(R.get(), std::forward<F>(f));
+  [[gnu::always_inline]] void clef_auto_assign(std::reference_wrapper<T> R, F &&f) {
+    clef_auto_assign(R.get(), std::forward<F>(f));
   }
   template <typename T, typename F>
-  [[gnu::always_inline]] void triqs_clef_auto_assign(expr<tags::terminal, T> const &t, F &&f) {
-    triqs_clef_auto_assign(std::get<0>(t.childs), std::forward<F>(f));
+  [[gnu::always_inline]] void clef_auto_assign(expr<tags::terminal, T> const &t, F &&f) {
+    clef_auto_assign(std::get<0>(t.childs), std::forward<F>(f));
   }
 
   // auto assign of an expr ? (for chain calls) : just reuse the same operator
   template <typename Tag, typename... Childs, typename RHS>
-  [[gnu::always_inline]] void triqs_clef_auto_assign(expr<Tag, Childs...> &&ex, RHS const &rhs) {
+  [[gnu::always_inline]] void clef_auto_assign(expr<Tag, Childs...> &&ex, RHS const &rhs) {
     ex << rhs;
   }
 
   template <typename Tag, typename... Childs, typename RHS>
-  [[gnu::always_inline]] void triqs_clef_auto_assign(expr<Tag, Childs...> const &ex, RHS const &rhs) {
+  [[gnu::always_inline]] void clef_auto_assign(expr<Tag, Childs...> const &ex, RHS const &rhs) {
     ex << rhs;
   }
 
-  template <typename... INT>
-  constexpr bool _all_different(INT... i) {
-    constexpr int N = sizeof...(INT);
-    int ind[N]      = {i...};
-    for (int a = 0; a < N; ++a)
-      for (int b = a + 1; b < N; ++b)
-        if (ind[a] == ind[b]) return false;
-    return true;
+  template <typename... Is>
+  constexpr bool _all_different(int i0, Is... is) {
+    return (((is - i0) * ... * 1) != 0);
   }
 
   // The case A(x_,y_) = RHS : we form the function (make_function) and call auto_assign (by ADL)
@@ -541,31 +538,31 @@ namespace clef {
   [[gnu::always_inline]] void operator<<(expr<tags::function, F, _ph<Is>...> &&ex, RHS &&rhs) {
     static_assert(_all_different(Is...),
                   "Illegal expression : two of the placeholders on the LHS are the same. This expression is only valid for loops on the full mesh");
-    triqs_clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
+    clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
   }
   template <typename F, typename RHS, int... Is>
   [[gnu::always_inline]] void operator<<(expr<tags::function, F, _ph<Is>...> const &ex, RHS &&rhs) {
     static_assert(_all_different(Is...),
                   "Illegal expression : two of the placeholders on the LHS are the same. This expression is only valid for loops on the full mesh");
-    triqs_clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
+    clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
   }
   template <typename F, typename RHS, int... Is>
   [[gnu::always_inline]] void operator<<(expr<tags::function, F, _ph<Is>...> &ex, RHS &&rhs) {
     static_assert(_all_different(Is...),
                   "Illegal expression : two of the placeholders on the LHS are the same. This expression is only valid for loops on the full mesh");
-    triqs_clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
+    clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
   }
 
   // The case A[x_,y_] = RHS : we form the function (make_function) and call auto_assign (by ADL)
   // template <typename F, typename RHS, int... Is> [[gnu::always_inline]] void operator<<(expr<tags::subscript, F, _tuple<_ph<Is>...>>&& ex, RHS&& rhs) {
-  //  triqs_clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
+  //  clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
   // }
   /*template <typename F, typename RHS, int... Is>
  [[gnu::always_inline]] void operator<<(expr<tags::subscript, F, _ph<Is>...> const& ex, RHS&& rhs) {
-  triqs_clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
+  clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
  }
  template <typename F, typename RHS, int... Is> [[gnu::always_inline]] void operator<<(expr<tags::subscript, F, _ph<Is>...>& ex, RHS&& rhs) {
-  triqs_clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
+  clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
  }
 */
   // any other case e.g. f(x_+y_) = RHS etc .... which makes no sense : compiler will stop
@@ -582,26 +579,26 @@ namespace clef {
 
   // by default it is deleted = not implemented : every class has to define it...
   template <typename T, typename F>
-  [[gnu::always_inline]] void triqs_clef_auto_assign_subscript(T, F) = delete;
+  [[gnu::always_inline]] void clef_auto_assign_subscript(T, F) = delete;
 
   // remove the ref_wrapper, terminal ...
   template <typename T, typename F>
-  [[gnu::always_inline]] void triqs_clef_auto_assign_subscript(std::reference_wrapper<T> R, F &&f) {
-    triqs_clef_auto_assign_subscript(R.get(), std::forward<F>(f));
+  [[gnu::always_inline]] void clef_auto_assign_subscript(std::reference_wrapper<T> R, F &&f) {
+    clef_auto_assign_subscript(R.get(), std::forward<F>(f));
   }
   template <typename T, typename F>
-  [[gnu::always_inline]] void triqs_clef_auto_assign_subscript(expr<tags::terminal, T> const &t, F &&f) {
-    triqs_clef_auto_assign_subscript(std::get<0>(t.childs), std::forward<F>(f));
+  [[gnu::always_inline]] void clef_auto_assign_subscript(expr<tags::terminal, T> const &t, F &&f) {
+    clef_auto_assign_subscript(std::get<0>(t.childs), std::forward<F>(f));
   }
 
   // auto assign of an expr ? (for chain calls) : just reuse the same operator
   template <typename Tag, typename... Childs, typename RHS>
-  [[gnu::always_inline]] void triqs_clef_auto_assign_subscript(expr<Tag, Childs...> &&ex, RHS const &rhs) {
+  [[gnu::always_inline]] void clef_auto_assign_subscript(expr<Tag, Childs...> &&ex, RHS const &rhs) {
     ex << rhs;
   }
 
   template <typename Tag, typename... Childs, typename RHS>
-  [[gnu::always_inline]] void triqs_clef_auto_assign_subscript(expr<Tag, Childs...> const &ex, RHS const &rhs) {
+  [[gnu::always_inline]] void clef_auto_assign_subscript(expr<Tag, Childs...> const &ex, RHS const &rhs) {
     ex << rhs;
   }
 
@@ -610,20 +607,20 @@ namespace clef {
   [[gnu::always_inline]] void operator<<(expr<tags::subscript, F, _ph<Is>...> const &ex, RHS &&rhs) {
     static_assert(_all_different(Is...),
                   "Illegal expression : two of the placeholdes on the LHS are the same. This expression is only valid for loops on the full mesh");
-    triqs_clef_auto_assign_subscript(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
+    clef_auto_assign_subscript(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
   }
   template <typename F, typename RHS, int... Is>
   [[gnu::always_inline]] void operator<<(expr<tags::subscript, F, _ph<Is>...> &&ex, RHS &&rhs) {
     static_assert(_all_different(Is...),
                   "Illegal expression : two of the placeholdes on the LHS are the same. This expression is only valid for loops on the full mesh");
-    triqs_clef_auto_assign_subscript(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
+    clef_auto_assign_subscript(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
   }
 
   template <typename F, typename RHS, int... Is>
   [[gnu::always_inline]] void operator<<(expr<tags::subscript, F, _ph<Is>...> &ex, RHS &&rhs) {
     static_assert(_all_different(Is...),
                   "Illegal expression : two of the placeholdes on the LHS are the same. This expression is only valid for loops on the full mesh");
-    triqs_clef_auto_assign_subscript(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
+    clef_auto_assign_subscript(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
   }
 
   template <typename F, typename RHS, typename... T>
@@ -645,7 +642,7 @@ namespace clef {
 
   // make a node from a copy of the object
   template <typename T>
-  expr<tags::terminal, typename remove_cv_ref<T>::type> make_expr_from_clone(T &&x) {
+  expr<tags::terminal, std::decay_t<T>> make_expr_from_clone(T &&x) {
     return {tags::terminal(), std::forward<T>(x)};
   }
 
