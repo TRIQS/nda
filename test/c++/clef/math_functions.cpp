@@ -9,7 +9,7 @@ namespace clef {
     using ::bar;
     using ::foo;
 
-    template <typename T> typename std::enable_if<!clef::is_any_lazy<T>::value, T>::type inc(T const &x) { return x + 1; }
+    template <typename T> T inc(T const &x) REQUIRES (!clef::is_any_lazy<T>) { return x + 1; }
 
     CLEF_MAKE_FNT_LAZY(bar);
     CLEF_MAKE_FNT_LAZY(inc);
