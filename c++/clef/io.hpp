@@ -37,7 +37,7 @@ namespace clef {
   template <int m>
   struct print_tuple_impl<m, m> {
     template <typename Tuple>
-    void operator()(std::ostream &out, Tuple const &t) {}
+    void operator()(std::ostream &, Tuple const &) {}
   };
   template <typename Tuple>
   std::ostream &print_tuple(std::ostream &out, Tuple const &t) {

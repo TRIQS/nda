@@ -20,7 +20,7 @@ namespace clef {
   };
 
   template <typename T>
-  std::ostream &triqs_clef_formal_print(std::ostream &out, std::vector<T> const &x) {
+  std::ostream &triqs_clef_formal_print(std::ostream &out, std::vector<T> const &) {
     return out << "std::vector";
   }
 

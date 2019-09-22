@@ -34,7 +34,7 @@ struct F1 {
     x.v = f(x.v);
   }
 
-  friend std::ostream &operator<<(std::ostream &out, F1 const &x) { return out << "F1"; }
+  friend std::ostream &operator<<(std::ostream &out, F1 const &) { return out << "F1"; }
 };
 
 struct F2 {
@@ -46,11 +46,11 @@ struct F2 {
 
   TRIQS_CLEF_IMPLEMENT_LAZY_CALL(F2);
 
-  template <typename Fnt> friend void triqs_clef_auto_assign(F2 const &x, Fnt f) {
+  template <typename Fnt> friend void triqs_clef_auto_assign(F2 const &, Fnt f) {
     std::cerr << " called F2 triqs_clef_auto_assign " << f(10, 20) << std::endl;
   }
 
-  friend std::ostream &operator<<(std::ostream &out, F2 const &x) { return out << "F2"; }
+  friend std::ostream &operator<<(std::ostream &out, F2 const &) { return out << "F2"; }
 };
 
 using namespace clef;
