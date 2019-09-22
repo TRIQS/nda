@@ -46,7 +46,7 @@ namespace clef {
   // If T is an rvalue reference, we store it as the type (using move semantics).
   template <typename T>
   constexpr bool force_copy_in_expr = false;
-  
+
   // --------------------
 
   template <class T>
@@ -110,7 +110,7 @@ namespace clef {
 
   // _ph will always be copied (they are empty anyway).
   template <int N>
-  constexpr bool force_copy_in_expr<_ph<N>> =true;
+  constexpr bool force_copy_in_expr<_ph<N>> = true;
 
   // represent a couple (_ph, value).
   template <int N, typename U>
@@ -147,7 +147,7 @@ namespace clef {
 
   template <typename... Args>
   constexpr bool is_any_lazy = (is_lazy<std::decay_t<Args>> or ...);
-  
+
   template <int N>
   constexpr bool is_lazy<_ph<N>> = true;
 
@@ -188,10 +188,10 @@ namespace clef {
   // set some traits
   template <typename Tag, typename... T>
   struct ph_set<expr<Tag, T...>> : ph_set<T...> {};
-  
+
   template <typename Tag, typename... T>
-  constexpr bool is_lazy<expr<Tag, T...>>  = true;
-  
+  constexpr bool is_lazy<expr<Tag, T...>> = true;
+
   // if we want that subexpression are copied ?
   template <typename Tag, typename... T>
   constexpr bool force_copy_in_expr<expr<Tag, T...>> = true;
@@ -250,7 +250,7 @@ namespace clef {
     };                                                                                                                                               \
   }                                                                                                                                                  \
   template <typename L, typename R>                                                                                                                  \
-  [[gnu::always_inline]] auto operator OP(L &&l, R &&r) REQUIRES(is_any_lazy<L, R>) {                                                         \
+  [[gnu::always_inline]] auto operator OP(L &&l, R &&r) REQUIRES(is_any_lazy<L, R>) {                                                                \
     return expr<tags::TAG, expr_storage_t<L>, expr_storage_t<R>>{tags::TAG(), std::forward<L>(l), std::forward<R>(r)};                               \
   }                                                                                                                                                  \
   template <>                                                                                                                                        \
@@ -280,7 +280,7 @@ namespace clef {
     };                                                                                                                                               \
   }                                                                                                                                                  \
   template <typename L>                                                                                                                              \
-  [[gnu::always_inline]] auto operator OP(L &&l) REQUIRES(is_any_lazy<L>) {                                                                   \
+  [[gnu::always_inline]] auto operator OP(L &&l) REQUIRES(is_any_lazy<L>) {                                                                          \
     return expr<tags::TAG, expr_storage_t<L>>{tags::TAG(), std::forward<L>(l)};                                                                      \
   }                                                                                                                                                  \
   template <>                                                                                                                                        \
@@ -454,22 +454,15 @@ namespace clef {
   };
 
   template <typename Expr, int... Is>
-  constexpr bool is_lazy<make_fun_impl<Expr, Is...>> =  (ph_set<make_fun_impl<Expr, Is...>>::value != 0);
-  
+  constexpr bool is_lazy<make_fun_impl<Expr, Is...>> = (ph_set<make_fun_impl<Expr, Is...>>::value != 0);
+
   template <typename Expr, int... Is>
-  constexpr bool force_copy_in_expr<make_fun_impl<Expr, Is...>>  = true;
+  constexpr bool force_copy_in_expr<make_fun_impl<Expr, Is...>> = true;
 
   template <typename Expr, typename... Phs>
   [[gnu::always_inline]] make_fun_impl<std::decay_t<Expr>, Phs::index...> make_function(Expr &&ex, Phs...) {
     return {std::forward<Expr>(ex)};
   }
-
-  //namespace result_of {
-  //template <typename Expr, typename... Phs>
-  //struct make_function {
-  //using type = make_fun_impl<std::decay_t<Expr>, Phs::index...>;
-  //};
-  //} // namespace result_of
 
   template <typename Expr, int... Is, typename... Pairs>
   struct evaluator<make_fun_impl<Expr, Is...>, Pairs...> {
@@ -654,32 +647,12 @@ namespace clef {
   * The object can be kept as a : a ref, a copy, a view
   * --------------------------------------------------------------------------------------------------- */
 
-  template <typename T>
-  struct arity {
-    static constexpr int value = -1;
-  };
-
-  /*
-  namespace _result_of {
-    template <typename Obj, typename... Args>
-    struct make_expr_call : std::enable_if<is_any_lazy<Args...>, expr<tags::function, expr_storage_t<Obj>, expr_storage_t<Args>...>> {
-      static_assert(((arity<Obj>::value == -1) || (arity<Obj>::value == sizeof...(Args))), "Object called with a wrong number of arguments");
-    };
-  } // namespace _result_of
-  template <typename Obj, typename... Args>
-  typename _result_of::make_expr_call<Obj, Args...>::type make_expr_call(Obj &&obj, Args &&... args) {
-    return {tags::function(), std::forward<Obj>(obj), std::forward<Args>(args)...};
-  }
-  
-  template <typename Obj, typename... Args>
-  using make_expr_call_t = typename _result_of::make_expr_call<Obj, Args...>::type;
-
-*/
+  //template <typename T>
+  //constexpr int arity = 1;
 
   template <typename Obj, typename... Args>
-  expr<tags::function, expr_storage_t<Obj>, expr_storage_t<Args>...> make_expr_call(Obj &&obj, Args &&... args)
-     REQUIRES(is_any_lazy<Args...>) {
-    static_assert(((arity<Obj>::value == -1) || (arity<Obj>::value == sizeof...(Args))), "Object called with a wrong number of arguments");
+  expr<tags::function, expr_storage_t<Obj>, expr_storage_t<Args>...> make_expr_call(Obj &&obj, Args &&... args) REQUIRES(is_any_lazy<Args...>) {
+    //static_assert(((arity<Obj> == -1) || (arity<Obj> == sizeof...(Args))), "Object called with a wrong number of arguments");
     return {tags::function{}, std::forward<Obj>(obj), std::forward<Args>(args)...};
   }
 
@@ -687,20 +660,6 @@ namespace clef {
   * Create a [] call (subscript) node of an object
   * The object can be kept as a : a ref, a copy, a view
   * --------------------------------------------------------------------------------------------------- */
-
-  /*
-  namespace _result_of {
-    template <typename Obj, typename Arg>
-    struct make_expr_subscript : std::enable_if<is_any_lazy<Arg>, expr<tags::subscript, expr_storage_t<Obj>, expr_storage_t<Arg>>> {};
-  } // namespace _result_of
-  template <typename Obj, typename Arg>
-  typename _result_of::make_expr_subscript<Obj, Arg>::type make_expr_subscript(Obj &&obj, Arg &&arg) {
-    return {tags::subscript(), std::forward<Obj>(obj), std::forward<Arg>(arg)};
-  }
-
-  template <typename Obj, typename... Args>
-  using make_expr_subscript_t = typename _result_of::make_expr_subscript<Obj, Args...>::type;
-*/
 
   template <typename Obj, typename Args>
   expr<tags::subscript, expr_storage_t<Obj>, expr_storage_t<Args>> make_expr_subscript(Obj &&obj, Args &&args) REQUIRES(is_any_lazy<Args>) {
@@ -725,7 +684,7 @@ namespace clef {
 
 #define CLEF_MAKE_FNT_LAZY(name)                                                                                                                     \
   template <typename... A>                                                                                                                           \
-  auto name(A &&... __a) REQUIRES(is_any_lazy<A...>) {                                                                                        \
+  auto name(A &&... __a) REQUIRES(is_any_lazy<A...>) {                                                                                               \
     return make_expr_call([](auto const &... __b) -> decltype(auto) { return name(__b...); }, std::forward<A>(__a)...);                              \
   }
 
