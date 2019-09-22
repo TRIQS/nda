@@ -2,6 +2,10 @@
 
 double x = 1, y = 2;
 
+#define _TEST_1a(EXPR)                                                                                                                                \
+  EXPECT_EQ(eval(EXPR, x_ = 1, y_ = 2), [&](int x_, int) { return EXPR; }(1, 2));                                                                 \
+  EXPECT_EQ(eval(eval(EXPR, x_ = x_ + y_), x_ = 1, y_ = 2), [&](int x_, int) { return EXPR; }(3, 2));
+
 #define _TEST_1(EXPR)                                                                                                                                \
   EXPECT_EQ(eval(EXPR, x_ = 1, y_ = 2), [&](int x_, int y_) { return EXPR; }(1, 2));                                                                 \
   EXPECT_EQ(eval(eval(EXPR, x_ = x_ + y_), x_ = 1, y_ = 2), [&](int x_, int y_) { return EXPR; }(3, 2));
@@ -9,11 +13,12 @@ double x = 1, y = 2;
 TEST(clef, eval) {
   F1 f(7);
 
-  _TEST_1(5 * x_);
+  _TEST_1a(5 * x_);
+  _TEST_1a(f(x_));
+  
   _TEST_1(x_ + 2 * y_);
   _TEST_1(x_ + 2 * y_ + x_);
   _TEST_1(x_ / 2.0 + 2 * y_);
-  _TEST_1(f(x_));
   _TEST_1(f(x_) + 2 * y_);
   _TEST_1(1 / f(x_) + 2 * y_);
 }
@@ -82,13 +87,13 @@ struct Obj {
   Obj(Obj const &) = delete; // a non copyable object, to illustrate that we do NOT copy...
 
   // a method
-  double my_method(double x) const { return 2 * x; }
+  double my_method(double d) const { return 2 * d; }
 
   // CLEF overload
   TRIQS_CLEF_IMPLEMENT_LAZY_METHOD(Obj, my_method);
 
   // Just to print itself nicely in the expressions
-  friend std::ostream &operator<<(std::ostream &out, Obj const &x) { return out << "Obj"; }
+  friend std::ostream &operator<<(std::ostream &out, Obj const &) { return out << "Obj"; }
 };
 
 // -----------------------
