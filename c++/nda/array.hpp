@@ -271,7 +271,7 @@ namespace nda {
       static_assert((std::is_convertible_v<Int, long> and ...), "Arguments must be convertible to long");
       static_assert(sizeof...(is) + 1 == Rank, "Incorrect number of arguments for resize. Should be Rank");
       static_assert(std::is_copy_constructible_v<ValueType>, "Can not resize an array if its value_t is not copy constructible");
-      resize(shape_t<Rank>{i0, is...});
+      resize(shape_t<Rank>{i0, long(is)...});
     }
 
     /** 

@@ -27,7 +27,7 @@
 #include "tools.hpp"
 #include "qcache.hpp"
 
-namespace triqs::arrays::lapack {
+namespace nda::lapack {
 
   using namespace blas_lapack_tools;
 
@@ -57,7 +57,8 @@ namespace triqs::arrays::lapack {
   }
 
   // RHS as a vector/vector_view
-  template <typename VT> std::enable_if_t<is_blas_lapack_type<typename VT::value_type>::value> gtsv(VT &DL, VT &D, VT &DU, VT &B) {
+  template <typename VT>
+  std::enable_if_t<is_blas_lapack_type<typename VT::value_type>::value> gtsv(VT &DL, VT &D, VT &DU, VT &B) {
     reflexive_qcache<VT> Cdl(DL);
     reflexive_qcache<VT> Cd(D);
     reflexive_qcache<VT> Cdu(DU);
@@ -76,4 +77,4 @@ namespace triqs::arrays::lapack {
     if (info) TRIQS_RUNTIME_ERROR << "Error in gtsv : info = " << info;
   }
 
-} // namespace triqs::arrays::lapack
+} // namespace nda::lapack

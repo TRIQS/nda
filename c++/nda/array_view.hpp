@@ -7,6 +7,7 @@
 #include "accessors.hpp"
 #include "iterators.hpp"
 #include "mpi.hpp"
+#include <clef/clef.hpp>
 
 namespace nda {
 
@@ -31,6 +32,12 @@ namespace nda {
 
   template <typename ValueType, typename Layout = C_stride_layout>
   using matrix_view = basic_array_view<ValueType, 2, Layout, 'M', default_accessor, borrowed>;
+
+  template <typename ValueType, typename Layout = C_layout> // CLayout or FLayout
+  using vector = basic_array<ValueType, 1, Layout, 'A', heap>;
+
+  template <typename ValueType, typename Layout = C_stride_layout>
+  using vector_view = basic_array_view<ValueType, 1, Layout, 'A', default_accessor, borrowed>;
 
   // ---------------------- is_array_or_view_container  --------------------------------
 

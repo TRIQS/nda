@@ -1,10 +1,10 @@
 #include "test_common.hpp"
 #include "nda/blas/gemm.hpp"
 //#include <nda/linalg/det_and_inverse.hpp>
-//#include "nda/blas_lapack/gtsv.hpp"
-//#include <nda/blas_lapack/stev.hpp>
-//#include <nda/blas_lapack/gelss.hpp>
-//#include <nda/blas_lapack/gesvd.hpp>
+//#include "nda/lapack/gtsv.hpp"
+#include <nda/lapack/stev.hpp>
+//#include <nda/lapack/gelss.hpp>
+//#include <nda/lapack/gesvd.hpp>
 //#include <nda/linalg/eigenelements.hpp>
 
 using nda::C_layout;
@@ -58,7 +58,6 @@ TEST(Matmul, Int) { all_test_matmul<long>(); }
 
 //-------------------------------------------------------------
 
-
 TEST(Matmul, Promotion) {
   matrix<double> C, D, A = {{1.0, 2.3}, {3.1, 4.3}};
   matrix<int> B     = {{1, 2}, {3, 4}};
@@ -68,7 +67,6 @@ TEST(Matmul, Promotion) {
   D = A * Bd;
   EXPECT_ARRAY_NEAR(A * B, A * Bd, 1.e-13);
 }
-
 
 //-------------------------------------------------------------
 
@@ -86,7 +84,7 @@ TEST(Matmul, Cache) {
   Res(0, 0) = 8;
   Res(1, 1) = 16.64;
   TMP()     = 0;
-  TMP()     = matrix<std::complex<double>> {M1 * (M1 + 2.0)};
+  TMP()     = matrix<std::complex<double>>{M1 * (M1 + 2.0)};
   EXPECT_ARRAY_NEAR(TMP(), Res, 1.e-13);
 }
 
@@ -115,7 +113,6 @@ TEST(Matmul, Alias) {
   B1 = make_regular(B1) * B2;
   EXPECT_ARRAY_NEAR(B1, matrix<double>{{6, 0}, {0, 6}});
 }
-
 
 // ==============================================================
 /*
@@ -169,33 +166,37 @@ TEST(NDA, MatrixInverse) {
   lapack::getri(Wi, ipiv2);
   EXPECT_ARRAY_NEAR(Wi, Wkeep, 1.e-12);
 }
-// ========================= tridiag matrix STEV  =====================================
 
+*/
+
+// ========================= tridiag matrix STEV  =====================================
+/*
+ * FAILS DUE TO MATRIX * VECTOR
 template <typename T>
-void check_eig(matrix<T> M, matrix_view<T> vectors, vector_view<double> values) {
-  auto _ = range();
+void check_eig(matrix<T> M, matrix_view<T> vectors, nda::vector_view<double> values) {
   for (auto i : range(0, first_dim(M))) { EXPECT_ARRAY_NEAR(M * vectors(i, _), values(i) * vectors(i, _), 1.e-13); }
 }
 
 template <typename Md, typename Me>
 void test(Md d, Me e) {
   using value_t = typename Me::value_type;
-  using triqs::utility::conj;
+  using nda::conj;
+  using std::conj;
 
   matrix<value_t> A(first_dim(d), first_dim(d));
   assign_foreach(A, [&](size_t i, size_t j) { return j == i ? d(i) : j == i + 1 ? e(i) : j == i - 1 ? conj(e(j)) : .0; });
 
   int size = first_dim(d);
   for (int init_size : {0, size, 2 * size}) {
-    lapack::tridiag_worker<triqs::is_complex<value_t>::value> w(init_size);
+    nda::lapack::tridiag_worker<nda::is_complex_v<value_t>> w(init_size);
     w(d, e);
     check_eig(A, w.vectors(), w.values());
   }
 }
 
 TEST(tridiag, real) {
-  vector<double> d(5);
-  vector<double> e(4);
+  nda::vector<double> d(5);
+  nda::vector<double> e(4);
   assign_foreach(d, [](size_t i) { return 3.2 * i + 2.3; });
   assign_foreach(e, [](size_t i) { return 2.4 * (i + 1.82) + 0.78; });
   e(1) = .0;
@@ -203,13 +204,16 @@ TEST(tridiag, real) {
 }
 
 TEST(tridiag, complex) {
-  vector<double> d(5);
-  vector<dcomplex> e(4);
+  nda::vector<double> d(5);
+  nda::vector<dcomplex> e(4);
   assign_foreach(d, [](size_t i) { return 3.2 * i + 2.3; });
   assign_foreach(e, [](size_t i) { return 2.4 * (i + 1.82) + 0.78 * dcomplex(0, 1.0); });
   e(1) = .0;
   test(d, e);
 }
+*/
+
+/*
 
 //=======================================  gtsv=====================================
 

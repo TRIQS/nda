@@ -1,12 +1,6 @@
-#define TRIQS_ARRAYS_ENFORCE_BOUNDCHECK
-#include <triqs/test_tools/arrays.hpp>
-#include <cmath>
-#include <limits>
-#include <triqs/arrays.hpp>
-#include <triqs/arrays/asserts.hpp>
+#include "./test_common.hpp"
 
-using namespace triqs::arrays;
-using triqs::clef::placeholder;
+using clef::placeholder;
 
 // ==============================================================
 
@@ -15,13 +9,14 @@ TEST(NDA, LazyFill) {
   placeholder<0> i_;
   placeholder<1> j_;
 
-  array<double, 2> A(2, 2);
+  nda::array<double, 2> A(2, 2);
   A(i_, j_) << i_ * 8.1 + 2.31 * j_;
 
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 2; ++j) EXPECT_EQ(A(i, j), i * 8.1 + 2.31 * j);
 }
 
+/*
 // ==============================================================
 
 TEST(NDA, MakeImmutable) {
@@ -46,5 +41,4 @@ TEST(NDA, MakeImmutableLazy) {
 
   EXPECT_ARRAY_NEAR(B, array<int, 2>{{0, 1}, {1, 2}}, 1.e-15);
 }
-
-MAKE_MAIN
+*/

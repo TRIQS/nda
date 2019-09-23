@@ -57,9 +57,9 @@ private:
 template <bool SelfIsRvalue, typename Self, typename... T>
 FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) {
 
-  //if constexpr (clef::is_any_lazy_v<T...>) return clef::make_expr_call(*this, std::forward<T>(x)...);
-  // else
-  if constexpr (sizeof...(T) == 0)
+  if constexpr (clef::is_any_lazy<T...>)
+    return clef::make_expr_call(std::forward<Self>(self), x...);
+  else if constexpr (sizeof...(T) == 0)
     return view_t{self._idx_m, self._storage};
   else {
     static_assert(((((std::is_base_of_v<range_tag, T> or std::is_constructible_v<long, T>) ? 0 : 1) + ...) == 0),
@@ -131,11 +131,11 @@ private:
 template <typename Iterator>
 [[nodiscard]] auto _make_iterator(bool at_end) const {
   //if constexpr (iterator_rank == Rank)
- //NDA_PRINT("USING general iterator");
-  //else 
-//NDA_PRINT("USING 1d iterator");
-    
-    if constexpr (iterator_rank == Rank)
+  //NDA_PRINT("USING general iterator");
+  //else
+  //NDA_PRINT("USING 1d iterator");
+
+  if constexpr (iterator_rank == Rank)
     return Iterator{indexmap().lengths(), indexmap().strides(), storage().data(), at_end};
   else
     return Iterator{std::array<long, 1>{size()}, std::array<long, 1>{indexmap().min_stride()}, storage().data(), at_end};
@@ -194,3 +194,5 @@ auto &operator/=(RHS const &rhs) {
   static_assert(not is_const, "Can not assign to a const view");
   return operator=(*this / rhs);
 }
+
+
