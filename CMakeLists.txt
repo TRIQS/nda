@@ -105,6 +105,12 @@ add_subdirectory(c++/nda)
 # Build and install the h5 library
 add_subdirectory(c++/h5)
 
+# Create interface target for and install mpi library
+add_subdirectory(c++/mpi)
+
+# Create interface target for and install clef library
+add_subdirectory(c++/clef)
+
 # Build and install the Python modules
 add_subdirectory(python/pybind11)
 add_subdirectory(python/h5)
