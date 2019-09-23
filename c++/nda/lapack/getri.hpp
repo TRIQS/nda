@@ -24,8 +24,8 @@
 
 #include <complex>
 #include "f77/cxx_interface.hpp"
-#include "tools.hpp"
-#include "qcache.hpp"
+#include "../blas/tools.hpp"
+#include "../blas/qcache.hpp"
 
 namespace nda::lapack {
 
@@ -36,8 +36,8 @@ namespace nda::lapack {
    * @param ipiv
    */
   template <typename M>
-  int getri(M &m, arrays::vector<int> &ipiv) {
-    static_assert(is_blas_lapack_v<M>, "Matrices must have the same element type and it must be double, complex ...");
+  int getri(M &m, array<int,1> &ipiv) {
+    static_assert(is_blas_lapack_v<typename M::value_type>, "Matrices must have the same element type and it must be double, complex ...");
 
     auto Ca = reflexive_qcache(m);
     auto dm = std::min(Ca().extent(0), Ca().extent(1));
@@ -49,11 +49,11 @@ namespace nda::lapack {
     f77::getri(get_n_rows(Ca()), Ca().data_start(), get_ld(Ca()), ipiv.data_start(), work1, -1, info);
     int lwork;
     if constexpr (is_complex_v<typename M::value_type>)
-      lwork = std::round(std::real(x)) + 1;
+      lwork = std::round(std::real(work1[0])) + 1;
     else
-      lwork = std::round(x) + 1;
+      lwork = std::round(work1[0]) + 1;
 
-    array<typename MT::value_type, 1> work(lwork);
+    array<typename M::value_type, 1> work(lwork);
 
     f77::getri(get_n_rows(Ca()), Ca().data_start(), get_ld(Ca()), ipiv.data_start(), work.data_start(), lwork, info);
     return info;

@@ -5,6 +5,7 @@
 #include <nda/lapack/stev.hpp>
 //#include <nda/lapack/gelss.hpp>
 //#include <nda/lapack/gesvd.hpp>
+#include <nda/linalg/det_and_inverse.hpp>
 //#include <nda/linalg/eigenelements.hpp>
 
 using nda::C_layout;
@@ -114,6 +115,127 @@ TEST(Matmul, Alias) {
   EXPECT_ARRAY_NEAR(B1, matrix<double>{{6, 0}, {0, 6}});
 }
 
+//-------------------------------------------------------------
+
+TEST(Determinant, Fortran) {
+
+  matrix<double, F_layout> W(3, 3);
+  for (int i = 0; i < 3; ++i)
+    for (int j = 0; j < 3; ++j) W(i, j) = (i > j ? i + 2.5 * j : i * 0.8 - j);
+
+  EXPECT_NEAR(determinant(W), -7.8, 1.e-12);
+}
+
+//-------------------------------------------------------------
+
+TEST(Determinant, C) {
+
+  matrix<double> W(3, 3);
+  for (int i = 0; i < 3; ++i)
+    for (int j = 0; j < 3; ++j) W(i, j) = (i > j ? i + 2.5 * j : i * 0.8 - j);
+
+  EXPECT_NEAR(determinant(W), -7.8, 1.e-12);
+}
+
+//-------------------------------------------------------------
+
+TEST(Inverse, F) {
+
+  using matrix_t = matrix<double, F_layout>;
+
+  matrix_t W(3, 3), Wi(3, 3), A;
+  for (int i = 0; i < 3; ++i)
+    for (int j = 0; j < 3; ++j) W(i, j) = (i > j ? i + 2.5 * j : i * 0.8 - j);
+
+  auto Wkeep = W;
+
+  Wi = inverse(W);
+  EXPECT_NEAR(determinant(Wi), -1 / 7.8, 1.e-12);
+
+  matrix<double, F_layout> should_be_one(W * Wi);
+  for (int i = 0; i < 3; ++i)
+    for (int j = 0; j < 3; ++j) EXPECT_NEAR(std::abs(should_be_one(i, j)), (i == j ? 1 : 0), 1.e-13);
+
+  // FIXME MOVE THIS IN LAPACK TEST
+  // testing against "manual" call of bindings
+  nda::array<int, 1> ipiv2(3);
+  ipiv2 = 0;
+  nda::lapack::getrf(Wi, ipiv2);
+  nda::lapack::getri(Wi, ipiv2);
+  EXPECT_ARRAY_NEAR(Wi, Wkeep, 1.e-12);
+}
+
+//-------------------------------------------------------------
+
+TEST(Inverse, C) {
+
+  using matrix_t = matrix<double, C_layout>;
+
+  matrix_t W(3, 3), Wi(3, 3), A;
+  for (int i = 0; i < 3; ++i)
+    for (int j = 0; j < 3; ++j) W(i, j) = (i > j ? i + 2.5 * j : i * 0.8 - j);
+
+  auto Wkeep = W;
+
+  Wi = inverse(W);
+  EXPECT_NEAR(determinant(Wi), -1 / 7.8, 1.e-12);
+
+  matrix<double, F_layout> should_be_one(W * Wi);
+  for (int i = 0; i < 3; ++i)
+    for (int j = 0; j < 3; ++j) EXPECT_NEAR(std::abs(should_be_one(i, j)), (i == j ? 1 : 0), 1.e-13);
+
+  // FIXME MOVE THIS IN LAPACK TEST
+  // testing against "manual" call of bindings
+  nda::array<int, 1> ipiv2(3);
+  ipiv2 = 0;
+  nda::lapack::getrf(Wi, ipiv2);
+  nda::lapack::getri(Wi, ipiv2);
+  EXPECT_ARRAY_NEAR(Wi, Wkeep, 1.e-12);
+}
+
+//-------------------------------------------------------------
+
+TEST(Inverse, Involution) {
+
+  using matrix_t = matrix<double, C_layout>;
+
+  matrix_t W(3, 3), Wi(3, 3), A;
+  for (int i = 0; i < 3; ++i)
+    for (int j = 0; j < 3; ++j) W(i, j) = (i > j ? i + 2.5 * j : i * 0.8 - j);
+
+  auto Wkeep = W;
+
+  W = inverse(W);
+  W = inverse(W);
+  EXPECT_ARRAY_NEAR(W, Wkeep, 1.e-12);
+}
+
+//-------------------------------------------------------------
+
+TEST(Inverse, slice) {
+
+  using matrix_t = matrix<double, C_layout>;
+
+  matrix_t W(3, 3), Wi(3, 3), A;
+  for (int i = 0; i < 3; ++i)
+    for (int j = 0; j < 3; ++j) W(i, j) = (i > j ? i + 2.5 * j : i * 0.8 - j);
+
+  {
+    auto V      = W(range(0, 3, 2), range(0, 3, 2));
+    matrix_t Vi = inverse(V);
+    matrix_t Viref{{-0.1, 0.5}, {-0.5, 0.0}};
+    EXPECT_ARRAY_NEAR(Vi, Viref, 1.e-12);
+  }
+  W = inverse(W);
+
+  {
+    auto V      = W(range(0, 3, 2), range(0, 3, 2));
+    matrix_t Vi = inverse(V);
+    matrix_t Viref{{-5.0, 4.0}, {24.5, -27.4}};
+    EXPECT_ARRAY_NEAR(Vi, Viref, 1.e-12);
+  }
+}
+
 // ==============================================================
 /*
 TEST(Matvecmul, Promotion) {
@@ -128,45 +250,6 @@ TEST(Matvecmul, Promotion) {
 
   EXPECT_ARRAY_NEAR(Cd, Ci, 1.e-13);
 }
-*/
-// ==============================================================
-/*
- *
-TEST(NDA, MatrixInverse) {
-
-  matrix<double> W(3, 3, FORTRAN_LAYOUT), Wi(3, 3, FORTRAN_LAYOUT), A(FORTRAN_LAYOUT);
-  for (int i = 0; i < 3; ++i)
-    for (int j = 0; j < 3; ++j) W(i, j) = (i > j ? i + 2.5 * j : i * 0.8 - j);
-
-  auto Wkeep = W;
-
-  EXPECT_NEAR(determinant(W), -7.8, 1.e-12);
-
-  Wi = inverse(W);
-  EXPECT_NEAR(determinant(Wi), -1 / 7.8, 1.e-12);
-
-  matrix<double> should_be_one(W * Wi);
-  for (int i = 0; i < 3; ++i)
-    for (int j = 0; j < 3; ++j) EXPECT_NEAR(std::abs(should_be_one(i, j)), (i == j ? 1 : 0), 1.e-13);
-
-  // involution
-  W = inverse(W);
-  A = inverse(W);
-  EXPECT_ARRAY_NEAR(A, Wkeep, 1.e-10);
-
-  matrix_view<double> V(W(range(0, 3, 2), range(0, 3, 2)));
-  matrix<double> Vi = inverse(V);
-  matrix<double> Viref{{-5.0, 4.0}, {24.5, -27.4}};
-  EXPECT_ARRAY_NEAR(Vi, Viref, 1.e-12);
-
-  // testing against "manual" call of bindings
-  triqs::arrays::vector<int> ipiv2(3);
-  ipiv2() = 0;
-  lapack::getrf(Wi, ipiv2);
-  lapack::getri(Wi, ipiv2);
-  EXPECT_ARRAY_NEAR(Wi, Wkeep, 1.e-12);
-}
-
 */
 
 // ========================= tridiag matrix STEV  =====================================

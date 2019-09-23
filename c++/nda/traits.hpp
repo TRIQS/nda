@@ -36,6 +36,12 @@ namespace nda {
   template <typename S, typename A>
   inline constexpr bool is_scalar_for_v = (is_scalar_v<typename A::value_t> ? is_scalar_or_convertible_v<S> : std::is_same_v<S, typename A::value_t>);
 
+  // --------------------------- Algebra ------------------------
+
+  /// A trait to mark a class for its algebra : 'N' = None, 'A' = array, 'M' = matrix, 'V' = vector
+  template <typename A>
+  inline constexpr char get_algebra = 'N';
+
   // ---------------------------  is_regular------------------------
 
   // Impl. trait to match the containers in requires. Match all regular containers (array, matrix)
@@ -53,6 +59,12 @@ namespace nda {
   // Impl. trait to match the containers in requires. Match all containers (array, matrix, view)
   template <typename A>
   inline constexpr bool is_regular_or_view_v = is_regular_v<A> or is_view_v<A>;
+
+  // ---------------------------  is_matrix_or_view_v------------------------
+
+  // Impl. trait to match the containers in requires. Match all containers (array, matrix, view)
+  template <typename A>
+  inline constexpr bool is_matrix_or_view_v = is_regular_or_view_v<A> and (get_algebra<A> =='M') ;
 
   // --------------------------- Ndarray concept------------------------
 
@@ -97,12 +109,6 @@ namespace nda {
   /// A trait to get the return_t of the (long, ... long) for an object with ndarray concept
   template <typename A>
   using get_value_t = decltype(get_first_element(std::declval<A const>()));
-
-  // --------------------------- Algebra ------------------------
-
-  /// A trait to mark a class for its algebra : 'N' = None, 'A' = array, 'M' = matrix, 'V' = vector
-  template <typename A>
-  inline constexpr char get_algebra = 'N';
 
   // ---------------------- Guarantees at compile time for some optimization  --------------------------------
 
