@@ -54,7 +54,7 @@ class ABC_1d : public benchmark::Fixture {
   const long l0 = a.indexmap().lengths()[0];
   double *pb    = &(b(0));
   double *pa    = &(a(0));
-  double *pc __restrict   = &(c(0));
+  double * __restrict pc = &(c(0));
   for (long i = 0; i < l0; ++i) { pa[i] = pb[i] + pc[i]; }
 }
 
@@ -111,7 +111,7 @@ struct p_s_t {
   const long l0 = a.indexmap().lengths()[0];
   double *pb    = &(b(0));
   double *pa    = &(a(0));
-  double *pc __restrict   = &(c(0));
+  double * __restrict pc = &(c(0));
   for (long i = 0; i < l0; i+=2) { pa[i] = pb[i] + pc[i]; }
 }
 
