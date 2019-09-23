@@ -7,7 +7,7 @@ namespace h5 {
 
     template <typename S>
     h5_array_view h5_array_view_from_scalar(S &&s) {
-      return {hdf5_type<std::decay_t<S>>, (void *)(&s), 0, h5::is_complex_v<std::decay_t<S>>};
+      return {hdf5_type<std::decay_t<S>>(), (void *)(&s), 0, h5::is_complex_v<std::decay_t<S>>};
     }
   } // namespace array_interface
 

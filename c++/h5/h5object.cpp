@@ -17,37 +17,39 @@ namespace h5 {
   static_assert(std::is_same<::hsize_t, hsize_t>::value, "Internal error");
 
   // specializations for all basic types
-  template <> hid_t hdf5_type<char>          = H5T_NATIVE_CHAR;
-  template <> hid_t hdf5_type<signed char>   = H5T_NATIVE_SCHAR;
-  template <> hid_t hdf5_type<unsigned char> = H5T_NATIVE_UCHAR;
+  // clang-format off
+  template <> hid_t hdf5_type<char>          (){return  H5T_NATIVE_CHAR;}
+  template <> hid_t hdf5_type<signed char>   (){return  H5T_NATIVE_SCHAR;}
+  template <> hid_t hdf5_type<unsigned char> (){return  H5T_NATIVE_UCHAR;}
 
-  template <> hid_t hdf5_type<short>     = H5T_NATIVE_SHORT;
-  template <> hid_t hdf5_type<int>       = H5T_NATIVE_INT;
-  template <> hid_t hdf5_type<long>      = H5T_NATIVE_LONG;
-  template <> hid_t hdf5_type<long long> = H5T_NATIVE_LLONG;
+  template <> hid_t hdf5_type<short>     (){return  H5T_NATIVE_SHORT;}
+  template <> hid_t hdf5_type<int>       (){return  H5T_NATIVE_INT;}
+  template <> hid_t hdf5_type<long>      (){return  H5T_NATIVE_LONG;}
+  template <> hid_t hdf5_type<long long> (){return  H5T_NATIVE_LLONG;}
 
-  template <> hid_t hdf5_type<unsigned short>     = H5T_NATIVE_USHORT;
-  template <> hid_t hdf5_type<unsigned int>       = H5T_NATIVE_UINT;
-  template <> hid_t hdf5_type<unsigned long>      = H5T_NATIVE_ULONG;
-  template <> hid_t hdf5_type<unsigned long long> = H5T_NATIVE_ULLONG;
+  template <> hid_t hdf5_type<unsigned short>     (){return  H5T_NATIVE_USHORT;}
+  template <> hid_t hdf5_type<unsigned int>       (){return  H5T_NATIVE_UINT;}
+  template <> hid_t hdf5_type<unsigned long>      (){return  H5T_NATIVE_ULONG;}
+  template <> hid_t hdf5_type<unsigned long long> (){return  H5T_NATIVE_ULLONG;}
 
-  template <> hid_t hdf5_type<float>       = H5T_NATIVE_FLOAT;
-  template <> hid_t hdf5_type<double>      = H5T_NATIVE_DOUBLE;
-  template <> hid_t hdf5_type<long double> = H5T_NATIVE_LDOUBLE;
+  template <> hid_t hdf5_type<float>       (){return  H5T_NATIVE_FLOAT;}
+  template <> hid_t hdf5_type<double>      (){return  H5T_NATIVE_DOUBLE;}
+  template <> hid_t hdf5_type<long double> (){return  H5T_NATIVE_LDOUBLE;}
 
-  template <> hid_t hdf5_type<std::complex<double>> = H5T_NATIVE_DOUBLE;
-  template <> hid_t hdf5_type<std::complex<long double>> = H5T_NATIVE_LDOUBLE;
-  template <> hid_t hdf5_type<std::complex<float>> = H5T_NATIVE_FLOAT;
+  template <> hid_t hdf5_type<std::complex<double>>      (){return  H5T_NATIVE_DOUBLE;}
+  template <> hid_t hdf5_type<std::complex<long double>> (){return  H5T_NATIVE_LDOUBLE;}
+  template <> hid_t hdf5_type<std::complex<float>>       (){return  H5T_NATIVE_FLOAT;}
+  // clang-format on
 
   // bool. Use a lambda to initialize it.
   template <>
-  hid_t hdf5_type<bool> = []() {
+  hid_t hdf5_type<bool>() {
     datatype bool_enum_h5type = H5Tenum_create(H5T_NATIVE_CHAR);
     char val;
     H5Tenum_insert(bool_enum_h5type, "FALSE", (val = 0, &val));
     H5Tenum_insert(bool_enum_h5type, "TRUE", (val = 1, &val));
     return bool_enum_h5type;
-  }();
+  };
 
   // -----------------------  name  ---------------------------
 
@@ -64,23 +66,23 @@ namespace h5 {
 
   static void init_h5_name_table() {
     h5_name_table = std::vector<h5_name_t>{
-       {hdf5_type<char>, H5_AS_STRING(char)},
-       {hdf5_type<signed char>, H5_AS_STRING(signed char)},
-       {hdf5_type<unsigned char>, H5_AS_STRING(unsigned char)},
-       {hdf5_type<short>, H5_AS_STRING(short)},
-       {hdf5_type<unsigned short>, H5_AS_STRING(unsigned short)},
-       {hdf5_type<int>, H5_AS_STRING(int)},
-       {hdf5_type<unsigned int>, H5_AS_STRING(unsigned int)},
-       {hdf5_type<long>, H5_AS_STRING(long)},
-       {hdf5_type<unsigned long>, H5_AS_STRING(unsigned long)},
-       {hdf5_type<long long>, H5_AS_STRING(long long)},
-       {hdf5_type<unsigned long long>, H5_AS_STRING(unsigned long long)},
-       {hdf5_type<float>, H5_AS_STRING(float)},
-       {hdf5_type<double>, H5_AS_STRING(double)},
-       {hdf5_type<long double>, H5_AS_STRING(long double)},
-       {hdf5_type<std::complex<float>>, H5_AS_STRING(std::complex<float>)},
-       {hdf5_type<std::complex<double>>, H5_AS_STRING(std::complex<double>)},
-       {hdf5_type<std::complex<long double>>, H5_AS_STRING(std::complex<long double>)} //
+       {hdf5_type<char>(), H5_AS_STRING(char)},
+       {hdf5_type<signed char>(), H5_AS_STRING(signed char)},
+       {hdf5_type<unsigned char>(), H5_AS_STRING(unsigned char)},
+       {hdf5_type<short>(), H5_AS_STRING(short)},
+       {hdf5_type<unsigned short>(), H5_AS_STRING(unsigned short)},
+       {hdf5_type<int>(), H5_AS_STRING(int)},
+       {hdf5_type<unsigned int>(), H5_AS_STRING(unsigned int)},
+       {hdf5_type<long>(), H5_AS_STRING(long)},
+       {hdf5_type<unsigned long>(), H5_AS_STRING(unsigned long)},
+       {hdf5_type<long long>(), H5_AS_STRING(long long)},
+       {hdf5_type<unsigned long long>(), H5_AS_STRING(unsigned long long)},
+       {hdf5_type<float>(), H5_AS_STRING(float)},
+       {hdf5_type<double>(), H5_AS_STRING(double)},
+       {hdf5_type<long double>(), H5_AS_STRING(long double)},
+       {hdf5_type<std::complex<float>>(), H5_AS_STRING(std::complex<float>)},
+       {hdf5_type<std::complex<double>>(), H5_AS_STRING(std::complex<double>)},
+       {hdf5_type<std::complex<long double>>(), H5_AS_STRING(std::complex<long double>)} //
     };
   }
 
@@ -119,8 +121,8 @@ namespace h5 {
 
   h5_object &h5_object::operator=(h5_object &&x) noexcept { //steals the ref, after properly decref its own.
     xdecref(id);
-    id                          = x.id;
-    x.id                        = 0;
+    id   = x.id;
+    x.id = 0;
     return *this;
   }
 

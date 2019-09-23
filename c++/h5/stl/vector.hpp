@@ -11,7 +11,7 @@ namespace h5 {
 
     template <typename T>
     h5_array_view h5_array_view_from_vector(std::vector<T> const &v) {
-      h5_array_view res{hdf5_type<T>, (void *)v.data(), 1, is_complex_v<std::decay_t<T>>};
+      h5_array_view res{hdf5_type<T>(), (void *)v.data(), 1, is_complex_v<std::decay_t<T>>};
       res.slab.count[0] = v.size();
       res.L_tot[0]      = v.size();
       return res;

@@ -15,31 +15,7 @@ namespace h5 {
 
   // Correspondance T -> hdf5 type
   template <typename T>
-  hid_t hdf5_type;
-
-  // clang-format off
-  template <> extern hid_t hdf5_type<char>;
-  template <> extern hid_t hdf5_type<signed char>;
-  template <> extern hid_t hdf5_type<unsigned char>;
-
-  template <> extern hid_t hdf5_type<short>;
-  template <> extern hid_t hdf5_type<int>;
-  template <> extern hid_t hdf5_type<long>;
-  template <> extern hid_t hdf5_type<long long>;
-
-  template <> extern hid_t hdf5_type<unsigned short>;
-  template <> extern hid_t hdf5_type<unsigned int>;
-  template <> extern hid_t hdf5_type<unsigned long>;
-  template <> extern hid_t hdf5_type<unsigned long long>;
-
-  template <> extern hid_t hdf5_type<float>;
-  template <> extern hid_t hdf5_type<double>;
-  template <> extern hid_t hdf5_type<long double>;
-
-  template <> extern hid_t hdf5_type<std::complex<double>>;
-  template <> extern hid_t hdf5_type<std::complex<long double>>;
-  template <> extern hid_t hdf5_type<std::complex<float>>;
-  // clang-format on
+  hid_t hdf5_type();
 
   // impl trait to detect complex numbers
   template <typename T>

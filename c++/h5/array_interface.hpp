@@ -43,7 +43,7 @@ namespace h5::array_interface {
   // scalar are array of rank 0, lengths, strides are empty, rank is 0, start is the scalar
   struct h5_array_view {
     datatype ty;    // HDF5 type
-    void *start;    // start of data. It MUST be a pointer of T* with ty = hdf5_type<T>
+    void *start;    // start of data. It MUST be a pointer of T* with ty = hdf5_type<T>()
     v_t L_tot;      // lengths of the parent contiguous array
     hyperslab slab; // hyperslab
     bool is_complex;
