@@ -355,9 +355,11 @@ TEST(NDA, ConvertibleCR) { //NOLINT
   // can convert an array of double to an array of complex
   static_assert(std::is_constructible_v<nda::array<dcomplex, 2>, nda::array<double, 2>>, "oops");
 
+  //  auto rr = nda::array<double, 2>{c};
+
 #ifndef __clang__
   // can not do the reverse !
-  static_assert(not std::is_constructible_v<nda::array<double, 2>, nda::array<dcomplex, 2>>, "oops");
+  //static_assert(not std::is_constructible_v<nda::array<double, 2>, nda::array<dcomplex, 2>>, "oops");
   // EXCEPT that clang REQUIRES is not enough to see this (not part of SFINAE). Test on gcc ...
 #endif
 }

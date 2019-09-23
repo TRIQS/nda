@@ -41,16 +41,16 @@ namespace nda {
     using view_t    = typename A::view_t;
     using regular_t = typename A::regular_t;
 
-    A &a;
+    A &_a;
     regular_t _copy; // empty by default
     view_t _view;
-    bool need_copy = false, back_copy = false;
+    bool need_copy = false, _back_copy = false;
 
     static constexpr bool guarantee_no_copy = is_regular_v<A> or (A::rank == 1);
     static constexpr bool is_const          = std::is_const_v<A>;
 
     public:
-    explicit _qcache(A &a, bool back_copy = false) : a(a), _view(a), back_copy(back_copy) {
+    explicit _qcache(A &a, bool back_copy = false) : _a(a), _view(a), _back_copy(back_copy) {
       if constexpr (!guarantee_no_copy) {
         need_copy = (A::rank == 2 ? (a.indexmap().min_stride() != 1) : false);
         if (need_copy) {
@@ -62,7 +62,7 @@ namespace nda {
 
     ~_qcache() {
       if constexpr (!guarantee_no_copy and !is_const) {
-        if (need_copy and back_copy) a = _copy;
+        if (need_copy and _back_copy) _a = _copy;
       }
     }
 

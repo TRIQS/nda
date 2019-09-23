@@ -24,18 +24,19 @@ namespace nda {
 
     // We need to make sure that l, and r are matrix or view before calling gemm, and that they have the right type
     // if not, we have to make a temporary
-    auto as_container = [](auto const &a) -> decltype(auto) {
-      using A    = decltype(a);
-      if constexpr (is_regular_or_view_v<A> and std::is_same_v<get_value_t<A>, promoted_type>)
-        return a;
-      else
-        return matrix<promoted_type>{a};
-    };
-
-    static_assert( not blas::is_blas_lapack_v<long>, "");
+    static_assert(not blas::is_blas_lapack_v<long>, "");
 
     // if the type is double, dcomplex or a type understood by gemm
     if constexpr (blas::is_blas_lapack_v<promoted_type>) {
+
+      auto as_container = [](auto const &a) -> decltype(auto) {
+        using A = decltype(a);
+        if constexpr (is_regular_or_view_v<A> and std::is_same_v<get_value_t<A>, promoted_type>)
+          return a;
+        else
+          return matrix<promoted_type>{a};
+      };
+
       blas::gemm(1, as_container(l), as_container(r), 0, result);
     } else {
       blas::generic::gemm(1, l, r, 0, result);

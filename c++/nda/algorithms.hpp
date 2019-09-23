@@ -41,9 +41,9 @@ namespace nda {
   template <typename A>
   auto max_element(A const &a) REQUIRES(is_ndarray_v<A>) {
     return fold(
-       [](auto const &a, auto const &b) {
+       [](auto const &x, auto const &y) {
          using std::max;
-         return max(a, b);
+         return max(x,y);
        },
        a, get_first_element(a));
   }
@@ -56,9 +56,9 @@ namespace nda {
   template <typename A>
   auto min_element(A const &a) REQUIRES(is_ndarray_v<A>) {
     return fold(
-       [](auto const &a, auto const &b) {
+       [](auto const &x, auto const &y) {
          using std::min;
-         return min(a, b);
+         return min(x,y);
        },
        a, get_first_element(a));
   }

@@ -123,6 +123,7 @@ namespace nda {
      */
     template <typename A>
     basic_array(A const &x) REQUIRES(is_ndarray_v<A>) : basic_array{x.shape()} {
+      // need to put here, not in REQUIRES : get_valuee_t may fail, and we want to trap the construction with a proper error
       static_assert(std::is_convertible_v<get_value_t<A>, value_t>,
                     "Can not construct the array. ValueType can not be constructed from the value_t of the argument");
       assign_from(*this, x);
