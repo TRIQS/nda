@@ -36,9 +36,9 @@ namespace h5 {
   char_buf to_char_buf(std::vector<std::vector<std::string>> const &v) {
 
     size_t s = 0, lv = 0;
-    for (auto &v : v) {
-      lv = std::max(lv, v.size());
-      for (auto &x : v) s = std::max(s, x.size() + 1);
+    for (auto &v1 : v) {
+      lv = std::max(lv, v1.size());
+      for (auto &x : v1) s = std::max(s, x.size() + 1);
     }
     auto len = v_t{v.size(), lv, s};
 

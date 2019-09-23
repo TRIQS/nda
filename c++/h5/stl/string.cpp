@@ -175,7 +175,7 @@ namespace h5 {
     size_t size = H5Aget_storage_size(attr);
     cb_out.lengths.push_back(size + 1); // last one is size of the string +1
 
-    long ltot = std::accumulate(cb_out.lengths.begin(), cb_out.lengths.end(), 1, std::multiplies<>());
+    //long ltot = std::accumulate(cb_out.lengths.begin(), cb_out.lengths.end(), 1, std::multiplies<>());
     cb_out.buffer.resize(0x00);
 
     auto err = H5Aread(attr, cb_out.dtype(), (void *)cb_out.buffer.data());
