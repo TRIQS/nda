@@ -1,5 +1,6 @@
 #pragma once
 #include <complex>
+#include <vector>
 #include <sstream>
 #include "./macros.hpp"
 

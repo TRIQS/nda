@@ -1,5 +1,6 @@
 #include <cstddef>
 #include <type_traits>
+#include <cstring>
 
 #include "./allocators.hpp"
 #include "./rtable.hpp"

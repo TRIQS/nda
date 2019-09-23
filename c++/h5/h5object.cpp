@@ -10,6 +10,7 @@
 
 #include "./h5object.hpp"
 #include <vector>
+#include <algorithm>
 
 namespace h5 {
 
