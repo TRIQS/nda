@@ -26,11 +26,12 @@ namespace nda::blas {
 
   /**
    * Calls gemm on a matrix or view
+   * to compute c <- alpha a*b + beta * c
    * @param alpha
    * @param a
    * @param b
    * @param beta
-   * @param out  Note that out can be a temporary (view)
+   * @param c  Note that c can be a temporary (view)
    */
   template <typename A, typename B, typename Out>
   void gemm(typename A::value_type alpha, A const &a, B const &b, typename A::value_type beta, Out &&c) {

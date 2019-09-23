@@ -2,18 +2,17 @@
 
 #include <complex>
 #include "f77/cxx_interface.hpp"
-#include "tools.hpp"
-#include <triqs/utility/exceptions.hpp>
-#include <triqs/arrays/matrix.hpp>
-#include <triqs/arrays/vector.hpp>
+#include "../blas/tools.hpp"
 
-namespace triqs::arrays::lapack {
+namespace nda::lapack {
 
-  using namespace blas_lapack_tools;
+  template <bool Complex = false>
+  struct tridiag_worker {};
 
-  template <bool Complex = false> struct tridiag_worker {};
+  // --------------   Real Version
 
-  template <> struct tridiag_worker<false> {
+  template <>
+  struct tridiag_worker<false> {
     vector<double> D, E, W;
     matrix<double> Z;
     size_t s;
@@ -27,20 +26,24 @@ namespace triqs::arrays::lapack {
       }
       s = n;
     }
-    template <typename VT> void operator()(VT const &diag, VT const &supdiag /* superdiagonal */) {
-      if (supdiag.size() != diag.size() - 1) TRIQS_RUNTIME_ERROR << "Error in tridiagonal matrix diagonalization: size mismatch";
+    template <typename VT>
+    void operator()(VT const &diag, VT const &supdiag /* superdiagonal */) {
+      if (supdiag.size() != diag.size() - 1) NDA_RUNTIME_ERROR << "Error in tridiagonal matrix diagonalization: size mismatch";
       resize(diag.size());
       D(range(0, s))     = diag;
       E(range(0, s - 1)) = supdiag;
       int info;
       f77::stev('V', s, D.data_start(), E.data_start(), Z.data_start(), first_dim(Z), W.data_start(), info);
-      if (info != 0) TRIQS_RUNTIME_ERROR << "Error in tridiagonal matrix diagonalization " << info;
+      if (info != 0) NDA_RUNTIME_ERROR << "Error in tridiagonal matrix diagonalization " << info;
     }
     vector_view<double> values() const { return D(range(0, s)); }
     matrix_view<double> vectors() const { return Z(range(0, s), range(0, s)); }
   };
 
-  template <> struct tridiag_worker<true> {
+  // --------------  Complex Version
+
+  template <>
+  struct tridiag_worker<true> {
     vector<double> D, E, W;
     matrix<double> Z;
     vector<std::complex<double>> U; // similarity transformation
@@ -58,8 +61,10 @@ namespace triqs::arrays::lapack {
       }
       s = n;
     }
-    template <typename VTd, typename VTe> void operator()(VTd const &diag, VTe const &supdiag /* superdiagonal */) {
-      if (supdiag.size() != diag.size() - 1) TRIQS_RUNTIME_ERROR << "Error in tridiagonal matrix diagonalization: size mismatch";
+    template <typename VTd, typename VTe>
+    void operator()(VTd const &diag, VTe const &supdiag /* superdiagonal */) {
+      using nda::conj;
+      if (supdiag.size() != diag.size() - 1) NDA_RUNTIME_ERROR << "Error in tridiagonal matrix diagonalization: size mismatch";
       resize(diag.size());
       D(range(0, s)) = diag;
       // construct transformed off-diagonal elements;
@@ -71,7 +76,7 @@ namespace triqs::arrays::lapack {
       }
       int info;
       f77::stev('V', s, D.data_start(), E.data_start(), Z.data_start(), first_dim(Z), W.data_start(), info);
-      if (info != 0) TRIQS_RUNTIME_ERROR << "Error in tridiagonal matrix diagonalization " << info;
+      if (info != 0) NDA_RUNTIME_ERROR << "Error in tridiagonal matrix diagonalization " << info;
 
       // Back-transform the eigenvectors
       for (int i : range(0, s))
@@ -81,4 +86,4 @@ namespace triqs::arrays::lapack {
     matrix_view<std::complex<double>> vectors() const { return V(range(0, s), range(0, s)); }
   };
 
-} // namespace triqs::arrays::lapack
+} // namespace nda::lapack
