@@ -5,7 +5,7 @@ add_library(nda_c ${sources})
 target_link_libraries(nda_c PRIVATE project_warnings)
 
 # Configure compilation
-target_compile_options(nda_c PUBLIC -fPIC -std=c++17)
+target_compile_options(nda_c PUBLIC -fPIC -std=c++17 $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
 target_include_directories(nda_c PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/c++>)
 target_compile_definitions(nda_c PUBLIC
 				NDA_GIT_HASH=${PROJECT_GIT_HASH}
