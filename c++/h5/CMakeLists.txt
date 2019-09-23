@@ -6,7 +6,7 @@ add_library(h5_interface SHARED ${sources})
 target_link_libraries(h5_interface PRIVATE project_warnings)
 
 # Configure compilation
-target_compile_options(h5_interface PUBLIC -fPIC -std=c++17)
+target_compile_options(h5_interface PUBLIC -fPIC -std=c++17 $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
 target_include_directories(h5_interface PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/c++>)
 target_compile_definitions(h5_interface PUBLIC
 				APP4TRIQS_GIT_HASH=${PROJECT_GIT_HASH}

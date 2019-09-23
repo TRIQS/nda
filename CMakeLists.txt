@@ -61,7 +61,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_compile_options(
   $<$<CONFIG:Debug>:-Og>
   $<$<CONFIG:Debug>:-ggdb3>
-  $<$<CXX_COMPILER_ID:GNU>:-fconcepts>
 )
 
 # Create an Interface target for compiler warnings
