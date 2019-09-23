@@ -10,6 +10,8 @@
 #include <hdf5.h>
 #include <hdf5_hl.h>
 
+#include <algorithm>
+
 namespace h5 {
 
   struct h5_c_size_t {
@@ -21,24 +23,24 @@ namespace h5 {
 
   static void init_h5_c_size_table() {
     h5_c_size_table = std::vector<h5_c_size_t>{
-       {hdf5_type<bool>, sizeof(bool)},
-       {hdf5_type<char>, sizeof(char)},
-       {hdf5_type<signed char>, sizeof(signed char)},
-       {hdf5_type<unsigned char>, sizeof(unsigned char)},
-       {hdf5_type<short>, sizeof(short)},
-       {hdf5_type<unsigned short>, sizeof(unsigned short)},
-       {hdf5_type<int>, sizeof(int)},
-       {hdf5_type<unsigned int>, sizeof(unsigned int)},
-       {hdf5_type<long>, sizeof(long)},
-       {hdf5_type<unsigned long>, sizeof(unsigned long)},
-       {hdf5_type<long long>, sizeof(long long)},
-       {hdf5_type<unsigned long long>, sizeof(unsigned long long)},
-       {hdf5_type<float>, sizeof(float)},
-       {hdf5_type<double>, sizeof(double)},
-       {hdf5_type<long double>, sizeof(long double)},
-       {hdf5_type<std::complex<float>>, sizeof(std::complex<float>)},
-       {hdf5_type<std::complex<double>>, sizeof(std::complex<double>)},
-       {hdf5_type<std::complex<long double>>, sizeof(std::complex<long double>)} //
+       {hdf5_type<bool>(), sizeof(bool)},
+       {hdf5_type<char>(), sizeof(char)},
+       {hdf5_type<signed char>(), sizeof(signed char)},
+       {hdf5_type<unsigned char>(), sizeof(unsigned char)},
+       {hdf5_type<short>(), sizeof(short)},
+       {hdf5_type<unsigned short>(), sizeof(unsigned short)},
+       {hdf5_type<int>(), sizeof(int)},
+       {hdf5_type<unsigned int>(), sizeof(unsigned int)},
+       {hdf5_type<long>(), sizeof(long)},
+       {hdf5_type<unsigned long>(), sizeof(unsigned long)},
+       {hdf5_type<long long>(), sizeof(long long)},
+       {hdf5_type<unsigned long long>(), sizeof(unsigned long long)},
+       {hdf5_type<float>(), sizeof(float)},
+       {hdf5_type<double>(), sizeof(double)},
+       {hdf5_type<long double>(), sizeof(long double)},
+       {hdf5_type<std::complex<float>>(), sizeof(std::complex<float>)},
+       {hdf5_type<std::complex<double>>(), sizeof(std::complex<double>)},
+       {hdf5_type<std::complex<long double>>(), sizeof(std::complex<long double>)} //
     };
   }
 
@@ -68,24 +70,24 @@ namespace h5 {
 
   static void init_h5py() {
     h5_py_type_table = std::vector<h5_py_type_t>{
-       //  {hdf5_type<bool>, NPY_BOOL, sizeof(bool)},
-       {hdf5_type<char>, NPY_STRING, sizeof(char)},
-       {hdf5_type<signed char>, NPY_BYTE, sizeof(signed char)},
-       {hdf5_type<unsigned char>, NPY_UBYTE, sizeof(unsigned char)},
-       {hdf5_type<short>, NPY_SHORT, sizeof(short)},
-       {hdf5_type<unsigned short>, NPY_USHORT, sizeof(unsigned short)},
-       {hdf5_type<int>, NPY_INT, sizeof(int)},
-       {hdf5_type<unsigned int>, NPY_UINT, sizeof(unsigned int)},
-       {hdf5_type<long>, NPY_LONG, sizeof(long)},
-       {hdf5_type<unsigned long>, NPY_ULONG, sizeof(unsigned long)},
-       {hdf5_type<long long>, NPY_LONGLONG, sizeof(long long)},
-       {hdf5_type<unsigned long long>, NPY_ULONGLONG, sizeof(unsigned long long)},
-       {hdf5_type<float>, NPY_FLOAT, sizeof(float)},
-       {hdf5_type<double>, NPY_DOUBLE, sizeof(double)},
-       {hdf5_type<long double>, NPY_LONGDOUBLE, sizeof(long double)},
-       {hdf5_type<std::complex<float>>, NPY_CFLOAT, sizeof(std::complex<float>)},
-       {hdf5_type<std::complex<double>>, NPY_CDOUBLE, sizeof(std::complex<double>)},
-       {hdf5_type<std::complex<long double>>, NPY_CLONGDOUBLE, sizeof(std::complex<long double>)} //
+       //  {hdf5_type<bool>(), NPY_BOOL, sizeof(bool)},
+       {hdf5_type<char>(), NPY_STRING, sizeof(char)},
+       {hdf5_type<signed char>(), NPY_BYTE, sizeof(signed char)},
+       {hdf5_type<unsigned char>(), NPY_UBYTE, sizeof(unsigned char)},
+       {hdf5_type<short>(), NPY_SHORT, sizeof(short)},
+       {hdf5_type<unsigned short>(), NPY_USHORT, sizeof(unsigned short)},
+       {hdf5_type<int>(), NPY_INT, sizeof(int)},
+       {hdf5_type<unsigned int>(), NPY_UINT, sizeof(unsigned int)},
+       {hdf5_type<long>(), NPY_LONG, sizeof(long)},
+       {hdf5_type<unsigned long>(), NPY_ULONG, sizeof(unsigned long)},
+       {hdf5_type<long long>(), NPY_LONGLONG, sizeof(long long)},
+       {hdf5_type<unsigned long long>(), NPY_ULONGLONG, sizeof(unsigned long long)},
+       {hdf5_type<float>(), NPY_FLOAT, sizeof(float)},
+       {hdf5_type<double>(), NPY_DOUBLE, sizeof(double)},
+       {hdf5_type<long double>(), NPY_LONGDOUBLE, sizeof(long double)},
+       {hdf5_type<std::complex<float>>(), NPY_CFLOAT, sizeof(std::complex<float>)},
+       {hdf5_type<std::complex<double>>(), NPY_CDOUBLE, sizeof(std::complex<double>)},
+       {hdf5_type<std::complex<long double>>(), NPY_CLONGDOUBLE, sizeof(std::complex<long double>)} //
     };
   }
 

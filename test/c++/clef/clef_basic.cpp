@@ -1,21 +1,25 @@
 #include "./common.hpp"
 
-double x = 1, y = 2;
+// must remove shadow here, the _TEST macro use it heavily on purpose
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wshadow"
 
-#define _TEST_1a(EXPR)                                                                                                                                \
-  EXPECT_EQ(eval(EXPR, x_ = 1, y_ = 2), [&](int x_, int) { return EXPR; }(1, 2));                                                                 \
+#define _TEST_1a(EXPR)                                                                                                                               \
+  EXPECT_EQ(eval(EXPR, x_ = 1, y_ = 2), [&](int x_, int) { return EXPR; }(1, 2));                                                                    \
   EXPECT_EQ(eval(eval(EXPR, x_ = x_ + y_), x_ = 1, y_ = 2), [&](int x_, int) { return EXPR; }(3, 2));
 
 #define _TEST_1(EXPR)                                                                                                                                \
   EXPECT_EQ(eval(EXPR, x_ = 1, y_ = 2), [&](int x_, int y_) { return EXPR; }(1, 2));                                                                 \
   EXPECT_EQ(eval(eval(EXPR, x_ = x_ + y_), x_ = 1, y_ = 2), [&](int x_, int y_) { return EXPR; }(3, 2));
 
+//#pragma GCC diagnostic pop
+
 TEST(clef, eval) {
   F1 f(7);
 
   _TEST_1a(5 * x_);
   _TEST_1a(f(x_));
-  
+
   _TEST_1(x_ + 2 * y_);
   _TEST_1(x_ + 2 * y_ + x_);
   _TEST_1(x_ / 2.0 + 2 * y_);
@@ -66,6 +70,7 @@ TEST(clef, autoassign) {
 // -----------------------
 
 TEST(clef, F2) {
+  double x = 1, y = 2;
   F2 ff;
   EXPECT_EQ(eval(ff(x_, y_) + 2 * y_, x_ = x, y_ = y), ff(x, y) + 2 * y);
   EXPECT_EQ(eval(ff(x_, 2), x_ = x), 12);
@@ -80,7 +85,6 @@ TEST(clef, elseif) {
   EXPECT_PRINT(std::string{"(_1 < _2)"}, (x_ < y_));
 }
 
-
 struct Obj {
   double v;                  // put something in it
   Obj(double v_) : v(v_) {}  // constructor
@@ -90,7 +94,7 @@ struct Obj {
   double my_method(double d) const { return 2 * d; }
 
   // CLEF overload
-  CLEF_IMPLEMENT_LAZY_METHOD(Obj, my_method);
+  CLEF_IMPLEMENT_LAZY_METHOD(Obj, my_method)
 
   // Just to print itself nicely in the expressions
   friend std::ostream &operator<<(std::ostream &out, Obj const &) { return out << "Obj"; }

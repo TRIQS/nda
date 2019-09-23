@@ -261,15 +261,17 @@ namespace clef {
     }                                                                                                                                                \
   };
 
-  CLEF_OPERATION(plus, +);
-  CLEF_OPERATION(minus, -);
-  CLEF_OPERATION(multiplies, *);
-  CLEF_OPERATION(divides, /);
-  CLEF_OPERATION(greater, >);
-  CLEF_OPERATION(less, <);
-  CLEF_OPERATION(leq, <=);
-  CLEF_OPERATION(geq, >=);
-  CLEF_OPERATION(eq, ==);
+  // clang-format off
+  CLEF_OPERATION(plus, +)
+  CLEF_OPERATION(minus, -)
+  CLEF_OPERATION(multiplies, *)
+  CLEF_OPERATION(divides, /)
+  CLEF_OPERATION(greater, >)
+  CLEF_OPERATION(less, <)
+  CLEF_OPERATION(leq, <=)
+  CLEF_OPERATION(geq, >=)
+  CLEF_OPERATION(eq, ==)
+  // clang-format on
 #undef CLEF_OPERATION
 
   // all unary operators....

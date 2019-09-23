@@ -385,6 +385,10 @@ namespace nda::mem {
     T &operator[](long i) noexcept { return _data[i]; }
     T const &operator[](long i) const noexcept { return _data[i]; }
 
+    // warnings supp
+    handle & operator = (handle const &) = default;
+    handle & operator = (handle &&) = default;
+
     [[nodiscard]] bool is_null() const noexcept { return _data == nullptr; }
 
     [[nodiscard]] handle<T0, 'R'> const *parent() const { return _parent; }
