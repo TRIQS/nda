@@ -103,6 +103,7 @@ endif()
 
 option(ASAN OFF "Compile library and executables with LLVM Address Sanitizer")
 option(UBSAN OFF "Compile library and executables with LLVM Undefined Behavior Sanitizer")
+option(MBSAN OFF "Compile library and executables with LLVM Memory Sanitizer")
 
 if(ASAN)
   find_package(sanitizer REQUIRED "asan")
@@ -113,4 +114,9 @@ if(UBSAN)
   find_package(sanitizer REQUIRED "ubsan")
   target_link_libraries(nda_c PUBLIC ubsan)
   install(TARGETS ubsan EXPORT nda-targets)
+endif()
+
+if(MSAN)
+  target_compile_options(nda_c PUBLIC -fsanitize=memory -fno-omit-frame-pointer -fsanitize-recover=all -fsanitize-memory-track-origins=2 -O1 -ggdb3)
+  target_link_libraries(nda_c PUBLIC "-fsanitize=memory -fno-omit-frame-pointer -fsanitize-recover=all -fsanitize-memory-track-origins=2")
 endif()
