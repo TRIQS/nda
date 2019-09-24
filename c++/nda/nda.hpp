@@ -29,6 +29,8 @@
 #include <nda/array.hpp>
 #include <nda/array_view.hpp>
 
+#include "basic_functions.hpp"
+
 //#include <nda/matrix.hpp>
 //#include <nda/vector.hpp>
 

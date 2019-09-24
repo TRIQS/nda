@@ -9,6 +9,8 @@ using nda::qcache;
 TEST(qcache, no_copy) {
 
   nda::array<long, 2> a(3, 3);
+  for (int i = 0; i < a.extent(0); ++i)
+    for (int j = 0; j < a.extent(1); ++j) a(i, j) = i + 10 * j;
 
   auto c = qcache(a);
 

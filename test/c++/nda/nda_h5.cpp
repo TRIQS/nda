@@ -116,7 +116,7 @@ TEST(Basic, Empty) {
     h5::group top(file);
     nda::array<long, 2> empty(5, 5);
     h5_read(top, "empty", empty);
-    EXPECT_EQ_ARRAY(empty, (nda::array<double, 2>(0, 10)));
+    EXPECT_EQ(empty.shape(), (nda::shape_t<2>{0,10}));
   }
 }
 
