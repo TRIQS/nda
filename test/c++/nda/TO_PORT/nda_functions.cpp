@@ -116,11 +116,13 @@ TEST(Array, SwapIndex) {
 //FIXME : move in lib
 namespace triqs::arrays {
 
-  template <typename V, int R, typename... I> array_view<V, sizeof...(I)> reinterpret(array<V, R> const &a, I... index) {
+  template <typename V, int R, typename... I>
+  array_view<V, sizeof...(I)> reinterpret(array<V, R> const &a, I... index) {
     return {{make_shape(index...)}, a.storage()};
   }
 
-  template <typename V, int R, bool B, typename... I> array_view<V, sizeof...(I)> reinterpret_array_view(array_view<V, R, B> const &a, I... index) {
+  template <typename V, int R, bool B, typename... I>
+  array_view<V, sizeof...(I)> reinterpret_array_view(array_view<V, R, B> const &a, I... index) {
     if (!has_contiguous_data(a)) TRIQS_RUNTIME_ERROR << "reinterpretation failure : data of the view are not contiguous";
     return {{make_shape(index...)}, a.storage()};
   }

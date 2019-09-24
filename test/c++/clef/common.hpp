@@ -14,7 +14,8 @@
 
 using namespace std::complex_literals;
 
-template <typename T> std::string to_string(T const &x) {
+template <typename T>
+std::string to_string(T const &x) {
   std::stringstream fs;
   fs << x;
   return fs.str();

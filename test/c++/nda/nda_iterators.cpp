@@ -78,7 +78,6 @@ TEST(iterator, Strided3d) { //NOLINT
         ++it;
       }
   EXPECT_TRUE(it == v.end());
-
 }
 //-----------------------------
 

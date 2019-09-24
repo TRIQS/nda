@@ -9,7 +9,8 @@
 
 using namespace std::complex_literals;
 
-template <int R> using myshape_t = nda::shape_t<R>;
+template <int R>
+using myshape_t = nda::shape_t<R>;
 
 // variables for the test
 nda::range_all _;

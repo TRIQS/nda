@@ -90,14 +90,14 @@ TEST(Basic, GroupAttribute) {
   {
     h5::file file("ess_group_attr.h5", 'w');
     auto g = h5::group(file).create_group("mygroup");
-    h5_write_attribute(g, "Scheme","MYTAGTYPE"); 
+    h5_write_attribute(g, "Scheme", "MYTAGTYPE");
   }
   {
     h5::file file("ess_group_attr.h5", 'r');
     h5::group top(file);
     auto g = top.open_group("mygroup");
     std::string s;
-    h5::h5_read_attribute(g, "Scheme",s);
+    h5::h5_read_attribute(g, "Scheme", s);
     EXPECT_EQ(s, std::string{"MYTAGTYPE"});
   }
 }
@@ -116,7 +116,7 @@ TEST(Basic, Empty) {
     h5::group top(file);
     nda::array<long, 2> empty(5, 5);
     h5_read(top, "empty", empty);
-    EXPECT_EQ(empty.shape(), (nda::shape_t<2>{0,10}));
+    EXPECT_EQ(empty.shape(), (nda::shape_t<2>{0, 10}));
   }
 }
 
@@ -230,7 +230,6 @@ TEST(Array, H5) {
     std::string s2("----------------------------------");
     h5_read(top, "s", s2);
     EXPECT_EQ(s2, "a nice chain");
-
   }
 }
 

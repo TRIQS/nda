@@ -44,7 +44,7 @@ TEST(Arrays, MPI) {
   AA() = 0;
 
   AA = mpi_gather(B, world);
-  if (world.rank() == 0) {EXPECT_ARRAY_NEAR(AA, -A);}
+  if (world.rank() == 0) { EXPECT_ARRAY_NEAR(AA, -A); }
 
   mpi::broadcast(AA, world);
   EXPECT_ARRAY_NEAR(AA, -A);
@@ -54,7 +54,7 @@ TEST(Arrays, MPI) {
   EXPECT_ARRAY_NEAR(AA, -A);
 
   arr_t r1 = mpi::reduce(A, world);
-  if (world.rank() == 0) {EXPECT_ARRAY_NEAR(r1, world.size() * A);}
+  if (world.rank() == 0) { EXPECT_ARRAY_NEAR(r1, world.size() * A); }
 
   arr_t r2 = mpi::all_reduce(A, world);
   EXPECT_ARRAY_NEAR(r2, world.size() * A);
@@ -131,4 +131,3 @@ TEST(Arrays, array_transpose_bcast) {
 */
 
 MAKE_MAIN_MPI;
-

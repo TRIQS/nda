@@ -5,7 +5,7 @@ TEST(NDA, compound_ops) {
   nda::array<long, 2> A(2, 3);
 
   for (long i = 0; i < 2; ++i)
-    for (long j = 0; j < 3; ++j) A(i, j) =  10 * i + j;
+    for (long j = 0; j < 3; ++j) A(i, j) = 10 * i + j;
 
   auto A2 = A;
 

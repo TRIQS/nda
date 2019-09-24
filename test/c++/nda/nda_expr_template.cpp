@@ -31,7 +31,7 @@ TEST(NDA, ExprTemplateArray) {
   C = A + B;
   EXPECT_ARRAY_NEAR(C, nda::array<int, 1>{5, 5, 5});
 
-  C = 2*A + B;
+  C = 2 * A + B;
   EXPECT_ARRAY_NEAR(C, nda::array<int, 1>{8, 8, 8});
 
   C = A * B;
@@ -60,13 +60,13 @@ TEST(NDA, ExprTemplateArray) {
 
 //TEST(NDA, DeductionRule) {
 
- //nda::array<int, 1> A(3), B(3);
- //B() = 2;
- //A() = 3;
+//nda::array<int, 1> A(3), B(3);
+//B() = 2;
+//A() = 3;
 
- //auto S = nda::array{A+B}; //
- //static_assert(std::is_same_v<decltype(S), nda::array<int,1>>,"oops");
- //EXPECT_ARRAY_NEAR(S, nda::array<int, 1>{5, 5, 5});
+//auto S = nda::array{A+B}; //
+//static_assert(std::is_same_v<decltype(S), nda::array<int,1>>,"oops");
+//EXPECT_ARRAY_NEAR(S, nda::array<int, 1>{5, 5, 5});
 
 //// auto NO = nda::array{1,2}; // Should not compile (yet). Init list
 //}

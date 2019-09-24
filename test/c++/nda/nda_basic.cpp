@@ -78,7 +78,7 @@ TEST(Assign, Strided2) { //NOLINT
   B = 0;
 
   static_assert(nda::get_layout_info<decltype(B(range(0, 2 * A.extent(0), 2)))>.prop == nda::layout_prop_e::strided_1d);
-  
+
   B(range(0, 2 * A.extent(0), 2)) = A(_, 0, 1);
   NDA_PRINT(B);
   NDA_PRINT(A(_, 0, 1));

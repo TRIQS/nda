@@ -5,7 +5,7 @@
 TEST(Array, BoundCheck) {
 
   nda::array<long, 2> A(2, 3);
- 
+
   EXPECT_THROW(A(0, 3), std::runtime_error); //, std::runtime_error);
 
   // FIXME : SHOULD WE REALLY THROW ?

@@ -108,4 +108,3 @@ TEST(clef, lazymethod) {
   std::cerr << "Clef expression     : " << f.my_method(y_) + 2 * x_ << std::endl;
   std::cerr << "Partial evaluation  : " << eval(f.my_method(y_) + 2 * x_, y_ = 1) << std::endl;
 }
-

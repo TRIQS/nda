@@ -7,7 +7,7 @@ clef::placeholder<10> i_;
 clef::placeholder<11> j_;
 
 TEST(Clef, Lazy) {
-  std::vector<int> V{14,2,3}, W(3,0);
+  std::vector<int> V{14, 2, 3}, W(3, 0);
 
   EXPECT_EQ(eval(make_expr(V)[i_], i_ = 0), 14);
 
@@ -29,4 +29,3 @@ TEST(Clef, Lazy) {
   for (size_t u = 0; u < v2.size(); ++u)
     for (size_t up = 0; up < v2[0].size(); ++up) EXPECT_EQ(v2[u][up], u + up + 1);
 }
-
