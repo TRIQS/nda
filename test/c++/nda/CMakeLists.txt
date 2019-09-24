@@ -7,8 +7,13 @@ endforeach()
 # List of all tests
 #file(GLOB_RECURSE all_tests RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 set(all_tests nda_idx_map nda_storage nda_basic nda_expr_template nda_map nda_alloc_poison nda_algorithms 
-   nda_arithmetic nda_array_of_non_pod nda_iterators nda_bound_check nda_h5 nda_h5_slice nda_matrix nda_view1 nda_qcache nda_blas nda_linear_algebra nda_mpi nda_stl 
-   nda_lazy nda_static )
+   nda_arithmetic nda_array_of_non_pod nda_iterators nda_bound_check 
+   nda_matrix nda_view1 nda_qcache 
+   nda_lazy nda_static nda_stl 
+   nda_blas nda_linear_algebra 
+   nda_h5 nda_h5_slice 
+   nda_mpi 
+   )
   
   
 #set(all_tests nda_linear_algebra )
@@ -41,6 +46,10 @@ endforeach()
 
 # Run all mpi tests in parallel
 list(FILTER all_tests INCLUDE REGEX ".*mpi.*")
+MESSAGE( "${all_tests} ")
+
 foreach(test ${all_tests})
-  add_test(NAME ${test_name}_mpi_np2 COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 ${MPIEXEC_PREFLAGS} ${test_name} ${MPIEXEC_POSTFLAGS} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test_dir})
+    MESSAGE("${test_name}_mpi_np2")
+
+ add_test(NAME ${test_name}_mpi_np2 COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 ${MPIEXEC_PREFLAGS} ${test_name} ${MPIEXEC_POSTFLAGS} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test_dir})
 endforeach()
