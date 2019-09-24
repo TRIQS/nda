@@ -170,7 +170,7 @@ namespace h5 {
   }
   // -------------------------
 
-  void h5_write_bare(group g, std::string const &name, PyObject * ob) {
+  void h5_write_bare(group g, std::string const &name, PyObject *ob) {
 
     import_numpy();
 

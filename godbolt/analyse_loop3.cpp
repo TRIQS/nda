@@ -8,20 +8,18 @@
 
 #include <nda/nda.hpp>
 
-
 //[[gnu::noinline]] void ex_tmp(nda::array<double, 3> &a, nda::array<double, 3> &b, nda::array<double, 3> &c) { a = 2 * b + c; }
 
-  /*
+/*
  void S1(nda::array<double, 3> &a, nda::array<double, 3> &b, nda::array<double, 3> &c,
  int i0 , int i1, int i2) {
  a(i0, i1, i2) = (2 * b + c)(i0, i1, i2);
  }
 */
 
-void S3(nda::array<double, 3> &a, nda::array<double, 3> &b, nda::array<double, 3> &c,
- int i0 , int i1, int i2) {
-a(i0, i1, i2) = 2 * b(i0, i1, i2) + c(i0, i1, i2);
- }
+void S3(nda::array<double, 3> &a, nda::array<double, 3> &b, nda::array<double, 3> &c, int i0, int i1, int i2) {
+  a(i0, i1, i2) = 2 * b(i0, i1, i2) + c(i0, i1, i2);
+}
 /*
 void S2(nda::array<double, 3> &a, nda::array<double, 3> &b, nda::array<double, 3> &c,
  int i0 , int i1, int i2) {
@@ -34,19 +32,13 @@ a.storage()[i0 * st0 + i1 * st1 + i2] =
       c.storage()[i0 * st0 + i1 * st1 + i2];
 
 }*/
-void S2b(nda::array<double, 3> &a, nda::array<double, 3> &b, nda::array<double, 3> &c,
- int i0 , int i1, int i2) {
-     const long st0 = a.indexmap().strides()[0];
+void S2b(nda::array<double, 3> &a, nda::array<double, 3> &b, nda::array<double, 3> &c, int i0, int i1, int i2) {
+  const long st0 = a.indexmap().strides()[0];
   const long st1 = a.indexmap().strides()[1];
   const long st2 = a.indexmap().strides()[2];
 
-
-a.storage()[a.indexmap()(i0,i1,i2)] =
-      2 * b.storage()[a.indexmap()(i0,i1,i2)] +
-      c.storage()[a.indexmap()(i0,i1,i2)];
-
+  a.storage()[a.indexmap()(i0, i1, i2)] = 2 * b.storage()[a.indexmap()(i0, i1, i2)] + c.storage()[a.indexmap()(i0, i1, i2)];
 }
-
 
 /*
 [[gnu::noinline]] void ex_tmp_manual_loop(nda::array<double, 3> &a, nda::array<double, 3> &b, nda::array<double, 3> &c) {
@@ -123,5 +115,3 @@ void it2(nda::array<double, 1> & a, nda::array<double, 1> & b
 
 }
 */
-
-

@@ -59,7 +59,6 @@ void e1M(nda::array<double, 1> &a, nda::array<double, 1> const &b, nda::array<do
   for (long i = 0; i < l0; ++i) pa[i] = pb[i] + pc[i];
 }
 
-
 // -----------------------------------------
 
 void g1(int i, nda::array<double, 4> &a, double x) {
@@ -77,14 +76,9 @@ void g(int i, nda::array<double, 5> &a, double x) { a(i, i, i, 0, 0) = x; }
 
 // =----------------------
 
-
-void f1(int i, nda::array<double, 4> & a, double x) { 
- nda::range_all _; 
-  a(i, _,i, _)(0,0) = x;
+void f1(int i, nda::array<double, 4> &a, double x) {
+  nda::range_all _;
+  a(i, _, i, _)(0, 0) = x;
 }
 
-
-void f2(int i, nda::array<double, 4> & a, double x) { 
-  a(i,0,i,0) = x;
-} 
-
+void f2(int i, nda::array<double, 4> &a, double x) { a(i, 0, i, 0) = x; }

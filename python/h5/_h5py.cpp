@@ -29,20 +29,22 @@ PYBIND11_MODULE(_h5py, m) {
      //
      ;
 
-  m.def("h5_write",
-        [](h5::group g, std::string const &name, py::object ob) {
-          h5::h5_write_bare(g, name, ob.ptr());
-          if (PyErr_Occurred()) throw pybind11::error_already_set();
-        },
-        "g"_a, "name"_a, "ob"_a);
+  m.def(
+     "h5_write",
+     [](h5::group g, std::string const &name, py::object ob) {
+       h5::h5_write_bare(g, name, ob.ptr());
+       if (PyErr_Occurred()) throw pybind11::error_already_set();
+     },
+     "g"_a, "name"_a, "ob"_a);
 
-  m.def("h5_read",
-        [](h5::group g, std::string const &name) -> py::object {
-          PyObject *ob = h5::h5_read_bare(g, name);
-          if (ob == nullptr)
-            throw pybind11::error_already_set();
-          else
-            return py::reinterpret_steal<py::object>(ob);
-        },
-        "g"_a, "name"_a);
+  m.def(
+     "h5_read",
+     [](h5::group g, std::string const &name) -> py::object {
+       PyObject *ob = h5::h5_read_bare(g, name);
+       if (ob == nullptr)
+         throw pybind11::error_already_set();
+       else
+         return py::reinterpret_steal<py::object>(ob);
+     },
+     "g"_a, "name"_a);
 }
