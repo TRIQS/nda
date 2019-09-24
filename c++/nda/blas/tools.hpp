@@ -44,4 +44,10 @@ namespace nda::blas {
   int get_ld(MatrixType const &A) {
     return A.indexmap().strides()[A.indexmap().is_stride_order_Fortran() ? 1 : 0];
   }
+
+  //template <typename M>
+  //bool min_stride_is_1(M const &m) {
+  //return a.indexmap().min_stride() == 1;
+  //}v
+
 } // namespace nda::blas

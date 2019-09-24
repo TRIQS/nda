@@ -19,7 +19,7 @@ template <typename T, typename L1, typename L2, typename L3>
 void test_matmul() {
   matrix<T, L1> M1(2, 3);
   matrix<T, L2> M2(3, 4);
-  matrix<T, L2> M3(2, 4), M3b;
+  matrix<T, L2> M3(2, 4), M3b(2, 4);
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 3; ++j) { M1(i, j) = i + j; }
   for (int i = 0; i < 3; ++i)
@@ -39,7 +39,7 @@ void test_matmul() {
   EXPECT_ARRAY_NEAR(M4, M3, 1.e-13);
   if constexpr (nda::blas::is_blas_lapack_v<T>) { EXPECT_ARRAY_NEAR(M4, M3b, 1.e-13); }
   // recheck gemm_generic
-  blas::generic::gemm(1, M1, M2, 0, M4);
+  blas::gemm_generic(1, M1, M2, 0, M4);
   EXPECT_ARRAY_NEAR(M4, M3, 1.e-13);
 }
 
