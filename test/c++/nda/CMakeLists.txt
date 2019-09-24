@@ -11,8 +11,8 @@ set(all_tests nda_idx_map nda_storage nda_basic nda_expr_template nda_map nda_al
    nda_matrix nda_view1 nda_qcache 
    nda_lazy nda_static nda_stl 
    nda_blas nda_linear_algebra 
-   nda_h5 nda_h5_slice 
    nda_mpi 
+   nda_h5 nda_h5_slice 
    )
   
   
@@ -46,10 +46,7 @@ endforeach()
 
 # Run all mpi tests in parallel
 list(FILTER all_tests INCLUDE REGEX ".*mpi.*")
-MESSAGE( "${all_tests} ")
 
 foreach(test ${all_tests})
-    MESSAGE("${test_name}_mpi_np2")
-
- add_test(NAME ${test_name}_mpi_np2 COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 ${MPIEXEC_PREFLAGS} ${test_name} ${MPIEXEC_POSTFLAGS} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test_dir})
+ add_test(NAME ${test}_mpi_np2 COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 ${MPIEXEC_PREFLAGS} ${test_name} ${MPIEXEC_POSTFLAGS} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test_dir})
 endforeach()
