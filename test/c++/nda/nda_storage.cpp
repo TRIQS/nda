@@ -1,10 +1,10 @@
 #include <gtest/gtest.h> // NOLINT
 #include <memory>
- 
+
 #define NDA_DEBUG_MEMORY
 
 #include <nda/storage/handle.hpp>
- 
+
 using namespace nda::mem;
 
 void print(rtable_t const &) {}
@@ -89,17 +89,17 @@ TEST_F(Ref, HR) { // NOLINT
 //// ---- Contruct R B
 //TEST_F(Ref, HBR) { // NOLINT
 
-  //handle<int, 'R'> h{10};
+//handle<int, 'R'> h{10};
 
-  //handle<int, 'B'> b{h};
-  //handle<int, 'B'> b2;
-  //b2 = h;
+//handle<int, 'B'> b{h};
+//handle<int, 'B'> b2;
+//b2 = h;
 
-  //// make sure it is a copy
-  //b.data()[2] = 89;
-  //handle<int, 'R'> h2{b};
-  //b.data()[2] = 0;
-  //EXPECT_EQ(h2.data()[2], 89); //NOLINT
+//// make sure it is a copy
+//b.data()[2] = 89;
+//handle<int, 'R'> h2{b};
+//b.data()[2] = 0;
+//EXPECT_EQ(h2.data()[2], 89); //NOLINT
 //}
 
 // ---- Construct R, S

@@ -71,4 +71,3 @@ TEST(Vector, Dot2) {
 }
 
 MAKE_MAIN
-

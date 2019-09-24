@@ -11,12 +11,12 @@ using nda::range;
 template <typename T>
 void one_simple(std::string name, T scalar) {
 
-   int N1 = 5, N2 = 7;
+  int N1 = 5, N2 = 7;
   nda::array<T, 2> b(N1, N2), b_sli;
 
   // numbers are unique ...
   for (int i = 0; i < N1; ++i)
-    for (int j = 0; j < N2; ++j) { b(i, j) = scalar*(10 * i + j); }
+    for (int j = 0; j < N2; ++j) { b(i, j) = scalar * (10 * i + j); }
 
   std::cout << b << std::endl;
   std::string filename = "ess_slice_simple_" + name + ".h5";
@@ -56,7 +56,7 @@ TEST(Slice, Systematic3d) {
 
   int N1 = 3, N2 = 5, N3 = 8;
   int StepMax = 3;
-  
+
   nda::array<long, 3> c(N1, N2, N3), c_sli;
 
   for (int i = 0; i < N1; ++i)

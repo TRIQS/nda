@@ -19,7 +19,7 @@ template <typename T, typename L1, typename L2, typename L3>
 void test_matmul() {
   matrix<T, L1> M1(2, 3);
   matrix<T, L2> M2(3, 4);
-  matrix<T, L2> M3(2,4), M3b;
+  matrix<T, L2> M3(2, 4), M3b;
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 3; ++j) { M1(i, j) = i + j; }
   for (int i = 0; i < 3; ++i)

@@ -19,7 +19,7 @@ struct A {
 
 TEST(NDA, NonDefaultConstructible) {
 
-  nda::array<A, 2> a({2,2}, [](int i, int j) { return i + 10 * j; });
+  nda::array<A, 2> a({2, 2}, [](int i, int j) { return i + 10 * j; });
   // nda::array<A,2> a( {2,2}, [](int i, int j) { return i+ 10*j;});
   nda::array<A, 1> a1(nda::make_shape(2), [](int i) { return i; });
 

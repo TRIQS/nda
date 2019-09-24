@@ -3,7 +3,8 @@
 #include <map>
 #include <algorithm>
 
-template <typename T> using vector_t = nda::array<T,1>;
+template <typename T>
+using vector_t = nda::array<T, 1>;
 
 // A few examples paying with STL containers and algorithms
 
@@ -83,8 +84,8 @@ TEST(STL, Bugxxx) {
     //EXPECT_FALSE(a < b);
   }
   //{
-    //vector_t<int> a = {1, 3, 2}, b = a;
-    //EXPECT_FALSE(a < b);
+  //vector_t<int> a = {1, 3, 2}, b = a;
+  //EXPECT_FALSE(a < b);
   //}
 }
 

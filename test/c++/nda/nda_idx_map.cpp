@@ -48,11 +48,11 @@ TEST(idxstat, eval) { // NOLINT
 
 TEST(idxstat, slice) { // NOLINT
 
-  idx_map<3,0,  C_stride_order<3>, layout_prop_e::none> i1{{1, 2, 3}};
+  idx_map<3, 0, C_stride_order<3>, layout_prop_e::none> i1{{1, 2, 3}};
 
   auto [offset2, i2] = slice_stride_order(i1, 0, _, 2);
 
-  idx_map<1,0, C_stride_order<1>, layout_prop_e::none> c2{{2}, {3}};
+  idx_map<1, 0, C_stride_order<1>, layout_prop_e::none> c2{{2}, {3}};
 
   std::cerr << i2 << std::endl;
   std::cerr << c2 << std::endl;
@@ -68,7 +68,7 @@ TEST(idxstat, slice) { // NOLINT
 
 TEST(idxstat, ellipsis) { // NOLINT
 
-  EXPECT_EQ(16, permutations::encode(nda::slice_static::sliced_mem_stride_order(std::array<int, 3>{0,1,2}, std::array<int, 2>{1,2})));
+  EXPECT_EQ(16, permutations::encode(nda::slice_static::sliced_mem_stride_order(std::array<int, 3>{0, 1, 2}, std::array<int, 2>{1, 2})));
 
   idx_map<3, 0, C_stride_order<3>, layout_prop_e::none> i1{{1, 2, 3}};
   auto [offset2, i2] = slice_stride_order(i1, 0, ___);
@@ -111,7 +111,7 @@ TEST(idxstat, iteratorC) { // NOLINT
 
   int pos = 0;
   //for (auto p : i1) {
-    //EXPECT_EQ(p, pos++); //NOLINT
+  //EXPECT_EQ(p, pos++); //NOLINT
   //}
 
   pos = 0;
@@ -152,4 +152,3 @@ TEST(idxstat, for_each) { // NOLINT
   //EXPECT_EQ(fs.str(), "000 010 001 011 002 012 ");
   //}
 }
-

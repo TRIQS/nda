@@ -4,10 +4,8 @@ TEST(Matrix, Create1) {
   nda::matrix<long> A(3, 3);
   EXPECT_EQ(A.shape(), (nda::shape_t<2>{3, 3}));
 
-  std::cerr << A.indexmap() <<std::endl;
+  std::cerr << A.indexmap() << std::endl;
 }
-
-
 
 /// Matrix specific tests
 /*
