@@ -39,26 +39,55 @@ namespace nda {
     }
   }
 
-  //// Fortran style
-  //template <int I, typename F, size_t R> FORCEINLINE void for_each_impl(std::array<long, R> idx_lengths, F &&f, traversal::Fortran_t) {
-  //if constexpr (I == R)
-  //f();
-  //else {
-  //for (int i = 0; i < idx_lengths[R - I - 1]; ++i) {
-  //for_each_impl<I + 1>(idx_lengths, [ i, f ](auto &&... x) __attribute__((always_inline)) { return f(x..., i); }, traversal::Fortran);
-  //}
-  //}
-  //}
+  ///
+  template <typename F, size_t R>
+  FORCEINLINE void for_each2(std::array<long, R> idx_lengths, F &&f) {
+    for_each_impl<0>(idx_lengths, f);
+  }
+
+  // ----------------  get_extent  -------------------------
+
+  template <int I, int R, uint64_t StaticExtents>
+  long get_extent(std::array<long, R> const &l) {
+    //if constexpr (StaticExtents == 0)
+    //return l[I]; // quick exit, no computation of
+    //else {
+    constexpr auto static_extents = permutations::decode<R>(StaticExtents); // FIXME C++20
+    if constexpr (static_extents[I] == 0)
+      return l[I];
+    else
+      return static_extents[I];
+    //    }
+  }
+
+  // ----------------  for_each  -------------------------
+
+  // FIXME : See if we can merge with for_each ...
+  // DEBUG
+
+  template <int I, uint64_t StaticExtents, typename F, size_t R>
+  FORCEINLINE void for_each_static_impl(std::array<long, R> idx_lengths, F &&f) {
+    if constexpr (I == R)
+      f();
+    else {
+      const long imax = get_extent<I, R, StaticExtents>(idx_lengths);
+      for (int i = 0; i < imax; ++i) {
+        for_each_impl<I + 1>(
+           idx_lengths, [ i, f ](auto &&... x) __attribute__((always_inline)) { return f(i, x...); });
+      }
+    }
+  }
+
+  ///
+  template <uint64_t StaticExtents, typename F, size_t R>
+  FORCEINLINE void for_each_static(std::array<long, R> idx_lengths, F &&f) {
+    for_each_static_impl<0, StaticExtents>(idx_lengths, f);
+  }
 
   ///
   template <typename F, size_t R>
   FORCEINLINE void for_each(std::array<long, R> idx_lengths, F &&f) {
-    for_each_impl<0>(idx_lengths, f);
+    for_each_static_impl<0, 0>(idx_lengths, f);
   }
-
-  ///
-  //template <typename F, size_t R, typename Traversal> FORCEINLINE void for_each(std::array<long, R> idx_lengths, F &&f, Traversal tr) {
-  //for_each_impl<0>(idx_lengths, f, tr);
-  //}
 
 } // namespace nda

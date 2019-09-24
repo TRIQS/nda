@@ -233,7 +233,8 @@ namespace nda::slice_static {
 
     long offset = (get_offset(std::get<q_of_n(Ns, e_pos, e_len)>(argstie), std::get<Ns>(idxm.strides())) + ... + 0);
 
-    return std::make_pair(offset, idx_map<P, permutations::encode(mem_stride_order), li>{len, str});
+    // FIXME : slice the static_extents
+    return std::make_pair(offset, idx_map<P, 0, permutations::encode(mem_stride_order), li>{len, str});
     //return idx_map<P, permutations::encode(stride_order)>{len, str, offset};
   }
 
