@@ -39,7 +39,7 @@ namespace nda {
 
       blas::gemm(1, as_container(l), as_container(r), 0, result);
     } else {
-      blas::generic::gemm(1, l, r, 0, result);
+      blas::gemm_generic(1, l, r, 0, result);
     }
     return result;
   }
