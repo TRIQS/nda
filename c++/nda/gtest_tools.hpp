@@ -54,10 +54,14 @@ template <typename X, typename Y>
     return ::testing::AssertionFailure() << "Comparing two arrays of different size "
                                          << "\n X = " << x << "\n Y = " << y;
 
-  if (x.size() == 0 || max_element(abs(x - y)) == 0)
+  auto xx = make_regular(x); // easier error in case of MSAN to compute separately
+  auto yy = make_regular(y);
+  auto maxdiff = max_element(abs(xx- yy));
+
+  if (x.size() == 0 || maxdiff== 0)
     return ::testing::AssertionSuccess();
   else
-    return ::testing::AssertionFailure() << "max_element(abs(x-y)) = " << max_element(abs(x - y)) << "\n X = " << x << "\n Y = " << y;
+    return ::testing::AssertionFailure() << "max_element(abs(x-y)) = " <<maxdiff<< "\n X = " << x << "\n Y = " << y;
 }
 
 #define EXPECT_EQ_ARRAY(X, Y) EXPECT_TRUE(array_are_equal(X, Y));
@@ -75,11 +79,13 @@ template <typename X, typename Y>
 
   // both x, y are contiguous, I check with basic tools instead of max_element(abs(x - y))
   if (x.size() == 0) return ::testing::AssertionSuccess();
-  auto max_diff = max_element(abs(x - y));
-  if (max_diff < precision)
+  auto xx = make_regular(x);
+  auto yy = make_regular(y);
+  auto maxdiff = max_element(abs(make_regular(xx- yy)));
+  if (maxdiff < precision)
     return ::testing::AssertionSuccess();
   else
-    return ::testing::AssertionFailure() << "max_element(abs(x-y)) = " << max_diff << "\n X = " << x << "\n Y = " << y;
+    return ::testing::AssertionFailure() << "max_element(abs(x-y)) = " << maxdiff << "\n X = " << x << "\n Y = " << y;
 }
 
 

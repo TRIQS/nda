@@ -2,7 +2,6 @@
 #include "storage/policies.hpp"
 #include "layout/idx_map.hpp"
 #include "layout/policies.hpp"
-#include "basic_functions.hpp"
 #include "assignment.hpp"
 #include "accessors.hpp"
 #include "iterators.hpp"

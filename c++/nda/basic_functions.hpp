@@ -2,13 +2,12 @@
 
 namespace nda {
 
-  // Some basic functions depending only on the concept
-
   // --------------------------- make_regular ------------------------
-  // FIXME MOVE THIS : A function, not a traits
   // general make_regular
+  // FIXME : auto return ?  regular_t<A> ?
   template <typename A>
-  typename std::decay_t<A>::regular_t make_regular(A &&x) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+  basic_array<get_value_t<std::decay_t<A>>, get_rank<A>, C_layout, get_algebra<std::decay_t<A>>, heap> //
+  make_regular(A &&x) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
     return std::forward<A>(x);
   }
   //template <typename A> regular_t<A> make_regular(A &&x) REQUIRES(is_ndarray_v<A>) { return std::forward<A>(x); }
