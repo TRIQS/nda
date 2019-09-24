@@ -55,13 +55,13 @@ namespace nda::blas::f77 {
               reinterpret_cast<const double *>(B), &LDB, reinterpret_cast<const double *>(&beta), reinterpret_cast<double *>(C), &LDC);
   }
 
-  void gemv(char *trans, int M, int N, double &alpha, const double *A, int &LDA, const double *x, int incx, double &beta, double *Y, int incy) {
-    F77_dgemv(trans, &M, &N, &alpha, A, &LDA, x, &incx, &beta, Y, &incy);
+  void gemv(char trans, int M, int N, double &alpha, const double *A, int &LDA, const double *x, int incx, double &beta, double *Y, int incy) {
+    F77_dgemv(&trans, &M, &N, &alpha, A, &LDA, x, &incx, &beta, Y, &incy);
   }
-  void gemv(char *trans, int M, int N, std::complex<double> &alpha, const std::complex<double> *A, int &LDA, const std::complex<double> *x, int incx,
+  void gemv(char trans, int M, int N, std::complex<double> &alpha, const std::complex<double> *A, int &LDA, const std::complex<double> *x, int incx,
             std::complex<double> &beta, std::complex<double> *Y, int incy) {
-    F77_zgemv(trans, &M, &N, reinterpret_cast<const double *>(&alpha), reinterpret_cast<const double *>(A), &LDA, reinterpret_cast<const double *>(x),
-              &incx, reinterpret_cast<const double *>(&beta), reinterpret_cast<double *>(Y), &incy);
+    F77_zgemv(&trans, &M, &N, reinterpret_cast<const double *>(&alpha), reinterpret_cast<const double *>(A), &LDA,
+              reinterpret_cast<const double *>(x), &incx, reinterpret_cast<const double *>(&beta), reinterpret_cast<double *>(Y), &incy);
   }
 
   void ger(int M, int N, double alpha, const double *x, int incx, const double *Y, int incy, double *A, int LDA) {
