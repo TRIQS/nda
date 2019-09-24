@@ -71,7 +71,7 @@ namespace nda {
    *    
    *    NB : StrideOrder = 0 is the default and it is means 0 order
    *
-   * */
+   */
   template <int Rank, uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp>
   class idx_map {
 
