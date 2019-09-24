@@ -30,15 +30,16 @@ class ABC_3d : public benchmark::Fixture {
 // retest with view
 // -----------------------------------------------------------------------
 [[gnu::noinline]] void ex_tmp(nda::array<double, 3> &a, nda::array<double, 3> &b, nda::array<double, 3> &c) {
- 
+
   static_assert(has_layout_contiguous<nda::array<double, 3>>, "EEE");
-  static_assert(has_layout_contiguous<std::decay_t<decltype(2*b+c)>>, "EEE");
-  a() = 2*b + c; }
+  static_assert(has_layout_contiguous<std::decay_t<decltype(2 * b + c)>>, "EEE");
+  a() = 2 * b + c;
+}
 
 [[gnu::noinline]] void ex_tmp_manual_loop(nda::array<double, 3> &a, nda::array<double, 3> &b, nda::array<double, 3> &c) {
   const long l0 = a.shape()[0];
   const long l1 = a.shape()[0];
-  const long l2  = a.shape()[2];
+  const long l2 = a.shape()[2];
   for (long i0 = 0; i0 < l0; ++i0)
     for (long i1 = 0; i1 < l1; ++i1)
       for (long i2 = 0; i2 < l2; ++i2) { a(i0, i1, i2) = (2 * b + c)(i0, i1, i2); }
@@ -47,7 +48,7 @@ class ABC_3d : public benchmark::Fixture {
 [[gnu::noinline]] void for_loop(nda::array<double, 3> &a, nda::array<double, 3> &b, nda::array<double, 3> &c) {
   const long l0 = a.shape()[0];
   const long l1 = a.shape()[0];
-  const long l2  = a.shape()[2];
+  const long l2 = a.shape()[2];
   for (long i0 = 0; i0 < l0; ++i0)
     for (long i1 = 0; i1 < l1; ++i1)
       for (long i2 = 0; i2 < l2; ++i2) { a(i0, i1, i2) = 2 * b(i0, i1, i2) + c(i0, i1, i2); }
@@ -57,9 +58,9 @@ class ABC_3d : public benchmark::Fixture {
   const long st0 = a.indexmap().strides()[0];
   const long st1 = a.indexmap().strides()[1];
   //const long st2 = a.indexmap().strides()[2];
-  const long l0  = a.shape()[0];
-  const long l1  = a.shape()[1];
-  const long l2  = a.shape()[2];
+  const long l0 = a.shape()[0];
+  const long l1 = a.shape()[1];
+  const long l2 = a.shape()[2];
 
   double *pb = &(b(0, 0, 0));
   double *pa = &(a(0, 0, 0));
@@ -77,7 +78,7 @@ class ABC_3d : public benchmark::Fixture {
   double *pa = &(a(0, 0, 0));
   double *pc = &(c(0, 0, 0));
   //for (long i = 0; i < s; ++i) { a.storage()[i] =  b.storage()[i] + c.storage()[i]; }
-  for (long i = 0; i < s; ++i) { pa[i] =  2*pb[i] + pc[i]; }
+  for (long i = 0; i < s; ++i) { pa[i] = 2 * pb[i] + pc[i]; }
 }
 
 // -----------------------------------------------------------------------
