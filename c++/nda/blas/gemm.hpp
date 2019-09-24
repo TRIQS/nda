@@ -46,6 +46,12 @@ namespace nda::blas {
     // first resize if necessary and possible
     resize_or_check_if_view(c, make_shape(a.extent(0), b.extent(1)));
 
+#if defined(__has_feature)
+#if __has_feature(memory_sanitizer)
+c=0;
+#endif
+#endif
+
     // now we use qcache instead of the matrix to make a copy if necessary ...
     // not optimal : if stride == 1, N ---> use LDA parameters
     // change the condition in the qcache construction....
