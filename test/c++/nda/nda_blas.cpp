@@ -3,6 +3,7 @@
 #include <nda/blas/gemm.hpp>
 #include <nda/blas/gemv.hpp>
 #include <nda/blas/ger.hpp>
+#include <nda/blas/dot.hpp>
 
 using nda::F_layout;
 
@@ -100,6 +101,35 @@ TEST(BLAS, ger) {
 
   nda::blas::ger(1.0, V, V, M);
   EXPECT_ARRAY_NEAR(M, nda::matrix<double>{{1, 2}, {2, 4}});
+}
+
+//----------------------------
+TEST(BLAS, dot) {
+
+  nda::array<double, 1> a{1, 2, 3, 4, 5};
+  nda::array<double, 1> b{10, 20, 30, 40, 50};
+
+  EXPECT_NEAR((nda::blas::dot(a, b)), (10 + 2 * 20 + 3 * 30 + 4 * 40 + 5 * 50), 1.e-14);
+}
+
+//----------------------------
+TEST(BLAS, dotc1) {
+
+  nda::array<dcomplex, 1> a{1, 2, 3};
+  nda::array<dcomplex, 1> b{10, 20, 30};
+  a *= 1 + 1i;
+  b *= 1 + 2i;
+
+  EXPECT_COMPLEX_NEAR((nda::blas::dotc(a, b)), (1 - 1i) * (1 + 2i) * (10 + 2 * 20 + 3 * 30), 1.e-14);
+}
+
+//----------------------------
+TEST(BLAS, dotc2) {
+
+  nda::array<double, 1> a{1, 2, 3, 4, 5};
+  nda::array<double, 1> b{10, 20, 30, 40, 50};
+
+  EXPECT_COMPLEX_NEAR((nda::blas::dotc(a, b)), (10 + 2 * 20 + 3 * 30 + 4 * 40 + 5 * 50), 1.e-14);
 }
 
 /*
