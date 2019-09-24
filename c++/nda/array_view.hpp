@@ -15,7 +15,8 @@ namespace nda {
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
   class basic_array;
 
-  template <typename ValueType, int Rank, typename Layout, char Algebra = 'A', typename AccessorPolicy = nda::default_accessor, typename OwningPolicy= nda::borrowed>
+  template <typename ValueType, int Rank, typename Layout, char Algebra = 'A', typename AccessorPolicy = nda::default_accessor,
+            typename OwningPolicy = nda::borrowed>
   class basic_array_view;
 
   // ---------------------- User aliases  --------------------------------

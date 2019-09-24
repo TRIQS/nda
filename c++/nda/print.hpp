@@ -32,7 +32,7 @@ namespace nda {
   std::ostream &operator<<(std::ostream &out, idx_map<Rank, StaticExtents, StrideOrder, LayoutProp> const &x) {
     return out << "  Lengths  : " << x.lengths() << "\n"
                << "  Strides  : " << x.strides() << "\n"
-               << "  StaticExtents  : " << permutations::decode<Rank>(StaticExtents)<< "\n"
+               << "  StaticExtents  : " << permutations::decode<Rank>(StaticExtents) << "\n"
                << "  MemoryStrideOrder   : " << x.stride_order << "\n"
                << "  Flags   :  " << LayoutProp << "\n";
   }

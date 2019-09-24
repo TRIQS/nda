@@ -54,14 +54,14 @@ template <typename X, typename Y>
     return ::testing::AssertionFailure() << "Comparing two arrays of different size "
                                          << "\n X = " << x << "\n Y = " << y;
 
-  auto xx = make_regular(x); // easier error in case of MSAN to compute separately
-  auto yy = make_regular(y);
-  auto maxdiff = max_element(abs(xx- yy));
+  auto xx      = make_regular(x); // easier error in case of MSAN to compute separately
+  auto yy      = make_regular(y);
+  auto maxdiff = max_element(abs(xx - yy));
 
-  if (x.size() == 0 || maxdiff== 0)
+  if (x.size() == 0 || maxdiff == 0)
     return ::testing::AssertionSuccess();
   else
-    return ::testing::AssertionFailure() << "max_element(abs(x-y)) = " <<maxdiff<< "\n X = " << x << "\n Y = " << y;
+    return ::testing::AssertionFailure() << "max_element(abs(x-y)) = " << maxdiff << "\n X = " << x << "\n Y = " << y;
 }
 
 #define EXPECT_EQ_ARRAY(X, Y) EXPECT_TRUE(array_are_equal(X, Y));
@@ -72,22 +72,21 @@ template <typename X, typename Y>
 ::testing::AssertionResult array_are_close(X const &x1, Y const &y1, double precision = 1.e-10) {
   nda::array<typename X::value_t, X::rank> x = x1;
   nda::array<typename X::value_t, X::rank> y = y1;
-  
+
   if (x.shape() != y.shape())
     return ::testing::AssertionFailure() << "Comparing two arrays of different size "
                                          << "\n X = " << x << "\n Y = " << y;
 
   // both x, y are contiguous, I check with basic tools instead of max_element(abs(x - y))
   if (x.size() == 0) return ::testing::AssertionSuccess();
-  auto xx = make_regular(x);
-  auto yy = make_regular(y);
-  auto maxdiff = max_element(abs(make_regular(xx- yy)));
+  auto xx      = make_regular(x);
+  auto yy      = make_regular(y);
+  auto maxdiff = max_element(abs(make_regular(xx - yy)));
   if (maxdiff < precision)
     return ::testing::AssertionSuccess();
   else
     return ::testing::AssertionFailure() << "max_element(abs(x-y)) = " << maxdiff << "\n X = " << x << "\n Y = " << y;
 }
-
 
 #define EXPECT_ARRAY_NEAR(X, ...) EXPECT_TRUE(array_are_close(X, __VA_ARGS__))
 

@@ -31,7 +31,7 @@ namespace nda::mem {
 
   class rtable_t;
 
-    // -------------- Global table  ---------------------------
+  // -------------- Global table  ---------------------------
 
   struct globals {
     static constexpr bool init_dcmplx = true; // initialize dcomplex to 0 globally

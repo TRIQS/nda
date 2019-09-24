@@ -1,0 +1,13 @@
+
+1 file lapack.hpp with basic interface : 
+  with the mdspan interface ...
+  no requires, just nda::blas::gemm.
+
+  no cache, no resize.
+  just check in debug mode.
+
+2- matmul, matmulvec
+
+3- tridiag worker and dgeless : linalg
+
+

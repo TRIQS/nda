@@ -48,7 +48,7 @@ namespace nda::blas {
 
 #if defined(__has_feature)
 #if __has_feature(memory_sanitizer)
-c=0;
+    c = 0;
 #endif
 #endif
 

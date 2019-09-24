@@ -24,4 +24,4 @@ namespace nda {
     using handle = ::nda::mem::handle<T, 'B'>;
   };
 
-} // namespace nda::mem
+} // namespace nda

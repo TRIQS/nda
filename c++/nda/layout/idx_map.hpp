@@ -11,9 +11,8 @@
 // FIXME : move it in decl.hpp
 namespace nda {
 
-  template <int Rank,uint64_t StaticExtents,  uint64_t StrideOrder, layout_prop_e LayoutProp>
+  template <int Rank, uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp>
   class idx_map;
-
 }
 
 #include "./range.hpp"
@@ -188,8 +187,8 @@ namespace nda {
 
 #ifdef NDA_DEBUG
       if constexpr (rank_dynamic != Rank) { // there are some static extents
-	for (int u =0; u < Rank; ++u) 
-	  if (static_extents[u] !=0) EXPECTS(static_extents[u] == len[u]);
+        for (int u = 0; u < Rank; ++u)
+          if (static_extents[u] != 0) EXPECTS(static_extents[u] == len[u]);
       }
 #endif
       // compute the strides for a compact array
@@ -215,7 +214,7 @@ namespace nda {
      * @param lengths
      * @param strides
      */
-    idx_map(std::array<long, rank_dynamic> const &lengths) noexcept REQUIRES(rank_dynamic != Rank) : idx_map(_embed_array(lengths)){}
+    idx_map(std::array<long, rank_dynamic> const &lengths) noexcept REQUIRES(rank_dynamic != Rank) : idx_map(_embed_array(lengths)) {}
 
     // trap for incorrect calls. For R = Rank, the non template has priority
     template <int R>

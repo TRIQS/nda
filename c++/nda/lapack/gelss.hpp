@@ -106,7 +106,8 @@ namespace triqs::arrays::lapack {
     return info;
   }
 
-  template <typename value_type> struct gelss_cache {
+  template <typename value_type>
+  struct gelss_cache {
 
     // cf. Notation in https://math.stackexchange.com/questions/772039/how-does-the-svd-solve-the-least-squares-problem
 
@@ -206,9 +207,9 @@ namespace triqs::arrays::lapack {
         size_t N = l[1] / (d * d);
 
         // We reshape the Matrix into a dim=4 array and swap the two innermost indices
-	// FIXME We would like to write: tranpose(reshape(idx_map, {l[0], N, d, d}), {0, 1, 3, 2})
-	auto idx_map_inner_transpose = array_view<dcomplex, 4>::indexmap_type{
-	   {l[0], N, d, d}, {s[0], d * d * s[1], s[1], d * s[1]}, static_cast<ptrdiff_t>(idx_map.start_shift())};
+        // FIXME We would like to write: tranpose(reshape(idx_map, {l[0], N, d, d}), {0, 1, 3, 2})
+        auto idx_map_inner_transpose = array_view<dcomplex, 4>::indexmap_type{
+           {l[0], N, d, d}, {s[0], d * d * s[1], s[1], d * s[1]}, static_cast<ptrdiff_t>(idx_map.start_shift())};
 
         // Deep copy
         array<dcomplex, 4> arr_dag = conj(array_view<dcomplex, 4>{idx_map_inner_transpose, M.storage()});

@@ -37,8 +37,6 @@ namespace nda {
           return matrix<promoted_type>{a};
       };
 
-      result = 0;
-
       blas::gemm(1, as_container(l), as_container(r), 0, result);
     } else {
       blas::generic::gemm(1, l, r, 0, result);

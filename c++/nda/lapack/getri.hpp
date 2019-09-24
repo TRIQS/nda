@@ -36,7 +36,7 @@ namespace nda::lapack {
    * @param ipiv
    */
   template <typename M>
-  int getri(M &m, array<int,1> &ipiv) {
+  int getri(M &m, array<int, 1> &ipiv) {
     static_assert(is_blas_lapack_v<typename M::value_type>, "Matrices must have the same element type and it must be double, complex ...");
 
     auto Ca = reflexive_qcache(m);

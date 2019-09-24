@@ -252,13 +252,13 @@ namespace clef {
     };                                                                                                                                               \
   }                                                                                                                                                  \
   template <typename L, typename R>                                                                                                                  \
-  FORCEINLINE auto operator OP(L &&l, R &&r) REQUIRES(is_any_lazy<L, R>) {                                                         \
+  FORCEINLINE auto operator OP(L &&l, R &&r) REQUIRES(is_any_lazy<L, R>) {                                                                           \
     return expr<tags::TAG, expr_storage_t<L>, expr_storage_t<R>>{tags::TAG(), std::forward<L>(l), std::forward<R>(r)};                               \
   }                                                                                                                                                  \
   template <>                                                                                                                                        \
   struct operation<tags::TAG> {                                                                                                                      \
     template <typename L, typename R>                                                                                                                \
-    FORCEINLINE decltype(auto) operator()(L &&l, R &&r) const {                                                                    \
+    FORCEINLINE decltype(auto) operator()(L &&l, R &&r) const {                                                                                      \
       return _cl(std::forward<L>(l)) OP _cl(std::forward<R>(r));                                                                                     \
     }                                                                                                                                                \
   };
@@ -284,13 +284,13 @@ namespace clef {
     };                                                                                                                                               \
   }                                                                                                                                                  \
   template <typename L>                                                                                                                              \
-  FORCEINLINE auto operator OP(L &&l) REQUIRES(is_any_lazy<L>) {                                                                   \
+  FORCEINLINE auto operator OP(L &&l) REQUIRES(is_any_lazy<L>) {                                                                                     \
     return expr<tags::TAG, expr_storage_t<L>>{tags::TAG(), std::forward<L>(l)};                                                                      \
   }                                                                                                                                                  \
   template <>                                                                                                                                        \
   struct operation<tags::TAG> {                                                                                                                      \
     template <typename L>                                                                                                                            \
-    FORCEINLINE decltype(auto) operator()(L &&l) const {                                                                           \
+    FORCEINLINE decltype(auto) operator()(L &&l) const {                                                                                             \
       return OP _cl(std::forward<L>(l));                                                                                                             \
     }                                                                                                                                                \
   };
