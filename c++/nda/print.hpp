@@ -28,10 +28,11 @@ namespace nda {
   }
 
   // idx_map
-  template <int Rank, uint64_t StrideOrder, layout_prop_e LayoutProp>
-  std::ostream &operator<<(std::ostream &out, idx_map<Rank, StrideOrder, LayoutProp> const &x) {
+  template <int Rank, uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp>
+  std::ostream &operator<<(std::ostream &out, idx_map<Rank, StaticExtents, StrideOrder, LayoutProp> const &x) {
     return out << "  Lengths  : " << x.lengths() << "\n"
                << "  Strides  : " << x.strides() << "\n"
+               << "  StaticExtents  : " << permutations::decode<Rank>(StaticExtents)<< "\n"
                << "  MemoryStrideOrder   : " << x.stride_order << "\n"
                << "  Flags   :  " << LayoutProp << "\n";
   }
