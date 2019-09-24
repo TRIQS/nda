@@ -9,8 +9,8 @@ namespace h5 {
   // Missing AATRIBUTE
 
   void h5_write_bare(group g, std::string const &name, py);
-//  void h5_write_bare(group g, std::string const &name, PyObject *ob);
+  //  void h5_write_bare(group g, std::string const &name, PyObject *ob);
 
-  PyObject * h5_read_bare(group g, std::string const &name);
+  PyObject *h5_read_bare(group g, std::string const &name);
 
 } // namespace h5

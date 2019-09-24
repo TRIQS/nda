@@ -377,17 +377,17 @@ namespace nda::mem {
     handle(handle<T, 'B'> const &x) = default;
 
     handle(handle<T, 'B'> const &x, long offset) noexcept : _data(x.data() + offset) {}
-    
-    handle(handle<T0, 'R'> const &x, long offset=0) noexcept : _parent(&x), _data(x.data() + offset) {}
-    handle(handle<T0, 'S'> const &x, long offset=0) noexcept : _data(x.data() + offset) {}
-    handle(handle<T0, 'B'> const &x, long offset=0) noexcept REQUIRES(std::is_const_v<T>) : _data(x.data() + offset) {}
+
+    handle(handle<T0, 'R'> const &x, long offset = 0) noexcept : _parent(&x), _data(x.data() + offset) {}
+    handle(handle<T0, 'S'> const &x, long offset = 0) noexcept : _data(x.data() + offset) {}
+    handle(handle<T0, 'B'> const &x, long offset = 0) noexcept REQUIRES(std::is_const_v<T>) : _data(x.data() + offset) {}
 
     T &operator[](long i) noexcept { return _data[i]; }
     T const &operator[](long i) const noexcept { return _data[i]; }
 
     // warnings supp
-    handle & operator = (handle const &) = default;
-    handle & operator = (handle &&) = default;
+    handle &operator=(handle const &) = default;
+    handle &operator=(handle &&) = default;
 
     [[nodiscard]] bool is_null() const noexcept { return _data == nullptr; }
 

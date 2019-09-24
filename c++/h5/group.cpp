@@ -65,7 +65,7 @@ namespace h5 {
 
   group group::create_group(std::string const &key, bool delete_if_exists) const {
     if (key.empty()) return *this;
-    if (delete_if_exists) unlink(key); 
+    if (delete_if_exists) unlink(key);
     hid_t id_g = H5Gcreate2(id, key.c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
     if (id_g < 0) throw std::runtime_error("Cannot create the subgroup " + key + " of the group" + name());
     return group(id_g);

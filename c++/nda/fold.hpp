@@ -31,13 +31,13 @@ namespace nda {
    * @param r
    *
    * fold computes f(f(r, a(0,0)), a(0,1), ...)  etc
-   */ 
+   */
   template <typename A, typename F, typename R = get_value_t<A>>
-  auto fold(F f, A const&a, R r= R{}) {
+  auto fold(F f, A const &a, R r = R{}) {
     decltype(f(r, get_value_t<A>{})) r2 = r;
     // to take into account that f may be double,double -> double, while one passes 0 (an int...)
     // R = int, R2= double in such case, and the result will be a double, or narrowing will occur
-    nda::for_each (a.shape(), [&a,&r2, &f](auto &&... args) { r2 = f(r2, a(args...)); });
+    nda::for_each(a.shape(), [&a, &r2, &f](auto &&... args) { r2 = f(r2, a(args...)); });
     return r2;
   }
 

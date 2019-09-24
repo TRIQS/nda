@@ -3,9 +3,9 @@
 
 namespace nda::h5_details {
 
-
   // implementation of the write
-  void write(h5::group g, std::string const &name, h5::datatype ty, void *start, int rank, bool is_complex, long const * lens, long const *strides, long total_size) {
+  void write(h5::group g, std::string const &name, h5::datatype ty, void *start, int rank, bool is_complex, long const *lens, long const *strides,
+             long total_size) {
 
     h5::array_interface::h5_array_view v{ty, start, rank, is_complex};
 

@@ -27,11 +27,11 @@ namespace nda::blas {
 
     auto v = Ca();
     if constexpr (v.indexmap().is_stride_order_C())
-      f77::ger(get_n_rows(Ca()), get_n_cols(Ca()), alpha, Cy().data_start(), *Cy().indexmap().strides().data(), Cx().data_start(), *Cx().indexmap().strides().data(), Ca().data_start(),
-               get_ld(Ca()));
+      f77::ger(get_n_rows(Ca()), get_n_cols(Ca()), alpha, Cy().data_start(), *Cy().indexmap().strides().data(), Cx().data_start(),
+               *Cx().indexmap().strides().data(), Ca().data_start(), get_ld(Ca()));
     else
-      f77::ger(get_n_rows(Ca()), get_n_cols(Ca()), alpha, Cx().data_start(), *Cx().indexmap().strides().data(), Cy().data_start(), *Cy().indexmap().strides().data(), Ca().data_start(),
-               get_ld(Ca()));
+      f77::ger(get_n_rows(Ca()), get_n_cols(Ca()), alpha, Cx().data_start(), *Cx().indexmap().strides().data(), Cy().data_start(),
+               *Cy().indexmap().strides().data(), Ca().data_start(), get_ld(Ca()));
   }
 
 } // namespace nda::blas

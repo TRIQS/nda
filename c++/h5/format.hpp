@@ -18,7 +18,7 @@ namespace h5 {
     static std::string invoke() { return T::hdf5_format(); }
   };
 
-#define H5_SPECIALIZE_FORMAT2(X, Y)                                                                                                             \
+#define H5_SPECIALIZE_FORMAT2(X, Y)                                                                                                                  \
   template <>                                                                                                                                        \
   struct hdf5_format_impl<X> {                                                                                                                       \
     static std::string invoke() { return H5_AS_STRING(Y); }                                                                                          \
@@ -50,7 +50,7 @@ namespace h5 {
 
   // A few helper functions
 
- /* /// Write the triqs tag*/
+  /* /// Write the triqs tag*/
   //void write_hdf5_format_as_string(group g, const char *a) { h5_write_attribute(g, "TRIQS_HDF5_data_format", a); }
 
   ///// Write the triqs tag of the group if it is an object.
@@ -65,7 +65,7 @@ namespace h5 {
   ///// Asserts that the tag of the group is the same as for T. Throws H5_ERROR if
   //template <typename T>
   //void assert_hdf5_format(T const &, bool ignore_if_absent = false) const {
-    //assert_hdf5_format_as_string(get_hdf5_format<T>().c_str(), ignore_if_absent);
+  //assert_hdf5_format_as_string(get_hdf5_format<T>().c_str(), ignore_if_absent);
   /*}*/
 
 } // namespace h5

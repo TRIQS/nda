@@ -643,7 +643,7 @@ namespace itertools {
    * The function to apply
    */
   template <typename F>
-  void foreach(range const &r, F&& f) {
+  void foreach (range const &r, F && f) {
     auto i = r.first(), last = r.last(), step = r.step();
     for (; i < last; i += step) f(i);
   }

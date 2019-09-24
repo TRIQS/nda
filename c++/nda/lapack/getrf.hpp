@@ -29,10 +29,10 @@
 
 namespace nda::lapack {
 
-  using blas::is_blas_lapack_v;
+  using blas::get_ld;
   using blas::get_n_cols;
   using blas::get_n_rows;
-  using blas::get_ld;
+  using blas::is_blas_lapack_v;
 
   /**
    * Calls getrf on a matrix or view

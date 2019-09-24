@@ -45,16 +45,15 @@ namespace h5::array_interface {
 
     //std::cout << " ------- RESULT ------- " << std::endl;
     //for (int u = 0; u < rank; ++u) {
-      //NDA_PRINT(u);
-      //NDA_PRINT(stri[u]);
-      //NDA_PRINT(Ltot[u]);
-      //NDA_PRINT(strides_h5[u]);
+    //NDA_PRINT(u);
+    //NDA_PRINT(stri[u]);
+    //NDA_PRINT(Ltot[u]);
+    //NDA_PRINT(strides_h5[u]);
     //}
     //std::cout << "------- END RESULT --------- " << std::endl;
 
     return {Ltot, strides_h5};
   }
-
 
   //-------------------------------------------------------
   //                    write
@@ -83,7 +82,7 @@ namespace h5::array_interface {
     if (!ds.is_valid()) throw std::runtime_error("Cannot create the dataset " + name + " in the group" + g.name());
 
     // memory data space
-    dataspace mem_d_space =  make_mem_dpace(v);
+    dataspace mem_d_space = make_mem_dpace(v);
     if (H5Sget_simple_extent_npoints(mem_d_space) > 0) { // avoid writing empty arrays
       herr_t err = H5Dwrite(ds, v.ty, mem_d_space, H5S_ALL, H5P_DEFAULT, v.start);
       if (err < 0) throw std::runtime_error("Error writing the scalar dataset " + name + " in the group" + g.name());

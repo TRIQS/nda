@@ -2,7 +2,7 @@
 namespace nda {
 
   /// --------------- make_const_view------------------------
-  
+
   template <typename T, int R, typename L, char Algebra, typename ContainerPolicy>
   basic_array_view<T const, R, L, Algebra> make_const_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a) {
     return {a};
@@ -13,7 +13,7 @@ namespace nda {
   make_const_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> const &a) {
     return {a};
   }
- 
+
   /// --------------- operator == ---------------------
 
   template <typename A, typename B>

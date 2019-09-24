@@ -26,7 +26,7 @@ namespace h5 {
      */
     file(const char *name, char mode);
 
-    /// 
+    ///
     file(std::string const &name, char mode) : file(name.c_str(), mode) {}
 
     /// Name of the file
@@ -34,7 +34,6 @@ namespace h5 {
 
     protected:
     file() = default;
-
   };
 
   /**
@@ -43,7 +42,6 @@ namespace h5 {
   class memory_file : public file {
 
     public:
-
     /// A writable file in memory with a buffer
     memory_file();
 
@@ -53,6 +51,5 @@ namespace h5 {
     /// Get a copy of the buffer
     std::vector<unsigned char> as_buffer() const;
   };
-
 
 } // namespace h5

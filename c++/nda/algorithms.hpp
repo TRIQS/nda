@@ -7,10 +7,10 @@ namespace nda {
   //template <typename T>
   ////require( is_real_or_complex<T>)
   //double frobenius_norm(matrix<T> const &a) {
-    //return std::sqrt(fold([](double r, T const &x) -> double {
-      //auto ab = std::abs(x);
-      //return r + ab * ab;
-    //}, a, double(0)));
+  //return std::sqrt(fold([](double r, T const &x) -> double {
+  //auto ab = std::abs(x);
+  //return r + ab * ab;
+  //}, a, double(0)));
   //}
 
   // --------------- Check if is finite ------------------------
@@ -43,7 +43,7 @@ namespace nda {
     return fold(
        [](auto const &x, auto const &y) {
          using std::max;
-         return max(x,y);
+         return max(x, y);
        },
        a, get_first_element(a));
   }
@@ -58,7 +58,7 @@ namespace nda {
     return fold(
        [](auto const &x, auto const &y) {
          using std::min;
-         return min(x,y);
+         return min(x, y);
        },
        a, get_first_element(a));
   }

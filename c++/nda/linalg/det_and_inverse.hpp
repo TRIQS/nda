@@ -31,7 +31,7 @@ namespace nda {
   template <typename A>
   bool is_matrix_square(A const &a, bool print_error = false) {
     bool r = (a.extent(0) == a.extent(1));
-    if (not r and print_error) std::cerr << "Error non-square matrix. Dimensions are :(" << a.extent(0) << "," << a.extent(1) << ")\n  " <<std::endl;
+    if (not r and print_error) std::cerr << "Error non-square matrix. Dimensions are :(" << a.extent(0) << "," << a.extent(1) << ")\n  " << std::endl;
     return r;
   }
 
@@ -48,7 +48,7 @@ namespace nda {
     return det;
   }
 
-  template<typename A> 
+  template <typename A>
   typename A::value_type determinant(A const &m, array<int, 1> const &ipiv) REQUIRES(is_matrix_or_view_v<A>) {
     return determinant_impl(make_const_view(m), ipiv);
   }

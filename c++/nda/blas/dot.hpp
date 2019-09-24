@@ -62,7 +62,7 @@ namespace nda::blas {
             res += X_[ix] * Y_[iy];
         }
       }
-    } 
+    }
     // general code for the concept. Is it really slower ?  cf below
     return res;
 

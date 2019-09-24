@@ -112,12 +112,12 @@ namespace nda {
       for (int u = 0; u < A::rank; ++u) L[u] = lt.lengths[u]; // NB : correct for complex
 
       if constexpr (is_regular_v<A>) {
-      H5_PRINT(a.shape());
-      H5_PRINT(L);
-      H5_PRINT(a.data_start());
-      a.resize(L);
-      H5_PRINT(a.shape());
-      H5_PRINT(a.data_start());
+        H5_PRINT(a.shape());
+        H5_PRINT(L);
+        H5_PRINT(a.data_start());
+        a.resize(L);
+        H5_PRINT(a.shape());
+        H5_PRINT(a.data_start());
       } else {
         if (a.shape() != L)
           NDA_RUNTIME_ERROR << "Error trying to read from an hdf5 file to a view. Dimension mismatch"

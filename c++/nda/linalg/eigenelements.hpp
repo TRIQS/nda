@@ -55,19 +55,22 @@ namespace triqs {
       /**
    * A worker to call lapack routine with the matrices. Handles both real and complex case.
    */
-      template <typename T> class eigenelements_worker {
+      template <typename T>
+      class eigenelements_worker {
         public:
         eigenelements_worker() = default;
 
         /// The eigenvalues
-        template <typename M> array<double, 1> eigenvalues(M &mat) const {
+        template <typename M>
+        array<double, 1> eigenvalues(M &mat) const {
           _prepare(mat);
           _invoke(is_complex<T>(), 'N', mat);
           return ev;
         }
 
         /// The eigensystems
-        template <typename M> std::pair<array<double, 1>, matrix<T>> eigenelements(M &mat) const {
+        template <typename M>
+        std::pair<array<double, 1>, matrix<T>> eigenelements(M &mat) const {
           _prepare(mat);
           _invoke(is_complex<T>(), 'V', mat);
           return {ev, _conj(mat, is_complex<T>())};
@@ -92,7 +95,8 @@ namespace triqs {
           if (info) TRIQS_RUNTIME_ERROR << "eigenelements_worker :error code zheev : " << info << " for matrix " << mat;
         }
 
-        template <typename M> void _prepare(M const &mat) const {
+        template <typename M>
+        void _prepare(M const &mat) const {
           if (mat.is_empty()) TRIQS_RUNTIME_ERROR << "eigenelements_worker : the matrix is empty : matrix =  " << mat << "  ";
           if (!mat.is_square()) TRIQS_RUNTIME_ERROR << "eigenelements_worker : the matrix " << mat << " is not square ";
           if (!mat.indexmap().is_contiguous()) TRIQS_RUNTIME_ERROR << "eigenelements_worker : the matrix " << mat << " is not contiguous in memory";
@@ -103,12 +107,16 @@ namespace triqs {
           if (is_complex<T>::value) work2.resize(lwork);
         }
 
-        template <typename M> matrix<double> _conj(M const &m, std::false_type) const { return m; }
+        template <typename M>
+        matrix<double> _conj(M const &m, std::false_type) const {
+          return m;
+        }
 
         // impl : since we call fortran lapack, if the order is C (!), the matrix is transposed, or conjugated, so we obtain
         // the conjugate of the eigenvectors... Fix #119.
         // Do nothing if the order is fortran already...
-        template <typename M> matrix<std::complex<double>> _conj(M const &m, std::true_type) const {
+        template <typename M>
+        matrix<std::complex<double>> _conj(M const &m, std::true_type) const {
           if (m.memory_layout_is_c())
             return conj(m);
           else
@@ -126,7 +134,8 @@ namespace triqs {
    * Handles both real and complex case.
    * @param M : the matrix or view.
    */
-      template <typename M> std::pair<array<double, 1>, matrix<typename M::value_type>> eigenelements(M const &m) {
+      template <typename M>
+      std::pair<array<double, 1>, matrix<typename M::value_type>> eigenelements(M const &m) {
         auto m2 = make_clone(m);
         return eigenelements_worker<typename M::value_type>().eigenelements(m2);
       }
@@ -139,7 +148,8 @@ namespace triqs {
    * Works in place, i.e. changes the matrix
    * @param M : the matrix or view.
    */
-      template <typename M> std::pair<array<double, 1>, matrix<typename M::value_type>> eigenelements_in_place(M *m) {
+      template <typename M>
+      std::pair<array<double, 1>, matrix<typename M::value_type>> eigenelements_in_place(M *m) {
         return eigenelements_worker<typename M::value_type>().eigenelements(*m);
       }
 
@@ -150,7 +160,8 @@ namespace triqs {
    * Handles both real and complex case.
    * @param M : the matrix VIEW : it MUST be contiguous
    */
-      template <typename M> array<double, 1> eigenvalues(M const &m) {
+      template <typename M>
+      array<double, 1> eigenvalues(M const &m) {
         auto m2 = make_clone(m);
         return eigenelements_worker<typename M::value_type>().eigenvalues(m2);
       }
@@ -162,7 +173,10 @@ namespace triqs {
    * Handles both real and complex case.
    * @param M : the matrix VIEW : it MUST be contiguous
    */
-      template <typename M> array<double, 1> eigenvalues_in_place(M *m) { return eigenelements_worker<typename M::value_type>().eigenvalues(*m); }
+      template <typename M>
+      array<double, 1> eigenvalues_in_place(M *m) {
+        return eigenelements_worker<typename M::value_type>().eigenvalues(*m);
+      }
     } // namespace linalg
   }   // namespace arrays
 } // namespace triqs

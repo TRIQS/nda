@@ -64,7 +64,7 @@ namespace nda {
 
   // Impl. trait to match the containers in requires. Match all containers (array, matrix, view)
   template <typename A>
-  inline constexpr bool is_matrix_or_view_v = is_regular_or_view_v<A> and (get_algebra<A> =='M') ;
+  inline constexpr bool is_matrix_or_view_v = is_regular_or_view_v<A> and (get_algebra<A> == 'M');
 
   // --------------------------- Ndarray concept------------------------
 

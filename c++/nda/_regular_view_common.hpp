@@ -194,5 +194,3 @@ auto &operator/=(RHS const &rhs) {
   static_assert(not is_const, "Can not assign to a const view");
   return operator=(*this / rhs);
 }
-
-

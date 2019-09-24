@@ -21,10 +21,10 @@ namespace h5 {
   // impl trait to detect complex numbers
   template <typename T>
   struct _is_complex : std::false_type {};
-  
+
   template <typename T>
   struct _is_complex<std::complex<T>> : std::true_type {};
-  
+
   template <typename T>
   constexpr bool is_complex_v = _is_complex<T>::value;
 

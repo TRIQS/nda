@@ -18,7 +18,7 @@ namespace nda {
 
     A const &ref;        // the array in reference
     mpi::communicator c; // mpi comm
-    int root{};            //
+    int root{};          //
     bool all{};
     MPI_Op op{};
 
@@ -36,7 +36,7 @@ namespace nda {
 
     A const &ref;        // the array in reference
     mpi::communicator c; // mpi comm
-    int root{};            //
+    int root{};          //
     bool all{};
 
     /// compute the shape of the target array. WARNING : MAKES A MPI CALL.
@@ -59,7 +59,7 @@ namespace nda {
 
     A const &ref;        // the array in reference
     mpi::communicator c; // mpi comm
-    int root{};            //
+    int root{};          //
     bool all{};
 
     /// compute the shape of the target array. WARNING : MAKES A MPI CALL.
@@ -141,7 +141,7 @@ namespace nda {
     auto D          = mpi::mpi_type<typename A::value_type>::get();
 
     bool in_place = (lhs.data_start() == lazy_op.ref.data_start());
-    auto sha = lazy_op.shape(); // WARNING : Keep this out of the if condition (shape USES MPI) !
+    auto sha      = lazy_op.shape(); // WARNING : Keep this out of the if condition (shape USES MPI) !
 
     // some checks.
     if (in_place) {
@@ -189,7 +189,6 @@ namespace nda {
       sendcounts[r] = mpi::chunk_length(slow_size, c.size(), r) * slow_stride;
       displs[r + 1] = sendcounts[r] + displs[r];
     }
-
 
     MPI_Scatterv((void *)lazy_op.ref.data_start(), &sendcounts[0], &displs[0], D, (void *)lhs.data_start(), recvcount, D, lazy_op.root, c.get());
   }

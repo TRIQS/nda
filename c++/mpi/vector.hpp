@@ -25,7 +25,8 @@ namespace mpi {
 
   // ---------------- broadcast ---------------------
 
-  template <typename T> void mpi_broadcast(std::vector<T> &v, communicator c = {}, int root = 0) {
+  template <typename T>
+  void mpi_broadcast(std::vector<T> &v, communicator c = {}, int root = 0) {
     size_t s = v.size();
     broadcast(s, c, root);
     if (c.rank() != root) v.resize(s);
@@ -37,7 +38,8 @@ namespace mpi {
   }
   // ---------------- reduce in place  ---------------------
 
-  template <typename T> void mpi_reduce_in_place(std::vector<T> &a, communicator c = {}, int root = 0, bool all = false, MPI_Op op = MPI_SUM) {
+  template <typename T>
+  void mpi_reduce_in_place(std::vector<T> &a, communicator c = {}, int root = 0, bool all = false, MPI_Op op = MPI_SUM) {
     if (a.size() == 0) return; // mpi behaviour not checked in that case.
     if constexpr (has_mpi_type<T>) {
       if (!all)
@@ -52,10 +54,17 @@ namespace mpi {
   // ---------------- reduce   ---------------------
 
   namespace detail {
-    template <typename T, typename Enable = void> struct _regular { using type = T; };
-    template <typename T> struct _regular<T, std::void_t<typename T::regular_type>> { using type = typename T::regular_type; };
+    template <typename T, typename Enable = void>
+    struct _regular {
+      using type = T;
+    };
+    template <typename T>
+    struct _regular<T, std::void_t<typename T::regular_type>> {
+      using type = typename T::regular_type;
+    };
   } // namespace detail
-  template <typename T> using regular_t = typename detail::_regular<std::decay_t<T>>::type;
+  template <typename T>
+  using regular_t = typename detail::_regular<std::decay_t<T>>::type;
 
   template <typename T>
   std::vector<regular_t<T>> mpi_reduce(std::vector<T> const &a, communicator c = {}, int root = 0, bool all = false, MPI_Op op = MPI_SUM) {
@@ -80,7 +89,8 @@ namespace mpi {
   // ---------------- scatter  ---------------------
 
   // FIXME : not checked for 0 size ?
-  template <typename T> std::vector<T> mpi_scatter(std::vector<T> const &a, communicator c = {}, int root = 0) {
+  template <typename T>
+  std::vector<T> mpi_scatter(std::vector<T> const &a, communicator c = {}, int root = 0) {
 
     if constexpr (has_mpi_type<T>) {
       auto slow_size  = a.size();
@@ -109,7 +119,8 @@ namespace mpi {
   }
   // ---------------- gather  ---------------------
 
-  template <typename T> std::vector<T> mpi_gather(std::vector<T> const &a, communicator c = {}, int root = 0, bool all = false) {
+  template <typename T>
+  std::vector<T> mpi_gather(std::vector<T> const &a, communicator c = {}, int root = 0, bool all = false) {
 
     if constexpr (has_mpi_type<T>) {
       long size = mpi_reduce(a.size(), c, root, all);
