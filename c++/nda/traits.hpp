@@ -42,6 +42,12 @@ namespace nda {
   template <typename A>
   inline constexpr char get_algebra = 'N';
 
+  // --------------------------- get_rank ------------------------
+
+  /// A trait to get the rank of an object with ndarray concept
+  template <typename A>
+  constexpr int get_rank = std::tuple_size_v<std::decay_t<decltype(std::declval<A const>().shape())>>;
+
   // ---------------------------  is_regular------------------------
 
   // Impl. trait to match the containers in requires. Match all regular containers (array, matrix)
@@ -64,7 +70,7 @@ namespace nda {
 
   // Impl. trait to match the containers in requires. Match all containers (array, matrix, view)
   template <typename A>
-  inline constexpr bool is_matrix_or_view_v = is_regular_or_view_v<A> and (get_algebra<A> == 'M');
+  inline constexpr bool is_matrix_or_view_v = is_regular_or_view_v<A> and (get_algebra<A> == 'M') and (get_rank<A> == 2);
 
   // --------------------------- Ndarray concept------------------------
 
@@ -85,12 +91,6 @@ namespace nda {
 
   //template <typename T>
   //inline constexpr bool is_2d_ndarray_v = is_ndarray_v<T> and ((get_rank<T>) == 2);
-
-  // --------------------------- get_rank ------------------------
-
-  /// A trait to get the rank of an object with ndarray concept
-  template <typename A>
-  constexpr int get_rank = std::tuple_size_v<std::decay_t<decltype(std::declval<A const>().shape())>>;
 
   // --------------------------- get_first_element and get_value_t ------------------------
 

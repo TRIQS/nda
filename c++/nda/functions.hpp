@@ -14,6 +14,28 @@ namespace nda {
     return {a};
   }
 
+  /// --------------- make_matrix_view------------------------
+
+  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy>
+  matrix_view<T, L> make_matrix_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a) {
+    return {a};
+  }
+
+  template <typename T, int R, typename L, char Algebra = 'A', typename AccessorPolicy, typename OwningPolicy>
+  matrix_view<T, L> make_matrix_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> const &a) {
+    return {a};
+  }
+
+  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy>
+  matrix_view<T const, L> make_matrix_const_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a) {
+    return {a};
+  }
+
+  template <typename T, int R, typename L, char Algebra = 'A', typename AccessorPolicy, typename OwningPolicy>
+  matrix_view<T const, L> make_matrix_const_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> const &a) {
+    return {a};
+  }
+
   /// --------------- operator == ---------------------
 
   template <typename A, typename B>

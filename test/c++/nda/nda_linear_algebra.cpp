@@ -1,12 +1,7 @@
 #include "test_common.hpp"
 #include "nda/blas/gemm.hpp"
-//#include <nda/linalg/det_and_inverse.hpp>
-//#include "nda/lapack/gtsv.hpp"
-#include <nda/lapack/stev.hpp>
-//#include <nda/lapack/gelss.hpp>
-//#include <nda/lapack/gesvd.hpp>
+#include <nda/lapack.hpp>
 #include <nda/linalg/det_and_inverse.hpp>
-//#include <nda/linalg/eigenelements.hpp>
 
 using nda::C_layout;
 using nda::F_layout;
@@ -161,9 +156,11 @@ TEST(Inverse, F) {
   // FIXME MOVE THIS IN LAPACK TEST
   // testing against "manual" call of bindings
   nda::array<int, 1> ipiv2(3);
-  ipiv2 = 0;
-  nda::lapack::getrf(Wi, ipiv2);
-  nda::lapack::getri(Wi, ipiv2);
+  ipiv2    = 0;
+  int info = nda::lapack::getrf(Wi(), ipiv2);
+  EXPECT_EQ(info, 0);
+  info = nda::lapack::getri(Wi(), ipiv2);
+  EXPECT_EQ(info, 0);
   EXPECT_ARRAY_NEAR(Wi, Wkeep, 1.e-12);
 }
 
@@ -189,9 +186,11 @@ TEST(Inverse, C) {
   // FIXME MOVE THIS IN LAPACK TEST
   // testing against "manual" call of bindings
   nda::array<int, 1> ipiv2(3);
-  ipiv2 = 0;
-  nda::lapack::getrf(Wi, ipiv2);
-  nda::lapack::getri(Wi, ipiv2);
+  ipiv2    = 0;
+  int info = nda::lapack::getrf(Wi(), ipiv2);
+  EXPECT_EQ(info, 0);
+  info = nda::lapack::getri(Wi, ipiv2);
+  EXPECT_EQ(info, 0);
   EXPECT_ARRAY_NEAR(Wi, Wkeep, 1.e-12);
 }
 
@@ -253,71 +252,25 @@ TEST(Matvecmul, Promotion) {
   EXPECT_ARRAY_NEAR(Cd, Ci, 1.e-13);
 }
 */
-
-// ========================= tridiag matrix STEV  =====================================
 /*
- * FAILS DUE TO MATRIX * VECTOR
-template <typename T>
-void check_eig(matrix<T> M, matrix_view<T> vectors, nda::vector_view<double> values) {
-  for (auto i : range(0, first_dim(M))) { EXPECT_ARRAY_NEAR(M * vectors(i, _), values(i) * vectors(i, _), 1.e-13); }
-}
-
-template <typename Md, typename Me>
-void test(Md d, Me e) {
-  using value_t = typename Me::value_type;
-  using nda::conj;
-  using std::conj;
-
-  matrix<value_t> A(first_dim(d), first_dim(d));
-  assign_foreach(A, [&](size_t i, size_t j) { return j == i ? d(i) : j == i + 1 ? e(i) : j == i - 1 ? conj(e(j)) : .0; });
-
-  int size = first_dim(d);
-  for (int init_size : {0, size, 2 * size}) {
-    nda::lapack::tridiag_worker<nda::is_complex_v<value_t>> w(init_size);
-    w(d, e);
-    check_eig(A, w.vectors(), w.values());
-  }
-}
-
-TEST(tridiag, real) {
-  nda::vector<double> d(5);
-  nda::vector<double> e(4);
-  assign_foreach(d, [](size_t i) { return 3.2 * i + 2.3; });
-  assign_foreach(e, [](size_t i) { return 2.4 * (i + 1.82) + 0.78; });
-  e(1) = .0;
-  test(d, e);
-}
-
-TEST(tridiag, complex) {
-  nda::vector<double> d(5);
-  nda::vector<dcomplex> e(4);
-  assign_foreach(d, [](size_t i) { return 3.2 * i + 2.3; });
-  assign_foreach(e, [](size_t i) { return 2.4 * (i + 1.82) + 0.78 * dcomplex(0, 1.0); });
-  e(1) = .0;
-  test(d, e);
-}
-*/
-
-/*
-
 //=======================================  gtsv=====================================
 
 TEST(blas_lapack, dgtsv) {
 
-  vector<double> DL = {4, 3, 2, 1};    // sub-diagonal elements
-  vector<double> D  = {1, 2, 3, 4, 5}; // diagonal elements
-  vector<double> DU = {1, 2, 3, 4};    // super-diagonal elements
+  nda::array<double, 1> DL = {4, 3, 2, 1};    // sub-diagonal elements
+  nda::array<double, 1> D  = {1, 2, 3, 4, 5}; // diagonal elements
+  nda::array<double, 1> DU = {1, 2, 3, 4};    // super-diagonal elements
 
-  vector<double> B1 = {6, 2, 7, 4, 5};  // RHS column 1
-  vector<double> B2 = {1, 3, 8, 9, 10}; // RHS column 2
-  matrix<double> B(5, 2, FORTRAN_LAYOUT);
+  nda::array<double, 1> B1 = {6, 2, 7, 4, 5};  // RHS column 1
+  nda::array<double, 1> B2 = {1, 3, 8, 9, 10}; // RHS column 2
+  matrix<dcomplex, F_layout> B(5, 2);
   B(range(), 0) = B1;
   B(range(), 1) = B2;
 
   // reference solutions
-  vector<double> ref_sol_1 = {43.0 / 33.0, 155.0 / 33.0, -208.0 / 33.0, 130.0 / 33.0, 7.0 / 33.0};
-  vector<double> ref_sol_2 = {-28.0 / 33.0, 61.0 / 33.0, 89.0 / 66.0, -35.0 / 66.0, 139.0 / 66.0};
-  matrix<double> ref_sol(5, 2, FORTRAN_LAYOUT);
+  nda::array<double, 1> ref_sol_1 = {43.0 / 33.0, 155.0 / 33.0, -208.0 / 33.0, 130.0 / 33.0, 7.0 / 33.0};
+  nda::array<double, 1> ref_sol_2 = {-28.0 / 33.0, 61.0 / 33.0, 89.0 / 66.0, -35.0 / 66.0, 139.0 / 66.0};
+  matrix<dcomplex, F_layout> ref_sol(5, 2);
   ref_sol(range(), 0) = ref_sol_1;
   ref_sol(range(), 1) = ref_sol_2;
 
@@ -325,21 +278,21 @@ TEST(blas_lapack, dgtsv) {
     auto dl(DL);
     auto d(D);
     auto du(DU);
-    lapack::gtsv(dl, d, du, B1);
-    EXPECT_ARRAY_NEAR(B1, ref_sol_1);
+    nda::lapack::gtsv(dl(), d(), du(), B1());
+    EXPECT_ARRAY_NEAR(B1(), ref_sol_1);
   }
   {
     auto dl(DL);
     auto d(D);
     auto du(DU);
-    lapack::gtsv(dl, d, du, B2);
+    nda::lapack::gtsv(dl(), d(), du(), B2());
     EXPECT_ARRAY_NEAR(B2, ref_sol_2);
   }
   {
     auto dl(DL);
     auto d(D);
     auto du(DU);
-    lapack::gtsv(dl, d, du, B);
+    nda::lapack::gtsv(dl(), d(), du(), B());
     EXPECT_ARRAY_NEAR(B, ref_sol);
   }
 }
@@ -355,14 +308,14 @@ TEST(blas_lapack, cgtsv) {
 
   vector<dcomplex> B1 = {6 + 0_j, 2_j, 7 + 0_j, 4_j, 5 + 0_j}; // RHS column 1
   vector<dcomplex> B2 = {1_j, 3 + 0_j, 8_j, 9 + 0_j, 10_j};    // RHS column 2
-  matrix<dcomplex> B(5, 2, FORTRAN_LAYOUT);
+  matrix<dcomplex, F_layout> B(5, 2);
   B(range(), 0) = B1;
   B(range(), 1) = B2;
 
   // reference solutions
   vector<dcomplex> ref_sol_1 = {137.0 / 33.0 + 0_j, -61_j / 33.0, 368.0 / 33.0 + 0_j, 230_j / 33.0, -13.0 / 33.0 + 0_j};
   vector<dcomplex> ref_sol_2 = {-35_j / 33.0, 68.0 / 33.0 + 0_j, -103_j / 66.0, 415.0 / 66.0 + 0_j, 215_j / 66.0};
-  matrix<dcomplex> ref_sol(5, 2, FORTRAN_LAYOUT);
+  matrix<dcomplex, F_layout> ref_sol(5, 2);
   ref_sol(range(), 0) = ref_sol_1;
   ref_sol(range(), 1) = ref_sol_2;
 
@@ -370,25 +323,26 @@ TEST(blas_lapack, cgtsv) {
     auto dl(DL);
     auto d(D);
     auto du(DU);
-    lapack::gtsv(dl, d, du, B1);
+    nda::lapack::gtsv(dl, d, du, B1);
     EXPECT_ARRAY_NEAR(B1, ref_sol_1);
   }
   {
     auto dl(DL);
     auto d(D);
     auto du(DU);
-    lapack::gtsv(dl, d, du, B2);
+    nda::lapack::gtsv(dl, d, du, B2);
     EXPECT_ARRAY_NEAR(B2, ref_sol_2);
   }
   {
     auto dl(DL);
     auto d(D);
     auto du(DU);
-    lapack::gtsv(dl, d, du, B);
+    nda::lapack::gtsv(dl, d, du, B);
     EXPECT_ARRAY_NEAR(B, ref_sol);
   }
 }
-
+*/
+/*
 // ================================================================================
 
 TEST(blas_lapack, svd) {

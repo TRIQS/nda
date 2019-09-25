@@ -37,6 +37,15 @@ namespace nda {
           return matrix<promoted_type>{a};
       };
 
+      // MSAN has no way to know that we are calling with beta = 0, hence
+      // this is not necessaru
+      // of course, in production code, we do NOT waste time to do this.
+#if defined(__has_feature)
+#if __has_feature(memory_sanitizer)
+      result = 0;
+#endif
+#endif
+
       blas::gemm(1, as_container(l), as_container(r), 0, result);
     } else {
       blas::gemm_generic(1, l, r, 0, result);
