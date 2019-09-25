@@ -1,7 +1,7 @@
 #pragma once
 
 #include <complex>
-#include "lapack/f77/cxx_interface.hpp"
+#include "lapack/f77/lapack_cxx_interface.hpp"
 #include "./blas/tools.hpp"
 
 namespace nda::lapack {
@@ -25,21 +25,25 @@ namespace nda::lapack {
   // Used by Igor ?
 
   /**
-   * LU decomposition of a matrix_view
+   * LU decomposition of a matrix
+   *
    * The matrix m is modified during the operation.
    * The matrix is interpreted as FORTRAN ordered, and then LU decomposed.
    * NB : for some operation, like det, inversion, it is fine to be transposed, 
    *      for some it may not be ... 
    *
-   * @tparam T Element type
-   * @tparam L Layout
+   * @tparam M matrix, matrix_view, array, array_view of rank 2. M can be a temporary view
    * @param m  matrix to be LU decomposed. It is destroyed by the operation
    * @param ipiv  Gauss Pivot, cf lapack doc
    *
    */
-  template <typename T, typename L>
-  [[nodiscard]] int getrf(matrix_view<T, L> m, array<int, 1> &ipiv) {
-    static_assert(is_blas_lapack_v<T>, "Matrices must have the same element type and it must be double, complex ...");
+  template <typename M>
+  [[nodiscard]] int getrf(M &&m, array<int, 1> &ipiv) {
+    using M_t = std::decay_t<M>;
+    static_assert(is_regular_or_view_v<M_t>, "getrf: M must be a matrix, matrix_view, array or array_view of rank 2");
+    static_assert(M_t::rank == 2, "M must be of rank 2");
+    static_assert(is_blas_lapack_v<typename M_t::value_type>, "Matrices must have the same element type and it must be double, complex ...");
+
     auto dm = std::min(m.extent(0), m.extent(1));
     if (ipiv.size() < dm) ipiv.resize(dm);
     int info = 0;
@@ -52,19 +56,22 @@ namespace nda::lapack {
    * The matrix m is modified during the operation.
    * The matrix is interpreted as FORTRAN orderedf getrf.
    *
-   * @tparam T Element type
-   * @tparam L Layout
+   * @tparam M matrix, matrix_view, array, array_view of rank 2. M can be a temporary view
    * @param m  matrix to be LU decomposed. It is destroyed by the operation
    * @param ipiv  Gauss Pivot, cf lapack doc
    *
    */
-  template <typename T, typename L>
-  [[nodiscard]] int getri(matrix_view<T, L> m, array<int, 1> &ipiv) {
-    static_assert(is_blas_lapack_v<T>, "Matrices must have the same element type and it must be double, complex ...");
+  template <typename M>
+  [[nodiscard]] int getri(M &&m, array<int, 1> &ipiv) {
+    using M_t = std::decay_t<M>;
+    static_assert(is_regular_or_view_v<M_t>, "getrf: M must be a matrix, matrix_view, array or array_view of rank 2");
+    static_assert(M_t::rank == 2, "M must be of rank 2");
+    static_assert(is_blas_lapack_v<typename M_t::value_type>, "Matrices must have the same element type and it must be double, complex ...");
 
     auto dm = std::min(m.extent(0), m.extent(1));
     EXPECTS(ipiv.size() >= dm);
 
+    using T  = typename M_t::value_type;
     int info = 0;
     T work1[2];
 
@@ -78,6 +85,7 @@ namespace nda::lapack {
 
     array<T, 1> work(lwork);
 
+    // second call to do the job
     f77::getri(get_n_rows(m), m.data_start(), get_ld(m), ipiv.data_start(), work.data_start(), lwork, info);
     return info;
   }
@@ -94,15 +102,22 @@ namespace nda::lapack {
    * @param du
    * @param b 
    */
-  template <typename T>
-  [[nodiscard]] int gtsv(array_view<T, 1> dl, array_view<T, 1> d, array_view<T, 1> du, matrix_view<T, F_layout> b) {
+  template <typename V1, typename V2, typename V3, typename M>
+  [[nodiscard]] int gtsv(V1 &dl, V2 &d, V3 &du, M &b) {
 
-    static_assert(is_blas_lapack_v<T>, "Must be double or double complex");
+    static_assert(is_regular_or_view_v<V1> and (V1::rank == 1), "gtsv: V1 must be an array/view of rank 1");
+    static_assert(is_regular_or_view_v<V2> and (V2::rank == 1), "gtsv: V2 must be an array/view of rank 1");
+    static_assert(is_regular_or_view_v<V3> and (V3::rank == 1), "gtsv: V3 must be an array/view of rank 1");
+    //   static_assert(is_regular_or_view_v<M> and (M::rank == 2), "gtsv: M must be an matrix/array/view of rank 2");
+    static_assert(is_regular_or_view_v<M>, "gtsv: M must be an matrix/array/view of rank  1 or 2");
+    static_assert(is_blas_lapack_v<typename M::value_type>, "Matrices must have the same element type and it must be double, complex ...");
+    static_assert(blas::have_same_element_type_and_it_is_blas_type_v<V1, V2, V3, M>,
+                  "All arguments must have the same element type and it must be double, complex ...");
 
     int N = first_dim(d);
-    EXPECT(dl.extent(0) == d.extent(0) - 1); // "gtsv : dimension mismatch between sub-diagonal and diagonal vectors "
-    EXPECT(du.extent(0) == d.extent(0) - 1); //"gtsv : dimension mismatch between super-diagonal and diagonal vectors "
-    EXPECT(b.extent(0) == d.extent(0));      // "gtsv : dimension mismatch between diagonal vector and RHS matrix, "
+    EXPECTS(dl.extent(0) == d.extent(0) - 1); // "gtsv : dimension mismatch between sub-diagonal and diagonal vectors "
+    EXPECTS(du.extent(0) == d.extent(0) - 1); // "gtsv : dimension mismatch between super-diagonal and diagonal vectors "
+    EXPECTS(b.extent(0) == d.extent(0));      // "gtsv : dimension mismatch between diagonal vector and RHS matrix, "
 
     int info = 0;
     f77::gtsv(N, second_dim(b), dl.data_start(), d.data_start(), du.data_start(), b.data_start(), N, info);

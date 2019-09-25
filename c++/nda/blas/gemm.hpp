@@ -45,12 +45,12 @@ namespace nda::blas {
   template <typename A, typename B, typename C>
   void gemm(typename A::value_type alpha, A const &a, B const &b, typename A::value_type beta, C &&c) {
 
-    using Out_t = std::decay_t<C>;
-    static_assert(is_regular_or_view_v<Out_t>, "gemm: Out must be a matrix, matrix_view, array or array_view of rank 2");
+    using C_t = std::decay_t<C>;
+    static_assert(is_regular_or_view_v<C_t>, "gemm: Out must be a matrix, matrix_view, array or array_view of rank 2");
     static_assert(A::rank == 2, "A must be of rank 2");
     static_assert(B::rank == 2, "B must be of rank 2");
-    static_assert(Out_t::rank == 2, "C must be of rank 2");
-    static_assert(have_same_element_type_and_it_is_blas_type_v<A, B, Out_t>,
+    static_assert(C_t::rank == 2, "C must be of rank 2");
+    static_assert(have_same_element_type_and_it_is_blas_type_v<A, B, C_t>,
                   "Matrices must have the same element type and it must be double, complex ...");
 
     EXPECTS(a.extent(1) == b.extent(0));
@@ -63,8 +63,7 @@ namespace nda::blas {
     EXPECTS(c.indexmap().min_stride() == 1);
 
     // We need to see if C is in Fortran order or C order
-    auto idx = c.indexmap();
-    if constexpr (idx.is_stride_order_C()) {
+    if constexpr (C_t::is_stride_order_C()) {
       // C order. We compute the transpose of the product in this case
       // since BLAS is in Fortran order
       char trans_a = get_trans(b, true);
@@ -74,7 +73,7 @@ namespace nda::blas {
       int k        = (trans_a == 'N' ? get_n_cols(b) : get_n_rows(b));
       f77::gemm(trans_a, trans_b, m, n, k, alpha, b.data_start(), get_ld(b), a.data_start(), get_ld(a), beta, c.data_start(), get_ld(c));
     } else {
-      // C is in fortran, we compute the product, maybe
+      // C is in fortran or, we compute the product.
       char trans_a = get_trans(a, false);
       char trans_b = get_trans(b, false);
       int m        = (trans_a == 'N' ? get_n_rows(a) : get_n_cols(a));
