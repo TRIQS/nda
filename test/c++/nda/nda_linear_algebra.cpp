@@ -2,6 +2,7 @@
 #include "nda/blas/gemm.hpp"
 #include <nda/lapack.hpp>
 #include <nda/linalg/det_and_inverse.hpp>
+#include <nda/linalg/eigenelements.hpp>
 
 using nda::C_layout;
 using nda::F_layout;
@@ -346,6 +347,72 @@ TEST(blas_lapack, cgtsv) {
     EXPECT_ARRAY_NEAR(B, ref_sol);
   }
 }
+// ================================================================================
+
+template <typename M, typename V1, typename V2>
+void check_eig(M const &m, V1 const &vectors, V2 const &values) {
+  for (auto i : range(0, m.extent(0))) { EXPECT_ARRAY_NEAR(matvecmul(m, vectors(i, _)), values(i) * vectors(i, _), 1.e-13); }
+}
+
+//----------------------------------
+
+TEST(eigenelements, test1) {
+
+  auto test = [](auto &&A) {
+    auto [ev, vecs] = nda::linalg::eigenelements(make_regular(A));
+    check_eig(A, vecs, ev);
+  };
+
+  {
+    nda::matrix<double> A(3, 3);
+
+    for (int i = 0; i < 3; ++i)
+      for (int j = 0; j <= i; ++j) {
+        A(i, j) = (i > j ? i + 2 * j : i - j);
+        A(j, i) = A(i, j);
+      }
+    test(A);
+
+    A()     = 0;
+    A(0, 1) = 1;
+    A(1, 0) = 1;
+    A(2, 2) = 8;
+    A(0, 2) = 2;
+    A(2, 0) = 2;
+
+    test(A);
+
+    A()     = 0;
+    A(0, 1) = 1;
+    A(1, 0) = 1;
+    A(2, 2) = 8;
+
+    test(A);
+  }
+  { // the complex case*/
+
+    matrix<dcomplex> M(2, 2);
+
+    M(0, 0) = 1;
+    M(0, 1) = 1.0i;
+    M(1, 0) = -1.0i;
+    M(1, 1) = 2;
+
+    test(M);
+  }
+
+  { // the complex case
+
+    matrix<dcomplex, F_layout> M(2, 2);
+
+    M(0, 0) = 1;
+    M(0, 1) = 1.0i;
+    M(1, 0) = -1.0i;
+    M(1, 1) = 2;
+
+    test(M);
+  }
+}
 
 /*
 // ================================================================================
@@ -395,64 +462,5 @@ TEST(blas_lapack, gelss) {
 
   EXPECT_ARRAY_NEAR(x_exact, x_1, 1e-14);
   EXPECT_ARRAY_NEAR(x_exact, x_2, 1e-14);
-}
-// ================================================================================
-
-TEST(eigenelements, test1) {
-
-  auto test = [](auto &&A) {
-    auto w = linalg::eigenelements(make_clone(A));
-    check_eig(A, w.second(), w.first());
-  };
-
-  {
-    matrix<double> A(3, 3);
-
-    for (int i = 0; i < 3; ++i)
-      for (int j = 0; j <= i; ++j) {
-        A(i, j) = (i > j ? i + 2 * j : i - j);
-        A(j, i) = A(i, j);
-      }
-    test(A);
-
-    A()     = 0;
-    A(0, 1) = 1;
-    A(1, 0) = 1;
-    A(2, 2) = 8;
-    A(0, 2) = 2;
-    A(2, 0) = 2;
-
-    test(A);
-
-    A()     = 0;
-    A(0, 1) = 1;
-    A(1, 0) = 1;
-    A(2, 2) = 8;
-
-    test(A);
-  }
-  { // the complex case
-
-    matrix<dcomplex> M(2, 2);
-
-    M(0, 0) = 1;
-    M(0, 1) = 1.0i;
-    M(1, 0) = -1.0i;
-    M(1, 1) = 2;
-
-    test(M);
-  }
-
-  { // the complex case
-
-    matrix<dcomplex> M(2, 2, FORTRAN_LAYOUT);
-
-    M(0, 0) = 1;
-    M(0, 1) = 1.0i;
-    M(1, 0) = -1.0i;
-    M(1, 1) = 2;
-
-    test(M);
-  }
 }
 */

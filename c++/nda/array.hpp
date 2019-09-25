@@ -59,8 +59,8 @@ namespace nda {
     using AccessorPolicy = default_accessor;
 
     template <typename IdxMap>
-    using my_view_template_t =
-       basic_array_view<ValueType, IdxMap::rank(), layout<IdxMap::stride_order_encoded, IdxMap::layout_prop>, Algebra, default_accessor, borrowed>;
+    using my_view_template_t = basic_array_view<ValueType, IdxMap::rank(), generic_layout<IdxMap::stride_order_encoded, IdxMap::layout_prop>, Algebra,
+                                                default_accessor, borrowed>;
 
     idx_map_t _idx_m;
     storage_t _storage;

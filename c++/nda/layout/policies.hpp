@@ -24,7 +24,7 @@ namespace nda {
   };
 
   template <uint64_t StrideOrder, layout_prop_e LayoutProp>
-  struct layout {
+  struct generic_layout {
     template <int Rank>
     using mapping = idx_map<Rank, 0, StrideOrder, LayoutProp>;
   };
