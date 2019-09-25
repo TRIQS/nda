@@ -25,7 +25,6 @@
 #include <complex>
 #include "f77/cxx_interface.hpp"
 #include "../blas/tools.hpp"
-#include "../blas/qcache.hpp"
 
 namespace nda::lapack {
 
@@ -35,21 +34,25 @@ namespace nda::lapack {
   using blas::is_blas_lapack_v;
 
   /**
-   * Calls getrf on a matrix or view
-   * @tparam M
-   * @param m
-   * @param ipiv
-   * @param assert_fortran_order Ensure the matrix is in Fortran Order 
+   * LU decomposition of a matrix_view
+   * The matrix m is modified during the operation.
+   * The matrix is interpreted as FORTRAN ordered, and then LU decomposed.
+   * NB : for some operation, like det, inversion, it is fine to be transposed, 
+   *      for some it may not be ... 
+   *
+   * @tparam T Element type
+   * @tparam L Layout
+   * @param m  matrix to be LU decomposed. It is destroyed by the operation
+   * @param ipiv  Gauss Pivot, cf lapack doc
+   *
    */
-  template <typename M>
-  int getrf(M &m, array<int, 1> &ipiv, bool assert_fortran_order = false) REQUIRES(is_regular_or_view_v<M> and (M::rank == 2)) {
-    static_assert(is_blas_lapack_v<typename M::value_type>, "Matrices must have the same element type and it must be double, complex ...");
-    if (assert_fortran_order && m.indexmap().is_stride_order_Fortran()) NDA_RUNTIME_ERROR << "matrix passed to getrf is not in Fortran order";
-    auto Ca = reflexive_qcache(m);
-    auto dm = std::min(Ca().extent(0), Ca().extent(1));
+  template <typename T, typename L>
+  int getrf(matrix_view<T, L> &m, array<int, 1> &ipiv) {
+    static_assert(is_blas_lapack_v<T>, "Matrices must have the same element type and it must be double, complex ...");
+    auto dm = std::min(m.extent(0), m.extent(1));
     if (ipiv.size() < dm) ipiv.resize(dm);
-    int info;
-    f77::getrf(get_n_rows(Ca()), get_n_cols(Ca()), Ca().data_start(), get_ld(Ca()), ipiv.data_start(), info);
+    int info = 0;
+    f77::getrf(get_n_rows(m), get_n_cols(m), m.data_start(), get_ld(m), ipiv.data_start(), info);
     return info;
   }
 

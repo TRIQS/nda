@@ -41,8 +41,6 @@ namespace nda::blas {
    * @Precondition : 
    *       * c has the correct dimension given a, b. 
    *         gemm does not resize the object, 
-   *
-   *
    */
   template <typename A, typename B, typename C>
   void gemm(typename A::value_type alpha, A const &a, B const &b, typename A::value_type beta, C &&c) {
@@ -63,14 +61,6 @@ namespace nda::blas {
     EXPECTS(a.indexmap().min_stride() == 1);
     EXPECTS(b.indexmap().min_stride() == 1);
     EXPECTS(c.indexmap().min_stride() == 1);
-
-    // For MSAN : we avoid to recompile the lapack/blas with MSAN which can be tricky and set to 0 here.
-    // of course, in production code, we do NOT waste time to do this.
-#if defined(__has_feature)
-#if __has_feature(memory_sanitizer)
-    c = 0;
-#endif
-#endif
 
     // We need to see if C is in Fortran order or C order
     auto idx = c.indexmap();

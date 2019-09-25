@@ -30,23 +30,28 @@
 namespace nda::lapack {
 
   /**
-   * Calls getri on a matrix or view
-   * @tparam M
-   * @param m
-   * @param ipiv
+   * Computes the inverse of an LU-factored general matrix.
+   * The matrix m is modified during the operation.
+   * The matrix is interpreted as FORTRAN orderedf getrf.
+   *
+   * @tparam T Element type
+   * @tparam L Layout
+   * @param m  matrix to be LU decomposed. It is destroyed by the operation
+   * @param ipiv  Gauss Pivot, cf lapack doc
+   *
    */
   template <typename M>
   int getri(M &m, array<int, 1> &ipiv) {
     static_assert(is_blas_lapack_v<typename M::value_type>, "Matrices must have the same element type and it must be double, complex ...");
 
-    auto Ca = reflexive_qcache(m);
-    auto dm = std::min(Ca().extent(0), Ca().extent(1));
-    if (ipiv.size() < dm) NDA_RUNTIME_ERROR << "getri : error in ipiv size : found " << ipiv.size() << " while it should be at least" << dm;
+    auto dm = std::min(m.extent(0), m.extent(1));
+    EXPECTS(ipiv.size() >= dm);
 
-    int info;
+    int info = 0;
     typename M::value_type work1[2];
+
     // first call to get the optimal lwork
-    f77::getri(get_n_rows(Ca()), Ca().data_start(), get_ld(Ca()), ipiv.data_start(), work1, -1, info);
+    f77::getri(get_n_rows(m), m.data_start(), get_ld(m), ipiv.data_start(), work1, -1, info);
     int lwork;
     if constexpr (is_complex_v<typename M::value_type>)
       lwork = std::round(std::real(work1[0])) + 1;
@@ -55,7 +60,7 @@ namespace nda::lapack {
 
     array<typename M::value_type, 1> work(lwork);
 
-    f77::getri(get_n_rows(Ca()), Ca().data_start(), get_ld(Ca()), ipiv.data_start(), work.data_start(), lwork, info);
+    f77::getri(get_n_rows(m), m.data_start(), get_ld(m), ipiv.data_start(), work.data_start(), lwork, info);
     return info;
   }
 } // namespace nda::lapack
