@@ -143,7 +143,7 @@ namespace nda::slice_static {
     int n_10_pattern = 0;
     for (size_t i = 1; i < Q; ++i) {
       int n = stride_order_in[i];
-      if (args_is_range_all[n - 1] and (not args_is_range_all[n])) ++n_10_pattern;
+      if ((n > 0) and args_is_range_all[n - 1] and (not args_is_range_all[n])) ++n_10_pattern;
     }
     bool rangeall_are_grouped_in_memory             = (n_10_pattern <= 1);
     bool rangeall_are_grouped_in_memory_and_fastest = (n_10_pattern == 0);

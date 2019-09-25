@@ -1,14 +1,14 @@
 // ------------------------------- data access --------------------------------------------
 
 /// The Index Map object
-[[nodiscard]] constexpr auto const &indexmap() const { return _idx_m; }
+[[nodiscard]] constexpr auto const &indexmap() const noexcept { return _idx_m; }
 
 /// The storage handle
-[[nodiscard]] storage_t const &storage() const { return _storage; }
+[[nodiscard]] storage_t const &storage() const noexcept { return _storage; }
 storage_t &storage() { return _storage; }
 
 /// Memory stride_order
-[[nodiscard]] auto stride_order() const { return _idx_m.stride_order(); }
+[[nodiscard]] constexpr auto stride_order() const noexcept { return _idx_m.stride_order(); }
 
 /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
 [[nodiscard]] ValueType const *data_start() const { return _storage.data(); }
@@ -31,6 +31,12 @@ ValueType *data_start() { return _storage.data(); }
 [[nodiscard]] long shape(int i) const { return _idx_m.lengths()[i]; }
 
 [[nodiscard]] long extent(int i) const { return _idx_m.lengths()[i]; }
+
+///
+static constexpr bool is_stride_order_C() { return idx_map_t::is_stride_order_C(); }
+
+///
+static constexpr bool is_stride_order_Fortran() { return idx_map_t::is_stride_order_Fortran(); }
 
 // -------------------------------  operator () --------------------------------------------
 

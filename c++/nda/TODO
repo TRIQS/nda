@@ -1,4 +1,13 @@
 
+regroup nda::default : policies in one file
+basic_array and co + defs + split
+
+
+
+
+
+
+
 1 file lapack.hpp with basic interface : 
   with the mdspan interface ...
   no requires, just nda::blas::gemm.

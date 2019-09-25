@@ -20,9 +20,7 @@
  ******************************************************************************/
 #pragma once
 
-//#include "../basic_array.hpp"
-#include "../lapack/getrf.hpp"
-#include "../lapack/getri.hpp"
+#include "../lapack.hpp"
 
 namespace nda {
 
@@ -57,7 +55,7 @@ namespace nda {
   auto determinant_in_place(A &a) {
     static_assert(not std::is_const_v<A>, "determinant_in_place can not be const. It destroys its argument");
     array<int, 1> ipiv(a.extent(0));
-    int info = lapack::getrf(make_matrix_view(a), ipiv); // it is ok to be in C order. Lapack compute the inverse of the transpose.
+    int info = lapack::getrf(a, ipiv); // it is ok to be in C order. Lapack compute the inverse of the transpose.
     if (info != 0) NDA_RUNTIME_ERROR << "Error in determinant. Info lapack is" << info;
     return determinant(a, ipiv);
   }
@@ -74,9 +72,9 @@ namespace nda {
   void inverse_in_place(A &a) REQUIRES(is_regular_or_view_v<A> and (get_algebra<A> == 'M') and (get_rank<A> == 2)) {
     EXPECTS(is_matrix_square(a, true));
     array<int, 1> ipiv(a.extent(0));
-    int info = lapack::getrf(a(), ipiv); // it is ok to be in C order. Lapack compute the inverse of the transpose.
+    int info = lapack::getrf(a, ipiv); // it is ok to be in C order. Lapack compute the inverse of the transpose.
     if (info != 0) NDA_RUNTIME_ERROR << "Inverse/Det error : matrix is not invertible. Step 1. Lapack error : " << info;
-    info = lapack::getri(a(), ipiv);
+    info = lapack::getri(a, ipiv);
     if (info != 0) NDA_RUNTIME_ERROR << "Inverse/Det error : matrix is not invertible. Step 2. Lapack error : " << info;
   }
 

@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-#include "cxx_interface.hpp"
+#include "lapack_cxx_interface.hpp"
 // Extracted from Reference Lapack (https://github.com/Reference-LAPACK):
 #include "lapack.h"
 
