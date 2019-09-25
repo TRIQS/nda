@@ -1,8 +1,8 @@
 #pragma once
 
 #include <complex>
-#include "f77/cxx_interface.hpp"
 #include "tools.hpp"
+#include "blas_interface/cxx_interface.hpp"
 
 namespace nda::blas {
 

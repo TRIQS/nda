@@ -38,10 +38,10 @@ namespace nda {
   }
 
   template <int Rank>
-  constexpr uint64_t Fortran_stride_order = nda::permutations::encode(nda::permutations::reverse_identity<Rank>());
+  constexpr uint64_t Fortran_stride_order = nda::encode(nda::permutations::reverse_identity<Rank>());
 
   template <int Rank>
-  constexpr uint64_t C_stride_order = nda::permutations::encode(nda::permutations::identity<Rank>());
+  constexpr uint64_t C_stride_order = nda::encode(nda::permutations::identity<Rank>());
 
   // constexpr std::array<long,  > ce_len, ce_stri :   -1 -->  dynamic.
   // https://godbolt.org/z/qmKWpj
@@ -81,7 +81,7 @@ namespace nda {
 
     public:
     // FIXME : rename DECODE : it is not a permutation
-    static constexpr std::array<int, Rank> static_extents = permutations::decode<Rank>(StaticExtents);
+    static constexpr std::array<int, Rank> static_extents = decode<Rank>(StaticExtents);
 
     static constexpr int rank_dynamic = []() {
       int r = 0;
@@ -91,9 +91,9 @@ namespace nda {
 
     // main property : idx_map<Rank, stride_order_encoded, layout_prop> is THIS
     static constexpr std::array<int, Rank> stride_order =
-       (StrideOrder == 0 ? permutations::identity<Rank>() : permutations::decode<Rank>(StrideOrder)); // 0 is C stride_order
+       (StrideOrder == 0 ? permutations::identity<Rank>() : decode<Rank>(StrideOrder)); // 0 is C stride_order
 
-    static constexpr uint64_t stride_order_encoded  = permutations::encode(stride_order);
+    static constexpr uint64_t stride_order_encoded  = encode(stride_order);
     static constexpr uint64_t stride_order_as_given = StrideOrder;
 
     static constexpr layout_prop_e layout_prop = LayoutProp;
@@ -119,18 +119,18 @@ namespace nda {
 
     /// Is the data contiguous in memory ?
     [[nodiscard]] bool is_contiguous() const noexcept {
-      int slowest_index = std::distance(str.begin(), std::min_element(str.begin(), str.end())); // index with minimal stride
+      int slowest_index = std::distance(str.begin(), std::max_element(str.begin(), str.end())); // index with minimal stride
       return (str[slowest_index] * len[slowest_index] == size());
     }
 
     ///
     static constexpr bool is_stride_order_C() {
-      return (permutations::encode(stride_order) == permutations::encode(permutations::identity<Rank>()));
+      return (encode(stride_order) == encode(permutations::identity<Rank>()));
     } // (stride_order == permutations::identity<Rank>()); }
 
     ///
     static constexpr bool is_stride_order_Fortran() {
-      return (permutations::encode(stride_order) == permutations::encode(permutations::reverse_identity<Rank>()));
+      return (encode(stride_order) == encode(permutations::reverse_identity<Rank>()));
     } //(stride_order == permutations::reverse_identity<Rank>()); }
 
     /////
@@ -296,16 +296,21 @@ namespace nda {
 
   // ---------------- Transposition -------------------------
 
-  // FIXME COMPUTE THE CORRECT LAYOUT !!
-  //template <int Rank, uint64_t StrideOrder, layout_prop_e LayoutProp>
-  //idx_map<Rank, StrideOrder, LayoutProp> transpose(idx_map<Rank, StrideOrder, LayoutProp> const &idx, std::array<int, Rank> const &perm) {
-  //std::array<long, Rank> l, s;
-  //for (int u = 0; u < idx.rank(); ++u) {
-  //l[perm[u]] = idx.lengths()[u];
-  //s[perm[u]] = idx.strides()[u];
-  //}
-  //return {l, s};
-  //}
+  template <ARRAY_INT Permutation, int Rank, uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp>
+  auto transpose(idx_map<Rank, StaticExtents, StrideOrder, LayoutProp> const &idx) {
+
+    using idx_t = idx_map<Rank, StaticExtents, StrideOrder, LayoutProp>;
+
+    static constexpr std::array<int, Rank> new_stride_order   = permutations::apply_inverse<Permutation>(idx_t::stride_order);
+    static constexpr std::array<int, Rank> new_static_extents = permutations::apply_inverse<Permutation>(idx_t::static_extents);
+
+    // compute the new layout_info...
+    // strided_1d does not change, but min_stride_is_1 can !
+    static constexpr layout_prop_e new_layout = (idx_t::layout_prop & layout_prop_e::strided_1d ? layout_prop_e::strided_1d : layout_prop_e::none);
+
+    return idx_map<Rank, encode(new_static_extents), encode(new_stride_order), new_layout>{permutations::apply_inverse<Permutation>(idx.lengths()),
+                                                                                           permutations::apply_inverse<Permutation>(idx.strides())};
+  }
 
   //// ----------------  More complex iterators -------------------------
 

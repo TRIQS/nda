@@ -68,7 +68,7 @@ TEST(idxstat, slice) { // NOLINT
 
 TEST(idxstat, ellipsis) { // NOLINT
 
-  EXPECT_EQ(16, permutations::encode(nda::slice_static::sliced_mem_stride_order(std::array<int, 3>{0, 1, 2}, std::array<int, 2>{1, 2})));
+  EXPECT_EQ(16, encode(nda::slice_static::sliced_mem_stride_order(std::array<int, 3>{0, 1, 2}, std::array<int, 2>{1, 2})));
 
   idx_map<3, 0, C_stride_order<3>, layout_prop_e::none> i1{{1, 2, 3}};
   auto [offset2, i2] = slice_stride_order(i1, 0, ___);

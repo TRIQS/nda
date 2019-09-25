@@ -141,17 +141,18 @@ namespace nda {
       if constexpr (OP == '-') { return l(args...) - r(args...); }
 
       if constexpr (OP == '*') {
-        static_assert(algebra != 'M', "Should not occur");
         if constexpr (l_is_scalar)
           return l * r(args...);
         else if constexpr (r_is_scalar)
           return l(args...) * r;
-        else
+        else {
+          static_assert(algebra != 'M', "Should not occur");
           return l(args...) * r(args...);
+        }
       }
 
       if constexpr (OP == '/') {
-        static_assert(algebra != 'M', "Should not occur");
+        //static_assert(algebra != 'M', "Should not occur");
         if constexpr (l_is_scalar)
           return l / r(args...);
         else if constexpr (r_is_scalar)

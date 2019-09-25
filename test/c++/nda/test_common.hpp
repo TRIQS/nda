@@ -17,6 +17,9 @@ nda::range_all _;
 nda::ellipsis ___;
 
 using nda::range;
+using dcomplex = std::complex<double>;
+using nda::C_layout;
+using nda::F_layout;
 
 #define MAKE_MAIN_MPI                                                                                                                                \
   int main(int argc, char **argv) {                                                                                                                  \

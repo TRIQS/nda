@@ -52,7 +52,7 @@ namespace nda {
     //if constexpr (StaticExtents == 0)
     //return l[I]; // quick exit, no computation of
     //else {
-    constexpr auto static_extents = permutations::decode<R>(StaticExtents); // FIXME C++20
+    constexpr auto static_extents = decode<R>(StaticExtents); // FIXME C++20
     if constexpr (static_extents[I] == 0)
       return l[I];
     else

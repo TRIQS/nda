@@ -50,3 +50,22 @@
     std::cerr << "Postcondition " << AS_STRING(X) << " violated at " << __FILE__ << ":" << __LINE__ << "\n";                                         \
     std::terminate();                                                                                                                                \
   }
+
+#define EXPECTS_WITH_MESSAGE(X, ...)                                                                                                                 \
+  if (!(X)) {                                                                                                                                        \
+    std::cerr << "Precondition " << AS_STRING(X) << " violated at " << __FILE__ << ":" << __LINE__ << "\n";                                          \
+    std::cerr << "Error message : " << __VA_ARGS__ << std::endl;                                                                                     \
+    std::terminate();                                                                                                                                \
+  }
+#define ASSERT_WITH_MESSAGE(X, ...)                                                                                                                  \
+  if (!(X)) {                                                                                                                                        \
+    std::cerr << "Assertion " << AS_STRING(X) << " violated at " << __FILE__ << ":" << __LINE__ << "\n";                                             \
+    std::cerr << "Error message : " << __VA_ARGS__ << std::endl;                                                                                     \
+    std::terminate();                                                                                                                                \
+  }
+#define ENSURES_WITH_MESSAGE(X, ...)                                                                                                                 \
+  if (!(X)) {                                                                                                                                        \
+    std::cerr << "Postcondition " << AS_STRING(X) << " violated at " << __FILE__ << ":" << __LINE__ << "\n";                                         \
+    std::cerr << "Error message : " << __VA_ARGS__ << std::endl;                                                                                     \
+    std::terminate();                                                                                                                                \
+  }

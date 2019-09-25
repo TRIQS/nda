@@ -1,7 +1,7 @@
 #pragma once
 
 #include <complex>
-#include "lapack/f77/lapack_cxx_interface.hpp"
+#include "lapack_interface/lapack_cxx_interface.hpp"
 #include "./blas/tools.hpp"
 
 namespace nda::lapack {
