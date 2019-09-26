@@ -63,29 +63,33 @@ namespace nda::mem {
 
   // -------------- handle ---------------------------
 
-  /*
-   * The block of memory for the arrays
-   * R : Regular (owns the memory)
-   * S : Share (shared memory ownership)
-   * B : Borrowed (no memory ownership)
-   */
-  template <typename T, char rbs>
-  struct handle;
+  // The block of memory for the arrays
+  // Heap (owns the memory on the heap)
+  // Shared (shared memory ownership)
+  // Borrowed (no memory ownership)
+  // Stack  (on stack)
+  // clang-format off
+  template <typename T> struct handle_heap; 
+  template <typename T> struct handle_shared; 
+  template <typename T> struct handle_borrowed; 
+
+  template <typename T, size_t Size> struct handle_stack;
+  // clang-format on
 
   // ------------------  HEAP -------------------------------------
 
   template <typename T>
-  struct handle<T, 'R'> {
+  struct handle_heap {
     private:
     T *_data     = nullptr; // Pointer to the start of the memory block
     size_t _size = 0;       // Size of the memory block. Invariant: size > 0 iif data != 0
 
-    // The regular handle can share its memory with handle<T, 'S'>
+    // The regular handle can share its memory with handle_shared<T>
     mutable long _id = 0; // The id in the refcounts table.
                           // id == 0 corresponds to the case of no memory sharing
                           // This field must be mutable for the cross construction of 'S'. Cf 'S'.
                           // Invariant: id == 0 if data == nullptr
-    friend handle<T, 'S'>;
+    friend handle_shared<T>;
 
     void decref() noexcept {
       static_assert(std::is_nothrow_destructible_v<T>, "nda::mem::handle requires the value_type to have a non-throwing constructor");
@@ -106,11 +110,11 @@ namespace nda::mem {
     public:
     using value_type = T;
 
-    ~handle() noexcept { decref(); }
+    ~handle_heap() noexcept { decref(); }
 
-    handle() = default;
+    handle_heap() = default;
 
-    handle(handle &&x) noexcept {
+    handle_heap(handle_heap &&x) noexcept {
       _data   = x._data;
       _size   = x._size;
       _id     = x._id;
@@ -119,12 +123,12 @@ namespace nda::mem {
       x._id   = 0;
     }
 
-    handle &operator=(handle const &x) {
-      *this = handle{x};
+    handle_heap &operator=(handle_heap const &x) {
+      *this = handle_heap{x};
       return *this;
     }
 
-    handle &operator=(handle &&x) noexcept {
+    handle_heap &operator=(handle_heap &&x) noexcept {
       decref();
       _data   = x._data;
       _size   = x._size;
@@ -136,7 +140,7 @@ namespace nda::mem {
     }
 
     // Set up a memory block of the correct size without initializing it
-    handle(long size, do_not_initialize_t) {
+    handle_heap(long size, do_not_initialize_t) {
       if (size == 0) return;               // no size -> null handle
       auto b = allocate(size * sizeof(T)); //, alignof(T));
       ASSERT(b.ptr != nullptr);
@@ -145,7 +149,7 @@ namespace nda::mem {
     }
 
     // Set up a memory block of the correct size without initializing it
-    handle(long size, init_zero_t) {
+    handle_heap(long size, init_zero_t) {
       static_assert(std::is_scalar_v<T> or is_complex<T>::value, "Internal Error");
       if (size == 0) return;                    // no size -> null handle
       auto b = allocate_zero(size * sizeof(T)); //, alignof(T));
@@ -155,7 +159,7 @@ namespace nda::mem {
     }
 
     // Construct a new block of memory of given size and init if needed.
-    handle(long size) {
+    handle_heap(long size) {
       if (size == 0) return; // no size -> null handle
 
       allocators::blk_t b;
@@ -175,7 +179,7 @@ namespace nda::mem {
     }
 
     // Construct by making a clone of the data
-    handle(handle const &x) : handle(x.size(), do_not_initialize) {
+    handle_heap(handle_heap const &x) : handle_heap(x.size(), do_not_initialize) {
       if (is_null()) return; // nothing to do for null handle
       if constexpr (std::is_trivially_copyable_v<T>) {
         std::memcpy(_data, x.data(), x.size() * sizeof(T));
@@ -185,7 +189,7 @@ namespace nda::mem {
     }
 
     // Construct by making a clone of the data. same code
-    handle(handle<T, 'S'> const &x) : handle(x.size(), do_not_initialize) {
+    handle_heap(handle_shared<T> const &x) : handle_heap(x.size(), do_not_initialize) {
       if (is_null()) return; // nothing to do for null handle
       if constexpr (std::is_trivially_copyable_v<T>) {
         std::memcpy(_data, x.data(), x.size() * sizeof(T));
@@ -219,10 +223,80 @@ namespace nda::mem {
     long size() const noexcept { return _size; }
   };
 
+  // ------------------  Stack -------------------------------------
+
+  template <typename T, size_t Size>
+  struct alignas(alignof(T)) handle_stack {
+    private:
+    char __buffer[sizeof(T) * Size]; //
+
+    public:
+    using value_type = T;
+
+    //
+    T *data() const noexcept { return (T *)__buffer; }
+
+    T &operator[](long i) noexcept { return data()[i]; }
+    T const &operator[](long i) const noexcept { return data()[i]; }
+
+    handle_stack() {
+      // Call placement new except for complex types
+      if constexpr (!std::is_trivial_v<T> and !is_complex<T>::value) {
+        for (size_t i = 0; i < Size; ++i) new (data() + i) T();
+      }
+    }
+
+    handle_stack(long /*size*/) : handle_stack{} {}
+
+    handle_stack(long /*size*/, do_not_initialize_t) {}
+
+    ~handle_stack() noexcept {
+      static_assert(std::is_nothrow_destructible_v<T>, "nda::mem::handle requires the value_type to have a non-throwing constructor");
+      //if (is_null()) retun;
+      // If needed, call the T destructors
+      if constexpr (!std::is_trivial_v<T>) {
+        for (size_t i = 0; i < Size; ++i) data()[i].~T();
+      }
+    }
+
+    handle_stack &operator=(handle_stack const &x) {
+      if constexpr (std::is_trivially_copyable_v<T>) {
+        std::memcpy(data(), x.data(), Size * sizeof(T));
+      } else {
+        for (size_t i = 0; i < Size; ++i) new (data() + i) T(x[i]); // placement new
+      }
+      return *this;
+    }
+    // Construct by making a clone of the data
+    handle_stack(handle_stack const &x) noexcept { // if an exception occurs in T construction, so be it, we terminate
+      operator=(x);
+    }
+
+    handle_stack(handle_stack &&x) noexcept { operator=(x); } // no move makes a copy, we are on stack
+
+    handle_stack &operator=(handle_stack &&x) noexcept {
+      operator=(x);
+      return *this;
+    }
+
+    // Set up a memory block of the correct size without initializing it
+    handle_stack(long /*size*/, init_zero_t) { static_assert(std::is_scalar_v<T> or is_complex<T>::value, "Internal Error"); }
+
+    static constexpr bool is_null() noexcept { return false; }
+    static constexpr long size() noexcept { return Size; }
+    //static constexpr bool has_shared_memory() const noexcept { return false; }
+
+    // Helper function for construction of array<T> when T is not default constructible
+    template <typename U>
+    void init_raw(long i, U &&x) {
+      new (data() + i) T{std::forward<U>(x)};
+    }
+  };
+
   // ------------------  Shared -------------------------------------
 
   template <typename T>
-  struct handle<T, 'S'> {
+  struct handle_shared {
     static_assert(std::is_nothrow_destructible_v<T>, "nda::mem::handle requires the value_type to have a non-throwing constructor");
 
     private:
@@ -269,7 +343,7 @@ namespace nda::mem {
 
     private:
     // basic part of copy, no ref handling here
-    void _copy(handle const &x) noexcept {
+    void _copy(handle_shared const &x) noexcept {
       _data           = x._data;
       _size           = x._size;
       _id             = x._id;
@@ -278,16 +352,16 @@ namespace nda::mem {
     }
 
     public:
-    ~handle() noexcept { decref(); }
+    ~handle_shared() noexcept { decref(); }
 
-    handle() = default;
+    handle_shared() = default;
 
-    handle(handle const &x) noexcept {
+    handle_shared(handle_shared const &x) noexcept {
       _copy(x);
       if (!is_null()) incref();
     }
 
-    handle(handle &&x) noexcept {
+    handle_shared(handle_shared &&x) noexcept {
       _copy(x);
 
       // Invalidate x so it destructs trivally
@@ -296,14 +370,14 @@ namespace nda::mem {
       x._id   = 0;
     }
 
-    handle &operator=(handle const &x) noexcept {
+    handle_shared &operator=(handle_shared const &x) noexcept {
       decref(); // Release my ref if I have one
       _copy(x);
       incref();
       return *this;
     }
 
-    handle &operator=(handle &&x) noexcept {
+    handle_shared &operator=(handle_shared &&x) noexcept {
       decref(); // Release my ref if I have one
       _copy(x);
 
@@ -316,7 +390,7 @@ namespace nda::mem {
     }
 
     // Construct from foreign library shared object
-    handle(T *data, size_t size, void *foreign_handle, void *foreign_decref) noexcept
+    handle_shared(T *data, size_t size, void *foreign_handle, void *foreign_decref) noexcept
        : _data(data), _size(size), _foreign_handle(foreign_handle), _foreign_decref(foreign_decref) {
       // Only one thread should fetch the id
       std::lock_guard<std::mutex> lock(globals::rtable.mtx);
@@ -324,7 +398,7 @@ namespace nda::mem {
     }
 
     // Cross construction from a regular handle
-    handle(handle<T, 'R'> const &x) noexcept : _data(x.data()), _size(x.size()) {
+    handle_shared(handle_heap<T> const &x) noexcept : _data(x.data()), _size(x.size()) {
       if (x.is_null()) return;
 
       // Get an id if necessary
@@ -361,37 +435,37 @@ namespace nda::mem {
   // ------------------  Borrowed -------------------------------------
 
   template <typename T>
-  struct handle<T, 'B'> {
+  struct handle_borrowed {
     using T0 = std::remove_const_t<T>;
 
     private:
-    handle<T0, 'R'> const *_parent = nullptr; // Parent, Required for regular->shared promotion in Python Converter
+    handle_heap<T0> const *_parent = nullptr; // Parent, Required for regular->shared promotion in Python Converter
     T *_data                       = nullptr; // Pointer to the start of the memory block
 
     public:
     using value_type = T;
 
-    handle() = default;
+    handle_borrowed() = default;
 
-    handle(T *ptr) noexcept : _data(ptr) {}
-    handle(handle<T, 'B'> const &x) = default;
+    handle_borrowed(T *ptr) noexcept : _data(ptr) {}
+    handle_borrowed(handle_borrowed<T> const &x) = default;
 
-    handle(handle<T, 'B'> const &x, long offset) noexcept : _data(x.data() + offset) {}
+    handle_borrowed(handle_borrowed<T> const &x, long offset) noexcept : _data(x.data() + offset) {}
 
-    handle(handle<T0, 'R'> const &x, long offset = 0) noexcept : _parent(&x), _data(x.data() + offset) {}
-    handle(handle<T0, 'S'> const &x, long offset = 0) noexcept : _data(x.data() + offset) {}
-    handle(handle<T0, 'B'> const &x, long offset = 0) noexcept REQUIRES(std::is_const_v<T>) : _data(x.data() + offset) {}
+    handle_borrowed(handle_heap<T0> const &x, long offset = 0) noexcept : _parent(&x), _data(x.data() + offset) {}
+    handle_borrowed(handle_shared<T0> const &x, long offset = 0) noexcept : _data(x.data() + offset) {}
+    handle_borrowed(handle_borrowed<T0> const &x, long offset = 0) noexcept REQUIRES(std::is_const_v<T>) : _data(x.data() + offset) {}
 
     T &operator[](long i) noexcept { return _data[i]; }
     T const &operator[](long i) const noexcept { return _data[i]; }
 
     // warnings supp
-    handle &operator=(handle const &) = default;
-    handle &operator=(handle &&) = default;
+    handle_borrowed &operator=(handle_borrowed const &) = default;
+    handle_borrowed &operator=(handle_borrowed &&) = default;
 
     [[nodiscard]] bool is_null() const noexcept { return _data == nullptr; }
 
-    [[nodiscard]] handle<T0, 'R'> const *parent() const { return _parent; }
+    [[nodiscard]] handle_heap<T0> const *parent() const { return _parent; }
 
     // A const-handle does not entail T const data
     [[nodiscard]] T *data() const noexcept { return _data; }

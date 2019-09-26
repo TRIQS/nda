@@ -68,12 +68,9 @@ namespace nda {
 
   template <ARRAY_INT Permutation, typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   auto transposed_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> a) {
-
     auto new_idx_map    = transpose<Permutation>(a.indexmap());
     using new_idx_map_t = decltype(new_idx_map);
-    // FIXME STATICEXTENT
-    using layout_policy = generic_layout<encode(new_idx_map_t::stride_order), new_idx_map_t::layout_prop>;
-
+    using layout_policy = basic_layout<encode(new_idx_map_t::static_extents), encode(new_idx_map_t::stride_order), new_idx_map_t::layout_prop>;
     return basic_array_view<T, R, layout_policy, Algebra, AccessorPolicy, OwningPolicy>{new_idx_map, a.storage()};
   }
 

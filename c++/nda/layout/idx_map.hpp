@@ -104,6 +104,17 @@ namespace nda {
     /// Rank of the map (number of arguments)
     static constexpr int rank() noexcept { return Rank; }
 
+    /// Compile time size, 0 is unknown
+    static constexpr long ce_size() noexcept {
+      if constexpr (rank_dynamic != 0) { // quick general case
+        return 0;
+      } else {
+        long s = 1;
+        for (int u = 0; u < Rank; ++u) s *= static_extents[u];
+        return s;
+      }
+    }
+
     /** 
      * Lengths of each dimension.
      */
@@ -144,9 +155,27 @@ namespace nda {
 
     // ----------------  Constructors -------------------------
 
+    private:
+    void _compute_strides() {
+      // compute the strides for a compact array
+      long s = 1;
+      for (int v = rank() - 1; v >= 0; --v) { // rank() is constexpr ...
+        int u  = stride_order[v];
+        str[u] = s;
+        s *= len[u];
+      }
+      ENSURES(s == size());
+    }
+
+    public:
     /// Default constructor. Lengths and Strides are not initiliazed.
     idx_map() {
-      for (int u = 0; u < Rank; ++u) len[u] = 0; // to have the proper invariant of the array : shape = (0,0,...) and pointer is null
+      if constexpr (rank_dynamic == 0) { // full static array
+        for (int u = 0; u < Rank; ++u) len[u] = static_extents[u];
+        _compute_strides();
+      } else {
+        for (int u = 0; u < Rank; ++u) len[u] = 0; // to have the proper invariant of the array : shape = (0,0,...) and pointer is null
+      }
     }
 
     ///
@@ -191,14 +220,7 @@ namespace nda {
           if (static_extents[u] != 0) EXPECTS(static_extents[u] == len[u]);
       }
 #endif
-      // compute the strides for a compact array
-      long s = 1;
-      for (int v = rank() - 1; v >= 0; --v) { // rank() is constexpr ...
-        int u  = stride_order[v];
-        str[u] = s;
-        s *= len[u];
-      }
-      ENSURES(s == size());
+      _compute_strides();
     }
 
     private:
@@ -214,7 +236,8 @@ namespace nda {
      * @param lengths
      * @param strides
      */
-    idx_map(std::array<long, rank_dynamic> const &lengths) noexcept REQUIRES(rank_dynamic != Rank) : idx_map(_embed_array(lengths)) {}
+    idx_map(std::array<long, rank_dynamic> const &lengths) noexcept REQUIRES((rank_dynamic != Rank) and (rank_dynamic != 0))
+       : idx_map(_embed_array(lengths)) {}
 
     // trap for incorrect calls. For R = Rank, the non template has priority
     template <int R>

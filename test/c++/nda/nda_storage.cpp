@@ -75,13 +75,13 @@ class Ref : public ::testing::Test {
 
 TEST_F(Ref, HR) { // NOLINT
 
-  handle<int, 'R'> h{10};
+  handle_heap<int> h{10};
 
-  auto h2 = handle<int, 'R'>{10};
+  auto h2 = handle_heap<int>{10};
 
   // make sure it is a copy
   h.data()[2] = 89;
-  handle<int, 'R'> h3{h};
+  handle_heap<int> h3{h};
   h.data()[2] = 0;
   EXPECT_EQ(h3.data()[2], 89); //NOLINT
 }
@@ -89,15 +89,15 @@ TEST_F(Ref, HR) { // NOLINT
 //// ---- Contruct R B
 //TEST_F(Ref, HBR) { // NOLINT
 
-//handle<int, 'R'> h{10};
+//handle_heap<int> h{10};
 
-//handle<int, 'B'> b{h};
-//handle<int, 'B'> b2;
+//handle_borrowed<int> b{h};
+//handle_borrowed<int> b2;
 //b2 = h;
 
 //// make sure it is a copy
 //b.data()[2] = 89;
-//handle<int, 'R'> h2{b};
+//handle_heap<int> h2{b};
 //b.data()[2] = 0;
 //EXPECT_EQ(h2.data()[2], 89); //NOLINT
 //}
@@ -105,9 +105,9 @@ TEST_F(Ref, HR) { // NOLINT
 // ---- Construct R, S
 TEST_F(Ref, HSR) { // NOLINT
 
-  handle<int, 'R'> h{10};
+  handle_heap<int> h{10};
 
-  handle<int, 'S'> s{h};
+  handle_shared<int> s{h};
 
   EXPECT_EQ(s.refcount(), 2); //NOLINT
 }
@@ -117,15 +117,15 @@ TEST_F(Ref, HSR) { // NOLINT
 // ---- More complex
 TEST_F(Ref, HSRS) { // NOLINT
 
-  handle<int, 'R'> h{10};
+  handle_heap<int> h{10};
 
-  handle<int, 'S'> s{h};
+  handle_shared<int> s{h};
   EXPECT_EQ(s.refcount(), 2); //NOLINT
 
-  s = handle<int, 'S'>{h};
+  s = handle_shared<int>{h};
   EXPECT_EQ(s.refcount(), 2); //NOLINT
 
-  handle<int, 'S'> s2{h};
+  handle_shared<int> s2{h};
   s = s2;
   EXPECT_EQ(s.refcount(), 3); //NOLINT
 }
@@ -145,7 +145,7 @@ struct Number {
 };
 
 TEST_F(Ref, HR_with_cd) { // NOLINT
-  { handle<Number, 'R'> h{5}; }
+  { handle_heap<Number> h{5}; }
   EXPECT_EQ(Number::c, 0); //NOLINT
 }
 
@@ -160,7 +160,7 @@ void release_sp(void *x) {
 
 TEST_F(Ref, HR_with_sharedPtr) { // NOLINT
   {
-    handle<Number, 'S'> s;
+    handle_shared<Number> s;
     //s.id = globals::rtable.get();
     //s.sptr = (void *)new std::shared_ptr<Number>{new Number{}};
     //s.release_fnt = (void*)release_sp;
