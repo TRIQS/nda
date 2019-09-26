@@ -239,7 +239,7 @@ TEST(Inverse, slice) {
 }
 
 // ==============================================================
-/*
+
 TEST(Matvecmul, Promotion) {
 
   matrix<int> Ai   = {{1, 2}, {3, 4}};
@@ -247,12 +247,11 @@ TEST(Matvecmul, Promotion) {
   nda::array<int,1> Ci, B     = {1, 1};
   nda::array<double,1> Cd, Bd = {1, 1};
 
-  Cd = A * B;
-  Ci = Ai * B;
+  Cd = matvecmul(A, B);
+  Ci = matvecmul(Ai, B);
 
   EXPECT_ARRAY_NEAR(Cd, Ci, 1.e-13);
 }
-*/
 
 //=======================================  gtsv=====================================
 
