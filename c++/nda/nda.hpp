@@ -37,6 +37,7 @@
 
 #include "map.hpp"
 #include "mapped_functions.hpp"
+#include "mapped_functions.hxx"
 
 #include "algorithms.hpp"
 #include "print.hpp"

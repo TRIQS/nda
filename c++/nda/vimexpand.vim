@@ -23,8 +23,9 @@ function! VimExpandSimple()
 
   endwhile    
 
+  "Close the namespace at the end
   "Clang format
-  normal ==
+  normal Go}==
 endfunction
 
 "----------------------------------------------------------------
@@ -50,8 +51,9 @@ function! VimExpand2Simple()
 
   endwhile    
 
+  "Close the namespace at the end
   "Clang format
-  normal ==
+  normal Go}==
 endfunction 
 
 

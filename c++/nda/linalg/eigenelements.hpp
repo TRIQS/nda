@@ -31,7 +31,7 @@ namespace nda::linalg {
     EXPECTS(is_matrix_square(m, true));
     EXPECTS(m.indexmap().is_contiguous());
 
-    int dim = first_dim(m);
+    int dim = m.extent(0);
 
     using T = typename std::decay_t<M>::value_type;
 
