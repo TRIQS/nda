@@ -35,40 +35,47 @@ namespace nda {
 
     public:
     /**
-     * range() stands for the whole set of indices in the dimension (like `:` in python) ::
+     * Default constructor.
+     * Equivalent to all, takes all indices
+     *
+     * As in Python, range() stands for the whole set of indices in the dimension (like `:` in python) ::    
      * A(range(), 0) // take the first column of A
-     */
+     * */
     range() = default;
 
     /**
-     - two arguments to specify a range ::
-
-        A(range (0,3), 0)  // means  A(0,0), A(1,0), A(2,0)
-
-     - three arguments : a range with a step ::
-
-        A(range(0,4,2), 0) // means A(0,0), A(2,0)
-
-       @warning the second element is excluded: range(0,3) is 0,1,2, like in Python.
-    */
+     *
+     * @param first : first index
+     * @param last : last index + 1 (as in Python or STL).
+     * @param step : step, default 1
+     *
+     * @examples :
+     *
+     *      A(range (0,3), 0)  // means  A(0,0), A(1,0), A(2,0)
+     *      A(range (0,4,2), 0) // means A(0,0), A(2,0)  
+     * */
     range(long first__, long last__, long step__ = 1) noexcept : first_(first__), last_(last__), step_(step__) {}
 
-    // range (N) is equivalent to range(0,N,1)
+    /**
+     * Constructor
+     *
+     * @param i : last index + 1 (as in Python or STL).
+     *
+     * Equivalent to range(0,i,1)
+     * */
     explicit range(long i) noexcept : range(0, i, 1) {}
 
-    ///first index of the range
+    /// First index of the range
     [[nodiscard]] long first() const noexcept { return first_; }
 
-    ///last index of the range (is excluded from the list of indices)
+    /// Last index of the range + 1 (as in Python or STL).
     [[nodiscard]] long last() const noexcept { return last_; }
 
-    ///step between two indices
+    /// Step between two indices
     [[nodiscard]] long step() const noexcept { return step_; }
 
-    ///number of indices in the range
+    /// Number of indices in the range
     [[nodiscard]] long size() const noexcept { return (last_ - first_) / step_; }
-
-    //range operator+(long shift) const { return range(first_ + shift, last_ + shift, step_); }
 
     friend inline std::ostream &operator<<(std::ostream &os, const range &r) noexcept {
       os << "range(" << r.first() << "," << r.last() << "," << r.step() << ")";
@@ -147,8 +154,4 @@ namespace nda {
   template <typename... T>
   constexpr bool ellipsis_is_present = ((std::is_same_v<T, ellipsis> ? 1 : 0) + ... + 0); // +0 because it can be empty
 
-  // FIXME : Keep for backward if necessary or kill
-  // for the case A(i, ellipsis) where A is of dim 1...
-  //inline int operator*(ellipsis, int) { return 0; }
-  //inline int operator*(int, ellipsis) { return 0; }
 } // namespace nda
