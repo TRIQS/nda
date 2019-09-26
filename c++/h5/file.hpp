@@ -32,6 +32,15 @@ namespace h5 {
     /// Name of the file
     std::string name() const;
 
+    /// Flush the file
+    void flush();
+
+    /** 
+     * Close the file
+     * NB : invalidates all groups currently open on this file
+     */
+    void close();
+
     protected:
     file() = default;
   };

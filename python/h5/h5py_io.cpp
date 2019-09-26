@@ -177,7 +177,7 @@ namespace h5 {
     // if numpy
     if (PyArray_Check(ob)) {
       PyArrayObject *arr_obj = (PyArrayObject *)ob;
-      write(g, name, make_av_from_py(arr_obj));
+      write(g, name, make_av_from_py(arr_obj), true);
     } else if (PyFloat_Check(ob)) {
       h5_write(g, name, PyFloat_AsDouble(ob));
     } else if (PyInt_Check(ob)) {

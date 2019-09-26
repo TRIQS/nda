@@ -71,6 +71,7 @@ namespace h5::array_interface {
       for (int i = 0; i < v.rank(); ++i) chunk_dims[i] = std::max(v.slab.count[i], hsize_t{1});
       cparms = H5Pcreate(H5P_DATASET_CREATE);
       H5Pset_chunk(cparms, n_dims, chunk_dims.data());
+      // FIXME : OLD COMMIT
       H5Pset_deflate(cparms, 8);
     }
 

@@ -9,10 +9,9 @@ namespace h5 {
    */
   class group : public h5_object {
 
-    public:
-    // FIXME Do we need this ?
-    //group() = default; // for python converter only
+    h5::file parent_file;
 
+    public:
     /// Takes the "/" group at the top of the file
     group(h5::file f);
 
@@ -20,27 +19,37 @@ namespace h5 {
     group(group const &) = default;
 
     private:
-    /*
-     * Takes ownership of the id [expert only]
-     * id can be :
-     *  - a file : in this case, make a group on /
-     *  - a group : in this case, take the id of the group. DOES NOT take ownership of the ref
-     */
-    group(hid_t id_);
-
-    // [expert only]. If not present, the obj is casted to hid_t and there is a ref. leak
-    group(h5_object obj);
+    // construct from the bare object and the parent
+    // internal use only for open/create subgroup
+    group(h5_object obj, h5::file _parent_file) : h5_object{obj}, parent_file(_parent_file) {}
 
     public:
     /// Name of the group
     std::string name() const;
+
+    /// Access to the parent file
+    h5::file get_file() const { return parent_file; }
+
+    /**
+     * True iff key is an object in the group
+     *
+     * @param key
+     */
+    bool has_key(std::string const &key) const;
 
     /**
      * True iff key is a subgroup of this.
      *
      * @param key
      */
-    bool has_key(std::string const &key) const;
+    bool has_subgroup(std::string const &key) const;
+
+    /**
+     * True iff key is a dataset of this.
+     *
+     * @param key
+     */
+    bool has_dataset(std::string const &key) const;
 
     /**
      * Unlinks the subgroup key if it exists

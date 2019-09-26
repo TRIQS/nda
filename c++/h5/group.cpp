@@ -13,17 +13,17 @@ namespace h5 {
 
   //static_assert(std::is_same<::hid_t, hid_t>::value, "Internal error");
 
-  group::group(h5::file f) : h5_object() {
+  group::group(h5::file f) : h5_object(), parent_file(f) {
     id = H5Gopen2(f, "/", H5P_DEFAULT);
     if (id < 0) throw std::runtime_error("Cannot open the root group / in the file " + f.name());
   }
 
-  group::group(h5_object obj) : h5_object(std::move(obj)) {
-    if (!H5Iis_valid(this->id)) throw std::runtime_error("Invalid input in group constructor from id");
-    if (H5Iget_type(this->id) != H5I_GROUP) throw std::runtime_error("Group constructor must take the id of a group or a file ");
-  }
+  //group::group(h5_object obj) : h5_object(std::move(obj)) {
+  //if (!H5Iis_valid(this->id)) throw std::runtime_error("Invalid input in group constructor from id");
+  //if (H5Iget_type(this->id) != H5I_GROUP) throw std::runtime_error("Group constructor must take the id of a group or a file ");
+  //}
 
-  group::group(hid_t id_) : group(h5_object(id_)) {}
+  //group::group(hid_t id_) : group(h5_object(id_)) {}
 
   std::string group::name() const {
     char _n[1];
@@ -36,6 +36,24 @@ namespace h5 {
   }
 
   bool group::has_key(std::string const &key) const { return H5Lexists(id, key.c_str(), H5P_DEFAULT); }
+
+  bool group::has_subgroup(std::string const &key) const {
+    if (!has_key(key)) return false;
+    hid_t id_node = H5Oopen(id, key.c_str(), H5P_DEFAULT);
+    if (id_node <= 0) return false;
+    bool r = (H5Iget_type(id_node) == H5I_GROUP);
+    H5Oclose(id_node);
+    return r;
+  }
+
+  bool group::has_dataset(std::string const &key) const {
+    if (!has_key(key)) return false;
+    hid_t id_node = H5Oopen(id, key.c_str(), H5P_DEFAULT);
+    if (id_node <= 0) return false;
+    bool r = (H5Iget_type(id_node) == H5I_DATASET);
+    H5Oclose(id_node);
+    return r;
+  }
 
   void group::unlink(std::string const &key, bool error_if_absent) const {
     if (!has_key(key)) {
@@ -52,7 +70,15 @@ namespace h5 {
     if (!has_key(key)) throw std::runtime_error("no subgroup " + key + " in the group");
     hid_t sg = H5Gopen2(id, key.c_str(), H5P_DEFAULT);
     if (sg < 0) throw std::runtime_error("Error in opening the subgroup " + key);
-    return group(sg);
+    return group(h5_object{sg}, parent_file);
+  }
+
+  group group::create_group(std::string const &key, bool delete_if_exists) const {
+    if (key.empty()) return *this;
+    if (delete_if_exists) unlink(key);
+    hid_t id_g = H5Gcreate2(id, key.c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+    if (id_g < 0) throw std::runtime_error("Cannot create the subgroup " + key + " of the group" + name());
+    return group(h5_object{id_g}, parent_file);
   }
 
   /// Open an existing DataSet. Throw if it does not exist.
@@ -61,14 +87,6 @@ namespace h5 {
     dataset ds = H5Dopen2(id, key.c_str(), H5P_DEFAULT);
     if (!ds.is_valid()) throw std::runtime_error("Cannot open dataset " + key + " in the group" + name());
     return ds;
-  }
-
-  group group::create_group(std::string const &key, bool delete_if_exists) const {
-    if (key.empty()) return *this;
-    if (delete_if_exists) unlink(key);
-    hid_t id_g = H5Gcreate2(id, key.c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-    if (id_g < 0) throw std::runtime_error("Cannot create the subgroup " + key + " of the group" + name());
-    return group(id_g);
   }
 
   /**

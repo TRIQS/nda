@@ -13,7 +13,7 @@ namespace h5 {
 
   template <typename T>
   void h5_write(group g, std::string const &name, T const &x) H5_REQUIRES(std::is_arithmetic_v<T> or is_complex_v<T>) {
-    array_interface::write(g, name, array_interface::h5_array_view_from_scalar(x));
+    array_interface::write(g, name, array_interface::h5_array_view_from_scalar(x), false);
   }
 
   template <typename T>
@@ -23,7 +23,7 @@ namespace h5 {
 
   template <typename T>
   void h5_write_attribute(hid_t id, std::string const &name, T const &x) H5_REQUIRES(std::is_arithmetic_v<T> or is_complex_v<T>) {
-    array_interface::write_attribute(id, name, array_interface::h5_array_view_from_scalar(x));
+    array_interface::write_attribute(id, name, array_interface::h5_array_view_from_scalar(x), false);
   }
 
   template <typename T>

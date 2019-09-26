@@ -70,13 +70,10 @@ namespace h5::array_interface {
   h5_lengths_type get_h5_lengths_type(group g, std::string const &name);
 
   // Write the view of the array to the group
-  void write(group g, std::string const &name, h5_array_view const &a, bool compress = false);
+  void write(group g, std::string const &name, h5_array_view const &a, bool compress);
 
   // EXPLAIN
   void read(group g, std::string const &name, h5_array_view v, h5_lengths_type lt);
-
-  // Read the data into the view.
-  //inline void read(group g, std::string const &name, h5_array_view v) { read(g, name, v, get_h5_lengths_type(g, name)); }
 
   // Write as attribute
   void write_attribute(hid_t id, std::string const &name, h5_array_view v);

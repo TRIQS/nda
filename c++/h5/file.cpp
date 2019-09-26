@@ -31,10 +31,24 @@ namespace h5 {
     char _n[1];
     ssize_t size = H5Fget_name(id, _n, 1); // first call, get the size only
     std::vector<char> buf(size + 1, 0x00);
-    H5Fget_name(id, buf.data(), size); // now get the name
+    H5Fget_name(id, buf.data(), size + 1); // now get the name
     std::string res = "";
     res.append(&(buf.front()));
     return res;
+  }
+
+  //---------------------------------------------
+
+  void file::flush() {
+    auto err = H5Fflush(id, H5F_SCOPE_GLOBAL);
+    CHECK_OR_THROW((err >= 0), "flushing the file");
+  }
+
+  //---------------------------------------------
+
+  void file::close() {
+    auto err = H5Fclose(id);
+    CHECK_OR_THROW((err >= 0), "closing the file");
   }
 
   // ======================= MEMORY FILE  ============================
