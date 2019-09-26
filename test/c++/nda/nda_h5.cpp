@@ -385,6 +385,6 @@ TEST(BlockMatrixH5, S1) {
     h5_read(file2, "block_mat", W);
   }
 
-  EXPECT_EQ(first_dim(V), first_dim(W));
-  for (int i = 0; i < first_dim(V); ++i) EXPECT_ARRAY_NEAR(V(i), W(i));
+  EXPECT_EQ(V.extent(0), W.extent(0));
+  for (int i = 0; i < V.extent(0); ++i) EXPECT_ARRAY_NEAR(V(i), W(i));
 }

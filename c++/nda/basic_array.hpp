@@ -44,8 +44,8 @@ namespace nda {
     ///
     using const_view_t = basic_array_view<ValueType const, Rank, Layout, Algebra, default_accessor, borrowed>;
 
-    using storage_t = heap::handle<ValueType>;
     using idx_map_t = typename Layout::template mapping<Rank>;
+    using storage_t = typename ContainerPolicy::template handle<ValueType, idx_map_t::ce_size()>;
 
     //    static constexpr uint64_t stride_order = StrideOrder;
     //  static constexpr layout_prop_e stride_order= layout_prop_e::contiguous;
@@ -59,8 +59,9 @@ namespace nda {
     using AccessorPolicy = default_accessor;
 
     template <typename IdxMap>
-    using my_view_template_t = basic_array_view<ValueType, IdxMap::rank(), generic_layout<IdxMap::stride_order_encoded, IdxMap::layout_prop>, Algebra,
-                                                default_accessor, borrowed>;
+    using my_view_template_t =
+       basic_array_view<ValueType, IdxMap::rank(), basic_layout<encode(IdxMap::static_extents), encode(IdxMap::stride_order), IdxMap::layout_prop>,
+                        Algebra, default_accessor, borrowed>;
 
     idx_map_t _idx_m;
     storage_t _storage;
@@ -285,7 +286,7 @@ namespace nda {
     [[gnu::noinline]] void resize(shape_t<Rank> const &shape) {
       _idx_m = idx_map_t(shape);
       // Construct a storage only if the new index is not compatible (size mismatch).
-      if (_storage.is_null() or (_storage.size() != _idx_m.size())) _storage = mem::handle<ValueType, 'R'>{_idx_m.size()};
+      if (_storage.is_null() or (_storage.size() != _idx_m.size())) _storage = storage_t{_idx_m.size()};
     }
 
     // --------------------------

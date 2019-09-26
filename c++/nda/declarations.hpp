@@ -30,11 +30,20 @@ namespace nda {
   template <typename ValueType, typename Layout = C_stride_layout>
   using matrix_view = basic_array_view<ValueType, 2, Layout, 'M', default_accessor, borrowed>;
 
-  template <typename ValueType, typename Layout = C_layout> // CLayout or FLayout
-  using vector = basic_array<ValueType, 1, Layout, 'A', heap>;
+  //template <typename ValueType, typename Layout = C_layout> // CLayout or FLayout
+  //using vector = basic_array<ValueType, 1, Layout, 'A', heap>;
 
-  template <typename ValueType, typename Layout = C_stride_layout>
-  using vector_view = basic_array_view<ValueType, 1, Layout, 'A', default_accessor, borrowed>;
+  //template <typename ValueType, typename Layout = C_stride_layout>
+  //using vector_view = basic_array_view<ValueType, 1, Layout, 'A', default_accessor, borrowed>;
+
+  template <typename ValueType, int Rank, uint64_t StaticExtents>
+  using stack_array =
+     nda::basic_array<long, Rank, nda::basic_layout<StaticExtents, nda::C_stride_order<Rank>, nda::layout_prop_e::contiguous>, 'A', nda::stack>;
+
+  template <typename... Is>
+  constexpr uint64_t static_extents(int i0, Is... is) {
+    return encode(std::array<int, sizeof...(Is) + 1>{i0, is...});
+  }
 
   // ---------------------- is_array_or_view_container  --------------------------------
 
