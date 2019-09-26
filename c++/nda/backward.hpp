@@ -1,6 +1,6 @@
 #pragma once
-namespace nda {
-
 #include "backward/extent_access.hxx"
 
-}
+// More backward compat. function
+
+namespace nda {}

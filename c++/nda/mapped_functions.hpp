@@ -53,7 +53,4 @@ namespace nda {
     })(std::forward<A>(a));
   }
 
-  // the automatically generated once. Cf file, with vim commands
-#include "mapped_functions.hxx"
-
 } // namespace nda

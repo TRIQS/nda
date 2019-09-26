@@ -114,13 +114,13 @@ namespace nda::lapack {
     static_assert(blas::have_same_element_type_and_it_is_blas_type_v<V1, V2, V3, M>,
                   "All arguments must have the same element type and it must be double, complex ...");
 
-    int N = first_dim(d);
+    int N = d.extent(0);
     EXPECTS(dl.extent(0) == d.extent(0) - 1); // "gtsv : dimension mismatch between sub-diagonal and diagonal vectors "
     EXPECTS(du.extent(0) == d.extent(0) - 1); // "gtsv : dimension mismatch between super-diagonal and diagonal vectors "
     EXPECTS(b.extent(0) == d.extent(0));      // "gtsv : dimension mismatch between diagonal vector and RHS matrix, "
 
     int info = 0;
-    f77::gtsv(N, second_dim(b), dl.data_start(), d.data_start(), du.data_start(), b.data_start(), N, info);
+    f77::gtsv(N, b.extent(1), dl.data_start(), d.data_start(), du.data_start(), b.data_start(), N, info);
     return info;
   }
 
