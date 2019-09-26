@@ -1,6 +1,6 @@
 #pragma once
-#include "blas/gemm.hpp"
-#include "blas/gemv.hpp"
+#include "../blas/gemm.hpp"
+#include "../blas/gemv.hpp"
 
 namespace nda {
 

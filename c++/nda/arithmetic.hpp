@@ -1,5 +1,5 @@
 #pragma once
-#include "matmul.hpp"
+#include "linalg/matmul.hpp"
 
 namespace nda {
 

@@ -1,6 +1,5 @@
 #include "./permutation.hpp"
 
-#define FORCEINLINE __inline__ __attribute__((always_inline))
 
 namespace nda::slice_static {
 
@@ -253,26 +252,5 @@ namespace nda::slice_static {
     return slice_stride_order_impl(std::make_index_sequence<IdxMap::rank() - n_args_long>{}, std::make_index_sequence<IdxMap::rank()>{},
                                    std::make_index_sequence<sizeof...(T)>{}, idxm, x...);
   }
-
-  // ----------------------------- slice of index map ----------------------------------------------
-
-  //   Ns, Ps, Qs : sequence indices for size N, P, Q
-  // IdxMap : type of the indexmap idx
-  // Arg : arguments of the slice
-  // returns : a new sliced idx_map, with computed rank, stride_order
-  //
-  //template <size_t... Ns, typename IdxMap, typename... Args>
-  //FORCEINLINE auto offset_of_slice(std::index_sequence<Ps...>, IdxMap const &idxm, Args const &... args) {
-
-  //static_assert(IdxMap::rank() == sizeof...(Ns), "Internal error");
-  //static constexpr int N     = sizeof...(Ns);
-  //static constexpr int Q     = sizeof...(Args);
-  //static constexpr int e_len = N - Q + 1; // len of ellipsis : how many ranges are missing
-  //static constexpr int e_pos = ellipsis_position<Args...>();
-
-  //auto argstie = std::tie(args...);
-  //long offset  = idxm.offset() + (get_offset(std::get<q_of_n(Ns, e_pos, e_len)>(argstie), std::get<Ns>(idxm.strides())) + ... + 0);
-  //return offset;
-  //}
 
 } // namespace nda::slice_static

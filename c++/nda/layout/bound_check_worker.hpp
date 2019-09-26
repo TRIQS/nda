@@ -1,4 +1,3 @@
-
 namespace nda::details {
 
   // -------------------- bound_check_worker ---------------------

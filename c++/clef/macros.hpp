@@ -15,7 +15,6 @@
 #define REQUIRES(...) requires(__VA_ARGS__)
 #endif
 
-#define DECL_AND_RETURN(...)                                                                                                                         \
-  ->decltype(__VA_ARGS__) { return __VA_ARGS__; }
+#define FORCEINLINE __inline__ __attribute__((always_inline))
 
 #endif
