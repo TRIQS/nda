@@ -1,5 +1,4 @@
-#include <nda/array.hpp>
-#include "./simple_read_write.hpp"
+#include "h5.hpp"
 
 namespace nda::h5_details {
 

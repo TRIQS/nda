@@ -19,7 +19,7 @@
  *
  ******************************************************************************/
 #pragma once
-#include "../lapack_interface/lapack_cxx_interface.hpp"
+#include "../lapack/interface/lapack_cxx_interface.hpp"
 
 namespace nda::linalg {
 

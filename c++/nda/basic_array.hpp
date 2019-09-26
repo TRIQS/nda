@@ -1,5 +1,5 @@
 #pragma once
-#include "./array_view.hpp"
+#include "basic_array_view.hpp"
 
 namespace nda {
 
@@ -290,7 +290,7 @@ namespace nda {
 
     // --------------------------
 
-#include "./_regular_view_common.hpp"
+#include "./_impl_basic_array_view_common.hpp"
   };
 
 } // namespace nda

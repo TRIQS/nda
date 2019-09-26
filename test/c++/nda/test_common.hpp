@@ -4,6 +4,7 @@
 
 #define NDA_BOUNDCHECK
 #define NDA_ENFORCE_BOUNDCHECK
+
 #include <nda/nda.hpp>
 #include <nda/gtest_tools.hpp>
 

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TRIQS_GUARD_STD_ADDONS_ARRAY_H
+#define TRIQS_GUARD_STD_ADDONS_ARRAY_H
 #include <array>
 #include <utility>
 
@@ -151,3 +152,4 @@ namespace nda {
   //}
 
 } // namespace nda
+#endif

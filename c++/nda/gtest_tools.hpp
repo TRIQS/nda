@@ -20,10 +20,8 @@
  ******************************************************************************/
 #pragma once
 #define NDA_DEBUG
-//#include <mpi/mpi.hpp>
-#include <nda/array.hpp>
-//#include <triqs/h5.hpp>
-//#include <triqs/utility/typeid_name.hpp>
+
+#include "nda/basic_array.hpp"
 #include <iostream>
 #include <sstream>
 #include <gtest/gtest.h> // NOLINT
@@ -33,7 +31,6 @@
 //#endif
 
 //using dcomplex = std::complex<double>;
-//using triqs::clef::placeholder;
 
 // Complex are close
 template <typename X, typename Y>
