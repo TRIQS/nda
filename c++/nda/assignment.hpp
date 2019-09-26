@@ -59,7 +59,7 @@ namespace nda {
         }
       } else {
         auto l = [&lhs, &rhs](auto const &... args) { lhs(args...) = rhs; };
-        nda::for_each(lhs.shape(), l);
+        nda::for_each_static<LHS::idx_map_t::static_extents_encoded>(lhs.shape(), l);
       }
     }
   } // namespace details

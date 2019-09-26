@@ -49,15 +49,15 @@ namespace nda {
 
   template <int I, int R, uint64_t StaticExtents>
   long get_extent(std::array<long, R> const &l) {
-    //if constexpr (StaticExtents == 0)
-    //return l[I]; // quick exit, no computation of
-    //else {
-    constexpr auto static_extents = decode<R>(StaticExtents); // FIXME C++20
-    if constexpr (static_extents[I] == 0)
-      return l[I];
-    else
-      return static_extents[I];
-    //    }
+    if constexpr (StaticExtents == 0)
+      return l[I]; // quick exit, no computation of
+    else {
+      constexpr auto static_extents = decode<R>(StaticExtents); // FIXME C++20
+      if constexpr (static_extents[I] == 0)
+        return l[I];
+      else
+        return static_extents[I];
+    }
   }
 
   // ----------------  for_each  -------------------------

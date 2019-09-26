@@ -456,6 +456,9 @@ namespace nda::mem {
     handle_borrowed(handle_shared<T0> const &x, long offset = 0) noexcept : _data(x.data() + offset) {}
     handle_borrowed(handle_borrowed<T0> const &x, long offset = 0) noexcept REQUIRES(std::is_const_v<T>) : _data(x.data() + offset) {}
 
+    template <size_t Size>
+    handle_borrowed(handle_stack<T0, Size> const &x, long offset = 0) noexcept : _data(x.data() + offset) {}
+
     T &operator[](long i) noexcept { return _data[i]; }
     T const &operator[](long i) const noexcept { return _data[i]; }
 

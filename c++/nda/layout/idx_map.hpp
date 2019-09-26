@@ -82,6 +82,7 @@ namespace nda {
     public:
     // FIXME : rename DECODE : it is not a permutation
     static constexpr std::array<int, Rank> static_extents = decode<Rank>(StaticExtents);
+    static constexpr uint64_t static_extents_encoded      = StaticExtents;
 
     static constexpr int rank_dynamic = []() {
       int r = 0;

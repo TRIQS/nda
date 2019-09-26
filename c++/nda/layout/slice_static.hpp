@@ -1,6 +1,5 @@
 #include "./permutation.hpp"
 
-
 namespace nda::slice_static {
 
   // Notations for this file
@@ -219,9 +218,17 @@ namespace nda::slice_static {
 
     //	PRINT(bitsP, Qn_of_p_map(bitsP, 0, e_pos, e_len)); PRINT(e_pos); PRINT(e_len);
 
+    // Compute the offset of the pointer
+    long offset = (get_offset(std::get<q_of_n(Ns, e_pos, e_len)>(argstie), std::get<Ns>(idxm.strides())) + ... + 0);
+
+    // Compute the new len and strides
     std::array<long, P> len{get_l(std::get<q_of_p[Ps]>(argstie), std::get<n_of_p[Ps]>(idxm.lengths()))...};
     std::array<long, P> str{get_s(std::get<q_of_p[Ps]>(argstie), std::get<n_of_p[Ps]>(idxm.strides()))...};
 
+    // Compute the new static_extents
+    static constexpr std::array<int, P> new_static_extents{(args_is_range_all[q_of_p[Ps]] ? IdxMap::static_extents[n_of_p[Ps]] : 0)...};
+
+    // The new Stride Order
     static constexpr std::array<int, P> mem_stride_order = sliced_mem_stride_order(IdxMap::stride_order, n_of_p);
 
     // Compute the new layout_prop
@@ -230,11 +237,9 @@ namespace nda::slice_static {
     static constexpr layout_prop_e li = slice_layout_prop(
        has_only_rangeall_and_long, args_is_range_all, q_of_n(IdxMap::stride_order[N - 1], e_pos, e_len), IdxMap::stride_order, IdxMap::layout_prop);
 
-    long offset = (get_offset(std::get<q_of_n(Ns, e_pos, e_len)>(argstie), std::get<Ns>(idxm.strides())) + ... + 0);
-
-    // FIXME : slice the static_extents
-    return std::make_pair(offset, idx_map<P, 0, encode(mem_stride_order), li>{len, str});
-    //return idx_map<P, encode(stride_order)>{len, str, offset};
+    static constexpr uint64_t new_static_extents_encoded = encode(new_static_extents);
+    static constexpr uint64_t mem_stride_order_encoded   = encode(mem_stride_order);
+    return std::make_pair(offset, idx_map<P, new_static_extents_encoded, mem_stride_order_encoded, li>{len, str});
   }
 
   // ----------------------------- slice of index map ----------------------------------------------
