@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TRIQS_GUARD_STD_ADDONS_COMPLEX_H
+#define TRIQS_GUARD_STD_ADDONS_COMPLEX_H
 #include <complex>
 
 namespace std { // has to be in the right namespace for ADL !
@@ -15,4 +16,6 @@ namespace std { // has to be in the right namespace for ADL !
   // clang-format on 
 
 } // namespace std
+#endif
+
 

@@ -1,7 +1,6 @@
 #pragma once
-
 #include "tools.hpp"
-#include "blas_interface/cxx_interface.hpp"
+#include "interface/cxx_interface.hpp"
 
 namespace nda::blas {
 

@@ -1,12 +1,6 @@
-#define NDA_ENFORCE_BOUNDCHECK
 #include "./test_common.hpp"
 #include <h5/h5.hpp>
-
-// FIXME  RENAME THIS FILE
-#include <nda/h5/simple_read_write.hpp>
-//------------------------------------
-
-using nda::range;
+#include <nda/h5.hpp>
 
 template <typename T>
 void one_simple(std::string name, T scalar) {

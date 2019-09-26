@@ -20,28 +20,26 @@
  ******************************************************************************/
 #pragma once
 
+// FIXME : REMOVE THIS ?
 // for python code generator, we need to know what to include...
 #define TRIQS_INCLUDED_ARRAYS
 
-#include "std_complex_missing_ops.hpp"
+#include "std_addons/complex.hpp"
 
 // The basic classes
-#include <nda/array.hpp>
-#include <nda/array_view.hpp>
+#include "basic_array_view.hpp"
+#include "basic_array.hpp"
 
+//#include "free_functions.hpp"
 #include "basic_functions.hpp"
+#include "functions.hpp"
 
-//#include <nda/matrix.hpp>
-//#include <nda/vector.hpp>
+#include "arithmetic.hpp"
 
-#include <nda/functions.hpp>
+#include "map.hpp"
+#include "mapped_functions.hpp"
 
-#include <nda/arithmetic.hpp>
-#include <nda/map.hpp>
-#include <nda/fold.hpp>
-
-#include <nda/mapped_functions.hpp>
-#include <nda/algorithms.hpp>
+#include "algorithms.hpp"
 
 #include <nda/print.hpp>
 

@@ -2,6 +2,8 @@
 #include <h5/array_interface.hpp>
 #include <h5/stl/string.hpp>
 
+#include "basic_array.hpp"
+
 namespace nda {
 
   namespace h5_details {

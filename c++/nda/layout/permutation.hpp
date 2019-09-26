@@ -1,5 +1,5 @@
 #pragma once
-#include "../std_array_addons.hpp"
+#include "../std_addons/array.hpp"
 
 namespace nda {
 
