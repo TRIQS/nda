@@ -341,7 +341,8 @@ namespace nda {
     // first case : Array algebra or matrix * scalar : expr template
     if constexpr ((common_algebra<L, R>() == 'A') or is_scalar_v<L_t> or is_scalar_v<R_t>) { // array
 #ifdef NDA_DEBUG
-      if (l.shape() != r.shape()) NDA_RUNTIME_ERROR << "Matrix product : dimension mismatch in matrix product " << l.shape() << " " << r.shape();
+      if constexpr (!nda::is_scalar_v<L_t> && !nda::is_scalar_v<R_t>)
+        if (l.shape() != r.shape()) NDA_RUNTIME_ERROR << "Matrix product : dimension mismatch in matrix product " << l.shape() << " " << r.shape();
 #endif
       return expr<'*', L, R>{std::forward<L>(l), std::forward<R>(r)};
     } else {
