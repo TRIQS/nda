@@ -29,7 +29,7 @@ namespace h5 {
     char _n[1];
     ssize_t size = H5Iget_name(id, _n, 1); // first call, get the size only
     std::vector<char> buf(size + 1, 0x00);
-    H5Iget_name(id, buf.data(), 1); // now get the name
+    H5Iget_name(id, buf.data(), size + 1); // now get the name
     std::string res = "";
     res.append(&(buf.front()));
     return res;

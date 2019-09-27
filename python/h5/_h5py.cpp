@@ -30,16 +30,14 @@ PYBIND11_MODULE(_h5py, m) {
      .def(py::init<h5::file>(), "Constructor", "f"_a)
      .def_property_readonly("name", &h5::group::name, "Name of the group")
      .def("open_group", &h5::group::open_group, "Open the subgroup", "key"_a)
-     .def("create_group", &h5::group::create_group, "Open the subgroup", "key"_a, "delete_if_exists"_a = false)
+     .def("create_group", &h5::group::create_group, "Open the subgroup", "key"_a, "delete_if_exists"_a = true)
      .def("keys", &h5::group::get_all_subgroup_dataset_names, "All the keys")
      .def("has_subgroup", &h5::group::has_subgroup, "", "key"_a)
      .def("has_dataset", &h5::group::has_dataset, "", "key"_a)
-     .def(
-        "write_attribute", [](h5::group g, std::string const &key, std::string const &val) { h5_write_attribute(g, key, val); }, "Write an attribute",
-        "key"_a, "val"_a)
-     .def(
-        "read_attribute", [](h5::group g, std::string const &key) { return h5::h5_read_attribute<std::string>(g, key); }, "Read an attribute",
-        "key"_a)
+     .def("write_attribute", [](h5::group g, std::string const &key, std::string const &val) { h5_write_attribute(g, key, val); },
+          "Write an attribute", "key"_a, "val"_a)
+     .def("read_attribute", [](h5::group g, std::string const &key) { return h5::h5_read_attribute<std::string>(g, key); }, "Read an attribute",
+          "key"_a)
      .def_property_readonly("file", &h5::group::get_file, "The parent file")
 
      //

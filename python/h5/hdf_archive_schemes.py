@@ -42,10 +42,6 @@ def register_class (cls, doc = None, read_fun = None, hdf5_data_scheme = None):
 
     """
     hdf_scheme = hdf5_data_scheme or (cls._hdf5_data_scheme_ if hasattr(cls,"_hdf5_data_scheme_") else cls.__name__) 
-
-    print hdf_scheme 
-    print _hdf5_schemes_dict
-
     assert hdf_scheme not in _hdf5_schemes_dict, "class %s is already registered"%hdf_scheme
     doc = doc if doc else (cls._hdf5_data_scheme_doc_ if hasattr(cls,"_hdf5_data_scheme_doc_") else {})
     _hdf5_schemes_dict [hdf_scheme] = HDF5Scheme (cls.__name__, cls.__module__,doc, hdf_scheme, read_fun)

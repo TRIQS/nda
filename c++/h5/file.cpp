@@ -6,17 +6,17 @@
 using namespace std::string_literals;
 
 #define CHECK_OR_THROW(Cond, Mess)                                                                                                                   \
-  if (!(Cond)) throw std::runtime_error("Error in h5 (de)serialization "s + Mess);
+  if (!(Cond)) throw std::runtime_error("Error in h5 interface : "s + Mess);
 
 namespace h5 {
 
   file::file(const char *name, char mode) {
 
+    std::cerr << "OPENING file " << name << "in mode " << mode << std::endl;
+
     switch (mode) {
       case 'r': id = H5Fopen(name, H5F_ACC_RDONLY, H5P_DEFAULT); break;
-
       case 'w': id = H5Fcreate(name, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT); break;
-
       case 'a': id = H5Fopen(name, H5F_ACC_RDWR, H5P_DEFAULT); break;
       case 'e': id = H5Fopen(name, H5F_ACC_EXCL, H5P_DEFAULT); break;
       default: throw std::runtime_error("HDF5 file opening : mode is not r, w, a, e. Cf documentation");
@@ -40,6 +40,7 @@ namespace h5 {
   //---------------------------------------------
 
   void file::flush() {
+    if (not is_valid()) return;
     auto err = H5Fflush(id, H5F_SCOPE_GLOBAL);
     CHECK_OR_THROW((err >= 0), "flushing the file");
   }
@@ -47,6 +48,8 @@ namespace h5 {
   //---------------------------------------------
 
   void file::close() {
+    if (not is_valid()) return;
+    std::cerr << "CLOSING file " << name() << std::endl;
     auto err = H5Fclose(id);
     CHECK_OR_THROW((err >= 0), "closing the file");
   }

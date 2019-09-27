@@ -65,15 +65,10 @@ class HDFArchiveGroupBasicLayer :
     def write_attr (self, key, val) :
         self._group.write_attribute(key, val)
 
-  #   def read_attr(self, key) :
-        # print "ATTR ",  self._group.read_attribute(key)
-        # return self._group.read_attribute(key)
-
     def _read (self, key):
         return h5.h5_read(self._group, key)
 
     def _write(self, key, val) :
-        print key, val
         h5.h5_write(self._group, key, val)
 
     def _flush(self):

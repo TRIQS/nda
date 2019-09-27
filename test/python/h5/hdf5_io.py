@@ -33,6 +33,27 @@ def assert_array_close_to_scalar(a, x, precision = 1.e-6):
 
 class TestHdf5Io(unittest.TestCase):
 
+    def test_hdf5_io1(self):
+        d = {'dbl' : 1.0, 'lst' : [1,[1],'a']}
+        
+        # === Write to archive
+        with HDFArchive('hdf5_io.out1.h5','w', init = d.items()) as arch:
+        
+            arch._flush()
+            print "----------- ok "
+            arch['int'] = 100
+            arch['arr'] = np.array([[1,2,3],[4,5,6]])
+            arch['tpl'] = (2,[2],'b')
+            arch['dct'] = { 'a':[10], 'b':20 }
+        
+        # === Final check
+        arch = HDFArchive('hdf5_io.out1.h5','r')
+        
+        self.assertEqual( arch['dbl'] , 1.0 )
+        self.assertEqual( arch['lst'] , [1,[1],'a'] )
+        self.assertEqual( arch['dct'] , {'a':[10], 'b':20} )
+
+
     def test_hdf5_io(self):
         d = {'dbl' : 1.0, 'lst' : [1,[1],'a']}
         
@@ -82,11 +103,11 @@ class TestHdf5Io(unittest.TestCase):
         self.assertEqual( arch['lst'] , [1,[1],'a'] )
         self.assertEqual( arch['int'] , 100 )
         assert_arrays_are_close( arch['arr'] , np.array([[1, 2, 3], [4, 5, 6]]) )
-        #self.assertEqual( arch['tpl'] , (2,[2],'b') )
-        #self.assertEqual( arch['dct'] , {'a':[10], 'b':20, 'c':'triqs'} )
+        self.assertEqual( arch['tpl'] , (2,[2],'b') )
+        self.assertEqual( arch['dct'] , {'a':[10], 'b':20, 'c':'triqs'} )
         self.assertEqual( arch['grp']['int'] , 98 )
-        #self.assertEqual( arch['grp']['tpl'] , (3,[3],'c') )
-        #self.assertEqual( arch['grp']['dct'] , { 'a':[30], 'b':40, 'c':'qmc'} )
+        self.assertEqual( arch['grp']['tpl'] , (3,[3],'c') )
+        self.assertEqual( arch['grp']['dct'] , { 'a':[30], 'b':40, 'c':'qmc'} )
         self.assertEqual( arch['grp']['d'] , 700 )
         self.assertEqual( arch['grp']['x'] , 1.5 )
         self.assertEqual( arch['grp']['y'] , 'zzz' )

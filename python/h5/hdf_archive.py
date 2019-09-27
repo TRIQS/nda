@@ -234,11 +234,13 @@ class HDFArchiveGroup (HDFArchiveGroupBasicLayer) :
             key = self._key_cipher(key)
             if key not in self  : raise KeyError, "Key %s does not exist."%key
 
+        #print key, self.is_group(key) ,self.is_data(key) 
         if self.is_group(key) :
             SUB = HDFArchiveGroup(self,key) # View of the subgroup
             bare_return = lambda: SUB
         elif self.is_data(key) :
-            bare_return = lambda: self._read(key)
+            #bare_return = lambda: self._read(key)
+            return self._read(key)
         else :
             raise KeyError, "Key %s is of unknown type !!"%Key
 
@@ -394,8 +396,9 @@ class HDFArchive(HDFArchiveGroup):
         for k,v in init : self[k]=v
 
     def __del__(self):
-      self._flush()
-      self._close()
+      print "ENTER __del__"
+      #self._flush()
+      #self._close()
 
     # These two methods are necessary for "with"
     def __enter__(self): return self
