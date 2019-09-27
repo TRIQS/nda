@@ -33,8 +33,14 @@ namespace pybind11::detail {
       /* Try converting into a Python integer value */
 
       nda::python::numpy_rank_and_type rt = nda::python::get_numpy_rank_and_type(source);
+      NDA_PRINT(rt.rank);
+      NDA_PRINT(rt.element_type);
+      NDA_PRINT(rt.arr);
       nda::python::view_info vi           = nda::python::from_python(rt);
+      NDA_PRINT(vi.data);
       value.rebind(nda::python::make_array_view_from_view_info<T, R>(vi));
+
+      std::cout  << value <<std::endl;
       return true; // CONTROL ERROR :
 
       //return !(value.long_value == -1 && !PyErr_Occurred());

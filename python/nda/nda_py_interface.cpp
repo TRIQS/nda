@@ -63,6 +63,7 @@ namespace nda::python {
     v.element_type = info.element_type;
     v.extents.resize(v.rank);
     v.strides.resize(v.rank);
+    v.data =PyArray_DATA(info.arr);
 
 #ifdef PYTHON_NUMPY_VERSION_LT_17
     for (long i = 0; i < v.rank; ++i) {
