@@ -49,7 +49,7 @@ namespace nda {
 
   /// A trait to get the rank of an object with ndarray concept
   template <typename A>
-  constexpr int get_rank = std::tuple_size_v<std::decay_t<decltype(std::declval<A const>().shape())>>;
+  constexpr int get_rank = std::tuple_size<std::decay_t<decltype(std::declval<A const>().shape())>>::value;
 
   // ---------------------------  is_regular------------------------
 
