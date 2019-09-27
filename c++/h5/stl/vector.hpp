@@ -56,7 +56,7 @@ namespace h5 {
 
     if constexpr (std::is_arithmetic_v<T> or is_complex_v<T>) {
 
-      array_interface::write(g, name, array_interface::h5_array_view_from_vector(v));
+      array_interface::write(g, name, array_interface::h5_array_view_from_vector(v), true);
 
     } else if constexpr (std::is_same_v<T, std::string>) {
 

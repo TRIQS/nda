@@ -113,8 +113,7 @@ add_subdirectory(c++/mpi)
 add_subdirectory(c++/clef)
 
 # Build and install the Python modules
-add_subdirectory(python/pybind11)
-add_subdirectory(python/h5)
+add_subdirectory(python)
 
 # Tests
 option(Build_Tests "Build tests" ON)

@@ -2,7 +2,6 @@
 #include "declarations.hpp"
 #include "assignment.hpp"
 #include "iterators.hpp"
-#include "mpi.hpp"
 #include <clef/clef.hpp>
 
 namespace nda {
