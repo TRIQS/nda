@@ -34,7 +34,7 @@ namespace pybind11::detail {
 
       nda::python::numpy_rank_and_type rt = nda::python::get_numpy_rank_and_type(source);
       nda::python::view_info vi           = nda::python::from_python(rt);
-      value                               = nda::python::make_array_view_from_view_info<T, R>(vi);
+      value.rebind(nda::python::make_array_view_from_view_info<T, R>(vi));
       return true; // CONTROL ERROR :
 
       //return !(value.long_value == -1 && !PyErr_Occurred());
