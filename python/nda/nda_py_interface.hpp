@@ -44,11 +44,11 @@ namespace nda::python {
 
   //
   template <typename T>
-  long npy_type;
+  inline long npy_type;
 
 #define CONVERT(C, P)                                                                                                                                \
   template <>                                                                                                                                        \
-  long npy_type<C> = P;
+  inline long npy_type<C> = P;
   CONVERT(bool, NPY_BOOL);
   CONVERT(char, NPY_STRING);
   CONVERT(signed char, NPY_BYTE);
