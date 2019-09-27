@@ -1,15 +1,21 @@
 add_library(nda_python nda_py_interface.cpp)
 
 # Enable warnings
-target_link_libraries(nda_python PRIVATE python_and_numpy project_warnings)
+target_link_libraries(nda_python PRIVATE nda_c python_and_numpy project_warnings)
 
 # Configure compilation
 target_compile_options(nda_python PUBLIC -fPIC -std=c++17 $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
-target_include_directories(nda_python PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/c++>)
+target_include_directories(nda_python PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/python> $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/c++>)
 target_compile_definitions(nda_python PUBLIC
 				NDA_GIT_HASH=${PROJECT_GIT_HASH}
 				$<$<CONFIG:Debug>:NDA_DEBUG>
 			  )
+
+
+# Build the pybind11 module
+pybind11_add_module(converter_test converter_test.cpp )
+target_link_libraries(converter_test PRIVATE nda_python python_and_numpy)
+
 
 # Install library and headers
 install(TARGETS nda_python EXPORT nda_python-targets DESTINATION lib)

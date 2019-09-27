@@ -22,7 +22,7 @@ namespace std { // For ADL
 
 namespace nda {
 
-  std::ostream &operator<<(std::ostream &out, layout_prop_e p) {
+  inline std::ostream &operator<<(std::ostream &out, layout_prop_e p) {
     return out << (p & layout_prop_e::contiguous ? "contiguous   " : " ") << (p & layout_prop_e::strided_1d ? "strided_1d   " : " ")
                << (p & layout_prop_e::smallest_stride_is_one ? "smallest_stride_is_one   " : " ");
   }
