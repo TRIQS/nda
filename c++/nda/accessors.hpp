@@ -1,4 +1,5 @@
 #pragma once
+#include "macros.hpp"
 
 namespace nda {
 
@@ -11,7 +12,8 @@ namespace nda {
       using element_type = T;
       using pointer      = T *;
       using reference    = T &;
-      static reference access(pointer p, std::ptrdiff_t i) noexcept { return p[i]; }
+      static reference access(pointer p, std::ptrdiff_t i) noexcept {
+	EXPECTS(p != nullptr); return p[i]; }
       static pointer offset(pointer p, std::ptrdiff_t i) noexcept { return p + i; }
     };
   };

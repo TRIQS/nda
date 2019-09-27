@@ -14,7 +14,7 @@ target_compile_definitions(nda_python PUBLIC
 
 # Build the pybind11 module
 pybind11_add_module(converter_test converter_test.cpp )
-target_link_libraries(converter_test PRIVATE nda_python python_and_numpy)
+target_link_libraries(converter_test PRIVATE pybind11 nda_python python_and_numpy)
 
 
 # Install library and headers
