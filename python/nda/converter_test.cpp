@@ -35,7 +35,7 @@ namespace pybind11::detail {
       if (not nda::python::is_convertible_to_array_view<T, R>(source)) return false;
       std::cout << " CONVERTIBLE = true" << std::endl;
 
-      nda::python::numpy_proxy p = nda::python::make_numpy_copy(source);
+      nda::python::numpy_proxy p = nda::python::make_numpy_proxy(source);
       value.rebind(nda::python::make_array_view_from_numpy_proxy<T, R>(p));
 
       std::cout  << value <<std::endl;

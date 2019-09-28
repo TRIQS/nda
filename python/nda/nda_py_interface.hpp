@@ -24,7 +24,7 @@ namespace nda::python {
   };
 
   // From a numpy, extract the info. Better than a constructor, I want to use the aggregate constructor of the struct also.
-  numpy_proxy make_numpy_copy(PyObject *);
+  numpy_proxy make_numpy_proxy(PyObject *);
 
   // Make a copy in Python with the given rank and element_type
   // If failure, return null with the Python exception set
