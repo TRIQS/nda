@@ -364,9 +364,9 @@ namespace nda {
   expr<'/', L, R> operator/(L &&l, R &&r) REQUIRES(model_ndarray_with_possibly_one_scalar<L, R> and (common_algebra<L, R>() != 'N')) {
     static_assert(rank_are_compatible<L, R>(), "rank mismatch in array addition");
     static_assert(common_algebra<L, R>() != 'N', "Can not divide two objects belonging to different algebras");
-    using L_t = std::decay_t<L>; // L, R can be lvalue references
+    //using L_t = std::decay_t<L>; // L, R can be lvalue references
     using R_t = std::decay_t<R>;
-    static_assert((not(get_algebra<L_t> == 'M') or is_scalar_v<R_t>), " matrix/matrix is not permitted. Use matrix * inverse( ...)");
+    static_assert((not(get_algebra<R_t> == 'M') or is_scalar_v<R_t>), " matrix/matrix is not permitted. Use matrix * inverse( ...)");
     return {std::forward<L>(l), std::forward<R>(r)};
   }
 

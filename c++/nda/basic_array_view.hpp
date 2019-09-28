@@ -4,6 +4,14 @@
 #include "iterators.hpp"
 #include <clef/clef.hpp>
 
+// The std::swap is WRONG for a view because of the copy/move semantics of view.
+// Use swap instead (the correct one, found by ADL).
+namespace std {
+  template <typename V, int R, typename L, char A, typename Al, typename Ow, typename V2, int R2, typename L2, char A2, typename Al2, typename Ow2>
+  void swap(nda::basic_array_view<V, R, L, A, Al, Ow> &a, nda::basic_array_view<V2, R2, L2, A2, Al2, Ow2> &b) =
+     delete; // std::swap disabled for basic_array_view. Use nda::swap iinstead (or simply nda, found by ADL).
+}
+
 namespace nda {
 
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
@@ -80,8 +88,9 @@ namespace nda {
      * @tparam A an array/array_view or matrix/vector type
      * @param a array or view
      */
-    template <typename A> //explicit
-    basic_array_view(A const &a) REQUIRES(is_regular_or_view_v<A>) : basic_array_view(a.indexmap(), a.storage()) {}
+    template <typename A>                                          //explicit
+    basic_array_view(A const &a) REQUIRES(is_regular_or_view_v<A>) //and layout_are_compatible_for_view<A::idx_map_t,idx_map_t>)
+       : basic_array_view(idx_map_t{a.indexmap()}, a.storage()) {}
 
     /** 
      * [Advanced] From a pointer to contiguous data, and a shape.
@@ -146,6 +155,54 @@ namespace nda {
       _storage = storage_t{a.storage()};
     }
     //check https://godbolt.org/z/G_QRCU
+
+    // ------------------------------- swap --------------------------------------------
+
+    /**
+     * Swaps the *views* a and b, without copying data
+     * @param a
+     * @param b
+     */
+    friend void swap(basic_array_view &a, basic_array_view &b) {
+      std::swap(a._idx_m, b._idx_m);
+      std::swap(a._storage, b._storage);
+    }
+
+    /**
+     * Swaps the *views* a and b, without copying data
+     * @param a
+     * @param b
+     */
+    friend void deep_swap(basic_array_view &a, basic_array_view &b) {
+      // FIXME Is this optimal ??
+      // Do we want to keep this function ?? Used only in det_manip, in 1d
+      //
+      auto tmp = make_regular(a);
+      a        = b;
+      b        = tmp;
+    }
+
+    // on or both can be a temporary !
+    /**
+     * Swaps the *views* a and b, without copying data
+     * @param a
+     * @param b
+     */
+    friend void deep_swap(basic_array_view &&a, basic_array_view &b) { deep_swap(a, b); }
+
+    /**
+     * Swaps the *views* a and b, without copying data
+     * @param a
+     * @param b
+     */
+    friend void deep_swap(basic_array_view &a, basic_array_view &&b) { deep_swap(a, b); }
+
+    /**
+     * Swaps the *views* a and b, without copying data
+     * @param a
+     * @param b
+     */
+    friend void deep_swap(basic_array_view &&a, basic_array_view &&b) { deep_swap(a, b); }
 
     //----------------------------------------------------
 

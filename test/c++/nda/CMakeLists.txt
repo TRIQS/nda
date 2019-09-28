@@ -9,6 +9,7 @@ endforeach()
 set(all_tests nda_idx_map nda_storage nda_basic nda_expr_template nda_map nda_alloc_poison nda_algorithms 
    nda_arithmetic nda_array_of_non_pod nda_iterators nda_bound_check 
    nda_matrix nda_view1 nda_qcache 
+   nda_mix_various_layout
    nda_lazy nda_static nda_stl 
    nda_blas nda_linear_algebra 
    nda_mpi 
