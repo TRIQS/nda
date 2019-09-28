@@ -1,4 +1,4 @@
-#include "./nda_py_interface.hpp"
+#include "nda_py.hpp"
 
 namespace nda::python {
 
