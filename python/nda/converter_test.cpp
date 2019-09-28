@@ -1,3 +1,5 @@
+#define NDA_ENFORCE_BOUNDCHECK
+
 #include <pybind11/pybind11.h>
 #include <nda/nda_py_interface.hpp>
 
@@ -6,7 +8,22 @@
 using namespace pybind11::literals;
 namespace py = pybind11;
 
-double f(nda::array_view<double, 2> a) { return a(1, 2); }
+double f(nda::array_view<double, 2> a, int i, int j) { return a(i, j); }
+
+nda::array<long, 1> ma(int n) {
+  nda::array<long, 1> result(n);
+  for (int i = 0; i < n; ++i) result(i) = i + 1;
+  return result;
+}
+
+struct A {
+  nda::array<long, 1> a;
+  A(int n) { a = ma(n); }
+  nda::array_view<long, 1> get() { return a; }
+  nda::array_view<long const, 1> get_c() const { return a; }
+};
+
+// -------------------
 
 namespace pybind11::detail {
 
@@ -15,48 +32,51 @@ namespace pybind11::detail {
     using _type = nda::array_view<T, R>;
 
     public:
-    /**
-         * This macro establishes the name 'inty' in
-         * function signatures and declares a local variable
-         * 'value' of type inty
-         */
     PYBIND11_TYPE_CASTER(_type, _("nda::array_view"));
 
-    /**
-         * Conversion part 1 (Python->C++): convert a PyObject into a inty
-         * instance or return false upon failure. The second argument
-         * indicates whether implicit conversions should be applied.
-         */
     bool load(handle src, bool) {
-      /* Extract PyObject from handle */
       PyObject *source = src.ptr();
-      /* Try converting into a Python integer value */
-
       if (not nda::python::is_convertible_to_array_view<T, R>(source)) return false;
-      std::cout << " CONVERTIBLE = true" << std::endl;
 
       nda::python::numpy_proxy p = nda::python::make_numpy_proxy(source);
       value.rebind(nda::python::make_array_view_from_numpy_proxy<T, R>(p));
 
-      std::cout  << value <<std::endl;
-      return true; // CONTROL ERROR :
-
-      //return !(value.long_value == -1 && !PyErr_Occurred());
+      if (PyErr_Occurred()) PyErr_Print();
+      return true;
     }
 
-    /**
-     * Conversion part 2 (C++ -> Python): convert an inty instance into
-     * a Python object. The second and third arguments are used to
-     * indicate the return value policy and parent object (for
-     * ``return_value_policy::reference_internal``) and are generally
-     * ignored by implicit casters.
-     */
     static handle cast(nda::array_view<T, R> src, return_value_policy /* policy */, handle /* parent */) {
       nda::python::numpy_proxy p = nda::python::make_numpy_proxy_from_array(src);
       return p.to_python();
     }
   };
+
+  template <typename T, int R>
+  struct type_caster<nda::array<T, R>> {
+    using _type = nda::array<T, R>;
+
+    public:
+    PYBIND11_TYPE_CASTER(_type, _("nda::array"));
+
+    bool load(handle src, bool) {
+      PyObject *source = src.ptr();
+      if (not nda::python::is_convertible_to_array_view<T, R>(source)) return false;
+
+      nda::python::numpy_proxy p = nda::python::make_numpy_proxy(source);
+      value                      = nda::python::make_array_view_from_numpy_proxy<T, R>(p);
+
+      if (PyErr_Occurred()) PyErr_Print();
+      return true;
+    }
+
+    static handle cast(nda::array<T, R> src, return_value_policy /* policy */, handle /* parent */) {
+      nda::python::numpy_proxy p = nda::python::make_numpy_proxy_from_array(src);
+      return p.to_python();
+    }
+  };
 } // namespace pybind11::detail
+
+//-------------------------------
 
 PYBIND11_MODULE(converter_test, m) {
 
@@ -64,6 +84,13 @@ PYBIND11_MODULE(converter_test, m) {
   //
 
   m.def("f", &f, "DOC");
+  m.def("ma", &ma, "DOC");
+
+  py::class_<A> _A(m, "A");
+  _A.def(py::init<int>(), "Constructor", "n"_a);
+
+  _A.def("get", &A::get, "doc no const");
+  _A.def("get_c", &A::get_c, "doc no const");
 
   //
 }
