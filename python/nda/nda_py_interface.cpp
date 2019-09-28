@@ -36,7 +36,7 @@ namespace nda::python {
   // ----------------------------------------------------------
 
   // Extract a view_info from python
-  numpy_proxy make_numpy_copy(PyObject *obj) {
+  numpy_proxy make_numpy_proxy(PyObject *obj) {
 
     if (obj == NULL) return {};
     if (not PyArray_Check(obj)) return {};
