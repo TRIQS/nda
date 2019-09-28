@@ -21,6 +21,7 @@ using nda::range;
 using dcomplex = std::complex<double>;
 using nda::C_layout;
 using nda::F_layout;
+using nda::matrix;
 
 #define MAKE_MAIN_MPI                                                                                                                                \
   int main(int argc, char **argv) {                                                                                                                  \

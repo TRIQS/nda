@@ -43,6 +43,14 @@ namespace nda {
   template <int Rank>
   constexpr uint64_t C_stride_order = nda::encode(nda::permutations::identity<Rank>());
 
+  //template <typename L1, typename L2>
+  //inline constexpr bool layout_are_compatible_for_view = false;
+
+  //template <int Rank, uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp>
+  //inline constexpr bool
+  //layout_are_compatible_for_view<idx_map<Rank, StaticExtents, StrideOrder, LayoutProp>, idx_map<Rank, StaticExtents, StrideOrder, LayoutProp>> =
+  //false;
+
   // constexpr std::array<long,  > ce_len, ce_stri :   -1 -->  dynamic.
   // https://godbolt.org/z/qmKWpj
   // -----------------------------------------------------------------------------------
@@ -199,6 +207,14 @@ namespace nda {
     idx_map(idx_map<Rank, StaticExtents, StrideOrder, LayoutProp2> const &idxm) noexcept : len(idxm.lengths()), str(idxm.strides()) {
       static_assert(is_degradable(LayoutProp2, LayoutProp),
                     "Can not construct the view: it would violate some compile time guarantees about the layout");
+    }
+
+    // trap for error. If one tries to construct a view with a mismatch of stride order
+    template <uint64_t StaticExtents2, uint64_t StrideOrder2, layout_prop_e LayoutProp2>
+    idx_map(idx_map<Rank, StaticExtents2, StrideOrder2, LayoutProp2> const &)
+       REQUIRES((StaticExtents2 != StaticExtents) or (StrideOrder != StrideOrder2)) {
+      static_assert(not((StaticExtents2 != StaticExtents) or (StrideOrder != StrideOrder2)),
+                    "Can not construct a layout from another one with a different stride order");
     }
 
     /** 

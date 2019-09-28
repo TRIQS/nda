@@ -1,15 +1,13 @@
 #include "./test_common.hpp"
 
 static_assert(!std::is_pod<nda::array<long, 2>>::value, "POD pb");
-//static_assert(is_scalar_for<int, matrix<std::complex<double>>>::type::value == 1, "oops");
+static_assert(nda::is_scalar_for_v<int, matrix<std::complex<double>>> == 1, "oops");
 
 // ==============================================================
 
 TEST(NDA, Create1) { //NOLINT
   nda::array<long, 2> A(3, 3);
   EXPECT_EQ(A.shape(), (nda::shape_t<2>{3, 3}));
-
-  std::cerr << A.indexmap() << std::endl;
 }
 
 // -------------------------------------
@@ -115,6 +113,9 @@ TEST(NDA, CreateResize) { //NOLINT
   A.resize({3, 3});
   EXPECT_EQ(A.shape(), (nda::shape_t<2>{3, 3}));
 
+  A.resize({4, 4});
+  EXPECT_EQ(A.shape(), (nda::shape_t<2>{4, 4}));
+
   nda::array<double, 2> M;
   M.resize(3, 3);
 
@@ -161,7 +162,6 @@ TEST(NDA, MoveConstructor) { //NOLINT
   nda::array<double, 1> B(std::move(A));
 
   EXPECT_TRUE(A.is_empty());
-  EXPECT_TRUE(A.size() != 0);
   EXPECT_EQ(B.shape(), (nda::shape_t<1>{3}));
   for (int i = 0; i < 3; ++i) EXPECT_EQ(B(i), 9);
 }
@@ -181,26 +181,12 @@ TEST(NDA, MoveAssignment) { //NOLINT
   for (int i = 0; i < 3; ++i) EXPECT_EQ(B(i), 9);
 }
 
-/*
 // ===================== SWAP =========================================
 
-TEST(NDA, Swap) { //NOLINT
-  auto V = vector<double>{3, 3, 3};
-  auto W = vector<double>{4, 4, 4, 4};
+TEST(Swap, StdSwap) { //NOLINT
 
-  swap(V, W);
-
-  // V , W are swapped
-  EXPECT_EQ(V, (vector<double>{4, 4, 4, 4}));
-  EXPECT_EQ(W, (vector<double>{3, 3, 3}));
-}
-
-// ----------------------------------
-
-TEST(NDA, StdSwap) { // same are triqs swap for regular types //NOLINT
-
-  auto V = vector<double>{3, 3, 3};
-  auto W = vector<double>{4, 4, 4, 4};
+  auto V = nda::array<long, 1>{3, 3, 3};
+  auto W = nda::array<long, 1>{4, 4, 4, 4};
 
   std::swap(V, W);
 
@@ -210,16 +196,16 @@ TEST(NDA, StdSwap) { // same are triqs swap for regular types //NOLINT
   //std::swap(VV, WW);
 
   // V , W are swapped
-  EXPECT_EQ(V, (vector<double>{4, 4, 4, 4}));
-  EXPECT_EQ(W, (vector<double>{3, 3, 3}));
+  EXPECT_EQ(V, (nda::array<long, 1>{4, 4, 4, 4}));
+  EXPECT_EQ(W, (nda::array<long, 1>{3, 3, 3}));
 }
 
 // ----------------------------------
 
-TEST(NDA, SwapView) { //NOLINT
+TEST(Swap, SwapView) { //NOLINT
 
-  auto V = vector<double>{3, 3, 3};
-  auto W = vector<double>{4, 4, 4, 4};
+  auto V = nda::array<long, 1>{3, 3, 3};
+  auto W = nda::array<long, 1>{4, 4, 4, 4};
 
   // swap the view, not the vectors. Views are pointers
   // FIXME should we keep this behaviour ?
@@ -228,32 +214,32 @@ TEST(NDA, SwapView) { //NOLINT
   swap(VV, WW);
 
   // V, W unchanged
-  EXPECT_EQ(V, (vector<double>{3, 3, 3}));
-  EXPECT_EQ(W, (vector<double>{4, 4, 4, 4}));
+  EXPECT_EQ(V, (nda::array<long, 1>{3, 3, 3}));
+  EXPECT_EQ(W, (nda::array<long, 1>{4, 4, 4, 4}));
 
   // VV, WW swapped
-  EXPECT_EQ(WW, (vector<double>{3, 3}));
-  EXPECT_EQ(VV, (vector<double>{4, 4}));
+  EXPECT_EQ(WW, (nda::array<long, 1>{3, 3}));
+  EXPECT_EQ(VV, (nda::array<long, 1>{4, 4}));
 }
 
 // ----------------------------------
 
 // FIXME Rename as BLAS_SWAP (swap of blas). Only for vector of same size
-TEST(NDA, DeepSwap) { //NOLINT
-  auto V = vector<double>{3, 3, 3};
-  auto W = vector<double>{4, 4, 4};
+TEST(Swap, DeepSwap) { //NOLINT
+  auto V = nda::array<long, 1>{3, 3, 3};
+  auto W = nda::array<long, 1>{4, 4, 4};
 
-  deep_swap(V, W);
+  deep_swap(V(), W());
 
   // V , W are swapped
-  EXPECT_EQ(V, (vector<double>{4, 4, 4}));
-  EXPECT_EQ(W, (vector<double>{3, 3, 3}));
+  EXPECT_EQ(V, (nda::array<long, 1>{4, 4, 4}));
+  EXPECT_EQ(W, (nda::array<long, 1>{3, 3, 3}));
 }
 // ----------------------------------
 
-TEST(NDA, DeepSwapView) { //NOLINT
-  auto V = vector<double>{3, 3, 3};
-  auto W = vector<double>{4, 4, 4, 4};
+TEST(Swap, DeepSwapView) { //NOLINT
+  auto V = nda::array<long, 1>{3, 3, 3};
+  auto W = nda::array<long, 1>{4, 4, 4, 4};
 
   auto VV = V(range(0, 2));
   auto WW = W(range(0, 2));
@@ -261,10 +247,13 @@ TEST(NDA, DeepSwapView) { //NOLINT
   deep_swap(VV, WW);
 
   // VV, WW swapped
-  EXPECT_EQ(WW, (vector<double>{3, 3}));
-  EXPECT_EQ(VV, (vector<double>{4, 4}));
+  EXPECT_EQ(WW, (nda::array<long, 1>{3, 3}));
+  EXPECT_EQ(VV, (nda::array<long, 1>{4, 4}));
+
+  // V, W changed
+  EXPECT_EQ(V, (nda::array<long, 1>{4, 4, 3}));
+  EXPECT_EQ(W, (nda::array<long, 1>{3, 3, 4, 4}));
 }
-*/
 
 // ==============================================================
 
@@ -355,13 +344,8 @@ TEST(NDA, ConvertibleCR) { //NOLINT
   // can convert an array of double to an array of complex
   static_assert(std::is_constructible_v<nda::array<dcomplex, 2>, nda::array<double, 2>>, "oops");
 
-  //  auto rr = nda::array<double, 2>{c};
-
-#ifndef __clang__
   // can not do the reverse !
   //static_assert(not std::is_constructible_v<nda::array<double, 2>, nda::array<dcomplex, 2>>, "oops");
-  // EXCEPT that clang REQUIRES is not enough to see this (not part of SFINAE). Test on gcc ...
-#endif
 }
 
 // =============================================================
