@@ -20,7 +20,7 @@ namespace pybind11::detail {
          * function signatures and declares a local variable
          * 'value' of type inty
          */
-    PYBIND11_TYPE_CASTER(_type, _("array_view"));
+    PYBIND11_TYPE_CASTER(_type, _("nda::array_view"));
 
     /**
          * Conversion part 1 (Python->C++): convert a PyObject into a inty
@@ -32,13 +32,11 @@ namespace pybind11::detail {
       PyObject *source = src.ptr();
       /* Try converting into a Python integer value */
 
-      nda::python::numpy_rank_and_type rt = nda::python::get_numpy_rank_and_type(source);
-      NDA_PRINT(rt.rank);
-      NDA_PRINT(rt.element_type);
-      NDA_PRINT(rt.arr);
-      nda::python::view_info vi           = nda::python::from_python(rt);
-      NDA_PRINT(vi.data);
-      value.rebind(nda::python::make_array_view_from_view_info<T, R>(vi));
+      if (not nda::python::is_convertible_to_array_view<T, R>(source)) return false;
+      std::cout << " CONVERTIBLE = true" << std::endl;
+
+      nda::python::numpy_proxy p = nda::python::make_numpy_copy(source);
+      value.rebind(nda::python::make_array_view_from_numpy_proxy<T, R>(p));
 
       std::cout  << value <<std::endl;
       return true; // CONTROL ERROR :
@@ -54,8 +52,8 @@ namespace pybind11::detail {
      * ignored by implicit casters.
      */
     static handle cast(nda::array_view<T, R> src, return_value_policy /* policy */, handle /* parent */) {
-      nda::python::view_info vi = nda::python::make_view_info_from_array(src);
-      return nda::python::to_python(vi);
+      nda::python::numpy_proxy p = nda::python::make_numpy_proxy_from_array(src);
+      return p.to_python();
     }
   };
 } // namespace pybind11::detail

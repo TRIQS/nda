@@ -10,33 +10,21 @@ namespace nda::python {
   using v_t = std::vector<long>;
 
   // the basic information for a numpy array
-  struct view_info {
+  struct numpy_proxy {
     int rank          = 0;
     long element_type = 0;
     void *data        = nullptr;
     bool is_const     = false;
     v_t extents, strides;
-    PyObject *base = nullptr; // The ref. coounting guard
+    PyObject *base = nullptr; // The ref. counting guard typically
+
+    // Returns a new ref (or NULL if failure) with a new numpy.
+    // If failure, return null with the Python exception set
+    PyObject *to_python();
   };
 
-  // intermediate information on a numpyarray : just rank and element type
-  struct numpy_rank_and_type {
-    PyArrayObject *arr = nullptr;
-    long element_type  = 0;
-    int rank           = 0;
-  };
-
-  // C to Python
-  // If failure, return null with the Python exception set
-  PyObject *to_python(view_info &a); // it is const & except that C interface will not like the const ...
-
-  view_info from_python(PyObject *obj, bool enforce_copy);
-
-  // Python to C : step 1 : get rank and type
-  numpy_rank_and_type get_numpy_rank_and_type(PyObject *obj);
-
-  // Python to C : step 2 : get the dims, strides
-  view_info from_python(numpy_rank_and_type info);
+  // From a numpy, extract the info. Better than a constructor, I want to use the aggregate constructor of the struct also.
+  numpy_proxy make_numpy_copy(PyObject *);
 
   // Make a copy in Python with the given rank and element_type
   // If failure, return null with the Python exception set
@@ -69,19 +57,20 @@ namespace nda::python {
   CONVERT(std::complex<long double>, NPY_CLONGDOUBLE);
 #undef CONVERT
 
-  // Convert array to view_info
+  // ------------------------------------------
+
+  // Convert array to numpy_proxy
   template <typename A>
-  view_info make_view_info_from_array(A &a) {
+  numpy_proxy make_numpy_proxy_from_array(A &a) {
 
-    int rank = A::rank;
-    v_t extents(rank), strides(rank);
+    v_t extents(A::rank), strides(A::rank);
 
-    for (size_t i = 0; i < rank; ++i) {
+    for (size_t i = 0; i < A::rank; ++i) {
       extents[i] = a.indexmap().lengths()[i];
       strides[i] = a.indexmap().strides()[i] * sizeof(typename A::value_type);
     }
 
-    return {rank,
+    return {A::rank,
             npy_type<typename A::value_type>,
             (void *)a.data_start(),
             std::is_const_v<A>,
@@ -90,9 +79,31 @@ namespace nda::python {
             make_pycapsule(a.storage())};
   }
 
+  // ------------------------------------------
+
+  template <typename T, int R>
+  bool is_convertible_to_array_view(PyObject *obj) {
+    NDA_PRINT("OK");
+    if (not PyArray_Check(obj)) return false;
+    NDA_PRINT("OK");
+    PyArrayObject *arr = (PyArrayObject *)(obj);
+    NDA_PRINT("OK");
+    if (PyArray_TYPE(arr) != npy_type<T>) return false;
+    NDA_PRINT("OK");
+#ifdef PYTHON_NUMPY_VERSION_LT_17
+    int rank = arr->nd;
+#else
+    int rank = PyArray_NDIM(arr);
+#endif
+    NDA_PRINT((rank == R));
+    return (rank == R);
+  }
+
+  // ------------------------------------------
+
   // Make a new array_view from numpy view
   template <typename T, int R>
-  array_view<T, R> make_array_view_from_view_info(view_info const &v) {
+  array_view<T, R> make_array_view_from_numpy_proxy(numpy_proxy const &v) {
     EXPECTS(v.rank == R);
     std::array<long, R> extents, strides;
     for (int u = 0; u < R; ++u) {

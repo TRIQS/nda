@@ -3,9 +3,7 @@
 namespace nda::python {
 
   // Make a new view_info
-  PyObject *to_python(view_info &v) {
-
-    //_import_array();
+  PyObject *numpy_proxy::to_python() {
 
 #ifdef PYTHON_NUMPY_VERSION_LT_17
     int flags = NPY_BEHAVED & ~NPY_OWNDATA;
@@ -13,7 +11,7 @@ namespace nda::python {
     int flags = NPY_ARRAY_BEHAVED & ~NPY_ARRAY_OWNDATA;
 #endif
     PyObject *result =
-       PyArray_NewFromDescr(&PyArray_Type, PyArray_DescrFromType(v.element_type), v.rank, v.extents.data(), v.strides.data(), v.data, flags, NULL);
+       PyArray_NewFromDescr(&PyArray_Type, PyArray_DescrFromType(element_type), rank, extents.data(), strides.data(), data, flags, NULL);
     if (not result) return nullptr; // the Python error is set
 
     if (!PyArray_Check(result)) {
@@ -23,61 +21,60 @@ namespace nda::python {
 
     PyArrayObject *arr = (PyArrayObject *)(result);
 #ifdef PYTHON_NUMPY_VERSION_LT_17
-    arr->base = v.base;
+    arr->base = base;
     assert(arr->flags == (arr->flags & ~NPY_OWNDATA));
 #else
-    int r     = PyArray_SetBaseObject(arr, v.base);
+    int r     = PyArray_SetBaseObject(arr, base);
     EXPECTS(r == 0);
     EXPECTS(PyArray_FLAGS(arr) == (PyArray_FLAGS(arr) & ~NPY_ARRAY_OWNDATA));
 #endif
+    base = nullptr; // ref is stolen by the new object
+
     return result;
   }
 
   // ----------------------------------------------------------
 
   // Extract a view_info from python
-  numpy_rank_and_type get_numpy_rank_and_type(PyObject *obj) {
+  numpy_proxy make_numpy_copy(PyObject *obj) {
 
     if (obj == NULL) return {};
-    if (_import_array() != 0) return {};
     if (not PyArray_Check(obj)) return {};
+
+    numpy_proxy result;
 
     // extract strides and lengths
     PyArrayObject *arr = (PyArrayObject *)(obj);
 
 #ifdef PYTHON_NUMPY_VERSION_LT_17
-    int rank = arr->nd;
+    result.rank = arr->nd;
 #else
-    int rank = PyArray_NDIM(arr);
+    result.rank = PyArray_NDIM(arr);
 #endif
-    return {arr, PyArray_TYPE(arr), rank};
-  }
 
-  // ----------------------------------------------------------
-
-  // Extract a view_info from python
-  view_info from_python(numpy_rank_and_type info) {
-
-    view_info v;
-    v.rank         = info.rank;
-    v.element_type = info.element_type;
-    v.extents.resize(v.rank);
-    v.strides.resize(v.rank);
-    v.data =PyArray_DATA(info.arr);
+    result.element_type = PyArray_TYPE(arr);
+    result.extents.resize(result.rank);
+    result.strides.resize(result.rank);
+    result.data = PyArray_DATA(arr);
+    // base is ignored, stays at nullptr
 
 #ifdef PYTHON_NUMPY_VERSION_LT_17
-    for (long i = 0; i < v.rank; ++i) {
-      v.extents[i] = size_t(info.arr->dimensions[i]);
-      v.strides[i] = std::ptrdiff_t(info.arr->strides[i]);
+    for (long i = 0; i < result.rank; ++i) {
+      result.extents[i] = size_t(arr->dimensions[i]);
+      result.strides[i] = std::ptrdiff_t(arr->strides[i]);
     }
 #else
-    for (size_t i = 0; i < v.rank; ++i) {
-      v.extents[i] = size_t(PyArray_DIMS(info.arr)[i]);
-      v.strides[i] = std::ptrdiff_t(PyArray_STRIDES(info.arr)[i]);
+    for (size_t i = 0; i < result.rank; ++i) {
+      result.extents[i] = size_t(PyArray_DIMS(arr)[i]);
+      result.strides[i] = std::ptrdiff_t(PyArray_STRIDES(arr)[i]);
     }
 #endif
 
-    return v;
+    NDA_PRINT(result.rank);
+    NDA_PRINT(result.element_type);
+    NDA_PRINT(result.data);
+
+    return result;
   }
 
   // ----------------------------------------------------------
@@ -85,7 +82,6 @@ namespace nda::python {
   PyObject *make_numpy_copy(PyObject *obj, int rank, long element_type) {
 
     if (obj == nullptr) return nullptr;
-    if (_import_array() != 0) return nullptr;
 
     // From obj, we ask the numpy library to make a numpy, and of the correct type.
     // This handles automatically the cases where :
@@ -98,7 +94,6 @@ namespace nda::python {
     // if obj is not array :
     //   - Order = FortranOrder or SameOrder - > Fortran order otherwise C
 
-    //bool ForceCast = false;// Unless FORCECAST is present in flags, this call will generate an error if the data type cannot be safely obtained from the object.
     int flags = 0; //(ForceCast ? NPY_FORCECAST : 0) ;// do NOT force a copy | (make_copy ?  NPY_ENSURECOPY : 0);
                    //if (!(PyArray_Check(obj) ))
     //flags |= ( IndexMapType::traversal_order == indexmaps::mem_layout::c_order(rank) ? NPY_C_CONTIGUOUS : NPY_F_CONTIGUOUS); //impose mem order
