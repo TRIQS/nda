@@ -5,11 +5,16 @@ namespace nda::python {
   // Make a new view_info
   PyObject *numpy_proxy::to_python() {
 
+    // Apparently we can not get rid of this
+    _import_array();
+
 #ifdef PYTHON_NUMPY_VERSION_LT_17
     int flags = NPY_BEHAVED & ~NPY_OWNDATA;
 #else
     int flags = NPY_ARRAY_BEHAVED & ~NPY_ARRAY_OWNDATA;
 #endif
+    // make the array read only
+    if (is_const) flags &= ~NPY_ARRAY_WRITEABLE;
     PyObject *result =
        PyArray_NewFromDescr(&PyArray_Type, PyArray_DescrFromType(element_type), rank, extents.data(), strides.data(), data, flags, NULL);
     if (not result) return nullptr; // the Python error is set
@@ -37,6 +42,9 @@ namespace nda::python {
 
   // Extract a view_info from python
   numpy_proxy make_numpy_proxy(PyObject *obj) {
+
+    // Apparently we can not get rid of this
+    _import_array();
 
     if (obj == NULL) return {};
     if (not PyArray_Check(obj)) return {};
