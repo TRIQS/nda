@@ -1,0 +1,2 @@
+ CXX=clang++ cmake ~/src/nda -DCMAKE_INSTALL_PREFIX=$HOME/nda -DASAN=ON -DUBSAN=ON -DPYTHON_EXECUTABLE=$(which python)
+

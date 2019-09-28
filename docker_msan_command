@@ -1,0 +1,2 @@
+ docker build -f packaging/Dockerfile.msan . &> MSAN.log &
+

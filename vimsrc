@@ -1,0 +1,3 @@
+VIM_BUILD_DIR=$HOME/B/nda  mvim  c++/**/*.?pp c++/**/*.?xx benchmarks/*.cpp test/c++/nda/**/*.cpp
+
+
