@@ -1,24 +1,20 @@
-add_library(nda_python nda_py_interface.cpp)
+add_library(nda_py nda_py.cpp)
 
 # Enable warnings
-target_link_libraries(nda_python PRIVATE nda_c python_and_numpy project_warnings)
+target_link_libraries(nda_py PRIVATE nda_c python_and_numpy project_warnings)
 
 # Configure compilation
-target_compile_options(nda_python PUBLIC -fPIC -std=c++17 $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
-target_include_directories(nda_python PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/python> $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/c++>)
-target_compile_definitions(nda_python PUBLIC
+target_compile_options(nda_py PUBLIC -fPIC -std=c++17 $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
+target_include_directories(nda_py PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/python> $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/c++>)
+target_compile_definitions(nda_py PUBLIC
 				NDA_GIT_HASH=${PROJECT_GIT_HASH}
 				$<$<CONFIG:Debug>:NDA_DEBUG>
 			  )
 
 
-# Build the pybind11 module
-pybind11_add_module(converter_test converter_test.cpp )
-target_link_libraries(converter_test PRIVATE pybind11 nda_python python_and_numpy)
-
 
 # Install library and headers
-install(TARGETS nda_python EXPORT nda_python-targets DESTINATION lib)
+install(TARGETS nda_py EXPORT nda_py-targets DESTINATION lib)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
 
 
@@ -34,7 +30,7 @@ if(ANALYZE_SOURCES)
   # Run clang-tidy if found
   if(CLANG_TIDY_EXECUTABLE)
     message(STATUS "clang-tidy found: ${CLANG_TIDY_EXECUTABLE}")
-    set_target_properties(nda_python PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXECUTABLE}")
+    set_target_properties(nda_py PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXECUTABLE}")
   else()
     message(STATUS "clang-tidy not found in $PATH. Please consider installing clang-tidy for additional checks!")
   endif()
@@ -43,7 +39,7 @@ if(ANALYZE_SOURCES)
   if(CPPCHECK_EXECUTABLE)
     message(STATUS "cppcheck found: ${CPPCHECK_EXECUTABLE}")
     add_custom_command(
-	TARGET nda_python
+	TARGET nda_py
 	COMMAND ${CPPCHECK_EXECUTABLE}
 	  --enable=warning,style,performance,portability
 	  --std=c++17
@@ -67,16 +63,16 @@ option(MBSAN OFF "Compile library and executables with LLVM Memory Sanitizer")
 
 if(ASAN)
  #find_package(sanitizer REQUIRED "asan")
-  target_link_libraries(nda_python PUBLIC asan)
-  install(TARGETS asan EXPORT nda_python-targets)
+  target_link_libraries(nda_py PUBLIC asan)
+  install(TARGETS asan EXPORT nda_py-targets)
 endif()
 if(UBSAN)
  #find_package(sanitizer REQUIRED "ubsan")
-  target_link_libraries(nda_python PUBLIC ubsan)
-  install(TARGETS ubsan EXPORT nda_python-targets)
+  target_link_libraries(nda_py PUBLIC ubsan)
+  install(TARGETS ubsan EXPORT nda_py-targets)
 endif()
 
 if(MSAN)
-  target_compile_options(nda_python PUBLIC -fsanitize=memory -fno-omit-frame-pointer -fsanitize-recover=all -fsanitize-memory-track-origins=2 -O1 -ggdb3)
-  target_link_libraries(nda_python PUBLIC "-fsanitize=memory -fno-omit-frame-pointer -fsanitize-recover=all -fsanitize-memory-track-origins=2")
+  target_compile_options(nda_py PUBLIC -fsanitize=memory -fno-omit-frame-pointer -fsanitize-recover=all -fsanitize-memory-track-origins=2 -O1 -ggdb3)
+  target_link_libraries(nda_py PUBLIC "-fsanitize=memory -fno-omit-frame-pointer -fsanitize-recover=all -fsanitize-memory-track-origins=2")
 endif()

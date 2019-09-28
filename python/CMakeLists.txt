@@ -9,5 +9,5 @@ endif()
 find_package(Python)
 
 add_subdirectory(h5)
-add_subdirectory(nda)
+add_subdirectory(nda_py)
 

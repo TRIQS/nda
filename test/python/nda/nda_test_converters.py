@@ -1,7 +1,10 @@
-import converter_test as C
+import nda_py_converter_test as C
 import numpy as np
 a = np.array(((1.0,2), (3,4)))
 print a
+
+
+### FIXME : make inittest
 
 print C.f(a,1,1)
 
@@ -22,4 +25,9 @@ print v
 
 vc = a.get_c()
 print "vc = ", vc
-vc[0] *=10
+
+try:
+    vc[0] *=10
+except:
+  print "error caught"
+
