@@ -1,5 +1,6 @@
 #include "test_common.hpp"
 #include "nda/blas/gemm.hpp"
+#include "nda/blas/dot.hpp"
 #include <nda/lapack.hpp>
 #include <nda/linalg/det_and_inverse.hpp>
 #include <nda/linalg/eigenelements.hpp>
@@ -10,6 +11,39 @@ using nda::matrix;
 using nda::matrix_view;
 using nda::range;
 namespace blas = nda::blas;
+using nda::blas::dot;
+
+// ==============================================================
+
+TEST(Vector, Dot) {
+  nda::array<double, 1> a(2), aa(2), c(2);
+  a() = 2.0;
+  c() = 1;
+  nda::array<int, 1> b(2);
+  b() = 3;
+  aa  = 2 * a;
+
+  EXPECT_DOUBLE_EQ(dot(a, b), 12);
+  EXPECT_DOUBLE_EQ(dot(aa, a), 16);
+  EXPECT_DOUBLE_EQ(dot(aa, b), 24);
+  EXPECT_DOUBLE_EQ(dot(aa - a, b), 12);
+}
+
+// ==============================================================
+
+TEST(Vector, Dot2) {
+
+  /// Added by I. Krivenko, #122
+  /// test the complex version, specially with the zdotu workaround on Os X.
+  nda::array<std::complex<double>, 1> v(2);
+  v(0) = 0;
+  v(1) = {0, 1};
+
+  EXPECT_COMPLEX_NEAR(nda::blas::dot(v, v), -1);
+  EXPECT_COMPLEX_NEAR(nda::blas::dotc(v, v), 1);
+}
+
+// ==============================================================
 
 template <typename T, typename L1, typename L2, typename L3>
 void test_matmul() {
@@ -244,8 +278,8 @@ TEST(Matvecmul, Promotion) {
 
   matrix<int> Ai   = {{1, 2}, {3, 4}};
   matrix<double> A = {{1, 2}, {3, 4}};
-  nda::array<int,1> Ci, B     = {1, 1};
-  nda::array<double,1> Cd, Bd = {1, 1};
+  nda::array<int, 1> Ci, B     = {1, 1};
+  nda::array<double, 1> Cd, Bd = {1, 1};
 
   Cd = matvecmul(A, B);
   Ci = matvecmul(Ai, B);
@@ -425,7 +459,7 @@ TEST(blas_lapack, svd) {
   auto U  = matrix<dcomplex>(M, M);
   auto VT = matrix<dcomplex>(N, N);
 
-  auto S = vector<double>(std::min(M, N));
+  auto S = array<double,1>(std::min(M, N));
 
   lapack::gesvd(A, S, U, VT);
 
@@ -448,7 +482,7 @@ TEST(blas_lapack, gelss) {
   int N    = second_dim(A);
   int NRHS = second_dim(B);
 
-  auto S = vector<double>(std::min(M, N));
+  auto S = array<double,1>(std::min(M, N));
 
   auto gelss_new    = lapack::gelss_cache<dcomplex>{A};
   auto [x_1, eps_1] = gelss_new(B);

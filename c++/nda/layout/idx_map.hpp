@@ -288,12 +288,11 @@ namespace nda {
      * checked at runtime
      *
      * @return : 
-     *      if one argument is a range, or ellipsis : the sliced idx_map
-     *      else : the linear position (long)
+     *       the linear position 
      *
      */
     template <typename... Args>
-    FORCEINLINE auto operator()(Args const &... args) const
+    FORCEINLINE long operator()(Args const &... args) const
 #ifdef NDA_ENFORCE_BOUNDCHECK
        noexcept(false) {
       details::assert_in_bounds(rank(), len.data(), args...);

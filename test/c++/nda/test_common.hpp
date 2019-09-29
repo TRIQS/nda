@@ -22,6 +22,7 @@ using dcomplex = std::complex<double>;
 using nda::C_layout;
 using nda::F_layout;
 using nda::matrix;
+using nda::matrix_view;
 
 #define MAKE_MAIN_MPI                                                                                                                                \
   int main(int argc, char **argv) {                                                                                                                  \

@@ -114,6 +114,7 @@ namespace nda {
     static constexpr layout_info_t layout_info =
        (l_is_scalar ? get_layout_info<R_t> : (r_is_scalar ? get_layout_info<L_t> : get_layout_info<R_t> | get_layout_info<L_t>));
 
+    //  --- shape ---
     [[nodiscard]] constexpr auto shape() const {
       if constexpr (l_is_scalar) {
         return r.shape();
@@ -122,6 +123,18 @@ namespace nda {
       } else {
         EXPECTS(l.shape() == r.shape());
         return l.shape();
+      }
+    }
+
+    //  --- extent ---
+    [[nodiscard]] constexpr long extent(int i) const noexcept {
+      if constexpr (l_is_scalar) {
+        return r.extent(i);
+      } else if constexpr (r_is_scalar) {
+        return l.extent(i);
+      } else {
+        EXPECTS(l.extent(i) == r.extent(i));
+        return l.extent(i);
       }
     }
 

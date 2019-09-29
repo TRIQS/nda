@@ -275,16 +275,15 @@ TEST(Array, H5ArrayString) {
 
 // ==============================================================
 // not yet implemented
-
 /*
- * TEST(Array, H5ArrayString2) {
+TEST(Array, H5ArrayString2) {
 
   // nda::array of string
   nda::array<std::string, 2> A(2, 2), B;
-  A(0,0) = "Nice String";
-  A(1,0) = "another";
-  A(1,1) = "really";
-  A(0,1) = "nice";
+  A(0, 0) = "Nice String";
+  A(1, 0) = "another";
+  A(1, 1) = "really";
+  A(0, 1) = "nice";
 
   // writing
   h5::file file("test_nda::array_string.h5", 'w');
@@ -299,7 +298,6 @@ TEST(Array, H5ArrayString) {
   for (int i = 0; i < 2; ++i) { EXPECT_EQ(A, B); }
 }
 */
-
 // ==============================================================
 
 // -----------------------------------------------------

@@ -21,5 +21,9 @@ endmacro(add_python_test)
 pybind11_add_module(nda_py_converter_test nda_py_converter_test.cpp )
 target_link_libraries(nda_py_converter_test PRIVATE pybind11 nda_py python_and_numpy)
 
+# Build the pybind11 module
+pybind11_add_module(nda_py_a nda_py_a.cpp )
+target_link_libraries(nda_py_a PRIVATE pybind11 nda_py python_and_numpy)
+
 add_python_test(nda_test_converters)
 

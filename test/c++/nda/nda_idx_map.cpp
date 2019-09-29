@@ -120,20 +120,7 @@ TEST(idxstat, iteratorC) { // NOLINT
   //std::cerr << i << std::endl;
   //}
 }
-/*
-TEST(idxstat, iteratorD) { // NOLINT
 
-  idx_map<3,  C_stride_order<3>, layout_prop_e::none> i1{{1, 2, 3}, stride_order::Fortran};
-
-  std::cerr << i1 << std::endl;
-
-  int pos = 0;
-  for (auto [p, i] : enumerate_indices_in_stride_order_order(i1)) {
-    EXPECT_EQ(p, pos++);//NOLINT
-    std::cerr << i << std::endl;
-  }
-}
-*/
 TEST(idxstat, for_each) { // NOLINT
 
   {
