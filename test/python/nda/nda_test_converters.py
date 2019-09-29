@@ -1,4 +1,5 @@
 import nda_py_converter_test as C
+#import nda_py_a as A
 import numpy as np
 a = np.array(((1.0,2), (3,4)))
 print a
@@ -17,7 +18,8 @@ except:
 
 print C.ma(5)
 
-a = C.A(7)
+    
+a = C.make_A()  #C.A(7)
 v = a.get()
 print v
 v[0] *=10

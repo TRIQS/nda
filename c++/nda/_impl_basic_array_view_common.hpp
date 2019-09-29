@@ -123,6 +123,33 @@ decltype(auto) operator()(T const &... x) && {
   return __call__impl<true>(*this, x...);
 }
 
+/**
+ * Access the array, make a lazy expression or slice of it depending on the arguments
+ *
+ * @tparam T Can be long, range, range_all or ellipsis, of clef lazy (placeholder or expression)
+ * @param x
+ * @example array_call
+ */
+template <typename T>
+decltype(auto) operator[](T const &x) const & {
+  static_assert((rank == 1), " [ ] operator is only available for rank 1 in C++17/20");
+  return __call__impl<false>(*this, x);
+}
+
+///
+template <typename T>
+decltype(auto) operator[](T const &x) & {
+  static_assert((rank == 1), " [ ] operator is only available for rank 1 in C++17/20");
+  return __call__impl<false>(*this, x);
+}
+
+///
+template <typename T>
+decltype(auto) operator[](T const &x) && {
+  static_assert((rank == 1), " [ ] operator is only available for rank 1 in C++17/20");
+  return __call__impl<true>(*this, x);
+}
+
 // ------------------------------- Iterators --------------------------------------------
 
 static constexpr int iterator_rank = (idx_map_t::layout_prop & layout_prop_e::strided_1d ? 1 : Rank);

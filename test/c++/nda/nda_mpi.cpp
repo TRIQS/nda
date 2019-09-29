@@ -93,14 +93,14 @@ TEST(Arrays, MPIReduceMAX) {
 }
 
 // --------------------------------------
-/*
+
 // test transposed matrix broadcast
 TEST(Arrays, matrix_transpose_bcast) {
 
   mpi::communicator world;
 
   nda::matrix<dcomplex> A  = {{1, 2, 3}, {4, 5, 6}};
-  nda::matrix<dcomplex> At = A.transpose();
+  nda::matrix<dcomplex> At = transpose(A);
 
   nda::matrix<dcomplex> B;
   if (world.rank() == 0) B = At;
@@ -118,7 +118,7 @@ TEST(Arrays, array_transpose_bcast) {
   mpi::communicator world;
 
   nda::array<dcomplex, 2> A  = {{1, 2, 3}, {4, 5, 6}};
-  nda::array<dcomplex, 2> At = transposed_view(A, 0, 1);
+  nda::array<dcomplex, 2> At = transpose(A);
 
   nda::array<dcomplex, 2> B(2, 3);
   if (world.rank() == 0) B = At;
@@ -128,6 +128,4 @@ TEST(Arrays, array_transpose_bcast) {
   EXPECT_ARRAY_EQ(At, B);
 }
 
-*/
-
-MAKE_MAIN_MPI;
+MAKE_MAIN_MPI

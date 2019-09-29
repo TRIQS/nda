@@ -24,11 +24,17 @@ namespace nda {
   template <typename ValueType, int Rank, typename Layout = C_stride_layout>
   using array_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed>;
 
+  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
+  using array_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed>;
+
   template <typename ValueType, typename Layout = C_layout> // CLayout or FLayout
   using matrix = basic_array<ValueType, 2, Layout, 'M', heap>;
 
   template <typename ValueType, typename Layout = C_stride_layout>
   using matrix_view = basic_array_view<ValueType, 2, Layout, 'M', default_accessor, borrowed>;
+
+  template <typename ValueType, typename Layout = C_stride_layout>
+  using matrix_const_view = basic_array_view<ValueType const, 2, Layout, 'M', default_accessor, borrowed>;
 
   //template <typename ValueType, typename Layout = C_layout> // CLayout or FLayout
   //using vector = basic_array<ValueType, 1, Layout, 'A', heap>;
