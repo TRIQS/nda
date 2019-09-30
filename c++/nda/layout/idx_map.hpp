@@ -7,23 +7,9 @@
 
 #include "../macros.hpp"
 #include "../traits.hpp"
-
-// FIXME : move it in decl.hpp
-namespace nda {
-
-  template <int Rank, uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp>
-  class idx_map;
-}
-
 #include "./range.hpp"
 #include "./bound_check_worker.hpp"
-#include "./slice_static.hpp"
 #include "./for_each.hpp"
-#include "./permutation.hpp"
-
-namespace boost::serialization {
-  class access;
-}
 
 namespace nda {
 
@@ -53,6 +39,7 @@ namespace nda {
 
   // constexpr std::array<long,  > ce_len, ce_stri :   -1 -->  dynamic.
   // https://godbolt.org/z/qmKWpj
+
   // -----------------------------------------------------------------------------------
   /**
    *
@@ -82,13 +69,10 @@ namespace nda {
    */
   template <int Rank, uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp>
   class idx_map {
-
-    static_assert(Rank < 64, "Rank must be < 64"); // constraint of slice implementation. ok...
-
+    static_assert(Rank < 16, "Rank must be < 16"); // C++17 constraint. Relax this in C++20 ?
     std::array<long, Rank> len, str;
 
     public:
-    // FIXME : rename DECODE : it is not a permutation
     static constexpr std::array<int, Rank> static_extents = decode<Rank>(StaticExtents);
     static constexpr uint64_t static_extents_encoded      = StaticExtents;
 
@@ -103,7 +87,6 @@ namespace nda {
        (StrideOrder == 0 ? permutations::identity<Rank>() : decode<Rank>(StrideOrder)); // 0 is C stride_order
 
     static constexpr uint64_t stride_order_encoded  = encode(stride_order);
-    static constexpr uint64_t stride_order_as_given = StrideOrder;
 
     static constexpr layout_prop_e layout_prop = LayoutProp;
     static constexpr layout_info_t layout_info = layout_info_t{stride_order_encoded, layout_prop};
@@ -113,7 +96,10 @@ namespace nda {
     /// Rank of the map (number of arguments)
     static constexpr int rank() noexcept { return Rank; }
 
-    /// Compile time size, 0 is unknown
+    /// Total number of elements (products of lengths in each dimension).
+    [[nodiscard]] long size() const noexcept { return std::accumulate(len.cbegin(), len.cend(), 1, std::multiplies<long>()); }
+
+    /// Compile time size, 0 means "dynamical"
     static constexpr long ce_size() noexcept {
       if constexpr (rank_dynamic != 0) { // quick general case
         return 0;
@@ -134,9 +120,6 @@ namespace nda {
      */
     [[nodiscard]] std::array<long, Rank> const &strides() const noexcept { return str; }
 
-    /// Total number of elements (products of lengths in each dimension).
-    [[nodiscard]] long size() const noexcept { return std::accumulate(len.cbegin(), len.cend(), 1, std::multiplies<long>()); }
-
     /// Is the data contiguous in memory ?
     [[nodiscard]] bool is_contiguous() const noexcept {
       int slowest_index = std::distance(str.begin(), std::max_element(str.begin(), str.end())); // index with minimal stride
@@ -145,26 +128,24 @@ namespace nda {
 
     ///
     static constexpr bool is_stride_order_C() {
+      // FIXME : constexpr issue with == ?
+      // (stride_order == permutations::identity<Rank>()); }
       return (encode(stride_order) == encode(permutations::identity<Rank>()));
-    } // (stride_order == permutations::identity<Rank>()); }
-
+    }
     ///
     static constexpr bool is_stride_order_Fortran() {
+      // FIXME Same as above
+      //(stride_order == permutations::reverse_identity<Rank>()); }
       return (encode(stride_order) == encode(permutations::reverse_identity<Rank>()));
-    } //(stride_order == permutations::reverse_identity<Rank>()); }
+    }
 
-    /////
-    //[[nodiscard]] bool check_stride_order() const noexcept {
-    //bool r = true;
-    //for (int i = 1; i < rank(); ++i) r &= (str[stride_order[i - 1]] <= str[stride_order[i]]); // runtime
-    //return r;
-    //}
-
+    /// Value of the minimum stride (i.e the fastest one)
     [[nodiscard]] long min_stride() const noexcept { return str[stride_order[Rank - 1]]; }
 
     // ----------------  Constructors -------------------------
 
     private:
+    // compute strides for a contiguous array given the extents in each dimension
     void _compute_strides() {
       // compute the strides for a compact array
       long s = 1;
@@ -227,7 +208,6 @@ namespace nda {
     /** 
      * Construction from the lengths, the strides
      * @param lengths
-     * @param strides
      */
     idx_map(std::array<long, Rank> const &lengths) noexcept : len(lengths) {
 
@@ -302,28 +282,10 @@ namespace nda {
       return call_impl(std::make_index_sequence<sizeof...(Args)>{}, args...);
     }
 
-    //// ----------------  Iterator -------------------------
-
-    //using iterator = idx_map_iterator<idx_map<Rank, StrideOrder, LayoutProp>>;
-
-    //[[nodiscard]] iterator begin() const { return {this}; }
-    //[[nodiscard]] iterator cbegin() const { return {this}; }
-    //[[nodiscard]] typename iterator::end_sentinel_t end() const { return {}; }
-    //[[nodiscard]] typename iterator::end_sentinel_t cend() const { return {}; }
-
     // ----------------  Comparison -------------------------
     bool operator==(idx_map const &x) { return (len == x.len) and (str == x.str); }
 
     bool operator!=(idx_map const &x) { return !(operator==(x)); }
-
-    // ----------------  Private -------------------------
-    private:
-    //  BOOST Serialization
-    friend class boost::serialization::access;
-    template <class Archive>
-    void serialize(Archive &ar, const unsigned int) {
-      ar &len &str;
-    }
 
   }; // idx_map class
 
@@ -350,29 +312,5 @@ namespace nda {
     return idx_map<Rank, encode(new_static_extents), encode(new_stride_order), new_layout>{permutations::apply_inverse<Permutation>(idx.lengths()),
                                                                                            permutations::apply_inverse<Permutation>(idx.strides())};
   }
-
-  //// ----------------  More complex iterators -------------------------
-
-  //template <int Rank, bool WithIndices, typename TraversalOrder> struct _changed_iter {
-  //idx_map<Rank> const *im;
-  //using iterator = idx_map_iterator<Rank, WithIndices, TraversalOrder>;
-  //iterator begin() const { return {im}; }
-  //iterator cbegin() const { return {im}; }
-  //typename iterator::end_sentinel_t end() const { return {}; }
-  //typename iterator::end_sentinel_t cend() const { return {}; }
-  //};
-
-  //// for (auto [pos, idx] : enumerate(idxmap)) : iterate on position and indices
-  //template <int Rank> _changed_iter<Rank, true, traversal::C_t> enumerate_indices(idx_map<Rank> const &x) { return {&x}; }
-
-  //template <int Rank> _changed_iter<Rank, false, traversal::Dynamical_t> in_stride_order_order(idx_map<Rank> const &x) { return {&x}; }
-  //template <int Rank> _changed_iter<Rank, true, traversal::Dynamical_t> enumerate_indices_in_stride_order_order(idx_map<Rank> const &x) { return {&x}; }
-
-  // ----------------  foreach  -------------------------
-
-  /*  template <int Rank, uint64_t StrideOrder, layout_prop_e LayoutProp, typename... Args>*/
-  //FORCEINLINE void for_each(idx_map<Rank, StrideOrder, LayoutProp> const &idx, Args &&... args) {
-  //for_each(idx.lengths(), std::forward<Args>(args)...);
-  /*}*/
 
 } // namespace nda
