@@ -8,29 +8,24 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
       g++ \
       gfortran \
       git \
-      hdf5-tools \
       libblas-dev \
       libboost-all-dev \
       libclang-${LLVM}-dev \
       libfftw3-dev \
       libgfortran3 \
       libgmp-dev \
-      libhdf5-dev \
+      zlib1g-dev \
       intel-mkl \
-      libopenmpi-dev \
-      openmpi-bin \
-      openmpi-common \
-      openmpi-doc \
       python-clang-${LLVM} \
       python-dev \
       python-h5py \
       python-mako \
       python-matplotlib \
-      python-mpi4py \
       python-numpy \
       python-scipy \
       python-sphinx \
-      python-nbsphinx
+      python-nbsphinx \
+      python-pip
 
 ENV CC=clang-${LLVM} CXX=clang++-${LLVM} LLVM_VERSION=${LLVM}.0.0
 
@@ -47,6 +42,18 @@ ENV CXXFLAGS="-stdlib=libc++ -fsanitize=memory" CFLAGS="-fsanitize=memory" LD_LI
 
 RUN update-alternatives --set liblapack.so-x86_64-linux-gnu /usr/lib/x86_64-linux-gnu/libmkl_rt.so && \
     update-alternatives --set libblas.so-x86_64-linux-gnu /usr/lib/x86_64-linux-gnu/libmkl_rt.so
+
+ADD https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.5/src/CMake-hdf5-1.10.5.tar.gz /tmp/
+RUN mkdir /tmp/build && cd /tmp/build && \
+      tar -C /tmp -xf /tmp/CMake-hdf5-1.10.5.tar.gz && \
+      cmake /tmp/CMake-hdf5-1.10.5/hdf5-1.10.5 -DCMAKE_INSTALL_PREFIX=/usr && make -j2 && make install && \
+      rm -rf * && \
+      rm -rf /tmp/CMake-hdf5-1.10.5* /tmp/build
+
+ADD https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.1.tar.gz /tmp/
+RUN tar -C /tmp -xf /tmp/openmpi-4.0.1.tar.gz && cd /tmp/openmpi-4.0.1 && \
+      ./configure --prefix=/usr/lib/x86_64-linux-gnu/openmpi --enable-shared --disable-mpi-fortran && make -j20 && make install && \
+      rm -rf /tmp/openmpi-4.0.1*
 
 RUN useradd -m build
 
