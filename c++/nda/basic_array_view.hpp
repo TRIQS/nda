@@ -1,8 +1,9 @@
 #pragma once
+#include <clef/clef.hpp>
 #include "declarations.hpp"
 #include "assignment.hpp"
 #include "iterators.hpp"
-#include <clef/clef.hpp>
+#include "layout/slice_static.hpp"
 
 // The std::swap is WRONG for a view because of the copy/move semantics of view.
 // Use swap instead (the correct one, found by ADL).

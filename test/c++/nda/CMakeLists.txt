@@ -10,9 +10,10 @@ set(all_tests nda_idx_map nda_storage nda_basic nda_expr_template nda_map nda_al
    nda_arithmetic nda_array_of_non_pod nda_iterators nda_bound_check 
    nda_matrix 
    nda_view1 nda_view2
+   nda_functions
    nda_qcache 
    nda_mix_various_layout
-   nda_lazy nda_static nda_stl 
+   nda_lazy nda_stack_array nda_stl 
    nda_blas nda_linear_algebra 
    nda_mpi 
    nda_h5 nda_h5_slice 

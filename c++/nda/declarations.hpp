@@ -7,6 +7,11 @@
 
 namespace nda {
 
+  // ---------------------- The layout  --------------------------------
+
+  template <int Rank, uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp>
+  class idx_map;
+
   // ---------------------- declare array and view  --------------------------------
 
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
@@ -27,7 +32,7 @@ namespace nda {
   template <typename ValueType, int Rank, typename Layout = C_stride_layout>
   using array_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed>;
 
-  template <typename ValueType, typename Layout = C_layout> // CLayout or FLayout
+  template <typename ValueType, typename Layout = C_layout>
   using matrix = basic_array<ValueType, 2, Layout, 'M', heap>;
 
   template <typename ValueType, typename Layout = C_stride_layout>
@@ -35,12 +40,6 @@ namespace nda {
 
   template <typename ValueType, typename Layout = C_stride_layout>
   using matrix_const_view = basic_array_view<ValueType const, 2, Layout, 'M', default_accessor, borrowed>;
-
-  //template <typename ValueType, typename Layout = C_layout> // CLayout or FLayout
-  //using vector = basic_array<ValueType, 1, Layout, 'A', heap>;
-
-  //template <typename ValueType, typename Layout = C_stride_layout>
-  //using vector_view = basic_array_view<ValueType, 1, Layout, 'A', default_accessor, borrowed>;
 
   template <typename ValueType, int Rank, uint64_t StaticExtents>
   using stack_array =

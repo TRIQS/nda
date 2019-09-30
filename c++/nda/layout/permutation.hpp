@@ -61,4 +61,12 @@ namespace nda::permutations {
     return result;
   }
 
+  template <int Rank>
+  constexpr std::array<int, Rank> transposition(int i, int j) {
+    auto r = identity<Rank>();
+    r[i]   = j;
+    r[j]   = i;
+    return r;
+  }
+
 } // namespace nda::permutations
