@@ -1,6 +1,15 @@
 #include "test_common.hpp"
 #include <nda/linalg/det_and_inverse.hpp>
 
+clef::placeholder<0> i_;
+clef::placeholder<1> j_;
+clef::placeholder<2> k_;
+clef::placeholder<3> l_;
+using nda::encode;
+using nda::idx_group;
+
+// ------------------------------------
+
 TEST(matrix, vstack) {
 
   matrix<long> A1 = {{1, 2}, {3, 4}};
@@ -44,33 +53,7 @@ TEST(reshaped_view, array) {
   EXPECT_EQ(v2, check);
 }
 
-/*
 //================================================
-
-// inversion tensor (by element)
-TEST(NDA, InverseTensor) {
-
-  array<dcomplex, 3> a(2, 2, 2);
-  a() = 0;
-  a() = a() + 2;
-
-  a() = inverse(a);
-
-  array<dcomplex, 3> r(2, 2, 2);
-  r() = 0.5;
-
-  EXPECT_ARRAY_NEAR(r, a);
-}
-*/
-clef::placeholder<0> i_;
-clef::placeholder<1> j_;
-clef::placeholder<2> k_;
-clef::placeholder<3> l_;
-
-//================================================
-
-using nda::encode;
-using nda::idx_group;
 
 TEST(GroupIndices, check) { nda::check_grouping(nda::permutations::identity<4>(), std::array{0, 1}, std::array{2, 3}); }
 
@@ -163,4 +146,3 @@ TEST(Array, SwapIndex) {
   EXPECT_EQ(S, B());
   EXPECT_EQ(S.shape(), B.shape());
 }
-
