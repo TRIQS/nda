@@ -55,8 +55,8 @@ void test_matmul() {
   for (int i = 0; i < 3; ++i)
     for (int j = 0; j < 4; ++j) { M2(i, j) = 1 + i - j; }
 
-  M3 = 0;
-
+  M3  = 0;
+  M3b = 0; // for MSAN
   if constexpr (nda::blas::is_blas_lapack_v<T>) { blas::gemm(1, M1, M2, 0, M3b); }
   M3 = M1 * M2;
 

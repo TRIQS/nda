@@ -40,6 +40,14 @@ namespace nda::linalg {
     array<T, 1> work(lwork);
     array<double, 1> work2(is_complex_v<T> ? lwork : 0);
 
+#if defined(__has_feature)
+#if __has_feature(memory_sanitizer)
+    work2 = 0;
+    work  = 0;
+    ev    = 0;
+#endif
+#endif
+
     int info = 0;
     if constexpr (not is_complex_v<T>) {
       lapack::f77::dsyev(compz, 'U', dim, m.data_start(), dim, ev.data_start(), work.data_start(), lwork, info);

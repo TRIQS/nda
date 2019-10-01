@@ -46,6 +46,13 @@ namespace nda::lapack {
 
     auto dm = std::min(m.extent(0), m.extent(1));
     if (ipiv.size() < dm) ipiv.resize(dm);
+
+#if defined(__has_feature)
+#if __has_feature(memory_sanitizer)
+    ipiv = 0;
+#endif
+#endif
+
     int info = 0;
     f77::getrf(get_n_rows(m), get_n_cols(m), m.data_start(), get_ld(m), ipiv.data_start(), info);
     return info;
@@ -74,6 +81,12 @@ namespace nda::lapack {
     using T  = typename M_t::value_type;
     int info = 0;
     T work1[2];
+#if defined(__has_feature)
+#if __has_feature(memory_sanitizer)
+    work1[0] = 0;
+    work1[1] = 0;
+#endif
+#endif
 
     // first call to get the optimal lwork
     f77::getri(get_n_rows(m), m.data_start(), get_ld(m), ipiv.data_start(), work1, -1, info);
@@ -84,6 +97,12 @@ namespace nda::lapack {
       lwork = std::round(work1[0]) + 1;
 
     array<T, 1> work(lwork);
+
+#if defined(__has_feature)
+#if __has_feature(memory_sanitizer)
+    work = 0;
+#endif
+#endif
 
     // second call to do the job
     f77::getri(get_n_rows(m), m.data_start(), get_ld(m), ipiv.data_start(), work.data_start(), lwork, info);
