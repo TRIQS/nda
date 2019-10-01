@@ -12,6 +12,20 @@ namespace nda {
   } // always v, just a trick to have the pack
 
   /**
+   * @tparam T  T must be constructible from U
+   * @tparam U
+   * @tparam R 
+   * make a std::array<T, R> initialized to v
+   */
+  template <typename T, typename U, size_t R>
+  constexpr std::array<T, R> make_std_array(std::array<U, R> const &a) {
+    static_assert(std::is_constructible_v<T, U>, "make_std_array : T must be constructible from U, Cf doc");
+    std::array<T, R> result;
+    for (int u = 0; u < R; ++u) result[u] = a[u];
+    return result;
+  }
+
+  /**
    * @tparam R 
    * @tparam T
    * make a std::array<T, R> initialized to v

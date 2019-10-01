@@ -102,15 +102,14 @@ namespace nda {
      */
     explicit basic_array(shape_t<Rank> const &shape) : _idx_m(shape), _storage(_idx_m.size()) {}
 
-    /** 
+    // Should we document this ? we use it in reshape, but that is a quite advanced constructor
+    /* 
      * [Advanced] Construct from an indexmap and a storage handle.
      *
      * @param idxm index map
      * @param mem_handle  memory handle
-     * NB: make a new copy.
      */
-    //template <char RBS>
-    //array(idx_map<Rank> const &idxm, mem::handle<ValueType, RBS> mem_handle) : _idx_m(idxm), _storage(std::move(mem_handle)) {}
+    basic_array(idx_map_t const &idxm, storage_t &&mem_handle) : _idx_m(idxm), _storage(std::move(mem_handle)) {}
 
     /// Construct from anything that has an indexmap and a storage compatible with this class
     //template <typename T> basic_array(T const &a) REQUIRES(XXXX): basic_array(a.indexmap(), a.storage()) {}

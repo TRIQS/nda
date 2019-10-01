@@ -71,8 +71,7 @@ namespace nda {
     static constexpr bool A_and_B_have_same_element_type = std::is_same_v<get_value_t<A>, get_value_t<B>>;
     static constexpr bool element_type_is_an_integer     = std::is_integral_v<get_value_t<A>>;
     static_assert((A_and_B_have_same_element_type and element_type_is_an_integer), "A == B is only defined when A, B are array of *integers*");
-    EXPECTS_WITH_MESSAGE(a.shape() == b.shape(), "operator == for array: shape mismatch" << a.shape() << b.shape());
-
+    if (a.shape() != b.shape()) return false;
     bool r = true;
     nda::for_each(a.shape(), [&](auto &&... x) { r &= (a(x...) == b(x...)); });
     return r;
