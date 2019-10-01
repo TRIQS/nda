@@ -67,16 +67,40 @@ TEST(GroupIndices, ProdInverse) {
     nda::array<double, 4> A(2, 3, 2, 3);
     A(i_, j_, k_, l_) << B(i_, k_) * C(j_, l_);
     auto M = make_matrix_view(group_indices_view(A, idx_group<0, 1>, idx_group<2, 3>));
+    NDA_PRINT(M.indexmap());
     M      = inverse(M);
     nda::array<double, 4> R(A.shape());
     R(i_, j_, k_, l_) << Binv(i_, k_) * Cinv(j_, l_);
     EXPECT_ARRAY_NEAR(R, A, 5.e-15);
   }
 
-  /*  {
+  {
+    nda::array<double, 4> A(2, 3, 2, 3);
+    A(i_, j_, k_, l_) << B(i_, k_) * C(j_, l_);
+    auto M = make_matrix_view(group_indices_view(A, idx_group<2, 3>, idx_group<0, 1>));
+    NDA_PRINT(M.indexmap());
+    M = inverse(M);
+    nda::array<double, 4> R(A.shape());
+    R(i_, j_, k_, l_) << Binv(i_, k_) * Cinv(j_, l_);
+    EXPECT_ARRAY_NEAR(R, A, 5.e-15);
+  }
+
+  {
     nda::array<double, 4, nda::basic_layout<0, encode(std::array{1, 0, 3, 2}), nda::layout_prop_e::contiguous>> A(2, 3, 2, 3);
     A(i_, j_, k_, l_) << B(i_, k_) * C(j_, l_);
     auto M = make_matrix_view(group_indices_view(A, idx_group<0, 1>, idx_group<2, 3>));
+    NDA_PRINT(M.indexmap());
+    M = inverse(M);
+    nda::array<double, 4> R(A.shape());
+    R(i_, j_, k_, l_) << Binv(i_, k_) * Cinv(j_, l_);
+    EXPECT_ARRAY_NEAR(R, A, 5.e-15);
+  }
+
+  {
+    nda::array<double, 4, nda::basic_layout<0, encode(std::array{1, 0, 3, 2}), nda::layout_prop_e::contiguous>> A(2, 3, 2, 3);
+    A(i_, j_, k_, l_) << B(i_, k_) * C(j_, l_);
+    auto M = make_matrix_view(group_indices_view(A, idx_group<2, 3>, idx_group<0, 1>));
+    NDA_PRINT(M.indexmap());
     M      = inverse(M);
     nda::array<double, 4> R(A.shape());
     R(i_, j_, k_, l_) << Binv(i_, k_) * Cinv(j_, l_);
@@ -87,12 +111,12 @@ TEST(GroupIndices, ProdInverse) {
     nda::array<double, 4, nda::basic_layout<0, encode(std::array{0, 2, 1, 3}), nda::layout_prop_e::contiguous>> A(2, 2, 3, 3);
     A(i_, k_, j_, l_) << B(i_, k_) * C(j_, l_);
     auto M = make_matrix_view(group_indices_view(A, idx_group<0, 2>, idx_group<1, 3>));
+    NDA_PRINT(M.indexmap());
     M      = inverse(M);
     nda::array<double, 4> R(A.shape());
     R(i_, k_, j_, l_) << Binv(i_, k_) * Cinv(j_, l_);
     EXPECT_ARRAY_NEAR(R, A, 5.e-15);
   }
-  */
 }
 
 //================================================
