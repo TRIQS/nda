@@ -5,7 +5,6 @@
 #include <hdf5_hl.h>
 
 #include <numeric>
-
 #include <iostream> // DEBUG
 
 namespace h5::array_interface {
@@ -42,15 +41,6 @@ namespace h5::array_interface {
       for (int v = u; v >= 0; --v) { strides_h5[v] /= L; }
       Ltot[u + 1] = L;
     }
-
-    //std::cout << " ------- RESULT ------- " << std::endl;
-    //for (int u = 0; u < rank; ++u) {
-    //NDA_PRINT(u);
-    //NDA_PRINT(stri[u]);
-    //NDA_PRINT(Ltot[u]);
-    //NDA_PRINT(strides_h5[u]);
-    //}
-    //std::cout << "------- END RESULT --------- " << std::endl;
 
     return {Ltot, strides_h5};
   }

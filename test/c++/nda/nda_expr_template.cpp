@@ -131,18 +131,24 @@ TEST(NDA, ExprTemplateArray) {
   EXPECT_ARRAY_NEAR(C, nda::array<int, 1>{63, 63, 63});
 }
 
-// ==============================================================
+//================================================
 
-//TEST(NDA, DeductionRule) {
+clef::placeholder<0> i_;
+clef::placeholder<1> j_;
+clef::placeholder<2> k_;
+clef::placeholder<3> l_;
 
-//nda::array<int, 1> A(3), B(3);
-//B() = 2;
-//A() = 3;
+//================================================
 
-//auto S = nda::array{A+B}; //
-//static_assert(std::is_same_v<decltype(S), nda::array<int,1>>,"oops");
-//EXPECT_ARRAY_NEAR(S, nda::array<int, 1>{5, 5, 5});
+// inversion tensor (by element)
+TEST(NDA, InverseTensor) {
 
-//// auto NO = nda::array{1,2}; // Should not compile (yet). Init list
-//}
+  nda::array<dcomplex, 3> a(2, 2, 2);
+  nda::array<dcomplex, 3> r(2, 2, 2);
+  a(i_, j_, k_) << 1 + i_ + 10 * j_ + 100 * k_;
+  r(i_, j_, k_) << 1 / (1.0 + i_ + 10 * j_ + 100 * k_);
 
+  a = 1 / a; //inverse(a);
+
+  EXPECT_ARRAY_NEAR(r, a);
+}

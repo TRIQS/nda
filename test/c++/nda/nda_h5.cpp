@@ -297,13 +297,11 @@ TEST(Array, H5ArrayString2) {
   //comparing
   for (int i = 0; i < 2; ++i) { EXPECT_EQ(A, B); }
 }
-*/
 // ==============================================================
 
 // -----------------------------------------------------
 // Testing the loading of nda::array of double into complex
 // -----------------------------------------------------
-/*
 TEST(Array, H5RealIntoComplex) {
 
   nda::array<double, 2> D(2, 3);
@@ -326,6 +324,92 @@ TEST(Array, H5RealIntoComplex) {
     h5::group top(file);
     h5_read(top, "D", C);
     EXPECT_ARRAY_NEAR(C, D);
+  }
+}
+*/
+// ==============================================================
+/*
+
+   // DECIDE if we want to implement such promotion int -> double in h5 reading
+TEST(Array, Promotion) {
+
+  nda::array<long, 2> a(2, 3);
+  nda::array<double, 2> d;
+
+  for (int i = 0; i < 2; ++i)
+    for (int j = 0; j < 3; ++j) {
+      a(i, j) = 10 * i + j;
+    }
+
+  // WRITE the file
+  {
+    h5::file file("ess_prom.h5", 'w');
+    //h5::group top(file);
+    h5_write(file, "A", a);
+  }
+
+  // READ the file
+  {
+    h5::file file("ess_prom.h5", 'r');
+    h5::group top(file);
+
+    h5_read(top, "A", d);
+    EXPECT_ARRAY_NEAR(a, d);
+  }
+}
+
+TEST(Array, PromotionWrong1) {
+
+  nda::array<long, 2> a(2, 3);
+  nda::array<int, 2> d;
+
+  for (int i = 0; i < 2; ++i)
+    for (int j = 0; j < 3; ++j) {
+      a(i, j) = 10 * i + j;
+    }
+
+  // WRITE the file
+  {
+    h5::file file("ess_prom1.h5", 'w');
+    //h5::group top(file);
+    h5_write(file, "A", a);
+  }
+
+  // READ the file
+  {
+    h5::file file("ess_prom1.h5", 'r');
+    h5::group top(file);
+
+    h5_read(top, "A", d);
+    EXPECT_ARRAY_NEAR(a, d);
+  }
+}
+
+
+TEST(Array, PromotionWrong) {
+
+  nda::array<double, 2> a(2, 3);
+  nda::array<long, 2> d;
+
+  for (int i = 0; i < 2; ++i)
+    for (int j = 0; j < 3; ++j) {
+      a(i, j) = 2.8* i + j;
+    }
+
+  // WRITE the file
+  {
+    h5::file file("ess_prom2.h5", 'w');
+    //h5::group top(file);
+    h5_write(file, "A", a);
+  }
+
+  // READ the file
+  {
+    h5::file file("ess_prom2.h5", 'r');
+    h5::group top(file);
+
+    h5_read(top, "A", d);
+    EXPECT_ARRAY_NEAR(a, d);
   }
 }
 */
