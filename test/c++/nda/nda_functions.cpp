@@ -16,6 +16,34 @@ TEST(matrix, vstack) {
 
   EXPECT_EQ(B.shape(), (std::array<long, 2>{4, 2}));
 }
+//================================================
+
+TEST(reshape, array) {
+
+  nda::array<long, 1> a{1, 2, 3, 4, 5, 6};
+  nda::array<long, 2> check{{1, 2}, {3, 4}, {5, 6}};
+
+  // should not compile
+  // auto b = reshape(a, std::array{2,3});
+  auto b = reshape(std::move(a), std::array{3, 2});
+
+  EXPECT_EQ(b, check);
+}
+
+//================================================
+
+TEST(reshaped_view, array) {
+
+  nda::array<long, 1> a{1, 2, 3, 4, 5, 6};
+  nda::array<long, 2> check{{1, 2}, {3, 4}, {5, 6}};
+
+  auto v = reshaped_view(a, std::array{3, 2});
+  EXPECT_EQ(v, check);
+
+  auto v2 = reshaped_view(a(), std::array{3, 2});
+  EXPECT_EQ(v2, check);
+}
+
 /*
 //================================================
 
@@ -68,7 +96,7 @@ TEST(GroupIndices, ProdInverse) {
     A(i_, j_, k_, l_) << B(i_, k_) * C(j_, l_);
     auto M = make_matrix_view(group_indices_view(A, idx_group<0, 1>, idx_group<2, 3>));
     NDA_PRINT(M.indexmap());
-    M      = inverse(M);
+    M = inverse(M);
     nda::array<double, 4> R(A.shape());
     R(i_, j_, k_, l_) << Binv(i_, k_) * Cinv(j_, l_);
     EXPECT_ARRAY_NEAR(R, A, 5.e-15);
@@ -101,7 +129,7 @@ TEST(GroupIndices, ProdInverse) {
     A(i_, j_, k_, l_) << B(i_, k_) * C(j_, l_);
     auto M = make_matrix_view(group_indices_view(A, idx_group<2, 3>, idx_group<0, 1>));
     NDA_PRINT(M.indexmap());
-    M      = inverse(M);
+    M = inverse(M);
     nda::array<double, 4> R(A.shape());
     R(i_, j_, k_, l_) << Binv(i_, k_) * Cinv(j_, l_);
     EXPECT_ARRAY_NEAR(R, A, 5.e-15);
@@ -112,7 +140,7 @@ TEST(GroupIndices, ProdInverse) {
     A(i_, k_, j_, l_) << B(i_, k_) * C(j_, l_);
     auto M = make_matrix_view(group_indices_view(A, idx_group<0, 2>, idx_group<1, 3>));
     NDA_PRINT(M.indexmap());
-    M      = inverse(M);
+    M = inverse(M);
     nda::array<double, 4> R(A.shape());
     R(i_, k_, j_, l_) << Binv(i_, k_) * Cinv(j_, l_);
     EXPECT_ARRAY_NEAR(R, A, 5.e-15);
@@ -135,28 +163,4 @@ TEST(Array, SwapIndex) {
   EXPECT_EQ(S, B());
   EXPECT_EQ(S.shape(), B.shape());
 }
-/*
-//================================================
 
-//FIXME : move in lib
-namespace triqs::arrays {
-
-  template <typename V, int R, typename... I>
-  array_view<V, sizeof...(I)> reinterpret(array<V, R> const &a, I... index) {
-    return {{make_shape(index...)}, a.storage()};
-  }
-
-  template <typename V, int R, bool B, typename... I>
-  array_view<V, sizeof...(I)> reinterpret_array_view(array_view<V, R, B> const &a, I... index) {
-    if (!has_contiguous_data(a)) TRIQS_RUNTIME_ERROR << "reinterpretation failure : data of the view are not contiguous";
-    return {{make_shape(index...)}, a.storage()};
-  }
-
-} // namespace triqs::arrays
-
-TEST(NDA, reinterpretView) {
-  array<long, 1> A = {1, 2, 3, 4, 5, 6};
-  EXPECT_ARRAY_NEAR(reinterpret(A, 2, 3), array<long, 2>{{1, 2, 3}, {4, 5, 6}});
-}
-
-*/

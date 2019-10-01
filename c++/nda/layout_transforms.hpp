@@ -10,30 +10,74 @@ namespace nda {
 
   // First a general function that map any transform of the layout onto the basic_array_view
 
-  template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy, typename Transform>
-  auto map_layout_transform(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> a, Transform transform) {
-    auto new_idx_map    = transform(a.indexmap());
-    using new_idx_map_t = decltype(new_idx_map);
-    using layout_policy = basic_layout<encode(new_idx_map_t::static_extents), encode(new_idx_map_t::stride_order), new_idx_map_t::layout_prop>;
-    return basic_array_view<T, new_idx_map_t::rank(), layout_policy, Algebra, AccessorPolicy, OwningPolicy>{new_idx_map, a.storage()};
+  template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy, typename NewLayoutType>
+  auto map_layout_transform(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> a, NewLayoutType const &new_layout) {
+    using layout_policy = basic_layout<encode(NewLayoutType::static_extents), encode(NewLayoutType::stride_order), NewLayoutType::layout_prop>;
+    return basic_array_view<T, NewLayoutType::rank(), layout_policy, Algebra, AccessorPolicy, OwningPolicy>{new_layout, a.storage()};
   }
 
-  // Useless ?
-  //template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, typename Transform>
-  //auto map_layout_transform(basic_array<T, R, L, Algebra, ContainerPolicy> const &a, Transform transform) {
-  //return map_layout_transform(a(), transform);
-  //}
+  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, typename NewLayoutType>
+  auto map_layout_transform(basic_array<T, R, L, Algebra, ContainerPolicy> &&a, NewLayoutType const &new_layout) {
+    using layout_policy = basic_layout<encode(NewLayoutType::static_extents), encode(NewLayoutType::stride_order), NewLayoutType::layout_prop>;
+    return basic_array<T, NewLayoutType::rank(), layout_policy, Algebra, ContainerPolicy>{new_layout, std::move(a.storage())};
+  }
 
-  //template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, typename Transform>
-  //auto map_layout_transform(basic_array<T, R, L, Algebra, ContainerPolicy> &a, Transform transform) {
-  //return map_layout_transform(a(), transform);
-  //}
+  // ---------------  reshape ------------------------
+  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, size_t R2>
+  auto reshape(basic_array<T, R, L, Algebra, ContainerPolicy> &&a, std::array<long, R2> const &new_shape) {
+    using idx_map_t = typename L::template mapping<R2>;
+    EXPECTS_WITH_MESSAGE(a.size() == (std::accumulate(new_shape.cbegin(), new_shape.cend(), 1, std::multiplies<>{})),
+                         "Reshape : the new shape has a incorrect number of elements");
+    return map_layout_transform(std::move(a), idx_map_t{new_shape});
+  }
 
-  /// --------------- permuted_indices_view------------------------
+  // for convenience, call it with std::array{1,2}.... Document ?
+  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, size_t R2>
+  auto reshape(basic_array<T, R, L, Algebra, ContainerPolicy> &&a, std::array<int, R2> const &new_shape) {
+    return reshape(std::move(a), make_std_array<long>(new_shape));
+  }
+
+  // ---------------  reshaped_view ------------------------
+
+  template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy, size_t R2>
+  auto reshaped_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> a, std::array<long, R2> const &new_shape) {
+    using idx_map_t = typename L::template mapping<R2>;
+    EXPECTS_WITH_MESSAGE(a.size() == (std::accumulate(new_shape.cbegin(), new_shape.cend(), 1, std::multiplies<>{})),
+                         "Reshape : the new shape has a incorrect number of elements");
+    EXPECTS_WITH_MESSAGE(a.indexmap().is_contiguous(), "reshaped_view only works with contiguous views");
+    return map_layout_transform(a, idx_map_t{new_shape});
+  }
+
+  template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy, size_t R2>
+  auto reshaped_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> a, std::array<int, R2> const &new_shape) {
+    return reshaped_view(a, make_std_array<long>(new_shape));
+  }
+
+  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, size_t R2>
+  auto reshaped_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a, std::array<long, R2> const &new_shape) {
+    return reshaped_view(basic_array_view<T const, R, L, Algebra, default_accessor, borrowed>(a), new_shape);
+  }
+
+  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, size_t R2>
+  auto reshaped_view(basic_array<T, R, L, Algebra, ContainerPolicy> &a, std::array<long, R2> const &new_shape) {
+    return reshaped_view(basic_array_view<T, R, L, Algebra, default_accessor, borrowed>(a), new_shape);
+  }
+
+  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, size_t R2>
+  auto reshaped_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a, std::array<int, R2> const &new_shape) {
+    return reshaped_view(basic_array_view<T const, R, L, Algebra, default_accessor, borrowed>(a), new_shape);
+  }
+
+  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, size_t R2>
+  auto reshaped_view(basic_array<T, R, L, Algebra, ContainerPolicy> &a, std::array<int, R2> const &new_shape) {
+    return reshaped_view(basic_array_view<T, R, L, Algebra, default_accessor, borrowed>(a), new_shape);
+  }
+
+  // --------------- permuted_indices_view------------------------
 
   template <ARRAY_INT Permutation, typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   auto permuted_indices_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> a) {
-    return map_layout_transform(a, [](auto &&x) { return transpose<Permutation>(x); });
+    return map_layout_transform(a, transpose<Permutation>(a.indexmap()));
   }
 
   template <ARRAY_INT Permutation, typename T, int R, typename L, char Algebra, typename ContainerPolicy>
@@ -46,6 +90,7 @@ namespace nda {
     return permuted_indices_view<Permutation>(basic_array_view<T, R, L, Algebra, default_accessor, borrowed>(a));
   }
 
+  // ---------------  transpose ------------------------
   // for matrices ...
   template <typename A>
   auto transpose(A &&a) REQUIRES(is_regular_or_view_v<std::decay_t<A>> and (std::decay_t<A>::rank == 2)) {
@@ -64,7 +109,7 @@ namespace nda {
 
   template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy, typename... IntSequences>
   auto group_indices_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> a, IntSequences...) {
-    return map_layout_transform(a, [](auto &&x) { return group_indices_layout(x, IntSequences{}...); });
+    return map_layout_transform(a, group_indices_layout(a.indexmap(), IntSequences{}...));
   }
 
   template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, typename... IntSequences>
