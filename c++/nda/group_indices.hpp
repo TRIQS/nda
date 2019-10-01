@@ -32,6 +32,32 @@ namespace nda {
     return (check_one_group(grps) and ...);
   }
 
+  template <size_t R, size_t... Rs>
+  constexpr std::array<int, sizeof...(Rs)> stride_order_of_grouped_idx(std::array<int, R> const &stride_order, std::array<int, Rs> const &... grps) {
+
+    constexpr int Rout = sizeof...(Rs);
+
+    auto min_mem_pos = [&stride_order](auto &&grp) {
+      int m = Rout;
+      for (int u = 0; u < grp.size(); ++u) {
+        int v = stride_order[grp[u]];
+        if (v < m) m = v;
+      }
+      return m;
+    };
+
+    std::array<int, Rout> max_pos{min_mem_pos(grps)...};
+    // compress the number by counting how many before each of them
+    std::array<int, Rout> result = make_initialized_array<sizeof...(Rs)>(0); // FIXME : not necessary in C++20
+
+    for (int u = 0; u < Rout; ++u) {
+      for (int i = 0; i < Rout; ++i) {
+        if (max_pos[i] < max_pos[u]) ++result[u];
+      }
+    }
+    return result;
+  }
+
   //---------------------------
 
   template <int... Is>
@@ -56,7 +82,6 @@ namespace nda {
     using Idx_t = idx_map<Rank, StaticExtents, StrideOrder, LayoutProp>;
 
     static_assert(StaticExtents == 0, "Not yet implemented for static extents");
-    static_assert(Idx_t::is_stride_order_C(), "Not yet implemented for non C orders");
     static_assert(LayoutProp == layout_prop_e::contiguous, "Not yet implemented for non contiguous arrays");
 
     static_assert(check_grouping(Idx_t::stride_order, IntSequences::as_std_array...), "Improper indices in group indices");
@@ -75,6 +100,9 @@ namespace nda {
     std::array<long, new_rank> new_extents{total_len_of_a_grp(IntSequences::as_std_array)...};
     std::array<long, new_rank> new_strides{min_stride_of_a_grp(IntSequences::as_std_array)...};
 
-    return idx_map<new_rank, 0, encode(permutations::identity<new_rank>()), layout_prop_e::contiguous>{new_extents, new_strides};
+    using new_idx_map_t =
+       idx_map<new_rank, 0, encode(stride_order_of_grouped_idx(Idx_t::stride_order, IntSequences::as_std_array...)), layout_prop_e::contiguous>;
+
+    return new_idx_map_t{new_extents, new_strides};
   }
 } // namespace nda
