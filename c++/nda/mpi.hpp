@@ -23,7 +23,7 @@ namespace nda {
     MPI_Op op{};
 
     /// compute the shape of the target array
-    auto shape() const { return ref.shape(); }
+    [[nodiscard]] auto shape() const { return ref.shape(); }
   };
 
   //--------------------------------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ namespace nda {
     bool all{};
 
     /// compute the shape of the target array. WARNING : MAKES A MPI CALL.
-    auto shape() const {
+    [[nodiscard]] auto shape() const {
       auto dims      = ref.shape();
       long slow_size = dims[0];
       mpi::broadcast(slow_size, c, root);
@@ -63,7 +63,7 @@ namespace nda {
     bool all{};
 
     /// compute the shape of the target array. WARNING : MAKES A MPI CALL.
-    auto shape() const {
+    [[nodiscard]] auto shape() const {
       auto dims      = ref.shape();
       long slow_size = dims[0];
       if (!all) {

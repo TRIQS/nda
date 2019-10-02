@@ -227,7 +227,7 @@ namespace nda {
 
     //    TRIQS_CLEF_IMPLEMENT_LAZY_CALL();
 
-    constexpr auto shape() const { return l.shape(); }
+    [[nodiscard]] constexpr auto shape() const { return l.shape(); }
 
     // just for better error messages
     template <typename T>

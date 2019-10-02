@@ -72,7 +72,7 @@ namespace nda {
     constexpr view_t operator()() const { return _view; }
 
     // for test only
-    bool use_copy() const { return need_copy; }
+    [[nodiscard]] bool use_copy() const { return need_copy; }
   };
 
   template <typename A>
