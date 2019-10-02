@@ -15,7 +15,7 @@ namespace h5::array_interface {
 
     if (v.rank() == 0) return H5Screate(H5S_SCALAR);
 
-    dataspace ds = H5Screate_simple(v.slab.rank(), v.L_tot.data(), NULL);
+    dataspace ds = H5Screate_simple(v.slab.rank(), v.L_tot.data(), nullptr);
     if (!ds.is_valid()) throw std::runtime_error("Cannot create the dataset");
 
     herr_t err = H5Sselect_hyperslab(ds, H5S_SELECT_SET, v.slab.offset.data(), v.slab.stride.data(), v.slab.count.data(),
@@ -66,7 +66,7 @@ namespace h5::array_interface {
     }
 
     // dataspace for the dataset in the file
-    dataspace file_dspace = H5Screate_simple(v.slab.rank(), v.slab.count.data(), NULL);
+    dataspace file_dspace = H5Screate_simple(v.slab.rank(), v.slab.count.data(), nullptr);
 
     // create the dataset in the file
     dataset ds = H5Dcreate2(g, name.c_str(), v.ty, file_dspace, H5P_DEFAULT, cparms, H5P_DEFAULT);
@@ -112,7 +112,7 @@ namespace h5::array_interface {
 
     // need to use hsize_t here and the vector is truncated at rank
     v_t dims_out(rank);
-    H5Sget_simple_extent_dims(d_space, dims_out.data(), NULL);
+    H5Sget_simple_extent_dims(d_space, dims_out.data(), nullptr);
 
     //  get the type from the file
     datatype ty = H5Dget_type(ds);

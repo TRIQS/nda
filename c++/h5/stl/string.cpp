@@ -95,7 +95,7 @@ namespace h5 {
 
   // the dataspace (without last dim, which is the string).
   dataspace char_buf::dspace() const {
-    dataspace ds = H5Screate_simple(lengths.size() - 1, lengths.data(), NULL); // rank is size of length - 1
+    dataspace ds = H5Screate_simple(lengths.size() - 1, lengths.data(), nullptr); // rank is size of length - 1
     if (!ds.is_valid()) throw make_runtime_error("Cannot create the dataset");
     return ds;
   }
@@ -136,7 +136,7 @@ namespace h5 {
 
     int dim = H5Sget_simple_extent_ndims(d_space);
     cb_out.lengths.resize(dim);
-    H5Sget_simple_extent_dims(d_space, cb_out.lengths.data(), NULL);
+    H5Sget_simple_extent_dims(d_space, cb_out.lengths.data(), nullptr);
 
     size_t size = H5Tget_size(ty);
 
@@ -170,7 +170,7 @@ namespace h5 {
 
     int dim = H5Sget_simple_extent_ndims(d_space);
     cb_out.lengths.resize(dim);
-    H5Sget_simple_extent_dims(d_space, cb_out.lengths.data(), NULL);
+    H5Sget_simple_extent_dims(d_space, cb_out.lengths.data(), nullptr);
 
     size_t size = H5Aget_storage_size(attr);
     cb_out.lengths.push_back(size + 1); // last one is size of the string +1
