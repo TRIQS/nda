@@ -93,7 +93,7 @@ namespace h5 {
     auto err = H5Fflush(f, H5F_SCOPE_GLOBAL);
     CHECK_OR_THROW((err >= 0), "flushed core file.");
 
-    ssize_t image_len = H5Fget_file_image(f, NULL, (size_t)0);
+    ssize_t image_len = H5Fget_file_image(f, nullptr, (size_t)0);
     CHECK_OR_THROW((image_len > 0), "got image file size");
 
     std::vector<unsigned char> buf(image_len, 0);
