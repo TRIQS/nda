@@ -3,7 +3,7 @@
 
 // ==============================================================
 
-TEST(NDA, Negate_Array) {
+TEST(NDA, Negate_Array) { //NOLINT
 
   static_assert(nda::is_ndarray_v<nda::array<double, 1>>, "EEE");
 
@@ -16,7 +16,7 @@ TEST(NDA, Negate_Array) {
 
 // ----------------------------------------------------
 
-TEST(NDA, Negate_Matrix) {
+TEST(NDA, Negate_Matrix) { //NOLINT
 
   matrix<double> A{{1, 2}, {3, 4}}, B(2, 2);
   B() = 0;
@@ -26,7 +26,7 @@ TEST(NDA, Negate_Matrix) {
 
 // ==============================================================
 
-TEST(NDA, ExprTemplateMatrix) {
+TEST(NDA, ExprTemplateMatrix) { //NOLINT
 
   matrix<long> A(2, 2), B(2, 2), C(2, 2);
 
@@ -44,7 +44,7 @@ TEST(NDA, ExprTemplateMatrix) {
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 2; ++j) EXPECT_EQ(C(i, j), A(i, j) + 2 * B(i, j));
 
-  C = std::plus<matrix<long>>()(A, B);
+  C = std::plus<>{}(A, B);
 
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 2; ++j) EXPECT_EQ(C(i, j), A(i, j) + B(i, j));
@@ -57,7 +57,7 @@ TEST(NDA, ExprTemplateMatrix) {
 
 // ----------------------------------------------------
 
-TEST(NDA, ExprTemplateMatrixMult) {
+TEST(NDA, ExprTemplateMatrixMult) { //NOLINT
 
   matrix<long> A(2, 2), B(2, 2), C(2, 2);
 
@@ -90,7 +90,7 @@ TEST(NDA, ExprTemplateMatrixMult) {
 
 // ----------------------------------------------------
 
-TEST(NDA, ExprTemplateArray) {
+TEST(NDA, ExprTemplateArray) { //NOLINT
 
   static_assert(nda::get_algebra<nda::array<int, 1>> == 'A', "oops");
 
@@ -141,7 +141,7 @@ clef::placeholder<3> l_;
 //================================================
 
 // inversion tensor (by element)
-TEST(NDA, InverseTensor) {
+TEST(NDA, InverseTensor) { //NOLINT
 
   nda::array<dcomplex, 3> a(2, 2, 2);
   nda::array<dcomplex, 3> r(2, 2, 2);

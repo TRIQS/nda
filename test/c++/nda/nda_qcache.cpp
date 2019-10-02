@@ -6,7 +6,7 @@ using nda::qcache;
 
 // -------------------------------------
 
-TEST(qcache, no_copy) {
+TEST(qcache, no_copy) { //NOLINT
 
   nda::array<long, 2> a(3, 3);
   for (int i = 0; i < a.extent(0); ++i)
@@ -21,7 +21,7 @@ TEST(qcache, no_copy) {
 
 // --------------------
 
-TEST(qcache, view_no_copy) {
+TEST(qcache, view_no_copy) { //NOLINT
 
   nda::array<long, 2> a(4, 4);
   for (int i = 0; i < 4; ++i)
@@ -39,7 +39,7 @@ TEST(qcache, view_no_copy) {
 }
 // --------------------
 
-TEST(qcache, view_with_copy) {
+TEST(qcache, view_with_copy) { //NOLINT
 
   nda::array<long, 2> a(4, 4);
   for (int i = 0; i < 4; ++i)
@@ -58,7 +58,7 @@ TEST(qcache, view_with_copy) {
 
 // --------------------
 
-TEST(qcache, reflexive) {
+TEST(qcache, reflexive) { //NOLINT
 
   nda::array<long, 2> a(4, 4);
   for (int i = 0; i < 4; ++i)
@@ -89,7 +89,7 @@ TEST(qcache, reflexive) {
 
 // --------------------
 
-TEST(qcache, no_reflexive_modif_ignored) {
+TEST(qcache, no_reflexive_modif_ignored) { //NOLINT
 
   nda::array<long, 2> a(4, 4);
   for (int i = 0; i < 4; ++i)

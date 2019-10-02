@@ -132,7 +132,7 @@ TEST_F(Ref, HSRS) { // NOLINT
 
 // ---- check with something that is constructed/destructed.
 struct Number {
-  int u;
+  int u               = 9;
   static inline int c = 0;
   Number() {
     c++;
@@ -153,9 +153,9 @@ TEST_F(Ref, HR_with_cd) { // NOLINT
 
 // TO BE REWRITTEN ? NEEDED ?
 void release_sp(void *x) {
-  auto *p = (std::shared_ptr<Number> *)x;
+  auto *p = (std::shared_ptr<Number> *)x; // NOLINT
   p->reset();
-  delete p;
+  delete p; // NOLINT
 }
 
 TEST_F(Ref, HR_with_sharedPtr) { // NOLINT

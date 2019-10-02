@@ -71,17 +71,25 @@ void one_test(std::string name, T scalar) {
 }
 
 //------------------------------------
-TEST(Basic, Int) { one_test<int>("int", 1); }
+TEST(Basic, Int) { //NOLINT
+  one_test<int>("int", 1);
+}
 
-TEST(Basic, Long) { one_test<long>("long", 1); }
+TEST(Basic, Long) { //NOLINT
+  one_test<long>("long", 1);
+}
 
-TEST(Basic, Double) { one_test<double>("double", 1.5); }
+TEST(Basic, Double) { //NOLINT
+  one_test<double>("double", 1.5);
+}
 
-TEST(Basic, Dcomplex) { one_test<dcomplex>("dcomplex", (1.0 + 1.0i)); }
+TEST(Basic, Dcomplex) { //NOLINT
+  one_test<dcomplex>("dcomplex", (1.0 + 1.0i));
+}
 
 //------------------------------------
 
-TEST(Basic, GroupAttribute) {
+TEST(Basic, GroupAttribute) { //NOLINT
 
   {
     h5::file file("ess_group_attr.h5", 'w');
@@ -99,7 +107,7 @@ TEST(Basic, GroupAttribute) {
 }
 //------------------------------------
 
-TEST(Basic, Empty) {
+TEST(Basic, Empty) { //NOLINT
 
   nda::array<long, 2> a(0, 10);
   {
@@ -118,7 +126,7 @@ TEST(Basic, Empty) {
 
 //------------------------------------
 
-TEST(Basic, String) {
+TEST(Basic, String) { //NOLINT
 
   {
     h5::file file("ess_string.h5", 'w');
@@ -145,7 +153,7 @@ TEST(Basic, String) {
 
 //------------------------------------
 
-TEST(Array, H5) {
+TEST(Array, H5) { //NOLINT
 
   nda::array<long, 2> A(2, 3), B;
   nda::array<double, 2> D(2, 3), D2;
@@ -231,7 +239,7 @@ TEST(Array, H5) {
 
 // ==============================================================
 
-TEST(Vector, String) {
+TEST(Vector, String) { //NOLINT
 
   // vector of string
   std::vector<std::string> V1, V2;
@@ -253,7 +261,7 @@ TEST(Vector, String) {
 
 // ==============================================================
 
-TEST(Array, H5ArrayString) {
+TEST(Array, H5ArrayString) { //NOLINT
 
   // nda::array of string
   nda::array<std::string, 1> A(2), B;
@@ -276,7 +284,8 @@ TEST(Array, H5ArrayString) {
 // ==============================================================
 // not yet implemented
 /*
-TEST(Array, H5ArrayString2) {
+TEST(Array, H5ArrayString2) { //NOLINT
+
 
   // nda::array of string
   nda::array<std::string, 2> A(2, 2), B;
@@ -302,7 +311,8 @@ TEST(Array, H5ArrayString2) {
 // -----------------------------------------------------
 // Testing the loading of nda::array of double into complex
 // -----------------------------------------------------
-TEST(Array, H5RealIntoComplex) {
+TEST(Array, H5RealIntoComplex) { //NOLINT
+
 
   nda::array<double, 2> D(2, 3);
   nda::array<dcomplex, 2> C(2, 3);
@@ -331,7 +341,8 @@ TEST(Array, H5RealIntoComplex) {
 /*
 
    // DECIDE if we want to implement such promotion int -> double in h5 reading
-TEST(Array, Promotion) {
+TEST(Array, Promotion) { //NOLINT
+
 
   nda::array<long, 2> a(2, 3);
   nda::array<double, 2> d;
@@ -358,7 +369,8 @@ TEST(Array, Promotion) {
   }
 }
 
-TEST(Array, PromotionWrong1) {
+TEST(Array, PromotionWrong1) { //NOLINT
+
 
   nda::array<long, 2> a(2, 3);
   nda::array<int, 2> d;
@@ -386,7 +398,8 @@ TEST(Array, PromotionWrong1) {
 }
 
 
-TEST(Array, PromotionWrong) {
+TEST(Array, PromotionWrong) { //NOLINT
+
 
   nda::array<double, 2> a(2, 3);
   nda::array<long, 2> d;
@@ -419,7 +432,7 @@ TEST(Array, PromotionWrong) {
 // Testing h5 for std vector
 // -----------------------------------------------------
 
-TEST(Array, H5StdVector) {
+TEST(Array, H5StdVector) { //NOLINT
 
   std::vector<double> v{1.1, 2.2, 3.3, 4.5};
   std::vector<std::complex<double>> vc{1.1, 2.2, 3.3, 4.5};
@@ -452,7 +465,7 @@ TEST(Array, H5StdVector) {
 // Testing h5 for an nda::array of matrix
 // -----------------------------------------------------
 
-TEST(BlockMatrixH5, S1) {
+TEST(BlockMatrixH5, S1) { //NOLINT
 
   using mat_t = nda::array<double, 2>;
   nda::array<mat_t, 1> W, V{mat_t{{1, 2}, {3, 4}}, mat_t{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}}};

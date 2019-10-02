@@ -2,7 +2,7 @@
 
 // ==============================================================
 
-TEST(iterator, empty) {
+TEST(iterator, empty) { //NOLINT
   nda::array<int, 1> arr(0);
   int s = 0;
   for (auto i : arr) s += i;

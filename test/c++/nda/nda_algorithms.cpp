@@ -2,7 +2,7 @@
 
 // ==================== ANY ALL ==========================================
 
-TEST(NDA, any_all) {
+TEST(NDA, any_all) { //NOLINT
   auto nan = std::numeric_limits<double>::quiet_NaN();
 
   nda::array<double, 2> A(2, 3);
@@ -22,7 +22,7 @@ TEST(NDA, any_all) {
 
 // -----------------------------------------------------
 
-TEST(NDA, any_all_c) {
+TEST(NDA, any_all_c) { //NOLINT
   auto nan = std::numeric_limits<double>::quiet_NaN();
 
   nda::array<std::complex<double>, 2> A(2, 3);
@@ -42,7 +42,7 @@ TEST(NDA, any_all_c) {
 
 // ==============================================================
 
-TEST(NDA, Algo1) {
+TEST(NDA, Algo1) { //NOLINT
   nda::array<int, 2> A(3, 3), B(3, 3);
 
   for (int i = 0; i < 3; ++i)

@@ -4,7 +4,7 @@ using clef::placeholder;
 
 // ==============================================================
 
-TEST(NDA, LazyFill) {
+TEST(NDA, LazyFill) { //NOLINT
 
   placeholder<0> i_;
   placeholder<1> j_;
@@ -15,4 +15,3 @@ TEST(NDA, LazyFill) {
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 2; ++j) EXPECT_EQ(A(i, j), i * 8.1 + 2.31 * j);
 }
-

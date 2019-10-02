@@ -1,6 +1,6 @@
 #include "./test_common.hpp"
 
-TEST(NDA, MinMaxElement) {
+TEST(NDA, MinMaxElement) { //NOLINT
 
   nda::array<int, 2> A(3, 3), B(3, 3), C;
 
@@ -23,7 +23,7 @@ TEST(NDA, MinMaxElement) {
 
 // ==============================================================
 
-TEST(NDA, Map) {
+TEST(NDA, Map) { //NOLINT
 
   using arr_t = nda::array<double, 2>;
   arr_t A(3, 3), B(3, 3), Sqr_A(3, 3), abs_B_B(3, 3), A_10_m_B(3, 3), abs_A_10_m_B(3, 3), max_A_10_m_B(3, 3), pow_A(3, 3);
@@ -52,7 +52,3 @@ TEST(NDA, Map) {
   EXPECT_ARRAY_NEAR(arr_t(Abs(A + 10 * B)), abs_A_10_m_B);
   EXPECT_ARRAY_NEAR(arr_t(Max(A, 10 * B)), max_A_10_m_B);
 }
-
-// ==============================================================
-
-MAKE_MAIN

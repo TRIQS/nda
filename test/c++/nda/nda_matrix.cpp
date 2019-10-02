@@ -1,6 +1,6 @@
 #include "./test_common.hpp"
 
-TEST(Matrix, Create1) {
+TEST(Matrix, Create1) { //NOLINT
   nda::matrix<long> A(3, 3);
   EXPECT_EQ(A.shape(), (nda::shape_t<2>{3, 3}));
 
@@ -9,7 +9,7 @@ TEST(Matrix, Create1) {
 
 // ===============================================================
 
-TEST(Matrix, TransposeDagger) {
+TEST(Matrix, TransposeDagger) { //NOLINT
 
   const int N = 5;
 
@@ -35,4 +35,3 @@ TEST(Matrix, TransposeDagger) {
       //EXPECT_COMPLEX_NEAR(bd(i, j), std::conj(B(j, i)));
     }
 }
-

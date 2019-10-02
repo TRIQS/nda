@@ -40,13 +40,17 @@ void one_simple(std::string name, T scalar) {
 }
 //------------------------------
 
-TEST(SliceH5, Long) { one_simple<long>("long", 1); }
+TEST(SliceH5, Long) { //NOLINT
+  one_simple<long>("long", 1);
+}
 
-TEST(SliceH5, Dcomplex) { one_simple<dcomplex>("dcomplex", (1.0 + 1.0i)); }
+TEST(SliceH5, Dcomplex) { //NOLINT
+  one_simple<dcomplex>("dcomplex", (1.0 + 1.0i));
+}
 
 //------------------------------
 
-TEST(SliceH5, Systematic3d) {
+TEST(SliceH5, Systematic3d) { //NOLINT
 
   int N1 = 3, N2 = 5, N3 = 8;
   int StepMax = 3;

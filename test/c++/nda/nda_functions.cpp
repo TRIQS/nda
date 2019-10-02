@@ -10,7 +10,7 @@ using nda::idx_group;
 
 // ------------------------------------
 
-TEST(matrix, vstack) {
+TEST(matrix, vstack) { //NOLINT
 
   matrix<long> A1 = {{1, 2}, {3, 4}};
   matrix<long> A2 = {{5, 6}, {7, 8}};
@@ -27,7 +27,7 @@ TEST(matrix, vstack) {
 }
 //================================================
 
-TEST(reshape, array) {
+TEST(reshape, array) { //NOLINT
 
   nda::array<long, 1> a{1, 2, 3, 4, 5, 6};
   nda::array<long, 2> check{{1, 2}, {3, 4}, {5, 6}};
@@ -41,7 +41,7 @@ TEST(reshape, array) {
 
 //================================================
 
-TEST(reshaped_view, array) {
+TEST(reshaped_view, array) { //NOLINT
 
   nda::array<long, 1> a{1, 2, 3, 4, 5, 6};
   nda::array<long, 2> check{{1, 2}, {3, 4}, {5, 6}};
@@ -55,9 +55,11 @@ TEST(reshaped_view, array) {
 
 //================================================
 
-TEST(GroupIndices, check) { nda::check_grouping(nda::permutations::identity<4>(), std::array{0, 1}, std::array{2, 3}); }
+TEST(GroupIndices, check) { //NOLINT
+  nda::check_grouping(nda::permutations::identity<4>(), std::array{0, 1}, std::array{2, 3});
+}
 
-TEST(GroupIndices, v1) {
+TEST(GroupIndices, v1) { //NOLINT
   nda::array<int, 4> A(2, 2, 2, 2);
   A(i_, j_, k_, l_) << i_ + 10 * j_ + 100 * k_ + 1000 * l_;
   nda::group_indices_view(A(), nda::idx_group<0, 1>, nda::idx_group<2, 3>);
@@ -65,7 +67,7 @@ TEST(GroupIndices, v1) {
 
 // ------------------------------------
 
-TEST(GroupIndices, ProdInverse) {
+TEST(GroupIndices, ProdInverse) { //NOLINT
 
   // more complex : inversing a tensor product of matrices...
   nda::matrix<double> B(2, 2), C(3, 3), Binv, Cinv;
@@ -132,7 +134,7 @@ TEST(GroupIndices, ProdInverse) {
 
 //================================================
 
-TEST(Array, SwapIndex) {
+TEST(Array, SwapIndex) { //NOLINT
 
   nda::array<long, 4> A(1, 2, 3, 4);
 

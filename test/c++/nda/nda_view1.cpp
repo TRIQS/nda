@@ -2,7 +2,7 @@
 
 // -------------------------------------
 
-TEST(View, ChangeData) {
+TEST(View, ChangeData) { //NOLINT
   nda::array<long, 3> a(3, 3, 4);
 
   for (int i = 0; i < 3; ++i)
@@ -25,7 +25,7 @@ TEST(View, ChangeData) {
 
 // -------------------------------------
 
-TEST(View, OnRawPointers) {
+TEST(View, OnRawPointers) { //NOLINT
 
   std::vector<long> _data(10, 3);
 
@@ -38,7 +38,7 @@ TEST(View, OnRawPointers) {
 
 // -------------------------------------
 
-TEST(RawPointers, add) {
+TEST(RawPointers, add) { //NOLINT
 
   std::vector<long> v1(10), v2(10), vr(10, -1);
   for (int i = 0; i < 10; ++i) {

@@ -15,7 +15,8 @@ namespace nda::details {
       ++N;
     }
 
-    void f(range_tag) { ++N; }
+    void f(range_all) { ++N; }
+    void f(range) { ++N; }
     void f(ellipsis) { N += ellipsis_loss + 1; }
 
     void g(std::stringstream &fs, long key) {
