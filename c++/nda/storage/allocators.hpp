@@ -63,7 +63,7 @@ namespace nda::allocators {
     blk_t allocate(size_t s) { return {(char *)malloc(s), s}; }                    //NOLINT
     blk_t allocate_zero(size_t s) { return {(char *)calloc(s, sizeof(char)), s}; } //NOLINT
 
-    void deallocate(blk_t b) noexcept { free(b.ptr); }
+    void deallocate(blk_t b) noexcept { free(b.ptr); } // NOLINT
   };
 
   // -------------------------  Bucket allocator ----------------------------
@@ -72,21 +72,17 @@ namespace nda::allocators {
   template <int ChunkSize>
   class bucket {
     static constexpr int TotalChunkSize = 64 * ChunkSize;
-    std::unique_ptr<char[]> _start      = std::make_unique<char[]>(TotalChunkSize);
+    std::unique_ptr<char[]> _start      = std::make_unique<char[]>(TotalChunkSize); // NOLINT
     char *p                             = _start.get();
     uint64_t flags                      = uint64_t(-1);
 
     public:
-    bucket() {
 #ifdef NDA_USE_ASAN
-      __asan_poison_memory_region(p, TotalChunkSize);
+    bucket() { __asan_poison_memory_region(p, TotalChunkSize); }
+    ~bucket() { __asan_unpoison_memory_region(p, TotalChunkSize); }
+#else
+    bucket() = default;
 #endif
-    }
-    ~bucket() {
-#ifdef NDA_USE_ASAN
-      __asan_unpoison_memory_region(p, TotalChunkSize);
-#endif
-    }
     bucket(bucket const &) = delete;
     bucket(bucket &&)      = default;
     bucket &operator=(bucket const &) = delete;
@@ -114,12 +110,12 @@ namespace nda::allocators {
       flags |= (1ull << pos);
     }
 
-    bool is_full() const noexcept { return flags == 0; }
-    bool is_empty() const noexcept { return flags == uint64_t(-1); }
+    [[nodiscard]] bool is_full() const noexcept { return flags == 0; }
+    [[nodiscard]] bool is_empty() const noexcept { return flags == uint64_t(-1); }
 
-    const char *data() const noexcept { return p; }
+    [[nodiscard]] const char *data() const noexcept { return p; }
 
-    bool owns(blk_t b) const noexcept { return b.ptr >= p and b.ptr < p + TotalChunkSize; }
+    [[nodiscard]] bool owns(blk_t b) const noexcept { return b.ptr >= p and b.ptr < p + TotalChunkSize; }
   };
 
   // -------------------------  Multiple bucket allocator ----------------------------
@@ -203,7 +199,7 @@ namespace nda::allocators {
 
     blk_t allocate(size_t s) { return s <= Threshold ? small.allocate(s) : big.allocate(s); }
     void deallocate(blk_t b) noexcept { return b.s <= Threshold ? small.deallocate(b) : big.deallocate(b); }
-    bool owns(blk_t b) const noexcept { return small.owns(b) or big.owns(b); }
+    [[nodiscard]] bool owns(blk_t b) const noexcept { return small.owns(b) or big.owns(b); }
   };
 
   // -------------------------  fallback allocator ----------------------------
@@ -233,7 +229,7 @@ namespace nda::allocators {
         F::deallocate(b);
     }
 
-    bool owns(blk_t b) const noexcept { return A::owns(b) or F::owns(b); }
+    [[nodiscard]] bool owns(blk_t b) const noexcept { return A::owns(b) or F::owns(b); }
   };
 
   // -------------------------  dress allocator with leak_checking ----------------------------
@@ -256,7 +252,7 @@ namespace nda::allocators {
       }
     }
 
-    bool empty() const { return (memory_used == 0); }
+    [[nodiscard]] bool empty() const { return (memory_used == 0); }
 
     blk_t allocate(size_t s) {
       blk_t b     = A::allocate(s);
@@ -276,9 +272,9 @@ namespace nda::allocators {
       A::deallocate(b);
     }
 
-    bool owns(blk_t b) const noexcept { return A::owns(b); }
+    [[nodiscard]] bool owns(blk_t b) const noexcept { return A::owns(b); }
 
-    long get_memory_used() const noexcept { return memory_used; }
+    [[nodiscard]] long get_memory_used() const noexcept { return memory_used; }
   };
 
   // ------------------------- gather statistics for a generic allocator ----------------------------
@@ -310,7 +306,7 @@ namespace nda::allocators {
 
     void deallocate(blk_t b) noexcept { A::deallocate(b); }
 
-    bool owns(blk_t b) const noexcept { return A::owns(b); }
+    [[nodiscard]] bool owns(blk_t b) const noexcept { return A::owns(b); }
 
     auto const &histogram() const noexcept { return hist; }
   };
