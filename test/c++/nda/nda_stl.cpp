@@ -11,7 +11,7 @@ using vector_t = nda::array<T, 1>;
 // ==============================================================
 
 // We can put nda::arrays in simple containers (there are regular types)
-TEST(STL, Containers) {
+TEST(STL, Containers) { //NOLINT
 
   nda::array<long, 2> A(2, 3);
   for (int i = 0; i < 2; ++i)
@@ -27,7 +27,7 @@ TEST(STL, Containers) {
 // ==============================================================
 
 // STL algorithms works on nda::vector
-TEST(STL, Vector) {
+TEST(STL, Vector) { //NOLINT
 
   std::vector<int> V(10);
   for (unsigned int i = 0; i < 10; ++i) V[i] = 10 + i;
@@ -49,7 +49,7 @@ TEST(STL, Vector) {
 
 // ==============================================================
 
-TEST(STL, Algo1) {
+TEST(STL, Algo1) { //NOLINT
 
   nda::array<int, 1> B{1, 34, 2, 6, 23, 189, 8, 4};
 
@@ -67,7 +67,7 @@ TEST(STL, Algo1) {
 // ==============================================================
 
 // NB Old bug, no issue
-TEST(STL, Bugxxx) {
+TEST(STL, Bugxxx) { //NOLINT
 
   {
     vector_t<double> a = {1, 3, 2}, b = {2, 3, 1};
@@ -88,7 +88,3 @@ TEST(STL, Bugxxx) {
   //EXPECT_FALSE(a < b);
   //}
 }
-
-// ==============================================================
-
-MAKE_MAIN

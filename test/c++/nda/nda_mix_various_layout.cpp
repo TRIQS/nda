@@ -2,7 +2,7 @@
 
 // ==============================================================
 
-TEST(FortranC, Assign) {
+TEST(FortranC, Assign) { //NOLINT
   nda::array<long, 2, F_layout> Af(2, 3);
 
   for (int i = 0; i < 2; ++i)
@@ -24,7 +24,7 @@ TEST(FortranC, Assign) {
 
 // ===============================================================
 
-TEST(Fortran, ScalarAssign) {
+TEST(Fortran, ScalarAssign) { //NOLINT
 
   int N = 5;
   matrix<int, F_layout> a(N, N);

@@ -15,7 +15,7 @@ using nda::blas::dot;
 
 // ==============================================================
 
-TEST(Vector, Dot) {
+TEST(Vector, Dot) { //NOLINT
   nda::array<double, 1> a(2), aa(2), c(2);
   a() = 2.0;
   c() = 1;
@@ -31,7 +31,7 @@ TEST(Vector, Dot) {
 
 // ==============================================================
 
-TEST(Vector, Dot2) {
+TEST(Vector, Dot2) { //NOLINT
 
   /// Added by I. Krivenko, #122
   /// test the complex version, specially with the zdotu workaround on Os X.
@@ -85,13 +85,19 @@ void all_test_matmul() {
   test_matmul<T, F_layout, C_layout, C_layout>();
 }
 
-TEST(Matmul, Double) { all_test_matmul<double>(); }
-TEST(Matmul, Complex) { all_test_matmul<std::complex<double>>(); }
-TEST(Matmul, Int) { all_test_matmul<long>(); }
+TEST(Matmul, Double) { // NOLINT
+  all_test_matmul<double>();
+}
+TEST(Matmul, Complex) { // NOLINT
+  all_test_matmul<std::complex<double>>();
+}
+TEST(Matmul, Int) { // NOLINT
+  all_test_matmul<long>();
+}
 
 //-------------------------------------------------------------
 
-TEST(Matmul, Promotion) {
+TEST(Matmul, Promotion) { //NOLINT
   matrix<double> C, D, A = {{1.0, 2.3}, {3.1, 4.3}};
   matrix<int> B     = {{1, 2}, {3, 4}};
   matrix<double> Bd = {{1, 2}, {3, 4}};
@@ -103,7 +109,7 @@ TEST(Matmul, Promotion) {
 
 //-------------------------------------------------------------
 
-TEST(Matmul, Cache) {
+TEST(Matmul, Cache) { //NOLINT
   // testing with view for possible cache issue
 
   nda::array<std::complex<double>, 3> TMPALL(2, 2, 5);
@@ -123,7 +129,7 @@ TEST(Matmul, Cache) {
 
 //-------------------------------------------------------------
 
-TEST(Matmul, Alias) {
+TEST(Matmul, Alias) { //NOLINT
 
   nda::array<dcomplex, 3> A(10, 2, 2);
   A() = -1;
@@ -149,7 +155,7 @@ TEST(Matmul, Alias) {
 
 //-------------------------------------------------------------
 
-TEST(Determinant, Fortran) {
+TEST(Determinant, Fortran) { //NOLINT
 
   matrix<double, F_layout> W(3, 3);
   for (int i = 0; i < 3; ++i)
@@ -160,7 +166,7 @@ TEST(Determinant, Fortran) {
 
 //-------------------------------------------------------------
 
-TEST(Determinant, C) {
+TEST(Determinant, C) { //NOLINT
 
   matrix<double> W(3, 3);
   for (int i = 0; i < 3; ++i)
@@ -171,7 +177,7 @@ TEST(Determinant, C) {
 
 //-------------------------------------------------------------
 
-TEST(Inverse, F) {
+TEST(Inverse, F) { //NOLINT
 
   using matrix_t = matrix<double, F_layout>;
 
@@ -188,7 +194,7 @@ TEST(Inverse, F) {
   for (int i = 0; i < 3; ++i)
     for (int j = 0; j < 3; ++j) EXPECT_NEAR(std::abs(should_be_one(i, j)), (i == j ? 1 : 0), 1.e-13);
 
-  // FIXME MOVE THIS IN LAPACK TEST
+  // FIXME MOVE THIS IN LAPACK TEST //NOLINT
   // testing against "manual" call of bindings
   nda::array<int, 1> ipiv2(3);
   ipiv2    = 0;
@@ -201,7 +207,7 @@ TEST(Inverse, F) {
 
 //-------------------------------------------------------------
 
-TEST(Inverse, C) {
+TEST(Inverse, C) { //NOLINT
 
   using matrix_t = matrix<double, C_layout>;
 
@@ -218,7 +224,7 @@ TEST(Inverse, C) {
   for (int i = 0; i < 3; ++i)
     for (int j = 0; j < 3; ++j) EXPECT_NEAR(std::abs(should_be_one(i, j)), (i == j ? 1 : 0), 1.e-13);
 
-  // FIXME MOVE THIS IN LAPACK TEST
+  // FIXME MOVE THIS IN LAPACK TEST //NOLINT
   // testing against "manual" call of bindings
   nda::array<int, 1> ipiv2(3);
   ipiv2    = 0;
@@ -231,7 +237,7 @@ TEST(Inverse, C) {
 
 //-------------------------------------------------------------
 
-TEST(Inverse, Involution) {
+TEST(Inverse, Involution) { //NOLINT
 
   using matrix_t = matrix<double, C_layout>;
 
@@ -248,7 +254,7 @@ TEST(Inverse, Involution) {
 
 //-------------------------------------------------------------
 
-TEST(Inverse, slice) {
+TEST(Inverse, slice) { //NOLINT
 
   using matrix_t = matrix<double, C_layout>;
 
@@ -274,7 +280,7 @@ TEST(Inverse, slice) {
 
 // ==============================================================
 
-TEST(Matvecmul, Promotion) {
+TEST(Matvecmul, Promotion) { //NOLINT
 
   matrix<int> Ai   = {{1, 2}, {3, 4}};
   matrix<double> A = {{1, 2}, {3, 4}};
@@ -289,7 +295,7 @@ TEST(Matvecmul, Promotion) {
 
 //=======================================  gtsv=====================================
 
-TEST(blas_lapack, dgtsv) {
+TEST(blas_lapack, dgtsv) { //NOLINT
 
   nda::array<double, 1> DL = {4, 3, 2, 1};    // sub-diagonal elements
   nda::array<double, 1> D  = {1, 2, 3, 4, 5}; // diagonal elements
@@ -336,7 +342,7 @@ TEST(blas_lapack, dgtsv) {
 
 //---------------------------------------------------------
 
-TEST(blas_lapack, cgtsv) {
+TEST(blas_lapack, cgtsv) { //NOLINT
 
   nda::array<dcomplex, 1> DL = {-4i, -3i, -2i, -1i}; // sub-diagonal elements
   nda::array<dcomplex, 1> D  = {1, 2, 3, 4, 5};      // diagonal elements
@@ -389,7 +395,7 @@ void check_eig(M const &m, V1 const &vectors, V2 const &values) {
 
 //----------------------------------
 
-TEST(eigenelements, test1) {
+TEST(eigenelements, test1) { //NOLINT
 
   auto test = [](auto &&A) {
     auto [ev, vecs] = nda::linalg::eigenelements(make_regular(A));
@@ -450,7 +456,7 @@ TEST(eigenelements, test1) {
 /*
 // ================================================================================
 
-TEST(blas_lapack, svd) {
+TEST(blas_lapack, svd) { //NOLINT
 
   auto A = matrix<dcomplex>{{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}}};
   int M  = first_dim(A);
@@ -472,7 +478,7 @@ TEST(blas_lapack, svd) {
 
 // ================================================================================
 
-TEST(blas_lapack, gelss) {
+TEST(blas_lapack, gelss) { //NOLINT
 
   // Cf. http://www.netlib.org/lapack/explore-html/d3/d77/example___d_g_e_l_s__colmajor_8c_source.html
   auto A = matrix<dcomplex>{{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}}};

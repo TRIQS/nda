@@ -30,7 +30,7 @@ namespace nda {
   /**
   `range` mimics the Python `range`.
   */
-  class range : public range_tag {
+  class range : range_tag {
     long first_ = 0, last_ = -1, step_ = 1;
 
     public:

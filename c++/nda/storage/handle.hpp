@@ -228,13 +228,14 @@ namespace nda::mem {
   template <typename T, size_t Size>
   struct alignas(alignof(T)) handle_stack {
     private:
-    char __buffer[sizeof(T) * Size]; //
+    std::array<char, sizeof(T) * Size> __buffer; //
+    //char __buffer[sizeof(T) * Size]; //
 
     public:
     using value_type = T;
 
     //
-    T *data() const noexcept { return (T *)__buffer; }
+    T *data() const noexcept { return (T *)__buffer.data(); }
 
     T &operator[](long i) noexcept { return data()[i]; }
     T const &operator[](long i) const noexcept { return data()[i]; }

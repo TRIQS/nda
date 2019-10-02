@@ -2,7 +2,7 @@
 
 // ====================== VIEW ========================================
 
-TEST(NDA, ViewBasic) {
+TEST(NDA, ViewBasic) { //NOLINT
   nda::array<long, 3> a(3, 3, 4);
 
   for (int i = 0; i < 3; ++i)
@@ -20,7 +20,7 @@ TEST(NDA, ViewBasic) {
 }
 // ----------------------------------
 
-TEST(NDA, Ellipsis) {
+TEST(NDA, Ellipsis) { //NOLINT
   nda::array<long, 3> A(2, 3, 4);
   A() = 7;
 
@@ -43,7 +43,7 @@ auto sum0(ArrayType const &A) {
   return res;
 }
 
-TEST(NDA, Ellipsis2) {
+TEST(NDA, Ellipsis2) { //NOLINT
   nda::array<double, 2> A(5, 2);
   A() = 2;
   nda::array<double, 3> B(5, 2, 3);
@@ -54,7 +54,7 @@ TEST(NDA, Ellipsis2) {
 
 // ==============================================================
 
-TEST(NDA, ConstView) {
+TEST(NDA, ConstView) { //NOLINT
 
   nda::array<long, 2> A(2, 3);
   A() = 98;
@@ -80,7 +80,7 @@ TEST(NDA, ConstView) {
 
 // ==============================================================
 
-TEST(NDA, Bug2) {
+TEST(NDA, Bug2) { //NOLINT
 
   nda::array<double, 3> A(10, 2, 2);
   A() = 0;
@@ -102,7 +102,7 @@ TEST(NDA, Bug2) {
 
 // ==============================================================
 
-TEST(NDA, View) {
+TEST(NDA, View) { //NOLINT
 
   nda::array<long, 2> A(2, 3);
   for (int i = 0; i < 2; ++i)
@@ -131,7 +131,7 @@ TEST(NDA, View) {
 
 // ==============================================================
 
-TEST(NDA, View3) {
+TEST(NDA, View3) { //NOLINT
 
   using nda::encode;
   //-------------
@@ -183,7 +183,7 @@ TEST(NDA, View3) {
 // ==============================================================
 
 // old issue
-TEST(NDA, IssueXXX) {
+TEST(NDA, IssueXXX) { //NOLINT
 
   nda::array<double, 3> A(10, 2, 2);
   A() = 0;

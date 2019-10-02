@@ -6,7 +6,7 @@
 #endif
 #endif
 
-TEST(Array, Poison) {
+TEST(Array, Poison) { //NOLINT
 
 #if defined(__has_feature)
 #if __has_feature(address_sanitizer)

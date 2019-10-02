@@ -80,16 +80,10 @@ namespace nda::lapack {
 
     using T  = typename M_t::value_type;
     int info = 0;
-    T work1[2];
-#if defined(__has_feature)
-#if __has_feature(memory_sanitizer)
-    work1[0] = 0;
-    work1[1] = 0;
-#endif
-#endif
+    std::array<T, 2> work1{0, 0}; // always init for MSAN and clang-tidy ...
 
     // first call to get the optimal lwork
-    f77::getri(get_n_rows(m), m.data_start(), get_ld(m), ipiv.data_start(), work1, -1, info);
+    f77::getri(get_n_rows(m), m.data_start(), get_ld(m), ipiv.data_start(), work1.data(), -1, info);
     int lwork;
     if constexpr (is_complex_v<T>)
       lwork = std::round(std::real(work1[0])) + 1;

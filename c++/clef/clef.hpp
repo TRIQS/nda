@@ -88,7 +88,7 @@ namespace clef {
     static_assert((N >= 0), "Invalid placeholder range. Placeholder parameters is to [0,15] for each type of placeholder.");
     static constexpr int index = N;
     template <typename RHS>
-    pair<N, RHS> operator=(RHS &&rhs) const {
+    pair<N, RHS> operator=(RHS &&rhs) const { // NOLINT It is correct here to return a pair, not the _ph& as suggested by clang-tidy
       return {std::forward<RHS>(rhs)};
     }
     template <typename... T>
@@ -397,14 +397,14 @@ namespace clef {
     static constexpr bool is_lazy = (evaluator<Childs, Pairs...>::is_lazy or ...);
 
     template <size_t... Is>
-    FORCEINLINE decltype(auto) eval_impl(std::index_sequence<Is...>, expr<Tag, Childs...> const &ex, Pairs const &... pairs) const {
+    [[nodiscard]] FORCEINLINE decltype(auto) eval_impl(std::index_sequence<Is...>, expr<Tag, Childs...> const &ex, Pairs const &... pairs) const {
       //  if constexpr(is_lazy)
       // return {Tag(), eval(std::get<Is>(ex.childs), pairs...)...};
 
       return op_dispatch<Tag>(std::integral_constant<bool, is_lazy>{}, eval(std::get<Is>(ex.childs), pairs...)...);
     }
 
-    FORCEINLINE decltype(auto) operator()(expr<Tag, Childs...> const &ex, Pairs const &... pairs) const {
+    [[nodiscard]] FORCEINLINE decltype(auto) operator()(expr<Tag, Childs...> const &ex, Pairs const &... pairs) const {
       return eval_impl(std::make_index_sequence<sizeof...(Childs)>(), ex, pairs...);
     }
   };

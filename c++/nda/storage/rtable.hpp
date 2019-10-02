@@ -57,11 +57,13 @@ namespace nda::mem {
 
     rtable_t(long size = 10) : _refcounts(size, uint16_t{0}) {}
 
-    ~rtable_t() {
 #ifdef NDA_DEBUG
+    ~rtable_t() {
       EXPECTS(std::all_of(_refcounts.begin(), _refcounts.end(), [](int_t c) { return c == 0; }));
-#endif
     }
+#else
+    ~rtable_t() = default;
+#endif
 
     // Initialize the next empty counter (to 1) and return the id
     long get() noexcept {

@@ -1,6 +1,6 @@
 #include "./test_common.hpp"
 
-TEST(NDA, compound_ops) {
+TEST(NDA, compound_ops) { //NOLINT
 
   nda::array<long, 2> A(2, 3);
 
@@ -22,7 +22,7 @@ TEST(NDA, compound_ops) {
 
 // ==============================================================
 
-TEST(Vector, Ops) {
+TEST(Vector, Ops) { //NOLINT
 
   nda::array<double, 1> V{1, 2, 3, 4, 5};
 
@@ -38,7 +38,7 @@ TEST(Vector, Ops) {
 
 // ==============================================================
 
-TEST(Vector, Ops2) {
+TEST(Vector, Ops2) { //NOLINT
 
   nda::array<double, 1> V{1, 2, 3, 4, 5};
   auto W = V;

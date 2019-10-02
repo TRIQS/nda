@@ -9,7 +9,7 @@ using nda::F_layout;
 
 //----------------------------
 
-TEST(BLAS, gemm) {
+TEST(BLAS, gemm) { //NOLINT
 
   nda::matrix<double> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3(2, 2);
   M3 = 0;
@@ -22,7 +22,7 @@ TEST(BLAS, gemm) {
 }
 
 //----------------------------
-TEST(BLAS, gemmF) {
+TEST(BLAS, gemmF) { //NOLINT
 
   nda::matrix<double, F_layout> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3(2, 2);
   M3 = 0;
@@ -37,7 +37,7 @@ TEST(BLAS, gemmF) {
 }
 
 //----------------------------
-TEST(BLAS, zgemm) {
+TEST(BLAS, zgemm) { //NOLINT
 
   nda::matrix<dcomplex> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3(2, 2);
   M3 = 0;
@@ -50,7 +50,7 @@ TEST(BLAS, zgemm) {
 }
 
 //----------------------------
-TEST(BLAS, gemmCF) {
+TEST(BLAS, gemmCF) { //NOLINT
   nda::matrix<dcomplex, F_layout> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3(2, 2);
   M3 = 0;
 
@@ -63,7 +63,7 @@ TEST(BLAS, gemmCF) {
 
 // ==============================================================
 
-TEST(BLAS, gemv) {
+TEST(BLAS, gemv) { //NOLINT
 
   nda::matrix<double, F_layout> A(5, 5), Ac(5, 5);
   nda::array<double, 1> MC(5), MB(5);
@@ -93,7 +93,7 @@ TEST(BLAS, gemv) {
 }
 
 //----------------------------
-TEST(BLAS, ger) {
+TEST(BLAS, ger) { //NOLINT
 
   nda::matrix<double, F_layout> M(2, 2);
   M = 0;
@@ -104,7 +104,7 @@ TEST(BLAS, ger) {
 }
 
 //----------------------------
-TEST(BLAS, dot) {
+TEST(BLAS, dot) { //NOLINT
 
   nda::array<double, 1> a{1, 2, 3, 4, 5};
   nda::array<double, 1> b{10, 20, 30, 40, 50};
@@ -113,7 +113,7 @@ TEST(BLAS, dot) {
 }
 
 //----------------------------
-TEST(BLAS, dotc1) {
+TEST(BLAS, dotc1) { //NOLINT
 
   nda::array<dcomplex, 1> a{1, 2, 3};
   nda::array<dcomplex, 1> b{10, 20, 30};
@@ -124,11 +124,10 @@ TEST(BLAS, dotc1) {
 }
 
 //----------------------------
-TEST(BLAS, dotc2) {
+TEST(BLAS, dotc2) { //NOLINT
 
   nda::array<double, 1> a{1, 2, 3, 4, 5};
   nda::array<double, 1> b{10, 20, 30, 40, 50};
 
   EXPECT_COMPLEX_NEAR((nda::blas::dotc(a, b)), (10 + 2 * 20 + 3 * 30 + 4 * 40 + 5 * 50), 1.e-14);
 }
-

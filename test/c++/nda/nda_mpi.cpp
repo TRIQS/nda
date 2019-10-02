@@ -15,7 +15,7 @@ std::pair<std::ptrdiff_t, std::ptrdiff_t> chunk_range(std::ptrdiff_t start, std:
     return {start + n_large_nodes + rank * chunk_size, start + n_large_nodes + (rank + 1) * chunk_size};
 }
 
-TEST(Arrays, MPI) {
+TEST(Arrays, MPI) { //NOLINT
 
   mpi::communicator world;
 
@@ -63,7 +63,7 @@ TEST(Arrays, MPI) {
 // --------------------------------------
 
 // test reduce MAX, MIN
-TEST(Arrays, MPIReduceMAX) {
+TEST(Arrays, MPIReduceMAX) { //NOLINT
 
   mpi::communicator world;
   using arr_t = nda::array<int, 1>;
@@ -95,7 +95,7 @@ TEST(Arrays, MPIReduceMAX) {
 // --------------------------------------
 
 // test transposed matrix broadcast
-TEST(Arrays, matrix_transpose_bcast) {
+TEST(Arrays, matrix_transpose_bcast) { //NOLINT
 
   mpi::communicator world;
 
@@ -113,7 +113,7 @@ TEST(Arrays, matrix_transpose_bcast) {
 // --------------------------------------
 
 // test transposed array broadcast
-TEST(Arrays, array_transpose_bcast) {
+TEST(Arrays, array_transpose_bcast) { //NOLINT
 
   mpi::communicator world;
 

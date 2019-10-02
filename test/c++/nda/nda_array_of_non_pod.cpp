@@ -17,7 +17,7 @@ struct A {
 
 //---------------------
 
-TEST(NDA, NonDefaultConstructible) {
+TEST(NDA, NonDefaultConstructible) { //NOLINT
 
   nda::array<A, 2> a({2, 2}, [](int i, int j) { return i + 10 * j; });
   // nda::array<A,2> a( {2,2}, [](int i, int j) { return i+ 10*j;});
@@ -37,7 +37,7 @@ TEST(NDA, NonDefaultConstructible) {
 
 // ==============================================================
 
-TEST(NDA, array_of_non_copyable) {
+TEST(NDA, array_of_non_copyable) { //NOLINT
   std::vector<nda::array<A, 1>> a(2);
   a.emplace_back(2);
 }
@@ -51,7 +51,7 @@ struct S {
   S(double x, double y, int k) : x(x), y(y), i(k) {}
 };
 
-TEST(NDA, non_numeric1) {
+TEST(NDA, non_numeric1) { //NOLINT
 
   nda::array<S, 2> A(2, 2);
 
@@ -68,7 +68,7 @@ TEST(NDA, non_numeric1) {
 
 // ---------------------------------------
 
-TEST(NDA, array_of_array) {
+TEST(NDA, array_of_array) { //NOLINT
 
   nda::array<nda::array<int, 1>, 2> a(2, 2);
   nda::array<int, 1> a0{1, 2, 3};
@@ -80,7 +80,7 @@ TEST(NDA, array_of_array) {
 
 // ---------------------------------------
 
-TEST(NDA, matrix_of_function) {
+TEST(NDA, matrix_of_function) { //NOLINT
 
   nda::array<std::function<double(double)>, 2> F(2, 2);
 
