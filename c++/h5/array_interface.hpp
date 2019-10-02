@@ -1,4 +1,5 @@
 #pragma once
+#include <utility>
 #include <vector>
 #include <string>
 #include "./group.hpp"
@@ -14,7 +15,7 @@ namespace h5::array_interface {
     bool has_complex_attribute;
 
     //
-    int rank() const { return lengths.size(); }
+    [[nodiscard]] int rank() const { return lengths.size(); }
   };
 
   // Store HDF5 hyperslab info, as in HDF5 manual
@@ -36,7 +37,7 @@ namespace h5::array_interface {
     }
 
     //
-    int rank() const { return count.size(); }
+    [[nodiscard]] int rank() const { return count.size(); }
   };
 
   // Stores a view of an array.
@@ -50,11 +51,11 @@ namespace h5::array_interface {
 
     // Constructor : unique to enforce the proper sizes of array
     h5_array_view(datatype ty, void *start, int rank, bool is_complex)
-       : ty(ty), start(start), L_tot(rank + is_complex), slab(rank, is_complex), is_complex(is_complex) {
+       : ty(std::move(ty)), start(start), L_tot(rank + is_complex), slab(rank, is_complex), is_complex(is_complex) {
       if (is_complex) L_tot[rank] = 2;
     }
 
-    int rank() const { return slab.rank(); }
+    [[nodiscard]] int rank() const { return slab.rank(); }
   };
 
   //------------------------------------------------

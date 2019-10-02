@@ -30,7 +30,7 @@ namespace h5 {
     file(std::string const &name, char mode) : file(name.c_str(), mode) {}
 
     /// Name of the file
-    std::string name() const;
+    [[nodiscard]] std::string name() const;
 
     /// Flush the file
     void flush();
@@ -58,7 +58,7 @@ namespace h5 {
     memory_file(std::vector<unsigned char> const &buf);
 
     /// Get a copy of the buffer
-    std::vector<unsigned char> as_buffer() const;
+    [[nodiscard]] std::vector<unsigned char> as_buffer() const;
   };
 
 } // namespace h5

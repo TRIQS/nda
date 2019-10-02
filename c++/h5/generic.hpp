@@ -50,9 +50,9 @@ namespace h5 {
   inline bool h5_try_read(group g, std::string key, T &x) {
     if (g.has_key(key)) {
       h5_read(g, key, x);
-      return 1;
+      return true;
     }
-    return 0;
+    return false;
   }
 
 } // namespace h5

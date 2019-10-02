@@ -81,10 +81,10 @@ namespace h5 {
     v_t lengths;
 
     // the string datatype
-    datatype dtype() const;
+    [[nodiscard]] datatype dtype() const;
 
     // the dataspace (without last dim, which is the string).
-    dataspace dspace() const;
+    [[nodiscard]] dataspace dspace() const;
   };
 
   // read/write for char_buf

@@ -77,7 +77,7 @@ namespace h5 {
     operator hid_t() const { return id; }
 
     /// Ensure the id is valid (by H5Iis_valid).
-    bool is_valid() const;
+    [[nodiscard]] bool is_valid() const;
   };
 
   //-----------------------------
