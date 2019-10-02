@@ -143,21 +143,21 @@ namespace h5 {
 
   std::vector<std::string> group::get_all_subgroup_names() const {
     std::vector<std::string> grp_name;
-    int r = H5Literate(::hid_t(id), H5_INDEX_NAME, H5_ITER_NATIVE, NULL, get_group_elements_name_grp, static_cast<void *>(&grp_name));
+    int r = H5Literate(::hid_t(id), H5_INDEX_NAME, H5_ITER_NATIVE, nullptr, get_group_elements_name_grp, static_cast<void *>(&grp_name));
     if (r != 0) throw std::runtime_error("Iteration over subgroups of group " + name() + "failed");
     return grp_name;
   }
 
   std::vector<std::string> group::get_all_dataset_names() const {
     std::vector<std::string> ds_name;
-    int r = H5Literate(::hid_t(id), H5_INDEX_NAME, H5_ITER_NATIVE, NULL, get_group_elements_name_ds, static_cast<void *>(&ds_name));
+    int r = H5Literate(::hid_t(id), H5_INDEX_NAME, H5_ITER_NATIVE, nullptr, get_group_elements_name_ds, static_cast<void *>(&ds_name));
     if (r != 0) throw std::runtime_error("Iteration over datasets of group " + name() + "failed");
     return ds_name;
   }
 
   std::vector<std::string> group::get_all_subgroup_dataset_names() const {
     std::vector<std::string> ds_name;
-    int r = H5Literate(::hid_t(id), H5_INDEX_NAME, H5_ITER_NATIVE, NULL, get_group_elements_name_ds_grp, static_cast<void *>(&ds_name));
+    int r = H5Literate(::hid_t(id), H5_INDEX_NAME, H5_ITER_NATIVE, nullptr, get_group_elements_name_ds_grp, static_cast<void *>(&ds_name));
     if (r != 0) throw std::runtime_error("Iteration over datasets of group " + name() + "failed");
     return ds_name;
   }

@@ -46,7 +46,7 @@ namespace h5 {
   class h5_object {
 
     protected:
-    hid_t id = 0;
+    hid_t id = 0; //NOLINT Ok, I want a protected variable ...
 
     public:
     /// make an h5_object from a simple borrowed ref (simply inc. the ref).
@@ -62,7 +62,10 @@ namespace h5 {
     h5_object(h5_object &&x) noexcept : id(x.id) { x.id = 0; }
 
     /// Copy the reference and incref
-    h5_object &operator=(h5_object const &x) { return operator=(h5_object(x)); }
+    h5_object &operator=(h5_object const &x) {
+      operator=(h5_object(x));
+      return *this;
+    }
 
     /// Steals the ref.
     h5_object &operator=(h5_object &&x) noexcept;

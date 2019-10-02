@@ -23,7 +23,7 @@ void one_test(std::string name, T scalar) {
   {
     h5::file file(filename, 'w');
     h5::group top(file);
-    top.create_group("G");
+    auto G1 = top.create_group("G");
 
     h5_write(top, "A", a);
     h5_write(top, "B", b);
@@ -64,7 +64,7 @@ void one_test(std::string name, T scalar) {
     // read the attributes of A
     auto id     = top.open_dataset("A");
     int att1    = h5::h5_read_attribute<int>(id, "AttrOfA1");
-    double att2 = h5::h5_read_attribute<double>(id, "AttrOfA2");
+    auto att2   = h5::h5_read_attribute<double>(id, "AttrOfA2");
     EXPECT_EQ(att1, 12);
     EXPECT_EQ(att2, 8.9);
   }
@@ -212,7 +212,7 @@ TEST(Array, H5) { //NOLINT
     // read the attributes of A
     auto id     = top.open_dataset("A");
     int att1    = h5::h5_read_attribute<int>(id, "AttrOfA1");
-    double att2 = h5::h5_read_attribute<double>(id, "AttrOfA2");
+    auto att2   = h5::h5_read_attribute<double>(id, "AttrOfA2");
 
     EXPECT_EQ(att1, 12);
     EXPECT_EQ(att2, 8.9);
@@ -243,8 +243,8 @@ TEST(Vector, String) { //NOLINT
 
   // vector of string
   std::vector<std::string> V1, V2;
-  V1.push_back("abcd");
-  V1.push_back("de");
+  V1.emplace_back("abcd");
+  V1.emplace_back("de");
 
   // writing
   h5::file file("test_nda::array_string.h5", 'w');
