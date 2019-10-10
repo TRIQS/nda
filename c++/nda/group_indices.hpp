@@ -88,8 +88,8 @@ namespace nda {
 
     /// Now compute the new lengths and strides.
     auto total_len_of_a_grp = [&idxm](auto &&grp) {
-      auto l = std::accumulate(grp.begin(), grp.end(), 1, [&idxm](long l, long u) { return l * idxm.lengths()[u]; });
-      return l;
+      auto ll = std::accumulate(grp.begin(), grp.end(), 1, [&idxm](long l, long u) { return l * idxm.lengths()[u]; });
+      return ll;
     };
 
     auto min_stride_of_a_grp = [&idxm](auto &&grp) {
