@@ -261,18 +261,18 @@ namespace clef {
     FORCEINLINE decltype(auto) operator()(L &&l, R &&r) const {                                                                                      \
       return _cl(std::forward<L>(l)) OP _cl(std::forward<R>(r));                                                                                     \
     }                                                                                                                                                \
-  };
+  }
 
   // clang-format off
-  CLEF_OPERATION(plus, +)
-  CLEF_OPERATION(minus, -)
-  CLEF_OPERATION(multiplies, *)
-  CLEF_OPERATION(divides, /)
-  CLEF_OPERATION(greater, >)
-  CLEF_OPERATION(less, <)
-  CLEF_OPERATION(leq, <=)
-  CLEF_OPERATION(geq, >=)
-  CLEF_OPERATION(eq, ==)
+  CLEF_OPERATION(plus, +);
+  CLEF_OPERATION(minus, -);
+  CLEF_OPERATION(multiplies, *);
+  CLEF_OPERATION(divides, /);
+  CLEF_OPERATION(greater, >);
+  CLEF_OPERATION(less, <);
+  CLEF_OPERATION(leq, <=);
+  CLEF_OPERATION(geq, >=);
+  CLEF_OPERATION(eq, ==);
   // clang-format on
 #undef CLEF_OPERATION
 
@@ -293,7 +293,7 @@ namespace clef {
     FORCEINLINE decltype(auto) operator()(L &&l) const {                                                                                             \
       return OP _cl(std::forward<L>(l));                                                                                                             \
     }                                                                                                                                                \
-  };
+  }
 
   CLEF_OPERATION(unaryplus, +);
   CLEF_OPERATION(negate, -);

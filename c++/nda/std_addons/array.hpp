@@ -2,6 +2,7 @@
 #define TRIQS_GUARD_STD_ADDONS_ARRAY_H
 #include <array>
 #include <utility>
+#include <vector>
 
 // missing part of std ...
 namespace nda {
@@ -14,7 +15,7 @@ namespace nda {
   /**
    * @tparam T  T must be constructible from U
    * @tparam U
-   * @tparam R 
+   * @tparam R
    * make a std::array<T, R> initialized to v
    */
   template <typename T, typename U, size_t R>
@@ -26,7 +27,7 @@ namespace nda {
   }
 
   /**
-   * @tparam R 
+   * @tparam R
    * @tparam T
    * make a std::array<T, R> initialized to v
    */
@@ -36,7 +37,7 @@ namespace nda {
   }
 
   /**
-  * Convert a std::array to a 
+  * Convert a std::array to a
   * @tparam T
   * @param a std::array to convert
   */
@@ -121,8 +122,8 @@ namespace nda {
   /**
    * Join two arrays
    * @tparam T
-   * @param a1 
-   * @param a2 
+   * @param a1
+   * @param a2
    * @return the concatenation of [a1, a2]
    */
   template <typename T, size_t R1, size_t R2>
@@ -137,8 +138,8 @@ namespace nda {
    * Dot product of two arrays.
    * @tparam T
    * @tparam U
-   * @param a1 
-   * @param a2 
+   * @param a1
+   * @param a2
    * @return The dot product to whatever type T*U is promoted to. If R = 0, return T{}
    */
   // ------------- dot --------------------------------------
