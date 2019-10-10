@@ -130,14 +130,14 @@ struct p_s_t {
 }
 
 // -----------------------------------------------------------------------
-BENCH_ABC_1d(ex_tmp);
-BENCH_ABC_1d(ex_tmp_manual_loop);
-BENCH_ABC_1d(for_loop);
-BENCH_ABC_1d(pointers);
-BENCH_ABC_1d(pointers2);
-BENCH_ABC_1d(pointers2_withstride);
-BENCH_ABC_1d(pointers2_withstrideconst);
-BENCH_ABC_1d(pointers2_withstrideconst_view);
-BENCH_ABC_1d(pointers2_withstrideconst_with_struct);
-//BENCH_ABC_1d(pointers2_step2);
-BENCH_ABC_1d(pointers2_withiterator);
+BENCH_ABC_1d(ex_tmp)
+BENCH_ABC_1d(ex_tmp_manual_loop)
+BENCH_ABC_1d(for_loop)
+BENCH_ABC_1d(pointers)
+BENCH_ABC_1d(pointers2)
+BENCH_ABC_1d(pointers2_withstride)
+BENCH_ABC_1d(pointers2_withstrideconst)
+BENCH_ABC_1d(pointers2_withstrideconst_view)
+BENCH_ABC_1d(pointers2_withstrideconst_with_struct)
+//BENCH_ABC_1d(pointers2_step2)
+BENCH_ABC_1d(pointers2_withiterator)

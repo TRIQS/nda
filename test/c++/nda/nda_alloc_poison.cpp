@@ -21,5 +21,3 @@ TEST(Array, Poison) { //NOLINT
 #endif
 #endif
 }
-
-MAKE_MAIN;

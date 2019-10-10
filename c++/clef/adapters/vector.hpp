@@ -17,6 +17,6 @@ namespace clef {
   template <typename T, typename Fnt>
   void clef_auto_assign_subscript(std::vector<T> &v, Fnt f) {
     for (size_t i = 0; i < v.size(); ++i) clef_auto_assign__std_vector_impl(v[i], f(i));
-  };
+  }
 
 } // namespace clef

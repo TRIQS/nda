@@ -68,7 +68,7 @@ class ABC_3d : public benchmark::Fixture {
   a(i_, j_, k_) << i_ - j_ + N * k_;
 }
 
-BENCH_ABC_1d(simple_loop1d);
-BENCH_ABC_1d(with_clef1d);
-BENCH_ABC_3d(simple_loop3d);
-BENCH_ABC_3d(with_clef3d);
+BENCH_ABC_1d(simple_loop1d)
+BENCH_ABC_1d(with_clef1d)
+BENCH_ABC_3d(simple_loop3d)
+BENCH_ABC_3d(with_clef3d)

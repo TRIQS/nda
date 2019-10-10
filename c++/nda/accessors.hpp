@@ -14,7 +14,7 @@ namespace nda {
       using reference    = T &;
       static reference access(pointer p, std::ptrdiff_t i) noexcept {
 	EXPECTS(p != nullptr); return p[i]; }
-      static pointer offset(pointer p, std::ptrdiff_t i) noexcept { return p + i; }
+      static T * offset(pointer p, std::ptrdiff_t i) noexcept { return p + i; }
     };
   };
 
@@ -26,7 +26,7 @@ namespace nda {
       using pointer      = T *__restrict;
       using reference    = T &;
       static reference access(pointer p, std::ptrdiff_t i) noexcept { return p[i]; }
-      static pointer offset(pointer p, std::ptrdiff_t i) noexcept { return p + i; }
+      static T * offset(pointer p, std::ptrdiff_t i) noexcept { return p + i; }
     };
   };
   // atomic ?
