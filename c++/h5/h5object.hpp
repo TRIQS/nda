@@ -98,4 +98,4 @@ namespace h5 {
   // A function to get the name of a datatype in clear (for error messages)
   std::string get_name_of_h5_type(datatype ty);
 
-}; // namespace h5
+} // namespace h5

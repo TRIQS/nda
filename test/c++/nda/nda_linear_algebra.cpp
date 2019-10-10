@@ -397,9 +397,9 @@ void check_eig(M const &m, V1 const &vectors, V2 const &values) {
 
 TEST(eigenelements, test1) { //NOLINT
 
-  auto test = [](auto &&A) {
-    auto [ev, vecs] = nda::linalg::eigenelements(make_regular(A));
-    check_eig(A, vecs, ev);
+  auto test = [](auto &&M) {
+    auto [ev, vecs] = nda::linalg::eigenelements(make_regular(M));
+    check_eig(M, vecs, ev);
   };
 
   {
@@ -428,28 +428,28 @@ TEST(eigenelements, test1) { //NOLINT
 
     test(A);
   }
-  { // the complex case*/
-
-    matrix<dcomplex> M(2, 2);
-
-    M(0, 0) = 1;
-    M(0, 1) = 1.0i;
-    M(1, 0) = -1.0i;
-    M(1, 1) = 2;
-
-    test(M);
-  }
-
   { // the complex case
 
-    matrix<dcomplex, F_layout> M(2, 2);
+    matrix<dcomplex> B(2, 2);
 
-    M(0, 0) = 1;
-    M(0, 1) = 1.0i;
-    M(1, 0) = -1.0i;
-    M(1, 1) = 2;
+    B(0, 0) = 1;
+    B(0, 1) = 1.0i;
+    B(1, 0) = -1.0i;
+    B(1, 1) = 2;
 
-    test(M);
+    test(B);
+  }
+
+  { // the complex case with fortran layout
+
+    matrix<dcomplex, F_layout> C(2, 2);
+
+    C(0, 0) = 1;
+    C(0, 1) = 1.0i;
+    C(1, 0) = -1.0i;
+    C(1, 1) = 2;
+
+    test(C);
   }
 }
 

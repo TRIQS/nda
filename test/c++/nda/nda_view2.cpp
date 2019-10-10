@@ -63,7 +63,7 @@ TEST(NDA, ConstView) { //NOLINT
 
   f2(A());
 
-  nda::array_const_view<long, 2> Vc = A();
+  nda::array_const_view<long, 2>{A()};
 
 //#define SHOULD_NOT_COMPILE
 #ifdef SHOULD_NOT_COMPILE

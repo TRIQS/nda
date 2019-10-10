@@ -87,7 +87,7 @@ TEST(NDA, matrix_of_function) { //NOLINT
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 2; ++j) {
       auto s  = i + j;
-      F(i, j) = [s](int i) { return i + s; };
+      F(i, j) = [s](int k) { return k + s; };
     }
 
   for (int i = 0; i < 2; ++i)

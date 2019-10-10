@@ -105,13 +105,17 @@ typedef struct {
 
 #endif
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
+#endif
 
 lapack_complex_float lapack_make_complex_float(float re, float im);
 lapack_complex_double lapack_make_complex_double(double re, double im);
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 #endif
 

@@ -22,7 +22,7 @@ namespace h5 {
   template <>                                                                                                                                        \
   struct hdf5_format_impl<X> {                                                                                                                       \
     static std::string invoke() { return H5_AS_STRING(Y); }                                                                                          \
-  };
+  }
 
 #define H5_SPECIALIZE_FORMAT(X) H5_SPECIALIZE_FORMAT2(X, X)
 

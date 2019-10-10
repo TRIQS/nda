@@ -78,7 +78,7 @@ namespace h5 {
      * @param key  The name of the subgroup. If empty, return this group.
      * @param delete_if_exists  Unlink the group if it exists
      */
-    [[nodiscard]] group create_group(std::string const &key, bool delete_if_exists = true) const;
+    group create_group(std::string const &key, bool delete_if_exists = true) const; // NOLINT
 
     /**
      * Open a existing DataSet in the group.

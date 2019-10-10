@@ -40,24 +40,24 @@ namespace nda::python {
   inline long npy_type<C>() {                                                                                                                        \
     return P;                                                                                                                                        \
   }
-  CONVERT(bool, NPY_BOOL);
-  CONVERT(char, NPY_STRING);
-  CONVERT(signed char, NPY_BYTE);
-  CONVERT(unsigned char, NPY_UBYTE);
-  CONVERT(short, NPY_SHORT);
-  CONVERT(unsigned short, NPY_USHORT);
-  CONVERT(int, NPY_INT);
-  CONVERT(unsigned int, NPY_UINT);
-  CONVERT(long, NPY_LONG);
-  CONVERT(unsigned long, NPY_ULONG);
-  CONVERT(long long, NPY_LONGLONG);
-  CONVERT(unsigned long long, NPY_ULONGLONG);
-  CONVERT(float, NPY_FLOAT);
-  CONVERT(double, NPY_DOUBLE);
-  CONVERT(long double, NPY_LONGDOUBLE);
-  CONVERT(std::complex<float>, NPY_CFLOAT);
-  CONVERT(std::complex<double>, NPY_CDOUBLE);
-  CONVERT(std::complex<long double>, NPY_CLONGDOUBLE);
+  CONVERT(bool, NPY_BOOL)
+  CONVERT(char, NPY_STRING)
+  CONVERT(signed char, NPY_BYTE)
+  CONVERT(unsigned char, NPY_UBYTE)
+  CONVERT(short, NPY_SHORT)
+  CONVERT(unsigned short, NPY_USHORT)
+  CONVERT(int, NPY_INT)
+  CONVERT(unsigned int, NPY_UINT)
+  CONVERT(long, NPY_LONG)
+  CONVERT(unsigned long, NPY_ULONG)
+  CONVERT(long long, NPY_LONGLONG)
+  CONVERT(unsigned long long, NPY_ULONGLONG)
+  CONVERT(float, NPY_FLOAT)
+  CONVERT(double, NPY_DOUBLE)
+  CONVERT(long double, NPY_LONGDOUBLE)
+  CONVERT(std::complex<float>, NPY_CFLOAT)
+  CONVERT(std::complex<double>, NPY_CDOUBLE)
+  CONVERT(std::complex<long double>, NPY_CLONGDOUBLE)
 #undef CONVERT
 
   // ------------------------------------------

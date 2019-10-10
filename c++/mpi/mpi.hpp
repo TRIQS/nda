@@ -175,13 +175,13 @@ namespace mpi {
   template <>                                                                                                                                        \
   struct mpi_type<T> {                                                                                                                               \
     static MPI_Datatype get() noexcept { return MPI_TY; }                                                                                            \
-  };
-  D(char, MPI_CHAR)
-  D(int, MPI_INT)
-  D(long, MPI_LONG)
-  D(long long, MPI_LONG_LONG)
-  D(double, MPI_DOUBLE)
-  D(float, MPI_FLOAT)
+  }
+  D(char, MPI_CHAR);
+  D(int, MPI_INT);
+  D(long, MPI_LONG);
+  D(long long, MPI_LONG_LONG);
+  D(double, MPI_DOUBLE);
+  D(float, MPI_FLOAT);
   D(std::complex<double>, MPI_DOUBLE_COMPLEX);
   D(unsigned long, MPI_UNSIGNED_LONG);
   D(unsigned int, MPI_UNSIGNED);
