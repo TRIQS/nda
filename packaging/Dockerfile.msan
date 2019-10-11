@@ -52,8 +52,13 @@ RUN mkdir /tmp/build && cd /tmp/build && \
 
 ADD https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.1.tar.gz /tmp/
 RUN tar -C /tmp -xf /tmp/openmpi-4.0.1.tar.gz && cd /tmp/openmpi-4.0.1 && \
-      ./configure --prefix=/usr/lib/x86_64-linux-gnu/openmpi --enable-shared --disable-mpi-fortran && make -j20 && make install && \
+      ./configure --prefix=/opt/openmpi-4.0.1 --enable-shared --disable-mpi-fortran && make -j2 && make install && \
       rm -rf /tmp/openmpi-4.0.1*
+ENV PATH=/opt/openmpi-4.0.1/bin:$PATH \
+    LIBRARY_PATH=/opt/openmpi-4.0.1/lib:$LIBRARY_PATH \
+    LD_LIBRARY_PATH=/opt/openmpi-4.0.1/lib:$LD_LIBRARY_PATH \
+    C_INCLUDE_PATH=/opt/openmpi-4.0.1/include:$C_INCLUDE_PATH \
+    CPLUS_INCLUDE_PATH=/opt/openmpi-4.0.1/include:$CPLUS_INCLUDE_PATH
 
 RUN useradd -m build
 
