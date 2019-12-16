@@ -1,9 +1,9 @@
 #%Module1.0
 #
-# To be installed as ${MODULEPATH}/nda/@NDA_VERSION@
+# To be installed as ${MODULEPATH}/nda/@PROJECT_VERSION@
 
 set     name        nda
-set     version     @NDA_VERSION@
+set     version     @PROJECT_VERSION@
 set     root        @CMAKE_INSTALL_PREFIX@
 set     git_hash    @PROJECT_GIT_HASH@
 
