@@ -21,7 +21,7 @@
 import unittest
 import numpy as np
 
-from hdf_archive import HDFArchive # HDFArchiveGroup, HDFArchiveInert
+from h5.hdf_archive import HDFArchive # HDFArchiveGroup, HDFArchiveInert
 
 def assert_arrays_are_close(a, b, precision = 1.e-6):
     d = np.amax(np.abs(a - b))

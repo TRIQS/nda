@@ -7,11 +7,6 @@ foreach(test ${all_tests})
   add_executable(${test_name} ${test})
   set_property(TARGET ${test_name} PROPERTY RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test_dir})
   target_link_libraries(${test_name} clef_c gtest_main project_warnings)
-
-  # ADDED OP
-  target_include_directories(${test_name} PRIVATE ${CMAKE_SOURCE_DIR}/c++)
-  target_compile_options(${test_name} PUBLIC -fPIC -std=c++17)
-
   add_test(NAME ${test_name} COMMAND ${test_name} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test_dir})
   # Run clang-tidy if found
   if(CLANG_TIDY_EXECUTABLE)
@@ -23,11 +18,12 @@ foreach(test ${all_tests})
       TARGET ${test_name}
       COMMAND ${CPPCHECK_EXECUTABLE}
       --enable=warning,style,performance,portability
-      --std=c++14
+      --std=c++17
       --template=gcc
       --verbose
+      --force
       --quiet
-      ${CMAKE_CURRENT_SOURCE_DIR}/${test}.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/${test}
     )
   endif()
 endforeach()

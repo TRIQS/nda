@@ -1,4 +1,4 @@
-import _h5py as h5
+import h5._h5py as h5
 import numpy as np
 import unittest
 

@@ -1,4 +1,4 @@
-add_library(nda_py nda_py.cpp)
+add_library(nda_py STATIC nda_py.cpp)
 
 # Enable warnings
 target_link_libraries(nda_py PRIVATE nda_c python_and_numpy project_warnings)
@@ -45,8 +45,11 @@ if(ANALYZE_SOURCES)
 	  --std=c++17
 	  --template=gcc
 	  --verbose
+	  --force
 	  --quiet
           ${sources}
+	WORKING_DIRECTORY
+	  ${CMAKE_CURRENT_SOURCE_DIR}
     )
   else()
     message(STATUS "cppcheck not found in $PATH. Please consider installing cppcheck for additional checks!")
@@ -62,12 +65,16 @@ option(UBSAN OFF "Compile library and executables with LLVM Undefined Behavior S
 option(MBSAN OFF "Compile library and executables with LLVM Memory Sanitizer")
 
 if(ASAN)
- #find_package(sanitizer REQUIRED "asan")
+  if(NOT TARGET asan)
+    find_package(sanitizer REQUIRED "asan")
+  endif()
   target_link_libraries(nda_py PUBLIC asan)
   install(TARGETS asan EXPORT nda_py-targets)
 endif()
 if(UBSAN)
- #find_package(sanitizer REQUIRED "ubsan")
+  if(NOT TARGET ubsan)
+    find_package(sanitizer REQUIRED "ubsan")
+  endif()
   target_link_libraries(nda_py PUBLIC ubsan)
   install(TARGETS ubsan EXPORT nda_py-targets)
 endif()

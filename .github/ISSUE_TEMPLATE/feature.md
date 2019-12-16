@@ -6,25 +6,18 @@ labels: feature
 
 ---
 
-<!--
-NOTE: The issue list is not the place for general questions.
-Please consider using the mailing list instead:
-https://groups.google.com/a/flatironinstitute.org/forum/#!forum/triqs
--->
-
 ### Summary
 
 One paragraph explanation of the feature.
 
 ### Motivation
 
-Why are we doing this? What use cases does it support? What is the expected outcome?
+Why is this feature of general interest?
 
-### Describe alternatives you've considered
+### Implementation
 
-A clear and concise description of the alternative solutions you've considered.
-Be sure to explain why the existing customizability of nda isn't suitable for this feature.
+What user interface do you suggest?
 
-### Additional context
+### Formatting
 
-Add any other context about the feature request here.
+Please use markdown in your issue message. A useful summary of commands can be found [here](https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf).
