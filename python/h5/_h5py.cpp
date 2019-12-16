@@ -34,10 +34,12 @@ PYBIND11_MODULE(_h5py, m) {
      .def("keys", &h5::group::get_all_subgroup_dataset_names, "All the keys")
      .def("has_subgroup", &h5::group::has_subgroup, "", "key"_a)
      .def("has_dataset", &h5::group::has_dataset, "", "key"_a)
-     .def("write_attribute", [](h5::group g, std::string const &key, std::string const &val) { h5_write_attribute(g, key, val); },
-          "Write an attribute", "key"_a, "val"_a)
-     .def("read_attribute", [](h5::group g, std::string const &key) { return h5::h5_read_attribute<std::string>(g, key); }, "Read an attribute",
-          "key"_a)
+     .def(
+        "write_attribute", [](h5::group g, std::string const &key, std::string const &val) { h5_write_attribute(g, key, val); }, "Write an attribute",
+        "key"_a, "val"_a)
+     .def(
+        "read_attribute", [](h5::group g, std::string const &key) { return h5::h5_read_attribute<std::string>(g, key); }, "Read an attribute",
+        "key"_a)
      .def_property_readonly("file", &h5::group::get_file, "The parent file")
 
      //

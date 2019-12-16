@@ -111,13 +111,13 @@ TEST(idxstat, iteratorC) { // NOLINT
 
   //int pos = 2;
   //for (auto p : i1) { // FIXME To be implemented
-    //EXPECT_EQ(p, pos++); //NOLINT
+  //EXPECT_EQ(p, pos++); //NOLINT
   //}
 
   //pos = 0;
   //for (auto [p, i] : enumerate_indices(i1)) {
-    //EXPECT_EQ(p, pos++); //NOLINT
-    //std::cerr << i << std::endl;
+  //EXPECT_EQ(p, pos++); //NOLINT
+  //std::cerr << i << std::endl;
   //}
 }
 
