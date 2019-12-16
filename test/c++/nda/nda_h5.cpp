@@ -62,9 +62,9 @@ void one_test(std::string name, T scalar) {
     EXPECT_EQ_ARRAY(a, d);
 
     // read the attributes of A
-    auto id     = top.open_dataset("A");
-    int att1    = h5::h5_read_attribute<int>(id, "AttrOfA1");
-    auto att2   = h5::h5_read_attribute<double>(id, "AttrOfA2");
+    auto id   = top.open_dataset("A");
+    int att1  = h5::h5_read_attribute<int>(id, "AttrOfA1");
+    auto att2 = h5::h5_read_attribute<double>(id, "AttrOfA2");
     EXPECT_EQ(att1, 12);
     EXPECT_EQ(att2, 8.9);
   }
@@ -210,9 +210,9 @@ TEST(Array, H5) { //NOLINT
     EXPECT_EQ_ARRAY(A, B);
 
     // read the attributes of A
-    auto id     = top.open_dataset("A");
-    int att1    = h5::h5_read_attribute<int>(id, "AttrOfA1");
-    auto att2   = h5::h5_read_attribute<double>(id, "AttrOfA2");
+    auto id   = top.open_dataset("A");
+    int att1  = h5::h5_read_attribute<int>(id, "AttrOfA1");
+    auto att2 = h5::h5_read_attribute<double>(id, "AttrOfA2");
 
     EXPECT_EQ(att1, 12);
     EXPECT_EQ(att2, 8.9);

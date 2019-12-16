@@ -86,7 +86,7 @@ namespace nda {
     static constexpr std::array<int, Rank> stride_order =
        (StrideOrder == 0 ? permutations::identity<Rank>() : decode<Rank>(StrideOrder)); // 0 is C stride_order
 
-    static constexpr uint64_t stride_order_encoded  = encode(stride_order);
+    static constexpr uint64_t stride_order_encoded = encode(stride_order);
 
     static constexpr layout_prop_e layout_prop = LayoutProp;
     static constexpr layout_info_t layout_info = layout_info_t{stride_order_encoded, layout_prop};

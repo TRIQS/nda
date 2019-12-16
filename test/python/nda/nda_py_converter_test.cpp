@@ -71,7 +71,8 @@ PYBIND11_MODULE(nda_py_converter_test, m) {
 
   m.def("ma", &ma, "DOC");
 
-  m.def("make_A", []() { return A{5}; }, "DOC");
+  m.def(
+     "make_A", []() { return A{5}; }, "DOC");
 
   //py::class_<A> _A(m, "A");
   //_A.def(py::init<int>(), "Constructor", "n"_a);

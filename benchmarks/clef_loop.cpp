@@ -36,13 +36,13 @@ class ABC_3d : public benchmark::Fixture {
   BENCHMARK_DEFINE_F(ABC_1d, F)(benchmark::State & state) {                                                                                          \
     while (state.KeepRunning()) { F(a, N); }                                                                                                         \
   }                                                                                                                                                  \
-  BENCHMARK_REGISTER_F(ABC_1d, F)->Arg(30)->Arg(300);
+  BENCHMARK_REGISTER_F(ABC_1d, F)->Arg(30)->Arg(300)
 
 #define BENCH_ABC_3d(F)                                                                                                                              \
   BENCHMARK_DEFINE_F(ABC_3d, F)(benchmark::State & state) {                                                                                          \
     while (state.KeepRunning()) { F(a, N); }                                                                                                         \
   }                                                                                                                                                  \
-  BENCHMARK_REGISTER_F(ABC_3d, F)->Arg(30)->Arg(100);
+  BENCHMARK_REGISTER_F(ABC_3d, F)->Arg(30)->Arg(100)
 
 // -----------------------------------------------------------------------
 [[gnu::noinline]] void simple_loop1d(nda::array<double, 1> &a, long N) {
@@ -68,7 +68,7 @@ class ABC_3d : public benchmark::Fixture {
   a(i_, j_, k_) << i_ - j_ + N * k_;
 }
 
-BENCH_ABC_1d(simple_loop1d)
-BENCH_ABC_1d(with_clef1d)
-BENCH_ABC_3d(simple_loop3d)
-BENCH_ABC_3d(with_clef3d)
+BENCH_ABC_1d(simple_loop1d);
+BENCH_ABC_1d(with_clef1d);
+BENCH_ABC_3d(simple_loop3d);
+BENCH_ABC_3d(with_clef3d);
