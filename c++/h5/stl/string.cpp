@@ -23,9 +23,9 @@ namespace h5 {
 
   // ------------------------------------------------------------------
 
-  void h5_write(group g, std::string const &name, std::string const &value) {
+  void h5_write(group g, std::string const &name, std::string const &value, bool force_utf8 = false) {
 
-    datatype dt     = str_datatype(value);
+    datatype dt     = force_utf8 ? str_datatype(value.size()+1,true) : str_datatype(value);
     dataspace space = H5Screate(H5S_SCALAR);
 
     // FIXME : remove create_dataset
@@ -37,9 +37,9 @@ namespace h5 {
 
   // ------------------------------------------------------------------
 
-  void h5_write_attribute(hid_t id, std::string const &name, std::string const &value) {
+  void h5_write_attribute(hid_t id, std::string const &name, std::string const &value, bool force_utf8 = false) {
 
-    datatype dt     = str_datatype(value);
+    datatype dt     = force_utf8 ? str_datatype(value.size()+1,true) : str_datatype(value);
     dataspace space = H5Screate(H5S_SCALAR);
 
     attribute attr = H5Acreate2(id, name.c_str(), dt, space, H5P_DEFAULT, H5P_DEFAULT);
