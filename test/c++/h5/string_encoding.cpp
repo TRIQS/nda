@@ -19,6 +19,11 @@ TEST(H5, Encoding) {
     // Store UTF8
     h5_write(file, "UTF8", utf8_str);
     h5_write_attribute(file, "UTF8_Attr", utf8_str);
+
+    // Store ASCII string as UTF8
+    bool force_utf8 = true;
+    h5_write(file, "ASCII_as_UTF8", utf8_str,force_utf8);
+    h5_write_attribute(file, "ASCII_as_UTF8_Attr", utf8_str,force_utf8);
   }
 
   {
@@ -37,5 +42,12 @@ TEST(H5, Encoding) {
     EXPECT_EQ(utf8_str, utf8_str_read);
     h5_read_attribute(file, "UTF8_Attr", utf8_str_read);
     EXPECT_EQ(utf8_str, utf8_str_read);
+
+    // Read ASCII as UTF8
+    std::string au_str_read = "";
+    h5_read(file, "ASCII_as_UTF8", au_str_read);
+    EXPECT_EQ(ascii_str, au_str_read);
+    h5_read_attribute(file, "ASCII_as_UTF8_Attr", au_str_read);
+    EXPECT_EQ(ascii_str, au_str_read);
   }
 }
