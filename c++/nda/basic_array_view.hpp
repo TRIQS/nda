@@ -45,7 +45,7 @@ namespace nda {
     //    static constexpr uint64_t stride_order = StrideOrder;
 
     // FIXME : h5
-    // static std::string hdf5_format() { return "array<" + triqs::h5::get_hdf5_format<ValueType>() + "," + std::to_string(rank) + ">"; }
+    // static std::string hdf5_format() { return "array<" + h5::get_hdf5_format<ValueType>() + "," + std::to_string(rank) + ">"; }
 
     private:
     template <typename IdxMap>
