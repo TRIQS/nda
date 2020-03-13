@@ -6,6 +6,62 @@
 
 namespace nda {
 
+  /*
+   * Write an array or a view into an hdf5 file
+   * The HDF5 exceptions will be caught and rethrown as std::runtime_error
+   *
+   * @tparam A The type of the array/matrix/vector, etc..
+   * @param g The h5 group
+   * @param name The name of the hdf5 array in the file/group where the stack will be stored
+   * @param a The array to be stored
+   */
+  template <typename A>
+  void h5_write(h5::group g, std::string const &name, A const &a) REQUIRES(is_regular_or_view_v<A>);
+
+  /*
+   * Read an array or a view from an hdf5 file
+   * The HDF5 exceptions will be caught and rethrown as std::runtime_error
+   *
+   * @tparam A The type of the array/matrix/vector, etc..
+   * @param g The h5 group
+   * @param a The array to be stored
+   */
+  template <typename A>
+  void h5_read(h5::group g, std::string const &name, A &a) REQUIRES(is_regular_or_view_v<A>);
+
+  /**
+   * Writes std::array into an hdf5 file
+   *
+   * Use implementation h5_write for an nda::array_view<T, 1>
+   *
+   * @tparam T
+   * @param g HDF5 group
+   * @param name Name of the object in the HDF5 file
+   * @param a Array to save in the file
+   */
+  template <typename T, size_t N>
+  void h5_write(h5::group g, std::string const &name, std::array<T, N> const &a) {
+    h5_write(g, name, nda::array_const_view<long, 1>{{long(a.size())}, a.data()});
+  }
+
+  /**
+   * Reads std::array from HDF5
+   *
+   * Use implementation h5_read from the array_interface
+   *
+   * @tparam T
+   * @param g HDF5 group
+   * @param name Name of the object in the HDF5 file
+   * @param a Array to save from the file
+   */
+  template <typename T, size_t N>
+  void h5_read(h5::group g, std::string name, std::array<T, N> &a) {
+    auto view = nda::array_view<long, 1>{{long(a.size())}, a.data()};
+    h5_read(g, name, view);
+  }
+
+  // ----- Implementation ------
+
   namespace h5_details {
 
     using h5::v_t;
@@ -48,14 +104,6 @@ namespace nda {
 
   } // namespace h5_details
 
-  /*
-   * Write an array or a view into an hdf5 file
-   * ArrayType The type of the array/matrix/vector, etc..
-   * g The h5 group
-   * name The name of the hdf5 array in the file/group where the stack will be stored
-   * A The array to be stored
-   * The HDF5 exceptions will be caught and rethrown as TRIQS_RUNTIME_ERROR (with a full stackstrace, cf triqs doc).
-   */
   template <typename A>
   void h5_write(h5::group g, std::string const &name, A const &a) REQUIRES(is_regular_or_view_v<A>) {
 
@@ -74,22 +122,12 @@ namespace nda {
 
       // if (a.is_empty()) return;
       auto g2 = g.create_group(name);
-      //g2.write_hdf5_format(a);
-      auto sha = a.shape();
-      h5_write(g2, "shape", nda::array_view<long, 1>{{long(sha.size())}, sha.data()});
+      h5_write(g2, "shape", a.shape());
       auto make_name = [](auto i0, auto... is) { return (std::to_string(i0) + ... + ("_" + std::to_string(is))); };
       nda::for_each(a.shape(), [&](auto... is) { h5_write(g2, make_name(is...), a(is...)); });
     }
   }
 
-  /*
-   * Read an array or a view from an hdf5 file
-   * ArrayType The type of the array/matrix/vector, etc..
-   * g The h5 group
-   * name The name of the hdf5 array in the file/group where the stack will be stored
-   * A The array to be stored
-   * The HDF5 exceptions will be caught and rethrown as std::runtime_error (with a full stackstrace, cf doc).
-   */
   template <typename A>
   void h5_read(h5::group g, std::string const &name, A &a) REQUIRES(is_regular_or_view_v<A>) {
 
@@ -131,18 +169,17 @@ namespace nda {
         v.slab.count[u] = L[u];
         v.L_tot[u]      = L[u];
       }
-
       h5::array_interface::read(g, name, v, lt);
-    }
 
-    else { // generic unknown type to hdf5
-
+    } else { // generic unknown type to hdf5
       auto g2 = g.open_group(name);
-      // Better error message ?
-      auto sha2       = a.shape();
-      auto shape_view = nda::array_view<long, 1>{{long(sha2.size())}, sha2.data()};
-      h5_read(g2, "shape", shape_view);
-      if (a.shape() != sha2) a.resize(sha2);
+
+      // Reshape if necessary
+      auto h5_shape = nda::shape_t<A::rank>{};
+      h5_read(g2, "shape", h5_shape);
+      if (a.shape() != h5_shape) a.resize(h5_shape);
+
+      // Read using appropriate h5_read implementation
       auto make_name = [](auto i0, auto... is) { return (std::to_string(i0) + ... + ("_" + std::to_string(is))); };
       nda::for_each(a.shape(), [&](auto... is) { h5_read(g2, make_name(is...), a(is...)); });
     }
