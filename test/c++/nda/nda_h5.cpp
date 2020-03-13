@@ -239,6 +239,30 @@ TEST(Array, H5) { //NOLINT
 
 // ==============================================================
 
+TEST(Array, H5ArrLayout) { //NOLINT
+
+  nda::array<long, 2, F_layout> Af(2, 3);
+  for (int i = 0; i < 2; ++i)
+    for (int j = 0; j < 3; ++j) Af(i, j) = 10 * i + j;
+
+  // write to file
+  {
+    h5::file f("test_nda_layout.h5", 'w');
+    h5_write(f, "Af", Af);
+  }
+
+  // reread
+  nda::array<long, 2, F_layout> Bf{};
+  {
+    h5::file f("test_nda_layout.h5", 'r');
+    h5_read(f, "Af", Bf);
+  }
+
+  EXPECT_EQ(Af, Bf);
+}
+
+// ==============================================================
+
 TEST(Vector, String) { //NOLINT
 
   // vector of string

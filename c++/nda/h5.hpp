@@ -107,6 +107,15 @@ namespace nda {
   template <typename A>
   void h5_write(h5::group g, std::string const &name, A const &a) REQUIRES(is_regular_or_view_v<A>) {
 
+    // Properly treat arrays with non-standard memory layout
+    if constexpr (not std::decay_t<A>::idx_map_t::is_stride_order_C()) {
+      using h5_arr_t = nda::array<typename A::value_t, A::rank>;
+      auto a_c_layout = h5_arr_t{a.shape()};
+      a_c_layout() = a;
+      h5_write(g, name, a_c_layout);
+      return;
+    }
+
     // first case array of string
     if constexpr (std::is_same_v<typename A::value_t, std::string>) { // special case of string. Like vector of string
 
@@ -131,11 +140,19 @@ namespace nda {
   template <typename A>
   void h5_read(h5::group g, std::string const &name, A &a) REQUIRES(is_regular_or_view_v<A>) {
 
-    static_assert(std::decay_t<decltype(a.indexmap())>::is_stride_order_C(), "Not implemented");
+    // If array is not C-strided, read into array with default layout and copy
+    if constexpr (not std::decay_t<A>::idx_map_t::is_stride_order_C()) {
+      static_assert(is_regular_v<A>, "Cannot read into an array_view to an array with non C-style memory layout");
+      using h5_arr_t = nda::array<typename A::value_t, A::rank>;
+      auto a_c_layout = h5_arr_t{};
+      h5_read(g, name, a_c_layout);
+      a.resize(a_c_layout.shape());
+      a() = a_c_layout;
+      return;
+    }
 
-    // first case array of string
-    if constexpr (std::is_same_v<typename A::value_t, std::string>) { // special case of string. Like vector of string
-
+    // Special case array<string>, store as char buffer
+    if constexpr (std::is_same_v<typename A::value_t, std::string>) {
       h5::char_buf cb;
       h5_read(g, name, cb);
       h5_details::from_char_buf(cb, a);
