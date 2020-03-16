@@ -159,7 +159,16 @@ namespace nda {
 
       static constexpr bool is_complex = is_complex_v<typename A::value_t>;
 
-      auto lt          = h5::array_interface::get_h5_lengths_type(g, name);
+      auto lt = h5::array_interface::get_h5_lengths_type(g, name);
+
+      // Allow to read non-complex data into array<complex>
+      if (is_complex && !lt.has_complex_attribute) {
+        array<double, A::rank> tmp;
+        h5_read(g, name, tmp);
+        a = tmp;
+        return;
+      }
+
       int rank_in_file = lt.rank() - (is_complex ? 1 : 0);
       if (rank_in_file != A::rank)
         NDA_RUNTIME_ERROR << " h5 read of nda::array : incorrect rank. In file: " << rank_in_file << "  In memory " << A::rank;

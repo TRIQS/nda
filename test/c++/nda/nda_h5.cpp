@@ -306,31 +306,6 @@ TEST(Array, H5ArrayString) { //NOLINT
 }
 
 // ==============================================================
-// not yet implemented
-/*
-TEST(Array, H5ArrayString2) { //NOLINT
-
-
-  // nda::array of string
-  nda::array<std::string, 2> A(2, 2), B;
-  A(0, 0) = "Nice String";
-  A(1, 0) = "another";
-  A(1, 1) = "really";
-  A(0, 1) = "nice";
-
-  // writing
-  h5::file file("test_nda::array_string.h5", 'w');
-  h5::group top(file);
-
-  h5_write(top, "A", A);
-
-  // rereading
-  h5_read(top, "A", B);
-
-  //comparing
-  for (int i = 0; i < 2; ++i) { EXPECT_EQ(A, B); }
-}
-// ==============================================================
 
 // -----------------------------------------------------
 // Testing the loading of nda::array of double into complex
@@ -359,6 +334,32 @@ TEST(Array, H5RealIntoComplex) { //NOLINT
     h5_read(top, "D", C);
     EXPECT_ARRAY_NEAR(C, D);
   }
+}
+
+// ==============================================================
+// not yet implemented
+/*
+TEST(Array, H5ArrayString2) { //NOLINT
+
+
+  // nda::array of string
+  nda::array<std::string, 2> A(2, 2), B;
+  A(0, 0) = "Nice String";
+  A(1, 0) = "another";
+  A(1, 1) = "really";
+  A(0, 1) = "nice";
+
+  // writing
+  h5::file file("test_nda::array_string.h5", 'w');
+  h5::group top(file);
+
+  h5_write(top, "A", A);
+
+  // rereading
+  h5_read(top, "A", B);
+
+  //comparing
+  for (int i = 0; i < 2; ++i) { EXPECT_EQ(A, B); }
 }
 */
 // ==============================================================
