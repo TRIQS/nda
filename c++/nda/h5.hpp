@@ -128,8 +128,6 @@ namespace nda {
                         a.indexmap().strides().data(), a.size());
 
     } else { // generic unknown type to hdf5
-
-      // if (a.is_empty()) return;
       auto g2 = g.create_group(name);
       h5_write(g2, "shape", a.shape());
       auto make_name = [](auto i0, auto... is) { return (std::to_string(i0) + ... + ("_" + std::to_string(is))); };
@@ -169,12 +167,7 @@ namespace nda {
       for (int u = 0; u < A::rank; ++u) L[u] = lt.lengths[u]; // NB : correct for complex
 
       if constexpr (is_regular_v<A>) {
-        H5_PRINT(a.shape());
-        H5_PRINT(L);
-        H5_PRINT(a.data_start());
         a.resize(L);
-        H5_PRINT(a.shape());
-        H5_PRINT(a.data_start());
       } else {
         if (a.shape() != L)
           NDA_RUNTIME_ERROR << "Error trying to read from an hdf5 file to a view. Dimension mismatch"

@@ -19,7 +19,10 @@
  *
  ******************************************************************************/
 #pragma once
+
+#ifndef NDA_DEBUG
 #define NDA_DEBUG
+#endif
 
 #include "nda/basic_array.hpp"
 #include <iostream>
