@@ -290,7 +290,7 @@ TEST(Array, H5ArrayString) { //NOLINT
   // nda::array of string
   nda::array<std::string, 1> A(2), B;
   A(0) = "Nice String";
-  A(1) = "another";
+  A(1) = "Unicode €☺";
 
   // writing
   h5::file file("test_nda::array_string.h5", 'w');
