@@ -74,6 +74,7 @@ target_compile_options(project_warnings
     -Wpedantic
     -Wno-sign-compare
     $<$<CXX_COMPILER_ID:GNU>:-Wshadow=local>
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-attributes>
     $<$<CXX_COMPILER_ID:GNU>:-Wno-unused-but-set-parameter>
     $<$<CXX_COMPILER_ID:Clang>:-Wshadow>
     $<$<CXX_COMPILER_ID:Clang>:-Wno-gcc-compat>
