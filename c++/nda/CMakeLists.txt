@@ -19,33 +19,14 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING
 
 # ========= Additional Depdencies ==========
 
-message(STATUS "-------- MPI detection -------------")
+# Link against HDF5 C++ Interface
+target_link_libraries(nda_c PUBLIC h5_interface)
 
-find_package(MPI REQUIRED)
+# Link against MPI C++ Interface
+target_link_libraries(nda_c PUBLIC mpi_interface)
 
-# Create an interface target
-add_library(mpi INTERFACE)
-target_include_directories(mpi SYSTEM INTERFACE ${MPI_C_INCLUDE_PATH})
-target_link_libraries(mpi INTERFACE ${MPI_C_LIBRARIES})
-separate_arguments(MPI_C_COMPILE_FLAGS) # Convert to list
-target_compile_options(mpi INTERFACE ${MPI_C_COMPILE_FLAGS})
 
-# Link against interface target and export
-target_link_libraries(nda_c PUBLIC mpi)
-install(TARGETS mpi EXPORT nda-targets)
-
-# Backward compatibility for older FindMPI.cmake
-if(NOT MPIEXEC_EXECUTABLE)
-  set(MPIEXEC_EXECUTABLE ${MPIEXEC} CACHE FILENAME "MPI Executable")
-endif()
-
-# Compatibility to Open-MPI 3.0.0: check whether MPI executable has option --oversubscribe and add it 
-execute_process(COMMAND ${MPIEXEC_EXECUTABLE} --oversubscribe ${MPIEXEC_NUMPROC_FLAG} 4 ${MPIEXEC_PREFLAGS} ls ${MPIEXEC_POSTFLAGS} RESULT_VARIABLE HAS_NO_OVERSUBSCRIBE OUTPUT_QUIET ERROR_QUIET)
-if(NOT HAS_NO_OVERSUBSCRIBE)
-  list(APPEND MPIEXEC_PREFLAGS --oversubscribe)
-  set(MPIEXEC_PREFLAGS ${MPIEXEC_PREFLAGS} CACHE STRING "These flags will be directly before the executable that is being run by mpiexec." FORCE)
-endif()
-
+# ========= Blas / Lapack ==========
 
 message(STATUS "-------- Lapack detection -------------")
 
