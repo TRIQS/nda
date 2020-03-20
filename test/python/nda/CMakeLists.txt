@@ -1,10 +1,15 @@
-# Build the pybind11 module
-pybind11_add_module(nda_py_converter_test nda_py_converter_test.cpp )
-target_link_libraries(nda_py_converter_test PRIVATE pybind11 nda_py python_and_numpy)
+# Build the cpp2py module
+add_cpp2py_module(nda_py_a)
+target_link_libraries(nda_py_a PRIVATE nda_py)
+target_include_directories(nda_py_a PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-# Build the pybind11 module
-pybind11_add_module(nda_py_a nda_py_a.cpp)
-target_link_libraries(nda_py_a PRIVATE pybind11 nda_py python_and_numpy)
+## Build the pybind11 module
+#pybind11_add_module(nda_py_converter_test nda_py_converter_test.cpp )
+#target_link_libraries(nda_py_converter_test PRIVATE pybind11 nda_py python_and_numpy)
+
+## Build the pybind11 module
+#pybind11_add_module(nda_py_a nda_py_a.cpp)
+#target_link_libraries(nda_py_a PRIVATE pybind11 nda_py python_and_numpy)
 
 # List of all tests
 set(all_tests nda_test_converters)
