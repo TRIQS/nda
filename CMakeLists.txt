@@ -109,8 +109,11 @@ add_subdirectory(c++/nda)
 # Build and install the h5 library
 add_subdirectory(c++/h5)
 
-# Create interface target for and install mpi library
+# Create interface target for mpi library
 add_subdirectory(c++/mpi)
+
+# Create interface target for itertools library
+add_subdirectory(c++/itertools)
 
 # Create interface target for and install clef library
 add_subdirectory(c++/clef)
