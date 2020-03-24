@@ -155,7 +155,8 @@ TEST(Basic, String) { //NOLINT
 
 TEST(Array, H5) { //NOLINT
 
-  nda::array<long, 2> A(2, 3), B;
+  nda::array<long, 2> A(2, 3), A2;
+  nda::array<bool, 2> B(2, 3), B2;
   nda::array<double, 2> D(2, 3), D2;
   nda::array<dcomplex, 1> C(5), C2;
   //dcomplex z(1, 2);
@@ -165,6 +166,7 @@ TEST(Array, H5) { //NOLINT
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 3; ++j) {
       A(i, j) = 10 * i + j;
+      B(i, j) = i < j;
       D(i, j) = A(i, j) / 10.0;
     }
 
@@ -174,16 +176,17 @@ TEST(Array, H5) { //NOLINT
     h5::group top(file);
 
     h5_write(top, "A", A);
-    h5_write(top, "C", C);
+    h5_write(top, "B", B);
     h5_write(top, "D", D);
+    h5_write(top, "C", C);
     h5::h5_write(top, "S", "");
     h5_write(top, "A_slice", A(nda::range(), nda::range(1, 3)));
     h5_write(top, "empty", nda::array<double, 2>(0, 10));
 
     // add some attribute to A
     auto id = top.open_dataset("A");
-    h5_write_attribute(id, "AttrOfA1", 12);
-    h5_write_attribute(id, "AttrOfA2", 8.9);
+    h5_write_attribute(id, "Attr1OfA", 12);
+    h5_write_attribute(id, "Attr2OfA", 8.9);
 
     // scalar
     double x = 2.3;
@@ -206,13 +209,16 @@ TEST(Array, H5) { //NOLINT
     h5::file file("ess_gal.h5", 'r');
     h5::group top(file);
 
-    h5_read(top, "A", B);
-    EXPECT_EQ_ARRAY(A, B);
+    h5_read(top, "A", A2);
+    EXPECT_EQ_ARRAY(A, A2);
+
+    h5_read(top, "B", B2);
+    EXPECT_EQ_ARRAY(B, B2);
 
     // read the attributes of A
     auto id   = top.open_dataset("A");
-    int att1  = h5::h5_read_attribute<int>(id, "AttrOfA1");
-    auto att2 = h5::h5_read_attribute<double>(id, "AttrOfA2");
+    int att1  = h5::h5_read_attribute<int>(id, "Attr1OfA");
+    auto att2 = h5::h5_read_attribute<double>(id, "Attr2OfA");
 
     EXPECT_EQ(att1, 12);
     EXPECT_EQ(att2, 8.9);
