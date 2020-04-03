@@ -4,7 +4,6 @@ endif()
 
 ## Pybind 11
 #find_package(Python)
-#set(PYTHON_EXECUTABLE ${PYTHON_INTERPRETER})
 #add_subdirectory(pybind11)
 ## Cf https://github.com/pybind/pybind11/issues/1604
 #if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
