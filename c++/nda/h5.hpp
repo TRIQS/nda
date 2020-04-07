@@ -109,9 +109,9 @@ namespace nda {
 
     // Properly treat arrays with non-standard memory layout
     if constexpr (not std::decay_t<A>::idx_map_t::is_stride_order_C()) {
-      using h5_arr_t = nda::array<typename A::value_t, A::rank>;
+      using h5_arr_t  = nda::array<typename A::value_t, A::rank>;
       auto a_c_layout = h5_arr_t{a.shape()};
-      a_c_layout() = a;
+      a_c_layout()    = a;
       h5_write(g, name, a_c_layout);
       return;
     }
@@ -141,7 +141,7 @@ namespace nda {
     // If array is not C-strided, read into array with default layout and copy
     if constexpr (not std::decay_t<A>::idx_map_t::is_stride_order_C()) {
       static_assert(is_regular_v<A>, "Cannot read into an array_view to an array with non C-style memory layout");
-      using h5_arr_t = nda::array<typename A::value_t, A::rank>;
+      using h5_arr_t  = nda::array<typename A::value_t, A::rank>;
       auto a_c_layout = h5_arr_t{};
       h5_read(g, name, a_c_layout);
       a.resize(a_c_layout.shape());
