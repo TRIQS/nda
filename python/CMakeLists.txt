@@ -10,5 +10,4 @@ endif()
      #target_compile_options(pybind11 INTERFACE -fsized-deallocation)
 #endif()
 
-add_subdirectory(h5)
 add_subdirectory(nda_py)
