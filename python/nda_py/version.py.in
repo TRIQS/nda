@@ -2,7 +2,7 @@
 #
 # TRIQS: a Toolbox for Research in Interacting Quantum Systems
 #
-# Copyright (C) 2020, The Simons Foundation
+# Copyright (C) 2020, Simons Foundation
 #   author: N. Wentzell
 #
 # TRIQS is free software: you can redistribute it and/or modify it under the
@@ -20,23 +20,11 @@
 #
 ################################################################################
 
-r"""
-DOC
+version = "@PROJECT_VERSION@"
+nda_hash = "@PROJECT_GIT_HASH@"
 
-"""
-from cpp2py import Cpp2pyInfoBase
+def show_version():
+  print("\nYou are using nda version %s\n"%version)
 
-class Cpp2pyInfo(Cpp2pyInfoBase):
-
-    table_imports = {
-    }
-
-    table_converters = {
-      'nda::basic_array' : 'nda_py/cpp2py_converters.hpp',
-      'nda::basic_array_view' : 'nda_py/cpp2py_converters.hpp',
-    }
-
-def _get_cpp2py_wrapped_class_enums():
-    return {'module_name' : 'UNUSED', 'includes' : "['<triqs/cpp2py_converters.hpp>']"}
-
-__all__ = ['Cpp2pyInfo']
+def show_git_hash():
+  print("\nYou are using nda git hash %s based on triqs git hash %s\n"%(nda_hash, triqs_hash))

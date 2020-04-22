@@ -1,4 +1,8 @@
-add_library(nda_py STATIC nda_py.cpp)
+# Configure the version
+configure_file(version.py.in version.py)
+
+# nda_py library
+add_library(nda_py nda_py.cpp)
 
 # Enable warnings
 target_link_libraries(nda_py PRIVATE nda_c python_and_numpy project_warnings)
