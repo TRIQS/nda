@@ -7,6 +7,7 @@ target_link_libraries(nda_c PRIVATE project_warnings)
 # Configure compilation
 target_compile_options(nda_c PUBLIC -fPIC -std=c++17 $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
 target_include_directories(nda_c PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/c++>)
+target_include_directories(nda_c SYSTEM INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>)
 target_compile_definitions(nda_c PUBLIC
 				NDA_GIT_HASH=${PROJECT_GIT_HASH}
 				$<$<CONFIG:Debug>:NDA_DEBUG>
@@ -20,10 +21,10 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING
 # ========= Additional Depdencies ==========
 
 # Link against HDF5 C++ Interface
-target_link_libraries(nda_c PUBLIC h5_c)
+target_link_libraries(nda_c PRIVATE h5_c)
 
 # Link against MPI C++ Interface
-target_link_libraries(nda_c PUBLIC mpi_interface)
+target_link_libraries(nda_c PUBLIC mpi_c)
 
 
 # ========= Blas / Lapack ==========

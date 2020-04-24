@@ -44,10 +44,6 @@ endif()
 set(NDA_BINARY_DIR ${PROJECT_BINARY_DIR} CACHE STRING "Binary directory of the NDA Project")
 
 # ############
-# Dependencies
-add_subdirectory(deps)
-
-# ############
 # Options
 
 # Make additional Find Modules available
@@ -112,6 +108,9 @@ endif()
 
 # #############
 # Build Project
+
+# Find / Build dependencies
+add_subdirectory(deps)
 
 # Build and install the nda library
 add_subdirectory(c++/nda)

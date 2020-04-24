@@ -1,7 +1,3 @@
-# Build google benchmark
-set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "")
-add_subdirectory(google_benchmark EXCLUDE_FROM_ALL)
-
 # The list of benchs
 set(all_benchs view iterator_foreach loop1d loop2d loop3d for_static clef_loop)
 
