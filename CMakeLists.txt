@@ -43,6 +43,7 @@ if(NOT IS_SUBPROJECT)
 endif()
 set(NDA_BINARY_DIR ${PROJECT_BINARY_DIR} CACHE STRING "Binary directory of the NDA Project")
 
+
 # ############
 # Options
 
@@ -61,7 +62,7 @@ endif()
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Global compiler options
-option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" FALSE)
+option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
 add_compile_options(
   $<$<CONFIG:Debug>:-Og>
   $<$<CONFIG:Debug>:-ggdb3>
@@ -143,6 +144,7 @@ endif()
 
 # Additional configuration files
 add_subdirectory(share)
+
 
 # #############
 # Debian Package

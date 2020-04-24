@@ -7,9 +7,10 @@ add_library(nda_py nda_py.cpp)
 # Enable warnings
 target_link_libraries(nda_py PRIVATE nda_c python_and_numpy project_warnings)
 
-# Configure compilation
+# Configure target and compilation
 target_compile_options(nda_py PUBLIC -fPIC -std=c++17 $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
 target_include_directories(nda_py PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/python> $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/c++>)
+target_include_directories(nda_py SYSTEM INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>)
 target_compile_definitions(nda_py PUBLIC
 				NDA_GIT_HASH=${PROJECT_GIT_HASH}
 				$<$<CONFIG:Debug>:NDA_DEBUG>
