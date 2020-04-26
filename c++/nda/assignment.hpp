@@ -40,6 +40,8 @@ namespace nda {
   // -----------------------------------------------------
   // RHS is a scalar for LHS (could be an array of array).
 
+    // FIXME : PRIVATE 
+    // GOES into the _impl_basic_array_view_common
   namespace details {
 
     // assign to a scalar, for array, no distinction for Matrix Algebra yet.

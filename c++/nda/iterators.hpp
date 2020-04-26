@@ -26,7 +26,9 @@ namespace nda {
     long operator->() const { return operator*(); }
 
     bool operator==(grid_iterator const &other) const { return (other.pos == pos); }
+#if __cplusplus > 201703L
     bool operator!=(grid_iterator const &other) const { return (other.pos != pos); }
+#endif
 
     grid_iterator &operator++() {
       offset += stri;

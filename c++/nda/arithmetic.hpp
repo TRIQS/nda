@@ -127,6 +127,8 @@ namespace nda {
     }
 
     //  --- extent ---
+    // FIXME  shape (i) ??  
+    // FIXME auto const  & ??? 
     [[nodiscard]] constexpr long extent(int i) const noexcept {
       if constexpr (l_is_scalar) {
         return r.extent(i);
@@ -139,7 +141,7 @@ namespace nda {
     }
 
     private:
-    FORCEINLINE static bool kronecker(long i, long j) { return (i == j); }
+    //FORCEINLINE static bool kronecker(long i, long j) { return (i == j); }
 
     public:
     // FIXME Clef
@@ -273,6 +275,11 @@ namespace nda {
       return 'N';
   }
 
+  //  FIXME : jsut OR ??
+  // requires NdArray<L> or NdArray<R> 
+  // _common --> add detail namespace
+  // return NdArray auto  
+  //
   /**
    * @tparam L
    * @tparam R
@@ -363,6 +370,8 @@ namespace nda {
     }
   }
 
+  // FIXME RETURN
+
   /**
    * @tparam L
    * @tparam R
@@ -390,6 +399,7 @@ namespace nda {
 
   //------------  lazy inverse
 
+  // requires NdArray<A> and HasMatrixAlgebra<A> 
   template <class A>
   expr<'/', A, int> inverse(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
     return {1, std::forward<A>(a)};

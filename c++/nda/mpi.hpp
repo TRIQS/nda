@@ -91,6 +91,9 @@ namespace nda {
   // The function to call on the array
   //--------------------------------------------------------------------------------------------------------
 
+  // FIXME : REQUIRE 
+  // NdArrayContainer or NdArrayView
+  //
   template <typename A>
   void mpi_broadcast(A &a, mpi::communicator c = {}, int root = 0) //
      NDA_REQUIRES(is_regular_or_view_v<A>) {

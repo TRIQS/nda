@@ -289,7 +289,9 @@ namespace nda {
     // ----------------  Comparison -------------------------
     bool operator==(idx_map const &x) { return (len == x.len) and (str == x.str); }
 
+#if __cplusplus > 201703L
     bool operator!=(idx_map const &x) { return !(operator==(x)); }
+#endif
 
   }; // idx_map class
 
@@ -301,6 +303,7 @@ namespace nda {
 
   // ---------------- Transposition -------------------------
 
+// FIXME : why is Permutation template  in apply_invers ? constexpr is enough ??
   template <ARRAY_INT Permutation, int Rank, uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp>
   auto transpose(idx_map<Rank, StaticExtents, StrideOrder, LayoutProp> const &idx) {
 

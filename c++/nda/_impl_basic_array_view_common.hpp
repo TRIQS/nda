@@ -44,8 +44,12 @@ static constexpr bool is_stride_order_Fortran() { return idx_map_t::is_stride_or
 
 // one can factorize the last part in a private static method, but I find clearer to have the repetition
 // here. In particular to check the && case carefully.
-
+//private:
 // Internal only. A special case for optimization
+// BUT can not be made private
+//template <typename LHS, typename RHS>
+//friend  void assign_from(LHS &lhs, RHS const &rhs);
+
 decltype(auto) operator()(_linear_index_t x) const {
   //NDA_PRINT(idx_map_t::layout_prop);
   if constexpr (idx_map_t::layout_prop == layout_prop_e::strided_1d) return _storage[x.value * _idx_m.min_stride()];

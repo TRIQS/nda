@@ -2,6 +2,7 @@
 
 namespace nda {
 
+  // FIXME : CHECK ORDER or the LOOP !
   // --------------- fold  ------------------------
   /**
    * @tparam A

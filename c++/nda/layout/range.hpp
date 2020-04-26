@@ -113,7 +113,9 @@ namespace nda {
       }
 
       bool operator==(const_iterator const &other) const noexcept { return (other.pos == this->pos); }
+#if __cplusplus > 201703L
       bool operator!=(const_iterator const &other) const noexcept { return (!operator==(other)); }
+#endif
 
       long operator*() const noexcept { return pos; }
       long operator->() const noexcept { return operator*(); }
