@@ -33,7 +33,7 @@ option(Build_Deps "Build dependencies from source" OFF)
 
 # -- GTest --
 external_dependency(GTest
-  GIT_REPO github:google/googletest
+  GIT_REPO https://github.com/google/googletest
   TAG release-1.10.0
   EXCLUDE_FROM_ALL
 )
@@ -41,20 +41,35 @@ external_dependency(GTest
 # -- google-bench --
 set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "")
 external_dependency(google-bench
-  GIT_REPO github:google/benchmark
+  GIT_REPO https://github.com/google/benchmark
   TAG v1.5.0
+  EXCLUDE_FROM_ALL
+)
+
+# -- Cpp2Py --
+external_dependency(Cpp2Py
+  GIT_REPO github:TRIQS/cpp2py
+  TAG master
   EXCLUDE_FROM_ALL
 )
 
 # -- H5 --
 external_dependency(H5 # CCQ-H5
-  GIT_REPO github:TRIQS/h5
+  GIT_REPO https://github.com/TRIQS/h5
   TAG unstable
   EXCLUDE_FROM_ALL
 )
 
 # -- MPI --
 external_dependency(MPI # CCQ-MPI
-  GIT_REPO github:TRIQS/mpi
+  GIT_REPO https://github.com/TRIQS/mpi
   TAG unstable
 )
+
+## Pybind 11
+#find_package(Python)
+#add_subdirectory(pybind11)
+## Cf https://github.com/pybind/pybind11/issues/1604
+#if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+     #target_compile_options(pybind11 INTERFACE -fsized-deallocation)
+#endif()

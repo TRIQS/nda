@@ -120,7 +120,7 @@ add_subdirectory(c++/nda)
 add_subdirectory(c++/clef)
 
 # Build and install the Python modules
-add_subdirectory(python)
+add_subdirectory(python/nda_py)
 
 # Tests
 option(Build_Tests "Build tests" ON)
