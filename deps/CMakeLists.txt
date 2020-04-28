@@ -48,8 +48,8 @@ external_dependency(google-bench
 
 # -- Cpp2Py --
 external_dependency(Cpp2Py
-  GIT_REPO github:TRIQS/cpp2py
-  TAG master
+  GIT_REPO https://github.com/TRIQS/cpp2py
+  TAG py3
   EXCLUDE_FROM_ALL
 )
 
