@@ -57,7 +57,6 @@ external_dependency(Cpp2Py
 external_dependency(H5 # CCQ-H5
   GIT_REPO https://github.com/TRIQS/h5
   TAG unstable
-  EXCLUDE_FROM_ALL
 )
 
 # -- MPI --

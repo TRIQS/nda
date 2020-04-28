@@ -21,7 +21,7 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING
 # ========= Additional Depdencies ==========
 
 # Link against HDF5 C++ Interface
-target_link_libraries(nda_c PRIVATE h5_c)
+target_link_libraries(nda_c PUBLIC h5_c)
 
 # Link against MPI C++ Interface
 target_link_libraries(nda_c PUBLIC mpi_c)
