@@ -1,4 +1,5 @@
 #include "./test_common.hpp"
+#include <h5/h5.hpp>
 #include <nda/h5.hpp>
 
 template <typename T>
