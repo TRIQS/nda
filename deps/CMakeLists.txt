@@ -5,7 +5,7 @@ include(external_dependency.cmake)
 #   external_dependency(name
 #       [VERSION <version-number>]
 #       [GIT_REPO <url>]
-#       [TAG <tag>]
+#       [GIT_TAG <tag>]
 #       [EXCLUDE_FROM_ALL]
 #   )
 #
@@ -23,18 +23,26 @@ include(external_dependency.cmake)
 #
 # Addtional options:
 #
-#  TAG - Use this keyword to specify the git tag or branch
+#  GIT_TAG - Use this keyword to specify the git-tag, branch or commit hash
 #
 #  EXCLUDE_FROM_ALL - If set, targets of the dependency cmake subproject
 #                     will not be included in the ALL target of the project.
 #                     In particular the dependency will not be installed.
 
-option(Build_Deps "Build dependencies from source" OFF)
+if(NOT DEFINED Build_Deps)
+  set(Build_Deps "Never" CACHE STRING "Do we build dependencies from source? [Never/Always/IfNotFound]")
+else()
+  set(Build_Deps_Opts "Never" "Always" "IfNotFound")
+  if(NOT ${Build_Deps} IN_LIST Build_Deps_Opts)
+    message(FATAL_ERROR "Build_Deps option should be either 'Never', 'Always' or 'IfNotFound'")
+  endif()
+  set(Build_Deps ${Build_Deps} CACHE STRING "Do we build dependencies from source? [Never/Always/IfNotFound]")
+endif()
 
 # -- GTest --
 external_dependency(GTest
   GIT_REPO https://github.com/google/googletest
-  TAG release-1.10.0
+  GIT_TAG release-1.10.0
   EXCLUDE_FROM_ALL
 )
 
@@ -42,27 +50,27 @@ external_dependency(GTest
 set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "")
 external_dependency(google-bench
   GIT_REPO https://github.com/google/benchmark
-  TAG v1.5.0
+  GIT_TAG v1.5.0
   EXCLUDE_FROM_ALL
 )
 
 # -- Cpp2Py --
 external_dependency(Cpp2Py
   GIT_REPO https://github.com/TRIQS/cpp2py
-  TAG py3
+  GIT_TAG py3
   EXCLUDE_FROM_ALL
 )
 
 # -- H5 --
 external_dependency(H5 # CCQ-H5
   GIT_REPO https://github.com/TRIQS/h5
-  TAG unstable
+  GIT_TAG unstable
 )
 
 # -- MPI --
 external_dependency(MPI # CCQ-MPI
   GIT_REPO https://github.com/TRIQS/mpi
-  TAG unstable
+  GIT_TAG unstable
 )
 
 ## Pybind 11
