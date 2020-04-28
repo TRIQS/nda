@@ -13,6 +13,11 @@ set(NDA_GIT_HASH @PROJECT_GIT_HASH@)
 # Root of the installation
 set(NDA_ROOT  @CMAKE_INSTALL_PREFIX@)
 
+# Find any runtime dependencies
+include(CMakeFindDependencyMacro)
+find_dependency(h5)
+find_dependency(mpi)
+
 # Include the exported targets of this project
 include(@CMAKE_INSTALL_PREFIX@/lib/cmake/nda/nda-targets.cmake)
 

@@ -66,14 +66,14 @@ external_dependency(Cpp2Py
   EXCLUDE_FROM_ALL
 )
 
-# -- H5 --
-external_dependency(H5 # CCQ-H5
+# -- h5 --
+external_dependency(h5 # CCQ-H5
   GIT_REPO https://github.com/TRIQS/h5
   GIT_TAG unstable
 )
 
 # -- MPI --
-external_dependency(MPI # CCQ-MPI
+external_dependency(mpi # CCQ-MPI
   GIT_REPO https://github.com/TRIQS/mpi
   GIT_TAG unstable
 )
