@@ -1,6 +1,6 @@
 # Build the cpp2py module
 add_cpp2py_module(nda_py_a)
-target_link_libraries(nda_py_a PRIVATE nda_py)
+target_link_libraries(nda_py_a nda_py)
 target_include_directories(nda_py_a PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 ## Build the pybind11 module

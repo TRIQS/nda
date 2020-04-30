@@ -111,6 +111,7 @@ endif()
 # #############
 # Build Project
 
+enable_testing()
 # Find / Build dependencies
 add_subdirectory(deps)
 
