@@ -2,7 +2,7 @@ file(GLOB_RECURSE sources *.cpp)
 add_library(nda_c ${sources})
 
 # Enable warnings
-target_link_libraries(nda_c PRIVATE nda_warnings)
+target_link_libraries(nda_c PRIVATE $<BUILD_INTERFACE:nda_warnings>)
 
 # Configure compilation
 target_compile_options(nda_c PUBLIC -fPIC -std=c++17 $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
