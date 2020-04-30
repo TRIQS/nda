@@ -5,7 +5,7 @@ configure_file(version.py.in version.py)
 add_library(nda_py nda_py.cpp)
 
 # Enable warnings
-target_link_libraries(nda_py PRIVATE nda_c python_and_numpy project_warnings)
+target_link_libraries(nda_py PRIVATE nda_c python_and_numpy $<BUILD_INTERFACE:nda_warnings>)
 
 # Configure target and compilation
 target_compile_options(nda_py PUBLIC -fPIC -std=c++17 $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
