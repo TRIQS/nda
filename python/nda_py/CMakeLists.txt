@@ -19,7 +19,7 @@ target_compile_definitions(nda_py PUBLIC
 
 
 # Install library and headers
-install(TARGETS nda_py EXPORT nda_py-targets DESTINATION lib)
+install(TARGETS nda_py python_and_numpy EXPORT nda-targets DESTINATION lib)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
 
 
