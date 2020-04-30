@@ -20,7 +20,7 @@
 # ##############################################################################
 
 cmake_minimum_required(VERSION 3.3.2 FATAL_ERROR)
-cmake_policy(SET CMP0057 NEW)
+cmake_policy(VERSION 3.3.2)
 if(POLICY CMP0074)
   cmake_policy(SET CMP0074 NEW)
 endif()
