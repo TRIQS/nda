@@ -1,5 +1,5 @@
-#ifndef TRIQS_GUARD_STD_ADDONS_COMPLEX_H
-#define TRIQS_GUARD_STD_ADDONS_COMPLEX_H
+#ifndef STD_ADDONS_COMPLEX_H
+#define STD_ADDONS_COMPLEX_H
 #include <complex>
 
 using namespace std::literals::complex_literals;

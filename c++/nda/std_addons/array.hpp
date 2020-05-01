@@ -1,5 +1,5 @@
-#ifndef TRIQS_GUARD_STD_ADDONS_ARRAY_H
-#define TRIQS_GUARD_STD_ADDONS_ARRAY_H
+#ifndef STD_ADDONS_ARRAY_H
+#define STD_ADDONS_ARRAY_H
 #include <array>
 #include <utility>
 #include <vector>
