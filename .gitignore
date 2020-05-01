@@ -1,2 +1,7 @@
-compile_commands.json
-doc/cpp2rst_generated
+*.pyc
+.*.swp
+.*.swo
+.*.swn
+.gitignore
+
+
