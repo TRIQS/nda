@@ -47,6 +47,7 @@ namespace nda {
 
   template <typename... Is>
   constexpr uint64_t static_extents(int i0, Is... is) {
+    if (i0>15) throw std::runtime_error("NO!");
     return encode(std::array<int, sizeof...(Is) + 1>{i0, is...});
   }
 
