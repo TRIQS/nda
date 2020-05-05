@@ -63,8 +63,8 @@ private:
 template <bool SelfIsRvalue, typename Self, typename... T>
 FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) {
 
-  if constexpr (clef::is_any_lazy<T...>)
-    return clef::make_expr_call(std::forward<Self>(self), x...);
+  if constexpr (::clef::is_any_lazy<T...>)
+    return ::clef::make_expr_call(std::forward<Self>(self), x...);
   else if constexpr (sizeof...(T) == 0)
     return view_t{self._idx_m, self._storage};
   else {
