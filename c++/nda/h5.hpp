@@ -29,37 +29,6 @@ namespace nda {
   template <typename A>
   void h5_read(h5::group g, std::string const &name, A &a) REQUIRES(is_regular_or_view_v<A>);
 
-  /**
-   * Writes std::array into an hdf5 file
-   *
-   * Use implementation h5_write for an nda::array_view<T, 1>
-   *
-   * @tparam T
-   * @param g HDF5 group
-   * @param name Name of the object in the HDF5 file
-   * @param a Array to save in the file
-   */
-  template <typename T, size_t N>
-  void h5_write(h5::group g, std::string const &name, std::array<T, N> const &a) {
-    h5_write(g, name, nda::array_const_view<long, 1>{{long(a.size())}, a.data()});
-  }
-
-  /**
-   * Reads std::array from HDF5
-   *
-   * Use implementation h5_read from the array_interface
-   *
-   * @tparam T
-   * @param g HDF5 group
-   * @param name Name of the object in the HDF5 file
-   * @param a Array to save from the file
-   */
-  template <typename T, size_t N>
-  void h5_read(h5::group g, std::string name, std::array<T, N> &a) {
-    auto view = nda::array_view<long, 1>{{long(a.size())}, a.data()};
-    h5_read(g, name, view);
-  }
-
   // ----- Implementation ------
 
   namespace h5_details {
