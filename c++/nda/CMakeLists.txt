@@ -1,5 +1,6 @@
 file(GLOB_RECURSE sources *.cpp)
 add_library(nda_c ${sources})
+add_library(nda::nda_c ALIAS nda_c)
 
 # Enable warnings
 target_link_libraries(nda_c PRIVATE $<BUILD_INTERFACE:nda_warnings>)
@@ -35,6 +36,7 @@ find_package(LAPACK REQUIRED)
 
 # Create an interface target
 add_library(blas_lapack INTERFACE)
+add_library(nda::blas_lapack ALIAS blas_lapack)
 list(REMOVE_DUPLICATES LAPACK_LIBRARIES)
 target_link_libraries(blas_lapack INTERFACE ${LAPACK_LIBRARIES})
 target_compile_options(blas_lapack INTERFACE ${LAPACK_LINKER_FLAGS})
