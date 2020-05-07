@@ -62,6 +62,12 @@ if(NOT IS_SUBPROJECT)
   message(STATUS "-------- BUILD-TYPE: ${CMAKE_BUILD_TYPE} --------")
 endif()
 
+# Python Support
+option(PythonSupport "Build with Python support" ON)
+
+# Documentation
+option(Build_Documentation "Build documentation" OFF)
+
 # Testing
 option(Build_Tests "Build tests" ON)
 if(Build_Tests)
@@ -128,7 +134,9 @@ add_subdirectory(c++/nda)
 add_subdirectory(c++/clef)
 
 # Build and install the Python modules
-add_subdirectory(python/nda_py)
+if(PythonSupport)
+  add_subdirectory(python/nda_py)
+endif()
 
 # Tests
 if(Build_Tests)
@@ -141,16 +149,13 @@ if(Build_Bench AND NOT ASAN AND NOT UBSAN)
   add_subdirectory(benchmarks)
 endif()
 
-# Build the documentation
-option(Build_Documentation "Build documentation" OFF)
-if(Build_Documentation AND NOT IS_SUBPROJECT)
-  message(STATUS "Documentation Build enabled")
+# Docs
+if(Build_Documentation)
   add_subdirectory(doc)
 endif()
 
 # Additional configuration files
 add_subdirectory(share)
-
 
 # #############
 # Debian Package
@@ -169,4 +174,3 @@ if(BUILD_DEBIAN_PACKAGE AND NOT IS_SUBPROJECT)
   set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
   include(CPack)
 endif()
-

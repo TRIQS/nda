@@ -4,7 +4,8 @@
 
 # Multiple inclusion guard
 if(NOT NDA_FOUND)
-set(NDA_FOUND True)
+set(NDA_FOUND TRUE)
+set_property(GLOBAL PROPERTY NDA_FOUND TRUE)
 
 # version
 set(NDA_VERSION @PROJECT_VERSION@)
@@ -25,5 +26,8 @@ message(STATUS "Found nda-config.cmake with version @PROJECT_VERSION@, hash = @P
 
 # Was the Project built with Documentation?
 set(NDA_WITH_DOCUMENTATION @Build_Documentation@)
+
+# Was the Project built with PythonSupport?
+set(NDA_WITH_PYTHON_SUPPORT @PythonSupport@)
 
 endif()

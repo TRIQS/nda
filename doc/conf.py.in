@@ -3,14 +3,19 @@
 # documentation build configuration file
 
 import sys
+sys.path.insert(0, "@CMAKE_CURRENT_SOURCE_DIR@/sphinxext/autorun")
+sys.path.insert(0, "@CMAKE_CURRENT_SOURCE_DIR@/sphinxext/numpydoc")
+
 extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.mathjax',
               'sphinx.ext.intersphinx',
               'sphinx.ext.doctest',
               'sphinx.ext.todo',
               'sphinx.ext.viewcode',
-              'sphinx.ext.autosummary'
-              ]
+              'sphinx.ext.autosummary',
+              'matplotlib.sphinxext.plot_directive',
+              'autorun',
+              'numpydoc']
 
 source_suffix = '.rst'
 
@@ -18,11 +23,11 @@ project = u'NDA - A multi-dimensional array class for C++'
 copyright = u'2018-2019 N. Wentzell, O. Parcollet 2019-2020 Simons Foundation'
 version = '@PROJECT_VERSION@'
 
-mathjax_path = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5"
-templates_path = ['@PROJECT_SOURCE_DIR@/doc/_templates']
+mathjax_path = "https://raw.githubusercontent.com/mathjax/MathJax/2.7.8/MathJax.js"
+templates_path = ['@CMAKE_CURRENT_SOURCE_DIR@/_templates']
 
 html_theme = 'triqs'
-html_theme_path = ['@PROJECT_SOURCE_DIR@/doc/themes']
+html_theme_path = ['@CMAKE_CURRENT_SOURCE_DIR@/themes']
 html_show_sphinx = False
 html_context = {'header_title': 'nda',
                 'header_subtitle': 'An example application using cpp2py and <a class="triqs" style="font-size: 12px" href="https://triqs.github.io">TRIQS</a>',
@@ -30,7 +35,7 @@ html_context = {'header_title': 'nda',
                                  ['Documentation', 'documentation'],
                                  ['Issues', 'issues'],
                                  ['About nda', 'about']]}
-html_static_path = ['@PROJECT_SOURCE_DIR@/doc/_static']
+html_static_path = ['@CMAKE_CURRENT_SOURCE_DIR@/_static']
 html_sidebars = {'index': ['sideb.html', 'searchbox.html']}
 
 htmlhelp_basename = 'NDAdoc'

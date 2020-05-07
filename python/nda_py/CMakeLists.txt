@@ -3,6 +3,7 @@ configure_file(version.py.in version.py)
 
 # nda_py library
 add_library(nda_py nda_py.cpp)
+add_library(nda::nda_py ALIAS nda_py)
 
 # Enable warnings
 target_link_libraries(nda_py PRIVATE nda_c python_and_numpy $<BUILD_INTERFACE:nda_warnings>)
