@@ -14,13 +14,8 @@ extensions = ['sphinx.ext.autodoc',
 
 source_suffix = '.rst'
 
-<<<<<<< HEAD
-project = u'NDA - An example triqs application'
-copyright = u'2017-2018 N. Wentzell, O. Parcollet 2018-2019 The Simons Foundation, authors: N. Wentzell, D. Simons, H. Strand, O. Parcollet'
-=======
-project = 'APP4TRIQS - An example triqs application'
-copyright = '2017-2018 N. Wentzell, O. Parcollet 2018-2019 The Simons Foundation, authors: N. Wentzell, D. Simons, H. Strand, O. Parcollet'
->>>>>>> app4triqs_remote/unstable
+project = u'NDA - A multi-dimensional array class for C++'
+copyright = u'2018-2019 N. Wentzell, O. Parcollet 2019-2020 Simons Foundation'
 version = '@PROJECT_VERSION@'
 
 mathjax_path = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5"

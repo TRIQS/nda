@@ -30,7 +30,7 @@ endif()
 
 # ############
 # Define Project
-project(NDA VERSION 2.2.0 LANGUAGES C CXX)
+project(NDA VERSION 0.8.0 LANGUAGES C CXX)
 get_directory_property(IS_SUBPROJECT PARENT_DIRECTORY)
 
 # Get the git hash & print status
