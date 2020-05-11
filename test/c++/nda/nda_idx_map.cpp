@@ -52,7 +52,7 @@ TEST(idxstat, slice) { // NOLINT
 
   auto [offset2, i2] = slice_stride_order(i1, 0, _, 2);
 
-  idx_map<1, 0, C_stride_order<1>, layout_prop_e::none> c2{{2}, {3}};
+  idx_map<1, 0, C_stride_order<1>, layout_prop_e::strided_1d> c2{{2}, {3}};
 
   std::cerr << i2 << std::endl;
   std::cerr << c2 << std::endl;

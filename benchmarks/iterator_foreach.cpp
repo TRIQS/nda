@@ -161,30 +161,3 @@ static void pointer_2C(benchmark::State &state) {
 }
 BENCHMARK(pointer_2C);
 
-/*
-static void foreach_manual_simple1(benchmark::State &state) {
-  triqs::arrays::array<double, 2> a(N1, N2, FORTRAN_LAYOUT);
-  auto l = [&a](auto x0, auto x1) { a(x0, x1) = 10 * x0 + x1; };
-  mini_vector<int, 2> t;
-  const int u[2] = {1, 0}; //=1, u1=0;
-  while (state.KeepRunning()) {
-    for (t[u[0]] = 0; t[u[0]] < a.shape(u[0]); ++t[u[0]])
-      for (t[u[1]] = 0; t[u[1]] < a.shape(u[1]); ++t[u[1]])
-        // l(t[u[1]], t[u[0]]);
-        a(t[u[1]], t[u[0]]) = 10 * t[u[1]] + t[u[0]];
-  }
-}
-BENCHMARK(foreach_manual_simple1);
-
-static void foreach_manual_simple(benchmark::State &state) {
-  triqs::arrays::array<double, 2> a(N1, N2, FORTRAN_LAYOUT);
-  auto l = [&a](auto x0, auto x1) { a(x0, x1) = 10 * x0 + x1; };
-  mini_vector<int, 2> t;
-  const int u[2] = {1, 0}; //=1, u1=0;
-  while (state.KeepRunning()) {
-    for (int i = 0; i < a.shape(u[0]); ++i)
-      for (int j = 0; j < a.shape(u[1]); ++j) l(i, j);
-  }
-}
-BENCHMARK(foreach_manual_simple);
-*/

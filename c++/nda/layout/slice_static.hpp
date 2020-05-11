@@ -23,7 +23,6 @@ namespace nda::slice_static {
 
   // We compute compile time map :  p -> n,  p -> q
   // example :
-  // no ellipsis : q = n
   // Args          = long, long, ellipsis,            long, range
   //  q               0      1      2                   3     4
   // Expanded Args = long, long, range, range, range, long, range
@@ -31,10 +30,11 @@ namespace nda::slice_static {
   // e_pos = 2, e_pos + e_len  = 5
   // n will be 0 1 2 3 4 5 6
   // q will be 0 1 2 2 2 3 4
-  // p -> n : 2 3 4 5
+  // p -> n : 2 3 4 6
   // p -> q : 2 2 2 4
 
   // ----------     Computation of the position of the ellipsis in the args ----------------------
+  // FIXME C++20
   namespace impl {
     template <typename... Args, size_t... Is>
     constexpr int ellipsis_position(std::index_sequence<Is...>) {
@@ -72,23 +72,27 @@ namespace nda::slice_static {
   template <int N, int P, size_t Q> // Q is a size_t for matching std::array
   constexpr std::array<int, P> n_of_p_map(std::array<bool, Q> const &args_is_range, int e_pos, int e_len) {
     auto result = nda::make_initialized_array<P>(0);
-    for (int n = 0, c = 0; n < N; ++n) {
+    int p       = 0;
+    for (int n = 0; n < N; ++n) {
       int q = q_of_n(n, e_pos, e_len);
-      if (args_is_range[q]) result[c++] = n;
+      if (args_is_range[q]) result[p++] = n;
     }
+    if (p != P) throw std::logic_error("Internal Error");
     return result;
   }
 
-  // ------------- The map  p-> n -------------------------
+  // ------------- The map  p-> q -------------------------
   // same as before except that it returns p-> q instead of p-> n
   //
   template <int N, int P, size_t Q>
   constexpr std::array<int, P> q_of_p_map(std::array<bool, Q> const &args_is_range, int e_pos, int e_len) {
     auto result = nda::make_initialized_array<P>(0);
-    for (int n = 0, c = 0; n < N; ++n) {
+    int p       = 0;
+    for (int n = 0; n < N; ++n) {
       int q = q_of_n(n, e_pos, e_len);
-      if (args_is_range[q]) result[c++] = q;
+      if (args_is_range[q]) result[p++] = q;
     }
+    if (p != P) throw std::logic_error("Internal Error");
     return result;
   }
 
@@ -109,29 +113,34 @@ namespace nda::slice_static {
   // return : the new stride_order of the sliced map
   template <size_t P, size_t N>
   constexpr std::array<int, P> sliced_mem_stride_order(std::array<int, N> const &stride_order_in, std::array<int, P> const &n_of_p) {
+    // quick short cut : does it really impact compilation time ?
     //if (stride_order_in == 0) return 0; // quick decision C-> C
     auto stride_order = nda::make_initialized_array<P>(0);
     auto p_of_n       = p_of_n_map<N>(n_of_p); // reverse the map
-    for (size_t i = 0, ip = 0; i < N; ++i) {   // i : index of the n
-      int n = stride_order_in[i];              // n traverses the N in the order of the stride_order. Slowest first.
-      int p = p_of_n[n];                       // n->p or -1 is n is a long argument
-      if (p != -1) stride_order[ip++] = p;     // if p is fine, it is the next
+    // traverse the n in the order given by stride_order_in and keep them if they are associated to a p
+    for (int i = 0, ip = 0; i < N; ++i) {  // i : index of the n
+      int n = stride_order_in[i];          // n traverses the N in the order of the stride_order. Slowest first.
+      int p = p_of_n[n];                   // n->p or -1 is n is a long argument
+      if (p != -1) stride_order[ip++] = p; // if p is fine, it is the next
     }
     return stride_order;
   }
 
   // -------------- Slice the stride_order info flags-----------
+  // P : as before
+  // has_only_rangeall_and_long : as the name says...
   // args_is_range_all : for each q, True iif the args is a range_all or an ellipsis [NO range here !]
   // stride_order : the stride_order of idx_map to be slided
   // Nlast : position, in q, of the argument corresponding to the fastest stride
   // layout_prop : to be sliced
   //
   template <size_t Q, size_t N>
-  constexpr layout_prop_e slice_layout_prop(bool has_only_rangeall_and_long, std::array<bool, Q> const &args_is_range_all, int Nlast,
-                                            std::array<int, N> const &stride_order_in, layout_prop_e layout_prop) {
+  constexpr layout_prop_e slice_layout_prop(int P, bool has_only_rangeall_and_long, std::array<bool, Q> const &args_is_range_all, int Nlast,
+                                            std::array<int, N> const &stride_order, layout_prop_e layout_prop) {
 
+    // if we have some ranges, we give up
     if (not has_only_rangeall_and_long) {
-      if (Q == 1) // rank one is special. Alyways at least 1d strided
+      if (P == 1) // rank one is special. Alyways at least 1d strided
         return layout_prop_e::strided_1d;
       else
         return layout_prop_e::none;
@@ -139,12 +148,14 @@ namespace nda::slice_static {
     // count the number of times 1 0 appears args_in_range
     // we must traverse in the order of the stride_order ! (in memory order, slowest to fastest)
     int n_10_pattern = 0;
+    // FIXME : looks wrong : i_n ---> 1 to N not to, and use map
+    // remove Nlast ? i_n = N-1 Nlast = q_of_n(stride_order[N-1], e_pos, e_len)
     for (size_t i = 1; i < Q; ++i) {
-      int n = stride_order_in[i];
+      int n = stride_order[i];
       if ((n > 0) and args_is_range_all[n - 1] and (not args_is_range_all[n])) ++n_10_pattern;
     }
-    bool rangeall_are_grouped_in_memory             = (n_10_pattern <= 1);
-    bool rangeall_are_grouped_in_memory_and_fastest = (n_10_pattern == 0);
+    bool rangeall_are_grouped_in_memory             = (n_10_pattern <= 1); // in mem order. e.g. (long, all, all, long) or (all, all, long)
+    bool rangeall_are_grouped_in_memory_and_fastest = (n_10_pattern == 0); // in mem order e.g. (.... all, all, all) all at the end.
     bool last_is_rangeall                           = args_is_range_all[Nlast];
 
     layout_prop_e r = layout_prop_e::none;
@@ -175,10 +186,10 @@ namespace nda::slice_static {
   FORCEINLINE long get_s(range const &R, long s_n) { return s_n * R.step(); }
   FORCEINLINE long get_s(range_all, long s_n) { return s_n; }
 
-  // temporary debug
-  template <int... R>
-  struct debug {};
-#define PRINT(...) debug<__VA_ARGS__>().zozo;
+  // compile time print debug
+  //template <int... R>
+  //struct debug {};
+  //#define PRINT(...) debug<__VA_ARGS__>().zozo;
 
   // ----------------------------- slice of index map  : implementation function ----------------------------------------------
 
@@ -187,7 +198,8 @@ namespace nda::slice_static {
   // Arg : arguments of the slice
   // returns : a pair:  (offset, new sliced stride_order)
   //
-  template <size_t... Ns, size_t... Ps, size_t... Qs, typename IdxMap, typename... Args>
+  // FIXME : Q only needed, not Qs
+  template <size_t... Ps, size_t... Ns, size_t... Qs, typename IdxMap, typename... Args>
   FORCEINLINE auto slice_stride_order_impl(std::index_sequence<Ps...>, std::index_sequence<Ns...>, std::index_sequence<Qs...>, IdxMap const &idxm,
                                            Args const &... args) {
 
@@ -234,8 +246,9 @@ namespace nda::slice_static {
     // Compute the new layout_prop
     static constexpr bool has_only_rangeall_and_long = ((std::is_constructible_v<long, Args> or std::is_base_of_v<range_all, Args>)and...);
 
-    static constexpr layout_prop_e li = slice_layout_prop(
-       has_only_rangeall_and_long, args_is_range_all, q_of_n(IdxMap::stride_order[N - 1], e_pos, e_len), IdxMap::stride_order, IdxMap::layout_prop);
+    static constexpr layout_prop_e li =
+       slice_layout_prop(P, has_only_rangeall_and_long, args_is_range_all, q_of_n(IdxMap::stride_order[N - 1], e_pos, e_len), IdxMap::stride_order,
+                         IdxMap::layout_prop);
 
     static constexpr uint64_t new_static_extents_encoded = encode(new_static_extents);
     static constexpr uint64_t mem_stride_order_encoded   = encode(mem_stride_order);
@@ -248,9 +261,9 @@ namespace nda::slice_static {
   FORCEINLINE decltype(auto) slice_stride_order(IdxMap const &idxm, T const &... x) {
 
     static constexpr int n_args_ellipsis = ((std::is_same_v<T, ellipsis>)+...);
-    static constexpr int n_args_long     = (std::is_constructible_v<long, T> + ...);
+    static constexpr int n_args_long     = (std::is_constructible_v<long, T> + ...); // any T I can construct a long from
 
-    static_assert(n_args_ellipsis <= 1, "Only one ellipsis argument is authorized");
+    static_assert(n_args_ellipsis <= 1, "At most one ellipsis argument is authorized");
     static_assert((sizeof...(T) <= IdxMap::rank()), "Incorrect number of arguments in array call ");
     static_assert((n_args_ellipsis == 1) or (sizeof...(T) == IdxMap::rank()), "Incorrect number of arguments in array call ");
 

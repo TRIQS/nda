@@ -157,6 +157,8 @@ namespace nda {
       ENSURES(s == size());
     }
 
+    // FIXME ADD A CHECK layout_prop_e ... compare to stride and
+
     public:
     /// Default constructor. Lengths and Strides are not initiliazed.
     idx_map() {

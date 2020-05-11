@@ -25,6 +25,8 @@
 
 namespace nda {
 
+  // FIXME : eliminate this 
+  // /c++/nda/_impl_basic_array_view_common.hpp:71 -> two is_same_v
   struct range_tag {};
 
   /**
