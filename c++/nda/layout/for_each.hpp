@@ -67,13 +67,13 @@ namespace nda {
   // DEBUG
 
   template <int I, uint64_t StaticExtents, typename F, size_t R>
-  FORCEINLINE void for_each_static_impl(std::array<long, R> idx_lengths, F &&f) {
+  FORCEINLINE void for_each_static_impl(std::array<long, R> const & idx_lengths, F &&f) {
     if constexpr (I == R)
       f();
     else {
       const long imax = get_extent<I, R, StaticExtents>(idx_lengths);
-      for (int i = 0; i < imax; ++i) {
-        for_each_impl<I + 1>(
+      for (long i = 0; i < imax; ++i) {
+        for_each_static_impl<I + 1, StaticExtents>(
            idx_lengths, [ i, f ](auto &&... x) __attribute__((always_inline)) { return f(i, x...); });
       }
     }
@@ -81,13 +81,13 @@ namespace nda {
 
   ///
   template <uint64_t StaticExtents, typename F, size_t R>
-  FORCEINLINE void for_each_static(std::array<long, R> idx_lengths, F &&f) {
+  FORCEINLINE void for_each_static(std::array<long, R> const & idx_lengths, F &&f) {
     for_each_static_impl<0, StaticExtents>(idx_lengths, f);
   }
 
   ///
   template <typename F, size_t R>
-  FORCEINLINE void for_each(std::array<long, R> idx_lengths, F &&f) {
+  FORCEINLINE void for_each(std::array<long, R> const &idx_lengths, F &&f) {
     for_each_static_impl<0, 0>(idx_lengths, f);
   }
 
