@@ -11,7 +11,7 @@ namespace nda {
   // BEGIN_REMOVE_FOR_MATRIX
   // Class template argument deduction
   template <typename T>
-  basic_array(T)->basic_array<get_value_t<std::decay_t<T>>, get_rank<std::decay_t<T>>, C_layout, 'A', heap>;
+  basic_array(T) -> basic_array<get_value_t<std::decay_t<T>>, get_rank<std::decay_t<T>>, C_layout, 'A', heap>;
 
   // FIXME : in array as static ?
   namespace details {

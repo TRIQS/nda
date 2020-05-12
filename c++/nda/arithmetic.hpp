@@ -345,7 +345,7 @@ namespace nda {
    *    * if the algebra is 'M' : compute the matrix product (with blas gemm), in a new matrix. 
    */
   template <typename L, typename R>
-  auto operator*(L &&l, R &&r)REQUIRES(model_ndarray_with_possibly_one_scalar<L, R>) {
+  auto operator*(L &&l, R &&r) REQUIRES(model_ndarray_with_possibly_one_scalar<L, R>) {
     static_assert(rank_are_compatible<L, R>(), "rank mismatch in multiplication");
     static_assert(common_algebra<L, R>() != 'N', "Can not multiply two objects belonging to different algebras");
     using L_t = std::decay_t<L>; // L, R can be lvalue references

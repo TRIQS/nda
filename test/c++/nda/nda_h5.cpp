@@ -318,7 +318,6 @@ TEST(Array, H5ArrayString) { //NOLINT
 // -----------------------------------------------------
 TEST(Array, H5RealIntoComplex) { //NOLINT
 
-
   nda::array<double, 2> D(2, 3);
   nda::array<dcomplex, 2> C(2, 3);
 
