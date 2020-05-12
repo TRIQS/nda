@@ -111,7 +111,7 @@ namespace nda::allocators {
     }
 
     [[nodiscard]] bool is_full() const noexcept { return flags == 0; }
-    [[nodiscard]] bool is_empty() const noexcept { return flags == uint64_t(-1); }
+    [[nodiscard]] bool empty() const noexcept { return flags == uint64_t(-1); }
 
     [[nodiscard]] const char *data() const noexcept { return p; }
 
@@ -172,7 +172,7 @@ namespace nda::allocators {
         std::abort();
       }
       bu->deallocate(b);
-      if (!bu->is_empty()) return;
+      if (!bu->empty()) return;
       if (bu_vec.size() <= 1) return;
       bu_vec.erase(bu);
       bu = bu_vec.end();

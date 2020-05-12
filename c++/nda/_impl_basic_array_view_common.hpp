@@ -23,8 +23,7 @@ ValueType *data_start() { return _storage.data(); }
 [[nodiscard]] long size() const { return _idx_m.size(); }
 
 /// size() == 0
-//[[deprecated]]
-[[nodiscard]] bool is_empty() const { return _storage.is_null(); }
+[[nodiscard]] bool empty() const { return _storage.is_null(); }
 
 /// Same as shape()[i]
 //[[deprecated]]

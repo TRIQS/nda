@@ -27,7 +27,7 @@ namespace nda::linalg {
   // dispatch the implementation of invoke for T = double or complex
   auto _eigen_element_impl(M &&m, char compz) {
 
-    EXPECTS((not m.is_empty()));
+    EXPECTS((not m.empty()));
     EXPECTS(is_matrix_square(m, true));
     EXPECTS(m.indexmap().is_contiguous());
 
