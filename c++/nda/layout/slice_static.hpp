@@ -135,8 +135,8 @@ namespace nda::slice_static {
   // layout_prop : to be sliced
   //
   template <size_t Q, size_t N>
-  constexpr layout_prop_e slice_layout_prop(int P, bool has_only_rangeall_and_long, std::array<bool, Q> const &args_is_range_all, int Nlast,
-                                            std::array<int, N> const &stride_order, layout_prop_e layout_prop) {
+  constexpr layout_prop_e slice_layout_prop(int P, bool has_only_rangeall_and_long, std::array<bool, Q> const &args_is_range_all,
+                                            std::array<int, N> const &stride_order, layout_prop_e layout_prop, int e_pos, int e_len) {
 
     // if we have some ranges, we give up
     if (not has_only_rangeall_and_long) {
@@ -148,15 +148,16 @@ namespace nda::slice_static {
     // count the number of times 1 0 appears args_in_range
     // we must traverse in the order of the stride_order ! (in memory order, slowest to fastest)
     int n_10_pattern = 0;
-    // FIXME : looks wrong : i_n ---> 1 to N not to, and use map
-    // remove Nlast ? i_n = N-1 Nlast = q_of_n(stride_order[N-1], e_pos, e_len)
-    for (size_t i = 1; i < Q; ++i) {
-      int n = stride_order[i];
-      if ((n > 0) and args_is_range_all[n - 1] and (not args_is_range_all[n])) ++n_10_pattern;
+    for (int i_n = 1; i_n < int(N); ++i_n) {
+      int q = q_of_n(stride_order[i_n], e_pos, e_len);
+      int q_prec = q_of_n(stride_order[i_n - 1], e_pos, e_len);
+      if (args_is_range_all[q_prec] and (not args_is_range_all[q])) ++n_10_pattern;
     }
     bool rangeall_are_grouped_in_memory             = (n_10_pattern <= 1); // in mem order. e.g. (long, all, all, long) or (all, all, long)
     bool rangeall_are_grouped_in_memory_and_fastest = (n_10_pattern == 0); // in mem order e.g. (.... all, all, all) all at the end.
-    bool last_is_rangeall                           = args_is_range_all[Nlast];
+
+    int qlast             = q_of_n(stride_order[N - 1], e_pos, e_len);
+    bool last_is_rangeall = args_is_range_all[qlast];
 
     layout_prop_e r = layout_prop_e::none;
 
@@ -247,8 +248,7 @@ namespace nda::slice_static {
     static constexpr bool has_only_rangeall_and_long = ((std::is_constructible_v<long, Args> or std::is_base_of_v<range_all, Args>)and...);
 
     static constexpr layout_prop_e li =
-       slice_layout_prop(P, has_only_rangeall_and_long, args_is_range_all, q_of_n(IdxMap::stride_order[N - 1], e_pos, e_len), IdxMap::stride_order,
-                         IdxMap::layout_prop);
+       slice_layout_prop(P, has_only_rangeall_and_long, args_is_range_all, IdxMap::stride_order, IdxMap::layout_prop, e_pos, e_len);
 
     static constexpr uint64_t new_static_extents_encoded = encode(new_static_extents);
     static constexpr uint64_t mem_stride_order_encoded   = encode(mem_stride_order);
