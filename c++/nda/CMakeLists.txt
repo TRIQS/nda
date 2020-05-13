@@ -6,7 +6,8 @@ add_library(nda::nda_c ALIAS nda_c)
 target_link_libraries(nda_c PRIVATE $<BUILD_INTERFACE:nda_warnings>)
 
 # Configure compilation
-target_compile_options(nda_c PUBLIC -fPIC -std=c++17 $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
+target_compile_options(nda_c PUBLIC -std=c++17 $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
+set_property(TARGET nda_c PROPERTY POSITION_INDEPENDENT_CODE ON)
 target_include_directories(nda_c PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/c++>)
 target_include_directories(nda_c SYSTEM INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>)
 target_compile_definitions(nda_c PUBLIC
