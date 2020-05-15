@@ -22,9 +22,13 @@ namespace nda {
   }
 */
 
-  ///
+#if __cplusplus > 201703L
+  template <Array<2> M>
+#else
   template <typename M>
-  typename M::value_type trace(M const &m) NDA_REQUIRES(is_ndarray_v<M> and (get_rank<M> == 2)) {
+#endif
+  typename M::value_type trace(M const &m) NDA_REQUIRES17(is_ndarray_v<M> and (get_rank<M> == 2))
+  {
     EXPECTS(m.extent(0) == m.extent(1));
     auto r = typename M::value_type{};
     auto d = m.extent(0);
