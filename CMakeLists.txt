@@ -52,7 +52,7 @@ set(NDA_BINARY_DIR ${PROJECT_BINARY_DIR} CACHE STRING "Binary directory of the N
 # Options
 
 # Make additional Find Modules available
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/share/cmake/Modules)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/share/cmake/Modules)
 
 # Default to Release build type
 if(NOT CMAKE_BUILD_TYPE)
