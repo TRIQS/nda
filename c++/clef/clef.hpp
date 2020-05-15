@@ -252,7 +252,7 @@ namespace clef {
     };                                                                                                                                               \
   }                                                                                                                                                  \
   template <typename L, typename R>                                                                                                                  \
-  FORCEINLINE auto operator OP(L &&l, R &&r) REQUIRES(is_any_lazy<L, R>) {                                                                           \
+  FORCEINLINE auto operator OP(L &&l, R &&r) CLEF_REQUIRES(is_any_lazy<L, R>) {                                                                           \
     return expr<tags::TAG, expr_storage_t<L>, expr_storage_t<R>>{tags::TAG(), std::forward<L>(l), std::forward<R>(r)};                               \
   }                                                                                                                                                  \
   template <>                                                                                                                                        \
@@ -284,7 +284,7 @@ namespace clef {
     };                                                                                                                                               \
   }                                                                                                                                                  \
   template <typename L>                                                                                                                              \
-  FORCEINLINE auto operator OP(L &&l) REQUIRES(is_any_lazy<L>) {                                                                                     \
+  FORCEINLINE auto operator OP(L &&l) CLEF_REQUIRES(is_any_lazy<L>) {                                                                                     \
     return expr<tags::TAG, expr_storage_t<L>>{tags::TAG(), std::forward<L>(l)};                                                                      \
   }                                                                                                                                                  \
   template <>                                                                                                                                        \
@@ -435,11 +435,11 @@ namespace clef {
       _apply_this_on_each(std::make_index_sequence<sizeof...(T)>{}, ex.childs);
     }
     template <typename T>
-    FORCEINLINE void operator()(T const &x) REQUIRES(!is_any_lazy<T>) {
+    FORCEINLINE void operator()(T const &x) CLEF_REQUIRES(!is_any_lazy<T>) {
       f(x);
     }
     template <typename T>
-    FORCEINLINE void operator()(std::reference_wrapper<T> const &x) REQUIRES(!is_any_lazy<T>) {
+    FORCEINLINE void operator()(std::reference_wrapper<T> const &x) CLEF_REQUIRES(!is_any_lazy<T>) {
       f(x.get());
     }
   };
@@ -680,7 +680,7 @@ namespace clef {
   //constexpr int arity = 1;
 
   template <typename Obj, typename... Args>
-  expr<tags::function, expr_storage_t<Obj>, expr_storage_t<Args>...> make_expr_call(Obj &&obj, Args &&... args) REQUIRES(is_any_lazy<Args...>) {
+  expr<tags::function, expr_storage_t<Obj>, expr_storage_t<Args>...> make_expr_call(Obj &&obj, Args &&... args) CLEF_REQUIRES(is_any_lazy<Args...>) {
     //static_assert(((arity<Obj> == -1) || (arity<Obj> == sizeof...(Args))), "Object called with a wrong number of arguments");
     return {tags::function{}, std::forward<Obj>(obj), std::forward<Args>(args)...};
   }
@@ -691,7 +691,7 @@ namespace clef {
   * --------------------------------------------------------------------------------------------------- */
 
   template <typename Obj, typename Args>
-  expr<tags::subscript, expr_storage_t<Obj>, expr_storage_t<Args>> make_expr_subscript(Obj &&obj, Args &&args) REQUIRES(is_any_lazy<Args>) {
+  expr<tags::subscript, expr_storage_t<Obj>, expr_storage_t<Args>> make_expr_subscript(Obj &&obj, Args &&args) CLEF_REQUIRES(is_any_lazy<Args>) {
     return {tags::function{}, std::forward<Obj>(obj), std::forward<Args>(args)};
   }
 
@@ -703,29 +703,29 @@ namespace clef {
   * --------------------------------------------------------------------------------------------------- */
 #define CLEF_MAKE_FNT_LAZY(name)                                                                                                                     \
   template <typename... A>                                                                                                                           \
-  auto name(A &&... __a) REQUIRES(is_any_lazy<A...>) {                                                                                               \
+  auto name(A &&... __a) CLEF_REQUIRES(is_any_lazy<A...>) {                                                                                               \
     return make_expr_call([](auto const &... __b) -> decltype(auto) { return name(__b...); }, std::forward<A>(__a)...);                              \
   }
 
 #define CLEF_IMPLEMENT_LAZY_METHOD(TY, name)                                                                                                         \
   template <typename... A>                                                                                                                           \
-  auto name(A &&... __a) REQUIRES(is_any_lazy<A...>) {                                                                                               \
+  auto name(A &&... __a) CLEF_REQUIRES(is_any_lazy<A...>) {                                                                                               \
     return make_expr_call([](auto &&__obj, auto &&... __b) -> decltype(auto) { return __obj.name(__b...); }, *this, std::forward<A>(__a)...);        \
   }
 
 #define CLEF_IMPLEMENT_LAZY_CALL(...)                                                                                                                \
   template <typename... Args>                                                                                                                        \
-  auto operator()(Args &&... args) const &REQUIRES(clef::is_any_lazy<Args...>) {                                                                     \
+  auto operator()(Args &&... args) const &CLEF_REQUIRES(clef::is_any_lazy<Args...>) {                                                                     \
     return make_expr_call(*this, std::forward<Args>(args)...);                                                                                       \
   }                                                                                                                                                  \
                                                                                                                                                      \
   template <typename... Args>                                                                                                                        \
-     auto operator()(Args &&... args) & REQUIRES(clef::is_any_lazy<Args...>) {                                                                       \
+     auto operator()(Args &&... args) & CLEF_REQUIRES(clef::is_any_lazy<Args...>) {                                                                       \
     return make_expr_call(*this, std::forward<Args>(args)...);                                                                                       \
   }                                                                                                                                                  \
                                                                                                                                                      \
   template <typename... Args>                                                                                                                        \
-     auto operator()(Args &&... args) && REQUIRES(clef::is_any_lazy<Args...>) {                                                                      \
+     auto operator()(Args &&... args) && CLEF_REQUIRES(clef::is_any_lazy<Args...>) {                                                                      \
     return make_expr_call(std::move(*this), std::forward<Args>(args)...);                                                                            \
   }
 

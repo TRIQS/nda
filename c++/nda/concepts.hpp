@@ -56,8 +56,10 @@ template <typename A> concept Array = requires(A const &a) {
 
 #ifdef __clang__
 #define NDA_REQUIRES17(...) __attribute__((enable_if(__VA_ARGS__, AS_STRING(__VA_ARGS__))))
+#define NDA_REQUIRES(...) __attribute__((enable_if(__VA_ARGS__, AS_STRING(__VA_ARGS__))))
 #elif __GNUC__
 #define NDA_REQUIRES17(...) requires(__VA_ARGS__)
+#define NDA_REQUIRES(...) requires(__VA_ARGS__)
 #endif
 
 

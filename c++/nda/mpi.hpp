@@ -93,7 +93,7 @@ namespace nda {
 
   template <typename A>
   void mpi_broadcast(A &a, mpi::communicator c = {}, int root = 0) //
-     REQUIRES(is_regular_or_view_v<A>) {
+     NDA_REQUIRES(is_regular_or_view_v<A>) {
     static_assert(has_layout_contiguous<A>, "Non contigous view in mpi_broadcast are not implemented");
     auto sh = a.shape();
     //FIXME : mpi::std::array
@@ -104,21 +104,21 @@ namespace nda {
 
   template <typename A>
   mpi_lazy_reduce<A> mpi_reduce(A &a, mpi::communicator c = {}, int root = 0, bool all = false, MPI_Op op = MPI_SUM)
-     REQUIRES(is_regular_or_view_v<A>) {
+     NDA_REQUIRES(is_regular_or_view_v<A>) {
     static_assert(has_layout_contiguous<A>, "Non contigous view in mpi_broadcast are not implemented");
     return {a, c, root, all, op};
   }
 
   template <typename A>
   mpi_lazy_scatter<A> mpi_scatter(A &a, mpi::communicator c = {}, int root = 0, bool all = false) //
-     REQUIRES(is_regular_or_view_v<A>) {
+     NDA_REQUIRES(is_regular_or_view_v<A>) {
     static_assert(has_layout_contiguous<A>, "Non contigous view in mpi_broadcast are not implemented");
     return {a, c, root, all};
   }
 
   template <typename A>
   mpi_lazy_gather<A> mpi_gather(A &a, mpi::communicator c = {}, int root = 0, bool all = false) //
-     REQUIRES(is_regular_or_view_v<A>) {
+     NDA_REQUIRES(is_regular_or_view_v<A>) {
     static_assert(has_layout_contiguous<A>, "Non contigous view in mpi_broadcast are not implemented");
     return {a, c, root, all};
   }

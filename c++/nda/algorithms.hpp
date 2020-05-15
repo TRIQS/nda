@@ -14,7 +14,7 @@ namespace nda {
    * fold computes f(f(r, a(0,0)), a(0,1), ...)  etc
    */
   template <typename A, typename F, typename R = get_value_t<A>>
-  auto fold(F f, A const &a, R r = R{}) REQUIRES(is_ndarray_v<A>) {
+  auto fold(F f, A const &a, R r = R{}) NDA_REQUIRES(is_ndarray_v<A>) {
     decltype(f(r, get_value_t<A>{})) r2 = r;
     // to take into account that f may be double,double -> double, while one passes 0 (an int...)
     // R = int, R2= double in such case, and the result will be a double, or narrowing will occur
@@ -26,14 +26,14 @@ namespace nda {
 
   /// Returns true iif at least one element of the array is true
   template <typename A>
-  bool any(A const &a) REQUIRES(is_ndarray_v<A>) {
+  bool any(A const &a) NDA_REQUIRES(is_ndarray_v<A>) {
     static_assert(std::is_same_v<get_value_t<A>, bool>, "OOPS");
     return fold([](bool r, auto const &x) -> bool { return r or bool(x); }, a, false);
   }
 
   /// Returns true iif all elements of the array are true
   template <typename A>
-  bool all(A const &a) REQUIRES(is_ndarray_v<A>) {
+  bool all(A const &a) NDA_REQUIRES(is_ndarray_v<A>) {
     static_assert(std::is_same_v<get_value_t<A>, bool>, "OOPS");
     return fold([](bool r, auto const &x) -> bool { return r and bool(x); }, a, true);
   }
@@ -44,7 +44,7 @@ namespace nda {
    * @return The maximum element of A
    */
   template <typename A>
-  auto max_element(A const &a) REQUIRES(is_ndarray_v<A>) {
+  auto max_element(A const &a) NDA_REQUIRES(is_ndarray_v<A>) {
     return fold(
        [](auto const &x, auto const &y) {
          using std::max;
@@ -59,7 +59,7 @@ namespace nda {
    * @return The minimum element of A
    */
   template <typename A>
-  auto min_element(A const &a) REQUIRES(is_ndarray_v<A>) {
+  auto min_element(A const &a) NDA_REQUIRES(is_ndarray_v<A>) {
     return fold(
        [](auto const &x, auto const &y) {
          using std::min;
@@ -94,7 +94,7 @@ namespace nda {
    */
 
   template <typename A>
-  auto sum(A const &a) REQUIRES(is_ndarray_v<A>) {
+  auto sum(A const &a) NDA_REQUIRES(is_ndarray_v<A>) {
     return fold(std::plus<>{}, a);
   }
 

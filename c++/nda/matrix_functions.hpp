@@ -24,7 +24,7 @@ namespace nda {
 
   ///
   template <typename M>
-  typename M::value_type trace(M const &m) REQUIRES(is_ndarray_v<M> and (get_rank<M> == 2)) {
+  typename M::value_type trace(M const &m) NDA_REQUIRES(is_ndarray_v<M> and (get_rank<M> == 2)) {
     EXPECTS(m.extent(0) == m.extent(1));
     auto r = typename M::value_type{};
     auto d = m.extent(0);
@@ -34,7 +34,7 @@ namespace nda {
 
   ///
   template <typename M>
-  auto dagger(M const &m) REQUIRES(is_ndarray_v<M> and (get_rank<M> == 2)) {
+  auto dagger(M const &m) NDA_REQUIRES(is_ndarray_v<M> and (get_rank<M> == 2)) {
     return conj(transpose(m));
   }
 

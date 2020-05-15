@@ -7,12 +7,12 @@
 
 #endif
 
-#ifndef REQUIRES
+#ifndef CLEF_REQUIRES
 
 #ifdef __clang__
-#define REQUIRES(...) __attribute__((enable_if(__VA_ARGS__, AS_STRING(__VA_ARGS__))))
+#define CLEF_REQUIRES(...) __attribute__((enable_if(__VA_ARGS__, AS_STRING(__VA_ARGS__))))
 #elif __GNUC__
-#define REQUIRES(...) requires(__VA_ARGS__)
+#define CLEF_REQUIRES(...) requires(__VA_ARGS__)
 #endif
 
 #define DECL_AND_RETURN(...)                                                                                                                         \

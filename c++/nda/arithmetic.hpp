@@ -144,7 +144,7 @@ namespace nda {
     public:
     // FIXME Clef
     template <typename... Args>
-    auto operator()(Args const &... args) const { //  REQUIRES(not(clef::is_lazy<A> and ...)) {
+    auto operator()(Args const &... args) const { //  NDA_REQUIRES(not(clef::is_lazy<A> and ...)) {
 
       // We simply implement all cases
       if constexpr (OP == '+') { // we KNOW that l and r are NOT scalar (cf operator +,- impl).
@@ -221,7 +221,7 @@ namespace nda {
 
     // FIXME clef
     template <typename... Args>
-    auto operator()(Args &&... args) const {                           // REQUIRES(not(clef::is_lazy<L>))
+    auto operator()(Args &&... args) const {                           // NDA_REQUIRES(not(clef::is_lazy<L>))
       if constexpr (OP == '-') return -l(std::forward<Args>(args)...); // other cases not implemented
     }
 
@@ -282,7 +282,7 @@ namespace nda {
    * @return a lazy expression for elementwise addition
    */
   template <typename L, typename R>
-  auto operator+(L &&l, R &&r) REQUIRES(model_ndarray_with_possibly_one_scalar<L, R>) {
+  auto operator+(L &&l, R &&r) NDA_REQUIRES(model_ndarray_with_possibly_one_scalar<L, R>) {
     static_assert(rank_are_compatible<L, R>(), "rank mismatch in array addition");
     static_assert(common_algebra<L, R>() != 'N', "Can not add two objects belonging to different algebras");
     using L_t = std::decay_t<L>; // L, R can be lvalue references
@@ -313,7 +313,7 @@ namespace nda {
    * @return a lazy expression for elementwise substraction
    */
   template <typename L, typename R>
-  auto operator-(L &&l, R &&r) REQUIRES(model_ndarray_with_possibly_one_scalar<L, R>) {
+  auto operator-(L &&l, R &&r) NDA_REQUIRES(model_ndarray_with_possibly_one_scalar<L, R>) {
     static_assert(rank_are_compatible<L, R>(), "rank mismatch in array addition");
     static_assert(common_algebra<L, R>() != 'N', "Can not substract two objects belonging to different algebras");
     using L_t = std::decay_t<L>; // L, R can be lvalue references
@@ -374,7 +374,7 @@ namespace nda {
    * @return lazy expression for element-wise division
    */
   template <typename L, typename R>
-  expr<'/', L, R> operator/(L &&l, R &&r) REQUIRES(model_ndarray_with_possibly_one_scalar<L, R> and (common_algebra<L, R>() != 'N')) {
+  expr<'/', L, R> operator/(L &&l, R &&r) NDA_REQUIRES(model_ndarray_with_possibly_one_scalar<L, R> and (common_algebra<L, R>() != 'N')) {
     static_assert(rank_are_compatible<L, R>(), "rank mismatch in array addition");
     static_assert(common_algebra<L, R>() != 'N', "Can not divide two objects belonging to different algebras");
     //using L_t = std::decay_t<L>; // L, R can be lvalue references
@@ -384,14 +384,14 @@ namespace nda {
   }
 
   template <typename L>
-  expr_unary<'-', L> operator-(L &&l) REQUIRES(is_ndarray_v<std::decay_t<L>>) {
+  expr_unary<'-', L> operator-(L &&l) NDA_REQUIRES(is_ndarray_v<std::decay_t<L>>) {
     return {std::forward<L>(l)};
   }
 
   //------------  lazy inverse
 
   template <class A>
-  expr<'/', A, int> inverse(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+  expr<'/', A, int> inverse(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
     return {1, std::forward<A>(a)};
   }
 
@@ -400,7 +400,7 @@ namespace nda {
   //// anything / matrix ---> anything * inverse(matrix)
   //template <typename A, typename M>
   //auto operator/(A &&a, M &&m)    //
-  //REQUIRES(ImmutableMatrix<M>) //
+  //NDA_REQUIRES(ImmutableMatrix<M>) //
   //{
   //return std::forward<A>(a) * inverse(std::forward<M>(m);
   //}

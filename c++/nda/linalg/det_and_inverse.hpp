@@ -47,7 +47,7 @@ namespace nda {
   }
 
   template <typename A>
-  typename A::value_type determinant(A const &m, array<int, 1> const &ipiv) REQUIRES(is_matrix_or_view_v<A>) {
+  typename A::value_type determinant(A const &m, array<int, 1> const &ipiv) NDA_REQUIRES(is_matrix_or_view_v<A>) {
     return determinant_impl(make_const_view(m), ipiv);
   }
 
@@ -69,7 +69,7 @@ namespace nda {
   // ----------  inverse -------------------------
 
   template <typename A>
-  void inverse_in_place(A &a) REQUIRES(is_regular_or_view_v<A> and (get_algebra<A> == 'M') and (get_rank<A> == 2)) {
+  void inverse_in_place(A &a) NDA_REQUIRES(is_regular_or_view_v<A> and (get_algebra<A> == 'M') and (get_rank<A> == 2)) {
     EXPECTS(is_matrix_square(a, true));
     array<int, 1> ipiv(a.extent(0));
     int info = lapack::getrf(a, ipiv); // it is ok to be in C order. Lapack compute the inverse of the transpose.
@@ -79,7 +79,7 @@ namespace nda {
   }
 
   template <typename A>
-  auto inverse(A &a) REQUIRES(is_ndarray_v<A> and (get_algebra<A> == 'M') and (get_rank<A> == 2)) {
+  auto inverse(A &a) NDA_REQUIRES(is_ndarray_v<A> and (get_algebra<A> == 'M') and (get_rank<A> == 2)) {
     EXPECTS(is_matrix_square(a, true));
     auto r = make_regular(a);
     inverse_in_place(r);

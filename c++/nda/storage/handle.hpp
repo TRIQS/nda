@@ -25,6 +25,7 @@
 #include <complex>
 #include <type_traits>
 #include <cstring>
+#include "../concepts.hpp"
 #include "./blk.hpp"
 #include "./rtable.hpp"
 
@@ -455,7 +456,7 @@ namespace nda::mem {
 
     handle_borrowed(handle_heap<T0> const &x, long offset = 0) noexcept : _parent(&x), _data(x.data() + offset) {}
     handle_borrowed(handle_shared<T0> const &x, long offset = 0) noexcept : _data(x.data() + offset) {}
-    handle_borrowed(handle_borrowed<T0> const &x, long offset = 0) noexcept REQUIRES(std::is_const_v<T>) : _data(x.data() + offset) {}
+    handle_borrowed(handle_borrowed<T0> const &x, long offset = 0) noexcept NDA_REQUIRES(std::is_const_v<T>) : _data(x.data() + offset) {}
 
     template <size_t Size>
     handle_borrowed(handle_stack<T0, Size> const &x, long offset = 0) noexcept : _data(x.data() + offset) {}
