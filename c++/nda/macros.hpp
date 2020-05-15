@@ -25,12 +25,6 @@
 #define AS_STRING(...) AS_STRING2(__VA_ARGS__)
 #define AS_STRING2(...) #__VA_ARGS__
 
-#ifdef __clang__
-#define REQUIRES(...) __attribute__((enable_if(__VA_ARGS__, AS_STRING(__VA_ARGS__))))
-#elif __GNUC__
-#define REQUIRES(...) requires(__VA_ARGS__)
-#endif
-
 #define NDA_PRINT(X) std::cerr << AS_STRING(X) << " = " << X << "      at " << __FILE__ << ":" << __LINE__ << '\n'
 
 #define FORCEINLINE __inline__ __attribute__((always_inline))

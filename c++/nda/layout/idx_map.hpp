@@ -65,6 +65,8 @@ namespace nda {
    *        120 : storage (i,j,k) is : index j is slowest, then k, then i
    *    
    *    NB : StrideOrder = 0 is the default and it is means 0 order
+   * 
+   * @tparam LayoutProp : A flags of compile time guarantees for the layout
    *
    */
   template <int Rank, uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp>

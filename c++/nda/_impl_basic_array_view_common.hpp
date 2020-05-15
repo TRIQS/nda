@@ -1,8 +1,11 @@
 // ------------------------------- data access --------------------------------------------
 
+// FIXME get_layout
+
 /// The Index Map object
 [[nodiscard]] constexpr auto const &indexmap() const noexcept { return _idx_m; }
 
+// FIXME : do we really need this ??
 /// The storage handle
 [[nodiscard]] storage_t const &storage() const noexcept { return _storage; }
 storage_t &storage() { return _storage; }
@@ -168,9 +171,9 @@ template <typename Iterator>
   //NDA_PRINT("USING 1d iterator");
 
   if constexpr (iterator_rank == Rank)
-    return Iterator{indexmap().lengths(), indexmap().strides(), storage().data(), at_end};
+    return Iterator{indexmap().lengths(), indexmap().strides(), _storage.data(), at_end};
   else
-    return Iterator{std::array<long, 1>{size()}, std::array<long, 1>{indexmap().min_stride()}, storage().data(), at_end};
+    return Iterator{std::array<long, 1>{size()}, std::array<long, 1>{indexmap().min_stride()}, _storage.data(), at_end};
 }
 
 public:

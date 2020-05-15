@@ -5,18 +5,6 @@
 
 namespace nda {
 
-  /* // --------------------------- is_instantiation_of ------------------------*/
-
-  /**
-   * is_instantiation_of_v
-   * Checks that X is a T<....>
-   */
-  //template <typename T, template <typename..., auto ...> class TMPLT>
-  //inline constexpr bool is_instantiation_of_v = false;
-
-  //template <template <typename..., auto ...> class TMPLT, typename... U, auto ... X>
-  //inline constexpr bool is_instantiation_of_v<TMPLT<U..., X...>, TMPLT> = true;
-
   // --------------------------- is_complex ------------------------
 
   template <typename T>
@@ -75,29 +63,23 @@ namespace nda {
   template <typename A>
   inline constexpr bool is_matrix_or_view_v = is_regular_or_view_v<A> and (get_algebra<A> == 'M') and (get_rank<A> == 2);
 
-  // --------------------------- Ndarray concept------------------------
+ // --------------------------- get_first_element and get_value_t ------------------------
 
-  /// A trait to mark classes modeling the Ndarray concept
-  template <typename T>
-  inline constexpr bool is_ndarray_v = false;
+#if __cplusplus > 201703L
 
-  //template <typename T>
-  //inline constexpr bool is_2d_ndarray_v = is_ndarray_v<T> and ((get_rank<T>) == 2);
+  /// Get the first element of the array as a(0,0,0....) (i.e. also work for non
+  /// containers, just with the concept !).
+  template <typename A>
+  auto get_first_element(A const &a) {
+    return [&a]<auto... Is>(std::index_sequence<Is...>) {
+      return a((0 * Is)...); // repeat 0 sizeof...(Is) times
+    }
+    (std::make_index_sequence<get_rank<A>>{});
+  }
 
-  // --------------------------- concept : is_assign_rhs------------------------
-  // Mark classes which are NOT nd_array but have :
-  // .shape()
-  // can be put at the RHS of assignment or used in construction of array
-  /// A trait to mark classes modeling the Ndarray concept
-  template <typename T>
-  inline constexpr bool is_assign_rhs = false;
+#else
+  // C++17 compat
 
-  //template <typename T>
-  //inline constexpr bool is_2d_ndarray_v = is_ndarray_v<T> and ((get_rank<T>) == 2);
-
-  // --------------------------- get_first_element and get_value_t ------------------------
-
-  // FIXME C++20 lambda
   template <size_t... Is, typename A>
   auto _get_first_element_impl(std::index_sequence<Is...>, A const &a) {
     return a((0 * Is)...); // repeat 0 sizeof...(Is) times
@@ -109,7 +91,10 @@ namespace nda {
     return _get_first_element_impl(std::make_index_sequence<get_rank<A>>{}, a);
   }
 
+#endif
+
   /// A trait to get the return_t of the (long, ... long) for an object with ndarray concept
+  // FIXME : can be a ref! ?
   template <typename A>
   using get_value_t = decltype(get_first_element(std::declval<A const>()));
 

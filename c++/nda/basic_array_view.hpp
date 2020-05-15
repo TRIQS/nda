@@ -10,7 +10,7 @@
 namespace std {
   template <typename V, int R, typename L, char A, typename Al, typename Ow, typename V2, int R2, typename L2, char A2, typename Al2, typename Ow2>
   void swap(nda::basic_array_view<V, R, L, A, Al, Ow> &a, nda::basic_array_view<V2, R2, L2, A2, Al2, Ow2> &b) =
-     delete; // std::swap disabled for basic_array_view. Use nda::swap iinstead (or simply nda, found by ADL).
+     delete; // std::swap disabled for basic_array_view. Use nda::swap iinstead (or simply swap, found by ADL).
 }
 
 namespace nda {
@@ -41,11 +41,6 @@ namespace nda {
     static constexpr int rank      = Rank;
     static constexpr bool is_view  = true;
     static constexpr bool is_const = std::is_const_v<ValueType>;
-
-    //    static constexpr uint64_t stride_order = StrideOrder;
-
-    // FIXME : h5
-    // static std::string hdf5_format() { return "array<" + h5::get_hdf5_format<ValueType>() + "," + std::to_string(rank) + ">"; }
 
     private:
     template <typename IdxMap>
@@ -169,6 +164,11 @@ namespace nda {
       std::swap(a._storage, b._storage);
     }
 
+
+    // FIXME : pull out !!
+    // copy view, no need of friend !
+
+
     /**
      * Swaps the *views* a and b, without copying data
      * @param a
@@ -183,6 +183,7 @@ namespace nda {
       b        = tmp;
     }
 
+    // FIXME useless !!
     // on or both can be a temporary !
     /**
      * Swaps the *views* a and b, without copying data

@@ -3,12 +3,6 @@
 
 namespace nda {
 
-  // // UNCOMMENT_FOR_MATRIX
-  // /// Class template argument deduction
-  // template <typename T>
-  // matrix(T)->matrix<get_value_t<std::decay_t<T>>>;
-
-  // BEGIN_REMOVE_FOR_MATRIX
   // Class template argument deduction
   template <typename T>
   basic_array(T) -> basic_array<get_value_t<std::decay_t<T>>, get_rank<std::decay_t<T>>, C_layout, 'A', heap>;
@@ -24,7 +18,6 @@ namespace nda {
       return std::is_invocable_r_v<R, Initializer, _long_anyway<Is>...>;
     }
   } // namespace details
-  // END_REMOVE_FOR_MATRIX
 
   // ---------------------- array--------------------------------
 
@@ -37,6 +30,7 @@ namespace nda {
     using value_t    = ValueType;
     using value_type = ValueType;
 
+    // FIXME traits
     ///
     using regular_t = basic_array;
     ///
@@ -44,13 +38,19 @@ namespace nda {
     ///
     using const_view_t = basic_array_view<ValueType const, Rank, Layout, Algebra, default_accessor, borrowed>;
 
+    // FIXME layout_t
     using idx_map_t = typename Layout::template mapping<Rank>;
+    private:
+    // FIXME : mem_handle_t
     using storage_t = typename ContainerPolicy::template handle<ValueType, idx_map_t::ce_size()>;
+
+    public:
 
     //    static constexpr uint64_t stride_order = StrideOrder;
     //  static constexpr layout_prop_e stride_order= layout_prop_e::contiguous;
 
     static constexpr int rank      = Rank;
+//    private:
     static constexpr bool is_const = false;
     static constexpr bool is_view  = false;
 
@@ -73,7 +73,7 @@ namespace nda {
     basic_array() = default;
 
     /// Makes a deep copy, since array is a regular type
-    basic_array(basic_array const &x) : _idx_m(x.indexmap()), _storage(x.storage()) {}
+    basic_array(basic_array const &x) : _idx_m(x.indexmap()), _storage(x._storage) {}
 
     ///
     basic_array(basic_array &&X) = default;
