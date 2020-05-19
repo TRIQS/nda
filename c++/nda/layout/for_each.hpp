@@ -26,69 +26,78 @@ namespace nda {
 
   // ----------------  for_each  -------------------------
 
-  // C style
-  template <int I, typename F, size_t R>
-  FORCEINLINE void for_each_impl(std::array<long, R> idx_lengths, F &&f) {
-    if constexpr (I == R)
-      f();
-    else {
-      long imax = idx_lengths[I];
-      for (int i = 0; i < imax; ++i) {
-        for_each_impl<I + 1>(
-           idx_lengths, [ i, f ](auto &&... x) __attribute__((always_inline)) { return f(i, x...); });
+  /*  // C style*/
+  //template <int I, typename F, size_t R>
+  //FORCEINLINE void for_each_impl(std::array<long, R> idx_lengths, F &&f) {
+  //if constexpr (I == R)
+  //f();
+  //else {
+  //long imax = idx_lengths[I];
+  //for (int i = 0; i < imax; ++i) {
+  //for_each_impl<I + 1>(
+  //idx_lengths, [ i, f ](auto &&... x) __attribute__((always_inline)) { return f(i, x...); });
+  //}
+  //}
+  //}
+
+  /////
+  //template <typename F, size_t R>
+  //FORCEINLINE void for_each2(std::array<long, R> idx_lengths, F &&f) {
+  //for_each_impl<0>(idx_lengths, f);
+  /*}*/
+
+  namespace details {
+
+    // return the i th index in Strider
+    int index_from_stride_order(uint64_t StrideOrder, int i) {
+      if (StrideOrder == 0) return i;             // default C order
+      auto stride_order = decode<R>(StrideOrder); // FIXME C++20
+      return stride_order[i];
+    }
+
+    // ----------------  get_extent  -------------------------
+
+    template <int I, int R, uint64_t StaticExtents>
+    long get_extent(std::array<long, R> const &l) {
+      if constexpr (StaticExtents == 0)
+        return l[I]; // quick exit, no computation of
+      else {
+        constexpr auto static_extents = decode<R>(StaticExtents); // FIXME C++20
+        if constexpr (static_extents[I] == 0)
+          return l[I];
+        else
+          return static_extents[I];
       }
     }
-  }
 
-  ///
-  template <typename F, size_t R>
-  FORCEINLINE void for_each2(std::array<long, R> idx_lengths, F &&f) {
-    for_each_impl<0>(idx_lengths, f);
-  }
+    // ----------------  for_each
 
-  // ----------------  get_extent  -------------------------
-
-  template <int I, int R, uint64_t StaticExtents>
-  long get_extent(std::array<long, R> const &l) {
-    if constexpr (StaticExtents == 0)
-      return l[I]; // quick exit, no computation of
-    else {
-      constexpr auto static_extents = decode<R>(StaticExtents); // FIXME C++20
-      if constexpr (static_extents[I] == 0)
-        return l[I];
-      else
-        return static_extents[I];
+    template <int I, uint64_t StaticExtents, uint64_t StrideOrder, typename F, size_t R>
+    FORCEINLINE void for_each_static_impl(std::array<long, R> const &idx_lengths, F &&f) {
+      if constexpr (I == R)
+        f();
+      else {
+        const long imax = details::get_extent<details::index_from_stride_order(StrideOrder, I), R, StaticExtents>(idx_lengths);
+        for (long i = 0; i < imax; ++i) {
+          for_each_static_impl<I + 1, StaticExtents, StrideOrder>(
+             idx_lengths, [ i, f ](auto &&... x) __attribute__((always_inline)) { return f(i, x...); });
+        }
+      }
     }
-  }
+  } // namespace details
 
   // ----------------  for_each  -------------------------
 
-  // FIXME : See if we can merge with for_each ...
-  // DEBUG
-
-  template <int I, uint64_t StaticExtents, typename F, size_t R>
-  FORCEINLINE void for_each_static_impl(std::array<long, R> const & idx_lengths, F &&f) {
-    if constexpr (I == R)
-      f();
-    else {
-      const long imax = get_extent<I, R, StaticExtents>(idx_lengths);
-      for (long i = 0; i < imax; ++i) {
-        for_each_static_impl<I + 1, StaticExtents>(
-           idx_lengths, [ i, f ](auto &&... x) __attribute__((always_inline)) { return f(i, x...); });
-      }
-    }
+  ///
+  template <uint64_t StaticExtents, uint64_t StrideOrder, typename F, long R>
+  FORCEINLINE void for_each_static(std::array<long, R> const &idx_lengths, F &&f) {
+    for_each_static_impl<0, StaticExtents, StrideOrder>(idx_lengths, f);
   }
 
-  ///
-  template <uint64_t StaticExtents, typename F, size_t R>
-  FORCEINLINE void for_each_static(std::array<long, R> const & idx_lengths, F &&f) {
-    for_each_static_impl<0, StaticExtents>(idx_lengths, f);
-  }
-
-  ///
-  template <typename F, size_t R>
+  /// A loop in C order
+  template <typename F, long R>
   FORCEINLINE void for_each(std::array<long, R> const &idx_lengths, F &&f) {
-    for_each_static_impl<0, 0>(idx_lengths, f);
+    for_each_static_impl<0, 0, 0>(idx_lengths, f);
   }
 
 } // namespace nda
