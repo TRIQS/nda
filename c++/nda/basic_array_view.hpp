@@ -69,7 +69,7 @@ namespace nda {
      *
      * @param v a view 
      */
-    basic_array_view(basic_array_view const &v) NDA_REQUIRES(is_const) : basic_array_view(v.indexmap(), v.storage()) {}
+    basic_array_view(basic_array_view const &v) REQUIRES(is_const) : basic_array_view(v.indexmap(), v.storage()) {}
 
     /**
      *  [Advanced] From an indexmap and a storage handle
@@ -85,7 +85,7 @@ namespace nda {
      * @param a array or view
      */
     template <typename A>                                          //explicit
-    basic_array_view(A const &a) NDA_REQUIRES(is_regular_or_view_v<A>) //and layout_are_compatible_for_view<A::idx_map_t,idx_map_t>)
+    basic_array_view(A const &a) REQUIRES(is_regular_or_view_v<A>) //and layout_are_compatible_for_view<A::idx_map_t,idx_map_t>)
        : basic_array_view(idx_map_t{a.indexmap()}, a.storage()) {}
 
     /** 
@@ -145,7 +145,7 @@ namespace nda {
     }
 
     /// Rebind view
-    void rebind(no_const_view_t const &a) NDA_REQUIRES(is_const) {
+    void rebind(no_const_view_t const &a) REQUIRES(is_const) {
       //static_assert(is_const, "Can not rebind a view of const ValueType to a view of ValueType");
       _idx_m   = idx_map_t{a.indexmap()};
       _storage = storage_t{a.storage()};

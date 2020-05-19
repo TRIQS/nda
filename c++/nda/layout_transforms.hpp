@@ -93,13 +93,13 @@ namespace nda {
   // ---------------  transpose ------------------------
   // for matrices ...
   template <typename A>
-  auto transpose(A &&a) NDA_REQUIRES(is_regular_or_view_v<std::decay_t<A>> and (std::decay_t<A>::rank == 2)) {
+  auto transpose(A &&a) REQUIRES(is_regular_or_view_v<std::decay_t<A>> and (std::decay_t<A>::rank == 2)) {
     return permuted_indices_view<encode(std::array{1, 0})>(std::forward<A>(a));
   }
 
   // Transposed_view swap two indices
   template <int I, int J, typename A>
-  auto transposed_view(A &&a) NDA_REQUIRES(is_regular_or_view_v<std::decay_t<A>>) {
+  auto transposed_view(A &&a) REQUIRES(is_regular_or_view_v<std::decay_t<A>>) {
     return permuted_indices_view<encode(permutations::transposition<std::decay_t<A>::rank>(I, J))>(std::forward<A>(a));
   }
 

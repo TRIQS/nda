@@ -197,7 +197,7 @@ namespace nda {
     // trap for error. If one tries to construct a view with a mismatch of stride order
     template <uint64_t StaticExtents2, uint64_t StrideOrder2, layout_prop_e LayoutProp2>
     idx_map(idx_map<Rank, StaticExtents2, StrideOrder2, LayoutProp2> const &)
-       NDA_REQUIRES((StaticExtents2 != StaticExtents) or (StrideOrder != StrideOrder2)) {
+       REQUIRES((StaticExtents2 != StaticExtents) or (StrideOrder != StrideOrder2)) {
       static_assert(not((StaticExtents2 != StaticExtents) or (StrideOrder != StrideOrder2)),
                     "Can not construct a layout from another one with a different stride order");
     }
@@ -237,7 +237,7 @@ namespace nda {
      * @param lengths
      * @param strides
      */
-    idx_map(std::array<long, rank_dynamic> const &lengths) noexcept NDA_REQUIRES((rank_dynamic != Rank) and (rank_dynamic != 0))
+    idx_map(std::array<long, rank_dynamic> const &lengths) noexcept REQUIRES((rank_dynamic != Rank) and (rank_dynamic != 0))
        : idx_map(_embed_array(lengths)) {}
 
     // trap for incorrect calls. For R = Rank, the non template has priority

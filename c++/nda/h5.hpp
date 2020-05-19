@@ -16,7 +16,7 @@ namespace nda {
    * @param a The array to be stored
    */
   template <typename A>
-  void h5_write(h5::group g, std::string const &name, A const &a) NDA_REQUIRES(is_regular_or_view_v<A>);
+  void h5_write(h5::group g, std::string const &name, A const &a) REQUIRES(is_regular_or_view_v<A>);
 
   /*
    * Read an array or a view from an hdf5 file
@@ -27,7 +27,7 @@ namespace nda {
    * @param a The array to be stored
    */
   template <typename A>
-  void h5_read(h5::group g, std::string const &name, A &a) NDA_REQUIRES(is_regular_or_view_v<A>);
+  void h5_read(h5::group g, std::string const &name, A &a) REQUIRES(is_regular_or_view_v<A>);
 
   // ----- Implementation ------
 
@@ -41,7 +41,7 @@ namespace nda {
     // FIXME almost the same code as for vector. Factorize this ?
     // For the moment, 1d only : easy to implement, just change the construction of the lengths
     template <typename A>
-    h5::char_buf to_char_buf(A const &v) NDA_REQUIRES(is_regular_or_view_v<A>) {
+    h5::char_buf to_char_buf(A const &v) REQUIRES(is_regular_or_view_v<A>) {
       static_assert(A::rank == 1, "H5 for array<string, N> for N>1 not implemented");
       size_t s = 0;
       for (auto &x : v) s = std::max(s, x.size() + 1);
@@ -58,7 +58,7 @@ namespace nda {
     }
 
     template <typename A>
-    void from_char_buf(h5::char_buf const &cb, A &v) NDA_REQUIRES(is_regular_or_view_v<A>) {
+    void from_char_buf(h5::char_buf const &cb, A &v) REQUIRES(is_regular_or_view_v<A>) {
       static_assert(A::rank == 1, "H5 for array<string, N> for N>1 not implemented");
       v.resize(cb.lengths[0]);
       auto len_string = cb.lengths[1];
@@ -74,7 +74,7 @@ namespace nda {
   } // namespace h5_details
 
   template <typename A>
-  void h5_write(h5::group g, std::string const &name, A const &a) NDA_REQUIRES(is_regular_or_view_v<A>) {
+  void h5_write(h5::group g, std::string const &name, A const &a) REQUIRES(is_regular_or_view_v<A>) {
 
     // Properly treat arrays with non-standard memory layout
     if constexpr (not std::decay_t<A>::idx_map_t::is_stride_order_C()) {
@@ -105,7 +105,7 @@ namespace nda {
   }
 
   template <typename A>
-  void h5_read(h5::group g, std::string const &name, A &a) NDA_REQUIRES(is_regular_or_view_v<A>) {
+  void h5_read(h5::group g, std::string const &name, A &a) REQUIRES(is_regular_or_view_v<A>) {
 
     // If array is not C-strided, read into array with default layout and copy
     if constexpr (not std::decay_t<A>::idx_map_t::is_stride_order_C()) {

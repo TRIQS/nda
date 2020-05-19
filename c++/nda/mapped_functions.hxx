@@ -15,7 +15,7 @@
   VIMEXPAND abs real imag floor conj
   /// Maps @ onto the array
   template <typename A>
-  auto @(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+  auto @(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
     return nda::map(
        [](auto const &x) {
          using std::@;
@@ -28,7 +28,7 @@
   VIMEXPAND conj_r abs2 isnan
   /// Maps @ onto the array
   template <typename A>
-  auto @(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+  auto @(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
     return nda::map(
        [](auto const &x) {return @(x); })(std::forward<A>(a));
   }
@@ -38,7 +38,7 @@
   VIMEXPAND exp cos sin tan cosh sinh tanh acos asin atan log sqrt
   /// Maps @ onto the array
   template <typename A>
-  auto @(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+  auto @(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
     return nda::map(
        [](auto const &x) {
          using std::@;
@@ -54,7 +54,7 @@ namespace nda {
 
   /// Maps abs onto the array
   template <typename A>
-  auto abs(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+  auto abs(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
     return nda::map([](auto const &x) {
       using std::abs;
       return abs(x);
@@ -63,7 +63,7 @@ namespace nda {
 
   /// Maps real onto the array
   template <typename A>
-  auto real(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+  auto real(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
     return nda::map([](auto const &x) {
       using std::real;
       return real(x);
@@ -72,7 +72,7 @@ namespace nda {
 
   /// Maps imag onto the array
   template <typename A>
-  auto imag(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+  auto imag(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
     return nda::map([](auto const &x) {
       using std::imag;
       return imag(x);
@@ -81,7 +81,7 @@ namespace nda {
 
   /// Maps floor onto the array
   template <typename A>
-  auto floor(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+  auto floor(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
     return nda::map([](auto const &x) {
       using std::floor;
       return floor(x);
@@ -90,7 +90,7 @@ namespace nda {
 
   /// Maps conj onto the array
   template <typename A>
-  auto conj(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+  auto conj(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
     return nda::map([](auto const &x) {
       using std::conj;
       return conj(x);
@@ -99,25 +99,25 @@ namespace nda {
 
   /// Maps conj_r onto the array
   template <typename A>
-  auto conj_r(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+  auto conj_r(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
     return nda::map([](auto const &x) { return conj_r(x); })(std::forward<A>(a));
   }
 
   /// Maps abs2 onto the array
   template <typename A>
-  auto abs2(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+  auto abs2(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
     return nda::map([](auto const &x) { return abs2(x); })(std::forward<A>(a));
   }
 
   /// Maps isnan onto the array
   template <typename A>
-  auto isnan(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+  auto isnan(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
     return nda::map([](auto const &x) { return isnan(x); })(std::forward<A>(a));
   }
 
   /// Maps exp onto the array
   template <typename A>
-  auto exp(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+  auto exp(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
     return nda::map([](auto const &x) {
       using std::exp;
       return exp(x);
@@ -126,7 +126,7 @@ namespace nda {
 
   /// Maps cos onto the array
   template <typename A>
-  auto cos(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+  auto cos(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
     return nda::map([](auto const &x) {
       using std::cos;
       return cos(x);
@@ -135,7 +135,7 @@ namespace nda {
 
   /// Maps sin onto the array
   template <typename A>
-  auto sin(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+  auto sin(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
     return nda::map([](auto const &x) {
       using std::sin;
       return sin(x);
@@ -144,7 +144,7 @@ namespace nda {
 
   /// Maps tan onto the array
   template <typename A>
-  auto tan(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+  auto tan(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
     return nda::map([](auto const &x) {
       using std::tan;
       return tan(x);
@@ -153,7 +153,7 @@ namespace nda {
 
   /// Maps cosh onto the array
   template <typename A>
-  auto cosh(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+  auto cosh(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
     return nda::map([](auto const &x) {
       using std::cosh;
       return cosh(x);
@@ -162,7 +162,7 @@ namespace nda {
 
   /// Maps sinh onto the array
   template <typename A>
-  auto sinh(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+  auto sinh(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
     return nda::map([](auto const &x) {
       using std::sinh;
       return sinh(x);
@@ -171,7 +171,7 @@ namespace nda {
 
   /// Maps tanh onto the array
   template <typename A>
-  auto tanh(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+  auto tanh(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
     return nda::map([](auto const &x) {
       using std::tanh;
       return tanh(x);
@@ -180,7 +180,7 @@ namespace nda {
 
   /// Maps acos onto the array
   template <typename A>
-  auto acos(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+  auto acos(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
     return nda::map([](auto const &x) {
       using std::acos;
       return acos(x);
@@ -189,7 +189,7 @@ namespace nda {
 
   /// Maps asin onto the array
   template <typename A>
-  auto asin(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+  auto asin(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
     return nda::map([](auto const &x) {
       using std::asin;
       return asin(x);
@@ -198,7 +198,7 @@ namespace nda {
 
   /// Maps atan onto the array
   template <typename A>
-  auto atan(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+  auto atan(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
     return nda::map([](auto const &x) {
       using std::atan;
       return atan(x);
@@ -207,7 +207,7 @@ namespace nda {
 
   /// Maps log onto the array
   template <typename A>
-  auto log(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+  auto log(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
     return nda::map([](auto const &x) {
       using std::log;
       return log(x);
@@ -216,7 +216,7 @@ namespace nda {
 
   /// Maps sqrt onto the array
   template <typename A>
-  auto sqrt(A &&a) NDA_REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+  auto sqrt(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
     return nda::map([](auto const &x) {
       using std::sqrt;
       return sqrt(x);

@@ -34,7 +34,7 @@ static void foreach_static2(benchmark::State &state) {
   nda::array<double, 2> a(N1, N2);
 
   while (state.KeepRunning()) {
-    nda::for_each_static<encode(std::array{N1, N2})>(a.shape(), [&a](auto x0, auto x1) { benchmark::DoNotOptimize(a(x0, x1) = 10); });
+    nda::for_each_static<encode(std::array{N1, N2}),0>(a.shape(), [&a](auto x0, auto x1) { benchmark::DoNotOptimize(a(x0, x1) = 10); });
   }
 }
 BENCHMARK(foreach_static2);

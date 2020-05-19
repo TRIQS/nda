@@ -14,7 +14,7 @@
   /// 
   template <typename A>
   [[deprecated("@1_dim is deprecated (convergence to std::mdspan). Replace by .extent(@2)")]] 
-  long @1_dim(A const &a) NDA_REQUIRES(is_ndarray_v<A>) {
+  long @1_dim(A const &a) REQUIRES(is_ndarray_v<A>) {
     return a.shape()[@2];
   }
 
@@ -30,7 +30,7 @@ namespace nda {
   /// @return The first dimension. Equivalent to a.shape()[0]
   ///
   template <typename A>
-  [[deprecated("first_dim is deprecated (convergence to std::mdspan). Replace by .extent(0)")]] long first_dim(A const &a) NDA_REQUIRES(is_ndarray_v<A>) {
+  [[deprecated("first_dim is deprecated (convergence to std::mdspan). Replace by .extent(0)")]] long first_dim(A const &a) REQUIRES(is_ndarray_v<A>) {
     return a.shape()[0];
   }
 
@@ -41,7 +41,7 @@ namespace nda {
   ///
   template <typename A>
   [[deprecated("second_dim is deprecated (convergence to std::mdspan). Replace by .extent(1)")]] long second_dim(A const &a)
-     NDA_REQUIRES(is_ndarray_v<A>) {
+     REQUIRES(is_ndarray_v<A>) {
     return a.shape()[1];
   }
 
@@ -51,7 +51,7 @@ namespace nda {
   /// @return The third dimension. Equivalent to a.shape()[2]
   ///
   template <typename A>
-  [[deprecated("third_dim is deprecated (convergence to std::mdspan). Replace by .extent(2)")]] long third_dim(A const &a) NDA_REQUIRES(is_ndarray_v<A>) {
+  [[deprecated("third_dim is deprecated (convergence to std::mdspan). Replace by .extent(2)")]] long third_dim(A const &a) REQUIRES(is_ndarray_v<A>) {
     return a.shape()[2];
   }
 
@@ -62,7 +62,7 @@ namespace nda {
   ///
   template <typename A>
   [[deprecated("fourth_dim is deprecated (convergence to std::mdspan). Replace by .extent(3)")]] long fourth_dim(A const &a)
-     NDA_REQUIRES(is_ndarray_v<A>) {
+     REQUIRES(is_ndarray_v<A>) {
     return a.shape()[3];
   }
 
@@ -72,7 +72,7 @@ namespace nda {
   /// @return The fifth dimension. Equivalent to a.shape()[4]
   ///
   template <typename A>
-  [[deprecated("fifth_dim is deprecated (convergence to std::mdspan). Replace by .extent(4)")]] long fifth_dim(A const &a) NDA_REQUIRES(is_ndarray_v<A>) {
+  [[deprecated("fifth_dim is deprecated (convergence to std::mdspan). Replace by .extent(4)")]] long fifth_dim(A const &a) REQUIRES(is_ndarray_v<A>) {
     return a.shape()[4];
   }
 
@@ -82,7 +82,7 @@ namespace nda {
   /// @return The sixth dimension. Equivalent to a.shape()[5]
   ///
   template <typename A>
-  [[deprecated("sixth_dim is deprecated (convergence to std::mdspan). Replace by .extent(5)")]] long sixth_dim(A const &a) NDA_REQUIRES(is_ndarray_v<A>) {
+  [[deprecated("sixth_dim is deprecated (convergence to std::mdspan). Replace by .extent(5)")]] long sixth_dim(A const &a) REQUIRES(is_ndarray_v<A>) {
     return a.shape()[5];
   }
 
@@ -93,7 +93,7 @@ namespace nda {
   ///
   template <typename A>
   [[deprecated("seventh_dim is deprecated (convergence to std::mdspan). Replace by .extent(6)")]] long seventh_dim(A const &a)
-     NDA_REQUIRES(is_ndarray_v<A>) {
+     REQUIRES(is_ndarray_v<A>) {
     return a.shape()[6];
   }
 
@@ -104,7 +104,7 @@ namespace nda {
   ///
   template <typename A>
   [[deprecated("eighth_dim is deprecated (convergence to std::mdspan). Replace by .extent(7)")]] long eighth_dim(A const &a)
-     NDA_REQUIRES(is_ndarray_v<A>) {
+     REQUIRES(is_ndarray_v<A>) {
     return a.shape()[7];
   }
 
@@ -114,7 +114,7 @@ namespace nda {
   /// @return The ninth dimension. Equivalent to a.shape()[8]
   ///
   template <typename A>
-  [[deprecated("ninth_dim is deprecated (convergence to std::mdspan). Replace by .extent(8)")]] long ninth_dim(A const &a) NDA_REQUIRES(is_ndarray_v<A>) {
+  [[deprecated("ninth_dim is deprecated (convergence to std::mdspan). Replace by .extent(8)")]] long ninth_dim(A const &a) REQUIRES(is_ndarray_v<A>) {
     return a.shape()[8];
   }
 

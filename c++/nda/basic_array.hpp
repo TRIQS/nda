@@ -112,7 +112,7 @@ namespace nda {
     basic_array(idx_map_t const &idxm, storage_t &&mem_handle) : _idx_m(idxm), _storage(std::move(mem_handle)) {}
 
     /// Construct from anything that has an indexmap and a storage compatible with this class
-    //template <typename T> basic_array(T const &a) NDA_REQUIRES(XXXX): basic_array(a.indexmap(), a.storage()) {}
+    //template <typename T> basic_array(T const &a) REQUIRES(XXXX): basic_array(a.indexmap(), a.storage()) {}
 
     /** 
      * From any type modeling NdArray
@@ -122,8 +122,8 @@ namespace nda {
      * @param x 
      */
     template <typename A>
-    basic_array(A const &x) NDA_REQUIRES(is_ndarray_v<A>) : basic_array{x.shape()} {
-      // need to put here, not in NDA_REQUIRES : get_valuee_t may fail, and we want to trap the construction with a proper error
+    basic_array(A const &x) REQUIRES(is_ndarray_v<A>) : basic_array{x.shape()} {
+      // need to put here, not in REQUIRES : get_valuee_t may fail, and we want to trap the construction with a proper error
       static_assert(std::is_convertible_v<get_value_t<A>, value_t>,
                     "Can not construct the array. ValueType can not be constructed from the value_t of the argument");
       assign_from(*this, x);
@@ -138,7 +138,7 @@ namespace nda {
      * @param lazy 
      */
     template <typename Lazy>
-    basic_array(Lazy const &lazy) NDA_REQUIRES(is_assign_rhs<Lazy>) : basic_array{lazy.shape()} {
+    basic_array(Lazy const &lazy) REQUIRES(is_assign_rhs<Lazy>) : basic_array{lazy.shape()} {
       assign_from(*this, lazy);
     }
 
@@ -165,7 +165,7 @@ namespace nda {
      */
     template <typename T>
     basic_array(std::initializer_list<T> const &l) //
-       NDA_REQUIRES((Rank == 1) and std::is_constructible_v<value_t, T>)
+       REQUIRES((Rank == 1) and std::is_constructible_v<value_t, T>)
        : basic_array{shape_t<Rank>{long(l.size())}} {
       long i = 0;
       for (auto const &x : l) (*this)(i++) = x;
@@ -195,7 +195,7 @@ namespace nda {
      */
     template <typename T>
     basic_array(std::initializer_list<std::initializer_list<T>> const &ll) //
-       NDA_REQUIRES((Rank == 2) and std::is_constructible_v<value_t, T>)
+       REQUIRES((Rank == 2) and std::is_constructible_v<value_t, T>)
        : basic_array(_comp_shape_from_list_list(ll)) {
       long i = 0, j = 0;
       for (auto const &l1 : ll) {
@@ -216,7 +216,7 @@ namespace nda {
      */
     template <typename Initializer>
     explicit basic_array(shape_t<Rank> const &shape, Initializer initializer)
-       NDA_REQUIRES(details::_is_a_good_lambda_for_init<ValueType, Initializer>(std::make_index_sequence<Rank>()))
+       REQUIRES(details::_is_a_good_lambda_for_init<ValueType, Initializer>(std::make_index_sequence<Rank>()))
        : _idx_m(shape), _storage{_idx_m.size(), mem::do_not_initialize} {
       nda::for_each(_idx_m.lengths(), [&](auto const &... x) { _storage.init_raw(_idx_m(x...), initializer(x...)); });
     }
@@ -251,7 +251,7 @@ namespace nda {
      * @param lazy 
      */
     template <typename Lazy>
-    basic_array &operator=(Lazy const &lazy) NDA_REQUIRES(is_assign_rhs<Lazy>) {
+    basic_array &operator=(Lazy const &lazy) REQUIRES(is_assign_rhs<Lazy>) {
       resize(lazy.shape());
       assign_from(*this, lazy);
       return *this;

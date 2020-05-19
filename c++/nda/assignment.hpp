@@ -7,7 +7,7 @@ namespace nda {
   // Case where RHS has NdArray concept, but RHS is not a scalar (i.e. LHS:element_type, it could still be
   // an array in case of array of array
   template <typename LHS, typename RHS>
-  void assign_from(LHS &lhs, RHS const &rhs) NDA_REQUIRES(is_ndarray_v<RHS> and not is_scalar_for_v<RHS, LHS>) {
+  void assign_from(LHS &lhs, RHS const &rhs) REQUIRES(is_ndarray_v<RHS> and not is_scalar_for_v<RHS, LHS>) {
 
     static_assert(is_regular_or_view_v<LHS>, "Internal error : LHS must a container");
     static_assert(!LHS::is_const, "Cannot assign to a const view !");
@@ -69,7 +69,7 @@ namespace nda {
   // -----------------------------------------------------
   // RHS is a scalar for LHS (could be an array of array).
   template <typename LHS, typename RHS>
-  void assign_from(LHS &lhs, RHS const &rhs) NDA_REQUIRES(is_scalar_for_v<RHS, LHS>) {
+  void assign_from(LHS &lhs, RHS const &rhs) REQUIRES(is_scalar_for_v<RHS, LHS>) {
 
     static_assert(is_regular_or_view_v<LHS>, "Internal error : LHS must a container");
     static_assert(!LHS::is_const, "Cannot assign to a const view !");
