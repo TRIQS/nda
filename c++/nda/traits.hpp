@@ -63,7 +63,7 @@ namespace nda {
   template <typename A>
   inline constexpr bool is_matrix_or_view_v = is_regular_or_view_v<A> and (get_algebra<A> == 'M') and (get_rank<A> == 2);
 
- // --------------------------- get_first_element and get_value_t ------------------------
+  // --------------------------- get_first_element and get_value_t ------------------------
 
 #if __cplusplus > 201703L
 

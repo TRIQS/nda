@@ -8,9 +8,10 @@ namespace nda {
 
     A const &ref;        // the array in reference
     mpi::communicator c; // mpi comm
-    const int root{};    //
-    const bool all{};
+    const int root;    //
+    const bool all;
 
+    public:
     using value_type = typename A::value_type; // needed to construct array from this object (to pass requires on convertibility of types)
 
     /// compute the shape of the target array. WARNING : MAKES A MPI CALL.
