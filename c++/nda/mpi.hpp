@@ -14,6 +14,8 @@ namespace nda {
   template <typename A>
   struct mpi_lazy_reduce {
 
+    //static_assert(ArrayInitializer<mpi_lazy_reduce<A>>, "Internal");
+
     using value_type = typename A::value_type; // needed to construct array from this object (to pass requires on convertibility of types)
 
     A const &ref;        // the array in reference
@@ -24,6 +26,11 @@ namespace nda {
 
     /// compute the shape of the target array
     [[nodiscard]] auto shape() const { return ref.shape(); }
+
+    ///
+    template <typename View>
+    void invoke(View &&v) const;
+
   };
 
   //--------------------------------------------------------------------------------------------------------
@@ -47,6 +54,10 @@ namespace nda {
       dims[0] = mpi::chunk_length(slow_size, c.size(), c.rank());
       return dims;
     }
+
+    ///
+    template <typename View>
+    void invoke(View &&v) const;
   };
 
   //--------------------------------------------------------------------------------------------------------
@@ -74,24 +85,29 @@ namespace nda {
 
       return dims;
     }
+
+    ///
+    template <typename View>
+    void invoke(View &&v) const;
+
   };
 
   //----------------------------  mark the class as assignable to an array for array construction and array/array_view assignment -------------
 
   template <typename A>
-  inline constexpr bool is_assign_rhs<mpi_lazy_reduce<A>> = true;
+  inline constexpr bool is_array_initializer_v<mpi_lazy_reduce<A>> = true;
 
   template <typename A>
-  inline constexpr bool is_assign_rhs<mpi_lazy_gather<A>> = true;
+  inline constexpr bool is_array_initializer_v<mpi_lazy_gather<A>> = true;
 
   template <typename A>
-  inline constexpr bool is_assign_rhs<mpi_lazy_scatter<A>> = true;
+  inline constexpr bool is_array_initializer_v<mpi_lazy_scatter<A>> = true;
 
   //--------------------------------------------------------------------------------------------------------
   // The function to call on the array
   //--------------------------------------------------------------------------------------------------------
 
-  // FIXME : REQUIRE 
+  // FIXME : REQUIRE
   // NdArrayContainer or NdArrayView
   //
   template <typename A>
@@ -133,56 +149,57 @@ namespace nda {
 
   // --------------------- mpi_lazy_reduce -----------------------
   //
-  template <typename LHS, typename A>
-  void assign_from(LHS &lhs, mpi_lazy_reduce<A> const &lazy_op) {
+  template <typename A>
+  template <typename View>
+  void mpi_lazy_reduce<A>::invoke(View && v) const {
 
     static_assert(has_layout_contiguous<A>, "Non contigous view in mpi_broadcast are not implemented");
 
-    auto rhs_n_elem = lazy_op.ref.size();
-    auto c          = lazy_op.c;
-    auto root       = lazy_op.root;
+    auto rhs_n_elem = ref.size();
     auto D          = mpi::mpi_type<typename A::value_type>::get();
 
-    bool in_place = (lhs.data_start() == lazy_op.ref.data_start());
-    auto sha      = lazy_op.shape(); // WARNING : Keep this out of the if condition (shape USES MPI) !
+    bool in_place = (v.data_start() == ref.data_start());
+    auto sha      = shape(); // WARNING : Keep this out of the if condition (shape USES MPI) !
 
     // some checks.
     if (in_place) {
-      if (rhs_n_elem != lhs.size()) NDA_RUNTIME_ERROR << "mpi reduce of array : same pointer to data start, but different number of elements !";
+      if (rhs_n_elem != v.size()) NDA_RUNTIME_ERROR << "mpi reduce of array : same pointer to data start, but different number of elements !";
     } else { // check no overlap
-      if ((c.rank() == root) || lazy_op.all) resize_or_check_if_view(lhs, sha);
-      if (std::abs(lhs.data_start() - lazy_op.ref.data_start()) < rhs_n_elem) NDA_RUNTIME_ERROR << "mpi reduce of array : overlapping arrays !";
+      if ((c.rank() == root) || all) resize_or_check_if_view(v, sha);
+      if (std::abs(v.data_start() - ref.data_start()) < rhs_n_elem) NDA_RUNTIME_ERROR << "mpi reduce of array : overlapping arrays !";
     }
 
-    void *lhs_p = lhs.data_start();
-    void *rhs_p = (void *)lazy_op.ref.data_start();
+    void *v_p = v.data_start();
+    void *rhs_p = (void *)ref.data_start();
 
-    if (!lazy_op.all) {
+    if (!all) {
       if (in_place)
-        MPI_Reduce((c.rank() == root ? MPI_IN_PLACE : rhs_p), rhs_p, rhs_n_elem, D, lazy_op.op, root, c.get());
+        MPI_Reduce((c.rank() == root ? MPI_IN_PLACE : rhs_p), rhs_p, rhs_n_elem, D, op, root, c.get());
       else
-        MPI_Reduce(rhs_p, lhs_p, rhs_n_elem, D, lazy_op.op, root, c.get());
+        MPI_Reduce(rhs_p, v_p, rhs_n_elem, D, op, root, c.get());
     } else {
       if (in_place)
-        MPI_Allreduce(MPI_IN_PLACE, rhs_p, rhs_n_elem, D, lazy_op.op, c.get());
+        MPI_Allreduce(MPI_IN_PLACE, rhs_p, rhs_n_elem, D, op, c.get());
       else
-        MPI_Allreduce(rhs_p, lhs_p, rhs_n_elem, D, lazy_op.op, c.get());
+        MPI_Allreduce(rhs_p, v_p, rhs_n_elem, D, op, c.get());
     }
+
+    PRINT(v);
   }
 
   // ----------------------- mpi_lazy_scatter ------------------------------------
 
-  template <typename LHS, typename A>
-  void assign_from(LHS &lhs, mpi_lazy_scatter<A> const &lazy_op) {
+  template <typename A>
+  template <typename View>
+  void mpi_lazy_scatter<A>::invoke(View && v) const {
 
     static_assert(has_layout_contiguous<A>, "Non contigous view in mpi_broadcast are not implemented");
 
-    auto sha = lazy_op.shape(); // WARNING : Keep this out of any if condition (shape USES MPI) !
-    resize_or_check_if_view(lhs, sha);
+    auto sha = shape(); // WARNING : Keep this out of any if condition (shape USES MPI) !
+    resize_or_check_if_view(v, sha);
 
-    auto c           = lazy_op.c;
-    auto slow_size   = lazy_op.ref.extent(0);
-    auto slow_stride = lazy_op.ref.indexmap().strides()[0];
+    auto slow_size   = ref.extent(0);
+    auto slow_stride = ref.indexmap().strides()[0];
     auto sendcounts  = std::vector<int>(c.size());
     auto displs      = std::vector<int>(c.size() + 1, 0);
     int recvcount    = mpi::chunk_length(slow_size, c.size(), c.rank()) * slow_stride;
@@ -193,39 +210,39 @@ namespace nda {
       displs[r + 1] = sendcounts[r] + displs[r];
     }
 
-    MPI_Scatterv((void *)lazy_op.ref.data_start(), &sendcounts[0], &displs[0], D, (void *)lhs.data_start(), recvcount, D, lazy_op.root, c.get());
+    MPI_Scatterv((void *)ref.data_start(), &sendcounts[0], &displs[0], D, (void *)v.data_start(), recvcount, D, root, c.get());
   }
 
   // ----------------------- mpi_lazy_gather ------------------------------------
 
-  template <typename LHS, typename A>
-  void assign_from(LHS &lhs, mpi_lazy_gather<A> const &lazy_op) {
-
+  template <typename A>
+  template <typename View>
+  void mpi_lazy_gather<A>::invoke(View && v) const {
+ 
     static_assert(has_layout_contiguous<A>, "Non contigous view in mpi_broadcast are not implemented");
 
-    auto c          = lazy_op.c;
     auto recvcounts = std::vector<int>(c.size());
     auto displs     = std::vector<int>(c.size() + 1, 0);
-    int sendcount   = lazy_op.ref.size();
+    int sendcount   = ref.size();
     auto D          = mpi::mpi_type<typename A::value_type>::get();
 
-    auto sha = lazy_op.shape(); // WARNING : Keep this out of the if condition (shape USES MPI) !
-    if (lazy_op.all || (lazy_op.c.rank() == lazy_op.root)) resize_or_check_if_view(lhs, sha);
+    auto sha = shape(); // WARNING : Keep this out of the if condition (shape USES MPI) !
+    if (all || (c.rank() == root)) resize_or_check_if_view(v, sha);
 
-    void *lhs_p       = lhs.data_start();
-    const void *rhs_p = lazy_op.ref.data_start();
+    void *v_p       = v.data_start();
+    const void *rhs_p = ref.data_start();
 
     auto mpi_ty = mpi::mpi_type<int>::get();
-    if (!lazy_op.all)
-      MPI_Gather(&sendcount, 1, mpi_ty, &recvcounts[0], 1, mpi_ty, lazy_op.root, c.get());
+    if (!all)
+      MPI_Gather(&sendcount, 1, mpi_ty, &recvcounts[0], 1, mpi_ty, root, c.get());
     else
       MPI_Allgather(&sendcount, 1, mpi_ty, &recvcounts[0], 1, mpi_ty, c.get());
 
     for (int r = 0; r < c.size(); ++r) displs[r + 1] = recvcounts[r] + displs[r];
 
-    if (!lazy_op.all)
-      MPI_Gatherv((void *)rhs_p, sendcount, D, lhs_p, &recvcounts[0], &displs[0], D, lazy_op.root, c.get());
+    if (!all)
+      MPI_Gatherv((void *)rhs_p, sendcount, D, v_p, &recvcounts[0], &displs[0], D, root, c.get());
     else
-      MPI_Allgatherv((void *)rhs_p, sendcount, D, lhs_p, &recvcounts[0], &displs[0], D, c.get());
+      MPI_Allgatherv((void *)rhs_p, sendcount, D, v_p, &recvcounts[0], &displs[0], D, c.get());
   }
 } // namespace nda

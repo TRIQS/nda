@@ -289,7 +289,7 @@ namespace nda {
     // ----------------  Comparison -------------------------
     bool operator==(idx_map const &x) const { return (len == x.len) and (str == x.str); }
 
-#if __cplusplus > 201703L
+#if not __cplusplus > 201703L
     bool operator!=(idx_map const &x) { return !(operator==(x)); }
 #endif
 

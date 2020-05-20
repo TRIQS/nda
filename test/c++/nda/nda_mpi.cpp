@@ -15,6 +15,40 @@ std::pair<std::ptrdiff_t, std::ptrdiff_t> chunk_range(std::ptrdiff_t start, std:
     return {start + n_large_nodes + rank * chunk_size, start + n_large_nodes + (rank + 1) * chunk_size};
 }
 
+// --------------------------------------
+
+// test reduce MAX, MIN
+TEST(Arrays, MPIReduceMAX) { //NOLINT
+
+  mpi::communicator world;
+  using arr_t = nda::array<int, 1>;
+  auto r      = world.rank();
+  auto s      = world.size();
+
+  arr_t a(7);
+  for (int i = 0; i < a.extent(0); ++i) a(i) = (i - r + 2) * (i - r + 2);
+
+  auto b1 = a, b2 = a;
+  for (int i = 0; i < 7; ++i) {
+    arr_t c(s);
+    for (int j = 0; j < c.extent(0); ++j) c(j) = (i - j + 2) * (i - j + 2);
+    b1(i) = min_element(c);
+    b2(i) = max_element(c);
+  }
+
+  arr_t r1 = mpi::reduce(a, world, 0, true, MPI_MIN);
+  arr_t r2 = mpi::reduce(a, world, 0, true, MPI_MAX);
+
+  std::cerr << " a = " << r << a << std::endl;
+  std::cerr << "r1 = " << r << r1 << std::endl;
+  std::cerr << "r2 = " << r << r2 << std::endl;
+
+  EXPECT_ARRAY_EQ(r1, b1);
+  EXPECT_ARRAY_EQ(r2, b2);
+}
+
+// --------------------------------------
+
 TEST(Arrays, MPI) { //NOLINT
 
   mpi::communicator world;
@@ -60,37 +94,6 @@ TEST(Arrays, MPI) { //NOLINT
   EXPECT_ARRAY_NEAR(r2, world.size() * A);
 }
 
-// --------------------------------------
-
-// test reduce MAX, MIN
-TEST(Arrays, MPIReduceMAX) { //NOLINT
-
-  mpi::communicator world;
-  using arr_t = nda::array<int, 1>;
-  auto r      = world.rank();
-  auto s      = world.size();
-
-  arr_t a(7);
-  for (int i = 0; i < a.extent(0); ++i) a(i) = (i - r + 2) * (i - r + 2);
-
-  auto b1 = a, b2 = a;
-  for (int i = 0; i < 7; ++i) {
-    arr_t c(s);
-    for (int j = 0; j < c.extent(0); ++j) c(j) = (i - j + 2) * (i - j + 2);
-    b1(i) = min_element(c);
-    b2(i) = max_element(c);
-  }
-
-  arr_t r1 = mpi::reduce(a, world, 0, true, MPI_MIN);
-  arr_t r2 = mpi::reduce(a, world, 0, true, MPI_MAX);
-
-  std::cerr << " a = " << r << a << std::endl;
-  std::cerr << "r1 = " << r << r1 << std::endl;
-  std::cerr << "r2 = " << r << r2 << std::endl;
-
-  EXPECT_ARRAY_EQ(r1, b1);
-  EXPECT_ARRAY_EQ(r2, b2);
-}
 
 // --------------------------------------
 

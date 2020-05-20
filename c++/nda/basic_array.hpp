@@ -3,7 +3,7 @@
 
 namespace nda {
 
-  // Class template argument deduction
+  /// Class template argument deduction
   template <typename T>
   basic_array(T) -> basic_array<get_value_t<std::decay_t<T>>, get_rank<std::decay_t<T>>, C_layout, 'A', heap>;
 
@@ -40,17 +40,17 @@ namespace nda {
 
     // FIXME layout_t
     using idx_map_t = typename Layout::template mapping<Rank>;
+
     private:
     // FIXME : mem_handle_t
     using storage_t = typename ContainerPolicy::template handle<ValueType, idx_map_t::ce_size()>;
 
     public:
-
     //    static constexpr uint64_t stride_order = StrideOrder;
     //  static constexpr layout_prop_e stride_order= layout_prop_e::contiguous;
 
-    static constexpr int rank      = Rank;
-//    private:
+    static constexpr int rank = Rank;
+    //    private:
     static constexpr bool is_const = false;
     static constexpr bool is_view  = false;
 
@@ -130,31 +130,16 @@ namespace nda {
     }
 
     /** 
-     * [Advanced] From any type which has a .shape() and can be assigned from
-     * Used for simple lazy operations, like mpi, and or other lazy transformation.
-     * Constructs from x.shape() and use assign. Cf code
-     * 
-     * @tparam Lazy A type modeling IsAssignRHS
-     * @param lazy 
+     * Initialize with any type modelling ArrayInitializer, typically a 
+     * delayed operation (mpi operation, matmul) that requires 
+     * the knowledge of the data pointer to execute
+     *
      */
-    template <typename Lazy>
-    basic_array(Lazy const &lazy) REQUIRES(is_assign_rhs<Lazy>) : basic_array{lazy.shape()} {
-      assign_from(*this, lazy);
+    template <CONCEPT(ArrayInitializer) Initializer>
+    basic_array(Initializer const &initializer) REQUIRES17(is_assign_rhs<Initializer>) : basic_array{initializer.shape()} {
+      initializer.invoke(*this);
     }
 
-    /** 
-     * [Advanced] From a shape and a storage handle (for reshaping)
-     * NB: make a new copy.
-     *
-     * @param shape  Shape of the array (lengths in each dimension)
-     * @param mem_handle  memory handle
-     */
-    //template <char RBS>
-    //basic_array(shape_t<Rank> const &shape, mem::handle<ValueType, RBS> mem_handle) : basic_array(idx_map_t{shape}, mem_handle) {}
-
-    // --- with initializers
-
-    // BEGIN_REMOVE_FOR_MATRIX
     /**
      * Construct from the initializer list 
      *
@@ -170,7 +155,6 @@ namespace nda {
       long i = 0;
       for (auto const &x : l) (*this)(i++) = x;
     }
-    // END_REMOVE_FOR_MATRIX
 
     private: // impl. detail for next function
     template <typename T>
@@ -244,16 +228,12 @@ namespace nda {
     }
 
     /** 
-     * [Advanced] Assign from any type which has a .shape() and can be assigned from
-     * Used for simple lazy operations, like mpi, and or other lazy transformation.
      * 
-     * @tparam Lazy A type modeling NdArray
-     * @param lazy 
      */
-    template <typename Lazy>
-    basic_array &operator=(Lazy const &lazy) REQUIRES(is_assign_rhs<Lazy>) {
-      resize(lazy.shape());
-      assign_from(*this, lazy);
+    template <CONCEPT(ArrayInitializer) Initializer>
+    basic_array &operator=(Initializer const &initializer) REQUIRES17(is_assign_rhs<Initializer>) {
+      resize(initializer.shape());
+      initializer.invoke(*this);
       return *this;
     }
 

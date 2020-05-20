@@ -1,7 +1,6 @@
 #pragma once
 
 #include "traits.hpp"
-#include "concepts.hpp"
 #include "accessors.hpp"
 #include "layout/policies.hpp"
 #include "storage/policies.hpp"
@@ -59,14 +58,6 @@ namespace nda {
 
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   inline constexpr bool is_view_v<basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>> = true;
-
-  // ---------------------- concept  --------------------------------
-
-  template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
-  inline constexpr bool is_ndarray_v<basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>> = true;
-
-  template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
-  inline constexpr bool is_ndarray_v<basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>> = true;
 
   // ---------------------- algebra --------------------------------
 

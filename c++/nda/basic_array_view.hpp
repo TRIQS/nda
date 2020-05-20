@@ -1,6 +1,7 @@
 #pragma once
 #include <clef/clef.hpp>
 #include "declarations.hpp"
+#include "concepts.hpp"
 #include "assignment.hpp"
 #include "iterators.hpp"
 #include "layout/slice_static.hpp"
@@ -135,6 +136,17 @@ namespace nda {
       assign_from(*this, rhs);
       return *this;
     }
+
+    /** 
+     * 
+     */
+    template <CONCEPT(ArrayInitializer) Initializer>
+    basic_array_view &operator=(Initializer const &initializer) REQUIRES17(is_assign_rhs<Initializer>) {
+      EXPECTS(shape() == initializer.shape());
+      initializer.invoke(*this);
+      return *this;
+    }
+
 
     // ------------------------------- rebind --------------------------------------------
 

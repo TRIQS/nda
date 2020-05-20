@@ -9,19 +9,6 @@ namespace nda {
     return r;
   }
 
-  /* template <typename ArrayType>
-  matrix_view<typename ArrayType::value_type> make_matrix_view(ArrayType const &a) {
-    static_assert(ArrayType::rank == 2, "make_matrix_view only works for array of rank 2");
-    return a;
-  }
-
-  template <typename ArrayType>
-  matrix<typename ArrayType::value_type> make_matrix(ArrayType const &a) {
-    static_assert(ArrayType::domain_type::rank == 2, "make_matrix only works for array of rank 2");
-    return a;
-  }
-*/
-
   template <CONCEPT(ArrayOfRank<2>) M>
   typename M::value_type trace(M const &m) REQUIRES17(is_ndarray_v<M> and (get_rank<M> == 2))
   {
