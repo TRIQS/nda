@@ -3,29 +3,6 @@
 
 namespace nda {
 
-  // --------------------------- Ndarray concept------------------------
-
-  /// A trait to mark classes modeling the Ndarray concept
-  template <typename T>
-  inline constexpr bool is_ndarray_v = false;
-
-    // ---------------------- Mark --------------------------------
-
-  template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
-  inline constexpr bool is_ndarray_v<basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>> = true;
-
-  template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
-  inline constexpr bool is_ndarray_v<basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>> = true;
-
-
-  // --------------------------- concept : is_array_initializer------------------------
-  // Mark classes which are NOT nd_array but have :
-  // .shape()
-  // can be put at the RHS of assignment or used in construction of array
-  /// A trait to mark classes modeling the Ndarray concept
-  template <typename T>
-  inline constexpr bool is_array_initializer_v = false;
-
 #if __cplusplus > 201703L
 
   template <typename T>
@@ -74,6 +51,30 @@ namespace nda {
 
   };
     // clang-format on
+
+#endif
+
+  // C++17 backward compat workaround
+
+  // --------------------------- Array
+
+  /// A trait to mark classes modeling the Ndarray concept
+  template <typename T>
+  inline constexpr bool is_ndarray_v = false;
+
+  // ---------------------- Mark containers --------------------------------
+
+  template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
+  inline constexpr bool is_ndarray_v<basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>> = true;
+
+  template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
+  inline constexpr bool is_ndarray_v<basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>> = true;
+
+#if not __cplusplus > 201703L
+
+  // --------------------------- ArrayInitializer
+  template <typename T>
+  inline constexpr bool is_array_initializer_v = false;
 
 #endif
 
