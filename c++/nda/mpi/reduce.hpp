@@ -70,21 +70,24 @@ namespace nda::lazy_mpi {
 namespace nda {
 
   /**
+   * Reduction of the array
+   *
    * \tparam A basic_array or basic_array_view, with contiguous data only
    * \param a
    * \param c The MPI communicator
    * \param root Root node of the reduction
    * \param all all_reduce iif true
    * \param op The MPI reduction operation to apply to the elements 
+   *
+   * NB : A::value_type must have an MPI reduction (basic type or custom type, cf mpi library)
+   *
    */
   template <typename A>
   AUTO(ArrayInitializer)
   mpi_reduce(A &a, mpi::communicator c = {}, int root = 0, bool all = false, MPI_Op op = MPI_SUM) //
      REQUIRES(is_regular_or_view_v<A>) {
     static_assert(has_layout_contiguous<A>, "Non contigous view in target_view.data_start() are not implemented");
-
     static_assert(mpi::has_mpi_type<typename A::value_type>, "Reduction of non MPI types is not implemented");
-
     return lazy_mpi::reduce<typename A::value_type, A::rank, A::idx_map_t::stride_order_encoded>{a(), c, root, all, op};
   }
 
