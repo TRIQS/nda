@@ -70,12 +70,13 @@ namespace nda {
   //----------------------------
 
   template <typename A>
-  lazy_mpi_gather<A> mpi_gather(A &a, mpi::communicator c = {}, int root = 0, bool all = false) //
+  AUTO(ArrayInitializer)
+   mpi_gather(A &a, mpi::communicator c = {}, int root = 0, bool all = false) //
      REQUIRES(is_regular_or_view_v<A>) {
 
     static_assert(has_layout_contiguous<A>, "Non contigous view in mpi_broadcast are not implemented");
     static_assert(ArrayInitializer<lazy_mpi_gather<A>>, "Internal");
 
-    return {a, c, root, all};
+    return lazy_mpi_gather<A> {a, c, root, all};
   }
 } // namespace nda

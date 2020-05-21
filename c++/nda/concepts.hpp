@@ -5,30 +5,48 @@ namespace nda {
 
 #if __cplusplus > 201703L
 
-  template <typename T>
-  constexpr bool is_std__array_of_long_v = false;
-  template <auto R>
-  constexpr bool is_std__array_of_long_v<std::array<long, R>> = true;
+  namespace concepts { // implementation details of concepts. Main concepts in nda::
 
-  template <class T>
-  concept IsStdArrayOfLong = is_std__array_of_long_v<T>;
+    // FIXME : replace get_first_element with call_on_R_zeros ? 
+    // It is crucial to use here a version of get_first_element with an explicitly deduced return type
+    // to have SFINAE, otherwise the concept checking below will fail
+    // in the case of A has a shape but NO operator(), like an initializer e.g. mpi_lazy_xxx
+    template <size_t... Is, typename A>
+    auto call_on_R_zeros_impl(std::index_sequence<Is...>, A const &a) -> decltype(a((0 * Is)...)) {
+      return a((0 * Is)...); // repeat 0 sizeof...(Is) times
+    }
 
-  template <class From, class To>
-  concept convertible_to = std::is_convertible_v<From, To> and requires(std::add_rvalue_reference_t<From> (&f)()) {
-    static_cast<To>(f());
-  };
+    template <typename A>
+    auto call_on_R_zeros(A const &a) -> decltype(call_on_R_zeros_impl(std::make_index_sequence<get_rank<A>>{}, a)) {
+      return call_on_R_zeros_impl(std::make_index_sequence<get_rank<A>>{}, a);
+    }
+
+    template <typename T>
+    constexpr bool is_std__array_of_long_v = false;
+    template <auto R>
+    constexpr bool is_std__array_of_long_v<std::array<long, R>> = true;
+
+    template <class T>
+    concept IsStdArrayOfLong = is_std__array_of_long_v<T>;
+
+    template <class From, class To>
+    concept convertible_to = std::is_convertible_v<From, To> and requires(std::add_rvalue_reference_t<From> (&f)()) {
+      static_cast<To>(f());
+    };
+
+  } // namespace concepts
 
   // clang-format off
   template <typename A> concept Array= requires(A const &a) {
 
   // A has a shape() which returns an array<long, R> ...
-  { a.shape() } -> IsStdArrayOfLong;
+  { a.shape() } -> concepts::IsStdArrayOfLong;
 
   // and R is an int, and is the rank.
-  { get_rank<A> } ->convertible_to<const int>;
+  { get_rank<A> } ->concepts::convertible_to<const int>;
 
   // a(0,0,0,0... R times) returns something, which is value_type by definition
-  {get_first_element(a)};
+  {concepts::call_on_R_zeros(a)};
   };
 
   //-------------------
@@ -42,7 +60,7 @@ namespace nda {
   template <typename A> concept ArrayInitializer = requires(A const &a) {
 
   // A has a shape() which returns an array<long, R> ...
-  { a.shape() } -> IsStdArrayOfLong;
+  { a.shape() } -> concepts::IsStdArrayOfLong;
 
   typename A::value_type; 
 

@@ -6,6 +6,16 @@
 
 namespace nda {
 
+  /**
+   *  Broadcast the array
+   *
+   * \tparam A basic_array or basic_array_view, with contiguous data only
+   * \param a
+   * \param c The MPI communicator
+   * \param root Root node of the reduction
+   * \param all all_reduce iif true
+   * \param op The MPI reduction operation to apply to the elements 
+   */
   template <typename A>
   void mpi_broadcast(A &a, mpi::communicator c = {}, int root = 0) //
      REQUIRES(is_regular_or_view_v<A>) {

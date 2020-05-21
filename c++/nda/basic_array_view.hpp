@@ -1,4 +1,5 @@
 #pragma once
+#include <cstring>
 #include <clef/clef.hpp>
 #include "declarations.hpp"
 #include "concepts.hpp"
@@ -18,6 +19,7 @@ namespace nda {
 
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   class basic_array_view {
+    using self_t = basic_array_view; // for common code with basic_array
 
     public:
     /// ValueType FIXME
@@ -126,6 +128,7 @@ namespace nda {
      */
     template <typename RHS>
     basic_array_view &operator=(RHS const &rhs) {
+      static_assert(!is_const, "Cannot assign to a const view !");
       assign_from(*this, rhs);
       return *this;
     }

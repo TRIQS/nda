@@ -24,6 +24,7 @@ namespace nda {
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
   class basic_array {
     static_assert(!std::is_const<ValueType>::value, "ValueType can not be const. WHY ?");
+   using self_t = basic_array; // for common code with basic_array_view
 
     public:
     ///
@@ -198,6 +199,7 @@ namespace nda {
      * @param shape  Shape of the array (lengths in each dimension)
      * @param initializer The lambda
      */
+    // FIXME : THIS Initializer is different !!!
     template <typename Initializer>
     explicit basic_array(shape_t<Rank> const &shape, Initializer initializer)
        REQUIRES(details::_is_a_good_lambda_for_init<ValueType, Initializer>(std::make_index_sequence<Rank>()))
@@ -219,11 +221,25 @@ namespace nda {
      *
      * @tparam RHS A scalar or an object modeling NdArray
      */
+    template <CONCEPT(ArrayOfRank<Rank>) RHS>
+    basic_array &operator=(RHS const &rhs) REQUIRES17(is_ndarray_v<RHS>) {
+      static_assert(!is_const, "Cannot assign to a const !");
+      resize(rhs.shape());
+      assign_from_ndarray(rhs); // common code with view, private
+      return *this;
+    }
+
+     /** 
+     * Resizes the array (if necessary).
+     * Invalidates all references to the storage.
+     *
+     * @tparam RHS A scalar or an object modeling NdArray
+     */
     template <typename RHS>
-    basic_array &operator=(RHS const &rhs) {
-      static_assert(is_ndarray_v<RHS> or is_scalar_for_v<RHS, basic_array>, "Assignment : RHS not supported");
-      if constexpr (is_ndarray_v<RHS>) resize(rhs.shape());
-      assign_from(*this, rhs);
+      // FIXME : explode this notion
+    basic_array &operator=(RHS const &rhs) REQUIRES(is_scalar_for_v<RHS, basic_array>) {
+      static_assert(!is_const, "Cannot assign to a const !");
+      assign_from_scalar(rhs); // common code with view, private
       return *this;
     }
 

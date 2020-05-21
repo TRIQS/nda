@@ -233,3 +233,75 @@ auto &operator/=(RHS const &rhs) {
   static_assert(not is_const, "Can not assign to a const view");
   return operator=(*this / rhs);
 }
+
+// ------------------------------- Assignment --------------------------------------------
+
+private:
+
+template <typename RHS>
+void assign_from_ndarray(RHS const &rhs) {
+
+#ifdef NDA_DEBUG
+  if (this->shape() != rhs.shape())
+    NDA_RUNTIME_ERROR << "Size mismatch in = "
+                      << " : LHS " << *this << " \n RHS = " << rhs;
+#endif
+
+  // general case if RHS is not a scalar (can be isp, expression...)
+  static_assert(std::is_assignable_v<value_t &, get_value_t<RHS>>, "Assignment impossible for the type of RHS into the type of LHS");
+
+  // If LHS and RHS are both 1d strided order or contiguous, and have the same stride order
+  // we can make a 1d loop
+  if constexpr ((get_layout_info<self_t>.stride_order == get_layout_info<RHS>.stride_order) // same stride order and both contiguous ...
+                and has_layout_strided_1d<self_t> and has_layout_strided_1d<RHS>) {
+    long L = size();
+    for (long i = 0; i < L; ++i) (*this)(_linear_index_t{i}) = rhs(_linear_index_t{i});
+  } else {
+    auto l = [this, &rhs](auto const &... args) { (*this)(args...) = rhs(args...); };
+    nda::for_each(shape(), l);
+  }
+}
+
+// -----------------------------------------------------
+
+template <typename Scalar>
+void fill_with_scalar(Scalar const &scalar) {
+  // we make a special implementation if the array is 1d strided or contiguous
+  if constexpr (has_layout_strided_1d<self_t>) { // possibly contiguous
+    const long L             = size();
+    auto *__restrict const p = data_start(); // no alias possible here !
+    if constexpr (has_layout_contiguous<self_t>) {
+      for (long i = 0; i < L; ++i) p[i] = scalar;
+    } else {
+      const long stri = indexmap().min_stride();
+      for (long i = 0; i < L; i += stri) p[i] = scalar;
+    }
+  } else {
+    auto l = [this, scalar](auto const &... args) { (*this)(args...) = scalar; };
+    nda::for_each_static<idx_map_t::static_extents_encoded, idx_map_t::stride_order_encoded>(shape(), l);
+  }
+}
+
+// -----------------------------------------------------
+
+template <typename Scalar>
+void assign_from_scalar(Scalar const &scalar) {  
+
+  static_assert(!is_const, "Cannot assign to a const view !");
+
+  if constexpr (Algebra != 'M') {
+    fill_with_scalar(scalar);
+  } else { 
+    //  A scalar has to be interpreted as a unit matrix
+    // FIXME : A priori faster to put 0 everywhere and then change the diag to avoid the if.
+    // FIXME : Benchmark and confirm
+    if constexpr (is_scalar_or_convertible_v<Scalar>)
+      fill_with_scalar(0);
+    else
+      fill_with_scalar(Scalar{0 * scalar}); //FIXME : improve this
+    // on diagonal only
+    const long imax = extent(0);
+    for (long i = 0; i < imax; ++i) operator()(i, i) = scalar;
+  }
+}
+
