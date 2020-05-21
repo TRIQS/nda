@@ -1,33 +1,6 @@
 
-TEST transpose general
-
-IMPLEMENTAtiON dagger
-
-REGROUP indices
-
-clean files
+- remove regular_t, etc... use TRAITS
+  make private
 
 
-
-
-regroup nda::default : policies in one file
-basic_array and co + defs + split
-
-
-
-
-
-
-
-1 file lapack.hpp with basic interface : 
-  with the mdspan interface ...
-  no requires, just nda::blas::gemm.
-
-  no cache, no resize.
-  just check in debug mode.
-
-2- matmul, matmulvec
-
-3- tridiag worker and dgeless : linalg
-
-
+- finir MPI refactor
