@@ -126,7 +126,7 @@ namespace nda {
      * the knowledge of the data pointer to execute
      *
      */
-    template <CONCEPT(ArrayInitializer) Initializer>
+    template <CONCEPT(ArrayInitializer) Initializer> // can not be explicit
     basic_array(Initializer const &initializer) REQUIRES17(is_assign_rhs<Initializer>) : basic_array{initializer.shape()} {
       initializer.invoke(*this);
     }
@@ -258,6 +258,6 @@ namespace nda {
     // --------------------------
 
 #include "./_impl_basic_array_view_common.hpp"
-  }; // namespace nda
+  }; 
 
 } // namespace nda
