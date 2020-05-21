@@ -149,6 +149,14 @@ TEST(NDA, InitList) { //NOLINT
   for (int i = 0; i < 3; ++i)
     for (int j = 0; j < 2; ++j) EXPECT_EQ(B(i, j), j + 2 * i + 1);
 
+  // 3d
+  nda::array<double, 3> C = {{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}}, {{100, 200, 300, 400}, {500, 600, 700, 800}, {900, 1000, 1100, 1200}}};
+
+  EXPECT_EQ(C.shape(), (nda::shape_t<3>{2, 3, 4}));
+  for (int i = 0; i < 2; ++i)
+    for (int j = 0; j < 3; ++j)
+      for (int k = 0; k < 4; ++k) EXPECT_EQ(C(i, j, k), (i == 0 ? 1 : 100) * (k + 4 * j + 1));
+
   // matrix
   nda::matrix<double> M = {{1, 2}, {3, 4}, {5, 6}};
   EXPECT_EQ(M.shape(), (nda::shape_t<2>{3, 2}));

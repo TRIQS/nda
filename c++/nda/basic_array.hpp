@@ -100,7 +100,7 @@ namespace nda {
      * 
      * @param shape  Shape of the array (lengths in each dimension)
      */
-    explicit basic_array(shape_t<Rank> const &shape) REQUIRES(std::is_default_constructible_v<ValueType>) : _idx_m(shape), _storage(_idx_m.size()) {}
+    explicit basic_array(std::array<long, Rank> const &shape) REQUIRES(std::is_default_constructible_v<ValueType>) : _idx_m(shape), _storage(_idx_m.size()) {}
 
     /** 
      * Constructs from a.shape() and then assign from the evaluation of a
@@ -131,9 +131,19 @@ namespace nda {
       initializer.invoke(*this);
     }
 
-    /**
-     * Construct from the initializer list 
-     */
+    private: // impl. detail for next function
+    static std::array<long, 1> shape_from_init_list(std::initializer_list<ValueType> const &l) { return {long(l.size())}; }
+
+    template <typename L>
+    static auto shape_from_init_list(std::initializer_list<L> const &l) {
+      const auto [min, max] =
+         std::minmax_element(std::begin(l), std::end(l), [](auto &&x, auto &&y) { return shape_from_init_list(x) == shape_from_init_list(y); });
+      EXPECTS_WITH_MESSAGE(shape_from_init_list(*min) == shape_from_init_list(*max), "initializer list not rectangular !");
+      return nda::front_append(shape_from_init_list(*max), long(l.size()));
+    }
+
+    public:
+    ///
     basic_array(std::initializer_list<ValueType> const &l) //
        REQUIRES(Rank == 1)
        : _idx_m(std::array<long, 1>{long(l.size())}), _storage{_idx_m.size(), mem::do_not_initialize} {
@@ -145,27 +155,29 @@ namespace nda {
       for (auto const &x : l) { new (_storage.data() + _idx_m(i++)) ValueType{x}; }
     }
 
-    private: // impl. detail for next function
-    static std::array<long, 2> _comp_shape_from_list_list(std::initializer_list<std::initializer_list<ValueType>> const &ll) {
-      const auto [min, max] = std::minmax_element(std::begin(ll), std::end(ll), [](auto &&x, auto &&y) { return x.size() == y.size(); });
-      EXPECTS_WITH_MESSAGE(min->size() == max->size(), "initializer list not rectangular !");
-      return {long(ll.size()), long(max->size())};
+    ///
+    basic_array(std::initializer_list<std::initializer_list<ValueType>> const &l2) //
+       REQUIRES((Rank == 2))
+       : _idx_m(shape_from_init_list(l2)), _storage{_idx_m.size(), mem::do_not_initialize} {
+      long i = 0, j = 0;
+      for (auto const &l1 : l2) {
+        for (auto const &x : l1) { new (_storage.data() + _idx_m(i, j++)) ValueType{x}; } // cf dim1
+        j = 0;
+        ++i;
+      }
     }
 
-    public:
-    /**
-     * Construct from the initializer list of list 
-     *
-     * @tparam T Any type from which ValueType is constructible
-     * @param ll Initializer list of list
-     * @requires Rank == 2 and ValueType is constructible from T
-     */
-    basic_array(std::initializer_list<std::initializer_list<ValueType>> const &ll) //
-       REQUIRES((Rank == 2))
-       : _idx_m(_comp_shape_from_list_list(ll)), _storage{_idx_m.size(), mem::do_not_initialize} {
-      long i = 0, j = 0;
-      for (auto const &l1 : ll) {
-        for (auto const &x : l1) { new (_storage.data() + _idx_m(i, j++)) ValueType{x}; } // cf dim1
+    ///
+    basic_array(std::initializer_list<std::initializer_list<std::initializer_list<ValueType>>> const &l3) //
+       : _idx_m(shape_from_init_list(l3)), _storage{_idx_m.size(), mem::do_not_initialize} {
+      long i = 0, j = 0, k = 0;
+      static_assert(Rank == 3, "?");
+      for (auto const &l2 : l3) {
+        for (auto const &l1 : l2) {
+          for (auto const &x : l1) { new (_storage.data() + _idx_m(i, j, k++)) ValueType{x}; } // cf dim1
+          k = 0;
+          ++j;
+        }
         j = 0;
         ++i;
       }
@@ -222,16 +234,12 @@ namespace nda {
      * Invalidates all references to the storage.
      * Content is undefined, makes no copy of previous data.
      *
-     * @tparam Int Integer type
-     * @param i0 New dimension
-     * @param is New dimension
      */
-    template <typename... Int>
-    void resize(long i0, Int const &... is) {
-      static_assert((std::is_convertible_v<Int, long> and ...), "Arguments must be convertible to long");
-      static_assert(sizeof...(is) + 1 == Rank, "Incorrect number of arguments for resize. Should be Rank");
+    template <CONCEPT(std::integral)... Int>
+    void resize(Int const &... extent) {
       static_assert(std::is_copy_constructible_v<ValueType>, "Can not resize an array if its value_t is not copy constructible");
-      resize(shape_t<Rank>{i0, long(is)...});
+      static_assert(sizeof...(extent) == Rank, "Incorrect number of arguments for resize. Should be Rank");
+      resize(std::array<long, Rank>{long(extent)...});
     }
 
     /** 
@@ -241,7 +249,7 @@ namespace nda {
      *
      * @param shape  New shape of the array (lengths in each dimension)
      */
-    [[gnu::noinline]] void resize(shape_t<Rank> const &shape) {
+    [[gnu::noinline]] void resize(std::array<long, Rank> const &shape) {
       _idx_m = idx_map_t(shape);
       // Construct a storage only if the new index is not compatible (size mismatch).
       if (_storage.is_null() or (_storage.size() != _idx_m.size())) _storage = storage_t{_idx_m.size()};
