@@ -212,12 +212,6 @@ namespace nda::mem {
     }
     bool has_shared_memory() const noexcept { return _id != 0; }
 
-    // Helper function for construction of array<T> when T is not default constructible
-    template <typename U>
-    void init_raw(long i, U &&x) {
-      new (_data + i) T{std::forward<U>(x)};
-    }
-
     // A const-handle does not entail T const data
     T *data() const noexcept { return _data; }
 
@@ -288,11 +282,6 @@ namespace nda::mem {
     static constexpr long size() noexcept { return Size; }
     //static constexpr bool has_shared_memory() const noexcept { return false; }
 
-    // Helper function for construction of array<T> when T is not default constructible
-    template <typename U>
-    void init_raw(long i, U &&x) {
-      new (data() + i) T{std::forward<U>(x)};
-    }
   };
 
   // ------------------  Shared -------------------------------------

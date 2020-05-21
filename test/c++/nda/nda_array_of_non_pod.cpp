@@ -1,33 +1,44 @@
 #include "./test_common.hpp"
 #include <functional>
+#include <nda/array_adapter.hpp>
 
 // ==============================================================
 
-// a little non copyable object
-struct A {
-  int i        = 2;
-  A()          = default;
-  A(A const &) = delete;
-  A(A &&)      = default;
-  A &operator=(A const &) = delete;
-  A &operator=(A &&) = default;
+// non default constructible (ndc)
+struct ndc {
+  int i            = 2;
+  ndc(ndc const &) = delete;
+  ndc(ndc &&)      = default;
+  ndc &operator=(ndc const &) = delete;
+  ndc &operator=(ndc &&) = default;
 
-  A(int j) : i(j) { std::cerr << " constructing A : " << i << "\n"; }
+  ndc(int j) : i(j) { std::cerr << " constructing ndc : " << i << "\n"; }
 };
 
 //---------------------
 
 TEST(NDA, NonDefaultConstructible) { //NOLINT
 
-  nda::array<A, 2> a({2, 2}, [](int i, int j) { return i + 10 * j; });
-  // nda::array<A,2> a( {2,2}, [](int i, int j) { return i+ 10*j;});
-  nda::array<A, 1> a1(nda::make_shape(2), [](int i) { return i; });
+  nda::array<ndc, 2> a(nda::array_adapter{std::array{2, 2}, [](int i, int j) { return i + 10 * j; }});
+
+  nda::array<ndc, 1> a1(nda::array_adapter{std::array{2}, [](int i) { return i; }});
 
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 2; ++j) { EXPECT_EQ(a(i, j).i, i + 10 * j); }
 
-  // copy fails to compile
-  //auto b= a;
+  //
+  auto b = a;
+
+  for (int i = 0; i < 2; ++i)
+    for (int j = 0; j < 2; ++j) { EXPECT_EQ(b(i, j).i, i + 10 * j); }
+
+  for (int i = 0; i < 2; ++i)
+    for (int j = 0; j < 2; ++j) b(i, j).i = 0;
+
+  b = a;
+
+  for (int i = 0; i < 2; ++i)
+    for (int j = 0; j < 2; ++j) { EXPECT_EQ(b(i, j).i, i + 10 * j); }
 
   // view is ok
   //auto b = a();
@@ -37,8 +48,18 @@ TEST(NDA, NonDefaultConstructible) { //NOLINT
 
 // ==============================================================
 
+// a little non copyable object
+struct anc {
+  int i            = 2;
+  anc()            = default;
+  anc(anc const &) = delete;
+  anc(anc &&)      = default;
+  anc &operator=(anc const &) = delete;
+  anc &operator=(anc &&) = default;
+};
+
 TEST(NDA, array_of_non_copyable) { //NOLINT
-  std::vector<nda::array<A, 1>> a(2);
+  std::vector<nda::array<anc, 1>> a(2);
   a.emplace_back(2);
 }
 

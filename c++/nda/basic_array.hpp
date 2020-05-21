@@ -7,17 +7,9 @@ namespace nda {
   template <typename T>
   basic_array(T) -> basic_array<get_value_t<std::decay_t<T>>, get_rank<std::decay_t<T>>, C_layout, 'A', heap>;
 
-  // FIXME : in array as static ?
-  namespace details {
-
-    template <int Is>
-    using _long_anyway = long; // to unpack below
-
-    template <typename R, typename Initializer, size_t... Is>
-    inline constexpr bool _is_a_good_lambda_for_init(std::index_sequence<Is...>) {
-      return std::is_invocable_r_v<R, Initializer, _long_anyway<Is>...>;
-    }
-  } // namespace details
+  // forward for friend declaration
+  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, typename NewLayoutType>
+  auto map_layout_transform(basic_array<T, R, L, Algebra, ContainerPolicy> &&a, NewLayoutType const &new_layout);
 
   // ---------------------- array--------------------------------
 
@@ -67,6 +59,13 @@ namespace nda {
     idx_map_t _idx_m;
     storage_t _storage;
 
+    //Construct from an indexmap and a storage handle.
+    // for map_layout_transform only
+    basic_array(idx_map_t const &idxm, storage_t &&mem_handle) : _idx_m(idxm), _storage(std::move(mem_handle)) {}
+
+    template <typename T, int R, typename L, char A, typename C, typename NewLayoutType>
+    friend auto map_layout_transform(basic_array<T, R, L, A, C> &&a, NewLayoutType const &new_layout);
+
     public:
     // ------------------------------- constructors --------------------------------------------
 
@@ -96,59 +95,28 @@ namespace nda {
     }
 
     /** 
-     * Construct with the given shape
+     * Construct with the given shape and default construct elements
      * 
      * @param shape  Shape of the array (lengths in each dimension)
      */
-    explicit basic_array(shape_t<Rank> const &shape) : _idx_m(shape), _storage(_idx_m.size()) {}
-
-    // Should we document this ? we use it in reshape, but that is a quite advanced constructor
-    /* 
-     * [Advanced] Construct from an indexmap and a storage handle.
-     *
-     * @param idxm index map
-     * @param mem_handle  memory handle
-     * 
-     * \private  NO doc at this stage (storage_t is internal)
-     *
-     */
-    basic_array(idx_map_t const &idxm, storage_t &&mem_handle) : _idx_m(idxm), _storage(std::move(mem_handle)) {}
-
-    //template <CONCEPT(ArrayOfRank<Rank>) A>
-    //basic_array(A const &a) REQUIRES17(is_ndarray_v<A>) : _idx_m(x.shape()), _storage{_idx_m.size(), mem::do_not_initialize} {
-      //nda::for_each(_idx_m.lengths(), [&](auto const &... is) { _storage.init_raw(_idx_m(x...), a(is...)); });
-    //}
+    explicit basic_array(shape_t<Rank> const &shape) REQUIRES(std::is_default_constructible_v<ValueType>) : _idx_m(shape), _storage(_idx_m.size()) {}
 
     /** 
-     * From any type modeling NdArray
-     * Constructs from x.shape() and then assign from the evaluation of x.
-     * 
-     * @tparam A A type modeling NdArray
-     * @param x 
+     * Constructs from a.shape() and then assign from the evaluation of a
      */
     template <CONCEPT(ArrayOfRank<Rank>) A>
-    basic_array(A const &x) REQUIRES17(is_ndarray_v<A>) : basic_array{x.shape()} {
-      // need to put here, not in REQUIRES : get_valuee_t may fail, and we want to trap the construction with a proper error
+    basic_array(A const &a) REQUIRES17(is_ndarray_v<A>) : _idx_m(a.shape()), _storage{_idx_m.size(), mem::do_not_initialize} {
       static_assert(std::is_convertible_v<get_value_t<A>, value_t>,
                     "Can not construct the array. ValueType can not be constructed from the value_t of the argument");
-      assign_from_ndarray(x);
-    }
-
-    /**
-     * [Advanced] Construct from shape and a Lambda to initialize the elements. 
-     * a(i,j,k,...) is initialized to initializer(i,j,k,...) at construction.
-     * Specially useful for non trivially constructible type
-     *
-     * @tparam Initializer  a callable on Rank longs which returns something is convertible to ValueType
-     * @param shape  Shape of the array (lengths in each dimension)
-     * @param initializer The lambda
-     */
-    // FIXME : THIS Initializer is different !!!
-    template <typename Initializer>
-    explicit basic_array(shape_t<Rank> const &shape, Initializer initializer)
-       REQUIRES(details::_is_a_good_lambda_for_init<ValueType, Initializer>(std::make_index_sequence<Rank>()))
-       : _idx_m(shape), _storage{_idx_m.size(), mem::do_not_initialize} {
-      nda::for_each(_idx_m.lengths(), [&](auto const &... x) { _storage.init_raw(_idx_m(x...), initializer(x...)); });
+      if constexpr (std::is_trivial_v<ValueType> or mem::is_complex<ValueType>::value) {
+        // simple type. the initialization was not necessary anyway.
+        // we use the assign, including the optimization (1d strided, contiguous) possibly
+        assign_from_ndarray(a);
+      } else {
+        // in particular ValueType may or may not be default constructible
+        // so we do not init memory, and make the placement new now, directly with the value returned by a
+        nda::for_each(_idx_m.lengths(), [&](auto const &... is) { new (_storage.data() + _idx_m(is...)) ValueType{a(is...)}; });
+      }
     }
 
     /** 
@@ -170,17 +138,16 @@ namespace nda {
      *
      * @requires Rank == 1 and ValueType is constructible from T
      */
-    template <typename T>
-    basic_array(std::initializer_list<T> const &l) //
-       REQUIRES((Rank == 1) and std::is_constructible_v<value_t, T>)
-       : basic_array{shape_t<Rank>{long(l.size())}} {
+    basic_array(std::initializer_list<ValueType> const &l) //
+       REQUIRES(Rank == 1)
+       : basic_array{std::array<long, 1>{long(l.size())}} {
       long i = 0;
       for (auto const &x : l) (*this)(i++) = x;
     }
 
     private: // impl. detail for next function
     template <typename T>
-    static shape_t<2> _comp_shape_from_list_list(std::initializer_list<std::initializer_list<T>> const &ll) {
+    static std::array<long, 2> _comp_shape_from_list_list(std::initializer_list<std::initializer_list<T>> const &ll) {
       long s = -1;
       for (auto const &l1 : ll) {
         if (s == -1)
@@ -199,9 +166,8 @@ namespace nda {
      * @param ll Initializer list of list
      * @requires Rank == 2 and ValueType is constructible from T
      */
-    template <typename T>
-    basic_array(std::initializer_list<std::initializer_list<T>> const &ll) //
-       REQUIRES((Rank == 2) and std::is_constructible_v<value_t, T>)
+    basic_array(std::initializer_list<std::initializer_list<ValueType>> const &ll) //
+       REQUIRES((Rank == 2))
        : basic_array(_comp_shape_from_list_list(ll)) {
       long i = 0, j = 0;
       for (auto const &l1 : ll) {

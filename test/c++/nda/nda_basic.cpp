@@ -159,6 +159,18 @@ TEST(NDA, InitList) { //NOLINT
 
 // ==============================================================
 
+TEST(NDA, InitList2) { //NOLINT
+
+  // testing more complex cases
+  nda::array<std::array<double, 2>, 1> aa{{0.0, 0.0}, {0.0, 1.0}, {1.0, 0.0}, {1.0, 1.0}};
+  EXPECT_EQ(aa(3), (std::array<double, 2>{1, 1}));
+
+  nda::array<double, 1> a{1, 2, 3.2};
+  EXPECT_EQ_ARRAY(a, (nda::array<double, 1>{1.0, 2.0, 3.2}));
+}
+
+// ==============================================================
+
 TEST(NDA, MoveConstructor) { //NOLINT
   nda::array<double, 1> A(3);
   A() = 9;
