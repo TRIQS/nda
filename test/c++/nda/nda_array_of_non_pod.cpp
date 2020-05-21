@@ -7,9 +7,9 @@
 // non default constructible (ndc)
 struct ndc {
   int i            = 2;
-  ndc(ndc const &) = delete;
+  ndc(ndc const &) = default;
   ndc(ndc &&)      = default;
-  ndc &operator=(ndc const &) = delete;
+  ndc &operator=(ndc const &) = default;
   ndc &operator=(ndc &&) = default;
 
   ndc(int j) : i(j) { std::cerr << " constructing ndc : " << i << "\n"; }
@@ -44,6 +44,28 @@ TEST(NDA, NonDefaultConstructible) { //NOLINT
   //auto b = a();
 
   //a.resize(3,3); // does not compile
+}
+
+//---------------------
+
+TEST(NDA, NonDefaultConstructibleInitList1) { //NOLINT
+
+  nda::array<ndc, 1> a{12, 3};
+
+  EXPECT_EQ(a(0).i, 12);
+  EXPECT_EQ(a(1).i, 3);
+}
+
+//---------------------
+
+TEST(NDA, NonDefaultConstructibleInitList2) { //NOLINT
+
+  nda::array<ndc, 2> a{{12, 3}, {34, 67}};
+
+  EXPECT_EQ(a(0, 0).i, 12);
+  EXPECT_EQ(a(0, 1).i, 3);
+  EXPECT_EQ(a(1, 0).i, 34);
+  EXPECT_EQ(a(1, 1).i, 67);
 }
 
 // ==============================================================

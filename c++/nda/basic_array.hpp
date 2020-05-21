@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include "basic_array_view.hpp"
 
 namespace nda {
@@ -132,30 +133,23 @@ namespace nda {
 
     /**
      * Construct from the initializer list 
-     *
-     * @tparam T Any type from which ValueType is constructible
-     * @param l Initializer list
-     *
-     * @requires Rank == 1 and ValueType is constructible from T
      */
     basic_array(std::initializer_list<ValueType> const &l) //
        REQUIRES(Rank == 1)
-       : basic_array{std::array<long, 1>{long(l.size())}} {
+       : _idx_m(std::array<long, 1>{long(l.size())}), _storage{_idx_m.size(), mem::do_not_initialize} {
       long i = 0;
-      for (auto const &x : l) (*this)(i++) = x;
+      // We can not assume that ValueType is default constructible. As before, we do not initialize,
+      // and use placement new
+      // https://godbolt.org/z/Lwic2o. Same code as = for basic type
+      // Alternative : if constexpr (std::is_trivial_v<ValueType> or mem::is_complex<ValueType>::value) for (auto const &x : l) *(_storage.data() + _idx_m(i++)) = x;
+      for (auto const &x : l) { new (_storage.data() + _idx_m(i++)) ValueType{x}; }
     }
 
     private: // impl. detail for next function
-    template <typename T>
-    static std::array<long, 2> _comp_shape_from_list_list(std::initializer_list<std::initializer_list<T>> const &ll) {
-      long s = -1;
-      for (auto const &l1 : ll) {
-        if (s == -1)
-          s = l1.size();
-        else if (s != l1.size())
-          throw std::runtime_error("initializer list not rectangular !");
-      }
-      return {long(ll.size()), s};
+    static std::array<long, 2> _comp_shape_from_list_list(std::initializer_list<std::initializer_list<ValueType>> const &ll) {
+      const auto [min, max] = std::minmax_element(std::begin(ll), std::end(ll), [](auto &&x, auto &&y) { return x.size() == y.size(); });
+      EXPECTS_WITH_MESSAGE(min->size() == max->size(), "initializer list not rectangular !");
+      return {long(ll.size()), long(max->size())};
     }
 
     public:
@@ -168,10 +162,10 @@ namespace nda {
      */
     basic_array(std::initializer_list<std::initializer_list<ValueType>> const &ll) //
        REQUIRES((Rank == 2))
-       : basic_array(_comp_shape_from_list_list(ll)) {
+       : _idx_m(_comp_shape_from_list_list(ll)), _storage{_idx_m.size(), mem::do_not_initialize} {
       long i = 0, j = 0;
       for (auto const &l1 : ll) {
-        for (auto const &x : l1) { (*this)(i, j++) = x; }
+        for (auto const &x : l1) { new (_storage.data() + _idx_m(i, j++)) ValueType{x}; } // cf dim1
         j = 0;
         ++i;
       }
@@ -256,6 +250,6 @@ namespace nda {
     // --------------------------
 
 #include "./_impl_basic_array_view_common.hpp"
-  };
+  }; // namespace nda
 
 } // namespace nda
