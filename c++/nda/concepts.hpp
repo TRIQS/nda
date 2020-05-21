@@ -1,13 +1,30 @@
 #pragma once
 #include "declarations.hpp"
 
-namespace nda {
-
 #if __cplusplus > 201703L
 
-  namespace concepts { // implementation details of concepts. Main concepts in nda::
+#if __has_include(<concepts>)
+#include <concepts>
+#else
+//  defined a few std concepts that are in <concepts> but libc++ has not yet implemented them
+namespace std {
+  template <class From, class To>
+  concept convertible_to = std::is_convertible_v<From, To> and requires(std::add_rvalue_reference_t<From> (&f)()) {
+    static_cast<To>(f());
+  };
 
-    // FIXME : replace get_first_element with call_on_R_zeros ? 
+  template <class T>
+  concept integral = std::is_integral_v<T>;
+} // namespace std
+
+#endif
+
+namespace nda {
+
+  namespace concept_impl { // implementation details of concepts. Main concepts in nda::
+
+    // -----------------------
+
     // It is crucial to use here a version of get_first_element with an explicitly deduced return type
     // to have SFINAE, otherwise the concept checking below will fail
     // in the case of A has a shape but NO operator(), like an initializer e.g. mpi_lazy_xxx
@@ -16,9 +33,9 @@ namespace nda {
       return a((0 * Is)...); // repeat 0 sizeof...(Is) times
     }
 
-    template <typename A>
-    auto call_on_R_zeros(A const &a) -> decltype(call_on_R_zeros_impl(std::make_index_sequence<get_rank<A>>{}, a)) {
-      return call_on_R_zeros_impl(std::make_index_sequence<get_rank<A>>{}, a);
+    template <int R, typename A>
+    auto call_on_R_zeros(A const &a) -> decltype(call_on_R_zeros_impl(std::make_index_sequence<R>{}, a)) {
+      return call_on_R_zeros_impl(std::make_index_sequence<R>{}, a);
     }
 
     template <typename T>
@@ -29,24 +46,26 @@ namespace nda {
     template <class T>
     concept IsStdArrayOfLong = is_std__array_of_long_v<std::decay_t<T>>;
 
-    template <class From, class To>
-    concept convertible_to = std::is_convertible_v<From, To> and requires(std::add_rvalue_reference_t<From> (&f)()) {
-      static_cast<To>(f());
+    // used in array_adapter
+    // clang-format off
+    template <int R, typename A> concept CallableWithRLongs= requires(A const &a) {
+      {call_on_R_zeros<R>(a)};
     };
+    // clang-format on
 
-  } // namespace concepts
+  } // namespace concept_impl
 
   // clang-format off
   template <typename A> concept Array= requires(A const &a) {
 
   // A has a shape() which returns an array<long, R> ...
-  { a.shape() } -> concepts::IsStdArrayOfLong;
+  { a.shape() } -> concept_impl::IsStdArrayOfLong;
 
   // and R is an int, and is the rank.
-  { get_rank<A> } ->concepts::convertible_to<const int>;
+  { get_rank<A> } ->std::convertible_to<const int>;
 
   // a(0,0,0,0... R times) returns something, which is value_type by definition
-  {concepts::call_on_R_zeros(a)};
+  {concept_impl::call_on_R_zeros<get_rank<A>>(a)};
   };
 
   //-------------------
@@ -60,7 +79,7 @@ namespace nda {
   template <typename A> concept ArrayInitializer = requires(A const &a) {
 
   // A has a shape() which returns an array<long, R> ...
-  { a.shape() } -> concepts::IsStdArrayOfLong;
+  { a.shape() } -> concept_impl::IsStdArrayOfLong;
 
   typename A::value_type; 
 
@@ -68,13 +87,16 @@ namespace nda {
   {a.invoke(array_view<typename A::value_type, get_rank<A>>{}) };
 
   };
-    // clang-format on
+  // clang-format on
+
+} // namespace nda
 
 #endif
 
-  // C++17 backward compat workaround
+// C++17 backward compat workaround
+// FIXME : remove in C++20
 
-  // --------------------------- Array
+namespace nda {
 
   /// A trait to mark classes modeling the Ndarray concept
   template <typename T>

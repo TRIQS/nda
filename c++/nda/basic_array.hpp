@@ -24,7 +24,7 @@ namespace nda {
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
   class basic_array {
     static_assert(!std::is_const<ValueType>::value, "ValueType can not be const. WHY ?");
-   using self_t = basic_array; // for common code with basic_array_view
+    using self_t = basic_array; // for common code with basic_array_view
 
     public:
     ///
@@ -81,16 +81,15 @@ namespace nda {
 
     /** 
      * Construct with a shape [i0, is ...]. 
-     * Int must be convertible to long, and there must be exactly Rank arguments.
+     * Int are integers (convertible to long), and there must be exactly R arguments.
      * 
-     * @param i0, is ... lengths in each dimensions
-     * @example array_constructors
+     * @param i0, is ... are the extents (lengths) in each dimension
      */
-    template <typename... Int>
-    explicit basic_array(long i0, Int... is) {
-      static_assert((std::is_convertible_v<Int, long> and ...), "Arguments must be convertible to long");
-      static_assert(sizeof...(Int) + 1 == Rank, "Incorrect number of arguments : should be exactly Rank. ");
-      _idx_m   = idx_map_t{{i0, is...}};
+    template <CONCEPT(std::integral)... Int>
+    explicit basic_array(Int... is) REQUIRES17((std::is_convertible_v<Int, long> and ...)) {
+      //static_assert((std::is_convertible_v<Int, long> and ...), "Arguments must be convertible to long");
+      static_assert(sizeof...(Int) == Rank, "Incorrect number of arguments : should be exactly Rank. ");
+      _idx_m   = idx_map_t{{long(is)...}};
       _storage = storage_t{_idx_m.size()};
       // It would be more natural to construct _idx_m, storage from the start, but the error message in case of false # of parameters (very common)
       // is better like this. FIXME to be tested in benchs
@@ -109,11 +108,16 @@ namespace nda {
      *
      * @param idxm index map
      * @param mem_handle  memory handle
+     * 
+     * \private  NO doc at this stage (storage_t is internal)
+     *
      */
     basic_array(idx_map_t const &idxm, storage_t &&mem_handle) : _idx_m(idxm), _storage(std::move(mem_handle)) {}
 
-    /// Construct from anything that has an indexmap and a storage compatible with this class
-    //template <typename T> basic_array(T const &a) REQUIRES(XXXX): basic_array(a.indexmap(), a.storage()) {}
+    //template <CONCEPT(ArrayOfRank<Rank>) A>
+    //basic_array(A const &a) REQUIRES17(is_ndarray_v<A>) : _idx_m(x.shape()), _storage{_idx_m.size(), mem::do_not_initialize} {
+      //nda::for_each(_idx_m.lengths(), [&](auto const &... is) { _storage.init_raw(_idx_m(x...), a(is...)); });
+    //}
 
     /** 
      * From any type modeling NdArray
@@ -128,6 +132,23 @@ namespace nda {
       static_assert(std::is_convertible_v<get_value_t<A>, value_t>,
                     "Can not construct the array. ValueType can not be constructed from the value_t of the argument");
       assign_from_ndarray(x);
+    }
+
+    /**
+     * [Advanced] Construct from shape and a Lambda to initialize the elements. 
+     * a(i,j,k,...) is initialized to initializer(i,j,k,...) at construction.
+     * Specially useful for non trivially constructible type
+     *
+     * @tparam Initializer  a callable on Rank longs which returns something is convertible to ValueType
+     * @param shape  Shape of the array (lengths in each dimension)
+     * @param initializer The lambda
+     */
+    // FIXME : THIS Initializer is different !!!
+    template <typename Initializer>
+    explicit basic_array(shape_t<Rank> const &shape, Initializer initializer)
+       REQUIRES(details::_is_a_good_lambda_for_init<ValueType, Initializer>(std::make_index_sequence<Rank>()))
+       : _idx_m(shape), _storage{_idx_m.size(), mem::do_not_initialize} {
+      nda::for_each(_idx_m.lengths(), [&](auto const &... x) { _storage.init_raw(_idx_m(x...), initializer(x...)); });
     }
 
     /** 
@@ -189,24 +210,6 @@ namespace nda {
         ++i;
       }
     }
-
-    /**
-     * [Advanced] Construct from shape and a Lambda to initialize the elements. 
-     * a(i,j,k,...) is initialized to initializer(i,j,k,...) at construction.
-     * Specially useful for non trivially constructible type
-     *
-     * @tparam Initializer  a callable on Rank longs which returns something is convertible to ValueType
-     * @param shape  Shape of the array (lengths in each dimension)
-     * @param initializer The lambda
-     */
-    // FIXME : THIS Initializer is different !!!
-    template <typename Initializer>
-    explicit basic_array(shape_t<Rank> const &shape, Initializer initializer)
-       REQUIRES(details::_is_a_good_lambda_for_init<ValueType, Initializer>(std::make_index_sequence<Rank>()))
-       : _idx_m(shape), _storage{_idx_m.size(), mem::do_not_initialize} {
-      nda::for_each(_idx_m.lengths(), [&](auto const &... x) { _storage.init_raw(_idx_m(x...), initializer(x...)); });
-    }
-
     //------------------ Assignment -------------------------
 
     ///
@@ -229,14 +232,14 @@ namespace nda {
       return *this;
     }
 
-     /** 
+    /** 
      * Resizes the array (if necessary).
      * Invalidates all references to the storage.
      *
      * @tparam RHS A scalar or an object modeling NdArray
      */
     template <typename RHS>
-      // FIXME : explode this notion
+    // FIXME : explode this notion
     basic_array &operator=(RHS const &rhs) REQUIRES(is_scalar_for_v<RHS, basic_array>) {
       static_assert(!is_const, "Cannot assign to a const !");
       assign_from_scalar(rhs); // common code with view, private

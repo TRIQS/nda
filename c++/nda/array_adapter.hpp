@@ -8,6 +8,10 @@ namespace nda {
     std::array<long, R> myshape;
     F f;
 
+#if __cplusplus > 201703L
+    static_assert(concept_impl::CallableWithRLongs<R, F>, "Lambda should be callable with R integers");
+#endif
+
     public:
     template <typename Int>
     array_adapter(std::array<Int, R> const &shape, F f) : myshape(make_std_array<long>(shape)), f(f) {}
@@ -19,13 +23,13 @@ namespace nda {
       static_assert((std::is_convertible_v<Long, long> and ...), "Arguments must be convertible to long");
       return f(i, is...);
     }
-  };
+  }; // namespace nda
 
   // CTAD
   template <auto R, typename Int, typename F>
   array_adapter(std::array<Int, R>, F) -> array_adapter<R, F>;
 
-  // C++17 concept emulation 
+// C++17 concept emulation
 #if not __cplusplus > 201703L
   template <int R, typename F>
   inline constexpr bool is_ndarray_v<array_adapter<R, F>> = true;
