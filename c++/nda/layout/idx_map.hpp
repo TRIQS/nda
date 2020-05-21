@@ -13,18 +13,6 @@
 
 namespace nda {
 
-  /// Type of all shapes
-  template <int Rank>
-  using shape_t = std::array<long, Rank>;
-
-  // std::array{....} will do the job now
-  // if function accept array<Int ..>
-  /// Shape factory
-  //template <typename... T>
-  //shape_t<sizeof...(T)> make_shape(T... args) noexcept {
-    //return {args...};
-  //}
-
   template <int Rank>
   constexpr uint64_t Fortran_stride_order = nda::encode(nda::permutations::reverse_identity<Rank>());
 

@@ -58,9 +58,9 @@ namespace nda {
   template <typename S, int Rank>
   struct scalar_array {
     S const s;
-    shape_t<Rank> _shape;
+    std::array<long, Rank> _shape;
 
-    [[nodiscard]] shape_t<Rank> const &shape() const { return _shape; }
+    [[nodiscard]] std::array<long, Rank> const &shape() const { return _shape; }
 
     template <typename T>
     S operator[](T &&) const {
@@ -79,9 +79,9 @@ namespace nda {
   struct scalar_matrix {
     S const s;
 
-    shape_t<2> _shape;
+    std::array<long, 2> _shape;
 
-    [[nodiscard]] shape_t<2> const &shape() const { return _shape; }
+    [[nodiscard]] std::array<long, 2> const &shape() const { return _shape; }
 
     template <typename T>
     S operator[](T &&) const {
@@ -127,8 +127,8 @@ namespace nda {
     }
 
     //  --- extent ---
-    // FIXME  shape (i) ??  
-    // FIXME auto const  & ??? 
+    // FIXME  shape (i) ??
+    // FIXME auto const  & ???
     [[nodiscard]] constexpr long extent(int i) const noexcept {
       if constexpr (l_is_scalar) {
         return r.extent(i);
@@ -276,9 +276,9 @@ namespace nda {
   }
 
   //  FIXME : jsut OR ??
-  // requires NdArray<L> or NdArray<R> 
+  // requires NdArray<L> or NdArray<R>
   // _common --> add detail namespace
-  // return NdArray auto  
+  // return NdArray auto
   //
   /**
    * @tparam L
@@ -399,7 +399,7 @@ namespace nda {
 
   //------------  lazy inverse
 
-  // requires NdArray<A> and HasMatrixAlgebra<A> 
+  // requires NdArray<A> and HasMatrixAlgebra<A>
   template <class A>
   expr<'/', A, int> inverse(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
     return {1, std::forward<A>(a)};

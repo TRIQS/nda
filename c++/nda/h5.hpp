@@ -141,7 +141,7 @@ namespace nda {
       int rank_in_file = lt.rank() - (is_complex ? 1 : 0);
       if (rank_in_file != A::rank)
         NDA_RUNTIME_ERROR << " h5 read of nda::array : incorrect rank. In file: " << rank_in_file << "  In memory " << A::rank;
-      shape_t<A::rank> L;
+      std::array<long, A::rank> L;
       for (int u = 0; u < A::rank; ++u) L[u] = lt.lengths[u]; // NB : correct for complex
 
       if constexpr (is_regular_v<A>) {
@@ -163,7 +163,7 @@ namespace nda {
       auto g2 = g.open_group(name);
 
       // Reshape if necessary
-      auto h5_shape = nda::shape_t<A::rank>{};
+      std::array<long, A::rank> h5_shape;
       h5_read(g2, "shape", h5_shape);
       if (a.shape() != h5_shape) a.resize(h5_shape);
 

@@ -11,7 +11,7 @@ TEST(NDA, ViewBasic) { //NOLINT
 
   auto v = a(_, 1, 2);
 
-  EXPECT_EQ(v.shape(), (myshape_t<1>{3}));
+  EXPECT_EQ(v.shape(), (nda::shape_t<1>{3}));
 
   EXPECT_EQ(a(1, 1, 2), 1 + 10 * 1 + 100 * 2);
 

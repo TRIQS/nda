@@ -20,7 +20,7 @@ storage_t &storage() { return _storage; }
 ValueType *data_start() { return _storage.data(); }
 
 /// Shape of this
-[[nodiscard]] shape_t<rank> const &shape() const { return _idx_m.lengths(); }
+[[nodiscard]] std::array<long, rank> const &shape() const { return _idx_m.lengths(); }
 
 /// Number of elements
 [[nodiscard]] long size() const { return _idx_m.size(); }

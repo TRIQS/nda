@@ -10,8 +10,11 @@
 
 using namespace std::complex_literals;
 
-template <int R>
-using myshape_t = nda::shape_t<R>;
+// for test only. Backward compat
+namespace nda { 
+  template <int Rank>
+  using shape_t = std::array<long, Rank>;
+}
 
 // variables for the test
 nda::range_all _;
