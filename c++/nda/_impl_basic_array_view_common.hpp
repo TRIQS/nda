@@ -247,6 +247,9 @@ void assign_from_ndarray(RHS const &rhs) {
                       << " : LHS " << *this << " \n RHS = " << rhs;
 #endif
 
+  // FIXME : what if RHS has no memory ??
+  // firt if SPECIFIC to container ...
+  // check call -> _linear_inde ?
   // general case if RHS is not a scalar (can be isp, expression...)
   static_assert(std::is_assignable_v<value_t &, get_value_t<RHS>>, "Assignment impossible for the type of RHS into the type of LHS");
 
@@ -254,6 +257,9 @@ void assign_from_ndarray(RHS const &rhs) {
   // we can make a 1d loop
   if constexpr ((get_layout_info<self_t>.stride_order == get_layout_info<RHS>.stride_order) // same stride order and both contiguous ...
                 and has_layout_strided_1d<self_t> and has_layout_strided_1d<RHS>) {
+    //static_assert(is_regular_or_view_v<RHS>, "oops");
+    // In general, has_layout_strided_1d is FALSE by default
+    // VALID ALSO FOR EXPRESSION !!!
     long L = size();
     for (long i = 0; i < L; ++i) (*this)(_linear_index_t{i}) = rhs(_linear_index_t{i});
   } else {

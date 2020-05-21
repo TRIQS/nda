@@ -3,7 +3,6 @@
 #include <clef/clef.hpp>
 #include "declarations.hpp"
 #include "concepts.hpp"
-#include "assignment.hpp"
 #include "iterators.hpp"
 #include "layout/slice_static.hpp"
 
@@ -126,17 +125,26 @@ namespace nda {
      * @tparam RHS A scalar or an object modeling the concept NDArray
      * @param rhs Right hand side of the = operation
      */
+    template <CONCEPT(ArrayOfRank<Rank>) RHS>
+    basic_array_view &operator=(RHS const &rhs) REQUIRES17(is_ndarray_v<RHS>) {
+      static_assert(!is_const, "Cannot assign to a const !");
+      assign_from_ndarray(rhs); // common code with view, private
+      return *this;
+    }
+
+    /// Assign to scalar
     template <typename RHS>
-    basic_array_view &operator=(RHS const &rhs) {
-      static_assert(!is_const, "Cannot assign to a const view !");
-      assign_from(*this, rhs);
+    // FIXME : explode this notion
+    basic_array_view &operator=(RHS const &rhs) REQUIRES(is_scalar_for_v<RHS, basic_array_view>) {
+      static_assert(!is_const, "Cannot assign to a const !");
+      assign_from_scalar(rhs); // common code with view, private
       return *this;
     }
 
     /// Same as the general case
     /// [C++ oddity : this case must be explicitly coded too]
     basic_array_view &operator=(basic_array_view const &rhs) {
-      assign_from(*this, rhs);
+      assign_from_ndarray(rhs);
       return *this;
     }
 
@@ -149,7 +157,6 @@ namespace nda {
       initializer.invoke(*this);
       return *this;
     }
-
 
     // ------------------------------- rebind --------------------------------------------
 
@@ -179,10 +186,8 @@ namespace nda {
       std::swap(a._storage, b._storage);
     }
 
-
     // FIXME : pull out !!
     // copy view, no need of friend !
-
 
     /**
      * Swaps the *views* a and b, without copying data

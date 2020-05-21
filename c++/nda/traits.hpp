@@ -19,7 +19,7 @@ namespace nda {
   // --------------------------- is_scalar ------------------------
 
   template <typename S>
-  inline constexpr bool is_scalar_v = std::is_arithmetic_v<S> or nda::is_complex_v<S>; // painful without the decay in later code
+  inline constexpr bool is_scalar_v = std::is_arithmetic_v<S> or nda::is_complex_v<S>; 
 
   template <typename S>
   inline constexpr bool is_scalar_or_convertible_v = is_scalar_v<S> or std::is_constructible_v<std::complex<double>, S>;

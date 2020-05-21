@@ -27,7 +27,7 @@ namespace nda {
     constexpr bool is_std__array_of_long_v<std::array<long, R>> = true;
 
     template <class T>
-    concept IsStdArrayOfLong = is_std__array_of_long_v<T>;
+    concept IsStdArrayOfLong = is_std__array_of_long_v<std::decay_t<T>>;
 
     template <class From, class To>
     concept convertible_to = std::is_convertible_v<From, To> and requires(std::add_rvalue_reference_t<From> (&f)()) {
