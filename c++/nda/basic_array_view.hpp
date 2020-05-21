@@ -194,7 +194,7 @@ namespace nda {
      * @param a
      * @param b
      */
-    friend void deep_swap(basic_array_view &a, basic_array_view &b) {
+    friend void deep_swap(basic_array_view a, basic_array_view b) {
       // FIXME Is this optimal ??
       // Do we want to keep this function ?? Used only in det_manip, in 1d
       //
@@ -202,29 +202,6 @@ namespace nda {
       a        = b;
       b        = tmp;
     }
-
-    // FIXME useless !!
-    // on or both can be a temporary !
-    /**
-     * Swaps the *views* a and b, without copying data
-     * @param a
-     * @param b
-     */
-    friend void deep_swap(basic_array_view &&a, basic_array_view &b) { deep_swap(a, b); }
-
-    /**
-     * Swaps the *views* a and b, without copying data
-     * @param a
-     * @param b
-     */
-    friend void deep_swap(basic_array_view &a, basic_array_view &&b) { deep_swap(a, b); }
-
-    /**
-     * Swaps the *views* a and b, without copying data
-     * @param a
-     * @param b
-     */
-    friend void deep_swap(basic_array_view &&a, basic_array_view &&b) { deep_swap(a, b); }
 
     //----------------------------------------------------
 
