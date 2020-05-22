@@ -67,11 +67,11 @@ namespace nda {
 
     ///
     template <typename T, typename L, char A, typename CP>
-    basic_array_view(basic_array<T, Rank, L, A, CP> const &a) : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
+    basic_array_view(basic_array<T, Rank, L, A, CP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
 
     ///
     template <typename T, typename L, char A, typename AP, typename OP>
-    basic_array_view(basic_array_view<T, Rank, L, A, AP, OP> const &a) : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
+    basic_array_view(basic_array_view<T, Rank, L, A, AP, OP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
 
     /** 
      * [Advanced] From a pointer to **contiguous data**, and a shape.
@@ -80,7 +80,7 @@ namespace nda {
      * @param p Pointer to the data
      * @param shape Shape of the view (contiguous)
      */
-    basic_array_view(std::array<long, Rank> const &shape, ValueType *p) : basic_array_view(layout_t{shape}, p) {}
+    basic_array_view(std::array<long, Rank> const &shape, ValueType *p) noexcept : basic_array_view(layout_t{shape}, p) {}
 
     /** 
      * [Advanced] From a pointer to data, and an idx_map 
@@ -89,7 +89,7 @@ namespace nda {
      * @param p Pointer to the data 
      * @param idxm Index Map (view can be non contiguous). If the offset is non zero, the view starts at p + idxm.offset()
      */
-    basic_array_view(layout_t const &idxm, ValueType *p) : lay(idxm), sto{p} {}
+    basic_array_view(layout_t const &idxm, ValueType *p) noexcept : lay(idxm), sto{p} {}
     //basic_array_view(idx_map<Rank, StrideOrder> const &idxm, ValueType *p) : lay(idxm), sto{p, size_t(idxm.size() + idxm.offset())} {}
 
     // Move assignment not defined : will use the copy = since view must copy data
@@ -98,7 +98,7 @@ namespace nda {
 
     /// Same as the general case
     /// [C++ oddity : this case must be explicitly coded too]
-    basic_array_view &operator=(basic_array_view const &rhs) {
+    basic_array_view &operator=(basic_array_view const &rhs) noexcept {
       assign_from_ndarray(rhs);
       return *this;
     }
@@ -116,7 +116,7 @@ namespace nda {
      * @param rhs Right hand side of the = operation
      */
     template <CONCEPT(ArrayOfRank<Rank>) RHS>
-    basic_array_view &operator=(RHS const &rhs) REQUIRES17(is_ndarray_v<RHS>) {
+    basic_array_view &operator=(RHS const &rhs) noexcept REQUIRES17(is_ndarray_v<RHS>) {
       static_assert(!is_const, "Cannot assign to a const !");
       assign_from_ndarray(rhs); // common code with view, private
       return *this;
@@ -125,7 +125,7 @@ namespace nda {
     /// Assign to scalar
     template <typename RHS>
     // FIXME : explode this notion
-    basic_array_view &operator=(RHS const &rhs) REQUIRES(is_scalar_for_v<RHS, basic_array_view>) {
+    basic_array_view &operator=(RHS const &rhs) noexcept REQUIRES(is_scalar_for_v<RHS, basic_array_view>) {
       static_assert(!is_const, "Cannot assign to a const !");
       assign_from_scalar(rhs); // common code with view, private
       return *this;
@@ -135,7 +135,7 @@ namespace nda {
      * 
      */
     template <CONCEPT(ArrayInitializer) Initializer>
-    basic_array_view &operator=(Initializer const &initializer) REQUIRES17(is_assign_rhs<Initializer>) {
+    basic_array_view &operator=(Initializer const &initializer) noexcept REQUIRES17(is_assign_rhs<Initializer>) {
       EXPECTS(shape() == initializer.shape());
       initializer.invoke(*this);
       return *this;
@@ -145,7 +145,7 @@ namespace nda {
 
     ///
     template <typename T, int R, typename L, char A, typename AP, typename OP>
-    void rebind(basic_array_view<T, R, L, A, AP, OP> v) {
+    void rebind(basic_array_view<T, R, L, A, AP, OP> v) noexcept {
       static_assert(R == Rank, "One can only rebind a view to a view of same rank");
       static_assert(std::is_same_v<std::remove_const_t<T>, std::remove_const_t<ValueType>>, "Type must be the same, except maybe const");
       static constexpr bool same_type = std::is_same_v<T, ValueType>;
@@ -170,7 +170,7 @@ namespace nda {
      * @param a
      * @param b
      */
-    friend void swap(basic_array_view &a, basic_array_view &b) {
+    friend void swap(basic_array_view &a, basic_array_view &b) noexcept {
       std::swap(a.lay, b.lay);
       std::swap(a.sto, b.sto);
     }
@@ -180,7 +180,7 @@ namespace nda {
      * @param a
      * @param b
      */
-    friend void deep_swap(basic_array_view a, basic_array_view b) {
+    friend void deep_swap(basic_array_view a, basic_array_view b) noexcept{
       auto tmp = make_regular(a);
       a        = b;
       b        = tmp;

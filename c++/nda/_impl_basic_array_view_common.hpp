@@ -5,7 +5,7 @@
 /// The Index Map object
 [[nodiscard]] constexpr auto const &indexmap() const noexcept { return lay; }
 
-/// \private 
+/// \private
 [[nodiscard]] storage_t const &storage() const noexcept { return sto; }
 
 /// \private
@@ -15,34 +15,34 @@ storage_t &storage() { return sto; }
 [[nodiscard]] constexpr auto stride_order() const noexcept { return lay.stride_order(); }
 
 /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
-[[nodiscard]] ValueType const *data_start() const { return sto.data(); }
+[[nodiscard]] ValueType const *data_start() const noexcept { return sto.data(); }
 
 /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
-ValueType *data_start() { return sto.data(); }
+ValueType *data_start() noexcept { return sto.data(); }
 
-/// Shape 
-[[nodiscard]] std::array<long, rank> const &shape() const { return lay.lengths(); }
+/// Shape
+[[nodiscard]] std::array<long, rank> const &shape() const noexcept { return lay.lengths(); }
 
-/// 
-[[nodiscard]] long size() const { return lay.size(); }
+///
+[[nodiscard]] long size() const noexcept { return lay.size(); }
 
 /// size() == 0
 [[nodiscard]] bool empty() const { return sto.is_null(); }
 
 //[[deprecated]]
-[[nodiscard]] bool is_empty() const { return sto.is_null(); }
+[[nodiscard]] bool is_empty() const noexcept { return sto.is_null(); }
 
 /// Same as shape()[i]
 //[[deprecated]]
-[[nodiscard]] long shape(int i) const { return lay.lengths()[i]; }
+[[nodiscard]] long shape(int i) const noexcept { return lay.lengths()[i]; }
 
-[[nodiscard]] long extent(int i) const { return lay.lengths()[i]; }
-
-///
-static constexpr bool is_stride_order_C() { return layout_t::is_stride_order_C(); }
+[[nodiscard]] long extent(int i) const noexcept { return lay.lengths()[i]; }
 
 ///
-static constexpr bool is_stride_order_Fortran() { return layout_t::is_stride_order_Fortran(); }
+static constexpr bool is_stride_order_C() noexcept { return layout_t::is_stride_order_C(); }
+
+///
+static constexpr bool is_stride_order_Fortran() noexcept { return layout_t::is_stride_order_Fortran(); }
 
 // -------------------------------  operator () --------------------------------------------
 
@@ -51,7 +51,7 @@ static constexpr bool is_stride_order_Fortran() { return layout_t::is_stride_ord
 // but it is not for the user directly
 
 /// \private NO DOC
-decltype(auto) operator()(_linear_index_t x) const {
+decltype(auto) operator()(_linear_index_t x) const noexcept {
   //NDA_PRINT(layout_t::layout_prop);
   if constexpr (layout_t::layout_prop == layout_prop_e::strided_1d) return sto[x.value * lay.min_stride()];
   if constexpr (layout_t::layout_prop == layout_prop_e::contiguous) return sto[x.value]; // min_stride is 1
@@ -59,7 +59,7 @@ decltype(auto) operator()(_linear_index_t x) const {
 }
 
 /// \private NO DOC
-decltype(auto) operator()(_linear_index_t x) {
+decltype(auto) operator()(_linear_index_t x) noexcept {
   //NDA_PRINT(layout_t::layout_prop);
   if constexpr (layout_t::layout_prop == layout_prop_e::strided_1d) return sto[x.value * lay.min_stride()];
   if constexpr (layout_t::layout_prop == layout_prop_e::contiguous) return sto[x.value]; // min_stride is 1
@@ -70,7 +70,7 @@ private:
 // impl of call. Only different case is if Self is &&
 
 template <bool SelfIsRvalue, typename Self, typename... T>
-FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) {
+FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) noexcept {
 
   using r_v_t = std::conditional_t<std::is_const_v<std::remove_reference_t<Self>>, ValueType const, ValueType>;
 
@@ -89,12 +89,12 @@ FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) {
 
     // case 1 : all arguments are long, we simply compute the offset
     if constexpr (n_args_long == rank) {         // no range, ellipsis, we simply compute the linear position
-      long offset = self.lay(x...);           // compute the offset
+      long offset = self.lay(x...);              // compute the offset
       if constexpr (is_view or not SelfIsRvalue) //
         return AccessorPolicy::template accessor<ValueType>::access(self.sto.data(),
                                                                     offset); // We return a REFERENCE here. Ok since underlying array is still alive
       else                                                                   //
-        return ValueType{self.sto[offset]};                             // We return a VALUE here, the array is about be destroyed.
+        return ValueType{self.sto[offset]};                                  // We return a VALUE here, the array is about be destroyed.
     }
     // case 2 : we have to make a slice
     else {
@@ -122,7 +122,7 @@ public:
  * @example array_call
  */
 template <typename... T>
-decltype(auto) operator()(T const &... x) const & {
+decltype(auto) operator()(T const &... x) const &noexcept {
   static_assert((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank)),
                 "Incorrect number of parameters in call");
   return __call__impl<false>(*this, x...);
@@ -130,7 +130,7 @@ decltype(auto) operator()(T const &... x) const & {
 
 ///
 template <typename... T>
-decltype(auto) operator()(T const &... x) & {
+decltype(auto) operator()(T const &... x) &noexcept {
   static_assert((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank)),
                 "Incorrect number of parameters in call");
   return __call__impl<false>(*this, x...);
@@ -138,7 +138,7 @@ decltype(auto) operator()(T const &... x) & {
 
 ///
 template <typename... T>
-decltype(auto) operator()(T const &... x) && {
+decltype(auto) operator()(T const &... x) &&noexcept {
   static_assert((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank)),
                 "Incorrect number of parameters in call");
   return __call__impl<true>(*this, x...);
@@ -152,21 +152,21 @@ decltype(auto) operator()(T const &... x) && {
  * @example array_call
  */
 template <typename T>
-decltype(auto) operator[](T const &x) const & {
+decltype(auto) operator[](T const &x) const &noexcept {
   static_assert((rank == 1), " [ ] operator is only available for rank 1 in C++17/20");
   return __call__impl<false>(*this, x);
 }
 
 ///
 template <typename T>
-decltype(auto) operator[](T const &x) & {
+decltype(auto) operator[](T const &x) &noexcept {
   static_assert((rank == 1), " [ ] operator is only available for rank 1 in C++17/20");
   return __call__impl<false>(*this, x);
 }
 
 ///
 template <typename T>
-decltype(auto) operator[](T const &x) && {
+decltype(auto) operator[](T const &x) &&noexcept {
   static_assert((rank == 1), " [ ] operator is only available for rank 1 in C++17/20");
   return __call__impl<true>(*this, x);
 }
@@ -183,7 +183,7 @@ using iterator = array_iterator<iterator_rank, ValueType, typename AccessorPolic
 
 private:
 template <typename Iterator>
-[[nodiscard]] auto _make_iterator(bool at_end) const {
+[[nodiscard]] auto _make_iterator(bool at_end) const noexcept {
   if constexpr (iterator_rank == Rank)
     return Iterator{indexmap().lengths(), indexmap().strides(), sto.data(), at_end};
   else
@@ -192,18 +192,18 @@ template <typename Iterator>
 
 public:
 ///
-[[nodiscard]] const_iterator begin() const { return _make_iterator<const_iterator>(false); }
+[[nodiscard]] const_iterator begin() const noexcept { return _make_iterator<const_iterator>(false); }
 ///
-[[nodiscard]] const_iterator cbegin() const { return _make_iterator<const_iterator>(false); }
+[[nodiscard]] const_iterator cbegin() const noexcept { return _make_iterator<const_iterator>(false); }
 ///
-iterator begin() { return _make_iterator<iterator>(false); }
+iterator begin() noexcept { return _make_iterator<iterator>(false); }
 
 ///
-[[nodiscard]] const_iterator end() const { return _make_iterator<const_iterator>(true); }
+[[nodiscard]] const_iterator end() const noexcept { return _make_iterator<const_iterator>(true); }
 ///
-[[nodiscard]] const_iterator cend() const { return _make_iterator<const_iterator>(true); }
+[[nodiscard]] const_iterator cend() const noexcept { return _make_iterator<const_iterator>(true); }
 ///
-iterator end() { return _make_iterator<iterator>(true); }
+iterator end() noexcept { return _make_iterator<iterator>(true); }
 
 // ------------------------------- Operations --------------------------------------------
 
@@ -212,7 +212,7 @@ iterator end() { return _make_iterator<iterator>(true); }
  * @param rhs
  */
 template <typename RHS>
-auto &operator+=(RHS const &rhs) {
+auto &operator+=(RHS const &rhs) noexcept {
   static_assert(not is_const, "Can not assign to a const view");
   return operator=(*this + rhs);
 }
@@ -221,7 +221,7 @@ auto &operator+=(RHS const &rhs) {
  * @param rhs
  */
 template <typename RHS>
-auto &operator-=(RHS const &rhs) {
+auto &operator-=(RHS const &rhs) noexcept {
   static_assert(not is_const, "Can not assign to a const view");
   return operator=(*this - rhs);
 }
@@ -230,7 +230,7 @@ auto &operator-=(RHS const &rhs) {
  * @param rhs
  */
 template <typename RHS>
-auto &operator*=(RHS const &rhs) {
+auto &operator*=(RHS const &rhs) noexcept {
   static_assert(not is_const, "Can not assign to a const view");
   return operator=(*this *rhs);
 }
@@ -239,7 +239,7 @@ auto &operator*=(RHS const &rhs) {
  * @param rhs
  */
 template <typename RHS>
-auto &operator/=(RHS const &rhs) {
+auto &operator/=(RHS const &rhs) noexcept {
   static_assert(not is_const, "Can not assign to a const view");
   return operator=(*this / rhs);
 }
@@ -248,7 +248,7 @@ auto &operator/=(RHS const &rhs) {
 
 private:
 template <typename RHS>
-void assign_from_ndarray(RHS const &rhs) {
+void assign_from_ndarray(RHS const &rhs) noexcept {
 
 #ifdef NDA_DEBUG
   if (this->shape() != rhs.shape())
@@ -280,7 +280,7 @@ void assign_from_ndarray(RHS const &rhs) {
 // -----------------------------------------------------
 
 template <typename Scalar>
-void fill_with_scalar(Scalar const &scalar) {
+void fill_with_scalar(Scalar const &scalar) noexcept {
   // we make a special implementation if the array is 1d strided or contiguous
   if constexpr (has_layout_strided_1d<self_t>) { // possibly contiguous
     const long L             = size();
@@ -300,7 +300,7 @@ void fill_with_scalar(Scalar const &scalar) {
 // -----------------------------------------------------
 
 template <typename Scalar>
-void assign_from_scalar(Scalar const &scalar) {
+void assign_from_scalar(Scalar const &scalar) noexcept {
 
   static_assert(!is_const, "Cannot assign to a const view !");
 

@@ -48,7 +48,7 @@ namespace nda {
     friend auto map_layout_transform(basic_array<T, R, L, A, C> &&a, NewLayoutType const &new_layout);
 
     // private constructor for the friend
-    basic_array(layout_t const &idxm, storage_t &&mem_handle) : lay(idxm), sto(std::move(mem_handle)) {}
+    basic_array(layout_t const &idxm, storage_t &&mem_handle) noexcept : lay(idxm), sto(std::move(mem_handle)) {}
 
     public:
     // ------------------------------- constructors --------------------------------------------
@@ -57,7 +57,7 @@ namespace nda {
     basic_array() = default;
 
     /// Makes a deep copy, since array is a regular type
-    basic_array(basic_array const &x) : lay(x.indexmap()), sto(x.sto) {}
+    basic_array(basic_array const &x) noexcept : lay(x.indexmap()), sto(x.sto) {}
 
     ///
     basic_array(basic_array &&X) = default;
@@ -69,7 +69,7 @@ namespace nda {
      * @param i0, is ... are the extents (lengths) in each dimension
      */
     template <CONCEPT(std::integral)... Int>
-    explicit basic_array(Int... is) REQUIRES17((std::is_convertible_v<Int, long> and ...)) {
+    explicit basic_array(Int... is) noexcept REQUIRES17((std::is_convertible_v<Int, long> and ...)) {
       //static_assert((std::is_convertible_v<Int, long> and ...), "Arguments must be convertible to long");
       static_assert(sizeof...(Int) == Rank, "Incorrect number of arguments : should be exactly Rank. ");
       lay   = layout_t{{long(is)...}};
@@ -83,14 +83,14 @@ namespace nda {
      * 
      * @param shape  Shape of the array (lengths in each dimension)
      */
-    explicit basic_array(std::array<long, Rank> const &shape) REQUIRES(std::is_default_constructible_v<ValueType>)
+    explicit basic_array(std::array<long, Rank> const &shape) noexcept REQUIRES(std::is_default_constructible_v<ValueType>)
        : lay(shape), sto(lay.size()) {}
 
     /** 
      * Constructs from a.shape() and then assign from the evaluation of a
      */
     template <CONCEPT(ArrayOfRank<Rank>) A>
-    basic_array(A const &a) REQUIRES17(is_ndarray_v<A>) : lay(a.shape()), sto{lay.size(), mem::do_not_initialize} {
+    basic_array(A const &a) noexcept REQUIRES17(is_ndarray_v<A>) : lay(a.shape()), sto{lay.size(), mem::do_not_initialize} {
       static_assert(std::is_convertible_v<get_value_t<A>, value_type>,
                     "Can not construct the array. ValueType can not be constructed from the value_type of the argument");
       if constexpr (std::is_trivial_v<ValueType> or mem::is_complex<ValueType>::value) {
@@ -111,15 +111,15 @@ namespace nda {
      *
      */
     template <CONCEPT(ArrayInitializer) Initializer> // can not be explicit
-    basic_array(Initializer const &initializer) REQUIRES17(is_assign_rhs<Initializer>) : basic_array{initializer.shape()} {
+    basic_array(Initializer const &initializer) noexcept REQUIRES17(is_assign_rhs<Initializer>) : basic_array{initializer.shape()} {
       initializer.invoke(*this);
     }
 
     private: // impl. detail for next function
-    static std::array<long, 1> shape_from_init_list(std::initializer_list<ValueType> const &l) { return {long(l.size())}; }
+    static std::array<long, 1> shape_from_init_list(std::initializer_list<ValueType> const &l) noexcept { return {long(l.size())}; }
 
     template <typename L>
-    static auto shape_from_init_list(std::initializer_list<L> const &l) {
+    static auto shape_from_init_list(std::initializer_list<L> const &l) noexcept {
       const auto [min, max] =
          std::minmax_element(std::begin(l), std::end(l), [](auto &&x, auto &&y) { return shape_from_init_list(x) == shape_from_init_list(y); });
       EXPECTS_WITH_MESSAGE(shape_from_init_list(*min) == shape_from_init_list(*max), "initializer list not rectangular !");
@@ -128,7 +128,7 @@ namespace nda {
 
     public:
     ///
-    basic_array(std::initializer_list<ValueType> const &l) //
+    basic_array(std::initializer_list<ValueType> const &l) noexcept //
        REQUIRES(Rank == 1)
        : lay(std::array<long, 1>{long(l.size())}), sto{lay.size(), mem::do_not_initialize} {
       long i = 0;
@@ -140,7 +140,7 @@ namespace nda {
     }
 
     ///
-    basic_array(std::initializer_list<std::initializer_list<ValueType>> const &l2) //
+    basic_array(std::initializer_list<std::initializer_list<ValueType>> const &l2) noexcept //
        REQUIRES((Rank == 2))
        : lay(shape_from_init_list(l2)), sto{lay.size(), mem::do_not_initialize} {
       long i = 0, j = 0;
@@ -152,7 +152,7 @@ namespace nda {
     }
 
     ///
-    basic_array(std::initializer_list<std::initializer_list<std::initializer_list<ValueType>>> const &l3) //
+    basic_array(std::initializer_list<std::initializer_list<std::initializer_list<ValueType>>> const &l3) noexcept //
        : lay(shape_from_init_list(l3)), sto{lay.size(), mem::do_not_initialize} {
       long i = 0, j = 0, k = 0;
       static_assert(Rank == 3, "?");
@@ -181,7 +181,7 @@ namespace nda {
      * @tparam RHS A scalar or an object modeling NdArray
      */
     template <CONCEPT(ArrayOfRank<Rank>) RHS>
-    basic_array &operator=(RHS const &rhs) REQUIRES17(is_ndarray_v<RHS>) {
+    basic_array &operator=(RHS const &rhs) noexcept REQUIRES17(is_ndarray_v<RHS>) {
       static_assert(!is_const, "Cannot assign to a const !");
       resize(rhs.shape());
       assign_from_ndarray(rhs); // common code with view, private
@@ -196,7 +196,7 @@ namespace nda {
      */
     template <typename RHS>
     // FIXME : explode this notion
-    basic_array &operator=(RHS const &rhs) REQUIRES(is_scalar_for_v<RHS, basic_array>) {
+    basic_array &operator=(RHS const &rhs) noexcept REQUIRES(is_scalar_for_v<RHS, basic_array>) {
       static_assert(!is_const, "Cannot assign to a const !");
       assign_from_scalar(rhs); // common code with view, private
       return *this;
@@ -206,7 +206,7 @@ namespace nda {
      * 
      */
     template <CONCEPT(ArrayInitializer) Initializer>
-    basic_array &operator=(Initializer const &initializer) REQUIRES17(is_assign_rhs<Initializer>) {
+    basic_array &operator=(Initializer const &initializer) noexcept REQUIRES17(is_assign_rhs<Initializer>) {
       resize(initializer.shape());
       initializer.invoke(*this);
       return *this;
