@@ -28,7 +28,6 @@ namespace nda {
     template <int Rank>
     using mapping = idx_map<Rank, StaticExtents, StrideOrder, LayoutProp>;
 
-    //template <layout_prop_e LayoutProp2> using my_self_with_other_prop = basic_layout<StaticExtents, StrideOrder, LayoutProp2>;
   };
 
 } // namespace nda

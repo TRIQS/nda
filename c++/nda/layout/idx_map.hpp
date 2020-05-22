@@ -19,14 +19,6 @@ namespace nda {
   template <int Rank>
   constexpr uint64_t C_stride_order = nda::encode(nda::permutations::identity<Rank>());
 
-  //template <typename L1, typename L2>
-  //inline constexpr bool layout_are_compatible_for_view = false;
-
-  //template <int Rank, uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp>
-  //inline constexpr bool
-  //layout_are_compatible_for_view<idx_map<Rank, StaticExtents, StrideOrder, LayoutProp>, idx_map<Rank, StaticExtents, StrideOrder, LayoutProp>> =
-  //false;
-
   // constexpr std::array<long,  > ce_len, ce_stri :   -1 -->  dynamic.
   // https://godbolt.org/z/qmKWpj
 
@@ -61,39 +53,40 @@ namespace nda {
    */
   template <int Rank, uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp>
   class idx_map {
-    static_assert(Rank < 16, "Rank must be < 16"); // C++17 constraint. Relax this in C++20 ?
-    std::array<long, Rank> len, str;
+    static_assert(Rank < 16, "Rank must be < 16"); // C++17 constraint. Relax this in C++20
+    std::array<long, Rank> len, str;               // lenghts and strides
 
     public:
-    static constexpr std::array<int, Rank> static_extents = decode<Rank>(StaticExtents);
     static constexpr uint64_t static_extents_encoded      = StaticExtents;
+    static constexpr std::array<int, Rank> static_extents = decode<Rank>(StaticExtents);
 
-    static constexpr int rank_dynamic = []() {
-      int r = 0;
-      for (int u = 0; u < Rank; ++u) r += (static_extents[u] == 0 ? 1 : 0);
-      return r;
-    }();
-
-    // main property : idx_map<Rank, stride_order_encoded, layout_prop> is THIS
     static constexpr std::array<int, Rank> stride_order =
        (StrideOrder == 0 ? permutations::identity<Rank>() : decode<Rank>(StrideOrder)); // 0 is C stride_order
-
     static constexpr uint64_t stride_order_encoded = encode(stride_order);
 
     static constexpr layout_prop_e layout_prop = LayoutProp;
     static constexpr layout_info_t layout_info = layout_info_t{stride_order_encoded, layout_prop};
 
+    private:
+    static constexpr int n_dynamic_extents = []() {
+      int r = 0;
+      for (int u = 0; u < Rank; ++u) r += (static_extents[u] == 0 ? 1 : 0);
+      return r;
+    }();
+
+    public:
     // ----------------  Accessors -------------------------
 
     /// Rank of the map (number of arguments)
     static constexpr int rank() noexcept { return Rank; }
 
     /// Total number of elements (products of lengths in each dimension).
+    // NB recomputed at each call (FIXME Optimize this ?)
     [[nodiscard]] long size() const noexcept { return std::accumulate(len.cbegin(), len.cend(), 1, std::multiplies<>{}); }
 
     /// Compile time size, 0 means "dynamical"
     static constexpr long ce_size() noexcept {
-      if constexpr (rank_dynamic != 0) { // quick general case
+      if constexpr (n_dynamic_extents != 0) { // quick general case
         return 0;
       } else {
         long s = 1;
@@ -102,33 +95,35 @@ namespace nda {
       }
     }
 
-    /** 
-     * Lengths of each dimension.
-     */
+    /// Lengths of each dimension.
     [[nodiscard]] std::array<long, Rank> const &lengths() const noexcept { return len; }
 
-    /** 
-     * Strides of each dimension.
-     */
+    /// Strides of each dimension.
     [[nodiscard]] std::array<long, Rank> const &strides() const noexcept { return str; }
 
-    /// Is the data contiguous in memory ?
+    /// Is the data contiguous in memory ? [NB recomputed at each call]
     [[nodiscard]] bool is_contiguous() const noexcept {
       int slowest_index = std::distance(str.begin(), std::max_element(str.begin(), str.end())); // index with minimal stride
       return (str[slowest_index] * len[slowest_index] == size());
     }
 
-    ///
+    /// Is the order in memory C ?
     static constexpr bool is_stride_order_C() {
-      // FIXME : constexpr issue with == ?
-      // (stride_order == permutations::identity<Rank>()); }
+      // operator == of std:array is constexpr only since C++20
+#if __cplusplus > 201703L
+      return (stride_order == permutations::identity<Rank>());
+#else
       return (encode(stride_order) == encode(permutations::identity<Rank>()));
+#endif
     }
-    ///
+
+    /// Is the order in memory Fortran ?
     static constexpr bool is_stride_order_Fortran() {
-      // FIXME Same as above
-      //(stride_order == permutations::reverse_identity<Rank>()); }
+#if __cplusplus > 201703L
+      return (stride_order == permutations::reverse_identity<Rank>());
+#else
       return (encode(stride_order) == encode(permutations::reverse_identity<Rank>()));
+#endif
     }
 
     /// Value of the minimum stride (i.e the fastest one)
@@ -137,11 +132,10 @@ namespace nda {
     // ----------------  Constructors -------------------------
 
     private:
-    // compute strides for a contiguous array given the extents in each dimension
-    void _compute_strides() {
-      // compute the strides for a compact array
+    // compute strides for a contiguous array from len
+    void compute_strides_contiguous() {
       long s = 1;
-      for (int v = rank() - 1; v >= 0; --v) { // rank() is constexpr ...
+      for (int v = rank() - 1; v >= 0; --v) { // rank() is constexpr, allowing compiler to transform loop...
         int u  = stride_order[v];
         str[u] = s;
         s *= len[u];
@@ -152,70 +146,61 @@ namespace nda {
     // FIXME ADD A CHECK layout_prop_e ... compare to stride and
 
     public:
-    /// Default constructor. Lengths and Strides are not initiliazed.
+    /// Default constructor. Strides are not initiliazed.
     idx_map() {
-      if constexpr (rank_dynamic == 0) { // full static array
+      if constexpr (n_dynamic_extents == 0) { // full static array
         for (int u = 0; u < Rank; ++u) len[u] = static_extents[u];
-        _compute_strides();
+        compute_strides_contiguous();
       } else {
-        for (int u = 0; u < Rank; ++u) len[u] = 0; // to have the proper invariant of the array : shape = (0,0,...) and pointer is null
+        for (int u = 0; u < Rank; ++u)
+          len[u] = 0; // FIXME. Needed ? To have the proper invariant of the array : shape = (0,0,...) and pointer is null
       }
     }
 
-    ///
     idx_map(idx_map const &) = default;
-
-    ///
-    idx_map(idx_map &&) = default;
-
-    ///
+    idx_map(idx_map &&)      = default;
     idx_map &operator=(idx_map const &) = default;
-
-    ///
     idx_map &operator=(idx_map &&) = default;
 
     /** 
      * From an idxmap with other info flags
      * @param idxm
      */
-    template <layout_prop_e LayoutProp2>
-    idx_map(idx_map<Rank, StaticExtents, StrideOrder, LayoutProp2> const &idxm) noexcept : len(idxm.lengths()), str(idxm.strides()) {
-      static_assert(is_degradable(LayoutProp2, LayoutProp),
-                    "Can not construct the view: it would violate some compile time guarantees about the layout");
+    template <layout_prop_e P>
+    idx_map(idx_map<Rank, StaticExtents, StrideOrder, P> const &idxm) noexcept : len(idxm.lengths()), str(idxm.strides()) {
+      static_assert(is_degradable(P, LayoutProp), "Can not construct the view: it would violate some compile time guarantees about the layout");
     }
 
-    // trap for error. If one tries to construct a view with a mismatch of stride order
-    template <uint64_t StaticExtents2, uint64_t StrideOrder2, layout_prop_e LayoutProp2>
-    idx_map(idx_map<Rank, StaticExtents2, StrideOrder2, LayoutProp2> const &)
-       REQUIRES((StaticExtents2 != StaticExtents) or (StrideOrder != StrideOrder2)) {
-      static_assert(not((StaticExtents2 != StaticExtents) or (StrideOrder != StrideOrder2)),
-                    "Can not construct a layout from another one with a different stride order");
-    }
-
-    /** 
-     * Construction from the lengths, the strides
-     * @param lengths
-     * @param strides
-     */
-    idx_map(std::array<long, Rank> const &lengths, std::array<long, Rank> const &strides) noexcept : len(lengths), str(strides) {}
-
-    /** 
-     * Construction from the lengths, the strides
-     * @param lengths
-     */
-    idx_map(std::array<long, Rank> const &lengths) noexcept : len(lengths) {
-
+    private:
+    void assert_static_extents_and_len_are_compatible() const {
 #ifdef NDA_DEBUG
-      if constexpr (rank_dynamic != Rank) { // there are some static extents
+      if constexpr (n_dynamic_extents != Rank) { // there are some static extents
         for (int u = 0; u < Rank; ++u)
           if (static_extents[u] != 0) EXPECTS(static_extents[u] == len[u]);
       }
 #endif
-      _compute_strides();
+    }
+    
+    public:
+
+    /// Construct from a compatible static_extents
+    template <uint64_t SE, layout_prop_e P>
+    idx_map(idx_map<Rank, SE, StrideOrder, P> const &idxm) noexcept(false) : len(idxm.lengths()), str(idxm.strides()) { // can throw
+      static_assert(is_degradable(P, LayoutProp), "Can not construct the view: it would violate some compile time guarantees about the layout");
+      assert_static_extents_and_len_are_compatible();
+    }
+
+    ///
+    idx_map(std::array<long, Rank> const &shape, std::array<long, Rank> const &strides) noexcept : len(shape), str(strides) {}
+
+    ///
+    idx_map(std::array<long, Rank> const &shape) noexcept : len(shape) {
+      assert_static_extents_and_len_are_compatible();
+      compute_strides_contiguous();
     }
 
     private:
-    std::array<long, Rank> _embed_array(std::array<long, rank_dynamic> const &s) {
+    std::array<long, Rank> _embed_array(std::array<long, n_dynamic_extents> const &s) {
       std::array<long, Rank> r;
       for (int u = 0, v = 0; u < Rank; ++u) r[u] = (static_extents[u] == 0 ? s[v++] : static_extents[u]);
       return r;
@@ -227,10 +212,19 @@ namespace nda {
      * @param lengths
      * @param strides
      */
-    idx_map(std::array<long, rank_dynamic> const &lengths) noexcept REQUIRES((rank_dynamic != Rank) and (rank_dynamic != 0))
+    idx_map(std::array<long, n_dynamic_extents> const &lengths) noexcept REQUIRES((n_dynamic_extents != Rank) and (n_dynamic_extents != 0))
        : idx_map(_embed_array(lengths)) {}
 
-    // trap for incorrect calls. For R = Rank, the non template has priority
+    /// \private
+    /// trap for error. If one tries to construct a view with a mismatch of stride order
+    template <uint64_t StaticExtents2, uint64_t StrideOrder2, layout_prop_e P>
+    idx_map(idx_map<Rank, StaticExtents2, StrideOrder2, P> const &) REQUIRES((StaticExtents2 != StaticExtents) or (StrideOrder != StrideOrder2)) {
+      static_assert(not((StaticExtents2 != StaticExtents) or (StrideOrder != StrideOrder2)),
+                    "Can not construct a layout from another one with a different stride order");
+    }
+
+    /// \private
+    /// trap for incorrect calls. For R = Rank, the non template has priority
     template <int R>
     idx_map(std::array<long, R> const &) {
       static_assert(R == Rank, "Rank of the argument incorrect in idx_map construction");
@@ -293,7 +287,7 @@ namespace nda {
 
   // ---------------- Transposition -------------------------
 
-// FIXME : why is Permutation template  in apply_invers ? constexpr is enough ??
+  // FIXME : why is Permutation template  in apply_invers ? constexpr is enough ??
   template <ARRAY_INT Permutation, int Rank, uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp>
   auto transpose(idx_map<Rank, StaticExtents, StrideOrder, LayoutProp> const &idx) {
 

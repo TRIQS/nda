@@ -1,7 +1,9 @@
 
 - SSO : with stack
   - custom alloc
-  - 
+  - redo bench 
+
+- C++17 mode.
 
 - layout : 
     - slice
