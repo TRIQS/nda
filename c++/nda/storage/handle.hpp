@@ -27,6 +27,7 @@
 #include <cstring>
 #include "./blk.hpp"
 #include "./rtable.hpp"
+#include "./allocators.hpp"
 
 namespace nda::mem {
 
@@ -37,11 +38,37 @@ namespace nda::mem {
   template <typename T>
   static constexpr bool is_complex_v<std::complex<T>> = true;
 
-  // -------------- Allocation Functions ---------------------------
+  // -------------- Allocation -----------
 
-  allocators::blk_t allocate(size_t size);
-  allocators::blk_t allocate_zero(size_t size);
-  void deallocate(allocators::blk_t b);
+  template <typename Allocator>
+  struct allocator_singleton {
+
+#ifndef NDA_DEBUG_LEAK_CHECK
+    static inline Allocator allocator;
+#else
+    static inline allocators::leak_check<Allocator> allocator;
+#endif
+
+    static allocators::blk_t allocate(size_t size) { return allocator.allocate(size); }
+    static allocators::blk_t allocate_zero(size_t size) { return allocator.allocate_zero(size); }
+    static void deallocate(allocators::blk_t b) { allocator.deallocate(b); }
+  };
+
+#ifndef NDA_DEBUG_LEAK_CHECK
+
+  // the default mallocator is special : it has no state and a special calloc
+  // use void : it is the default case, and simplify error messages in 99.999% of cases
+  template <>
+  struct allocator_singleton<void> {
+    static allocators::blk_t allocate(size_t size) { return allocators::mallocator::allocate(size); }
+    static allocators::blk_t allocate_zero(size_t size) { return allocators::mallocator::allocate_zero(size); }
+    static void deallocate(allocators::blk_t b) { allocators::mallocator::deallocate(b); }
+  };
+#else
+  template <>
+  struct allocator_singleton<void> : allocator_singleton<allocators::leak_check<allocators::mallocator>> {};
+
+#endif
 
   // -------------- Utilities ---------------------------
 
@@ -69,7 +96,7 @@ namespace nda::mem {
   // Borrowed (no memory ownership)
   // Stack  (on stack)
   // clang-format off
-  template <typename T> struct handle_heap; 
+  template <typename T, typename Allocator> struct handle_heap; 
   template <typename T> struct handle_shared; 
   template <typename T> struct handle_borrowed; 
 
@@ -78,7 +105,7 @@ namespace nda::mem {
 
   // ------------------  HEAP -------------------------------------
 
-  template <typename T>
+  template <typename T, typename Allocator>
   struct handle_heap {
     private:
     T *_data     = nullptr; // Pointer to the start of the memory block
@@ -104,7 +131,7 @@ namespace nda::mem {
       }
 
       // Deallocate the memory block
-      deallocate({(char *)_data, _size * sizeof(T)});
+      allocator_singleton<Allocator>::deallocate({(char *)_data, _size * sizeof(T)});
     }
 
     public:
@@ -141,8 +168,8 @@ namespace nda::mem {
 
     // Set up a memory block of the correct size without initializing it
     handle_heap(long size, do_not_initialize_t) {
-      if (size == 0) return;               // no size -> null handle
-      auto b = allocate(size * sizeof(T)); //, alignof(T));
+      if (size == 0) return;                                               // no size -> null handle
+      auto b = allocator_singleton<Allocator>::allocate(size * sizeof(T)); //, alignof(T));
       ASSERT(b.ptr != nullptr);
       _data = (T *)b.ptr;
       _size = size;
@@ -151,8 +178,8 @@ namespace nda::mem {
     // Set up a memory block of the correct size without initializing it
     handle_heap(long size, init_zero_t) {
       static_assert(std::is_scalar_v<T> or is_complex_v<T>, "Internal Error");
-      if (size == 0) return;                    // no size -> null handle
-      auto b = allocate_zero(size * sizeof(T)); //, alignof(T));
+      if (size == 0) return;                                                    // no size -> null handle
+      auto b = allocator_singleton<Allocator>::allocate_zero(size * sizeof(T)); //, alignof(T));
       ASSERT(b.ptr != nullptr);
       _data = (T *)b.ptr;
       _size = size;
@@ -164,9 +191,9 @@ namespace nda::mem {
 
       allocators::blk_t b;
       if constexpr (is_complex_v<T> && globals::init_dcmplx)
-        b = allocate_zero(size * sizeof(T));
+        b = allocator_singleton<Allocator>::allocate_zero(size * sizeof(T));
       else
-        b = allocate(size * sizeof(T));
+        b = allocator_singleton<Allocator>::allocate(size * sizeof(T));
 
       ASSERT(b.ptr != nullptr);
       _data = (T *)b.ptr;
@@ -319,8 +346,8 @@ namespace nda::mem {
         for (size_t i = 0; i < _size; ++i) _data[i].~T();
       }
 
-      // Deallocate the memory block
-      deallocate({(char *)_data, _size * sizeof(T)});
+      // Deallocate the memory block. Malloc case only
+      allocator_singleton<void>::deallocate({(char *)_data, _size * sizeof(T)});
     }
 
     void incref() noexcept {
@@ -386,8 +413,8 @@ namespace nda::mem {
       _id = globals::rtable.get();
     }
 
-    // Cross construction from a regular handle
-    handle_shared(handle_heap<T> const &x) noexcept : _data(x.data()), _size(x.size()) {
+    // Cross construction from a regular handle. MALLOC CASE ONLY
+    handle_shared(handle_heap<T, void> const &x) noexcept : _data(x.data()), _size(x.size()) {
       if (x.is_null()) return;
 
       // Get an id if necessary
@@ -428,8 +455,8 @@ namespace nda::mem {
     using T0 = std::remove_const_t<T>;
 
     private:
-    handle_heap<T0> const *_parent = nullptr; // Parent, Required for regular->shared promotion in Python Converter
-    T *_data                       = nullptr; // Pointer to the start of the memory block
+    handle_heap<T0, void> const *_parent = nullptr; // Parent, Required for regular->shared promotion in Python Converter
+    T *_data                             = nullptr; // Pointer to the start of the memory block
 
     public:
     using value_type = T;
@@ -441,7 +468,11 @@ namespace nda::mem {
 
     handle_borrowed(handle_borrowed<T> const &x, long offset) noexcept : _data(x.data() + offset) {}
 
-    handle_borrowed(handle_heap<T0> const &x, long offset = 0) noexcept : _parent(&x), _data(x.data() + offset) {}
+    handle_borrowed(handle_heap<T0, void> const &x, long offset = 0) noexcept : _parent(&x), _data(x.data() + offset) {}
+
+    template <typename Alloc>
+    handle_borrowed(handle_heap<T0, Alloc> const &x, long offset = 0) noexcept : _parent(nullptr), _data(x.data() + offset) {}
+
     handle_borrowed(handle_shared<T0> const &x, long offset = 0) noexcept : _data(x.data() + offset) {}
     handle_borrowed(handle_borrowed<T0> const &x, long offset = 0) noexcept REQUIRES(std::is_const_v<T>) : _data(x.data() + offset) {}
 
@@ -457,7 +488,7 @@ namespace nda::mem {
 
     [[nodiscard]] bool is_null() const noexcept { return _data == nullptr; }
 
-    [[nodiscard]] handle_heap<T0> const *parent() const { return _parent; }
+    [[nodiscard]] handle_heap<T0, void> const *parent() const { return _parent; }
 
     // A const-handle does not entail T const data
     [[nodiscard]] T *data() const noexcept { return _data; }

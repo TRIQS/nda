@@ -75,13 +75,13 @@ class Ref : public ::testing::Test {
 
 TEST_F(Ref, HR) { // NOLINT
 
-  handle_heap<int> h{10};
+  handle_heap<int, void> h{10};
 
-  auto h2 = handle_heap<int>{10};
+  auto h2 = handle_heap<int, void>{10};
 
   // make sure it is a copy
   h.data()[2] = 89;
-  handle_heap<int> h3{h};
+  handle_heap<int, void> h3{h};
   h.data()[2] = 0;
   EXPECT_EQ(h3.data()[2], 89); //NOLINT
 }
@@ -89,7 +89,7 @@ TEST_F(Ref, HR) { // NOLINT
 //// ---- Contruct R B
 //TEST_F(Ref, HBR) { // NOLINT
 
-//handle_heap<int> h{10};
+//handle_heap<int, void> h{10};
 
 //handle_borrowed<int> b{h};
 //handle_borrowed<int> b2;
@@ -97,7 +97,7 @@ TEST_F(Ref, HR) { // NOLINT
 
 //// make sure it is a copy
 //b.data()[2] = 89;
-//handle_heap<int> h2{b};
+//handle_heap<int, void> h2{b};
 //b.data()[2] = 0;
 //EXPECT_EQ(h2.data()[2], 89); //NOLINT
 //}
@@ -105,7 +105,7 @@ TEST_F(Ref, HR) { // NOLINT
 // ---- Construct R, S
 TEST_F(Ref, HSR) { // NOLINT
 
-  handle_heap<int> h{10};
+  handle_heap<int, void> h{10};
 
   handle_shared<int> s{h};
 
@@ -117,7 +117,7 @@ TEST_F(Ref, HSR) { // NOLINT
 // ---- More complex
 TEST_F(Ref, HSRS) { // NOLINT
 
-  handle_heap<int> h{10};
+  handle_heap<int, void> h{10};
 
   handle_shared<int> s{h};
   EXPECT_EQ(s.refcount(), 2); //NOLINT
@@ -145,7 +145,7 @@ struct Number {
 };
 
 TEST_F(Ref, HR_with_cd) { // NOLINT
-  { handle_heap<Number> h{5}; }
+  { handle_heap<Number, void> h{5}; }
   EXPECT_EQ(Number::c, 0); //NOLINT
 }
 

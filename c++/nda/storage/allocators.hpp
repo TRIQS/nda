@@ -60,10 +60,10 @@ namespace nda::allocators {
     mallocator &operator=(mallocator const &) = delete;
     mallocator &operator=(mallocator &&) = default;
 
-    blk_t allocate(size_t s) { return {(char *)malloc(s), s}; }                    //NOLINT
-    blk_t allocate_zero(size_t s) { return {(char *)calloc(s, sizeof(char)), s}; } //NOLINT
+    static blk_t allocate(size_t s) { return {(char *)malloc(s), s}; }                    //NOLINT
+    static blk_t allocate_zero(size_t s) { return {(char *)calloc(s, sizeof(char)), s}; } //NOLINT
 
-    void deallocate(blk_t b) noexcept { free(b.ptr); } // NOLINT
+    static void deallocate(blk_t b) noexcept { free(b.ptr); } // NOLINT
   };
 
   // -------------------------  Bucket allocator ----------------------------
@@ -100,6 +100,12 @@ namespace nda::allocators {
       __asan_unpoison_memory_region(b.ptr, ChunkSize);
 #endif
       return b;
+    }
+
+    blk_t allocate_zero(size_t s) noexcept {
+      auto blk = allocate(s);
+      std::memset(blk.ptr, 0, s);
+      return blk;
     }
 
     void deallocate(blk_t b) noexcept {
@@ -155,6 +161,12 @@ namespace nda::allocators {
       return bu->allocate(s);
     }
 
+    blk_t allocate_zero(size_t s) noexcept {
+      auto blk = allocate(s);
+      std::memset(blk.ptr, 0, s);
+      return blk;
+    }
+
     void deallocate(blk_t b) noexcept {
       //[[likely]]
       if (bu != bu_vec.end() and bu->owns(b)) {
@@ -198,38 +210,10 @@ namespace nda::allocators {
     segregator &operator=(segregator &&) = default;
 
     blk_t allocate(size_t s) { return s <= Threshold ? small.allocate(s) : big.allocate(s); }
+    blk_t allocate_zero(size_t s) { return s <= Threshold ? small.allocate_zero(s) : big.allocate_zero(s); }
+
     void deallocate(blk_t b) noexcept { return b.s <= Threshold ? small.deallocate(b) : big.deallocate(b); }
     [[nodiscard]] bool owns(blk_t b) const noexcept { return small.owns(b) or big.owns(b); }
-  };
-
-  // -------------------------  fallback allocator ----------------------------
-  //
-  // Fallback for composition
-  //
-  template <typename A, typename F>
-  class fallback : A, F {
-
-    public:
-    fallback()                 = default;
-    fallback(fallback const &) = delete;
-    fallback(fallback &&)      = default;
-    fallback &operator=(fallback const &) = delete;
-    fallback &operator=(fallback &&) = default;
-
-    blk_t allocate(size_t s) {
-      blk_t r = A::allocate(s);
-      if (!r.ptr) F::allocate(s);
-      return r;
-    }
-
-    void deallocate(blk_t b) noexcept {
-      if (A::owns(b))
-        A::deallocate(b);
-      else
-        F::deallocate(b);
-    }
-
-    [[nodiscard]] bool owns(blk_t b) const noexcept { return A::owns(b) or F::owns(b); }
   };
 
   // -------------------------  dress allocator with leak_checking ----------------------------
@@ -256,6 +240,13 @@ namespace nda::allocators {
 
     blk_t allocate(size_t s) {
       blk_t b     = A::allocate(s);
+      memory_used = memory_used + b.s;
+      //      std::cerr<< "Allocating "<< b.s << "Total = "<< memory_used << "\n";
+      return b;
+    }
+
+    blk_t allocate_zero(size_t s) {
+      blk_t b     = A::allocate_zero(s);
       memory_used = memory_used + b.s;
       //      std::cerr<< "Allocating "<< b.s << "Total = "<< memory_used << "\n";
       return b;
@@ -300,6 +291,11 @@ namespace nda::allocators {
     stats &operator=(stats &&) = default;
 
     blk_t allocate(uint64_t s) {
+      ++hist[__builtin_clzl(s)];
+      return A::allocate(s);
+    }
+
+    blk_t allocate_zero(uint64_t s) {
       ++hist[__builtin_clzl(s)];
       return A::allocate(s);
     }

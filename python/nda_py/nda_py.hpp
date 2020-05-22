@@ -61,7 +61,7 @@ namespace nda::python {
       extents[u] = v.extents[u];
       strides[u] = v.strides[u] / sizeof(T);
     }
-    using idx_t = typename array_view<T, R>::idx_map_t;
+    using idx_t = typename array_view<T, R>::layout_t;
     return array_view<T, R>{idx_t{extents, strides}, static_cast<T *>(v.data)};
   }
 
