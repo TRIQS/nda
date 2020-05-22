@@ -19,9 +19,9 @@ struct ndc {
 
 TEST(NDA, NonDefaultConstructible) { //NOLINT
 
-  nda::array<ndc, 2> a(nda::array_adapter{std::array{2, 2}, [](int i, int j) { return i + 10 * j; }});
+  nda::array<ndc, 2> a{nda::array_adapter{std::array{2, 2}, [](int i, int j) { return i + 10 * j; }}};
 
-  nda::array<ndc, 1> a1(nda::array_adapter{std::array{2}, [](int i) { return i; }});
+  nda::array<ndc, 1> a1{nda::array_adapter{std::array{2}, [](int i) { return i; }}};
 
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 2; ++j) { EXPECT_EQ(a(i, j).i, i + 10 * j); }

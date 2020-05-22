@@ -22,6 +22,7 @@
  ******************************************************************************/
 #pragma once
 
+#include <cstddef>
 #include <iostream>
 #include <algorithm>
 #include <vector>
