@@ -45,19 +45,17 @@ namespace nda::permutations {
     return result;
   }
 
-  template <ARRAY_INT Permutation, typename T, size_t R>
-  constexpr std::array<T, R> apply_inverse(std::array<T, R> const &a) {
-    std::array<int, R> permu = decode<R>(Permutation);
-    auto result              = nda::make_initialized_array<R, T>(0);
-    for (int u = 0; u < R; ++u) { result[permu[u]] = a[u]; }
+  template <typename T, auto R>
+  constexpr std::array<T, R> apply_inverse(std::array<int, R> const &permutation, std::array<T, R> const &a) {
+    auto result = nda::make_initialized_array<R, T>(0);
+    for (int u = 0; u < R; ++u) { result[permutation[u]] = a[u]; }
     return result;
   }
 
-  template <ARRAY_INT Permutation, typename T, size_t R>
-  constexpr std::array<T, R> apply(std::array<T, R> const &a) {
-    std::array<int, R> permu = decode<R>(Permutation);
-    auto result              = nda::make_initialized_array<R, T>(0);
-    for (int u = 0; u < R; ++u) { result[u] = a[permu[u]]; }
+  template <typename T, auto R>
+  constexpr std::array<T, R> apply(std::array<int, R> const &permutation, std::array<T, R> const &a) {
+    auto result = nda::make_initialized_array<R, T>(0);
+    for (int u = 0; u < R; ++u) { result[u] = a[permutation[u]]; }
     return result;
   }
 

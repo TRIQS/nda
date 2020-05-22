@@ -77,7 +77,7 @@ namespace nda {
 
   template <ARRAY_INT Permutation, typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   auto permuted_indices_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> a) {
-    return map_layout_transform(a, transpose<Permutation>(a.indexmap()));
+    return map_layout_transform(a, a.indexmap().template transpose<Permutation>());
   }
 
   template <ARRAY_INT Permutation, typename T, int R, typename L, char Algebra, typename ContainerPolicy>
