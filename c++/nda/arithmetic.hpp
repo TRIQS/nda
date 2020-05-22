@@ -125,8 +125,6 @@ namespace nda {
     }
 
     //  --- extent ---
-    // FIXME  shape (i) ??
-    // FIXME auto const  & ???
     [[nodiscard]] constexpr long extent(int i) const noexcept {
       if constexpr (l_is_scalar) {
         return r.extent(i);

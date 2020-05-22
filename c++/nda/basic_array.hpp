@@ -72,7 +72,7 @@ namespace nda {
     explicit basic_array(Int... is) noexcept REQUIRES17((std::is_convertible_v<Int, long> and ...)) {
       //static_assert((std::is_convertible_v<Int, long> and ...), "Arguments must be convertible to long");
       static_assert(sizeof...(Int) == Rank, "Incorrect number of arguments : should be exactly Rank. ");
-      lay   = layout_t{{long(is)...}};
+      lay = layout_t{{long(is)...}};
       sto = storage_t{lay.size()};
       // It would be more natural to construct lay, storage from the start, but the error message in case of false # of parameters (very common)
       // is better like this. FIXME to be tested in benchs
@@ -111,7 +111,8 @@ namespace nda {
      *
      */
     template <CONCEPT(ArrayInitializer) Initializer> // can not be explicit
-    basic_array(Initializer const &initializer) noexcept REQUIRES17(is_assign_rhs<Initializer>) : basic_array{initializer.shape()} {
+    basic_array(Initializer const &initializer) noexcept(noexcept(initializer.invoke(*this))) REQUIRES17(is_assign_rhs<Initializer>)
+       : basic_array{initializer.shape()} {
       initializer.invoke(*this);
     }
 
@@ -220,7 +221,7 @@ namespace nda {
      *
      */
     template <CONCEPT(std::integral)... Int>
-    void resize(Int const &... extent) REQUIRES17(std::is_convertible_v<Int, long> and ...) {
+    void resize(Int const &... extent) REQUIRES17(std::is_convertible_v<Int, long> and...) {
       static_assert(std::is_copy_constructible_v<ValueType>, "Can not resize an array if its value_type is not copy constructible");
       static_assert(sizeof...(extent) == Rank, "Incorrect number of arguments for resize. Should be Rank");
       resize(std::array<long, Rank>{long(extent)...});
