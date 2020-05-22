@@ -5,9 +5,10 @@
 /// The Index Map object
 [[nodiscard]] constexpr auto const &indexmap() const noexcept { return lay; }
 
-// FIXME : do we really need this ??
-/// The storage handle
+/// \private 
 [[nodiscard]] storage_t const &storage() const noexcept { return sto; }
+
+/// \private
 storage_t &storage() { return sto; }
 
 /// Memory stride_order
@@ -19,14 +20,15 @@ storage_t &storage() { return sto; }
 /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
 ValueType *data_start() { return sto.data(); }
 
-/// Shape of this
+/// Shape 
 [[nodiscard]] std::array<long, rank> const &shape() const { return lay.lengths(); }
 
-/// Number of elements
+/// 
 [[nodiscard]] long size() const { return lay.size(); }
 
 /// size() == 0
 [[nodiscard]] bool empty() const { return sto.is_null(); }
+
 //[[deprecated]]
 [[nodiscard]] bool is_empty() const { return sto.is_null(); }
 
@@ -64,6 +66,7 @@ decltype(auto) operator()(_linear_index_t x) {
   // other case : should not happen, let it be a compilation error.
 }
 
+private:
 // impl of call. Only different case is if Self is &&
 
 template <bool SelfIsRvalue, typename Self, typename... T>
@@ -181,11 +184,6 @@ using iterator = array_iterator<iterator_rank, ValueType, typename AccessorPolic
 private:
 template <typename Iterator>
 [[nodiscard]] auto _make_iterator(bool at_end) const {
-  //if constexpr (iterator_rank == Rank)
-  //NDA_PRINT("USING general iterator");
-  //else
-  //NDA_PRINT("USING 1d iterator");
-
   if constexpr (iterator_rank == Rank)
     return Iterator{indexmap().lengths(), indexmap().strides(), sto.data(), at_end};
   else
