@@ -78,7 +78,7 @@ namespace nda {
 
     // Properly treat arrays with non-standard memory layout
     if constexpr (not std::decay_t<A>::idx_map_t::is_stride_order_C()) {
-      using h5_arr_t  = nda::array<typename A::value_t, A::rank>;
+      using h5_arr_t  = nda::array<typename A::value_type, A::rank>;
       auto a_c_layout = h5_arr_t{a.shape()};
       a_c_layout()    = a;
       h5_write(g, name, a_c_layout);
@@ -86,13 +86,13 @@ namespace nda {
     }
 
     // first case array of string
-    if constexpr (std::is_same_v<typename A::value_t, std::string>) { // special case of string. Like vector of string
+    if constexpr (std::is_same_v<typename A::value_type, std::string>) { // special case of string. Like vector of string
 
       h5_write(g, name, h5_details::to_char_buf(a));
 
-    } else if constexpr (is_scalar_v<typename A::value_t>) { // FIXME : register types as USER DEFINED hdf5 types
+    } else if constexpr (is_scalar_v<typename A::value_type>) { // FIXME : register types as USER DEFINED hdf5 types
 
-      static constexpr bool is_complex = is_complex_v<typename A::value_t>;
+      static constexpr bool is_complex = is_complex_v<typename A::value_type>;
       h5_details::write(g, name, h5::hdf5_type<get_value_t<A>>(), (void *)(a.data_start()), A::rank, is_complex, a.indexmap().lengths().data(),
                         a.indexmap().strides().data(), a.size());
 
@@ -110,7 +110,7 @@ namespace nda {
     // If array is not C-strided, read into array with default layout and copy
     if constexpr (not std::decay_t<A>::idx_map_t::is_stride_order_C()) {
       static_assert(is_regular_v<A>, "Cannot read into an array_view to an array with non C-style memory layout");
-      using h5_arr_t  = nda::array<typename A::value_t, A::rank>;
+      using h5_arr_t  = nda::array<typename A::value_type, A::rank>;
       auto a_c_layout = h5_arr_t{};
       h5_read(g, name, a_c_layout);
       a.resize(a_c_layout.shape());
@@ -119,14 +119,14 @@ namespace nda {
     }
 
     // Special case array<string>, store as char buffer
-    if constexpr (std::is_same_v<typename A::value_t, std::string>) {
+    if constexpr (std::is_same_v<typename A::value_type, std::string>) {
       h5::char_buf cb;
       h5_read(g, name, cb);
       h5_details::from_char_buf(cb, a);
 
-    } else if constexpr (is_scalar_v<typename A::value_t>) { // FIXME : register types as USER DEFINED hdf5 types
+    } else if constexpr (is_scalar_v<typename A::value_type>) { // FIXME : register types as USER DEFINED hdf5 types
 
-      static constexpr bool is_complex = is_complex_v<typename A::value_t>;
+      static constexpr bool is_complex = is_complex_v<typename A::value_type>;
 
       auto lt = h5::array_interface::get_h5_lengths_type(g, name);
 

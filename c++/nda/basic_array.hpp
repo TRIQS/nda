@@ -21,7 +21,6 @@ namespace nda {
 
     public:
     ///
-    using value_t    = ValueType;
     using value_type = ValueType;
 
     // FIXME traits
@@ -39,14 +38,11 @@ namespace nda {
     // FIXME : mem_handle_t
     using storage_t = typename ContainerPolicy::template handle<ValueType, idx_map_t::ce_size()>;
 
-    public:
-    //    static constexpr uint64_t stride_order = StrideOrder;
-    //  static constexpr layout_prop_e stride_order= layout_prop_e::contiguous;
-
-    static constexpr int rank = Rank;
-    //    private:
     static constexpr bool is_const = false;
     static constexpr bool is_view  = false;
+
+    public:
+    static constexpr int rank = Rank;
 
     private:
     // details for the common code with view
@@ -67,6 +63,7 @@ namespace nda {
     basic_array(idx_map_t const &idxm, storage_t &&mem_handle) : _idx_m(idxm), _storage(std::move(mem_handle)) {}
 
     public:
+    
     // ------------------------------- constructors --------------------------------------------
 
     /// Empty array
@@ -107,8 +104,8 @@ namespace nda {
      */
     template <CONCEPT(ArrayOfRank<Rank>) A>
     basic_array(A const &a) REQUIRES17(is_ndarray_v<A>) : _idx_m(a.shape()), _storage{_idx_m.size(), mem::do_not_initialize} {
-      static_assert(std::is_convertible_v<get_value_t<A>, value_t>,
-                    "Can not construct the array. ValueType can not be constructed from the value_t of the argument");
+      static_assert(std::is_convertible_v<get_value_t<A>, value_type>,
+                    "Can not construct the array. ValueType can not be constructed from the value_type of the argument");
       if constexpr (std::is_trivial_v<ValueType> or mem::is_complex<ValueType>::value) {
         // simple type. the initialization was not necessary anyway.
         // we use the assign, including the optimization (1d strided, contiguous) possibly
@@ -237,7 +234,7 @@ namespace nda {
      */
     template <CONCEPT(std::integral)... Int>
     void resize(Int const &... extent) {
-      static_assert(std::is_copy_constructible_v<ValueType>, "Can not resize an array if its value_t is not copy constructible");
+      static_assert(std::is_copy_constructible_v<ValueType>, "Can not resize an array if its value_type is not copy constructible");
       static_assert(sizeof...(extent) == Rank, "Incorrect number of arguments for resize. Should be Rank");
       resize(std::array<long, Rank>{long(extent)...});
     }
@@ -254,8 +251,6 @@ namespace nda {
       // Construct a storage only if the new index is not compatible (size mismatch).
       if (_storage.is_null() or (_storage.size() != _idx_m.size())) _storage = storage_t{_idx_m.size()};
     }
-
-    // --------------------------
 
 #include "./_impl_basic_array_view_common.hpp"
   };

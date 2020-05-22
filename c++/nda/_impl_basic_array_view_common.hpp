@@ -251,7 +251,7 @@ void assign_from_ndarray(RHS const &rhs) {
   // firt if SPECIFIC to container ...
   // check call -> _linear_inde ?
   // general case if RHS is not a scalar (can be isp, expression...)
-  static_assert(std::is_assignable_v<value_t &, get_value_t<RHS>>, "Assignment impossible for the type of RHS into the type of LHS");
+  static_assert(std::is_assignable_v<value_type &, get_value_t<RHS>>, "Assignment impossible for the type of RHS into the type of LHS");
 
   // If LHS and RHS are both 1d strided order or contiguous, and have the same stride order
   // we can make a 1d loop

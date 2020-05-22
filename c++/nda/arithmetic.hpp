@@ -108,9 +108,7 @@ namespace nda {
 
     static constexpr bool l_is_scalar = nda::is_scalar_v<L_t>;
     static constexpr bool r_is_scalar = nda::is_scalar_v<R_t>;
-
     static constexpr char algebra = (l_is_scalar ? get_algebra<R_t> : get_algebra<L_t>);
-
     static constexpr layout_info_t layout_info =
        (l_is_scalar ? get_layout_info<R_t> : (r_is_scalar ? get_layout_info<L_t> : get_layout_info<R_t> | get_layout_info<L_t>));
 
@@ -139,9 +137,6 @@ namespace nda {
         return l.extent(i);
       }
     }
-
-    private:
-    //FORCEINLINE static bool kronecker(long i, long j) { return (i == j); }
 
     public:
     // FIXME Clef

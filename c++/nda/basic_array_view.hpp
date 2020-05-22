@@ -27,13 +27,15 @@ namespace nda {
     using self_t = basic_array_view; // for common code with basic_array
 
     public:
-    /// ValueType FIXME
-    using value_t    = ValueType;
     using value_type = ValueType;
+    using idx_map_t = typename Layout::template mapping<Rank>;
+  
+    private:
 
     //using value_as_template_arg_t = ValueType;
     using storage_t = typename OwningPolicy::template handle<ValueType>;
-    using idx_map_t = typename Layout::template mapping<Rank>;
+    
+    public:
 
     ///
     using regular_t =
@@ -47,10 +49,11 @@ namespace nda {
     using no_const_view_t = basic_array_view<std::remove_const_t<ValueType>, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
 
     static constexpr int rank      = Rank;
+
+    private:
     static constexpr bool is_view  = true;
     static constexpr bool is_const = std::is_const_v<ValueType>;
 
-    private:
     template <typename IdxMap>
     using my_view_template_t =
        basic_array_view<ValueType, IdxMap::rank(), basic_layout<encode(IdxMap::static_extents), encode(IdxMap::stride_order), IdxMap::layout_prop>,

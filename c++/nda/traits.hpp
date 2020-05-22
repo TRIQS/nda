@@ -25,7 +25,7 @@ namespace nda {
   inline constexpr bool is_scalar_or_convertible_v = is_scalar_v<S> or std::is_constructible_v<std::complex<double>, S>;
 
   template <typename S, typename A>
-  inline constexpr bool is_scalar_for_v = (is_scalar_v<typename A::value_t> ? is_scalar_or_convertible_v<S> : std::is_same_v<S, typename A::value_t>);
+  inline constexpr bool is_scalar_for_v = (is_scalar_v<typename A::value_type> ? is_scalar_or_convertible_v<S> : std::is_same_v<S, typename A::value_type>);
 
   // --------------------------- Algebra ------------------------
 
