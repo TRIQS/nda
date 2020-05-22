@@ -25,18 +25,17 @@
 #include <complex>
 #include <type_traits>
 #include <cstring>
-//#include "../concepts.hpp"
 #include "./blk.hpp"
 #include "./rtable.hpp"
 
 namespace nda::mem {
 
-  // -------------- Traits ---------------------------
+  // -------------- is_complex ----------------
 
   template <typename T>
-  struct is_complex : std::false_type {};
+  static constexpr bool is_complex_v = false;
   template <typename T>
-  struct is_complex<std::complex<T>> : std::true_type {};
+  static constexpr bool is_complex_v<std::complex<T>> = true;
 
   // -------------- Allocation Functions ---------------------------
 
@@ -151,7 +150,7 @@ namespace nda::mem {
 
     // Set up a memory block of the correct size without initializing it
     handle_heap(long size, init_zero_t) {
-      static_assert(std::is_scalar_v<T> or is_complex<T>::value, "Internal Error");
+      static_assert(std::is_scalar_v<T> or is_complex_v<T>, "Internal Error");
       if (size == 0) return;                    // no size -> null handle
       auto b = allocate_zero(size * sizeof(T)); //, alignof(T));
       ASSERT(b.ptr != nullptr);
@@ -164,7 +163,7 @@ namespace nda::mem {
       if (size == 0) return; // no size -> null handle
 
       allocators::blk_t b;
-      if constexpr (is_complex<T>::value && globals::init_dcmplx)
+      if constexpr (is_complex_v<T> && globals::init_dcmplx)
         b = allocate_zero(size * sizeof(T));
       else
         b = allocate(size * sizeof(T));
@@ -174,7 +173,7 @@ namespace nda::mem {
       _size = size;
 
       // Call placement new except for complex types
-      if constexpr (!std::is_trivial_v<T> and !is_complex<T>::value) {
+      if constexpr (!std::is_trivial_v<T> and !is_complex_v<T>) {
         for (size_t i = 0; i < size; ++i) new (_data + i) T();
       }
     }
@@ -237,7 +236,7 @@ namespace nda::mem {
 
     handle_stack() {
       // Call placement new except for complex types
-      if constexpr (!std::is_trivial_v<T> and !is_complex<T>::value) {
+      if constexpr (!std::is_trivial_v<T> and !is_complex_v<T>) {
         for (size_t i = 0; i < Size; ++i) new (data() + i) T();
       }
     }
@@ -276,12 +275,11 @@ namespace nda::mem {
     }
 
     // Set up a memory block of the correct size without initializing it
-    handle_stack(long /*size*/, init_zero_t) { static_assert(std::is_scalar_v<T> or is_complex<T>::value, "Internal Error"); }
+    handle_stack(long /*size*/, init_zero_t) { static_assert(std::is_scalar_v<T> or is_complex_v<T>, "Internal Error"); }
 
     static constexpr bool is_null() noexcept { return false; }
     static constexpr long size() noexcept { return Size; }
     //static constexpr bool has_shared_memory() const noexcept { return false; }
-
   };
 
   // ------------------  Shared -------------------------------------

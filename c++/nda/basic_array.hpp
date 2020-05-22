@@ -93,7 +93,7 @@ namespace nda {
     basic_array(A const &a) noexcept REQUIRES17(is_ndarray_v<A>) : lay(a.shape()), sto{lay.size(), mem::do_not_initialize} {
       static_assert(std::is_convertible_v<get_value_t<A>, value_type>,
                     "Can not construct the array. ValueType can not be constructed from the value_type of the argument");
-      if constexpr (std::is_trivial_v<ValueType> or mem::is_complex<ValueType>::value) {
+      if constexpr (std::is_trivial_v<ValueType> or mem::is_complex_v<ValueType>) {
         // simple type. the initialization was not necessary anyway.
         // we use the assign, including the optimization (1d strided, contiguous) possibly
         assign_from_ndarray(a);
