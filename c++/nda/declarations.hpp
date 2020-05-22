@@ -23,8 +23,8 @@ namespace nda {
 
   // ---------------------- User aliases  --------------------------------
 
-  template <typename ValueType, int Rank, typename Layout = C_layout>
-  using array = basic_array<ValueType, Rank, Layout, 'A', heap>;
+  template <typename ValueType, int Rank, typename Layout = C_layout, typename ContainerPolicy = heap>
+  using array = basic_array<ValueType, Rank, Layout, 'A', ContainerPolicy>;
 
   template <typename ValueType, int Rank, typename Layout = C_stride_layout>
   using array_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed>;
