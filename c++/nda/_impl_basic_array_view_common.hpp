@@ -69,10 +69,15 @@ private:
 template <bool SelfIsRvalue, typename Self, typename... T>
 FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) {
 
-  if constexpr (::clef::is_any_lazy<T...>)
-    return ::clef::make_expr_call(std::forward<Self>(self), x...);
-  else if constexpr (sizeof...(T) == 0)
-    return view_t{self._idx_m, self._storage};
+  using r_v_t = std::conditional_t<std::is_const_v<std::remove_reference_t<Self>>, ValueType const, ValueType>;
+
+  if constexpr (::clef::is_any_lazy<T...>) return ::clef::make_expr_call(std::forward<Self>(self), x...);
+
+  // () returns a full view
+  else if constexpr (sizeof...(T) == 0) {
+    return basic_array_view<r_v_t, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>{self._idx_m, self._storage};
+  }
+
   else {
     static_assert(((((std::is_base_of_v<range_tag, T> or std::is_constructible_v<long, T>) ? 0 : 1) + ...) == 0),
                   "Slice arguments must be convertible to range, Ellipsis, or long");
@@ -95,6 +100,7 @@ FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) {
 
       using r_idx_map_t = decltype(idxm);
       using r_view_t =
+         // FIXME  basic_array_view<r_v_t, r_idx_map_t::rank(),
          basic_array_view<ValueType, r_idx_map_t::rank(),
                           basic_layout<encode(r_idx_map_t::static_extents), encode(r_idx_map_t::stride_order), r_idx_map_t::layout_prop>, Algebra,
                           AccessorPolicy, OwningPolicy>;

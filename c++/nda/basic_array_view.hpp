@@ -9,9 +9,9 @@
 // The std::swap is WRONG for a view because of the copy/move semantics of view.
 // Use swap instead (the correct one, found by ADL).
 namespace std {
-  template <typename V, int R, typename L, char A, typename Al, typename Ow, typename V2, int R2, typename L2, char A2, typename Al2, typename Ow2>
-  void swap(nda::basic_array_view<V, R, L, A, Al, Ow> &a, nda::basic_array_view<V2, R2, L2, A2, Al2, Ow2> &b) =
-     delete; // std::swap disabled for basic_array_view. Use nda::swap iinstead (or simply swap, found by ADL).
+  template <typename V, int R, typename L, char A, typename AP, typename OP, typename V2, int R2, typename L2, char A2, typename AP2, typename OP2>
+  void swap(nda::basic_array_view<V, R, L, A, AP, OP> &a, nda::basic_array_view<V2, R2, L2, A2, AP2, OP2> &b) =
+     delete; // std::swap disabled for basic_array_view. Use nda::swap instead (or simply swap, found by ADL).
 }
 
 namespace nda {
@@ -24,31 +24,20 @@ namespace nda {
 
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   class basic_array_view {
-    
-    using self_t = basic_array_view; // for common code with basic_array
+
+    // details for the common code with view
+    using self_t    = basic_array_view;
     using storage_t = typename OwningPolicy::template handle<ValueType>;
-
-    public:
-    using value_type = ValueType;
-    using idx_map_t = typename Layout::template mapping<Rank>;
-  
-    ///
-    //using regular_t =
-       //basic_array<ValueType, Rank, basic_layout<encode(idx_map_t::static_extents), encode(idx_map_t::stride_order), layout_prop_e::contiguous>,
-                   //Algebra, heap>;
-    ///
-    using view_t = basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
-    ///
-    using const_view_t = basic_array_view<ValueType const, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
-    ///
-    using no_const_view_t = basic_array_view<std::remove_const_t<ValueType>, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
-
-    static constexpr int rank      = Rank;
-
-    private:
     static constexpr bool is_view  = true;
     static constexpr bool is_const = std::is_const_v<ValueType>;
 
+    public:
+    using value_type = ValueType;
+    using idx_map_t  = typename Layout::template mapping<Rank>;
+
+    static constexpr int rank = Rank;
+
+    private:
     idx_map_t _idx_m;
     storage_t _storage;
 
@@ -154,24 +143,30 @@ namespace nda {
 
     // ------------------------------- rebind --------------------------------------------
 
-    /// Rebind the view
-    void rebind(basic_array_view const &a) { //value_t is NEVER const
-      _idx_m   = a._idx_m;
-      _storage = a._storage;
-    }
+    ///
+    template <typename T, int R, typename L, char A, typename AP, typename OP>
+    void rebind(basic_array_view<T, R, L, A, AP, OP> v) {
+      static_assert(R == Rank, "One can only rebind a view to a view of same rank");
+      static_assert(std::is_same_v<std::remove_const_t<T>, std::remove_const_t<ValueType>>, "Type must be the same, except maybe const");
+      static constexpr bool same_type = std::is_same_v<T, ValueType>;
 
-    /// Rebind view
-    void rebind(no_const_view_t const &a) REQUIRES(is_const) {
-      //static_assert(is_const, "Can not rebind a view of const ValueType to a view of ValueType");
-      _idx_m   = idx_map_t{a.indexmap()};
-      _storage = storage_t{a.storage()};
+      static_assert(same_type or is_const, "One can not rebind a view of T onto a view of const T. It would discard the const qualifier");
+      if constexpr (same_type) {
+        // FIXME Error message in layout error !
+        _idx_m   = v._idx_m;
+        _storage = v._storage;
+      } else if constexpr (is_const) {
+        // the last if is always trivially true BUT in case of an error in the static_assert above,
+        // it improves the error message by not compiling the = afterwards
+        _idx_m   = idx_map_t{v.indexmap()};
+        _storage = storage_t{v.storage()};
+      }
     }
-    //check https://godbolt.org/z/G_QRCU
 
     // ------------------------------- swap --------------------------------------------
 
     /**
-     * Swaps the *views* a and b, without copying data
+     * Swaps by rebinding a and b
      * @param a
      * @param b
      */
@@ -181,14 +176,11 @@ namespace nda {
     }
 
     /**
-     * Swaps the *views* a and b, without copying data
+     * Swaps the data in a and b
      * @param a
      * @param b
      */
     friend void deep_swap(basic_array_view a, basic_array_view b) {
-      // FIXME Is this optimal ??
-      // Do we want to keep this function ?? Used only in det_manip, in 1d
-      //
       auto tmp = make_regular(a);
       a        = b;
       b        = tmp;
