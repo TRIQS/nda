@@ -16,8 +16,15 @@ namespace nda {
 
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
   class basic_array {
+  
     static_assert(!std::is_const<ValueType>::value, "ValueType can not be const. WHY ?");
     using self_t = basic_array; // for common code with basic_array_view
+   // details for the common code with view
+    using AccessorPolicy = default_accessor;
+    using OwningPolicy = borrowed;
+    using storage_t = typename ContainerPolicy::template handle<ValueType, idx_map_t::ce_size()>;
+    static constexpr bool is_const = false;
+    static constexpr bool is_view  = false;
 
     public:
     ///
@@ -34,26 +41,10 @@ namespace nda {
     // FIXME layout_t
     using idx_map_t = typename Layout::template mapping<Rank>;
 
-    private:
-    // FIXME : mem_handle_t
-    using storage_t = typename ContainerPolicy::template handle<ValueType, idx_map_t::ce_size()>;
-
-    static constexpr bool is_const = false;
-    static constexpr bool is_view  = false;
-
-    public:
     static constexpr int rank = Rank;
 
     private:
-    // details for the common code with view
-    using AccessorPolicy = default_accessor;
-
-    template <typename IdxMap>
-    using my_view_template_t =
-       basic_array_view<ValueType, IdxMap::rank(), basic_layout<encode(IdxMap::static_extents), encode(IdxMap::stride_order), IdxMap::layout_prop>,
-                        Algebra, default_accessor, borrowed>;
-
-    idx_map_t _idx_m;
+     idx_map_t _idx_m;
     storage_t _storage;
 
     template <typename T, int R, typename L, char A, typename C, typename NewLayoutType>

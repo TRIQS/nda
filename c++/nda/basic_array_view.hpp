@@ -24,19 +24,14 @@ namespace nda {
 
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   class basic_array_view {
+    
     using self_t = basic_array_view; // for common code with basic_array
+    using storage_t = typename OwningPolicy::template handle<ValueType>;
 
     public:
     using value_type = ValueType;
     using idx_map_t = typename Layout::template mapping<Rank>;
   
-    private:
-
-    //using value_as_template_arg_t = ValueType;
-    using storage_t = typename OwningPolicy::template handle<ValueType>;
-    
-    public:
-
     ///
     using regular_t =
        basic_array<ValueType, Rank, basic_layout<encode(idx_map_t::static_extents), encode(idx_map_t::stride_order), layout_prop_e::contiguous>,
@@ -53,11 +48,6 @@ namespace nda {
     private:
     static constexpr bool is_view  = true;
     static constexpr bool is_const = std::is_const_v<ValueType>;
-
-    template <typename IdxMap>
-    using my_view_template_t =
-       basic_array_view<ValueType, IdxMap::rank(), basic_layout<encode(IdxMap::static_extents), encode(IdxMap::stride_order), IdxMap::layout_prop>,
-                        Algebra, AccessorPolicy, OwningPolicy>;
 
     idx_map_t _idx_m;
     storage_t _storage;

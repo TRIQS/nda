@@ -93,7 +93,13 @@ FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) {
       // Static rank
       auto const [offset, idxm] = slice_static::slice_stride_order(self._idx_m, x...);
 
-      return my_view_template_t<decltype(idxm)>{std::move(idxm), {self._storage, offset}};
+      using r_idx_map_t = decltype(idxm);
+      using r_view_t =
+         basic_array_view<ValueType, r_idx_map_t::rank(),
+                          basic_layout<encode(r_idx_map_t::static_extents), encode(r_idx_map_t::stride_order), r_idx_map_t::layout_prop>, Algebra,
+                          AccessorPolicy, OwningPolicy>;
+
+      return r_view_t{std::move(idxm), {self._storage, offset}};
     }
   }
 }
@@ -237,7 +243,6 @@ auto &operator/=(RHS const &rhs) {
 // ------------------------------- Assignment --------------------------------------------
 
 private:
-
 template <typename RHS>
 void assign_from_ndarray(RHS const &rhs) {
 
@@ -291,13 +296,13 @@ void fill_with_scalar(Scalar const &scalar) {
 // -----------------------------------------------------
 
 template <typename Scalar>
-void assign_from_scalar(Scalar const &scalar) {  
+void assign_from_scalar(Scalar const &scalar) {
 
   static_assert(!is_const, "Cannot assign to a const view !");
 
   if constexpr (Algebra != 'M') {
     fill_with_scalar(scalar);
-  } else { 
+  } else {
     //  A scalar has to be interpreted as a unit matrix
     // FIXME : A priori faster to put 0 everywhere and then change the diag to avoid the if.
     // FIXME : Benchmark and confirm
@@ -310,4 +315,3 @@ void assign_from_scalar(Scalar const &scalar) {
     for (long i = 0; i < imax; ++i) operator()(i, i) = scalar;
   }
 }
-
