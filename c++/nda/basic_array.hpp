@@ -60,12 +60,11 @@ namespace nda {
     idx_map_t _idx_m;
     storage_t _storage;
 
-    //Construct from an indexmap and a storage handle.
-    // for map_layout_transform only
-    basic_array(idx_map_t const &idxm, storage_t &&mem_handle) : _idx_m(idxm), _storage(std::move(mem_handle)) {}
-
     template <typename T, int R, typename L, char A, typename C, typename NewLayoutType>
     friend auto map_layout_transform(basic_array<T, R, L, A, C> &&a, NewLayoutType const &new_layout);
+
+    // private constructor for the friend
+    basic_array(idx_map_t const &idxm, storage_t &&mem_handle) : _idx_m(idxm), _storage(std::move(mem_handle)) {}
 
     public:
     // ------------------------------- constructors --------------------------------------------
@@ -100,7 +99,8 @@ namespace nda {
      * 
      * @param shape  Shape of the array (lengths in each dimension)
      */
-    explicit basic_array(std::array<long, Rank> const &shape) REQUIRES(std::is_default_constructible_v<ValueType>) : _idx_m(shape), _storage(_idx_m.size()) {}
+    explicit basic_array(std::array<long, Rank> const &shape) REQUIRES(std::is_default_constructible_v<ValueType>)
+       : _idx_m(shape), _storage(_idx_m.size()) {}
 
     /** 
      * Constructs from a.shape() and then assign from the evaluation of a
@@ -258,6 +258,6 @@ namespace nda {
     // --------------------------
 
 #include "./_impl_basic_array_view_common.hpp"
-  }; 
+  };
 
 } // namespace nda

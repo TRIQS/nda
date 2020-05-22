@@ -16,6 +16,12 @@ namespace std {
 
 namespace nda {
 
+  // forward for friend declaration
+  template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy, typename NewLayoutType>
+  auto map_layout_transform(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> a, NewLayoutType const &new_layout);
+
+  // -----------------------------------------------
+
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   class basic_array_view {
     using self_t = basic_array_view; // for common code with basic_array
@@ -53,6 +59,18 @@ namespace nda {
     idx_map_t _idx_m;
     storage_t _storage;
 
+    template <typename T, int R, typename L, char A, typename CP>
+    friend class basic_array;
+
+    template <typename T, int R, typename L, char A, typename AP, typename OP>
+    friend class basic_array_view;
+
+    template <typename T, int R, typename L, char A, typename AP, typename OP, typename NewLayoutType>
+    friend auto map_layout_transform(basic_array_view<T, R, L, A, AP, OP> a, NewLayoutType const &new_layout);
+
+    // private constructor for the previous friend
+    basic_array_view(idx_map_t const &idxm, storage_t st) : _idx_m(idxm), _storage(std::move(st)) {}
+
     public:
     // ------------------------------- constructors --------------------------------------------
 
@@ -65,34 +83,17 @@ namespace nda {
     /// Shallow copy. It copies the *view*, not the data.
     basic_array_view(basic_array_view const &) = default;
 
-    /** 
-     * From a view of non const ValueType.
-     * Only valid when ValueType is const
-     *
-     * @param v a view 
-     */
-    basic_array_view(basic_array_view const &v) REQUIRES(is_const) : basic_array_view(v.indexmap(), v.storage()) {}
+    ///
+    template <typename T, typename L, char A, typename CP>
+    basic_array_view(basic_array<T, Rank, L, A, CP> const &a) : basic_array_view(idx_map_t{a.indexmap()}, a.storage()) {}
 
-    /**
-     *  [Advanced] From an indexmap and a storage handle
-     *  @param idxm index map
-     *  @st  storage (memory handle)
-     */
-    basic_array_view(idx_map_t const &idxm, storage_t st) : _idx_m(idxm), _storage(std::move(st)) {}
+    ///
+    template <typename T, typename L, char A, typename AP, typename OP>
+    basic_array_view(basic_array_view<T, Rank, L, A, AP, OP> const &a) : basic_array_view(idx_map_t{a.indexmap()}, a.storage()) {}
 
     /** 
-     * From other containers and view : array, matrix, matrix_view.
-     *
-     * @tparam A an array/array_view or matrix/vector type
-     * @param a array or view
-     */
-    template <typename A>                                          //explicit
-    basic_array_view(A const &a) REQUIRES(is_regular_or_view_v<A>) //and layout_are_compatible_for_view<A::idx_map_t,idx_map_t>)
-       : basic_array_view(idx_map_t{a.indexmap()}, a.storage()) {}
-
-    /** 
-     * [Advanced] From a pointer to contiguous data, and a shape.
-     * NB : no control obvious on the dimensions given.  
+     * [Advanced] From a pointer to **contiguous data**, and a shape.
+     * NB : no control on the dimensions given.  
      *
      * @param p Pointer to the data
      * @param shape Shape of the view (contiguous)
@@ -112,6 +113,13 @@ namespace nda {
     // Move assignment not defined : will use the copy = since view must copy data
 
     // ------------------------------- assign --------------------------------------------
+
+    /// Same as the general case
+    /// [C++ oddity : this case must be explicitly coded too]
+    basic_array_view &operator=(basic_array_view const &rhs) {
+      assign_from_ndarray(rhs);
+      return *this;
+    }
 
     /**
      * Copies the content of rhs into the view.
@@ -138,13 +146,6 @@ namespace nda {
     basic_array_view &operator=(RHS const &rhs) REQUIRES(is_scalar_for_v<RHS, basic_array_view>) {
       static_assert(!is_const, "Cannot assign to a const !");
       assign_from_scalar(rhs); // common code with view, private
-      return *this;
-    }
-
-    /// Same as the general case
-    /// [C++ oddity : this case must be explicitly coded too]
-    basic_array_view &operator=(basic_array_view const &rhs) {
-      assign_from_ndarray(rhs);
       return *this;
     }
 
@@ -186,9 +187,6 @@ namespace nda {
       std::swap(a._storage, b._storage);
     }
 
-    // FIXME : pull out !!
-    // copy view, no need of friend !
-
     /**
      * Swaps the *views* a and b, without copying data
      * @param a
@@ -202,8 +200,6 @@ namespace nda {
       a        = b;
       b        = tmp;
     }
-
-    //----------------------------------------------------
 
 #include "./_impl_basic_array_view_common.hpp"
   };
