@@ -33,9 +33,9 @@ namespace nda {
     using idx_map_t = typename Layout::template mapping<Rank>;
   
     ///
-    using regular_t =
-       basic_array<ValueType, Rank, basic_layout<encode(idx_map_t::static_extents), encode(idx_map_t::stride_order), layout_prop_e::contiguous>,
-                   Algebra, heap>;
+    //using regular_t =
+       //basic_array<ValueType, Rank, basic_layout<encode(idx_map_t::static_extents), encode(idx_map_t::stride_order), layout_prop_e::contiguous>,
+                   //Algebra, heap>;
     ///
     using view_t = basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
     ///

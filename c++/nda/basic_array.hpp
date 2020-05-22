@@ -22,7 +22,6 @@ namespace nda {
    // details for the common code with view
     using AccessorPolicy = default_accessor;
     using OwningPolicy = borrowed;
-    using storage_t = typename ContainerPolicy::template handle<ValueType, idx_map_t::ce_size()>;
     static constexpr bool is_const = false;
     static constexpr bool is_view  = false;
 
@@ -32,7 +31,7 @@ namespace nda {
 
     // FIXME traits
     ///
-    using regular_t = basic_array;
+    //using regular_t = basic_array;
     ///
     using view_t = basic_array_view<ValueType, Rank, Layout, Algebra, default_accessor, borrowed>;
     ///
@@ -41,6 +40,11 @@ namespace nda {
     // FIXME layout_t
     using idx_map_t = typename Layout::template mapping<Rank>;
 
+    private:
+    // FIXME : mem_handle_t
+    using storage_t = typename ContainerPolicy::template handle<ValueType, idx_map_t::ce_size()>;
+
+    public:
     static constexpr int rank = Rank;
 
     private:
