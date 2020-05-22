@@ -3,4 +3,10 @@
 
 - finir MPI refactor
 
-- 
+- relire arithm
+- relire last slice + layout
+- file array.hpp 
+  include core + alias  
+
+- storage : 
+   - rtable : header only ?

@@ -69,8 +69,14 @@ decltype(auto) operator()(_linear_index_t x) noexcept {
 private:
 // impl of call. Only different case is if Self is &&
 
+#ifdef NDA_ENFORCE_BOUNDCHECK
+  static constexpr bool has_no_boundcheck = false;
+#else 
+  static constexpr bool has_no_boundcheck = true;
+#endif
+ 
 template <bool SelfIsRvalue, typename Self, typename... T>
-FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) noexcept {
+FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) noexcept(has_no_boundcheck) {
 
   using r_v_t = std::conditional_t<std::is_const_v<std::remove_reference_t<Self>>, ValueType const, ValueType>;
 
@@ -122,7 +128,7 @@ public:
  * @example array_call
  */
 template <typename... T>
-decltype(auto) operator()(T const &... x) const &noexcept {
+decltype(auto) operator()(T const &... x) const &noexcept(has_no_boundcheck) {
   static_assert((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank)),
                 "Incorrect number of parameters in call");
   return __call__impl<false>(*this, x...);
@@ -130,7 +136,7 @@ decltype(auto) operator()(T const &... x) const &noexcept {
 
 ///
 template <typename... T>
-decltype(auto) operator()(T const &... x) &noexcept {
+decltype(auto) operator()(T const &... x) &noexcept(has_no_boundcheck) {
   static_assert((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank)),
                 "Incorrect number of parameters in call");
   return __call__impl<false>(*this, x...);
@@ -138,7 +144,7 @@ decltype(auto) operator()(T const &... x) &noexcept {
 
 ///
 template <typename... T>
-decltype(auto) operator()(T const &... x) &&noexcept {
+decltype(auto) operator()(T const &... x) &&noexcept(has_no_boundcheck) {
   static_assert((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank)),
                 "Incorrect number of parameters in call");
   return __call__impl<true>(*this, x...);
@@ -152,21 +158,21 @@ decltype(auto) operator()(T const &... x) &&noexcept {
  * @example array_call
  */
 template <typename T>
-decltype(auto) operator[](T const &x) const &noexcept {
+decltype(auto) operator[](T const &x) const &noexcept(has_no_boundcheck) {
   static_assert((rank == 1), " [ ] operator is only available for rank 1 in C++17/20");
   return __call__impl<false>(*this, x);
 }
 
 ///
 template <typename T>
-decltype(auto) operator[](T const &x) &noexcept {
+decltype(auto) operator[](T const &x) &noexcept(has_no_boundcheck) {
   static_assert((rank == 1), " [ ] operator is only available for rank 1 in C++17/20");
   return __call__impl<false>(*this, x);
 }
 
 ///
 template <typename T>
-decltype(auto) operator[](T const &x) &&noexcept {
+decltype(auto) operator[](T const &x) &&noexcept(has_no_boundcheck) {
   static_assert((rank == 1), " [ ] operator is only available for rank 1 in C++17/20");
   return __call__impl<true>(*this, x);
 }
