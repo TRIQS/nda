@@ -7,17 +7,17 @@
 
 // FIXME : do we really need this ??
 /// The storage handle
-[[nodiscard]] storage_t const &storage() const noexcept { return _storage; }
-storage_t &storage() { return _storage; }
+[[nodiscard]] storage_t const &storage() const noexcept { return sto; }
+storage_t &storage() { return sto; }
 
 /// Memory stride_order
 [[nodiscard]] constexpr auto stride_order() const noexcept { return lay.stride_order(); }
 
 /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
-[[nodiscard]] ValueType const *data_start() const { return _storage.data(); }
+[[nodiscard]] ValueType const *data_start() const { return sto.data(); }
 
 /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
-ValueType *data_start() { return _storage.data(); }
+ValueType *data_start() { return sto.data(); }
 
 /// Shape of this
 [[nodiscard]] std::array<long, rank> const &shape() const { return lay.lengths(); }
@@ -26,7 +26,9 @@ ValueType *data_start() { return _storage.data(); }
 [[nodiscard]] long size() const { return lay.size(); }
 
 /// size() == 0
-[[nodiscard]] bool empty() const { return _storage.is_null(); }
+[[nodiscard]] bool empty() const { return sto.is_null(); }
+//[[deprecated]]
+[[nodiscard]] bool is_empty() const { return sto.is_null(); }
 
 /// Same as shape()[i]
 //[[deprecated]]
@@ -49,16 +51,16 @@ static constexpr bool is_stride_order_Fortran() { return layout_t::is_stride_ord
 /// \private NO DOC
 decltype(auto) operator()(_linear_index_t x) const {
   //NDA_PRINT(layout_t::layout_prop);
-  if constexpr (layout_t::layout_prop == layout_prop_e::strided_1d) return _storage[x.value * lay.min_stride()];
-  if constexpr (layout_t::layout_prop == layout_prop_e::contiguous) return _storage[x.value]; // min_stride is 1
+  if constexpr (layout_t::layout_prop == layout_prop_e::strided_1d) return sto[x.value * lay.min_stride()];
+  if constexpr (layout_t::layout_prop == layout_prop_e::contiguous) return sto[x.value]; // min_stride is 1
   // other case : should not happen, let it be a compilation error.
 }
 
 /// \private NO DOC
 decltype(auto) operator()(_linear_index_t x) {
   //NDA_PRINT(layout_t::layout_prop);
-  if constexpr (layout_t::layout_prop == layout_prop_e::strided_1d) return _storage[x.value * lay.min_stride()];
-  if constexpr (layout_t::layout_prop == layout_prop_e::contiguous) return _storage[x.value]; // min_stride is 1
+  if constexpr (layout_t::layout_prop == layout_prop_e::strided_1d) return sto[x.value * lay.min_stride()];
+  if constexpr (layout_t::layout_prop == layout_prop_e::contiguous) return sto[x.value]; // min_stride is 1
   // other case : should not happen, let it be a compilation error.
 }
 
@@ -73,7 +75,7 @@ FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) {
 
   // () returns a full view
   else if constexpr (sizeof...(T) == 0) {
-    return basic_array_view<r_v_t, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>{self.lay, self._storage};
+    return basic_array_view<r_v_t, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>{self.lay, self.sto};
   }
 
   else {
@@ -86,10 +88,10 @@ FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) {
     if constexpr (n_args_long == rank) {         // no range, ellipsis, we simply compute the linear position
       long offset = self.lay(x...);           // compute the offset
       if constexpr (is_view or not SelfIsRvalue) //
-        return AccessorPolicy::template accessor<ValueType>::access(self._storage.data(),
+        return AccessorPolicy::template accessor<ValueType>::access(self.sto.data(),
                                                                     offset); // We return a REFERENCE here. Ok since underlying array is still alive
       else                                                                   //
-        return ValueType{self._storage[offset]};                             // We return a VALUE here, the array is about be destroyed.
+        return ValueType{self.sto[offset]};                             // We return a VALUE here, the array is about be destroyed.
     }
     // case 2 : we have to make a slice
     else {
@@ -103,7 +105,7 @@ FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) {
                           basic_layout<encode(r_layout_t::static_extents), encode(r_layout_t::stride_order), r_layout_t::layout_prop>, Algebra,
                           AccessorPolicy, OwningPolicy>;
 
-      return r_view_t{std::move(idxm), {self._storage, offset}};
+      return r_view_t{std::move(idxm), {self.sto, offset}};
     }
   }
 }
@@ -185,9 +187,9 @@ template <typename Iterator>
   //NDA_PRINT("USING 1d iterator");
 
   if constexpr (iterator_rank == Rank)
-    return Iterator{indexmap().lengths(), indexmap().strides(), _storage.data(), at_end};
+    return Iterator{indexmap().lengths(), indexmap().strides(), sto.data(), at_end};
   else
-    return Iterator{std::array<long, 1>{size()}, std::array<long, 1>{indexmap().min_stride()}, _storage.data(), at_end};
+    return Iterator{std::array<long, 1>{size()}, std::array<long, 1>{indexmap().min_stride()}, sto.data(), at_end};
 }
 
 public:

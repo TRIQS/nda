@@ -26,20 +26,20 @@ namespace nda {
   class basic_array_view {
 
     // details for the common code with view
-    using self_t    = basic_array_view;
-    using storage_t = typename OwningPolicy::template handle<ValueType>;
+    using self_t                   = basic_array_view;
+    using storage_t                = typename OwningPolicy::template handle<ValueType>;
     static constexpr bool is_view  = true;
     static constexpr bool is_const = std::is_const_v<ValueType>;
 
     public:
     using value_type = ValueType;
-    using layout_t  = typename Layout::template mapping<Rank>;
+    using layout_t   = typename Layout::template mapping<Rank>;
 
     static constexpr int rank = Rank;
 
     private:
     layout_t lay;
-    storage_t _storage;
+    storage_t sto;
 
     template <typename T, int R, typename L, char A, typename CP>
     friend class basic_array;
@@ -51,7 +51,7 @@ namespace nda {
     friend auto map_layout_transform(basic_array_view<T, R, L, A, AP, OP> a, NewLayoutType const &new_layout);
 
     // private constructor for the previous friend
-    basic_array_view(layout_t const &idxm, storage_t st) : lay(idxm), _storage(std::move(st)) {}
+    basic_array_view(layout_t const &idxm, storage_t st) : lay(idxm), sto(std::move(st)) {}
 
     public:
     // ------------------------------- constructors --------------------------------------------
@@ -89,8 +89,8 @@ namespace nda {
      * @param p Pointer to the data 
      * @param idxm Index Map (view can be non contiguous). If the offset is non zero, the view starts at p + idxm.offset()
      */
-    basic_array_view(layout_t const &idxm, ValueType *p) : lay(idxm), _storage{p} {}
-    //basic_array_view(idx_map<Rank, StrideOrder> const &idxm, ValueType *p) : lay(idxm), _storage{p, size_t(idxm.size() + idxm.offset())} {}
+    basic_array_view(layout_t const &idxm, ValueType *p) : lay(idxm), sto{p} {}
+    //basic_array_view(idx_map<Rank, StrideOrder> const &idxm, ValueType *p) : lay(idxm), sto{p, size_t(idxm.size() + idxm.offset())} {}
 
     // Move assignment not defined : will use the copy = since view must copy data
 
@@ -153,13 +153,13 @@ namespace nda {
       static_assert(same_type or is_const, "One can not rebind a view of T onto a view of const T. It would discard the const qualifier");
       if constexpr (same_type) {
         // FIXME Error message in layout error !
-        lay   = v.lay;
-        _storage = v._storage;
+        lay = v.lay;
+        sto = v.sto;
       } else if constexpr (is_const) {
         // the last if is always trivially true BUT in case of an error in the static_assert above,
         // it improves the error message by not compiling the = afterwards
-        lay   = layout_t{v.indexmap()};
-        _storage = storage_t{v.storage()};
+        lay = layout_t{v.indexmap()};
+        sto = storage_t{v.storage()};
       }
     }
 
@@ -172,7 +172,7 @@ namespace nda {
      */
     friend void swap(basic_array_view &a, basic_array_view &b) {
       std::swap(a.lay, b.lay);
-      std::swap(a._storage, b._storage);
+      std::swap(a.sto, b.sto);
     }
 
     /**
