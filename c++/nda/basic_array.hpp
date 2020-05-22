@@ -31,24 +31,24 @@ namespace nda {
     using value_type = ValueType;
 
     // FIXME layout_t
-    using idx_map_t = typename Layout::template mapping<Rank>;
+    using layout_t = typename Layout::template mapping<Rank>;
 
     private:
     // FIXME : mem_handle_t
-    using storage_t = typename ContainerPolicy::template handle<ValueType, idx_map_t::ce_size()>;
+    using storage_t = typename ContainerPolicy::template handle<ValueType, layout_t::ce_size()>;
 
     public:
     static constexpr int rank = Rank;
 
     private:
-    idx_map_t _idx_m;
+    layout_t lay;
     storage_t _storage;
 
     template <typename T, int R, typename L, char A, typename C, typename NewLayoutType>
     friend auto map_layout_transform(basic_array<T, R, L, A, C> &&a, NewLayoutType const &new_layout);
 
     // private constructor for the friend
-    basic_array(idx_map_t const &idxm, storage_t &&mem_handle) : _idx_m(idxm), _storage(std::move(mem_handle)) {}
+    basic_array(layout_t const &idxm, storage_t &&mem_handle) : lay(idxm), _storage(std::move(mem_handle)) {}
 
     public:
     // ------------------------------- constructors --------------------------------------------
@@ -57,7 +57,7 @@ namespace nda {
     basic_array() = default;
 
     /// Makes a deep copy, since array is a regular type
-    basic_array(basic_array const &x) : _idx_m(x.indexmap()), _storage(x._storage) {}
+    basic_array(basic_array const &x) : lay(x.indexmap()), _storage(x._storage) {}
 
     ///
     basic_array(basic_array &&X) = default;
@@ -72,9 +72,9 @@ namespace nda {
     explicit basic_array(Int... is) REQUIRES17((std::is_convertible_v<Int, long> and ...)) {
       //static_assert((std::is_convertible_v<Int, long> and ...), "Arguments must be convertible to long");
       static_assert(sizeof...(Int) == Rank, "Incorrect number of arguments : should be exactly Rank. ");
-      _idx_m   = idx_map_t{{long(is)...}};
-      _storage = storage_t{_idx_m.size()};
-      // It would be more natural to construct _idx_m, storage from the start, but the error message in case of false # of parameters (very common)
+      lay   = layout_t{{long(is)...}};
+      _storage = storage_t{lay.size()};
+      // It would be more natural to construct lay, storage from the start, but the error message in case of false # of parameters (very common)
       // is better like this. FIXME to be tested in benchs
     }
 
@@ -84,13 +84,13 @@ namespace nda {
      * @param shape  Shape of the array (lengths in each dimension)
      */
     explicit basic_array(std::array<long, Rank> const &shape) REQUIRES(std::is_default_constructible_v<ValueType>)
-       : _idx_m(shape), _storage(_idx_m.size()) {}
+       : lay(shape), _storage(lay.size()) {}
 
     /** 
      * Constructs from a.shape() and then assign from the evaluation of a
      */
     template <CONCEPT(ArrayOfRank<Rank>) A>
-    basic_array(A const &a) REQUIRES17(is_ndarray_v<A>) : _idx_m(a.shape()), _storage{_idx_m.size(), mem::do_not_initialize} {
+    basic_array(A const &a) REQUIRES17(is_ndarray_v<A>) : lay(a.shape()), _storage{lay.size(), mem::do_not_initialize} {
       static_assert(std::is_convertible_v<get_value_t<A>, value_type>,
                     "Can not construct the array. ValueType can not be constructed from the value_type of the argument");
       if constexpr (std::is_trivial_v<ValueType> or mem::is_complex<ValueType>::value) {
@@ -100,7 +100,7 @@ namespace nda {
       } else {
         // in particular ValueType may or may not be default constructible
         // so we do not init memory, and make the placement new now, directly with the value returned by a
-        nda::for_each(_idx_m.lengths(), [&](auto const &... is) { new (_storage.data() + _idx_m(is...)) ValueType{a(is...)}; });
+        nda::for_each(lay.lengths(), [&](auto const &... is) { new (_storage.data() + lay(is...)) ValueType{a(is...)}; });
       }
     }
 
@@ -130,22 +130,22 @@ namespace nda {
     ///
     basic_array(std::initializer_list<ValueType> const &l) //
        REQUIRES(Rank == 1)
-       : _idx_m(std::array<long, 1>{long(l.size())}), _storage{_idx_m.size(), mem::do_not_initialize} {
+       : lay(std::array<long, 1>{long(l.size())}), _storage{lay.size(), mem::do_not_initialize} {
       long i = 0;
       // We can not assume that ValueType is default constructible. As before, we do not initialize,
       // and use placement new
       // https://godbolt.org/z/Lwic2o. Same code as = for basic type
-      // Alternative : if constexpr (std::is_trivial_v<ValueType> or mem::is_complex<ValueType>::value) for (auto const &x : l) *(_storage.data() + _idx_m(i++)) = x;
-      for (auto const &x : l) { new (_storage.data() + _idx_m(i++)) ValueType{x}; }
+      // Alternative : if constexpr (std::is_trivial_v<ValueType> or mem::is_complex<ValueType>::value) for (auto const &x : l) *(_storage.data() + lay(i++)) = x;
+      for (auto const &x : l) { new (_storage.data() + lay(i++)) ValueType{x}; }
     }
 
     ///
     basic_array(std::initializer_list<std::initializer_list<ValueType>> const &l2) //
        REQUIRES((Rank == 2))
-       : _idx_m(shape_from_init_list(l2)), _storage{_idx_m.size(), mem::do_not_initialize} {
+       : lay(shape_from_init_list(l2)), _storage{lay.size(), mem::do_not_initialize} {
       long i = 0, j = 0;
       for (auto const &l1 : l2) {
-        for (auto const &x : l1) { new (_storage.data() + _idx_m(i, j++)) ValueType{x}; } // cf dim1
+        for (auto const &x : l1) { new (_storage.data() + lay(i, j++)) ValueType{x}; } // cf dim1
         j = 0;
         ++i;
       }
@@ -153,12 +153,12 @@ namespace nda {
 
     ///
     basic_array(std::initializer_list<std::initializer_list<std::initializer_list<ValueType>>> const &l3) //
-       : _idx_m(shape_from_init_list(l3)), _storage{_idx_m.size(), mem::do_not_initialize} {
+       : lay(shape_from_init_list(l3)), _storage{lay.size(), mem::do_not_initialize} {
       long i = 0, j = 0, k = 0;
       static_assert(Rank == 3, "?");
       for (auto const &l2 : l3) {
         for (auto const &l1 : l2) {
-          for (auto const &x : l1) { new (_storage.data() + _idx_m(i, j, k++)) ValueType{x}; } // cf dim1
+          for (auto const &x : l1) { new (_storage.data() + lay(i, j, k++)) ValueType{x}; } // cf dim1
           k = 0;
           ++j;
         }
@@ -234,9 +234,9 @@ namespace nda {
      * @param shape  New shape of the array (lengths in each dimension)
      */
     [[gnu::noinline]] void resize(std::array<long, Rank> const &shape) {
-      _idx_m = idx_map_t(shape);
+      lay = layout_t(shape);
       // Construct a storage only if the new index is not compatible (size mismatch).
-      if (_storage.is_null() or (_storage.size() != _idx_m.size())) _storage = storage_t{_idx_m.size()};
+      if (_storage.is_null() or (_storage.size() != lay.size())) _storage = storage_t{lay.size()};
     }
 
 #include "./_impl_basic_array_view_common.hpp"

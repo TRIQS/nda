@@ -100,9 +100,9 @@ namespace nda {
     std::array<long, new_rank> new_extents{total_len_of_a_grp(IntSequences::as_std_array)...};
     std::array<long, new_rank> new_strides{min_stride_of_a_grp(IntSequences::as_std_array)...};
 
-    using new_idx_map_t =
+    using new_layout_t =
        idx_map<new_rank, 0, encode(stride_order_of_grouped_idx(Idx_t::stride_order, IntSequences::as_std_array...)), layout_prop_e::contiguous>;
 
-    return new_idx_map_t{new_extents, new_strides};
+    return new_layout_t{new_extents, new_strides};
   }
 } // namespace nda

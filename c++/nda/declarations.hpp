@@ -77,10 +77,10 @@ namespace nda {
 
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
   inline constexpr layout_info_t get_layout_info<basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>> =
-     basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>::idx_map_t::layout_info;
+     basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>::layout_t::layout_info;
 
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   inline constexpr layout_info_t get_layout_info<basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>> =
-     basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>::idx_map_t::layout_info;
+     basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>::layout_t::layout_info;
 
  } // namespace nda

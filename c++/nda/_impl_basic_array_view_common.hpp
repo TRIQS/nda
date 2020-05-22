@@ -3,7 +3,7 @@
 // FIXME get_layout
 
 /// The Index Map object
-[[nodiscard]] constexpr auto const &indexmap() const noexcept { return _idx_m; }
+[[nodiscard]] constexpr auto const &indexmap() const noexcept { return lay; }
 
 // FIXME : do we really need this ??
 /// The storage handle
@@ -11,7 +11,7 @@
 storage_t &storage() { return _storage; }
 
 /// Memory stride_order
-[[nodiscard]] constexpr auto stride_order() const noexcept { return _idx_m.stride_order(); }
+[[nodiscard]] constexpr auto stride_order() const noexcept { return lay.stride_order(); }
 
 /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
 [[nodiscard]] ValueType const *data_start() const { return _storage.data(); }
@@ -20,25 +20,25 @@ storage_t &storage() { return _storage; }
 ValueType *data_start() { return _storage.data(); }
 
 /// Shape of this
-[[nodiscard]] std::array<long, rank> const &shape() const { return _idx_m.lengths(); }
+[[nodiscard]] std::array<long, rank> const &shape() const { return lay.lengths(); }
 
 /// Number of elements
-[[nodiscard]] long size() const { return _idx_m.size(); }
+[[nodiscard]] long size() const { return lay.size(); }
 
 /// size() == 0
 [[nodiscard]] bool empty() const { return _storage.is_null(); }
 
 /// Same as shape()[i]
 //[[deprecated]]
-[[nodiscard]] long shape(int i) const { return _idx_m.lengths()[i]; }
+[[nodiscard]] long shape(int i) const { return lay.lengths()[i]; }
 
-[[nodiscard]] long extent(int i) const { return _idx_m.lengths()[i]; }
-
-///
-static constexpr bool is_stride_order_C() { return idx_map_t::is_stride_order_C(); }
+[[nodiscard]] long extent(int i) const { return lay.lengths()[i]; }
 
 ///
-static constexpr bool is_stride_order_Fortran() { return idx_map_t::is_stride_order_Fortran(); }
+static constexpr bool is_stride_order_C() { return layout_t::is_stride_order_C(); }
+
+///
+static constexpr bool is_stride_order_Fortran() { return layout_t::is_stride_order_Fortran(); }
 
 // -------------------------------  operator () --------------------------------------------
 
@@ -48,17 +48,17 @@ static constexpr bool is_stride_order_Fortran() { return idx_map_t::is_stride_or
 
 /// \private NO DOC
 decltype(auto) operator()(_linear_index_t x) const {
-  //NDA_PRINT(idx_map_t::layout_prop);
-  if constexpr (idx_map_t::layout_prop == layout_prop_e::strided_1d) return _storage[x.value * _idx_m.min_stride()];
-  if constexpr (idx_map_t::layout_prop == layout_prop_e::contiguous) return _storage[x.value]; // min_stride is 1
+  //NDA_PRINT(layout_t::layout_prop);
+  if constexpr (layout_t::layout_prop == layout_prop_e::strided_1d) return _storage[x.value * lay.min_stride()];
+  if constexpr (layout_t::layout_prop == layout_prop_e::contiguous) return _storage[x.value]; // min_stride is 1
   // other case : should not happen, let it be a compilation error.
 }
 
 /// \private NO DOC
 decltype(auto) operator()(_linear_index_t x) {
-  //NDA_PRINT(idx_map_t::layout_prop);
-  if constexpr (idx_map_t::layout_prop == layout_prop_e::strided_1d) return _storage[x.value * _idx_m.min_stride()];
-  if constexpr (idx_map_t::layout_prop == layout_prop_e::contiguous) return _storage[x.value]; // min_stride is 1
+  //NDA_PRINT(layout_t::layout_prop);
+  if constexpr (layout_t::layout_prop == layout_prop_e::strided_1d) return _storage[x.value * lay.min_stride()];
+  if constexpr (layout_t::layout_prop == layout_prop_e::contiguous) return _storage[x.value]; // min_stride is 1
   // other case : should not happen, let it be a compilation error.
 }
 
@@ -73,7 +73,7 @@ FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) {
 
   // () returns a full view
   else if constexpr (sizeof...(T) == 0) {
-    return basic_array_view<r_v_t, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>{self._idx_m, self._storage};
+    return basic_array_view<r_v_t, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>{self.lay, self._storage};
   }
 
   else {
@@ -84,7 +84,7 @@ FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) {
 
     // case 1 : all arguments are long, we simply compute the offset
     if constexpr (n_args_long == rank) {         // no range, ellipsis, we simply compute the linear position
-      long offset = self._idx_m(x...);           // compute the offset
+      long offset = self.lay(x...);           // compute the offset
       if constexpr (is_view or not SelfIsRvalue) //
         return AccessorPolicy::template accessor<ValueType>::access(self._storage.data(),
                                                                     offset); // We return a REFERENCE here. Ok since underlying array is still alive
@@ -94,13 +94,13 @@ FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) {
     // case 2 : we have to make a slice
     else {
       // Static rank
-      auto const [offset, idxm] = slice_static::slice_stride_order(self._idx_m, x...);
+      auto const [offset, idxm] = slice_static::slice_stride_order(self.lay, x...);
 
-      using r_idx_map_t = decltype(idxm);
+      using r_layout_t = decltype(idxm);
       using r_view_t =
-         // FIXME  basic_array_view<r_v_t, r_idx_map_t::rank(),
-         basic_array_view<ValueType, r_idx_map_t::rank(),
-                          basic_layout<encode(r_idx_map_t::static_extents), encode(r_idx_map_t::stride_order), r_idx_map_t::layout_prop>, Algebra,
+         // FIXME  basic_array_view<r_v_t, r_layout_t::rank(),
+         basic_array_view<ValueType, r_layout_t::rank(),
+                          basic_layout<encode(r_layout_t::static_extents), encode(r_layout_t::stride_order), r_layout_t::layout_prop>, Algebra,
                           AccessorPolicy, OwningPolicy>;
 
       return r_view_t{std::move(idxm), {self._storage, offset}};
@@ -168,7 +168,7 @@ decltype(auto) operator[](T const &x) && {
 
 // ------------------------------- Iterators --------------------------------------------
 
-static constexpr int iterator_rank = (idx_map_t::layout_prop & layout_prop_e::strided_1d ? 1 : Rank);
+static constexpr int iterator_rank = (layout_t::layout_prop & layout_prop_e::strided_1d ? 1 : Rank);
 
 ///
 using const_iterator = array_iterator<iterator_rank, ValueType const, typename AccessorPolicy::template accessor<ValueType>::pointer>;
@@ -293,7 +293,7 @@ void fill_with_scalar(Scalar const &scalar) {
     }
   } else {
     auto l = [this, scalar](auto const &... args) { (*this)(args...) = scalar; };
-    nda::for_each_static<idx_map_t::static_extents_encoded, idx_map_t::stride_order_encoded>(shape(), l);
+    nda::for_each_static<layout_t::static_extents_encoded, layout_t::stride_order_encoded>(shape(), l);
   }
 }
 

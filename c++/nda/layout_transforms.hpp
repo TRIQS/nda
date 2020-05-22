@@ -25,10 +25,10 @@ namespace nda {
   // ---------------  reshape ------------------------
   template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, size_t R2>
   auto reshape(basic_array<T, R, L, Algebra, ContainerPolicy> &&a, std::array<long, R2> const &new_shape) {
-    using idx_map_t = typename L::template mapping<R2>;
+    using layout_t = typename L::template mapping<R2>;
     EXPECTS_WITH_MESSAGE(a.size() == (std::accumulate(new_shape.cbegin(), new_shape.cend(), 1, std::multiplies<>{})),
                          "Reshape : the new shape has a incorrect number of elements");
-    return map_layout_transform(std::move(a), idx_map_t{new_shape});
+    return map_layout_transform(std::move(a), layout_t{new_shape});
   }
 
   // for convenience, call it with std::array{1,2}.... Document ?
@@ -41,11 +41,11 @@ namespace nda {
 
   template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy, size_t R2>
   auto reshaped_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> a, std::array<long, R2> const &new_shape) {
-    using idx_map_t = typename L::template mapping<R2>;
+    using layout_t = typename L::template mapping<R2>;
     EXPECTS_WITH_MESSAGE(a.size() == (std::accumulate(new_shape.cbegin(), new_shape.cend(), 1, std::multiplies<>{})),
                          "Reshape : the new shape has a incorrect number of elements");
     EXPECTS_WITH_MESSAGE(a.indexmap().is_contiguous(), "reshaped_view only works with contiguous views");
-    return map_layout_transform(a, idx_map_t{new_shape});
+    return map_layout_transform(a, layout_t{new_shape});
   }
 
   template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy, size_t R2>

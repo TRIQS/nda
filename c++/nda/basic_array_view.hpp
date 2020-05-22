@@ -33,12 +33,12 @@ namespace nda {
 
     public:
     using value_type = ValueType;
-    using idx_map_t  = typename Layout::template mapping<Rank>;
+    using layout_t  = typename Layout::template mapping<Rank>;
 
     static constexpr int rank = Rank;
 
     private:
-    idx_map_t _idx_m;
+    layout_t lay;
     storage_t _storage;
 
     template <typename T, int R, typename L, char A, typename CP>
@@ -51,7 +51,7 @@ namespace nda {
     friend auto map_layout_transform(basic_array_view<T, R, L, A, AP, OP> a, NewLayoutType const &new_layout);
 
     // private constructor for the previous friend
-    basic_array_view(idx_map_t const &idxm, storage_t st) : _idx_m(idxm), _storage(std::move(st)) {}
+    basic_array_view(layout_t const &idxm, storage_t st) : lay(idxm), _storage(std::move(st)) {}
 
     public:
     // ------------------------------- constructors --------------------------------------------
@@ -67,11 +67,11 @@ namespace nda {
 
     ///
     template <typename T, typename L, char A, typename CP>
-    basic_array_view(basic_array<T, Rank, L, A, CP> const &a) : basic_array_view(idx_map_t{a.indexmap()}, a.storage()) {}
+    basic_array_view(basic_array<T, Rank, L, A, CP> const &a) : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
 
     ///
     template <typename T, typename L, char A, typename AP, typename OP>
-    basic_array_view(basic_array_view<T, Rank, L, A, AP, OP> const &a) : basic_array_view(idx_map_t{a.indexmap()}, a.storage()) {}
+    basic_array_view(basic_array_view<T, Rank, L, A, AP, OP> const &a) : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
 
     /** 
      * [Advanced] From a pointer to **contiguous data**, and a shape.
@@ -80,7 +80,7 @@ namespace nda {
      * @param p Pointer to the data
      * @param shape Shape of the view (contiguous)
      */
-    basic_array_view(std::array<long, Rank> const &shape, ValueType *p) : basic_array_view(idx_map_t{shape}, p) {}
+    basic_array_view(std::array<long, Rank> const &shape, ValueType *p) : basic_array_view(layout_t{shape}, p) {}
 
     /** 
      * [Advanced] From a pointer to data, and an idx_map 
@@ -89,8 +89,8 @@ namespace nda {
      * @param p Pointer to the data 
      * @param idxm Index Map (view can be non contiguous). If the offset is non zero, the view starts at p + idxm.offset()
      */
-    basic_array_view(idx_map_t const &idxm, ValueType *p) : _idx_m(idxm), _storage{p} {}
-    //basic_array_view(idx_map<Rank, StrideOrder> const &idxm, ValueType *p) : _idx_m(idxm), _storage{p, size_t(idxm.size() + idxm.offset())} {}
+    basic_array_view(layout_t const &idxm, ValueType *p) : lay(idxm), _storage{p} {}
+    //basic_array_view(idx_map<Rank, StrideOrder> const &idxm, ValueType *p) : lay(idxm), _storage{p, size_t(idxm.size() + idxm.offset())} {}
 
     // Move assignment not defined : will use the copy = since view must copy data
 
@@ -153,12 +153,12 @@ namespace nda {
       static_assert(same_type or is_const, "One can not rebind a view of T onto a view of const T. It would discard the const qualifier");
       if constexpr (same_type) {
         // FIXME Error message in layout error !
-        _idx_m   = v._idx_m;
+        lay   = v.lay;
         _storage = v._storage;
       } else if constexpr (is_const) {
         // the last if is always trivially true BUT in case of an error in the static_assert above,
         // it improves the error message by not compiling the = afterwards
-        _idx_m   = idx_map_t{v.indexmap()};
+        lay   = layout_t{v.indexmap()};
         _storage = storage_t{v.storage()};
       }
     }
@@ -171,7 +171,7 @@ namespace nda {
      * @param b
      */
     friend void swap(basic_array_view &a, basic_array_view &b) {
-      std::swap(a._idx_m, b._idx_m);
+      std::swap(a.lay, b.lay);
       std::swap(a._storage, b._storage);
     }
 

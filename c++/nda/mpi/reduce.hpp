@@ -88,7 +88,7 @@ namespace nda {
      REQUIRES(is_regular_or_view_v<A>) {
     static_assert(has_layout_contiguous<A>, "Non contigous view in target_view.data_start() are not implemented");
     static_assert(mpi::has_mpi_type<typename A::value_type>, "Reduction of non MPI types is not implemented");
-    return lazy_mpi::reduce<typename A::value_type, A::rank, A::idx_map_t::stride_order_encoded>{a(), c, root, all, op};
+    return lazy_mpi::reduce<typename A::value_type, A::rank, A::layout_t::stride_order_encoded>{a(), c, root, all, op};
   }
 
 } // namespace nda
