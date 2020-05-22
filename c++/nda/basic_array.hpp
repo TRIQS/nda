@@ -220,7 +220,7 @@ namespace nda {
      *
      */
     template <CONCEPT(std::integral)... Int>
-    void resize(Int const &... extent) {
+    void resize(Int const &... extent) REQUIRES17(std::is_convertible_v<Int, long> and ...) {
       static_assert(std::is_copy_constructible_v<ValueType>, "Can not resize an array if its value_type is not copy constructible");
       static_assert(sizeof...(extent) == Rank, "Incorrect number of arguments for resize. Should be Rank");
       resize(std::array<long, Rank>{long(extent)...});

@@ -42,20 +42,19 @@ static constexpr bool is_stride_order_Fortran() { return idx_map_t::is_stride_or
 
 // -------------------------------  operator () --------------------------------------------
 
-// one can factorize the last part in a private static method, but I find clearer to have the repetition
-// here. In particular to check the && case carefully.
-//private:
-// Internal only. A special case for optimization
-// BUT can not be made private
-//template <typename LHS, typename RHS>
-//friend  void assign_from(LHS &lhs, RHS const &rhs);
+// impl details : optimization
+// can NOT be put private, since used by expr template e.g. forwarding argument.
+// but it is not for the user directly
 
+/// \private NO DOC
 decltype(auto) operator()(_linear_index_t x) const {
   //NDA_PRINT(idx_map_t::layout_prop);
   if constexpr (idx_map_t::layout_prop == layout_prop_e::strided_1d) return _storage[x.value * _idx_m.min_stride()];
   if constexpr (idx_map_t::layout_prop == layout_prop_e::contiguous) return _storage[x.value]; // min_stride is 1
   // other case : should not happen, let it be a compilation error.
 }
+
+/// \private NO DOC
 decltype(auto) operator()(_linear_index_t x) {
   //NDA_PRINT(idx_map_t::layout_prop);
   if constexpr (idx_map_t::layout_prop == layout_prop_e::strided_1d) return _storage[x.value * _idx_m.min_stride()];
@@ -63,7 +62,6 @@ decltype(auto) operator()(_linear_index_t x) {
   // other case : should not happen, let it be a compilation error.
 }
 
-private:
 // impl of call. Only different case is if Self is &&
 
 template <bool SelfIsRvalue, typename Self, typename... T>
