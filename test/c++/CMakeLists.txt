@@ -7,11 +7,16 @@ endforeach()
 # List of all tests
 file(GLOB_RECURSE all_tests RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 
+macro(SetUpAllTestWithMacroDef extension macrodef)
 foreach(test ${all_tests})
   get_filename_component(test_name ${test} NAME_WE)
+  string(APPEND test_name "${ARGV0}")
+  #MESSAGE("${test_name} with option ${ARGV1}")
   get_filename_component(test_dir ${test} DIRECTORY)
   add_executable(${test_name} ${test})
-  target_link_libraries(${test_name} ${PROJECT_NAME}_c gtest_main ${PROJECT_NAME}_warnings)
+  target_link_libraries(${test_name} ${PROJECT_NAME}_c clef_c gtest_main ${PROJECT_NAME}_warnings)
+  #target_link_libraries(${test_name} nda_c clef_c gtest_main nda_warnings)
+  target_compile_options(${test_name}  PRIVATE "${ARGV1}")
   set_property(TARGET ${test_name} PROPERTY RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test_dir})
   add_test(NAME ${test_name} COMMAND ${test_name} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test_dir})
   if(test_name MATCHES ".*mpi.*")
@@ -36,3 +41,15 @@ foreach(test ${all_tests})
     )
   endif()
 endforeach()
+endmacro()
+
+# Regular tests
+SetUpAllTestWithMacroDef("" "")
+
+if (Build_SSO_Tests)
+  # Rerun all C++ tests with others allocs, using the SS0 with 2 size for handle of the basic_array
+  SetUpAllTestWithMacroDef("_SSO_10" "-DNDA_TEST_SSO=10")
+  SetUpAllTestWithMacroDef("_SSO_100" "-DNDA_TEST_SSO=100")
+  SetUpAllTestWithMacroDef("_MBUCKET_10" "-DNDA_TEST_DEFAULT_ALLOC_MBUCKET=10")
+endif()
+

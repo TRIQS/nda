@@ -72,6 +72,14 @@ namespace nda {
   }
 
   // ==============================================
+
+  template <int R, typename F>
+  std::ostream &operator<<(std::ostream &sout, array_adapter<R, F> const &x) {
+    return sout << "array_adapter of shape" << x.shape();
+  }
+
+  // ==============================================
+ 
   template <typename S, int Rank>
   std::ostream &operator<<(std::ostream &sout, scalar_array<S, Rank> const &expr) {
     return sout << expr.s;

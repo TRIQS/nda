@@ -17,7 +17,7 @@ namespace nda {
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
   class basic_array;
 
-  template <typename ValueType, int Rank, typename Layout, char Algebra = 'A', typename AccessorPolicy = nda::default_accessor,
+  template <typename ValueType, int Rank, typename Layout, char Algebra = 'A', typename AccessorPolicy = nda::default_accessor, //, nda::no_alias_accessor, //,
             typename OwningPolicy = nda::borrowed>
   class basic_array_view;
 
@@ -49,7 +49,7 @@ namespace nda {
 
   template <typename ValueType, int Rank, uint64_t StaticExtents>
   using stack_array =
-     nda::basic_array<long, Rank, nda::basic_layout<StaticExtents, nda::C_stride_order<Rank>, nda::layout_prop_e::contiguous>, 'A', nda::stack>;
+     nda::basic_array<ValueType, Rank, nda::basic_layout<StaticExtents, nda::C_stride_order<Rank>, nda::layout_prop_e::contiguous>, 'A', nda::stack>;
 
   template <typename... Is>
   constexpr uint64_t static_extents(int i0, Is... is) {

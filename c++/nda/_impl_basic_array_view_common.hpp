@@ -254,7 +254,7 @@ auto &operator/=(RHS const &rhs) noexcept {
 
 private:
 template <typename RHS>
-void assign_from_ndarray(RHS const &rhs) noexcept {
+void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
 
 #ifdef NDA_DEBUG
   if (this->shape() != rhs.shape())

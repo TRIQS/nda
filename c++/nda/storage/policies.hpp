@@ -5,18 +5,44 @@ namespace nda {
 
   // Policy classes
   struct heap {
+
+#if !defined(NDA_TEST_DEFAULT_ALLOC_SSO) and !defined(NDA_TEST_DEFAULT_ALLOC_MBUCKET)
+    // Normal version.
     template <typename T, size_t StackSize = 0> // StackSize is ignored in this case, but called in basic_array
     using handle = ::nda::mem::handle_heap<T, void>;
+#else
+    // FOR TESTS ONLY : To be able to rerun all tests with the SSO as a default
+#ifdef NDA_TEST_DEFAULT_ALLOC_SSO
+    template <typename T, size_t StackSize = 0>
+    using handle =
+       std::conditional_t<std::is_copy_constructible_v<T>, ::nda::mem::handle_sso<T, NDA_TEST_DEFAULT_ALLOC_SSO>, ::nda::mem::handle_heap<T, void>>;
+#endif
+    // FOR TESTS ONLY : To be able to rerun all tests with another allocator
+#ifdef NDA_TEST_DEFAULT_ALLOC_MBUCKET
+    using test_buck_alloc_t =
+       nda::allocators::segregator<8 * NDA_TEST_DEFAULT_ALLOC_MBUCKET, nda::allocators::multiple_bucket<8 * NDA_TEST_DEFAULT_ALLOC_MBUCKET>,
+                                   nda::allocators::mallocator>;
+    template <typename T, size_t StackSize = 0>
+    using handle = ::nda::mem::handle_heap<T, test_buck_alloc_t>;
+#endif
+#endif
   };
 
   template <typename Allocator>
   struct heap_custom_alloc {
 #ifdef _OPENMP
-    template<typename T> static constexpr bool always_true = true; // to prevent the static_assert to trigger only when instantiated
-    static_assert(false and always_true<Allocator> , "Custom Allocators are not available in OpenMP");
+    template <typename T>
+    static constexpr bool always_true = true; // to prevent the static_assert to trigger only when instantiated
+    static_assert(false and always_true<Allocator>, "Custom Allocators are not available in OpenMP");
 #endif
     template <typename T, size_t StackSize = 0> // StackSize is ignored in this case, but called in basic_array
     using handle = ::nda::mem::handle_heap<T, Allocator>;
+  };
+
+  template <size_t SSO_Size>
+  struct sso {
+    template <typename T, size_t StackSize = 0>
+    using handle = ::nda::mem::handle_sso<T, SSO_Size>;
   };
 
   struct stack {

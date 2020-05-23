@@ -101,6 +101,7 @@ namespace nda::mem {
   template <typename T> struct handle_borrowed; 
 
   template <typename T, size_t Size> struct handle_stack;
+  template <typename T, size_t Size> struct handle_sso;
   // clang-format on
 
   // ------------------  HEAP -------------------------------------
@@ -133,6 +134,8 @@ namespace nda::mem {
       // Deallocate the memory block
       allocator_singleton<Allocator>::deallocate({(char *)_data, _size * sizeof(T)});
     }
+
+    bool has_shared_memory() const noexcept { return _id != 0; }
 
     public:
     using value_type = T;
@@ -236,7 +239,6 @@ namespace nda::mem {
 #endif
       return _data == nullptr;
     }
-    bool has_shared_memory() const noexcept { return _id != 0; }
 
     // A const-handle does not entail T const data
     T *data() const noexcept { return _data; }
@@ -247,51 +249,30 @@ namespace nda::mem {
   // ------------------  Stack -------------------------------------
 
   template <typename T, size_t Size>
-  struct alignas(alignof(T)) handle_stack {
+  // struct alignas(alignof(T)) handle_stack {
+  struct handle_stack {
+    static_assert(std::is_copy_constructible_v<T>,
+                  "nda::mem::handle_sso requires the value_type to be copy constructible, or it can not even move (it is on stack)");
+    static_assert(std::is_nothrow_destructible_v<T>, "nda::mem::handle requires the value_type to have a non-throwing constructor");
+
     private:
-    std::array<char, sizeof(T) * Size> __buffer; //
-    //char __buffer[sizeof(T) * Size]; //
+    std::array<char, sizeof(T) * Size> buffer; //
 
     public:
     using value_type = T;
 
     //
-    T *data() const noexcept { return (T *)__buffer.data(); }
+    T *data() const noexcept { return (T *)buffer.data(); }
 
     T &operator[](long i) noexcept { return data()[i]; }
     T const &operator[](long i) const noexcept { return data()[i]; }
 
-    handle_stack() {
-      // Call placement new except for complex types
-      if constexpr (!std::is_trivial_v<T> and !is_complex_v<T>) {
-        for (size_t i = 0; i < Size; ++i) new (data() + i) T();
-      }
-    }
-
-    handle_stack(long /*size*/) : handle_stack{} {}
-
-    handle_stack(long /*size*/, do_not_initialize_t) {}
+    handle_stack() = default;
 
     ~handle_stack() noexcept {
-      static_assert(std::is_nothrow_destructible_v<T>, "nda::mem::handle requires the value_type to have a non-throwing constructor");
-      //if (is_null()) retun;
-      // If needed, call the T destructors
       if constexpr (!std::is_trivial_v<T>) {
         for (size_t i = 0; i < Size; ++i) data()[i].~T();
       }
-    }
-
-    handle_stack &operator=(handle_stack const &x) {
-      if constexpr (std::is_trivially_copyable_v<T>) {
-        std::memcpy(data(), x.data(), Size * sizeof(T));
-      } else {
-        for (size_t i = 0; i < Size; ++i) new (data() + i) T(x[i]); // placement new
-      }
-      return *this;
-    }
-    // Construct by making a clone of the data
-    handle_stack(handle_stack const &x) noexcept { // if an exception occurs in T construction, so be it, we terminate
-      operator=(x);
     }
 
     handle_stack(handle_stack &&x) noexcept { operator=(x); } // no move makes a copy, we are on stack
@@ -301,12 +282,188 @@ namespace nda::mem {
       return *this;
     }
 
+    handle_stack(long /*size*/) : handle_stack{} {
+      // Call placement new except for complex types
+      if constexpr (!std::is_trivial_v<T> and !is_complex_v<T>) {
+        for (size_t i = 0; i < Size; ++i) new (data() + i) T();
+      }
+    }
+
+    handle_stack(long /*size*/, do_not_initialize_t) {}
+
     // Set up a memory block of the correct size without initializing it
     handle_stack(long /*size*/, init_zero_t) { static_assert(std::is_scalar_v<T> or is_complex_v<T>, "Internal Error"); }
 
+    handle_stack &operator=(handle_stack const &x) {
+      for (size_t i = 0; i < Size; ++i) new (data() + i) T(x[i]); // placement new
+      return *this;
+    }
+
+    // Construct by making a clone of the data
+    handle_stack(handle_stack const &x) noexcept { // if an exception occurs in T construction, so be it, we terminate
+      operator=(x);
+    }
+
     static constexpr bool is_null() noexcept { return false; }
     static constexpr long size() noexcept { return Size; }
-    //static constexpr bool has_shared_memory() const noexcept { return false; }
+  };
+
+  // ------------------  SSO -------------------------------------
+
+  template <typename T, size_t Size>
+  //struct alignas(alignof(T)) handle_sso {
+  struct handle_sso {
+    static_assert(Size > 0, "Size =0 makes no sense here");
+    static_assert(std::is_copy_constructible_v<T>,
+                  "nda::mem::handle_sso requires the value_type to be copy constructible, or it can not even move (it is on stack)");
+    static_assert(std::is_nothrow_destructible_v<T>, "nda::mem::handle requires the value_type to have a non-throwing constructor");
+
+    private:
+    std::array<char, sizeof(T) * Size> buffer; //
+
+    T *_data     = nullptr; // Pointer to the start of the memory block
+    size_t _size = 0;       // Size of the memory block. Invariant: size > 0 iif data != 0
+
+    public:
+    using value_type = T;
+
+    bool on_heap() const { return _size > Size; }
+
+    bool is_null() const noexcept {
+#ifdef NDA_DEBUG
+      EXPECTS((_data == nullptr) == (_size == 0));
+#endif
+      return _data == nullptr;
+    }
+
+    T *data() const noexcept { return _data; }
+
+    T &operator[](long i) noexcept { return _data[i]; }
+    T const &operator[](long i) const noexcept { return _data[i]; }
+
+    long size() const noexcept { return _size; }
+
+    handle_sso() = default;
+
+    private:
+    void clean() noexcept {
+      if (is_null()) return;
+      if constexpr (!std::is_trivial_v<T>) {
+        for (size_t i = 0; i < _size; ++i) data()[i].~T();
+        // STACK	for (size_t i = 0; i < Size; ++i) data()[i].~T();
+      }
+      if (on_heap()) allocators::mallocator::deallocate({(char *)_data, _size * sizeof(T)});
+      _data = nullptr;
+    }
+
+    public:
+    ~handle_sso() noexcept { clean(); }
+
+    handle_sso(handle_sso &&x) noexcept {
+      _size = x._size;
+      if (on_heap()) { // heap path
+        _data = x._data;
+      } else {            // stack path. We MUST copy
+        if (_size != 0) { // if crucial to maintain invariant
+          _data = (T *)buffer.data();
+          for (size_t i = 0; i < _size; ++i) new (data() + i) T(x[i]);
+        }
+        //for (size_t i = 0; i < Size; ++i) new (data() + i) T(x[i]);
+      }
+      x._data = nullptr; // steal data
+      x._size = 0;       // maintain invariant
+    }
+
+    handle_sso &operator=(handle_sso &&x) noexcept {
+      clean();
+      _size = x._size;
+      if (on_heap()) {
+        _data = x._data;
+      } else {
+        if (_size != 0) { // if crucial to maintain invariant
+          _data = (T *)buffer.data();
+          for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]); // placement new
+        }
+      }
+      x._data = nullptr; // steal data
+      x._size = 0;       // maintain invariant
+      return *this;
+    }
+
+    // Set up a memory block of the correct size without initializing it
+    handle_sso(long size, do_not_initialize_t) {
+      if (size == 0) return; // no size -> null handle
+      _size = size;
+      if (not on_heap()) {
+        _data = (T *)buffer.data();
+      } else {
+        allocators::blk_t b;
+        b = allocators::mallocator::allocate(size * sizeof(T));
+        ASSERT(b.ptr != nullptr);
+        _data = (T *)b.ptr;
+      }
+    }
+
+    // Same but call calloc with malloc ...
+    handle_sso(long size, init_zero_t) {
+      static_assert(std::is_scalar_v<T> or is_complex_v<T>, "Internal Error");
+      if (size == 0) return; // no size -> null handle
+      _size = size;
+      if (not on_heap()) {
+        _data = (T *)buffer.data();
+      } else {
+        auto b = allocators::mallocator::allocate_zero(size * sizeof(T)); //, alignof(T));
+        ASSERT(b.ptr != nullptr);
+        _data = (T *)b.ptr;
+      }
+    }
+
+    // Copy data
+    handle_sso(handle_sso const &x) : handle_sso(x.size(), do_not_initialize) {
+      for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]); // placement new
+    }
+
+    handle_sso &operator=(handle_sso const &x) noexcept {
+      clean();
+      _size = x._size;
+      if (_size == 0) return *this;
+      if (on_heap()) {
+        allocators::blk_t b;
+        b = allocators::mallocator::allocate(_size * sizeof(T));
+        ASSERT(b.ptr != nullptr);
+        _data = (T *)b.ptr;
+      } else {
+        _data = (T *)buffer.data();
+      }
+      for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]);
+
+      return *this;
+    }
+
+    // Construct a new block of memory of given size and init if needed.
+    handle_sso(long size) {
+      if (size == 0) return; // no size -> null handle
+      _size = size;          // NOt needed in the Stack path if type is trivial ??
+
+      if (not on_heap()) {
+        _data = (T *)buffer.data();
+        _size = size;
+      } else {
+        allocators::blk_t b;
+        if constexpr (is_complex_v<T> && globals::init_dcmplx)
+          b = allocators::mallocator::allocate_zero(size * sizeof(T));
+        else
+          b = allocators::mallocator::allocate(size * sizeof(T));
+        ASSERT(b.ptr != nullptr);
+        _data = (T *)b.ptr;
+        _size = size;
+      }
+
+      // Call placement new except for complex types
+      if constexpr (!std::is_trivial_v<T> and !is_complex_v<T>) {
+        for (size_t i = 0; i < size; ++i) new (_data + i) T();
+      }
+    }
   };
 
   // ------------------  Shared -------------------------------------
@@ -478,6 +635,9 @@ namespace nda::mem {
 
     template <size_t Size>
     handle_borrowed(handle_stack<T0, Size> const &x, long offset = 0) noexcept : _data(x.data() + offset) {}
+
+    template <size_t SSO_Size>
+    handle_borrowed(handle_sso<T0, SSO_Size> const &x, long offset = 0) noexcept : _data(x.data() + offset) {}
 
     T &operator[](long i) noexcept { return _data[i]; }
     T const &operator[](long i) const noexcept { return _data[i]; }

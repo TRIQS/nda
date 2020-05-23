@@ -21,7 +21,7 @@ namespace nda {
 
     // details for the common code with view
     using self_t                   = basic_array;
-    using AccessorPolicy           = default_accessor;
+    using AccessorPolicy           = default_accessor;// no_alias_accessor
     using OwningPolicy             = borrowed;
     static constexpr bool is_const = false;
     static constexpr bool is_view  = false;

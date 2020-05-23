@@ -34,6 +34,8 @@
 #include "basic_functions.hpp"
 #include "layout_transforms.hpp"
 
+#include "array_adapter.hpp"
+
 #include "matrix_functions.hpp"
 
 #include "arithmetic.hpp"

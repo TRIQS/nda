@@ -1,20 +1,50 @@
 
-- SSO : with stack
-  - custom alloc
-  - redo bench 
+- SSO + custsom alloc
 
-- C++17 mode.
+  - reread handle_sso impl. 
+  - should we keep it AND handle_stack or just one ? (with CToption)
+  - pass all tests with this as default ?
+  - clean bench. repass it on linux
+
+  - custom alloc :
+    - keep as is experimental
+ 
+  - stack + non-pod
+
+- C++17 mode
+  - compile and recheck
+
+- Sanitizer. Including MSAN. 
+  Can I have this in the CI ?? 
+  CI : nda : all test, clang, gcc, c++17, c++20, ASAN + UBSAN, MSAN -> log to me and or find the docker.
+
 
 - layout : 
-    - slice
-    - test in any order ?
-    - idx_map
 
+  - reread slice.
+  - more test for any order ?
+  - Can I put a Fortran order in all tests ?? :   NO HDF5
+    Then all cycle + 1 or reverse cycle ?
+  - Or a default permutation ?? How many test of rank > 2 ?
 
-- arithm : 
+  - copy, assign
+  - check contiguouity at CT.
+
+  - rename  
+
+- arithm : reread for doc.
+
+- literals : nda::literals::_ and ___ 
+  ellipsis_t -> ellipsis_t
 
 - finir MPI refactor
 
 - file array.hpp 
   include core + alias  
+
+- linking : just rtable ??
+
+- rebind ?
+- matmul lazy ?
+- zeros : revue the initi_zero and maybe rebname this detail
 

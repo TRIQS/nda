@@ -70,6 +70,7 @@ option(Build_Documentation "Build documentation" OFF)
 
 # Testing
 option(Build_Tests "Build tests" ON)
+option(Build_SSO_Tests "Build same tests with various SSO/Custom Allocators" OFF)
 if(Build_Tests)
   enable_testing()
 endif()
