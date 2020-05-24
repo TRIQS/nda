@@ -105,7 +105,7 @@ namespace nda {
     array_iterator(array_iterator const &) = default;
 
     array_iterator(std::array<long, Rank> const &lengths, std::array<long, Rank> const &strides, T *start, bool at_end)
-       : data(start), len(lengths), stri(strides), iter(lengths.data(), stri.data(), at_end) {}
+       : data(start), len(lengths), stri(strides), iter(len.data(), stri.data(), at_end) {}
 
     value_type &operator*() const { return ((Pointer)data)[*iter]; }
 

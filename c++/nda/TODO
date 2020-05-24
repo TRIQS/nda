@@ -1,15 +1,8 @@
 
 - SSO + custsom alloc
 
-  - reread handle_sso impl. 
-  - should we keep it AND handle_stack or just one ? (with CToption)
-  - pass all tests with this as default ?
   - clean bench. repass it on linux
-
-  - custom alloc :
-    - keep as is experimental
- 
-  - stack + non-pod
+  - recheck all on gcc + linux
 
 - C++17 mode
   - compile and recheck

@@ -70,11 +70,11 @@ private:
 // impl of call. Only different case is if Self is &&
 
 #ifdef NDA_ENFORCE_BOUNDCHECK
-  static constexpr bool has_no_boundcheck = false;
-#else 
-  static constexpr bool has_no_boundcheck = true;
+static constexpr bool has_no_boundcheck = false;
+#else
+static constexpr bool has_no_boundcheck = true;
 #endif
- 
+
 template <bool SelfIsRvalue, typename Self, typename... T>
 FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) noexcept(has_no_boundcheck) {
 
@@ -189,27 +189,34 @@ using iterator = array_iterator<iterator_rank, ValueType, typename AccessorPolic
 
 private:
 template <typename Iterator>
-[[nodiscard]] auto _make_iterator(bool at_end) const noexcept {
-  if constexpr (iterator_rank == Rank)
-    return Iterator{indexmap().lengths(), indexmap().strides(), sto.data(), at_end};
-  else
+[[nodiscard]] auto make_iterator(bool at_end) const noexcept {
+  if constexpr (iterator_rank == Rank) {
+    if constexpr (layout_t::is_stride_order_C())
+      return Iterator{indexmap().lengths(), indexmap().strides(), sto.data(), at_end};
+    else
+      // general case. In C order, no need to spend time applying the identity permutation
+      // the new length used by the iterator is  length[ stride_order[0]], length[ stride_order[1]], ...
+      // since stride_order[0] is the slowest, it will traverse the memory in sequential order
+      return Iterator{nda::permutations::apply(layout_t::stride_order, indexmap().lengths()),
+                      nda::permutations::apply(layout_t::stride_order, indexmap().strides()), sto.data(), at_end};
+  } else // 1d iteration
     return Iterator{std::array<long, 1>{size()}, std::array<long, 1>{indexmap().min_stride()}, sto.data(), at_end};
 }
 
 public:
 ///
-[[nodiscard]] const_iterator begin() const noexcept { return _make_iterator<const_iterator>(false); }
+[[nodiscard]] const_iterator begin() const noexcept { return make_iterator<const_iterator>(false); }
 ///
-[[nodiscard]] const_iterator cbegin() const noexcept { return _make_iterator<const_iterator>(false); }
+[[nodiscard]] const_iterator cbegin() const noexcept { return make_iterator<const_iterator>(false); }
 ///
-iterator begin() noexcept { return _make_iterator<iterator>(false); }
+iterator begin() noexcept { return make_iterator<iterator>(false); }
 
 ///
-[[nodiscard]] const_iterator end() const noexcept { return _make_iterator<const_iterator>(true); }
+[[nodiscard]] const_iterator end() const noexcept { return make_iterator<const_iterator>(true); }
 ///
-[[nodiscard]] const_iterator cend() const noexcept { return _make_iterator<const_iterator>(true); }
+[[nodiscard]] const_iterator cend() const noexcept { return make_iterator<const_iterator>(true); }
 ///
-iterator end() noexcept { return _make_iterator<iterator>(true); }
+iterator end() noexcept { return make_iterator<iterator>(true); }
 
 // ------------------------------- Operations --------------------------------------------
 
