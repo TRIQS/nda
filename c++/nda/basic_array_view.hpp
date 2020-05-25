@@ -69,9 +69,24 @@ namespace nda {
     template <typename T, typename L, char A, typename CP>
     basic_array_view(basic_array<T, Rank, L, A, CP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
 
+    /// \private: error trap. In case of error, it selects this constructor and make one simple error message
+    /// instead of presenting the whole, long list of constructors
+    template <typename T, int R2, typename L, char A, typename CP>
+    basic_array_view(basic_array<T, R2, L, A, CP> const &) {
+      // It can not happen, the previous constructor has priority
+      static_assert(R2 == Rank, "Rank error in constructing a view");
+    }
+
     ///
     template <typename T, typename L, char A, typename AP, typename OP>
     basic_array_view(basic_array_view<T, Rank, L, A, AP, OP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
+
+    /// \private: error trap
+    template <typename T, int R2, typename L, char A, typename AP, typename OP>
+    basic_array_view(basic_array_view<T, R2, L, A, AP, OP> const &) {
+      // It can not happen, the previous constructor has priority
+      static_assert(R2 == Rank, "Rank error in constructing a view");
+    }
 
     /** 
      * [Advanced] From a pointer to **contiguous data**, and a shape.
@@ -180,7 +195,7 @@ namespace nda {
      * @param a
      * @param b
      */
-    friend void deep_swap(basic_array_view a, basic_array_view b) noexcept{
+    friend void deep_swap(basic_array_view a, basic_array_view b) noexcept {
       auto tmp = make_regular(a);
       a        = b;
       b        = tmp;

@@ -82,7 +82,7 @@ namespace nda {
 
   template <ARRAY_INT Permutation, typename T, int R, typename L, char Algebra, typename ContainerPolicy>
   auto permuted_indices_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a) {
-    return permuted_indices_view(basic_array_view<T const, R, L, Algebra, default_accessor, borrowed>(a));
+    return permuted_indices_view<Permutation>(basic_array_view<T const, R, L, Algebra, default_accessor, borrowed>(a));
   }
 
   template <ARRAY_INT Permutation, typename T, int R, typename L, char Algebra, typename ContainerPolicy>

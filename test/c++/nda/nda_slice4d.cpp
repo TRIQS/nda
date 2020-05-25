@@ -20,7 +20,11 @@ void test4d() {
   A a(N0, N1, N2, N3);
 
   long c = 0;
-  for (auto &x : a) x = c++; // in memory order, 0,1,2,3,4 ....
+  for (auto &x : a) {
+    // Checks that the iterator in indeed going one by one in memory, even with a non trivial StrideOrder 
+    EXPECT_EQ(std::distance(&(*std::begin(a)), &x), c);
+    x = c++; // in memory order, 0,1,2,3,4 ....
+  }
 
   auto check = [n = 0](auto v) mutable {
     bool is_contiguous          = (v.indexmap().layout_prop == nda::layout_prop_e::contiguous);
@@ -98,4 +102,3 @@ TEST(Slice, ContiguityComputation4dfull) { //NOLINT
   test4d<nda::encode(std::array{0, 3, 1, 2})>();
   test4d<nda::encode(std::array{3, 0, 1, 2})>();
 }
-

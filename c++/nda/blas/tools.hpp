@@ -20,7 +20,7 @@ namespace nda::blas {
   // check all A have the same element_type
   template <typename A0, typename... A>
   inline constexpr bool have_same_element_type_and_it_is_blas_type_v =
-     is_blas_lapack_v<typename A0::value_type> and (std::is_same_v<typename A::value_type, typename A0::value_type> and ... and true);
+     is_blas_lapack_v<typename A0::value_type> and (std::is_same_v<std::remove_const_t<typename A::value_type>, std::remove_const_t<typename A0::value_type>> and ... and true);
 
   template <typename MatrixType>
   char get_trans(MatrixType const &A, bool transpose) {
