@@ -3,64 +3,18 @@
 #include <numpy/arrayobject.h>
 
 #include <vector>
+
 #include <nda/nda.hpp>
+
+#include <cpp2py/numpy_proxy.hpp>
+
 #include "make_py_capsule.hpp"
 
 namespace nda::python {
 
-  using v_t = std::vector<long>;
-
-  // the basic information for a numpy array
-  struct numpy_proxy {
-    int rank          = 0;
-    long element_type = 0;
-    void *data        = nullptr;
-    bool is_const     = false;
-    v_t extents, strides;
-    PyObject *base = nullptr; // The ref. counting guard typically
-
-    // Returns a new ref (or NULL if failure) with a new numpy.
-    // If failure, return null with the Python exception set
-    PyObject *to_python();
-  };
-
-  // From a numpy, extract the info. Better than a constructor, I want to use the aggregate constructor of the struct also.
-  numpy_proxy make_numpy_proxy(PyObject *);
-
-  // Make a copy in Python with the given rank and element_type
-  // If failure, return null with the Python exception set
-  PyObject *make_numpy_copy(PyObject *obj, int rank, long elements_type);
-
-  //
-  template <typename T>
-  inline long npy_type();
-
-#define CONVERT(C, P)                                                                                                                                \
-  template <>                                                                                                                                        \
-  inline long npy_type<C>() {                                                                                                                        \
-    return P;                                                                                                                                        \
-  }
-  CONVERT(bool, NPY_BOOL)
-  CONVERT(char, NPY_STRING)
-  CONVERT(signed char, NPY_BYTE)
-  CONVERT(unsigned char, NPY_UBYTE)
-  CONVERT(short, NPY_SHORT)
-  CONVERT(unsigned short, NPY_USHORT)
-  CONVERT(int, NPY_INT)
-  CONVERT(unsigned int, NPY_UINT)
-  CONVERT(long, NPY_LONG)
-  CONVERT(unsigned long, NPY_ULONG)
-  CONVERT(long long, NPY_LONGLONG)
-  CONVERT(unsigned long long, NPY_ULONGLONG)
-  CONVERT(float, NPY_FLOAT)
-  CONVERT(double, NPY_DOUBLE)
-  CONVERT(long double, NPY_LONGDOUBLE)
-  CONVERT(std::complex<float>, NPY_CFLOAT)
-  CONVERT(std::complex<double>, NPY_CDOUBLE)
-  CONVERT(std::complex<long double>, NPY_CLONGDOUBLE)
-#undef CONVERT
-
-  // ------------------------------------------
+  using cpp2py::make_numpy_copy;
+  using cpp2py::make_numpy_proxy;
+  using cpp2py::numpy_proxy;
 
   // Convert array to numpy_proxy
   template <typename A>

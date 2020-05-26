@@ -1,19 +1,15 @@
 # Configure the version
 configure_file(version.py.in version.py)
 
-# nda_py library
-add_library(nda_py nda_py.cpp)
+# nda_py interface library
+add_library(nda_py INTERFACE)
 add_library(nda::nda_py ALIAS nda_py)
 
-# Enable warnings
-target_link_libraries(nda_py PRIVATE nda_c python_and_numpy $<BUILD_INTERFACE:nda_warnings>)
-
 # Configure target and compilation
-target_compile_options(nda_py PUBLIC -std=c++17 $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
-set_property(TARGET nda_py PROPERTY POSITION_INDEPENDENT_CODE ON)
-target_include_directories(nda_py PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/python> $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/c++>)
+target_compile_options(nda_py INTERFACE -std=c++17 $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
+target_include_directories(nda_py INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/python> $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/c++>)
 target_include_directories(nda_py SYSTEM INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>)
-target_compile_definitions(nda_py PUBLIC
+target_compile_definitions(nda_py INTERFACE
 				NDA_GIT_HASH=${PROJECT_GIT_HASH}
 				$<$<CONFIG:Debug>:NDA_DEBUG>
 			  )
@@ -21,9 +17,19 @@ target_compile_definitions(nda_py PUBLIC
 
 
 # Install library and headers
-install(TARGETS nda_py python_and_numpy EXPORT nda-targets DESTINATION lib)
+install(TARGETS nda_py EXPORT nda-targets DESTINATION lib)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
 
+# ========= Dependencies ==========
+
+# nda_c
+target_link_libraries(nda_py INTERFACE nda_c)
+
+# Cpp2Py
+target_link_libraries(nda_py INTERFACE cpp2py::cpp2py)
+
+# Python and Numpy
+target_link_libraries(nda_py INTERFACE cpp2py::python_and_numpy)
 
 # ========= Static Analyzer Checks ==========
 
@@ -75,13 +81,13 @@ if(ASAN)
   if(NOT TARGET asan)
     find_package(sanitizer REQUIRED "asan")
   endif()
-  target_link_libraries(nda_py PUBLIC $<BUILD_INTERFACE:asan>)
+  target_link_libraries(nda_py INTERFACE $<BUILD_INTERFACE:asan>)
 endif()
 if(UBSAN)
   if(NOT TARGET ubsan)
     find_package(sanitizer REQUIRED "ubsan")
   endif()
-  target_link_libraries(nda_py PUBLIC $<BUILD_INTERFACE:ubsan>)
+  target_link_libraries(nda_py INTERFACE $<BUILD_INTERFACE:ubsan>)
 endif()
 
 if(MSAN)
@@ -90,5 +96,5 @@ if(MSAN)
     target_compile_options(msan INTERFACE -fsanitize=memory -fno-omit-frame-pointer -fsanitize-recover=all -fsanitize-memory-track-origins=2 -O1 -ggdb3)
     target_link_libraries(msan INTERFACE "-fsanitize=memory -fno-omit-frame-pointer -fsanitize-recover=all -fsanitize-memory-track-origins=2")
   endif()
-  target_link_libraries(nda_py PUBLIC $<BUILD_INTERFACE:msan>)
+  target_link_libraries(nda_py INTERFACE $<BUILD_INTERFACE:msan>)
 endif()
