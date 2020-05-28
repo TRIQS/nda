@@ -28,7 +28,7 @@ namespace nda::python {
     }
 
     return {A::rank,
-            npy_type<std::remove_const_t<typename A::value_type>>(),
+            npy_type<std::remove_const_t<typename A::value_type>>,
             (void *)a.data_start(),
             std::is_const_v<typename A::value_type>,
             std::move(extents),
@@ -42,7 +42,7 @@ namespace nda::python {
   bool is_convertible_to_array_view(PyObject *obj) {
     if (not PyArray_Check(obj)) return false;
     PyArrayObject *arr = (PyArrayObject *)(obj);
-    if (PyArray_TYPE(arr) != npy_type<T>()) return false;
+    if (PyArray_TYPE(arr) != npy_type<T>) return false;
 #ifdef PYTHON_NUMPY_VERSION_LT_17
     int rank = arr->nd;
 #else
