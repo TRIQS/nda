@@ -1,0 +1,58 @@
+{% set version = "2.2.1" %}
+
+package:
+  name: app4triqs
+  version: {{ version }}
+
+source:
+  url: https://github.com/TRIQS/app4triqs/releases/download/{{ version }}/app4triqs-{{ version }}.tar.gz
+  sha256: # Put here the sha256sum of the arxiv
+
+build:
+  number: 0
+  skip: True  # [win or py>30]
+
+requirements:
+  build:
+    - cmake
+    - make
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+  host:
+    - triqs {{ '.'.join(version.split('.')[:2]) }}
+    - boost-cpp
+    - nfft
+    - hdf5
+    - {{ mpi }}
+    - libblas
+    - liblapack
+    - python
+  run:
+    - {{ pin_compatible("triqs", max_pin="x.x") }}
+    - nfft
+    - hdf5
+    - {{ mpi }}
+    - libblas
+    - liblapack
+    - python
+
+test:
+  commands:
+    - export OMPI_MCA_btl=self,tcp
+    - export OMPI_MCA_plm=isolated
+    - export OMPI_MCA_rmaps_base_oversubscribe=yes
+    - export OMPI_MCA_btl_vader_single_copy_mechanism=none
+    - export mpiexec="mpiexec --allow-run-as-root"
+    - python -c "import triqs_cthyb"
+
+about:
+  home: https://triqs.github.io/cthyb
+  license: GPL-3.0-or-later
+  license_family: GPL
+  license_file: LICENSE.txt
+  summary: 'A skeleton for a TRIQS application'
+
+extra:
+  recipe-maintainers:
+    - wentzell
+    - pgunn

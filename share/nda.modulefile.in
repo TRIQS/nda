@@ -1,13 +1,13 @@
 #%Module1.0
 #
-# To be installed as ${MODULEPATH}/nda/@PROJECT_VERSION@
+# To be installed as ${MODULEPATH}/@PROJECT_NAME@/@PROJECT_VERSION@
 
-set     name        nda
+set     name        @PROJECT_NAME@
 set     version     @PROJECT_VERSION@
 set     root        @CMAKE_INSTALL_PREFIX@
 set     git_hash    @PROJECT_GIT_HASH@
 
-set     url         "https://github.com/TRIQS/nda"
+set     url         "https://github.com/TRIQS/@PROJECT_NAME@"
 set     description "An example application using cpp2py and triqs."
 
 module-whatis   "$description"
@@ -20,12 +20,12 @@ proc ModulesHelp { } {
     puts stderr "Git hash:    $git_hash"
 }
 
-# Only one version of nda can be loaded at a time
+# Only one version of @PROJECT_NAME@ can be loaded at a time
 conflict $name
 
-setenv          NDA_ROOT      $root
-setenv          NDA_VERSION   $version
-setenv          NDA_GIT_HASH  $git_hash
+setenv          @PROJECT_NAME@_ROOT      $root
+setenv          @PROJECT_NAME@_VERSION   $version
+setenv          @PROJECT_NAME@_GIT_HASH  $git_hash
 
 prepend-path    PATH                $root/bin
 prepend-path    CPLUS_INCLUDE_PATH  $root/include

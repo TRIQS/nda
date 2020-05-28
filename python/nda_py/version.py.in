@@ -2,7 +2,8 @@
 #
 # TRIQS: a Toolbox for Research in Interacting Quantum Systems
 #
-# Copyright (C) 2020, Simons Foundation
+# Copyright (C) 2016-2018, N. Wentzell
+# Copyright (C) 2018-2019, Simons Foundation
 #   author: N. Wentzell
 #
 # TRIQS is free software: you can redistribute it and/or modify it under the
@@ -21,10 +22,10 @@
 ################################################################################
 
 version = "@PROJECT_VERSION@"
-nda_hash = "@PROJECT_GIT_HASH@"
+@PROJECT_NAME@_hash = "@PROJECT_GIT_HASH@"
 
 def show_version():
-  print("\nYou are using nda version %s\n"%version)
+  print("\nYou are using @PROJECT_NAME@ version %s\n"%version)
 
 def show_git_hash():
-  print("\nYou are using nda git hash %s based on triqs git hash %s\n"%(nda_hash, triqs_hash))
+  print("\nYou are using @PROJECT_NAME@ git hash %s\n"%("@PROJECT_GIT_HASH@"))

@@ -13,15 +13,17 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.todo',
               'sphinx.ext.viewcode',
               'sphinx.ext.autosummary',
+              'sphinx.ext.githubpages',
               'matplotlib.sphinxext.plot_directive',
               'autorun',
               'numpydoc']
 
 source_suffix = '.rst'
 
-project = u'NDA - A multi-dimensional array class for C++'
-copyright = u'2018-2019 N. Wentzell, O. Parcollet 2019-2020 Simons Foundation'
+project = '@PROJECT_NAME@ - A multi-dimensional array class for C++'
 version = '@PROJECT_VERSION@'
+
+copyright = '2018-2019 N. Wentzell, O. Parcollet 2019-2020 The Simons Foundation, authors: N. Wentzell, O. Parcollet'
 
 mathjax_path = "https://raw.githubusercontent.com/mathjax/MathJax/2.7.8/MathJax.js"
 templates_path = ['@CMAKE_CURRENT_SOURCE_DIR@/_templates']
@@ -29,15 +31,15 @@ templates_path = ['@CMAKE_CURRENT_SOURCE_DIR@/_templates']
 html_theme = 'triqs'
 html_theme_path = ['@CMAKE_CURRENT_SOURCE_DIR@/themes']
 html_show_sphinx = False
-html_context = {'header_title': 'nda',
-                'header_subtitle': 'An example application using cpp2py and <a class="triqs" style="font-size: 12px" href="https://triqs.github.io">TRIQS</a>',
+html_context = {'header_title': '@PROJECT_NAME@',
+                'header_subtitle': 'A multi-dimensional array class for C++',
                 'header_links': [['Install', 'install'],
                                  ['Documentation', 'documentation'],
                                  ['Issues', 'issues'],
-                                 ['About nda', 'about']]}
+                                 ['About @PROJECT_NAME@', 'about']]}
 html_static_path = ['@CMAKE_CURRENT_SOURCE_DIR@/_static']
 html_sidebars = {'index': ['sideb.html', 'searchbox.html']}
 
-htmlhelp_basename = 'NDAdoc'
+htmlhelp_basename = '@PROJECT_NAME@doc'
 
-intersphinx_mapping = {'python': ('http://docs.python.org/2.7', None), 'triqslibs': ('https://triqs.github.io/triqs/latest', None)}
+intersphinx_mapping = {'python': ('http://docs.python.org/2.7', None)}

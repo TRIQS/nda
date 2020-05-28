@@ -1,10 +1,10 @@
-configure_file(nda-config.cmake.in nda-config.cmake @ONLY)
-configure_file(nda-config-version.cmake.in nda-config-version.cmake @ONLY)
+configure_file(${PROJECT_NAME}-config.cmake.in ${PROJECT_NAME}-config.cmake @ONLY)
+configure_file(${PROJECT_NAME}-config-version.cmake.in ${PROJECT_NAME}-config-version.cmake @ONLY)
 install(
   FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/nda-config.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/nda-config-version.cmake
-  DESTINATION lib/cmake/nda
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+  DESTINATION lib/cmake/${PROJECT_NAME}
 )
 
-install(EXPORT nda-targets NAMESPACE nda:: DESTINATION lib/cmake/nda)
+install(EXPORT ${PROJECT_NAME}-targets NAMESPACE ${PROJECT_NAME}:: DESTINATION lib/cmake/${PROJECT_NAME})

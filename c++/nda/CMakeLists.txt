@@ -1,32 +1,31 @@
 file(GLOB_RECURSE sources *.cpp)
-add_library(nda_c ${sources})
-add_library(nda::nda_c ALIAS nda_c)
+add_library(${PROJECT_NAME}_c ${sources})
+add_library(${PROJECT_NAME}::${PROJECT_NAME}_c ALIAS ${PROJECT_NAME}_c)
 
 # Enable warnings
-target_link_libraries(nda_c PRIVATE $<BUILD_INTERFACE:nda_warnings>)
+target_link_libraries(${PROJECT_NAME}_c PRIVATE $<BUILD_INTERFACE:${PROJECT_NAME}_warnings>)
 
-# Configure compilation
-target_compile_options(nda_c PUBLIC -std=c++17 $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
-set_property(TARGET nda_c PROPERTY POSITION_INDEPENDENT_CODE ON)
-target_include_directories(nda_c PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/c++>)
-target_include_directories(nda_c SYSTEM INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>)
-target_compile_definitions(nda_c PUBLIC
+# Configure target and compilation
+set_property(TARGET ${PROJECT_NAME}_c PROPERTY POSITION_INDEPENDENT_CODE ON)
+target_compile_options(${PROJECT_NAME}_c PUBLIC -std=c++17 $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
+target_include_directories(${PROJECT_NAME}_c PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/c++>)
+target_include_directories(${PROJECT_NAME}_c SYSTEM INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>)
+target_compile_definitions(${PROJECT_NAME}_c PUBLIC
 				NDA_GIT_HASH=${PROJECT_GIT_HASH}
 				$<$<CONFIG:Debug>:NDA_DEBUG>
 			  )
 
 # Install library and headers
-install(TARGETS nda_c EXPORT nda-targets DESTINATION lib)
+install(TARGETS ${PROJECT_NAME}_c EXPORT ${PROJECT_NAME}-targets DESTINATION lib)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
-
 
 # ========= Additional Depdencies ==========
 
 # Link against HDF5 C++ Interface
-target_link_libraries(nda_c PUBLIC h5::h5_c)
+target_link_libraries(${PROJECT_NAME}_c PUBLIC h5::h5_c)
 
 # Link against MPI C++ Interface
-target_link_libraries(nda_c PUBLIC mpi::mpi_c)
+target_link_libraries(${PROJECT_NAME}_c PUBLIC mpi::mpi_c)
 
 
 # ========= Blas / Lapack ==========
@@ -37,14 +36,15 @@ find_package(LAPACK REQUIRED)
 
 # Create an interface target
 add_library(blas_lapack INTERFACE)
-add_library(nda::blas_lapack ALIAS blas_lapack)
+add_library(${PROJECT_NAME}::blas_lapack ALIAS blas_lapack)
 list(REMOVE_DUPLICATES LAPACK_LIBRARIES)
 target_link_libraries(blas_lapack INTERFACE ${LAPACK_LIBRARIES})
 target_compile_options(blas_lapack INTERFACE ${LAPACK_LINKER_FLAGS})
 
 # Link against interface target and export
-target_link_libraries(nda_c PRIVATE blas_lapack)
-install(TARGETS blas_lapack EXPORT nda-targets)
+target_link_libraries(${PROJECT_NAME}_c PRIVATE blas_lapack)
+install(TARGETS blas_lapack EXPORT ${PROJECT_NAME}-targets)
+
 
 
 # ========= Static Analyzer Checks ==========
@@ -59,7 +59,7 @@ if(ANALYZE_SOURCES)
   # Run clang-tidy if found
   if(CLANG_TIDY_EXECUTABLE)
     message(STATUS "clang-tidy found: ${CLANG_TIDY_EXECUTABLE}")
-    set_target_properties(nda_c PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXECUTABLE}")
+    set_target_properties(${PROJECT_NAME}_c PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXECUTABLE}")
   else()
     message(STATUS "clang-tidy not found in $PATH. Please consider installing clang-tidy for additional checks!")
   endif()
@@ -68,14 +68,17 @@ if(ANALYZE_SOURCES)
   if(CPPCHECK_EXECUTABLE)
     message(STATUS "cppcheck found: ${CPPCHECK_EXECUTABLE}")
     add_custom_command(
-	TARGET nda_c
+	TARGET ${PROJECT_NAME}_c
 	COMMAND ${CPPCHECK_EXECUTABLE}
 	  --enable=warning,style,performance,portability
 	  --std=c++17
 	  --template=gcc
 	  --verbose
+	  --force
 	  --quiet
           ${sources}
+	WORKING_DIRECTORY
+	  ${CMAKE_CURRENT_SOURCE_DIR}
     )
   else()
     message(STATUS "cppcheck not found in $PATH. Please consider installing cppcheck for additional checks!")
@@ -94,13 +97,13 @@ if(ASAN)
   if(NOT TARGET asan)
     find_package(sanitizer REQUIRED "asan")
   endif()
-  target_link_libraries(nda_c PUBLIC $<BUILD_INTERFACE:asan>)
+  target_link_libraries(${PROJECT_NAME}_c PUBLIC $<BUILD_INTERFACE:asan>)
 endif()
 if(UBSAN)
   if(NOT TARGET ubsan)
     find_package(sanitizer REQUIRED "ubsan")
   endif()
-  target_link_libraries(nda_c PUBLIC $<BUILD_INTERFACE:ubsan>)
+  target_link_libraries(${PROJECT_NAME}_c PUBLIC $<BUILD_INTERFACE:ubsan>)
 endif()
 
 if(MSAN)
@@ -109,5 +112,5 @@ if(MSAN)
     target_compile_options(msan INTERFACE -fsanitize=memory -fno-omit-frame-pointer -fsanitize-recover=all -fsanitize-memory-track-origins=2 -O1 -ggdb3)
     target_link_libraries(msan INTERFACE "-fsanitize=memory -fno-omit-frame-pointer -fsanitize-recover=all -fsanitize-memory-track-origins=2")
   endif()
-  target_link_libraries(nda_c PUBLIC $<BUILD_INTERFACE:msan>)
+  target_link_libraries(${PROJECT_NAME}_c PUBLIC $<BUILD_INTERFACE:msan>)
 endif()

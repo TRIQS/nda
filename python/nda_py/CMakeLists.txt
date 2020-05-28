@@ -3,7 +3,7 @@ configure_file(version.py.in version.py)
 
 # nda_py interface library
 add_library(nda_py INTERFACE)
-add_library(nda::nda_py ALIAS nda_py)
+add_library(${PROJECT_NAME}:nda_py ALIAS nda_py)
 
 # Configure target and compilation
 target_compile_options(nda_py INTERFACE -std=c++17 $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
@@ -17,10 +17,10 @@ target_compile_definitions(nda_py INTERFACE
 
 
 # Install library and headers
-install(TARGETS nda_py EXPORT nda-targets DESTINATION lib)
+install(TARGETS nda_py EXPORT ${PROJECT_NAME}-targets DESTINATION lib)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
 
-# ========= Dependencies ==========
+# ========= Additional Depdencies ==========
 
 # nda_c
 target_link_libraries(nda_py INTERFACE nda_c)

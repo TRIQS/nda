@@ -30,7 +30,7 @@ endif()
 
 # ############
 # Define Project
-project(NDA VERSION 0.8.0 LANGUAGES C CXX)
+project(nda VERSION 0.8.0 LANGUAGES C CXX)
 get_directory_property(IS_SUBPROJECT PARENT_DIRECTORY)
 
 # Get the git hash & print status
@@ -45,7 +45,7 @@ endif()
 if(NOT IS_SUBPROJECT)
   message(STATUS "-------- CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX} --------")
 endif()
-set(NDA_BINARY_DIR ${PROJECT_BINARY_DIR} CACHE STRING "Binary directory of the NDA Project")
+set(${PROJECT_NAME}_BINARY_DIR ${PROJECT_BINARY_DIR} CACHE STRING "Binary directory of the ${PROJECT_NAME} Project")
 
 
 # ############
@@ -85,8 +85,8 @@ add_compile_options(
 )
 
 # Create an Interface target for compiler warnings
-add_library(nda_warnings INTERFACE)
-target_compile_options(nda_warnings
+add_library(${PROJECT_NAME}_warnings INTERFACE)
+target_compile_options(${PROJECT_NAME}_warnings
   INTERFACE
     -Wall
     -Wextra
@@ -127,20 +127,20 @@ enable_testing()
 # Find / Build dependencies
 add_subdirectory(deps)
 
-# Build and install the nda library
-add_subdirectory(c++/nda)
+# Build and install the library
+add_subdirectory(c++/${PROJECT_NAME})
 
 # Create interface target for and install clef library
 add_subdirectory(c++/clef)
 
-# Build and install the Python modules
-if(PythonSupport)
-  add_subdirectory(python/nda_py)
-endif()
-
 # Tests
 if(Build_Tests)
   add_subdirectory(test)
+endif()
+
+# Python
+if(PythonSupport)
+  add_subdirectory(python/nda_py)
 endif()
 
 # Benchmarks
@@ -165,10 +165,10 @@ if(BUILD_DEBIAN_PACKAGE AND NOT IS_SUBPROJECT)
   if(NOT CMAKE_INSTALL_PREFIX STREQUAL "/usr")
     message(FATAL_ERROR "CMAKE_INSTALL_PREFIX must be /usr for packaging")
   endif()
-  set(CPACK_PACKAGE_NAME nda)
+  set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
   set(CPACK_GENERATOR "DEB")
   set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
-  set(CPACK_PACKAGE_CONTACT "https://github.com/TRIQS/nda")
+  set(CPACK_PACKAGE_CONTACT "https://github.com/TRIQS/${PROJECT_NAME}")
   execute_process(COMMAND dpkg --print-architecture OUTPUT_VARIABLE CMAKE_DEBIAN_PACKAGE_ARCHITECTURE OUTPUT_STRIP_TRAILING_WHITESPACE)
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
   set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
