@@ -26,15 +26,17 @@ namespace nda {
   // --------------- applications of fold -----------------------
 
   /// Returns true iif at least one element of the array is true
-  template <typename A>
-  bool any(A const &a) REQUIRES(is_ndarray_v<A>) {
+  /// \ingroup Algorithms
+  template <CONCEPT(Array) A>
+  bool any(A const &a) REQUIRES17(is_ndarray_v<A>) {
     static_assert(std::is_same_v<get_value_t<A>, bool>, "OOPS");
     return fold([](bool r, auto const &x) -> bool { return r or bool(x); }, a, false);
   }
 
   /// Returns true iif all elements of the array are true
-  template <typename A>
-  bool all(A const &a) REQUIRES(is_ndarray_v<A>) {
+  /// \ingroup Algorithms
+  template <CONCEPT(Array) A>
+  bool all(A const &a) REQUIRES17(is_ndarray_v<A>) {
     static_assert(std::is_same_v<get_value_t<A>, bool>, "OOPS");
     return fold([](bool r, auto const &x) -> bool { return r and bool(x); }, a, true);
   }
@@ -43,9 +45,10 @@ namespace nda {
    * @tparam A Anything modeling NdArray
    * @param a The object of type A
    * @return The maximum element of A
+   * \ingroup Algorithms
    */
-  template <typename A>
-  auto max_element(A const &a) REQUIRES(is_ndarray_v<A>) {
+  template <CONCEPT(Array) A>
+  auto max_element(A const &a) REQUIRES17(is_ndarray_v<A>) {
     return fold(
        [](auto const &x, auto const &y) {
          using std::max;
@@ -58,9 +61,10 @@ namespace nda {
    * @tparam A Anything modeling NdArray
    * @param a The object of type A
    * @return The minimum element of A
+   * \ingroup Algorithms
    */
-  template <typename A>
-  auto min_element(A const &a) REQUIRES(is_ndarray_v<A>) {
+  template <CONCEPT(Array) A>
+  auto min_element(A const &a) REQUIRES17(is_ndarray_v<A>) {
     return fold(
        [](auto const &x, auto const &y) {
          using std::min;
@@ -92,10 +96,10 @@ namespace nda {
    * @tparam A Anything modeling NdArray
    * @param a The object of type A
    * @return The sum of all elements of a 
+   * \ingroup Algorithms
    */
-
-  template <typename A>
-  auto sum(A const &a) REQUIRES(is_ndarray_v<A>) {
+  template <CONCEPT(Array) A>
+  auto sum(A const &a) REQUIRES17(is_ndarray_v<A>) {
     return fold(std::plus<>{}, a);
   }
 

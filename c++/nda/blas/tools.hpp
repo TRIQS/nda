@@ -18,9 +18,30 @@ namespace nda::blas {
   inline constexpr bool is_blas_lapack_v = _is_blas_lapack<std::remove_const_t<T>>::value;
 
   // check all A have the same element_type
+  // remove the ref here, this trait is exposed in the doc, it is simpler
   template <typename A0, typename... A>
-  inline constexpr bool have_same_element_type_and_it_is_blas_type_v =
-     is_blas_lapack_v<typename A0::value_type> and (std::is_same_v<std::remove_const_t<typename A::value_type>, std::remove_const_t<typename A0::value_type>> and ... and true);
+  inline constexpr bool have_same_value_type_v = (std::is_same_v<std::remove_const_t<typename std::remove_reference_t<A>::value_type>,
+                                                                 std::remove_const_t<typename std::remove_reference_t<A0>::value_type>> and ...
+                                                  and true);
+
+#if __cplusplus > 201703L
+
+  // anyway from which I can make a MatrixView out
+  template <typename A> concept MatrixView = (is_regular_or_view_v<std::decay_t<A>> and get_rank<std::decay_t<A>> ==2);
+
+    // anyway from which I can make a MatrixView out
+  //template <typename A, typename T> concept MatrixViewOf = MatrixView<A> and (std::is_same_v<T, typename A::value_type>);
+
+  template <typename T> concept IsDoubleOrComplex = is_blas_lapack_v<T>;
+
+  // anyway from which I can make a VectorView out
+  template <typename A> concept VectorView = (is_regular_or_view_v<std::decay_t<A>> and get_rank<std::decay_t<A>> ==1);
+
+#endif
+
+  // FIXME : kill this
+  template <typename A0, typename... A>
+  inline constexpr bool have_same_element_type_and_it_is_blas_type_v = have_same_value_type_v<A0, A...> and is_blas_lapack_v<typename A0::value_type>;
 
   template <typename MatrixType>
   char get_trans(MatrixType const &A, bool transpose) {

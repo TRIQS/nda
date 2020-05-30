@@ -5,9 +5,17 @@
 
 namespace nda::blas {
 
-  // make the generic version for non lapack types or more complex types
-  // largely suboptimal
-  template <typename A, typename B, typename Out>
+  /**
+   * Compute c <- alpha a*b + beta * c using BLAS dgemm or zgemm 
+   * 
+   * using a generic version for non lapack types or more complex types
+   * largely suboptimal. For testing, or in case of value_type being a complex type.
+   * SHOULD not be used with double and dcomplex
+   *
+   * \private : DO NOT DOCUMENT, testing only ??
+   */
+  template <CONCEPT(MatrixView) A, CONCEPT(MatrixView) B, CONCEPT(MatrixView) Out>
+
   void gemm_generic(typename A::value_type alpha, A const &a, B const &b, typename A::value_type beta, Out &c) {
 
     EXPECTS(a.extent(1) == b.extent(0));
@@ -24,33 +32,21 @@ namespace nda::blas {
   }
 
   /**
-   * Calls gemm on a matrix, matrix_view, array, array_view of rank 2
-   * to compute c <- alpha a*b + beta * c
+   * Compute c <- alpha a*b + beta * c using BLAS dgemm or zgemm 
    *
-   * @tparam A matrix, matrix_view, array, array_view of rank 2
-   * @tparam B matrix, matrix_view, array, array_view of rank 2
-   * @tparam C matrix, matrix_view, array, array_view of rank 2
-   * @param alpha
-   * @param a 
-   * @param b
-   * @param beta
-   * @param c The result. Can be a temporary view. 
+   * @param c Out parameter. Can be a temporary view (hence the &&).
    *         
-   * @StaticPrecondition : A, B, C have the same value_type and it is complex<double> or double         
    * @Precondition : 
    *       * c has the correct dimension given a, b. 
    *         gemm does not resize the object, 
    */
-  template <typename A, typename B, typename C>
+  template <CONCEPT(MatrixView) A, CONCEPT(MatrixView) B, CONCEPT(MatrixView) C>
+
+  REQUIRES(have_same_value_type_v<A, B, C> and is_blas_lapack_v<typename A::value_type>)
+
   void gemm(typename A::value_type alpha, A const &a, B const &b, typename A::value_type beta, C &&c) {
 
     using C_t = std::decay_t<C>;
-    static_assert(is_regular_or_view_v<C_t>, "gemm: Out must be a matrix, matrix_view, array or array_view of rank 2");
-    static_assert(A::rank == 2, "A must be of rank 2");
-    static_assert(B::rank == 2, "B must be of rank 2");
-    static_assert(C_t::rank == 2, "C must be of rank 2");
-    static_assert(have_same_element_type_and_it_is_blas_type_v<A, B, C_t>,
-                  "Matrices must have the same element type and it must be double, complex ...");
 
     EXPECTS(a.extent(1) == b.extent(0));
     EXPECTS(a.extent(0) == c.extent(0));

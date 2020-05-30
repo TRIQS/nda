@@ -1,3 +1,16 @@
+/**
+ * Copyright (C) 2020 by Simons Foundation
+ *     authors : O. Parcollet
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
+*/
 #pragma once
 #include <algorithm>
 #include "basic_array_view.hpp"
@@ -27,10 +40,10 @@ namespace nda {
     static constexpr bool is_view  = false;
 
     public:
-    ///
+    /// T
     using value_type = ValueType;
 
-    // FIXME layout_t
+    /// The type of the layout
     using layout_t = typename Layout::template mapping<Rank>;
 
     private:
@@ -44,8 +57,8 @@ namespace nda {
     layout_t lay;
     storage_t sto;
 
-    template <typename T, int R, typename L, char A, typename C, typename NewLayoutType>
-    friend auto map_layout_transform(basic_array<T, R, L, A, C> &&a, NewLayoutType const &new_layout);
+    template <typename U, int R, typename L, char A, typename C, typename NewLayoutType>
+    friend auto map_layout_transform(basic_array<U, R, L, A, C> &&a, NewLayoutType const &new_layout);
 
     // private constructor for the friend
     basic_array(layout_t const &idxm, storage_t &&mem_handle) noexcept : lay(idxm), sto(std::move(mem_handle)) {}
