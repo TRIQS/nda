@@ -1,6 +1,27 @@
 #pragma once
 namespace nda {
 
+  // --------------------------- zeros ------------------------
+
+  /// Make a array of zeros with the given dimensions.
+  /// Return a scalar for the case of rank zero.
+  /// If we want more general array, use the static factory zeros [See also]
+  template <typename T, CONCEPT(std::integral) Int, auto Rank>
+  REQUIRES(std::is_arithmetic_v<T> or nda::is_complex_v<T>)
+  auto zeros(std::array<Int, Rank> const &shape) {
+    // For Rank == 0 we should return the underlying scalar_t
+    if constexpr (Rank == 0)
+      return T{0};
+    else
+      return array<T, Rank>::zeros(shape);
+  }
+
+  /// 
+  template <typename T, CONCEPT(std::integral)... Int>
+  auto zeros(Int... i) {
+    return zeros<T>(std::array<long, sizeof...(Int)>{i...});
+  }
+
   // --------------------------- make_regular ------------------------
   // general make_regular
   // FIXME : auto return ?  regular_t<A> ?

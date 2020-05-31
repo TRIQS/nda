@@ -61,7 +61,8 @@ namespace nda {
     friend auto map_layout_transform(basic_array<U, R, L, A, C> &&a, NewLayoutType const &new_layout);
 
     // private constructor for the friend
-    basic_array(layout_t const &idxm, storage_t &&mem_handle) noexcept : lay(idxm), sto(std::move(mem_handle)) {}
+    basic_array(layout_t const &idxm, storage_t &&mem_handle) noexcept : lay{idxm}, sto{std::move(mem_handle)} {}
+    basic_array(std::array<long, Rank> const &shape, mem::init_zero_t) noexcept : lay{shape}, sto{lay.size(), mem::init_zero} {}
 
     public:
     // ------------------------------- constructors --------------------------------------------
@@ -211,6 +212,19 @@ namespace nda {
     explicit basic_array(basic_array<ValueType, 2, Layout, Algebra2, ContainerPolicy> &&am) noexcept
        REQUIRES(Rank == 2) // NB Rank =2 since matrix/array for the moment. generalize if needed
        : basic_array{am.indexmap(), std::move(am).storage()} {}
+
+    //------------------ Factory -------------------------
+
+    template <CONCEPT(std::integral) Int>
+    static basic_array zeros(std::array<Int, Rank> const &shape) REQUIRES((std::is_arithmetic_v<ValueType> or nda::is_complex_v<ValueType>)) {
+      return basic_array{make_std_array<long>(shape), mem::init_zero};
+    }
+
+    /// \private error trap
+    template <CONCEPT(std::integral) Int, auto R>
+    static auto zeros(std::array<Int, R> const &) {
+      static_assert((R == Rank), "Incorrect dimension of the shape");
+    }
 
     //------------------ Assignment -------------------------
 

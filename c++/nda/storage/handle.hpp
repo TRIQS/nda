@@ -292,7 +292,10 @@ namespace nda::mem {
     handle_stack(long /*size*/, do_not_initialize_t) {}
 
     // Set up a memory block of the correct size without initializing it
-    handle_stack(long /*size*/, init_zero_t) { static_assert(std::is_scalar_v<T> or is_complex_v<T>, "Internal Error"); }
+    handle_stack(long /*size*/, init_zero_t) {
+      static_assert(std::is_scalar_v<T> or is_complex_v<T>, "Internal Error");
+      for (size_t i = 0; i < Size; ++i) data()[i] = 0;
+    }
 
     handle_stack &operator=(handle_stack const &x) {
       for (size_t i = 0; i < Size; ++i) new (data() + i) T(x[i]); // placement new
@@ -411,6 +414,7 @@ namespace nda::mem {
       _size = size;
       if (not on_heap()) {
         _data = (T *)buffer.data();
+        for (size_t i = 0; i < _size; ++i) data()[i] = 0;
       } else {
         auto b = allocators::mallocator::allocate_zero(size * sizeof(T)); //, alignof(T));
         ASSERT(b.ptr != nullptr);
