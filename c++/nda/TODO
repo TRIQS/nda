@@ -10,14 +10,27 @@
 - gelss 
   basic one is NOT done 
 
+- rtable -> simple std::shared_ptr now possible
+  no linking of the core.
+
+- zeros, zero static function.
+  Duplication for  different use case, just document.
 
 
 # TRIQS PORTING
 
- 
+
+- zeros : function : can we remove the return to a scalar in Rank 0 ??? 
+
+- Gf : remove matrix_proxy
+- Gf : change memory layout
 
 
+- Godbolst 
 
+
+1) std::array in view making are eliminated 
+ https://godbolt.org/z/SLTePO
 
 
 
@@ -51,8 +64,6 @@
 
 - literals : nda::literals::_ and ___ 
   ellipsis_t -> ellipsis_t
-
-- finir MPI refactor
 
 - file array.hpp 
   include core + alias  

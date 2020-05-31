@@ -35,20 +35,23 @@ namespace nda {
 
   // ----------  Determinant -------------------------
 
-  template <typename T, typename Layout>
-  T determinant_impl(matrix_view<T const, Layout> m, array<int, 1> const &ipiv) {
-    T det         = 1;
-    const int dim = m.extent(0);
-    for (int i = 0; i < dim; i++) det *= m(i, i);
-    int flip = 0; // compute the sign of the permutation
-    for (int i = 0; i < dim; i++) flip += (ipiv(i) != i + 1 ? 1 : 0);
-    det = ((flip % 2 == 1) ? -det : det);
-    return det;
-  }
+  namespace impl {
+
+    template <typename T, typename Layout>
+    T determinant_from_view(matrix_view<T const, Layout> m, array<int, 1> const &ipiv) {
+      T det         = 1;
+      const int dim = m.extent(0);
+      for (int i = 0; i < dim; i++) det *= m(i, i);
+      int flip = 0; // compute the sign of the permutation
+      for (int i = 0; i < dim; i++) flip += (ipiv(i) != i + 1 ? 1 : 0);
+      det = ((flip % 2 == 1) ? -det : det);
+      return det;
+    }
+  } // namespace impl
 
   template <typename A>
   typename A::value_type determinant(A const &m, array<int, 1> const &ipiv) REQUIRES(is_matrix_or_view_v<A>) {
-    return determinant_impl(make_const_view(m), ipiv);
+    return impl::determinant_from_view(make_const_view(m), ipiv);
   }
 
   template <typename A>
@@ -79,7 +82,7 @@ namespace nda {
   }
 
   template <typename A>
-  auto inverse(A &a) REQUIRES(is_ndarray_v<A> and (get_algebra<A> == 'M') and (get_rank<A> == 2)) {
+  auto inverse(A const &a) REQUIRES(is_ndarray_v<A> and (get_algebra<A> == 'M') and (get_rank<A> == 2)) {
     EXPECTS(is_matrix_square(a, true));
     auto r = make_regular(a);
     inverse_in_place(r);
