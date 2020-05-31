@@ -4,6 +4,7 @@
 #include <nda/lapack.hpp>
 #include <nda/linalg/det_and_inverse.hpp>
 #include <nda/linalg/eigenelements.hpp>
+#include <nda/linalg/gelss_worker.hpp>
 
 using nda::C_layout;
 using nda::F_layout;

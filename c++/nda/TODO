@@ -1,3 +1,25 @@
+# Come back to : reread, etrc..
+
+
+- fix of the map
+  - what about the clef lazy case ? add test for multiple operations after mapping
+
+- reshape : 
+  - more test + documentation
+
+- gelss 
+  basic one is NOT done 
+
+
+
+# TRIQS PORTING
+
+ 
+
+
+
+
+
 
 - SSO + custsom alloc
 

@@ -18,7 +18,6 @@ namespace nda::lapack {
 }
 
 #include "lapack/gesvd.hpp"
-#include "lapack/gelss_worker.hpp"
 
 namespace nda::lapack {
 
