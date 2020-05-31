@@ -82,15 +82,17 @@ namespace nda {
    * @param a The object of type A
    * @return The minimum element of A
    */
-
-  //template <typename T>
-  ////require( is_real_or_complex<T>)
-  //double frobenius_norm(matrix<T> const &a) {
-  //return std::sqrt(fold([](double r, T const &x) -> double {
-  //auto ab = std::abs(x);
-  //return r + ab * ab;
-  //}, a, double(0)));
-  //}
+  template <typename T>
+  // FIxme IsDoubleOrComplex
+  //require( is_real_or_complex<T>)
+  double frobenius_norm(matrix<T> const &a) {
+    return std::sqrt(fold(
+       [](double r, T const &x) -> double {
+         auto ab = std::abs(x);
+         return r + ab * ab;
+       },
+       a, double(0)));
+  }
 
   /**
    * @tparam A Anything modeling NdArray

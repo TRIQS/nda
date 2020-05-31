@@ -26,16 +26,16 @@ namespace nda::blas {
 
 #if __cplusplus > 201703L
 
+  template <typename T>
+  concept IsDoubleOrComplex = is_blas_lapack_v<T>;
+
   // anyway from which I can make a MatrixView out
-  template <typename A> concept MatrixView = (is_regular_or_view_v<std::decay_t<A>> and get_rank<std::decay_t<A>> ==2);
-
-    // anyway from which I can make a MatrixView out
-  //template <typename A, typename T> concept MatrixViewOf = MatrixView<A> and (std::is_same_v<T, typename A::value_type>);
-
-  template <typename T> concept IsDoubleOrComplex = is_blas_lapack_v<T>;
+  template <typename A>
+  concept MatrixView = (is_regular_or_view_v<std::decay_t<A>> and get_rank<std::decay_t<A>> == 2);
 
   // anyway from which I can make a VectorView out
-  template <typename A> concept VectorView = (is_regular_or_view_v<std::decay_t<A>> and get_rank<std::decay_t<A>> ==1);
+  template <typename A>
+  concept VectorView = (is_regular_or_view_v<std::decay_t<A>> and get_rank<std::decay_t<A>> == 1);
 
 #endif
 
@@ -43,6 +43,7 @@ namespace nda::blas {
   template <typename A0, typename... A>
   inline constexpr bool have_same_element_type_and_it_is_blas_type_v = have_same_value_type_v<A0, A...> and is_blas_lapack_v<typename A0::value_type>;
 
+  // FIXME : move to impl NS
   template <typename MatrixType>
   char get_trans(MatrixType const &A, bool transpose) {
     return (A.indexmap().is_stride_order_Fortran() ? (transpose ? 'T' : 'N') : (transpose ? 'N' : 'T'));

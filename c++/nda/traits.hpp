@@ -19,13 +19,14 @@ namespace nda {
   // --------------------------- is_scalar ------------------------
 
   template <typename S>
-  inline constexpr bool is_scalar_v = std::is_arithmetic_v<S> or nda::is_complex_v<S>; 
+  inline constexpr bool is_scalar_v = std::is_arithmetic_v<S> or nda::is_complex_v<S>;
 
   template <typename S>
   inline constexpr bool is_scalar_or_convertible_v = is_scalar_v<S> or std::is_constructible_v<std::complex<double>, S>;
 
   template <typename S, typename A>
-  inline constexpr bool is_scalar_for_v = (is_scalar_v<typename A::value_type> ? is_scalar_or_convertible_v<S> : std::is_same_v<S, typename A::value_type>);
+  inline constexpr bool is_scalar_for_v = (is_scalar_v<typename A::value_type> ? is_scalar_or_convertible_v<S> :
+                                                                                 std::is_same_v<S, typename A::value_type>);
 
   // --------------------------- Algebra ------------------------
 
@@ -153,5 +154,9 @@ namespace nda {
   struct _linear_index_t {
     long value;
   };
+
+  // debug tool
+  template <typename T>
+  [[deprecated]] void show_the_type(T &&) {}
 
 } // namespace nda

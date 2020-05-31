@@ -29,14 +29,26 @@ namespace nda {
   }
 
   ///
-  template <typename M1, typename M2>
-  matrix<typename M1::value_type> vstack(M1 const &a, M2 const &b) {
-    static_assert(std::is_same_v<typename M1::value_type, typename M2::value_type>, "ERROR in vstack(A,B): Matrices have incompatible value_type!");
-    EXPECTS_WITH_MESSAGE(a.extent(1) == b.extent(1), "ERROR in vstack(A,B): Matrices have incompatible shape!");
+  /// Give 2 matrices A (of size n x q) and B (of size p x q)
+  /// produces a new matrix of size
+  ///
+  template <CONCEPT(ArrayOfRank<2>) A, CONCEPT(ArrayOfRank<2>) B>
+  REQUIRES20(std::same_as<get_value_t<A>, get_value_t<B>>) // NB the get_value_t gets rid of const if any
+  matrix<get_value_t<A>> vstack(A const &a, B const &b)
+  //REQUIRES17(is_ndarray_v<A> and (get_rank<A> == 2) and is_ndarray_v<B> and (get_rank<B> == 2))
+  {
+    EXPECTS_WITH_MESSAGE(a.shape()[1] == b.shape()[1],
+                         "vstack. The second dimension of the two matrices must be equal but \n   a is of shape "
+                            + to_string(a.shape())  + "   b is of shape" + to_string(b.shape()));
+    // Impl. Concept only ! A, B can be expression template, e.g.
 
-    matrix<typename M1::value_type> res(a.extent(0) + b.extent(0), a.extent(1));
-    res(range(a.extent(0)), range_all{})                            = a;
-    res(range(a.extent(0), a.extent(0) + b.extent(0)), range_all{}) = b;
+    auto [n, q] = a.shape();
+    auto p      = b.shape()[0];
+    auto _      = range_all{};
+
+    matrix<get_value_t<A>> res(n + p, q);
+    res(range(0, n), _)     = a;
+    res(range(n, n + p), _) = b;
     return res;
   }
 

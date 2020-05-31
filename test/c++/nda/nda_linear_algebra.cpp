@@ -453,53 +453,60 @@ TEST(eigenelements, test1) { //NOLINT
   }
 }
 
-/*
 // ================================================================================
 
 TEST(blas_lapack, svd) { //NOLINT
 
-  auto A = matrix<dcomplex>{{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}}};
-  int M  = first_dim(A);
-  int N  = second_dim(A);
+  auto A = nda::matrix<dcomplex, F_layout>{{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}}};
+  int M  = A.extent(0);
+  int N  = A.extent(1);
 
-  auto U  = matrix<dcomplex>(M, M);
-  auto VT = matrix<dcomplex>(N, N);
+  auto U  = nda::matrix<dcomplex, F_layout>(M, M);
+  auto VT = nda::matrix<dcomplex, F_layout>(N, N);
 
-  auto S = array<double,1>(std::min(M, N));
+  //auto aaaa = matrix_view<double, F_layout> { A};
 
-  lapack::gesvd(A, S, U, VT);
+  auto S = nda::array<double, 1>(std::min(M, N));
+
+  auto a_copy = A;
+  nda::lapack::gesvd(A, S, U, VT);
 
   auto S_Mat = A;
   S_Mat()    = 0.0;
   for (int i : range(std::min(M, N))) S_Mat(i, i) = S(i);
 
-  EXPECT_ARRAY_NEAR(A, U * S_Mat * VT, 1e-14);
+  EXPECT_ARRAY_NEAR(a_copy, U * S_Mat * VT, 1e-14);
 }
+
+
 
 // ================================================================================
 
 TEST(blas_lapack, gelss) { //NOLINT
 
+  static_assert(std::is_same_v<long, nda::get_value_t<nda::array_const_view<long, 2>>>, "Oops");
+  static_assert(std::is_same_v<long, nda::get_value_t<nda::array_view<long const, 2>>>, "Oops");
+
   // Cf. http://www.netlib.org/lapack/explore-html/d3/d77/example___d_g_e_l_s__colmajor_8c_source.html
-  auto A = matrix<dcomplex>{{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}}};
-  auto B = matrix<dcomplex>{{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}}};
+  auto A = matrix<dcomplex>{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}};
+  auto B = matrix<dcomplex>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
 
-  int M    = first_dim(A);
-  int N    = second_dim(A);
-  int NRHS = second_dim(B);
+  int M    = A.extent(0);
+  int N    = A.extent(1);
+  //int NRHS = B.extent(1);
 
-  auto S = array<double,1>(std::min(M, N));
+  auto x_exact = matrix<dcomplex>{{2, 1}, {1, 1}, {1, 2}};
+  auto S = nda::array<double,1>(std::min(M, N));
 
-  auto gelss_new    = lapack::gelss_cache<dcomplex>{A};
+  auto gelss_new    = nda::lapack::gelss_worker<dcomplex>{A};
   auto [x_1, eps_1] = gelss_new(B);
-
-  int i;
-  lapack::gelss(A, B, S, 1e-18, i);
-  auto x_2 = B(range(N), range(NRHS));
-
-  auto x_exact = matrix<dcomplex>{{{2, 1}, {1, 1}, {1, 2}}};
-
   EXPECT_ARRAY_NEAR(x_exact, x_1, 1e-14);
-  EXPECT_ARRAY_NEAR(x_exact, x_2, 1e-14);
+
+  //int i;
+  //nda::lapack::gelss(A, B, S, 1e-18, i);
+  //auto x_2 = B(range(N), range(NRHS));
+
+
+  //EXPECT_ARRAY_NEAR(x_exact, x_2, 1e-14);
 }
-*/
+

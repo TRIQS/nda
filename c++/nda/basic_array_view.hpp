@@ -20,6 +20,10 @@ namespace nda {
   template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy, typename NewLayoutType>
   auto map_layout_transform(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> a, NewLayoutType const &new_layout);
 
+  // CTAD
+  //template <typename ValueType, int Rank, typename Layout, char A, typename CP>
+  //basic_array_view(basic_array<ValueType, Rank, L, A, CP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
+
   // -----------------------------------------------
 
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
@@ -66,27 +70,26 @@ namespace nda {
     basic_array_view(basic_array_view const &) = default;
 
     ///
-    template <typename T, typename L, char A, typename CP>
-    basic_array_view(basic_array<T, Rank, L, A, CP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
-
-    /// \private: error trap. In case of error, it selects this constructor and make one simple error message
-    /// instead of presenting the whole, long list of constructors
-    template <typename T, int R2, typename L, char A, typename CP>
-    basic_array_view(basic_array<T, R2, L, A, CP> const &) {
-      // It can not happen, the previous constructor has priority
-      static_assert(R2 == Rank, "Rank error in constructing a view");
-    }
+    template <typename CP>
+    basic_array_view(basic_array<ValueType, Rank, Layout, Algebra, CP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
 
     ///
-    template <typename T, typename L, char A, typename AP, typename OP>
-    basic_array_view(basic_array_view<T, Rank, L, A, AP, OP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
+    template <typename L, char A, typename CP>
+    basic_array_view(basic_array<ValueType, Rank, L, A, CP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
 
-    /// \private: error trap
-    template <typename T, int R2, typename L, char A, typename AP, typename OP>
-    basic_array_view(basic_array_view<T, R2, L, A, AP, OP> const &) {
-      // It can not happen, the previous constructor has priority
-      static_assert(R2 == Rank, "Rank error in constructing a view");
-    }
+    ///
+    template <typename L, char A, typename AP, typename OP>
+    basic_array_view(basic_array_view<ValueType, Rank, L, A, AP, OP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
+
+    ///
+    template <typename L, char A, typename CP>
+    basic_array_view(basic_array<std::remove_const_t<ValueType>, Rank, L, A, CP> const &a) noexcept REQUIRES(std::is_const_v<ValueType>)
+       : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
+
+    ///
+    template <typename L, char A, typename AP, typename OP>
+    basic_array_view(basic_array_view<std::remove_const_t<ValueType>, Rank, L, A, AP, OP> const &a) noexcept REQUIRES(std::is_const_v<ValueType>)
+       : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
 
     /** 
      * [Advanced] From a pointer to **contiguous data**, and a shape.

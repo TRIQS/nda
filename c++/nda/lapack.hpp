@@ -1,8 +1,8 @@
 #pragma once
-
 #include <complex>
-#include "lapack/interface/lapack_cxx_interface.hpp"
 #include "blas/tools.hpp"
+#include "lapack/interface/lapack_cxx_interface.hpp"
+
 
 namespace nda::lapack {
 
@@ -10,15 +10,17 @@ namespace nda::lapack {
   using blas::get_n_cols;
   using blas::get_n_rows;
   using blas::is_blas_lapack_v;
+  using blas::MatrixView;
+  using blas::VectorView;
+  using blas::MatrixView;
+  using blas::IsDoubleOrComplex;
+  using blas::have_same_value_type_v;
+}
 
-  // RULES :
-  // - Only basic interface to lapack
-  // - no copy, no cache, just EXPECTS
+#include "lapack/gesvd.hpp"
+#include "lapack/gelss_worker.hpp"
 
-  // FIXME NILS : port here a minimum interface to gelss
-  // as before, minimal, no qcache, just a call to lapack
-  // ALSO : add a test
-  // Move back the gelss_cache to TRIQS and separate the two.
+namespace nda::lapack {
 
   // REMOVED FROM TRIQS arrays
   // stev + its test : it is a worker, we just want here a simple interface to lapack

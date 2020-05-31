@@ -34,7 +34,7 @@ namespace nda {
 
     // details for the common code with view
     using self_t                   = basic_array;
-    using AccessorPolicy           = default_accessor;// no_alias_accessor
+    using AccessorPolicy           = default_accessor; // no_alias_accessor
     using OwningPolicy             = borrowed;
     static constexpr bool is_const = false;
     static constexpr bool is_view  = false;
@@ -167,6 +167,7 @@ namespace nda {
 
     ///
     basic_array(std::initializer_list<std::initializer_list<std::initializer_list<ValueType>>> const &l3) noexcept //
+       REQUIRES((Rank == 3))
        : lay(shape_from_init_list(l3)), sto{lay.size(), mem::do_not_initialize} {
       long i = 0, j = 0, k = 0;
       static_assert(Rank == 3, "?");
@@ -180,6 +181,37 @@ namespace nda {
         ++i;
       }
     }
+
+    /////
+    //template <typename U>
+    //explicit basic_array(std::initializer_list<std::initializer_list<U>> const &l2) noexcept //
+    //REQUIRES((Rank == 1) and (std::is_constructible_v<ValueType, std::initializer_list<U>>))
+    //: lay(l2.size()), sto{lay.size(), mem::do_not_initialize} {
+    //long i = 0;
+    //for (auto const &l1 : l2) { new (sto.data() + lay(i++)) ValueType{l1}; }
+    //}
+
+    /////
+    //template <typename U>
+    //explicit basic_array(std::initializer_list<std::initializer_list<std::initializer_list<U>>> const &l3) noexcept //
+    //REQUIRES((Rank == 2) and (std::is_constructible_v<ValueType, std::initializer_list<U>>))
+    //: lay(pop(shape_from_init_list(l3))), sto{lay.size(), mem::do_not_initialize} {
+    //long i = 0, j = 0;
+    //static_assert(Rank == 3, "?");
+    //for (auto const &l2 : l3) {
+    //for (auto const &l1 : l2) { new (sto.data() + lay(i, j++)) ValueType{l1}; }
+    //j = 0;
+    //++i;
+    //}
+    /*}*/
+
+    /// Allows to move a array of Rank 2 into a matrix and vice versa
+    /// Beware that for stack/sso array, it will copy the data (but move them for heap allocated array).
+    template <char Algebra2>
+    explicit basic_array(basic_array<ValueType, 2, Layout, Algebra2, ContainerPolicy> &&am) noexcept
+       REQUIRES(Rank == 2) // NB Rank =2 since matrix/array for the moment. generalize if needed
+       : basic_array{am.indexmap(), std::move(am).storage()} {}
+
     //------------------ Assignment -------------------------
 
     ///

@@ -42,6 +42,9 @@ namespace nda {
 
   //----------------------------
 
+  template <class F>
+  struct mapped;
+
   // a lazy expression of f(A...) where f is the function to map and A the arrays
   // e.g. f is sqrt(x) and there is one A, or f is min(x,y) and there are 2 A
   template <typename F, typename... A>
@@ -52,9 +55,20 @@ namespace nda {
 
     private: // FIXME C++20 lambda implementation details
     template <size_t... Is, typename... Args>
-    [[gnu::always_inline]] [[nodiscard]] [[nodiscard]] [[nodiscard]] [[nodiscard]] auto _call(std::index_sequence<Is...>,
-                                                                                              Args const &... args) const {
-      return f(std::get<Is>(a)(args...)...);
+    [[gnu::always_inline]] [[nodiscard]] auto _call(std::index_sequence<Is...>, Args const &... args) const {
+      // a priori, we just need to return
+      // f(std::get<Is>(a)(args...)...)
+      // but if a(args) is a view, we can not always use f.
+      // It works if f is well written, i.e. it takes a temporary and forwards it, like
+      // f(auto &&x) { return ...}
+      // but if the user's function is badly written, like (auto const & x) { ...}
+      // which is quite natural for a simple function, then the temporary view will be dangling.
+      // So we take care of this case explicitly
+      if constexpr (is_regular_or_view_v<decltype(std::get<0>(a)(args...))>) { // we have views, same for all a...
+        return mapped<F>{f}(std::get<Is>(a)(args...)...);
+      } else {
+        return f(std::get<Is>(a)(args...)...);
+      }
     }
     template <size_t... Is, typename Args>
     [[gnu::always_inline]] auto _call_bra(std::index_sequence<Is...>, Args const &args) const {

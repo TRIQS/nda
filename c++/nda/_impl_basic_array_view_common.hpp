@@ -6,10 +6,13 @@
 [[nodiscard]] constexpr auto const &indexmap() const noexcept { return lay; }
 
 /// \private
-[[nodiscard]] storage_t const &storage() const noexcept { return sto; }
+[[nodiscard]] storage_t const &storage() const &noexcept { return sto; }
 
 /// \private
-storage_t &storage() { return sto; }
+[[nodiscard]] storage_t &storage() & noexcept{ return sto; }
+
+/// \private
+[[nodiscard]] storage_t storage() && noexcept { return std::move(sto); }
 
 /// Memory stride_order
 [[nodiscard]] constexpr auto stride_order() const noexcept { return lay.stride_order(); }
@@ -328,7 +331,7 @@ void assign_from_scalar(Scalar const &scalar) noexcept {
     else
       fill_with_scalar(Scalar{0 * scalar}); //FIXME : improve this
     // on diagonal only
-    const long imax = extent(0);
+    const long imax = std::min(extent(0), extent(1));
     for (long i = 0; i < imax; ++i) operator()(i, i) = scalar;
   }
 }

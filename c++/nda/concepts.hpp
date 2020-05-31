@@ -13,6 +13,14 @@ namespace std {
     static_cast<To>(f());
   };
 
+  namespace detail {
+    template <class T, class U>
+    concept SameHelper = std::is_same_v<T, U>;
+  }
+
+  template <class T, class U>
+  concept same_as = detail::SameHelper<T, U> &&detail::SameHelper<U, T>;
+
   template <class T>
   concept integral = std::is_integral_v<T>;
 } // namespace std
