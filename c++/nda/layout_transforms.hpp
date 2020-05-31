@@ -54,11 +54,6 @@ namespace nda {
     return map_layout_transform(a, layout_t{make_std_array<long>(new_shape)});
   }
 
-  /* template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy, auto newRank>*/
-  //auto reshaped_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> a, std::array<int, newRank> const &new_shape) {
-  //return reshaped_view(a, make_std_array<long>(new_shape));
-  //}
-
   template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, CONCEPT(std::integral) Int, auto newRank>
   auto reshaped_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a, std::array<Int, newRank> const &new_shape) {
     return reshaped_view(basic_array_view<T const, R, L, Algebra, default_accessor, borrowed>(a), new_shape);
@@ -68,18 +63,6 @@ namespace nda {
   auto reshaped_view(basic_array<T, R, L, Algebra, ContainerPolicy> &a, std::array<Int, newRank> const &new_shape) {
     return reshaped_view(basic_array_view<T, R, L, Algebra, default_accessor, borrowed>(a), new_shape);
   }
-
-  /////
-  //template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, auto newRank>
-  //auto reshaped_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a, std::array<int, newRank> const &new_shape) {
-  //return reshaped_view(basic_array_view<T const, R, L, Algebra, default_accessor, borrowed>(a), new_shape);
-  //}
-
-  /////
-  //template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, auto newRank>
-  //auto reshaped_view(basic_array<T, R, L, Algebra, ContainerPolicy> &a, std::array<int, newRank> const &new_shape) {
-  //return reshaped_view(basic_array_view<T, R, L, Algebra, default_accessor, borrowed>(a), new_shape);
-  //}
 
   // --------------- permuted_indices_view------------------------
 
