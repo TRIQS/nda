@@ -44,14 +44,14 @@ namespace nda {
   template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy, //
             CONCEPT(std::integral) Int, auto newRank>
 
-  auto reshaped_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> a, //
+  auto reshaped_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> v, //
                      std::array<Int, newRank> const &new_shape) {
 
     using layout_t = typename L::template mapping<newRank>;
-    EXPECTS_WITH_MESSAGE(a.size() == (std::accumulate(new_shape.cbegin(), new_shape.cend(), 1, std::multiplies<>{})),
+    EXPECTS_WITH_MESSAGE(v.size() == (std::accumulate(new_shape.cbegin(), new_shape.cend(), 1, std::multiplies<>{})),
                          "Reshape : the new shape has a incorrect number of elements");
-    EXPECTS_WITH_MESSAGE(a.indexmap().is_contiguous(), "reshaped_view only works with contiguous views");
-    return map_layout_transform(a, layout_t{make_std_array<long>(new_shape)});
+    EXPECTS_WITH_MESSAGE(v.indexmap().is_contiguous(), "reshaped_view only works with contiguous views");
+    return map_layout_transform(v, layout_t{make_std_array<long>(new_shape)});
   }
 
   template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, CONCEPT(std::integral) Int, auto newRank>

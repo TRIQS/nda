@@ -156,7 +156,7 @@ namespace nda {
 
     ///
     basic_array(std::initializer_list<std::initializer_list<ValueType>> const &l2) noexcept //
-       REQUIRES((Rank == 2))
+       REQUIRES(Rank == 2)
        : lay(shape_from_init_list(l2)), sto{lay.size(), mem::do_not_initialize} {
       long i = 0, j = 0;
       for (auto const &l1 : l2) {
@@ -168,7 +168,7 @@ namespace nda {
 
     ///
     basic_array(std::initializer_list<std::initializer_list<std::initializer_list<ValueType>>> const &l3) noexcept //
-       REQUIRES((Rank == 3))
+       REQUIRES(Rank == 3)
        : lay(shape_from_init_list(l3)), sto{lay.size(), mem::do_not_initialize} {
       long i = 0, j = 0, k = 0;
       static_assert(Rank == 3, "?");
@@ -208,6 +208,7 @@ namespace nda {
 
     /// Allows to move a array of Rank 2 into a matrix and vice versa
     /// Beware that for stack/sso array, it will copy the data (but move them for heap allocated array).
+    /// \trailing_requires
     template <char Algebra2>
     explicit basic_array(basic_array<ValueType, 2, Layout, Algebra2, ContainerPolicy> &&am) noexcept
        REQUIRES(Rank == 2) // NB Rank =2 since matrix/array for the moment. generalize if needed
