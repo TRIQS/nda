@@ -27,11 +27,17 @@ TEST(Matrix, Create2) { //NOLINT
 }
 
 TEST(Matrix, Create2Complex) { //NOLINT
-  auto m1 = matrix<dcomplex>{{-10, -3i}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
-  EXPECT_EQ(m1.shape(), (nda::shape_t<2>{5, 2}));
+  auto m3 = matrix<dcomplex>{{-10, -3i}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
+  EXPECT_EQ(m3.shape(), (nda::shape_t<2>{5, 2}));
 
-  auto m2 = matrix<dcomplex>{{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}}};
-  EXPECT_EQ(m2.shape(), (nda::shape_t<2>{1, 5})); /// VERY DANGEROUS !
+  auto m4 = matrix<dcomplex>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
+  EXPECT_EQ(m4.shape(), (nda::shape_t<2>{5, 2}));
+
+  auto m5 = matrix<dcomplex>{{{-10, -3i}, {12, 14}, {14, 12}, {16, 16}, {18, 16}}};
+  EXPECT_EQ(m5.shape(), (nda::shape_t<2>{5, 2}));
+
+  auto m6 = matrix<dcomplex>{{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}}};
+  EXPECT_EQ(m6.shape(), (nda::shape_t<2>{1, 5})); /// VERY DANGEROUS !
 }
 
 // ===============================================================
@@ -45,7 +51,7 @@ TEST(Matrix, MoveToArray) { //NOLINT
   auto a = nda::array<double, 2>{std::move(m)};
 
   EXPECT_EQ_ARRAY(mcopy, matrix_view<double>{a}); // should be EXACLY equal
-  
+
   // HEAP only, it would not be correct for the other cases
 #if !defined(NDA_TEST_DEFAULT_ALLOC_SSO) and !defined(NDA_TEST_DEFAULT_ALLOC_MBUCKET)
   EXPECT_EQ(m.storage().size(), 0);
@@ -57,7 +63,7 @@ TEST(Matrix, MoveToArray) { //NOLINT
 
 TEST(Matrix, MoveFromArray) { //NOLINT
 
-  auto a = nda::array<double,2>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
+  auto a = nda::array<double, 2>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
 
   auto acopy = a;
 
