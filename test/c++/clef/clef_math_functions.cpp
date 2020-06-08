@@ -5,7 +5,7 @@ int foo(int x) { return x / 2; }
 
 double bar(double x, double y) { return x + y; }
 
-namespace clef {
+namespace nda::clef {
   using ::bar;
   using ::foo;
 

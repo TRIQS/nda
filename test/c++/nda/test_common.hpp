@@ -11,6 +11,8 @@
 
 using namespace std::complex_literals;
 
+namespace clef= nda::clef;
+
 // for test only. Backward compat
 namespace nda { 
   template <int Rank>

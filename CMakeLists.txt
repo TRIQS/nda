@@ -131,9 +131,6 @@ add_subdirectory(deps)
 # Build and install the library
 add_subdirectory(c++/${PROJECT_NAME})
 
-# Create interface target for and install clef library
-add_subdirectory(c++/clef)
-
 # Tests
 if(Build_Tests)
   add_subdirectory(test)

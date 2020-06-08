@@ -2,7 +2,7 @@
 #include "clef.hpp"
 #include <iostream>
 
-namespace clef {
+namespace nda::clef {
 
   /* ---------------------------------------------------------------------------------------------------
   * Printing of the expressions

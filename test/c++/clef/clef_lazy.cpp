@@ -1,5 +1,5 @@
 #include "./common.hpp"
-#include <clef/adapters/vector.hpp>
+#include <nda/clef/adapters/vector.hpp>
 
 using namespace clef;
 

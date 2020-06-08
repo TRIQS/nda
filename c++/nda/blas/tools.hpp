@@ -2,6 +2,12 @@
 #include <complex>
 #include <type_traits>
 
+namespace nda {
+
+  using dcomplex = std::complex<double>;
+
+}
+
 namespace nda::blas {
 
   // a trait to detect all types for which blas/lapack bindings is defined

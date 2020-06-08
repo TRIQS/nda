@@ -1,7 +1,7 @@
 #include <gtest/gtest.h> // NOLINT
 
-#include <clef/clef.hpp>
-#include <clef/io.hpp>
+#include <nda/clef/clef.hpp>
+#include <nda/clef/io.hpp>
 #include <sstream>
 #include <string>
 
@@ -13,6 +13,8 @@
   }
 
 using namespace std::complex_literals;
+
+namespace clef= nda::clef;
 
 template <typename T>
 std::string to_string(T const &x) {

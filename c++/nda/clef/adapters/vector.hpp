@@ -2,7 +2,7 @@
 #include "../clef.hpp"
 #include <vector>
 
-namespace clef {
+namespace nda::clef {
 
   template <typename T, typename RHS>
   void clef_auto_assign__std_vector_impl(T &x, RHS &&rhs) {

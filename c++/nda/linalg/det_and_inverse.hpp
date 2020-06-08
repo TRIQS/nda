@@ -96,6 +96,6 @@ namespace nda {
 
 } // namespace nda
 
-namespace clef {
+namespace nda::clef {
   CLEF_MAKE_FNT_LAZY(determinant)
 }
