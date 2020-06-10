@@ -2,6 +2,7 @@
 #include <cmath>
 #include <limits>
 
+#define NDA_DEBUG
 #define NDA_BOUNDCHECK
 #define NDA_ENFORCE_BOUNDCHECK
 

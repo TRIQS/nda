@@ -170,7 +170,7 @@ namespace nda {
 
     private:
     void assert_static_extents_and_len_are_compatible() const {
-#ifdef NDA_DEBUG
+#ifdef NDA_ENFORCE_BOUNDCHECK
       if constexpr (n_dynamic_extents != Rank) { // there are some static extents
         for (int u = 0; u < Rank; ++u)
           if (static_extents[u] != 0) EXPECTS(static_extents[u] == len[u]);

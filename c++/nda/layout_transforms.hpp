@@ -13,13 +13,15 @@ namespace nda {
   template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy, typename NewLayoutType>
   auto map_layout_transform(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> a, NewLayoutType const &new_layout) {
     using layout_policy = basic_layout<encode(NewLayoutType::static_extents), encode(NewLayoutType::stride_order), NewLayoutType::layout_prop>;
-    return basic_array_view<T, NewLayoutType::rank(), layout_policy, Algebra, AccessorPolicy, OwningPolicy>{new_layout, a.storage()};
+    return basic_array_view<T, NewLayoutType::rank(), layout_policy, (NewLayoutType::rank() == R ? Algebra : 'A'), AccessorPolicy, OwningPolicy>{
+       new_layout, a.storage()};
   }
 
   template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, typename NewLayoutType>
   auto map_layout_transform(basic_array<T, R, L, Algebra, ContainerPolicy> &&a, NewLayoutType const &new_layout) {
     using layout_policy = basic_layout<encode(NewLayoutType::static_extents), encode(NewLayoutType::stride_order), NewLayoutType::layout_prop>;
-    return basic_array<T, NewLayoutType::rank(), layout_policy, Algebra, ContainerPolicy>{new_layout, std::move(a.storage())};
+    return basic_array<T, NewLayoutType::rank(), layout_policy, (NewLayoutType::rank() == R ? Algebra : 'A'), ContainerPolicy>{
+       new_layout, std::move(a.storage())};
   }
 
   // ---------------  reshape ------------------------
@@ -82,6 +84,9 @@ namespace nda {
   }
 
   // ---------------  transpose ------------------------
+
+  // FIXME : NAME
+
   // for matrices ...
   template <typename A>
   auto transpose(A &&a) REQUIRES(is_regular_or_view_v<std::decay_t<A>> and (std::decay_t<A>::rank == 2)) {

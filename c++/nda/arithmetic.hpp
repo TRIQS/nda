@@ -108,7 +108,7 @@ namespace nda {
 
     static constexpr bool l_is_scalar = nda::is_scalar_v<L_t>;
     static constexpr bool r_is_scalar = nda::is_scalar_v<R_t>;
-    static constexpr char algebra = (l_is_scalar ? get_algebra<R_t> : get_algebra<L_t>);
+    static constexpr char algebra     = (l_is_scalar ? get_algebra<R_t> : get_algebra<L_t>);
     static constexpr layout_info_t layout_info =
        (l_is_scalar ? get_layout_info<R_t> : (r_is_scalar ? get_layout_info<L_t> : get_layout_info<R_t> | get_layout_info<L_t>));
 
@@ -284,7 +284,7 @@ namespace nda {
   template <typename L, typename R>
   auto operator+(L &&l, R &&r) REQUIRES(model_ndarray_with_possibly_one_scalar<L, R>) {
     static_assert(rank_are_compatible<L, R>(), "rank mismatch in array addition");
-    static_assert(common_algebra<L, R>() != 'N', "Can not add two objects belonging to different algebras");
+    //static_assert(common_algebra<L, R>() != 'N', "Can not add two objects belonging to different algebras");
     using L_t = std::decay_t<L>; // L, R can be lvalue references
     using R_t = std::decay_t<R>;
 
@@ -315,7 +315,7 @@ namespace nda {
   template <typename L, typename R>
   auto operator-(L &&l, R &&r) REQUIRES(model_ndarray_with_possibly_one_scalar<L, R>) {
     static_assert(rank_are_compatible<L, R>(), "rank mismatch in array addition");
-    static_assert(common_algebra<L, R>() != 'N', "Can not substract two objects belonging to different algebras");
+    //static_assert(common_algebra<L, R>() != 'N', "Can not substract two objects belonging to different algebras");
     using L_t = std::decay_t<L>; // L, R can be lvalue references
     using R_t = std::decay_t<R>;
 
@@ -346,20 +346,26 @@ namespace nda {
    */
   template <typename L, typename R>
   auto operator*(L &&l, R &&r) REQUIRES(model_ndarray_with_possibly_one_scalar<L, R>) {
-    static_assert(rank_are_compatible<L, R>(), "rank mismatch in multiplication");
-    static_assert(common_algebra<L, R>() != 'N', "Can not multiply two objects belonging to different algebras");
     using L_t = std::decay_t<L>; // L, R can be lvalue references
     using R_t = std::decay_t<R>;
 
-    // first case : Array algebra or matrix * scalar : expr template
+    // array * array or  anything* scalar or scalar * anything
     if constexpr ((common_algebra<L, R>() == 'A') or is_scalar_v<L_t> or is_scalar_v<R_t>) { // array
-#ifdef NDA_DEBUG
+      static_assert(rank_are_compatible<L, R>(), "rank mismatch in multiplication");
+      static_assert(common_algebra<L, R>() != 'N', "Can not multiply two objects belonging to different algebras");
+#ifdef NDA_ENFORCE_BOUNDCHECK
       if constexpr (!nda::is_scalar_v<L_t> && !nda::is_scalar_v<R_t>)
         if (l.shape() != r.shape()) NDA_RUNTIME_ERROR << "Matrix product : dimension mismatch in matrix product " << l.shape() << " " << r.shape();
 #endif
       return expr<'*', L, R>{std::forward<L>(l), std::forward<R>(r)};
-    } else {
+    }
+    // matrix * matrix
+    else if constexpr (common_algebra<L, R>() == 'M') {
       return matmul(std::forward<L>(l), std::forward<R>(r));
+    }
+    // matrix * vector
+    else if constexpr (get_algebra<L_t> == 'M' and get_algebra<R_t> == 'V') {
+      return matvecmul(std::forward<L>(l), std::forward<R>(r));
     }
   }
 

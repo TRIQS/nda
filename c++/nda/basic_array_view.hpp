@@ -29,6 +29,9 @@ namespace nda {
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   class basic_array_view {
 
+    static_assert((Algebra != 'M') or (Rank <= 2), " Internal error : Algebra 'A' only makes sense for rank 2");
+    static_assert((Algebra != 'V') or (Rank == 1), " Internal error : Algebra 'V' only makes sense for rank 1");
+
     // details for the common code with view
     using self_t                   = basic_array_view;
     using storage_t                = typename OwningPolicy::template handle<ValueType>;
@@ -38,6 +41,9 @@ namespace nda {
     public:
     using value_type = ValueType;
     using layout_t   = typename Layout::template mapping<Rank>;
+
+    using view_type       = basic_array_view;
+    using const_view_type = basic_array_view<const ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
 
     static constexpr int rank = Rank;
 

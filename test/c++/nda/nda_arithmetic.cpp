@@ -1,5 +1,31 @@
 #include "./test_common.hpp"
 
+TEST(NDA, ExprTemplate) { //NOLINT
+
+  nda::array<long, 2> A(2, 3);
+
+  for (long i = 0; i < 2; ++i)
+    for (long j = 0; j < 3; ++j) A(i, j) = 10 * i + j;
+
+  nda::array<long, 2> R;
+ 
+  R = A + 10;
+  EXPECT_EQ(R, (nda::array<long, 2>{{0 + 10, 1 + 10, 2 + 10}, {10+ 10, 11+ 10, 12+ 10}}));
+
+  R = A - 10;
+  EXPECT_EQ(R, (nda::array<long, 2>{{0 - 10, 1 - 10, 2 - 10}, {10- 10, 11- 10, 12- 10}}));
+
+  R = 2* A;
+  EXPECT_EQ(R, (nda::array<long, 2>{{0, 2, 4}, {20, 22, 24}}));
+
+  long s = 2;
+  R = s* A;
+  EXPECT_EQ(R, (nda::array<long, 2>{{0, 2, 4}, {20, 22, 24}}));
+  
+}
+
+// ==============================================================
+
 TEST(NDA, compound_ops) { //NOLINT
 
   nda::array<long, 2> A(2, 3);

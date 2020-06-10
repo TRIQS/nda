@@ -266,7 +266,7 @@ private:
 template <typename RHS>
 void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
 
-#ifdef NDA_DEBUG
+#ifdef NDA_ENFORCE_BOUNDCHECK
   if (this->shape() != rhs.shape())
     NDA_RUNTIME_ERROR << "Size mismatch in = "
                       << " : LHS " << *this << " \n RHS = " << rhs;

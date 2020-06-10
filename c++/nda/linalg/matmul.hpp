@@ -77,7 +77,7 @@ namespace nda {
         if constexpr (is_regular_or_view_v<A> and std::is_same_v<get_value_t<A>, promoted_type>)
           return a;
         else
-          return array<promoted_type, A::rank>{a};
+          return array<promoted_type, get_rank<A>>{a};
       };
 
       // MSAN has no way to know that we are calling with beta = 0, hence

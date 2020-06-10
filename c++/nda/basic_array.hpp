@@ -31,6 +31,9 @@ namespace nda {
   class basic_array {
 
     static_assert(!std::is_const<ValueType>::value, "ValueType can not be const. WHY ?");
+    // FIXME : should be ==2 ? matrix slice -> vector or matrix ??
+    static_assert((Algebra != 'M') or (Rank <= 2), " Internal error : Algebra 'A' only makes sense for rank 2");
+    static_assert((Algebra != 'V') or (Rank == 1), " Internal error : Algebra 'V' only makes sense for rank 1");
 
     // details for the common code with view
     using self_t                   = basic_array;
@@ -45,6 +48,9 @@ namespace nda {
 
     /// The type of the layout
     using layout_t = typename Layout::template mapping<Rank>;
+
+    using view_type       = basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
+    using const_view_type = basic_array_view<const ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
 
     private:
     // FIXME : mem_handle_t
@@ -86,7 +92,7 @@ namespace nda {
     explicit basic_array(Int... is) noexcept REQUIRES17((std::is_convertible_v<Int, long> and ...)) {
       //static_assert((std::is_convertible_v<Int, long> and ...), "Arguments must be convertible to long");
       static_assert(sizeof...(Int) == Rank, "Incorrect number of arguments : should be exactly Rank. ");
-      lay = layout_t{{long(is)...}};
+      lay = layout_t{std::array{long(is)...}};
       sto = storage_t{lay.size()};
       // It would be more natural to construct lay, storage from the start, but the error message in case of false # of parameters (very common)
       // is better like this. FIXME to be tested in benchs

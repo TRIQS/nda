@@ -10,10 +10,10 @@ namespace nda {
   }
 
   template <CONCEPT(ArrayOfRank<2>) M>
-  typename M::value_type trace(M const &m) REQUIRES17(is_ndarray_v<M> and (get_rank<M> == 2)) {
-    EXPECTS(m.extent(0) == m.extent(1));
-    auto r = typename M::value_type{};
-    auto d = m.extent(0);
+  get_value_t<M> trace(M const &m) REQUIRES17(is_ndarray_v<M> and (get_rank<M> == 2)) {
+    EXPECTS(m.shape()[0] == m.shape()[1]);
+    auto r = get_value_t<M>{};
+    auto d = m.shape()[0];
     for (int i = 0; i < d; ++i) r += m(i, i);
     return r;
   }

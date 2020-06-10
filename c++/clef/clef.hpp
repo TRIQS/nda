@@ -150,6 +150,11 @@ namespace clef {
   template <typename... Args>
   constexpr bool is_any_lazy = (is_lazy<std::decay_t<Args>> or ...);
 
+  // FIXME : we should be this, much more precise
+  template <typename... T>
+  constexpr bool is_clef_expression = is_any_lazy<T...>;
+
+
   template <int N>
   constexpr bool is_lazy<_ph<N>> = true;
 

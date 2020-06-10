@@ -77,8 +77,7 @@ TEST(BLAS, gemv) { //NOLINT
   MB() = 0;
   nda::range R(1, 3);
 
-  // FIXME IMPLEMENT
-  //matrix_view<double> Acw = A.transpose();
+  matrix_view<double> Acw = transpose(A);
 
   auto MB_w = MB(R); // view !
 
@@ -88,8 +87,13 @@ TEST(BLAS, gemv) { //NOLINT
   nda::blas::gemv(1, Ac(R, R), MC(R), 0, MB_w);
   EXPECT_ARRAY_NEAR(MB, nda::array<double, 1>{0, 10, 12, 0, 0});
 
-  //blas::gemv(1, Acw(R, R), MC(R), 0, MB_w);
-  //EXPECT_ARRAY_NEAR(MB, vector<double>{0, 9, 13, 0, 0});
+  nda::blas::gemv(1, Acw(R, R), MC(R), 0, MB_w);
+  EXPECT_ARRAY_NEAR(MB, nda::vector<double>{0, 9, 13, 0, 0});
+  
+  // test *
+  MB() = -8;
+  MB(R) = Acw(R, R) * nda::vector_view<double>{MC(R)};
+  EXPECT_ARRAY_NEAR(MB, nda::vector<double>{-8, 9, 13, -8, -8});
 }
 
 //----------------------------
