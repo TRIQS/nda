@@ -144,7 +144,7 @@ namespace nda {
       const auto [min, max] =
          std::minmax_element(std::begin(l), std::end(l), [](auto &&x, auto &&y) { return shape_from_init_list(x) == shape_from_init_list(y); });
       EXPECTS_WITH_MESSAGE(shape_from_init_list(*min) == shape_from_init_list(*max), "initializer list not rectangular !");
-      return nda::front_append(shape_from_init_list(*max), long(l.size()));
+      return stdutil::front_append(shape_from_init_list(*max), long(l.size()));
     }
 
     public:
@@ -224,7 +224,7 @@ namespace nda {
 
     template <CONCEPT(std::integral) Int>
     static basic_array zeros(std::array<Int, Rank> const &shape) REQUIRES((std::is_arithmetic_v<ValueType> or nda::is_complex_v<ValueType>)) {
-      return basic_array{make_std_array<long>(shape), mem::init_zero};
+      return basic_array{stdutil::make_std_array<long>(shape), mem::init_zero};
     }
 
     /// \private error trap

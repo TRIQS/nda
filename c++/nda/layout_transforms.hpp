@@ -36,7 +36,7 @@ namespace nda {
   // for convenience, call it with std::array{1,2}.... Document ?
   template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, auto newRank>
   auto reshape(basic_array<T, R, L, Algebra, ContainerPolicy> &&a, std::array<int, newRank> const &new_shape) {
-    return reshape(std::move(a), make_std_array<long>(new_shape));
+    return reshape(std::move(a), stdutil::make_std_array<long>(new_shape));
   }
 
   // ---------------  reshaped_view ------------------------
@@ -53,7 +53,7 @@ namespace nda {
     EXPECTS_WITH_MESSAGE(v.size() == (std::accumulate(new_shape.cbegin(), new_shape.cend(), 1, std::multiplies<>{})),
                          "Reshape : the new shape has a incorrect number of elements");
     EXPECTS_WITH_MESSAGE(v.indexmap().is_contiguous(), "reshaped_view only works with contiguous views");
-    return map_layout_transform(v, layout_t{make_std_array<long>(new_shape)});
+    return map_layout_transform(v, layout_t{stdutil::make_std_array<long>(new_shape)});
   }
 
   template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, CONCEPT(std::integral) Int, auto newRank>

@@ -48,7 +48,7 @@ namespace nda {
 
     std::array<int, Rout> max_pos{min_mem_pos(grps)...};
     // compress the number by counting how many before each of them
-    std::array<int, Rout> result = make_initialized_array<sizeof...(Rs)>(0); // FIXME : not necessary in C++20
+    std::array<int, Rout> result = stdutil::make_initialized_array<sizeof...(Rs)>(0); // FIXME : not necessary in C++20
 
     for (int u = 0; u < Rout; ++u) {
       for (int i = 0; i < Rout; ++i) {

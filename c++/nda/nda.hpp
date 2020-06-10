@@ -24,10 +24,6 @@
 // for python code generator, we need to know what to include...
 #define TRIQS_INCLUDED_ARRAYS
 
-// A few addons to the std::...
-#include "std_addons/complex.hpp"
-#include "std_addons/array.hpp"
-
 #include "basic_array_view.hpp"
 #include "basic_array.hpp"
 

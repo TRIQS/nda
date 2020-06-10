@@ -89,10 +89,7 @@ namespace nda {
 
   template <typename A, typename B>
   bool operator==(A const &a, B const &b) REQUIRES(is_ndarray_v<A> and is_ndarray_v<B>) {
-    static constexpr bool A_and_B_have_same_element_type = std::is_same_v<get_value_t<A>, get_value_t<B>>;
-    //static constexpr bool element_type_is_an_integer     = std::is_integral_v<get_value_t<A>>;
-    //static_assert((A_and_B_have_same_element_type and element_type_is_an_integer), "A == B is only defined when A, B are array of *integers*");
-    static_assert((A_and_B_have_same_element_type), "A == B is only defined when A, B have same element type");
+    static_assert(StdEqualityComparableWith<get_value_t<A>, get_value_t<B>>, "A == B is only defined when their element can be compared");
     if (a.shape() != b.shape()) return false;
     bool r = true;
     nda::for_each(a.shape(), [&](auto &&... x) { r &= (a(x...) == b(x...)); });

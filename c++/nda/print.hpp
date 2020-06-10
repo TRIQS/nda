@@ -1,23 +1,6 @@
 #pragma once
 #include <ostream>
 
-// FIXME : MOVE THIS
-namespace std { // For ADL
-  template <typename T, size_t R>
-  std::ostream &operator<<(std::ostream &out, std::array<T, R> const &a) {
-    return out << to_string(a);
-  }
-
-  template <typename T, size_t R>
-  std::string to_string(std::array<T, R> const &a) {
-    std::stringstream fs;
-    fs << "(";
-    for (int i = 0; i < R; ++i) fs << (i == 0 ? "" : " ") << a[i];
-    fs << ")";
-    return fs.str();
-  }
-} // namespace std
-
 // ---------------------------------------------------------------
 
 namespace nda {

@@ -14,7 +14,7 @@ namespace nda {
 
     public:
     template <typename Int>
-    array_adapter(std::array<Int, R> const &shape, F f) : myshape(make_std_array<long>(shape)), f(f) {}
+    array_adapter(std::array<Int, R> const &shape, F f) : myshape(stdutil::make_std_array<long>(shape)), f(f) {}
 
     std::array<long, R> const &shape() const { return myshape; }
 

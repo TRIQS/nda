@@ -1,16 +1,36 @@
 #ifndef STD_ADDONS_ARRAY_H
 #define STD_ADDONS_ARRAY_H
+
+// No pragma once. Easier to copy to another project.
+
 #include <array>
 #include <utility>
 #include <vector>
 
-// missing part of std ...
-namespace nda {
+/// =========    ADDING IN STD ===========
+/// =========    NEED TO PUT IT IN STD FOR ADL ========
+// How to document this ?? Manually ?
+namespace std { 
 
-  template <typename T, size_t... Is>
-  constexpr std::array<T, sizeof...(Is)> make_initialized_array_impl(T v, std::index_sequence<Is...>) {
-    return {(Is ? v : v)...};
-  } // always v, just a trick to have the pack
+  template <typename T, size_t R>
+  std::ostream &operator<<(std::ostream &out, std::array<T, R> const &a) {
+    return out << to_string(a);
+  }
+
+  template <typename T, size_t R>
+  std::string to_string(std::array<T, R> const &a) {
+    std::stringstream fs;
+    fs << "(";
+    for (int i = 0; i < R; ++i) fs << (i == 0 ? "" : " ") << a[i];
+    fs << ")";
+    return fs.str();
+  }
+
+} // namespace std
+
+/// =========    END ADDING IN STD ===========
+
+namespace nda::stdutil {
 
   /**
    * @tparam T  T must be constructible from U
@@ -26,6 +46,13 @@ namespace nda {
     return result;
   }
 
+  namespace impl {
+    template <typename T, size_t... Is>
+    constexpr std::array<T, sizeof...(Is)> make_initialized_array(T v, std::index_sequence<Is...>) {
+      return {(Is ? v : v)...};
+    } // always v, just a trick to have the pack
+  }   // namespace impl
+
   /**
    * @tparam R
    * @tparam T
@@ -33,7 +60,7 @@ namespace nda {
    */
   template <size_t R, typename T>
   constexpr std::array<T, R> make_initialized_array(T v) {
-    return make_initialized_array_impl(v, std::make_index_sequence<R>{});
+    return impl::make_initialized_array(v, std::make_index_sequence<R>{});
   }
 
   /**
@@ -154,17 +181,21 @@ namespace nda {
     }
   }
 
-  //template <typename T, int R> std::array<T, R> operator+(std::array<T, R> const &a1, std::array<T, R> const &a2) {
-  //std::array<T, R> r;
-  //for (int i = 0; i < R; ++i) r[i] = a1[i] + a2[i];
-  //return r;
-  //}
+  // ------------- basic arithmetic --------------------------------------
 
-  //template <typename T, int R> std::array<T, R> operator-(std::array<T, R> const &a1, std::array<T, R> const &a2) {
-  //std::array<T, R> r;
-  //for (int i = 0; i < R; ++i) r[i] = a1[i] - a2[i];
-  //return r;
-  //}
+  template <typename T, size_t R>
+  std::array<T, R> operator+(std::array<T, R> const &a1, std::array<T, R> const &a2) {
+    std::array<T, R> r;
+    for (int i = 0; i < R; ++i) r[i] = a1[i] + a2[i];
+    return r;
+  }
 
-} // namespace nda
+  template <typename T, size_t R>
+  std::array<T, R> operator-(std::array<T, R> const &a1, std::array<T, R> const &a2) {
+    std::array<T, R> r;
+    for (int i = 0; i < R; ++i) r[i] = a1[i] - a2[i];
+    return r;
+  }
+
+} // namespace nda::stdutil
 #endif

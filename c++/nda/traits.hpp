@@ -3,8 +3,16 @@
 #include <type_traits>
 #include <utility>
 
+// A few addons to the std::...
+#include "stdutil/complex.hpp"
+#include "stdutil/array.hpp"
+
 namespace nda {
 
+  // Using 2i and co
+  //
+  using namespace std::literals::complex_literals;
+  
   // --------------------------- is_complex ------------------------
 
   template <typename T>

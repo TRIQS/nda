@@ -1,61 +1,8 @@
 #pragma once
 #include "declarations.hpp"
+#include "stdutil/concepts.hpp"
 
 #if __cplusplus > 201703L
-
-#if __has_include(<concepts>)
-#include <concepts>
-#else
-//  defined a few std concepts that are in <concepts> but libc++ has not yet implemented them
-namespace std {
-  template <class From, class To>
-  concept convertible_to = std::is_convertible_v<From, To> and requires(std::add_rvalue_reference_t<From> (&f)()) {
-    static_cast<To>(f());
-  };
-
-  namespace detail {
-    template <class T, class U>
-    concept SameHelper = std::is_same_v<T, U>;
-  }
-
-  template <class T, class U>
-  concept same_as = detail::SameHelper<T, U> &&detail::SameHelper<U, T>;
-
-  template <class T>
-  concept integral = std::is_integral_v<T>;
-
-  // clang-format off
-
-  template<class T, class U>
-  concept IMPL__WeaklyEqualityComparableWith = // exposition only
-    requires(const std::remove_reference_t<T>& t,
-             const std::remove_reference_t<U>& u) {
-      { t == u } -> std::boolean;
-      { t != u } -> std::boolean;
-      { u == t } -> std::boolean;
-      { u != t } -> std::boolean;
-    };
-  template < class T >
-  concept equality_comparable = IMPL__WeaklyEqualityComparableWith<T, T>;
-
-  template <class T, class U>
-  concept equality_comparable_with =
-    std::equality_comparable<T> &&
-    std::equality_comparable<U> &&
-    std::common_reference_with<
-      const std::remove_reference_t<T>&,
-      const std::remove_reference_t<U>&> &&
-    std::equality_comparable<
-      std::common_reference_t<
-        const std::remove_reference_t<T>&,
-        const std::remove_reference_t<U>&>> &&
-    IMPL__WeaklyEqualityComparableWith<T, U> ;
-
-  // clang-format on
-
-} // namespace std
-
-#endif
 
 namespace nda {
 
@@ -93,8 +40,21 @@ namespace nda {
 
   } // namespace concept_impl
 
-  // clang-format off
-  template <typename A> concept Array= requires(A const &a) {
+   // clang-format off
+  
+   // FIXME : C++20 replace by  std::equality_comparable_with with <concepts> in libc++
+   /// A simplified version of std::equality_comparable_with (temporary fix waiting to implementation of <concepts> in libc++
+    template<class T, class U>
+    concept StdEqualityComparableWith= // exposition only
+    requires(const std::remove_reference_t<T>& t,
+             const std::remove_reference_t<U>& u) {
+      { t == u } -> std::convertible_to<bool>;
+      { t != u } ->std::convertible_to<bool> ;
+      { u == t } -> std::convertible_to<bool>;
+      { u != t } -> std::convertible_to<bool>;
+    };
+  
+    template <typename A> concept Array= requires(A const &a) {
 
   // A has a shape() which returns an array<long, R> ...
   { a.shape() } -> concept_impl::IsStdArrayOfLong;
@@ -129,6 +89,7 @@ namespace nda {
 
 } // namespace nda
 
+// end if C++20
 #endif
 
 // C++17 backward compat workaround

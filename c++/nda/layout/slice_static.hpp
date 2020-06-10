@@ -71,7 +71,7 @@ namespace nda::slice_static {
   //
   template <int N, int P, size_t Q> // Q is a size_t for matching std::array
   constexpr std::array<int, P> n_of_p_map(std::array<bool, Q> const &args_is_range, int e_pos, int e_len) {
-    auto result = nda::make_initialized_array<P>(0);
+    auto result = stdutil::make_initialized_array<P>(0);
     int p       = 0;
     for (int n = 0; n < N; ++n) {
       int q = q_of_n(n, e_pos, e_len);
@@ -86,7 +86,7 @@ namespace nda::slice_static {
   //
   template <int N, int P, size_t Q>
   constexpr std::array<int, P> q_of_p_map(std::array<bool, Q> const &args_is_range, int e_pos, int e_len) {
-    auto result = nda::make_initialized_array<P>(0);
+    auto result = stdutil::make_initialized_array<P>(0);
     int p       = 0;
     for (int n = 0; n < N; ++n) {
       int q = q_of_n(n, e_pos, e_len);
@@ -102,7 +102,7 @@ namespace nda::slice_static {
   // n -> p or -1 if n is the index of a long argument
   template <size_t N, size_t P>
   constexpr std::array<int, N> p_of_n_map(std::array<int, P> const &n_of_p) {
-    auto result = nda::make_initialized_array<N>(-1);
+    auto result = stdutil::make_initialized_array<N>(-1);
     for (size_t p = 0; p < P; ++p) result[n_of_p[p]] = p;
     return result;
   }
@@ -115,7 +115,7 @@ namespace nda::slice_static {
   constexpr std::array<int, P> sliced_mem_stride_order(std::array<int, N> const &stride_order_in, std::array<int, P> const &n_of_p) {
     // quick short cut : does it really impact compilation time ?
     //if (stride_order_in == 0) return 0; // quick decision C-> C
-    auto stride_order = nda::make_initialized_array<P>(0);
+    auto stride_order = stdutil::make_initialized_array<P>(0);
     auto p_of_n       = p_of_n_map<N>(n_of_p); // reverse the map
     // traverse the n in the order given by stride_order_in and keep them if they are associated to a p
     for (int i = 0, ip = 0; i < N; ++i) {  // i : index of the n
