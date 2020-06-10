@@ -10,7 +10,7 @@
 /// =========    ADDING IN STD ===========
 /// =========    NEED TO PUT IT IN STD FOR ADL ========
 // How to document this ?? Manually ?
-namespace std { 
+namespace std {
 
   template <typename T, size_t R>
   std::ostream &operator<<(std::ostream &out, std::array<T, R> const &a) {
@@ -139,7 +139,7 @@ namespace nda::stdutil {
    * @param a The array
    * @return A new std::array with the element less at the front
    */
-  template <typename T, size_t R, int N>
+  template <int N, typename T, size_t R>
   constexpr std::array<T, R - N> front_mpop(std::array<T, R> const &a) {
     std::array<T, R - N> res;
     for (int i = N; i < R; ++i) res[i - N] = a[i];
