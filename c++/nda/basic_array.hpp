@@ -84,11 +84,11 @@ namespace nda {
     basic_array(std::array<long, Rank> const &shape, mem::init_zero_t) noexcept : lay{shape}, sto{lay.size(), mem::init_zero} {}
 
     // FIXME : REMOVE : for tempo transpose for PORTING TRIQS
-    template <ARRAY_INT P, typename U, int R, typename L, char A, typename CP>
-    friend auto permuted_indices_view(basic_array<U, R, L, A, CP> const &a);
+    //template <ARRAY_INT P, typename U, int R, typename L, char A, typename CP>
+    //friend auto permuted_indices_view(basic_array<U, R, L, A, CP> const &a);
 
-    template <ARRAY_INT P, typename U, int R, typename L, char A, typename CP>
-    friend auto permuted_indices_view(basic_array<U, R, L, A, CP> &a);
+    //template <ARRAY_INT P, typename U, int R, typename L, char A, typename CP>
+    //friend auto permuted_indices_view(basic_array<U, R, L, A, CP> &a);
 
     public:
     // backward : FIXME : temporary to be removed
