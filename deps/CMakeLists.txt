@@ -77,19 +77,19 @@ external_dependency(google-bench
 # -- itertools --
 external_dependency(itertools # CCQ-H5
   GIT_REPO https://github.com/TRIQS/itertools
-  GIT_TAG unstable
+  GIT_TAG cpp20
 )
 
 # -- h5 --
 external_dependency(h5
   GIT_REPO https://github.com/TRIQS/h5
-  GIT_TAG unstable
+  GIT_TAG cpp20
 )
 
 # -- MPI --
 external_dependency(mpi
   GIT_REPO https://github.com/TRIQS/mpi
-  GIT_TAG unstable
+  GIT_TAG cpp20
 )
 
 ## Pybind 11

@@ -6,7 +6,7 @@ add_library(nda_py INTERFACE)
 add_library(${PROJECT_NAME}:nda_py ALIAS nda_py)
 
 # Configure target and compilation
-target_compile_options(nda_py INTERFACE -std=c++17 $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
+target_compile_options(nda_py INTERFACE -std=c++20)
 target_include_directories(nda_py INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/python> $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/c++>)
 target_include_directories(nda_py SYSTEM INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>)
 target_compile_definitions(nda_py INTERFACE
