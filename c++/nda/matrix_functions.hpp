@@ -38,8 +38,8 @@ namespace nda {
   //REQUIRES17(is_ndarray_v<A> and (get_rank<A> == 2) and is_ndarray_v<B> and (get_rank<B> == 2))
   {
     EXPECTS_WITH_MESSAGE(a.shape()[1] == b.shape()[1],
-                         "vstack. The second dimension of the two matrices must be equal but \n   a is of shape "
-                            + to_string(a.shape())  + "   b is of shape" + to_string(b.shape()));
+                         "vstack. The second dimension of the two matrices must be equal but \n   a is of shape " + to_string(a.shape())
+                            + "   b is of shape" + to_string(b.shape()));
     // Impl. Concept only ! A, B can be expression template, e.g.
 
     auto [n, q] = a.shape();

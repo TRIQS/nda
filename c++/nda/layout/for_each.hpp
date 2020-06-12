@@ -78,11 +78,12 @@ namespace nda {
       if constexpr (I == R)
         f();
       else {
-	static constexpr int J = details::index_from_stride_order<R>(StrideOrder, I);
-        const long imax = details::get_extent<J, R, StaticExtents>(idx_lengths);
+        static constexpr int J = details::index_from_stride_order<R>(StrideOrder, I);
+        const long imax        = details::get_extent<J, R, StaticExtents>(idx_lengths);
         for (long i = 0; i < imax; ++i) {
           for_each_static_impl<I + 1, StaticExtents, StrideOrder>(
-             idx_lengths, [ i, f ](auto &&... x)  __attribute__((always_inline)) mutable{ return f(i, x...); }); // mutable since f itself can be mutable !
+             idx_lengths,
+             [ i, f ](auto &&... x) __attribute__((always_inline)) mutable { return f(i, x...); }); // mutable since f itself can be mutable !
         }
       }
     }

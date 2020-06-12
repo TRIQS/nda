@@ -33,7 +33,6 @@ namespace std {
   template <class T>
   concept integral = std::is_integral_v<T>;
 
- 
   // clang-format on
 
 } // namespace std

@@ -96,4 +96,4 @@ namespace nda::clef {
     return sout << ") --> " << x.ex;
   }
 
-} // namespace clef
+} // namespace nda::clef

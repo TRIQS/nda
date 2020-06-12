@@ -68,10 +68,9 @@ namespace nda {
     basic_array_view(layout_t const &idxm, storage_t st) : lay(idxm), sto(std::move(st)) {}
 
     public:
- 
     // backward : FIXME : temporary to be removed
-    [[deprecated]] basic_array_view<ValueType, Rank, Layout, 'A', AccessorPolicy, OwningPolicy> as_array_view(){return {*this};};
-    [[deprecated]] basic_array_view<const ValueType, Rank, Layout, 'A', AccessorPolicy, OwningPolicy> as_array_view() const {return {*this};};
+    [[deprecated]] basic_array_view<ValueType, Rank, Layout, 'A', AccessorPolicy, OwningPolicy> as_array_view() { return {*this}; };
+    [[deprecated]] basic_array_view<const ValueType, Rank, Layout, 'A', AccessorPolicy, OwningPolicy> as_array_view() const { return {*this}; };
 
     // ------------------------------- constructors --------------------------------------------
 
@@ -149,7 +148,8 @@ namespace nda {
      * @param rhs Right hand side of the = operation
      */
     template <CONCEPT(ArrayOfRank<Rank>) RHS>
-    basic_array_view &operator=(RHS const &rhs) noexcept REQUIRES17(is_ndarray_v<RHS>) {
+    basic_array_view &operator=(RHS const &rhs) noexcept REQUIRES17(is_ndarray_v<RHS> and not is_scalar_for_v<RHS, basic_array_view>) {
+      // in C20 I use the concept refinement here, in 17 I have to exclude the  alternaticve
       static_assert(!is_const, "Cannot assign to a const !");
       assign_from_ndarray(rhs); // common code with view, private
       return *this;
@@ -168,7 +168,7 @@ namespace nda {
      * 
      */
     template <CONCEPT(ArrayInitializer) Initializer>
-    basic_array_view &operator=(Initializer const &initializer) noexcept REQUIRES17(is_assign_rhs<Initializer>) {
+    basic_array_view &operator=(Initializer const &initializer) noexcept REQUIRES17(is_array_initializer_v<Initializer>) {
       EXPECTS(shape() == initializer.shape());
       initializer.invoke(*this);
       return *this;

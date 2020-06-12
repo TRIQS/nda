@@ -8,7 +8,7 @@ namespace nda {
 
     A const &ref;        // the array in reference
     mpi::communicator c; // mpi comm
-    const int root;    //
+    const int root;      //
     const bool all;
 
     public:
@@ -60,7 +60,7 @@ namespace nda {
   };
   //----------------------------  mark the class as assignable to an array for array construction and array/array_view assignment -------------
 
-#if not __cplusplus > 201703L
+#if not(__cplusplus > 201703L)
 
   template <typename A>
   inline constexpr bool is_array_initializer_v<lazy_mpi_gather<A>> = true;
@@ -71,12 +71,15 @@ namespace nda {
 
   template <typename A>
   AUTO(ArrayInitializer)
-   mpi_gather(A &a, mpi::communicator c = {}, int root = 0, bool all = false) //
+  mpi_gather(A &a, mpi::communicator c = {}, int root = 0, bool all = false) //
      REQUIRES(is_regular_or_view_v<A>) {
 
     static_assert(has_layout_contiguous<A>, "Non contigous view in mpi_broadcast are not implemented");
-    static_assert(ArrayInitializer<lazy_mpi_gather<A>>, "Internal");
 
-    return lazy_mpi_gather<A> {a, c, root, all};
+#if (__cplusplus > 201703L)
+    static_assert(ArrayInitializer<lazy_mpi_gather<A>>, "Internal");
+#endif
+
+    return lazy_mpi_gather<A>{a, c, root, all};
   }
 } // namespace nda

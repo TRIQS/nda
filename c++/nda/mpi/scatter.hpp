@@ -53,7 +53,7 @@ namespace nda {
 
   //----------------------------  mark the class as assignable to an array for array construction and array/array_view assignment -------------
 
-#if not __cplusplus > 201703L
+#if not(__cplusplus > 201703L)
 
   template <typename A>
   inline constexpr bool is_array_initializer_v<lazy_mpi_scatter<A>> = true;
@@ -62,11 +62,14 @@ namespace nda {
 
   template <typename A>
   AUTO(ArrayInitializer)
-	   mpi_scatter(A &a, mpi::communicator c = {}, int root = 0, bool all = false) //
+  mpi_scatter(A &a, mpi::communicator c = {}, int root = 0, bool all = false) //
      REQUIRES(is_regular_or_view_v<A>) {
 
-    static_assert(ArrayInitializer<lazy_mpi_scatter<A>>, "Internal");
     static_assert(has_layout_contiguous<A>, "Non contigous view in mpi_broadcast are not implemented");
+
+#if (__cplusplus > 201703L)
+    static_assert(ArrayInitializer<lazy_mpi_scatter<A>>, "Internal");
+#endif
 
     return lazy_mpi_scatter<A>{a, c, root, all};
   }

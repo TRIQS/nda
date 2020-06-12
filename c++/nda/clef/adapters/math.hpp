@@ -8,7 +8,7 @@
 
 namespace nda::clef {
 
-#define CLEF_MAKE_STD_FNT_LAZY(name)                                                                                                           \
+#define CLEF_MAKE_STD_FNT_LAZY(name)                                                                                                                 \
   using std::name;                                                                                                                                   \
   CLEF_MAKE_FNT_LAZY(name)
 
@@ -16,4 +16,4 @@ namespace nda::clef {
   CLEF_MAKE_STD_FNT_LAZY(cos)
   CLEF_MAKE_STD_FNT_LAZY(abs)
 
-} // namespace clef
+} // namespace nda::clef

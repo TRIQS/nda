@@ -139,10 +139,10 @@ namespace nda {
     auto const &lay = a.indexmap();
     using lay_t     = std::decay_t<decltype(lay)>;
 
-    static constexpr uint64_t new_stride_order_encoded =encode(impl::complete_stride_order_with_fast<N>(lay_t::stride_order));
-      // (lay_t::stride_order_encoded == 0 ? 0 : encode(impl::complete_stride_order_with_fast<N>(lay_t::stride_order)));
+    static constexpr uint64_t new_stride_order_encoded = encode(impl::complete_stride_order_with_fast<N>(lay_t::stride_order));
+    // (lay_t::stride_order_encoded == 0 ? 0 : encode(impl::complete_stride_order_with_fast<N>(lay_t::stride_order)));
 
-    static constexpr uint64_t new_static_extents_encoded =encode(stdutil::join(lay_t::static_extents, stdutil::make_initialized_array<N>(0)));
+    static constexpr uint64_t new_static_extents_encoded = encode(stdutil::join(lay_t::static_extents, stdutil::make_initialized_array<N>(0)));
     //   (lay_t::static_extents_encoded == 0 ? 0 : encode(stdutil::join(lay_t::static_extents, stdutil::make_initialized_array<N>(0))));
 
     using new_lay_t = idx_map<get_rank<A> + N, new_static_extents_encoded, new_stride_order_encoded, lay_t::layout_prop>;

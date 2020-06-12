@@ -9,7 +9,9 @@ TEST(array_adapter, base) { //NOLINT
 
   auto al = nda::array_adapter{std::array{2, 2}, l};
 
+#if (__cplusplus > 201703L)
   static_assert(nda::ArrayOfRank<decltype(al), 2>, "Opps");
+#endif
 
   auto a = nda::array<long, 2>{al};
 

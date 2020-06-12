@@ -3,19 +3,21 @@
 #include "blas/tools.hpp"
 #include "lapack/interface/lapack_cxx_interface.hpp"
 
-
 namespace nda::lapack {
 
   using blas::get_ld;
   using blas::get_n_cols;
   using blas::get_n_rows;
+  using blas::have_same_value_type_v;
   using blas::is_blas_lapack_v;
+
+#if (__cplusplus > 201703L)
+  using blas::IsDoubleOrComplex;
   using blas::MatrixView;
   using blas::VectorView;
-  using blas::MatrixView;
-  using blas::IsDoubleOrComplex;
-  using blas::have_same_value_type_v;
-}
+#endif
+
+} // namespace nda::lapack
 
 #include "lapack/gesvd.hpp"
 

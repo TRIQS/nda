@@ -18,7 +18,7 @@ namespace nda::lapack {
     int info = 0;
 
     using T = typename A::value_type;
-    static_assert(IsDoubleOrComplex<T>, "Not implemented");
+    static_assert(is_blas_lapack_v<T>, "Not implemented");
 
     if constexpr (std::is_same_v<T, double>) {
 

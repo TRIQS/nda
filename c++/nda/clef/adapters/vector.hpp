@@ -19,4 +19,4 @@ namespace nda::clef {
     for (size_t i = 0; i < v.size(); ++i) clef_auto_assign__std_vector_impl(v[i], f(i));
   }
 
-} // namespace clef
+} // namespace nda::clef

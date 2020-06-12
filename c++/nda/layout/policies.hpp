@@ -28,7 +28,6 @@ namespace nda {
     // FIXME C++20 : StrideOrder will be a std::array<int, Rank> WITH SAME rank
     template <int Rank>
     using mapping = idx_map<Rank, StaticExtents, StrideOrder, LayoutProp>;
-
   };
 
 } // namespace nda

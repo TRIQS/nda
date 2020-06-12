@@ -17,7 +17,13 @@
 
 // --- Concept macros -----
 
-#if __cplusplus > 201703L
+//#if (__cplusplus > 201703L)
+//#define NDA_CPP17
+//#else
+//#define NDA_CPP20
+//#endif
+
+#if (__cplusplus > 201703L)
 
 // C++20
 // REQUIRES17 : only in 17, same for 20
@@ -37,7 +43,7 @@
 
 // C++17 backward compat mode
 
-#define AUTO(X)  auto
+#define AUTO(X) auto
 #define CONCEPT(X) typename
 #define REQUIRES20(...)
 
@@ -91,6 +97,4 @@
     std::terminate();                                                                                                                                \
   }
 
-
 #endif
-

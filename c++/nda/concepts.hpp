@@ -40,7 +40,7 @@ namespace nda {
 
   } // namespace concept_impl
 
-   // clang-format off
+  // clang-format off
   
    // FIXME : C++20 replace by  std::equality_comparable_with with <concepts> in libc++
    /// A simplified version of std::equality_comparable_with (temporary fix waiting to implementation of <concepts> in libc++
@@ -109,7 +109,7 @@ namespace nda {
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   inline constexpr bool is_ndarray_v<basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>> = true;
 
-#if not __cplusplus > 201703L
+#if not(__cplusplus > 201703L)
 
   // --------------------------- ArrayInitializer
   template <typename T>

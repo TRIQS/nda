@@ -67,16 +67,28 @@ namespace nda {
     template <typename U, int R, typename L, char A, typename C, typename NewLayoutType>
     friend auto map_layout_transform(basic_array<U, R, L, A, C> &&a, NewLayoutType const &new_layout);
 
+    // to avoid  warning: use of function template name with no prior declaration in function call with explicit template arguments is a C++20 extension
+#if not(__cplusplus > 201703L)
+    template <ARRAY_INT P, typename U, int R, typename L, char A, typename AP, typename OP>
+    auto permuted_indices_view(basic_array_view<U, R, L, A, AP, OP>);
+
+    template <ARRAY_INT P, typename U, int R, typename L, char A, typename CP>
+    auto permuted_indices_view(basic_array<U, R, L, A, CP> const &);
+
+    template <ARRAY_INT P, typename U, int R, typename L, char A, typename CP>
+    auto permuted_indices_view(basic_array<U, R, L, A, CP> &);
+#endif
+
     // private constructor for the friend
     basic_array(layout_t const &idxm, storage_t &&mem_handle) noexcept : lay{idxm}, sto{std::move(mem_handle)} {}
     basic_array(std::array<long, Rank> const &shape, mem::init_zero_t) noexcept : lay{shape}, sto{lay.size(), mem::init_zero} {}
 
     // FIXME : REMOVE : for tempo transpose for PORTING TRIQS
-    template <ARRAY_INT P, typename T, int R, typename L, char A, typename CP>
-    friend auto permuted_indices_view(basic_array<T, R, L, A, CP> const &a);
+    template <ARRAY_INT P, typename U, int R, typename L, char A, typename CP>
+    friend auto permuted_indices_view(basic_array<U, R, L, A, CP> const &a);
 
-    template <ARRAY_INT P, typename T, int R, typename L, char A, typename CP>
-    friend auto permuted_indices_view(basic_array<T, R, L, A, CP> &a);
+    template <ARRAY_INT P, typename U, int R, typename L, char A, typename CP>
+    friend auto permuted_indices_view(basic_array<U, R, L, A, CP> &a);
 
     public:
     // backward : FIXME : temporary to be removed
@@ -146,7 +158,7 @@ namespace nda {
      *
      */
     template <CONCEPT(ArrayInitializer) Initializer> // can not be explicit
-    basic_array(Initializer const &initializer) noexcept(noexcept(initializer.invoke(*this))) REQUIRES17(is_assign_rhs<Initializer>)
+    basic_array(Initializer const &initializer) noexcept(noexcept(initializer.invoke(*this))) REQUIRES17(is_array_initializer_v<Initializer>)
        : basic_array{initializer.shape()} {
       initializer.invoke(*this);
     }
@@ -288,7 +300,7 @@ namespace nda {
      * 
      */
     template <CONCEPT(ArrayInitializer) Initializer>
-    basic_array &operator=(Initializer const &initializer) noexcept REQUIRES17(is_assign_rhs<Initializer>) {
+    basic_array &operator=(Initializer const &initializer) noexcept REQUIRES17(is_array_initializer_v<Initializer>) {
       resize(initializer.shape());
       initializer.invoke(*this);
       return *this;
@@ -302,7 +314,7 @@ namespace nda {
      *
      */
     template <CONCEPT(std::integral)... Int>
-    void resize(Int const &... extent) REQUIRES17(std::is_convertible_v<Int, long> and...) {
+    void resize(Int const &... extent) REQUIRES17((std::is_convertible_v<Int, long> and ...)) {
       static_assert(std::is_copy_constructible_v<ValueType>, "Can not resize an array if its value_type is not copy constructible");
       static_assert(sizeof...(extent) == Rank, "Incorrect number of arguments for resize. Should be Rank");
       resize(std::array<long, Rank>{long(extent)...});

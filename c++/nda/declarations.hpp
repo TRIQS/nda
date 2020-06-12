@@ -17,8 +17,9 @@ namespace nda {
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
   class basic_array;
 
-  template <typename ValueType, int Rank, typename Layout, char Algebra = 'A', typename AccessorPolicy = nda::default_accessor, //, nda::no_alias_accessor, //,
-            typename OwningPolicy = nda::borrowed>
+  template <typename ValueType, int Rank, typename Layout, char Algebra = 'A',
+            typename AccessorPolicy = nda::default_accessor, //, nda::no_alias_accessor, //,
+            typename OwningPolicy   = nda::borrowed>
   class basic_array_view;
 
   // ---------------------- User aliases  --------------------------------
@@ -33,10 +34,12 @@ namespace nda {
   using array_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed>;
 
   template <typename ValueType, int Rank, uint64_t StrideOrder>
-  using array_contiguous_view = basic_array_view<ValueType, Rank,  basic_layout<0, StrideOrder, layout_prop_e::contiguous>, 'A', default_accessor, borrowed>;
+  using array_contiguous_view =
+     basic_array_view<ValueType, Rank, basic_layout<0, StrideOrder, layout_prop_e::contiguous>, 'A', default_accessor, borrowed>;
 
   template <typename ValueType, int Rank, uint64_t StrideOrder>
-  using array_contiguous_const_view = basic_array_view<ValueType const, Rank,  basic_layout<0, StrideOrder, layout_prop_e::contiguous>, 'A', default_accessor, borrowed>;
+  using array_contiguous_const_view =
+     basic_array_view<ValueType const, Rank, basic_layout<0, StrideOrder, layout_prop_e::contiguous>, 'A', default_accessor, borrowed>;
 
   template <typename ValueType, typename Layout = C_layout>
   using matrix = basic_array<ValueType, 2, Layout, 'M', heap>;
@@ -92,4 +95,4 @@ namespace nda {
   inline constexpr layout_info_t get_layout_info<basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>> =
      basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>::layout_t::layout_info;
 
- } // namespace nda
+} // namespace nda

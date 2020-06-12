@@ -25,7 +25,7 @@ namespace nda::lazy_mpi {
 
       // some checks.
       bool in_place = (target_view.data_start() == source.data_start());
-      auto sha      = shape(); 
+      auto sha      = shape();
       if (in_place) {
         if (source.size() != target_view.size())
           NDA_RUNTIME_ERROR << "mpi reduce of array : same pointer to data start, but different number of elements !";
@@ -53,17 +53,17 @@ namespace nda::lazy_mpi {
       }
     }
   };
+} // namespace nda::lazy_mpi
 
+#if not(__cplusplus > 201703L)
+namespace nda {
   //----------------------------  mark the class for C++17 concept workaround
 
-#if not __cplusplus > 201703L
+  template <typename V, int R, uint64_t SO>
+  inline constexpr bool is_array_initializer_v<lazy_mpi::reduce<V, R, SO>> = true;
 
-  template <typename V>
-  inline constexpr bool is_array_initializer_v<reduce<V>> = true;
-
+} // namespace nda
 #endif
-
-} // namespace nda::lazy_mpi
 
 //----------------------------
 

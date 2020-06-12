@@ -93,7 +93,7 @@ template <typename X, typename Y>
 // Arrays is almost 0
 template <typename X>
 ::testing::AssertionResult array_almost_zero(X const &x1) {
-  double precision                           = 1.e-10;
+  double precision                                    = 1.e-10;
   nda::array<nda::get_value_t<X>, nda::get_rank<X>> x = x1;
 
   if (x.size() == 0 || max_element(abs(x)) < precision)

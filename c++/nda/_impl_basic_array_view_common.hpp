@@ -290,7 +290,7 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
   if constexpr ((get_layout_info<self_t>.stride_order == get_layout_info<RHS>.stride_order) // same stride order and both contiguous ...
                 and has_layout_strided_1d<self_t> and has_layout_strided_1d<RHS>) {
 
-    static_assert(! std::is_reference_v<RHS>, "W?");
+    static_assert(!std::is_reference_v<RHS>, "W?");
     //static_assert(is_regular_or_view_v<RHS>, "oops");
     // In general, has_layout_strided_1d is FALSE by default
     // VALID ALSO FOR EXPRESSION !!!

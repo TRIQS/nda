@@ -25,7 +25,7 @@
 
 namespace nda {
 
-  // FIXME : eliminate this 
+  // FIXME : eliminate this
   // /c++/nda/_impl_basic_array_view_common.hpp:71 -> two is_same_v
   struct range_tag {};
 
@@ -113,9 +113,9 @@ namespace nda {
       }
 
       bool operator==(const_iterator const &other) const noexcept { return (other.pos == this->pos); }
-//#if not __cplusplus > 201703L
+      //#if not (__cplusplus > 201703L)
       bool operator!=(const_iterator const &other) const noexcept { return (!operator==(other)); }
-//#endif
+      //#endif
 
       long operator*() const noexcept { return pos; }
       long operator->() const noexcept { return operator*(); }
@@ -131,11 +131,11 @@ namespace nda {
   // ------------------   foreach   --------------------------------------
 
   /// Calls f for each element of the range
- // useless ?
+  // useless ?
   //template <typename F>
   //void foreach (range const &r, F && f) noexcept {
-    //long i = r.first(), last = r.last(), step = r.step();
-    //for (; i < last; i += step) std::forward<F>(f)(i);
+  //long i = r.first(), last = r.last(), step = r.step();
+  //for (; i < last; i += step) std::forward<F>(f)(i);
   //}
 
   // ------------------  range_all   --------------------------------------

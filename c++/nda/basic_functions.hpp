@@ -16,7 +16,7 @@ namespace nda {
       return array<T, Rank>::zeros(shape);
   }
 
-  /// 
+  ///
   template <typename T, CONCEPT(std::integral)... Int>
   auto zeros(Int... i) {
     return zeros<T>(std::array<long, sizeof...(Int)>{i...});
@@ -91,7 +91,9 @@ namespace nda {
   /// True iif all elements are equal.
   template <typename A, typename B>
   bool operator==(A const &a, B const &b) REQUIRES(is_ndarray_v<A> and is_ndarray_v<B>) {
+#if (__cplusplus > 201703L)
     static_assert(StdEqualityComparableWith<get_value_t<A>, get_value_t<B>>, "A == B is only defined when their element can be compared");
+#endif
     if (a.shape() != b.shape()) return false;
     bool r = true;
     nda::for_each(a.shape(), [&](auto &&... x) { r &= (a(x...) == b(x...)); });

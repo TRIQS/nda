@@ -51,8 +51,8 @@ namespace nda {
   template <int Rank, uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp>
   class idx_map {
     static_assert(Rank < 16, "Rank must be < 16"); // C++17 constraint. Relax this in C++20
-    static_assert((StrideOrder !=0) or (Rank==1), "Oops");
-    std::array<long, Rank> len, str;               // lenghts and strides
+    static_assert((StrideOrder != 0) or (Rank == 1), "Oops");
+    std::array<long, Rank> len, str; // lenghts and strides
 
     public:
     static constexpr uint64_t static_extents_encoded      = StaticExtents;

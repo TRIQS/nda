@@ -30,7 +30,7 @@ namespace nda {
   array_adapter(std::array<Int, R>, F) -> array_adapter<R, F>;
 
 // C++17 concept emulation
-#if not __cplusplus > 201703L
+#if not(__cplusplus > 201703L)
   template <int R, typename F>
   inline constexpr bool is_ndarray_v<array_adapter<R, F>> = true;
 #endif

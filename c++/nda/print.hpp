@@ -62,7 +62,7 @@ namespace nda {
   }
 
   // ==============================================
- 
+
   template <typename S, int Rank>
   std::ostream &operator<<(std::ostream &sout, scalar_array<S, Rank> const &expr) {
     return sout << expr.s;
