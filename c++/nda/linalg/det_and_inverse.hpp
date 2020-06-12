@@ -71,14 +71,19 @@ namespace nda {
 
   // ----------  inverse -------------------------
 
-  template <typename A>
-  void inverse_in_place(A &a) REQUIRES(is_regular_or_view_v<A> and (get_algebra<A> == 'M') and (get_rank<A> == 2)) {
+  template <typename T, typename L, typename AP, typename OP>
+  void inverse_in_place(basic_array_view<T, 2, L, 'M', AP, OP> a) {
     EXPECTS(is_matrix_square(a, true));
     array<int, 1> ipiv(a.extent(0));
     int info = lapack::getrf(a, ipiv); // it is ok to be in C order. Lapack compute the inverse of the transpose.
     if (info != 0) NDA_RUNTIME_ERROR << "Inverse/Det error : matrix is not invertible. Step 1. Lapack error : " << info;
     info = lapack::getri(a, ipiv);
     if (info != 0) NDA_RUNTIME_ERROR << "Inverse/Det error : matrix is not invertible. Step 2. Lapack error : " << info;
+  } // namespace nda
+
+  template <typename T, typename L, typename CP>
+  void inverse_in_place(basic_array<T, 2, L, 'M', CP> &a) {
+    inverse_in_place(a());
   }
 
   template <typename A>

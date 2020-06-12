@@ -25,6 +25,7 @@ namespace nda {
 
   template <uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp>
   struct basic_layout {
+    // FIXME C++20 : StrideOrder will be a std::array<int, Rank> WITH SAME rank
     template <int Rank>
     using mapping = idx_map<Rank, StaticExtents, StrideOrder, LayoutProp>;
 

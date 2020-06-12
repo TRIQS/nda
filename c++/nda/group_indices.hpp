@@ -81,7 +81,7 @@ namespace nda {
   auto group_indices_layout(idx_map<Rank, StaticExtents, StrideOrder, LayoutProp> const &idxm, IntSequences...) {
     using Idx_t = idx_map<Rank, StaticExtents, StrideOrder, LayoutProp>;
 
-    static_assert(StaticExtents == 0, "Not yet implemented for static extents");
+    //static_assert(Idx_t::is_stride_order_C(), "Not yet implemented for static extents");
     static_assert(LayoutProp == layout_prop_e::contiguous, "Not yet implemented for non contiguous arrays");
 
     static_assert(check_grouping(Idx_t::stride_order, IntSequences::as_std_array...), "Improper indices in group indices");

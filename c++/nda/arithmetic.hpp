@@ -110,7 +110,7 @@ namespace nda {
     static constexpr bool r_is_scalar = nda::is_scalar_v<R_t>;
     static constexpr char algebra     = (l_is_scalar ? get_algebra<R_t> : get_algebra<L_t>);
     static constexpr layout_info_t layout_info =
-       (l_is_scalar ? get_layout_info<R_t> : (r_is_scalar ? get_layout_info<L_t> : get_layout_info<R_t> | get_layout_info<L_t>));
+       (l_is_scalar ? get_layout_info<R_t> : (r_is_scalar ? get_layout_info<L_t> : get_layout_info<R_t> & get_layout_info<L_t>));
 
     //  --- shape ---
     [[nodiscard]] constexpr auto shape() const {
@@ -209,7 +209,7 @@ namespace nda {
   struct expr_unary {
     using L_t = std::decay_t<L>;
     L l;
-    static constexpr char algebra = L_t::algebra;
+    static constexpr char algebra = get_algebra<L_t>;
 
     template <typename LL>
     expr_unary(LL &&l_) : l(std::forward<LL>(l_)) {}

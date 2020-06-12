@@ -9,10 +9,10 @@
 [[nodiscard]] storage_t const &storage() const &noexcept { return sto; }
 
 /// \private
-[[nodiscard]] storage_t &storage() & noexcept{ return sto; }
+[[nodiscard]] storage_t &storage() &noexcept { return sto; }
 
 /// \private
-[[nodiscard]] storage_t storage() && noexcept { return std::move(sto); }
+[[nodiscard]] storage_t storage() &&noexcept { return std::move(sto); }
 
 /// Memory stride_order
 [[nodiscard]] constexpr auto stride_order() const noexcept { return lay.stride_order(); }
@@ -56,16 +56,23 @@ static constexpr bool is_stride_order_Fortran() noexcept { return layout_t::is_s
 /// \private NO DOC
 decltype(auto) operator()(_linear_index_t x) const noexcept {
   //NDA_PRINT(layout_t::layout_prop);
-  if constexpr (layout_t::layout_prop == layout_prop_e::strided_1d) return sto[x.value * lay.min_stride()];
-  if constexpr (layout_t::layout_prop == layout_prop_e::contiguous) return sto[x.value]; // min_stride is 1
-  // other case : should not happen, let it be a compilation error.
+  if constexpr (layout_t::layout_prop == layout_prop_e::strided_1d)
+    return sto[x.value * lay.min_stride()];
+  else if constexpr (layout_t::layout_prop == layout_prop_e::contiguous)
+    return sto[x.value]; // min_stride is 1
+  else
+    static_assert(fail<layout_t>, "Internal error");
 }
 
 /// \private NO DOC
 decltype(auto) operator()(_linear_index_t x) noexcept {
   //NDA_PRINT(layout_t::layout_prop);
-  if constexpr (layout_t::layout_prop == layout_prop_e::strided_1d) return sto[x.value * lay.min_stride()];
-  if constexpr (layout_t::layout_prop == layout_prop_e::contiguous) return sto[x.value]; // min_stride is 1
+  if constexpr (layout_t::layout_prop == layout_prop_e::strided_1d)
+    return sto[x.value * lay.min_stride()];
+  else if constexpr (layout_t::layout_prop == layout_prop_e::contiguous)
+    return sto[x.value]; // min_stride is 1
+  else
+    static_assert(fail<layout_t>, "Internal error");
   // other case : should not happen, let it be a compilation error.
 }
 
@@ -182,7 +189,7 @@ decltype(auto) operator[](T const &x) &&noexcept(has_no_boundcheck) {
 
 // ------------------------------- Iterators --------------------------------------------
 
-static constexpr int iterator_rank = (layout_t::layout_prop & layout_prop_e::strided_1d ? 1 : Rank);
+static constexpr int iterator_rank = (has_strided_1d(layout_t::layout_prop) ? 1 : Rank);
 
 ///
 using const_iterator = array_iterator<iterator_rank, ValueType const, typename AccessorPolicy::template accessor<ValueType>::pointer>;
@@ -282,6 +289,8 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
   // we can make a 1d loop
   if constexpr ((get_layout_info<self_t>.stride_order == get_layout_info<RHS>.stride_order) // same stride order and both contiguous ...
                 and has_layout_strided_1d<self_t> and has_layout_strided_1d<RHS>) {
+
+    static_assert(! std::is_reference_v<RHS>, "W?");
     //static_assert(is_regular_or_view_v<RHS>, "oops");
     // In general, has_layout_strided_1d is FALSE by default
     // VALID ALSO FOR EXPRESSION !!!

@@ -49,8 +49,9 @@ namespace nda {
     /// The type of the layout
     using layout_t = typename Layout::template mapping<Rank>;
 
-    using view_type       = basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
-    using const_view_type = basic_array_view<const ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
+    using regular_type = basic_array;
+    //using view_type       = basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
+    //using const_view_type = basic_array_view<const ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
 
     private:
     // FIXME : mem_handle_t
@@ -70,7 +71,21 @@ namespace nda {
     basic_array(layout_t const &idxm, storage_t &&mem_handle) noexcept : lay{idxm}, sto{std::move(mem_handle)} {}
     basic_array(std::array<long, Rank> const &shape, mem::init_zero_t) noexcept : lay{shape}, sto{lay.size(), mem::init_zero} {}
 
+    // FIXME : REMOVE : for tempo transpose for PORTING TRIQS
+    template <ARRAY_INT P, typename T, int R, typename L, char A, typename CP>
+    friend auto permuted_indices_view(basic_array<T, R, L, A, CP> const &a);
+
+    template <ARRAY_INT P, typename T, int R, typename L, char A, typename CP>
+    friend auto permuted_indices_view(basic_array<T, R, L, A, CP> &a);
+
     public:
+    // backward : FIXME : temporary to be removed
+    [[deprecated]] basic_array_view<ValueType, Rank, Layout, 'A', AccessorPolicy, OwningPolicy> as_array_view() { return {*this}; };
+    [[deprecated]] basic_array_view<const ValueType, Rank, Layout, 'A', AccessorPolicy, OwningPolicy> as_array_view() const { return {*this}; };
+
+    [[deprecated]] auto transpose() REQUIRES(Rank == 2) { return permuted_indices_view<encode(std::array{1, 0})>(*this); }
+    [[deprecated]] auto transpose() const REQUIRES(Rank == 2) { return permuted_indices_view<encode(std::array{1, 0})>(*this); }
+
     // ------------------------------- constructors --------------------------------------------
 
     /// Empty array

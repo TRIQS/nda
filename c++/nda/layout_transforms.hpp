@@ -102,6 +102,7 @@ namespace nda {
   /// --------------- Grouping indices------------------------
 
   // FIXME : write the doc
+  // FIXME : use "magnetic" placeholder
 
   template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy, typename... IntSequences>
   auto group_indices_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> a, IntSequences...) {
@@ -116,6 +117,38 @@ namespace nda {
   template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, typename... IntSequences>
   auto group_indices_view(basic_array<T, R, L, Algebra, ContainerPolicy> &a, IntSequences...) {
     return group_indices_view(basic_array_view<T, R, L, Algebra, default_accessor, borrowed>(a), IntSequences{}...);
+  }
+
+  /// --------------- Reinterpretation------------------------
+
+  namespace impl {
+
+    template <int N, auto R>
+    constexpr std::array<int, R + N> complete_stride_order_with_fast(std::array<int, R> const &a) {
+      auto r = stdutil::make_initialized_array<R + N>(0);
+      for (int i = 0; i < R; ++i) r[i] = a[i];
+      for (int i = 0; i < N; ++i) r[R + i] = R + i;
+      return r;
+    }
+  } // namespace impl
+
+  // Take an array or view and add N dimensions of size 1 in the fastest indices
+  template <int N, typename A>
+  auto reinterpret_add_fast_dims_of_size_one(A &&a) REQUIRES(nda::is_regular_or_view_v<std::decay_t<A>>) {
+
+    auto const &lay = a.indexmap();
+    using lay_t     = std::decay_t<decltype(lay)>;
+
+    static constexpr uint64_t new_stride_order_encoded =encode(impl::complete_stride_order_with_fast<N>(lay_t::stride_order));
+      // (lay_t::stride_order_encoded == 0 ? 0 : encode(impl::complete_stride_order_with_fast<N>(lay_t::stride_order)));
+
+    static constexpr uint64_t new_static_extents_encoded =encode(stdutil::join(lay_t::static_extents, stdutil::make_initialized_array<N>(0)));
+    //   (lay_t::static_extents_encoded == 0 ? 0 : encode(stdutil::join(lay_t::static_extents, stdutil::make_initialized_array<N>(0))));
+
+    using new_lay_t = idx_map<get_rank<A> + N, new_static_extents_encoded, new_stride_order_encoded, lay_t::layout_prop>;
+
+    auto shap1111 = stdutil::make_initialized_array<N>(1l);
+    return map_layout_transform(std::forward<A>(a), new_lay_t{stdutil::join(lay.lengths(), shap1111), stdutil::join(lay.strides(), shap1111)});
   }
 
 } // namespace nda

@@ -29,8 +29,9 @@ void test5d() {
 
   auto check = [n = 0](auto v) mutable {
     bool is_contiguous          = (v.indexmap().layout_prop == nda::layout_prop_e::contiguous);
-    bool is_strided_1d          = (v.indexmap().layout_prop & nda::layout_prop_e::strided_1d);
-    bool smallest_stride_is_one = (v.indexmap().layout_prop & nda::layout_prop_e::smallest_stride_is_one);
+    bool is_strided_1d          = (has_strided_1d(v.indexmap().layout_prop));
+    bool smallest_stride_is_one = (has_smallest_stride_is_one(v.indexmap().layout_prop));
+
 
     EXPECT_EQ(is_contiguous, (is_strided_1d and smallest_stride_is_one));
 

@@ -83,7 +83,7 @@ namespace nda::stdutil {
    * @param x Element to append
    * @return A new std::array with the element appended at the end
    */
-  template <typename T, typename U, size_t R>
+  template <typename T, auto R, typename U>
   constexpr std::array<T, R + 1> append(std::array<T, R> const &a, U const &x) {
     std::array<T, R + 1> res;
     for (int i = 0; i < R; ++i) res[i] = a[i];
@@ -117,6 +117,19 @@ namespace nda::stdutil {
   constexpr std::array<T, R - 1> pop(std::array<T, R> const &a) {
     std::array<T, R - 1> res;
     for (int i = 0; i < R - 1; ++i) res[i] = a[i];
+    return res;
+  }
+
+  /**
+   * Make a new std::array by removing one element at the front
+   * @tparam T
+   * @param a The array
+   * @return A new std::array with the element less at the front
+   */
+  template <int N, typename T, size_t R>
+  constexpr std::array<T, R - N> mpop(std::array<T, R> const &a) {
+    std::array<T, R - N> res;
+    for (int i = 0; i < R - N; ++i) res[i] = a[i];
     return res;
   }
 

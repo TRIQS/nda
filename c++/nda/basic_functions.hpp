@@ -50,8 +50,9 @@ namespace nda {
     }
   }
 
-  /// --------------- make_const_view------------------------
+  // --------------- make_const_view------------------------
 
+  /// Explicitly make a const view REMOVING all compile time guarantee flags
   template <typename T, int R, typename L, char Algebra, typename ContainerPolicy>
   basic_array_view<T const, R, L, Algebra> make_const_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a) {
     return {a};
@@ -63,7 +64,7 @@ namespace nda {
     return {a};
   }
 
-  /// --------------- make_matrix_view------------------------
+  // --------------- make_matrix_view------------------------
 
   template <typename T, int R, typename L, char Algebra, typename ContainerPolicy>
   matrix_view<T, L> make_matrix_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a) {
@@ -85,8 +86,9 @@ namespace nda {
     return {a};
   }
 
-  /// --------------- operator == ---------------------
+  // --------------- operator == ---------------------
 
+  /// True iif all elements are equal.
   template <typename A, typename B>
   bool operator==(A const &a, B const &b) REQUIRES(is_ndarray_v<A> and is_ndarray_v<B>) {
     static_assert(StdEqualityComparableWith<get_value_t<A>, get_value_t<B>>, "A == B is only defined when their element can be compared");
@@ -96,7 +98,7 @@ namespace nda {
     return r;
   }
 
-  /// --------------- ASSIGN FOREACH ------------------------
+  // --------------- ASSIGN FOREACH ------------------------
 
   template <typename T, typename F>
   //[[deprecated]] // FIXME : SHALL WE KEEP THIS ?

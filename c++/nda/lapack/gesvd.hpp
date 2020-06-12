@@ -53,11 +53,11 @@ namespace nda::lapack {
     return info;
   }
 
-  int gesvd(matrix_view<double, F_layout> a, array_view<double, 1> c, matrix_view<double, F_layout> u, matrix_view<double, F_layout> v) {
+  inline int gesvd(matrix_view<double, F_layout> a, array_view<double, 1> c, matrix_view<double, F_layout> u, matrix_view<double, F_layout> v) {
     return gesvd1(a, c, u, v);
   }
 
-  int gesvd(matrix_view<dcomplex, F_layout> a, array_view<double, 1> c, matrix_view<dcomplex, F_layout> u, matrix_view<dcomplex, F_layout> v) {
+  inline int gesvd(matrix_view<dcomplex, F_layout> a, array_view<double, 1> c, matrix_view<dcomplex, F_layout> u, matrix_view<dcomplex, F_layout> v) {
     return gesvd1(a, c, u, v);
   }
 

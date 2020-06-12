@@ -304,6 +304,14 @@ TEST(NDA, Ellipsis) { //NOLINT
   EXPECT_ARRAY_NEAR(B(0, ___, 3), B(0, _, _, 3), 1.e-15);
   EXPECT_ARRAY_NEAR(B(0, ___, 2, 3), B(0, _, 2, 3), 1.e-15);
   EXPECT_ARRAY_NEAR(B(___, 2, 3), B(_, _, 2, 3), 1.e-15);
+
+  // null ellipsis
+  //EXPECT_ARRAY_NEAR(B(1, 2, 3, _), B(1, 2, 3, _, ___), 1.e-15);
+
+  // null ellipsis
+  //EXPECT_ARRAY_NEAR(B(1, 2, 3, 4), B(1, 2, 3, 4, ___), 1.e-15);
+  //EXPECT_ARRAY_NEAR(B(1, 2, 3, 4), B(___, 1, 2, 3, 4), 1.e-15);
+  //EXPECT_ARRAY_NEAR(B(1, 2, 3, 4), B(1, ___, 2, 3, 4), 1.e-15);
 }
 
 // ==============================================================

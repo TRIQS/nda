@@ -42,8 +42,10 @@ namespace nda {
     using value_type = ValueType;
     using layout_t   = typename Layout::template mapping<Rank>;
 
-    using view_type       = basic_array_view;
-    using const_view_type = basic_array_view<const ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
+    // FIXME : TRIQS PORT REMOVE
+    using regular_type = basic_array<std::remove_const_t<ValueType>, Rank, Layout, Algebra, heap>;
+    //using view_type       = basic_array_view;
+    //using const_view_type = basic_array_view<const ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
 
     static constexpr int rank = Rank;
 
@@ -60,10 +62,17 @@ namespace nda {
     template <typename T, int R, typename L, char A, typename AP, typename OP, typename NewLayoutType>
     friend auto map_layout_transform(basic_array_view<T, R, L, A, AP, OP> a, NewLayoutType const &new_layout);
 
+    public:
+    // FIXME : TRIQS PORTING
     // private constructor for the previous friend
     basic_array_view(layout_t const &idxm, storage_t st) : lay(idxm), sto(std::move(st)) {}
 
     public:
+ 
+    // backward : FIXME : temporary to be removed
+    [[deprecated]] basic_array_view<ValueType, Rank, Layout, 'A', AccessorPolicy, OwningPolicy> as_array_view(){return {*this};};
+    [[deprecated]] basic_array_view<const ValueType, Rank, Layout, 'A', AccessorPolicy, OwningPolicy> as_array_view() const {return {*this};};
+
     // ------------------------------- constructors --------------------------------------------
 
     /// Construct an empty view.

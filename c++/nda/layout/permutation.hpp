@@ -32,19 +32,6 @@ namespace nda {
 
 namespace nda::permutations {
 
-  template <int Rank>
-  constexpr std::array<int, Rank> identity() {
-    auto result = stdutil::make_initialized_array<Rank>(0);
-    for (int i = 0; i < Rank; ++i) result[i] = i;
-    return result;
-  }
-  template <int Rank>
-  constexpr std::array<int, Rank> reverse_identity() {
-    auto result = stdutil::make_initialized_array<Rank>(0);
-    for (int i = 0; i < Rank; ++i) result[i] = Rank - 1 - i;
-    return result;
-  }
-
   template <typename T, auto R>
   constexpr std::array<T, R> apply_inverse(std::array<int, R> const &permutation, std::array<T, R> const &a) {
     auto result = stdutil::make_initialized_array<R, T>(0);
@@ -60,11 +47,39 @@ namespace nda::permutations {
   }
 
   template <int Rank>
+  constexpr std::array<int, Rank> identity() {
+    auto result = stdutil::make_initialized_array<Rank>(0);
+    for (int i = 0; i < Rank; ++i) result[i] = i;
+    return result;
+  }
+
+  template <int Rank>
+  constexpr std::array<int, Rank> reverse_identity() {
+    auto result = stdutil::make_initialized_array<Rank>(0);
+    for (int i = 0; i < Rank; ++i) result[i] = Rank - 1 - i;
+    return result;
+  }
+
+  template <int Rank>
   constexpr std::array<int, Rank> transposition(int i, int j) {
     auto r = identity<Rank>();
     r[i]   = j;
     r[j]   = i;
     return r;
+  }
+
+  // cyclic permutation, p times. Forward
+  // n = 1 :  0 1 2 3 ---->   3 0 1 2
+  // P[n] = (Rank + n - p) % Rank
+  // 4 + 0 -1 = 3, 4 + 1 -1 = 0, 4 +2 -1 = 1, etc...
+  // if pos < Rank, the cycle is partial
+  // cycle<5> (1, 3) --> 2 0 1 3 4
+  // pos ==0 --> identity
+  template <int Rank>
+  constexpr std::array<int, Rank> cycle(int p, int pos = Rank) {
+    auto result = stdutil::make_initialized_array<Rank>(0);
+    for (int i = 0; i < Rank; ++i) result[i] = (i < pos ? (pos + i - p) % pos : i);
+    return result;
   }
 
 } // namespace nda::permutations

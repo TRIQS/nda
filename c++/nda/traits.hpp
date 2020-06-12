@@ -12,7 +12,19 @@ namespace nda {
   // Using 2i and co
   //
   using namespace std::literals::complex_literals;
-  
+
+  // --------------------------- For error messages ------------------------
+
+  // to prevent the static_assert to trigger only when instantiated
+  // in a constexpr branch of a template function, use fail<T>
+  // static_assert(0) would never compile.
+  // fail also prints the type T in question
+  template <typename T>
+  static constexpr bool always_true = true;
+
+  template <typename T>
+  static constexpr bool fail = false and always_true<T>;
+
   // --------------------------- is_complex ------------------------
 
   template <typename T>
@@ -129,8 +141,12 @@ namespace nda {
   //  operator for the layout_prop_e
   constexpr layout_prop_e operator|(layout_prop_e a, layout_prop_e b) { return layout_prop_e(uint64_t(a) | uint64_t(b)); }
 
-  constexpr bool operator&(layout_prop_e a, layout_prop_e b) { return uint64_t(a) & uint64_t(b); }
+  constexpr layout_prop_e operator&(layout_prop_e a, layout_prop_e b) { return layout_prop_e{uint64_t(a) & uint64_t(b)}; }
   //bool operator|=(layout_prop_e & a, layout_prop_e b) { return a = layout_prop_e(uint64_t(a) | uint64_t(b));}
+
+  inline constexpr bool has_contiguous(layout_prop_e x) { return uint64_t(x) & uint64_t(layout_prop_e::contiguous); }
+  inline constexpr bool has_strided_1d(layout_prop_e x) { return uint64_t(x) & uint64_t(layout_prop_e::strided_1d); }
+  inline constexpr bool has_smallest_stride_is_one(layout_prop_e x) { return uint64_t(x) & uint64_t(layout_prop_e::smallest_stride_is_one); }
 
   // FIXME : I need a NONE for stride_order. For the scalars ...
   struct layout_info_t {
@@ -139,9 +155,9 @@ namespace nda {
   };
 
   // Combining layout_info
-  constexpr layout_info_t operator|(layout_info_t a, layout_info_t b) {
+  constexpr layout_info_t operator&(layout_info_t a, layout_info_t b) {
     if (a.stride_order == b.stride_order)
-      return layout_info_t{a.stride_order, layout_prop_e(uint64_t(a.prop) | uint64_t(b.prop))};
+      return layout_info_t{a.stride_order, layout_prop_e(uint64_t(a.prop) & uint64_t(b.prop))};
     else
       return layout_info_t{uint64_t(-1), layout_prop_e::none}; // -1 is undefined stride_order, it corresponds to no permutation
   }
@@ -150,11 +166,11 @@ namespace nda {
   inline constexpr layout_info_t get_layout_info = layout_info_t{};
 
   template <typename A>
-  constexpr bool has_layout_contiguous = (get_layout_info<A>.prop & layout_prop_e::contiguous);
+  constexpr bool has_layout_contiguous = (has_contiguous(get_layout_info<A>.prop));
   template <typename A>
-  constexpr bool has_layout_strided_1d = (get_layout_info<A>.prop & layout_prop_e::strided_1d);
+  constexpr bool has_layout_strided_1d = (has_strided_1d(get_layout_info<A>.prop));
   template <typename A>
-  constexpr bool has_layout_smallest_stride_is_one = (get_layout_info<A>.prop & layout_prop_e::smallest_stride_is_one);
+  constexpr bool has_layout_smallest_stride_is_one = (has_smallest_stride_is_one(get_layout_info<A>.prop));
 
   // ---------------------- linear index  --------------------------------
 

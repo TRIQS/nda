@@ -51,6 +51,7 @@ namespace nda {
   template <int Rank, uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp>
   class idx_map {
     static_assert(Rank < 16, "Rank must be < 16"); // C++17 constraint. Relax this in C++20
+    static_assert((StrideOrder !=0) or (Rank==1), "Oops");
     std::array<long, Rank> len, str;               // lenghts and strides
 
     public:
@@ -235,7 +236,7 @@ namespace nda {
     // call implementation
     template <typename... Args, size_t... Is>
     [[nodiscard]] FORCEINLINE long call_impl(std::index_sequence<Is...>, Args... args) const noexcept {
-      if constexpr (LayoutProp & layout_prop_e::smallest_stride_is_one)
+      if constexpr (has_smallest_stride_is_one(LayoutProp))
         return (myget<Is>(args) + ...);
       else
         return ((args * std::get<Is>(str)) + ...);
@@ -281,7 +282,7 @@ namespace nda {
 
       // Compute the new layout_prop of the new view
       // NB : strided_1d property is preserved, but smallest_stride_is_one is not
-      static constexpr layout_prop_e new_layout_prop = (layout_prop & layout_prop_e::strided_1d ? layout_prop_e::strided_1d : layout_prop_e::none);
+      static constexpr layout_prop_e new_layout_prop = (has_strided_1d(layout_prop) ? layout_prop_e::strided_1d : layout_prop_e::none);
 
       return idx_map<Rank, encode(new_static_extents), encode(new_stride_order), new_layout_prop>{permutations::apply_inverse(permu, lengths()),
                                                                                                   permutations::apply_inverse(permu, strides())};
