@@ -19,11 +19,11 @@ namespace nda {
   // in a constexpr branch of a template function, use fail<T>
   // static_assert(0) would never compile.
   // fail also prints the type T in question
-  template <typename T>
+  template <typename... T>
   static constexpr bool always_true = true;
 
-  template <typename T>
-  static constexpr bool fail = false and always_true<T>;
+  template <typename... T>
+  static constexpr bool fail = false and always_true<T...>;
 
   // --------------------------- is_complex ------------------------
 

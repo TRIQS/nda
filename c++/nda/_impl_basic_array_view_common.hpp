@@ -104,7 +104,7 @@ FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) noex
     static constexpr int n_args_long = (std::is_constructible_v<long, T> + ...);
 
     // case 1 : all arguments are long, we simply compute the offset
-    if constexpr (n_args_long == rank) {         // no range, ellipsis, we simply compute the linear position
+    if constexpr (n_args_long == rank) {         // no range, simply compute the linear position. There may be an ellipsis, but it is of zero length !
       long offset = self.lay(x...);              // compute the offset
       if constexpr (is_view or not SelfIsRvalue) //
         return AccessorPolicy::template accessor<ValueType>::access(self.sto.data(),
@@ -139,7 +139,7 @@ public:
  */
 template <typename... T>
 decltype(auto) operator()(T const &... x) const &noexcept(has_no_boundcheck) {
-  static_assert((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank)),
+  static_assert((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank + 1)),
                 "Incorrect number of parameters in call");
   return __call__impl<false>(*this, x...);
 }
@@ -147,15 +147,21 @@ decltype(auto) operator()(T const &... x) const &noexcept(has_no_boundcheck) {
 ///
 template <typename... T>
 decltype(auto) operator()(T const &... x) &noexcept(has_no_boundcheck) {
-  static_assert((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank)),
-                "Incorrect number of parameters in call");
+
+  if constexpr (not((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0)
+                    or (ellipsis_is_present<T...> and (sizeof...(T) <= rank + 1)))) { // +1 since ellipsis can be of size 0
+    //if ((sizeof...(T) != rank))
+    static_assert(fail<self_t, T...>, "Incorrect number of parameters in call");
+  }
+  //static_assert(,
+  //              "Incorrect number of parameters in call");
   return __call__impl<false>(*this, x...);
 }
 
 ///
 template <typename... T>
 decltype(auto) operator()(T const &... x) &&noexcept(has_no_boundcheck) {
-  static_assert((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank)),
+  static_assert((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank + 1)),
                 "Incorrect number of parameters in call");
   return __call__impl<true>(*this, x...);
 }

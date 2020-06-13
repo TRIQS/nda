@@ -52,15 +52,26 @@ namespace nda {
 
   // --------------- make_const_view------------------------
 
-  /// Explicitly make a const view REMOVING all compile time guarantee flags
-  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy>
-  basic_array_view<T const, R, L, Algebra> make_const_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a) {
+  /// Make a view const
+  template <typename T, int R, typename L, char Algebra, typename CP>
+  basic_array_view<T const, R, L, Algebra> make_const_view(basic_array<T, R, L, Algebra, CP> const &a) {
     return {a};
   }
 
-  template <typename T, int R, typename L, char Algebra = 'A', typename AccessorPolicy, typename OwningPolicy>
-  basic_array_view<T const, R, L, Algebra, AccessorPolicy, OwningPolicy>
-  make_const_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> const &a) {
+  template <typename T, int R, typename L, char Algebra, typename AP, typename OP>
+  basic_array_view<T const, R, L, Algebra, AP, OP> make_const_view(basic_array_view<T, R, L, Algebra, AP, OP> const &a) {
+    return {a};
+  }
+
+  // --------------- make_array_view------------------------
+
+  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy>
+  array_view<T, R> make_array_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a) {
+    return {a};
+  }
+
+  template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy>
+  array_view<T, R> make_array_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> const &a) {
     return {a};
   }
 
@@ -76,15 +87,15 @@ namespace nda {
     return {a};
   }
 
-  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy>
-  matrix_view<T const, L> make_matrix_const_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a) {
-    return {a};
-  }
+/*  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy>*/
+  //matrix_view<T const, L> make_matrix_const_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a) {
+    //return {a};
+  //}
 
-  template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy>
-  matrix_view<T const, L> make_matrix_const_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> const &a) {
-    return {a};
-  }
+  //template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy>
+  //matrix_view<T const, L> make_matrix_const_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> const &a) {
+    //return {a};
+  //}
 
   // --------------- operator == ---------------------
 

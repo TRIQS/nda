@@ -225,21 +225,35 @@ namespace nda {
 
     // ----------------  Call operator -------------------------
     private:
-    template <auto Is>
+    template <bool skip_stride, auto Is>
+    [[nodiscard]] FORCEINLINE long myget(ellipsis) const noexcept {
+      return 0;
+    }
+
+    template <bool skip_stride, auto Is>
     [[nodiscard]] FORCEINLINE long myget(long arg) const noexcept {
-      if constexpr (Is == stride_order[Rank - 1]) // this is the slowest stride
+      if constexpr (skip_stride and (Is == stride_order[Rank - 1])) // this is the slowest stride
         return arg;
       else
         return arg * std::get<Is>(str);
     }
 
+    static constexpr bool smallest_stride_is_one = has_smallest_stride_is_one(LayoutProp);
+
     // call implementation
     template <typename... Args, size_t... Is>
     [[nodiscard]] FORCEINLINE long call_impl(std::index_sequence<Is...>, Args... args) const noexcept {
-      if constexpr (has_smallest_stride_is_one(LayoutProp))
-        return (myget<Is>(args) + ...);
-      else
-        return ((args * std::get<Is>(str)) + ...);
+      static constexpr int e_pos = ((std::is_same_v<Args, ellipsis> ? int(Is) + 1 : 0) + ...) - 1; // position ellipsis + 1 or 0
+
+      if constexpr (e_pos == -1) { // common case, no ellipsis
+        if constexpr (smallest_stride_is_one)
+          return (myget<true, Is>(args) + ...);
+        else
+          return ((args * std::get<Is>(str)) + ...);
+      } else {
+        // there is an empty ellipsis to skip
+        return (myget<smallest_stride_is_one, (Is < e_pos ? Is : Is - 1)>(args) + ...);
+      }
     }
 
     public:
@@ -259,6 +273,7 @@ namespace nda {
 #else
        noexcept(true) {
 #endif
+      // there may be an empty ellipsis which we will need to skip. e_pos = 128 if no ellipsis
       return call_impl(std::make_index_sequence<sizeof...(Args)>{}, args...);
     }
 

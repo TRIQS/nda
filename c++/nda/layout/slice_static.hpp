@@ -33,6 +33,17 @@ namespace nda::slice_static {
   // p -> n : 2 3 4 6
   // p -> q : 2 2 2 4
 
+  // Case of ellipsis of zero size
+  // Args          = long, long, range,  ellipsis,  long, range
+  //  q               0      1      2       3         4     5
+  // Expanded Args = long, long, range, long, range
+  //  n               0      1      2     3      4
+  // e_pos = 2, e_len  = 0
+  // n will be 0 1 2 3 4
+  // q will be 0 1 2 4 5
+  // p -> n : 2 4
+  // p -> q : 2 5
+
   // ----------     Computation of the position of the ellipsis in the args ----------------------
   // FIXME C++20
   namespace impl {
@@ -47,19 +58,20 @@ namespace nda::slice_static {
   // position of the ellipsis in the argument list if there is an ellipsis or 128 if not
   template <typename... Args>
   constexpr int ellipsis_position() {
-    return impl::ellipsis_position<Args...>(std::index_sequence_for<Args...>{});
+    return impl::ellipsis_position<Args...>(std::make_index_sequence<sizeof...(Args)>{}); //std::index_sequence_for<Args...>{});
   }
 
   //  ------------ Relation  n -> q, given the position and length of the ellipsis -----------
   // e_pos : ellipsis position
   // e_len : ellipsis length
   // return q
+  //
   constexpr int q_of_n(int n, int e_pos, int e_len) {
-    if (n <= e_pos) return n; // if no ellipsis, e_pos is 128 = infty
-    if (n >= (e_pos + e_len))
-      return n - (e_len - 1);
-    else
+    if (n < e_pos) return n; // if no ellipsis, e_pos is 128 = infty
+    if (n < (e_pos + e_len)) // in the ellipsis
       return e_pos;
+    else
+      return n - (e_len - 1); // ok if e_len ==0  : n+1
   }
 
   // ------------- The map  p-> n -------------------------
@@ -264,7 +276,7 @@ namespace nda::slice_static {
     static constexpr int n_args_long     = (std::is_constructible_v<long, T> + ...); // any T I can construct a long from
 
     static_assert(n_args_ellipsis <= 1, "At most one ellipsis argument is authorized");
-    static_assert((sizeof...(T) <= IdxMap::rank()), "Incorrect number of arguments in array call ");
+    static_assert((sizeof...(T) <= IdxMap::rank() + 1), "Incorrect number of arguments in array call ");
     static_assert((n_args_ellipsis == 1) or (sizeof...(T) == IdxMap::rank()), "Incorrect number of arguments in array call ");
 
     return slice_stride_order_impl(std::make_index_sequence<IdxMap::rank() - n_args_long>{}, std::make_index_sequence<IdxMap::rank()>{},
