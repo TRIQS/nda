@@ -65,3 +65,9 @@ external_dependency(GTest
   BUILD_ALWAYS
   EXCLUDE_FROM_ALL
 )
+
+# -- h5 --
+external_dependency(h5
+  GIT_REPO https://github.com/TRIQS/h5
+  GIT_TAG unstable
+)

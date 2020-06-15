@@ -19,16 +19,12 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
   host:
-    - triqs {{ '.'.join(version.split('.')[:2]) }}
-    - boost-cpp
     - hdf5
     - {{ mpi }}
     - libblas
     - liblapack
     - python
   run:
-    - {{ pin_compatible("triqs", max_pin="x.x") }}
-    - boost-cpp
     - hdf5
     - {{ mpi }}
     - libblas

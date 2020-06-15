@@ -1,0 +1,68 @@
+FROM ubuntu:disco
+ENV LLVM_MAJOR_VERSION=9
+ENV APPNAME=myapp
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+      clang-${LLVM_MAJOR_VERSION} \
+      cmake \
+      g++ \
+      gfortran \
+      git \
+      libblas-dev \
+      libboost-all-dev \
+      libclang-${LLVM_MAJOR_VERSION}-dev \
+      libfftw3-dev \
+      libgfortran3 \
+      libgmp-dev \
+      zlib1g-dev \
+      intel-mkl \
+      python-clang-${LLVM_MAJOR_VERSION} \
+      python-dev \
+      python-h5py \
+      python-mako \
+      python-matplotlib \
+      python-numpy \
+      python-scipy \
+      python-sphinx \
+      python-nbsphinx \
+      python-pip
+
+ENV CC=clang-${LLVM_MAJOR_VERSION} CXX=clang++-${LLVM_MAJOR_VERSION} LLVM_VERSION=${LLVM_MAJOR_VERSION}.0.0
+
+ADD http://releases.llvm.org/${LLVM_VERSION}/libcxx-${LLVM_VERSION}.src.tar.xz /tmp/
+ADD http://releases.llvm.org/${LLVM_VERSION}/libcxxabi-${LLVM_VERSION}.src.tar.xz /tmp/
+RUN mkdir /tmp/build && cd /tmp/build && \
+      tar -C /tmp -xf /tmp/libcxx-${LLVM_VERSION}.src.tar.xz && \
+      tar -C /tmp -xf /tmp/libcxxabi-${LLVM_VERSION}.src.tar.xz && \
+      cmake /tmp/libcxxabi-${LLVM_VERSION}.src -DLLVM_CONFIG_PATH=/usr/bin/llvm-config-${LLVM_MAJOR_VERSION} -DCMAKE_INSTALL_PREFIX=/usr/lib/llvm-${LLVM_MAJOR_VERSION} -DLIBCXXABI_LIBCXX_PATH=/tmp/libcxx-${LLVM_VERSION}.src -DLLVM_USE_SANITIZER=Memory && make -j2 && make install && \
+      rm -rf * && \
+      cmake /tmp/libcxx-${LLVM_VERSION}.src -DLLVM_CONFIG_PATH=/usr/bin/llvm-config-${LLVM_MAJOR_VERSION} -DCMAKE_INSTALL_PREFIX=/usr/lib/llvm-${LLVM_MAJOR_VERSION} -DLIBCXX_CXX_ABI=libcxxabi -DLIBCXX_CXX_ABI_INCLUDE_PATHS=/tmp/libcxxabi-${LLVM_VERSION}.src/include -DLLVM_USE_SANITIZER=Memory && make -j2 install && \
+      rm -rf /tmp/libcxx* /tmp/build
+ENV CXXFLAGS="-stdlib=libc++ -fsanitize=memory" CFLAGS="-fsanitize=memory" LD_LIBRARY_PATH=/usr/lib/llvm-${LLVM_MAJOR_VERSION}/lib LDFLAGS="-fsanitize=memory"
+
+RUN update-alternatives --set liblapack.so-x86_64-linux-gnu /usr/lib/x86_64-linux-gnu/libmkl_rt.so && \
+    update-alternatives --set libblas.so-x86_64-linux-gnu /usr/lib/x86_64-linux-gnu/libmkl_rt.so
+
+ADD https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.5/src/CMake-hdf5-1.10.5.tar.gz /tmp/
+RUN mkdir /tmp/build && cd /tmp/build && \
+      tar -C /tmp -xf /tmp/CMake-hdf5-1.10.5.tar.gz && \
+      cmake /tmp/CMake-hdf5-1.10.5/hdf5-1.10.5 -DCMAKE_INSTALL_PREFIX=/usr && make -j2 && make install && \
+      rm -rf * && \
+      rm -rf /tmp/CMake-hdf5-1.10.5* /tmp/build
+
+RUN useradd -m build
+
+ENV SRC=/src \
+    BUILD=/home/build \
+    INSTALL=/usr/local \
+    PYTHONPATH=/usr/local/lib/python2.7/site-packages:${PYTHONPATH} \
+    CMAKE_PREFIX_PATH=/usr/lib/cmake/${APPNAME}:${CMAKE_PREFIX_PATH}
+
+COPY . ${SRC}/${APPNAME}
+WORKDIR ${BUILD}/${APPNAME}
+RUN chown -R build ${SRC}/${APPNAME} .
+USER build
+RUN cmake $SRC/nda -DCMAKE_INSTALL_PREFIX=$INSTALL -DMSAN=ON -DPYTHON_EXECUTABLE=$(which python)
+RUN make VERBOSE=1 -j8
+ENV MSAN_SYMBOLIZER_PATH=/usr/lib/llvm-${LLVM_MAJOR_VERSION}/bin/llvm-symbolizer CTEST_OUTPUT_ON_FAILURE=1
+RUN make test || true
