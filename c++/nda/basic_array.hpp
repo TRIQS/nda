@@ -95,8 +95,8 @@ namespace nda {
     [[deprecated]] basic_array_view<ValueType, Rank, Layout, 'A', AccessorPolicy, OwningPolicy> as_array_view() { return {*this}; };
     [[deprecated]] basic_array_view<const ValueType, Rank, Layout, 'A', AccessorPolicy, OwningPolicy> as_array_view() const { return {*this}; };
 
-    [[deprecated]] auto transpose() REQUIRES(Rank == 2) { return permuted_indices_view<encode(std::array{1, 0})>(*this); }
-    [[deprecated]] auto transpose() const REQUIRES(Rank == 2) { return permuted_indices_view<encode(std::array{1, 0})>(*this); }
+    [[deprecated]] auto transpose() REQUIRES(Rank == 2) { return permuted_indices_view<encode(std::array<int, 2>{1, 0})>(*this); }
+    [[deprecated]] auto transpose() const REQUIRES(Rank == 2) { return permuted_indices_view<encode(std::array<int, 2>{1, 0})>(*this); }
 
     // ------------------------------- constructors --------------------------------------------
 
@@ -158,7 +158,7 @@ namespace nda {
      *
      */
     template <CONCEPT(ArrayInitializer) Initializer> // can not be explicit
-    basic_array(Initializer const &initializer) noexcept(noexcept(initializer.invoke(*this))) REQUIRES17(is_array_initializer_v<Initializer>)
+    basic_array(Initializer const &initializer) noexcept(noexcept(initializer.invoke(basic_array{}))) REQUIRES17(is_array_initializer_v<Initializer>)
        : basic_array{initializer.shape()} {
       initializer.invoke(*this);
     }
