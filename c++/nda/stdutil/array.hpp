@@ -32,20 +32,6 @@ namespace std {
 
 namespace nda::stdutil {
 
-  /**
-   * @tparam T  T must be constructible from U
-   * @tparam U
-   * @tparam R
-   * make a std::array<T, R> initialized to v
-   */
-  template <typename T, typename U, size_t R>
-  constexpr std::array<T, R> make_std_array(std::array<U, R> const &a) {
-    static_assert(std::is_constructible_v<T, U>, "make_std_array : T must be constructible from U, Cf doc");
-    std::array<T, R> result; // NOLINT Ok, not init indeex.
-    for (int u = 0; u < R; ++u) result[u] = a[u];
-    return result;
-  }
-
   namespace impl {
     template <typename T, size_t... Is>
     constexpr std::array<T, sizeof...(Is)> make_initialized_array(T v, std::index_sequence<Is...>) {
@@ -62,6 +48,21 @@ namespace nda::stdutil {
   constexpr std::array<T, R> make_initialized_array(T v) {
     return impl::make_initialized_array(v, std::make_index_sequence<R>{});
   }
+  
+  /**
+   * @tparam T  T must be constructible from U
+   * @tparam U
+   * @tparam R
+   * make a std::array<T, R> initialized to v
+   */
+  template <typename T, typename U, size_t R>
+  constexpr std::array<T, R> make_std_array(std::array<U, R> const &a) {
+    static_assert(std::is_constructible_v<T, U>, "make_std_array : T must be constructible from U, Cf doc");
+    std::array<T, R> result = make_initialized_array<R>(T{}); 
+    for (int u = 0; u < R; ++u) result[u] = a[u];
+    return result;
+  }
+
 
   /**
   * Convert a std::array to a
