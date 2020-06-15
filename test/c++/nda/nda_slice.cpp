@@ -21,17 +21,18 @@ void test5d() {
   //using A = nda::array<long, 5>;
   A a(N0, N1, N2, N3, N4);
 
-  long c = 0;
-  for (auto &x : a) {
-    EXPECT_EQ(std::distance(&(*std::begin(a)), &x), c);
-    x = c++; // in memory order, 0,1,2,3,4 ....
+  {
+    long c = 0;
+    for (auto &x : a) {
+      EXPECT_EQ(std::distance(&(*std::begin(a)), &x), c);
+      x = c++; // in memory order, 0,1,2,3,4 ....
+    }
   }
 
   auto check = [n = 0](auto v) mutable {
     bool is_contiguous          = (v.indexmap().layout_prop == nda::layout_prop_e::contiguous);
     bool is_strided_1d          = (has_strided_1d(v.indexmap().layout_prop));
     bool smallest_stride_is_one = (has_smallest_stride_is_one(v.indexmap().layout_prop));
-
 
     EXPECT_EQ(is_contiguous, (is_strided_1d and smallest_stride_is_one));
 

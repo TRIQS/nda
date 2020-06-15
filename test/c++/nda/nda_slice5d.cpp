@@ -21,8 +21,10 @@ void test5d() {
   //using A = nda::array<long, 5>;
   A a(N0, N1, N2, N3, N4);
 
-  long c = 0;
-  for (auto &x : a) x = c++; // in memory order, 0,1,2,3,4 ....
+  {
+    long c = 0;
+    for (auto &x : a) x = c++; // in memory order, 0,1,2,3,4 ....
+  }
 
   auto check = [n = 0](auto v) mutable {
     bool is_contiguous          = (v.indexmap().layout_prop == nda::layout_prop_e::contiguous);

@@ -19,11 +19,13 @@ void test4d() {
   using A = nda::array<long, 4, nda::basic_layout<0, StrideOrder, nda::layout_prop_e::contiguous>>;
   A a(N0, N1, N2, N3);
 
-  long c = 0;
-  for (auto &x : a) {
-    // Checks that the iterator in indeed going one by one in memory, even with a non trivial StrideOrder
-    EXPECT_EQ(std::distance(&(*std::begin(a)), &x), c);
-    x = c++; // in memory order, 0,1,2,3,4 ....
+  {
+    long c = 0;
+    for (auto &x : a) {
+      // Checks that the iterator in indeed going one by one in memory, even with a non trivial StrideOrder
+      EXPECT_EQ(std::distance(&(*std::begin(a)), &x), c);
+      x = c++; // in memory order, 0,1,2,3,4 ....
+    }
   }
 
   auto check = [n = 0](auto v) mutable {

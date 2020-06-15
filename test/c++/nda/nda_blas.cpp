@@ -89,9 +89,9 @@ TEST(BLAS, gemv) { //NOLINT
 
   nda::blas::gemv(1, Acw(R, R), MC(R), 0, MB_w);
   EXPECT_ARRAY_NEAR(MB, nda::vector<double>{0, 9, 13, 0, 0});
-  
+
   // test *
-  MB() = -8;
+  MB()  = -8;
   MB(R) = Acw(R, R) * nda::vector_view<double>{MC(R)};
   EXPECT_ARRAY_NEAR(MB, nda::vector<double>{-8, 9, 13, -8, -8});
 }

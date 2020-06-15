@@ -1,10 +1,5 @@
-#include <nda/nda.hpp>
-#include <benchmark/benchmark.h>
+#include "./bench_common.hpp"
 
-nda::range_all _;
-nda::ellipsis ___;
-
-using namespace nda;
 static constexpr int N1 = 4, N2 = 4;
 
 // ------------------------------- 2d ----------------------------------------
@@ -34,7 +29,7 @@ static void foreach_static2(benchmark::State &state) {
   nda::array<double, 2> a(N1, N2);
 
   while (state.KeepRunning()) {
-    nda::for_each_static<encode(std::array{N1, N2}),0>(a.shape(), [&a](auto x0, auto x1) { benchmark::DoNotOptimize(a(x0, x1) = 10); });
+    nda::for_each_static<encode(std::array{N1, N2}), 0>(a.shape(), [&a](auto x0, auto x1) { benchmark::DoNotOptimize(a(x0, x1) = 10); });
   }
 }
 BENCHMARK(foreach_static2);

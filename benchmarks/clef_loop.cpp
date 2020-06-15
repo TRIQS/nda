@@ -1,10 +1,4 @@
-#include <nda/nda.hpp>
-#include <benchmark/benchmark.h>
-
-nda::range_all _;
-nda::ellipsis ___;
-
-using namespace nda;
+#include "./bench_common.hpp"
 
 class ABC_1d : public benchmark::Fixture {
   public:

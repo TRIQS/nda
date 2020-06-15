@@ -6,7 +6,7 @@ TEST(NDA, Ellipsis) { //NOLINT
   nda::array<long, 3> A(2, 3, 4);
   A() = 7;
 
-  //A(1,2); 
+  //A(1,2);
 
   EXPECT_ARRAY_NEAR(A(0, ___), A(0, _, _), 1.e-15);
 
@@ -56,5 +56,3 @@ TEST(NDA, Ellipsis2) { //NOLINT
   EXPECT_ARRAY_NEAR(sum0(A), nda::array<double, 1>{10, 10}, 1.e-15);
   EXPECT_ARRAY_NEAR(sum0(B), nda::array<double, 2>{{15, 15, 15}, {15, 15, 15}}, 1.e-15);
 }
-
-

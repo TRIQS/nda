@@ -17,7 +17,7 @@ namespace nda::clef {
   CLEF_MAKE_FNT_LAZY(bar)
   CLEF_MAKE_FNT_LAZY(inc)
   CLEF_MAKE_FNT_LAZY(foo)
-} // namespace clef
+} // namespace nda::clef
 
 #define _TEST_3(EXPR) EXPECT_EQ(eval(EXPR, x_ = 2), [&](int x_) { return EXPR; }(2));
 

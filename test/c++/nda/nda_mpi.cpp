@@ -94,7 +94,6 @@ TEST(Arrays, MPI) { //NOLINT
   EXPECT_ARRAY_NEAR(r2, world.size() * A);
 }
 
-
 // --------------------------------------
 
 // test transposed matrix broadcast

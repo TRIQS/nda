@@ -14,5 +14,4 @@ TEST(Array, BoundCheck) { //NOLINT
 
   EXPECT_THROW(A(nda::range(), 5), std::runtime_error); //NOLINT
   EXPECT_THROW(A(0, 3), std::runtime_error);            //NOLINT
-
 }

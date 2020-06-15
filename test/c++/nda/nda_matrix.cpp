@@ -155,4 +155,4 @@ TEST(Matrix, DaggerSlice) { //NOLINT
 TEST(Matrix, Eye) { //NOLINT
 
   EXPECT_EQ_ARRAY(nda::eye<long>(3), (nda::matrix<long>{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}));
-};
+}

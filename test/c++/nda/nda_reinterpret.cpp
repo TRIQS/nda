@@ -13,7 +13,7 @@ TEST(Reinterpret, add_N_one) { //NOLINT
 
   // view form
   {
-    auto v = reinterpret_add_fast_dims_of_size_one<2>(a());
+    auto v = nda::reinterpret_add_fast_dims_of_size_one<2>(a());
 
     EXPECT_EQ(v.shape(), (nda::shape_t<4>{3, 3, 1, 1}));
 
@@ -23,7 +23,7 @@ TEST(Reinterpret, add_N_one) { //NOLINT
 
   {
     // array form
-    auto b = reinterpret_add_fast_dims_of_size_one<2>(std::move(a));
+    auto b = nda::reinterpret_add_fast_dims_of_size_one<2>(std::move(a));
 
     EXPECT_EQ(b.shape(), (nda::shape_t<4>{3, 3, 1, 1}));
 

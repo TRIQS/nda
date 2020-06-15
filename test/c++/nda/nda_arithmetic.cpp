@@ -8,20 +8,19 @@ TEST(NDA, ExprTemplate) { //NOLINT
     for (long j = 0; j < 3; ++j) A(i, j) = 10 * i + j;
 
   nda::array<long, 2> R;
- 
+
   R = A + 10;
-  EXPECT_EQ(R, (nda::array<long, 2>{{0 + 10, 1 + 10, 2 + 10}, {10+ 10, 11+ 10, 12+ 10}}));
+  EXPECT_EQ(R, (nda::array<long, 2>{{0 + 10, 1 + 10, 2 + 10}, {10 + 10, 11 + 10, 12 + 10}}));
 
   R = A - 10;
-  EXPECT_EQ(R, (nda::array<long, 2>{{0 - 10, 1 - 10, 2 - 10}, {10- 10, 11- 10, 12- 10}}));
+  EXPECT_EQ(R, (nda::array<long, 2>{{0 - 10, 1 - 10, 2 - 10}, {10 - 10, 11 - 10, 12 - 10}}));
 
-  R = 2* A;
+  R = 2 * A;
   EXPECT_EQ(R, (nda::array<long, 2>{{0, 2, 4}, {20, 22, 24}}));
 
   long s = 2;
-  R = s* A;
+  R      = s * A;
   EXPECT_EQ(R, (nda::array<long, 2>{{0, 2, 4}, {20, 22, 24}}));
-  
 }
 
 // ==============================================================

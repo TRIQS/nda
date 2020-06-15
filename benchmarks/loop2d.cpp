@@ -1,10 +1,5 @@
-#include <nda/nda.hpp>
-#include <benchmark/benchmark.h>
+#include "./bench_common.hpp"
 
-nda::range_all _;
-nda::ellipsis ___;
-
-using namespace nda;
 const int N1 = 100; //, N2 = 1000;
 
 class ABC_2d : public benchmark::Fixture {

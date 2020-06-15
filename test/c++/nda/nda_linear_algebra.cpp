@@ -479,8 +479,6 @@ TEST(blas_lapack, svd) { //NOLINT
   EXPECT_ARRAY_NEAR(a_copy, U * S_Mat * VT, 1e-14);
 }
 
-
-
 // ================================================================================
 
 TEST(blas_lapack, gelss) { //NOLINT
@@ -492,12 +490,12 @@ TEST(blas_lapack, gelss) { //NOLINT
   auto A = matrix<dcomplex>{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}};
   auto B = matrix<dcomplex>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
 
-  int M    = A.extent(0);
-  int N    = A.extent(1);
+  int M = A.extent(0);
+  int N = A.extent(1);
   //int NRHS = B.extent(1);
 
   auto x_exact = matrix<dcomplex>{{2, 1}, {1, 1}, {1, 2}};
-  auto S = nda::array<double,1>(std::min(M, N));
+  auto S       = nda::array<double, 1>(std::min(M, N));
 
   auto gelss_new    = nda::lapack::gelss_worker<dcomplex>{A};
   auto [x_1, eps_1] = gelss_new(B);
@@ -507,7 +505,5 @@ TEST(blas_lapack, gelss) { //NOLINT
   //nda::lapack::gelss(A, B, S, 1e-18, i);
   //auto x_2 = B(range(N), range(NRHS));
 
-
   //EXPECT_ARRAY_NEAR(x_exact, x_2, 1e-14);
 }
-

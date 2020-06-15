@@ -1,8 +1,4 @@
-#include <nda/nda.hpp>
-#include <benchmark/benchmark.h>
-
-nda::range_all _;
-nda::ellipsis ___;
+#include "./bench_common.hpp"
 
 // using VALUE_TYPE=double ;
 using VALUE_TYPE = int;
