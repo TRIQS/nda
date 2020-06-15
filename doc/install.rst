@@ -22,7 +22,7 @@ Installation steps
 
 #. Create and move to a new directory where you will compile the code::
 
-     $ mkdir nda.build && cd nda.build
+   $ mkdir nda.build && cd nda.build
 
 #. In the build directory call cmake, including any additional custom CMake options, see below::
 
@@ -52,7 +52,7 @@ Custom CMake options
 
 The compilation of ``nda`` can be configured using CMake-options::
 
-    cmake ../nda.src -DOPTION1=value1 -DOPTION2=value2 ... ../nda.src
+    cmake ../nda.src -DOPTION1=value1 -DOPTION2=value2 ...
 
 +-----------------------------------------------------------------+-----------------------------------------------+
 | Options                                                         | Syntax                                        |
