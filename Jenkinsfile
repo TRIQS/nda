@@ -3,9 +3,6 @@ def projectName = "app4triqs" /* set to app/repo name */
 def dockerName = projectName.toLowerCase();
 /* which platform to build documentation on */
 def documentationPlatform = "ubuntu-clang"
-/* depend on triqs upstream branch/project */
-def triqsBranch = env.CHANGE_TARGET ?: env.BRANCH_NAME
-def triqsProject = '/TRIQS/triqs/' + triqsBranch.replaceAll('/', '%2F')
 /* whether to keep and publish the results */
 def keepInstall = !env.BRANCH_NAME.startsWith("PR-")
 
@@ -15,7 +12,7 @@ properties([
   pipelineTriggers(keepInstall ? [
     upstream(
       threshold: 'SUCCESS',
-      upstreamProjects: triqsProject
+      upstreamProjects: '/TRIQS/cpp2py/master,/TRIQS/h5/unstable'
     )
   ] : [])
 ])
@@ -34,8 +31,7 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
       checkout scm
       /* construct a Dockerfile for this base */
       sh """
-      ( echo "FROM flatironinstitute/triqs:${triqsBranch}-${env.STAGE_NAME}" ; sed '0,/^FROM /d' Dockerfile ) > Dockerfile.jenkins
-        mv -f Dockerfile.jenkins Dockerfile
+        ( cat packaging/Dockerfile.${env.STAGE_NAME} ; sed '0,/^FROM /d' Dockerfile.build ) > Dockerfile
       """
       /* build and tag */
       def img = docker.build("flatironinstitute/${dockerName}:${env.BRANCH_NAME}-${env.STAGE_NAME}", "--build-arg APPNAME=${projectName} --build-arg BUILD_DOC=${platform==documentationPlatform} --build-arg BUILD_ID=${env.BUILD_TAG} .")
@@ -66,8 +62,7 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
       def buildDir = "$tmpDir/build"
       /* install real branches in a fixed predictable place so apps can find them */
       def installDir = keepInstall ? "${env.HOME}/install/${projectName}/${env.BRANCH_NAME}/${platform}" : "$tmpDir/install"
-      def triqsDir = "${env.HOME}/install/triqs/${triqsBranch}/${platform}"
-      def venv = triqsDir
+      def venv = installDir
       dir(installDir) {
         deleteDir()
       }
@@ -85,9 +80,9 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
           "PYTHONPATH=$installDir/lib/python3.7/site-packages",
 	  "CMAKE_PREFIX_PATH=$venv/lib/cmake/triqs"]) {
         deleteDir()
-        /* note: this is installing into the parent (triqs) venv (install dir), which is thus shared among apps and so not be completely safe */
+        sh "python3 -m venv $venv"
         sh "pip3 install -U -r $srcDir/requirements.txt"
-        sh "cmake $srcDir -DCMAKE_INSTALL_PREFIX=$installDir -DTRIQS_ROOT=$triqsDir -DBuild_Deps=Always"
+        sh "cmake $srcDir -DCMAKE_INSTALL_PREFIX=$installDir -DBuild_Deps=Always"
         sh "make -j2"
         catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') { try {
           sh "make test CTEST_OUTPUT_ON_FAILURE=1"
