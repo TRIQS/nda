@@ -83,7 +83,14 @@ namespace nda {
         for (long i = 0; i < imax; ++i) {
           for_each_static_impl<I + 1, StaticExtents, StrideOrder>(
              idx_lengths,
-             [ i, f ](auto &&... x) __attribute__((always_inline)) mutable { return f(i, x...); }); // mutable since f itself can be mutable !
+             [ i, f ](auto &&... x)
+// Great: clang and gcc want the lambda mutable and attribute in a different order !:
+#ifdef __clang__
+                __attribute__((always_inline)) mutable
+#else
+                mutable __attribute__((always_inline))
+#endif
+             { return f(i, x...); }); // mutable since f itself can be mutable !
         }
       }
     }
