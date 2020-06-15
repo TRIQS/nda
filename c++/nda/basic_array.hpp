@@ -257,7 +257,7 @@ namespace nda {
     /// \private error trap
     template <CONCEPT(std::integral) Int, auto R>
     static auto zeros(std::array<Int, R> const &) {
-      static_assert((R == Rank), "Incorrect dimension of the shape");
+      static_assert((int(R) == Rank), "Incorrect dimension of the shape");//FIXME : int(R) is a bug in clang 9
     }
 
     //------------------ Assignment -------------------------
