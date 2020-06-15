@@ -3,19 +3,16 @@ def projectName = "app4triqs" /* set to app/repo name */
 def dockerName = projectName.toLowerCase();
 /* which platform to build documentation on */
 def documentationPlatform = "ubuntu-clang"
-/* depend on triqs upstream branch/project */
-def triqsBranch = env.CHANGE_TARGET ?: env.BRANCH_NAME
-def triqsProject = '/TRIQS/triqs/' + triqsBranch.replaceAll('/', '%2F')
 /* whether to keep and publish the results */
-def keepInstall = !env.BRANCH_NAME.startsWith("PR-")
+def publish = !env.BRANCH_NAME.startsWith("PR-")
 
 properties([
   disableConcurrentBuilds(),
   buildDiscarder(logRotator(numToKeepStr: '10', daysToKeepStr: '30')),
-  pipelineTriggers(keepInstall ? [
+  pipelineTriggers(publish ? [
     upstream(
       threshold: 'SUCCESS',
-      upstreamProjects: triqsProject
+      upstreamProjects: '/TRIQS/cpp2py/master,/TRIQS/h5/unstable'
     )
   ] : [])
 ])
@@ -34,13 +31,12 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
       checkout scm
       /* construct a Dockerfile for this base */
       sh """
-      ( echo "FROM flatironinstitute/triqs:${triqsBranch}-${env.STAGE_NAME}" ; sed '0,/^FROM /d' Dockerfile ) > Dockerfile.jenkins
-        mv -f Dockerfile.jenkins Dockerfile
+        ( cat packaging/Dockerfile.${env.STAGE_NAME} ; sed '0,/^FROM /d' Dockerfile.build ) > Dockerfile
       """
       /* build and tag */
       def args = ''
       if (platform == documentationPlatform)
-        args = '-DBuild_Documentation=1'
+        args = '-DBuild_Documentation=1 -DMATHJAX_PATH=https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2'
       else if (platform == "sanitize")
         args = '-DASAN=ON -DUBSAN=ON'
       def img = docker.build("flatironinstitute/${dockerName}:${env.BRANCH_NAME}-${env.STAGE_NAME}", "--build-arg APPNAME=${projectName} --build-arg BUILD_ID=${env.BUILD_TAG} --build-arg CMAKE_ARGS='${args}' .")
@@ -49,7 +45,7 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
           sh "make -C \$BUILD/${projectName} test CTEST_OUTPUT_ON_FAILURE=1"
         }
       }
-      if (!keepInstall) {
+      if (!publish || platform != documentationPlatform) {
         sh "docker rmi --no-prune ${img.imageName()}"
       }
     } } }
@@ -70,9 +66,8 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
       def tmpDir = pwd(tmp:true)
       def buildDir = "$tmpDir/build"
       /* install real branches in a fixed predictable place so apps can find them */
-      def installDir = keepInstall ? "${env.HOME}/install/${projectName}/${env.BRANCH_NAME}/${platform}" : "$tmpDir/install"
-      def triqsDir = "${env.HOME}/install/triqs/${triqsBranch}/${platform}"
-      def venv = triqsDir
+      def installDir = "$tmpDir/install"
+      def venv = installDir
       dir(installDir) {
         deleteDir()
       }
@@ -91,9 +86,9 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
           "CMAKE_PREFIX_PATH=$venv/lib/cmake/triqs",
           "OMP_NUM_THREADS=2"]) {
         deleteDir()
-        /* note: this is installing into the parent (triqs) venv (install dir), which is thus shared among apps and so not be completely safe */
+        sh "python3 -m venv $venv"
         sh "pip3 install -U -r $srcDir/requirements.txt"
-        sh "cmake $srcDir -DCMAKE_INSTALL_PREFIX=$installDir -DTRIQS_ROOT=$triqsDir"
+        sh "cmake $srcDir -DCMAKE_INSTALL_PREFIX=$installDir"
         sh "make -j2 || make -j1 VERBOSE=1"
         catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') { try {
           sh "make test CTEST_OUTPUT_ON_FAILURE=1"
@@ -111,7 +106,7 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
 def error = null
 try {
   parallel platforms
-  if (keepInstall) { node('linux && docker && triqs') {
+  if (publish) { node('linux && docker && triqs') {
     /* Publish results */
     stage("publish") { timeout(time: 5, unit: 'MINUTES') {
       def commit = sh(returnStdout: true, script: "git rev-parse HEAD").trim()

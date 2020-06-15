@@ -2,10 +2,11 @@ file(GLOB_RECURSE sources *.cpp)
 add_library(${PROJECT_NAME}_c ${sources})
 add_library(${PROJECT_NAME}::${PROJECT_NAME}_c ALIAS ${PROJECT_NAME}_c)
 
-# Link against triqs and enable warnings
-target_link_libraries(${PROJECT_NAME}_c PUBLIC triqs PRIVATE $<BUILD_INTERFACE:${PROJECT_NAME}_warnings>)
+# Enable warnings
+target_link_libraries(${PROJECT_NAME}_c PRIVATE $<BUILD_INTERFACE:${PROJECT_NAME}_warnings>)
 
 # Configure target and compilation
+target_compile_features(${PROJECT_NAME}_c PUBLIC cxx_std_23)
 set_target_properties(${PROJECT_NAME}_c PROPERTIES
   POSITION_INDEPENDENT_CODE ON
   VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -14,16 +15,17 @@ target_include_directories(${PROJECT_NAME}_c PUBLIC $<BUILD_INTERFACE:${PROJECT_
 target_include_directories(${PROJECT_NAME}_c SYSTEM INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>)
 target_compile_definitions(${PROJECT_NAME}_c PUBLIC
 				APP4TRIQS_GIT_HASH=${PROJECT_GIT_HASH}
-				TRIQS_GIT_HASH=${TRIQS_GIT_HASH}
 				$<$<CONFIG:Debug>:APP4TRIQS_DEBUG>
-				$<$<CONFIG:Debug>:TRIQS_DEBUG>
-				$<$<CONFIG:Debug>:TRIQS_ARRAYS_ENFORCE_BOUNDCHECK>
 			  )
 
 # Install library and headers
 install(TARGETS ${PROJECT_NAME}_c EXPORT ${PROJECT_NAME}-targets DESTINATION lib)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
 
+# ========= Additional Depdencies ==========
+
+# Link against HDF5 C++ Interface
+target_link_libraries(${PROJECT_NAME}_c PUBLIC h5::h5_c)
 
 # ========= Static Analyzer Checks ==========
 

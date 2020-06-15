@@ -10,12 +10,6 @@ Compiling app4triqs from source
 
 .. note:: To guarantee reproducibility in scientific calculations we strongly recommend the use of a stable `release <https://github.com/TRIQS/triqs/releases>`_ of both TRIQS and its applications.
 
-Prerequisites
--------------
-
-#. The :ref:`TRIQS <triqslibs:welcome>` library, see :ref:`TRIQS installation instruction <triqslibs:installation>`.
-   In the following, we assume that TRIQS is installed in the directory ``path_to_triqs``.
-
 Installation steps
 ------------------
 
@@ -27,13 +21,9 @@ Installation steps
 
      $ mkdir app4triqs.build && cd app4triqs.build
 
-#. Ensure that your shell contains the TRIQS environment variables by sourcing the ``triqsvars.sh`` file from your TRIQS installation::
-
-     $ source path_to_triqs/share/triqs/triqsvars.sh
-
 #. In the build directory call cmake, including any additional custom CMake options, see below::
 
-     $ cmake ../app4triqs.src
+     $ cmake -DCMAKE_INSTALL_PREFIX=path_to_install_dir ../app4triqs.src
 
 #. Compile the code, run the tests and install the application::
 
@@ -41,12 +31,9 @@ Installation steps
      $ make test
      $ make install
 
-Version compatibility
----------------------
+Versions
+--------
 
-Keep in mind that the version of ``app4triqs`` must be compatible with your TRIQS library version,
-see :ref:`TRIQS website <triqslibs:versions>`.
-In particular the Major and Minor Version numbers have to be the same.
 To use a particular version, go into the directory with the sources, and look at all available versions::
 
      $ cd app4triqs.src && git tag
