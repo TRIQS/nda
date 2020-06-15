@@ -15,5 +15,6 @@ namespace nda::clef {
   // FIXME use vim generation
   CLEF_MAKE_STD_FNT_LAZY(cos)
   CLEF_MAKE_STD_FNT_LAZY(abs)
+  CLEF_MAKE_STD_FNT_LAZY(exp)
 
 } // namespace nda::clef

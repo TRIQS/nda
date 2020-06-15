@@ -75,6 +75,18 @@ namespace nda {
     return {a};
   }
 
+   // --------------- make_array_const_view------------------------
+
+  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy>
+  array_const_view<T, R> make_array_const_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a) {
+    return {a};
+  }
+
+  template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy>
+  array_const_view<T, R> make_array_const_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> const &a) {
+    return {a};
+  }
+
   // --------------- make_matrix_view------------------------
 
   template <typename T, int R, typename L, char Algebra, typename ContainerPolicy>

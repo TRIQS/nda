@@ -292,13 +292,13 @@ namespace nda {
       if constexpr (get_algebra<R_t> == 'M')
         return expr<'+', scalar_matrix<L_t>, R>{scalar_matrix<L_t>{l, r.shape()}, std::forward<R>(r)};
       else
-        return expr<'+', scalar_array<L_t, R_t::rank>, R>{{l, r.shape()}, std::forward<R>(r)};
+        return expr<'+', scalar_array<L_t, get_rank<R_t>>, R>{{l, r.shape()}, std::forward<R>(r)};
     } //
     else if constexpr (is_scalar_v<R_t>) {
       if constexpr (get_algebra<L_t> == 'M')
         return expr<'+', L, scalar_matrix<R_t>>{std::forward<L>(l), scalar_matrix<R_t>{r, l.shape()}};
       else
-        return expr<'+', L, scalar_array<R_t, L_t::rank>>{std::forward<L>(l), {r, l.shape()}};
+        return expr<'+', L, scalar_array<R_t, get_rank<L_t>>>{std::forward<L>(l), {r, l.shape()}};
     } //
     else
       return expr<'+', L, R>{std::forward<L>(l), std::forward<R>(r)};
@@ -323,13 +323,13 @@ namespace nda {
       if constexpr (get_algebra<R_t> == 'M')
         return expr<'-', scalar_matrix<L_t>, R>{scalar_matrix<L_t>{l, r.shape()}, std::forward<R>(r)};
       else
-        return expr<'-', scalar_array<L_t, R_t::rank>, R>{{l, r.shape()}, std::forward<R>(r)};
+        return expr<'-', scalar_array<L_t, get_rank<R_t>>, R>{{l, r.shape()}, std::forward<R>(r)};
     } //
     else if constexpr (is_scalar_v<R_t>) {
       if constexpr (get_algebra<L_t> == 'M')
         return expr<'-', L, scalar_matrix<R_t>>{std::forward<L>(l), scalar_matrix<R_t>{r, l.shape()}};
       else
-        return expr<'-', L, scalar_array<R_t, L_t::rank>>{std::forward<L>(l), {r, l.shape()}};
+        return expr<'-', L, scalar_array<R_t, get_rank<L_t>>>{std::forward<L>(l), {r, l.shape()}};
     } //
     else
       return expr<'-', L, R>{std::forward<L>(l), std::forward<R>(r)};
@@ -349,8 +349,20 @@ namespace nda {
     using L_t = std::decay_t<L>; // L, R can be lvalue references
     using R_t = std::decay_t<R>;
 
-    // array * array or  anything* scalar or scalar * anything
-    if constexpr ((common_algebra<L, R>() == 'A') or is_scalar_v<L_t> or is_scalar_v<R_t>) { // array
+    // scalar * array/matrix
+    if constexpr (is_scalar_v<L_t>) {
+      // I copy the scalar. NOt strictly necessary, but it is a good protection in many cases
+      // like 
+      // s = 3; return s* A; 
+      // then the expression is dangling when returned...
+      return expr<'*', L_t, R>{l, std::forward<R>(r)};
+    }
+    // array/matrix * scalar
+    else if constexpr (is_scalar_v<R_t>) {
+      return expr<'*', L, R_t>{std::forward<L>(l), r};
+    }
+    // array * array
+    else if constexpr ((common_algebra<L, R>() == 'A')) { // array
       static_assert(rank_are_compatible<L, R>(), "rank mismatch in multiplication");
       static_assert(common_algebra<L, R>() != 'N', "Can not multiply two objects belonging to different algebras");
 #ifdef NDA_ENFORCE_BOUNDCHECK

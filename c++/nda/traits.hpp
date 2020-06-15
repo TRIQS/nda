@@ -23,7 +23,16 @@ namespace nda {
   static constexpr bool always_true = true;
 
   template <typename... T>
-  static constexpr bool fail = false and always_true<T...>;
+  static constexpr bool print_types_and_die = false; 
+
+  template <typename... T>
+  static constexpr bool with_Args = false; 
+
+  template <typename T>
+  static constexpr bool with_Array = false;
+
+  template <int R>
+  static constexpr bool with_Rank = false; 
 
   // --------------------------- is_complex ------------------------
 

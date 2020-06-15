@@ -61,7 +61,7 @@ decltype(auto) operator()(_linear_index_t x) const noexcept {
   else if constexpr (layout_t::layout_prop == layout_prop_e::contiguous)
     return sto[x.value]; // min_stride is 1
   else
-    static_assert(fail<layout_t>, "Internal error");
+    static_assert(print_types_and_die<layout_t>, "Internal error in calling this type with a _linear_index_t. One should never reach this !");
 }
 
 /// \private NO DOC
@@ -72,7 +72,7 @@ decltype(auto) operator()(_linear_index_t x) noexcept {
   else if constexpr (layout_t::layout_prop == layout_prop_e::contiguous)
     return sto[x.value]; // min_stride is 1
   else
-    static_assert(fail<layout_t>, "Internal error");
+    static_assert(print_types_and_die<layout_t>, "Internal error in calling this type with a _linear_index_t. One should never reach this !");
   // other case : should not happen, let it be a compilation error.
 }
 
@@ -118,10 +118,13 @@ FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) noex
       auto const [offset, idxm] = slice_static::slice_stride_order(self.lay, x...);
 
       using r_layout_t = decltype(idxm);
+
+      static constexpr char newAlgebra = (Algebra == 'M' and (r_layout_t::rank() == 1) ? 'V' : Algebra);
+      
       using r_view_t =
          // FIXME  basic_array_view<r_v_t, r_layout_t::rank(),
          basic_array_view<ValueType, r_layout_t::rank(),
-                          basic_layout<encode(r_layout_t::static_extents), encode(r_layout_t::stride_order), r_layout_t::layout_prop>, Algebra,
+                          basic_layout<encode(r_layout_t::static_extents), encode(r_layout_t::stride_order), r_layout_t::layout_prop>, newAlgebra,
                           AccessorPolicy, OwningPolicy>;
 
       return r_view_t{std::move(idxm), {self.sto, offset}};
@@ -151,7 +154,7 @@ decltype(auto) operator()(T const &... x) &noexcept(has_no_boundcheck) {
   if constexpr (not((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0)
                     or (ellipsis_is_present<T...> and (sizeof...(T) <= rank + 1)))) { // +1 since ellipsis can be of size 0
     //if ((sizeof...(T) != rank))
-    static_assert(fail<self_t, T...>, "Incorrect number of parameters in call");
+    static_assert(with_Args<T...> or with_Array<self_t>, "Incorrect number of parameters in calling Array with Args");
   }
   //static_assert(,
   //              "Incorrect number of parameters in call");

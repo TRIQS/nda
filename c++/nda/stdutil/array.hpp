@@ -85,7 +85,7 @@ namespace nda::stdutil {
    */
   template <typename T, auto R, typename U>
   constexpr std::array<T, R + 1> append(std::array<T, R> const &a, U const &x) {
-    std::array<T, R + 1> res;
+    std::array<T, R + 1> res = make_initialized_array<R + 1>(T{}); // FIXME : c++20 defect
     for (int i = 0; i < R; ++i) res[i] = a[i];
     res[R] = x;
     return res;
@@ -95,14 +95,14 @@ namespace nda::stdutil {
    * Make a new std::array by appending one element at the front
    * @tparam T
    * @tparam U Must be convertible to T
-   * @param a The array
+   * @param a The ar/ay
    * @param x Element to append
    * @return A new std::array with the element appended at the front
    */
   template <typename T, typename U, size_t R>
   constexpr std::array<T, R + 1> front_append(std::array<T, R> const &a, U const &x) {
-    std::array<T, R + 1> res;
-    res[0] = x;
+    std::array<T, R + 1> res = make_initialized_array<R + 1>(T{});
+    res[0]                   = x;
     for (int i = 0; i < R; ++i) res[i + 1] = a[i];
     return res;
   }
@@ -115,7 +115,7 @@ namespace nda::stdutil {
    */
   template <typename T, size_t R>
   constexpr std::array<T, R - 1> pop(std::array<T, R> const &a) {
-    std::array<T, R - 1> res;
+    std::array<T, R - 1> res = make_initialized_array<R - 1>(T{});
     for (int i = 0; i < R - 1; ++i) res[i] = a[i];
     return res;
   }
@@ -128,7 +128,8 @@ namespace nda::stdutil {
    */
   template <int N, typename T, size_t R>
   constexpr std::array<T, R - N> mpop(std::array<T, R> const &a) {
-    std::array<T, R - N> res;
+    std::array<T, R - N> res = make_initialized_array<R - N>(T{});
+    ;
     for (int i = 0; i < R - N; ++i) res[i] = a[i];
     return res;
   }
@@ -141,7 +142,7 @@ namespace nda::stdutil {
    */
   template <typename T, size_t R>
   constexpr std::array<T, R - 1> front_pop(std::array<T, R> const &a) {
-    std::array<T, R - 1> res;
+    std::array<T, R - 1> res = make_initialized_array<R - 1>(T{});
     for (int i = 1; i < R; ++i) res[i - 1] = a[i];
     return res;
   }
@@ -154,7 +155,7 @@ namespace nda::stdutil {
    */
   template <int N, typename T, size_t R>
   constexpr std::array<T, R - N> front_mpop(std::array<T, R> const &a) {
-    std::array<T, R - N> res;
+    std::array<T, R - N> res = make_initialized_array<R - N>(T{});
     for (int i = N; i < R; ++i) res[i - N] = a[i];
     return res;
   }
@@ -168,7 +169,7 @@ namespace nda::stdutil {
    */
   template <typename T, size_t R1, size_t R2>
   constexpr std::array<T, R1 + R2> join(std::array<T, R1> const &a1, std::array<T, R2> const &a2) {
-    std::array<T, R1 + R2> res;
+    std::array<T, R1 + R2> res = make_initialized_array<R1 + R2>(T{});
     for (int i = 0; i < R1; ++i) res[i] = a1[i];
     for (int i = 0; i < R2; ++i) res[R1 + i] = a2[i];
     return res;
@@ -197,17 +198,17 @@ namespace nda::stdutil {
   // ------------- basic arithmetic --------------------------------------
 
   template <typename T, size_t R>
-  std::array<T, R> operator+(std::array<T, R> const &a1, std::array<T, R> const &a2) {
-    std::array<T, R> r;
-    for (int i = 0; i < R; ++i) r[i] = a1[i] + a2[i];
-    return r;
+  constexpr std::array<T, R> operator+(std::array<T, R> const &a1, std::array<T, R> const &a2) {
+    std::array<T, R> res = make_initialized_array<R>(T{});
+    for (int i = 0; i < R; ++i) res[i] = a1[i] + a2[i];
+    return res;
   }
 
   template <typename T, size_t R>
-  std::array<T, R> operator-(std::array<T, R> const &a1, std::array<T, R> const &a2) {
-    std::array<T, R> r;
-    for (int i = 0; i < R; ++i) r[i] = a1[i] - a2[i];
-    return r;
+  constexpr std::array<T, R> operator-(std::array<T, R> const &a1, std::array<T, R> const &a2) {
+    std::array<T, R> res = make_initialized_array<R>(T{});
+    for (int i = 0; i < R; ++i) res[i] = a1[i] - a2[i];
+    return res;
   }
 
 } // namespace nda::stdutil

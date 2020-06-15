@@ -6,6 +6,8 @@ TEST(NDA, Ellipsis) { //NOLINT
   nda::array<long, 3> A(2, 3, 4);
   A() = 7;
 
+  //A(1,2); 
+
   EXPECT_ARRAY_NEAR(A(0, ___), A(0, _, _), 1.e-15);
 
   nda::array<long, 4> B(2, 3, 4, 5);

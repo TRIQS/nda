@@ -29,7 +29,7 @@ namespace nda {
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   class basic_array_view {
 
-    static_assert((Algebra != 'M') or (Rank <= 2), " Internal error : Algebra 'A' only makes sense for rank 2");
+    static_assert((Algebra != 'M') or (Rank == 2), " Internal error : Algebra 'A' only makes sense for rank 2");
     static_assert((Algebra != 'V') or (Rank == 1), " Internal error : Algebra 'V' only makes sense for rank 1");
 
     // details for the common code with view

@@ -3,6 +3,21 @@
 
 // ==============================================================
 
+TEST(NDA, DanglingScalarProtection) { //NOLINT
+
+  nda::array<long, 1> a{4, 2, 3}, b{8, 4, 6};
+
+  auto f = [&a]() {
+    double x = 2;
+    return x * a;
+  };
+
+  static_assert(!std::is_reference_v<decltype(f().l)>, "Dangling !");
+  EXPECT_EQ_ARRAY((nda::array<long, 1>{f()}), b);
+}
+
+// ==============================================================
+
 TEST(NDA, Negate_Array) { //NOLINT
 
   static_assert(nda::is_ndarray_v<nda::array<double, 1>>, "EEE");
