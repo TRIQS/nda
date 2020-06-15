@@ -33,25 +33,14 @@ endif()
 project(app4triqs VERSION 3.0.0 LANGUAGES C CXX)
 get_directory_property(IS_SUBPROJECT PARENT_DIRECTORY)
 
-# ############
-# Load TRIQS and CPP2PY
-find_package(TRIQS 3.0 REQUIRED)
-
 # Get the git hash & print status
-triqs_get_git_hash_of_source_dir(PROJECT_GIT_HASH)
+execute_process(COMMAND git rev-parse HEAD WORKING_DIRECTORY ${PROJECT_SOURCE_DIR} OUTPUT_VARIABLE PROJECT_GIT_HASH OUTPUT_STRIP_TRAILING_WHITESPACE)
 message(STATUS "${PROJECT_NAME} version : ${PROJECT_VERSION}")
 message(STATUS "${PROJECT_NAME} Git hash: ${PROJECT_GIT_HASH}")
 
-# Enforce Consistent Versioning
-if(NOT ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR} VERSION_EQUAL ${TRIQS_VERSION_MAJOR}.${TRIQS_VERSION_MINOR})
-  message(FATAL_ERROR "The ${PROJECT_NAME} version ${PROJECT_VERSION} is not compatible with TRIQS version ${TRIQS_VERSION}.")
-endif()
-
-# Default Install directory to TRIQS_ROOT if not given or invalid.
+# Assert that Install directory is given and invalid.
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT OR (NOT IS_ABSOLUTE ${CMAKE_INSTALL_PREFIX}))
-  message(STATUS "No install prefix given (or invalid). Defaulting to TRIQS_ROOT")
-  set(CMAKE_INSTALL_PREFIX ${TRIQS_ROOT} CACHE PATH "default install path" FORCE)
-  set(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT FALSE)
+  message(FATAL_ERROR "No install prefix given (or invalid)")
 endif()
 if(NOT IS_SUBPROJECT)
   message(STATUS "-------- CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX} --------")
@@ -75,9 +64,6 @@ endif()
 
 # Python Support
 option(PythonSupport "Build with Python support" ON)
-if(PythonSupport AND NOT TRIQS_WITH_PYTHON_SUPPORT)
-  message(FATAL_ERROR "TRIQS was installed without Python support. Cannot build the Python Interface. Disable the build with -DPythonSupport=OFF")
-endif()
 
 # Documentation
 option(Build_Documentation "Build documentation" OFF)
@@ -111,6 +97,25 @@ target_compile_options(${PROJECT_NAME}_warnings
     $<$<CXX_COMPILER_ID:AppleClang>:-Wshadow>
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-gcc-compat>
 )
+
+# ---------------------------------
+# Resolve Clang Linktime Problems
+# CMake will adjust any linker flags from '-L path_to/mylib.so' to -lmylib
+# if the proper mylib.so is automatically found by the linker, i.e.
+# the directory comes first in LIBRARY_PATH.
+# The clang linker however ignores LIBRARY_PATH.
+# We thus explicitly add the content of LIBRARY_PATH to the LDFLAGS
+# FIXME For future cmake versions we should populate the
+# INTERFACE_LINK_DIRECTORIES of the triqs target
+# ---------------------------------
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" AND DEFINED ENV{LIBRARY_PATH})
+  string(REPLACE ":" ";" LINK_DIRS $ENV{LIBRARY_PATH})
+  foreach(dir ${LINK_DIRS})
+    string(APPEND CMAKE_SHARED_LINKER_FLAGS " -L${dir}")
+    string(APPEND CMAKE_MODULE_LINKER_FLAGS " -L${dir}")
+    string(APPEND CMAKE_EXE_LINKER_FLAGS " -L${dir}")
+  endforeach()
+endif()
 
 # #############
 # Build Project
@@ -152,7 +157,6 @@ if(BUILD_DEBIAN_PACKAGE AND NOT IS_SUBPROJECT)
   set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
   set(CPACK_PACKAGE_CONTACT "https://github.com/TRIQS/${PROJECT_NAME}")
   execute_process(COMMAND dpkg --print-architecture OUTPUT_VARIABLE CMAKE_DEBIAN_PACKAGE_ARCHITECTURE OUTPUT_STRIP_TRAILING_WHITESPACE)
-  set(CPACK_DEBIAN_PACKAGE_DEPENDS "triqs (>= 3.0)")
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
   set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
   include(CPack)

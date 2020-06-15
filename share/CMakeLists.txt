@@ -1,6 +1,6 @@
 add_subdirectory(cmake)
 
-if(NOT CMAKE_INSTALL_PREFIX STREQUAL TRIQS_ROOT AND NOT IS_SUBPROJECT)
+if(NOT IS_SUBPROJECT)
 
   if(PythonSupport)
     set(EXPORT_PYTHON_PATH "export PYTHONPATH=${CMAKE_INSTALL_PREFIX}/${CPP2PY_PYTHON_LIB_DEST_ROOT}:$PYTHONPATH")
@@ -18,7 +18,7 @@ if(NOT CMAKE_INSTALL_PREFIX STREQUAL TRIQS_ROOT AND NOT IS_SUBPROJECT)
   )
  
   message(STATUS "***************************************************************")
-  message(STATUS "* Custom install Location. Use:                                ")
+  message(STATUS "* Use:                                                         ")
   message(STATUS "*                                                              ")
   message(STATUS "*   source ${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}vars.sh      ")
   message(STATUS "*                                                              ")
