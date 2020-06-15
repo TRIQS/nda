@@ -1,15 +1,11 @@
 easyblock = 'CMakeMake'
 
-name = 'TRIQS-app4triqs'
+name = 'app4triqs'
 version = '3.0.0'
 versionsuffix = '-Python-%(pyver)s'
 
 homepage = 'https://triqs.github.io/app4triqs/'
 description = """
- TRIQS (Toolbox for Research on Interacting Quantum Systems) is a
- scientific project providing a set of C++ and Python libraries to
- develop new tools for the study of interacting quantum systems.
-
  PROVIDE HERE A DESCRIPTION OF YOUR APPLICATION
 """
 
@@ -32,7 +28,6 @@ dependencies = [
     ('HDF5', '1.10.5'),
     ('Mako', '1.0.8'),
     ('h5py', '2.9.0'),
-    ('TRIQS', '3.0.0', versionsuffix),
     ('NFFT', '3.5.1')
 ]
 

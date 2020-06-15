@@ -1,5 +1,4 @@
 #pragma once
-#include <triqs/gfs.hpp>
 #include <h5/h5.hpp>
 
 namespace app4triqs {

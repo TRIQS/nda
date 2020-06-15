@@ -2,9 +2,9 @@ name: build
 
 on:
   push:
-    branches: [ unstable ]
+    branches: [ notriqs ]
   pull_request:
-    branches: [ unstable ]
+    branches: [ notriqs ]
 
 jobs:
   build:
@@ -31,11 +31,9 @@ jobs:
         gfortran
         hdf5-tools
         libblas-dev
-        libboost-dev
         libclang-10-dev
         libc++-10-dev
         libc++abi-10-dev
-        libfftw3-dev
         libgfortran4
         libgmp-dev
         libhdf5-dev
@@ -47,7 +45,6 @@ jobs:
         python3-clang-10
         python3-dev
         python3-mako
-        python3-matplotlib
         python3-mpi4py
         python3-numpy
         python3-pip
@@ -58,20 +55,9 @@ jobs:
     - name: Install homebrew dependencies
       if: matrix.os == 'macos-10.15'
       run: |
-        brew install gcc@10 llvm@10 boost fftw hdf5 open-mpi openblas numpy scipy mpi4py
+        brew install gcc@10 llvm@10 hdf5 open-mpi openblas numpy scipy mpi4py
         pip3 install mako
         pip3 install -r requirements.txt
-
-    - name: Build & Install TRIQS
-      env:
-        CC: ${{ matrix.cc }}
-        CXX: ${{ matrix.cxx }}
-      run: |
-        git clone https://github.com/TRIQS/triqs --branch unstable
-        mkdir triqs/build && cd triqs/build
-        cmake .. -DBuild_Tests=OFF -DCMAKE_INSTALL_PREFIX=$HOME/install
-        make -j1 install VERBOSE=1
-        cd ../
 
     - name: Build app4triqs
       env:
@@ -79,14 +65,12 @@ jobs:
         CXX: ${{ matrix.cxx }}
         LIBRARY_PATH: /usr/local/opt/llvm/lib
       run: |
-        source $HOME/install/share/triqsvars.sh
-        mkdir build && cmake -B build
+        mkdir build && cmake -B build -DCMAKE_INSTALL_PREFIX=$HOME/install
         cmake --build build -j2
 
     - name: Test app4triqs
       env:
         DYLD_FALLBACK_LIBRARY_PATH: /usr/local/opt/llvm/lib
       run: |
-        source $HOME/install/share/triqsvars.sh
         cd build
         ctest -j2 --output-on-failure
