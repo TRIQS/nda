@@ -275,7 +275,7 @@ namespace nda {
      * @tparam RHS A scalar or an object modeling NdArray
      */
     template <CONCEPT(ArrayOfRank<Rank>) RHS>
-    basic_array &operator=(RHS const &rhs) noexcept REQUIRES17(is_ndarray_v<RHS>) {
+    basic_array &operator=(RHS const &rhs) noexcept REQUIRES17(is_ndarray_v<RHS> and not is_scalar_for_v<RHS, basic_array>) {
       static_assert(!is_const, "Cannot assign to a const !");
       resize(rhs.shape());
       assign_from_ndarray(rhs); // common code with view, private
