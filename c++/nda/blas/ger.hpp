@@ -38,6 +38,12 @@ namespace nda::blas {
     // Must be lapack compatible
     EXPECTS(m.indexmap().min_stride() == 1);
 
+
+    //for (int i = 0; i< x.extent(0); ++i) 
+    //for (int j = 0; j< y.extent(0); ++j) 
+      //m(i,j) += alpha * x(i) * y(j);
+    //return ;
+
     auto idx = m.indexmap(); // FIXME should not need a copy
     // if in C, we need to call fortran with transposed matrix
     if constexpr (idx.is_stride_order_C())

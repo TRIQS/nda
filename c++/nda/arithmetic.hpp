@@ -20,10 +20,16 @@ namespace nda {
 
   // algebra
   template <char OP, typename L, typename R>
-  constexpr char get_algebra<expr<OP, L, R>> = expr<OP, L, R>::algebra;
+  inline constexpr char get_algebra<expr<OP, L, R>> = expr<OP, L, R>::algebra;
 
   template <char OP, typename L>
-  inline constexpr bool get_algebra<expr_unary<OP, L>> = expr_unary<OP, L>::algebra;
+  inline constexpr char get_algebra<expr_unary<OP, L>> = expr_unary<OP, L>::algebra;
+
+  template <typename S>
+  inline constexpr char get_algebra<scalar_matrix<S>> = 'M';
+
+  template <typename S, int R>
+  inline constexpr char get_algebra<scalar_array<S, R>> = 'A';
 
   // Both model NdArray concept
   template <char OP, typename L, typename R>
@@ -131,7 +137,7 @@ namespace nda {
       } else if constexpr (r_is_scalar) {
         return l.extent(i);
       } else {
-        EXPECTS(l.extent(i) == r.extent(i));
+        //EXPECTS(l.extent(i) == r.extent(i));
         return l.extent(i);
       }
     }
@@ -210,14 +216,15 @@ namespace nda {
     using L_t = std::decay_t<L>;
     L l;
     static constexpr char algebra = get_algebra<L_t>;
+    static_assert(OP == '-', "Internal error");
 
     template <typename LL>
     expr_unary(LL &&l_) : l(std::forward<LL>(l_)) {}
 
     // FIXME clef
     template <typename... Args>
-    auto operator()(Args &&... args) const {                           // REQUIRES(not(clef::is_lazy<L>))
-      if constexpr (OP == '-') return -l(std::forward<Args>(args)...); // other cases not implemented
+    auto operator()(Args &&... args) const { // REQUIRES(not(clef::is_lazy<L>))
+      return -l(std::forward<Args>(args)...);
     }
 
     //    TRIQS_CLEF_IMPLEMENT_LAZY_CALL();
@@ -352,8 +359,8 @@ namespace nda {
     // scalar * array/matrix
     if constexpr (is_scalar_v<L_t>) {
       // I copy the scalar. NOt strictly necessary, but it is a good protection in many cases
-      // like 
-      // s = 3; return s* A; 
+      // like
+      // s = 3; return s* A;
       // then the expression is dangling when returned...
       return expr<'*', L_t, R>{l, std::forward<R>(r)};
     }
@@ -362,22 +369,25 @@ namespace nda {
       return expr<'*', L, R_t>{std::forward<L>(l), r};
     }
     // array * array
-    else if constexpr ((common_algebra<L, R>() == 'A')) { // array
-      static_assert(rank_are_compatible<L, R>(), "rank mismatch in multiplication");
-      static_assert(common_algebra<L, R>() != 'N', "Can not multiply two objects belonging to different algebras");
+    else if constexpr ((common_algebra<L_t, R_t>() == 'A')) { // array
+      static_assert(rank_are_compatible<L_t, R_t>(), "rank mismatch in multiplication");
+      static_assert(common_algebra<L_t, R_t>() != 'N', "Can not multiply two objects belonging to different algebras");
 #ifdef NDA_ENFORCE_BOUNDCHECK
-      if constexpr (!nda::is_scalar_v<L_t> && !nda::is_scalar_v<R_t>)
+      if constexpr (!nda::is_scalar_v<L_t> && !nda::is_scalar_v<R_t>) {
         if (l.shape() != r.shape()) NDA_RUNTIME_ERROR << "Matrix product : dimension mismatch in matrix product " << l.shape() << " " << r.shape();
+      }
 #endif
       return expr<'*', L, R>{std::forward<L>(l), std::forward<R>(r)};
     }
     // matrix * matrix
-    else if constexpr (common_algebra<L, R>() == 'M') {
+    else if constexpr (common_algebra<L_t, R_t>() == 'M') {
       return matmul(std::forward<L>(l), std::forward<R>(r));
     }
     // matrix * vector
     else if constexpr (get_algebra<L_t> == 'M' and get_algebra<R_t> == 'V') {
       return matvecmul(std::forward<L>(l), std::forward<R>(r));
+    } else {
+      static_assert(always_false<L> || always_false<R>, "Can not multiply : logic Error");
     }
   }
 
@@ -394,13 +404,16 @@ namespace nda {
    * @return lazy expression for element-wise division
    */
   template <typename L, typename R>
-  expr<'/', L, R> operator/(L &&l, R &&r) REQUIRES(model_ndarray_with_possibly_one_scalar<L, R> and (common_algebra<L, R>() != 'N')) {
+  auto operator/(L &&l, R &&r) REQUIRES(model_ndarray_with_possibly_one_scalar<L, R>) { // and (common_algebra<L, R>() != 'N')) {
     static_assert(rank_are_compatible<L, R>(), "rank mismatch in array addition");
-    static_assert(common_algebra<L, R>() != 'N', "Can not divide two objects belonging to different algebras");
-    //using L_t = std::decay_t<L>; // L, R can be lvalue references
+    using L_t = std::decay_t<L>; // L, R can be lvalue references
     using R_t = std::decay_t<R>;
-    static_assert((not(get_algebra<R_t> == 'M') or is_scalar_v<R_t>), " matrix/matrix is not permitted. Use matrix * inverse( ...)");
-    return {std::forward<L>(l), std::forward<R>(r)};
+    if constexpr (get_algebra<R_t> == 'M' and is_scalar_v<L_t>) {
+      return std::forward<L>(l) * inverse(matrix<get_value_t<R_t>>{std::forward<R>(r)});
+    } else {
+      static_assert(common_algebra<L, R>() != 'N', "Can not divide two objects belonging to different algebras");
+      return expr<'/', L, R>{std::forward<L>(l), std::forward<R>(r)};
+    }
   }
 
   template <typename L>
@@ -412,7 +425,7 @@ namespace nda {
 
   // requires NdArray<A> and HasMatrixAlgebra<A>
   template <class A>
-  expr<'/', A, int> inverse(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
+  expr<'/', int, A> inverse(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
     return {1, std::forward<A>(a)};
   }
 

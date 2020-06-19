@@ -7,6 +7,8 @@
 
 using nda::F_layout;
 
+static_assert( not std::is_constructible_v<long, nda::range>, "ioio");
+
 //----------------------------
 
 TEST(BLAS, gemm) { //NOLINT

@@ -48,10 +48,10 @@ namespace nda {
 
     /// The type of the layout
     using layout_t = typename Layout::template mapping<Rank>;
+    
+    static_assert(has_contiguous(layout_t::layout_prop), "Non sense. A basic_array is a contiguous object");
 
     using regular_type = basic_array;
-    //using view_type       = basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
-    //using const_view_type = basic_array_view<const ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
 
     private:
     // FIXME : mem_handle_t

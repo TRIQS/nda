@@ -61,7 +61,7 @@ decltype(auto) operator()(_linear_index_t x) const noexcept {
   else if constexpr (layout_t::layout_prop == layout_prop_e::contiguous)
     return sto[x.value]; // min_stride is 1
   else
-    static_assert(print_types_and_die<layout_t>, "Internal error in calling this type with a _linear_index_t. One should never reach this !");
+    static_assert(always_false<layout_t>, "Internal error in calling this type with a _linear_index_t. One should never reach this !");
 }
 
 /// \private NO DOC
@@ -72,7 +72,7 @@ decltype(auto) operator()(_linear_index_t x) noexcept {
   else if constexpr (layout_t::layout_prop == layout_prop_e::contiguous)
     return sto[x.value]; // min_stride is 1
   else
-    static_assert(print_types_and_die<layout_t>, "Internal error in calling this type with a _linear_index_t. One should never reach this !");
+    static_assert(always_false<layout_t>, "Internal error in calling this type with a _linear_index_t. One should never reach this !");
   // other case : should not happen, let it be a compilation error.
 }
 
@@ -85,8 +85,15 @@ static constexpr bool has_no_boundcheck = false;
 static constexpr bool has_no_boundcheck = true;
 #endif
 
-template <bool SelfIsRvalue, typename Self, typename... T>
-FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) noexcept(has_no_boundcheck) {
+public:
+// I keep this public for the call of gf, which has to be reinterpreted as matrix
+// I can construct a matrix at once. Of course, the optimizer may eliminate the copy of handle and idx_map
+// but I prefer to keep it shorter here.
+// FIXME : consider to make this private, and use a make_matrix (...) on the resut in gf operator()
+// and restest carefully with benchmarsk
+/// \private
+template <char ResultAlgebra, bool SelfIsRvalue, typename Self, typename... T>
+FORCEINLINE static decltype(auto) call(Self &&self, T const &... x) noexcept(has_no_boundcheck) {
 
   using r_v_t = std::conditional_t<std::is_const_v<std::remove_reference_t<Self>>, ValueType const, ValueType>;
 
@@ -118,9 +125,8 @@ FORCEINLINE static decltype(auto) __call__impl(Self &&self, T const &... x) noex
       auto const [offset, idxm] = slice_static::slice_stride_order(self.lay, x...);
 
       using r_layout_t = decltype(idxm);
+      static constexpr char newAlgebra = (ResultAlgebra == 'M' and (r_layout_t::rank() == 1) ? 'V' : ResultAlgebra);
 
-      static constexpr char newAlgebra = (Algebra == 'M' and (r_layout_t::rank() == 1) ? 'V' : Algebra);
-      
       using r_view_t =
          // FIXME  basic_array_view<r_v_t, r_layout_t::rank(),
          basic_array_view<ValueType, r_layout_t::rank(),
@@ -144,7 +150,7 @@ template <typename... T>
 decltype(auto) operator()(T const &... x) const &noexcept(has_no_boundcheck) {
   static_assert((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank + 1)),
                 "Incorrect number of parameters in call");
-  return __call__impl<false>(*this, x...);
+  return call<Algebra, false>(*this, x...);
 }
 
 ///
@@ -158,7 +164,7 @@ decltype(auto) operator()(T const &... x) &noexcept(has_no_boundcheck) {
   }
   //static_assert(,
   //              "Incorrect number of parameters in call");
-  return __call__impl<false>(*this, x...);
+  return call<Algebra, false>(*this, x...);
 }
 
 ///
@@ -166,7 +172,7 @@ template <typename... T>
 decltype(auto) operator()(T const &... x) &&noexcept(has_no_boundcheck) {
   static_assert((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank + 1)),
                 "Incorrect number of parameters in call");
-  return __call__impl<true>(*this, x...);
+  return call<Algebra, true>(*this, x...);
 }
 
 /**
@@ -179,21 +185,21 @@ decltype(auto) operator()(T const &... x) &&noexcept(has_no_boundcheck) {
 template <typename T>
 decltype(auto) operator[](T const &x) const &noexcept(has_no_boundcheck) {
   static_assert((rank == 1), " [ ] operator is only available for rank 1 in C++17/20");
-  return __call__impl<false>(*this, x);
+  return call<Algebra, false>(*this, x);
 }
 
 ///
 template <typename T>
 decltype(auto) operator[](T const &x) &noexcept(has_no_boundcheck) {
   static_assert((rank == 1), " [ ] operator is only available for rank 1 in C++17/20");
-  return __call__impl<false>(*this, x);
+  return call<Algebra, false>(*this, x);
 }
 
 ///
 template <typename T>
 decltype(auto) operator[](T const &x) &&noexcept(has_no_boundcheck) {
   static_assert((rank == 1), " [ ] operator is only available for rank 1 in C++17/20");
-  return __call__impl<true>(*this, x);
+  return call<Algebra, true>(*this, x);
 }
 
 // ------------------------------- Iterators --------------------------------------------
@@ -210,6 +216,8 @@ private:
 template <typename Iterator>
 [[nodiscard]] auto make_iterator(bool at_end) const noexcept {
   if constexpr (iterator_rank == Rank) {
+    // FIXME DEB"UGGING
+    return Iterator{indexmap().lengths(), indexmap().strides(), sto.data(), at_end};
     if constexpr (layout_t::is_stride_order_C())
       return Iterator{indexmap().lengths(), indexmap().strides(), sto.data(), at_end};
     else
@@ -323,7 +331,8 @@ void fill_with_scalar(Scalar const &scalar) noexcept {
       for (long i = 0; i < L; ++i) p[i] = scalar;
     } else {
       const long stri = indexmap().min_stride();
-      for (long i = 0; i < L; i += stri) p[i] = scalar;
+      const long Lstri = L*stri;
+      for (long i = 0; i < Lstri; i += stri) p[i] = scalar;
     }
   } else {
     auto l = [this, scalar](auto const &... args) { (*this)(args...) = scalar; };

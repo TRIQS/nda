@@ -19,50 +19,61 @@
  *
  ******************************************************************************/
 #pragma once
-#include "../clef.hpp"
-#include "../utility/view_tools.hpp"
+#include "./clef.hpp"
 
-namespace triqs {
-  namespace clef {
+namespace nda::clef {
 
-    using triqs::make_regular;
+  namespace details {
+    template <typename T, typename Enable = void>
+    struct regular {
+      using type = T;
+    };
+    template <typename T>
+    struct regular<T, std::void_t<typename T::regular_type>> {
+      using type = typename T::regular_type;
+    };
+  } // namespace details
+  // template <typename T> using regular_t            = typename details::regular<std::decay_t<T>>::type;
 
-    //--------------------------------------------------------------------------------------------------
-    //  sum of expressions
-    // -------------------------------------------------------------------------------------------------
+  /// Transform to the regular type
+  template <typename T>
+  auto make_regular(T &&x) {
+    return typename details::regular<std::decay_t<T>>::type{std::forward<T>(x)};
+  }
 
-    // sum a function f on a domain D, using a simple foreach
-    template <typename F, typename D>
-    // requires(!triqs::clef::is_any_lazy<F, D>::value)
-    auto sum_f_domain_impl(F const &f, D const &d)
-       -> std::enable_if_t<!triqs::clef::is_any_lazy<F, D>::value, std::decay_t<decltype(make_regular(f(*(d.begin()))))>> {
-      auto it  = d.begin();
-      auto ite = d.end();
-      if (it == ite) TRIQS_RUNTIME_ERROR << "Sum over an empty domain";
-      auto res = make_regular(f(*it));
-      ++it;
-      for (; it != ite; ++it) res = res + f(*it);
-      return res;
-    }
+  //--------------------------------------------------------------------------------------------------
+  //  sum of expressions
+  // -------------------------------------------------------------------------------------------------
 
-    TRIQS_CLEF_MAKE_FNT_LAZY(sum_f_domain_impl);
+  // sum a function f on a domain D, using a simple foreach
+  template <typename F, typename D>
+  auto sum_f_domain_impl(F const &f, D const &d) REQUIRES(not is_clef_expression<F, D>) {
+    auto it  = d.begin();
+    auto ite = d.end();
+    if (it == ite) NDA_RUNTIME_ERROR << "Sum over an empty domain";
+    auto res = make_regular(f(*it));
+    ++it;
+    for (; it != ite; ++it) res = res + f(*it);
+    return res;
+  }
 
-    // sum( expression, i = domain)
-    template <typename Expr, int N, typename D>
-    decltype(auto) sum(Expr const &f, clef::pair<N, D> const &d) {
-      return sum_f_domain_impl(make_function(f, clef::_ph<N>()), d.rhs);
-    }
-    // warning : danger here : if the d is a temporary, the domain MUST be moved in case the Expr
-    // is still lazy after eval, or we will obtain a dangling reference.
-    template <typename Expr, int N, typename D>
-    decltype(auto) sum(Expr const &f, clef::pair<N, D> &&d) {
-      return sum_f_domain_impl(make_function(f, clef::_ph<N>()), std::move(d.rhs));
-    }
+  CLEF_MAKE_FNT_LAZY(sum_f_domain_impl);
 
-    // two or more indices : sum recursively
-    template <typename Expr, typename A0, typename A1, typename... A>
-    auto sum(Expr const &f, A0 &&a0, A1 &&a1, A &&... a) {
-      return sum(sum(f, std::forward<A0>(a0)), std::forward<A1>(a1), std::forward<A>(a)...);
-    }
-  } // namespace clef
-} // namespace triqs
+  // sum( expression, i = domain)
+  template <typename Expr, int N, typename D>
+  decltype(auto) sum(Expr const &f, clef::pair<N, D> const &d) {
+    return sum_f_domain_impl(make_function(f, clef::_ph<N>()), d.rhs);
+  }
+  // warning : danger here : if the d is a temporary, the domain MUST be moved in case the Expr
+  // is still lazy after eval, or we will obtain a dangling reference.
+  template <typename Expr, int N, typename D>
+  decltype(auto) sum(Expr const &f, clef::pair<N, D> &&d) {
+    return sum_f_domain_impl(make_function(f, clef::_ph<N>()), std::move(d.rhs));
+  }
+
+  // two or more indices : sum recursively
+  template <typename Expr, typename A0, typename A1, typename... A>
+  auto sum(Expr const &f, A0 &&a0, A1 &&a1, A &&... a) {
+    return sum(sum(f, std::forward<A0>(a0)), std::forward<A1>(a1), std::forward<A>(a)...);
+  }
+} // namespace nda::clef

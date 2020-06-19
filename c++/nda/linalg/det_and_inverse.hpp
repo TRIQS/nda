@@ -28,8 +28,8 @@ namespace nda {
 
   template <typename A>
   bool is_matrix_square(A const &a, bool print_error = false) {
-    bool r = (a.extent(0) == a.extent(1));
-    if (not r and print_error) std::cerr << "Error non-square matrix. Dimensions are :(" << a.extent(0) << "," << a.extent(1) << ")\n  " << std::endl;
+    bool r = (a.shape()[0] == a.shape()[1]);
+    if (not r and print_error) std::cerr << "Error non-square matrix. Dimensions are :(" << a.shape()[0] << "," << a.shape()[1] << ")\n  " << std::endl;
     return r;
   }
 

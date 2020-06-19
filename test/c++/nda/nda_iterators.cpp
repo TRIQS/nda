@@ -1,6 +1,21 @@
 #include "./test_common.hpp"
 
-// ==============================================================
+// ===================   for_each ===========================================
+
+TEST(for_each, Mutable) { //NOLINT
+  nda::array<int, 3> a(3, 4, 5);
+  nda::for_each(a.shape(), [&a, c2 = 0](auto... i) mutable { a(i...) = c2++; });
+
+  auto check = a;
+  int c      = 0;
+  for (int i = 0; i < a.extent(0); ++i)
+    for (int j = 0; j < a.extent(1); ++j)
+      for (int k = 0; k < a.extent(2); ++k) check(i, j, k) = c++;
+
+  EXPECT_ARRAY_EQ(a, check);
+}
+
+// ====================   iterator ==========================================
 
 TEST(iterator, empty) { //NOLINT
   nda::array<int, 1> arr(0);

@@ -159,25 +159,23 @@ namespace nda::slice_static {
     }
     // count the number of times 1 0 appears args_in_range
     // we must traverse in the order of the stride_order ! (in memory order, slowest to fastest)
-    int n_10_pattern = 0;
-    for (int i_n = 1; i_n < int(N); ++i_n) {
-      int q      = q_of_n(stride_order[i_n], e_pos, e_len);
-      int q_prec = q_of_n(stride_order[i_n - 1], e_pos, e_len);
-      if (args_is_range_all[q_prec] and (not args_is_range_all[q])) ++n_10_pattern;
+    int n_1_blocks                = 0;
+    bool previous_arg_is_rangeall = false;
+    for (int i_n = 0; i_n < int(N); ++i_n) {
+      int q                = q_of_n(stride_order[i_n], e_pos, e_len);
+      bool arg_is_rangeall = args_is_range_all[q];
+      if (arg_is_rangeall and (not previous_arg_is_rangeall)) ++n_1_blocks;
+      previous_arg_is_rangeall = arg_is_rangeall;
     }
-    bool rangeall_are_grouped_in_memory             = (n_10_pattern <= 1); // in mem order. e.g. (long, all, all, long) or (all, all, long)
-    bool rangeall_are_grouped_in_memory_and_fastest = (n_10_pattern == 0); // in mem order e.g. (.... all, all, all) all at the end.
+    // in mem order. e.g. (long, all, all, long) or (all, all, long), but not (all, long, all)
+    bool rangeall_are_grouped_in_memory             = (n_1_blocks <= 1);
+    bool last_is_rangeall                           = previous_arg_is_rangeall;
 
-    int qlast             = q_of_n(stride_order[N - 1], e_pos, e_len);
-    bool last_is_rangeall = args_is_range_all[qlast];
+    if (has_contiguous(layout_prop) and rangeall_are_grouped_in_memory and last_is_rangeall) return layout_prop_e::contiguous;
+    if (has_strided_1d(layout_prop) and rangeall_are_grouped_in_memory) return layout_prop_e::strided_1d;
+    if (has_smallest_stride_is_one(layout_prop) and last_is_rangeall) return layout_prop_e::smallest_stride_is_one;
 
-    layout_prop_e r = layout_prop_e::none;
-
-    if (has_contiguous(layout_prop) and rangeall_are_grouped_in_memory_and_fastest) r = r | layout_prop_e::contiguous;
-    if (has_strided_1d(layout_prop) and rangeall_are_grouped_in_memory) r = r | layout_prop_e::strided_1d;
-    if (has_smallest_stride_is_one(layout_prop) and last_is_rangeall) r = r | layout_prop_e::smallest_stride_is_one;
-
-    return r;
+    return layout_prop_e::none;
   }
 
   // ------------  Small pieces of code for the fold in functions below, with dispatch on type --------------------------------------

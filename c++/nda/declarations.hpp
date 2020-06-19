@@ -33,13 +33,11 @@ namespace nda {
   template <typename ValueType, int Rank, typename Layout = C_stride_layout>
   using array_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed>;
 
-  template <typename ValueType, int Rank, uint64_t StrideOrder>
-  using array_contiguous_view =
-     basic_array_view<ValueType, Rank, basic_layout<0, StrideOrder, layout_prop_e::contiguous>, 'A', default_accessor, borrowed>;
+  template <typename ValueType, int Rank>
+  using array_contiguous_view = basic_array_view<ValueType, Rank, C_layout, 'A', default_accessor, borrowed>;
 
-  template <typename ValueType, int Rank, uint64_t StrideOrder>
-  using array_contiguous_const_view =
-     basic_array_view<ValueType const, Rank, basic_layout<0, StrideOrder, layout_prop_e::contiguous>, 'A', default_accessor, borrowed>;
+  template <typename ValueType, int Rank>
+  using array_contiguous_const_view = basic_array_view<ValueType const, Rank, C_layout, 'A', default_accessor, borrowed>;
 
   template <typename ValueType, typename Layout = C_layout>
   using matrix = basic_array<ValueType, 2, Layout, 'M', heap>;

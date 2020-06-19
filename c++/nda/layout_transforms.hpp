@@ -9,7 +9,8 @@ namespace nda {
   // e.g. permuted_indices_view, regroup_indices, reshape, ...
 
   // First a general function that map any transform of the layout onto the basic_array_view
-
+ // NB : Algebra is down to A is 
+  // FIXME : regroup + requires ? ?
   template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy, typename NewLayoutType>
   auto map_layout_transform(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> a, NewLayoutType const &new_layout) {
     using layout_policy = basic_layout<encode(NewLayoutType::static_extents), encode(NewLayoutType::stride_order), NewLayoutType::layout_prop>;
@@ -21,6 +22,20 @@ namespace nda {
   auto map_layout_transform(basic_array<T, R, L, Algebra, ContainerPolicy> &&a, NewLayoutType const &new_layout) {
     using layout_policy = basic_layout<encode(NewLayoutType::static_extents), encode(NewLayoutType::stride_order), NewLayoutType::layout_prop>;
     return basic_array<T, NewLayoutType::rank(), layout_policy, (NewLayoutType::rank() == R ? Algebra : 'A'), ContainerPolicy>{
+       new_layout, std::move(a.storage())};
+  }
+
+  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, typename NewLayoutType>
+  auto map_layout_transform(basic_array<T, R, L, Algebra, ContainerPolicy> &a, NewLayoutType const &new_layout) {
+    using layout_policy = basic_layout<encode(NewLayoutType::static_extents), encode(NewLayoutType::stride_order), NewLayoutType::layout_prop>;
+    return basic_array_view<T, NewLayoutType::rank(), layout_policy, (NewLayoutType::rank() == R ? Algebra : 'A')>{
+       new_layout, a.storage()};
+  }
+
+  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, typename NewLayoutType>
+  auto map_layout_transform(basic_array<T, R, L, Algebra, ContainerPolicy> const &a, NewLayoutType const &new_layout) {
+    using layout_policy = basic_layout<encode(NewLayoutType::static_extents), encode(NewLayoutType::stride_order), NewLayoutType::layout_prop>;
+    return basic_array_view<T const, NewLayoutType::rank(), layout_policy, (NewLayoutType::rank() == R ? Algebra : 'A')>{
        new_layout, std::move(a.storage())};
   }
 

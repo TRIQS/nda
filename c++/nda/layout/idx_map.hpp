@@ -99,10 +99,19 @@ namespace nda {
     /// Strides of each dimension.
     [[nodiscard]] std::array<long, Rank> const &strides() const noexcept { return str; }
 
+    /// Value of the minimum stride (i.e the fastest one)
+    [[nodiscard]] long min_stride() const noexcept { return str[stride_order[Rank - 1]]; }
+
     /// Is the data contiguous in memory ? [NB recomputed at each call]
     [[nodiscard]] bool is_contiguous() const noexcept {
       int slowest_index = std::distance(str.begin(), std::max_element(str.begin(), str.end())); // index with minimal stride
       return (str[slowest_index] * len[slowest_index] == size());
+    }
+
+    /// Is the data strided 1d in memory ? [NB recomputed at each call]
+    [[nodiscard]] bool is_strided_1d() const noexcept {
+      int slowest_index = std::distance(str.begin(), std::max_element(str.begin(), str.end())); // index with minimal stride
+      return (str[slowest_index] * len[slowest_index] == size() * min_stride());
     }
 
     /// Is the order in memory C ?
@@ -123,9 +132,6 @@ namespace nda {
       return (encode(stride_order) == encode(permutations::reverse_identity<Rank>()));
 #endif
     }
-
-    /// Value of the minimum stride (i.e the fastest one)
-    [[nodiscard]] long min_stride() const noexcept { return str[stride_order[Rank - 1]]; }
 
     // ----------------  Constructors -------------------------
 
@@ -166,7 +172,18 @@ namespace nda {
      */
     template <layout_prop_e P>
     idx_map(idx_map<Rank, StaticExtents, StrideOrder, P> const &idxm) noexcept : len(idxm.lengths()), str(idxm.strides()) {
-      static_assert(is_degradable(P, LayoutProp), "Can not construct the view: it would violate some compile time guarantees about the layout");
+      if constexpr (not layout_property_compatible(P, LayoutProp)) {
+        if constexpr (has_contiguous(LayoutProp)) {
+          EXPECTS_WITH_MESSAGE(
+             idxm.is_contiguous(),
+             "Failed check of contiguity. Constructing a contiguous layout from another layout which was not guaranteed to be contiguous at compile time. The check fails so your program is incorrect");
+        }
+        if constexpr (has_strided_1d(LayoutProp)) {
+          EXPECTS_WITH_MESSAGE(
+             idxm.is_strided_1d(),
+             "Failed check of quasi-contiguity (1d-strided). Constructing a contiguous layout from another layout which was not guaranteed to be quasi-contiguous at compile time. The check fails so your program is incorrect");
+        }
+      }
     }
 
     private:
@@ -183,7 +200,18 @@ namespace nda {
     /// Construct from a compatible static_extents
     template <uint64_t SE, layout_prop_e P>
     idx_map(idx_map<Rank, SE, StrideOrder, P> const &idxm) noexcept(false) : len(idxm.lengths()), str(idxm.strides()) { // can throw
-      static_assert(is_degradable(P, LayoutProp), "Can not construct the view: it would violate some compile time guarantees about the layout");
+      if constexpr (not layout_property_compatible(P, LayoutProp)) {
+        if constexpr (has_contiguous(LayoutProp)) {
+          EXPECTS_WITH_MESSAGE(
+             idxm.is_contiguous(),
+             "Failed check of contiguity. Constructing a contiguous layout from another layout which was not guaranteed to be contiguous at compile time. The check fails so your program is incorrect");
+        }
+        if constexpr (has_strided_1d(LayoutProp)) {
+          EXPECTS_WITH_MESSAGE(
+             idxm.is_strided_1d(),
+             "Failed check of quasi-contiguity (1d-strided). Constructing a contiguous layout from another layout which was not guaranteed to be quasi-contiguous at compile time. The check fails so your program is incorrect");
+        }
+      }
       assert_static_extents_and_len_are_compatible();
     }
 
@@ -297,7 +325,8 @@ namespace nda {
 
       // Compute the new layout_prop of the new view
       // NB : strided_1d property is preserved, but smallest_stride_is_one is not
-      static constexpr layout_prop_e new_layout_prop = (has_strided_1d(layout_prop) ? layout_prop_e::strided_1d : layout_prop_e::none);
+      // FIXME 
+      static constexpr layout_prop_e new_layout_prop = layout_prop_e::none; // BUT FIX (has_strided_1d(layout_prop) ? layout_prop_e::strided_1d : layout_prop_e::none);
 
       return idx_map<Rank, encode(new_static_extents), encode(new_stride_order), new_layout_prop>{permutations::apply_inverse(permu, lengths()),
                                                                                                   permutations::apply_inverse(permu, strides())};

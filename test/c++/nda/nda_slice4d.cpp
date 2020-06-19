@@ -39,18 +39,30 @@ void test4d() {
               << " smallest_stride_is_one = " << smallest_stride_is_one << std::endl;
 
     bool check_strided_1d = true;
-    auto it               = std::begin(v);
-    auto c                = *it; // first element
-    ++it;
-    auto stri = (*it) - c; // the stride
-    for (auto const &x : v) {
-      check_strided_1d &= (x == c);
+
+    // forcing the basic iterator in rank dimension, avoiding all optimization
+    using layout_t = typename decltype(v)::layout_t;
+    using Iterator = nda::array_iterator<layout_t::rank(), long const, typename nda::default_accessor::template accessor<long>::pointer>;
+    auto it        = Iterator{nda::permutations::apply(layout_t::stride_order, v.indexmap().lengths()),
+                       nda::permutations::apply(layout_t::stride_order, v.indexmap().strides()), v.data_start(), false};
+    auto end       = Iterator{nda::permutations::apply(layout_t::stride_order, v.indexmap().lengths()),
+                        nda::permutations::apply(layout_t::stride_order, v.indexmap().strides()), v.data_start(), true};
+
+    auto it1 = it;
+    auto c   = *it1; // first element
+    ++it1;
+    auto stri = (*it1) - c; // the stride
+    for (; it != end; ++it) {
+      check_strided_1d &= (*it == c);
       c += stri;
     }
+
     bool check_contiguous = check_strided_1d and (stri == 1);
 
     EXPECT_EQ(check_strided_1d, is_strided_1d);
     EXPECT_EQ(check_contiguous, is_contiguous);
+    EXPECT_EQ(v.indexmap().is_contiguous(), is_contiguous);
+    EXPECT_EQ(v.indexmap().is_strided_1d(), is_strided_1d);
 
     ++n;
   };

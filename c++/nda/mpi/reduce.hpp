@@ -7,7 +7,7 @@ namespace nda::lazy_mpi {
   template <typename ValueType, int Rank, uint64_t StrideOrder>
   struct reduce {
 
-    using view_t     = array_contiguous_view<ValueType const, Rank, StrideOrder>;
+    using view_t     = basic_array_view<ValueType const, Rank, basic_layout<0, StrideOrder, layout_prop_e::contiguous>, 'A', default_accessor, borrowed>;
     using value_type = ValueType;
 
     view_t source;       // view of the array to reduce
@@ -20,9 +20,10 @@ namespace nda::lazy_mpi {
     [[nodiscard]] auto shape() const { return source.shape(); }
 
     /// Delayed reduction operation
-    void invoke(view_t target_view) const {
+    void invoke(array_view<ValueType const, Rank> target) const {
       // we force the caller to build a view_t. If not possible, e.g. stride orders mismatch, it will not compile
 
+      view_t target_view{target};
       // some checks.
       bool in_place = (target_view.data_start() == source.data_start());
       auto sha      = shape();
@@ -86,9 +87,11 @@ namespace nda {
   AUTO(ArrayInitializer)
   mpi_reduce(A &a, mpi::communicator c = {}, int root = 0, bool all = false, MPI_Op op = MPI_SUM) //
      REQUIRES(is_regular_or_view_v<std::decay_t<A>>) {
-    static_assert(has_layout_contiguous<std::decay_t<A>>, "Non contigous view in target_view.data_start() are not implemented");
-    static_assert(mpi::has_mpi_type<typename A::value_type>, "Reduction of non MPI types is not implemented");
-    return lazy_mpi::reduce<typename A::value_type, A::rank, A::layout_t::stride_order_encoded>{a(), c, root, all, op};
+    //static_assert(has_layout_contiguous<std::decay_t<A>>, "Non contigous view in target_view.data_start() are not implemented");
+    using v_t = std::decay_t<typename A::value_type>;
+    static_assert(mpi::has_mpi_type<v_t>, "Reduction of non MPI types is not implemented");
+    using r_t = lazy_mpi::reduce<v_t, A::rank, A::layout_t::stride_order_encoded>;
+    return r_t{typename r_t::view_t{a}, c, root, all, op};
   }
 
 } // namespace nda

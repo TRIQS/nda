@@ -82,7 +82,7 @@ namespace nda {
   typename A::value_type; 
 
   // not perfect, it should accept any layout
-  {a.invoke(array_view<typename A::value_type, get_rank<A>>{}) };
+  {a.invoke(array_contiguous_view<typename A::value_type, get_rank<A>>{}) };
 
   };
   // clang-format on

@@ -156,3 +156,22 @@ TEST(Matrix, Eye) { //NOLINT
 
   EXPECT_EQ_ARRAY(nda::eye<long>(3), (nda::matrix<long>{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}));
 }
+
+// ===============================================================
+
+TEST(Matrix, Slice) { //NOLINT
+
+  const int N = 10;
+
+  nda::matrix<double> a(N, N);
+
+  nda::range R(2,4);
+
+  auto v = a(R, 7);
+
+  static_assert(decltype(v)::layout_t::layout_prop == nda::layout_prop_e::strided_1d, "ee");
+  static_assert(nda::has_contiguous(decltype(v)::layout_t::layout_prop) == false, "ee");
+
+}
+
+

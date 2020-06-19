@@ -1,6 +1,12 @@
 #include "./test_common.hpp"
 #include <nda/linalg/det_and_inverse.hpp>
 
+using expr_1_m_mat =
+   nda::expr<'-', nda::scalar_matrix<long>, nda::basic_array_view<long, 2, nda::C_layout, 'M', nda::default_accessor, nda::borrowed>>;
+
+static_assert(expr_1_m_mat::algebra == 'M', "oops");
+static_assert(nda::get_algebra<expr_1_m_mat> == 'M', "oops");
+
 // ==============================================================
 
 TEST(NDA, DanglingScalarProtection) { //NOLINT
@@ -37,6 +43,22 @@ TEST(NDA, Negate_Matrix) { //NOLINT
   B() = 0;
   B   = -A;
   EXPECT_ARRAY_NEAR(B, (matrix<double>{{-1, -2}, {-3, -4}}));
+}
+
+// ==============================================================
+
+TEST(NDA, ScalarDivMatrix) { //NOLINT
+
+  auto a    = nda::matrix<double>(2, 2);
+  a         = 0;
+  auto b    = a;
+  double l1 = 0.2, l2 = 1.4;
+  a(0, 0) = 2;
+  a(1, 1) = 4;
+  b(0, 0) = l1 / (l2 - a(0, 0));
+  b(1, 1) = l1 / (l2 - a(1, 1));
+
+  EXPECT_ARRAY_NEAR(b, (l1 / (l2 - a)));
 }
 
 // ==============================================================

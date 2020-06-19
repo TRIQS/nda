@@ -23,16 +23,19 @@ namespace nda {
   static constexpr bool always_true = true;
 
   template <typename... T>
-  static constexpr bool print_types_and_die = false; 
+  static constexpr bool always_false = false;
 
   template <typename... T>
-  static constexpr bool with_Args = false; 
+  static constexpr bool with_Args = false;
 
   template <typename T>
   static constexpr bool with_Array = false;
 
   template <int R>
-  static constexpr bool with_Rank = false; 
+  static constexpr bool with_Rank = false;
+
+  template <typename T>
+  [[deprecated]] void debug_print_type(T) {}
 
   // --------------------------- is_complex ------------------------
 
@@ -140,11 +143,11 @@ namespace nda {
   // Whether we can degrade the property. It is a partial order.
   // contiguous -> strided_1d  -> none
   // contiguous -> smallest_stride_is_one  -> none
-  //
-  inline constexpr bool is_degradable(layout_prop_e from, layout_prop_e into) {
+  /// \private
+  inline constexpr bool layout_property_compatible(layout_prop_e from, layout_prop_e to) {
     if (from == layout_prop_e::contiguous) return true;
-    if (from == layout_prop_e::none) return (into == layout_prop_e::none);
-    return ((into == layout_prop_e::none) or (into == from));
+    if (from == layout_prop_e::none) return (to == layout_prop_e::none);
+    return ((to == layout_prop_e::none) or (to == from));
   }
 
   //  operator for the layout_prop_e
@@ -153,9 +156,9 @@ namespace nda {
   constexpr layout_prop_e operator&(layout_prop_e a, layout_prop_e b) { return layout_prop_e{uint64_t(a) & uint64_t(b)}; }
   //bool operator|=(layout_prop_e & a, layout_prop_e b) { return a = layout_prop_e(uint64_t(a) | uint64_t(b));}
 
-  inline constexpr bool has_contiguous(layout_prop_e x) { return uint64_t(x) & uint64_t(layout_prop_e::contiguous); }
   inline constexpr bool has_strided_1d(layout_prop_e x) { return uint64_t(x) & uint64_t(layout_prop_e::strided_1d); }
   inline constexpr bool has_smallest_stride_is_one(layout_prop_e x) { return uint64_t(x) & uint64_t(layout_prop_e::smallest_stride_is_one); }
+  inline constexpr bool has_contiguous(layout_prop_e x) { return has_strided_1d(x) and has_smallest_stride_is_one(x); }
 
   // FIXME : I need a NONE for stride_order. For the scalars ...
   struct layout_info_t {

@@ -75,7 +75,7 @@ namespace nda {
     return {a};
   }
 
-   // --------------- make_array_const_view------------------------
+  // --------------- make_array_const_view------------------------
 
   template <typename T, int R, typename L, char Algebra, typename ContainerPolicy>
   array_const_view<T, R> make_array_const_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a) {
@@ -99,14 +99,14 @@ namespace nda {
     return {a};
   }
 
-/*  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy>*/
+  /*  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy>*/
   //matrix_view<T const, L> make_matrix_const_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a) {
-    //return {a};
+  //return {a};
   //}
 
   //template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   //matrix_view<T const, L> make_matrix_const_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> const &a) {
-    //return {a};
+  //return {a};
   //}
 
   // --------------- operator == ---------------------
@@ -123,19 +123,17 @@ namespace nda {
     return r;
   }
 
-  // --------------- ASSIGN FOREACH ------------------------
-
-  template <typename T, typename F>
-  //[[deprecated]] // FIXME : SHALL WE KEEP THIS ?
-  void assign_foreach(T &x, F &&f) {
-    nda::for_each(x.shape(), std::forward<F>(f));
-  }
-
   // ------------------------------- auto_assign --------------------------------------------
 
   template <typename A, typename F>
   void clef_auto_assign(A &&a, F &&f) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
-    nda::for_each(a.shape(), [&a, &f](auto &&... x) { a(x...) = f(x...); });
+    nda::for_each(a.shape(), [&a, &f](auto &&... x) {
+     if constexpr (clef::is_function<std::decay_t<decltype(f(x...))>>) {
+         clef_auto_assign(a(x...), f(x...));
+      } else {
+        a(x...) = f(x...);
+      }
+    });
   }
 
 } // namespace nda

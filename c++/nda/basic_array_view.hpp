@@ -43,10 +43,8 @@ namespace nda {
     using layout_t   = typename Layout::template mapping<Rank>;
 
     // FIXME : TRIQS PORT REMOVE
-    using regular_type = basic_array<std::remove_const_t<ValueType>, Rank, Layout, Algebra, heap>;
-    //using view_type       = basic_array_view;
-    //using const_view_type = basic_array_view<const ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>;
-
+    using regular_type = basic_array<std::remove_const_t<ValueType>, Rank, C_layout, Algebra, heap>;
+ 
     static constexpr int rank = Rank;
 
     private:
@@ -61,6 +59,9 @@ namespace nda {
 
     template <typename T, int R, typename L, char A, typename AP, typename OP, typename NewLayoutType>
     friend auto map_layout_transform(basic_array_view<T, R, L, A, AP, OP> a, NewLayoutType const &new_layout);
+
+    template <typename L>
+    static constexpr bool requires_runtime_check = not layout_property_compatible(L::template mapping<Rank>::layout_prop, layout_t::layout_prop);
 
     public:
     // FIXME : TRIQS PORTING
@@ -89,20 +90,22 @@ namespace nda {
 
     ///
     template <typename L, char A, typename CP>
-    basic_array_view(basic_array<ValueType, Rank, L, A, CP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
-
-    ///
-    template <typename L, char A, typename AP, typename OP>
-    basic_array_view(basic_array_view<ValueType, Rank, L, A, AP, OP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
-
-    ///
-    template <typename L, char A, typename CP>
-    basic_array_view(basic_array<std::remove_const_t<ValueType>, Rank, L, A, CP> const &a) noexcept REQUIRES(std::is_const_v<ValueType>)
+    EXPLICIT(requires_runtime_check<L>) basic_array_view(basic_array<ValueType, Rank, L, A, CP> const &a) noexcept
        : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
 
     ///
     template <typename L, char A, typename AP, typename OP>
-    basic_array_view(basic_array_view<std::remove_const_t<ValueType>, Rank, L, A, AP, OP> const &a) noexcept REQUIRES(std::is_const_v<ValueType>)
+    EXPLICIT(requires_runtime_check<L>) basic_array_view(basic_array_view<ValueType, Rank, L, A, AP, OP> const &a) noexcept
+       : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
+
+    ///
+    template <typename L, char A, typename CP>
+    EXPLICIT(requires_runtime_check<L>) basic_array_view(basic_array<std::remove_const_t<ValueType>, Rank, L, A, CP> const &a) noexcept REQUIRES(std::is_const_v<ValueType>)
+       : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
+
+    ///
+    template <typename L, char A, typename AP, typename OP>
+    EXPLICIT(requires_runtime_check<L>) basic_array_view(basic_array_view<std::remove_const_t<ValueType>, Rank, L, A, AP, OP> const &a) noexcept REQUIRES(std::is_const_v<ValueType>)
        : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
 
     /** 

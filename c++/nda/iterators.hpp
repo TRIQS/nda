@@ -71,7 +71,7 @@ namespace nda {
 
     grid_iterator &operator++() {
       ++it;
-      if (it == it_end) { //FIXME [[likely]]
+      if (it == it_end) { //FIXME [[unlikely]]
         ++pos;
         offset += stri;
         it = it_begin;

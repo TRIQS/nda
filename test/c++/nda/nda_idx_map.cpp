@@ -46,6 +46,18 @@ TEST(idxstat, eval) { // NOLINT
 
 //-----------------------
 
+TEST(idxstat, slicemat) { // NOLINT
+
+  idx_map<2, 0, C_stride_order<2>, layout_prop_e::none> i1{{10,10}};
+
+  auto [offset2, i2] = slice_stride_order(i1, range(0,2), 2);
+
+  static_assert(decltype(i2)::layout_prop == layout_prop_e::strided_1d, "000");
+
+}
+
+//-----------------------
+
 TEST(idxstat, slice) { // NOLINT
 
   idx_map<3, 0, C_stride_order<3>, layout_prop_e::none> i1{{1, 2, 3}};

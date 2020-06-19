@@ -26,6 +26,23 @@ namespace std {
     return fs.str();
   }
 
+ // ------------- basic arithmetic --------------------------------------
+
+  template <typename T, size_t R>
+  constexpr std::array<T, R> operator+(std::array<T, R> const &a1, std::array<T, R> const &a2) {
+    std::array<T, R> res;// = make_initialized_array<R>(T{});
+    for (int i = 0; i < R; ++i) res[i] = a1[i] + a2[i];
+    return res;
+  }
+
+  template <typename T, size_t R>
+  constexpr std::array<T, R> operator-(std::array<T, R> const &a1, std::array<T, R> const &a2) {
+    std::array<T, R> res;// FIXME MOVE THIS = make_initialized_array<R>(T{});
+    for (int i = 0; i < R; ++i) res[i] = a1[i] - a2[i];
+    return res;
+  }
+
+
 } // namespace std
 
 /// =========    END ADDING IN STD ===========
@@ -194,22 +211,6 @@ namespace nda::stdutil {
       for (int i = 1; i < R; ++i) res += a1[i] * a2[i];
       return res;
     }
-  }
-
-  // ------------- basic arithmetic --------------------------------------
-
-  template <typename T, size_t R>
-  constexpr std::array<T, R> operator+(std::array<T, R> const &a1, std::array<T, R> const &a2) {
-    std::array<T, R> res = make_initialized_array<R>(T{});
-    for (int i = 0; i < R; ++i) res[i] = a1[i] + a2[i];
-    return res;
-  }
-
-  template <typename T, size_t R>
-  constexpr std::array<T, R> operator-(std::array<T, R> const &a1, std::array<T, R> const &a2) {
-    std::array<T, R> res = make_initialized_array<R>(T{});
-    for (int i = 0; i < R; ++i) res[i] = a1[i] - a2[i];
-    return res;
   }
 
 } // namespace nda::stdutil

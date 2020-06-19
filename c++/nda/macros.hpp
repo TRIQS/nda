@@ -36,6 +36,9 @@
 #define REQUIRES requires
 #define REQUIRES20 requires
 
+// C++20 explicit(bool) : degrade it NOTHING in c++17, we can not check easily
+#define EXPLICIT explicit
+
 // WARNING : it is critical for our doctools to have REQUIRES as requires, NOT a (...) with __VA_ARGS__
 // It is the same effect, but raises unnecessary complications in traversing the AST in libtooling with macros.
 
@@ -46,6 +49,8 @@
 #define AUTO(X) auto
 #define CONCEPT(X) typename
 #define REQUIRES20(...)
+
+#define EXPLICIT(...)
 
 #ifdef __clang__
 #define REQUIRES17(...) __attribute__((enable_if(__VA_ARGS__, AS_STRING(__VA_ARGS__))))

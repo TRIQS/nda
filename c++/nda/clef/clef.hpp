@@ -469,6 +469,13 @@ namespace nda::clef {
     }
   };
 
+  // To easily detect such an object in generic code.
+  template <typename T>
+  inline constexpr bool is_function = false;
+  template <typename Expr, int... Is>
+  inline constexpr bool is_function<make_fun_impl<Expr, Is...>> = true;
+
+
   // values of the ph, excluding the Is ...
   template <ull_t x, int... Is>
   struct ph_filter;
@@ -696,7 +703,7 @@ namespace nda::clef {
 
   template <typename Obj, typename Args>
   expr<tags::subscript, expr_storage_t<Obj>, expr_storage_t<Args>> make_expr_subscript(Obj &&obj, Args &&args) CLEF_REQUIRES(is_any_lazy<Args>) {
-    return {tags::function{}, std::forward<Obj>(obj), std::forward<Args>(args)};
+    return {tags::subscript{}, std::forward<Obj>(obj), std::forward<Args>(args)};
   }
 
   /* --------------------------------------------------------------------------------------------------
