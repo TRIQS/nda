@@ -13,7 +13,7 @@ namespace cpp2py {
   struct py_converter<nda::array_view<T, R>> {
     using _type = nda::array_view<T, R>;
 
-    static _type py2c(PyObject *src) {
+    static _type py2c(PyObject *src) REQUIRES(cpp2py::has_npy_type<T>) {
       _import_array();
       nda::python::numpy_proxy p = nda::python::make_numpy_proxy(src);
       auto res                   = nda::python::make_array_view_from_numpy_proxy<T, R>(p);
@@ -46,20 +46,23 @@ namespace cpp2py {
     static _type py2c(PyObject *src) {
       _import_array();
       nda::python::numpy_proxy p = nda::python::make_numpy_proxy(src);
-      auto res                   = nda::python::make_array_view_from_numpy_proxy<T, R>(p);
-      if (PyErr_Occurred()) PyErr_Print();
-      return res;
+      if constexpr (cpp2py::has_npy_type<T>) {
+        auto res = nda::python::make_array_view_from_numpy_proxy<T, R>(p);
+        if (PyErr_Occurred()) PyErr_Print();
+        return res;
+      } else {
+        auto res = nda::python::make_array_from_numpy_proxy<T, R>(p);
+        if (PyErr_Occurred()) PyErr_Print();
+        return res;
+      }
     }
 
     static PyObject *c2py(_type src) {
-      //import_numpy();
-      nda::python::numpy_proxy p = nda::python::make_numpy_proxy_from_array(src);
-      return p.to_python();
+      return py_converter<nda::array_view<T, R>>::c2py(src);
     }
 
     static bool is_convertible(PyObject *src, bool raise_exception) {
-      //import_numpy();
-      auto res = nda::python::is_convertible_to_array_view<T, R>(src);
+      auto res = nda::python::is_convertible_to_array<T, R>(src);
       if (!res and raise_exception) throw std::runtime_error("Cannot convert to array/matrix");
       return res;
     }

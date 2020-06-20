@@ -7,6 +7,8 @@
 #include <nda/nda.hpp>
 
 #include <cpp2py/numpy_proxy.hpp>
+#include <cpp2py/py_converter.hpp>
+#include <cpp2py/pyref.hpp>
 
 #include "make_py_capsule.hpp"
 
@@ -14,35 +16,52 @@ namespace nda::python {
 
   using cpp2py::make_numpy_copy;
   using cpp2py::make_numpy_proxy;
+  using cpp2py::npy_type;
   using cpp2py::numpy_proxy;
 
   // Convert array to numpy_proxy
-  template <typename A>
-  numpy_proxy make_numpy_proxy_from_array(A &a) {
+  template <typename AUR>
+  numpy_proxy make_numpy_proxy_from_array(AUR &&a) {
 
-    v_t extents(A::rank), strides(A::rank);
+    using A          = std::decay_t<AUR>;
+    using value_type = typename A::value_type;
 
-    for (size_t i = 0; i < A::rank; ++i) {
-      extents[i] = a.indexmap().lengths()[i];
-      strides[i] = a.indexmap().strides()[i] * sizeof(typename A::value_type);
+    if constexpr (cpp2py::has_npy_type<value_type>) {
+      cpp2py::v_t extents(A::rank), strides(A::rank);
+
+      for (size_t i = 0; i < A::rank; ++i) {
+        extents[i] = a.indexmap().lengths()[i];
+        strides[i] = a.indexmap().strides()[i] * sizeof(value_type);
+      }
+
+      return {A::rank,
+              npy_type<std::remove_const_t<value_type>>,
+              (void *)a.data_start(),
+              std::is_const_v<value_type>,
+              std::move(extents),
+              std::move(strides),
+              make_pycapsule(a.storage())};
+    } else {
+      // FIXME is map properly implemented for rvalues?
+      array<cpp2py::pyref, A::rank> aobj =
+         map([](value_type x) { return cpp2py::pyref{cpp2py::py_converter<std::decay_t<value_type>>::c2py(x)}; })(std::forward<AUR>(a));
+      return make_numpy_proxy_from_array(std::move(aobj));
     }
-
-    return {A::rank,
-            npy_type<std::remove_const_t<typename A::value_type>>,
-            (void *)a.data_start(),
-            std::is_const_v<typename A::value_type>,
-            std::move(extents),
-            std::move(strides),
-            make_pycapsule(a.storage())};
   }
 
   // ------------------------------------------
 
   template <typename T, int R>
-  bool is_convertible_to_array_view(PyObject *obj) {
+  bool is_convertible_to_array(PyObject *obj) {
     if (not PyArray_Check(obj)) return false;
     PyArrayObject *arr = (PyArrayObject *)(obj);
-    if (PyArray_TYPE(arr) != npy_type<T>) return false;
+    if constexpr (cpp2py::has_npy_type<T>){
+      if(PyArray_TYPE(arr) != npy_type<T>)
+	return false;
+    } else{
+      if(not cpp2py::py_converter<T>::is_convertible(..., false))
+	return false;
+    }
 #ifdef PYTHON_NUMPY_VERSION_LT_17
     int rank = arr->nd;
 #else
@@ -51,18 +70,52 @@ namespace nda::python {
     return (rank == R);
   }
 
+  template <typename T, int R>
+  bool is_convertible_to_array_view(PyObject *obj) {
+    return cpp2py::has_npy_type<T> && is_convertible_to_array(obj);
+  }
+
   // ------------------------------------------
 
   // Make a new array_view from numpy view
   template <typename T, int R>
   array_view<T, R> make_array_view_from_numpy_proxy(numpy_proxy const &v) {
+    EXPECTS(v.extents.size() == R);
+
     std::array<long, R> extents, strides;
     for (int u = 0; u < R; ++u) {
       extents[u] = v.extents[u];
       strides[u] = v.strides[u] / sizeof(T);
     }
-    using idx_t = typename array_view<T, R>::layout_t;
-    return array_view<T, R>{idx_t{extents, strides}, static_cast<T *>(v.data)};
+    using layout_t = typename array_view<T, R>::layout_t;
+
+    if(v.element_type != npy_type<cpp2py::pyref>)
+      throw std::runtime_error{"Cannot convert a ndarray of PyObjects to a view in c++"};
+
+    return array_view<T, R>{layout_t{extents, strides}, static_cast<T *>(v.data)};
+  }
+
+  // ------------------------------------------
+
+  // Make a new array from numpy view
+  template <typename T, int R>
+  array<T, R> make_array_from_numpy_proxy(numpy_proxy const &v) {
+    EXPECTS(v.extents.size() == R);
+
+    std::array<long, R> extents, strides;
+    for (int u = 0; u < R; ++u) {
+      extents[u] = v.extents[u];
+      strides[u] = v.strides[u] / sizeof(T);
+    }
+
+    auto layout = typename array_view<T, R>::layout_t{extents, strides};
+
+    if (v.element_type == npy_type<cpp2py::pyref>) {
+      auto arr_dat = array_view<PyObject *, R>{layout, static_cast<PyObject **>(v.data)};
+      return map([](PyObject *o) { return cpp2py::py_converter<std::decay_t<T>>::py2c(o); })(arr_dat);
+    } else {
+      return array_view<T, R>{layout, static_cast<T *>(v.data)};
+    }
   }
 
 } // namespace nda::python

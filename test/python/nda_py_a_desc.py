@@ -1,5 +1,5 @@
 # Generated automatically using the command :
-# c++2py a.hpp -C nda_py -a nda_py_a -m nda_py_a -o nda_py_a --cxxflags="-std=c++17" --includes=./../../../c++ --includes=./../../../python --target_file_only
+# c++2py a.hpp -C nda_py -a nda_py_a -m nda_py_a -o nda_py_a --cxxflags="-std=c++17" --includes=./../../c++ --includes=./../../python --target_file_only
 from cpp2py.wrap_generator import *
 
 # The module
@@ -38,6 +38,8 @@ c.add_method("""nda::array_view<long, 1> get ()""",
 module.add_class(c)
 
 module.add_function ("nda::array<long, 1> arrn (int n)", doc = r"""""")
+
+module.add_function ("nda::array<container, 2> make_container_array ()", doc = r"""""")
 
 
 
