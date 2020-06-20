@@ -46,9 +46,7 @@ TEST(clef, makefunction) {
 TEST(clef, makefunctionparametric) {
   auto expr = 2 * x_ + 1;
   auto r    = make_function(expr, x_);
-  auto r2   = x_ >> expr;
   EXPECT_EQ(r(3), 7);
-  EXPECT_EQ(r2(3), 7);
 
   EXPECT_EQ((eval(make_function(x_ + 2 * y_, x_), y_ = 2)(3)), 7);
   EXPECT_EQ((make_function(x_ + 2, x_)(3)), 5);

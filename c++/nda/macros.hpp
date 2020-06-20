@@ -11,17 +11,10 @@
 #define AS_STRING2(...) #__VA_ARGS__
 
 // We might want to split these one because of the iostream include
-#include <iostream>
 #define PRINT(X) std::cerr << AS_STRING(X) << " = " << X << "      at " << __FILE__ << ":" << __LINE__ << '\n'
 #define NDA_PRINT(X) std::cerr << AS_STRING(X) << " = " << X << "      at " << __FILE__ << ":" << __LINE__ << '\n'
 
 // --- Concept macros -----
-
-//#if (__cplusplus > 201703L)
-//#define NDA_CPP17
-//#else
-//#define NDA_CPP20
-//#endif
 
 #if (__cplusplus > 201703L)
 
@@ -59,7 +52,6 @@
 // with the -fconcepts TS only. A degraded concept mode, not exactly the C++20. We return to C++17 + basic require
 #define REQUIRES17 requires
 #define REQUIRES requires
-//#define REQUIRES(...) requires(__VA_ARGS__)
 
 #endif
 

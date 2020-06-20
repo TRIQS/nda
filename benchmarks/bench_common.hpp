@@ -3,6 +3,7 @@
 #pragma GCC diagnostic ignored "-Wpedantic"
 #endif
 
+#include <iostream>
 #include <nda/nda.hpp>
 #include <benchmark/benchmark.h>
 

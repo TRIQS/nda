@@ -1,6 +1,7 @@
 #include <gtest/gtest.h> // NOLINT
 #include <cmath>
 #include <limits>
+#include <iostream>
 
 #define NDA_DEBUG
 #define NDA_BOUNDCHECK

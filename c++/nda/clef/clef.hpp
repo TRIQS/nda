@@ -531,10 +531,10 @@ namespace nda::clef {
   *  x_ >> expression  is the same as make_function(expression,x)
   * --------------------------------------------------------------------------------------------------- */
 
-  template <int N, typename Expr>
-  auto operator>>(_ph<N>, Expr &&ex) {
-    return make_function(ex, _ph<N>{});
-  }
+/*  template <int N, typename Expr>*/
+  //auto operator>>(_ph<N>, Expr &&ex) {
+    //return make_function(ex, _ph<N>{});
+  //}
 
   /* ---------------------------------------------------------------------------------------------------
   * Auto assign for ()
