@@ -26,10 +26,12 @@
 #include <type_traits>
 #include <cstring>
 #include "./blk.hpp"
-#include "./rtable.hpp"
 #include "./allocators.hpp"
 
 namespace nda::mem {
+
+  //
+  static constexpr bool init_dcmplx = true; // initialize dcomplex to 0 globally
 
   // -------------- is_complex ----------------
 
@@ -112,60 +114,66 @@ namespace nda::mem {
     T *_data     = nullptr; // Pointer to the start of the memory block
     size_t _size = 0;       // Size of the memory block. Invariant: size > 0 iif data != 0
 
-    // The regular handle can share its memory with handle_shared<T>
-    mutable long _id = 0; // The id in the refcounts table.
-                          // id == 0 corresponds to the case of no memory sharing
-                          // This field must be mutable for the cross construction of 'S'. Cf 'S'.
-                          // Invariant: id == 0 if data == nullptr
-    friend handle_shared<T>;
+    // In case we need to share the memory
+    mutable std::shared_ptr<void> sptr;
 
-    void decref() noexcept {
+    using blk_t = std::pair<T *, size_t>;
+
+    // code for destructor
+    static void destruct(blk_t b) noexcept {
+
       static_assert(std::is_nothrow_destructible_v<T>, "nda::mem::handle requires the value_type to have a non-throwing constructor");
-      if (is_null()) return;
+      auto [data, size] = b;
 
-      // Check if the memory is shared and still pointed to
-      if (has_shared_memory() and not globals::rtable.decref(_id)) return;
-
+      if (data == nullptr) return;
+      
       // If needed, call the T destructors
       if constexpr (!std::is_trivial_v<T>) {
-        for (size_t i = 0; i < _size; ++i) _data[i].~T();
+        for (size_t i = 0; i < size; ++i) data[i].~T();
       }
 
       // Deallocate the memory block
-      allocator_singleton<Allocator>::deallocate({(char *)_data, _size * sizeof(T)});
+      allocator_singleton<Allocator>::deallocate({(char *)data, size * sizeof(T)});
     }
 
-    bool has_shared_memory() const noexcept { return _id != 0; }
+    // a deleter for the data in the sptr
+    static void deleter(void *p) noexcept { destruct(*((blk_t *)p)); }
 
     public:
+    std::shared_ptr<void> get_sptr() const {
+      if (not sptr) sptr.reset(new blk_t{_data, _size}, deleter);
+      return sptr;
+    }
+
     using value_type = T;
 
-    ~handle_heap() noexcept { decref(); }
+    ~handle_heap() noexcept {
+      // if the data is not in the shared_ptr, we delete it, otherwise the shared_ptr will take care of it
+      if (not sptr and not(is_null())) destruct({_data, _size});
+    }
 
     handle_heap() = default;
 
     handle_heap(handle_heap &&x) noexcept {
       _data   = x._data;
       _size   = x._size;
-      _id     = x._id;
+      sptr    = std::move(x.sptr);
       x._data = nullptr;
       x._size = 0;
-      x._id   = 0;
+    }
+
+    handle_heap &operator=(handle_heap &&x) noexcept {
+      if (not sptr and not(is_null())) destruct({_data, _size});
+      _data   = x._data;
+      _size   = x._size;
+      sptr    = std::move(x.sptr);
+      x._data = nullptr;
+      x._size = 0;
+      return *this;
     }
 
     handle_heap &operator=(handle_heap const &x) {
       *this = handle_heap{x};
-      return *this;
-    }
-
-    handle_heap &operator=(handle_heap &&x) noexcept {
-      decref();
-      _data   = x._data;
-      _size   = x._size;
-      _id     = x._id;
-      x._data = nullptr;
-      x._size = 0;
-      x._id   = 0;
       return *this;
     }
 
@@ -193,7 +201,7 @@ namespace nda::mem {
       if (size == 0) return; // no size -> null handle
 
       allocators::blk_t b;
-      if constexpr (is_complex_v<T> && globals::init_dcmplx)
+      if constexpr (is_complex_v<T> && init_dcmplx)
         b = allocator_singleton<Allocator>::allocate_zero(size * sizeof(T));
       else
         b = allocator_singleton<Allocator>::allocate(size * sizeof(T));
@@ -234,7 +242,6 @@ namespace nda::mem {
     bool is_null() const noexcept {
 #ifdef NDA_DEBUG
       // Check the Invariants in Debug Mode
-      EXPECTS(_data != nullptr or _id == 0);
       EXPECTS((_data == nullptr) == (_size == 0));
 #endif
       return _data == nullptr;
@@ -244,6 +251,7 @@ namespace nda::mem {
     T *data() const noexcept { return _data; }
 
     long size() const noexcept { return _size; }
+
   };
 
   // ------------------  Stack -------------------------------------
@@ -454,7 +462,7 @@ namespace nda::mem {
         _size = size;
       } else {
         allocators::blk_t b;
-        if constexpr (is_complex_v<T> && globals::init_dcmplx)
+        if constexpr (is_complex_v<T> && init_dcmplx)
           b = allocators::mallocator::allocate_zero(size * sizeof(T));
         else
           b = allocators::mallocator::allocate(size * sizeof(T));
@@ -480,113 +488,21 @@ namespace nda::mem {
     T *_data     = nullptr; // Pointer to the start of the memory block
     size_t _size = 0;       // Size of the memory block. Invariant: size > 0 iif data != 0
 
-    long _id = 0; // The id in the refcounts table. id == 0 corresponds to a null-handle
-                  // Invariant: id == 0 iif data == nullptr
-
-    // Allow to take ownership of a shared pointer from another lib, e.g. numpy.
-    void *_foreign_handle = nullptr; // Memory handle of the foreign library
-    void *_foreign_decref = nullptr; // Function pointer to decref of the foreign library (void (*)(void *))
+    using blk_t = std::pair<T *, size_t>;
+    std::shared_ptr<void> sptr;
 
     public:
     using value_type = T;
 
-    void decref() noexcept {
-      if (is_null()) return;
-
-      // Check if the memory is shared and still pointed to
-      if (!globals::rtable.decref(_id)) return;
-
-      // If the memory was allocated in a foreign foreign lib, release it there
-      if (_foreign_handle) {
-        ((void (*)(void *))_foreign_decref)(_foreign_handle);
-        return;
-      }
-
-      // If needed, call the T destructors
-      if constexpr (!std::is_trivial_v<T>) {
-        for (size_t i = 0; i < _size; ++i) _data[i].~T();
-      }
-
-      // Deallocate the memory block. Malloc case only
-      allocator_singleton<void>::deallocate({(char *)_data, _size * sizeof(T)});
-    }
-
-    void incref() noexcept {
-#ifdef NDA_DEBUG
-      EXPECTS(!is_null());
-#endif
-      globals::rtable.incref(_id);
-    }
-
-    private:
-    // basic part of copy, no ref handling here
-    void _copy(handle_shared const &x) noexcept {
-      _data           = x._data;
-      _size           = x._size;
-      _id             = x._id;
-      _foreign_handle = x._foreign_handle;
-      _foreign_decref = x._foreign_decref;
-    }
-
-    public:
-    ~handle_shared() noexcept { decref(); }
-
     handle_shared() = default;
 
-    handle_shared(handle_shared const &x) noexcept {
-      _copy(x);
-      if (!is_null()) incref();
-    }
-
-    handle_shared(handle_shared &&x) noexcept {
-      _copy(x);
-
-      // Invalidate x so it destructs trivally
-      x._data = nullptr;
-      x._size = 0;
-      x._id   = 0;
-    }
-
-    handle_shared &operator=(handle_shared const &x) noexcept {
-      decref(); // Release my ref if I have one
-      _copy(x);
-      incref();
-      return *this;
-    }
-
-    handle_shared &operator=(handle_shared &&x) noexcept {
-      decref(); // Release my ref if I have one
-      _copy(x);
-
-      // Invalidate x so it destructs trivially
-      x._data = nullptr;
-      x._size = 0;
-      x._id   = 0;
-
-      return *this;
-    }
-
     // Construct from foreign library shared object
-    handle_shared(T *data, size_t size, void *foreign_handle, void *foreign_decref) noexcept
-       : _data(data), _size(size), _foreign_handle(foreign_handle), _foreign_decref(foreign_decref) {
-      // Only one thread should fetch the id
-      std::lock_guard<std::mutex> lock(globals::rtable.mtx);
-      _id = globals::rtable.get();
-    }
+    handle_shared(T *data, size_t size, void *foreign_handle, void (*foreign_decref)(void *)) noexcept
+       : _data(data), _size(size), sptr{foreign_handle, foreign_decref} {}
 
-    // Cross construction from a regular handle. MALLOC CASE ONLY
+    // Cross construction from a regular handle. MALLOC CASE ONLY. FIXME : why ?
     handle_shared(handle_heap<T, void> const &x) noexcept : _data(x.data()), _size(x.size()) {
-      if (x.is_null()) return;
-
-      // Get an id if necessary
-      if (x._id == 0) {
-        // Only one thread should fetch the id
-        std::lock_guard<std::mutex> lock(globals::rtable.mtx);
-        if (x._id == 0) x._id = globals::rtable.get();
-      }
-      _id = x._id;
-      // Increase refcount
-      incref();
+      if (not x.is_null()) sptr = x.get_sptr();
     }
 
     T &operator[](long i) noexcept { return _data[i]; }
@@ -596,12 +512,11 @@ namespace nda::mem {
 #ifdef NDA_DEBUG
       // Check the Invariants in Debug Mode
       EXPECTS((_data == nullptr) == (_size == 0));
-      EXPECTS((_data == nullptr) == (_id == 0));
 #endif
       return _data == nullptr;
     }
 
-    [[nodiscard]] long refcount() const noexcept { return globals::rtable.refcounts()[_id]; }
+    [[nodiscard]] long refcount() const noexcept { return sptr.use_count(); }
 
     // A constant handle does not entail T const data
     [[nodiscard]] T *data() const noexcept { return _data; }

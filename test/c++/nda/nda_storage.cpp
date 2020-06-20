@@ -7,69 +7,12 @@
 
 using namespace nda::mem;
 
-void print(rtable_t const &) {}
-
-// test the rtable
-TEST(rtable, base) { // NOLINT
-
-  rtable_t ta(5);
-
-  print(ta);
-
-  auto c1 = ta.get();
-  EXPECT_EQ(c1, 1); //NOLINT
-  print(ta);
-
-  auto c2 = ta.get();
-  EXPECT_EQ(c2, 2); //NOLINT
-  print(ta);
-
-  ta.incref(c1);
-  EXPECT_EQ(ta.refcounts()[c1], 2); //NOLINT
-  print(ta);
-
-  ta.decref(c1);
-  print(ta);
-
-  auto c3 = ta.get();
-  EXPECT_EQ(c3, 3); //NOLINT
-  print(ta);
-
-  ta.decref(c1);
-  print(ta);
-
-  auto c4 = ta.get();
-  EXPECT_EQ(c4, 1); //NOLINT
-  print(ta);
-
-  auto c5 = ta.get();
-  EXPECT_EQ(c5, 4); //NOLINT
-  print(ta);
-
-  auto c6 = ta.get();
-  EXPECT_EQ(c6, 5); //NOLINT
-  print(ta);
-
-  ta.decref(c6);
-  print(ta);
-  ta.decref(c5);
-  print(ta);
-  ta.decref(c4);
-  print(ta);
-  ta.decref(c3);
-  print(ta);
-  ta.decref(c2);
-  print(ta);
-}
-
 //---------------------------------------------
 
 // make sure that all memory is deallocated at the end of each test
 class Ref : public ::testing::Test {
   protected:
   void TearDown() override {
-    //EXPECT_TRUE(globals::rtable.empty());//NOLINT
-    // EXPECT_TRUE(globals::alloc.empty());//NOLINT
   }
 };
 
@@ -85,22 +28,6 @@ TEST_F(Ref, HR) { // NOLINT
   h.data()[2] = 0;
   EXPECT_EQ(h3.data()[2], 89); //NOLINT
 }
-
-//// ---- Contruct R B
-//TEST_F(Ref, HBR) { // NOLINT
-
-//handle_heap<int, void> h{10};
-
-//handle_borrowed<int> b{h};
-//handle_borrowed<int> b2;
-//b2 = h;
-
-//// make sure it is a copy
-//b.data()[2] = 89;
-//handle_heap<int, void> h2{b};
-//b.data()[2] = 0;
-//EXPECT_EQ(h2.data()[2], 89); //NOLINT
-//}
 
 // ---- Construct R, S
 TEST_F(Ref, HSR) { // NOLINT
@@ -161,9 +88,6 @@ void release_sp(void *x) {
 TEST_F(Ref, HR_with_sharedPtr) { // NOLINT
   {
     handle_shared<Number> s;
-    //s.id = globals::rtable.get();
-    //s.sptr = (void *)new std::shared_ptr<Number>{new Number{}};
-    //s.release_fnt = (void*)release_sp;
   }
   EXPECT_EQ(Number::c, 0); //NOLINT
 }

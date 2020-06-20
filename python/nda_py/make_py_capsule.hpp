@@ -51,10 +51,10 @@ namespace nda::python {
     PyArrayObject *arr = (PyArrayObject *)(obj);
 
     nda::mem::handle_shared<T> r{
-       (T *)PyArray_DATA(arr),    // r._data
-       size_t(PyArray_SIZE(arr)), // r._size
-       obj,                       // r._foreign_handle
-       (void *)&py_decref         // r._foreign_decref
+       (T *)PyArray_DATA(arr),    // data
+       size_t(PyArray_SIZE(arr)), // size
+       obj,                       // foreign_handle
+       (void *)&py_decref         // foreign_decref
     };
     return r;
   }
