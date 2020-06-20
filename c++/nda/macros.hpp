@@ -1,6 +1,9 @@
 #ifndef _CCQ_MACROS_GUARD_H
 #define _CCQ_MACROS_GUARD_H
 
+#include <iostream>
+
+
 // CCQ, TRIQS general macros
 // GUARD IT do not use pragma once
 // hence one can simply include them in every projects
