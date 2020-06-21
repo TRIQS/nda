@@ -147,7 +147,7 @@ public:
  * @example array_call
  */
 template <typename... T>
-decltype(auto) operator()(T const &... x) const &noexcept(has_no_boundcheck) {
+FORCEINLINE decltype(auto) operator()(T const &... x) const &noexcept(has_no_boundcheck) {
   static_assert((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank + 1)),
                 "Incorrect number of parameters in call");
   return call<Algebra, false>(*this, x...);
@@ -155,7 +155,7 @@ decltype(auto) operator()(T const &... x) const &noexcept(has_no_boundcheck) {
 
 ///
 template <typename... T>
-decltype(auto) operator()(T const &... x) &noexcept(has_no_boundcheck) {
+FORCEINLINE decltype(auto) operator()(T const &... x) &noexcept(has_no_boundcheck) {
 
   if constexpr (not((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0)
                     or (ellipsis_is_present<T...> and (sizeof...(T) <= rank + 1)))) { // +1 since ellipsis can be of size 0
@@ -169,7 +169,7 @@ decltype(auto) operator()(T const &... x) &noexcept(has_no_boundcheck) {
 
 ///
 template <typename... T>
-decltype(auto) operator()(T const &... x) &&noexcept(has_no_boundcheck) {
+FORCEINLINE decltype(auto) operator()(T const &... x) &&noexcept(has_no_boundcheck) {
   static_assert((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank + 1)),
                 "Incorrect number of parameters in call");
   return call<Algebra, true>(*this, x...);

@@ -78,8 +78,7 @@ namespace nda::lapack {
     static_assert(M_t::rank == 2, "M must be of rank 2");
     static_assert(is_blas_lapack_v<typename M_t::value_type>, "Matrices must have the same element type and it must be double, complex ...");
 
-    auto dm = std::min(m.extent(0), m.extent(1));
-    EXPECTS(ipiv.size() >= dm);
+    EXPECTS(ipiv.size() >=  std::min(m.extent(0), m.extent(1)));
 
     using T  = typename M_t::value_type;
     int info = 0;

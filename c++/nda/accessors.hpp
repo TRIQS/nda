@@ -12,11 +12,11 @@ namespace nda {
       using element_type = T;
       using pointer      = T *;
       using reference    = T &;
-      static reference access(pointer p, std::ptrdiff_t i) noexcept {
+      FORCEINLINE static reference access(pointer p, std::ptrdiff_t i) noexcept {
         EXPECTS(p != nullptr);
         return p[i];
       }
-      static T *offset(pointer p, std::ptrdiff_t i) noexcept { return p + i; }
+      FORCEINLINE static T *offset(pointer p, std::ptrdiff_t i) noexcept { return p + i; }
     };
   };
 
@@ -27,8 +27,8 @@ namespace nda {
       using element_type = T;
       using pointer      = T *__restrict;
       using reference    = T &;
-      static reference access(pointer p, std::ptrdiff_t i) noexcept { return p[i]; }
-      static T *offset(pointer p, std::ptrdiff_t i) noexcept { return p + i; }
+      FORCEINLINE static reference access(pointer p, std::ptrdiff_t i) noexcept { return p[i]; }
+      FORCEINLINE static T *offset(pointer p, std::ptrdiff_t i) noexcept { return p + i; }
     };
   };
   // atomic ?

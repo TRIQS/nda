@@ -23,7 +23,6 @@
 #pragma once
 
 #include <cstddef>
-#include <iostream>
 #include <algorithm>
 #include <vector>
 #include <memory>
@@ -176,14 +175,8 @@ namespace nda::allocators {
       }
       bu = std::lower_bound(bu_vec.begin(), bu_vec.end(), b.ptr, [](auto const &B, auto p) { return B.data() <= p; });
       --bu;
-      if (bu == bu_vec.end()) {
-        std::cerr << "Fatal Logic Error in allocator. Not in bucket. \n";
-        std::abort();
-      }
-      if (!bu->owns(b)) {
-        std::cerr << "Fatal Logic Error in allocator\n";
-        std::abort();
-      }
+      EXPECTS_WITH_MESSAGE ((bu != bu_vec.end()), "Fatal Logic Error in allocator. Not in bucket. \n");
+      EXPECTS_WITH_MESSAGE ((bu->owns(b)), "Fatal Logic Error in allocator. \n");
       bu->deallocate(b);
       if (!bu->empty()) return;
       if (bu_vec.size() <= 1) return;
@@ -232,8 +225,10 @@ namespace nda::allocators {
 
     ~leak_check() {
       if (!empty()) {
-        std::cerr << "Allocator : MEMORY LEAK of " << memory_used << " bytes\n";
+#ifndef NDEBUG
+	std::cerr << "Allocator : MEMORY LEAK of " << memory_used << " bytes\n";
         std::abort();
+#endif
       }
     }
 
@@ -258,8 +253,10 @@ namespace nda::allocators {
       //    std::cerr<< "Deallocating "<< b.s << "Total = "<< memory_used << "\n";
 
       if (memory_used < 0) {
+#ifndef NDEBUG
         std::cerr << "Allocator : memory_used <0 : " << memory_used << " b.s = " << b.s << " b.ptr = " << (void *)b.ptr;
         std::abort();
+#endif
       }
       A::deallocate(b);
     }
@@ -277,6 +274,7 @@ namespace nda::allocators {
 
     public:
     ~stats() {
+#ifndef NDEBUG
       std::cerr << "Allocation size histogram :\n";
       //auto weight = 1.0 / std::accumulate(hist.begin(), hist.end(), 0);
       double lz = 65;
@@ -284,6 +282,7 @@ namespace nda::allocators {
         std::cerr << "[2^" << lz << ", 2^" << lz - 1 << "]: " << c << "\n";
         --lz;
       }
+#endif
     }
     stats()              = default;
     stats(stats const &) = delete;

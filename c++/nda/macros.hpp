@@ -1,9 +1,6 @@
 #ifndef _CCQ_MACROS_GUARD_H
 #define _CCQ_MACROS_GUARD_H
 
-#include <iostream>
-
-
 // CCQ, TRIQS general macros
 // GUARD IT do not use pragma once
 // hence one can simply include them in every projects
@@ -13,7 +10,6 @@
 #define AS_STRING(...) AS_STRING2(__VA_ARGS__)
 #define AS_STRING2(...) #__VA_ARGS__
 
-// We might want to split these one because of the iostream include
 #define PRINT(X) std::cerr << AS_STRING(X) << " = " << X << "      at " << __FILE__ << ":" << __LINE__ << '\n'
 #define NDA_PRINT(X) std::cerr << AS_STRING(X) << " = " << X << "      at " << __FILE__ << ":" << __LINE__ << '\n'
 
@@ -60,7 +56,22 @@
 
 #endif
 
+// -----------------------------------------------------------
+
 #define FORCEINLINE __inline__ __attribute__((always_inline))
+
+#ifdef NDEBUG
+
+#define EXPECTS(X)
+#define ASSERT(X)
+#define ENSURES(X)
+#define EXPECTS_WITH_MESSAGE(X, ...)
+#define ASSERT_WITH_MESSAGE(X, ...)
+#define ENSURES_WITH_MESSAGE(X, ...)
+
+#else
+
+#include <iostream>
 
 #define EXPECTS(X)                                                                                                                                   \
   if (!(X)) {                                                                                                                                        \
@@ -96,5 +107,7 @@
     std::cerr << "Error message : " << __VA_ARGS__ << std::endl;                                                                                     \
     std::terminate();                                                                                                                                \
   }
+
+#endif
 
 #endif

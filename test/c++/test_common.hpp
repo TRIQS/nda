@@ -3,9 +3,10 @@
 #include <limits>
 #include <iostream>
 
+#ifndef NDA_DEBUG
 #define NDA_DEBUG
-#define NDA_BOUNDCHECK
 #define NDA_ENFORCE_BOUNDCHECK
+#endif
 
 #include <nda/nda.hpp>
 #include <nda/gtest_tools.hpp>
