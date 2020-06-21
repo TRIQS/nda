@@ -4,6 +4,18 @@
 using VALUE_TYPE = int;
 inline VALUE_TYPE fnt(size_t i) { return i * (i + 2.0) * (i - 8.0); }
 
+static void view1_reference(benchmark::State &state) {
+  const int N = state.range(0);
+  nda::array<double, 3> A(N, 2, 2);
+
+  while (state.KeepRunning()) {
+    for (int i = 0; i < N - 1; ++i) benchmark::DoNotOptimize(A(i, 0, 0) = fnt(i));
+  }
+}
+BENCHMARK(view1_reference)->Arg(3)->Arg(5)->Arg(10)->Arg(30)->Arg(100)->Arg(300);
+
+// ---------------------------------
+
 static void view1(benchmark::State &state) {
   const int N = state.range(0);
   nda::array<double, 3> A(N, 2, 2);
@@ -12,21 +24,21 @@ static void view1(benchmark::State &state) {
     for (int i = 0; i < N - 1; ++i) benchmark::DoNotOptimize(A(i, _, _)(0, 0) = fnt(i));
   }
 }
-BENCHMARK(view1)->Arg(30)->Arg(300);
-
-// ---------------------------------
-
-static void direct1(benchmark::State &state) {
-  const int N = state.range(0);
-  nda::array<double, 3> A(N, 2, 2);
-
-  while (state.KeepRunning()) {
-    for (int i = 0; i < N - 1; ++i) benchmark::DoNotOptimize(A(i, 0, 0) = fnt(i));
-  }
-}
-BENCHMARK(direct1)->Arg(30)->Arg(300);
+BENCHMARK(view1)->Arg(3)->Arg(5)->Arg(10)->Arg(30)->Arg(100)->Arg(300);
 
 // ==========================================================
+
+static void view2_reference(benchmark::State &state) {
+  const int N = state.range(0);
+  nda::array<double, 4> A(N, N, 2, 2);
+
+  while (state.KeepRunning()) {
+    for (int i = 0; i < N - 1; ++i) benchmark::DoNotOptimize(A(i, i, 0, 0) = fnt(i));
+  }
+}
+BENCHMARK(view2_reference)->Arg(3)->Arg(5)->Arg(10)->Arg(30)->Arg(100)->Arg(300);
+
+// ---------------------------------
 
 static void view2(benchmark::State &state) {
   const int N = state.range(0);
@@ -36,7 +48,7 @@ static void view2(benchmark::State &state) {
     for (int i = 0; i < N - 1; ++i) benchmark::DoNotOptimize(A(i, i, _, _)(0, 0) = fnt(i));
   }
 }
-BENCHMARK(view2)->Arg(30)->Arg(300);
+BENCHMARK(view2)->Arg(3)->Arg(5)->Arg(10)->Arg(30)->Arg(100)->Arg(300);
 
 // ---------------------------------
 
@@ -48,19 +60,7 @@ static void view2_ellipsis(benchmark::State &state) {
     for (int i = 0; i < N - 1; ++i) benchmark::DoNotOptimize(A(i, i, ___)(0, 0) = fnt(i));
   }
 }
-BENCHMARK(view2_ellipsis)->Arg(30)->Arg(300);
-
-// ---------------------------------
-
-static void direct2(benchmark::State &state) {
-  const int N = state.range(0);
-  nda::array<double, 4> A(N, N, 2, 2);
-
-  while (state.KeepRunning()) {
-    for (int i = 0; i < N - 1; ++i) benchmark::DoNotOptimize(A(i, i, 0, 0) = fnt(i));
-  }
-}
-BENCHMARK(direct2)->Arg(30)->Arg(300);
+BENCHMARK(view2_ellipsis)->Arg(3)->Arg(5)->Arg(10)->Arg(30)->Arg(100)->Arg(300);
 
 // ==========================================================
 
