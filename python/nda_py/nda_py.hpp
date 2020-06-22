@@ -55,12 +55,12 @@ namespace nda::python {
   bool is_convertible_to_array(PyObject *obj) {
     if (not PyArray_Check(obj)) return false;
     PyArrayObject *arr = (PyArrayObject *)(obj);
-    if constexpr (cpp2py::has_npy_type<T>){
-      if(PyArray_TYPE(arr) != npy_type<T>)
-	return false;
-    } else{
-      if(not cpp2py::py_converter<T>::is_convertible(..., false))
-	return false;
+    if constexpr (cpp2py::has_npy_type<T>) {
+      if (PyArray_TYPE(arr) != npy_type<T>) return false;
+    }
+    if (PyArray_TYPE(arr) == NPY_OBJECT && PyArray_SIZE(arr) > 0) {
+      auto *ptr = static_cast<PyObject **>(PyArray_DATA(arr));
+      if (not cpp2py::py_converter<T>::is_convertible(*ptr, false)) return false;
     }
 #ifdef PYTHON_NUMPY_VERSION_LT_17
     int rank = arr->nd;
@@ -72,7 +72,7 @@ namespace nda::python {
 
   template <typename T, int R>
   bool is_convertible_to_array_view(PyObject *obj) {
-    return cpp2py::has_npy_type<T> && is_convertible_to_array(obj);
+    return cpp2py::has_npy_type<T> && is_convertible_to_array<T, R>(obj);
   }
 
   // ------------------------------------------
@@ -89,8 +89,7 @@ namespace nda::python {
     }
     using layout_t = typename array_view<T, R>::layout_t;
 
-    if(v.element_type != npy_type<cpp2py::pyref>)
-      throw std::runtime_error{"Cannot convert a ndarray of PyObjects to a view in c++"};
+    if (v.element_type != npy_type<cpp2py::pyref>) throw std::runtime_error{"Cannot convert a ndarray of PyObjects to a view in c++"};
 
     return array_view<T, R>{layout_t{extents, strides}, static_cast<T *>(v.data)};
   }
