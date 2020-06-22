@@ -216,7 +216,7 @@ private:
 template <typename Iterator>
 [[nodiscard]] auto make_iterator(bool at_end) const noexcept {
   if constexpr (iterator_rank == Rank) {
-    // FIXME DEB"UGGING
+    // FIXME : remove optimziation becasue of a TRIQS bug
     return Iterator{indexmap().lengths(), indexmap().strides(), sto.data(), at_end};
     if constexpr (layout_t::is_stride_order_C())
       return Iterator{indexmap().lengths(), indexmap().strides(), sto.data(), at_end};
