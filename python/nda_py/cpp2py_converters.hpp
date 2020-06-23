@@ -41,9 +41,8 @@ namespace cpp2py {
 
   template <typename T, int R>
   struct py_converter<nda::array<T, R>> {
-    using _type = nda::array<T, R>;
 
-    static _type py2c(PyObject *src) {
+    static nda::array<T, R> py2c(PyObject *src) {
       _import_array();
       nda::python::numpy_proxy p = nda::python::make_numpy_proxy(src);
       if constexpr (cpp2py::has_npy_type<T>) {
@@ -57,8 +56,10 @@ namespace cpp2py {
       }
     }
 
-    static PyObject *c2py(_type src) {
-      return py_converter<nda::array_view<T, R>>::c2py(src);
+    static PyObject *c2py(nda::array<T, R> src) {
+      _import_array();
+      nda::python::numpy_proxy p = nda::python::make_numpy_proxy_from_array(std::move(src));
+      return p.to_python();
     }
 
     static bool is_convertible(PyObject *src, bool raise_exception) {
