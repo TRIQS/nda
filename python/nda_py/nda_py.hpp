@@ -42,9 +42,13 @@ namespace nda::python {
               std::move(strides),
               make_pycapsule(a.storage())};
     } else {
-      // FIXME is map properly implemented for rvalues?
-      array<cpp2py::pyref, A::rank> aobj =
-         map([](value_type x) { return cpp2py::pyref{cpp2py::py_converter<std::decay_t<value_type>>::c2py(x)}; })(std::forward<AUR>(a));
+      array<cpp2py::pyref, A::rank> aobj = map([](value_type &x) {
+        if constexpr (is_view_v<A> or std::is_reference_v<AUR>) {
+          return cpp2py::py_converter<std::decay_t<value_type>>::c2py(x);
+        } else { // nda::array rvalue, be sure to move
+          return cpp2py::py_converter<std::decay_t<value_type>>::c2py(std::move(x));
+        }
+      })(a);
       return make_numpy_proxy_from_array(std::move(aobj));
     }
   }
