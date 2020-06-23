@@ -122,6 +122,19 @@ TEST(Basic, Empty) { //NOLINT
     h5_read(top, "empty", empty);
     EXPECT_EQ(empty.shape(), (nda::shape_t<2>{0, 10}));
   }
+
+  nda::array<long, 2> b{};
+  {
+    h5::file file("ess_default.h5", 'w');
+    h5_write(file, "default", b);
+  }
+  {
+    h5::file file("ess_default.h5", 'r');
+    h5::group top(file);
+    nda::array<long, 2> empty(5, 5);
+    h5_read(top, "default", empty);
+    EXPECT_EQ(empty.shape(), (nda::shape_t<2>{0, 0}));
+  }
 }
 
 //------------------------------------
