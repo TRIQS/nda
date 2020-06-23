@@ -27,7 +27,7 @@ namespace nda::python {
     using value_type = typename A::value_type;
 
     if constexpr (cpp2py::has_npy_type<value_type>) {
-      cpp2py::v_t extents(A::rank), strides(A::rank);
+      std::vector<long> extents(A::rank), strides(A::rank);
 
       for (size_t i = 0; i < A::rank; ++i) {
         extents[i] = a.indexmap().lengths()[i];
