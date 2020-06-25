@@ -11,9 +11,8 @@ namespace cpp2py {
 
   template <typename T, int R>
   struct py_converter<nda::array_view<T, R>> {
-    using _type = nda::array_view<T, R>;
 
-    static _type py2c(PyObject *src) REQUIRES(cpp2py::has_npy_type<T>) {
+    static nda::array_view<T, R> py2c(PyObject *src) REQUIRES(cpp2py::has_npy_type<T>) {
       _import_array();
       nda::python::numpy_proxy p = nda::python::make_numpy_proxy(src);
       auto res                   = nda::python::make_array_view_from_numpy_proxy<T, R>(p);
@@ -21,7 +20,7 @@ namespace cpp2py {
       return res;
     }
 
-    static PyObject *c2py(_type src) {
+    static PyObject *c2py(nda::array_view<T, R> src) {
       _import_array();
       nda::python::numpy_proxy p = nda::python::make_numpy_proxy_from_array(src);
       return p.to_python();
@@ -56,9 +55,11 @@ namespace cpp2py {
       }
     }
 
-    static PyObject *c2py(nda::array<T, R> src) {
+    template<typename A>
+    static PyObject *c2py(A&& src) {
+      static_assert(std::is_same_v<std::decay_t<A>, nda::array<T, R>>, "Logic Error in array c2py conversion");
       _import_array();
-      nda::python::numpy_proxy p = nda::python::make_numpy_proxy_from_array(std::move(src));
+      nda::python::numpy_proxy p = nda::python::make_numpy_proxy_from_array(std::forward<A>(src));
       return p.to_python();
     }
 
