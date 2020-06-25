@@ -21,7 +21,7 @@ namespace nda::python {
 
   // Convert array to numpy_proxy
   template <typename AUR>
-  numpy_proxy make_numpy_proxy_from_array(AUR &&a) {
+  numpy_proxy make_numpy_proxy_from_array(AUR &&a) REQUIRES(is_ndarray_v<std::decay_t<AUR>>) {
 
     using A          = std::decay_t<AUR>;
     using value_type = typename A::value_type;
