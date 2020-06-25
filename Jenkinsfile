@@ -4,7 +4,7 @@ def dockerName = projectName.toLowerCase();
 /* which platform to build documentation on */
 def documentationPlatform = "ubuntu-clang"
 /* whether to keep and publish the results */
-def keepInstall = !env.BRANCH_NAME.startsWith("PR-")
+def keepInstall = false && !env.BRANCH_NAME.startsWith("PR-")
 
 properties([
   disableConcurrentBuilds(),
