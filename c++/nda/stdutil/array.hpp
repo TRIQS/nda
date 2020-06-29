@@ -45,6 +45,11 @@ namespace std {
 
 } // namespace std
 
+#endif
+
+#ifndef STDUTILS_ARRAY_H
+#define STDUTILS_ARRAY_H
+
 /// =========    END ADDING IN STD ===========
 
 namespace nda::stdutil {
