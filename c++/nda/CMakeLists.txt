@@ -99,7 +99,7 @@ endif()
 
 option(ASAN OFF "Compile library and executables with LLVM Address Sanitizer")
 option(UBSAN OFF "Compile library and executables with LLVM Undefined Behavior Sanitizer")
-option(MBSAN OFF "Compile library and executables with LLVM Memory Sanitizer")
+option(MSAN OFF "Compile library and executables with LLVM Memory Sanitizer")
 
 if(ASAN)
   if(NOT TARGET asan)
