@@ -35,7 +35,9 @@ static void iterators1(benchmark::State &state) {
 }
 BENCHMARK(iterators1);
 
-static void pointer_1A(benchmark::State &state) {
+// ------------------------------- pointer 1d ----------------------------------------
+
+static void pointer_1_bad_with_stride0(benchmark::State &state) {
   nda::array<double, 1> a(N1);
 
   const long l0 = a.indexmap().lengths()[0];
@@ -45,9 +47,9 @@ static void pointer_1A(benchmark::State &state) {
     for (long i0 = 0; i0 < l0; ++i0) benchmark::DoNotOptimize(p[i0 * a.indexmap().strides()[0]] = 10 * i0);
   }
 }
-BENCHMARK(pointer_1A);
+BENCHMARK(pointer_1_bad_with_stride0);
 
-static void pointer_1B(benchmark::State &state) {
+static void pointer_1d_restrict(benchmark::State &state) {
   nda::array<double, 1> a(N1);
 
   //const long s0 = a.indexmap().strides()[0];
@@ -58,7 +60,7 @@ static void pointer_1B(benchmark::State &state) {
     for (long i0 = 0; i0 < l0; ++i0) benchmark::DoNotOptimize(p[i0] = 10 * i0);
   }
 }
-BENCHMARK(pointer_1B);
+BENCHMARK(pointer_1d_restrict);
 
 // ------------------------------- 2d ----------------------------------------
 
