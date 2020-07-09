@@ -29,7 +29,7 @@ namespace cpp2py {
     static bool is_convertible(PyObject *src, bool raise_exception) {
       //import_numpy();
       auto res = nda::python::is_convertible_to_array_view<T, R>(src);
-      if (!res and raise_exception) throw std::runtime_error("Cannot convert to array/matrix");
+      if (!res and raise_exception) PyErr_SetString(PyExc_TypeError, "Cannot convert to array/matrix");
       return res;
     }
   };
@@ -65,7 +65,7 @@ namespace cpp2py {
 
     static bool is_convertible(PyObject *src, bool raise_exception) {
       auto res = nda::python::is_convertible_to_array<T, R>(src);
-      if (!res and raise_exception) throw std::runtime_error("Cannot convert to array/matrix");
+      if (!res and raise_exception) PyErr_SetString(PyExc_TypeError, "Cannot convert to array/matrix");
       return res;
     }
   };
