@@ -85,6 +85,7 @@ namespace nda::python {
   template <typename T, int R>
   array_view<T, R> make_array_view_from_numpy_proxy(numpy_proxy const &v) {
     EXPECTS(v.extents.size() == R);
+    EXPECTS((std::is_same_v<T, cpp2py::pyref> or v.element_type != NPY_OBJECT));
 
     std::array<long, R> extents, strides;
     for (int u = 0; u < R; ++u) {
@@ -92,8 +93,6 @@ namespace nda::python {
       strides[u] = v.strides[u] / sizeof(T);
     }
     using layout_t = typename array_view<T, R>::layout_t;
-
-    if (v.element_type != npy_type<cpp2py::pyref>) throw std::runtime_error{"Cannot convert a ndarray of PyObjects to a view in c++"};
 
     return array_view<T, R>{layout_t{extents, strides}, static_cast<T *>(v.data)};
   }
