@@ -1,122 +1,57 @@
 #pragma once
-#include <Python.h>
-#include <numpy/arrayobject.h>
-
 #include <vector>
-
 #include <nda/nda.hpp>
 
-#include <cpp2py/numpy_proxy.hpp>
 #include <cpp2py/py_converter.hpp>
-#include <cpp2py/pyref.hpp>
+#include <cpp2py/numpy_proxy.hpp>
 
 #include "make_py_capsule.hpp"
 
 namespace nda::python {
 
-  using cpp2py::make_numpy_copy;
-  using cpp2py::make_numpy_proxy;
-  using cpp2py::npy_type;
-  using cpp2py::numpy_proxy;
-
-  // Convert array to numpy_proxy
+  // Given an array or a view, it returns the numpy_proxy viewing its data
+  // NB : accepts ref, rvalue ref
+  // AUR is array<T,R> or array_view<T, R>, but NOT a the Array concept.
+  // It must be a container or a view.
   template <typename AUR>
-  numpy_proxy make_numpy_proxy_from_array(AUR &&a) REQUIRES(is_ndarray_v<std::decay_t<AUR>>) {
+  cpp2py::numpy_proxy make_numpy_proxy_from_array_or_view(AUR &&a) REQUIRES(is_regular_or_view_v<std::decay_t<AUR>>) {
 
     using A          = std::decay_t<AUR>;
-    using value_type = typename A::value_type;
+    using value_type = typename A::value_type;          // NB May be const
+    using T          = std::remove_const_t<value_type>; // The canonical type without the possible const
+    static_assert(not std::is_reference_v<value_type>, "Logical Error");
 
-    if constexpr (cpp2py::has_npy_type<value_type>) {
+    // If T is a type which has a native Numpy equivalent, or it is PyObject *  or pyref.
+    // we simply take a numpy of the data
+    if constexpr (cpp2py::has_npy_type<T>) {
       std::vector<long> extents(A::rank), strides(A::rank);
 
-      for (size_t i = 0; i < A::rank; ++i) {
+      for (int i = 0; i < A::rank; ++i) {
         extents[i] = a.indexmap().lengths()[i];
-        strides[i] = a.indexmap().strides()[i] * sizeof(value_type);
+        strides[i] = a.indexmap().strides()[i] * sizeof(T);
       }
 
-      return {A::rank,
-              npy_type<std::remove_const_t<value_type>>,
-              (void *)a.data_start(),
-              std::is_const_v<value_type>,
+      return {A::rank,                     // dimension
+              npy_type<T>,                 // the npy type code
+              (void *)a.data_start(),      // start of the data
+              std::is_const_v<value_type>, // if const, the numpy will be immutable in python
               std::move(extents),
               std::move(strides),
-              make_pycapsule(a.storage())};
+              make_pycapsule(a.storage())}; // a PyCapsule with a SHARED view on the data
     } else {
-      array<cpp2py::pyref, A::rank> aobj = map([](value_type &x) {
-        if constexpr (is_view_v<A> or std::is_reference_v<AUR>) {
-          return cpp2py::py_converter<std::decay_t<value_type>>::c2py(x);
-        } else { // nda::array rvalue, be sure to move
-          return cpp2py::py_converter<std::decay_t<value_type>>::c2py(std::move(x));
-        }
+      // If T is another type, which requires some conversion to python
+      // we make a new array of pyref and return a numpy view of it.
+      // each pyref handles the ownership of the object according to the T conversion rule, 
+      // it is not the job of this function to handle this.
+      // We need to distinguish the special case where a is a RValue, in which case, the python will steal the ownership
+      // by moving the elements one by one.
+      nda::array<cpp2py::pyref, A::rank> aobj = map([](auto &&x) {
+        if constexpr (is_view_v<A> or std::is_reference_v<AUR>)
+          return cpp2py::py_converter<T>::c2py(x);
+        else // nda::array rvalue (i.e. AUR is an array, and NOT a ref, so it matches array &&. Be sure to move
+          return cpp2py::py_converter<T>::c2py(std::move(x));
       })(a);
-      return make_numpy_proxy_from_array(std::move(aobj));
-    }
-  }
-
-  // ------------------------------------------
-
-  template <typename T, int R>
-  bool is_convertible_to_array(PyObject *obj) {
-    if (not PyArray_Check(obj)) return false;
-    PyArrayObject *arr = (PyArrayObject *)(obj);
-    if constexpr (cpp2py::has_npy_type<T>) {
-      if (PyArray_TYPE(arr) != npy_type<T>) return false;
-    }
-    if (PyArray_TYPE(arr) == NPY_OBJECT && PyArray_SIZE(arr) > 0) {
-      auto *ptr = static_cast<PyObject **>(PyArray_DATA(arr));
-      if (not cpp2py::py_converter<T>::is_convertible(*ptr, false)) return false;
-    }
-#ifdef PYTHON_NUMPY_VERSION_LT_17
-    int rank = arr->nd;
-#else
-    int rank = PyArray_NDIM(arr);
-#endif
-    return (rank == R);
-  }
-
-  template <typename T, int R>
-  bool is_convertible_to_array_view(PyObject *obj) {
-    return cpp2py::has_npy_type<T> && is_convertible_to_array<T, R>(obj);
-  }
-
-  // ------------------------------------------
-
-  // Make a new array_view from numpy view
-  template <typename T, int R>
-  array_view<T, R> make_array_view_from_numpy_proxy(numpy_proxy const &v) {
-    EXPECTS(v.extents.size() == R);
-    EXPECTS((std::is_same_v<T, cpp2py::pyref> or v.element_type != NPY_OBJECT));
-
-    std::array<long, R> extents, strides;
-    for (int u = 0; u < R; ++u) {
-      extents[u] = v.extents[u];
-      strides[u] = v.strides[u] / sizeof(T);
-    }
-    using layout_t = typename array_view<T, R>::layout_t;
-
-    return array_view<T, R>{layout_t{extents, strides}, static_cast<T *>(v.data)};
-  }
-
-  // ------------------------------------------
-
-  // Make a new array from numpy view
-  template <typename T, int R>
-  array<T, R> make_array_from_numpy_proxy(numpy_proxy const &v) {
-    EXPECTS(v.extents.size() == R);
-
-    std::array<long, R> extents, strides;
-    for (int u = 0; u < R; ++u) {
-      extents[u] = v.extents[u];
-      strides[u] = v.strides[u] / sizeof(T);
-    }
-
-    auto layout = typename array_view<T, R>::layout_t{extents, strides};
-
-    if (v.element_type == npy_type<cpp2py::pyref>) {
-      auto arr_dat = array_view<PyObject *, R>{layout, static_cast<PyObject **>(v.data)};
-      return map([](PyObject *o) { return cpp2py::py_converter<std::decay_t<T>>::py2c(o); })(arr_dat);
-    } else {
-      return array_view<T, R>{layout, static_cast<T *>(v.data)};
+      return make_numpy_proxy_from_array_or_view(std::move(aobj));
     }
   }
 
