@@ -140,38 +140,4 @@ namespace cpp2py {
     }
   };
 
-  // -----------------------------------
-  // range
-  // -----------------------------------
-
-  // FIXME : to be ported to Python3. Does not compile
-#if 0
-
-  // range can not be directly converted from slice (slice is more complex)
-  // convert from python slice and int (interpreted are slice(i,i+1,1))
-  nda::range range_from_slice(PyObject *src, long len) {
-    if (PyInt_Check(src)) {
-      long i = PyInt_AsLong(src);
-      if ((i < -len) || (i >= len)) CPP2PY_RUNTIME_ERROR << "Integer index out of range : expected [0," << len << "], got " << i;
-      if (i < 0) i += len;
-      // std::cerr  << " range int "<< i << std::endl;
-      return {i, i + 1, 1};
-    }
-    Py_ssize_t start, stop, step, slicelength;
-    if (!PySlice_Check(src) || (PySlice_GetIndicesEx((PySliceObject *)src, len, &start, &stop, &step, &slicelength) < 0))
-      CPP2PY_RUNTIME_ERROR << "Can not converted the slice to C++";
-    // std::cerr  << "range ( "<< start << " "<< stop << " " << step<<std::endl;
-    return {start, stop, step};
-  }
-
-  template <>
-  struct py_converter<nda::range> {
-    static PyObject *c2py(nda::range const &r) {
-      return PySlice_New(convert_to_python(r.first()), convert_to_python(r.last()), convert_to_python(r.step()));
-    }
-    static nda::range py2c(PyObject *src)                     = delete;
-    static bool is_convertible(PyObject *src, bool raise_exception) = delete;
-  };
-#endif
-
-} // namespace cpp2py
+ } // namespace cpp2py
