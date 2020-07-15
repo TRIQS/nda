@@ -45,7 +45,7 @@ namespace cpp2py {
         return false;
       }
 
-      if (PyArray_TYPE(arr) == npy_type<U>) {
+      if (PyArray_TYPE(arr) != npy_type<U>) {
         if (raise_python_exception) PyErr_SetString(PyExc_TypeError, "Cannot convert to array_view : Type mismatch");
         return false;
       }
@@ -106,20 +106,12 @@ namespace cpp2py {
         // First I see whether I can convert it to a array of PyObject* ( i.e. it is an array of object and it has the proper rank...)
         bool res = converter_view_pyobject::is_convertible(obj, raise_python_exception);
         if (not res) return false;
-#if 1
+
         // ok, now I need to see if all elements are convertible ...
         // I make the array of PyObject*, and use all_of
-        nda::array_view<PyObject *, R> v = converter_view_pyobject::py2c(obj);
-        res                              = std::all_of(v.begin(), v.end(), [](PyObject *ob) { return converter_T::is_convertible(ob, false); });
-#else
-	// FIXME : Shall I keep this ??
-        // Shorter version where I check only the first ??
-        PyArrayObject *arr = (PyArrayObject *)(obj);
-        if (PyArray_TYPE(arr) == NPY_OBJECT && PyArray_SIZE(arr) > 0) {
-          auto *ptr = static_cast<PyObject **>(PyArray_DATA(arr));
-          if (not py_converter<T>::is_convertible(*ptr, false)) return false;
-        }
-#endif
+        auto v = converter_view_pyobject::py2c(obj);
+        res    = std::all_of(v.begin(), v.end(), [](PyObject *ob) { return converter_T::is_convertible(ob, false); });
+
         if (!res and raise_python_exception) PyErr_SetString(PyExc_TypeError, "Cannot convert to array. One element can not be converted to C++.");
         return res;
       }
