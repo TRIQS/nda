@@ -1,18 +1,23 @@
 # Build the cpp2py module
-add_cpp2py_module(nda_py_a)
-target_link_libraries(nda_py_a nda_py)
-target_include_directories(nda_py_a PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+add_cpp2py_module(wrap_basic)
+target_link_libraries(wrap_basic nda_py)
+target_include_directories(wrap_basic PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
+# Build the cpp2py module
+add_cpp2py_module(copy_move_stat)
+target_link_libraries(copy_move_stat nda_py)
+target_include_directories(copy_move_stat PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 ## Build the pybind11 module
-#pybind11_add_module(nda_py_converter_test nda_py_converter_test.cpp )
-#target_link_libraries(nda_py_converter_test PRIVATE pybind11 nda_py python_and_numpy)
+#pybind11_add_module(pybind_a pybind_a.cpp)
+#target_link_libraries(pybind_a PRIVATE pybind11 nda_py python_and_numpy)
 
 ## Build the pybind11 module
-#pybind11_add_module(nda_py_a nda_py_a.cpp)
-#target_link_libraries(nda_py_a PRIVATE pybind11 nda_py python_and_numpy)
+#pybind11_add_module(pybind_test pybind_test.cpp)
+#target_link_libraries(pybind_test PRIVATE pybind11 nda_py python_and_numpy)
 
 # List of all tests
-set(all_tests nda_test_converters)
+set(all_tests wrap_basic_test copy_move_stat_test)
 
 foreach(test ${all_tests})
   get_filename_component(test_name ${test} NAME_WE)
