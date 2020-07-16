@@ -16,6 +16,8 @@ TEST(array_adapter, base) { //NOLINT
   auto a = nda::array<long, 2>{al};
 
   EXPECT_EQ_ARRAY(a, (nda::array<long, 2>{{0, 2}, {1, 3}}));
+
+  EXPECT_EQ( sum(al), sum(a));
 }
 
 // ------------------------------------

@@ -4,7 +4,7 @@ namespace nda {
 
   // FIXME : CHECK ORDER or the LOOP !
   // --------------- fold  ------------------------
-  /**
+ /**
    * @tparam A
    * @tparam F is a function f(x, r)
    * @tparam R
@@ -14,14 +14,27 @@ namespace nda {
    *
    * fold computes f(f(r, a(0,0)), a(0,1), ...)  etc
    */
-  template <typename A, typename F, typename R = get_value_t<A>>
-  auto fold(F f, A const &a, R r = R{}) REQUIRES(is_ndarray_v<A>) {
+  template <CONCEPT(Array) A, typename F, typename R>
+  auto fold(F f, A const &a, R r) REQUIRES17(is_ndarray_v<A>) {
     decltype(f(r, get_value_t<A>{})) r2 = r;
     // to take into account that f may be double,double -> double, while one passes 0 (an int...)
     // R = int, R2= double in such case, and the result will be a double, or narrowing will occur
     nda::for_each(a.shape(), [&a, &r2, &f](auto &&... args) { r2 = f(r2, a(args...)); });
     return r2;
   }
+
+    /**
+   * @tparam A
+   * @tparam F is a function f(x, r)
+   * @param f
+   * @param a
+   *
+   * fold computes f(f(r, a(0,0)), a(0,1), ...)  etc
+   */
+  template <CONCEPT(Array) A, typename F>
+  auto fold(F f, A const &a) REQUIRES17(is_ndarray_v<A>) {
+    return fold(std::move(f), a,get_value_t<A>{});
+  } 
 
   // --------------- applications of fold -----------------------
 
