@@ -29,7 +29,7 @@ namespace cpp2py {
 
     // --------- PY -> C is possible --------
 
-    static bool is_convertible(PyObject *obj, bool raise_python_exception) {
+    static bool is_convertible(PyObject *obj, bool raise_python_exception, bool allow_lower_rank = false) {
       // has_npy_type<T> is true (static_assert at top)
       _import_array();
       // check the rank and type. First protects the rest
@@ -38,8 +38,9 @@ namespace cpp2py {
         return false;
       }
       PyArrayObject *arr = (PyArrayObject *)(obj);
-      
-      if (PyArray_NDIM(arr) != R) {
+
+      auto r = PyArray_NDIM(arr);
+      if (allow_lower_rank ? r < R : r != R) {
         if (raise_python_exception)
           PyErr_SetString(
              PyExc_TypeError,
@@ -47,9 +48,13 @@ namespace cpp2py {
         return false;
       }
 
-      if (PyArray_TYPE(arr) != npy_type<U>) {
-        if (raise_python_exception) PyErr_SetString(PyExc_TypeError, "Cannot convert to array_view : Type mismatch");
-        return false;
+      if (r == R) {
+        if (has_npy_type<U> && (PyArray_TYPE(arr) != npy_type<U>)) {
+          if (raise_python_exception) PyErr_SetString(PyExc_TypeError, "Cannot convert to array_view : Type mismatch");
+          return false;
+        }
+      } else {
+        //  FIXME Check that value type of magic array matches
       }
 
       return true;
@@ -60,8 +65,8 @@ namespace cpp2py {
     static nda::array_view<T, R> py2c(PyObject *obj) {
       _import_array();
       auto p = make_numpy_proxy(obj);
-      EXPECTS(p.extents.size() == R);
-      EXPECTS(p.element_type == npy_type<T>);
+      EXPECTS(p.extents.size() >= R);
+      EXPECTS(p.element_type == npy_type<T> or p.extents.size() > R);
 
       std::array<long, R> extents, strides;
       for (int u = 0; u < R; ++u) {
@@ -70,7 +75,7 @@ namespace cpp2py {
       }
       return nda::array_view<T, R>{{extents, strides}, static_cast<T *>(p.data)};
     }
-  }; 
+  };
 
   // -----------------------------------
   // array
@@ -106,13 +111,22 @@ namespace cpp2py {
       } else {
         // T is a type requiring conversion.
         // First I see whether I can convert it to a array of PyObject* ( i.e. it is an array of object and it has the proper rank...)
-        bool res = converter_view_pyobject::is_convertible(obj, raise_python_exception);
+        bool res = converter_view_pyobject::is_convertible(obj, raise_python_exception, true /*allow_lower_rank*/);
         if (not res) return false;
 
-        // ok, now I need to see if all elements are convertible ...
-        // I make the array of PyObject*, and use all_of
-        auto v = converter_view_pyobject::py2c(obj);
-        res    = std::all_of(v.begin(), v.end(), [](PyObject *ob) { return converter_T::is_convertible(ob, false); });
+        // Check if all elements are convertible
+        // CAUTION: numpy array might be of higher rank!
+        // We Extract the first R extents from the numpy proxy
+        // and use __getitem__ to check convertibility of
+        // each such element
+        auto p = make_numpy_proxy(obj);
+        std::array<long, R> shape;
+        for (int i = 0; i < R; ++i) shape[i] = p.extents[i];
+        auto l = [obj](auto... i) -> bool {
+          pyref subobj = PyObject_GetItem(obj, pyref::make_tuple(PyLong_FromLong(i)...));
+          return converter_T::is_convertible(subobj, false);
+        };
+        res = sum(nda::array_adapter{shape, l});
 
         if (!res and raise_python_exception) PyErr_SetString(PyExc_TypeError, "Cannot convert to array. One element can not be converted to C++.");
         return res;
@@ -126,12 +140,18 @@ namespace cpp2py {
       if constexpr (has_npy_type<T>) {
         return converter_view_T::py2c(obj);
       } else {
-        auto arr             = converter_view_pyobject::py2c(obj);
-        nda::array<T, R> res = map([](PyObject *ob) { return converter_T::py2c(ob); })(arr);
+        auto p = make_numpy_proxy(obj);
+        std::array<long, R> shape;
+        for (int i = 0; i < R; ++i) shape[i] = p.extents[i];
+        auto l = [obj](auto... i) {
+          pyref subobj = PyObject_GetItem(obj, pyref::make_tuple(PyLong_FromLong(i)...));
+          return converter_T::py2c(subobj);
+        };
+        nda::array<T, R> res = nda::array_adapter{shape, l};
         if (PyErr_Occurred()) PyErr_Print();
         return res;
       }
     }
   };
 
- } // namespace cpp2py
+} // namespace cpp2py
