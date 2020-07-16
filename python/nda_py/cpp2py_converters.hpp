@@ -5,6 +5,8 @@
 
 namespace cpp2py {
 
+  template <typename T, int R, typename L, char A, typename AP, typename OP> struct is_view<nda::basic_array_view<T, R, L, A, AP, OP>> : std::true_type{};
+
   // -----------------------------------
   // array_view
   // -----------------------------------
