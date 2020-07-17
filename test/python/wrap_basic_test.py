@@ -4,7 +4,7 @@ import unittest
 import os
 import sys
 
-from wrap_basic import MemberAccess, make_arr, make_arr_arr, size_arr, size_arr_v, size_arr_cv, size_arr_arr, size_arr_arr_v, size_arr_arr_cv
+from wrap_basic import MemberAccess, make_arr, make_arr_arr, size_arr, size_arr_v, size_arr_cv, size_arr_arr, size_arr_arr_v, size_arr_arr_cv, multby2, multby2_d
 
 import numpy as np
 
@@ -49,6 +49,18 @@ class test_wrap_basic(unittest.TestCase):
         assert 2 == size_arr_arr(np.array([make_arr(2), make_arr(2)]))
         # FIXME Not yet implemented
         # assert 2 == size_arr_arr([make_arr(2), make_arr(4)])
+
+        # Check list 1d and then 2d
+        assert size_arr([1,2,3]) == 3 
+        assert size_arr((1,2,3)) == 3 
+        assert size_arr([[1,2,3], [4,5,6]]) == 6 
+
+        assert (np.array([2,4,6]) == multby2([1,2,3])).all()
+        assert (np.array([2,4,6]) == multby2([1,2,3])).all()
+
+        # promote list of int -> np of double
+        assert (np.array([2.0,4.0,6.0]) == multby2_d([1,2,3])).all()
+
 
 
 if __name__ == '__main__':
