@@ -62,5 +62,9 @@ module.add_function ("long size_arr_arr_v (nda::array<nda::array_view<long, 1>, 
 module.add_function ("long size_arr_arr_cv (nda::array<nda::array_view<long, 1>, 1> a)", doc = r"""""")
 
 
+module.add_function ("nda::array<long, 1> multby2 (nda::array<long, 1> a)", doc = r"""""")
+module.add_function ("nda::array<long, 2> multby2 (nda::array<long, 2> a)", doc = r"""""")
+module.add_function ("nda::array<double, 1> multby2_d (nda::array<double, 1> a)", doc = r"""""")
+
 
 module.generate_code()

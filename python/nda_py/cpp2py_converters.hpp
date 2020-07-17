@@ -5,7 +5,8 @@
 
 namespace cpp2py {
 
-  template <typename T, int R, typename L, char A, typename AP, typename OP> struct is_view<nda::basic_array_view<T, R, L, A, AP, OP>> : std::true_type{};
+  template <typename T, int R, typename L, char A, typename AP, typename OP>
+  struct is_view<nda::basic_array_view<T, R, L, A, AP, OP>> : std::true_type {};
 
   // -----------------------------------
   // array_view
@@ -44,7 +45,8 @@ namespace cpp2py {
         if (raise_python_exception)
           PyErr_SetString(
              PyExc_TypeError,
-             ("Cannot convert to array_view : Rank is not correct. Expected " + std::to_string(R) + "\n Got " + std::to_string(PyArray_NDIM(arr))).c_str());
+             ("Cannot convert to array_view : Rank is not correct. Expected " + std::to_string(R) + "\n Got " + std::to_string(PyArray_NDIM(arr)))
+                .c_str());
         return false;
       }
 
@@ -104,7 +106,21 @@ namespace cpp2py {
 
     // --------- PY -> C is possible --------
 
+    static PyObject *make_numpy(PyObject *obj) {
+      return PyArray_FromAny(obj, PyArray_DescrFromType(npy_type<T>), R, R, NPY_ARRAY_C_CONTIGUOUS | NPY_ARRAY_ENSURECOPY, NULL); // new ref
+    }
+
     static bool is_convertible(PyObject *obj, bool raise_python_exception) {
+      // if obj is not an numpy, we try to make a numpy with the proper type
+      if (not PyArray_Check(obj)) {
+        cpp2py::pyref numpy_obj = make_numpy(obj);
+	if (PyErr_Occurred()) {
+          if (!raise_python_exception) PyErr_Clear();
+          return false;
+        }
+        return is_convertible(numpy_obj, raise_python_exception);
+      }
+
       if constexpr (has_npy_type<T>) {
         // in this case, we convert to a view and then copy to the array, so the condition is the same
         return converter_view_T::is_convertible(obj, raise_python_exception);
@@ -137,6 +153,14 @@ namespace cpp2py {
 
     static nda::array<T, R> py2c(PyObject *obj) {
       _import_array();
+
+      // if obj is not an numpy, we make a numpy and rerun
+      if (not PyArray_Check(obj)) {
+        cpp2py::pyref numpy_obj = make_numpy(obj);
+        EXPECTS(not PyErr_Occurred());
+        return py2c(numpy_obj);
+      }
+
       if constexpr (has_npy_type<T>) {
         return converter_view_T::py2c(obj);
       } else {
