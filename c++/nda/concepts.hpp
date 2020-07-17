@@ -72,6 +72,9 @@ namespace nda {
   concept ArrayOfRank = Array<A> and (get_rank<A> == R);
 
 
+  template <typename A, typename U>
+  concept HasValueTypeConvertibleTo = Array<A> and (std::is_convertible_v<get_value_t<A>, U>);
+
   //-------------------
 
   template <typename A> concept ArrayInitializer = requires(A const &a) {
@@ -114,6 +117,24 @@ namespace nda {
   // --------------------------- ArrayInitializer
   template <typename T>
   inline constexpr bool is_array_initializer_v = false;
+
+  // --------------------------- Check if a type is an array of given rank
+  template <typename T, auto Rank>
+  inline constexpr bool has_rank = []() {
+    if constexpr (is_ndarray_v<T>) {
+      return Rank == get_rank<T>;
+    } else
+      return false;
+  }();
+
+ // --------------------------- Workaround concept
+  template <typename A, typename U>
+  inline constexpr bool has_value_type_convertible_to = []() {
+    if constexpr (is_ndarray_v<A>) {
+      return std::is_convertible_v<get_value_t<A>, U>;
+    } else
+      return false;
+  }();
 
 #endif
 

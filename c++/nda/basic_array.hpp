@@ -48,7 +48,7 @@ namespace nda {
 
     /// The type of the layout
     using layout_t = typename Layout::template mapping<Rank>;
-    
+
     static_assert(has_contiguous(layout_t::layout_prop), "Non sense. A basic_array is a contiguous object");
 
     using regular_type = basic_array;
@@ -137,7 +137,10 @@ namespace nda {
      * Constructs from a.shape() and then assign from the evaluation of a
      */
     template <CONCEPT(ArrayOfRank<Rank>) A>
-    basic_array(A const &a) noexcept REQUIRES17(is_ndarray_v<A>) : lay(a.shape()), sto{lay.size(), mem::do_not_initialize} {
+    basic_array(A const &a) noexcept //
+       REQUIRES20(HasValueTypeConvertibleTo<A, value_type>)
+          REQUIRES17(is_ndarray_v<A> and has_rank<A, Rank> and has_value_type_convertible_to<A, value_type>)
+       : lay(a.shape()), sto{lay.size(), mem::do_not_initialize} {
       static_assert(std::is_convertible_v<get_value_t<A>, value_type>,
                     "Can not construct the array. ValueType can not be constructed from the value_type of the argument");
       if constexpr (std::is_trivial_v<ValueType> or mem::is_complex_v<ValueType>) {
@@ -257,7 +260,7 @@ namespace nda {
     /// \private error trap
     template <CONCEPT(std::integral) Int, auto R>
     static auto zeros(std::array<Int, R> const &) {
-      static_assert((int(R) == Rank), "Incorrect dimension of the shape");//FIXME : int(R) is a bug in clang 9
+      static_assert((int(R) == Rank), "Incorrect dimension of the shape"); //FIXME : int(R) is a bug in clang 9
     }
 
     //------------------ Assignment -------------------------

@@ -103,24 +103,25 @@ namespace nda {
   /// Get the first element of the array as a(0,0,0....) (i.e. also work for non
   /// containers, just with the concept !).
   template <typename A>
-  auto get_first_element(A const &a) {
-    return [&a]<auto... Is>(std::index_sequence<Is...>) {
+  decltype(auto) get_first_element(A const &a) {
+    return [&a]<auto... Is>(std::index_sequence<Is...>)->decltype(auto) {
       return a((0 * Is)...); // repeat 0 sizeof...(Is) times
     }
     (std::make_index_sequence<get_rank<A>>{});
   }
 
+  // decltype(auto) and not auto to work in case that a(....) is NOT copy constructible
 #else
   // C++17 compat
 
   template <size_t... Is, typename A>
-  auto _get_first_element_impl(std::index_sequence<Is...>, A const &a) {
+  decltype(auto) _get_first_element_impl(std::index_sequence<Is...>, A const &a) {
     return a((0 * Is)...); // repeat 0 sizeof...(Is) times
   }
 
   /// Get the first element of the array as a(0,0,0....) (i.e. also work for non containers, just with the concept !).
   template <typename A>
-  auto get_first_element(A const &a) {
+  decltype(auto) get_first_element(A const &a) {
     return _get_first_element_impl(std::make_index_sequence<get_rank<A>>{}, a);
   }
 
@@ -129,7 +130,10 @@ namespace nda {
   /// A trait to get the return_t of the (long, ... long) for an object with ndarray concept
   // FIXME : can be a ref! ?
   template <typename A>
-  using get_value_t = decltype(get_first_element(std::declval<A const>()));
+  using get_value_t = std::decay_t<decltype(get_first_element(std::declval<A const>()))>;
+
+  template <typename A, auto R>
+  using get_value2_t = decltype(_get_first_element_impl(std::make_index_sequence<R>{}, std::declval<A const>()));
 
   // ---------------------- Guarantees at compile time for some optimization  --------------------------------
 

@@ -318,6 +318,24 @@ TEST(Array, CrossConstruct2) { //NOLINT
 
   for (int i = 1; i < 3; ++i) EXPECT_ARRAY_NEAR(W2[i], i * A);
 }
+
+// ------------------
+
+// check non ambiguity of resolution, solved by the check of value type in the constructor
+struct A {};
+struct B {};
+std::ostream &operator<<(std::ostream &out, A) { return out; }
+std::ostream &operator<<(std::ostream &out, B) { return out; }
+
+int f1(nda::array<A, 1>) { return 1; }
+int f1(nda::array<B, 1>) { return 2; }
+
+TEST(Array, CrossConstruct3) { //NOLINT
+  nda::array<A, 1> a(2);
+  auto v = a();
+  EXPECT_EQ(f1(v), 1);
+}
+
 // =============================================================
 
 TEST(NDA, ConvertibleCR) { //NOLINT
