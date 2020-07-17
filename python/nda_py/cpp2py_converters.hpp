@@ -50,13 +50,11 @@ namespace cpp2py {
         return false;
       }
 
-      if (r == R) {
+      if (not allow_lower_rank && r == R) {
         if (has_npy_type<U> && (PyArray_TYPE(arr) != npy_type<U>)) {
           if (raise_python_exception) PyErr_SetString(PyExc_TypeError, "Cannot convert to array_view : Type mismatch");
           return false;
         }
-      } else {
-        //  FIXME Check that value type of magic array matches
       }
 
       return true;
