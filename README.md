@@ -2,7 +2,7 @@
 
 nda is a C++ library providing an efficient and flexible multi-dimensional array class.
 It is an essential building-block of the TRIQS project. Some features include
-* coded in modern C++
+* coded in C++17/20 using concepts
 * easily store and retrieve arrays to/from hdf5 files using [h5](https://github.com/TRIQS/h5)
 * expressions are implemented lazily for maximum performance
 * flexible and lightweight view-types
@@ -21,7 +21,7 @@ using namespace nda;
 
 int main() {
 
-  // Create array of a given shape
+  // Create array of shape (4,4,4)
   array<long, 3> A(4, 4, 4);
 
   // Create an array given its data
