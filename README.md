@@ -52,7 +52,7 @@ int main() {
   }
 
   // read from file
-  array<long, 2> D;
+  array<long, 3> D;
   {
     h5::file file("dat.h5", 'r');
     h5_read(file, "A", D);
