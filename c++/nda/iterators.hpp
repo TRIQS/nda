@@ -164,9 +164,7 @@ namespace nda {
     }
 
     bool operator==(array_iterator const &other) const { return (other.iter == iter); }
-#if __cplusplus > 201703L
     bool operator!=(array_iterator const &other) const { return (!operator==(other)); }
-#endif
   };
 
   // -------------------------------
@@ -217,9 +215,7 @@ namespace nda {
     }
 
     bool operator==(array_iterator const &other) const { return (other.iter == iter); }
-#if __cplusplus > 201703L
     bool operator!=(array_iterator const &other) const { return (!operator==(other)); }
-#endif
 
     array_iterator &operator+=(std::ptrdiff_t n) {
       iter += n;
