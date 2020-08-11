@@ -51,3 +51,23 @@ TEST(Fortran, ScalarAssign) { //NOLINT
   for (int i = 0; i < N; ++i)
     for (int j = 0; j < N; ++j) EXPECT_EQ(a(i, j), 2);
 }
+// ===============================================================
+
+TEST(Fortran, is_stride_order_Fortran) { //NOLINT
+
+  int N = 5;
+  nda::matrix<int> a(N, N);
+  nda::matrix<int, F_layout> af(N, N);
+  nda::array<int, 1> v(N);
+  nda::array<int, 1, F_layout> vf(N);
+
+  EXPECT_FALSE(a.indexmap().is_stride_order_Fortran());
+  EXPECT_TRUE(af.indexmap().is_stride_order_Fortran());
+  EXPECT_TRUE(v.indexmap().is_stride_order_Fortran());
+  EXPECT_TRUE(vf.indexmap().is_stride_order_Fortran());
+
+  EXPECT_TRUE(a.indexmap().is_stride_order_C());
+  EXPECT_FALSE(af.indexmap().is_stride_order_C());
+  EXPECT_TRUE(v.indexmap().is_stride_order_C());
+  EXPECT_TRUE(vf.indexmap().is_stride_order_C());
+}
