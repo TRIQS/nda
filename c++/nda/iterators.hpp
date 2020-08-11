@@ -13,60 +13,29 @@
 // limitations under the License.
 
 #pragma once
-#include <iterator>
 namespace nda {
-
-  template <int Rank>
-  class grid_iterator;
 
   /*
    * Iterator on a rectangular grid (in C traversal order)
    *
    */
-
-  // -------------------------------
-  // Rank = 1 is a special case
-  template <>
-  class grid_iterator<1> : public std::iterator<std::forward_iterator_tag, long> {
-    long stri   = 0;
-    long pos    = 0;
-    long offset = 0;
-
-    public:
-    grid_iterator() = default;
-    grid_iterator(long const *lengths, long const *strides, bool at_end) : stri(strides[0]), pos(at_end ? lengths[0] : 0), offset(pos * stri) {}
-
-    [[nodiscard]] long operator*() const { return offset; }
-    long operator->() const { return operator*(); }
-
-    bool operator==(grid_iterator const &other) const { return (other.pos == pos); }
-#if __cplusplus > 201703L
-    bool operator!=(grid_iterator const &other) const { return (other.pos != pos); }
-#endif
-
-    grid_iterator &operator++() {
-      offset += stri;
-      ++pos;
-      return *this;
-    }
-
-    grid_iterator operator++(int) {
-      auto c = *this;
-      ++(*this);
-      return c;
-    }
-  };
-
   // -------------------------------
   // Rank >1 : general case
   template <int Rank>
-  class grid_iterator : public std::iterator<std::forward_iterator_tag, long> {
+  class grid_iterator {
     long stri   = 0;
     long pos    = 0;
     long offset = 0;
     grid_iterator<Rank - 1> it_begin, it_end, it;
 
     public:
+ 
+    using iterator_category = std::forward_iterator_tag;
+    using value_type        = long;
+    using difference_type   = std::ptrdiff_t;
+    using pointer           = long *;
+    using reference         = long &;
+
     grid_iterator() = default;
 
     grid_iterator(long const *lengths, long const *strides, bool at_end)
@@ -81,8 +50,9 @@ namespace nda {
     long operator->() const { return operator*(); }
 
     bool operator==(grid_iterator const &other) const { return ((other.pos == pos) and (other.it == it)); }
+#if __cplusplus > 201703L
     bool operator!=(grid_iterator const &other) const { return not operator==(other); }
-
+#endif
     grid_iterator &operator++() {
       ++it;
       if (it == it_end) { //FIXME [[unlikely]]
@@ -100,6 +70,59 @@ namespace nda {
     }
   };
 
+  // -------------------------------
+  // Rank = 1 is a special case
+  template <>
+  class grid_iterator<1> {
+    long stri   = 0;
+    long pos    = 0;
+    long offset = 0;
+
+    public:
+    using iterator_category = std::forward_iterator_tag;
+    using value_type        = long;
+    using difference_type   = std::ptrdiff_t;
+    using pointer           = long *;
+    using reference         = long &;
+
+    grid_iterator() = default;
+    grid_iterator(long const *lengths, long const *strides, bool at_end) : stri(strides[0]), pos(at_end ? lengths[0] : 0), offset(pos * stri) {
+    
+    }
+
+    [[nodiscard]] long operator*() const { return offset; }
+    long operator->() const { return operator*(); }
+
+    bool operator==(grid_iterator const &other) const { return (other.pos == pos); }
+#if __cplusplus > 201703L
+    bool operator!=(grid_iterator const &other) const { return (other.pos != pos); }
+#endif
+
+    grid_iterator &operator++() {
+      offset += stri;
+      ++pos;
+      return *this;
+    }
+
+    grid_iterator &operator--() {
+      offset -= stri;
+      --pos;
+      return *this;
+    }
+
+    grid_iterator &operator+=(std::ptrdiff_t n) {
+      offset += n * stri;
+      pos += n;
+      return *this;
+    }
+
+    // We do not implement the full LegacyRandomAccessIterator here, just what is needed for the array_iterator below.
+    friend grid_iterator operator+(grid_iterator it, std::ptrdiff_t n) { return it += n; }
+    friend std::ptrdiff_t operator-(grid_iterator const &it1, grid_iterator const &it2) { return it1.pos - it2.pos; }
+    friend bool operator<(grid_iterator const &it1, grid_iterator const &it2) { return it1.pos < it2.pos; }
+    friend bool operator>(grid_iterator const &it1, grid_iterator const &it2) { return it1.pos > it2.pos; }
+  };
+
   //-----------------------------------------------------------------------
 
   // The iterator for the array and array_view container.
@@ -107,13 +130,17 @@ namespace nda {
   // e.g. for a strided_1d, we use Rank == 1, whatever the real array is
   // T can be const
   template <int Rank, typename T, typename Pointer>
-  class array_iterator : public std::iterator<std::forward_iterator_tag, T> {
+  class array_iterator {
     T *data = nullptr;
     std::array<long, Rank> len, stri;
     grid_iterator<Rank> iter;
 
     public:
-    using value_type = T;
+    using iterator_category = std::forward_iterator_tag;
+    using value_type        = T;
+    using difference_type   = std::ptrdiff_t;
+    using pointer           = T *;
+    using reference         = T &;
 
     array_iterator()                       = default;
     array_iterator(array_iterator const &) = default;
@@ -137,7 +164,86 @@ namespace nda {
     }
 
     bool operator==(array_iterator const &other) const { return (other.iter == iter); }
+#if __cplusplus > 201703L
     bool operator!=(array_iterator const &other) const { return (!operator==(other)); }
+#endif
+  };
+
+  // -------------------------------
+  // 1d case is special : it is a LegacyRandomAccessIterator
+  template <typename T, typename Pointer>
+  class array_iterator<1, T, Pointer> {
+    T *data                   = nullptr;
+    std::array<long, 1> len, stri;
+    grid_iterator<1> iter;
+
+    public:
+    using iterator_category = std::random_access_iterator_tag;
+    using value_type        = T;
+    using difference_type   = std::ptrdiff_t;
+    using pointer           = T *;
+    using reference         = T &;
+
+    array_iterator()                       = default;
+    array_iterator(array_iterator const &) = default;
+
+    array_iterator(std::array<long, 1> const &lengths, std::array<long, 1> const &strides, T *start, bool at_end)
+       : data(start), len(lengths), stri(strides), iter(len.data(), stri.data(), at_end) {}
+
+    T &operator*() const { return ((Pointer)data)[*iter]; }
+
+    T &operator->() const { return operator*(); }
+
+    array_iterator &operator++() {
+      ++iter;
+      return *this;
+    }
+
+    array_iterator operator++(int) {
+      auto c = *this;
+      ++iter;
+      return c;
+    }
+
+    array_iterator &operator--() {
+      --iter;
+      return *this;
+    }
+
+    array_iterator operator--(int) {
+      auto c = *this;
+      --iter;
+      return c;
+    }
+
+    bool operator==(array_iterator const &other) const { return (other.iter == iter); }
+#if __cplusplus > 201703L
+    bool operator!=(array_iterator const &other) const { return (!operator==(other)); }
+#endif
+
+    array_iterator &operator+=(std::ptrdiff_t n) {
+      iter += n;
+      return *this;
+    }
+
+    array_iterator &operator-=(std::ptrdiff_t n) {
+      iter += (-n);
+      return *this;
+    }
+
+    friend array_iterator operator+(std::ptrdiff_t n, array_iterator it) { return it += n; }
+    friend array_iterator operator+(array_iterator it, std::ptrdiff_t n) { return it += n; }
+    friend array_iterator operator-(array_iterator it, std::ptrdiff_t n) { return it -= n; }
+
+    friend std::ptrdiff_t operator-(array_iterator const &it1, array_iterator const &it2) { return it1.iter - it2.iter; }
+
+    T &operator[](std::ptrdiff_t n) { return ((Pointer)data)[*(iter + n)]; }
+
+    // FIXME C++20 ? with <=> operator
+    friend bool operator<(array_iterator const &it1, array_iterator const &it2) { return it1.iter < it2.iter; }
+    friend bool operator>(array_iterator const &it1, array_iterator const &it2) { return it1.iter > it2.iter; }
+    friend bool operator<=(array_iterator const &it1, array_iterator const &it2) { return not(it1.iter > it2.iter); }
+    friend bool operator>=(array_iterator const &it1, array_iterator const &it2) { return not(it1.iter < it2.iter); }
   };
 
 } // namespace nda

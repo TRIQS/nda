@@ -16,6 +16,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <random>
 
 template <typename T>
 using vector_t = nda::array<T, 1>;
@@ -101,4 +102,54 @@ TEST(STL, Bugxxx) { //NOLINT
   //vector_t<int> a = {1, 3, 2}, b = a;
   //EXPECT_FALSE(a < b);
   //}
+}
+
+// ==============================================================
+
+// random access iterator in d = 1
+TEST(STL, RandomIteratorAndSort) { //NOLINT
+
+  nda::array<int, 1> V(10);
+  for (unsigned int i = 0; i < 10; ++i) V[i] = 10 - i;
+
+  std::sort(V.begin(), V.end());
+
+  for (unsigned int i = 0; i < 10; ++i) EXPECT_EQ(V[i], 1 + i);
+}
+
+// std::shuffle also require random access
+// adapted from cppref example for it.
+TEST(STL, RandomIteratorAndSort2) { //NOLINT
+
+  nda::array<int, 1> v = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+  std::random_device rd;
+  std::mt19937 g(rd());
+  std::shuffle(v.begin(), v.end(), g);
+
+  std::sort(v.begin(), v.end());
+
+  for (unsigned int i = 0; i < 10; ++i) EXPECT_EQ(v[i], 1 + i);
+}
+
+// test it with a stride of 2
+TEST(STL, RandomIteratorAndSortWithStride) { //NOLINT
+
+  nda::array<int, 1> a(20);
+  a      = -9;
+  auto v = a(range(0, 20, 2));
+  for (unsigned int i = 0; i < 10; ++i) v[i] = 1 + i;
+
+  std::random_device rd;
+  std::mt19937 g(rd());
+  std::shuffle(v.begin(), v.end(), g);
+  
+  std::sort(v.begin(), v.end());
+
+  EXPECT_EQ((v.begin()[3]), 4);
+  
+  for (unsigned int i = 0; i < 10; ++i) {
+    EXPECT_EQ(a[2 * i], 1 + i);
+    EXPECT_EQ(a[2 * i + 1], -9);
+  }
 }
