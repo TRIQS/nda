@@ -22,13 +22,13 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING
 
 # ========= Additional Depdencies ==========
 
-# nda_c
-target_link_libraries(nda_py INTERFACE nda_c)
+# Link against nda_c
+target_link_libraries(nda_py INTERFACE nda::nda_c)
 
-# Cpp2Py
+# Link against Cpp2Py
 target_link_libraries(nda_py INTERFACE cpp2py::cpp2py)
 
-# Python and Numpy
+# Link against Python and Numpy
 target_link_libraries(nda_py INTERFACE cpp2py::python_and_numpy)
 
 # ========= Static Analyzer Checks ==========
@@ -75,7 +75,7 @@ endif()
 
 option(ASAN OFF "Compile library and executables with LLVM Address Sanitizer")
 option(UBSAN OFF "Compile library and executables with LLVM Undefined Behavior Sanitizer")
-option(MBSAN OFF "Compile library and executables with LLVM Memory Sanitizer")
+option(MSAN OFF "Compile library and executables with LLVM Memory Sanitizer")
 
 if(ASAN)
   if(NOT TARGET asan)

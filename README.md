@@ -1,3 +1,5 @@
+[![build](https://github.com/TRIQS/nda/workflows/build/badge.svg?branch=unstable)](https://github.com/TRIQS/nda/actions?query=workflow%3Abuild)
+
 # nda
 
 nda is a C++ library providing an efficient and flexible multi-dimensional array class.

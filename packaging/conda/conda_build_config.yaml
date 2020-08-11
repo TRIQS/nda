@@ -1,5 +1,3 @@
 mpi:
   - mpich
   - openmpi
-python:
-  - 2.7.* *_cpython  # [not (aarch64 or ppc64le or win)]]

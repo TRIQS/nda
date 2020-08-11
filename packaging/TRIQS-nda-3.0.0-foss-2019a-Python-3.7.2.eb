@@ -1,0 +1,60 @@
+easyblock = 'CMakeMake'
+
+name = 'nda'
+version = '3.0.0'
+versionsuffix = '-Python-%(pyver)s'
+
+homepage = 'https://triqs.github.io/nda/'
+description = """
+ PROVIDE HERE A DESCRIPTION OF YOUR APPLICATION
+"""
+
+docurls = ['https://triqs.github.io/nda/%(version_major_minor)s.x/']
+software_license = 'LicenseGPLv3'
+
+toolchain = {'name': 'foss', 'version': '2019a'}
+toolchainopts = {'pic': True, 'usempi': True}
+
+source_urls = ['https://github.com/TRIQS/nda/releases/download/%(version)s/']
+sources = ['nda-%(version)s.tar.gz']
+checksums = ['PUT HERE THE SHA256 OF THE RELEASE TARBALL']
+
+dependencies = [
+    ('Python', '3.7.2'),
+    ('SciPy-bundle', '2019.03'),
+    ('Boost', '1.70.0'),
+    ('Clang', '8.0.0'),
+    ('GMP', '6.1.2'),
+    ('HDF5', '1.10.5'),
+    ('Mako', '1.0.8'),
+    ('h5py', '2.9.0'),
+    ('NFFT', '3.5.1')
+]
+
+builddependencies = [
+    ('CMake', '3.13.3')
+]
+
+separate_build_dir = True
+
+runtest = 'test'
+
+sanity_check_paths = {
+    'files': ['lib/libnda_c.%s' % SHLIB_EXT],
+    'dirs': ['include/nda', 'lib', 'share',
+             'lib/python%(pyshortver)s/site-packages/nda'],
+}
+
+sanity_check_commands = ["python -c 'import nda'"]
+
+modextrapaths = {
+    'CPLUS_INCLUDE_PATH': 'include',
+    'PYTHONPATH': 'lib/python%(pyshortver)s/site-packages',
+    'CMAKE_PREFIX_PATH': 'lib/cmake/nda',
+}
+modextravars = {
+    'NDA_ROOT': '%(installdir)s',
+    'NDA_VERSION': '%(version)s',
+}
+
+moduleclass = 'phys'

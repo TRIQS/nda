@@ -25,7 +25,7 @@ version = '@PROJECT_VERSION@'
 
 copyright = '2018-2019 N. Wentzell, O. Parcollet 2019-2020 The Simons Foundation, authors: N. Wentzell, O. Parcollet'
 
-mathjax_path = "https://raw.githubusercontent.com/mathjax/MathJax/2.7.8/MathJax.js"
+mathjax_path = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=default"
 templates_path = ['@CMAKE_CURRENT_SOURCE_DIR@/_templates']
 
 html_theme = 'triqs'
