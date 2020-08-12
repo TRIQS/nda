@@ -119,10 +119,10 @@ FORCEINLINE static decltype(auto) call(Self &&self, T const &... x) noexcept(has
   }
 
   else {
-    static_assert(((((std::is_base_of_v<range_tag, T> or std::is_constructible_v<long, T>) ? 0 : 1) + ...) == 0),
-                  "Slice arguments must be convertible to range, Ellipsis, or long");
+    static_assert(((layout_t::template argument_is_allowed_for_call_or_slice<T> + ...) > 0),
+                  "Slice arguments must be convertible to range, Ellipsis, or long (or string if the layout permits it)");
 
-    static constexpr int n_args_long = (std::is_constructible_v<long, T> + ...);
+    static constexpr int n_args_long = (layout_t::template argument_is_allowed_for_call<T> + ...);
 
     // case 1 : all arguments are long, we simply compute the offset
     if constexpr (n_args_long == rank) {         // no range, simply compute the linear position. There may be an ellipsis, but it is of zero length !
@@ -136,16 +136,16 @@ FORCEINLINE static decltype(auto) call(Self &&self, T const &... x) noexcept(has
     // case 2 : we have to make a slice
     else {
       // Static rank
-      auto const [offset, idxm] = slice_static::slice_stride_order(self.lay, x...);
+      auto const [offset, idxm] = self.lay.slice(x...);
 
-      using r_layout_t = decltype(idxm);
+      using r_layout_t = std::decay_t<decltype(idxm)>;
+
       static constexpr char newAlgebra = (ResultAlgebra == 'M' and (r_layout_t::rank() == 1) ? 'V' : ResultAlgebra);
 
       using r_view_t =
          // FIXME  basic_array_view<r_v_t, r_layout_t::rank(),
-         basic_array_view<ValueType, r_layout_t::rank(),
-                          basic_layout<encode(r_layout_t::static_extents), encode(r_layout_t::stride_order), r_layout_t::layout_prop>, newAlgebra,
-                          AccessorPolicy, OwningPolicy>;
+         basic_array_view<ValueType, r_layout_t::rank(), typename details::layout_to_policy<r_layout_t>::type, newAlgebra, AccessorPolicy,
+                          OwningPolicy>;
 
       return r_view_t{std::move(idxm), {self.sto, offset}};
     }
@@ -344,8 +344,8 @@ void fill_with_scalar(Scalar const &scalar) noexcept {
     if constexpr (has_layout_contiguous<self_t>) {
       for (long i = 0; i < L; ++i) p[i] = scalar;
     } else {
-      const long stri = indexmap().min_stride();
-      const long Lstri = L*stri;
+      const long stri  = indexmap().min_stride();
+      const long Lstri = L * stri;
       for (long i = 0; i < Lstri; i += stri) p[i] = scalar;
     }
   } else {

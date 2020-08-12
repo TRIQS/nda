@@ -182,8 +182,8 @@ namespace nda::slice_static {
       previous_arg_is_rangeall = arg_is_rangeall;
     }
     // in mem order. e.g. (long, all, all, long) or (all, all, long), but not (all, long, all)
-    bool rangeall_are_grouped_in_memory             = (n_1_blocks <= 1);
-    bool last_is_rangeall                           = previous_arg_is_rangeall;
+    bool rangeall_are_grouped_in_memory = (n_1_blocks <= 1);
+    bool last_is_rangeall               = previous_arg_is_rangeall;
 
     if (has_contiguous(layout_prop) and rangeall_are_grouped_in_memory and last_is_rangeall) return layout_prop_e::contiguous;
     if (has_strided_1d(layout_prop) and rangeall_are_grouped_in_memory) return layout_prop_e::strided_1d;
@@ -280,18 +280,18 @@ namespace nda::slice_static {
   }
 
   // ----------------------------- slice of index map ----------------------------------------------
-  //
-  template <typename IdxMap, typename... T>
-  FORCEINLINE decltype(auto) slice_stride_order(IdxMap const &idxm, T const &... x) {
+
+  template <int R, uint64_t SE, uint64_t SO, layout_prop_e LP, typename... T>
+  FORCEINLINE decltype(auto) slice_stride_order(idx_map<R, SE, SO, LP> const &idxm, T const &... x) {
 
     static constexpr int n_args_ellipsis = ((std::is_same_v<T, ellipsis>)+...);
     static constexpr int n_args_long     = (std::is_constructible_v<long, T> + ...); // any T I can construct a long from
 
     static_assert(n_args_ellipsis <= 1, "At most one ellipsis argument is authorized");
-    static_assert((sizeof...(T) <= IdxMap::rank() + 1), "Incorrect number of arguments in array call ");
-    static_assert((n_args_ellipsis == 1) or (sizeof...(T) == IdxMap::rank()), "Incorrect number of arguments in array call ");
+    static_assert((sizeof...(T) <= R + 1), "Incorrect number of arguments in array call ");
+    static_assert((n_args_ellipsis == 1) or (sizeof...(T) == R), "Incorrect number of arguments in array call ");
 
-    return slice_stride_order_impl(std::make_index_sequence<IdxMap::rank() - n_args_long>{}, std::make_index_sequence<IdxMap::rank()>{},
+    return slice_stride_order_impl(std::make_index_sequence<R - n_args_long>{}, std::make_index_sequence<R>{},
                                    std::make_index_sequence<sizeof...(T)>{}, idxm, x...);
   }
 

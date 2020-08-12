@@ -27,6 +27,16 @@
 
 namespace nda {
 
+  // forward
+  template <int Rank, uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp>
+  class idx_map;
+
+  namespace slice_static {
+    template <int R, uint64_t SE, uint64_t SO, layout_prop_e LP, typename... T>
+    FORCEINLINE decltype(auto) slice_stride_order(idx_map<R, SE, SO, LP> const &idxm, T const &... x);
+  }
+  // end forward
+
   template <int Rank>
   constexpr uint64_t Fortran_stride_order = nda::encode(nda::permutations::reverse_identity<Rank>());
 
@@ -79,7 +89,13 @@ namespace nda {
     static constexpr layout_prop_e layout_prop = LayoutProp;
     static constexpr layout_info_t layout_info = layout_info_t{stride_order_encoded, layout_prop};
 
-    private:
+    template <typename T>
+    static constexpr int argument_is_allowed_for_call = std::is_constructible_v<long, T>;
+
+    template <typename T>
+    static constexpr int argument_is_allowed_for_call_or_slice = std::is_base_of_v<range_tag, T> or std::is_constructible_v<long, T>;
+
+    protected:
     static constexpr int n_dynamic_extents = []() {
       int r = 0;
       for (int u = 0; u < Rank; ++u) r += (static_extents[u] == 0 ? 1 : 0);
@@ -322,6 +338,13 @@ namespace nda {
       return call_impl(std::make_index_sequence<sizeof...(Args)>{}, args...);
     }
 
+    // ----------------  Slice -------------------------
+
+    template <typename... Args>
+    auto slice(Args const &... args) const {
+      return slice_static::slice_stride_order(*this, args...);
+    }
+
     // ----------------  Comparison -------------------------
 
 #if __cplusplus > 201703L
@@ -342,8 +365,9 @@ namespace nda {
 
       // Compute the new layout_prop of the new view
       // NB : strided_1d property is preserved, but smallest_stride_is_one is not
-      // FIXME 
-      static constexpr layout_prop_e new_layout_prop = layout_prop_e::none; // BUT FIX (has_strided_1d(layout_prop) ? layout_prop_e::strided_1d : layout_prop_e::none);
+      // FIXME
+      static constexpr layout_prop_e new_layout_prop =
+         layout_prop_e::none; // BUT FIX (has_strided_1d(layout_prop) ? layout_prop_e::strided_1d : layout_prop_e::none);
 
       return idx_map<Rank, encode(new_static_extents), encode(new_stride_order), new_layout_prop>{permutations::apply_inverse(permu, lengths()),
                                                                                                   permutations::apply_inverse(permu, strides())};

@@ -133,6 +133,10 @@ namespace nda {
     explicit basic_array(std::array<long, Rank> const &shape) noexcept REQUIRES(std::is_default_constructible_v<ValueType>)
        : lay(shape), sto(lay.size()) {}
 
+    /// Construct from the layout
+    explicit basic_array(layout_t const & layout) noexcept REQUIRES(std::is_default_constructible_v<ValueType>)
+       : lay(layout), sto(lay.size()) {}
+
     /** 
      * Constructs from a.shape() and then assign from the evaluation of a
      */

@@ -65,4 +65,37 @@ namespace nda {
   template <uint64_t StrideOrder>
   using contiguous_layout_with_stride_order = basic_layout<0, StrideOrder, layout_prop_e::contiguous>;
 
+  namespace details {
+
+    template <typename L>
+    struct layout_to_policy;
+
+    template <int Rank, uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp>
+    struct layout_to_policy<idx_map<Rank, StaticExtents, StrideOrder, LayoutProp>> {
+      using type = basic_layout<StaticExtents, StrideOrder, LayoutProp>;
+    };
+
+    template <int Rank>
+    struct layout_to_policy<idx_map<Rank, 0, C_stride_order<Rank>, layout_prop_e::contiguous>> {
+      using type = C_layout;
+    };
+
+    template <int Rank>
+    struct layout_to_policy<idx_map<Rank, 0, C_stride_order<Rank>, layout_prop_e::none>> {
+      using type = C_stride_layout;
+    };
+
+    // NOT OK for Rank 1
+    //template <int Rank>
+    //struct layout_to_policy<idx_map<Rank, 0, Fortran_stride_order<Rank>, layout_prop_e::contiguous>> {
+      //using type = F_layout;
+    //};
+
+    //template <int Rank>
+    //struct layout_to_policy<idx_map<Rank, 0, Fortran_stride_order<Rank>, layout_prop_e::none>> {
+      //using type = F_stride_layout;
+    //};
+
+  } // namespace details
+
 } // namespace nda
