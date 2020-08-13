@@ -144,9 +144,9 @@ namespace nda {
       auto const &current_ind = get_string_indices();
       ind_t ind2((not argument_is_allowed_for_call<T> + ...)); // number of arg which are range, ellipsis, i.e. not arg of simple call
 
-      auto l = [p = 0, &current_ind, &ind2](int n, auto const &x) mutable -> void {
-        using U = std::decay_t<decltype(x)>;
-        if constexpr (not argument_is_allowed_for_call<U>) { ind2[p++] = current_ind[n](x); }
+      auto l = [p = 0, &current_ind, &ind2](int n, auto const &y) mutable -> void {
+        using U = std::decay_t<decltype(y)>;
+        if constexpr (not argument_is_allowed_for_call<U>) { ind2[p++] = current_ind[n](y); }
       };
       (l(Is, x), ...);
 

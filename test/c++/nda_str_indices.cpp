@@ -20,7 +20,7 @@ TEST(Construct, FromStringArray) { //NOLINT
 
   nda::array<nda::array<std::string, 1>, 1> ind{{"a", "b", "c"}, {"A", "B"}};
 
-  nda::array<long, 2, nda::C_layout_str> b({ind});
+  nda::array<long, 2, nda::C_layout_str> b(ind);
   EXPECT_EQ(b.shape(), (std::array<long, 2>{3, 2}));
   EXPECT_EQ(ind, b.indexmap().get_string_indices()());
 }

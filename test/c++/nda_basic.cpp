@@ -14,7 +14,7 @@
 
 #include "./test_common.hpp"
 
-static_assert(!std::is_pod<nda::array<long, 2>>::value, "POD pb");
+//static_assert(!std::is_pod<nda::array<long, 2>>::value, "POD pb");
 static_assert(nda::is_scalar_for_v<int, matrix<std::complex<double>>> == 1, "oops");
 
 // ==============================================================
