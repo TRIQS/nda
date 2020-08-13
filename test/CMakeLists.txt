@@ -1,5 +1,5 @@
 add_subdirectory(c++)
 
-if(PythonSupport)
+if(PythonSupport AND NOT MSAN)
  add_subdirectory(python)
 endif()
