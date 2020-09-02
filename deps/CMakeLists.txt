@@ -55,6 +55,8 @@ if(PythonSupport)
    BUILD_ALWAYS
    EXCLUDE_FROM_ALL
   )
+  # Workaround cache variable pybind11_FOUND
+  unset(pybind11_FOUND CACHE)
 endif()
 
 # -- Cpp2Py --
