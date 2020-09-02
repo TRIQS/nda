@@ -47,8 +47,18 @@ else()
   endif()
 endif()
 
+# -- pybind11  --
+if(PythonSupport)
+  external_dependency(pybind11
+   GIT_REPO https://github.com/pybind/pybind11.git
+   GIT_TAG master
+   BUILD_ALWAYS
+   EXCLUDE_FROM_ALL
+  )
+endif()
+
 # -- Cpp2Py --
-if(PythonSupport OR Build_Documentation)
+if(Build_Documentation)
   external_dependency(Cpp2Py
     GIT_REPO https://github.com/TRIQS/cpp2py
     VERSION 2.0
@@ -89,6 +99,7 @@ external_dependency(h5
   GIT_REPO https://github.com/TRIQS/h5
   VERSION 1.0
   GIT_TAG unstable
+  #GIT_TAG pybind11
 )
 
 # -- MPI --
