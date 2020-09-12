@@ -14,7 +14,7 @@
 
 #include <iostream>
 
-#include <nda/basic_array.hpp>
+#include <nda/nda.hpp>
 
 //// Forward Declaration
 //struct copy_move_stat;

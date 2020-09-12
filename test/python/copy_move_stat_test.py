@@ -72,7 +72,9 @@ class test_copy_move_stat(unittest.TestCase):
         
         # Member Access
         d.m
-        assert self.counts() == [1, 0]
+        # Changed compared to cpp2py. member access does not copy in pybind11.
+        assert self.counts() == [0, 0]
+        #assert self.counts() == [1, 0]
 
 if __name__ == '__main__':
     unittest.main()

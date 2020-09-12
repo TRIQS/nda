@@ -1,16 +1,23 @@
 # Build the cpp2py module
-add_cpp2py_module(wrap_basic)
-target_link_libraries(wrap_basic nda_py)
-target_include_directories(wrap_basic PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+#add_cpp2py_module(wrap_basic)
+#target_link_libraries(wrap_basic nda_py)
+#target_include_directories(wrap_basic PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-# Build the cpp2py module
-add_cpp2py_module(copy_move_stat)
-target_link_libraries(copy_move_stat nda_py)
-target_include_directories(copy_move_stat PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+## Build the cpp2py module
+#add_cpp2py_module(copy_move_stat)
+#target_link_libraries(copy_move_stat nda_py)
+#target_include_directories(copy_move_stat PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 ## Build the pybind11 module
-#pybind11_add_module(pybind_a pybind_a.cpp)
-#target_link_libraries(pybind_a PRIVATE pybind11 nda_py python_and_numpy)
+pybind11_add_module(wrap_basic wrap_basic.cxx)
+target_link_libraries(wrap_basic PRIVATE nda_py) #pybind11 nda_py python_and_numpy)
+
+pybind11_add_module(copy_move_stat copy_move_stat.cxx)
+target_link_libraries(copy_move_stat PRIVATE nda_py) #pybind11 nda_py python_and_numpy)
+
+# Generate the C++2Py Module for an hdf5 storable class
+#target_link_libraries(storable PRIVATE h5_c hdf5 h5py_c)
+#target_compile_options(storable PUBLIC $<$<CXX_COMPILER_ID:GNU>:-Wno-attributes>)
 
 ## Build the pybind11 module
 #pybind11_add_module(pybind_test pybind_test.cpp)

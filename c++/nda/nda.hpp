@@ -18,9 +18,6 @@
 #define NDA_ENFORCE_BOUNDCHECK
 #endif
 
-// FIXME : REMOVE THIS ?
-// for python code generator, we need to know what to include...
-#define TRIQS_INCLUDED_ARRAYS
 
 #include "exceptions.hpp"
 
@@ -46,3 +43,7 @@
 #include "layout/rect_str.hpp"
 
 #include "backward.hpp"
+
+#ifdef CPP2PY_GENERATED_PYBIND11_MODULE
+#include "nda_py/nda_py.hpp"
+#endif
