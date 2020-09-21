@@ -40,12 +40,9 @@ separate_build_dir = True
 runtest = 'test'
 
 sanity_check_paths = {
-    'files': ['lib/libnda_c.%s' % SHLIB_EXT],
-    'dirs': ['include/nda', 'lib', 'share',
-             'lib/python%(pyshortver)s/site-packages/nda'],
+    'files': ['lib/libnda_c.a'],
+    'dirs': ['include/nda', 'lib', 'share'],
 }
-
-sanity_check_commands = ["python -c 'import nda'"]
 
 modextrapaths = {
     'CPLUS_INCLUDE_PATH': 'include',
