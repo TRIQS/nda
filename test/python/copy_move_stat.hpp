@@ -38,12 +38,12 @@ struct copy_move_stat {
     ++construction_count;
   }
 
-  copy_move_stat(copy_move_stat const & c) {
+  copy_move_stat(copy_move_stat const & c) : verbose(c.verbose) {
     if (verbose) std::cout << "Copy Construction\n";
     ++copy_construction_count;
   }
 
-  copy_move_stat(copy_move_stat && c) {
+  copy_move_stat(copy_move_stat && c) : verbose(c.verbose){
     if (verbose) std::cout << "Move Construction\n";
     ++move_construction_count;
   }
@@ -51,12 +51,14 @@ struct copy_move_stat {
   //copy_move_stat(copy_move_stat_view v): copy_move_stat{v->ptr} {}
 
   copy_move_stat &operator=(copy_move_stat const & c) {
+    verbose = c.verbose;
     if (verbose) std::cout << "Copy Assignment\n";
     ++copy_assignment_count;
     return *this;
   }
 
   copy_move_stat &operator=(copy_move_stat && c) {
+    verbose = c.verbose;
     if (verbose) std::cout << "Move Assignment\n";
     ++move_assignment_count;
     return *this;
