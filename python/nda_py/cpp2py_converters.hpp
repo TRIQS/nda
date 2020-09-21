@@ -152,7 +152,8 @@ namespace cpp2py {
       _import_array();
 
       // if obj is not an numpy, we make a numpy and rerun
-      if (not PyArray_Check(obj)) {
+      if (not PyArray_Check(obj) or (PyArray_Check(obj) and has_npy_type<T> and (PyArray_TYPE((PyArrayObject *)(obj)) != npy_type<T>))) {
+
         cpp2py::pyref numpy_obj = make_numpy(obj);
         EXPECTS(not PyErr_Occurred());
         return py2c(numpy_obj);
