@@ -147,20 +147,20 @@ namespace nda {
     /// Is the order in memory C ?
     static constexpr bool is_stride_order_C() {
       // operator == of std:array is constexpr only since C++20
-//#if __cplusplus > 201703L
-//      return (stride_order == permutations::identity<Rank>());
-//#else
+      //#if __cplusplus > 201703L
+      //      return (stride_order == permutations::identity<Rank>());
+      //#else
       return (encode(stride_order) == encode(permutations::identity<Rank>()));
-//#endif
+      //#endif
     }
 
     /// Is the order in memory Fortran ?
     static constexpr bool is_stride_order_Fortran() {
-//#if __cplusplus > 201703L
-//      return (stride_order == permutations::reverse_identity<Rank>());
-//#else
+      //#if __cplusplus > 201703L
+      //      return (stride_order == permutations::reverse_identity<Rank>());
+      //#else
       return (encode(stride_order) == encode(permutations::reverse_identity<Rank>()));
-//#endif
+      //#endif
     }
 
     // ----------------  Constructors -------------------------

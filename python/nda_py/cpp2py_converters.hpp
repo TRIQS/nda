@@ -95,7 +95,8 @@ namespace cpp2py {
 
     template <typename A>
     static PyObject *c2py(A &&src) {
-      static_assert(std::is_same_v<std::decay_t<A>, nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap>>, "Logic Error in array c2py conversion");
+      static_assert(std::is_same_v<std::decay_t<A>, nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap>>,
+                    "Logic Error in array c2py conversion");
       _import_array();
       auto p = nda::python::make_numpy_proxy_from_array_or_view(std::forward<A>(src));
       return p.to_python();
@@ -111,7 +112,7 @@ namespace cpp2py {
       // if obj is not an numpy, we try to make a numpy with the proper type
       if (not PyArray_Check(obj)) {
         cpp2py::pyref numpy_obj = make_numpy(obj);
-	if (PyErr_Occurred()) {
+        if (PyErr_Occurred()) {
           if (!raise_python_exception) PyErr_Clear();
           return false;
         }
@@ -175,6 +176,5 @@ namespace cpp2py {
       }
     }
   };
-  
 
 } // namespace cpp2py

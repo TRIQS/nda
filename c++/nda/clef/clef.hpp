@@ -469,7 +469,6 @@ namespace nda::clef {
   template <typename Expr, int... Is>
   inline constexpr bool is_function<make_fun_impl<Expr, Is...>> = true;
 
-
   // values of the ph, excluding the Is ...
   template <ull_t x, int... Is>
   struct ph_filter;
@@ -525,9 +524,9 @@ namespace nda::clef {
   *  x_ >> expression  is the same as make_function(expression,x)
   * --------------------------------------------------------------------------------------------------- */
 
-/*  template <int N, typename Expr>*/
+  /*  template <int N, typename Expr>*/
   //auto operator>>(_ph<N>, Expr &&ex) {
-    //return make_function(ex, _ph<N>{});
+  //return make_function(ex, _ph<N>{});
   //}
 
   /* ---------------------------------------------------------------------------------------------------

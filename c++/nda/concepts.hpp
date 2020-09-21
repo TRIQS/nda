@@ -141,7 +141,7 @@ namespace nda {
       return false;
   }();
 
- // --------------------------- Workaround concept
+  // --------------------------- Workaround concept
   template <typename A, typename U>
   inline constexpr bool has_value_type_convertible_to = []() {
     if constexpr (is_ndarray_v<A>) {

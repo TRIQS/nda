@@ -18,7 +18,7 @@ namespace nda {
 
   // FIXME : CHECK ORDER or the LOOP !
   // --------------- fold  ------------------------
- /**
+  /**
    * @tparam A
    * @tparam F is a function f(x, r)
    * @tparam R
@@ -37,7 +37,7 @@ namespace nda {
     return r2;
   }
 
-    /**
+  /**
    * @tparam A
    * @tparam F is a function f(x, r)
    * @param f
@@ -47,8 +47,8 @@ namespace nda {
    */
   template <CONCEPT(Array) A, typename F>
   auto fold(F f, A const &a) REQUIRES17(is_ndarray_v<A>) {
-    return fold(std::move(f), a,get_value_t<A>{});
-  } 
+    return fold(std::move(f), a, get_value_t<A>{});
+  }
 
   // --------------- applications of fold -----------------------
 

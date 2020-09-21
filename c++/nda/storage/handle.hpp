@@ -118,7 +118,7 @@ namespace nda::mem {
       auto [data, size] = b;
 
       if (data == nullptr) return;
-      
+
       // If needed, call the T destructors
       if constexpr (!std::is_trivial_v<T>) {
         for (size_t i = 0; i < size; ++i) data[i].~T();
@@ -243,7 +243,6 @@ namespace nda::mem {
     T *data() const noexcept { return _data; }
 
     long size() const noexcept { return _size; }
-
   };
 
   // ------------------  Stack -------------------------------------

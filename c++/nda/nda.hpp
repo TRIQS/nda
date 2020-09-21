@@ -18,7 +18,6 @@
 #define NDA_ENFORCE_BOUNDCHECK
 #endif
 
-
 // FIXME : REMOVE THIS ?
 // for python code generator, we need to know what to include...
 #define TRIQS_INCLUDED_ARRAYS

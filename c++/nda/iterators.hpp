@@ -29,7 +29,6 @@ namespace nda {
     grid_iterator<Rank - 1> it_begin, it_end, it;
 
     public:
- 
     using iterator_category = std::forward_iterator_tag;
     using value_type        = long;
     using difference_type   = std::ptrdiff_t;
@@ -86,9 +85,7 @@ namespace nda {
     using reference         = long &;
 
     grid_iterator() = default;
-    grid_iterator(long const *lengths, long const *strides, bool at_end) : stri(strides[0]), pos(at_end ? lengths[0] : 0), offset(pos * stri) {
-    
-    }
+    grid_iterator(long const *lengths, long const *strides, bool at_end) : stri(strides[0]), pos(at_end ? lengths[0] : 0), offset(pos * stri) {}
 
     [[nodiscard]] long operator*() const { return offset; }
     long operator->() const { return operator*(); }
@@ -171,7 +168,7 @@ namespace nda {
   // 1d case is special : it is a LegacyRandomAccessIterator
   template <typename T, typename Pointer>
   class array_iterator<1, T, Pointer> {
-    T *data                   = nullptr;
+    T *data = nullptr;
     std::array<long, 1> len, stri;
     grid_iterator<1> iter;
 

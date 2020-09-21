@@ -167,8 +167,8 @@ namespace nda::allocators {
       }
       bu = std::lower_bound(bu_vec.begin(), bu_vec.end(), b.ptr, [](auto const &B, auto p) { return B.data() <= p; });
       --bu;
-      EXPECTS_WITH_MESSAGE ((bu != bu_vec.end()), "Fatal Logic Error in allocator. Not in bucket. \n");
-      EXPECTS_WITH_MESSAGE ((bu->owns(b)), "Fatal Logic Error in allocator. \n");
+      EXPECTS_WITH_MESSAGE((bu != bu_vec.end()), "Fatal Logic Error in allocator. Not in bucket. \n");
+      EXPECTS_WITH_MESSAGE((bu->owns(b)), "Fatal Logic Error in allocator. \n");
       bu->deallocate(b);
       if (!bu->empty()) return;
       if (bu_vec.size() <= 1) return;
@@ -218,7 +218,7 @@ namespace nda::allocators {
     ~leak_check() {
       if (!empty()) {
 #ifndef NDEBUG
-	std::cerr << "Allocator : MEMORY LEAK of " << memory_used << " bytes\n";
+        std::cerr << "Allocator : MEMORY LEAK of " << memory_used << " bytes\n";
         std::abort();
 #endif
       }

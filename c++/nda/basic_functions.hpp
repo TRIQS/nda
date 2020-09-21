@@ -142,8 +142,8 @@ namespace nda {
   template <typename A, typename F>
   void clef_auto_assign(A &&a, F &&f) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
     nda::for_each(a.shape(), [&a, &f](auto &&... x) {
-     if constexpr (clef::is_function<std::decay_t<decltype(f(x...))>>) {
-         clef_auto_assign(a(x...), f(x...));
+      if constexpr (clef::is_function<std::decay_t<decltype(f(x...))>>) {
+        clef_auto_assign(a(x...), f(x...));
       } else {
         a(x...) = f(x...);
       }

@@ -40,22 +40,21 @@ namespace std {
     return fs.str();
   }
 
- // ------------- basic arithmetic --------------------------------------
+  // ------------- basic arithmetic --------------------------------------
 
   template <typename T, size_t R>
   constexpr std::array<T, R> operator+(std::array<T, R> const &a1, std::array<T, R> const &a2) {
-    std::array<T, R> res;// = make_initialized_array<R>(T{});
+    std::array<T, R> res; // = make_initialized_array<R>(T{});
     for (int i = 0; i < R; ++i) res[i] = a1[i] + a2[i];
     return res;
   }
 
   template <typename T, size_t R>
   constexpr std::array<T, R> operator-(std::array<T, R> const &a1, std::array<T, R> const &a2) {
-    std::array<T, R> res;// FIXME MOVE THIS = make_initialized_array<R>(T{});
+    std::array<T, R> res; // FIXME MOVE THIS = make_initialized_array<R>(T{});
     for (int i = 0; i < R; ++i) res[i] = a1[i] - a2[i];
     return res;
   }
-
 
 } // namespace std
 
@@ -84,7 +83,7 @@ namespace nda::stdutil {
   constexpr std::array<T, R> make_initialized_array(T v) {
     return impl::make_initialized_array(v, std::make_index_sequence<R>{});
   }
-  
+
   /**
    * @tparam T  T must be constructible from U
    * @tparam U
@@ -94,11 +93,10 @@ namespace nda::stdutil {
   template <typename T, typename U, size_t R>
   constexpr std::array<T, R> make_std_array(std::array<U, R> const &a) {
     static_assert(std::is_constructible_v<T, U>, "make_std_array : T must be constructible from U, Cf doc");
-    std::array<T, R> result = make_initialized_array<R>(T{}); 
+    std::array<T, R> result = make_initialized_array<R>(T{});
     for (int u = 0; u < R; ++u) result[u] = a[u];
     return result;
   }
-
 
   /**
   * Convert a std::array to a

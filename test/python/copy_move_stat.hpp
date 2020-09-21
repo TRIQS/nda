@@ -17,11 +17,11 @@
 #include <nda/basic_array.hpp>
 
 //// Forward Declaration
-//struct copy_move_stat; 
+//struct copy_move_stat;
 
 //// A simple view type
 //struct copy_move_stat_view {
-  //friend class copy_move_stat; 
+  //friend class copy_move_stat;
   //copy_move_stat(copy_move_stat & c): ptr{&c} {}
 
   //long copy_count() { return ptr->copy_count(); }

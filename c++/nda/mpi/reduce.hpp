@@ -21,7 +21,7 @@ namespace nda::lazy_mpi {
   template <typename ValueType, int Rank, uint64_t StrideOrder>
   struct reduce {
 
-    using view_t     = basic_array_view<ValueType const, Rank, basic_layout<0, StrideOrder, layout_prop_e::contiguous>, 'A', default_accessor, borrowed>;
+    using view_t = basic_array_view<ValueType const, Rank, basic_layout<0, StrideOrder, layout_prop_e::contiguous>, 'A', default_accessor, borrowed>;
     using value_type = ValueType;
 
     view_t source;       // view of the array to reduce
