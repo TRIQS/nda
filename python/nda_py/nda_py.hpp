@@ -9,6 +9,8 @@
 
 namespace nda::python {
 
+  using cpp2py::npy_type;
+
   // Given an array or a view, it returns the numpy_proxy viewing its data
   // NB : accepts ref, rvalue ref
   // AUR is array<T,R> or array_view<T, R>, but NOT a the Array concept.
