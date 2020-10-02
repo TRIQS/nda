@@ -21,7 +21,7 @@
 #include <nda/nda.hpp>
 #include <benchmark/benchmark.h>
 
-nda::range_all _;
+auto _ = nda::range::all;
 nda::ellipsis ___;
 
 using namespace nda;
