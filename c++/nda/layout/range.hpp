@@ -19,14 +19,10 @@
 
 namespace nda {
 
-  // FIXME : eliminate this
-  // /c++/nda/_impl_basic_array_view_common.hpp:71 -> two is_same_v
-  struct range_tag {};
-
   /**
   `range` mimics the Python `range`.
   */
-  class range : range_tag {
+  class range {
     long first_ = 0, last_ = -1, step_ = 1;
 
     public:
@@ -135,7 +131,7 @@ namespace nda {
   // ------------------  range_all   --------------------------------------
 
   /// Equivalent to range, but quicker (no operation).
-  struct range_all : range_tag {};
+  struct range_all {};
 
   /// Ellipsis can be provided in place of [[range]], as in python. The type `ellipsis` is similar to [[range_all]] except that it is implicitly repeated to as much as necessary.
   struct ellipsis : range_all {};
