@@ -17,7 +17,7 @@
 
 #include <nda/nda.hpp>
 
-nda::range_all _;
+auto _ = nda::range::all;
 
 template <int R>
 using Vs = nda::basic_array_view<

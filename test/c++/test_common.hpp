@@ -36,7 +36,7 @@ namespace nda {
 }
 
 // variables for the test
-nda::range_all _;
+auto _ = nda::range::all;
 nda::ellipsis ___;
 
 using nda::range;

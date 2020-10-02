@@ -198,18 +198,18 @@ namespace nda::slice_static {
   // second arg : s_n  : stride[n] of the idx_map
   FORCEINLINE long get_offset(long R, long s_n) { return R * s_n; }
   FORCEINLINE long get_offset(range const &R, long s_n) { return R.first() * s_n; }
-  FORCEINLINE long get_offset(range_all, long) { return 0; }
+  FORCEINLINE long get_offset(range::all_t, long) { return 0; }
 
   // length. Same convention
   // second arg : l_n  : length[n] of the idx_map
   FORCEINLINE long get_l(range const &R, long l_n) {
     return ((R.last() == -1 ? l_n : R.last()) - R.first() + R.step() - 1) / R.step(); // python behaviour
   }
-  FORCEINLINE long get_l(range_all, long l_n) { return l_n; }
+  FORCEINLINE long get_l(range::all_t, long l_n) { return l_n; }
 
   // strides
   FORCEINLINE long get_s(range const &R, long s_n) { return s_n * R.step(); }
-  FORCEINLINE long get_s(range_all, long s_n) { return s_n; }
+  FORCEINLINE long get_s(range::all_t, long s_n) { return s_n; }
 
   // compile time print debug
   //template <int... R>
@@ -242,8 +242,8 @@ namespace nda::slice_static {
     static constexpr int e_pos = ellipsis_position<Args...>();
 
     // Pattern of the arguments. 1 for a range/range_all/ellipsis, 0 for long
-    static constexpr std::array<bool, Q> args_is_range{(std::is_same_v<Args, range> or std::is_base_of_v<range_all, Args>)...};
-    static constexpr std::array<bool, Q> args_is_range_all{(std::is_base_of_v<range_all, Args>)...};
+    static constexpr std::array<bool, Q> args_is_range{(std::is_same_v<Args, range> or std::is_base_of_v<range::all_t, Args>)...};
+    static constexpr std::array<bool, Q> args_is_range_all{(std::is_base_of_v<range::all_t, Args>)...};
 
     static constexpr std::array<int, P> n_of_p = n_of_p_map<N, P>(args_is_range, e_pos, e_len);
     static constexpr std::array<int, P> q_of_p = q_of_p_map<N, P>(args_is_range, e_pos, e_len);
@@ -269,7 +269,7 @@ namespace nda::slice_static {
     static constexpr std::array<int, P> mem_stride_order = sliced_mem_stride_order(IdxMap::stride_order, n_of_p);
 
     // Compute the new layout_prop
-    static constexpr bool has_only_rangeall_and_long = ((std::is_constructible_v<long, Args> or std::is_base_of_v<range_all, Args>)and...);
+    static constexpr bool has_only_rangeall_and_long = ((std::is_constructible_v<long, Args> or std::is_base_of_v<range::all_t, Args>)and...);
 
     static constexpr layout_prop_e li =
        slice_layout_prop(P, has_only_rangeall_and_long, args_is_range_all, IdxMap::stride_order, IdxMap::layout_prop, e_pos, e_len);

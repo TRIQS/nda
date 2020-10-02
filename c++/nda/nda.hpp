@@ -22,6 +22,8 @@
 // for python code generator, we need to know what to include...
 #define TRIQS_INCLUDED_ARRAYS
 
+#include "exceptions.hpp"
+
 #include "basic_array_view.hpp"
 #include "basic_array.hpp"
 

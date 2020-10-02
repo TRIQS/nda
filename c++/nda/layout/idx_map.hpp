@@ -93,7 +93,8 @@ namespace nda {
     static constexpr int argument_is_allowed_for_call = std::is_constructible_v<long, T>;
 
     template <typename T>
-    static constexpr int argument_is_allowed_for_call_or_slice = std::is_same_v<range, T> or std::is_same_v<range_all, T> or std::is_same_v<ellipsis, T> or std::is_constructible_v<long, T>;
+    static constexpr int argument_is_allowed_for_call_or_slice =
+       std::is_same_v<range, T> or std::is_same_v<range::all_t, T> or std::is_same_v<ellipsis, T> or std::is_constructible_v<long, T>;
 
     protected:
     static constexpr int n_dynamic_extents = []() {

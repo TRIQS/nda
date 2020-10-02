@@ -29,7 +29,7 @@ namespace nda::details {
       ++N;
     }
 
-    void f(range_all) { ++N; }
+    void f(range::all_t) { ++N; }
     void f(range) { ++N; }
     void f(ellipsis) { N += ellipsis_loss + 1; }
 
@@ -38,7 +38,7 @@ namespace nda::details {
       N++;
     }
     void g(std::stringstream &, range) { ++N; }
-    void g(std::stringstream &, range_all) { ++N; }
+    void g(std::stringstream &, range::all_t) { ++N; }
     void g(std::stringstream &, ellipsis) { N += ellipsis_loss + 1; }
   };
 

@@ -58,7 +58,7 @@ namespace nda {
 
     auto [n, q] = a.shape();
     auto p      = b.shape()[0];
-    auto _      = range_all{};
+    auto _      = range::all;
 
     matrix<get_value_t<A>> res(n + p, q);
     res(range(0, n), _)     = a;

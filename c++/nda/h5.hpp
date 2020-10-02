@@ -17,6 +17,7 @@
 #include <h5/stl/string.hpp>
 
 #include "basic_array.hpp"
+#include "exceptions.hpp"
 
 namespace nda {
 
