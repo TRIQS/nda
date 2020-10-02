@@ -68,6 +68,9 @@ option(PythonSupport "Build with Python support" ON)
 # Documentation
 option(Build_Documentation "Build documentation" OFF)
 
+# Benchmarks
+option(Build_Benchs "Build Benchmarks" OFF)
+
 # Testing
 option(Build_Tests "Build tests" ON)
 option(Build_SSO_Tests "Build same tests with various SSO/Custom Allocators" OFF)
@@ -143,8 +146,7 @@ if(PythonSupport)
 endif()
 
 # Benchmarks
-option(Build_Bench "Benchmarks" ON)
-if(Build_Bench AND NOT ASAN AND NOT UBSAN)
+if(Build_Benchs AND NOT ASAN AND NOT UBSAN)
   add_subdirectory(benchmarks)
 endif()
 
