@@ -3,7 +3,7 @@ configure_file(version.py.in version.py)
 
 # nda_py interface library
 add_library(nda_py INTERFACE)
-add_library(${PROJECT_NAME}:nda_py ALIAS nda_py)
+add_library(${PROJECT_NAME}::nda_py ALIAS nda_py)
 
 # Configure target and compilation
 target_compile_options(nda_py INTERFACE -std=c++17 $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
