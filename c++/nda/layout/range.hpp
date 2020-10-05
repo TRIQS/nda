@@ -28,11 +28,6 @@ namespace nda {
   inline std::ostream &operator<<(std::ostream &os, range::all_t) noexcept { return os << "_"; }
   inline std::ostream &operator<<(std::ostream &os, ellipsis) noexcept { return os << "___"; }
 
-  namespace vars {
-    static inline constexpr range::all_t _;
-    static inline constexpr ellipsis ___;
-  } // namespace vars
-
   // impl details : detects ellipsis in a argument pack
   template <typename... T>
   constexpr bool ellipsis_is_present = ((std::is_same_v<T, ellipsis> ? 1 : 0) + ... + 0); // +0 because it can be empty
