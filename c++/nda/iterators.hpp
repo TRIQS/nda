@@ -13,6 +13,9 @@
 // limitations under the License.
 
 #pragma once
+
+#include "stdutil/array.hpp"
+
 namespace nda {
 
   /*
@@ -44,6 +47,8 @@ namespace nda {
          it_begin(lengths + 1, strides + 1, false),
          it_end(lengths + 1, strides + 1, true),
          it(it_begin) {} // NB always it_begin, even if at_end. The end iterator correspond to pos = (length -1) + 1, but it is at its *beginning*
+
+    [[nodiscard]] std::array<long, Rank> indices() { return stdutil::front_append(it.indices(), pos); }
 
     [[nodiscard]] long operator*() const { return offset + *it; }
     long operator->() const { return operator*(); }
@@ -86,6 +91,8 @@ namespace nda {
 
     grid_iterator() = default;
     grid_iterator(long const *lengths, long const *strides, bool at_end) : stri(strides[0]), pos(at_end ? lengths[0] : 0), offset(pos * stri) {}
+
+    [[nodiscard]] std::array<long, 1> indices() { return {pos}; }
 
     [[nodiscard]] long operator*() const { return offset; }
     long operator->() const { return operator*(); }
@@ -145,8 +152,9 @@ namespace nda {
     array_iterator(std::array<long, Rank> const &lengths, std::array<long, Rank> const &strides, T *start, bool at_end)
        : data(start), len(lengths), stri(strides), iter(len.data(), stri.data(), at_end) {}
 
-    value_type &operator*() const { return ((Pointer)data)[*iter]; }
+    [[nodiscard]] std::array<long, Rank> indices() { return iter.indices(); }
 
+    [[nodiscard]] value_type &operator*() const { return ((Pointer)data)[*iter]; }
     value_type &operator->() const { return operator*(); }
 
     array_iterator &operator++() {
@@ -185,8 +193,9 @@ namespace nda {
     array_iterator(std::array<long, 1> const &lengths, std::array<long, 1> const &strides, T *start, bool at_end)
        : data(start), len(lengths), stri(strides), iter(len.data(), stri.data(), at_end) {}
 
-    T &operator*() const { return ((Pointer)data)[*iter]; }
+    [[nodiscard]] std::array<long, 1> indices() { return iter.indices(); }
 
+    [[nodiscard]] T &operator*() const { return ((Pointer)data)[*iter]; }
     T &operator->() const { return operator*(); }
 
     array_iterator &operator++() {
