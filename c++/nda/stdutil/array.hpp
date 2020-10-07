@@ -211,6 +211,39 @@ namespace nda::stdutil {
   }
 
   /**
+   * Sum of elements
+   * @tparam T
+   * @param a
+   * @return The sum of elements in the array. If R = 0, return T{}
+   */
+  // ------------- sum --------------------------------------
+  template <typename T, size_t R>
+  constexpr auto sum(std::array<T, R> const &a) {
+    if constexpr (R == 0)
+      return T{};
+    else {
+      auto res = a[0];
+      for (int i = 1; i < R; ++i) res += a[0];
+      return res;
+    }
+  }
+
+  /**
+   * Product of elements
+   * @tparam T
+   * @param a
+   * @return The product of elements in the array
+   */
+  // ------------- product --------------------------------------
+  template <typename T, size_t R>
+  constexpr auto product(std::array<T, R> const &a) {
+    static_assert(R > 0, "Product of elements in std::array<T, R> only defined for R > 0");
+    auto res = a[0];
+    for (int i = 1; i < R; ++i) res *= a[0];
+    return res;
+  }
+
+  /**
    * Dot product of two arrays.
    * @tparam T
    * @tparam U
