@@ -223,7 +223,7 @@ namespace nda::stdutil {
       return T{};
     else {
       auto res = a[0];
-      for (int i = 1; i < R; ++i) res += a[0];
+      for (int i = 1; i < R; ++i) res += a[i];
       return res;
     }
   }
@@ -239,7 +239,7 @@ namespace nda::stdutil {
   constexpr auto product(std::array<T, R> const &a) {
     static_assert(R > 0, "Product of elements in std::array<T, R> only defined for R > 0");
     auto res = a[0];
-    for (int i = 1; i < R; ++i) res *= a[0];
+    for (int i = 1; i < R; ++i) res *= a[i];
     return res;
   }
 
