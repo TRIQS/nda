@@ -306,8 +306,8 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
 
 #ifdef NDA_ENFORCE_BOUNDCHECK
   if (this->shape() != rhs.shape())
-    NDA_RUNTIME_ERROR << "Size mismatch in = "
-                      << " : LHS " << *this << " \n RHS = " << rhs;
+    NDA_RUNTIME_ERROR << "Size mismatch:"
+                      << "\n LHS.shape() = " << this->shape() << "\n RHS.shape() = " << rhs.shape();
 #endif
 
   // FIXME : what if RHS has no memory ??
