@@ -110,7 +110,7 @@ namespace cpp2py {
 
     static bool is_convertible(PyObject *obj, bool raise_python_exception) {
       // if obj is not an numpy, we try to make a numpy with the proper type
-      if (not PyArray_Check(obj)) {
+      if (not PyArray_Check(obj) or (PyArray_Check(obj) and has_npy_type<T> and (PyArray_TYPE((PyArrayObject *)(obj)) != npy_type<T>))) {
         cpp2py::pyref numpy_obj = make_numpy(obj);
         if (PyErr_Occurred()) {
           if (!raise_python_exception) PyErr_Clear();
