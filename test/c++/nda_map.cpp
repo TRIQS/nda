@@ -42,10 +42,14 @@ TEST(NDA, Map) { //NOLINT
   using arr_t = nda::array<double, 2>;
   arr_t A(3, 3), B(3, 3), Sqr_A(3, 3), abs_B_B(3, 3), A_10_m_B(3, 3), abs_A_10_m_B(3, 3), max_A_10_m_B(3, 3), pow_A(3, 3);
 
+  using mat_t = nda::matrix<std::complex<double>>;
+  mat_t C(3, 3), conj_C(3, 3), transp_C(3, 3);
+
   for (int i = 0; i < 3; ++i)
     for (int j = 0; j < 3; ++j) {
       A(i, j) = i + 2 * j + 1;
       B(i, j) = i - 3 * j;
+      C(i, j) = A(i, j) + 1i * B(i, j);
 
       pow_A(i, j)        = A(i, j) * A(i, j);
       Sqr_A(i, j)        = A(i, j) * A(i, j);
@@ -53,6 +57,8 @@ TEST(NDA, Map) { //NOLINT
       A_10_m_B(i, j)     = A(i, j) + 10 * B(i, j);
       abs_A_10_m_B(i, j) = std::abs(A(i, j) + 10 * B(i, j));
       max_A_10_m_B(i, j) = std::max(A(i, j), 10 * B(i, j));
+      conj_C(i, j)       = A(i, j) - 1i * B(i, j);
+      transp_C(j, i)     = A(i, j) + 1i * B(i, j);
     }
 
   auto Abs = nda::map([](double x) { return std::fabs(x); });
@@ -65,4 +71,7 @@ TEST(NDA, Map) { //NOLINT
   EXPECT_ARRAY_NEAR(arr_t(A + 10 * B), A_10_m_B);
   EXPECT_ARRAY_NEAR(arr_t(Abs(A + 10 * B)), abs_A_10_m_B);
   EXPECT_ARRAY_NEAR(arr_t(Max(A, 10 * B)), max_A_10_m_B);
+  EXPECT_ARRAY_NEAR(mat_t(conj(C)), conj_C);
+  EXPECT_ARRAY_NEAR(mat_t(transpose(C)), transp_C);
+  EXPECT_ARRAY_NEAR(mat_t(C * conj(transpose(C))), mat_t(transpose(conj(C) * transpose(C))));
 }
