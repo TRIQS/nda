@@ -116,7 +116,7 @@ namespace nda {
      * @param i0, is ... are the extents (lengths) in each dimension
      */
     template <CONCEPT(std::integral)... Int>
-    explicit basic_array(Int... is) noexcept REQUIRES17((std::is_convertible_v<Int, long> and ...)) {
+    explicit basic_array(Int... is) noexcept REQUIRES17((std::is_integral_v<Int> and ...)) {
       //static_assert((std::is_convertible_v<Int, long> and ...), "Arguments must be convertible to long");
       static_assert(sizeof...(Int) == Rank, "Incorrect number of arguments : should be exactly Rank. ");
       lay = layout_t{std::array{long(is)...}};
