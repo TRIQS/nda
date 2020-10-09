@@ -52,6 +52,7 @@ namespace nda {
   template <typename A>
   auto determinant_in_place(A &a) {
     static_assert(not std::is_const_v<A>, "determinant_in_place can not be const. It destroys its argument");
+    if(a.empty()) return get_value_t<A>{1.0};
     array<int, 1> ipiv(a.extent(0));
     int info = lapack::getrf(a, ipiv); // it is ok to be in C order. Lapack compute the inverse of the transpose.
     if (info != 0) NDA_RUNTIME_ERROR << "Error in determinant. Info lapack is" << info;

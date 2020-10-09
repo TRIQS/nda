@@ -24,7 +24,8 @@ namespace nda {
   }
 
   template <CONCEPT(ArrayOfRank<2>) M>
-  get_value_t<M> trace(M const &m) REQUIRES17(is_ndarray_v<M> and (get_rank<M> == 2)) {
+  auto trace(M const &m) REQUIRES17(is_ndarray_v<M>) {
+    static_assert(get_rank<M> == 2);
     EXPECTS(m.shape()[0] == m.shape()[1]);
     auto r = get_value_t<M>{};
     auto d = m.shape()[0];
