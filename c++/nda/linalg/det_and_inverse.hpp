@@ -30,39 +30,40 @@ namespace nda {
 
   // ----------  Determinant -------------------------
 
-  namespace impl {
+  template <typename M>
+  auto determinant_in_place(M &m) REQUIRES(is_matrix_or_view_v<M>) {
+    using value_t = get_value_t<M>;
+    static_assert(std::is_convertible_v<value_t, double> or std::is_convertible_v<value_t, std::complex<double>>,
+	"determinant requires a matrix of values that can be implicitly converted to double or std::complex<double>");
+    static_assert(not std::is_const_v<M>, "determinant_in_place can not be const. It destroys its argument");
 
-    template <typename T, typename Layout>
-    T determinant_from_view(matrix_view<T const, Layout> m, array<int, 1> const &ipiv) {
-      T det         = 1;
-      const int dim = m.extent(0);
-      for (int i = 0; i < dim; i++) det *= m(i, i);
-      int flip = 0; // compute the sign of the permutation
-      for (int i = 0; i < dim; i++) flip += (ipiv(i) != i + 1 ? 1 : 0);
-      det = ((flip % 2 == 1) ? -det : det);
-      return det;
+    if(m.empty()) return value_t{1};
+
+    if(m.extent(0) != m.extent(1))
+      NDA_RUNTIME_ERROR << "Error in determinant. Matrix is not square but has shape " << m.shape();
+    const int dim = m.extent(0);
+
+    // Calculate the LU decomposition using lapack getrf
+    array<int, 1> ipiv(dim);
+    int info = lapack::getrf(m, ipiv); // it is ok to be in C order. Lapack compute the inverse of the transpose.
+    if (info < 0) NDA_RUNTIME_ERROR << "Error in determinant. Info lapack is " << info;
+
+    // Calculate the determinant from the LU decomposition
+    auto det = value_t{1};
+    int n_flips = 0;
+    for (int i = 0; i < dim; i++){
+      det *= m(i, i);
+      // Count the number of column interchanges performed by getrf
+      if(ipiv(i) != i + 1) ++n_flips;
     }
-  } // namespace impl
 
-  template <typename A>
-  typename A::value_type determinant(A const &m, array<int, 1> const &ipiv) REQUIRES(is_matrix_or_view_v<A>) {
-    return impl::determinant_from_view(make_const_view(m), ipiv);
+    return ((n_flips % 2 == 1) ? -det : det);
   }
 
-  template <typename A>
-  auto determinant_in_place(A &a) {
-    static_assert(not std::is_const_v<A>, "determinant_in_place can not be const. It destroys its argument");
-    if(a.empty()) return get_value_t<A>{1.0};
-    array<int, 1> ipiv(a.extent(0));
-    int info = lapack::getrf(a, ipiv); // it is ok to be in C order. Lapack compute the inverse of the transpose.
-    if (info != 0) NDA_RUNTIME_ERROR << "Error in determinant. Info lapack is" << info;
-    return determinant(a, ipiv);
-  }
-
-  template <typename A>
-  auto determinant(A const &a) {
-    auto a_copy = make_regular(a);
-    return determinant_in_place(a_copy);
+  template <typename M>
+  auto determinant(M const &m) {
+    auto m_copy = make_regular(m);
+    return determinant_in_place(m_copy);
   }
 
   // ----------  inverse -------------------------
