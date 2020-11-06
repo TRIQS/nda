@@ -16,6 +16,9 @@
 #include <nda/mpi.hpp>
 #include <fstream>
 
+#include <nda/clef/literals.hpp>
+using namespace nda::clef::literals;
+
 using nda::range;
 
 // COPY for itertools to make the test independent from itertools package
@@ -106,6 +109,29 @@ TEST(Arrays, MPI) { //NOLINT
 
   arr_t r2 = mpi::all_reduce(A, world);
   EXPECT_ARRAY_NEAR(r2, world.size() * A);
+}
+
+// --------------------------------------
+
+TEST(Arrays, MPIReduceCustom) { //NOLINT
+
+  mpi::communicator world;
+  using matrix_t = nda::matrix<double>;
+  using arr_t = nda::array<matrix_t, 1>;
+
+  arr_t a(7);
+  arr_t r_exact(7);
+  for (int i = 0; i < a.extent(0); ++i){
+    a(i) = matrix_t{4, 4};
+    a(i)(k_, l_) << world.rank() * (k_ + l_);
+
+    r_exact(i) = matrix_t{4, 4};
+    r_exact(i)(k_, l_) << (world.size() - 1) * world.size() / 2 * (k_ + l_);
+  }
+
+  arr_t r = mpi::all_reduce(a, world);
+
+  //EXPECT_ARRAY_EQ(r, r_exact); // FIXME Does not compile
 }
 
 // --------------------------------------
