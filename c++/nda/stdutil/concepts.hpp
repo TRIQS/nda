@@ -20,9 +20,14 @@
 
 #if __cplusplus > 201703L
 
-// Of course if implemented we use the real one
+#include <version>
+
+// Use concepts header if available
+// Skip inclusion for libc++ as header still incomplete
+#ifndef _LIBCPP_VERSION
 #if __has_include(<concepts>)
 #include <concepts>
+#endif
 
 // Define them
 #else
