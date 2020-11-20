@@ -63,7 +63,7 @@ namespace nda {
     requires(const std::remove_reference_t<T>& t,
              const std::remove_reference_t<U>& u) {
       { t == u } -> std::convertible_to<bool>;
-      { t != u } ->std::convertible_to<bool> ;
+      { t != u } -> std::convertible_to<bool>;
       { u == t } -> std::convertible_to<bool>;
       { u != t } -> std::convertible_to<bool>;
     };

@@ -17,9 +17,11 @@
 
 namespace nda::clef::literals {
 
-  auto i_ = placeholder<0>{};
-  auto j_ = placeholder<1>{};
-  auto k_ = placeholder<2>{};
-  auto l_ = placeholder<3>{};
+  constexpr auto i_ = placeholder<0>{};
+  constexpr auto j_ = placeholder<1>{};
+  constexpr auto k_ = placeholder<2>{};
+  constexpr auto l_ = placeholder<3>{};
+
+  constexpr auto bl_ = placeholder<4>{};
 
 } // namespace nda::clef::literals
