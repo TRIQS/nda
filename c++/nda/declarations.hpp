@@ -53,8 +53,8 @@ namespace nda {
   template <typename ValueType, int Rank>
   using array_contiguous_const_view = basic_array_view<ValueType const, Rank, C_layout, 'A', default_accessor, borrowed>;
 
-  template <typename ValueType, typename Layout = C_layout>
-  using matrix = basic_array<ValueType, 2, Layout, 'M', heap>;
+  template <typename ValueType, typename Layout = C_layout, typename ContainerPolicy = heap>
+  using matrix = basic_array<ValueType, 2, Layout, 'M', ContainerPolicy>;
 
   template <typename ValueType, typename Layout = C_stride_layout>
   using matrix_view = basic_array_view<ValueType, 2, Layout, 'M', default_accessor, borrowed>;
