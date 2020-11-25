@@ -73,4 +73,17 @@ TEST(NDA, Algo1) { //NOLINT
   EXPECT_EQ(max_element(A + 10 * B), 23);
 }
 
+TEST(NDA, AlgoMat) { //NOLINT
+  nda::matrix<double> A(3, 3);
+
+  for (int i = 0; i < 3; ++i)
+    for (int j = 0; j < 3; ++j) A(i, j) = std::sqrt(i + 3 * j);
+
+  nda::matrix<double, C_layout, nda::sso<100>> A_SSO(3, 3);
+  A_SSO = A;
+
+  EXPECT_EQ(frobenius_norm(A), std::sqrt(9 * 8 / 2));
+  EXPECT_EQ(frobenius_norm(A_SSO), std::sqrt(9 * 8 / 2));
+}
+
 MAKE_MAIN
