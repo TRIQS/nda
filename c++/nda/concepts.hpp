@@ -56,28 +56,28 @@ namespace nda {
 
   // clang-format off
   
-   // FIXME : C++20 replace by  std::equality_comparable_with with <concepts> in libc++
-   /// A simplified version of std::equality_comparable_with (temporary fix waiting to implementation of <concepts> in libc++
-    template<class T, class U>
-    concept StdEqualityComparableWith= // exposition only
-    requires(const std::remove_reference_t<T>& t,
-             const std::remove_reference_t<U>& u) {
-      { t == u } -> std::convertible_to<bool>;
-      { t != u } -> std::convertible_to<bool>;
-      { u == t } -> std::convertible_to<bool>;
-      { u != t } -> std::convertible_to<bool>;
-    };
+  // FIXME : C++20 replace by  std::equality_comparable_with with <concepts> in libc++
+  /// A simplified version of std::equality_comparable_with (temporary fix waiting to implementation of <concepts> in libc++
+  template<class T, class U>
+  concept StdEqualityComparableWith= // exposition only
+  requires(const std::remove_reference_t<T>& t,
+           const std::remove_reference_t<U>& u) {
+    { t == u } -> std::convertible_to<bool>;
+    { t != u } -> std::convertible_to<bool>;
+    { u == t } -> std::convertible_to<bool>;
+    { u != t } -> std::convertible_to<bool>;
+  };
   
-    template <typename A> concept Array= requires(A const &a) {
+  template <typename A> concept Array= requires(A const &a) {
 
-  // A has a shape() which returns an array<long, R> ...
-  { a.shape() } -> concept_impl::IsStdArrayOfLong;
+    // A has a shape() which returns an array<long, R> ...
+    { a.shape() } -> concept_impl::IsStdArrayOfLong;
 
-  // and R is an int, and is the rank.
-  { get_rank<A> } ->std::convertible_to<const int>;
+    // and R is an int, and is the rank.
+    { get_rank<A> } ->std::convertible_to<const int>;
 
-  // a(0,0,0,0... R times) returns something, which is value_type by definition
-  {concept_impl::call_on_R_zeros<get_rank<A>>(a)};
+    // a(0,0,0,0... R times) returns something, which is value_type by definition
+    {concept_impl::call_on_R_zeros<get_rank<A>>(a)};
   };
 
   //-------------------
@@ -93,13 +93,13 @@ namespace nda {
 
   template <typename A> concept ArrayInitializer = requires(A const &a) {
 
-  // A has a shape() which returns an array<long, R> ...
-  { a.shape() } -> concept_impl::IsStdArrayOfLong;
+    // A has a shape() which returns an array<long, R> ...
+    { a.shape() } -> concept_impl::IsStdArrayOfLong;
 
-  typename A::value_type; 
+    typename A::value_type;
 
-  // not perfect, it should accept any layout
-  {a.invoke(array_contiguous_view<typename A::value_type, get_rank<A>>{}) };
+    // not perfect, it should accept any layout
+    {a.invoke(array_contiguous_view<typename A::value_type, get_rank<A>>{}) };
 
   };
   // clang-format on

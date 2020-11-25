@@ -36,7 +36,7 @@ TEST(NDA, any_all) { //NOLINT
 
 // -----------------------------------------------------
 
-TEST(NDA, any_all_c) { //NOLINT
+TEST(NDA, any_all_cplx) { //NOLINT
   auto nan = std::numeric_limits<double>::quiet_NaN();
 
   nda::array<std::complex<double>, 2> A(2, 3);
