@@ -17,10 +17,6 @@ Installation steps
 
      $ mkdir nda.build && cd nda.build
 
-#. Ensure that your shell contains the TRIQS environment variables by sourcing the ``triqsvars.sh`` file from your TRIQS installation::
-
-     $ source path_to_triqs/share/triqs/triqsvars.sh
-
 #. In the build directory call cmake, including any additional custom CMake options, see below::
 
      $ cmake -DCMAKE_INSTALL_PREFIX=path_to_install_dir ../nda.src
@@ -54,7 +50,7 @@ The compilation of ``nda`` can be configured using CMake-options::
 +-----------------------------------------------------------------+-----------------------------------------------+
 | Options                                                         | Syntax                                        |
 +=================================================================+===============================================+
-| Specify an installation path other than path_to_triqs           | -DCMAKE_INSTALL_PREFIX=path_to_nda      |
+| Specify an installation path                                    | -DCMAKE_INSTALL_PREFIX=path_to_nda            |
 +-----------------------------------------------------------------+-----------------------------------------------+
 | Build in Debugging Mode                                         | -DCMAKE_BUILD_TYPE=Debug                      |
 +-----------------------------------------------------------------+-----------------------------------------------+
