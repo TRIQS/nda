@@ -44,7 +44,7 @@ namespace nda {
     const int dim = m.extent(0);
 
     // Calculate the LU decomposition using lapack getrf
-    array<int, 1> ipiv(dim);
+    basic_array<int, 1, C_layout, 'A', sso<100>> ipiv(dim);
     int info = lapack::getrf(m, ipiv); // it is ok to be in C order. Lapack compute the inverse of the transpose.
     if (info < 0) NDA_RUNTIME_ERROR << "Error in determinant. Info lapack is " << info;
 

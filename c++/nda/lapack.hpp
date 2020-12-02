@@ -54,8 +54,8 @@ namespace nda::lapack {
    * @param ipiv  Gauss Pivot, cf lapack doc
    *
    */
-  template <typename M>
-  [[nodiscard]] int getrf(M &&m, array<int, 1> &ipiv) {
+  template <typename M, typename CP>
+  [[nodiscard]] int getrf(M &&m, basic_array<int, 1, C_layout, 'A', CP> &ipiv) REQUIRES(is_ndarray_v<std::decay_t<M>> and (get_rank<std::decay_t<M>> == 2)) {
     using M_t = std::decay_t<M>;
     static_assert(is_regular_or_view_v<M_t>, "getrf: M must be a matrix, matrix_view, array or array_view of rank 2");
     static_assert(M_t::rank == 2, "M must be of rank 2");
