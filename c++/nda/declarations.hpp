@@ -62,8 +62,8 @@ namespace nda {
   template <typename ValueType, typename Layout = C_stride_layout>
   using matrix_const_view = basic_array_view<ValueType const, 2, Layout, 'M', default_accessor, borrowed>;
 
-  template <typename ValueType, typename Layout = C_layout>
-  using vector = basic_array<ValueType, 1, Layout, 'V', heap>;
+  template <typename ValueType, typename ContainerPolicy = heap>
+  using vector = basic_array<ValueType, 1, C_layout, 'V', ContainerPolicy>;
 
   template <typename ValueType, typename Layout = C_stride_layout>
   using vector_view = basic_array_view<ValueType, 1, Layout, 'V', default_accessor, borrowed>;
