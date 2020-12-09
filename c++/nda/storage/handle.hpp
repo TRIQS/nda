@@ -345,7 +345,9 @@ namespace nda::mem {
 
     long size() const noexcept { return _size; }
 
-    handle_sso() = default;
+    // Caution! We need to provide a user-defined constructor (over =default)
+    // to avoid value initialization of the buffer
+    handle_sso(){};
 
     private:
     void clean() noexcept {
