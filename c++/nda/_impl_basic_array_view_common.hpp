@@ -32,10 +32,10 @@
 [[nodiscard]] constexpr auto stride_order() const noexcept { return lay.stride_order(); }
 
 /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
-[[nodiscard]] ValueType const *data_start() const noexcept { return sto.data(); }
+[[nodiscard]] ValueType const *data() const noexcept { return sto.data(); }
 
 /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
-ValueType *data_start() noexcept { return sto.data(); }
+ValueType *data() noexcept { return sto.data(); }
 
 /// Shape
 [[nodiscard]] std::array<long, rank> const &shape() const noexcept { return lay.lengths(); }
@@ -340,7 +340,7 @@ void fill_with_scalar(Scalar const &scalar) noexcept {
   // we make a special implementation if the array is 1d strided or contiguous
   if constexpr (has_layout_strided_1d<self_t>) { // possibly contiguous
     const long L             = size();
-    auto *__restrict const p = data_start(); // no alias possible here !
+    auto *__restrict const p = data(); // no alias possible here !
     if constexpr (has_layout_contiguous<self_t>) {
       for (long i = 0; i < L; ++i) p[i] = scalar;
     } else {

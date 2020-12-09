@@ -68,14 +68,12 @@ namespace nda::blas {
 
         // first call to get the optimal lwork
         T work1[1];
-        f77::gelss(get_n_rows(a2), get_n_cols(a2), nrhs, a2.data_start(), get_ld(a2), b.data_start(), get_ld(b), c.data_start(), rcond, rank, work1,
-                   -1, info);
+        f77::gelss(get_n_rows(a2), get_n_cols(a2), nrhs, a2.data(), get_ld(a2), b.data(), get_ld(b), c.data(), rcond, rank, work1, -1, info);
 
         int lwork = r_round(work1[0]);
         array<T, 1> work(lwork);
 
-        f77::gelss(get_n_rows(a2), get_n_cols(a2), nrhs, a2.data_start(), get_ld(a2), b.data_start(), get_ld(b), c.data_start(), rcond, rank,
-                   work.data_start(), lwork, info);
+        f77::gelss(get_n_rows(a2), get_n_cols(a2), nrhs, a2.data(), get_ld(a2), b.data(), get_ld(b), c.data(), rcond, rank, work.data(), lwork, info);
 
       } else if constexpr (std::is_same_v<T, dcomplex>) {
 
@@ -83,14 +81,14 @@ namespace nda::blas {
 
         // first call to get the optimal lwork
         T work1[1];
-        f77::gelss(get_n_rows(a2), get_n_cols(a2), nrhs, a2.data_start(), get_ld(a2), b.data_start(), get_ld(b), c.data_start(), rcond, rank, work1,
-                   -1, rwork.data_start(), info);
+        f77::gelss(get_n_rows(a2), get_n_cols(a2), nrhs, a2.data(), get_ld(a2), b.data(), get_ld(b), c.data(), rcond, rank, work1, -1, rwork.data(),
+                   info);
 
         int lwork = r_round(work1[0]);
         array<T, 1> work(lwork);
 
-        f77::gelss(get_n_rows(a2), get_n_cols(a2), nrhs, a2.data_start(), get_ld(a2), b.data_start(), get_ld(b), c.data_start(), rcond, rank,
-                   work.data_start(), lwork, rwork.data_start(), info);
+        f77::gelss(get_n_rows(a2), get_n_cols(a2), nrhs, a2.data(), get_ld(a2), b.data(), get_ld(b), c.data(), rcond, rank, work.data(), lwork,
+                   rwork.data(), info);
       } else
         static_assert(false and always_true<A>, "Internal logic error");
 

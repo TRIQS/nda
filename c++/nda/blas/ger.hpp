@@ -60,11 +60,9 @@ namespace nda::blas {
     auto idx = m.indexmap(); // FIXME should not need a copy
     // if in C, we need to call fortran with transposed matrix
     if constexpr (idx.is_stride_order_C())
-      f77::ger(get_n_rows(m), get_n_cols(m), alpha, y.data_start(), y.indexmap().strides()[0], x.data_start(), x.indexmap().strides()[0],
-               m.data_start(), get_ld(m));
+      f77::ger(get_n_rows(m), get_n_cols(m), alpha, y.data(), y.indexmap().strides()[0], x.data(), x.indexmap().strides()[0], m.data(), get_ld(m));
     else
-      f77::ger(get_n_rows(m), get_n_cols(m), alpha, x.data_start(), x.indexmap().strides()[0], y.data_start(), y.indexmap().strides()[0],
-               m.data_start(), get_ld(m));
+      f77::ger(get_n_rows(m), get_n_cols(m), alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], m.data(), get_ld(m));
   }
 
 } // namespace nda::blas

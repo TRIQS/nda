@@ -80,7 +80,7 @@ namespace nda::blas {
       int m        = (trans_a == 'N' ? get_n_rows(b) : get_n_cols(b));
       int n        = (trans_b == 'N' ? get_n_cols(a) : get_n_rows(a));
       int k        = (trans_a == 'N' ? get_n_cols(b) : get_n_rows(b));
-      f77::gemm(trans_a, trans_b, m, n, k, alpha, b.data_start(), get_ld(b), a.data_start(), get_ld(a), beta, c.data_start(), get_ld(c));
+      f77::gemm(trans_a, trans_b, m, n, k, alpha, b.data(), get_ld(b), a.data(), get_ld(a), beta, c.data(), get_ld(c));
     } else {
       // C is in fortran or, we compute the product.
       char trans_a = get_trans(a, false);
@@ -88,7 +88,7 @@ namespace nda::blas {
       int m        = (trans_a == 'N' ? get_n_rows(a) : get_n_cols(a));
       int n        = (trans_b == 'N' ? get_n_cols(b) : get_n_rows(b));
       int k        = (trans_a == 'N' ? get_n_cols(a) : get_n_rows(a));
-      f77::gemm(trans_a, trans_b, m, n, k, alpha, a.data_start(), get_ld(a), b.data_start(), get_ld(b), beta, c.data_start(), get_ld(c));
+      f77::gemm(trans_a, trans_b, m, n, k, alpha, a.data(), get_ld(a), b.data(), get_ld(b), beta, c.data(), get_ld(c));
     }
   }
 

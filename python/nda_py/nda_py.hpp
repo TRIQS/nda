@@ -35,7 +35,7 @@ namespace nda::python {
 
       return {A::rank,                     // dimension
               npy_type<T>,                 // the npy type code
-              (void *)a.data_start(),      // start of the data
+              (void *)a.data(),            // start of the data
               std::is_const_v<value_type>, // if const, the numpy will be immutable in python
               std::move(extents),
               std::move(strides),

@@ -38,7 +38,7 @@ namespace nda {
     //FIXME : mpi::std::array
     MPI_Bcast(&sh[0], sh.size(), mpi::mpi_type<typename decltype(sh)::value_type>::get(), root, c.get());
     if (c.rank() != root) { resize_or_check_if_view(a, sh); }
-    MPI_Bcast(a.data_start(), a.size(), mpi::mpi_type<typename A::value_type>::get(), root, c.get());
+    MPI_Bcast(a.data(), a.size(), mpi::mpi_type<typename A::value_type>::get(), root, c.get());
   }
 
 } // namespace nda

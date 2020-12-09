@@ -71,7 +71,7 @@ namespace nda::lapack {
 #endif
 
     int info = 0;
-    f77::getrf(get_n_rows(m), get_n_cols(m), m.data_start(), get_ld(m), ipiv.data_start(), info);
+    f77::getrf(get_n_rows(m), get_n_cols(m), m.data(), get_ld(m), ipiv.data(), info);
     return info;
   }
 
@@ -99,7 +99,7 @@ namespace nda::lapack {
     std::array<T, 2> work1{0, 0}; // always init for MSAN and clang-tidy ...
 
     // first call to get the optimal lwork
-    f77::getri(get_n_rows(m), m.data_start(), get_ld(m), ipiv.data_start(), work1.data(), -1, info);
+    f77::getri(get_n_rows(m), m.data(), get_ld(m), ipiv.data(), work1.data(), -1, info);
     int lwork;
     if constexpr (is_complex_v<T>)
       lwork = std::round(std::real(work1[0])) + 1;
@@ -115,7 +115,7 @@ namespace nda::lapack {
 #endif
 
     // second call to do the job
-    f77::getri(get_n_rows(m), m.data_start(), get_ld(m), ipiv.data_start(), work.data_start(), lwork, info);
+    f77::getri(get_n_rows(m), m.data(), get_ld(m), ipiv.data(), work.data(), lwork, info);
     return info;
   }
 
@@ -149,7 +149,7 @@ namespace nda::lapack {
     EXPECTS(b.extent(0) == d.extent(0));      // "gtsv : dimension mismatch between diagonal vector and RHS matrix, "
 
     int info = 0;
-    f77::gtsv(N, b.extent(1), dl.data_start(), d.data_start(), du.data_start(), b.data_start(), N, info);
+    f77::gtsv(N, b.extent(1), dl.data(), d.data(), du.data(), b.data(), N, info);
     return info;
   }
 

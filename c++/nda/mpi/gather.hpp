@@ -55,8 +55,8 @@ namespace nda {
       auto sha = shape(); // WARNING : Keep this out of the if condition (shape USES MPI) !
       if (all || (c.rank() == root)) resize_or_check_if_view(v, sha);
 
-      void *v_p         = v.data_start();
-      const void *rhs_p = ref.data_start();
+      void *v_p         = v.data();
+      const void *rhs_p = ref.data();
 
       auto mpi_ty = mpi::mpi_type<int>::get();
       if (!all)

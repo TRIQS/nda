@@ -38,14 +38,14 @@ namespace nda::lapack {
 
       // first call to get the optimal lwork
       T work1[1];
-      lapack::f77::gesvd('A', 'A', get_n_rows(a), get_n_cols(a), a.data_start(), get_ld(a), c.data_start(), u.data_start(), get_ld(u), v.data_start(),
-                         get_ld(v), work1, -1, info);
+      lapack::f77::gesvd('A', 'A', get_n_rows(a), get_n_cols(a), a.data(), get_ld(a), c.data(), u.data(), get_ld(u), v.data(), get_ld(v), work1, -1,
+                         info);
 
       int lwork = std::round(work1[0]) + 1;
       array<T, 1> work(lwork);
 
-      lapack::f77::gesvd('A', 'A', get_n_rows(a), get_n_cols(a), a.data_start(), get_ld(a), c.data_start(), u.data_start(), get_ld(u), v.data_start(),
-                         get_ld(v), work.data_start(), lwork, info);
+      lapack::f77::gesvd('A', 'A', get_n_rows(a), get_n_cols(a), a.data(), get_ld(a), c.data(), u.data(), get_ld(u), v.data(), get_ld(v), work.data(),
+                         lwork, info);
 
     } else {
 
@@ -53,14 +53,14 @@ namespace nda::lapack {
 
       // first call to get the optimal lwork
       T work1[1];
-      lapack::f77::gesvd('A', 'A', get_n_rows(a), get_n_cols(a), a.data_start(), get_ld(a), c.data_start(), u.data_start(), get_ld(u), v.data_start(),
-                         get_ld(v), work1, -1, rwork.data_start(), info);
+      lapack::f77::gesvd('A', 'A', get_n_rows(a), get_n_cols(a), a.data(), get_ld(a), c.data(), u.data(), get_ld(u), v.data(), get_ld(v), work1, -1,
+                         rwork.data(), info);
 
       int lwork = std::round(std::real(work1[0])) + 1;
       array<T, 1> work(lwork);
 
-      lapack::f77::gesvd('A', 'A', get_n_rows(a), get_n_cols(a), a.data_start(), get_ld(a), c.data_start(), u.data_start(), get_ld(u), v.data_start(),
-                         get_ld(v), work.data_start(), lwork, rwork.data_start(), info);
+      lapack::f77::gesvd('A', 'A', get_n_rows(a), get_n_cols(a), a.data(), get_ld(a), c.data(), u.data(), get_ld(u), v.data(), get_ld(v), work.data(),
+                         lwork, rwork.data(), info);
     }
 
     if (info) NDA_RUNTIME_ERROR << "Error in gesvd : info = " << info;

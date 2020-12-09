@@ -47,19 +47,18 @@ namespace nda::lazy_mpi {
 
         view_t target_view{target};
         // some checks.
-        bool in_place = (target_view.data_start() == source.data_start());
+        bool in_place = (target_view.data() == source.data());
         auto sha      = shape();
         if (in_place) {
           if (source.size() != target_view.size())
             NDA_RUNTIME_ERROR << "mpi reduce of array : same pointer to data start, but different number of elements !";
         } else { // check no overlap
           if ((c.rank() == root) || all) resize_or_check_if_view(target_view, sha);
-          if (std::abs(target_view.data_start() - source.data_start()) < source.size())
-            NDA_RUNTIME_ERROR << "mpi reduce of array : overlapping arrays !";
+          if (std::abs(target_view.data() - source.data()) < source.size()) NDA_RUNTIME_ERROR << "mpi reduce of array : overlapping arrays !";
         }
 
-        void *v_p       = (void *)target_view.data_start();
-        void *rhs_p     = (void *)source.data_start();
+        void *v_p       = (void *)target_view.data();
+        void *rhs_p     = (void *)source.data();
         auto rhs_n_elem = source.size();
         auto D          = mpi::mpi_type<value_type>::get();
 
@@ -110,7 +109,7 @@ namespace nda {
   AUTO(ArrayInitializer)
   mpi_reduce(A &a, mpi::communicator c = {}, int root = 0, bool all = false, MPI_Op op = MPI_SUM) //
      REQUIRES(is_regular_or_view_v<std::decay_t<A>>) {
-    //static_assert(has_layout_contiguous<std::decay_t<A>>, "Non contigous view in target_view.data_start() are not implemented");
+    //static_assert(has_layout_contiguous<std::decay_t<A>>, "Non contigous view in target_view.data() are not implemented");
     using v_t = std::decay_t<typename A::value_type>;
     using r_t = lazy_mpi::reduce<v_t, A::rank, A::layout_t::stride_order_encoded>;
     return r_t{typename r_t::view_t{a}, c, root, all, op};

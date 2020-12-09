@@ -34,8 +34,8 @@ namespace nda::blas {
 
     if constexpr (has_layout_smallest_stride_is_one<X> and has_layout_smallest_stride_is_one<Y>) {
       if constexpr (is_regular_or_view_v<X> and is_regular_or_view_v<Y>) {
-        auto *__restrict px = x.data_start();
-        auto *__restrict py = y.data_start();
+        auto *__restrict px = x.data();
+        auto *__restrict py = y.data();
         auto res            = _conj(px[0]) * py[0];
         for (size_t i = 1; i < N; ++i) { res += _conj(px[i]) * py[i]; }
         return res;
