@@ -62,9 +62,9 @@ void test3d() {
     using layout_t = typename decltype(v)::layout_t;
     using Iterator = nda::array_iterator<layout_t::rank(), long const, typename nda::default_accessor::template accessor<long>::pointer>;
     auto it        = Iterator{nda::permutations::apply(layout_t::stride_order, v.indexmap().lengths()),
-                       nda::permutations::apply(layout_t::stride_order, v.indexmap().strides()), v.data_start(), false};
+                       nda::permutations::apply(layout_t::stride_order, v.indexmap().strides()), v.data(), false};
     auto end       = Iterator{nda::permutations::apply(layout_t::stride_order, v.indexmap().lengths()),
-                        nda::permutations::apply(layout_t::stride_order, v.indexmap().strides()), v.data_start(), true};
+                        nda::permutations::apply(layout_t::stride_order, v.indexmap().strides()), v.data(), true};
 
     auto it1 = it;
     auto c   = *it1; // first element

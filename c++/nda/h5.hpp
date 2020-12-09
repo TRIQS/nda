@@ -108,7 +108,7 @@ namespace nda {
     } else if constexpr (is_scalar_v<typename A::value_type>) { // FIXME : register types as USER DEFINED hdf5 types
 
       static constexpr bool is_complex = is_complex_v<typename A::value_type>;
-      h5_details::write(g, name, h5::hdf5_type<get_value_t<A>>(), (void *)(a.data_start()), A::rank, is_complex, a.indexmap().lengths().data(),
+      h5_details::write(g, name, h5::hdf5_type<get_value_t<A>>(), (void *)(a.data()), A::rank, is_complex, a.indexmap().lengths().data(),
                         a.indexmap().strides().data(), a.size());
 
     } else { // generic unknown type to hdf5
@@ -167,7 +167,7 @@ namespace nda {
                             << "\n in file  : " << L << "\n in view  : " << a.shape();
       }
 
-      h5::array_interface::h5_array_view v{h5::hdf5_type<get_value_t<A>>(), (void *)(a.data_start()), A::rank, is_complex};
+      h5::array_interface::h5_array_view v{h5::hdf5_type<get_value_t<A>>(), (void *)(a.data()), A::rank, is_complex};
       for (int u = 0; u < A::rank; ++u) {
         v.slab.count[u] = L[u];
         v.L_tot[u]      = L[u];

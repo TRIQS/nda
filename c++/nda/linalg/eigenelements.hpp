@@ -44,9 +44,9 @@ namespace nda::linalg {
 
     int info = 0;
     if constexpr (not is_complex_v<T>) {
-      lapack::f77::dsyev(compz, 'U', dim, m.data_start(), dim, ev.data_start(), work.data_start(), lwork, info);
+      lapack::f77::dsyev(compz, 'U', dim, m.data(), dim, ev.data(), work.data(), lwork, info);
     } else {
-      lapack::f77::zheev(compz, 'U', dim, m.data_start(), dim, ev.data_start(), work.data_start(), lwork, work2.data_start(), info);
+      lapack::f77::zheev(compz, 'U', dim, m.data(), dim, ev.data(), work.data(), lwork, work2.data(), info);
     }
     if (info) NDA_RUNTIME_ERROR << "Diagonalization error";
     return ev;

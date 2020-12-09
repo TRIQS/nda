@@ -61,7 +61,7 @@ namespace nda {
         displs[r + 1] = sendcounts[r] + displs[r];
       }
 
-      MPI_Scatterv((void *)ref.data_start(), &sendcounts[0], &displs[0], D, (void *)v.data_start(), recvcount, D, root, c.get());
+      MPI_Scatterv((void *)ref.data(), &sendcounts[0], &displs[0], D, (void *)v.data(), recvcount, D, root, c.get());
     }
   };
 

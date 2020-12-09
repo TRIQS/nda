@@ -69,8 +69,7 @@ namespace nda::blas {
     int m1       = get_n_rows(a);
     int m2       = get_n_cols(a);
     int lda      = get_ld(a);
-    f77::gemv(trans_a, m1, m2, alpha, a.data_start(), lda, b.data_start(), b.indexmap().strides()[0], beta, c.data_start(),
-              c.indexmap().strides()[0]);
+    f77::gemv(trans_a, m1, m2, alpha, a.data(), lda, b.data(), b.indexmap().strides()[0], beta, c.data(), c.indexmap().strides()[0]);
   }
 
 } // namespace nda::blas
