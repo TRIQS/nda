@@ -101,7 +101,9 @@ namespace nda {
     // ------------------------------- constructors --------------------------------------------
 
     /// Empty array
-    basic_array() = default;
+    // Caution! We need to provide a user-defined constructor (over =default)
+    // to avoid value initialization of the sso buffer
+    basic_array() {};
 
     /// Makes a deep copy, since array is a regular type
     basic_array(basic_array const &x) noexcept : lay(x.indexmap()), sto(x.sto) {}
