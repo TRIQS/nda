@@ -70,25 +70,18 @@ namespace nda {
     // to avoid  warning: use of function template name with no prior declaration in function call with explicit template arguments is a C++20 extension
 #if not(__cplusplus > 201703L)
     template <ARRAY_INT P, typename U, int R, typename L, char A, typename AP, typename OP>
-    auto permuted_indices_view(basic_array_view<U, R, L, A, AP, OP>);
+    basic_array_view<U, R, L, A, AP, OP> permuted_indices_view(basic_array_view<U, R, L, A, AP, OP>);
 
     template <ARRAY_INT P, typename U, int R, typename L, char A, typename CP>
-    auto permuted_indices_view(basic_array<U, R, L, A, CP> const &);
+    basic_array_view<U, R, L, A, default_accessor, borrowed> permuted_indices_view(basic_array<U, R, L, A, CP> const &);
 
     template <ARRAY_INT P, typename U, int R, typename L, char A, typename CP>
-    auto permuted_indices_view(basic_array<U, R, L, A, CP> &);
+    basic_array_view<U, R, L, A, default_accessor, borrowed> permuted_indices_view(basic_array<U, R, L, A, CP> &);
 #endif
 
     // private constructor for the friend
     basic_array(layout_t const &idxm, storage_t &&mem_handle) noexcept : lay{idxm}, sto{std::move(mem_handle)} {}
     basic_array(std::array<long, Rank> const &shape, mem::init_zero_t) noexcept : lay{shape}, sto{lay.size(), mem::init_zero} {}
-
-    // FIXME : REMOVE : for tempo transpose for PORTING TRIQS
-    //template <ARRAY_INT P, typename U, int R, typename L, char A, typename CP>
-    //friend auto permuted_indices_view(basic_array<U, R, L, A, CP> const &a);
-
-    //template <ARRAY_INT P, typename U, int R, typename L, char A, typename CP>
-    //friend auto permuted_indices_view(basic_array<U, R, L, A, CP> &a);
 
     public:
     // backward : FIXME : temporary to be removed
