@@ -123,15 +123,15 @@ TEST(Arrays, MPIReduceCustom) { //NOLINT
   arr_t r_exact(7);
   for (int i = 0; i < a.extent(0); ++i){
     a(i) = matrix_t{4, 4};
-    a(i)(k_, l_) << world.rank() * (k_ + l_);
+    a(i)(k_, l_) << i * (world.rank() + 1) * (k_ + l_);
 
     r_exact(i) = matrix_t{4, 4};
-    r_exact(i)(k_, l_) << (world.size() - 1) * world.size() / 2 * (k_ + l_);
+    r_exact(i)(k_, l_) << i * (world.size() + 1) * world.size() / 2 * (k_ + l_);
   }
 
   arr_t r = mpi::all_reduce(a, world);
 
-  //EXPECT_ARRAY_EQ(r, r_exact); // FIXME Does not compile
+  EXPECT_ARRAY_EQ(r, r_exact);
 }
 
 // --------------------------------------
