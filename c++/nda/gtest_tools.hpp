@@ -47,15 +47,10 @@ template <typename X, typename Y>
   if (x.shape() != y.shape())
     return ::testing::AssertionFailure() << "Comparing two arrays of different size "
                                          << "\n X = " << x << "\n Y = " << y;
-
-  auto xx      = make_regular(x); // easier error in case of MSAN to compute separately
-  auto yy      = make_regular(y);
-  auto maxdiff = max_element(abs(xx - yy));
-
-  if (x.size() == 0 || maxdiff == 0)
+  if (x == y)
     return ::testing::AssertionSuccess();
   else
-    return ::testing::AssertionFailure() << "max_element(abs(x-y)) = " << maxdiff << "\n X = " << x << "\n Y = " << y;
+    return ::testing::AssertionFailure() << "Arrays have different elements\n X = " << x << "\n Y = " << y;
 }
 
 #define EXPECT_EQ_ARRAY(X, Y) EXPECT_TRUE(array_are_equal(X, Y));
