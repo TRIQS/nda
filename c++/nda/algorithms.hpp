@@ -111,7 +111,7 @@ namespace nda {
   template <CONCEPT(ArrayOfRank<2>) A>
   double frobenius_norm(A const &a) REQUIRES17(is_ndarray_v<A> &&has_rank<A, 2>) {
     return std::sqrt(fold(
-       [](double r, get_value_t<A> const &x) -> double {
+       [](double r, auto const &x) -> double {
          auto ab = std::abs(x);
          return r + ab * ab;
        },

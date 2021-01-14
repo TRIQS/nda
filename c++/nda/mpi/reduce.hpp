@@ -40,7 +40,7 @@ namespace nda::lazy_mpi {
       // we force the caller to build a view_t. If not possible, e.g. stride orders mismatch, it will not compile
 
       if constexpr(not mpi::has_mpi_type<value_type>){
-	target = nda::map([this](value_type const & x){ return mpi::reduce(x, this->c, this->root, this->all, this->op); })(source);
+	target = nda::map([this](auto const & x){ return mpi::reduce(x, this->c, this->root, this->all, this->op); })(source);
       } else {
 
         view_t target_view{target};
