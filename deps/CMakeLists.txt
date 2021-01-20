@@ -89,8 +89,7 @@ external_dependency(itertools
 external_dependency(h5
   GIT_REPO https://github.com/TRIQS/h5
   VERSION 1.0
-  GIT_TAG unstable
-  #GIT_TAG pybind11
+  GIT_TAG pybind11
 )
 
 # -- MPI --
