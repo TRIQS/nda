@@ -32,7 +32,6 @@ target_compile_definitions(nda_py PUBLIC
 install(TARGETS nda_py EXPORT ${PROJECT_NAME}-targets DESTINATION lib)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
 set(PYTHON_LIB_DEST ${PYTHON_LIB_DEST_ROOT}/nda_py)
-install(FILES __init__.py DESTINATION ${PYTHON_LIB_DEST})
 
 # ========= Additional Depdencies ==========
 
