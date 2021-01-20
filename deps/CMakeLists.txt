@@ -47,7 +47,6 @@ else()
   endif()
 endif()
 
-# CHANGE FOR TEST ONLY
 # -- pybind11  --
 if(Build_Tests AND PythonSupport)
   external_dependency(pybind11
@@ -100,11 +99,3 @@ external_dependency(mpi
   VERSION 1.0
   GIT_TAG unstable
 )
-
-## Pybind 11
-#find_package(Python)
-#add_subdirectory(pybind11)
-## Cf https://github.com/pybind/pybind11/issues/1604
-#if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-     #target_compile_options(pybind11 INTERFACE -fsized-deallocation)
-#endif()
