@@ -24,7 +24,7 @@
 
 // Use concepts header if available
 // Skip inclusion for libc++ as header still incomplete
-#ifndef _LIBCPP_VERSION
+#if defined(__GLIBCXX__) and (_GLIBCXX_RELEASE>=10)
 #if __has_include(<concepts>)
 #include <concepts>
 #endif
