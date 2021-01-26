@@ -27,12 +27,32 @@ namespace nda {
 
   // ---------------------- array--------------------------------
 
+  // to avoid  warning: use of function template name with no prior declaration in function call with explicit template arguments is a C++20 extension
+#if not(__cplusplus > 201703L)
+    template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
+    class basic_array;
+
+    template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
+      class basic_array_view;
+
+    template <ARRAY_INT P, typename T, int R, typename L, char A, typename AP, typename OP>
+    //basic_array_view<T, R, L, A, AP, OP> permuted_indices_view(basic_array_view<T, R, L, A, AP, OP>);
+    auto permuted_indices_view(basic_array_view<T, R, L, A, AP, OP>);
+
+    template <ARRAY_INT P, typename T, int R, typename L, char A, typename CP>
+    //basic_array_view<T const, R, L, A, default_accessor, borrowed> permuted_indices_view(basic_array<T, R, L, A, CP> const &);
+    auto permuted_indices_view(basic_array<T, R, L, A, CP> const &);
+
+    template <ARRAY_INT P, typename T, int R, typename L, char A, typename CP>
+    //basic_array_view<T, R, L, A, default_accessor, borrowed> permuted_indices_view(basic_array<T, R, L, A, CP> &);
+    auto permuted_indices_view(basic_array<T, R, L, A, CP> &);
+#endif
+
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
   class basic_array {
 
     static_assert(!std::is_const<ValueType>::value, "ValueType can not be const. WHY ?");
-    // FIXME : should be ==2 ? matrix slice -> vector or matrix ??
-    static_assert((Algebra != 'M') or (Rank <= 2), " Internal error : Algebra 'A' only makes sense for rank 2");
+    static_assert((Algebra != 'M') or (Rank == 2), " Internal error : Algebra 'M' only makes sense for rank 2");
     static_assert((Algebra != 'V') or (Rank == 1), " Internal error : Algebra 'V' only makes sense for rank 1");
 
     // details for the common code with view
@@ -66,18 +86,6 @@ namespace nda {
 
     template <typename U, int R, typename L, char A, typename C, typename NewLayoutType>
     friend auto map_layout_transform(basic_array<U, R, L, A, C> &&a, NewLayoutType const &new_layout);
-
-    // to avoid  warning: use of function template name with no prior declaration in function call with explicit template arguments is a C++20 extension
-#if not(__cplusplus > 201703L)
-    template <ARRAY_INT P, typename U, int R, typename L, char A, typename AP, typename OP>
-    basic_array_view<U, R, L, A, AP, OP> permuted_indices_view(basic_array_view<U, R, L, A, AP, OP>);
-
-    template <ARRAY_INT P, typename U, int R, typename L, char A, typename CP>
-    basic_array_view<U, R, L, A, default_accessor, borrowed> permuted_indices_view(basic_array<U, R, L, A, CP> const &);
-
-    template <ARRAY_INT P, typename U, int R, typename L, char A, typename CP>
-    basic_array_view<U, R, L, A, default_accessor, borrowed> permuted_indices_view(basic_array<U, R, L, A, CP> &);
-#endif
 
     // private constructor for the friend
     basic_array(layout_t const &idxm, storage_t &&mem_handle) noexcept : lay{idxm}, sto{std::move(mem_handle)} {}
@@ -338,3 +346,5 @@ namespace nda {
   };
 
 } // namespace nda
+
+#include "./layout_transforms.hpp"

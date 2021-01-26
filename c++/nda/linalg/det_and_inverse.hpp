@@ -84,7 +84,8 @@ namespace nda {
   }
 
   template <typename A>
-  auto inverse(A const &a) REQUIRES(is_ndarray_v<A> and (get_algebra<A> == 'M') and (get_rank<A> == 2)) {
+  auto inverse(A const &a) REQUIRES(is_ndarray_v<A> and (get_algebra<A> == 'M')) {
+    static_assert(get_rank<A> == 2, "inverse: array must have rank two");
     EXPECTS(is_matrix_square(a, true));
     auto r = make_regular(a);
     inverse_in_place(r);
