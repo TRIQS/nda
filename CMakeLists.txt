@@ -83,6 +83,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Global compiler options
 option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
+set(CMAKE_CXX_EXTENSIONS OFF) # Disable Compiler Extensions
 add_compile_options($<$<CONFIG:Debug>:-ggdb3>)
 cmake_policy(SET CMP0069 NEW)
 include(CheckIPOSupported)

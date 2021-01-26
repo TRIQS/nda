@@ -8,10 +8,11 @@ target_link_libraries(${PROJECT_NAME}_c PRIVATE $<BUILD_INTERFACE:${PROJECT_NAME
 # Set C++ Standard
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++20" HAS_CPP20)
-if(HAS_CPP20)
-  target_compile_options(${PROJECT_NAME}_c PUBLIC -std=c++20)
+if(HAS_CPP20 AND cxx_std_20 IN_LIST CMAKE_CXX_COMPILE_FEATURES)
+  target_compile_features(${PROJECT_NAME}_c PUBLIC cxx_std_20)
 else()
-  target_compile_options(${PROJECT_NAME}_c PUBLIC -std=c++17 $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
+  target_compile_features(${PROJECT_NAME}_c PUBLIC cxx_std_17)
+  target_compile_options(${PROJECT_NAME}_c PUBLIC $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
 endif()
 
 # Configure target and compilation
