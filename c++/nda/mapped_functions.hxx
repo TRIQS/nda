@@ -12,7 +12,7 @@
 
   ----  normal mapping -------
 
-  VIMEXPAND abs real imag floor conj
+  VIMEXPAND abs imag floor
   /// Maps @ onto the array
   /// \ingroup ArrayFunction
   template <typename A>
@@ -26,7 +26,7 @@
 
  ---------  same, no using std::-------
 
-  VIMEXPAND conj_r abs2 isnan
+  VIMEXPAND real conj abs2 isnan
   /// Maps @ onto the array
   /// \ingroup ArrayFunction
   template <typename A>
@@ -99,17 +99,7 @@ namespace nda {
   /// \ingroup ArrayFunction
   template <typename A>
   auto conj(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
-    return nda::map([](auto const &x) {
-      using std::conj;
-      return conj(x);
-    })(std::forward<A>(a));
-  }
-
-  /// Maps conj_r onto the array
-  /// \ingroup ArrayFunction
-  template <typename A>
-  auto conj_r(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
-    return nda::map([](auto const &x) { return conj_r(x); })(std::forward<A>(a));
+    return nda::map([](auto const &x) { return conj(x); })(std::forward<A>(a));
   }
 
   /// Maps abs2 onto the array

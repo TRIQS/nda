@@ -19,17 +19,29 @@ namespace nda {
 
   // ---------------  a few additional functions --------------
 
-  ///
-  inline double conj_r(double x) { return x; }
+  template <typename T>
+  auto real(T t) REQUIRES(nda::is_scalar_v<T>) {
+    if constexpr (mem::is_complex_v<T>) {
+      return std::real(t);
+    } else {
+      return t;
+    }
+  }
 
-  ///
-  inline std::complex<double> conj_r(std::complex<double> x) { return std::conj(x); }
+  template <typename T>
+  auto conj(T t) REQUIRES(nda::is_scalar_v<T>) {
+    if constexpr (mem::is_complex_v<T>) {
+      return std::conj(t);
+    } else {
+      return t;
+    }
+  }
 
   ///
   inline double abs2(double x) { return x * x; }
 
   ///
-  inline double abs2(std::complex<double> x) { return (std::conj(x) * x).real(); }
+  inline double abs2(std::complex<double> x) { return (conj(x) * x).real(); }
 
   // not for libc++ (already defined)
 #if !defined(_LIBCPP_VERSION)
