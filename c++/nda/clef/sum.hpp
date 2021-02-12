@@ -29,12 +29,6 @@ namespace nda::clef {
   } // namespace details
   // template <typename T> using regular_t            = typename details::regular<std::decay_t<T>>::type;
 
-  /// Transform to the regular type
-  template <typename T>
-  auto make_regular(T &&x) {
-    return typename details::regular<std::decay_t<T>>::type{std::forward<T>(x)};
-  }
-
   //--------------------------------------------------------------------------------------------------
   //  sum of expressions
   // -------------------------------------------------------------------------------------------------

@@ -37,14 +37,25 @@ namespace nda {
   }
 
   // --------------------------- make_regular ------------------------
-  // general make_regular
-  // FIXME : auto return ?  regular_t<A> ?
+
+  /**
+   * Return a basic_array if A fullfills the Array concept,
+   * else forward the object without midifications
+   *
+   * @tparam A
+   * @param x
+   */
   template <typename A>
-  basic_array<get_value_t<std::decay_t<A>>, get_rank<A>, C_layout, get_algebra<std::decay_t<A>>, heap> //
-  make_regular(A &&x) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
-    return std::forward<A>(x);
+  auto make_regular(A &&x) {
+    using A_t = std::decay_t<A>;
+    if constexpr (is_ndarray_v<A_t>)
+      return basic_array<get_value_t<A_t>, get_rank<A_t>, C_layout, get_algebra<A_t>, heap>{std::forward<A>(x)};
+    else
+      return x;
   }
-  //template <typename A> regular_t<A> make_regular(A &&x) REQUIRES(is_ndarray_v<A>) { return std::forward<A>(x); }
+
+  template <typename A>
+  using get_regular_t = decltype(make_regular(std::declval<A>()));
 
   // --------------------------- resize_or_check_if_view------------------------
 
