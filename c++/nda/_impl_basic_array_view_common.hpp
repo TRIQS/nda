@@ -43,6 +43,9 @@ ValueType *data() noexcept { return sto.data(); }
 ///
 [[nodiscard]] long size() const noexcept { return lay.size(); }
 
+///
+[[nodiscard]] long is_contiguous() const noexcept { return lay.is_contiguous(); }
+
 /// size() == 0
 [[nodiscard]] bool empty() const { return sto.is_null(); }
 
