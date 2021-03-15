@@ -17,78 +17,74 @@
 
 #include "./../map.hpp"
 
-namespace nda::lazy_mpi {
+// Models ArrayInitializer concept
+template <CONCEPT(nda::Array) A>
+REQUIRES17(nda::is_ndarray_v<std::decay_t<A>>)
+struct mpi::lazy<mpi::tag::reduce, A> {
 
-  // Models ArrayInitializer concept
-  template <typename ValueType, int Rank, uint64_t StrideOrder>
-  struct reduce {
+  using value_type      = typename std::decay_t<A>::value_type;
+  using const_view_type = decltype(std::declval<const A>()());
 
-    using view_t = basic_array_view<ValueType const, Rank, basic_layout<0, StrideOrder, layout_prop_e::contiguous>, 'A', default_accessor, borrowed>;
-    using value_type = ValueType;
+  const_view_type rhs; // the rhs array
+  mpi::communicator c; // mpi comm
+  const int root;      //
+  const bool all;
+  const MPI_Op op;
 
-    view_t source;       // view of the array to reduce
-    mpi::communicator c; // mpi comm
-    const int root;      //
-    const bool all;
-    const MPI_Op op;
+  /// compute the shape of the target array
+  [[nodiscard]] auto shape() const { return rhs.shape(); }
 
-    /// compute the shape of the target array
-    [[nodiscard]] auto shape() const { return source.shape(); }
+  /// Execute the mpi operation and write result to target
+  template <CONCEPT(nda::Array) T>
+  REQUIRES17(nda::is_ndarray_v<std::decay_t<T>>)
+  void invoke(T &&target) const {
+    if (not target.is_contiguous()) NDA_RUNTIME_ERROR << "mpi operations require contiguous target.data() to be contiguous";
 
-    /// Delayed reduction operation
-    void invoke(array_view<ValueType, Rank> target) const {
-      // we force the caller to build a view_t. If not possible, e.g. stride orders mismatch, it will not compile
+    static_assert(std::decay_t<A>::layout_t::stride_order_encoded == std::decay_t<T>::layout_t::stride_order_encoded,
+                  "Array types for rhs and target have incompatible stride order");
 
-      if constexpr(not mpi::has_mpi_type<value_type>){
-	target = nda::map([this](auto const & x){ return mpi::reduce(x, this->c, this->root, this->all, this->op); })(source);
+    if constexpr (not mpi::has_mpi_type<value_type>) {
+      target = nda::map([this](auto const &x) { return mpi::reduce(x, this->c, this->root, this->all, this->op); })(rhs);
+    } else {
+
+      // some checks.
+      bool in_place = (target.data() == rhs.data());
+      auto sha      = shape();
+      if (in_place) {
+        if (rhs.size() != target.size()) NDA_RUNTIME_ERROR << "mpi reduce of array : same pointer to data start, but different number of elements !";
+      } else { // check no overlap
+        if ((c.rank() == root) || all) resize_or_check_if_view(target, sha);
+        if (std::abs(target.data() - rhs.data()) < rhs.size()) NDA_RUNTIME_ERROR << "mpi reduce of array : overlapping arrays !";
+      }
+
+      void *v_p       = (void *)target.data();
+      void *rhs_p     = (void *)rhs.data();
+      auto rhs_n_elem = rhs.size();
+      auto D          = mpi::mpi_type<value_type>::get();
+
+      if (!all) {
+        if (in_place)
+          MPI_Reduce((c.rank() == root ? MPI_IN_PLACE : rhs_p), rhs_p, rhs_n_elem, D, op, root, c.get());
+        else
+          MPI_Reduce(rhs_p, v_p, rhs_n_elem, D, op, root, c.get());
       } else {
-
-        view_t target_view{target};
-        // some checks.
-        bool in_place = (target_view.data() == source.data());
-        auto sha      = shape();
-        if (in_place) {
-          if (source.size() != target_view.size())
-            NDA_RUNTIME_ERROR << "mpi reduce of array : same pointer to data start, but different number of elements !";
-        } else { // check no overlap
-          if ((c.rank() == root) || all) resize_or_check_if_view(target_view, sha);
-          if (std::abs(target_view.data() - source.data()) < source.size()) NDA_RUNTIME_ERROR << "mpi reduce of array : overlapping arrays !";
-        }
-
-        void *v_p       = (void *)target_view.data();
-        void *rhs_p     = (void *)source.data();
-        auto rhs_n_elem = source.size();
-        auto D          = mpi::mpi_type<value_type>::get();
-
-        if (!all) {
-          if (in_place)
-            MPI_Reduce((c.rank() == root ? MPI_IN_PLACE : rhs_p), rhs_p, rhs_n_elem, D, op, root, c.get());
-          else
-            MPI_Reduce(rhs_p, v_p, rhs_n_elem, D, op, root, c.get());
-        } else {
-          if (in_place)
-            MPI_Allreduce(MPI_IN_PLACE, rhs_p, rhs_n_elem, D, op, c.get());
-          else
-            MPI_Allreduce(rhs_p, v_p, rhs_n_elem, D, op, c.get());
-        }
+        if (in_place)
+          MPI_Allreduce(MPI_IN_PLACE, rhs_p, rhs_n_elem, D, op, c.get());
+        else
+          MPI_Allreduce(rhs_p, v_p, rhs_n_elem, D, op, c.get());
       }
     }
-  };
-} // namespace nda::lazy_mpi
+  }
+};
+
+namespace nda {
 
 #if not(__cplusplus > 201703L)
-namespace nda {
   //----------------------------  mark the class for C++17 concept workaround
-
-  template <typename V, int R, uint64_t SO>
-  inline constexpr bool is_array_initializer_v<lazy_mpi::reduce<V, R, SO>> = true;
-
-} // namespace nda
+  template <typename A>
+  REQUIRES17(nda::is_ndarray_v<std::decay_t<A>>)
+  inline constexpr bool is_array_initializer_v<mpi::lazy<mpi::tag::reduce, A>> = true;
 #endif
-
-//----------------------------
-
-namespace nda {
 
   /**
    * Reduction of the array
@@ -105,12 +101,11 @@ namespace nda {
    */
   template <typename A>
   AUTO(ArrayInitializer)
-  mpi_reduce(A &a, mpi::communicator c = {}, int root = 0, bool all = false, MPI_Op op = MPI_SUM) //
-     REQUIRES(is_regular_or_view_v<std::decay_t<A>>) {
-    //static_assert(has_layout_contiguous<std::decay_t<A>>, "Non contigous view in target_view.data() are not implemented");
-    using v_t = std::decay_t<typename A::value_type>;
-    using r_t = lazy_mpi::reduce<v_t, A::rank, A::layout_t::stride_order_encoded>;
-    return r_t{typename r_t::view_t{a}, c, root, all, op};
+  mpi_reduce(A &&a, mpi::communicator c = {}, int root = 0, bool all = false, MPI_Op op = MPI_SUM) REQUIRES(is_regular_or_view_v<std::decay_t<A>>) {
+
+    if (not a.is_contiguous()) NDA_RUNTIME_ERROR << "mpi operations require contiguous rhs.data() to be contiguous";
+
+    return mpi::lazy<mpi::tag::reduce, A>{std::forward<A>(a), c, root, all, op};
   }
 
 } // namespace nda
