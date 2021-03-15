@@ -48,9 +48,13 @@ using nda::matrix_view;
 
 #define MAKE_MAIN_MPI                                                                                                                                \
   int main(int argc, char **argv) {                                                                                                                  \
-    ::mpi::environment env(argc, argv);                                                                                                              \
     ::testing::InitGoogleTest(&argc, argv);                                                                                                          \
-    return RUN_ALL_TESTS();                                                                                                                          \
+    if (mpi::check_mpi_env() == mpi::MPI_ENV::True) {                                                                                                \
+      mpi::environment env(argc, argv);                                                                                                              \
+      std::cout << "MPI environment detected\n";                                                                                                     \
+      return RUN_ALL_TESTS();                                                                                                                        \
+    } else                                                                                                                                           \
+      return RUN_ALL_TESTS();                                                                                                                        \
   }
 
 #define MAKE_MAIN                                                                                                                                    \
