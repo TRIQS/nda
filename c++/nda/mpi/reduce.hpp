@@ -43,6 +43,11 @@ struct mpi::lazy<mpi::tag::reduce, A> {
     static_assert(std::decay_t<A>::layout_t::stride_order_encoded == std::decay_t<T>::layout_t::stride_order_encoded,
                   "Array types for rhs and target have incompatible stride order");
 
+    if (not mpi::has_env) {
+      target = rhs;
+      return;
+    }
+
     if constexpr (not mpi::has_mpi_type<value_type>) {
       target = nda::map([this](auto const &x) { return mpi::reduce(x, this->c, this->root, this->all, this->op); })(rhs);
     } else {

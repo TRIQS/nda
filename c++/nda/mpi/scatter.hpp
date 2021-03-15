@@ -46,6 +46,11 @@ struct mpi::lazy<mpi::tag::scatter, A> {
     static_assert(std::decay_t<A>::layout_t::stride_order_encoded == std::decay_t<T>::layout_t::stride_order_encoded,
                   "Array types for rhs and target have incompatible stride order");
 
+    if (not mpi::has_env) {
+      target = rhs;
+      return;
+    }
+
     auto sha = shape(); // WARNING : Keep this out of any if condition (shape USES MPI) !
     resize_or_check_if_view(target, sha);
 

@@ -50,6 +50,11 @@ struct mpi::lazy<mpi::tag::gather, A> {
     static_assert(std::decay_t<A>::layout_t::stride_order_encoded == std::decay_t<T>::layout_t::stride_order_encoded,
                   "Array types for rhs and target have incompatible stride order");
 
+    if (not mpi::has_env) {
+      target = rhs;
+      return;
+    }
+
     auto recvcounts = std::vector<int>(c.size());
     auto displs     = std::vector<int>(c.size() + 1, 0);
     int sendcount   = rhs.size();
