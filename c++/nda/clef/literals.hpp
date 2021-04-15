@@ -24,4 +24,9 @@ namespace nda::clef::literals {
 
   constexpr auto bl_ = placeholder<4>{};
 
+  constexpr auto w_ = placeholder<5>{};
+  constexpr auto iw_ = placeholder<6>{};
+  constexpr auto t_ = placeholder<7>{};
+  constexpr auto tau_ = placeholder<8>{};
+
 } // namespace nda::clef::literals
