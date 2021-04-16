@@ -16,7 +16,7 @@
 
 // ==============================================================
 
-// #ifdef _OPENMP 
+#ifndef _OPENMP
 
 using alloc_t = nda::allocators::segregator<8 * 100, nda::allocators::multiple_bucket<8 * 100>, nda::allocators::mallocator>;
 
@@ -41,3 +41,5 @@ TEST(SSO, is_at_right_place) { // NOLINT
   EXPECT_FALSE(a.storage().on_heap());
   EXPECT_TRUE(b.storage().on_heap());
 }
+
+#endif
