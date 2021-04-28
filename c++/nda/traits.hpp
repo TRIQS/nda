@@ -48,9 +48,6 @@ namespace nda {
   template <int R>
   static constexpr bool with_Rank = false;
 
-  template <typename T>
-  [[deprecated]] void debug_print_type(T) {}
-
   // --------------------------- is_complex ------------------------
 
   template <typename T>
