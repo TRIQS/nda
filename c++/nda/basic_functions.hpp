@@ -21,7 +21,6 @@ namespace nda {
   /// Return a scalar for the case of rank zero.
   /// If we want more general array, use the static factory zeros [See also]
   template <typename T, CONCEPT(std::integral) Int, auto Rank>
-  REQUIRES(std::is_arithmetic_v<T> or nda::is_complex_v<T>)
   auto zeros(std::array<Int, Rank> const &shape) {
     // For Rank == 0 we should return the underlying scalar_t
     if constexpr (Rank == 0)

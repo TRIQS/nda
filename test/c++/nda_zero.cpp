@@ -40,3 +40,17 @@ TEST(NDA, ZeroStaticFactory) { //NOLINT
   EXPECT_EQ(max_element(abs(a2)), 0);
   EXPECT_EQ(max_element(abs(a3)), 0);
 }
+
+// ==============================================================
+
+struct Int {
+  int i = 2;
+};
+
+TEST(NDA, ZerosCustom) { //NOLINT
+
+  auto a = nda::zeros<Int>(3, 3);
+
+  EXPECT_EQ(a.shape(), (nda::shape_t<2>{3, 3}));
+  for(auto v: a) EXPECT_EQ(v.i, 0);
+}

@@ -259,14 +259,8 @@ namespace nda {
     //------------------ Factory -------------------------
 
     template <CONCEPT(std::integral) Int = long>
-    static basic_array zeros(std::array<Int, Rank> const &shape) REQUIRES((std::is_arithmetic_v<ValueType> or nda::is_complex_v<ValueType>)) {
+    static basic_array zeros(std::array<Int, Rank> const &shape) {
       return basic_array{stdutil::make_std_array<long>(shape), mem::init_zero};
-    }
-
-    /// \private error trap
-    template <CONCEPT(std::integral) Int = long, auto R>
-    static auto zeros(std::array<Int, R> const &) {
-      static_assert((int(R) == Rank), "Incorrect dimension of the shape"); //FIXME : int(R) is a bug in clang 9
     }
 
     //------------------ Assignment -------------------------

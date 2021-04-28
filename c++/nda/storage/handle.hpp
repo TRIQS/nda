@@ -180,7 +180,6 @@ namespace nda::mem {
 
     // Set up a memory block of the correct size without initializing it
     handle_heap(long size, init_zero_t) {
-      static_assert(std::is_scalar_v<T> or is_complex_v<T>, "Internal Error");
       if (size == 0) return;                                                    // no size -> null handle
       auto b = allocator_singleton<Allocator>::allocate_zero(size * sizeof(T)); //, alignof(T));
       ASSERT(b.ptr != nullptr);
