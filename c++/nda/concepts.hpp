@@ -87,7 +87,7 @@ namespace nda {
 
 
   template <typename A, typename U>
-  concept HasValueTypeConvertibleTo = Array<A> and (std::is_convertible_v<get_value_t<A>, U>);
+  concept HasValueTypeConstructibleFrom = Array<A> and (std::is_constructible_v<U, get_value_t<A>>);
 
   //-------------------
 
@@ -143,9 +143,9 @@ namespace nda {
 
   // --------------------------- Workaround concept
   template <typename A, typename U>
-  inline constexpr bool has_value_type_convertible_to = []() {
+  inline constexpr bool has_value_type_constructible_from = []() {
     if constexpr (is_ndarray_v<A>) {
-      return std::is_convertible_v<get_value_t<A>, U>;
+      return std::is_constructible_v<U, get_value_t<A>>;
     } else
       return false;
   }();

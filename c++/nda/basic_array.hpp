@@ -144,8 +144,8 @@ namespace nda {
      */
     template <CONCEPT(ArrayOfRank<Rank>) A>
     basic_array(A const &a) noexcept //
-       REQUIRES20(HasValueTypeConvertibleTo<A, value_type>)
-          REQUIRES17(is_ndarray_v<A> and has_rank<A, Rank> and has_value_type_convertible_to<A, value_type>)
+       REQUIRES20(HasValueTypeConstructibleFrom<A, value_type>)
+          REQUIRES17(is_ndarray_v<A> and has_rank<A, Rank> and has_value_type_constructible_from<A, value_type>)
        : lay(a.shape()), sto{lay.size(), mem::do_not_initialize} {
       static_assert(std::is_convertible_v<get_value_t<A>, value_type>,
                     "Can not construct the array. ValueType can not be constructed from the value_type of the argument");
