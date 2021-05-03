@@ -368,7 +368,7 @@ namespace nda {
     auto transpose() const {
 
       static constexpr std::array<int, Rank> permu              = decode<Rank>(Permutation);
-      static constexpr std::array<int, Rank> new_stride_order   = permutations::apply_inverse(permu, stride_order);
+      static constexpr std::array<int, Rank> new_stride_order   = permutations::apply(permu, stride_order);
       static constexpr std::array<int, Rank> new_static_extents = permutations::apply_inverse(permu, static_extents);
 
       // Compute the new layout_prop of the new view
