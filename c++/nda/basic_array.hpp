@@ -29,23 +29,23 @@ namespace nda {
 
   // to avoid  warning: use of function template name with no prior declaration in function call with explicit template arguments is a C++20 extension
 #if not(__cplusplus > 201703L)
-    template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
-    class basic_array;
+  template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
+  class basic_array;
 
-    template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
-      class basic_array_view;
+  template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
+  class basic_array_view;
 
-    template <ARRAY_INT P, typename T, int R, typename L, char A, typename AP, typename OP>
-    //basic_array_view<T, R, L, A, AP, OP> permuted_indices_view(basic_array_view<T, R, L, A, AP, OP>);
-    auto permuted_indices_view(basic_array_view<T, R, L, A, AP, OP>);
+  template <ARRAY_INT P, typename T, int R, typename L, char A, typename AP, typename OP>
+  //basic_array_view<T, R, L, A, AP, OP> permuted_indices_view(basic_array_view<T, R, L, A, AP, OP>);
+  auto permuted_indices_view(basic_array_view<T, R, L, A, AP, OP>);
 
-    template <ARRAY_INT P, typename T, int R, typename L, char A, typename CP>
-    //basic_array_view<T const, R, L, A, default_accessor, borrowed> permuted_indices_view(basic_array<T, R, L, A, CP> const &);
-    auto permuted_indices_view(basic_array<T, R, L, A, CP> const &);
+  template <ARRAY_INT P, typename T, int R, typename L, char A, typename CP>
+  //basic_array_view<T const, R, L, A, default_accessor, borrowed> permuted_indices_view(basic_array<T, R, L, A, CP> const &);
+  auto permuted_indices_view(basic_array<T, R, L, A, CP> const &);
 
-    template <ARRAY_INT P, typename T, int R, typename L, char A, typename CP>
-    //basic_array_view<T, R, L, A, default_accessor, borrowed> permuted_indices_view(basic_array<T, R, L, A, CP> &);
-    auto permuted_indices_view(basic_array<T, R, L, A, CP> &);
+  template <ARRAY_INT P, typename T, int R, typename L, char A, typename CP>
+  //basic_array_view<T, R, L, A, default_accessor, borrowed> permuted_indices_view(basic_array<T, R, L, A, CP> &);
+  auto permuted_indices_view(basic_array<T, R, L, A, CP> &);
 #endif
 
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
@@ -107,7 +107,7 @@ namespace nda {
     /// Empty array
     // Caution! We need to provide a user-defined constructor (over =default)
     // to avoid value initialization of the sso buffer
-    basic_array() {};
+    basic_array(){};
 
     /// Makes a deep copy, since array is a regular type
     basic_array(basic_array const &x) noexcept : lay(x.indexmap()), sto(x.sto) {}
@@ -160,7 +160,7 @@ namespace nda {
       } else {
         // in particular ValueType may or may not be default constructible
         // so we do not init memory, and make the placement new now, directly with the value returned by a
-        nda::for_each(lay.lengths(), [&](auto const &... is) { new (sto.data() + lay(is...)) ValueType{a(is...)}; });
+        nda::for_each(lay.lengths(), [&](auto const &...is) { new (sto.data() + lay(is...)) ValueType{a(is...)}; });
       }
     }
 
@@ -321,7 +321,7 @@ namespace nda {
      *
      */
     template <CONCEPT(std::integral)... Int>
-    void resize(Int const &... extent) REQUIRES17((std::is_convertible_v<Int, long> and ...)) {
+    void resize(Int const &...extent) REQUIRES17((std::is_convertible_v<Int, long> and ...)) {
       static_assert(std::is_copy_constructible_v<ValueType>, "Can not resize an array if its value_type is not copy constructible");
       static_assert(sizeof...(extent) == Rank, "Incorrect number of arguments for resize. Should be Rank");
       resize(std::array<long, Rank>{long(extent)...});

@@ -33,7 +33,7 @@ namespace nda {
 
   namespace slice_static {
     template <int R, uint64_t SE, uint64_t SO, layout_prop_e LP, typename... T>
-    FORCEINLINE decltype(auto) slice_stride_order(idx_map<R, SE, SO, LP> const &idxm, T const &... x);
+    FORCEINLINE decltype(auto) slice_stride_order(idx_map<R, SE, SO, LP> const &idxm, T const &...x);
   }
   // end forward
 
@@ -328,7 +328,7 @@ namespace nda {
      *
      */
     template <typename... Args>
-    FORCEINLINE long operator()(Args const &... args) const
+    FORCEINLINE long operator()(Args const &...args) const
 #ifdef NDA_ENFORCE_BOUNDCHECK
        noexcept(false) {
       details::assert_in_bounds(rank(), len.data(), args...);
@@ -342,7 +342,7 @@ namespace nda {
     // ----------------  Slice -------------------------
 
     template <typename... Args>
-    auto slice(Args const &... args) const {
+    auto slice(Args const &...args) const {
       return slice_static::slice_stride_order(*this, args...);
     }
 
