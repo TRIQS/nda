@@ -14,6 +14,8 @@
 
 #pragma once
 #include <complex>
+
+#include "nda.hpp"
 #include "blas/tools.hpp"
 #include "lapack/interface/lapack_cxx_interface.hpp"
 

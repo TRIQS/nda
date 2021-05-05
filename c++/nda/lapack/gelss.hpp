@@ -14,6 +14,7 @@
 
 #pragma once
 #include <complex>
+#include <optional>
 #include "tools.hpp"
 #include "interface/cxx_interface.hpp"
 

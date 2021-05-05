@@ -14,7 +14,7 @@
 
 #pragma once
 #include <cstring>
-#include "clef/clef.hpp"
+#include "clef.hpp"
 #include "declarations.hpp"
 #include "concepts.hpp"
 #include "iterators.hpp"
