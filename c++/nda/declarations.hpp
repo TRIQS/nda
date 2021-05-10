@@ -47,11 +47,13 @@ namespace nda {
   template <typename ValueType, int Rank, typename Layout = C_stride_layout>
   using array_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed>;
 
-  template <typename ValueType, int Rank>
-  using array_contiguous_view = basic_array_view<ValueType, Rank, C_layout, 'A', default_accessor, borrowed>;
+  template <typename ValueType, int Rank, typename Layout = C_layout>
+  REQUIRES(has_contiguous(Layout::template mapping<Rank>::layout_prop))
+  using array_contiguous_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed>;
 
-  template <typename ValueType, int Rank>
-  using array_contiguous_const_view = basic_array_view<ValueType const, Rank, C_layout, 'A', default_accessor, borrowed>;
+  template <typename ValueType, int Rank, typename Layout = C_layout>
+  REQUIRES(has_contiguous(Layout::template mapping<Rank>::layout_prop))
+  using array_contiguous_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed>;
 
   template <typename ValueType, typename Layout = C_layout, typename ContainerPolicy = heap>
   using matrix = basic_array<ValueType, 2, Layout, 'M', ContainerPolicy>;
