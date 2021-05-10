@@ -29,7 +29,7 @@
 [[nodiscard]] storage_t storage() &&noexcept { return std::move(sto); }
 
 /// Memory stride_order
-[[nodiscard]] constexpr auto stride_order() const noexcept { return lay.stride_order(); }
+[[nodiscard]] constexpr auto stride_order() const noexcept { return lay.stride_order; }
 
 /// Starting point of the data. NB : this is NOT the beginning of the memory block for a view in general
 [[nodiscard]] ValueType const *data() const noexcept { return sto.data(); }
