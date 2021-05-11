@@ -14,6 +14,8 @@
 
 #pragma once
 #include "../stdutil/array.hpp"
+#include "../stdutil/concepts.hpp"
+#include "../macros.hpp"
 
 namespace nda {
 
@@ -42,39 +44,64 @@ namespace nda {
     for (int i = 0; i < int(Rank); ++i) result += (a[i] << (4 * i));
     return result;
   }
+
 } // namespace nda
 
 namespace nda::permutations {
 
-  template <typename T, auto R>
-  constexpr std::array<T, R> apply_inverse(std::array<int, R> const &permutation, std::array<T, R> const &a) {
-    auto result = stdutil::make_initialized_array<R, T>(0);
-    for (int u = 0; u < R; ++u) { result[permutation[u]] = a[u]; }
+  template <CONCEPT(std::integral) Int, size_t Rank>
+  REQUIRES17(std::is_integral_v<Int>)
+  constexpr bool is_valid(std::array<Int, Rank> const &permutation) {
+    auto idx_counts = stdutil::make_initialized_array<Rank>(0);
+    for (auto idx : permutation) {
+      if (idx_counts[idx] > 0) return false;
+      idx_counts[idx] = 1;
+    }
+    return true;
+  }
+
+  template <CONCEPT(std::integral) Int, size_t Rank>
+  REQUIRES17(std::is_integral_v<Int>)
+  constexpr std::array<Int, Rank> inverse(std::array<Int, Rank> const &permutation) {
+    EXPECTS(is_valid(permutation));
+    auto result = stdutil::make_initialized_array<Rank>(0);
+    for (int u = 0; u < Rank; ++u) { result[permutation[u]] = u; }
     return result;
   }
 
-  template <typename T, auto R>
-  constexpr std::array<T, R> apply(std::array<int, R> const &permutation, std::array<T, R> const &a) {
-    auto result = stdutil::make_initialized_array<R, T>(0);
-    for (int u = 0; u < R; ++u) { result[u] = a[permutation[u]]; }
+  template <typename T, CONCEPT(std::integral) Int, size_t Rank>
+  REQUIRES17(std::is_integral_v<Int>)
+  constexpr std::array<T, Rank> apply_inverse(std::array<Int, Rank> const &permutation, std::array<T, Rank> const &a) {
+    EXPECTS(is_valid(permutation));
+    auto result = stdutil::make_initialized_array<Rank, T>(0);
+    for (int u = 0; u < Rank; ++u) { result[permutation[u]] = a[u]; }
     return result;
   }
 
-  template <int Rank>
+  template <typename T, CONCEPT(std::integral) Int, size_t Rank>
+  REQUIRES17(std::is_integral_v<Int>)
+  constexpr std::array<T, Rank> apply(std::array<Int, Rank> const &permutation, std::array<T, Rank> const &a) {
+    EXPECTS(is_valid(permutation));
+    auto result = stdutil::make_initialized_array<Rank, T>(0);
+    for (int u = 0; u < Rank; ++u) { result[u] = a[permutation[u]]; }
+    return result;
+  }
+
+  template <size_t Rank>
   constexpr std::array<int, Rank> identity() {
     auto result = stdutil::make_initialized_array<Rank>(0);
     for (int i = 0; i < Rank; ++i) result[i] = i;
     return result;
   }
 
-  template <int Rank>
+  template <size_t Rank>
   constexpr std::array<int, Rank> reverse_identity() {
     auto result = stdutil::make_initialized_array<Rank>(0);
     for (int i = 0; i < Rank; ++i) result[i] = Rank - 1 - i;
     return result;
   }
 
-  template <int Rank>
+  template <size_t Rank>
   constexpr std::array<int, Rank> transposition(int i, int j) {
     auto r = identity<Rank>();
     r[i]   = j;
@@ -89,7 +116,7 @@ namespace nda::permutations {
   // if pos < Rank, the cycle is partial
   // cycle<5> (1, 3) --> 2 0 1 3 4
   // pos ==0 --> identity
-  template <int Rank>
+  template <size_t Rank>
   constexpr std::array<int, Rank> cycle(int p, int pos = Rank) {
     auto result = stdutil::make_initialized_array<Rank>(0);
     for (int i = 0; i < Rank; ++i) result[i] = (i < pos ? (pos + i - p) % pos : i);
