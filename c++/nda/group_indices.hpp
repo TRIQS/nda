@@ -35,8 +35,9 @@ namespace nda {
     auto check_one_group = [&stride_order](auto &&grp) {
       // find min max
       int m = R, M = 0;
+      auto idx_speed = permutations::inverse(stride_order);
       for (int u = 0; u < grp.size(); ++u) {
-        int v = stride_order[grp[u]];
+        int v = idx_speed[grp[u]];
         if (v > M) M = v;
         if (v < m) m = v;
       }
