@@ -18,8 +18,6 @@
 #include <cmath>
 #include <complex>
 
-//#define CLEF_STD_MATH_FNT_TO_MAKE_LAZY (cos)(sin)(tan)(cosh)(sinh)(tanh)(acos)(asin)(atan)(exp)(log)(sqrt)(abs)(floor)(pow)(conj)
-
 namespace nda::clef {
 
 #define CLEF_MAKE_STD_FNT_LAZY(name)                                                                                                                 \
@@ -28,7 +26,20 @@ namespace nda::clef {
 
   // FIXME use vim generation
   CLEF_MAKE_STD_FNT_LAZY(cos)
-  CLEF_MAKE_STD_FNT_LAZY(abs)
+  CLEF_MAKE_STD_FNT_LAZY(sin)
+  CLEF_MAKE_STD_FNT_LAZY(tan)
+  CLEF_MAKE_STD_FNT_LAZY(cosh)
+  CLEF_MAKE_STD_FNT_LAZY(sinh)
+  CLEF_MAKE_STD_FNT_LAZY(tanh)
+  CLEF_MAKE_STD_FNT_LAZY(acos)
+  CLEF_MAKE_STD_FNT_LAZY(asin)
+  CLEF_MAKE_STD_FNT_LAZY(atan)
   CLEF_MAKE_STD_FNT_LAZY(exp)
+  CLEF_MAKE_STD_FNT_LAZY(log)
+  CLEF_MAKE_STD_FNT_LAZY(sqrt)
+  CLEF_MAKE_STD_FNT_LAZY(abs)
+  CLEF_MAKE_STD_FNT_LAZY(floor)
+  CLEF_MAKE_STD_FNT_LAZY(pow)
+  CLEF_MAKE_STD_FNT_LAZY(conj)
 
 } // namespace nda::clef
