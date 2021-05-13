@@ -86,7 +86,7 @@ namespace nda::clef {
       return {std::forward<RHS>(rhs)};
     }
     template <typename... T>
-    expr<tags::function, _ph, expr_storage_t<T>...> operator()(T &&... x) const {
+    expr<tags::function, _ph, expr_storage_t<T>...> operator()(T &&...x) const {
       return {tags::function{}, *this, std::forward<T>(x)...};
     }
     template <typename T>
@@ -163,7 +163,7 @@ namespace nda::clef {
     expr(expr &&x) noexcept : childs(std::move(x.childs)) {}
     // a constructor with the Tag make it unambiguous with other constructors...
     template <typename... Args>
-    expr(Tag, Args &&... args) : childs(std::forward<Args>(args)...) {}
+    expr(Tag, Args &&...args) : childs(std::forward<Args>(args)...) {}
     // [] returns a new lazy expression, with one more layer
     template <typename Args>
     expr<tags::subscript, expr, expr_storage_t<Args>> operator[](Args &&args) const {
@@ -171,7 +171,7 @@ namespace nda::clef {
     }
     // () also ...
     template <typename... Args>
-    expr<tags::function, expr, expr_storage_t<Args>...> operator()(Args &&... args) const {
+    expr<tags::function, expr, expr_storage_t<Args>...> operator()(Args &&...args) const {
       return {tags::function(), *this, std::forward<Args>(args)...};
     }
     // assignement is in general deleted
@@ -228,7 +228,7 @@ namespace nda::clef {
   template <>
   struct operation<tags::function> {
     template <typename F, typename... Args>
-    FORCEINLINE decltype(auto) operator()(F &&f, Args &&... args) const {
+    FORCEINLINE decltype(auto) operator()(F &&f, Args &&...args) const {
       return _cl(std::forward<F>(f))(_cl(std::forward<Args>(args))...);
     }
   };
@@ -326,7 +326,7 @@ namespace nda::clef {
 
   // The general eval function for expressions : declaration only
   template <typename T, typename... Pairs>
-  decltype(auto) eval(T const &ex, Pairs const &... pairs);
+  decltype(auto) eval(T const &ex, Pairs const &...pairs);
 
 #if 0
   // _ph
@@ -359,7 +359,7 @@ namespace nda::clef {
     public:
     static constexpr bool is_lazy = (N_position == -1);
 
-    FORCEINLINE decltype(auto) operator()(_ph<N>, pair<Is, T> const &... pairs) const {
+    FORCEINLINE decltype(auto) operator()(_ph<N>, pair<Is, T> const &...pairs) const {
       if constexpr (not is_lazy) { // N is one of the Is
         return std::get<N_position>(std::tie(pairs...)).rhs;
       } else { // N is not one of the Is
@@ -373,19 +373,19 @@ namespace nda::clef {
   template <typename T, typename... Contexts>
   struct evaluator<std::reference_wrapper<T>, Contexts...> {
     static constexpr bool is_lazy = false;
-    FORCEINLINE decltype(auto) operator()(std::reference_wrapper<T> const &x, Contexts const &... contexts) const {
+    FORCEINLINE decltype(auto) operator()(std::reference_wrapper<T> const &x, Contexts const &...contexts) const {
       return eval(x.get(), contexts...);
     }
   };
 
   // Dispatch the operations : depends it the result is a lazy expression
   template <typename Tag, typename... Args>
-  FORCEINLINE expr<Tag, expr_storage_t<Args>...> op_dispatch(std::true_type, Args &&... args) {
+  FORCEINLINE expr<Tag, expr_storage_t<Args>...> op_dispatch(std::true_type, Args &&...args) {
     return {Tag(), std::forward<Args>(args)...};
   }
 
   template <typename Tag, typename... Args>
-  FORCEINLINE decltype(auto) op_dispatch(std::false_type, Args &&... args) {
+  FORCEINLINE decltype(auto) op_dispatch(std::false_type, Args &&...args) {
     return operation<Tag>()(std::forward<Args>(args)...);
   }
 
@@ -395,21 +395,21 @@ namespace nda::clef {
     static constexpr bool is_lazy = (evaluator<Childs, Pairs...>::is_lazy or ...);
 
     template <size_t... Is>
-    [[nodiscard]] FORCEINLINE decltype(auto) eval_impl(std::index_sequence<Is...>, expr<Tag, Childs...> const &ex, Pairs const &... pairs) const {
+    [[nodiscard]] FORCEINLINE decltype(auto) eval_impl(std::index_sequence<Is...>, expr<Tag, Childs...> const &ex, Pairs const &...pairs) const {
       //  if constexpr(is_lazy)
       // return {Tag(), eval(std::get<Is>(ex.childs), pairs...)...};
 
       return op_dispatch<Tag>(std::integral_constant<bool, is_lazy>{}, eval(std::get<Is>(ex.childs), pairs...)...);
     }
 
-    [[nodiscard]] FORCEINLINE decltype(auto) operator()(expr<Tag, Childs...> const &ex, Pairs const &... pairs) const {
+    [[nodiscard]] FORCEINLINE decltype(auto) operator()(expr<Tag, Childs...> const &ex, Pairs const &...pairs) const {
       return eval_impl(std::make_index_sequence<sizeof...(Childs)>(), ex, pairs...);
     }
   };
 
   // The general eval function for expressions
   template <typename T, typename... Pairs>
-  FORCEINLINE decltype(auto) eval(T const &ex, Pairs const &... pairs) {
+  FORCEINLINE decltype(auto) eval(T const &ex, Pairs const &...pairs) {
     return evaluator<T, Pairs...>()(ex, pairs...);
   }
 
@@ -458,7 +458,7 @@ namespace nda::clef {
     //make_fun_impl(Expr const & ex_) : ex(ex_) {}
 
     template <typename... Args>
-    FORCEINLINE decltype(auto) operator()(Args &&... args) const {
+    FORCEINLINE decltype(auto) operator()(Args &&...args) const {
       return evaluator<Expr, pair<Is, Args>...>()(ex, pair<Is, Args>{std::forward<Args>(args)}...);
     }
   };
@@ -501,7 +501,7 @@ namespace nda::clef {
   struct evaluator<make_fun_impl<Expr, Is...>, Pairs...> {
     using e_t                     = evaluator<Expr, Pairs...>;
     static constexpr bool is_lazy = (ph_set<make_fun_impl<Expr, Is...>>::value != ph_set<Pairs...>::value);
-    FORCEINLINE decltype(auto) operator()(make_fun_impl<Expr, Is...> const &f, Pairs const &... pairs) const {
+    FORCEINLINE decltype(auto) operator()(make_fun_impl<Expr, Is...> const &f, Pairs const &...pairs) const {
       return make_function(e_t()(f.ex, pairs...), _ph<Is>()...);
     }
   };
@@ -684,7 +684,7 @@ namespace nda::clef {
   //constexpr int arity = 1;
 
   template <typename Obj, typename... Args>
-  expr<tags::function, expr_storage_t<Obj>, expr_storage_t<Args>...> make_expr_call(Obj &&obj, Args &&... args) CLEF_REQUIRES(is_any_lazy<Args...>) {
+  expr<tags::function, expr_storage_t<Obj>, expr_storage_t<Args>...> make_expr_call(Obj &&obj, Args &&...args) CLEF_REQUIRES(is_any_lazy<Args...>) {
     //static_assert(((arity<Obj> == -1) || (arity<Obj> == sizeof...(Args))), "Object called with a wrong number of arguments");
     return {tags::function{}, std::forward<Obj>(obj), std::forward<Args>(args)...};
   }
@@ -721,17 +721,17 @@ namespace nda::clef {
 
 #define CLEF_IMPLEMENT_LAZY_CALL(...)                                                                                                                \
   template <typename... Args>                                                                                                                        \
-  auto operator()(Args &&... args) const &CLEF_REQUIRES(nda::clef::is_any_lazy<Args...>) {                                                           \
+  auto operator()(Args &&...args) const &CLEF_REQUIRES(nda::clef::is_any_lazy<Args...>) {                                                            \
     return make_expr_call(*this, std::forward<Args>(args)...);                                                                                       \
   }                                                                                                                                                  \
                                                                                                                                                      \
   template <typename... Args>                                                                                                                        \
-     auto operator()(Args &&... args) & CLEF_REQUIRES(nda::clef::is_any_lazy<Args...>) {                                                             \
+     auto operator()(Args &&...args) & CLEF_REQUIRES(nda::clef::is_any_lazy<Args...>) {                                                              \
     return make_expr_call(*this, std::forward<Args>(args)...);                                                                                       \
   }                                                                                                                                                  \
                                                                                                                                                      \
   template <typename... Args>                                                                                                                        \
-     auto operator()(Args &&... args) && CLEF_REQUIRES(nda::clef::is_any_lazy<Args...>) {                                                            \
+     auto operator()(Args &&...args) && CLEF_REQUIRES(nda::clef::is_any_lazy<Args...>) {                                                             \
     return make_expr_call(std::move(*this), std::forward<Args>(args)...);                                                                            \
   }
 
