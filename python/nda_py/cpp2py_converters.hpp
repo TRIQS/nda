@@ -12,8 +12,8 @@ namespace cpp2py {
   // array_view
   // -----------------------------------
 
-  template <typename T, int R, char Algebra>
-  struct py_converter<nda::basic_array_view<T, R, nda::C_stride_layout, Algebra>> {
+  template <typename T, int R, typename Layout, char Algebra>
+  struct py_converter<nda::basic_array_view<T, R, Layout, Algebra>> {
 
     using U = std::decay_t<T>;
     static_assert(has_npy_type<U>, "Logical Error");
