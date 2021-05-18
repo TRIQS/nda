@@ -713,7 +713,7 @@ namespace nda::clef {
 
 #define CLEF_IMPLEMENT_LAZY_METHOD(TY, name)                                                                                                         \
   template <typename... A>                                                                                                                           \
-  auto name(A &&...__a) CLEF_REQUIRES(is_any_lazy<A...>) {                                                                                           \
+  auto name(A &&...__a) CLEF_REQUIRES(nda::clef::is_any_lazy<A...>) {                                                                                \
     return make_expr_call(                                                                                                                           \
        [](auto &&__obj, auto &&...__b) -> decltype(auto) { return std::forward<decltype(__obj)>(__obj).name(std::forward<decltype(__b)>(__b)...); }, \
        *this, std::forward<A>(__a)...);                                                                                                              \
