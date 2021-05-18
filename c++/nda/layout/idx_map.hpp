@@ -197,12 +197,21 @@ namespace nda {
     idx_map &operator=(idx_map const &) = default;
     idx_map &operator=(idx_map &&) = default;
 
+    private:
+    [[nodiscard]] bool strides_compatible_to_stride_order() const {
+      for (int u = 0; u < Rank - 1; ++u)
+        if (str[stride_order[u]] < str[stride_order[u + 1]]) return false;
+      return true;
+    }
+
+    public:
     /** 
      * From an idxmap with other info flags
      * @param idxm
      */
     template <layout_prop_e P>
     idx_map(idx_map<Rank, StaticExtents, StrideOrder, P> const &idxm) noexcept : len(idxm.lengths()), str(idxm.strides()) {
+      EXPECTS(strides_compatible_to_stride_order());
       if constexpr (not layout_property_compatible(P, LayoutProp)) {
         if constexpr (has_contiguous(LayoutProp)) {
           EXPECTS_WITH_MESSAGE(
@@ -230,15 +239,11 @@ namespace nda {
 #endif
     }
 
-    void check_stride_order() const {
-      for (int u = 0; u < Rank - 1; ++u)
-        if (str[stride_order[u]] < str[stride_order[u + 1]]) throw std::runtime_error("ERROR: strides of idx_map do not match stride order\n");
-    }
-
     public:
     /// Construct from a compatible static_extents
     template <uint64_t SE, layout_prop_e P>
     idx_map(idx_map<Rank, SE, StrideOrder, P> const &idxm) noexcept(false) : len(idxm.lengths()), str(idxm.strides()) { // can throw
+      EXPECTS(strides_compatible_to_stride_order());
       if constexpr (not layout_property_compatible(P, LayoutProp)) {
         if constexpr (has_contiguous(LayoutProp)) {
           EXPECTS_WITH_MESSAGE(
@@ -255,8 +260,8 @@ namespace nda {
     }
 
     ///
-    idx_map(std::array<long, Rank> const &shape, std::array<long, Rank> const &strides) noexcept : len(shape), str(strides) {
-      check_stride_order();
+    idx_map(std::array<long, Rank> const &shape, std::array<long, Rank> const &strides) : len(shape), str(strides) {
+      if (not strides_compatible_to_stride_order()) throw std::runtime_error("ERROR: strides of idx_map do not match stride order of the type\n");
     }
 
     /// Construct from the shape. If StaticExtents are present, the corresponding component of the shape must be equal to it.
