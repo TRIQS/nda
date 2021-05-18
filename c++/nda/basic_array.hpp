@@ -131,6 +131,20 @@ namespace nda {
       // is better like this. FIXME to be tested in benchs
     }
 
+    /**
+     * Construct one-dimensional array with a shape [i0]
+     * with all elements initialized to val
+     * Int is an integer (convertible to long)
+     *
+     * @param i0 is the extents of the only dimension
+     */
+    template <CONCEPT(std::integral) Int, typename RHS>
+    explicit basic_array(Int i, RHS const &val) noexcept REQUIRES((std::is_integral_v<Int> and Rank == 1 and is_scalar_for_v<RHS, basic_array>)) {
+      lay = layout_t{std::array{long(i)}};
+      sto = storage_t{lay.size()};
+      assign_from_scalar(val);
+    }
+
     /** 
      * Construct with the given shape and default construct elements
      * 
