@@ -174,6 +174,24 @@ TEST(Array, SwapIndex) { //NOLINT
 
 // ----------------------------------------------
 
+TEST(Array, Permuted_view1) { //NOLINT
+
+  // first check with all same length
+  nda::array<long, 4> A(3, 3, 3, 3);
+
+  A(i_, j_, k_, l_) << (1 + i_) + 10 * (1 + j_) + 100 * (1 + k_) + 1000 * (1 + l_);
+
+  // permutation (1 2 0 3)
+  auto S = nda::permuted_indices_view<nda::encode(std::array<int, 4>{1, 2, 0, 3})>(A);
+
+  for (int i0 = 0; i0 < 3; ++i0)
+    for (int i1 = 0; i1 < 3; ++i1)
+      for (int i2 = 0; i2 < 3; ++i2)
+        for (int i3 = 0; i3 < 3; ++i3) { EXPECT_EQ((S(i0, i1, i2, i3)), (A(i1, i2, i0, i3))); }
+}
+
+// ----------------------------------------------
+
 TEST(Array, Permuted_view) { //NOLINT
 
   nda::array<long, 4> A(1, 2, 3, 4);
@@ -198,7 +216,7 @@ TEST(Array, Permuted_view) { //NOLINT
     EXPECT_EQ(Sinv, A());
     EXPECT_TRUE(Sinv.indexmap().strides_compatible_to_stride_order());
   }
-  // permutation composition  
+  // permutation composition
   //  (0 3 1 2)  (1 2 0 3)   = (3 1 0 2)
   {
     EXPECT_EQ((nda::permutations::compose(std::array<int, 4>{0, 3, 1, 2}, std::array<int, 4>{1, 2, 0, 3})), (std::array<int, 4>{3, 1, 0, 2}));
