@@ -60,6 +60,17 @@ namespace nda::permutations {
     return true;
   }
 
+  /// Compose p1 p2 
+  template <CONCEPT(std::integral) Int, size_t Rank>
+  REQUIRES17(std::is_integral_v<Int>)
+  constexpr std::array<Int, Rank> compose(std::array<Int, Rank> const &p1, std::array<Int, Rank> const &p2) {
+    EXPECTS(is_valid(p1));
+    EXPECTS(is_valid(p2));
+    auto result = stdutil::make_initialized_array<Rank>(0);
+    for (int u = 0; u < Rank; ++u) { result[u] = p1[p2[u]]; }
+    return result;
+  }
+
   template <CONCEPT(std::integral) Int, size_t Rank>
   REQUIRES17(std::is_integral_v<Int>)
   constexpr std::array<Int, Rank> inverse(std::array<Int, Rank> const &permutation) {

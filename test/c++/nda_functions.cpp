@@ -79,7 +79,7 @@ TEST(reshaped_view, checkView) { //NOLINT
 //================================================
 
 TEST(GroupIndices, check) { //NOLINT
-  nda::check_grouping(nda::permutations::identity<4>(), std::array{0, 1}, std::array{2, 3});
+  nda::details::is_partition_of_indices<4>(std::array{0, 1}, std::array{2, 3});
 }
 
 TEST(GroupIndices, v1) { //NOLINT
@@ -170,4 +170,77 @@ TEST(Array, SwapIndex) { //NOLINT
 
   EXPECT_EQ(S, B());
   EXPECT_EQ(S.shape(), B.shape());
+}
+
+// ----------------------------------------------
+
+TEST(Array, Permuted_view) { //NOLINT
+
+  nda::array<long, 4> A(1, 2, 3, 4);
+
+  A(i_, j_, k_, l_) << i_ + 10 * j_ + 100 * k_ + 1000 * l_;
+
+  // permutation (1 2 0 3)
+  auto S = nda::permuted_indices_view<nda::encode(std::array<int, 4>{1, 2, 0, 3})>(A);
+
+  nda::array<long, 4> B(3, 1, 2, 4);
+  B(i_, j_, k_, l_) << j_ + 10 * k_ + 100 * i_ + 1000 * l_;
+
+  EXPECT_EQ(S.shape(), B.shape());
+  EXPECT_EQ(S, B());
+  EXPECT_TRUE(S.indexmap().strides_compatible_to_stride_order());
+
+  // reversing the permutation
+  {
+    auto Sinv = nda::permuted_indices_view<nda::encode(std::array<int, 4>{2, 0, 1, 3})>(B);
+
+    EXPECT_EQ(Sinv.shape(), A.shape());
+    EXPECT_EQ(Sinv, A());
+    EXPECT_TRUE(Sinv.indexmap().strides_compatible_to_stride_order());
+  }
+  // permutation composition  
+  //  (0 3 1 2)  (1 2 0 3)   = (3 1 0 2)
+  {
+    EXPECT_EQ((nda::permutations::compose(std::array<int, 4>{0, 3, 1, 2}, std::array<int, 4>{1, 2, 0, 3})), (std::array<int, 4>{3, 1, 0, 2}));
+    auto S2    = nda::permuted_indices_view<nda::encode(std::array<int, 4>{0, 3, 1, 2})>(S);
+    auto Scomp = nda::permuted_indices_view<nda::encode(std::array<int, 4>{3, 1, 0, 2})>(A);
+
+    EXPECT_EQ(S2.shape(), Scomp.shape());
+    EXPECT_EQ(S2, Scomp);
+    EXPECT_TRUE(S2.indexmap().strides_compatible_to_stride_order());
+    EXPECT_TRUE(Scomp.indexmap().strides_compatible_to_stride_order());
+  }
+}
+
+// ------------------------------------------
+// another composition
+// Ideally, we would need to test all permutations ??
+// chosen so that the 2 perm. do not commute
+
+TEST(Array, Permuted_view2) { //NOLINT
+
+  nda::array<long, 4> A(1, 2, 3, 4);
+
+  A(i_, j_, k_, l_) << i_ + 10 * j_ + 100 * k_ + 1000 * l_;
+
+  // (1 2 0 3)
+  auto S = nda::permuted_indices_view<nda::encode(std::array<int, 4>{1, 2, 0, 3})>(A);
+
+  nda::array<long, 4> B(3, 1, 2, 4);
+  B(i_, j_, k_, l_) << j_ + 10 * k_ + 100 * i_ + 1000 * l_;
+
+  EXPECT_EQ(S.shape(), B.shape());
+  EXPECT_EQ(S, B());
+  EXPECT_TRUE(S.indexmap().strides_compatible_to_stride_order());
+
+  EXPECT_EQ((nda::permutations::compose(std::array<int, 4>{0, 1, 3, 2}, std::array<int, 4>{1, 2, 0, 3})), (std::array<int, 4>{1, 3, 0, 2}));
+  EXPECT_EQ((nda::permutations::compose(std::array<int, 4>{1, 2, 0, 3}, std::array<int, 4>{0, 1, 3, 2})), (std::array<int, 4>{1, 2, 3, 0}));
+
+  auto S2    = nda::permuted_indices_view<nda::encode(std::array<int, 4>{0, 1, 3, 2})>(S);
+  auto Scomp = nda::permuted_indices_view<nda::encode(std::array<int, 4>{1, 3, 0, 2})>(A);
+
+  EXPECT_EQ(S2.shape(), Scomp.shape());
+  EXPECT_EQ(S2, Scomp);
+  EXPECT_TRUE(S2.indexmap().strides_compatible_to_stride_order());
+  EXPECT_TRUE(Scomp.indexmap().strides_compatible_to_stride_order());
 }

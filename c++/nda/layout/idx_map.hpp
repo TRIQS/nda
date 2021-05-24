@@ -197,7 +197,7 @@ namespace nda {
     idx_map &operator=(idx_map const &) = default;
     idx_map &operator=(idx_map &&) = default;
 
-    private:
+    //private:
     [[nodiscard]] bool strides_compatible_to_stride_order() const {
       for (int u = 0; u < Rank - 1; ++u)
         if (str[stride_order[u]] < str[stride_order[u + 1]]) return false;
@@ -369,16 +369,53 @@ namespace nda {
 
     // ---------------- Transposition -------------------------
 
+    /**
+     * Makes a new transposed idx_map with permutation P such that 
+     * denoting here  A = this, A' = returned_value
+     * A'(i_k) = A(i_{P[k]})
+     *
+     * FIXME : This convention is NOT good, it should be P^-1 as in any group action on a function 
+     *  if g in G and G in a group action on space X, 
+     *   and f(x) with x \in X is a function on X, 
+     *  then the action is defined as 
+     *   g \dot f (x) \equiv f ( g^{-1} x) as it maps the group mult. into a composition of g \dot.
+     *
+     *   The code is correct as is, but the convention for transpose is misleading when P is not self-inverse.
+     */
     template <uint64_t Permutation>
     auto transpose() const {
-
+      // We have 
+      // A(i_k) = sum_k i_k * S[k] (1) 
+      // where S[k] denotes the strides here.
+      // 
+      // 1- strides
+      //    A'(i_k) = sum_k i_{P[k]} * S[k] = sum_k i_k * S[P{^-1}[k]]
+      //    so the new strides are 
+      //         S'[k] = S[P{^-1}[k]]  (2)
+      //    i.e. apply (inverse(P), S) or apply_inverse directly.
+      // 2- lengths
+      //    if L[k] is the k-th length, then because of the definition of A', i.e. A'(i_k) = A(i_{P[k]})
+      //    i_q in the lhs A is at position q' such that P[q'] = q  (A'(i0 i1 i2...) = A( i_P0 i_P1 i_P2....)  
+      //    and L'[q] = L[q']
+      //    hence q' = P^{-1}[q], and therefore L'[q] =  L[P^{-1}[q]]
+      //    same for static length
+      // 3- stride_order, denoted in this paragraph as Q (and Q' for A').
+      //    by definition Q[0] is the slowest index, Q[Rank -1] the fastest
+      //    hence S[Q[k]] is a strictly decreasing sequence (as checked by strides_compatible_to_stride_order)
+      //    we want therefore Q' the permutation that will sort the S', i.e.
+      //    S'[Q'[k]] = S[Q[k]] 
+      //    using (2), we have S[ P{^-1}[ Q'[k] ]] = S[Q[k]] 
+      //    and the permutation Q' is such that  P{^-1}  Q' = Q  or Q = PQ (as permutation product/composition).
+      //    NB : Q and P are permutation, so Q' must be a composition, not an apply (apply applies a P to any set, like L, S, not only a permutation)
+      //    even though they are all std::array in the code
+      // 
       static constexpr std::array<int, Rank> permu              = decode<Rank>(Permutation);
-      static constexpr std::array<int, Rank> new_stride_order   = permutations::apply(permu, stride_order);
+      static constexpr std::array<int, Rank> new_stride_order   = permutations::compose(permu, stride_order);
       static constexpr std::array<int, Rank> new_static_extents = permutations::apply_inverse(permu, static_extents);
 
+      // FIXME
       // Compute the new layout_prop of the new view
       // NB : strided_1d property is preserved, but smallest_stride_is_one is not
-      // FIXME
       static constexpr layout_prop_e new_layout_prop =
          layout_prop_e::none; // BUT FIX (has_strided_1d(layout_prop) ? layout_prop_e::strided_1d : layout_prop_e::none);
 
