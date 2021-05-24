@@ -18,90 +18,138 @@
 
 namespace nda {
 
-  template <size_t R, size_t... Rs>
-  constexpr bool check_grouping(std::array<int, R> const &stride_order, std::array<int, Rs> const &... grps) {
-    // Now check that all indices are present
-    auto l = [](auto &&grp) {
-      uint64_t r = 0;
-      for (int u = 0; u < grp.size(); ++u) r |= (1ull << grp[u]);
-      return r;
-    };
-    uint64_t bit_pattern = (l(grps) | ...);
-    // all bits 0> R-1 should be 1
-    if (bit_pattern != ((1ull << R) - 1)) return false;
+  namespace details {
 
-    // check that all groups are contiguous in memory
+    // 2 compile time helpers functioms
 
-    auto check_one_group = [&stride_order](auto &&grp) {
-      // find min max
-      int m = R, M = 0;
-      auto idx_speed = permutations::inverse(stride_order);
-      for (int u = 0; u < grp.size(); ++u) {
-        int v = idx_speed[grp[u]];
-        if (v > M) M = v;
-        if (v < m) m = v;
-      }
-      return (M - m + 1 == grp.size());
-    };
+    // -- is_partition_of_indices --
+    //
+    // checks if the groups are a partition of the indices [0,R[
+    // where R is the dimension of the array being regrouped
+    // it will throw (compiler stop) if index is out of bounds
+    template <size_t R, size_t... Rs>
+    constexpr bool is_partition_of_indices(std::array<int, Rs> const &... grps) {
 
-    return (check_one_group(grps) and ...);
-  }
+      // check we have exactly R indices ...
+      // FIXME in C++20, we can have constexpr string, hence have more informative error message.
+      auto Rstot = (Rs + ...);
+      if (Rstot < R) throw "Too few indices in the group. Should be the rank";
+      if (Rstot > R) throw "Too many indices in the group. Should be the rank";
 
-  template <size_t R, size_t... Rs>
-  constexpr std::array<int, sizeof...(Rs)> stride_order_of_grouped_idx(std::array<int, R> const &stride_order, std::array<int, Rs> const &... grps) {
+      // we go over each indices, in each group and count them
+      std::array<int, R> count          = stdutil::make_initialized_array<R>(0); // FIXME : not necessary in C++20
+      std::array<int, R> correct_answer = stdutil::make_initialized_array<R>(1); // FIXME : not necessary in C++20
 
-    constexpr int Rout = sizeof...(Rs);
-
-    auto min_mem_pos = [&stride_order](auto &&grp) {
-      int m = Rout;
-      for (int u = 0; u < grp.size(); ++u) {
-        int v = stride_order[grp[u]];
-        if (v < m) m = v;
-      }
-      return m;
-    };
-
-    std::array<int, Rout> max_pos{min_mem_pos(grps)...};
-    // compress the number by counting how many before each of them
-    std::array<int, Rout> result = stdutil::make_initialized_array<sizeof...(Rs)>(0); // FIXME : not necessary in C++20
-
-    for (int u = 0; u < Rout; ++u) {
-      for (int i = 0; i < Rout; ++i) {
-        if (max_pos[i] < max_pos[u]) ++result[u];
-      }
+      auto l = [&](auto &&grp) mutable -> void {
+        for (int u = 0; u < grp.size(); ++u) {
+          if (grp[u] < 0) throw "Negative index !";
+          if (grp[u] >= R) throw "Index larger than the rank !!";
+          count[grp[u]]++;
+        }
+      };
+      (l(grps), ...); // execute all lambdas
+      return (count == correct_answer);
     }
-    return result;
-  }
+
+    //---------------------------
+
+    // --- stride_order_of_grouped_idx_map ---
+    //
+    // Given a stride_order and some groups, returns the stride_order of the grouped idx_map
+    // compile time only
+    template <size_t R, size_t... Rs>
+    constexpr std::array<int, sizeof...(Rs)> stride_order_of_grouped_idx_map(std::array<int, R> const &stride_order,
+                                                                             std::array<int, Rs> const &... grps) {
+
+      constexpr int Rout = sizeof...(Rs); // Dimension of the returned idx_map.
+
+      // stride_order is permutation which by definition is such that
+      // stride_order[0] is the slowest index, stride_order[1] the next, stride_order[Rank-1] the fastest.
+      
+      // we need to work with the inverse permutation mem_pos.
+      // for each index k, mem_pos[k] gives the position of index k in the memory layout, 0 for slowest to R-1 for fastest.
+      // e.g. so by definition   mem_pos[ stride_order[0]] = 0,  mem_pos[ stride_order[1]] = 1, etc...
+
+      // for each group, we look at the mem_pos of its indices.
+      // they must be consecutive to be regrouped.
+      // We select their min, it will give us the mem_pos of the regrouped view, which we will then invert to get the stride_order.
+
+      auto mem_pos = permutations::inverse(stride_order);
+
+      // find the minimum memory position of the indices in this group
+      // throw (compile time, i.e. stop compilation) if the indices are not consecutive in memory in this group
+      auto min_mem_pos = [&mem_pos](auto &&grp) {
+        // m = minimum, M = maximum
+        int m = R, M = 0;
+        for (int u = 0; u < grp.size(); ++u) {
+          int v = mem_pos[grp[u]];
+          if (v > M) M = v;
+          if (v < m) m = v;
+        }
+        bool idx_are_consecutive_in_memory = (M - m + 1 == grp.size());
+        if (!idx_are_consecutive_in_memory)
+          throw "Indices are not consecutive in memory"; // FIXME : can I have a better error message at compile time ??
+        return m;
+      };
+
+      // an array of all minimal memory position in each group
+      std::array<int, Rout> min_mem_positions{min_mem_pos(grps)...};
+
+      // The problem is that they are not consecutive numbers, they run from 0 to R -1, not Rs -1
+      // We compress them back to [0, Rs[ by counting how many there are before each of them
+      std::array<int, Rout> mem_pos_out = stdutil::make_initialized_array<Rout>(0); // FIXME : not necessary in C++20
+      for (int u = 0; u < Rout; ++u) {
+        for (int i = 0; i < Rout; ++i) {
+          if (min_mem_positions[i] < min_mem_positions[u]) ++mem_pos_out[u];
+        }
+      }
+
+      // The new stride_order is the inverse of mem_pos_out
+      return permutations::inverse(mem_pos_out);
+    }
+  } // namespace details
 
   //---------------------------
 
+  /// A group of indices to be merged together
   template <int... Is>
   struct idx_group_t {
     static constexpr std::array<int, sizeof...(Is)> as_std_array{Is...};
   };
 
+  // idx_group<0,1> etc.. Helper variable template.
+  // The user call will be (for the idxmap, then propagated to the array in group_indices_view
+  //
+  //  group_indices_layout(idxm, idx_group<i, j>, idx_group<k,l>)
+  // will return an new regrouped idx_map
+  //
   template <int... Is>
   inline idx_group_t<Is...> idx_group = {};
 
   //---------------------------
 
   /**
-  * Regroup indices for a C array
-  * Usage : group_indices_view(A, std::index_{0,1}, {2,3})
+  * \param idxm an idx_map
+  * \param IdxGrps some idx_group<i,j>  
+  * Usage : group_indices_view(A, idx_group<i,j>, idx_group<k,l>, ...)
   * Precondition :
-  *   - every indices is listed in the {...} exactly once.
-  *   - the indices in one group are consecutive in memory.
+  *   - the indices (i,j,k,l, ....) exactly a partition of the indices of idxm
+  *   - In each group, the indices are consecutive in memory, as indicate by StrideOrder.
+  *
+  * \return a new idxmap of rank sizeof (IdxGrps...) seeing the same data, with merged indices, one index for each group of indices.
   */
-  template <int Rank, uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp, typename... IntSequences>
-  auto group_indices_layout(idx_map<Rank, StaticExtents, StrideOrder, LayoutProp> const &idxm, IntSequences...) {
-    using Idx_t = idx_map<Rank, StaticExtents, StrideOrder, LayoutProp>;
+  template <int Rank, uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp, typename... IdxGrps>
+  auto group_indices_layout(idx_map<Rank, StaticExtents, StrideOrder, LayoutProp> const &idxm, IdxGrps...) {
 
-    //static_assert(Idx_t::is_stride_order_C(), "Not yet implemented for static extents");
-    static_assert(LayoutProp == layout_prop_e::contiguous, "Not yet implemented for non contiguous arrays");
+    static_assert(LayoutProp == layout_prop_e::contiguous, "Not implemented for non contiguous arrays");
 
-    static_assert(check_grouping(Idx_t::stride_order, IntSequences::as_std_array...), "Improper indices in group indices");
+    // decoded StrideOrder
+    static constexpr auto stride_order = idx_map<Rank, StaticExtents, StrideOrder, LayoutProp>::stride_order;
 
-    /// Now compute the new lengths and strides.
+    static_assert(details::is_partition_of_indices<Rank>(IdxGrps::as_std_array...),
+                  "The indices provided in the groups are not a partition of the indices of the array, i.e. [0, Rank[");
+
+    /// new lengths and strides.
     auto total_len_of_a_grp = [&idxm](auto &&grp) {
       auto ll = std::accumulate(grp.begin(), grp.end(), 1, [&idxm](long l, long u) { return l * idxm.lengths()[u]; });
       return ll;
@@ -111,12 +159,13 @@ namespace nda {
       return std::accumulate(grp.begin(), grp.end(), idxm.size(), [&idxm](long s, long u) { return std::min(s, idxm.strides()[u]); });
     };
 
-    static constexpr int new_rank = sizeof...(IntSequences);
-    std::array<long, new_rank> new_extents{total_len_of_a_grp(IntSequences::as_std_array)...};
-    std::array<long, new_rank> new_strides{min_stride_of_a_grp(IntSequences::as_std_array)...};
+    static constexpr int new_rank = sizeof...(IdxGrps);
+    std::array<long, new_rank> new_extents{total_len_of_a_grp(IdxGrps::as_std_array)...};
+    std::array<long, new_rank> new_strides{min_stride_of_a_grp(IdxGrps::as_std_array)...};
 
+    // new layout using the new stride_order  
     using new_layout_t =
-       idx_map<new_rank, 0, encode(stride_order_of_grouped_idx(Idx_t::stride_order, IntSequences::as_std_array...)), layout_prop_e::contiguous>;
+       idx_map<new_rank, 0, encode(details::stride_order_of_grouped_idx_map(stride_order, IdxGrps::as_std_array...)), layout_prop_e::contiguous>;
 
     return new_layout_t{new_extents, new_strides};
   }
