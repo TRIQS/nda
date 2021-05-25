@@ -277,7 +277,8 @@ namespace nda {
     //------------------ Factory -------------------------
 
     template <CONCEPT(std::integral) Int = long>
-    static basic_array zeros(std::array<Int, Rank> const &shape) {
+    static basic_array zeros(std::array<Int, Rank> const &shape)
+       REQUIRES(std::is_standard_layout_v<ValueType> &&std::is_trivially_copyable_v<ValueType>) {
       return basic_array{stdutil::make_std_array<long>(shape), mem::init_zero};
     }
 
