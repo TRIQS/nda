@@ -369,7 +369,7 @@ namespace nda {
 
     /**
      * Makes a new transposed idx_map with permutation P such that 
-     * denoting here  A = this, A' = P A  = returned_value
+     * denoting here  A = this, A' = P A = returned_value
      * A'(i_k) = A(i_{P[k]})
      *
      * Note that this convention is the correct one to have a (left) action of the symmetric group on a array
@@ -378,7 +378,7 @@ namespace nda {
      *  let's operate with P then Q, and denote A'' = Q A'. We want to show that A'' = (QP) A
      *   A'(i_k) = A(i_{P[k]})
      *   A''(j_k) = A'(j_{Q[k]})
-     *   then i_k = j_{Q[k]} and  A''(j_k) =  A(i_{P[k]}) = A( j_{Q[P[k]]}) = A(j_{ (QP)[k]}), q.e.d
+     *   then i_k = j_{Q[k]} and  A''(j_k) =  A(i_{P[k]}) = A(j_{Q[P[k]]}) = A(j_{(QP)[k]}), q.e.d
      *
      * NB test will test this composition
      */
@@ -407,8 +407,8 @@ namespace nda {
       //    hence S[Q[k]] is a strictly decreasing sequence (as checked by strides_compatible_to_stride_order)
       //    we want therefore Q' the permutation that will sort the S', i.e.
       //    S'[Q'[k]] = S[Q[k]] 
-      //    using (2), we have S[ P{^-1}[ Q'[k] ]] = S[Q[k]] 
-      //    so the permutation Q' is such that  P{^-1}  Q' = Q  or Q = PQ (as permutation product/composition).
+      //    using (2), we have S[P{^-1}[Q'[k]]] = S[Q[k]]
+      //    so the permutation Q' is such that  P{^-1}Q' = Q  or Q' = PQ (as permutation product/composition).
       //    NB : Q and P are permutations, so the operation must be a composition, not an apply (apply applies a P to any set, like L, S, not only a permutation)
       //    even though they are all std::array in the code ...
       // 
