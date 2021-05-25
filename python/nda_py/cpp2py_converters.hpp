@@ -40,6 +40,11 @@ namespace cpp2py {
       }
       PyArrayObject *arr = (PyArrayObject *)(obj);
 
+      if (not PyArray_IS_C_CONTIGUOUS(obj)) {
+        if (raise_python_exception) PyErr_SetString(PyExc_TypeError, "Cannot convert to array_view : Numpy array is not in C order");
+        return false;
+      }
+
       auto r = PyArray_NDIM(arr);
       if (allow_lower_rank ? r < R : r != R) {
         if (raise_python_exception)
@@ -161,6 +166,10 @@ namespace cpp2py {
       }
 
       if constexpr (has_npy_type<T>) {
+        if (not PyArray_IS_C_CONTIGUOUS(obj)) {
+          cpp2py::pyref obj_c_order = make_numpy(obj);
+          return converter_view_T::py2c(obj_c_order);
+        }
         return converter_view_T::py2c(obj);
       } else {
         auto p = make_numpy_proxy(obj);
