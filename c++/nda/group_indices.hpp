@@ -60,29 +60,26 @@ namespace nda {
     template <size_t R, size_t... Rs>
     constexpr std::array<int, sizeof...(Rs)> stride_order_of_grouped_idx_map(std::array<int, R> const &stride_order,
                                                                              std::array<int, Rs> const &... grps) {
-
-      constexpr int Rout = sizeof...(Rs); // Dimension of the returned idx_map.
-
       // stride_order is permutation which by definition is such that
       // stride_order[0] is the slowest index, stride_order[1] the next, stride_order[Rank-1] the fastest.
       
-      // we need to work with the inverse permutation mem_pos.
-      // for each index k, mem_pos[k] gives the position of index k in the memory layout, 0 for slowest to R-1 for fastest.
+      // We need to work with the inverse permutation mem_pos.
+      // For each index k, mem_pos[k] gives the position of index k in the memory layout, 0 for slowest to R-1 for fastest.
       // e.g. so by definition   mem_pos[ stride_order[0]] = 0,  mem_pos[ stride_order[1]] = 1, etc...
 
-      // for each group, we look at the mem_pos of its indices.
-      // they must be consecutive to be regrouped.
+      // For each group, we look at the mem_pos of its indices.
+      // They must be consecutive to be regrouped.
       // We select their min, it will give us the mem_pos of the regrouped view, which we will then invert to get the stride_order.
 
       auto mem_pos = permutations::inverse(stride_order);
 
-      // find the minimum memory position of the indices in this group
-      // throw (compile time, i.e. stop compilation) if the indices are not consecutive in memory in this group
+      // Find the minimum memory position of the indices in this group
+      // Throw (compile time, i.e. stop compilation) if the indices are not consecutive in memory in this group
       auto min_mem_pos = [&mem_pos](auto &&grp) {
         // m = minimum, M = maximum
         int m = R, M = 0;
-        for (int u = 0; u < grp.size(); ++u) {
-          int v = mem_pos[grp[u]];
+        for (int idx: grp) {
+          int v = mem_pos[idx];
           if (v > M) M = v;
           if (v < m) m = v;
         }
@@ -92,14 +89,17 @@ namespace nda {
         return m;
       };
 
-      // an array of all minimal memory position in each group
-      std::array<int, Rout> min_mem_positions{min_mem_pos(grps)...};
+      // The Number of groups <-> Dimension of the returned idx_map.
+      constexpr int Ngrps = sizeof...(Rs);
 
-      // The problem is that they are not consecutive numbers, they run from 0 to R -1, not Rs -1
-      // We compress them back to [0, Rs[ by counting how many there are before each of them
-      std::array<int, Rout> mem_pos_out = stdutil::make_initialized_array<Rout>(0); // FIXME : not necessary in C++20
-      for (int u = 0; u < Rout; ++u) {
-        for (int i = 0; i < Rout; ++i) {
+      // An array containing the minimal memory position for each group
+      std::array<int, Ngrps> min_mem_positions{min_mem_pos(grps)...};
+
+      // The problem is that they are not consecutive numbers, they run from 0 to R -1, not Ngrps -1
+      // We compress them back to [0, Ngrps[ by counting how many there are before each of them
+      std::array<int, Ngrps> mem_pos_out = stdutil::make_initialized_array<Ngrps>(0); // FIXME : not necessary in C++20
+      for (int u = 0; u < Ngrps; ++u) {
+        for (int i = 0; i < Ngrps; ++i) {
           if (min_mem_positions[i] < min_mem_positions[u]) ++mem_pos_out[u];
         }
       }
@@ -133,8 +133,8 @@ namespace nda {
   * \param IdxGrps some idx_group<i,j>  
   * Usage : group_indices_view(A, idx_group<i,j>, idx_group<k,l>, ...)
   * Precondition :
-  *   - the indices (i,j,k,l, ....) exactly a partition of the indices of idxm
-  *   - In each group, the indices are consecutive in memory, as indicate by StrideOrder.
+  *   - the groups indices [ {i,j}, {k,l}, .... ] define a partition of the indices of idxm
+  *   - In each group, the indices are consecutive in memory, as indicated by StrideOrder.
   *
   * \return a new idxmap of rank sizeof (IdxGrps...) seeing the same data, with merged indices, one index for each group of indices.
   */
