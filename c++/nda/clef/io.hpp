@@ -23,7 +23,7 @@ namespace nda::clef {
   *  --------------------------------------------------------------------------------------------------- */
 
   template <int N>
-  std::ostream &operator<<(std::ostream &sout, _ph<N>) {
+  std::ostream &operator<<(std::ostream &sout, placeholder<N>) {
     return sout << "_" << N;
   }
   template <typename T>
@@ -106,7 +106,7 @@ namespace nda::clef {
   template <typename Expr, int... Is>
   std::ostream &operator<<(std::ostream &sout, make_fun_impl<Expr, Is...> const &x) {
     sout << "lazy function : (";
-    variadic_print(sout, _ph<Is>()...);
+    variadic_print(sout, placeholder<Is>()...);
     return sout << ") --> " << x.ex;
   }
 

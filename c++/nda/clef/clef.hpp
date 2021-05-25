@@ -77,38 +77,27 @@ namespace nda::clef {
 
   // a placeholder is an empty struct, labelled by an int.
   template <int N>
-  struct _ph {
-    //static_assert( (N>=0) && (N<64) , "Placeholder number limited to [0,63]");
-    static_assert((N >= 0), "Invalid placeholder range. Placeholder parameters is to [0,15] for each type of placeholder.");
+  struct placeholder {
     static constexpr int index = N;
     template <typename RHS>
-    pair<N, RHS> operator=(RHS &&rhs) const { // NOLINT It is correct here to return a pair, not the _ph& as suggested by clang-tidy
+    pair<N, RHS> operator=(RHS &&rhs) const { // NOLINT It is correct here to return a pair, not the placeholder& as suggested by clang-tidy
       return {std::forward<RHS>(rhs)};
     }
     template <typename... T>
-    expr<tags::function, _ph, expr_storage_t<T>...> operator()(T &&...x) const {
+    expr<tags::function, placeholder, expr_storage_t<T>...> operator()(T &&...x) const {
       return {tags::function{}, *this, std::forward<T>(x)...};
     }
     template <typename T>
-    expr<tags::subscript, _ph, expr_storage_t<T>> operator[](T &&x) const {
+    expr<tags::subscript, placeholder, expr_storage_t<T>> operator[](T &&x) const {
       return {tags::subscript{}, *this, std::forward<T>(x)};
     }
   };
 
-  //
-  constexpr int _ph_flatten_indices(int i, int p) { return (i <= 15 ? p * 16 + i : -1); }
-
-  // user class
-  template <int I>
-  using placeholder = _ph<_ph_flatten_indices(I, 0)>; // the ordinary placeholder (rank 0) with index [0,15]
-  template <int I>
-  using placeholder_prime = _ph<_ph_flatten_indices(I, 1)>; // the of placeholder rank 1 with index [0,15]
-
-  // _ph will always be copied (they are empty anyway).
+  // placeholder will always be copied (they are empty anyway).
   template <int N>
-  constexpr bool force_copy_in_expr<_ph<N>> = true;
+  constexpr bool force_copy_in_expr<placeholder<N>> = true;
 
-  // represent a couple (_ph, value).
+  // represent a couple (placeholder, value).
   template <int N, typename U>
   struct pair {
     U rhs;
@@ -116,8 +105,8 @@ namespace nda::clef {
     using value_type       = std::decay_t<U>;
   };
 
-  // ph_set is a trait that given a pack of type, returns the set of _phs they contain
-  // it returns a int in binary coding : bit N in the int is 1 iif at least one T is lazy and contains _ph<N>
+  // ph_set is a trait that given a pack of type, returns the set of placeholders they contain
+  // it returns a int in binary coding : bit N in the int is 1 iif at least one T is lazy and contains placeholder<N>
   template <typename... T>
   struct ph_set;
   template <typename T0, typename... T>
@@ -129,11 +118,11 @@ namespace nda::clef {
     static constexpr ull_t value = 0;
   };
   template <int N>
-  struct ph_set<_ph<N>> {
+  struct ph_set<placeholder<N>> {
     static constexpr ull_t value = 1ull << N;
   };
   template <int i, typename T>
-  struct ph_set<pair<i, T>> : ph_set<_ph<i>> {};
+  struct ph_set<pair<i, T>> : ph_set<placeholder<i>> {};
 
   /* ---------------------------------------------------------------------------------------------------
   * is_lazy and is_any_lazy
@@ -149,7 +138,7 @@ namespace nda::clef {
   constexpr bool is_clef_expression = is_any_lazy<T...>;
 
   template <int N>
-  constexpr bool is_lazy<_ph<N>> = true;
+  constexpr bool is_lazy<placeholder<N>> = true;
 
   /* ---------------------------------------------------------------------------------------------------
   * Node of the expression tree
@@ -317,7 +306,7 @@ namespace nda::clef {
   * Evaluation of the expression tree.
   *  --------------------------------------------------------------------------------------------------- */
 
-  // Generic case : do nothing (for the leaf of the tree including _ph)
+  // Generic case : do nothing (for the leaf of the tree including placeholder)
   template <typename T, typename... Pairs>
   struct evaluator {
     static constexpr bool is_lazy = is_any_lazy<T>;
@@ -329,26 +318,26 @@ namespace nda::clef {
   decltype(auto) eval(T const &ex, Pairs const &...pairs);
 
 #if 0
-  // _ph
+  // placeholder
   template <int N, int i, typename T, typename... Pairs>
-  struct evaluator<_ph<N>, pair<i, T>, Pairs...> {
-    using eval_t                  = evaluator<_ph<N>, Pairs...>;
+  struct evaluator<placeholder<N>, pair<i, T>, Pairs...> {
+    using eval_t                  = evaluator<placeholder<N>, Pairs...>;
     static constexpr bool is_lazy = eval_t::is_lazy;
-    FORCEINLINE decltype(auto) operator()(_ph<N>, pair<i, T> const &, Pairs const &... pairs) const {
-      return eval_t()(_ph<N>(), pairs...);
+    FORCEINLINE decltype(auto) operator()(placeholder<N>, pair<i, T> const &, Pairs const &... pairs) const {
+      return eval_t()(placeholder<N>(), pairs...);
     }
   };
 
   template <int N, typename T, typename... Pairs>
-  struct evaluator<_ph<N>, pair<N, T>, Pairs...> {
+  struct evaluator<placeholder<N>, pair<N, T>, Pairs...> {
     static constexpr bool is_lazy = false;
-    FORCEINLINE T operator()(_ph<N>, pair<N, T> const &p, Pairs const &...) const { return p.rhs; }
+    FORCEINLINE T operator()(placeholder<N>, pair<N, T> const &p, Pairs const &...) const { return p.rhs; }
   };
 
 #else
 
   template <int N, int... Is, typename... T>
-  struct evaluator<_ph<N>, pair<Is, T>...> {
+  struct evaluator<placeholder<N>, pair<Is, T>...> {
     private:
     template <size_t... Ps>
     static constexpr int get_position_of_N(std::index_sequence<Ps...>) {
@@ -359,11 +348,11 @@ namespace nda::clef {
     public:
     static constexpr bool is_lazy = (N_position == -1);
 
-    FORCEINLINE decltype(auto) operator()(_ph<N>, pair<Is, T> const &...pairs) const {
+    FORCEINLINE decltype(auto) operator()(placeholder<N>, pair<Is, T> const &...pairs) const {
       if constexpr (not is_lazy) { // N is one of the Is
         return std::get<N_position>(std::tie(pairs...)).rhs;
       } else { // N is not one of the Is
-        return _ph<N>{};
+        return placeholder<N>{};
       }
     }
   };
@@ -502,20 +491,20 @@ namespace nda::clef {
     using e_t                     = evaluator<Expr, Pairs...>;
     static constexpr bool is_lazy = (ph_set<make_fun_impl<Expr, Is...>>::value != ph_set<Pairs...>::value);
     FORCEINLINE decltype(auto) operator()(make_fun_impl<Expr, Is...> const &f, Pairs const &...pairs) const {
-      return make_function(e_t()(f.ex, pairs...), _ph<Is>()...);
+      return make_function(e_t()(f.ex, pairs...), placeholder<Is>()...);
     }
   };
 
   template <int... N>
   struct ph_list {};
   template <int... N>
-  ph_list<N...> var(_ph<N>...) {
+  ph_list<N...> var(placeholder<N>...) {
     return {};
   }
 
   template <typename Expr, int... N>
-  auto operator>>(ph_list<N...> &&, Expr const &ex) -> decltype(make_function(ex, _ph<N>()...)) {
-    return make_function(ex, _ph<N>()...);
+  auto operator>>(ph_list<N...> &&, Expr const &ex) -> decltype(make_function(ex, placeholder<N>()...)) {
+    return make_function(ex, placeholder<N>()...);
   }
   // add trailing as a workaround around a clang bug here on xcode 5.1.1 (?)
 
@@ -525,8 +514,8 @@ namespace nda::clef {
   * --------------------------------------------------------------------------------------------------- */
 
   /*  template <int N, typename Expr>*/
-  //auto operator>>(_ph<N>, Expr &&ex) {
-  //return make_function(ex, _ph<N>{});
+  //auto operator>>(placeholder<N>, Expr &&ex) {
+  //return make_function(ex, placeholder<N>{});
   //}
 
   /* ---------------------------------------------------------------------------------------------------
@@ -564,34 +553,34 @@ namespace nda::clef {
 
   // The case A(x_,y_) = RHS : we form the function (make_function) and call auto_assign (by ADL)
   template <typename F, typename RHS, int... Is>
-  FORCEINLINE void operator<<(expr<tags::function, F, _ph<Is>...> &&ex, RHS &&rhs) {
+  FORCEINLINE void operator<<(expr<tags::function, F, placeholder<Is>...> &&ex, RHS &&rhs) {
     static_assert(_all_different(Is...),
                   "Illegal expression : two of the placeholders on the LHS are the same. This expression is only valid for loops on the full mesh");
-    clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
+    clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), placeholder<Is>()...));
   }
   template <typename F, typename RHS, int... Is>
-  FORCEINLINE void operator<<(expr<tags::function, F, _ph<Is>...> const &ex, RHS &&rhs) {
+  FORCEINLINE void operator<<(expr<tags::function, F, placeholder<Is>...> const &ex, RHS &&rhs) {
     static_assert(_all_different(Is...),
                   "Illegal expression : two of the placeholders on the LHS are the same. This expression is only valid for loops on the full mesh");
-    clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
+    clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), placeholder<Is>()...));
   }
   template <typename F, typename RHS, int... Is>
-  FORCEINLINE void operator<<(expr<tags::function, F, _ph<Is>...> &ex, RHS &&rhs) {
+  FORCEINLINE void operator<<(expr<tags::function, F, placeholder<Is>...> &ex, RHS &&rhs) {
     static_assert(_all_different(Is...),
                   "Illegal expression : two of the placeholders on the LHS are the same. This expression is only valid for loops on the full mesh");
-    clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
+    clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), placeholder<Is>()...));
   }
 
   // The case A[x_,y_] = RHS : we form the function (make_function) and call auto_assign (by ADL)
-  // template <typename F, typename RHS, int... Is> FORCEINLINE void operator<<(expr<tags::subscript, F, _tuple<_ph<Is>...>>&& ex, RHS&& rhs) {
-  //  clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
+  // template <typename F, typename RHS, int... Is> FORCEINLINE void operator<<(expr<tags::subscript, F, _tuple<placeholder<Is>...>>&& ex, RHS&& rhs) {
+  //  clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), placeholder<Is>()...));
   // }
   /*template <typename F, typename RHS, int... Is>
- FORCEINLINE void operator<<(expr<tags::subscript, F, _ph<Is>...> const& ex, RHS&& rhs) {
-  clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
+ FORCEINLINE void operator<<(expr<tags::subscript, F, placeholder<Is>...> const& ex, RHS&& rhs) {
+  clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), placeholder<Is>()...));
  }
- template <typename F, typename RHS, int... Is> FORCEINLINE void operator<<(expr<tags::subscript, F, _ph<Is>...>& ex, RHS&& rhs) {
-  clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
+ template <typename F, typename RHS, int... Is> FORCEINLINE void operator<<(expr<tags::subscript, F, placeholder<Is>...>& ex, RHS&& rhs) {
+  clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), placeholder<Is>()...));
  }
 */
   // any other case e.g. f(x_+y_) = RHS etc .... which makes no sense : compiler will stop
@@ -633,23 +622,23 @@ namespace nda::clef {
 
   // Same thing for the  [ ]
   template <typename F, typename RHS, int... Is>
-  FORCEINLINE void operator<<(expr<tags::subscript, F, _ph<Is>...> const &ex, RHS &&rhs) {
+  FORCEINLINE void operator<<(expr<tags::subscript, F, placeholder<Is>...> const &ex, RHS &&rhs) {
     static_assert(_all_different(Is...),
                   "Illegal expression : two of the placeholdes on the LHS are the same. This expression is only valid for loops on the full mesh");
-    clef_auto_assign_subscript(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
+    clef_auto_assign_subscript(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), placeholder<Is>()...));
   }
   template <typename F, typename RHS, int... Is>
-  FORCEINLINE void operator<<(expr<tags::subscript, F, _ph<Is>...> &&ex, RHS &&rhs) {
+  FORCEINLINE void operator<<(expr<tags::subscript, F, placeholder<Is>...> &&ex, RHS &&rhs) {
     static_assert(_all_different(Is...),
                   "Illegal expression : two of the placeholdes on the LHS are the same. This expression is only valid for loops on the full mesh");
-    clef_auto_assign_subscript(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
+    clef_auto_assign_subscript(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), placeholder<Is>()...));
   }
 
   template <typename F, typename RHS, int... Is>
-  FORCEINLINE void operator<<(expr<tags::subscript, F, _ph<Is>...> &ex, RHS &&rhs) {
+  FORCEINLINE void operator<<(expr<tags::subscript, F, placeholder<Is>...> &ex, RHS &&rhs) {
     static_assert(_all_different(Is...),
                   "Illegal expression : two of the placeholdes on the LHS are the same. This expression is only valid for loops on the full mesh");
-    clef_auto_assign_subscript(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), _ph<Is>()...));
+    clef_auto_assign_subscript(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), placeholder<Is>()...));
   }
 
   template <typename F, typename RHS, typename... T>
