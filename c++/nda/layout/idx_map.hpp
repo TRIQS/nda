@@ -197,14 +197,12 @@ namespace nda {
     idx_map &operator=(idx_map const &) = default;
     idx_map &operator=(idx_map &&) = default;
 
-    //private:
     [[nodiscard]] bool strides_compatible_to_stride_order() const {
       for (int u = 0; u < Rank - 1; ++u)
         if (str[stride_order[u]] < str[stride_order[u + 1]]) return false;
       return true;
     }
 
-    public:
     /** 
      * From an idxmap with other info flags
      * @param idxm
