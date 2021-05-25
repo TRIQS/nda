@@ -17,16 +17,23 @@
 
 namespace nda::clef::literals {
 
-  constexpr auto i_ = placeholder<0>{};
-  constexpr auto j_ = placeholder<1>{};
-  constexpr auto k_ = placeholder<2>{};
-  constexpr auto l_ = placeholder<3>{};
+  // Define literal placeholders starting from the end of the ph index spectrum
+#define PH(I) placeholder<std::numeric_limits<int>::max() - I>{};
 
-  constexpr auto bl_ = placeholder<4>{};
+  constexpr auto i_ = PH(0);
+  constexpr auto j_ = PH(1);
+  constexpr auto k_ = PH(2);
+  constexpr auto l_ = PH(3);
 
-  constexpr auto w_ = placeholder<5>{};
-  constexpr auto iw_ = placeholder<6>{};
-  constexpr auto t_ = placeholder<7>{};
-  constexpr auto tau_ = placeholder<8>{};
+  constexpr auto bl_ = PH(4);
+
+  constexpr auto w_ = PH(5);
+  constexpr auto iw_ = PH(6);
+  constexpr auto W_ = PH(7);
+  constexpr auto iW_ = PH(8);
+  constexpr auto t_ = PH(9);
+  constexpr auto tau_ = PH(10);
+
+#undef PH
 
 } // namespace nda::clef::literals
