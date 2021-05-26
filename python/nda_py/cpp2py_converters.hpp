@@ -12,6 +12,13 @@ namespace cpp2py {
   // array_view
   // -----------------------------------
 
+  template <int R, typename Layout>
+  bool numpy_check_layout(PyObject * obj) {
+    EXPECTS(PyArray_Check(obj));
+    PyArrayObject *arr = (PyArrayObject *)(obj);
+    return Layout::template mapping<R>::is_stride_order_valid(PyArray_DIMS(arr), PyArray_STRIDES(arr));
+  }
+
   template <typename T, int R, typename Layout, char Algebra>
   struct py_converter<nda::basic_array_view<T, R, Layout, Algebra>> {
 
@@ -40,7 +47,7 @@ namespace cpp2py {
       }
       PyArrayObject *arr = (PyArrayObject *)(obj);
 
-      if (require_c_order and not PyArray_IS_C_CONTIGUOUS(obj)) {
+      if (require_c_order and not numpy_check_layout<R, Layout>(obj)) {
         if (raise_python_exception) PyErr_SetString(PyExc_TypeError, "Cannot convert to array_view : Numpy array is not in C order");
         return false;
       }
@@ -72,6 +79,7 @@ namespace cpp2py {
       auto p = make_numpy_proxy(obj);
       EXPECTS(p.extents.size() >= R);
       EXPECTS(p.element_type == npy_type<T> or p.extents.size() > R);
+      EXPECTS((numpy_check_layout<R, Layout>(obj)));
 
       std::array<long, R> extents, strides;
       for (int u = 0; u < R; ++u) {
@@ -166,9 +174,9 @@ namespace cpp2py {
       }
 
       if constexpr (has_npy_type<T>) {
-        if (not PyArray_IS_C_CONTIGUOUS(obj)) {
+        if (not numpy_check_layout<R, nda::C_layout>(obj)) {
           cpp2py::pyref obj_c_order = make_numpy(obj);
-          return converter_view_T::py2c(obj_c_order);
+          return nda::array<T, R>{converter_view_T::py2c(obj_c_order)};
         }
         return converter_view_T::py2c(obj);
       } else {
