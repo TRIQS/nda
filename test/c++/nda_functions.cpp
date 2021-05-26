@@ -206,7 +206,7 @@ TEST(Array, Permuted_view) { //NOLINT
 
   EXPECT_EQ(S.shape(), B.shape());
   EXPECT_EQ(S, B());
-  EXPECT_TRUE(S.indexmap().strides_compatible_to_stride_order());
+  EXPECT_TRUE(S.indexmap().is_stride_order_valid());
 
   // reversing the permutation
   {
@@ -214,7 +214,7 @@ TEST(Array, Permuted_view) { //NOLINT
 
     EXPECT_EQ(Sinv.shape(), A.shape());
     EXPECT_EQ(Sinv, A());
-    EXPECT_TRUE(Sinv.indexmap().strides_compatible_to_stride_order());
+    EXPECT_TRUE(Sinv.indexmap().is_stride_order_valid());
   }
   // permutation composition
   //  (0 3 1 2)  (1 2 0 3)   = (3 1 0 2)
@@ -225,8 +225,8 @@ TEST(Array, Permuted_view) { //NOLINT
 
     EXPECT_EQ(S2.shape(), Scomp.shape());
     EXPECT_EQ(S2, Scomp);
-    EXPECT_TRUE(S2.indexmap().strides_compatible_to_stride_order());
-    EXPECT_TRUE(Scomp.indexmap().strides_compatible_to_stride_order());
+    EXPECT_TRUE(S2.indexmap().is_stride_order_valid());
+    EXPECT_TRUE(Scomp.indexmap().is_stride_order_valid());
   }
 }
 
@@ -249,7 +249,7 @@ TEST(Array, Permuted_view2) { //NOLINT
 
   EXPECT_EQ(S.shape(), B.shape());
   EXPECT_EQ(S, B());
-  EXPECT_TRUE(S.indexmap().strides_compatible_to_stride_order());
+  EXPECT_TRUE(S.indexmap().is_stride_order_valid());
 
   EXPECT_EQ((nda::permutations::compose(std::array<int, 4>{0, 1, 3, 2}, std::array<int, 4>{1, 2, 0, 3})), (std::array<int, 4>{1, 3, 0, 2}));
   EXPECT_EQ((nda::permutations::compose(std::array<int, 4>{1, 2, 0, 3}, std::array<int, 4>{0, 1, 3, 2})), (std::array<int, 4>{1, 2, 3, 0}));
@@ -259,6 +259,6 @@ TEST(Array, Permuted_view2) { //NOLINT
 
   EXPECT_EQ(S2.shape(), Scomp.shape());
   EXPECT_EQ(S2, Scomp);
-  EXPECT_TRUE(S2.indexmap().strides_compatible_to_stride_order());
-  EXPECT_TRUE(Scomp.indexmap().strides_compatible_to_stride_order());
+  EXPECT_TRUE(S2.indexmap().is_stride_order_valid());
+  EXPECT_TRUE(Scomp.indexmap().is_stride_order_valid());
 }
