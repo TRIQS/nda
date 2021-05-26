@@ -410,19 +410,19 @@ namespace nda {
     auto transpose() const {
       // Denoting this as A, an indexmap, calling it returns the linear index given by
       //
-      // A(i_k) = sum_k i_k * S[k] (1) 
+      // A(i_k) = sum_k i_k * S[k] (1)
       //
       // where S[k] denotes the strides.
-      // 
+      //
       // 1- S' : strides of A'
       //    A'(i_k) = sum_k i_{P[k]} * S[k] = sum_k i_k * S[P{^-1}[k]]
-      //     so    
+      //     so
       //         S'[k] = S[P{^-1}[k]]  (2)
       //    i.e. apply (inverse(P), S) or apply_inverse directly.
       //
       // 2- L' : lengths of A'
       //    if L[k] is the k-th length, then because of the definition of A', i.e. A'(i_k) = A(i_{P[k]})
-      //    i_q in the lhs A is at position q' such that P[q'] = q  (A'(i0 i1 i2...) = A( i_P0 i_P1 i_P2....)  
+      //    i_q in the lhs A is at position q' such that P[q'] = q  (A'(i0 i1 i2...) = A( i_P0 i_P1 i_P2....)
       //    hence L'[q] = L[q'] =  L[P^{-1}[q]]
       //    same for static length
       //
@@ -430,12 +430,12 @@ namespace nda {
       //    by definition Q is a permutation such that Q[0] is the slowest index, Q[Rank -1] the fastest
       //    hence S[Q[k]] is a strictly decreasing sequence (as checked by strides_compatible_to_stride_order)
       //    we want therefore Q' the permutation that will sort the S', i.e.
-      //    S'[Q'[k]] = S[Q[k]] 
+      //    S'[Q'[k]] = S[Q[k]]
       //    using (2), we have S[P{^-1}[Q'[k]]] = S[Q[k]]
       //    so the permutation Q' is such that  P{^-1}Q' = Q  or Q' = PQ (as permutation product/composition).
       //    NB : Q and P are permutations, so the operation must be a composition, not an apply (apply applies a P to any set, like L, S, not only a permutation)
       //    even though they are all std::array in the code ...
-      // 
+      //
       static constexpr std::array<int, Rank> permu              = decode<Rank>(Permutation);
       static constexpr std::array<int, Rank> new_stride_order   = permutations::compose(permu, stride_order);
       static constexpr std::array<int, Rank> new_static_extents = permutations::apply_inverse(permu, static_extents);
