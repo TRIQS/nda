@@ -30,7 +30,7 @@ namespace cpp2py {
 
     // --------- PY -> C is possible --------
 
-    static bool is_convertible(PyObject *obj, bool raise_python_exception, bool allow_lower_rank = false) {
+    static bool is_convertible(PyObject *obj, bool raise_python_exception, bool allow_lower_rank = false, bool require_c_order = true) {
       // has_npy_type<T> is true (static_assert at top)
       _import_array();
       // check the rank and type. First protects the rest
@@ -40,7 +40,7 @@ namespace cpp2py {
       }
       PyArrayObject *arr = (PyArrayObject *)(obj);
 
-      if (not PyArray_IS_C_CONTIGUOUS(obj)) {
+      if (require_c_order and not PyArray_IS_C_CONTIGUOUS(obj)) {
         if (raise_python_exception) PyErr_SetString(PyExc_TypeError, "Cannot convert to array_view : Numpy array is not in C order");
         return false;
       }
@@ -126,7 +126,7 @@ namespace cpp2py {
 
       if constexpr (has_npy_type<T>) {
         // in this case, we convert to a view and then copy to the array, so the condition is the same
-        return converter_view_T::is_convertible(obj, raise_python_exception);
+        return converter_view_T::is_convertible(obj, raise_python_exception, false /*allow_lower_rank*/, false /*require_c_order*/);
       } else {
         // T is a type requiring conversion.
         // First I see whether I can convert it to a array of PyObject* ( i.e. it is an array of object and it has the proper rank...)
