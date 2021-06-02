@@ -22,19 +22,24 @@ def platforms = [:]
 
 /****************** linux builds (in docker) */
 /* Each platform must have a cooresponding Dockerfile.PLATFORM in triqs/packaging */
-def dockerPlatforms = ["ubuntu-clang", "ubuntu-gcc", "centos-gcc"]
+def dockerPlatforms = ["ubuntu-clang", "ubuntu-gcc", "sanitize"]
 /* .each is currently broken in jenkins */
 for (int i = 0; i < dockerPlatforms.size(); i++) {
   def platform = dockerPlatforms[i]
   platforms[platform] = { -> node('docker') {
-    stage(platform) { timeout(time: 1, unit: 'HOURS') {
+    stage(platform) { timeout(time: 1, unit: 'HOURS') { ansiColor('xterm') {
       checkout scm
       /* construct a Dockerfile for this base */
       sh """
         ( cat packaging/Dockerfile.${env.STAGE_NAME} ; sed '0,/^FROM /d' Dockerfile.build ) > Dockerfile
       """
       /* build and tag */
-      def img = docker.build("flatironinstitute/${dockerName}:${env.BRANCH_NAME}-${env.STAGE_NAME}", "--build-arg APPNAME=${projectName} --build-arg BUILD_DOC=${platform==documentationPlatform} --build-arg BUILD_ID=${env.BUILD_TAG} .")
+      def args = ''
+      if (platform == documentationPlatform)
+        args = '-DBuild_Documentation=1'
+      else if (platform == "sanitize")
+        args = '-DASAN=ON -DUBSAN=ON'
+      def img = docker.build("flatironinstitute/${dockerName}:${env.BRANCH_NAME}-${env.STAGE_NAME}", "--build-arg APPNAME=${projectName} --build-arg BUILD_ID=${env.BUILD_TAG} --build-arg CMAKE_ARGS='${args}' .")
       catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
         img.inside() {
           sh "make -C \$BUILD/${projectName} test CTEST_OUTPUT_ON_FAILURE=1"
@@ -43,20 +48,20 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
       if (!keepInstall) {
         sh "docker rmi --no-prune ${img.imageName()}"
       }
-    } }
+    } } }
   } }
 }
 
 /****************** osx builds (on host) */
 def osxPlatforms = [
-  ["gcc", ['CC=gcc-10', 'CXX=g++-10', 'FC=gfortran-10']],
-  ["clang", ['CC=$BREW/opt/llvm/bin/clang', 'CXX=$BREW/opt/llvm/bin/clang++', 'FC=gfortran-10', 'CXXFLAGS=-I$BREW/opt/llvm/include', 'LDFLAGS=-L$BREW/opt/llvm/lib']]
+  ["gcc", ['CC=gcc-11', 'CXX=g++-11', 'FC=gfortran-11']],
+  ["clang", ['CC=$BREW/opt/llvm/bin/clang', 'CXX=$BREW/opt/llvm/bin/clang++', 'FC=gfortran-11', 'CXXFLAGS=-I$BREW/opt/llvm/include', 'LDFLAGS=-L$BREW/opt/llvm/lib']]
 ]
 for (int i = 0; i < osxPlatforms.size(); i++) {
   def platformEnv = osxPlatforms[i]
   def platform = platformEnv[0]
   platforms["osx-$platform"] = { -> node('osx && triqs') {
-    stage("osx-$platform") { timeout(time: 1, unit: 'HOURS') {
+    stage("osx-$platform") { timeout(time: 1, unit: 'HOURS') { ansiColor('xterm') {
       def srcDir = pwd()
       def tmpDir = pwd(tmp:true)
       def buildDir = "$tmpDir/build"
@@ -77,13 +82,13 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
 	  "CPLUS_INCLUDE_PATH=$venv/include:$hdf5/include:${env.BREW}/include",
 	  "LIBRARY_PATH=$venv/lib:$hdf5/lib:${env.BREW}/lib",
           "LD_LIBRARY_PATH=$hdf5/lib",
-          "PYTHONPATH=$installDir/lib/python3.8/site-packages",
+          "PYTHONPATH=$installDir/lib/python3.9/site-packages",
 	  "CMAKE_PREFIX_PATH=$venv/lib/cmake/triqs"]) {
         deleteDir()
         sh "python3 -m venv $venv"
         sh "pip3 install -U -r $srcDir/requirements.txt"
         sh "cmake $srcDir -DCMAKE_INSTALL_PREFIX=$installDir -DBuild_Deps=Always"
-        sh "make -j2"
+        sh "make -j2 || make -j1 VERBOSE=1"
         catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') { try {
           sh "make test CTEST_OUTPUT_ON_FAILURE=1"
         } catch (exc) {
@@ -92,7 +97,7 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
         } }
         sh "make install"
       } }
-    } }
+    } } }
   } }
 }
 
