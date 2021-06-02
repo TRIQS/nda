@@ -43,15 +43,6 @@ namespace nda {
   ///
   inline double abs2(std::complex<double> x) { return (conj(x) * x).real(); }
 
-  // not for libc++ (already defined)
-#if !defined(_LIBCPP_VERSION)
-  // complex conjugation for integers
-  inline std::complex<double> conj(int x) { return x; }
-  inline std::complex<double> conj(long x) { return x; }
-  inline std::complex<double> conj(long long x) { return x; }
-  inline std::complex<double> conj(double x) { return x; }
-#endif
-
   ///
   inline bool isnan(std::complex<double> const &z) { return std::isnan(z.real()) or std::isnan(z.imag()); }
 
