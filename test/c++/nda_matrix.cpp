@@ -188,4 +188,12 @@ TEST(Matrix, Slice) { //NOLINT
 
 }
 
+TEST(Matrix, Algebra) {
+  auto m1 = nda::matrix<double>{{1, 2}, {3, 4}};
+  auto m2 = nda::matrix<double>{{1, 2}, {2, 1}};
 
+  auto prod = nda::matrix<double>{{5, 4}, {11, 10}};
+  EXPECT_EQ(prod, make_regular(m1 * m2));
+
+  EXPECT_EQ(make_regular(m1 / m2), make_regular(m1 * inverse(m2)));
+}

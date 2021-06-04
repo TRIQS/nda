@@ -14,6 +14,7 @@
 
 #pragma once
 #include "linalg/matmul.hpp"
+#include "linalg/det_and_inverse.hpp"
 
 namespace nda {
 
@@ -159,7 +160,7 @@ namespace nda {
     public:
     // FIXME Clef
     template <typename... Args>
-    auto operator()(Args const &... args) const { //  REQUIRES(not(clef::is_lazy<A> and ...)) {
+    auto operator()(Args const &...args) const { //  REQUIRES(not(clef::is_lazy<A> and ...)) {
 
       // We simply implement all cases
       if constexpr (OP == '+') { // we KNOW that l and r are NOT scalar (cf operator +,- impl).
@@ -237,7 +238,7 @@ namespace nda {
 
     // FIXME clef
     template <typename... Args>
-    auto operator()(Args &&... args) const { // REQUIRES(not(clef::is_lazy<L>))
+    auto operator()(Args &&...args) const { // REQUIRES(not(clef::is_lazy<L>))
       return -l(std::forward<Args>(args)...);
     }
 
@@ -420,9 +421,8 @@ namespace nda {
   template <typename L, typename R>
   auto operator/(L &&l, R &&r) REQUIRES(model_ndarray_with_possibly_one_scalar<L, R>) { // and (common_algebra<L, R>() != 'N')) {
     static_assert(rank_are_compatible<L, R>(), "rank mismatch in array addition");
-    using L_t = std::decay_t<L>; // L, R can be lvalue references
     using R_t = std::decay_t<R>;
-    if constexpr (get_algebra<R_t> == 'M' and is_scalar_v<L_t>) {
+    if constexpr (get_algebra<R_t> == 'M') {
       return std::forward<L>(l) * inverse(matrix<get_value_t<R_t>>{std::forward<R>(r)});
     } else {
       static_assert(common_algebra<L, R>() != 'N', "Can not divide two objects belonging to different algebras");
@@ -434,23 +434,5 @@ namespace nda {
   expr_unary<'-', L> operator-(L &&l) REQUIRES(is_ndarray_v<std::decay_t<L>>) {
     return {std::forward<L>(l)};
   }
-
-  //------------  lazy inverse
-
-  // requires NdArray<A> and HasMatrixAlgebra<A>
-  template <class A>
-  expr<'/', int, A> inverse(A &&a) REQUIRES(is_ndarray_v<std::decay_t<A>> and (get_algebra<std::decay_t<A>> != 'M')) {
-    return {1, std::forward<A>(a)};
-  }
-
-  //------------  Inverse of Matrix
-
-  //// anything / matrix ---> anything * inverse(matrix)
-  //template <typename A, typename M>
-  //auto operator/(A &&a, M &&m)    //
-  //REQUIRES(ImmutableMatrix<M>) //
-  //{
-  //return std::forward<A>(a) * inverse(std::forward<M>(m);
-  //}
 
 } // namespace nda
