@@ -16,7 +16,7 @@
 #include <nda/linalg/det_and_inverse.hpp>
 
 using expr_1_m_mat =
-   nda::expr<'-', nda::scalar_matrix<long>, nda::basic_array_view<long, 2, nda::C_layout, 'M', nda::default_accessor, nda::borrowed>>;
+   nda::expr<'-', long, nda::basic_array_view<long, 2, nda::C_layout, 'M', nda::default_accessor, nda::borrowed>>;
 
 static_assert(expr_1_m_mat::algebra == 'M', "oops");
 static_assert(nda::get_algebra<expr_1_m_mat> == 'M', "oops");
@@ -40,7 +40,7 @@ TEST(NDA, DanglingScalarProtection) { //NOLINT
 
 TEST(NDA, Negate_Array) { //NOLINT
 
-  static_assert(nda::is_ndarray_v<nda::array<double, 1>>, "EEE");
+  static_assert(nda::Array<nda::array<double, 1>>, "EEE");
 
   nda::array<double, 1> A{4, 2, 3}, B{0, 0, 0};
 

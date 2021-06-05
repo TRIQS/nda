@@ -28,7 +28,7 @@ namespace nda::blas {
    *
    * \private : DO NOT DOCUMENT, testing only ??
    */
-  template <CONCEPT(MatrixView) A, CONCEPT(MatrixView) B, CONCEPT(MatrixView) Out>
+  template <MatrixView A, MatrixView B, MatrixView Out>
 
   void gemm_generic(typename A::value_type alpha, A const &a, B const &b, typename A::value_type beta, Out &c) {
 
@@ -54,9 +54,9 @@ namespace nda::blas {
    *       * c has the correct dimension given a, b. 
    *         gemm does not resize the object, 
    */
-  template <CONCEPT(MatrixView) A, CONCEPT(MatrixView) B, CONCEPT(MatrixView) C>
+  template <MatrixView A, MatrixView B, MatrixView C>
 
-  REQUIRES(have_same_value_type_v<A, B, C> and is_blas_lapack_v<typename A::value_type>)
+  requires(have_same_value_type_v<A, B, C> and is_blas_lapack_v<typename A::value_type>)
 
   void gemm(typename A::value_type alpha, A const &a, B const &b, typename A::value_type beta, C &&c) {
 

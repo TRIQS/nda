@@ -20,7 +20,7 @@ namespace nda {
   /// Make a array of zeros with the given dimensions.
   /// Return a scalar for the case of rank zero.
   /// If we want more general array, use the static factory zeros [See also]
-  template <typename T, CONCEPT(std::integral) Int, auto Rank>
+  template <typename T, std::integral Int, auto Rank>
   auto zeros(std::array<Int, Rank> const &shape) {
     // For Rank == 0 we should return the underlying scalar_t
     if constexpr (Rank == 0)
@@ -30,7 +30,7 @@ namespace nda {
   }
 
   ///
-  template <typename T, CONCEPT(std::integral)... Int>
+  template <typename T, std::integral... Int>
   auto zeros(Int... i) {
     return zeros<T>(std::array<long, sizeof...(Int)>{i...});
   }
@@ -47,7 +47,7 @@ namespace nda {
   template <typename A>
   auto make_regular(A &&x) {
     using A_t = std::decay_t<A>;
-    if constexpr (is_ndarray_v<A_t>)
+    if constexpr (Array<A>)
       return basic_array<get_value_t<A_t>, get_rank<A_t>, C_layout, get_algebra<A_t>, heap>{std::forward<A>(x)};
     else
       return x;
@@ -65,7 +65,7 @@ namespace nda {
    * @param a A container or a view
    */
   template <typename A>
-  void resize_or_check_if_view(A &a, std::array<long, A::rank> const &sha) REQUIRES(is_regular_or_view_v<A>) {
+  void resize_or_check_if_view(A &a, std::array<long, A::rank> const &sha) requires(is_regular_or_view_v<A>) {
     if (a.shape() == sha) return;
     if constexpr (is_regular_v<A>) {
       a.resize(sha);
@@ -136,10 +136,11 @@ namespace nda {
   // --------------- operator == ---------------------
 
   /// True iif all elements are equal.
-  template <typename A, typename B>
-  bool operator==(A const &a, B const &b) REQUIRES(is_ndarray_v<A> and is_ndarray_v<B>) {
-#if (__cplusplus > 201703L)
-    static_assert(StdEqualityComparableWith<get_value_t<A>, get_value_t<B>>, "A == B is only defined when their element can be compared");
+  template <Array A, Array B>
+  bool operator==(A const &a, B const &b) {
+ // FIXME not implemented in clang .. readd when done for better error message
+#ifndef __clang__
+    static_assert(std::equality_comparable_with<get_value_t<A>, get_value_t<B>>, "A == B is only defined when their element can be compared");
 #endif
     if (a.shape() != b.shape()) return false;
     bool r = true;
@@ -149,8 +150,8 @@ namespace nda {
 
   // ------------------------------- auto_assign --------------------------------------------
 
-  template <typename A, typename F>
-  void clef_auto_assign(A &&a, F &&f) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+  template <Array A, typename F>
+  void clef_auto_assign(A &&a, F &&f) {
     nda::for_each(a.shape(), [&a, &f](auto &&...x) {
       if constexpr (clef::is_function<std::decay_t<decltype(f(x...))>>) {
         clef_auto_assign(a(x...), f(x...));

@@ -104,24 +104,24 @@ namespace nda {
 
     ///
     template <typename L, char A, typename CP>
-    EXPLICIT(requires_runtime_check<L>)
+    explicit(requires_runtime_check<L>)
     basic_array_view(basic_array<ValueType, Rank, L, A, CP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
 
     ///
     template <typename L, char A, typename AP, typename OP>
-    EXPLICIT(requires_runtime_check<L>)
+    explicit(requires_runtime_check<L>)
     basic_array_view(basic_array_view<ValueType, Rank, L, A, AP, OP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
 
     ///
     template <typename L, char A, typename CP>
-    EXPLICIT(requires_runtime_check<L>)
-    basic_array_view(basic_array<std::remove_const_t<ValueType>, Rank, L, A, CP> const &a) noexcept REQUIRES(std::is_const_v<ValueType>)
+    explicit(requires_runtime_check<L>)
+    basic_array_view(basic_array<std::remove_const_t<ValueType>, Rank, L, A, CP> const &a) noexcept requires(std::is_const_v<ValueType>)
        : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
 
     ///
     template <typename L, char A, typename AP, typename OP>
-    EXPLICIT(requires_runtime_check<L>)
-    basic_array_view(basic_array_view<std::remove_const_t<ValueType>, Rank, L, A, AP, OP> const &a) noexcept REQUIRES(std::is_const_v<ValueType>)
+    explicit(requires_runtime_check<L>)
+    basic_array_view(basic_array_view<std::remove_const_t<ValueType>, Rank, L, A, AP, OP> const &a) noexcept requires(std::is_const_v<ValueType>)
        : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
 
     /** 
@@ -166,8 +166,8 @@ namespace nda {
      * @tparam RHS A scalar or an object modeling the concept NDArray
      * @param rhs Right hand side of the = operation
      */
-    template <CONCEPT(ArrayOfRank<Rank>) RHS>
-    basic_array_view &operator=(RHS const &rhs) noexcept REQUIRES17(is_ndarray_v<RHS> and not is_scalar_for_v<RHS, basic_array_view>) {
+    template <ArrayOfRank<Rank> RHS>
+    basic_array_view &operator=(RHS const &rhs) noexcept  {
       // in C20 I use the concept refinement here, in 17 I have to exclude the  alternaticve
       static_assert(!is_const, "Cannot assign to a const !");
       assign_from_ndarray(rhs); // common code with view, private
@@ -177,7 +177,7 @@ namespace nda {
     /// Assign to scalar
     template <typename RHS>
     // FIXME : explode this notion
-    basic_array_view &operator=(RHS const &rhs) noexcept REQUIRES(is_scalar_for_v<RHS, basic_array_view>) {
+    basic_array_view &operator=(RHS const &rhs) noexcept requires(is_scalar_for_v<RHS, basic_array_view>) {
       static_assert(!is_const, "Cannot assign to a const !");
       assign_from_scalar(rhs); // common code with view, private
       return *this;
@@ -186,8 +186,8 @@ namespace nda {
     /** 
      * 
      */
-    template <CONCEPT(ArrayInitializer) Initializer>
-    basic_array_view &operator=(Initializer const &initializer) noexcept REQUIRES17(is_array_initializer_v<Initializer>) {
+    template <ArrayInitializer Initializer>
+    basic_array_view &operator=(Initializer const &initializer) noexcept  {
       EXPECTS(shape() == initializer.shape());
       initializer.invoke(*this);
       return *this;

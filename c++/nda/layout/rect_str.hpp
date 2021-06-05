@@ -100,7 +100,7 @@ namespace nda {
        : base_t{make_shape_from_string_indices(str_indices)}, s_indices{std::make_shared<ind_t>(std::move(str_indices))} {}
 
     ///
-    rect_str(std::array<long, n_dynamic_extents> const &shape) noexcept REQUIRES((n_dynamic_extents != Rank) and (n_dynamic_extents != 0))
+    rect_str(std::array<long, n_dynamic_extents> const &shape) noexcept requires((n_dynamic_extents != Rank) and (n_dynamic_extents != 0))
        : base_t{shape} {}
 
     // ----------------  Call operator -------------------------

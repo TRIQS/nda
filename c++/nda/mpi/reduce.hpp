@@ -18,8 +18,8 @@
 #include "./../map.hpp"
 
 // Models ArrayInitializer concept
-template <CONCEPT(nda::Array) A>
-REQUIRES17(nda::is_ndarray_v<std::decay_t<A>>)
+template <nda::Array A>
+
 struct mpi::lazy<mpi::tag::reduce, A> {
 
   using value_type      = typename std::decay_t<A>::value_type;
@@ -35,8 +35,8 @@ struct mpi::lazy<mpi::tag::reduce, A> {
   [[nodiscard]] auto shape() const { return rhs.shape(); }
 
   /// Execute the mpi operation and write result to target
-  template <CONCEPT(nda::Array) T>
-  REQUIRES17(nda::is_ndarray_v<std::decay_t<T>>)
+  template <nda::Array T>
+  
   void invoke(T &&target) const {
     if (not target.is_contiguous()) NDA_RUNTIME_ERROR << "mpi operations require contiguous target.data() to be contiguous";
 
@@ -84,13 +84,6 @@ struct mpi::lazy<mpi::tag::reduce, A> {
 
 namespace nda {
 
-#if not(__cplusplus > 201703L)
-  //----------------------------  mark the class for C++17 concept workaround
-  template <typename A>
-  REQUIRES17(nda::is_ndarray_v<std::decay_t<A>>)
-  inline constexpr bool is_array_initializer_v<mpi::lazy<mpi::tag::reduce, A>> = true;
-#endif
-
   /**
    * Reduction of the array
    *
@@ -105,8 +98,8 @@ namespace nda {
    *
    */
   template <typename A>
-  AUTO(ArrayInitializer)
-  mpi_reduce(A &&a, mpi::communicator c = {}, int root = 0, bool all = false, MPI_Op op = MPI_SUM) REQUIRES(is_regular_or_view_v<std::decay_t<A>>) {
+  ArrayInitializer auto mpi_reduce(A &&a, mpi::communicator c = {}, int root = 0, bool all = false, MPI_Op op = MPI_SUM)
+     requires(is_regular_or_view_v<std::decay_t<A>>) {
 
     if (not a.is_contiguous()) NDA_RUNTIME_ERROR << "mpi operations require contiguous rhs.data() to be contiguous";
 

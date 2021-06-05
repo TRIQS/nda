@@ -148,20 +148,14 @@ namespace nda {
     /// Is the order in memory C ?
     static constexpr bool is_stride_order_C() {
       // operator == of std:array is constexpr only since C++20
-      //#if __cplusplus > 201703L
-      //      return (stride_order == permutations::identity<Rank>());
-      //#else
-      return (encode(stride_order) == encode(permutations::identity<Rank>()));
-      //#endif
+      return (stride_order == permutations::identity<Rank>());
+      //return (encode(stride_order) == encode(permutations::identity<Rank>()));
     }
 
     /// Is the order in memory Fortran ?
     static constexpr bool is_stride_order_Fortran() {
-      //#if __cplusplus > 201703L
-      //      return (stride_order == permutations::reverse_identity<Rank>());
-      //#else
-      return (encode(stride_order) == encode(permutations::reverse_identity<Rank>()));
-      //#endif
+      return (stride_order == permutations::reverse_identity<Rank>());
+      //return (encode(stride_order) == encode(permutations::reverse_identity<Rank>()));
     }
 
     // ----------------  Constructors -------------------------
@@ -203,7 +197,7 @@ namespace nda {
      * @param lenptr Pointer to the lengths
      * @param strptr Pointer to the strides
      */
-    template <CONCEPT(std::integral) Int>
+    template <std::integral Int>
     [[nodiscard]] static bool is_stride_order_valid(Int *lenptr, Int *strptr) {
       auto dims_to_check = std::vector<int>{};
       dims_to_check.reserve(Rank);
@@ -301,21 +295,21 @@ namespace nda {
 
     public:
     /// When StaticExtents are present, constructs from the dynamic extents only
-    idx_map(std::array<long, n_dynamic_extents> const &shape) noexcept REQUIRES((n_dynamic_extents != Rank) and (n_dynamic_extents != 0))
+    idx_map(std::array<long, n_dynamic_extents> const &shape) noexcept requires((n_dynamic_extents != Rank) and (n_dynamic_extents != 0))
        : idx_map(merge_static_and_dynamic_extents(shape)) {}
 
     /// \private
     /// trap for error. If one tries to construct a view with a mismatch of stride order
     // The compiler selects this constructor instead of presenting a long list, and then goes into a dead end.
     template <uint64_t StaticExtents2, uint64_t StrideOrder2, layout_prop_e P>
-    idx_map(idx_map<Rank, StaticExtents2, StrideOrder2, P> const &) REQUIRES(StrideOrder != StrideOrder2) {
+    idx_map(idx_map<Rank, StaticExtents2, StrideOrder2, P> const &) requires(StrideOrder != StrideOrder2) {
       static_assert((StrideOrder == StrideOrder2), "Can not construct a layout from another one with a different stride order");
     }
 
     /// \private
     /// trap for error. For R = Rank, the non template has priority
     template <int R>
-    idx_map(std::array<long, R> const &) REQUIRES(R != Rank) {
+    idx_map(std::array<long, R> const &) requires(R != Rank) {
       static_assert(R == Rank, "Rank of the argument incorrect in idx_map construction");
     }
 
@@ -382,12 +376,7 @@ namespace nda {
 
     // ----------------  Comparison -------------------------
 
-#if __cplusplus > 201703L
     bool operator==(idx_map const &x) const = default;
-#else
-    bool operator==(idx_map const &x) const { return (len == x.len) and (str == x.str); }
-    bool operator!=(idx_map const &x) { return !(operator==(x)); }
-#endif
 
     // ---------------- Transposition -------------------------
 

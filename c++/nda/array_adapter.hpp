@@ -19,12 +19,10 @@ namespace nda {
   /// A pair shape + lambda --> an immutable array
   template <int R, typename F>
   class array_adapter {
+    static_assert(CallableWithLongs<F, R>, "Lambda should be callable with R integers");
+    
     std::array<long, R> myshape;
     F f;
-
-#if __cplusplus > 201703L
-    static_assert(concept_impl::CallableWithRLongs<R, F>, "Lambda should be callable with R integers");
-#endif
 
     public:
     template <typename Int>
@@ -42,11 +40,5 @@ namespace nda {
   // CTAD
   template <auto R, typename Int, typename F>
   array_adapter(std::array<Int, R>, F) -> array_adapter<R, F>;
-
-// C++17 concept emulation
-#if not(__cplusplus > 201703L)
-  template <int R, typename F>
-  inline constexpr bool is_ndarray_v<array_adapter<R, F>> = true;
-#endif
 
 } // namespace nda

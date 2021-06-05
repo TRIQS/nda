@@ -44,8 +44,7 @@ namespace nda::blas {
                                                                  std::remove_const_t<typename std::remove_reference_t<A0>::value_type>> and ...
                                                   and true);
 
-#if __cplusplus > 201703L
-
+  // ===================== CONCEPTS ===========================
   template <typename T>
   concept IsDoubleOrComplex = is_blas_lapack_v<T>;
 
@@ -57,7 +56,7 @@ namespace nda::blas {
   template <typename A>
   concept VectorView = (is_regular_or_view_v<std::decay_t<A>> and get_rank<std::decay_t<A>> == 1);
 
-#endif
+  // ================================================
 
   // FIXME : kill this
   template <typename A0, typename... A>

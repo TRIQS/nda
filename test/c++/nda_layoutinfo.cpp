@@ -26,7 +26,7 @@ TEST(BUG, n1) { //NOLINT
   EXPECT_EQ(expr_t::l_is_scalar, false);
   EXPECT_EQ(expr_t::r_is_scalar, false);
 
-  EXPECT_EQ(expr_t::layout_info.prop, nda::layout_prop_e::none);
+  EXPECT_EQ(expr_t::compute_layout_info().prop, nda::layout_prop_e::none);
 
   EXPECT_EQ(nda::get_layout_info<expr_t::R_t>.prop, nda::layout_prop_e::none);
   EXPECT_EQ(nda::get_layout_info<expr_t::L_t>.prop, nda::layout_prop_e::contiguous);

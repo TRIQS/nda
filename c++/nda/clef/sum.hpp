@@ -35,7 +35,7 @@ namespace nda::clef {
 
   // sum a function f on a domain D, using a simple foreach
   template <typename F, typename D>
-  auto sum_f_domain_impl(F const &f, D const &d) REQUIRES(not is_clef_expression<F, D>) {
+  auto sum_f_domain_impl(F const &f, D const &d) requires(not is_clef_expression<F, D>) {
     auto it  = d.begin();
     auto ite = d.end();
     if (it == ite) NDA_RUNTIME_ERROR << "Sum over an empty domain";

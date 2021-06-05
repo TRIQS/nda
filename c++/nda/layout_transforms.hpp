@@ -72,7 +72,7 @@ namespace nda {
   /// Reshape : contiguous view only [runtime checked]
   ///\param Int : shape are std::array<long, R> but the Int allows the user to pass int, or any integer and forget about it
   template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy, //
-            CONCEPT(std::integral) Int, auto newRank>
+            std::integral Int, auto newRank>
 
   auto reshaped_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> v, //
                      std::array<Int, newRank> const &new_shape) {
@@ -84,12 +84,12 @@ namespace nda {
     return map_layout_transform(v, layout_t{stdutil::make_std_array<long>(new_shape)});
   }
 
-  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, CONCEPT(std::integral) Int, auto newRank>
+  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, std::integral Int, auto newRank>
   auto reshaped_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a, std::array<Int, newRank> const &new_shape) {
     return reshaped_view(basic_array_view<T const, R, L, Algebra, default_accessor, borrowed>(a), new_shape);
   }
 
-  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, CONCEPT(std::integral) Int, auto newRank>
+  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, std::integral Int, auto newRank>
   auto reshaped_view(basic_array<T, R, L, Algebra, ContainerPolicy> &a, std::array<Int, newRank> const &new_shape) {
     return reshaped_view(basic_array_view<T, R, L, Algebra, default_accessor, borrowed>(a), new_shape);
   }
@@ -117,13 +117,13 @@ namespace nda {
 
   // for matrices ...
   template <typename A>
-  auto transpose(A &&a) REQUIRES(is_regular_or_view_v<std::decay_t<A>> and (std::decay_t<A>::rank == 2)) {
+  auto transpose(A &&a) requires(is_regular_or_view_v<std::decay_t<A>> and (std::decay_t<A>::rank == 2)) {
     return permuted_indices_view<encode(std::array{1, 0})>(std::forward<A>(a));
   }
 
   // Transposed_view swap two indices
   template <int I, int J, typename A>
-  auto transposed_view(A &&a) REQUIRES(is_regular_or_view_v<std::decay_t<A>>) {
+  auto transposed_view(A &&a) requires(is_regular_or_view_v<std::decay_t<A>>) {
     return permuted_indices_view<encode(permutations::transposition<std::decay_t<A>::rank>(I, J))>(std::forward<A>(a));
   }
 
@@ -162,7 +162,7 @@ namespace nda {
 
   // Take an array or view and add N dimensions of size 1 in the fastest indices
   template <int N, typename A>
-  auto reinterpret_add_fast_dims_of_size_one(A &&a) REQUIRES(nda::is_regular_or_view_v<std::decay_t<A>>) {
+  auto reinterpret_add_fast_dims_of_size_one(A &&a) requires(nda::is_regular_or_view_v<std::decay_t<A>>) {
 
     auto const &lay = a.indexmap();
     using lay_t     = std::decay_t<decltype(lay)>;

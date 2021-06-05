@@ -27,11 +27,9 @@ namespace nda::lapack {
   using blas::have_same_value_type_v;
   using blas::is_blas_lapack_v;
 
-#if (__cplusplus > 201703L)
   using blas::IsDoubleOrComplex;
   using blas::MatrixView;
   using blas::VectorView;
-#endif
 
 } // namespace nda::lapack
 

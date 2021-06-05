@@ -16,140 +16,95 @@
 #include "declarations.hpp"
 #include "stdutil/concepts.hpp"
 
-#if __cplusplus > 201703L
-
 namespace nda {
 
-  namespace concept_impl { // implementation details of concepts. Main concepts in nda::
+  // -------   CallableWithLongs<A, R>   ----------
+  // A can be called with R longs
 
-    // -----------------------
-
-    // It is crucial to use here a version of get_first_element with an explicitly deduced return type
-    // to have SFINAE, otherwise the concept checking below will fail
-    // in the case of A has a shape but NO operator(), like an initializer e.g. mpi_lazy_xxx
-    template <size_t... Is, typename A>
-    auto call_on_R_zeros_impl(std::index_sequence<Is...>, A const &a) -> decltype(a((0 * Is)...)) {
-      return a((0 * Is)...); // repeat 0 sizeof...(Is) times
-    }
-
-    template <int R, typename A>
-    auto call_on_R_zeros(A const &a) -> decltype(call_on_R_zeros_impl(std::make_index_sequence<R>{}, a)) {
-      return call_on_R_zeros_impl(std::make_index_sequence<R>{}, a);
-    }
-
-    template <typename T>
-    constexpr bool is_std__array_of_long_v = false;
-    template <auto R>
-    constexpr bool is_std__array_of_long_v<std::array<long, R>> = true;
-
-    template <class T>
-    concept IsStdArrayOfLong = is_std__array_of_long_v<std::decay_t<T>>;
-
-    // used in array_adapter
-    // clang-format off
-    template <int R, typename A> concept CallableWithRLongs= requires(A const &a) {
-      {call_on_R_zeros<R>(a)};
-    };
-    // clang-format on
-
-  } // namespace concept_impl
-
+#ifndef __clang__
+  // clang does not have an implementation yet of "Lambda in unevaluated context"
+  // we make a workaround below
   // clang-format off
-  
-  // FIXME : C++20 replace by  std::equality_comparable_with with <concepts> in libc++
-  /// A simplified version of std::equality_comparable_with (temporary fix waiting to implementation of <concepts> in libc++
-  template<class T, class U>
-  concept StdEqualityComparableWith= // exposition only
-  requires(const std::remove_reference_t<T>& t,
-           const std::remove_reference_t<U>& u) {
-    { t == u } -> std::convertible_to<bool>;
-    { t != u } -> std::convertible_to<bool>;
-    { u == t } -> std::convertible_to<bool>;
-    { u != t } -> std::convertible_to<bool>;
+  template <typename A, int R>
+  concept CallableWithLongs = requires(A const &a) {
+   {
+     []<auto... Is>(std::index_sequence<Is...>, auto const &aa) -> decltype(aa(long(Is)...)) {return aa(long(Is)...);} // a lambda to call aa(Is...)
+     (std::make_index_sequence<R>{}, a) // apply it
+   }; 
+   // the expression a(long(Is)...) should compile, with a pack of R longs
+   // the concept says nothing about the return type of this function
+   // NB decltype is crucial for the concept to work, to use SFINAE. 
+   // if not present, the concept will fail to compile for an A for which the a(Is...) it not well formed.
   };
-  
-  template <typename A> concept Array= requires(A const &a) {
-
-    // A has a shape() which returns an array<long, R> ...
-    { a.shape() } -> concept_impl::IsStdArrayOfLong;
-
-    // and R is an int, and is the rank.
-    { get_rank<A> } ->std::convertible_to<const int>;
-
-    // a(0,0,0,0... R times) returns something, which is value_type by definition
-    {concept_impl::call_on_R_zeros<get_rank<A>>(a)};
-  };
-
-  //-------------------
+// clang-format on
+#else
+  namespace details {
+    template <auto... Is, typename A>
+    auto call_on_R_longs(std::index_sequence<Is...>, A const &a) -> decltype(a((long{Is})...)); // no impl needed
+  }
 
   template <typename A, int R>
-  concept ArrayOfRank = Array<A> and (get_rank<A> == R);
-
-
-  template <typename A, typename U>
-  concept HasValueTypeConstructibleFrom = Array<A> and (std::is_constructible_v<U, get_value_t<A>>);
-
-  //-------------------
-
-  template <typename A> concept ArrayInitializer = requires(A const &a) {
-
-    // A has a shape() which returns an array<long, R> ...
-    { a.shape() } -> concept_impl::IsStdArrayOfLong;
-
-    typename A::value_type;
-
-    // not perfect, it should accept any layout
-    {a.invoke(array_contiguous_view<typename A::value_type, get_rank<A>>{}) };
-
+  concept CallableWithLongs = requires(A const &a) {
+    {details::call_on_R_longs(std::make_index_sequence<R>{}, a)};
   };
-  // clang-format on
-
-} // namespace nda
-
-// end if C++20
-#endif
-
-// C++17 backward compat workaround
-// FIXME : remove in C++20
-
-namespace nda {
-
-  /// A trait to mark classes modeling the Ndarray concept
-  template <typename T>
-  inline constexpr bool is_ndarray_v = false;
-
-  // ---------------------- Mark containers --------------------------------
-
-  template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
-  inline constexpr bool is_ndarray_v<basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>> = true;
-
-  template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
-  inline constexpr bool is_ndarray_v<basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>> = true;
-
-#if not(__cplusplus > 201703L)
-
-  // --------------------------- ArrayInitializer
-  template <typename T>
-  inline constexpr bool is_array_initializer_v = false;
-
-  // --------------------------- Check if a type is an array of given rank
-  template <typename T, auto Rank>
-  inline constexpr bool has_rank = []() {
-    if constexpr (is_ndarray_v<T>) {
-      return Rank == get_rank<T>;
-    } else
-      return false;
-  }();
-
-  // --------------------------- Workaround concept
-  template <typename A, typename U>
-  inline constexpr bool has_value_type_constructible_from = []() {
-    if constexpr (is_ndarray_v<A>) {
-      return std::is_constructible_v<U, get_value_t<A>>;
-    } else
-      return false;
-  }();
 
 #endif
+
+// -------   IsStdArrayOfLong   ----------
+// true iif T is a std::array<long, Rank>
+
+namespace details {
+  template <typename T>
+  constexpr bool is_std_array_of_long_v = false;
+  template <auto R>
+  constexpr bool is_std_array_of_long_v<std::array<long, R>> = true;
+} // namespace details
+
+template <class T>
+concept IsStdArrayOfLong = details::is_std_array_of_long_v<std::decay_t<T>>;
+
+// -------   Array   ----------
+// main concept of the library
+
+template <typename A>
+concept Array = requires(A const &a) {
+
+  // A has a shape() which returns an array<long, R>
+  // its length is the rank, as deduced by get_rank
+  { a.shape() } -> IsStdArrayOfLong;
+
+  // a(0,0,0,0... R times) returns something, which is of type value_type by definition
+  requires CallableWithLongs<A, get_rank<A>>;
+};
+
+// -------   ArrayOfRank   ----------
+// An array of rank R
+
+template <typename A, int R>
+concept ArrayOfRank = Array<A> and(get_rank<A> == R);
+
+//---------ArrayInitializer  ----------
+// The concept of what can be used to init an array
+// it must have
+// - a shape (to init the array
+// - a value_type
+// - be invokable on a view to init the array
+
+template <typename A>
+concept ArrayInitializer = requires(A const &a) {
+
+  { a.shape() } -> IsStdArrayOfLong;
+
+  typename A::value_type;
+
+  // FIXME not perfect, it should accept any layout ??
+  {a.invoke(array_contiguous_view<typename A::value_type, get_rank<A>>{})};
+};
+
+//---------HasValueTypeConstructibleFrom  ----------
+// FIXME : We should not need this ... Only used once...
+
+template <typename A, typename U>
+concept HasValueTypeConstructibleFrom = Array<A> and(std::is_constructible_v<U, get_value_t<A>>);
 
 } // namespace nda

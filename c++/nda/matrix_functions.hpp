@@ -23,8 +23,8 @@ namespace nda {
     return r;
   }
 
-  template <CONCEPT(ArrayOfRank<2>) M>
-  auto trace(M const &m) REQUIRES17(is_ndarray_v<M>) {
+  template <ArrayOfRank<2> M>
+  auto trace(M const &m)  {
     static_assert(get_rank<M> == 2, "trace: array must have rank two");
     EXPECTS(m.shape()[0] == m.shape()[1]);
     auto r = get_value_t<M>{};
@@ -34,9 +34,8 @@ namespace nda {
   }
 
   ///
-  template <CONCEPT(ArrayOfRank<2>) M>
-  AUTO(Array)
-  dagger(M const &m) REQUIRES17(is_ndarray_v<M>) {
+  template <ArrayOfRank<2> M>
+  Array auto dagger(M const &m)  {
     static_assert(get_rank<M> == 2, "dagger: array must have rank two");
     if constexpr (is_complex_v<typename M::value_type>)
       return conj(transpose(m));
@@ -48,11 +47,10 @@ namespace nda {
   /// Give 2 matrices A (of size n x q) and B (of size p x q)
   /// produces a new matrix of size
   ///
-  template <CONCEPT(ArrayOfRank<2>) A, CONCEPT(ArrayOfRank<2>) B>
-  REQUIRES20(std::same_as<get_value_t<A>, get_value_t<B>>) // NB the get_value_t gets rid of const if any
+  template <ArrayOfRank<2> A, ArrayOfRank<2> B>
+  requires(std::same_as<get_value_t<A>, get_value_t<B>>) // NB the get_value_t gets rid of const if any
   matrix<get_value_t<A>> vstack(A const &a, B const &b)
-  REQUIRES17(is_ndarray_v<A> and is_ndarray_v<B> and std::is_same_v<get_value_t<A>, get_value_t<B>>)
-  {
+      {
     static_assert(get_rank<A> == 2, "vstack: first argument must have rank two");
     static_assert(get_rank<B> == 2, "vstack: second argument must have rank two");
     EXPECTS_WITH_MESSAGE(a.shape()[1] == b.shape()[1],

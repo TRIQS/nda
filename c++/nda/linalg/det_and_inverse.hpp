@@ -31,7 +31,7 @@ namespace nda {
   // ----------  Determinant -------------------------
 
   template <typename M>
-  auto determinant_in_place(M &m) REQUIRES(is_matrix_or_view_v<M>) {
+  auto determinant_in_place(M &m) requires(is_matrix_or_view_v<M>) {
     using value_t = get_value_t<M>;
     static_assert(std::is_convertible_v<value_t, double> or std::is_convertible_v<value_t, std::complex<double>>,
 	"determinant requires a matrix of values that can be implicitly converted to double or std::complex<double>");
@@ -83,8 +83,8 @@ namespace nda {
     inverse_in_place(a());
   }
 
-  template <typename A>
-  auto inverse(A const &a) REQUIRES(is_ndarray_v<A> and (get_algebra<A> == 'M')) {
+  template <Array A>
+  auto inverse(A const &a) requires(get_algebra<A> == 'M') {
     static_assert(get_rank<A> == 2, "inverse: array must have rank two");
     EXPECTS(is_matrix_square(a, true));
     auto r = make_regular(a);

@@ -20,7 +20,7 @@ namespace nda {
   // ---------------  a few additional functions --------------
 
   template <typename T>
-  auto real(T t) REQUIRES(nda::is_scalar_v<T>) {
+  auto real(T t) requires(nda::is_scalar_v<T>) {
     if constexpr (mem::is_complex_v<T>) {
       return std::real(t);
     } else {
@@ -29,7 +29,7 @@ namespace nda {
   }
 
   template <typename T>
-  auto conj(T t) REQUIRES(nda::is_scalar_v<T>) {
+  auto conj(T t) requires(nda::is_scalar_v<T>) {
     if constexpr (mem::is_complex_v<T>) {
       return std::conj(t);
     } else {
@@ -51,7 +51,7 @@ namespace nda {
 
   /// pow for integer
   template <typename T>
-  T pow(T x, int n) REQUIRES(std::is_integral_v<T>) {
+  T pow(T x, int n) requires(std::is_integral_v<T>) {
     T r = 1;
     for (int i = 0; i < n; ++i) r *= x;
     return r;
@@ -62,8 +62,8 @@ namespace nda {
   // can not use a macro or I can not write the doc !
 
   /// Map pow on Ndarray
-  template <typename A>
-  auto pow(A &&a, int n) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+  template <Array A>
+  auto pow(A &&a, int n) {
     return nda::map([n](auto const &x) {
       using std::pow;
       return pow(x, n);

@@ -38,7 +38,7 @@ namespace nda {
 
   // array
   template <typename A>
-  std::ostream &operator<<(std::ostream &out, A const &a) REQUIRES(is_regular_or_view_v<A>) {
+  std::ostream &operator<<(std::ostream &out, A const &a) requires(is_regular_or_view_v<A>) {
 
     if constexpr (A::rank == 1) {
       out << "[";
@@ -73,18 +73,6 @@ namespace nda {
   template <int R, typename F>
   std::ostream &operator<<(std::ostream &sout, array_adapter<R, F> const &x) {
     return sout << "array_adapter of shape" << x.shape();
-  }
-
-  // ==============================================
-
-  template <typename S, int Rank>
-  std::ostream &operator<<(std::ostream &sout, scalar_array<S, Rank> const &expr) {
-    return sout << expr.s;
-  }
-
-  template <typename S>
-  std::ostream &operator<<(std::ostream &sout, scalar_matrix<S> const &expr) {
-    return sout << expr.s;
   }
 
   // ==============================================

@@ -27,49 +27,6 @@
 #define PRINT(X) std::cerr << AS_STRING(X) << " = " << X << "      at " << __FILE__ << ":" << __LINE__ << '\n'
 #define NDA_PRINT(X) std::cerr << AS_STRING(X) << " = " << X << "      at " << __FILE__ << ":" << __LINE__ << '\n'
 
-// --- Concept macros -----
-
-#if (__cplusplus > 201703L)
-
-// C++20
-// REQUIRES17 : only in 17, same for 20
-// REQUIRES : in both
-
-#define AUTO(X) X auto
-#define CONCEPT(X) X
-
-#define REQUIRES17(...)
-#define REQUIRES requires
-#define REQUIRES20 requires
-
-// C++20 explicit(bool) : degrade it NOTHING in c++17, we can not check easily
-#define EXPLICIT explicit
-
-// WARNING : it is critical for our doctools to have REQUIRES as requires, NOT a (...) with __VA_ARGS__
-// It is the same effect, but raises unnecessary complications in traversing the AST in libtooling with macros.
-
-#else
-
-// C++17 backward compat mode
-
-#define AUTO(X) auto
-#define CONCEPT(X) typename
-#define REQUIRES20(...)
-
-#define EXPLICIT(...)
-
-#ifdef __clang__
-#define REQUIRES17(...) __attribute__((enable_if(__VA_ARGS__, AS_STRING(__VA_ARGS__))))
-#define REQUIRES(...) __attribute__((enable_if(__VA_ARGS__, AS_STRING(__VA_ARGS__))))
-#elif __GNUC__
-// with the -fconcepts TS only. A degraded concept mode, not exactly the C++20. We return to C++17 + basic require
-#define REQUIRES17 requires
-#define REQUIRES requires
-
-#endif
-
-#endif
-
 // -----------------------------------------------------------
 
 #define FORCEINLINE __inline__ __attribute__((always_inline))
