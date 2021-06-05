@@ -89,6 +89,9 @@ namespace nda {
   template <typename A, typename U>
   concept HasValueTypeConstructibleFrom = Array<A> and (std::is_constructible_v<U, get_value_t<A>>);
 
+  template <typename S, typename A>
+  concept ScalarFor = is_scalar_for_v<S, std::decay_t<A>>;
+  
   //-------------------
 
   template <typename A> concept ArrayInitializer = requires(A const &a) {

@@ -77,15 +77,11 @@ namespace nda {
 
   // ==============================================
 
-  template <typename S, int Rank>
-  std::ostream &operator<<(std::ostream &sout, scalar_array<S, Rank> const &expr) {
+  template <typename S, int Rank, char A>
+  std::ostream &operator<<(std::ostream &sout, scalar_array<S, Rank, A> const &expr) {
     return sout << expr.s;
   }
 
-  template <typename S>
-  std::ostream &operator<<(std::ostream &sout, scalar_matrix<S> const &expr) {
-    return sout << expr.s;
-  }
 
   // ==============================================
 

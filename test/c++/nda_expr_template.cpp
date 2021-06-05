@@ -16,7 +16,7 @@
 #include <nda/linalg/det_and_inverse.hpp>
 
 using expr_1_m_mat =
-   nda::expr<'-', nda::scalar_matrix<long>, nda::basic_array_view<long, 2, nda::C_layout, 'M', nda::default_accessor, nda::borrowed>>;
+   nda::expr<'-', nda::scalar_array<long, 2, 'M'>, nda::basic_array_view<long, 2, nda::C_layout, 'M', nda::default_accessor, nda::borrowed>>;
 
 static_assert(expr_1_m_mat::algebra == 'M', "oops");
 static_assert(nda::get_algebra<expr_1_m_mat> == 'M', "oops");
