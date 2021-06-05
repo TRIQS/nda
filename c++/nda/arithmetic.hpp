@@ -18,14 +18,6 @@
 
 namespace nda {
 
-  // Wrap a scalar as a constant array, with Algebra (A, M, ...)
-  template <typename S, int Rank, char Algebra>
-  struct scalar_array;
-
-  // alias : S as a scalar with the Rank and Algebra of A
-  template <typename S, typename A>
-  using scalar_array_similar_to = scalar_array<std::decay_t<S>, get_rank<std::decay_t<A>>, get_algebra<std::decay_t<A>>>;
-
   // binary expression
   template <char OP, typename L, typename R>
   struct expr;
@@ -35,9 +27,6 @@ namespace nda {
   struct expr_unary;
 
   // algebra
-  template <typename S, int R, char A>
-  inline constexpr char get_algebra<scalar_array<S, R, A>> = A;
-
   template <char OP, typename L, typename R>
   inline constexpr char get_algebra<expr<OP, L, R>> = expr<OP, L, R>::algebra;
 
@@ -51,41 +40,12 @@ namespace nda {
   template <char OP, typename L>
   inline constexpr bool is_ndarray_v<expr_unary<OP, L>> = true;
 
-  template <typename S, int Rank, char Algebra>
-  inline constexpr bool is_ndarray_v<scalar_array<S, Rank, Algebra>> = true;
-
   // Get the layout info recursively
   template <char OP, typename L, typename R>
-  inline constexpr layout_info_t get_layout_info<expr<OP, L, R>> = expr<OP, L, R>::layout_info;
+  inline constexpr layout_info_t get_layout_info<expr<OP, L, R>> = expr<OP, L, R>::compute_layout_info();
 
   template <char OP, typename L>
   inline constexpr layout_info_t get_layout_info<expr_unary<OP, L>> = get_layout_info<std::decay_t<L>>;
-
-  template <typename S, int Rank, char Algebra>
-  inline constexpr layout_info_t get_layout_info<scalar_array<S, Rank, Algebra>> =
-     layout_info_t{}; // NOT contiguous, we disable the linear optimisation of assign
-
-  // -------------------------------------------------------------------------------------------
-  //         A constant array
-  // -------------------------------------------------------------------------------------------
-
-  template <typename S, int Rank, char Algebra>
-  struct scalar_array {
-    S const s;
-    std::array<long, Rank> _shape;
-
-    [[nodiscard]] std::array<long, Rank> const &shape() const { return _shape; }
-
-    S operator[](long) const requires(Rank == 1) { return s; }
-
-    template <std::integral... Is>
-    S operator()(Is...) const requires(Algebra == 'A') {
-      static_assert(sizeof...(Is) == Rank, "Logic error");
-      return s;
-    }
-
-    S operator()(long i1, long i2) const requires(Algebra == 'M') { return (i1 == i2 ? S{s} : S{}); }
-  };
 
   // -------------------------------------------------------------------------------------------
   //                             binary expressions
@@ -103,8 +63,14 @@ namespace nda {
     static constexpr bool l_is_scalar = nda::is_scalar_v<L_t>;
     static constexpr bool r_is_scalar = nda::is_scalar_v<R_t>;
     static constexpr char algebra     = (l_is_scalar ? get_algebra<R_t> : get_algebra<L_t>);
-    static constexpr layout_info_t layout_info =
-       (l_is_scalar ? get_layout_info<R_t> : (r_is_scalar ? get_layout_info<L_t> : get_layout_info<R_t> & get_layout_info<L_t>));
+    
+    static constexpr layout_info_t compute_layout_info() { 
+      if (l_is_scalar)
+	return (algebra == 'A' ? get_layout_info<R_t>  : layout_info_t{}); // {} is default : no information in the case of matrix
+       if (r_is_scalar) 
+	return (algebra == 'A' ? get_layout_info<L_t>  : layout_info_t{});
+       return get_layout_info<R_t> & get_layout_info<L_t>;
+    }
 
     //  --- shape ---
     [[nodiscard]] constexpr auto shape() const {
@@ -130,17 +96,39 @@ namespace nda {
       }
     }
 
-    public:
     // FIXME Clef
     template <typename... Args>
     auto operator()(Args const &...args) const { //  REQUIRES(not(clef::is_lazy<A> and ...)) {
 
-      // We simply implement all cases
-      if constexpr (OP == '+') { // we KNOW that l and r are NOT scalar (cf operator +,- impl).
-        return l(args...) + r(args...);
+      if constexpr (OP == '+') {
+        if constexpr (l_is_scalar) {
+          if constexpr (algebra == 'M') // ... of size 2
+            return (std::equal_to{}(args...) ? l + r(args...) : r(args...));
+          else
+            return l + r(args...);
+        } else if constexpr (r_is_scalar) {
+          if constexpr (algebra == 'M')
+            return (std::equal_to{}(args...) ? l(args...) + r : l(args...));
+          else
+            return l(args...) + r;
+        } else
+          return l(args...) + r(args...);
       }
 
-      if constexpr (OP == '-') { return l(args...) - r(args...); }
+      if constexpr (OP == '-') {
+        if constexpr (l_is_scalar) {
+          if constexpr (algebra == 'M') // ... of size 2
+            return (std::equal_to{}(args...) ? l - r(args...) : r(args...));
+          else
+            return l - r(args...);
+        } else if constexpr (r_is_scalar) {
+          if constexpr (algebra == 'M')
+            return (std::equal_to{}(args...) ? l(args...) - r : l(args...));
+          else
+            return l(args...) - r;
+        } else
+          return l(args...) - r(args...);
+      }
 
       if constexpr (OP == '*') {
         if constexpr (l_is_scalar)
@@ -249,12 +237,12 @@ namespace nda {
   // --- scalar ---
   template <Array A, typename S>
   Array auto operator+(A &&a, S &&s) { // S&& is MANDATORY for proper concept  Array <: typename to work
-    return expr<'+', A, scalar_array_similar_to<S, A>>{std::forward<A>(a), {s, a.shape()}};
+    return expr<'+', A, std::decay_t<S>>{a, s};
   }
 
   template <typename S, Array A>
   Array auto operator+(S &&s, A &&a) {
-    return expr<'+', scalar_array_similar_to<S, A>, A>{{s, a.shape()}, std::forward<A>(a)};
+    return expr<'+', std::decay_t<S>, A>{s, a};
   }
 
   // ===== operator - ========
@@ -268,12 +256,12 @@ namespace nda {
   // --- scalar ---
   template <Array A, typename S>
   Array auto operator-(A &&a, S &&s) { // S&& is MANDATORY for proper concept  Array <: typename to work
-    return expr<'-', A, scalar_array_similar_to<S, A>>{std::forward<A>(a), {s, a.shape()}};
+    return expr<'-', A, std::decay_t<S>>{a, s};
   }
 
   template <typename S, Array A>
   Array auto operator-(S &&s, A &&a) {
-    return expr<'-', scalar_array_similar_to<S, A>, A>{{s, a.shape()}, std::forward<A>(a)};
+    return expr<'-', std::decay_t<S>, A>{s, a};
   }
 
   // ===== operator * ========
