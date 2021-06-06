@@ -122,7 +122,7 @@ namespace nda {
      * @param i0, is ... are the extents (lengths) in each dimension
      */
     template <std::integral... Int>
-    explicit basic_array(Int... is) noexcept ) {
+    explicit basic_array(Int... is) noexcept {
       //static_assert((std::is_convertible_v<Int, long> and ...), "Arguments must be convertible to long");
       static_assert(sizeof...(Int) == Rank, "Incorrect number of arguments : should be exactly Rank. ");
       lay = layout_t{std::array{long(is)...}};
@@ -336,7 +336,7 @@ namespace nda {
      *
      */
     template <std::integral... Int>
-    void resize(Int const &...extent) ) {
+    void resize(Int const &...extent) {
       static_assert(std::is_copy_constructible_v<ValueType>, "Can not resize an array if its value_type is not copy constructible");
       static_assert(sizeof...(extent) == Rank, "Incorrect number of arguments for resize. Should be Rank");
       resize(std::array<long, Rank>{long(extent)...});

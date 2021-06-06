@@ -40,7 +40,7 @@ TEST(NDA, DanglingScalarProtection) { //NOLINT
 
 TEST(NDA, Negate_Array) { //NOLINT
 
-  static_assert(nda::is_ndarray_v<nda::array<double, 1>>, "EEE");
+  static_assert(nda::Array<nda::array<double, 1>>, "EEE");
 
   nda::array<double, 1> A{4, 2, 3}, B{0, 0, 0};
 

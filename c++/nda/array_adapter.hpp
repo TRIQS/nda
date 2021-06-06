@@ -19,7 +19,7 @@ namespace nda {
   /// A pair shape + lambda --> an immutable array
   template <int R, typename F>
   class array_adapter {
-    static_assert(CallableWithLongs<R, F>, "Lambda should be callable with R integers");
+    static_assert(CallableWithLongs<F, R>, "Lambda should be callable with R integers");
     
     std::array<long, R> myshape;
     F f;

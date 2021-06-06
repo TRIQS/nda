@@ -18,38 +18,39 @@
 
 namespace nda {
 
-  // -------   concept CallableWithLongs<R, A>   ----------
-  // true iif A can be called with R longs
+  // -------   CallableWithLongs<A, R>   ----------
+  // A can be called with R longs
 
 #ifndef __clang__
-  // clang does not have implementation yet of "Lambda in unevaluated context"
+  // clang does not have an implementation yet of "Lambda in unevaluated context"
   // we make a workaround below
-  // https://godbolt.org/z/cj5rdoj65
   // clang-format off
-  template <int R, typename A>
+  template <typename A, int R>
   concept CallableWithLongs = requires(A const &a) {
-    // NB decltype is crucial for the concept to work, to use SFINAE. if aa(...) is not well formed, the compiler needs to know before looking in the definition
-   {[]<auto... Is>(std::index_sequence<Is...>, auto const &aa) -> decltype(aa(long(Is)...)) {return aa(long(Is)...);}
-   (std::make_index_sequence<R>{}, a)}; // in other words the expression a(long(Is)...) should compile
-  // we just need to make a pack of Is of size R
-   // the concept says nothing about the return type, could be anything
+   {
+     []<auto... Is>(std::index_sequence<Is...>, auto const &aa) -> decltype(aa(long(Is)...)) {return aa(long(Is)...);} // a lambda to call aa(Is...)
+     (std::make_index_sequence<R>{}, a) // apply it
+   }; 
+   // the expression a(long(Is)...) should compile, with a pack of R longs
+   // the concept says nothing about the return type of this function
+   // NB decltype is crucial for the concept to work, to use SFINAE. 
+   // if not present, the concept will fail to compile for an A for which the a(Is...) it not well formed.
   };
 // clang-format on
 #else
-  template <auto... Is, typename A>
-  auto call_on_R_zeros(std::index_sequence<Is...>, A const &a) -> decltype(a((long{Is})...)) {
-    // NB decltype is crucial for the concept to work
-    return a((long{Is})...);
+  namespace details {
+    template <auto... Is, typename A>
+    auto call_on_R_longs(std::index_sequence<Is...>, A const &a) -> decltype(a((long{Is})...)); // no impl needed
   }
 
-  template <int R, typename A>
+  template <typename A, int R>
   concept CallableWithLongs = requires(A const &a) {
-    {call_on_R_zeros(std::make_index_sequence<R>{}, a)};
+    {details::call_on_R_longs(std::make_index_sequence<R>{}, a)};
   };
 
 #endif
 
-// -------   concept IsStdArrayOfLong   ----------
+// -------   IsStdArrayOfLong   ----------
 // true iif T is a std::array<long, Rank>
 
 namespace details {
@@ -68,19 +69,19 @@ concept IsStdArrayOfLong = details::is_std_array_of_long_v<std::decay_t<T>>;
 template <typename A>
 concept Array = requires(A const &a) {
 
-  // A has a shape() which returns an array<long, R> whose length is the rank, as get_rank will deduce
-  { a.shape() }
-  ->IsStdArrayOfLong;
+  // A has a shape() which returns an array<long, R>
+  // its length is the rank, as deduced by get_rank
+  { a.shape() } -> IsStdArrayOfLong;
 
-  // a(0,0,0,0... R times) returns something, which is value_type by definition
-  requires CallableWithLongs<get_rank<A>, A>;
+  // a(0,0,0,0... R times) returns something, which is of type value_type by definition
+  requires CallableWithLongs<A, get_rank<A>>;
 };
 
 // -------   ArrayOfRank   ----------
 // An array of rank R
 
 template <typename A, int R>
-concept ArrayOfRank = Array<A> and (get_rank<A> == R);
+concept ArrayOfRank = Array<A> and(get_rank<A> == R);
 
 //---------ArrayInitializer  ----------
 // The concept of what can be used to init an array
@@ -92,7 +93,7 @@ concept ArrayOfRank = Array<A> and (get_rank<A> == R);
 template <typename A>
 concept ArrayInitializer = requires(A const &a) {
 
-  { a.shape() } ->IsStdArrayOfLong;
+  { a.shape() } -> IsStdArrayOfLong;
 
   typename A::value_type;
 
@@ -100,9 +101,10 @@ concept ArrayInitializer = requires(A const &a) {
   {a.invoke(array_contiguous_view<typename A::value_type, get_rank<A>>{})};
 };
 
-// FIXME : We should not need this ...
-template <typename A, typename U>
-concept HasValueTypeConstructibleFrom = Array<A> and (std::is_constructible_v<U, get_value_t<A>>);
+//---------HasValueTypeConstructibleFrom  ----------
+// FIXME : We should not need this ... Only used once...
 
+template <typename A, typename U>
+concept HasValueTypeConstructibleFrom = Array<A> and(std::is_constructible_v<U, get_value_t<A>>);
 
 } // namespace nda
