@@ -122,7 +122,7 @@ namespace nda {
      * @param i0, is ... are the extents (lengths) in each dimension
      */
     template <std::integral... Int>
-    explicit basic_array(Int... is) noexcept REQUIRES17((std::is_integral_v<Int> and ...)) {
+    explicit basic_array(Int... is) noexcept ) {
       //static_assert((std::is_convertible_v<Int, long> and ...), "Arguments must be convertible to long");
       static_assert(sizeof...(Int) == Rank, "Incorrect number of arguments : should be exactly Rank. ");
       lay = layout_t{std::array{long(is)...}};
@@ -163,7 +163,7 @@ namespace nda {
     template <ArrayOfRank<Rank> A>
     basic_array(A const &a) noexcept //
        REQUIRES20(HasValueTypeConstructibleFrom<A, value_type>)
-          REQUIRES17(is_ndarray_v<A> and has_rank<A, Rank> and has_value_type_constructible_from<A, value_type>)
+          
        : lay(a.shape()), sto{lay.size(), mem::do_not_initialize} {
       static_assert(std::is_convertible_v<get_value_t<A>, value_type>,
                     "Can not construct the array. ValueType can not be constructed from the value_type of the argument");
@@ -185,7 +185,7 @@ namespace nda {
      *
      */
     template <ArrayInitializer Initializer> // can not be explicit
-    basic_array(Initializer const &initializer) noexcept(noexcept(initializer.invoke(basic_array{}))) REQUIRES17(is_array_initializer_v<Initializer>)
+    basic_array(Initializer const &initializer) noexcept(noexcept(initializer.invoke(basic_array{}))) 
        : basic_array{initializer.shape()} {
       initializer.invoke(*this);
     }
@@ -297,7 +297,7 @@ namespace nda {
      * @tparam RHS A scalar or an object modeling NdArray
      */
     template <ArrayOfRank<Rank> RHS>
-    basic_array &operator=(RHS const &rhs) noexcept REQUIRES17(is_ndarray_v<RHS> and not is_scalar_for_v<RHS, basic_array>) {
+    basic_array &operator=(RHS const &rhs) noexcept  {
       static_assert(!is_const, "Cannot assign to a const !");
       resize(rhs.shape());
       assign_from_ndarray(rhs); // common code with view, private
@@ -322,7 +322,7 @@ namespace nda {
      * 
      */
     template <ArrayInitializer Initializer>
-    basic_array &operator=(Initializer const &initializer) noexcept REQUIRES17(is_array_initializer_v<Initializer>) {
+    basic_array &operator=(Initializer const &initializer) noexcept  {
       resize(initializer.shape());
       initializer.invoke(*this);
       return *this;
@@ -336,7 +336,7 @@ namespace nda {
      *
      */
     template <std::integral... Int>
-    void resize(Int const &...extent) REQUIRES17((std::is_convertible_v<Int, long> and ...)) {
+    void resize(Int const &...extent) ) {
       static_assert(std::is_copy_constructible_v<ValueType>, "Can not resize an array if its value_type is not copy constructible");
       static_assert(sizeof...(extent) == Rank, "Incorrect number of arguments for resize. Should be Rank");
       resize(std::array<long, Rank>{long(extent)...});

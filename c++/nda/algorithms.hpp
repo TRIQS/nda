@@ -29,7 +29,7 @@ namespace nda {
    * fold computes f(f(r, a(0,0)), a(0,1), ...)  etc
    */
   template <Array A, typename F, typename R>
-  auto fold(F f, A const &a, R r) REQUIRES17(is_ndarray_v<A>) {
+  auto fold(F f, A const &a, R r)  {
     decltype(f(r, get_value_t<A>{})) r2 = r;
     // to take into account that f may be double,double -> double, while one passes 0 (an int...)
     // R = int, R2= double in such case, and the result will be a double, or narrowing will occur
@@ -46,7 +46,7 @@ namespace nda {
    * fold computes f(f(r, a(0,0)), a(0,1), ...)  etc
    */
   template <Array A, typename F>
-  auto fold(F f, A const &a) REQUIRES17(is_ndarray_v<A>) {
+  auto fold(F f, A const &a)  {
     return fold(std::move(f), a, get_value_t<A>{});
   }
 
@@ -55,7 +55,7 @@ namespace nda {
   /// Returns true iif at least one element of the array is true
   /// \ingroup Algorithms
   template <Array A>
-  bool any(A const &a) REQUIRES17(is_ndarray_v<A>) {
+  bool any(A const &a)  {
     static_assert(std::is_same_v<get_value_t<A>, bool>, "OOPS");
     return fold([](bool r, auto const &x) -> bool { return r or bool(x); }, a, false);
   }
@@ -63,7 +63,7 @@ namespace nda {
   /// Returns true iif all elements of the array are true
   /// \ingroup Algorithms
   template <Array A>
-  bool all(A const &a) REQUIRES17(is_ndarray_v<A>) {
+  bool all(A const &a)  {
     static_assert(std::is_same_v<get_value_t<A>, bool>, "OOPS");
     return fold([](bool r, auto const &x) -> bool { return r and bool(x); }, a, true);
   }
@@ -75,7 +75,7 @@ namespace nda {
    * \ingroup Algorithms
    */
   template <Array A>
-  auto max_element(A const &a) REQUIRES17(is_ndarray_v<A>) {
+  auto max_element(A const &a)  {
     return fold(
        [](auto const &x, auto const &y) {
          using std::max;
@@ -91,7 +91,7 @@ namespace nda {
    * \ingroup Algorithms
    */
   template <Array A>
-  auto min_element(A const &a) REQUIRES17(is_ndarray_v<A>) {
+  auto min_element(A const &a)  {
     return fold(
        [](auto const &x, auto const &y) {
          using std::min;
@@ -109,7 +109,7 @@ namespace nda {
    * @param m The object of type A
    */
   template <ArrayOfRank<2> A>
-  double frobenius_norm(A const &a) REQUIRES17(is_ndarray_v<A> &&has_rank<A, 2>) {
+  double frobenius_norm(A const &a)  {
     return std::sqrt(fold(
        [](double r, auto const &x) -> double {
          auto ab = std::abs(x);
@@ -125,7 +125,7 @@ namespace nda {
    * \ingroup Algorithms
    */
   template <Array A>
-  auto sum(A const &a) REQUIRES17(is_ndarray_v<A>) {
+  auto sum(A const &a)  {
     return fold(std::plus<>{}, a);
   }
 

@@ -50,7 +50,7 @@ namespace nda {
 namespace nda::permutations {
 
   template <std::integral Int, size_t Rank>
-  REQUIRES17(std::is_integral_v<Int>)
+  
   constexpr bool is_valid(std::array<Int, Rank> const &permutation) {
     auto idx_counts = stdutil::make_initialized_array<Rank>(0);
     for (auto idx : permutation) {
@@ -62,7 +62,7 @@ namespace nda::permutations {
 
   /// Compose p1 p2 
   template <std::integral Int, size_t Rank>
-  REQUIRES17(std::is_integral_v<Int>)
+  
   constexpr std::array<Int, Rank> compose(std::array<Int, Rank> const &p1, std::array<Int, Rank> const &p2) {
     EXPECTS(is_valid(p1));
     EXPECTS(is_valid(p2));
@@ -72,7 +72,7 @@ namespace nda::permutations {
   }
 
   template <std::integral Int, size_t Rank>
-  REQUIRES17(std::is_integral_v<Int>)
+  
   constexpr std::array<Int, Rank> inverse(std::array<Int, Rank> const &permutation) {
     EXPECTS(is_valid(permutation));
     auto result = stdutil::make_initialized_array<Rank>(0);
@@ -81,7 +81,7 @@ namespace nda::permutations {
   }
 
   template <typename T, std::integral Int, size_t Rank>
-  REQUIRES17(std::is_integral_v<Int>)
+  
   constexpr std::array<T, Rank> apply_inverse(std::array<Int, Rank> const &permutation, std::array<T, Rank> const &a) {
     EXPECTS(is_valid(permutation));
     auto result = stdutil::make_initialized_array<Rank, T>(0);
@@ -90,7 +90,7 @@ namespace nda::permutations {
   }
 
   template <typename T, std::integral Int, size_t Rank>
-  REQUIRES17(std::is_integral_v<Int>)
+  
   constexpr std::array<T, Rank> apply(std::array<Int, Rank> const &permutation, std::array<T, Rank> const &a) {
     EXPECTS(is_valid(permutation));
     auto result = stdutil::make_initialized_array<Rank, T>(0);

@@ -30,7 +30,7 @@
 // --- Concept macros -----
 
 
-#define REQUIRES17(...)
+#define 
 #define REQUIRES requires
 #define REQUIRES20 requires
 
