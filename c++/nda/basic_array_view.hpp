@@ -104,23 +104,23 @@ namespace nda {
 
     ///
     template <typename L, char A, typename CP>
-    EXPLICIT(requires_runtime_check<L>)
+    explicit(requires_runtime_check<L>)
     basic_array_view(basic_array<ValueType, Rank, L, A, CP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
 
     ///
     template <typename L, char A, typename AP, typename OP>
-    EXPLICIT(requires_runtime_check<L>)
+    explicit(requires_runtime_check<L>)
     basic_array_view(basic_array_view<ValueType, Rank, L, A, AP, OP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
 
     ///
     template <typename L, char A, typename CP>
-    EXPLICIT(requires_runtime_check<L>)
+    explicit(requires_runtime_check<L>)
     basic_array_view(basic_array<std::remove_const_t<ValueType>, Rank, L, A, CP> const &a) noexcept requires(std::is_const_v<ValueType>)
        : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
 
     ///
     template <typename L, char A, typename AP, typename OP>
-    EXPLICIT(requires_runtime_check<L>)
+    explicit(requires_runtime_check<L>)
     basic_array_view(basic_array_view<std::remove_const_t<ValueType>, Rank, L, A, AP, OP> const &a) noexcept requires(std::is_const_v<ValueType>)
        : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
 
