@@ -16,27 +16,33 @@
 #include "linalg/matmul.hpp"
 #include "linalg/det_and_inverse.hpp"
 
+// arithmetic expression with object of Array concept
+// expr and expr_unary are the expression template
+// then overload operators.
 namespace nda {
 
-  // binary expression
-  template <char OP, typename L, typename R>
-  struct expr;
-
-  // unary expression
-  template <char OP, typename L>
-  struct expr_unary;
-
-  // algebra
-  template <char OP, typename L, typename R>
-  inline constexpr char get_algebra<expr<OP, L, R>> = expr<OP, L, R>::algebra;
+  // -------------------------------------------------------------------------------------------
+  //                             unary expressions
+  // -------------------------------------------------------------------------------------------
 
   template <char OP, typename L>
-  inline constexpr char get_algebra<expr_unary<OP, L>> = expr_unary<OP, L>::algebra;
+  struct expr_unary {
+    static_assert(OP == '-', "Internal error");
+    L l;
 
-  // Get the layout info recursively
-  template <char OP, typename L, typename R>
-  inline constexpr layout_info_t get_layout_info<expr<OP, L, R>> = expr<OP, L, R>::compute_layout_info();
+    template <typename... Args>
+    auto operator()(Args &&...args) const {
+      return -l(std::forward<Args>(args)...);
+    }
 
+    [[nodiscard]] constexpr auto shape() const { return l.shape(); }
+  }; // end expr_unary class
+
+  // get_algebra
+  template <char OP, typename L>
+  inline constexpr char get_algebra<expr_unary<OP, L>> = get_algebra<L>;
+
+  // get_layout_info
   template <char OP, typename L>
   inline constexpr layout_info_t get_layout_info<expr_unary<OP, L>> = get_layout_info<std::decay_t<L>>;
 
@@ -53,20 +59,19 @@ namespace nda {
     using L_t = std::decay_t<L>; // L, R can be lvalue references
     using R_t = std::decay_t<R>;
 
+    // FIXME : we should use is_scalar_for_v but the trait needs work to accomodate scalar L or R
     static constexpr bool l_is_scalar = nda::is_scalar_v<L_t>;
     static constexpr bool r_is_scalar = nda::is_scalar_v<R_t>;
     static constexpr char algebra     = (l_is_scalar ? get_algebra<R_t> : get_algebra<L_t>);
-    
-    static constexpr layout_info_t compute_layout_info() { 
-      if (l_is_scalar)
-	return (algebra == 'A' ? get_layout_info<R_t>  : layout_info_t{}); // {} is default : no information in the case of matrix
-       if (r_is_scalar) 
-	return (algebra == 'A' ? get_layout_info<L_t>  : layout_info_t{});
-       return get_layout_info<R_t> & get_layout_info<L_t>;
+
+    static constexpr layout_info_t compute_layout_info() {
+      if (l_is_scalar) return (algebra == 'A' ? get_layout_info<R_t> : layout_info_t{}); // 1 as an array has all flags, it is just 1
+      if (r_is_scalar) return (algebra == 'A' ? get_layout_info<L_t> : layout_info_t{}); // 1 as a matrix does not, as it is diagonal only.
+      return get_layout_info<R_t> & get_layout_info<L_t>;                                // default case. Take the logical and of all flags
     }
 
     //  --- shape ---
-    [[nodiscard]] constexpr auto shape() const {
+    [[nodiscard]] constexpr decltype(auto) shape() const {
       if constexpr (l_is_scalar) {
         return r.shape();
       } else if constexpr (r_is_scalar) {
@@ -77,25 +82,13 @@ namespace nda {
       }
     }
 
-    //  --- extent ---
-    [[nodiscard]] constexpr long extent(int i) const noexcept {
-      if constexpr (l_is_scalar) {
-        return r.extent(i);
-      } else if constexpr (r_is_scalar) {
-        return l.extent(i);
-      } else {
-        //EXPECTS(l.extent(i) == r.extent(i));
-        return l.extent(i);
-      }
-    }
-
-    // FIXME Clef
     template <typename... Args>
-    auto operator()(Args const &...args) const { //  requires(not(clef::is_lazy<A> and ...)) {
+    auto operator()(Args const &...args) const {
 
       if constexpr (OP == '+') {
         if constexpr (l_is_scalar) {
-          if constexpr (algebra == 'M') // ... of size 2
+          if constexpr (algebra == 'M')
+            // args... is of size 2,
             return (std::equal_to{}(args...) ? l + r(args...) : r(args...));
           else
             return l + r(args...);
@@ -129,86 +122,38 @@ namespace nda {
         else if constexpr (r_is_scalar)
           return l(args...) * r;
         else {
-          static_assert(algebra != 'M', "Logic Error");
+          static_assert(algebra != 'M', "We should not be here");
           return l(args...) * r(args...);
         }
       }
 
       if constexpr (OP == '/') {
-        if constexpr (l_is_scalar)
+        if constexpr (l_is_scalar) {
+          static_assert(algebra != 'M', "We should not be here");
           return l / r(args...);
-        else if constexpr (r_is_scalar)
+        } else if constexpr (r_is_scalar)
           return l(args...) / r;
         else {
-          static_assert(algebra != 'M', "Logic Error");
+          static_assert(algebra != 'M', "We should not be here");
           return l(args...) / r(args...);
         }
       }
     }
 
-    // FIXME clef
-    //TRIQS_CLEF_IMPLEMENT_LAZY_CALL(); // can not simply capture in () and dispatch becuase of && case. Cf macro def.
-
-    private: // detail for operator [] below. get_rank does not work for a scalar, so I can not simply make a || list in the static_assert below
-    static constexpr bool rank_is_one() {
-      if constexpr (nda::is_scalar_v<L_t> || nda::is_scalar_v<R_t>)
-        return true;
-      else
-        return ((get_rank<L_t> == 1) and (get_rank<R_t> == 1));
-    }
-
-    public:
-    // FIXME
-    // [long] ? 1d only ? strided only ?
-    // Overload with _long ? long ? lazy ?
-    /// [ ] is the same as (). Enable for Vectors only
     template <typename Arg>
     auto operator[](Arg const &arg) const {
-      static_assert(rank_is_one(), "operator[] only available for array of rank 1");
+      static_assert(get_rank<expr> == 1, "operator[] only available for expression of rank 1");
       return operator()(std::forward<Arg>(arg));
     }
+  }; // end expr class
 
-    // just for better error messages
-    template <typename T>
-    void operator=(T &&x) = delete; // expressions are immutable
-    template <typename T>
-    void operator+=(T &&x) = delete; // expressions are immutable
-    template <typename T>
-    void operator-=(T &&x) = delete; // expressions are immutable
-  };
+  // get_algebra
+  template <char OP, typename L, typename R>
+  inline constexpr char get_algebra<expr<OP, L, R>> = expr<OP, L, R>::algebra;
 
-  // -------------------------------------------------------------------------------------------
-  //                             unary expressions
-  // -------------------------------------------------------------------------------------------
-
-  template <char OP, typename L>
-  struct expr_unary {
-    using L_t = std::decay_t<L>;
-    L l;
-    static constexpr char algebra = get_algebra<L_t>;
-    static_assert(OP == '-', "Internal error");
-
-    template <typename LL>
-    expr_unary(LL &&l_) : l(std::forward<LL>(l_)) {}
-
-    // FIXME clef
-    template <typename... Args>
-    auto operator()(Args &&...args) const { // requires(not(clef::is_lazy<L>))
-      return -l(std::forward<Args>(args)...);
-    }
-
-    //    TRIQS_CLEF_IMPLEMENT_LAZY_CALL();
-
-    [[nodiscard]] constexpr auto shape() const { return l.shape(); }
-
-    // just for better error messages
-    template <typename T>
-    void operator=(T &&x) = delete; // expressions are immutable
-    template <typename T>
-    void operator+=(T &&x) = delete; // expressions are immutable
-    template <typename T>
-    void operator-=(T &&x) = delete; // expressions are immutable
-  };
+  // get_layout_info
+  template <char OP, typename L, typename R>
+  inline constexpr layout_info_t get_layout_info<expr<OP, L, R>> = expr<OP, L, R>::compute_layout_info();
 
   // -------------------------------------------------------------------------------------------
   //                                 Operator overload
@@ -221,6 +166,12 @@ namespace nda {
   }
 
   // ===== operator + ========
+  // first case : array + array
+  // then array + scalar and scalar + array
+  // FIXME we copy the scalar. Should we ?
+  // FIXME we can regroup in one with requires(Array<L> or Array<R>) but then it is harder to assert rank as scalar have no rank.
+  // choice : keep it simple like this
+
   template <Array L, Array R>
   Array auto operator+(L &&l, R &&r) {
     static_assert(get_rank<L> == get_rank<R>, "Rank mismatch in array addition");
@@ -228,6 +179,7 @@ namespace nda {
   }
 
   // --- scalar ---
+  // S is not an array, so it is treated as a scalar.
   template <Array A, typename S>
   Array auto operator+(A &&a, S &&s) { // S&& is MANDATORY for proper concept  Array <: typename to work
     return expr<'+', A, std::decay_t<S>>{a, s};
@@ -266,6 +218,7 @@ namespace nda {
     static_assert(l_algebra != 'V', "Error Can not multiply vector by an array or a matrix");
 
     // three cases (with algebras...) :  A * A or M * M or M * V
+    // A * ?
     if constexpr (l_algebra == 'A') {
       static_assert(r_algebra == 'A', "Error Try to multiply array * matrix or vector");
       static_assert(get_rank<L> == get_rank<R>, "Rank mismatch in array multiply");
@@ -273,7 +226,9 @@ namespace nda {
       if (l.shape() != r.shape()) NDA_RUNTIME_ERROR << "Matrix product : dimension mismatch in matrix product " << l.shape() << " " << r.shape();
 #endif
       return expr<'*', L, R>{std::forward<L>(l), std::forward<R>(r)};
-    } else { // l_algebra is M
+    }
+    // M * ?
+    if constexpr (l_algebra == 'M') {
       static_assert(r_algebra != 'A', "Error Can not multiply matrix by array");
       if constexpr (r_algebra == 'M')
         // matrix * matrix
@@ -306,6 +261,7 @@ namespace nda {
     static_assert(l_algebra != 'V', "Error Can not divide vector by an array or a matrix");
 
     // two cases (with algebras...) :  A / A or M / M
+    // A / A
     if constexpr (l_algebra == 'A') {
       static_assert(r_algebra == 'A', "Error Try to multiply array * matrix or vector");
       static_assert(get_rank<L> == get_rank<R>, "Rank mismatch in array multiply");
@@ -313,7 +269,9 @@ namespace nda {
       if (l.shape() != r.shape()) NDA_RUNTIME_ERROR << "Matrix product : dimension mismatch in matrix product " << l.shape() << " " << r.shape();
 #endif
       return expr<'/', L, R>{std::forward<L>(l), std::forward<R>(r)};
-    } else { // l_algebra is M
+    }
+    // M / M
+    if constexpr (l_algebra == 'M') {
       static_assert(r_algebra == 'M', "Error Can only divide a matrix by a matrix (or scalar)");
       using R_t = std::decay_t<R>;
       return std::forward<L>(l) * inverse(matrix<get_value_t<R_t>>{std::forward<R>(r)});

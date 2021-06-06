@@ -23,7 +23,7 @@ namespace nda::blas {
   template <bool star, typename X, typename Y>
   auto _dot_impl(X const &x, Y const &y) {
     EXPECTS(x.shape() == y.shape());
-    long N = x.extent(0);
+    long N = x.shape()[0];
 
     auto _conj = [](auto z) __attribute__((always_inline)) {
       if constexpr (star and is_complex_v<decltype(z)>) {
