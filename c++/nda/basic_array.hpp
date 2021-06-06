@@ -27,27 +27,6 @@ namespace nda {
 
   // ---------------------- array--------------------------------
 
-  // to avoid  warning: use of function template name with no prior declaration in function call with explicit template arguments is a C++20 extension
-#if not(__cplusplus > 201703L)
-  template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
-  class basic_array;
-
-  template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
-  class basic_array_view;
-
-  template <ARRAY_INT P, typename T, int R, typename L, char A, typename AP, typename OP>
-  //basic_array_view<T, R, L, A, AP, OP> permuted_indices_view(basic_array_view<T, R, L, A, AP, OP>);
-  auto permuted_indices_view(basic_array_view<T, R, L, A, AP, OP>);
-
-  template <ARRAY_INT P, typename T, int R, typename L, char A, typename CP>
-  //basic_array_view<T const, R, L, A, default_accessor, borrowed> permuted_indices_view(basic_array<T, R, L, A, CP> const &);
-  auto permuted_indices_view(basic_array<T, R, L, A, CP> const &);
-
-  template <ARRAY_INT P, typename T, int R, typename L, char A, typename CP>
-  //basic_array_view<T, R, L, A, default_accessor, borrowed> permuted_indices_view(basic_array<T, R, L, A, CP> &);
-  auto permuted_indices_view(basic_array<T, R, L, A, CP> &);
-#endif
-
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
   class basic_array {
 

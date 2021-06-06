@@ -148,20 +148,14 @@ namespace nda {
     /// Is the order in memory C ?
     static constexpr bool is_stride_order_C() {
       // operator == of std:array is constexpr only since C++20
-      //#if __cplusplus > 201703L
-      //      return (stride_order == permutations::identity<Rank>());
-      //#else
-      return (encode(stride_order) == encode(permutations::identity<Rank>()));
-      //#endif
+      return (stride_order == permutations::identity<Rank>());
+      //return (encode(stride_order) == encode(permutations::identity<Rank>()));
     }
 
     /// Is the order in memory Fortran ?
     static constexpr bool is_stride_order_Fortran() {
-      //#if __cplusplus > 201703L
-      //      return (stride_order == permutations::reverse_identity<Rank>());
-      //#else
-      return (encode(stride_order) == encode(permutations::reverse_identity<Rank>()));
-      //#endif
+      return (stride_order == permutations::reverse_identity<Rank>());
+      //return (encode(stride_order) == encode(permutations::reverse_identity<Rank>()));
     }
 
     // ----------------  Constructors -------------------------
@@ -382,12 +376,7 @@ namespace nda {
 
     // ----------------  Comparison -------------------------
 
-#if __cplusplus > 201703L
     bool operator==(idx_map const &x) const = default;
-#else
-    bool operator==(idx_map const &x) const { return (len == x.len) and (str == x.str); }
-    bool operator!=(idx_map const &x) { return !(operator==(x)); }
-#endif
 
     // ---------------- Transposition -------------------------
 

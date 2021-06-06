@@ -84,13 +84,6 @@ struct mpi::lazy<mpi::tag::reduce, A> {
 
 namespace nda {
 
-#if not(__cplusplus > 201703L)
-  //----------------------------  mark the class for C++17 concept workaround
-  template <typename A>
-  
-  inline constexpr bool is_array_initializer_v<mpi::lazy<mpi::tag::reduce, A>> = true;
-#endif
-
   /**
    * Reduction of the array
    *
