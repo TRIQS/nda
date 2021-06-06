@@ -65,7 +65,7 @@ namespace nda {
    * @param a A container or a view
    */
   template <typename A>
-  void resize_or_check_if_view(A &a, std::array<long, A::rank> const &sha) REQUIRES(is_regular_or_view_v<A>) {
+  void resize_or_check_if_view(A &a, std::array<long, A::rank> const &sha) requires(is_regular_or_view_v<A>) {
     if (a.shape() == sha) return;
     if constexpr (is_regular_v<A>) {
       a.resize(sha);
@@ -137,7 +137,7 @@ namespace nda {
 
   /// True iif all elements are equal.
   template <typename A, typename B>
-  bool operator==(A const &a, B const &b) REQUIRES(is_ndarray_v<A> and is_ndarray_v<B>) {
+  bool operator==(A const &a, B const &b) requires(is_ndarray_v<A> and is_ndarray_v<B>) {
  // FIXME not implemented in clang .. readd when done for better error message
 #ifndef __clang__
     static_assert(std::equality_comparable_with<get_value_t<A>, get_value_t<B>>, "A == B is only defined when their element can be compared");
@@ -151,7 +151,7 @@ namespace nda {
   // ------------------------------- auto_assign --------------------------------------------
 
   template <typename A, typename F>
-  void clef_auto_assign(A &&a, F &&f) REQUIRES(is_ndarray_v<std::decay_t<A>>) {
+  void clef_auto_assign(A &&a, F &&f) requires(is_ndarray_v<std::decay_t<A>>) {
     nda::for_each(a.shape(), [&a, &f](auto &&...x) {
       if constexpr (clef::is_function<std::decay_t<decltype(f(x...))>>) {
         clef_auto_assign(a(x...), f(x...));

@@ -30,14 +30,10 @@
 // --- Concept macros -----
 
 
-#define 
-#define REQUIRES requires
-#define REQUIRES20 requires
-
 // C++20 explicit(bool) : degrade it NOTHING in c++17, we can not check easily
 #define EXPLICIT explicit
 
-// WARNING : it is critical for our doctools to have REQUIRES as requires, NOT a (...) with __VA_ARGS__
+// WARNING : it is critical for our doctools to have requires as requires, NOT a (...) with __VA_ARGS__
 // It is the same effect, but raises unnecessary complications in traversing the AST in libtooling with macros.
 
 

@@ -98,7 +98,7 @@ namespace nda {
 
     // FIXME Clef
     template <typename... Args>
-    auto operator()(Args const &...args) const { //  REQUIRES(not(clef::is_lazy<A> and ...)) {
+    auto operator()(Args const &...args) const { //  requires(not(clef::is_lazy<A> and ...)) {
 
       if constexpr (OP == '+') {
         if constexpr (l_is_scalar) {
@@ -200,7 +200,7 @@ namespace nda {
 
     // FIXME clef
     template <typename... Args>
-    auto operator()(Args &&...args) const { // REQUIRES(not(clef::is_lazy<L>))
+    auto operator()(Args &&...args) const { // requires(not(clef::is_lazy<L>))
       return -l(std::forward<Args>(args)...);
     }
 

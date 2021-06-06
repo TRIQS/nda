@@ -27,7 +27,7 @@ namespace nda::blas {
   ///
   template <MatrixView A, MatrixView B, MatrixView C>
 
-  REQUIRES(have_same_element_type_and_it_is_blas_type_v<A, B, C>)
+  requires(have_same_element_type_and_it_is_blas_type_v<A, B, C>)
 
   // FIXME : why A const and B not ??
   // CF Nils ??

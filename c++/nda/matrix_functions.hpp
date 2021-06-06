@@ -48,7 +48,7 @@ namespace nda {
   /// produces a new matrix of size
   ///
   template <ArrayOfRank<2> A, ArrayOfRank<2> B>
-  REQUIRES20(std::same_as<get_value_t<A>, get_value_t<B>>) // NB the get_value_t gets rid of const if any
+  requires(std::same_as<get_value_t<A>, get_value_t<B>>) // NB the get_value_t gets rid of const if any
   matrix<get_value_t<A>> vstack(A const &a, B const &b)
       {
     static_assert(get_rank<A> == 2, "vstack: first argument must have rank two");

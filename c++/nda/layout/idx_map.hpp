@@ -301,21 +301,21 @@ namespace nda {
 
     public:
     /// When StaticExtents are present, constructs from the dynamic extents only
-    idx_map(std::array<long, n_dynamic_extents> const &shape) noexcept REQUIRES((n_dynamic_extents != Rank) and (n_dynamic_extents != 0))
+    idx_map(std::array<long, n_dynamic_extents> const &shape) noexcept requires((n_dynamic_extents != Rank) and (n_dynamic_extents != 0))
        : idx_map(merge_static_and_dynamic_extents(shape)) {}
 
     /// \private
     /// trap for error. If one tries to construct a view with a mismatch of stride order
     // The compiler selects this constructor instead of presenting a long list, and then goes into a dead end.
     template <uint64_t StaticExtents2, uint64_t StrideOrder2, layout_prop_e P>
-    idx_map(idx_map<Rank, StaticExtents2, StrideOrder2, P> const &) REQUIRES(StrideOrder != StrideOrder2) {
+    idx_map(idx_map<Rank, StaticExtents2, StrideOrder2, P> const &) requires(StrideOrder != StrideOrder2) {
       static_assert((StrideOrder == StrideOrder2), "Can not construct a layout from another one with a different stride order");
     }
 
     /// \private
     /// trap for error. For R = Rank, the non template has priority
     template <int R>
-    idx_map(std::array<long, R> const &) REQUIRES(R != Rank) {
+    idx_map(std::array<long, R> const &) requires(R != Rank) {
       static_assert(R == Rank, "Rank of the argument incorrect in idx_map construction");
     }
 

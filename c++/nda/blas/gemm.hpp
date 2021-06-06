@@ -56,7 +56,7 @@ namespace nda::blas {
    */
   template <MatrixView A, MatrixView B, MatrixView C>
 
-  REQUIRES(have_same_value_type_v<A, B, C> and is_blas_lapack_v<typename A::value_type>)
+  requires(have_same_value_type_v<A, B, C> and is_blas_lapack_v<typename A::value_type>)
 
   void gemm(typename A::value_type alpha, A const &a, B const &b, typename A::value_type beta, C &&c) {
 

@@ -38,7 +38,7 @@ namespace nda {
 
   // array
   template <typename A>
-  std::ostream &operator<<(std::ostream &out, A const &a) REQUIRES(is_regular_or_view_v<A>) {
+  std::ostream &operator<<(std::ostream &out, A const &a) requires(is_regular_or_view_v<A>) {
 
     if constexpr (A::rank == 1) {
       out << "[";
