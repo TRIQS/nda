@@ -30,8 +30,6 @@
 // --- Concept macros -----
 
 
-#define AUTO(X) X auto
-
 #define REQUIRES17(...)
 #define REQUIRES requires
 #define REQUIRES20 requires

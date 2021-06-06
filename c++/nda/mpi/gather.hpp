@@ -102,8 +102,7 @@ namespace nda {
    * NB : A::value_type must have an MPI reduction (basic type or custom type, cf mpi library)
    */
   template <typename A>
-  AUTO(ArrayInitializer)
-  mpi_gather(A &&a, mpi::communicator c = {}, int root = 0, bool all = false) REQUIRES(is_regular_or_view_v<std::decay_t<A>>) {
+  ArrayInitializer auto mpi_gather(A &&a, mpi::communicator c = {}, int root = 0, bool all = false) REQUIRES(is_regular_or_view_v<std::decay_t<A>>) {
 
     if (not a.is_contiguous()) NDA_RUNTIME_ERROR << "mpi operations require contiguous rhs.data() to be contiguous";
 
