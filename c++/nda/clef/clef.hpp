@@ -546,10 +546,17 @@ namespace nda::clef {
     ex << rhs;
   }
 
+  // a erroneous diagnostics in gcc : i0 is indeed used. We silence it.
+#if defined(__GNUC__) and not defined(__clang__)
+#pragma GCC diagnostic ignored "-Wunused-but-set-parameter"
+#endif
   template <typename... Is>
   constexpr bool _all_different(int i0, Is... is) {
     return (((is - i0) * ... * 1) != 0);
   }
+#if defined(__GNUC__) and not defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
 
   // The case A(x_,y_) = RHS : we form the function (make_function) and call auto_assign (by ADL)
   template <typename F, typename RHS, int... Is>

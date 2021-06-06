@@ -18,7 +18,7 @@
 namespace nda::clef::literals {
 
   // Define literal placeholders starting from the end of the ph index spectrum
-#define PH(I) placeholder<std::numeric_limits<int>::max() - I>{};
+#define PH(I) placeholder<std::numeric_limits<int>::max() - I>{}
 
   constexpr auto i_ = PH(0);
   constexpr auto j_ = PH(1);
