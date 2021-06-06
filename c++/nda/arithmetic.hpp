@@ -33,13 +33,6 @@ namespace nda {
   template <char OP, typename L>
   inline constexpr char get_algebra<expr_unary<OP, L>> = expr_unary<OP, L>::algebra;
 
-  // Both model NdArray concept
-  template <char OP, typename L, typename R>
-  inline constexpr bool is_ndarray_v<expr<OP, L, R>> = true;
-
-  template <char OP, typename L>
-  inline constexpr bool is_ndarray_v<expr_unary<OP, L>> = true;
-
   // Get the layout info recursively
   template <char OP, typename L, typename R>
   inline constexpr layout_info_t get_layout_info<expr<OP, L, R>> = expr<OP, L, R>::compute_layout_info();

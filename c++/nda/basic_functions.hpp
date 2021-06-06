@@ -47,7 +47,7 @@ namespace nda {
   template <typename A>
   auto make_regular(A &&x) {
     using A_t = std::decay_t<A>;
-    if constexpr (is_ndarray_v<A_t>)
+    if constexpr (Array<A>)
       return basic_array<get_value_t<A_t>, get_rank<A_t>, C_layout, get_algebra<A_t>, heap>{std::forward<A>(x)};
     else
       return x;
@@ -136,8 +136,8 @@ namespace nda {
   // --------------- operator == ---------------------
 
   /// True iif all elements are equal.
-  template <typename A, typename B>
-  bool operator==(A const &a, B const &b) requires(is_ndarray_v<A> and is_ndarray_v<B>) {
+  template <Array A, Array B>
+  bool operator==(A const &a, B const &b) {
  // FIXME not implemented in clang .. readd when done for better error message
 #ifndef __clang__
     static_assert(std::equality_comparable_with<get_value_t<A>, get_value_t<B>>, "A == B is only defined when their element can be compared");
@@ -150,8 +150,8 @@ namespace nda {
 
   // ------------------------------- auto_assign --------------------------------------------
 
-  template <typename A, typename F>
-  void clef_auto_assign(A &&a, F &&f) requires(is_ndarray_v<std::decay_t<A>>) {
+  template <Array A, typename F>
+  void clef_auto_assign(A &&a, F &&f) {
     nda::for_each(a.shape(), [&a, &f](auto &&...x) {
       if constexpr (clef::is_function<std::decay_t<decltype(f(x...))>>) {
         clef_auto_assign(a(x...), f(x...));

@@ -62,8 +62,8 @@ namespace nda {
   // can not use a macro or I can not write the doc !
 
   /// Map pow on Ndarray
-  template <typename A>
-  auto pow(A &&a, int n) requires(is_ndarray_v<std::decay_t<A>>) {
+  template <Array A>
+  auto pow(A &&a, int n) {
     return nda::map([n](auto const &x) {
       using std::pow;
       return pow(x, n);

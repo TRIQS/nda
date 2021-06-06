@@ -104,18 +104,5 @@ concept ArrayInitializer = requires(A const &a) {
 template <typename A, typename U>
 concept HasValueTypeConstructibleFrom = Array<A> and (std::is_constructible_v<U, get_value_t<A>>);
 
-//-------------------
-
-/// A trait to mark classes modeling the Ndarray concept
-template <typename T>
-inline constexpr bool is_ndarray_v = false;
-
-// ---------------------- Mark containers --------------------------------
-
-template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
-inline constexpr bool is_ndarray_v<basic_array<ValueType, Rank, Layout, Algebra, ContainerPolicy>> = true;
-
-template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
-inline constexpr bool is_ndarray_v<basic_array_view<ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>> = true;
 
 } // namespace nda

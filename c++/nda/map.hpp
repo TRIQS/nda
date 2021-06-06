@@ -30,10 +30,6 @@ namespace nda {
   template <typename F, typename... A>
   constexpr char get_algebra<expr_call<F, A...>> = _impl_find_common_algebra(get_algebra<std::decay_t<A>>...);
 
-  // NdArray concept
-  template <typename F, typename... A>
-  inline constexpr bool is_ndarray_v<expr_call<F, A...>> = true;
-
   //----------------------------
 
   template <class F>
