@@ -203,7 +203,7 @@ namespace nda {
      * @param lenptr Pointer to the lengths
      * @param strptr Pointer to the strides
      */
-    template <CONCEPT(std::integral) Int>
+    template <std::integral Int>
     [[nodiscard]] static bool is_stride_order_valid(Int *lenptr, Int *strptr) {
       auto dims_to_check = std::vector<int>{};
       dims_to_check.reserve(Rank);

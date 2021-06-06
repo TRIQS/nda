@@ -18,7 +18,7 @@
 #include "./../map.hpp"
 
 // Models ArrayInitializer concept
-template <CONCEPT(nda::Array) A>
+template <nda::Array A>
 REQUIRES17(nda::is_ndarray_v<std::decay_t<A>>)
 struct mpi::lazy<mpi::tag::reduce, A> {
 
@@ -35,7 +35,7 @@ struct mpi::lazy<mpi::tag::reduce, A> {
   [[nodiscard]] auto shape() const { return rhs.shape(); }
 
   /// Execute the mpi operation and write result to target
-  template <CONCEPT(nda::Array) T>
+  template <nda::Array T>
   REQUIRES17(nda::is_ndarray_v<std::decay_t<T>>)
   void invoke(T &&target) const {
     if (not target.is_contiguous()) NDA_RUNTIME_ERROR << "mpi operations require contiguous target.data() to be contiguous";

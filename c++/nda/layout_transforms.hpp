@@ -72,7 +72,7 @@ namespace nda {
   /// Reshape : contiguous view only [runtime checked]
   ///\param Int : shape are std::array<long, R> but the Int allows the user to pass int, or any integer and forget about it
   template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy, //
-            CONCEPT(std::integral) Int, auto newRank>
+            std::integral Int, auto newRank>
 
   auto reshaped_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> v, //
                      std::array<Int, newRank> const &new_shape) {
@@ -84,12 +84,12 @@ namespace nda {
     return map_layout_transform(v, layout_t{stdutil::make_std_array<long>(new_shape)});
   }
 
-  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, CONCEPT(std::integral) Int, auto newRank>
+  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, std::integral Int, auto newRank>
   auto reshaped_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a, std::array<Int, newRank> const &new_shape) {
     return reshaped_view(basic_array_view<T const, R, L, Algebra, default_accessor, borrowed>(a), new_shape);
   }
 
-  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, CONCEPT(std::integral) Int, auto newRank>
+  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, std::integral Int, auto newRank>
   auto reshaped_view(basic_array<T, R, L, Algebra, ContainerPolicy> &a, std::array<Int, newRank> const &new_shape) {
     return reshaped_view(basic_array_view<T, R, L, Algebra, default_accessor, borrowed>(a), new_shape);
   }

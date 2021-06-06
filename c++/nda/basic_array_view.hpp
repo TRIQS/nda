@@ -166,7 +166,7 @@ namespace nda {
      * @tparam RHS A scalar or an object modeling the concept NDArray
      * @param rhs Right hand side of the = operation
      */
-    template <CONCEPT(ArrayOfRank<Rank>) RHS>
+    template <ArrayOfRank<Rank> RHS>
     basic_array_view &operator=(RHS const &rhs) noexcept REQUIRES17(is_ndarray_v<RHS> and not is_scalar_for_v<RHS, basic_array_view>) {
       // in C20 I use the concept refinement here, in 17 I have to exclude the  alternaticve
       static_assert(!is_const, "Cannot assign to a const !");
@@ -186,7 +186,7 @@ namespace nda {
     /** 
      * 
      */
-    template <CONCEPT(ArrayInitializer) Initializer>
+    template <ArrayInitializer Initializer>
     basic_array_view &operator=(Initializer const &initializer) noexcept REQUIRES17(is_array_initializer_v<Initializer>) {
       EXPECTS(shape() == initializer.shape());
       initializer.invoke(*this);

@@ -23,7 +23,7 @@ namespace nda {
     return r;
   }
 
-  template <CONCEPT(ArrayOfRank<2>) M>
+  template <ArrayOfRank<2> M>
   auto trace(M const &m) REQUIRES17(is_ndarray_v<M>) {
     static_assert(get_rank<M> == 2, "trace: array must have rank two");
     EXPECTS(m.shape()[0] == m.shape()[1]);
@@ -34,7 +34,7 @@ namespace nda {
   }
 
   ///
-  template <CONCEPT(ArrayOfRank<2>) M>
+  template <ArrayOfRank<2> M>
   AUTO(Array)
   dagger(M const &m) REQUIRES17(is_ndarray_v<M>) {
     static_assert(get_rank<M> == 2, "dagger: array must have rank two");
@@ -48,7 +48,7 @@ namespace nda {
   /// Give 2 matrices A (of size n x q) and B (of size p x q)
   /// produces a new matrix of size
   ///
-  template <CONCEPT(ArrayOfRank<2>) A, CONCEPT(ArrayOfRank<2>) B>
+  template <ArrayOfRank<2> A, ArrayOfRank<2> B>
   REQUIRES20(std::same_as<get_value_t<A>, get_value_t<B>>) // NB the get_value_t gets rid of const if any
   matrix<get_value_t<A>> vstack(A const &a, B const &b)
   REQUIRES17(is_ndarray_v<A> and is_ndarray_v<B> and std::is_same_v<get_value_t<A>, get_value_t<B>>)

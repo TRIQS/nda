@@ -19,7 +19,7 @@ namespace nda::lapack {
   ///
   ///  $$ A = U S {}^t V$$
   /// A is destroyed during the computation
-  template <CONCEPT(MatrixView) A, CONCEPT(MatrixView) U, CONCEPT(MatrixView) V>
+  template <MatrixView A, MatrixView U, MatrixView V>
 
   REQUIRES(have_same_value_type_v<A, U, V> and is_blas_lapack_v<typename A::value_type>)
 

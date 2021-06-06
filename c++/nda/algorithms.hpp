@@ -28,7 +28,7 @@ namespace nda {
    *
    * fold computes f(f(r, a(0,0)), a(0,1), ...)  etc
    */
-  template <CONCEPT(Array) A, typename F, typename R>
+  template <Array A, typename F, typename R>
   auto fold(F f, A const &a, R r) REQUIRES17(is_ndarray_v<A>) {
     decltype(f(r, get_value_t<A>{})) r2 = r;
     // to take into account that f may be double,double -> double, while one passes 0 (an int...)
@@ -45,7 +45,7 @@ namespace nda {
    *
    * fold computes f(f(r, a(0,0)), a(0,1), ...)  etc
    */
-  template <CONCEPT(Array) A, typename F>
+  template <Array A, typename F>
   auto fold(F f, A const &a) REQUIRES17(is_ndarray_v<A>) {
     return fold(std::move(f), a, get_value_t<A>{});
   }
@@ -54,7 +54,7 @@ namespace nda {
 
   /// Returns true iif at least one element of the array is true
   /// \ingroup Algorithms
-  template <CONCEPT(Array) A>
+  template <Array A>
   bool any(A const &a) REQUIRES17(is_ndarray_v<A>) {
     static_assert(std::is_same_v<get_value_t<A>, bool>, "OOPS");
     return fold([](bool r, auto const &x) -> bool { return r or bool(x); }, a, false);
@@ -62,7 +62,7 @@ namespace nda {
 
   /// Returns true iif all elements of the array are true
   /// \ingroup Algorithms
-  template <CONCEPT(Array) A>
+  template <Array A>
   bool all(A const &a) REQUIRES17(is_ndarray_v<A>) {
     static_assert(std::is_same_v<get_value_t<A>, bool>, "OOPS");
     return fold([](bool r, auto const &x) -> bool { return r and bool(x); }, a, true);
@@ -74,7 +74,7 @@ namespace nda {
    * @return The maximum element of A
    * \ingroup Algorithms
    */
-  template <CONCEPT(Array) A>
+  template <Array A>
   auto max_element(A const &a) REQUIRES17(is_ndarray_v<A>) {
     return fold(
        [](auto const &x, auto const &y) {
@@ -90,7 +90,7 @@ namespace nda {
    * @return The minimum element of A
    * \ingroup Algorithms
    */
-  template <CONCEPT(Array) A>
+  template <Array A>
   auto min_element(A const &a) REQUIRES17(is_ndarray_v<A>) {
     return fold(
        [](auto const &x, auto const &y) {
@@ -108,7 +108,7 @@ namespace nda {
    * @tparam A Anything modeling the ArrayOfRank<2> concept
    * @param m The object of type A
    */
-  template <CONCEPT(ArrayOfRank<2>) A>
+  template <ArrayOfRank<2> A>
   double frobenius_norm(A const &a) REQUIRES17(is_ndarray_v<A> &&has_rank<A, 2>) {
     return std::sqrt(fold(
        [](double r, auto const &x) -> double {
@@ -124,7 +124,7 @@ namespace nda {
    * @return The sum of all elements of a 
    * \ingroup Algorithms
    */
-  template <CONCEPT(Array) A>
+  template <Array A>
   auto sum(A const &a) REQUIRES17(is_ndarray_v<A>) {
     return fold(std::plus<>{}, a);
   }

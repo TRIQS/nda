@@ -20,7 +20,7 @@ namespace nda {
   /// Make a array of zeros with the given dimensions.
   /// Return a scalar for the case of rank zero.
   /// If we want more general array, use the static factory zeros [See also]
-  template <typename T, CONCEPT(std::integral) Int, auto Rank>
+  template <typename T, std::integral Int, auto Rank>
   auto zeros(std::array<Int, Rank> const &shape) {
     // For Rank == 0 we should return the underlying scalar_t
     if constexpr (Rank == 0)
@@ -30,7 +30,7 @@ namespace nda {
   }
 
   ///
-  template <typename T, CONCEPT(std::integral)... Int>
+  template <typename T, std::integral... Int>
   auto zeros(Int... i) {
     return zeros<T>(std::array<long, sizeof...(Int)>{i...});
   }

@@ -121,7 +121,7 @@ namespace nda {
      * 
      * @param i0, is ... are the extents (lengths) in each dimension
      */
-    template <CONCEPT(std::integral)... Int>
+    template <std::integral... Int>
     explicit basic_array(Int... is) noexcept REQUIRES17((std::is_integral_v<Int> and ...)) {
       //static_assert((std::is_convertible_v<Int, long> and ...), "Arguments must be convertible to long");
       static_assert(sizeof...(Int) == Rank, "Incorrect number of arguments : should be exactly Rank. ");
@@ -138,7 +138,7 @@ namespace nda {
      *
      * @param i0 is the extents of the only dimension
      */
-    template <CONCEPT(std::integral) Int, typename RHS>
+    template <std::integral Int, typename RHS>
     explicit basic_array(Int i, RHS const &val) noexcept REQUIRES((std::is_integral_v<Int> and Rank == 1 and is_scalar_for_v<RHS, basic_array>)) {
       lay = layout_t{std::array{long(i)}};
       sto = storage_t{lay.size()};
@@ -160,7 +160,7 @@ namespace nda {
     /** 
      * Constructs from a.shape() and then assign from the evaluation of a
      */
-    template <CONCEPT(ArrayOfRank<Rank>) A>
+    template <ArrayOfRank<Rank> A>
     basic_array(A const &a) noexcept //
        REQUIRES20(HasValueTypeConstructibleFrom<A, value_type>)
           REQUIRES17(is_ndarray_v<A> and has_rank<A, Rank> and has_value_type_constructible_from<A, value_type>)
@@ -184,7 +184,7 @@ namespace nda {
      * the knowledge of the data pointer to execute
      *
      */
-    template <CONCEPT(ArrayInitializer) Initializer> // can not be explicit
+    template <ArrayInitializer Initializer> // can not be explicit
     basic_array(Initializer const &initializer) noexcept(noexcept(initializer.invoke(basic_array{}))) REQUIRES17(is_array_initializer_v<Initializer>)
        : basic_array{initializer.shape()} {
       initializer.invoke(*this);
@@ -276,7 +276,7 @@ namespace nda {
 
     //------------------ Factory -------------------------
 
-    template <CONCEPT(std::integral) Int = long>
+    template <std::integral Int = long>
     static basic_array zeros(std::array<Int, Rank> const &shape)
        REQUIRES(std::is_standard_layout_v<ValueType> &&std::is_trivially_copyable_v<ValueType>) {
       return basic_array{stdutil::make_std_array<long>(shape), mem::init_zero};
@@ -296,7 +296,7 @@ namespace nda {
      *
      * @tparam RHS A scalar or an object modeling NdArray
      */
-    template <CONCEPT(ArrayOfRank<Rank>) RHS>
+    template <ArrayOfRank<Rank> RHS>
     basic_array &operator=(RHS const &rhs) noexcept REQUIRES17(is_ndarray_v<RHS> and not is_scalar_for_v<RHS, basic_array>) {
       static_assert(!is_const, "Cannot assign to a const !");
       resize(rhs.shape());
@@ -321,7 +321,7 @@ namespace nda {
     /** 
      * 
      */
-    template <CONCEPT(ArrayInitializer) Initializer>
+    template <ArrayInitializer Initializer>
     basic_array &operator=(Initializer const &initializer) noexcept REQUIRES17(is_array_initializer_v<Initializer>) {
       resize(initializer.shape());
       initializer.invoke(*this);
@@ -335,7 +335,7 @@ namespace nda {
      * Content is undefined, makes no copy of previous data.
      *
      */
-    template <CONCEPT(std::integral)... Int>
+    template <std::integral... Int>
     void resize(Int const &...extent) REQUIRES17((std::is_convertible_v<Int, long> and ...)) {
       static_assert(std::is_copy_constructible_v<ValueType>, "Can not resize an array if its value_type is not copy constructible");
       static_assert(sizeof...(extent) == Rank, "Incorrect number of arguments for resize. Should be Rank");
