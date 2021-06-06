@@ -140,6 +140,14 @@ TEST(Matmul, Cache) { //NOLINT
   TMP()     = 0;
   TMP()     = matrix<std::complex<double>>{M1 * (M1 + 2.0)};
   EXPECT_ARRAY_NEAR(TMP(), Res, 1.e-13);
+
+  // not matmul, just recheck diagonal unity
+  Res()     = 0;
+  Res(0, 0) = 4;
+  Res(1, 1) = 5.2;
+  TMP()     = 0;
+  TMP()     = matrix<std::complex<double>>{(M1 + 2.0)};
+  EXPECT_ARRAY_NEAR(TMP(), Res, 1.e-13);
 }
 
 //-------------------------------------------------------------
