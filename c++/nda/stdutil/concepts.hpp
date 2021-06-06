@@ -14,46 +14,16 @@
 
 #pragma once
 
-// This file is a temporary replacement for <concepts> if not present (libc++ as 06/2020)
-// to have a few basic concepts in std:: that we need.
-// definitions are taken from cppreference
-
-#if __cplusplus > 201703L
-
 #include <version>
-
-// Use concepts header if available
-// Skip inclusion for libc++ as header still incomplete
-#if defined(__GLIBCXX__) and (_GLIBCXX_RELEASE>=10)
-#if __has_include(<concepts>)
 #include <concepts>
-#endif
 
-// Define them
-#else
+// clang below 13 has incomplete <concepts>
+#ifdef __clang__
+#if __clang_major__ < 13
+
 namespace std {
-
-  // clang-format does not format well concepts yet
-  // clang-format off
-
-  template <class From, class To>
-  concept convertible_to = std::is_convertible_v<From, To> and requires(std::add_rvalue_reference_t<From> (&f)()) {
-    static_cast<To>(f());
-  };
-
-  namespace detail {
-    template <class T, class U>
-    concept SameHelper = std::is_same_v<T, U>;
-  }
-
-  template <class T, class U>
-  concept same_as = detail::SameHelper<T, U> &&detail::SameHelper<U, T>;
-
   template <class T>
   concept integral = std::is_integral_v<T>;
-
-  // clang-format on
-
 } // namespace std
 
 #endif

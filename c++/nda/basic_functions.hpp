@@ -138,8 +138,9 @@ namespace nda {
   /// True iif all elements are equal.
   template <typename A, typename B>
   bool operator==(A const &a, B const &b) REQUIRES(is_ndarray_v<A> and is_ndarray_v<B>) {
-#if (__cplusplus > 201703L)
-    static_assert(StdEqualityComparableWith<get_value_t<A>, get_value_t<B>>, "A == B is only defined when their element can be compared");
+ // FIXME not implemented in clang .. readd when done for better error message
+#ifndef __clang__
+    static_assert(std::equality_comparable_with<get_value_t<A>, get_value_t<B>>, "A == B is only defined when their element can be compared");
 #endif
     if (a.shape() != b.shape()) return false;
     bool r = true;
