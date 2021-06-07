@@ -5,7 +5,7 @@ ARG APPNAME=nda
 COPY requirements.txt /src/$APPNAME/requirements.txt
 RUN pip3 install -r /src/$APPNAME/requirements.txt
 
-RUN useradd -u 993 -m build
+RUN useradd -u 990 -m build
 
 ENV SRC=/src \
     BUILD=/home/build \
@@ -20,6 +20,6 @@ USER build
 ARG BUILD_DOC=0
 ARG BUILD_ID
 ARG CMAKE_ARGS
-RUN cmake $SRC/$APPNAME -DCMAKE_INSTALL_PREFIX=$INSTALL -DBuild_Documentation=$BUILD_DOC -DBuild_Deps=Always -DCLANG_OPT="$CXXFLAGS" -DMATHJAX_PATH="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2" $CMAKE_ARGS && make -j4 || make -j1 VERBOSE=1
+RUN cmake $SRC/$APPNAME -DCMAKE_INSTALL_PREFIX=$INSTALL -DBuild_Deps=Always -DCLANG_OPT="$CXXFLAGS" $CMAKE_ARGS && make -j4 || make -j1 VERBOSE=1
 USER root
 RUN make install
