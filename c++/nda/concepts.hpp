@@ -63,6 +63,11 @@ namespace details {
 template <class T>
 concept IsStdArrayOfLong = details::is_std_array_of_long_v<std::decay_t<T>>;
 
+// -------   Scalar   ----------
+
+template <typename S>
+concept Scalar = nda::is_scalar_v<std::decay_t<S>>;
+
 // -------   Array   ----------
 // main concept of the library
 
@@ -76,6 +81,11 @@ concept Array = requires(A const &a) {
   // a(0,0,0,0... R times) returns something, which is of type value_type by definition
   requires CallableWithLongs<A, get_rank<A>>;
 };
+
+// -------   ArrayOrScalar   ----------
+
+template <typename AS>
+concept ArrayOrScalar = Array<AS> or Scalar<AS>;
 
 // -------   ArrayOfRank   ----------
 // An array of rank R

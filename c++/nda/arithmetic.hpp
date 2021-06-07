@@ -50,7 +50,7 @@ namespace nda {
   //                             binary expressions
   // -------------------------------------------------------------------------------------------
   // OP : '+', '-', ...
-  template <char OP, typename L, typename R>
+  template <char OP, ArrayOrScalar L, ArrayOrScalar R>
   struct expr {
 
     L l;
@@ -180,12 +180,12 @@ namespace nda {
 
   // --- scalar ---
   // S is not an array, so it is treated as a scalar.
-  template <Array A, typename S>
+  template <Array A, Scalar S>
   Array auto operator+(A &&a, S &&s) { // S&& is MANDATORY for proper concept  Array <: typename to work
     return expr<'+', A, std::decay_t<S>>{a, s};
   }
 
-  template <typename S, Array A>
+  template <Scalar S, Array A>
   Array auto operator+(S &&s, A &&a) {
     return expr<'+', std::decay_t<S>, A>{s, a};
   }
@@ -199,12 +199,12 @@ namespace nda {
   }
 
   // --- scalar ---
-  template <Array A, typename S>
+  template <Array A, Scalar S>
   Array auto operator-(A &&a, S &&s) { // S&& is MANDATORY for proper concept  Array <: typename to work
     return expr<'-', A, std::decay_t<S>>{a, s};
   }
 
-  template <typename S, Array A>
+  template <Scalar S, Array A>
   Array auto operator-(S &&s, A &&a) {
     return expr<'-', std::decay_t<S>, A>{s, a};
   }
@@ -241,13 +241,13 @@ namespace nda {
 
   // --- scalar ---
 
-  template <Array A, typename S>
+  template <Array A, Scalar S>
   Array auto operator*(A &&a, S &&s) { // S&& is MANDATORY for proper concept  Array <: typename to work
     // copy the scalar. Not strictly necessary, but it is a good protection, e.g. s = 3; return s* A;
     return expr<'*', A, std::decay_t<S>>{a, s};
   }
 
-  template <typename S, Array A>
+  template <Scalar S, Array A>
   Array auto operator*(S &&s, A &&a) {
     return expr<'*', std::decay_t<S>, A>{s, a};
   }
@@ -280,12 +280,12 @@ namespace nda {
 
   // --- scalar ---
 
-  template <Array A, typename S>
+  template <Array A, Scalar S>
   Array auto operator/(A &&a, S &&s) { // S&& is MANDATORY for proper concept  Array <: typename to work
     return expr<'/', A, std::decay_t<S>>{a, s};
   }
 
-  template <typename S, Array A>
+  template <Scalar S, Array A>
   Array auto operator/(S &&s, A &&a) {
     using A_t                     = std::decay_t<A>;
     static constexpr char algebra = get_algebra<A_t>;
