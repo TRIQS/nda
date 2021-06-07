@@ -77,7 +77,7 @@ namespace nda {
   template <typename A>
   inline constexpr char get_algebra = 'N';
 
-// --------------------------- get_rank ------------------------
+  // --------------------------- get_rank ------------------------
 
   /// A trait to get the rank of an object with ndarray concept
   template <typename A>

@@ -17,7 +17,6 @@
 
 // Models ArrayInitializer concept
 template <nda::Array A>
-
 struct mpi::lazy<mpi::tag::scatter, A> {
 
   using value_type      = typename std::decay_t<A>::value_type;
@@ -39,7 +38,6 @@ struct mpi::lazy<mpi::tag::scatter, A> {
 
   /// Execute the mpi operation and write result to target
   template <nda::Array T>
-  
   void invoke(T &&target) const {
     if (not target.is_contiguous()) NDA_RUNTIME_ERROR << "mpi operations require contiguous target.data() to be contiguous";
 
