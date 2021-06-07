@@ -74,7 +74,7 @@ if(ANALYZE_SOURCES)
 	TARGET ${PROJECT_NAME}_c
 	COMMAND ${CPPCHECK_EXECUTABLE}
 	  --enable=warning,style,performance,portability
-	  --std=c++17
+	  --std=c++20
 	  --template=gcc
 	  --verbose
 	  --force
