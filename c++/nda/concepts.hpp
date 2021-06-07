@@ -50,7 +50,7 @@ namespace nda {
 
 #endif
 
-// -------   IsStdArrayOfLong   ----------
+// -------   StdArrayOfLong   ----------
 // true iif T is a std::array<long, Rank>
 
 namespace details {
@@ -61,7 +61,7 @@ namespace details {
 } // namespace details
 
 template <class T>
-concept IsStdArrayOfLong = details::is_std_array_of_long_v<std::decay_t<T>>;
+concept StdArrayOfLong = details::is_std_array_of_long_v<std::decay_t<T>>;
 
 // -------   Scalar   ----------
 
@@ -76,7 +76,7 @@ concept Array = requires(A const &a) {
 
   // A has a shape() which returns an array<long, R>
   // its length is the rank, as deduced by get_rank
-  { a.shape() } -> IsStdArrayOfLong;
+  { a.shape() } -> StdArrayOfLong;
 
   // a(0,0,0,0... R times) returns something, which is of type value_type by definition
   requires CallableWithLongs<A, get_rank<A>>;
@@ -103,7 +103,7 @@ concept ArrayOfRank = Array<A> and(get_rank<A> == R);
 template <typename A>
 concept ArrayInitializer = requires(A const &a) {
 
-  { a.shape() } -> IsStdArrayOfLong;
+  { a.shape() } -> StdArrayOfLong;
 
   typename A::value_type;
 
