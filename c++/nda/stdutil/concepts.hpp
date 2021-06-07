@@ -17,14 +17,12 @@
 #include <version>
 #include <concepts>
 
-// clang below 13 has incomplete <concepts>
-#ifdef __clang__
-#if __clang_major__ < 13
+// libcpp below 13 has incomplete <concepts>
+#if defined(_LIBCPP_VERSION) and _LIBCPP_VERSION < 13000
 
 namespace std {
   template <class T>
   concept integral = std::is_integral_v<T>;
 } // namespace std
 
-#endif
 #endif
