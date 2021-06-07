@@ -40,7 +40,7 @@ namespace nda {
 
   // get_algebra
   template <char OP, typename L>
-  inline constexpr char get_algebra<expr_unary<OP, L>> = get_algebra<L>;
+  inline constexpr char get_algebra<expr_unary<OP, L>> = get_algebra<std::decay_t<L>>;
 
   // get_layout_info
   template <char OP, typename L>
