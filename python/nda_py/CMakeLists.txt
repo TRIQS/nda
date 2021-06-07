@@ -5,16 +5,8 @@ configure_file(version.py.in version.py)
 add_library(nda_py INTERFACE)
 add_library(${PROJECT_NAME}::nda_py ALIAS nda_py)
 
-# Set C++ Standard
-include(CheckCXXCompilerFlag)
-CHECK_CXX_COMPILER_FLAG("-std=c++20" HAS_CPP20)
-if(HAS_CPP20)
-  target_compile_options(nda_py INTERFACE -std=c++20)
-else()
-  target_compile_options(nda_py INTERFACE -std=c++17 $<$<CXX_COMPILER_ID:GNU>:-fconcepts>)
-endif()
-
 # Configure target and compilation
+target_compile_features(nda_py INTERFACE cxx_std_20)
 target_include_directories(nda_py INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/python> $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/c++>)
 target_include_directories(nda_py SYSTEM INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>)
 target_compile_definitions(nda_py INTERFACE
