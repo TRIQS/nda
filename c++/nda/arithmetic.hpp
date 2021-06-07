@@ -182,12 +182,12 @@ namespace nda {
   // S is not an array, so it is treated as a scalar.
   template <Array A, Scalar S>
   Array auto operator+(A &&a, S &&s) { // S&& is MANDATORY for proper concept  Array <: typename to work
-    return expr<'+', A, std::decay_t<S>>{a, s};
+    return expr<'+', A, std::decay_t<S>>{std::forward<A>(a), s};
   }
 
   template <Scalar S, Array A>
   Array auto operator+(S &&s, A &&a) {
-    return expr<'+', std::decay_t<S>, A>{s, a};
+    return expr<'+', std::decay_t<S>, A>{s, std::forward<A>(a)};
   }
 
   // ===== operator - ========
@@ -201,12 +201,12 @@ namespace nda {
   // --- scalar ---
   template <Array A, Scalar S>
   Array auto operator-(A &&a, S &&s) { // S&& is MANDATORY for proper concept  Array <: typename to work
-    return expr<'-', A, std::decay_t<S>>{a, s};
+    return expr<'-', A, std::decay_t<S>>{std::forward<A>(a), s};
   }
 
   template <Scalar S, Array A>
   Array auto operator-(S &&s, A &&a) {
-    return expr<'-', std::decay_t<S>, A>{s, a};
+    return expr<'-', std::decay_t<S>, A>{s, std::forward<A>(a)};
   }
 
   // ===== operator * ========
@@ -244,12 +244,12 @@ namespace nda {
   template <Array A, Scalar S>
   Array auto operator*(A &&a, S &&s) { // S&& is MANDATORY for proper concept  Array <: typename to work
     // copy the scalar. Not strictly necessary, but it is a good protection, e.g. s = 3; return s* A;
-    return expr<'*', A, std::decay_t<S>>{a, s};
+    return expr<'*', A, std::decay_t<S>>{std::forward<A>(a), s};
   }
 
   template <Scalar S, Array A>
   Array auto operator*(S &&s, A &&a) {
-    return expr<'*', std::decay_t<S>, A>{s, a};
+    return expr<'*', std::decay_t<S>, A>{s, std::forward<A>(a)};
   }
 
   // ===== operator / ========
@@ -282,7 +282,7 @@ namespace nda {
 
   template <Array A, Scalar S>
   Array auto operator/(A &&a, S &&s) { // S&& is MANDATORY for proper concept  Array <: typename to work
-    return expr<'/', A, std::decay_t<S>>{a, s};
+    return expr<'/', A, std::decay_t<S>>{std::forward<A>(a), s};
   }
 
   template <Scalar S, Array A>
@@ -292,7 +292,7 @@ namespace nda {
     if constexpr (algebra == 'M')
       return s * inverse(matrix<get_value_t<A_t>>{std::forward<A>(a)});
     else
-      return expr<'/', std::decay_t<S>, A>{s, a};
+      return expr<'/', std::decay_t<S>, A>{s, std::forward<A>(a)};
   }
 
 } // namespace nda
