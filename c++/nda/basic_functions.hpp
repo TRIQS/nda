@@ -202,13 +202,13 @@ namespace nda {
   /// True iif all elements are equal.
   template <Array A, Array B>
   bool operator==(A const &a, B const &b) {
- // FIXME not implemented in clang .. readd when done for better error message
+    // FIXME not implemented in clang .. readd when done for better error message
 #ifndef __clang__
     static_assert(std::equality_comparable_with<get_value_t<A>, get_value_t<B>>, "A == B is only defined when their element can be compared");
 #endif
     if (a.shape() != b.shape()) return false;
     bool r = true;
-    nda::for_each(a.shape(), [&](auto &&...x) { r &= (a(x...) == b(x...)); });
+    nda::for_each(a.shape(), [&](auto &&... x) { r &= (a(x...) == b(x...)); });
     return r;
   }
 
@@ -224,16 +224,34 @@ namespace nda {
     return a == r;
   }
 
-  // ------------------------------- auto_assign --------------------------------------------
+  // ------------------------------- clef_auto_assign --------------------------------------------
 
-  template <Array A, typename F>
-  void clef_auto_assign(A &&a, F &&f) {
-    nda::for_each(a.shape(), [&a, &f](auto &&...x) {
-      if constexpr (clef::is_function<std::decay_t<decltype(f(x...))>>) {
-        clef_auto_assign(a(x...), f(x...));
-      } else {
+  // a(i_,j_) << expr
+  // a(i_,j_)(k_,l_) << expr
+  // A is the array to fill
+  // RHS the expr
+  // Tag is () or [] : ignored here
+  // CTArgs are the rest : the funciton is called with Tag1, phlist1, Tag2, phlist2
+  // when chained. e.g. a(i_, j_)(k_,l_) << expr
+  //
+  template <Array A, typename RHS, clef::CallOrSubscriptTag Tag, typename PhList, typename... OtherTagAndPhList>
+  void clef_auto_assign(A &&a, RHS &&rhs, Tag, PhList phl, OtherTagAndPhList...) {
+
+    // we make a function which evaluate the first phlist, i.e. phl
+    auto f = nda::clef::make_function(std::forward<RHS>(rhs), phl);
+
+    // f can return a lazy expr (if OtherTagAndPhList is not empty) or anything
+    // Tag can be () or [] : we ignore it, same effect for this class
+    // we iterate on all indices, in proper order, possibly with optimization (cf for_each).
+    nda::for_each(a.shape(), [&a, &f](auto &&... x) {
+      // If we have other phlist, we have other placeholders to iterate on
+      // we then call clef_auto_assign on the result of a(x...), and the rest of the Tags and phlist
+      // NB a(x...) can be anything (not necessarly nda::array or similar)
+      // if not, we simply put the result in a and we are done.
+      if constexpr (sizeof...(OtherTagAndPhList) > 0)
+        clef_auto_assign(a(x...), f(x...), OtherTagAndPhList{}...);
+      else
         a(x...) = f(x...);
-      }
     });
   }
 

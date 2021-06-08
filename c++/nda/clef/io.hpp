@@ -30,83 +30,49 @@ namespace nda::clef {
   std::ostream &operator<<(std::ostream &out, std::reference_wrapper<T> const &x) {
     return out << x.get();
   }
-  //template<typename T> std::ostream & operator<<(std::ostream & out, std::reference_wrapper<T> const & x) { return out<< "["<<x.get()<<"]"; }
 
-  inline std::ostream &variadic_print(std::ostream &out) { return out; }
-  template <typename T0, typename... T>
-  std::ostream &variadic_print(std::ostream &out, T0 &&t0, T &&... t) {
-    out << t0 << (sizeof...(T) > 0 ? ", " : "");
-    variadic_print(out, t...);
-    return out;
-  }
+  template <typename Tag, typename... T>
+  std::ostream &operator<<(std::ostream &sout, expr<Tag, T...> const &ex) {
 
-  template <int c, int m>
-  struct print_tuple_impl {
-    template <typename Tuple>
-    void operator()(std::ostream &out, Tuple const &t) {
-      out << std::get<c>(t) << (c != m - 1 ? ", " : "");
-      print_tuple_impl<c + 1, m>()(out, t);
+    if constexpr (std::is_same_v<Tag, tags::function> or std::is_same_v<Tag, tags::subscript>) {
+      bool is_fun = std::is_same_v<Tag, tags::function>;
+      sout << "lambda" << (is_fun ? '(' : '[');
+      auto print = [&sout](auto &&x, bool with_comma) mutable -> void {
+        if (with_comma) sout << ", ";
+        sout << x;
+      };
+      [&]<auto... Is>(std::index_sequence<Is...>) {
+        (print(std::get<Is + 1>(ex.children), (Is > 0)), ...); // do not print arg 0, is it the function
+      }
+      (std::make_index_sequence<sizeof...(T) - 1>{});
+      return sout << (is_fun ? ')' : ']');
+    } else {
+      if constexpr (sizeof...(T) == 2)
+        return sout << "(" << std::get<0>(ex.children) << " " << get_tag_name(Tag{}) << " " << std::get<1>(ex.children) << ")";
+      else
+        return sout << "(" << get_tag_name(Tag{}) << " " << std::get<0>(ex.children) << ")";
     }
-  };
-  template <int m>
-  struct print_tuple_impl<m, m> {
-    template <typename Tuple>
-    void operator()(std::ostream &, Tuple const &) {}
-  };
-  template <typename Tuple>
-  std::ostream &print_tuple(std::ostream &out, Tuple const &t) {
-    print_tuple_impl<1, std::tuple_size<Tuple>::value>()(out, t);
-    return out;
   }
-  template <typename Tag, typename L>
-  typename std::enable_if<std::is_base_of<tags::unary_op, Tag>::value, std::ostream &>::type operator<<(std::ostream &sout, expr<Tag, L> const &ex) {
-    return sout << "(" << Tag::name() << " " << std::get<0>(ex.childs) << ")";
-  }
-  template <typename Tag, typename L, typename R>
-  typename std::enable_if<std::is_base_of<tags::binary_op, Tag>::value, std::ostream &>::type operator<<(std::ostream &sout,
-                                                                                                         expr<Tag, L, R> const &ex) {
-    return sout << "(" << std::get<0>(ex.childs) << " " << Tag::name() << " " << std::get<1>(ex.childs) << ")";
-  }
+
   template <typename C, typename A, typename B>
   std::ostream &operator<<(std::ostream &sout, expr<tags::if_else, C, A, B> const &ex) {
-    return sout << "(" << std::get<0>(ex.childs) << "?" << std::get<1>(ex.childs) << " : " << std::get<2>(ex.childs) << ")";
-  }
-  template <typename... T>
-  std::ostream &operator<<(std::ostream &sout, expr<tags::function, T...> const &ex) {
-    sout << "lambda"
-         << "(";
-    //sout << std::get<0>(ex.childs) << "(";
-    print_tuple(sout, ex.childs);
-    return sout << ")";
-  }
-  template <typename... T>
-  std::ostream &operator<<(std::ostream &sout, expr<tags::subscript, T...> const &ex) {
-    sout << "lambda"
-         << "[";
-    //sout << std::get<0>(ex.childs) << "[";
-    print_tuple(sout, ex.childs);
-    return sout << "]";
+    return sout << "(" << std::get<0>(ex.children) << "?" << std::get<1>(ex.children) << " : " << std::get<2>(ex.children) << ")";
   }
 
   template <typename T>
   std::ostream &operator<<(std::ostream &sout, expr<tags::terminal, T> const &ex) {
-    return sout << std::get<0>(ex.childs);
-  }
-
-  template <typename T>
-  std::ostream &operator<<(std::ostream &sout, expr<tags::subscript, T> const &ex) {
-    return sout << std::get<0>(ex.childs) << "[" << std::get<1>(ex.childs) << "]";
+    return sout << std::get<0>(ex.children);
   }
 
   template <typename T>
   std::ostream &operator<<(std::ostream &sout, expr<tags::negate, T> const &ex) {
-    return sout << "-(" << std::get<0>(ex.childs) << ")";
+    return sout << "-(" << std::get<0>(ex.children) << ")";
   }
 
   template <typename Expr, int... Is>
-  std::ostream &operator<<(std::ostream &sout, make_fun_impl<Expr, Is...> const &x) {
+  std::ostream &operator<<(std::ostream &sout, expr_as_function<Expr, Is...> const &x) {
     sout << "lazy function : (";
-    variadic_print(sout, placeholder<Is>()...);
+    (sout << ... << placeholder<Is>{});
     return sout << ") --> " << x.ex;
   }
 

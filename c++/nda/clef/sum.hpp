@@ -15,19 +15,13 @@
 #pragma once
 #include "./clef.hpp"
 
-namespace nda::clef {
+namespace nda {
+  // forward : declared in basic_function
+  template <typename A>
+  auto make_regular(A &&x);
+} // namespace nda
 
-  namespace details {
-    template <typename T, typename Enable = void>
-    struct regular {
-      using type = T;
-    };
-    template <typename T>
-    struct regular<T, std::void_t<typename T::regular_type>> {
-      using type = typename T::regular_type;
-    };
-  } // namespace details
-  // template <typename T> using regular_t            = typename details::regular<std::decay_t<T>>::type;
+namespace nda::clef {
 
   //--------------------------------------------------------------------------------------------------
   //  sum of expressions
@@ -35,7 +29,9 @@ namespace nda::clef {
 
   // sum a function f on a domain D, using a simple foreach
   template <typename F, typename D>
-  auto sum_f_domain_impl(F const &f, D const &d) requires(not is_clef_expression<F, D>) {
+  auto sum_f_domain_impl(F const &f, D const &d) {
+    static_assert(not Lazy<F>);
+    static_assert(not Lazy<D>);
     auto it  = d.begin();
     auto ite = d.end();
     if (it == ite) NDA_RUNTIME_ERROR << "Sum over an empty domain";
@@ -45,17 +41,21 @@ namespace nda::clef {
     return res;
   }
 
-  CLEF_MAKE_FNT_LAZY(sum_f_domain_impl);
+  template <typename... A>
+  requires((nda::clef::Lazy<A> or ...)) auto sum_f_domain_impl(A &&... a) {
+    return make_expr_call(
+       []<typename... T>(T && ... x)->decltype(auto) { return sum_f_domain_impl(std::forward<T>(x)...); }, std::forward<A>(a)...);
+  }
 
   // sum( expression, i = domain)
   template <typename Expr, int N, typename D>
-  decltype(auto) sum(Expr const &f, clef::pair<N, D> const &d) {
+  decltype(auto) sum(Expr const &f, phvp<N, D> const &d) {
     return sum_f_domain_impl(make_function(f, clef::placeholder<N>()), d.rhs);
   }
   // warning : danger here : if the d is a temporary, the domain MUST be moved in case the Expr
   // is still lazy after eval, or we will obtain a dangling reference.
   template <typename Expr, int N, typename D>
-  decltype(auto) sum(Expr const &f, clef::pair<N, D> &&d) {
+  decltype(auto) sum(Expr const &f, phvp<N, D> &&d) {
     return sum_f_domain_impl(make_function(f, clef::placeholder<N>()), std::move(d.rhs));
   }
 

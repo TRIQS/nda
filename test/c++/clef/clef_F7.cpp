@@ -21,8 +21,9 @@ struct F7 {
 
   CLEF_IMPLEMENT_LAZY_CALL(F7)
 
-  template <typename Fnt>
-  friend void clef_auto_assign(F7 &x, Fnt f) {
+  template <typename RHS, typename Tag, typename PhList>
+  friend void clef_auto_assign(F7 &x, RHS && rhs, Tag, PhList phl) {
+    auto f = nda::clef::make_function(std::forward<RHS>(rhs), phl);
     x.v++;
     std::cerr << " called clef_auto_assign " << f(1, 2, 3, 4, 5, 6, 7) << std::endl;
   }

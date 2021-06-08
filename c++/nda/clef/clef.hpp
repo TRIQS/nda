@@ -13,10 +13,9 @@
 // limitations under the License.
 
 #pragma once
+#include <array>
 #include <tuple>
 #include <type_traits>
-#include <functional>
-#include <memory>
 #include <complex>
 #include "macros.hpp"
 
@@ -24,675 +23,418 @@ namespace nda::clef {
 
 #define FORCEINLINE __inline__ __attribute__((always_inline))
 
-  //template <typename T>
-  //struct remove_cv_ref : std::remove_cv<typename std::remove_reference<T>::type> {};
+  // Are all the is different ? We use it at compile time.
+  template <typename... Is>
+  constexpr bool all_different(Is... is) {
+    std::array<int, sizeof...(Is)> arr{is...};
+    auto pos = std::adjacent_find(std::begin(arr), std::end(arr));
+    return (pos == std::end(arr));
+  }
 
-  using ull_t = unsigned long long;
+  // Tags of the expression nodes
   namespace tags {
     struct function {};
     struct subscript {};
     struct terminal {};
     struct if_else {};
-    struct unary_op {};
-    struct binary_op {};
+    struct plus {};
+    struct minus {};
+    struct multiplies {};
+    struct divides {};
+    struct greater {};
+    struct less {};
+    struct leq {};
+    struct geq {};
+    struct unaryplus {};
+    struct negate {};
+    struct loginot {};
   } // namespace tags
 
-  // Compute the type to put in the expression tree.
+  /* ---------------------------------------------------------------------------------------------------
+  * Compute the type to put in the expression tree 
+  *  --------------------------------------------------------------------------------------------------- */
+
   // If T is a lvalue reference, pack it into a reference_wrapper, unless force_copy_in_expr<T>::value == true
   // If T is an rvalue reference, we store it as the type (using move semantics).
   template <typename T>
   constexpr bool force_copy_in_expr = false;
 
-  // --------------------
-
   template <class T>
-  struct expr_storage_impl {
-    using type = T;
-  };
-  template <class T>
-  struct expr_storage_impl<T &> : std::conditional<force_copy_in_expr<std::remove_const_t<T>>, std::remove_const_t<T>, std::reference_wrapper<T>> {};
-  template <class T>
-  struct expr_storage_impl<T &&> {
-    using type = T;
-  };
-  template <class T>
-  struct expr_storage_impl<const T &&> {
-    using type = T;
-  };
-  template <class T>
-  struct expr_storage_impl<const T> {
-    using type = T;
-  };
-
-  template <class T>
-  using expr_storage_t = typename expr_storage_impl<T>::type; // helper type
+  using expr_storage_t = std::conditional_t<std::is_reference_v<T> and !force_copy_in_expr<std::decay_t<T>>, //
+                                            std::reference_wrapper<std::remove_reference_t<T>>,              //
+                                            std::decay_t<T>>;
 
   /* ---------------------------------------------------------------------------------------------------
-  *  Placeholder and corresponding traits
+  * placeholder-value-pair : a couple (placeholder index at compile time, runtime value)
   *  --------------------------------------------------------------------------------------------------- */
-  template <int i, typename T>
-  struct pair; // forward
+
+  template <int N, typename U>
+  struct phvp {
+    U rhs;
+    static constexpr int p = N;
+    using value_type       = std::decay_t<U>;
+  };
+
+  /* ---------------------------------------------------------------------------------------------------
+  * comma_tuple is a specific tuple to accumulate objects in subscript call
+  *  g[ x,x,x,x]. It is a tuple, in a struct to allow proper overload and void conflict with the ordinary tuple
+  *  NB : why in 2020 does C++ not allow g[x,y,z] ?????
+  *  NB : not really related to clef, it could be put aside
+  *  --------------------------------------------------------------------------------------------------- */
+
+  // the comma_tuple structure
+  template <typename... T>
+  struct comma_tuple {
+    std::tuple<T...> _t;
+  };
+
+  // make_comma_tuple
+  template <typename... T>
+  comma_tuple<std::decay_t<T>...> make_comma_tuple(T &&...x) {
+    return {std::make_tuple(std::forward<T>(x)...)};
+  }
+
+  // the tuple absorbs anything
+  template <typename X, typename... T>
+  FORCEINLINE comma_tuple<T..., std::decay_t<X>> operator,(comma_tuple<T...> &&t, X &&x) {
+    return {std::tuple_cat(std::move(t._t), std::make_tuple(std::forward<X>(x)))};
+  }
+
+  template <typename X, typename... T>
+  FORCEINLINE comma_tuple<T..., std::decay_t<X>> operator,(X &&x, comma_tuple<T...> &&t) {
+    return {std::tuple_cat(std::forward<X>(x)), std::make_tuple(std::move(t._t))};
+  }
+
+  // any type tagged with this will overload , operator and make a comma tuple
+  template <typename T>
+  constexpr bool is_comma_tuple_seed_v = false;
+
+  // NB : we will need to copy this in other namespaces because of ADL, see e.g. triqs::mesh
+  template <typename T, typename U>
+  requires(is_comma_tuple_seed_v<std::decay_t<T>> or is_comma_tuple_seed_v<std::decay_t<U>>) //
+     comma_tuple<std::decay_t<T>, std::decay_t<U>>
+  operator,(T &&x, U &&u) { return {std::make_tuple(x, u)}; }
+
+  /* ---------------------------------------------------------------------------------------------------
+  * Lazy and is_lazy_v 
+  *  --------------------------------------------------------------------------------------------------- */
+  template <typename T>
+  constexpr bool is_lazy_v = false;
+
+  template <typename T>
+  concept Lazy = is_lazy_v<std::decay_t<T>>;
+
+  // true iif T contains OTHER ph than Is
+  template <typename T, int... Is>
+  static constexpr bool contains_other_ph = false;
+
+  /* ---------------------------------------------------------------------------------------------------
+  * General node of the expression tree
+  *  --------------------------------------------------------------------------------------------------- */
+
   template <typename Tag, typename... T>
-  struct expr; //forward
+  struct expr {
+    // T can be U, U & (a reference or a value).
+    std::tuple<T...> children;
+
+    // constructor with Tag to disambiguate with other constructors because of the && (e.g. expr(expr &) )
+    template <typename... Args>
+    expr(Tag, Args &&...args) : children(std::forward<Args>(args)...) {}
+
+    // rule of 4 : delete the =
+    expr(expr const &x) = default;
+    expr(expr &&x)      = default;
+    expr &operator=(expr const &) = delete; // no ordinary assignment
+    expr &operator=(expr &&) = default;     // move assign ok
+
+    // calling an expression just build a larger expression
+    // FIXME : we could avoid a copy in && case and move ...
+    template <typename... Args>
+    auto operator()(Args &&...args) const {
+      return expr<tags::function, expr, expr_storage_t<Args>...>{tags::function{}, *this, std::forward<Args>(args)...};
+    }
+
+    template <typename... Args>
+    auto operator[](Args &&...args) const {
+      return expr<tags::subscript, expr, expr_storage_t<Args>...>{tags::subscript{}, *this, std::forward<Args>(args)...};
+    }
+  };
+
+  // --- is_lazy_v ----
+  template <typename Tag, typename... T>
+  constexpr bool is_lazy_v<expr<Tag, T...>> = true;
+
+  // --- force_copy ----
+  template <typename Tag, typename... T>
+  constexpr bool force_copy_in_expr<expr<Tag, T...>> = true;
+
+  // --- contains_other_ph ----
+  template <typename Tag, typename... T, int... Is>
+  static constexpr bool contains_other_ph<expr<Tag, T...>, Is...> = (contains_other_ph<T, Is...> or ...);
+
+  // --- Makers ----
+
+  // Make a general node
+  template <typename Tag, typename... Args>
+  auto make_expr(Args &&...args) {
+    return expr<Tag, expr_storage_t<Args>...>{Tag{}, std::forward<Args>(args)...};
+  }
+
+  // Make a terminal node
+  template <typename T>
+  auto make_expr_terminal(T &&x) {
+    return make_expr<tags::terminal>(std::forward<T>(x));
+  }
+
+  // Make a call node
+  template <typename Obj, typename... Args>
+  requires(Lazy<Args> or ... or Lazy<Obj>) //
+     auto make_expr_call(Obj &&obj, Args &&...args) {
+    return make_expr<tags::function>(std::forward<Obj>(obj), std::forward<Args>(args)...);
+  }
+
+  // Make a subscript node
+  template <typename Obj, typename... Args>
+  requires(Lazy<Args> or ... or Lazy<Obj>) //
+     auto make_expr_subscript(Obj &&obj, Args &&...args) {
+    return make_expr<tags::subscript>(std::forward<Obj>(obj), std::forward<Args>(args)...);
+  }
+
+  // Make a subscript node : splat the comma_tuple when building teh expression
+  // the expression allows for multiple arguments in [] (they are gathered back to a tuple at evaluation)
+  template <typename Obj, typename... T>
+  requires(Lazy<T> or ... or Lazy<Obj>) //
+     auto make_expr_subscript(Obj &&obj, comma_tuple<T...> const &tu) {
+    return [&tu, &obj ]<auto... Is>(std::index_sequence<Is...>) { return make_expr_subscript(std::forward<Obj>(obj), std::get<Is>(tu._t)...); }
+    (std::make_index_sequence<sizeof...(T)>());
+  }
+
+  /* ---------------------------------------------------------------------------------------------------
+  *  Placeholder 
+  *  --------------------------------------------------------------------------------------------------- */
 
   // a placeholder is an empty struct, labelled by an int.
   template <int N>
   struct placeholder {
     static constexpr int index = N;
     template <typename RHS>
-    pair<N, RHS> operator=(RHS &&rhs) const { // NOLINT It is correct here to return a pair, not the placeholder& as suggested by clang-tidy
+    phvp<N, RHS> operator=(RHS &&rhs) const { // NOLINT It is correct here to return a phvp, not the placeholder& as suggested by clang-tidy
       return {std::forward<RHS>(rhs)};
     }
     template <typename... T>
-    expr<tags::function, placeholder, expr_storage_t<T>...> operator()(T &&...x) const {
-      return {tags::function{}, *this, std::forward<T>(x)...};
+    auto operator()(T &&...x) const {
+      return make_expr_call(*this, std::forward<T>(x)...);
     }
     template <typename T>
-    expr<tags::subscript, placeholder, expr_storage_t<T>> operator[](T &&x) const {
-      return {tags::subscript{}, *this, std::forward<T>(x)};
+    auto operator[](T &&x) const {
+      return make_expr_subscript(*this, std::forward<T>(x));
     }
   };
 
+  // --- is_lazy_v ----
+  template <int N>
+  constexpr bool is_lazy_v<placeholder<N>> = true;
+
+  // --- force_copy ----
   // placeholder will always be copied (they are empty anyway).
   template <int N>
   constexpr bool force_copy_in_expr<placeholder<N>> = true;
 
-  // represent a couple (placeholder, value).
-  template <int N, typename U>
-  struct pair {
-    U rhs;
-    static constexpr int p = N;
-    using value_type       = std::decay_t<U>;
-  };
+  // --- contains_other_ph ----
+  template <int N, int... Is>
+  static constexpr bool contains_other_ph<placeholder<N>, Is...> = (not((N == Is) or ...));
 
-  // ph_set is a trait that given a pack of type, returns the set of placeholders they contain
-  // it returns a int in binary coding : bit N in the int is 1 iif at least one T is lazy and contains placeholder<N>
-  template <typename... T>
-  struct ph_set;
-  template <typename T0, typename... T>
-  struct ph_set<T0, T...> {
-    static constexpr ull_t value = ph_set<T0>::value | ph_set<T...>::value;
-  };
-  template <typename T>
-  struct ph_set<T> {
-    static constexpr ull_t value = 0;
-  };
+  // ----- comma_tuple_seed_v is true ------
   template <int N>
-  struct ph_set<placeholder<N>> {
-    static constexpr ull_t value = 1ull << N;
-  };
-  template <int i, typename T>
-  struct ph_set<pair<i, T>> : ph_set<placeholder<i>> {};
+  constexpr bool is_comma_tuple_seed_v<placeholder<N>> = true;
 
   /* ---------------------------------------------------------------------------------------------------
-  * is_lazy and is_any_lazy
-  *  --------------------------------------------------------------------------------------------------- */
-  template <typename T>
-  constexpr bool is_lazy = false;
-
-  template <typename... Args>
-  constexpr bool is_any_lazy = (is_lazy<std::decay_t<Args>> or ...);
-
-  // FIXME : we should be this, much more precise
-  template <typename... T>
-  constexpr bool is_clef_expression = is_any_lazy<T...>;
-
-  template <int N>
-  constexpr bool is_lazy<placeholder<N>> = true;
-
-  /* ---------------------------------------------------------------------------------------------------
-  * Node of the expression tree
-  *  --------------------------------------------------------------------------------------------------- */
-  template <typename Tag, typename... T>
-  struct expr {
-    // T can be U, U & (a reference or a value).
-    using childs_t = std::tuple<T...>;
-    childs_t childs;
-    expr(expr const &x) = default;
-    expr(expr &&x) noexcept : childs(std::move(x.childs)) {}
-    // a constructor with the Tag make it unambiguous with other constructors...
-    template <typename... Args>
-    expr(Tag, Args &&...args) : childs(std::forward<Args>(args)...) {}
-    // [] returns a new lazy expression, with one more layer
-    template <typename Args>
-    expr<tags::subscript, expr, expr_storage_t<Args>> operator[](Args &&args) const {
-      return {tags::subscript(), *this, std::forward<Args>(args)};
-    }
-    // () also ...
-    template <typename... Args>
-    expr<tags::function, expr, expr_storage_t<Args>...> operator()(Args &&...args) const {
-      return {tags::function(), *this, std::forward<Args>(args)...};
-    }
-    // assignement is in general deleted
-    expr &operator=(expr const &) = delete; // no ordinary assignment
-    expr &operator=(expr &&) = default;     // move assign ok
-
-    // however, this is ok in the case f(i,j) = expr, where f is a clef::function
-    //template <typename RHS, typename CH = childs_t>
-    //void operator=(RHS const &rhs) {
-    //static_assert(std::is_base_of<tags::function_class, std::tuple_element_t<0, CH>>::value, "NO");
-    //*this << rhs;
-    //}
-  };
-  // set some traits
-  template <typename Tag, typename... T>
-  struct ph_set<expr<Tag, T...>> : ph_set<T...> {};
-
-  template <typename Tag, typename... T>
-  constexpr bool is_lazy<expr<Tag, T...>> = true;
-
-  // if we want that subexpression are copied ?
-  template <typename Tag, typename... T>
-  constexpr bool force_copy_in_expr<expr<Tag, T...>> = true;
-
-  template <typename Tag, typename... T>
-  using expr_node_t = expr<Tag, expr_storage_t<T>...>;
-
-  /* ---------------------------------------------------------------------------------------------------
-  * The basic operations put in a template....
-  *  --------------------------------------------------------------------------------------------------- */
-  template <typename Tag>
-  struct operation;
-
-  // a little function to clean the reference_wrapper
-  template <typename U>
-  FORCEINLINE U &&_cl(U &&x) {
-    return std::forward<U>(x);
-  }
-  template <typename U>
-  FORCEINLINE decltype(auto) _cl(std::reference_wrapper<U> x) {
-    return x.get();
-  }
-
-  // Terminal
-  template <>
-  struct operation<tags::terminal> {
-    template <typename L>
-    FORCEINLINE L operator()(L &&l) const {
-      return std::forward<L>(l);
-    }
-  };
-
-  // Function call
-  template <>
-  struct operation<tags::function> {
-    template <typename F, typename... Args>
-    FORCEINLINE decltype(auto) operator()(F &&f, Args &&...args) const {
-      return _cl(std::forward<F>(f))(_cl(std::forward<Args>(args))...);
-    }
-  };
-
-  // [ ] Call
-  template <>
-  struct operation<tags::subscript> {
-    template <typename F, typename Args>
-    FORCEINLINE decltype(auto) operator()(F &&f, Args &&args) const {
-      return _cl(std::forward<F>(f))[_cl(std::forward<Args>(args))];
-    }
-  };
-
-  // all binary operators....
-#define CLEF_OPERATION(TAG, OP)                                                                                                                      \
-  namespace tags {                                                                                                                                   \
-    struct TAG : binary_op {                                                                                                                         \
-      static const char *name() { return AS_STRING(OP); }                                                                                            \
-    };                                                                                                                                               \
-  }                                                                                                                                                  \
-  template <typename L, typename R>                                                                                                                  \
-  FORCEINLINE auto operator OP(L &&l, R &&r) CLEF_requires(is_any_lazy<L, R>) {                                                                      \
-    return expr<tags::TAG, expr_storage_t<L>, expr_storage_t<R>>{tags::TAG(), std::forward<L>(l), std::forward<R>(r)};                               \
-  }                                                                                                                                                  \
-  template <>                                                                                                                                        \
-  struct operation<tags::TAG> {                                                                                                                      \
-    template <typename L, typename R>                                                                                                                \
-    FORCEINLINE decltype(auto) operator()(L &&l, R &&r) const {                                                                                      \
-      return _cl(std::forward<L>(l)) OP _cl(std::forward<R>(r));                                                                                     \
-    }                                                                                                                                                \
-  }
-
-  // clang-format off
-  CLEF_OPERATION(plus, +);
-  CLEF_OPERATION(minus, -);
-  CLEF_OPERATION(multiplies, *);
-  CLEF_OPERATION(divides, /);
-  CLEF_OPERATION(greater, >);
-  CLEF_OPERATION(less, <);
-  CLEF_OPERATION(leq, <=);
-  CLEF_OPERATION(geq, >=);
-  CLEF_OPERATION(eq, ==);
-  // clang-format on
-#undef CLEF_OPERATION
-
-  // all unary operators....
-#define CLEF_OPERATION(TAG, OP)                                                                                                                      \
-  namespace tags {                                                                                                                                   \
-    struct TAG : unary_op {                                                                                                                          \
-      static const char *name() { return AS_STRING(OP); }                                                                                            \
-    };                                                                                                                                               \
-  }                                                                                                                                                  \
-  template <typename L>                                                                                                                              \
-  FORCEINLINE auto operator OP(L &&l) CLEF_requires(is_any_lazy<L>) {                                                                                \
-    return expr<tags::TAG, expr_storage_t<L>>{tags::TAG(), std::forward<L>(l)};                                                                      \
-  }                                                                                                                                                  \
-  template <>                                                                                                                                        \
-  struct operation<tags::TAG> {                                                                                                                      \
-    template <typename L>                                                                                                                            \
-    FORCEINLINE decltype(auto) operator()(L &&l) const {                                                                                             \
-      return OP _cl(std::forward<L>(l));                                                                                                             \
-    }                                                                                                                                                \
-  }
-
-  CLEF_OPERATION(unaryplus, +);
-  CLEF_OPERATION(negate, -);
-  CLEF_OPERATION(loginot, !);
-#undef CLEF_OPERATION
-
-  // the only ternary node :  expression if
-  template <>
-  struct operation<tags::if_else> {
-    // A and B MUST be the same
-    template <typename C, typename A, typename B>
-    FORCEINLINE A operator()(C const &c, A const &a, B const &b) const {
-      return _cl(c) ? _cl(a) : _cl(b);
-    }
-  };
-  // operator is : if_else( Condition, A, B)
-  template <typename C, typename A, typename B>
-  FORCEINLINE expr<tags::if_else, expr_storage_t<C>, expr_storage_t<A>, expr_storage_t<B>> if_else(C &&c, A &&a, B &&b) {
-    return {tags::if_else(), std::forward<C>(c), std::forward<A>(a), std::forward<B>(b)};
-  }
-
-  /* ---------------------------------------------------------------------------------------------------
-  * Evaluation of the expression tree.
+  *  Placeholder list at compile time
   *  --------------------------------------------------------------------------------------------------- */
 
-  // Generic case : do nothing (for the leaf of the tree including placeholder)
-  template <typename T, typename... Pairs>
-  struct evaluator {
-    static constexpr bool is_lazy = is_any_lazy<T>;
-    FORCEINLINE T const &operator()(T const &k, Pairs const &...) const { return k; }
+  template <int... Is>
+  struct phlist {
+    static constexpr int size = sizeof...(Is);
   };
-
-  // The general eval function for expressions : declaration only
-  template <typename T, typename... Pairs>
-  decltype(auto) eval(T const &ex, Pairs const &...pairs);
-
-#if 0
-  // placeholder
-  template <int N, int i, typename T, typename... Pairs>
-  struct evaluator<placeholder<N>, pair<i, T>, Pairs...> {
-    using eval_t                  = evaluator<placeholder<N>, Pairs...>;
-    static constexpr bool is_lazy = eval_t::is_lazy;
-    FORCEINLINE decltype(auto) operator()(placeholder<N>, pair<i, T> const &, Pairs const &... pairs) const {
-      return eval_t()(placeholder<N>(), pairs...);
-    }
-  };
-
-  template <int N, typename T, typename... Pairs>
-  struct evaluator<placeholder<N>, pair<N, T>, Pairs...> {
-    static constexpr bool is_lazy = false;
-    FORCEINLINE T operator()(placeholder<N>, pair<N, T> const &p, Pairs const &...) const { return p.rhs; }
-  };
-
-#else
-
-  template <int N, int... Is, typename... T>
-  struct evaluator<placeholder<N>, pair<Is, T>...> {
-    private:
-    template <size_t... Ps>
-    static constexpr int get_position_of_N(std::index_sequence<Ps...>) {
-      return ((Is == N ? int(Ps) + 1 : 0) + ...) - 1;
-    }
-    static constexpr int N_position = get_position_of_N(std::make_index_sequence<sizeof...(Is)>{});
-
-    public:
-    static constexpr bool is_lazy = (N_position == -1);
-
-    FORCEINLINE decltype(auto) operator()(placeholder<N>, pair<Is, T> const &...pairs) const {
-      if constexpr (not is_lazy) { // N is one of the Is
-        return std::get<N_position>(std::tie(pairs...)).rhs;
-      } else { // N is not one of the Is
-        return placeholder<N>{};
-      }
-    }
-  };
-#endif
-
-  // any object hold by reference wrapper is redirected to the evaluator of the object
-  template <typename T, typename... Contexts>
-  struct evaluator<std::reference_wrapper<T>, Contexts...> {
-    static constexpr bool is_lazy = false;
-    FORCEINLINE decltype(auto) operator()(std::reference_wrapper<T> const &x, Contexts const &...contexts) const {
-      return eval(x.get(), contexts...);
-    }
-  };
-
-  // Dispatch the operations : depends it the result is a lazy expression
-  template <typename Tag, typename... Args>
-  FORCEINLINE expr<Tag, expr_storage_t<Args>...> op_dispatch(std::true_type, Args &&...args) {
-    return {Tag(), std::forward<Args>(args)...};
-  }
-
-  template <typename Tag, typename... Args>
-  FORCEINLINE decltype(auto) op_dispatch(std::false_type, Args &&...args) {
-    return operation<Tag>()(std::forward<Args>(args)...);
-  }
-
-  // the evaluator for an expression
-  template <typename Tag, typename... Childs, typename... Pairs>
-  struct evaluator<expr<Tag, Childs...>, Pairs...> {
-    static constexpr bool is_lazy = (evaluator<Childs, Pairs...>::is_lazy or ...);
-
-    template <size_t... Is>
-    [[nodiscard]] FORCEINLINE decltype(auto) eval_impl(std::index_sequence<Is...>, expr<Tag, Childs...> const &ex, Pairs const &...pairs) const {
-      //  if constexpr(is_lazy)
-      // return {Tag(), eval(std::get<Is>(ex.childs), pairs...)...};
-
-      return op_dispatch<Tag>(std::integral_constant<bool, is_lazy>{}, eval(std::get<Is>(ex.childs), pairs...)...);
-    }
-
-    [[nodiscard]] FORCEINLINE decltype(auto) operator()(expr<Tag, Childs...> const &ex, Pairs const &...pairs) const {
-      return eval_impl(std::make_index_sequence<sizeof...(Childs)>(), ex, pairs...);
-    }
-  };
-
-  // The general eval function for expressions
-  template <typename T, typename... Pairs>
-  FORCEINLINE decltype(auto) eval(T const &ex, Pairs const &...pairs) {
-    return evaluator<T, Pairs...>()(ex, pairs...);
-  }
 
   /* ---------------------------------------------------------------------------------------------------
- * Apply a function object to all the leaves of the expression tree
- *  --------------------------------------------------------------------------------------------------- */
-
-  template <typename F>
-  struct apply_on_each_leaf_impl {
-    F f;
-
-    private:
-    template <typename ChildTuple, size_t... Is>
-    void _apply_this_on_each(std::index_sequence<Is...>, ChildTuple const &child_tuple) {
-      ((*this)(std::get<Is>(child_tuple)), ...);
-    }
-
-    public:
-    template <typename Tag, typename... T>
-    FORCEINLINE void operator()(expr<Tag, T...> const &ex) {
-      _apply_this_on_each(std::make_index_sequence<sizeof...(T)>{}, ex.childs);
-    }
-    template <typename T>
-    FORCEINLINE void operator()(T const &x) CLEF_requires(!is_any_lazy<T>) {
-      f(x);
-    }
-    template <typename T>
-    FORCEINLINE void operator()(std::reference_wrapper<T> const &x) CLEF_requires(!is_any_lazy<T>) {
-      f(x.get());
-    }
-  };
-
-  template <typename F, typename Expr>
-  FORCEINLINE void apply_on_each_leaf(F &&f, Expr const &ex) {
-    auto impl = apply_on_each_leaf_impl<F>{std::forward<F>(f)};
-    impl(ex);
-  }
-
-  /* ---------------------------------------------------------------------------------------------------
+  * expr_as_function : an expression transformed to a function given a ordered list of placeholders
   * make_function : transform an expression to a function
   *  --------------------------------------------------------------------------------------------------- */
 
   template <typename Expr, int... Is>
-  struct make_fun_impl {
+  struct expr_as_function {
     Expr ex; // keep a copy of the expression
-    //make_fun_impl(Expr const & ex_) : ex(ex_) {}
 
     template <typename... Args>
     FORCEINLINE decltype(auto) operator()(Args &&...args) const {
-      return evaluator<Expr, pair<Is, Args>...>()(ex, pair<Is, Args>{std::forward<Args>(args)}...);
+      return eval(ex, phvp<Is, Args>{std::forward<Args>(args)}...);
     }
   };
 
-  // To easily detect such an object in generic code.
-  template <typename T>
-  inline constexpr bool is_function = false;
-  template <typename Expr, int... Is>
-  inline constexpr bool is_function<make_fun_impl<Expr, Is...>> = true;
-
-  // values of the ph, excluding the Is ...
-  template <ull_t x, int... Is>
-  struct ph_filter;
-  template <ull_t x, int I0, int... Is>
-  struct ph_filter<x, I0, Is...> {
-    static constexpr ull_t value = ph_filter<x, Is...>::value & (~(1ull << I0));
-  };
-  template <ull_t x>
-  struct ph_filter<x> {
-    static constexpr ull_t value = x;
-  };
-
-  template <typename Expr, int... Is>
-  struct ph_set<make_fun_impl<Expr, Is...>> {
-    static constexpr ull_t value = ph_filter<ph_set<Expr>::value, Is...>::value;
-  };
-
-  template <typename Expr, int... Is>
-  constexpr bool is_lazy<make_fun_impl<Expr, Is...>> = (ph_set<make_fun_impl<Expr, Is...>>::value != 0);
-
-  template <typename Expr, int... Is>
-  constexpr bool force_copy_in_expr<make_fun_impl<Expr, Is...>> = true;
-
+  // Use CTAD
   template <typename Expr, typename... Phs>
-  FORCEINLINE make_fun_impl<std::decay_t<Expr>, Phs::index...> make_function(Expr &&ex, Phs...) {
-    return {std::forward<Expr>(ex)};
+  FORCEINLINE auto make_function(Expr ex, Phs...) {
+    return expr_as_function<Expr, Phs::index...>{std::move(ex)};
   }
 
-  template <typename Expr, int... Is, typename... Pairs>
-  struct evaluator<make_fun_impl<Expr, Is...>, Pairs...> {
-    using e_t                     = evaluator<Expr, Pairs...>;
-    static constexpr bool is_lazy = (ph_set<make_fun_impl<Expr, Is...>>::value != ph_set<Pairs...>::value);
-    FORCEINLINE decltype(auto) operator()(make_fun_impl<Expr, Is...> const &f, Pairs const &...pairs) const {
-      return make_function(e_t()(f.ex, pairs...), placeholder<Is>()...);
+  // same function, from a phlist
+  template <typename Expr, int... Is>
+  FORCEINLINE auto make_function(Expr ex, phlist<Is...>) {
+    return expr_as_function<Expr, Is...>{std::move(ex)};
+  }
+
+  // --- is_lazy_v ----
+  template <typename Expr, int... Is>
+  constexpr bool is_lazy_v<expr_as_function<Expr, Is...>> = contains_other_ph<Expr, Is...>;
+
+  // --- force_copy ----
+  template <typename Expr, int... Is>
+  constexpr bool force_copy_in_expr<expr_as_function<Expr, Is...>> = true;
+
+  // --- contains_other_ph ----
+  template <typename Expr, int... Js, int... Is>
+  static constexpr bool contains_other_ph<expr_as_function<Expr, Js...>, Is...> = contains_other_ph<Expr, Is..., Js...>;
+
+  /* ---------------------------------------------------------------------------------------------------
+  * is_expr_as_function_v : detects expr_as_function
+  *  --------------------------------------------------------------------------------------------------- */
+
+  // A trait to easily detect such an object in generic code.
+  template <typename T>
+  constexpr bool is_expr_as_function_v = false;
+
+  template <typename Expr, int... Is>
+  constexpr bool is_expr_as_function_v<expr_as_function<Expr, Is...>> = true;
+
+  /* ---------------------------------------------------------------------------------------------------
+  * generated code : all basic operators and invoke_operation 
+  *  --------------------------------------------------------------------------------------------------- */
+} // namespace nda::clef
+
+#include "clef_ops.hxx"
+
+namespace nda::clef {
+  /* ---------------------------------------------------------------------------------------------------
+  * Evaluation
+  *  --------------------------------------------------------------------------------------------------- */
+
+  // eval (x, phvp...) is the evaluation function.
+  // it evaluate x in the context of the phvp, which are a "placeholder-value-pair"
+  // replacing recursively the placeholder by the value.
+  // if some placeholder remain unevaluated, we get a new expr
+  // otherwise, we get whatever the expression evaluates to.
+
+  // Evaluate default : do nothing. See other overloads below
+  template <typename T, typename... Phvps>
+  FORCEINLINE decltype(auto) eval(T const &x, Phvps const &...) {
+    return x;
+  }
+
+  // Evaluate a placeholder
+  template <int N, int... Is, typename... T>
+  FORCEINLINE decltype(auto) eval(placeholder<N> x, phvp<Is, T> const &...phvps) {
+
+    static_assert(all_different(Is...), "Evaluation context : the placeholder indices must be all different");
+
+    // the position of N in the Is... : -1 if not present
+    // NB works before of the assert above.
+    constexpr int position_of_N = []<auto... Ps>(std::index_sequence<Ps...>) { return ((Is == N ? int(Ps) + 1 : 0) + ...) - 1; }
+    (std::make_index_sequence<sizeof...(Is)>{});
+
+    if constexpr (position_of_N != -1) { // N is one of the Is
+      return std::get<position_of_N>(std::tie(phvps...)).rhs;
+    } else // N is not one of the Is
+      return x;
+  }
+
+  // Evaluate a reference_wrapper. Just remove the wrapper.
+  template <typename T, typename... Phvps>
+  FORCEINLINE decltype(auto) eval(std::reference_wrapper<T> x, Phvps const &...phvps) {
+    return eval(x.get(), phvps...);
+  }
+
+  // Evaluate a general expression node a context of phvps
+  template <typename Tag, typename... Childs, typename... Phvps>
+  FORCEINLINE decltype(auto) eval(expr<Tag, Childs...> const &ex, Phvps const &...phvps) {
+
+    // we evaluate the children for all Is : eval(std::get<Is>(ex.children), phvps...)
+    // if one of them is lazy ( Lazy <decltype(...)> , we build another expression
+    // if not we invoke the operation and return whatever the operation has returned...
+    // The lambda at the top is just here to splat the children tuple into a pack
+    //
+    return [&phvps..., &ex ]<auto... Is>(std::index_sequence<Is...>) {
+      if constexpr ((Lazy<decltype(eval(std::get<Is>(ex.children), phvps...))> or ... or false))
+        return make_expr<Tag>(eval(std::get<Is>(ex.children), phvps...)...);
+      else {
+        return invoke_operation(Tag{}, eval(std::get<Is>(ex.children), phvps...)...);
+      }
     }
-  };
-
-  template <int... N>
-  struct ph_list {};
-  template <int... N>
-  ph_list<N...> var(placeholder<N>...) {
-    return {};
+    (std::make_index_sequence<sizeof...(Childs)>{});
   }
 
-  template <typename Expr, int... N>
-  auto operator>>(ph_list<N...> &&, Expr const &ex) -> decltype(make_function(ex, placeholder<N>()...)) {
-    return make_function(ex, placeholder<N>()...);
+  // Evaluate a expr_as_function
+  // we just evaluate the expression ... and make sure it is still lazy (?).
+  template <typename Expr, int... Is, typename... Phvps>
+  FORCEINLINE decltype(auto) eval(expr_as_function<Expr, Is...> const &f, Phvps const &...phvps) {
+    static_assert(Lazy<decltype(eval(f.ex, phvps...))>, "Evaluation of a expr_as_function is not a function");
+    return make_function(eval(f.ex, phvps...), placeholder<Is>{}...);
   }
-  // add trailing as a workaround around a clang bug here on xcode 5.1.1 (?)
-
-  /* --------------------------------------------------------------------------------------------------
-  *  make_function
-  *  x_ >> expression  is the same as make_function(expression,x)
-  * --------------------------------------------------------------------------------------------------- */
-
-  /*  template <int N, typename Expr>*/
-  //auto operator>>(placeholder<N>, Expr &&ex) {
-  //return make_function(ex, placeholder<N>{});
-  //}
 
   /* ---------------------------------------------------------------------------------------------------
   * Auto assign for ()
   *  --------------------------------------------------------------------------------------------------- */
 
-  // by default it is deleted = not implemented : every class has to define it...
-  //template<typename T, typename F> void clef_auto_assign (T,F) = delete;
+  // Principle. For any object X
+  // X (ph1a, ph1b, ph1c, ..)[ph2a, ph2b, ph2c] << RHS
+  // is replaced by
+  // clef_auto_assign (X, RHS, Tag1, phlist1, Tag2, phlist2, ....)
+  // where Tagi is tags::function for () or tags::subscript for []
+  // Each object has to write a clef_auto_assign function and do whatever it needs with this information
+  // cf basic_functions for the nda::array
+  // RHS has to be a clef lazy expression
 
-  // remove the ref_wrapper, terminal ...
-  template <typename T, typename F>
-  FORCEINLINE void clef_auto_assign(std::reference_wrapper<T> R, F &&f) {
-    clef_auto_assign(R.get(), std::forward<F>(f));
-  }
-  template <typename T, typename F>
-  FORCEINLINE void clef_auto_assign(expr<tags::terminal, T> const &t, F &&f) {
-    clef_auto_assign(std::get<0>(t.childs), std::forward<F>(f));
-  }
+  // a little convenient concept
+  template <typename Tag>
+  concept CallOrSubscriptTag = std::is_same_v<Tag, tags::function> or std::is_same_v<Tag, tags::subscript>;
 
-  // auto assign of an expr ? (for chain calls) : just reuse the same operator
-  template <typename Tag, typename... Childs, typename RHS>
-  FORCEINLINE void clef_auto_assign(expr<Tag, Childs...> &&ex, RHS const &rhs) {
-    ex << rhs;
-  }
+  // ---------- operator << ------
 
-  template <typename Tag, typename... Childs, typename RHS>
-  FORCEINLINE void clef_auto_assign(expr<Tag, Childs...> const &ex, RHS const &rhs) {
-    ex << rhs;
-  }
-
-  // a erroneous diagnostics in gcc : i0 is indeed used. We silence it.
-#if defined(__GNUC__) and not defined(__clang__)
-#pragma GCC diagnostic ignored "-Wunused-but-set-parameter"
-#endif
-  template <typename... Is>
-  constexpr bool _all_different(int i0, Is... is) {
-    return (((is - i0) * ... * 1) != 0);
-  }
-#if defined(__GNUC__) and not defined(__clang__)
-#pragma GCC diagnostic pop
-#endif
-
-  // The case A(x_,y_) = RHS : we form the function (make_function) and call auto_assign (by ADL)
-  template <typename F, typename RHS, int... Is>
-  FORCEINLINE void operator<<(expr<tags::function, F, placeholder<Is>...> &&ex, RHS &&rhs) {
-    static_assert(_all_different(Is...),
-                  "Illegal expression : two of the placeholders on the LHS are the same. This expression is only valid for loops on the full mesh");
-    clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), placeholder<Is>()...));
-  }
-  template <typename F, typename RHS, int... Is>
-  FORCEINLINE void operator<<(expr<tags::function, F, placeholder<Is>...> const &ex, RHS &&rhs) {
-    static_assert(_all_different(Is...),
-                  "Illegal expression : two of the placeholders on the LHS are the same. This expression is only valid for loops on the full mesh");
-    clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), placeholder<Is>()...));
-  }
-  template <typename F, typename RHS, int... Is>
-  FORCEINLINE void operator<<(expr<tags::function, F, placeholder<Is>...> &ex, RHS &&rhs) {
-    static_assert(_all_different(Is...),
-                  "Illegal expression : two of the placeholders on the LHS are the same. This expression is only valid for loops on the full mesh");
-    clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), placeholder<Is>()...));
+  // we match  X(placeholders...) << expr and X[placeholders...] << expr
+  // other operator << are not defined.
+  template <CallOrSubscriptTag Tag, typename X, typename RHS, int... Is>
+  FORCEINLINE void operator<<(expr<Tag, X, placeholder<Is>...> const &ex, RHS &&rhs) {
+    static_assert(all_different(Is...), "Illegal expression : two of the placeholders on the LHS of << are the same.");
+    clef_auto_assign_prepare(ex, std::forward<RHS>(rhs));
   }
 
-  // The case A[x_,y_] = RHS : we form the function (make_function) and call auto_assign (by ADL)
-  // template <typename F, typename RHS, int... Is> FORCEINLINE void operator<<(expr<tags::subscript, F, _tuple<placeholder<Is>...>>&& ex, RHS&& rhs) {
-  //  clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), placeholder<Is>()...));
-  // }
-  /*template <typename F, typename RHS, int... Is>
- FORCEINLINE void operator<<(expr<tags::subscript, F, placeholder<Is>...> const& ex, RHS&& rhs) {
-  clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), placeholder<Is>()...));
- }
- template <typename F, typename RHS, int... Is> FORCEINLINE void operator<<(expr<tags::subscript, F, placeholder<Is>...>& ex, RHS&& rhs) {
-  clef_auto_assign(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), placeholder<Is>()...));
- }
-*/
-  // any other case e.g. f(x_+y_) = RHS etc .... which makes no sense : compiler will stop
-  template <typename F, typename RHS, typename... T>
-  void operator<<(expr<tags::function, F, T...> &&ex, RHS &&rhs) = delete;
-  template <typename F, typename RHS, typename... T>
-  void operator<<(expr<tags::function, F, T...> &ex, RHS &&rhs) = delete;
-  template <typename F, typename RHS, typename... T>
-  void operator<<(expr<tags::function, F, T...> const &ex, RHS &&rhs) = delete;
+  // ---------- clef_auto_assign_prepare : internal  ------
 
-  /* ---------------------------------------------------------------------------------------------------
-  * Auto assign for []
-  *  --------------------------------------------------------------------------------------------------- */
-
-  // by default it is deleted = not implemented : every class has to define it...
-  template <typename T, typename F>
-  FORCEINLINE void clef_auto_assign_subscript(T, F) = delete;
-
-  // remove the ref_wrapper, terminal ...
-  template <typename T, typename F>
-  FORCEINLINE void clef_auto_assign_subscript(std::reference_wrapper<T> R, F &&f) {
-    clef_auto_assign_subscript(R.get(), std::forward<F>(f));
-  }
-  template <typename T, typename F>
-  FORCEINLINE void clef_auto_assign_subscript(expr<tags::terminal, T> const &t, F &&f) {
-    clef_auto_assign_subscript(std::get<0>(t.childs), std::forward<F>(f));
+  // X (ph1a, ph1b, ph1c, ..)[ph2a, ph2b, ph2c] << RHS
+  // we recursively accumulate the Tag and the phlist as arguments.
+  // CTargs are compile time args : phlist or Tag, which have no state.
+  template <CallOrSubscriptTag Tag, typename X, typename RHS, int... Is, typename... CTArgs>
+  FORCEINLINE void clef_auto_assign_prepare(expr<Tag, X, placeholder<Is>...> const &ex, RHS &&rhs, CTArgs... ctargs) {
+    clef_auto_assign_prepare(std::get<0>(ex.children), std::forward<RHS>(rhs), Tag{}, phlist<Is...>{}, ctargs...);
   }
 
-  // auto assign of an expr ? (for chain calls) : just reuse the same operator
-  template <typename Tag, typename... Childs, typename RHS>
-  FORCEINLINE void clef_auto_assign_subscript(expr<Tag, Childs...> &&ex, RHS const &rhs) {
-    ex << rhs;
+  // If ex is not an expression of the right form, we stop accumulating the phlist and tags and call clef_auto_assign
+  template <typename T, typename RHS, typename... CTArgs>
+  FORCEINLINE void clef_auto_assign_prepare(T &&x, RHS &&rhs, CTArgs... ctargs) {
+    clef_auto_assign(std::forward<T>(x), std::forward<RHS>(rhs), ctargs...);
   }
 
-  template <typename Tag, typename... Childs, typename RHS>
-  FORCEINLINE void clef_auto_assign_subscript(expr<Tag, Childs...> const &ex, RHS const &rhs) {
-    ex << rhs;
+  // ---------- clef_auto_assign for two basic types ------
+  // we clean the reference wrapper and the terminal
+
+  template <typename T, typename RHS, typename... CTArgs>
+  FORCEINLINE void clef_auto_assign(std::reference_wrapper<T> x, RHS &&rhs, CTArgs... ctargs) {
+    clef_auto_assign(x.get(), std::forward<RHS>(rhs), ctargs...);
   }
 
-  // Same thing for the  [ ]
-  template <typename F, typename RHS, int... Is>
-  FORCEINLINE void operator<<(expr<tags::subscript, F, placeholder<Is>...> const &ex, RHS &&rhs) {
-    static_assert(_all_different(Is...),
-                  "Illegal expression : two of the placeholdes on the LHS are the same. This expression is only valid for loops on the full mesh");
-    clef_auto_assign_subscript(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), placeholder<Is>()...));
-  }
-  template <typename F, typename RHS, int... Is>
-  FORCEINLINE void operator<<(expr<tags::subscript, F, placeholder<Is>...> &&ex, RHS &&rhs) {
-    static_assert(_all_different(Is...),
-                  "Illegal expression : two of the placeholdes on the LHS are the same. This expression is only valid for loops on the full mesh");
-    clef_auto_assign_subscript(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), placeholder<Is>()...));
-  }
-
-  template <typename F, typename RHS, int... Is>
-  FORCEINLINE void operator<<(expr<tags::subscript, F, placeholder<Is>...> &ex, RHS &&rhs) {
-    static_assert(_all_different(Is...),
-                  "Illegal expression : two of the placeholdes on the LHS are the same. This expression is only valid for loops on the full mesh");
-    clef_auto_assign_subscript(std::get<0>(ex.childs), make_function(std::forward<RHS>(rhs), placeholder<Is>()...));
-  }
-
-  template <typename F, typename RHS, typename... T>
-  void operator<<(expr<tags::subscript, F, T...> &&ex, RHS &&rhs) = delete;
-  template <typename F, typename RHS, typename... T>
-  void operator<<(expr<tags::subscript, F, T...> &ex, RHS &&rhs) = delete;
-  template <typename F, typename RHS, typename... T>
-  void operator<<(expr<tags::subscript, F, T...> const &ex, RHS &&rhs) = delete;
-
-  /* --------------------------------------------------------------------------------------------------
-  * Create a terminal node of an object. the from clone version force copying the object
-  * --------------------------------------------------------------------------------------------------- */
-
-  // make a node with the ref, unless it is an rvalue (which is moved).
-  template <typename T>
-  expr<tags::terminal, expr_storage_t<T>> make_expr(T &&x) {
-    return {tags::terminal(), std::forward<T>(x)};
-  }
-
-  // make a node from a copy of the object
-  template <typename T>
-  expr<tags::terminal, std::decay_t<T>> make_expr_from_clone(T &&x) {
-    return {tags::terminal(), std::forward<T>(x)};
-  }
-
-  /* --------------------------------------------------------------------------------------------------
-  * Create a call node of an object
-  * The object can be kept as a : a ref, a copy, a view
-  * --------------------------------------------------------------------------------------------------- */
-
-  //template <typename T>
-  //constexpr int arity = 1;
-
-  template <typename Obj, typename... Args>
-  expr<tags::function, expr_storage_t<Obj>, expr_storage_t<Args>...> make_expr_call(Obj &&obj, Args &&...args) CLEF_requires(is_any_lazy<Args...>) {
-    //static_assert(((arity<Obj> == -1) || (arity<Obj> == sizeof...(Args))), "Object called with a wrong number of arguments");
-    return {tags::function{}, std::forward<Obj>(obj), std::forward<Args>(args)...};
-  }
-
-  /* --------------------------------------------------------------------------------------------------
-  * Create a [] call (subscript) node of an object
-  * The object can be kept as a : a ref, a copy, a view
-  * --------------------------------------------------------------------------------------------------- */
-
-  template <typename Obj, typename Args>
-  expr<tags::subscript, expr_storage_t<Obj>, expr_storage_t<Args>> make_expr_subscript(Obj &&obj, Args &&args) CLEF_requires(is_any_lazy<Args>) {
-    return {tags::subscript{}, std::forward<Obj>(obj), std::forward<Args>(args)};
+  template <typename T, typename RHS, typename... CTArgs>
+  FORCEINLINE void clef_auto_assign(expr<tags::terminal, T> const &ex, RHS &&rhs, CTArgs... ctargs) {
+    clef_auto_assign(std::get<0>(ex.children), std::forward<RHS>(rhs), ctargs...);
   }
 
   /* --------------------------------------------------------------------------------------------------
@@ -701,33 +443,31 @@ namespace nda::clef {
   *  taking expressions (at least one argument has to be an expression)
   *  The lookup happens by ADL, so IT MUST BE USED IN THE clef namespace
   * --------------------------------------------------------------------------------------------------- */
+
 #define CLEF_MAKE_FNT_LAZY(name)                                                                                                                     \
   template <typename... A>                                                                                                                           \
-  auto name(A &&...__a) CLEF_requires(nda::clef::is_any_lazy<A...>) {                                                                                \
-    return make_expr_call([](auto &&...__b) -> decltype(auto) { return name(std::forward<decltype(__b)>(__b)...); }, std::forward<A>(__a)...);       \
+  requires((nda::clef::Lazy<A> or ...)) auto name(A &&...a) {                                                                                        \
+    return make_expr_call(                                                                                                                           \
+       []<typename... T>(T && ...x)->decltype(auto) { return name(std::forward<T>(x)...); }, std::forward<A>(a)...);                                 \
   }
 
 #define CLEF_IMPLEMENT_LAZY_METHOD(TY, name)                                                                                                         \
   template <typename... A>                                                                                                                           \
-  auto name(A &&...__a) CLEF_requires(nda::clef::is_any_lazy<A...>) {                                                                                \
+  requires((nda::clef::Lazy<A> or ...)) auto name(A &&...a) {                                                                                        \
     return make_expr_call(                                                                                                                           \
-       [](auto &&__obj, auto &&...__b) -> decltype(auto) { return std::forward<decltype(__obj)>(__obj).name(std::forward<decltype(__b)>(__b)...); }, \
-       *this, std::forward<A>(__a)...);                                                                                                              \
+       []<typename Self, typename... T>(Self && self, T && ...x)->decltype(auto) { return std::forward<Self>(self).name(std::forward<T>(x)...); },   \
+       *this, std::forward<A>(a)...);                                                                                                                \
   }
 
 #define CLEF_IMPLEMENT_LAZY_CALL(...)                                                                                                                \
   template <typename... Args>                                                                                                                        \
-  auto operator()(Args &&...args) const &CLEF_requires(nda::clef::is_any_lazy<Args...>) {                                                            \
-    return make_expr_call(*this, std::forward<Args>(args)...);                                                                                       \
-  }                                                                                                                                                  \
+  requires((nda::clef::Lazy<Args> or ...)) auto operator()(Args &&...args) const & { return make_expr_call(*this, std::forward<Args>(args)...); }    \
                                                                                                                                                      \
   template <typename... Args>                                                                                                                        \
-     auto operator()(Args &&...args) & CLEF_requires(nda::clef::is_any_lazy<Args...>) {                                                              \
-    return make_expr_call(*this, std::forward<Args>(args)...);                                                                                       \
-  }                                                                                                                                                  \
+  requires((nda::clef::Lazy<Args> or ...)) auto operator()(Args &&...args) & { return make_expr_call(*this, std::forward<Args>(args)...); }          \
                                                                                                                                                      \
   template <typename... Args>                                                                                                                        \
-     auto operator()(Args &&...args) && CLEF_requires(nda::clef::is_any_lazy<Args...>) {                                                             \
+  requires((nda::clef::Lazy<Args> or ...)) auto operator()(Args &&...args) && {                                                                      \
     return make_expr_call(std::move(*this), std::forward<Args>(args)...);                                                                            \
   }
 

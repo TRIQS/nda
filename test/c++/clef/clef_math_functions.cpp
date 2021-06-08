@@ -24,7 +24,7 @@ namespace nda::clef {
   using ::foo;
 
   template <typename T>
-  T inc(T const &x) requires(!clef::is_any_lazy<T>) {
+  T inc(T const &x) requires(!clef::Lazy<T>) {
     return x + 1;
   }
 

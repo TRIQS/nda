@@ -18,19 +18,16 @@
 
 namespace nda::clef {
 
-  template <typename T, typename RHS>
-  void clef_auto_assign__std_vector_impl(T &x, RHS &&rhs) {
-    x = std::forward<RHS>(rhs);
-  }
-
-  template <typename Expr, int... Is, typename T>
-  void clef_auto_assign__std_vector_impl(T &x, make_fun_impl<Expr, Is...> &&rhs) {
-    clef_auto_assign_subscript(x, std::forward<make_fun_impl<Expr, Is...>>(rhs));
-  }
-
-  template <typename T, typename Fnt>
-  void clef_auto_assign_subscript(std::vector<T> &v, Fnt f) {
-    for (size_t i = 0; i < v.size(); ++i) clef_auto_assign__std_vector_impl(v[i], f(i));
+  template <typename T, typename RHS, typename Tag, typename PhList, typename... CTArgs>
+  void clef_auto_assign(std::vector<T> &v, RHS &&rhs, Tag, PhList phl, CTArgs...) {
+    auto f = nda::clef::make_function(std::forward<RHS>(rhs), phl);
+    static_assert(std::is_same_v<Tag, tags::subscript>, "() is not defined for a std::vector");
+    for (size_t i = 0; i < v.size(); ++i) {
+      if constexpr (sizeof...(CTArgs) > 0)
+        clef_auto_assign(v[i], f(i), CTArgs{}...);
+      else
+        v[i] = f(i);
+    }
   }
 
 } // namespace nda::clef

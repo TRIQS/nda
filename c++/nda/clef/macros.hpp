@@ -19,17 +19,7 @@
 #define AS_STRING(...) AS_STRING2(__VA_ARGS__)
 #define AS_STRING2(...) #__VA_ARGS__
 
+#define PRINT(X) std::cerr << AS_STRING(X) << " = " << X << "      at " << __FILE__ << ":" << __LINE__ << '\n'
+#
 #endif
 
-#ifndef CLEF_requires
-
-#ifdef __clang__
-#define CLEF_requires(...) __attribute__((enable_if(__VA_ARGS__, AS_STRING(__VA_ARGS__))))
-#elif __GNUC__
-#define CLEF_requires(...) requires(__VA_ARGS__)
-#endif
-
-#define DECL_AND_RETURN(...)                                                                                                                         \
-  ->decltype(__VA_ARGS__) { return __VA_ARGS__; }
-
-#endif

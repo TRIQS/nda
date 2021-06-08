@@ -16,5 +16,5 @@
 
 #include "clef/clef.hpp"
 #include "clef/io.hpp"
-#include "clef/adapters/math.hpp"
+#include "clef/adapters/math.hxx"
 #include "clef/adapters/vector.hpp"

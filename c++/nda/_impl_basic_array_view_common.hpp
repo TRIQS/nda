@@ -117,7 +117,7 @@ FORCEINLINE static decltype(auto) call(Self &&self, T const &... x) noexcept(has
 
   using r_v_t = std::conditional_t<std::is_const_v<std::remove_reference_t<Self>>, ValueType const, ValueType>;
 
-  if constexpr (clef::is_any_lazy<T...>) return clef::make_expr_call(std::forward<Self>(self), x...);
+  if constexpr ((clef::Lazy<T> or ...)) return clef::make_expr_call(std::forward<Self>(self), x...);
 
   // () returns a full view
   else if constexpr (sizeof...(T) == 0) {

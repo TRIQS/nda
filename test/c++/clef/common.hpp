@@ -47,8 +47,9 @@ struct F1 {
 
   CLEF_IMPLEMENT_LAZY_CALL(F1)
 
-  template <typename Fnt>
-  friend void clef_auto_assign(F1 &x, Fnt f) {
+  template < typename RHS, typename Tag, typename PhList>
+  friend void clef_auto_assign(F1 &x, RHS && rhs, Tag, PhList phl) {
+    auto f = clef::make_function(std::forward<RHS>(rhs), phl);
     x.v = f(x.v);
   }
 
@@ -64,8 +65,9 @@ struct F2 {
 
   CLEF_IMPLEMENT_LAZY_CALL(F2)
 
-  template <typename Fnt>
-  friend void clef_auto_assign(F2 const &, Fnt f) {
+  template < typename RHS, typename Tag, typename PhList>
+  friend void clef_auto_assign(F2 const &, RHS && rhs, Tag, PhList phl) {
+    auto f = clef::make_function(std::forward<RHS>(rhs), phl);
     std::cerr << " called F2 clef_auto_assign " << f(10, 20) << std::endl;
   }
 

@@ -25,7 +25,8 @@ function! VimExpandSimple()
 
   "Close the namespace at the end
   "Clang format
-  normal Go}==
+  normal Go}
+  normal ==
 endfunction
 
 "----------------------------------------------------------------
@@ -53,7 +54,8 @@ function! VimExpand2Simple()
 
   "Close the namespace at the end
   "Clang format
-  normal Go}==
+  normal Go}
+  normal ==
 endfunction 
 
 
