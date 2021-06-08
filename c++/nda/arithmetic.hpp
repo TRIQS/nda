@@ -104,7 +104,7 @@ namespace nda {
       if constexpr (OP == '-') {
         if constexpr (l_is_scalar) {
           if constexpr (algebra == 'M') // ... of size 2
-            return (std::equal_to{}(args...) ? l - r(args...) : r(args...));
+            return (std::equal_to{}(args...) ? l - r(args...) : -r(args...));
           else
             return l - r(args...);
         } else if constexpr (r_is_scalar) {
