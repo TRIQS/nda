@@ -45,7 +45,7 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
           sh "make -C \$BUILD/${projectName} test CTEST_OUTPUT_ON_FAILURE=1"
         }
       }
-      if (!keepInstall || platform != documentationPlatform) {
+      if (!publish || platform != documentationPlatform) {
         sh "docker rmi --no-prune ${img.imageName()}"
       }
     } } }
