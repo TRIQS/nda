@@ -47,11 +47,6 @@ namespace cpp2py {
       }
       PyArrayObject *arr = (PyArrayObject *)(obj);
 
-      if (require_c_order and not numpy_check_layout<R, Layout>(obj)) {
-        if (raise_python_exception) PyErr_SetString(PyExc_TypeError, "Cannot convert to array_view : Numpy array is not in C order");
-        return false;
-      }
-
       auto r = PyArray_NDIM(arr);
       if (allow_lower_rank ? r < R : r != R) {
         if (raise_python_exception)
@@ -67,6 +62,11 @@ namespace cpp2py {
           if (raise_python_exception) PyErr_SetString(PyExc_TypeError, "Cannot convert to array_view : Type mismatch");
           return false;
         }
+      }
+
+      if (require_c_order and not numpy_check_layout<R, Layout>(obj)) {
+        if (raise_python_exception) PyErr_SetString(PyExc_TypeError, "Cannot convert to array_view : Numpy array is not in C order");
+        return false;
       }
 
       return true;
