@@ -2,7 +2,7 @@ def projectName = "nda" /* set to app/repo name */
 
 def dockerName = projectName.toLowerCase();
 /* which platform to build documentation on */
-def documentationPlatform = "ubuntu-clang"
+def documentationPlatform = ""
 /* whether to keep and publish the results */
 def publish = !env.BRANCH_NAME.startsWith("PR-")
 
@@ -105,7 +105,7 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
 def error = null
 try {
   parallel platforms
-  if (publish) { node('linux && docker && triqs') {
+  if (publish && documentationPlatform) { node('linux && docker && triqs') {
     /* Publish results */
     stage("publish") { timeout(time: 5, unit: 'MINUTES') {
       def commit = sh(returnStdout: true, script: "git rev-parse HEAD").trim()
