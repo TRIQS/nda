@@ -69,7 +69,7 @@ namespace nda {
     // private constructor for the friend
     basic_array(layout_t const &idxm, storage_t &&mem_handle) noexcept : lay{idxm}, sto{std::move(mem_handle)} {}
 
-    template <typename Int>
+    template <std::integral Int = long>
     basic_array(std::array<Int, Rank> const &shape, mem::init_zero_t) noexcept requires(std::is_integral_v<Int>)
        : lay{shape}, sto{lay.size(), mem::init_zero} {}
 
@@ -129,7 +129,7 @@ namespace nda {
      * 
      * @param shape  Shape of the array (lengths in each dimension)
      */
-    template <typename Int>
+    template <std::integral Int = long>
     explicit basic_array(std::array<Int, Rank> const &shape) noexcept requires(std::is_integral_v<Int> and std::is_default_constructible_v<ValueType>)
        : lay(shape), sto(lay.size()) {}
 
