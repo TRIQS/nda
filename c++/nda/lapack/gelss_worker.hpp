@@ -15,7 +15,8 @@
 #pragma once
 
 #include <optional>
-#include "../lapack/gesvd.hpp"
+
+#include "./gesvd.hpp"
 
 namespace nda::lapack {
 

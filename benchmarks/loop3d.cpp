@@ -40,8 +40,8 @@ class ABC_3d : public benchmark::Fixture {
 // -----------------------------------------------------------------------
 [[gnu::noinline]] void ex_tmp(nda::array<double, 3> &a, nda::array<double, 3> &b, nda::array<double, 3> &c) {
 
-  static_assert(has_layout_contiguous<nda::array<double, 3>>, "EEE");
-  static_assert(has_layout_contiguous<std::decay_t<decltype(2 * b + c)>>, "EEE");
+  static_assert(has_contiguous_layout<nda::array<double, 3>>, "EEE");
+  static_assert(has_contiguous_layout<std::decay_t<decltype(2 * b + c)>>, "EEE");
   a() = 2 * b + c;
 }
 

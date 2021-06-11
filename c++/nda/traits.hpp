@@ -121,7 +121,6 @@ namespace nda {
   // decltype(auto) and not auto to work in case that a(....) is NOT copy constructible
 
   /// A trait to get the return_t of the (long, ... long) for an object with ndarray concept
-  // FIXME : can be a ref! ?
   template <typename A>
   using get_value_t = std::decay_t<decltype(get_first_element(std::declval<A const>()))>;
 
@@ -172,11 +171,11 @@ namespace nda {
   inline constexpr layout_info_t get_layout_info = layout_info_t{};
 
   template <typename A>
-  constexpr bool has_layout_contiguous = (has_contiguous(get_layout_info<A>.prop));
+  constexpr bool has_contiguous_layout = (has_contiguous(get_layout_info<std::decay_t<A>>.prop));
   template <typename A>
-  constexpr bool has_layout_strided_1d = (has_strided_1d(get_layout_info<A>.prop));
+  constexpr bool has_layout_strided_1d = (has_strided_1d(get_layout_info<std::decay_t<A>>.prop));
   template <typename A>
-  constexpr bool has_layout_smallest_stride_is_one = (has_smallest_stride_is_one(get_layout_info<A>.prop));
+  constexpr bool has_layout_smallest_stride_is_one = (has_smallest_stride_is_one(get_layout_info<std::decay_t<A>>.prop));
 
   // ---------------------- linear index  --------------------------------
 

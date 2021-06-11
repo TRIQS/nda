@@ -13,26 +13,12 @@
 // limitations under the License.
 
 #pragma once
-#include <complex>
-#include <optional>
-#include "tools.hpp"
-#include "interface/cxx_interface.hpp"
 
-#include <optional>
-#include <itertools/itertools.hpp>
-#include "f77/cxx_interface.hpp"
-
-namespace nda::blas {
+namespace nda::lapack {
 
   ///
   template <MatrixView A, MatrixView B, MatrixView C>
-
-  requires(have_same_element_type_and_it_is_blas_type_v<A, B, C>)
-
-  // FIXME : why A const and B not ??
-  // CF Nils ??
-  // FIXME change a_in to a after pass test
-  int gelss(A const &a_in, B &b, C &c, double rcond, int &rank) {
+  int gelss(A &a, B &b, C &c, double rcond, int &rank) requires(nda::blas::have_same_element_type_and_it_is_blas_type_v<A, B, C>) {
 
     int info = 0;
 
@@ -41,25 +27,25 @@ namespace nda::blas {
     // We enforce Fortran order by making a copy if necessary.
     // If both matrix are in C, call itself twice : ok we pass &
     if constexpr (not A::layout_t::is_stride_order_Fortran()) {
-      auto af = matrix<T, F_layout>{a_in};
+      auto af = matrix<T, F_layout>{a};
       info    = gelss(af, b, c, rcond, rank);
       return info;
 
     } else if constexpr (not B::layout_t::is_stride_order_Fortran()) {
 
       auto bf = matrix<T, F_layout>{b};
-      info    = gelss(a_in, bf, c, rcond, rank);
+      info    = gelss(a, bf, c, rcond, rank);
       return info;
 
     } else { // do not compile useless code !
 
       // Must be lapack compatible
-      EXPECTS(a_in.indexmap().min_stride() == 1);
+      EXPECTS(a.indexmap().min_stride() == 1);
       EXPECTS(b.indexmap().min_stride() == 1);
       EXPECTS(c.indexmap().min_stride() == 1);
 
       // Copy since it is altered by gelss
-      auto a2 = a_in;
+      auto a2 = a;
 
       auto dm = std::min(get_n_rows(a2), get_n_cols(a2));
       if (c.size() < dm) c.resize(dm);
@@ -98,4 +84,4 @@ namespace nda::blas {
     }
   }
 
-} // namespace nda::blas
+} // namespace nda::lapack

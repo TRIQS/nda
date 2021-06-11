@@ -37,12 +37,20 @@ namespace nda::lapack::f77 {
 
   void stev(char J, int N, double *D, double *E, double *Z, int ldz, double *work, int &info) { LAPACK_dstev(&J, &N, D, E, Z, &ldz, work, &info); }
 
-  void dsyev(char JOBZ, char UPLO, int N, double *A, int LDA, double *W, double *work, int &lwork, int &info) {
+  void syev(char JOBZ, char UPLO, int N, double *A, int LDA, double *W, double *work, int &lwork, int &info) {
     LAPACK_dsyev(&JOBZ, &UPLO, &N, A, &LDA, W, work, &lwork, &info);
   }
-  void zheev(char JOBZ, char UPLO, int N, std::complex<double> *A, int LDA, double *W, std::complex<double> *work, int &lwork, double *work2,
-             int &info) {
+
+  void heev(char JOBZ, char UPLO, int N, std::complex<double> *A, int LDA, double *W, std::complex<double> *work, int &lwork, double *work2,
+            int &info) {
     LAPACK_zheev(&JOBZ, &UPLO, &N, A, &LDA, W, work, &lwork, work2, &info);
+  }
+
+  void getrs(char TRANS, int N, int NRHS, double const *A, int LDA, int *ipiv, double *B, int LDB, int &info) {
+    LAPACK_dgetrs(&TRANS, &N, &NRHS, A, &LDA, ipiv, B, &LDB, &info);
+  }
+  void getrs(char TRANS, int N, int NRHS, std::complex<double> const *A, int LDA, int *ipiv, std::complex<double> *B, int LDB, int &info) {
+    LAPACK_zgetrs(&TRANS, &N, &NRHS, A, &LDA, ipiv, B, &LDB, &info);
   }
 
 } // namespace nda::lapack::f77

@@ -15,6 +15,7 @@
 #pragma once
 
 #include "../lapack.hpp"
+#include "../layout_transforms.hpp"
 
 namespace nda {
 

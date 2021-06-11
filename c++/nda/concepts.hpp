@@ -82,16 +82,13 @@ concept Array = requires(A const &a) {
   requires CallableWithLongs<A, get_rank<A>>;
 };
 
-// -------   ArrayOrScalar   ----------
-
-template <typename AS>
-concept ArrayOrScalar = Array<AS> or Scalar<AS>;
-
-// -------   ArrayOfRank   ----------
-// An array of rank R
+// -------   Additional Array Concepts   ----------
 
 template <typename A, int R>
 concept ArrayOfRank = Array<A> and(get_rank<A> == R);
+
+template <typename AS>
+concept ArrayOrScalar = Array<AS> or Scalar<AS>;
 
 //---------ArrayInitializer  ----------
 // The concept of what can be used to init an array

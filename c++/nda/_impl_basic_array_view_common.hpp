@@ -344,7 +344,7 @@ void fill_with_scalar(Scalar const &scalar) noexcept {
   if constexpr (has_layout_strided_1d<self_t>) { // possibly contiguous
     const long L             = size();
     auto *__restrict const p = data(); // no alias possible here !
-    if constexpr (has_layout_contiguous<self_t>) {
+    if constexpr (has_contiguous_layout<self_t>) {
       for (long i = 0; i < L; ++i) p[i] = scalar;
     } else {
       const long stri  = indexmap().min_stride();
