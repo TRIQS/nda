@@ -22,5 +22,4 @@
 #include "linalg/cross_product.hpp"
 #include "linalg/det_and_inverse.hpp"
 #include "linalg/eigenelements.hpp"
-#include "linalg/gelss_worker.hpp"
 #include "linalg/matmul.hpp"
