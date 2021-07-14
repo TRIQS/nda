@@ -72,6 +72,7 @@ namespace nda {
   template <typename T, typename L, typename AP, typename OP>
   void inverse_in_place(basic_array_view<T, 2, L, 'M', AP, OP> a) {
     EXPECTS(is_matrix_square(a, true));
+    if(a.empty()) return;
     array<int, 1> ipiv(a.extent(0));
     int info = lapack::getrf(a, ipiv); // it is ok to be in C order. Lapack compute the inverse of the transpose.
     if (info != 0) NDA_RUNTIME_ERROR << "Inverse/Det error : matrix is not invertible. Step 1. Lapack error : " << info;
