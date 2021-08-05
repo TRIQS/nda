@@ -11,6 +11,4 @@ white_list: ['nda::.*']
 black_list: ['nda::expr.*', '.*_impl', 'nda::clef::.*'] 
 ns_white_list: ['nda', 'nda::blas', 'nda::stdutil']  
 
-# A prefix to remove from the source files FIXME: use git repo root?
-source_prefix: /home/build/c++
 # source_remote_prefix: https://github.com/triqs/nda
