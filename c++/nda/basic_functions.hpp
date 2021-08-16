@@ -50,7 +50,7 @@ namespace nda {
     if constexpr (Array<A>)
       return basic_array<get_value_t<A_t>, get_rank<A_t>, C_layout, get_algebra<A_t>, heap>{std::forward<A>(x)};
     else
-      return x;
+      return std::forward<A>(x);
   }
 
   template <typename A>
