@@ -91,7 +91,6 @@ namespace nda::linalg {
    */
   template <typename M>
   array<double, 1> eigenvalues_in_place(M *&m) {
-    static_assert(M::is_stride_order_Fortran());
     return _eigen_element_impl(m, 'N');
   }
 
