@@ -55,49 +55,43 @@ namespace nda::linalg {
   //--------------------------------
 
   /**
-   * Simple diagonalization call, return all eigenelements.
-   * Handles both real and complex case.
-   * @param M : the matrix or view.
+   * Find the eigenvalues and eigenvectors of a symmetric(real) or hermitian(complex) matrix.
+   * Requires an additional copy when M is stored in C memory order
+   * @param M The matrix or view.
+   * @return Pair consisting of the array of eigenvalues and the matrix containing the eigenvectors as columns
    */
   template <typename M>
-  std::pair<array<double, 1>, matrix<typename M::value_type>> eigenelements(M const &m) {
-    auto m_copy = make_regular(m);
+  std::pair<array<double, 1>, typename M::regular_type> eigenelements(M const &m) {
+    auto m_copy = matrix<typename M::value_type, F_layout>(m);
     auto ev     = _eigen_element_impl(m_copy, 'V');
-    if constexpr (is_complex_v<typename M::value_type>) {
-      if constexpr (M::is_stride_order_C()) {
-        return {ev, conj(m_copy)};
-      } else {
-        return {ev, m_copy.transpose()}; // the matrix mat is understood as a fortran matrix. After the lapack, in memory, it contains the
-                                         // correct answer.
-                                         // but since it is a fortran matrix, the C will see its transpose. We need to compensate this transpose (!).
-      }
-    } else {
-      return {ev, m_copy};
-    }
+    return {ev, m_copy};
   }
 
   //--------------------------------
 
   /**
-   * Simple diagonalization call, returning only the eigenvalues.
-   * Handles both real and complex case.
-   * @param M : the matrix VIEW : it MUST be contiguous
+   * Find the eigenvalues of a symmetric(real) or hermitian(complex) matrix.
+   * @param M The matrix or view.
+   * @return The array of eigenvalues
    */
   template <typename M>
   array<double, 1> eigenvalues(M const &m) {
-    auto m_copy = make_regular(m);
+    auto m_copy = matrix<typename M::value_type, F_layout>(m);
     return _eigen_element_impl(m_copy, 'N');
   }
 
   //--------------------------------
 
   /**
-   * Simple diagonalization call, returning only the eigenvalues.
-   * Handles both real and complex case.
-   * @param M : the matrix VIEW : it MUST be contiguous
+   * Find the eigenvalues of a symmetric(real) or hermitian(complex) matrix.
+   * Perform the operation in-place, avoiding a copy of the matrix,
+   * but invalidating its contents.
+   * @param M The matrix or view (must be contiguous and Fortran memory order)
+   * @return The array of eigenvalues
    */
   template <typename M>
   array<double, 1> eigenvalues_in_place(M *&m) {
+    static_assert(M::is_stride_order_Fortran());
     return _eigen_element_impl(m, 'N');
   }
 
