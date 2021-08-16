@@ -320,7 +320,7 @@ TEST(Matvecmul, Promotion) { //NOLINT
 
 template <typename M, typename V1, typename V2>
 void check_eig(M const &m, V1 const &vectors, V2 const &values) {
-  for (auto i : range(0, m.extent(0))) { EXPECT_ARRAY_NEAR(matvecmul(m, vectors(i, _)), values(i) * vectors(i, _), 1.e-13); }
+  for (auto i : range(0, m.extent(0))) { EXPECT_ARRAY_NEAR(matvecmul(m, vectors(_, i)), values(i) * vectors(_, i), 1.e-13); }
 }
 
 //----------------------------------
@@ -328,7 +328,7 @@ void check_eig(M const &m, V1 const &vectors, V2 const &values) {
 TEST(eigenelements, test1) { //NOLINT
 
   auto test = [](auto &&M) {
-    auto [ev, vecs] = nda::linalg::eigenelements(make_regular(M));
+    auto [ev, vecs] = nda::linalg::eigenelements(M);
     check_eig(M, vecs, ev);
   };
 
@@ -358,6 +358,19 @@ TEST(eigenelements, test1) { //NOLINT
 
     test(A);
   }
+
+  { // the real case with fortran layout
+
+    matrix<double, F_layout> D(2, 2);
+
+    D(0, 0) = 1.3;
+    D(0, 1) = 1.2;
+    D(1, 0) = 1.2;
+    D(1, 1) = 2.2;
+
+    test(D);
+  }
+
   { // the complex case
 
     matrix<dcomplex> B(2, 2);
@@ -374,10 +387,10 @@ TEST(eigenelements, test1) { //NOLINT
 
     matrix<dcomplex, F_layout> C(2, 2);
 
-    C(0, 0) = 1;
-    C(0, 1) = 1.0i;
-    C(1, 0) = -1.0i;
-    C(1, 1) = 2;
+    C(0, 0) = 1.3;
+    C(0, 1) = 1.1i;
+    C(1, 0) = -1.1i;
+    C(1, 1) = 2.4;
 
     test(C);
   }
