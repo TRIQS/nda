@@ -30,7 +30,6 @@ namespace cpp2py {
     // --------- C -> PY --------
 
     static PyObject *c2py(nda::array_view<T, R> v) {
-      _import_array();
       auto p = nda::python::make_numpy_proxy_from_array_or_view(v);
       return p.to_python();
     }
@@ -39,7 +38,6 @@ namespace cpp2py {
 
     static bool is_convertible(PyObject *obj, bool raise_python_exception, bool allow_lower_rank = false, bool require_c_order = true) {
       // has_npy_type<T> is true (static_assert at top)
-      _import_array();
       // check the rank and type. First protects the rest
       if (not PyArray_Check(obj)) {
         if (raise_python_exception) PyErr_SetString(PyExc_TypeError, "Cannot convert to array_view : Python object is not a Numpy array");
@@ -75,7 +73,6 @@ namespace cpp2py {
     // --------- PY -> C --------
 
     static nda::array_view<T, R> py2c(PyObject *obj) {
-      _import_array();
       auto p = make_numpy_proxy(obj);
       EXPECTS(p.extents.size() >= R);
       EXPECTS(p.element_type == npy_type<T> or p.extents.size() > R);
@@ -110,7 +107,6 @@ namespace cpp2py {
     static PyObject *c2py(A &&src) {
       static_assert(std::is_same_v<std::decay_t<A>, nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap>>,
                     "Logic Error in array c2py conversion");
-      _import_array();
       auto p = nda::python::make_numpy_proxy_from_array_or_view(std::forward<A>(src));
       return p.to_python();
     }
@@ -163,7 +159,6 @@ namespace cpp2py {
     // --------- PY -> C --------
 
     static nda::array<T, R> py2c(PyObject *obj) {
-      _import_array();
 
       // if obj is not an numpy, we make a numpy and rerun
       if (not PyArray_Check(obj) or (PyArray_Check(obj) and has_npy_type<T> and (PyArray_TYPE((PyArrayObject *)(obj)) != npy_type<T>))) {

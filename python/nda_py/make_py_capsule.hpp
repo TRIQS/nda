@@ -40,8 +40,6 @@ namespace nda::python {
   template <typename T>
   nda::mem::handle_shared<T> make_handle(PyObject *obj) {
 
-    _import_array();
-
     if (obj == NULL) throw std::runtime_error(" Can not build an mem_blk_handle from a NULL PyObject *");
     if (!PyArray_Check(obj)) throw std::runtime_error("Internal error : ref_counter construct from pyo : obj is not an array");
 
