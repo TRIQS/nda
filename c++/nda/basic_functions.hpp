@@ -35,6 +35,29 @@ namespace nda {
     return zeros<T>(std::array<long, sizeof...(Int)>{i...});
   }
 
+  // --------------------------- rand ------------------------
+
+  /// Create an array the given dimensions and populate it with random
+  /// samples from a uniform distribution over [0, 1)
+  template <typename RealType = double, std::integral Int, auto Rank>
+  auto rand(std::array<Int, Rank> const &shape) requires(std::is_floating_point_v<RealType>) {
+    // For Rank == 0 we should return a scalar
+    if constexpr (Rank == 0) {
+      auto static gen  = std::mt19937(std::random_device{}());
+      auto static dist = std::uniform_real_distribution<>(0.0, 1.0);
+      return dist(gen);
+;
+    } else {
+      return array<RealType, Rank>::rand(shape);
+    }
+  }
+
+  ///
+  template <typename RealType = double, std::integral... Int>
+  auto rand(Int... i) {
+    return rand<RealType>(std::array<long, sizeof...(Int)>{i...});
+  }
+
   // --------------------------- make_regular ------------------------
 
   /**

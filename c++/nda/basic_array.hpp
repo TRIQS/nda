@@ -13,6 +13,7 @@
 */
 #pragma once
 #include <algorithm>
+#include <random>
 #include "basic_array_view.hpp"
 
 namespace nda {
@@ -117,8 +118,8 @@ namespace nda {
      *
      * @param i0 is the extents of the only dimension
      */
-    template <std::integral Int, typename RHS>
-    explicit basic_array(Int i, RHS const &val) noexcept requires((std::is_integral_v<Int> and Rank == 1 and is_scalar_for_v<RHS, basic_array>)) {
+    template <std::integral Int = long, typename RHS>
+    explicit basic_array(Int i, RHS const &val) noexcept requires((Rank == 1 and is_scalar_for_v<RHS, basic_array>)) {
       lay = layout_t{std::array{long(i)}};
       sto = storage_t{lay.size()};
       assign_from_scalar(val);
@@ -259,6 +260,19 @@ namespace nda {
     static basic_array zeros(std::array<Int, Rank> const &shape)
        requires(std::is_standard_layout_v<ValueType> &&std::is_trivially_copyable_v<ValueType>) {
       return basic_array{stdutil::make_std_array<long>(shape), mem::init_zero};
+    }
+
+    template <std::integral Int = long>
+    static basic_array rand(std::array<Int, Rank> const &shape) requires(std::is_floating_point_v<ValueType>) {
+
+      auto static gen  = std::mt19937(std::random_device{}());
+      auto static dist = std::uniform_real_distribution<>(0.0, 1.0);
+
+      auto res = basic_array{shape};
+      auto l = [&res](auto const &...args) mutable { res(args...) = dist(gen); };
+
+      nda::for_each_static<layout_t::static_extents_encoded, layout_t::stride_order_encoded>(shape, l);
+      return res;
     }
 
     //------------------ Assignment -------------------------

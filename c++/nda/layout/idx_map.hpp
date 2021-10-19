@@ -282,7 +282,7 @@ namespace nda {
 
     /// Construct from the shape. If StaticExtents are present, the corresponding component of the shape must be equal to it.
     template <std::integral Int = long>
-    idx_map(std::array<Int, Rank> const &shape) noexcept : len(shape) {
+    idx_map(std::array<Int, Rank> const &shape) noexcept : len(stdutil::make_std_array<long>(shape)) {
       assert_static_extents_and_len_are_compatible();
       compute_strides_contiguous();
     }
