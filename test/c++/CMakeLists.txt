@@ -22,6 +22,10 @@ foreach(test ${all_tests})
   if(test_name MATCHES ".*mpi.*" AND NOT MSAN)
     add_test(NAME ${test_name}_np2 COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 ${MPIEXEC_PREFLAGS} ${CMAKE_CURRENT_BINARY_DIR}/${test_dir}/${test_name} ${MPIEXEC_POSTFLAGS} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test_dir})
   endif()
+  # Make sure that we properly treat NaN even with IntelLLVM's aggressive default optimizations
+  if(CMAKE_CXX_COMPILER_ID MATCHES "IntelLLVM")
+    target_compile_options(${test_name} PRIVATE -fhonor-nans)
+  endif()
   # Run clang-tidy if found
   if(CLANG_TIDY_EXECUTABLE)
     set_target_properties(${test_name} PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXECUTABLE}")
