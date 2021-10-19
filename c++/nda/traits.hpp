@@ -24,7 +24,6 @@
 namespace nda {
 
   // Using 2i and co
-  //
   using namespace std::literals::complex_literals;
 
   // --------------------------- For error messages ------------------------

@@ -51,8 +51,8 @@ namespace nda {
 
     // ----------------  get_extent  -------------------------
 
-    template <int I, int R, uint64_t StaticExtents>
-    long get_extent(std::array<long, R> const &l) {
+    template <int I, int R, uint64_t StaticExtents, std::integral Int = long>
+    long get_extent(std::array<Int, R> const &l) {
       if constexpr (StaticExtents == 0)
         return l[I]; // quick exit, no computation of
       else {
@@ -66,8 +66,8 @@ namespace nda {
 
     // ----------------  for_each
 
-    template <int I, uint64_t StaticExtents, uint64_t StrideOrder, typename F, size_t R>
-    FORCEINLINE void for_each_static_impl(std::array<long, R> const &idx_lengths, F &&f) {
+    template <int I, uint64_t StaticExtents, uint64_t StrideOrder, typename F, size_t R, std::integral Int = long>
+    FORCEINLINE void for_each_static_impl(std::array<Int, R> const &idx_lengths, F &&f) {
       if constexpr (I == R)
         f();
       else {
@@ -92,14 +92,14 @@ namespace nda {
   // ----------------  for_each  -------------------------
 
   ///
-  template <uint64_t StaticExtents, uint64_t StrideOrder, typename F, auto R>
-  FORCEINLINE void for_each_static(std::array<long, R> const &idx_lengths, F &&f) {
+  template <uint64_t StaticExtents, uint64_t StrideOrder, typename F, auto R, std::integral Int = long>
+  FORCEINLINE void for_each_static(std::array<Int, R> const &idx_lengths, F &&f) {
     details::for_each_static_impl<0, StaticExtents, StrideOrder>(idx_lengths, f);
   }
 
   /// A loop in C order
-  template <typename F, auto R>
-  FORCEINLINE void for_each(std::array<long, R> const &idx_lengths, F &&f) {
+  template <typename F, auto R, std::integral Int = long>
+  FORCEINLINE void for_each(std::array<Int, R> const &idx_lengths, F &&f) {
     details::for_each_static_impl<0, 0, 0>(idx_lengths, f);
   }
 
