@@ -23,18 +23,9 @@ using namespace nda::mem;
 
 //---------------------------------------------
 
-// make sure that all memory is deallocated at the end of each test
-class Ref : public ::testing::Test {
-  protected:
-  void TearDown() override {
-  }
-};
-
-TEST_F(Ref, HR) { // NOLINT
+TEST(Storage, HR) { // NOLINT
 
   handle_heap<int, void> h{10};
-
-  auto h2 = handle_heap<int, void>{10};
 
   // make sure it is a copy
   h.data()[2] = 89;
@@ -44,7 +35,7 @@ TEST_F(Ref, HR) { // NOLINT
 }
 
 // ---- Construct R, S
-TEST_F(Ref, HSR) { // NOLINT
+TEST(Storage, HSR) { // NOLINT
 
   handle_heap<int, void> h{10};
 
@@ -53,10 +44,8 @@ TEST_F(Ref, HSR) { // NOLINT
   EXPECT_EQ(s.refcount(), 2); //NOLINT
 }
 
-// --- implicit construction
-
 // ---- More complex
-TEST_F(Ref, HSRS) { // NOLINT
+TEST(Ref, HSRS) { // NOLINT
 
   handle_heap<int, void> h{10};
 
@@ -85,28 +74,14 @@ struct Number {
   };
 };
 
-TEST_F(Ref, HR_with_cd) { // NOLINT
+TEST(Storage, HR_with_cd) { // NOLINT
   { handle_heap<Number, void> h{5}; }
   EXPECT_EQ(Number::c, 0); //NOLINT
 }
 
 // --- check with a shared_ptr
 
-// TO BE REWRITTEN ? NEEDED ?
-void release_sp(void *x) {
-  auto *p = (std::shared_ptr<Number> *)x; // NOLINT
-  p->reset();
-  delete p; // NOLINT
-}
-
-TEST_F(Ref, HR_with_sharedPtr) { // NOLINT
-  {
-    handle_shared<Number> s;
-  }
+TEST(Storage, HR_with_sharedPtr) { // NOLINT
+  { handle_shared<Number> s; }
   EXPECT_EQ(Number::c, 0); //NOLINT
-}
-
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
 }
