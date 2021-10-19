@@ -145,7 +145,7 @@ namespace nda {
        requires(HasValueTypeConstructibleFrom<A, value_type>)
           
        : lay(a.shape()), sto{lay.size(), mem::do_not_initialize} {
-      static_assert(std::is_convertible_v<get_value_t<A>, value_type>,
+      static_assert(std::is_constructible_v<value_type, get_value_t<A>>,
                     "Can not construct the array. ValueType can not be constructed from the value_type of the argument");
       if constexpr (std::is_trivial_v<ValueType> or mem::is_complex_v<ValueType>) {
         // simple type. the initialization was not necessary anyway.
