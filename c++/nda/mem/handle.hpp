@@ -17,7 +17,6 @@
 #include <complex>
 #include <type_traits>
 #include <cstring>
-#include "./blk.hpp"
 #include "./allocators.hpp"
 
 namespace nda::mem {
@@ -40,12 +39,12 @@ namespace nda::mem {
 #ifndef NDA_DEBUG_LEAK_CHECK
     static inline Allocator allocator;
 #else
-    static inline allocators::leak_check<Allocator> allocator;
+    static inline mem::leak_check<Allocator> allocator;
 #endif
 
-    static allocators::blk_t allocate(size_t size) { return allocator.allocate(size); }
-    static allocators::blk_t allocate_zero(size_t size) { return allocator.allocate_zero(size); }
-    static void deallocate(allocators::blk_t b) { allocator.deallocate(b); }
+    static mem::blk_t allocate(size_t size) { return allocator.allocate(size); }
+    static mem::blk_t allocate_zero(size_t size) { return allocator.allocate_zero(size); }
+    static void deallocate(mem::blk_t b) { allocator.deallocate(b); }
   };
 
 #ifndef NDA_DEBUG_LEAK_CHECK
@@ -54,13 +53,13 @@ namespace nda::mem {
   // use void : it is the default case, and simplify error messages in 99.999% of cases
   template <>
   struct allocator_singleton<void> {
-    static allocators::blk_t allocate(size_t size) { return allocators::mallocator::allocate(size); }
-    static allocators::blk_t allocate_zero(size_t size) { return allocators::mallocator::allocate_zero(size); }
-    static void deallocate(allocators::blk_t b) { allocators::mallocator::deallocate(b); }
+    static mem::blk_t allocate(size_t size) { return mem::mallocator::allocate(size); }
+    static mem::blk_t allocate_zero(size_t size) { return mem::mallocator::allocate_zero(size); }
+    static void deallocate(mem::blk_t b) { mem::mallocator::deallocate(b); }
   };
 #else
   template <>
-  struct allocator_singleton<void> : allocator_singleton<allocators::leak_check<allocators::mallocator>> {};
+  struct allocator_singleton<void> : allocator_singleton<mem::leak_check<mem::mallocator>> {};
 
 #endif
 
@@ -191,7 +190,7 @@ namespace nda::mem {
     handle_heap(long size) {
       if (size == 0) return; // no size -> null handle
 
-      allocators::blk_t b;
+      mem::blk_t b;
       if constexpr (is_complex_v<T> && init_dcmplx)
         b = allocator_singleton<Allocator>::allocate_zero(size * sizeof(T));
       else
@@ -355,7 +354,7 @@ namespace nda::mem {
         for (size_t i = 0; i < _size; ++i) data()[i].~T();
         // STACK	for (size_t i = 0; i < Size; ++i) data()[i].~T();
       }
-      if (on_heap()) allocators::mallocator::deallocate({(char *)_data, _size * sizeof(T)});
+      if (on_heap()) mem::mallocator::deallocate({(char *)_data, _size * sizeof(T)});
       _data = nullptr;
     }
 
@@ -400,8 +399,8 @@ namespace nda::mem {
       if (not on_heap()) {
         _data = (T *)buffer.data();
       } else {
-        allocators::blk_t b;
-        b = allocators::mallocator::allocate(size * sizeof(T));
+        mem::blk_t b;
+        b = mem::mallocator::allocate(size * sizeof(T));
         ASSERT(b.ptr != nullptr);
         _data = (T *)b.ptr;
       }
@@ -416,7 +415,7 @@ namespace nda::mem {
         _data = (T *)buffer.data();
         for (size_t i = 0; i < _size; ++i) data()[i] = 0;
       } else {
-        auto b = allocators::mallocator::allocate_zero(size * sizeof(T)); //, alignof(T));
+        auto b = mem::mallocator::allocate_zero(size * sizeof(T)); //, alignof(T));
         ASSERT(b.ptr != nullptr);
         _data = (T *)b.ptr;
       }
@@ -432,8 +431,8 @@ namespace nda::mem {
       _size = x._size;
       if (_size == 0) return *this;
       if (on_heap()) {
-        allocators::blk_t b;
-        b = allocators::mallocator::allocate(_size * sizeof(T));
+        mem::blk_t b;
+        b = mem::mallocator::allocate(_size * sizeof(T));
         ASSERT(b.ptr != nullptr);
         _data = (T *)b.ptr;
       } else {
@@ -453,11 +452,11 @@ namespace nda::mem {
         _data = (T *)buffer.data();
         _size = size;
       } else {
-        allocators::blk_t b;
+        mem::blk_t b;
         if constexpr (is_complex_v<T> && init_dcmplx)
-          b = allocators::mallocator::allocate_zero(size * sizeof(T));
+          b = mem::mallocator::allocate_zero(size * sizeof(T));
         else
-          b = allocators::mallocator::allocate(size * sizeof(T));
+          b = mem::mallocator::allocate(size * sizeof(T));
         ASSERT(b.ptr != nullptr);
         _data = (T *)b.ptr;
         _size = size;

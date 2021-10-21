@@ -17,7 +17,7 @@
 #include "traits.hpp"
 #include "accessors.hpp"
 #include "layout/policies.hpp"
-#include "storage/policies.hpp"
+#include "mem/policies.hpp"
 
 namespace nda {
 
