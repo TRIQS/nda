@@ -17,7 +17,7 @@
 
 #define NDA_DEBUG_MEMORY
 
-#include <nda/storage/handle.hpp>
+#include <nda/mem/handle.hpp>
 
 using namespace nda::mem;
 

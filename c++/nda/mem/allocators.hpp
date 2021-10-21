@@ -20,7 +20,6 @@
 #include <memory>
 #include <numeric>
 #include "../macros.hpp"
-#include "./blk.hpp"
 
 #if defined(__has_feature)
 #if __has_feature(address_sanitizer)
@@ -29,7 +28,13 @@
 #endif
 #endif
 
-namespace nda::allocators {
+namespace nda::mem {
+
+  // ------------------------ The memory block with its size  -------------
+  struct blk_t {
+    char *ptr = nullptr;
+    size_t s  = 0;
+  };
 
   // ------------------------  Utility -------------
 
@@ -299,4 +304,4 @@ namespace nda::allocators {
     auto const &histogram() const noexcept { return hist; }
   };
 
-} // namespace nda::allocators
+} // namespace nda::mem

@@ -34,8 +34,7 @@ namespace nda {
     // FOR TESTS ONLY : To be able to rerun all tests with another allocator
 #ifdef NDA_TEST_DEFAULT_ALLOC_MBUCKET
     using test_buck_alloc_t =
-       nda::allocators::segregator<8 * NDA_TEST_DEFAULT_ALLOC_MBUCKET, nda::allocators::multiple_bucket<8 * NDA_TEST_DEFAULT_ALLOC_MBUCKET>,
-                                   nda::allocators::mallocator>;
+       nda::mem::segregator<8 * NDA_TEST_DEFAULT_ALLOC_MBUCKET, nda::mem::multiple_bucket<8 * NDA_TEST_DEFAULT_ALLOC_MBUCKET>, nda::mem::mallocator>;
     template <typename T, size_t StackSize = 0>
     using handle = ::nda::mem::handle_heap<T, test_buck_alloc_t>;
 #endif
