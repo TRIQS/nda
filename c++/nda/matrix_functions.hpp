@@ -19,13 +19,15 @@
 
 namespace nda {
 
-  template <typename V>
-  matrix<V> eye(long dim) {
-    matrix<V> r(dim, dim);
-    r = 1;
+  /// Create a two-dimensional matrix of scalar-type T with ones on the diagonal and zeros elsewhere
+  template <Scalar S, std::integral Int = long>
+  auto eye(Int dim) {
+    auto r = matrix<S>(dim, dim);
+    r = S{1};
     return r;
   }
 
+  /// Return the trace of a matrix or a rank==2 array
   template <ArrayOfRank<2> M>
   auto trace(M const &m)  {
     static_assert(get_rank<M> == 2, "trace: array must have rank two");
@@ -36,10 +38,9 @@ namespace nda {
     return r;
   }
 
-  ///
+  /// Return the conjugate transpase of a matrix or a rank==2 array
   template <ArrayOfRank<2> M>
-  Array auto dagger(M const &m)  {
-    static_assert(get_rank<M> == 2, "dagger: array must have rank two");
+  ArrayOfRank<2> auto dagger(M const &m)  {
     if constexpr (is_complex_v<typename M::value_type>)
       return conj(transpose(m));
     else
@@ -48,8 +49,8 @@ namespace nda {
 
   ///
   /// Give 2 matrices A (of size n x q) and B (of size p x q)
-  /// produces a new matrix of size
-  ///
+  /// produces a new matrix C of size (n + p) x q such that
+  /// C[0:n,:] == A and C[n:n+p,:] == B
   template <ArrayOfRank<2> A, ArrayOfRank<2> B>
   requires(std::same_as<get_value_t<A>, get_value_t<B>>) // NB the get_value_t gets rid of const if any
   matrix<get_value_t<A>> vstack(A const &a, B const &b)
