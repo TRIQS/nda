@@ -13,6 +13,9 @@
 // limitations under the License.
 
 #pragma once
+
+#include "basic_array.hpp"
+
 namespace nda {
 
   // --------------------------- zeros ------------------------
