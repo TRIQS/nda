@@ -58,6 +58,22 @@ namespace nda {
     return rand<RealType>(std::array<long, sizeof...(Int)>{i...});
   }
 
+  // --------------------------- dim helpers ------------------------
+
+  /// Return the first array dimension
+  /// @tparam A Type modeling NdArray
+  /// @param a Object
+  /// @return The first dimension. Equivalent to a.extent(0) and a.shape()[0]
+  template <Array A>
+  long first_dim(A const &a) { return a.extent(0); }
+
+  /// Return the second array dimension
+  /// @tparam A Type modeling NdArray
+  /// @param a Object
+  /// @return The second dimension. Equivalent to a.extent(1) and a.shape()[1]
+  template <Array A>
+  long second_dim(A const &a) { return a.extent(1); }
+
   // --------------------------- make_regular ------------------------
 
   /**
