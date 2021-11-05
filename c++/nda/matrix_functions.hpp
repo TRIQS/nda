@@ -14,6 +14,9 @@
 
 #pragma once
 
+#include "basic_array.hpp"
+#include "declarations.hpp"
+
 namespace nda {
 
   template <typename V>
