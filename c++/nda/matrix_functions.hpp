@@ -47,7 +47,23 @@ namespace nda {
       return transpose(m);
   }
 
-  ///
+  /// Return a vector_view on the diagonal of a matrix or a rank==2 array
+  template <ArrayOfRank<2> M>
+  ArrayOfRank<1> auto diagonal(M &m)  {
+    long dim = std::min(m.shape()[0], m.shape()[1]);
+    long stride = stdutil::sum(m.indexmap().strides());
+    using vector_view_t = basic_array_view<std::remove_reference_t<decltype(*m.data())>, 1, C_stride_layout, 'V', nda::default_accessor, nda::borrowed>;
+    return vector_view_t{C_stride_layout::mapping<1>{{dim}, {stride}}, m.data()};
+  }
+
+  /// Return a new matrix with the values of v on the diagonal
+  template <ArrayOfRank<1> V>
+  ArrayOfRank<2> auto diag(V const &v)  {
+    auto m = matrix<std::remove_const_t<typename V::value_type>>::zeros({v.shape()[0], v.shape()[0]});
+    diagonal(m) = v;
+    return m;
+  }
+
   /// Give 2 matrices A (of size n x q) and B (of size p x q)
   /// produces a new matrix C of size (n + p) x q such that
   /// C[0:n,:] == A and C[n:n+p,:] == B
