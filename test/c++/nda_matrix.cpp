@@ -173,6 +173,18 @@ TEST(Matrix, Eye) { //NOLINT
 
 // ===============================================================
 
+TEST(Matrix, Diagonal) { //NOLINT
+  auto v = nda::vector<int>{1,2,3};
+  auto m = nda::diag(v);
+  EXPECT_EQ_ARRAY(m, (nda::matrix<int>{{1, 0, 0},{0, 2, 0},{0, 0, 3}}));
+  EXPECT_EQ_ARRAY(nda::diagonal(m), v);
+
+  nda::diagonal(m) += v;
+  EXPECT_EQ_ARRAY(nda::diagonal(m), 2*v);
+}
+
+// ===============================================================
+
 TEST(Matrix, Slice) { //NOLINT
 
   const int N = 10;
