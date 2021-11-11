@@ -45,7 +45,7 @@ namespace nda::blas {
         return res;
       }
     } else {
-      auto res = x(0) * y(0);
+      auto res = _conj(x(0)) * y(0);
       for (long i = 1; i < N; ++i) { res += _conj(x(i)) * y(i); }
       return res;
     }
