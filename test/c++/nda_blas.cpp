@@ -14,10 +14,7 @@
 
 #include "test_common.hpp"
 
-#include <nda/blas/gemm.hpp>
-#include <nda/blas/gemv.hpp>
-#include <nda/blas/ger.hpp>
-#include <nda/blas/dot.hpp>
+#include <nda/blas.hpp>
 
 using nda::F_layout;
 
@@ -121,6 +118,21 @@ TEST(BLAS, ger) { //NOLINT
 
   nda::blas::ger(1.0, V, V, M);
   EXPECT_ARRAY_NEAR(M, nda::matrix<double>{{1, 2}, {2, 4}});
+}
+
+//----------------------------
+TEST(BLAS, outer_product) { //NOLINT
+
+  auto N = nda::rand<double>(2, 2);
+  auto M = nda::rand<double>(2, 2);
+
+  nda::array<double, 4> P(2, 2, 2, 2);
+
+  for(auto [i,j] : N.indices())
+    for(auto [k,l] : M.indices())
+      P(i, j, k, l) = N(i, j) * M(k, l);
+
+  EXPECT_ARRAY_NEAR(P, (nda::blas::outer_product(N, M)));
 }
 
 //----------------------------
