@@ -59,7 +59,7 @@ namespace nda {
   /// Return a new matrix with the values of v on the diagonal
   template <ArrayOfRank<1> V>
   ArrayOfRank<2> auto diag(V const &v)  {
-    auto m = matrix<std::remove_const_t<typename V::value_type>>::zeros({v.shape()[0], v.shape()[0]});
+    auto m      = matrix<std::remove_const_t<typename V::value_type>>::zeros({v.size(), v.size()});
     diagonal(m) = v;
     return m;
   }
