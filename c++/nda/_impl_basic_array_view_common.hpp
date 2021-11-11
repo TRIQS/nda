@@ -58,6 +58,9 @@ ValueType *data() noexcept { return sto.data(); }
 
 [[nodiscard]] long extent(int i) const noexcept { return lay.lengths()[i]; }
 
+/// Return a range that generates all valid index tuples
+[[nodiscard]] auto indices() const noexcept { return itertools::product_range(shape()); }
+
 ///
 static constexpr bool is_stride_order_C() noexcept { return layout_t::is_stride_order_C(); }
 
