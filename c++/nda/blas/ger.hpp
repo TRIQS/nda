@@ -47,8 +47,8 @@ namespace nda::blas {
     static_assert(Y::rank == 1, "Y must be of rank 1");
     static_assert(M_t::rank == 2, "C must be of rank 2");
 
-    EXPECTS(m.extent(1) == x.extent(0));
-    EXPECTS(m.extent(0) == y.extent(0));
+    EXPECTS(m.extent(0) == x.extent(0));
+    EXPECTS(m.extent(1) == y.extent(0));
     // Must be lapack compatible
     EXPECTS(m.indexmap().min_stride() == 1);
 
