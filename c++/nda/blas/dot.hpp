@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #pragma once
+#include "../concepts.hpp"
 #include "tools.hpp"
 #include "interface/cxx_interface.hpp"
 
@@ -54,15 +55,21 @@ namespace nda::blas {
   // --------
   template <typename X, typename Y>
   auto dot(X const &x, Y const &y) {
-    EXPECTS(x.shape() == y.shape());
-    return _dot_impl<false>(x, y);
+    if constexpr (Scalar<X> or Scalar<Y>) {
+      return x * y;
+    } else {
+      return _dot_impl<false>(x, y);
+    }
   }
 
   // --------
   template <typename X, typename Y>
   auto dotc(X const &x, Y const &y) {
-    EXPECTS(x.shape() == y.shape());
-    return _dot_impl<true>(x, y);
+    if constexpr (Scalar<X> or Scalar<Y>) {
+      return x * y;
+    } else {
+      return _dot_impl<true>(x, y);
+    }
   }
 
 } // namespace nda::blas
