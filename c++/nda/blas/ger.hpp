@@ -65,4 +65,36 @@ namespace nda::blas {
       f77::ger(get_n_rows(m), get_n_cols(m), alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], m.data(), get_ld(m));
   }
 
+  /**
+   * Calculate the outer product of two (contiguous) arrays a and b
+   *
+   *  $$ c_{i,j,k,...,u,v,w,...} = a_{i,j,k,...} * b_{u,v,w,...} $$
+   *
+   * Both A and B can be scalars. Uses blas::ger for efficient implementation.
+   *
+   * @tparam A array or scalar type
+   * @tparam B array or scalar type
+   * @param a The first array
+   * @param b The second array
+   *
+   * @return The outer product of a and b as defined above
+   */
+  template <ArrayOrScalar A, ArrayOrScalar B>
+  auto outer_product(A const &a, B const &b) {
+
+    if constexpr (Scalar<A> or Scalar<B>) {
+      return a * b;
+    } else {
+      static_assert(has_contiguous_layout<A> and has_contiguous_layout<B>);
+      auto res = zeros<get_value_t<A>>(stdutil::join(a.shape(), b.shape()));
+
+      auto a_vec = reshaped_view(a, std::array{a.size()});
+      auto b_vec = reshaped_view(b, std::array{b.size()});
+      auto mat   = reshaped_view(res, std::array{a.size(), b.size()});
+      ger(1.0, a_vec, b_vec, mat);
+
+      return res;
+    }
+  }
+
 } // namespace nda::blas
