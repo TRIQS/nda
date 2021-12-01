@@ -13,6 +13,8 @@
 */
 #pragma once
 #include <algorithm>
+#include <memory>
+#include <ranges>
 #include <random>
 #include "basic_array_view.hpp"
 

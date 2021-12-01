@@ -14,6 +14,8 @@
 
 #pragma once
 #include <cstring>
+#include <memory>
+#include <ranges>
 #include "clef.hpp"
 #include "declarations.hpp"
 #include "concepts.hpp"
@@ -157,7 +159,7 @@ namespace nda {
     /**
      * Copies the content of rhs into the view.
      * Pseudo code : 
-     *     for all i,j,k,l,... : this[i,j,k,l] = rhs(i,j,k,l)
+     *     for all i,j,k,l,... : this[i,j,k,l,...] = rhs(i,j,k,l,...)
      *
      * The dimension of RHS must be large enough or behaviour is undefined.
      * 
@@ -174,7 +176,7 @@ namespace nda {
       return *this;
     }
 
-    /// Assign to scalar
+    /// Assign scalar
     template <typename RHS>
     // FIXME : explode this notion
     basic_array_view &operator=(RHS const &rhs) noexcept requires(is_scalar_for_v<RHS, basic_array_view>) {
