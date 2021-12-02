@@ -307,9 +307,9 @@ auto &operator/=(RHS const &rhs) noexcept {
 // ------------------------------- Assignment --------------------------------------------
 
 /// Assign from 1D Contiguous Range
-template <typename C>
-requires(Rank == 1 and std::ranges::contiguous_range<C>) auto &operator=(C const &rhs) noexcept {
-  *this = array_const_view<typename C::value_type, 1, C_layout>{{long(rhs.size())}, std::to_address(std::begin(rhs))};
+template <typename R>
+requires(Rank == 1 and std::ranges::contiguous_range<R>) auto &operator=(R const &rhs) noexcept {
+  *this = basic_array_view{rhs};
   return *this;
 }
 

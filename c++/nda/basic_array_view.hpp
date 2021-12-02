@@ -147,6 +147,15 @@ namespace nda {
 
     // Move assignment not defined : will use the copy = since view must copy data
 
+    /**
+     * Construct from a 1D Contiguous Range
+     *
+     * @tparam R The contiguous Range type
+     * @param r The contiguous Range
+     */
+    template <std::ranges::contiguous_range R>
+    explicit basic_array_view(R &r) noexcept requires(Rank == 1) : basic_array_view{{long(std::ranges::size(r))}, std::to_address(std::cbegin(r))} {}
+
     // ------------------------------- assign --------------------------------------------
 
     /// Same as the general case
@@ -242,5 +251,10 @@ namespace nda {
 
 #include "./_impl_basic_array_view_common.hpp"
   };
+
+  // Template Deduction Guides
+  template <std::ranges::contiguous_range R>
+  basic_array_view(R &r) -> basic_array_view<std::conditional_t<std::is_const_v<R>, const typename R::value_type, typename R::value_type>, 1,
+                                             C_layout, 'V', default_accessor, borrowed>;
 
 } // namespace nda

@@ -190,6 +190,18 @@ namespace nda {
     return r;
   }
 
+  /// -- Value-comparison with 1D Contiguous Ranges
+
+  template <ArrayOfRank<1> A, std::ranges::contiguous_range R>
+  bool operator==(A const &a, R const &r) {
+    return a == basic_array_view{r};
+  }
+
+  template <std::ranges::contiguous_range R, ArrayOfRank<1> A>
+  bool operator==(R const &r, A const &a) {
+    return a == r;
+  }
+
   // ------------------------------- auto_assign --------------------------------------------
 
   template <Array A, typename F>

@@ -73,8 +73,7 @@ namespace nda {
     basic_array(layout_t const &idxm, storage_t &&mem_handle) noexcept : lay{idxm}, sto{std::move(mem_handle)} {}
 
     template <std::integral Int = long>
-    basic_array(std::array<Int, Rank> const &shape, mem::init_zero_t) noexcept requires(std::is_integral_v<Int>)
-       : lay{shape}, sto{lay.size(), mem::init_zero} {}
+    basic_array(std::array<Int, Rank> const &shape, mem::init_zero_t) noexcept : lay{shape}, sto{lay.size(), mem::init_zero} {}
 
     public:
     // backward : FIXME : temporary to be removed
