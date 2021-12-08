@@ -20,14 +20,14 @@ namespace nda {
 
   // --------------------------- zeros ------------------------
 
-  /// Make a array of zeros with the given dimensions.
+  /// Make an array of the given dimensions and zero-initialized values / memory.
   /// Return a scalar for the case of rank zero.
-  /// If we want more general array, use the static factory zeros [See also]
+  /// For a more specific array type consider using basic_array<...>::zeros
   template <typename T, std::integral Int, auto Rank>
   auto zeros(std::array<Int, Rank> const &shape) {
     // For Rank == 0 we should return the underlying scalar_t
     if constexpr (Rank == 0)
-      return T{0};
+      return T{};
     else
       return array<T, Rank>::zeros(shape);
   }
@@ -38,10 +38,33 @@ namespace nda {
     return zeros<T>(std::array<long, sizeof...(Int)>{i...});
   }
 
+  // --------------------------- ones ------------------------
+
+  /// Make an array of the given dimensions holding 'scalar ones'.
+  /// Return a scalar for the case of rank zero.
+  /// For a more specific array type consider using basic_array<...>::ones
+  template <typename T, std::integral Int, auto Rank>
+  auto ones(std::array<Int, Rank> const &shape) requires(nda::is_scalar_v<T>) {
+    // For Rank == 0 we should return the underlying scalar_t
+    if constexpr (Rank == 0)
+      return T{1};
+    else {
+      return array<T, Rank>::ones(shape);
+    }
+  }
+
+  ///
+  template <typename T, std::integral... Int>
+  auto ones(Int... i) {
+    return ones<T>(std::array<long, sizeof...(Int)>{i...});
+  }
+
   // --------------------------- rand ------------------------
 
   /// Create an array the given dimensions and populate it with random
-  /// samples from a uniform distribution over [0, 1)
+  /// samples from a uniform distribution over [0, 1).
+  /// Return a scalar for the case of rank zero.
+  /// For a more specific array type consider using basic_array<...>::rand
   template <typename RealType = double, std::integral Int, auto Rank>
   auto rand(std::array<Int, Rank> const &shape) requires(std::is_floating_point_v<RealType>) {
     // For Rank == 0 we should return a scalar

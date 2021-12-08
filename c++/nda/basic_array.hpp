@@ -257,12 +257,23 @@ namespace nda {
 
     //------------------ Factory -------------------------
 
+    /// Make an array of the given dimensions and zero-initialized values / memory
     template <std::integral Int = long>
     static basic_array zeros(std::array<Int, Rank> const &shape)
        requires(std::is_standard_layout_v<ValueType> &&std::is_trivially_copyable_v<ValueType>) {
       return basic_array{stdutil::make_std_array<long>(shape), mem::init_zero};
     }
 
+    /// Make an array of the given dimensions holding 'scalar ones'
+    template <std::integral Int = long>
+    static basic_array ones(std::array<Int, Rank> const &shape) requires(nda::is_scalar_v<ValueType>) {
+      auto res = basic_array{stdutil::make_std_array<long>(shape)};
+      res()    = ValueType{1};
+      return res;
+    }
+
+    /// Create an array the given dimensions and populate it with random
+    /// samples from a uniform distribution over [0, 1)
     template <std::integral Int = long>
     static basic_array rand(std::array<Int, Rank> const &shape) requires(std::is_floating_point_v<ValueType>) {
 
