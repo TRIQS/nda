@@ -22,6 +22,13 @@ static_assert(nda::is_scalar_for_v<int, matrix<std::complex<double>>> == 1, "oop
 TEST(NDA, Create1) { //NOLINT
   nda::array<long, 2> A(3, 3);
   EXPECT_EQ(A.shape(), (nda::shape_t<2>{3, 3}));
+
+  nda::array<long, 2> B({3, 3});
+  EXPECT_EQ(B.shape(), (nda::shape_t<2>{3, 3}));
+
+  nda::array<long, 1> C(3, 3);
+  EXPECT_EQ(C.shape(), (nda::shape_t<1>{3}));
+  EXPECT_EQ(C, (3 * nda::ones<long>(3)));
 }
 
 // -------------------------------------

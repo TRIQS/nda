@@ -119,7 +119,7 @@ namespace nda {
      *
      * @param i0 is the extents of the only dimension
      */
-    template <std::integral Int = long, typename RHS>
+    template <std::integral Int, typename RHS>
     explicit basic_array(Int i, RHS const &val) noexcept requires((Rank == 1 and is_scalar_for_v<RHS, basic_array>)) {
       lay = layout_t{std::array{long(i)}};
       sto = storage_t{lay.size()};
