@@ -154,7 +154,8 @@ namespace nda {
      * @param r The contiguous Range
      */
     template <std::ranges::contiguous_range R>
-    explicit basic_array_view(R &r) noexcept requires(Rank == 1) : basic_array_view{{long(std::ranges::size(r))}, std::to_address(std::cbegin(r))} {}
+    explicit basic_array_view(R &r) noexcept requires(Rank == 1 and not MemoryArray<R>)
+       : basic_array_view{{long(std::ranges::size(r))}, std::to_address(std::cbegin(r))} {}
 
     // ------------------------------- assign --------------------------------------------
 

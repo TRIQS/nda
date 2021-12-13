@@ -307,8 +307,8 @@ auto &operator/=(RHS const &rhs) noexcept {
 // ------------------------------- Assignment --------------------------------------------
 
 /// Assign from 1D Contiguous Range
-template <typename R>
-requires(Rank == 1 and std::ranges::contiguous_range<R>) auto &operator=(R const &rhs) noexcept {
+template <std::ranges::contiguous_range R>
+auto &operator=(R const &rhs) noexcept requires(Rank == 1 and not MemoryArray<R>) {
   *this = basic_array_view{rhs};
   return *this;
 }
@@ -362,8 +362,7 @@ void fill_with_scalar(Scalar const &scalar) noexcept {
       for (long i = 0; i < Lstri; i += stri) p[i] = scalar;
     }
   } else {
-    auto l = [this, scalar](auto const &... args) { (*this)(args...) = scalar; };
-    nda::for_each_static<layout_t::static_extents_encoded, layout_t::stride_order_encoded>(shape(), l);
+    for (auto &x : *this) x = scalar;
   }
 }
 

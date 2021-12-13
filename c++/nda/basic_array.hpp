@@ -281,9 +281,8 @@ namespace nda {
       auto static dist = std::uniform_real_distribution<>(0.0, 1.0);
 
       auto res = basic_array{shape};
-      auto l = [&res](auto const &...args) mutable { res(args...) = dist(gen); };
+      for (auto &x : res) x = dist(gen);
 
-      nda::for_each_static<layout_t::static_extents_encoded, layout_t::stride_order_encoded>(shape, l);
       return res;
     }
 

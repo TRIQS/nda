@@ -123,10 +123,10 @@ TEST(BLAS, ger) { //NOLINT
 //----------------------------
 TEST(BLAS, outer_product) { //NOLINT
 
-  auto N = nda::rand<double>(2, 2);
-  auto M = nda::rand<double>(2, 2);
+  auto N = nda::rand<double>(2, 3);
+  auto M = nda::rand<double>(4, 5);
 
-  nda::array<double, 4> P(2, 2, 2, 2);
+  nda::array<double, 4> P(2, 3, 4, 5);
 
   for(auto [i,j] : N.indices())
     for(auto [k,l] : M.indices())

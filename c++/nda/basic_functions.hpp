@@ -72,7 +72,6 @@ namespace nda {
       auto static gen  = std::mt19937(std::random_device{}());
       auto static dist = std::uniform_real_distribution<>(0.0, 1.0);
       return dist(gen);
-;
     } else {
       return array<RealType, Rank>::rand(shape);
     }
