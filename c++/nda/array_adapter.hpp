@@ -14,6 +14,9 @@
 
 #pragma once
 
+#include "stdutil/array.hpp"
+#include "concepts.hpp"
+
 namespace nda {
 
   /// A pair shape + lambda --> an immutable array
@@ -29,6 +32,7 @@ namespace nda {
     array_adapter(std::array<Int, R> const &shape, F f) : myshape(stdutil::make_std_array<long>(shape)), f(f) {}
 
     std::array<long, R> const &shape() const { return myshape; }
+    [[nodiscard]] long size() const { return stdutil::product(myshape); }
 
     template <typename... Long>
     auto operator()(long i, Long... is) const {

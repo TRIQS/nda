@@ -36,6 +36,7 @@ namespace nda {
     }
 
     [[nodiscard]] constexpr auto shape() const { return l.shape(); }
+    [[nodiscard]] constexpr long size() const { return l.size(); }
   }; // end expr_unary class
 
   // get_algebra
@@ -79,6 +80,18 @@ namespace nda {
       } else {
         EXPECTS(l.shape() == r.shape());
         return l.shape();
+      }
+    }
+
+    //  --- size ---
+    [[nodiscard]] constexpr long size() const {
+      if constexpr (l_is_scalar) {
+        return r.size();
+      } else if constexpr (r_is_scalar) {
+        return l.size();
+      } else {
+        EXPECTS(l.size() == r.size());
+        return l.size();
       }
     }
 

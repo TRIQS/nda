@@ -48,8 +48,8 @@ namespace nda {
   }
 
   /// Return a vector_view on the diagonal of a matrix or a rank==2 array
-  template <ArrayOfRank<2> M>
-  ArrayOfRank<1> auto diagonal(M &m)  {
+  template <MemoryArrayOfRank<2> M>
+  ArrayOfRank<1> auto diagonal(M &m) {
     long dim = std::min(m.shape()[0], m.shape()[1]);
     long stride = stdutil::sum(m.indexmap().strides());
     using vector_view_t = basic_array_view<std::remove_reference_t<decltype(*m.data())>, 1, C_stride_layout, 'V', nda::default_accessor, nda::borrowed>;

@@ -16,6 +16,8 @@
 #include "declarations.hpp"
 #include "stdutil/concepts.hpp"
 
+#include <type_traits>
+
 namespace nda {
 
   // -------   CallableWithLongs<A, R>   ----------
@@ -78,14 +80,30 @@ concept Array = requires(A const &a) {
   // its length is the rank, as deduced by get_rank
   { a.shape() } -> StdArrayOfLong;
 
+  // Contract: Expects the size to be equal to the product of the elements in shape()
+  { a.size() } -> std::same_as<long>;
+
   // a(0,0,0,0... R times) returns something, which is of type value_type by definition
   requires CallableWithLongs<A, get_rank<A>>;
+};
+
+template <typename A>
+concept MemoryArray = Array<A> && requires(A &a) {
+
+  // We can acquire the pointer to the underlying data
+  { a.data() } -> std::same_as<std::conditional_t<std::is_const_v<A>, const get_value_t<A>, get_value_t<A>> *>;
+
+  // Exposes the memory stride for each dimension
+  { a.indexmap().strides() } -> StdArrayOfLong;
 };
 
 // -------   Additional Array Concepts   ----------
 
 template <typename A, int R>
 concept ArrayOfRank = Array<A> and(get_rank<A> == R);
+
+template <typename A, int R>
+concept MemoryArrayOfRank = MemoryArray<A> and(get_rank<A> == R);
 
 template <typename AS>
 concept ArrayOrScalar = Array<AS> or Scalar<AS>;

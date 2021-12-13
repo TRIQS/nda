@@ -20,6 +20,8 @@
 #include <array>
 #include <utility>
 #include <vector>
+#include <string>
+#include <sstream>
 
 /// =========    ADDING IN STD ===========
 /// =========    NEED TO PUT IT IN STD FOR ADL ========
