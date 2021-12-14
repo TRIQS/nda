@@ -132,7 +132,7 @@ namespace nda {
      * @param shape  Shape of the array (lengths in each dimension)
      */
     template <std::integral Int = long>
-    explicit basic_array(std::array<Int, Rank> const &shape) noexcept requires(std::is_integral_v<Int> and std::is_default_constructible_v<ValueType>)
+    explicit basic_array(std::array<Int, Rank> const &shape) noexcept requires(std::is_default_constructible_v<ValueType>)
        : lay(shape), sto(lay.size()) {}
 
     /// Construct from the layout
