@@ -20,6 +20,7 @@
 #include "accessors.hpp"
 #include "layout/policies.hpp"
 #include "mem/policies.hpp"
+#include "stdutil/array.hpp"
 
 namespace nda {
 
@@ -35,49 +36,49 @@ namespace nda {
 
   template <typename ValueType, int Rank, typename Layout, char Algebra = 'A',
             typename AccessorPolicy = nda::default_accessor, //, nda::no_alias_accessor, //,
-            typename OwningPolicy   = nda::borrowed>
+            typename OwningPolicy   = nda::borrowed<>>
   class basic_array_view;
 
   // ---------------------- User aliases  --------------------------------
 
-  template <typename ValueType, int Rank, typename Layout = C_layout, typename ContainerPolicy = heap>
+  template <typename ValueType, int Rank, typename Layout = C_layout, typename ContainerPolicy = heap<>>
   using array = basic_array<ValueType, Rank, Layout, 'A', ContainerPolicy>;
 
   template <typename ValueType, int Rank, typename Layout = C_stride_layout>
-  using array_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed>;
+  using array_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<>>;
 
   template <typename ValueType, int Rank, typename Layout = C_stride_layout>
-  using array_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed>;
+  using array_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<>>;
 
   template <typename ValueType, int Rank, typename Layout = C_layout>
-  requires(has_contiguous(Layout::template mapping<Rank>::layout_prop))
-  using array_contiguous_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed>;
+  requires(has_contiguous(Layout::template mapping<Rank>::layout_prop)) using array_contiguous_view =
+     basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<>>;
 
   template <typename ValueType, int Rank, typename Layout = C_layout>
-  requires(has_contiguous(Layout::template mapping<Rank>::layout_prop))
-  using array_contiguous_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed>;
+  requires(has_contiguous(Layout::template mapping<Rank>::layout_prop)) using array_contiguous_const_view =
+     basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<>>;
 
-  template <typename ValueType, typename Layout = C_layout, typename ContainerPolicy = heap>
+  template <typename ValueType, typename Layout = C_layout, typename ContainerPolicy = heap<>>
   using matrix = basic_array<ValueType, 2, Layout, 'M', ContainerPolicy>;
 
   template <typename ValueType, typename Layout = C_stride_layout>
-  using matrix_view = basic_array_view<ValueType, 2, Layout, 'M', default_accessor, borrowed>;
+  using matrix_view = basic_array_view<ValueType, 2, Layout, 'M', default_accessor, borrowed<>>;
 
   template <typename ValueType, typename Layout = C_stride_layout>
-  using matrix_const_view = basic_array_view<ValueType const, 2, Layout, 'M', default_accessor, borrowed>;
+  using matrix_const_view = basic_array_view<ValueType const, 2, Layout, 'M', default_accessor, borrowed<>>;
 
-  template <typename ValueType, typename ContainerPolicy = heap>
+  template <typename ValueType, typename ContainerPolicy = heap<>>
   using vector = basic_array<ValueType, 1, C_layout, 'V', ContainerPolicy>;
 
   template <typename ValueType, typename Layout = C_stride_layout>
-  using vector_view = basic_array_view<ValueType, 1, Layout, 'V', default_accessor, borrowed>;
+  using vector_view = basic_array_view<ValueType, 1, Layout, 'V', default_accessor, borrowed<>>;
 
   template <typename ValueType, typename Layout = C_stride_layout>
-  using vector_const_view = basic_array_view<ValueType const, 1, Layout, 'V', default_accessor, borrowed>;
+  using vector_const_view = basic_array_view<ValueType const, 1, Layout, 'V', default_accessor, borrowed<>>;
 
   template <typename ValueType, int Rank, uint64_t StaticExtents>
   using stack_array =
-     nda::basic_array<ValueType, Rank, nda::basic_layout<StaticExtents, nda::C_stride_order<Rank>, nda::layout_prop_e::contiguous>, 'A', nda::stack>;
+     nda::basic_array<ValueType, Rank, nda::basic_layout<StaticExtents, nda::C_stride_order<Rank>, nda::layout_prop_e::contiguous>, 'A', nda::stack<stdutil::product(decode<Rank>(StaticExtents))>>;
 
   template <typename... Is>
   constexpr uint64_t static_extents(int i0, Is... is) {

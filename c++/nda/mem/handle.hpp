@@ -23,6 +23,24 @@
 
 namespace nda::mem {
 
+  // -------  Handle and OwningHandle Concept ----------
+
+  /// Concept of a handle on a block of memory
+  template <typename H, typename T = typename H::value_type>
+  concept Handle = requires(H const &h) {
+    { typename H::value_type{} } -> std::same_as<T>;
+    { h.is_null() } noexcept -> std::same_as<bool>;
+    { h.data() } noexcept -> std::same_as<T *>;
+    { H::address_space } -> std::same_as<AddressSpace const &>;
+  };
+
+  /// Concept of a handle that owns a block of memory
+  template <typename H, typename T = typename H::value_type>
+  concept OwningHandle = Handle<H, T> and requires(H const &h) {
+    requires(not std::is_const_v<typename H::value_type>);
+    { h.size() } noexcept -> std::same_as<long>;
+  };
+
   //
   static constexpr bool init_dcmplx = true; // initialize dcomplex to 0 globally
 
@@ -32,38 +50,6 @@ namespace nda::mem {
   static constexpr bool is_complex_v = false;
   template <typename T>
   static constexpr bool is_complex_v<std::complex<T>> = true;
-
-  // -------------- Allocation -----------
-
-  template <typename Allocator>
-  struct allocator_singleton {
-
-#ifndef NDA_DEBUG_LEAK_CHECK
-    static inline Allocator allocator;
-#else
-    static inline mem::leak_check<Allocator> allocator;
-#endif
-
-    static mem::blk_t allocate(size_t size) { return allocator.allocate(size); }
-    static mem::blk_t allocate_zero(size_t size) { return allocator.allocate_zero(size); }
-    static void deallocate(mem::blk_t b) { allocator.deallocate(b); }
-  };
-
-#ifndef NDA_DEBUG_LEAK_CHECK
-
-  // the default mallocator is special : it has no state and a special calloc
-  // use void : it is the default case, and simplify error messages in 99.999% of cases
-  template <>
-  struct allocator_singleton<void> {
-    static mem::blk_t allocate(size_t size) { return mem::mallocator::allocate(size); }
-    static mem::blk_t allocate_zero(size_t size) { return mem::mallocator::allocate_zero(size); }
-    static void deallocate(mem::blk_t b) { mem::mallocator::deallocate(b); }
-  };
-#else
-  template <>
-  struct allocator_singleton<void> : allocator_singleton<mem::leak_check<mem::mallocator>> {};
-
-#endif
 
   // -------------- Utilities ---------------------------
 
@@ -90,30 +76,31 @@ namespace nda::mem {
   // Shared (shared memory ownership)
   // Borrowed (no memory ownership)
   // Stack  (on stack)
-  // clang-format off
-  template <typename T, typename Allocator> struct handle_heap; 
-  template <typename T> struct handle_shared; 
-  template <typename T> struct handle_borrowed; 
-
-  template <typename T, size_t Size> struct handle_stack;
-  template <typename T, size_t Size> struct handle_sso;
-  // clang-format on
+  // Forward declaration
+  template <typename T, AddressSpace AdrSp = Host>
+  struct handle_shared;
 
   // ------------------  HEAP -------------------------------------
 
-  template <typename T, typename Allocator>
+  template <typename T, Allocator alloc_t = mallocator<>>
   struct handle_heap {
     private:
     T *_data     = nullptr; // Pointer to the start of the memory block
     size_t _size = 0;       // Size of the memory block. Invariant: size > 0 iif data != 0
 
+#ifndef NDA_DEBUG_LEAK_CHECK
+    static inline alloc_t allocator;
+#else
+    static inline leak_check<alloc_t> allocator;
+#endif
+
     // In case we need to share the memory
     mutable std::shared_ptr<void> sptr;
 
-    using blk_t = std::pair<T *, size_t>;
+    using blk_T_t = std::pair<T *, size_t>;
 
     // code for destructor
-    static void destruct(blk_t b) noexcept {
+    static void destruct(blk_T_t b) noexcept {
 
       static_assert(std::is_nothrow_destructible_v<T>, "nda::mem::handle requires the value_type to have a non-throwing constructor");
       auto [data, size] = b;
@@ -126,19 +113,20 @@ namespace nda::mem {
       }
 
       // Deallocate the memory block
-      allocator_singleton<Allocator>::deallocate({(char *)data, size * sizeof(T)});
+      allocator.deallocate({(char *)data, size * sizeof(T)});
     }
 
     // a deleter for the data in the sptr
-    static void deleter(void *p) noexcept { destruct(*((blk_t *)p)); }
+    static void deleter(void *p) noexcept { destruct(*((blk_T_t *)p)); }
 
     public:
     std::shared_ptr<void> get_sptr() const {
-      if (not sptr) sptr.reset(new blk_t{_data, _size}, deleter);
+      if (not sptr) sptr.reset(new blk_T_t{_data, _size}, deleter);
       return sptr;
     }
 
     using value_type = T;
+    static constexpr auto address_space = alloc_t::address_space;
 
     ~handle_heap() noexcept {
       // if the data is not in the shared_ptr, we delete it, otherwise the shared_ptr will take care of it
@@ -170,10 +158,16 @@ namespace nda::mem {
       return *this;
     }
 
+    template <Allocator alloc_t_other>
+    handle_heap &operator=(handle_heap<T, alloc_t_other> const &x) {
+      *this = handle_heap{x};
+      return *this;
+    }
+
     // Set up a memory block of the correct size without initializing it
     handle_heap(long size, do_not_initialize_t) {
       if (size == 0) return;                                               // no size -> null handle
-      auto b = allocator_singleton<Allocator>::allocate(size * sizeof(T)); //, alignof(T));
+      auto b = allocator.allocate(size * sizeof(T)); //, alignof(T));
       ASSERT(b.ptr != nullptr);
       _data = (T *)b.ptr;
       _size = size;
@@ -182,7 +176,7 @@ namespace nda::mem {
     // Set up a memory block of the correct size without initializing it
     handle_heap(long size, init_zero_t) {
       if (size == 0) return;                                                    // no size -> null handle
-      auto b = allocator_singleton<Allocator>::allocate_zero(size * sizeof(T)); //, alignof(T));
+      auto b = allocator.allocate_zero(size * sizeof(T)); //, alignof(T));
       ASSERT(b.ptr != nullptr);
       _data = (T *)b.ptr;
       _size = size;
@@ -192,11 +186,11 @@ namespace nda::mem {
     handle_heap(long size) {
       if (size == 0) return; // no size -> null handle
 
-      mem::blk_t b;
+      blk_t b;
       if constexpr (is_complex_v<T> && init_dcmplx)
-        b = allocator_singleton<Allocator>::allocate_zero(size * sizeof(T));
+        b = allocator.allocate_zero(size * sizeof(T));
       else
-        b = allocator_singleton<Allocator>::allocate(size * sizeof(T));
+        b = allocator.allocate(size * sizeof(T));
 
       ASSERT(b.ptr != nullptr);
       _data = (T *)b.ptr;
@@ -208,23 +202,25 @@ namespace nda::mem {
       }
     }
 
-    // Construct by making a clone of the data
-    handle_heap(handle_heap const &x) : handle_heap(x.size(), do_not_initialize) {
+    explicit handle_heap(handle_heap const &x) : handle_heap(x.size(), do_not_initialize) {
       if (is_null()) return; // nothing to do for null handle
       if constexpr (std::is_trivially_copyable_v<T>) {
-        std::memcpy(_data, x.data(), x.size() * sizeof(T));
+	std::memcpy(_data, x.data(), x.size() * sizeof(T));
       } else {
-        for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]); // placement new
+	for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]); // placement new
       }
     }
 
-    // Construct by making a clone of the data. same code
-    handle_heap(handle_shared<T> const &x) : handle_heap(x.size(), do_not_initialize) {
+    // Copy data from another owning handle
+    template <OwningHandle<value_type> H>
+    explicit handle_heap(H const &x) : handle_heap(x.size(), do_not_initialize) {
       if (is_null()) return; // nothing to do for null handle
-      if constexpr (std::is_trivially_copyable_v<T>) {
-        std::memcpy(_data, x.data(), x.size() * sizeof(T));
-      } else {
+      if constexpr (not std::is_trivially_copyable_v<T>) {
+        static_assert(address_space == H::address_space,
+                      "Constructing from handle of different address space requires trivially copyable value_type");
         for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]); // placement new
+      } else {
+        memcpy<address_space, H::address_space>((void *)_data, (void *)x.data(), _size * sizeof(T));
       }
     }
 
@@ -259,6 +255,7 @@ namespace nda::mem {
 
     public:
     using value_type = T;
+    static constexpr auto address_space = Host;
 
     //
     T *data() const noexcept { return (T *)buffer.data(); }
@@ -328,6 +325,7 @@ namespace nda::mem {
 
     public:
     using value_type = T;
+    static constexpr auto address_space = Host;
 
     bool on_heap() const { return _size > Size; }
 
@@ -356,7 +354,7 @@ namespace nda::mem {
         for (size_t i = 0; i < _size; ++i) data()[i].~T();
         // STACK	for (size_t i = 0; i < Size; ++i) data()[i].~T();
       }
-      if (on_heap()) mem::mallocator::deallocate({(char *)_data, _size * sizeof(T)});
+      if (on_heap()) mallocator<>::deallocate({(char *)_data, _size * sizeof(T)});
       _data = nullptr;
     }
 
@@ -394,6 +392,19 @@ namespace nda::mem {
       return *this;
     }
 
+    // Copy data from another owning handle
+    template <OwningHandle<value_type> H>
+    explicit handle_sso(H const &x) : handle_sso(x.size(), do_not_initialize) {
+      if (is_null()) return; // nothing to do for null handle
+      if constexpr (std::is_trivially_copyable_v<T>) {
+        static_assert(address_space == H::address_space,
+                      "Constructing from handle of different address space requires trivially copyable value_type");
+        for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]); // placement new
+      } else {
+        memcpy<address_space, H::address_space>((void *)_data, (void *)x.data(), _size * sizeof(T));
+      }
+    }
+
     // Set up a memory block of the correct size without initializing it
     handle_sso(long size, do_not_initialize_t) {
       if (size == 0) return; // no size -> null handle
@@ -401,8 +412,8 @@ namespace nda::mem {
       if (not on_heap()) {
         _data = (T *)buffer.data();
       } else {
-        mem::blk_t b;
-        b = mem::mallocator::allocate(size * sizeof(T));
+        blk_t b;
+        b = mallocator<>::allocate(size * sizeof(T));
         ASSERT(b.ptr != nullptr);
         _data = (T *)b.ptr;
       }
@@ -417,32 +428,10 @@ namespace nda::mem {
         _data = (T *)buffer.data();
         for (size_t i = 0; i < _size; ++i) data()[i] = 0;
       } else {
-        auto b = mem::mallocator::allocate_zero(size * sizeof(T)); //, alignof(T));
+        auto b = mallocator<>::allocate_zero(size * sizeof(T)); //, alignof(T));
         ASSERT(b.ptr != nullptr);
         _data = (T *)b.ptr;
       }
-    }
-
-    // Copy data
-    handle_sso(handle_sso const &x) : handle_sso(x.size(), do_not_initialize) {
-      for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]); // placement new
-    }
-
-    handle_sso &operator=(handle_sso const &x) noexcept {
-      clean();
-      _size = x._size;
-      if (_size == 0) return *this;
-      if (on_heap()) {
-        mem::blk_t b;
-        b = mem::mallocator::allocate(_size * sizeof(T));
-        ASSERT(b.ptr != nullptr);
-        _data = (T *)b.ptr;
-      } else {
-        _data = (T *)buffer.data();
-      }
-      for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]);
-
-      return *this;
     }
 
     // Construct a new block of memory of given size and init if needed.
@@ -452,16 +441,14 @@ namespace nda::mem {
 
       if (not on_heap()) {
         _data = (T *)buffer.data();
-        _size = size;
       } else {
-        mem::blk_t b;
+        blk_t b;
         if constexpr (is_complex_v<T> && init_dcmplx)
-          b = mem::mallocator::allocate_zero(size * sizeof(T));
+          b = mallocator<>::allocate_zero(size * sizeof(T));
         else
-          b = mem::mallocator::allocate(size * sizeof(T));
+          b = mallocator<>::allocate(size * sizeof(T));
         ASSERT(b.ptr != nullptr);
         _data = (T *)b.ptr;
-        _size = size;
       }
 
       // Call placement new except for complex types
@@ -469,11 +456,28 @@ namespace nda::mem {
         for (size_t i = 0; i < size; ++i) new (_data + i) T();
       }
     }
+
+    handle_sso &operator=(handle_sso const &x) noexcept {
+      clean();
+      _size = x._size;
+      if (_size == 0) return *this;
+      if (on_heap()) {
+        blk_t b;
+        b = mallocator<>::allocate(_size * sizeof(T));
+        ASSERT(b.ptr != nullptr);
+        _data = (T *)b.ptr;
+      } else {
+        _data = (T *)buffer.data();
+      }
+      for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]);
+
+      return *this;
+    }
   };
 
   // ------------------  Shared -------------------------------------
 
-  template <typename T>
+  template <typename T, AddressSpace AdrSp>
   struct handle_shared {
     static_assert(std::is_nothrow_destructible_v<T>, "nda::mem::handle requires the value_type to have a non-throwing constructor");
 
@@ -486,6 +490,7 @@ namespace nda::mem {
 
     public:
     using value_type = T;
+    static constexpr auto address_space = AdrSp;
 
     handle_shared() = default;
 
@@ -494,7 +499,8 @@ namespace nda::mem {
        : _data(data), _size(size), sptr{foreign_handle, foreign_decref} {}
 
     // Cross construction from a regular handle. MALLOC CASE ONLY. FIXME : why ?
-    handle_shared(handle_heap<T, void> const &x) noexcept : _data(x.data()), _size(x.size()) {
+    template <Allocator alloc_t>
+    handle_shared(handle_heap<T, alloc_t> const &x) noexcept requires(alloc_t::address_space == address_space) : _data(x.data()), _size(x.size()) {
       if (not x.is_null()) sptr = x.get_sptr();
     }
 
@@ -519,37 +525,28 @@ namespace nda::mem {
 
   // ------------------  Borrowed -------------------------------------
 
-  template <typename T>
+  template <typename T, AddressSpace AdrSp = Host>
   struct handle_borrowed {
-    using T0 = std::remove_const_t<T>;
-
     private:
-    handle_heap<T0, void> const *_parent = nullptr; // Parent, Required for regular->shared promotion in Python Converter
-    T *_data                             = nullptr; // Pointer to the start of the memory block
+    using T0                       = std::remove_const_t<T>;
+    handle_heap<T0> const *_parent = nullptr; // Parent, Required for regular->shared promotion in Python Converter
+    T *_data                       = nullptr; // Pointer to the start of the memory block
 
     public:
     using value_type = T;
+    static constexpr auto address_space = AdrSp;
 
     handle_borrowed() = default;
+    handle_borrowed(handle_borrowed const &x) = default;
 
     handle_borrowed(T *ptr) noexcept : _data(ptr) {}
-    handle_borrowed(handle_borrowed<T> const &x) = default;
 
-    handle_borrowed(handle_borrowed<T> const &x, long offset) noexcept : _data(x.data() + offset) {}
-
-    handle_borrowed(handle_heap<T0, void> const &x, long offset = 0) noexcept : _parent(&x), _data(x.data() + offset) {}
-
-    template <typename Alloc>
-    handle_borrowed(handle_heap<T0, Alloc> const &x, long offset = 0) noexcept : _parent(nullptr), _data(x.data() + offset) {}
-
-    handle_borrowed(handle_shared<T0> const &x, long offset = 0) noexcept : _data(x.data() + offset) {}
-    handle_borrowed(handle_borrowed<T0> const &x, long offset = 0) noexcept requires(std::is_const_v<T>) : _data(x.data() + offset) {}
-
-    template <size_t Size>
-    handle_borrowed(handle_stack<T0, Size> const &x, long offset = 0) noexcept : _data(x.data() + offset) {}
-
-    template <size_t SSO_Size>
-    handle_borrowed(handle_sso<T0, SSO_Size> const &x, long offset = 0) noexcept : _data(x.data() + offset) {}
+    template <Handle H>
+    requires(address_space == H::address_space and (std::is_const_v<value_type> or !std::is_const_v<typename H::value_type>)
+             and std::is_same_v<const value_type, const typename H::value_type>) handle_borrowed(H const &x, long offset = 0)
+    noexcept : _data(x.data() + offset) {
+      if constexpr (std::is_same_v<H, handle_heap<T0>>) _parent = &x;
+    }
 
     T &operator[](long i) noexcept { return _data[i]; }
     T const &operator[](long i) const noexcept { return _data[i]; }
@@ -560,7 +557,7 @@ namespace nda::mem {
 
     [[nodiscard]] bool is_null() const noexcept { return _data == nullptr; }
 
-    [[nodiscard]] handle_heap<T0, void> const *parent() const { return _parent; }
+    [[nodiscard]] handle_heap<T0> const *parent() const { return _parent; }
 
     // A const-handle does not entail T const data
     [[nodiscard]] T *data() const noexcept { return _data; }

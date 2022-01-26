@@ -102,6 +102,10 @@ concept Array = requires(A const &a) {
 template <typename A, typename A_t = std::remove_cvref_t<A>>
 concept MemoryArray = Array<A> && requires(A &a) {
 
+  // Has a storage_t that is a memory handle
+  typename A::storage_t;
+  mem::Handle<typename A::storage_t>;
+
   // We can acquire the pointer to the underlying data
   {
     a.data()

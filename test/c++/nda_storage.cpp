@@ -27,11 +27,11 @@ using namespace nda::mem;
 
 TEST(Storage, HR) { // NOLINT
 
-  handle_heap<int, void> h{10};
+  handle_heap<int> h{10};
 
   // make sure it is a copy
   h.data()[2] = 89;
-  handle_heap<int, void> h3{h};
+  handle_heap<int> h3{h};
   h.data()[2] = 0;
   EXPECT_EQ(h3.data()[2], 89); //NOLINT
 }
@@ -39,7 +39,7 @@ TEST(Storage, HR) { // NOLINT
 // ---- Construct R, S
 TEST(Storage, HSR) { // NOLINT
 
-  handle_heap<int, void> h{10};
+  handle_heap<int> h{10};
 
   handle_shared<int> s{h};
 
@@ -49,7 +49,7 @@ TEST(Storage, HSR) { // NOLINT
 // ---- More complex
 TEST(Ref, HSRS) { // NOLINT
 
-  handle_heap<int, void> h{10};
+  handle_heap<int> h{10};
 
   handle_shared<int> s{h};
   EXPECT_EQ(s.refcount(), 2); //NOLINT
@@ -77,7 +77,7 @@ struct Number {
 };
 
 TEST(Storage, HR_with_cd) { // NOLINT
-  { handle_heap<Number, void> h{5}; }
+  { handle_heap<Number> h{5}; }
   EXPECT_EQ(Number::c, 0); //NOLINT
 }
 
