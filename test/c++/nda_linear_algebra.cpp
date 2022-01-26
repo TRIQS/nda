@@ -196,6 +196,9 @@ TEST(Determinant, C) { //NOLINT
     for (int j = 0; j < 3; ++j) W(i, j) = (i > j ? i + 2.5 * j : i * 0.8 - j);
 
   EXPECT_NEAR(determinant(W), -7.8, 1.e-12);
+
+  auto W_sso = matrix<double, nda::C_layout, nda::sso<100>>{W};
+  EXPECT_NEAR(determinant(W_sso), -7.8, 1.e-12);
 }
 
 //-------------------------------------------------------------
