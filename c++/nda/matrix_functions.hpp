@@ -54,7 +54,8 @@ namespace nda {
   ArrayOfRank<1> auto diagonal(M &m) {
     long dim = std::min(m.shape()[0], m.shape()[1]);
     long stride = stdutil::sum(m.indexmap().strides());
-    using vector_view_t = basic_array_view<std::remove_reference_t<decltype(*m.data())>, 1, C_stride_layout, 'V', nda::default_accessor, nda::borrowed>;
+    using vector_view_t =
+       basic_array_view<std::remove_reference_t<decltype(*m.data())>, 1, C_stride_layout, 'V', nda::default_accessor, nda::borrowed<>>;
     return vector_view_t{C_stride_layout::mapping<1>{{dim}, {stride}}, m.data()};
   }
 

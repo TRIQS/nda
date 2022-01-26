@@ -21,7 +21,10 @@
 #include <vector>
 #include <memory>
 #include <numeric>
+#include <concepts>
 #include "../macros.hpp"
+
+#include <cuda_runtime.h>
 
 #if defined(__has_feature)
 #if __has_feature(address_sanitizer)
@@ -30,27 +33,60 @@
 #endif
 #endif
 
+using namespace std::literals;
+
 namespace nda::mem {
 
-  // ------------------------ The memory block with its size  -------------
+  /// The memory block with its size
   struct blk_t {
     char *ptr = nullptr;
     size_t s  = 0;
   };
 
-  // ------------------------  Utility -------------
+  /**
+   * The Address-Space identifier
+   * Host -> address in ram
+   * Device -> address on the GPU
+   * Unified -> CUDA Unified memory address
+   */
+  enum class AddressSpace { Host, Device, Unified };
+  using AddressSpace::Device;
+  using AddressSpace::Host;
+  using AddressSpace::Unified;
 
-  inline size_t round_to_align(size_t s) {
-    size_t a = alignof(std::max_align_t);
-    return ((s + a - 1) / a) * a; // s = 3a +2  --> (4a + 2)/a = 4 --> 4a
+  /// Concept of an Allocator
+  template <typename A>
+  concept Allocator = requires(A &a) {
+    { a.allocate(size_t{}) }
+    noexcept->std::same_as<blk_t>;
+    { a.allocate_zero(size_t{}) }
+    noexcept->std::same_as<blk_t>;
+    { a.deallocate(blk_t{}) }
+    noexcept;
+    { A::address_space } -> std::same_as<AddressSpace const &>;
+  };
+
+  /// Generic memcpy between potentially different Address Spaces
+  template <AddressSpace DestAdrSp, AddressSpace SrcAdrSp>
+  void memcpy(void *dest, void *src, size_t count) {
+    if constexpr (DestAdrSp == Host) {
+      if constexpr (SrcAdrSp == Host)
+        std::memcpy(dest, src, count);
+      else // Device/Unified -> Host
+        cudaMemcpy(dest, src, count, cudaMemcpyDeviceToHost);
+    } else {
+      if constexpr (SrcAdrSp == Host)
+        cudaMemcpy(dest, src, count, cudaMemcpyHostToDevice);
+      else // Device/Unified -> Device/Unified
+        cudaMemcpy(dest, src, count, cudaMemcpyDeviceToDevice);
+    }
   }
-
-  static constexpr unsigned aligment = alignof(std::max_align_t);
 
   // -------------------------  Malloc allocator ----------------------------
   //
   // Allocates simply with malloc
   //
+  template <AddressSpace AdrSp = Host>
   class mallocator {
     public:
     mallocator()                   = default;
@@ -59,10 +95,39 @@ namespace nda::mem {
     mallocator &operator=(mallocator const &) = delete;
     mallocator &operator=(mallocator &&) = default;
 
-    static blk_t allocate(size_t s) { return {(char *)malloc(s), s}; }                    //NOLINT
-    static blk_t allocate_zero(size_t s) { return {(char *)calloc(s, sizeof(char)), s}; } //NOLINT
+    static constexpr auto address_space = AdrSp;
 
-    static void deallocate(blk_t b) noexcept { free(b.ptr); } // NOLINT
+    static blk_t allocate(size_t s) noexcept {
+      if constexpr (AdrSp == Host) {
+        return {(char *)malloc(s), s}; // NOLINT
+      } else {
+        auto blk = blk_t{nullptr, s};
+        auto err = [&]() {
+          if constexpr (AdrSp == Device)
+            return cudaMalloc((void **)&blk.ptr, s);        // NOLINT
+          else                                              // Unified
+            return cudaMallocManaged((void **)&blk.ptr, s); // NOLINT
+        }();
+        ASSERT_WITH_MESSAGE(err == cudaSuccess, "Cuda memory allocation failed with error code "s + std::to_string(err));
+        return blk;
+      }
+    }
+    static blk_t allocate_zero(size_t s) noexcept {
+      if constexpr (AdrSp == Host) {
+        return {(char *)calloc(s, sizeof(char)), s}; // NOLINT
+      } else /* Device, Unified */ {
+        auto blk = allocate(s);
+        cudaMemset((void *)blk.ptr, 0, s);
+        return blk;
+      }
+    }
+
+    static void deallocate(blk_t b) noexcept {
+      if constexpr (AdrSp == Host)
+        free(b.ptr); // NOLINT
+      else           // Device, Unified
+        cudaFree((void *)b.ptr);
+    }
   };
 
   // -------------------------  Bucket allocator ----------------------------
@@ -76,6 +141,8 @@ namespace nda::mem {
     uint64_t flags                      = uint64_t(-1);
 
     public:
+    static constexpr auto address_space = Host;
+
 #ifdef NDA_USE_ASAN
     bucket() { __asan_poison_memory_region(p, TotalChunkSize); }
     ~bucket() { __asan_unpoison_memory_region(p, TotalChunkSize); }
@@ -127,7 +194,7 @@ namespace nda::mem {
   //
   //
   template <int ChunkSize>
-  class multiple_bucket {
+  class multi_bucket {
 
     using b_t = bucket<ChunkSize>;
     std::vector<b_t> bu_vec;                // an ordered vector of buckets
@@ -148,13 +215,15 @@ namespace nda::mem {
     }
 
     public:
-    multiple_bucket() : bu_vec(1), bu(bu_vec.begin()) {}
-    multiple_bucket(multiple_bucket const &) = delete;
-    multiple_bucket(multiple_bucket &&)      = delete;
-    multiple_bucket &operator=(multiple_bucket const &) = delete;
-    multiple_bucket &operator=(multiple_bucket &&) = delete;
+    static constexpr auto address_space = Host;
 
-    blk_t allocate(size_t s) {
+    multi_bucket() : bu_vec(1), bu(bu_vec.begin()) {}
+    multi_bucket(multi_bucket const &) = delete;
+    multi_bucket(multi_bucket &&)      = delete;
+    multi_bucket &operator=(multi_bucket const &) = delete;
+    multi_bucket &operator=(multi_bucket &&) = delete;
+
+    blk_t allocate(size_t s) noexcept {
       //[[unlikely]]
       if ((bu == bu_vec.end()) or (bu->is_full())) find_non_full_bucket();
       return bu->allocate(s);
@@ -190,32 +259,38 @@ namespace nda::mem {
   //
   // Dispatch according to size to two allocators
   //
-  template <size_t Threshold, typename A, typename B>
+  template <size_t Threshold, Allocator A, Allocator B>
   class segregator {
+
     A small;
     B big;
 
     public:
+    static_assert(A::address_space == B::address_space);
+    static constexpr auto address_space = A::address_space;
+
     segregator()                   = default;
     segregator(segregator const &) = delete;
     segregator(segregator &&)      = default;
     segregator &operator=(segregator const &) = delete;
     segregator &operator=(segregator &&) = default;
 
-    blk_t allocate(size_t s) { return s <= Threshold ? small.allocate(s) : big.allocate(s); }
-    blk_t allocate_zero(size_t s) { return s <= Threshold ? small.allocate_zero(s) : big.allocate_zero(s); }
+    blk_t allocate(size_t s) noexcept { return s <= Threshold ? small.allocate(s) : big.allocate(s); }
+    blk_t allocate_zero(size_t s) noexcept { return s <= Threshold ? small.allocate_zero(s) : big.allocate_zero(s); }
 
     void deallocate(blk_t b) noexcept { return b.s <= Threshold ? small.deallocate(b) : big.deallocate(b); }
     [[nodiscard]] bool owns(blk_t b) const noexcept { return small.owns(b) or big.owns(b); }
   };
 
   // -------------------------  dress allocator with leak_checking ----------------------------
-  template <typename A>
+  template <Allocator A>
   class leak_check : A {
 
     long memory_used = 0;
 
     public:
+    static constexpr auto address_space = A::address_space;
+
     leak_check()                   = default;
     leak_check(leak_check const &) = delete;
     leak_check(leak_check &&)      = default;
@@ -266,12 +341,14 @@ namespace nda::mem {
   };
 
   // ------------------------- gather statistics for a generic allocator ----------------------------
-  template <typename A>
+  template <Allocator A>
   class stats : A {
 
     std::vector<uint64_t> hist = std::vector<uint64_t>(65, 0);
 
     public:
+    static constexpr auto address_space = A::address_space;
+
     ~stats() {
 #ifndef NDEBUG
       std::cerr << "Allocation size histogram :\n";

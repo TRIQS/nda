@@ -136,7 +136,7 @@ BENCHMARK(stack_loop_only)->Arg(1)->Arg(2)->Arg(3)->Arg(4)->Arg(10)->Arg(15); //
 
 // ------------------
 
-using alloc_t = nda::mem::segregator<8 * 100, nda::mem::multiple_bucket<8 * 100>, nda::mem::mallocator>;
+using alloc_t = nda::mem::segregator<8 * 100, nda::mem::multi_bucket<8 * 100>, nda::mem::mallocator>;
 
 static void mbucket_alloc(benchmark::State &state) {
   const int N = state.range(0);

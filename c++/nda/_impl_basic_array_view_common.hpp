@@ -333,24 +333,16 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
                       << "\n LHS.shape() = " << this->shape() << "\n RHS.shape() = " << rhs.shape();
 #endif
 
-  // FIXME : what if RHS has no memory ??
-  // firt if SPECIFIC to container ...
-  // check call -> _linear_inde ?
-  // general case if RHS is not a scalar (can be isp, expression...)
   static_assert(std::is_assignable_v<value_type &, get_value_t<RHS>>, "Assignment impossible for the type of RHS into the type of LHS");
 
-  // If LHS and RHS are both 1d strided order or contiguous, and have the same stride order
-  // we can make a 1d loop
-  if constexpr ((get_layout_info<self_t>.stride_order == get_layout_info<RHS>.stride_order) // same stride order and both contiguous ...
-                and has_layout_strided_1d<self_t> and has_layout_strided_1d<RHS>) {
+  constexpr bool both_in_memory    = MemoryArray<self_t> and MemoryArray<RHS>;
+  constexpr bool both_1d_strided   = has_layout_strided_1d<self_t> and has_layout_strided_1d<RHS>;
+  constexpr bool same_stride_order = get_layout_info<self_t>.stride_order == get_layout_info<RHS>.stride_order;
 
-    static_assert(!std::is_reference_v<RHS>, "W?");
-    //static_assert(is_regular_or_view_v<RHS>, "oops");
-    // In general, has_layout_strided_1d is FALSE by default
-    // VALID ALSO FOR EXPRESSION !!!
-    long L = size();
-    for (long i = 0; i < L; ++i) (*this)(_linear_index_t{i}) = rhs(_linear_index_t{i});
-  } else {
+  if constexpr (both_in_memory and both_1d_strided and same_stride_order) { // -> vectorizable copy
+    static_assert(self_t::storage_t::address_space == RHS::storage_t::address_space);
+    for (long i = 0; i < size(); ++i) (*this)(_linear_index_t{i}) = rhs(_linear_index_t{i});
+  } else { // -> element-wise assignment
     auto l = [this, &rhs](auto const &... args) { (*this)(args...) = rhs(args...); };
     nda::for_each(shape(), l);
   }
