@@ -118,12 +118,12 @@ namespace nda::permutations {
   }
 
   // cyclic permutation, p times. Forward
-  // n = 1 :  0 1 2 3 ---->   3 0 1 2
-  // P[n] = (Rank + n - p) % Rank
+  // p = 1 :  0 1 2 3 ---->   3 0 1 2
+  // P[i] = (Rank + i - p) % Rank
   // 4 + 0 -1 = 3, 4 + 1 -1 = 0, 4 +2 -1 = 1, etc...
   // if pos < Rank, the cycle is partial
   // cycle<5> (1, 3) --> 2 0 1 3 4
-  // pos ==0 --> identity
+  // pos == 0 --> identity
   template <size_t Rank>
   constexpr std::array<int, Rank> cycle(int p, int pos = Rank) {
     auto result = stdutil::make_initialized_array<Rank>(0);

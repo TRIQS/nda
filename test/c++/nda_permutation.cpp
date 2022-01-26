@@ -92,14 +92,17 @@ TEST(Permutation, Iterator) { //NOLINT
           for (int l = 0; l < a.extent(3); ++l) { EXPECT_EQ(a(i, j, k, l), (*it++)); }
   }
 
+  // Rotate indices ijkl -> kijl
+  // New stride order will be 1203
   auto v = nda::rotate_index_view<2>(a);
+
 PRINT(v.iterator_rank);
   {
     auto it = v.begin();
 
-    for (int i = 0; i < v.extent(0); ++i)
-      for (int j = 0; j < v.extent(1); ++j)
-        for (int k = 0; k < v.extent(2); ++k)
+    for (int j = 0; j < v.extent(1); ++j)
+      for (int k = 0; k < v.extent(2); ++k)
+        for (int i = 0; i < v.extent(0); ++i)
           for (int l = 0; l < v.extent(3); ++l) { EXPECT_EQ(v(i, j, k, l), (*it++)); }
   }
 }
