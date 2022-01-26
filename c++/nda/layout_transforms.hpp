@@ -53,18 +53,13 @@ namespace nda {
   }
 
   // ---------------  reshape ------------------------
-  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, auto newRank>
-  auto reshape(basic_array<T, R, L, Algebra, ContainerPolicy> &&a, std::array<long, newRank> const &new_shape) {
+
+  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, std::integral Int, auto newRank>
+  auto reshape(basic_array<T, R, L, Algebra, ContainerPolicy> &&a, std::array<Int, newRank> const &new_shape) {
     using layout_t = typename L::template mapping<newRank>;
     EXPECTS_WITH_MESSAGE(a.size() == (std::accumulate(new_shape.cbegin(), new_shape.cend(), 1, std::multiplies<>{})),
                          "Reshape : the new shape has a incorrect number of elements");
     return map_layout_transform(std::move(a), layout_t{new_shape});
-  }
-
-  // for convenience, call it with std::array{1,2}.... Document ?
-  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, auto newRank>
-  auto reshape(basic_array<T, R, L, Algebra, ContainerPolicy> &&a, std::array<int, newRank> const &new_shape) {
-    return reshape(std::move(a), stdutil::make_std_array<long>(new_shape));
   }
 
   // ---------------  reshaped_view ------------------------
