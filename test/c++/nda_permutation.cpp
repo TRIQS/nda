@@ -86,13 +86,17 @@ TEST(Permutation, Iterator) { //NOLINT
   {
     auto it = a.begin();
 
+    // We traverse the view in a memory-contiguous way
     for (int i = 0; i < a.extent(0); ++i)
       for (int j = 0; j < a.extent(1); ++j)
         for (int k = 0; k < a.extent(2); ++k)
           for (int l = 0; l < a.extent(3); ++l) { EXPECT_EQ(a(i, j, k, l), (*it++)); }
   }
 
+  // Rotate indices ijkl -> kijl
+  // New stride order will be 1203
   auto v = nda::rotate_index_view<2>(a);
+
   {
     auto it = v.begin();
 
