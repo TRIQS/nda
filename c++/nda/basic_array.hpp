@@ -25,7 +25,7 @@ namespace nda {
 
   /// Class template argument deduction
   template <typename T>
-  basic_array(T) -> basic_array<get_value_t<std::decay_t<T>>, get_rank<std::decay_t<T>>, C_layout, 'A', heap>;
+  basic_array(T) -> basic_array<get_value_t<std::decay_t<T>>, get_rank<std::decay_t<T>>, C_layout, 'A', heap<>>;
 
   // forward for friend declaration
   template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, typename NewLayoutType>
@@ -36,36 +36,32 @@ namespace nda {
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
   class basic_array {
 
-    static_assert(!std::is_const<ValueType>::value, "ValueType can not be const. WHY ?");
+    static_assert(!std::is_const<ValueType>::value, "ValueType of basic_array cannot be const.");
     static_assert((Algebra != 'M') or (Rank == 2), " Internal error : Algebra 'M' only makes sense for rank 2");
     static_assert((Algebra != 'V') or (Rank == 1), " Internal error : Algebra 'V' only makes sense for rank 1");
 
-    // details for the common code with view
-    using self_t                   = basic_array;
-    using AccessorPolicy           = default_accessor; // no_alias_accessor
-    using OwningPolicy             = borrowed;
-    static constexpr bool is_const = false;
-    static constexpr bool is_view  = false;
-
     public:
-    /// T
-    using value_type = ValueType;
-
-    /// The type of the layout
-    using layout_t = typename Layout::template mapping<Rank>;
+    /// Type of the array's values
+    using value_type          = ValueType;
+    /// Type of the memory handle
+    using storage_t           = typename ContainerPolicy::template handle<ValueType>;
+    /// Type of the memory layout
+    using layout_t            = typename Layout::template mapping<Rank>;
+    /// The associated regular type
+    using regular_type        = basic_array;
+    /// The number of dimensions of the array
+    static constexpr int rank = Rank;
 
     static_assert(has_contiguous(layout_t::layout_prop), "Non sense. A basic_array is a contiguous object");
 
-    using regular_type = basic_array;
-
     private:
-    // FIXME : mem_handle_t
-    using storage_t = typename ContainerPolicy::template handle<ValueType, layout_t::ce_size()>;
+    // details for the common code with view
+    using self_t                   = basic_array;
+    using AccessorPolicy           = default_accessor; // no_alias_accessor
+    using OwningPolicy             = borrowed<storage_t::address_space>;
+    static constexpr bool is_const = false;
+    static constexpr bool is_view  = false;
 
-    public:
-    static constexpr int rank = Rank;
-
-    private:
     layout_t lay;
     storage_t sto;
 
@@ -94,7 +90,11 @@ namespace nda {
     basic_array(){};
 
     /// Makes a deep copy, since array is a regular type
-    basic_array(basic_array const &x) noexcept : lay(x.indexmap()), sto(x.sto) {}
+    explicit basic_array(basic_array const &x) noexcept : lay(x.indexmap()), sto(x.sto) {}
+
+    /// Makes a deep copy, given a basic_array with a different container policy
+    template <char Algebra_other, typename ContainerPolicy_other>
+    explicit basic_array(basic_array<ValueType, Rank, Layout, Algebra_other, ContainerPolicy_other> const &x) noexcept : lay(x.indexmap()), sto(x.storage()) {}
 
     ///
     basic_array(basic_array &&X) = default;
@@ -296,6 +296,13 @@ namespace nda {
 
     /// Deep copy (array is a regular type). Invalidates all references to the storage.
     basic_array &operator=(basic_array const &X) = default;
+
+    /// Deep copy assignment given array with different algebra and/or container policy
+    template <char Algebra_other, typename ContainerPolicy_other>
+    basic_array &operator=(basic_array<ValueType, Rank, Layout, Algebra_other, ContainerPolicy_other> const &x) {
+      *this = basic_array{x};
+      return *this;
+    }
 
     /** 
      * Resizes the array (if necessary).

@@ -102,6 +102,10 @@ concept Array = requires(A const &a) {
 template <typename A>
 concept MemoryArray = Array<A> && requires(A &a) {
 
+  // Has a storage_t that is a memory handle
+  typename A::storage_t;
+  mem::Handle<typename A::storage_t>;
+
   // We can acquire the pointer to the underlying data
   { a.data() } -> std::same_as<std::conditional_t<std::is_const_v<A>, const get_value_t<A>, get_value_t<A>> *>;
 

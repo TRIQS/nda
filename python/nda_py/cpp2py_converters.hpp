@@ -91,7 +91,7 @@ namespace cpp2py {
   // array
   // -----------------------------------
   template <typename T, int R, char Algebra>
-  struct py_converter<nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap>> {
+  struct py_converter<nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap<>>> {
 
     // T can be a npy type cpp2py::has_npy_type<T> == true or NOT (then we need to convert using cpp2py)
     static_assert(not std::is_same_v<T, pyref>, "Not implemented");
@@ -105,7 +105,7 @@ namespace cpp2py {
 
     template <typename A>
     static PyObject *c2py(A &&src) {
-      static_assert(std::is_same_v<std::decay_t<A>, nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap>>,
+      static_assert(std::is_same_v<std::decay_t<A>, nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap<>>>,
                     "Logic Error in array c2py conversion");
       auto p = nda::python::make_numpy_proxy_from_array_or_view(std::forward<A>(src));
       return p.to_python();

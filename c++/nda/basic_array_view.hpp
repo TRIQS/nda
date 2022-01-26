@@ -61,7 +61,7 @@ namespace nda {
     using layout_t   = typename Layout::template mapping<Rank>;
 
     // FIXME : TRIQS PORT REMOVE
-    using regular_type = basic_array<std::remove_const_t<ValueType>, Rank, C_layout, Algebra, heap>;
+    using regular_type = basic_array<std::remove_const_t<ValueType>, Rank, C_layout, Algebra, heap<>>;
 
     static constexpr int rank = Rank;
 
@@ -258,6 +258,6 @@ namespace nda {
   // Template Deduction Guides
   template <std::ranges::contiguous_range R>
   basic_array_view(R &r) -> basic_array_view<std::conditional_t<std::is_const_v<R>, const typename R::value_type, typename R::value_type>, 1,
-                                             C_layout, 'V', default_accessor, borrowed>;
+                                             C_layout, 'V', default_accessor, borrowed<>>;
 
 } // namespace nda

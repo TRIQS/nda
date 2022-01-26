@@ -114,7 +114,7 @@ namespace nda {
   auto make_regular(A &&x) {
     using A_t = std::decay_t<A>;
     if constexpr (Array<A>)
-      return basic_array<get_value_t<A_t>, get_rank<A_t>, C_layout, get_algebra<A_t>, heap>{std::forward<A>(x)};
+      return basic_array<get_value_t<A_t>, get_rank<A_t>, C_layout, get_algebra<A_t>, heap<>>{std::forward<A>(x)};
     else
       return std::forward<A>(x);
   }

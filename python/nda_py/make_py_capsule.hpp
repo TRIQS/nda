@@ -71,7 +71,7 @@ namespace nda::python {
 
   // Make a pycapsule out of the shared handle to return to Python
   template <typename T>
-  PyObject *make_pycapsule(nda::mem::handle_heap<T, void> const &h) {
+  PyObject *make_pycapsule(nda::mem::handle_heap<T> const &h) {
     void *keep = new nda::mem::handle_shared<T>{h}; // a new reference
     return PyCapsule_New(keep, "guard", &delete_pycapsule<T>);
   }
