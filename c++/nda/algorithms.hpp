@@ -119,14 +119,29 @@ namespace nda {
   }
 
   /**
+   * Return the sum of all array elements added to value_t{0}
+   *
    * @tparam A Anything modeling NdArray
    * @param a The object of type A
    * @return The sum of all elements of a 
    * \ingroup Algorithms
    */
   template <Array A>
-  auto sum(A const &a)  {
+  auto sum(A const &a) requires(nda::is_scalar_v<get_value_t<A>>) {
     return fold(std::plus<>{}, a);
+  }
+
+  /**
+   * Return the product of all array elements multiplied with value_t{1}
+   *
+   * @tparam A Anything modeling NdArray
+   * @param a The object of type A
+   * @return The product of all elements of a
+   * \ingroup Algorithms
+   */
+  template <Array A>
+  auto product(A const &a) requires(nda::is_scalar_v<get_value_t<A>>) {
+    return fold(std::multiplies<>{}, a, get_value_t<A>{1});
   }
 
 } // namespace nda

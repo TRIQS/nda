@@ -71,6 +71,10 @@ TEST(NDA, Algo1) { //NOLINT
   EXPECT_EQ(sum(B), 0);
   EXPECT_EQ((nda::array<int, 2>{A + 10 * B}), (nda::array<int, 2>{{1, -7, -15}, {12, 4, -4}, {23, 15, 7}}));
   EXPECT_EQ(max_element(A + 10 * B), 23);
+
+  A() = 1;
+  A += nda::diag(nda::vector<int>{2, 3, 4});
+  EXPECT_EQ(product(A), 3 * 4 * 5);
 }
 
 TEST(NDA, AlgoMat) { //NOLINT
