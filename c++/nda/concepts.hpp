@@ -14,6 +14,7 @@
 
 #pragma once
 #include "declarations.hpp"
+#include "traits.hpp"
 #include "stdutil/concepts.hpp"
 
 #include <type_traits>
@@ -69,6 +70,11 @@ concept StdArrayOfLong = details::is_std_array_of_long_v<std::decay_t<T>>;
 
 template <typename S>
 concept Scalar = nda::is_scalar_v<std::decay_t<S>>;
+
+// -------   InstantiationOf   ----------
+
+template <typename T, template <typename...> class TMPLT>
+concept InstantiationOf = nda::is_instantiation_of_v<TMPLT, T>;
 
 // -------   Array   ----------
 // main concept of the library

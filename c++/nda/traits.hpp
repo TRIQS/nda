@@ -26,6 +26,15 @@ namespace nda {
   // Using 2i and co
   using namespace std::literals::complex_literals;
 
+  // --------------------------- is_instantiation_of ------------------------
+
+  template <template <typename...> class TMPLT, typename T>
+  struct is_instantiation_of : std::false_type {};
+  template <template <typename...> class TMPLT, typename... U>
+  struct is_instantiation_of<TMPLT, TMPLT<U...>> : std::true_type {};
+  template <template <typename...> class gf, typename T>
+  inline constexpr bool is_instantiation_of_v = is_instantiation_of<gf, std::remove_reference_t<T>>::value;
+
   // --------------------------- For error messages ------------------------
 
   // to prevent the static_assert to trigger only when instantiated
