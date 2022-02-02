@@ -32,8 +32,8 @@ namespace nda {
   struct is_instantiation_of : std::false_type {};
   template <template <typename...> class TMPLT, typename... U>
   struct is_instantiation_of<TMPLT, TMPLT<U...>> : std::true_type {};
-  template <template <typename...> class gf, typename T>
-  inline constexpr bool is_instantiation_of_v = is_instantiation_of<gf, std::remove_reference_t<T>>::value;
+  template <template <typename...> class TMPLT, typename T>
+  inline constexpr bool is_instantiation_of_v = is_instantiation_of<TMPLT, std::remove_reference_t<T>>::value;
 
   // --------------------------- For error messages ------------------------
 
