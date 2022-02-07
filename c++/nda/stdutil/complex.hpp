@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//
+// Authors: Olivier Parcollet, Nils Wentzell
 
 #ifndef STD_ADDONS_COMPLEX_H
 #define STD_ADDONS_COMPLEX_H
