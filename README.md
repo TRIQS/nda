@@ -11,6 +11,7 @@ It is an essential building-block of the TRIQS project. Some features include
 * easily store and retrieve arrays to and from hdf5 files using [h5](https://github.com/TRIQS/h5)
 * common mpi functionality using [mpi](https://github.com/TRIQS/mpi)
 
+A prelimenary reference documentation based on [Doxygen](https://www.doxygen.nl) is provided at [triqs.github.io/nda](https://triqs.github.io/nda/latest/).
 
 ## Simple Example
 
