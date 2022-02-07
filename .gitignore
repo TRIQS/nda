@@ -1,6 +1,7 @@
+compile_commands.json
+doc/cpp2rst_generated
+doc/html
 *.pyc
 .*.swp
 .*.swo
 .*.swn
-.gitignore
-doc/html
