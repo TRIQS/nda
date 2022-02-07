@@ -63,22 +63,25 @@ namespace details {
   constexpr bool is_std_array_of_long_v<std::array<long, R>> = true;
 } // namespace details
 
+/// Check if T is an 'std::array' of long
 template <class T>
 concept StdArrayOfLong = details::is_std_array_of_long_v<std::decay_t<T>>;
 
 // -------   Scalar   ----------
 
+/// Check if S is an arthmetic or complex type
 template <typename S>
 concept Scalar = nda::is_scalar_v<std::decay_t<S>>;
 
 // -------   InstantiationOf   ----------
 
+/// Check if T is an instantiation of the `template <typename...> class TMPLT`
 template <typename T, template <typename...> class TMPLT>
 concept InstantiationOf = nda::is_instantiation_of_v<TMPLT, T>;
 
 // -------   Array   ----------
-// main concept of the library
 
+/// Check if A has a shape, size and rank R and can be called with R integers.
 template <typename A>
 concept Array = requires(A const &a) {
 
@@ -93,6 +96,7 @@ concept Array = requires(A const &a) {
   requires CallableWithLongs<A, get_rank<A>>;
 };
 
+/// Check if A is an Array and exposes its `data()` and its `indexmap().strides()`
 template <typename A>
 concept MemoryArray = Array<A> && requires(A &a) {
 
@@ -105,12 +109,15 @@ concept MemoryArray = Array<A> && requires(A &a) {
 
 // -------   Additional Array Concepts   ----------
 
+/// Check if A is a Array with of rank R
 template <typename A, int R>
 concept ArrayOfRank = Array<A> and(get_rank<A> == R);
 
+/// Check if A is a MemoryArray with a specific rank R
 template <typename A, int R>
 concept MemoryArrayOfRank = MemoryArray<A> and(get_rank<A> == R);
 
+/// Check if A is a Array or Scalar
 template <typename AS>
 concept ArrayOrScalar = Array<AS> or Scalar<AS>;
 
@@ -121,6 +128,7 @@ concept ArrayOrScalar = Array<AS> or Scalar<AS>;
 // - a value_type
 // - be invokable on a view to init the array
 
+///
 template <typename A>
 concept ArrayInitializer = requires(A const &a) {
 

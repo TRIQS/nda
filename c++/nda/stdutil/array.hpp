@@ -23,8 +23,8 @@
 #include <string>
 #include <sstream>
 
-/// =========    ADDING IN STD ===========
-/// =========    NEED TO PUT IT IN STD FOR ADL ========
+// =========    ADDING IN STD ===========
+// =========    NEED TO PUT IT IN STD FOR ADL ========
 // How to document this ?? Manually ?
 namespace std {
 
@@ -65,7 +65,7 @@ namespace std {
 #ifndef STDUTILS_ARRAY_H
 #define STDUTILS_ARRAY_H
 
-/// =========    END ADDING IN STD ===========
+// =========    END ADDING IN STD ===========
 
 namespace nda::stdutil {
 

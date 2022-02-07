@@ -12,6 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#pragma once
+
+/// BLAS Interface
+namespace nda::blas {}
+
 #include "blas/tools.hpp"
 #include "blas/gemm.hpp"
 #include "blas/gemv.hpp"

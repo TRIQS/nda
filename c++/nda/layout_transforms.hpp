@@ -122,7 +122,7 @@ namespace nda {
     return permuted_indices_view<encode(permutations::transposition<std::decay_t<A>::rank>(I, J))>(std::forward<A>(a));
   }
 
-  /// --------------- Grouping indices------------------------
+  // --------------- Grouping indices------------------------
 
   // FIXME : write the doc
   // FIXME : use "magnetic" placeholder
@@ -142,7 +142,7 @@ namespace nda {
     return group_indices_view(basic_array_view<T, R, L, Algebra, default_accessor, borrowed>(a), IntSequences{}...);
   }
 
-  /// --------------- Reinterpretation------------------------
+  // --------------- Reinterpretation------------------------
 
   namespace impl {
 

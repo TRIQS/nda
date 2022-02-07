@@ -19,6 +19,7 @@
 #include "blas/tools.hpp"
 #include "lapack/interface/lapack_cxx_interface.hpp"
 
+/// LAPACK Interface
 namespace nda::lapack {
 
   using blas::get_ld;

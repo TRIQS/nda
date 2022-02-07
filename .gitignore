@@ -3,5 +3,4 @@
 .*.swo
 .*.swn
 .gitignore
-
-
+doc/html

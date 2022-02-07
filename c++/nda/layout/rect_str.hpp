@@ -164,7 +164,7 @@ namespace nda {
     bool operator==(rect_str const &x) const { return base_t::operator==(x) and (!s_indices or !x.s_indices or (*s_indices == *(x.s_indices))); }
     bool operator!=(rect_str const &x) { return !(operator==(x)); }
 
-    //// ---------------- Transposition -------------------------
+    // ---------------- Transposition -------------------------
 
     template <uint64_t Permutation>
     auto transpose() const {
