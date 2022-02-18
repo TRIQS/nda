@@ -22,6 +22,10 @@ target_compile_definitions(${PROJECT_NAME}_c PUBLIC
 install(TARGETS ${PROJECT_NAME}_c EXPORT ${PROJECT_NAME}-targets DESTINATION lib)
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING PATTERN "*.hpp" PATTERN "*.hxx" PATTERN "*.h")
 
+# Configure and install version file
+configure_file(version.hpp.in version.hpp @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/version.hpp DESTINATION include/${PROJECT_NAME})
+
 # ========= Additional Depdencies ==========
 
 # Link against HDF5 C++ Interface
