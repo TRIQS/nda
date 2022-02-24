@@ -28,7 +28,7 @@ namespace nda::mem {
   /// Concept of a handle on a block of memory
   template <typename H, typename T = typename H::value_type>
   concept Handle = requires(H const &h) {
-    { typename H::value_type{} } -> std::same_as<T>;
+    requires std::is_same_v<typename H::value_type, T>;
     { h.is_null() } noexcept -> std::same_as<bool>;
     { h.data() } noexcept -> std::same_as<T *>;
     { H::address_space } -> std::same_as<AddressSpace const &>;
@@ -37,7 +37,7 @@ namespace nda::mem {
   /// Concept of a handle that owns a block of memory
   template <typename H, typename T = typename H::value_type>
   concept OwningHandle = Handle<H, T> and requires(H const &h) {
-    requires(not std::is_const_v<typename H::value_type>);
+    requires not std::is_const_v<typename H::value_type>;
     { h.size() } noexcept -> std::same_as<long>;
   };
 
