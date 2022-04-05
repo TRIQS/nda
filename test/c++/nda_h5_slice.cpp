@@ -17,6 +17,9 @@
 #include "./test_common.hpp"
 #include <h5/h5.hpp>
 #include <nda/h5.hpp>
+#include <nda/clef/literals.hpp>
+
+using namespace nda::clef::literals;
 
 template <typename T>
 void one_simple(std::string name, T scalar) {
@@ -25,8 +28,7 @@ void one_simple(std::string name, T scalar) {
   nda::array<T, 2> b(N1, N2), b_sli;
 
   // numbers are unique ...
-  for (int i = 0; i < N1; ++i)
-    for (int j = 0; j < N2; ++j) { b(i, j) = scalar * (10 * i + j); }
+  b(i_, j_) << scalar * (10 * i_ + j_);
 
   std::cout << b << std::endl;
   std::string filename = "ess_slice_simple_" + name + ".h5";
@@ -72,10 +74,7 @@ TEST(SliceH5, Systematic3d) { //NOLINT
   int StepMax = 3;
 
   nda::array<long, 3> c(N1, N2, N3), c_sli;
-
-  for (int i = 0; i < N1; ++i)
-    for (int j = 0; j < N2; ++j)
-      for (int k = 0; k < N3; ++k) { c(i, j, k) = (i + 10 * j + 100 * k); }
+  c(i_, j_, k_) << (i_ + 10 * j_ + 100 * k_);
 
   std::cerr << c << std::endl;
   std::string filename = "ess_slice_systematic3d.h5";

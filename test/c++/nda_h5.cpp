@@ -17,6 +17,9 @@
 #include "./test_common.hpp"
 #include <h5/h5.hpp>
 #include <nda/h5.hpp>
+#include <nda/clef/literals.hpp>
+
+using namespace nda::clef::literals;
 
 template <typename T>
 void one_test(std::string name, T scalar) {
@@ -25,14 +28,9 @@ void one_test(std::string name, T scalar) {
   nda::array<T, 2> b(2, 3), b_check;
   nda::array<T, 3> c(2, 3, 4), c_check;
 
-  for (int i = 0; i < 5; ++i) { a(i) = scalar * (10 * i); }
-
-  for (int i = 0; i < 2; ++i)
-    for (int j = 0; j < 3; ++j) { b(i, j) = scalar * (10 * i + j); }
-
-  for (int i = 0; i < 2; ++i)
-    for (int j = 0; j < 3; ++j)
-      for (int k = 0; k < 4; ++k) { c(i, j, k) = scalar * (i + 10 * j + 100 * k); }
+  a(i_) << scalar * (10 * i_);
+  b(i_, j_) << scalar * (10 * i_ + j_);
+  c(i_, j_, k_) << scalar * (i_ + 10 * j_ + 100 * k_);
 
   std::string filename = "ess_" + name + ".h5";
   // WRITE the file
@@ -192,12 +190,9 @@ TEST(Array, H5) { //NOLINT
 
   for (int i = 0; i < 5; ++i) C(i) = dcomplex(i, i);
 
-  for (int i = 0; i < 2; ++i)
-    for (int j = 0; j < 3; ++j) {
-      A(i, j) = 10 * i + j;
-      B(i, j) = i < j;
-      D(i, j) = A(i, j) / 10.0;
-    }
+  A(i_, j_) << 10 * i_ + j_;
+  B(i_, j_) << (i_ < j_);
+  D(i_, j_) << A(i_, j_) / 10.0;
 
   // WRITE the file
   {
@@ -277,8 +272,7 @@ TEST(Array, H5) { //NOLINT
 TEST(Array, H5ArrLayout) { //NOLINT
 
   nda::array<long, 2, F_layout> Af(2, 3);
-  for (int i = 0; i < 2; ++i)
-    for (int j = 0; j < 3; ++j) Af(i, j) = 10 * i + j;
+  Af(i_, j_) << 10 * i_ + j_;
 
   // write to file
   {
@@ -348,10 +342,7 @@ TEST(Array, H5ArrayString) { //NOLINT
 TEST(Array, H5RealIntoComplex) { //NOLINT
 
   nda::array<double, 2> D(2, 3);
-  nda::array<dcomplex, 2> C(2, 3);
-
-  for (int i = 0; i < 2; ++i)
-    for (int j = 0; j < 3; ++j) { D(i, j) = 10 * i + j; }
+  D(i_, j_) << 10 * i_ + j_;
 
   // WRITE the file
   {
@@ -359,6 +350,8 @@ TEST(Array, H5RealIntoComplex) { //NOLINT
     h5::group top(file);
     h5_write(top, "D", D);
   }
+
+  nda::array<dcomplex, 2> C(2, 3);
 
   // READ the file
   {
@@ -371,7 +364,32 @@ TEST(Array, H5RealIntoComplex) { //NOLINT
 }
 
 // ==============================================================
+
+// -----------------------------------------------------
+// Testing h5 for an nda::array of matrix
+// -----------------------------------------------------
+
+TEST(BlockMatrixH5, S1) { //NOLINT
+
+  using mat_t = nda::array<double, 2>;
+  nda::array<mat_t, 1> W, V{mat_t{{1, 2}, {3, 4}}, mat_t{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}}};
+
+  {
+    h5::file file1("ess_non_pod.h5", 'w');
+    h5_write(file1, "block_mat", V);
+  }
+
+  {
+    h5::file file2("ess_non_pod.h5", 'r');
+    h5_read(file2, "block_mat", W);
+  }
+
+  EXPECT_EQ(V.extent(0), W.extent(0));
+  for (int i = 0; i < V.extent(0); ++i) EXPECT_ARRAY_NEAR(V(i), W(i));
+}
+
 // not yet implemented
+// ==============================================================
 /*
 TEST(Array, H5ArrayString2) { //NOLINT
 
@@ -486,59 +504,3 @@ TEST(Array, PromotionWrong) { //NOLINT
 }
 */
 // ==============================================================
-
-// -----------------------------------------------------
-// Testing h5 for std vector
-// -----------------------------------------------------
-
-TEST(Array, H5StdVector) { //NOLINT
-
-  std::vector<double> v{1.1, 2.2, 3.3, 4.5};
-  std::vector<std::complex<double>> vc{1.1, 2.2, 3.3, 4.5};
-
-  std::vector<double> v2;
-  std::vector<std::complex<double>> vc2;
-
-  {
-    h5::file file1("test_std_vector.h5", 'w');
-    // do we need this top ?
-    h5::group top(file1);
-    h5_write(top, "vdouble", v);
-    h5_write(top, "vcomplex", vc);
-  }
-
-  {
-    h5::file file2("test_std_vector.h5", 'r');
-    h5::group top2(file2);
-    h5_read(top2, "vdouble", v2);
-    h5_read(top2, "vcomplex", vc2);
-  }
-
-  for (size_t i = 0; i < v.size(); ++i) EXPECT_EQ(v[i], v2[i]);
-  for (size_t i = 0; i < vc.size(); ++i) EXPECT_EQ(vc[i], vc2[i]);
-}
-
-// ==============================================================
-
-// -----------------------------------------------------
-// Testing h5 for an nda::array of matrix
-// -----------------------------------------------------
-
-TEST(BlockMatrixH5, S1) { //NOLINT
-
-  using mat_t = nda::array<double, 2>;
-  nda::array<mat_t, 1> W, V{mat_t{{1, 2}, {3, 4}}, mat_t{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}}};
-
-  {
-    h5::file file1("ess_non_pod.h5", 'w');
-    h5_write(file1, "block_mat", V);
-  }
-
-  {
-    h5::file file2("ess_non_pod.h5", 'r');
-    h5_read(file2, "block_mat", W);
-  }
-
-  EXPECT_EQ(V.extent(0), W.extent(0));
-  for (int i = 0; i < V.extent(0); ++i) EXPECT_ARRAY_NEAR(V(i), W(i));
-}
