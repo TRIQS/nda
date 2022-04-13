@@ -135,8 +135,8 @@ TEST(SliceH5, Hyperslab) { //NOLINT
   }
 
   // auto slice = std::tuple{range(), range(), 3}); // FIXME range() = range(0,-1,0) <- Empty!
-  auto slice   = std::tuple{range(2, 4), range(3, 5), 3};
-  auto A_slice = A(range(2, 4), range(3, 5), 3);
+  auto slice   = std::tuple{range::all_t{}, range(3, 5), 3};
+  auto A_slice = A(range::all_t{}, range(3, 5), 3);
 
   // read only slice of the data
   auto C = nda::array<long, 2>{};
@@ -145,12 +145,11 @@ TEST(SliceH5, Hyperslab) { //NOLINT
     h5::file f("test_nda_slab.h5", 'r');
     h5_read(f, "A", C, slice);
   }
-  EXPECT_EQ(A.shape()[0], C.size());
   EXPECT_EQ_ARRAY(A_slice, C);
 
   // read into non-contiguous view
   auto B       = nda::zeros<long>(4, 5, 6);
-  auto B_slice = B(range(2, 4), range(3, 5), 3);
+  auto B_slice = B(range::all_t{}, range(3, 5), 3);
   {
     h5::file f("test_nda_slab.h5", 'r');
     h5_read(f, "A", B_slice, slice);

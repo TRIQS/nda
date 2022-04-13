@@ -127,20 +127,23 @@ namespace nda {
   }
 
   /**
-   * Create a h5 hyperslab and shape from a slice, i.e. a tuple of nda::range and/or integers
+   * Create a h5 hyperslab and shape from a slice, i.e. a tuple containing types
+   * nda::range, nda::range::all_t and integers
    *
    * The hyperslab will have the same number of dimensions as the length of the slice
    * The shape will only contain those dimensions of the slice that are not of integer type
    *
    * @param slice The slice tuple
+   * @param lengths The dimensions of the underlying dataset
    * @param is_complex True iff the dataset holds complex values
    * @tparam TU The type of the slice tuple, containing integers and/or index ranges
    */
   template <typename TU>
-  auto hyperslab_and_shape_from_slice(TU const &slice, bool is_complex) {
+  auto hyperslab_and_shape_from_slice(TU const &slice, std::vector<h5::hsize_t> const &lengths, bool is_complex) {
     auto hsl                   = h5::array_interface::hyperslab(std::tuple_size_v<TU>, is_complex);
     constexpr auto sliced_rank = []<size_t... Is>(std::index_sequence<Is...>) {
-      return (std::is_same_v<std::tuple_element_t<Is, TU>, nda::range> + ...);
+      return (std::is_same_v<std::tuple_element_t<Is, TU>, nda::range> + ...)
+         + (std::is_same_v<std::tuple_element_t<Is, TU>, nda::range::all_t> + ...);
     }
     (std::make_index_sequence<std::tuple_size_v<TU>>{});
     auto shape = std::array<long, sliced_rank>{};
@@ -150,12 +153,15 @@ namespace nda {
            if constexpr (std::integral<IR>) {
              hsl.offset[n] = ir;
              hsl.count[n]  = 1;
-           } else {
-             static_assert(std::is_same_v<IR, nda::range>);
+           } else if constexpr (std::is_same_v<IR, nda::range>) {
              hsl.offset[n] = ir.first();
              hsl.stride[n] = ir.step();
              hsl.count[n]  = ir.size();
              shape[m++]    = ir.size();
+           } else {
+             static_assert(std::is_same_v<IR, nda::range::all_t>);
+             hsl.count[n] = lengths[n];
+             shape[m++]   = lengths[n];
            }
          }(Is, std::get<Is>(slice)),
          ...);
@@ -211,7 +217,7 @@ namespace nda {
       if constexpr (slicing) {
         if (rank_in_file != size_of_slice)
           NDA_RUNTIME_ERROR << " h5 read of nda::array : incorrect slice rank. In file: " << rank_in_file << "  Rank of slice: " << size_of_slice;
-        auto const [sl, sh] = hyperslab_and_shape_from_slice(slice, is_complex);
+        auto const [sl, sh] = hyperslab_and_shape_from_slice(slice, lt.lengths, is_complex);
         static_assert(std::tuple_size_v<decltype(sh)> == A::rank, "Array rank does not match the number of non-trivial slice dimensions");
         slice_slab = sl;
         shape      = sh;
