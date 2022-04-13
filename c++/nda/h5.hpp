@@ -32,19 +32,23 @@ namespace nda {
    * @param name The name of the hdf5 array in the file/group where the stack will be stored
    * @param a The array to be stored
    */
-  template <typename A>
+  template <MemoryArray A>
   void h5_write(h5::group g, std::string const &name, A const &a) requires(is_regular_or_view_v<A>);
 
   /*
    * Read an array or a view from an hdf5 file
+   * Allow to read only a slice of the dataset by providing an optional tuple of nda::range and/or integers
    * The HDF5 exceptions will be caught and rethrown as std::runtime_error
    *
    * @tparam A The type of the array/matrix/vector, etc..
+   * @tparam TU The tuple-type of the slice
    * @param g The h5 group
    * @param a The array to be stored
+   * @param slice Optional slice (tuple of nda::range and/or integer types) to limit which data to read
    */
-  template <typename A>
-  void h5_read(h5::group g, std::string const &name, A &a) requires(is_regular_or_view_v<A>);
+  template <MemoryArray A, typename TU = std::tuple<>>
+  void h5_read(h5::group g, std::string const &name, A &a,
+               TU const &slice = {}) requires(is_regular_or_view_v<A> and is_instantiation_of_v<std::tuple, TU>);
 
   // ----- Implementation ------
 
@@ -90,11 +94,12 @@ namespace nda {
 
   } // namespace h5_details
 
-  template <typename A>
+  template <MemoryArray A>
   void h5_write(h5::group g, std::string const &name, A const &a) requires(is_regular_or_view_v<A>) {
 
-    // Properly treat arrays with non-standard memory layout
-    if constexpr (not std::decay_t<A>::layout_t::is_stride_order_C()) {
+    // If array is not in C-order or not contiguous
+    // copy into array with default layout and write
+    if (not a.indexmap().is_stride_order_C() or not a.indexmap().is_contiguous()) {
       using h5_arr_t  = nda::array<typename A::value_type, A::rank>;
       auto a_c_layout = h5_arr_t{a.shape()};
       a_c_layout()    = a;
@@ -121,19 +126,63 @@ namespace nda {
     }
   }
 
-  template <typename A>
-  void h5_read(h5::group g, std::string const &name, A &a) requires(is_regular_or_view_v<A>) {
+  /**
+   * Create a h5 hyperslab and shape from a slice, i.e. a tuple of nda::range and/or integers
+   *
+   * The hyperslab will have the same number of dimensions as the length of the slice
+   * The shape will only contain those dimensions of the slice that are not of integer type
+   *
+   * @param slice The slice tuple
+   * @param is_complex True iff the dataset holds complex values
+   * @tparam TU The type of the slice tuple, containing integers and/or index ranges
+   */
+  template <typename TU>
+  auto hyperslab_and_shape_from_slice(TU const &slice, bool is_complex) {
+    auto hsl                   = h5::array_interface::hyperslab(std::tuple_size_v<TU>, is_complex);
+    constexpr auto sliced_rank = []<size_t... Is>(std::index_sequence<Is...>) {
+      return (std::is_same_v<std::tuple_element_t<Is, TU>, nda::range> + ...);
+    }
+    (std::make_index_sequence<std::tuple_size_v<TU>>{});
+    auto shape = std::array<long, sliced_rank>{};
+    [&, m = 0 ]<size_t... Is>(std::index_sequence<Is...>) mutable {
+      (
+         [&]<typename IR>(size_t n, IR const &ir) {
+           if constexpr (std::integral<IR>) {
+             hsl.offset[n] = ir;
+             hsl.count[n]  = 1;
+           } else {
+             static_assert(std::is_same_v<IR, nda::range>);
+             hsl.offset[n] = ir.first();
+             hsl.stride[n] = ir.step();
+             hsl.count[n]  = ir.size();
+             shape[m++]    = ir.size();
+           }
+         }(Is, std::get<Is>(slice)),
+         ...);
+    }
+    (std::make_index_sequence<std::tuple_size_v<TU>>{});
+    return std::make_pair(hsl, shape);
+  }
 
-    // If array is not C-strided, read into array with default layout and copy
-    if constexpr (not std::decay_t<A>::layout_t::is_stride_order_C()) {
-      static_assert(is_regular_v<A>, "Cannot read into an array_view to an array with non C-style memory layout");
+  template <MemoryArray A, typename TU>
+  void h5_read(h5::group g, std::string const &name, A &a,
+               TU const &slice) requires(is_regular_or_view_v<A> and is_instantiation_of_v<std::tuple, TU>) {
+
+    // If array is not in C-order or not contiguous
+    // read into array with default layout and copy
+    constexpr bool is_stride_order_C = std::decay_t<A>::layout_t::is_stride_order_C();
+    static_assert(is_stride_order_C or is_regular_v<A>, "Cannot read into an array_view to an array with non C-style memory layout");
+    if (not is_stride_order_C or not a.indexmap().is_contiguous()) {
       using h5_arr_t  = nda::array<typename A::value_type, A::rank>;
       auto a_c_layout = h5_arr_t{};
-      h5_read(g, name, a_c_layout);
-      a.resize(a_c_layout.shape());
+      h5_read(g, name, a_c_layout, slice);
+      if constexpr (is_regular_v<A>) a.resize(a_c_layout.shape());
       a() = a_c_layout;
       return;
     }
+
+    constexpr int size_of_slice = std::tuple_size_v<TU>;
+    constexpr bool slicing      = (size_of_slice > 0);
 
     // Special case array<string>, store as char buffer
     if constexpr (std::is_same_v<typename A::value_type, std::string>) {
@@ -155,28 +204,47 @@ namespace nda {
         return;
       }
 
-      int rank_in_file = lt.rank() - (is_complex ? 1 : 0);
-      if (rank_in_file != A::rank)
-        NDA_RUNTIME_ERROR << " h5 read of nda::array : incorrect rank. In file: " << rank_in_file << "  In memory " << A::rank;
-      std::array<long, A::rank> L;
-      for (int u = 0; u < A::rank; ++u) L[u] = lt.lengths[u]; // NB : correct for complex
+      int rank_in_file = lt.rank() - is_complex;
+      std::array<long, A::rank> shape;
+      auto slice_slab = h5::array_interface::hyperslab{};
+
+      if constexpr (slicing) {
+        if (rank_in_file != size_of_slice)
+          NDA_RUNTIME_ERROR << " h5 read of nda::array : incorrect slice rank. In file: " << rank_in_file << "  Rank of slice: " << size_of_slice;
+        auto const [sl, sh] = hyperslab_and_shape_from_slice(slice, is_complex);
+        static_assert(std::tuple_size_v<decltype(sh)> == A::rank, "Array rank does not match the number of non-trivial slice dimensions");
+        slice_slab = sl;
+        shape      = sh;
+      } else {
+        if (rank_in_file != A::rank)
+          NDA_RUNTIME_ERROR << " h5 read of nda::array : incorrect rank. In file: " << rank_in_file << "  In memory: " << A::rank;
+        for (int u = 0; u < A::rank; ++u) shape[u] = lt.lengths[u]; // NB : correct for complex
+      }
 
       if constexpr (is_regular_v<A>) {
-        a.resize(L);
+        a.resize(shape);
       } else {
-        if (a.shape() != L)
+        if (a.shape() != shape)
           NDA_RUNTIME_ERROR << "Error trying to read from an hdf5 file to a view. Dimension mismatch"
-                            << "\n in file  : " << L << "\n in view  : " << a.shape();
+                            << "\n in file  : " << shape << "\n in view  : " << a.shape();
       }
 
-      h5::array_interface::h5_array_view v{h5::hdf5_type<get_value_t<A>>(), (void *)(a.data()), A::rank, is_complex};
-      for (int u = 0; u < A::rank; ++u) {
-        v.slab.count[u] = L[u];
-        v.L_tot[u]      = L[u];
+      h5::array_interface::h5_array_view v{h5::hdf5_type<get_value_t<A>>(), (void *)(a.data()), rank_in_file, is_complex};
+      if constexpr (slicing) {
+        v.slab.count = slice_slab.count;
+        v.L_tot      = slice_slab.count;
+      } else {
+        for (int u = 0; u < A::rank; ++u) {
+          v.slab.count[u] = shape[u];
+          v.L_tot[u]      = shape[u];
+        }
       }
-      h5::array_interface::read(g, name, v, lt);
+      h5::array_interface::read(g, name, v, lt, slice_slab);
 
     } else { // generic unknown type to hdf5
+
+      static_assert(!slicing, "Slicing not supported in generic h5_read");
+
       auto g2 = g.open_group(name);
 
       // Reshape if necessary

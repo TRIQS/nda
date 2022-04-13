@@ -120,3 +120,40 @@ TEST(SliceH5, Systematic3d) { //NOLINT
                     }
   }
 }
+
+// ==============================================================
+
+TEST(SliceH5, Hyperslab) { //NOLINT
+
+  nda::array<long, 3> A(4, 5, 6);
+  A(i_, j_, k_) << i_ * 100 + j_ * 10 + k_;
+
+  // write to file
+  {
+    h5::file f("test_nda_slab.h5", 'w');
+    h5_write(f, "A", A);
+  }
+
+  // auto slice = std::tuple{range(), range(), 3}); // FIXME range() = range(0,-1,0) <- Empty!
+  auto slice   = std::tuple{range(2, 4), range(3, 5), 3};
+  auto A_slice = A(range(2, 4), range(3, 5), 3);
+
+  // read only slice of the data
+  auto C = nda::array<long, 2>{};
+  {
+    // Provide multi-dimensional slice, i.e. tuple of long, range, range_all or ellipsis
+    h5::file f("test_nda_slab.h5", 'r');
+    h5_read(f, "A", C, slice);
+  }
+  EXPECT_EQ(A.shape()[0], C.size());
+  EXPECT_EQ_ARRAY(A_slice, C);
+
+  // read into non-contiguous view
+  auto B       = nda::zeros<long>(4, 5, 6);
+  auto B_slice = B(range(2, 4), range(3, 5), 3);
+  {
+    h5::file f("test_nda_slab.h5", 'r');
+    h5_read(f, "A", B_slice, slice);
+  }
+  EXPECT_EQ_ARRAY(A_slice, B_slice);
+}
