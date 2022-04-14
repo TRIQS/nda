@@ -14,6 +14,8 @@
 //
 // Authors: Olivier Parcollet, Nils Wentzell
 
+#include "./range.hpp"
+
 namespace nda::details {
 
   // -------------------- bound_check_worker ---------------------
@@ -26,13 +28,19 @@ namespace nda::details {
     int N               = 0;
 
     void f(long key) {
-      bool pb = ((key < 0) or (key >= lengths[N]));
-      if (pb) error_code += 1ul << N; // binary code
+      if ((key < 0) or (key >= lengths[N])) error_code += 1ul << N; // binary code
       ++N;
     }
 
     void f(range::all_t) { ++N; }
-    void f(range) { ++N; }
+    void f(range const &r) {
+      if (r.size() > 0) {
+        auto first_idx = r.first();
+        auto last_idx  = first_idx + (r.size() - 1) * r.step();
+        if (first_idx < 0 or first_idx >= lengths[N] or last_idx < 0 or last_idx >= lengths[N]) error_code += 1ul << N;
+      }
+      ++N;
+    }
     void f(ellipsis) { N += ellipsis_loss + 1; }
 
     void g(std::stringstream &fs, long key) {
@@ -45,7 +53,7 @@ namespace nda::details {
   };
 
   template <typename... Args>
-  void assert_in_bounds(int rank, long const *lengths, Args const &... args) {
+  void assert_in_bounds(int rank, long const *lengths, Args const &...args) {
     bound_check_worker w{lengths};
     w.ellipsis_loss = rank - sizeof...(Args); // len of ellipsis : how many ranges are missing
     (w.f(args), ...);                         // folding with , operator ...
