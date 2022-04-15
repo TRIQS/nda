@@ -205,7 +205,7 @@ namespace nda::mem {
     explicit handle_heap(handle_heap const &x) : handle_heap(x.size(), do_not_initialize) {
       if (is_null()) return; // nothing to do for null handle
       if constexpr (std::is_trivially_copyable_v<T>) {
-	std::memcpy(_data, x.data(), x.size() * sizeof(T));
+	memcpy<address_space, address_space>(_data, x.data(), x.size() * sizeof(T));
       } else {
 	for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]); // placement new
       }
@@ -215,12 +215,12 @@ namespace nda::mem {
     template <OwningHandle<value_type> H>
     explicit handle_heap(H const &x) : handle_heap(x.size(), do_not_initialize) {
       if (is_null()) return; // nothing to do for null handle
-      if constexpr (not std::is_trivially_copyable_v<T>) {
+      if constexpr (std::is_trivially_copyable_v<T>) {
+        memcpy<address_space, H::address_space>((void *)_data, (void *)x.data(), _size * sizeof(T));
+      } else {
         static_assert(address_space == H::address_space,
                       "Constructing from handle of different address space requires trivially copyable value_type");
         for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]); // placement new
-      } else {
-        memcpy<address_space, H::address_space>((void *)_data, (void *)x.data(), _size * sizeof(T));
       }
     }
 
@@ -392,16 +392,25 @@ namespace nda::mem {
       return *this;
     }
 
+    handle_sso(handle_sso const &x) : handle_sso(x.size(), do_not_initialize) {
+      if (is_null()) return; // nothing to do for null handle
+      if constexpr (std::is_trivially_copyable_v<T>) {
+        memcpy<address_space, address_space>((void *)_data, (void *)x.data(), _size * sizeof(T));
+      } else {
+        for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]); // placement new
+      }
+    }
+
     // Copy data from another owning handle
     template <OwningHandle<value_type> H>
     explicit handle_sso(H const &x) : handle_sso(x.size(), do_not_initialize) {
       if (is_null()) return; // nothing to do for null handle
       if constexpr (std::is_trivially_copyable_v<T>) {
+        memcpy<address_space, H::address_space>((void *)_data, (void *)x.data(), _size * sizeof(T));
+      } else {
         static_assert(address_space == H::address_space,
                       "Constructing from handle of different address space requires trivially copyable value_type");
         for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]); // placement new
-      } else {
-        memcpy<address_space, H::address_space>((void *)_data, (void *)x.data(), _size * sizeof(T));
       }
     }
 

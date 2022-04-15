@@ -91,7 +91,7 @@ static void sso_loop_only_restrict(benchmark::State &state) {
   const int N = state.range(0);
   using a_t   = nda::basic_array<long, 1, nda::C_layout, 'A', nda::sso<100>>;
   a_t A(N);
-  nda::basic_array_view<long, 1, nda::C_layout, 'A', nda::no_alias_accessor, nda::borrowed> v{A};
+  nda::basic_array_view<long, 1, nda::C_layout, 'A', nda::no_alias_accessor, nda::borrowed<>> v{A};
   //nda::basic_array_view<long, 1, nda::C_layout, 'A', nda::default_accessor, nda::borrowed> v{A};
 
   while (state.KeepRunning()) {
@@ -125,7 +125,7 @@ BENCHMARK(stack_alloc)->Arg(1)->Arg(2)->Arg(3)->Arg(4)->Arg(10)->Arg(15); //->Ar
 static void stack_loop_only(benchmark::State &state) {
   const int N = state.range(0);
   nda::stack_array<long, 1, nda::static_extents(15)> A(N);
-  nda::basic_array_view<long, 1, nda::C_layout, 'A', nda::no_alias_accessor, nda::borrowed> v{A};
+  nda::basic_array_view<long, 1, nda::C_layout, 'A', nda::no_alias_accessor, nda::borrowed<>> v{A};
 
   while (state.KeepRunning()) {
     for (int i = 0; i < N - 1; ++i) benchmark::DoNotOptimize(A(i) = i); //fnt(i));
@@ -136,13 +136,13 @@ BENCHMARK(stack_loop_only)->Arg(1)->Arg(2)->Arg(3)->Arg(4)->Arg(10)->Arg(15); //
 
 // ------------------
 
-using alloc_t = nda::mem::segregator<8 * 100, nda::mem::multi_bucket<8 * 100>, nda::mem::mallocator>;
+using alloc_t = nda::mem::segregator<8 * 100, nda::mem::multi_bucket<8 * 100>, nda::mem::mallocator<>>;
 
 static void mbucket_alloc(benchmark::State &state) {
   const int N = state.range(0);
 
   while (state.KeepRunning()) {
-    nda::basic_array<long, 1, nda::C_layout, 'A', nda::heap_custom_alloc<alloc_t>> A(N);
+    nda::basic_array<long, 1, nda::C_layout, 'A', nda::heap_basic<alloc_t>> A(N);
     benchmark::DoNotOptimize(A(0));
   }
 }
