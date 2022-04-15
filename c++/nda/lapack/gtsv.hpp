@@ -36,19 +36,19 @@ namespace nda::lapack {
     static_assert(is_regular_or_view_v<V1> and (V1::rank == 1), "gtsv: V1 must be an array/view of rank 1");
     static_assert(is_regular_or_view_v<V2> and (V2::rank == 1), "gtsv: V2 must be an array/view of rank 1");
     static_assert(is_regular_or_view_v<V3> and (V3::rank == 1), "gtsv: V3 must be an array/view of rank 1");
-    //   static_assert(is_regular_or_view_v<M> and (M::rank == 2), "gtsv: M must be an matrix/array/view of rank 2");
-    static_assert(is_regular_or_view_v<M>, "gtsv: M must be an matrix/array/view of rank  1 or 2");
+    static_assert(is_regular_or_view_v<M> and (M::rank == 1 or M::rank == 2), "gtsv: M must be an matrix/array/view of rank  1 or 2");
     static_assert(is_blas_lapack_v<typename M::value_type>, "Matrices must have the same element type and it must be double, complex ...");
     static_assert(blas::have_same_element_type_and_it_is_blas_type_v<V1, V2, V3, M>,
                   "All arguments must have the same element type and it must be double, complex ...");
 
-    int N = d.extent(0);
+    int N    = d.extent(0);
+    int NRHS = (M::rank == 2 ? b.extent(1) : 1);
     EXPECTS(dl.extent(0) == d.extent(0) - 1); // "gtsv : dimension mismatch between sub-diagonal and diagonal vectors "
     EXPECTS(du.extent(0) == d.extent(0) - 1); // "gtsv : dimension mismatch between super-diagonal and diagonal vectors "
     EXPECTS(b.extent(0) == d.extent(0));      // "gtsv : dimension mismatch between diagonal vector and RHS matrix, "
 
     int info = 0;
-    f77::gtsv(N, b.extent(1), dl.data(), d.data(), du.data(), b.data(), N, info);
+    f77::gtsv(N, NRHS, dl.data(), d.data(), du.data(), b.data(), N, info);
     return info;
   }
 } // namespace nda::lapack
