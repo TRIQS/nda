@@ -53,17 +53,17 @@ class ABC_3d : public benchmark::Fixture {
   BENCHMARK_REGISTER_F(ABC_3d, F)->Arg(3)->Arg(5)->Arg(10)->Arg(30)->Arg(100)->Arg(300)
 
 // -----------------------------------------------------------------------
-[[gnu::noinline]] void fill_view_gal(nda::basic_array_view<double, 3, nda::C_stride_layout, 'A', nda::default_accessor, nda::borrowed> v, long ) {
+[[gnu::noinline]] void fill_view_gal(nda::basic_array_view<double, 3, nda::C_stride_layout, 'A', nda::default_accessor, nda::borrowed<>> v, long ) {
   v = 0;
   benchmark::DoNotOptimize(v(v.extent(0) / 2, 1, 2));
 }
 
-[[gnu::noinline]] void fill_view_contiguous(nda::basic_array_view<double, 3, nda::C_layout, 'A', nda::default_accessor, nda::borrowed> v, long) {
+[[gnu::noinline]] void fill_view_contiguous(nda::basic_array_view<double, 3, nda::C_layout, 'A', nda::default_accessor, nda::borrowed<>> v, long) {
   v = 0;
   benchmark::DoNotOptimize(v(v.extent(0) / 2, 1, 2));
 }
 
-[[gnu::noinline]] void fill_view_contiguous_restrict(nda::basic_array_view<double, 3, nda::C_layout, 'A', nda::no_alias_accessor, nda::borrowed> v, long) {
+[[gnu::noinline]] void fill_view_contiguous_restrict(nda::basic_array_view<double, 3, nda::C_layout, 'A', nda::no_alias_accessor, nda::borrowed<>> v, long) {
   v = 0;
   benchmark::DoNotOptimize(v(v.extent(0) / 2, 1, 2));
 }
