@@ -39,7 +39,7 @@ BENCH_EXPR(constr_vec_sso_mat_sso, (vector<mat_sso_t, sso<10>>(1)));
 
 // --- Heap vs SSO Handle
 
-BENCH_EXPR(constr_handle_heap, heap::handle<double>{});
+BENCH_EXPR(constr_handle_heap, heap<>::handle<double>{});
 BENCH_EXPR(constr_handle_sso, sso<1000>::handle<double>{});
 
 // --- Value Initialization

@@ -22,12 +22,12 @@ auto _ = nda::range::all;
 template <int R>
 using Vs = nda::basic_array_view<
    double, R, nda::C_stride_layout, 'A',
-   nda::default_accessor, nda::borrowed>;
+   nda::default_accessor, nda::borrowed<>>;
 
 template <int R>
 using V = nda::basic_array_view<
    double, R, nda::C_layout, 'A',
-   nda::default_accessor, nda::borrowed>;
+   nda::default_accessor, nda::borrowed<>>;
 
 double f1(V<4> v, int i, int j, int k, int l) {
   return v(k, _, l, _)(i, j);
