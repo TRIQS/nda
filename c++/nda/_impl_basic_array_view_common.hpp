@@ -54,11 +54,19 @@ ValueType *data() noexcept { return sto.data(); }
 //[[deprecated]]
 [[nodiscard]] bool is_empty() const noexcept { return sto.is_null(); }
 
+[[nodiscard]] long extent(int i) const noexcept {
+#ifdef NDA_ENFORCE_BOUNDCHECK
+  if (i < 0 || i >= rank) {
+    std::cerr << "Dimension i in arr.extent(i) is incompatible with array rank: i=" << i << "  rank=" << rank << std::endl;
+    std::terminate();
+  }
+#endif
+  return lay.lengths()[i];
+}
+
 /// Same as shape()[i]
 //[[deprecated]]
-[[nodiscard]] long shape(int i) const noexcept { return lay.lengths()[i]; }
-
-[[nodiscard]] long extent(int i) const noexcept { return lay.lengths()[i]; }
+[[nodiscard]] long shape(int i) const noexcept { return extent(i); }
 
 /// Return a range that generates all valid index tuples
 [[nodiscard]] auto indices() const noexcept { return itertools::product_range(shape()); }
