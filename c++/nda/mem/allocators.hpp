@@ -69,16 +69,11 @@ namespace nda::mem {
   /// Generic memcpy between potentially different Address Spaces
   template <AddressSpace DestAdrSp, AddressSpace SrcAdrSp>
   void memcpy(void *dest, void *src, size_t count) {
-    if constexpr (DestAdrSp == Host) {
-      if constexpr (SrcAdrSp == Host)
-        std::memcpy(dest, src, count);
-      else // Device/Unified -> Host
-        cudaMemcpy(dest, src, count, cudaMemcpyDeviceToHost);
+    if constexpr (DestAdrSp == Host && SrcAdrSp == Host) {
+      std::memcpy(dest, src, count);
     } else {
-      if constexpr (SrcAdrSp == Host)
-        cudaMemcpy(dest, src, count, cudaMemcpyHostToDevice);
-      else // Device/Unified -> Device/Unified
-        cudaMemcpy(dest, src, count, cudaMemcpyDeviceToDevice);
+      auto err = cudaMemcpy(dest, src, count, cudaMemcpyDefault);
+      ASSERT_WITH_MESSAGE(err == cudaSuccess, "CudaMemcpy failed with error code "s + std::to_string(err));
     }
   }
 
