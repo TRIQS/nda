@@ -33,8 +33,11 @@ TEST(Cuda, Construct) { //NOLINT
   auto A_d = device_array_t{A};
   EXPECT_EQ(A_d.shape(), A.shape());
 
+  // device <- device
+  auto B_d = device_array_t{A_d};
+
   // host <- device
-  auto B = array_t{A_d};
+  auto B = array_t{B_d};
   EXPECT_ARRAY_EQ(B, A);
 }
 
@@ -45,9 +48,13 @@ TEST(Cuda, Assign) { //NOLINT
   auto A_d = device_array_t(N, N);
   A_d      = A;
 
+  // device <- device
+  auto B_d = device_array_t(N, N);
+  B_d      = A_d;
+
   // host <- device
   auto B = array_t(N, N);
-  B      = A_d;
+  B      = B_d;
 
   EXPECT_ARRAY_EQ(B, A);
 }
@@ -60,10 +67,13 @@ TEST(Cuda, Storage) { // NOLINT
   h1.data()[2] = 89;
 
   // device <- host
-  auto h_d = heap<mem::Device>::handle<int>{h1};
+  auto h1_d = heap<mem::Device>::handle<int>{h1};
+
+  // device <- host
+  auto h2_d = heap<mem::Device>::handle<int>{h1_d};
 
   // host <- device
-  auto h2 = handle_heap<int>{h_d};
+  auto h2 = handle_heap<int>{h2_d};
 
   EXPECT_EQ(h2.data()[2], 89); //NOLINT
 }
