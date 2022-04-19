@@ -50,22 +50,24 @@ namespace nda {
     static_assert((Algebra != 'M') or (Rank == 2), " Internal error : Algebra 'A' only makes sense for rank 2");
     static_assert((Algebra != 'V') or (Rank == 1), " Internal error : Algebra 'V' only makes sense for rank 1");
 
-    // details for the common code with view
-    using self_t                   = basic_array_view;
-    using storage_t                = typename OwningPolicy::template handle<ValueType>;
-    static constexpr bool is_view  = true;
-    static constexpr bool is_const = std::is_const_v<ValueType>;
-
     public:
+    /// Type of the array's values
     using value_type = ValueType;
-    using layout_t   = typename Layout::template mapping<Rank>;
-
-    // FIXME : TRIQS PORT REMOVE
+    /// Type of the memory handle
+    using storage_t = typename OwningPolicy::template handle<ValueType>;
+    /// Type of the memory layout
+    using layout_t = typename Layout::template mapping<Rank>;
+    /// The associated regular type
     using regular_type = basic_array<std::remove_const_t<ValueType>, Rank, C_layout, Algebra, heap<>>;
-
+    /// The number of dimensions of the array
     static constexpr int rank = Rank;
 
     private:
+    // details for the common code with array
+    using self_t                   = basic_array_view;
+    static constexpr bool is_view  = true;
+    static constexpr bool is_const = std::is_const_v<ValueType>;
+
     layout_t lay;
     storage_t sto;
 
