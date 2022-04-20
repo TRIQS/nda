@@ -20,6 +20,7 @@
 #include <ranges>
 #include "clef.hpp"
 #include "declarations.hpp"
+#include "exceptions.hpp"
 #include "concepts.hpp"
 #include "iterators.hpp"
 #include "layout/slice_static.hpp"
