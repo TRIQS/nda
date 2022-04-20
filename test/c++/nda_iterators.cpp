@@ -110,6 +110,29 @@ TEST(iterator, Strided3d) { //NOLINT
       }
   EXPECT_TRUE(it == v.end());
 }
+
+//-----------------------------
+
+TEST(iterator, BlockStrided2d) { //NOLINT
+  auto a = nda::rand<>(3, 4);
+
+  EXPECT_TRUE(get_block_layout(a(_, range(0, 4, 2))));
+  EXPECT_TRUE(get_block_layout(a(_, range(2))));
+  EXPECT_TRUE(!get_block_layout(a(_, range(0, 4, 3))));
+  EXPECT_TRUE(!get_block_layout(a(_, range(3))));
+
+  auto av                                = a(_, range(0, 4, 2));
+  auto [n_blocks, block_size, block_str] = get_block_layout(av).value();
+  EXPECT_EQ(n_blocks * block_size, av.size());
+
+  // Compare loop over array with pointer arithmetic based on block_size and block_str
+  auto *ptr = a.data();
+  for (auto [n, val] : itertools::enumerate(av)) {
+    auto [bl_idx, inner_idx] = std::ldiv(n, block_size);
+    EXPECT_EQ(val, *(ptr + bl_idx * block_str + inner_idx));
+  }
+}
+
 //-----------------------------
 
 TEST(iterator, bug) { //NOLINT

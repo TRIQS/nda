@@ -239,4 +239,56 @@ namespace nda {
     });
   }
 
+  // ------------------------------- get_block_layout --------------------------------------------
+
+  /**
+   * If the array is block-strided, return the number of blocks,
+   * their size and the stride
+   *
+   * An array is block-strided if its data in memory is laid out as
+   * contiguous blocks of the same size repeated with a single stride
+   * in memory
+   *
+   * We check this by asserting that (s=strides, l=lengths)
+   * - there is at most one strided index m with
+   *   s_m = N * s_{m+1}*l_{m+1} for some integer N>1
+   * - all other indices are 'contiguous': s_i = s_{i+1}*l_{i+1}
+   *
+   * Example of a block-strided layout with n_blocks=4, block_size=4
+   * and block_stride=6 (x: data, _: other memory):
+   *   xxxx__xxxx__xxxx__xxxx__
+   *
+   * @tparam A Type of the memory array
+   * @param a The array
+   * @return Iff block-strided return the tuple of: {n_blocks, block_size, block_stride}
+   */
+  template <MemoryArray A>
+  std::optional<std::tuple<int, int, int>> get_block_layout(A const &a) {
+
+    auto const &l = a.indexmap().lengths();
+    auto const &s = a.indexmap().strides();
+    auto const &i = a.indexmap().stride_order;
+
+    int data_size  = l[i[0]] * s[i[0]];
+    int block_size = data_size;
+    int block_str  = data_size;
+    int n_blocks   = 1;
+
+    for (auto n : range(A::rank)) {
+      auto inner_size = (n == A::rank - 1) ? 1 : s[i[n + 1]] * l[i[n + 1]];
+      auto [str, rem] = std::ldiv(s[i[n]], inner_size);
+      if (str < 1 || rem > 0) return {};
+      if (str > 1) {
+        if (block_size < data_size) // Second strided idx -> fail
+          return {};
+        n_blocks = a.size() / inner_size;
+        ASSERT(n_blocks * inner_size == a.size());
+        block_size = inner_size;
+        block_str  = s[i[n]];
+      }
+    }
+
+    return std::make_tuple(n_blocks, block_size, block_str);
+  }
+
 } // namespace nda
