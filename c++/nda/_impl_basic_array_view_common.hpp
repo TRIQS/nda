@@ -335,17 +335,53 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
 
   static_assert(std::is_assignable_v<value_type &, get_value_t<RHS>>, "Assignment impossible for the type of RHS into the type of LHS");
 
-  constexpr bool both_in_memory    = MemoryArray<self_t> and MemoryArray<RHS>;
-  constexpr bool both_1d_strided   = has_layout_strided_1d<self_t> and has_layout_strided_1d<RHS>;
-  constexpr bool same_stride_order = get_layout_info<self_t>.stride_order == get_layout_info<RHS>.stride_order;
+  static constexpr bool both_in_memory    = MemoryArray<self_t> and MemoryArray<RHS>;
+  static constexpr bool same_stride_order = get_layout_info<self_t>.stride_order == get_layout_info<RHS>.stride_order;
 
-  if constexpr (both_in_memory and both_1d_strided and same_stride_order) { // -> vectorizable copy
-    static_assert(self_t::storage_t::address_space == RHS::storage_t::address_space);
-    for (long i = 0; i < size(); ++i) (*this)(_linear_index_t{i}) = rhs(_linear_index_t{i});
-  } else { // -> element-wise assignment
-    auto l = [this, &rhs](auto const &... args) { (*this)(args...) = rhs(args...); };
-    nda::for_each(shape(), l);
+  if constexpr (both_in_memory and same_stride_order) {
+    static constexpr bool both_1d_strided = has_layout_strided_1d<self_t> and has_layout_strided_1d<RHS>;
+    static constexpr auto dst_adr_spc     = self_t::storage_t::address_space;
+    static constexpr auto src_adr_spc     = RHS::storage_t::address_space;
+    static constexpr bool both_on_host    = (dst_adr_spc == nda::mem::Host && src_adr_spc == nda::mem::Host);
+    static constexpr bool same_value_type = std::is_same_v<value_type, std::remove_const_t<get_value_t<RHS>>>;
+
+    if constexpr (both_on_host and both_1d_strided) { // -> vectorizable host copy
+      for (long i = 0; i < size(); ++i) (*this)(_linear_index_t{i}) = rhs(_linear_index_t{i});
+      return;
+    } else if constexpr (same_value_type) {
+      // Check for block-layout and use cudaMemcpy2D if possible
+      auto bl_layout_dst = get_block_layout(*this);
+      auto bl_layout_src = get_block_layout(rhs);
+      if (bl_layout_dst && bl_layout_src) {
+        auto [n_bl_dst, bl_size_dst, bl_str_dst] = *bl_layout_dst;
+        auto [n_bl_src, bl_size_src, bl_str_src] = *bl_layout_src;
+
+        // If either destination or source consist of a single block we can chunk it up to make the layouts compatible
+        if (n_bl_dst == 1 && n_bl_src > 1) {
+          n_bl_dst = n_bl_src;
+          bl_size_dst /= n_bl_src;
+          bl_str_dst /= n_bl_src;
+        }
+        if (n_bl_src == 1 && n_bl_dst > 1) {
+          n_bl_src = n_bl_dst;
+          bl_size_src /= n_bl_dst;
+          bl_str_src /= n_bl_dst;
+        }
+
+        // Copy only if block-layouts are compatible, otherwise continue to fallback
+        if (n_bl_dst == n_bl_src && bl_size_dst == bl_size_src) {
+          cudaError_t err = cudaMemcpy2D((void *)data(), bl_str_dst * sizeof(value_type), (void *)rhs.data(), bl_str_src * sizeof(value_type),
+                                         bl_size_src * sizeof(value_type), n_bl_src, cudaMemcpyDefault);
+          ASSERT_WITH_MESSAGE(err == cudaSuccess, "CudaMemcpy2D failed with error code "s + std::to_string(err));
+          return;
+        }
+      }
+    }
+    if constexpr (not both_on_host) NDA_RUNTIME_ERROR << "Fallback to elementwise assignment not implemented for arrays on the GPU";
   }
+  // Fallback to elementwise assignment
+  auto l = [this, &rhs](auto const &...args) { (*this)(args...) = rhs(args...); };
+  nda::for_each(shape(), l);
 }
 
 // -----------------------------------------------------
