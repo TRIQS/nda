@@ -23,24 +23,6 @@
 
 namespace nda::mem {
 
-  // -------  Handle and OwningHandle Concept ----------
-
-  /// Concept of a handle on a block of memory
-  template <typename H, typename T = typename H::value_type>
-  concept Handle = requires(H const &h) {
-    requires std::is_same_v<typename H::value_type, T>;
-    { h.is_null() } noexcept -> std::same_as<bool>;
-    { h.data() } noexcept -> std::same_as<T *>;
-    { H::address_space } -> std::same_as<AddressSpace const &>;
-  };
-
-  /// Concept of a handle that owns a block of memory
-  template <typename H, typename T = typename H::value_type>
-  concept OwningHandle = Handle<H, T> and requires(H const &h) {
-    requires not std::is_const_v<typename H::value_type>;
-    { h.size() } noexcept -> std::same_as<long>;
-  };
-
   //
   static constexpr bool init_dcmplx = true; // initialize dcomplex to 0 globally
 
