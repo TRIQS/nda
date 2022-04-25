@@ -17,6 +17,9 @@
 #pragma once
 #include <mpi/mpi.hpp>
 
+#include "../concepts.hpp"
+#include "../exceptions.hpp"
+
 // Models ArrayInitializer concept
 template <nda::Array A>
 struct mpi::lazy<mpi::tag::gather, A> {
@@ -95,7 +98,8 @@ namespace nda {
    * NB : A::value_type must have an MPI reduction (basic type or custom type, cf mpi library)
    */
   template <typename A>
-  ArrayInitializer auto mpi_gather(A &&a, mpi::communicator c = {}, int root = 0, bool all = false) requires(is_regular_or_view_v<std::decay_t<A>>) {
+  ArrayInitializer<std::remove_reference_t<A>> auto mpi_gather(A &&a, mpi::communicator c = {}, int root = 0,
+                                                               bool all = false) requires(is_regular_or_view_v<std::decay_t<A>>) {
 
     if (not a.is_contiguous()) NDA_RUNTIME_ERROR << "mpi operations require contiguous rhs.data() to be contiguous";
 

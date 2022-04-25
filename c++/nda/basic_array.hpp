@@ -168,9 +168,8 @@ namespace nda {
      * the knowledge of the data pointer to execute
      *
      */
-    template <ArrayInitializer Initializer> // can not be explicit
-    basic_array(Initializer const &initializer) noexcept(noexcept(initializer.invoke(basic_array{}))) 
-       : basic_array{initializer.shape()} {
+    template <ArrayInitializer<basic_array> Initializer> // can not be explicit
+    basic_array(Initializer const &initializer) noexcept(noexcept(initializer.invoke(basic_array{}))) : basic_array{initializer.shape()} {
       initializer.invoke(*this);
     }
 
@@ -335,8 +334,8 @@ namespace nda {
     /** 
      * 
      */
-    template <ArrayInitializer Initializer>
-    basic_array &operator=(Initializer const &initializer) noexcept  {
+    template <ArrayInitializer<basic_array> Initializer>
+    basic_array &operator=(Initializer const &initializer) noexcept {
       resize(initializer.shape());
       initializer.invoke(*this);
       return *this;

@@ -15,7 +15,6 @@
 // Authors: Olivier Parcollet, Nils Wentzell
 
 #pragma once
-#include "declarations.hpp"
 #include "traits.hpp"
 #include "stdutil/concepts.hpp"
 
@@ -171,7 +170,7 @@ concept ArrayOrScalar = Array<AS> or Scalar<AS>;
 // - be invokable on a view to init the array
 
 ///
-template <typename A>
+template <typename A, typename B>
 concept ArrayInitializer = requires(A const &a) {
 
   { a.shape() } -> StdArrayOfLong;
@@ -179,7 +178,7 @@ concept ArrayInitializer = requires(A const &a) {
   typename A::value_type;
 
   // FIXME not perfect, it should accept any layout ??
-  {a.invoke(array_contiguous_view<typename A::value_type, get_rank<A>>{})};
+  requires MemoryArray<B> && requires(B & b) { a.invoke(b); };
 };
 
 //---------HasValueTypeConstructibleFrom  ----------
