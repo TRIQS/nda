@@ -83,12 +83,12 @@ namespace nda {
 
   template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, std::integral Int, auto newRank>
   auto reshaped_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a, std::array<Int, newRank> const &new_shape) {
-    return reshaped_view(basic_array_view<T const, R, L, Algebra, default_accessor, borrowed<>>(a), new_shape);
+    return reshaped_view(basic_array_view<T const, R, L, Algebra, default_accessor, borrowed<mem::get_addr_space<decltype(a)>>>(a), new_shape);
   }
 
   template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, std::integral Int, auto newRank>
   auto reshaped_view(basic_array<T, R, L, Algebra, ContainerPolicy> &a, std::array<Int, newRank> const &new_shape) {
-    return reshaped_view(basic_array_view<T, R, L, Algebra, default_accessor, borrowed<>>(a), new_shape);
+    return reshaped_view(basic_array_view<T, R, L, Algebra, default_accessor, borrowed<mem::get_addr_space<decltype(a)>>>(a), new_shape);
   }
 
   // --------------- permuted_indices_view------------------------
@@ -100,12 +100,12 @@ namespace nda {
 
   template <ARRAY_INT Permutation, typename T, int R, typename L, char Algebra, typename ContainerPolicy>
   auto permuted_indices_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a) {
-    return permuted_indices_view<Permutation>(basic_array_view<T const, R, L, Algebra, default_accessor, borrowed<>>(a));
+    return permuted_indices_view<Permutation>(basic_array_view<T const, R, L, Algebra, default_accessor, borrowed<mem::get_addr_space<decltype(a)>>>(a));
   }
 
   template <ARRAY_INT Permutation, typename T, int R, typename L, char Algebra, typename ContainerPolicy>
   auto permuted_indices_view(basic_array<T, R, L, Algebra, ContainerPolicy> &a) {
-    return permuted_indices_view<Permutation>(basic_array_view<T, R, L, Algebra, default_accessor, borrowed<>>(a));
+    return permuted_indices_view<Permutation>(basic_array_view<T, R, L, Algebra, default_accessor, borrowed<mem::get_addr_space<decltype(a)>>>(a));
   }
 
   // ---------------  transpose ------------------------
@@ -136,12 +136,12 @@ namespace nda {
 
   template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, typename... IntSequences>
   auto group_indices_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a, IntSequences...) {
-    return group_indices_view(basic_array_view<T const, R, L, Algebra, default_accessor, borrowed<>>(a), IntSequences{}...);
+    return group_indices_view(basic_array_view<T const, R, L, Algebra, default_accessor, borrowed<mem::get_addr_space<decltype(a)>>>(a), IntSequences{}...);
   }
 
   template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, typename... IntSequences>
   auto group_indices_view(basic_array<T, R, L, Algebra, ContainerPolicy> &a, IntSequences...) {
-    return group_indices_view(basic_array_view<T, R, L, Algebra, default_accessor, borrowed<>>(a), IntSequences{}...);
+    return group_indices_view(basic_array_view<T, R, L, Algebra, default_accessor, borrowed<mem::get_addr_space<decltype(a)>>>(a), IntSequences{}...);
   }
 
   // --------------- Reinterpretation------------------------
