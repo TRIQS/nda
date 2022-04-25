@@ -22,6 +22,8 @@
 #include <memory>
 #include <numeric>
 #include <concepts>
+
+#include "address_space.hpp"
 #include "../macros.hpp"
 
 #include <cuda_runtime.h>
@@ -41,29 +43,6 @@ namespace nda::mem {
   struct blk_t {
     char *ptr = nullptr;
     size_t s  = 0;
-  };
-
-  /**
-   * The Address-Space identifier
-   * Host -> address in ram
-   * Device -> address on the GPU
-   * Unified -> CUDA Unified memory address
-   */
-  enum class AddressSpace { Host, Device, Unified };
-  using AddressSpace::Device;
-  using AddressSpace::Host;
-  using AddressSpace::Unified;
-
-  /// Concept of an Allocator
-  template <typename A>
-  concept Allocator = requires(A &a) {
-    { a.allocate(size_t{}) }
-    noexcept->std::same_as<blk_t>;
-    { a.allocate_zero(size_t{}) }
-    noexcept->std::same_as<blk_t>;
-    { a.deallocate(blk_t{}) }
-    noexcept;
-    { A::address_space } -> std::same_as<AddressSpace const &>;
   };
 
   /// Generic memcpy between potentially different Address Spaces

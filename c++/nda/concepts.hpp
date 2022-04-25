@@ -81,6 +81,42 @@ concept Scalar = nda::is_scalar_v<std::decay_t<S>>;
 template <typename T, template <typename...> class TMPLT>
 concept InstantiationOf = nda::is_instantiation_of_v<TMPLT, T>;
 
+namespace mem {
+
+  struct blk_t;
+  enum class AddressSpace;
+  /// Concept of an Allocator
+  template <typename A>
+  concept Allocator = requires(A & a) {
+    { a.allocate(size_t{}) }
+    noexcept->std::same_as<blk_t>;
+    { a.allocate_zero(size_t{}) }
+    noexcept->std::same_as<blk_t>;
+    { a.deallocate(std::declval<blk_t>()) }
+    noexcept;
+    { A::address_space } -> std::same_as<AddressSpace const &>;
+  };
+
+  /// Concept of a handle on a block of memory
+  template <typename H, typename T = typename H::value_type>
+  concept Handle = requires(H const &h) {
+    requires std::is_same_v<typename H::value_type, T>;
+    { h.is_null() }
+    noexcept->std::same_as<bool>;
+    { h.data() }
+    noexcept->std::same_as<T *>;
+    { H::address_space } -> std::same_as<AddressSpace const &>;
+  };
+
+  /// Concept of a handle that owns a block of memory
+  template <typename H, typename T = typename H::value_type>
+  concept OwningHandle = Handle<H, T> and requires(H const &h) {
+    requires not std::is_const_v<typename H::value_type>;
+    { h.size() }
+    noexcept->std::same_as<long>;
+  };
+} // namespace mem
+
 // -------   Array   ----------
 
 /// Check if A has a shape, size and rank R and can be called with R integers.
