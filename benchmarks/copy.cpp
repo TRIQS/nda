@@ -20,7 +20,7 @@ template <size_t Rank>
 using array_t = nda::array<value_t, Rank>;
 
 template <size_t Rank>
-using device_array_t = nda::basic_array<value_t, Rank, C_layout, 'A', nda::heap<mem::Device>>;
+using device_array_t = nda::cuarray<value_t, Rank>;
 
 long KBmin = 8;
 long KBmax = 1 << 15;

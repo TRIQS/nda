@@ -76,10 +76,6 @@ namespace nda {
   template <typename ValueType, typename Layout = C_stride_layout>
   using vector_const_view = basic_array_view<ValueType const, 1, Layout, 'V', default_accessor, borrowed<>>;
   
-  template <typename ValueType, int Rank, uint64_t StaticExtents>
-  using stack_array =
-     nda::basic_array<ValueType, Rank, nda::basic_layout<StaticExtents, nda::C_stride_order<Rank>, nda::layout_prop_e::contiguous>, 'A', nda::stack<stdutil::product(decode<Rank>(StaticExtents))>>;
-
   template <typename... Is>
   constexpr uint64_t static_extents(int i0, Is... is) {
     if (i0 > 15) throw std::runtime_error("NO!");
@@ -88,15 +84,44 @@ namespace nda {
 
   template <typename ValueType, int N0, int... Ns>
   using stack_array =
-     nda::basic_array<ValueType, 1 + sizeof...(Ns), nda::basic_layout<nda::static_extents(N0, Ns...), nda::C_stride_order<1 + sizeof...(Ns)>, nda::layout_prop_e::contiguous>, 'A', nda::stack>;
+     nda::basic_array<ValueType, 1 + sizeof...(Ns), nda::basic_layout<nda::static_extents(N0, Ns...), nda::C_stride_order<1 + sizeof...(Ns)>, nda::layout_prop_e::contiguous>, 'A', nda::stack<N0 * (Ns * ... * 1)>>;
 
   template <typename ValueType, int Length>
   using stack_vector =
-     nda::basic_array<ValueType, 1, nda::basic_layout<nda::static_extents(Length), nda::C_stride_order<1>, nda::layout_prop_e::contiguous>, 'V', nda::stack>;
+     nda::basic_array<ValueType, 1, nda::basic_layout<nda::static_extents(Length), nda::C_stride_order<1>, nda::layout_prop_e::contiguous>, 'V', nda::stack<Length>>;
 
   template <typename ValueType, int N, int M>
   using stack_matrix =
-     nda::basic_array<ValueType, 2, nda::basic_layout<nda::static_extents(N, M), nda::C_stride_order<2>, nda::layout_prop_e::contiguous>, 'M', nda::stack>;
+     nda::basic_array<ValueType, 2, nda::basic_layout<nda::static_extents(N, M), nda::C_stride_order<2>, nda::layout_prop_e::contiguous>, 'M', nda::stack<N * M>>;
+
+  // ---------------------- Cuda Aliases --------------------------------
+
+  template <typename ValueType, int Rank, typename Layout = C_layout>
+  using cuarray = basic_array<ValueType, Rank, Layout, 'A', heap<mem::Device>>;
+
+  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
+  using cuarray_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<mem::Device>>;
+
+  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
+  using cuarray_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<mem::Device>>;
+
+  template <typename ValueType, typename Layout = C_layout, typename ContainerPolicy = heap<mem::Device>>
+  using cumatrix = basic_array<ValueType, 2, Layout, 'M', ContainerPolicy>;
+
+  template <typename ValueType, typename Layout = C_stride_layout>
+  using cumatrix_view = basic_array_view<ValueType, 2, Layout, 'M', default_accessor, borrowed<mem::Device>>;
+
+  template <typename ValueType, typename Layout = C_stride_layout>
+  using cumatrix_const_view = basic_array_view<ValueType const, 2, Layout, 'M', default_accessor, borrowed<mem::Device>>;
+
+  template <typename ValueType>
+  using cuvector = basic_array<ValueType, 1, C_layout, 'V', heap<mem::Device>>;
+
+  template <typename ValueType, typename Layout = C_stride_layout>
+  using cuvector_view = basic_array_view<ValueType, 1, Layout, 'V', default_accessor, borrowed<mem::Device>>;
+
+  template <typename ValueType, typename Layout = C_stride_layout>
+  using cuvector_const_view = basic_array_view<ValueType const, 1, Layout, 'V', default_accessor, borrowed<mem::Device>>;
 
   // ---------------------- is_array_or_view_container  --------------------------------
 
