@@ -112,8 +112,10 @@ namespace nda {
    */
   template <typename A>
   auto make_regular(A &&x) {
-    using A_t = std::decay_t<A>;
-    if constexpr (Array<A>)
+    using A_t = std::remove_cvref_t<A>;
+    if constexpr (MemoryArray<A_t>)
+      return basic_array<get_value_t<A_t>, get_rank<A_t>, C_layout, get_algebra<A_t>, heap<mem::get_addr_space<A_t>>>{std::forward<A>(x)};
+    else if constexpr (Array<A_t>)
       return basic_array<get_value_t<A_t>, get_rank<A_t>, C_layout, get_algebra<A_t>, heap<>>{std::forward<A>(x)};
     else
       return std::forward<A>(x);
