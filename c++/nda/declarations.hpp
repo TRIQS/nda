@@ -86,6 +86,35 @@ namespace nda {
     return encode(std::array<int, sizeof...(Is) + 1>{i0, is...});
   }
 
+  // ---------------------- Cuda Aliases --------------------------------
+
+  template <typename ValueType, int Rank, typename Layout = C_layout>
+  using cuarray = basic_array<ValueType, Rank, Layout, 'A', heap<mem::Device>>;
+
+  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
+  using cuarray_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<mem::Device>>;
+
+  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
+  using cuarray_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<mem::Device>>;
+
+  template <typename ValueType, typename Layout = C_layout, typename ContainerPolicy = heap<mem::Device>>
+  using cumatrix = basic_array<ValueType, 2, Layout, 'M', ContainerPolicy>;
+
+  template <typename ValueType, typename Layout = C_stride_layout>
+  using cumatrix_view = basic_array_view<ValueType, 2, Layout, 'M', default_accessor, borrowed<mem::Device>>;
+
+  template <typename ValueType, typename Layout = C_stride_layout>
+  using cumatrix_const_view = basic_array_view<ValueType const, 2, Layout, 'M', default_accessor, borrowed<mem::Device>>;
+
+  template <typename ValueType>
+  using cuvector = basic_array<ValueType, 1, C_layout, 'V', heap<mem::Device>>;
+
+  template <typename ValueType, typename Layout = C_stride_layout>
+  using cuvector_view = basic_array_view<ValueType, 1, Layout, 'V', default_accessor, borrowed<mem::Device>>;
+
+  template <typename ValueType, typename Layout = C_stride_layout>
+  using cuvector_const_view = basic_array_view<ValueType const, 1, Layout, 'V', default_accessor, borrowed<mem::Device>>;
+
   // ---------------------- is_array_or_view_container  --------------------------------
 
   template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
