@@ -141,6 +141,9 @@ concept MemoryArray = Array<A> && requires(A &a) {
   typename A::storage_t;
   mem::Handle<typename A::storage_t>;
 
+  // There is a member-type value_type that maybe const
+  typename A::value_type;
+
   // We can acquire the pointer to the underlying data
   {
     a.data()
