@@ -22,7 +22,7 @@ using value_t   = double;
 constexpr int N = 4;
 
 template <size_t Rank>
-using device_array_t = nda::basic_array<value_t, Rank, C_layout, 'A', nda::heap<mem::Device>>;
+using cuarray_t = nda::basic_array<value_t, Rank, C_layout, 'A', nda::heap<mem::Device>>;
 
 template <size_t Rank>
 using array_t = nda::array<value_t, Rank>;
@@ -34,11 +34,11 @@ TEST(Cuda, ConstructFromArray) { //NOLINT
   auto A = nda::rand<value_t>(N, N);
 
   // device <- host
-  auto A_d = device_array_t<2>{A};
+  auto A_d = cuarray_t<2>{A};
   EXPECT_EQ(A_d.shape(), A.shape());
 
   // device <- device
-  auto B_d = device_array_t<2>{A_d};
+  auto B_d = cuarray_t<2>{A_d};
 
   // host <- device
   auto B = array_t<2>{B_d};
@@ -50,11 +50,11 @@ TEST(Cuda, ConstructFromView) { //NOLINT
 
   // device <- host
   auto Av  = A(_, 0, _, _);
-  auto A_d = device_array_t<3>{Av};
+  auto A_d = cuarray_t<3>{Av};
 
   // device <- device
   auto Av_d = A_d(_, 0, _);
-  auto B_d  = device_array_t<2>{Av_d};
+  auto B_d  = cuarray_t<2>{Av_d};
 
   // host <- device
   auto Bv_d = B_d(_, 0);
@@ -66,11 +66,11 @@ TEST(Cuda, AssignFromArray) { //NOLINT
   auto A = nda::rand<value_t>(N, N);
 
   // device <- host
-  auto A_d = device_array_t<2>(N, N);
+  auto A_d = cuarray_t<2>(N, N);
   A_d      = A;
 
   // device <- device
-  auto B_d = device_array_t<2>(N, N);
+  auto B_d = cuarray_t<2>(N, N);
   B_d      = A_d;
 
   // host <- device
@@ -85,12 +85,12 @@ TEST(Cuda, AssignFromView) { //NOLINT
 
   // device <- host
   auto Av  = A(_, 0, _, _);
-  auto A_d = device_array_t<3>(N, N, N);
+  auto A_d = cuarray_t<3>(N, N, N);
   A_d      = Av;
 
   // device <- device
   auto Av_d = A_d(_, 0, _);
-  auto B_d  = device_array_t<2>(N, N);
+  auto B_d  = cuarray_t<2>(N, N);
   B_d       = Av_d;
 
   // host <- device
