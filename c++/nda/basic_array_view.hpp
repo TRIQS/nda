@@ -203,8 +203,8 @@ namespace nda {
     /** 
      * 
      */
-    template <ArrayInitializer Initializer>
-    basic_array_view &operator=(Initializer const &initializer) noexcept  {
+    template <ArrayInitializer<basic_array_view> Initializer>
+    basic_array_view &operator=(Initializer const &initializer) noexcept {
       EXPECTS(shape() == initializer.shape());
       initializer.invoke(*this);
       return *this;
