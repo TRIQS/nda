@@ -41,14 +41,13 @@ namespace nda {
    * The HDF5 exceptions will be caught and rethrown as std::runtime_error
    *
    * @tparam A The type of the array/matrix/vector, etc..
-   * @tparam TU The tuple-type of the slice
+   * @tparam IRs The types in the slice tuple, i.e. integer, index ranges, range::all_t or ellipsis
    * @param g The h5 group
    * @param a The array to be stored
    * @param slice Optional slice (tuple of nda::range and/or integer types) to limit which data to read
    */
-  template <MemoryArray A, typename TU = std::tuple<>>
-  void h5_read(h5::group g, std::string const &name, A &a,
-               TU const &slice = {}) requires(is_regular_or_view_v<A> and is_instantiation_of_v<std::tuple, TU>);
+  template <MemoryArray A, typename... IRs>
+  void h5_read(h5::group g, std::string const &name, A &a, std::tuple<IRs...> const &slice = {}) requires(is_regular_or_view_v<A>);
 
   // ----- Implementation ------
 
@@ -136,23 +135,49 @@ namespace nda {
    * @param slice The slice tuple
    * @param lengths The dimensions of the underlying dataset
    * @param is_complex True iff the dataset holds complex values
-   * @tparam TU The type of the slice tuple, containing integers and/or index ranges
+   * @tparam NDim The number of dimensions in the shape
+   * @tparam IRs The types in the slice tuple, i.e. integer, index ranges, range::all_t or ellipsis
    */
-  template <typename TU>
-  auto hyperslab_and_shape_from_slice(TU const &slice, std::vector<h5::hsize_t> const &lengths, bool is_complex) {
-    auto hsl                   = h5::array_interface::hyperslab(std::tuple_size_v<TU>, is_complex);
-    constexpr auto sliced_rank = []<size_t... Is>(std::index_sequence<Is...>) {
-      return (std::is_same_v<std::tuple_element_t<Is, TU>, nda::range> + ...)
-         + (std::is_same_v<std::tuple_element_t<Is, TU>, nda::range::all_t> + ...);
+  template <size_t NDim, typename... IRs>
+  auto hyperslab_and_shape_from_slice(std::tuple<IRs...> const &slice, std::vector<h5::hsize_t> const &lengths, bool is_complex) {
+
+    static constexpr auto size_of_slice = sizeof...(IRs);
+
+    static constexpr auto ellipsis_count = (std::is_same_v<IRs, ellipsis> + ... + 0);
+    static_assert(ellipsis_count < 2, "Can only provide single ellipsis in slicing");
+    static constexpr auto has_ellipsis      = (ellipsis_count == 1);
+    static constexpr auto ellipsis_position = [&]<size_t... Is>(std::index_sequence<Is...>) {
+      if constexpr (has_ellipsis) return ((std::is_same_v<IRs, ellipsis> * Is) + ... + 0);
+      return size_of_slice;
     }
-    (std::make_index_sequence<std::tuple_size_v<TU>>{});
-    auto shape = std::array<long, sliced_rank>{};
+    (std::index_sequence_for<IRs...>{});
+
+    static constexpr auto integer_count  = (std::integral<IRs> + ... + 0);
+    static constexpr auto range_count    = size_of_slice - integer_count - ellipsis_count;
+    static constexpr auto ellipsis_width = NDim - range_count;
+
+    static_assert((has_ellipsis && range_count <= NDim) || range_count == NDim,
+                  "Array rank does not match the number of non-trivial slice dimensions");
+
+    static constexpr auto slab_rank = NDim + integer_count;
+    auto rank_in_file               = lengths.size() - is_complex;
+    if (slab_rank != rank_in_file)
+      NDA_RUNTIME_ERROR << " h5 read of nda::array : incorrect slice rank. In file: " << rank_in_file << "  Rank of slice: " << size_of_slice;
+
+    auto hsl   = h5::array_interface::hyperslab(slab_rank, is_complex);
+    auto shape = std::array<long, NDim>{};
     [&, m = 0 ]<size_t... Is>(std::index_sequence<Is...>) mutable {
       (
-         [&]<typename IR>(size_t n, IR const &ir) {
+         [&]<typename IR>(size_t n, IR const &ir) mutable {
+           if (n > ellipsis_position) n += (ellipsis_width - 1);
            if constexpr (std::integral<IR>) {
              hsl.offset[n] = ir;
              hsl.count[n]  = 1;
+           } else if constexpr (std::is_same_v<IR, nda::ellipsis>) {
+             for (auto k : range(n, n + ellipsis_width)) {
+               hsl.count[k] = lengths[k];
+               shape[m++]   = lengths[k];
+             }
            } else if constexpr (std::is_same_v<IR, nda::range>) {
              hsl.offset[n] = ir.first();
              hsl.stride[n] = ir.step();
@@ -166,13 +191,12 @@ namespace nda {
          }(Is, std::get<Is>(slice)),
          ...);
     }
-    (std::make_index_sequence<std::tuple_size_v<TU>>{});
+    (std::make_index_sequence<size_of_slice>{});
     return std::make_pair(hsl, shape);
   }
 
-  template <MemoryArray A, typename TU>
-  void h5_read(h5::group g, std::string const &name, A &a,
-               TU const &slice) requires(is_regular_or_view_v<A> and is_instantiation_of_v<std::tuple, TU>) {
+  template <MemoryArray A, typename... IRs>
+  void h5_read(h5::group g, std::string const &name, A &a, std::tuple<IRs...> const &slice) requires(is_regular_or_view_v<A>) {
 
     // If array is not in C-order or not contiguous
     // read into array with default layout and copy
@@ -187,7 +211,7 @@ namespace nda {
       return;
     }
 
-    constexpr int size_of_slice = std::tuple_size_v<TU>;
+    constexpr int size_of_slice = sizeof...(IRs);
     constexpr bool slicing      = (size_of_slice > 0);
 
     // Special case array<string>, store as char buffer
@@ -210,20 +234,14 @@ namespace nda {
         return;
       }
 
-      int rank_in_file = lt.rank() - is_complex;
       std::array<long, A::rank> shape;
       auto slice_slab = h5::array_interface::hyperslab{};
 
       if constexpr (slicing) {
-        if (rank_in_file != size_of_slice)
-          NDA_RUNTIME_ERROR << " h5 read of nda::array : incorrect slice rank. In file: " << rank_in_file << "  Rank of slice: " << size_of_slice;
-        auto const [sl, sh] = hyperslab_and_shape_from_slice(slice, lt.lengths, is_complex);
-        static_assert(std::tuple_size_v<decltype(sh)> == A::rank, "Array rank does not match the number of non-trivial slice dimensions");
+        auto const [sl, sh] = hyperslab_and_shape_from_slice<A::rank>(slice, lt.lengths, is_complex);
         slice_slab = sl;
         shape      = sh;
       } else {
-        if (rank_in_file != A::rank)
-          NDA_RUNTIME_ERROR << " h5 read of nda::array : incorrect rank. In file: " << rank_in_file << "  In memory: " << A::rank;
         for (int u = 0; u < A::rank; ++u) shape[u] = lt.lengths[u]; // NB : correct for complex
       }
 
@@ -235,6 +253,7 @@ namespace nda {
                             << "\n in file  : " << shape << "\n in view  : " << a.shape();
       }
 
+      auto rank_in_file = lt.rank() - is_complex;
       h5::array_interface::h5_array_view v{h5::hdf5_type<get_value_t<A>>(), (void *)(a.data()), rank_in_file, is_complex};
       if constexpr (slicing) {
         v.slab.count = slice_slab.count;

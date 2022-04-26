@@ -135,24 +135,48 @@ TEST(SliceH5, Hyperslab) { //NOLINT
   }
 
   // auto slice = std::tuple{range(), range(), 3}); // FIXME range() = range(0,-1,0) <- Empty!
-  auto slice   = std::tuple{range::all_t{}, range(3, 5), 3};
-  auto A_slice = A(range::all_t{}, range(3, 5), 3);
+  auto slice          = std::tuple{_, range(3, 5), 3};
+  auto slice_ellipsis = std::tuple{___, range(3, 5), 3};
+  auto A_slice        = A(_, range(3, 5), 3);
 
   // read only slice of the data
-  auto C = nda::array<long, 2>{};
+  nda::array<long, 2> B{}, C{};
   {
     // Provide multi-dimensional slice, i.e. tuple of long, range, range_all or ellipsis
     h5::file f("test_nda_slab.h5", 'r');
-    h5_read(f, "A", C, slice);
+
+    h5_read(f, "A", B, slice);
+    EXPECT_EQ_ARRAY(A_slice, B);
+
+    h5_read(f, "A", C, slice_ellipsis);
+    EXPECT_EQ_ARRAY(A_slice, C);
   }
-  EXPECT_EQ_ARRAY(A_slice, C);
 
   // read into non-contiguous view
-  auto B       = nda::zeros<long>(4, 5, 6);
-  auto B_slice = B(range::all_t{}, range(3, 5), 3);
+  auto D = nda::zeros<long>(4, 5, 6);
+  auto E = nda::zeros<long>(4, 5, 6);
   {
     h5::file f("test_nda_slab.h5", 'r');
-    h5_read(f, "A", B_slice, slice);
+
+    auto D_slice = D(_, range(3, 5), 3);
+    h5_read(f, "A", D_slice, slice);
+    EXPECT_EQ_ARRAY(A_slice, D_slice);
+
+    auto E_slice = E(_, range(3, 5), 3);
+    h5_read(f, "A", E_slice, slice_ellipsis);
+    EXPECT_EQ_ARRAY(A_slice, E_slice);
   }
-  EXPECT_EQ_ARRAY(A_slice, B_slice);
+
+  // test ellipsis of width two and three
+  auto F = nda::array<long, 2>{};
+  auto G = nda::array<long, 3>{};
+  {
+    h5::file f("test_nda_slab.h5", 'r');
+
+    h5_read(f, "A", F, std::tuple{___, 3});
+    EXPECT_EQ_ARRAY(A(___, 3), F);
+
+    h5_read(f, "A", G, std::tuple{___});
+    EXPECT_EQ_ARRAY(A, G);
+  }
 }
