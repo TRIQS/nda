@@ -33,21 +33,22 @@ namespace nda {
    * @param a The array to be stored
    */
   template <MemoryArray A>
-  void h5_write(h5::group g, std::string const &name, A const &a) requires(is_regular_or_view_v<A>);
+  void h5_write(h5::group g, std::string const &name, A const &a)
 
   /*
    * Read an array or a view from an hdf5 file
    * Allow to read only a slice of the dataset by providing an optional tuple of nda::range and/or integers
    * The HDF5 exceptions will be caught and rethrown as std::runtime_error
    *
-   * @tparam A The type of the array/matrix/vector, etc..
-   * @tparam IRs The types in the slice tuple, i.e. integer, index ranges, range::all_t or ellipsis
    * @param g The h5 group
    * @param a The array to be stored
-   * @param slice Optional slice (tuple of nda::range and/or integer types) to limit which data to read
+   * @param name The name of the dataset in the file/group that should be read
+   * @param slice Optional slice (tuple of range, range::all_t, ellipsis or integer types) to limit which data to read
+   * @tparam A The type of the array/matrix/vector, etc..
+   * @tparam IRs The types in the slice tuple, i.e. integer, index ranges, range::all_t or ellipsis
    */
   template <MemoryArray A, typename... IRs>
-  void h5_read(h5::group g, std::string const &name, A &a, std::tuple<IRs...> const &slice = {}) requires(is_regular_or_view_v<A>);
+  void h5_read(h5::group g, std::string const &name, A &a, std::tuple<IRs...> const &slice = {})
 
   // ----- Implementation ------
 
@@ -60,9 +61,8 @@ namespace nda {
 
     // FIXME almost the same code as for vector. Factorize this ?
     // For the moment, 1d only : easy to implement, just change the construction of the lengths
-    template <typename A>
-    h5::char_buf to_char_buf(A const &v) requires(is_regular_or_view_v<A>) {
-      static_assert(A::rank == 1, "H5 for array<string, N> for N>1 not implemented");
+    template <MemoryArrayOfRank<1> A>
+    h5::char_buf to_char_buf(A const &v) {
       size_t s = 0;
       for (auto &x : v) s = std::max(s, x.size() + 1);
       auto len = v_t{size_t(v.size()), s};
@@ -77,9 +77,8 @@ namespace nda {
       return {buf, len};
     }
 
-    template <typename A>
-    void from_char_buf(h5::char_buf const &cb, A &v) requires(is_regular_or_view_v<A>) {
-      static_assert(A::rank == 1, "H5 for array<string, N> for N>1 not implemented");
+    template <MemoryArrayOfRank<1> A>
+    void from_char_buf(h5::char_buf const &cb, A &v) {
       v.resize(cb.lengths[0]);
       auto len_string = cb.lengths[1];
 
@@ -94,7 +93,7 @@ namespace nda {
   } // namespace h5_details
 
   template <MemoryArray A>
-  void h5_write(h5::group g, std::string const &name, A const &a) requires(is_regular_or_view_v<A>) {
+  void h5_write(h5::group g, std::string const &name, A const &a) {
 
     // If array is not in C-order or not contiguous
     // copy into array with default layout and write
@@ -196,7 +195,7 @@ namespace nda {
   }
 
   template <MemoryArray A, typename... IRs>
-  void h5_read(h5::group g, std::string const &name, A &a, std::tuple<IRs...> const &slice) requires(is_regular_or_view_v<A>) {
+  void h5_read(h5::group g, std::string const &name, A &a, std::tuple<IRs...> const &slice) {
 
     // If array is not in C-order or not contiguous
     // read into array with default layout and copy
