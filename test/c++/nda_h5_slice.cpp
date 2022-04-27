@@ -179,4 +179,17 @@ TEST(SliceH5, Hyperslab) { //NOLINT
     h5_read(f, "A", G, std::tuple{___});
     EXPECT_EQ_ARRAY(A, G);
   }
+
+  // Update only a slice of the data in file
+  A_slice() = 42;
+  {
+    h5::file f("test_nda_slab.h5", 'a');
+    h5_write(f, "A", A_slice, slice);
+  }
+  auto A2 = nda::array<long, 3>{};
+  {
+    h5::file f("test_nda_slab.h5", 'r');
+    h5_read(f, "A", A2);
+  }
+  EXPECT_EQ_ARRAY(A, A2);
 }

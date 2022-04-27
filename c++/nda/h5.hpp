@@ -27,13 +27,15 @@ namespace nda {
    * Write an array or a view into an hdf5 file
    * The HDF5 exceptions will be caught and rethrown as std::runtime_error
    *
-   * @tparam A The type of the array/matrix/vector, etc..
    * @param g The h5 group
    * @param name The name of the hdf5 array in the file/group where the stack will be stored
    * @param a The array to be stored
+   * @param slice Optional slice (tuple of range, range::all_t, ellipsis or integer types) to limit which data to write (assumes existing dataset in File!)
+   * @tparam A The type of the array/matrix/vector, etc..
+   * @tparam IRs The types in the slice tuple, i.e. integer, index ranges, range::all_t or ellipsis
    */
-  template <MemoryArray A>
-  void h5_write(h5::group g, std::string const &name, A const &a)
+  template <MemoryArray A, typename... IRs>
+  void h5_write(h5::group g, std::string const &name, A const &a, std::tuple<IRs...> const &slice = {});
 
   /*
    * Read an array or a view from an hdf5 file
@@ -48,16 +50,11 @@ namespace nda {
    * @tparam IRs The types in the slice tuple, i.e. integer, index ranges, range::all_t or ellipsis
    */
   template <MemoryArray A, typename... IRs>
-  void h5_read(h5::group g, std::string const &name, A &a, std::tuple<IRs...> const &slice = {})
+  void h5_read(h5::group g, std::string const &name, A &a, std::tuple<IRs...> const &slice = {});
 
   // ----- Implementation ------
 
   namespace h5_details {
-
-    using h5::v_t;
-    // in cpp to diminish template instantiations
-    void write(h5::group g, std::string const &name, h5::datatype ty, void *start, int rank, bool is_complex, long const *lens, long const *strides,
-               long total_size);
 
     // FIXME almost the same code as for vector. Factorize this ?
     // For the moment, 1d only : easy to implement, just change the construction of the lengths
@@ -65,7 +62,7 @@ namespace nda {
     h5::char_buf to_char_buf(A const &v) {
       size_t s = 0;
       for (auto &x : v) s = std::max(s, x.size() + 1);
-      auto len = v_t{size_t(v.size()), s};
+      auto len = h5::v_t{size_t(v.size()), s};
 
       std::vector<char> buf;
       buf.resize(v.size() * s, 0x00);
@@ -92,38 +89,6 @@ namespace nda {
 
   } // namespace h5_details
 
-  template <MemoryArray A>
-  void h5_write(h5::group g, std::string const &name, A const &a) {
-
-    // If array is not in C-order or not contiguous
-    // copy into array with default layout and write
-    if (not a.indexmap().is_stride_order_C() or not a.indexmap().is_contiguous()) {
-      using h5_arr_t  = nda::array<typename A::value_type, A::rank>;
-      auto a_c_layout = h5_arr_t{a.shape()};
-      a_c_layout()    = a;
-      h5_write(g, name, a_c_layout);
-      return;
-    }
-
-    // first case array of string
-    if constexpr (std::is_same_v<typename A::value_type, std::string>) { // special case of string. Like vector of string
-
-      h5_write(g, name, h5_details::to_char_buf(a));
-
-    } else if constexpr (is_scalar_v<typename A::value_type>) { // FIXME : register types as USER DEFINED hdf5 types
-
-      static constexpr bool is_complex = is_complex_v<typename A::value_type>;
-      h5_details::write(g, name, h5::hdf5_type<get_value_t<A>>(), (void *)(a.data()), A::rank, is_complex, a.indexmap().lengths().data(),
-                        a.indexmap().strides().data(), a.size());
-
-    } else { // generic unknown type to hdf5
-      auto g2 = g.create_group(name);
-      h5_write(g2, "shape", a.shape());
-      auto make_name = [](auto i0, auto... is) { return (std::to_string(i0) + ... + ("_" + std::to_string(is))); };
-      nda::for_each(a.shape(), [&](auto... is) { h5_write(g2, make_name(is...), a(is...)); });
-    }
-  }
-
   /**
    * Create a h5 hyperslab and shape from a slice, i.e. a tuple containing types
    * nda::range, nda::range::all_t and integers
@@ -136,6 +101,7 @@ namespace nda {
    * @param is_complex True iff the dataset holds complex values
    * @tparam NDim The number of dimensions in the shape
    * @tparam IRs The types in the slice tuple, i.e. integer, index ranges, range::all_t or ellipsis
+   * @return A pair containing the hyperslab and the shape
    */
   template <size_t NDim, typename... IRs>
   auto hyperslab_and_shape_from_slice(std::tuple<IRs...> const &slice, std::vector<h5::hsize_t> const &lengths, bool is_complex) {
@@ -161,7 +127,7 @@ namespace nda {
     static constexpr auto slab_rank = NDim + integer_count;
     auto rank_in_file               = lengths.size() - is_complex;
     if (slab_rank != rank_in_file)
-      NDA_RUNTIME_ERROR << " h5 read of nda::array : incorrect slice rank. In file: " << rank_in_file << "  Rank of slice: " << size_of_slice;
+      NDA_RUNTIME_ERROR << "Error in h5 slice: Incorrect slice rank. In file: " << rank_in_file << "  Rank of slice: " << size_of_slice;
 
     auto hsl   = h5::array_interface::hyperslab(slab_rank, is_complex);
     auto shape = std::array<long, NDim>{};
@@ -195,6 +161,71 @@ namespace nda {
   }
 
   template <MemoryArray A, typename... IRs>
+  void h5_write(h5::group g, std::string const &name, A const &a, std::tuple<IRs...> const &slice) {
+
+    // If array is not in C-order or not contiguous
+    // copy into array with default layout and write
+    if (not a.indexmap().is_stride_order_C() or not a.indexmap().is_contiguous()) {
+      using h5_arr_t  = nda::array<typename A::value_type, A::rank>;
+      auto a_c_layout = h5_arr_t{a.shape()};
+      a_c_layout()    = a;
+      h5_write(g, name, a_c_layout, slice);
+      return;
+    }
+
+    constexpr int size_of_slice = sizeof...(IRs);
+    constexpr bool slicing      = (size_of_slice > 0);
+
+    // Special case of string, write as char buffer
+    if constexpr (std::is_same_v<typename A::value_type, std::string>) {
+      static_assert(!slicing, "Slicing not supported in h5_write for array of string");
+      h5_write(g, name, h5_details::to_char_buf(a));
+
+    } else if constexpr (is_scalar_v<typename A::value_type>) {
+
+      static constexpr bool is_complex = is_complex_v<typename A::value_type>;
+
+      if constexpr (slicing) {
+        // Dataset must already exist for the sliced h5_write
+        auto lt = h5::array_interface::get_h5_lengths_type(g, name);
+        if (is_complex != lt.has_complex_attribute)
+          NDA_RUNTIME_ERROR << "Error in sliced h5_write. Existing dataset and array must both be either complex or real";
+        auto const [sl, sh] = hyperslab_and_shape_from_slice<A::rank>(slice, lt.lengths, is_complex);
+        if (sh != a.shape())
+          NDA_RUNTIME_ERROR << "Error in sliced h5_write. Shape of slice and Array shape incompatible"
+                            << "\n shape of slice : " << sh << "\n array  : " << a.shape();
+
+        auto rank_in_file = lt.rank() - is_complex;
+        h5::array_interface::h5_array_view v{h5::hdf5_type<get_value_t<A>>(), (void *)(a.data()), rank_in_file, is_complex};
+        v.slab.count = sl.count;
+        v.L_tot      = sl.count;
+
+        h5::array_interface::write_slice(g, name, v, lt, sl);
+      } else {
+
+        auto [L_tot, strides_h5] = h5::array_interface::get_L_tot_and_strides_h5(a.indexmap().strides().data(), A::rank, a.size());
+
+        h5::array_interface::h5_array_view v{h5::hdf5_type<get_value_t<A>>(), (void *)a.data(), A::rank, is_complex};
+        for (int u = 0; u < A::rank; ++u) { // size of lhs may be size of the rhs vector + 1 if complex. Can not simply use =
+          v.slab.count[u]  = a.shape()[u];
+          v.slab.stride[u] = strides_h5[u];
+          v.L_tot[u]       = L_tot[u];
+        }
+        h5::array_interface::write(g, name, v, true);
+      }
+
+    } else { // generic unknown type to hdf5
+
+      static_assert(!slicing, "Slicing not supported in generic h5_write");
+
+      auto g2 = g.create_group(name);
+      h5_write(g2, "shape", a.shape());
+      auto make_name = [](auto i0, auto... is) { return (std::to_string(i0) + ... + ("_" + std::to_string(is))); };
+      nda::for_each(a.shape(), [&](auto... is) { h5_write(g2, make_name(is...), a(is...)); });
+    }
+  }
+
+  template <MemoryArray A, typename... IRs>
   void h5_read(h5::group g, std::string const &name, A &a, std::tuple<IRs...> const &slice) {
 
     // If array is not in C-order or not contiguous
@@ -215,11 +246,12 @@ namespace nda {
 
     // Special case array<string>, store as char buffer
     if constexpr (std::is_same_v<typename A::value_type, std::string>) {
+      static_assert(!slicing, "Slicing not supported in h5_read for array of string");
       h5::char_buf cb;
       h5_read(g, name, cb);
       h5_details::from_char_buf(cb, a);
 
-    } else if constexpr (is_scalar_v<typename A::value_type>) { // FIXME : register types as USER DEFINED hdf5 types
+    } else if constexpr (is_scalar_v<typename A::value_type>) {
 
       static constexpr bool is_complex = is_complex_v<typename A::value_type>;
 
@@ -233,7 +265,7 @@ namespace nda {
         return;
       }
 
-      std::array<long, A::rank> shape;
+      std::array<long, A::rank> shape{};
       auto slice_slab = h5::array_interface::hyperslab{};
 
       if constexpr (slicing) {
@@ -253,6 +285,8 @@ namespace nda {
       }
 
       auto rank_in_file = lt.rank() - is_complex;
+      if (!slicing && rank_in_file != A::rank)
+        NDA_RUNTIME_ERROR << "Error in h5_read: Rank mismatch. Array has rank " << A::rank << " while Dataset has rank " << rank_in_file;
       h5::array_interface::h5_array_view v{h5::hdf5_type<get_value_t<A>>(), (void *)(a.data()), rank_in_file, is_complex};
       if constexpr (slicing) {
         v.slab.count = slice_slab.count;
