@@ -17,6 +17,7 @@
 #pragma once
 #include "tools.hpp"
 #include "interface/cxx_interface.hpp"
+#include "../mem/address_space.hpp"
 
 namespace nda::blas {
 
@@ -36,35 +37,33 @@ namespace nda::blas {
    * @Precondition : 
    *       * m has the correct dimension given a, b. 
    */
-  template <typename X, typename Y, typename M>
+  template <MemoryVector X, MemoryVector Y, MemoryMatrix M>
+  requires(have_same_value_type_v<X, Y, M> and is_blas_lapack_v<get_value_t<X>>)
   void ger(typename X::value_type alpha, X const &x, Y const &y, M &&m) {
-
-    using M_t = std::decay_t<M>;
-    static_assert(is_regular_or_view_v<M_t>, "ger: Out must be a matrix or matrix_view");
-    static_assert(is_regular_or_view_v<M_t>, "gemm: Out must be a matrix, matrix_view, array or array_view of rank 2");
-    static_assert(have_same_element_type_and_it_is_blas_type_v<X, Y, M_t>,
-                  "Matrices must have the same element type and it must be double, complex ...");
-
-    static_assert(X::rank == 1, "X must be of rank 1");
-    static_assert(Y::rank == 1, "Y must be of rank 1");
-    static_assert(M_t::rank == 2, "C must be of rank 2");
 
     EXPECTS(m.extent(0) == x.extent(0));
     EXPECTS(m.extent(1) == y.extent(0));
     // Must be lapack compatible
     EXPECTS(m.indexmap().min_stride() == 1);
 
-    //for (int i = 0; i< x.extent(0); ++i)
-    //for (int j = 0; j< y.extent(0); ++j)
-    //m(i,j) += alpha * x(i) * y(j);
-    //return ;
+    static constexpr auto X_adr_spc = mem::get_addr_space<X>;
+    static constexpr auto Y_adr_spc = mem::get_addr_space<Y>;
+    static constexpr auto M_adr_spc = mem::get_addr_space<M>;
 
-    auto idx = m.indexmap(); // FIXME should not need a copy
+    static_assert(X_adr_spc == Y_adr_spc && Y_adr_spc == M_adr_spc);
+    static constexpr bool on_host = (X_adr_spc == nda::mem::Host);
+
     // if in C, we need to call fortran with transposed matrix
-    if constexpr (idx.is_stride_order_C())
-      f77::ger(get_n_rows(m), get_n_cols(m), alpha, y.data(), y.indexmap().strides()[0], x.data(), x.indexmap().strides()[0], m.data(), get_ld(m));
-    else
+    if (std::remove_cvref_t<M>::layout_t::is_stride_order_C()) {
+      ger(alpha, y, x, transpose(m));
+      return;
+    }
+
+    if constexpr (on_host) {
       f77::ger(get_n_rows(m), get_n_cols(m), alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], m.data(), get_ld(m));
+    } else {
+      cuda::ger(get_n_rows(m), get_n_cols(m), alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], m.data(), get_ld(m));
+    }
   }
 
   /**
@@ -88,7 +87,7 @@ namespace nda::blas {
       return a * b;
     } else {
       static_assert(has_contiguous_layout<A> and has_contiguous_layout<B>);
-      auto res = zeros<get_value_t<A>>(stdutil::join(a.shape(), b.shape()));
+      auto res = zeros<get_value_t<A>, mem::get_addr_space<A>>(stdutil::join(a.shape(), b.shape()));
 
       auto a_vec = reshaped_view(a, std::array{a.size()});
       auto b_vec = reshaped_view(b, std::array{b.size()});

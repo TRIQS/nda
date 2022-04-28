@@ -35,7 +35,7 @@ namespace nda {
   template <template <typename...> class TMPLT, typename... U>
   struct is_instantiation_of<TMPLT, TMPLT<U...>> : std::true_type {};
   template <template <typename...> class TMPLT, typename T>
-  inline constexpr bool is_instantiation_of_v = is_instantiation_of<TMPLT, std::remove_reference_t<T>>::value;
+  inline constexpr bool is_instantiation_of_v = is_instantiation_of<TMPLT, std::remove_cvref_t<T>>::value;
 
   // --------------------------- For error messages ------------------------
 
@@ -61,18 +61,12 @@ namespace nda {
   // --------------------------- is_complex ------------------------
 
   template <typename T>
-  struct _is_complex : std::false_type {};
-
-  template <typename T>
-  struct _is_complex<std::complex<T>> : std::true_type {};
-
-  template <typename T>
-  inline constexpr bool is_complex_v = _is_complex<std::decay_t<T>>::value;
+  inline constexpr bool is_complex_v = is_instantiation_of_v<std::complex, T>;
 
   // --------------------------- is_scalar ------------------------
 
   template <typename S>
-  inline constexpr bool is_scalar_v = std::is_arithmetic_v<S> or nda::is_complex_v<S>;
+  inline constexpr bool is_scalar_v = std::is_arithmetic_v<std::remove_cvref_t<S>> or nda::is_complex_v<S>;
 
   template <typename S>
   inline constexpr bool is_scalar_or_convertible_v = is_scalar_v<S> or std::is_constructible_v<std::complex<double>, S>;
@@ -80,6 +74,12 @@ namespace nda {
   template <typename S, typename A>
   inline constexpr bool is_scalar_for_v = (is_scalar_v<typename A::value_type> ? is_scalar_or_convertible_v<S> :
                                                                                  std::is_same_v<S, typename A::value_type>);
+
+  template <typename T>
+  inline constexpr bool is_double_or_complex_v = is_complex_v<T> or std::is_same_v<double, std::remove_cvref_t<T>>;
+
+  template <typename T>
+  inline constexpr bool is_blas_lapack_v = is_double_or_complex_v<T>;
 
   // --------------------------- Algebra ------------------------
 
@@ -91,7 +91,7 @@ namespace nda {
 
   /// A trait to get the rank of an object with ndarray concept
   template <typename A>
-  constexpr int get_rank = std::tuple_size<std::decay_t<decltype(std::declval<A const>().shape())>>::value;
+  constexpr int get_rank = std::tuple_size_v<std::remove_cvref_t<decltype(std::declval<A const>().shape())>>;
 
   // ---------------------------  is_regular------------------------
 
@@ -133,6 +133,10 @@ namespace nda {
   /// A trait to get the return_t of the (long, ... long) for an object with ndarray concept
   template <typename A>
   using get_value_t = std::decay_t<decltype(get_first_element(std::declval<A const>()))>;
+
+  // Check all A have the same element_type
+  template <typename A0, typename... A>
+  inline constexpr bool have_same_value_type_v = (std::is_same_v<get_value_t<A0>, get_value_t<A>> and ... and true);
 
   // ---------------------- Guarantees at compile time for some optimization  --------------------------------
 

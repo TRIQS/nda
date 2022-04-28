@@ -17,13 +17,14 @@
 #pragma once
 #include "tools.hpp"
 #include "interface/cxx_interface.hpp"
+#include "../mem/address_space.hpp"
 
 namespace nda::blas {
 
   // make the generic version for non lapack types or more complex types
   // largely suboptimal
   template <typename A, typename B, typename Out>
-  void gemv_generic(typename A::value_type alpha, A const &a, B const &b, typename A::value_type beta, Out &c) {
+  void gemv_generic(get_value_t<A> alpha, A const &a, B const &b, get_value_t<A> beta, Out &c) {
     EXPECTS(a.extent(1) == b.extent(0));
     EXPECTS(a.extent(0) == c.extent(0));
     c() = 0;
@@ -53,16 +54,16 @@ namespace nda::blas {
    *
    *
    */
-  template <typename A, typename B, typename C>
-  void gemv(typename A::value_type alpha, A const &a, B const &b, typename A::value_type beta, C &&c) {
+  template <MemoryMatrix A, MemoryVector B, MemoryVector C>
+  requires(have_same_value_type_v<A, B, C> and is_blas_lapack_v<get_value_t<A>>)
+  void gemv(get_value_t<A> alpha, A const &a, B const &b, get_value_t<A> beta, C &&c) {
 
-    using Out_t = std::decay_t<C>;
-    static_assert(is_regular_or_view_v<Out_t>, "gemm: Out must be a matrix, matrix_view, array or array_view of rank 2");
-    static_assert(A::rank == 2, "A must be of rank 2");
-    static_assert(B::rank == 1, "B must be of rank 1");
-    static_assert(Out_t::rank == 1, "C must be of rank 1");
-    static_assert(have_same_element_type_and_it_is_blas_type_v<A, B, Out_t>,
-                  "Matrices/vectors must have the same element type and it must be double, complex ...");
+    static constexpr auto A_adr_spc = mem::get_addr_space<A>;
+    static constexpr auto B_adr_spc = mem::get_addr_space<B>;
+    static constexpr auto C_adr_spc = mem::get_addr_space<C>;
+
+    static_assert(A_adr_spc == B_adr_spc && B_adr_spc == C_adr_spc);
+    static constexpr bool on_host = (A_adr_spc == nda::mem::Host);
 
     EXPECTS(a.extent(1) == b.extent(0));
     EXPECTS(a.extent(0) == c.extent(0));
@@ -71,7 +72,12 @@ namespace nda::blas {
     int m1       = get_n_rows(a);
     int m2       = get_n_cols(a);
     int lda      = get_ld(a);
-    f77::gemv(trans_a, m1, m2, alpha, a.data(), lda, b.data(), b.indexmap().strides()[0], beta, c.data(), c.indexmap().strides()[0]);
+
+    if constexpr (on_host) {
+      f77::gemv(trans_a, m1, m2, alpha, a.data(), lda, b.data(), b.indexmap().strides()[0], beta, c.data(), c.indexmap().strides()[0]);
+    } else {
+      cuda::gemv(trans_a, m1, m2, alpha, a.data(), lda, b.data(), b.indexmap().strides()[0], beta, c.data(), c.indexmap().strides()[0]);
+    }
   }
 
 } // namespace nda::blas
