@@ -16,13 +16,68 @@
 
 #pragma once
 #include "../concepts.hpp"
+#include "../mem/address_space.hpp"
 #include "tools.hpp"
 #include "interface/cxx_interface.hpp"
 
 namespace nda::blas {
 
-  // reimplement rather use blas.
-  // there was a major issue with dotc on OS X. in triqs::arrays. Keep it this way.
+  // --------
+  template <typename X, typename Y>
+  requires((Scalar<X> or MemoryVector<X>) and (Scalar<Y> or MemoryVector<X>))
+  auto dot(X const &x, Y const &y) {
+    if constexpr (Scalar<X> or Scalar<Y>) {
+      return x * y;
+    } else {
+      static_assert(have_same_value_type_v<X, Y>, "Vectors must have same value type");
+      static_assert(is_blas_lapack_v<get_value_t<X>>, "Vectors hold value_type incompatible with blas");
+
+      static constexpr auto X_adr_spc = mem::get_addr_space<X>;
+      static constexpr auto Y_adr_spc = mem::get_addr_space<Y>;
+
+      static_assert(X_adr_spc == Y_adr_spc);
+      static constexpr bool on_host = (X_adr_spc == nda::mem::Host);
+
+      EXPECTS(x.shape() == y.shape());
+
+      if constexpr (on_host) {
+        return f77::dot(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
+      } else {
+        return cuda::dot(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
+      }
+    }
+  }
+
+  // --------
+  template <typename X, typename Y>
+  requires((Scalar<X> or MemoryVector<X>) and (Scalar<Y> or MemoryVector<X>))
+  auto dotc(X const &x, Y const &y) {
+    if constexpr (Scalar<X> or Scalar<Y>) {
+      return conj(x) * y;
+    } else {
+      static_assert(have_same_value_type_v<X, Y>, "Vectors must have same value type");
+      static_assert(is_blas_lapack_v<get_value_t<X>>, "Vectors hold value_type incompatible with blas");
+
+      static constexpr auto X_adr_spc = mem::get_addr_space<X>;
+      static constexpr auto Y_adr_spc = mem::get_addr_space<Y>;
+
+      static_assert(X_adr_spc == Y_adr_spc);
+      static constexpr bool on_host = (X_adr_spc == nda::mem::Host);
+
+      EXPECTS(x.shape() == y.shape());
+
+      if constexpr (!is_complex_v<get_value_t<X>>) {
+        return dot(x, y);
+      } else if constexpr (on_host) {
+        return f77::dotc(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
+      } else {
+        return cuda::dotc(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
+      }
+    }
+  }
+
+  // ------- Generic Impl -------
+
   template <bool star, typename X, typename Y>
   auto _dot_impl(X const &x, Y const &y) {
     EXPECTS(x.shape() == y.shape());
@@ -56,7 +111,7 @@ namespace nda::blas {
 
   // --------
   template <typename X, typename Y>
-  auto dot(X const &x, Y const &y) {
+  auto dot_generic(X const &x, Y const &y) {
     if constexpr (Scalar<X> or Scalar<Y>) {
       return x * y;
     } else {
@@ -66,9 +121,9 @@ namespace nda::blas {
 
   // --------
   template <typename X, typename Y>
-  auto dotc(X const &x, Y const &y) {
+  auto dotc_generic(X const &x, Y const &y) {
     if constexpr (Scalar<X> or Scalar<Y>) {
-      return x * y;
+      return conj(x) * y;
     } else {
       return _dot_impl<true>(x, y);
     }

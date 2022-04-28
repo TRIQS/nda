@@ -63,6 +63,9 @@ namespace nda::mem {
   template <MemoryArray A>
   static constexpr AddressSpace get_addr_space<A> = A::storage_t::address_space;
 
+  template <Handle H>
+  static constexpr AddressSpace get_addr_space<H> = H::address_space;
+
   template <char OP, typename L, typename R>
   static constexpr AddressSpace get_addr_space<expr<OP, L, R>> = combine<get_addr_space<L>, get_addr_space<R>>;
 

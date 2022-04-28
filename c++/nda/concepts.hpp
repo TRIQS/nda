@@ -72,7 +72,11 @@ concept StdArrayOfLong = details::is_std_array_of_long_v<std::decay_t<T>>;
 
 /// Check if S is an arthmetic or complex type
 template <typename S>
-concept Scalar = nda::is_scalar_v<std::decay_t<S>>;
+concept Scalar = nda::is_scalar_v<S>;
+
+/// Check if S is either double of complex
+template <typename S>
+concept DoubleOrComplex = nda::is_double_or_complex_v<S>;
 
 // -------   InstantiationOf   ----------
 
@@ -97,9 +101,9 @@ namespace mem {
   };
 
   /// Concept of a handle on a block of memory
-  template <typename H, typename T = typename H::value_type>
+  template <typename H, typename T = typename std::remove_cvref_t<H>::value_type>
   concept Handle = requires(H const &h) {
-    requires std::is_same_v<typename H::value_type, T>;
+    requires std::is_same_v<typename std::remove_cvref_t<H>::value_type, T>;
     { h.is_null() }
     noexcept->std::same_as<bool>;
     { h.data() }
@@ -108,9 +112,9 @@ namespace mem {
   };
 
   /// Concept of a handle that owns a block of memory
-  template <typename H, typename T = typename H::value_type>
+  template <typename H, typename T = typename std::remove_cvref_t<H>::value_type>
   concept OwningHandle = Handle<H, T> and requires(H const &h) {
-    requires not std::is_const_v<typename H::value_type>;
+    requires not std::is_const_v<typename std::remove_cvref_t<H>::value_type>;
     { h.size() }
     noexcept->std::same_as<long>;
   };
@@ -134,18 +138,20 @@ concept Array = requires(A const &a) {
 };
 
 /// Check if A is an Array and exposes its `data()` and its `indexmap().strides()`
-template <typename A>
+template <typename A, typename A_t = std::remove_cvref_t<A>>
 concept MemoryArray = Array<A> && requires(A &a) {
 
   // Has a storage_t that is a memory handle
-  typename A::storage_t;
-  mem::Handle<typename A::storage_t>;
+  typename A_t::storage_t;
+  mem::Handle<typename A_t::storage_t>;
 
   // There is a member-type value_type that maybe const
-  typename A::value_type;
+  typename A_t::value_type;
 
   // We can acquire the pointer to the underlying data
-  { a.data() } -> std::same_as<std::conditional_t<std::is_const_v<A> || std::is_const_v<typename A::value_type>, const get_value_t<A>, get_value_t<A>> *>;
+  {
+    a.data()
+    } -> std::same_as<std::conditional_t<std::is_const_v<A> || std::is_const_v<typename A_t::value_type>, const get_value_t<A>, get_value_t<A>> *>;
 
   // Exposes the memory stride for each dimension
   { a.indexmap().strides() } -> StdArrayOfLong;
@@ -165,6 +171,22 @@ concept MemoryArrayOfRank = MemoryArray<A> and(get_rank<A> == R);
 template <typename AS>
 concept ArrayOrScalar = Array<AS> or Scalar<AS>;
 
+/// Check if M is a Matrix, i.e. ArrayOfRank<2>
+template <typename M>
+concept Matrix = ArrayOfRank<M, 2>;
+
+/// Check if M is a Vector, i.e. ArrayOfRank<1>
+template <typename V>
+concept Vector = ArrayOfRank<V, 1>;
+
+/// Check if M is a MemoryMatrix, i.e. MemoryArrayOfRank<2>
+template <typename M>
+concept MemoryMatrix = MemoryArrayOfRank<M, 2>;
+
+/// Check if V is a MemoryVector, i.e. MemoryArrayOfRank<1>
+template <typename V>
+concept MemoryVector = MemoryArrayOfRank<V, 1>;
+
 //---------ArrayInitializer  ----------
 // The concept of what can be used to init an array
 // it must have
@@ -178,7 +200,7 @@ concept ArrayInitializer = requires(A const &a) {
 
   { a.shape() } -> StdArrayOfLong;
 
-  typename A::value_type;
+  typename std::remove_cvref_t<A>::value_type;
 
   // FIXME not perfect, it should accept any layout ??
   requires MemoryArray<B> && requires(B & b) { a.invoke(b); };

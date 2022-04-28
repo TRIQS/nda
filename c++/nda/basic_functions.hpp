@@ -25,19 +25,23 @@ namespace nda {
   /// Make an array of the given dimensions and zero-initialized values / memory.
   /// Return a scalar for the case of rank zero.
   /// For a more specific array type consider using basic_array<...>::zeros
-  template <typename T, std::integral Int, auto Rank>
+  template <typename T, mem::AddressSpace AdrSp = mem::Host, std::integral Int, auto Rank>
   auto zeros(std::array<Int, Rank> const &shape) {
+    static_assert(AdrSp != mem::None);
+
     // For Rank == 0 we should return the underlying scalar_t
     if constexpr (Rank == 0)
       return T{};
-    else
+    else if constexpr (AdrSp == mem::Host)
       return array<T, Rank>::zeros(shape);
+    else
+      return cuarray<T, Rank>::zeros(shape);
   }
 
   ///
-  template <typename T, std::integral... Int>
+  template <typename T, mem::AddressSpace AdrSp = mem::Host, std::integral... Int>
   auto zeros(Int... i) {
-    return zeros<T>(std::array<long, sizeof...(Int)>{i...});
+    return zeros<T, AdrSp>(std::array<long, sizeof...(Int)>{i...});
   }
 
   // --------------------------- ones ------------------------

@@ -15,6 +15,8 @@
 // Authors: Olivier Parcollet, Nils Wentzell
 
 #pragma once
+#include "../layout/policies.hpp"
+#include "../basic_array.hpp"
 #include "../blas/gemm.hpp"
 #include "../blas/gemv.hpp"
 
@@ -31,23 +33,24 @@ namespace nda {
 
   template <typename L, typename R>
   auto matmul(L &&l, R &&r) {
-    using L_t = std::decay_t<L>; // L, R can be lvalue references
-    using R_t = std::decay_t<R>;
-
     EXPECTS_WITH_MESSAGE(l.shape()[1] == r.shape()[0], "Matrix product : dimension mismatch in matrix product " << l << " " << r);
 
-    using promoted_type = decltype(get_value_t<L_t>{} * get_value_t<R_t>{});
-    matrix<promoted_type> result(l.shape()[0], r.shape()[1]);
+    static constexpr auto L_adr_spc = mem::get_addr_space<L>;
+    static constexpr auto R_adr_spc = mem::get_addr_space<R>;
+    static_assert(L_adr_spc != mem::None);
+    static_assert(R_adr_spc != mem::None);
 
-    if constexpr (blas::is_blas_lapack_v<promoted_type>) {
+    using promoted_type = decltype(get_value_t<L>{} * get_value_t<R>{});
+    using matrix_t      = basic_array<promoted_type, 2, C_layout /*FIXME*/, 'M', nda::heap<mem::combine<L_adr_spc, R_adr_spc>>>;
+    auto result         = matrix_t(l.shape()[0], r.shape()[1]);
 
-      auto as_container = [](auto const &a) -> decltype(auto) {
-        //FIXMEM C++20 LAMBDA
-        using A = std::decay_t<decltype(a)>;
+    if constexpr (is_blas_lapack_v<promoted_type>) {
+
+      auto as_container = []<typename A>(A const &a) -> decltype(auto) {
         if constexpr (is_regular_or_view_v<A> and std::is_same_v<get_value_t<A>, promoted_type>)
           return a;
         else
-          return matrix<promoted_type>{a};
+          return matrix_t{a};
       };
 
       // MSAN has no way to know that we are calling with beta = 0, hence
@@ -77,23 +80,23 @@ namespace nda {
 
   template <typename L, typename R>
   auto matvecmul(L &&l, R &&r) {
-    using L_t = std::decay_t<L>; // L, R can be lvalue references
-    using R_t = std::decay_t<R>;
-
     EXPECTS_WITH_MESSAGE(l.shape()[1] == r.shape()[0], "Matrix Vector product : dimension mismatch in matrix product " << l << " " << r);
 
-    using promoted_type = decltype(get_value_t<L_t>{} * get_value_t<R_t>{});
-    array<promoted_type, 1> result(l.shape()[0]);
+    static constexpr auto L_adr_spc = mem::get_addr_space<L>;
+    static constexpr auto R_adr_spc = mem::get_addr_space<R>;
+    static_assert(L_adr_spc != mem::None);
+    static_assert(R_adr_spc != mem::None);
 
-    if constexpr (blas::is_blas_lapack_v<promoted_type>) {
+    using promoted_type = decltype(get_value_t<L>{} * get_value_t<R>{});
+    vector<promoted_type, heap<L_adr_spc>> result(l.shape()[0]);
 
-      auto as_container = [](auto const &a) -> decltype(auto) {
-        //FIXMEM C++20 LAMBDA
-        using A = std::decay_t<decltype(a)>;
+    if constexpr (is_blas_lapack_v<promoted_type>) {
+
+      auto as_container = []<typename A>(A const &a) -> decltype(auto) {
         if constexpr (is_regular_or_view_v<A> and std::is_same_v<get_value_t<A>, promoted_type>)
           return a;
         else
-          return array<promoted_type, get_rank<A>>{a};
+          return basic_array<promoted_type, get_rank<A>, C_layout, 'A', heap<L_adr_spc>>{a};
       };
 
       // MSAN has no way to know that we are calling with beta = 0, hence
