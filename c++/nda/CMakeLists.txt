@@ -37,6 +37,10 @@ target_link_libraries(${PROJECT_NAME}_c PUBLIC h5::h5_c)
 # Link against MPI C++ Interface
 target_link_libraries(${PROJECT_NAME}_c PUBLIC mpi::mpi_c)
 
+# Link against CuBLAS
+find_package(CUDAToolkit REQUIRED)
+target_link_libraries(${PROJECT_NAME}_c PUBLIC CUDA::cublas)
+
 
 # ========= Blas / Lapack ==========
 

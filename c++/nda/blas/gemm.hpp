@@ -18,6 +18,7 @@
 #include <complex>
 #include "tools.hpp"
 #include "interface/cxx_interface.hpp"
+#include "../mem/address_space.hpp"
 
 namespace nda::blas {
 
@@ -30,8 +31,7 @@ namespace nda::blas {
    *
    * \private : DO NOT DOCUMENT, testing only ??
    */
-  template <MatrixView A, MatrixView B, MatrixView Out>
-
+  template <Matrix A, Matrix B, MemoryMatrix Out>
   void gemm_generic(typename A::value_type alpha, A const &a, B const &b, typename A::value_type beta, Out &c) {
 
     EXPECTS(a.extent(1) == b.extent(0));
@@ -56,10 +56,8 @@ namespace nda::blas {
    *       * c has the correct dimension given a, b. 
    *         gemm does not resize the object, 
    */
-  template <MatrixView A, MatrixView B, MatrixView C>
-
-  requires(have_same_value_type_v<A, B, C> and is_blas_lapack_v<typename A::value_type>)
-
+  template <MemoryMatrix A, MemoryMatrix B, MemoryMatrix C>
+  requires(have_same_value_type_v<A, B, C> and is_blas_lapack_v<get_value_t<A>>)
   void gemm(typename A::value_type alpha, A const &a, B const &b, typename A::value_type beta, C &&c) {
 
     using C_t = std::decay_t<C>;
@@ -73,6 +71,13 @@ namespace nda::blas {
     EXPECTS(b.indexmap().min_stride() == 1);
     EXPECTS(c.indexmap().min_stride() == 1);
 
+    static constexpr auto A_adr_spc = mem::get_addr_space<A>;
+    static constexpr auto B_adr_spc = mem::get_addr_space<B>;
+    static constexpr auto C_adr_spc = mem::get_addr_space<C>;
+
+    static_assert(A_adr_spc == B_adr_spc && B_adr_spc == C_adr_spc);
+    static constexpr bool on_host = (A_adr_spc == nda::mem::Host);
+
     // We need to see if C is in Fortran order or C order
     if constexpr (C_t::is_stride_order_C()) {
       // C order. We compute the transpose of the product in this case
@@ -82,7 +87,13 @@ namespace nda::blas {
       int m        = (trans_a == 'N' ? get_n_rows(b) : get_n_cols(b));
       int n        = (trans_b == 'N' ? get_n_cols(a) : get_n_rows(a));
       int k        = (trans_a == 'N' ? get_n_cols(b) : get_n_rows(b));
-      f77::gemm(trans_a, trans_b, m, n, k, alpha, b.data(), get_ld(b), a.data(), get_ld(a), beta, c.data(), get_ld(c));
+
+      if constexpr (on_host) {
+        f77::gemm(trans_a, trans_b, m, n, k, alpha, b.data(), get_ld(b), a.data(), get_ld(a), beta, c.data(), get_ld(c));
+      } else { // on device
+        cuda::gemm(trans_a, trans_b, m, n, k, alpha, b.data(), get_ld(b), a.data(), get_ld(a), beta, c.data(), get_ld(c));
+      }
+
     } else {
       // C is in fortran or, we compute the product.
       char trans_a = get_trans(a, false);
@@ -90,7 +101,12 @@ namespace nda::blas {
       int m        = (trans_a == 'N' ? get_n_rows(a) : get_n_cols(a));
       int n        = (trans_b == 'N' ? get_n_cols(b) : get_n_rows(b));
       int k        = (trans_a == 'N' ? get_n_cols(a) : get_n_rows(a));
-      f77::gemm(trans_a, trans_b, m, n, k, alpha, a.data(), get_ld(a), b.data(), get_ld(b), beta, c.data(), get_ld(c));
+
+      if constexpr (on_host) {
+        f77::gemm(trans_a, trans_b, m, n, k, alpha, a.data(), get_ld(a), b.data(), get_ld(b), beta, c.data(), get_ld(c));
+      } else { // on device
+        cuda::gemm(trans_a, trans_b, m, n, k, alpha, a.data(), get_ld(a), b.data(), get_ld(b), beta, c.data(), get_ld(c));
+      }
     }
   }
 

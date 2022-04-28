@@ -16,11 +16,13 @@
 
 #pragma once
 
+#include "../concepts.hpp"
+
 namespace nda::lapack {
 
   ///
-  template <MatrixView A, MatrixView B, MatrixView C>
-  int gelss(A &a, B &b, C &c, double rcond, int &rank) requires(nda::blas::have_same_element_type_and_it_is_blas_type_v<A, B, C>) {
+  template <MemoryMatrix A, MemoryMatrix B, MemoryMatrix C>
+  requires(have_same_value_type_v<A, B, C> and is_blas_lapack_v<get_value_t<A>>) int gelss(A &a, B &b, C &c, double rcond, int &rank) {
 
     int info = 0;
 
