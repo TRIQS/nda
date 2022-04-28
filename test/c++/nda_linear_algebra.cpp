@@ -16,7 +16,7 @@
 
 #include "test_common.hpp"
 #include "nda/blas/gemm.hpp"
-#include "nda/blas/dot.hpp"
+#include "nda/linalg/dot.hpp"
 #include <nda/lapack.hpp>
 
 #include <nda/linalg/det_and_inverse.hpp>
@@ -28,7 +28,7 @@ using nda::matrix;
 using nda::matrix_view;
 using nda::range;
 namespace blas = nda::blas;
-using nda::blas::dot;
+using nda::dot;
 
 // ==============================================================
 
@@ -74,7 +74,7 @@ void test_matmul() {
 
   M3  = 0;
   M3b = 0; // for MSAN
-  if constexpr (nda::blas::is_blas_lapack_v<T>) { blas::gemm(1, M1, M2, 0, M3b); }
+  if constexpr (nda::is_blas_lapack_v<T>) { blas::gemm(1, M1, M2, 0, M3b); }
   M3 = M1 * M2;
 
   auto M4 = M3;
@@ -84,7 +84,7 @@ void test_matmul() {
       for (int j = 0; j < 4; ++j) M4(i, j) += M1(i, k) * M2(k, j);
 
   EXPECT_ARRAY_NEAR(M4, M3, 1.e-13);
-  if constexpr (nda::blas::is_blas_lapack_v<T>) { EXPECT_ARRAY_NEAR(M4, M3b, 1.e-13); }
+  if constexpr (nda::is_blas_lapack_v<T>) { EXPECT_ARRAY_NEAR(M4, M3b, 1.e-13); }
   // recheck gemm_generic
   blas::gemm_generic(1, M1, M2, 0, M4);
   EXPECT_ARRAY_NEAR(M4, M3, 1.e-13);

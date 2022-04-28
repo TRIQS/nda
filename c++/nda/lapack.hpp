@@ -23,17 +23,9 @@
 
 /// LAPACK Interface
 namespace nda::lapack {
-
   using blas::get_ld;
   using blas::get_n_cols;
   using blas::get_n_rows;
-  using blas::have_same_value_type_v;
-  using blas::is_blas_lapack_v;
-
-  using blas::IsDoubleOrComplex;
-  using blas::MatrixView;
-  using blas::VectorView;
-
 } // namespace nda::lapack
 
 #include "lapack/gelss.hpp"

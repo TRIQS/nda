@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include "../blas/tools.hpp"
+
 namespace nda::lapack {
 
   /**
@@ -37,9 +39,8 @@ namespace nda::lapack {
     static_assert(is_regular_or_view_v<V2> and (V2::rank == 1), "gtsv: V2 must be an array/view of rank 1");
     static_assert(is_regular_or_view_v<V3> and (V3::rank == 1), "gtsv: V3 must be an array/view of rank 1");
     static_assert(is_regular_or_view_v<M> and (M::rank == 1 or M::rank == 2), "gtsv: M must be an matrix/array/view of rank  1 or 2");
-    static_assert(is_blas_lapack_v<typename M::value_type>, "Matrices must have the same element type and it must be double, complex ...");
-    static_assert(blas::have_same_element_type_and_it_is_blas_type_v<V1, V2, V3, M>,
-                  "All arguments must have the same element type and it must be double, complex ...");
+    static_assert(have_same_value_type_v<V1, V2, V3, M>, "Arrays must have the same value-type");
+    static_assert(is_double_or_complex_v<get_value_t<V1>>, "Arrays must have value-type double or complex");
 
     int N    = d.extent(0);
     int NRHS = (M::rank == 2 ? b.extent(1) : 1);
