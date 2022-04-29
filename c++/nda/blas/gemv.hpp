@@ -61,9 +61,7 @@ namespace nda::blas {
     static constexpr auto A_adr_spc = mem::get_addr_space<A>;
     static constexpr auto B_adr_spc = mem::get_addr_space<B>;
     static constexpr auto C_adr_spc = mem::get_addr_space<C>;
-
     static_assert(A_adr_spc == B_adr_spc && B_adr_spc == C_adr_spc);
-    static constexpr bool on_host = (A_adr_spc == nda::mem::Host);
 
     EXPECTS(a.extent(1) == b.extent(0));
     EXPECTS(a.extent(0) == c.extent(0));
@@ -73,7 +71,7 @@ namespace nda::blas {
     int m2       = get_n_cols(a);
     int lda      = get_ld(a);
 
-    if constexpr (on_host) {
+    if constexpr (mem::on_host<A>) {
       f77::gemv(trans_a, m1, m2, alpha, a.data(), lda, b.data(), b.indexmap().strides()[0], beta, c.data(), c.indexmap().strides()[0]);
     } else {
       cuda::gemv(trans_a, m1, m2, alpha, a.data(), lda, b.data(), b.indexmap().strides()[0], beta, c.data(), c.indexmap().strides()[0]);
