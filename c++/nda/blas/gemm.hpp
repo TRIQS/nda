@@ -74,9 +74,7 @@ namespace nda::blas {
     static constexpr auto A_adr_spc = mem::get_addr_space<A>;
     static constexpr auto B_adr_spc = mem::get_addr_space<B>;
     static constexpr auto C_adr_spc = mem::get_addr_space<C>;
-
     static_assert(A_adr_spc == B_adr_spc && B_adr_spc == C_adr_spc);
-    static constexpr bool on_host = (A_adr_spc == nda::mem::Host);
 
     // We need to see if C is in Fortran order or C order
     if constexpr (C_t::is_stride_order_C()) {
@@ -88,7 +86,7 @@ namespace nda::blas {
       int n        = (trans_b == 'N' ? get_n_cols(a) : get_n_rows(a));
       int k        = (trans_a == 'N' ? get_n_cols(b) : get_n_rows(b));
 
-      if constexpr (on_host) {
+    if constexpr (mem::on_host<A>) {
         f77::gemm(trans_a, trans_b, m, n, k, alpha, b.data(), get_ld(b), a.data(), get_ld(a), beta, c.data(), get_ld(c));
       } else { // on device
         cuda::gemm(trans_a, trans_b, m, n, k, alpha, b.data(), get_ld(b), a.data(), get_ld(a), beta, c.data(), get_ld(c));
@@ -102,7 +100,7 @@ namespace nda::blas {
       int n        = (trans_b == 'N' ? get_n_cols(b) : get_n_rows(b));
       int k        = (trans_a == 'N' ? get_n_cols(a) : get_n_rows(a));
 
-      if constexpr (on_host) {
+    if constexpr (mem::on_host<A>) {
         f77::gemm(trans_a, trans_b, m, n, k, alpha, a.data(), get_ld(a), b.data(), get_ld(b), beta, c.data(), get_ld(c));
       } else { // on device
         cuda::gemm(trans_a, trans_b, m, n, k, alpha, a.data(), get_ld(a), b.data(), get_ld(b), beta, c.data(), get_ld(c));
