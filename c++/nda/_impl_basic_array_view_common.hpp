@@ -375,8 +375,8 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
         }
       }
     }
-    if constexpr (not both_on_host) NDA_RUNTIME_ERROR << "Fallback to elementwise assignment not implemented for arrays on the GPU";
   }
+  if constexpr (mem::on_device<self_t> || mem::on_device<RHS>) NDA_RUNTIME_ERROR << "Fallback to elementwise assignment not implemented for arrays on the GPU";
   // Fallback to elementwise assignment
   auto l = [this, &rhs](auto const &...args) { (*this)(args...) = rhs(args...); };
   nda::for_each(shape(), l);
