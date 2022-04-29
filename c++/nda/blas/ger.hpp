@@ -49,9 +49,7 @@ namespace nda::blas {
     static constexpr auto X_adr_spc = mem::get_addr_space<X>;
     static constexpr auto Y_adr_spc = mem::get_addr_space<Y>;
     static constexpr auto M_adr_spc = mem::get_addr_space<M>;
-
     static_assert(X_adr_spc == Y_adr_spc && Y_adr_spc == M_adr_spc);
-    static constexpr bool on_host = (X_adr_spc == nda::mem::Host);
 
     // if in C, we need to call fortran with transposed matrix
     if (std::remove_cvref_t<M>::layout_t::is_stride_order_C()) {
@@ -59,7 +57,7 @@ namespace nda::blas {
       return;
     }
 
-    if constexpr (on_host) {
+    if constexpr (mem::on_host<X>) {
       f77::ger(get_n_rows(m), get_n_cols(m), alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], m.data(), get_ld(m));
     } else {
       cuda::ger(get_n_rows(m), get_n_cols(m), alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], m.data(), get_ld(m));
