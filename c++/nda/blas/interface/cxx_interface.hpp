@@ -69,7 +69,7 @@ namespace nda::blas::cuda {
             const std::complex<double> *B, int LDB, std::complex<double> beta, std::complex<double> *C, int LDC);
 
   void gemv(char trans, int M, int N, double alpha, const double *A, int LDA, const double *x, int incx, double beta, double *Y, int incy);
-  void gemv(char trans, int M, int N, std::complex<double> alpha, const std::complex<double> *A, int &LDA, const std::complex<double> *x, int incx,
+  void gemv(char trans, int M, int N, std::complex<double> alpha, const std::complex<double> *A, int LDA, const std::complex<double> *x, int incx,
             std::complex<double> beta, std::complex<double> *Y, int incy);
 
   void ger(int M, int N, double alpha, const double *x, int incx, const double *Y, int incy, double *A, int LDA);
