@@ -34,13 +34,11 @@ namespace nda::blas {
 
       static constexpr auto X_adr_spc = mem::get_addr_space<X>;
       static constexpr auto Y_adr_spc = mem::get_addr_space<Y>;
-
       static_assert(X_adr_spc == Y_adr_spc);
-      static constexpr bool on_host = (X_adr_spc == nda::mem::Host);
 
       EXPECTS(x.shape() == y.shape());
 
-      if constexpr (on_host) {
+      if constexpr (mem::on_host<X>) {
         return f77::dot(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
       } else {
         return cuda::dot(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
@@ -60,15 +58,13 @@ namespace nda::blas {
 
       static constexpr auto X_adr_spc = mem::get_addr_space<X>;
       static constexpr auto Y_adr_spc = mem::get_addr_space<Y>;
-
       static_assert(X_adr_spc == Y_adr_spc);
-      static constexpr bool on_host = (X_adr_spc == nda::mem::Host);
 
       EXPECTS(x.shape() == y.shape());
 
       if constexpr (!is_complex_v<get_value_t<X>>) {
         return dot(x, y);
-      } else if constexpr (on_host) {
+      } else if constexpr (mem::on_host<X>) {
         return f77::dotc(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
       } else {
         return cuda::dotc(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);

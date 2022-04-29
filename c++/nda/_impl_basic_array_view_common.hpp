@@ -340,10 +340,8 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
 
   if constexpr (both_in_memory and same_stride_order) {
     static constexpr bool both_1d_strided = has_layout_strided_1d<self_t> and has_layout_strided_1d<RHS>;
-    static constexpr auto dst_adr_spc     = self_t::storage_t::address_space;
-    static constexpr auto src_adr_spc     = RHS::storage_t::address_space;
-    static constexpr bool both_on_host    = (dst_adr_spc == nda::mem::Host && src_adr_spc == nda::mem::Host);
     static constexpr bool same_value_type = std::is_same_v<value_type, std::remove_const_t<get_value_t<RHS>>>;
+    static constexpr bool both_on_host    = (mem::on_host<self_t> && mem::on_host<RHS>);
 
     if constexpr (both_on_host and both_1d_strided) { // -> vectorizable host copy
       for (long i = 0; i < size(); ++i) (*this)(_linear_index_t{i}) = rhs(_linear_index_t{i});

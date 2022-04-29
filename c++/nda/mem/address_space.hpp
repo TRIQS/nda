@@ -72,7 +72,16 @@ namespace nda::mem {
   template <typename F, typename... A>
   static constexpr AddressSpace get_addr_space<expr_call<F, A...>> = combine<get_addr_space<A>...>;
 
-  // Test Promotion for various cases:
+  // ------------- Additional helper traits -------------
+
+  template <typename T>
+  static constexpr bool on_host = (get_addr_space<T> == mem::Host);
+
+  template <typename T>
+  static constexpr bool on_device = (get_addr_space<T> == mem::Device || get_addr_space<T> == mem::Unified);
+
+  // ------------- Test Promotion for various cases ------------
+
   static_assert(combine<None, None> == None);
   static_assert(combine<Host, Host> == Host);
   static_assert(combine<None, Host> == Host);
