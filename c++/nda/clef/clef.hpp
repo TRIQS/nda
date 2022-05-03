@@ -131,9 +131,11 @@ namespace nda::clef {
   *  --------------------------------------------------------------------------------------------------- */
   template <typename T>
   constexpr bool is_lazy = false;
+  template <typename T> requires(!std::is_same_v<T, std::remove_cvref_t<T>>)
+  constexpr bool is_lazy<T> = is_lazy<std::remove_cvref_t<T>>;
 
   template <typename... Args>
-  constexpr bool is_any_lazy = (is_lazy<std::decay_t<Args>> or ...);
+  constexpr bool is_any_lazy = (is_lazy<Args> or ...);
 
   // FIXME : we should be this, much more precise
   template <typename... T>
