@@ -88,7 +88,7 @@ namespace nda {
    */
   template <typename A>
   ArrayInitializer<std::remove_reference_t<A>> auto mpi_scatter(A &&a, mpi::communicator c = {}, int root = 0,
-                                                                bool all = false) requires(is_regular_or_view_v<std::decay_t<A>>) {
+                                                                bool all = false) requires(is_regular_or_view_v<A>) {
 
     if (not a.is_contiguous()) NDA_RUNTIME_ERROR << "mpi operations require contiguous rhs.data() to be contiguous";
 

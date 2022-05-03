@@ -91,6 +91,8 @@ namespace nda {
   /// A trait to mark a class for its algebra : 'N' = None, 'A' = array, 'M' = matrix, 'V' = vector
   template <typename A>
   inline constexpr char get_algebra = 'N';
+  template <typename A> requires(!std::is_same_v<A, std::remove_cvref_t<A>>)
+  inline constexpr char get_algebra<A> = get_algebra<std::remove_cvref_t<A>>;
 
   // --------------------------- get_rank ------------------------
 
@@ -103,12 +105,16 @@ namespace nda {
   // Impl. trait to match the containers in requires. Match all regular containers (array, matrix)
   template <typename A>
   inline constexpr bool is_regular_v = false;
+  template <typename A> requires(!std::is_same_v<A, std::remove_cvref_t<A>>)
+  inline constexpr bool is_regular_v<A> = is_regular_v<std::remove_cvref_t<A>>;
 
   // ---------------------------  is_view_v------------------------
 
   // Impl. trait to match the containers in requires. Match all containers (array, matrix, view)
   template <typename A>
   inline constexpr bool is_view_v = false;
+  template <typename A> requires(!std::is_same_v<A, std::remove_cvref_t<A>>)
+  inline constexpr bool is_view_v<A> = is_view_v<std::remove_cvref_t<A>>;
 
   // ---------------------------  is_regular_or_view_v------------------------
 
@@ -188,13 +194,15 @@ namespace nda {
 
   template <typename A>
   inline constexpr layout_info_t get_layout_info = layout_info_t{};
+  template <typename A> requires(!std::is_same_v<A, std::remove_cvref_t<A>>)
+  inline constexpr layout_info_t get_layout_info<A> = get_layout_info<std::remove_cvref_t<A>>;
 
   template <typename A>
-  constexpr bool has_contiguous_layout = (has_contiguous(get_layout_info<std::decay_t<A>>.prop));
+  constexpr bool has_contiguous_layout = (has_contiguous(get_layout_info<A>.prop));
   template <typename A>
-  constexpr bool has_layout_strided_1d = (has_strided_1d(get_layout_info<std::decay_t<A>>.prop));
+  constexpr bool has_layout_strided_1d = (has_strided_1d(get_layout_info<A>.prop));
   template <typename A>
-  constexpr bool has_layout_smallest_stride_is_one = (has_smallest_stride_is_one(get_layout_info<std::decay_t<A>>.prop));
+  constexpr bool has_layout_smallest_stride_is_one = (has_smallest_stride_is_one(get_layout_info<A>.prop));
 
   // ---------------------- linear index  --------------------------------
 

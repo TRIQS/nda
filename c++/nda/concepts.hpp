@@ -60,13 +60,15 @@ namespace nda {
 namespace details {
   template <typename T>
   constexpr bool is_std_array_of_long_v = false;
+  template <typename T> requires(!std::is_same_v<T, std::remove_cvref_t<T>>)
+  constexpr bool is_std_array_of_long_v<T> = is_std_array_of_long_v<std::remove_cvref_t<T>>;
   template <auto R>
   constexpr bool is_std_array_of_long_v<std::array<long, R>> = true;
 } // namespace details
 
 /// Check if T is an 'std::array' of long
 template <class T>
-concept StdArrayOfLong = details::is_std_array_of_long_v<std::decay_t<T>>;
+concept StdArrayOfLong = details::is_std_array_of_long_v<T>;
 
 // -------   Scalar   ----------
 

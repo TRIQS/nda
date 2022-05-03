@@ -114,14 +114,14 @@ namespace nda {
 
   // for matrices ...
   template <typename A>
-  auto transpose(A &&a) requires(is_regular_or_view_v<std::decay_t<A>> and (std::decay_t<A>::rank == 2)) {
+  auto transpose(A &&a) requires(is_regular_or_view_v<A> and (get_rank<A> == 2)) {
     return permuted_indices_view<encode(std::array{1, 0})>(std::forward<A>(a));
   }
 
   // Transposed_view swap two indices
   template <int I, int J, typename A>
-  auto transposed_view(A &&a) requires(is_regular_or_view_v<std::decay_t<A>>) {
-    return permuted_indices_view<encode(permutations::transposition<std::decay_t<A>::rank>(I, J))>(std::forward<A>(a));
+  auto transposed_view(A &&a) requires(is_regular_or_view_v<A>) {
+    return permuted_indices_view<encode(permutations::transposition<get_rank<A>>(I, J))>(std::forward<A>(a));
   }
 
   // --------------- Grouping indices------------------------
@@ -159,7 +159,7 @@ namespace nda {
 
   // Take an array or view and add N dimensions of size 1 in the fastest indices
   template <int N, typename A>
-  auto reinterpret_add_fast_dims_of_size_one(A &&a) requires(nda::is_regular_or_view_v<std::decay_t<A>>) {
+  auto reinterpret_add_fast_dims_of_size_one(A &&a) requires(nda::is_regular_or_view_v<A>) {
 
     auto const &lay = a.indexmap();
     using lay_t     = std::decay_t<decltype(lay)>;
