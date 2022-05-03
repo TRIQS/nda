@@ -30,14 +30,13 @@ namespace nda::lapack {
    */
   template <typename M, char Algebra, typename CP>
   [[nodiscard]] int getri(M &&m, basic_array<int, 1, C_layout, Algebra, CP> &ipiv) {
-    using M_t = std::decay_t<M>;
-    static_assert(is_regular_or_view_v<M_t>, "getrf: M must be a matrix, matrix_view, array or array_view of rank 2");
-    static_assert(M_t::rank == 2, "M must be of rank 2");
-    static_assert(is_blas_lapack_v<typename M_t::value_type>, "Matrices must have the same element type and it must be double, complex ...");
+    static_assert(is_regular_or_view_v<M>, "getrf: M must be a matrix, matrix_view, array or array_view of rank 2");
+    static_assert(std::decay_t<M>::rank == 2, "M must be of rank 2");
+    static_assert(is_blas_lapack_v<get_value_t<M>>, "Matrices must have the same element type and it must be double, complex ...");
 
     EXPECTS(ipiv.size() >= std::min(m.extent(0), m.extent(1)));
 
-    using T  = typename M_t::value_type;
+    using T  = typename std::decay_t<M>::value_type;
     int info = 0;
     std::array<T, 2> work1{0, 0}; // always init for MSAN and clang-tidy ...
 

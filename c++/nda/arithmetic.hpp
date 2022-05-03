@@ -15,6 +15,7 @@
 // Authors: Olivier Parcollet, Nils Wentzell
 
 #pragma once
+#include "concepts.hpp"
 #include "linalg/matmul.hpp"
 #include "linalg/det_and_inverse.hpp"
 
@@ -43,11 +44,11 @@ namespace nda {
 
   // get_algebra
   template <char OP, typename L>
-  inline constexpr char get_algebra<expr_unary<OP, L>> = get_algebra<std::decay_t<L>>;
+  inline constexpr char get_algebra<expr_unary<OP, L>> = get_algebra<L>;
 
   // get_layout_info
   template <char OP, typename L>
-  inline constexpr layout_info_t get_layout_info<expr_unary<OP, L>> = get_layout_info<std::decay_t<L>>;
+  inline constexpr layout_info_t get_layout_info<expr_unary<OP, L>> = get_layout_info<L>;
 
   // -------------------------------------------------------------------------------------------
   //                             binary expressions
@@ -63,14 +64,14 @@ namespace nda {
     using R_t = std::decay_t<R>;
 
     // FIXME : we should use is_scalar_for_v but the trait needs work to accomodate scalar L or R
-    static constexpr bool l_is_scalar = nda::is_scalar_v<L_t>;
-    static constexpr bool r_is_scalar = nda::is_scalar_v<R_t>;
-    static constexpr char algebra     = (l_is_scalar ? get_algebra<R_t> : get_algebra<L_t>);
+    static constexpr bool l_is_scalar = nda::is_scalar_v<L>;
+    static constexpr bool r_is_scalar = nda::is_scalar_v<R>;
+    static constexpr char algebra     = (l_is_scalar ? get_algebra<R> : get_algebra<L>);
 
     static constexpr layout_info_t compute_layout_info() {
-      if (l_is_scalar) return (algebra == 'A' ? get_layout_info<R_t> : layout_info_t{}); // 1 as an array has all flags, it is just 1
-      if (r_is_scalar) return (algebra == 'A' ? get_layout_info<L_t> : layout_info_t{}); // 1 as a matrix does not, as it is diagonal only.
-      return get_layout_info<R_t> & get_layout_info<L_t>;                                // default case. Take the logical and of all flags
+      if (l_is_scalar) return (algebra == 'A' ? get_layout_info<R> : layout_info_t{}); // 1 as an array has all flags, it is just 1
+      if (r_is_scalar) return (algebra == 'A' ? get_layout_info<L> : layout_info_t{}); // 1 as a matrix does not, as it is diagonal only.
+      return get_layout_info<R> & get_layout_info<L>;                                  // default case. Take the logical and of all flags
     }
 
     //  --- shape ---
@@ -228,8 +229,8 @@ namespace nda {
 
   template <Array L, Array R>
   auto operator*(L &&l, R &&r) {
-    static constexpr char l_algebra = get_algebra<std::decay_t<L>>;
-    static constexpr char r_algebra = get_algebra<std::decay_t<R>>;
+    static constexpr char l_algebra = get_algebra<L>;
+    static constexpr char r_algebra = get_algebra<R>;
     static_assert(l_algebra != 'V', "Error Can not multiply vector by an array or a matrix");
 
     // three cases (with algebras...) :  A * A or M * M or M * V
@@ -271,8 +272,8 @@ namespace nda {
 
   template <Array L, Array R>
   Array auto operator/(L &&l, R &&r) {
-    static constexpr char l_algebra = get_algebra<std::decay_t<L>>;
-    static constexpr char r_algebra = get_algebra<std::decay_t<R>>;
+    static constexpr char l_algebra = get_algebra<L>;
+    static constexpr char r_algebra = get_algebra<R>;
     static_assert(l_algebra != 'V', "Error Can not divide vector by an array or a matrix");
 
     // two cases (with algebras...) :  A / A or M / M
@@ -288,8 +289,7 @@ namespace nda {
     // M / M
     if constexpr (l_algebra == 'M') {
       static_assert(r_algebra == 'M', "Error Can only divide a matrix by a matrix (or scalar)");
-      using R_t = std::decay_t<R>;
-      return std::forward<L>(l) * inverse(matrix<get_value_t<R_t>>{std::forward<R>(r)});
+      return std::forward<L>(l) * inverse(matrix<get_value_t<R>>{std::forward<R>(r)});
     }
   }
 
@@ -302,10 +302,9 @@ namespace nda {
 
   template <Scalar S, Array A>
   Array auto operator/(S &&s, A &&a) {
-    using A_t                     = std::decay_t<A>;
-    static constexpr char algebra = get_algebra<A_t>;
+    static constexpr char algebra = get_algebra<A>;
     if constexpr (algebra == 'M')
-      return s * inverse(matrix<get_value_t<A_t>>{std::forward<A>(a)});
+      return s * inverse(matrix<get_value_t<A>>{std::forward<A>(a)});
     else
       return expr<'/', std::decay_t<S>, A>{s, std::forward<A>(a)};
   }
