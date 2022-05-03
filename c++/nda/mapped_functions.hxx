@@ -43,7 +43,7 @@
   /// Maps @ onto the array
   /// \ingroup ArrayNoMatrixFunction
   template <Array A>
-  auto @(A &&a) requires(get_algebra<std::decay_t<A>> != 'M') {
+  auto @(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
          using std::@;
@@ -126,7 +126,7 @@ namespace nda {
   /// Maps exp onto the array
   /// \ingroup ArrayNoMatrixFunction
   template <Array A>
-  auto exp(A &&a) requires(get_algebra<std::decay_t<A>> != 'M') {
+  auto exp(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
          using std::exp;
@@ -137,7 +137,7 @@ namespace nda {
   /// Maps cos onto the array
   /// \ingroup ArrayNoMatrixFunction
   template <Array A>
-  auto cos(A &&a) requires(get_algebra<std::decay_t<A>> != 'M') {
+  auto cos(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
          using std::cos;
@@ -148,7 +148,7 @@ namespace nda {
   /// Maps sin onto the array
   /// \ingroup ArrayNoMatrixFunction
   template <Array A>
-  auto sin(A &&a) requires(get_algebra<std::decay_t<A>> != 'M') {
+  auto sin(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
          using std::sin;
@@ -159,7 +159,7 @@ namespace nda {
   /// Maps tan onto the array
   /// \ingroup ArrayNoMatrixFunction
   template <Array A>
-  auto tan(A &&a) requires(get_algebra<std::decay_t<A>> != 'M') {
+  auto tan(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
          using std::tan;
@@ -170,7 +170,7 @@ namespace nda {
   /// Maps cosh onto the array
   /// \ingroup ArrayNoMatrixFunction
   template <Array A>
-  auto cosh(A &&a) requires(get_algebra<std::decay_t<A>> != 'M') {
+  auto cosh(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
          using std::cosh;
@@ -181,7 +181,7 @@ namespace nda {
   /// Maps sinh onto the array
   /// \ingroup ArrayNoMatrixFunction
   template <Array A>
-  auto sinh(A &&a) requires(get_algebra<std::decay_t<A>> != 'M') {
+  auto sinh(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
          using std::sinh;
@@ -192,7 +192,7 @@ namespace nda {
   /// Maps tanh onto the array
   /// \ingroup ArrayNoMatrixFunction
   template <Array A>
-  auto tanh(A &&a) requires(get_algebra<std::decay_t<A>> != 'M') {
+  auto tanh(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
          using std::tanh;
@@ -203,7 +203,7 @@ namespace nda {
   /// Maps acos onto the array
   /// \ingroup ArrayNoMatrixFunction
   template <Array A>
-  auto acos(A &&a) requires(get_algebra<std::decay_t<A>> != 'M') {
+  auto acos(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
          using std::acos;
@@ -214,7 +214,7 @@ namespace nda {
   /// Maps asin onto the array
   /// \ingroup ArrayNoMatrixFunction
   template <Array A>
-  auto asin(A &&a) requires(get_algebra<std::decay_t<A>> != 'M') {
+  auto asin(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
          using std::asin;
@@ -225,7 +225,7 @@ namespace nda {
   /// Maps atan onto the array
   /// \ingroup ArrayNoMatrixFunction
   template <Array A>
-  auto atan(A &&a) requires(get_algebra<std::decay_t<A>> != 'M') {
+  auto atan(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
          using std::atan;
@@ -236,7 +236,7 @@ namespace nda {
   /// Maps log onto the array
   /// \ingroup ArrayNoMatrixFunction
   template <Array A>
-  auto log(A &&a) requires(get_algebra<std::decay_t<A>> != 'M') {
+  auto log(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
          using std::log;
@@ -247,13 +247,11 @@ namespace nda {
   /// Maps sqrt onto the array
   /// \ingroup ArrayNoMatrixFunction
   template <Array A>
-  auto sqrt(A &&a) requires(get_algebra<std::decay_t<A>> != 'M') {
+  auto sqrt(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
          using std::sqrt;
          return sqrt(x);
        })(std::forward<A>(a));
   }
-
-
 }
