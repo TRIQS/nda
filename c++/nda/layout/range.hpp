@@ -19,6 +19,8 @@
 
 #include <itertools/itertools.hpp>
 
+#include "../traits.hpp"
+
 namespace nda {
 
   // Elevate range implementation from itertools
@@ -30,8 +32,12 @@ namespace nda {
   inline std::ostream &operator<<(std::ostream &os, range::all_t) noexcept { return os << "_"; }
   inline std::ostream &operator<<(std::ostream &os, ellipsis) noexcept { return os << "___"; }
 
-  // impl details : detects ellipsis in a argument pack
-  template <typename... T>
-  constexpr bool ellipsis_is_present = ((std::is_same_v<T, ellipsis> ? 1 : 0) + ... + 0); // +0 because it can be empty
+  // Detects ellipsis in template parameter pack
+  template <typename... Args>
+  constexpr bool ellipsis_is_present = is_any_of<ellipsis, std::remove_cvref_t<Args>...>;
+
+  // Detects ellipsis in template parameter pack
+  template <typename T>
+  constexpr bool is_range_or_ellipsis = is_any_of<std::remove_cvref_t<T>, range, range::all_t, ellipsis>;
 
 } // namespace nda
