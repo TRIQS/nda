@@ -23,7 +23,7 @@ namespace nda {
   // Forward declarations
   template <char OP, ArrayOrScalar L, ArrayOrScalar R>
   struct expr;
-  template <typename F, typename... A>
+  template <typename F, Array... A>
   struct expr_call;
 } // namespace nda
 
