@@ -16,6 +16,12 @@
 
 #pragma once
 
+#include <type_traits>
+#include <tuple>
+
+#include "traits.hpp"
+#include "layout/range.hpp"
+
 namespace nda {
 
   // lazy expression for mapping a function on arrays A
@@ -48,15 +54,9 @@ namespace nda {
     private: // FIXME C++20 lambda implementation details
     template <size_t... Is, typename... Args>
     [[gnu::always_inline]] [[nodiscard]] auto _call(std::index_sequence<Is...>, Args const &... args) const {
-      // a priori, we just need to return
-      // f(std::get<Is>(a)(args...)...)
-      // but if a(args) is a view, we can not always use f.
-      // It works if f is well written, i.e. it takes a temporary and forwards it, like
-      // f(auto &&x) { return ...}
-      // but if the user's function is badly written, like (auto const & x) { ...}
-      // which is quite natural for a simple function, then the temporary view will be dangling.
-      // So we take care of this case explicitly
-      if constexpr (is_regular_or_view_v<decltype(std::get<0>(a)(args...))>) { // we have views, same for all a...
+      // In the case that (args...) invokes a slice on the array
+      // we need to return an call_expr on the resulting view
+      if constexpr ((is_range_or_ellipsis<Args> or ... or false)) {
         return mapped<F>{f}(std::get<Is>(a)(args...)...);
       } else {
         return f(std::get<Is>(a)(args...)...);
