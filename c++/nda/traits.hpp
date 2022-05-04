@@ -37,6 +37,11 @@ namespace nda {
   template <template <typename...> class TMPLT, typename T>
   inline constexpr bool is_instantiation_of_v = is_instantiation_of<TMPLT, std::remove_cvref_t<T>>::value;
 
+  // --------------------------- Check if parameter pack contains any T ------------------------
+
+  template <typename T, typename... Args>
+  static constexpr bool is_any_of = (std::is_same_v<Args, T> or ... or false);
+
   // --------------------------- For error messages ------------------------
 
   // to prevent the static_assert to trigger only when instantiated
