@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <nda/nda.hpp>
+#include <nda/concepts.hpp>
 
 #include <cpp2py/py_converter.hpp>
 #include <cpp2py/numpy_proxy.hpp>
@@ -15,12 +16,12 @@ namespace nda::python {
   // NB : accepts ref, rvalue ref
   // AUR is array<T,R> or array_view<T, R>, but NOT a the Array concept.
   // It must be a container or a view.
-  template <typename AUR>
-  cpp2py::numpy_proxy make_numpy_proxy_from_array_or_view(AUR &&a) REQUIRES(is_regular_or_view_v<std::decay_t<AUR>>) {
+  template <MemoryArray AUR>
+  cpp2py::numpy_proxy make_numpy_proxy_from_array_or_view(AUR &&a) REQUIRES(is_regular_or_view_v<AUR>) {
 
     using A          = std::decay_t<AUR>;
-    using value_type = typename A::value_type;          // NB May be const
-    using T          = std::remove_const_t<value_type>; // The canonical type without the possible const
+    using value_type = typename A::value_type; // NB May be const
+    using T          = get_value_t<A>;         // The canonical type without the possible const
     static_assert(not std::is_reference_v<value_type>, "Logical Error");
 
     // If T is a type which has a native Numpy equivalent, or it is PyObject *  or pyref.
@@ -47,11 +48,13 @@ namespace nda::python {
       // it is not the job of this function to handle this.
       // We need to distinguish the special case where a is a RValue, in which case, the python will steal the ownership
       // by moving the elements one by one.
+
       nda::array<cpp2py::pyref, A::rank> aobj = map([](auto &&x) {
-        if constexpr (is_view_v<A> or std::is_reference_v<AUR>)
-          return cpp2py::py_converter<T>::c2py(x);
-        else // nda::array rvalue (i.e. AUR is an array, and NOT a ref, so it matches array &&. Be sure to move
+        if constexpr (is_regular_v<AUR> and !std::is_reference_v<AUR>)
+          // nda::array rvalue (i.e. AUR is an array, and NOT a ref, so it matches array &&) Be sure to move
           return cpp2py::py_converter<T>::c2py(std::move(x));
+        else
+          return cpp2py::py_converter<T>::c2py(x);
       })(a);
       return make_numpy_proxy_from_array_or_view(std::move(aobj));
     }
