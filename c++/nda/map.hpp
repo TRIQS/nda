@@ -19,13 +19,13 @@
 #include <type_traits>
 #include <tuple>
 
-#include "traits.hpp"
+#include "concepts.hpp"
 #include "layout/range.hpp"
 
 namespace nda {
 
   // lazy expression for mapping a function on arrays A
-  template <typename F, typename... A>
+  template <typename F, Array... A>
   struct expr_call;
 
   // impl details
@@ -35,7 +35,7 @@ namespace nda {
   }
 
   // algebra
-  template <typename F, typename... A>
+  template <typename F, Array... A>
   constexpr char get_algebra<expr_call<F, A...>> = _impl_find_common_algebra(get_algebra<std::decay_t<A>>...);
 
   //----------------------------
@@ -45,7 +45,7 @@ namespace nda {
 
   // a lazy expression of f(A...) where f is the function to map and A the arrays
   // e.g. f is sqrt(x) and there is one A, or f is min(x,y) and there are 2 A
-  template <typename F, typename... A>
+  template <typename F, Array... A>
   struct expr_call {
 
     F f;
@@ -92,7 +92,7 @@ namespace nda {
   struct mapped {
     F f;
 
-    template <typename A0, typename... A>
+    template <Array A0, Array... A>
     expr_call<F, A0, A...> operator()(A0 &&a0, A &&... a) const {
       EXPECTS(((a.shape() == a0.shape()) && ...)); // same shape
       return {f, {std::forward<A0>(a0), std::forward<A>(a)...}};
