@@ -23,7 +23,7 @@ namespace nda {
 
   template <typename T>
   auto real(T t) requires(nda::is_scalar_v<T>) {
-    if constexpr (mem::is_complex_v<T>) {
+    if constexpr (is_complex_v<T>) {
       return std::real(t);
     } else {
       return t;
@@ -32,7 +32,7 @@ namespace nda {
 
   template <typename T>
   auto conj(T t) requires(nda::is_scalar_v<T>) {
-    if constexpr (mem::is_complex_v<T>) {
+    if constexpr (is_complex_v<T>) {
       return std::conj(t);
     } else {
       return t;

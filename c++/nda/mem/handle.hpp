@@ -20,18 +20,12 @@
 #include <type_traits>
 #include <cstring>
 #include "./allocators.hpp"
+#include "./../traits.hpp"
 
 namespace nda::mem {
 
   //
   static constexpr bool init_dcmplx = true; // initialize dcomplex to 0 globally
-
-  // -------------- is_complex ----------------
-
-  template <typename T>
-  static constexpr bool is_complex_v = false;
-  template <typename T>
-  static constexpr bool is_complex_v<std::complex<T>> = true;
 
   // -------------- Utilities ---------------------------
 
