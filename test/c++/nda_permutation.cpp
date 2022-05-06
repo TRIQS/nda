@@ -34,7 +34,7 @@ TEST(Permutation, cycle) { //NOLINT
 
 namespace nda {
   // FIXME : MOVE UP
-  // Rotate the index n to 0, preserving the relative order of the other indices
+  // Rotate the lengths / strides for indices lower than N cyclically forward by one
   template <int N, typename A> //[[deprecated]]
   auto rotate_index_view(A &&a) {
     return permuted_indices_view<encode(nda::permutations::cycle<get_rank<A>>(-1, N + 1))>(std::forward<A>(a));
@@ -93,13 +93,13 @@ TEST(Permutation, Iterator) { //NOLINT
   }
 
   auto v = nda::rotate_index_view<2>(a);
-PRINT(v.iterator_rank);
   {
     auto it = v.begin();
 
-    for (int i = 0; i < v.extent(0); ++i)
-      for (int j = 0; j < v.extent(1); ++j)
-        for (int k = 0; k < v.extent(2); ++k)
+    // We traverse the view in a memory-contiguous way
+    for (int j = 0; j < v.extent(1); ++j)
+      for (int k = 0; k < v.extent(2); ++k)
+        for (int i = 0; i < v.extent(0); ++i)
           for (int l = 0; l < v.extent(3); ++l) { EXPECT_EQ(v(i, j, k, l), (*it++)); }
   }
 }
