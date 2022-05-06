@@ -157,7 +157,7 @@ namespace nda {
        : lay(a.shape()), sto{lay.size(), mem::do_not_initialize} {
       static_assert(std::is_constructible_v<value_type, get_value_t<A>>,
                     "Can not construct the array. ValueType can not be constructed from the value_type of the argument");
-      if constexpr (std::is_trivial_v<ValueType> or mem::is_complex_v<ValueType>) {
+      if constexpr (std::is_trivial_v<ValueType> or is_complex_v<ValueType>) {
         // simple type. the initialization was not necessary anyway.
         // we use the assign, including the optimization (1d strided, contiguous) possibly
         assign_from_ndarray(a);
@@ -199,7 +199,7 @@ namespace nda {
       // We can not assume that ValueType is default constructible. As before, we do not initialize,
       // and use placement new
       // https://godbolt.org/z/Lwic2o. Same code as = for basic type
-      // Alternative : if constexpr (std::is_trivial_v<ValueType> or mem::is_complex<ValueType>::value) for (auto const &x : l) *(sto.data() + lay(i++)) = x;
+      // Alternative : if constexpr (std::is_trivial_v<ValueType> or is_complex<ValueType>::value) for (auto const &x : l) *(sto.data() + lay(i++)) = x;
       for (auto const &x : l) { new (sto.data() + lay(i++)) ValueType{x}; }
     }
 
