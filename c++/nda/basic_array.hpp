@@ -24,8 +24,8 @@
 namespace nda {
 
   // forward for friend declaration
-  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, typename NewLayoutType>
-  auto map_layout_transform(basic_array<T, R, L, Algebra, ContainerPolicy> &&a, NewLayoutType const &new_layout);
+  template <MemoryArray A, typename NewLayoutType>
+  auto map_layout_transform(A &&a, NewLayoutType const &new_layout);
 
   // ---------------------- array--------------------------------
 
@@ -67,8 +67,8 @@ namespace nda {
     layout_t lay;
     storage_t sto;
 
-    template <typename U, int R, typename L, char A, typename C, typename NewLayoutType>
-    friend auto map_layout_transform(basic_array<U, R, L, A, C> &&a, NewLayoutType const &new_layout);
+    template <MemoryArray A, typename NewLayoutType>
+    friend auto map_layout_transform(A &&a, NewLayoutType const &new_layout);
 
     // private constructor for the friend
     basic_array(layout_t const &idxm, storage_t &&mem_handle) noexcept : lay{idxm}, sto{std::move(mem_handle)} {}
