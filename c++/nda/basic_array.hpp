@@ -401,7 +401,12 @@ namespace nda {
 
   template <Array A>
   basic_array(A &&a) -> basic_array<get_value_t<A>, get_rank<A>, C_layout, get_algebra<A>, heap<>>;
-  
+
+  // --- get_regular_t ---
+
+  template <typename T>
+  using get_regular_t = std::remove_reference_t<decltype(basic_array{std::declval<T>()})>;
+
 } // namespace nda
 
 #include "./layout_transforms.hpp"
