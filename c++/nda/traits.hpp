@@ -161,10 +161,8 @@ namespace nda {
   // Whether we can degrade the property. It is a partial order.
   // contiguous -> strided_1d  -> none
   // contiguous -> smallest_stride_is_one  -> none
-  /// \private
   inline constexpr bool layout_property_compatible(layout_prop_e from, layout_prop_e to) {
     if (from == layout_prop_e::contiguous) return true;
-    if (from == layout_prop_e::none) return (to == layout_prop_e::none);
     return ((to == layout_prop_e::none) or (to == from));
   }
 

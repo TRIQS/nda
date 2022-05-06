@@ -112,31 +112,21 @@ namespace nda {
     /// Shallow copy. It copies the *view*, not the data.
     basic_array_view(basic_array_view const &) = default;
 
-    ///
-    template <typename CP>
-    basic_array_view(basic_array<ValueType, Rank, LayoutPolicy, Algebra, CP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
-
-    ///
-    template <typename L, char A, typename CP>
-    explicit(requires_runtime_check<L>)
-    basic_array_view(basic_array<ValueType, Rank, L, A, CP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
-
-    ///
-    template <typename L, char A, typename AP, typename OP>
-    explicit(requires_runtime_check<L>)
-    basic_array_view(basic_array_view<ValueType, Rank, L, A, AP, OP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
-
-    ///
-    template <typename L, char A, typename CP>
-    explicit(requires_runtime_check<L>)
-    basic_array_view(basic_array<std::remove_const_t<ValueType>, Rank, L, A, CP> const &a) noexcept requires(std::is_const_v<ValueType>)
-       : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
-
-    ///
-    template <typename L, char A, typename AP, typename OP>
-    explicit(requires_runtime_check<L>)
-    basic_array_view(basic_array_view<std::remove_const_t<ValueType>, Rank, L, A, AP, OP> const &a) noexcept requires(std::is_const_v<ValueType>)
-       : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
+    /// Generic constructor from any MemoryArray type
+    template <MemoryArrayOfRank<Rank> A>
+    requires(
+       // Exclude construction from basic_array rvalue
+       (!is_regular_v<A> or std::is_reference_v<A>)and
+       // Require same stride-order
+       (get_layout_info<A>.stride_order == layout_t::stride_order_encoded) and
+       // Require same underlying value_type
+       (std::is_same_v<std::remove_const_t<ValueType>, get_value_t<A>>) and
+       // Make sure that we have a const ValueType if our argument does
+       (std::is_const_v<ValueType> or !std::is_const_v<typename std::decay_t<A>::value_type>)
+    )
+    // Explicit iff layout properties maybe be incompatible
+    explicit(requires_runtime_check<typename std::decay_t<A>::layout_policy_t>)
+    basic_array_view(A &&a) noexcept : lay(a.indexmap()), sto(a.storage()) {}
 
     /** 
      * [Advanced] From a pointer to **contiguous data**, and a shape.
