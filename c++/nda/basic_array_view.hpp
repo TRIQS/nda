@@ -48,6 +48,7 @@ namespace nda {
   template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   class basic_array_view {
 
+    static_assert((Algebra != 'N'), " Internal error : Algebra 'N' not supported");
     static_assert((Algebra != 'M') or (Rank == 2), " Internal error : Algebra 'A' only makes sense for rank 2");
     static_assert((Algebra != 'V') or (Rank == 1), " Internal error : Algebra 'V' only makes sense for rank 1");
 
@@ -264,7 +265,14 @@ namespace nda {
 #include "./_impl_basic_array_view_common.hpp"
   };
 
-  // Template Deduction Guides
+  // --- Class Template Argument Deduction Guides ---
+
+  template <MemoryArray A>
+  basic_array_view(A &&a)
+     -> basic_array_view<std::conditional_t<std::is_const_v<std::remove_reference_t<A>>, const typename std::decay_t<A>::value_type,
+                                            typename std::decay_t<A>::value_type>,
+                         get_rank<A>, typename std::decay_t<A>::layout_policy_t, get_algebra<A>, default_accessor, borrowed<mem::get_addr_space<A>>>;
+
   template <std::ranges::contiguous_range R>
   basic_array_view(R &r) -> basic_array_view<std::conditional_t<std::is_const_v<R>, const typename R::value_type, typename R::value_type>, 1,
                                              C_layout, 'V', default_accessor, borrowed<>>;
