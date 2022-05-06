@@ -70,9 +70,14 @@ namespace nda {
 
   // ---------------  transpose ------------------------
 
-  template <MemoryMatrix A>
-  auto transpose(A &&a) {
-    return permuted_indices_view<encode(std::array{1, 0})>(std::forward<A>(a));
+  template <typename A>
+  auto transpose(A &&a) requires(MemoryMatrix<A> or is_instantiation_of_v<expr_call, A>) {
+    if constexpr (MemoryMatrix<A>) {
+      return permuted_indices_view<encode(std::array{1, 0})>(std::forward<A>(a));
+    } else { // expr_call
+      static_assert(std::tuple_size_v<decltype(a.a)> == 1, "Cannot transpose expr_call with more than one array argument");
+      return map(a.f)(transpose(std::get<0>(std::forward<A>(a).a)));
+    }
   }
 
   // Transposed_view swap two indices
