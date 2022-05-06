@@ -53,11 +53,11 @@ namespace nda::lapack {
     array<double, 1> const &S_vec() const { return s_vec; }
 
     /// ???
-    gelss_worker(matrix_const_view<T> _A) : M(_A.extent(0)), N(_A.extent(1)), A(_A), s_vec(std::min(M, N)) {
+    gelss_worker(matrix<T> _A) : M(_A.extent(0)), N(_A.extent(1)), A(std::move(_A)), s_vec(std::min(M, N)) {
 
       if (N > M) NDA_RUNTIME_ERROR << "ERROR: Matrix A for linear least square procedure cannot have more columns than rows";
 
-      matrix<T, F_layout> A_FL{_A};
+      matrix<T, F_layout> A_FL{A};
       matrix<T, F_layout> U(M, M);
       matrix<T, F_layout> VT(N, N);
 
@@ -109,7 +109,7 @@ namespace nda::lapack {
     //matrix<dcomplex> const &A_mat() const { return A; }
     array<double, 1> const &S_vec() const { return _lss.S_vec(); }
 
-    gelss_worker_hermitian(matrix_const_view<dcomplex> _A) : A(_A), _lss(A), _lss_matrix(vstack(A, conj(A))) {}
+    gelss_worker_hermitian(matrix<dcomplex> _A) : A(std::move(_A)), _lss(A), _lss_matrix(vstack(A, conj(A))) {}
 
     // Solve the least-square problem that minimizes || A * x - B ||_2 given A and B with a real-valued vector x
     std::pair<matrix<dcomplex>, double> operator()(matrix_const_view<dcomplex> B, std::optional<long> inner_matrix_dim = {}) const {
@@ -146,7 +146,8 @@ namespace nda::lapack {
 
       // Solve the enlarged system vstack(A, A*) * x = vstack(B, B_dag)
       matrix<dcomplex> B_dag = inner_adjoint(B);
-      auto [x, err]          = _lss_matrix(vstack(B, B_dag));
+      auto B_stack           = vstack(B, B_dag);
+      auto [x, err]          = _lss_matrix(B_stack);
 
       // Resymmetrize results to cure small hermiticity violations
       return {0.5 * (x + inner_adjoint(x)), err};
