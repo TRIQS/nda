@@ -33,7 +33,7 @@ namespace nda {
 
   // ---------------------- array--------------------------------
 
-  template <typename ValueType, int Rank, typename Layout, char Algebra, typename ContainerPolicy>
+  template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename ContainerPolicy>
   class basic_array {
 
     static_assert(!std::is_const<ValueType>::value, "ValueType of basic_array cannot be const.");
@@ -42,13 +42,18 @@ namespace nda {
 
     public:
     /// Type of the array's values
-    using value_type          = ValueType;
-    /// Type of the memory handle
-    using storage_t           = typename ContainerPolicy::template handle<ValueType>;
+    using value_type = ValueType;
+    /// Type of the memory layout policy
+    using layout_policy_t = LayoutPolicy;
     /// Type of the memory layout
-    using layout_t            = typename Layout::template mapping<Rank>;
+    using layout_t = typename LayoutPolicy::template mapping<Rank>;
+    /// Type of the container policy
+    using container_policy_t = ContainerPolicy;
+    /// Type of the memory handle
+    using storage_t = typename ContainerPolicy::template handle<ValueType>;
     /// The associated regular type
-    using regular_type        = basic_array;
+    using regular_type = basic_array;
+
     /// The number of dimensions of the array
     static constexpr int rank = Rank;
 
@@ -76,8 +81,8 @@ namespace nda {
 
     public:
     // backward : FIXME : temporary to be removed
-    [[deprecated]] basic_array_view<ValueType, Rank, Layout, 'A', AccessorPolicy, OwningPolicy> as_array_view() { return {*this}; };
-    [[deprecated]] basic_array_view<const ValueType, Rank, Layout, 'A', AccessorPolicy, OwningPolicy> as_array_view() const { return {*this}; };
+    [[deprecated]] basic_array_view<ValueType, Rank, LayoutPolicy, 'A', AccessorPolicy, OwningPolicy> as_array_view() { return {*this}; };
+    [[deprecated]] basic_array_view<const ValueType, Rank, LayoutPolicy, 'A', AccessorPolicy, OwningPolicy> as_array_view() const { return {*this}; };
 
     [[deprecated]] auto transpose() requires(Rank == 2) { return permuted_indices_view<encode(std::array<int, 2>{1, 0})>(*this); }
     [[deprecated]] auto transpose() const requires(Rank == 2) { return permuted_indices_view<encode(std::array<int, 2>{1, 0})>(*this); }
@@ -89,15 +94,16 @@ namespace nda {
     // to avoid value initialization of the sso buffer
     basic_array(){};
 
+    ///
+    basic_array(basic_array &&X) = default;
+
     /// Makes a deep copy, since array is a regular type
     explicit basic_array(basic_array const &x) noexcept : lay(x.indexmap()), sto(x.sto) {}
 
     /// Makes a deep copy, given a basic_array with a different container policy
     template <char Algebra_other, typename ContainerPolicy_other>
-    explicit basic_array(basic_array<ValueType, Rank, Layout, Algebra_other, ContainerPolicy_other> const &x) noexcept : lay(x.indexmap()), sto(x.storage()) {}
-
-    ///
-    basic_array(basic_array &&X) = default;
+    explicit basic_array(basic_array<ValueType, Rank, LayoutPolicy, Algebra_other, ContainerPolicy_other> x) noexcept
+       : lay(x.indexmap()), sto(std::move(x.storage())) {}
 
     /** 
      * Construct with a shape [i0, is ...]. 
@@ -253,7 +259,7 @@ namespace nda {
     /// Beware that for stack/sso array, it will copy the data (but move them for heap allocated array).
     /// \trailing_requires
     template <char Algebra2>
-    explicit basic_array(basic_array<ValueType, 2, Layout, Algebra2, ContainerPolicy> &&am) noexcept
+    explicit basic_array(basic_array<ValueType, 2, LayoutPolicy, Algebra2, ContainerPolicy> &&am) noexcept
        requires(Rank == 2) // NB Rank =2 since matrix/array for the moment. generalize if needed
        : basic_array{am.indexmap(), std::move(am).storage()} {}
 
@@ -317,7 +323,7 @@ namespace nda {
 
     /// Deep copy assignment given array with different algebra and/or container policy
     template <char Algebra_other, typename ContainerPolicy_other>
-    basic_array &operator=(basic_array<ValueType, Rank, Layout, Algebra_other, ContainerPolicy_other> const &x) {
+    basic_array &operator=(basic_array<ValueType, Rank, LayoutPolicy, Algebra_other, ContainerPolicy_other> const &x) {
       *this = basic_array{x};
       return *this;
     }
