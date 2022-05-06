@@ -144,9 +144,6 @@ namespace nda {
       return std::forward<A>(x);
   }
 
-  template <typename A>
-  using get_regular_t = decltype(make_regular(std::declval<A>()));
-
   // --------------------------- resize_or_check_if_view------------------------
 
   /** 
