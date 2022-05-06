@@ -23,10 +23,6 @@
 
 namespace nda {
 
-  /// Class template argument deduction
-  template <typename T>
-  basic_array(T) -> basic_array<get_value_t<T>, get_rank<T>, C_layout, 'A', heap<>>;
-
   // forward for friend declaration
   template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, typename NewLayoutType>
   auto map_layout_transform(basic_array<T, R, L, Algebra, ContainerPolicy> &&a, NewLayoutType const &new_layout);
@@ -37,6 +33,7 @@ namespace nda {
   class basic_array {
 
     static_assert(!std::is_const<ValueType>::value, "ValueType of basic_array cannot be const.");
+    static_assert((Algebra != 'N'), " Internal error : Algebra 'N' not supported");
     static_assert((Algebra != 'M') or (Rank == 2), " Internal error : Algebra 'M' only makes sense for rank 2");
     static_assert((Algebra != 'V') or (Rank == 1), " Internal error : Algebra 'V' only makes sense for rank 1");
 
@@ -396,6 +393,15 @@ namespace nda {
 #include "./_impl_basic_array_view_common.hpp"
   };
 
+  // --- Class Template Argument Deduction Guides ---
+
+  template <MemoryArray A>
+  basic_array(A &&a)
+     -> basic_array<get_value_t<A>, get_rank<A>, get_contiguous_layout_policy<get_rank<A>, get_layout_info<A>.stride_order>, get_algebra<A>, heap<mem::get_addr_space<A>>>;
+
+  template <Array A>
+  basic_array(A &&a) -> basic_array<get_value_t<A>, get_rank<A>, C_layout, get_algebra<A>, heap<>>;
+  
 } // namespace nda
 
 #include "./layout_transforms.hpp"
