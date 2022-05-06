@@ -131,7 +131,7 @@ FORCEINLINE static decltype(auto) call(Self &&self, T const &... x) noexcept(has
 
   // () returns a full view
   else if constexpr (sizeof...(T) == 0) {
-    return basic_array_view<r_v_t, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy>{self.lay, self.sto};
+    return basic_array_view<r_v_t, Rank, LayoutPolicy, Algebra, AccessorPolicy, OwningPolicy>{self.lay, self.sto};
   }
 
   else {

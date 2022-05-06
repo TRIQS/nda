@@ -45,7 +45,7 @@ namespace nda {
 
   // -----------------------------------------------
 
-  template <typename ValueType, int Rank, typename Layout, char Algebra, typename AccessorPolicy, typename OwningPolicy>
+  template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   class basic_array_view {
 
     static_assert((Algebra != 'M') or (Rank == 2), " Internal error : Algebra 'A' only makes sense for rank 2");
@@ -54,10 +54,16 @@ namespace nda {
     public:
     /// Type of the array's values
     using value_type = ValueType;
+    /// Type of the memory layout policy
+    using layout_policy_t = LayoutPolicy;
+    /// Type of the memory layout
+    using layout_t = typename LayoutPolicy::template mapping<Rank>;
+    /// Type of the accessor policy
+    using accessor_policy_t = AccessorPolicy;
+    /// Type of the owning policy
+    using owning_policy_t = OwningPolicy;
     /// Type of the memory handle
     using storage_t = typename OwningPolicy::template handle<ValueType>;
-    /// Type of the memory layout
-    using layout_t = typename Layout::template mapping<Rank>;
     /// The associated regular type
     using regular_type = basic_array<std::remove_const_t<ValueType>, Rank, C_layout, Algebra, heap<>>;
     /// The number of dimensions of the array
@@ -91,8 +97,8 @@ namespace nda {
 
     public:
     // backward : FIXME : temporary to be removed
-    [[deprecated]] basic_array_view<ValueType, Rank, Layout, 'A', AccessorPolicy, OwningPolicy> as_array_view() { return {*this}; };
-    [[deprecated]] basic_array_view<const ValueType, Rank, Layout, 'A', AccessorPolicy, OwningPolicy> as_array_view() const { return {*this}; };
+    [[deprecated]] basic_array_view<ValueType, Rank, LayoutPolicy, 'A', AccessorPolicy, OwningPolicy> as_array_view() { return {*this}; };
+    [[deprecated]] basic_array_view<const ValueType, Rank, LayoutPolicy, 'A', AccessorPolicy, OwningPolicy> as_array_view() const { return {*this}; };
 
     // ------------------------------- constructors --------------------------------------------
 
@@ -107,7 +113,7 @@ namespace nda {
 
     ///
     template <typename CP>
-    basic_array_view(basic_array<ValueType, Rank, Layout, Algebra, CP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
+    basic_array_view(basic_array<ValueType, Rank, LayoutPolicy, Algebra, CP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
 
     ///
     template <typename L, char A, typename CP>
