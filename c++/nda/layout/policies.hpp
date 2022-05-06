@@ -16,6 +16,7 @@
 
 #pragma once
 #include "idx_map.hpp"
+#include "../concepts.hpp"
 
 namespace nda {
 
@@ -66,6 +67,11 @@ namespace nda {
 
   template <uint64_t StrideOrder>
   using contiguous_layout_with_stride_order = basic_layout<0, StrideOrder, layout_prop_e::contiguous>;
+
+  template <int Rank, uint64_t StrideOrder>
+  using get_contiguous_layout_policy =
+     std::conditional_t<StrideOrder == C_stride_order<Rank>, C_layout,
+                        std::conditional_t<StrideOrder == Fortran_stride_order<Rank>, F_layout, contiguous_layout_with_stride_order<StrideOrder>>>;
 
   namespace details {
 
