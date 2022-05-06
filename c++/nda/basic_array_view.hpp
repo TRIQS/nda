@@ -36,12 +36,8 @@ namespace std {
 namespace nda {
 
   // forward for friend declaration
-  template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy, typename NewLayoutType>
-  auto map_layout_transform(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> a, NewLayoutType const &new_layout);
-
-  // CTAD
-  //template <typename ValueType, int Rank, typename Layout, char A, typename CP>
-  //basic_array_view(basic_array<ValueType, Rank, L, A, CP> const &a) noexcept : basic_array_view(layout_t{a.indexmap()}, a.storage()) {}
+  template <MemoryArray A, typename NewLayoutType>
+  auto map_layout_transform(A &&a, NewLayoutType const &new_layout);
 
   // -----------------------------------------------
 
@@ -85,8 +81,8 @@ namespace nda {
     template <typename T, int R, typename L, char A, typename AP, typename OP>
     friend class basic_array_view;
 
-    template <typename T, int R, typename L, char A, typename AP, typename OP, typename NewLayoutType>
-    friend auto map_layout_transform(basic_array_view<T, R, L, A, AP, OP> a, NewLayoutType const &new_layout);
+    template <MemoryArray A, typename NewLayoutType>
+    friend auto map_layout_transform(A &&a, NewLayoutType const &new_layout);
 
     template <typename L>
     static constexpr bool requires_runtime_check = not layout_property_compatible(L::template mapping<Rank>::layout_prop, layout_t::layout_prop);

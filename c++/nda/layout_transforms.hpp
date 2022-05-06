@@ -17,48 +17,32 @@
 #pragma once
 
 #include "group_indices.hpp"
+#include "map.hpp"
 
 namespace nda {
 
-  // Regroup here some function which only transform the layout
-  // to reinterpret the data
-  // e.g. permuted_indices_view, regroup_indices, reshape, ...
-
-  // First a general function that map any transform of the layout onto the basic_array_view
-  // NB : Algebra is down to A is
-  // FIXME : regroup + requires ? ?
-  template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy, typename NewLayoutType>
-  auto map_layout_transform(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> a, NewLayoutType const &new_layout) {
-    using layout_policy = typename details::layout_to_policy<NewLayoutType>::type;
-    return basic_array_view<T, NewLayoutType::rank(), layout_policy, (NewLayoutType::rank() == R ? Algebra : 'A'), AccessorPolicy, OwningPolicy>{
-       new_layout, a.storage()};
-  }
-
-  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, typename NewLayoutType>
-  auto map_layout_transform(basic_array<T, R, L, Algebra, ContainerPolicy> &&a, NewLayoutType const &new_layout) {
-    using layout_policy = typename details::layout_to_policy<NewLayoutType>::type;
-    return basic_array<T, NewLayoutType::rank(), layout_policy, (NewLayoutType::rank() == R ? Algebra : 'A'), ContainerPolicy>{
-       new_layout, std::move(a.storage())};
-  }
-
-  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, typename NewLayoutType>
-  auto map_layout_transform(basic_array<T, R, L, Algebra, ContainerPolicy> &a, NewLayoutType const &new_layout) {
-    using layout_policy = typename details::layout_to_policy<NewLayoutType>::type;
-    return basic_array_view<T, NewLayoutType::rank(), layout_policy, (NewLayoutType::rank() == R ? Algebra : 'A')>{new_layout, a.storage()};
-  }
-
-  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, typename NewLayoutType>
-  auto map_layout_transform(basic_array<T, R, L, Algebra, ContainerPolicy> const &a, NewLayoutType const &new_layout) {
-    using layout_policy = typename details::layout_to_policy<NewLayoutType>::type;
-    return basic_array_view<T const, NewLayoutType::rank(), layout_policy, (NewLayoutType::rank() == R ? Algebra : 'A')>{new_layout,
-                                                                                                                         std::move(a.storage())};
+  // A general function that maps any transform of the layout onto the basic_array_view
+  template <MemoryArray A, typename NewLayoutType>
+  auto map_layout_transform(A &&a, NewLayoutType const &new_layout) {
+    using A_t                     = std::remove_reference_t<A>;
+    using value_t                 = std::conditional_t<std::is_const_v<A_t>, const typename A_t::value_type, typename A_t::value_type>;
+    using layout_policy           = typename details::layout_to_policy<NewLayoutType>::type;
+    static constexpr auto algebra = (NewLayoutType::rank() == get_rank<A> ? get_algebra<A> : 'A');
+    if constexpr (is_regular_v<A> and !std::is_reference_v<A>) { // basic_array rvalue
+      using container_policy_t = typename A_t::container_policy_t;
+      return basic_array<value_t, NewLayoutType::rank(), layout_policy, algebra, container_policy_t>{new_layout, std::forward<A>(a).storage()};
+    } else {
+      using accessor_policy = typename get_view_t<A>::accessor_policy_t;
+      using owning_policy   = typename get_view_t<A>::owning_policy_t;
+      return basic_array_view<value_t, NewLayoutType::rank(), layout_policy, algebra, accessor_policy, owning_policy>{new_layout, a.storage()};
+    }
   }
 
   // ---------------  reshape ------------------------
 
-  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, std::integral Int, auto newRank>
-  auto reshape(basic_array<T, R, L, Algebra, ContainerPolicy> &&a, std::array<Int, newRank> const &new_shape) {
-    using layout_t = typename L::template mapping<newRank>;
+  template <MemoryArray A, std::integral Int, auto newRank>
+  auto reshape(A &&a, std::array<Int, newRank> const &new_shape) requires(is_regular_v<A>) {
+    using layout_t = typename std::decay_t<A>::layout_policy_t::template mapping<newRank>;
     EXPECTS_WITH_MESSAGE(a.size() == (std::accumulate(new_shape.cbegin(), new_shape.cend(), Int{1}, std::multiplies<>{})),
                          "Reshape : the new shape has a incorrect number of elements");
     return map_layout_transform(std::move(a), layout_t{new_shape});
@@ -68,58 +52,31 @@ namespace nda {
 
   /// Reshape : contiguous view only [runtime checked]
   ///\param Int : shape are std::array<long, R> but the Int allows the user to pass int, or any integer and forget about it
-  template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy, //
-            std::integral Int, auto newRank>
-
-  auto reshaped_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> v, //
-                     std::array<Int, newRank> const &new_shape) {
-
-    using layout_t = typename L::template mapping<newRank>;
-    EXPECTS_WITH_MESSAGE(v.size() == (std::accumulate(new_shape.cbegin(), new_shape.cend(), Int{1}, std::multiplies<>{})),
+  template <MemoryArray A, std::integral Int, auto newRank>
+  auto reshaped_view(A &&a, std::array<Int, newRank> const &new_shape) {
+    using layout_t = typename std::decay_t<A>::layout_policy_t::template mapping<newRank>;
+    EXPECTS_WITH_MESSAGE(a.size() == (std::accumulate(new_shape.cbegin(), new_shape.cend(), Int{1}, std::multiplies<>{})),
                          "Reshape : the new shape has a incorrect number of elements");
-    EXPECTS_WITH_MESSAGE(v.indexmap().is_contiguous(), "reshaped_view only works with contiguous views");
-    return map_layout_transform(v, layout_t{stdutil::make_std_array<long>(new_shape)});
-  }
-
-  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, std::integral Int, auto newRank>
-  auto reshaped_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a, std::array<Int, newRank> const &new_shape) {
-    return reshaped_view(basic_array_view<T const, R, L, Algebra, default_accessor, borrowed<mem::get_addr_space<decltype(a)>>>(a), new_shape);
-  }
-
-  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, std::integral Int, auto newRank>
-  auto reshaped_view(basic_array<T, R, L, Algebra, ContainerPolicy> &a, std::array<Int, newRank> const &new_shape) {
-    return reshaped_view(basic_array_view<T, R, L, Algebra, default_accessor, borrowed<mem::get_addr_space<decltype(a)>>>(a), new_shape);
+    EXPECTS_WITH_MESSAGE(a.indexmap().is_contiguous(), "reshaped_view only works with contiguous views");
+    return map_layout_transform(std::forward<A>(a), layout_t{stdutil::make_std_array<long>(new_shape)});
   }
 
   // --------------- permuted_indices_view------------------------
 
-  template <ARRAY_INT Permutation, typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy>
-  auto permuted_indices_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> a) {
-    return map_layout_transform(a, a.indexmap().template transpose<Permutation>());
-  }
-
-  template <ARRAY_INT Permutation, typename T, int R, typename L, char Algebra, typename ContainerPolicy>
-  auto permuted_indices_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a) {
-    return permuted_indices_view<Permutation>(basic_array_view<T const, R, L, Algebra, default_accessor, borrowed<mem::get_addr_space<decltype(a)>>>(a));
-  }
-
-  template <ARRAY_INT Permutation, typename T, int R, typename L, char Algebra, typename ContainerPolicy>
-  auto permuted_indices_view(basic_array<T, R, L, Algebra, ContainerPolicy> &a) {
-    return permuted_indices_view<Permutation>(basic_array_view<T, R, L, Algebra, default_accessor, borrowed<mem::get_addr_space<decltype(a)>>>(a));
+  template <ARRAY_INT Permutation, MemoryArray A>
+  auto permuted_indices_view(A &&a) {
+    return map_layout_transform(std::forward<A>(a), a.indexmap().template transpose<Permutation>());
   }
 
   // ---------------  transpose ------------------------
 
-  // FIXME : NAME
-
-  // for matrices ...
-  template <typename A>
-  auto transpose(A &&a) requires(is_regular_or_view_v<A> and (get_rank<A> == 2)) {
+  template <MemoryMatrix A>
+  auto transpose(A &&a) {
     return permuted_indices_view<encode(std::array{1, 0})>(std::forward<A>(a));
   }
 
   // Transposed_view swap two indices
-  template <int I, int J, typename A>
+  template <int I, int J, MemoryArray A>
   auto transposed_view(A &&a) requires(is_regular_or_view_v<A>) {
     return permuted_indices_view<encode(permutations::transposition<get_rank<A>>(I, J))>(std::forward<A>(a));
   }
@@ -129,19 +86,9 @@ namespace nda {
   // FIXME : write the doc
   // FIXME : use "magnetic" placeholder
 
-  template <typename T, int R, typename L, char Algebra, typename AccessorPolicy, typename OwningPolicy, typename... IntSequences>
-  auto group_indices_view(basic_array_view<T, R, L, Algebra, AccessorPolicy, OwningPolicy> a, IntSequences...) {
-    return map_layout_transform(a, group_indices_layout(a.indexmap(), IntSequences{}...));
-  }
-
-  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, typename... IntSequences>
-  auto group_indices_view(basic_array<T, R, L, Algebra, ContainerPolicy> const &a, IntSequences...) {
-    return group_indices_view(basic_array_view<T const, R, L, Algebra, default_accessor, borrowed<mem::get_addr_space<decltype(a)>>>(a), IntSequences{}...);
-  }
-
-  template <typename T, int R, typename L, char Algebra, typename ContainerPolicy, typename... IntSequences>
-  auto group_indices_view(basic_array<T, R, L, Algebra, ContainerPolicy> &a, IntSequences...) {
-    return group_indices_view(basic_array_view<T, R, L, Algebra, default_accessor, borrowed<mem::get_addr_space<decltype(a)>>>(a), IntSequences{}...);
+  template <MemoryArray A, typename... IntSequences>
+  auto group_indices_view(A &&a, IntSequences...) {
+    return map_layout_transform(std::forward<A>(a), group_indices_layout(a.indexmap(), IntSequences{}...));
   }
 
   // --------------- Reinterpretation------------------------
