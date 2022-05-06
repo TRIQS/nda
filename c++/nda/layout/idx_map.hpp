@@ -432,14 +432,8 @@ namespace nda {
       static constexpr std::array<int, Rank> new_stride_order   = permutations::compose(permu, stride_order);
       static constexpr std::array<int, Rank> new_static_extents = permutations::apply_inverse(permu, static_extents);
 
-      // FIXME
-      // Compute the new layout_prop of the new view
-      // NB : strided_1d property is preserved, but smallest_stride_is_one is not
-      static constexpr layout_prop_e new_layout_prop =
-         layout_prop_e::none; // BUT FIX (has_strided_1d(layout_prop) ? layout_prop_e::strided_1d : layout_prop_e::none);
-
-      return idx_map<Rank, encode(new_static_extents), encode(new_stride_order), new_layout_prop>{permutations::apply_inverse(permu, lengths()),
-                                                                                                  permutations::apply_inverse(permu, strides())};
+      return idx_map<Rank, encode(new_static_extents), encode(new_stride_order), LayoutProp>{permutations::apply_inverse(permu, lengths()),
+                                                                                             permutations::apply_inverse(permu, strides())};
     }
 
   }; // idx_map class
