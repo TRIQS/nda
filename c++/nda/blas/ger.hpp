@@ -52,7 +52,7 @@ namespace nda::blas {
     static_assert(X_adr_spc == Y_adr_spc && Y_adr_spc == M_adr_spc);
 
     // if in C, we need to call fortran with transposed matrix
-    if (std::remove_cvref_t<M>::layout_t::is_stride_order_C()) {
+    if (has_C_layout<M>) {
       ger(alpha, y, x, transpose(m));
       return;
     }

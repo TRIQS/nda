@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "../blas/tools.hpp"
+#include "../lapack.hpp"
 
 namespace nda::lapack {
 

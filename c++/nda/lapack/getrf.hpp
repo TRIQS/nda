@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include "../lapack.hpp"
+
 namespace nda::lapack {
 
   /**

@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "../concepts.hpp"
+#include "../lapack.hpp"
 
 namespace nda::lapack {
 
@@ -30,13 +30,12 @@ namespace nda::lapack {
 
     // We enforce Fortran order by making a copy if necessary.
     // If both matrix are in C, call itself twice : ok we pass &
-    if constexpr (not A::layout_t::is_stride_order_Fortran()) {
+    if constexpr (has_C_layout<A>) {
       auto af = matrix<T, F_layout>{a};
       info    = gelss(af, b, c, rcond, rank);
       return info;
 
-    } else if constexpr (not B::layout_t::is_stride_order_Fortran()) {
-
+    } else if constexpr (has_C_layout<B>) {
       auto bf = matrix<T, F_layout>{b};
       info    = gelss(a, bf, c, rcond, rank);
       return info;
