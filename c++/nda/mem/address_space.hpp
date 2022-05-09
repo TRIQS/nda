@@ -62,6 +62,7 @@ namespace nda::mem {
   }();
 
   // -------------  Specializations -------------
+
   template <MemoryArray A>
   static constexpr AddressSpace get_addr_space<A> = A::storage_t::address_space;
 
