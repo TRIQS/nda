@@ -50,20 +50,20 @@ namespace nda::lapack {
       // Copy since it is altered by gelss
       auto a2 = a;
 
-      auto dm = std::min(get_n_rows(a2), get_n_cols(a2));
+      auto dm = std::min(a2.extent(0), a2.extent(1));
       if (c.size() < dm) c.resize(dm);
-      int nrhs = get_n_cols(b);
+      int nrhs = b.extent(1);
 
       if constexpr (std::is_same_v<T, double>) {
 
         // first call to get the optimal lwork
         T work1[1];
-        f77::gelss(get_n_rows(a2), get_n_cols(a2), nrhs, a2.data(), get_ld(a2), b.data(), get_ld(b), c.data(), rcond, rank, work1, -1, info);
+        f77::gelss(a2.extent(0), a2.extent(1), nrhs, a2.data(), get_ld(a2), b.data(), get_ld(b), c.data(), rcond, rank, work1, -1, info);
 
         int lwork = r_round(work1[0]);
         array<T, 1> work(lwork);
 
-        f77::gelss(get_n_rows(a2), get_n_cols(a2), nrhs, a2.data(), get_ld(a2), b.data(), get_ld(b), c.data(), rcond, rank, work.data(), lwork, info);
+        f77::gelss(a2.extent(0), a2.extent(1), nrhs, a2.data(), get_ld(a2), b.data(), get_ld(b), c.data(), rcond, rank, work.data(), lwork, info);
 
       } else if constexpr (std::is_same_v<T, dcomplex>) {
 
@@ -71,13 +71,13 @@ namespace nda::lapack {
 
         // first call to get the optimal lwork
         T work1[1];
-        f77::gelss(get_n_rows(a2), get_n_cols(a2), nrhs, a2.data(), get_ld(a2), b.data(), get_ld(b), c.data(), rcond, rank, work1, -1, rwork.data(),
+        f77::gelss(a2.extent(0), a2.extent(1), nrhs, a2.data(), get_ld(a2), b.data(), get_ld(b), c.data(), rcond, rank, work1, -1, rwork.data(),
                    info);
 
         int lwork = r_round(work1[0]);
         array<T, 1> work(lwork);
 
-        f77::gelss(get_n_rows(a2), get_n_cols(a2), nrhs, a2.data(), get_ld(a2), b.data(), get_ld(b), c.data(), rcond, rank, work.data(), lwork,
+        f77::gelss(a2.extent(0), a2.extent(1), nrhs, a2.data(), get_ld(a2), b.data(), get_ld(b), c.data(), rcond, rank, work.data(), lwork,
                    rwork.data(), info);
       } else
         static_assert(false and always_true<A>, "Internal logic error");
