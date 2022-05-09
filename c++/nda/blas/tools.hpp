@@ -19,6 +19,7 @@
 #include <type_traits>
 
 #include "../traits.hpp"
+#include "../concepts.hpp"
 
 namespace nda {
   using dcomplex = std::complex<double>;
@@ -27,6 +28,12 @@ namespace nda {
 namespace nda::blas {
 
   // ================================================
+
+  template <MemoryMatrix M>
+  static constexpr bool has_F_layout = std::remove_cvref_t<M>::is_stride_order_Fortran();
+
+  template <MemoryMatrix M>
+  static constexpr bool has_C_layout = std::remove_cvref_t<M>::is_stride_order_C();
 
   // FIXME : move to impl NS
   template <typename MatrixType>
@@ -47,9 +54,9 @@ namespace nda::blas {
   }
 
   // LDA in lapack jargon
-  template <typename MatrixType>
-  int get_ld(MatrixType const &A) {
-    return A.indexmap().strides()[A.indexmap().is_stride_order_Fortran() ? 1 : 0];
+  template <MemoryMatrix A>
+  int get_ld(A const &a) {
+    return a.indexmap().strides()[has_F_layout<A> ? 1 : 0];
   }
 
   //template <typename M>
