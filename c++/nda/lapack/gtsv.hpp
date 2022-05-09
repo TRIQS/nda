@@ -32,13 +32,10 @@ namespace nda::lapack {
    * @param du
    * @param b 
    */
-  template <typename V1, typename V2, typename V3, typename M>
+  template <MemoryVector V1, MemoryVector V2, MemoryVector V3, MemoryArray M>
   [[nodiscard]] int gtsv(V1 &dl, V2 &d, V3 &du, M &b) {
 
-    static_assert(is_regular_or_view_v<V1> and (V1::rank == 1), "gtsv: V1 must be an array/view of rank 1");
-    static_assert(is_regular_or_view_v<V2> and (V2::rank == 1), "gtsv: V2 must be an array/view of rank 1");
-    static_assert(is_regular_or_view_v<V3> and (V3::rank == 1), "gtsv: V3 must be an array/view of rank 1");
-    static_assert(is_regular_or_view_v<M> and (M::rank == 1 or M::rank == 2), "gtsv: M must be an matrix/array/view of rank  1 or 2");
+    static_assert((get_rank<M> == 1 or get_rank<M> == 2), "gtsv: M must be an matrix/array/view of rank  1 or 2");
     static_assert(have_same_value_type_v<V1, V2, V3, M>, "Arrays must have the same value-type");
     static_assert(is_double_or_complex_v<get_value_t<V1>>, "Arrays must have value-type double or complex");
 
