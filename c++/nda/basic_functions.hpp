@@ -135,7 +135,7 @@ namespace nda {
    */
   template <typename A>
   decltype(auto) make_regular(A &&x) {
-    if constexpr(Array<A>) {
+    if constexpr(Array<A> and not is_regular_v<A>) {
       return basic_array{std::forward<A>(x)};
     } else {
       return std::forward<A>(x);
