@@ -54,19 +54,37 @@ namespace nda::blas {
    *
    *
    */
-  template <MemoryMatrix A, MemoryVector B, MemoryVector C>
-  requires(have_same_value_type_v<A, B, C> and is_blas_lapack_v<get_value_t<A>>)
-  void gemv(get_value_t<A> alpha, A const &a, B const &b, get_value_t<A> beta, C &&c) {
+  template <Matrix X, MemoryVector B, MemoryVector C>
+  requires((MemoryMatrix<X> or is_conj_matrix_expr<X>) and
+            have_same_value_type_v<X, B, C> and is_blas_lapack_v<get_value_t<X>>)
+  void gemv(get_value_t<X> alpha, X const &x, B const &b, get_value_t<X> beta, C &&c) {
+
+    auto to_mat = []<typename Z>(Z const &z) -> decltype(auto) {
+      if constexpr (is_conj_matrix_expr<Z>)
+        return std::get<0>(z.a);
+      else
+        return z;
+    };
+    auto &a = to_mat(x);
+
+    static constexpr bool conj_A = is_conj_matrix_expr<X>;
+
+    using A = decltype(a);
+
+    EXPECTS(a.extent(1) == b.extent(0));
+    EXPECTS(a.extent(0) == c.extent(0));
+
+    // Must be lapack compatible
+    EXPECTS(a.indexmap().min_stride() == 1);
+    EXPECTS(b.indexmap().min_stride() == 1);
+    EXPECTS(c.indexmap().min_stride() == 1);
 
     static constexpr auto A_adr_spc = mem::get_addr_space<A>;
     static constexpr auto B_adr_spc = mem::get_addr_space<B>;
     static constexpr auto C_adr_spc = mem::get_addr_space<C>;
     static_assert(A_adr_spc == B_adr_spc && B_adr_spc == C_adr_spc);
 
-    EXPECTS(a.extent(1) == b.extent(0));
-    EXPECTS(a.extent(0) == c.extent(0));
-
-    char op_a   = get_op(a, false);
+    char op_a                    = get_op<conj_A, /*transpose =*/!has_F_layout<A>>;
     auto [m, n] = a.shape();
     if constexpr (has_C_layout<A>) std::swap(m, n);
 
