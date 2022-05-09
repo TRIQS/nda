@@ -80,30 +80,30 @@ namespace nda::blas {
     if constexpr (C_t::is_stride_order_C()) {
       // C order. We compute the transpose of the product in this case
       // since BLAS is in Fortran order
-      char trans_a = get_trans(b, true);
-      char trans_b = get_trans(a, true);
-      int m        = (trans_a == 'N' ? get_n_rows(b) : get_n_cols(b));
-      int n        = (trans_b == 'N' ? get_n_cols(a) : get_n_rows(a));
-      int k        = (trans_a == 'N' ? get_n_cols(b) : get_n_rows(b));
+      char op_a = get_op(b, true);
+      char op_b = get_op(a, true);
+      int m     = (op_a == 'N' ? get_n_rows(b) : get_n_cols(b));
+      int n     = (op_b == 'N' ? get_n_cols(a) : get_n_rows(a));
+      int k     = (op_a == 'N' ? get_n_cols(b) : get_n_rows(b));
 
     if constexpr (mem::on_host<A>) {
-        f77::gemm(trans_a, trans_b, m, n, k, alpha, b.data(), get_ld(b), a.data(), get_ld(a), beta, c.data(), get_ld(c));
+        f77::gemm(op_a, op_b, m, n, k, alpha, b.data(), get_ld(b), a.data(), get_ld(a), beta, c.data(), get_ld(c));
       } else { // on device
-        cuda::gemm(trans_a, trans_b, m, n, k, alpha, b.data(), get_ld(b), a.data(), get_ld(a), beta, c.data(), get_ld(c));
+        cuda::gemm(op_a, op_b, m, n, k, alpha, b.data(), get_ld(b), a.data(), get_ld(a), beta, c.data(), get_ld(c));
       }
 
     } else {
       // C is in fortran or, we compute the product.
-      char trans_a = get_trans(a, false);
-      char trans_b = get_trans(b, false);
-      int m        = (trans_a == 'N' ? get_n_rows(a) : get_n_cols(a));
-      int n        = (trans_b == 'N' ? get_n_cols(b) : get_n_rows(b));
-      int k        = (trans_a == 'N' ? get_n_cols(a) : get_n_rows(a));
+      char op_a = get_op(a, false);
+      char op_b = get_op(b, false);
+      int m     = (op_a == 'N' ? get_n_rows(a) : get_n_cols(a));
+      int n     = (op_b == 'N' ? get_n_cols(b) : get_n_rows(b));
+      int k     = (op_a == 'N' ? get_n_cols(a) : get_n_rows(a));
 
     if constexpr (mem::on_host<A>) {
-        f77::gemm(trans_a, trans_b, m, n, k, alpha, a.data(), get_ld(a), b.data(), get_ld(b), beta, c.data(), get_ld(c));
+        f77::gemm(op_a, op_b, m, n, k, alpha, a.data(), get_ld(a), b.data(), get_ld(b), beta, c.data(), get_ld(c));
       } else { // on device
-        cuda::gemm(trans_a, trans_b, m, n, k, alpha, a.data(), get_ld(a), b.data(), get_ld(b), beta, c.data(), get_ld(c));
+        cuda::gemm(op_a, op_b, m, n, k, alpha, a.data(), get_ld(a), b.data(), get_ld(b), beta, c.data(), get_ld(c));
       }
     }
   }
