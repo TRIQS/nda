@@ -66,15 +66,14 @@ namespace nda::blas {
     EXPECTS(a.extent(1) == b.extent(0));
     EXPECTS(a.extent(0) == c.extent(0));
 
-    char op_a = get_op(a, false);
-    int m1    = get_n_rows(a);
-    int m2    = get_n_cols(a);
-    int lda   = get_ld(a);
+    char op_a   = get_op(a, false);
+    auto [m, n] = a.shape();
+    if constexpr (has_C_layout<A>) std::swap(m, n);
 
     if constexpr (mem::on_host<A>) {
-      f77::gemv(op_a, m1, m2, alpha, a.data(), lda, b.data(), b.indexmap().strides()[0], beta, c.data(), c.indexmap().strides()[0]);
+      f77::gemv(op_a, m, n, alpha, a.data(), get_ld(a), b.data(), b.indexmap().strides()[0], beta, c.data(), c.indexmap().strides()[0]);
     } else {
-      cuda::gemv(op_a, m1, m2, alpha, a.data(), lda, b.data(), b.indexmap().strides()[0], beta, c.data(), c.indexmap().strides()[0]);
+      cuda::gemv(op_a, m, n, alpha, a.data(), get_ld(a), b.data(), b.indexmap().strides()[0], beta, c.data(), c.indexmap().strides()[0]);
     }
   }
 

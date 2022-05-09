@@ -60,8 +60,6 @@ namespace nda::blas {
   requires(have_same_value_type_v<A, B, C> and is_blas_lapack_v<get_value_t<A>>)
   void gemm(typename A::value_type alpha, A const &a, B const &b, typename A::value_type beta, C &&c) {
 
-    using C_t = std::decay_t<C>;
-
     EXPECTS(a.extent(1) == b.extent(0));
     EXPECTS(a.extent(0) == c.extent(0));
     EXPECTS(b.extent(1) == c.extent(1));
@@ -74,33 +72,20 @@ namespace nda::blas {
     static constexpr auto A_adr_spc = mem::get_addr_space<A>;
     static constexpr auto B_adr_spc = mem::get_addr_space<B>;
     static constexpr auto C_adr_spc = mem::get_addr_space<C>;
+
     static_assert(A_adr_spc == B_adr_spc && B_adr_spc == C_adr_spc);
 
-    // We need to see if C is in Fortran order or C order
-    if constexpr (C_t::is_stride_order_C()) {
-      // C order. We compute the transpose of the product in this case
-      // since BLAS is in Fortran order
-      char op_a = get_op(b, true);
-      char op_b = get_op(a, true);
-      int m     = (op_a == 'N' ? get_n_rows(b) : get_n_cols(b));
-      int n     = (op_b == 'N' ? get_n_cols(a) : get_n_rows(a));
-      int k     = (op_a == 'N' ? get_n_cols(b) : get_n_rows(b));
+    // c is in C order: compute the transpose of the product in Fortran order
+    if constexpr (has_C_layout<C>) {
+      gemm(alpha, transpose(b), transpose(a), beta, transpose(std::forward<C>(c)));
+      return;
+    } else { // c is in Fortran order
+      char op_a   = get_op(a, false);
+      char op_b   = get_op(b, false);
+      auto [m, k] = a.shape();
+      auto n      = b.extent(1);
 
-    if constexpr (mem::on_host<A>) {
-        f77::gemm(op_a, op_b, m, n, k, alpha, b.data(), get_ld(b), a.data(), get_ld(a), beta, c.data(), get_ld(c));
-      } else { // on device
-        cuda::gemm(op_a, op_b, m, n, k, alpha, b.data(), get_ld(b), a.data(), get_ld(a), beta, c.data(), get_ld(c));
-      }
-
-    } else {
-      // C is in fortran or, we compute the product.
-      char op_a = get_op(a, false);
-      char op_b = get_op(b, false);
-      int m     = (op_a == 'N' ? get_n_rows(a) : get_n_cols(a));
-      int n     = (op_b == 'N' ? get_n_cols(b) : get_n_rows(b));
-      int k     = (op_a == 'N' ? get_n_cols(a) : get_n_rows(a));
-
-    if constexpr (mem::on_host<A>) {
+      if constexpr (mem::on_host<A>) {
         f77::gemm(op_a, op_b, m, n, k, alpha, a.data(), get_ld(a), b.data(), get_ld(b), beta, c.data(), get_ld(c));
       } else { // on device
         cuda::gemm(op_a, op_b, m, n, k, alpha, a.data(), get_ld(a), b.data(), get_ld(b), beta, c.data(), get_ld(c));

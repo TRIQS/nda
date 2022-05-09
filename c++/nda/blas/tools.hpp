@@ -41,17 +41,6 @@ namespace nda::blas {
     return (A.indexmap().is_stride_order_Fortran() ? (transpose ? 'T' : 'N') : (transpose ? 'N' : 'T'));
   }
 
-  // returns the # of rows of the matrix *seen* as fortran matrix
-  template <typename MatrixType>
-  size_t get_n_rows(MatrixType const &A) {
-    return (A.indexmap().is_stride_order_Fortran() ? A.extent(0) : A.extent(1));
-  }
-
-  // returns the # of cols of the matrix *seen* as fortran matrix
-  template <typename MatrixType>
-  size_t get_n_cols(MatrixType const &A) {
-    return (A.indexmap().is_stride_order_Fortran() ? A.extent(1) : A.extent(0));
-  }
 
   // LDA in lapack jargon
   template <MemoryMatrix A>

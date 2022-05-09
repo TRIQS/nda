@@ -50,7 +50,7 @@ namespace nda::lapack {
 #endif
 
     int info = 0;
-    f77::getrf(get_n_rows(m), get_n_cols(m), m.data(), get_ld(m), ipiv.data(), info);
+    f77::getrf(m.extent(0), m.extent(1), m.data(), get_ld(m), ipiv.data(), info);
     return info;
   }
 

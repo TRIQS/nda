@@ -42,13 +42,13 @@ namespace nda::lapack {
 
       // first call to get the optimal lwork
       T work1[1];
-      lapack::f77::gesvd('A', 'A', get_n_rows(a), get_n_cols(a), a.data(), get_ld(a), c.data(), u.data(), get_ld(u), v.data(), get_ld(v), work1, -1,
+      lapack::f77::gesvd('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), c.data(), u.data(), get_ld(u), v.data(), get_ld(v), work1, -1,
                          info);
 
       int lwork = std::round(work1[0]) + 1;
       array<T, 1> work(lwork);
 
-      lapack::f77::gesvd('A', 'A', get_n_rows(a), get_n_cols(a), a.data(), get_ld(a), c.data(), u.data(), get_ld(u), v.data(), get_ld(v), work.data(),
+      lapack::f77::gesvd('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), c.data(), u.data(), get_ld(u), v.data(), get_ld(v), work.data(),
                          lwork, info);
 
     } else {
@@ -57,13 +57,13 @@ namespace nda::lapack {
 
       // first call to get the optimal lwork
       T work1[1];
-      lapack::f77::gesvd('A', 'A', get_n_rows(a), get_n_cols(a), a.data(), get_ld(a), c.data(), u.data(), get_ld(u), v.data(), get_ld(v), work1, -1,
+      lapack::f77::gesvd('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), c.data(), u.data(), get_ld(u), v.data(), get_ld(v), work1, -1,
                          rwork.data(), info);
 
       int lwork = std::round(std::real(work1[0])) + 1;
       array<T, 1> work(lwork);
 
-      lapack::f77::gesvd('A', 'A', get_n_rows(a), get_n_cols(a), a.data(), get_ld(a), c.data(), u.data(), get_ld(u), v.data(), get_ld(v), work.data(),
+      lapack::f77::gesvd('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), c.data(), u.data(), get_ld(u), v.data(), get_ld(v), work.data(),
                          lwork, rwork.data(), info);
     }
 

@@ -42,7 +42,7 @@ namespace nda::lapack {
     std::array<T, 2> work1{0, 0}; // always init for MSAN and clang-tidy ...
 
     // first call to get the optimal lwork
-    f77::getri(get_n_rows(m), m.data(), get_ld(m), ipiv.data(), work1.data(), -1, info);
+    f77::getri(m.extent(0), m.data(), get_ld(m), ipiv.data(), work1.data(), -1, info);
     int lwork;
     if constexpr (is_complex_v<T>)
       lwork = std::round(std::real(work1[0])) + 1;
@@ -58,7 +58,7 @@ namespace nda::lapack {
 #endif
 
     // second call to do the job
-    f77::getri(get_n_rows(m), m.data(), get_ld(m), ipiv.data(), work.data(), lwork, info);
+    f77::getri(m.extent(0), m.data(), get_ld(m), ipiv.data(), work.data(), lwork, info);
     return info;
   }
 
