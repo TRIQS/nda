@@ -17,12 +17,14 @@
 #pragma once
 #include <complex>
 
-#include "nda.hpp"
+#include "basic_array.hpp"
 #include "blas/tools.hpp"
 #include "lapack/interface/lapack_cxx_interface.hpp"
 
 /// LAPACK Interface
 namespace nda::lapack {
+  using blas::has_C_layout;
+  using blas::has_F_layout;
   using blas::get_ld;
   using blas::get_n_cols;
   using blas::get_n_rows;

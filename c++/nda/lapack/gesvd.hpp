@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include "../lapack.hpp"
+
 namespace nda::lapack {
 
   ///
@@ -27,13 +29,13 @@ namespace nda::lapack {
 
   int gesvd1(A &a, array_view<double, 1> c, U &u, V &v) {
 
-    static_assert(A::layout_t::is_stride_order_Fortran(), "C order not implemented");
-    static_assert(U::layout_t::is_stride_order_Fortran(), "C order not implemented");
-    static_assert(V::layout_t::is_stride_order_Fortran(), "C order not implemented");
+    static_assert(has_F_layout<A>, "C order not implemented");
+    static_assert(has_F_layout<U>, "C order not implemented");
+    static_assert(has_F_layout<V>, "C order not implemented");
 
     int info = 0;
 
-    using T = typename A::value_type;
+    using T = get_value_t<A>;
     static_assert(is_blas_lapack_v<T>, "Not implemented");
 
     if constexpr (std::is_same_v<T, double>) {
