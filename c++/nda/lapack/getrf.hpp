@@ -33,7 +33,7 @@ namespace nda::lapack {
    * @param ipiv  Gauss Pivot, cf lapack doc
    *
    */
-  template <ArrayOfRank<2> M, ArrayOfRank<1> IPIV>
+  template <MemoryMatrix M, MemoryVector IPIV>
   [[nodiscard]] int getrf(M &&m, IPIV &ipiv) {
     static_assert(is_blas_lapack_v<get_value_t<M>>, "Matrix must have elements of type double or complex");
     static_assert(std::is_same_v<get_value_t<IPIV>, int>, "Pivoting array must have elements of type int");
