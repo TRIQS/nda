@@ -43,41 +43,55 @@ TEST(BLAS, zgemmF) { test_gemm<dcomplex, F_layout>(); } //NOLINT
 
 // ==============================================================
 
-TEST(BLAS, gemv) { //NOLINT
+template <typename value_t, typename Layout>
+void test_gemv() {
 
-  nda::matrix<double, F_layout> A(5, 5);
+  nda::matrix<value_t, Layout> A(5, 5);
   A(i_, j_) << i_ + 2 * j_ + 1;
 
-  nda::vector<double> MC(5), MB(5);
+  nda::vector<value_t> MC(5), MB(5);
   MC() = 1;
   MB() = 0;
 
   nda::range R(1, 3);
   nda::blas::gemv(1, A(R, R), MC(R), 0, MB(R));
-  EXPECT_ARRAY_NEAR(MB, nda::array<double, 1>{0, 10, 12, 0, 0});
+  EXPECT_ARRAY_NEAR(MB, nda::vector<value_t>{0, 10, 12, 0, 0});
 
-  matrix_view<double> AT = transpose(A);
+  auto AT = make_regular(transpose(A));
   nda::blas::gemv(1, AT(R, R), MC(R), 0, MB(R));
-  EXPECT_ARRAY_NEAR(MB, nda::vector<double>{0, 9, 13, 0, 0});
+  EXPECT_ARRAY_NEAR(MB, nda::vector<value_t>{0, 9, 13, 0, 0});
 
   // test operator*
   MB()  = -8;
   MB(R) = AT(R, R) * MC(R);
-  EXPECT_ARRAY_NEAR(MB, nda::vector<double>{-8, 9, 13, -8, -8});
+  EXPECT_ARRAY_NEAR(MB, nda::vector<value_t>{-8, 9, 13, -8, -8});
 }
 
-//----------------------------
-TEST(BLAS, ger) { //NOLINT
+TEST(BLAS, gemv) { test_gemv<double, C_layout>(); }     //NOLINT
+TEST(BLAS, gemvF) { test_gemv<double, F_layout>(); }    //NOLINT
+TEST(BLAS, zgemv) { test_gemv<dcomplex, C_layout>(); }  //NOLINT
+TEST(BLAS, zgemvF) { test_gemv<dcomplex, F_layout>(); } //NOLINT
 
-  nda::matrix<double, F_layout> M(2, 2);
+//----------------------------
+
+template <typename value_t, typename Layout>
+void test_ger() {
+
+  nda::matrix<value_t, Layout> M(2, 2);
   M = 0;
-  nda::array<double, 1> V{1, 2};
+  nda::array<value_t, 1> V{1, 2};
 
   nda::blas::ger(1.0, V, V, M);
-  EXPECT_ARRAY_NEAR(M, nda::matrix<double>{{1, 2}, {2, 4}});
+  EXPECT_ARRAY_NEAR(M, nda::matrix<value_t>{{1, 2}, {2, 4}});
 }
 
+TEST(BLAS, dger) { test_ger<double, C_layout>(); }    //NOLINT
+TEST(BLAS, dgerF) { test_ger<double, F_layout>(); }   //NOLINT
+TEST(BLAS, zger) { test_ger<dcomplex, C_layout>(); }  //NOLINT
+TEST(BLAS, zgerF) { test_ger<dcomplex, C_layout>(); } //NOLINT
+
 //----------------------------
+
 TEST(BLAS, outer_product) { //NOLINT
 
   auto N = nda::rand<double>(2, 3);
@@ -85,37 +99,44 @@ TEST(BLAS, outer_product) { //NOLINT
 
   nda::array<double, 4> P(2, 3, 4, 5);
 
-  for(auto [i,j] : N.indices())
-    for(auto [k,l] : M.indices())
-      P(i, j, k, l) = N(i, j) * M(k, l);
+  for (auto [i, j] : N.indices())
+    for (auto [k, l] : M.indices()) P(i, j, k, l) = N(i, j) * M(k, l);
 
   EXPECT_ARRAY_NEAR(P, (nda::blas::outer_product(N, M)));
 }
 
 //----------------------------
-TEST(CUBLAS, dot) { //NOLINT
 
-  nda::vector<double> a{1, 2, 3, 4, 5};
-  nda::vector<double> b{10, 20, 30, 40, 50};
+template <typename value_t>
+void test_dot() { //NOLINT
 
-  EXPECT_NEAR((nda::blas::dot(a, b)), (10 + 2 * 20 + 3 * 30 + 4 * 40 + 5 * 50), 1.e-14);
-  EXPECT_COMPLEX_NEAR((nda::blas::dotc(a, b)), (10 + 2 * 20 + 3 * 30 + 4 * 40 + 5 * 50), 1.e-14);
+  nda::vector<value_t> a{1, 2, 3, 4, 5};
+  nda::vector<value_t> b{10, 20, 30, 40, 50};
+  if constexpr (nda::is_complex_v<value_t>) {
+    a *= 1 + 1i;
+    b *= 1 + 2i;
+  }
+
+  EXPECT_COMPLEX_NEAR((nda::blas::dot(a, b)), (nda::blas::dot_generic(a, b)), 1.e-14);
 }
+
+TEST(CUBLAS, ddot) { test_dot<double>(); }   //NOLINT
+TEST(CUBLAS, zdot) { test_dot<dcomplex>(); } //NOLINT
 
 //----------------------------
-TEST(CUBLAS, dotc1) { //NOLINT
 
-  nda::vector<dcomplex> a{1, 2, 3};
-  nda::vector<dcomplex> b{10, 20, 30};
-  a *= 1 + 1i;
-  b *= 1 + 2i;
+template <typename value_t>
+void test_dotc() { //NOLINT
 
-  EXPECT_COMPLEX_NEAR((nda::blas::dotc(a, b)), (1 - 1i) * (1 + 2i) * (10 + 2 * 20 + 3 * 30), 1.e-14);
+  nda::vector<value_t> a{1, 2, 3, 4, 5};
+  nda::vector<value_t> b{10, 20, 30, 40, 50};
+  if constexpr (nda::is_complex_v<value_t>) {
+    a *= 1 + 1i;
+    b *= 1 + 2i;
+  }
+
+  EXPECT_COMPLEX_NEAR((nda::blas::dotc(a, b)), (nda::blas::dotc_generic(a, b)), 1.e-14);
 }
 
-//----------------------------
-TEST(CUBLAS, dotc2) { //NOLINT
-
-  nda::vector<double> a{1, 2, 3, 4, 5};
-  nda::vector<double> b{10, 20, 30, 40, 50};
-}
+TEST(CUBLAS, ddotc) { test_dotc<double>(); }   //NOLINT
+TEST(CUBLAS, zdotc) { test_dotc<dcomplex>(); } //NOLINT
