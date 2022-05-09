@@ -40,7 +40,7 @@ namespace nda::lapack {
     EXPECTS(ipiv.size() >= std::min(a.extent(0), a.extent(1)));
 
     int info = 0;
-    f77::getrs('N', get_n_cols(a), get_n_cols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
+    f77::getrs('N', a.extent(1), b.extent(1), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
     return info;
   }
 } // namespace nda::lapack
