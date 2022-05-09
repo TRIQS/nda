@@ -20,6 +20,7 @@
 
 #include "../traits.hpp"
 #include "../concepts.hpp"
+#include "../mapped_functions.hpp"
 
 namespace nda {
   using dcomplex = std::complex<double>;
@@ -27,30 +28,46 @@ namespace nda {
 
 namespace nda::blas {
 
-  // ================================================
-
+  // Check if a type is a conjugate matrix expression
+  template <typename M>
+  static constexpr bool is_conj_matrix_expr = false;
   template <MemoryMatrix M>
-  static constexpr bool has_F_layout = std::remove_cvref_t<M>::is_stride_order_Fortran();
+  static constexpr bool is_conj_matrix_expr<expr_call<conj_f, M>> = true;
+  template <typename M>
+  requires(!std::is_same_v<M, std::remove_cvref_t<M>>) static constexpr bool is_conj_matrix_expr<M> = is_conj_matrix_expr<std::remove_cvref_t<M>>;
 
-  template <MemoryMatrix M>
-  static constexpr bool has_C_layout = std::remove_cvref_t<M>::is_stride_order_C();
+  // ==== Layout Checks (Fortran/C) for both MemoryMatrix and conj(MemoryMatrix)
 
-  // FIXME : move to impl NS
-  template <typename MatrixType>
-  char get_op(MatrixType const &A, bool transpose) {
-    return (A.indexmap().is_stride_order_Fortran() ? (transpose ? 'T' : 'N') : (transpose ? 'N' : 'T'));
-  }
+  template <Matrix M>
+  requires(MemoryMatrix<M> or is_conj_matrix_expr<M>)
+  static constexpr bool has_F_layout = [](){
+    if constexpr (blas::is_conj_matrix_expr<M>) return has_F_layout<decltype(std::get<0>(std::declval<M>().a))>;
+    else return std::remove_cvref_t<M>::is_stride_order_Fortran();
+  }();
 
+  template <Matrix M>
+  requires(MemoryMatrix<M> or is_conj_matrix_expr<M>)
+  static constexpr bool has_C_layout = [](){
+    if constexpr (blas::is_conj_matrix_expr<M>) return has_C_layout<decltype(std::get<0>(std::declval<M>().a))>;
+    else return std::remove_cvref_t<M>::is_stride_order_C();
+  }();
+
+  // Determine the blas matrix operation tag ('N','T','C') based on the bools for conjugation and transposition
+  template <bool conj, bool transpose>
+  const char get_op = []() {
+    static_assert(!(conj and not transpose), "Cannot use conjugate of a matrix in blas operations. Please perform operation before call");
+    if constexpr (conj and transpose)
+      return 'C';
+    else if constexpr (transpose)
+      return 'T';
+    else // !conj and !transpose
+      return 'N';
+  }();
 
   // LDA in lapack jargon
   template <MemoryMatrix A>
   int get_ld(A const &a) {
     return a.indexmap().strides()[has_F_layout<A> ? 1 : 0];
   }
-
-  //template <typename M>
-  //bool min_stride_is_1(M const &m) {
-  //return a.indexmap().min_stride() == 1;
-  //}v
 
 } // namespace nda::blas

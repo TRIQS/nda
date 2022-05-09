@@ -72,4 +72,20 @@ namespace nda {
     })(std::forward<A>(a));
   }
 
+  // -----------
+
+  struct conj_f {
+    auto operator()(auto const &x) const { return conj(x); };
+  };
+
+  /// Maps conj onto the array
+  /// \ingroup ArrayFunction
+  template <Array A>
+  decltype(auto) conj(A &&a) {
+    if constexpr (is_complex_v<get_value_t<A>>)
+      return nda::map(conj_f{})(std::forward<A>(a));
+    else
+      return std::forward<A>(a);
+  }
+
 } // namespace nda

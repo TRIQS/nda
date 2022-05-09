@@ -56,9 +56,26 @@ namespace nda::blas {
    *       * c has the correct dimension given a, b. 
    *         gemm does not resize the object, 
    */
-  template <MemoryMatrix A, MemoryMatrix B, MemoryMatrix C>
-  requires(have_same_value_type_v<A, B, C> and is_blas_lapack_v<get_value_t<A>>)
-  void gemm(typename A::value_type alpha, A const &a, B const &b, typename A::value_type beta, C &&c) {
+  template <Matrix X, Matrix Y, MemoryMatrix C>
+  requires((MemoryMatrix<X> or is_conj_matrix_expr<X>) and
+           (MemoryMatrix<Y> or is_conj_matrix_expr<Y>) and
+	   have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>)
+  void gemm(get_value_t<X> alpha, X const &x, Y const &y, get_value_t<X> beta, C &&c) {
+
+    auto to_mat = []<typename Z>(Z const &z) -> decltype(auto) {
+      if constexpr (is_conj_matrix_expr<Z>)
+        return std::get<0>(z.a);
+      else
+        return z;
+    };
+    auto &a = to_mat(x);
+    auto &b = to_mat(y);
+
+    static constexpr bool conj_A = is_conj_matrix_expr<X>;
+    static constexpr bool conj_B = is_conj_matrix_expr<Y>;
+
+    using A = decltype(a);
+    using B = decltype(b);
 
     EXPECTS(a.extent(1) == b.extent(0));
     EXPECTS(a.extent(0) == c.extent(0));
@@ -72,16 +89,15 @@ namespace nda::blas {
     static constexpr auto A_adr_spc = mem::get_addr_space<A>;
     static constexpr auto B_adr_spc = mem::get_addr_space<B>;
     static constexpr auto C_adr_spc = mem::get_addr_space<C>;
-
     static_assert(A_adr_spc == B_adr_spc && B_adr_spc == C_adr_spc);
 
     // c is in C order: compute the transpose of the product in Fortran order
     if constexpr (has_C_layout<C>) {
-      gemm(alpha, transpose(b), transpose(a), beta, transpose(std::forward<C>(c)));
+      gemm(alpha, transpose(y), transpose(x), beta, transpose(std::forward<C>(c)));
       return;
     } else { // c is in Fortran order
-      char op_a   = get_op(a, false);
-      char op_b   = get_op(b, false);
+      char op_a   = get_op<conj_A, /*transpose =*/has_C_layout<A>>;
+      char op_b   = get_op<conj_B, /*transpose =*/has_C_layout<B>>;
       auto [m, k] = a.shape();
       auto n      = b.extent(1);
 
