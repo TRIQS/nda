@@ -30,7 +30,7 @@ namespace nda::blas {
 
   // FIXME : move to impl NS
   template <typename MatrixType>
-  char get_trans(MatrixType const &A, bool transpose) {
+  char get_op(MatrixType const &A, bool transpose) {
     return (A.indexmap().is_stride_order_Fortran() ? (transpose ? 'T' : 'N') : (transpose ? 'N' : 'T'));
   }
 

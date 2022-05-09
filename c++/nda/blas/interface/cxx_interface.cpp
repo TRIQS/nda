@@ -56,22 +56,22 @@ namespace nda::blas::f77 {
     return F77_zdotc(&M, reinterpret_cast<const double *>(x), &incx, reinterpret_cast<const double *>(Y), &incy); // NOLINT
   }
 
-  void gemm(char trans_a, char trans_b, int M, int N, int K, double alpha, const double *A, int LDA, const double *B, int LDB, double beta, double *C,
+  void gemm(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, const double *B, int LDB, double beta, double *C,
             int LDC) {
-    F77_dgemm(&trans_a, &trans_b, &M, &N, &K, &alpha, A, &LDA, B, &LDB, &beta, C, &LDC);
+    F77_dgemm(&op_a, &op_b, &M, &N, &K, &alpha, A, &LDA, B, &LDB, &beta, C, &LDC);
   }
-  void gemm(char trans_a, char trans_b, int M, int N, int K, std::complex<double> alpha, const std::complex<double> *A, int LDA,
+  void gemm(char op_a, char op_b, int M, int N, int K, std::complex<double> alpha, const std::complex<double> *A, int LDA,
             const std::complex<double> *B, int LDB, std::complex<double> beta, std::complex<double> *C, int LDC) {
-    F77_zgemm(&trans_a, &trans_b, &M, &N, &K, reinterpret_cast<const double *>(&alpha), reinterpret_cast<const double *>(A), &LDA,      // NOLINT
+    F77_zgemm(&op_a, &op_b, &M, &N, &K, reinterpret_cast<const double *>(&alpha), reinterpret_cast<const double *>(A), &LDA,            // NOLINT
               reinterpret_cast<const double *>(B), &LDB, reinterpret_cast<const double *>(&beta), reinterpret_cast<double *>(C), &LDC); // NOLINT
   }
 
-  void gemv(char trans, int M, int N, double alpha, const double *A, int LDA, const double *x, int incx, double beta, double *Y, int incy) {
-    F77_dgemv(&trans, &M, &N, &alpha, A, &LDA, x, &incx, &beta, Y, &incy);
+  void gemv(char op, int M, int N, double alpha, const double *A, int LDA, const double *x, int incx, double beta, double *Y, int incy) {
+    F77_dgemv(&op, &M, &N, &alpha, A, &LDA, x, &incx, &beta, Y, &incy);
   }
-  void gemv(char trans, int M, int N, std::complex<double> alpha, const std::complex<double> *A, int LDA, const std::complex<double> *x, int incx,
+  void gemv(char op, int M, int N, std::complex<double> alpha, const std::complex<double> *A, int LDA, const std::complex<double> *x, int incx,
             std::complex<double> beta, std::complex<double> *Y, int incy) {
-    F77_zgemv(&trans, &M, &N, reinterpret_cast<const double *>(&alpha), reinterpret_cast<const double *>(A), &LDA,                        // NOLINT
+    F77_zgemv(&op, &M, &N, reinterpret_cast<const double *>(&alpha), reinterpret_cast<const double *>(A), &LDA,                           // NOLINT
               reinterpret_cast<const double *>(x), &incx, reinterpret_cast<const double *>(&beta), reinterpret_cast<double *>(Y), &incy); // NOLINT
   }
 
@@ -99,8 +99,8 @@ namespace nda::blas::f77 {
 
 namespace nda::blas::cuda {
 
-  constexpr cublasOperation_t get_op(char trans) {
-    switch (trans) {
+  constexpr cublasOperation_t get_cublas_op(char op) {
+    switch (op) {
       case 'N': return CUBLAS_OP_N; break;
       case 'T': return CUBLAS_OP_T; break;
       case 'C': return CUBLAS_OP_C; break;
@@ -122,17 +122,17 @@ namespace nda::blas::cuda {
   auto err = X(handle, __VA_ARGS__);                                                                                                                 \
   ASSERT_WITH_MESSAGE(err == CUBLAS_STATUS_SUCCESS, AS_STRING(X) + " failed with error code "s + std::to_string(err));
 
-  void gemm(char trans_a, char trans_b, int M, int N, int K, double alpha, const double *A, int LDA, const double *B, int LDB, double beta, double *C,
+  void gemm(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, const double *B, int LDB, double beta, double *C,
             int LDC) {
-    CUBLAS_CHECK(cublasDgemm, get_op(trans_a), get_op(trans_b), M, N, K, &alpha, A, LDA, B, LDB, &beta, C, LDC); // NOLINT
+    CUBLAS_CHECK(cublasDgemm, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha, A, LDA, B, LDB, &beta, C, LDC); // NOLINT
   }
 
-  void gemm(char trans_a, char trans_b, int M, int N, int K, std::complex<double> alpha, const std::complex<double> *A, int LDA,
+  void gemm(char op_a, char op_b, int M, int N, int K, std::complex<double> alpha, const std::complex<double> *A, int LDA,
             const std::complex<double> *B, int LDB, std::complex<double> beta, std::complex<double> *C, int LDC) {
     auto alpha_cu = cuDoubleComplex{alpha.real(), alpha.imag()};
     auto beta_cu  = cuDoubleComplex{beta.real(), beta.imag()};
-    CUBLAS_CHECK(cublasZgemm, get_op(trans_a), get_op(trans_b), M, N, K, &alpha_cu, reinterpret_cast<const cuDoubleComplex *>(A), LDA, // NOLINT
-                 reinterpret_cast<const cuDoubleComplex *>(B), LDB, &beta_cu, reinterpret_cast<cuDoubleComplex *>(C), LDC);            // NOLINT
+    CUBLAS_CHECK(cublasZgemm, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha_cu, reinterpret_cast<const cuDoubleComplex *>(A), // NOLINT
+                 LDA, reinterpret_cast<const cuDoubleComplex *>(B), LDB, &beta_cu, reinterpret_cast<cuDoubleComplex *>(C), LDC);          // NOLINT
   }
 
   void axpy(int N, double alpha, const double *x, int incx, double *Y, int incy) { cublasDaxpy(handle, N, &alpha, x, incx, Y, incy); }
@@ -164,12 +164,12 @@ namespace nda::blas::cuda {
     return {res.x, res.y};
   }
 
-  void gemv(char trans, int M, int N, double alpha, const double *A, int LDA, const double *x, int incx, double beta, double *Y, int incy) {
-    CUBLAS_CHECK(cublasDgemv, get_op(trans), M, N, &alpha, A, LDA, x, incx, &beta, Y, incy); // NOLINT
+  void gemv(char op, int M, int N, double alpha, const double *A, int LDA, const double *x, int incx, double beta, double *Y, int incy) {
+    CUBLAS_CHECK(cublasDgemv, get_cublas_op(op), M, N, &alpha, A, LDA, x, incx, &beta, Y, incy); // NOLINT
   }
-  void gemv(char trans, int M, int N, std::complex<double> alpha, const std::complex<double> *A, int LDA, const std::complex<double> *x, int incx,
+  void gemv(char op, int M, int N, std::complex<double> alpha, const std::complex<double> *A, int LDA, const std::complex<double> *x, int incx,
             std::complex<double> beta, std::complex<double> *Y, int incy) {
-    CUBLAS_CHECK(cublasZgemv, get_op(trans), M, N, reinterpret_cast<const cuDoubleComplex *>(&alpha),
+    CUBLAS_CHECK(cublasZgemv, get_cublas_op(op), M, N, reinterpret_cast<const cuDoubleComplex *>(&alpha),
                  reinterpret_cast<const cuDoubleComplex *>(A),                                                              // NOLINT
                  LDA, reinterpret_cast<const cuDoubleComplex *>(x), incx, reinterpret_cast<const cuDoubleComplex *>(&beta), // NOLINT
                  reinterpret_cast<cuDoubleComplex *>(Y), incy);                                                             // NOLINT
