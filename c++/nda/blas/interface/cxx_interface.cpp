@@ -15,6 +15,7 @@
 // Authors: Olivier Parcollet, Nils Wentzell
 
 #include <nda/macros.hpp>
+#include <nda/exceptions.hpp>
 #include "cxx_interface.hpp"
 
 // Extracted from Reference Lapack (https://github.com/Reference-LAPACK):
@@ -37,23 +38,25 @@ std::complex<double> F77_zdotc(FINT, const double *, FINT, const double *, FINT)
 
 namespace nda::blas::f77 {
 
+  inline auto *blacplx(std::complex<double> *c) { return reinterpret_cast<double *>(c); }             // NOLINT
+  inline auto *blacplx(std::complex<double> const *c) { return reinterpret_cast<const double *>(c); } // NOLINT
+
   void axpy(int N, double alpha, const double *x, int incx, double *Y, int incy) { F77_daxpy(&N, &alpha, x, &incx, Y, &incy); }
   void axpy(int N, std::complex<double> alpha, const std::complex<double> *x, int incx, std::complex<double> *Y, int incy) {
-    F77_zaxpy(&N, reinterpret_cast<const double *>(&alpha), reinterpret_cast<const double *>(x), &incx, reinterpret_cast<double *>(Y), // NOLINT
-              &incy);                                                                                                                  // NOLINT
+    F77_zaxpy(&N, blacplx(&alpha), blacplx(x), &incx, blacplx(Y), &incy);
   }
   // No Const In Wrapping!
   void copy(int N, const double *x, int incx, double *Y, int incy) { F77_dcopy(&N, x, &incx, Y, &incy); }
   void copy(int N, const std::complex<double> *x, int incx, std::complex<double> *Y, int incy) {
-    F77_zcopy(&N, reinterpret_cast<const double *>(x), &incx, reinterpret_cast<double *>(Y), &incy); // NOLINT
+    F77_zcopy(&N, blacplx(x), &incx, blacplx(Y), &incy);
   }
 
   double dot(int M, const double *x, int incx, const double *Y, int incy) { return F77_ddot(&M, x, &incx, Y, &incy); }
   std::complex<double> dot(int M, const std::complex<double> *x, int incx, const std::complex<double> *Y, int incy) {
-    return F77_zdotu(&M, reinterpret_cast<const double *>(x), &incx, reinterpret_cast<const double *>(Y), &incy); // NOLINT
+    return F77_zdotu(&M, blacplx(x), &incx, blacplx(Y), &incy);
   }
   std::complex<double> dotc(int M, const std::complex<double> *x, int incx, const std::complex<double> *Y, int incy) {
-    return F77_zdotc(&M, reinterpret_cast<const double *>(x), &incx, reinterpret_cast<const double *>(Y), &incy); // NOLINT
+    return F77_zdotc(&M, blacplx(x), &incx, blacplx(Y), &incy);
   }
 
   void gemm(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, const double *B, int LDB, double beta, double *C,
@@ -62,8 +65,7 @@ namespace nda::blas::f77 {
   }
   void gemm(char op_a, char op_b, int M, int N, int K, std::complex<double> alpha, const std::complex<double> *A, int LDA,
             const std::complex<double> *B, int LDB, std::complex<double> beta, std::complex<double> *C, int LDC) {
-    F77_zgemm(&op_a, &op_b, &M, &N, &K, reinterpret_cast<const double *>(&alpha), reinterpret_cast<const double *>(A), &LDA,            // NOLINT
-              reinterpret_cast<const double *>(B), &LDB, reinterpret_cast<const double *>(&beta), reinterpret_cast<double *>(C), &LDC); // NOLINT
+    F77_zgemm(&op_a, &op_b, &M, &N, &K, blacplx(&alpha), blacplx(A), &LDA, blacplx(B), &LDB, blacplx(&beta), blacplx(C), &LDC);
   }
 
   void gemv(char op, int M, int N, double alpha, const double *A, int LDA, const double *x, int incx, double beta, double *Y, int incy) {
@@ -71,8 +73,7 @@ namespace nda::blas::f77 {
   }
   void gemv(char op, int M, int N, std::complex<double> alpha, const std::complex<double> *A, int LDA, const std::complex<double> *x, int incx,
             std::complex<double> beta, std::complex<double> *Y, int incy) {
-    F77_zgemv(&op, &M, &N, reinterpret_cast<const double *>(&alpha), reinterpret_cast<const double *>(A), &LDA,                           // NOLINT
-              reinterpret_cast<const double *>(x), &incx, reinterpret_cast<const double *>(&beta), reinterpret_cast<double *>(Y), &incy); // NOLINT
+    F77_zgemv(&op, &M, &N, blacplx(&alpha), blacplx(A), &LDA, blacplx(x), &incx, blacplx(&beta), blacplx(Y), &incy);
   }
 
   void ger(int M, int N, double alpha, const double *x, int incx, const double *Y, int incy, double *A, int LDA) {
@@ -80,20 +81,14 @@ namespace nda::blas::f77 {
   }
   void ger(int M, int N, std::complex<double> alpha, const std::complex<double> *x, int incx, const std::complex<double> *Y, int incy,
            std::complex<double> *A, int LDA) {
-    F77_zgeru(&M, &N, reinterpret_cast<const double *>(&alpha), reinterpret_cast<const double *>(x), &incx, // NOLINT
-              reinterpret_cast<const double *>(Y),                                                          // NOLINT
-              &incy, reinterpret_cast<double *>(A), &LDA);                                                  // NOLINT
+    F77_zgeru(&M, &N, blacplx(&alpha), blacplx(x), &incx, blacplx(Y), &incy, blacplx(A), &LDA);
   }
 
   void scal(int M, double alpha, double *x, int incx) { F77_dscal(&M, &alpha, x, &incx); }
-  void scal(int M, std::complex<double> alpha, std::complex<double> *x, int incx) {
-    F77_zscal(&M, reinterpret_cast<const double *>(&alpha), reinterpret_cast<double *>(x), &incx); // NOLINT
-  }
+  void scal(int M, std::complex<double> alpha, std::complex<double> *x, int incx) { F77_zscal(&M, blacplx(&alpha), blacplx(x), &incx); }
 
   void swap(int N, double *x, int incx, double *Y, int incy) { F77_dswap(&N, x, &incx, Y, &incy); }
-  void swap(int N, std::complex<double> *x, int incx, std::complex<double> *Y, int incy) {
-    F77_zswap(&N, reinterpret_cast<double *>(x), &incx, reinterpret_cast<double *>(Y), &incy); // NOLINT
-  }
+  void swap(int N, std::complex<double> *x, int incx, std::complex<double> *Y, int incy) { F77_zswap(&N, blacplx(x), &incx, blacplx(Y), &incy); }
 
 } // namespace nda::blas::f77
 
@@ -120,78 +115,71 @@ namespace nda::blas::cuda {
 
 #define CUBLAS_CHECK(X, ...)                                                                                                                         \
   auto err = X(handle, __VA_ARGS__);                                                                                                                 \
-  ASSERT_WITH_MESSAGE(err == CUBLAS_STATUS_SUCCESS, AS_STRING(X) + " failed with error code "s + std::to_string(err));
+  if (err != CUBLAS_STATUS_SUCCESS) NDA_RUNTIME_ERROR << AS_STRING(X) + " failed with error code "s + std::to_string(err);
+
+  inline auto *cucplx(std::complex<double> *c) { return reinterpret_cast<cuDoubleComplex *>(c); }             // NOLINT
+  inline auto *cucplx(std::complex<double> const *c) { return reinterpret_cast<const cuDoubleComplex *>(c); } // NOLINT
 
   void gemm(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, const double *B, int LDB, double beta, double *C,
             int LDC) {
-    CUBLAS_CHECK(cublasDgemm, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha, A, LDA, B, LDB, &beta, C, LDC); // NOLINT
+    CUBLAS_CHECK(cublasDgemm, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha, A, LDA, B, LDB, &beta, C, LDC);
   }
 
   void gemm(char op_a, char op_b, int M, int N, int K, std::complex<double> alpha, const std::complex<double> *A, int LDA,
             const std::complex<double> *B, int LDB, std::complex<double> beta, std::complex<double> *C, int LDC) {
     auto alpha_cu = cuDoubleComplex{alpha.real(), alpha.imag()};
     auto beta_cu  = cuDoubleComplex{beta.real(), beta.imag()};
-    CUBLAS_CHECK(cublasZgemm, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha_cu, reinterpret_cast<const cuDoubleComplex *>(A), // NOLINT
-                 LDA, reinterpret_cast<const cuDoubleComplex *>(B), LDB, &beta_cu, reinterpret_cast<cuDoubleComplex *>(C), LDC);          // NOLINT
+    CUBLAS_CHECK(cublasZgemm, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha_cu, cucplx(A), LDA, cucplx(B), LDB, &beta_cu, cucplx(C), LDC);
   }
 
   void axpy(int N, double alpha, const double *x, int incx, double *Y, int incy) { cublasDaxpy(handle, N, &alpha, x, incx, Y, incy); }
   void axpy(int N, std::complex<double> alpha, const std::complex<double> *x, int incx, std::complex<double> *Y, int incy) {
-    CUBLAS_CHECK(cublasZaxpy, N, reinterpret_cast<const cuDoubleComplex *>(&alpha), reinterpret_cast<const cuDoubleComplex *>(x), incx, // NOLINT
-                 reinterpret_cast<cuDoubleComplex *>(Y), incy);                                                                         // NOLINT
+    CUBLAS_CHECK(cublasZaxpy, N, cucplx(&alpha), cucplx(x), incx, cucplx(Y), incy);
   }
 
   void copy(int N, const double *x, int incx, double *Y, int incy) { cublasDcopy(handle, N, x, incx, Y, incy); }
   void copy(int N, const std::complex<double> *x, int incx, std::complex<double> *Y, int incy) {
-    CUBLAS_CHECK(cublasZcopy, N, reinterpret_cast<const cuDoubleComplex *>(x), incx, reinterpret_cast<cuDoubleComplex *>(Y), incy); // NOLINT
+    CUBLAS_CHECK(cublasZcopy, N, cucplx(x), incx, cucplx(Y), incy);
   }
 
   double dot(int M, const double *x, int incx, const double *Y, int incy) {
     double res{};
-    CUBLAS_CHECK(cublasDdot, M, x, incx, Y, incy, &res); // NOLINT
+    CUBLAS_CHECK(cublasDdot, M, x, incx, Y, incy, &res);
     return res;
   }
   std::complex<double> dot(int M, const std::complex<double> *x, int incx, const std::complex<double> *Y, int incy) {
     cuDoubleComplex res;
-    CUBLAS_CHECK(cublasZdotu, M, reinterpret_cast<const cuDoubleComplex *>(x), incx, reinterpret_cast<const cuDoubleComplex *>(Y), incy,
-                 &res); // NOLINT
+    CUBLAS_CHECK(cublasZdotu, M, cucplx(x), incx, cucplx(Y), incy, &res);
     return {res.x, res.y};
   }
   std::complex<double> dotc(int M, const std::complex<double> *x, int incx, const std::complex<double> *Y, int incy) {
     cuDoubleComplex res;
-    CUBLAS_CHECK(cublasZdotc, M, reinterpret_cast<const cuDoubleComplex *>(x), incx, reinterpret_cast<const cuDoubleComplex *>(Y), incy,
-                 &res); // NOLINT
+    CUBLAS_CHECK(cublasZdotc, M, cucplx(x), incx, cucplx(Y), incy, &res);
     return {res.x, res.y};
   }
 
   void gemv(char op, int M, int N, double alpha, const double *A, int LDA, const double *x, int incx, double beta, double *Y, int incy) {
-    CUBLAS_CHECK(cublasDgemv, get_cublas_op(op), M, N, &alpha, A, LDA, x, incx, &beta, Y, incy); // NOLINT
+    CUBLAS_CHECK(cublasDgemv, get_cublas_op(op), M, N, &alpha, A, LDA, x, incx, &beta, Y, incy);
   }
   void gemv(char op, int M, int N, std::complex<double> alpha, const std::complex<double> *A, int LDA, const std::complex<double> *x, int incx,
             std::complex<double> beta, std::complex<double> *Y, int incy) {
-    CUBLAS_CHECK(cublasZgemv, get_cublas_op(op), M, N, reinterpret_cast<const cuDoubleComplex *>(&alpha),
-                 reinterpret_cast<const cuDoubleComplex *>(A),                                                              // NOLINT
-                 LDA, reinterpret_cast<const cuDoubleComplex *>(x), incx, reinterpret_cast<const cuDoubleComplex *>(&beta), // NOLINT
-                 reinterpret_cast<cuDoubleComplex *>(Y), incy);                                                             // NOLINT
+    CUBLAS_CHECK(cublasZgemv, get_cublas_op(op), M, N, cucplx(&alpha), cucplx(A), LDA, cucplx(x), incx, cucplx(&beta), cucplx(Y), incy);
   }
 
   void ger(int M, int N, double alpha, const double *x, int incx, const double *Y, int incy, double *A, int LDA) {
-    CUBLAS_CHECK(cublasDger, M, N, &alpha, x, incx, Y, incy, A, LDA); // NOLINT
+    CUBLAS_CHECK(cublasDger, M, N, &alpha, x, incx, Y, incy, A, LDA);
   }
   void ger(int M, int N, std::complex<double> alpha, const std::complex<double> *x, int incx, const std::complex<double> *Y, int incy,
            std::complex<double> *A, int LDA) {
-    CUBLAS_CHECK(cublasZgeru, M, N, reinterpret_cast<const cuDoubleComplex *>(&alpha), reinterpret_cast<const cuDoubleComplex *>(x), incx, // NOLINT
-                 reinterpret_cast<const cuDoubleComplex *>(Y), incy, reinterpret_cast<cuDoubleComplex *>(A), LDA);                         // NOLINT
+    CUBLAS_CHECK(cublasZgeru, M, N, cucplx(&alpha), cucplx(x), incx, cucplx(Y), incy, cucplx(A), LDA);
   }
 
-  void scal(int M, double alpha, double *x, int incx) { CUBLAS_CHECK(cublasDscal, M, &alpha, x, incx); } // NOLINT
-  void scal(int M, std::complex<double> alpha, std::complex<double> *x, int incx) {
-    CUBLAS_CHECK(cublasZscal, M, reinterpret_cast<const cuDoubleComplex *>(&alpha), reinterpret_cast<cuDoubleComplex *>(x), incx); // NOLINT
-  }
+  void scal(int M, double alpha, double *x, int incx) { CUBLAS_CHECK(cublasDscal, M, &alpha, x, incx); }
+  void scal(int M, std::complex<double> alpha, std::complex<double> *x, int incx) { CUBLAS_CHECK(cublasZscal, M, cucplx(&alpha), cucplx(x), incx); }
 
-  void swap(int N, double *x, int incx, double *Y, int incy) { CUBLAS_CHECK(cublasDswap, N, x, incx, Y, incy); } // NOLINT
+  void swap(int N, double *x, int incx, double *Y, int incy) { CUBLAS_CHECK(cublasDswap, N, x, incx, Y, incy); }
   void swap(int N, std::complex<double> *x, int incx, std::complex<double> *Y, int incy) {
-    CUBLAS_CHECK(cublasZswap, N, reinterpret_cast<cuDoubleComplex *>(x), incx, reinterpret_cast<cuDoubleComplex *>(Y), incy); // NOLINT
+    CUBLAS_CHECK(cublasZswap, N, cucplx(x), incx, cucplx(Y), incy);
   }
 
 } // namespace nda::blas::cuda
