@@ -38,18 +38,13 @@ namespace nda::blas {
    *       * m has the correct dimension given a, b. 
    */
   template <MemoryVector X, MemoryVector Y, MemoryMatrix M>
-  requires(have_same_value_type_v<X, Y, M> and is_blas_lapack_v<get_value_t<X>>)
-  void ger(typename X::value_type alpha, X const &x, Y const &y, M &&m) {
+  requires(have_same_value_type_v<X, Y, M> and mem::have_same_addr_space_v<X, Y, M> and is_blas_lapack_v<get_value_t<X>>)
+  void ger(get_value_t<X> alpha, X const &x, Y const &y, M &&m) {
 
     EXPECTS(m.extent(0) == x.extent(0));
     EXPECTS(m.extent(1) == y.extent(0));
     // Must be lapack compatible
     EXPECTS(m.indexmap().min_stride() == 1);
-
-    static constexpr auto X_adr_spc = mem::get_addr_space<X>;
-    static constexpr auto Y_adr_spc = mem::get_addr_space<Y>;
-    static constexpr auto M_adr_spc = mem::get_addr_space<M>;
-    static_assert(X_adr_spc == Y_adr_spc && Y_adr_spc == M_adr_spc);
 
     // if in C, we need to call fortran with transposed matrix
     if (has_C_layout<M>) {
