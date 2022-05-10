@@ -76,6 +76,7 @@ namespace nda::blas {
 
     using A = decltype(a);
     using B = decltype(b);
+    static_assert(mem::have_same_addr_space_v<A, B, C>, "Matrices must have same memory address space");
 
     EXPECTS(a.extent(1) == b.extent(0));
     EXPECTS(a.extent(0) == c.extent(0));
@@ -85,11 +86,6 @@ namespace nda::blas {
     EXPECTS(a.indexmap().min_stride() == 1);
     EXPECTS(b.indexmap().min_stride() == 1);
     EXPECTS(c.indexmap().min_stride() == 1);
-
-    static constexpr auto A_adr_spc = mem::get_addr_space<A>;
-    static constexpr auto B_adr_spc = mem::get_addr_space<B>;
-    static constexpr auto C_adr_spc = mem::get_addr_space<C>;
-    static_assert(A_adr_spc == B_adr_spc && B_adr_spc == C_adr_spc);
 
     // c is in C order: compute the transpose of the product in Fortran order
     if constexpr (has_C_layout<C>) {

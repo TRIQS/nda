@@ -30,11 +30,8 @@ namespace nda::blas {
       return x * y;
     } else {
       static_assert(have_same_value_type_v<X, Y>, "Vectors must have same value type");
+      static_assert(mem::have_same_addr_space_v<X, Y>, "Vectors must have same memory address space");
       static_assert(is_blas_lapack_v<get_value_t<X>>, "Vectors hold value_type incompatible with blas");
-
-      static constexpr auto X_adr_spc = mem::get_addr_space<X>;
-      static constexpr auto Y_adr_spc = mem::get_addr_space<Y>;
-      static_assert(X_adr_spc == Y_adr_spc);
 
       EXPECTS(x.shape() == y.shape());
 
@@ -54,11 +51,8 @@ namespace nda::blas {
       return conj(x) * y;
     } else {
       static_assert(have_same_value_type_v<X, Y>, "Vectors must have same value type");
+      static_assert(mem::have_same_addr_space_v<X, Y>, "Vectors must have same memory address space");
       static_assert(is_blas_lapack_v<get_value_t<X>>, "Vectors hold value_type incompatible with blas");
-
-      static constexpr auto X_adr_spc = mem::get_addr_space<X>;
-      static constexpr auto Y_adr_spc = mem::get_addr_space<Y>;
-      static_assert(X_adr_spc == Y_adr_spc);
 
       EXPECTS(x.shape() == y.shape());
 
