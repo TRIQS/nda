@@ -95,6 +95,10 @@ namespace nda::mem {
   requires(sizeof...(Ts) > 0)
   static constexpr bool on_unified = ((get_addr_space<Ts> == mem::Unified) and ...);
 
+  // Check all A have the same element_type
+  template <typename A0, typename... A>
+  static constexpr bool have_same_addr_space_v = ((get_addr_space<A0> == get_addr_space<A>)and... and true);
+
   // ------------- Test Promotion for various cases ------------
 
   static_assert(combine<None, None> == None);

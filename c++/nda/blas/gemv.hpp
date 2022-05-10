@@ -70,6 +70,7 @@ namespace nda::blas {
     static constexpr bool conj_A = is_conj_matrix_expr<X>;
 
     using A = decltype(a);
+    static_assert(mem::have_same_addr_space_v<A, B, C>);
 
     EXPECTS(a.extent(1) == b.extent(0));
     EXPECTS(a.extent(0) == c.extent(0));
@@ -78,11 +79,6 @@ namespace nda::blas {
     EXPECTS(a.indexmap().min_stride() == 1);
     EXPECTS(b.indexmap().min_stride() == 1);
     EXPECTS(c.indexmap().min_stride() == 1);
-
-    static constexpr auto A_adr_spc = mem::get_addr_space<A>;
-    static constexpr auto B_adr_spc = mem::get_addr_space<B>;
-    static constexpr auto C_adr_spc = mem::get_addr_space<C>;
-    static_assert(A_adr_spc == B_adr_spc && B_adr_spc == C_adr_spc);
 
     char op_a                    = get_op<conj_A, /*transpose =*/!has_F_layout<A>>;
     auto [m, n] = a.shape();
