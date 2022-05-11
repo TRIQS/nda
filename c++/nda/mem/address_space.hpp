@@ -79,11 +79,20 @@ namespace nda::mem {
 
   // ------------- Additional helper traits -------------
 
-  template <typename T>
-  static constexpr bool on_host = (get_addr_space<T> == mem::Host);
+  // Check if all Ts have memory on the host
+  template <typename... Ts>
+  requires(sizeof...(Ts) > 0)
+  static constexpr bool on_host = ((get_addr_space<Ts> == mem::Host) and ...);
 
-  template <typename T>
-  static constexpr bool on_device = (get_addr_space<T> == mem::Device || get_addr_space<T> == mem::Unified);
+  // Check if all Ts have memory on the device
+  template <typename... Ts>
+  requires(sizeof...(Ts) > 0)
+  static constexpr bool on_device = ((get_addr_space<Ts> == mem::Device) and ...);
+
+  // Check if all Ts have unified memory
+  template <typename... Ts>
+  requires(sizeof...(Ts) > 0)
+  static constexpr bool on_unified = ((get_addr_space<Ts> == mem::Unified) and ...);
 
   // ------------- Test Promotion for various cases ------------
 
