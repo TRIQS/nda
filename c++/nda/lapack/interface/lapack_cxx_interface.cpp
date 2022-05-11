@@ -1,10 +1,28 @@
+// Copyright (c) 2019-2021 Simons Foundation
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Authors: Olivier Parcollet, Nils Wentzell
+
 #include "lapack_cxx_interface.hpp"
+
 // Extracted from Reference Lapack (https://github.com/Reference-LAPACK):
 #include "lapack.h"
 
 namespace nda::lapack::f77 {
 
-  void gelss(int M, int N, int NRHS, double *A, int LDA, double *B, int LDB, double *S, double RCOND, int &RANK, double *WORK, int LWORK, int &INFO) {
+  void gelss(int M, int N, int NRHS, double *A, int LDA, double *B, int LDB, double *S, double RCOND, int &RANK, double *WORK, int LWORK,
+             [[maybe_unused]] double *RWORK, int &INFO) {
     LAPACK_dgelss(&M, &N, &NRHS, A, &LDA, B, &LDB, S, &RCOND, &RANK, WORK, &LWORK, &INFO);
   }
   void gelss(int M, int N, int NRHS, std::complex<double> *A, int LDA, std::complex<double> *B, int LDB, double *S, double RCOND, int &RANK,
@@ -12,11 +30,11 @@ namespace nda::lapack::f77 {
     LAPACK_zgelss(&M, &N, &NRHS, A, &LDA, B, &LDB, S, &RCOND, &RANK, WORK, &LWORK, RWORK, &INFO);
   }
 
-  void gesvd(const char &JOBU, const char &JOBVT, int M, int N, double *A, int LDA, double *S, double *U, int LDU, double *VT, int LDVT, double *WORK,
-             int LWORK, int &INFO) {
+  void gesvd(char JOBU, char JOBVT, int M, int N, double *A, int LDA, double *S, double *U, int LDU, double *VT, int LDVT, double *WORK, int LWORK,
+             [[maybe_unused]] double *RWORK, int &INFO) {
     LAPACK_dgesvd(&JOBU, &JOBVT, &M, &N, A, &LDA, S, U, &LDU, VT, &LDVT, WORK, &LWORK, &INFO);
   }
-  void gesvd(const char &JOBU, const char &JOBVT, int M, int N, std::complex<double> *A, int LDA, double *S, std::complex<double> *U, int LDU,
+  void gesvd(char JOBU, char JOBVT, int M, int N, std::complex<double> *A, int LDA, double *S, std::complex<double> *U, int LDU,
              std::complex<double> *VT, int LDVT, std::complex<double> *WORK, int LWORK, double *RWORK, int &INFO) {
     LAPACK_zgesvd(&JOBU, &JOBVT, &M, &N, A, &LDA, S, U, &LDU, VT, &LDVT, WORK, &LWORK, RWORK, &INFO);
   }
@@ -46,11 +64,11 @@ namespace nda::lapack::f77 {
     LAPACK_zheev(&JOBZ, &UPLO, &N, A, &LDA, W, work, &lwork, work2, &info);
   }
 
-  void getrs(char TRANS, int N, int NRHS, double const *A, int LDA, int *ipiv, double *B, int LDB, int &info) {
-    LAPACK_dgetrs(&TRANS, &N, &NRHS, A, &LDA, ipiv, B, &LDB, &info);
+  void getrs(char op, int N, int NRHS, double const *A, int LDA, int const *ipiv, double *B, int LDB, int &info) {
+    LAPACK_dgetrs(&op, &N, &NRHS, A, &LDA, ipiv, B, &LDB, &info);
   }
-  void getrs(char TRANS, int N, int NRHS, std::complex<double> const *A, int LDA, int *ipiv, std::complex<double> *B, int LDB, int &info) {
-    LAPACK_zgetrs(&TRANS, &N, &NRHS, A, &LDA, ipiv, B, &LDB, &info);
+  void getrs(char op, int N, int NRHS, std::complex<double> const *A, int LDA, int const *ipiv, std::complex<double> *B, int LDB, int &info) {
+    LAPACK_zgetrs(&op, &N, &NRHS, A, &LDA, ipiv, B, &LDB, &info);
   }
 
 } // namespace nda::lapack::f77

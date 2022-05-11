@@ -20,63 +20,73 @@
 
 namespace nda::lapack {
 
-  ///
-  ///  $$ A = U S {}^t V$$
-  /// A is destroyed during the computation
-  template <MemoryMatrix A, MemoryMatrix U, MemoryMatrix V>
+  /**
+   * Computes the singular value decomposition (SVD) of a real/complex
+   * M-by-N matrix A, computing the left and/or right singular
+   * vectors. The SVD is written
+   *
+   *      A = U * SIGMA * conjugate-transpose(V)
+   *
+   * where SIGMA is an M-by-N matrix which is zero except for its
+   * min(m,n) diagonal elements, U is an M-by-M unitary matrix, and
+   * V is an N-by-N unitary matrix.  The diagonal elements of SIGMA
+   * are the singular values of A; they are real and non-negative, and
+   * are returned in descending order.  The first min(m,n) columns of
+   * U and V are the left and right singular vectors of A.
+   *
+   * Note that the routine calculates V**H, not V.
+   *
+   * [in,out]  A is real/complex array, dimension (LDA,N)
+   *           On entry, the M-by-N matrix A.
+   *           On exit,
+   *
+   * [out]     S is DOUBLE PRECISION array, dimension (min(M,N))
+   *           The singular values of A, sorted so that S(i) >= S(i+1).
+   *
+   * [out]     U is real/complex array, dimension (LDU,M).
+   *           U contains the M-by-M unitary matrix U;
+   *
+   * [out]     VT is real/complex array, dimension (LDVT,N)
+   *           VT contains the N-by-N unitary matrix V**H
+   *
+   * [return]  INFO is INTEGER
+   *           = 0:  successful exit.
+   *           < 0:  if INFO = -i, the i-th argument had an illegal value.
+   *           > 0:  if ZBDSQR did not converge, INFO specifies how many
+   *                 superdiagonals of an intermediate bidiagonal form B
+   *                 did not converge to zero. See the description of RWORK
+   *                 above for details.
+   */
+  template <MemoryMatrix A, MemoryVector S, MemoryMatrix U, MemoryMatrix VT>
+  requires(have_same_value_type_v<A, U, VT> and mem::on_host<A, S, U, VT> and is_blas_lapack_v<get_value_t<A>>)
+  int gesvd(A &a, S &s, U &u, VT &vt) {
+    static_assert(has_F_layout<A> and has_F_layout<U> and has_F_layout<VT>, "C order not implemented");
 
-  requires(have_same_value_type_v<A, U, V> and is_blas_lapack_v<typename A::value_type>)
+    using T    = get_value_t<A>;
+    auto dm    = std::min(a.extent(0), a.extent(1));
+    auto rwork = array<double, 1, C_layout, heap<mem::get_addr_space<A>>>(5 * dm);
+    if (s.size() < dm) s.resize(dm);
 
-  int gesvd1(A &a, array_view<double, 1> c, U &u, V &v) {
+    // Must be lapack compatible
+    EXPECTS(a.indexmap().min_stride() == 1);
+    EXPECTS(s.indexmap().min_stride() == 1);
+    EXPECTS(u.indexmap().min_stride() == 1);
+    EXPECTS(vt.indexmap().min_stride() == 1);
 
-    static_assert(has_F_layout<A>, "C order not implemented");
-    static_assert(has_F_layout<U>, "C order not implemented");
-    static_assert(has_F_layout<V>, "C order not implemented");
+    // First call to get the optimal buffersize
+    T bufferSize_T{};
+    int info   = 0;
+    f77::gesvd('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), s.data(), u.data(), get_ld(u), vt.data(), get_ld(vt), &bufferSize_T, -1,
+          rwork.data(), info);
+    int bufferSize = std::ceil(std::real(bufferSize_T));
 
-    int info = 0;
-
-    using T = get_value_t<A>;
-    static_assert(is_blas_lapack_v<T>, "Not implemented");
-
-    if constexpr (std::is_same_v<T, double>) {
-
-      // first call to get the optimal lwork
-      T work1[1];
-      lapack::f77::gesvd('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), c.data(), u.data(), get_ld(u), v.data(), get_ld(v), work1, -1,
-                         info);
-
-      int lwork = std::round(work1[0]) + 1;
-      array<T, 1> work(lwork);
-
-      lapack::f77::gesvd('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), c.data(), u.data(), get_ld(u), v.data(), get_ld(v), work.data(),
-                         lwork, info);
-
-    } else {
-
-      auto rwork = array<double, 1>(5 * std::min(a.extent(0), a.extent(1)));
-
-      // first call to get the optimal lwork
-      T work1[1];
-      lapack::f77::gesvd('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), c.data(), u.data(), get_ld(u), v.data(), get_ld(v), work1, -1,
-                         rwork.data(), info);
-
-      int lwork = std::round(std::real(work1[0])) + 1;
-      array<T, 1> work(lwork);
-
-      lapack::f77::gesvd('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), c.data(), u.data(), get_ld(u), v.data(), get_ld(v), work.data(),
-                         lwork, rwork.data(), info);
-    }
+    // Allocate work buffer and perform actual library call
+    array<T, 1, C_layout, heap<mem::get_addr_space<A>>> work(bufferSize);
+    f77::gesvd('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), s.data(), u.data(), get_ld(u), vt.data(), get_ld(vt), work.data(), bufferSize,
+          rwork.data(), info);
 
     if (info) NDA_RUNTIME_ERROR << "Error in gesvd : info = " << info;
     return info;
-  }
-
-  inline int gesvd(matrix_view<double, F_layout> a, array_view<double, 1> c, matrix_view<double, F_layout> u, matrix_view<double, F_layout> v) {
-    return gesvd1(a, c, u, v);
-  }
-
-  inline int gesvd(matrix_view<dcomplex, F_layout> a, array_view<double, 1> c, matrix_view<dcomplex, F_layout> u, matrix_view<dcomplex, F_layout> v) {
-    return gesvd1(a, c, u, v);
   }
 
 } // namespace nda::lapack

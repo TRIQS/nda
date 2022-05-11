@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Authors: Nils Wentzell
+// Authors: Olivier Parcollet, Nils Wentzell
 
 #pragma once
 
@@ -21,27 +21,45 @@
 namespace nda::lapack {
 
   /**
-   * LU decomposition of a matrix
+   * Computes an LU factorization of a general M-by-N matrix A
+   * using partial pivoting with row interchanges.
    *
-   * The matrix m is modified during the operation.
-   * The matrix is interpreted as FORTRAN ordered, and then LU decomposed.
-   * NB : for some operation, like det, inversion, it is fine to be transposed, 
-   *      for some it may not be ... 
+   * The factorization has the form
+   *    A = P * L * U
+   * where P is a permutation matrix, L is lower triangular with unit
+   * diagonal elements (lower trapezoidal if m > n), and U is upper
+   * triangular (upper trapezoidal if m < n).
    *
-   * @tparam M matrix, matrix_view, array, array_view of rank 2. M can be a temporary view
-   * @param m  matrix to be LU decomposed. It is destroyed by the operation
-   * @param ipiv  Gauss Pivot, cf lapack doc
+   * This is the right-looking Level 3 BLAS version of the algorithm.
    *
+   * [in,out]  a is real/complex array, dimension (LDA,N)
+   *           On entry, the M-by-N matrix to be factored.
+   *           On exit, the factors L and U from the factorization
+   *           a = P*l*u; the unit diagonal elements of L are not stored.
+   *
+   * [out]     ipiv is INTEGER array, dimension (min(M,N))
+   *           The pivot indices; for 1 <= i <= min(M,N), row i of the
+   *           matrix was interchanged with row ipiv(i).
+   *
+   * [return]  info is INTEGER
+   *           = 0:  successful exit
+   *           < 0:  if info = -i, the i-th argument had an illegal value
+   *           > 0:  if info = i, U(i,i) is exactly zero. The factorization
+   *                 has been completed, but the factor U is exactly
+   *                 singular, and division by zero will occur if it is used
+   *                 to solve a system of equations.
    */
-  template <MemoryMatrix M, MemoryVector IPIV>
-  [[nodiscard]] int getrf(M &&m, IPIV &ipiv) {
-    static_assert(is_blas_lapack_v<get_value_t<M>>, "Matrix must have elements of type double or complex");
+  template <MemoryMatrix A, MemoryVector IPIV>
+  requires(mem::on_host<A, IPIV> and is_blas_lapack_v<get_value_t<A>>)
+  int getrf(A &a, IPIV &ipiv) {
     static_assert(std::is_same_v<get_value_t<IPIV>, int>, "Pivoting array must have elements of type int");
 
-    if (!m.is_contiguous() or !ipiv.is_contiguous()) NDA_RUNTIME_ERROR << "Lapack routines require arrays with contiguous data";
-
-    auto dm = std::min(m.extent(0), m.extent(1));
+    auto dm = std::min(a.extent(0), a.extent(1));
     if (ipiv.size() < dm) ipiv.resize(dm);
+
+    // Must be lapack compatible
+    EXPECTS(a.indexmap().min_stride() == 1);
+    EXPECTS(ipiv.indexmap().min_stride() == 1);
 
 #if defined(__has_feature)
 #if __has_feature(memory_sanitizer)
