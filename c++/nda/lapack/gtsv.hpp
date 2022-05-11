@@ -21,26 +21,51 @@
 namespace nda::lapack {
 
   /**
-   * Computes the solution to the system of linear equations with a tridiagonal coefficient matrix A and multiple right-hand sides.
+   * Solves the equation
    *
-   * The routine solves for X the system of linear equations A*X = B, where A is an n-by-n tridiagonal matrix.
-   * The columns of matrix B are individual right-hand sides, and the columns of X are the corresponding solutions. 
+   *     A*X = B,
    *
-   * @tparam T Element type
-   * @param dl
-   * @param d
-   * @param du
-   * @param b 
+   *  where A is an N-by-N tridiagonal matrix, by Gaussian elimination with
+   *  partial pivoting.
+   *
+   *  Note that the equation  A**T *X = B  may be solved by interchanging the
+   *  order of the arguments du and dl.
+   *
+   * [in,out]  dl is real/complex array, dimension (N-1)
+   *           On entry, dl must contain the (n-1) subdiagonal elements of
+   *           A.
+   *           On exit, dl is overwritten by the (n-2) elements of the
+   *           second superdiagonal of the upper triangular matrix U from
+   *           the LU factorization of A, in dl(1), ..., dl(n-2).
+   *
+   * [in,out]  d is real/complex array, dimension (N)
+   *           On entry, D must contain the diagonal elements of A.
+   *           On exit, D is overwritten by the n diagonal elements of U.
+   *
+   * [in,out]  du is real/complex array, dimension (N-1)
+   *           On entry, du must contain the (n-1) superdiagonal elements
+   *           of A.
+   *           On exit, du is overwritten by the (n-1) elements of the first
+   *           superdiagonal of U.
+   *
+   * [in,out]  b is real/complex array, dimension (LDB,NRHS)
+   *           On entry, the N-by-NRHS right hand side matrix B.
+   *           On exit, if INFO = 0, the N-by-NRHS solution matrix X.
+   *
+   * [return]  INFO is INTEGER
+   *           = 0:  successful exit
+   *           < 0:  if INFO = -i, the i-th argument had an illegal value
+   *           > 0:  if INFO = i, U(i,i) is exactly zero, and the solution
+   *                 has not been computed.  The factorization has not been
+   *                 completed unless i = N.
    */
-  template <MemoryVector V1, MemoryVector V2, MemoryVector V3, MemoryArray M>
-  [[nodiscard]] int gtsv(V1 &dl, V2 &d, V3 &du, M &b) {
-
-    static_assert((get_rank<M> == 1 or get_rank<M> == 2), "gtsv: M must be an matrix/array/view of rank  1 or 2");
-    static_assert(have_same_value_type_v<V1, V2, V3, M>, "Arrays must have the same value-type");
-    static_assert(is_double_or_complex_v<get_value_t<V1>>, "Arrays must have value-type double or complex");
+  template <MemoryVector DL, MemoryVector D, MemoryVector DU, MemoryArray B>
+  requires(have_same_value_type_v<DL, D, DU, B> and mem::on_host<DL, D, DU, B> and is_blas_lapack_v<get_value_t<DL>>)
+  int gtsv(DL &dl, D &d, DU &du, B &b) {
+    static_assert((get_rank<B> == 1 or get_rank<B> == 2), "gtsv: M must be an matrix/array/view of rank  1 or 2");
 
     int N    = d.extent(0);
-    int NRHS = (M::rank == 2 ? b.extent(1) : 1);
+    int NRHS = (get_rank<B> == 2 ? b.extent(1) : 1);
     EXPECTS(dl.extent(0) == d.extent(0) - 1); // "gtsv : dimension mismatch between sub-diagonal and diagonal vectors "
     EXPECTS(du.extent(0) == d.extent(0) - 1); // "gtsv : dimension mismatch between super-diagonal and diagonal vectors "
     EXPECTS(b.extent(0) == d.extent(0));      // "gtsv : dimension mismatch between diagonal vector and RHS matrix, "

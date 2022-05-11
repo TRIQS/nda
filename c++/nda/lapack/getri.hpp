@@ -21,44 +21,55 @@
 namespace nda::lapack {
 
   /**
-   * Computes the inverse of an LU-factored general matrix.
-   * The matrix m is modified during the operation.
-   * The matrix is interpreted as FORTRAN orderedf getrf.
+   * Computes the inverse of a matrix using the LU factorization
+   * computed by getrf.
    *
-   * @tparam M matrix, matrix_view, array, array_view of rank 2. M can be a temporary view
-   * @param m  matrix to be LU decomposed. It is destroyed by the operation
-   * @param ipiv  Gauss Pivot, cf lapack doc
+   * This method inverts U and then computes inv(A) by solving the system
+   * inv(A)*L = inv(U) for inv(A).
+   *
+   * [in,out]  a is real/complex array, dimension (LDA,N)
+   *           On entry, the factors L and U from the factorization
+   *           A = P*L*U as computed by ZGETRF.
+   *           On exit, if info = 0, the inverse of the original matrix A.
+   *
+   * [in]      ipiv, integer array of dimension (N)
+   *           The pivot indices from ZGETRF; for 1<=i<=N, row i of the
+   *           matrix was interchanged with row ipiv(i).
+   *
+   * [return]  info is INTEGER
+   *           = 0:  successful exit
+   *           < 0:  if info = -i, the i-th argument had an illegal value
+   *           > 0:  if info = i, U(i,i) is exactly zero; the matrix is
+   *                 singular and its inverse could not be computed.
    *
    */
-  template <MemoryMatrix M, MemoryVector IPIV>
-  [[nodiscard]] int getri(M &&m, IPIV &ipiv) {
-    static_assert(is_blas_lapack_v<get_value_t<M>>, "Matrices must have the same element type and it must be double, complex ...");
+  template <MemoryMatrix A, MemoryVector IPIV>
+  requires(mem::on_host<A, IPIV> and is_blas_lapack_v<get_value_t<A>>)
+  int getri(A &&a, IPIV &ipiv) {
     static_assert(std::is_same_v<get_value_t<IPIV>, int>, "Pivoting array must have elements of type int");
 
-    EXPECTS(ipiv.size() >= std::min(m.extent(0), m.extent(1)));
+    using T  = get_value_t<A>;
+    auto dm = std::min(a.extent(0), a.extent(1));
+    if (ipiv.size() < dm) ipiv.resize(dm);
 
-    using T  = get_value_t<M>;
+    // Must be lapack compatible
+    EXPECTS(a.indexmap().min_stride() == 1);
+    EXPECTS(ipiv.indexmap().min_stride() == 1);
+
+    // First call to get the optimal buffersize
+    T bufferSize_T{};
     int info = 0;
-    std::array<T, 2> work1{0, 0}; // always init for MSAN and clang-tidy ...
+    f77::getri(a.extent(0), a.data(), get_ld(a), ipiv.data(), &bufferSize_T, -1, info);
+    int bufferSize = std::ceil(std::real(bufferSize_T));
 
-    // first call to get the optimal lwork
-    f77::getri(m.extent(0), m.data(), get_ld(m), ipiv.data(), work1.data(), -1, info);
-    int lwork;
-    if constexpr (is_complex_v<T>)
-      lwork = std::round(std::real(work1[0])) + 1;
-    else
-      lwork = std::round(work1[0]) + 1;
-
-    array<T, 1> work(lwork);
-
+    // Allocate work buffer and perform actual library call
+    array<T, 1> work(bufferSize);
 #if defined(__has_feature)
 #if __has_feature(memory_sanitizer)
     work = 0;
 #endif
 #endif
-
-    // second call to do the job
-    f77::getri(m.extent(0), m.data(), get_ld(m), ipiv.data(), work.data(), lwork, info);
+    f77::getri(a.extent(0), a.data(), get_ld(a), ipiv.data(), work.data(), bufferSize, info);
     return info;
   }
 
