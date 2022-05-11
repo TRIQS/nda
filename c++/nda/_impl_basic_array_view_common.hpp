@@ -342,13 +342,11 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
     if (rhs.empty()) return;
 
     static constexpr bool both_1d_strided = has_layout_strided_1d<self_t> and has_layout_strided_1d<RHS>;
-    static constexpr bool same_value_type = std::is_same_v<value_type, std::remove_const_t<get_value_t<RHS>>>;
-    static constexpr bool both_on_host    = (mem::on_host<self_t> && mem::on_host<RHS>);
 
-    if constexpr (both_on_host and both_1d_strided) { // -> vectorizable host copy
+    if constexpr (mem::on_host<self_t, RHS> and both_1d_strided) { // -> vectorizable host copy
       for (long i = 0; i < size(); ++i) (*this)(_linear_index_t{i}) = rhs(_linear_index_t{i});
       return;
-    } else if constexpr (same_value_type) {
+    } else if constexpr (have_same_value_type_v<self_t, RHS>) {
       // Check for block-layout and use cudaMemcpy2D if possible
       auto bl_layout_dst = get_block_layout(*this);
       auto bl_layout_src = get_block_layout(rhs);
