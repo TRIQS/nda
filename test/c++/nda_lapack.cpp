@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Authors: Nils Wentzell
+// Authors: Olivier Parcollet, Nils Wentzell
 
 #include "test_common.hpp"
 #include <nda/lapack.hpp>
@@ -22,21 +22,22 @@ using namespace nda;
 
 // ======================================= gtsv =====================================
 
-TEST(lapack, dgtsv) { //NOLINT
+template <typename value_t>
+void test_gtsv() {
 
-  array<double, 1> DL = {4, 3, 2, 1};    // sub-diagonal elements
-  array<double, 1> D  = {1, 2, 3, 4, 5}; // diagonal elements
-  array<double, 1> DU = {1, 2, 3, 4};    // super-diagonal elements
+  vector<value_t> DL = {4, 3, 2, 1};    // sub-diagonal elements
+  vector<value_t> D  = {1, 2, 3, 4, 5}; // diagonal elements
+  vector<value_t> DU = {1, 2, 3, 4};    // super-diagonal elements
 
-  array<double, 1> B1 = {6, 2, 7, 4, 5};  // RHS column 1
-  array<double, 1> B2 = {1, 3, 8, 9, 10}; // RHS column 2
-  matrix<double, F_layout> B(5, 2);
-  B(_, 0) = B1;
-  B(_, 1) = B2;
+  vector<value_t> B1 = {6, 2, 7, 4, 5};  // RHS column 1
+  vector<value_t> B2 = {1, 3, 8, 9, 10}; // RHS column 2
+  auto B             = matrix<value_t, F_layout>(5, 2);
+  B(_, 0)            = B1;
+  B(_, 1)            = B2;
 
   // reference solutions
-  array<double, 1> ref_sol_1 = {43.0 / 33.0, 155.0 / 33.0, -208.0 / 33.0, 130.0 / 33.0, 7.0 / 33.0};
-  array<double, 1> ref_sol_2 = {-28.0 / 33.0, 61.0 / 33.0, 89.0 / 66.0, -35.0 / 66.0, 139.0 / 66.0};
+  vector<double> ref_sol_1 = {43.0 / 33.0, 155.0 / 33.0, -208.0 / 33.0, 130.0 / 33.0, 7.0 / 33.0};
+  vector<double> ref_sol_2 = {-28.0 / 33.0, 61.0 / 33.0, 89.0 / 66.0, -35.0 / 66.0, 139.0 / 66.0};
   matrix<double, F_layout> ref_sol(5, 2);
   ref_sol(_, 0) = ref_sol_1;
   ref_sol(_, 1) = ref_sol_2;
@@ -66,24 +67,26 @@ TEST(lapack, dgtsv) { //NOLINT
     EXPECT_ARRAY_NEAR(B, ref_sol);
   }
 }
+TEST(lapack, gtsv) { test_gtsv<double>(); }    // NOLINT
+TEST(lapack, zgtsv) { test_gtsv<dcomplex>(); } // NOLINT
 
 //---------------------------------------------------------
 
 TEST(lapack, cgtsv) { //NOLINT
 
-  array<dcomplex, 1> DL = {-4i, -3i, -2i, -1i}; // sub-diagonal elements
-  array<dcomplex, 1> D  = {1, 2, 3, 4, 5};      // diagonal elements
-  array<dcomplex, 1> DU = {1i, 2i, 3i, 4i};     // super-diagonal elements
+  vector<dcomplex> DL = {-4i, -3i, -2i, -1i}; // sub-diagonal elements
+  vector<dcomplex> D  = {1, 2, 3, 4, 5};      // diagonal elements
+  vector<dcomplex> DU = {1i, 2i, 3i, 4i};     // super-diagonal elements
 
-  array<dcomplex, 1> B1 = {6 + 0i, 2i, 7 + 0i, 4i, 5 + 0i}; // RHS column 1
-  array<dcomplex, 1> B2 = {1i, 3 + 0i, 8i, 9 + 0i, 10i};    // RHS column 2
+  vector<dcomplex> B1 = {6 + 0i, 2i, 7 + 0i, 4i, 5 + 0i}; // RHS column 1
+  vector<dcomplex> B2 = {1i, 3 + 0i, 8i, 9 + 0i, 10i};    // RHS column 2
   matrix<dcomplex, F_layout> B(5, 2);
   B(_, 0) = B1;
   B(_, 1) = B2;
 
   // reference solutions
-  array<dcomplex, 1> ref_sol_1 = {137.0 / 33.0 + 0i, -61i / 33.0, 368.0 / 33.0 + 0i, 230i / 33.0, -13.0 / 33.0 + 0i};
-  array<dcomplex, 1> ref_sol_2 = {-35i / 33.0, 68.0 / 33.0 + 0i, -103i / 66.0, 415.0 / 66.0 + 0i, 215i / 66.0};
+  vector<dcomplex> ref_sol_1 = {137.0 / 33.0 + 0i, -61i / 33.0, 368.0 / 33.0 + 0i, 230i / 33.0, -13.0 / 33.0 + 0i};
+  vector<dcomplex> ref_sol_2 = {-35i / 33.0, 68.0 / 33.0 + 0i, -103i / 66.0, 415.0 / 66.0 + 0i, 215i / 66.0};
   matrix<dcomplex, F_layout> ref_sol(5, 2);
   ref_sol(_, 0) = ref_sol_1;
   ref_sol(_, 1) = ref_sol_2;
@@ -116,61 +119,56 @@ TEST(lapack, cgtsv) { //NOLINT
 
 // ==================================== gesvd ============================================
 
-TEST(lapack, gesvd) { //NOLINT
+template <typename value_t>
+void test_gesvd() { //NOLINT
+  using matrix_t = matrix<value_t, F_layout>;
 
-  auto A = matrix<dcomplex, F_layout>{{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}}};
-  int M  = A.extent(0);
-  int N  = A.extent(1);
+  auto A      = matrix_t{{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}}};
+  auto [M, N] = A.shape();
 
-  auto U  = matrix<dcomplex, F_layout>(M, M);
-  auto VT = matrix<dcomplex, F_layout>(N, N);
+  auto U  = matrix_t(M, M);
+  auto VT = matrix_t(N, N);
 
-  auto S = array<double, 1>(std::min(M, N));
+  auto S     = vector<double>(std::min(M, N));
+  auto Acopy = matrix_t{A};
+  lapack::gesvd(Acopy, S, U, VT);
 
-  auto a_copy = A;
-  lapack::gesvd(A, S, U, VT);
-
-  auto S_Mat = A;
-  S_Mat()    = 0.0;
-  for (int i : range(std::min(M, N))) S_Mat(i, i) = S(i);
-
-  EXPECT_ARRAY_NEAR(a_copy, U * S_Mat * VT, 1e-14);
+  auto Sigma = matrix_t::zeros(A.shape());
+  for (auto i : range(std::min(M, N))) Sigma(i, i) = S(i);
+  EXPECT_ARRAY_NEAR(A, U * Sigma * VT, 1e-14);
 }
+TEST(lapack, gesvd) { test_gesvd<double>(); }    //NOLINT
+TEST(lapack, zgesvd) { test_gesvd<dcomplex>(); } //NOLINT
 
 // =================================== gelss =======================================
 
-TEST(lapack, gelss) { //NOLINT
-
-  static_assert(std::is_same_v<long, get_value_t<array_const_view<long, 2>>>, "Oops");
-  static_assert(std::is_same_v<long, get_value_t<array_view<long const, 2>>>, "Oops");
-
+template <typename value_t>
+void test_gelss() {
   // Cf. http://www.netlib.org/lapack/explore-html/d3/d77/example___d_g_e_l_s__colmajor_8c_source.html
-  auto A = matrix<dcomplex>{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}};
-  auto B = matrix<dcomplex>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
+  auto A = matrix<value_t>{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}};
+  auto B = matrix<value_t>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
 
-  int M = A.extent(0);
-  int N = A.extent(1);
-  //int NRHS = B.extent(1);
+  auto [M, N]  = A.shape();
+  auto x_exact = matrix<value_t>{{2, 1}, {1, 1}, {1, 2}};
+  auto S       = vector<double>(std::min(M, N));
 
-  auto x_exact = matrix<dcomplex>{{2, 1}, {1, 1}, {1, 2}};
-  auto S       = array<double, 1>(std::min(M, N));
-
-  auto gelss_new    = lapack::gelss_worker<dcomplex>{A};
+  auto gelss_new    = lapack::gelss_worker<value_t>{A};
   auto [x_1, eps_1] = gelss_new(B);
   EXPECT_ARRAY_NEAR(x_exact, x_1, 1e-14);
 
-  //int i;
-  //lapack::gelss(A, B, S, 1e-18, i);
-  //auto x_2 = B(range(N), range(NRHS));
-
-  //EXPECT_ARRAY_NEAR(x_exact, x_2, 1e-14);
+  int rank{};
+  matrix<value_t, F_layout> AF{A}, BF{B};
+  lapack::gelss(AF, BF, S, 1e-18, rank);
+  EXPECT_ARRAY_NEAR(x_exact, BF(range(N), _), 1e-14);
 }
+TEST(lapack, gelss) { test_gelss<double>(); }    //NOLINT
+TEST(lapack, zgelss) { test_gelss<dcomplex>(); } //NOLINT
 
 // =================================== getrs =======================================
 
-TEST(lapack, getrs) { //NOLINT
-
-  using matrix_t = matrix<double, F_layout>;
+template <typename value_t>
+void test_getrs() {
+  using matrix_t = matrix<value_t, F_layout>;
 
   auto A = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
   auto B = matrix_t{{1, 5}, {4, 5}, {3, 6}};
@@ -184,10 +182,11 @@ TEST(lapack, getrs) { //NOLINT
   auto Acopy = matrix_t{A};
   auto Bcopy = matrix_t{B};
   array<int, 1> ipiv(3);
-  int info = lapack::getrf(Acopy, ipiv);
-  info     = lapack::getrs(Acopy, Bcopy, ipiv);
-  auto X2  = matrix_t{Bcopy};
+  lapack::getrf(Acopy, ipiv);
+  lapack::getrs(Acopy, Bcopy, ipiv);
+  auto X2 = matrix_t{Bcopy};
   EXPECT_ARRAY_NEAR(matrix_t{A * X2}, B);
-
   EXPECT_ARRAY_NEAR(X1, X2);
 }
+TEST(lapack, getrs) { test_getrs<double>(); }    //NOLINT
+TEST(lapack, zgetrs) { test_getrs<dcomplex>(); } //NOLINT

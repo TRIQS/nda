@@ -22,8 +22,6 @@
 using nda::F_layout;
 using namespace clef::literals;
 
-static_assert( not std::is_constructible_v<long, nda::range>, "ioio");
-
 //----------------------------
 
 template <typename value_t, typename Layout>
