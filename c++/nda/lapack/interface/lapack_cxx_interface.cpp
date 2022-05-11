@@ -14,10 +14,19 @@
 //
 // Authors: Olivier Parcollet, Nils Wentzell
 
+#include <nda/nda.hpp>
+#include <nda/macros.hpp>
+#include <nda/exceptions.hpp>
+#include <nda/mem/handle.hpp>
 #include "lapack_cxx_interface.hpp"
 
 // Extracted from Reference Lapack (https://github.com/Reference-LAPACK):
 #include "lapack.h"
+#include "cusolverDn.h"
+
+#include <string>
+
+using namespace std::string_literals;
 
 namespace nda::lapack::f77 {
 
@@ -72,3 +81,86 @@ namespace nda::lapack::f77 {
   }
 
 } // namespace nda::lapack::f77
+
+namespace nda::lapack::cuda {
+
+  constexpr cublasOperation_t get_cublas_op(char op) {
+    switch (op) {
+      case 'N': return CUBLAS_OP_N; break;
+      case 'T': return CUBLAS_OP_T; break;
+      case 'C': return CUBLAS_OP_C; break;
+      default: std::terminate(); return {};
+    }
+  }
+
+  struct handle_t {
+    handle_t() { cusolverDnCreate(&h); }
+    ~handle_t() { cusolverDnDestroy(h); }
+    operator cusolverDnHandle_t() { return h; }
+
+    private:
+    cusolverDnHandle_t h = {};
+  };
+  static handle_t handle = {}; // NOLINT
+
+#define CUSOLVER_CHECK(X, ...)                                                                                                                       \
+  auto err = X(handle, __VA_ARGS__);                                                                                                                 \
+  if (err != CUSOLVER_STATUS_SUCCESS) NDA_RUNTIME_ERROR << AS_STRING(X) + " failed with error code "s + std::to_string(err);
+
+  inline auto *cucplx(std::complex<double> *c) { return reinterpret_cast<cuDoubleComplex *>(c); }             // NOLINT
+  inline auto *cucplx(std::complex<double> const *c) { return reinterpret_cast<const cuDoubleComplex *>(c); } // NOLINT
+
+  static auto info_u_handle = mem::handle_heap<int, mem::mallocator<mem::Unified>>(1); // NOLINT
+  auto &info_u              = *info_u_handle.data();                                   // NOLINT
+
+  void gesvd(char JOBU, char JOBVT, int M, int N, double *A, int LDA, double *S, double *U, int LDU, double *VT, int LDVT, double *WORK, int LWORK,
+             double *RWORK, int &INFO) {
+    // Replicate behavior of Netlib gesvd
+    if (LWORK == -1) {
+      int bufferSize = 0;
+      cusolverDnDgesvd_bufferSize(handle, M, N, &bufferSize);
+      *WORK = bufferSize;
+    } else {
+      CUSOLVER_CHECK(cusolverDnDgesvd, JOBU, JOBVT, M, N, A, LDA, S, U, LDU, VT, LDVT, WORK, LWORK, RWORK, &info_u);
+      INFO = info_u;
+    }
+  }
+  void gesvd(char JOBU, char JOBVT, int M, int N, std::complex<double> *A, int LDA, double *S, std::complex<double> *U, int LDU,
+             std::complex<double> *VT, int LDVT, std::complex<double> *WORK, int LWORK, double *RWORK, int &INFO) {
+    // Replicate behavior of Netlib gesvd
+    if (LWORK == -1) {
+      int bufferSize = 0;
+      cusolverDnZgesvd_bufferSize(handle, M, N, &bufferSize);
+      *WORK = bufferSize;
+    } else {
+      CUSOLVER_CHECK(cusolverDnZgesvd, JOBU, JOBVT, M, N, cucplx(A), LDA, S, cucplx(U), LDU, cucplx(VT), LDVT, cucplx(WORK), LWORK, RWORK,
+                     &info_u); // NOLINT
+      INFO = info_u;
+    }
+  }
+
+  void getrf(int M, int N, double *A, int LDA, int *ipiv, int &info) {
+    int bufferSize = 0;
+    cusolverDnDgetrf_bufferSize(handle, M, N, A, LDA, &bufferSize);
+    auto Workspace = nda::cuvector<double>(bufferSize);
+    CUSOLVER_CHECK(cusolverDnDgetrf, M, N, A, LDA, Workspace.data(), ipiv, &info_u);
+    info = info_u;
+  }
+  void getrf(int M, int N, std::complex<double> *A, int LDA, int *ipiv, int &info) {
+    int bufferSize = 0;
+    cusolverDnZgetrf_bufferSize(handle, M, N, cucplx(A), LDA, &bufferSize);
+    auto Workspace = nda::cuvector<dcomplex>(bufferSize);
+    CUSOLVER_CHECK(cusolverDnZgetrf, M, N, cucplx(A), LDA, cucplx(Workspace.data()), ipiv, &info_u);
+    info = info_u;
+  }
+
+  void getrs(char op, int N, int NRHS, double const *A, int LDA, int const *ipiv, double *B, int LDB, int &info) {
+    CUSOLVER_CHECK(cusolverDnDgetrs, get_cublas_op(op), N, NRHS, A, LDA, ipiv, B, LDB, &info_u);
+    info = info_u;
+  }
+  void getrs(char op, int N, int NRHS, std::complex<double> const *A, int LDA, int const *ipiv, std::complex<double> *B, int LDB, int &info) {
+    CUSOLVER_CHECK(cusolverDnZgetrs, get_cublas_op(op), N, NRHS, cucplx(A), LDA, ipiv, cucplx(B), LDB, &info_u);
+    info = info_u;
+  }
+
+} // namespace nda::lapack::cuda

@@ -58,7 +58,7 @@ namespace nda::lapack {
    *                 above for details.
    */
   template <MemoryMatrix A, MemoryVector S, MemoryMatrix U, MemoryMatrix VT>
-  requires(have_same_value_type_v<A, U, VT> and mem::on_host<A, S, U, VT> and is_blas_lapack_v<get_value_t<A>>)
+  requires(have_same_value_type_v<A, U, VT> and mem::have_same_addr_space_v<A, S, U, VT> and is_blas_lapack_v<get_value_t<A>>)
   int gesvd(A &a, S &s, U &u, VT &vt) {
     static_assert(has_F_layout<A> and has_F_layout<U> and has_F_layout<VT>, "C order not implemented");
 
@@ -73,16 +73,25 @@ namespace nda::lapack {
     EXPECTS(u.indexmap().min_stride() == 1);
     EXPECTS(vt.indexmap().min_stride() == 1);
 
+    // Call host/device implementation depending on input
+    auto gesvd = []<typename... Ts>(Ts && ...args) {
+      if constexpr (mem::on_host<A>) {
+        lapack::f77::gesvd(std::forward<Ts>(args)...);
+      } else {
+        lapack::cuda::gesvd(std::forward<Ts>(args)...);
+      }
+    };
+
     // First call to get the optimal buffersize
     T bufferSize_T{};
     int info   = 0;
-    f77::gesvd('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), s.data(), u.data(), get_ld(u), vt.data(), get_ld(vt), &bufferSize_T, -1,
+    gesvd('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), s.data(), u.data(), get_ld(u), vt.data(), get_ld(vt), &bufferSize_T, -1,
           rwork.data(), info);
     int bufferSize = std::ceil(std::real(bufferSize_T));
 
     // Allocate work buffer and perform actual library call
     array<T, 1, C_layout, heap<mem::get_addr_space<A>>> work(bufferSize);
-    f77::gesvd('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), s.data(), u.data(), get_ld(u), vt.data(), get_ld(vt), work.data(), bufferSize,
+    gesvd('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), s.data(), u.data(), get_ld(u), vt.data(), get_ld(vt), work.data(), bufferSize,
           rwork.data(), info);
 
     if (info) NDA_RUNTIME_ERROR << "Error in gesvd : info = " << info;
