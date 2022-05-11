@@ -127,8 +127,8 @@ namespace nda {
   // --------------------------- make_regular ------------------------
 
   /**
-   * Return a basic_array if A fullfills the Array concept,
-   * else forward the object without midifications
+   * Return a basic_array if A fullfills the Array concept
+   * and is not regular, else forward the object without modifications
    *
    * @tparam A
    * @param x
@@ -137,6 +137,56 @@ namespace nda {
   decltype(auto) make_regular(A &&x) {
     if constexpr(Array<A> and not is_regular_v<A>) {
       return basic_array{std::forward<A>(x)};
+    } else {
+      return std::forward<A>(x);
+    }
+  }
+
+  // --------------------- to_host, to_device, to_unified ------------------
+
+  /**
+   * Given a MemoryArray, create a basic_array on the host.
+   * If A is already on the host simply forward the argument.
+   *
+   * @tparam A A type fulfilling the MemoryArray concept
+   * @param x The value to be converted
+   */
+  template <MemoryArray A>
+  decltype(auto) to_host(A &&x) {
+    if constexpr(not mem::on_host<A>) {
+      return get_regular_host_t<A>{std::forward<A>(x)};
+    } else {
+      return std::forward<A>(x);
+    }
+  }
+
+  /**
+   * Given a MemoryArray, create a basic_array on the device.
+   * If A is already on the device simply forward the argument.
+   *
+   * @tparam A A type fulfilling the MemoryArray concept
+   * @param x The value to be converted
+   */
+  template <MemoryArray A>
+  decltype(auto) to_device(A &&x) {
+    if constexpr(not mem::on_device<A>) {
+      return get_regular_device_t<A>{std::forward<A>(x)};
+    } else {
+      return std::forward<A>(x);
+    }
+  }
+
+  /**
+   * Given a MemoryArray, create a basic_array with unified memory.
+   * If A is already has unified memory simply forward the argument.
+   *
+   * @tparam A A type fulfilling the MemoryArray concept
+   * @param x The value to be converted
+   */
+  template <MemoryArray A>
+  decltype(auto) to_unified(A &&x) {
+    if constexpr(not mem::on_unified<A>) {
+      return get_regular_unified_t<A>{std::forward<A>(x)};
     } else {
       return std::forward<A>(x);
     }
