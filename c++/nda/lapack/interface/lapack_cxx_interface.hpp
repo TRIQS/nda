@@ -47,7 +47,22 @@ namespace nda::lapack::f77 {
   void heev(char JOBZ, char UPLO, int N, std::complex<double> *A, int LDA, double *W, std::complex<double> *work, int &lwork, double *work2,
             int &info);
 
-  void getrs(char TRANS, int N, int NRHS, double const *A, int LDA, int *ipiv, double *B, int LDB, int &info);
-  void getrs(char TRANS, int N, int NRHS, std::complex<double> const *A, int LDA, int *ipiv, std::complex<double> *B, int LDB, int &info);
+  void getrs(char op, int N, int NRHS, double const *A, int LDA, int const *ipiv, double *B, int LDB, int &info);
+  void getrs(char op, int N, int NRHS, std::complex<double> const *A, int LDA, int const *ipiv, std::complex<double> *B, int LDB, int &info);
 
 } // namespace nda::lapack::f77
+
+namespace nda::lapack::cuda {
+
+  void gesvd(char JOBU, char JOBVT, int M, int N, double *A, int LDA, double *S, double *U, int LDU, double *VT, int LDVT, double *WORK, int LWORK,
+             double *RWORK, int &INFO);
+  void gesvd(char JOBU, char JOBVT, int M, int N, std::complex<double> *A, int LDA, double *S, std::complex<double> *U, int LDU,
+             std::complex<double> *VT, int LDVT, std::complex<double> *WORK, int LWORK, double *RWORK, int &INFO);
+
+  void getrf(int M, int N, double *A, int LDA, int *ipiv, int &info);
+  void getrf(int M, int N, std::complex<double> *A, int LDA, int *ipiv, int &info);
+
+  void getrs(char op, int N, int NRHS, double const *A, int LDA, int const *ipiv, double *B, int LDB, int &info);
+  void getrs(char op, int N, int NRHS, std::complex<double> const *A, int LDA, int const *ipiv, std::complex<double> *B, int LDB, int &info);
+
+} // namespace nda::lapack::cuda

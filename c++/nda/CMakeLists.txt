@@ -56,7 +56,7 @@ install(TARGETS blas_lapack EXPORT ${PROJECT_NAME}-targets)
 message(STATUS "-------- CUDAToolkit detection -------------")
 
 find_package(CUDAToolkit REQUIRED)
-target_link_libraries(${PROJECT_NAME}_c PUBLIC CUDA::cudart CUDA::cublas)
+target_link_libraries(${PROJECT_NAME}_c PUBLIC CUDA::cudart CUDA::cublas CUDA::cusolver)
 
 # ========= Compiler Wrapper ==========
 
