@@ -226,9 +226,9 @@ TEST(Inverse, F) { //NOLINT
   // testing against "manual" call of bindings
   nda::array<int, 1> ipiv2(3);
   ipiv2    = 0;
-  int info = nda::lapack::getrf(Wi(), ipiv2);
+  int info = nda::lapack::getrf(Wi, ipiv2);
   EXPECT_EQ(info, 0);
-  info = nda::lapack::getri(Wi(), ipiv2);
+  info = nda::lapack::getri(Wi, ipiv2);
   EXPECT_EQ(info, 0);
   EXPECT_ARRAY_NEAR(Wi, Wkeep, 1.e-12);
 }
@@ -256,7 +256,7 @@ TEST(Inverse, C) { //NOLINT
   // testing against "manual" call of bindings
   nda::array<int, 1> ipiv2(3);
   ipiv2    = 0;
-  int info = nda::lapack::getrf(Wi(), ipiv2);
+  int info = nda::lapack::getrf(Wi, ipiv2);
   EXPECT_EQ(info, 0);
   info = nda::lapack::getri(Wi, ipiv2);
   EXPECT_EQ(info, 0);
