@@ -23,8 +23,10 @@ namespace nda {
   // Forward declarations
   template <char OP, ArrayOrScalar L, ArrayOrScalar R>
   struct expr;
-  template <typename F, Array... A>
+  template <typename F, Array... As>
   struct expr_call;
+  template <char OP, Array A>
+  struct expr_unary;
 } // namespace nda
 
 namespace nda::mem {
@@ -66,11 +68,14 @@ namespace nda::mem {
   template <Handle H>
   static constexpr AddressSpace get_addr_space<H> = H::address_space;
 
-  template <char OP, typename L, typename R>
+  template <char OP, ArrayOrScalar L, ArrayOrScalar R>
   static constexpr AddressSpace get_addr_space<expr<OP, L, R>> = combine<get_addr_space<L>, get_addr_space<R>>;
 
-  template <typename F, typename... A>
-  static constexpr AddressSpace get_addr_space<expr_call<F, A...>> = combine<get_addr_space<A>...>;
+  template <typename F, Array... As>
+  static constexpr AddressSpace get_addr_space<expr_call<F, As...>> = combine<get_addr_space<As>...>;
+
+  template <char OP, Array A>
+  static constexpr AddressSpace get_addr_space<expr_unary<OP, A>> = get_addr_space<A>;
 
   // ------------- Additional helper traits -------------
 
