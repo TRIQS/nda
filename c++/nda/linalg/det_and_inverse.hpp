@@ -81,15 +81,15 @@ namespace nda {
   //     3             701 ns            67.5 ns
   
   // ----------  inverse (1x1) ---------------------
-  template <typename T, typename L, typename AP, typename OP>
-  void inverse1_in_place(basic_array_view<T, 2, L, 'M', AP, OP> a) {
+  template <MemoryMatrix M> requires(get_algebra<M> == 'M' and mem::on_host<M>)
+  void inverse1_in_place(M&& a) {
     if (a(0,0) == 0.0) NDA_RUNTIME_ERROR << "Inverse/Det error : matrix is not invertible.";
     a(0,0) = 1.0/a(0,0);
   }
   
   // ----------  inverse (2x2) ---------------------
-  template <typename T, typename L, typename AP, typename OP>
-  void inverse2_in_place(basic_array_view<T, 2, L, 'M', AP, OP> a) {
+  template <MemoryMatrix M> requires(get_algebra<M> == 'M' and mem::on_host<M>)
+  void inverse2_in_place(M&& a) {
 
     // calculate the adjoint of the matrix
     std::swap(a(0,0), a(1,1));
@@ -106,8 +106,8 @@ namespace nda {
   }
 
   // ----------  inverse (3x3) ---------------------
-  template <typename T, typename L, typename AP, typename OP>
-  void inverse3_in_place(basic_array_view<T, 2, L, 'M', AP, OP> a) {
+  template <MemoryMatrix M> requires(get_algebra<M> == 'M' and mem::on_host<M>)
+  void inverse3_in_place(M&& a) {
 
     // calculate the adjoint of the matrix
     auto b00 = +a(1, 1) * a(2, 2) - a(1, 2) * a(2, 1);
@@ -132,24 +132,26 @@ namespace nda {
   }
 
   // ----------  inverse ----------------
-  template <typename T, typename L, typename AP, typename OP>
-  void inverse_in_place(basic_array_view<T, 2, L, 'M', AP, OP> a) {
+  template <MemoryMatrix M> requires(get_algebra<M> == 'M')
+  void inverse_in_place(M&& a) {
     EXPECTS(is_matrix_square(a, true));
     if (a.empty()) return;
 
-    if (a.shape()[0] == 1) {
-      inverse1_in_place(a);
-      return;
-    }
+    if constexpr (mem::on_host<M>) {
+      if (a.shape()[0] == 1) {
+        inverse1_in_place(a);
+        return;
+      }
 
-    if (a.shape()[0] == 2) {
-      inverse2_in_place(a);
-      return;
-    }
+      if (a.shape()[0] == 2) {
+        inverse2_in_place(a);
+        return;
+      }
 
-    if (a.shape()[0] == 3) {
-      inverse3_in_place(a);
-      return;
+      if (a.shape()[0] == 3) {
+        inverse3_in_place(a);
+        return;
+      }
     }
 
     array<int, 1> ipiv(a.extent(0));
@@ -159,14 +161,8 @@ namespace nda {
     if (info != 0) NDA_RUNTIME_ERROR << "Inverse/Det error : matrix is not invertible. Step 2. Lapack error : " << info;
   } // namespace nda
 
-  template <typename T, typename L, typename CP>
-  void inverse_in_place(basic_array<T, 2, L, 'M', CP> &a) {
-    inverse_in_place(a());
-  }
-
-  template <Array A>
+  template <Matrix A>
   auto inverse(A const &a) requires(get_algebra<A> == 'M') {
-    static_assert(get_rank<A> == 2, "inverse: array must have rank two");
     EXPECTS(is_matrix_square(a, true));
     auto r = make_regular(a);
     inverse_in_place(r);
