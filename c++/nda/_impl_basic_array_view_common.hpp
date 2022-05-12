@@ -339,6 +339,8 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
   static constexpr bool same_stride_order = get_layout_info<self_t>.stride_order == get_layout_info<RHS>.stride_order;
 
   if constexpr (both_in_memory and same_stride_order) {
+    if (rhs.empty()) return;
+
     static constexpr bool both_1d_strided = has_layout_strided_1d<self_t> and has_layout_strided_1d<RHS>;
     static constexpr bool same_value_type = std::is_same_v<value_type, std::remove_const_t<get_value_t<RHS>>>;
     static constexpr bool both_on_host    = (mem::on_host<self_t> && mem::on_host<RHS>);
