@@ -17,6 +17,11 @@
 #pragma once
 #include <ostream>
 
+#include "concepts.hpp"
+#include "map.hpp"
+#include "array_adapter.hpp"
+#include "layout/idx_map.hpp"
+
 // ---------------------------------------------------------------
 
 namespace nda {
