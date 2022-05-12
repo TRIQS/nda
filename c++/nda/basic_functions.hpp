@@ -290,6 +290,8 @@ namespace nda {
   template <MemoryArray A>
   std::optional<std::tuple<int, int, int>> get_block_layout(A const &a) {
 
+    EXPECTS(!a.empty());
+
     auto const &l = a.indexmap().lengths();
     auto const &s = a.indexmap().strides();
     auto const &i = a.indexmap().stride_order;
