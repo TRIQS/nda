@@ -79,10 +79,10 @@ namespace nda {
 
   // ==============================================
 
-  template <char OP, typename L> struct expr_unary; // Necessary for libclang parsing
-  template <char OP, typename L>
-  std::ostream &operator<<(std::ostream &sout, expr_unary<OP, L> const &x) {
-    return sout << OP << x.l;
+  template <char OP, Array A> struct expr_unary; // Necessary for libclang parsing
+  template <char OP, Array A>
+  std::ostream &operator<<(std::ostream &sout, expr_unary<OP, A> const &x) {
+    return sout << OP << x.a;
   }
 
   template <char OP, ArrayOrScalar L, ArrayOrScalar R> struct expr; // Necessary for libclang parsing

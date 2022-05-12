@@ -28,27 +28,27 @@ namespace nda {
   //                             unary expressions
   // -------------------------------------------------------------------------------------------
 
-  template <char OP, typename L>
+  template <char OP, Array A>
   struct expr_unary {
     static_assert(OP == '-', "Internal error");
-    L l;
+    A a;
 
     template <typename... Args>
     auto operator()(Args &&...args) const {
-      return -l(std::forward<Args>(args)...);
+      return -a(std::forward<Args>(args)...);
     }
 
-    [[nodiscard]] constexpr auto shape() const { return l.shape(); }
-    [[nodiscard]] constexpr long size() const { return l.size(); }
+    [[nodiscard]] constexpr auto shape() const { return a.shape(); }
+    [[nodiscard]] constexpr long size() const { return a.size(); }
   }; // end expr_unary class
 
   // get_algebra
-  template <char OP, typename L>
-  inline constexpr char get_algebra<expr_unary<OP, L>> = get_algebra<L>;
+  template <char OP, Array A>
+  inline constexpr char get_algebra<expr_unary<OP, A>> = get_algebra<A>;
 
   // get_layout_info
-  template <char OP, typename L>
-  inline constexpr layout_info_t get_layout_info<expr_unary<OP, L>> = get_layout_info<L>;
+  template <char OP, Array A>
+  inline constexpr layout_info_t get_layout_info<expr_unary<OP, A>> = get_layout_info<A>;
 
   // -------------------------------------------------------------------------------------------
   //                             binary expressions
