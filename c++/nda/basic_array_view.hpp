@@ -115,8 +115,6 @@ namespace nda {
     /// Generic constructor from any MemoryArray type
     template <MemoryArrayOfRank<Rank> A>
     requires(
-       // Exclude construction from basic_array rvalue
-       (!is_regular_v<A> or std::is_reference_v<A>)and
        // Require same stride-order
        (get_layout_info<A>.stride_order == layout_t::stride_order_encoded) and
        // Require same underlying value_type
