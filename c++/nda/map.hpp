@@ -35,8 +35,8 @@ namespace nda {
   }
 
   // algebra
-  template <typename F, Array... A>
-  constexpr char get_algebra<expr_call<F, A...>> = _impl_find_common_algebra(get_algebra<A>...);
+  template <typename F, Array... As>
+  constexpr char get_algebra<expr_call<F, As...>> = _impl_find_common_algebra(get_algebra<As>...);
 
   //----------------------------
 
