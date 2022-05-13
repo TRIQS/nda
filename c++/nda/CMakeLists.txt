@@ -5,9 +5,6 @@ add_library(${PROJECT_NAME}::${PROJECT_NAME}_c ALIAS ${PROJECT_NAME}_c)
 # Enable warnings
 target_link_libraries(${PROJECT_NAME}_c PRIVATE $<BUILD_INTERFACE:${PROJECT_NAME}_warnings>)
 
-# Link Cuda Libs
-target_link_libraries(${PROJECT_NAME}_c PUBLIC cudart_static dl rt)
-
 # Configure target and compilation
 target_compile_features(${PROJECT_NAME}_c PUBLIC cxx_std_20)
 set_target_properties(${PROJECT_NAME}_c PROPERTIES
@@ -37,11 +34,6 @@ target_link_libraries(${PROJECT_NAME}_c PUBLIC h5::h5_c)
 # Link against MPI C++ Interface
 target_link_libraries(${PROJECT_NAME}_c PUBLIC mpi::mpi_c)
 
-# Link against CuBLAS
-find_package(CUDAToolkit REQUIRED)
-target_link_libraries(${PROJECT_NAME}_c PUBLIC CUDA::cublas)
-
-
 # ========= Blas / Lapack ==========
 
 message(STATUS "-------- Lapack detection -------------")
@@ -58,6 +50,13 @@ target_compile_options(blas_lapack INTERFACE ${LAPACK_LINKER_FLAGS})
 # Link against interface target and export
 target_link_libraries(${PROJECT_NAME}_c PRIVATE blas_lapack)
 install(TARGETS blas_lapack EXPORT ${PROJECT_NAME}-targets)
+
+# ========= CudaRT & CuBLAS ==========
+
+message(STATUS "-------- CUDAToolkit detection -------------")
+
+find_package(CUDAToolkit REQUIRED)
+target_link_libraries(${PROJECT_NAME}_c PUBLIC CUDA::cudart CUDA::cublas)
 
 # ========= Compiler Wrapper ==========
 
