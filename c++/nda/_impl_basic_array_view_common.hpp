@@ -346,7 +346,7 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
     if constexpr (mem::on_host<self_t, RHS> and both_1d_strided) { // -> vectorizable host copy
       for (long i = 0; i < size(); ++i) (*this)(_linear_index_t{i}) = rhs(_linear_index_t{i});
       return;
-    } else if constexpr (have_same_value_type_v<self_t, RHS>) {
+    } else if constexpr (!mem::on_host<self_t, RHS> and have_same_value_type_v<self_t, RHS>) {
       // Check for block-layout and use cudaMemcpy2D if possible
       auto bl_layout_dst = get_block_layout(*this);
       auto bl_layout_src = get_block_layout(rhs);
