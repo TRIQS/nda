@@ -51,7 +51,7 @@ namespace nda::mem {
     if constexpr (DestAdrSp == Host && SrcAdrSp == Host) {
       std::memcpy(dest, src, count);
     } else {
-      auto err = cudaMemcpy(dest, src, count, cudaMemcpyDefault);
+      auto err [[maybe_unused]] = cudaMemcpy(dest, src, count, cudaMemcpyDefault);
       ASSERT_WITH_MESSAGE(err == cudaSuccess, "CudaMemcpy failed with error code "s + std::to_string(err));
     }
   }
@@ -76,7 +76,7 @@ namespace nda::mem {
         return {(char *)malloc(s), s}; // NOLINT
       } else {
         auto blk = blk_t{nullptr, s};
-        auto err = [&]() {
+        auto err [[maybe_unused]] = [&]() {
           if constexpr (AdrSp == Device)
             return cudaMalloc((void **)&blk.ptr, s);        // NOLINT
           else                                              // Unified

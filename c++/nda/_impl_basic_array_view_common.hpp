@@ -368,8 +368,8 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
 
         // Copy only if block-layouts are compatible, otherwise continue to fallback
         if (n_bl_dst == n_bl_src && bl_size_dst == bl_size_src) {
-          cudaError_t err = cudaMemcpy2D((void *)data(), bl_str_dst * sizeof(value_type), (void *)rhs.data(), bl_str_src * sizeof(value_type),
-                                         bl_size_src * sizeof(value_type), n_bl_src, cudaMemcpyDefault);
+          auto err [[maybe_unused]] = cudaMemcpy2D((void *)data(), bl_str_dst * sizeof(value_type), (void *)rhs.data(),
+                                                   bl_str_src * sizeof(value_type), bl_size_src * sizeof(value_type), n_bl_src, cudaMemcpyDefault);
           ASSERT_WITH_MESSAGE(err == cudaSuccess, "CudaMemcpy2D failed with error code "s + std::to_string(err));
           return;
         }
