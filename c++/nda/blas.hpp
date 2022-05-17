@@ -21,6 +21,7 @@ namespace nda::blas {}
 
 #include "blas/tools.hpp"
 #include "blas/gemm.hpp"
+#include "blas/gemm_batch.hpp"
 #include "blas/gemv.hpp"
 #include "blas/ger.hpp"
 #include "blas/dot.hpp"

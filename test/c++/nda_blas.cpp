@@ -32,6 +32,14 @@ void test_gemm() {
   EXPECT_ARRAY_NEAR(M1, nda::matrix<value_t>{{0, 1}, {1, 2}});
   EXPECT_ARRAY_NEAR(M2, nda::matrix<value_t>{{1, 1}, {1, 1}});
   EXPECT_ARRAY_NEAR(M3, nda::matrix<value_t>{{2, 1}, {3, 4}});
+
+  // batch strided
+  nda::array<value_t, 3> A1{{{0, 1}, {1, 2}}, {{0, 1}, {1, 2}}}, A2{{{1, 1}, {1, 1}}, {{1, 1}, {1, 1}}}, A3{{{1, 0}, {0, 1}}, {{1, 0}, {0, 1}}};
+  nda::blas::gemm_batch_strided(1.0, A1, A2, 1.0, A3);
+
+  EXPECT_ARRAY_NEAR(A1, nda::array<value_t, 3>{{{0, 1}, {1, 2}}, {{0, 1}, {1, 2}}});
+  EXPECT_ARRAY_NEAR(A2, nda::array<value_t, 3>{{{1, 1}, {1, 1}}, {{1, 1}, {1, 1}}});
+  EXPECT_ARRAY_NEAR(A3, nda::array<value_t, 3>{{{2, 1}, {3, 4}}, {{2, 1}, {3, 4}}});
 }
 
 TEST(BLAS, gemm) { test_gemm<double, C_layout>(); }     //NOLINT
