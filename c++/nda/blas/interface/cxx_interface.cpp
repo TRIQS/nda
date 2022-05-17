@@ -24,6 +24,7 @@
 #include "cublas_v2.h"
 
 #include <string>
+#include <vector>
 
 using namespace std::string_literals;
 
@@ -35,12 +36,24 @@ extern "C" {
 double F77_ddot(FINT, const double *, FINT, const double *, FINT);
 std::complex<double> F77_zdotu(FINT, const double *, FINT, const double *, FINT); // NOLINT
 std::complex<double> F77_zdotc(FINT, const double *, FINT, const double *, FINT); // NOLINT
+#ifdef HAVE_GEMM_BATCH
+void dgemm_batch(FCHAR, FCHAR, FINT, FINT, FINT, const double *, const double **, FINT, const double **, FINT, const double *, double **, FINT, FINT,
+                 FINT);
+void zgemm_batch(FCHAR, FCHAR, FINT, FINT, FINT, const double *, const double **, FINT, const double **, FINT, const double *, double **, FINT, FINT,
+                 FINT);
+void dgemm_batch_strided(FCHAR, FCHAR, FINT, FINT, FINT, const double *, const double *, FINT, FINT, const double *, FINT, FINT, const double *,
+                         double *, FINT, FINT, FINT);
+void zgemm_batch_strided(FCHAR, FCHAR, FINT, FINT, FINT, const double *, const double *, FINT, FINT, const double *, FINT, FINT, const double *,
+                         double *, FINT, FINT, FINT);
+#endif
 }
 
 namespace nda::blas::f77 {
 
-  inline auto *blacplx(std::complex<double> *c) { return reinterpret_cast<double *>(c); }             // NOLINT
-  inline auto *blacplx(std::complex<double> const *c) { return reinterpret_cast<const double *>(c); } // NOLINT
+  inline auto *blacplx(std::complex<double> *c) { return reinterpret_cast<double *>(c); }                // NOLINT
+  inline auto *blacplx(std::complex<double> const *c) { return reinterpret_cast<const double *>(c); }    // NOLINT
+  inline auto **blacplx(std::complex<double> **c) { return reinterpret_cast<double **>(c); }             // NOLINT
+  inline auto **blacplx(std::complex<double> const **c) { return reinterpret_cast<const double **>(c); } // NOLINT
 
   void axpy(int N, double alpha, const double *x, int incx, double *Y, int incy) { F77_daxpy(&N, &alpha, x, &incx, Y, &incy); }
   void axpy(int N, std::complex<double> alpha, const std::complex<double> *x, int incx, std::complex<double> *Y, int incy) {
@@ -67,6 +80,45 @@ namespace nda::blas::f77 {
   void gemm(char op_a, char op_b, int M, int N, int K, std::complex<double> alpha, const std::complex<double> *A, int LDA,
             const std::complex<double> *B, int LDB, std::complex<double> beta, std::complex<double> *C, int LDC) {
     F77_zgemm(&op_a, &op_b, &M, &N, &K, blacplx(&alpha), blacplx(A), &LDA, blacplx(B), &LDB, blacplx(&beta), blacplx(C), &LDC);
+  }
+
+  void gemm_batch(char op_a, char op_b, int M, int N, int K, double alpha, const double **A, int LDA, const double **B, int LDB, double beta,
+                  double **C, int LDC, int batch_count) {
+#ifdef HAVE_GEMM_BATCH
+    const int group_count = 1;
+    dgemm_batch(&op_a, &op_b, &M, &N, &K, &alpha, A, &LDA, B, &LDB, &beta, C, &LDC, &group_count, &batch_count);
+#else // Fallback to loop
+    for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, M, N, K, alpha, A[i], LDA, B[i], LDB, beta, C[i], LDC);
+#endif
+  }
+  void gemm_batch(char op_a, char op_b, int M, int N, int K, std::complex<double> alpha, const std::complex<double> **A, int LDA,
+                  const std::complex<double> **B, int LDB, std::complex<double> beta, std::complex<double> **C, int LDC, int batch_count) {
+#ifdef HAVE_GEMM_BATCH
+    const int group_count = 1;
+    zgemm_batch(&op_a, &op_b, &M, &N, &K, blacplx(&alpha), blacplx(A), &LDA, blacplx(B), &LDB, blacplx(&beta), blacplx(C), &LDC, &group_count,
+                &batch_count);
+#else
+    for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, M, N, K, alpha, A[i], LDA, B[i], LDB, beta, C[i], LDC);
+#endif
+  }
+
+  void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, int strideA, const double *B, int LDB,
+                          int strideB, double beta, double *C, int LDC, int strideC, int batch_count) {
+#ifdef HAVE_GEMM_BATCH
+    dgemm_batch_strided(&op_a, &op_b, &M, &N, &K, &alpha, A, &LDA, &strideA, B, &LDB, &strideB, &beta, C, &LDC, &strideC, &batch_count);
+#else
+    for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, M, N, K, alpha, A + i * strideA, LDA, B + i * strideB, LDB, beta, C + i * strideC, LDC);
+#endif
+  }
+  void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, std::complex<double> alpha, const std::complex<double> *A, int LDA, int strideA,
+                          const std::complex<double> *B, int LDB, int strideB, std::complex<double> beta, std::complex<double> *C, int LDC,
+                          int strideC, int batch_count) {
+#ifdef HAVE_GEMM_BATCH
+    zgemm_batch_strided(&op_a, &op_b, &M, &N, &K, blacplx(&alpha), blacplx(A), &LDA, &strideA, blacplx(B), &LDB, &strideB, blacplx(&beta), blacplx(C),
+                        &LDC, &strideC, &batch_count);
+#else
+    for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, M, N, K, alpha, A + i * strideA, LDA, B + i * strideB, LDB, beta, C + i * strideC, LDC);
+#endif
   }
 
   void gemv(char op, int M, int N, double alpha, const double *A, int LDA, const double *x, int incx, double beta, double *Y, int incy) {
@@ -121,19 +173,46 @@ namespace nda::blas::cuda {
   if (synchronize) cudaDeviceSynchronize();                                                                                                          \
   if (err != CUBLAS_STATUS_SUCCESS) NDA_RUNTIME_ERROR << AS_STRING(X) + " failed with error code "s + std::to_string(err);
 
-  inline auto *cucplx(std::complex<double> *c) { return reinterpret_cast<cuDoubleComplex *>(c); }             // NOLINT
-  inline auto *cucplx(std::complex<double> const *c) { return reinterpret_cast<const cuDoubleComplex *>(c); } // NOLINT
+  inline auto *cucplx(std::complex<double> *c) { return reinterpret_cast<cuDoubleComplex *>(c); }                // NOLINT
+  inline auto *cucplx(std::complex<double> const *c) { return reinterpret_cast<const cuDoubleComplex *>(c); }    // NOLINT
+  inline auto **cucplx(std::complex<double> **c) { return reinterpret_cast<cuDoubleComplex **>(c); }             // NOLINT
+  inline auto **cucplx(std::complex<double> const **c) { return reinterpret_cast<const cuDoubleComplex **>(c); } // NOLINT
 
   void gemm(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, const double *B, int LDB, double beta, double *C,
             int LDC) {
     CUBLAS_CHECK(cublasDgemm, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha, A, LDA, B, LDB, &beta, C, LDC);
   }
-
   void gemm(char op_a, char op_b, int M, int N, int K, std::complex<double> alpha, const std::complex<double> *A, int LDA,
             const std::complex<double> *B, int LDB, std::complex<double> beta, std::complex<double> *C, int LDC) {
     auto alpha_cu = cuDoubleComplex{alpha.real(), alpha.imag()};
     auto beta_cu  = cuDoubleComplex{beta.real(), beta.imag()};
     CUBLAS_CHECK(cublasZgemm, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha_cu, cucplx(A), LDA, cucplx(B), LDB, &beta_cu, cucplx(C), LDC);
+  }
+
+  void gemm_batch(char op_a, char op_b, int M, int N, int K, double alpha, const double **A, int LDA, const double **B, int LDB, double beta,
+                  double **C, int LDC, int batch_count) {
+    CUBLAS_CHECK(cublasDgemmBatched, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha, A, LDA, B, LDB, &beta, C, LDC, batch_count);
+  }
+  void gemm_batch(char op_a, char op_b, int M, int N, int K, std::complex<double> alpha, const std::complex<double> **A, int LDA,
+                  const std::complex<double> **B, int LDB, std::complex<double> beta, std::complex<double> **C, int LDC, int batch_count) {
+    auto alpha_cu = cuDoubleComplex{alpha.real(), alpha.imag()};
+    auto beta_cu  = cuDoubleComplex{beta.real(), beta.imag()};
+    CUBLAS_CHECK(cublasZgemmBatched, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha_cu, cucplx(A), LDA, cucplx(B), LDB, &beta_cu,
+                 cucplx(C), LDC, batch_count);
+  }
+
+  void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, int strideA, const double *B, int LDB,
+                          int strideB, double beta, double *C, int LDC, int strideC, int batch_count) {
+    CUBLAS_CHECK(cublasDgemmStridedBatched, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha, A, LDA, strideA, B, LDB, strideB, &beta, C,
+                 LDC, strideC, batch_count);
+  }
+  void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, std::complex<double> alpha, const std::complex<double> *A, int LDA, int strideA,
+                          const std::complex<double> *B, int LDB, int strideB, std::complex<double> beta, std::complex<double> *C, int LDC,
+                          int strideC, int batch_count) {
+    auto alpha_cu = cuDoubleComplex{alpha.real(), alpha.imag()};
+    auto beta_cu  = cuDoubleComplex{beta.real(), beta.imag()};
+    CUBLAS_CHECK(cublasZgemmStridedBatched, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha_cu, cucplx(A), LDA, strideA, cucplx(B), LDB,
+                 strideB, &beta_cu, cucplx(C), LDC, strideC, batch_count);
   }
 
   void axpy(int N, double alpha, const double *x, int incx, double *Y, int incy) { cublasDaxpy(handle, N, &alpha, x, incx, Y, incy); }

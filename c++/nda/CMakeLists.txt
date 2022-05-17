@@ -47,6 +47,10 @@ list(REMOVE_DUPLICATES LAPACK_LIBRARIES)
 target_link_libraries(blas_lapack INTERFACE ${LAPACK_LIBRARIES})
 target_compile_options(blas_lapack INTERFACE ${LAPACK_LINKER_FLAGS})
 
+# Provide compile-time information on if GEMM batch is available
+# FIXME Actually Check
+target_compile_definitions(blas_lapack INTERFACE HAVE_GEMM_BATCH)
+
 # Link against interface target and export
 target_link_libraries(${PROJECT_NAME}_c PRIVATE blas_lapack)
 install(TARGETS blas_lapack EXPORT ${PROJECT_NAME}-targets)
