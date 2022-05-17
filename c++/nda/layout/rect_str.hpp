@@ -16,7 +16,8 @@
 
 #pragma once
 
-#include "./rect_str.hpp"
+#include "./idx_map.hpp"
+#include "./policies.hpp"
 
 namespace nda {
 
