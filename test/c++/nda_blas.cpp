@@ -118,8 +118,8 @@ void test_dot() { //NOLINT
   EXPECT_COMPLEX_NEAR((nda::blas::dot(a, b)), (nda::blas::dot_generic(a, b)), 1.e-14);
 }
 
-TEST(CUBLAS, ddot) { test_dot<double>(); }   //NOLINT
-TEST(CUBLAS, zdot) { test_dot<dcomplex>(); } //NOLINT
+TEST(BLAS, ddot) { test_dot<double>(); }   //NOLINT
+TEST(BLAS, zdot) { test_dot<dcomplex>(); } //NOLINT
 
 //----------------------------
 
@@ -136,5 +136,5 @@ void test_dotc() { //NOLINT
   EXPECT_COMPLEX_NEAR((nda::blas::dotc(a, b)), (nda::blas::dotc_generic(a, b)), 1.e-14);
 }
 
-TEST(CUBLAS, ddotc) { test_dotc<double>(); }   //NOLINT
-TEST(CUBLAS, zdotc) { test_dotc<dcomplex>(); } //NOLINT
+TEST(BLAS, ddotc) { test_dotc<double>(); }   //NOLINT
+TEST(BLAS, zdotc) { test_dotc<dcomplex>(); } //NOLINT
