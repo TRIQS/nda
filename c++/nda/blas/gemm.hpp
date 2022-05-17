@@ -18,6 +18,7 @@
 #include <complex>
 #include "tools.hpp"
 #include "interface/cxx_interface.hpp"
+#include "../declarations.hpp"
 #include "../mem/address_space.hpp"
 
 namespace nda::blas {
@@ -62,7 +63,7 @@ namespace nda::blas {
            have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>) //
   void gemm(get_value_t<X> alpha, X const &x, Y const &y, get_value_t<X> beta, C &&c) {
 
-    auto to_mat = []<typename Z>(Z const &z) -> decltype(auto) {
+    auto to_mat = []<typename Z>(Z const &z) -> auto & {
       if constexpr (is_conj_array_expr<Z>)
         return std::get<0>(z.a);
       else

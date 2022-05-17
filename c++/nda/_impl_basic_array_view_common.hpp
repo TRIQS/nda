@@ -42,6 +42,9 @@ ValueType *data() noexcept { return sto.data(); }
 /// Shape
 [[nodiscard]] std::array<long, rank> const &shape() const noexcept { return lay.lengths(); }
 
+/// Strides
+[[nodiscard]] std::array<long, rank> const &strides() const noexcept { return lay.strides(); }
+
 ///
 [[nodiscard]] long size() const noexcept { return lay.size(); }
 
