@@ -28,28 +28,30 @@ namespace nda {
 
 namespace nda::blas {
 
-  // Check if a type is a conjugate matrix expression
-  template <typename M>
-  static constexpr bool is_conj_matrix_expr = false;
-  template <MemoryMatrix M>
-  static constexpr bool is_conj_matrix_expr<expr_call<conj_f, M>> = true;
-  template <typename M>
-  requires(!std::is_same_v<M, std::remove_cvref_t<M>>) static constexpr bool is_conj_matrix_expr<M> = is_conj_matrix_expr<std::remove_cvref_t<M>>;
+  // Check if a type is a conjugate array expression
+  template <typename A>
+  static constexpr bool is_conj_array_expr = false;
+  template <MemoryArray A>
+  static constexpr bool is_conj_array_expr<expr_call<conj_f, A>> = true;
+  template <typename A>
+  requires(!std::is_same_v<A, std::remove_cvref_t<A>>) static constexpr bool is_conj_array_expr<A> = is_conj_array_expr<std::remove_cvref_t<A>>;
 
   // ==== Layout Checks (Fortran/C) for both MemoryMatrix and conj(MemoryMatrix)
 
-  template <Matrix M>
-  requires(MemoryMatrix<M> or is_conj_matrix_expr<M>)
-  static constexpr bool has_F_layout = [](){
-    if constexpr (blas::is_conj_matrix_expr<M>) return has_F_layout<decltype(std::get<0>(std::declval<M>().a))>;
-    else return std::remove_cvref_t<M>::is_stride_order_Fortran();
+  template <Array A>
+  requires(MemoryArray<A> or is_conj_array_expr<A>) static constexpr bool has_F_layout = []() {
+    if constexpr (is_conj_array_expr<A>)
+      return has_F_layout<decltype(std::get<0>(std::declval<A>().a))>;
+    else
+      return std::remove_cvref_t<A>::is_stride_order_Fortran();
   }();
 
-  template <Matrix M>
-  requires(MemoryMatrix<M> or is_conj_matrix_expr<M>)
-  static constexpr bool has_C_layout = [](){
-    if constexpr (blas::is_conj_matrix_expr<M>) return has_C_layout<decltype(std::get<0>(std::declval<M>().a))>;
-    else return std::remove_cvref_t<M>::is_stride_order_C();
+  template <Array A>
+  requires(MemoryArray<A> or is_conj_array_expr<A>) static constexpr bool has_C_layout = []() {
+    if constexpr (is_conj_array_expr<A>)
+      return has_C_layout<decltype(std::get<0>(std::declval<A>().a))>;
+    else
+      return std::remove_cvref_t<A>::is_stride_order_C();
   }();
 
   // Determine the blas matrix operation tag ('N','T','C') based on the bools for conjugation and transposition
