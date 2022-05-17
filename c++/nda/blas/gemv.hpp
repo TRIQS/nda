@@ -55,19 +55,20 @@ namespace nda::blas {
    *
    */
   template <Matrix X, MemoryVector B, MemoryVector C>
-  requires((MemoryMatrix<X> or is_conj_matrix_expr<X>) and
-            have_same_value_type_v<X, B, C> and is_blas_lapack_v<get_value_t<X>>)
+  requires((MemoryMatrix<X> or is_conj_array_expr<X>) and //
+           have_same_value_type_v<X, B, C> and            //
+           is_blas_lapack_v<get_value_t<X>>)              //
   void gemv(get_value_t<X> alpha, X const &x, B const &b, get_value_t<X> beta, C &&c) {
 
-    auto to_mat = []<typename Z>(Z const &z) -> decltype(auto) {
-      if constexpr (is_conj_matrix_expr<Z>)
+    auto to_mat = []<Matrix Z>(Z const &z) -> decltype(auto) {
+      if constexpr (is_conj_array_expr<Z>)
         return std::get<0>(z.a);
       else
         return z;
     };
     auto &a = to_mat(x);
 
-    static constexpr bool conj_A = is_conj_matrix_expr<X>;
+    static constexpr bool conj_A = is_conj_array_expr<X>;
 
     using A = decltype(a);
     static_assert(mem::have_same_addr_space_v<A, B, C>);

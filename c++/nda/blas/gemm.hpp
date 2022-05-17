@@ -23,8 +23,8 @@
 namespace nda::blas {
 
   /**
-   * Compute c <- alpha a*b + beta * c using BLAS dgemm or zgemm 
-   * 
+   * Compute c <- alpha a*b + beta * c using BLAS dgemm or zgemm
+   *
    * using a generic version for non lapack types or more complex types
    * largely suboptimal. For testing, or in case of value_type being a complex type.
    * SHOULD not be used with double and dcomplex
@@ -48,22 +48,22 @@ namespace nda::blas {
   }
 
   /**
-   * Compute c <- alpha a*b + beta * c using BLAS dgemm or zgemm 
+   * Compute c <- alpha a*b + beta * c using BLAS dgemm or zgemm
    *
    * @param c Out parameter. Can be a temporary view (hence the &&).
-   *         
-   * @Precondition : 
-   *       * c has the correct dimension given a, b. 
-   *         gemm does not resize the object, 
+   *
+   * @Precondition :
+   *       * c has the correct dimension given a, b.
+   *         gemm does not resize the object,
    */
   template <Matrix X, Matrix Y, MemoryMatrix C>
-  requires((MemoryMatrix<X> or is_conj_matrix_expr<X>) and
-           (MemoryMatrix<Y> or is_conj_matrix_expr<Y>) and
-	   have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>)
+  requires((MemoryMatrix<X> or is_conj_array_expr<X>) and                        //
+           (MemoryMatrix<Y> or is_conj_array_expr<Y>) and                        //
+           have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>) //
   void gemm(get_value_t<X> alpha, X const &x, Y const &y, get_value_t<X> beta, C &&c) {
 
     auto to_mat = []<typename Z>(Z const &z) -> decltype(auto) {
-      if constexpr (is_conj_matrix_expr<Z>)
+      if constexpr (is_conj_array_expr<Z>)
         return std::get<0>(z.a);
       else
         return z;
@@ -71,8 +71,8 @@ namespace nda::blas {
     auto &a = to_mat(x);
     auto &b = to_mat(y);
 
-    static constexpr bool conj_A = is_conj_matrix_expr<X>;
-    static constexpr bool conj_B = is_conj_matrix_expr<Y>;
+    static constexpr bool conj_A = is_conj_array_expr<X>;
+    static constexpr bool conj_B = is_conj_array_expr<Y>;
 
     using A = decltype(a);
     using B = decltype(b);
