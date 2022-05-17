@@ -25,7 +25,7 @@ namespace nda {
 
   // Helper variable template to check if the three Matrix types can be passed to gemm
   // Only certain combinations of the memory layout (C/Fortran) and conjugation are allowed
-  template <Matrix A, Matrix B, MemoryMatrix C, bool conj_A = blas::is_conj_matrix_expr<A>, bool conj_B = blas::is_conj_matrix_expr<B>>
+  template <Matrix A, Matrix B, MemoryMatrix C, bool conj_A = blas::is_conj_array_expr<A>, bool conj_B = blas::is_conj_array_expr<B>>
   requires((MemoryMatrix<A> or conj_A) and (MemoryMatrix<B> or conj_B))
   static constexpr bool is_valid_gemm_triple = []() {
     using blas::has_F_layout;
@@ -59,8 +59,8 @@ namespace nda {
 
     if constexpr (is_blas_lapack_v<promoted_type>) {
 
-      auto as_container = []<typename A>(A &&a) -> decltype(auto) {
-        if constexpr (std::is_same_v<get_value_t<A>, promoted_type> and (MemoryMatrix<A> or blas::is_conj_matrix_expr<A>))
+      auto as_container = []<Matrix A>(A &&a) -> decltype(auto) {
+        if constexpr (std::is_same_v<get_value_t<A>, promoted_type> and (MemoryMatrix<A> or blas::is_conj_array_expr<A>))
           return std::forward<A>(a);
         else
           return matrix_t{std::forward<A>(a)};
@@ -112,8 +112,8 @@ namespace nda {
 
     if constexpr (is_blas_lapack_v<promoted_type>) {
 
-      auto as_container = []<typename A>(A &&a) -> decltype(auto) {
-        if constexpr (std::is_same_v<get_value_t<A>, promoted_type> and (MemoryMatrix<A> or blas::is_conj_matrix_expr<A>))
+      auto as_container = []<Array A>(A &&a) -> decltype(auto) {
+        if constexpr (std::is_same_v<get_value_t<A>, promoted_type> and (MemoryMatrix<A> or (Matrix<A> and blas::is_conj_array_expr<A>)))
           return std::forward<A>(a);
         else
           return basic_array<promoted_type, get_rank<A>, C_layout, 'A', heap<L_adr_spc>>{std::forward<A>(a)};
@@ -128,7 +128,10 @@ namespace nda {
 #endif
 #endif
 
-      if constexpr (blas::is_conj_matrix_expr<decltype(as_container(l))> and
+      // For expressions of the kind 'conj(M)*V' with a Matrix in Fortran Layout
+      // we have to explicitly form the conj operation in memory as gemv only
+      // provides op tags 'N', 'T' and 'C' (hermitian conjugate)
+      if constexpr (blas::is_conj_array_expr<decltype(as_container(l))> and
 	            blas::has_F_layout<decltype(as_container(l))>) {
 	blas::gemv(1, make_regular(as_container(l)), as_container(r), 0, result);
       } else {
