@@ -103,8 +103,11 @@ namespace nda::lapack::cuda {
   };
   static handle_t handle = {}; // NOLINT
 
+  /// Global option to turn on/off the cudaDeviceSynchronize after cusolver library calls
+  static bool synchronize = true;
 #define CUSOLVER_CHECK(X, ...)                                                                                                                       \
   auto err = X(handle, __VA_ARGS__);                                                                                                                 \
+  if (synchronize) cudaDeviceSynchronize();                                                                                                          \
   if (err != CUSOLVER_STATUS_SUCCESS) NDA_RUNTIME_ERROR << AS_STRING(X) + " failed with error code "s + std::to_string(err);
 
   inline auto *cucplx(std::complex<double> *c) { return reinterpret_cast<cuDoubleComplex *>(c); }             // NOLINT

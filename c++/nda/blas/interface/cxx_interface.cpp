@@ -20,6 +20,7 @@
 
 // Extracted from Reference Lapack (https://github.com/Reference-LAPACK):
 #include "cblas_f77.h"
+#include "cuda_runtime.h"
 #include "cublas_v2.h"
 
 #include <string>
@@ -113,8 +114,11 @@ namespace nda::blas::cuda {
   };
   static handle_t handle = {};
 
+  /// Global option to turn on/off the cudaDeviceSynchronize after cublas library calls
+  static bool synchronize = true;
 #define CUBLAS_CHECK(X, ...)                                                                                                                         \
   auto err = X(handle, __VA_ARGS__);                                                                                                                 \
+  if (synchronize) cudaDeviceSynchronize();                                                                                                          \
   if (err != CUBLAS_STATUS_SUCCESS) NDA_RUNTIME_ERROR << AS_STRING(X) + " failed with error code "s + std::to_string(err);
 
   inline auto *cucplx(std::complex<double> *c) { return reinterpret_cast<cuDoubleComplex *>(c); }             // NOLINT
