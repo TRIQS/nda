@@ -70,7 +70,7 @@ if(Build_Benchs)
   set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "")
   external_dependency(google-bench
     GIT_REPO https://github.com/google/benchmark
-    GIT_TAG v1.5.2
+    GIT_TAG main
     BUILD_ALWAYS
     EXCLUDE_FROM_ALL
   )
