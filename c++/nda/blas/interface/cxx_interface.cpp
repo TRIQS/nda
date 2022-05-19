@@ -156,20 +156,24 @@ namespace nda::blas::cuda {
     }
   }
 
-  struct handle_t {
-    handle_t() { cublasCreate(&h); }
-    ~handle_t() { cublasDestroy(h); }
-    operator cublasHandle_t() { return h; }
+  // Get CuBlas Handle, Used by all routines
+  auto &get_handle() {
+    struct handle_t {
+      handle_t() { cublasCreate(&h); }
+      ~handle_t() { cublasDestroy(h); }
+      operator cublasHandle_t() { return h; }
 
-    private:
-    cublasHandle_t h = {};
-  };
-  static handle_t handle = {};
+      private:
+      cublasHandle_t h = {};
+    };
+    static handle_t h = {};
+    return h;
+  }
 
   /// Global option to turn on/off the cudaDeviceSynchronize after cublas library calls
   static bool synchronize = true;
 #define CUBLAS_CHECK(X, ...)                                                                                                                         \
-  auto err = X(handle, __VA_ARGS__);                                                                                                                 \
+  auto err = X(get_handle(), __VA_ARGS__);                                                                                                           \
   if (synchronize) cudaDeviceSynchronize();                                                                                                          \
   if (err != CUBLAS_STATUS_SUCCESS) NDA_RUNTIME_ERROR << AS_STRING(X) + " failed with error code "s + std::to_string(err);
 
@@ -215,12 +219,12 @@ namespace nda::blas::cuda {
                  strideB, &beta_cu, cucplx(C), LDC, strideC, batch_count);
   }
 
-  void axpy(int N, double alpha, const double *x, int incx, double *Y, int incy) { cublasDaxpy(handle, N, &alpha, x, incx, Y, incy); }
+  void axpy(int N, double alpha, const double *x, int incx, double *Y, int incy) { cublasDaxpy(get_handle(), N, &alpha, x, incx, Y, incy); }
   void axpy(int N, std::complex<double> alpha, const std::complex<double> *x, int incx, std::complex<double> *Y, int incy) {
     CUBLAS_CHECK(cublasZaxpy, N, cucplx(&alpha), cucplx(x), incx, cucplx(Y), incy);
   }
 
-  void copy(int N, const double *x, int incx, double *Y, int incy) { cublasDcopy(handle, N, x, incx, Y, incy); }
+  void copy(int N, const double *x, int incx, double *Y, int incy) { cublasDcopy(get_handle(), N, x, incx, Y, incy); }
   void copy(int N, const std::complex<double> *x, int incx, std::complex<double> *Y, int incy) {
     CUBLAS_CHECK(cublasZcopy, N, cucplx(x), incx, cucplx(Y), incy);
   }
