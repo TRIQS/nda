@@ -46,10 +46,9 @@ add_library(${PROJECT_NAME}::blas_lapack ALIAS blas_lapack)
 list(REMOVE_DUPLICATES LAPACK_LIBRARIES)
 target_link_libraries(blas_lapack INTERFACE ${LAPACK_LIBRARIES})
 target_compile_options(blas_lapack INTERFACE ${LAPACK_LINKER_FLAGS})
-
-# Provide compile-time information on if GEMM batch is available
-# FIXME Actually Check
-target_compile_definitions(blas_lapack INTERFACE HAVE_GEMM_BATCH)
+if(LAPACK_LIBRARIES MATCHES "mkl")
+  target_compile_definitions(${PROJECT_NAME}_c PRIVATE HAVE_GEMM_BATCH)
+endif()
 
 # Link against interface target and export
 target_link_libraries(${PROJECT_NAME}_c PRIVATE blas_lapack)
