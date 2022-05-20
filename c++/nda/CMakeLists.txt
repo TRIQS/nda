@@ -52,7 +52,15 @@ target_compile_options(blas_lapack INTERFACE ${LAPACK_LINKER_FLAGS})
 target_link_libraries(${PROJECT_NAME}_c PRIVATE blas_lapack)
 install(TARGETS blas_lapack EXPORT ${PROJECT_NAME}-targets)
 
+# ========= Compiler Wrapper ==========
 
+# Get the compiler and linktime flags of nda_c
+include(${PROJECT_SOURCE_DIR}/share/cmake/extract_flags.cmake)
+extract_flags(nda_c)
+
+# Generate and install compiler wrapper
+configure_file(nda++.in nda++ @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/nda++ PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE DESTINATION bin)
 
 # ========= Static Analyzer Checks ==========
 
