@@ -47,7 +47,7 @@ namespace nda::mem {
 
   /// Generic memcpy between potentially different Address Spaces
   template <AddressSpace DestAdrSp, AddressSpace SrcAdrSp>
-  void memcpy(void *dest, void *src, size_t count) {
+  void memcpy(void *dest, void const *src, size_t count) {
     if constexpr (DestAdrSp == Host && SrcAdrSp == Host) {
       std::memcpy(dest, src, count);
     } else {
@@ -75,7 +75,7 @@ namespace nda::mem {
       if constexpr (AdrSp == Host) {
         return {(char *)malloc(s), s}; // NOLINT
       } else {
-        auto blk = blk_t{nullptr, s};
+        auto blk                  = blk_t{nullptr, s};
         auto err [[maybe_unused]] = [&]() {
           if constexpr (AdrSp == Device)
             return cudaMalloc((void **)&blk.ptr, s);        // NOLINT
