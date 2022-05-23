@@ -292,13 +292,16 @@ namespace nda {
     /// Create an array the given shape and populate it with random
     /// samples from a uniform distribution over [0, 1)
     template <std::integral Int = long>
-    static basic_array rand(std::array<Int, Rank> const &shape) requires(std::is_floating_point_v<ValueType>) {
+    static basic_array rand(std::array<Int, Rank> const &shape) requires(std::is_floating_point_v<ValueType> or nda::is_complex_v<ValueType>) {
 
       auto static gen  = std::mt19937(std::random_device{}());
       auto static dist = std::uniform_real_distribution<>(0.0, 1.0);
 
       auto res = basic_array{shape};
-      for (auto &x : res) x = dist(gen);
+      if constexpr(nda::is_complex_v<ValueType>)
+        for (auto &x : res) x = dist(gen) + 1i * dist(gen);
+      else
+        for (auto &x : res) x = dist(gen);
 
       return res;
     }
