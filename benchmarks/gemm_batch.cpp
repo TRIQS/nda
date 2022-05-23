@@ -38,6 +38,24 @@ static void GEMM_BATCH(benchmark::State &state) {
 BENCHMARK_TEMPLATE(GEMM_BATCH, nda::matrix<value_t>)->RangeMultiplier(2)->Range(Nmin, Nmax)->Unit(benchmark::kMicrosecond);   // NOLINT
 BENCHMARK_TEMPLATE(GEMM_BATCH, nda::cumatrix<value_t>)->RangeMultiplier(2)->Range(Nmin, Nmax)->Unit(benchmark::kMicrosecond); // NOLINT
 
+template <typename M>
+static void GEMM_VBATCH(benchmark::State &state) {
+  long N          = state.range(0);
+  long BatchCount = 10 * Nmax * Nmax / N / N;
+
+  auto A = std::vector(BatchCount, M{nda::rand<value_t>(N, N)});
+  auto B = std::vector(BatchCount, M{nda::rand<value_t>(N, N)});
+  auto C = std::vector(BatchCount, M{nda::zeros<value_t>(N, N)});
+
+  for (auto s : state) { nda::blas::gemm_vbatch(1.0, A, B, 0.0, C); }
+
+  auto NBytes                  = BatchCount * N * N * sizeof(value_t);
+  state.counters["batchcount"] = double(BatchCount);
+  state.counters["bytesize"]   = double(NBytes);
+}
+BENCHMARK_TEMPLATE(GEMM_VBATCH, nda::matrix<value_t>)->RangeMultiplier(2)->Range(Nmin, Nmax)->Unit(benchmark::kMicrosecond);   // NOLINT
+BENCHMARK_TEMPLATE(GEMM_VBATCH, nda::cumatrix<value_t>)->RangeMultiplier(2)->Range(Nmin, Nmax)->Unit(benchmark::kMicrosecond); // NOLINT
+
 template <typename T>
 static void GEMM_BATCH_STRIDED(benchmark::State &state) {
   long N          = state.range(0);

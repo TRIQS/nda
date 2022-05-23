@@ -33,15 +33,6 @@ void test_gemm() {
   M3 = M3_d;
 
   EXPECT_ARRAY_NEAR(M3, nda::matrix<value_t>{{2, 1}, {3, 4}});
-
-  // batch strided
-  nda::array<value_t, 3> A1{{{0, 1}, {1, 2}}, {{0, 1}, {1, 2}}}, A2{{{1, 1}, {1, 1}}, {{1, 1}, {1, 1}}}, A3{{{1, 0}, {0, 1}}, {{1, 0}, {0, 1}}};
-  nda::cuarray<value_t, 3> A1_d{A1}, A2_d{A2}, A3_d{A3};
-
-  nda::blas::gemm_batch_strided(1.0, A1_d, A2_d, 1.0, A3_d);
-  A3 = A3_d;
-
-  EXPECT_ARRAY_NEAR(A3, nda::array<value_t, 3>{{{2, 1}, {3, 4}}, {{2, 1}, {3, 4}}});
 }
 
 TEST(CUBLAS, gemm) { test_gemm<double, C_layout>(); }     //NOLINT
@@ -52,22 +43,42 @@ TEST(CUBLAS, zgemmF) { test_gemm<dcomplex, F_layout>(); } //NOLINT
 //----------------------------
 
 template <typename value_t, typename Layout>
-void test_gemm_batched() {
-  int BatchCount = 10;
-  long N         = 64;
+void test_gemm_batch() {
+  int batch_count = 10;
+  long N          = 64;
 
-  using matrix_t = nda::cumatrix<value_t, Layout>;
-  auto A         = std::vector(BatchCount, matrix_t{nda::rand<value_t>(N, N)});
-  auto B         = std::vector(BatchCount, matrix_t{nda::rand<value_t>(N, N)});
-  auto C         = std::vector(BatchCount, matrix_t{nda::zeros<value_t>(N, N)});
+  auto vAd = std::vector(batch_count, to_device(nda::matrix<value_t, Layout>::rand({N, N})));
+  auto vBd = std::vector(batch_count, to_device(nda::matrix<value_t, Layout>::rand({N, N})));
+  auto vCd = std::vector(batch_count, to_device(nda::matrix<value_t, Layout>::zeros({N, N})));
+  nda::blas::gemm_batch(1.0, vAd, vBd, 0.0, vCd);
 
-  nda::blas::gemm_batch(1.0, A, B, 0.0, C);
+  for (auto i : range(batch_count)) EXPECT_ARRAY_NEAR(make_regular(to_host(vAd[i]) * to_host(vBd[i])), to_host(vCd[i]));
 }
 
-TEST(CUBLAS, gemm_batched) { test_gemm<double, C_layout>(); }     //NOLINT
-TEST(CUBLAS, gemmF_batched) { test_gemm<double, F_layout>(); }    //NOLINT
-TEST(CUBLAS, zgemm_batched) { test_gemm<dcomplex, C_layout>(); }  //NOLINT
-TEST(CUBLAS, zgemmF_batched) { test_gemm<dcomplex, F_layout>(); } //NOLINT
+TEST(CUBLAS, gemm_batch) { test_gemm_batch<double, C_layout>(); }     //NOLINT
+TEST(CUBLAS, gemmF_batch) { test_gemm_batch<double, F_layout>(); }    //NOLINT
+TEST(CUBLAS, zgemm_batch) { test_gemm_batch<dcomplex, C_layout>(); }  //NOLINT
+TEST(CUBLAS, zgemmF_batch) { test_gemm_batch<dcomplex, F_layout>(); } //NOLINT
+
+//----------------------------
+
+template <typename value_t, typename Layout>
+void test_gemm_vbatch() {
+  int batch_count = 10;
+  long N          = 64;
+
+  auto vAd = std::vector(batch_count, to_device(nda::matrix<value_t, Layout>::rand({N, N})));
+  auto vBd = std::vector(batch_count, to_device(nda::matrix<value_t, Layout>::rand({N, N})));
+  auto vCd = std::vector(batch_count, to_device(nda::matrix<value_t, Layout>::zeros({N, N})));
+  nda::blas::gemm_vbatch(1.0, vAd, vBd, 0.0, vCd);
+
+  for (auto i : range(batch_count)) EXPECT_ARRAY_NEAR(make_regular(to_host(vAd[i]) * to_host(vBd[i])), to_host(vCd[i]));
+}
+
+TEST(CUBLAS, gemm_vbatch) { test_gemm_vbatch<double, C_layout>(); }     //NOLINT
+TEST(CUBLAS, gemmF_vbatch) { test_gemm_vbatch<double, F_layout>(); }    //NOLINT
+TEST(CUBLAS, zgemm_vbatch) { test_gemm_vbatch<dcomplex, C_layout>(); }  //NOLINT
+TEST(CUBLAS, zgemmF_vbatch) { test_gemm_vbatch<dcomplex, F_layout>(); } //NOLINT
 
 // ==============================================================
 
