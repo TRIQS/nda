@@ -18,7 +18,8 @@
 #include <complex>
 #include "tools.hpp"
 #include "interface/cxx_interface.hpp"
-#include "../declarations.hpp"
+#include "../basic_array.hpp"
+#include "../basic_functions.hpp"
 #include "../mem/address_space.hpp"
 
 namespace nda::blas {
@@ -26,15 +27,12 @@ namespace nda::blas {
   /**
    * Batched version of GEMM taking vectors of matrices as arguments
    */
-  template <Matrix X, Matrix Y, MemoryMatrix C>
+  template <bool VBATCH = false, Matrix X, Matrix Y, MemoryMatrix C>
   requires((MemoryMatrix<X> or is_conj_array_expr<X>) and                        //
            (MemoryMatrix<Y> or is_conj_array_expr<Y>) and                        //
            have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>) //
   void gemm_batch(get_value_t<X> alpha, std::vector<X> const &vx, std::vector<Y> const &vy, get_value_t<X> beta, std::vector<C> &vc) {
 
-    EXPECTS(std::all_of(vx.begin(), vx.end(), [&vx](auto &x) { return x.shape() == vx[0].shape(); }));
-    EXPECTS(std::all_of(vy.begin(), vy.end(), [&vy](auto &y) { return y.shape() == vy[0].shape(); }));
-    EXPECTS(std::all_of(vc.begin(), vc.end(), [&vc](auto &c) { return c.shape() == vc[0].shape(); }));
     EXPECTS(vx.size() == vy.size() and vx.size() == vc.size());
     if (vx.empty()) return;
     int batch_count = vx.size();
@@ -56,55 +54,100 @@ namespace nda::blas {
     using B = decltype(b0);
     static_assert(mem::have_same_addr_space_v<A, B, C>, "Matrices must have same memory address space");
 
-    EXPECTS(a0.extent(1) == b0.extent(0));
-    EXPECTS(a0.extent(0) == c0.extent(0));
-    EXPECTS(b0.extent(1) == c0.extent(1));
-
     // c is in C order: compute the transpose of the product in Fortran order
     if constexpr (has_C_layout<C>) {
-      std::vector<std::decay_t<decltype(transpose(vx[0]))>> vxT;
-      std::vector<std::decay_t<decltype(transpose(vy[0]))>> vyT;
-      std::vector<std::decay_t<decltype(transpose(vc[0]))>> vcT;
 
-      std::transform(vx.begin(), vx.end(), std::back_inserter(vxT), [](auto &x) { return transpose(x); });
-      std::transform(vy.begin(), vy.end(), std::back_inserter(vyT), [](auto &y) { return transpose(y); });
-      std::transform(vc.begin(), vc.end(), std::back_inserter(vcT), [](auto &c) { return transpose(c); });
-
-      gemm_batch(alpha, vyT, vxT, beta, vcT);
+      auto map_transpose = [](auto &v) {
+        auto vT = std::vector<std::decay_t<decltype(transpose(v[0]))>>{};
+        vT.reserve(v.size());
+        std::transform(v.begin(), v.end(), std::back_inserter(vT), [](auto &x) { return transpose(x); });
+        return vT;
+      };
+      auto vcT = map_transpose(vc);
+      gemm_batch<VBATCH>(alpha, map_transpose(vy), map_transpose(vx), beta, vcT);
       return;
     } else { // c is in Fortran order
 
-      char op_a   = get_op<conj_A, /*transpose =*/has_C_layout<A>>;
-      char op_b   = get_op<conj_B, /*transpose =*/has_C_layout<B>>;
-      auto [m, k] = a0.shape();
-      auto n      = b0.extent(1);
-
-      auto to_ptr = [&to_mat]<typename Z>(Z & z) -> auto * {
-        // Must be lapack compatible
-        EXPECTS(to_mat(z).indexmap().min_stride() == 1);
-        return to_mat(z).data();
+      auto get_ptrs = [&to_mat]<typename V>(V &v) {
+        EXPECTS(std::all_of(v.begin(), v.end(),
+                            [&v, &to_mat](auto &z) { return (VBATCH or z.shape() == v[0].shape()) and to_mat(z).indexmap().min_stride() == 1; }));
+        using value_t = get_value_t<typename V::value_type>;
+        using ptr_t   = std::conditional_t<std::is_const_v<V>, value_t const *, value_t *>;
+        auto v_ptrs   = vector<ptr_t>(v.size());
+        std::transform(v.begin(), v.end(), v_ptrs.begin(), [&to_mat](auto &z) { return to_mat(z).data(); });
+	if constexpr (mem::on_host<A>)
+          return v_ptrs;
+	else
+	  return to_device(v_ptrs);
       };
+      auto a_ptrs = get_ptrs(vx);
+      auto b_ptrs = get_ptrs(vy);
+      auto c_ptrs = get_ptrs(vc);
 
-      vector<get_value_t<X> const *> a_ptrs(batch_count), b_ptrs(batch_count);
-      std::transform(vx.begin(), vx.end(), a_ptrs.begin(), to_ptr);
-      std::transform(vy.begin(), vy.end(), b_ptrs.begin(), to_ptr);
+      char op_a = get_op<conj_A, /*transpose =*/has_C_layout<A>>;
+      char op_b = get_op<conj_B, /*transpose =*/has_C_layout<B>>;
 
-      vector<get_value_t<X> *> c_ptrs(batch_count);
-      std::transform(vc.begin(), vc.end(), c_ptrs.begin(), to_ptr);
+      if constexpr (VBATCH) {
 
-      if constexpr (mem::on_host<A>) {
-        f77::gemm_batch(op_a, op_b, m, n, k, alpha, a_ptrs.data(), get_ld(a0), b_ptrs.data(), get_ld(b0), beta, c_ptrs.data(), get_ld(c0),
-                        batch_count);
-      } else { // on device
-        cuda::gemm_batch(op_a, op_b, m, n, k, alpha, to_device(a_ptrs).data(), get_ld(a0), to_device(b_ptrs).data(), get_ld(b0), beta,
-                         to_device(c_ptrs).data(), get_ld(c0), batch_count);
+        vector<int> vm(batch_count + 1), vk(batch_count + 1), vn(batch_count + 1), vlda(batch_count + 1), vldb(batch_count + 1), vldc(batch_count + 1);
+        for (auto i : range(batch_count)) {
+          auto &ai = to_mat(vx[i]);
+          auto &bi = to_mat(vy[i]);
+          auto &ci = vc[i];
+
+          EXPECTS(ai.extent(1) == bi.extent(0));
+          EXPECTS(ai.extent(0) == ci.extent(0));
+          EXPECTS(bi.extent(1) == ci.extent(1));
+
+          std::tie(vm[i], vk[i]) = ai.shape();
+          vn[i]                  = bi.extent(1);
+
+          vlda[i] = get_ld(ai);
+          vldb[i] = get_ld(bi);
+          vldc[i] = get_ld(ci);
+        }
+
+        if constexpr (mem::on_host<A>) {
+          f77::gemm_vbatch(op_a, op_b, vm.data(), vn.data(), vk.data(), alpha, a_ptrs.data(), vlda.data(), b_ptrs.data(), vldb.data(), beta,
+                           c_ptrs.data(), vldc.data(), batch_count);
+        } else { // on device
+          cuda::gemm_vbatch(op_a, op_b, to_device(vm).data(), to_device(vn).data(), to_device(vk).data(), alpha, a_ptrs.data(), to_device(vlda).data(), b_ptrs.data(), to_device(vldb).data(), beta,
+                           to_device(c_ptrs).data(), to_device(vldc).data(), batch_count);
+        }
+      } else {
+
+        EXPECTS(a0.extent(1) == b0.extent(0));
+        EXPECTS(a0.extent(0) == c0.extent(0));
+        EXPECTS(b0.extent(1) == c0.extent(1));
+
+        auto [m, k] = a0.shape();
+        auto n      = b0.extent(1);
+
+        if constexpr (mem::on_host<A>) {
+          f77::gemm_batch(op_a, op_b, m, n, k, alpha, a_ptrs.data(), get_ld(a0), b_ptrs.data(), get_ld(b0), beta, c_ptrs.data(), get_ld(c0),
+                          batch_count);
+        } else { // on device
+          cuda::gemm_batch(op_a, op_b, m, n, k, alpha, a_ptrs.data(), get_ld(a0), b_ptrs.data(), get_ld(b0), beta, c_ptrs.data(), get_ld(c0),
+                           batch_count);
+        }
       }
     }
   }
+
+  /**
+   * VBatched version of GEMM taking vectors of matrices as arguments
+   */
+  template <Matrix X, Matrix Y, MemoryMatrix C>
+  void gemm_vbatch(get_value_t<X> alpha, std::vector<X> const &vx, std::vector<Y> const &vy, get_value_t<X> beta, std::vector<C> &vc) {
+    gemm_batch</*VBATCH=*/true>(alpha, vx, vy, beta, vc);
+  }
+
   /**
    * Batched strided version of GEMM taking arrays of rank 3
    * as arguments, where the operation is performed for each
-   * of the slices: c(i,_,_) = x(i,_,_) * y(i,_,_)
+   * of the slices:
+   *
+   *   c(i,_,_) = x(i,_,_) * y(i,_,_)
    */
   template <ArrayOfRank<3> X, ArrayOfRank<3> Y, MemoryArrayOfRank<3> C>
   requires((MemoryArrayOfRank<X, 3> or (is_conj_array_expr<X>)) and              //
@@ -144,6 +187,7 @@ namespace nda::blas {
 
     // c is in C order: compute the transpose of the product in Fortran order
     if constexpr (has_C_layout<C>) {
+      //Reconsider ..
       gemm_batch_strided(alpha, transposed_view<1, 2>(y), transposed_view<1, 2>(x), beta, transposed_view<1, 2>(std::forward<C>(c)));
       return;
     } else { // c is in Fortran order
