@@ -47,7 +47,7 @@ list(REMOVE_DUPLICATES LAPACK_LIBRARIES)
 target_link_libraries(blas_lapack INTERFACE ${LAPACK_LIBRARIES})
 target_compile_options(blas_lapack INTERFACE ${LAPACK_LINKER_FLAGS})
 if(LAPACK_LIBRARIES MATCHES "mkl")
-  target_compile_definitions(${PROJECT_NAME}_c PRIVATE HAVE_GEMM_BATCH)
+  target_compile_definitions(${PROJECT_NAME}_c PRIVATE NDA_HAVE_GEMM_BATCH)
 endif()
 
 # Link against interface target and export
@@ -60,6 +60,17 @@ message(STATUS "-------- CUDAToolkit detection -------------")
 
 find_package(CUDAToolkit REQUIRED)
 target_link_libraries(${PROJECT_NAME}_c PUBLIC CUDA::cudart CUDA::cublas CUDA::cusolver)
+
+# ========= Magma ==========
+
+message(STATUS "-------- Magma detection -------------")
+option(Use_Magma "Use Magma library" OFF)
+if(Use_Magma)
+  find_package(Magma REQUIRED)
+  target_link_libraries(${PROJECT_NAME}_c PUBLIC magma)
+  target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_MAGMA)
+  install(TARGETS magma EXPORT ${PROJECT_NAME}-targets)
+endif()
 
 # ========= Compiler Wrapper ==========
 
