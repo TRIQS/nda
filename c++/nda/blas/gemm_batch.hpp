@@ -68,17 +68,18 @@ namespace nda::blas {
       return;
     } else { // c is in Fortran order
 
+      // For operations on the device, use unified memory for vector of ints or ptrs
+      auto constexpr vec_adr_spc = []() { return mem::on_host<C> ? mem::Host : mem::Unified; }();
+
+      // Convert the vector of matrices into the associated vector of pointers
       auto get_ptrs = [&to_mat]<typename V>(V &v) {
         EXPECTS(std::all_of(v.begin(), v.end(),
                             [&v, &to_mat](auto &z) { return (VBATCH or z.shape() == v[0].shape()) and to_mat(z).indexmap().min_stride() == 1; }));
         using value_t = get_value_t<typename V::value_type>;
         using ptr_t   = std::conditional_t<std::is_const_v<V>, value_t const *, value_t *>;
-        auto v_ptrs   = vector<ptr_t>(v.size());
+        auto v_ptrs   = vector<ptr_t, heap<vec_adr_spc>>(v.size());
         std::transform(v.begin(), v.end(), v_ptrs.begin(), [&to_mat](auto &z) { return to_mat(z).data(); });
-	if constexpr (mem::on_host<A>)
-          return v_ptrs;
-	else
-	  return to_device(v_ptrs);
+        return v_ptrs;
       };
       auto a_ptrs = get_ptrs(vx);
       auto b_ptrs = get_ptrs(vy);
@@ -89,7 +90,10 @@ namespace nda::blas {
 
       if constexpr (VBATCH) {
 
-        vector<int> vm(batch_count + 1), vk(batch_count + 1), vn(batch_count + 1), vlda(batch_count + 1), vldb(batch_count + 1), vldc(batch_count + 1);
+        // Create vectors of size 'batch_count + 1' as required by Magma
+        vector<int, heap<vec_adr_spc>> vm(batch_count + 1), vk(batch_count + 1), vn(batch_count + 1), vlda(batch_count + 1), vldb(batch_count + 1),
+           vldc(batch_count + 1);
+
         for (auto i : range(batch_count)) {
           auto &ai = to_mat(vx[i]);
           auto &bi = to_mat(vy[i]);
@@ -111,8 +115,8 @@ namespace nda::blas {
           f77::gemm_vbatch(op_a, op_b, vm.data(), vn.data(), vk.data(), alpha, a_ptrs.data(), vlda.data(), b_ptrs.data(), vldb.data(), beta,
                            c_ptrs.data(), vldc.data(), batch_count);
         } else { // on device
-          cuda::gemm_vbatch(op_a, op_b, to_device(vm).data(), to_device(vn).data(), to_device(vk).data(), alpha, a_ptrs.data(), to_device(vlda).data(), b_ptrs.data(), to_device(vldb).data(), beta,
-                           to_device(c_ptrs).data(), to_device(vldc).data(), batch_count);
+          cuda::gemm_vbatch(op_a, op_b, vm.data(), vn.data(), vk.data(), alpha, a_ptrs.data(), vlda.data(), b_ptrs.data(), vldb.data(), beta,
+                            c_ptrs.data(), vldc.data(), batch_count);
         }
       } else {
 
