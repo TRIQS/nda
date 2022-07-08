@@ -22,7 +22,7 @@ using value_t   = double;
 constexpr int N = 4;
 
 template <size_t Rank>
-using cuarray_t = nda::basic_array<value_t, Rank, C_layout, 'A', nda::heap<mem::Device>>;
+using cuarray_t = nda::cuarray<value_t, Rank>;
 
 template <size_t Rank>
 using array_t = nda::array<value_t, Rank>;
