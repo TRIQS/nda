@@ -113,7 +113,7 @@ namespace nda {
 
     /// Total number of elements (products of lengths in each dimension).
     // NB recomputed at each call (FIXME Optimize this ?)
-    [[nodiscard]] long size() const noexcept { return std::accumulate(len.cbegin(), len.cend(), 1, std::multiplies<>{}); }
+    [[nodiscard]] long size() const noexcept { return std::accumulate(len.cbegin(), len.cend(), 1L, std::multiplies<>{}); }
 
     /// Compile time size, 0 means "dynamical"
     static constexpr long ce_size() noexcept {
