@@ -153,7 +153,7 @@ namespace nda {
 
     /// new lengths and strides.
     auto total_len_of_a_grp = [&idxm](auto &&grp) {
-      auto ll = std::accumulate(grp.begin(), grp.end(), 1, [&idxm](long l, long u) { return l * idxm.lengths()[u]; });
+      auto ll = std::accumulate(grp.begin(), grp.end(), 1L, [&idxm](long l, long u) { return l * idxm.lengths()[u]; });
       return ll;
     };
 
