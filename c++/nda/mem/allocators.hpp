@@ -275,7 +275,7 @@ namespace nda::mem {
     ~stats() {
 #ifndef NDEBUG
       std::cerr << "Allocation size histogram :\n";
-      //auto weight = 1.0 / std::accumulate(hist.begin(), hist.end(), 0);
+      //auto weight = 1.0 / std::accumulate(hist.begin(), hist.end(), uint64_t(0));
       double lz = 65;
       for (auto c : hist) {
         std::cerr << "[2^" << lz << ", 2^" << lz - 1 << "]: " << c << "\n";
