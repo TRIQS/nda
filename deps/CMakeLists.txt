@@ -54,7 +54,6 @@ if(PythonSupport OR Build_Documentation)
     VERSION 2.0
     GIT_TAG master
     BUILD_ALWAYS
-    EXCLUDE_FROM_ALL
   )
 endif()
 
