@@ -44,6 +44,20 @@ Checkout the version of the code that you want::
 
 and follow steps 2 to 4 above to compile the code.
 
+Linking against nda
+-------------------
+
+In order to use nda in other projects you can load it into your current shell environment with::
+
+     $ source path_to_install_dir/share/nda/ndavars.sh
+
+We then recommend to use cmake to link your executable against nda.
+This will require the following additional lines in your CMakeLists.txt::
+
+     find_package(nda REQUIRED)
+     target_link_libraries(your_executable nda::nda_c)
+
+
 Custom CMake options
 --------------------
 
