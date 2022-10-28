@@ -40,7 +40,7 @@ To use a particular version, go into the directory with the sources, and look at
 
 Checkout the version of the code that you want::
 
-     $ git checkout 2.1.0
+     $ git checkout 1.1.0
 
 and follow steps 2 to 4 above to compile the code.
 
@@ -58,7 +58,11 @@ The compilation of ``nda`` can be configured using CMake-options::
 +-----------------------------------------------------------------+-----------------------------------------------+
 | Build in Debugging Mode                                         | -DCMAKE_BUILD_TYPE=Debug                      |
 +-----------------------------------------------------------------+-----------------------------------------------+
+| Disable Python and Cpp2Py Support                               | -DPythonSupport=OFF                           |
++-----------------------------------------------------------------+-----------------------------------------------+
 | Disable testing (not recommended)                               | -DBuild_Tests=OFF                             |
++-----------------------------------------------------------------+-----------------------------------------------+
+| Build Benchmarks                                                | -DBuild_Benchs=ON                             |
 +-----------------------------------------------------------------+-----------------------------------------------+
 | Build the documentation                                         | -DBuild_Documentation=ON                      |
 +-----------------------------------------------------------------+-----------------------------------------------+
