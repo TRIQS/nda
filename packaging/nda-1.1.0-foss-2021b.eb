@@ -1,7 +1,7 @@
 easyblock = 'CMakeMake'
 
 name = 'nda'
-version = '3.0.0'
+version = '1.1.0'
 versionsuffix = '-Python-%(pyver)s'
 
 homepage = 'https://triqs.github.io/nda/'
@@ -12,7 +12,7 @@ description = """
 docurls = ['https://triqs.github.io/nda/%(version_major_minor)s.x/']
 software_license = 'LicenseGPLv3'
 
-toolchain = {'name': 'foss', 'version': '2019a'}
+toolchain = {'name': 'foss', 'version': '2021b'}
 toolchainopts = {'pic': True, 'usempi': True}
 
 source_urls = ['https://github.com/TRIQS/nda/releases/download/%(version)s/']
@@ -25,14 +25,11 @@ dependencies = [
     ('Boost', '1.70.0'),
     ('Clang', '8.0.0'),
     ('GMP', '6.1.2'),
-    ('HDF5', '1.10.5'),
-    ('Mako', '1.0.8'),
-    ('h5py', '2.9.0'),
-    ('NFFT', '3.5.1')
+    ('HDF5', '1.10.5')
 ]
 
 builddependencies = [
-    ('CMake', '3.13.3')
+    ('CMake', '3.22.1')
 ]
 
 separate_build_dir = True
