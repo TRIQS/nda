@@ -3,9 +3,9 @@
 nda
 ***
 
-.. sidebar:: nda 0.8.0
+.. sidebar:: nda |PROJECT_VERSION|
 
-   This is the homepage of nda v0.8.0.
+   This is the homepage of nda |PROJECT_VERSION|.
    For changes see the :ref:`changelog page <changelog>`.
       
       .. image:: _static/logo_github.png

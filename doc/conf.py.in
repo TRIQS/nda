@@ -45,7 +45,14 @@ source_suffix = '.rst'
 project = '@PROJECT_NAME@ - A multi-dimensional array class for C++'
 version = '@PROJECT_VERSION@'
 
-copyright = '2018-2019 N. Wentzell, O. Parcollet 2019-2020 The Simons Foundation, authors: N. Wentzell, O. Parcollet'
+# this makes the current project version available as var in every rst file
+rst_epilog = """
+.. |PROJECT_VERSION| replace:: {version}
+""".format(
+version = version,
+)
+
+copyright = '2018-2019 N. Wentzell, O. Parcollet 2019-2022 The Simons Foundation, authors: N. Wentzell, O. Parcollet'
 
 mathjax_path = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=default"
 templates_path = ['@CMAKE_CURRENT_SOURCE_DIR@/_templates']
