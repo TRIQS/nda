@@ -24,6 +24,9 @@ endfunction()
 find_dep(itertools 1.0)
 find_dep(mpi 1.0)
 find_dep(h5 1.0)
+if(@PythonSupport@)
+  find_dep(Cpp2Py 2.0)
+endif()
 
 # Include the exported targets of this project
 include(@CMAKE_INSTALL_PREFIX@/lib/cmake/@PROJECT_NAME@/@PROJECT_NAME@-targets.cmake)
@@ -37,7 +40,6 @@ set(@PROJECT_NAME@_WITH_DOCUMENTATION @Build_Documentation@ CACHE BOOL "Was @PRO
 set(@PROJECT_NAME@_WITH_PYTHON_SUPPORT @PythonSupport@ CACHE BOOL "Was @PROJECT_NAME@ build with python support?")
 if(@PythonSupport@)
   set(@PROJECT_NAME@_MODULE_DIR @CMAKE_INSTALL_PREFIX@/@CPP2PY_PYTHON_LIB_DEST_ROOT@ CACHE BOOL "The @PROJECT_NAME@ python module directory")
-  find_dep(Cpp2Py 2.0)
 endif()
 
 endif()
