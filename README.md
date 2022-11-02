@@ -66,3 +66,4 @@ int main() {
 ```
 
 For further examples we refer the users to our [tests](https://github.com/TRIQS/nda/tree/unstable/test/c++).
+We outline some important design principles [here](https://github.com/TRIQS/nda/blob/unstable/doc/documentation/design.rst).
