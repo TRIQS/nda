@@ -34,16 +34,17 @@ namespace nda {
   // ----------  Determinant -------------------------
 
   template <typename M>
-  auto determinant_in_place(M &m) requires(is_matrix_or_view_v<M>) {
+  auto determinant_in_place(M &m)
+    requires(is_matrix_or_view_v<M>)
+  {
     using value_t = get_value_t<M>;
     static_assert(std::is_convertible_v<value_t, double> or std::is_convertible_v<value_t, std::complex<double>>,
-	"determinant requires a matrix of values that can be implicitly converted to double or std::complex<double>");
+                  "determinant requires a matrix of values that can be implicitly converted to double or std::complex<double>");
     static_assert(not std::is_const_v<M>, "determinant_in_place can not be const. It destroys its argument");
 
-    if(m.empty()) return value_t{1};
+    if (m.empty()) return value_t{1};
 
-    if(m.extent(0) != m.extent(1))
-      NDA_RUNTIME_ERROR << "Error in determinant. Matrix is not square but has shape " << m.shape();
+    if (m.extent(0) != m.extent(1)) NDA_RUNTIME_ERROR << "Error in determinant. Matrix is not square but has shape " << m.shape();
     const int dim = m.extent(0);
 
     // Calculate the LU decomposition using lapack getrf
@@ -52,12 +53,12 @@ namespace nda {
     if (info < 0) NDA_RUNTIME_ERROR << "Error in determinant. Info lapack is " << info;
 
     // Calculate the determinant from the LU decomposition
-    auto det = value_t{1};
+    auto det    = value_t{1};
     int n_flips = 0;
-    for (int i = 0; i < dim; i++){
+    for (int i = 0; i < dim; i++) {
       det *= m(i, i);
       // Count the number of column interchanges performed by getrf
-      if(ipiv(i) != i + 1) ++n_flips;
+      if (ipiv(i) != i + 1) ++n_flips;
     }
 
     return ((n_flips % 2 == 1) ? -det : det);
@@ -69,12 +70,76 @@ namespace nda {
     return determinant_in_place(m_copy);
   }
 
-  // ----------  inverse -------------------------
+  // For small matrices (2x2 and 3x3), we directly
+  // compute the matrix inversion rather than calling the
+  // LaPack routine
+  // ---------- Small Inverse Benchmarks ---------
+  //          Run on (16 X 2400 MHz CPUs) (see benchmarks/small_inv.cpp)
+  // ---------------------------------------------
+  // Matrix Size      Time (old)        Time (new)
+  //     2             595 ns            61.7 ns
+  //     3             701 ns            67.5 ns
+  
+  // ----------  inverse (2x2) ---------------------
+  template <typename T, typename L, typename AP, typename OP>
+  void inverse2_in_place(basic_array_view<T, 2, L, 'M', AP, OP> a) {
 
+    // calculate the adjoint of the matrix
+    std::swap(a(0,0), a(1,1));
+
+    // calculate the inverse determinant of the matrix
+    auto detinv = (a(0, 0) * a(1, 1) - a(0, 1) * a(1, 0));
+    detinv = 1.0/detinv;
+
+    a(0,0) *= +detinv; 
+    a(1,1) *= +detinv;
+    a(1,0) *= -detinv;
+    a(0,1) *= -detinv;
+
+  }
+
+  // ----------  inverse (3x3) ---------------------
+  template <typename T, typename L, typename AP, typename OP>
+  void inverse3_in_place(basic_array_view<T, 2, L, 'M', AP, OP> a) {
+
+    // calculate the adjoint of the matrix
+    auto b00 = +a(1, 1) * a(2, 2) - a(1, 2) * a(2, 1);
+    auto b10 = -a(1, 0) * a(2, 2) + a(1, 2) * a(2, 0);
+    auto b20 = +a(1, 0) * a(2, 1) - a(1, 1) * a(2, 0);
+    auto b01 = -a(0, 1) * a(2, 2) + a(0, 2) * a(2, 1);
+    auto b11 = +a(0, 0) * a(2, 2) - a(0, 2) * a(2, 0);
+    auto b21 = -a(0, 0) * a(2, 1) + a(0, 1) * a(2, 0);
+    auto b02 = +a(0, 1) * a(1, 2) - a(0, 2) * a(1, 1);
+    auto b12 = -a(0, 0) * a(1, 2) + a(0, 2) * a(1, 0);
+    auto b22 = +a(0, 0) * a(1, 1) - a(0, 1) * a(1, 0);
+
+    // calculate the inverse determinant of the matrix
+    auto detinv  =  a(0,0)*b00 + a(0,1)*b10 + a(0,2)*b20;
+    detinv = 1.0/detinv;
+
+    // fill the matrix
+    a(0,0) = detinv * b00; a(0,1) = detinv * b01; a(0,2) = detinv * b02;
+    a(1,0) = detinv * b10; a(1,1) = detinv * b11; a(1,2) = detinv * b12;
+    a(2,0) = detinv * b20; a(2,1) = detinv * b21; a(2,2) = detinv * b22;
+
+  }
+
+  // ----------  inverse ----------------
   template <typename T, typename L, typename AP, typename OP>
   void inverse_in_place(basic_array_view<T, 2, L, 'M', AP, OP> a) {
     EXPECTS(is_matrix_square(a, true));
-    if(a.empty()) return;
+    if (a.empty()) return;
+
+    if (a.shape()[0] == 2) {
+      inverse2_in_place(a);
+      return;
+    }
+
+    if (a.shape()[0] == 3) {
+      inverse3_in_place(a);
+      return;
+    }
+
     array<int, 1> ipiv(a.extent(0));
     int info = lapack::getrf(a, ipiv); // it is ok to be in C order. Lapack compute the inverse of the transpose.
     if (info != 0) NDA_RUNTIME_ERROR << "Inverse/Det error : matrix is not invertible. Step 1. Lapack error : " << info;
@@ -88,7 +153,9 @@ namespace nda {
   }
 
   template <Array A>
-  auto inverse(A const &a) requires(get_algebra<A> == 'M') {
+  auto inverse(A const &a)
+    requires(get_algebra<A> == 'M')
+  {
     static_assert(get_rank<A> == 2, "inverse: array must have rank two");
     EXPECTS(is_matrix_square(a, true));
     auto r = make_regular(a);
