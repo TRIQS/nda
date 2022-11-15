@@ -308,48 +308,21 @@ TEST(Inverse, slice) { //NOLINT
 
 //-------------------------------------------------------------
 
-TEST(Inverse, Small2) { //NOLINT
+TEST(Inverse, Small) { //NOLINT
 
-  using matrix_t = matrix<double>;
+  for (auto N: {2, 3}) {
 
-  matrix_t W(2, 2), Wi(2, 2), A;
-  for (int i = 0; i < 2; ++i)
-    for (int j = 0; j < 2; ++j) W(i, j) = (i > j ? i + 2.5 * j : i * 0.8 - j);
+    matrix<double> W(N, N);
+    for (int i = 0; i < N; ++i)
+      for (int j = 0; j < N; ++j) W(i, j) = (i > j ? i + 2.5 * j : i * 0.8 - j);
 
-  auto Wkeep = W;
+    auto Wi = inverse(W);
+    EXPECT_NEAR(determinant(Wi), 1.0/determinant(W), 1.e-12);
+    EXPECT_ARRAY_NEAR(W * Wi, nda::eye<double>(N), 1.e-13);
 
-  Wi = inverse(W);
-  EXPECT_NEAR(determinant(Wi), 1.0, 1.e-12);
-
-  matrix<double> should_be_one(W * Wi);
-  for (int i = 0; i < 2; ++i)
-    for (int j = 0; j < 2; ++j) EXPECT_NEAR(std::abs(should_be_one(i, j)), (i == j ? 1 : 0), 1.e-13);
-
-  Wi = inverse(Wi);
-  EXPECT_ARRAY_NEAR(Wi, Wkeep, 1.e-12);
-}
-
-//-------------------------------------------------------------
-
-TEST(Inverse, Small3) { //NOLINT
-
-  using matrix_t = matrix<double, F_layout>;
-
-  matrix_t W(3, 3), Wi(3, 3), A;
-  for (int i = 0; i < 3; ++i)
-    for (int j = 0; j < 3; ++j) W(i, j) = (i > j ? i + 2.5 * j : i * 0.8 - j);
-
-  auto Wkeep = W;
-
-  Wi = inverse(W);
-  EXPECT_NEAR(determinant(Wi), -1 / 7.8, 1.e-12);
-
-  matrix<double> should_be_one(W * Wi);
-  for (int i = 0; i < 3; ++i)
-    for (int j = 0; j < 3; ++j) EXPECT_NEAR(std::abs(should_be_one(i, j)), (i == j ? 1 : 0), 1.e-13);
-
-  Wi = inverse(Wi);
-  EXPECT_ARRAY_NEAR(Wi, Wkeep, 1.e-12);
+    auto Wii = inverse(Wi);
+    EXPECT_ARRAY_NEAR(Wii, W, 1.e-12);
+  }
 }
 
 // ==============================================================

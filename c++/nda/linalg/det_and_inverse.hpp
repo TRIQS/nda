@@ -34,17 +34,16 @@ namespace nda {
   // ----------  Determinant -------------------------
 
   template <typename M>
-  auto determinant_in_place(M &m)
-    requires(is_matrix_or_view_v<M>)
-  {
+  auto determinant_in_place(M &m) requires(is_matrix_or_view_v<M>) {
     using value_t = get_value_t<M>;
     static_assert(std::is_convertible_v<value_t, double> or std::is_convertible_v<value_t, std::complex<double>>,
-                  "determinant requires a matrix of values that can be implicitly converted to double or std::complex<double>");
+	"determinant requires a matrix of values that can be implicitly converted to double or std::complex<double>");
     static_assert(not std::is_const_v<M>, "determinant_in_place can not be const. It destroys its argument");
 
-    if (m.empty()) return value_t{1};
+    if(m.empty()) return value_t{1};
 
-    if (m.extent(0) != m.extent(1)) NDA_RUNTIME_ERROR << "Error in determinant. Matrix is not square but has shape " << m.shape();
+    if(m.extent(0) != m.extent(1))
+      NDA_RUNTIME_ERROR << "Error in determinant. Matrix is not square but has shape " << m.shape();
     const int dim = m.extent(0);
 
     // Calculate the LU decomposition using lapack getrf
@@ -53,12 +52,12 @@ namespace nda {
     if (info < 0) NDA_RUNTIME_ERROR << "Error in determinant. Info lapack is " << info;
 
     // Calculate the determinant from the LU decomposition
-    auto det    = value_t{1};
+    auto det = value_t{1};
     int n_flips = 0;
-    for (int i = 0; i < dim; i++) {
+    for (int i = 0; i < dim; i++){
       det *= m(i, i);
       // Count the number of column interchanges performed by getrf
-      if (ipiv(i) != i + 1) ++n_flips;
+      if(ipiv(i) != i + 1) ++n_flips;
     }
 
     return ((n_flips % 2 == 1) ? -det : det);
@@ -88,14 +87,14 @@ namespace nda {
     std::swap(a(0,0), a(1,1));
 
     // calculate the inverse determinant of the matrix
-    auto detinv = (a(0, 0) * a(1, 1) - a(0, 1) * a(1, 0));
-    detinv = 1.0/detinv;
+    auto det = (a(0, 0) * a(1, 1) - a(0, 1) * a(1, 0));
+    if (det == 0.0) NDA_RUNTIME_ERROR << "Inverse/Det error : matrix is not invertible.";
+    auto detinv = 1.0/det;
 
     a(0,0) *= +detinv; 
     a(1,1) *= +detinv;
     a(1,0) *= -detinv;
     a(0,1) *= -detinv;
-
   }
 
   // ----------  inverse (3x3) ---------------------
@@ -114,14 +113,14 @@ namespace nda {
     auto b22 = +a(0, 0) * a(1, 1) - a(0, 1) * a(1, 0);
 
     // calculate the inverse determinant of the matrix
-    auto detinv  =  a(0,0)*b00 + a(0,1)*b10 + a(0,2)*b20;
-    detinv = 1.0/detinv;
+    auto det = a(0,0)*b00 + a(0,1)*b10 + a(0,2)*b20;
+    if (det == 0.0) NDA_RUNTIME_ERROR << "Inverse/Det error : matrix is not invertible.";
+    auto detinv = 1.0/det;
 
     // fill the matrix
     a(0,0) = detinv * b00; a(0,1) = detinv * b01; a(0,2) = detinv * b02;
     a(1,0) = detinv * b10; a(1,1) = detinv * b11; a(1,2) = detinv * b12;
     a(2,0) = detinv * b20; a(2,1) = detinv * b21; a(2,2) = detinv * b22;
-
   }
 
   // ----------  inverse ----------------
@@ -153,9 +152,7 @@ namespace nda {
   }
 
   template <Array A>
-  auto inverse(A const &a)
-    requires(get_algebra<A> == 'M')
-  {
+  auto inverse(A const &a) requires(get_algebra<A> == 'M') {
     static_assert(get_rank<A> == 2, "inverse: array must have rank two");
     EXPECTS(is_matrix_square(a, true));
     auto r = make_regular(a);
