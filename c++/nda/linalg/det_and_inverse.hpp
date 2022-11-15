@@ -76,8 +76,17 @@ namespace nda {
   //          Run on (16 X 2400 MHz CPUs) (see benchmarks/small_inv.cpp)
   // ---------------------------------------------
   // Matrix Size      Time (old)        Time (new)
+  //     1             502 ns            59.0 ns
   //     2             595 ns            61.7 ns
   //     3             701 ns            67.5 ns
+  
+  // ----------  inverse (1x1) ---------------------
+  template <typename T, typename L, typename AP, typename OP>
+  void inverse1_in_place(basic_array_view<T, 2, L, 'M', AP, OP> a) {
+    if (a(0,0) == 0.0) NDA_RUNTIME_ERROR << "Inverse/Det error : matrix is not invertible.";
+    a(0,0) = 1.0/a(0.0);
+    a(0,0) = b;
+  }
   
   // ----------  inverse (2x2) ---------------------
   template <typename T, typename L, typename AP, typename OP>
@@ -128,6 +137,11 @@ namespace nda {
   void inverse_in_place(basic_array_view<T, 2, L, 'M', AP, OP> a) {
     EXPECTS(is_matrix_square(a, true));
     if (a.empty()) return;
+
+    if (a.shape()[0] == 1) {
+      inverse1_in_place(a);
+      return;
+    }
 
     if (a.shape()[0] == 2) {
       inverse2_in_place(a);
