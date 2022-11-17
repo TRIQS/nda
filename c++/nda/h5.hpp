@@ -166,7 +166,7 @@ namespace nda {
     // If array is not in C-order or not contiguous
     // copy into array with default layout and write
     if (not a.indexmap().is_stride_order_C() or not a.indexmap().is_contiguous()) {
-      using h5_arr_t  = nda::array<typename A::value_type, A::rank>;
+      using h5_arr_t  = nda::array<get_value_t<A>, A::rank>;
       auto a_c_layout = h5_arr_t{a.shape()};
       a_c_layout()    = a;
       h5_write(g, name, a_c_layout, slice);

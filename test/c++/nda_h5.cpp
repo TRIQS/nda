@@ -388,6 +388,18 @@ TEST(BlockMatrixH5, S1) { //NOLINT
   for (int i = 0; i < V.extent(0); ++i) EXPECT_ARRAY_NEAR(V(i), W(i));
 }
 
+// ==============================================================
+
+TEST(Array, ConstIssue) { //NOLINT
+  auto a = nda::zeros<double>(2, 2);
+
+  nda::array<double, 2> const a_c = a;
+  {
+    h5::file file1("const_issue.h5", 'w');
+    h5::write(file1, "a_c", a_c());
+  }
+}
+
 // not yet implemented
 // ==============================================================
 /*
