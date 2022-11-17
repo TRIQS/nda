@@ -99,7 +99,7 @@ concept Array = requires(A const &a) {
 };
 
 /// Check if A is an Array and exposes its `data()` and its `indexmap().strides()`
-template <typename A>
+template <typename A, typename A_t = std::remove_cvref_t<A>>
 concept MemoryArray = Array<A> && requires(A &a) {
 
   // We can acquire the pointer to the underlying data
