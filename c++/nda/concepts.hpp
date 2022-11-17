@@ -103,7 +103,10 @@ template <typename A>
 concept MemoryArray = Array<A> && requires(A &a) {
 
   // We can acquire the pointer to the underlying data
-  { a.data() } -> std::same_as<std::conditional_t<std::is_const_v<A> || std::is_const_v<typename A::value_type>, const get_value_t<A>, get_value_t<A>> *>;
+  {
+    a.data()
+    } -> std::same_as<std::conditional_t<std::is_const_v<std::remove_reference_t<A>> || std::is_const_v<typename A_t::value_type>,
+                                         const get_value_t<A>, get_value_t<A>> *>;
 
   // Exposes the memory stride for each dimension
   { a.indexmap().strides() } -> StdArrayOfLong;
