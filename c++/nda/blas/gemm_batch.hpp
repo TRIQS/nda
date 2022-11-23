@@ -103,8 +103,9 @@ namespace nda::blas {
           EXPECTS(ai.extent(0) == ci.extent(0));
           EXPECTS(bi.extent(1) == ci.extent(1));
 
-          std::tie(vm[i], vk[i]) = ai.shape();
-          vn[i]                  = bi.extent(1);
+          vm[i] = ai.extent(0);
+          vk[i] = ai.extent(1);
+          vn[i] = bi.extent(1);
 
           vlda[i] = get_ld(ai);
           vldb[i] = get_ld(bi);
