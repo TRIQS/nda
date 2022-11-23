@@ -150,7 +150,7 @@ TEST(lapack, gelss) { //NOLINT
 
   int M = A.extent(0);
   int N = A.extent(1);
-  //int NRHS = B.extent(1);
+  int NRHS = B.extent(1);
 
   auto x_exact = matrix<dcomplex>{{2, 1}, {1, 1}, {1, 2}};
   auto S       = array<double, 1>(std::min(M, N));
@@ -159,11 +159,74 @@ TEST(lapack, gelss) { //NOLINT
   auto [x_1, eps_1] = gelss_new(B);
   EXPECT_ARRAY_NEAR(x_exact, x_1, 1e-14);
 
-  //int i;
-  //lapack::gelss(A, B, S, 1e-18, i);
-  //auto x_2 = B(range(N), range(NRHS));
+  int rank;
+  lapack::gelss(A, B, S, -1, rank);
+  auto x_2 = B(range(N), range(NRHS));
 
-  //EXPECT_ARRAY_NEAR(x_exact, x_2, 1e-14);
+  EXPECT_ARRAY_NEAR(x_exact, x_2, 1e-14);
+}
+
+// =================================== gels =======================================
+
+TEST(lapack, gels) { //NOLINT
+
+  {
+    // Cf. http://www.netlib.org/lapack/explore-html/d3/d77/example___d_g_e_l_s__colmajor_8c_source.html
+    auto A = matrix<dcomplex>{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}};
+    auto B = matrix<dcomplex>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
+
+    int N = A.extent(1);
+    int NRHS = B.extent(1);
+
+    auto x_exact = matrix<dcomplex>{{2, 1}, {1, 1}, {1, 2}};
+    lapack::gels('N', A, B);
+    auto x_2 = B(range(N), range(NRHS));
+
+    EXPECT_ARRAY_NEAR(x_exact, x_2, 1e-14);
+  }
+
+  {
+    auto A = matrix<double>{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}};
+    auto B = matrix<double>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
+  
+    int N = A.extent(1);
+    int NRHS = B.extent(1);
+  
+    auto x_exact = matrix<double>{{2, 1}, {1, 1}, {1, 2}};
+    lapack::gels('N', A, B);
+    auto x_2 = B(range(N), range(NRHS));
+  
+    EXPECT_ARRAY_NEAR(x_exact, x_2, 1e-14);
+  }
+
+  {
+    auto A = matrix<dcomplex,F_layout>{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}};
+    auto B = matrix<dcomplex,F_layout>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
+
+    int N = A.extent(1);
+    int NRHS = B.extent(1);
+
+    auto x_exact = matrix<dcomplex,F_layout>{{2, 1}, {1, 1}, {1, 2}};
+    lapack::gels('N', A, B);
+    auto x_2 = B(range(N), range(NRHS));
+
+    EXPECT_ARRAY_NEAR(x_exact, x_2, 1e-14);
+  }
+
+  {
+    auto A = matrix<dcomplex>{{1, 2, 3, 4, 5}, {1, 3, 5, 2, 4}, {1, 4, 2, 5, 3}};
+    auto B = matrix<dcomplex>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
+    
+    int N = A.extent(0);
+    int NRHS = B.extent(1);
+
+    auto x_exact = matrix<dcomplex>{{2, 1}, {1, 1}, {1, 2}};
+    lapack::gels('C', A, B);
+    auto x_2 = B(range(N), range(NRHS));
+
+    EXPECT_ARRAY_NEAR(x_exact, x_2, 1e-14);
+  }
+
 }
 
 // =================================== getrs =======================================

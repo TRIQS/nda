@@ -93,4 +93,27 @@ namespace nda::blas {
   //return a.indexmap().min_stride() == 1;
   //}v
 
+  // ================================================
+
+  template<typename T>
+  struct remove_complex
+  {
+    using type = T;
+  };
+
+  template<>
+  struct remove_complex<std::complex<float>>
+  {
+    using type = float;
+  };
+
+  template<>
+  struct remove_complex<std::complex<double>>
+  {
+    using type = double;
+  };
+
+  template <typename T>
+  using remove_complex_t = typename remove_complex<T>::type;
+
 } // namespace nda::blas

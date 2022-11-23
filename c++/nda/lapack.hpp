@@ -37,6 +37,7 @@ namespace nda::lapack {
 } // namespace nda::lapack
 
 #include "lapack/gelss.hpp"
+#include "lapack/gels.hpp"
 #include "lapack/gesvd.hpp"
 #include "lapack/getrf.hpp"
 #include "lapack/getri.hpp"

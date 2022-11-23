@@ -15,12 +15,13 @@
 // Authors: Olivier Parcollet, Nils Wentzell
 
 #pragma once
+#include <type_traits>
 
 namespace nda::lapack {
 
   ///
-  template <MatrixView A, MatrixView B, MatrixView C>
-  int gelss(A &a, B &b, C &c, double rcond, int &rank) requires(nda::blas::have_same_element_type_and_it_is_blas_type_v<A, B, C>) {
+  template <MatrixView A, MatrixView B, VectorView C>
+  int gelss(A &a, B &b, C &c, double rcond, int &rank) requires(nda::blas::have_same_element_type_and_it_is_blas_type_v<A, B> && std::is_same_v<nda::blas::remove_complex_t<get_value_t<A>>,get_value_t<C>>) {
 
     int info = 0;
 
@@ -31,12 +32,14 @@ namespace nda::lapack {
     if constexpr (not A::layout_t::is_stride_order_Fortran()) {
       auto af = matrix<T, F_layout>{a};
       info    = gelss(af, b, c, rcond, rank);
+      a = af;
       return info;
 
     } else if constexpr (not B::layout_t::is_stride_order_Fortran()) {
 
       auto bf = matrix<T, F_layout>{b};
       info    = gelss(a, bf, c, rcond, rank);
+      b = bf;
       return info;
 
     } else { // do not compile useless code !
@@ -46,10 +49,7 @@ namespace nda::lapack {
       EXPECTS(b.indexmap().min_stride() == 1);
       EXPECTS(c.indexmap().min_stride() == 1);
 
-      // Copy since it is altered by gelss
-      auto a2 = a;
-
-      auto dm = std::min(get_n_rows(a2), get_n_cols(a2));
+      auto dm = std::min(get_n_rows(a), get_n_cols(a));
       if (c.size() < dm) c.resize(dm);
       int nrhs = get_n_cols(b);
 
@@ -57,12 +57,13 @@ namespace nda::lapack {
 
         // first call to get the optimal lwork
         T work1[1];
-        f77::gelss(get_n_rows(a2), get_n_cols(a2), nrhs, a2.data(), get_ld(a2), b.data(), get_ld(b), c.data(), rcond, rank, work1, -1, info);
+        f77::gelss(get_n_rows(a), get_n_cols(a), nrhs, a.data(), get_ld(a), b.data(), get_ld(b), c.data(), rcond, rank, work1, -1, info);
 
-        int lwork = r_round(work1[0]);
+        //int lwork = r_round(work1[0]);
+        int lwork = int(work1[0]);
         array<T, 1> work(lwork);
 
-        f77::gelss(get_n_rows(a2), get_n_cols(a2), nrhs, a2.data(), get_ld(a2), b.data(), get_ld(b), c.data(), rcond, rank, work.data(), lwork, info);
+        f77::gelss(get_n_rows(a), get_n_cols(a), nrhs, a.data(), get_ld(a), b.data(), get_ld(b), c.data(), rcond, rank, work.data(), lwork, info);
 
       } else if constexpr (std::is_same_v<T, dcomplex>) {
 
@@ -70,13 +71,14 @@ namespace nda::lapack {
 
         // first call to get the optimal lwork
         T work1[1];
-        f77::gelss(get_n_rows(a2), get_n_cols(a2), nrhs, a2.data(), get_ld(a2), b.data(), get_ld(b), c.data(), rcond, rank, work1, -1, rwork.data(),
+        f77::gelss(get_n_rows(a), get_n_cols(a), nrhs, a.data(), get_ld(a), b.data(), get_ld(b), c.data(), rcond, rank, work1, -1, rwork.data(),
                    info);
 
-        int lwork = r_round(work1[0]);
+        //int lwork = r_round(work1[0]);
+        int lwork = int(real(work1[0]));
         array<T, 1> work(lwork);
 
-        f77::gelss(get_n_rows(a2), get_n_cols(a2), nrhs, a2.data(), get_ld(a2), b.data(), get_ld(b), c.data(), rcond, rank, work.data(), lwork,
+        f77::gelss(get_n_rows(a), get_n_cols(a), nrhs, a.data(), get_ld(a), b.data(), get_ld(b), c.data(), rcond, rank, work.data(), lwork,
                    rwork.data(), info);
       } else
         static_assert(false and always_true<A>, "Internal logic error");
