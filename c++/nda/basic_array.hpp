@@ -408,7 +408,7 @@ namespace nda {
   // --- get_regular_t ---
 
   template <typename T>
-  using get_regular_t = std::remove_reference_t<decltype(basic_array{std::declval<T>()})>;
+  using get_regular_t = decltype(basic_array{std::declval<T>()});
 
   // --- Get the associated regular type with host/device/unified memory ---
 
@@ -419,7 +419,7 @@ namespace nda {
   using get_regular_device_t = std::conditional_t<mem::on_device<RT>, RT, basic_array<get_value_t<RT>, get_rank<RT>, get_contiguous_layout_policy<get_rank<RT>, get_layout_info<RT>.stride_order>, get_algebra<RT>, heap<mem::Device>>>;
 
   template <typename T, typename RT = get_regular_t<T>>
-  using get_regular_unified_t = std::conditional_t<mem::on_unified<RT>, get_regular_t<RT>, basic_array<get_value_t<RT>, get_rank<RT>, get_contiguous_layout_policy<get_rank<RT>, get_layout_info<RT>.stride_order>, get_algebra<RT>, heap<mem::Unified>>>;
+  using get_regular_unified_t = std::conditional_t<mem::on_unified<RT>, RT, basic_array<get_value_t<RT>, get_rank<RT>, get_contiguous_layout_policy<get_rank<RT>, get_layout_info<RT>.stride_order>, get_algebra<RT>, heap<mem::Unified>>>;
 
 } // namespace nda
 
