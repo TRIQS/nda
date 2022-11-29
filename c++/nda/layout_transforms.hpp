@@ -32,8 +32,8 @@ namespace nda {
       using container_policy_t = typename A_t::container_policy_t;
       return basic_array<value_t, NewLayoutType::rank(), layout_policy, algebra, container_policy_t>{new_layout, std::forward<A>(a).storage()};
     } else {
-      using accessor_policy = get_view_t<A>::accessor_policy_t;
-      using owning_policy   = get_view_t<A>::owning_policy_t;
+      using accessor_policy = typename get_view_t<A>::accessor_policy_t;
+      using owning_policy   = typename get_view_t<A>::owning_policy_t;
       return basic_array_view<value_t, NewLayoutType::rank(), layout_policy, algebra, accessor_policy, owning_policy>{new_layout, a.storage()};
     }
   }
