@@ -289,7 +289,7 @@ namespace nda {
 
   // --- get_view_t ---
 
-  template <typename T>
-  using get_view_t = std::remove_reference_t<decltype(basic_array_view{std::declval<T>()})>;
+  template <typename T, typename T2 = std::remove_reference_t<T>>
+  using get_view_t = std::remove_reference_t<decltype(basic_array_view{std::declval<T2>()})>;
 
 } // namespace nda
