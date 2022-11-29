@@ -61,6 +61,25 @@ namespace nda {
     return ones<T>(std::array<long, sizeof...(Int)>{i...});
   }
 
+  // --------------------------- arange ------------------------
+
+  /// Make a one-dimensional array holding integer values
+  /// evenly spaced in a given interval [start, stop)
+  /// Values are separated by an optional step-size
+  /// that can be negative
+  template <std::integral Int = long>
+  auto arange(long first, long last, long step = 1) {
+    auto r = range(first, last, step);
+    auto a = array<Int, 1>(r.size());
+    for (auto [x, v] : itertools::zip(a, r)) x = v;
+    return a;
+  }
+
+  template <std::integral Int = long>
+  auto arange(long last) {
+    return arange<Int>(0, last);
+  }
+
   // --------------------------- rand ------------------------
 
   /// Create an array the given dimensions and populate it with random
