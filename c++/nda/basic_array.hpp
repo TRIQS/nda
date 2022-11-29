@@ -407,8 +407,8 @@ namespace nda {
 
   // --- get_regular_t ---
 
-  template <typename T, typename T2 = std::remove_reference_t<T>>
-  using get_regular_t = decltype(basic_array{std::declval<T2>()});
+  template <typename T, typename T2 = std::remove_reference_t<T> /* Keep this: Fix for gcc11 bug */ >
+  using get_regular_t = decltype(basic_array{std::declval<T>()});
 
   // --- Get the associated regular type with host/device/unified memory ---
 
