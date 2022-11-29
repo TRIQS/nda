@@ -52,7 +52,7 @@ void test_gemm_batch() {
   auto vCd = std::vector(batch_count, to_device(nda::matrix<value_t, Layout>::zeros({N, N})));
   nda::blas::gemm_batch(1.0, vAd, vBd, 0.0, vCd);
 
-  for (auto i : range(batch_count)) EXPECT_ARRAY_NEAR(make_regular(to_host(vAd[i]) * to_host(vBd[i])), to_host(vCd[i]));
+  for (auto i : range(batch_count)) EXPECT_ARRAY_NEAR(nda::make_regular(to_host(vAd[i]) * to_host(vBd[i])), to_host(vCd[i]));
 }
 
 TEST(CUBLAS, gemm_batch) { test_gemm_batch<double, C_layout>(); }     //NOLINT
@@ -61,7 +61,7 @@ TEST(CUBLAS, zgemm_batch) { test_gemm_batch<dcomplex, C_layout>(); }  //NOLINT
 TEST(CUBLAS, zgemmF_batch) { test_gemm_batch<dcomplex, F_layout>(); } //NOLINT
 
 //----------------------------
-
+#ifdef NDA_HAVE_MAGMA
 template <typename value_t, typename Layout>
 void test_gemm_vbatch() {
   int batch_count = 10;
@@ -72,13 +72,14 @@ void test_gemm_vbatch() {
   auto vCd = std::vector(batch_count, to_device(nda::matrix<value_t, Layout>::zeros({N, N})));
   nda::blas::gemm_vbatch(1.0, vAd, vBd, 0.0, vCd);
 
-  for (auto i : range(batch_count)) EXPECT_ARRAY_NEAR(make_regular(to_host(vAd[i]) * to_host(vBd[i])), to_host(vCd[i]));
+  for (auto i : range(batch_count)) EXPECT_ARRAY_NEAR(nda::make_regular(to_host(vAd[i]) * to_host(vBd[i])), to_host(vCd[i]));
 }
 
 TEST(CUBLAS, gemm_vbatch) { test_gemm_vbatch<double, C_layout>(); }     //NOLINT
 TEST(CUBLAS, gemmF_vbatch) { test_gemm_vbatch<double, F_layout>(); }    //NOLINT
 TEST(CUBLAS, zgemm_vbatch) { test_gemm_vbatch<dcomplex, C_layout>(); }  //NOLINT
 TEST(CUBLAS, zgemmF_vbatch) { test_gemm_vbatch<dcomplex, F_layout>(); } //NOLINT
+#endif
 
 // ==============================================================
 

@@ -51,7 +51,7 @@ void test_gemm_batch() {
   auto vC = std::vector(batch_count, nda::matrix<value_t, Layout>::zeros({N, N}));
   nda::blas::gemm_batch(1.0, vA, vB, 0.0, vC);
 
-  for (auto i : range(batch_count)) EXPECT_ARRAY_NEAR(make_regular(vA[i] * vB[i]), vC[i]);
+  for (auto i : range(batch_count)) EXPECT_ARRAY_NEAR(nda::make_regular(vA[i] * vB[i]), vC[i]);
 }
 
 TEST(BLAS, gemm_batch) { test_gemm_batch<double, C_layout>(); }     //NOLINT
@@ -71,7 +71,7 @@ void test_gemm_vbatch() {
   auto vCd = std::vector(batch_count, nda::matrix<value_t, Layout>::zeros({N, N}));
   nda::blas::gemm_vbatch(1.0, vAd, vBd, 0.0, vCd);
 
-  for (auto i : range(batch_count)) EXPECT_ARRAY_NEAR(make_regular(vAd[i] * vBd[i]), vCd[i]);
+  for (auto i : range(batch_count)) EXPECT_ARRAY_NEAR(nda::make_regular(vAd[i] * vBd[i]), vCd[i]);
 }
 
 TEST(BLAS, gemm_vbatch) { test_gemm_vbatch<double, C_layout>(); }     //NOLINT
@@ -93,7 +93,7 @@ void test_gemv() {
   nda::blas::gemv(1, A(R, R), MC(R), 0, MB(R));
   EXPECT_ARRAY_NEAR(MB, nda::vector<value_t>{0, 10, 12, 0, 0});
 
-  auto AT = make_regular(transpose(A));
+  auto AT = nda::make_regular(transpose(A));
   nda::blas::gemv(1, AT(R, R), MC(R), 0, MB(R));
   EXPECT_ARRAY_NEAR(MB, nda::vector<value_t>{0, 9, 13, 0, 0});
 
