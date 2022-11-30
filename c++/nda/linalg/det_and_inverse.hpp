@@ -84,8 +84,7 @@ namespace nda {
   template <typename T, typename L, typename AP, typename OP>
   void inverse1_in_place(basic_array_view<T, 2, L, 'M', AP, OP> a) {
     if (a(0,0) == 0.0) NDA_RUNTIME_ERROR << "Inverse/Det error : matrix is not invertible.";
-    a(0,0) = 1.0/a(0.0);
-    a(0,0) = b;
+    a(0,0) = 1.0/a(0,0);
   }
   
   // ----------  inverse (2x2) ---------------------
