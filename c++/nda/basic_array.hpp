@@ -258,16 +258,22 @@ namespace nda {
        requires(Rank == 2) // NB Rank =2 since matrix/array for the moment. generalize if needed
        : basic_array{am.indexmap(), std::move(am).storage()} {}
 
-    //------------------ Factory -------------------------
+    //------------------ Factories -------------------------
 
-    /// Make an array of the given dimensions and zero-initialized values / memory
+    /// Make a zero-initialized array of the given shape
     template <std::integral Int = long>
     static basic_array zeros(std::array<Int, Rank> const &shape)
        requires(std::is_standard_layout_v<ValueType> &&std::is_trivially_copyable_v<ValueType>) {
       return basic_array{stdutil::make_std_array<long>(shape), mem::init_zero};
     }
 
-    /// Make an array of the given dimensions holding 'scalar ones'
+    /// Make a zero-initialized array with the given dimensions
+    template <std::integral... Ints>
+    static basic_array zeros(Ints... i) requires(sizeof...(Ints) == Rank) {
+      return zeros(std::array<long, Rank>{i...});
+    }
+
+    /// Make an array of the given shape holding 'scalar ones'
     template <std::integral Int = long>
     static basic_array ones(std::array<Int, Rank> const &shape) requires(nda::is_scalar_v<ValueType>) {
       auto res = basic_array{stdutil::make_std_array<long>(shape)};
@@ -275,7 +281,13 @@ namespace nda {
       return res;
     }
 
-    /// Create an array the given dimensions and populate it with random
+    /// Make an array of the given dimensions holding 'scalar ones'
+    template <std::integral... Ints>
+    static basic_array ones(Ints... i) requires(sizeof...(Ints) == Rank) {
+      return ones(std::array<long, Rank>{i...});
+    }
+
+    /// Create an array the given shape and populate it with random
     /// samples from a uniform distribution over [0, 1)
     template <std::integral Int = long>
     static basic_array rand(std::array<Int, Rank> const &shape) requires(std::is_floating_point_v<ValueType>) {
@@ -287,6 +299,13 @@ namespace nda {
       for (auto &x : res) x = dist(gen);
 
       return res;
+    }
+
+    /// Create an array the given dimensions and populate it with random
+    /// samples from a uniform distribution over [0, 1)
+    template <std::integral... Ints>
+    static basic_array rand(Ints... i) requires(sizeof...(Ints) == Rank) {
+      return rand(std::array<long, Rank>{i...});
     }
 
     //------------------ Assignment -------------------------

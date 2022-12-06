@@ -35,9 +35,9 @@ namespace nda {
   }
 
   ///
-  template <typename T, std::integral... Int>
-  auto zeros(Int... i) {
-    return zeros<T>(std::array<long, sizeof...(Int)>{i...});
+  template <typename T, std::integral... Ints>
+  auto zeros(Ints... i) {
+    return zeros<T>(std::array<long, sizeof...(Ints)>{i...});
   }
 
   // --------------------------- ones ------------------------
@@ -56,9 +56,9 @@ namespace nda {
   }
 
   ///
-  template <typename T, std::integral... Int>
-  auto ones(Int... i) {
-    return ones<T>(std::array<long, sizeof...(Int)>{i...});
+  template <typename T, std::integral... Ints>
+  auto ones(Ints... i) {
+    return ones<T>(std::array<long, sizeof...(Ints)>{i...});
   }
 
   // --------------------------- arange ------------------------
@@ -99,9 +99,9 @@ namespace nda {
   }
 
   ///
-  template <typename RealType = double, std::integral... Int>
-  auto rand(Int... i) {
-    return rand<RealType>(std::array<long, sizeof...(Int)>{i...});
+  template <typename RealType = double, std::integral... Ints>
+  auto rand(Ints... i) {
+    return rand<RealType>(std::array<long, sizeof...(Ints)>{i...});
   }
 
   // --------------------------- dim helpers ------------------------
