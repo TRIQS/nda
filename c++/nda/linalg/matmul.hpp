@@ -83,7 +83,7 @@ namespace nda {
     EXPECTS_WITH_MESSAGE(l.shape()[1] == r.shape()[0], "Matrix Vector product : dimension mismatch in matrix product " << l << " " << r);
 
     using promoted_type = decltype(get_value_t<L_t>{} * get_value_t<R_t>{});
-    array<promoted_type, 1> result(l.shape()[0]);
+    vector<promoted_type> result(l.shape()[0]);
 
     if constexpr (blas::is_blas_lapack_v<promoted_type>) {
 
