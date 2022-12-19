@@ -61,7 +61,7 @@ namespace nda::lapack {
    */
   template <MemoryVector DL, MemoryVector D, MemoryVector DU, MemoryArray B>
   requires(have_same_value_type_v<DL, D, DU, B> and mem::on_host<DL, D, DU, B> and is_blas_lapack_v<get_value_t<DL>>)
-  int gtsv(DL &dl, D &d, DU &du, B &b) {
+  int gtsv(DL &&dl, D &&d, DU &&du, B &&b) {
     static_assert((get_rank<B> == 1 or get_rank<B> == 2), "gtsv: M must be an matrix/array/view of rank  1 or 2");
 
     int N    = d.extent(0);

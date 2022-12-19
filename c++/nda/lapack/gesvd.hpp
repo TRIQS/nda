@@ -59,7 +59,7 @@ namespace nda::lapack {
    */
   template <MemoryMatrix A, MemoryVector S, MemoryMatrix U, MemoryMatrix VT>
   requires(have_same_value_type_v<A, U, VT> and mem::have_same_addr_space_v<A, S, U, VT> and is_blas_lapack_v<get_value_t<A>>)
-  int gesvd(A &a, S &s, U &u, VT &vt) {
+  int gesvd(A &&a, S &&s, U &&u, VT &&vt) {
     static_assert(has_F_layout<A> and has_F_layout<U> and has_F_layout<VT>, "C order not implemented");
 
     using T    = get_value_t<A>;

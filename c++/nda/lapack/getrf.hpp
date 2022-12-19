@@ -51,7 +51,7 @@ namespace nda::lapack {
    */
   template <MemoryMatrix A, MemoryVector IPIV>
   requires(mem::have_same_addr_space_v<A, IPIV> and is_blas_lapack_v<get_value_t<A>>)
-  int getrf(A &a, IPIV &ipiv) {
+  int getrf(A &&a, IPIV &&ipiv) {
     static_assert(std::is_same_v<get_value_t<IPIV>, int>, "Pivoting array must have elements of type int");
 
     auto dm = std::min(a.extent(0), a.extent(1));
