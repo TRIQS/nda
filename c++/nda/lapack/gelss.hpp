@@ -70,7 +70,7 @@ namespace nda::lapack {
    */
   template <MemoryMatrix A, MemoryMatrix B, MemoryVector S>
   requires(have_same_value_type_v<A, B> and mem::on_host<A, B, S> and is_blas_lapack_v<get_value_t<A>>)
-  int gelss(A &a, B &b, S &s, double rcond, int &rank) {
+  int gelss(A &&a, B &&b, S &&s, double rcond, int &rank) {
     static_assert(has_F_layout<A> and has_F_layout<B>, "C order not implemented");
 
     using T = get_value_t<A>;

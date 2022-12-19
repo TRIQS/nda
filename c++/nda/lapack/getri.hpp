@@ -45,12 +45,12 @@ namespace nda::lapack {
    */
   template <MemoryMatrix A, MemoryVector IPIV>
   requires(mem::on_host<A, IPIV> and is_blas_lapack_v<get_value_t<A>>)
-  int getri(A &&a, IPIV &ipiv) {
+  int getri(A &&a, IPIV const &ipiv) {
     static_assert(std::is_same_v<get_value_t<IPIV>, int>, "Pivoting array must have elements of type int");
 
     using T  = get_value_t<A>;
     auto dm = std::min(a.extent(0), a.extent(1));
-    if (ipiv.size() < dm) ipiv.resize(dm);
+    if (ipiv.size() < dm) NDA_RUNTIME_ERROR << "In getri: Pivot index array size " << ipiv.size() << " smaller than required size " << dm;
 
     // Must be lapack compatible
     EXPECTS(a.indexmap().min_stride() == 1);
