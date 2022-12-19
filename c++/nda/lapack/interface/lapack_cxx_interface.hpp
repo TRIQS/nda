@@ -33,8 +33,8 @@ namespace nda::lapack::f77 {
   void getrf(int M, int N, double *A, int LDA, int *ipiv, int &info);
   void getrf(int M, int N, std::complex<double> *A, int LDA, int *ipiv, int &info);
 
-  void getri(int N, double *A, int LDA, int *ipiv, double *work, int lwork, int &info);
-  void getri(int N, std::complex<double> *A, int LDA, int *ipiv, std::complex<double> *work, int lwork, int &info);
+  void getri(int N, double *A, int LDA, int const *ipiv, double *work, int lwork, int &info);
+  void getri(int N, std::complex<double> *A, int LDA, int const *ipiv, std::complex<double> *work, int lwork, int &info);
 
   void gtsv(int N, int NRHS, double *DL, double *D, double *DU, double *B, int LDB, int &info);
   void gtsv(int N, int NRHS, std::complex<double> *DL, std::complex<double> *D, std::complex<double> *DU, std::complex<double> *B, int LDB,
