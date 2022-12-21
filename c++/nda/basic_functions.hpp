@@ -322,7 +322,7 @@ namespace nda {
    *
    * We check this by asserting that (s=strides, l=lengths)
    * - there is at most one strided index m with
-   *   s_m = N * s_{m+1}*l_{m+1} for some integer N>1
+   *   s_m != s_{m+1}*l_{m+1}
    * - all other indices are 'contiguous': s_i = s_{i+1}*l_{i+1}
    *
    * Example of a block-strided layout with n_blocks=4, block_size=4
@@ -349,18 +349,17 @@ namespace nda {
 
     for (auto n : range(A::rank)) {
       auto inner_size = (n == A::rank - 1) ? 1 : s[i[n + 1]] * l[i[n + 1]];
-      auto [str, rem] = std::ldiv(s[i[n]], inner_size);
-      if (str < 1 || rem > 0) return {};
-      if (str > 1) {
-        if (block_size < data_size) // Second strided idx -> fail
-          return {};
+      if( s[i[n]] != inner_size ) {
+        if( block_size < data_size )  // second strided dimension
+          return {}; 
+        // found a strided dimension with (assumed) contiguous inner blocks
         n_blocks = a.size() / inner_size;
-        ASSERT(n_blocks * inner_size == a.size());
         block_size = inner_size;
         block_str  = s[i[n]];
       }
     }
-
+    ASSERT(n_blocks * block_size == a.size());
+    ASSERT(n_blocks * block_str == l[i[0]] * s[i[0]]);
     return std::make_tuple(n_blocks, block_size, block_str);
   }
 

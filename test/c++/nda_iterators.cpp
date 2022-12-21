@@ -114,14 +114,14 @@ TEST(iterator, Strided3d) { //NOLINT
 //-----------------------------
 
 TEST(iterator, BlockStrided2d) { //NOLINT
-  auto a = nda::rand<>(3, 4);
+  auto a = nda::rand<>(3, 4, 5);
 
-  EXPECT_TRUE(get_block_layout(a(_, range(0, 4, 2))));
-  EXPECT_TRUE(get_block_layout(a(_, range(2))));
-  EXPECT_TRUE(!get_block_layout(a(_, range(0, 4, 3))));
-  EXPECT_TRUE(!get_block_layout(a(_, range(3))));
+  EXPECT_TRUE(get_block_layout(a(_, range(2), _)));
+  EXPECT_TRUE(get_block_layout(a(_, range(3), _)));
+  EXPECT_TRUE(get_block_layout(a(_, range(0, 4, 2), _)));
+  EXPECT_TRUE(!get_block_layout(a(_, range(0, 4, 3), _)));
 
-  auto av                                = a(_, range(0, 4, 2));
+  auto av                                = a(_, range(0, 4, 2), _);
   auto [n_blocks, block_size, block_str] = get_block_layout(av).value();
   EXPECT_EQ(n_blocks * block_size, av.size());
 
