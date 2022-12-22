@@ -24,6 +24,7 @@
 #include "concepts.hpp"
 #include "iterators.hpp"
 #include "layout/slice_static.hpp"
+#include "mem/memcpy.hpp"
 
 // The std::swap is WRONG for a view because of the copy/move semantics of view.
 // Use swap instead (the correct one, found by ADL).

@@ -350,7 +350,7 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
       for (long i = 0; i < size(); ++i) (*this)(_linear_index_t{i}) = rhs(_linear_index_t{i});
       return;
     } else if constexpr (!mem::on_host<self_t, RHS> and have_same_value_type_v<self_t, RHS>) {
-      // Check for block-layout and use cudaMemcpy2D if possible
+      // Check for block-layout and use mem::memcpy2D if possible
       auto bl_layout_dst = get_block_layout(*this);
       auto bl_layout_src = get_block_layout(rhs);
       if (bl_layout_dst && bl_layout_src) {
@@ -371,9 +371,10 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
 
         // Copy only if block-layouts are compatible, otherwise continue to fallback
         if (n_bl_dst == n_bl_src && bl_size_dst == bl_size_src) {
-          auto err [[maybe_unused]] = cudaMemcpy2D((void *)data(), bl_str_dst * sizeof(value_type), (void *)rhs.data(),
-                                                   bl_str_src * sizeof(value_type), bl_size_src * sizeof(value_type), n_bl_src, cudaMemcpyDefault);
-          ASSERT_WITH_MESSAGE(err == cudaSuccess, "CudaMemcpy2D failed with error code "s + std::to_string(err));
+          mem::memcpy2D<mem::get_addr_space<self_t>, mem::get_addr_space<RHS>>(
+			  (void *)data(), bl_str_dst * sizeof(value_type), (void *)rhs.data(),
+                          bl_str_src * sizeof(value_type), bl_size_src * sizeof(value_type), 
+			  n_bl_src); 
           return;
         }
       }

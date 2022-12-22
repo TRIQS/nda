@@ -28,9 +28,6 @@
 
 #include "../mem/memcpy.hpp"
 #include "../mem/malloc.hpp"
-#if defined(NDA_HAVE_CUDA)
-#include <cuda_runtime.h>
-#endif
 
 #if defined(__has_feature)
 #if __has_feature(address_sanitizer)
