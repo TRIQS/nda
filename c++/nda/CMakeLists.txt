@@ -63,9 +63,14 @@ install(TARGETS blas_lapack EXPORT ${PROJECT_NAME}-targets)
 # ========= CudaRT & CuBLAS ==========
 
 message(STATUS "-------- CUDAToolkit detection -------------")
-
-find_package(CUDAToolkit REQUIRED)
-target_link_libraries(${PROJECT_NAME}_c PUBLIC CUDA::cudart CUDA::cublas CUDA::cusolver)
+option(Use_Cuda "Use CUDA library" OFF)
+if(Use_Cuda)
+  find_package(CUDAToolkit REQUIRED)
+  target_link_libraries(${PROJECT_NAME}_c PUBLIC CUDA::cudart CUDA::cublas CUDA::cusolver)
+  target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_CUDA)
+# MAM: look at https://github.com/NVIDIA/CUDALibrarySamples/blob/master/cuTENSOR/CMakeLists.txt 
+# to make cutensor target, since it doesn't seem to be available through CUDAToolkit yet
+endif()
 
 # ========= Magma ==========
 
