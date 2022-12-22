@@ -26,7 +26,11 @@
 #include "address_space.hpp"
 #include "../macros.hpp"
 
+#include "../mem/memcpy.hpp"
+#include "../mem/malloc.hpp"
+#if defined(NDA_HAVE_CUDA)
 #include <cuda_runtime.h>
+#endif
 
 #if defined(__has_feature)
 #if __has_feature(address_sanitizer)
@@ -45,17 +49,6 @@ namespace nda::mem {
     size_t s  = 0;
   };
 
-  /// Generic memcpy between potentially different Address Spaces
-  template <AddressSpace DestAdrSp, AddressSpace SrcAdrSp>
-  void memcpy(void *dest, void const *src, size_t count) {
-    if constexpr (DestAdrSp == Host && SrcAdrSp == Host) {
-      std::memcpy(dest, src, count);
-    } else {
-      auto err [[maybe_unused]] = cudaMemcpy(dest, src, count, cudaMemcpyDefault);
-      ASSERT_WITH_MESSAGE(err == cudaSuccess, "CudaMemcpy failed with error code "s + std::to_string(err));
-    }
-  }
-
   // -------------------------  Malloc allocator ----------------------------
   //
   // Allocates simply with malloc
@@ -72,35 +65,14 @@ namespace nda::mem {
     static constexpr auto address_space = AdrSp;
 
     static blk_t allocate(size_t s) noexcept {
-      if constexpr (AdrSp == Host) {
-        return {(char *)malloc(s), s}; // NOLINT
-      } else {
-        auto blk                  = blk_t{nullptr, s};
-        auto err [[maybe_unused]] = [&]() {
-          if constexpr (AdrSp == Device)
-            return cudaMalloc((void **)&blk.ptr, s);        // NOLINT
-          else                                              // Unified
-            return cudaMallocManaged((void **)&blk.ptr, s); // NOLINT
-        }();
-        ASSERT_WITH_MESSAGE(err == cudaSuccess, "Cuda memory allocation failed with error code "s + std::to_string(err));
-        return blk;
-      }
+      return {(char *)malloc<AdrSp>(s), s}; // NOLINT
     }
     static blk_t allocate_zero(size_t s) noexcept {
-      if constexpr (AdrSp == Host) {
-        return {(char *)calloc(s, sizeof(char)), s}; // NOLINT
-      } else /* Device, Unified */ {
-        auto blk = allocate(s);
-        cudaMemset((void *)blk.ptr, 0, s);
-        return blk;
-      }
+      return {(char *)calloc<AdrSp>(s, sizeof(char)), s}; // NOLINT
     }
 
     static void deallocate(blk_t b) noexcept {
-      if constexpr (AdrSp == Host)
-        free(b.ptr); // NOLINT
-      else           // Device, Unified
-        cudaFree((void *)b.ptr);
+      free<AdrSp>((void*)b.ptr); // NOLINT
     }
   };
 
