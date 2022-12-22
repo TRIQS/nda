@@ -391,18 +391,40 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
 template <typename Scalar>
 void fill_with_scalar(Scalar const &scalar) noexcept {
   // we make a special implementation if the array is 1d strided or contiguous
-  if constexpr (has_layout_strided_1d<self_t>) { // possibly contiguous
-    const long L             = size();
-    auto *__restrict const p = data(); // no alias possible here !
-    if constexpr (has_contiguous_layout<self_t>) {
-      for (long i = 0; i < L; ++i) p[i] = scalar;
+  if constexpr (mem::on_host<self_t>) {
+    if constexpr (has_layout_strided_1d<self_t>) { // possibly contiguous
+      const long L             = size();
+      auto *__restrict const p = data(); // no alias possible here !
+      if constexpr (has_contiguous_layout<self_t>) {
+        for (long i = 0; i < L; ++i) p[i] = scalar;
+      } else {
+        const long stri  = indexmap().min_stride();
+        const long Lstri = L * stri;
+        for (long i = 0; i < Lstri; i += stri) p[i] = scalar;
+      }
     } else {
-      const long stri  = indexmap().min_stride();
-      const long Lstri = L * stri;
-      for (long i = 0; i < Lstri; i += stri) p[i] = scalar;
+      for (auto &x : *this) x = scalar;
     }
-  } else {
-    for (auto &x : *this) x = scalar;
+  } else if constexpr(mem::on_device<self_t> or mem::on_unified<self_t>) {  // on device
+    if constexpr (has_layout_strided_1d<self_t>) { // possibly contiguous
+      if constexpr (has_contiguous_layout<self_t>) {
+        mem::fill_n<mem::get_addr_space<self_t>>(data(), size(), value_type(scalar));
+      } else {
+        const long stri  = indexmap().min_stride();
+        mem::fill2D_n<mem::get_addr_space<self_t>>(data(), stri, 1, size(), value_type(scalar));
+      }
+    } else {
+      // check for 2D layout
+      auto bl_layout = get_block_layout(*this);
+      if (bl_layout) {
+        auto [n_bl, bl_size, bl_str] = *bl_layout;
+        mem::fill2D_n<mem::get_addr_space<self_t>>(data(), bl_str, bl_size, n_bl, value_type(scalar));
+        return;
+      } else {
+        // MAM: implement recursive call to fill_with_scalar on (i,nda::ellipsis{})
+        NDA_RUNTIME_ERROR <<"fill_with_scalar: Not implemented yet for general layout. ";
+      }
+    }
   }
 }
 
@@ -425,6 +447,12 @@ void assign_from_scalar(Scalar const &scalar) noexcept {
       fill_with_scalar(Scalar{0 * scalar}); //FIXME : improve this
     // on diagonal only
     const long imax = std::min(extent(0), extent(1));
-    for (long i = 0; i < imax; ++i) operator()(i, i) = scalar;
+    if constexpr (mem::on_host<self_t>) {
+      for (long i = 0; i < imax; ++i) operator()(i, i) = scalar;
+    } else if constexpr(mem::on_device<self_t> or mem::on_unified<self_t>) {
+      size_t dstr = lay.strides()[layout_t::is_stride_order_Fortran() ? 1 : 0] + 1; 
+      for (long i = 0; i < imax; ++i) operator()(i, i) = scalar;
+      mem::fill2D_n<mem::get_addr_space<self_t>>(data(), dstr, value_type(scalar), 1, imax);
+    } 
   }
 }

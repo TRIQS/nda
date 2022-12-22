@@ -18,6 +18,7 @@
 
 #include <cstdlib> 
 #include <algorithm>
+#include <vector>
 
 #include "address_space.hpp"
 #include "../macros.hpp"
@@ -67,7 +68,7 @@ T* fill(T* first, T* end, const T& value)
 }
 
 
-template <AddressSpace AdrSp typename T, typename Size >
+template <AddressSpace AdrSp, typename T, typename Size >
 requires(nda::is_scalar_or_convertible_v<T>)
 void fill2D_n( T* first, Size pitch, Size width, Size height, const T& value )
 {
@@ -79,13 +80,10 @@ void fill2D_n( T* first, Size pitch, Size width, Size height, const T& value )
     } else {
       // MAM: temporary, use kernel/thrust/foreach/... when available
       // as a temporary version, can also loop over rows...
-      nda::array<T,1> buf(width*height);
-      buf()=value;
-      memcopy2D<Host,Device>((void*)first, pitch*sizeof(T), (void*) buf.data(), width*sizeof(T),
-                width*sizeof(T), height);
+      std::vector<T> v(width*height, value);
       device_check( cudaMemcpy2D((void*)first, pitch*sizeof(T), 
-				 (void*) buf.data(), width*sizeof(T),
-                		 width*sizeof(T), height, cudaMemcpyH2D), "CudaMemcpy2D" );
+				 (void*) v.data(), width*sizeof(T),
+                		 width*sizeof(T), height, cudaMemcpyDefault), "cudaMemcpy2D" );
     }
 #else
     static_assert(always_false<bool>," Reached device code. Compile with GPU support.");
