@@ -28,10 +28,10 @@ namespace nda::mem {
 
 template <AddressSpace AdrSp, typename T, typename Size>
 requires(nda::is_scalar_or_convertible_v<T>)
-void fill_n(T* first, Size count, const T& value) 
+T* fill_n(T* first, Size count, const T& value) 
 {
   if constexpr (AdrSp == Host) {
-    std::fill_n(first,std::size_t(count),value);
+    return std::fill_n(first,size_t(count),value);
   } else if constexpr (AdrSp == Device or AdrSp == Unified) {
 #if defined(NDA_HAVE_CUDA)
     if(std::find_if((char const*)(&value), (char const*)(&value) + sizeof(T), [](char c){return c!=0;}) == (char const*)(&value) + sizeof(T)){
@@ -47,6 +47,7 @@ void fill_n(T* first, Size count, const T& value)
         device_check( cudaMemset2D((void*)(fn+n), sizeof(T), v, 1, count), "cudaMemset2D" );
       }
     }
+    return first+count;
 #else
     static_assert(always_false<bool>," Reached device code. Compile with GPU support."); 
 #endif
@@ -58,10 +59,11 @@ void fill_n(T* first, Size count, const T& value)
 
 template <AddressSpace AdrSp, typename T>
 requires(nda::is_scalar_or_convertible_v<T>)
-void fill(T* first, T* end, const T& value)
+T* fill(T* first, T* end, const T& value)
 {
   if( std::distance(first,end) > 0 )
-    fill_n<AdrSp>(first,std::distance(first,end),value);
+    return fill_n<AdrSp>(first,std::distance(first,end),value);
+  return first;
 }
 
 

@@ -27,7 +27,7 @@
 namespace nda::mem {
 
 template <AddressSpace AdrSp>
-void* malloc(std::size_t size) {
+void* malloc(size_t size) {
   if constexpr (AdrSp == Host) {
     return std::malloc(size);
   } else if constexpr (AdrSp == Device) {
@@ -68,7 +68,7 @@ void free(void* p) {
 }
 
 template <AddressSpace AdrSp>
-void* calloc(std::size_t num, std::size_t size) {
+void* calloc(size_t num, size_t size) {
   if constexpr (AdrSp == Host) {
     return std::calloc(num,size);
   } else if constexpr (AdrSp == Device or AdrSp == Unified) {

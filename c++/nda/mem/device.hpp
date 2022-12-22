@@ -17,7 +17,7 @@
 #pragma once
 
 #include <iostream>
-#include "../macros.hpp"
+#include "../exceptions.hpp"
 #if defined(NDA_HAVE_CUDA)
 #include <cuda_runtime.h>
 
@@ -27,9 +27,9 @@ inline void device_check(cudaError_t sucess, std::string message = "")
 {
   if (sucess != cudaSuccess) {
     NDA_RUNTIME_ERROR <<"Cuda runtime error: " <<std::to_string(sucess) <<"\n" 
-	              << " message: " <<message <<"\n"
-                      << " cudaGetErrorName: " << cudaGetErrorName(sucess) <<"\n"
-                      << " cudaGetErrorString: " << cudaGetErrorString(sucess) <<std::endl;
+	              <<" message: " <<message <<"\n"
+                      <<" cudaGetErrorName: " << std::string(cudaGetErrorName(sucess)) <<"\n"
+                      <<" cudaGetErrorString: " << std::string(cudaGetErrorString(sucess)) <<"\n";
   }
 }
 
