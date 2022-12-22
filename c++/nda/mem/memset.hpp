@@ -17,48 +17,23 @@
 #pragma once
 
 #include <cstdlib> 
+#include <algorithm>
 
 #include "address_space.hpp"
 #include "../macros.hpp"
 #include "../traits.hpp"
 #include "device.hpp"
-//#include "fill.hpp"
 
 namespace nda::mem {
 
 template <AddressSpace AdrSp>
-void* malloc(std::size_t size) {
+void memset(void* p, int value, size_t count)
+{
   if constexpr (AdrSp == Host) {
-    return std::malloc(size);
-  } else if constexpr (AdrSp == Device) {
-#if defined(NDA_HAVE_CUDA)
-    void* ptr = nullptr;
-    device_check( cudaMalloc((void**)&ptr, size), "cudaMalloc" ); 
-    return ptr;
-#else
-    static_assert(always_false<bool>," Reached device code. Compile with GPU support."); 
-#endif
-  } else if constexpr (AdrSp == Unified) {
-#if defined(NDA_HAVE_CUDA)
-    void* ptr = nullptr;
-    device_check( cudaMallocManaged((void**)&ptr, size), "cudaMallocManaged" );                 
-    return ptr;
-#else
-    static_assert(always_false<bool>," Reached device code. Compile with GPU support.");
-#endif
-  } else if constexpr (AdrSp == None) {
-    static_assert(always_false<bool>," malloc<AdrSp == None>: Oh Oh! "); 
-  }
-  return nullptr;
-}
-
-template <AddressSpace AdrSp>
-void free(void* p) {
-  if constexpr (AdrSp == Host) {
-    std::free(p);
+    std::memset(p,value,count);
   } else if constexpr (AdrSp == Device or AdrSp == Unified) {
 #if defined(NDA_HAVE_CUDA)
-    device_check( cudaFree(p), "cudaFree" );
+    device_check( cudaMemset(p, value, count), "cudaMemset" );
 #else
     static_assert(always_false<bool>," Reached device code. Compile with GPU support.");
 #endif
@@ -68,22 +43,24 @@ void free(void* p) {
 }
 
 template <AddressSpace AdrSp>
-void* calloc(std::size_t num, std::size_t size) {
+void memset2D(void* ptr, size_t pitch, int value, size_t width, size_t height) 
+{ 
   if constexpr (AdrSp == Host) {
-    return std::calloc(num,size);
+    auto v = static_cast<unsigned char>(value);
+    unsigned char* p = reinterpret_cast<unsigned char*>(ptr);
+    for(size_t i=0; i<height; ++i, p+=pitch) 
+      for(size_t j=0; j<width; ++j) 
+        *(p+j) = v;
   } else if constexpr (AdrSp == Device or AdrSp == Unified) {
-    char* ptr = (char*) malloc<AdrSp>(num*size);
 #if defined(NDA_HAVE_CUDA)
-    device_check( cudaMemset((void*)ptr,0,num*size), "cudaMemset" );
+    device_check( cudaMemset2D(ptr, pitch, value, width, height), "cudaMemset2D" );
 #else
     static_assert(always_false<bool>," Reached device code. Compile with GPU support.");
 #endif
-//    fill<AdrSp>(ptr, 0, num*size);
-    return (void*)ptr;
   } else if constexpr (AdrSp == None) {
     static_assert(always_false<bool>," malloc<AdrSp == None>: Oh Oh! ");
   }
-  return nullptr;
 }
 
 } // namespace nda::mem
+

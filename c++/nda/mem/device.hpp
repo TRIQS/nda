@@ -26,13 +26,10 @@ namespace nda::mem {
 inline void device_check(cudaError_t sucess, std::string message = "")
 {
   if (sucess != cudaSuccess) {
-    if(message != std::string("")) std::cerr << message <<"\n";
-    std::cerr << "Cuda runtime error: " <<std::to_string(sucess) <<" \n"
-	      << "   Error name: " <<cudaGetErrorName(sucess) <<"\n"
-              << "   Error message: " <<cudaGetErrorString(sucess) <<std::endl; 
-    // MAM: terminate is not ideal in MPI environment, 
-    //      maybe the library should have a user-defined terminate routine
-    std::terminate();  
+    NDA_RUNTIME_ERROR <<"Cuda runtime error: " <<std::to_string(sucess) <<"\n" 
+	              << " message: " <<message <<"\n"
+                      << " cudaGetErrorName: " << cudaGetErrorName(sucess) <<"\n"
+                      << " cudaGetErrorString: " << cudaGetErrorString(sucess) <<std::endl;
   }
 }
 

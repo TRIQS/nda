@@ -40,4 +40,23 @@ void memcpy(void *dest, void const *src, size_t count) {
   }
 }
 
+template <AddressSpace DestAdrSp, AddressSpace SrcAdrSp>
+void memcpy2D(void* dst, size_t dpitch, const void* src, size_t spitch,
+                        size_t width, size_t height)
+  if constexpr (DestAdrSp == None or SrcAdrSp == None) {
+    static_assert(always_false<bool>," memcpy2D<DestAdrSp == None or SrcAdrSp == None>: Oh Oh! ");
+  } else if constexpr (DestAdrSp == Host && SrcAdrSp == Host) {
+    for(size_t i=0; i<height; ++i, dst+=dpitch, src+=spitch)
+      for(size_t j=0; j<width; ++j)
+        *(dst+j) = *(src+j);
+  } else {
+#if defined(NDA_HAVE_CUDA)
+    device_check( cudaMemcpy2D(dst, dpitch, src, spitch, width, height, cudaMemcpyDefault), "CudaMemcpy2D" );
+#else
+    static_assert(always_false<bool>," Reached device code. Compile with GPU support.");
+#endif
+  }
+}
+
+
 } // namespace nda::mem
