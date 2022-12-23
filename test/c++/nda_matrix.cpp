@@ -15,6 +15,7 @@
 // Authors: Olivier Parcollet, Nils Wentzell
 
 #include "./test_common.hpp"
+using nda::matrix_view;
 
 TEST(Array, InitializerOfArray) { //NOLINT
   auto pts = nda::array<std::array<double, 2>, 1>{{0.0, 0.0}, {0.0, 1.0}, {1.0, 0.0}, {1.0, 1.0}};

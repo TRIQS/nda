@@ -15,6 +15,7 @@
 // Authors: Olivier Parcollet, Nils Wentzell
 
 #include "./test_common.hpp"
+using nda::matrix_view;
 
 // ====================== VIEW ========================================
 
