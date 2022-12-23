@@ -108,3 +108,46 @@ TEST(TENSOR, contract) { test_contract<double, C_layout>(); }     //NOLINT
 TEST(TENSOR, contractF) { test_contract<double, F_layout>(); }    //NOLINT
 TEST(TENSOR, zcontract) { test_contract<dcomplex, C_layout>(); }  //NOLINT
 TEST(TENSOR, zcontractF) { test_contract<dcomplex, F_layout>(); } //NOLINT
+
+template <typename value_t, typename Layout>
+void test_outer_product_contract() {
+
+  using other_layout = std::conditional_t<std::is_same_v<Layout, C_layout>, F_layout, C_layout>;
+  { // i,j->ij
+    matrix<value_t, Layout> M3{{1, 0}, {0, 1}};
+    nda::array<value_t, 1, Layout> M1{{value_t{1}, value_t{2}}}, M2{{value_t{3}, value_t{4}}};
+    nda::tensor::contract(1.0, M1, "i", M2, "j", 1.0, M3, "ij");
+
+    EXPECT_ARRAY_NEAR(M3, nda::matrix<value_t>{{4, 4}, {6, 9}});
+  }
+
+  { // i,ij->ij
+    matrix<value_t, Layout> M2{{1, 2}, {3, 4}}, M3{{1, 0}, {0, 1}};
+    nda::array<value_t, 1, Layout> M1{{value_t{2}, value_t{3}}};
+    nda::tensor::contract(1.0, M1, "i", M2, "ij", 1.0, M3, "ij");
+
+    EXPECT_ARRAY_NEAR(M3, nda::matrix<value_t>{{3, 4}, {9, 13}});
+  }
+
+  { // i,j->ij
+    matrix<value_t, other_layout> M3{{1, 0}, {0, 1}};
+    nda::array<value_t, 1, Layout> M1{{value_t{1}, value_t{2}}}, M2{{value_t{3}, value_t{4}}};
+    nda::tensor::contract(1.0, M1, "i", M2, "j", 1.0, M3, "ij");
+
+    EXPECT_ARRAY_NEAR(M3, nda::matrix<value_t>{{4, 4}, {6, 9}});
+  }
+
+  { // i,ij->ij
+    matrix<value_t, other_layout> M2{{1, 2}, {3, 4}};
+    matrix<value_t, Layout> M3{{1, 0}, {0, 1}};
+    nda::array<value_t, 1, Layout> M1{{value_t{2}, value_t{3}}};
+    nda::tensor::contract(1.0, M1, "i", M2, "ij", 1.0, M3, "ij");
+
+    EXPECT_ARRAY_NEAR(M3, nda::matrix<value_t>{{3, 4}, {9, 13}});
+  }
+}
+
+TEST(TENSOR, outer_product_contract) { test_outer_product_contract<double, C_layout>(); }                 //NOLINT
+TEST(TENSOR, outer_product_contractF) { test_outer_product_contract<double, F_layout>(); }                //NOLINT
+TEST(TENSOR, zouter_product_contract) { test_outer_product_contract<std::complex<double>, C_layout>(); }  //NOLINT
+TEST(TENSOR, zouter_product_contractF) { test_outer_product_contract<std::complex<double>, F_layout>(); } //NOLINT
