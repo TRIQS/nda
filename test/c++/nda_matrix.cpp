@@ -15,6 +15,7 @@
 // Authors: Thomas Hahn, Olivier Parcollet, Nils Wentzell
 
 #include "./test_common.hpp"
+using nda::matrix_view;
 
 #include <nda/gtest_tools.hpp>
 #include <nda/nda.hpp>
