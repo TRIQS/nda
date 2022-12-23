@@ -116,12 +116,11 @@ namespace nda::blas {
           f77::gemm_vbatch(op_a, op_b, vm.data(), vn.data(), vk.data(), alpha, a_ptrs.data(), vlda.data(), b_ptrs.data(), vldb.data(), beta,
                            c_ptrs.data(), vldc.data(), batch_count);
         } else { // on device
-#if defined(NDA_HAVE_CUDA)
+#if defined(NDA_HAVE_DEVICE)
           device::gemm_vbatch(op_a, op_b, vm.data(), vn.data(), vk.data(), alpha, a_ptrs.data(), vlda.data(), b_ptrs.data(), vldb.data(), beta,
                             c_ptrs.data(), vldc.data(), batch_count);
 #else
-        static_assert(always_false<bool>," blas on device without gpu support! Compile for GPU. ");
-        return std::decay_t<X>::value_type{0};
+          static_assert(always_false<bool>," blas on device without gpu support! Compile for GPU. ");
 #endif
         }
       } else {
@@ -137,12 +136,11 @@ namespace nda::blas {
           f77::gemm_batch(op_a, op_b, m, n, k, alpha, a_ptrs.data(), get_ld(a0), b_ptrs.data(), get_ld(b0), beta, c_ptrs.data(), get_ld(c0),
                           batch_count);
         } else { // on device
-#if defined(NDA_HAVE_CUDA)
+#if defined(NDA_HAVE_DEVICE)
           device::gemm_batch(op_a, op_b, m, n, k, alpha, a_ptrs.data(), get_ld(a0), b_ptrs.data(), get_ld(b0), beta, c_ptrs.data(), get_ld(c0),
                            batch_count);
 #else
-        static_assert(always_false<bool>," blas on device without gpu support! Compile for GPU. ");
-        return std::decay_t<X>::value_type{0};
+          static_assert(always_false<bool>," blas on device without gpu support! Compile for GPU. ");
 #endif
         }
       }
@@ -215,12 +213,11 @@ namespace nda::blas {
         f77::gemm_batch_strided(op_a, op_b, m, n, k, alpha, a.data(), get_ld(a0), a.strides()[0], b.data(), get_ld(b0), b.strides()[0], beta,
                                 c.data(), get_ld(c0), c.strides()[0], a.extent(0));
       } else { // on device
-#if defined(NDA_HAVE_CUDA)
+#if defined(NDA_HAVE_DEVICE)
         device::gemm_batch_strided(op_a, op_b, m, n, k, alpha, a.data(), get_ld(a0), a.indexmap().strides()[0], b.data(), get_ld(b0), b.strides()[0],
                                  beta, c.data(), get_ld(c0), c.indexmap().strides()[0], a.extent(0));
 #else
         static_assert(always_false<bool>," blas on device without gpu support! Compile for GPU. ");
-        return std::decay_t<X>::value_type{0};
 #endif
       }
     }

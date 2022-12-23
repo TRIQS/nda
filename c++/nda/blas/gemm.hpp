@@ -101,11 +101,10 @@ namespace nda::blas {
       if constexpr (mem::on_host<A>) {
         f77::gemm(op_a, op_b, m, n, k, alpha, a.data(), get_ld(a), b.data(), get_ld(b), beta, c.data(), get_ld(c));
       } else { // on device
-#if defined(NDA_HAVE_CUDA)
+#if defined(NDA_HAVE_DEVICE)
         device::gemm(op_a, op_b, m, n, k, alpha, a.data(), get_ld(a), b.data(), get_ld(b), beta, c.data(), get_ld(c));
 #else
         static_assert(always_false<bool>," blas on device without gpu support! Compile for GPU. ");
-        return std::decay_t<X>::value_type{0};
 #endif
       }
     }

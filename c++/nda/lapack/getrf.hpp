@@ -71,7 +71,11 @@ namespace nda::lapack {
     if constexpr (mem::on_host<A>) {
       f77::getrf(a.extent(0), a.extent(1), a.data(), get_ld(a), ipiv.data(), info);
     } else {
-      cuda::getrf(a.extent(0), a.extent(1), a.data(), get_ld(a), ipiv.data(), info);
+#if defined(NDA_HAVE_DEVICE)
+      device::getrf(a.extent(0), a.extent(1), a.data(), get_ld(a), ipiv.data(), info);
+#else
+      static_assert(always_false<bool>," lapack on device without gpu support! Compile for GPU. ");
+#endif
     }
     return info;
   }

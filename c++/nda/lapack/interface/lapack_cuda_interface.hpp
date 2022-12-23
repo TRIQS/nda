@@ -18,16 +18,7 @@
 
 #include <complex>
 
-#if defined(NDA_HAVE_CUDA)
-#include "lapack_cuda_interface.hpp"
-#endif
-
-namespace nda::lapack::f77 {
-
-  void gelss(int M, int N, int NRHS, double *A, int LDA, double *B, int LDB, double *S, double RCOND, int &RANK, double *WORK, int LWORK,
-             double *RWORK, int &INFO);
-  void gelss(int M, int N, int NRHS, std::complex<double> *A, int LDA, std::complex<double> *B, int LDB, double *S, double RCOND, int &RANK,
-             std::complex<double> *WORK, int LWORK, double *RWORK, int &INFO);
+namespace nda::lapack::device {
 
   void gesvd(char JOBU, char JOBVT, int M, int N, double *A, int LDA, double *S, double *U, int LDU, double *VT, int LDVT, double *WORK, int LWORK,
              double *RWORK, int &INFO);
@@ -37,22 +28,7 @@ namespace nda::lapack::f77 {
   void getrf(int M, int N, double *A, int LDA, int *ipiv, int &info);
   void getrf(int M, int N, std::complex<double> *A, int LDA, int *ipiv, int &info);
 
-  void getri(int N, double *A, int LDA, int const *ipiv, double *work, int lwork, int &info);
-  void getri(int N, std::complex<double> *A, int LDA, int const *ipiv, std::complex<double> *work, int lwork, int &info);
-
-  void gtsv(int N, int NRHS, double *DL, double *D, double *DU, double *B, int LDB, int &info);
-  void gtsv(int N, int NRHS, std::complex<double> *DL, std::complex<double> *D, std::complex<double> *DU, std::complex<double> *B, int LDB,
-            int &info);
-
-  void stev(char J, int N, double *D, double *E, double *Z, int ldz, double *work, int &info);
-
-  void syev(char JOBZ, char UPLO, int N, double *A, int LDA, double *W, double *work, int &lwork, int &info);
-
-  void heev(char JOBZ, char UPLO, int N, std::complex<double> *A, int LDA, double *W, std::complex<double> *work, int &lwork, double *work2,
-            int &info);
-
   void getrs(char op, int N, int NRHS, double const *A, int LDA, int const *ipiv, double *B, int LDB, int &info);
   void getrs(char op, int N, int NRHS, std::complex<double> const *A, int LDA, int const *ipiv, std::complex<double> *B, int LDB, int &info);
 
-} // namespace nda::lapack::f77
-
+} // namespace nda::lapack::device
