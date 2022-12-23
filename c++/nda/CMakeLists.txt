@@ -103,7 +103,7 @@ if(Use_Tblis)
   add_library(tblis INTERFACE IMPORTED)
   set_target_properties(tblis PROPERTIES 
         INTERFACE_INCLUDE_DIRECTORIES  "${TBLIS_ROOT}/include"
-        INTERFACE_LINK_LIBRARIES "-L${TBLIS_ROOT}/lib;-ltblis;-ltci") #;-Wl,-rpath=${TBLIS_ROOT}/lib")
+        INTERFACE_LINK_LIBRARIES "-L${TBLIS_ROOT}/lib;-ltblis;-ltci;-Wl,-rpath=${TBLIS_ROOT}/lib")
   target_link_libraries(${PROJECT_NAME}_c PUBLIC tblis)
   target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_TBLIS)
 endif()
