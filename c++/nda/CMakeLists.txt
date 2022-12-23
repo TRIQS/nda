@@ -86,6 +86,28 @@ if(Use_Magma)
   install(TARGETS magma EXPORT ${PROJECT_NAME}-targets)
 endif()
 
+# ========= TBLIS ==========
+
+message(STATUS "-------- TBLIS detection -------------")
+option(Use_Tblis "Use TBLIS library" OFF)
+if(Use_Tblis)
+  # no find package, :-(, doing it by hand
+  if(NOT DEFINED TBLIS_ROOT AND DEFINED ENV{TBLIS_ROOT})
+    set(TBLIS_ROOT $ENV{TBLIS_ROOT})
+  endif()
+  if(NOT DEFINED TBLIS_ROOT)
+    message(FATAL_ERROR "Error: Please set TBLIS_ROOT when Use_Tblis is set to ON")
+  endif()
+  message(STATUS "TBLIS_ROOT: ${TBLIS_ROOT}") 
+  # MAM: improve this, need to check if library is in TBLIS_ROOT/include, TBLIS_ROOT/lib
+  add_library(tblis INTERFACE IMPORTED)
+  set_target_properties(tblis PROPERTIES 
+        INTERFACE_INCLUDE_DIRECTORIES  "${TBLIS_ROOT}/include"
+        INTERFACE_LINK_LIBRARIES "-L${TBLIS_ROOT}/lib;-ltblis;-ltci") #;-Wl,-rpath=${TBLIS_ROOT}/lib")
+  target_link_libraries(${PROJECT_NAME}_c PUBLIC tblis)
+  target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_TBLIS)
+endif()
+
 # ========= Compiler Wrapper ==========
 
 # Get the compiler and linktime flags of nda_c
