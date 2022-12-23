@@ -14,6 +14,8 @@
 //
 // Authors: Olivier Parcollet, Nils Wentzell 
 
+#pragma once
+
 #include "nda/concepts.hpp"
 #include "tblis/tblis.h"
 

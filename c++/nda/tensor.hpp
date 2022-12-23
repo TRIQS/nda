@@ -21,3 +21,4 @@ namespace nda::tensor {}
 
 #include "blas/tools.hpp"
 #include "tensor/contract.hpp"
+#include "tensor/add.hpp"
