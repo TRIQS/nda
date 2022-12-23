@@ -88,7 +88,12 @@ namespace nda::blas {
     if constexpr (mem::on_host<A>) {
       f77::gemv(op_a, m, n, alpha, a.data(), get_ld(a), b.data(), b.indexmap().strides()[0], beta, c.data(), c.indexmap().strides()[0]);
     } else {
-      cuda::gemv(op_a, m, n, alpha, a.data(), get_ld(a), b.data(), b.indexmap().strides()[0], beta, c.data(), c.indexmap().strides()[0]);
+#if defined(NDA_HAVE_CUDA)
+      device::gemv(op_a, m, n, alpha, a.data(), get_ld(a), b.data(), b.indexmap().strides()[0], beta, c.data(), c.indexmap().strides()[0]);
+#else
+      static_assert(always_false<bool>," blas on device without gpu support! Compile for GPU. ");
+      return std::decay_t<X>::value_type{0};
+#endif
     }
   }
 

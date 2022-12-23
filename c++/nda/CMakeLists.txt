@@ -70,6 +70,9 @@ if(Use_Cuda)
   target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_CUDA)
 # MAM: look at https://github.com/NVIDIA/CUDALibrarySamples/blob/master/cuTENSOR/CMakeLists.txt 
 # to make cutensor target, since it doesn't seem to be available through CUDAToolkit yet
+else()
+  # ======== remove cuda-related cpp files ==========
+  list(FILTER sources EXCLUDE REGEX "*cublas_interface.cpp*" )
 endif()
 
 # ========= Magma ==========

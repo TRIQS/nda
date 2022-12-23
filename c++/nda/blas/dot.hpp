@@ -38,7 +38,12 @@ namespace nda::blas {
       if constexpr (mem::on_host<X>) {
         return f77::dot(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
       } else {
-        return cuda::dot(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
+#if defined(NDA_HAVE_CUDA)
+        return device::dot(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
+#else
+        static_assert(always_false<bool>," blas on device without gpu support! Compile for GPU. ");
+        return std::decay_t<X>::value_type{0};
+#endif
       }
     }
   }
@@ -61,7 +66,12 @@ namespace nda::blas {
       } else if constexpr (mem::on_host<X>) {
         return f77::dotc(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
       } else {
-        return cuda::dotc(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
+#if defined(NDA_HAVE_CUDA)
+        return device::dotc(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
+#else
+        static_assert(always_false<bool>," blas on device without gpu support! Compile for GPU. ");
+        return std::decay_t<X>::value_type{0};
+#endif
       }
     }
   }

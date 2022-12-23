@@ -18,11 +18,7 @@
 
 #include <complex>
 
-#if defined(NDA_HAVE_CUDA)
-#include "cublas_interface.hpp"
-#endif
-
-namespace nda::blas::f77 {
+namespace nda::blas::device {
 
   void axpy(int N, double alpha, const double *x, int incx, double *Y, int incy);
   void axpy(int N, std::complex<double> alpha, const std::complex<double> *x, int incx, std::complex<double> *Y, int incy);
@@ -69,5 +65,4 @@ namespace nda::blas::f77 {
   void swap(int N, double *x, int incx, double *Y, int incy);
   void swap(int N, std::complex<double> *x, int incx, std::complex<double> *Y, int incy);
 
-} // namespace nda::blas::f77
-
+} // namespace nda::blas::device
