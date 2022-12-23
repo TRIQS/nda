@@ -4,7 +4,7 @@ option(Use_Cuda "Use CUDA library" OFF)
 if(NOT Use_Cuda)
   # ======== remove cuda-related cpp files ==========
   list(REMOVE_ITEM sources "${CMAKE_CURRENT_SOURCE_DIR}/blas/interface/cublas_interface.cpp")
-  list(REMOVE_ITEM sources "${CMAKE_CURRENT_SOURCE_DIR}/blas/interface/lapack_cuda_interface.cpp")
+  list(REMOVE_ITEM sources "${CMAKE_CURRENT_SOURCE_DIR}/lapack/interface/lapack_cuda_interface.cpp")
 endif()
 add_library(${PROJECT_NAME}_c ${sources})
 add_library(${PROJECT_NAME}::${PROJECT_NAME}_c ALIAS ${PROJECT_NAME}_c)
