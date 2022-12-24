@@ -27,7 +27,7 @@
 #endif
 
 #if defined(NDA_HAVE_CUTENSOR)
-#include "interface/cutensor_interface.hpp"
+#include "interface/cutensor_interface.h"
 #endif
 
 namespace nda::tensor {

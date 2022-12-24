@@ -21,6 +21,14 @@ namespace nda::tensor {
   enum REDUCE_OP { REDUCE_SUM, REDUCE_MAX, REDUCE_MIN };
   enum UNARY_OP { ID_UOP, CONJ_UOP, SQRT_UOP, ABS_UOP, NEG_UOP };
   enum BINARY_OP { SUM_BOP, MUL_BOP, MAX_BOP, MIN_BOP };
+
+  // can I make this constexpr???
+  template <uint8_t N>
+  std::string default_index() {
+    std::string indx{size_t(N)};
+    for (uint8_t i = 0; i < N; i++) indx[i] = static_cast<char>(i);
+    return indx;
+  }
 } // namespace nda::tensor
 
 #include "blas/tools.hpp"

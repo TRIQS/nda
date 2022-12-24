@@ -24,15 +24,6 @@
 
 namespace nda::tensor::nda_tblis {
 
-// make this constexpr??? 
-template<uint8_t N>
-std::string default_index()
-{
-  std::string indx{size_t(N)};
-  for(uint8_t i=0; i<N; i++) indx[i] = static_cast<char>(i);  
-  return indx;
-}
-
 // Following design choices of correaa@boost::multi 
 template<class T> auto init_scalar = std::enable_if_t<sizeof(T*)==0>{};
 template<> auto init_scalar<float               > = ::tblis::tblis_init_scalar_s;
