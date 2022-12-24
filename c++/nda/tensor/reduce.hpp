@@ -27,7 +27,7 @@
 #endif
 
 #if defined(NDA_HAVE_CUTENSOR)
-#include "interface/cutensor_interface.hpp"
+#include "interface/cutensor_interface.h"
 #endif
 
 namespace nda::tensor {
@@ -45,7 +45,7 @@ namespace nda::tensor {
     if constexpr (mem::on_host<A>) {
 #if defined(NDA_HAVE_TBLIS)
       nda_tblis::tensor<value_t,rank> a_t(a);
-      std::string indx = nda_tblis::default_index<uint8_t(rank)>(); 
+      std::string indx = default_index<uint8_t(rank)>(); 
       nda_tblis::scalar<value_t> res(0);
       std::array<::tblis::len_type, rank> idx; 
       // MAM: do this in a cleaner way!

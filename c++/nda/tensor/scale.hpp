@@ -27,7 +27,7 @@
 #endif
 
 #if defined(NDA_HAVE_CUTENSOR)
-#include "interface/cutensor_interface.hpp"
+#include "interface/cutensor_interface.h"
 #endif
 
 namespace nda::tensor {
@@ -39,12 +39,10 @@ namespace nda::tensor {
   requires(is_blas_lapack_v<get_value_t<A>>) 
   void scale(get_value_t<A> alpha, A &&a) {
 
-    using value_t = get_value_t<A>;
-
     if constexpr (mem::on_host<A>) {
 //#if defined(NDA_HAVE_TBLIS)
 //      nda_tblis::tensor<value_t,get_rank<A>> a_t(a,alpha);
-//      std::string indx = nda_tblis::default_index<uint8_t(get_rank<A>)>(); 
+//      std::string indx = default_index<uint8_t(get_rank<A>)>(); 
 //      ::tblis::tblis_tensor_scale(NULL,NULL,&a_t,indx.data());
 //#else
       a() *= alpha;

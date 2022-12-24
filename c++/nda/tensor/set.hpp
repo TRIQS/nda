@@ -27,7 +27,7 @@
 #endif
 
 #if defined(NDA_HAVE_CUTENSOR)
-#include "interface/cutensor_interface.hpp"
+#include "interface/cutensor_interface.h"
 #endif
 
 namespace nda::tensor {
@@ -38,8 +38,6 @@ namespace nda::tensor {
   template <MemoryArray A>
   requires(is_blas_lapack_v<get_value_t<A>>) 
   void set(get_value_t<A> alpha, A &&a) {
-
-    using value_t = get_value_t<A>;
 
     if constexpr (mem::on_host<A>) {
       a() = alpha;  // is there a point in using tblis? 
