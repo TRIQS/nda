@@ -67,13 +67,52 @@ endif()
 target_link_libraries(${PROJECT_NAME}_c PRIVATE blas_lapack)
 install(TARGETS blas_lapack EXPORT ${PROJECT_NAME}-targets)
 
-# ========= CudaRT & CuBLAS ==========
+# ========= CudaRT, CuBLAS, CuSolver & CuTensor ==========
 
+<<<<<<< HEAD
 if(CudaSupport)
   message(STATUS "-------- CUDAToolkit detection -------------")
   find_package(CUDAToolkit REQUIRED)
   target_link_libraries(${PROJECT_NAME}_c PUBLIC CUDA::cudart CUDA::cublas CUDA::cusolver)
   target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_CUDA NDA_HAVE_DEVICE)
+
+  message(STATUS "-------- cutensor detection -------------")
+  option(Use_Cutensor "Use cutensor library" OFF)
+  if(Use_Cutensor)
+    if(NOT DEFINED ENV{CUTENSOR_ROOT} AND NOT DEFINED CUTENSOR_ROOT)
+      message(FATAL_ERROR "CUTENSOR_ROOT not set!")
+    endif() 
+    if(DEFINED ENV{CUTENSOR_ROOT})
+      set(CUTENSOR_ROOT "$ENV{CUTENSOR_ROOT}")
+    endif()
+    message("-- Looking for cuTENSOR in ${CUTENSOR_ROOT}")
+    if(NOT EXISTS ${CUTENSOR_ROOT})
+      message(FATAL_ERROR "Cannot find CUTENSOR_ROOT")
+    endif()
+
+    if(NOT TARGET cutensor)
+      add_library(cutensor SHARED IMPORTED)
+      if(WIN32)
+        set(CUTENSOR_LIBRARY_NAME "cutensor.dll")
+        set(CUTENSOR_LIBRARY_DEF "cutensor.lib")
+      else()
+        set(CUTENSOR_LIBRARY_NAME "libcutensor.so")
+      endif()
+      if((${CUDAToolkit_VERSION_MAJOR} GREATER_EQUAL 11) AND (${CUDAToolkit_VERSION_MINOR} LESS_EQUAL 0))
+        set(LIB_DIR "/lib/11.0")
+      elseif((${CUDAToolkit_VERSION_MAJOR} GREATER_EQUAL 11) AND (${CUDAToolkit_VERSION_MINOR} GREATER_EQUAL 1))
+        set(LIB_DIR "/lib/11")
+      elseif((${CUDAToolkit_VERSION_MAJOR} GREATER_EQUAL 12))
+        set(LIB_DIR "/lib/12")
+      endif()
+      set_target_properties(cutensor PROPERTIES
+        IMPORTED_LOCATION "${CUTENSOR_ROOT}/${LIB_DIR}/${CUTENSOR_LIBRARY_NAME}"
+        IMPORTED_IMPLIB "${CUTENSOR_ROOT}/${LIB_DIR}/${CUTENSOR_LIBRARY_DEF}"
+        INTERFACE_INCLUDE_DIRECTORIES "${CUTENSOR_ROOT}/include")
+    endif()
+    target_link_libraries(${PROJECT_NAME}_c PUBLIC cutensor)
+    target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_CUTENSOR)
+  endif()
 endif()
 
 # ========= Magma ==========
