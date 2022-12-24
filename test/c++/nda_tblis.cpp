@@ -154,26 +154,74 @@ TEST(TENSOR, zouter_product_contractF) { test_outer_product_contract<std::comple
 
 template <typename value_t, typename Layout>
 void test_add() {
-  {
-    nda::array<value_t, 3, Layout> M1{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
-    nda::array<value_t, 3, Layout> M2{{{0, 2}, {4, 6}}, {{8, 10}, {12, 14}}};
+  nda::array<value_t, 3, Layout> M1{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
+  nda::array<value_t, 3, Layout> M2{{{0, 2}, {4, 6}}, {{8, 10}, {12, 14}}};
 
-    nda::tensor::add(2.0, M1, "ijk", 1.0, M2, "ijk");
-    EXPECT_ARRAY_NEAR(M2, nda::array<value_t, 3>{{{0, 4}, {8, 12}}, {{16, 20}, {24, 28}}});
+  nda::tensor::add(2.0, M1, "ijk", 1.0, M2, "ijk");
+  EXPECT_ARRAY_NEAR(M2, nda::array<value_t, 3>{{{0, 4}, {8, 12}}, {{16, 20}, {24, 28}}});
 
-    nda::tensor::add(0.0, M1, "ijk", 3.0, M2, "ijk");
-    EXPECT_ARRAY_NEAR(M2, nda::array<value_t, 3>{{{0, 12}, {24, 36}}, {{48, 60}, {72, 84}}});
+  nda::tensor::add(0.0, M1, "ijk", 3.0, M2, "ijk");
+  EXPECT_ARRAY_NEAR(M2, nda::array<value_t, 3>{{{0, 12}, {24, 36}}, {{48, 60}, {72, 84}}});
 
-    nda::tensor::add(2.0, M1, "ijk", 0.0, M2, "ijk");
-    EXPECT_ARRAY_NEAR(M2, nda::array<value_t, 3>{{{0, 2}, {4, 6}}, {{8, 10}, {12, 14}}});
+  nda::tensor::add(2.0, M1, "ijk", 0.0, M2, "ijk");
+  EXPECT_ARRAY_NEAR(M2, nda::array<value_t, 3>{{{0, 2}, {4, 6}}, {{8, 10}, {12, 14}}});
 
-    // out of place transposition through add
-    nda::tensor::add(1.0, M1, "kij", 0.0, M2, "ijk");
-    EXPECT_ARRAY_NEAR(M2, nda::array<value_t, 3>{{{0, 4}, {1, 5}}, {{2, 6}, {3, 7}}});
-  }
+  // out of place transposition through add
+  nda::tensor::add(1.0, M1, "kij", 0.0, M2, "ijk");
+  EXPECT_ARRAY_NEAR(M2, nda::array<value_t, 3>{{{0, 4}, {1, 5}}, {{2, 6}, {3, 7}}});
 }
 
 TEST(TENSOR, add) { test_add<double, C_layout>(); }     //NOLINT
 TEST(TENSOR, addF) { test_add<double, F_layout>(); }    //NOLINT
 TEST(TENSOR, zadd) { test_add<dcomplex, C_layout>(); }  //NOLINT
 TEST(TENSOR, zaddF) { test_add<dcomplex, F_layout>(); } //NOLINT
+
+template <typename value_t, typename Layout>
+void test_set() {
+  nda::array<value_t, 3, Layout> M1{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
+  nda::tensor::set(2, M1);
+  EXPECT_ARRAY_NEAR(M1, nda::array<value_t, 3>{{{2, 2}, {2, 2}}, {{2, 2}, {2, 2}}});
+}
+
+TEST(TENSOR, set) { test_set<double, C_layout>(); }     //NOLINT
+TEST(TENSOR, setF) { test_set<double, F_layout>(); }    //NOLINT
+TEST(TENSOR, zset) { test_set<dcomplex, C_layout>(); }  //NOLINT
+TEST(TENSOR, zsetF) { test_set<dcomplex, F_layout>(); } //NOLINT
+
+template <typename value_t, typename Layout>
+void test_scale() {
+  nda::array<value_t, 3, Layout> M1{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
+  nda::tensor::scale(2, M1);
+  EXPECT_ARRAY_NEAR(M1, nda::array<value_t, 3>{{{0, 2}, {4, 6}}, {{8, 10}, {12, 14}}});
+}
+
+TEST(TENSOR, scale) { test_scale<double, C_layout>(); }     //NOLINT
+TEST(TENSOR, scaleF) { test_scale<double, F_layout>(); }    //NOLINT
+TEST(TENSOR, zscale) { test_scale<dcomplex, C_layout>(); }  //NOLINT
+TEST(TENSOR, zscaleF) { test_scale<dcomplex, F_layout>(); } //NOLINT
+
+template <typename value_t, typename Layout>
+void test_dot() {
+  nda::array<value_t, 3, Layout> M1{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
+  EXPECT_NEAR(std::abs(nda::tensor::dot(M1, "ijk", M1, "ijk")), double{140}, 1.e-12);
+  EXPECT_NEAR(std::abs(nda::tensor::dot(M1, "ijk", M1, "jik")), double{132}, 1.e-12);
+  EXPECT_NEAR(std::abs(nda::tensor::dot(M1, "ikj", M1, "kji")), double{126}, 1.e-12);
+}
+
+TEST(TENSOR, dot) { test_dot<double, C_layout>(); }     //NOLINT
+TEST(TENSOR, dotF) { test_dot<double, F_layout>(); }    //NOLINT
+TEST(TENSOR, dotz) { test_dot<dcomplex, C_layout>(); }  //NOLINT
+TEST(TENSOR, zdotF) { test_dot<dcomplex, F_layout>(); } //NOLINT
+
+template <typename value_t, typename Layout>
+void test_reduce() {
+  nda::array<value_t, 3, Layout> M1{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
+  EXPECT_NEAR(std::abs(nda::tensor::reduce(M1, nda::tensor::REDUCE_SUM)), double{28}, 1.e-12);
+  EXPECT_NEAR(std::abs(nda::tensor::reduce(M1, nda::tensor::REDUCE_MAX)), double{7}, 1.e-12);
+  EXPECT_NEAR(std::abs(nda::tensor::reduce(M1, nda::tensor::REDUCE_MIN)), double{0}, 1.e-12);
+}
+
+TEST(TENSOR, reduce) { test_reduce<double, C_layout>(); }     //NOLINT
+TEST(TENSOR, reduceF) { test_reduce<double, F_layout>(); }    //NOLINT
+TEST(TENSOR, reducez) { test_reduce<dcomplex, C_layout>(); }  //NOLINT
+TEST(TENSOR, zreduceF) { test_reduce<dcomplex, F_layout>(); } //NOLINT

@@ -24,7 +24,22 @@
 
 namespace nda::tensor::nda_tblis {
 
+// make this constexpr??? 
+template<uint8_t N>
+std::string default_index()
+{
+  std::string indx{size_t(N)};
+  for(uint8_t i=0; i<N; i++) indx[i] = static_cast<char>(i);  
+  return indx;
+}
+
 // Following design choices of correaa@boost::multi 
+template<class T> auto init_scalar = std::enable_if_t<sizeof(T*)==0>{};
+template<> auto init_scalar<float               > = ::tblis::tblis_init_scalar_s;
+template<> auto init_scalar<double              > = ::tblis::tblis_init_scalar_d;
+template<> auto init_scalar<std::complex<float >> = ::tblis::tblis_init_scalar_c;
+template<> auto init_scalar<std::complex<double>> = ::tblis::tblis_init_scalar_z;
+
 template<class T> auto init_tensor = std::enable_if_t<sizeof(T*)==0>{};
 template<> auto init_tensor<float               > = ::tblis::tblis_init_tensor_s;
 template<> auto init_tensor<double              > = ::tblis::tblis_init_tensor_d;
@@ -37,9 +52,20 @@ template<> auto init_tensor_scaled<double              > = ::tblis::tblis_init_t
 template<> auto init_tensor_scaled<std::complex<float >> = ::tblis::tblis_init_tensor_scaled_c;
 template<> auto init_tensor_scaled<std::complex<double>> = ::tblis::tblis_init_tensor_scaled_z;
 
+template<class ValueType>
+struct scalar : ::tblis::tblis_scalar {
+  using value_type = ValueType;
+  scalar() { init_scalar<std::decay_t<ValueType>>(this, 0); }
+  scalar(ValueType v) { init_scalar<std::decay_t<ValueType>>(this, v); }
+  scalar(scalar const&) = delete;
+  scalar(scalar&& other) { init_scalar<std::decay_t<ValueType>>(this, ValueType(other.value())); }
+  ValueType value() const{return ::tblis::tblis_scalar::get<ValueType>();}
+};
+
 template<class ValueType, size_t Rank>
 struct tensor : ::tblis::tblis_tensor {
 
+  using value_type = ValueType;
   static constexpr int rank = Rank;
 
   // since tblis types might not be consistent with nda
@@ -70,7 +96,7 @@ struct tensor : ::tblis::tblis_tensor {
 				         strides_.data());
   }
   ValueType* data() const{return static_cast<ValueType*>(::tblis::tblis_tensor::data);}
-  ValueType scalar() const{return static_cast<ValueType>(::tblis::tblis_tensor::scalar);}
+//  ValueType scalar() const{return ::tblis::tblis_tensor::scalar.get<ValueType>();}
 };
 
 } // namespace nda::tensor::nda_tblis
