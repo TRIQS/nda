@@ -27,7 +27,7 @@
 #endif
 
 #if defined(NDA_HAVE_CUTENSOR)
-#include "interface/cutensor_interface.h"
+#include "interface/cutensor_interface.hpp"
 #endif
 
 namespace nda::tensor {
@@ -37,7 +37,7 @@ namespace nda::tensor {
    */
   template <MemoryArray A>
   requires(is_blas_lapack_v<get_value_t<A>>) 
-  get_value_t<A> reduce(A &&a, REDUCE_OP op = REDUCE_SUM) {
+  get_value_t<A> reduce(A &&a, op::TENSOR_OP oper = op::SUM) {
 
     using value_t = get_value_t<A>;
     constexpr int rank = get_rank<A>;
@@ -49,11 +49,11 @@ namespace nda::tensor {
       nda_tblis::scalar<value_t> res(0);
       std::array<::tblis::len_type, rank> idx; 
       // MAM: do this in a cleaner way!
-      if( op == REDUCE_SUM ) { 
+      if( oper == op::SUM ) { 
         ::tblis::tblis_tensor_reduce(NULL,NULL,::tblis::REDUCE_SUM,&a_t,indx.data(),&res,idx.data());
-      } else if( op == REDUCE_MAX ) {
+      } else if( oper == op::MAX ) {
         ::tblis::tblis_tensor_reduce(NULL,NULL,::tblis::REDUCE_MAX,&a_t,indx.data(),&res,idx.data());
-      } else if( op == REDUCE_MIN ) {
+      } else if( oper == op::MIN ) {
         ::tblis::tblis_tensor_reduce(NULL,NULL,::tblis::REDUCE_MIN,&a_t,indx.data(),&res,idx.data());
       } else {
         NDA_RUNTIME_ERROR <<"tensor::reduce: Unknown reduction operation."; 

@@ -27,7 +27,7 @@
 #endif
 
 #if defined(NDA_HAVE_CUTENSOR)
-#include "interface/cutensor_interface.h"
+#include "interface/cutensor_interface.hpp"
 #endif
 
 namespace nda::tensor {
@@ -85,8 +85,10 @@ namespace nda::tensor {
 #endif
     } else { // on device
 #if defined(NDA_HAVE_CUTENSOR)
-//      cutensor::contract();
-      static_assert(always_false<bool>," contract on device cuTensor!!!. ");
+      cutensor::cutensor_desc<value_t,get_rank<A>> a_t(a,op::ID);
+      cutensor::cutensor_desc<value_t,get_rank<B>> b_t(b,op::ID);
+      cutensor::cutensor_desc<value_t,get_rank<C>> c_t(c,op::ID);
+      cutensor::contract(alpha,a_t,a.data(),indxX,b_t,b.data(),indxY,beta,c_t,c.data(),indxC);
 #else
       static_assert(always_false<bool>," contract on device requires gpu tensor contraction backend. ");
 #endif

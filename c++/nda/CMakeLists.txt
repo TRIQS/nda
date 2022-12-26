@@ -1,6 +1,6 @@
 file(GLOB_RECURSE sources *.cpp)
 if(NOT CudaSupport)
-  list(FILTER sources EXCLUDE REGEX "(cublas_interface|cusolver_interface)")
+  list(FILTER sources EXCLUDE REGEX "(cublas_interface|cusolver_interface|cutensor_interface)")
 endif()
 add_library(${PROJECT_NAME}_c ${sources})
 add_library(${PROJECT_NAME}::${PROJECT_NAME}_c ALIAS ${PROJECT_NAME}_c)
@@ -69,7 +69,6 @@ install(TARGETS blas_lapack EXPORT ${PROJECT_NAME}-targets)
 
 # ========= CudaRT, CuBLAS, CuSolver & CuTensor ==========
 
-<<<<<<< HEAD
 if(CudaSupport)
   message(STATUS "-------- CUDAToolkit detection -------------")
   find_package(CUDAToolkit REQUIRED)

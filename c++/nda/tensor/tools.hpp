@@ -16,14 +16,28 @@
 
 #pragma once
 
-/// Tensor operations Interface
-namespace nda::tensor {}
+#if defined(NDA_HAVE_CUDA)
+#include <cuda_runtime.h>
+#endif
 
-#include "blas/tools.hpp"
-#include "tensor/tools.hpp"
-#include "tensor/contract.hpp"
-#include "tensor/add.hpp"
-#include "tensor/set.hpp"
-#include "tensor/scale.hpp"
-#include "tensor/dot.hpp"
-#include "tensor/reduce.hpp"
+/// Tensor operations Interface
+namespace nda::tensor 
+{
+  enum backend {__TBLIS__, __CUTENSOR__,__NONE__};
+
+  namespace op {
+    enum TENSOR_OP {ID,CONJ,SQRT,ABS,NEG,SUM,MUL,MAX,MIN};
+  }
+
+  // can I make this constexpr??? 
+  template<uint8_t N>
+  std::string default_index()
+  {
+    std::string indx{size_t(N)};
+    for(uint8_t i=0; i<N; i++) indx[i] = static_cast<char>(i);
+    return indx;
+  }
+
+  // contraction_plan_t = std::variant<dummy_contract_t,cutensor::contract_plan_t>;
+}
+

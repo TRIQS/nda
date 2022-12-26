@@ -28,16 +28,17 @@ using nda::F_layout;
 template <typename value_t, typename Layout>
 void test_contract() {
 
+  // MAM: add tests passing matrix view's
   using other_layout = std::conditional_t<std::is_same_v<Layout, C_layout>, F_layout, C_layout>;
   { // ik,kj->ij
     matrix<value_t, Layout> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3{{1, 0}, {0, 1}};
-    nda::tensor::contract(1.0, M1, "ik", M2, "kj", 1.0, M3, "ij");
+    nda::cumatrix<value_t, Layout> M1_d{M1}, M2_d{M2}, M3_d{M3};
 
-    EXPECT_ARRAY_NEAR(M1, nda::matrix<value_t>{{0, 1}, {1, 2}});
-    EXPECT_ARRAY_NEAR(M2, nda::matrix<value_t>{{1, 1}, {1, 1}});
+    nda::tensor::contract(1.0, M1_d, "ik", M2_d, "kj", 1.0, M3_d, "ij");
+
+    M3 = M3_d;
     EXPECT_ARRAY_NEAR(M3, nda::matrix<value_t>{{2, 1}, {3, 4}});
   }
-
   {
     nda::array<value_t, 3, Layout> M1{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
     nda::array<value_t, 3, Layout> M2{{{0, 2}, {4, 6}}, {{8, 10}, {12, 14}}};
@@ -47,25 +48,33 @@ void test_contract() {
     M3() = 0;
     M4() = 0;
     M5() = 0;
+    nda::cuarray<value_t, 3, Layout> M1_d{M1}, M2_d{M2}, M3_d{M3};
+    nda::cuarray<value_t, 2, Layout> M4_d{M4};
+    nda::cuarray<value_t, 1, Layout> M5_d{M5};
 
     // ijk,ikl->ijl
-    nda::tensor::contract(1.0, M1, "ijk", M2, "ikl", 0.0, M3, "ijl");
+    nda::tensor::contract(1.0, M1_d, "ijk", M2_d, "ikl", 0.0, M3_d, "ijl");
+    M3 = M3_d;
     EXPECT_ARRAY_NEAR(M3, nda::array<value_t, 3>{{{4, 6}, {12, 22}}, {{92, 110}, {132, 158}}});
 
     // ikj,kli->lij
-    nda::tensor::contract(1.0, M1, "ikj", M2, "kli", 0.0, M3, "lij");
+    nda::tensor::contract(1.0, M1_d, "ikj", M2_d, "kli", 0.0, M3_d, "lij");
+    M3 = M3_d;
     EXPECT_ARRAY_NEAR(M3, nda::array<value_t, 3>{{{16, 24}, {68, 80}}, {{24, 40}, {108, 128}}});
 
     // ijk,klj->li
-    nda::tensor::contract(1.0, M1, "ijk", M2, "klj", 0.0, M4, "li");
+    nda::tensor::contract(1.0, M1_d, "ijk", M2_d, "klj", 0.0, M4_d, "li");
+    M4 = M4_d;
     EXPECT_ARRAY_NEAR(M4, nda::array<value_t, 2>{{42, 122}, {66, 210}});
 
     // ijk,kij->i
-    nda::tensor::contract(1.0, M1, "ijk", M2, "kij", 0.0, M5, "i");
+    nda::tensor::contract(1.0, M1_d, "ijk", M2_d, "kij", 0.0, M5_d, "i");
+    M5 = M5_d;
     EXPECT_ARRAY_NEAR(M5, nda::array<value_t, 1>{42, 210});
 
     // ik,jk->ij
-    nda::tensor::contract(1.0, M1(_, 0, _), "ik", M2(0, _, _), "jk", 0.0, M3(0, _, _), "ij");
+    nda::tensor::contract(1.0, M1_d(_, 0, _), "ik", M2_d(0, _, _), "jk", 0.0, M3_d(0, _, _), "ij");
+    M3 = M3_d;
     EXPECT_ARRAY_NEAR(M3(0, _, _), nda::array<value_t, 2>{{2, 6}, {10, 46}});
   }
 
@@ -73,10 +82,11 @@ void test_contract() {
   { // ik,kj->ij
     matrix<value_t, Layout> M1{{0, 1}, {1, 2}}, M3{{1, 0}, {0, 1}};
     matrix<value_t, other_layout> M2{{1, 1}, {1, 1}};
-    nda::tensor::contract(1.0, M1, "ik", M2, "kj", 1.0, M3, "ij");
+    nda::cumatrix<value_t, Layout> M1_d{M1}, M3_d{M3};
+    nda::cumatrix<value_t, other_layout> M2_d{M2};
+    nda::tensor::contract(1.0, M1_d, "ik", M2_d, "kj", 1.0, M3_d, "ij");
 
-    EXPECT_ARRAY_NEAR(M1, nda::matrix<value_t>{{0, 1}, {1, 2}});
-    EXPECT_ARRAY_NEAR(M2, nda::matrix<value_t>{{1, 1}, {1, 1}});
+    M3 = M3_d;
     EXPECT_ARRAY_NEAR(M3, nda::matrix<value_t>{{2, 1}, {3, 4}});
   }
 
@@ -89,21 +99,29 @@ void test_contract() {
     M3() = 0;
     M4() = 0;
     M5() = 0;
+    nda::cuarray<value_t, 3, Layout> M1_d{M1}, M3_d{M3};
+    nda::cuarray<value_t, 3, other_layout> M2_d{M2};
+    nda::cuarray<value_t, 2, Layout> M4_d{M4};
+    nda::cuarray<value_t, 1, Layout> M5_d{M5};
 
     // ijk,ikl->ijl
-    nda::tensor::contract(1.0, M1, "ijk", M2, "ikl", 0.0, M3, "ijl");
+    nda::tensor::contract(1.0, M1_d, "ijk", M2_d, "ikl", 0.0, M3_d, "ijl");
+    M3 = M3_d;
     EXPECT_ARRAY_NEAR(M3, nda::array<value_t, 3>{{{4, 6}, {12, 22}}, {{92, 110}, {132, 158}}});
 
     // ikj,kli->lij
-    nda::tensor::contract(1.0, M1, "ikj", M2, "kli", 0.0, M3, "lij");
+    nda::tensor::contract(1.0, M1_d, "ikj", M2_d, "kli", 0.0, M3_d, "lij");
+    M3 = M3_d;
     EXPECT_ARRAY_NEAR(M3, nda::array<value_t, 3>{{{16, 24}, {68, 80}}, {{24, 40}, {108, 128}}});
 
     // ijk,klj->li
-    nda::tensor::contract(1.0, M1, "ijk", M2, "klj", 0.0, M4, "li");
+    nda::tensor::contract(1.0, M1_d, "ijk", M2_d, "klj", 0.0, M4_d, "li");
+    M4 = M4_d;
     EXPECT_ARRAY_NEAR(M4, nda::array<value_t, 2>{{42, 122}, {66, 210}});
 
     // ijk,kij->i
-    nda::tensor::contract(1.0, M1, "ijk", M2, "kij", 0.0, M5, "i");
+    nda::tensor::contract(1.0, M1_d, "ijk", M2_d, "kij", 0.0, M5_d, "i");
+    M5 = M5_d;
     EXPECT_ARRAY_NEAR(M5, nda::array<value_t, 1>{42, 210});
   }
 }
@@ -113,10 +131,11 @@ TEST(TENSOR, contractF) { test_contract<double, F_layout>(); }    //NOLINT
 TEST(TENSOR, zcontract) { test_contract<dcomplex, C_layout>(); }  //NOLINT
 TEST(TENSOR, zcontractF) { test_contract<dcomplex, F_layout>(); } //NOLINT
 
+/*
 template <typename value_t, typename Layout>
 void test_outer_product_contract() {
 
-  using other_layout = std::conditional_t<std::is_same_v<Layout, C_layout>, F_layout, C_layout>;
+  using other_layout = std::conditional_t<std::is_same_v<Layout,C_layout>,F_layout,C_layout>;
   { // i,j->ij
     matrix<value_t, Layout> M3{{1, 0}, {0, 1}};
     nda::array<value_t, 1, Layout> M1{{value_t{1}, value_t{2}}}, M2{{value_t{3}, value_t{4}}};
@@ -149,30 +168,31 @@ void test_outer_product_contract() {
 
     EXPECT_ARRAY_NEAR(M3, nda::matrix<value_t>{{3, 4}, {9, 13}});
   }
+
 }
 
-TEST(TENSOR, outer_product_contract) { test_outer_product_contract<double, C_layout>(); }                 //NOLINT
-TEST(TENSOR, outer_product_contractF) { test_outer_product_contract<double, F_layout>(); }                //NOLINT
-TEST(TENSOR, zouter_product_contract) { test_outer_product_contract<std::complex<double>, C_layout>(); }  //NOLINT
-TEST(TENSOR, zouter_product_contractF) { test_outer_product_contract<std::complex<double>, F_layout>(); } //NOLINT
+TEST(TENSOR, outer_product_contract) { test_outer_product_contract<double, C_layout>(); }     //NOLINT
+TEST(TENSOR, outer_product_contractF) { test_outer_product_contract<double, F_layout>(); }     //NOLINT
+TEST(TENSOR, zouter_product_contract) { test_outer_product_contract<std::complex<double>, C_layout>(); }     //NOLINT
+TEST(TENSOR, zouter_product_contractF) { test_outer_product_contract<std::complex<double>, F_layout>(); }     //NOLINT
 
 template <typename value_t, typename Layout>
 void test_add() {
-  nda::array<value_t, 3, Layout> M1{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
-  nda::array<value_t, 3, Layout> M2{{{0, 2}, {4, 6}}, {{8, 10}, {12, 14}}};
+  nda::array<value_t, 3, Layout> M1{{{0,1},{2,3}},{{4,5},{6,7}}};
+  nda::array<value_t, 3, Layout> M2{{{0,2},{4,6}},{{8,10},{12,14}}};
 
   nda::tensor::add(2.0, M1, "ijk", 1.0, M2, "ijk");
-  EXPECT_ARRAY_NEAR(M2, nda::array<value_t, 3>{{{0, 4}, {8, 12}}, {{16, 20}, {24, 28}}});
+  EXPECT_ARRAY_NEAR(M2, nda::array<value_t, 3>{{{0,4},{8,12}},{{16,20},{24,28}}});
 
   nda::tensor::add(0.0, M1, "ijk", 3.0, M2, "ijk");
-  EXPECT_ARRAY_NEAR(M2, nda::array<value_t, 3>{{{0, 12}, {24, 36}}, {{48, 60}, {72, 84}}});
+  EXPECT_ARRAY_NEAR(M2, nda::array<value_t, 3>{{{0,12},{24,36}},{{48,60},{72,84}}});
 
   nda::tensor::add(2.0, M1, "ijk", 0.0, M2, "ijk");
-  EXPECT_ARRAY_NEAR(M2, nda::array<value_t, 3>{{{0, 2}, {4, 6}}, {{8, 10}, {12, 14}}});
+  EXPECT_ARRAY_NEAR(M2, nda::array<value_t, 3>{{{0,2},{4,6}},{{8,10},{12,14}}});
 
   // out of place transposition through add
   nda::tensor::add(1.0, M1, "kij", 0.0, M2, "ijk");
-  EXPECT_ARRAY_NEAR(M2, nda::array<value_t, 3>{{{0, 4}, {1, 5}}, {{2, 6}, {3, 7}}});
+  EXPECT_ARRAY_NEAR(M2, nda::array<value_t, 3>{{{0,4},{1,5}},{{2,6},{3,7}}});
 }
 
 TEST(TENSOR, add) { test_add<double, C_layout>(); }     //NOLINT
@@ -182,9 +202,9 @@ TEST(TENSOR, zaddF) { test_add<dcomplex, F_layout>(); } //NOLINT
 
 template <typename value_t, typename Layout>
 void test_set() {
-  nda::array<value_t, 3, Layout> M1{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
+  nda::array<value_t, 3, Layout> M1{{{0,1},{2,3}},{{4,5},{6,7}}};
   nda::tensor::set(2, M1);
-  EXPECT_ARRAY_NEAR(M1, nda::array<value_t, 3>{{{2, 2}, {2, 2}}, {{2, 2}, {2, 2}}});
+  EXPECT_ARRAY_NEAR(M1, nda::array<value_t, 3>{{{2,2},{2,2}},{{2,2},{2,2}}});
 }
 
 TEST(TENSOR, set) { test_set<double, C_layout>(); }     //NOLINT
@@ -194,9 +214,9 @@ TEST(TENSOR, zsetF) { test_set<dcomplex, F_layout>(); } //NOLINT
 
 template <typename value_t, typename Layout>
 void test_scale() {
-  nda::array<value_t, 3, Layout> M1{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
+  nda::array<value_t, 3, Layout> M1{{{0,1},{2,3}},{{4,5},{6,7}}};
   nda::tensor::scale(2, M1);
-  EXPECT_ARRAY_NEAR(M1, nda::array<value_t, 3>{{{0, 2}, {4, 6}}, {{8, 10}, {12, 14}}});
+  EXPECT_ARRAY_NEAR(M1, nda::array<value_t, 3>{{{0,2},{4,6}},{{8,10},{12,14}}});
 }
 
 TEST(TENSOR, scale) { test_scale<double, C_layout>(); }     //NOLINT
@@ -206,10 +226,10 @@ TEST(TENSOR, zscaleF) { test_scale<dcomplex, F_layout>(); } //NOLINT
 
 template <typename value_t, typename Layout>
 void test_dot() {
-  nda::array<value_t, 3, Layout> M1{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
-  EXPECT_NEAR(std::abs(nda::tensor::dot(M1, "ijk", M1, "ijk")), double{140}, 1.e-12);
-  EXPECT_NEAR(std::abs(nda::tensor::dot(M1, "ijk", M1, "jik")), double{132}, 1.e-12);
-  EXPECT_NEAR(std::abs(nda::tensor::dot(M1, "ikj", M1, "kji")), double{126}, 1.e-12);
+  nda::array<value_t, 3, Layout> M1{{{0,1},{2,3}},{{4,5},{6,7}}};
+  EXPECT_NEAR(std::abs(nda::tensor::dot(M1,"ijk",M1,"ijk")), double{140}, 1.e-12);
+  EXPECT_NEAR(std::abs(nda::tensor::dot(M1,"ijk",M1,"jik")), double{132}, 1.e-12);
+  EXPECT_NEAR(std::abs(nda::tensor::dot(M1,"ikj",M1,"kji")), double{126}, 1.e-12);
 }
 
 TEST(TENSOR, dot) { test_dot<double, C_layout>(); }     //NOLINT
@@ -219,13 +239,14 @@ TEST(TENSOR, zdotF) { test_dot<dcomplex, F_layout>(); } //NOLINT
 
 template <typename value_t, typename Layout>
 void test_reduce() {
-  nda::array<value_t, 3, Layout> M1{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
-  EXPECT_NEAR(std::abs(nda::tensor::reduce(M1, nda::tensor::op::SUM)), double{28}, 1.e-12);
-  EXPECT_NEAR(std::abs(nda::tensor::reduce(M1, nda::tensor::op::MAX)), double{7}, 1.e-12);
-  EXPECT_NEAR(std::abs(nda::tensor::reduce(M1, nda::tensor::op::MIN)), double{0}, 1.e-12);
+  nda::array<value_t, 3, Layout> M1{{{0,1},{2,3}},{{4,5},{6,7}}};
+  EXPECT_NEAR(std::abs(nda::tensor::reduce(M1,nda::tensor::op::SUM)), double{28}, 1.e-12);
+  EXPECT_NEAR(std::abs(nda::tensor::reduce(M1,nda::tensor::op::MAX)), double{7}, 1.e-12);
+  EXPECT_NEAR(std::abs(nda::tensor::reduce(M1,nda::tensor::op::MIN)), double{0}, 1.e-12);
 }
 
 TEST(TENSOR, reduce) { test_reduce<double, C_layout>(); }     //NOLINT
 TEST(TENSOR, reduceF) { test_reduce<double, F_layout>(); }    //NOLINT
 TEST(TENSOR, reducez) { test_reduce<dcomplex, C_layout>(); }  //NOLINT
-TEST(TENSOR, zreduceF) { test_reduce<dcomplex, F_layout>(); } //NOLINT
+TEST(TENSOR, zreduceF) { test_reduce<dcomplex, F_layout>(); } //NOLINT 
+*/
