@@ -53,7 +53,7 @@ struct scalar : ::tblis::tblis_scalar {
   ValueType value() const{return ::tblis::tblis_scalar::get<ValueType>();}
 };
 
-template<class ValueType, size_t Rank>
+template<class ValueType, int Rank>
 struct tensor : ::tblis::tblis_tensor {
 
   using value_type = ValueType;
