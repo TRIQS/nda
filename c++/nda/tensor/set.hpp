@@ -17,10 +17,13 @@
 #pragma once
 #include <complex>
 #include <string_view>
-#include "../exceptions.hpp"
-#include "../traits.hpp"
-#include "../declarations.hpp"
-#include "../mem/address_space.hpp"
+#include "nda/exceptions.hpp"
+#include "nda/traits.hpp"
+#include "nda/declarations.hpp"
+#include "nda/mem/address_space.hpp"
+#include "nda/mem/device.hpp"
+#include "nda/mem/malloc.hpp"
+#include "nda/mem/memcpy.hpp"
 
 #if defined(NDA_HAVE_TBLIS)
 #include "interface/tblis_interface.hpp"
@@ -39,12 +42,23 @@ namespace nda::tensor {
   requires(is_blas_lapack_v<get_value_t<A>>) 
   void set(get_value_t<A> alpha, A &&a) {
 
+    using value_t = get_value_t<A>;
+    constexpr int rank = get_rank<A>;
+
     if constexpr (mem::on_host<A>) {
       a() = alpha;  // is there a point in using tblis? 
     } else { // on device
 #if defined(NDA_HAVE_CUTENSOR)
-//      cutensor::termbyterm();
-      static_assert(always_false<bool>," set on device cuTensor!!!. ");
+      std::string indx = default_index<uint8_t(rank)>();
+      cutensor::cutensor_desc<value_t,rank> a_t(a,op::ID);
+      value_t* z;
+      mem::device_check( cudaMalloc((void**) &z, sizeof(value_t)), "CudaMalloc" );
+      mem::device_check( cudaMemcpy((void*) z, (void*) &alpha, sizeof(value_t), cudaMemcpyDefault), "CudaMemcpy" );
+      cutensor::cutensor_desc<value_t,0> z_t(z,op::ID);
+      cutensor::elementwise_binary(value_t{1},z_t,z,"",
+                                   value_t{0},a_t,a.data(),indx,
+                                   a.data(),op::SUM);
+      mem::device_check( cudaFree((void*)z), "cudaFree" );
 #else
       static_assert(always_false<bool>," set on device requires gpu tensor operations backend. ");
 #endif

@@ -14,10 +14,12 @@
 //
 // Authors: Olivier Parcollet, Nils Wentzell
 
+#include <algorithm>
 #include <type_traits>
 #include "test_common.hpp"
 
 #include <nda/tensor.hpp>
+#include <nda/traits.hpp>
 //#include <nda/clef/literals.hpp>
 
 using nda::F_layout;
@@ -197,9 +199,19 @@ TEST(TENSOR, zaddF) { test_add<dcomplex, F_layout>(); } //NOLINT
 
 template <typename value_t, typename Layout>
 void test_set() {
-  nda::array<value_t, 3, Layout> M1{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
-  nda::tensor::set(2, M1);
-  EXPECT_ARRAY_NEAR(M1, nda::array<value_t, 3>{{{2, 2}, {2, 2}}, {{2, 2}, {2, 2}}});
+  {
+    nda::array<value_t, 3, Layout> M1{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
+    nda::tensor::set(2, M1);
+    EXPECT_ARRAY_NEAR(M1, nda::array<value_t, 3>{{{2, 2}, {2, 2}}, {{2, 2}, {2, 2}}});
+  }
+  { // some complicated case...
+    using rg = nda::range;
+    nda::array<value_t, 5, Layout> M1(4, 5, 4, 4, 7);
+    M1() = 0;
+    nda::tensor::set(2, M1(rg(0, 4, 2), rg(0, 4, 2), _, rg(0, 3), rg(0, 5, 3)));
+    EXPECT_EQ(192, std::accumulate(M1.data(), M1.data() + M1.size(), int(0), [](auto const &a, auto &v) { return a + int(std::abs(v)); }));
+    EXPECT_EQ(96, std::count_if(M1.data(), M1.data() + M1.size(), [](auto &v) { return std::abs(v) > 1.0e-6; }));
+  }
 }
 
 TEST(TENSOR, set) { test_set<double, C_layout>(); }     //NOLINT
@@ -236,8 +248,10 @@ template <typename value_t, typename Layout>
 void test_reduce() {
   nda::array<value_t, 3, Layout> M1{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
   EXPECT_NEAR(std::abs(nda::tensor::reduce(M1, nda::tensor::op::SUM)), double{28}, 1.e-12);
-  EXPECT_NEAR(std::abs(nda::tensor::reduce(M1, nda::tensor::op::MAX)), double{7}, 1.e-12);
-  EXPECT_NEAR(std::abs(nda::tensor::reduce(M1, nda::tensor::op::MIN)), double{0}, 1.e-12);
+  if constexpr (not nda::is_complex_v<value_t>) {
+    EXPECT_NEAR(std::abs(nda::tensor::reduce(M1, nda::tensor::op::MAX)), double{7}, 1.e-12);
+    EXPECT_NEAR(std::abs(nda::tensor::reduce(M1, nda::tensor::op::MIN)), double{0}, 1.e-12);
+  }
 }
 
 TEST(TENSOR, reduce) { test_reduce<double, C_layout>(); }     //NOLINT

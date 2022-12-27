@@ -62,6 +62,7 @@ namespace nda::tensor::cutensor {
     return h.get();
   }
 
-  static bool synchronize = true;
+  // always synchronize for now
+  //static bool synchronize = true;
 
 } // namespace nda::tensor::cutensor

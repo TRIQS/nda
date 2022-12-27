@@ -27,6 +27,10 @@
 #include "mem/memcpy.hpp"
 #include "mem/memset.hpp"
 #include "mem/fill.hpp"
+// for tensor::set
+#if defined(NDA_HAVE_CUTENSOR)
+#include "tensor/set.hpp"
+#endif
 
 // The std::swap is WRONG for a view because of the copy/move semantics of view.
 // Use swap instead (the correct one, found by ADL).

@@ -17,10 +17,10 @@
 #pragma once
 #include <complex>
 #include <string_view>
-#include "../exceptions.hpp"
-#include "../traits.hpp"
-#include "../declarations.hpp"
-#include "../mem/address_space.hpp"
+#include "nda/exceptions.hpp"
+#include "nda/traits.hpp"
+#include "nda/declarations.hpp"
+#include "nda/mem/address_space.hpp"
 
 #if defined(NDA_HAVE_TBLIS)
 #include "interface/tblis_interface.hpp"
@@ -142,8 +142,8 @@ namespace nda::tensor {
 #if defined(NDA_HAVE_CUTENSOR)
       cutensor::cutensor_desc<value_t,get_rank<A>> a_t(a,op::ID);
       cutensor::cutensor_desc<value_t,get_rank<B>> b_t(b,op::ID);
-      cutensor::elementwise_binary(alpha,a_t,a.data(),indxX.data(),
-                                   beta ,b_t,b.data(),indxY.data(),
+      cutensor::elementwise_binary(alpha,a_t,a.data(),indxX,
+                                   beta ,b_t,b.data(),indxY,
                                    c.data(),op::SUM);
 #else
       static_assert(always_false<bool>," add on device requires gpu tensor operations backend. ");

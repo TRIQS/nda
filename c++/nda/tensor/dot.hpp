@@ -17,10 +17,14 @@
 #pragma once
 #include <complex>
 #include <string_view>
-#include "../exceptions.hpp"
-#include "../traits.hpp"
-#include "../declarations.hpp"
-#include "../mem/address_space.hpp"
+#include "nda/exceptions.hpp"
+#include "nda/traits.hpp"
+#include "nda/declarations.hpp"
+#include "nda/mem/address_space.hpp"
+#include "nda/mem/device.hpp"
+#include "nda/mem/memset.hpp"
+#include "nda/mem/malloc.hpp"
+#include "nda/mem/memcpy.hpp"
 
 #if defined(NDA_HAVE_TBLIS)
 #include "interface/tblis_interface.hpp"
@@ -64,8 +68,9 @@ namespace nda::tensor {
     using B = decltype(b);
     static_assert(mem::have_same_addr_space_v<A, B>, "Matrices must have same memory address space");
 
-    if( get_rank<A> != indxX.size() ) NDA_RUNTIME_ERROR <<"tensor::dot: Rank mismatch \n";
-    if( get_rank<B> != indxY.size() ) NDA_RUNTIME_ERROR <<"tensor::dot: Rank mismatch \n";
+    if( get_rank<A> != indxX.size() ) NDA_RUNTIME_ERROR<<"tensor::dot: Rank mismatch in A,indx\n";
+    if( get_rank<B> != indxY.size() ) NDA_RUNTIME_ERROR<<"tensor::dot: Rank mismatch in B,indx\n";
+    if( get_rank<A> != get_rank<B> ) NDA_RUNTIME_ERROR<<"tensor::dot: Rank mismatch in A,B\n";
 
     if constexpr (mem::on_host<A>) {
 #if defined(NDA_HAVE_TBLIS)
@@ -79,8 +84,17 @@ namespace nda::tensor {
 #endif
     } else { // on device
 #if defined(NDA_HAVE_CUTENSOR)
-//      cutensor::termbyterm();
-      static_assert(always_false<bool>," dot on device cuTensor!!!. ");
+      cutensor::cutensor_desc<value_t,get_rank<A>> a_t(a,op::ID);
+      cutensor::cutensor_desc<value_t,get_rank<B>> b_t(b,op::ID);
+      value_t* z;
+      mem::device_check( cudaMalloc((void**) &z, sizeof(value_t)), "CudaMalloc" );
+      mem::device_check( cudaMemset((void*) z, 0, sizeof(value_t)), "cudaMemset" );
+      cutensor::cutensor_desc<value_t,0> z_t(z,op::ID);
+      cutensor::contract(value_t{1},a_t,a.data(),indxX,b_t,b.data(),indxY,value_t{0},z_t,z,"");
+      value_t res;
+      mem::device_check( cudaMemcpy((void*) &res, (void*) z, sizeof(value_t), cudaMemcpyDefault), "CudaMemcpy" );
+      mem::device_check( cudaFree((void*)z), "cudaFree" );
+      return res;
 #else
       static_assert(always_false<bool>," dot on device requires gpu tensor operations backend. ");
 #endif
