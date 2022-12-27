@@ -160,15 +160,30 @@ template <typename value_t, typename Layout>
 void test_add() {
   nda::array<value_t, 3, Layout> M1{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
   nda::array<value_t, 3, Layout> M2{{{0, 2}, {4, 6}}, {{8, 10}, {12, 14}}};
+  nda::array<value_t, 3, Layout> M3(2, 2, 2);
+  M3() = 0;
 
   nda::tensor::add(2.0, M1, "ijk", 1.0, M2, "ijk");
   EXPECT_ARRAY_NEAR(M2, nda::array<value_t, 3>{{{0, 4}, {8, 12}}, {{16, 20}, {24, 28}}});
 
-  nda::tensor::add(0.0, M1, "ijk", 3.0, M2, "ijk");
+  nda::tensor::add(0.0, M1, "ijk", 3.0, M2(_, _, _), "ijk");
   EXPECT_ARRAY_NEAR(M2, nda::array<value_t, 3>{{{0, 12}, {24, 36}}, {{48, 60}, {72, 84}}});
 
   nda::tensor::add(2.0, M1, "ijk", 0.0, M2, "ijk");
   EXPECT_ARRAY_NEAR(M2, nda::array<value_t, 3>{{{0, 2}, {4, 6}}, {{8, 10}, {12, 14}}});
+
+  nda::tensor::add(5.0, M1, "kij", 7.0, M2, "ijk");
+  EXPECT_ARRAY_NEAR(M2, nda::array<value_t, 3>{{{0, 34}, {33, 67}}, {{66, 100}, {99, 133}}});
+
+  nda::tensor::add(2.0, M1, "ijk", 0.0, M2, "ijk"); // to reset to original M2
+  nda::tensor::add(5.0, M1, "ijk", 7.0, M2, "ijk", M3, "ijk");
+  EXPECT_ARRAY_NEAR(M3, nda::array<value_t, 3>{{{0, 19}, {38, 57}}, {{76, 95}, {114, 133}}});
+
+  nda::tensor::add(5.0, M1, "kij", 7.0, M2, "ijk", M3, "ijk");
+  EXPECT_ARRAY_NEAR(M3, nda::array<value_t, 3>{{{0, 34}, {33, 67}}, {{66, 100}, {99, 133}}});
+
+  nda::tensor::add(5.0, M1(_, 0, _), "ji", 7.0, M2(0, _, _), "ij", M3(0, _, _), "ij");
+  EXPECT_ARRAY_NEAR(M3(0, _, _), nda::array<value_t, 2>{{0, 34}, {33, 67}});
 
   // out of place transposition through add
   nda::tensor::add(1.0, M1, "kij", 0.0, M2, "ijk");
