@@ -39,6 +39,11 @@
 #include "./mem/fill.hpp"
 #include "./mem/policies.hpp"
 #include "./traits.hpp"
+#include "layout/slice_static.hpp"
+// for tensor::set
+#if defined(NDA_HAVE_CUTENSOR)
+#include "tensor/set.hpp"
+#endif
 
 #include <itertools/itertools.hpp>
 

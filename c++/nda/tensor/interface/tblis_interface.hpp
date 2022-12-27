@@ -26,22 +26,22 @@ namespace nda::tensor::nda_tblis {
 
 // Following design choices of correaa@boost::multi 
 template<class T> auto init_scalar = std::enable_if_t<sizeof(T*)==0>{};
-template<> auto init_scalar<float               > = ::tblis::tblis_init_scalar_s;
-template<> auto init_scalar<double              > = ::tblis::tblis_init_scalar_d;
-template<> auto init_scalar<std::complex<float >> = ::tblis::tblis_init_scalar_c;
-template<> auto init_scalar<std::complex<double>> = ::tblis::tblis_init_scalar_z;
+template<> auto inline init_scalar<float               > = ::tblis::tblis_init_scalar_s;
+template<> auto inline init_scalar<double              > = ::tblis::tblis_init_scalar_d;
+template<> auto inline init_scalar<std::complex<float >> = ::tblis::tblis_init_scalar_c;
+template<> auto inline init_scalar<std::complex<double>> = ::tblis::tblis_init_scalar_z;
 
 template<class T> auto init_tensor = std::enable_if_t<sizeof(T*)==0>{};
-template<> auto init_tensor<float               > = ::tblis::tblis_init_tensor_s;
-template<> auto init_tensor<double              > = ::tblis::tblis_init_tensor_d;
-template<> auto init_tensor<std::complex<float >> = ::tblis::tblis_init_tensor_c;
-template<> auto init_tensor<std::complex<double>> = ::tblis::tblis_init_tensor_z;
+template<> auto inline init_tensor<float               > = ::tblis::tblis_init_tensor_s;
+template<> auto inline init_tensor<double              > = ::tblis::tblis_init_tensor_d;
+template<> auto inline init_tensor<std::complex<float >> = ::tblis::tblis_init_tensor_c;
+template<> auto inline init_tensor<std::complex<double>> = ::tblis::tblis_init_tensor_z;
 
 template<class T> auto init_tensor_scaled = std::enable_if_t<sizeof(T*)==0>{};
-template<> auto init_tensor_scaled<float               > = ::tblis::tblis_init_tensor_scaled_s;
-template<> auto init_tensor_scaled<double              > = ::tblis::tblis_init_tensor_scaled_d;
-template<> auto init_tensor_scaled<std::complex<float >> = ::tblis::tblis_init_tensor_scaled_c;
-template<> auto init_tensor_scaled<std::complex<double>> = ::tblis::tblis_init_tensor_scaled_z;
+template<> auto inline init_tensor_scaled<float               > = ::tblis::tblis_init_tensor_scaled_s;
+template<> auto inline init_tensor_scaled<double              > = ::tblis::tblis_init_tensor_scaled_d;
+template<> auto inline init_tensor_scaled<std::complex<float >> = ::tblis::tblis_init_tensor_scaled_c;
+template<> auto inline init_tensor_scaled<std::complex<double>> = ::tblis::tblis_init_tensor_scaled_z;
 
 template<class ValueType>
 struct scalar : ::tblis::tblis_scalar {

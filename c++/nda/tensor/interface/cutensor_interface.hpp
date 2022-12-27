@@ -67,16 +67,16 @@ namespace nda::tensor::cutensor {
 
   //cudaDataType_t 
   template<typename T> auto data_type = std::enable_if_t<sizeof(T*)==0>{};
-  template<> auto data_type<float>                = CUDA_R_32F;    
-  template<> auto data_type<double>               = CUDA_R_64F;    
-  template<> auto data_type<std::complex<float>>  = CUDA_C_32F;    
-  template<> auto data_type<std::complex<double>> = CUDA_C_64F;    
+  template<> inline auto data_type<float>                = CUDA_R_32F;    
+  template<> inline auto data_type<double>               = CUDA_R_64F;    
+  template<> inline auto data_type<std::complex<float>>  = CUDA_C_32F;    
+  template<> inline auto data_type<std::complex<double>> = CUDA_C_64F;    
 
   template<typename T> auto compute_type = std::enable_if_t<sizeof(T*)==0>{};
-  template<> auto compute_type<float>                = CUTENSOR_COMPUTE_32F;
-  template<> auto compute_type<double>               = CUTENSOR_COMPUTE_64F;
-  template<> auto compute_type<std::complex<float>>  = CUTENSOR_COMPUTE_32F;
-  template<> auto compute_type<std::complex<double>> = CUTENSOR_COMPUTE_64F;
+  template<> inline auto compute_type<float>                = CUTENSOR_COMPUTE_32F;
+  template<> inline auto compute_type<double>               = CUTENSOR_COMPUTE_64F;
+  template<> inline auto compute_type<std::complex<float>>  = CUTENSOR_COMPUTE_32F;
+  template<> inline auto compute_type<std::complex<double>> = CUTENSOR_COMPUTE_64F;
 
   // define a compute_type that takes 3 types and a bool and returns the appropriate compute type, for the bool set to true it will lead to the "fast" version using e.g. CUTENSOR_COMPUTE_TF32 and CUTENSOR_COMPUTE_32F in case of double precision calculations
 
@@ -91,7 +91,9 @@ namespace nda::tensor::cutensor {
     cutensorTensorDescriptor_t desc_ = {};
 
     cutensor_desc() = delete;
-    cutensor_desc(::nda::MemoryArrayOfRank<Rank> auto const& a, op::TENSOR_OP const oper = op::ID) :
+    template<::nda::MemoryArrayOfRank<Rank> Arr>
+    requires( Rank > 0 )
+    cutensor_desc(Arr const& a, op::TENSOR_OP const oper = op::ID) :
       lens_(a.shape()),
       strides_(a.strides())
     {
@@ -99,6 +101,15 @@ namespace nda::tensor::cutensor {
   		     lens_.data(), strides_.data(), data_type<ValueType>, cutensor_op(oper)); 
       CUTENSOR_CHECK(cutensorGetAlignmentRequirement, get_handle_ptr(), (const void *)a.data(),
 		     &desc_, &alignment_); 
+    }
+    cutensor_desc(ValueType *a, op::TENSOR_OP const oper = op::ID) :
+      lens_{},strides_{}
+    {
+      static_assert( Rank==0, "Rank mismatch.");
+      CUTENSOR_CHECK(cutensorInitTensorDescriptor, get_handle_ptr(), &desc_, uint32_t(Rank),
+                     NULL, NULL, data_type<ValueType>, cutensor_op(oper));
+      CUTENSOR_CHECK(cutensorGetAlignmentRequirement, get_handle_ptr(), (void *)a,
+                     &desc_, &alignment_);
     }
     ~cutensor_desc() = default;
 
@@ -144,6 +155,7 @@ namespace nda::tensor::cutensor {
   };
 
   template<typename value_t, int rA, int rB, int rC>
+  requires( rA>0 and rB>0 and rC>=0 )
   contract_plan_t create_contract_plan(
 	    cutensor_desc<value_t,rA> const& descA, std::string_view idxA,
             cutensor_desc<value_t,rB> const& descB, std::string_view idxB,
@@ -155,17 +167,17 @@ namespace nda::tensor::cutensor {
     std::array<int,rC> modeC;
     std::copy_n(idxA.begin(),rA,modeA.begin());	 
     std::copy_n(idxB.begin(),rB,modeB.begin());	 
-    std::copy_n(idxC.begin(),rC,modeC.begin());	 
+    if constexpr (rC > 0) std::copy_n(idxC.begin(),rC,modeC.begin());	 
 
     // Create the Contraction Descriptor
     cutensorContractionDescriptor_t desc;
+    int* modeC_data = (rC>0?modeC.data():NULL); 
     CUTENSOR_CHECK( cutensorInitContractionDescriptor, get_handle_ptr(), &desc,
               descA.desc(), modeA.data(), descA.alignment(),
               descB.desc(), modeB.data(), descB.alignment(),
-              descC.desc(), modeC.data(), descC.alignment(),
-              descC.desc(), modeC.data(), descC.alignment(),
+              descC.desc(), modeC_data, descC.alignment(),
+              descC.desc(), modeC_data, descC.alignment(),
               compute_type<value_t> );
-
 
     // Set the algorithm to use
     cutensorContractionFind_t find;
@@ -216,6 +228,7 @@ namespace nda::tensor::cutensor {
   }
 
   template<typename value_t, int rA, int rB, int rC>
+  requires( rA>0 and rB>0 and rC>=0 )
   void contract(value_t alpha,
             cutensor_desc<value_t,rA> const& descA, value_t const* A_d, std::string_view idxA,
             cutensor_desc<value_t,rB> const& descB, value_t const* B_d, std::string_view idxB,
@@ -232,22 +245,126 @@ namespace nda::tensor::cutensor {
    *                            elementwise binary                         *
    ************************************************************************/
 
-  template<typename value_t, int rank>
+  template<typename value_t, int rA, int rB>
+  requires( rA >= 0 and rB > 0 and rB >= rA )
   void elementwise_binary(value_t alpha, 
-	cutensor_desc<value_t,rank> const& descA, value_t const* A_d, std::string_view idxA,
+	cutensor_desc<value_t,rA> const& descA, value_t const* A_d, std::string_view idxA,
         value_t gamma,
-        cutensor_desc<value_t,rank> const& descB, value_t const* B_d, std::string_view idxB,
+        cutensor_desc<value_t,rB> const& descB, value_t const* B_d, std::string_view idxB,
         value_t * C_d, op::TENSOR_OP oper)
+  {
+    std::array<int,rB> modeB;
+    std::copy_n(idxB.begin(),rB,modeB.begin());
+
+    if constexpr (rA > 0) {
+      std::array<int,rA> modeA;
+      std::copy_n(idxA.begin(),rA,modeA.begin());
+      CUTENSOR_CHECK( cutensorElementwiseBinary, get_handle_ptr(), (void*) &alpha, 
+	A_d, descA.desc(), modeA.data(), (void*) &gamma, B_d, descB.desc(), modeB.data(),	 
+	C_d, descB.desc(), modeB.data(), cutensor_op(oper), data_type<value_t>, 0);
+    } else {
+      CUTENSOR_CHECK( cutensorElementwiseBinary, get_handle_ptr(), (void*) &alpha, 
+	A_d, descA.desc(), NULL, (void*) &gamma, B_d, descB.desc(), modeB.data(), 
+	C_d, descB.desc(), modeB.data(), cutensor_op(oper), data_type<value_t>, 0);
+    }
+
+  }
+
+  /*************************************************************************
+   *                              permute                                  *
+   ************************************************************************/
+
+  // MAM: this routine could be used to convert value_types, generalized later! need
+  //      new data_type<typeA,typeB> with allowed combinations...
+  template<typename value_t, int rank>
+  void permute(value_t alpha,
+        cutensor_desc<value_t,rank> const& descA, value_t const* A_d, std::string_view const idxA,
+        cutensor_desc<value_t,rank> const& descB, value_t * B_d, std::string_view const idxB)
   {
     std::array<int,rank> modeA;
     std::array<int,rank> modeB;
     std::copy_n(idxA.begin(),rank,modeA.begin());
     std::copy_n(idxB.begin(),rank,modeB.begin());
 
-    CUTENSOR_CHECK( cutensorElementwiseBinary, get_handle_ptr(), (void*) &alpha, 
-	A_d, descA.desc(), modeA.data(), (void*) &gamma, B_d, descB.desc(), modeB.data(),	 
-	C_d, descB.desc(), modeB.data(), cutensor_op(oper), data_type<value_t>, 0);
-
+    CUTENSOR_CHECK( cutensorPermutation, get_handle_ptr(), (void*) &alpha,
+        A_d, descA.desc(), modeA.data(), B_d, descB.desc(), modeB.data(),
+        data_type<value_t>, 0);
   }
+
+  /*************************************************************************
+   *                              permute                                  *
+   ************************************************************************/
+
+  template<typename value_t, int rA, int rB>
+  void reduce(value_t alpha,
+        cutensor_desc<value_t,rA> const& descA, value_t const* A_d, std::string_view const idxA,
+        value_t beta,
+        cutensor_desc<value_t,rB> const& descB, value_t const* B_d, std::string_view const idxB,
+        value_t * C_d, op::TENSOR_OP oper)
+  {
+    std::array<int,rA> modeA;
+    std::array<int,rB> modeB;
+    std::copy_n(idxA.begin(),rA,modeA.begin());
+    std::copy_n(idxB.begin(),rB,modeB.begin());
+
+    uint64_t workspaceSize = 0;
+    CUTENSOR_CHECK( cutensorReductionGetWorkspaceSize, get_handle_ptr(), 
+        A_d, descA.desc(), modeA.data(), B_d, descB.desc(), modeB.data(),
+        C_d, descB.desc(), modeB.data(), cutensor_op(oper), 
+	compute_type<value_t>, &workspaceSize);
+
+    // MAM: use buffer!
+    void* work;
+    if( workspaceSize > 0 )
+      mem::device_check( cudaMalloc((void**) &work, workspaceSize), "cudaMalloc" );
+
+    CUTENSOR_CHECK( cutensorReduction, get_handle_ptr(), (void*) &alpha, 
+        A_d, descA.desc(), modeA.data(), (void*) &beta, B_d, descB.desc(), modeB.data(),
+        C_d, descB.desc(), modeB.data(), cutensor_op(oper), compute_type<value_t>, 
+	work, workspaceSize, 0);
+
+    if( workspaceSize > 0 )
+      cudaFree(work);
+  }
+
+  template<typename value_t, int rA>
+  void reduce(value_t alpha,
+        cutensor_desc<value_t,rA> const& descA, value_t const* A_d, std::string_view const idxA,
+        value_t * C_d, op::TENSOR_OP oper)
+  {
+    std::array<int,rA> modeA;
+    std::copy_n(idxA.begin(),rA,modeA.begin());
+
+    uint32_t alignment_ = 0;
+    cutensorTensorDescriptor_t desc_;
+    CUTENSOR_CHECK(cutensorInitTensorDescriptor, get_handle_ptr(), &desc_, 0,
+                   NULL, NULL, data_type<value_t>, CUTENSOR_OP_IDENTITY);
+    CUTENSOR_CHECK(cutensorGetAlignmentRequirement, get_handle_ptr(), (void *) C_d,
+                   &desc_, &alignment_);
+
+    uint64_t workspaceSize = 0;
+    CUTENSOR_CHECK( cutensorReductionGetWorkspaceSize, get_handle_ptr(),
+        A_d, descA.desc(), modeA.data(), C_d, &desc_, NULL,
+        C_d, &desc_, NULL, cutensor_op(oper),
+        compute_type<value_t>, &workspaceSize);
+
+    // MAM: use buffer!
+    void* work;
+    if( workspaceSize > 0 )
+      mem::device_check( cudaMalloc((void**) &work, workspaceSize), "cudaMalloc" );
+
+    value_t beta{0}; 
+    CUTENSOR_CHECK( cutensorReduction, get_handle_ptr(), (void*) &alpha,
+        A_d, descA.desc(), modeA.data(), (void*) &beta, C_d, &desc_, NULL,
+        C_d, &desc_, NULL, cutensor_op(oper), compute_type<value_t>,
+        work, workspaceSize, 0);
+
+    if( workspaceSize > 0 )
+      cudaFree(work);
+  }
+
+
+
+  
 
 } // namespace nda::tensor::cutensor

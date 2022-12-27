@@ -17,10 +17,13 @@
 #pragma once
 #include <complex>
 #include <string_view>
-#include "../exceptions.hpp"
-#include "../traits.hpp"
-#include "../declarations.hpp"
-#include "../mem/address_space.hpp"
+#include "nda/exceptions.hpp"
+#include "nda/traits.hpp"
+#include "nda/declarations.hpp"
+#include "nda/mem/device.hpp"
+#include "nda/mem/address_space.hpp"
+#include "nda/mem/malloc.hpp"
+#include "nda/mem/memcpy.hpp"
 
 #if defined(NDA_HAVE_TBLIS)
 #include "interface/tblis_interface.hpp"
@@ -64,8 +67,15 @@ namespace nda::tensor {
 #endif
     } else { // on device
 #if defined(NDA_HAVE_CUTENSOR)
-//      cutensor::termbyterm();
-      static_assert(always_false<bool>," reduce on device cuTensor!!!. ");
+      cutensor::cutensor_desc<value_t,rank> a_t(a,op::ID);
+      std::string indx = default_index<uint8_t(rank)>(); 
+      value_t* z;
+      mem::device_check( cudaMalloc((void**) &z, sizeof(value_t)), "CudaMalloc" );
+      cutensor::reduce(value_t{1.0},a_t,a.data(),indx,z,oper);
+      value_t res;  
+      mem::device_check( cudaMemcpy((void*) &res, (void*) z, sizeof(value_t), cudaMemcpyDefault), "CudaMemcpy" );
+      mem::device_check( cudaFree((void*)z), "cudaFree" );
+      return res;
 #else
       static_assert(always_false<bool>," reduce on device requires gpu tensor operations backend. ");
 #endif
