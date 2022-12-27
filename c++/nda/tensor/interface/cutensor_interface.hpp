@@ -110,6 +110,10 @@ namespace nda::tensor::cutensor {
     cutensorTensorDescriptor_t const* desc() const { return std::addressof(desc_); }
   };
 
+  /*************************************************************************
+   *                            contraction                                *
+   ************************************************************************/
+
   struct contract_plan_t
   {
     contract_plan_t() { plan = new cutensorContractionPlan_t{}; }
@@ -221,6 +225,29 @@ namespace nda::tensor::cutensor {
     // don't allocate during plan creation when buffer is ready, allocate on the fly on contract!
     auto plan = create_contract_plan(descA,idxA,descB,idxB,descC,idxC,true);
     contract(plan,alpha,A_d,B_d,beta,C_d);
+  }
+
+
+  /*************************************************************************
+   *                            elementwise binary                         *
+   ************************************************************************/
+
+  template<typename value_t, int rank>
+  void elementwise_binary(value_t alpha, 
+	cutensor_desc<value_t,rank> const& descA, value_t const* A_d, std::string_view idxA,
+        value_t gamma,
+        cutensor_desc<value_t,rank> const& descB, value_t const* B_d, std::string_view idxB,
+        value_t * C_d, op::TENSOR_OP oper)
+  {
+    std::array<int,rank> modeA;
+    std::array<int,rank> modeB;
+    std::copy_n(idxA.begin(),rank,modeA.begin());
+    std::copy_n(idxB.begin(),rank,modeB.begin());
+
+    CUTENSOR_CHECK( cutensorElementwiseBinary, get_handle_ptr(), (void*) &alpha, 
+	A_d, descA.desc(), modeA.data(), (void*) &gamma, B_d, descB.desc(), modeB.data(),	 
+	C_d, descB.desc(), modeB.data(), cutensor_op(oper), data_type<value_t>, 0);
+
   }
 
 } // namespace nda::tensor::cutensor
