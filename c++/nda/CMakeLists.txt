@@ -71,13 +71,13 @@ install(TARGETS blas_lapack EXPORT ${PROJECT_NAME}-targets)
 
 if(CudaSupport)
   message(STATUS "-------- CUDAToolkit detection -------------")
-  find_package(CUDAToolkit REQUIRED)
+  find_package(CUDAToolkit REQUIRED 11)
   target_link_libraries(${PROJECT_NAME}_c PUBLIC CUDA::cudart CUDA::cublas CUDA::cusolver)
   target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_CUDA NDA_HAVE_DEVICE)
 
-  message(STATUS "-------- cutensor detection -------------")
   option(Use_Cutensor "Use cutensor library" OFF)
   if(Use_Cutensor)
+    message(STATUS "-------- cutensor detection -------------")
     if(NOT DEFINED ENV{CUTENSOR_ROOT} AND NOT DEFINED CUTENSOR_ROOT)
       message(FATAL_ERROR "CUTENSOR_ROOT not set!")
     endif() 
@@ -126,9 +126,9 @@ endif()
 
 # ========= TBLIS ==========
 
-message(STATUS "-------- TBLIS detection -------------")
 option(Use_Tblis "Use TBLIS library" OFF)
 if(Use_Tblis)
+  message(STATUS "-------- TBLIS detection -------------")
   # no find package, :-(, doing it by hand
   if(NOT DEFINED TBLIS_ROOT AND DEFINED ENV{TBLIS_ROOT})
     set(TBLIS_ROOT $ENV{TBLIS_ROOT})
