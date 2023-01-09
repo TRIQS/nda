@@ -451,8 +451,7 @@ void assign_from_scalar(Scalar const &scalar) noexcept {
       for (long i = 0; i < imax; ++i) operator()(i, i) = scalar;
     } else if constexpr(mem::on_device<self_t> or mem::on_unified<self_t>) {
       size_t dstr = lay.strides()[layout_t::is_stride_order_Fortran() ? 1 : 0] + 1; 
-      for (long i = 0; i < imax; ++i) operator()(i, i) = scalar;
-      mem::fill2D_n<mem::get_addr_space<self_t>>(data(), dstr, value_type(scalar), 1, imax);
+      mem::fill2D_n<mem::get_addr_space<self_t>>(data(), dstr, 1, imax, value_type(scalar));
     } 
   }
 }
