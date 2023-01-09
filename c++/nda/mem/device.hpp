@@ -17,7 +17,7 @@
 #pragma once
 
 #include <iostream>
-#include "../exceptions.hpp"
+#include "nda/exceptions.hpp"
 #if defined(NDA_HAVE_CUDA)
 #include <cuda_runtime.h>
 
