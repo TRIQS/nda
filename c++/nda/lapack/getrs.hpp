@@ -43,7 +43,7 @@ namespace nda::lapack {
    *           < 0:  if info = -i, the i-th argument had an illegal value
    */
   template <MemoryMatrix A, MemoryMatrix B, MemoryVector IPIV>
-    requires(have_same_value_type_v<A, B> and mem::have_same_addr_space_v<A, B, IPIV> and is_blas_lapack_v<get_value_t<A>>)
+    requires(have_same_value_type_v<A, B> and mem::have_compatible_addr_space_v<A, B, IPIV> and is_blas_lapack_v<get_value_t<A>>)
   int getrs(A const &a, B &b, IPIV const &ipiv) {
     static_assert(std::is_same_v<get_value_t<IPIV>, int>, "Pivoting array must have elements of type int");
     EXPECTS(ipiv.size() >= std::min(a.extent(0), a.extent(1)));
@@ -57,14 +57,14 @@ namespace nda::lapack {
     char op_a                    = get_op<conj_A, /*transpose =*/has_C_layout<A>>;
 
     int info = 0;
-    if constexpr (mem::on_host<A>) {
-      f77::getrs(op_a, get_ncols(a), get_ncols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
-    } else {
+    if constexpr (mem::have_device_compatible_addr_space_v<A,B,IPIV>) {
 #if defined(NDA_HAVE_DEVICE)
       device::getrs(op_a, get_ncols(a), get_ncols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
 #else
       compile_error_no_gpu();
 #endif
+    } else {
+      f77::getrs(op_a, get_ncols(a), get_ncols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
     }
     return info;
   }

@@ -44,7 +44,7 @@ namespace nda::lapack {
    *
    */
   template <MemoryMatrix A, MemoryVector IPIV>
-  requires(mem::on_host<A, IPIV> and is_blas_lapack_v<get_value_t<A>>)
+  requires(mem::have_compatible_addr_space_v<A, IPIV> and is_blas_lapack_v<get_value_t<A>>)
   int getri(A &&a, IPIV const &ipiv) {
     static_assert(std::is_same_v<get_value_t<IPIV>, int>, "Pivoting array must have elements of type int");
 
@@ -56,20 +56,24 @@ namespace nda::lapack {
     EXPECTS(a.indexmap().min_stride() == 1);
     EXPECTS(ipiv.indexmap().min_stride() == 1);
 
-    // First call to get the optimal buffersize
-    T bufferSize_T{};
     int info = 0;
-    f77::getri(a.extent(0), a.data(), get_ld(a), ipiv.data(), &bufferSize_T, -1, info);
-    int bufferSize = std::ceil(std::real(bufferSize_T));
+    if constexpr (mem::have_device_compatible_addr_space_v<A,IPIV>) {
+      device:getri(a.extent(0), a.data(), get_ld(a), ipiv.data(), NULL, 0, info);
+    } else {
+      // First call to get the optimal buffersize
+      T bufferSize_T{};
+      f77::getri(a.extent(0), a.data(), get_ld(a), ipiv.data(), &bufferSize_T, -1, info);
+      int bufferSize = std::ceil(std::real(bufferSize_T));
 
-    // Allocate work buffer and perform actual library call
-    array<T, 1> work(bufferSize);
+      // Allocate work buffer and perform actual library call
+      array<T, 1> work(bufferSize);
 #if defined(__has_feature)
 #if __has_feature(memory_sanitizer)
-    work = 0;
+      work = 0;
 #endif
 #endif
-    f77::getri(a.extent(0), a.data(), get_ld(a), ipiv.data(), work.data(), bufferSize, info);
+      f77::getri(a.extent(0), a.data(), get_ld(a), ipiv.data(), work.data(), bufferSize, info);
+    }
     return info;
   }
 

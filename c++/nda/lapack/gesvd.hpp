@@ -58,7 +58,7 @@ namespace nda::lapack {
    *                 above for details.
    */
   template <MemoryMatrix A, MemoryVector S, MemoryMatrix U, MemoryMatrix VT>
-  requires(have_same_value_type_v<A, U, VT> and mem::have_same_addr_space_v<A, S, U, VT> and is_blas_lapack_v<get_value_t<A>>)
+  requires(have_same_value_type_v<A, U, VT> and mem::have_compatible_addr_space_v<A, S, U, VT> and is_blas_lapack_v<get_value_t<A>>)
   int gesvd(A &&a, S &&s, U &&u, VT &&vt) {
     static_assert(has_F_layout<A> and has_F_layout<U> and has_F_layout<VT>, "C order not implemented");
 
@@ -75,14 +75,14 @@ namespace nda::lapack {
 
     // Call host/device implementation depending on input
     auto gesvd = []<typename... Ts>(Ts && ...args) {
-      if constexpr (mem::on_host<A>) {
-        lapack::f77::gesvd(std::forward<Ts>(args)...);
-      } else {
+      if constexpr (mem::have_device_compatible_addr_space_v<Ts...>) {
 #if defined(NDA_HAVE_DEVICE)
         lapack::device::gesvd(std::forward<Ts>(args)...);
 #else
         compile_error_no_gpu();
 #endif
+      } else {
+        lapack::f77::gesvd(std::forward<Ts>(args)...);
       }
     };
 
