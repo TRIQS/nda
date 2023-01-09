@@ -18,6 +18,7 @@
 #include <nda/macros.hpp>
 #include <nda/exceptions.hpp>
 #include <nda/mem/handle.hpp>
+#include <nda/mem/fill.hpp>
 #include "lapack_cxx_interface.hpp"
 
 #include "cusolverDn.h"
@@ -110,6 +111,46 @@ namespace nda::lapack::device {
   }
   void getrs(char op, int N, int NRHS, std::complex<double> const *A, int LDA, int const *ipiv, std::complex<double> *B, int LDB, int &info) {
     CUSOLVER_CHECK(cusolverDnZgetrs, info, get_cublas_op(op), N, NRHS, cucplx(A), LDA, ipiv, cucplx(B), LDB);
+  }
+
+  // use getrs with B=Idensity
+  void getri(int N, double *A, int LDA, int *ipiv, double *WORK, int LWORK, int &info)
+  {
+    if (LWORK == -1) {
+      int bufferSize = N*N;
+      *WORK = bufferSize;
+      return;
+    }
+    if(LWORK == N*N) {
+      auto B = nda::cuarray_view<double,2>(std::array<long,2>{N,N},WORK);
+      B() = 0.0;
+      mem::fill2D_n<mem::Device>(B.data(), N+1, 1, N, 1.0);
+      getrs('N',N,N,A,LDA,ipiv,B.data(),N,info);
+    } else {
+      auto B = nda::cuvector<double>(N*N);
+      B() = 0.0;
+      mem::fill2D_n<mem::Device>(B.data(), N+1, 1, N, 1.0);
+      getrs('N',N,N,A,LDA,ipiv,B.data(),N,info);
+    }
+  }
+  void getri(int N, std::complex<double> *A, int LDA, int *ipiv, std::complex<double> *WORK, int LWORK, int &info)
+  {
+    if (LWORK == -1) {
+      int bufferSize = N*N;
+      *WORK = bufferSize;
+      return;
+    }
+    if(LWORK == N*N) {
+      auto B = nda::cuarray_view<dcomplex,2>(std::array<long,2>{N,N},WORK);
+      B() = 0.0;
+      mem::fill2D_n<mem::Device>(B.data(), N+1, 1, N, 1.0);
+      getrs('N',N,N,cucplx(A),LDA,ipiv,cucplx(B.data()),N,info);
+    } else {
+      auto B = nda::cuvector<dcomplex>(N*N);
+      B() = 0.0;
+      mem::fill2D_n<mem::Device>(B.data(), N+1, 1, N, 1.0);
+      getrs('N',N,N,cucplx(A),LDA,ipiv,cucplx(B.data()),N,info);
+    }
   }
 
 } // namespace nda::lapack::device
