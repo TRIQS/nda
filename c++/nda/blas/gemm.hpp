@@ -77,7 +77,7 @@ namespace nda::blas {
 
     using A = decltype(a);
     using B = decltype(b);
-    static_assert(mem::have_same_addr_space_v<A, B, C>, "Matrices must have same memory address space");
+    static_assert(mem::have_compatible_addr_space_v<A, B, C>, "Matrices must have compatible memory address space");
 
     EXPECTS(a.extent(1) == b.extent(0));
     EXPECTS(a.extent(0) == c.extent(0));
@@ -98,14 +98,14 @@ namespace nda::blas {
       auto [m, k] = a.shape();
       auto n      = b.extent(1);
 
-      if constexpr (mem::on_host<A>) {
-        f77::gemm(op_a, op_b, m, n, k, alpha, a.data(), get_ld(a), b.data(), get_ld(b), beta, c.data(), get_ld(c));
-      } else { // on device
+      if constexpr (mem::have_device_compatible_addr_space_v<A, B, C>) {
 #if defined(NDA_HAVE_DEVICE)
         device::gemm(op_a, op_b, m, n, k, alpha, a.data(), get_ld(a), b.data(), get_ld(b), beta, c.data(), get_ld(c));
 #else
         compile_error_no_gpu();
 #endif
+      } else {
+        f77::gemm(op_a, op_b, m, n, k, alpha, a.data(), get_ld(a), b.data(), get_ld(b), beta, c.data(), get_ld(c));
       }
     }
   }

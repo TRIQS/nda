@@ -52,7 +52,7 @@ namespace nda::blas {
 
     using A = decltype(a0);
     using B = decltype(b0);
-    static_assert(mem::have_same_addr_space_v<A, B, C>, "Matrices must have same memory address space");
+    static_assert(mem::have_compatible_addr_space_v<A, B, C>, "Matrices must have same memory address space");
 
     // c is in C order: compute the transpose of the product in Fortran order
     if constexpr (has_C_layout<C>) {
@@ -112,16 +112,16 @@ namespace nda::blas {
           vldc[i] = get_ld(ci);
         }
 
-        if constexpr (mem::on_host<A>) {
-          f77::gemm_vbatch(op_a, op_b, vm.data(), vn.data(), vk.data(), alpha, a_ptrs.data(), vlda.data(), b_ptrs.data(), vldb.data(), beta,
-                           c_ptrs.data(), vldc.data(), batch_count);
-        } else { // on device
+	if constexpr (mem::have_device_compatible_addr_space_v<A,B,C>) {
 #if defined(NDA_HAVE_DEVICE)
           device::gemm_vbatch(op_a, op_b, vm.data(), vn.data(), vk.data(), alpha, a_ptrs.data(), vlda.data(), b_ptrs.data(), vldb.data(), beta,
                             c_ptrs.data(), vldc.data(), batch_count);
 #else
           compile_error_no_gpu();
 #endif
+	} else {
+          f77::gemm_vbatch(op_a, op_b, vm.data(), vn.data(), vk.data(), alpha, a_ptrs.data(), vlda.data(), b_ptrs.data(), vldb.data(), beta,
+                           c_ptrs.data(), vldc.data(), batch_count);
         }
       } else {
 
@@ -132,16 +132,16 @@ namespace nda::blas {
         auto [m, k] = a0.shape();
         auto n      = b0.extent(1);
 
-        if constexpr (mem::on_host<A>) {
-          f77::gemm_batch(op_a, op_b, m, n, k, alpha, a_ptrs.data(), get_ld(a0), b_ptrs.data(), get_ld(b0), beta, c_ptrs.data(), get_ld(c0),
-                          batch_count);
-        } else { // on device
+	if constexpr (mem::have_device_compatible_addr_space_v<A,B,C>) {
 #if defined(NDA_HAVE_DEVICE)
           device::gemm_batch(op_a, op_b, m, n, k, alpha, a_ptrs.data(), get_ld(a0), b_ptrs.data(), get_ld(b0), beta, c_ptrs.data(), get_ld(c0),
                            batch_count);
 #else
           compile_error_no_gpu();
 #endif
+	} else {
+          f77::gemm_batch(op_a, op_b, m, n, k, alpha, a_ptrs.data(), get_ld(a0), b_ptrs.data(), get_ld(b0), beta, c_ptrs.data(), get_ld(c0),
+                          batch_count);
         }
       }
     }
@@ -183,7 +183,7 @@ namespace nda::blas {
 
     using A = decltype(a);
     using B = decltype(b);
-    static_assert(mem::have_same_addr_space_v<A, B, C>, "Arrays must have same memory address space");
+    static_assert(mem::have_compatible_addr_space_v<A, B, C>, "Arrays must have same memory address space");
 
     auto _  = nda::range::all;
     auto a0 = a(0, _, _);
@@ -209,16 +209,16 @@ namespace nda::blas {
       auto [m, k] = a0.shape();
       auto n      = b0.extent(1);
 
-      if constexpr (mem::on_host<A>) {
-        f77::gemm_batch_strided(op_a, op_b, m, n, k, alpha, a.data(), get_ld(a0), a.strides()[0], b.data(), get_ld(b0), b.strides()[0], beta,
-                                c.data(), get_ld(c0), c.strides()[0], a.extent(0));
-      } else { // on device
+      if constexpr (mem::have_device_compatible_addr_space_v<A,B,C>) {
 #if defined(NDA_HAVE_DEVICE)
         device::gemm_batch_strided(op_a, op_b, m, n, k, alpha, a.data(), get_ld(a0), a.indexmap().strides()[0], b.data(), get_ld(b0), b.strides()[0],
                                  beta, c.data(), get_ld(c0), c.indexmap().strides()[0], a.extent(0));
 #else
         compile_error_no_gpu();
 #endif
+      } else {
+        f77::gemm_batch_strided(op_a, op_b, m, n, k, alpha, a.data(), get_ld(a0), a.strides()[0], b.data(), get_ld(b0), b.strides()[0], beta,
+                                c.data(), get_ld(c0), c.strides()[0], a.extent(0));
       }
     }
   }

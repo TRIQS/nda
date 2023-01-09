@@ -30,20 +30,20 @@ namespace nda::blas {
       return x * y;
     } else {
       static_assert(have_same_value_type_v<X, Y>, "Vectors must have same value type");
-      static_assert(mem::have_same_addr_space_v<X, Y>, "Vectors must have same memory address space");
+      static_assert(mem::have_compatible_addr_space_v<X, Y>, "Vectors must have same memory address space");
       static_assert(is_blas_lapack_v<get_value_t<X>>, "Vectors hold value_type incompatible with blas");
 
       EXPECTS(x.shape() == y.shape());
 
-      if constexpr (mem::on_host<X>) {
-        return f77::dot(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
-      } else {
+      if constexpr (mem::have_device_compatible_addr_space_v<X,Y>) {
 #if defined(NDA_HAVE_DEVICE)
         return device::dot(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
 #else
         compile_error_no_gpu();
         return get_value_t<X>(0);
 #endif
+      } else {
+        return f77::dot(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
       }
     }
   }
@@ -56,22 +56,22 @@ namespace nda::blas {
       return conj(x) * y;
     } else {
       static_assert(have_same_value_type_v<X, Y>, "Vectors must have same value type");
-      static_assert(mem::have_same_addr_space_v<X, Y>, "Vectors must have same memory address space");
+      static_assert(mem::have_compatible_addr_space_v<X, Y>, "Vectors must have same memory address space");
       static_assert(is_blas_lapack_v<get_value_t<X>>, "Vectors hold value_type incompatible with blas");
 
       EXPECTS(x.shape() == y.shape());
 
       if constexpr (!is_complex_v<get_value_t<X>>) {
         return dot(x, y);
-      } else if constexpr (mem::on_host<X>) {
-        return f77::dotc(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
-      } else {
+      } else if constexpr (mem::have_device_compatible_addr_space_v<X,Y>) {
 #if defined(NDA_HAVE_DEVICE)
         return device::dotc(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
 #else
         compile_error_no_gpu();
         return get_value_t<X>(0);
 #endif
+      } else {
+        return f77::dotc(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
       }
     }
   }

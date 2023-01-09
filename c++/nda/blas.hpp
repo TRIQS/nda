@@ -25,3 +25,4 @@ namespace nda::blas {}
 #include "blas/gemv.hpp"
 #include "blas/ger.hpp"
 #include "blas/dot.hpp"
+#include "blas/scal.hpp"
