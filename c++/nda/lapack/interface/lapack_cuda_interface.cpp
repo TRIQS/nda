@@ -143,13 +143,13 @@ namespace nda::lapack::device {
     if(LWORK == N*N) {
       auto B = nda::cuarray_view<dcomplex,2>(std::array<long,2>{N,N},WORK);
       B() = 0.0;
-      mem::fill2D_n<mem::Device>(B.data(), N+1, 1, N, 1.0);
-      getrs('N',N,N,cucplx(A),LDA,ipiv,cucplx(B.data()),N,info);
+      mem::fill2D_n<mem::Device>(B.data(), N+1, 1, N, std::complex<double>{1.0});
+      getrs('N',N,N,A,LDA,ipiv,B.data(),N,info);
     } else {
       auto B = nda::cuvector<dcomplex>(N*N);
       B() = 0.0;
-      mem::fill2D_n<mem::Device>(B.data(), N+1, 1, N, 1.0);
-      getrs('N',N,N,cucplx(A),LDA,ipiv,cucplx(B.data()),N,info);
+      mem::fill2D_n<mem::Device>(B.data(), N+1, 1, N, std::complex<double>{1.0});
+      getrs('N',N,N,A,LDA,ipiv,B.data(),N,info);
     }
   }
 
