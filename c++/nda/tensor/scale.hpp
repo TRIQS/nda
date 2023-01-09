@@ -61,4 +61,43 @@ namespace nda::tensor {
     }
   }
 
+  template <MemoryArray A>
+  requires(is_blas_lapack_v<get_value_t<A>>)
+  void scale(get_value_t<A> alpha, A &&a, op::TENSOR_OP oper) {
+
+    using value_t = get_value_t<A>;
+    constexpr int rank = get_rank<A>;
+
+    if constexpr (mem::on_host<A>) {
+      switch(oper) {
+        case op::ID:
+	  a() *= alpha;
+	  break;
+        case op::CONJ:
+          a = nda::conj(a)*alpha;
+	  break;
+        case op::SQRT:
+          a = nda::sqrt(a)*alpha;
+	  break;
+        case op::ABS:
+          a = nda::abs(a)*alpha;
+	  break;
+        case op::NEG:
+          a = a*(-1.0*alpha);
+	  break;
+        default:
+     	 NDA_RUNTIME_ERROR <<"Unknown unary operation."; 
+      };
+    } else { // on device
+#if defined(NDA_HAVE_CUTENSOR)
+      cutensor::cutensor_desc<value_t,rank> a_t(a,oper);
+      cutensor::cutensor_desc<value_t,rank> b_t(a,op::ID);
+      std::string indx = default_index<uint8_t(rank)>();
+      cutensor::permute(alpha, a_t, a.data(), indx, b_t, a.data(), indx);
+#else
+      static_assert(always_false<bool>," scale on device requires gpu tensor operations backend. ");
+#endif
+    }
+  }
+
 } // namespace nda::tensor

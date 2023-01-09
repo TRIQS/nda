@@ -63,21 +63,13 @@ namespace nda::tensor {
     static_assert(not conj_A, "Error: No conj in tblis yet!");
 
     using A = decltype(a);
-    static_assert(mem::have_same_addr_space_v<A, B>, "Matrices must have same memory address space");
+    static_assert(mem::have_compatible_addr_space_v<A, B>, "Matrices must have compatible memory address space");
 
     if( get_rank<A> != indxX.size() ) NDA_RUNTIME_ERROR <<"tensor::add: Rank mismatch \n";
     if( get_rank<B> != indxY.size() ) NDA_RUNTIME_ERROR <<"tensor::add: Rank mismatch \n";
     if( get_rank<A> != get_rank<B> ) NDA_RUNTIME_ERROR <<"tensor::add: Rank mismatch \n";
 
-    if constexpr (mem::on_host<A>) {
-#if defined(NDA_HAVE_TBLIS)
-      nda_tblis::tensor<value_t,get_rank<A>> a_t(a,alpha);
-      nda_tblis::tensor<value_t,get_rank<B>> b_t(b,beta);
-      ::tblis::tblis_tensor_add(NULL,NULL,&a_t,indxX.data(),&b_t,indxY.data());
-#else
-      static_assert(always_false<bool>," add on host requires cpu tensor operations backend. ");
-#endif
-    } else { // on device
+    if constexpr (mem::have_device_compatible_addr_space_v<A,B>) {
 #if defined(NDA_HAVE_CUTENSOR)
       cutensor::cutensor_desc<value_t,get_rank<A>> a_t(a,op::ID);
       cutensor::cutensor_desc<value_t,get_rank<B>> b_t(b,op::ID);
@@ -86,6 +78,14 @@ namespace nda::tensor {
 				   b.data(),op::SUM);
 #else
       static_assert(always_false<bool>," add on device requires gpu tensor operations backend. ");
+#endif
+    } else {
+#if defined(NDA_HAVE_TBLIS)
+      nda_tblis::tensor<value_t,get_rank<A>> a_t(a,alpha);
+      nda_tblis::tensor<value_t,get_rank<B>> b_t(b,beta);
+      ::tblis::tblis_tensor_add(NULL,NULL,&a_t,indxX.data(),&b_t,indxY.data());
+#else
+      static_assert(always_false<bool>," add on host requires cpu tensor operations backend. ");
 #endif
     }
   }
@@ -117,7 +117,7 @@ namespace nda::tensor {
 
     using A = decltype(a);
     using B = decltype(b);
-    static_assert(mem::have_same_addr_space_v<A, B, C>, "Matrices must have same memory address space");
+    static_assert(mem::have_compatible_addr_space_v<A, B, C>, "Matrices must have compatible memory address space");
 
     if( get_rank<A> != indxX.size() ) NDA_RUNTIME_ERROR <<"tensor::add: Rank mismatch \n";
     if( get_rank<B> != indxY.size() ) NDA_RUNTIME_ERROR <<"tensor::add: Rank mismatch \n";
@@ -128,17 +128,7 @@ namespace nda::tensor {
     if( b.strides() != c.strides() or b.shape() != c.shape() or b.stride_order() != c.stride_order() ) 
       NDA_RUNTIME_ERROR <<" tensor::add: Tensor's B and C must have identical strides, shapes and stride_orders."; 
 
-    if constexpr (mem::on_host<A>) {
-#if defined(NDA_HAVE_TBLIS)
-      nda_tblis::tensor<value_t,get_rank<A>> a_t(a,alpha);
-      nda_tblis::tensor<value_t,get_rank<C>> c_t(c,value_t{1.0});
-      // if conditions on B/C being compatible are relaxed, this needs to change!
-      c() = beta*b();	
-      ::tblis::tblis_tensor_add(NULL,NULL,&a_t,indxX.data(),&c_t,indxC.data());
-#else
-      static_assert(always_false<bool>," add on host requires cpu tensor operations backend. ");
-#endif
-    } else { // on device
+    if constexpr (mem::have_device_compatible_addr_space_v<A,B>) {
 #if defined(NDA_HAVE_CUTENSOR)
       cutensor::cutensor_desc<value_t,get_rank<A>> a_t(a,op::ID);
       cutensor::cutensor_desc<value_t,get_rank<B>> b_t(b,op::ID);
@@ -148,8 +138,17 @@ namespace nda::tensor {
 #else
       static_assert(always_false<bool>," add on device requires gpu tensor operations backend. ");
 #endif
+    } else { // on host
+#if defined(NDA_HAVE_TBLIS)
+      nda_tblis::tensor<value_t,get_rank<A>> a_t(a,alpha);
+      nda_tblis::tensor<value_t,get_rank<C>> c_t(c,value_t{1.0});
+      // if conditions on B/C being compatible are relaxed, this needs to change!
+      c() = beta*b();   
+      ::tblis::tblis_tensor_add(NULL,NULL,&a_t,indxX.data(),&c_t,indxC.data());
+#else 
+      static_assert(always_false<bool>," add on host requires cpu tensor operations backend. ");
+#endif 
     }
-
   }
 
 } // namespace nda::tensor
