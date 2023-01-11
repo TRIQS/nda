@@ -62,7 +62,7 @@ namespace nda {
     /// Type of the memory handle
     using storage_t = typename OwningPolicy::template handle<ValueType>;
     /// The associated regular type
-    using regular_type = basic_array<std::remove_const_t<ValueType>, Rank, C_layout, Algebra, heap<>>;
+    using regular_type = basic_array<std::remove_const_t<ValueType>, Rank, C_layout, Algebra, heap<get_addr_space<storage_t>>>;
     /// The number of dimensions of the array
     static constexpr int rank = Rank;
 
