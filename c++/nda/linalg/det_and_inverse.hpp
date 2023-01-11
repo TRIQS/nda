@@ -141,7 +141,7 @@ namespace nda {
     a(2,0) = detinv * b20; a(2,1) = detinv * b21; a(2,2) = detinv * b22;
   }
 
-  // ----------  inverse ----------------
+  // ----------  inverse_in_place ----------------
   template <MemoryMatrix M> requires(get_algebra<M> == 'M')
   void inverse_in_place(M&& a) {
     EXPECTS(is_matrix_square(a, true));
