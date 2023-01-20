@@ -48,10 +48,8 @@ TEST(reshape, array) { //NOLINT
   nda::array<long, 1> a{1, 2, 3, 4, 5, 6};
   nda::array<long, 2> check{{1, 2}, {3, 4}, {5, 6}};
 
-  // should not compile
-  // auto b = reshape(a, std::array{2,3});
+  // reshape(a, std::array{2,3}); // <- does not compile, reshape requires rvalues
   auto b = reshape(std::move(a), std::array{3, 2});
-
   EXPECT_EQ(b, check);
 }
 
