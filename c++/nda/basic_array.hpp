@@ -70,9 +70,6 @@ namespace nda {
     template <MemoryArray A, typename NewLayoutType>
     friend auto map_layout_transform(A &&a, NewLayoutType const &new_layout);
 
-    // private constructor for the friend
-    basic_array(layout_t const &idxm, storage_t &&mem_handle) noexcept : lay{idxm}, sto{std::move(mem_handle)} {}
-
     template <std::integral Int = long>
     basic_array(std::array<Int, Rank> const &shape, mem::init_zero_t) noexcept : lay{shape}, sto{lay.size(), mem::init_zero} {}
 
@@ -143,6 +140,9 @@ namespace nda {
 
     /// Construct from the layout
     explicit basic_array(layout_t const &layout) noexcept requires(std::is_default_constructible_v<ValueType>) : lay(layout), sto(lay.size()) {}
+
+    /// Construct from the layout and existing memory
+    explicit basic_array(layout_t const &idxm, storage_t &&mem_handle) noexcept : lay{idxm}, sto{std::move(mem_handle)} {}
 
     /** 
      * Constructs from a.shape() and then assign from the evaluation of a
