@@ -17,7 +17,6 @@
 #pragma once
 
 #include "../lapack.hpp"
-#include "../blas/tools.hpp"
 
 namespace nda::lapack {
 
@@ -54,14 +53,14 @@ namespace nda::lapack {
     EXPECTS(b.indexmap().min_stride() == 1);
     EXPECTS(ipiv.indexmap().min_stride() == 1);
 
-    static constexpr bool conj_A = blas::is_conj_array_expr<A>;
-    char op_a                    = blas::get_op<conj_A, /*transpose =*/has_C_layout<A>>;
+    static constexpr bool conj_A = is_conj_array_expr<A>;
+    char op_a                    = get_op<conj_A, /*transpose =*/has_C_layout<A>>;
 
     int info = 0;
     if constexpr (mem::on_host<A>) {
-      f77::getrs(op_a, a.extent(1), b.extent(1), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
+      f77::getrs(op_a, get_ncols(a), get_ncols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
     } else {
-      cuda::getrs(op_a, a.extent(1), b.extent(1), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
+      cuda::getrs(op_a, get_ncols(a), get_ncols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
     }
     return info;
   }

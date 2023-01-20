@@ -26,6 +26,9 @@ namespace nda::lapack {
   using blas::has_C_layout;
   using blas::has_F_layout;
   using blas::get_ld;
+  using blas::get_ncols;
+  using blas::is_conj_array_expr;
+  using blas::get_op;
 } // namespace nda::lapack
 
 #include "lapack/gelss.hpp"
