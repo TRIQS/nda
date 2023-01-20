@@ -42,7 +42,9 @@ namespace nda {
   // ---------------  reshape ------------------------
 
   template <MemoryArray A, std::integral Int, auto newRank>
-  auto reshape(A &&a, std::array<Int, newRank> const &new_shape) requires(is_regular_v<A>) {
+  auto reshape(A &&a, std::array<Int, newRank> const &new_shape)
+    requires(is_regular_v<A> and !std::is_reference_v<A>)
+  {
     using layout_t = typename std::decay_t<A>::layout_policy_t::template mapping<newRank>;
     EXPECTS_WITH_MESSAGE(a.size() == (std::accumulate(new_shape.cbegin(), new_shape.cend(), Int{1}, std::multiplies<>{})),
                          "Reshape : the new shape has a incorrect number of elements");
