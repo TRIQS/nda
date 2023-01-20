@@ -25,13 +25,14 @@ namespace nda {
   template <MemoryArray A, typename NewLayoutType>
   auto map_layout_transform(A &&a, NewLayoutType const &new_layout) {
     using A_t                     = std::remove_reference_t<A>;
-    using value_t                 = std::conditional_t<std::is_const_v<A_t>, const typename A_t::value_type, typename A_t::value_type>;
     using layout_policy           = typename details::layout_to_policy<NewLayoutType>::type;
     static constexpr auto algebra = (NewLayoutType::rank() == get_rank<A> ? get_algebra<A> : 'A');
     if constexpr (is_regular_v<A> and !std::is_reference_v<A>) { // basic_array rvalue
       using container_policy_t = typename A_t::container_policy_t;
-      return basic_array<value_t, NewLayoutType::rank(), layout_policy, algebra, container_policy_t>{new_layout, std::forward<A>(a).storage()};
+      return basic_array<typename A_t::value_type, NewLayoutType::rank(), layout_policy, algebra, container_policy_t>{new_layout,
+                                                                                                                      std::forward<A>(a).storage()};
     } else {
+      using value_t         = std::conditional_t<std::is_const_v<A_t>, const typename A_t::value_type, typename A_t::value_type>;
       using accessor_policy = typename get_view_t<A>::accessor_policy_t;
       using owning_policy   = typename get_view_t<A>::owning_policy_t;
       return basic_array_view<value_t, NewLayoutType::rank(), layout_policy, algebra, accessor_policy, owning_policy>{new_layout, a.storage()};
