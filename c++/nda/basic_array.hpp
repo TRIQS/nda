@@ -139,10 +139,10 @@ namespace nda {
        : lay(shape), sto(lay.size()) {}
 
     /// Construct from the layout
-    explicit basic_array(layout_t const &layout) noexcept requires(std::is_default_constructible_v<ValueType>) : lay(layout), sto(lay.size()) {}
+    explicit basic_array(layout_t const &layout) noexcept requires(std::is_default_constructible_v<ValueType>) : lay{layout}, sto{lay.size()} {}
 
     /// Construct from the layout and existing memory
-    explicit basic_array(layout_t const &idxm, storage_t &&mem_handle) noexcept : lay{idxm}, sto{std::move(mem_handle)} {}
+    explicit basic_array(layout_t const &layout, storage_t &&storage) noexcept : lay{layout}, sto{std::move(storage)} {}
 
     /** 
      * Constructs from a.shape() and then assign from the evaluation of a
