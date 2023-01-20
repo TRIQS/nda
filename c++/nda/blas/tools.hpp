@@ -72,4 +72,10 @@ namespace nda::blas {
     return a.indexmap().strides()[has_F_layout<A> ? 1 : 0];
   }
 
+  // column number in lapack jargon
+  template <MemoryMatrix A>
+  int get_ncols(A const &a) {
+    return a.shape()[has_F_layout<A> ? 1 : 0];
+  }
+
 } // namespace nda::blas
