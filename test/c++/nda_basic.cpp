@@ -388,6 +388,8 @@ TEST(Assign, CrossStrideOrder) { //NOLINT
 
   nda::array<long, 3> a(2, 3, 4);
   nda::array<long, 3, nda::F_layout> af(2, 3, 4);
+  EXPECT_TRUE(af.indexmap().is_contiguous());
+  EXPECT_TRUE(af.indexmap().is_strided_1d());
 
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 3; ++j)
