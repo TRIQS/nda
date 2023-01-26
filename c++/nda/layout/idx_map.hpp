@@ -137,14 +137,18 @@ namespace nda {
 
     /// Is the data contiguous in memory ? [NB recomputed at each call]
     [[nodiscard]] bool is_contiguous() const noexcept {
-      int slowest_index = std::distance(str.begin(), std::max_element(str.begin(), str.end())); // index with minimal stride
-      return (str[slowest_index] * len[slowest_index] == size());
+      auto s = size();
+      if (s == 0) return true;
+      auto const str_x_len = str * len;
+      return (*std::max_element(str_x_len.cbegin(), str_x_len.cend()) == s);
     }
 
     /// Is the data strided 1d in memory ? [NB recomputed at each call]
     [[nodiscard]] bool is_strided_1d() const noexcept {
-      int slowest_index = std::distance(str.begin(), std::max_element(str.begin(), str.end())); // index with minimal stride
-      return (str[slowest_index] * len[slowest_index] == size() * min_stride());
+      auto s = size();
+      if (s == 0) return true;
+      auto const str_x_len = str * len;
+      return (*std::max_element(str_x_len.cbegin(), str_x_len.cend()) == s * min_stride());
     }
 
     /// Is the order in memory C ?
