@@ -36,6 +36,10 @@ namespace nda {
     }
   }();
 
+  // Get the layout policy for a given Array type
+  template <Array A>
+  using get_layout_policy = typename std::remove_reference_t<decltype(nda::make_regular(std::declval<A>()))>::layout_policy_t;
+
   /**
    * @tparam L NdArray with algebra 'M' 
    * @tparam R 
@@ -53,9 +57,10 @@ namespace nda {
     static_assert(L_adr_spc == R_adr_spc, "Error: Matrix Product requires arguments with same Adress space");
     static_assert(L_adr_spc != mem::None);
 
-    using promoted_type = decltype(get_value_t<L>{} * get_value_t<R>{});
-    using matrix_t      = basic_array<promoted_type, 2, C_layout /*FIXME*/, 'M', nda::heap<mem::combine<L_adr_spc, R_adr_spc>>>;
-    auto result         = matrix_t(l.shape()[0], r.shape()[1]);
+    using promoted_type        = decltype(get_value_t<L>{} * get_value_t<R>{});
+    using result_layout_policy = std::conditional_t<get_layout_info<L>.stride_order == get_layout_info<R>.stride_order, get_layout_policy<L>, C_layout>;
+    using matrix_t             = basic_array<promoted_type, 2, result_layout_policy, 'M', nda::heap<mem::combine<L_adr_spc, R_adr_spc>>>;
+    auto result                = matrix_t(l.shape()[0], r.shape()[1]);
 
     if constexpr (is_blas_lapack_v<promoted_type>) {
 
@@ -133,7 +138,7 @@ namespace nda {
       // provides op tags 'N', 'T' and 'C' (hermitian conjugate)
       if constexpr (blas::is_conj_array_expr<decltype(as_container(l))> and
 	            blas::has_F_layout<decltype(as_container(l))>) {
-	blas::gemv(1, make_regular(as_container(l)), as_container(r), 0, result);
+        blas::gemv(1, make_regular(as_container(l)), as_container(r), 0, result);
       } else {
         blas::gemv(1, as_container(l), as_container(r), 0, result);
       }
