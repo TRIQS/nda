@@ -344,15 +344,16 @@ TEST(Matvecmul, Promotion) { //NOLINT
 
 template <typename M, typename V1, typename V2>
 void check_eig(M const &m, V1 const &vectors, V2 const &values) {
-  for (auto i : range(0, m.extent(0))) { EXPECT_ARRAY_NEAR(matvecmul(m, vectors(_, i)), values(i) * vectors(_, i), 1.e-13); }
+  using T_eigval = typename std::decay_t<V2>::value_type;
+  for (auto i : range(0, m.extent(0))) { EXPECT_ARRAY_NEAR(matvecmul(m, vectors(_, i))*T_eigval(1.0), values(i) * vectors(_, i), 1.e-13); }
 }
 
 //----------------------------------
 
 TEST(eigenelements, test1) { //NOLINT
 
-  auto test = [](auto &&M) {
-    auto [ev, vecs] = nda::linalg::eigenelements(M);
+  auto test = [](auto &&M, bool hermitian = true) {
+    auto [ev, vecs] = (hermitian)? nda::linalg::eigenelements(M) : nda::linalg::geigenelements(M);
     check_eig(M, vecs, ev);
   };
 
@@ -365,6 +366,7 @@ TEST(eigenelements, test1) { //NOLINT
         A(j, i) = A(i, j);
       }
     test(A);
+    test(A, false);
 
     A()     = 0;
     A(0, 1) = 1;
@@ -374,6 +376,7 @@ TEST(eigenelements, test1) { //NOLINT
     A(2, 0) = 2;
 
     test(A);
+    test(A, false);
 
     A()     = 0;
     A(0, 1) = 1;
@@ -381,6 +384,7 @@ TEST(eigenelements, test1) { //NOLINT
     A(2, 2) = 8;
 
     test(A);
+    test(A, false);
   }
 
   { // the real case with fortran layout
@@ -393,6 +397,7 @@ TEST(eigenelements, test1) { //NOLINT
     D(1, 1) = 2.2;
 
     test(D);
+    test(D, false);
   }
 
   { // the complex case
@@ -405,6 +410,7 @@ TEST(eigenelements, test1) { //NOLINT
     B(1, 1) = 2;
 
     test(B);
+    test(B, false);
   }
 
   { // the complex case with fortran layout
@@ -417,5 +423,50 @@ TEST(eigenelements, test1) { //NOLINT
     C(1, 1) = 2.4;
 
     test(C);
+    test(C, false);
+  }
+
+  { // the real non-symmetric case
+    matrix<double> D(2, 2);
+
+    D(0, 0) = 1.3;
+    D(0, 1) = 1.8;
+    D(1, 0) = 2.1;
+    D(1, 1) = 1.0;
+
+    test(D, false);
+  }
+
+  { // the real non-symmetric case with fortran layout
+    matrix<double, F_layout> D(2, 2);
+
+    D(0, 0) = 2.8;
+    D(0, 1) = 1.2;
+    D(1, 0) = 3.1;
+    D(1, 1) = 1.4;
+
+    test(D, false);
+  }
+
+  { // the complex case non-hermitian case
+    matrix<dcomplex> C(2, 2);
+
+    C(0, 0) = 1.6;
+    C(0, 1) = 1.1i;
+    C(1, 0) = 1.1i;
+    C(1, 1) = 2.3;
+
+    test(C, false);
+  }
+
+  { // the complex case non-hermitian case with fortran layout
+    matrix<dcomplex, F_layout> C(2, 2);
+
+    C(0, 0) = 1.6i;
+    C(0, 1) = 1.5;
+    C(1, 0) = 1.1i;
+    C(1, 1) = 2.8;
+
+    test(C, false);
   }
 }
