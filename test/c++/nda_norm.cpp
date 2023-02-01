@@ -15,6 +15,7 @@
 // Authors: Nils Wentzell
 
 #include "./test_common.hpp"
+#include <nda/linalg.hpp>
 
 // ==============================================================
 
@@ -71,7 +72,6 @@ TEST(Norm, Rand) { //NOLINT
 // ==============================================================
 
 TEST(Norm, Example) { //NOLINT
-  const int N = 100;
   auto vdbl   = nda::array<double, 1>{-0.5, 0.0, 1.0, 2.5};
 
   auto run_checks = [](auto const &v) {

@@ -25,3 +25,4 @@
 #include "linalg/det_and_inverse.hpp"
 #include "linalg/eigenelements.hpp"
 #include "linalg/matmul.hpp"
+#include "linalg/norm.hpp"
