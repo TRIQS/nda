@@ -65,10 +65,10 @@ namespace nda {
 
   /// Map pow on Ndarray
   template <Array A>
-  auto pow(A &&a, int n) {
-    return nda::map([n](auto const &x) {
+  auto pow(A &&a, double p) {
+    return nda::map([p](auto const &x) {
       using std::pow;
-      return pow(x, n);
+      return pow(x, p);
     })(std::forward<A>(a));
   }
 
