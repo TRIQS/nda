@@ -41,8 +41,8 @@ namespace nda::blas {
 #if defined(NDA_HAVE_DEVICE)
         return device::dot(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
 #else
-        static_assert(always_false<bool>," blas on device without gpu support! Compile for GPU. ");
-        return std::decay_t<X>::value_type(0);
+        compile_error_no_gpu();
+        return get_value_t<X>(0);
 #endif
       }
     }
@@ -69,8 +69,8 @@ namespace nda::blas {
 #if defined(NDA_HAVE_DEVICE)
         return device::dotc(x.size(), x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0]);
 #else
-        static_assert(always_false<bool>," blas on device without gpu support! Compile for GPU. ");
-        return std::decay_t<X>::value_type(0);
+        compile_error_no_gpu();
+        return get_value_t<X>(0);
 #endif
       }
     }

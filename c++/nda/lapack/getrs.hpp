@@ -61,9 +61,9 @@ namespace nda::lapack {
       f77::getrs(op_a, get_ncols(a), get_ncols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
     } else {
 #if defined(NDA_HAVE_DEVICE)
-      cuda::getrs(op_a, get_ncols(a), get_ncols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
+      device::getrs(op_a, get_ncols(a), get_ncols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
 #else
-      static_assert(always_false<bool>," lapack on device without gpu support! Compile for GPU. ");
+      compile_error_no_gpu();
 #endif
     }
     return info;

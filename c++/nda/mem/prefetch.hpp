@@ -21,27 +21,24 @@
 #include "address_space.hpp"
 #include "../macros.hpp"
 #include "../traits.hpp"
-#include "device.hpp"
 
 namespace nda::mem {
 
 // MAM: should I keep a specific stream just for prefetching???
 template <AddressSpace AdrSp>
-void prefecth(void *p, size_t count) {
-  if constexpr (AdrSp == None or AdrSp == Unified) { // makes no sense!
-    static_assert(always_false<bool>," memcpy<DestAdrSp == None or SrcAdrSp == Unified>:Oh Oh! ");
-  } else {
+void prefetch(void *p, size_t count) {
+  static_assert(AdrSp != None and AdrSp != Unified);
 #if defined(NDA_HAVE_CUDA)
-    if constexpr (AdrSp == Host)
-      device_check( cudaMemPrefetchAsync(p, count, cudaCpuDeviceId, 0), "cudaMemPrefetchAsync" ); 
-    else if constexpr (AdrSp == Device) {
-      int dev=0;
-      device_check( cudaGetDevice(&dev), "cudagetDevice" ); 
-      device_check( cudaMemPrefetchAsync(p,count,dev,0), "cudaMemPrefetchAsync" ); 
-    }
-#endif
+  if constexpr (AdrSp == Host)
+    device_check( cudaMemPrefetchAsync(p, count, cudaCpuDeviceId, 0), "cudaMemPrefetchAsync" ); 
+  else if constexpr (AdrSp == Device) {
+    int dev=0;
+    device_check( cudaGetDevice(&dev), "cudagetDevice" ); 
+    device_check( cudaMemPrefetchAsync(p,count,dev,0), "cudaMemPrefetchAsync" ); 
   }
+#else
+  compile_error_no_gpu();
+#endif
 }
-
 
 } // namespace nda::mem

@@ -81,7 +81,7 @@ namespace nda::lapack {
 #if defined(NDA_HAVE_DEVICE)
         lapack::device::gesvd(std::forward<Ts>(args)...);
 #else
-        static_assert(always_false<bool>," lapack on device without gpu support! Compile for GPU. ");
+        compile_error_no_gpu();
 #endif
       }
     };

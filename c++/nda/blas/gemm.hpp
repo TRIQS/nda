@@ -104,7 +104,7 @@ namespace nda::blas {
 #if defined(NDA_HAVE_DEVICE)
         device::gemm(op_a, op_b, m, n, k, alpha, a.data(), get_ld(a), b.data(), get_ld(b), beta, c.data(), get_ld(c));
 #else
-        static_assert(always_false<bool>," blas on device without gpu support! Compile for GPU. ");
+        compile_error_no_gpu();
 #endif
       }
     }

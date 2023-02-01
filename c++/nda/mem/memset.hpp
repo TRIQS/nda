@@ -22,43 +22,34 @@
 #include "address_space.hpp"
 #include "../macros.hpp"
 #include "../traits.hpp"
-#include "device.hpp"
 
 namespace nda::mem {
 
 template <AddressSpace AdrSp>
 void memset(void* p, int value, size_t count)
 {
+  check_adr_sp_valid<AdrSp>();
+  static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
+
   if constexpr (AdrSp == Host) {
     std::memset(p,value,count);
-  } else if constexpr (AdrSp == Device or AdrSp == Unified) {
-#if defined(NDA_HAVE_CUDA)
+  } else { // Device or Unified
     device_check( cudaMemset(p, value, count), "cudaMemset" );
-#else
-    static_assert(always_false<bool>," Reached device code. Compile with GPU support.");
-#endif
-  } else if constexpr (AdrSp == None) {
-    static_assert(always_false<bool>," malloc<AdrSp == None>: Oh Oh! ");
   }
 }
 
 template <AddressSpace AdrSp>
 void memset2D(void* ptr, size_t pitch, int value, size_t width, size_t height) 
 { 
+  check_adr_sp_valid<AdrSp>();
+  static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
+
   if constexpr (AdrSp == Host) {
-    auto v = static_cast<unsigned char>(value);
-    unsigned char* p = reinterpret_cast<unsigned char*>(ptr);
-    for(size_t i=0; i<height; ++i, p+=pitch) 
-      for(size_t j=0; j<width; ++j) 
-        *(p+j) = v;
-  } else if constexpr (AdrSp == Device or AdrSp == Unified) {
-#if defined(NDA_HAVE_CUDA)
+    auto *ptri = static_cast<unsigned char *>(ptr);
+    for(size_t i=0; i<height; ++i, ptri+=pitch) 
+      std::memset(ptri,value,width); 
+  } else { // Device or Unified
     device_check( cudaMemset2D(ptr, pitch, value, width, height), "cudaMemset2D" );
-#else
-    static_assert(always_false<bool>," Reached device code. Compile with GPU support.");
-#endif
-  } else if constexpr (AdrSp == None) {
-    static_assert(always_false<bool>," malloc<AdrSp == None>: Oh Oh! ");
   }
 }
 

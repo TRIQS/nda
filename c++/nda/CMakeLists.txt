@@ -1,11 +1,8 @@
 file(GLOB_RECURSE sources *.cpp)
-# MAM: Find better way!
-option(Use_Cuda "Use CUDA library" OFF)
-if(NOT Use_Cuda)
-  # ======== remove cuda-related cpp files ==========
-  list(REMOVE_ITEM sources "${CMAKE_CURRENT_SOURCE_DIR}/blas/interface/cublas_interface.cpp")
-  list(REMOVE_ITEM sources "${CMAKE_CURRENT_SOURCE_DIR}/lapack/interface/lapack_cuda_interface.cpp")
+if(NOT CudaSupport)
+  list(FILTER sources EXCLUDE REGEX "(cublas_interface|cuda_interface)")
 endif()
+message(STATUS "XXX ${sources}")
 add_library(${PROJECT_NAME}_c ${sources})
 add_library(${PROJECT_NAME}::${PROJECT_NAME}_c ALIAS ${PROJECT_NAME}_c)
 
@@ -70,19 +67,15 @@ install(TARGETS blas_lapack EXPORT ${PROJECT_NAME}-targets)
 # ========= CudaRT & CuBLAS ==========
 
 message(STATUS "-------- CUDAToolkit detection -------------")
-#option(Use_Cuda "Use CUDA library" OFF)
-if(Use_Cuda)
+if(CudaSupport)
   find_package(CUDAToolkit REQUIRED)
   target_link_libraries(${PROJECT_NAME}_c PUBLIC CUDA::cudart CUDA::cublas CUDA::cusolver)
   target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_CUDA NDA_HAVE_DEVICE)
-# MAM: look at https://github.com/NVIDIA/CUDALibrarySamples/blob/master/cuTENSOR/CMakeLists.txt 
-# to make cutensor target, since it doesn't seem to be available through CUDAToolkit yet
 endif()
 
 # ========= Magma ==========
 
 message(STATUS "-------- Magma detection -------------")
-option(Use_Magma "Use Magma library" OFF)
 if(Use_Magma)
   find_package(Magma REQUIRED)
   target_link_libraries(${PROJECT_NAME}_c PUBLIC magma)

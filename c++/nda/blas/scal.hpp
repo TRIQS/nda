@@ -34,7 +34,7 @@ namespace nda::blas {
 #if defined(NDA_HAVE_DEVICE)
       device::scal(x.size(), alpha, x.data(), x.indexmap().strides()[0]);
 #else
-      static_assert(always_false<bool>," blas on device without gpu support! Compile for GPU. ");
+      compile_error_no_gpu();
 #endif
     }
   }

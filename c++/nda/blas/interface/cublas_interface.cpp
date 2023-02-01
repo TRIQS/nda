@@ -127,7 +127,7 @@ namespace nda::blas::device {
     if (synchronize) magma_queue_sync(get_magma_queue());
     if (synchronize) cudaDeviceSynchronize();
 #else
-    NDA_RUNTIME_ERROR << "nda::blas::cuda::gemmv_batch requires Magma [https://icl.cs.utk.edu/magma/]. Configure nda with -DUse_Magma=ON";
+    NDA_RUNTIME_ERROR << "nda::blas::device::gemmv_batch requires Magma [https://icl.cs.utk.edu/magma/]. Configure nda with -DUse_Magma=ON";
 #endif
   }
   void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, std::complex<double> alpha, const std::complex<double> **A, int *LDA,
@@ -140,7 +140,7 @@ namespace nda::blas::device {
     if (synchronize) magma_queue_sync(get_magma_queue());
     if (synchronize) cudaDeviceSynchronize();
 #else
-    NDA_RUNTIME_ERROR << "nda::blas::cuda::gemmv_batch requires Magma [https://icl.cs.utk.edu/magma/]. Configure nda with -DUse_Magma=ON";
+    NDA_RUNTIME_ERROR << "nda::blas::device::gemmv_batch requires Magma [https://icl.cs.utk.edu/magma/]. Configure nda with -DUse_Magma=ON";
 #endif
   }
 

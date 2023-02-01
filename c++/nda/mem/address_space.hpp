@@ -17,6 +17,7 @@
 #pragma once
 #include <algorithm>
 
+#include "../device.hpp"
 #include "../concepts.hpp"
 
 namespace nda {
@@ -79,6 +80,13 @@ namespace nda::mem {
   static constexpr AddressSpace get_addr_space<expr_unary<OP, A>> = get_addr_space<A>;
 
   // ------------- Additional helper traits -------------
+
+  // Chack validity of a set of Address Spaces
+  template <AddressSpace... AdrSpcs>
+  static const auto check_adr_sp_valid = []() {
+    static_assert(((AdrSpcs != None) & ...), "Cannot use AdrSp == None");
+    static_assert(nda::have_device or ((AdrSpcs == Host) & ...), "Using device code requires compiling with GPU support.");
+  };
 
   // Check if all Ts have memory on the host
   template <typename... Ts>

@@ -23,18 +23,19 @@
 #include "address_space.hpp"
 #include "../macros.hpp"
 #include "../traits.hpp"
-#include "device.hpp"
 
 namespace nda::mem {
 
-template <AddressSpace AdrSp, typename T, typename Size>
+template <AddressSpace AdrSp, typename T>
 requires(nda::is_scalar_or_convertible_v<T>)
-T* fill_n(T* first, Size count, const T& value) 
+T* fill_n(T* first, size_t count, const T& value) 
 {
+  check_adr_sp_valid<AdrSp>();
+  static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
+
   if constexpr (AdrSp == Host) {
-    return std::fill_n(first,size_t(count),value);
-  } else if constexpr (AdrSp == Device or AdrSp == Unified) {
-#if defined(NDA_HAVE_CUDA)
+    return std::fill_n(first,count,value);
+  } else { // Device or Unified
     if(std::find_if((char const*)(&value), (char const*)(&value) + sizeof(T), [](char c){return c!=0;}) == (char const*)(&value) + sizeof(T)){
       device_check( cudaMemset((void*)first,0,count*sizeof(T)), "cudaMemset" );
     } else {
@@ -49,32 +50,31 @@ T* fill_n(T* first, Size count, const T& value)
       }
     }
     return first+count;
-#else
-    static_assert(always_false<bool>," Reached device code. Compile with GPU support."); 
-#endif
-  } else if constexpr (AdrSp == None) {
-    static_assert(always_false<bool>," malloc<AdrSp == None>: Oh Oh! "); 
   }
-  return nullptr;
 }
 
 template <AddressSpace AdrSp, typename T>
 requires(nda::is_scalar_or_convertible_v<T>)
 T* fill(T* first, T* end, const T& value)
 {
+  check_adr_sp_valid<AdrSp>();
+  static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
+
   if( std::distance(first,end) > 0 )
     return fill_n<AdrSp>(first,std::distance(first,end),value);
   return first;
 }
 
 
-template <AddressSpace AdrSp, typename T, typename Size >
+template <AddressSpace AdrSp, typename T>
 requires(nda::is_scalar_or_convertible_v<T>)
-void fill2D_n( T* first, Size pitch, Size width, Size height, const T& value )
+void fill2D_n( T* first, size_t pitch, size_t width, size_t height, const T& value )
 {
+  check_adr_sp_valid<AdrSp>();
+  static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
+
   if constexpr (AdrSp == Host) {
-  } else if constexpr (AdrSp == Device or AdrSp == Unified) {
-#if defined(NDA_HAVE_CUDA)
+  } else { // Device or Unified
     if(std::find_if((char const*)(&value), (char const*)(&value) + sizeof(T), [](char c){return c!=0;}) == (char const*)(&value) + sizeof(T)){
       device_check( cudaMemset2D((void*)first,pitch*sizeof(T),0,width*sizeof(T),height), "cudaMemset2D" );
     } else {
@@ -85,15 +85,7 @@ void fill2D_n( T* first, Size pitch, Size width, Size height, const T& value )
 				 (void*) v.data(), width*sizeof(T),
                 		 width*sizeof(T), height, cudaMemcpyDefault), "cudaMemcpy2D" );
     }
-#else
-    static_assert(always_false<bool>," Reached device code. Compile with GPU support.");
-#endif
-  } else if constexpr (AdrSp == None) {
-    static_assert(always_false<bool>," malloc<AdrSp == None>: Oh Oh! "); 
-  } 
-
+  }
 }
-
-
 
 } // namespace nda::mem
