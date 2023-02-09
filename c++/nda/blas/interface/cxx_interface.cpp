@@ -82,23 +82,19 @@ namespace nda::blas::f77 {
   void copy(int N, const dcomplex *x, int incx, dcomplex *Y, int incy) { F77_zcopy(&N, blacplx(x), &incx, blacplx(Y), &incy); }
 
   double dot(int M, const double *x, int incx, const double *Y, int incy) { return F77_ddot(&M, x, &incx, Y, &incy); }
-  dcomplex dot(int M, const dcomplex *x, int incx, const dcomplex *Y, int incy) {
-#ifdef NDA_USE_MKL
-    MKL_Complex16 result;
-    cblas_zdotu_sub(M, mklcplx(x), incx, mklcplx(Y), incy, &result);
-#else
-    auto result = F77_zdotu(&M, blacplx(x), &incx, blacplx(Y), &incy);
-#endif
-    return dcomplex{result.real, result.imag};
+  dcomplex dot(int M, const dcomplex *x, int incx, const dcomplex *y, int incy) {
+    dcomplex res(0.0);
+    for( int i=0; i<M; ++i, x+=incx, y+=incy  ) res += (*x) * (*y) ;
+    return res;
+    //auto result = F77_zdotu(&M, blacplx(x), &incx, blacplx(Y), &incy);
+    //return dcomplex{result.real, result.imag};
   }
-  dcomplex dotc(int M, const dcomplex *x, int incx, const dcomplex *Y, int incy) {
-#ifdef NDA_USE_MKL
-    MKL_Complex16 result;
-    cblas_zdotc_sub(M, mklcplx(x), incx, mklcplx(Y), incy, &result);
-#else
-    auto result = F77_zdotc(&M, blacplx(x), &incx, blacplx(Y), &incy);
-#endif
-    return dcomplex{result.real, result.imag};
+  dcomplex dotc(int M, const dcomplex *x, int incx, const dcomplex *y, int incy) {
+    dcomplex res(0.0);
+    for( int i=0; i<M; ++i, x+=incx, y+=incy  ) res += std::conj(*x) * (*y) ;
+    return res;
+    //auto result = F77_zdotc(&M, blacplx(x), &incx, blacplx(Y), &incy);
+    //return dcomplex{result.real, result.imag};
   }
 
   void gemm(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, const double *B, int LDB, double beta, double *C,
