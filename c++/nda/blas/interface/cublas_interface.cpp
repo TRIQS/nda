@@ -14,6 +14,7 @@
 //
 // Authors: Olivier Parcollet, Nils Wentzell
 
+#include <mpi/mpi.hpp>
 #include <nda/nda.hpp>
 #include <nda/exceptions.hpp>
 #include "cxx_interface.hpp"
@@ -32,6 +33,34 @@
 using namespace std::string_literals;
 
 namespace nda::blas::device {
+
+  static const char *_cudaGetErrorEnum(cublasStatus_t error)
+  {
+    switch (error)
+    {
+      case CUBLAS_STATUS_SUCCESS:
+        return "CUBLAS_STATUS_SUCCESS";
+      case CUBLAS_STATUS_NOT_INITIALIZED:
+        return "CUBLAS_STATUS_NOT_INITIALIZED";
+      case CUBLAS_STATUS_ALLOC_FAILED:
+        return "CUBLAS_STATUS_ALLOC_FAILED";
+      case CUBLAS_STATUS_INVALID_VALUE:
+        return "CUBLAS_STATUS_INVALID_VALUE";
+      case CUBLAS_STATUS_ARCH_MISMATCH:
+        return "CUBLAS_STATUS_ARCH_MISMATCH";
+      case CUBLAS_STATUS_MAPPING_ERROR:
+        return "CUBLAS_STATUS_MAPPING_ERROR";
+      case CUBLAS_STATUS_EXECUTION_FAILED:
+        return "CUBLAS_STATUS_EXECUTION_FAILED";
+      case CUBLAS_STATUS_INTERNAL_ERROR:
+        return "CUBLAS_STATUS_INTERNAL_ERROR";
+      case CUBLAS_STATUS_NOT_SUPPORTED:
+        return "CUBLAS_STATUS_NOT_SUPPORTED";
+      case CUBLAS_STATUS_LICENSE_ERROR:
+        return "CUBLAS_STATUS_LICENSE_ERROR";
+    }
+    return "<unknown>";
+  }
 
   constexpr cublasOperation_t get_cublas_op(char op) {
     switch (op) {
@@ -87,10 +116,24 @@ namespace nda::blas::device {
 
   /// Global option to turn on/off the cudaDeviceSynchronize after cublas library calls
   static bool synchronize = true;
-#define CUBLAS_CHECK(X, ...)                                                                                                                         \
-  auto err = X(get_handle(), __VA_ARGS__);                                                                                                           \
-  if (synchronize) cudaDeviceSynchronize();                                                                                                          \
-  if (err != CUBLAS_STATUS_SUCCESS) NDA_RUNTIME_ERROR << AS_STRING(X) + " failed with error code "s + std::to_string(err);
+
+#define CUBLAS_CHECK(X, ...)                                                                                                                  \
+{ 																	      \
+  auto err = X(get_handle(), __VA_ARGS__);                                                                                                    \
+  if (err != CUBLAS_STATUS_SUCCESS) {												              \
+    std::cerr<< AS_STRING(X) <<" failed with error code: " <<std::to_string(err) <<", error message: " <<_cudaGetErrorEnum(err) <<std::endl;  \
+    mpi::communicator{}.abort(11);    													      \
+  }																	      \
+  if (synchronize) {  													                      \
+    auto err1 = cudaDeviceSynchronize();                                                                                                      \
+    if (err1 != cudaSuccess) {												                      \
+      std::cerr<<" cudaDeviceSynchronize failed after call to: " <<AS_STRING(X) " \n " 				      							      \
+	       <<" cudaGetErrorName: " << std::string(cudaGetErrorName(err1)) <<"\n"							      \
+	       <<" cudaGetErrorString: " << std::string(cudaGetErrorString(err1)) <<"\n";						      \
+      mpi::communicator{}.abort(11);    												      \
+    }																	      \
+  } 																	      \
+}     
 
   inline auto *cucplx(std::complex<double> *c) { return reinterpret_cast<cuDoubleComplex *>(c); }                // NOLINT
   inline auto *cucplx(std::complex<double> const *c) { return reinterpret_cast<const cuDoubleComplex *>(c); }    // NOLINT

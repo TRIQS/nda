@@ -355,16 +355,18 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
         auto [n_bl_dst, bl_size_dst, bl_str_dst] = *bl_layout_dst;
         auto [n_bl_src, bl_size_src, bl_str_src] = *bl_layout_src;
 
+        if(n_bl_dst*bl_size_dst != n_bl_src*bl_size_src) 
+          NDA_RUNTIME_ERROR <<"Incompatible block sizes in assign_from_ndarray";
         // If either destination or source consist of a single block we can chunk it up to make the layouts compatible
         if (n_bl_dst == 1 && n_bl_src > 1) {
           n_bl_dst = n_bl_src;
           bl_size_dst /= n_bl_src;
-          bl_str_dst /= n_bl_src;
+          bl_str_dst = bl_size_dst;
         }
         if (n_bl_src == 1 && n_bl_dst > 1) {
           n_bl_src = n_bl_dst;
           bl_size_src /= n_bl_dst;
-          bl_str_src /= n_bl_dst;
+          bl_str_src = bl_size_src;
         }
 
         // Copy only if block-layouts are compatible, otherwise continue to fallback

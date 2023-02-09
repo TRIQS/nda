@@ -84,7 +84,7 @@ namespace nda::mem {
       if (data == nullptr) return;
 
       // If needed, call the T destructors
-      if constexpr (!std::is_trivial_v<T>) {
+      if constexpr (alloc_t::address_space == Host and !(std::is_trivial_v<T> or nda::is_complex_v<T>)) {
         for (size_t i = 0; i < size; ++i) data[i].~T();
       }
 
