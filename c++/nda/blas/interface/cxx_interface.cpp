@@ -36,8 +36,8 @@ namespace {
 
 // Manual Include since cblas uses Fortan _sub to wrap function again
 #define F77_ddot F77_GLOBAL(ddot, DDOT)
-#define F77_zdotu F77_GLOBAL(zdotu, DDOT)
-#define F77_zdotc F77_GLOBAL(zdotc, DDOT)
+#define F77_zdotu F77_GLOBAL(zdotu, ZDOTU)
+#define F77_zdotc F77_GLOBAL(zdotc, ZDOTC)
 extern "C" {
 double F77_ddot(FINT, const double *, FINT, const double *, FINT);
 nda_complex_double F77_zdotu(FINT, const double *, FINT, const double *, FINT); // NOLINT
@@ -72,13 +72,19 @@ namespace nda::blas::f77 {
   }
 
   double dot(int M, const double *x, int incx, const double *Y, int incy) { return F77_ddot(&M, x, &incx, Y, &incy); }
-  std::complex<double> dot(int M, const std::complex<double> *x, int incx, const std::complex<double> *Y, int incy) {
-    auto result = F77_zdotu(&M, blacplx(x), &incx, blacplx(Y), &incy);
-    return std::complex<double>{result.real, result.imag};
+  std::complex<double> dot(int M, const std::complex<double> *x, int incx, const std::complex<double> *y, int incy) {
+    std::complex<double> res(0.0);
+    for( int i=0; i<M; ++i, x+=incx, y+=incy  ) res += (*x) * (*y) ;
+    return res;
+    //auto result = F77_zdotu(&M, blacplx(x), &incx, blacplx(Y), &incy);
+    //return std::complex<double>{result.real, result.imag};
   }
-  std::complex<double> dotc(int M, const std::complex<double> *x, int incx, const std::complex<double> *Y, int incy) {
-    auto result = F77_zdotc(&M, blacplx(x), &incx, blacplx(Y), &incy);
-    return std::complex<double>{result.real, result.imag};
+  std::complex<double> dotc(int M, const std::complex<double> *x, int incx, const std::complex<double> *y, int incy) {
+    std::complex<double> res(0.0);
+    for( int i=0; i<M; ++i, x+=incx, y+=incy  ) res += std::conj(*x) * (*y) ;
+    return res;
+    //auto result = F77_zdotc(&M, blacplx(x), &incx, blacplx(Y), &incy);
+    //return std::complex<double>{result.real, result.imag};
   }
 
   void gemm(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, const double *B, int LDB, double beta, double *C,

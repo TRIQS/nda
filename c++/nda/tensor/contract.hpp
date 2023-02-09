@@ -95,7 +95,7 @@ namespace nda::tensor {
       static_assert(always_false<bool>," contract on host requires cpu tensor contraction backend. ");
 #endif
     } else { // incompatible address spaces, should not be here! 
-      static_assert(always_false<bool>, "Matrices must have compatible memory address space");
+      //static_assert(always_false<bool>, "Matrices must have compatible memory address space");
     }
     
   }
