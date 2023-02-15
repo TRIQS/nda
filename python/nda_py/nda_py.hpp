@@ -16,7 +16,7 @@ namespace nda::python {
   // AUR is array<T,R> or array_view<T, R>, but NOT a the Array concept.
   // It must be a container or a view.
   template <typename AUR>
-  cpp2py::numpy_proxy make_numpy_proxy_from_array_or_view(AUR &&a) REQUIRES(is_regular_or_view_v<std::decay_t<AUR>>) {
+  cpp2py::numpy_proxy make_numpy_proxy_from_array_or_view(AUR &&a) requires(is_regular_or_view_v<std::decay_t<AUR>>) {
 
     using A          = std::decay_t<AUR>;
     using value_type = typename A::value_type;          // NB May be const
