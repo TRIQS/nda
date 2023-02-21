@@ -16,9 +16,36 @@
 */
 
 TEST(SymGrp, MatrixPermutation) { //NOLINT
-  // the 4x4 matrix
+  // the 4x4 matrix, initialized such that it respects the symmetries
   nda::array<std::complex<double>, 2> A(4, 4);
- 
+  auto a  = std::rand() / RAND_MAX;
+  A(0, 0) = a;
+  A(2, 0) = a;
+  A(0, 3) = a;
+  A(2, 3) = a;
+
+  auto b  = std::rand() / RAND_MAX;
+  A(1, 0) = b;
+  A(1, 3) = b;
+
+  auto c  = std::rand() / RAND_MAX;
+  A(3, 0) = c;
+  A(3, 3) = c;
+
+  auto d  = std::rand() / RAND_MAX;
+  A(0, 1) = d;
+  A(2, 1) = d;
+  A(0, 2) = d;
+  A(2, 2) = d;
+
+  auto e  = std::rand() / RAND_MAX;
+  A(1, 1) = e;
+  A(1, 2) = e;
+
+  auto f  = std::rand() / RAND_MAX;
+  A(3, 1) = f;
+  A(3, 2) = f;
+
   // 1) {0, 1, 2, 3} -> {2, 1, 0, 3}
   std::function<nda::operation(std::array<long, 2> &)> p0 = [](std::array<long, 2> &x) {
     auto p = std::array<long, 4>{2, 1, 0, 3};
@@ -33,10 +60,19 @@ TEST(SymGrp, MatrixPermutation) { //NOLINT
     return nda::operation{false, false};
   };
 
-  // compute symmetry classes
+  // compute symmetry classes and test if 
+  // 1) number matches expectation
+  // 2) A is left invariant under symmetry operation 
   std::vector<std::function<nda::operation(std::array<long, 2> &)>> sym_list = {p0, p1};
   nda::sym_grp grp(A, sym_list);
   EXPECT_EQ(grp.get_sym_classes().size(), 6);
+  EXPECT_EQ(grp.symmetrize(A), 0.0);
+
+  // init second array from symmetry group and test if it matches input array
+  nda::array<std::complex<double>, 2> B(4, 4);
+  std::function<std::complex<double>(std::array<long, 2> const &)> init_func = [&A](std::array<long, 2> const &x) { return std::apply(A, x); };
+  grp.init(B, init_func);
+  EXPECT_EQ_ARRAY(A, B);
 }
 
 // -------------------------------------
@@ -51,7 +87,7 @@ TEST(SymGrp, MatrixPermutation) { //NOLINT
 TEST(SymGrp, MatrixFlipShift) { //NOLINT
   // the 4x4 matrix
   nda::array<std::complex<double>, 2> A(4, 4);
- 
+
   // 1) A_ij -> A_ji
   std::function<nda::operation(std::array<long, 2> &)> p0 = [](std::array<long, 2> &x) {
     auto idx = x[0];
@@ -85,7 +121,7 @@ TEST(SymGrp, TensorCylicTriplet) { //NOLINT
   // the rank 6 tensor
   int N = 2;
   nda::array<std::complex<double>, 6> A(2, 2, 2, 2, 2, 2);
- 
+
   // 1) A_ijklmn -> A_jkilmn
   std::function<nda::operation(std::array<long, 6> &)> p0 = [](std::array<long, 6> &x) {
     auto idx = x[0];

@@ -48,6 +48,45 @@ namespace nda {
     [[nodiscard]] std::vector<sym_func_t> const &get_sym_list() const { return sym_list; }
     [[nodiscard]] std::vector<sym_class_t> const &get_sym_classes() const { return sym_classes; }
 
+    // initializer method 1
+    // iterates over symmetry classes and propagates first element
+    void init(A &x) {
+      for (auto sym_class : sym_classes) {
+        auto ref_val = std::apply(x, sym_class[0].first);
+
+        for (auto idx = 1; idx < sym_class.size(); ++idx) { std::apply(x, sym_class[idx].first) = sym_class[idx].second(ref_val); }
+      }
+    }
+
+    // initializer method 2
+    // iterates over symmetry classes and propagates value from initializer function
+    template <typename T>
+    void init(A &x, std::function<T(idx_t const &)> init_func) {
+      for (auto sym_class : sym_classes) {
+        auto ref_val                      = init_func(sym_class[0].first);
+        std::apply(x, sym_class[0].first) = ref_val;
+
+        for (auto idx = 1; idx < sym_class.size(); ++idx) { std::apply(x, sym_class[idx].first) = sym_class[idx].second(ref_val); }
+      }
+    }
+
+    // symmetrization, similar to initializer method 1 but with error estimate
+    double symmetrize(A &x) {
+      double max_diff = 0.0;
+
+      for (auto sym_class : sym_classes) {
+        auto ref_val = std::apply(x, sym_class[0].first);
+
+        for (auto idx = 1; idx < sym_class.size(); ++idx) {
+          double diff = std::abs(std::apply(x, sym_class[idx].first) - sym_class[idx].second(ref_val));
+          if (diff > max_diff) { max_diff = diff; };
+          std::apply(x, sym_class[idx].first) = sym_class[idx].second(ref_val);
+        }
+      }
+
+      return max_diff;
+    }
+
     // constructor
     sym_grp(A const &x, std::vector<sym_func_t> const &sym_list_) : sym_list(sym_list_) {
 
