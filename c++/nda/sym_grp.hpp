@@ -1,6 +1,7 @@
 #pragma once
 
 namespace nda {
+  // residual operation after applying a symmetry
   struct operation {
     // members
     bool sgn = false; // change sign?
@@ -11,98 +12,96 @@ namespace nda {
 
     // define how operator acts on given value
     template <typename T>
-    std::complex<double> operator()(T const &x) {
+    T operator()(T const &x) {
       if (sgn) return cc ? -conj(x) : -x;
       return cc ? conj(x) : x;
     }
   };
 
-  template <nda::Array A>
-  FORCEINLINE bool is_valid(A const &x, std::array<long, static_cast<std::size_t>(nda::get_rank<A>)> const &idxs) {
+  // check if array index is valid (move into basic_array.hpp?)
+  template <Array A>
+  FORCEINLINE bool is_valid(A const &x, std::array<long, static_cast<std::size_t>(get_rank<A>)> const &idx) {
 
     // check that indices are valid for each dimension
-    for (auto i = 0; i < nda::get_rank<A>; ++i) {
-      if (not(0 <= idxs[i] && idxs[i] < x.shape()[i])) { return false; }
+    for (auto i = 0; i < get_rank<A>; ++i) {
+      if (not(0 <= idx[i] && idx[i] < x.shape()[i])) { return false; }
     }
 
     return true;
   }
 
-  template <nda::Array A>
-  class sym_grp {
+  // model the symmetry concept
+  // symmetry mutates array index and returns operation (make idx const and return new idx explicitly?)
+  template <typename F, typename A>
+  concept NdaSymmetry = Array<A> and requires(F f, std::array<long, static_cast<std::size_t>(get_rank<A>)> &idx) {
+    { f(idx) } -> std::same_as<operation>;
+  };
+
+  // model the init function concept
+  // init function accepts array index and returns array value type
+  template <typename F, typename A>
+  concept NdaInitFunc = Array<A> and requires(F f, std::array<long, static_cast<std::size_t>(get_rank<A>)> const &idx) {
+    { f(idx) } -> std::same_as<get_value_t<A>>;
+  };
+
+  // symmetry group implementation
+  template <typename F, typename A>
+  requires(Array<A> &&NdaSymmetry<F, A>) class sym_grp {
     public:
     // aliases
-    static constexpr int ndims = nda::get_rank<A>;
-    using idx_t                = std::array<long, static_cast<std::size_t>(ndims)>;
-    using sym_idx_t            = std::pair<idx_t, operation>;
-    using sym_func_t           = std::function<operation(idx_t &)>; // symmetry mutates index and returns operation
-    using sym_class_t          = std::vector<sym_idx_t>;            // symmetry class
+    static constexpr int ndims = get_rank<A>;
+    using sym_idx_t            = std::pair<long, operation>;
+    using sym_class_t          = std::vector<sym_idx_t>;
 
     private:
     // members
-    std::vector<sym_func_t> sym_list;     // list of symmetries defining the symmetry group
+    std::vector<F> sym_list;              // list of symmetries defining the symmetry group
     std::vector<sym_class_t> sym_classes; // list of symmetric elements
 
     public:
     // getter methods (no setter methods, members should not be modified)
-    [[nodiscard]] std::vector<sym_func_t> const &get_sym_list() const { return sym_list; }
+    [[nodiscard]] std::vector<F> const &get_sym_list() const { return sym_list; }
     [[nodiscard]] std::vector<sym_class_t> const &get_sym_classes() const { return sym_classes; }
 
     // initializer method 1
     // iterates over symmetry classes and propagates first element
-    void init(A &x) {
+    FORCEINLINE void init(A &x) const {
       for (auto sym_class : sym_classes) {
-        auto ref_val = std::apply(x, sym_class[0].first);
-
-        for (auto idx = 1; idx < sym_class.size(); ++idx) { std::apply(x, sym_class[idx].first) = sym_class[idx].second(ref_val); }
+        auto ref_val = std::apply(x, x.indexmap().to_idx(sym_class[0].first));
+        for (auto idx = 1; idx < sym_class.size(); ++idx) {
+          std::apply(x, x.indexmap().to_idx(sym_class[idx].first)) = sym_class[idx].second(ref_val);
+        }
       }
     }
 
     // initializer method 2
     // iterates over symmetry classes and propagates value from initializer function
-    template <typename T>
-    void init(A &x, std::function<T(idx_t const &)> init_func) {
+    template <typename H>
+    requires(NdaInitFunc<H, A>) FORCEINLINE void init(A &x, H const &init_func) const {
       for (auto sym_class : sym_classes) {
-        auto ref_val                      = init_func(sym_class[0].first);
-        std::apply(x, sym_class[0].first) = ref_val;
-
-        for (auto idx = 1; idx < sym_class.size(); ++idx) { std::apply(x, sym_class[idx].first) = sym_class[idx].second(ref_val); }
+        auto idx           = x.indexmap().to_idx(sym_class[0].first);
+        auto ref_val       = init_func(idx);
+        std::apply(x, idx) = ref_val;
+        for (auto i = 1; i < sym_class.size(); ++i) { std::apply(x, x.indexmap().to_idx(sym_class[i].first)) = sym_class[i].second(ref_val); }
       }
-    }
-
-    // symmetrization, similar to initializer method 1 but with error estimate
-    double symmetrize(A &x) {
-      double max_diff = 0.0;
-
-      for (auto sym_class : sym_classes) {
-        auto ref_val = std::apply(x, sym_class[0].first);
-
-        for (auto idx = 1; idx < sym_class.size(); ++idx) {
-          double diff = std::abs(std::apply(x, sym_class[idx].first) - sym_class[idx].second(ref_val));
-          if (diff > max_diff) { max_diff = diff; };
-          std::apply(x, sym_class[idx].first) = sym_class[idx].second(ref_val);
-        }
-      }
-
-      return max_diff;
     }
 
     // constructor
-    sym_grp(A const &x, std::vector<sym_func_t> const &sym_list_) : sym_list(sym_list_) {
+    sym_grp(A const &x, std::vector<F> const &sym_list_) : sym_list(sym_list_) {
 
       // array to check whether index has been sorted into a symmetry class already
-      nda::array<bool, ndims> checked(x.shape());
+      array<bool, ndims> checked(x.shape());
       checked() = false;
 
       // loop over array elements and sort them into symmetry classes
-      nda::for_each(checked.shape(), [&checked, this](auto... i) {
+      for_each(checked.shape(), [&checked, this](auto... i) {
         if (not checked(i...)) {
           // this index is now checked and generates a new symmetry class
           checked(i...) = true;
           sym_class_t sym_class;
-          auto idx = std::array{i...};
           operation op;
-          sym_class.push_back({idx, op});
+          auto idx = std::array{i...};
+          sym_class.push_back({checked.indexmap()(i...), op});
 
           // apply all symmetries to current index
           iterate(idx, op, checked, sym_class);
@@ -114,7 +113,9 @@ namespace nda {
     }
 
     private:
-    void iterate(idx_t const &idx, operation const &op, nda::array<bool, ndims> &checked, sym_class_t &sym_class, long path_length = 0) {
+    void iterate(std::array<long, static_cast<std::size_t>(get_rank<A>)> const &idx, operation const &op, array<bool, ndims> &checked,
+                 sym_class_t &sym_class, long path_length = 0) {
+
       // loop over all symmetry operations
       for (auto sym : sym_list) {
         // copy the index before mutating it
@@ -131,7 +132,7 @@ namespace nda {
             std::apply(checked, idxp) = true;
 
             // add to symmetry class and keep going
-            sym_class.push_back({idxp, opp});
+            sym_class.push_back({std::apply(checked.indexmap(), idxp), opp});
             iterate(idxp, opp, checked, sym_class);
           }
         } else if (path_length < 10) {

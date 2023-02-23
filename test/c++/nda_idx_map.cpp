@@ -51,6 +51,28 @@ TEST(idxstat, eval) { // NOLINT
   EXPECT_EQ(i1(1, 3, 2), 21 * 1 + 3 * 3 + 2 * 1); //NOLINT
 }
 
+//-------------------------
+
+TEST(idxstat, to_idx) {
+
+  idx_map<3, 0, C_stride_order<3>, layout_prop_e::none> iC{{2, 7, 3}};
+  idx_map<3, 0, Fortran_stride_order<3>, layout_prop_e::none> iF{{2, 7, 3}};
+  auto iP = iF.transpose<encode(std::array{0, 2, 1})>();
+
+  for (auto idx0 : range(2)) {
+    auto iPv = iP.slice(idx0, _, _).second;
+
+    for (auto idx1 : range(7)) {
+      for (auto idx2 : range(3)) {
+        EXPECT_TRUE(iPv.to_idx(iPv(idx2, idx1)) == ma(idx2, idx1));
+        EXPECT_TRUE(iC.to_idx(iC(idx0, idx1, idx2)) == ma(idx0, idx1, idx2));
+        EXPECT_TRUE(iF.to_idx(iF(idx0, idx1, idx2)) == ma(idx0, idx1, idx2));
+        EXPECT_TRUE(iP.to_idx(iP(idx0, idx2, idx1)) == ma(idx0, idx2, idx1));
+      }
+    }
+  }
+}
+
 //-----------------------
 
 //TEST(idxstat, boundcheck) { // NOLINT

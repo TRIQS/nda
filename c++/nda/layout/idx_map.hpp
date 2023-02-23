@@ -376,6 +376,34 @@ namespace nda {
       return call_impl(std::make_index_sequence<sizeof...(Args)>{}, args...);
     }
 
+    /**
+     * Stride order agnostic mapping to index
+     * 
+     * @return : 
+     *       indices corresponding to linear index
+     *
+     */
+    std::array<long, Rank> to_idx(long lin_idx) const {
+
+      // compute stride residues starting from slowest index 
+      std::array<long, Rank> residues;
+      residues[0] = lin_idx;
+      
+      for (auto i : range(1, Rank)) {
+        residues[i] = residues[i - 1] % str[stride_order[i - 1]];
+      } // residues[Rank - 1] is now the value of the fastest index times the corresponding stride 
+
+      // convert residues to indices, ordered from slowest to fastest
+      std::array<long, Rank> idx;
+      idx[Rank - 1] = residues[Rank - 1] / str[stride_order[Rank - 1]];
+
+      for (auto i : range(Rank - 2, -1, -1)) {
+        idx[i] = (residues[i] - residues[i + 1]) / str[stride_order[i]];
+      }
+
+      return permutations::apply_inverse(stride_order, idx);
+    }
+
     // ----------------  Slice -------------------------
 
     template <typename... Args>

@@ -18,6 +18,7 @@
 TEST(SymGrp, MatrixPermutation) { //NOLINT
   // the 4x4 matrix, initialized such that it respects the symmetries
   nda::array<std::complex<double>, 2> A(4, 4);
+
   auto a  = std::rand() / RAND_MAX;
   A(0, 0) = a;
   A(2, 0) = a;
@@ -47,14 +48,14 @@ TEST(SymGrp, MatrixPermutation) { //NOLINT
   A(3, 2) = f;
 
   // 1) {0, 1, 2, 3} -> {2, 1, 0, 3}
-  std::function<nda::operation(std::array<long, 2> &)> p0 = [](std::array<long, 2> &x) {
+  auto p0 = [](std::array<long, 2> &x) {
     auto p = std::array<long, 4>{2, 1, 0, 3};
     x[0]   = p[x[0]];
     return nda::operation{false, false};
   };
 
   // 2) {0, 1, 2, 3} -> {3, 2, 1, 0}
-  std::function<nda::operation(std::array<long, 2> &)> p1 = [](std::array<long, 2> &x) {
+  auto p1 = [](std::array<long, 2> &x) {
     auto p = std::array<long, 4>{3, 2, 1, 0};
     x[1]   = p[x[1]];
     return nda::operation{false, false};
@@ -63,14 +64,17 @@ TEST(SymGrp, MatrixPermutation) { //NOLINT
   // compute symmetry classes and test if 
   // 1) number matches expectation
   // 2) A is left invariant under symmetry operation 
-  std::vector<std::function<nda::operation(std::array<long, 2> &)>> sym_list = {p0, p1};
-  nda::sym_grp grp(A, sym_list);
+  using FT = std::function<nda::operation(std::array<long, 2> &)>;
+  std::vector<FT> sym_list = {p0, p1};
+  auto grp = nda::sym_grp{A, sym_list};
+  decltype(A) Ap(A);
   EXPECT_EQ(grp.get_sym_classes().size(), 6);
-  EXPECT_EQ(grp.symmetrize(A), 0.0);
+  grp.init(Ap);
+  EXPECT_EQ_ARRAY(A, Ap);
 
   // init second array from symmetry group and test if it matches input array
   nda::array<std::complex<double>, 2> B(4, 4);
-  std::function<std::complex<double>(std::array<long, 2> const &)> init_func = [&A](std::array<long, 2> const &x) { return std::apply(A, x); };
+  auto init_func = [&A](std::array<long, 2> const &x) { return std::apply(A, x); };
   grp.init(B, init_func);
   EXPECT_EQ_ARRAY(A, B);
 }
@@ -89,7 +93,7 @@ TEST(SymGrp, MatrixFlipShift) { //NOLINT
   nda::array<std::complex<double>, 2> A(4, 4);
 
   // 1) A_ij -> A_ji
-  std::function<nda::operation(std::array<long, 2> &)> p0 = [](std::array<long, 2> &x) {
+  auto p0 = [](std::array<long, 2> &x) {
     auto idx = x[0];
     x[0]     = x[1];
     x[1]     = idx;
@@ -97,14 +101,15 @@ TEST(SymGrp, MatrixFlipShift) { //NOLINT
   };
 
   // 2) A_ij -> A_(i+1)j
-  std::function<nda::operation(std::array<long, 2> &)> p1 = [](std::array<long, 2> &x) {
+  auto p1 = [](std::array<long, 2> &x) {
     ++x[0];
     return nda::operation{false, false};
   };
 
   // compute symmetry classes
-  std::vector<std::function<nda::operation(std::array<long, 2> &)>> sym_list = {p0, p1};
-  nda::sym_grp grp(A, sym_list);
+  using FT = std::function<nda::operation(std::array<long, 2> &)>;
+  std::vector<FT> sym_list = {p0, p1};
+  auto grp = nda::sym_grp{A, sym_list};
   EXPECT_EQ(grp.get_sym_classes().size(), 1);
 }
 
@@ -123,7 +128,7 @@ TEST(SymGrp, TensorCylicTriplet) { //NOLINT
   nda::array<std::complex<double>, 6> A(2, 2, 2, 2, 2, 2);
 
   // 1) A_ijklmn -> A_jkilmn
-  std::function<nda::operation(std::array<long, 6> &)> p0 = [](std::array<long, 6> &x) {
+  auto p0 = [](std::array<long, 6> &x) {
     auto idx = x[0];
     x[0]     = x[1];
     x[1]     = x[2];
@@ -132,7 +137,7 @@ TEST(SymGrp, TensorCylicTriplet) { //NOLINT
   };
 
   // 2) A_ijklmn -> A_ijkmnl
-  std::function<nda::operation(std::array<long, 6> &)> p1 = [](std::array<long, 6> &x) {
+  auto p1 = [](std::array<long, 6> &x) {
     auto idx = x[3];
     x[3]     = x[4];
     x[4]     = x[5];
@@ -141,8 +146,9 @@ TEST(SymGrp, TensorCylicTriplet) { //NOLINT
   };
 
   // compute symmetry classes
-  std::vector<std::function<nda::operation(std::array<long, 6> &)>> sym_list = {p0, p1};
-  nda::sym_grp grp(A, sym_list);
+  using FT = std::function<nda::operation(std::array<long, 6> &)>;
+  std::vector<FT> sym_list = {p0, p1};
+  auto grp = nda::sym_grp{A, sym_list};
   EXPECT_EQ(grp.get_sym_classes().size(), pow((pow(N, 3) + 2 * N) / 3, 2));
 }
 
