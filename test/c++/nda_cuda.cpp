@@ -25,7 +25,7 @@ template <size_t Rank>
 using cuarray_t = nda::cuarray<value_t, Rank>;
 
 template <size_t Rank>
-using cuarray_vt = nda::cuarray<value_t, Rank>;
+using cuarray_vt = nda::cuarray_view<value_t, Rank>;
 
 template <size_t Rank>
 using cuarray_cvt = nda::cuarray_const_view<value_t, Rank>;
