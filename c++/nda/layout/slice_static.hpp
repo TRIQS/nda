@@ -205,7 +205,8 @@ namespace nda::slice_static {
   // length. Same convention
   // second arg : l_n  : length[n] of the idx_map
   FORCEINLINE long get_l(range const &R, long l_n) {
-    return ((R.last() == -1 ? l_n : R.last()) - R.first() + R.step() - 1) / R.step(); // python behaviour
+    auto last = (R.last() == -1 and R.step() > 0) ? l_n : R.last();
+    return range(R.first(), last, R.step()).size();
   }
   FORCEINLINE long get_l(range::all_t, long l_n) { return l_n; }
 

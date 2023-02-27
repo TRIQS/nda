@@ -211,7 +211,7 @@ namespace nda {
         if (lenptr[dim] > 1) dims_to_check.push_back(dim);
 
       for (int n = 1; n < dims_to_check.size(); ++n)
-        if (strptr[dims_to_check[n - 1]] < strptr[dims_to_check[n]]) return false;
+        if (std::abs(strptr[dims_to_check[n - 1]]) < std::abs(strptr[dims_to_check[n]])) return false;
 
       return true;
     }
