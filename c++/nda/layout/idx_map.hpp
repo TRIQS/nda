@@ -281,6 +281,7 @@ namespace nda {
 
     public:
     idx_map(std::array<long, Rank> const &shape, std::array<long, Rank> const &strides) noexcept(!check_stride_order) : len(shape), str(strides) {
+      EXPECTS(std::all_of(shape.cbegin(), shape.cend(), [](auto &i) { return i >= 0; }));
       if constexpr (check_stride_order)
         if (not is_stride_order_valid())
           throw std::runtime_error("ERROR: strides of idx_map do not match stride order of the type\n");
@@ -289,6 +290,7 @@ namespace nda {
     /// Construct from the shape. If StaticExtents are present, the corresponding component of the shape must be equal to it.
     template <std::integral Int = long>
     idx_map(std::array<Int, Rank> const &shape) noexcept : len(stdutil::make_std_array<long>(shape)) {
+      EXPECTS(std::all_of(shape.cbegin(), shape.cend(), [](auto &i) { return i >= 0; }));
       assert_static_extents_and_len_are_compatible();
       compute_strides_contiguous();
     }
