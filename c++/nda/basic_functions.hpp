@@ -37,7 +37,7 @@ namespace nda {
   ///
   template <typename T, std::integral... Ints>
   auto zeros(Ints... i) {
-    return zeros<T>(std::array<long, sizeof...(Ints)>{i...});
+    return zeros<T>(std::array<long, sizeof...(Ints)>{static_cast<long>(i)...});
   }
 
   // --------------------------- ones ------------------------
