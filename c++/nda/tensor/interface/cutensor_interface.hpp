@@ -22,6 +22,7 @@
 #include "cutensor.h"
 
 #include "nda/concepts.hpp"
+#include "nda/traits.hpp"
 #include "nda/macros.hpp"
 #include "nda/exceptions.hpp"
 #include "nda/mem/device.hpp"
@@ -45,6 +46,8 @@ namespace nda::tensor::cutensor {
     switch(oper) {
       case op::SUM:
         return CUTENSOR_OP_ADD;
+      case op::MUL:
+        return CUTENSOR_OP_MUL;
       case op::MAX:
         return CUTENSOR_OP_MAX;
       case op::MIN:
@@ -60,6 +63,7 @@ namespace nda::tensor::cutensor {
       case op::NEG:
         return CUTENSOR_OP_NEG;
       default:
+	static_assert(always_true<bool>,"Unknown cutensor operation.");
         return CUTENSOR_OP_UNKNOWN;
     };
     return o;
