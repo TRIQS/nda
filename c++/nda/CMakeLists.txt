@@ -2,7 +2,6 @@ file(GLOB_RECURSE sources *.cpp)
 if(NOT CudaSupport)
   list(FILTER sources EXCLUDE REGEX "(cublas_interface|cuda_interface)")
 endif()
-message(STATUS "XXX ${sources}")
 add_library(${PROJECT_NAME}_c ${sources})
 add_library(${PROJECT_NAME}::${PROJECT_NAME}_c ALIAS ${PROJECT_NAME}_c)
 
@@ -66,8 +65,8 @@ install(TARGETS blas_lapack EXPORT ${PROJECT_NAME}-targets)
 
 # ========= CudaRT & CuBLAS ==========
 
-message(STATUS "-------- CUDAToolkit detection -------------")
 if(CudaSupport)
+  message(STATUS "-------- CUDAToolkit detection -------------")
   find_package(CUDAToolkit REQUIRED)
   target_link_libraries(${PROJECT_NAME}_c PUBLIC CUDA::cudart CUDA::cublas CUDA::cusolver)
   target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_CUDA NDA_HAVE_DEVICE)
@@ -75,8 +74,8 @@ endif()
 
 # ========= Magma ==========
 
-message(STATUS "-------- Magma detection -------------")
 if(Use_Magma)
+  message(STATUS "-------- Magma detection -------------")
   find_package(Magma REQUIRED)
   target_link_libraries(${PROJECT_NAME}_c PUBLIC magma)
   target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_MAGMA)
