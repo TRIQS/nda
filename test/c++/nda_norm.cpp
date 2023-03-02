@@ -78,7 +78,7 @@ TEST(Norm, Example) { //NOLINT
     EXPECT_EQ(norm(v), norm(v, 2.0));
     EXPECT_EQ(norm(v, 0.0), 3);
     EXPECT_EQ(norm(v, 1.0), 4);
-    EXPECT_EQ(norm(v, 2.0), sqrt(7.5));
+    EXPECT_NEAR(norm(v, 2.0), sqrt(7.5), 1e-15);
 
     EXPECT_TRUE((check_norm_p(v, -1.5)));
     EXPECT_TRUE((check_norm_p(v, -1.0)));
