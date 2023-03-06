@@ -78,12 +78,16 @@ namespace nda {
   template <typename ValueType, int Rank, uint64_t StaticExtents>
   using stack_array =
      nda::basic_array<ValueType, Rank, nda::basic_layout<StaticExtents, nda::C_stride_order<Rank>, nda::layout_prop_e::contiguous>, 'A', nda::stack>;
-
+  
   template <typename... Is>
   constexpr uint64_t static_extents(int i0, Is... is) {
     if (i0 > 15) throw std::runtime_error("NO!");
     return encode(std::array<int, sizeof...(Is) + 1>{i0, is...});
   }
+
+  template <typename ValueType, long Length>
+  using stack_vector =
+     nda::basic_array<ValueType, 1, nda::basic_layout<nda::static_extents(Length), nda::C_stride_order<1>, nda::layout_prop_e::contiguous>, 'V', nda::stack>;
 
   // ---------------------- is_array_or_view_container  --------------------------------
 
