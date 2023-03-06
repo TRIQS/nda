@@ -134,7 +134,6 @@ TEST(SliceH5, Hyperslab) { //NOLINT
     h5_write(f, "A", A);
   }
 
-  // auto slice = std::tuple{range::all, range::all, 3}); // FIXME range::all = range(0,-1,0) <- Empty!
   auto slice          = std::tuple{_, range(3, 5), 3};
   auto slice_ellipsis = std::tuple{___, range(3, 5), 3};
   auto A_slice        = A(_, range(3, 5), 3);
