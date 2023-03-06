@@ -131,7 +131,7 @@ TEST(Matmul, Cache) { //NOLINT
 
   nda::array<std::complex<double>, 3> TMPALL(2, 2, 5);
   TMPALL() = -1;
-  matrix_view<std::complex<double>> TMP(TMPALL(range(), range(), 2));
+  matrix_view<std::complex<double>> TMP(TMPALL(range::all, range::all, 2));
   matrix<std::complex<double>> M1(2, 2), Res(2, 2);
   M1()      = 0;
   M1(0, 0)  = 2;

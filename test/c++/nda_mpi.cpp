@@ -90,7 +90,7 @@ TEST(Arrays, MPI) { //NOLINT
   out << "  B = " << B << std::endl;
   out << "  C = " << C << std::endl;
 
-  EXPECT_ARRAY_EQ(B, A(range(se.first, se.second), range()));
+  EXPECT_ARRAY_EQ(B, A(range(se.first, se.second), range::all));
   EXPECT_ARRAY_NEAR(C, B);
 
   B *= -1;

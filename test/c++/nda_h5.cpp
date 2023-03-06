@@ -204,7 +204,7 @@ TEST(Array, H5) { //NOLINT
     h5_write(top, "D", D);
     h5_write(top, "C", C);
     h5::h5_write(top, "S", "");
-    h5_write(top, "A_slice", A(nda::range(), nda::range(1, 3)));
+    h5_write(top, "A_slice", A(nda::range::all, nda::range(1, 3)));
     h5_write(top, "empty", nda::array<double, 2>(0, 10));
 
     // add some attribute to A
@@ -255,7 +255,7 @@ TEST(Array, H5) { //NOLINT
 
     nda::array<long, 2> a_sli;
     h5_read(top, "A_slice", a_sli);
-    EXPECT_EQ_ARRAY(a_sli, A(nda::range(), nda::range(1, 3)));
+    EXPECT_EQ_ARRAY(a_sli, A(nda::range::all, nda::range(1, 3)));
 
     double xxx = 0;
     h5_read(top, "x", xxx);

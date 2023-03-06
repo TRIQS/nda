@@ -101,11 +101,11 @@ TEST(NDA, Bug2) { //NOLINT
   nda::array<double, 3> A(10, 2, 2);
   A() = 0;
 
-  A(4, range(), range()) = 1;
-  A(5, range(), range()) = 2;
+  A(4, range::all, range::all) = 1;
+  A(5, range::all, range::all) = 2;
 
-  matrix_view<double> M1 = A(4, range(), range());
-  matrix_view<double> M2 = A(5, range(), range());
+  matrix_view<double> M1 = A(4, range::all, range::all);
+  matrix_view<double> M2 = A(5, range::all, range::all);
 
   EXPECT_ARRAY_NEAR(M1, matrix<double>{{1, 1}, {1, 1}});
   EXPECT_ARRAY_NEAR(M2, matrix<double>{{2, 2}, {2, 2}});
@@ -179,7 +179,7 @@ TEST(NDA, View3) { //NOLINT
       for (int j = 0; j < 3; ++j)
         for (int k = 0; k < 4; ++k) A(i, j, k) = 100 * (i + 1) + 10 * (j + 1) + (k + 1);
 
-    auto _ = range{};
+    auto _ = range::all;
 
     EXPECT_EQ_ARRAY(A(0, _, _), (nda::array<long, 2>{{111, 112, 113, 114}, {121, 122, 123, 124}, {131, 132, 133, 134}}));
     EXPECT_EQ_ARRAY(A(1, _, _), (nda::array<long, 2>{{211, 212, 213, 214}, {221, 222, 223, 224}, {231, 232, 233, 234}}));
@@ -204,11 +204,11 @@ TEST(NDA, IssueXXX) { //NOLINT
   nda::array<double, 3> A(10, 2, 2);
   A() = 0;
 
-  A(4, range(), range()) = 1;
-  A(5, range(), range()) = 2;
+  A(4, range::all, range::all) = 1;
+  A(5, range::all, range::all) = 2;
 
-  matrix_view<double> M1 = A(4, range(), range());
-  matrix_view<double> M2 = A(5, range(), range());
+  matrix_view<double> M1 = A(4, range::all, range::all);
+  matrix_view<double> M2 = A(5, range::all, range::all);
 
   EXPECT_ARRAY_NEAR(M1, matrix<double>{{1, 1}, {1, 1}});
   EXPECT_ARRAY_NEAR(M2, matrix<double>{{2, 2}, {2, 2}});
