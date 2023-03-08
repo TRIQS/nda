@@ -74,20 +74,24 @@ namespace nda {
 
   template <typename ValueType, typename Layout = C_stride_layout>
   using vector_const_view = basic_array_view<ValueType const, 1, Layout, 'V', default_accessor, borrowed>;
-
-  template <typename ValueType, int Rank, uint64_t StaticExtents>
-  using stack_array =
-     nda::basic_array<ValueType, Rank, nda::basic_layout<StaticExtents, nda::C_stride_order<Rank>, nda::layout_prop_e::contiguous>, 'A', nda::stack>;
   
   template <typename... Is>
   constexpr uint64_t static_extents(int i0, Is... is) {
     if (i0 > 15) throw std::runtime_error("NO!");
-    return encode(std::array<int, sizeof...(Is) + 1>{i0, is...});
+    return encode(std::array<int, sizeof...(Is) + 1>{i0, static_cast<int>(is)...});
   }
 
-  template <typename ValueType, long Length>
+  template <typename ValueType, int N0, int... Ns>
+  using stack_array =
+     nda::basic_array<ValueType, 1 + sizeof...(Ns), nda::basic_layout<nda::static_extents(N0, Ns...), nda::C_stride_order<1 + sizeof...(Ns)>, nda::layout_prop_e::contiguous>, 'A', nda::stack>;
+
+  template <typename ValueType, int Length>
   using stack_vector =
      nda::basic_array<ValueType, 1, nda::basic_layout<nda::static_extents(Length), nda::C_stride_order<1>, nda::layout_prop_e::contiguous>, 'V', nda::stack>;
+
+  template <typename ValueType, int N, int M>
+  using stack_matrix =
+     nda::basic_array<ValueType, 2, nda::basic_layout<nda::static_extents(N, M), nda::C_stride_order<2>, nda::layout_prop_e::contiguous>, 'M', nda::stack>;
 
   // ---------------------- is_array_or_view_container  --------------------------------
 

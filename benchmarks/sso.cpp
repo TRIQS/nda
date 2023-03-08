@@ -106,7 +106,7 @@ static void stack_alloc(benchmark::State &state) {
   const int N = state.range(0);
 
   while (state.KeepRunning()) {
-    nda::stack_array<long, 1, nda::static_extents(15)> A(N);
+    nda::stack_array<long, 15> A(N);
     benchmark::DoNotOptimize(A(0));
   }
 }
@@ -116,7 +116,7 @@ BENCHMARK(stack_alloc)->Arg(1)->Arg(2)->Arg(3)->Arg(4)->Arg(10)->Arg(15); //->Ar
 //const int N = state.range(0);
 
 //while (state.KeepRunning()) {
-//nda::stack_array<long, 1, nda::static_extents(15)> A(N);
+//nda::stack_array<long, 15> A(N);
 //for (int i = 0; i < N - 1; ++i) benchmark::DoNotOptimize(A(i) = i);//fnt(i));
 //}
 //}
@@ -124,7 +124,7 @@ BENCHMARK(stack_alloc)->Arg(1)->Arg(2)->Arg(3)->Arg(4)->Arg(10)->Arg(15); //->Ar
 
 static void stack_loop_only(benchmark::State &state) {
   const int N = state.range(0);
-  nda::stack_array<long, 1, nda::static_extents(15)> A(N);
+  nda::stack_array<long, 15> A(N);
   nda::basic_array_view<long, 1, nda::C_layout, 'A', nda::no_alias_accessor, nda::borrowed> v{A};
 
   while (state.KeepRunning()) {
@@ -166,7 +166,7 @@ static void stack_alloc2d(benchmark::State &state) {
   const int N = state.range(0);
 
   while (state.KeepRunning()) {
-  nda::stack_array<double, 2, nda::static_extents(15,15)> A;
+  nda::stack_array<double, 15, 15> A;
     for (int i = 0; i < N - 1; ++i) 
     for (int j = 0; j < N - 1; ++j) benchmark::DoNotOptimize(A(i,j)  = i+2*j);//fnt(i));
   }
@@ -186,7 +186,7 @@ BENCHMARK(dyn_alloc2d_loop_only)->Arg(1)->Arg(2)->Arg(3)->Arg(4)->Arg(10)->Arg(1
 
 static void stack_alloc2d_loop_only(benchmark::State &state) {
   const int N = state.range(0);
-  nda::stack_array<double, 2, nda::static_extents(15,15)> A;
+  nda::stack_array<double, 15, 15> A;
 
   while (state.KeepRunning()) {
     for (int i = 0; i < N - 1; ++i) 

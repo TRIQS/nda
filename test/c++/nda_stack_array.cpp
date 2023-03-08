@@ -20,7 +20,7 @@
 
 TEST(StackArray, create) { //NOLINT
 
-  nda::stack_array<long, 2, nda::static_extents(3, 3)> a;
+  nda::stack_array<long, 3, 3> a;
   nda::array<long, 2> d(3, 3);
 
   a = 3;
@@ -48,7 +48,7 @@ TEST(StackArray, create) { //NOLINT
 
 TEST(StackArray, slice) { //NOLINT
 
-  nda::stack_array<long, 2, nda::static_extents(3, 3)> a;
+  nda::stack_array<long, 3, 3> a;
 
   a = 3;
   for (int i = 0; i < 3; ++i)
