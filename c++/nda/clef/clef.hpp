@@ -227,9 +227,10 @@ namespace nda::clef {
   // [ ] Call
   template <>
   struct operation<tags::subscript> {
-    template <typename F, typename Args>
-    FORCEINLINE decltype(auto) operator()(F &&f, Args &&args) const {
-      return _cl(std::forward<F>(f))[_cl(std::forward<Args>(args))];
+    template <typename F, typename... Args>
+    FORCEINLINE decltype(auto) operator()(F &&f, Args &&...args) const {
+      // directly calling [args...] breaks clang
+      return _cl(std::forward<F>(f)).operator[](_cl(std::forward<Args>(args))...);
     }
   };
 
@@ -692,9 +693,9 @@ namespace nda::clef {
   * The object can be kept as a : a ref, a copy, a view
   * --------------------------------------------------------------------------------------------------- */
 
-  template <typename Obj, typename Args>
-  expr<tags::subscript, expr_storage_t<Obj>, expr_storage_t<Args>> make_expr_subscript(Obj &&obj, Args &&args) CLEF_requires(is_any_lazy<Args>) {
-    return {tags::subscript{}, std::forward<Obj>(obj), std::forward<Args>(args)};
+  template <typename Obj, typename... Args>
+  expr<tags::subscript, expr_storage_t<Obj>, expr_storage_t<Args>...> make_expr_subscript(Obj &&obj, Args &&...args) CLEF_requires(is_any_lazy<Args...>) {
+    return {tags::subscript{}, std::forward<Obj>(obj), std::forward<Args>(args)...};
   }
 
   /* --------------------------------------------------------------------------------------------------
