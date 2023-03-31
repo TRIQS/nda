@@ -59,11 +59,15 @@ namespace nda {
   }
 
   /// Return a new matrix with the values of v on the diagonal
-  template <ArrayOfRank<1> V>
+  template <typename V> requires (std::ranges::contiguous_range<V> or ArrayOfRank<V, 1>)
   ArrayOfRank<2> auto diag(V const &v)  {
-    auto m      = matrix<std::remove_const_t<typename V::value_type>>::zeros({v.size(), v.size()});
-    diagonal(m) = v;
-    return m;
+    if constexpr (std::ranges::contiguous_range<V>) {
+      return diag(nda::basic_array_view{v});
+    } else {
+      auto m      = matrix<std::remove_const_t<typename V::value_type>>::zeros({v.size(), v.size()});
+      diagonal(m) = v;
+      return m;
+    }
   }
 
   /// Give 2 matrices A (of size n x q) and B (of size p x q)
