@@ -19,8 +19,8 @@
 
 #include <nda/nda.hpp>
 
-nda::range _;
-nda::ellipsis ___;
+auto _ = nda::range::all;
+auto ___ = nda::ellipsis{};
 using nda::slice_static::slice_stride_order;
 
 using namespace nda;
