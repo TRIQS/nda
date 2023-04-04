@@ -145,8 +145,6 @@ namespace nda {
     using reference         = T &;
 
     array_iterator()                       = default;
-    array_iterator(array_iterator const &) = default;
-
     array_iterator(std::array<long, Rank> const &lengths, std::array<long, Rank> const &strides, T *start, bool at_end)
        : data(start), len(lengths), stri(strides), iter(len.data(), stri.data(), at_end) {}
 
@@ -186,8 +184,6 @@ namespace nda {
     using reference         = T &;
 
     array_iterator()                       = default;
-    array_iterator(array_iterator const &) = default;
-
     array_iterator(std::array<long, 1> const &lengths, std::array<long, 1> const &strides, T *start, bool at_end)
        : data(start), len(lengths), stri(strides), iter(len.data(), stri.data(), at_end) {}
 
