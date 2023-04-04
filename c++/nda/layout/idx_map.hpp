@@ -383,7 +383,10 @@ namespace nda {
 
     // ----------------  Comparison -------------------------
 
-    bool operator==(idx_map const &x) const = default;
+    template <int R, uint64_t SE, uint64_t SO, layout_prop_e LP>
+    bool operator==(idx_map<R, SE, SO, LP> const &x) const {
+      return (Rank == R and len == x.lengths() and str == x.strides());
+    }
 
     // ---------------- Transposition -------------------------
 
