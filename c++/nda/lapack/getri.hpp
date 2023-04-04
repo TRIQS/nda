@@ -29,7 +29,7 @@ namespace nda::lapack {
    *
    */
   template <typename M, char Algebra, typename CP>
-  [[nodiscard]] int getri(M &&m, basic_array<int, 1, C_layout, Algebra, CP> &ipiv) {
+  int getri(M &&m, basic_array<int, 1, C_layout, Algebra, CP> &ipiv) {
     using M_t = std::decay_t<M>;
     static_assert(is_regular_or_view_v<M_t>, "getrf: M must be a matrix, matrix_view, array or array_view of rank 2");
     static_assert(M_t::rank == 2, "M must be of rank 2");

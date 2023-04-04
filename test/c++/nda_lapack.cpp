@@ -184,8 +184,8 @@ TEST(lapack, getrs) { //NOLINT
   auto Acopy = matrix_t{A};
   auto Bcopy = matrix_t{B};
   array<int, 1> ipiv(3);
-  int info = lapack::getrf(Acopy, ipiv);
-  info     = lapack::getrs(Acopy, Bcopy, ipiv);
+  lapack::getrf(Acopy, ipiv);
+  lapack::getrs(Acopy, Bcopy, ipiv);
   auto X2  = matrix_t{Bcopy};
   EXPECT_ARRAY_NEAR(matrix_t{A * X2}, B);
 

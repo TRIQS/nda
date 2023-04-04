@@ -31,7 +31,7 @@ namespace nda::lapack {
    * @param b 
    */
   template <typename V1, typename V2, typename V3, typename M>
-  [[nodiscard]] int gtsv(V1 &dl, V2 &d, V3 &du, M &b) {
+  int gtsv(V1 &dl, V2 &d, V3 &du, M &b) {
 
     static_assert(is_regular_or_view_v<V1> and (V1::rank == 1), "gtsv: V1 must be an array/view of rank 1");
     static_assert(is_regular_or_view_v<V2> and (V2::rank == 1), "gtsv: V2 must be an array/view of rank 1");

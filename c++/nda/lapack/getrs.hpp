@@ -28,7 +28,7 @@ namespace nda::lapack {
    * @param ipiv Integer array of shape (N) containing the pivot indices from getrf
    */
   template <ArrayOfRank<2> A, ArrayOfRank<2> B, ArrayOfRank<1> IPIV>
-  [[nodiscard]] int getrs(A &&a, B &b, IPIV &ipiv) {
+  int getrs(A &&a, B &b, IPIV &ipiv) {
     static_assert(std::is_same_v<get_value_t<A>, get_value_t<B>>, "Matrices must have the same element type");
     static_assert(is_blas_lapack_v<get_value_t<A>>, "Matrices must have elements of type double or complex");
     static_assert(std::is_same_v<get_value_t<IPIV>, int>, "Pivoting array must have elements of type int");
