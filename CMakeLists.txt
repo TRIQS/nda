@@ -54,7 +54,7 @@ if(NOT IS_SUBPROJECT)
 endif()
 
 # Python Support
-option(PythonSupport "Build with Python support" ON)
+option(PythonSupport "Build with Python support" OFF)
 
 # Documentation
 option(Build_Documentation "Build documentation" OFF)
