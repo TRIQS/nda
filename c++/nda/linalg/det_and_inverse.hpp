@@ -21,13 +21,23 @@
 
 namespace nda {
 
-  // ---------- is_matrix_square  -------------------------
+  // ---------- is_matrix_square -------------------------
 
   template <typename A>
   bool is_matrix_square(A const &a, bool print_error = false) {
     bool r = (a.shape()[0] == a.shape()[1]);
     if (not r and print_error)
       std::cerr << "Error non-square matrix. Dimensions are :(" << a.shape()[0] << "," << a.shape()[1] << ")\n  " << std::endl;
+    return r;
+  }
+
+  // ---------- is_matrix_diagonal -------------------------
+
+  template <typename A>
+  bool is_matrix_diagonal(A const &a, bool print_error = false) {
+    bool r = is_matrix_square(a) and a == diag(diagonal(a));
+    if (not r and print_error)
+      std::cerr << "Error non-diagonal matrix: " << a << std::endl;
     return r;
   }
 
