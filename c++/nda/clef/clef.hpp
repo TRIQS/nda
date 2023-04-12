@@ -156,9 +156,9 @@ namespace nda::clef {
     template <typename... Args>
     expr(Tag, Args &&...args) : childs(std::forward<Args>(args)...) {}
     // [] returns a new lazy expression, with one more layer
-    template <typename Args>
-    expr<tags::subscript, expr, expr_storage_t<Args>> operator[](Args &&args) const {
-      return {tags::subscript(), *this, std::forward<Args>(args)};
+    template <typename... Args>
+    expr<tags::subscript, expr, expr_storage_t<Args>...> operator[](Args &&... args) const {
+      return {tags::subscript(), *this, std::forward<Args>(args)...};
     }
     // () also ...
     template <typename... Args>
