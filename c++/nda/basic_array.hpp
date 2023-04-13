@@ -67,9 +67,6 @@ namespace nda {
     layout_t lay;
     storage_t sto;
 
-    template <MemoryArray A, typename NewLayoutType>
-    friend auto map_layout_transform(A &&a, NewLayoutType const &new_layout);
-
     template <std::integral Int = long>
     basic_array(std::array<Int, Rank> const &shape, mem::init_zero_t) noexcept : lay{shape}, sto{lay.size(), mem::init_zero} {}
 

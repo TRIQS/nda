@@ -81,9 +81,6 @@ namespace nda {
     template <typename T, int R, typename L, char A, typename AP, typename OP>
     friend class basic_array_view;
 
-    template <MemoryArray A, typename NewLayoutType>
-    friend auto map_layout_transform(A &&a, NewLayoutType const &new_layout);
-
     template <typename L>
     static constexpr bool requires_runtime_check = not layout_property_compatible(L::template mapping<Rank>::layout_prop, layout_t::layout_prop);
 
