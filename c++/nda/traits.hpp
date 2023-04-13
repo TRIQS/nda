@@ -98,7 +98,11 @@ namespace nda {
 
   /// A trait to get the rank of an object with ndarray concept
   template <typename A>
-  constexpr int get_rank = std::tuple_size_v<std::remove_cvref_t<decltype(std::declval<A const>().shape())>>;
+    requires(std::ranges::contiguous_range<A> or requires {std::declval<A const>().shape();})
+  constexpr int get_rank = [](){
+    if constexpr (std::ranges::contiguous_range<A>) return 1;
+    else return std::tuple_size_v<std::remove_cvref_t<decltype(std::declval<A const>().shape())>>;
+  }();
 
   // ---------------------------  is_regular------------------------
 
