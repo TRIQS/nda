@@ -31,22 +31,24 @@ namespace nda {
   }
 
   // model the symmetry concept
-  // symmetry mutates array index and returns operation (make idx const and return new idx explicitly?)
-  template <typename F, typename A>
-  concept NdaSymmetry = Array<A> and requires(F f, std::array<long, static_cast<std::size_t>(get_rank<A>)> &idx) {
-    { f(idx) } -> std::same_as<operation>;
+  // symmetry accepts array index and returns new array index & operation
+  template <typename F, typename A, typename idx_t = std::array<long, static_cast<std::size_t>(get_rank<A>)>>
+  concept NdaSymmetry = Array<A> and requires(F f, idx_t const &idx) {
+    { f(idx) } -> std::same_as<std::tuple<idx_t, operation>>;
   };
 
   // model the init function concept
   // init function accepts array index and returns array value type
-  template <typename F, typename A>
-  concept NdaInitFunc = Array<A> and requires(F f, std::array<long, static_cast<std::size_t>(get_rank<A>)> const &idx) {
+  template <typename F, typename A, typename idx_t = std::array<long, static_cast<std::size_t>(get_rank<A>)>>
+  concept NdaInitFunc = Array<A> and requires(F f, idx_t const &idx) {
     { f(idx) } -> std::same_as<get_value_t<A>>;
   };
 
   // symmetry group implementation
   template <typename F, typename A>
-  requires(Array<A> &&NdaSymmetry<F, A>) class sym_grp {
+  requires(Array<A> && NdaSymmetry<F, A>)
+  class sym_grp {
+
     public:
     // aliases
     static constexpr int ndims = get_rank<A>;
@@ -63,21 +65,11 @@ namespace nda {
     [[nodiscard]] std::vector<F> const &get_sym_list() const { return sym_list; }
     [[nodiscard]] std::vector<sym_class_t> const &get_sym_classes() const { return sym_classes; }
 
-    // initializer method 1
-    // iterates over symmetry classes and propagates first element
-    FORCEINLINE void init(A &x) const {
-      for (auto sym_class : sym_classes) {
-        auto ref_val = std::apply(x, x.indexmap().to_idx(sym_class[0].first));
-        for (auto idx = 1; idx < sym_class.size(); ++idx) {
-          std::apply(x, x.indexmap().to_idx(sym_class[idx].first)) = sym_class[idx].second(ref_val);
-        }
-      }
-    }
-
-    // initializer method 2
+    // initializer method
     // iterates over symmetry classes and propagates value from initializer function
     template <typename H>
-    requires(NdaInitFunc<H, A>) FORCEINLINE void init(A &x, H const &init_func) const {
+    requires(NdaInitFunc<H, A>)
+    FORCEINLINE void init(A &x, H const &init_func) const {
       for (auto sym_class : sym_classes) {
         auto idx           = x.indexmap().to_idx(sym_class[0].first);
         auto ref_val       = init_func(idx);
@@ -118,11 +110,9 @@ namespace nda {
 
       // loop over all symmetry operations
       for (auto sym : sym_list) {
-        // copy the index before mutating it
-        auto idxp = idx;
-
-        // apply the symmetry operation (mutates idxp)
-        auto opp = sym(idxp) * op;
+        // apply the symmetry
+        auto [idxp, opp] = sym(idx);
+        opp              = opp * op;
 
         // check if index is valid, reset path_length iff we start from valid & unchecked index
         if (is_valid(checked, idxp)) {
