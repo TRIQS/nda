@@ -33,32 +33,35 @@ namespace nda {
   // model the symmetry concept
   // symmetry accepts array index and returns new array index & operation
   template <typename F, typename A, typename idx_t = std::array<long, static_cast<std::size_t>(get_rank<A>)>>
-  concept NdaSymmetry = Array<A> and requires(F f, idx_t const &idx) {
-    { f(idx) } -> std::same_as<std::tuple<idx_t, operation>>;
-  };
+  concept NdaSymmetry = Array<A> and //
+     requires(F f, idx_t const &idx) {
+       { f(idx) } -> std::same_as<std::tuple<idx_t, operation>>;
+     };
 
   // model the init function concept
   // init function accepts array index and returns array value type
   template <typename F, typename A, typename idx_t = std::array<long, static_cast<std::size_t>(get_rank<A>)>>
-  concept NdaInitFunc = Array<A> and requires(F f, idx_t const &idx) {
-    { f(idx) } -> std::same_as<get_value_t<A>>;
-  };
+  concept NdaInitFunc = Array<A> and //
+     requires(F f, idx_t const &idx) {
+       { f(idx) } -> std::same_as<get_value_t<A>>;
+     };
 
   // symmetry group implementation
   template <typename F, typename A>
-  requires(Array<A> && NdaSymmetry<F, A>)
+    requires(Array<A> && NdaSymmetry<F, A>)
   class sym_grp {
 
     public:
     // aliases
     static constexpr int ndims = get_rank<A>;
     using sym_idx_t            = std::pair<long, operation>;
-    using sym_class_t          = std::vector<sym_idx_t>;
+    using sym_class_t          = std::span<sym_idx_t>;
 
     private:
     // members
     std::vector<F> sym_list;              // list of symmetries defining the symmetry group
-    std::vector<sym_class_t> sym_classes; // list of symmetric elements
+    std::vector<sym_class_t> sym_classes; // list of classes
+    std::vector<sym_idx_t> data;          // list of all elements to have a single contigous block of memory
 
     public:
     // getter methods (no setter methods, members should not be modified)
@@ -85,28 +88,33 @@ namespace nda {
       array<bool, ndims> checked(x.shape());
       checked() = false;
 
+      // initialize data array
+      data.reserve(x.size());
+
       // loop over array elements and sort them into symmetry classes
       for_each(checked.shape(), [&checked, this](auto... i) {
         if (not checked(i...)) {
           // this index is now checked and generates a new symmetry class
-          checked(i...) = true;
-          sym_class_t sym_class;
           operation op;
-          auto idx = std::array{i...};
-          sym_class.push_back({checked.indexmap()(i...), op});
+          checked(i...)    = true;
+          auto idx         = std::array{i...};
+          auto class_start = data.end();
+          this->data.emplace_back(checked.indexmap()(i...), op);
 
           // apply all symmetries to current index
-          iterate(idx, op, checked, sym_class);
+          auto class_size = iterate(idx, op, checked);
 
           // add new symmetry class to list
-          this->sym_classes.push_back(sym_class);
+          this->sym_classes.emplace_back(class_start, class_size);
         }
       });
     }
 
     private:
-    void iterate(std::array<long, static_cast<std::size_t>(get_rank<A>)> const &idx, operation const &op, array<bool, ndims> &checked,
-                 sym_class_t &sym_class, long path_length = 0) {
+    long long iterate(std::array<long, static_cast<std::size_t>(get_rank<A>)> const &idx, operation const &op, array<bool, ndims> &checked,
+                      long excursion_length = 0) {
+
+      long long segment_length = 0;
 
       // loop over all symmetry operations
       for (auto const &sym : sym_list) {
@@ -114,22 +122,27 @@ namespace nda {
         auto [idxp, opp] = sym(idx);
         opp              = opp * op;
 
-        // check if index is valid, reset path_length iff we start from valid & unchecked index
+        // check if index is valid, reset excursion_length iff we start from valid & unchecked index
         if (is_valid(checked, idxp)) {
+
           // check if index has been used already
           if (not std::apply(checked, idxp)) {
+
             // this index is now checked
             std::apply(checked, idxp) = true;
 
             // add to symmetry class and keep going
-            sym_class.push_back({std::apply(checked.indexmap(), idxp), opp});
-            iterate(idxp, opp, checked, sym_class);
+            this->data.emplace_back(std::apply(checked.indexmap(), idxp), opp);
+            segment_length += iterate(idxp, opp, checked) + 1;
           }
-        } else if (path_length < 10) {
-          // increment path_length and keep going
-          iterate(idxp, opp, checked, sym_class, ++path_length);
+
+        } else if (excursion_length < 10) {
+          // increment excursion_length and keep going
+          segment_length += iterate(idxp, opp, checked, ++excursion_length);
         }
       }
+
+      return segment_length;
     }
   };
 } // namespace nda
