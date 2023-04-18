@@ -109,7 +109,7 @@ namespace nda {
                  sym_class_t &sym_class, long path_length = 0) {
 
       // loop over all symmetry operations
-      for (auto sym : sym_list) {
+      for (auto const &sym : sym_list) {
         // apply the symmetry
         auto [idxp, opp] = sym(idx);
         opp              = opp * op;
