@@ -145,7 +145,7 @@ concept MemoryArray = Array<A> && requires(A &a) {
 
   // Has a storage_t that is a memory handle
   typename A_t::storage_t;
-  mem::Handle<typename A_t::storage_t>;
+  requires mem::Handle<typename A_t::storage_t>;
 
   // There is a member-type value_type that maybe const
   typename A_t::value_type;
