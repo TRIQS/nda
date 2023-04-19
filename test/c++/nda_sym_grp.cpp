@@ -23,31 +23,31 @@ TEST(SymGrp, MatrixPermutation) { //NOLINT
 
   nda::array<std::complex<double>, 2> A(4, 4);
 
-  auto a  = std::rand() / RAND_MAX;
+  auto a  = nda::rand();
   A(0, 0) = a;
   A(2, 0) = a;
   A(0, 3) = a;
   A(2, 3) = a;
 
-  auto b  = std::rand() / RAND_MAX;
+  auto b  = nda::rand();
   A(1, 0) = b;
   A(1, 3) = b;
 
-  auto c  = std::rand() / RAND_MAX;
+  auto c  = nda::rand();
   A(3, 0) = c;
   A(3, 3) = c;
 
-  auto d  = std::rand() / RAND_MAX;
+  auto d  = nda::rand();
   A(0, 1) = d;
   A(2, 1) = d;
   A(0, 2) = d;
   A(2, 2) = d;
 
-  auto e  = std::rand() / RAND_MAX;
+  auto e  = nda::rand();
   A(1, 1) = e;
   A(1, 2) = e;
 
-  auto f  = std::rand() / RAND_MAX;
+  auto f  = nda::rand();
   A(3, 1) = f;
   A(3, 2) = f;
 

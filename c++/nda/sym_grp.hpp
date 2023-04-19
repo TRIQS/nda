@@ -1,34 +1,26 @@
 #pragma once
-
-// this will only be needed once we introduce parallelization
-// #include "nda.hpp"
-// #include "mpi.hpp"
-// #include <itertools/omp_chunk.hpp>
+#include "nda.hpp"
+#include "mpi.hpp"
+#include <itertools/omp_chunk.hpp>
 
 namespace nda {
 
-  // residual operation after applying a symmetry
   struct operation {
-    // members
     bool sgn = false; // change sign?
     bool cc  = false; // complex conjugation?
 
-    // define multiplication to chain operations together
     operation operator*(operation const &x) { return operation{bool(sgn xor x.sgn), bool(cc xor x.cc)}; }
 
-    // define how operator acts on given value
     template <typename T>
-    T operator()(T const &x) {
+    T operator()(T const &x) const {
       if (sgn) return cc ? -conj(x) : -x;
       return cc ? conj(x) : x;
     }
   };
 
-  // check if array index is valid
   template <Array A>
-  FORCEINLINE bool is_valid(A const &x, std::array<long, static_cast<std::size_t>(get_rank<A>)> const &idx) {
+  bool is_valid(A const &x, std::array<long, static_cast<std::size_t>(get_rank<A>)> const &idx) {
 
-    // check that indices are valid for each dimension
     for (auto i = 0; i < get_rank<A>; ++i) {
       if (not(0 <= idx[i] && idx[i] < x.shape()[i])) { return false; }
     }
@@ -36,23 +28,20 @@ namespace nda {
     return true;
   }
 
-  // model the symmetry concept
-  // symmetry accepts array index and returns new array index & operation
+  // symmetry concept: symmetry accepts array index and returns new array index & operation
   template <typename F, typename A, typename idx_t = std::array<long, static_cast<std::size_t>(get_rank<A>)>>
   concept NdaSymmetry = Array<A> and //
      requires(F f, idx_t const &idx) {
        { f(idx) } -> std::same_as<std::tuple<idx_t, operation>>;
      };
 
-  // model the init function concept
-  // init function accepts array index and returns array value type
+  // init function concept: init function accepts array index and returns array value type
   template <typename F, typename A, typename idx_t = std::array<long, static_cast<std::size_t>(get_rank<A>)>>
   concept NdaInitFunc = Array<A> and //
      requires(F f, idx_t const &idx) {
        { f(idx) } -> std::same_as<get_value_t<A>>;
      };
 
-  // symmetry group implementation
   template <typename F, typename A>
     requires(Array<A> && NdaSymmetry<F, A>)
   class sym_grp {
@@ -70,41 +59,39 @@ namespace nda {
     public:
     [[nodiscard]] std::vector<F> const &get_sym_list() const { return sym_list; }
     [[nodiscard]] std::vector<sym_class_t> const &get_sym_classes() const { return sym_classes; }
+    long num_classes() const { return sym_classes.size(); }
 
-    // initializer method
-    // iterates over symmetry classes and propagates value from initializer function
-
-    // this is the non-parallel version
+    // initializer method: iterates over symmetry classes and propagates value from evaluation of init function
     template <typename H>
       requires(NdaInitFunc<H, A>)
-    FORCEINLINE void init(A &x, H const &init_func) const {
-      for (auto const &sym_class : sym_classes) {
-        auto idx           = x.indexmap().to_idx(sym_class[0].first);
-        auto ref_val       = init_func(idx);
-        std::apply(x, idx) = ref_val;
-        for (auto i = 1; i < sym_class.size(); ++i) { std::apply(x, x.indexmap().to_idx(sym_class[i].first)) = sym_class[i].second(ref_val); }
+    void init(A &x, H const &init_func, bool parallel = false) const {
+
+      if (parallel) {
+        // reset input array to allow for mpi reduction
+        x() = 0.0;
+
+        #pragma omp parallel
+        for (auto const &sym_class : itertools::omp_chunk(mpi::chunk(sym_classes))) {
+          auto idx           = x.indexmap().to_idx(sym_class[0].first);
+          auto ref_val       = init_func(idx);
+          std::apply(x, idx) = ref_val;
+          for (auto const &[lin_idx, op] : sym_class) { std::apply(x, x.indexmap().to_idx(lin_idx)) = op(ref_val); }
+        }
+
+        // distribute data among all ranks
+        x = mpi::all_reduce(x);
+
+      } else {
+        for (auto const &sym_class : sym_classes) {
+          auto idx           = x.indexmap().to_idx(sym_class[0].first);
+          auto ref_val       = init_func(idx);
+          std::apply(x, idx) = ref_val;
+          for (auto const &[lin_idx, op] : sym_class) { std::apply(x, x.indexmap().to_idx(lin_idx)) = op(ref_val); }
+        }
       }
     }
 
-    /*
-    // this is the parallel version
-    template <typename H>
-      requires(NdaInitFunc<H, A>)
-    FORCEINLINE void init(A &x, H const &init_func) const {
-      x() = 0.0;
-
-      #pragma omp parallel
-      for (auto const &sym_class : mpi::chunk(itertools::omp_chunk(sym_classes))) {
-        auto idx           = x.indexmap().to_idx(sym_class[0].first);
-        auto ref_val       = init_func(idx);
-        std::apply(x, idx) = ref_val;
-        for (auto i = 1; i < sym_class.size(); ++i) { std::apply(x, x.indexmap().to_idx(sym_class[i].first)) = sym_class[i].second(ref_val); }
-      }
-
-      x = mpi::all_reduce(x);
-    }
-    */
-
+    // constructor
     sym_grp(A const &x, std::vector<F> const &sym_list_) : sym_list(sym_list_) {
 
       // array to check whether index has been sorted into a symmetry class already
@@ -114,34 +101,30 @@ namespace nda {
       // initialize data array (we have as many elements as in the original nda array)
       data.reserve(x.size());
 
-      // loop over array elements and sort them into symmetry classes
       for_each(checked.shape(), [&checked, this](auto... i) {
         if (not checked(i...)) {
-          // this index is now checked and generates a new symmetry class
           operation op;
-          checked(i...)    = true;
+          checked(i...)    = true;                         // this index is now checked and defines a new symmetry class
           auto idx         = std::array{i...};
-          auto class_start = data.end();                         // the class is added to the end of the data list
-          this->data.emplace_back(checked.indexmap()(i...), op); // every class is initialized by one representative with op = identity
+          auto class_start = data.end();                   // the class is added to the end of the data list
+          data.emplace_back(checked.indexmap()(i...), op); // every class is initialized by one representative with op = identity
 
           // apply all symmetries to current index and generate the symmetry class
-          auto class_size = iterate(idx, op, checked);
+          auto class_size = iterate(idx, op, checked) + 1;
 
-          // add new symmetry class to list
-          this->sym_classes.emplace_back(class_start, class_size);
+          sym_classes.emplace_back(class_start, class_size);
         }
       });
     }
 
     private:
-    // this is the implementation of the actual symmetry reduction algorithm
+    // implementation of the actual symmetry reduction algorithm
     long long iterate(std::array<long, static_cast<std::size_t>(get_rank<A>)> const &idx, operation const &op, array<bool, ndims> &checked,
                       long excursion_length = 0) {
 
       // initialize the local segment_length to 0 (we have not advanced to a new member of the symmetry class so far)
       long long segment_length = 0;
 
-      // loop over all symmetry operations
       for (auto const &sym : sym_list) {
         // apply the symmetry
         auto [idxp, opp] = sym(idx);
@@ -152,12 +135,10 @@ namespace nda {
 
           // check if index has been used already
           if (not std::apply(checked, idxp)) {
-
-            // this index is now checked
-            std::apply(checked, idxp) = true;
+            std::apply(checked, idxp) = true; // this index is now checked
 
             // add new member to symmetry class and increment the segment_length
-            this->data.emplace_back(std::apply(checked.indexmap(), idxp), opp);
+            data.emplace_back(std::apply(checked.indexmap(), idxp), opp);
             segment_length += iterate(idxp, opp, checked) + 1;
           }
 
