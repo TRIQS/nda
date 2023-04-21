@@ -52,12 +52,10 @@ namespace nda {
     using sym_class_t          = std::span<sym_idx_t>;
 
     private:
-    std::vector<F> sym_list;              // list of symmetries defining the symmetry group
     std::vector<sym_class_t> sym_classes; // list of classes
     std::vector<sym_idx_t> data;          // long list of all elements (to allocate contigous block of memory)
 
     public:
-    [[nodiscard]] std::vector<F> const &get_sym_list() const { return sym_list; }
     [[nodiscard]] std::vector<sym_class_t> const &get_sym_classes() const { return sym_classes; }
     long num_classes() const { return sym_classes.size(); }
 
@@ -91,8 +89,9 @@ namespace nda {
       }
     }
 
-    // constructor
-    sym_grp(A const &x, std::vector<F> const &sym_list_) : sym_list(sym_list_) {
+    // constructors
+    sym_grp() = default;
+    sym_grp(A const &x, std::vector<F> const &sym_list) {
 
       // array to check whether index has been sorted into a symmetry class already
       array<bool, ndims> checked(x.shape());
@@ -101,16 +100,16 @@ namespace nda {
       // initialize data array (we have as many elements as in the original nda array)
       data.reserve(x.size());
 
-      for_each(checked.shape(), [&checked, this](auto... i) {
+      for_each(checked.shape(), [&checked, &sym_list, this](auto... i) {
         if (not checked(i...)) {
           operation op;
-          checked(i...)    = true;                         // this index is now checked and defines a new symmetry class
+          checked(i...)    = true; // this index is now checked and defines a new symmetry class
           auto idx         = std::array{i...};
           auto class_start = data.end();                   // the class is added to the end of the data list
           data.emplace_back(checked.indexmap()(i...), op); // every class is initialized by one representative with op = identity
 
           // apply all symmetries to current index and generate the symmetry class
-          auto class_size = iterate(idx, op, checked) + 1;
+          auto class_size = iterate(idx, op, checked, sym_list) + 1;
 
           sym_classes.emplace_back(class_start, class_size);
         }
@@ -120,7 +119,7 @@ namespace nda {
     private:
     // implementation of the actual symmetry reduction algorithm
     long long iterate(std::array<long, static_cast<std::size_t>(get_rank<A>)> const &idx, operation const &op, array<bool, ndims> &checked,
-                      long excursion_length = 0) {
+                      std::vector<F> const &sym_list, long excursion_length = 0) {
 
       // initialize the local segment_length to 0 (we have not advanced to a new member of the symmetry class so far)
       long long segment_length = 0;
@@ -139,12 +138,12 @@ namespace nda {
 
             // add new member to symmetry class and increment the segment_length
             data.emplace_back(std::apply(checked.indexmap(), idxp), opp);
-            segment_length += iterate(idxp, opp, checked) + 1;
+            segment_length += iterate(idxp, opp, checked, sym_list) + 1;
           }
 
           // if index is invalid, increment excursion length and keep going (segment_length is not incremented)
         } else if (excursion_length < 10) {
-          segment_length += iterate(idxp, opp, checked, ++excursion_length);
+          segment_length += iterate(idxp, opp, checked, sym_list, ++excursion_length);
         }
       }
 

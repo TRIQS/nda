@@ -54,20 +54,20 @@ TEST(SymGrp, MatrixPermutation) { //NOLINT
   // 1) {0, 1, 2, 3} -> {2, 1, 0, 3}
   auto p0 = [](idx_t const &x) {
     auto p   = std::array<long, 4>{2, 1, 0, 3};
-    idx_t xp = {p[x[0]], x[1]}; 
+    idx_t xp = {p[x[0]], x[1]};
     return sym_t{xp, nda::operation{false, false}};
   };
 
   // 2) {0, 1, 2, 3} -> {3, 2, 1, 0}
   auto p1 = [](idx_t const &x) {
-    auto p  = std::array<long, 4>{3, 2, 1, 0};
-    idx_t xp = {x[0], p[x[1]]}; 
+    auto p   = std::array<long, 4>{3, 2, 1, 0};
+    idx_t xp = {x[0], p[x[1]]};
     return sym_t{xp, nda::operation{false, false}};
   };
 
   // compute symmetry classes
   std::vector<sym_func_t> sym_list = {p0, p1};
-  auto grp = nda::sym_grp{A, sym_list};
+  auto grp                         = nda::sym_grp{A, sym_list};
 
   // test if number of classes matches expectation
   EXPECT_EQ(grp.get_sym_classes().size(), 6);
@@ -110,7 +110,7 @@ TEST(SymGrp, MatrixFlipShift) { //NOLINT
 
   // compute symmetry classes
   std::vector<sym_func_t> sym_list = {p0, p1};
-  auto grp = nda::sym_grp{A, sym_list};
+  auto grp                         = nda::sym_grp{A, sym_list};
 
   // test if number of classes matches expectation
   EXPECT_EQ(grp.get_sym_classes().size(), 1);
@@ -153,7 +153,7 @@ TEST(SymGrp, TensorCylicTriplet) { //NOLINT
 
   // compute symmetry classes
   std::vector<sym_func_t> sym_list = {p0, p1};
-  auto grp = nda::sym_grp{A, sym_list};
+  auto grp                         = nda::sym_grp{A, sym_list};
 
   // test if number of classes matches expectation
   EXPECT_EQ(grp.get_sym_classes().size(), pow((pow(2, 3) + 2 * 2) / 3, 2));
@@ -164,5 +164,3 @@ TEST(SymGrp, TensorCylicTriplet) { //NOLINT
   grp.init(B, init_func);
   EXPECT_EQ_ARRAY(A, B);
 }
-
-// -------------------------------------
