@@ -42,26 +42,22 @@ namespace nda {
   // ---------------  reshape ------------------------
 
   template <MemoryArray A, std::integral Int, auto newRank>
-  auto reshape(A &&a, std::array<Int, newRank> const &new_shape)
-    requires(is_regular_v<A> and !std::is_reference_v<A>)
-  {
+  auto reshape(A &&a, std::array<Int, newRank> const &new_shape) {
     using layout_t = typename std::decay_t<A>::layout_policy_t::template mapping<newRank>;
     EXPECTS_WITH_MESSAGE(a.size() == (std::accumulate(new_shape.cbegin(), new_shape.cend(), Int{1}, std::multiplies<>{})),
                          "Reshape : the new shape has a incorrect number of elements");
-    return map_layout_transform(std::move(a), layout_t{new_shape});
+    EXPECTS_WITH_MESSAGE(a.indexmap().is_contiguous(), "reshape only works with contiguous data");
+    return map_layout_transform(std::forward<A>(a), layout_t{stdutil::make_std_array<long>(new_shape)});
   }
 
-  // ---------------  reshaped_view ------------------------
+  template <MemoryArray A, std::integral... Ints>
+  auto reshape(A &&a, Ints... is) {
+    return reshape(std::forward<A>(a), std::array<long, sizeof...(Ints)>{static_cast<long>(is)...});
+  }
 
-  /// Reshape : contiguous view only [runtime checked]
-  ///\param Int : shape are std::array<long, R> but the Int allows the user to pass int, or any integer and forget about it
   template <MemoryArray A, std::integral Int, auto newRank>
-  auto reshaped_view(A &&a, std::array<Int, newRank> const &new_shape) {
-    using layout_t = typename std::decay_t<A>::layout_policy_t::template mapping<newRank>;
-    EXPECTS_WITH_MESSAGE(a.size() == (std::accumulate(new_shape.cbegin(), new_shape.cend(), Int{1}, std::multiplies<>{})),
-                         "Reshape : the new shape has a incorrect number of elements");
-    EXPECTS_WITH_MESSAGE(a.indexmap().is_contiguous(), "reshaped_view only works with contiguous views");
-    return map_layout_transform(std::forward<A>(a), layout_t{stdutil::make_std_array<long>(new_shape)});
+  [[deprecated("Please use reshape(arr, shape) instead")]] auto reshaped_view(A &&a, std::array<Int, newRank> const &new_shape) {
+    return reshape(std::forward<A>(a), new_shape);
   }
 
   // --------------- permuted_indices_view------------------------

@@ -139,7 +139,7 @@ namespace nda::lapack {
         //return matrix<dcomplex>{matrix<dcomplex>::layout_t{l, s}, std::move(arr_dag).storage()};
 
         // FIXME C++20 remove encode
-        array<dcomplex, 4> arr_dag = conj(permuted_indices_view<encode(std::array{0, 1, 3, 2})>(reshaped_view(M, std::array{l[0], N, d, d})));
+        array<dcomplex, 4> arr_dag = conj(permuted_indices_view<encode(std::array{0, 1, 3, 2})>(reshape(M, std::array{l[0], N, d, d})));
 
         return matrix<dcomplex>{reshape(std::move(arr_dag), l)}; // move into a matrix
       };

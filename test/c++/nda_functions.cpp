@@ -43,35 +43,41 @@ TEST(matrix, vstack) { //NOLINT
 }
 //================================================
 
+TEST(reshape, array_rval) { //NOLINT
+
+  nda::array<long, 1> a{1, 2, 3, 4, 5, 6};
+  nda::array<long, 2> check{{1, 2}, {3, 4}, {5, 6}};
+
+  auto b = reshape(nda::basic_array{a}, std::array{3, 2});
+  EXPECT_EQ(b, check);
+  static_assert(nda::is_regular_v<decltype(b)>);
+
+  auto c = reshape(nda::basic_array{a}, 3, 2);
+  EXPECT_EQ(c, check);
+  static_assert(nda::is_regular_v<decltype(c)>);
+}
+
+//================================================
+
 TEST(reshape, array) { //NOLINT
 
   nda::array<long, 1> a{1, 2, 3, 4, 5, 6};
   nda::array<long, 2> check{{1, 2}, {3, 4}, {5, 6}};
 
-  // reshape(a, std::array{2,3}); // <- does not compile, reshape requires rvalues
-  auto b = reshape(std::move(a), std::array{3, 2});
-  EXPECT_EQ(b, check);
-}
-
-//================================================
-
-TEST(reshaped_view, array) { //NOLINT
-
-  nda::array<long, 1> a{1, 2, 3, 4, 5, 6};
-  nda::array<long, 2> check{{1, 2}, {3, 4}, {5, 6}};
-
-  auto v = reshaped_view(a, std::array{3, 2});
+  auto v = reshape(a, std::array{3, 2});
   EXPECT_EQ(v, check);
+  static_assert(nda::is_view_v<decltype(v)>);
 
-  auto v2 = reshaped_view(a(), std::array{3, 2});
+  auto v2 = reshape(a(), 3, 2);
   EXPECT_EQ(v2, check);
+  static_assert(nda::is_view_v<decltype(v2)>);
 }
 //================================================
 
-TEST(reshaped_view, checkView) { //NOLINT
+TEST(reshape, checkView) { //NOLINT
 
   nda::array<long, 1> a{1, 2, 3, 4, 5, 6};     // 1d array
-  auto v = reshaped_view(a, std::array{2, 3}); // v is an array_view<long,2> of size 2 x 3
+  auto v = reshape(a, std::array{2, 3});       // v is an array_view<long,2> of size 2 x 3
   v(0, nda::range::all) *= 10;                 // a is now {10, 20, 30, 4, 5, 6}
 
   EXPECT_EQ_ARRAY(a, (nda::array<long, 1>{10, 20, 30, 4, 5, 6}));

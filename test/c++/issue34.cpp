@@ -21,7 +21,7 @@ nda::array<double, 3> arraymult(nda::matrix<double, F_layout> a, nda::array<doub
 
   auto [m, n, p] = b.shape();
 
-  auto brs  = nda::reshaped_view(b, std::array{m, n * p});
+  auto brs  = nda::reshape(b, std::array{m, n * p});
   auto bmat = nda::matrix_const_view<double, F_layout>(brs);
   return nda::reshape(a * bmat, std::array{m, n, p});
 }

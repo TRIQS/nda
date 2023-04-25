@@ -82,9 +82,9 @@ namespace nda::blas {
       static_assert(has_contiguous_layout<A> and has_contiguous_layout<B>);
       auto res = zeros<get_value_t<A>, mem::get_addr_space<A>>(stdutil::join(a.shape(), b.shape()));
 
-      auto a_vec = reshaped_view(a, std::array{a.size()});
-      auto b_vec = reshaped_view(b, std::array{b.size()});
-      auto mat   = reshaped_view(res, std::array{a.size(), b.size()});
+      auto a_vec = reshape(a, std::array{a.size()});
+      auto b_vec = reshape(b, std::array{b.size()});
+      auto mat   = reshape(res, std::array{a.size(), b.size()});
       ger(1.0, a_vec, b_vec, mat);
 
       return res;
