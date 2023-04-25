@@ -37,6 +37,10 @@ target_link_libraries(${PROJECT_NAME}_c PUBLIC h5::h5_c)
 # Link against MPI C++ Interface
 target_link_libraries(${PROJECT_NAME}_c PUBLIC mpi::mpi_c)
 
+# OpenMP
+find_package(OpenMP REQUIRED COMPONENTS CXX)
+target_link_libraries(${PROJECT_NAME}_c PUBLIC OpenMP::OpenMP_CXX)
+
 # ========= Blas / Lapack ==========
 
 message(STATUS "-------- Lapack detection -------------")
