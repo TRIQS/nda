@@ -55,6 +55,10 @@ TEST(reshape, array_rval) { //NOLINT
   auto c = reshape(nda::basic_array{a}, 3, 2);
   EXPECT_EQ(c, check);
   static_assert(nda::is_regular_v<decltype(c)>);
+
+  EXPECT_EQ(a, flatten(a));
+  EXPECT_EQ(a, flatten(b));
+  EXPECT_EQ(a, flatten(c));
 }
 
 //================================================

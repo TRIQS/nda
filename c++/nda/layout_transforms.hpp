@@ -39,7 +39,7 @@ namespace nda {
     }
   }
 
-  // ---------------  reshape ------------------------
+  // --------------- reshape ------------------------
 
   template <MemoryArray A, std::integral Int, auto newRank>
   auto reshape(A &&a, std::array<Int, newRank> const &new_shape) {
@@ -58,6 +58,13 @@ namespace nda {
   template <MemoryArray A, std::integral Int, auto newRank>
   [[deprecated("Please use reshape(arr, shape) instead")]] auto reshaped_view(A &&a, std::array<Int, newRank> const &new_shape) {
     return reshape(std::forward<A>(a), new_shape);
+  }
+
+  // --------------- flatten ------------------------
+
+  template <MemoryArray A>
+  auto flatten(A &&a) {
+    return reshape(std::forward<A>(a), std::array{a.size()});
   }
 
   // --------------- permuted_indices_view------------------------
