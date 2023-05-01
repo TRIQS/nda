@@ -15,7 +15,9 @@ set(@PROJECT_NAME@_GIT_HASH @PROJECT_GIT_HASH@ CACHE STRING "@PROJECT_NAME@ git 
 set(@PROJECT_NAME@_ROOT @CMAKE_INSTALL_PREFIX@ CACHE STRING "@PROJECT_NAME@ root directory")
 
 # Find CUDAToolkit
-find_package(CUDAToolkit REQUIRED)
+if(@CudaSupport@)
+  find_package(CUDAToolkit REQUIRED)
+endif()
 
 ## Find the target dependencies
 function(find_dep)
@@ -44,5 +46,8 @@ set(@PROJECT_NAME@_WITH_PYTHON_SUPPORT @PythonSupport@ CACHE BOOL "Was @PROJECT_
 if(@PythonSupport@)
   set(@PROJECT_NAME@_MODULE_DIR @CMAKE_INSTALL_PREFIX@/@CPP2PY_PYTHON_LIB_DEST_ROOT@ CACHE BOOL "The @PROJECT_NAME@ python module directory")
 endif()
+
+# Was the Project built with CudaSupport?
+set(@PROJECT_NAME@_WITH_CUDA_SUPPORT @CudaSupport@ CACHE BOOL "Was @PROJECT_NAME@ build with Cuda support?")
 
 endif()
