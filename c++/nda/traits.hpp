@@ -138,12 +138,14 @@ namespace nda {
   /// containers, just with the concept !).
   template <typename A>
   decltype(auto) get_first_element(A const &a) {
-    return [&a]<auto... Is>(std::index_sequence<Is...>)->decltype(auto) {
-      return a((0 * Is)...); // repeat 0 sizeof...(Is) times
+    if constexpr (is_scalar_v<A>) {
+      return a;
+    } else {
+      return [&a]<auto... Is>(std::index_sequence<Is...>) -> decltype(auto) {
+        return a((0 * Is)...); // repeat 0 sizeof...(Is) times
+      }(std::make_index_sequence<get_rank<A>>{});
     }
-    (std::make_index_sequence<get_rank<A>>{});
   }
-  // decltype(auto) and not auto to work in case that a(....) is NOT copy constructible
 
   /// A trait to get the return_t of the (long, ... long) for an object with ndarray concept
   template <typename A>
