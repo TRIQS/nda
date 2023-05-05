@@ -66,7 +66,7 @@ external_dependency(GTest
 )
 
 # -- google-bench --
-if(Build_Benchs)
+if(NOT IS_SUBPROJECT AND Build_Benchs AND NOT ASAN AND NOT UBSAN)
   set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "")
   external_dependency(google-bench
     GIT_REPO https://github.com/google/benchmark

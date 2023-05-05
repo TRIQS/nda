@@ -151,7 +151,7 @@ if(PythonSupport)
 endif()
 
 # Benchmarks
-if(Build_Benchs AND NOT ASAN AND NOT UBSAN)
+if(NOT IS_SUBPROJECT AND Build_Benchs AND NOT ASAN AND NOT UBSAN)
   add_subdirectory(benchmarks)
 endif()
 
