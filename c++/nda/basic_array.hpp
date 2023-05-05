@@ -71,9 +71,8 @@ namespace nda {
     basic_array(std::array<Int, Rank> const &shape, mem::init_zero_t) noexcept : lay{shape}, sto{lay.size(), mem::init_zero} {}
 
     public:
-    // backward : FIXME : temporary to be removed
-    [[deprecated]] basic_array_view<ValueType, Rank, LayoutPolicy, 'A', AccessorPolicy, OwningPolicy> as_array_view() { return {*this}; };
-    [[deprecated]] basic_array_view<const ValueType, Rank, LayoutPolicy, 'A', AccessorPolicy, OwningPolicy> as_array_view() const { return {*this}; };
+    basic_array_view<ValueType, Rank, LayoutPolicy, 'A', AccessorPolicy, OwningPolicy> as_array_view() { return {*this}; };
+    basic_array_view<const ValueType, Rank, LayoutPolicy, 'A', AccessorPolicy, OwningPolicy> as_array_view() const { return {*this}; };
 
     [[deprecated]] auto transpose() requires(Rank == 2) { return permuted_indices_view<encode(std::array<int, 2>{1, 0})>(*this); }
     [[deprecated]] auto transpose() const requires(Rank == 2) { return permuted_indices_view<encode(std::array<int, 2>{1, 0})>(*this); }
