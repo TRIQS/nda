@@ -39,6 +39,12 @@ target_link_libraries(${PROJECT_NAME}_c PUBLIC mpi::mpi_c)
 message(STATUS "-------- Lapack detection -------------")
 
 find_package(LAPACK REQUIRED)
+if(LAPACK_LIBRARIES MATCHES "Accelerate.framework")
+  message(STATUS "Can't build with Accelerate Framework on OSX, trying to find OpenBLAS instead.")
+  set(BLA_VENDOR OpenBLAS) # Accelerate Framework has issue in zdot
+  set(LAPACK_ROOT "/opt/homebrew/opt/openblas;/usr/local/opt/openblas")
+  find_package(LAPACK REQUIRED)
+endif()
 
 # Create an interface target
 add_library(blas_lapack INTERFACE)
