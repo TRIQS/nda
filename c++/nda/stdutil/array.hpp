@@ -74,6 +74,13 @@ namespace std {
     return res;
   }
 
+ template <typename T, size_t R>
+  constexpr std::array<T, R> operator*(T s, std::array<T, R> const &a) {
+    std::array<T, R> res;
+    for (int i = 0; i < R; ++i) res[i] = s*a[i];
+    return res;
+  }
+
 } // namespace std
 
 #endif
