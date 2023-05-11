@@ -46,3 +46,10 @@
 #include "print.hpp"
 
 #include "layout/rect_str.hpp"
+
+// If we are using c2py, include converters automatically
+#ifdef C2PY_INCLUDED
+#include <nda_py/cpp2py_converters.hpp>
+#endif
+
+
