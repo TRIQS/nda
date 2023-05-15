@@ -89,6 +89,39 @@ namespace nda {
       }
     }
 
+    // symmetrization method, returns maximum symmetry violation and corresponding linear index
+    // NOTE: this actually requires the definition of an inverse operation, but with the current implementation
+    //       operations are anyways self-inverse
+    std::pair<double, long> symmetrize(A &x) const {
+
+      double max_diff = 0.0;
+      long max_idx    = -1;
+
+      for (auto const &sym_class : sym_classes) {
+        get_value_t<A> ref_val = 0.0;
+
+        for (auto const &[lin_idx, op] : sym_class) { ref_val += op(std::apply(x, x.indexmap().to_idx(lin_idx))); }
+
+        ref_val /= sym_class.size();
+
+        for (auto const &[lin_idx, op] : sym_class) {
+          auto mapped_val  = op(ref_val);
+          auto mapped_idx  = x.indexmap().to_idx(lin_idx);
+          auto current_val = std::apply(x, mapped_idx);
+          auto diff        = std::abs(mapped_val - current_val);
+
+          if (diff > max_diff) {
+            max_diff = diff;
+            max_idx  = lin_idx;
+          };
+
+          std::apply(x, mapped_idx) = mapped_val;
+        }
+      }
+
+      return std::pair{max_diff, max_idx};
+    }
+
     // constructors
     sym_grp() = default;
     sym_grp(A const &x, std::vector<F> const &sym_list, long const max_length = 0) {

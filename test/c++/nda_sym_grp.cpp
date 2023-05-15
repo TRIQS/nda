@@ -77,6 +77,11 @@ TEST(SymGrp, MatrixPermutation) { //NOLINT
   auto init_func = [&A](idx_t const &x) { return std::apply(A, x); };
   grp.init(B, init_func);
   EXPECT_EQ_ARRAY(A, B);
+
+  // test symmetrization
+  auto const &[max_diff, max_idx] = grp.symmetrize(A);
+  EXPECT_EQ(max_diff, 0.0);
+  EXPECT_EQ(max_idx, -1);
 }
 
 // -------------------------------------
@@ -120,6 +125,11 @@ TEST(SymGrp, MatrixFlipShift) { //NOLINT
   auto init_func = [&A](idx_t const &x) { return std::apply(A, x); };
   grp.init(B, init_func);
   EXPECT_EQ_ARRAY(A, B);
+
+  // test symmetrization
+  auto const &[max_diff, max_idx] = grp.symmetrize(A);
+  EXPECT_EQ(max_diff, 0.0);
+  EXPECT_EQ(max_idx, -1);
 }
 
 // -------------------------------------
@@ -163,4 +173,9 @@ TEST(SymGrp, TensorCylicTriplet) { //NOLINT
   auto init_func = [&A](idx_t const &x) { return std::apply(A, x); };
   grp.init(B, init_func);
   EXPECT_EQ_ARRAY(A, B);
+
+  // test symmetrization
+  auto const &[max_diff, max_idx] = grp.symmetrize(A);
+  EXPECT_EQ(max_diff, 0.0);
+  EXPECT_EQ(max_idx, -1);
 }
