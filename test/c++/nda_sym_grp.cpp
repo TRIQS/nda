@@ -81,7 +81,7 @@ TEST(SymGrp, MatrixPermutation) { //NOLINT
   // test symmetrization
   auto const &[max_diff, max_idx] = grp.symmetrize(A);
   EXPECT_EQ(max_diff, 0.0);
-  EXPECT_EQ(max_idx, -1);
+  for (auto const x : max_idx) EXPECT_EQ(x, 0);
 }
 
 // -------------------------------------
@@ -129,7 +129,7 @@ TEST(SymGrp, MatrixFlipShift) { //NOLINT
   // test symmetrization
   auto const &[max_diff, max_idx] = grp.symmetrize(A);
   EXPECT_EQ(max_diff, 0.0);
-  EXPECT_EQ(max_idx, -1);
+  for (auto const x : max_idx) EXPECT_EQ(x, 0);
 }
 
 // -------------------------------------
@@ -177,5 +177,5 @@ TEST(SymGrp, TensorCylicTriplet) { //NOLINT
   // test symmetrization
   auto const &[max_diff, max_idx] = grp.symmetrize(A);
   EXPECT_EQ(max_diff, 0.0);
-  EXPECT_EQ(max_idx, -1);
+  for (auto const x : max_idx) EXPECT_EQ(x, 0);
 }

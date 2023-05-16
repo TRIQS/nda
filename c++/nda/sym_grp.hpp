@@ -50,6 +50,7 @@ namespace nda {
     static constexpr int ndims = get_rank<A>;
     using sym_idx_t            = std::pair<long, operation>;
     using sym_class_t          = std::span<sym_idx_t>;
+    using arr_idx_t            = std::array<long, static_cast<std::size_t>(ndims)>;
 
     private:
     std::vector<sym_class_t> sym_classes; // list of classes
@@ -89,13 +90,13 @@ namespace nda {
       }
     }
 
-    // symmetrization method, returns maximum symmetry violation and corresponding linear index
+    // symmetrization method, returns maximum symmetry violation and corresponding array index
     // NOTE: this actually requires the definition of an inverse operation, but with the current implementation
     //       operations are anyways self-inverse
-    std::pair<double, long> symmetrize(A &x) const {
+    std::pair<double, arr_idx_t> symmetrize(A &x) const {
 
       double max_diff = 0.0;
-      long max_idx    = -1;
+      auto max_idx    = arr_idx_t{};
 
       for (auto const &sym_class : sym_classes) {
         get_value_t<A> ref_val = 0.0;
@@ -112,7 +113,7 @@ namespace nda {
 
           if (diff > max_diff) {
             max_diff = diff;
-            max_idx  = lin_idx;
+            max_idx  = mapped_idx;
           };
 
           std::apply(x, mapped_idx) = mapped_val;
