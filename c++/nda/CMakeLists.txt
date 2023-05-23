@@ -60,7 +60,7 @@ list(REMOVE_DUPLICATES LAPACK_LIBRARIES)
 target_link_libraries(blas_lapack INTERFACE ${LAPACK_LIBRARIES})
 target_compile_options(blas_lapack INTERFACE ${LAPACK_LINKER_FLAGS})
 if(LAPACK_LIBRARIES MATCHES "mkl")
-  target_compile_definitions(${PROJECT_NAME}_c PRIVATE NDA_HAVE_GEMM_BATCH)
+  target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_GEMM_BATCH)
 endif()
 
 # Link against interface target and export

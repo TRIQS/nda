@@ -14,6 +14,7 @@
 //
 // Authors: Olivier Parcollet, Nils Wentzell
 
+#include <mpi/mpi.hpp>
 #include <nda/nda.hpp>
 #include <nda/macros.hpp>
 #include <nda/exceptions.hpp>
@@ -62,9 +63,20 @@ namespace nda::lapack::device {
   static bool synchronize = true;
 #define CUSOLVER_CHECK(X, info, ...)                                                                                                                 \
   auto err = X(get_handle(), __VA_ARGS__, get_info_ptr());                                                                                           \
-  info     = *get_info_ptr();                                                                                                                        \
-  if (synchronize) cudaDeviceSynchronize();                                                                                                          \
-  if (err != CUSOLVER_STATUS_SUCCESS) NDA_RUNTIME_ERROR << AS_STRING(X) + " failed with error code "s + std::to_string(err);
+  if (err != CUSOLVER_STATUS_SUCCESS) {   \
+    std::cerr << AS_STRING(X)  <<" failed with error code " << std::to_string(err);  \
+    mpi::communicator{}.abort(11);   \
+  }   \
+  if (synchronize) {  \
+    auto err1 = cudaDeviceSynchronize();                                                                                                      \
+    if (err1 != cudaSuccess) {                                                                                                                \
+      std::cerr<<" cudaDeviceSynchronize failed after call to: " <<AS_STRING(X) " \n "                                                                                        \
+               <<" cudaGetErrorName: " << std::string(cudaGetErrorName(err1)) <<"\n"                                                          \
+               <<" cudaGetErrorString: " << std::string(cudaGetErrorString(err1)) <<"\n";                                                     \
+      mpi::communicator{}.abort(11);                                                                                                          \
+    }  \
+  }  \
+  info     = *get_info_ptr();           
 
   inline auto *cucplx(std::complex<double> *c) { return reinterpret_cast<cuDoubleComplex *>(c); }             // NOLINT
   inline auto *cucplx(std::complex<double> const *c) { return reinterpret_cast<const cuDoubleComplex *>(c); } // NOLINT
