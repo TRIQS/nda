@@ -47,4 +47,7 @@ namespace nda {
   template <auto R, typename Int, typename F>
   array_adapter(std::array<Int, R>, F) -> array_adapter<R, F>;
 
+  template <int R, typename F>
+  inline constexpr char get_algebra<array_adapter<R, F>> = 'A';
+
 } // namespace nda
