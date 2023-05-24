@@ -167,7 +167,7 @@ namespace nda {
      * @param r The contiguous Range
      */
     template <std::ranges::contiguous_range R>
-    explicit basic_array_view(R &r) noexcept requires(Rank == 1 and not MemoryArray<R> and std::is_same_v<std::remove_reference_t<decltype(*std::begin(std::declval<R>()))>, ValueType>)
+    explicit basic_array_view(R &r) noexcept requires(Rank == 1 and not MemoryArray<R> and (std::is_same_v<std::ranges::range_value_t<R>, ValueType> or std::is_same_v<const std::ranges::range_value_t<R>, ValueType>))
        : basic_array_view{{long(std::ranges::size(r))}, std::to_address(std::begin(r))} {}
 
     // ------------------------------- assign --------------------------------------------
