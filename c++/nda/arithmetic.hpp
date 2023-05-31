@@ -157,7 +157,7 @@ namespace nda {
     }
 
     template <typename Arg>
-    auto operator[](Arg const &arg) const {
+    auto operator[](Arg &&arg) const {
       static_assert(get_rank<expr> == 1, "operator[] only available for expression of rank 1");
       return operator()(std::forward<Arg>(arg));
     }
