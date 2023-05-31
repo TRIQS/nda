@@ -102,9 +102,8 @@ namespace nda {
      * @param i0, is ... are the extents (lengths) in each dimension
      */
     template <std::integral... Int>
+      requires(sizeof...(Int) == Rank)
     explicit basic_array(Int... is) noexcept {
-      //static_assert((std::is_convertible_v<Int, long> and ...), "Arguments must be convertible to long");
-      static_assert(sizeof...(Int) == Rank, "Incorrect number of arguments : should be exactly Rank. ");
       lay = layout_t{std::array{long(is)...}};
       sto = storage_t{lay.size()};
       // It would be more natural to construct lay, storage from the start, but the error message in case of false # of parameters (very common)
