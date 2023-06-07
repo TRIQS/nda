@@ -93,6 +93,7 @@ target_compile_options(${PROJECT_NAME}_warnings
   INTERFACE
     -Wall
     -Wextra
+    -Wfloat-conversion
     -Wpedantic
     -Wno-sign-compare
     $<$<CXX_COMPILER_ID:GNU>:-Wno-comma-subscript>
