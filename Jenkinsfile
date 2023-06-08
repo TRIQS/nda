@@ -4,12 +4,12 @@ def dockerName = projectName.toLowerCase();
 /* which platform to build documentation on */
 def documentationPlatform = ""
 /* whether to keep and publish the results */
-def publish = !env.BRANCH_NAME.startsWith("PR-")
+def keepInstall = !env.BRANCH_NAME.startsWith("PR-")
 
 properties([
   disableConcurrentBuilds(),
   buildDiscarder(logRotator(numToKeepStr: '10', daysToKeepStr: '30')),
-  pipelineTriggers(publish ? [
+  pipelineTriggers(keepInstall ? [
     upstream(
       threshold: 'SUCCESS',
       upstreamProjects: '/TRIQS/cpp2py/master,/TRIQS/itertools/unstable,/TRIQS/mpi/unstable,/TRIQS/h5/unstable'
@@ -36,7 +36,7 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
       /* build and tag */
       def args = ''
       if (platform == documentationPlatform)
-        args = '-DBuild_Documentation=1 -DMATHJAX_PATH=https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2'
+        args = '-DBuild_Documentation=1'
       else if (platform == "sanitize")
         args = '-DASAN=ON -DUBSAN=ON'
       def img = docker.build("flatironinstitute/${dockerName}:${env.BRANCH_NAME}-${env.STAGE_NAME}", "--build-arg APPNAME=${projectName} --build-arg BUILD_ID=${env.BUILD_TAG} --build-arg CMAKE_ARGS='${args}' .")
@@ -45,7 +45,7 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
           sh "make -C \$BUILD/${projectName} test CTEST_OUTPUT_ON_FAILURE=1"
         }
       }
-      if (!publish || platform != documentationPlatform) {
+      if (!keepInstall) {
         sh "docker rmi --no-prune ${img.imageName()}"
       }
     } } }
@@ -54,8 +54,8 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
 
 /****************** osx builds (on host) */
 def osxPlatforms = [
-  ["gcc", ['CC=gcc-11', 'CXX=g++-11', 'FC=gfortran-11']],
-  ["clang", ['CC=$BREW/opt/llvm/bin/clang', 'CXX=$BREW/opt/llvm/bin/clang++', 'FC=gfortran-11', 'CXXFLAGS=-I$BREW/opt/llvm/include', 'LDFLAGS=-L$BREW/opt/llvm/lib']]
+  ["gcc", ['CC=gcc-13', 'CXX=g++-13', 'FC=gfortran-13']],
+  ["clang", ['CC=$BREW/opt/llvm/bin/clang', 'CXX=$BREW/opt/llvm/bin/clang++', 'FC=gfortran-13', 'CXXFLAGS=-I$BREW/opt/llvm/include', 'LDFLAGS=-L$BREW/opt/llvm/lib']]
 ]
 for (int i = 0; i < osxPlatforms.size(); i++) {
   def platformEnv = osxPlatforms[i]
@@ -66,7 +66,7 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
       def tmpDir = pwd(tmp:true)
       def buildDir = "$tmpDir/build"
       /* install real branches in a fixed predictable place so apps can find them */
-      def installDir = "$tmpDir/install"
+      def installDir = keepInstall ? "${env.HOME}/install/${projectName}/${env.BRANCH_NAME}/${platform}" : "$tmpDir/install"
       def venv = installDir
       dir(installDir) {
         deleteDir()
@@ -106,7 +106,7 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
 def error = null
 try {
   parallel platforms
-  if (publish && documentationPlatform) { node('linux && docker && triqs') {
+  if (keepInstall) { node('linux && docker && triqs') {
     /* Publish results */
     stage("publish") { timeout(time: 5, unit: 'MINUTES') {
       def commit = sh(returnStdout: true, script: "git rev-parse HEAD").trim()
@@ -170,7 +170,7 @@ Changes:
 End of build log:
 \${BUILD_LOG,maxLines=60}
     """,
-    to: 'nwentzell@flatironinstitute.org, oparcollet@flatironinstitute.org',
+    to: 'nwentzell@flatironinstitute.org',
     recipientProviders: [
       [$class: 'DevelopersRecipientProvider'],
     ],
