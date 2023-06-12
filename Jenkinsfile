@@ -4,7 +4,7 @@ def dockerName = projectName.toLowerCase();
 /* which platform to build documentation on */
 def documentationPlatform = ""
 /* whether to keep and publish the results */
-def keepInstall = !env.BRANCH_NAME.startsWith("PR-")
+def keepInstall = false
 
 properties([
   disableConcurrentBuilds(),
@@ -21,7 +21,7 @@ properties([
 def platforms = [:]
 
 /****************** linux builds (in docker) */
-/* Each platform must have a cooresponding Dockerfile.PLATFORM in triqs/packaging */
+/* Each platform must have a corresponding Dockerfile.PLATFORM in triqs/packaging */
 def dockerPlatforms = ["ubuntu-clang", "ubuntu-gcc", "sanitize"]
 /* .each is currently broken in jenkins */
 for (int i = 0; i < dockerPlatforms.size(); i++) {
@@ -88,7 +88,7 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
         deleteDir()
         sh "python3 -m venv $venv"
         sh "pip3 install -U -r $srcDir/requirements.txt"
-        sh "cmake $srcDir -DCMAKE_INSTALL_PREFIX=$installDir -DBuild_Deps=Always"
+        sh "cmake $srcDir -DCMAKE_INSTALL_PREFIX=$installDir"
         sh "make -j2 || make -j1 VERBOSE=1"
         catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') { try {
           sh "make test CTEST_OUTPUT_ON_FAILURE=1"
