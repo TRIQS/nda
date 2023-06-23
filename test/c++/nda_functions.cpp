@@ -210,12 +210,15 @@ TEST(Array, Permuted_view_matmul) { //NOLINT
 
   // build permuted array
   auto B = nda::array<double, 3>{nda::permuted_indices_view<nda::encode(std::array<int, 3>{1, 2, 0})>(A)};
+  auto C = make_regular(nda::permuted_indices_view<nda::encode(std::array<int, 3>{1, 2, 0})>(A));
 
   for (auto k : range(3)) {
     auto Amat = matrix<double>{A(_, _, k)};
     auto Bmat = matrix_view<double>{B(k, _, _)};
+    auto Cmat = matrix_view<double>{C(k, _, _)};
     EXPECT_EQ_ARRAY(Amat, Bmat);
     EXPECT_EQ_ARRAY(Amat * v, Bmat * v);
+    EXPECT_DEBUG_DEATH(Cmat * v, "gemv");
   }
 }
 
