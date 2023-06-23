@@ -202,6 +202,25 @@ TEST(Array, Permuted_view1) { //NOLINT
 
 // ----------------------------------------------
 
+TEST(Array, Permuted_view_matmul) { //NOLINT
+
+  // generate some dummy data
+  nda::array<double, 3> A = nda::rand(3, 3, 3);
+  nda::vector<double> v   = nda::rand(3);
+
+  // build permuted array
+  auto B = nda::array<double, 3>{nda::permuted_indices_view<nda::encode(std::array<int, 3>{1, 2, 0})>(A)};
+
+  for (auto k : range(3)) {
+    auto Amat = matrix<double>{A(_, _, k)};
+    auto Bmat = matrix_view<double>{B(k, _, _)};
+    EXPECT_EQ_ARRAY(Amat, Bmat);
+    EXPECT_EQ_ARRAY(Amat * v, Bmat * v);
+  }
+}
+
+// ----------------------------------------------
+
 TEST(Array, Permuted_view) { //NOLINT
 
   nda::array<long, 4> A(1, 2, 3, 4);
