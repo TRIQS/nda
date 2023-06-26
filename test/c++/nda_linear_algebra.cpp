@@ -291,8 +291,14 @@ TEST(NDA, LinearAlgebraEigenelements) {
     EXPECT_ARRAY_NEAR(ev1, ev2);
   };
 
+  auto test_generalize_eigenelements = [](auto &&M, auto &&B) {
+    auto [ev, vecs] = nda::linalg::eigenelements(M, B);
+    check_eig(M, vecs, ev);
+  };
+
   // double matrix in C layout
   nda::matrix<double> A(3, 3);
+  nda::matrix<double> S = nda::eye<double>(3);
   for (int i = 0; i < 3; ++i) {
     for (int j = 0; j <= i; ++j) {
       A(i, j) = (i > j ? i + 2 * j : i - j);
@@ -301,6 +307,7 @@ TEST(NDA, LinearAlgebraEigenelements) {
   }
   test_eigenelements(A);
   test_egienelements(A, false);
+  test_generalize_eigenelements(A, S);
 
   A()     = 0;
   A(0, 1) = 1;
