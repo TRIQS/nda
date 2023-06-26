@@ -38,8 +38,10 @@ namespace nda {
    */
   template <ArrayOfRank<1> A>
   double norm(A const &x, double p = 2.0)
-    requires(Scalar<get_value_t<A>>)
   {
+    // Scalar check: Can't move to template constraint, get_value_t not generically implemented
+    static_assert(Scalar<get_value_t<A>>, "norm only works for arrays with scalar values");
+
     if (p == 2.0) [[likely]] {
       if constexpr (MemoryArray<A>)
         return std::sqrt(std::real(nda::blas::dotc(x, x)));
