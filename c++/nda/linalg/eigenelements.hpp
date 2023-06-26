@@ -96,7 +96,7 @@ namespace nda::linalg {
     return _eigen_element_impl(m, 'N');
   }
 
-  //--------------------------------
+  //--------- eigen problem for nonsymmetric matrices ----------
 
   // dispatch the implementation of invoke for T = double or complex
   // require an additional copy for eigenvectors if compz = 'V'
@@ -135,6 +135,8 @@ namespace nda::linalg {
     return ev;
   }
 
+  //--------------------------------
+
   /**
    * Find the eigenvalues and eigenvectors of a general real or complex matrix.
    * @param M The matrix or view.
@@ -148,6 +150,8 @@ namespace nda::linalg {
     return {ev, m_copy};
   }
 
+  //--------------------------------
+
   /**
    * Find the eigenvalues of a general complex matrix
    * Requires an additional copy
@@ -160,6 +164,8 @@ namespace nda::linalg {
     return _geigen_element_impl(m_copy, 'N');
   }
 
+  //--------------------------------
+
   /**
    * Find the eigenvalues of a general real or complex matrix.
    * Perform the operation in-place, avoiding a copy of the matrix,
@@ -170,6 +176,93 @@ namespace nda::linalg {
   template <typename M>
   array<std::complex<double>, 1> geigenvalues_in_place(M *&m) {
     return _geigen_element_impl(m, 'N');
+  }
+
+  //--------- Generalized eigenproblem for symmetric matrices ----------
+
+  template <typename M>
+  // dispatch the implementation of invoke for T = double or complex
+  auto _eigen_element_impl(M &&A, M &&B, char compz) {
+
+    EXPECTS((not A.empty()));
+    EXPECTS(is_matrix_square(A, true));
+    EXPECTS(A.indexmap().is_contiguous());
+
+    EXPECTS((not B.empty()));
+    EXPECTS(is_matrix_square(B, true));
+    EXPECTS(B.indexmap().is_contiguous());
+
+    EXPECTS(A.extent(0) == B.extent(0));
+
+    int dim = A.extent(0);
+
+    using T = typename std::decay_t<M>::value_type;
+
+    array<double, 1> ev(dim);
+    int lwork = 64 * dim;
+    array<T, 1> work(lwork);
+    array<double, 1> work2(is_complex_v<T> ? lwork : 0);
+
+#if defined(__has_feature)
+#if __has_feature(memory_sanitizer)
+    work2 = 0;
+    work  = 0;
+    ev    = 0;
+#endif
+#endif
+
+    int info = 0;
+    if constexpr (not is_complex_v<T>) {
+      lapack::f77::sygv(1, compz, 'U', dim, A.data(), dim, B.data(), dim, ev.data(), work.data(), lwork, info);
+    } else {
+      lapack::f77::hegv(1, compz, 'U', dim, A.data(), dim, B.data(), dim, ev.data(), work.data(), lwork, work2.data(), info);
+    }
+    if (info) NDA_RUNTIME_ERROR << "Diagonalization error";
+    return ev;
+  }
+
+  //--------------------------------
+
+  /**
+   * Find the eigenvalues and eigenvectors of a generalized symmetric(real) or hermitian(complex) eigenproblem.
+   * Requires an additional copy when M is stored in C memory order
+   * @param M The matrix or view.
+   * @return Pair consisting of the array of eigenvalues and the matrix containing the eigenvectors as columns
+   */
+  template <typename M>
+  std::pair<array<double, 1>, typename M::regular_type> eigenelements(M const &A, M const &B) {
+    auto A_copy = matrix<typename M::value_type, F_layout>(A);
+    auto B_copy = matrix<typename M::value_type, F_layout>(B);
+    auto ev     = _eigen_element_impl(A_copy, B_copy, 'V');
+    return {ev, A_copy};
+  }
+
+  //--------------------------------
+
+  /**
+   * Find the eigenvalues of a generalized symmetric(real) or hermitian(complex) eigenproblem.
+   * @param M The matrix or view.
+   * @return The array of eigenvalues
+   */
+  template <typename M>
+  array<double, 1> eigenvalues(M const &A, M const& B) {
+    auto A_copy = matrix<typename M::value_type, F_layout>(A);
+    auto B_copy = matrix<typename M::value_type, F_layout>(B);
+    return _eigen_element_impl(A_copy, B_copy, 'N');
+  }
+
+  //--------------------------------
+
+  /**
+   * Find the eigenvalues of a generalized symmetric(real) or hermitian(complex) eigenproblem.
+   * Perform the operation in-place, avoiding a copy of the matrix,
+   * but invalidating its contents.
+   * @param M The matrix or view (must be contiguous and Fortran memory order)
+   * @return The array of eigenvalues
+   */
+  template <typename M>
+  array<double, 1> eigenvalues_in_place(M *&A, M *&B) {
+    return _eigen_element_impl(A, B, 'N');
   }
 
 

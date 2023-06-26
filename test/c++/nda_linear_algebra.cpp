@@ -357,8 +357,14 @@ TEST(eigenelements, test1) { //NOLINT
     check_eig(M, vecs, ev);
   };
 
+  auto test2 = [](auto &&A, auto &&B) {
+    auto [ev, vecs] = nda::linalg::eigenelements(A, B);
+    check_eig(A, vecs, ev);
+  };
+
   {
     nda::matrix<double> A(3, 3);
+    nda::matrix<double> B = nda::eye<double>(3);
 
     for (int i = 0; i < 3; ++i)
       for (int j = 0; j <= i; ++j) {
@@ -367,6 +373,7 @@ TEST(eigenelements, test1) { //NOLINT
       }
     test(A);
     test(A, false);
+    test2(A, B);
 
     A()     = 0;
     A(0, 1) = 1;

@@ -51,6 +51,11 @@ namespace nda::lapack::f77 {
   void heev(char JOBZ, char UPLO, int N, std::complex<double> *A, int LDA, double *W, std::complex<double> *work, int &lwork, double *work2,
             int &info);
 
+  void sygv(int ITYPE, char JOBZ, char UPLO, int N, double *A, int LDA, double *B, int LDB, double *W, double *work, int &lwork, int &info);
+
+  void hegv(int ITYPE, char JOBZ, char UPLO, int N, std::complex<double> *A, int LDA, std::complex<double> *B, int LDB,
+            double *W, std::complex<double> *work, int &lwork, double *work2, int &info);
+
   void geev(char JOBVL, char JOBVR, int N, double *A, int LDA, double *WR, double *WI, double *VL, int LDVL, double *VR, int LDVR,
             double *work, int &lwork, int &info);
   void geev(char JOBVL, char JOBVR, int N, std::complex<double> *A, int LDA, std::complex<double> *W, std::complex<double> *VL,
