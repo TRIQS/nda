@@ -83,7 +83,8 @@ namespace nda::blas {
     if constexpr (Scalar<A> or Scalar<B>) {
       return a * b;
     } else {
-      static_assert(has_contiguous_layout<A> and has_contiguous_layout<B>);
+      if (not a.is_contiguous()) NDA_RUNTIME_ERROR << "First argument to outer_product call has non-contiguous layout";
+      if (not b.is_contiguous()) NDA_RUNTIME_ERROR << "Second argument to outer_product call has non-contiguous layout";
       auto res = zeros<get_value_t<A>, mem::get_addr_space<A>>(stdutil::join(a.shape(), b.shape()));
 
       auto a_vec = reshape(a, std::array{a.size()});
