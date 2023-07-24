@@ -35,10 +35,10 @@ jobs:
         gfortran
         hdf5-tools
         libblas-dev
-        libclang-13-dev
-        libc++-13-dev
-        libc++abi-13-dev
-        libomp-13-dev
+        libclang-15-dev
+        libc++-15-dev
+        libc++abi-15-dev
+        libomp-15-dev
         libgfortran5
         libgmp-dev
         libhdf5-dev
