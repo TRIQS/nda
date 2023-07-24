@@ -14,12 +14,13 @@
 //
 // Authors: Olivier Parcollet, Nils Wentzell
 
-#ifndef STD_ADDONS_COMPLEX_H
-#define STD_ADDONS_COMPLEX_H
+#ifndef STDUTILS_COMPLEX_H
+#define STDUTILS_COMPLEX_H
 
 #include <complex>
 
-// Add doc manually
+using namespace std::literals::complex_literals;
+
 namespace std { // has to be in the right namespace for ADL !
 
   // clang-format off

@@ -14,10 +14,8 @@
 //
 // Authors: Olivier Parcollet, Nils Wentzell
 
-#ifndef STD_ADDONS_ARRAY_H
-#define STD_ADDONS_ARRAY_H
-
-// No pragma once. Easier to copy to another project.
+#ifndef STDUTILS_ARRAY_H
+#define STDUTILS_ARRAY_H
 
 #include <array>
 #include <utility>
@@ -25,9 +23,6 @@
 #include <string>
 #include <sstream>
 
-// =========    ADDING IN STD ===========
-// =========    NEED TO PUT IT IN STD FOR ADL ========
-// How to document this ?? Manually ?
 namespace std {
 
   template <typename T, size_t R>
@@ -74,21 +69,16 @@ namespace std {
     return res;
   }
 
- template <typename T, size_t R>
+  template <typename T, size_t R>
   constexpr std::array<T, R> operator*(T s, std::array<T, R> const &a) {
     std::array<T, R> res;
-    for (int i = 0; i < R; ++i) res[i] = s*a[i];
+    for (int i = 0; i < R; ++i) res[i] = s * a[i];
     return res;
   }
 
 } // namespace std
 
-#endif
-
-#ifndef STDUTILS_ARRAY_H
-#define STDUTILS_ARRAY_H
-
-// =========    END ADDING IN STD ===========
+// ===============================================
 
 namespace nda::stdutil {
 
@@ -289,4 +279,5 @@ namespace nda::stdutil {
   }
 
 } // namespace nda::stdutil
+
 #endif

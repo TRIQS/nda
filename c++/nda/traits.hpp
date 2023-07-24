@@ -25,9 +25,6 @@
 
 namespace nda {
 
-  // Using 2i and co
-  using namespace std::literals::complex_literals;
-
   // --------------------------- is_instantiation_of ------------------------
 
   template <template <typename...> class TMPLT, typename T>
