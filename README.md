@@ -11,7 +11,7 @@ It is an essential building-block of the TRIQS project. Some features include
 * easily store and retrieve arrays to and from hdf5 files using [h5](https://github.com/TRIQS/h5)
 * common mpi functionality using [mpi](https://github.com/TRIQS/mpi)
 
-Install instructions are provided [here](https://github.com/TRIQS/nda/blob/unstable/doc/install.rst).
+Install instructions are provided [here](https://github.com/TRIQS/nda/blob/1.1.x/doc/install.rst).
 
 A prelimenary reference documentation based on [Doxygen](https://www.doxygen.nl) is provided at [triqs.github.io/nda](https://triqs.github.io/nda/latest/).
 
@@ -66,4 +66,3 @@ int main() {
 ```
 
 For further examples we refer the users to our [tests](https://github.com/TRIQS/nda/tree/unstable/test/c++).
-We outline some important design principles [here](https://github.com/TRIQS/nda/blob/unstable/doc/documentation/design.rst).
