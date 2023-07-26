@@ -2,7 +2,7 @@
 
 import unittest
 
-from app4triqs import Toto, chain
+from nda import Toto, chain
 from h5 import *
 
 class test_toto(unittest.TestCase):

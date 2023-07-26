@@ -65,7 +65,7 @@ jobs:
         pip3 install mako numpy scipy mpi4py
         pip3 install -r requirements.txt
 
-    - name: Build app4triqs
+    - name: Build nda
       env:
         CC: ${{ matrix.cc }}
         CXX: ${{ matrix.cxx }}
@@ -74,7 +74,7 @@ jobs:
         mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/install
         make -j2 || make -j1 VERBOSE=1
 
-    - name: Test app4triqs
+    - name: Test nda
       env:
         DYLD_FALLBACK_LIBRARY_PATH: /usr/local/opt/llvm/lib
       run: |

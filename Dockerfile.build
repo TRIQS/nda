@@ -1,6 +1,6 @@
 # See packaging for various base options
 FROM flatironinstitute/triqs:base
-ARG APPNAME=app4triqs
+ARG APPNAME=nda
 
 COPY requirements.txt /src/$APPNAME/requirements.txt
 RUN pip3 install -r /src/$APPNAME/requirements.txt

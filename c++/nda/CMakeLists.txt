@@ -14,8 +14,8 @@ set_target_properties(${PROJECT_NAME}_c PROPERTIES
 target_include_directories(${PROJECT_NAME}_c PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/c++>)
 target_include_directories(${PROJECT_NAME}_c SYSTEM INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>)
 target_compile_definitions(${PROJECT_NAME}_c PUBLIC
-				APP4TRIQS_GIT_HASH=${PROJECT_GIT_HASH}
-				$<$<CONFIG:Debug>:APP4TRIQS_DEBUG>
+				NDA_GIT_HASH=${PROJECT_GIT_HASH}
+				$<$<CONFIG:Debug>:NDA_DEBUG>
 			  )
 
 # Install library and headers
