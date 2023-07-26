@@ -79,21 +79,21 @@ endif()
 # -- itertools --
 external_dependency(itertools
   GIT_REPO https://github.com/TRIQS/itertools
-  VERSION 1.0
+  VERSION 1.2
   GIT_TAG unstable
 )
 
 # -- h5 --
 external_dependency(h5
   GIT_REPO https://github.com/TRIQS/h5
-  VERSION 1.0
+  VERSION 1.2
   GIT_TAG unstable
 )
 
 # -- MPI --
 external_dependency(mpi
   GIT_REPO https://github.com/TRIQS/mpi
-  VERSION 1.0
+  VERSION 1.2
   GIT_TAG unstable
 )
 

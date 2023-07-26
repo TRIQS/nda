@@ -19,7 +19,7 @@ cmake_policy(VERSION 3.20)
 
 # ############
 # Define Project
-project(nda VERSION 1.1.0 LANGUAGES C CXX)
+project(nda VERSION 1.2.0 LANGUAGES C CXX)
 get_directory_property(IS_SUBPROJECT PARENT_DIRECTORY)
 
 # Get the git hash & print status
