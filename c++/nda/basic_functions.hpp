@@ -51,13 +51,13 @@ namespace nda {
   /// Return a scalar for the case of rank zero.
   /// For a more specific array type consider using basic_array<...>::ones
   template <typename T, std::integral Int, auto Rank>
-  auto ones(std::array<Int, Rank> const &shape) requires(nda::is_scalar_v<T>) {
+  auto ones(std::array<Int, Rank> const &shape)
+    requires(nda::is_scalar_v<T>)
+  {
     // For Rank == 0 we should return the underlying scalar_t
     if constexpr (Rank == 0)
       return T{1};
-    else {
-      return array<T, Rank>::ones(shape);
-    }
+    else { return array<T, Rank>::ones(shape); }
   }
 
   ///
@@ -92,7 +92,9 @@ namespace nda {
   /// Return a scalar for the case of rank zero.
   /// For a more specific array type consider using basic_array<...>::rand
   template <typename RealType = double, std::integral Int, auto Rank>
-  auto rand(std::array<Int, Rank> const &shape) requires(std::is_floating_point_v<RealType>) {
+  auto rand(std::array<Int, Rank> const &shape)
+    requires(std::is_floating_point_v<RealType>)
+  {
     // For Rank == 0 we should return a scalar
     if constexpr (Rank == 0) {
       auto static gen  = std::mt19937(std::random_device{}());
@@ -116,14 +118,18 @@ namespace nda {
   /// @param a Object
   /// @return The first dimension. Equivalent to a.extent(0) and a.shape()[0]
   template <Array A>
-  long first_dim(A const &a) { return a.extent(0); }
+  long first_dim(A const &a) {
+    return a.extent(0);
+  }
 
   /// Return the second array dimension
   /// @tparam A Type modeling NdArray
   /// @param a Object
   /// @return The second dimension. Equivalent to a.extent(1) and a.shape()[1]
   template <Array A>
-  long second_dim(A const &a) { return a.extent(1); }
+  long second_dim(A const &a) {
+    return a.extent(1);
+  }
 
   // --------------------------- make_regular ------------------------
 
@@ -159,7 +165,7 @@ namespace nda {
    */
   template <MemoryArray A>
   decltype(auto) to_host(A &&x) {
-    if constexpr(not mem::on_host<A>) {
+    if constexpr (not mem::on_host<A>) {
       return get_regular_host_t<A>{std::forward<A>(x)};
     } else {
       return std::forward<A>(x);
@@ -175,7 +181,7 @@ namespace nda {
    */
   template <MemoryArray A>
   decltype(auto) to_device(A &&x) {
-    if constexpr(not mem::on_device<A>) {
+    if constexpr (not mem::on_device<A>) {
       return get_regular_device_t<A>{std::forward<A>(x)};
     } else {
       return std::forward<A>(x);
@@ -191,7 +197,7 @@ namespace nda {
    */
   template <MemoryArray A>
   decltype(auto) to_unified(A &&x) {
-    if constexpr(not mem::on_unified<A>) {
+    if constexpr (not mem::on_unified<A>) {
       return get_regular_unified_t<A>{std::forward<A>(x)};
     } else {
       return std::forward<A>(x);
@@ -207,7 +213,9 @@ namespace nda {
    * @param a A container or a view
    */
   template <typename A>
-  void resize_or_check_if_view(A &a, std::array<long, A::rank> const &sha) requires(is_regular_or_view_v<A>) {
+  void resize_or_check_if_view(A &a, std::array<long, A::rank> const &sha)
+    requires(is_regular_or_view_v<A>)
+  {
     if (a.shape() == sha) return;
     if constexpr (is_regular_v<A>) {
       a.resize(sha);
@@ -280,7 +288,7 @@ namespace nda {
   /// True iif all elements are equal.
   template <Array A, Array B>
   bool operator==(A const &a, B const &b) {
- // FIXME not implemented in clang .. readd when done for better error message
+    // FIXME not implemented in clang .. readd when done for better error message
 #ifndef __clang__
     static_assert(std::equality_comparable_with<get_value_t<A>, get_value_t<B>>, "A == B is only defined when their element can be compared");
 #endif
@@ -354,11 +362,11 @@ namespace nda {
 
     for (auto n : range(A::rank)) {
       auto inner_size = (n == A::rank - 1) ? 1 : s[i[n + 1]] * l[i[n + 1]];
-      if( s[i[n]] != inner_size ) {
-        if( block_size < data_size )  // second strided dimension
-          return {}; 
+      if (s[i[n]] != inner_size) {
+        if (block_size < data_size) // second strided dimension
+          return {};
         // found a strided dimension with (assumed) contiguous inner blocks
-        n_blocks = a.size() / inner_size;
+        n_blocks   = a.size() / inner_size;
         block_size = inner_size;
         block_str  = s[i[n]];
       }
