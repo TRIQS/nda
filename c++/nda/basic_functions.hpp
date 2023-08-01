@@ -134,10 +134,15 @@ namespace nda {
    * @tparam A
    * @param x
    */
-  template <typename A>
+  template <typename A, typename A_t = std::decay_t<A>>
   decltype(auto) make_regular(A &&x) {
-    if constexpr(Array<A> and not is_regular_v<A>) {
+    if constexpr (Array<A> and not is_regular_v<A>) {
       return basic_array{std::forward<A>(x)};
+    } else if constexpr (requires { typename A_t::regular_t; }) {
+      if constexpr (not std::is_same_v<A_t, typename A_t::regular_t>)
+        return typename A_t::regular_t{std::forward<A>(x)};
+      else
+        return std::forward<A>(x);
     } else {
       return std::forward<A>(x);
     }
