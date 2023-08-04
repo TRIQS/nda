@@ -57,7 +57,7 @@ namespace nda::lapack {
     char op_a                    = get_op<conj_A, /*transpose =*/has_C_layout<A>>;
 
     int info = 0;
-    if constexpr (mem::have_device_compatible_addr_space_v<A,B,IPIV>) {
+    if constexpr (mem::have_device_compatible_addr_space_v<A, B, IPIV>) {
 #if defined(NDA_HAVE_DEVICE)
       device::getrs(op_a, get_ncols(a), get_ncols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
 #else

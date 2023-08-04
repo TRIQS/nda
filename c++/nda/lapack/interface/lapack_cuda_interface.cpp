@@ -14,7 +14,6 @@
 //
 // Authors: Olivier Parcollet, Nils Wentzell
 
-#include <mpi/mpi.hpp>
 #include <nda/nda.hpp>
 #include <nda/macros.hpp>
 #include <nda/exceptions.hpp>
@@ -22,6 +21,7 @@
 #include <nda/mem/fill.hpp>
 #include "lapack_cxx_interface.hpp"
 
+#include "cuda_runtime.h"
 #include "cusolverDn.h"
 
 #include <string>
@@ -63,20 +63,16 @@ namespace nda::lapack::device {
   static bool synchronize = true;
 #define CUSOLVER_CHECK(X, info, ...)                                                                                                                 \
   auto err = X(get_handle(), __VA_ARGS__, get_info_ptr());                                                                                           \
-  if (err != CUSOLVER_STATUS_SUCCESS) {   \
-    std::cerr << AS_STRING(X)  <<" failed with error code " << std::to_string(err);  \
-    mpi::communicator{}.abort(11);   \
-  }   \
-  if (synchronize) {  \
-    auto err1 = cudaDeviceSynchronize();                                                                                                      \
-    if (err1 != cudaSuccess) {                                                                                                                \
-      std::cerr<<" cudaDeviceSynchronize failed after call to: " <<AS_STRING(X) " \n "                                                                                        \
-               <<" cudaGetErrorName: " << std::string(cudaGetErrorName(err1)) <<"\n"                                                          \
-               <<" cudaGetErrorString: " << std::string(cudaGetErrorString(err1)) <<"\n";                                                     \
-      mpi::communicator{}.abort(11);                                                                                                          \
-    }  \
-  }  \
-  info     = *get_info_ptr();           
+  if (err != CUSOLVER_STATUS_SUCCESS) { NDA_RUNTIME_ERROR << AS_STRING(X) << " failed with error code " << std::to_string(err); }                    \
+  if (synchronize) {                                                                                                                                 \
+    auto errsync = cudaDeviceSynchronize();                                                                                                          \
+    if (errsync != cudaSuccess) {                                                                                                                    \
+      NDA_RUNTIME_ERROR << " cudaDeviceSynchronize failed after call to: " << AS_STRING(X) " \n "                                                    \
+                        << " cudaGetErrorName: " << std::string(cudaGetErrorName(errsync)) << "\n"                                                   \
+                        << " cudaGetErrorString: " << std::string(cudaGetErrorString(errsync)) << "\n";                                              \
+    }                                                                                                                                                \
+  }                                                                                                                                                  \
+  info = *get_info_ptr();
 
   inline auto *cucplx(std::complex<double> *c) { return reinterpret_cast<cuDoubleComplex *>(c); }             // NOLINT
   inline auto *cucplx(std::complex<double> const *c) { return reinterpret_cast<const cuDoubleComplex *>(c); } // NOLINT
@@ -126,42 +122,40 @@ namespace nda::lapack::device {
   }
 
   // use getrs with B=Idensity
-  void getri(int N, double *A, int LDA, int *ipiv, double *WORK, int LWORK, int &info)
-  {
+  void getri(int N, double *A, int LDA, int *ipiv, double *WORK, int LWORK, int &info) {
     if (LWORK == -1) {
-      int bufferSize = N*N;
-      *WORK = bufferSize;
+      int bufferSize = N * N;
+      *WORK          = bufferSize;
       return;
     }
-    if(LWORK == N*N) {
-      auto B = nda::cuarray_view<double,2>(std::array<long,2>{N,N},WORK);
-      B() = 0.0;
-      mem::fill2D_n<mem::Device>(B.data(), N+1, 1, N, 1.0);
-      getrs('N',N,N,A,LDA,ipiv,B.data(),N,info);
+    if (LWORK == N * N) {
+      auto B = nda::cuarray_view<double, 2>(std::array<long, 2>{N, N}, WORK);
+      B()    = 0.0;
+      mem::fill2D_n<mem::Device>(B.data(), N + 1, 1, N, 1.0);
+      getrs('N', N, N, A, LDA, ipiv, B.data(), N, info);
     } else {
-      auto B = nda::cuvector<double>(N*N);
-      B() = 0.0;
-      mem::fill2D_n<mem::Device>(B.data(), N+1, 1, N, 1.0);
-      getrs('N',N,N,A,LDA,ipiv,B.data(),N,info);
+      auto B = nda::cuvector<double>(N * N);
+      B()    = 0.0;
+      mem::fill2D_n<mem::Device>(B.data(), N + 1, 1, N, 1.0);
+      getrs('N', N, N, A, LDA, ipiv, B.data(), N, info);
     }
   }
-  void getri(int N, std::complex<double> *A, int LDA, int *ipiv, std::complex<double> *WORK, int LWORK, int &info)
-  {
+  void getri(int N, std::complex<double> *A, int LDA, int *ipiv, std::complex<double> *WORK, int LWORK, int &info) {
     if (LWORK == -1) {
-      int bufferSize = N*N;
-      *WORK = bufferSize;
+      int bufferSize = N * N;
+      *WORK          = bufferSize;
       return;
     }
-    if(LWORK == N*N) {
-      auto B = nda::cuarray_view<dcomplex,2>(std::array<long,2>{N,N},WORK);
-      B() = 0.0;
-      mem::fill2D_n<mem::Device>(B.data(), N+1, 1, N, std::complex<double>{1.0});
-      getrs('N',N,N,A,LDA,ipiv,B.data(),N,info);
+    if (LWORK == N * N) {
+      auto B = nda::cuarray_view<dcomplex, 2>(std::array<long, 2>{N, N}, WORK);
+      B()    = 0.0;
+      mem::fill2D_n<mem::Device>(B.data(), N + 1, 1, N, std::complex<double>{1.0});
+      getrs('N', N, N, A, LDA, ipiv, B.data(), N, info);
     } else {
-      auto B = nda::cuvector<dcomplex>(N*N);
-      B() = 0.0;
-      mem::fill2D_n<mem::Device>(B.data(), N+1, 1, N, std::complex<double>{1.0});
-      getrs('N',N,N,A,LDA,ipiv,B.data(),N,info);
+      auto B = nda::cuvector<dcomplex>(N * N);
+      B()    = 0.0;
+      mem::fill2D_n<mem::Device>(B.data(), N + 1, 1, N, std::complex<double>{1.0});
+      getrs('N', N, N, A, LDA, ipiv, B.data(), N, info);
     }
   }
 

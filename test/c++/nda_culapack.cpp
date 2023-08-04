@@ -34,11 +34,10 @@ void test_gesvd() { //NOLINT
 
   auto S = vector<double>(std::min(M, N));
 
-  //using cumatrix_t = cumatrix<value_t, F_layout>;
-  auto A_d         = to_device(A);
-  auto S_d         = to_device(S);
-  auto U_d         = to_device(U);
-  auto VT_d        = to_device(VT);
+  auto A_d  = to_device(A);
+  auto S_d  = to_device(S);
+  auto U_d  = to_device(U);
+  auto VT_d = to_device(VT);
   lapack::gesvd(A_d, S_d, U_d, VT_d);
   S  = S_d;
   U  = U_d;

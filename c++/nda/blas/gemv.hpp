@@ -85,7 +85,7 @@ namespace nda::blas {
     auto [m, n] = a.shape();
     if constexpr (has_C_layout<A>) std::swap(m, n);
 
-    if constexpr (mem::have_device_compatible_addr_space_v<A,B,C>) {
+    if constexpr (mem::have_device_compatible_addr_space_v<A, B, C>) {
 #if defined(NDA_HAVE_DEVICE)
       device::gemv(op_a, m, n, alpha, a.data(), get_ld(a), b.data(), b.indexmap().strides()[0], beta, c.data(), c.indexmap().strides()[0]);
 #else

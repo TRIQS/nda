@@ -50,7 +50,7 @@ namespace nda::lapack {
    *                 to solve a system of equations.
    */
   template <MemoryMatrix A, MemoryVector IPIV>
-  requires(mem::have_compatible_addr_space_v<A, IPIV> and is_blas_lapack_v<get_value_t<A>>)
+    requires(mem::have_compatible_addr_space_v<A, IPIV> and is_blas_lapack_v<get_value_t<A>>)
   int getrf(A &&a, IPIV &&ipiv) {
     static_assert(std::is_same_v<get_value_t<IPIV>, int>, "Pivoting array must have elements of type int");
 
@@ -68,7 +68,7 @@ namespace nda::lapack {
 #endif
 
     int info = 0;
-    if constexpr (mem::have_device_compatible_addr_space_v<A,IPIV>) {
+    if constexpr (mem::have_device_compatible_addr_space_v<A, IPIV>) {
 #if defined(NDA_HAVE_DEVICE)
       device::getrf(a.extent(0), a.extent(1), a.data(), get_ld(a), ipiv.data(), info);
 #else
