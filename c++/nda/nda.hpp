@@ -51,5 +51,3 @@
 #ifdef C2PY_INCLUDED
 #include <nda_py/cpp2py_converters.hpp>
 #endif
-
-

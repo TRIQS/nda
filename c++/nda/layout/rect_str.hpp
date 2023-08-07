@@ -85,10 +85,10 @@ namespace nda {
     /// Default constructor. Strides are not initiliazed.
     rect_str() = default;
 
-    rect_str(rect_str const &) = default;
-    rect_str(rect_str &&)      = default;
+    rect_str(rect_str const &)            = default;
+    rect_str(rect_str &&)                 = default;
     rect_str &operator=(rect_str const &) = default;
-    rect_str &operator=(rect_str &&) = default;
+    rect_str &operator=(rect_str &&)      = default;
 
     ///
     rect_str(base_t const &idxm) noexcept : base_t{idxm} {}
@@ -117,7 +117,8 @@ namespace nda {
        : base_t{make_shape_from_string_indices(str_indices)}, s_indices{std::make_shared<ind_t>(std::move(str_indices))} {}
 
     ///
-    rect_str(std::array<long, n_dynamic_extents> const &shape) noexcept requires((n_dynamic_extents != Rank) and (n_dynamic_extents != 0))
+    rect_str(std::array<long, n_dynamic_extents> const &shape) noexcept
+      requires((n_dynamic_extents != Rank) and (n_dynamic_extents != 0))
        : base_t{shape} {}
 
     // ----------------  Call operator -------------------------
@@ -143,7 +144,7 @@ namespace nda {
 
     public:
     template <typename... Args>
-    FORCEINLINE long operator()(Args const &... args) const {
+    FORCEINLINE long operator()(Args const &...args) const {
       return call_impl(std::make_index_sequence<sizeof...(Args)>{}, args...);
     }
 
@@ -151,7 +152,7 @@ namespace nda {
 
     private:
     template <typename... T, auto... Is>
-    FORCEINLINE decltype(auto) slice_impl(std::index_sequence<Is...>, T const &... x) const {
+    FORCEINLINE decltype(auto) slice_impl(std::index_sequence<Is...>, T const &...x) const {
       auto const [offset, idxm2] = base_t::slice(peel_string(Is, x)...);
       using new_rect_str_t       = typename details::rect_str_from_base<std::decay_t<decltype(idxm2)>>::type;
 
@@ -172,7 +173,7 @@ namespace nda {
 
     public:
     template <typename... Args>
-    auto slice(Args const &... args) const {
+    auto slice(Args const &...args) const {
       return slice_impl(std::make_index_sequence<sizeof...(args)>{}, args...);
     }
 

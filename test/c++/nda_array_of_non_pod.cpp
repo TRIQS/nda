@@ -22,11 +22,11 @@
 
 // non default constructible (ndc)
 struct ndc {
-  int i            = 2;
-  ndc(ndc const &) = default;
-  ndc(ndc &&)      = default;
+  int i                       = 2;
+  ndc(ndc const &)            = default;
+  ndc(ndc &&)                 = default;
   ndc &operator=(ndc const &) = default;
-  ndc &operator=(ndc &&) = default;
+  ndc &operator=(ndc &&)      = default;
 
   ndc(int j) : i(j) { std::cerr << " constructing ndc : " << i << "\n"; }
 };
@@ -88,12 +88,12 @@ TEST(NDA, NonDefaultConstructibleInitList2) { //NOLINT
 
 // a little non copyable object
 struct anc {
-  int i            = 2;
-  anc()            = default;
-  anc(anc const &) = delete;
-  anc(anc &&)      = default;
+  int i                       = 2;
+  anc()                       = default;
+  anc(anc const &)            = delete;
+  anc(anc &&)                 = default;
   anc &operator=(anc const &) = delete;
-  anc &operator=(anc &&) = default;
+  anc &operator=(anc &&)      = default;
 };
 
 TEST(NDA, array_of_non_copyable) { //NOLINT

@@ -229,7 +229,7 @@ namespace nda::slice_static {
   // FIXME : Q only needed, not Qs
   template <size_t... Ps, size_t... Ns, size_t... Qs, typename IdxMap, typename... Args>
   FORCEINLINE auto slice_stride_order_impl(std::index_sequence<Ps...>, std::index_sequence<Ns...>, std::index_sequence<Qs...>, IdxMap const &idxm,
-                                           Args const &... args) {
+                                           Args const &...args) {
 
 #ifdef NDA_ENFORCE_BOUNDCHECK
     details::assert_in_bounds(idxm.rank(), idxm.lengths().data(), args...);
@@ -285,7 +285,7 @@ namespace nda::slice_static {
   // ----------------------------- slice of index map ----------------------------------------------
 
   template <int R, uint64_t SE, uint64_t SO, layout_prop_e LP, typename... T>
-  FORCEINLINE decltype(auto) slice_stride_order(idx_map<R, SE, SO, LP> const &idxm, T const &... x) {
+  FORCEINLINE decltype(auto) slice_stride_order(idx_map<R, SE, SO, LP> const &idxm, T const &...x) {
 
     static constexpr int n_args_ellipsis = ((std::is_same_v<T, ellipsis>)+...);
     static constexpr int n_args_long     = (std::is_constructible_v<long, T> + ...); // any T I can construct a long from

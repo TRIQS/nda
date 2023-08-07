@@ -24,7 +24,7 @@ namespace nda::blas {
 
   // --------
   template <typename X, typename Y>
-  requires((Scalar<X> or MemoryVector<X>) and (Scalar<Y> or MemoryVector<X>))
+    requires((Scalar<X> or MemoryVector<X>) and (Scalar<Y> or MemoryVector<X>))
   auto dot(X const &x, Y const &y) {
     if constexpr (Scalar<X> or Scalar<Y>) {
       return x * y;
@@ -50,7 +50,7 @@ namespace nda::blas {
 
   // --------
   template <typename X, typename Y>
-  requires((Scalar<X> or MemoryVector<X>) and (Scalar<Y> or MemoryVector<X>))
+    requires((Scalar<X> or MemoryVector<X>) and (Scalar<Y> or MemoryVector<X>))
   auto dotc(X const &x, Y const &y) {
     if constexpr (Scalar<X> or Scalar<Y>) {
       return conj(x) * y;

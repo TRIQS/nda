@@ -36,7 +36,8 @@ TEST(Slice, d3to2) { //NOLINT
         EXPECT_COMPLEX_NEAR((a - b)(w, i, j), 0);
         EXPECT_COMPLEX_NEAR((a(Nw - 1 - w, i, Nj - 1 - j)), (a(range(Nw - 1, -1, -1), _, range(Nj - 1, -1, -1))(w, i, j)));
         EXPECT_COMPLEX_NEAR((a(Nw - 1 - w, i, Nj - 1 - j)), (a(range(Nw - 1, -1, -1), i, range(Nj - 1, -1, -1))(w, j)));
-        if(w < Nw/2 and j < Nj/3) EXPECT_COMPLEX_NEAR((a(Nw - 1 - 2*w, i, Nj - 1 - 3*j)), (a(range(Nw - 1, -1, -2), i, range(Nj - 1, -1, -3))(w, j)));
+        if (w < Nw / 2 and j < Nj / 3)
+          EXPECT_COMPLEX_NEAR((a(Nw - 1 - 2 * w, i, Nj - 1 - 3 * j)), (a(range(Nw - 1, -1, -2), i, range(Nj - 1, -1, -3))(w, j)));
       }
 
   nda::array<dcomplex, 3> r = a - b;

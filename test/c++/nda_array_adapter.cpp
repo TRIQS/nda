@@ -33,7 +33,7 @@ TEST(array_adapter, base) { //NOLINT
 
   EXPECT_EQ_ARRAY(a, (nda::array<long, 2>{{0, 2}, {1, 3}}));
 
-  EXPECT_EQ( sum(al), sum(a));
+  EXPECT_EQ(sum(al), sum(a));
 }
 
 // ------------------------------------
@@ -76,7 +76,7 @@ TEST(array_adapter, move2) { //NOLINT
     for (int j = 0; j < 2; ++j) arr1(i, j) = A{1 + i + 10 * j};
 
   // -------
-  auto l2 = [arr2 = std::move(arr1)](long i, long j) { return B{std::move(arr2(i, j))}; };
+  auto l2                = [arr2 = std::move(arr1)](long i, long j) { return B{std::move(arr2(i, j))}; };
   nda::array<B, 2> arr_b = nda::array_adapter{std::array{2, 2}, l2};
 
   // -------

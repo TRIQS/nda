@@ -22,7 +22,9 @@ namespace nda {
   // ---------------  a few additional functions --------------
 
   template <typename T>
-  auto real(T t) requires(nda::is_scalar_v<T>) {
+  auto real(T t)
+    requires(nda::is_scalar_v<T>)
+  {
     if constexpr (is_complex_v<T>) {
       return std::real(t);
     } else {
@@ -31,7 +33,9 @@ namespace nda {
   }
 
   template <typename T>
-  auto conj(T t) requires(nda::is_scalar_v<T>) {
+  auto conj(T t)
+    requires(nda::is_scalar_v<T>)
+  {
     if constexpr (is_complex_v<T>) {
       return std::conj(t);
     } else {
@@ -53,7 +57,9 @@ namespace nda {
 
   /// pow for integer
   template <typename T>
-  T pow(T x, int n) requires(std::is_integral_v<T>) {
+  T pow(T x, int n)
+    requires(std::is_integral_v<T>)
+  {
     T r = 1;
     for (int i = 0; i < n; ++i) r *= x;
     return r;

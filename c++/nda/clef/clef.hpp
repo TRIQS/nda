@@ -131,7 +131,8 @@ namespace nda::clef {
   *  --------------------------------------------------------------------------------------------------- */
   template <typename T>
   constexpr bool is_lazy = false;
-  template <typename T> requires(!std::is_same_v<T, std::remove_cvref_t<T>>)
+  template <typename T>
+    requires(!std::is_same_v<T, std::remove_cvref_t<T>>)
   constexpr bool is_lazy<T> = is_lazy<std::remove_cvref_t<T>>;
 
   template <typename... Args>
@@ -159,7 +160,7 @@ namespace nda::clef {
     expr(Tag, Args &&...args) : childs(std::forward<Args>(args)...) {}
     // [] returns a new lazy expression, with one more layer
     template <typename... Args>
-    expr<tags::subscript, expr, expr_storage_t<Args>...> operator[](Args &&... args) const {
+    expr<tags::subscript, expr, expr_storage_t<Args>...> operator[](Args &&...args) const {
       return {tags::subscript(), *this, std::forward<Args>(args)...};
     }
     // () also ...
@@ -168,8 +169,8 @@ namespace nda::clef {
       return {tags::function(), *this, std::forward<Args>(args)...};
     }
     // assignement is in general deleted
-    expr &operator=(expr const &) = delete; // no ordinary assignment
-    expr &operator=(expr &&) = default;     // move assign ok
+    expr &operator=(expr const &) = delete;  // no ordinary assignment
+    expr &operator=(expr &&)      = default; // move assign ok
 
     // however, this is ok in the case f(i,j) = expr, where f is a clef::function
     //template <typename RHS, typename CH = childs_t>
@@ -696,7 +697,8 @@ namespace nda::clef {
   * --------------------------------------------------------------------------------------------------- */
 
   template <typename Obj, typename... Args>
-  expr<tags::subscript, expr_storage_t<Obj>, expr_storage_t<Args>...> make_expr_subscript(Obj &&obj, Args &&...args) CLEF_requires(is_any_lazy<Args...>) {
+  expr<tags::subscript, expr_storage_t<Obj>, expr_storage_t<Args>...> make_expr_subscript(Obj &&obj, Args &&...args)
+     CLEF_requires(is_any_lazy<Args...>) {
     return {tags::subscript{}, std::forward<Obj>(obj), std::forward<Args>(args)...};
   }
 

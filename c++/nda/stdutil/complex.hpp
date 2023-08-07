@@ -25,31 +25,31 @@ using namespace std::literals::complex_literals;
 
 namespace std { // has to be in the right namespace for ADL !
 
-#define IMPL_OP(OP)                                                                                                    \
-  template <typename T, typename U>                                                                                    \
-    requires(std::is_arithmetic_v<T> and std::is_arithmetic_v<U> and std::common_with<T, U>)                           \
-  auto operator OP(std::complex<T> const &x, U y) {                                                                    \
-    using C = std::complex<std::common_type_t<T, U>>;                                                                  \
-    return C(x.real(), x.imag()) OP C(y);                                                                              \
-  }                                                                                                                    \
-                                                                                                                       \
-  template <typename T, typename U>                                                                                    \
-    requires(std::is_arithmetic_v<T> and std::is_arithmetic_v<U> and std::common_with<T, U>)                           \
-  auto operator OP(T x, std::complex<U> const &y) {                                                                    \
-    using C = std::complex<std::common_type_t<T, U>>;                                                                  \
-    return C(x) OP C(y.real(), y.imag());                                                                              \
-  }                                                                                                                    \
-                                                                                                                       \
-  template <typename T, typename U>                                                                                    \
-    requires(std::is_arithmetic_v<T> and std::is_arithmetic_v<U> and std::common_with<T, U> and !std::is_same_v<T, U>) \
-  auto operator OP(std::complex<T> const &x, std::complex<U> const &y) {                                               \
-    using C = std::complex<std::common_type_t<T, U>>;                                                                  \
-    return C(x.real(), x.imag()) OP C(y.real(), y.imag());                                                             \
+#define IMPL_OP(OP)                                                                                                                                  \
+  template <typename T, typename U>                                                                                                                  \
+    requires(std::is_arithmetic_v<T> and std::is_arithmetic_v<U> and std::common_with<T, U>)                                                         \
+  auto operator OP(std::complex<T> const &x, U y) {                                                                                                  \
+    using C = std::complex<std::common_type_t<T, U>>;                                                                                                \
+    return C(x.real(), x.imag()) OP C(y);                                                                                                            \
+  }                                                                                                                                                  \
+                                                                                                                                                     \
+  template <typename T, typename U>                                                                                                                  \
+    requires(std::is_arithmetic_v<T> and std::is_arithmetic_v<U> and std::common_with<T, U>)                                                         \
+  auto operator OP(T x, std::complex<U> const &y) {                                                                                                  \
+    using C = std::complex<std::common_type_t<T, U>>;                                                                                                \
+    return C(x) OP C(y.real(), y.imag());                                                                                                            \
+  }                                                                                                                                                  \
+                                                                                                                                                     \
+  template <typename T, typename U>                                                                                                                  \
+    requires(std::is_arithmetic_v<T> and std::is_arithmetic_v<U> and std::common_with<T, U> and !std::is_same_v<T, U>)                               \
+  auto operator OP(std::complex<T> const &x, std::complex<U> const &y) {                                                                             \
+    using C = std::complex<std::common_type_t<T, U>>;                                                                                                \
+    return C(x.real(), x.imag()) OP C(y.real(), y.imag());                                                                                           \
   }
   IMPL_OP(+)
   IMPL_OP(-)
   IMPL_OP(*)
   IMPL_OP(/)
 #undef IMPL_OP
-}
+} // namespace std
 #endif

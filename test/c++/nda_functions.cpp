@@ -80,9 +80,9 @@ TEST(reshape, array) { //NOLINT
 
 TEST(reshape, checkView) { //NOLINT
 
-  nda::array<long, 1> a{1, 2, 3, 4, 5, 6};     // 1d array
-  auto v = reshape(a, std::array{2, 3});       // v is an array_view<long,2> of size 2 x 3
-  v(0, nda::range::all) *= 10;                 // a is now {10, 20, 30, 4, 5, 6}
+  nda::array<long, 1> a{1, 2, 3, 4, 5, 6}; // 1d array
+  auto v = reshape(a, std::array{2, 3});   // v is an array_view<long,2> of size 2 x 3
+  v(0, nda::range::all) *= 10;             // a is now {10, 20, 30, 4, 5, 6}
 
   EXPECT_EQ_ARRAY(a, (nda::array<long, 1>{10, 20, 30, 4, 5, 6}));
 }

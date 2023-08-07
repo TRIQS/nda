@@ -26,7 +26,10 @@
 namespace nda {
 
   // Use within constexpr branch to trigger compiler error
-  template<bool flag = false> void compile_error_no_gpu() { static_assert(flag, "Using device functionality without gpu support! Configure project with -DSupportGPU=ON."); }
+  template <bool flag = false>
+  void compile_error_no_gpu() {
+    static_assert(flag, "Using device functionality without gpu support! Configure project with -DSupportGPU=ON.");
+  }
 
 #if defined(NDA_HAVE_CUDA)
   static constexpr bool have_device = true;

@@ -310,14 +310,14 @@ TEST(Inverse, slice) { //NOLINT
 
 TEST(Inverse, Small) { //NOLINT
 
-  for (auto N: {1, 2, 3}) {
+  for (auto N : {1, 2, 3}) {
 
     matrix<double> W(N, N);
     for (int i = 0; i < N; ++i)
       for (int j = 0; j < N; ++j) W(i, j) = (i > j ? 0.5 + i + 2.5 * j : i * 0.8 - j - 0.5);
 
     auto Wi = inverse(W);
-    EXPECT_NEAR(determinant(Wi), 1.0/determinant(W), 1.e-12);
+    EXPECT_NEAR(determinant(Wi), 1.0 / determinant(W), 1.e-12);
     EXPECT_ARRAY_NEAR(W * Wi, nda::eye<double>(N), 1.e-13);
 
     auto Wii = inverse(Wi);

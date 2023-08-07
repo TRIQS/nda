@@ -61,7 +61,7 @@ namespace nda::permutations {
     return true;
   }
 
-  /// Compose p1 p2 
+  /// Compose p1 p2
   template <std::integral Int, size_t Rank>
   constexpr std::array<Int, Rank> compose(std::array<Int, Rank> const &p1, std::array<Int, Rank> const &p2) {
     EXPECTS(is_valid(p1));

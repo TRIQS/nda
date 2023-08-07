@@ -49,9 +49,7 @@ TEST(Norm, Ones) { //NOLINT
 
 // ==============================================================
 
-bool check_norm_p(auto &v, double p) {
-  return norm(v, p) == std::pow(sum(pow(abs(v), p)), 1.0 / p);
-};
+bool check_norm_p(auto &v, double p) { return norm(v, p) == std::pow(sum(pow(abs(v), p)), 1.0 / p); };
 
 TEST(Norm, Rand) { //NOLINT
   const int N = 100;
@@ -72,7 +70,7 @@ TEST(Norm, Rand) { //NOLINT
 // ==============================================================
 
 TEST(Norm, Example) { //NOLINT
-  auto vdbl   = nda::array<double, 1>{-0.5, 0.0, 1.0, 2.5};
+  auto vdbl = nda::array<double, 1>{-0.5, 0.0, 1.0, 2.5};
 
   auto run_checks = [](auto const &v) {
     EXPECT_EQ(norm(v), norm(v, 2.0));

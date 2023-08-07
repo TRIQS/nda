@@ -74,8 +74,16 @@ namespace nda {
     basic_array_view<ValueType, Rank, LayoutPolicy, 'A', AccessorPolicy, OwningPolicy> as_array_view() { return {*this}; };
     basic_array_view<const ValueType, Rank, LayoutPolicy, 'A', AccessorPolicy, OwningPolicy> as_array_view() const { return {*this}; };
 
-    [[deprecated]] auto transpose() requires(Rank == 2) { return permuted_indices_view<encode(std::array<int, 2>{1, 0})>(*this); }
-    [[deprecated]] auto transpose() const requires(Rank == 2) { return permuted_indices_view<encode(std::array<int, 2>{1, 0})>(*this); }
+    [[deprecated]] auto transpose()
+      requires(Rank == 2)
+    {
+      return permuted_indices_view<encode(std::array<int, 2>{1, 0})>(*this);
+    }
+    [[deprecated]] auto transpose() const
+      requires(Rank == 2)
+    {
+      return permuted_indices_view<encode(std::array<int, 2>{1, 0})>(*this);
+    }
 
     // ------------------------------- constructors --------------------------------------------
 
@@ -118,7 +126,9 @@ namespace nda {
      * @param i0 is the extents of the only dimension
      */
     template <std::integral Int, typename RHS>
-    explicit basic_array(Int i, RHS const &val) noexcept requires((Rank == 1 and is_scalar_for_v<RHS, basic_array>)) {
+    explicit basic_array(Int i, RHS const &val) noexcept
+      requires((Rank == 1 and is_scalar_for_v<RHS, basic_array>))
+    {
       lay = layout_t{std::array{long(i)}};
       sto = storage_t{lay.size()};
       assign_from_scalar(val);
@@ -130,11 +140,14 @@ namespace nda {
      * @param shape  Shape of the array (lengths in each dimension)
      */
     template <std::integral Int = long>
-    explicit basic_array(std::array<Int, Rank> const &shape) noexcept requires(std::is_default_constructible_v<ValueType>)
+    explicit basic_array(std::array<Int, Rank> const &shape) noexcept
+      requires(std::is_default_constructible_v<ValueType>)
        : lay(shape), sto(lay.size()) {}
 
     /// Construct from the layout
-    explicit basic_array(layout_t const &layout) noexcept requires(std::is_default_constructible_v<ValueType>) : lay{layout}, sto{lay.size()} {}
+    explicit basic_array(layout_t const &layout) noexcept
+      requires(std::is_default_constructible_v<ValueType>)
+       : lay{layout}, sto{lay.size()} {}
 
     /// Construct from the layout and existing memory
     explicit basic_array(layout_t const &layout, storage_t &&storage) noexcept : lay{layout}, sto{std::move(storage)} {}
@@ -144,8 +157,8 @@ namespace nda {
      */
     template <ArrayOfRank<Rank> A>
     basic_array(A const &a) noexcept //
-       requires(HasValueTypeConstructibleFrom<A, value_type>)
-          
+      requires(HasValueTypeConstructibleFrom<A, value_type>)
+
        : lay(a.shape()), sto{lay.size(), mem::do_not_initialize} {
       static_assert(std::is_constructible_v<value_type, get_value_t<A>>,
                     "Can not construct the array. ValueType can not be constructed from the value_type of the argument");
@@ -185,7 +198,7 @@ namespace nda {
     public:
     ///
     basic_array(std::initializer_list<ValueType> const &l) noexcept //
-       requires(Rank == 1)
+      requires(Rank == 1)
        : lay(std::array<long, 1>{long(l.size())}), sto{lay.size(), mem::do_not_initialize} {
       long i = 0;
       // We can not assume that ValueType is default constructible. As before, we do not initialize,
@@ -197,7 +210,7 @@ namespace nda {
 
     ///
     basic_array(std::initializer_list<std::initializer_list<ValueType>> const &l2) noexcept //
-       requires(Rank == 2)
+      requires(Rank == 2)
        : lay(shape_from_init_list(l2)), sto{lay.size(), mem::do_not_initialize} {
       long i = 0, j = 0;
       for (auto const &l1 : l2) {
@@ -209,7 +222,7 @@ namespace nda {
 
     ///
     basic_array(std::initializer_list<std::initializer_list<std::initializer_list<ValueType>>> const &l3) noexcept //
-       requires(Rank == 3)
+      requires(Rank == 3)
        : lay(shape_from_init_list(l3)), sto{lay.size(), mem::do_not_initialize} {
       long i = 0, j = 0, k = 0;
       static_assert(Rank == 3, "?");
@@ -252,7 +265,7 @@ namespace nda {
     /// \trailing_requires
     template <char Algebra2>
     explicit basic_array(basic_array<ValueType, 2, LayoutPolicy, Algebra2, ContainerPolicy> &&am) noexcept
-       requires(Rank == 2) // NB Rank =2 since matrix/array for the moment. generalize if needed
+      requires(Rank == 2) // NB Rank =2 since matrix/array for the moment. generalize if needed
        : basic_array{am.indexmap(), std::move(am).storage()} {}
 
     //------------------ Factories -------------------------
@@ -260,19 +273,24 @@ namespace nda {
     /// Make a zero-initialized array of the given shape
     template <std::integral Int = long>
     static basic_array zeros(std::array<Int, Rank> const &shape)
-       requires(std::is_standard_layout_v<ValueType> &&std::is_trivially_copyable_v<ValueType>) {
+      requires(std::is_standard_layout_v<ValueType> && std::is_trivially_copyable_v<ValueType>)
+    {
       return basic_array{stdutil::make_std_array<long>(shape), mem::init_zero};
     }
 
     /// Make a zero-initialized array with the given dimensions
     template <std::integral... Ints>
-    static basic_array zeros(Ints... i) requires(sizeof...(Ints) == Rank) {
+    static basic_array zeros(Ints... i)
+      requires(sizeof...(Ints) == Rank)
+    {
       return zeros(std::array<long, Rank>{i...});
     }
 
     /// Make an array of the given shape holding 'scalar ones'
     template <std::integral Int = long>
-    static basic_array ones(std::array<Int, Rank> const &shape) requires(nda::is_scalar_v<ValueType>) {
+    static basic_array ones(std::array<Int, Rank> const &shape)
+      requires(nda::is_scalar_v<ValueType>)
+    {
       auto res = basic_array{stdutil::make_std_array<long>(shape)};
       res()    = ValueType{1};
       return res;
@@ -280,20 +298,24 @@ namespace nda {
 
     /// Make an array of the given dimensions holding 'scalar ones'
     template <std::integral... Ints>
-    static basic_array ones(Ints... i) requires(sizeof...(Ints) == Rank) {
+    static basic_array ones(Ints... i)
+      requires(sizeof...(Ints) == Rank)
+    {
       return ones(std::array<long, Rank>{i...});
     }
 
     /// Create an array the given shape and populate it with random
     /// samples from a uniform distribution over [0, 1)
     template <std::integral Int = long>
-    static basic_array rand(std::array<Int, Rank> const &shape) requires(std::is_floating_point_v<ValueType> or nda::is_complex_v<ValueType>) {
+    static basic_array rand(std::array<Int, Rank> const &shape)
+      requires(std::is_floating_point_v<ValueType> or nda::is_complex_v<ValueType>)
+    {
 
       auto static gen  = std::mt19937(std::random_device{}());
       auto static dist = std::uniform_real_distribution<>(0.0, 1.0);
 
       auto res = basic_array{shape};
-      if constexpr(nda::is_complex_v<ValueType>)
+      if constexpr (nda::is_complex_v<ValueType>)
         for (auto &x : res) x = dist(gen) + 1i * dist(gen);
       else
         for (auto &x : res) x = dist(gen);
@@ -304,7 +326,9 @@ namespace nda {
     /// Create an array the given dimensions and populate it with random
     /// samples from a uniform distribution over [0, 1)
     template <std::integral... Ints>
-    static basic_array rand(Ints... i) requires(sizeof...(Ints) == Rank) {
+    static basic_array rand(Ints... i)
+      requires(sizeof...(Ints) == Rank)
+    {
       return rand(std::array<long, Rank>{i...});
     }
 
@@ -330,7 +354,7 @@ namespace nda {
      * @tparam RHS A scalar or an object modeling NdArray
      */
     template <ArrayOfRank<Rank> RHS>
-    basic_array &operator=(RHS const &rhs) noexcept  {
+    basic_array &operator=(RHS const &rhs) noexcept {
       static_assert(!is_const, "Cannot assign to a const !");
       resize(rhs.shape());
       assign_from_ndarray(rhs); // common code with view, private
@@ -345,7 +369,9 @@ namespace nda {
      */
     template <typename RHS>
     // FIXME : explode this notion
-    basic_array &operator=(RHS const &rhs) noexcept requires(is_scalar_for_v<RHS, basic_array>) {
+    basic_array &operator=(RHS const &rhs) noexcept
+      requires(is_scalar_for_v<RHS, basic_array>)
+    {
       static_assert(!is_const, "Cannot assign to a const !");
       assign_from_scalar(rhs); // common code with view, private
       return *this;
@@ -394,27 +420,36 @@ namespace nda {
   // --- Class Template Argument Deduction Guides ---
 
   template <MemoryArray A>
-  basic_array(A &&a)
-     -> basic_array<get_value_t<A>, get_rank<A>, get_contiguous_layout_policy<get_rank<A>, get_layout_info<A>.stride_order>, get_algebra<A>, heap<mem::get_addr_space<A>>>;
+  basic_array(A &&a) -> basic_array<get_value_t<A>, get_rank<A>, get_contiguous_layout_policy<get_rank<A>, get_layout_info<A>.stride_order>,
+                                    get_algebra<A>, heap<mem::get_addr_space<A>>>;
 
   template <Array A>
   basic_array(A &&a) -> basic_array<get_value_t<A>, get_rank<A>, C_layout, get_algebra<A>, heap<>>;
 
   // --- get_regular_t ---
 
-  template <typename T, typename T2 = std::remove_reference_t<T> /* Keep this: Fix for gcc11 bug */ >
+  template <typename T, typename T2 = std::remove_reference_t<T> /* Keep this: Fix for gcc11 bug */>
   using get_regular_t = decltype(basic_array{std::declval<T>()});
 
   // --- Get the associated regular type with host/device/unified memory ---
 
   template <typename T, typename RT = get_regular_t<T>>
-  using get_regular_host_t = std::conditional_t<mem::on_host<RT>, RT, basic_array<get_value_t<RT>, get_rank<RT>, get_contiguous_layout_policy<get_rank<RT>, get_layout_info<RT>.stride_order>, get_algebra<RT>, heap<mem::Host>>>;
+  using get_regular_host_t =
+     std::conditional_t<mem::on_host<RT>, RT,
+                        basic_array<get_value_t<RT>, get_rank<RT>, get_contiguous_layout_policy<get_rank<RT>, get_layout_info<RT>.stride_order>,
+                                    get_algebra<RT>, heap<mem::Host>>>;
 
   template <typename T, typename RT = get_regular_t<T>>
-  using get_regular_device_t = std::conditional_t<mem::on_device<RT>, RT, basic_array<get_value_t<RT>, get_rank<RT>, get_contiguous_layout_policy<get_rank<RT>, get_layout_info<RT>.stride_order>, get_algebra<RT>, heap<mem::Device>>>;
+  using get_regular_device_t =
+     std::conditional_t<mem::on_device<RT>, RT,
+                        basic_array<get_value_t<RT>, get_rank<RT>, get_contiguous_layout_policy<get_rank<RT>, get_layout_info<RT>.stride_order>,
+                                    get_algebra<RT>, heap<mem::Device>>>;
 
   template <typename T, typename RT = get_regular_t<T>>
-  using get_regular_unified_t = std::conditional_t<mem::on_unified<RT>, RT, basic_array<get_value_t<RT>, get_rank<RT>, get_contiguous_layout_policy<get_rank<RT>, get_layout_info<RT>.stride_order>, get_algebra<RT>, heap<mem::Unified>>>;
+  using get_regular_unified_t =
+     std::conditional_t<mem::on_unified<RT>, RT,
+                        basic_array<get_value_t<RT>, get_rank<RT>, get_contiguous_layout_policy<get_rank<RT>, get_layout_info<RT>.stride_order>,
+                                    get_algebra<RT>, heap<mem::Unified>>>;
 
 } // namespace nda
 

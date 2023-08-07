@@ -24,7 +24,7 @@ namespace nda::blas {
 
   // --------
   template <typename X>
-  requires(MemoryVector<X> or is_conj_array_expr<X>)
+    requires(MemoryVector<X> or is_conj_array_expr<X>)
   void scal(get_value_t<X> alpha, X &&x) {
     static_assert(is_blas_lapack_v<get_value_t<X>>, "Vector hold value_type incompatible with blas");
 

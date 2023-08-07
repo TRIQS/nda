@@ -69,7 +69,7 @@ namespace nda {
         // reset input array to allow for mpi reduction
         x() = 0.0;
 
-        #pragma omp parallel
+#pragma omp parallel
         for (auto const &sym_class : itertools::omp_chunk(mpi::chunk(sym_classes))) {
           auto idx           = x.indexmap().to_idx(sym_class[0].first);
           auto ref_val       = init_func(idx);

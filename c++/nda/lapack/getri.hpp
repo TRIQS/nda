@@ -48,7 +48,7 @@ namespace nda::lapack {
   int getri(A &&a, IPIV const &ipiv) {
     static_assert(std::is_same_v<get_value_t<IPIV>, int>, "Pivoting array must have elements of type int");
 
-    using T  = get_value_t<A>;
+    using T = get_value_t<A>;
     auto dm = std::min(a.extent(0), a.extent(1));
     if (ipiv.size() < dm) NDA_RUNTIME_ERROR << "In getri: Pivot index array size " << ipiv.size() << " smaller than required size " << dm;
 

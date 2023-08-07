@@ -22,7 +22,6 @@
 
 TEST(NDA, Concept) { // NOLINT
 
-
 #if __cplusplus > 201703L
 
   using nda::Array;

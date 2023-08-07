@@ -119,11 +119,11 @@ TEST(Arrays, MPIReduceCustom) { //NOLINT
 
   mpi::communicator world;
   using matrix_t = nda::matrix<double>;
-  using arr_t = nda::array<matrix_t, 1>;
+  using arr_t    = nda::array<matrix_t, 1>;
 
   arr_t a(7);
   arr_t r_exact(7);
-  for (int i = 0; i < a.extent(0); ++i){
+  for (int i = 0; i < a.extent(0); ++i) {
     a(i) = matrix_t{4, 4};
     a(i)(k_, l_) << i * (world.rank() + 1) * (k_ + l_);
 

@@ -53,7 +53,7 @@ namespace nda {
 
     private: // FIXME C++20 lambda implementation details
     template <size_t... Is, typename... Args>
-    [[gnu::always_inline]] [[nodiscard]] auto _call(std::index_sequence<Is...>, Args const &... args) const {
+    [[gnu::always_inline]] [[nodiscard]] auto _call(std::index_sequence<Is...>, Args const &...args) const {
       // In the case that (args...) invokes a slice on the array
       // we need to return an call_expr on the resulting view
       if constexpr ((is_range_or_ellipsis<Args> or ... or false)) {
@@ -69,7 +69,7 @@ namespace nda {
 
     public:
     template <typename... Args>
-    auto operator()(Args const &... args) const {
+    auto operator()(Args const &...args) const {
       return _call(std::make_index_sequence<sizeof...(A)>{}, args...);
     }
 
@@ -93,7 +93,7 @@ namespace nda {
     F f;
 
     template <Array A0, Array... A>
-    expr_call<F, A0, A...> operator()(A0 &&a0, A &&... a) const {
+    expr_call<F, A0, A...> operator()(A0 &&a0, A &&...a) const {
       EXPECTS(((a.shape() == a0.shape()) && ...)); // same shape
       return {f, {std::forward<A0>(a0), std::forward<A>(a)...}};
     }

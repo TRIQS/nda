@@ -176,13 +176,13 @@ TEST(Matrix, Eye) { //NOLINT
 // ===============================================================
 
 TEST(Matrix, Diagonal) { //NOLINT
-  auto v = nda::vector<int>{1,2,3};
+  auto v = nda::vector<int>{1, 2, 3};
   auto m = nda::diag(v);
-  EXPECT_EQ_ARRAY(m, (nda::matrix<int>{{1, 0, 0},{0, 2, 0},{0, 0, 3}}));
+  EXPECT_EQ_ARRAY(m, (nda::matrix<int>{{1, 0, 0}, {0, 2, 0}, {0, 0, 3}}));
   EXPECT_EQ_ARRAY(nda::diagonal(m), v);
 
   nda::diagonal(m) += v;
-  EXPECT_EQ_ARRAY(nda::diagonal(m), 2*v);
+  EXPECT_EQ_ARRAY(nda::diagonal(m), 2 * v);
 }
 
 // ===============================================================
@@ -193,13 +193,12 @@ TEST(Matrix, Slice) { //NOLINT
 
   nda::matrix<double> a(N, N);
 
-  nda::range R(2,4);
+  nda::range R(2, 4);
 
   auto v = a(R, 7);
 
   static_assert(decltype(v)::layout_t::layout_prop == nda::layout_prop_e::strided_1d, "ee");
   static_assert(nda::has_contiguous(decltype(v)::layout_t::layout_prop) == false, "ee");
-
 }
 
 TEST(Matrix, Algebra) {

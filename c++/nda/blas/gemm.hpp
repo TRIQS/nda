@@ -58,9 +58,9 @@ namespace nda::blas {
    *         gemm does not resize the object,
    */
   template <Matrix X, Matrix Y, MemoryMatrix C>
-  requires((MemoryMatrix<X> or is_conj_array_expr<X>) and                        //
-           (MemoryMatrix<Y> or is_conj_array_expr<Y>) and                        //
-           have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>) //
+    requires((MemoryMatrix<X> or is_conj_array_expr<X>) and                        //
+             (MemoryMatrix<Y> or is_conj_array_expr<Y>) and                        //
+             have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>) //
   void gemm(get_value_t<X> alpha, X const &x, Y const &y, get_value_t<X> beta, C &&c) {
 
     auto to_mat = []<typename Z>(Z const &z) -> auto & {

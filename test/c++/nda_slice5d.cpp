@@ -56,7 +56,7 @@ void test5d() {
               << " smallest_stride_is_one = " << smallest_stride_is_one << std::endl;
 
     bool check_strided_1d = true;
- 
+
     // forcing the basic iterator in rank dimension, avoiding all optimization
     using layout_t = typename decltype(v)::layout_t;
     using Iterator = nda::array_iterator<layout_t::rank(), long const, typename nda::default_accessor::template accessor<long>::pointer>;

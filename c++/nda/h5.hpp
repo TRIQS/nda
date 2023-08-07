@@ -114,8 +114,7 @@ namespace nda {
     static constexpr auto ellipsis_position = [&]<size_t... Is>(std::index_sequence<Is...>) {
       if constexpr (has_ellipsis) return ((std::is_same_v<IRs, ellipsis> * Is) + ... + 0);
       return size_of_slice;
-    }
-    (std::index_sequence_for<IRs...>{});
+    }(std::index_sequence_for<IRs...>{});
 
     static constexpr auto integer_count  = (std::integral<IRs> + ... + 0);
     static constexpr auto range_count    = size_of_slice - integer_count - ellipsis_count;
@@ -131,7 +130,7 @@ namespace nda {
 
     auto hsl   = h5::array_interface::hyperslab(slab_rank, is_complex);
     auto shape = std::array<long, NDim>{};
-    [&, m = 0 ]<size_t... Is>(std::index_sequence<Is...>) mutable {
+    [&, m = 0]<size_t... Is>(std::index_sequence<Is...>) mutable {
       (
          [&]<typename IR>(size_t n, IR const &ir) mutable {
            if (n > ellipsis_position) n += (ellipsis_width - 1);
@@ -155,8 +154,7 @@ namespace nda {
            }
          }(Is, std::get<Is>(slice)),
          ...);
-    }
-    (std::make_index_sequence<size_of_slice>{});
+    }(std::make_index_sequence<size_of_slice>{});
     return std::make_pair(hsl, shape);
   }
 
@@ -270,8 +268,8 @@ namespace nda {
 
       if constexpr (slicing) {
         auto const [sl, sh] = hyperslab_and_shape_from_slice<A::rank>(slice, lt.lengths, is_complex);
-        slice_slab = sl;
-        shape      = sh;
+        slice_slab          = sl;
+        shape               = sh;
       } else {
         for (int u = 0; u < A::rank; ++u) shape[u] = lt.lengths[u]; // NB : correct for complex
       }

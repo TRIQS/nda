@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <cstdlib> 
+#include <cstdlib>
 #include <algorithm>
 
 #include "address_space.hpp"
@@ -25,33 +25,29 @@
 
 namespace nda::mem {
 
-template <AddressSpace AdrSp>
-void memset(void* p, int value, size_t count)
-{
-  check_adr_sp_valid<AdrSp>();
-  static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
+  template <AddressSpace AdrSp>
+  void memset(void *p, int value, size_t count) {
+    check_adr_sp_valid<AdrSp>();
+    static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
 
-  if constexpr (AdrSp == Host) {
-    std::memset(p,value,count);
-  } else { // Device or Unified
-    device_check( cudaMemset(p, value, count), "cudaMemset" );
+    if constexpr (AdrSp == Host) {
+      std::memset(p, value, count);
+    } else { // Device or Unified
+      device_check(cudaMemset(p, value, count), "cudaMemset");
+    }
   }
-}
 
-template <AddressSpace AdrSp>
-void memset2D(void* ptr, size_t pitch, int value, size_t width, size_t height) 
-{ 
-  check_adr_sp_valid<AdrSp>();
-  static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
+  template <AddressSpace AdrSp>
+  void memset2D(void *ptr, size_t pitch, int value, size_t width, size_t height) {
+    check_adr_sp_valid<AdrSp>();
+    static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
 
-  if constexpr (AdrSp == Host) {
-    auto *ptri = static_cast<unsigned char *>(ptr);
-    for(size_t i=0; i<height; ++i, ptri+=pitch) 
-      std::memset(ptri,value,width); 
-  } else { // Device or Unified
-    device_check( cudaMemset2D(ptr, pitch, value, width, height), "cudaMemset2D" );
+    if constexpr (AdrSp == Host) {
+      auto *ptri = static_cast<unsigned char *>(ptr);
+      for (size_t i = 0; i < height; ++i, ptri += pitch) std::memset(ptri, value, width);
+    } else { // Device or Unified
+      device_check(cudaMemset2D(ptr, pitch, value, width, height), "cudaMemset2D");
+    }
   }
-}
 
 } // namespace nda::mem
-

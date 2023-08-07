@@ -101,7 +101,7 @@ namespace nda::mem {
       return sptr;
     }
 
-    using value_type = T;
+    using value_type                    = T;
     static constexpr auto address_space = alloc_t::address_space;
 
     ~handle_heap() noexcept {
@@ -142,7 +142,7 @@ namespace nda::mem {
 
     // Set up a memory block of the correct size without initializing it
     handle_heap(long size, do_not_initialize_t) {
-      if (size == 0) return;                                               // no size -> null handle
+      if (size == 0) return;                         // no size -> null handle
       auto b = allocator.allocate(size * sizeof(T)); //, alignof(T));
       ASSERT(b.ptr != nullptr);
       _data = (T *)b.ptr;
@@ -151,7 +151,7 @@ namespace nda::mem {
 
     // Set up a memory block of the correct size without initializing it
     handle_heap(long size, init_zero_t) {
-      if (size == 0) return;                                                    // no size -> null handle
+      if (size == 0) return;                              // no size -> null handle
       auto b = allocator.allocate_zero(size * sizeof(T)); //, alignof(T));
       ASSERT(b.ptr != nullptr);
       _data = (T *)b.ptr;
@@ -181,9 +181,9 @@ namespace nda::mem {
     explicit handle_heap(handle_heap const &x) : handle_heap(x.size(), do_not_initialize) {
       if (is_null()) return; // nothing to do for null handle
       if constexpr (std::is_trivially_copyable_v<T>) {
-	memcpy<address_space, address_space>(_data, x.data(), x.size() * sizeof(T));
+        memcpy<address_space, address_space>(_data, x.data(), x.size() * sizeof(T));
       } else {
-	for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]); // placement new
+        for (size_t i = 0; i < _size; ++i) new (_data + i) T(x[i]); // placement new
       }
     }
 
@@ -230,7 +230,7 @@ namespace nda::mem {
     std::array<char, sizeof(T) * Size> buffer; //
 
     public:
-    using value_type = T;
+    using value_type                    = T;
     static constexpr auto address_space = Host;
 
     //
@@ -300,7 +300,7 @@ namespace nda::mem {
     size_t _size = 0;       // Size of the memory block. Invariant: size > 0 iif data != 0
 
     public:
-    using value_type = T;
+    using value_type                    = T;
     static constexpr auto address_space = Host;
 
     bool on_heap() const { return _size > Size; }
@@ -474,7 +474,7 @@ namespace nda::mem {
     std::shared_ptr<void> sptr;
 
     public:
-    using value_type = T;
+    using value_type                    = T;
     static constexpr auto address_space = AdrSp;
 
     handle_shared() = default;
@@ -485,7 +485,9 @@ namespace nda::mem {
 
     // Cross construction from a regular handle. MALLOC CASE ONLY. FIXME : why ?
     template <Allocator alloc_t>
-    handle_shared(handle_heap<T, alloc_t> const &x) noexcept requires(alloc_t::address_space == address_space) : _data(x.data()), _size(x.size()) {
+    handle_shared(handle_heap<T, alloc_t> const &x) noexcept
+      requires(alloc_t::address_space == address_space)
+       : _data(x.data()), _size(x.size()) {
       if (not x.is_null()) sptr = x.get_sptr();
     }
 
@@ -518,18 +520,18 @@ namespace nda::mem {
     T *_data                       = nullptr; // Pointer to the start of the memory block
 
     public:
-    using value_type = T;
+    using value_type                    = T;
     static constexpr auto address_space = AdrSp;
 
-    handle_borrowed() = default;
+    handle_borrowed()                         = default;
     handle_borrowed(handle_borrowed const &x) = default;
 
     handle_borrowed(T *ptr) noexcept : _data(ptr) {}
 
     template <Handle H>
-    requires(address_space == H::address_space and (std::is_const_v<value_type> or !std::is_const_v<typename H::value_type>)
-             and std::is_same_v<const value_type, const typename H::value_type>) handle_borrowed(H const &x, long offset = 0)
-    noexcept : _data(x.data() + offset) {
+      requires(address_space == H::address_space and (std::is_const_v<value_type> or !std::is_const_v<typename H::value_type>)
+               and std::is_same_v<const value_type, const typename H::value_type>)
+    handle_borrowed(H const &x, long offset = 0) noexcept : _data(x.data() + offset) {
       if constexpr (std::is_same_v<H, handle_heap<T0>>) _parent = &x;
     }
 
@@ -538,7 +540,7 @@ namespace nda::mem {
 
     // warnings supp
     handle_borrowed &operator=(handle_borrowed const &) = default;
-    handle_borrowed &operator=(handle_borrowed &&) = default;
+    handle_borrowed &operator=(handle_borrowed &&)      = default;
 
     [[nodiscard]] bool is_null() const noexcept { return _data == nullptr; }
 

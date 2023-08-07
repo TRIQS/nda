@@ -100,8 +100,9 @@ namespace nda {
    *
    */
   template <typename A>
-  ArrayInitializer<std::remove_reference_t<A>> auto mpi_reduce(A &&a, mpi::communicator c = {}, int root = 0, bool all = false,
-                                                               MPI_Op op = MPI_SUM) requires(is_regular_or_view_v<A>) {
+  ArrayInitializer<std::remove_reference_t<A>> auto mpi_reduce(A &&a, mpi::communicator c = {}, int root = 0, bool all = false, MPI_Op op = MPI_SUM)
+    requires(is_regular_or_view_v<A>)
+  {
 
     if (not a.is_contiguous()) NDA_RUNTIME_ERROR << "mpi operations require contiguous rhs.data() to be contiguous";
 

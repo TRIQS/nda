@@ -45,7 +45,9 @@ namespace nda {
 
   // array
   template <typename A>
-  std::ostream &operator<<(std::ostream &out, A const &a) requires(is_regular_or_view_v<A>) {
+  std::ostream &operator<<(std::ostream &out, A const &a)
+    requires(is_regular_or_view_v<A>)
+  {
 
     if constexpr (A::rank == 1) {
       out << "[";
@@ -68,9 +70,9 @@ namespace nda {
     // FIXME : not very pretty, do better here, but that was the arrays way
     if constexpr (A::rank > 2) {
       out << "[";
-      for (bool first = true; auto& v: a) {
-	out << (first ? "" : ",") << v;
-	first = false;
+      for (bool first = true; auto &v : a) {
+        out << (first ? "" : ",") << v;
+        first = false;
       }
       out << "]";
     }
@@ -87,13 +89,15 @@ namespace nda {
 
   // ==============================================
 
-  template <char OP, Array A> struct expr_unary; // Necessary for libclang parsing
+  template <char OP, Array A>
+  struct expr_unary; // Necessary for libclang parsing
   template <char OP, Array A>
   std::ostream &operator<<(std::ostream &sout, expr_unary<OP, A> const &x) {
     return sout << OP << x.a;
   }
 
-  template <char OP, ArrayOrScalar L, ArrayOrScalar R> struct expr; // Necessary for libclang parsing
+  template <char OP, ArrayOrScalar L, ArrayOrScalar R>
+  struct expr; // Necessary for libclang parsing
   template <char OP, ArrayOrScalar L, ArrayOrScalar R>
   std::ostream &operator<<(std::ostream &sout, expr<OP, L, R> const &x) {
     return sout << "(" << x.l << " " << OP << " " << x.r << ")";

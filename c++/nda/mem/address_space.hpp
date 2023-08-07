@@ -90,30 +90,30 @@ namespace nda::mem {
 
   // Check if all Ts have memory on the host
   template <typename... Ts>
-  requires(sizeof...(Ts) > 0)
+    requires(sizeof...(Ts) > 0)
   static constexpr bool on_host = ((get_addr_space<Ts> == mem::Host) and ...);
 
   // Check if all Ts have memory on the device
   template <typename... Ts>
-  requires(sizeof...(Ts) > 0)
+    requires(sizeof...(Ts) > 0)
   static constexpr bool on_device = ((get_addr_space<Ts> == mem::Device) and ...);
 
   // Check if all Ts have unified memory
   template <typename... Ts>
-  requires(sizeof...(Ts) > 0)
+    requires(sizeof...(Ts) > 0)
   static constexpr bool on_unified = ((get_addr_space<Ts> == mem::Unified) and ...);
 
-  // Check all A have the same address space 
+  // Check all A have the same address space
   template <typename A0, typename... A>
   static constexpr bool have_same_addr_space_v = ((get_addr_space<A0> == get_addr_space<A>)and... and true);
 
-  // Check all Ts are host compatible 
+  // Check all Ts are host compatible
   template <typename... Ts>
-  static constexpr bool have_host_compatible_addr_space_v = ((on_host<Ts> or on_unified<Ts>) and ...);
+  static constexpr bool have_host_compatible_addr_space_v = ((on_host<Ts> or on_unified<Ts>)and...);
 
-  // Check all Ts are device compatible 
+  // Check all Ts are device compatible
   template <typename... Ts>
-  static constexpr bool have_device_compatible_addr_space_v = ((on_device<Ts> or on_unified<Ts>) and ...);
+  static constexpr bool have_device_compatible_addr_space_v = ((on_device<Ts> or on_unified<Ts>)and...);
 
   // Check all Ts have compatible address spaces
   template <typename... Ts>

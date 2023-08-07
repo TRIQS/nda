@@ -110,17 +110,16 @@ namespace nda {
 
     /// Generic constructor from any MemoryArray type
     template <MemoryArrayOfRank<Rank> A>
-    requires(
-       // Require same stride-order
-       (get_layout_info<A>.stride_order == layout_t::stride_order_encoded) and
-       // Require same underlying value_type
-       (std::is_same_v<std::remove_const_t<ValueType>, get_value_t<A>>) and
-       // Make sure that we have a const ValueType if our argument does
-       (std::is_const_v<ValueType> or !std::is_const_v<typename std::decay_t<A>::value_type>)
-    )
+      requires(
+                 // Require same stride-order
+                 (get_layout_info<A>.stride_order == layout_t::stride_order_encoded) and
+                 // Require same underlying value_type
+                 (std::is_same_v<std::remove_const_t<ValueType>, get_value_t<A>>) and
+                 // Make sure that we have a const ValueType if our argument does
+                 (std::is_const_v<ValueType> or !std::is_const_v<typename std::decay_t<A>::value_type>))
     // Explicit iff layout properties maybe be incompatible
-    explicit(requires_runtime_check<typename std::decay_t<A>::layout_policy_t>)
-    basic_array_view(A &&a) noexcept : lay(a.indexmap()), sto(a.storage()) {}
+    explicit(requires_runtime_check<typename std::decay_t<A>::layout_policy_t>) basic_array_view(A &&a) noexcept
+       : lay(a.indexmap()), sto(a.storage()) {}
 
     /** 
      * [Advanced] From a pointer to **contiguous data**, and a shape.
@@ -150,7 +149,8 @@ namespace nda {
      * @param a The array
      */
     template <size_t N>
-    explicit basic_array_view(std::array<ValueType, N> &a) noexcept requires(Rank == 1)
+    explicit basic_array_view(std::array<ValueType, N> &a) noexcept
+      requires(Rank == 1)
        : basic_array_view{{long(N)}, a.data()} {}
 
     /**
@@ -160,7 +160,8 @@ namespace nda {
      * @param a The array
      */
     template <size_t N>
-    explicit basic_array_view(std::array<std::remove_const_t<ValueType>, N> const &a) noexcept requires(Rank == 1 and std::is_const_v<ValueType>)
+    explicit basic_array_view(std::array<std::remove_const_t<ValueType>, N> const &a) noexcept
+      requires(Rank == 1 and std::is_const_v<ValueType>)
        : basic_array_view{{long(N)}, a.data()} {}
 
     /**
@@ -170,7 +171,9 @@ namespace nda {
      * @param r The contiguous Range
      */
     template <std::ranges::contiguous_range R>
-    explicit basic_array_view(R &r) noexcept requires(Rank == 1 and not MemoryArray<R> and (std::is_same_v<std::ranges::range_value_t<R>, ValueType> or std::is_same_v<const std::ranges::range_value_t<R>, ValueType>))
+    explicit basic_array_view(R &r) noexcept
+      requires(Rank == 1 and not MemoryArray<R>
+               and (std::is_same_v<std::ranges::range_value_t<R>, ValueType> or std::is_same_v<const std::ranges::range_value_t<R>, ValueType>))
        : basic_array_view{{long(std::ranges::size(r))}, std::to_address(std::begin(r))} {}
 
     // ------------------------------- assign --------------------------------------------
@@ -195,7 +198,7 @@ namespace nda {
      * @param rhs Right hand side of the = operation
      */
     template <ArrayOfRank<Rank> RHS>
-    basic_array_view &operator=(RHS const &rhs) noexcept  {
+    basic_array_view &operator=(RHS const &rhs) noexcept {
       // in C20 I use the concept refinement here, in 17 I have to exclude the  alternaticve
       static_assert(!is_const, "Cannot assign to a const !");
       assign_from_ndarray(rhs); // common code with view, private
@@ -205,7 +208,9 @@ namespace nda {
     /// Assign scalar
     template <typename RHS>
     // FIXME : explode this notion
-    basic_array_view &operator=(RHS const &rhs) noexcept requires(is_scalar_for_v<RHS, basic_array_view>) {
+    basic_array_view &operator=(RHS const &rhs) noexcept
+      requires(is_scalar_for_v<RHS, basic_array_view>)
+    {
       static_assert(!is_const, "Cannot assign to a const !");
       assign_from_scalar(rhs); // common code with view, private
       return *this;
@@ -278,10 +283,14 @@ namespace nda {
                          get_rank<A>, typename std::decay_t<A>::layout_policy_t, get_algebra<A>, default_accessor, borrowed<mem::get_addr_space<A>>>;
 
   template <typename V, size_t R>
-  basic_array_view(std::array<V, R> &a) -> basic_array_view<V, 1, nda::basic_layout<nda::static_extents(R), nda::C_stride_order<1>, nda::layout_prop_e::contiguous>, 'V', default_accessor, borrowed<>>;
+  basic_array_view(std::array<V, R> &a)
+     -> basic_array_view<V, 1, nda::basic_layout<nda::static_extents(R), nda::C_stride_order<1>, nda::layout_prop_e::contiguous>, 'V',
+                         default_accessor, borrowed<>>;
 
   template <typename V, size_t R>
-  basic_array_view(std::array<V, R> const &a) -> basic_array_view<const V, 1, nda::basic_layout<nda::static_extents(R), nda::C_stride_order<1>, nda::layout_prop_e::contiguous>, 'V', default_accessor, borrowed<>>;
+  basic_array_view(std::array<V, R> const &a)
+     -> basic_array_view<const V, 1, nda::basic_layout<nda::static_extents(R), nda::C_stride_order<1>, nda::layout_prop_e::contiguous>, 'V',
+                         default_accessor, borrowed<>>;
 
   template <std::ranges::contiguous_range R>
   basic_array_view(R &r) -> basic_array_view<std::conditional_t<std::is_const_v<R>, const typename R::value_type, typename R::value_type>, 1,

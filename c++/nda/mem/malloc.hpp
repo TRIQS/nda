@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <cstdlib> 
+#include <cstdlib>
 
 #include "address_space.hpp"
 #include "../macros.hpp"
@@ -24,49 +24,49 @@
 
 namespace nda::mem {
 
-template <AddressSpace AdrSp>
-void* malloc(size_t size) {
-  check_adr_sp_valid<AdrSp>();
-  static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
+  template <AddressSpace AdrSp>
+  void *malloc(size_t size) {
+    check_adr_sp_valid<AdrSp>();
+    static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
 
-  if constexpr (AdrSp == Host) {
-    return std::malloc(size);
-  } else if constexpr (AdrSp == Device) {
-    void* ptr = nullptr;
-    device_check( cudaMalloc((void**)&ptr, size), "cudaMalloc" ); 
-    return ptr;
-  } else { // Unified
-    void* ptr = nullptr;
-    device_check( cudaMallocManaged((void**)&ptr, size), "cudaMallocManaged" );
-    return ptr;
+    if constexpr (AdrSp == Host) {
+      return std::malloc(size);
+    } else if constexpr (AdrSp == Device) {
+      void *ptr = nullptr;
+      device_check(cudaMalloc((void **)&ptr, size), "cudaMalloc");
+      return ptr;
+    } else { // Unified
+      void *ptr = nullptr;
+      device_check(cudaMallocManaged((void **)&ptr, size), "cudaMallocManaged");
+      return ptr;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-template <AddressSpace AdrSp>
-void free(void* p) {
-  check_adr_sp_valid<AdrSp>();
-  static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
+  template <AddressSpace AdrSp>
+  void free(void *p) {
+    check_adr_sp_valid<AdrSp>();
+    static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
 
-  if constexpr (AdrSp == Host) {
-    std::free(p);
-  } else { // Device or Unified
-    device_check( cudaFree(p), "cudaFree" );
-  } 
-}
-
-template <AddressSpace AdrSp>
-void* calloc(size_t num, size_t size) {
-  check_adr_sp_valid<AdrSp>();
-  static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
-
-  if constexpr (AdrSp == Host) {
-    return std::calloc(num,size);
-  } else { // Device or Unified
-    char* ptr = (char*) malloc<AdrSp>(num*size);
-    device_check( cudaMemset((void*)ptr,0,num*size), "cudaMemset" );
-    return (void*)ptr;
+    if constexpr (AdrSp == Host) {
+      std::free(p);
+    } else { // Device or Unified
+      device_check(cudaFree(p), "cudaFree");
+    }
   }
-}
+
+  template <AddressSpace AdrSp>
+  void *calloc(size_t num, size_t size) {
+    check_adr_sp_valid<AdrSp>();
+    static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
+
+    if constexpr (AdrSp == Host) {
+      return std::calloc(num, size);
+    } else { // Device or Unified
+      char *ptr = (char *)malloc<AdrSp>(num * size);
+      device_check(cudaMemset((void *)ptr, 0, num * size), "cudaMemset");
+      return (void *)ptr;
+    }
+  }
 
 } // namespace nda::mem

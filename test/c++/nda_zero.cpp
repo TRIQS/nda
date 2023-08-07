@@ -54,5 +54,5 @@ TEST(NDA, ZerosCustom) { //NOLINT
   auto a = nda::zeros<Int>(3, 3);
 
   EXPECT_EQ(a.shape(), (nda::shape_t<2>{3, 3}));
-  for(auto v: a) EXPECT_EQ(v.i, 0);
+  for (auto v : a) EXPECT_EQ(v.i, 0);
 }

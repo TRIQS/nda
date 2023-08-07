@@ -55,11 +55,11 @@ namespace nda::mem {
   template <AddressSpace AdrSp = Host>
   class mallocator {
     public:
-    mallocator()                   = default;
-    mallocator(mallocator const &) = delete;
-    mallocator(mallocator &&)      = default;
+    mallocator()                              = default;
+    mallocator(mallocator const &)            = delete;
+    mallocator(mallocator &&)                 = default;
     mallocator &operator=(mallocator const &) = delete;
-    mallocator &operator=(mallocator &&) = default;
+    mallocator &operator=(mallocator &&)      = default;
 
     static constexpr auto address_space = AdrSp;
 
@@ -71,7 +71,7 @@ namespace nda::mem {
     }
 
     static void deallocate(blk_t b) noexcept {
-      free<AdrSp>((void*)b.ptr); // NOLINT
+      free<AdrSp>((void *)b.ptr); // NOLINT
     }
   };
 
@@ -94,10 +94,10 @@ namespace nda::mem {
 #else
     bucket() = default;
 #endif
-    bucket(bucket const &) = delete;
-    bucket(bucket &&)      = default;
+    bucket(bucket const &)            = delete;
+    bucket(bucket &&)                 = default;
     bucket &operator=(bucket const &) = delete;
-    bucket &operator=(bucket &&) = default;
+    bucket &operator=(bucket &&)      = default;
 
     blk_t allocate(size_t s) noexcept {
       // FIXME not here ! in the handle
@@ -163,10 +163,10 @@ namespace nda::mem {
     static constexpr auto address_space = Host;
 
     multi_bucket() : bu_vec(1), bu(bu_vec.begin()) {}
-    multi_bucket(multi_bucket const &) = delete;
-    multi_bucket(multi_bucket &&)      = delete;
+    multi_bucket(multi_bucket const &)            = delete;
+    multi_bucket(multi_bucket &&)                 = delete;
     multi_bucket &operator=(multi_bucket const &) = delete;
-    multi_bucket &operator=(multi_bucket &&) = delete;
+    multi_bucket &operator=(multi_bucket &&)      = delete;
 
     blk_t allocate(size_t s) noexcept {
       //[[unlikely]]
@@ -214,11 +214,11 @@ namespace nda::mem {
     static_assert(A::address_space == B::address_space);
     static constexpr auto address_space = A::address_space;
 
-    segregator()                   = default;
-    segregator(segregator const &) = delete;
-    segregator(segregator &&)      = default;
+    segregator()                              = default;
+    segregator(segregator const &)            = delete;
+    segregator(segregator &&)                 = default;
     segregator &operator=(segregator const &) = delete;
-    segregator &operator=(segregator &&) = default;
+    segregator &operator=(segregator &&)      = default;
 
     blk_t allocate(size_t s) noexcept { return s <= Threshold ? small.allocate(s) : big.allocate(s); }
     blk_t allocate_zero(size_t s) noexcept { return s <= Threshold ? small.allocate_zero(s) : big.allocate_zero(s); }
@@ -236,11 +236,11 @@ namespace nda::mem {
     public:
     static constexpr auto address_space = A::address_space;
 
-    leak_check()                   = default;
-    leak_check(leak_check const &) = delete;
-    leak_check(leak_check &&)      = default;
+    leak_check()                              = default;
+    leak_check(leak_check const &)            = delete;
+    leak_check(leak_check &&)                 = default;
     leak_check &operator=(leak_check const &) = delete;
-    leak_check &operator=(leak_check &&) = default;
+    leak_check &operator=(leak_check &&)      = default;
 
     ~leak_check() {
       if (!empty()) {
@@ -305,11 +305,11 @@ namespace nda::mem {
       }
 #endif
     }
-    stats()              = default;
-    stats(stats const &) = delete;
-    stats(stats &&)      = default;
+    stats()                         = default;
+    stats(stats const &)            = delete;
+    stats(stats &&)                 = default;
     stats &operator=(stats const &) = delete;
-    stats &operator=(stats &&) = default;
+    stats &operator=(stats &&)      = default;
 
     blk_t allocate(uint64_t s) {
       ++hist[__builtin_clzl(s)];

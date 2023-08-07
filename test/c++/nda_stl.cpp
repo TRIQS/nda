@@ -145,11 +145,11 @@ TEST(STL, RandomIteratorAndSortWithStride) { //NOLINT
   std::random_device rd;
   std::mt19937 g(rd());
   std::shuffle(v.begin(), v.end(), g);
-  
+
   std::sort(v.begin(), v.end());
 
   EXPECT_EQ((v.begin()[3]), 4);
-  
+
   for (unsigned int i = 0; i < 10; ++i) {
     EXPECT_EQ(a[2 * i], 1 + i);
     EXPECT_EQ(a[2 * i + 1], -9);

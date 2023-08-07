@@ -70,4 +70,3 @@ namespace nda::blas::f77 {
   void swap(int N, std::complex<double> *x, int incx, std::complex<double> *Y, int incy);
 
 } // namespace nda::blas::f77
-

@@ -22,13 +22,13 @@
 [[nodiscard]] constexpr auto const &indexmap() const noexcept { return lay; }
 
 /// \private
-[[nodiscard]] storage_t const &storage() const &noexcept { return sto; }
+[[nodiscard]] storage_t const &storage() const & noexcept { return sto; }
 
 /// \private
-[[nodiscard]] storage_t &storage() &noexcept { return sto; }
+[[nodiscard]] storage_t &storage() & noexcept { return sto; }
 
 /// \private
-[[nodiscard]] storage_t storage() &&noexcept { return std::move(sto); }
+[[nodiscard]] storage_t storage() && noexcept { return std::move(sto); }
 
 /// Memory stride_order
 [[nodiscard]] constexpr auto stride_order() const noexcept { return lay.stride_order; }
@@ -126,7 +126,7 @@ public:
 // and restest carefully with benchmarsk
 /// \private
 template <char ResultAlgebra, bool SelfIsRvalue, typename Self, typename... T>
-FORCEINLINE static decltype(auto) call(Self &&self, T const &... x) noexcept(has_no_boundcheck) {
+FORCEINLINE static decltype(auto) call(Self &&self, T const &...x) noexcept(has_no_boundcheck) {
 
   using r_v_t = std::conditional_t<std::is_const_v<std::remove_reference_t<Self>>, ValueType const, ValueType>;
 
@@ -180,7 +180,7 @@ public:
  * @example array_call
  */
 template <typename... T>
-FORCEINLINE decltype(auto) operator()(T const &... x) const &noexcept(has_no_boundcheck) {
+FORCEINLINE decltype(auto) operator()(T const &...x) const & noexcept(has_no_boundcheck) {
   static_assert((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank + 1)),
                 "Incorrect number of parameters in call");
   return call<Algebra, false>(*this, x...);
@@ -188,7 +188,7 @@ FORCEINLINE decltype(auto) operator()(T const &... x) const &noexcept(has_no_bou
 
 ///
 template <typename... T>
-FORCEINLINE decltype(auto) operator()(T const &... x) &noexcept(has_no_boundcheck) {
+FORCEINLINE decltype(auto) operator()(T const &...x) & noexcept(has_no_boundcheck) {
 
   if constexpr (not((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0)
                     or (ellipsis_is_present<T...> and (sizeof...(T) <= rank + 1)))) { // +1 since ellipsis can be of size 0
@@ -202,7 +202,7 @@ FORCEINLINE decltype(auto) operator()(T const &... x) &noexcept(has_no_boundchec
 
 ///
 template <typename... T>
-FORCEINLINE decltype(auto) operator()(T const &... x) &&noexcept(has_no_boundcheck) {
+FORCEINLINE decltype(auto) operator()(T const &...x) && noexcept(has_no_boundcheck) {
   static_assert((rank == -1) or (sizeof...(T) == rank) or (sizeof...(T) == 0) or (ellipsis_is_present<T...> and (sizeof...(T) <= rank + 1)),
                 "Incorrect number of parameters in call");
   return call<Algebra, true>(*this, x...);
@@ -216,21 +216,21 @@ FORCEINLINE decltype(auto) operator()(T const &... x) &&noexcept(has_no_boundche
  * @example array_call
  */
 template <typename T>
-decltype(auto) operator[](T const &x) const &noexcept(has_no_boundcheck) {
+decltype(auto) operator[](T const &x) const & noexcept(has_no_boundcheck) {
   static_assert((rank == 1), " [ ] operator is only available for rank 1 in C++17/20");
   return call<Algebra, false>(*this, x);
 }
 
 ///
 template <typename T>
-decltype(auto) operator[](T const &x) &noexcept(has_no_boundcheck) {
+decltype(auto) operator[](T const &x) & noexcept(has_no_boundcheck) {
   static_assert((rank == 1), " [ ] operator is only available for rank 1 in C++17/20");
   return call<Algebra, false>(*this, x);
 }
 
 ///
 template <typename T>
-decltype(auto) operator[](T const &x) &&noexcept(has_no_boundcheck) {
+decltype(auto) operator[](T const &x) && noexcept(has_no_boundcheck) {
   static_assert((rank == 1), " [ ] operator is only available for rank 1 in C++17/20");
   return call<Algebra, true>(*this, x);
 }
@@ -319,7 +319,9 @@ auto &operator/=(RHS const &rhs) noexcept {
 
 /// Assign from 1D Contiguous Range
 template <std::ranges::contiguous_range R>
-auto &operator=(R const &rhs) noexcept requires(Rank == 1 and not MemoryArray<R>) {
+auto &operator=(R const &rhs) noexcept
+  requires(Rank == 1 and not MemoryArray<R>)
+{
   *this = basic_array_view{rhs};
   return *this;
 }
@@ -370,16 +372,16 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
 
         // Copy only if block-layouts are compatible, otherwise continue to fallback
         if (n_bl_dst == n_bl_src && bl_size_dst == bl_size_src) {
-          mem::memcpy2D<mem::get_addr_space<self_t>, mem::get_addr_space<RHS>>(
-			  (void *)data(), bl_str_dst * sizeof(value_type), (void *)rhs.data(),
-                          bl_str_src * sizeof(value_type), bl_size_src * sizeof(value_type), 
-			  n_bl_src); 
+          mem::memcpy2D<mem::get_addr_space<self_t>, mem::get_addr_space<RHS>>((void *)data(), bl_str_dst * sizeof(value_type), (void *)rhs.data(),
+                                                                               bl_str_src * sizeof(value_type), bl_size_src * sizeof(value_type),
+                                                                               n_bl_src);
           return;
         }
       }
     }
   }
-  if constexpr (mem::on_device<self_t> || mem::on_device<RHS>) NDA_RUNTIME_ERROR << "Fallback to elementwise assignment not implemented for arrays on the GPU";
+  if constexpr (mem::on_device<self_t> || mem::on_device<RHS>)
+    NDA_RUNTIME_ERROR << "Fallback to elementwise assignment not implemented for arrays on the GPU";
   // Fallback to elementwise assignment
   auto l = [this, &rhs](auto const &...args) { (*this)(args...) = rhs(args...); };
   nda::for_each(shape(), l);
@@ -404,12 +406,12 @@ void fill_with_scalar(Scalar const &scalar) noexcept {
     } else {
       for (auto &x : *this) x = scalar;
     }
-  } else if constexpr(mem::on_device<self_t> or mem::on_unified<self_t>) {  // on device
-    if constexpr (has_layout_strided_1d<self_t>) { // possibly contiguous
+  } else if constexpr (mem::on_device<self_t> or mem::on_unified<self_t>) { // on device
+    if constexpr (has_layout_strided_1d<self_t>) {                          // possibly contiguous
       if constexpr (has_contiguous_layout<self_t>) {
         mem::fill_n<mem::get_addr_space<self_t>>(data(), size(), value_type(scalar));
       } else {
-        const long stri  = indexmap().min_stride();
+        const long stri = indexmap().min_stride();
         mem::fill2D_n<mem::get_addr_space<self_t>>(data(), stri, 1, size(), value_type(scalar));
       }
     } else {
@@ -421,7 +423,7 @@ void fill_with_scalar(Scalar const &scalar) noexcept {
         return;
       } else {
         // MAM: implement recursive call to fill_with_scalar on (i,nda::ellipsis{})
-        NDA_RUNTIME_ERROR <<"fill_with_scalar: Not implemented yet for general layout. ";
+        NDA_RUNTIME_ERROR << "fill_with_scalar: Not implemented yet for general layout. ";
       }
     }
   }
@@ -448,9 +450,9 @@ void assign_from_scalar(Scalar const &scalar) noexcept {
     const long imax = std::min(extent(0), extent(1));
     if constexpr (mem::on_host<self_t>) {
       for (long i = 0; i < imax; ++i) operator()(i, i) = scalar;
-    } else if constexpr(mem::on_device<self_t> or mem::on_unified<self_t>) {
-      size_t dstr = lay.strides()[layout_t::is_stride_order_Fortran() ? 1 : 0] + 1; 
+    } else if constexpr (mem::on_device<self_t> or mem::on_unified<self_t>) {
+      size_t dstr = lay.strides()[layout_t::is_stride_order_Fortran() ? 1 : 0] + 1;
       mem::fill2D_n<mem::get_addr_space<self_t>>(data(), dstr, 1, imax, value_type(scalar));
-    } 
+    }
   }
 }

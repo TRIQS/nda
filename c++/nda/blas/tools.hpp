@@ -34,12 +34,14 @@ namespace nda::blas {
   template <MemoryArray A>
   static constexpr bool is_conj_array_expr<expr_call<conj_f, A>> = true;
   template <typename A>
-  requires(!std::is_same_v<A, std::remove_cvref_t<A>>) static constexpr bool is_conj_array_expr<A> = is_conj_array_expr<std::remove_cvref_t<A>>;
+    requires(!std::is_same_v<A, std::remove_cvref_t<A>>)
+  static constexpr bool is_conj_array_expr<A> = is_conj_array_expr<std::remove_cvref_t<A>>;
 
   // ==== Layout Checks (Fortran/C) for both MemoryMatrix and conj(MemoryMatrix)
 
   template <Array A>
-  requires(MemoryArray<A> or is_conj_array_expr<A>) static constexpr bool has_F_layout = []() {
+    requires(MemoryArray<A> or is_conj_array_expr<A>)
+  static constexpr bool has_F_layout = []() {
     if constexpr (is_conj_array_expr<A>)
       return has_F_layout<decltype(std::get<0>(std::declval<A>().a))>;
     else
@@ -47,7 +49,8 @@ namespace nda::blas {
   }();
 
   template <Array A>
-  requires(MemoryArray<A> or is_conj_array_expr<A>) static constexpr bool has_C_layout = []() {
+    requires(MemoryArray<A> or is_conj_array_expr<A>)
+  static constexpr bool has_C_layout = []() {
     if constexpr (is_conj_array_expr<A>)
       return has_C_layout<decltype(std::get<0>(std::declval<A>().a))>;
     else

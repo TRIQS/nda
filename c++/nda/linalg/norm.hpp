@@ -37,8 +37,7 @@ namespace nda {
    * @return The norm as a double
    */
   template <ArrayOfRank<1> A>
-  double norm(A const &x, double p = 2.0)
-  {
+  double norm(A const &x, double p = 2.0) {
     // Scalar check: Can't move to template constraint, get_value_t not generically implemented
     static_assert(Scalar<get_value_t<A>>, "norm only works for arrays with scalar values");
 

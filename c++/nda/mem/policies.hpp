@@ -22,8 +22,8 @@ namespace nda {
   // ----- Policy classes -----
 
 #ifdef NDA_TEST_DEFAULT_ALLOC_MBUCKET // FOR TESTS ONLY: Run all with bucket allocator
-  template <typename Allocator = mem::segregator<8 * NDA_TEST_DEFAULT_ALLOC_MBUCKET, mem::multi_bucket<8 * NDA_TEST_DEFAULT_ALLOC_MBUCKET>,
-                                                      mem::mallocator>>
+  template <typename Allocator =
+               mem::segregator<8 * NDA_TEST_DEFAULT_ALLOC_MBUCKET, mem::multi_bucket<8 * NDA_TEST_DEFAULT_ALLOC_MBUCKET>, mem::mallocator>>
 #else // Normal case
   template <typename Allocator>
 #endif
@@ -31,8 +31,8 @@ namespace nda {
 
     template <typename T>
 #ifdef NDA_TEST_DEFAULT_ALLOC_SSO // FOR TESTS ONLY: Run all with sso
-    using handle = std::conditional_t<std::is_copy_constructible_v<T>, mem::handle_sso<T, NDA_TEST_DEFAULT_ALLOC_SSO>,
-                                      mem::handle_heap<T, Allocator>>;
+    using handle =
+       std::conditional_t<std::is_copy_constructible_v<T>, mem::handle_sso<T, NDA_TEST_DEFAULT_ALLOC_SSO>, mem::handle_heap<T, Allocator>>;
 #else
     using handle = mem::handle_heap<T, Allocator>;
 #endif

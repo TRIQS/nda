@@ -23,14 +23,14 @@
 
 //// A simple view type
 //struct copy_move_stat_view {
-  //friend class copy_move_stat;
-  //copy_move_stat(copy_move_stat & c): ptr{&c} {}
+//friend class copy_move_stat;
+//copy_move_stat(copy_move_stat & c): ptr{&c} {}
 
-  //long copy_count() { return ptr->copy_count(); }
-  //long move_count() { return ptr->move_count(); }
-  //long reset_count() { return ptr->reset_count(); }
-  //private:
-  //copy_move_stat * ptr;
+//long copy_count() { return ptr->copy_count(); }
+//long move_count() { return ptr->move_count(); }
+//long reset_count() { return ptr->reset_count(); }
+//private:
+//copy_move_stat * ptr;
 //}
 
 // Class to track numbers of copy/move
@@ -40,26 +40,26 @@ struct copy_move_stat {
     ++construction_count;
   }
 
-  copy_move_stat(copy_move_stat const & c) : verbose(c.verbose) {
+  copy_move_stat(copy_move_stat const &c) : verbose(c.verbose) {
     if (verbose) std::cout << "Copy Construction\n";
     ++copy_construction_count;
   }
 
-  copy_move_stat(copy_move_stat && c) : verbose(c.verbose){
+  copy_move_stat(copy_move_stat &&c) : verbose(c.verbose) {
     if (verbose) std::cout << "Move Construction\n";
     ++move_construction_count;
   }
 
   //copy_move_stat(copy_move_stat_view v): copy_move_stat{v->ptr} {}
 
-  copy_move_stat &operator=(copy_move_stat const & c) {
+  copy_move_stat &operator=(copy_move_stat const &c) {
     verbose = c.verbose;
     if (verbose) std::cout << "Copy Assignment\n";
     ++copy_assignment_count;
     return *this;
   }
 
-  copy_move_stat &operator=(copy_move_stat && c) {
+  copy_move_stat &operator=(copy_move_stat &&c) {
     verbose = c.verbose;
     if (verbose) std::cout << "Move Assignment\n";
     ++move_assignment_count;
@@ -96,13 +96,11 @@ struct copy_move_stat {
 };
 
 struct member_stat {
-  member_stat() = default;
+  member_stat()    = default;
   copy_move_stat m = {};
 };
 
-copy_move_stat make_obj() {
-  return {};
-}
+copy_move_stat make_obj() { return {}; }
 
 nda::array<copy_move_stat, 1> make_arr(long n) {
   auto shape = std::array{n};
@@ -114,17 +112,13 @@ nda::array<copy_move_stat, 2> make_arr(long n1, long n2) {
   return nda::array<copy_move_stat, 2>{shape};
 }
 
-long take_obj(copy_move_stat o) {
-  return o.copy_count() + o.move_count();
-}
+long take_obj(copy_move_stat o) { return o.copy_count() + o.move_count(); }
 
-long take_arr(nda::array<copy_move_stat, 1> const & a) {
+long take_arr(nda::array<copy_move_stat, 1> const &a) {
   NDA_PRINT(a.shape());
   return a[0].copy_count() + a[0].move_count();
 }
 
-long take_arr(nda::array<copy_move_stat, 2> const & a) {
-  return a(0,0).copy_count() + a(0,0).move_count();
-}
+long take_arr(nda::array<copy_move_stat, 2> const &a) { return a(0, 0).copy_count() + a(0, 0).move_count(); }
 
 //void take_arr_v(nda::array<copy_move_stat_view, 1> a) {}

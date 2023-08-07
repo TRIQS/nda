@@ -55,4 +55,3 @@ namespace nda::lapack::f77 {
   void getrs(char op, int N, int NRHS, std::complex<double> const *A, int LDA, int const *ipiv, std::complex<double> *B, int LDB, int &info);
 
 } // namespace nda::lapack::f77
-

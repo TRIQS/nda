@@ -88,7 +88,7 @@ namespace nda::lapack {
 
     // First call to get the optimal buffersize
     T bufferSize_T{};
-    int info   = 0;
+    int info = 0;
     gesvd('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), s.data(), u.data(), get_ld(u), vt.data(), get_ld(vt), &bufferSize_T, -1,
           rwork.data(), info);
     int bufferSize = std::ceil(std::real(bufferSize_T));

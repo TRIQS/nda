@@ -30,7 +30,7 @@ namespace nda {
     // where R is the dimension of the array being regrouped
     // it will throw (compiler stop) if index is out of bounds
     template <size_t R, size_t... Rs>
-    constexpr bool is_partition_of_indices(std::array<int, Rs> const &... grps) {
+    constexpr bool is_partition_of_indices(std::array<int, Rs> const &...grps) {
 
       // check we have exactly R indices ...
       // FIXME in C++20, we can have constexpr string, hence have more informative error message.
@@ -61,10 +61,10 @@ namespace nda {
     // compile time only
     template <size_t R, size_t... Rs>
     constexpr std::array<int, sizeof...(Rs)> stride_order_of_grouped_idx_map(std::array<int, R> const &stride_order,
-                                                                             std::array<int, Rs> const &... grps) {
+                                                                             std::array<int, Rs> const &...grps) {
       // stride_order is permutation which by definition is such that
       // stride_order[0] is the slowest index, stride_order[1] the next, stride_order[Rank-1] the fastest.
-      
+
       // We need to work with the inverse permutation mem_pos.
       // For each index k, mem_pos[k] gives the position of index k in the memory layout, 0 for slowest to R-1 for fastest.
       // e.g. so by definition   mem_pos[ stride_order[0]] = 0,  mem_pos[ stride_order[1]] = 1, etc...
@@ -80,7 +80,7 @@ namespace nda {
       auto min_mem_pos = [&mem_pos](auto &&grp) {
         // m = minimum, M = maximum
         int m = R, M = 0;
-        for (int idx: grp) {
+        for (int idx : grp) {
           int v = mem_pos[idx];
           if (v > M) M = v;
           if (v < m) m = v;
@@ -165,7 +165,7 @@ namespace nda {
     std::array<long, new_rank> new_extents{total_len_of_a_grp(IdxGrps::as_std_array)...};
     std::array<long, new_rank> new_strides{min_stride_of_a_grp(IdxGrps::as_std_array)...};
 
-    // new layout using the new stride_order  
+    // new layout using the new stride_order
     using new_layout_t =
        idx_map<new_rank, 0, encode(details::stride_order_of_grouped_idx_map(stride_order, IdxGrps::as_std_array...)), layout_prop_e::contiguous>;
 

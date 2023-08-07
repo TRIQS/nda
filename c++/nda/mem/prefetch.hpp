@@ -24,21 +24,21 @@
 
 namespace nda::mem {
 
-// MAM: should I keep a specific stream just for prefetching???
-template <AddressSpace AdrSp>
-void prefetch(void *p, size_t count) {
-  static_assert(AdrSp != None and AdrSp != Unified);
+  // MAM: should I keep a specific stream just for prefetching???
+  template <AddressSpace AdrSp>
+  void prefetch(void *p, size_t count) {
+    static_assert(AdrSp != None and AdrSp != Unified);
 #if defined(NDA_HAVE_CUDA)
-  if constexpr (AdrSp == Host)
-    device_check( cudaMemPrefetchAsync(p, count, cudaCpuDeviceId, 0), "cudaMemPrefetchAsync" ); 
-  else if constexpr (AdrSp == Device) {
-    int dev=0;
-    device_check( cudaGetDevice(&dev), "cudagetDevice" ); 
-    device_check( cudaMemPrefetchAsync(p,count,dev,0), "cudaMemPrefetchAsync" ); 
-  }
+    if constexpr (AdrSp == Host)
+      device_check(cudaMemPrefetchAsync(p, count, cudaCpuDeviceId, 0), "cudaMemPrefetchAsync");
+    else if constexpr (AdrSp == Device) {
+      int dev = 0;
+      device_check(cudaGetDevice(&dev), "cudagetDevice");
+      device_check(cudaMemPrefetchAsync(p, count, dev, 0), "cudaMemPrefetchAsync");
+    }
 #else
-  compile_error_no_gpu();
+    compile_error_no_gpu();
 #endif
-}
+  }
 
 } // namespace nda::mem

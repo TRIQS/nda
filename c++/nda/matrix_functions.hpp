@@ -25,13 +25,13 @@ namespace nda {
   template <Scalar S, std::integral Int = long>
   auto eye(Int dim) {
     auto r = matrix<S>(dim, dim);
-    r = S{1};
+    r      = S{1};
     return r;
   }
 
   /// Return the trace of a matrix or a rank==2 array
   template <ArrayOfRank<2> M>
-  auto trace(M const &m)  {
+  auto trace(M const &m) {
     static_assert(get_rank<M> == 2, "trace: array must have rank two");
     EXPECTS(m.shape()[0] == m.shape()[1]);
     auto r = get_value_t<M>{};
@@ -42,7 +42,7 @@ namespace nda {
 
   /// Return the conjugate transpase of a matrix or a rank==2 array
   template <ArrayOfRank<2> M>
-  ArrayOfRank<2> auto dagger(M const &m)  {
+  ArrayOfRank<2> auto dagger(M const &m) {
     if constexpr (is_complex_v<typename M::value_type>)
       return conj(transpose(m));
     else
@@ -52,7 +52,7 @@ namespace nda {
   /// Return a vector_view on the diagonal of a matrix or a rank==2 array
   template <MemoryArrayOfRank<2> M>
   ArrayOfRank<1> auto diagonal(M &m) {
-    long dim = std::min(m.shape()[0], m.shape()[1]);
+    long dim    = std::min(m.shape()[0], m.shape()[1]);
     long stride = stdutil::sum(m.indexmap().strides());
     using vector_view_t =
        basic_array_view<std::remove_reference_t<decltype(*m.data())>, 1, C_stride_layout, 'V', nda::default_accessor, nda::borrowed<>>;
@@ -60,8 +60,9 @@ namespace nda {
   }
 
   /// Return a new matrix with the values of v on the diagonal
-  template <typename V> requires (std::ranges::contiguous_range<V> or ArrayOfRank<V, 1>)
-  ArrayOfRank<2> auto diag(V const &v)  {
+  template <typename V>
+    requires(std::ranges::contiguous_range<V> or ArrayOfRank<V, 1>)
+  ArrayOfRank<2> auto diag(V const &v) {
     if constexpr (std::ranges::contiguous_range<V>) {
       return diag(nda::basic_array_view{v});
     } else {
@@ -75,9 +76,8 @@ namespace nda {
   /// produces a new matrix C of size (n + p) x q such that
   /// C[0:n,:] == A and C[n:n+p,:] == B
   template <ArrayOfRank<2> A, ArrayOfRank<2> B>
-  requires(std::same_as<get_value_t<A>, get_value_t<B>>) // NB the get_value_t gets rid of const if any
-  matrix<get_value_t<A>> vstack(A const &a, B const &b)
-      {
+    requires(std::same_as<get_value_t<A>, get_value_t<B>>) // NB the get_value_t gets rid of const if any
+  matrix<get_value_t<A>> vstack(A const &a, B const &b) {
     static_assert(get_rank<A> == 2, "vstack: first argument must have rank two");
     static_assert(get_rank<B> == 2, "vstack: second argument must have rank two");
     EXPECTS_WITH_MESSAGE(a.shape()[1] == b.shape()[1],

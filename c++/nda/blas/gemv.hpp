@@ -55,9 +55,9 @@ namespace nda::blas {
    *
    */
   template <Matrix X, MemoryVector B, MemoryVector C>
-  requires((MemoryMatrix<X> or is_conj_array_expr<X>) and //
-           have_same_value_type_v<X, B, C> and            //
-           is_blas_lapack_v<get_value_t<X>>)              //
+    requires((MemoryMatrix<X> or is_conj_array_expr<X>) and //
+             have_same_value_type_v<X, B, C> and            //
+             is_blas_lapack_v<get_value_t<X>>)              //
   void gemv(get_value_t<X> alpha, X const &x, B const &b, get_value_t<X> beta, C &&c) {
 
     auto to_mat = []<Matrix Z>(Z const &z) -> decltype(auto) {
@@ -81,7 +81,7 @@ namespace nda::blas {
     EXPECTS(b.indexmap().min_stride() == 1);
     EXPECTS(c.indexmap().min_stride() == 1);
 
-    char op_a                    = get_op<conj_A, /*transpose =*/!has_F_layout<A>>;
+    char op_a   = get_op<conj_A, /*transpose =*/!has_F_layout<A>>;
     auto [m, n] = a.shape();
     if constexpr (has_C_layout<A>) std::swap(m, n);
 

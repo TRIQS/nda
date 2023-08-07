@@ -30,7 +30,7 @@
 
 using namespace std::complex_literals;
 
-namespace clef= nda::clef;
+namespace clef = nda::clef;
 
 template <typename T>
 std::string to_string(T const &x) {

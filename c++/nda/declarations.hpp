@@ -51,12 +51,12 @@ namespace nda {
   using array_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<>>;
 
   template <typename ValueType, int Rank, typename Layout = C_layout>
-  requires(has_contiguous(Layout::template mapping<Rank>::layout_prop)) using array_contiguous_view =
-     basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<>>;
+    requires(has_contiguous(Layout::template mapping<Rank>::layout_prop))
+  using array_contiguous_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<>>;
 
   template <typename ValueType, int Rank, typename Layout = C_layout>
-  requires(has_contiguous(Layout::template mapping<Rank>::layout_prop)) using array_contiguous_const_view =
-     basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<>>;
+    requires(has_contiguous(Layout::template mapping<Rank>::layout_prop))
+  using array_contiguous_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<>>;
 
   template <typename ValueType, typename Layout = C_layout, typename ContainerPolicy = heap<>>
   using matrix = basic_array<ValueType, 2, Layout, 'M', ContainerPolicy>;
@@ -75,7 +75,7 @@ namespace nda {
 
   template <typename ValueType, typename Layout = C_stride_layout>
   using vector_const_view = basic_array_view<ValueType const, 1, Layout, 'V', default_accessor, borrowed<>>;
-  
+
   template <typename... Is>
   constexpr uint64_t static_extents(int i0, Is... is) {
     if (i0 > 15) throw std::runtime_error("NO!");
@@ -84,15 +84,19 @@ namespace nda {
 
   template <typename ValueType, int N0, int... Ns>
   using stack_array =
-     nda::basic_array<ValueType, 1 + sizeof...(Ns), nda::basic_layout<nda::static_extents(N0, Ns...), nda::C_stride_order<1 + sizeof...(Ns)>, nda::layout_prop_e::contiguous>, 'A', nda::stack<N0 * (Ns * ... * 1)>>;
+     nda::basic_array<ValueType, 1 + sizeof...(Ns),
+                      nda::basic_layout<nda::static_extents(N0, Ns...), nda::C_stride_order<1 + sizeof...(Ns)>, nda::layout_prop_e::contiguous>, 'A',
+                      nda::stack<N0 *(Ns *... * 1)>>;
 
   template <typename ValueType, int Length>
   using stack_vector =
-     nda::basic_array<ValueType, 1, nda::basic_layout<nda::static_extents(Length), nda::C_stride_order<1>, nda::layout_prop_e::contiguous>, 'V', nda::stack<Length>>;
+     nda::basic_array<ValueType, 1, nda::basic_layout<nda::static_extents(Length), nda::C_stride_order<1>, nda::layout_prop_e::contiguous>, 'V',
+                      nda::stack<Length>>;
 
   template <typename ValueType, int N, int M>
   using stack_matrix =
-     nda::basic_array<ValueType, 2, nda::basic_layout<nda::static_extents(N, M), nda::C_stride_order<2>, nda::layout_prop_e::contiguous>, 'M', nda::stack<N * M>>;
+     nda::basic_array<ValueType, 2, nda::basic_layout<nda::static_extents(N, M), nda::C_stride_order<2>, nda::layout_prop_e::contiguous>, 'M',
+                      nda::stack<N * M>>;
 
   // ---------------------- Cuda Aliases --------------------------------
 

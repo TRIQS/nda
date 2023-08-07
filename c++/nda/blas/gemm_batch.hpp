@@ -28,16 +28,16 @@ namespace nda::blas {
    * Batched version of GEMM taking vectors of matrices as arguments
    */
   template <bool VBATCH = false, Matrix X, Matrix Y, MemoryMatrix C>
-  requires((MemoryMatrix<X> or is_conj_array_expr<X>) and                        //
-           (MemoryMatrix<Y> or is_conj_array_expr<Y>) and                        //
-           have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>) //
+    requires((MemoryMatrix<X> or is_conj_array_expr<X>) and                        //
+             (MemoryMatrix<Y> or is_conj_array_expr<Y>) and                        //
+             have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>) //
   void gemm_batch(get_value_t<X> alpha, std::vector<X> const &vx, std::vector<Y> const &vy, get_value_t<X> beta, std::vector<C> &vc) {
 
     EXPECTS(vx.size() == vy.size() and vx.size() == vc.size());
     if (vx.empty()) return;
     int batch_count = vx.size();
 
-    auto to_mat = []<typename Z>(Z & z) -> auto & {
+    auto to_mat = []<typename Z>(Z &z) -> auto & {
       if constexpr (is_conj_array_expr<Z>)
         return std::get<0>(z.a);
       else
@@ -115,7 +115,7 @@ namespace nda::blas {
         if constexpr (mem::have_device_compatible_addr_space_v<A, B, C>) {
 #if defined(NDA_HAVE_DEVICE)
           device::gemm_vbatch(op_a, op_b, vm.data(), vn.data(), vk.data(), alpha, a_ptrs.data(), vlda.data(), b_ptrs.data(), vldb.data(), beta,
-                            c_ptrs.data(), vldc.data(), batch_count);
+                              c_ptrs.data(), vldc.data(), batch_count);
 #else
           compile_error_no_gpu();
 #endif
@@ -135,7 +135,7 @@ namespace nda::blas {
         if constexpr (mem::have_device_compatible_addr_space_v<A, B, C>) {
 #if defined(NDA_HAVE_DEVICE)
           device::gemm_batch(op_a, op_b, m, n, k, alpha, a_ptrs.data(), get_ld(a0), b_ptrs.data(), get_ld(b0), beta, c_ptrs.data(), get_ld(c0),
-                           batch_count);
+                             batch_count);
 #else
           compile_error_no_gpu();
 #endif
@@ -163,13 +163,13 @@ namespace nda::blas {
    *   c(i,_,_) = x(i,_,_) * y(i,_,_)
    */
   template <ArrayOfRank<3> X, ArrayOfRank<3> Y, MemoryArrayOfRank<3> C>
-  requires((MemoryArrayOfRank<X, 3> or (is_conj_array_expr<X>)) and              //
-           (MemoryArrayOfRank<Y, 3> or (is_conj_array_expr<Y>)) and              //
-           have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>) //
+    requires((MemoryArrayOfRank<X, 3> or (is_conj_array_expr<X>)) and              //
+             (MemoryArrayOfRank<Y, 3> or (is_conj_array_expr<Y>)) and              //
+             have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>) //
   void gemm_batch_strided(get_value_t<X> alpha, X const &x, Y const &y, get_value_t<X> beta, C &&c) {
 
     EXPECTS(x.shape()[0] == y.shape()[0] and y.shape()[0] == c.shape()[0]);
-    auto to_arr = []<typename Z>(Z & z) -> auto & {
+    auto to_arr = []<typename Z>(Z &z) -> auto & {
       if constexpr (is_conj_array_expr<Z>)
         return std::get<0>(z.a);
       else
@@ -212,7 +212,7 @@ namespace nda::blas {
       if constexpr (mem::have_device_compatible_addr_space_v<A, B, C>) {
 #if defined(NDA_HAVE_DEVICE)
         device::gemm_batch_strided(op_a, op_b, m, n, k, alpha, a.data(), get_ld(a0), a.indexmap().strides()[0], b.data(), get_ld(b0), b.strides()[0],
-                                 beta, c.data(), get_ld(c0), c.indexmap().strides()[0], a.extent(0));
+                                   beta, c.data(), get_ld(c0), c.indexmap().strides()[0], a.extent(0));
 #else
         compile_error_no_gpu();
 #endif

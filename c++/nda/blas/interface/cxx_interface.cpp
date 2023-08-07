@@ -103,7 +103,7 @@ namespace nda::blas::f77 {
   void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, double alpha, const double **A, int *LDA, const double **B, int *LDB, double beta,
                    double **C, int *LDC, int batch_count) {
 #ifdef NDA_HAVE_GEMM_BATCH
-    nda::vector<int> group_size(batch_count, 1); 
+    nda::vector<int> group_size(batch_count, 1);
     nda::vector<char> ops_a(batch_count, op_a), ops_b(batch_count, op_b);
     nda::vector<double> alphas(batch_count, alpha), betas(batch_count, beta);
     dgemm_batch(ops_a.data(), ops_b.data(), M, N, K, alphas.data(), A, LDA, B, LDB, betas.data(), C, LDC, &batch_count, group_size.data());
@@ -114,7 +114,7 @@ namespace nda::blas::f77 {
   void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, std::complex<double> alpha, const std::complex<double> **A, int *LDA,
                    const std::complex<double> **B, int *LDB, std::complex<double> beta, std::complex<double> **C, int *LDC, int batch_count) {
 #ifdef NDA_HAVE_GEMM_BATCH
-    nda::vector<int> group_size(batch_count, 1); 
+    nda::vector<int> group_size(batch_count, 1);
     nda::vector<char> ops_a(batch_count, op_a), ops_b(batch_count, op_b);
     nda::vector<std::complex<double>> alphas(batch_count, alpha), betas(batch_count, beta);
     zgemm_batch(ops_a.data(), ops_b.data(), M, N, K, blacplx(alphas.data()), blacplx(A), LDA, blacplx(B), LDB, blacplx(betas.data()), blacplx(C), LDC,
@@ -166,4 +166,3 @@ namespace nda::blas::f77 {
   void swap(int N, std::complex<double> *x, int incx, std::complex<double> *Y, int incy) { F77_zswap(&N, blacplx(x), &incx, blacplx(Y), &incy); }
 
 } // namespace nda::blas::f77
-

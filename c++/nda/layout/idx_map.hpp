@@ -192,10 +192,10 @@ namespace nda {
       }
     }
 
-    idx_map(idx_map const &) = default;
-    idx_map(idx_map &&)      = default;
+    idx_map(idx_map const &)            = default;
+    idx_map(idx_map &&)                 = default;
     idx_map &operator=(idx_map const &) = default;
-    idx_map &operator=(idx_map &&) = default;
+    idx_map &operator=(idx_map &&)      = default;
 
     /**
      * Check if the strides of all non-trivial dimensions (l[d] > 1)
@@ -283,8 +283,7 @@ namespace nda {
     idx_map(std::array<long, Rank> const &shape, std::array<long, Rank> const &strides) noexcept(!check_stride_order) : len(shape), str(strides) {
       EXPECTS(std::all_of(shape.cbegin(), shape.cend(), [](auto &i) { return i >= 0; }));
       if constexpr (check_stride_order)
-        if (not is_stride_order_valid())
-          throw std::runtime_error("ERROR: strides of idx_map do not match stride order of the type\n");
+        if (not is_stride_order_valid()) throw std::runtime_error("ERROR: strides of idx_map do not match stride order of the type\n");
     }
 
     /// Construct from the shape. If StaticExtents are present, the corresponding component of the shape must be equal to it.
@@ -304,21 +303,26 @@ namespace nda {
 
     public:
     /// When StaticExtents are present, constructs from the dynamic extents only
-    idx_map(std::array<long, n_dynamic_extents> const &shape) noexcept requires((n_dynamic_extents != Rank) and (n_dynamic_extents != 0))
+    idx_map(std::array<long, n_dynamic_extents> const &shape) noexcept
+      requires((n_dynamic_extents != Rank) and (n_dynamic_extents != 0))
        : idx_map(merge_static_and_dynamic_extents(shape)) {}
 
     /// \private
     /// trap for error. If one tries to construct a view with a mismatch of stride order
     // The compiler selects this constructor instead of presenting a long list, and then goes into a dead end.
     template <uint64_t StaticExtents2, uint64_t StrideOrder2, layout_prop_e P>
-    idx_map(idx_map<Rank, StaticExtents2, StrideOrder2, P> const &) requires(StrideOrder != StrideOrder2) {
+    idx_map(idx_map<Rank, StaticExtents2, StrideOrder2, P> const &)
+      requires(StrideOrder != StrideOrder2)
+    {
       static_assert((StrideOrder == StrideOrder2), "Can not construct a layout from another one with a different stride order");
     }
 
     /// \private
     /// trap for error. For R = Rank, the non template has priority
     template <int R>
-    idx_map(std::array<long, R> const &) requires(R != Rank) {
+    idx_map(std::array<long, R> const &)
+      requires(R != Rank)
+    {
       static_assert(R == Rank, "Rank of the argument incorrect in idx_map construction");
     }
 
@@ -385,21 +389,19 @@ namespace nda {
      */
     std::array<long, Rank> to_idx(long lin_idx) const {
 
-      // compute stride residues starting from slowest index 
+      // compute stride residues starting from slowest index
       std::array<long, Rank> residues;
       residues[0] = lin_idx;
-      
+
       for (auto i : range(1, Rank)) {
         residues[i] = residues[i - 1] % str[stride_order[i - 1]];
-      } // residues[Rank - 1] is now the value of the fastest index times the corresponding stride 
+      } // residues[Rank - 1] is now the value of the fastest index times the corresponding stride
 
       // convert residues to indices, ordered from slowest to fastest
       std::array<long, Rank> idx;
       idx[Rank - 1] = residues[Rank - 1] / str[stride_order[Rank - 1]];
 
-      for (auto i : range(Rank - 2, -1, -1)) {
-        idx[i] = (residues[i] - residues[i + 1]) / str[stride_order[i]];
-      }
+      for (auto i : range(Rank - 2, -1, -1)) { idx[i] = (residues[i] - residues[i + 1]) / str[stride_order[i]]; }
 
       return permutations::apply_inverse(stride_order, idx);
     }

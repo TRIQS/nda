@@ -27,9 +27,9 @@ namespace py = pybind11;
 struct BigObject {
   int i;
 
-  BigObject(BigObject &&)      = default;
-  BigObject(BigObject const &) = delete;
-  BigObject &operator=(BigObject &&) = default;
+  BigObject(BigObject &&)                 = default;
+  BigObject(BigObject const &)            = delete;
+  BigObject &operator=(BigObject &&)      = default;
   BigObject &operator=(BigObject const &) = delete;
 };
 

@@ -25,7 +25,7 @@ namespace nda {
   template <int R, typename F>
   class array_adapter {
     static_assert(CallableWithLongs<F, R>, "Lambda should be callable with R integers");
-    
+
     std::array<long, R> myshape;
     F f;
 

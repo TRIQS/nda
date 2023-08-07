@@ -29,10 +29,10 @@
 
 using namespace std::complex_literals;
 
-namespace clef= nda::clef;
+namespace clef = nda::clef;
 
 // for test only. Backward compat
-namespace nda { 
+namespace nda {
   template <int Rank>
   using shape_t = std::array<long, Rank>;
 }

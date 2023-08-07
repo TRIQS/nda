@@ -50,7 +50,9 @@ namespace nda::lapack::f77 {
   void getrf(int M, int N, double *A, int LDA, int *ipiv, int &info) { LAPACK_dgetrf(&M, &N, A, &LDA, ipiv, &info); }
   void getrf(int M, int N, std::complex<double> *A, int LDA, int *ipiv, int &info) { LAPACK_zgetrf(&M, &N, A, &LDA, ipiv, &info); }
 
-  void getri(int N, double *A, int LDA, int const *ipiv, double *work, int lwork, int &info) { LAPACK_dgetri(&N, A, &LDA, ipiv, work, &lwork, &info); }
+  void getri(int N, double *A, int LDA, int const *ipiv, double *work, int lwork, int &info) {
+    LAPACK_dgetri(&N, A, &LDA, ipiv, work, &lwork, &info);
+  }
   void getri(int N, std::complex<double> *A, int LDA, int const *ipiv, std::complex<double> *work, int lwork, int &info) {
     LAPACK_zgetri(&N, A, &LDA, ipiv, work, &lwork, &info);
   }
@@ -80,4 +82,3 @@ namespace nda::lapack::f77 {
   }
 
 } // namespace nda::lapack::f77
-

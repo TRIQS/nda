@@ -36,7 +36,7 @@ namespace nda::clef {
 
   inline std::ostream &variadic_print(std::ostream &out) { return out; }
   template <typename T0, typename... T>
-  std::ostream &variadic_print(std::ostream &out, T0 &&t0, T &&... t) {
+  std::ostream &variadic_print(std::ostream &out, T0 &&t0, T &&...t) {
     out << t0 << (sizeof...(T) > 0 ? ", " : "");
     variadic_print(out, t...);
     return out;

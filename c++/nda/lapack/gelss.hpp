@@ -69,11 +69,11 @@ namespace nda::lapack {
    *                 bidiagonal form did not converge to zero.
    */
   template <MemoryMatrix A, MemoryMatrix B, MemoryVector S>
-  requires(have_same_value_type_v<A, B> and mem::on_host<A, B, S> and is_blas_lapack_v<get_value_t<A>>)
+    requires(have_same_value_type_v<A, B> and mem::on_host<A, B, S> and is_blas_lapack_v<get_value_t<A>>)
   int gelss(A &&a, B &&b, S &&s, double rcond, int &rank) {
     static_assert(has_F_layout<A> and has_F_layout<B>, "C order not implemented");
 
-    using T = get_value_t<A>;
+    using T    = get_value_t<A>;
     auto dm    = std::min(a.extent(0), a.extent(1));
     auto rwork = array<double, 1>(5 * dm);
     if (s.size() < dm) s.resize(dm);

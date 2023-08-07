@@ -34,7 +34,8 @@ namespace nda {
    */
   template <typename A>
   void mpi_broadcast(A &a, mpi::communicator c = {}, int root = 0) //
-     requires(is_regular_or_view_v<A>) {
+    requires(is_regular_or_view_v<A>)
+  {
     static_assert(has_contiguous_layout<A>, "Non contigous view in mpi_broadcast are not implemented");
     auto sh = a.shape();
     //FIXME : mpi::std::array
