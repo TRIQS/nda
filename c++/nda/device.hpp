@@ -16,8 +16,8 @@
 
 #pragma once
 
+#include <mpi/mpi.hpp>
 #include <iostream>
-#include "exceptions.hpp"
 
 #ifdef NDA_HAVE_CUDA
 #include "cuda_runtime.h"
@@ -38,10 +38,11 @@ namespace nda {
 
   inline void device_error_check(cudaError_t success, std::string message = "") {
     if (success != cudaSuccess) {
-      NDA_RUNTIME_ERROR << "Cuda runtime error: " << std::to_string(success) << "\n"
-                        << " message: " << message << "\n"
-                        << " cudaGetErrorName: " << std::string(cudaGetErrorName(success)) << "\n"
-                        << " cudaGetErrorString: " << std::string(cudaGetErrorString(success)) << "\n";
+      std::cerr << "Cuda runtime error: " << std::to_string(success) << "\n"
+                << " message: " << message << "\n"
+                << " cudaGetErrorName: " << std::string(cudaGetErrorName(success)) << "\n"
+                << " cudaGetErrorString: " << std::string(cudaGetErrorString(success)) << "\n";
+      mpi::communicator{}.abort(31);
     }
   }
 
