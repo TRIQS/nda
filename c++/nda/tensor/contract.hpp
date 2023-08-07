@@ -65,13 +65,13 @@ namespace nda::tensor {
 
     using A = decltype(a);
     using B = decltype(b);
-    static_assert(mem::have_compatible_addr_space_v<A, B, C>, "Matrices must have compatible memory address space");
+    static_assert(mem::have_compatible_addr_space<A, B, C>, "Matrices must have compatible memory address space");
 
     if( get_rank<A> != indxX.size() ) NDA_RUNTIME_ERROR <<"tensor::contract: Rank mismatch \n";
     if( get_rank<B> != indxY.size() ) NDA_RUNTIME_ERROR <<"tensor::contract: Rank mismatch \n";
     if( get_rank<C> != indxC.size() ) NDA_RUNTIME_ERROR <<"tensor::contract: Rank mismatch \n";
 
-    if constexpr (mem::have_device_compatible_addr_space_v<A,B,C>) {
+    if constexpr (mem::have_device_compatible_addr_space<A,B,C>) {
 #if defined(NDA_HAVE_CUTENSOR)
       // pull more generic operands!
       op::TENSOR_OP a_op = conj_A ? op::CONJ : op::ID;
@@ -83,7 +83,7 @@ namespace nda::tensor {
 #else
       static_assert(always_false<bool>," contract on device requires gpu tensor contraction backend. ");
 #endif
-    } else if constexpr (mem::have_host_compatible_addr_space_v<A,B,C>) {
+    } else if constexpr (mem::have_host_compatible_addr_space<A,B,C>) {
 #if defined(NDA_HAVE_TBLIS)
       // no conj in tblis yet!
       static_assert(not conj_A and not conj_B, "Error: No conj in tblis yet!");

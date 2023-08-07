@@ -23,6 +23,7 @@ clef::placeholder<2> k_;
 clef::placeholder<3> l_;
 using nda::encode;
 using nda::idx_group;
+using nda::matrix_view;
 
 // ------------------------------------
 
