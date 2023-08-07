@@ -23,6 +23,7 @@
 
 #include <mpi/mpi.hpp>
 #include <iostream>
+#include <exception>
 
 #ifdef NDA_HAVE_CUDA
 #include "./exceptions.hpp"

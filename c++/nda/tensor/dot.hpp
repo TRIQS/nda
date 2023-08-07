@@ -66,13 +66,13 @@ namespace nda::tensor {
 
     using A = decltype(a);
     using B = decltype(b);
-    static_assert(mem::have_compatible_addr_space_v<A, B>, "Matrices must have compatible memory address space");
+    static_assert(mem::have_compatible_addr_space<A, B>, "Matrices must have compatible memory address space");
 
     if( get_rank<A> != indxX.size() ) NDA_RUNTIME_ERROR<<"tensor::dot: Rank mismatch in A,indx\n";
     if( get_rank<B> != indxY.size() ) NDA_RUNTIME_ERROR<<"tensor::dot: Rank mismatch in B,indx\n";
     if( get_rank<A> != get_rank<B> ) NDA_RUNTIME_ERROR<<"tensor::dot: Rank mismatch in A,B\n";
 
-    if constexpr (mem::have_device_compatible_addr_space_v<A,B>) {
+    if constexpr (mem::have_device_compatible_addr_space<A,B>) {
 #if defined(NDA_HAVE_CUTENSOR)
       cutensor::cutensor_desc<value_t,get_rank<A>> a_t(a,op::ID);
       cutensor::cutensor_desc<value_t,get_rank<B>> b_t(b,op::ID);
