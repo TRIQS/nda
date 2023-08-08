@@ -1,3 +1,5 @@
+// Copyright (c) 2018 Commissariat à l'énergie atomique et aux énergies alternatives (CEA)
+// Copyright (c) 2018 Centre national de la recherche scientifique (CNRS)
 // Copyright (c) 2018-2021 Simons Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");

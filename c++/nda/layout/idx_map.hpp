@@ -1,4 +1,6 @@
-// Copyright (c) 2018-2021 Simons Foundation
+// Copyright (c) 2018 Commissariat à l'énergie atomique et aux énergies alternatives (CEA)
+// Copyright (c) 2018 Centre national de la recherche scientifique (CNRS)
+// Copyright (c) 2018-2023 Simons Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +14,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Authors: Olivier Parcollet, Nils Wentzell
+// Authors: Dominik Kiese, Henri Menke, Olivier Parcollet, Nils Wentzell
 
 #pragma once
 #include <vector>
