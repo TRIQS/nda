@@ -20,10 +20,14 @@
 #include <itertools/omp_chunk.hpp>
 
 namespace nda {
-
+  /**
+    * A structure to capture combinations of complex conjugation and sign flip.
+    */
   struct operation {
-    bool sgn = false; // change sign?
-    bool cc  = false; // complex conjugation?
+    /*@{*/
+    bool sgn = false; /**< change sign? */
+    bool cc  = false; /**< complex conjugation? */
+    /*@}*/
 
     operation operator*(operation const &x) { return operation{bool(sgn xor x.sgn), bool(cc xor x.cc)}; }
 
@@ -44,39 +48,71 @@ namespace nda {
     return true;
   }
 
-  // symmetry concept: symmetry accepts array index and returns new array index & operation
+  /**
+   * Symmetry concept: NdaSymmetry accepts an array index and returns new array index & operation
+   * @tparam F Anything callable with idx_t
+   * @tparam A Anything modeling NdArray
+   * @tparam idx_t Index for NdArray
+   */
   template <typename F, typename A, typename idx_t = std::array<long, static_cast<std::size_t>(get_rank<A>)>>
   concept NdaSymmetry = Array<A> and //
      requires(F f, idx_t const &idx) {
        { f(idx) } -> std::same_as<std::tuple<idx_t, operation>>;
      };
 
-  // init function concept: init function accepts array index and returns array value type
+  /**
+   * Init function concept: NdaInitFunc accepts an array index and returns array value type
+   * @tparam F Anything callable with idx_t
+   * @tparam A Anything modeling NdArray
+   * @tparam idx_t Index for NdArray
+   */
   template <typename F, typename A, typename idx_t = std::array<long, static_cast<std::size_t>(get_rank<A>)>>
   concept NdaInitFunc = Array<A> and //
      requires(F f, idx_t const &idx) {
        { f(idx) } -> std::same_as<get_value_t<A>>;
      };
 
+  /**
+   * The sym_grp class 
+   * @tparam F Anything modeling NdaSymmetry with A
+   * @tparam A Anything modeling NdArray
+   */
   template <typename F, typename A>
     requires(Array<A> && NdaSymmetry<F, A>)
   class sym_grp {
 
     public:
-    static constexpr int ndims = get_rank<A>;
-    using sym_idx_t            = std::pair<long, operation>;
-    using sym_class_t          = std::span<sym_idx_t>;
-    using arr_idx_t            = std::array<long, static_cast<std::size_t>(ndims)>;
+    /*@{*/
+    static constexpr int ndims = get_rank<A>;                                       /**< rank of input array */
+    using sym_idx_t            = std::pair<long, operation>;                        /**< return type of F */
+    using sym_class_t          = std::span<sym_idx_t>;                              /**< symmetry class type */
+    using arr_idx_t            = std::array<long, static_cast<std::size_t>(ndims)>; /**< index type of A */
+    /*@}*/
 
     private:
     std::vector<sym_class_t> sym_classes; // list of classes
     std::vector<sym_idx_t> data;          // long list of all elements (to allocate contigous block of memory)
 
     public:
+    /**
+     * Accessor for symmetry classes
+     * @return Vector including the individual classes
+    */
     [[nodiscard]] std::vector<sym_class_t> const &get_sym_classes() const { return sym_classes; }
+
+    /**
+     * Accessor for number of symmetry classes
+     * @return Number of deduced symmetry classes
+    */
     long num_classes() const { return sym_classes.size(); }
 
-    // initializer method: iterates over symmetry classes and propagates value from evaluation of init function
+    /**
+     * Initializer method: Iterates over all classes and propagates result from evaluation of init function
+     * @tparam H Anything modeling NdaInitFunction with NdArray A
+     * @param x An NdArray
+     * @param init_func The init function to be used
+     * @param parallel Switch to enable OMP parallel evaluation of init_func. Default is false
+    */
     template <typename H>
       requires(NdaInitFunc<H, A>)
     void init(A &x, H const &init_func, bool parallel = false) const {
@@ -106,9 +142,14 @@ namespace nda {
       }
     }
 
-    // symmetrization method, returns maximum symmetry violation and corresponding array index
     // NOTE: this actually requires the definition of an inverse operation, but with the current implementation
     //       operations are anyways self-inverse
+
+    /**
+     * Symmetrization method: Symmetrizes an array returning the maximum symmetry violation and its corresponding array index
+     * @param x An NdArray
+     * @return Maximum symmetry violation and corresponding array index
+    */
     std::pair<double, arr_idx_t> symmetrize(A &x) const {
 
       double max_diff = 0.0;
@@ -139,8 +180,17 @@ namespace nda {
       return std::pair{max_diff, max_idx};
     }
 
-    // constructors
+    /**
+     * Default constructor for sym_grp class
+    */
     sym_grp() = default;
+
+    /**
+     * Constructor for sym_grp class
+     * @param x An NdArray
+     * @param sym_list List of symmetries modeling the NdaSymmetry concept
+     * @param max_length Maximum recursion depth for out-of-bounds projection. Default is 0.
+    */
     sym_grp(A const &x, std::vector<F> const &sym_list, long const max_length = 0) {
 
       // array to check whether index has been sorted into a symmetry class already
