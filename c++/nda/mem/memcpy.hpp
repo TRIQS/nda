@@ -32,7 +32,7 @@ namespace nda::mem {
     if constexpr (DestAdrSp == Host && SrcAdrSp == Host) {
       std::memcpy(dest, src, count);
     } else { // Device or Unified
-      device_check(cudaMemcpy(dest, src, count, cudaMemcpyDefault), "CudaMemcpy");
+      device_error_check(cudaMemcpy(dest, src, count, cudaMemcpyDefault), "CudaMemcpy");
     }
   }
 
@@ -47,7 +47,7 @@ namespace nda::mem {
       auto *srci  = static_cast<const unsigned char *>(src);
       for (size_t i = 0; i < height; ++i, desti += dpitch, srci += spitch) std::memcpy(desti, srci, width);
     } else if (nda::have_device) {
-      device_check(cudaMemcpy2D(dest, dpitch, src, spitch, width, height, cudaMemcpyDefault), "CudaMemcpy2D");
+      device_error_check(cudaMemcpy2D(dest, dpitch, src, spitch, width, height, cudaMemcpyDefault), "CudaMemcpy2D");
     }
   }
 

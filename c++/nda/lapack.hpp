@@ -19,7 +19,7 @@
 
 #include "basic_array.hpp"
 #include "blas/tools.hpp"
-#include "lapack/interface/lapack_cxx_interface.hpp"
+#include "lapack/interface/cxx_interface.hpp"
 
 /// LAPACK Interface
 namespace nda::lapack {

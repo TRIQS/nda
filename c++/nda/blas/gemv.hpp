@@ -71,7 +71,7 @@ namespace nda::blas {
     static constexpr bool conj_A = is_conj_array_expr<X>;
 
     using A = decltype(a);
-    static_assert(mem::have_compatible_addr_space_v<A, B, C>);
+    static_assert(mem::have_compatible_addr_space<A, B, C>);
 
     EXPECTS(a.extent(1) == b.extent(0));
     EXPECTS(a.extent(0) == c.extent(0));
@@ -85,7 +85,7 @@ namespace nda::blas {
     auto [m, n] = a.shape();
     if constexpr (has_C_layout<A>) std::swap(m, n);
 
-    if constexpr (mem::have_device_compatible_addr_space_v<A, B, C>) {
+    if constexpr (mem::have_device_compatible_addr_space<A, B, C>) {
 #if defined(NDA_HAVE_DEVICE)
       device::gemv(op_a, m, n, alpha, a.data(), get_ld(a), b.data(), b.indexmap().strides()[0], beta, c.data(), c.indexmap().strides()[0]);
 #else

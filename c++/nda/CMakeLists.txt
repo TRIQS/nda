@@ -1,6 +1,6 @@
 file(GLOB_RECURSE sources *.cpp)
 if(NOT CudaSupport)
-  list(FILTER sources EXCLUDE REGEX "(cublas_interface|cuda_interface)")
+  list(FILTER sources EXCLUDE REGEX "(cublas_interface|cusolver_interface)")
 endif()
 add_library(${PROJECT_NAME}_c ${sources})
 add_library(${PROJECT_NAME}::${PROJECT_NAME}_c ALIAS ${PROJECT_NAME}_c)

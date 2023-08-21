@@ -77,7 +77,7 @@ namespace nda::blas {
 
     using A = decltype(a);
     using B = decltype(b);
-    static_assert(mem::have_compatible_addr_space_v<A, B, C>, "Matrices must have compatible memory address space");
+    static_assert(mem::have_compatible_addr_space<A, B, C>, "Matrices must have compatible memory address space");
 
     EXPECTS(a.extent(1) == b.extent(0));
     EXPECTS(a.extent(0) == c.extent(0));
@@ -91,14 +91,13 @@ namespace nda::blas {
     // c is in C order: compute the transpose of the product in Fortran order
     if constexpr (has_C_layout<C>) {
       gemm(alpha, transpose(y), transpose(x), beta, transpose(std::forward<C>(c)));
-      return;
     } else { // c is in Fortran order
       char op_a   = get_op<conj_A, /*transpose =*/has_C_layout<A>>;
       char op_b   = get_op<conj_B, /*transpose =*/has_C_layout<B>>;
       auto [m, k] = a.shape();
       auto n      = b.extent(1);
 
-      if constexpr (mem::have_device_compatible_addr_space_v<A, B, C>) {
+      if constexpr (mem::have_device_compatible_addr_space<A, B, C>) {
 #if defined(NDA_HAVE_DEVICE)
         device::gemm(op_a, op_b, m, n, k, alpha, a.data(), get_ld(a), b.data(), get_ld(b), beta, c.data(), get_ld(c));
 #else

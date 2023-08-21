@@ -19,7 +19,7 @@
 #include <complex>
 
 #if defined(NDA_HAVE_CUDA)
-#include "lapack_cuda_interface.hpp"
+#include "cusolver_interface.hpp"
 #endif
 
 namespace nda::lapack::f77 {

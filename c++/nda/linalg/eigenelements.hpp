@@ -15,7 +15,7 @@
 // Authors: Olivier Parcollet, Nils Wentzell
 
 #pragma once
-#include "../lapack/interface/lapack_cxx_interface.hpp"
+#include "../lapack/interface/cxx_interface.hpp"
 
 namespace nda::linalg {
 

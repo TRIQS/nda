@@ -101,8 +101,8 @@ namespace nda {
     explicit basic_array(basic_array const &x) noexcept : lay(x.indexmap()), sto(x.sto) {}
 
     /// Makes a deep copy, given a basic_array with a different container policy
-    template <char Algebra_other, typename ContainerPolicy_other>
-    explicit basic_array(basic_array<ValueType, Rank, LayoutPolicy, Algebra_other, ContainerPolicy_other> x) noexcept
+    template <char AlgebraOther, typename ContainerPolicyOther>
+    explicit basic_array(basic_array<ValueType, Rank, LayoutPolicy, AlgebraOther, ContainerPolicyOther> x) noexcept
        : lay(x.indexmap()), sto(std::move(x.storage())) {}
 
     /** 
@@ -112,12 +112,11 @@ namespace nda {
      * @param i0, is ... are the extents (lengths) in each dimension
      */
     template <std::integral... Int>
-      requires(sizeof...(Int) == Rank)
     explicit basic_array(Int... is) noexcept {
+      static_assert(sizeof...(Int) == Rank, "Incorrect number of extents");
+      // Constructing layout and storage in constructor body improves error message for wrong # of args
       lay = layout_t{std::array{long(is)...}};
       sto = storage_t{lay.size()};
-      // It would be more natural to construct lay, storage from the start, but the error message in case of false # of parameters (very common)
-      // is better like this. FIXME to be tested in benchs
     }
 
     /**

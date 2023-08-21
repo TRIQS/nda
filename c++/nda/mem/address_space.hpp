@@ -40,7 +40,7 @@ namespace nda::mem {
    * Device  -> Address on GPU memory
    * Unified -> CUDA Unified memory address
    */
-  enum class AddressSpace { None, Host, Device, Unified };
+  enum class AddressSpace { None, Host, Device, Unified }; // Do not change order, used in max in combine below.
   using AddressSpace::Device;
   using AddressSpace::Host;
   using AddressSpace::None;
@@ -50,6 +50,8 @@ namespace nda::mem {
   // To be specialized for each case / concept
   template <typename T>
   static constexpr AddressSpace get_addr_space = mem::None;
+  template <typename T>
+  static constexpr AddressSpace get_addr_space<T const> = get_addr_space<T>;
   template <typename T>
   static constexpr AddressSpace get_addr_space<T &> = get_addr_space<T>;
 
@@ -61,6 +63,10 @@ namespace nda::mem {
     if constexpr (sizeof...(AN) > 0) { return combine<std::max(A1, A2), AN...>; }
     return std::max(A1, A2);
   }();
+
+  // Find the common address space given a number of array types
+  template <MemoryArray A1, MemoryArray... AN>
+  constexpr AddressSpace common_addr_space = combine<get_addr_space<A1>, get_addr_space<AN>...>;
 
   // -------------  Specializations -------------
 
@@ -105,19 +111,19 @@ namespace nda::mem {
 
   // Check all A have the same address space
   template <typename A0, typename... A>
-  static constexpr bool have_same_addr_space_v = ((get_addr_space<A0> == get_addr_space<A>)and... and true);
+  static constexpr bool have_same_addr_space = ((get_addr_space<A0> == get_addr_space<A>)and... and true);
 
   // Check all Ts are host compatible
   template <typename... Ts>
-  static constexpr bool have_host_compatible_addr_space_v = ((on_host<Ts> or on_unified<Ts>)and...);
+  static constexpr bool have_host_compatible_addr_space = ((on_host<Ts> or on_unified<Ts>)and...);
 
   // Check all Ts are device compatible
   template <typename... Ts>
-  static constexpr bool have_device_compatible_addr_space_v = ((on_device<Ts> or on_unified<Ts>)and...);
+  static constexpr bool have_device_compatible_addr_space = ((on_device<Ts> or on_unified<Ts>)and...);
 
   // Check all Ts have compatible address spaces
   template <typename... Ts>
-  static constexpr bool have_compatible_addr_space_v = (have_host_compatible_addr_space_v<Ts...> or have_device_compatible_addr_space_v<Ts...>);
+  static constexpr bool have_compatible_addr_space = (have_host_compatible_addr_space<Ts...> or have_device_compatible_addr_space<Ts...>);
 
   // ------------- Test Promotion for various cases ------------
 

@@ -33,7 +33,7 @@ namespace nda::mem {
     if constexpr (AdrSp == Host) {
       std::memset(p, value, count);
     } else { // Device or Unified
-      device_check(cudaMemset(p, value, count), "cudaMemset");
+      device_error_check(cudaMemset(p, value, count), "cudaMemset");
     }
   }
 
@@ -46,7 +46,7 @@ namespace nda::mem {
       auto *ptri = static_cast<unsigned char *>(ptr);
       for (size_t i = 0; i < height; ++i, ptri += pitch) std::memset(ptri, value, width);
     } else { // Device or Unified
-      device_check(cudaMemset2D(ptr, pitch, value, width, height), "cudaMemset2D");
+      device_error_check(cudaMemset2D(ptr, pitch, value, width, height), "cudaMemset2D");
     }
   }
 

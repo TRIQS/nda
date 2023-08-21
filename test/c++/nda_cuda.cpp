@@ -157,22 +157,22 @@ TEST(Cuda, AddrSpace) { // NOLINT
   static_assert(not on_unified<array_t<1>, unmarray_vt<2>, unmarray_cvt<3>>, "INTERNAL");
   static_assert(not on_unified<unmarray_t<1>, cuarray_vt<2>, unmarray_cvt<3>>, "INTERNAL");
 
-  static_assert(have_same_addr_space_v<array_t<1>, array_vt<2>, array_cvt<3>>, "INTERNAL");
-  static_assert(have_same_addr_space_v<cuarray_t<1>, cuarray_vt<2>, cuarray_cvt<3>>, "INTERNAL");
-  static_assert(have_same_addr_space_v<unmarray_t<1>, unmarray_vt<2>, unmarray_cvt<3>>, "INTERNAL");
-  static_assert(not have_same_addr_space_v<cuarray_t<1>, array_vt<2>, array_cvt<3>>, "INTERNAL");
-  static_assert(not have_same_addr_space_v<array_t<1>, cuarray_vt<2>, cuarray_cvt<3>>, "INTERNAL");
-  static_assert(not have_same_addr_space_v<array_t<1>, unmarray_vt<2>, unmarray_cvt<3>>, "INTERNAL");
+  static_assert(have_same_addr_space<array_t<1>, array_vt<2>, array_cvt<3>>, "INTERNAL");
+  static_assert(have_same_addr_space<cuarray_t<1>, cuarray_vt<2>, cuarray_cvt<3>>, "INTERNAL");
+  static_assert(have_same_addr_space<unmarray_t<1>, unmarray_vt<2>, unmarray_cvt<3>>, "INTERNAL");
+  static_assert(not have_same_addr_space<cuarray_t<1>, array_vt<2>, array_cvt<3>>, "INTERNAL");
+  static_assert(not have_same_addr_space<array_t<1>, cuarray_vt<2>, cuarray_cvt<3>>, "INTERNAL");
+  static_assert(not have_same_addr_space<array_t<1>, unmarray_vt<2>, unmarray_cvt<3>>, "INTERNAL");
 
-  static_assert(have_host_compatible_addr_space_v<array_t<1>, array_vt<2>, array_cvt<3>>, "INTERNAL");
-  static_assert(have_host_compatible_addr_space_v<array_t<1>, unmarray_vt<2>, unmarray_cvt<3>>, "INTERNAL");
-  static_assert(not have_host_compatible_addr_space_v<array_t<1>, unmarray_vt<2>, cuarray_cvt<3>>, "INTERNAL");
+  static_assert(have_host_compatible_addr_space<array_t<1>, array_vt<2>, array_cvt<3>>, "INTERNAL");
+  static_assert(have_host_compatible_addr_space<array_t<1>, unmarray_vt<2>, unmarray_cvt<3>>, "INTERNAL");
+  static_assert(not have_host_compatible_addr_space<array_t<1>, unmarray_vt<2>, cuarray_cvt<3>>, "INTERNAL");
 
-  static_assert(have_device_compatible_addr_space_v<cuarray_t<1>, cuarray_vt<2>, cuarray_cvt<3>>, "INTERNAL");
-  static_assert(have_device_compatible_addr_space_v<cuarray_t<1>, unmarray_vt<2>, cuarray_cvt<3>>, "INTERNAL");
-  static_assert(not have_device_compatible_addr_space_v<cuarray_t<1>, unmarray_vt<2>, array_cvt<3>>, "INTERNAL");
+  static_assert(have_device_compatible_addr_space<cuarray_t<1>, cuarray_vt<2>, cuarray_cvt<3>>, "INTERNAL");
+  static_assert(have_device_compatible_addr_space<cuarray_t<1>, unmarray_vt<2>, cuarray_cvt<3>>, "INTERNAL");
+  static_assert(not have_device_compatible_addr_space<cuarray_t<1>, unmarray_vt<2>, array_cvt<3>>, "INTERNAL");
 
-  static_assert(have_compatible_addr_space_v<cuarray_t<1>, unmarray_vt<2>, cuarray_cvt<3>>, "INTERNAL");
-  static_assert(have_compatible_addr_space_v<array_t<1>, unmarray_vt<2>, array_cvt<3>>, "INTERNAL");
-  static_assert(not have_compatible_addr_space_v<cuarray_t<1>, unmarray_vt<2>, array_cvt<3>>, "INTERNAL");
+  static_assert(have_compatible_addr_space<cuarray_t<1>, unmarray_vt<2>, cuarray_cvt<3>>, "INTERNAL");
+  static_assert(have_compatible_addr_space<array_t<1>, unmarray_vt<2>, array_cvt<3>>, "INTERNAL");
+  static_assert(not have_compatible_addr_space<cuarray_t<1>, unmarray_vt<2>, array_cvt<3>>, "INTERNAL");
 }

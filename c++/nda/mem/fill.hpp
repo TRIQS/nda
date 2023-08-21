@@ -27,9 +27,9 @@
 namespace nda::mem {
 
   template <AddressSpace AdrSp, typename T>
-    requires(nda::is_scalar_or_convertible_v<T>)
   T *fill_n(T *first, size_t count, const T &value) {
     check_adr_sp_valid<AdrSp>();
+    static_assert(nda::is_scalar_or_convertible_v<T>, "Incompatible scalar type");
     static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
 
     if constexpr (AdrSp == Host) {
@@ -37,7 +37,7 @@ namespace nda::mem {
     } else { // Device or Unified
       if (std::find_if((char const *)(&value), (char const *)(&value) + sizeof(T), [](char c) { return c != 0; })
           == (char const *)(&value) + sizeof(T)) {
-        device_check(cudaMemset((void *)first, 0, count * sizeof(T)), "cudaMemset");
+        device_error_check(cudaMemset((void *)first, 0, count * sizeof(T)), "cudaMemset");
       } else {
         // MAM: temporary, use kernel/thrust/foreach/... when available
         int v             = 0;
@@ -46,7 +46,7 @@ namespace nda::mem {
         for (int n = 0; n < sizeof(T); ++n) {
           v = 0; // just in case
           v = *(ui + n);
-          device_check(cudaMemset2D((void *)(fn + n), sizeof(T), v, 1, count), "cudaMemset2D");
+          device_error_check(cudaMemset2D((void *)(fn + n), sizeof(T), v, 1, count), "cudaMemset2D");
         }
       }
       return first + count;
@@ -73,12 +73,12 @@ namespace nda::mem {
     } else { // Device or Unified
       if (std::find_if((char const *)(&value), (char const *)(&value) + sizeof(T), [](char c) { return c != 0; })
           == (char const *)(&value) + sizeof(T)) {
-        device_check(cudaMemset2D((void *)first, pitch * sizeof(T), 0, width * sizeof(T), height), "cudaMemset2D");
+        device_error_check(cudaMemset2D((void *)first, pitch * sizeof(T), 0, width * sizeof(T), height), "cudaMemset2D");
       } else {
         // MAM: temporary, use kernel/thrust/foreach/... when available
         // as a temporary version, can also loop over rows...
         std::vector<T> v(width * height, value);
-        device_check(
+        device_error_check(
            cudaMemcpy2D((void *)first, pitch * sizeof(T), (void *)v.data(), width * sizeof(T), width * sizeof(T), height, cudaMemcpyDefault),
            "cudaMemcpy2D");
       }

@@ -44,7 +44,7 @@ namespace nda::lapack {
    *
    */
   template <MemoryMatrix A, MemoryVector IPIV>
-    requires(mem::have_compatible_addr_space_v<A, IPIV> and is_blas_lapack_v<get_value_t<A>>)
+    requires(mem::have_compatible_addr_space<A, IPIV> and is_blas_lapack_v<get_value_t<A>>)
   int getri(A &&a, IPIV const &ipiv) {
     static_assert(std::is_same_v<get_value_t<IPIV>, int>, "Pivoting array must have elements of type int");
 
@@ -57,7 +57,7 @@ namespace nda::lapack {
     EXPECTS(ipiv.indexmap().min_stride() == 1);
 
     int info = 0;
-    if constexpr (mem::have_device_compatible_addr_space_v<A, IPIV>) {
+    if constexpr (mem::have_device_compatible_addr_space<A, IPIV>) {
 #if defined(NDA_HAVE_DEVICE)
       device::getri(a.extent(0), a.data(), get_ld(a), ipiv.data(), NULL, 0, info);
 #else

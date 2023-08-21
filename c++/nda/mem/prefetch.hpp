@@ -30,11 +30,11 @@ namespace nda::mem {
     static_assert(AdrSp != None and AdrSp != Unified);
 #if defined(NDA_HAVE_CUDA)
     if constexpr (AdrSp == Host)
-      device_check(cudaMemPrefetchAsync(p, count, cudaCpuDeviceId, 0), "cudaMemPrefetchAsync");
+      device_error_check(cudaMemPrefetchAsync(p, count, cudaCpuDeviceId, 0), "cudaMemPrefetchAsync");
     else if constexpr (AdrSp == Device) {
       int dev = 0;
-      device_check(cudaGetDevice(&dev), "cudagetDevice");
-      device_check(cudaMemPrefetchAsync(p, count, dev, 0), "cudaMemPrefetchAsync");
+      device_error_check(cudaGetDevice(&dev), "cudagetDevice");
+      device_error_check(cudaMemPrefetchAsync(p, count, dev, 0), "cudaMemPrefetchAsync");
     }
 #else
     compile_error_no_gpu();

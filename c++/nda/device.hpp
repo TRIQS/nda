@@ -19,8 +19,9 @@
 #include <iostream>
 #include "exceptions.hpp"
 
-#if defined(NDA_HAVE_CUDA)
-#include <cuda_runtime.h>
+#ifdef NDA_HAVE_CUDA
+#include "cuda_runtime.h"
+#include "cublas_v2.h"
 #endif
 
 namespace nda {
@@ -31,11 +32,11 @@ namespace nda {
     static_assert(flag, "Using device functionality without gpu support! Configure project with -DSupportGPU=ON.");
   }
 
-#if defined(NDA_HAVE_CUDA)
+#ifdef NDA_HAVE_CUDA
   static constexpr bool have_device = true;
   static constexpr bool have_cuda   = true;
 
-  inline void device_check(cudaError_t success, std::string message = "") {
+  inline void device_error_check(cudaError_t success, std::string message = "") {
     if (success != cudaSuccess) {
       NDA_RUNTIME_ERROR << "Cuda runtime error: " << std::to_string(success) << "\n"
                         << " message: " << message << "\n"
@@ -44,9 +45,23 @@ namespace nda {
     }
   }
 
+  inline cublasOperation_t get_cublas_op(char op) {
+    switch (op) {
+      case 'N': return CUBLAS_OP_N;
+      case 'T': return CUBLAS_OP_T;
+      case 'C': return CUBLAS_OP_C;
+      default: std::terminate(); return {};
+    }
+  }
+
+  inline auto cucplx(std::complex<double> c) { return cuDoubleComplex{c.real(), c.imag()}; }
+  inline auto *cucplx(std::complex<double> *c) { return reinterpret_cast<cuDoubleComplex *>(c); }                // NOLINT
+  inline auto *cucplx(std::complex<double> const *c) { return reinterpret_cast<const cuDoubleComplex *>(c); }    // NOLINT
+  inline auto **cucplx(std::complex<double> **c) { return reinterpret_cast<cuDoubleComplex **>(c); }             // NOLINT
+  inline auto **cucplx(std::complex<double> const **c) { return reinterpret_cast<const cuDoubleComplex **>(c); } // NOLINT
 #else
 
-#define device_check(ARG1, ARG2) compile_error_no_gpu()
+#define device_error_check(ARG1, ARG2) compile_error_no_gpu()
   static constexpr bool have_device = false;
   static constexpr bool have_cuda   = false;
 #endif

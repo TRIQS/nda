@@ -76,6 +76,16 @@ namespace nda {
 
   // ---------------  transpose ------------------------
 
+  /**
+   * Perform transposition on the memory layout of the MemoryMatrix.
+   * No operation is performed in memory.
+   * For expression-calls with a single argument perform transposition
+   * on the underlying array.
+   *
+   * @tparam The type of the array or expression
+   * @param The array or expression
+   * @return A view with reversed index order
+   */
   template <typename A>
   auto transpose(A &&a)
     requires(MemoryMatrix<A> or is_instantiation_of_v<expr_call, A>)

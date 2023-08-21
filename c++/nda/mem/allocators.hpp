@@ -69,7 +69,13 @@ namespace nda::mem {
       return {(char *)malloc<AdrSp>(s), s}; // NOLINT
     }
     static blk_t allocate_zero(size_t s) noexcept {
-      return {(char *)calloc<AdrSp>(s, sizeof(char)), s}; // NOLINT
+      if constexpr (AdrSp == mem::Host) {
+        return {(char *)std::calloc(s, 1 /*byte*/), s}; // NOLINT
+      } else {
+        char *ptr = (char *)malloc<AdrSp>(s);
+        memset<AdrSp>(ptr, 0, s);
+        return {ptr, s};
+      }
     }
 
     static void deallocate(blk_t b) noexcept {

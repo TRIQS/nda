@@ -54,10 +54,10 @@ namespace nda {
 
     static constexpr auto L_adr_spc = mem::get_addr_space<L>;
     static constexpr auto R_adr_spc = mem::get_addr_space<R>;
-    static_assert(L_adr_spc == R_adr_spc, "Error: Matrix Product requires arguments with same Adress space");
-    static_assert(L_adr_spc != mem::None);
+    mem::check_adr_sp_valid<L_adr_spc, R_adr_spc>();
 
     using promoted_type = decltype(get_value_t<L>{} * get_value_t<R>{});
+    // Same layout as L, R if they have the same stride order, else C layout.
     using result_layout_policy =
        std::conditional_t<get_layout_info<L>.stride_order == get_layout_info<R>.stride_order, get_layout_policy<L>, C_layout>;
     using matrix_t = basic_array<promoted_type, 2, result_layout_policy, 'M', nda::heap<mem::combine<L_adr_spc, R_adr_spc>>>;
@@ -73,7 +73,7 @@ namespace nda {
       };
 
       // MSAN has no way to know that we are calling with beta = 0, hence
-      // this is not necessaru
+      // this is not necessary
       // of course, in production code, we do NOT waste time to do this.
 #if defined(__has_feature)
 #if __has_feature(memory_sanitizer)
@@ -83,10 +83,10 @@ namespace nda {
 
       // Check if we have a valid set of matrices for a gemm call
       // If not, form a new matrix from any conjugate matrix expressions
-      if constexpr (!is_valid_gemm_triple<decltype(as_container(l)), decltype(as_container(r)), matrix_t>) {
-        blas::gemm(1, make_regular(as_container(l)), make_regular(as_container(r)), 0, result);
-      } else {
+      if constexpr (is_valid_gemm_triple<decltype(as_container(l)), decltype(as_container(r)), matrix_t>) {
         blas::gemm(1, as_container(l), as_container(r), 0, result);
+      } else {
+        blas::gemm(1, make_regular(as_container(l)), make_regular(as_container(r)), 0, result);
       }
 
     } else {
@@ -126,7 +126,7 @@ namespace nda {
       };
 
       // MSAN has no way to know that we are calling with beta = 0, hence
-      // this is not necessaru
+      // this is not necessary
       // of course, in production code, we do NOT waste time to do this.
 #if defined(__has_feature)
 #if __has_feature(memory_sanitizer)

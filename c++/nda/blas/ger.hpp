@@ -38,7 +38,7 @@ namespace nda::blas {
    *       * m has the correct dimension given a, b. 
    */
   template <MemoryVector X, MemoryVector Y, MemoryMatrix M>
-    requires(have_same_value_type_v<X, Y, M> and mem::have_compatible_addr_space_v<X, Y, M> and is_blas_lapack_v<get_value_t<X>>)
+    requires(have_same_value_type_v<X, Y, M> and mem::have_compatible_addr_space<X, Y, M> and is_blas_lapack_v<get_value_t<X>>)
   void ger(get_value_t<X> alpha, X const &x, Y const &y, M &&m) {
 
     EXPECTS(m.extent(0) == x.extent(0));
@@ -52,7 +52,7 @@ namespace nda::blas {
       return;
     }
 
-    if constexpr (mem::have_device_compatible_addr_space_v<X, Y, M>) {
+    if constexpr (mem::have_device_compatible_addr_space<X, Y, M>) {
 #if defined(NDA_HAVE_DEVICE)
       device::ger(m.extent(0), m.extent(1), alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], m.data(), get_ld(m));
 #else
@@ -64,7 +64,7 @@ namespace nda::blas {
   }
 
   /**
-   * Calculate the outer product of two (contiguous) arrays a and b
+   * Calculate the outer product of two contiguous arrays a and b
    *
    *  $$ c_{i,j,k,...,u,v,w,...} = a_{i,j,k,...} * b_{u,v,w,...} $$
    *
@@ -85,7 +85,7 @@ namespace nda::blas {
     } else {
       if (not a.is_contiguous()) NDA_RUNTIME_ERROR << "First argument to outer_product call has non-contiguous layout";
       if (not b.is_contiguous()) NDA_RUNTIME_ERROR << "Second argument to outer_product call has non-contiguous layout";
-      auto res = zeros<get_value_t<A>, mem::get_addr_space<A>>(stdutil::join(a.shape(), b.shape()));
+      auto res = zeros<get_value_t<A>, mem::common_addr_space<A, B>>(stdutil::join(a.shape(), b.shape()));
 
       auto a_vec = reshape(a, std::array{a.size()});
       auto b_vec = reshape(b, std::array{b.size()});
