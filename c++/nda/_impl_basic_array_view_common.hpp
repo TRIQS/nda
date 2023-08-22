@@ -347,7 +347,7 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
     static constexpr bool both_1d_strided = has_layout_strided_1d<self_t> and has_layout_strided_1d<RHS>;
 
     if constexpr (mem::on_host<self_t, RHS> and both_1d_strided) { // -> vectorizable host copy
-      for (long i = 0; i < size(); ++i) (*this)(_linear_index_t{i}) = rhs(_linear_index_t{i});
+      for (long i = 0; i < size(); ++i) (*this)(_linear_index_t{i}) = static_cast<value_type>(rhs(_linear_index_t{i}));
       return;
     } else if constexpr (!mem::on_host<self_t, RHS> and have_same_value_type_v<self_t, RHS>) {
       // Check for block-layout and use mem::memcpy2D if possible
@@ -383,10 +383,9 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
   if constexpr (mem::on_device<self_t> || mem::on_device<RHS>)
     NDA_RUNTIME_ERROR << "Fallback to elementwise assignment not implemented for arrays on the GPU";
   // Fallback to elementwise assignment
-  auto l = [this, &rhs](auto const &...args) { (*this)(args...) = rhs(args...); };
+  auto l = [this, &rhs](auto const &...args) { (*this)(args...) = static_cast<value_type>(rhs(args...)); };
   nda::for_each(shape(), l);
 }
-
 // -----------------------------------------------------
 
 template <typename Scalar>

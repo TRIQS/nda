@@ -67,7 +67,7 @@ namespace nda::lapack {
       // First call to get the optimal buffersize
       T bufferSize_T{};
       f77::getri(a.extent(0), a.data(), get_ld(a), ipiv.data(), &bufferSize_T, -1, info);
-      int bufferSize = std::ceil(std::real(bufferSize_T));
+      int bufferSize = static_cast<int>(std::ceil(std::real(bufferSize_T)));
 
       // Allocate work buffer and perform actual library call
       array<T, 1> work(bufferSize);

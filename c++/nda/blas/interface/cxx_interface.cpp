@@ -26,14 +26,22 @@
 
 using namespace std::string_literals;
 
+// Define a complex struct which is returned by BLAS functions
+namespace {
+  struct nda_complex_double {
+    double real;
+    double imag;
+  };
+} // namespace
+
 // Manual Include since cblas uses Fortan _sub to wrap function again
 #define F77_ddot F77_GLOBAL(ddot, DDOT)
 #define F77_zdotu F77_GLOBAL(zdotu, DDOT)
 #define F77_zdotc F77_GLOBAL(zdotc, DDOT)
 extern "C" {
 double F77_ddot(FINT, const double *, FINT, const double *, FINT);
-std::complex<double> F77_zdotu(FINT, const double *, FINT, const double *, FINT); // NOLINT
-std::complex<double> F77_zdotc(FINT, const double *, FINT, const double *, FINT); // NOLINT
+nda_complex_double F77_zdotu(FINT, const double *, FINT, const double *, FINT); // NOLINT
+nda_complex_double F77_zdotc(FINT, const double *, FINT, const double *, FINT); // NOLINT
 #ifdef NDA_HAVE_GEMM_BATCH
 void dgemm_batch(FCHAR, FCHAR, FINT, FINT, FINT, const double *, const double **, FINT, const double **, FINT, const double *, double **, FINT, FINT,
                  FINT);
@@ -65,10 +73,12 @@ namespace nda::blas::f77 {
 
   double dot(int M, const double *x, int incx, const double *Y, int incy) { return F77_ddot(&M, x, &incx, Y, &incy); }
   std::complex<double> dot(int M, const std::complex<double> *x, int incx, const std::complex<double> *Y, int incy) {
-    return F77_zdotu(&M, blacplx(x), &incx, blacplx(Y), &incy);
+    auto result = F77_zdotu(&M, blacplx(x), &incx, blacplx(Y), &incy);
+    return std::complex<double>{result.real, result.imag};
   }
   std::complex<double> dotc(int M, const std::complex<double> *x, int incx, const std::complex<double> *Y, int incy) {
-    return F77_zdotc(&M, blacplx(x), &incx, blacplx(Y), &incy);
+    auto result = F77_zdotc(&M, blacplx(x), &incx, blacplx(Y), &incy);
+    return std::complex<double>{result.real, result.imag};
   }
 
   void gemm(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, const double *B, int LDB, double beta, double *C,
