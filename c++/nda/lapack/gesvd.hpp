@@ -20,6 +20,8 @@
 
 namespace nda::lapack {
 
+  // OPFXIME : PUT in DOXYGEN FORMAT
+
   /**
    * Computes the singular value decomposition (SVD) of a real/complex
    * M-by-N matrix A, computing the left and/or right singular
@@ -72,6 +74,9 @@ namespace nda::lapack {
     EXPECTS(s.indexmap().min_stride() == 1);
     EXPECTS(u.indexmap().min_stride() == 1);
     EXPECTS(vt.indexmap().min_stride() == 1);
+
+    // FIXMEOP : unify call, no need of this anymore ...
+    // Cf remarks.
 
     // Call host/device implementation depending on input
     auto gesvd = []<typename... Ts>(Ts &&...args) {

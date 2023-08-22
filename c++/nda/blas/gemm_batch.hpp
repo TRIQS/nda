@@ -95,6 +95,11 @@ namespace nda::blas {
       auto b_ptrs = get_ptrs(vy);
       auto c_ptrs = get_ptrs(vc);
 
+      // FIXMEOP : can I remove the first  if constexpr (has_C_layout<C>) ?
+      // and spare the all vector of view stuff  by simply adding another term to the transpose here ??
+      // data is the same, it is just a transposition ...
+      //char op_a = get_op<conj_A, /*transpose =*/ (has_C_layout<C> ? has_F_layout<A> : has_C_layout<A>)>;
+
       char op_a = get_op<conj_A, /*transpose =*/has_C_layout<A>>;
       char op_b = get_op<conj_B, /*transpose =*/has_C_layout<B>>;
 
@@ -135,6 +140,7 @@ namespace nda::blas {
         }
       } else {
 
+        // FIXMEOP : shouldnt' we check that the size are the same for all matrices ?
         EXPECTS(a0.extent(1) == b0.extent(0));
         EXPECTS(a0.extent(0) == c0.extent(0));
         EXPECTS(b0.extent(1) == c0.extent(1));
@@ -179,6 +185,8 @@ namespace nda::blas {
   void gemm_batch_strided(get_value_t<X> alpha, X const &x, Y const &y, get_value_t<X> beta, C &&c) {
 
     EXPECTS(x.shape()[0] == y.shape()[0] and y.shape()[0] == c.shape()[0]);
+
+    //FIXMEOP : pull out. Was to_mat before.
     auto to_arr = []<typename Z>(Z &z) -> auto & {
       if constexpr (is_conj_array_expr<Z>)
         return std::get<0>(z.a);

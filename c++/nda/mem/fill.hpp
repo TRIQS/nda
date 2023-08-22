@@ -35,6 +35,7 @@ namespace nda::mem {
     if constexpr (AdrSp == Host) {
       return std::fill_n(first, count, value);
     } else { // Device or Unified
+      // FIXMEOP : What ???
       if (std::find_if((char const *)(&value), (char const *)(&value) + sizeof(T), [](char c) { return c != 0; })
           == (char const *)(&value) + sizeof(T)) {
         device_error_check(cudaMemset((void *)first, 0, count * sizeof(T)), "cudaMemset");
@@ -44,7 +45,7 @@ namespace nda::mem {
         uint8_t const *ui = reinterpret_cast<uint8_t const *>(&value);
         uint8_t *fn       = reinterpret_cast<uint8_t *>(first);
         for (int n = 0; n < sizeof(T); ++n) {
-          v = 0; // just in case
+          v = 0; // just in case // FIXMEOP in case of what ? it is assigned just after !
           v = *(ui + n);
           device_error_check(cudaMemset2D((void *)(fn + n), sizeof(T), v, 1, count), "cudaMemset2D");
         }
@@ -63,6 +64,7 @@ namespace nda::mem {
     return first;
   }
 
+  //FIXMEOP : same : impl unreadable.
   template <AddressSpace AdrSp, typename T>
     requires(nda::is_scalar_or_convertible_v<T>)
   void fill2D_n(T *first, size_t pitch, size_t width, size_t height, const T &value) {

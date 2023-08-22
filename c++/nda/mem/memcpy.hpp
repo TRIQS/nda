@@ -36,6 +36,8 @@ namespace nda::mem {
     }
   }
 
+  // FIXMEOP Comment the meaning of inputs
+  // What is pitch ?
   template <AddressSpace DestAdrSp, AddressSpace SrcAdrSp>
   void memcpy2D(void *dest, size_t dpitch, const void *src, size_t spitch, size_t width, size_t height) {
     EXPECTS(width <= dpitch && width <= spitch);

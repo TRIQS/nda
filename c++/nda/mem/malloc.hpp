@@ -24,6 +24,11 @@
 
 namespace nda::mem {
 
+  // FIXMEOP is it no except ? the Mallocator is noexcept ...
+  // What happens if the malloc fails ?
+  // the DEVICE is protected by device_error_check, but not the host !
+  // device_error_check and host_error_check ??
+
   template <AddressSpace AdrSp>
   void *malloc(size_t size) {
     check_adr_sp_valid<AdrSp>();

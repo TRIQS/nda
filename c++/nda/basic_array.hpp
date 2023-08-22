@@ -434,6 +434,9 @@ namespace nda {
 
   // --- Get the associated regular type with host/device/unified memory ---
 
+  // FIXMEOP Can be removed by putting basic_aarray ....-> into the implementation of to_device() function ?
+  // one less thing at top level, just decltype(to_device(A))
+
   template <typename T, typename RT = get_regular_t<T>>
   using get_regular_host_t =
      std::conditional_t<mem::on_host<RT>, RT,

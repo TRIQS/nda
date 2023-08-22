@@ -20,6 +20,9 @@
 
 namespace nda {
 
+  // FIXMEOP : for p=2 (and only there)
+  // we make a full copy for an expression, just to call dotc ??
+
   /**
    * Calculate the p-norm of an array x with scalar values and rank one:
    *

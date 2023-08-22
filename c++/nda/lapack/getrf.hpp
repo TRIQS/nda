@@ -20,6 +20,8 @@
 
 namespace nda::lapack {
 
+  // FIXMEOP : doxygen documentation !
+
   /**
    * Computes an LU factorization of a general M-by-N matrix A
    * using partial pivoting with row interchanges.
@@ -60,6 +62,10 @@ namespace nda::lapack {
     // Must be lapack compatible
     EXPECTS(a.indexmap().min_stride() == 1);
     EXPECTS(ipiv.indexmap().min_stride() == 1);
+
+    // FIXMEOP : propagate this to other functions.
+    // This is to avoid false positive in the MSAN ...
+    // ---> also run MSAN on nda ?
 
 #if defined(__has_feature)
 #if __has_feature(memory_sanitizer)

@@ -21,6 +21,10 @@
 
 namespace nda {
 
+  //FIXMEOP : better doc ? What can X, Y be ??
+  // a lot, e.g. expr (but then we make a copy ???).
+  // is it really a good idea to make a copy ??
+
   /**
    * @tparam X
    * @tparam Y
@@ -54,6 +58,7 @@ namespace nda {
     }
   }
 
+  // FIXMEOP Same remarks
   /**
    * @tparam X
    * @tparam Y
