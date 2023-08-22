@@ -31,7 +31,6 @@
 #include "../mem/memcpy.hpp"
 #include "../mem/malloc.hpp"
 #include "../mem/memset.hpp"
-#include "../mem/fill.hpp"
 
 #if defined(__has_feature)
 #if __has_feature(address_sanitizer)
