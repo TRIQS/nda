@@ -56,37 +56,35 @@ void zgemm_batch_strided(FCHAR, FCHAR, FINT, FINT, FINT, const double *, const d
 
 namespace nda::blas::f77 {
 
-  inline auto *blacplx(std::complex<double> *c) { return reinterpret_cast<double *>(c); }                // NOLINT
-  inline auto *blacplx(std::complex<double> const *c) { return reinterpret_cast<const double *>(c); }    // NOLINT
-  inline auto **blacplx(std::complex<double> **c) { return reinterpret_cast<double **>(c); }             // NOLINT
-  inline auto **blacplx(std::complex<double> const **c) { return reinterpret_cast<const double **>(c); } // NOLINT
+  inline auto *blacplx(dcomplex *c) { return reinterpret_cast<double *>(c); }                // NOLINT
+  inline auto *blacplx(dcomplex const *c) { return reinterpret_cast<const double *>(c); }    // NOLINT
+  inline auto **blacplx(dcomplex **c) { return reinterpret_cast<double **>(c); }             // NOLINT
+  inline auto **blacplx(dcomplex const **c) { return reinterpret_cast<const double **>(c); } // NOLINT
 
   void axpy(int N, double alpha, const double *x, int incx, double *Y, int incy) { F77_daxpy(&N, &alpha, x, &incx, Y, &incy); }
-  void axpy(int N, std::complex<double> alpha, const std::complex<double> *x, int incx, std::complex<double> *Y, int incy) {
+  void axpy(int N, dcomplex alpha, const dcomplex *x, int incx, dcomplex *Y, int incy) {
     F77_zaxpy(&N, blacplx(&alpha), blacplx(x), &incx, blacplx(Y), &incy);
   }
   // No Const In Wrapping!
   void copy(int N, const double *x, int incx, double *Y, int incy) { F77_dcopy(&N, x, &incx, Y, &incy); }
-  void copy(int N, const std::complex<double> *x, int incx, std::complex<double> *Y, int incy) {
-    F77_zcopy(&N, blacplx(x), &incx, blacplx(Y), &incy);
-  }
+  void copy(int N, const dcomplex *x, int incx, dcomplex *Y, int incy) { F77_zcopy(&N, blacplx(x), &incx, blacplx(Y), &incy); }
 
   double dot(int M, const double *x, int incx, const double *Y, int incy) { return F77_ddot(&M, x, &incx, Y, &incy); }
-  std::complex<double> dot(int M, const std::complex<double> *x, int incx, const std::complex<double> *Y, int incy) {
+  dcomplex dot(int M, const dcomplex *x, int incx, const dcomplex *Y, int incy) {
     auto result = F77_zdotu(&M, blacplx(x), &incx, blacplx(Y), &incy);
-    return std::complex<double>{result.real, result.imag};
+    return dcomplex{result.real, result.imag};
   }
-  std::complex<double> dotc(int M, const std::complex<double> *x, int incx, const std::complex<double> *Y, int incy) {
+  dcomplex dotc(int M, const dcomplex *x, int incx, const dcomplex *Y, int incy) {
     auto result = F77_zdotc(&M, blacplx(x), &incx, blacplx(Y), &incy);
-    return std::complex<double>{result.real, result.imag};
+    return dcomplex{result.real, result.imag};
   }
 
   void gemm(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, const double *B, int LDB, double beta, double *C,
             int LDC) {
     F77_dgemm(&op_a, &op_b, &M, &N, &K, &alpha, A, &LDA, B, &LDB, &beta, C, &LDC);
   }
-  void gemm(char op_a, char op_b, int M, int N, int K, std::complex<double> alpha, const std::complex<double> *A, int LDA,
-            const std::complex<double> *B, int LDB, std::complex<double> beta, std::complex<double> *C, int LDC) {
+  void gemm(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex *A, int LDA, const dcomplex *B, int LDB, dcomplex beta,
+            dcomplex *C, int LDC) {
     F77_zgemm(&op_a, &op_b, &M, &N, &K, blacplx(&alpha), blacplx(A), &LDA, blacplx(B), &LDB, blacplx(&beta), blacplx(C), &LDC);
   }
 
@@ -99,8 +97,8 @@ namespace nda::blas::f77 {
     for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, M, N, K, alpha, A[i], LDA, B[i], LDB, beta, C[i], LDC);
 #endif
   }
-  void gemm_batch(char op_a, char op_b, int M, int N, int K, std::complex<double> alpha, const std::complex<double> **A, int LDA,
-                  const std::complex<double> **B, int LDB, std::complex<double> beta, std::complex<double> **C, int LDC, int batch_count) {
+  void gemm_batch(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex **A, int LDA, const dcomplex **B, int LDB, dcomplex beta,
+                  dcomplex **C, int LDC, int batch_count) {
 #ifdef NDA_HAVE_GEMM_BATCH
     const int group_count = 1;
     zgemm_batch(&op_a, &op_b, &M, &N, &K, blacplx(&alpha), blacplx(A), &LDA, blacplx(B), &LDB, blacplx(&beta), blacplx(C), &LDC, &group_count,
@@ -121,12 +119,12 @@ namespace nda::blas::f77 {
     for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, M[i], N[i], K[i], alpha, A[i], LDA[i], B[i], LDB[i], beta, C[i], LDC[i]);
 #endif
   }
-  void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, std::complex<double> alpha, const std::complex<double> **A, int *LDA,
-                   const std::complex<double> **B, int *LDB, std::complex<double> beta, std::complex<double> **C, int *LDC, int batch_count) {
+  void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, dcomplex alpha, const dcomplex **A, int *LDA, const dcomplex **B, int *LDB,
+                   dcomplex beta, dcomplex **C, int *LDC, int batch_count) {
 #ifdef NDA_HAVE_GEMM_BATCH
     nda::vector<int> group_size(batch_count, 1);
     nda::vector<char> ops_a(batch_count, op_a), ops_b(batch_count, op_b);
-    nda::vector<std::complex<double>> alphas(batch_count, alpha), betas(batch_count, beta);
+    nda::vector<dcomplex> alphas(batch_count, alpha), betas(batch_count, beta);
     zgemm_batch(ops_a.data(), ops_b.data(), M, N, K, blacplx(alphas.data()), blacplx(A), LDA, blacplx(B), LDB, blacplx(betas.data()), blacplx(C), LDC,
                 &batch_count, group_size.data());
 #else
@@ -142,9 +140,8 @@ namespace nda::blas::f77 {
     for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, M, N, K, alpha, A + i * strideA, LDA, B + i * strideB, LDB, beta, C + i * strideC, LDC);
 #endif
   }
-  void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, std::complex<double> alpha, const std::complex<double> *A, int LDA, int strideA,
-                          const std::complex<double> *B, int LDB, int strideB, std::complex<double> beta, std::complex<double> *C, int LDC,
-                          int strideC, int batch_count) {
+  void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex *A, int LDA, int strideA, const dcomplex *B,
+                          int LDB, int strideB, dcomplex beta, dcomplex *C, int LDC, int strideC, int batch_count) {
 #ifdef NDA_HAVE_GEMM_BATCH
     zgemm_batch_strided(&op_a, &op_b, &M, &N, &K, blacplx(&alpha), blacplx(A), &LDA, &strideA, blacplx(B), &LDB, &strideB, blacplx(&beta), blacplx(C),
                         &LDC, &strideC, &batch_count);
@@ -156,23 +153,21 @@ namespace nda::blas::f77 {
   void gemv(char op, int M, int N, double alpha, const double *A, int LDA, const double *x, int incx, double beta, double *Y, int incy) {
     F77_dgemv(&op, &M, &N, &alpha, A, &LDA, x, &incx, &beta, Y, &incy);
   }
-  void gemv(char op, int M, int N, std::complex<double> alpha, const std::complex<double> *A, int LDA, const std::complex<double> *x, int incx,
-            std::complex<double> beta, std::complex<double> *Y, int incy) {
+  void gemv(char op, int M, int N, dcomplex alpha, const dcomplex *A, int LDA, const dcomplex *x, int incx, dcomplex beta, dcomplex *Y, int incy) {
     F77_zgemv(&op, &M, &N, blacplx(&alpha), blacplx(A), &LDA, blacplx(x), &incx, blacplx(&beta), blacplx(Y), &incy);
   }
 
   void ger(int M, int N, double alpha, const double *x, int incx, const double *Y, int incy, double *A, int LDA) {
     F77_dger(&M, &N, &alpha, x, &incx, Y, &incy, A, &LDA);
   }
-  void ger(int M, int N, std::complex<double> alpha, const std::complex<double> *x, int incx, const std::complex<double> *Y, int incy,
-           std::complex<double> *A, int LDA) {
+  void ger(int M, int N, dcomplex alpha, const dcomplex *x, int incx, const dcomplex *Y, int incy, dcomplex *A, int LDA) {
     F77_zgeru(&M, &N, blacplx(&alpha), blacplx(x), &incx, blacplx(Y), &incy, blacplx(A), &LDA);
   }
 
   void scal(int M, double alpha, double *x, int incx) { F77_dscal(&M, &alpha, x, &incx); }
-  void scal(int M, std::complex<double> alpha, std::complex<double> *x, int incx) { F77_zscal(&M, blacplx(&alpha), blacplx(x), &incx); }
+  void scal(int M, dcomplex alpha, dcomplex *x, int incx) { F77_zscal(&M, blacplx(&alpha), blacplx(x), &incx); }
 
   void swap(int N, double *x, int incx, double *Y, int incy) { F77_dswap(&N, x, &incx, Y, &incy); }
-  void swap(int N, std::complex<double> *x, int incx, std::complex<double> *Y, int incy) { F77_zswap(&N, blacplx(x), &incx, blacplx(Y), &incy); }
+  void swap(int N, dcomplex *x, int incx, dcomplex *Y, int incy) { F77_zswap(&N, blacplx(x), &incx, blacplx(Y), &incy); }
 
 } // namespace nda::blas::f77

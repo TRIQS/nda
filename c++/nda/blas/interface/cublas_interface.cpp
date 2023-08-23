@@ -81,7 +81,7 @@ namespace nda::blas::device {
     }                                                                                                                                                \
     if (synchronize) {                                                                                                                               \
       auto errsync = cudaDeviceSynchronize();                                                                                                        \
-      if (errsync != cudaSuccess) {                                                                                                                      \
+      if (errsync != cudaSuccess) {                                                                                                                  \
         NDA_RUNTIME_ERROR << " cudaDeviceSynchronize failed after call to: " << AS_STRING(X) << "\n"                                                 \
                           << " cudaGetErrorName: " << cudaGetErrorName(errsync) << "\n"                                                              \
                           << " cudaGetErrorString: " << cudaGetErrorString(errsync) << "\n";                                                         \
