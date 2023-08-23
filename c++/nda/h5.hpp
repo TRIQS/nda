@@ -256,11 +256,13 @@ namespace nda {
       auto lt = h5::array_interface::get_h5_lengths_type(g, name);
 
       // Allow to read non-complex data into array<complex>
-      if (is_complex && !lt.has_complex_attribute) {
-        array<double, A::rank> tmp;
-        h5_read(g, name, tmp);
-        a = tmp;
-        return;
+      if constexpr (is_complex) {
+        if (!lt.has_complex_attribute) {
+          array<double, A::rank> tmp;
+          h5_read(g, name, tmp);
+          a = tmp;
+          return;
+        }
       }
 
       std::array<long, A::rank> shape{};

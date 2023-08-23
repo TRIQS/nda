@@ -14,6 +14,7 @@
 //
 // Authors: Olivier Parcollet, Nils Wentzell
 
+#pragma GCC diagnostic ignored "-Wfloat-conversion"
 #include "./test_common.hpp"
 
 TEST(NDA, ExprTemplate) { //NOLINT

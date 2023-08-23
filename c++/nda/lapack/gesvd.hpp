@@ -91,7 +91,7 @@ namespace nda::lapack {
     int info = 0;
     gesvd('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), s.data(), u.data(), get_ld(u), vt.data(), get_ld(vt), &bufferSize_T, -1,
           rwork.data(), info);
-    int bufferSize = std::ceil(std::real(bufferSize_T));
+    int bufferSize = static_cast<int>(std::ceil(std::real(bufferSize_T)));
 
     // Allocate work buffer and perform actual library call
     nda::array<T, 1, C_layout, heap<mem::get_addr_space<A>>> work(bufferSize);

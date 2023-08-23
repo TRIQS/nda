@@ -88,7 +88,7 @@ namespace nda::lapack {
     int info = 0;
     f77::gelss(a.extent(0), a.extent(1), b.extent(1), a.data(), get_ld(a), b.data(), get_ld(b), s.data(), rcond, rank, &bufferSize_T, -1,
                rwork.data(), info);
-    int bufferSize = std::ceil(std::real(bufferSize_T));
+    int bufferSize = static_cast<int>(std::ceil(std::real(bufferSize_T)));
 
     // Allocate work buffer and perform actual library call
     array<T, 1> work(bufferSize);

@@ -29,7 +29,7 @@ TEST(NDA, DanglingScalarProtection) { //NOLINT
   nda::array<long, 1> a{4, 2, 3}, b{8, 4, 6};
 
   auto f = [&a]() {
-    double x = 2;
+    long x = 2;
     return x * a;
   };
 
