@@ -15,7 +15,9 @@
 // Authors: Olivier Parcollet, Nils Wentzell
 
 #pragma GCC diagnostic ignored "-Wfloat-conversion"
+#pragma GCC diagnostic push
 #include "./test_common.hpp"
+#pragma GCC diagnostic pop
 
 TEST(NDA, ExprTemplate) { //NOLINT
 
