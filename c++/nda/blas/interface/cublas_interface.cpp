@@ -15,9 +15,8 @@
 // Authors: Miguel Morales, Nils Wentzell
 
 #include <nda/nda.hpp>
-#include <nda/exceptions.hpp>
 #include <nda/device.hpp>
-#include "cxx_interface.hpp"
+#include "cublas_interface.hpp"
 
 #ifdef NDA_HAVE_MAGMA
 #include "magma_v2.h"
@@ -82,7 +81,7 @@ namespace nda::blas::device {
     }                                                                                                                                                \
     if (synchronize) {                                                                                                                               \
       auto errsync = cudaDeviceSynchronize();                                                                                                        \
-      if (err != cudaSuccess) {                                                                                                                      \
+      if (errsync != cudaSuccess) {                                                                                                                      \
         NDA_RUNTIME_ERROR << " cudaDeviceSynchronize failed after call to: " << AS_STRING(X) << "\n"                                                 \
                           << " cudaGetErrorName: " << cudaGetErrorName(errsync) << "\n"                                                              \
                           << " cudaGetErrorString: " << cudaGetErrorString(errsync) << "\n";                                                         \
