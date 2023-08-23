@@ -112,29 +112,23 @@ namespace nda::blas::device {
                  cucplx(C), LDC, batch_count);
   }
 
+#ifdef NDA_HAVE_MAGMA
   void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, double alpha, const double **A, int *LDA, const double **B, int *LDB, double beta,
                    double **C, int *LDC, int batch_count) {
-#ifdef NDA_HAVE_MAGMA
     magmablas_dgemm_vbatched(get_magma_op(op_a), get_magma_op(op_b), M, N, K, alpha, A, LDA, B, LDB, beta, C, LDC, batch_count, get_magma_queue());
     if (synchronize) magma_queue_sync(get_magma_queue());
     if (synchronize) cudaDeviceSynchronize();
-#else
-    NDA_RUNTIME_ERROR << "nda::blas::device::gemmv_batch requires Magma [https://icl.cs.utk.edu/magma/]. Configure nda with -DUse_Magma=ON";
-#endif
   }
   void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, dcomplex alpha, const dcomplex **A, int *LDA, const dcomplex **B, int *LDB,
                    dcomplex beta, dcomplex **C, int *LDC, int batch_count) {
-#ifdef NDA_HAVE_MAGMA
     auto alpha_cu = cucplx(alpha);
     auto beta_cu  = cucplx(beta);
     magmablas_zgemm_vbatched(get_magma_op(op_a), get_magma_op(op_b), M, N, K, alpha_cu, cucplx(A), LDA, cucplx(B), LDB, beta_cu, cucplx(C), LDC,
                              batch_count, get_magma_queue());
     if (synchronize) magma_queue_sync(get_magma_queue());
     if (synchronize) cudaDeviceSynchronize();
-#else
-    NDA_RUNTIME_ERROR << "nda::blas::device::gemmv_batch requires Magma [https://icl.cs.utk.edu/magma/]. Configure nda with -DUse_Magma=ON";
-#endif
   }
+#endif
 
   void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, int strideA, const double *B, int LDB,
                           int strideB, double beta, double *C, int LDC, int strideC, int batch_count) {

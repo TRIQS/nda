@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <nda/exceptions.hpp>
 #include <complex>
 
 namespace nda::blas::device {
@@ -40,10 +41,20 @@ namespace nda::blas::device {
   void gemm_batch(char op_a, char op_b, int M, int N, int K, std::complex<double> alpha, const std::complex<double> **A, int LDA,
                   const std::complex<double> **B, int LDB, std::complex<double> beta, std::complex<double> **C, int LDC, int batch_count);
 
+#ifdef NDA_HAVE_MAGMA
   void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, double alpha, const double **A, int *LDA, const double **B, int *LDB, double beta,
                    double **C, int *LDC, int batch_count);
-  void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, std::complex<double> alpha, const std::complex<double> **A, int *LDA,
-                   const std::complex<double> **B, int *LDB, std::complex<double> beta, std::complex<double> **C, int *LDC, int batch_count);
+  void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, dcomplex alpha, const dcomplex **A, int *LDA,
+                   const dcomplex **B, int *LDB, dcomplex beta, dcomplex **C, int *LDC, int batch_count);
+#else
+  inline void gemm_vbatch(char, char, int, int, int, double, const double **, int *, const double **, int *, double, double **, int *, int) {
+    NDA_RUNTIME_ERROR << "nda::blas::device::gemmv_batch requires Magma [https://icl.cs.utk.edu/magma/]. Configure nda with -DUse_Magma=ON";
+  }
+  inline void gemm_vbatch(char, char, int *, int *, int *, dcomplex, const dcomplex **, int *, const dcomplex **,
+                          int *, dcomplex, dcomplex **, int *, int) {
+    NDA_RUNTIME_ERROR << "nda::blas::device::gemmv_batch requires Magma [https://icl.cs.utk.edu/magma/]. Configure nda with -DUse_Magma=ON";
+  }
+#endif
 
   void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, int strideA, const double *B, int LDB,
                           int strideB, double beta, double *C, int LDC, int strideC, int batch_count);
