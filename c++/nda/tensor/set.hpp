@@ -21,7 +21,6 @@
 #include "nda/traits.hpp"
 #include "nda/declarations.hpp"
 #include "nda/mem/address_space.hpp"
-#include "nda/mem/device.hpp"
 #include "nda/mem/malloc.hpp"
 #include "nda/mem/memcpy.hpp"
 
@@ -51,14 +50,13 @@ namespace nda::tensor {
 #if defined(NDA_HAVE_CUTENSOR)
       std::string indx = default_index<uint8_t(rank)>();
       cutensor::cutensor_desc<value_t,rank> a_t(a,op::ID);
-      value_t* z;
-      mem::device_check( cudaMalloc((void**) &z, sizeof(value_t)), "CudaMalloc" );
-      mem::device_check( cudaMemcpy((void*) z, (void*) &alpha, sizeof(value_t), cudaMemcpyDefault), "CudaMemcpy" );
+      value_t* z = (value_t*)mem::malloc<mem::Device>(sizeof(value_t));
+      mem::memcpy<mem::Device,mem::Host>(z,&alpha,sizeof(value_t));
       cutensor::cutensor_desc<value_t,0> z_t(z,op::ID);
       cutensor::elementwise_binary(value_t{1},z_t,z,"",
                                    value_t{0},a_t,a.data(),indx,
                                    a.data(),op::SUM);
-      mem::device_check( cudaFree((void*)z), "cudaFree" );
+      mem::free<mem::Device>(z);
 #else
       static_assert(always_false<bool>," set on device requires gpu tensor operations backend. ");
 #endif
