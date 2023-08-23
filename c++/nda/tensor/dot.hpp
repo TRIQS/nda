@@ -21,7 +21,6 @@
 #include "nda/traits.hpp"
 #include "nda/declarations.hpp"
 #include "nda/mem/address_space.hpp"
-#include "nda/mem/device.hpp"
 #include "nda/mem/memset.hpp"
 #include "nda/mem/malloc.hpp"
 #include "nda/mem/memcpy.hpp"
@@ -76,14 +75,13 @@ namespace nda::tensor {
 #if defined(NDA_HAVE_CUTENSOR)
       cutensor::cutensor_desc<value_t,get_rank<A>> a_t(a,op::ID);
       cutensor::cutensor_desc<value_t,get_rank<B>> b_t(b,op::ID);
-      value_t* z;
-      mem::device_check( cudaMalloc((void**) &z, sizeof(value_t)), "CudaMalloc" );
-      mem::device_check( cudaMemset((void*) z, 0, sizeof(value_t)), "cudaMemset" );
+      value_t* z = (value_t*)mem::malloc<mem::Device>(sizeof(value_t));
+      mem::memset<mem::Device>(z,0,sizeof(value_t));
       cutensor::cutensor_desc<value_t,0> z_t(z,op::ID);
       cutensor::contract(value_t{1},a_t,a.data(),indxX,b_t,b.data(),indxY,value_t{0},z_t,z,"");
       value_t res;
-      mem::device_check( cudaMemcpy((void*) &res, (void*) z, sizeof(value_t), cudaMemcpyDefault), "CudaMemcpy" );
-      mem::device_check( cudaFree((void*)z), "cudaFree" );
+      mem::memcpy<mem::Host,mem::Device>(&res,z,sizeof(value_t));
+      mem::free<mem::Device>(z);
       return res;
 #else
       static_assert(always_false<bool>," dot on device requires gpu tensor operations backend. ");
