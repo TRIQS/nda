@@ -112,8 +112,8 @@ namespace nda {
      * @param i0, is ... are the extents (lengths) in each dimension
      */
     template <std::integral... Int>
+      requires(sizeof...(Int) == Rank)
     explicit basic_array(Int... is) noexcept {
-      static_assert(sizeof...(Int) == Rank, "Incorrect number of extents");
       // Constructing layout and storage in constructor body improves error message for wrong # of args
       lay = layout_t{std::array{long(is)...}};
       sto = storage_t{lay.size()};
