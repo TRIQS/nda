@@ -1,4 +1,4 @@
-[![build](https://github.com/TRIQS/nda/workflows/build/badge.svg?branch=notriqs)](https://github.com/TRIQS/nda/actions?query=workflow%3Abuild)
+[![build](https://github.com/TRIQS/nda/workflows/build/badge.svg?branch=unstable)](https://github.com/TRIQS/nda/actions?query=workflow%3Abuild)
 
 # nda - A skeleton for a TRIQS application
 
