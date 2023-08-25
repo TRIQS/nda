@@ -5,9 +5,9 @@
 ## Version 1.2.0
 
 NDA Version 1.2.0 is a release that 
-* Introduce NVidia GPU support for array and view types
+* Introduces NVidia GPU support for array and view types
 * Adds GPU blas/lapack backends using the CuBLAS and CuSOLVER backend
-* Allows the use of symmetries for inialization and symmetrization of arrays
+* Allows the use of symmetries for initialization and symmetrization of arrays
 * Uses C++20 concepts to constrain generic function implementations
 * Enables sliced hdf5 read/write operations
 * Fixes several library issues
@@ -17,7 +17,7 @@ We thank all the people who have contributed to this release: Thomas Hahn, Alexa
 Find below an itemized list of changes in this release.
 
 ### General
-* Added new test for matmul with permuted view
+* Add new test for matmul with permuted view
 * Add flatten function to layout_transforms.hpp
 * Add generic p-norm function
 * Add bindings for batched GEMM through gemm_batch function
@@ -48,7 +48,7 @@ Find below an itemized list of changes in this release.
 * In transpose(A) allow for unary expr_call arguments
 * Allow basic_array rvalues in basic_array_view constructor
 * Extend deduction guides for basic_array and basic_array_view
-* Fix preservation of layout properties idx_map.transpose(permutation)
+* Fix preservation of layout properties in idx_map.transpose(permutation)
 * Rename Layout to LayoutPolicy in array/view template parameters
 * Short-circuit in assign_from_ndarray for empty arrays
 * Generalize most traits to apply equally to A and A&
@@ -160,7 +160,7 @@ Find below an itemized list of changes in this release.
 * In nda::memcpy make sure to take src as a 'const *'
 * Do not create views from temporary arrays in gelss_worker
 * Fix issue in expr_call implementation for the slicing case
-* Fix Bug in is_contiguous and is_strided_1d for Fortran layout arrays
+* Fix bug in is_contiguous and is_strided_1d for Fortran layout arrays
 * Fix issue when calling h5::write for array_view<const T>
 * Matrix * Vector now returns a Vector and not a 1d array
 * Bugfix in print for arrays of rank>2
