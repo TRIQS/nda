@@ -26,6 +26,17 @@
 
 using namespace std::string_literals;
 
+#ifdef NDA_USE_MKL
+#include <mkl.h>
+namespace nda::blas {
+  static int const mkl_interface_layer = mkl_set_interface_layer(MKL_INTERFACE_LP64 + MKL_INTERFACE_GNU);
+  inline auto *mklcplx(nda::dcomplex *c) { return reinterpret_cast<MKL_Complex16 *>(c); }               // NOLINT
+  inline auto *mklcplx(nda::dcomplex const *c) { return reinterpret_cast<const MKL_Complex16 *>(c); }   // NOLINT
+  inline auto *mklcplx(nda::dcomplex **c) { return reinterpret_cast<MKL_Complex16 **>(c); }             // NOLINT
+  inline auto *mklcplx(nda::dcomplex const **c) { return reinterpret_cast<const MKL_Complex16 **>(c); } // NOLINT
+} // namespace nda::blas
+#endif
+
 // Define a complex struct which is returned by BLAS functions
 namespace {
   struct nda_complex_double {
@@ -42,16 +53,6 @@ extern "C" {
 double F77_ddot(FINT, const double *, FINT, const double *, FINT);
 nda_complex_double F77_zdotu(FINT, const double *, FINT, const double *, FINT); // NOLINT
 nda_complex_double F77_zdotc(FINT, const double *, FINT, const double *, FINT); // NOLINT
-#ifdef NDA_HAVE_GEMM_BATCH
-void dgemm_batch(FCHAR, FCHAR, FINT, FINT, FINT, const double *, const double **, FINT, const double **, FINT, const double *, double **, FINT, FINT,
-                 FINT);
-void zgemm_batch(FCHAR, FCHAR, FINT, FINT, FINT, const double *, const double **, FINT, const double **, FINT, const double *, double **, FINT, FINT,
-                 FINT);
-void dgemm_batch_strided(FCHAR, FCHAR, FINT, FINT, FINT, const double *, const double *, FINT, FINT, const double *, FINT, FINT, const double *,
-                         double *, FINT, FINT, FINT);
-void zgemm_batch_strided(FCHAR, FCHAR, FINT, FINT, FINT, const double *, const double *, FINT, FINT, const double *, FINT, FINT, const double *,
-                         double *, FINT, FINT, FINT);
-#endif
 }
 
 namespace nda::blas::f77 {
@@ -90,7 +91,7 @@ namespace nda::blas::f77 {
 
   void gemm_batch(char op_a, char op_b, int M, int N, int K, double alpha, const double **A, int LDA, const double **B, int LDB, double beta,
                   double **C, int LDC, int batch_count) {
-#ifdef NDA_HAVE_GEMM_BATCH
+#ifdef NDA_USE_MKL
     const int group_count = 1;
     dgemm_batch(&op_a, &op_b, &M, &N, &K, &alpha, A, &LDA, B, &LDB, &beta, C, &LDC, &group_count, &batch_count);
 #else // Fallback to loop
@@ -99,9 +100,9 @@ namespace nda::blas::f77 {
   }
   void gemm_batch(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex **A, int LDA, const dcomplex **B, int LDB, dcomplex beta,
                   dcomplex **C, int LDC, int batch_count) {
-#ifdef NDA_HAVE_GEMM_BATCH
+#ifdef NDA_USE_MKL
     const int group_count = 1;
-    zgemm_batch(&op_a, &op_b, &M, &N, &K, blacplx(&alpha), blacplx(A), &LDA, blacplx(B), &LDB, blacplx(&beta), blacplx(C), &LDC, &group_count,
+    zgemm_batch(&op_a, &op_b, &M, &N, &K, mklcplx(&alpha), mklcplx(A), &LDA, mklcplx(B), &LDB, mklcplx(&beta), mklcplx(C), &LDC, &group_count,
                 &batch_count);
 #else
     for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, M, N, K, alpha, A[i], LDA, B[i], LDB, beta, C[i], LDC);
@@ -110,7 +111,7 @@ namespace nda::blas::f77 {
 
   void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, double alpha, const double **A, int *LDA, const double **B, int *LDB, double beta,
                    double **C, int *LDC, int batch_count) {
-#ifdef NDA_HAVE_GEMM_BATCH
+#ifdef NDA_USE_MKL
     nda::vector<int> group_size(batch_count, 1);
     nda::vector<char> ops_a(batch_count, op_a), ops_b(batch_count, op_b);
     nda::vector<double> alphas(batch_count, alpha), betas(batch_count, beta);
@@ -121,11 +122,11 @@ namespace nda::blas::f77 {
   }
   void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, dcomplex alpha, const dcomplex **A, int *LDA, const dcomplex **B, int *LDB,
                    dcomplex beta, dcomplex **C, int *LDC, int batch_count) {
-#ifdef NDA_HAVE_GEMM_BATCH
+#ifdef NDA_USE_MKL
     nda::vector<int> group_size(batch_count, 1);
     nda::vector<char> ops_a(batch_count, op_a), ops_b(batch_count, op_b);
     nda::vector<dcomplex> alphas(batch_count, alpha), betas(batch_count, beta);
-    zgemm_batch(ops_a.data(), ops_b.data(), M, N, K, blacplx(alphas.data()), blacplx(A), LDA, blacplx(B), LDB, blacplx(betas.data()), blacplx(C), LDC,
+    zgemm_batch(ops_a.data(), ops_b.data(), M, N, K, mklcplx(alphas.data()), mklcplx(A), LDA, mklcplx(B), LDB, mklcplx(betas.data()), mklcplx(C), LDC,
                 &batch_count, group_size.data());
 #else
     for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, M[i], N[i], K[i], alpha, A[i], LDA[i], B[i], LDB[i], beta, C[i], LDC[i]);
@@ -134,7 +135,7 @@ namespace nda::blas::f77 {
 
   void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, int strideA, const double *B, int LDB,
                           int strideB, double beta, double *C, int LDC, int strideC, int batch_count) {
-#ifdef NDA_HAVE_GEMM_BATCH
+#ifdef NDA_USE_MKL
     dgemm_batch_strided(&op_a, &op_b, &M, &N, &K, &alpha, A, &LDA, &strideA, B, &LDB, &strideB, &beta, C, &LDC, &strideC, &batch_count);
 #else
     for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, M, N, K, alpha, A + i * strideA, LDA, B + i * strideB, LDB, beta, C + i * strideC, LDC);
@@ -142,8 +143,8 @@ namespace nda::blas::f77 {
   }
   void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex *A, int LDA, int strideA, const dcomplex *B,
                           int LDB, int strideB, dcomplex beta, dcomplex *C, int LDC, int strideC, int batch_count) {
-#ifdef NDA_HAVE_GEMM_BATCH
-    zgemm_batch_strided(&op_a, &op_b, &M, &N, &K, blacplx(&alpha), blacplx(A), &LDA, &strideA, blacplx(B), &LDB, &strideB, blacplx(&beta), blacplx(C),
+#ifdef NDA_USE_MKL
+    zgemm_batch_strided(&op_a, &op_b, &M, &N, &K, mklcplx(&alpha), mklcplx(A), &LDA, &strideA, mklcplx(B), &LDB, &strideB, mklcplx(&beta), mklcplx(C),
                         &LDC, &strideC, &batch_count);
 #else
     for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, M, N, K, alpha, A + i * strideA, LDA, B + i * strideB, LDB, beta, C + i * strideC, LDC);
