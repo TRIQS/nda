@@ -16,6 +16,7 @@ set_target_properties(${PROJECT_NAME}_c PROPERTIES
 )
 target_include_directories(${PROJECT_NAME}_c PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/c++>)
 target_include_directories(${PROJECT_NAME}_c SYSTEM INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>)
+target_compile_options(${PROJECT_NAME}_c PUBLIC $<$<CXX_COMPILER_ID:IntelLLVM>:-fno-finite-math-only>)
 target_compile_definitions(${PROJECT_NAME}_c PUBLIC
 				NDA_GIT_HASH=${PROJECT_GIT_HASH}
 				$<$<CONFIG:Debug>:NDA_DEBUG>
