@@ -57,7 +57,7 @@ TEST(Norm, Rand) { //NOLINT
 
   EXPECT_EQ(norm(v), norm(v, 2.0));
   EXPECT_EQ(norm(v, 0.0), N);
-  EXPECT_EQ(norm(v, 1.0), sum(v));
+  EXPECT_EQ(norm(v, 1.0), sum(abs(v)));
   EXPECT_EQ(norm(v, 2.0), sqrt(std::real(nda::blas::dotc(v, v))));
   EXPECT_EQ(norm(v, std::numeric_limits<double>::infinity()), max_element(v));
   EXPECT_EQ(norm(v, -std::numeric_limits<double>::infinity()), min_element(v));
