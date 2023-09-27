@@ -19,7 +19,7 @@ target_include_directories(${PROJECT_NAME}_c SYSTEM INTERFACE $<INSTALL_INTERFAC
 target_compile_options(${PROJECT_NAME}_c PUBLIC $<$<CXX_COMPILER_ID:IntelLLVM>:-fno-finite-math-only>)
 target_compile_definitions(${PROJECT_NAME}_c PUBLIC
 				NDA_GIT_HASH=${PROJECT_GIT_HASH}
-				$<$<CONFIG:Debug>:NDA_DEBUG>
+				$<$<CONFIG:Debug,RelWithDebInfo>:NDA_DEBUG>
 			  )
 
 # Install library and headers
