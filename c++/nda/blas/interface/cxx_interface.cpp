@@ -135,7 +135,7 @@ namespace nda::blas::f77 {
 
   void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, int strideA, const double *B, int LDB,
                           int strideB, double beta, double *C, int LDC, int strideC, int batch_count) {
-#ifdef NDA_USE_MKL
+#if defined(NDA_USE_MKL) && INTEL_MKL_VERSION >= 20200002
     dgemm_batch_strided(&op_a, &op_b, &M, &N, &K, &alpha, A, &LDA, &strideA, B, &LDB, &strideB, &beta, C, &LDC, &strideC, &batch_count);
 #else
     for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, M, N, K, alpha, A + i * strideA, LDA, B + i * strideB, LDB, beta, C + i * strideC, LDC);
@@ -143,7 +143,7 @@ namespace nda::blas::f77 {
   }
   void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex *A, int LDA, int strideA, const dcomplex *B,
                           int LDB, int strideB, dcomplex beta, dcomplex *C, int LDC, int strideC, int batch_count) {
-#ifdef NDA_USE_MKL
+#if defined(NDA_USE_MKL) && INTEL_MKL_VERSION >= 20200002
     zgemm_batch_strided(&op_a, &op_b, &M, &N, &K, mklcplx(&alpha), mklcplx(A), &LDA, &strideA, mklcplx(B), &LDB, &strideB, mklcplx(&beta), mklcplx(C),
                         &LDC, &strideC, &batch_count);
 #else
