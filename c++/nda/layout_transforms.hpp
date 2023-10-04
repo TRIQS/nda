@@ -47,6 +47,10 @@ namespace nda {
     EXPECTS_WITH_MESSAGE(a.size() == (std::accumulate(new_shape.cbegin(), new_shape.cend(), Int{1}, std::multiplies<>{})),
                          "Reshape : the new shape has a incorrect number of elements");
     EXPECTS_WITH_MESSAGE(a.indexmap().is_contiguous(), "reshape only works with contiguous data");
+
+    using A_t = std::remove_cvref_t<A>;
+    static_assert(A_t::is_stride_order_C() or A_t::is_stride_order_Fortran(), "Reshape incompatible with non-standard memory order");
+
     return map_layout_transform(std::forward<A>(a), layout_t{stdutil::make_std_array<long>(new_shape)});
   }
 
