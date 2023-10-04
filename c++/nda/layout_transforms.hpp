@@ -81,7 +81,7 @@ namespace nda {
   // ---------------  transpose ------------------------
 
   /**
-   * Perform transposition on the memory layout of the MemoryMatrix.
+   * Perform transposition on the memory layout of the MemoryArray.
    * No operation is performed in memory.
    * For expression-calls with a single argument perform transposition
    * on the underlying array.
@@ -92,10 +92,10 @@ namespace nda {
    */
   template <typename A>
   auto transpose(A &&a)
-    requires(MemoryMatrix<A> or is_instantiation_of_v<expr_call, A>)
+    requires(MemoryArray<A> or is_instantiation_of_v<expr_call, A>)
   {
-    if constexpr (MemoryMatrix<A>) {
-      return permuted_indices_view<encode(std::array{1, 0})>(std::forward<A>(a));
+    if constexpr (MemoryArray<A>) {
+      return permuted_indices_view<encode(nda::permutations::reverse_identity<get_rank<A>>())>(std::forward<A>(a));
     } else { // expr_call
       static_assert(std::tuple_size_v<decltype(a.a)> == 1, "Cannot transpose expr_call with more than one array argument");
       return map(a.f)(transpose(std::get<0>(std::forward<A>(a).a)));
