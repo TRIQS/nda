@@ -69,7 +69,7 @@ namespace nda {
 
   // --------------- permuted_indices_view------------------------
 
-  template <ARRAY_INT Permutation, MemoryArray A>
+  template <uint64_t Permutation, MemoryArray A>
   auto permuted_indices_view(A &&a) {
     return map_layout_transform(std::forward<A>(a), a.indexmap().template transpose<Permutation>());
   }

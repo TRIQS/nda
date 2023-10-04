@@ -21,10 +21,6 @@
 
 namespace nda {
 
-// FIXME in C++20 , will be std::array
-// For template argument with a list of integer
-#define ARRAY_INT uint64_t
-
   // Compact representation of std::array<int,N> for N< 16
   // indeed, we can not yet (C++20 ?) template array, array_view on a std::array ...
   // when the elements are also <16/
