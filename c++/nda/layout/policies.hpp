@@ -93,16 +93,17 @@ namespace nda {
       using type = C_stride_layout;
     };
 
-    // NOT OK for Rank 1
-    //template <int Rank>
-    //struct layout_to_policy<idx_map<Rank, 0, Fortran_stride_order<Rank>, layout_prop_e::contiguous>> {
-    //using type = F_layout;
-    //};
+    template <int Rank>
+      requires(Rank > 1)
+    struct layout_to_policy<idx_map<Rank, 0, Fortran_stride_order<Rank>, layout_prop_e::contiguous>> {
+      using type = F_layout;
+    };
 
-    //template <int Rank>
-    //struct layout_to_policy<idx_map<Rank, 0, Fortran_stride_order<Rank>, layout_prop_e::none>> {
-    //using type = F_stride_layout;
-    //};
+    template <int Rank>
+      requires(Rank > 1)
+    struct layout_to_policy<idx_map<Rank, 0, Fortran_stride_order<Rank>, layout_prop_e::none>> {
+      using type = F_stride_layout;
+    };
 
   } // namespace details
 
