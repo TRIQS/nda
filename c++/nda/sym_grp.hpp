@@ -195,14 +195,16 @@ namespace nda {
     /**
      * Init multidimensional array from its representative data using symmetries
      * @param x An NdArray
-     * @param vec Vector of data values for the representatives elements of each symmetry class
+     * @param vec Vector or vector view of data values for the representatives elements of each symmetry class
     */
-    void init_from_representative_data(A &x, std::vector<get_value_t<A>> const &vec) const {
+    template <typename V>
+    void init_from_representative_data(A &x, V const &vec) const {
+      static_assert(std::is_same_v<const get_value_t<A> &, decltype(vec[0])>);
       for (auto const i : range(vec.size())) {
         auto const ref_val = vec[i];
         for (auto const &[lin_idx, op] : sym_classes[i]) { std::apply(x, x.indexmap().to_idx(lin_idx)) = op(ref_val); }
       }
-    }
+    };
 
     /**
      * Default constructor for sym_grp class
