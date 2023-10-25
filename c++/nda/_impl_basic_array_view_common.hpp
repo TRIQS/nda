@@ -382,8 +382,12 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
   }
   if constexpr (mem::on_device<self_t> || mem::on_device<RHS>)
     NDA_RUNTIME_ERROR << "Fallback to elementwise assignment not implemented for arrays on the GPU";
+
   // Fallback to elementwise assignment
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-conversion"
   auto l = [this, &rhs](auto const &...args) { (*this)(args...) = rhs(args...); };
+#pragma GCC diagnostic pop
   nda::for_each(shape(), l);
 }
 

@@ -352,7 +352,7 @@ namespace nda {
 
       if constexpr (e_pos == -1) { // common case, no ellipsis
         if constexpr (smallest_stride_is_one)
-          return (myget<true, Is>(args) + ...);
+          return (myget<true, Is>(static_cast<long>(args)) + ...);
         else
           return ((args * std::get<Is>(str)) + ...);
       } else {
