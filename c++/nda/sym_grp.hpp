@@ -111,7 +111,7 @@ namespace nda {
      * @tparam H Anything modeling NdaInitFunction with NdArray A
      * @param x An NdArray
      * @param init_func The init function to be used
-     * @param parallel Switch to enable OMP parallel evaluation of init_func. Default is false
+     * @param parallel Switch to enable parallel evaluation of init_func. Default is false
     */
     template <typename H>
       requires(NdaInitFunc<H, A>)
@@ -121,7 +121,7 @@ namespace nda {
         // reset input array to allow for mpi reduction
         x() = 0.0;
 
-#pragma omp parallel
+        #pragma omp parallel
         for (auto const &sym_class : itertools::omp_chunk(mpi::chunk(sym_classes))) {
           auto idx           = x.indexmap().to_idx(sym_class[0].first);
           auto ref_val       = init_func(idx);
@@ -178,6 +178,30 @@ namespace nda {
       }
 
       return std::pair{max_diff, max_idx};
+    }
+
+    /**
+     * Reduce multidimensional array to its representative data using symmetries
+     * @param x An NdArray
+     * @return Vector of data values for the representatives elements of each symmetry class
+    */
+    [[nodiscard]] std::vector<get_value_t<A>> get_representative_data(A const &x) const {
+      long const len = sym_classes.size();
+      std::vector<get_value_t<A>> vec(len);
+      for (auto const i : range(len)) vec[i] = std::apply(x, x.indexmap().to_idx(sym_classes[i][0].first));
+      return vec;
+    }
+
+    /**
+     * Init multidimensional array from its representative data using symmetries
+     * @param x An NdArray
+     * @param vec Vector of data values for the representatives elements of each symmetry class
+    */
+    void init_from_representative_data(A &x, std::vector<get_value_t<A>> const &vec) const {
+      for (auto const i : range(vec.size())) {
+        auto const ref_val = vec[i];
+        for (auto const &[lin_idx, op] : sym_classes[i]) { std::apply(x, x.indexmap().to_idx(lin_idx)) = op(ref_val); }
+      }
     }
 
     /**

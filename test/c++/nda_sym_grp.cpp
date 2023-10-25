@@ -98,6 +98,11 @@ TEST(SymGrp, MatrixPermutation) { //NOLINT
   auto const &[max_diff, max_idx] = grp.symmetrize(A);
   EXPECT_EQ(max_diff, 0.0);
   for (auto const x : max_idx) EXPECT_EQ(x, 0);
+
+  // test transformation to and initialization from representative data
+  auto const vec = grp.get_representative_data(A); 
+  grp.init_from_representative_data(B, vec);
+  EXPECT_EQ_ARRAY(A, B);
 }
 
 // -------------------------------------
@@ -146,6 +151,11 @@ TEST(SymGrp, MatrixFlipShift) { //NOLINT
   auto const &[max_diff, max_idx] = grp.symmetrize(A);
   EXPECT_EQ(max_diff, 0.0);
   for (auto const x : max_idx) EXPECT_EQ(x, 0);
+
+  // test transformation to and initialization from representative data
+  auto const vec = grp.get_representative_data(A); 
+  grp.init_from_representative_data(B, vec);
+  EXPECT_EQ_ARRAY(A, B);
 }
 
 // -------------------------------------
@@ -194,4 +204,9 @@ TEST(SymGrp, TensorCylicTriplet) { //NOLINT
   auto const &[max_diff, max_idx] = grp.symmetrize(A);
   EXPECT_EQ(max_diff, 0.0);
   for (auto const x : max_idx) EXPECT_EQ(x, 0);
+
+  // test transformation to and initialization from representative data
+  auto const vec = grp.get_representative_data(A); 
+  grp.init_from_representative_data(B, vec);
+  EXPECT_EQ_ARRAY(A, B);
 }
