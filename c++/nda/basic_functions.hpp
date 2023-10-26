@@ -376,4 +376,44 @@ namespace nda {
     return std::make_tuple(n_blocks, block_size, block_str);
   }
 
+  // ------------------------------- concatenate --------------------------------------------
+  // slice in all dimensions but Axis
+  template <auto Axis, Array A> 
+  auto all_view_except(A const &a, auto const &arg) {
+    auto slice_or_arg = [&arg](auto x) {
+      if constexpr (Axis == decltype(x)::value)
+        return arg;
+      else
+        return range::all;
+    };
+
+    return [&]<auto... Is>(std::index_sequence<Is...>) { return a(slice_or_arg(std::integral_constant<size_t, Is>{})...); }
+    (std::make_index_sequence<A::rank>{});
+  };
+
+  // numpy style concatenation
+  template <auto Axis, Array A0, Array... A>
+  auto concatenate(A0 const &a0, A const &...a) {
+    // sanity checks
+    static_assert(A0::rank >= Axis);
+    static_assert(((A0::rank == A::rank) and ... and true));
+    static_assert(((std::is_same_v<get_value_t<A0>, get_value_t<A>>) and ... and true));
+
+    for (auto const ax : range(A0::rank)) {
+      if (not (ax == Axis)) { assert(((a0.shape()[ax] == a.shape()[ax]) and ... and true)); }
+    }
+
+    // build concatenated array
+    auto new_shape  = a0.shape();
+    long offset     = 0;
+    new_shape[Axis] = new_shape[Axis] + ((a.shape()[Axis] + ... + 0));
+    array<get_value_t<A0>, A0::rank> new_array(new_shape);
+
+    for (auto const &a_view : {basic_array_view(a0), basic_array_view(a)...}) {
+      all_view_except<Axis>(new_array, range(offset, offset + a_view.shape()[Axis])) = a_view;
+      offset += a_view.shape()[Axis];
+    }
+
+    return new_array;
+  };
 } // namespace nda
