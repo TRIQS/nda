@@ -15,6 +15,7 @@
 // Authors: Olivier Parcollet, Nils Wentzell
 
 #pragma once
+#include <cstdint>
 #include <complex>
 #include <type_traits>
 #include <utility>
