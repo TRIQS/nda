@@ -25,6 +25,8 @@
 #include <numeric>
 #include <concepts>
 
+#include <mpi/mpi.hpp>
+
 #include "address_space.hpp"
 #include "../macros.hpp"
 
@@ -47,6 +49,7 @@ namespace nda::mem {
   struct blk_t {
     char *ptr = nullptr;
     size_t s  = 0;
+    void *userdata = nullptr;
   };
 
   // -------------------------  Malloc allocator ----------------------------
@@ -333,6 +336,49 @@ namespace nda::mem {
     [[nodiscard]] bool owns(blk_t b) const noexcept { return A::owns(b); }
 
     auto const &histogram() const noexcept { return hist; }
+  };
+
+  // -------------------------  MPI shared memory allocator ----------------------------
+  //
+  // Allocates the same amount of memory on each shared memory island
+  //
+  class shared_allocator {
+    public:
+    shared_allocator()                                    = default;
+    shared_allocator(shared_allocator const &)            = delete;
+    shared_allocator(shared_allocator &&)                 = default;
+    shared_allocator &operator=(shared_allocator const &) = delete;
+    shared_allocator &operator=(shared_allocator &&)      = default;
+
+    static constexpr auto address_space = Host;
+
+    static blk_t allocate(size_t s) noexcept {
+      return allocate(s, mpi::communicator{}.split_shared());
+    }
+
+    static blk_t allocate(MPI_Aint s, mpi::shared_communicator shm) noexcept {
+      auto *win = new mpi::shared_window<char>{shm, shm.rank() == 0 ? s : 0};
+      return {(char *)win->base(0), (std::size_t)s, (void *)win}; // NOLINT
+    }
+
+    static blk_t allocate_zero(size_t s) noexcept {
+      return allocate_zero(s, mpi::communicator{}.split_shared());
+    }
+
+    static blk_t allocate_zero(MPI_Aint s, mpi::shared_communicator shm) noexcept {
+      auto *win = new mpi::shared_window<char>{shm, shm.rank() == 0 ? s : 0};
+      char *baseptr = win->base(0);
+      win->fence();
+      if (shm.rank() == 0) {
+          std::memset(baseptr, 0, s);
+      }
+      win->fence();
+      return {baseptr, (std::size_t)s, (void *)win}; // NOLINT
+    }
+
+    static void deallocate(blk_t b) noexcept {
+      delete static_cast<mpi::shared_window<char>*>(b.userdata);
+    }
   };
 
 } // namespace nda::mem
