@@ -46,18 +46,16 @@ target_link_libraries(${PROJECT_NAME}_c PUBLIC OpenMP::OpenMP_CXX)
 
 message(STATUS "-------- Lapack detection -------------")
 
-find_package(LAPACK REQUIRED)
-if(LAPACK_LIBRARIES MATCHES "libmkl" AND NOT LAPACK_LIBRARIES MATCHES "libmkl_rt")
-  message(STATUS "Found MKL: Making sure to use single dynamic library")
+find_package(LAPACK QUIET REQUIRED)
+if(LAPACK_LIBRARIES MATCHES "libmkl" AND BLA_VENDOR STREQUAL "All")
+  message(STATUS "Detected MKL with no BLA_VENDOR set, defaulting to single dynamic library 'libmkl_rt'")
   set(BLA_VENDOR Intel10_64_dyn)
-  find_package(LAPACK REQUIRED)
-endif()
-if(LAPACK_LIBRARIES MATCHES "Accelerate.framework")
-  message(STATUS "Can't build with Accelerate Framework on OSX, trying to find OpenBLAS instead.")
+elseif(LAPACK_LIBRARIES MATCHES "Accelerate.framework")
+  message(STATUS "Can't build with Accelerate Framework on OSX, trying to find OpenBLAS instead...")
   set(BLA_VENDOR OpenBLAS) # Accelerate Framework has issue in zdot
   set(LAPACK_ROOT "${LAPACK_ROOT};$ENV{LAPACK_ROOT};/opt/homebrew/opt/openblas;/usr/local/opt/openblas")
-  find_package(LAPACK REQUIRED)
 endif()
+find_package(LAPACK REQUIRED)
 
 # Create an interface target
 add_library(blas_lapack INTERFACE)
@@ -70,6 +68,9 @@ if(LAPACK_LIBRARIES MATCHES "libmkl")
     target_include_directories(${PROJECT_NAME}_c PUBLIC $ENV{MKLROOT}/include)
   endif()
   target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_USE_MKL)
+  if(LAPACK_LIBRARIES MATCHES "libmkl_rt")
+    target_compile_definitions(${PROJECT_NAME}_c PRIVATE NDA_USE_MKL_RT)
+  endif()
 endif()
 
 # Link against interface target and export
