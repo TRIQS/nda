@@ -59,6 +59,17 @@ TEST(clef, makefunction) {
 
 // -----------------------
 
+TEST(clef, subscript) {
+
+  auto expr = x_[y_];
+  for (int i = 0; i < 10; ++i) {
+    auto res = nda::clef::eval(expr, x_ = std::array{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, y_ = i);
+    EXPECT_EQ(res, i);
+  }
+}
+
+// -----------------------
+
 TEST(clef, makefunctionparametric) {
   auto expr = 2 * x_ + 1;
   auto r    = make_function(expr, x_);
