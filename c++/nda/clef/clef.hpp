@@ -356,7 +356,8 @@ namespace nda::clef {
 
     FORCEINLINE decltype(auto) operator()(placeholder<N>, pair<Is, T> const &...pairs) const {
       if constexpr (not is_lazy) { // N is one of the Is
-        return std::get<N_position>(std::tie(pairs...)).rhs;
+        auto const& res = std::get<N_position>(std::tie(pairs...)).rhs;
+        return res;
       } else { // N is not one of the Is
         return placeholder<N>{};
       }
