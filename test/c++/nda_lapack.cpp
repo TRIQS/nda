@@ -145,8 +145,9 @@ TEST(lapack, zgesvd) { test_gesvd<dcomplex>(); } //NOLINT
 template <typename value_t>
 void test_gelss() {
   // Cf. http://www.netlib.org/lapack/explore-html/d3/d77/example___d_g_e_l_s__colmajor_8c_source.html
-  auto A = matrix<value_t>{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}};
-  auto B = matrix<value_t>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
+  auto A    = matrix<value_t>{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}};
+  auto B    = matrix<value_t>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
+  auto Bvec = vector<value_t>{-10, 12, 14, 16, 18}; // For testing vector right hand side
 
   auto [M, N]  = A.shape();
   auto x_exact = matrix<value_t>{{2, 1}, {1, 1}, {1, 2}};
@@ -155,11 +156,17 @@ void test_gelss() {
   auto gelss_new    = lapack::gelss_worker<value_t>{A};
   auto [x_1, eps_1] = gelss_new(B);
   EXPECT_ARRAY_NEAR(x_exact, x_1, 1e-14);
+  auto [x_2, eps_2] = gelss_new(Bvec);
+  EXPECT_ARRAY_NEAR(x_exact(_, 0), x_2, 1e-14);
 
   int rank{};
   matrix<value_t, F_layout> AF{A}, BF{B};
   lapack::gelss(AF, BF, S, 1e-18, rank);
   EXPECT_ARRAY_NEAR(x_exact, BF(range(N), _), 1e-14);
+
+  AF = A;
+  lapack::gelss(AF, Bvec, S, 1e-18, rank);
+  EXPECT_ARRAY_NEAR(x_exact(_, 0), Bvec(range(N)), 1e-14);
 }
 TEST(lapack, gelss) { test_gelss<double>(); }    //NOLINT
 TEST(lapack, zgelss) { test_gelss<dcomplex>(); } //NOLINT
