@@ -86,15 +86,20 @@ namespace nda::lapack {
 
     // First call to get the optimal bufferSize
     T bufferSize_T{};
-    int info = 0, nrhs = 1;
-    if (MemoryMatrix<B>) { nrhs = b.extent(1); }
-    f77::gelss(a.extent(0), a.extent(1), nrhs, a.data(), get_ld(a), b.data(), b.extent(0), s.data(), rcond, rank, &bufferSize_T, -1, rwork.data(),
+    int info = 0, nrhs = 1, ldb;
+    if constexpr (MemoryMatrix<B>) {
+      nrhs = b.extent(1);
+      ldb = get_ld(b);
+    } else { // MemoryVector
+      ldb = b.size();
+    }
+    f77::gelss(a.extent(0), a.extent(1), nrhs, a.data(), get_ld(a), b.data(), ldb, s.data(), rcond, rank, &bufferSize_T, -1, rwork.data(),
                info);
     int bufferSize = static_cast<int>(std::ceil(std::real(bufferSize_T)));
 
     // Allocate work buffer and perform actual library call
     array<T, 1> work(bufferSize);
-    f77::gelss(a.extent(0), a.extent(1), nrhs, a.data(), get_ld(a), b.data(), b.extent(0), s.data(), rcond, rank, work.data(), bufferSize,
+    f77::gelss(a.extent(0), a.extent(1), nrhs, a.data(), get_ld(a), b.data(), ldb, s.data(), rcond, rank, work.data(), bufferSize,
                rwork.data(), info);
 
     if (info) NDA_RUNTIME_ERROR << "Error in gesvd : info = " << info;
