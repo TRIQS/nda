@@ -68,10 +68,11 @@ namespace nda::lapack {
    *                 if INFO = i, i off-diagonal elements of an intermediate
    *                 bidiagonal form did not converge to zero.
    */
-  template <MemoryMatrix A, MemoryMatrix B, MemoryVector S>
+  template <MemoryMatrix A, MemoryArray B, MemoryVector S>
     requires(have_same_value_type_v<A, B> and mem::on_host<A, B, S> and is_blas_lapack_v<get_value_t<A>>)
   int gelss(A &&a, B &&b, S &&s, double rcond, int &rank) {
     static_assert(has_F_layout<A> and has_F_layout<B>, "C order not implemented");
+    static_assert(MemoryVector<B> or MemoryMatrix<B>, "B must be vector or matrix");
 
     using T    = get_value_t<A>;
     auto dm    = std::min(a.extent(0), a.extent(1));
@@ -86,14 +87,18 @@ namespace nda::lapack {
     // First call to get the optimal bufferSize
     T bufferSize_T{};
     int info = 0;
-    f77::gelss(a.extent(0), a.extent(1), b.extent(1), a.data(), get_ld(a), b.data(), get_ld(b), s.data(), rcond, rank, &bufferSize_T, -1,
-               rwork.data(), info);
+    int nrhs = 1, ldb = b.size(); // Defaults for B MemoryVector
+    if constexpr (MemoryMatrix<B>) {
+      nrhs = b.extent(1);
+      ldb  = get_ld(b);
+    }
+    f77::gelss(a.extent(0), a.extent(1), nrhs, a.data(), get_ld(a), b.data(), ldb, s.data(), rcond, rank, &bufferSize_T, -1, rwork.data(), info);
     int bufferSize = static_cast<int>(std::ceil(std::real(bufferSize_T)));
 
     // Allocate work buffer and perform actual library call
     array<T, 1> work(bufferSize);
-    f77::gelss(a.extent(0), a.extent(1), b.extent(1), a.data(), get_ld(a), b.data(), get_ld(b), s.data(), rcond, rank, work.data(), bufferSize,
-               rwork.data(), info);
+    f77::gelss(a.extent(0), a.extent(1), nrhs, a.data(), get_ld(a), b.data(), ldb, s.data(), rcond, rank, work.data(), bufferSize, rwork.data(),
+               info);
 
     if (info) NDA_RUNTIME_ERROR << "Error in gesvd : info = " << info;
     return info;

@@ -19,6 +19,7 @@
 #include <optional>
 
 #include "./gesvd.hpp"
+#include "../linalg.hpp"
 
 namespace nda::lapack {
 
@@ -83,6 +84,13 @@ namespace nda::lapack {
         for (int i : range(B.shape()[1])) err_vec.push_back(frobenius_norm(UT_NULL * B(range::all, range(i, i + 1))) / sqrt(B.shape()[0]));
         err = *std::max_element(err_vec.begin(), err_vec.end());
       }
+      return std::make_pair(V_x_InvS_x_UT * B, err);
+    }
+
+    std::pair<vector<T>, double> operator()(vector_const_view<T> B, std::optional<long> /*inner_matrix_dim*/ = {}) const {
+      using std::sqrt;
+      double err = 0.0;
+      if (M != N) { err = norm(UT_NULL * B) / sqrt(B.size()); }
       return std::make_pair(V_x_InvS_x_UT * B, err);
     }
   };
