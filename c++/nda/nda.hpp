@@ -49,5 +49,5 @@
 
 // If we are using c2py, include converters automatically
 #ifdef C2PY_INCLUDED
-#include <nda_py/cpp2py_converters.hpp>
+#include <nda_py/c2py_converters.hpp>
 #endif
