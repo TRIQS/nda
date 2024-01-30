@@ -81,7 +81,7 @@ jobs:
     - name: Install homebrew dependencies
       if: matrix.os == 'macos-12'
       run: |
-        brew install gcc@12 llvm hdf5 open-mpi openblas
+        brew install ccache gcc@12 llvm hdf5 open-mpi openblas
         pip3 install mako numpy scipy mpi4py
         pip3 install -r requirements.txt
 
