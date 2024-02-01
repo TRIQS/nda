@@ -545,11 +545,12 @@ void fill_with_scalar(Scalar const &scalar) noexcept {
         return;
       } else {
 #if defined(NDA_HAVE_CUTENSOR)
-        tensor::set(value_type(scalar), *this);
-#else
-        // MAM: implement recursive call to fill_with_scalar on (i,nda::ellipsis{})
-        NDA_RUNTIME_ERROR << "fill_with_scalar: Not implemented yet for general layout. ";
+        if constexpr (is_blas_lapack_v<value_type>) {
+          tensor::set(value_type(scalar), *this);
+        } else
 #endif
+          // MAM: implement recursive call to fill_with_scalar on (i,nda::ellipsis{})
+          NDA_RUNTIME_ERROR << "fill_with_scalar: Not implemented yet for general layout. ";
       }
     }
   }

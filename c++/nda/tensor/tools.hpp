@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <array>
+
 #if defined(NDA_HAVE_CUDA)
 #include <cuda_runtime.h>
 #endif
@@ -35,6 +37,17 @@ namespace nda::tensor
   {
     std::string indx{size_t(N)};
     for(uint8_t i=0; i<N; i++) indx[i] = static_cast<char>(i);
+    return indx;
+  }
+
+  // this can be done for arbitrary layout based on 
+  template<std::size_t N>
+  std::string default_index(std::array<int, N> const& order)
+  {
+    // MAM: use characters if N>=10!
+    static_assert(N>0 and N<10, "Index out of bounds.");
+    std::string indx{N};
+    for(uint8_t i=0; i<N; i++) indx[i] = static_cast<char>(order[i]);
     return indx;
   }
 
