@@ -74,6 +74,8 @@ namespace nda::blas::device {
 
   void ger(int M, int N, double alpha, const double *x, int incx, const double *Y, int incy, double *A, int LDA);
   void ger(int M, int N, dcomplex alpha, const dcomplex *x, int incx, const dcomplex *Y, int incy, dcomplex *A, int LDA);
+  void gerc(int M, int N, double alpha, const double *x, int incx, const double *Y, int incy, double *A, int LDA);
+  void gerc(int M, int N, dcomplex alpha, const dcomplex *x, int incx, const dcomplex *Y, int incy, dcomplex *A, int LDA);
 
   void scal(int M, double alpha, double *x, int incx);
   void scal(int M, dcomplex alpha, dcomplex *x, int incx);

@@ -185,6 +185,13 @@ namespace nda::blas::f77 {
   void ger(int M, int N, dcomplex alpha, const dcomplex *x, int incx, const dcomplex *Y, int incy, dcomplex *A, int LDA) {
     F77_zgeru(&M, &N, blacplx(&alpha), blacplx(x), &incx, blacplx(Y), &incy, blacplx(A), &LDA);
   }
+  void gerc(int M, int N, double alpha, const double *x, int incx, const double *Y, int incy, double *A, int LDA) {
+    F77_dger(&M, &N, &alpha, x, &incx, Y, &incy, A, &LDA);
+  }
+  void gerc(int M, int N, std::complex<double> alpha, const std::complex<double> *x, int incx, const std::complex<double> *Y, int incy,
+           std::complex<double> *A, int LDA) {
+    F77_zgerc(&M, &N, blacplx(&alpha), blacplx(x), &incx, blacplx(Y), &incy, blacplx(A), &LDA);
+  }
 
   void scal(int M, double alpha, double *x, int incx) { F77_dscal(&M, &alpha, x, &incx); }
   void scal(int M, dcomplex alpha, dcomplex *x, int incx) { F77_zscal(&M, blacplx(&alpha), blacplx(x), &incx); }
