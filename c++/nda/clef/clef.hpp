@@ -316,12 +316,12 @@ namespace nda::clef {
   template <typename T, typename... Pairs>
   struct evaluator {
     static constexpr bool is_lazy = is_any_lazy<T>;
-    FORCEINLINE T const &operator()(T const &k, Pairs const &...) const { return k; }
+    FORCEINLINE T const &operator()(T const &k, Pairs &...) const { return k; }
   };
 
   // The general eval function for expressions : declaration only
   template <typename T, typename... Pairs>
-  decltype(auto) eval(T const &ex, Pairs const &...pairs);
+  decltype(auto) eval(T const &ex, Pairs &&...pairs);
 
 #if 0
   // placeholder
@@ -329,7 +329,7 @@ namespace nda::clef {
   struct evaluator<placeholder<N>, pair<i, T>, Pairs...> {
     using eval_t                  = evaluator<placeholder<N>, Pairs...>;
     static constexpr bool is_lazy = eval_t::is_lazy;
-    FORCEINLINE decltype(auto) operator()(placeholder<N>, pair<i, T> const &, Pairs const &... pairs) const {
+    FORCEINLINE decltype(auto) operator()(placeholder<N>, pair<i, T> const &, Pairs &... pairs) const {
       return eval_t()(placeholder<N>(), pairs...);
     }
   };
@@ -337,7 +337,7 @@ namespace nda::clef {
   template <int N, typename T, typename... Pairs>
   struct evaluator<placeholder<N>, pair<N, T>, Pairs...> {
     static constexpr bool is_lazy = false;
-    FORCEINLINE T operator()(placeholder<N>, pair<N, T> const &p, Pairs const &...) const { return p.rhs; }
+    FORCEINLINE T operator()(placeholder<N>, pair<N, T> const &p, Pairs &...) const { return p.rhs; }
   };
 
 #else
@@ -354,10 +354,14 @@ namespace nda::clef {
     public:
     static constexpr bool is_lazy = (N_position == -1);
 
-    FORCEINLINE decltype(auto) operator()(placeholder<N>, pair<Is, T> const &...pairs) const {
+    FORCEINLINE decltype(auto) operator()(placeholder<N>, pair<Is, T> &...pairs) const {
       if constexpr (not is_lazy) { // N is one of the Is
-        auto const& res = std::get<N_position>(std::tie(pairs...)).rhs;
-        return res;
+        auto &pair_N = std::get<N_position>(std::tie(pairs...));
+        if constexpr (std::is_lvalue_reference_v<decltype(pair_N.rhs)>) {
+          return pair_N.rhs;
+        } else {
+          return std::move(pair_N.rhs);
+        }
       } else { // N is not one of the Is
         return placeholder<N>{};
       }
@@ -391,22 +395,22 @@ namespace nda::clef {
     static constexpr bool is_lazy = (evaluator<Childs, Pairs...>::is_lazy or ...);
 
     template <size_t... Is>
-    [[nodiscard]] FORCEINLINE decltype(auto) eval_impl(std::index_sequence<Is...>, expr<Tag, Childs...> const &ex, Pairs const &...pairs) const {
+    [[nodiscard]] FORCEINLINE decltype(auto) eval_impl(std::index_sequence<Is...>, expr<Tag, Childs...> const &ex, Pairs &...pairs) const {
       //  if constexpr(is_lazy)
       // return {Tag(), eval(std::get<Is>(ex.childs), pairs...)...};
 
       return op_dispatch<Tag>(std::integral_constant<bool, is_lazy>{}, eval(std::get<Is>(ex.childs), pairs...)...);
     }
 
-    [[nodiscard]] FORCEINLINE decltype(auto) operator()(expr<Tag, Childs...> const &ex, Pairs const &...pairs) const {
+    [[nodiscard]] FORCEINLINE decltype(auto) operator()(expr<Tag, Childs...> const &ex, Pairs &...pairs) const {
       return eval_impl(std::make_index_sequence<sizeof...(Childs)>(), ex, pairs...);
     }
   };
 
   // The general eval function for expressions
   template <typename T, typename... Pairs>
-  FORCEINLINE decltype(auto) eval(T const &ex, Pairs const &...pairs) {
-    return evaluator<T, Pairs...>()(ex, pairs...);
+  FORCEINLINE decltype(auto) eval(T const &ex, Pairs &&...pairs) {
+    return evaluator<T, std::remove_reference_t<Pairs>...>()(ex, pairs...);
   }
 
   /* ---------------------------------------------------------------------------------------------------
@@ -455,7 +459,7 @@ namespace nda::clef {
 
     template <typename... Args>
     FORCEINLINE decltype(auto) operator()(Args &&...args) const {
-      return evaluator<Expr, pair<Is, Args>...>()(ex, pair<Is, Args>{std::forward<Args>(args)}...);
+      return eval(ex, pair<Is, Args>{std::forward<Args>(args)}...);
     }
   };
 
@@ -497,7 +501,7 @@ namespace nda::clef {
   struct evaluator<make_fun_impl<Expr, Is...>, Pairs...> {
     using e_t                     = evaluator<Expr, Pairs...>;
     static constexpr bool is_lazy = (ph_set<make_fun_impl<Expr, Is...>>::value != ph_set<Pairs...>::value);
-    FORCEINLINE decltype(auto) operator()(make_fun_impl<Expr, Is...> const &f, Pairs const &...pairs) const {
+    FORCEINLINE decltype(auto) operator()(make_fun_impl<Expr, Is...> const &f, Pairs &...pairs) const {
       return make_function(e_t()(f.ex, pairs...), placeholder<Is>()...);
     }
   };
