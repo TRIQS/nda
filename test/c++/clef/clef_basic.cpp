@@ -47,9 +47,9 @@ TEST(clef, eval) {
 
 TEST(clef, makefunction) {
 
-  auto expr  = x_ + 2 * y_;
-  auto myf   = make_function(expr, x_, y_);
-  auto myf_r = make_function(expr, y_, x_);
+  auto lexpr = x_ + 2 * y_;
+  auto myf   = make_function(lexpr, x_, y_);
+  auto myf_r = make_function(lexpr, y_, x_);
 
   EXPECT_EQ(myf(2, 5), 12);
   EXPECT_EQ(myf(5, 2), 9);
@@ -61,18 +61,43 @@ TEST(clef, makefunction) {
 
 TEST(clef, subscript) {
 
-  auto expr = x_[y_];
+  auto lexpr = x_[y_];
   for (int i = 0; i < 10; ++i) {
-    auto res = nda::clef::eval(expr, x_ = std::array{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, y_ = i);
+    auto res = nda::clef::eval(lexpr, x_ = std::array{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, y_ = i);
     EXPECT_EQ(res, i);
   }
 }
 
 // -----------------------
 
+struct foo {
+  foo(int x = 100) : x(x) {}
+  foo(foo const &f) = delete; // Do not allow copies
+  foo(foo &&f)      = default;
+  int operator+(int y) const { return x + y; }
+  int x;
+};
+
+TEST(clef, CopyCheck) {
+  nda::clef::placeholder<0> i;
+  nda::clef::placeholder<1> j;
+
+  // One-shot
+  auto e1 = i + j;
+  auto r1 = nda::clef::eval(e1, i = foo(2), j = 10);
+  EXPECT_EQ(r1, 12);
+
+  // Partial Eval
+  auto e2 = nda::clef::eval(e1, i = foo(3));
+  auto r2 = nda::clef::eval(e2, j = 2);
+  EXPECT_EQ(r2, 5);
+}
+
+// -----------------------
+
 TEST(clef, makefunctionparametric) {
-  auto expr = 2 * x_ + 1;
-  auto r    = make_function(expr, x_);
+  auto lexpr = 2 * x_ + 1;
+  auto r     = make_function(lexpr, x_);
   EXPECT_EQ(r(3), 7);
 
   EXPECT_EQ((eval(make_function(x_ + 2 * y_, x_), y_ = 2)(3)), 7);
