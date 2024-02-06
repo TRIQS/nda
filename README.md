@@ -1,6 +1,6 @@
 [![build](https://github.com/TRIQS/nda/workflows/build/badge.svg?branch=unstable)](https://github.com/TRIQS/nda/actions?query=workflow%3Abuild)
 
-# nda - A skeleton for a TRIQS application
+# nda - A multi-dimensional array library in C++
 
 nda is a C++ library providing an efficient and flexible multi-dimensional array class.
 It is an essential building-block of the TRIQS project. Some features include
