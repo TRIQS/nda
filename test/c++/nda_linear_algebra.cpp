@@ -327,6 +327,30 @@ TEST(Inverse, Small) { //NOLINT
 
 // ==============================================================
 
+TEST(Inverse, BroadcastInverse) { //NOLINT
+
+  for (auto N : {1, 2, 3, 4}) {
+
+    long dim = 100000;
+    nda::array<double, 3> W(dim, N, N);
+
+    for (int k = 0; k < dim; ++k) {
+        for (int i = 0; i < N; ++i)
+            for (int j = 0; j < N; ++j) W(k, i, j) = (i > j ? 0.5 + i + 2.5 * j : i * 0.8 - j - 0.5);
+      }
+
+    auto Wi = inverse(W);
+    auto Wii = inverse(Wi);
+    for ( int k = 0; k < dim; ++k) {
+        EXPECT_NEAR(determinant(make_matrix_view(Wi(k, range(), range()))), 1.0/determinant(make_matrix_view(W(k, range(), range()))), 1.e-12);
+        EXPECT_ARRAY_NEAR(make_matrix_view(W(k,range(),range())) * make_matrix_view(Wi(k, range(), range())), nda::eye<double>(N), 1.e-13);
+        EXPECT_ARRAY_NEAR(make_matrix_view(Wii(k,range(),range())), make_matrix_view(W(k, range(), range())), 1.e-12);
+    }
+  }
+}
+
+// ==============================================================
+
 TEST(Matvecmul, Promotion) { //NOLINT
 
   matrix<int> Ai   = {{1, 2}, {3, 4}};
