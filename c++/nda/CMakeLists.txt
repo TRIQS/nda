@@ -28,7 +28,7 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION ${CMAKE_INSTALL_INCLUD
 
 # Configure and install version file
 configure_file(version.hpp.in version.hpp @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/version.hpp DESTINATION include/${PROJECT_NAME})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/version.hpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
 
 # ========= Additional Depdencies ==========
 
@@ -102,9 +102,11 @@ endif()
 include(${PROJECT_SOURCE_DIR}/share/cmake/extract_flags.cmake)
 extract_flags(nda_c)
 
-# Generate and install compiler wrapper
-configure_file(nda++.in nda++ @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/nda++ PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE DESTINATION bin)
+# Generate and install python-based compiler wrapper
+if(PythonSupport)
+  configure_file(nda++.in nda++ @ONLY)
+  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/nda++ PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE DESTINATION ${CMAKE_INSTALL_BINDIR})
+endif()
 
 # ========= Static Analyzer Checks ==========
 
