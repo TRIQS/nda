@@ -226,31 +226,24 @@ namespace nda {
 
     constexpr int size_of_slice = sizeof...(IRs);
     static_assert(size_of_slice > 0, "Invalid empty slice provided in h5_write call");
-    static_assert(not std::is_same_v<typename A::value_type, std::string>, "Slicing not supported in h5_write for array of string");
+    static_assert(is_scalar_v<typename A::value_type>, "Slicing in h5_write is only supported for scalar types");
+    static constexpr bool is_complex = is_complex_v<typename A::value_type>;
 
-    if constexpr (is_scalar_v<typename A::value_type>) {
+    // Dataset must already exist for the sliced h5_write
+    auto lt = h5::array_interface::get_h5_lengths_type(g, name);
+    if (is_complex != lt.has_complex_attribute)
+      NDA_RUNTIME_ERROR << "Error in sliced h5_write. Existing dataset and array must both be either complex or real";
+    auto const [sl, sh] = hyperslab_and_shape_from_slice<A::rank>(slice, lt.lengths, is_complex);
+    if (sh != a.shape())
+      NDA_RUNTIME_ERROR << "Error in sliced h5_write. Shape of slice and Array shape incompatible"
+                        << "\n shape of slice : " << sh << "\n array  : " << a.shape();
 
-      static constexpr bool is_complex = is_complex_v<typename A::value_type>;
+    auto rank_in_file = lt.rank() - is_complex;
+    h5::array_interface::h5_array_view v{h5::hdf5_type<get_value_t<A>>(), (void *)(a.data()), rank_in_file, is_complex};
+    v.slab.count = sl.count;
+    v.L_tot      = sl.count;
 
-      // Dataset must already exist for the sliced h5_write
-      auto lt = h5::array_interface::get_h5_lengths_type(g, name);
-      if (is_complex != lt.has_complex_attribute)
-        NDA_RUNTIME_ERROR << "Error in sliced h5_write. Existing dataset and array must both be either complex or real";
-      auto const [sl, sh] = hyperslab_and_shape_from_slice<A::rank>(slice, lt.lengths, is_complex);
-      if (sh != a.shape())
-        NDA_RUNTIME_ERROR << "Error in sliced h5_write. Shape of slice and Array shape incompatible"
-                          << "\n shape of slice : " << sh << "\n array  : " << a.shape();
-
-      auto rank_in_file = lt.rank() - is_complex;
-      h5::array_interface::h5_array_view v{h5::hdf5_type<get_value_t<A>>(), (void *)(a.data()), rank_in_file, is_complex};
-      v.slab.count = sl.count;
-      v.L_tot      = sl.count;
-
-      h5::array_interface::write_slice(g, name, v, lt, sl);
-
-    } else { // generic unknown type to hdf5
-      static_assert(false, "Slicing not supported in generic h5_write");
-    }
+    h5::array_interface::write_slice(g, name, v, lt, sl);
   }
 
   template <MemoryArray A, typename... IRs>
