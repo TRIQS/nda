@@ -24,11 +24,11 @@ target_compile_definitions(${PROJECT_NAME}_c PUBLIC
 
 # Install library and headers
 install(TARGETS ${PROJECT_NAME}_c EXPORT ${PROJECT_NAME}-targets DESTINATION ${CMAKE_INSTALL_LIBDIR})
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} FILES_MATCHING PATTERN "*.hpp" PATTERN "*.hxx" PATTERN "*.h")
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING PATTERN "*.hpp" PATTERN "*.hxx" PATTERN "*.h")
 
 # Configure and install version file
 configure_file(version.hpp.in version.hpp @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/version.hpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/version.hpp DESTINATION include/${PROJECT_NAME})
 
 # ========= Additional Depdencies ==========
 
@@ -105,7 +105,7 @@ extract_flags(nda_c)
 # Generate and install python-based compiler wrapper
 if(PythonSupport)
   configure_file(nda++.in nda++ @ONLY)
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/nda++ PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE DESTINATION ${CMAKE_INSTALL_BINDIR})
+  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/nda++ PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE DESTINATION bin)
 endif()
 
 # ========= Static Analyzer Checks ==========
