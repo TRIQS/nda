@@ -34,6 +34,14 @@ namespace nda::lapack::f77 {
   void gesvd(char JOBU, char JOBVT, int M, int N, std::complex<double> *A, int LDA, double *S, std::complex<double> *U, int LDU,
              std::complex<double> *VT, int LDVT, std::complex<double> *WORK, int LWORK, double *RWORK, int &INFO);
 
+  void geqp3(int M, int N, double *A, int LDA, int *JPVT, double *TAU, double *WORK, int LWORK, double *RWORK, int &INFO);
+  void geqp3(int M, int N, std::complex<double> *A, int LDA, int *JPVT, std::complex<double> *TAU, std::complex<double> *WORK, int LWORK,
+             double *RWORK, int &INFO);
+
+  void orgqr(int M, int N, int K, double *A, int LDA, double *TAU, double *WORK, int LWORK, int &INFO);
+
+  void ungqr(int M, int N, int K, std::complex<double> *A, int LDA, std::complex<double> *TAU, std::complex<double> *WORK, int LWORK, int &INFO);
+
   void getrf(int M, int N, double *A, int LDA, int *ipiv, int &info);
   void getrf(int M, int N, std::complex<double> *A, int LDA, int *ipiv, int &info);
 

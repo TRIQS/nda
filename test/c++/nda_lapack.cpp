@@ -140,11 +140,52 @@ void test_gesvd() { //NOLINT
 TEST(lapack, gesvd) { test_gesvd<double>(); }    //NOLINT
 TEST(lapack, zgesvd) { test_gesvd<dcomplex>(); } //NOLINT
 
+// ==================================== geqp3 & orgqr/ungqr ====================================
+
+template <typename value_t, bool wide = false>
+void test_geqp3() { //NOLINT
+  using matrix_t = matrix<value_t, F_layout>;
+
+  auto A = matrix_t{{{1, 1, 1}, {3, 2, 4}, {5, 3, 2}, {2, 4, 5}, {4, 5, 3}}};
+  if (wide) A = matrix_t{transpose(A)};
+
+  auto [M, N] = A.shape();
+
+  auto jpvt = nda::zeros<int>(N);
+  auto tau  = nda::vector<value_t>(std::min(M, N));
+
+  auto Q = matrix_t{A};
+  lapack::geqp3(Q, jpvt, tau);
+
+  // Compute A*P by permuting columns of A
+  auto AP = matrix_t{A};
+  for (int j = 0; j < N; ++j) { AP(_, j) = A(_, jpvt(j) - 1); }
+
+  // Extract upper triangular matrix R
+  auto R = nda::matrix<value_t, F_layout>::zeros(std::min(M, N), N);
+  for (int i = 0; i < std::min(M, N); ++i) {
+    for (int j = i; j < N; ++j) { R(i, j) = Q(i, j); }
+  }
+
+  // Extract matrix Q with orthonormal columns
+  if constexpr (std::is_same_v<value_t, double>) {
+    lapack::orgqr(Q, tau);
+  } else {
+    lapack::ungqr(Q, tau);
+  }
+
+  EXPECT_ARRAY_NEAR(AP, Q(_, range(std::min(M, N))) * R, 1e-14);
+}
+TEST(lapack, geqp3_tall) { test_geqp3<double>(); }          //NOLINT
+TEST(lapack, zgeqp3_tall) { test_geqp3<dcomplex>(); }       //NOLINT
+TEST(lapack, geqp3_wide) { test_geqp3<double, true>(); }    //NOLINT
+TEST(lapack, zgeqp3_wide) { test_geqp3<dcomplex, true>(); } //NOLINT
+
 // =================================== gelss =======================================
 
 template <typename value_t>
 void test_gelss() {
-  // Cf. http://www.netlib.org/lapack/explore-html/d3/d77/example___d_g_e_l_s__colmajor_8c_source.html
+  // Cf. https://www.netlib.org/lapack/lapack-3.9.0/LAPACKE/example/example_DGELS_colmajor.c
   auto A    = matrix<value_t>{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}};
   auto B    = matrix<value_t>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
   auto Bvec = vector<value_t>{-10, 12, 14, 16, 18}; // For testing vector right hand side
