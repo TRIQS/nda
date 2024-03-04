@@ -102,7 +102,7 @@ jobs:
         CXX: ${{ matrix.cxx }}
         LIBRARY_PATH: /usr/local/opt/llvm/lib
       run: |
-        mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/install
+        mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/install -DPythonSupport=ON
         make -j2 || make -j1 VERBOSE=1
 
     - name: Test nda
