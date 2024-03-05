@@ -25,7 +25,7 @@ endif()
 project(nda VERSION 1.2.0 LANGUAGES C CXX)
 get_directory_property(IS_SUBPROJECT PARENT_DIRECTORY)
 
-message(STATUS "-------- app4triqs version and git hash detection -------------")
+message(STATUS "-------- nda version and git hash detection -------------")
 find_package(Git)
 execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse HEAD
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
