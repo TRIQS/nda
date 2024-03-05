@@ -25,12 +25,17 @@ endif()
 project(nda VERSION 1.2.0 LANGUAGES C CXX)
 get_directory_property(IS_SUBPROJECT PARENT_DIRECTORY)
 
-# Get the git hash & print status
-execute_process(COMMAND git rev-parse HEAD WORKING_DIRECTORY ${PROJECT_SOURCE_DIR} OUTPUT_VARIABLE PROJECT_GIT_HASH OUTPUT_STRIP_TRAILING_WHITESPACE)
+message(STATUS "-------- app4triqs version and git hash detection -------------")
+find_package(Git)
+execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse HEAD
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+  OUTPUT_VARIABLE PROJECT_GIT_HASH
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
 message(STATUS "${PROJECT_NAME} version : ${PROJECT_VERSION}")
 message(STATUS "${PROJECT_NAME} Git hash: ${PROJECT_GIT_HASH}")
 
-# Assert that Install directory is given and invalid.
+# Assert that install directory is provided and is absolute path.
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT OR (NOT IS_ABSOLUTE ${CMAKE_INSTALL_PREFIX}))
   message(FATAL_ERROR "No install prefix given (or invalid)")
 endif()
@@ -75,9 +80,6 @@ endif()
 # GPU support
 option(CudaSupport "Build with Cuda support" OFF)
 option(Use_Magma "Enable GEMM vBatch using Magma" OFF)
-
-# Build static libraries by default
-option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
 
 # ############
 # Global Compilation Settings
@@ -126,7 +128,7 @@ target_compile_options(${PROJECT_NAME}_warnings
 # FIXME For future cmake versions we should populate the
 # INTERFACE_LINK_DIRECTORIES of the triqs target
 # ---------------------------------
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" AND DEFINED ENV{LIBRARY_PATH})
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND DEFINED ENV{LIBRARY_PATH})
   string(REPLACE ":" ";" LINK_DIRS $ENV{LIBRARY_PATH})
   foreach(dir ${LINK_DIRS})
     string(APPEND CMAKE_SHARED_LINKER_FLAGS " -L${dir}")
@@ -135,10 +137,12 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" AND DEFINED ENV{LIBRARY_PATH})
   endforeach()
 endif()
 
+# Provide GNU Installation directories
+include(GNUInstallDirs)
+
 # #############
 # Build Project
 
-enable_testing()
 # Find / Build dependencies
 add_subdirectory(deps)
 
