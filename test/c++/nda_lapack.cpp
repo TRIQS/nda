@@ -159,7 +159,7 @@ void test_geqp3() { //NOLINT
 
   // Compute A*P by permuting columns of A
   auto AP = matrix_t{A};
-  for (int j = 0; j < N; ++j) { AP(_, j) = A(_, jpvt(j) - 1); }
+  for (int j = 0; j < N; ++j) { AP(_, j) = A(_, jpvt(j)); }
 
   // Extract upper triangular matrix R
   auto R = nda::matrix<value_t, F_layout>::zeros(std::min(M, N), N);
