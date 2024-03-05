@@ -80,6 +80,7 @@ namespace nda::lapack {
     // Allocate work buffer and perform actual library call
     nda::array<T, 1, C_layout, heap<mem::get_addr_space<A>>> work(bufferSize);
     lapack::f77::geqp3(m, n, a.data(), get_ld(a), jpvt.data(), tau.data(), work.data(), bufferSize, rwork.data(), info);
+    jpvt -= 1; // Shift to 0-based indexing
 
     if (info) NDA_RUNTIME_ERROR << "Error in geqp3 : info = " << info;
     return info;
