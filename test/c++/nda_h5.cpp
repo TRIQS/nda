@@ -12,507 +12,444 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Authors: Olivier Parcollet, Nils Wentzell
+// Authors: Thomas Hahn
 
-#include "./test_common.hpp"
-#include <h5/h5.hpp>
-#include <nda/h5.hpp>
+#include <gtest/gtest.h>
+
 #include <nda/clef/literals.hpp>
+#include <nda/gtest_tools.hpp>
+#include <nda/h5.hpp>
+#include <nda/nda.hpp>
+
+#include <h5/h5.hpp>
+#include <hdf5_hl.h>
 
 using namespace nda::clef::literals;
+using nda::ellipsis;
+using nda::range;
 
-template <typename T>
-void one_test(std::string name, T scalar) {
+// define HDF5 serializable type
+class foo {
+  int i{};
 
-  nda::array<T, 1> a(5), a_check;
-  nda::array<T, 2> b(2, 3), b_check;
-  nda::array<T, 3> c(2, 3, 4), c_check;
+  public:
+  // constructors
+  foo() = default;
+  foo(int i) : i(i) {}
 
-  a(i_) << scalar * (10 * i_);
-  b(i_, j_) << scalar * (10 * i_ + j_);
-  c(i_, j_, k_) << scalar * (i_ + 10 * j_ + 100 * k_);
+  // get hdf5_format tag
+  static std::string hdf5_format() { return "foo"; }
 
-  std::string filename = "ess_" + name + ".h5";
-  // WRITE the file
-  {
-    h5::file file(filename, 'w');
-    h5::group top(file);
-    auto G1 = top.create_group("G");
-
-    h5_write(top, "A", a);
-    h5_write(top, "B", b);
-    h5_write(top, "C", c);
-    h5_write(top, "scalar", scalar);
-
-    // add some attribute to A
-    auto id = top.open_dataset("A");
-    h5_write_attribute(id, "AttrOfA1", 12);
-    h5_write_attribute(id, "AttrOfA2", 8.9);
-
-    // in a subgroup
-    auto G = top.open_group("G");
-    h5_write(G, "A2", a);
+  // write to HDF5
+  friend void h5_write(h5::group g, const std::string &subgroup_name, const foo &f) {
+    auto sg = g.create_group(subgroup_name);
+    h5::write_hdf5_format(sg, f); // NOLINT (slicing is fine here)
+    h5::write(sg, "i", f.i);
   }
 
-  // READ the file
-  {
-    h5::file file(filename, 'r');
-    h5::group top(file);
+  // read from HDF5
+  friend void h5_read(h5::group g, const std::string &subgroup_name, foo &f) {
+    auto sg = g.open_group(subgroup_name);
+    h5::assert_hdf5_format(sg, f);
+    h5::read(sg, "i", f.i);
+  }
 
-    h5_read(top, "A", a_check);
-    EXPECT_EQ_ARRAY(a, a_check);
+  // stream operator
+  friend std::ostream &operator<<(std::ostream &os, const foo &f) {
+    os << f.i << "/n";
+    return os;
+  }
 
-    h5_read(top, "B", b_check);
-    EXPECT_EQ_ARRAY(b, b_check);
+  // equal-to operator
+  friend bool operator==(const foo &lhs, const foo &rhs) { return lhs.i == rhs.i; }
+};
 
-    h5_read(top, "C", c_check);
-    EXPECT_EQ_ARRAY(c, c_check);
+// check any type of 1d arrays and views
+template <nda::MemoryArray A>
+void check_1d_arrays_and_views(const A &a, h5::group group) {
+  auto size = a.size();
 
-    EXPECT_EQ(scalar, h5::h5_read<T>(top, "scalar"));
+  // write/read full array
+  h5_write(group, "a", a);
+  A a2;
+  h5_read(group, "a", a2);
+  EXPECT_EQ_ARRAY(a, a2);
 
-    auto d = a;
-    d()    = 0;
-    h5_read(top, "G/A2", d);
-    EXPECT_EQ_ARRAY(a, d);
+  // write/read full view
+  h5_write(group, "a(ellipsis{})", a(ellipsis{}));
+  A a3;
+  h5_read(group, "a(ellipsis{})", a3);
+  EXPECT_EQ_ARRAY(a, a3);
 
-    // read the attributes of A
-    auto id   = top.open_dataset("A");
-    int att1  = h5::h5_read_attribute<int>(id, "AttrOfA1");
-    auto att2 = h5::h5_read_attribute<double>(id, "AttrOfA2");
-    EXPECT_EQ(att1, 12);
-    EXPECT_EQ(att2, 8.9);
+  // write/read various views
+  auto half_size = size / 2;
+  h5_write(group, "a(range(half_size))", a(range(half_size)));
+  h5_write(group, "a(range(half_size, size))", a(range(half_size, size)));
+  A a4(size);
+  auto a4_view1 = a4(range(half_size));
+  h5_read(group, "a(range(half_size))", a4_view1);
+  auto a4_view2 = a4(range(half_size, size));
+  h5_read(group, "a(range(half_size, size))", a4_view2);
+  EXPECT_EQ_ARRAY(a, a4);
+
+  h5_write(group, "a(range(0, size, 2))", a(range(0, size, 2)));
+  h5_write(group, "a(range(1, size, 2))", a(range(1, size, 2)));
+  A a5(size);
+  auto a5_view1 = a5(range(0, size, 2));
+  h5_read(group, "a(range(0, size, 2))", a5_view1);
+  auto a5_view2 = a5(range(1, size, 2));
+  h5_read(group, "a(range(1, size, 2))", a5_view2);
+  EXPECT_EQ_ARRAY(a, a5);
+
+  // write/read a scalar view
+  h5_write(group, "a(half_size)", a(half_size));
+  typename A::value_type scalar;
+  h5_read(group, "a(half_size)", scalar);
+  EXPECT_EQ(a(half_size), scalar);
+
+  // write/read slices
+  if constexpr (nda::is_scalar_v<typename A::value_type>) {
+    auto g      = h5::group(group);
+    auto g2     = g.create_group("slices");
+    int ds_rank = 1;
+    h5::v_t h5_shape{static_cast<h5::hsize_t>(size), 2};
+    constexpr auto is_complex = nda::is_complex_v<typename A::value_type>;
+    if constexpr (is_complex) { ds_rank = 2; }
+
+    // write/read full slice
+    auto sp6 = H5Screate_simple(ds_rank, h5_shape.data(), nullptr);
+    auto ds6 = g2.create_dataset("ds6", h5::hdf5_type<nda::get_value_t<A>>(), sp6);
+    if (is_complex) h5::h5_write_attribute(ds6, "__complex__", "1");
+    h5_write(g2, "ds6", a, std::make_tuple(ellipsis{}));
+    A a6;
+    h5_read(g2, "ds6", a6, std::make_tuple(ellipsis{}));
+    EXPECT_EQ_ARRAY(a, a6);
+
+    // write/read every second element
+    auto sp7 = H5Screate_simple(ds_rank, h5_shape.data(), nullptr);
+    auto ds7 = g2.create_dataset("ds7", h5::hdf5_type<nda::get_value_t<A>>(), sp7);
+    if (is_complex) h5::h5_write_attribute(ds7, "__complex__", "1");
+    h5_write(g2, "ds7", a(range(0, size, 2)), std::make_tuple(range(0, size, 2)));
+    h5_write(g2, "ds7", a(range(1, size, 2)), std::make_tuple(range(1, size, 2)));
+    A a7(size);
+    auto a7_view1 = a7(range(0, size, 2));
+    h5_read(g2, "ds7", a7_view1, std::make_tuple(range(0, size, 2)));
+    auto a7_view2 = a7(range(1, size, 2));
+    h5_read(g2, "ds7", a7_view2, std::make_tuple(range(1, size, 2)));
+    EXPECT_EQ_ARRAY(a7, a);
   }
 }
 
-//------------------------------------
-TEST(Basic, Int) { //NOLINT
-  one_test<int>("int", 1);
-}
+// check 3d arrays and views of scalar and generic types
+template <nda::MemoryArray A>
+void check_3d_arrays_and_views(const A &a, h5::group group) {
+  auto shape = a.shape();
 
-TEST(Basic, Long) { //NOLINT
-  one_test<long>("long", 1);
-}
+  // write/read full array
+  h5_write(group, "a", a);
+  A a2;
+  h5_read(group, "a", a2);
+  EXPECT_EQ_ARRAY(a, a2);
 
-TEST(Basic, Double) { //NOLINT
-  one_test<double>("double", 1.5);
-}
+  // write/read full view
+  h5_write(group, "a(ellipsis{})", a(ellipsis{}));
+  A a3;
+  h5_read(group, "a(ellipsis{})", a3);
+  EXPECT_EQ_ARRAY(a, a3);
 
-TEST(Basic, Dcomplex) { //NOLINT
-  one_test<dcomplex>("dcomplex", (1.0 + 1.0i));
-}
-
-//------------------------------------
-
-TEST(Basic, GroupAttribute) { //NOLINT
-
-  {
-    h5::file file("ess_group_attr.h5", 'w');
-    auto g = h5::group(file).create_group("mygroup");
-    h5_write_attribute(g, "Scheme", "MYTAGTYPE");
+  // write/read various 2d views
+  A a4(shape);
+  for (int i = 0; i < shape[0]; ++i) {
+    auto name = std::string("a(") + std::to_string(i) + ", ellipsis{})";
+    h5_write(group, name, a(i, ellipsis{}));
+    auto a4_view = a4(i, ellipsis{});
+    h5_read(group, name, a4_view);
   }
-  {
-    h5::file file("ess_group_attr.h5", 'r');
-    h5::group top(file);
-    auto g = top.open_group("mygroup");
-    std::string s;
-    h5::h5_read_attribute(g, "Scheme", s);
-    EXPECT_EQ(s, std::string{"MYTAGTYPE"});
+  EXPECT_EQ_ARRAY(a, a4);
+
+  A a5(shape);
+  for (int i = 0; i < shape[1]; ++i) {
+    auto name = std::string("a(range::all, ") + std::to_string(i) + ", range::all)";
+    h5_write(group, name, a(range::all, i, range::all));
+    auto a5_view = a5(range::all, i, range::all);
+    h5_read(group, name, a5_view);
+  }
+  EXPECT_EQ_ARRAY(a, a5);
+
+  A a6(shape);
+  for (int i = 0; i < shape[2]; ++i) {
+    auto name = std::string("a(ellipsis{}, ") + std::to_string(i) + ")";
+    h5_write(group, name, a(ellipsis{}, i));
+    auto a6_view = a6(ellipsis{}, i);
+    h5_read(group, name, a6_view);
+  }
+  EXPECT_EQ_ARRAY(a, a6);
+
+  // write/read 1d, 2d and 3d views
+  h5_write(group, "a(0, range::all, 0)", a(0, range::all, 0));
+  h5_write(group, "a(range(1, shape[0]), range::all, 0)", a(range(1, shape[0]), range::all, 0));
+  h5_write(group, "a(range::all, range::all, range(1, shape[2]))", a(range::all, range::all, range(1, shape[2])));
+  A a7(shape);
+  auto a7_view1 = a7(0, range::all, 0);
+  h5_read(group, "a(0, range::all, 0)", a7_view1);
+  auto a7_view2 = a7(range(1, shape[0]), range::all, 0);
+  h5_read(group, "a(range(1, shape[0]), range::all, 0)", a7_view2);
+  auto a7_view3 = a7(range::all, range::all, range(1, shape[2]));
+  h5_read(group, "a(range::all, range::all, range(1, shape[2]))", a7_view3);
+  EXPECT_EQ_ARRAY(a, a7);
+
+  // write/read a scalar view
+  auto half_0 = shape[0] / 2;
+  auto half_1 = shape[1] / 2;
+  auto half_2 = shape[2] / 2;
+  h5_write(group, "a(half_0, half_1, half_2)", a(half_0, half_1, half_2));
+  typename A::value_type scalar;
+  h5_read(group, "a(half_0, half_1, half_2)", scalar);
+  EXPECT_EQ(a(half_0, half_1, half_2), scalar);
+
+  // write/read slices
+  if constexpr (nda::is_scalar_v<typename A::value_type>) {
+    auto g      = h5::group(group);
+    auto g2     = g.create_group("slices");
+    int ds_rank = 3;
+    h5::v_t h5_shape(4, 2);
+    for (int i = 0; i < 3; ++i) h5_shape[i] = shape[i];
+    constexpr auto is_complex = nda::is_complex_v<typename A::value_type>;
+    if constexpr (is_complex) ds_rank = 4;
+
+    // write/read full slice
+    auto sp8 = H5Screate_simple(ds_rank, h5_shape.data(), nullptr);
+    auto ds8 = g2.create_dataset("ds8", h5::hdf5_type<nda::get_value_t<A>>(), sp8);
+    if (is_complex) h5::h5_write_attribute(ds8, "__complex__", "1");
+    h5_write(g2, "ds8", a, std::make_tuple(ellipsis{}));
+    A a8;
+    h5_read(g2, "ds8", a8, std::make_tuple(ellipsis{}));
+    EXPECT_EQ_ARRAY(a, a8);
+
+    // write/read 1d, 2d and 3d slices
+    auto sp9 = H5Screate_simple(ds_rank, h5_shape.data(), nullptr);
+    auto ds9 = g2.create_dataset("ds9", h5::hdf5_type<nda::get_value_t<A>>(), sp9);
+    if (is_complex) h5::h5_write_attribute(ds9, "__complex__", "1");
+    h5_write(g2, "ds9", a(0, range::all, 0), std::make_tuple(0, range::all, 0));
+    h5_write(g2, "ds9", a(range(1, shape[0]), range::all, 0), std::make_tuple(range(1, shape[0]), range::all, 0));
+    h5_write(g2, "ds9", a(range::all, range::all, range(1, shape[2])), std::make_tuple(range::all, range::all, range(1, shape[2])));
+    A a9(shape);
+    auto a9_view1 = a9(0, range::all, 0);
+    h5_read(g2, "ds9", a9_view1, std::make_tuple(0, range::all, 0));
+    auto a9_view2 = a9(range(1, shape[0]), range::all, 0);
+    h5_read(g2, "ds9", a9_view2, std::make_tuple(range(1, shape[0]), range::all, 0));
+    auto a9_view3 = a9(range::all, range::all, range(1, shape[2]));
+    h5_read(g2, "ds9", a9_view3, std::make_tuple(range::all, range::all, range(1, shape[2])));
+    EXPECT_EQ_ARRAY(a, a9);
   }
 }
-//------------------------------------
 
-TEST(Basic, Empty) { //NOLINT
+TEST(NDA, H5StringArray) {
+  // write/read arrays/views of strings
+  h5::file file("string.h5", 'w');
 
+  // 1d array
+  nda::array<std::string, 1> a_1d(6);
+  for (int i = 0; i < 6; ++i) a_1d(i) = "string " + std::to_string(i);
+  check_1d_arrays_and_views(a_1d, file);
+
+  // 2d array
+  nda::array<std::string, 2> a_2d(2, 2);
+  int i = 0;
+  for (auto &str : a_2d) str = "string " + std::to_string(i++);
+
+  // write/read every row
+  h5_write(file, "a_2d(0, _)", a_2d(0, nda::range::all));
+  h5_write(file, "a_2d(1, _)", a_2d(1, nda::range::all));
+  nda::array<std::string, 2> b_2d(2, 2);
+  auto b_2d_view1 = b_2d(0, nda::range::all);
+  h5_read(file, "a_2d(0, _)", b_2d_view1);
+  EXPECT_EQ_ARRAY(a_2d(0, nda::range::all), b_2d(0, nda::range::all));
+  auto b_2d_view2 = b_2d(1, nda::range::all);
+  h5_read(file, "a_2d(1, _)", b_2d_view2);
+  EXPECT_EQ_ARRAY(a_2d, b_2d);
+
+  // write/read every column
+  h5_write(file, "a_2d(_, 0)", a_2d(nda::range::all, 0));
+  h5_write(file, "a_2d(_, 1)", a_2d(nda::range::all, 1));
+  nda::array<std::string, 2> c_2d(2, 2);
+  auto c_2d_view1 = c_2d(nda::range::all, 0);
+  h5_read(file, "a_2d(_, 0)", c_2d_view1);
+  EXPECT_EQ_ARRAY(a_2d(nda::range::all, 0), c_2d(nda::range::all, 0));
+  auto c_2d_view2 = c_2d(nda::range::all, 1);
+  h5_read(file, "a_2d(_, 1)", c_2d_view2);
+  EXPECT_EQ_ARRAY(a_2d, c_2d);
+}
+
+TEST(NDA, H5GenericArray) {
+  // write/read arrays/views of a generic type
+  h5::file file("generic_type.h5", 'w');
+  h5::group root(file);
+
+  // 1d array
+  auto g_1d = root.create_group("1d");
+  nda::array<foo, 1> a_1d(6);
+  int i_1d = 0;
+  for (auto &v : a_1d) v = foo(i_1d++);
+  check_1d_arrays_and_views(a_1d, g_1d);
+
+  // 3d array
+  auto g_3d = root.create_group("3d");
+  nda::array<foo, 3> a_3d(3, 4, 5);
+  int i_3d = 0;
+  for (auto &v : a_3d) v = foo(i_3d++);
+  check_3d_arrays_and_views(a_3d, g_3d);
+
+  // 3d array in Fortran layout
+  auto g_3d_f                              = root.create_group("3d_f");
+  nda::array<foo, 3, nda::F_layout> a_3d_f = a_3d;
+  check_3d_arrays_and_views(a_3d_f, g_3d_f);
+}
+
+TEST(NDA, H5IntegerArray) {
+  // write/read arrays/views of integers
+  h5::file file("integer.h5", 'w');
+  h5::group root(file);
+
+  // 1d array
+  auto g_1d = root.create_group("1d");
+  nda::array<int, 1> a_1d(6);
+  int i_1d = 0;
+  for (auto &v : a_1d) v = i_1d++;
+  check_1d_arrays_and_views(a_1d, g_1d);
+
+  // 3d array
+  auto g_3d = root.create_group("3d");
+  nda::array<int, 3> a_3d(3, 4, 5);
+  int i_3d = 0;
+  for (auto &v : a_3d) v = i_3d++;
+  check_3d_arrays_and_views(a_3d, g_3d);
+
+  // 3d array Fortran layout
+  auto g_3d_f                              = root.create_group("3d_f");
+  nda::array<int, 3, nda::F_layout> a_3d_f = a_3d;
+  check_3d_arrays_and_views(a_3d_f, g_3d_f);
+}
+
+TEST(NDA, H5ComplexArray) {
+  // write/read arrays/views of complex numbers
+  h5::file file("complex.h5", 'w');
+  h5::group root(file);
+
+  // 1d array
+  auto g_1d = root.create_group("1d");
+  nda::array<std::complex<double>, 1> a_1d(6);
+  int r_1d = 0;
+  int i_1d = 0;
+  for (auto &v : a_1d) v = r_1d++ + i_1d++ * 1.0i;
+  check_1d_arrays_and_views(a_1d, g_1d);
+
+  // 3d array
+  auto g_3d = root.create_group("3d");
+  nda::array<std::complex<double>, 3> a_3d(3, 4, 5);
+  int r_3d = 0;
+  int i_3d = 0;
+  for (auto &v : a_3d) v = r_3d++ + i_3d++ * 1.0i;
+  check_3d_arrays_and_views(a_3d, g_3d);
+
+  // 3d array Fortran layout
+  auto g_3d_f                                               = root.create_group("3d_f");
+  nda::array<std::complex<double>, 3, nda::F_layout> a_3d_f = a_3d;
+  check_3d_arrays_and_views(a_3d_f, g_3d_f);
+}
+
+TEST(NDA, H5EmptyArray) {
+  // write/read empty arrays
+  h5::file file("empty.h5", 'w');
+
+  // uninitialized array
   nda::array<long, 2> a(0, 10);
-  {
-    h5::file file("ess_empty.h5", 'w');
-    //h5::group top(file);
-    h5_write(file, "empty", a);
-  }
-  {
-    h5::file file("ess_empty.h5", 'r');
-    h5::group top(file);
-    nda::array<long, 2> empty(5, 5);
-    h5_read(top, "empty", empty);
-    EXPECT_EQ(empty.shape(), (nda::shape_t<2>{0, 10}));
-  }
+  h5_write(file, "a", a);
+  nda::array<long, 2> a_in(5, 5);
+  h5_read(file, "a", a_in);
+  EXPECT_EQ(a_in.shape(), a.shape());
 
+  // empty (default constructed) array
   nda::array<long, 2> b{};
-  {
-    h5::file file("ess_default.h5", 'w');
-    h5_write(file, "default", b);
-  }
-  {
-    h5::file file("ess_default.h5", 'r');
-    h5::group top(file);
-    nda::array<long, 2> empty(5, 5);
-    h5_read(top, "default", empty);
-    EXPECT_EQ(empty.shape(), (nda::shape_t<2>{0, 0}));
-  }
+  h5_write(file, "b", b);
+  nda::array<long, 2> b_in(5, 5);
+  h5_read(file, "b", b_in);
+  EXPECT_EQ(b_in.shape(), b.shape());
 }
 
-//------------------------------------
-
-TEST(Basic, String) { //NOLINT
-
-  {
-    h5::file file("ess_string.h5", 'w');
-    h5_write(file, "s", std::string("a nice chain"));
-    h5_write(file, "sempty", "");
-  }
-  {
-    h5::file file("ess_string.h5", 'r');
-    nda::array<double, 2> empty(5, 5);
-
-    std::string s2("----------------------------------");
-    h5_read(file, "s", s2);
-    EXPECT_EQ(s2, "a nice chain");
-
-    std::string s3; //empty
-    h5_read(file, "s", s3);
-    EXPECT_EQ(s3, "a nice chain");
-
-    std::string s4; //empty
-    h5_read(file, "sempty", s4);
-    EXPECT_EQ(s4, "");
-  }
-}
-
-//------------------------------------
-
-TEST(Array, H5) { //NOLINT
-
-  nda::array<long, 2> A(2, 3), A2;
-  nda::array<bool, 2> B(2, 3), B2;
-  nda::array<double, 2> D(2, 3), D2;
-  nda::array<dcomplex, 1> C(5), C2;
-  //dcomplex z(1, 2);
-
-  for (int i = 0; i < 5; ++i) C(i) = dcomplex(i, i);
-
-  A(i_, j_) << 10 * i_ + j_;
-  B(i_, j_) << (i_ < j_);
-  D(i_, j_) << A(i_, j_) / 10.0;
-
-  // WRITE the file
-  {
-    h5::file file("ess_gal.h5", 'w');
-    h5::group top(file);
-
-    h5_write(top, "A", A);
-    h5_write(top, "B", B);
-    h5_write(top, "D", D);
-    h5_write(top, "C", C);
-    h5::h5_write(top, "S", "");
-    h5_write(top, "A_slice", A(nda::range::all, nda::range(1, 3)));
-    h5_write(top, "empty", nda::array<double, 2>(0, 10));
-
-    // add some attribute to A
-    auto id = top.open_dataset("A");
-    h5_write_attribute(id, "Attr1OfA", 12);
-    h5_write_attribute(id, "Attr2OfA", 8.9);
-
-    // scalar
-    double x = 2.3;
-    h5_write(top, "x", x);
-
-    // dcomplex xx(2, 3);
-    // h5_write(top, "xx", xx);
-
-    h5_write(top, "s", std::string("a nice chain"));
-
-    top.create_group("G");
-    h5_write(top, "G/A", A);
-
-    auto G = top.open_group("G");
-    h5_write(G, "A2", A);
-  }
-
-  // READ the file
-  {
-    h5::file file("ess_gal.h5", 'r');
-    h5::group top(file);
-
-    h5_read(top, "A", A2);
-    EXPECT_EQ_ARRAY(A, A2);
-
-    h5_read(top, "B", B2);
-    EXPECT_EQ_ARRAY(B, B2);
-
-    // read the attributes of A
-    auto id   = top.open_dataset("A");
-    int att1  = h5::h5_read_attribute<int>(id, "Attr1OfA");
-    auto att2 = h5::h5_read_attribute<double>(id, "Attr2OfA");
-
-    EXPECT_EQ(att1, 12);
-    EXPECT_EQ(att2, 8.9);
-
-    h5_read(top, "D", D2);
-    EXPECT_ARRAY_NEAR(D, D2);
-
-    h5_read(top, "C", C2);
-    EXPECT_ARRAY_NEAR(C, C2);
-
-    nda::array<long, 2> a_sli;
-    h5_read(top, "A_slice", a_sli);
-    EXPECT_EQ_ARRAY(a_sli, A(nda::range::all, nda::range(1, 3)));
-
-    double xxx = 0;
-    h5_read(top, "x", xxx);
-    EXPECT_DOUBLE_EQ(xxx, 2.3);
-
-    std::string s2("----------------------------------");
-    h5_read(top, "s", s2);
-    EXPECT_EQ(s2, "a nice chain");
-  }
-}
-
-// ==============================================================
-
-TEST(Array, H5ArrLayout) { //NOLINT
-
-  nda::array<long, 2, F_layout> Af(2, 3);
-  Af(i_, j_) << 10 * i_ + j_;
+TEST(NDA, H5DoubleIntoComplexArray) {
+  // test reading double values into a complex array
+  nda::array<double, 2> a_d(2, 3);
+  a_d(i_, j_) << 10 * i_ + j_;
 
   // write to file
-  {
-    h5::file f("test_nda_layout.h5", 'w');
-    h5_write(f, "Af", Af);
-  }
+  h5::file file("double_into_complex.h5", 'w');
+  h5_write(file, "a_d", a_d);
 
-  // reread
-  nda::array<long, 2, F_layout> Bf{};
-  {
-    h5::file f("test_nda_layout.h5", 'r');
-    h5_read(f, "Af", Bf);
-  }
-
-  EXPECT_EQ(Af, Bf);
+  // read into complex array
+  nda::array<std::complex<double>, 2> a_c(2, 3);
+  h5_read(file, "a_d", a_c);
+  EXPECT_ARRAY_NEAR(a_c, a_d);
 }
 
-// ==============================================================
+TEST(NDA, H5BlockMatrix) {
+  // write/read an array of matrices
+  using mat_t = nda::matrix<double>;
+  nda::array<mat_t, 1> block_mat{mat_t{{1, 2}, {3, 4}}, mat_t{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}}}, block_mat_in;
 
-TEST(Vector, String) { //NOLINT
+  // write to file
+  h5::file file("block_matrix.h5", 'w');
+  h5_write(file, "block_mat", block_mat);
 
-  // vector of string
-  std::vector<std::string> V1, V2;
-  V1.emplace_back("abcd");
-  V1.emplace_back("de");
+  // read from file
+  h5_read(file, "block_mat", block_mat_in);
 
-  // writing
-  h5::file file("test_nda::array_string.h5", 'w');
-  h5::group top(file);
-
-  h5_write(top, "V", V1);
-
-  // rereading
-  h5_read(top, "V", V2);
-
-  //comparing
-  for (int i = 0; i < 2; ++i) { EXPECT_EQ(V1[i], V2[i]); }
+  EXPECT_EQ(block_mat.extent(0), block_mat_in.extent(0));
+  for (int i = 0; i < block_mat.extent(0); ++i) EXPECT_ARRAY_EQ(block_mat(i), block_mat_in(i));
 }
 
-// ==============================================================
-
-TEST(Array, H5ArrayString) { //NOLINT
-
-  // nda::array of string
-  nda::array<std::string, 1> A(2), B;
-  A(0) = "Nice String";
-  A(1) = "Unicode €☺";
-
-  // writing
-  h5::file file("test_nda::array_string.h5", 'w');
-  h5::group top(file);
-
-  h5_write(top, "A", A);
-
-  // rereading
-  h5_read(top, "A", B);
-
-  //comparing
-  for (int i = 0; i < 2; ++i) { EXPECT_EQ(A(i), B(i)); }
+TEST(NDA, H5ConstIssue) {
+  // write a const array
+  auto a                              = nda::zeros<double>(2, 2);
+  nda::array<double, 2> const a_const = a;
+  h5::file file("const_issue.h5", 'w');
+  h5::write(file, "a_const", a_const());
 }
 
-// ==============================================================
+TEST(NDA, H5SystematicViewsOf3dArray) {
+  // write/read various views of a 3d array
+  h5::file file("systematic_slices", 'w');
+  int n1 = 3, n2 = 5, n3 = 8;
+  int max_step = 3;
+  nda::array<long, 3> a(n1, n2, n3), a_in;
+  a(i_, j_, k_) << (i_ + 10 * j_ + 100 * k_);
 
-// -----------------------------------------------------
-// Testing the loading of nda::array of double into complex
-// -----------------------------------------------------
-TEST(Array, H5RealIntoComplex) { //NOLINT
+  // write to file
+  int count = 0;
+  for (int i = 0; i < n1; ++i)
+    for (int j = 0; j < n2; ++j)
+      for (int k = 0; k < n3; ++k)
+        for (int i2 = i + 1; i2 < n1; ++i2)
+          for (int j2 = j + 1; j2 < n2; ++j2)
+            for (int k2 = k + 1; k2 < n3; ++k2)
+              for (int si = 1; si <= max_step; ++si)
+                for (int sj = 1; sj <= max_step; ++sj)
+                  for (int sk = 1; sk <= max_step; ++sk) {
+                    h5_write(file, "slice" + std::to_string(count++), a(range(i, i2, si), range(j, j2, sj), range(k, k2, sk)));
+                  }
 
-  nda::array<double, 2> D(2, 3);
-  D(i_, j_) << 10 * i_ + j_;
-
-  // WRITE the file
-  {
-    h5::file file("ess_real_complex.h5", 'w');
-    h5::group top(file);
-    h5_write(top, "D", D);
-  }
-
-  nda::array<dcomplex, 2> C(2, 3);
-
-  // READ the file
-  {
-    C() = 89.0 + 9i; // put garbage in it
-    h5::file file("ess_real_complex.h5", 'r');
-    h5::group top(file);
-    h5_read(top, "D", C);
-    EXPECT_ARRAY_NEAR(C, D);
-  }
+  // read from file and compare
+  count = 0;
+  for (int i = 0; i < n1; ++i)
+    for (int j = 0; j < n2; ++j)
+      for (int k = 0; k < n3; ++k)
+        for (int i2 = i + 1; i2 < n1; ++i2)
+          for (int j2 = j + 1; j2 < n2; ++j2)
+            for (int k2 = k + 1; k2 < n3; ++k2)
+              for (int si = 1; si <= max_step; ++si)
+                for (int sj = 1; sj <= max_step; ++sj)
+                  for (int sk = 1; sk <= max_step; ++sk) {
+                    h5_read(file, "slice" + std::to_string(count++), a_in);
+                    EXPECT_EQ_ARRAY(a_in, a(range(i, i2, si), range(j, j2, sj), range(k, k2, sk)));
+                  }
 }
-
-// ==============================================================
-
-// -----------------------------------------------------
-// Testing h5 for an nda::array of matrix
-// -----------------------------------------------------
-
-TEST(BlockMatrixH5, S1) { //NOLINT
-
-  using mat_t = nda::array<double, 2>;
-  nda::array<mat_t, 1> W, V{mat_t{{1, 2}, {3, 4}}, mat_t{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}}};
-
-  {
-    h5::file file1("ess_non_pod.h5", 'w');
-    h5_write(file1, "block_mat", V);
-  }
-
-  {
-    h5::file file2("ess_non_pod.h5", 'r');
-    h5_read(file2, "block_mat", W);
-  }
-
-  EXPECT_EQ(V.extent(0), W.extent(0));
-  for (int i = 0; i < V.extent(0); ++i) EXPECT_ARRAY_NEAR(V(i), W(i));
-}
-
-// ==============================================================
-
-TEST(Array, ConstIssue) { //NOLINT
-  auto a = nda::zeros<double>(2, 2);
-
-  nda::array<double, 2> const a_c = a;
-  {
-    h5::file file1("const_issue.h5", 'w');
-    h5::write(file1, "a_c", a_c());
-  }
-}
-
-// not yet implemented
-// ==============================================================
-/*
-TEST(Array, H5ArrayString2) { //NOLINT
-
-
-  // nda::array of string
-  nda::array<std::string, 2> A(2, 2), B;
-  A(0, 0) = "Nice String";
-  A(1, 0) = "another";
-  A(1, 1) = "really";
-  A(0, 1) = "nice";
-
-  // writing
-  h5::file file("test_nda::array_string.h5", 'w');
-  h5::group top(file);
-
-  h5_write(top, "A", A);
-
-  // rereading
-  h5_read(top, "A", B);
-
-  //comparing
-  for (int i = 0; i < 2; ++i) { EXPECT_EQ(A, B); }
-}
-*/
-// ==============================================================
-/*
-
-   // DECIDE if we want to implement such promotion int -> double in h5 reading
-TEST(Array, Promotion) { //NOLINT
-
-
-  nda::array<long, 2> a(2, 3);
-  nda::array<double, 2> d;
-
-  for (int i = 0; i < 2; ++i)
-    for (int j = 0; j < 3; ++j) {
-      a(i, j) = 10 * i + j;
-    }
-
-  // WRITE the file
-  {
-    h5::file file("ess_prom.h5", 'w');
-    //h5::group top(file);
-    h5_write(file, "A", a);
-  }
-
-  // READ the file
-  {
-    h5::file file("ess_prom.h5", 'r');
-    h5::group top(file);
-
-    h5_read(top, "A", d);
-    EXPECT_ARRAY_NEAR(a, d);
-  }
-}
-
-TEST(Array, PromotionWrong1) { //NOLINT
-
-
-  nda::array<long, 2> a(2, 3);
-  nda::array<int, 2> d;
-
-  for (int i = 0; i < 2; ++i)
-    for (int j = 0; j < 3; ++j) {
-      a(i, j) = 10 * i + j;
-    }
-
-  // WRITE the file
-  {
-    h5::file file("ess_prom1.h5", 'w');
-    //h5::group top(file);
-    h5_write(file, "A", a);
-  }
-
-  // READ the file
-  {
-    h5::file file("ess_prom1.h5", 'r');
-    h5::group top(file);
-
-    h5_read(top, "A", d);
-    EXPECT_ARRAY_NEAR(a, d);
-  }
-}
-
-
-TEST(Array, PromotionWrong) { //NOLINT
-
-
-  nda::array<double, 2> a(2, 3);
-  nda::array<long, 2> d;
-
-  for (int i = 0; i < 2; ++i)
-    for (int j = 0; j < 3; ++j) {
-      a(i, j) = 2.8* i + j;
-    }
-
-  // WRITE the file
-  {
-    h5::file file("ess_prom2.h5", 'w');
-    //h5::group top(file);
-    h5_write(file, "A", a);
-  }
-
-  // READ the file
-  {
-    h5::file file("ess_prom2.h5", 'r');
-    h5::group top(file);
-
-    h5_read(top, "A", d);
-    EXPECT_ARRAY_NEAR(a, d);
-  }
-}
-*/
-// ==============================================================
