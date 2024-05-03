@@ -14,32 +14,58 @@
 //
 // Authors: Olivier Parcollet, Nils Wentzell
 
+/**
+ * @file
+ * @brief Provides utilities to work with permutations and to compactly encode/decode them.
+ */
+
 #pragma once
+
+#include "../macros.hpp"
 #include "../stdutil/array.hpp"
 #include "../stdutil/concepts.hpp"
-#include "../macros.hpp"
+
+#include <algorithm>
+#include <array>
+#include <concepts>
+#include <cstddef>
+#include <cstdint>
 
 namespace nda {
 
-  // Compact representation of std::array<int,N> for N< 16
-  // indeed, we can not yet (C++20 ?) template array, array_view on a std::array ...
-  // when the elements are also <16/
-  // As a bit pattern.
-  // since N <= 16, we use 4 bits per N, for a maximum of 16* 4 = 64 bits
-  // the remaining bits are 0.
-  // the two following constexpr functions encode and decode it from the binary representation
-  // to std::array<int, Rank>
-  template <size_t Rank>
-  constexpr std::array<int, Rank> decode(uint64_t binary_representation) {
-    auto result = stdutil::make_initialized_array<Rank>(0);
-    for (int i = 0; i < int(Rank); ++i) result[i] = (binary_representation >> (4 * i)) & 0b1111ull;
+  /**
+   * @brief Decode a `uint64_t` into a `std::array<int, N>`.
+   *
+   * @details The 64-bit code is split into 4-bit chunks, and each chunk is then decoded into a
+   * value in the range [0, 15]. The 4 least significant bits are decoded into first element, the next
+   * 4-bits into second element, and so on.
+   *
+   * @tparam N Size of the array.
+   * @param binary_representation 64-bit code.
+   * @return `std::array<int, N>` containing values in the range [0, 15].
+   */
+  template <size_t N>
+  constexpr std::array<int, N> decode(uint64_t binary_representation) {
+    auto result = stdutil::make_initialized_array<N>(0);
+    for (int i = 0; i < N; ++i) result[i] = (binary_representation >> (4 * i)) & 0b1111ull;
     return result;
   }
 
-  template <size_t Rank>
-  constexpr uint64_t encode(std::array<int, Rank> const &a) {
+  /**
+   * @brief Encode a `std::array<int, N>` in a `uint64_t`.
+   *
+   * @details The values in the array are assumed to be in the range [0, 15]. Then each value
+   * is encoded in 4 bits, i.e. the first element is encoded in the 4 least significant bits,
+   * the second element in the next 4 bits, and so on.
+   *
+   * @tparam N Size of the array.
+   * @param a Array to encode.
+   * @return 64-bit code.
+   */
+  template <size_t N>
+  constexpr uint64_t encode(std::array<int, N> const &a) {
     uint64_t result = 0;
-    for (int i = 0; i < int(Rank); ++i) result += (a[i] << (4 * i));
+    for (int i = 0; i < N; ++i) result += (static_cast<uint64_t>(a[i]) << (4 * i));
     return result;
   }
 
@@ -47,83 +73,160 @@ namespace nda {
 
 namespace nda::permutations {
 
-  template <std::integral Int, size_t Rank>
-  constexpr bool is_valid(std::array<Int, Rank> const &permutation) {
-    auto idx_counts = stdutil::make_initialized_array<Rank>(0);
-    for (auto idx : permutation) {
-      if (idx_counts[idx] > 0) return false;
+  /**
+   * @brief Check if a given array is a valid permutation.
+   *
+   * @details A valid permutation is an array of integers with values in the range [0, N - 1] where
+   * each value appears exactly once.
+   *
+   * @tparam Int Integral type.
+   * @tparam N Degree of the permutation.
+   * @param p Array to check.
+   * @return True if the array is a valid permutation, false otherwise.
+   */
+  template <std::integral Int, size_t N>
+  constexpr bool is_valid(std::array<Int, N> const &p) {
+    auto idx_counts = stdutil::make_initialized_array<N>(0);
+    for (auto idx : p) {
+      if (idx < 0 or idx > N - 1 or idx_counts[idx] > 0) return false;
       idx_counts[idx] = 1;
     }
     return true;
   }
 
-  /// Compose p1 p2
-  template <std::integral Int, size_t Rank>
-  constexpr std::array<Int, Rank> compose(std::array<Int, Rank> const &p1, std::array<Int, Rank> const &p2) {
+  /**
+   * @brief Composition of two permutations.
+   *
+   * @details The second argument is applied first. Composition is not commutative in general, i.e.
+   * `compose(p1, p2) != compose(p2, p1)`.
+   *
+   * @tparam Int Integral type.
+   * @tparam N Degree of the permutations.
+   * @param p1 Permutation to apply second.
+   * @param p2 Permutation to apply first.
+   * @return Composition of the two permutations.
+   */
+  template <std::integral Int, size_t N>
+  constexpr std::array<Int, N> compose(std::array<Int, N> const &p1, std::array<Int, N> const &p2) {
     EXPECTS(is_valid(p1));
     EXPECTS(is_valid(p2));
-    auto result = stdutil::make_initialized_array<Rank>(0);
-    for (int u = 0; u < Rank; ++u) { result[u] = p1[p2[u]]; }
+    auto result = stdutil::make_initialized_array<N>(0);
+    for (int u = 0; u < N; ++u) result[u] = p1[p2[u]];
     return result;
   }
 
-  template <std::integral Int, size_t Rank>
-  constexpr std::array<Int, Rank> inverse(std::array<Int, Rank> const &permutation) {
-    EXPECTS(is_valid(permutation));
-    auto result = stdutil::make_initialized_array<Rank>(0);
-    for (int u = 0; u < Rank; ++u) { result[permutation[u]] = u; }
+  /**
+   * @brief Inverse of a permutation.
+   *
+   * @details The inverse, `inv`, of a permutation `p` is defined such that `compose(p, inv) == compose(int, p) == identity`.
+   *
+   * @tparam Int Integral type.
+   * @tparam N Degree of the permutations.
+   * @param p Permutation to invert.
+   * @return Inverse of the permutation.
+   */
+  template <std::integral Int, size_t N>
+  constexpr std::array<Int, N> inverse(std::array<Int, N> const &p) {
+    EXPECTS(is_valid(p));
+    auto result = stdutil::make_initialized_array<N>(0);
+    for (int u = 0; u < N; ++u) result[p[u]] = u;
     return result;
   }
 
-  template <typename T, std::integral Int, size_t Rank>
-  constexpr std::array<T, Rank> apply_inverse(std::array<Int, Rank> const &permutation, std::array<T, Rank> const &a) {
-    EXPECTS(is_valid(permutation));
-    auto result = stdutil::make_initialized_array<Rank, T>(0);
-    for (int u = 0; u < Rank; ++u) { result[permutation[u]] = a[u]; }
+  /**
+   * @brief Apply the inverse of a permutation to an array.
+   *
+   * @tparam T Value type of the array.
+   * @tparam Int Integral type.
+   * @tparam N Size/Degree of the array/permutation.
+   * @param p Permutation to invert and apply.
+   * @param a Array to apply the inverse permutation to.
+   * @return Result of applying the inverse permutation to the array.
+   */
+  template <typename T, std::integral Int, size_t N>
+  constexpr std::array<T, N> apply_inverse(std::array<Int, N> const &p, std::array<T, N> const &a) {
+    EXPECTS(is_valid(p));
+    auto result = stdutil::make_initialized_array<N, T>(0);
+    for (int u = 0; u < N; ++u) result[p[u]] = a[u];
     return result;
   }
 
-  template <typename T, std::integral Int, size_t Rank>
-  constexpr std::array<T, Rank> apply(std::array<Int, Rank> const &permutation, std::array<T, Rank> const &a) {
-    EXPECTS(is_valid(permutation));
-    auto result = stdutil::make_initialized_array<Rank, T>(0);
-    for (int u = 0; u < Rank; ++u) { result[u] = a[permutation[u]]; }
+  /**
+   * @brief Apply a permutation to an array.
+   *
+   * @tparam T Value type of the array.
+   * @tparam Int Integral type.
+   * @tparam N Size/Degree of the array/permutation.
+   * @param p Permutation to apply.
+   * @param a Array to apply the permutation to.
+   * @return Result of applying the permutation to the array.
+   */
+  template <typename T, std::integral Int, size_t N>
+  constexpr std::array<T, N> apply(std::array<Int, N> const &p, std::array<T, N> const &a) {
+    EXPECTS(is_valid(p));
+    auto result = stdutil::make_initialized_array<N, T>(0);
+    for (int u = 0; u < N; ++u) result[u] = a[p[u]];
     return result;
   }
 
-  template <size_t Rank>
-  constexpr std::array<int, Rank> identity() {
-    auto result = stdutil::make_initialized_array<Rank>(0);
-    for (int i = 0; i < Rank; ++i) result[i] = i;
+  /**
+   * @brief Get identity permutation.
+   *
+   * @tparam N Degree of the permutation.
+   * @return Identity permutation of degree `N`.
+   */
+  template <size_t N>
+  constexpr std::array<int, N> identity() {
+    auto result = stdutil::make_initialized_array<N>(0);
+    for (int i = 0; i < N; ++i) result[i] = i;
     return result;
   }
 
-  template <size_t Rank>
-  constexpr std::array<int, Rank> reverse_identity() {
-    auto result = stdutil::make_initialized_array<Rank>(0);
-    for (int i = 0; i < Rank; ++i) result[i] = Rank - 1 - i;
+  /**
+   * @brief Get reverse identity permutation.
+   *
+   * @tparam N Degree of the permutation.
+   * @return Reverse of the identity permutation of degree `N`.
+   */
+  template <size_t N>
+  constexpr std::array<int, N> reverse_identity() {
+    auto result = stdutil::make_initialized_array<N>(0);
+    for (int i = 0; i < N; ++i) result[i] = N - 1 - i;
     return result;
   }
 
-  template <size_t Rank>
-  constexpr std::array<int, Rank> transposition(int i, int j) {
-    auto r = identity<Rank>();
+  /**
+   * @brief Get a single transposition.
+   *
+   * @tparam N Degree of the permutation.
+   * @param i First index to transpose.
+   * @param j Second index to transpose.
+   * @return Permutation corresponding to the transposition of `i` and `j`.
+   */
+  template <size_t N>
+  constexpr std::array<int, N> transposition(int i, int j) {
+    auto r = identity<N>();
     r[i]   = j;
     r[j]   = i;
     return r;
   }
 
-  // cyclic permutation, p times. Forward
-  // p = 1 :  0 1 2 3 ---->   3 0 1 2
-  // P[i] = (Rank + i - p) % Rank
-  // 4 + 0 -1 = 3, 4 + 1 -1 = 0, 4 +2 -1 = 1, etc...
-  // if pos < Rank, the cycle is partial
-  // cycle<5> (1, 3) --> 2 0 1 3 4
-  // pos == 0 --> identity
-  template <size_t Rank>
-  constexpr std::array<int, Rank> cycle(int p, int pos = Rank) {
-    auto result = stdutil::make_initialized_array<Rank>(0);
-    for (int i = 0; i < Rank; ++i) result[i] = (i < pos ? (pos + i - p) % pos : i);
+  /**
+   * @brief Perform a forward (partial) cyclic permutation of the identity 'p' times.
+   *
+   * @details The permutation is partial if `pos >= 0 && pos < N`. In this case, only the first
+   * `pos` elements are permuted, while the rest is left unchanged w.r.t the identity.
+   *
+   * @tparam N Degree of the permutation.
+   * @param p Number of times to perform the cyclic permutation.
+   * @param pos Number of elements to permute. If `pos < N`, the permutation is partial.
+   * @return Result of the cyclic permutation.
+   */
+  template <size_t N>
+  constexpr std::array<int, N> cycle(int p, int pos = N) {
+    auto result = stdutil::make_initialized_array<N>(0);
+    pos         = std::clamp(pos, 0, static_cast<int>(N));
+    for (int i = 0; i < N; ++i) result[i] = (i < pos ? (pos + i - p) % pos : i);
     return result;
   }
 
