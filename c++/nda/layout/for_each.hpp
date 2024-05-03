@@ -16,95 +16,112 @@
 //
 // Authors: Olivier Parcollet, Nils Wentzell
 
+/**
+ * @file
+ * @brief Provides for_each functions for multi-dimensional arrays.
+ */
+
 #pragma once
-#include "permutation.hpp"
+
+#include "./permutation.hpp"
+
+#include <array>
+#include <concepts>
+#include <cstdint>
 
 namespace nda {
 
-  // ----------------  for_each  -------------------------
-
-  /*  // C style*/
-  //template <int I, typename F, size_t R>
-  //FORCEINLINE void for_each_impl(std::array<long, R> idx_lengths, F &&f) {
-  //if constexpr (I == R)
-  //f();
-  //else {
-  //long imax = idx_lengths[I];
-  //for (int i = 0; i < imax; ++i) {
-  //for_each_impl<I + 1>(
-  //idx_lengths, [ i, f ](auto &&... x) __attribute__((always_inline)) { return f(i, x...); });
-  //}
-  //}
-  //}
-
-  /////
-  //template <typename F, size_t R>
-  //FORCEINLINE void for_each2(std::array<long, R> idx_lengths, F &&f) {
-  //for_each_impl<0>(idx_lengths, f);
-  /*}*/
-
   namespace details {
 
-    // return the i th index in Strider
+    // Get the i-th slowest moving dimension from a given encoded stride order.
     template <int R>
-    constexpr int index_from_stride_order(uint64_t StrideOrder, int i) {
-      if (StrideOrder == 0) return i;             // default C order
-      auto stride_order = decode<R>(StrideOrder); // FIXME C++20
-      return stride_order[i];
+    constexpr int index_from_stride_order(uint64_t stride_order, int i) {
+      if (stride_order == 0) return i;                 // default C-order
+      auto stride_order_arr = decode<R>(stride_order); // FIXME C++20
+      return stride_order_arr[i];
     }
 
-    // ----------------  get_extent  -------------------------
-
+    // Get the extent of an array along its i-th dimension.
     template <int I, int R, uint64_t StaticExtents, std::integral Int = long>
-    long get_extent(std::array<Int, R> const &l) {
-      if constexpr (StaticExtents == 0)
-        return l[I]; // quick exit, no computation of
-      else {
+    constexpr long get_extent(std::array<Int, R> const &shape) {
+      if constexpr (StaticExtents == 0) {
+        // dynamic extents
+        return shape[I];
+      } else {
+        // static extents
         constexpr auto static_extents = decode<R>(StaticExtents); // FIXME C++20
         if constexpr (static_extents[I] == 0)
-          return l[I];
+          return shape[I];
         else
           return static_extents[I];
       }
     }
 
-    // ----------------  for_each
-
+    // Apply a callable object recursively to all possible index values of a given shape.
     template <int I, uint64_t StaticExtents, uint64_t StrideOrder, typename F, size_t R, std::integral Int = long>
-    FORCEINLINE void for_each_static_impl(std::array<Int, R> const &idx_lengths, F &&f) {
-      if constexpr (I == R)
-        f();
-      else {
+    FORCEINLINE void for_each_static_impl(std::array<Int, R> const &shape, std::array<long, R> &idxs, F &f) {
+      if constexpr (I == R) {
+        // end of recursion
+        std::apply(f, idxs);
+      } else {
+        // get the dimension over which to iterate and its extent
         static constexpr int J = details::index_from_stride_order<R>(StrideOrder, I);
-        const long imax        = details::get_extent<J, R, StaticExtents>(idx_lengths);
+        const long imax        = details::get_extent<J, R, StaticExtents>(shape);
+
+        // loop over all indices of the current dimension
         for (long i = 0; i < imax; ++i) {
-          for_each_static_impl<I + 1, StaticExtents, StrideOrder>(
-             idx_lengths,
-             [ i, &f ](auto &&...x)
-// Great: clang and gcc want the lambda mutable and attribute in a different order !:
-#ifdef __clang__
-                __attribute__((always_inline)) mutable
-#else
-                mutable __attribute__((always_inline))
-#endif
-             { return f(i, x...); }); // mutable since f itself can be mutable !
+          // recursive call for the next dimension
+          for_each_static_impl<I + 1, StaticExtents, StrideOrder>(shape, idxs, f);
+          ++idxs[J];
         }
+        idxs[J] = 0;
       }
     }
+
   } // namespace details
 
-  // ----------------  for_each  -------------------------
-
-  ///
+  /**
+   * @brief Loop over all possible index values of a given shape and apply a function to them.
+   *
+   * @details It traverses all possible indices in the order given by the encoded `StrideOrder` parameter.
+   * The shape is either specified at runtime (`StaticExtents == 0`) or, partially or fully, at compile time (`StaticExtents != 0`).
+   * The given function `f` must be callable with as many long values as the number of dimensions in the shape
+   * array, e.g. for a 3-dimensional shape the function must be callable as `f(long, long, long)`.
+   *
+   * @tparam StaticExtents Encoded static extents.
+   * @tparam StrideOrder Encoded stride order.
+   * @tparam F Callable type.
+   * @tparam R Rank of the array.
+   * @tparam Int Integer type.
+   *
+   * @param shape Shape to loop over (index bounds).
+   * @param f Callable object.
+   */
   template <uint64_t StaticExtents, uint64_t StrideOrder, typename F, auto R, std::integral Int = long>
-  FORCEINLINE void for_each_static(std::array<Int, R> const &idx_lengths, F &&f) {
-    details::for_each_static_impl<0, StaticExtents, StrideOrder>(idx_lengths, f);
+  FORCEINLINE void for_each_static(std::array<Int, R> const &shape, F &&f) { // NOLINT (we do not want to forward here)
+    auto idxs = nda::stdutil::make_initialized_array<R>(0l);
+    details::for_each_static_impl<0, StaticExtents, StrideOrder>(shape, idxs, f);
   }
 
-  /// A loop in C order
+  /**
+   * @brief Loop over all possible index values of a given shape and apply a function to them.
+   *
+   * @details It traverses all possible indices in C-order, i.e. the last index varies the fastest.
+   * The shape is specified at runtime and the given function `f` must be callable with
+   * as many long values as the number of dimensions in the shape array, e.g. for a 3-dimensional
+   * shape the function must be callable as `f(long, long, long)`.
+   *
+   * @tparam F Callable type.
+   * @tparam R Number of dimensions.
+   * @tparam Int Integer type used in the shape array.
+   *
+   * @param shape Shape to loop over (index bounds).
+   * @param f Callable object.
+   */
   template <typename F, auto R, std::integral Int = long>
-  FORCEINLINE void for_each(std::array<Int, R> const &idx_lengths, F &&f) {
-    details::for_each_static_impl<0, 0, 0>(idx_lengths, f);
+  FORCEINLINE void for_each(std::array<Int, R> const &shape, F &&f) { // NOLINT (we do not want to forward here)
+    auto idxs = nda::stdutil::make_initialized_array<R>(0l);
+    details::for_each_static_impl<0, 0, 0>(shape, idxs, f);
   }
 
 } // namespace nda

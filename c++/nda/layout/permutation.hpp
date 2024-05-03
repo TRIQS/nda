@@ -65,7 +65,10 @@ namespace nda {
   template <size_t N>
   constexpr uint64_t encode(std::array<int, N> const &a) {
     uint64_t result = 0;
-    for (int i = 0; i < N; ++i) result += (static_cast<uint64_t>(a[i]) << (4 * i));
+    for (int i = 0; i < N; ++i) {
+      EXPECTS(0 <= a[i] and a[i] <= 15);
+      result += (static_cast<uint64_t>(a[i]) << (4 * i));
+    }
     return result;
   }
 
@@ -118,7 +121,7 @@ namespace nda::permutations {
   /**
    * @brief Inverse of a permutation.
    *
-   * @details The inverse, `inv`, of a permutation `p` is defined such that `compose(p, inv) == compose(int, p) == identity`.
+   * @details The inverse, `inv`, of a permutation `p` is defined such that `compose(p, inv) == compose(inv, p) == identity`.
    *
    * @tparam Int Integral type.
    * @tparam N Degree of the permutations.

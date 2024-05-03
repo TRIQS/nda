@@ -23,7 +23,7 @@
 #include <numeric>
 #include <random>
 
-// Iake identity or random permutation of size N.
+// Make identity or random permutation of size N.
 template <int N>
 auto make_permutation(bool random = true) {
   std::array<int, N> arr{};
@@ -67,6 +67,8 @@ TEST(NDA, PermutationIsValid) {
   EXPECT_FALSE(nda::permutations::is_valid(nda::stdutil::append(perm, size - 1)));
   EXPECT_FALSE(nda::permutations::is_valid(nda::stdutil::append(perm, size + 1)));
   EXPECT_FALSE(nda::permutations::is_valid(nda::stdutil::append(perm, -1)));
+  perm[0] = size;
+  EXPECT_FALSE(nda::permutations::is_valid(perm));
 }
 
 TEST(NDA, PermutationComposeAndInverse) {
@@ -99,10 +101,10 @@ TEST(NDA, PermutationIdentityAndReverseIdentity) {
 }
 
 TEST(NDA, PermutationTransposition) {
-  auto arr = std::array{10, 100, 1000};
-  auto tp  = nda::permutations::transposition<std::size(arr)>(0, std::size(arr) - 1);
-  EXPECT_EQ((std::array{1000, 100, 10}), nda::permutations::apply(tp, arr));
-  EXPECT_EQ(arr, nda::permutations::apply(tp, nda::permutations::apply(tp, arr)));
+  auto arr    = std::array{10, 100, 1000};
+  auto transp = nda::permutations::transposition<std::size(arr)>(0, std::size(arr) - 1);
+  EXPECT_EQ((std::array{1000, 100, 10}), nda::permutations::apply(transp, arr));
+  EXPECT_EQ(arr, nda::permutations::apply(transp, nda::permutations::apply(transp, arr)));
 }
 
 TEST(NDA, PermutationCycle) {

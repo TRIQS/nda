@@ -34,11 +34,11 @@ TEST(NDA, ForEachIndexFromStrideOrder) {
 
 TEST(NDA, ForEachGetExtent) {
   constexpr auto shape_arr  = std::array{2, 3, 4};
-//   constexpr auto shape_code = nda::encode(shape_arr);
-//   constexpr auto zeros      = nda::stdutil::make_initialized_array<std::size(shape_arr)>(0l);
-//   static_assert(nda::details::get_extent<0, 3, shape_code>(zeros) == 2);
-//   static_assert(nda::details::get_extent<1, 3, shape_code>(zeros) == 3);
-//   static_assert(nda::details::get_extent<2, 3, shape_code>(zeros) == 4);
+  constexpr auto shape_code = nda::encode(shape_arr);
+  constexpr auto zeros      = nda::stdutil::make_initialized_array<std::size(shape_arr)>(0l);
+  static_assert(nda::details::get_extent<0, 3, shape_code>(zeros) == 2);
+  static_assert(nda::details::get_extent<1, 3, shape_code>(zeros) == 3);
+  static_assert(nda::details::get_extent<2, 3, shape_code>(zeros) == 4);
 
   auto shape_dyn = shape_arr;
   auto e1        = nda::details::get_extent<0, 3, 0>(shape_dyn);
