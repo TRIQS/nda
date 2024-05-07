@@ -70,7 +70,7 @@ namespace nda {
     storage_t sto;
 
     template <std::integral Int = long>
-    basic_array(std::array<Int, Rank> const &shape, mem::init_zero_t) noexcept : lay{shape}, sto{lay.size(), mem::init_zero} {}
+    basic_array(std::array<Int, Rank> const &shape, mem::init_zero_t) : lay{shape}, sto{lay.size(), mem::init_zero} {}
 
     public:
     basic_array_view<ValueType, Rank, LayoutPolicy, 'A', AccessorPolicy, OwningPolicy> as_array_view() { return {*this}; };
@@ -98,7 +98,7 @@ namespace nda {
     basic_array(basic_array &&X) = default;
 
     /// Makes a deep copy, since array is a regular type
-    explicit basic_array(basic_array const &x) noexcept : lay(x.indexmap()), sto(x.sto) {}
+    explicit basic_array(basic_array const &x) : lay(x.indexmap()), sto(x.sto) {}
 
     /// Makes a deep copy, given a basic_array with a different container policy
     template <char AlgebraOther, typename ContainerPolicyOther>
@@ -113,7 +113,7 @@ namespace nda {
      */
     template <std::integral... Int>
       requires(sizeof...(Int) == Rank)
-    explicit basic_array(Int... is) noexcept {
+    explicit basic_array(Int... is) {
       // Constructing layout and storage in constructor body improves error message for wrong # of args
       lay = layout_t{std::array{long(is)...}};
       sto = storage_t{lay.size()};
@@ -127,7 +127,7 @@ namespace nda {
      * @param i0 is the extents of the only dimension
      */
     template <std::integral Int, typename RHS>
-    explicit basic_array(Int i, RHS const &val) noexcept
+    explicit basic_array(Int i, RHS const &val)
       requires((Rank == 1 and is_scalar_for_v<RHS, basic_array>))
     {
       lay = layout_t{std::array{long(i)}};
@@ -141,12 +141,12 @@ namespace nda {
      * @param shape  Shape of the array (lengths in each dimension)
      */
     template <std::integral Int = long>
-    explicit basic_array(std::array<Int, Rank> const &shape) noexcept
+    explicit basic_array(std::array<Int, Rank> const &shape)
       requires(std::is_default_constructible_v<ValueType>)
        : lay(shape), sto(lay.size()) {}
 
     /// Construct from the layout
-    explicit basic_array(layout_t const &layout) noexcept
+    explicit basic_array(layout_t const &layout)
       requires(std::is_default_constructible_v<ValueType>)
        : lay{layout}, sto{lay.size()} {}
 
@@ -157,7 +157,7 @@ namespace nda {
      * Constructs from a.shape() and then assign from the evaluation of a
      */
     template <ArrayOfRank<Rank> A>
-    basic_array(A const &a) noexcept //
+    basic_array(A const &a) //
       requires(HasValueTypeConstructibleFrom<A, value_type>)
 
        : lay(a.shape()), sto{lay.size(), mem::do_not_initialize} {
@@ -181,7 +181,7 @@ namespace nda {
      *
      */
     template <ArrayInitializer<basic_array> Initializer> // can not be explicit
-    basic_array(Initializer const &initializer) noexcept(noexcept(initializer.invoke(basic_array{}))) : basic_array{initializer.shape()} {
+    basic_array(Initializer const &initializer) : basic_array{initializer.shape()} {
       initializer.invoke(*this);
     }
 
@@ -198,7 +198,7 @@ namespace nda {
 
     public:
     ///
-    basic_array(std::initializer_list<ValueType> const &l) noexcept //
+    basic_array(std::initializer_list<ValueType> const &l) //
       requires(Rank == 1)
        : lay(std::array<long, 1>{long(l.size())}), sto{lay.size(), mem::do_not_initialize} {
       long i = 0;
@@ -210,7 +210,7 @@ namespace nda {
     }
 
     ///
-    basic_array(std::initializer_list<std::initializer_list<ValueType>> const &l2) noexcept //
+    basic_array(std::initializer_list<std::initializer_list<ValueType>> const &l2) //
       requires(Rank == 2)
        : lay(shape_from_init_list(l2)), sto{lay.size(), mem::do_not_initialize} {
       long i = 0, j = 0;
@@ -222,7 +222,7 @@ namespace nda {
     }
 
     ///
-    basic_array(std::initializer_list<std::initializer_list<std::initializer_list<ValueType>>> const &l3) noexcept //
+    basic_array(std::initializer_list<std::initializer_list<std::initializer_list<ValueType>>> const &l3) //
       requires(Rank == 3)
        : lay(shape_from_init_list(l3)), sto{lay.size(), mem::do_not_initialize} {
       long i = 0, j = 0, k = 0;
@@ -240,7 +240,7 @@ namespace nda {
 
     /////
     //template <typename U>
-    //explicit basic_array(std::initializer_list<std::initializer_list<U>> const &l2) noexcept //
+    //explicit basic_array(std::initializer_list<std::initializer_list<U>> const &l2) //
     //requires((Rank == 1) and (std::is_constructible_v<ValueType, std::initializer_list<U>>))
     //: lay(l2.size()), sto{lay.size(), mem::do_not_initialize} {
     //long i = 0;
@@ -249,7 +249,7 @@ namespace nda {
 
     /////
     //template <typename U>
-    //explicit basic_array(std::initializer_list<std::initializer_list<std::initializer_list<U>>> const &l3) noexcept //
+    //explicit basic_array(std::initializer_list<std::initializer_list<std::initializer_list<U>>> const &l3) //
     //requires((Rank == 2) and (std::is_constructible_v<ValueType, std::initializer_list<U>>))
     //: lay(pop(shape_from_init_list(l3))), sto{lay.size(), mem::do_not_initialize} {
     //long i = 0, j = 0;
@@ -355,7 +355,7 @@ namespace nda {
      * @tparam RHS A scalar or an object modeling NdArray
      */
     template <ArrayOfRank<Rank> RHS>
-    basic_array &operator=(RHS const &rhs) noexcept {
+    basic_array &operator=(RHS const &rhs) {
       static_assert(!is_const, "Cannot assign to a const !");
       resize(rhs.shape());
       assign_from_ndarray(rhs); // common code with view, private
@@ -382,7 +382,7 @@ namespace nda {
      * 
      */
     template <ArrayInitializer<basic_array> Initializer>
-    basic_array &operator=(Initializer const &initializer) noexcept {
+    basic_array &operator=(Initializer const &initializer) {
       resize(initializer.shape());
       initializer.invoke(*this);
       return *this;

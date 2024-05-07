@@ -16,13 +16,11 @@
 
 #include "./test_common.hpp"
 
-#if defined(__has_feature)
-#if __has_feature(address_sanitizer)
-#include <sanitizer/asan_interface.h>
-#endif
-#endif
+TEST(Array, BadAlloc) { //NOLINT
+  EXPECT_THROW(nda::vector<int>(long(1e16)), std::bad_alloc);
+}
 
-TEST(Array, Poison) { //NOLINT
+TEST(Array, ASANPoison) { //NOLINT
 
 #if defined(__has_feature)
 #if __has_feature(address_sanitizer)

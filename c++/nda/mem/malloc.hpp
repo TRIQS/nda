@@ -29,18 +29,15 @@ namespace nda::mem {
     check_adr_sp_valid<AdrSp>();
     static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
 
+    void *ptr = nullptr;
     if constexpr (AdrSp == Host) {
-      return std::malloc(size);
+      ptr = std::malloc(size);
     } else if constexpr (AdrSp == Device) {
-      void *ptr = nullptr;
       device_error_check(cudaMalloc((void **)&ptr, size), "cudaMalloc");
-      return ptr;
     } else { // Unified
-      void *ptr = nullptr;
       device_error_check(cudaMallocManaged((void **)&ptr, size), "cudaMallocManaged");
-      return ptr;
     }
-    return nullptr;
+    return ptr;
   }
 
   template <AddressSpace AdrSp>

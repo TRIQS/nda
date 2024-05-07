@@ -146,7 +146,7 @@ namespace nda::mem {
     handle_heap(long size, do_not_initialize_t) {
       if (size == 0) return;                         // no size -> null handle
       auto b = allocator.allocate(size * sizeof(T)); //, alignof(T));
-      ASSERT(b.ptr != nullptr);
+      if (not b.ptr) throw std::bad_alloc{};
       _data = (T *)b.ptr;
       _size = size;
     }
@@ -155,7 +155,7 @@ namespace nda::mem {
     handle_heap(long size, init_zero_t) {
       if (size == 0) return;                              // no size -> null handle
       auto b = allocator.allocate_zero(size * sizeof(T)); //, alignof(T));
-      ASSERT(b.ptr != nullptr);
+      if (not b.ptr) throw std::bad_alloc{};
       _data = (T *)b.ptr;
       _size = size;
     }
@@ -170,7 +170,7 @@ namespace nda::mem {
       else
         b = allocator.allocate(size * sizeof(T));
 
-      ASSERT(b.ptr != nullptr);
+      if (not b.ptr) throw std::bad_alloc{};
       _data = (T *)b.ptr;
       _size = size;
 
@@ -401,7 +401,7 @@ namespace nda::mem {
       } else {
         blk_t b;
         b = mallocator<>::allocate(size * sizeof(T));
-        ASSERT(b.ptr != nullptr);
+        if (not b.ptr) throw std::bad_alloc{};
         _data = (T *)b.ptr;
       }
     }
@@ -416,7 +416,7 @@ namespace nda::mem {
         for (size_t i = 0; i < _size; ++i) data()[i] = 0;
       } else {
         auto b = mallocator<>::allocate_zero(size * sizeof(T)); //, alignof(T));
-        ASSERT(b.ptr != nullptr);
+        if (not b.ptr) throw std::bad_alloc{};
         _data = (T *)b.ptr;
       }
     }
@@ -434,7 +434,7 @@ namespace nda::mem {
           b = mallocator<>::allocate_zero(size * sizeof(T));
         else
           b = mallocator<>::allocate(size * sizeof(T));
-        ASSERT(b.ptr != nullptr);
+        if (not b.ptr) throw std::bad_alloc{};
         _data = (T *)b.ptr;
       }
 
@@ -444,14 +444,14 @@ namespace nda::mem {
       }
     }
 
-    handle_sso &operator=(handle_sso const &x) noexcept {
+    handle_sso &operator=(handle_sso const &x) {
       clean();
       _size = x._size;
       if (_size == 0) return *this;
       if (on_heap()) {
         blk_t b;
         b = mallocator<>::allocate(_size * sizeof(T));
-        ASSERT(b.ptr != nullptr);
+        if (not b.ptr) throw std::bad_alloc{};
         _data = (T *)b.ptr;
       } else {
         _data = (T *)buffer.data();
