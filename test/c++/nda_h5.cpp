@@ -70,41 +70,41 @@ void check_1d_arrays_and_views(const A &a, h5::group group) {
   auto size = a.size();
 
   // write/read full array
-  h5_write(group, "a", a);
+  h5::write(group, "a", a);
   A a2;
-  h5_read(group, "a", a2);
+  h5::read(group, "a", a2);
   EXPECT_EQ_ARRAY(a, a2);
 
   // write/read full view
-  h5_write(group, "a(ellipsis{})", a(ellipsis{}));
+  h5::write(group, "a(ellipsis{})", a(ellipsis{}));
   A a3;
-  h5_read(group, "a(ellipsis{})", a3);
+  h5::read(group, "a(ellipsis{})", a3);
   EXPECT_EQ_ARRAY(a, a3);
 
   // write/read various views
   auto half_size = size / 2;
-  h5_write(group, "a(range(half_size))", a(range(half_size)));
-  h5_write(group, "a(range(half_size, size))", a(range(half_size, size)));
+  h5::write(group, "a(range(half_size))", a(range(half_size)));
+  h5::write(group, "a(range(half_size, size))", a(range(half_size, size)));
   A a4(size);
   auto a4_view1 = a4(range(half_size));
-  h5_read(group, "a(range(half_size))", a4_view1);
+  h5::read(group, "a(range(half_size))", a4_view1);
   auto a4_view2 = a4(range(half_size, size));
-  h5_read(group, "a(range(half_size, size))", a4_view2);
+  h5::read(group, "a(range(half_size, size))", a4_view2);
   EXPECT_EQ_ARRAY(a, a4);
 
-  h5_write(group, "a(range(0, size, 2))", a(range(0, size, 2)));
-  h5_write(group, "a(range(1, size, 2))", a(range(1, size, 2)));
+  h5::write(group, "a(range(0, size, 2))", a(range(0, size, 2)));
+  h5::write(group, "a(range(1, size, 2))", a(range(1, size, 2)));
   A a5(size);
   auto a5_view1 = a5(range(0, size, 2));
-  h5_read(group, "a(range(0, size, 2))", a5_view1);
+  h5::read(group, "a(range(0, size, 2))", a5_view1);
   auto a5_view2 = a5(range(1, size, 2));
-  h5_read(group, "a(range(1, size, 2))", a5_view2);
+  h5::read(group, "a(range(1, size, 2))", a5_view2);
   EXPECT_EQ_ARRAY(a, a5);
 
   // write/read a scalar view
-  h5_write(group, "a(half_size)", a(half_size));
+  h5::write(group, "a(half_size)", a(half_size));
   typename A::value_type scalar;
-  h5_read(group, "a(half_size)", scalar);
+  h5::read(group, "a(half_size)", scalar);
   EXPECT_EQ(a(half_size), scalar);
 
   // write/read slices
@@ -119,23 +119,23 @@ void check_1d_arrays_and_views(const A &a, h5::group group) {
     // write/read full slice
     auto sp6 = H5Screate_simple(ds_rank, h5_shape.data(), nullptr);
     auto ds6 = g2.create_dataset("ds6", h5::hdf5_type<nda::get_value_t<A>>(), sp6);
-    if (is_complex) h5::h5_write_attribute(ds6, "__complex__", "1");
-    h5_write(g2, "ds6", a, std::make_tuple(ellipsis{}));
+    if (is_complex) h5::write_attribute(ds6, "__complex__", "1");
+    h5::write(g2, "ds6", a, std::make_tuple(ellipsis{}));
     A a6;
-    h5_read(g2, "ds6", a6, std::make_tuple(ellipsis{}));
+    h5::read(g2, "ds6", a6, std::make_tuple(ellipsis{}));
     EXPECT_EQ_ARRAY(a, a6);
 
     // write/read every second element
     auto sp7 = H5Screate_simple(ds_rank, h5_shape.data(), nullptr);
     auto ds7 = g2.create_dataset("ds7", h5::hdf5_type<nda::get_value_t<A>>(), sp7);
-    if (is_complex) h5::h5_write_attribute(ds7, "__complex__", "1");
-    h5_write(g2, "ds7", a(range(0, size, 2)), std::make_tuple(range(0, size, 2)));
-    h5_write(g2, "ds7", a(range(1, size, 2)), std::make_tuple(range(1, size, 2)));
+    if (is_complex) h5::write_attribute(ds7, "__complex__", "1");
+    h5::write(g2, "ds7", a(range(0, size, 2)), std::make_tuple(range(0, size, 2)));
+    h5::write(g2, "ds7", a(range(1, size, 2)), std::make_tuple(range(1, size, 2)));
     A a7(size);
     auto a7_view1 = a7(range(0, size, 2));
-    h5_read(g2, "ds7", a7_view1, std::make_tuple(range(0, size, 2)));
+    h5::read(g2, "ds7", a7_view1, std::make_tuple(range(0, size, 2)));
     auto a7_view2 = a7(range(1, size, 2));
-    h5_read(g2, "ds7", a7_view2, std::make_tuple(range(1, size, 2)));
+    h5::read(g2, "ds7", a7_view2, std::make_tuple(range(1, size, 2)));
     EXPECT_EQ_ARRAY(a7, a);
   }
 }
@@ -146,65 +146,68 @@ void check_3d_arrays_and_views(const A &a, h5::group group) {
   auto shape = a.shape();
 
   // write/read full array
-  h5_write(group, "a", a);
+  h5::write(group, "a", a);
   A a2;
-  h5_read(group, "a", a2);
+  h5::read(group, "a", a2);
   EXPECT_EQ_ARRAY(a, a2);
 
   // write/read full view
-  h5_write(group, "a(ellipsis{})", a(ellipsis{}));
+  h5::write(group, "a(ellipsis{})", a(ellipsis{}));
   A a3;
-  h5_read(group, "a(ellipsis{})", a3);
+  h5::read(group, "a(ellipsis{})", a3);
   EXPECT_EQ_ARRAY(a, a3);
 
   // write/read various 2d views
   A a4(shape);
   for (int i = 0; i < shape[0]; ++i) {
     auto name = std::string("a(") + std::to_string(i) + ", ellipsis{})";
-    h5_write(group, name, a(i, ellipsis{}));
+    h5::write(group, name, a(i, ellipsis{}));
     auto a4_view = a4(i, ellipsis{});
-    h5_read(group, name, a4_view);
+    h5::read(group, name, a4_view);
   }
   EXPECT_EQ_ARRAY(a, a4);
 
   A a5(shape);
   for (int i = 0; i < shape[1]; ++i) {
     auto name = std::string("a(range::all, ") + std::to_string(i) + ", range::all)";
-    h5_write(group, name, a(range::all, i, range::all));
+    h5::write(group, name, a(range::all, i, range::all));
     auto a5_view = a5(range::all, i, range::all);
-    h5_read(group, name, a5_view);
+    h5::read(group, name, a5_view);
   }
   EXPECT_EQ_ARRAY(a, a5);
 
   A a6(shape);
   for (int i = 0; i < shape[2]; ++i) {
     auto name = std::string("a(ellipsis{}, ") + std::to_string(i) + ")";
-    h5_write(group, name, a(ellipsis{}, i));
+    h5::write(group, name, a(ellipsis{}, i));
     auto a6_view = a6(ellipsis{}, i);
-    h5_read(group, name, a6_view);
+    h5::read(group, name, a6_view);
   }
   EXPECT_EQ_ARRAY(a, a6);
 
   // write/read 1d, 2d and 3d views
-  h5_write(group, "a(0, range::all, 0)", a(0, range::all, 0));
-  h5_write(group, "a(range(1, shape[0]), range::all, 0)", a(range(1, shape[0]), range::all, 0));
-  h5_write(group, "a(range::all, range::all, range(1, shape[2]))", a(range::all, range::all, range(1, shape[2])));
+  h5::write(group, "a(0, range::all, 0)", a(0, range::all, 0));
+  h5::write(group, "a(range(1, shape[0]), range::all, 0)", a(range(1, shape[0]), range::all, 0));
+  h5::write(group, "a(0, range::all, range(1, shape[2]))", a(0, range::all, range(1, shape[2])));
+  h5::write(group, "a(range(1, shape[0]), range::all, range(1, shape[2]))", a(range(1, shape[0]), range::all, range(1, shape[2])));
   A a7(shape);
   auto a7_view1 = a7(0, range::all, 0);
-  h5_read(group, "a(0, range::all, 0)", a7_view1);
+  h5::read(group, "a(0, range::all, 0)", a7_view1);
   auto a7_view2 = a7(range(1, shape[0]), range::all, 0);
-  h5_read(group, "a(range(1, shape[0]), range::all, 0)", a7_view2);
-  auto a7_view3 = a7(range::all, range::all, range(1, shape[2]));
-  h5_read(group, "a(range::all, range::all, range(1, shape[2]))", a7_view3);
+  h5::read(group, "a(range(1, shape[0]), range::all, 0)", a7_view2);
+  auto a7_view3 = a7(0, range::all, range(1, shape[2]));
+  h5::read(group, "a(0, range::all, range(1, shape[2]))", a7_view3);
+  auto a7_view4 = a7(range(1, shape[0]), range::all, range(1, shape[2]));
+  h5::read(group, "a(range(1, shape[0]), range::all, range(1, shape[2]))", a7_view4);
   EXPECT_EQ_ARRAY(a, a7);
 
   // write/read a scalar view
   auto half_0 = shape[0] / 2;
   auto half_1 = shape[1] / 2;
   auto half_2 = shape[2] / 2;
-  h5_write(group, "a(half_0, half_1, half_2)", a(half_0, half_1, half_2));
+  h5::write(group, "a(half_0, half_1, half_2)", a(half_0, half_1, half_2));
   typename A::value_type scalar;
-  h5_read(group, "a(half_0, half_1, half_2)", scalar);
+  h5::read(group, "a(half_0, half_1, half_2)", scalar);
   EXPECT_EQ(a(half_0, half_1, half_2), scalar);
 
   // write/read slices
@@ -220,26 +223,29 @@ void check_3d_arrays_and_views(const A &a, h5::group group) {
     // write/read full slice
     auto sp8 = H5Screate_simple(ds_rank, h5_shape.data(), nullptr);
     auto ds8 = g2.create_dataset("ds8", h5::hdf5_type<nda::get_value_t<A>>(), sp8);
-    if (is_complex) h5::h5_write_attribute(ds8, "__complex__", "1");
-    h5_write(g2, "ds8", a, std::make_tuple(ellipsis{}));
+    if (is_complex) h5::write_attribute(ds8, "__complex__", "1");
+    h5::write(g2, "ds8", a, std::make_tuple(ellipsis{}));
     A a8;
-    h5_read(g2, "ds8", a8, std::make_tuple(ellipsis{}));
+    h5::read(g2, "ds8", a8, std::make_tuple(ellipsis{}));
     EXPECT_EQ_ARRAY(a, a8);
 
     // write/read 1d, 2d and 3d slices
     auto sp9 = H5Screate_simple(ds_rank, h5_shape.data(), nullptr);
     auto ds9 = g2.create_dataset("ds9", h5::hdf5_type<nda::get_value_t<A>>(), sp9);
-    if (is_complex) h5::h5_write_attribute(ds9, "__complex__", "1");
-    h5_write(g2, "ds9", a(0, range::all, 0), std::make_tuple(0, range::all, 0));
-    h5_write(g2, "ds9", a(range(1, shape[0]), range::all, 0), std::make_tuple(range(1, shape[0]), range::all, 0));
-    h5_write(g2, "ds9", a(range::all, range::all, range(1, shape[2])), std::make_tuple(range::all, range::all, range(1, shape[2])));
+    if (is_complex) h5::write_attribute(ds9, "__complex__", "1");
+    h5::write(g2, "ds9", a(0, range::all, 0), std::make_tuple(0, range::all, 0));
+    h5::write(g2, "ds9", a(range(1, shape[0]), range::all, 0), std::make_tuple(range(1, shape[0]), range::all, 0));
+    h5::write(g2, "ds9", a(0, range::all, range(1, shape[2])), std::make_tuple(0, range::all, range(1, shape[2])));
+    h5::write(g2, "ds9", a(range(1, shape[0]), range::all, range(1, shape[2])), std::make_tuple(range(1, shape[0]), range::all, range(1, shape[2])));
     A a9(shape);
     auto a9_view1 = a9(0, range::all, 0);
-    h5_read(g2, "ds9", a9_view1, std::make_tuple(0, range::all, 0));
+    h5::read(g2, "ds9", a9_view1, std::make_tuple(0, range::all, 0));
     auto a9_view2 = a9(range(1, shape[0]), range::all, 0);
-    h5_read(g2, "ds9", a9_view2, std::make_tuple(range(1, shape[0]), range::all, 0));
-    auto a9_view3 = a9(range::all, range::all, range(1, shape[2]));
-    h5_read(g2, "ds9", a9_view3, std::make_tuple(range::all, range::all, range(1, shape[2])));
+    h5::read(g2, "ds9", a9_view2, std::make_tuple(range(1, shape[0]), range::all, 0));
+    auto a9_view3 = a9(0, range::all, range(1, shape[2]));
+    h5::read(g2, "ds9", a9_view3, std::make_tuple(0, range::all, range(1, shape[2])));
+    auto a9_view4 = a9(range(1, shape[0]), range::all, range(1, shape[2]));
+    h5::read(g2, "ds9", a9_view4, std::make_tuple(range(1, shape[0]), range::all, range(1, shape[2])));
     EXPECT_EQ_ARRAY(a, a9);
   }
 }
@@ -259,25 +265,25 @@ TEST(NDA, H5StringArray) {
   for (auto &str : a_2d) str = "string " + std::to_string(i++);
 
   // write/read every row
-  h5_write(file, "a_2d(0, _)", a_2d(0, nda::range::all));
-  h5_write(file, "a_2d(1, _)", a_2d(1, nda::range::all));
+  h5::write(file, "a_2d(0, _)", a_2d(0, nda::range::all));
+  h5::write(file, "a_2d(1, _)", a_2d(1, nda::range::all));
   nda::array<std::string, 2> b_2d(2, 2);
   auto b_2d_view1 = b_2d(0, nda::range::all);
-  h5_read(file, "a_2d(0, _)", b_2d_view1);
+  h5::read(file, "a_2d(0, _)", b_2d_view1);
   EXPECT_EQ_ARRAY(a_2d(0, nda::range::all), b_2d(0, nda::range::all));
   auto b_2d_view2 = b_2d(1, nda::range::all);
-  h5_read(file, "a_2d(1, _)", b_2d_view2);
+  h5::read(file, "a_2d(1, _)", b_2d_view2);
   EXPECT_EQ_ARRAY(a_2d, b_2d);
 
   // write/read every column
-  h5_write(file, "a_2d(_, 0)", a_2d(nda::range::all, 0));
-  h5_write(file, "a_2d(_, 1)", a_2d(nda::range::all, 1));
+  h5::write(file, "a_2d(_, 0)", a_2d(nda::range::all, 0));
+  h5::write(file, "a_2d(_, 1)", a_2d(nda::range::all, 1));
   nda::array<std::string, 2> c_2d(2, 2);
   auto c_2d_view1 = c_2d(nda::range::all, 0);
-  h5_read(file, "a_2d(_, 0)", c_2d_view1);
+  h5::read(file, "a_2d(_, 0)", c_2d_view1);
   EXPECT_EQ_ARRAY(a_2d(nda::range::all, 0), c_2d(nda::range::all, 0));
   auto c_2d_view2 = c_2d(nda::range::all, 1);
-  h5_read(file, "a_2d(_, 1)", c_2d_view2);
+  h5::read(file, "a_2d(_, 1)", c_2d_view2);
   EXPECT_EQ_ARRAY(a_2d, c_2d);
 }
 
@@ -364,16 +370,16 @@ TEST(NDA, H5EmptyArray) {
 
   // uninitialized array
   nda::array<long, 2> a(0, 10);
-  h5_write(file, "a", a);
+  h5::write(file, "a", a);
   nda::array<long, 2> a_in(5, 5);
-  h5_read(file, "a", a_in);
+  h5::read(file, "a", a_in);
   EXPECT_EQ(a_in.shape(), a.shape());
 
   // empty (default constructed) array
   nda::array<long, 2> b{};
-  h5_write(file, "b", b);
+  h5::write(file, "b", b);
   nda::array<long, 2> b_in(5, 5);
-  h5_read(file, "b", b_in);
+  h5::read(file, "b", b_in);
   EXPECT_EQ(b_in.shape(), b.shape());
 }
 
@@ -384,11 +390,11 @@ TEST(NDA, H5DoubleIntoComplexArray) {
 
   // write to file
   h5::file file("double_into_complex.h5", 'w');
-  h5_write(file, "a_d", a_d);
+  h5::write(file, "a_d", a_d);
 
   // read into complex array
   nda::array<std::complex<double>, 2> a_c(2, 3);
-  h5_read(file, "a_d", a_c);
+  h5::read(file, "a_d", a_c);
   EXPECT_ARRAY_NEAR(a_c, a_d);
 }
 
@@ -399,10 +405,10 @@ TEST(NDA, H5BlockMatrix) {
 
   // write to file
   h5::file file("block_matrix.h5", 'w');
-  h5_write(file, "block_mat", block_mat);
+  h5::write(file, "block_mat", block_mat);
 
   // read from file
-  h5_read(file, "block_mat", block_mat_in);
+  h5::read(file, "block_mat", block_mat_in);
 
   EXPECT_EQ(block_mat.extent(0), block_mat_in.extent(0));
   for (int i = 0; i < block_mat.extent(0); ++i) EXPECT_ARRAY_EQ(block_mat(i), block_mat_in(i));
@@ -435,7 +441,7 @@ TEST(NDA, H5SystematicViewsOf3dArray) {
               for (int si = 1; si <= max_step; ++si)
                 for (int sj = 1; sj <= max_step; ++sj)
                   for (int sk = 1; sk <= max_step; ++sk) {
-                    h5_write(file, "slice" + std::to_string(count++), a(range(i, i2, si), range(j, j2, sj), range(k, k2, sk)));
+                    h5::write(file, "slice" + std::to_string(count++), a(range(i, i2, si), range(j, j2, sj), range(k, k2, sk)));
                   }
 
   // read from file and compare
@@ -449,7 +455,7 @@ TEST(NDA, H5SystematicViewsOf3dArray) {
               for (int si = 1; si <= max_step; ++si)
                 for (int sj = 1; sj <= max_step; ++sj)
                   for (int sk = 1; sk <= max_step; ++sk) {
-                    h5_read(file, "slice" + std::to_string(count++), a_in);
+                    h5::read(file, "slice" + std::to_string(count++), a_in);
                     EXPECT_EQ_ARRAY(a_in, a(range(i, i2, si), range(j, j2, sj), range(k, k2, sk)));
                   }
 }
