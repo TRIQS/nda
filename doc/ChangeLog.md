@@ -2,9 +2,63 @@
 
 # Changelog
 
+## Version 1.3.0
+
+NDA Version 1.3.0 is a release that
+* Adds new functionality to the symmetry library
+* Optimizes CLEF by removing redundant copies
+* Extends the LAPACK/BLAS functionality
+* Improves the interface to read/write HDF5 files
+* Fixes several library issues
+
+We thank all contributors: Thomas Hahn, Alexander Hampel, Jason Kaye, Dominik Kiese, Harrison LaBollita, Henri Menke, Olivier Parcollet, Dylan Simon, Nils Wentzell, iskakoff, jasonkaye, mmorale3
+
+Find below an itemized list of changes in this release.
+
+### General
+* Allow nda::flatten to be called for non-trivial memory layouts
+* Fix bug in for_each_static_impl, clean up layout/for_each.hpp and add tests
+* Fix bug in encode function, clean up layout/permutation.hpp and add tests
+* Improve h5 interface by removing unnecessary copies and restrictions and update tests
+* Remove redundant files c++/nda/TODO and c++/nda/mapped_functions.vim
+* Avoid redundant copies in clef evaluation
+* Add sym_grp functions to obtain / initialize from representative data
+* Add nda::concatenate implementation
+* Fix bug in clef evaluator and add corresponding tests
+* Update Dockerfile.msan to more recent Ubuntu and library versions
+* Generalize nda::transpose to work with arrays of arbitrary rank
+* Protect nda::reshape, should not allow non-standard memory order
+* Remove redundant ARRAY_INT definition
+* Add layout_to_policy trait specialization for Fortran layouts
+* Use Default Seed for std::mt19937 construction
+
+### cmake
+* Disable -ffast-math by default for intel compilers
+* Use GNUInstallDirs in install commands
+* Use CPP2PY_PYTHON_xxx variables instead of PYTHON_xxx
+* Fix install command to include hxx files
+* Set policy CMP0144 to new
+* Improve logic when MKL is detected as LAPACK distribution
+* Run NDA checks also in RelWithDebInfo build mode
+* Disable finite-math-only for IntelLLVM compiler
+* When using mkl enforce single dynamic lib and explicitly set mkl_interface_layer (#48)
+
+### jenkins
+* Enable PythonSupport on all CIs
+* Add ubuntu-intel build
+* Fix ubuntu-intel gpg file in Dockerfile
+
+### blas/lapack
+* Fix type error in magma interface
+* Add implementations and tests for geqp3, orgqr, ungqr of LAPACK
+* Allow right hand side object lapack::gelss to be a vector or a matrix (#56)
+* Allow temporary views in call to lapack::getrs
+* Fix MKL version check when using BLAS gemm_batch_strided
+
+
 ## Version 1.2.0
 
-NDA Version 1.2.0 is a release that 
+NDA Version 1.2.0 is a release that
 * Introduces NVidia GPU support for array and view types
 * Adds GPU blas/lapack backends using the CuBLAS and CuSOLVER backend
 * Allows the use of symmetries for initialization and symmetrization of arrays
