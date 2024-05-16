@@ -118,20 +118,20 @@ namespace nda {
     explicit(requires_runtime_check<typename std::decay_t<A>::layout_policy_t>) basic_array_view(A &&a) noexcept
        : lay(a.indexmap()), sto(a.storage()) {}
 
-    /** 
+    /**
      * [Advanced] From a pointer to **contiguous data**, and a shape.
-     * NB : no control on the dimensions given.  
+     * NB : no control on the dimensions given.
      *
      * @param p Pointer to the data
      * @param shape Shape of the view (contiguous)
      */
     basic_array_view(std::array<long, Rank> const &shape, ValueType *p) noexcept : basic_array_view(layout_t{shape}, p) {}
 
-    /** 
-     * [Advanced] From a pointer to data, and an idx_map 
-     * NB : no control obvious on the dimensions given.  
+    /**
+     * [Advanced] From a pointer to data, and an idx_map
+     * NB : no control obvious on the dimensions given.
      *
-     * @param p Pointer to the data 
+     * @param p Pointer to the data
      * @param idxm Index Map (view can be non contiguous). If the offset is non zero, the view starts at p + idxm.offset()
      */
     basic_array_view(layout_t const &idxm, ValueType *p) noexcept : lay(idxm), sto{p} {}
@@ -184,11 +184,11 @@ namespace nda {
 
     /**
      * Copies the content of rhs into the view.
-     * Pseudo code : 
+     * Pseudo code :
      *     for all i,j,k,l,... : this[i,j,k,l,...] = rhs(i,j,k,l,...)
      *
      * The dimension of RHS must be large enough or behaviour is undefined.
-     * 
+     *
      * If NDA_BOUNDCHECK is defined, the bounds are checked.
      *
      * @tparam RHS A scalar or an object modeling the concept NDArray
@@ -213,8 +213,8 @@ namespace nda {
       return *this;
     }
 
-    /** 
-     * 
+    /**
+     *
      */
     template <ArrayInitializer<basic_array_view> Initializer>
     basic_array_view &operator=(Initializer const &initializer) noexcept {

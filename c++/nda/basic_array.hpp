@@ -105,10 +105,10 @@ namespace nda {
     explicit basic_array(basic_array<ValueType, Rank, LayoutPolicy, AlgebraOther, ContainerPolicyOther> x) noexcept
        : lay(x.indexmap()), sto(std::move(x.storage())) {}
 
-    /** 
-     * Construct with a shape [i0, is ...]. 
+    /**
+     * Construct with a shape [i0, is ...].
      * Int are integers (convertible to long), and there must be exactly R arguments.
-     * 
+     *
      * @param i0, is ... are the extents (lengths) in each dimension
      */
     template <std::integral... Int>
@@ -135,9 +135,9 @@ namespace nda {
       assign_from_scalar(val);
     }
 
-    /** 
+    /**
      * Construct with the given shape and default construct elements
-     * 
+     *
      * @param shape  Shape of the array (lengths in each dimension)
      */
     template <std::integral Int = long>
@@ -153,7 +153,7 @@ namespace nda {
     /// Construct from the layout and existing memory
     explicit basic_array(layout_t const &layout, storage_t &&storage) noexcept : lay{layout}, sto{std::move(storage)} {}
 
-    /** 
+    /**
      * Constructs from a.shape() and then assign from the evaluation of a
      */
     template <ArrayOfRank<Rank> A>
@@ -174,9 +174,9 @@ namespace nda {
       }
     }
 
-    /** 
-     * Initialize with any type modelling ArrayInitializer, typically a 
-     * delayed operation (mpi operation, matmul) that requires 
+    /**
+     * Initialize with any type modelling ArrayInitializer, typically a
+     * delayed operation (mpi operation, matmul) that requires
      * the knowledge of the data pointer to execute
      *
      */
@@ -348,7 +348,7 @@ namespace nda {
       return *this;
     }
 
-    /** 
+    /**
      * Resizes the array (if necessary).
      * Invalidates all references to the storage.
      *
@@ -362,7 +362,7 @@ namespace nda {
       return *this;
     }
 
-    /** 
+    /**
      * Resizes the array (if necessary).
      * Invalidates all references to the storage.
      *
@@ -378,8 +378,8 @@ namespace nda {
       return *this;
     }
 
-    /** 
-     * 
+    /**
+     *
      */
     template <ArrayInitializer<basic_array> Initializer>
     basic_array &operator=(Initializer const &initializer) noexcept {
@@ -389,7 +389,7 @@ namespace nda {
     }
 
     //------------------ resize  -------------------------
-    /** 
+    /**
      * Resizes the array.
      * Invalidates all references to the storage.
      * Content is undefined, makes no copy of previous data.
@@ -402,7 +402,7 @@ namespace nda {
       resize(std::array<long, Rank>{long(extent)...});
     }
 
-    /** 
+    /**
      * Resizes the array.
      * Invalidates all references to the storage.
      * Content is undefined, makes no copy of previous data.

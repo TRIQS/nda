@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2022 Simons Foundation
+// Copyright (c) 2024 Simons Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Authors: Olivier Parcollet, Nils Wentzell, Jason Kaye
+// Authors: Jason Kaye, Olivier Parcollet, Nils Wentzell
 
 #pragma once
 
@@ -42,7 +42,7 @@ namespace nda::lapack {
    *           reflector H(i), as returned by GEQRF or GEQP3.
    *
    * [return]  info is INTEGER
-   *           = 0: successful exit. 
+   *           = 0: successful exit.
    *           < 0: if INFO = -i, the i-th argument had an illegal value.
    */
   template <MemoryMatrix A, MemoryVector TAU>

@@ -14,7 +14,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Authors: Dominik Kiese, Henri Menke, Olivier Parcollet, Nils Wentzell
+// Authors: Thomas Hahn, Dominik Kiese, Henri Menke, Olivier Parcollet, Nils Wentzell
 
 #pragma once
 #include <vector>
@@ -55,7 +55,7 @@ namespace nda {
    * Basically lengths and strides for each dimensions
    *
    * @tparam Rank : rank of the index map
-   * 
+   *
    * @tparam StaticExtents : encoded std::array{0, d1, 0, d3}
    *   where d1, d3 are static dimensions for index 1,3
    *         NB Limitation : d1, d3 < 16 (until C++20)
@@ -63,16 +63,16 @@ namespace nda {
    *   NB : if StaticExtents ==0, it means all dimensions are static
    *
    * @tparam StrideOrder : a permutation for the memory stride_order of the array
-   *    
+   *
    *    StrideOrder[0] : the slowest index,
    *    StrideOrder[Rank-1] : the fastest index
    *    Example :
    *        012 : C the last index is the fastest
    *        210 : Fortran, the first index is the fastest
    *        120 : storage (i,j,k) is : index j is slowest, then k, then i
-   *    
+   *
    *    NB : StrideOrder = 0 is the default and it is means 0 order
-   * 
+   *
    * @tparam LayoutProp : A flags of compile time guarantees for the layout
    *
    */
@@ -220,7 +220,7 @@ namespace nda {
 
     [[nodiscard]] bool is_stride_order_valid() const { return is_stride_order_valid(len.data(), str.data()); }
 
-    /** 
+    /**
      * From an idxmap with other info flags
      * @param idxm
      */
@@ -366,8 +366,8 @@ namespace nda {
      * Number of variables must be exactly the rank or are optionally
      * checked at runtime
      *
-     * @return : 
-     *       the linear position 
+     * @return :
+     *       the linear position
      *
      */
     template <typename... Args>
@@ -384,8 +384,8 @@ namespace nda {
 
     /**
      * Stride order agnostic mapping to index
-     * 
-     * @return : 
+     *
+     * @return :
      *       indices corresponding to linear index
      *
      */
@@ -425,7 +425,7 @@ namespace nda {
     // ---------------- Transposition -------------------------
 
     /**
-     * Makes a new transposed idx_map with permutation P such that 
+     * Makes a new transposed idx_map with permutation P such that
      * denoting here  A = this, A' = P A = returned_value
      * A'(i_k) = A(i_{P[k]})
      *

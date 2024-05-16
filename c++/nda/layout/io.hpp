@@ -29,7 +29,7 @@ namespace std {
     return out;
   }
 
-  /* template<typename T, size_t N> 
+  /* template<typename T, size_t N>
   std::string to_string(std::array<T,N> const &v) const {
     std::ostringstream fs;
     fs<<v;
