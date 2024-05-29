@@ -45,6 +45,7 @@
 #else
 
 #include <iostream>
+#include <exception>
 
 #define EXPECTS(X)                                                                                                                                   \
   if (!(X)) {                                                                                                                                        \

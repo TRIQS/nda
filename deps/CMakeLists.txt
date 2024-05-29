@@ -94,7 +94,7 @@ external_dependency(h5
 external_dependency(mpi
   GIT_REPO https://github.com/TRIQS/mpi
   VERSION 1.3
-  GIT_TAG 1.3.x
+  GIT_TAG fix_exception
 )
 
 ## Pybind 11

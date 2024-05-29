@@ -150,4 +150,35 @@ namespace nda {
     return fold(std::multiplies<>{}, a, get_value_t<A>{1});
   }
 
+  template <Matrix M>
+  auto fill_principal_minor(M const &m, std::vector<get_value_t<M>> &minors, int l = 0, int i = 0) {
+    // index in binary tree
+    auto I = i + (std::size_t)std::pow(2, l); 
+
+    // calculate minor at I from recursion formula 
+    // if {l} is removed, decrease I by 2^l (for 0-based indexing), i.e. I -> i
+    minors[I] = m(0, 0) * minors[i];
+
+    // check exit and prepare submatrix slice
+    if (std::get<0>(m.shape()) == 1) { return; };
+    auto r = range(1, std::get<0>(m.shape()));
+
+    // left move, removal of first row and colum
+    // index mapping is I -> I + 2^l (for 0-based indexing), i.e. I -> i + 2^(l + 1), thus, l -> l + 1 & i -> i 
+    fill_principal_minor(m(r, r), minors, l + 1, i);
+
+    // right move, removal of first row and colum + Schur complement
+    // index mapping is I -> I + 2^(l + 1) (for 0-based indexing), thus, l -> l + 1 & i -> I
+    auto mright = nda::array<get_value_t<M>, 2>{m(r, r)};
+    for (auto const &[x, y] : product(r, r)) { mright(x - 1, y - 1) -= m(x, 0) * m(0, y) / m(0, 0); }
+    fill_principal_minor(mright, minors, l + 1, I);
+  }
+
+  template <Matrix M>
+  auto principal_minors(M const &m) {
+    EXPECTS(std::get<0>(m.shape()) == std::get<1>(m.shape()));
+    std::vector<get_value_t<M>> minors((std::size_t)std::pow(2, std::get<0>(m.shape())), 1);
+    fill_principal_minor(m, minors);
+    return minors; 
+  }
 } // namespace nda

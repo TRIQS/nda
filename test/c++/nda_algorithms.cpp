@@ -92,4 +92,11 @@ TEST(NDA, AlgoMat) { //NOLINT
   EXPECT_EQ(frobenius_norm(A_SSO), std::sqrt(9 * 8 / 2));
 }
 
+TEST(NDA, AlgoMinor) { //NOLINT
+  auto A      = nda::array<double, 2>{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+  auto minors = nda::principal_minors(A);
+  auto res    = std::vector<double>{1, 1, 5, -3, 9, -12, -3, 0};
+  for (auto i : range(minors.size())) EXPECT_CLOSE(minors[i], res[i]);
+}
+
 MAKE_MAIN
