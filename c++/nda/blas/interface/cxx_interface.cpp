@@ -74,11 +74,21 @@ namespace nda::blas::f77 {
 
   double dot(int M, const double *x, int incx, const double *Y, int incy) { return F77_ddot(&M, x, &incx, Y, &incy); }
   dcomplex dot(int M, const dcomplex *x, int incx, const dcomplex *Y, int incy) {
+#ifdef NDA_USE_MKL
+    MKL_Complex16 result;
+    cblas_zdotu_sub(M, mklcplx(x), incx, mklcplx(Y), incy, &result);
+#else
     auto result = F77_zdotu(&M, blacplx(x), &incx, blacplx(Y), &incy);
+#endif
     return dcomplex{result.real, result.imag};
   }
   dcomplex dotc(int M, const dcomplex *x, int incx, const dcomplex *Y, int incy) {
+#ifdef NDA_USE_MKL
+    MKL_Complex16 result;
+    cblas_zdotc_sub(M, mklcplx(x), incx, mklcplx(Y), incy, &result);
+#else
     auto result = F77_zdotc(&M, blacplx(x), &incx, blacplx(Y), &incy);
+#endif
     return dcomplex{result.real, result.imag};
   }
 
