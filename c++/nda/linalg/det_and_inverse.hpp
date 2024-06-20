@@ -191,6 +191,14 @@ namespace nda {
     return r;
   }
 
+  template <Array A>
+  auto inverse(A const &a) {
+      auto r = make_regular(a);
+      auto long_axis = stdutil::mpop<2>(r.indexmap().lengths());
+      for_each(long_axis, [&r, _ = range()](auto &&... i) {inverse_in_place(make_matrix_view(r(i..., _, _))); });
+      return r;
+  }
+
 } // namespace nda
 
 namespace nda::clef {
