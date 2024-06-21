@@ -24,7 +24,7 @@
 #include <vector>
 #include <tuple>
 
-// Test fixture for testing various algorithms.
+// Test fixture for testing arrays and views.
 struct NDAArrayAndView : public ::testing::Test {
   protected:
   using lay_3d_t = nda::contiguous_layout_with_stride_order<nda::encode(std::array{1, 2, 0})>;
@@ -236,22 +236,29 @@ void check_assignments() {
   A10_v = arr_init;
   EXPECT_EQ(A, A10);
 
-  // rank specific assignments -> not working but should
-  // if constexpr (rank == 1) {
-  //   std::vector<value_t> vec(shape[0]);
-  //   std::iota(vec.begin(), vec.end(), 0);
+  // rank specific assignments
+  if constexpr (rank == 1) {
+    std::vector<value_t> vec(shape[0]);
+    std::iota(vec.begin(), vec.end(), 0);
 
-  //   // assign a contiguous range to an array
-  //   arr_t A11;
-  //   A11 = vec;
-  //   for (long i = 0; i < shape[0]; ++i) EXPECT_EQ(A11(i), vec[i]);
+    // assign a contiguous range to an array
+    arr_t A11;
+    A11 = vec;
+    for (long i = 0; i < shape[0]; ++i) EXPECT_EQ(A11(i), vec[i]);
 
-  //   // assign a contiguous range to a view -> not working but should
-  //   arr_t A12(shape);
-  //   view_t A12_v(A12);
-  //   A12_v = vec;
-  //   for (long i = 0; i < shape[0]; ++i) EXPECT_EQ(A12(i), vec[i]);
-  // }
+    // assign a contiguous range to a view
+    arr_t A12(shape);
+    view_t A12_v(A12);
+    A12_v = vec;
+    for (long i = 0; i < shape[0]; ++i) EXPECT_EQ(A12(i), vec[i]);
+
+    // assign a const vector to a view
+    const std::vector<value_t> cvec{1, 2, 3};
+    arr_t A13(3);
+    view_t A13_v(A13);
+    A13_v = cvec;
+    for (long i = 0; i < 3; ++i) EXPECT_EQ(A13(i), cvec[i]);
+  }
 }
 
 TEST_F(NDAArrayAndView, Constructors) {

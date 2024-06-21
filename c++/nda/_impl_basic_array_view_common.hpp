@@ -436,7 +436,7 @@ template <std::ranges::contiguous_range R>
 auto &operator=(R const &rhs) noexcept
   requires(Rank == 1 and not MemoryArray<R>)
 {
-  *this = basic_array_view{rhs};
+  *this = array_const_view<std::ranges::range_value_t<R>, 1>{rhs};
   return *this;
 }
 
