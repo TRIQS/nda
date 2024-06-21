@@ -204,7 +204,7 @@ FORCEINLINE static decltype(auto) call(Self &&self, Ts const &...idxs) noexcept(
       long offset = self.lay(idxs...);
       if constexpr (is_view or not SelfIsRvalue) {
         // if the calling object is a view or an lvalue, we return a reference
-        return AccessorPolicy::template accessor<ValueType>::access(self.sto.data(), offset);
+        return AccessorPolicy::template accessor<r_v_t>::access(self.sto.data(), offset);
       } else {
         // otherwise, we return a copy of the value
         return ValueType{self.sto[offset]};
@@ -217,7 +217,7 @@ FORCEINLINE static decltype(auto) call(Self &&self, Ts const &...idxs) noexcept(
       static constexpr char newAlgebra = (ResultAlgebra == 'M' and (res_rank == 1) ? 'V' : ResultAlgebra);
       // resulting layout policy
       using r_layout_p = typename detail::layout_to_policy<std::decay_t<decltype(idxm)>>::type;
-      return basic_array_view<ValueType, res_rank, r_layout_p, newAlgebra, AccessorPolicy, OwningPolicy>{std::move(idxm), {self.sto, offset}};
+      return basic_array_view<r_v_t, res_rank, r_layout_p, newAlgebra, AccessorPolicy, OwningPolicy>{std::move(idxm), {self.sto, offset}};
     }
   }
 }

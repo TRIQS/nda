@@ -188,9 +188,9 @@ TEST(NDA, ConstView) {
 
   // assigning to a const array does not compile
   // const nda::array<long, 1> C = {1, 2, 3, 4};
-  // C(0) = 2; // this compiles but it shouldn't
+  // C(0) = 2;
   // C()(0) = 2;
-  // C(nda::range(0, 2))(0) = 10; // this compiles but it shouldn't
+  // C(nda::range(0, 2))(0) = 10;
 }
 
 TEST(NDA, ViewToStringstream) {

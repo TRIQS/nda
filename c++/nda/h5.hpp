@@ -128,7 +128,7 @@ namespace nda {
    */
   template <MemoryArray A>
   void h5_write(h5::group g, std::string const &name, A const &a, bool compress = true) {
-    if constexpr (std::is_same_v<typename A::value_type, std::string>) {
+    if constexpr (std::is_same_v<std::remove_cvref_t<typename A::value_type>, std::string>) {
       // 1-dimensional array/view of strings
       h5_write(g, name, detail::to_char_buf(a));
     } else if constexpr (is_scalar_v<typename A::value_type>) {
