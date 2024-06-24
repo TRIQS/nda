@@ -113,3 +113,14 @@ TEST(NDA, STLAlgorithmBug) {
   EXPECT_FALSE(std::lexicographical_compare(C.begin(), C.end(), D.begin(), D.end()));
   EXPECT_TRUE(std::lexicographical_compare(D.begin(), D.end(), C.begin(), C.end()));
 }
+
+TEST(NDA, AmbiguousAssignmentOperatorIssue) {
+  // issue concerning an ambiguous assignment operator overload when assigning a contiguous range
+  nda::array<std::string, 1> A(3);
+  A() = std::string("foo");
+  for (int i = 0; i < 3; ++i) { EXPECT_EQ(A(i), std::string("foo")); }
+
+  nda::array<std::array<int, 3>, 1> B(3);
+  B = std::array{1, 2, 3};
+  for (int i = 0; i < 3; ++i) { EXPECT_EQ(B(i), (std::array{1, 2, 3})); }
+}
