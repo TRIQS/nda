@@ -1,0 +1,23 @@
+var searchData=
+[
+  ['get_5faddr_5fspace_0',['get_addr_space',['../group__mem__addrspcs.html#ga8055e10307486aacf11f746f7d718ad7',1,'nda::mem']]],
+  ['get_5faddr_5fspace_3c_20a_20_3e_1',['get_addr_space&lt; A &gt;',['../group__mem__addrspcs.html#ga8308180d9f61b480984f2e563d14c721',1,'nda::mem']]],
+  ['get_5faddr_5fspace_3c_20expr_3c_20op_2c_20l_2c_20r_20_3e_20_3e_2',['get_addr_space&lt; expr&lt; OP, L, R &gt; &gt;',['../group__mem__addrspcs.html#ga69bfecc3c871dfe7c6c397ee852db0f8',1,'nda::mem']]],
+  ['get_5faddr_5fspace_3c_20expr_5fcall_3c_20f_2c_20as_2e_2e_2e_20_3e_20_3e_3',['get_addr_space&lt; expr_call&lt; F, As... &gt; &gt;',['../group__mem__addrspcs.html#gae3a2fec6497934a19c9df839708ca85f',1,'nda::mem']]],
+  ['get_5faddr_5fspace_3c_20expr_5funary_3c_20op_2c_20a_20_3e_20_3e_4',['get_addr_space&lt; expr_unary&lt; OP, A &gt; &gt;',['../group__mem__addrspcs.html#gad9a020c989db915478b03fd0586d6f80',1,'nda::mem']]],
+  ['get_5faddr_5fspace_3c_20h_20_3e_5',['get_addr_space&lt; H &gt;',['../group__mem__addrspcs.html#ga1ef74eb2452003a300c482ab8450c97f',1,'nda::mem']]],
+  ['get_5falgebra_6',['get_algebra',['../group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab',1,'nda']]],
+  ['get_5falgebra_3c_20array_5fadapter_3c_20r_2c_20f_20_3e_20_3e_7',['get_algebra&lt; array_adapter&lt; R, F &gt; &gt;',['../group__utils__type__traits.html#ga3632b7e323ca3102890f381eb2c8d620',1,'nda']]],
+  ['get_5falgebra_3c_20basic_5farray_3c_20valuetype_2c_20rank_2c_20layout_2c_20algebra_2c_20containerpolicy_20_3e_20_3e_8',['get_algebra&lt; basic_array&lt; ValueType, Rank, Layout, Algebra, ContainerPolicy &gt; &gt;',['../group__av__utils.html#ga347b252fb7044423569247eaa9a6e5c0',1,'nda']]],
+  ['get_5falgebra_3c_20basic_5farray_5fview_3c_20valuetype_2c_20rank_2c_20layout_2c_20algebra_2c_20accessorpolicy_2c_20owningpolicy_20_3e_20_3e_9',['get_algebra&lt; basic_array_view&lt; ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy &gt; &gt;',['../group__av__utils.html#ga302b12acbd2ca9b3a49abc0c79b7405d',1,'nda']]],
+  ['get_5falgebra_3c_20expr_3c_20op_2c_20l_2c_20r_20_3e_20_3e_10',['get_algebra&lt; expr&lt; OP, L, R &gt; &gt;',['../group__av__utils.html#gaf5728e16a618758391fd893f48be1ec2',1,'nda']]],
+  ['get_5falgebra_3c_20expr_5fcall_3c_20f_2c_20as_2e_2e_2e_20_3e_20_3e_11',['get_algebra&lt; expr_call&lt; F, As... &gt; &gt;',['../group__av__utils.html#gaddcc4394f44b1068df481038f7f9098a',1,'nda']]],
+  ['get_5falgebra_3c_20expr_5funary_3c_20op_2c_20a_20_3e_20_3e_12',['get_algebra&lt; expr_unary&lt; OP, A &gt; &gt;',['../group__av__utils.html#ga882518feb021aca8d31a05d35ef28f2c',1,'nda']]],
+  ['get_5flayout_5finfo_13',['get_layout_info',['../group__layout__utils.html#ga9bd94d15e6806a7637d8c45464561878',1,'nda']]],
+  ['get_5flayout_5finfo_3c_20basic_5farray_3c_20valuetype_2c_20rank_2c_20layout_2c_20algebra_2c_20containerpolicy_20_3e_20_3e_14',['get_layout_info&lt; basic_array&lt; ValueType, Rank, Layout, Algebra, ContainerPolicy &gt; &gt;',['../group__av__utils.html#ga961c606788361ac34d03852d91624649',1,'nda']]],
+  ['get_5flayout_5finfo_3c_20basic_5farray_5fview_3c_20valuetype_2c_20rank_2c_20layout_2c_20algebra_2c_20accessorpolicy_2c_20owningpolicy_20_3e_20_3e_15',['get_layout_info&lt; basic_array_view&lt; ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy &gt; &gt;',['../group__av__utils.html#gaac262f9913e9c1164b11e728e96f3b07',1,'nda']]],
+  ['get_5flayout_5finfo_3c_20expr_3c_20op_2c_20l_2c_20r_20_3e_20_3e_16',['get_layout_info&lt; expr&lt; OP, L, R &gt; &gt;',['../group__av__utils.html#ga4199dbd8208aa91ca2efd2f0a91af3c6',1,'nda']]],
+  ['get_5flayout_5finfo_3c_20expr_5funary_3c_20op_2c_20a_20_3e_20_3e_17',['get_layout_info&lt; expr_unary&lt; OP, A &gt; &gt;',['../group__av__utils.html#ga580ce1a693fb911d33331828bd954458',1,'nda']]],
+  ['get_5fop_18',['get_op',['../group__linalg__blas.html#gaf9028eaeb96ef5867bb66664aa831cb7',1,'nda::blas']]],
+  ['get_5frank_19',['get_rank',['../group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e',1,'nda']]]
+];
