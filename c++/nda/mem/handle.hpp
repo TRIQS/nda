@@ -595,7 +595,7 @@ namespace nda::mem {
      *
      * @param h Source handle.
      */
-    handle_sso &operator=(handle_sso const &h) noexcept {
+    handle_sso &operator=(handle_sso const &h) {
       if (this == &h) return *this; // self assignment
       clean();
       _size = h._size;

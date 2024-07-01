@@ -14,9 +14,10 @@
 //
 // Authors: Thomas Hahn
 
-#include <gtest/gtest.h>
+#include "./test_common.hpp"
 
 #include <nda/layout/permutation.hpp>
+#include <nda/stdutil/array.hpp>
 
 #include <algorithm>
 #include <array>

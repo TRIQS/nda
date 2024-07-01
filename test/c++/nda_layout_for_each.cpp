@@ -14,9 +14,10 @@
 //
 // Authors: Thomas Hahn
 
-#include <gtest/gtest.h>
+#include "./test_common.hpp"
 
 #include <nda/layout/for_each.hpp>
+#include <nda/layout/permutation.hpp>
 #include <nda/stdutil/array.hpp>
 
 #include <array>
@@ -94,4 +95,11 @@ TEST(NDA, ForeachStaticAndDynamic) {
     ++count;
   });
   EXPECT_EQ(count, n_i * n_j * n_k);
+}
+
+TEST(NDA, ForEachMutable) {
+  std::array<long, 1> shape{10};
+  std::vector<int> data(10, 0);
+  nda::for_each(shape, [&, i = 0](long idx) mutable { data[idx] = i++; });
+  for (int i = 0; i < 10; ++i) EXPECT_EQ(data[i], i);
 }

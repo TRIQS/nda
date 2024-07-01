@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Simons Foundation
+// Copyright (c) 2019-2020 Simons Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,36 +16,24 @@
 
 #include "./test_common.hpp"
 
-// ==============================================================
+#include <nda/nda.hpp>
 
-TEST(Rebind, base) { //NOLINT
+using namespace nda::clef::literals;
 
-  nda::array<long, 2> a{{1, 2}, {3, 4}};
-  nda::array<long, 2> b{{10, 20}, {30, 40}};
+TEST(NDA, AutoAssign2DArray) {
+  nda::array<double, 2> A(2, 2);
+  A(i_, j_) << i_ * 8.1 + 2.31 * j_;
 
-  auto v = a();
-  v.rebind(b());
-
-  EXPECT_EQ_ARRAY(v, b);
+  for (int i = 0; i < 2; ++i)
+    for (int j = 0; j < 2; ++j) EXPECT_EQ(A(i, j), i * 8.1 + 2.31 * j);
 }
 
-// ------------
+TEST(NDA, AutoAssignArrayofArray) {
+  nda::array<nda::array<double, 1>, 2> A(2, 2);
+  A = nda::array<double, 1>(3);
+  A(i_, j_)(k_) << i_ + 8.1 * j_ + 100 * k_;
 
-TEST(Rebind, const) { //NOLINT
-
-  nda::array<long, 2> a{{1, 2}, {3, 4}};
-  nda::array<long, 2> b{{10, 20}, {30, 40}};
-
-  auto const &aa = a;
-
-  auto v = aa();
-  v.rebind(b());
-
-  // FIXME : const view should not compile
-#if 0
-  auto v2 = a();
-  v2.rebind(v);
-#endif
-
-  EXPECT_EQ_ARRAY(v, b);
+  for (int i = 0; i < 2; ++i)
+    for (int j = 0; j < 2; ++j)
+      for (int k = 0; k < 3; ++k) EXPECT_EQ((A(i, j)(k)), i + 8.1 * j + 100 * k);
 }

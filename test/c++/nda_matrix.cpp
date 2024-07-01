@@ -16,197 +16,167 @@
 
 #include "./test_common.hpp"
 
-TEST(Array, InitializerOfArray) { //NOLINT
-  auto pts = nda::array<std::array<double, 2>, 1>{{0.0, 0.0}, {0.0, 1.0}, {1.0, 0.0}, {1.0, 1.0}};
-  EXPECT_EQ(pts.shape(), (nda::shape_t<1>{4}));
+#include <nda/gtest_tools.hpp>
+#include <nda/nda.hpp>
+
+#include <array>
+#include <complex>
+#include <utility>
+
+TEST(NDA, ConstructLongMatrices) {
+  nda::matrix<long> M1(3, 3);
+  EXPECT_EQ(M1.shape(), (std::array<long, 2>{3, 3}));
+
+  // no ambiguity with initializer list
+  nda::matrix<long> M2{3, 3};
+  EXPECT_EQ(M2.shape(), (std::array<long, 2>{3, 3}));
+
+  // uses initializer list constructor
+  nda::matrix<long> M3{{3, 3}};
+  EXPECT_EQ(M3.shape(), (std::array<long, 2>{1, 2}));
 }
 
-TEST(Matrix, Create1) { //NOLINT
-  nda::matrix<long> a(3, 3);
-  EXPECT_EQ(a.shape(), (nda::shape_t<2>{3, 3}));
+TEST(NDA, ConstructDoubleMatrices) {
+  auto M1 = nda::matrix<double>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
+  EXPECT_EQ(M1.shape(), (std::array<long, 2>{5, 2}));
 
-  nda::matrix<long> b{3, 3}; // fine, no ambiguity with init list
-  EXPECT_EQ(b.shape(), (nda::shape_t<2>{3, 3}));
-
-  nda::matrix<long> c{{3, 3}}; // Careful ?
-  EXPECT_EQ(c.shape(), (nda::shape_t<2>{1, 2}));
+  auto M2 = nda::matrix<double>{{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}}};
+  EXPECT_EQ(M2.shape(), (std::array<long, 2>{5, 2}));
 }
 
-// ===============================================================
+TEST(NDA, ConstructComplexMatrices) {
+  auto M1 = nda::matrix<std::complex<double>>{{-10, -3i}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
+  EXPECT_EQ(M1.shape(), (std::array<long, 2>{5, 2}));
 
-TEST(Matrix, Create2) { //NOLINT
-  auto m1 = matrix<double>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
-  EXPECT_EQ(m1.shape(), (nda::shape_t<2>{5, 2}));
+  auto M2 = nda::matrix<std::complex<double>>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
+  EXPECT_EQ(M2.shape(), (std::array<long, 2>{5, 2}));
 
-  auto m2 = matrix<double>{{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}}};
-  EXPECT_EQ(m2.shape(), (nda::shape_t<2>{5, 2}));
+  auto M3 = nda::matrix<std::complex<double>>{{{-10, -3i}, {12, 14}, {14, 12}, {16, 16}, {18, 16}}};
+  EXPECT_EQ(M3.shape(), (std::array<long, 2>{5, 2}));
+
+  // constructs a 1x5 matrix
+  auto M4 = nda::matrix<std::complex<double>>{{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}}};
+  EXPECT_EQ(M4.shape(), (std::array<long, 2>{1, 5}));
 }
 
-TEST(Matrix, Create2Complex) { //NOLINT
-  auto m3 = matrix<dcomplex>{{-10, -3i}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
-  EXPECT_EQ(m3.shape(), (nda::shape_t<2>{5, 2}));
+TEST(NDA, MoveMatrixIntoArray) {
+  auto M      = nda::matrix<double>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
+  auto M_copy = M;
+  auto A      = nda::array<double, 2>{std::move(M)};
+  EXPECT_EQ_ARRAY(M_copy, nda::matrix_view<double>{A});
 
-  auto m4 = matrix<dcomplex>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
-  EXPECT_EQ(m4.shape(), (nda::shape_t<2>{5, 2}));
-
-  auto m5 = matrix<dcomplex>{{{-10, -3i}, {12, 14}, {14, 12}, {16, 16}, {18, 16}}};
-  EXPECT_EQ(m5.shape(), (nda::shape_t<2>{5, 2}));
-
-  auto m6 = matrix<dcomplex>{{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}}};
-  EXPECT_EQ(m6.shape(), (nda::shape_t<2>{1, 5})); /// VERY DANGEROUS !
-}
-
-// ===============================================================
-
-TEST(Matrix, MoveToArray) { //NOLINT
-
-  auto m = matrix<double>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
-
-  auto mcopy = m;
-
-  auto a = nda::array<double, 2>{std::move(m)};
-
-  EXPECT_EQ_ARRAY(mcopy, matrix_view<double>{a}); // should be EXACLY equal
-
-  // HEAP only, it would not be correct for the other cases
+  // only on heap, it would not be correct for the other cases
 #if !defined(NDA_TEST_DEFAULT_ALLOC_SSO) and !defined(NDA_TEST_DEFAULT_ALLOC_MBUCKET)
-  EXPECT_EQ(m.storage().size(), 0);
-  EXPECT_TRUE(m.storage().is_null());
+  EXPECT_EQ(M.storage().size(), 0);
+  EXPECT_TRUE(M.storage().is_null());
 #endif
 }
 
-// ===============================================================
+TEST(NDA, MovaArrayIntoMatrix) {
+  auto A      = nda::array<double, 2>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
+  auto A_copy = A;
+  auto M      = nda::matrix<double>{std::move(A)};
+  EXPECT_EQ_ARRAY(M, nda::matrix_view<double>{A_copy});
 
-TEST(Matrix, MoveFromArray) { //NOLINT
-
-  auto a = nda::array<double, 2>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
-
-  auto acopy = a;
-
-  auto m = matrix<double>{std::move(a)};
-
-  EXPECT_EQ_ARRAY(m, matrix_view<double>{acopy}); // should be EXACLY equal
-
-  // HEAP only, it would not be correct for the other cases
+  // only on heap, it would not be correct for the other cases
 #if !defined(NDA_TEST_DEFAULT_ALLOC_SSO) and !defined(NDA_TEST_DEFAULT_ALLOC_MBUCKET)
-  EXPECT_EQ(a.storage().size(), 0);
-  EXPECT_TRUE(a.storage().is_null());
+  EXPECT_EQ(A.storage().size(), 0);
+  EXPECT_TRUE(A.storage().is_null());
 #endif
 }
 
-// ===============================================================
+TEST(NDA, MatrixTranspose) {
+  const int size = 5;
+  nda::matrix<double, nda::F_layout> M_d(size, size);
+  nda::matrix<std::complex<double>> M_c(size, size);
 
-TEST(Matrix, Transpose) { //NOLINT
-
-  const int N = 5;
-
-  nda::matrix<double, F_layout> A(N, N);
-  nda::matrix<std::complex<double>> B(N, N);
-
-  for (int i = 0; i < N; ++i)
-    for (int j = 0; j < N; ++j) {
-      A(i, j) = i + 2 * j + 1;
-      B(i, j) = i + 2.5 * j + (i - 0.8 * j) * 1i;
+  for (int i = 0; i < size; ++i) {
+    for (int j = 0; j < size; ++j) {
+      M_d(i, j) = i + 2 * j + 1;
+      M_c(i, j) = i + 2.5 * j + (i - 0.8 * j) * 1i;
     }
+  }
 
-  auto at = transpose(A);
-  auto bt = transpose(B);
+  auto M_d_T = nda::transpose(M_d);
+  auto M_c_T = nda::transpose(M_c);
 
-  for (int i = 0; i < N; ++i)
-    for (int j = 0; j < N; ++j) {
-      EXPECT_COMPLEX_NEAR(at(i, j), A(j, i));
-      EXPECT_COMPLEX_NEAR(bt(i, j), B(j, i));
+  for (int i = 0; i < size; ++i) {
+    for (int j = 0; j < size; ++j) {
+      EXPECT_COMPLEX_NEAR(M_d_T(i, j), M_d(j, i));
+      EXPECT_COMPLEX_NEAR(M_c_T(i, j), M_c(j, i));
     }
-}
-// ===============================================================
-
-TEST(Matrix, Dagger) { //NOLINT
-
-  const int N = 5;
-
-  nda::matrix<double, F_layout> A(N, N);
-  nda::matrix<std::complex<double>> B(N, N);
-
-  for (int i = 0; i < N; ++i)
-    for (int j = 0; j < N; ++j) {
-      A(i, j) = i + 2 * j + 1;
-      B(i, j) = i + 2.5 * j + (i - 0.8 * j) * 1i;
-    }
-
-  auto ad = dagger(A);
-  auto bd = dagger(B);
-
-  for (int i = 0; i < N; ++i)
-    for (int j = 0; j < N; ++j) {
-      EXPECT_COMPLEX_NEAR(ad(i, j), A(j, i));
-      EXPECT_COMPLEX_NEAR(bd(i, j), std::conj(B(j, i)));
-    }
+  }
 }
 
-// ===============================================================
+TEST(NDA, MatrixDagger) {
+  const int size = 5;
+  nda::matrix<double, nda::F_layout> M_d(size, size);
+  nda::matrix<std::complex<double>> M_c(size, size);
 
-TEST(Matrix, DaggerSlice) { //NOLINT
+  for (int i = 0; i < size; ++i) {
+    for (int j = 0; j < size; ++j) {
+      M_d(i, j) = i + 2 * j + 1;
+      M_c(i, j) = i + 2.5 * j + (i - 0.8 * j) * 1i;
+    }
+  }
 
-  const int N = 5, Nb = 2;
+  auto M_d_dag = nda::dagger(M_d);
+  auto M_c_dag = nda::dagger(M_c);
 
-  nda::matrix<std::complex<double>> a(N, N);
-  nda::matrix<std::complex<double>> b(Nb, Nb);
-
-  for (int i = 0; i < N; ++i)
-    for (int j = 0; j < N; ++j) { a(i, j) = i + 2.5 * j + (i - 0.8 * j) * 1i; }
-  for (int i = 0; i < Nb; ++i)
-    for (int j = 0; j < Nb; ++j) { b(j, i) = std::conj(a(i, j)); }
-
-  auto a1 = conj(nda::matrix_view<dcomplex>{a});
-  EXPECT_EQ(a1.shape(), (nda::shape_t<2>{N, N}));
-
-  auto ad = dagger(a)(range(0, 2), range(0, 2));
-  EXPECT_EQ(ad.shape(), (nda::shape_t<2>{Nb, Nb}));
-
-  EXPECT_ARRAY_NEAR(ad, b, 1.e-14);
+  for (int i = 0; i < size; ++i) {
+    for (int j = 0; j < size; ++j) {
+      EXPECT_COMPLEX_NEAR(M_d_dag(i, j), M_d(j, i));
+      EXPECT_COMPLEX_NEAR(M_c_dag(i, j), std::conj(M_c(j, i)));
+    }
+  }
 }
 
-// ===============================================================
+TEST(NDA, MatrixSliceDagger) {
+  const int size = 5, slice_size = 2;
 
-TEST(Matrix, Eye) { //NOLINT
+  nda::matrix<std::complex<double>> M(size, size);
+  nda::matrix<std::complex<double>> exp_slice(slice_size, slice_size);
 
-  EXPECT_EQ_ARRAY(nda::eye<long>(3), (nda::matrix<long>{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}));
+  for (int i = 0; i < size; ++i) {
+    for (int j = 0; j < size; ++j) { M(i, j) = i + 2.5 * j + (i - 0.8 * j) * 1i; }
+  }
+
+  for (int i = 0; i < slice_size; ++i) {
+    for (int j = 0; j < slice_size; ++j) { exp_slice(j, i) = std::conj(M(i, j)); }
+  }
+
+  auto M_conj = nda::conj(nda::matrix_view<std::complex<double>>{M});
+  EXPECT_EQ(M_conj.shape(), (std::array<long, 2>{size, size}));
+
+  auto M_slice_dag = nda::dagger(M)(nda::range(0, 2), nda::range(0, 2));
+  EXPECT_EQ(M_slice_dag.shape(), (std::array<long, 2>{slice_size, slice_size}));
+
+  EXPECT_ARRAY_NEAR(M_slice_dag, exp_slice, 1.e-14);
 }
 
-// ===============================================================
+TEST(NDA, IdentityMatrix) { EXPECT_EQ_ARRAY(nda::eye<long>(3), (nda::matrix<long>{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}})); }
 
-TEST(Matrix, Diagonal) { //NOLINT
+TEST(NDA, DiagonalMatrix) {
   auto v = nda::vector<int>{1, 2, 3};
-  auto m = nda::diag(v);
-  EXPECT_EQ_ARRAY(m, (nda::matrix<int>{{1, 0, 0}, {0, 2, 0}, {0, 0, 3}}));
-  EXPECT_EQ_ARRAY(nda::diagonal(m), v);
+  auto M = nda::diag(v);
+  EXPECT_EQ_ARRAY(M, (nda::matrix<int>{{1, 0, 0}, {0, 2, 0}, {0, 0, 3}}));
+  EXPECT_EQ_ARRAY(nda::diagonal(M), v);
 
-  nda::diagonal(m) += v;
-  EXPECT_EQ_ARRAY(nda::diagonal(m), 2 * v);
+  nda::diagonal(M) += v;
+  EXPECT_EQ_ARRAY(nda::diagonal(M), 2 * v);
 }
 
-// ===============================================================
-
-TEST(Matrix, Slice) { //NOLINT
-
-  const int N = 10;
-
-  nda::matrix<double> a(N, N);
-
-  nda::range R(2, 4);
-
-  auto v = a(R, 7);
-
-  static_assert(decltype(v)::layout_t::layout_prop == nda::layout_prop_e::strided_1d, "ee");
-  static_assert(nda::has_contiguous(decltype(v)::layout_t::layout_prop) == false, "ee");
+TEST(NDA, MatrixSlice) {
+  nda::matrix<double> M(10, 10);
+  auto v = M(nda::range(2, 4), 7);
+  static_assert(decltype(v)::layout_t::layout_prop == nda::layout_prop_e::strided_1d);
+  static_assert(nda::has_contiguous(decltype(v)::layout_t::layout_prop) == false);
 }
 
-TEST(Matrix, Algebra) {
-  auto m1 = nda::matrix<double>{{1, 2}, {3, 4}};
-  auto m2 = nda::matrix<double>{{1, 2}, {2, 1}};
-
+TEST(NDA, MatrixAlgebra) {
+  auto M1   = nda::matrix<double>{{1, 2}, {3, 4}};
+  auto M2   = nda::matrix<double>{{1, 2}, {2, 1}};
   auto prod = nda::matrix<double>{{5, 4}, {11, 10}};
-  EXPECT_EQ(prod, make_regular(m1 * m2));
-
-  EXPECT_EQ(make_regular(m1 / m2), make_regular(m1 * inverse(m2)));
+  EXPECT_EQ(prod, nda::make_regular(M1 * M2));
+  EXPECT_EQ(nda::make_regular(M1 / M2), nda::make_regular(M1 * nda::inverse(M2)));
 }

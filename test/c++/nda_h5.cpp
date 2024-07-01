@@ -14,7 +14,7 @@
 //
 // Authors: Thomas Hahn, Olivier Parcollet, Nils Wentzell
 
-#include <gtest/gtest.h>
+#include "./test_common.hpp"
 
 #include <nda/clef/literals.hpp>
 #include <nda/gtest_tools.hpp>

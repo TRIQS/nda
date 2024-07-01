@@ -14,138 +14,153 @@
 //
 // Authors: Olivier Parcollet, Nils Wentzell
 
-#include "test_common.hpp"
+#include "./test_common.hpp"
 
-#include <nda/blas.hpp>
-#include <nda/clef/literals.hpp>
+#include <nda/gtest_tools.hpp>
+#include <nda/nda.hpp>
 
-using nda::F_layout;
-using namespace clef::literals;
+#include <complex>
+#include <vector>
 
-//----------------------------
-
+// Test the BLAS gemm function and its generic implementation.
 template <typename value_t, typename Layout>
 void test_gemm() {
-  nda::matrix<value_t, Layout> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3{{1, 0}, {0, 1}};
-  nda::blas::gemm(1.0, M1, M2, 1.0, M3);
+  nda::matrix<value_t, Layout> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3{{1, 0}, {0, 1}}, M3_gen;
+  M3_gen = M3;
 
+  nda::blas::gemm(1.0, M1, M2, 1.0, M3);
   EXPECT_ARRAY_NEAR(M1, nda::matrix<value_t>{{0, 1}, {1, 2}});
   EXPECT_ARRAY_NEAR(M2, nda::matrix<value_t>{{1, 1}, {1, 1}});
   EXPECT_ARRAY_NEAR(M3, nda::matrix<value_t>{{2, 1}, {3, 4}});
+
+  nda::blas::gemm_generic(1.0, M1, M2, 1.0, M3_gen);
+  EXPECT_ARRAY_NEAR(M1, nda::matrix<value_t>{{0, 1}, {1, 2}});
+  EXPECT_ARRAY_NEAR(M2, nda::matrix<value_t>{{1, 1}, {1, 1}});
+  EXPECT_ARRAY_NEAR(M3_gen, nda::matrix<value_t>{{2, 1}, {3, 4}});
 }
 
-TEST(BLAS, gemm) { test_gemm<double, C_layout>(); }     //NOLINT
-TEST(BLAS, gemmF) { test_gemm<double, F_layout>(); }    //NOLINT
-TEST(BLAS, zgemm) { test_gemm<dcomplex, C_layout>(); }  //NOLINT
-TEST(BLAS, zgemmF) { test_gemm<dcomplex, F_layout>(); } //NOLINT
+TEST(NDA, BLASGemm) {
+  test_gemm<double, nda::C_layout>();
+  test_gemm<double, nda::F_layout>();
+  test_gemm<std::complex<double>, nda::C_layout>();
+  test_gemm<std::complex<double>, nda::F_layout>();
+}
 
-// ==============================================================
-
+// Test the BLAS gemm_batch function.
 template <typename value_t, typename Layout>
 void test_gemm_batch() {
   int batch_count = 10;
-  long N          = 64;
+  long size       = 64;
 
-  auto vA = std::vector(batch_count, nda::matrix<value_t, Layout>::rand({N, N}));
-  auto vB = std::vector(batch_count, nda::matrix<value_t, Layout>::rand({N, N}));
-  auto vC = std::vector(batch_count, nda::matrix<value_t, Layout>::zeros({N, N}));
-  nda::blas::gemm_batch(1.0, vA, vB, 0.0, vC);
+  auto vec_A = std::vector(batch_count, nda::matrix<value_t, Layout>::rand({size, size}));
+  auto vec_B = std::vector(batch_count, nda::matrix<value_t, Layout>::rand({size, size}));
+  auto vec_C = std::vector(batch_count, nda::matrix<value_t, Layout>::zeros({size, size}));
+  nda::blas::gemm_batch(1.0, vec_A, vec_B, 0.0, vec_C);
 
-  for (auto i : range(batch_count)) EXPECT_ARRAY_NEAR(make_regular(vA[i] * vB[i]), vC[i]);
+  for (auto i : nda::range(batch_count)) EXPECT_ARRAY_NEAR(make_regular(vec_A[i] * vec_B[i]), vec_C[i]);
 }
 
-TEST(BLAS, gemm_batch) { test_gemm_batch<double, C_layout>(); }     //NOLINT
-TEST(BLAS, gemmF_batch) { test_gemm_batch<double, F_layout>(); }    //NOLINT
-TEST(BLAS, zgemm_batch) { test_gemm_batch<dcomplex, C_layout>(); }  //NOLINT
-TEST(BLAS, zgemmF_batch) { test_gemm_batch<dcomplex, F_layout>(); } //NOLINT
+TEST(NDA, BLASGemmBatch) {
+  test_gemm_batch<double, nda::C_layout>();
+  test_gemm_batch<double, nda::F_layout>();
+  test_gemm_batch<std::complex<double>, nda::C_layout>();
+  test_gemm_batch<std::complex<double>, nda::F_layout>();
+}
 
-//----------------------------
-
+// Test the BLAS gemm_vbatch function.
 template <typename value_t, typename Layout>
 void test_gemm_vbatch() {
   int batch_count = 10;
-  long N          = 64;
+  long size       = 64;
 
-  auto vAd = std::vector(batch_count, nda::matrix<value_t, Layout>::rand({N, N}));
-  auto vBd = std::vector(batch_count, nda::matrix<value_t, Layout>::rand({N, N}));
-  auto vCd = std::vector(batch_count, nda::matrix<value_t, Layout>::zeros({N, N}));
-  nda::blas::gemm_vbatch(1.0, vAd, vBd, 0.0, vCd);
+  auto vec_A = std::vector(batch_count, nda::matrix<value_t, Layout>::rand({size, size}));
+  auto vec_B = std::vector(batch_count, nda::matrix<value_t, Layout>::rand({size, size}));
+  auto vec_C = std::vector(batch_count, nda::matrix<value_t, Layout>::zeros({size, size}));
+  nda::blas::gemm_vbatch(1.0, vec_A, vec_B, 0.0, vec_C);
 
-  for (auto i : range(batch_count)) EXPECT_ARRAY_NEAR(make_regular(vAd[i] * vBd[i]), vCd[i]);
+  for (auto i : nda::range(batch_count)) EXPECT_ARRAY_NEAR(make_regular(vec_A[i] * vec_B[i]), vec_C[i]);
 }
 
-TEST(BLAS, gemm_vbatch) { test_gemm_vbatch<double, C_layout>(); }     //NOLINT
-TEST(BLAS, gemmF_vbatch) { test_gemm_vbatch<double, F_layout>(); }    //NOLINT
-TEST(BLAS, zgemm_vbatch) { test_gemm_vbatch<dcomplex, C_layout>(); }  //NOLINT
-TEST(BLAS, zgemmF_vbatch) { test_gemm_vbatch<dcomplex, F_layout>(); } //NOLINT
+TEST(NDA, BLASGemmVbatch) {
+  test_gemm_vbatch<double, nda::C_layout>();
+  test_gemm_vbatch<double, nda::F_layout>();
+  test_gemm_vbatch<std::complex<double>, nda::C_layout>();
+  test_gemm_vbatch<std::complex<double>, nda::F_layout>();
+}
 
+// Test the BLAS gemv function and its generic implementation.
 template <typename value_t, typename Layout>
 void test_gemv() {
+  using namespace nda::clef::literals;
 
   nda::matrix<value_t, Layout> A(5, 5);
   A(i_, j_) << i_ + 2 * j_ + 1;
 
-  nda::vector<value_t> MC(5), MB(5);
-  MC() = 1;
-  MB() = 0;
+  nda::vector<value_t> v(5), w(5);
+  v() = 1;
+  w() = 0;
 
-  nda::range R(1, 3);
-  nda::blas::gemv(1, A(R, R), MC(R), 0, MB(R));
-  EXPECT_ARRAY_NEAR(MB, nda::vector<value_t>{0, 10, 12, 0, 0});
+  nda::range rg(1, 3);
+  nda::blas::gemv(1, A(rg, rg), v(rg), 0, w(rg));
+  EXPECT_ARRAY_NEAR(w, nda::vector<value_t>{0, 10, 12, 0, 0});
 
-  auto AT = make_regular(transpose(A));
-  nda::blas::gemv(1, AT(R, R), MC(R), 0, MB(R));
-  EXPECT_ARRAY_NEAR(MB, nda::vector<value_t>{0, 9, 13, 0, 0});
+  nda::vector<value_t> w_gen(5);
+  w_gen() = 0;
+  nda::blas::gemv_generic(1, A(rg, rg), v(rg), 0, w_gen(rg));
+  EXPECT_ARRAY_NEAR(w_gen, nda::vector<value_t>{0, 10, 12, 0, 0});
+
+  auto AT = nda::make_regular(transpose(A));
+  nda::blas::gemv(1, AT(rg, rg), v(rg), 0, w(rg));
+  EXPECT_ARRAY_NEAR(w, nda::vector<value_t>{0, 9, 13, 0, 0});
+
+  nda::blas::gemv_generic(1, AT(rg, rg), v(rg), 0, w_gen(rg));
+  EXPECT_ARRAY_NEAR(w_gen, nda::vector<value_t>{0, 9, 13, 0, 0});
 
   // test operator*
-  MB()  = -8;
-  MB(R) = AT(R, R) * MC(R);
-  EXPECT_ARRAY_NEAR(MB, nda::vector<value_t>{-8, 9, 13, -8, -8});
+  w()   = -8;
+  w(rg) = AT(rg, rg) * v(rg);
+  EXPECT_ARRAY_NEAR(w, nda::vector<value_t>{-8, 9, 13, -8, -8});
 }
 
-TEST(BLAS, gemv) { test_gemv<double, C_layout>(); }     //NOLINT
-TEST(BLAS, gemvF) { test_gemv<double, F_layout>(); }    //NOLINT
-TEST(BLAS, zgemv) { test_gemv<dcomplex, C_layout>(); }  //NOLINT
-TEST(BLAS, zgemvF) { test_gemv<dcomplex, F_layout>(); } //NOLINT
+TEST(NDA, BLASGemv) {
+  test_gemv<double, nda::C_layout>();
+  test_gemv<double, nda::F_layout>();
+  test_gemv<std::complex<double>, nda::C_layout>();
+  test_gemv<std::complex<double>, nda::F_layout>();
+}
 
-//----------------------------
-
+// Test the BLAS ger function.
 template <typename value_t, typename Layout>
 void test_ger() {
-
   nda::matrix<value_t, Layout> M(2, 2);
   M = 0;
-  nda::array<value_t, 1> V{1, 2};
+  nda::array<value_t, 1> v{1, 2};
 
-  nda::blas::ger(1.0, V, V, M);
+  nda::blas::ger(1.0, v, v, M);
   EXPECT_ARRAY_NEAR(M, nda::matrix<value_t>{{1, 2}, {2, 4}});
 }
 
-TEST(BLAS, dger) { test_ger<double, C_layout>(); }    //NOLINT
-TEST(BLAS, dgerF) { test_ger<double, F_layout>(); }   //NOLINT
-TEST(BLAS, zger) { test_ger<dcomplex, C_layout>(); }  //NOLINT
-TEST(BLAS, zgerF) { test_ger<dcomplex, C_layout>(); } //NOLINT
+TEST(NDA, BLASGer) {
+  test_ger<double, nda::C_layout>();
+  test_ger<double, nda::F_layout>();
+  test_ger<std::complex<double>, nda::C_layout>();
+  test_ger<std::complex<double>, nda::C_layout>();
+}
 
-//----------------------------
-
-TEST(BLAS, outer_product) { //NOLINT
-
+TEST(NDA, BLASOuterProduct) {
   auto N = nda::rand<double>(2, 3);
   auto M = nda::rand<double>(4, 5);
 
   nda::array<double, 4> P(2, 3, 4, 5);
-
   for (auto [i, j] : N.indices())
     for (auto [k, l] : M.indices()) P(i, j, k, l) = N(i, j) * M(k, l);
 
-  EXPECT_ARRAY_NEAR(P, (nda::blas::outer_product(N, M)));
+  EXPECT_ARRAY_NEAR(P, nda::blas::outer_product(N, M));
 }
 
-//----------------------------
-
+// Test the BLAS dot function and its generic implementation.
 template <typename value_t>
-void test_dot() { //NOLINT
-
+void test_dot() {
   nda::vector<value_t> a{1, 2, 3, 4, 5};
   nda::vector<value_t> b{10, 20, 30, 40, 50};
   if constexpr (nda::is_complex_v<value_t>) {
@@ -153,17 +168,17 @@ void test_dot() { //NOLINT
     b *= 1 + 2i;
   }
 
-  EXPECT_COMPLEX_NEAR((nda::blas::dot(a, b)), (nda::blas::dot_generic(a, b)), 1.e-14);
+  EXPECT_COMPLEX_NEAR(nda::blas::dot(a, b), nda::blas::dot_generic(a, b), 1.e-14);
 }
 
-TEST(BLAS, ddot) { test_dot<double>(); }   //NOLINT
-TEST(BLAS, zdot) { test_dot<dcomplex>(); } //NOLINT
+TEST(NDA, BLASDot) {
+  test_dot<double>();
+  test_dot<std::complex<double>>();
+}
 
-//----------------------------
-
+// Test the BLAS dotc function and its generic implementation.
 template <typename value_t>
-void test_dotc() { //NOLINT
-
+void test_dotc() {
   nda::vector<value_t> a{1, 2, 3, 4, 5};
   nda::vector<value_t> b{10, 20, 30, 40, 50};
   if constexpr (nda::is_complex_v<value_t>) {
@@ -171,8 +186,30 @@ void test_dotc() { //NOLINT
     b *= 1 + 2i;
   }
 
-  EXPECT_COMPLEX_NEAR((nda::blas::dotc(a, b)), (nda::blas::dotc_generic(a, b)), 1.e-14);
+  EXPECT_COMPLEX_NEAR(nda::blas::dotc(a, b), nda::blas::dotc_generic(a, b), 1.e-14);
 }
 
-TEST(BLAS, ddotc) { test_dotc<double>(); }   //NOLINT
-TEST(BLAS, zdotc) { test_dotc<dcomplex>(); } //NOLINT
+TEST(NDA, BLASDotc) {
+  test_dotc<double>();
+  test_dotc<std::complex<double>>();
+}
+
+// Test the BLAS scal function.
+template <typename value_t>
+void test_scal() {
+  nda::vector<value_t> a{1, 2, 3, 4, 5};
+  value_t x = 3.0;
+  if constexpr (nda::is_complex_v<value_t>) {
+    a *= 1 + 1i;
+    x = 3.0 + 2.0i;
+  }
+
+  auto exp = nda::make_regular(x * a);
+  nda::blas::scal(x, a);
+  EXPECT_ARRAY_NEAR(a, exp);
+}
+
+TEST(NDA, BLASScal) {
+  test_scal<double>();
+  test_scal<std::complex<double>>();
+}

@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Simons Foundation
+// Copyright (c) 2023 Simons Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,24 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Authors: Nils Wentzell
+// Authors: Thomas Hahn
 
 #include "./test_common.hpp"
 
-// ==============================================================
+#include <nda/exceptions.hpp>
 
-TEST(NDA, arange) { //NOLINT
+#include <exception>
+#include <iostream>
+#include <string>
 
-  for (auto first : range(-100, 100)) {
-    for (auto last : range(-100, 100)) {
-      for (auto step : range(-100, 100)) {
-        if (step == 0) continue;
-        auto a = nda::arange(first, last, step);
-        int n  = 0;
-        for (auto i = first; step > 0 ? i < last : i > last; i = i + step) EXPECT_EQ(a[n++], i);
-      }
-    }
+TEST(NDA, AccumulateErrorMessageAndThrow) {
+  std::string msg("Test error message");
+  try {
+    throw nda::runtime_error{} << msg;
+  } catch (std::exception const &e) {
+    std::cout << e.what() << std::endl;
+    EXPECT_EQ(std::string(e.what()), msg);
   }
+}
 
-  for (auto N : range(100)) EXPECT_EQ(nda::sum(nda::arange(N)), N * (N - 1) / 2);
+TEST(NDA, AssertMacro) {
+  ASSERT_NO_THROW(NDA_ASSERT(true));
+  ASSERT_THROW(NDA_ASSERT(false), nda::runtime_error);
 }

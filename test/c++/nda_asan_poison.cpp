@@ -14,19 +14,18 @@
 //
 // Authors: Olivier Parcollet, Nils Wentzell
 
-#include <nda/nda.hpp>
-#include <gtest/gtest.h>
+#include "./test_common.hpp"
 
 #if defined(__has_feature)
-#if !__has_feature(address_sanitizer)
+#if __has_feature(address_sanitizer)
+#include <nda/nda.hpp>
+#include <sanitizer/asan_interface.h>
+#endif
+#endif
 
-TEST(Array, BadAlloc) { //NOLINT
-  EXPECT_THROW(nda::vector<int>(long(1e16)), std::bad_alloc);
-}
-
-#else
-
-TEST(Array, ASANPoison) { //NOLINT
+TEST(NDA, ASANPoison) {
+#if defined(__has_feature)
+#if __has_feature(address_sanitizer)
   long *p;
   {
     nda::array<long, 2> A(3, 3);
@@ -35,7 +34,6 @@ TEST(Array, ASANPoison) { //NOLINT
   }
 
   EXPECT_EQ(__asan_address_is_poisoned(p), 1);
+#endif
+#endif
 }
-
-#endif
-#endif

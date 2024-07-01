@@ -16,9 +16,8 @@
 
 #include "./test_common.hpp"
 
-// ==============================================================
-
-using namespace nda;
+#include <nda/gtest_tools.hpp>
+#include <nda/nda.hpp>
 
 using value_t   = double;
 constexpr int N = 4;
@@ -42,15 +41,15 @@ template <size_t Rank>
 using array_cvt = nda::array_view<const value_t, Rank>;
 
 template <size_t Rank>
-using unmarray_t = basic_array<value_t, Rank, C_layout, 'A', heap<mem::Unified>>;
+using unmarray_t = nda::basic_array<value_t, Rank, nda::C_layout, 'A', nda::heap<nda::mem::Unified>>;
 
 template <size_t Rank>
-using unmarray_vt = basic_array_view<value_t, Rank, C_stride_layout, 'A', default_accessor, borrowed<mem::Unified>>;
+using unmarray_vt = nda::basic_array_view<value_t, Rank, nda::C_stride_layout, 'A', nda::default_accessor, nda::borrowed<nda::mem::Unified>>;
 
 template <size_t Rank>
-using unmarray_cvt = basic_array_view<const value_t, Rank, C_stride_layout, 'A', default_accessor, borrowed<mem::Unified>>;
+using unmarray_cvt = nda::basic_array_view<const value_t, Rank, nda::C_stride_layout, 'A', nda::default_accessor, nda::borrowed<nda::mem::Unified>>;
 
-TEST(Cuda, ConstructFromArray) { //NOLINT
+TEST(NDA, CudaConstructFromArray) {
   auto A = nda::rand<value_t>(N, N);
 
   // device <- host
@@ -65,24 +64,24 @@ TEST(Cuda, ConstructFromArray) { //NOLINT
   EXPECT_ARRAY_EQ(B, A);
 }
 
-TEST(Cuda, ConstructFromView) { //NOLINT
+TEST(NDA, CudaConstructFromView) {
   auto A = nda::rand<value_t>(N, N, N, N);
 
   // device <- host
-  auto Av  = A(_, 0, _, _);
+  auto Av  = A(nda::range::all, 0, nda::range::all, nda::range::all);
   auto A_d = cuarray_t<3>{Av};
 
   // device <- device
-  auto Av_d = A_d(_, 0, _);
+  auto Av_d = A_d(nda::range::all, 0, nda::range::all);
   auto B_d  = cuarray_t<2>{Av_d};
 
   // host <- device
-  auto Bv_d = B_d(_, 0);
+  auto Bv_d = B_d(nda::range::all, 0);
   auto B    = array_t<1>{Bv_d};
-  EXPECT_ARRAY_EQ(B, A(_, 0, 0, 0));
+  EXPECT_ARRAY_EQ(B, A(nda::range::all, 0, 0, 0));
 }
 
-TEST(Cuda, AssignFromArray) { //NOLINT
+TEST(NDA, CudaAssignFromArray) {
   auto A = nda::rand<value_t>(N, N);
 
   // device <- host
@@ -100,48 +99,44 @@ TEST(Cuda, AssignFromArray) { //NOLINT
   EXPECT_ARRAY_EQ(B, A);
 }
 
-TEST(Cuda, AssignFromView) { //NOLINT
+TEST(NDA, CudaAssignFromView) {
   auto A = nda::rand<value_t>(N, N, N, N);
 
   // device <- host
-  auto Av  = A(_, 0, _, _);
+  auto Av  = A(nda::range::all, 0, nda::range::all, nda::range::all);
   auto A_d = cuarray_t<3>(N, N, N);
   A_d      = Av;
 
   // device <- device
-  auto Av_d = A_d(_, 0, _);
+  auto Av_d = A_d(nda::range::all, 0, nda::range::all);
   auto B_d  = cuarray_t<2>(N, N);
   B_d       = Av_d;
 
   // host <- device
-  auto Bv_d = B_d(_, 0);
+  auto Bv_d = B_d(nda::range::all, 0);
   auto B    = array_t<1>(N);
   B         = Bv_d;
 
-  EXPECT_ARRAY_EQ(B, A(_, 0, 0, 0));
+  EXPECT_ARRAY_EQ(B, A(nda::range::all, 0, 0, 0));
 }
 
-#include <nda/mem/handle.hpp>
-TEST(Cuda, Storage) { // NOLINT
-  using namespace nda::mem;
-
-  auto h1      = handle_heap<int>{10};
+TEST(NDA, CudaStorage) {
+  auto h1      = nda::mem::handle_heap<int>{10};
   h1.data()[2] = 89;
 
   // device <- host
-  auto h1_d = heap<mem::Device>::handle<int>{h1};
+  auto h1_d = nda::heap<nda::mem::Device>::handle<int>{h1};
 
   // device <- host
-  auto h2_d = heap<mem::Device>::handle<int>{h1_d};
+  auto h2_d = nda::heap<nda::mem::Device>::handle<int>{h1_d};
 
   // host <- device
-  auto h2 = handle_heap<int>{h2_d};
+  auto h2 = nda::mem::handle_heap<int>{h2_d};
 
-  EXPECT_EQ(h2.data()[2], 89); //NOLINT
+  EXPECT_EQ(h2.data()[2], 89);
 }
 
-#include <nda/mem/address_space.hpp>
-TEST(Cuda, AddrSpace) { // NOLINT
+TEST(NDA, CudaAddrSpace) {
   // compile time checks
   using namespace nda::mem;
 

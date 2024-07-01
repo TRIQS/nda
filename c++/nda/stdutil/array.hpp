@@ -164,7 +164,7 @@ namespace nda::stdutil {
   template <size_t R, typename T>
   constexpr std::array<T, R> make_initialized_array(T v) {
     return [&v]<size_t... Is>(std::index_sequence<Is...>) {
-      return std::array<T, R>{(Is, v)...}; // NOLINT (always v, just a trick to have the pack)
+      return std::array<T, R>{((void)Is, v)...}; // NOLINT (always v, just a trick to have the pack)
     }(std::make_index_sequence<R>{});
   }
 

@@ -16,152 +16,105 @@
 
 #include "./test_common.hpp"
 
-using str_t = std::string;
+#include <nda/gtest_tools.hpp>
+#include <nda/nda.hpp>
 
-// ==============================================================
+#include <array>
+#include <string>
 
-TEST(Construct, NoString) { //NOLINT
-  nda::array<long, 2, nda::C_layout_str> a(3, 2);
-
-  nda::array<nda::array<std::string, 1>, 1> ind = a.indexmap().get_string_indices();
-
-  EXPECT_EQ(ind.shape(), (std::array<long, 1>{2}));
-
-  for (int i = 0; i < a.rank; ++i)
-    for (int j = 0; j < a.shape()[i]; ++j) EXPECT_EQ(ind(i)(j), std::to_string(j));
-}
-// ==============================================================
-
-TEST(Construct, FromStringArray) { //NOLINT
-
-  nda::array<nda::array<std::string, 1>, 1> ind{{"a", "b", "c"}, {"A", "B"}};
-
-  nda::array<long, 2, nda::C_layout_str> b(ind);
-  EXPECT_EQ(b.shape(), (std::array<long, 2>{3, 2}));
-  EXPECT_EQ(ind, b.indexmap().get_string_indices()());
-}
-// ==============================================================
-
-TEST(Construct, FromStringArray2) { //NOLINT
-
-  nda::array<nda::array<std::string, 1>, 1> ind{{"a", "b", "c"}, {"A", "B"}};
-
-  using lay_t = nda::array<long, 2, nda::C_layout_str>::layout_t;
-  nda::array<long, 2, nda::C_layout_str> b(lay_t{ind});
-  EXPECT_EQ(b.shape(), (std::array<long, 2>{3, 2}));
-  EXPECT_EQ(ind, b.indexmap().get_string_indices()());
-}
-
-// ==============================================================
-// a test with one array with string
-
-class StrIndicesA : public ::testing::Test {
-  public:
-  nda::array<long, 2, nda::C_layout_str> a;
-
+// Test fixture for testing arrays with string indices.
+class NDAStringIndices : public ::testing::Test {
   protected:
-  virtual void SetUp() override {
+  using lay_t = nda::array<long, 2, nda::C_layout_str>::layout_t;
+  nda::array<long, 2, nda::C_layout_str> A;
+  nda::array<nda::array<std::string, 1>, 1> str_idxs;
 
-    nda::array<nda::array<std::string, 1>, 1> ind{{"a", "b", "c"}, {"A", "B"}};
-
-    using lay_t = nda::array<long, 2, nda::C_layout_str>::layout_t;
-
-    lay_t lay{ind};
-    a = nda::array<long, 2, nda::C_layout_str>(lay);
-
-    for (int i = 0; i < a.shape()[0]; ++i)
-      for (int j = 0; j < a.shape()[1]; ++j) a(i, j) = i + 10 * j;
+  void SetUp() override {
+    str_idxs = nda::array<nda::array<std::string, 1>, 1>{{"a", "b", "c"}, {"A", "B"}};
+    lay_t lay{str_idxs};
+    A = nda::array<long, 2, nda::C_layout_str>(lay);
+    for (int i = 0; i < A.shape()[0]; ++i)
+      for (int j = 0; j < A.shape()[1]; ++j) A(i, j) = i + 10 * j;
   }
-  void TearDown() override {}
 };
 
-// ==============================================================
-
-TEST_F(StrIndicesA, CrossConstruct) { //NOLINT
-
-  nda::array<long, 2> AA(a);
-
-  EXPECT_EQ(a.shape(), AA.shape());
-
-  for (int i = 0; i < a.shape()[0]; ++i)
-    for (int j = 0; j < a.shape()[1]; ++j) EXPECT_EQ(AA(i, j), a(i, j));
+TEST_F(NDAStringIndices, ConstructArrayWithoutStringIndices) {
+  nda::array<long, 2, nda::C_layout_str> B(3, 2);
+  nda::array<nda::array<std::string, 1>, 1> idxs = B.indexmap().get_string_indices();
+  EXPECT_EQ(idxs.shape(), (std::array<long, 1>{2}));
+  for (int i = 0; i < B.rank; ++i)
+    for (int j = 0; j < B.shape()[i]; ++j) EXPECT_EQ(idxs(i)(j), std::to_string(j));
 }
 
-// ==============================================================
-
-TEST_F(StrIndicesA, CrossConstructView) { //NOLINT
-
-  nda::array_view<long, 2> v(a);
-
-  EXPECT_EQ(a.shape(), v.shape());
-
-  for (int i = 0; i < a.shape()[0]; ++i)
-    for (int j = 0; j < a.shape()[1]; ++j) EXPECT_EQ(v(i, j), a(i, j));
+TEST_F(NDAStringIndices, ConstructArrayWithStringIndices) {
+  EXPECT_EQ(A.shape(), (std::array<long, 2>{3, 2}));
+  EXPECT_EQ(str_idxs, A.indexmap().get_string_indices()());
 }
 
-// ==============================================================
-
-TEST_F(StrIndicesA, call) { //NOLINT
-
-  auto ind = a.indexmap().get_string_indices();
-
-  EXPECT_EQ(a(str_t{"a"}, str_t{"A"}), a(0, 0));
-
-  for (int i = 0; i < a.shape()[0]; ++i)
-    for (int j = 0; j < a.shape()[1]; ++j) EXPECT_EQ(a(ind[0][i], ind[1][j]), a(i, j));
-
-  EXPECT_EQ(a("a", "A"), a(0, 0));
-
-  EXPECT_THROW(a("z", "A"), nda::runtime_error); //NOLINT
+TEST_F(NDAStringIndices, ConstructArrayWithStringIndexLayout) {
+  nda::array<long, 2, nda::C_layout_str> B(lay_t{str_idxs});
+  EXPECT_EQ(B.shape(), (std::array<long, 2>{3, 2}));
+  EXPECT_EQ(str_idxs, B.indexmap().get_string_indices()());
 }
 
-// ==============================================================
-
-TEST_F(StrIndicesA, Equal) { //NOLINT
-
-  EXPECT_TRUE(a == a);
-  auto b = a;
-  EXPECT_TRUE(a == b);
-
-  b(0, 0) += 3;
-  EXPECT_FALSE(a == b);
+TEST_F(NDAStringIndices, CrossConstructArray) {
+  nda::array<long, 2> B(A);
+  EXPECT_EQ(A.shape(), B.shape());
+  for (int i = 0; i < A.shape()[0]; ++i)
+    for (int j = 0; j < A.shape()[1]; ++j) EXPECT_EQ(B(i, j), A(i, j));
 }
 
-// ==============================================================
-
-TEST_F(StrIndicesA, sliceall) { //NOLINT
-  auto v = a(_, "A");
-  nda::array_view<long, 2> view_no_str(a);
-  auto vcheck = view_no_str(_, 0);
-  nda::array<nda::array<std::string, 1>, 1> ind{{"a", "b", "c"}};
-
-  EXPECT_EQ_ARRAY(v, vcheck);
-  EXPECT_EQ(v.indexmap().get_string_indices(), ind);
+TEST_F(NDAStringIndices, CrossConstructView) {
+  nda::array_view<long, 2> B_v(A);
+  EXPECT_EQ(A.shape(), B_v.shape());
+  for (int i = 0; i < A.shape()[0]; ++i)
+    for (int j = 0; j < A.shape()[1]; ++j) EXPECT_EQ(B_v(i, j), A(i, j));
 }
 
-// ==============================================================
+TEST_F(NDAStringIndices, AccessArray) {
+  EXPECT_EQ(A(std::string{"a"}, std::string{"A"}), A(0, 0));
 
-TEST_F(StrIndicesA, slice) { //NOLINT
-  auto v = a(nda::range(0, 2), "A");
-  nda::array_view<long, 2> view_no_str(a);
-  auto vcheck = view_no_str(nda::range(0, 2), 0);
-  nda::array<nda::array<std::string, 1>, 1> ind{{"a", "b"}};
+  for (int i = 0; i < A.shape()[0]; ++i)
+    for (int j = 0; j < A.shape()[1]; ++j) EXPECT_EQ(A(str_idxs[0][i], str_idxs[1][j]), A(i, j));
 
-  EXPECT_EQ_ARRAY(v, vcheck);
-  EXPECT_EQ(v.indexmap().get_string_indices(), ind);
+  EXPECT_EQ(A("a", "A"), A(0, 0));
+
+  EXPECT_THROW(A("z", "A"), nda::runtime_error);
 }
 
-// ==============================================================
+TEST_F(NDAStringIndices, EqualToOperator) {
+  EXPECT_TRUE(A == A);
+  auto B = A;
+  EXPECT_TRUE(A == B);
+  B(0, 0) += 3;
+  EXPECT_FALSE(A == B);
+}
 
-TEST_F(StrIndicesA, transpose) { //NOLINT
+TEST_F(NDAStringIndices, SliceRangeAll) {
+  auto slice = A(nda::range::all, "A");
+  nda::array_view<long, 2> A_v(A);
+  auto exp_v = A_v(nda::range::all, 0);
+  nda::array<nda::array<std::string, 1>, 1> idxs{{"a", "b", "c"}};
+  EXPECT_EQ_ARRAY(slice, exp_v);
+  EXPECT_EQ(slice.indexmap().get_string_indices(), idxs);
+}
 
-  auto a2 = nda::transposed_view<1, 0>(a);
+TEST_F(NDAStringIndices, SliceRange) {
+  auto slice = A(nda::range(0, 2), "A");
+  nda::array_view<long, 2> A_v(A);
+  auto exp_v = A_v(nda::range(0, 2), 0);
+  nda::array<nda::array<std::string, 1>, 1> idxs{{"a", "b"}};
+  EXPECT_EQ_ARRAY(slice, exp_v);
+  EXPECT_EQ(slice.indexmap().get_string_indices(), idxs);
+}
 
-  nda::array<nda::array<std::string, 1>, 1> ind2{{"A", "B"}, {"a", "b", "c"}};
-  EXPECT_EQ(a2.indexmap().get_string_indices(), ind2);
+TEST_F(NDAStringIndices, TransposedView) {
+  auto A_t = nda::transposed_view<1, 0>(A);
 
-  auto v1 = nda::transposed_view<1, 0>(nda::array_view<long, 2>{a});
-  auto v2 = nda::array_view<long, 2, F_layout>{a2};
+  nda::array<nda::array<std::string, 1>, 1> idxs_t{{"A", "B"}, {"a", "b", "c"}};
+  EXPECT_EQ(A_t.indexmap().get_string_indices(), idxs_t);
 
-  EXPECT_EQ_ARRAY(v1, v2);
+  auto A_v1 = nda::transposed_view<1, 0>(nda::array_view<long, 2>{A});
+  auto A_v2 = nda::array_view<long, 2, nda::F_layout>{A_t};
+  EXPECT_EQ_ARRAY(A_v1, A_v2);
 }

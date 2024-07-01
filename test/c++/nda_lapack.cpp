@@ -14,219 +14,232 @@
 //
 // Authors: Jason Kaye, Nils Wentzell
 
-#include "test_common.hpp"
-#include <nda/lapack.hpp>
+#include "./test_common.hpp"
+
+#include <nda/gtest_tools.hpp>
 #include <nda/lapack/gelss_worker.hpp>
+#include <nda/nda.hpp>
+
+#include <algorithm>
+#include <complex>
 
 using namespace nda;
 
-// ======================================= gtsv =====================================
-
+// Test LAPACK gtsv function.
 template <typename value_t>
 void test_gtsv() {
+  // sub-diagonal, diagonal, and super-diagonal elements
+  vector<value_t> subdiag_vec   = {4, 3, 2, 1};
+  vector<value_t> diag_vec      = {1, 2, 3, 4, 5};
+  vector<value_t> superdiag_vec = {1, 2, 3, 4};
 
-  vector<value_t> DL = {4, 3, 2, 1};    // sub-diagonal elements
-  vector<value_t> D  = {1, 2, 3, 4, 5}; // diagonal elements
-  vector<value_t> DU = {1, 2, 3, 4};    // super-diagonal elements
-
-  vector<value_t> B1 = {6, 2, 7, 4, 5};  // RHS column 1
-  vector<value_t> B2 = {1, 3, 8, 9, 10}; // RHS column 2
+  // right hand side
+  vector<value_t> B1 = {6, 2, 7, 4, 5};
+  vector<value_t> B2 = {1, 3, 8, 9, 10};
   auto B             = matrix<value_t, F_layout>(5, 2);
-  B(_, 0)            = B1;
-  B(_, 1)            = B2;
+  B(range::all, 0)   = B1;
+  B(range::all, 1)   = B2;
 
   // reference solutions
   vector<double> ref_sol_1 = {43.0 / 33.0, 155.0 / 33.0, -208.0 / 33.0, 130.0 / 33.0, 7.0 / 33.0};
   vector<double> ref_sol_2 = {-28.0 / 33.0, 61.0 / 33.0, 89.0 / 66.0, -35.0 / 66.0, 139.0 / 66.0};
   matrix<double, F_layout> ref_sol(5, 2);
-  ref_sol(_, 0) = ref_sol_1;
-  ref_sol(_, 1) = ref_sol_2;
+  ref_sol(range::all, 0) = ref_sol_1;
+  ref_sol(range::all, 1) = ref_sol_2;
 
   {
-    auto dl(DL);
-    auto d(D);
-    auto du(DU);
+    auto dl(subdiag_vec);
+    auto d(diag_vec);
+    auto du(superdiag_vec);
     int info = lapack::gtsv(dl, d, du, B1);
     EXPECT_EQ(info, 0);
     EXPECT_ARRAY_NEAR(B1, ref_sol_1);
   }
   {
-    auto dl(DL);
-    auto d(D);
-    auto du(DU);
+    auto dl(subdiag_vec);
+    auto d(diag_vec);
+    auto du(superdiag_vec);
     int info = lapack::gtsv(dl, d, du, B2);
     EXPECT_EQ(info, 0);
     EXPECT_ARRAY_NEAR(B2, ref_sol_2);
   }
   {
-    auto dl(DL);
-    auto d(D);
-    auto du(DU);
+    auto dl(subdiag_vec);
+    auto d(diag_vec);
+    auto du(superdiag_vec);
     int info = lapack::gtsv(dl, d, du, B);
     EXPECT_EQ(info, 0);
     EXPECT_ARRAY_NEAR(B, ref_sol);
   }
 }
-TEST(lapack, gtsv) { test_gtsv<double>(); }    // NOLINT
-TEST(lapack, zgtsv) { test_gtsv<dcomplex>(); } // NOLINT
+TEST(NDA, LAPACKGtsv) {
+  test_gtsv<double>();
+  test_gtsv<std::complex<double>>();
 
-//---------------------------------------------------------
+  // test cgtsv
+  vector<std::complex<double>> subdiag_vec   = {-4i, -3i, -2i, -1i};
+  vector<std::complex<double>> diag_vec      = {1, 2, 3, 4, 5};
+  vector<std::complex<double>> superdiag_vec = {1i, 2i, 3i, 4i};
 
-TEST(lapack, cgtsv) { //NOLINT
-
-  vector<dcomplex> DL = {-4i, -3i, -2i, -1i}; // sub-diagonal elements
-  vector<dcomplex> D  = {1, 2, 3, 4, 5};      // diagonal elements
-  vector<dcomplex> DU = {1i, 2i, 3i, 4i};     // super-diagonal elements
-
-  vector<dcomplex> B1 = {6 + 0i, 2i, 7 + 0i, 4i, 5 + 0i}; // RHS column 1
-  vector<dcomplex> B2 = {1i, 3 + 0i, 8i, 9 + 0i, 10i};    // RHS column 2
-  matrix<dcomplex, F_layout> B(5, 2);
-  B(_, 0) = B1;
-  B(_, 1) = B2;
+  // right hand side
+  vector<std::complex<double>> B1 = {6 + 0i, 2i, 7 + 0i, 4i, 5 + 0i};
+  vector<std::complex<double>> B2 = {1i, 3 + 0i, 8i, 9 + 0i, 10i};
+  matrix<std::complex<double>, F_layout> B(5, 2);
+  B(range::all, 0) = B1;
+  B(range::all, 1) = B2;
 
   // reference solutions
-  vector<dcomplex> ref_sol_1 = {137.0 / 33.0 + 0i, -61i / 33.0, 368.0 / 33.0 + 0i, 230i / 33.0, -13.0 / 33.0 + 0i};
-  vector<dcomplex> ref_sol_2 = {-35i / 33.0, 68.0 / 33.0 + 0i, -103i / 66.0, 415.0 / 66.0 + 0i, 215i / 66.0};
-  matrix<dcomplex, F_layout> ref_sol(5, 2);
-  ref_sol(_, 0) = ref_sol_1;
-  ref_sol(_, 1) = ref_sol_2;
+  vector<std::complex<double>> ref_sol_1 = {137.0 / 33.0 + 0i, -61i / 33.0, 368.0 / 33.0 + 0i, 230i / 33.0, -13.0 / 33.0 + 0i};
+  vector<std::complex<double>> ref_sol_2 = {-35i / 33.0, 68.0 / 33.0 + 0i, -103i / 66.0, 415.0 / 66.0 + 0i, 215i / 66.0};
+  matrix<std::complex<double>, F_layout> ref_sol(5, 2);
+  ref_sol(range::all, 0) = ref_sol_1;
+  ref_sol(range::all, 1) = ref_sol_2;
 
   {
-    auto dl(DL);
-    auto d(D);
-    auto du(DU);
+    auto dl(subdiag_vec);
+    auto d(diag_vec);
+    auto du(superdiag_vec);
     int info = lapack::gtsv(dl, d, du, B1);
     EXPECT_EQ(info, 0);
     EXPECT_ARRAY_NEAR(B1, ref_sol_1);
   }
   {
-    auto dl(DL);
-    auto d(D);
-    auto du(DU);
+    auto dl(subdiag_vec);
+    auto d(diag_vec);
+    auto du(superdiag_vec);
     int info = lapack::gtsv(dl, d, du, B2);
     EXPECT_EQ(info, 0);
     EXPECT_ARRAY_NEAR(B2, ref_sol_2);
   }
   {
-    auto dl(DL);
-    auto d(D);
-    auto du(DU);
+    auto dl(subdiag_vec);
+    auto d(diag_vec);
+    auto du(superdiag_vec);
     int info = lapack::gtsv(dl, d, du, B);
     EXPECT_EQ(info, 0);
     EXPECT_ARRAY_NEAR(B, ref_sol);
   }
 }
 
-// ==================================== gesvd ============================================
-
+// Test LAPACK gesvd function.
 template <typename value_t>
-void test_gesvd() { //NOLINT
+void test_gesvd() {
   using matrix_t = matrix<value_t, F_layout>;
 
   auto A      = matrix_t{{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}}};
-  auto [M, N] = A.shape();
+  auto [m, n] = A.shape();
 
-  auto U  = matrix_t(M, M);
-  auto VT = matrix_t(N, N);
+  auto U  = matrix_t(m, m);
+  auto VT = matrix_t(n, n);
 
-  auto S     = vector<double>(std::min(M, N));
+  auto S     = vector<double>(std::min(m, n));
   auto Acopy = matrix_t{A};
   lapack::gesvd(Acopy, S, U, VT);
 
   auto Sigma = matrix_t::zeros(A.shape());
-  for (auto i : range(std::min(M, N))) Sigma(i, i) = S(i);
+  for (auto i : range(std::min(m, n))) Sigma(i, i) = S(i);
   EXPECT_ARRAY_NEAR(A, U * Sigma * VT, 1e-14);
 }
-TEST(lapack, gesvd) { test_gesvd<double>(); }    //NOLINT
-TEST(lapack, zgesvd) { test_gesvd<dcomplex>(); } //NOLINT
 
-// ==================================== geqp3 & orgqr/ungqr ====================================
+TEST(NDA, LAPACKGesvd) {
+  test_gesvd<double>();
+  test_gesvd<std::complex<double>>();
+}
 
-template <typename value_t, bool wide = false>
-void test_geqp3() { //NOLINT
+// Test LAPACK geqp3, orgqr and ungqr functions.
+template <typename value_t, bool wide_matrix = false>
+void test_geqp3_orgqr_ungqr() {
   using matrix_t = matrix<value_t, F_layout>;
 
   auto A = matrix_t{{{1, 1, 1}, {3, 2, 4}, {5, 3, 2}, {2, 4, 5}, {4, 5, 3}}};
-  if (wide) A = matrix_t{transpose(A)};
+  if (wide_matrix) A = matrix_t{transpose(A)};
+  auto [m, n] = A.shape();
 
-  auto [M, N] = A.shape();
-
-  auto jpvt = nda::zeros<int>(N);
-  auto tau  = nda::vector<value_t>(std::min(M, N));
-
-  auto Q = matrix_t{A};
+  // compute QR factorization with column pivoting, i.e. A * P = Q * R
+  auto jpvt = nda::zeros<int>(n);
+  auto tau  = nda::vector<value_t>(std::min(m, n));
+  auto Q    = matrix_t{A};
   lapack::geqp3(Q, jpvt, tau);
 
-  // Compute A*P by permuting columns of A
+  // compute A * P by permuting columns of A
   auto AP = matrix_t{A};
-  for (int j = 0; j < N; ++j) { AP(_, j) = A(_, jpvt(j)); }
+  for (int j = 0; j < n; ++j) { AP(range::all, j) = A(range::all, jpvt(j)); }
 
-  // Extract upper triangular matrix R
-  auto R = nda::matrix<value_t, F_layout>::zeros(std::min(M, N), N);
-  for (int i = 0; i < std::min(M, N); ++i) {
-    for (int j = i; j < N; ++j) { R(i, j) = Q(i, j); }
+  // extract upper triangular matrix R
+  auto R = nda::matrix<value_t, F_layout>::zeros(std::min(m, n), n);
+  for (int i = 0; i < std::min(m, n); ++i) {
+    for (int j = i; j < n; ++j) { R(i, j) = Q(i, j); }
   }
 
-  // Extract matrix Q with orthonormal columns
+  // extract matrix Q with orthonormal columns
   if constexpr (std::is_same_v<value_t, double>) {
     lapack::orgqr(Q, tau);
   } else {
     lapack::ungqr(Q, tau);
   }
 
-  EXPECT_ARRAY_NEAR(AP, Q(_, range(std::min(M, N))) * R, 1e-14);
+  EXPECT_ARRAY_NEAR(AP, Q(range::all, range(std::min(m, n))) * R, 1e-14);
 }
-TEST(lapack, geqp3_tall) { test_geqp3<double>(); }          //NOLINT
-TEST(lapack, zgeqp3_tall) { test_geqp3<dcomplex>(); }       //NOLINT
-TEST(lapack, geqp3_wide) { test_geqp3<double, true>(); }    //NOLINT
-TEST(lapack, zgeqp3_wide) { test_geqp3<dcomplex, true>(); } //NOLINT
+TEST(NDA, LAPACKGeqp3UngqrAndOrgqr) {
+  // tall matrix, i.e. n_rows > n_cols
+  test_geqp3_orgqr_ungqr<double>();
+  test_geqp3_orgqr_ungqr<std::complex<double>>();
 
-// =================================== gelss =======================================
+  // wide matrix, i.e. n_rows < n_cols
+  test_geqp3_orgqr_ungqr<double, true>();
+  test_geqp3_orgqr_ungqr<std::complex<double>, true>();
+}
 
+// Test LAPACK gelss function and the gelss_worker class.
 template <typename value_t>
 void test_gelss() {
   // Cf. https://www.netlib.org/lapack/lapack-3.9.0/LAPACKE/example/example_DGELS_colmajor.c
-  auto A    = matrix<value_t>{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}};
-  auto B    = matrix<value_t>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
-  auto Bvec = vector<value_t>{-10, 12, 14, 16, 18}; // For testing vector right hand side
+  auto A = matrix<value_t>{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}};
+  auto B = matrix<value_t>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
+  auto b = vector<value_t>{-10, 12, 14, 16, 18};
 
-  auto [M, N]  = A.shape();
+  auto [m, n]  = A.shape();
   auto x_exact = matrix<value_t>{{2, 1}, {1, 1}, {1, 2}};
-  auto S       = vector<double>(std::min(M, N));
+  auto s       = vector<double>(std::min(m, n));
 
-  auto gelss_new    = lapack::gelss_worker<value_t>{A};
-  auto [x_1, eps_1] = gelss_new(B);
+  // using the gelss_worker class
+  auto worker       = lapack::gelss_worker<value_t>{A};
+  auto [x_1, eps_1] = worker(B);
   EXPECT_ARRAY_NEAR(x_exact, x_1, 1e-14);
-  auto [x_2, eps_2] = gelss_new(Bvec);
-  EXPECT_ARRAY_NEAR(x_exact(_, 0), x_2, 1e-14);
 
+  auto [x_2, eps_2] = worker(b);
+  EXPECT_ARRAY_NEAR(x_exact(range::all, 0), x_2, 1e-14);
+
+  // call the gelss function directly
   int rank{};
-  matrix<value_t, F_layout> AF{A}, BF{B};
-  lapack::gelss(AF, BF, S, 1e-18, rank);
-  EXPECT_ARRAY_NEAR(x_exact, BF(range(N), _), 1e-14);
+  matrix<value_t, F_layout> A_f{A}, B_f{B};
+  lapack::gelss(A_f, B_f, s, 1e-18, rank);
+  EXPECT_ARRAY_NEAR(x_exact, B_f(range(n), range::all), 1e-14);
 
-  AF = A;
-  lapack::gelss(AF, Bvec, S, 1e-18, rank);
-  EXPECT_ARRAY_NEAR(x_exact(_, 0), Bvec(range(N)), 1e-14);
+  A_f = A;
+  lapack::gelss(A_f, b, s, 1e-18, rank);
+  EXPECT_ARRAY_NEAR(x_exact(range::all, 0), b(range(n)), 1e-14);
 }
-TEST(lapack, gelss) { test_gelss<double>(); }    //NOLINT
-TEST(lapack, zgelss) { test_gelss<dcomplex>(); } //NOLINT
 
-// =================================== getrs =======================================
+TEST(NDA, LAPACKGelss) {
+  test_gelss<double>();
+  test_gelss<std::complex<double>>();
+}
 
+// Test LAPACK getrs, getrf and getri functions.
 template <typename value_t>
-void test_getrs() {
+void test_getrs_getrf_getri() {
   using matrix_t = matrix<value_t, F_layout>;
 
   auto A = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
   auto B = matrix_t{{1, 5}, {4, 5}, {3, 6}};
 
-  // Solve A * x = B using exact Matrix inverse
+  // solve A * x = B using the exact matrix inverse
   auto Ainv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
   auto X1   = matrix_t{Ainv * B};
   EXPECT_ARRAY_NEAR(matrix_t{A * X1}, B);
 
-  // Solve A * x = B using getrf,getrs
+  // solve A * x = B using getrf and getrs
   auto Acopy = matrix_t{A};
   auto Bcopy = matrix_t{B};
   array<int, 1> ipiv(3);
@@ -235,6 +248,14 @@ void test_getrs() {
   auto X2 = matrix_t{Bcopy};
   EXPECT_ARRAY_NEAR(matrix_t{A * X2}, B);
   EXPECT_ARRAY_NEAR(X1, X2);
+
+  // compute the inverse of A using getrf and getri
+  auto Ainv2 = Acopy;
+  lapack::getri(Ainv2, ipiv);
+  EXPECT_ARRAY_NEAR(Ainv, Ainv2);
 }
-TEST(lapack, getrs) { test_getrs<double>(); }    //NOLINT
-TEST(lapack, zgetrs) { test_getrs<dcomplex>(); } //NOLINT
+
+TEST(NDA, LAPAKCGetrsGetrfAndGetri) {
+  test_getrs_getrf_getri<double>();
+  test_getrs_getrf_getri<std::complex<double>>();
+}

@@ -16,80 +16,103 @@
 
 #include "./test_common.hpp"
 
-// ==================== ANY ALL ==========================================
+#include <nda/gtest_tools.hpp>
+#include <nda/nda.hpp>
 
-TEST(NDA, any_all) { //NOLINT
-  auto nan = std::numeric_limits<double>::quiet_NaN();
+#include <algorithm>
+#include <array>
+#include <complex>
+#include <functional>
+#include <limits>
 
-  nda::array<double, 2> A(2, 3);
-  A() = 98;
+// Test fixture for testing various algorithms.
+struct NDAAlgorithm : public ::testing::Test {
+  protected:
+  NDAAlgorithm() {
+    A_d = nda::array<double, 3>::rand(shape) - 0.5;
+    A_c = nda::array<std::complex<double>, 3>::rand(shape) - std::complex<double>{0.5, 0.5};
+  }
 
-  EXPECT_FALSE(any(isnan(A)));
+  std::array<long, 3> shape{2, 3, 4};
+  nda::array<double, 3> A_d;
+  nda::array<std::complex<double>, 3> A_c;
+  static auto constexpr nan = std::numeric_limits<double>::quiet_NaN();
+};
 
-  A() = nan;
-  EXPECT_TRUE(all(isnan(A)));
+TEST_F(NDAAlgorithm, Any) {
+  auto greater1 = nda::map([](auto x) { return x > 1; })(A_d);
+  EXPECT_FALSE(nda::any(greater1));
 
-  A()     = 0;
-  A(0, 0) = nan;
+  A_d(1, 2, 2) = 2;
+  EXPECT_TRUE(nda::any(greater1));
 
-  EXPECT_FALSE(all(isnan(A)));
-  EXPECT_TRUE(any(isnan(A)));
+  EXPECT_FALSE(nda::any(nda::isnan(A_d)));
+
+  A_d(1, 2, 2) = nan;
+  EXPECT_TRUE(nda::any(nda::isnan(A_d)));
 }
 
-// -----------------------------------------------------
+TEST_F(NDAAlgorithm, All) {
+  auto greaterm05 = nda::map([](auto x) { return x > -0.5; })(A_d);
+  EXPECT_TRUE(nda::all(greaterm05));
 
-TEST(NDA, any_all_cplx) { //NOLINT
-  auto nan = std::numeric_limits<double>::quiet_NaN();
+  A_d(0, 1, 3) = -1;
+  EXPECT_FALSE(nda::all(greaterm05));
 
-  nda::array<std::complex<double>, 2> A(2, 3);
-  A() = 98;
+  EXPECT_FALSE(nda::all(nda::isnan(A_d)));
 
-  EXPECT_FALSE(any(isnan(A)));
-
-  A() = nan;
-  EXPECT_TRUE(all(isnan(A)));
-
-  A()     = 0;
-  A(0, 0) = nan;
-
-  EXPECT_FALSE(all(isnan(A)));
-  EXPECT_TRUE(any(isnan(A)));
+  A_d() = nan;
+  EXPECT_TRUE(nda::all(nda::isnan(A_d)));
 }
 
-// ==============================================================
+TEST_F(NDAAlgorithm, MaxElement) {
+  EXPECT_EQ(nda::max_element(A_d), *std::max_element(A_d.begin(), A_d.end()));
 
-TEST(NDA, Algo1) { //NOLINT
+  A_d(1, 1, 1) = 1;
+  EXPECT_EQ(nda::max_element(A_d), 1);
+}
+
+TEST_F(NDAAlgorithm, MinElement) {
+  EXPECT_EQ(nda::min_element(A_d), *std::min_element(A_d.begin(), A_d.end()));
+
+  A_d(1, 1, 2) = -1;
+  EXPECT_EQ(nda::min_element(A_d), -1);
+}
+
+TEST_F(NDAAlgorithm, Sum) {
+  EXPECT_DOUBLE_EQ(nda::sum(A_d), std::accumulate(A_d.begin(), A_d.end(), 0.0));
+  EXPECT_COMPLEX_NEAR(nda::sum(A_c), std::accumulate(A_c.begin(), A_c.end(), std::complex<double>{0.0, 0.0}));
+}
+
+TEST_F(NDAAlgorithm, Product) {
+  EXPECT_DOUBLE_EQ(nda::product(A_d), std::accumulate(A_d.begin(), A_d.end(), 1.0, std::multiplies<>{}));
+  EXPECT_COMPLEX_NEAR(nda::product(A_c), std::accumulate(A_c.begin(), A_c.end(), std::complex<double>{1.0, 0.0}, std::multiplies<>{}));
+}
+
+TEST_F(NDAAlgorithm, CustomFold) {
+  auto minus_d = nda::fold([](auto r, auto x) { return r - x; }, A_d);
+  EXPECT_DOUBLE_EQ(minus_d, std::accumulate(A_d.begin(), A_d.end(), 0.0, std::minus<>{}));
+
+  auto minus_c = nda::fold([](auto r, auto x) { return r - x; }, A_c);
+  EXPECT_COMPLEX_NEAR(minus_c, std::accumulate(A_c.begin(), A_c.end(), std::complex<double>{0.0, 0.0}, std::minus<>{}));
+}
+
+TEST_F(NDAAlgorithm, CombineAlgorithmsWithArithmeticOps) {
   nda::array<int, 2> A(3, 3), B(3, 3);
-
-  for (int i = 0; i < 3; ++i)
+  for (int i = 0; i < 3; ++i) {
     for (int j = 0; j < 3; ++j) {
       A(i, j) = i + 2 * j + 1;
-      B(i, j) = i - j;
+      B(i, j) = i - 3 * j;
     }
+  }
 
-  EXPECT_EQ(max_element(A), 7);
-  EXPECT_EQ(sum(A), 36);
-  EXPECT_EQ(min_element(B), -2);
-  EXPECT_EQ(sum(B), 0);
-  EXPECT_EQ((nda::array<int, 2>{A + 10 * B}), (nda::array<int, 2>{{1, -7, -15}, {12, 4, -4}, {23, 15, 7}}));
-  EXPECT_EQ(max_element(A + 10 * B), 23);
-
-  A() = 1;
-  A += nda::diag(nda::vector<int>{2, 3, 4});
-  EXPECT_EQ(product(A), 3 * 4 * 5);
+  EXPECT_EQ(nda::max_element(A), 7);
+  EXPECT_EQ(nda::min_element(A), 1);
+  EXPECT_EQ(nda::max_element(B), 2);
+  EXPECT_EQ(nda::min_element(B), -6);
+  EXPECT_EQ(nda::max_element(A + B), 5);
+  EXPECT_EQ(nda::min_element(A + B), -1);
+  EXPECT_EQ(nda::sum(A), 36);
+  EXPECT_EQ(nda::sum(B), -18);
+  EXPECT_EQ(nda::sum(A + B), 18);
 }
-
-TEST(NDA, AlgoMat) { //NOLINT
-  nda::matrix<double> A(3, 3);
-
-  for (int i = 0; i < 3; ++i)
-    for (int j = 0; j < 3; ++j) A(i, j) = std::sqrt(i + 3 * j);
-
-  nda::matrix<double, C_layout, nda::sso<100>> A_SSO(3, 3);
-  A_SSO = A;
-
-  EXPECT_EQ(frobenius_norm(A), std::sqrt(9 * 8 / 2));
-  EXPECT_EQ(frobenius_norm(A_SSO), std::sqrt(9 * 8 / 2));
-}
-
-MAKE_MAIN
