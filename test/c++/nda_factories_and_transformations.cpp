@@ -263,6 +263,7 @@ TEST_F(NDAFactoriesTransformations, MakeViews) {
 TEST_F(NDAFactoriesTransformations, MakeRegular) {
   // make a view regular
   auto A      = nda::array<int, 4>{1, 2, 3, 4};
+  A()         = 5;
   auto A_view = A();
   static_assert(std::is_same_v<decltype(A_view), nda::get_view_t<decltype(A)>>);
   auto A_reg = nda::make_regular(A_view);
