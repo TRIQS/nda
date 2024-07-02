@@ -18,14 +18,11 @@
 
 #if defined(__has_feature)
 #if __has_feature(address_sanitizer)
+
 #include <nda/nda.hpp>
 #include <sanitizer/asan_interface.h>
-#endif
-#endif
 
 TEST(NDA, ASANPoison) {
-#if defined(__has_feature)
-#if __has_feature(address_sanitizer)
   long *p;
   {
     nda::array<long, 2> A(3, 3);
@@ -34,6 +31,7 @@ TEST(NDA, ASANPoison) {
   }
 
   EXPECT_EQ(__asan_address_is_poisoned(p), 1);
-#endif
-#endif
 }
+
+#endif
+#endif

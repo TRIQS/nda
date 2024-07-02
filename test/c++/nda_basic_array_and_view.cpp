@@ -834,3 +834,11 @@ TEST_F(NDAArrayAndView, StrideOrderOfArrays) {
   EXPECT_TRUE(v_c.indexmap().is_stride_order_C());
   EXPECT_TRUE(v_f.indexmap().is_stride_order_C());
 }
+
+#if defined(__has_feature)
+#if !__has_feature(address_sanitizer)
+TEST_F(NDAArrayAndView, BadAlloc) {
+  EXPECT_THROW(nda::vector<int>(long(1e16)), std::bad_alloc);
+}
+#endif
+#endif
