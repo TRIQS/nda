@@ -23,13 +23,13 @@ using value_t   = double;
 constexpr int N = 4;
 
 template <size_t Rank>
-using cuarray_t = nda::cuarray<value_t, Rank>;
+using cuarray_t = nda::devarray<value_t, Rank>;
 
 template <size_t Rank>
-using cuarray_vt = nda::cuarray_view<value_t, Rank>;
+using cuarray_vt = nda::devarray_view<value_t, Rank>;
 
 template <size_t Rank>
-using cuarray_cvt = nda::cuarray_const_view<value_t, Rank>;
+using cuarray_cvt = nda::devarray_const_view<value_t, Rank>;
 
 template <size_t Rank>
 using array_t = nda::array<value_t, Rank>;

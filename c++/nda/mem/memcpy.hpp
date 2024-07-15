@@ -50,12 +50,16 @@ namespace nda::mem {
   template <AddressSpace DestAdrSp, AddressSpace SrcAdrSp>
   void memcpy(void *dest, void const *src, size_t count) {
     check_adr_sp_valid<DestAdrSp, SrcAdrSp>();
-    static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
+    static_assert(nda::have_device == nda::have_cuda || nda::have_device == nda::have_rocm, "Adjust function for new device types");
 
     if constexpr (DestAdrSp == Host && SrcAdrSp == Host) {
       std::memcpy(dest, src, count);
-    } else {
+    } else { // Device or Unified
+#ifdef NDA_HAVE_CUDA
       device_error_check(cudaMemcpy(dest, src, count, cudaMemcpyDefault), "cudaMemcpy");
+#elif NDA_HAVE_ROCM
+      device_error_check(hipMemcpy(dest, src, count, hipMemcpyDefault), "hipMemcpy");
+#endif
     }
   }
 
@@ -84,14 +88,18 @@ namespace nda::mem {
   void memcpy2D(void *dest, size_t dpitch, const void *src, size_t spitch, size_t width, size_t height) {
     EXPECTS(width <= dpitch && width <= spitch);
     check_adr_sp_valid<DestAdrSp, SrcAdrSp>();
-    static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
+    static_assert(nda::have_device == nda::have_cuda || nda::have_device == nda::have_rocm, "Adjust function for new device types");
 
     if constexpr (DestAdrSp == Host && SrcAdrSp == Host) {
       auto *desti = static_cast<unsigned char *>(dest);
       auto *srci  = static_cast<const unsigned char *>(src);
       for (size_t i = 0; i < height; ++i, desti += dpitch, srci += spitch) std::memcpy(desti, srci, width);
-    } else if (nda::have_device) {
+    } else { // Device or Unified
+#ifdef NDA_HAVE_CUDA
       device_error_check(cudaMemcpy2D(dest, dpitch, src, spitch, width, height, cudaMemcpyDefault), "cudaMemcpy2D");
+#elif NDA_HAVE_ROCM
+      device_error_check(hipMemcpy2D(dest, dpitch, src, spitch, width, height, hipMemcpyDefault), "hipMemcpy2D");
+#endif
     }
   }
 

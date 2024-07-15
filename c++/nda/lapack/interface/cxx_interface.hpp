@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Authors: Thomas Hahn, Jason Kaye, Miguel Morales, Olivier Parcollet, Nils Wentzell
+// Authors: Thomas Hahn, Jason Kaye, Geraud Krawezik, Miguel Morales, Olivier Parcollet, Nils Wentzell
 
 /**
  * @file
@@ -27,6 +27,10 @@
 
 #if defined(NDA_HAVE_CUDA)
 #include "./cusolver_interface.hpp"
+#endif
+
+#if defined(NDA_HAVE_ROCM)
+#include "rocsolver_interface.hpp"
 #endif
 
 namespace nda::lapack::f77 {

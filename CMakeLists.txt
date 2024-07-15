@@ -76,6 +76,7 @@ endif()
 
 # GPU support
 option(CudaSupport "Build with Cuda support" OFF)
+option(RocmSupport "Build with Rocm support" OFF)
 option(Use_Magma "Enable GEMM vBatch using Magma" OFF)
 
 # ############

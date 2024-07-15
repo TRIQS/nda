@@ -55,7 +55,7 @@ namespace nda {
    * @tparam Int Integer type.
    * @tparam Rank Rank of the array.
    * @param shape Shape of the array.
-   * @return Zero-initialized nda::array or nda::cuarray or scalar if `Rank == 0`.
+   * @return Zero-initialized nda::array or nda::devarray or scalar if `Rank == 0`.
    */
   template <typename T, mem::AddressSpace AdrSp = mem::Host, std::integral Int, auto Rank>
   auto zeros(std::array<Int, Rank> const &shape) {
@@ -65,7 +65,7 @@ namespace nda {
     else if constexpr (AdrSp == mem::Host)
       return array<T, Rank>::zeros(shape);
     else
-      return cuarray<T, Rank>::zeros(shape);
+      return devarray<T, Rank>::zeros(shape);
   }
 
   /**
@@ -77,7 +77,7 @@ namespace nda {
    * @tparam AdrSp Address space of the array.
    * @tparam Ints Integer types.
    * @param is Extent (number of elements) along each dimension.
-   * @return Zero-initialized nda::array or nda::cuarray or scalar if no arguments are given.
+   * @return Zero-initialized nda::array or nda::devarray or scalar if no arguments are given.
    */
   template <typename T, mem::AddressSpace AdrSp = mem::Host, std::integral... Ints>
   auto zeros(Ints... is) {

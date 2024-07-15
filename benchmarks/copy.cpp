@@ -20,7 +20,7 @@ template <size_t Rank>
 using array_t = nda::array<value_t, Rank>;
 
 template <size_t Rank>
-using device_array_t = nda::cuarray<value_t, Rank>;
+using device_array_t = nda::devarray<value_t, Rank>;
 
 const long KBmin = 8;
 const long KBmax = 1 << 15;

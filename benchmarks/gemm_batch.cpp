@@ -36,7 +36,7 @@ static void GEMM_BATCH(benchmark::State &state) {
   state.counters["bytesize"]   = double(NBytes);
 }
 BENCHMARK_TEMPLATE(GEMM_BATCH, nda::matrix<value_t>)->RangeMultiplier(2)->Range(Nmin, Nmax)->Unit(benchmark::kMicrosecond);   // NOLINT
-BENCHMARK_TEMPLATE(GEMM_BATCH, nda::cumatrix<value_t>)->RangeMultiplier(2)->Range(Nmin, Nmax)->Unit(benchmark::kMicrosecond); // NOLINT
+BENCHMARK_TEMPLATE(GEMM_BATCH, nda::devmatrix<value_t>)->RangeMultiplier(2)->Range(Nmin, Nmax)->Unit(benchmark::kMicrosecond); // NOLINT
 
 template <typename M>
 static void GEMM_VBATCH(benchmark::State &state) {
@@ -54,7 +54,7 @@ static void GEMM_VBATCH(benchmark::State &state) {
   state.counters["bytesize"]   = double(NBytes);
 }
 BENCHMARK_TEMPLATE(GEMM_VBATCH, nda::matrix<value_t>)->RangeMultiplier(2)->Range(Nmin, Nmax)->Unit(benchmark::kMicrosecond);   // NOLINT
-BENCHMARK_TEMPLATE(GEMM_VBATCH, nda::cumatrix<value_t>)->RangeMultiplier(2)->Range(Nmin, Nmax)->Unit(benchmark::kMicrosecond); // NOLINT
+BENCHMARK_TEMPLATE(GEMM_VBATCH, nda::devmatrix<value_t>)->RangeMultiplier(2)->Range(Nmin, Nmax)->Unit(benchmark::kMicrosecond); // NOLINT
 
 template <typename T>
 static void GEMM_BATCH_STRIDED(benchmark::State &state) {
@@ -72,4 +72,4 @@ static void GEMM_BATCH_STRIDED(benchmark::State &state) {
   state.counters["bytesize"]   = double(NBytes);
 }
 BENCHMARK_TEMPLATE(GEMM_BATCH_STRIDED, nda::array<value_t, 3>)->RangeMultiplier(2)->Range(Nmin, Nmax)->Unit(benchmark::kMicrosecond);   // NOLINT
-BENCHMARK_TEMPLATE(GEMM_BATCH_STRIDED, nda::cuarray<value_t, 3>)->RangeMultiplier(2)->Range(Nmin, Nmax)->Unit(benchmark::kMicrosecond); // NOLINT
+BENCHMARK_TEMPLATE(GEMM_BATCH_STRIDED, nda::devarray<value_t, 3>)->RangeMultiplier(2)->Range(Nmin, Nmax)->Unit(benchmark::kMicrosecond); // NOLINT

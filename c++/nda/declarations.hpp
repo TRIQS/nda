@@ -228,6 +228,8 @@ namespace nda {
      nda::basic_array<ValueType, 1, nda::basic_layout<nda::static_extents(N), nda::C_stride_order<1>, nda::layout_prop_e::contiguous>, 'V',
                       nda::stack<N>>;
 
+  // ---------------------- Devices Aliases --------------------------------
+
   /**
    * @brief Similar to nda::array except the memory is stored on the device.
    *
@@ -236,7 +238,7 @@ namespace nda {
    * @tparam Layout Layout policy of the array.
    */
   template <typename ValueType, int Rank, typename Layout = C_layout>
-  using cuarray = basic_array<ValueType, Rank, Layout, 'A', heap<mem::Device>>;
+  using devarray = basic_array<ValueType, Rank, Layout, 'A', heap<mem::Device>>;
 
   /**
    * @brief Similar to nda::array_view except the memory is stored on the device.
@@ -246,7 +248,7 @@ namespace nda {
    * @tparam Layout Layout policy of the view.
    */
   template <typename ValueType, int Rank, typename Layout = C_stride_layout>
-  using cuarray_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<mem::Device>>;
+  using devarray_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<mem::Device>>;
 
   /**
    * @brief Similar to nda::array_const_view except the memory is stored on the device.
@@ -256,7 +258,7 @@ namespace nda {
    * @tparam Layout Layout policy of the view.
    */
   template <typename ValueType, int Rank, typename Layout = C_stride_layout>
-  using cuarray_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<mem::Device>>;
+  using devarray_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<mem::Device>>;
 
   /**
    * @brief Similar to nda::matrix except the memory is stored on the device.
@@ -266,7 +268,7 @@ namespace nda {
    * @tparam ContainerPolicy Memory policy of the matrix.
    */
   template <typename ValueType, typename Layout = C_layout, typename ContainerPolicy = heap<mem::Device>>
-  using cumatrix = basic_array<ValueType, 2, Layout, 'M', ContainerPolicy>;
+  using devmatrix = basic_array<ValueType, 2, Layout, 'M', ContainerPolicy>;
 
   /**
    * @brief Similar to nda::matrix_view except the memory is stored on the device.
@@ -275,7 +277,7 @@ namespace nda {
    * @tparam Layout Layout policy of the view.
    */
   template <typename ValueType, typename Layout = C_stride_layout>
-  using cumatrix_view = basic_array_view<ValueType, 2, Layout, 'M', default_accessor, borrowed<mem::Device>>;
+  using devmatrix_view = basic_array_view<ValueType, 2, Layout, 'M', default_accessor, borrowed<mem::Device>>;
 
   /**
    * @brief Similar to nda::matrix_const_view except the memory is stored on the device.
@@ -284,7 +286,7 @@ namespace nda {
    * @tparam Layout Layout policy of the view.
    */
   template <typename ValueType, typename Layout = C_stride_layout>
-  using cumatrix_const_view = basic_array_view<ValueType const, 2, Layout, 'M', default_accessor, borrowed<mem::Device>>;
+  using devmatrix_const_view = basic_array_view<ValueType const, 2, Layout, 'M', default_accessor, borrowed<mem::Device>>;
 
   /**
    * @brief Similar to nda::vector except the memory is stored on the device.
@@ -292,7 +294,7 @@ namespace nda {
    * @tparam ValueType Value type of the vector.
    */
   template <typename ValueType>
-  using cuvector = basic_array<ValueType, 1, C_layout, 'V', heap<mem::Device>>;
+  using devvector = basic_array<ValueType, 1, C_layout, 'V', heap<mem::Device>>;
 
   /**
    * @brief Similar to nda::vector_view except the memory is stored on the device.
@@ -301,7 +303,7 @@ namespace nda {
    * @tparam Layout Layout policy of the view.
    */
   template <typename ValueType, typename Layout = C_stride_layout>
-  using cuvector_view = basic_array_view<ValueType, 1, Layout, 'V', default_accessor, borrowed<mem::Device>>;
+  using devvector_view = basic_array_view<ValueType, 1, Layout, 'V', default_accessor, borrowed<mem::Device>>;
 
   /**
    * @brief Similar to nda::vector_const_view except the memory is stored on the device.
@@ -310,7 +312,7 @@ namespace nda {
    * @tparam Layout Layout policy of the view.
    */
   template <typename ValueType, typename Layout = C_stride_layout>
-  using cuvector_const_view = basic_array_view<ValueType const, 1, Layout, 'V', default_accessor, borrowed<mem::Device>>;
+  using devvector_const_view = basic_array_view<ValueType const, 1, Layout, 'V', default_accessor, borrowed<mem::Device>>;
 
   /** @} */
 

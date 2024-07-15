@@ -6,9 +6,10 @@ endforeach()
 
 # List of all tests
 file(GLOB_RECURSE all_tests RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
-if(NOT CudaSupport)
-  list(FILTER all_tests EXCLUDE REGEX "nda_cu")
+if(NOT CudaSupport AND NOT RocmSupport)
+  list(FILTER all_tests EXCLUDE REGEX "nda_dev")
 endif()
+list(FILTER all_tests EXCLUDE REGEX "nda_cu")
 
 macro(SetUpAllTestWithMacroDef extension macrodef)
 foreach(test ${all_tests})

@@ -2,6 +2,9 @@ file(GLOB_RECURSE sources *.cpp)
 if(NOT CudaSupport)
   list(FILTER sources EXCLUDE REGEX "(cublas_interface|cusolver_interface)")
 endif()
+if(NOT RocmSupport)
+  list(FILTER sources EXCLUDE REGEX "(rocblas_interface|rocsolver_interface)")
+endif()
 add_library(${PROJECT_NAME}_c ${sources})
 add_library(${PROJECT_NAME}::${PROJECT_NAME}_c ALIAS ${PROJECT_NAME}_c)
 
@@ -84,6 +87,17 @@ if(CudaSupport)
   find_package(CUDAToolkit REQUIRED)
   target_link_libraries(${PROJECT_NAME}_c PUBLIC CUDA::cudart CUDA::cublas CUDA::cusolver)
   target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_CUDA NDA_HAVE_DEVICE)
+endif()
+
+# ========= RocRT & RocBLAS ==========
+
+if(RocmSupport)
+  message(STATUS "-------- RocmToolkit detection -------------")
+  find_package(HIP REQUIRED)
+  find_package(rocblas REQUIRED)
+  find_package(rocsolver REQUIRED)
+  target_link_libraries(${PROJECT_NAME}_c PUBLIC hip::host roc::rocblas roc::rocsolver)
+  target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_ROCM NDA_HAVE_DEVICE)
 endif()
 
 # ========= Magma ==========

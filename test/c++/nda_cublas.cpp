@@ -26,7 +26,7 @@
 template <typename value_t, typename Layout>
 void test_gemm() {
   nda::matrix<value_t, Layout> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3{{1, 0}, {0, 1}};
-  nda::cumatrix<value_t, Layout> M1_d{M1}, M2_d{M2}, M3_d{M3};
+  nda::devmatrix<value_t, Layout> M1_d{M1}, M2_d{M2}, M3_d{M3};
 
   nda::blas::gemm(1.0, M1_d, M2_d, 1.0, M3_d);
   M3 = M3_d;
@@ -98,8 +98,8 @@ void test_gemv() {
   v() = 1;
   w() = 0;
 
-  nda::cumatrix<value_t, Layout> A_d{A};
-  nda::cuvector<value_t> v_d{v}, w_d{w};
+  nda::devmatrix<value_t, Layout> A_d{A};
+  nda::devvector<value_t> v_d{v}, w_d{w};
 
   nda::range rg(1, 3);
   nda::blas::gemv(1, A_d(rg, rg), v_d(rg), 0, w_d(rg));
@@ -132,8 +132,8 @@ void test_ger() {
   M = 0;
   nda::array<value_t, 1> v{1, 2};
 
-  nda::cumatrix<value_t, Layout> M_d{M};
-  nda::cuvector<value_t> v_d{v};
+  nda::devmatrix<value_t, Layout> M_d{M};
+  nda::devvector<value_t> v_d{v};
 
   nda::blas::ger(1.0, v_d, v_d, M_d);
 
@@ -156,7 +156,7 @@ TEST(NDA, CUBLASOuterProduct) {
   for (auto [i, j] : N.indices())
     for (auto [k, l] : M.indices()) P(i, j, k, l) = N(i, j) * M(k, l);
 
-  nda::cumatrix<double> M_d{M}, N_d{N};
+  nda::devmatrix<double> M_d{M}, N_d{N};
   auto Res_d = nda::blas::outer_product(N_d, M_d);
   auto Res   = nda::array<double, 4>{Res_d};
   EXPECT_ARRAY_NEAR(P, Res);
@@ -172,7 +172,7 @@ void test_dot() {
     b *= 1 + 2i;
   }
 
-  nda::cuvector<value_t> a_d{a}, b_d{b};
+  nda::devvector<value_t> a_d{a}, b_d{b};
   EXPECT_COMPLEX_NEAR((nda::blas::dot(a_d, b_d)), (nda::blas::dot_generic(a, b)), 1.e-14);
 }
 
@@ -191,7 +191,7 @@ void test_dotc() {
     b *= 1 + 2i;
   }
 
-  nda::cuvector<value_t> a_d{a}, b_d{b};
+  nda::devvector<value_t> a_d{a}, b_d{b};
   EXPECT_COMPLEX_NEAR((nda::blas::dotc(a_d, b_d)), (nda::blas::dotc_generic(a, b)), 1.e-14);
 }
 

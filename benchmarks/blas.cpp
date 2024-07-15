@@ -31,7 +31,7 @@ static void DOT(benchmark::State &state) {
   state.counters["bytesize"] = double(NBytes);
 }
 BENCHMARK_TEMPLATE(DOT, nda::vector<value_t>)->RangeMultiplier(2)->Range(Nmin, Nmax)->Unit(benchmark::kMicrosecond);   // NOLINT
-BENCHMARK_TEMPLATE(DOT, nda::cuvector<value_t>)->RangeMultiplier(2)->Range(Nmin, Nmax)->Unit(benchmark::kMicrosecond); // NOLINT
+BENCHMARK_TEMPLATE(DOT, nda::devvector<value_t>)->RangeMultiplier(2)->Range(Nmin, Nmax)->Unit(benchmark::kMicrosecond); // NOLINT
 
 template <typename Matrix>
 static void GEMM(benchmark::State &state) {
@@ -45,7 +45,7 @@ static void GEMM(benchmark::State &state) {
   state.counters["bytesize"] = double(NBytes);
 }
 BENCHMARK_TEMPLATE(GEMM, nda::matrix<value_t>)->RangeMultiplier(2)->Range(Nmin, Nmax)->Unit(benchmark::kMicrosecond);   // NOLINT
-BENCHMARK_TEMPLATE(GEMM, nda::cumatrix<value_t>)->RangeMultiplier(2)->Range(Nmin, Nmax)->Unit(benchmark::kMicrosecond); // NOLINT
+BENCHMARK_TEMPLATE(GEMM, nda::devmatrix<value_t>)->RangeMultiplier(2)->Range(Nmin, Nmax)->Unit(benchmark::kMicrosecond); // NOLINT
 
 template <typename Vector, typename Matrix>
 static void GER(benchmark::State &state) {
@@ -59,7 +59,7 @@ static void GER(benchmark::State &state) {
   state.counters["bytesize"] = double(NBytes);
 }
 BENCHMARK_TEMPLATE(GER, nda::vector<value_t>, nda::matrix<value_t>)->RangeMultiplier(2)->Range(Nmin, Nmax)->Unit(benchmark::kMicrosecond); // NOLINT
-BENCHMARK_TEMPLATE(GER, nda::cuvector<value_t>, nda::cumatrix<value_t>)
+BENCHMARK_TEMPLATE(GER, nda::devvector<value_t>, nda::devmatrix<value_t>)
    ->RangeMultiplier(2)
    ->Range(Nmin, Nmax)
    ->Unit(benchmark::kMicrosecond); // NOLINT

@@ -96,13 +96,13 @@ namespace nda::lapack::device {
   void getrf(int M, int N, double *A, int LDA, int *ipiv, int &info) {
     int bufferSize = 0;
     cusolverDnDgetrf_bufferSize(get_handle(), M, N, A, LDA, &bufferSize);
-    auto Workspace = nda::cuvector<double>(bufferSize);
+    auto Workspace = nda::devvector<double>(bufferSize);
     CUSOLVER_CHECK(cusolverDnDgetrf, info, M, N, A, LDA, Workspace.data(), ipiv);
   }
   void getrf(int M, int N, dcomplex *A, int LDA, int *ipiv, int &info) {
     int bufferSize = 0;
     cusolverDnZgetrf_bufferSize(get_handle(), M, N, cucplx(A), LDA, &bufferSize);
-    auto Workspace = nda::cuvector<dcomplex>(bufferSize);
+    auto Workspace = nda::devvector<dcomplex>(bufferSize);
     CUSOLVER_CHECK(cusolverDnZgetrf, info, M, N, cucplx(A), LDA, cucplx(Workspace.data()), ipiv);
   }
 

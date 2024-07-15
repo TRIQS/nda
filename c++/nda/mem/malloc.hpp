@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Authors: Thomas Hahn, Miguel Morales, Nils Wentzell
+// Authors: Thomas Hahn, Geraud Krawezik, Miguel Morales, Nils Wentzell
 
 /**
  * @file
@@ -48,15 +48,23 @@ namespace nda::mem {
   template <AddressSpace AdrSp>
   void *malloc(size_t size) {
     check_adr_sp_valid<AdrSp>();
-    static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
+    static_assert(nda::have_device == nda::have_cuda || nda::have_device == nda::have_rocm, "Adjust function for new device types");
 
     void *ptr = nullptr;
     if constexpr (AdrSp == Host) {
       ptr = std::malloc(size); // NOLINT (we want to return a void*)
     } else if constexpr (AdrSp == Device) {
+#ifdef NDA_HAVE_CUDA
       device_error_check(cudaMalloc((void **)&ptr, size), "cudaMalloc");
-    } else {
+#elif NDA_HAVE_ROCM
+      device_error_check(hipMalloc((void **)&ptr, size), "hipMalloc");
+#endif
+    } else { // Unified
+#ifdef NDA_HAVE_CUDA
       device_error_check(cudaMallocManaged((void **)&ptr, size), "cudaMallocManaged");
+#elif NDA_HAVE_ROCM
+      device_error_check(hipMallocManaged((void **)&ptr, size), "hipMallocManaged");
+#endif
     }
     return ptr;
   }
@@ -74,12 +82,16 @@ namespace nda::mem {
   template <AddressSpace AdrSp>
   void free(void *p) {
     check_adr_sp_valid<AdrSp>();
-    static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
+    static_assert(nda::have_device == nda::have_cuda || nda::have_device == nda::have_rocm, "Adjust function for new device types");
 
     if constexpr (AdrSp == Host) {
       std::free(p); // NOLINT (we want to call free with a void*)
-    } else {
+    } else {        // Device or Unified
+#ifdef NDA_HAVE_CUDA
       device_error_check(cudaFree(p), "cudaFree");
+#elif NDA_HAVE_ROCM
+      device_error_check(hipFree(p), "hipFree");
+#endif
     }
   }
 

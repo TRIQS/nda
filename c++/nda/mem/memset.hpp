@@ -48,12 +48,16 @@ namespace nda::mem {
   template <AddressSpace AdrSp>
   void memset(void *p, int value, size_t count) {
     check_adr_sp_valid<AdrSp>();
-    static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
+    static_assert(nda::have_device == nda::have_cuda || nda::have_device == nda::have_rocm, "Adjust function for new device types");
 
     if constexpr (AdrSp == Host) {
       std::memset(p, value, count);
-    } else {
+    } else { // Device or Unified
+#ifdef NDA_HAVE_CUDA
       device_error_check(cudaMemset(p, value, count), "cudaMemset");
+#elif NDA_HAVE_ROCM
+      device_error_check(hipMemset(p, value, count), "hipMemset");
+#endif
     }
   }
 
@@ -77,13 +81,17 @@ namespace nda::mem {
   template <AddressSpace AdrSp>
   void memset2D(void *ptr, size_t pitch, int value, size_t width, size_t height) {
     check_adr_sp_valid<AdrSp>();
-    static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
+    static_assert(nda::have_device == nda::have_cuda || nda::have_device == nda::have_rocm, "Adjust function for new device types");
 
     if constexpr (AdrSp == Host) {
       auto *ptri = static_cast<unsigned char *>(ptr);
       for (size_t i = 0; i < height; ++i, ptri += pitch) std::memset(ptri, value, width);
     } else { // Device or Unified
+#ifdef NDA_HAVE_CUDA
       device_error_check(cudaMemset2D(ptr, pitch, value, width, height), "cudaMemset2D");
+#elif NDA_HAVE_ROCM
+      device_error_check(hipMemset2D(ptr, pitch, value, width, height), "hipMemset2D");
+#endif
     }
   }
 
