@@ -50,12 +50,12 @@ namespace nda::lapack {
    *
    * @tparam A nda::MemoryMatrix type.
    * @tparam B nda::MemoryMatrix type.
-   * @tparam B nda::MemoryVector type.
+   * @tparam IPIV nda::MemoryVector type.
    * @param a Input matrix. The factors \f$ \mathbf{L} \f$ and \f$ \mathbf{U} \f$ from the factorization \f$ \mathbf{A}
    * = \mathbf{P L U} \f$ as computed by `getrf`.
    * @param b Input/output matrix. On entry, the right hand side matrix \f$ \mathbf{B} \f$. On exit, the solution matrix
    * \f$ \mathbf{X} \f$.
-   * @param ipiv Input vector. The pivot indices from `getrf`, i.e. for `1 <= i <= N`, row i of the matrix was
+   * @param ipiv Input vector. The pivot indices from `getrf`, i.e. for `1 <= i <= n`, row i of the matrix was
    * interchanged with row `ipiv(i)`.
    * @return Integer return code from the LAPACK call.
    */

@@ -53,7 +53,7 @@ namespace nda::lapack {
    * @param a Input/output matrix. On entry, the m-by-n matrix to be factored. On exit, the factors \f$ \mathbf{L} \f$
    * and \f$ \mathbf{U} \f$ from the factorization \f$ \mathbf{A} = \mathbf{P L U} \f$; the unit diagonal elements of
    * \f$ \mathbf{L} \f$ are not stored.
-   * @param ipiv Output vector. The pivot indices from `getrf`, i.e. for `1 <= i <= N`, row i of the matrix was
+   * @param ipiv Output vector. The pivot indices from `getrf`, i.e. for `1 <= i <= n`, row i of the matrix was
    * interchanged with row `ipiv(i)`.
    * @return Integer return code from the LAPACK call.
    */

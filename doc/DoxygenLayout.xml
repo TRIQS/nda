@@ -17,6 +17,14 @@
       </tab>
     </tab>
     <tab type="usergroup" url="@ref examples" title="Examples">
+      <tab type="user" url="@ref ex1" title="Example 1: A quick overview"/>
+      <tab type="user" url="@ref ex2" title="Example 2: Constructing arrays"/>
+      <tab type="user" url="@ref ex3" title="Example 3: Initializing arrays"/>
+      <tab type="user" url="@ref ex4" title="Example 4: Views and slices"/>
+      <tab type="user" url="@ref ex5" title="Example 5: HDF5 support"/>
+      <tab type="user" url="@ref ex6" title="Example 6: MPI support"/>
+      <tab type="user" url="@ref ex7" title="Example 7: Making use of symmetries"/>
+      <tab type="user" url="@ref ex8" title="Example 8: Linear algebra support"/>
     </tab>
     <tab type="usergroup" url="@ref documentation" title="API Documentation">
       <tab type="usergroup" url="@ref arrays_views" title="Arrays and views">
@@ -131,15 +139,10 @@
       <tab type="usergroup" url="@ref layout" title="Memory layout">
         <tab type="usergroup" url="@ref layout_pols" title="Layout policies">
           <tab type="user" url="@ref nda::basic_layout" title="basic_layout"/>
-          <tab type="user" url="@ref nda::basic_layout_str" title="basic_layout_str"/>
           <tab type="user" url="@ref nda::C_layout" title="C_layout"/>
-          <tab type="user" url="@ref nda::C_layout_str" title="C_layout_str"/>
           <tab type="user" url="@ref nda::C_stride_layout" title="C_stride_layout"/>
-          <tab type="user" url="@ref nda::C_stride_layout_str" title="C_stride_layout_str"/>
           <tab type="user" url="@ref nda::F_layout" title="F_layout"/>
-          <tab type="user" url="@ref nda::F_layout_str" title="F_layout_str"/>
           <tab type="user" url="@ref nda::F_stride_layout" title="F_stride_layout"/>
-          <tab type="user" url="@ref nda::F_stride_layout_str" title="F_stride_layout_str"/>
         </tab>
         <tab type="usergroup" url="@ref layout_utils" title="Layout utilities">
           <tab type="user" url="@ref nda::_linear_index_t" title="_linear_index_t"/>
@@ -149,7 +152,6 @@
         </tab>
         <tab type="usergroup" url="@ref layout_idx" title="Mult-dimensional indexing">
           <tab type="user" url="@ref nda::idx_map" title="idx_map"/>
-          <tab type="user" url="@ref nda::rect_str" title="rect_str"/>
         </tab>
       </tab>
       <tab type="usergroup" url="@ref memory" title="Memory management">
