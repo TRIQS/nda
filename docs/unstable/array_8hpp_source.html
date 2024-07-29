@@ -292,7 +292,7 @@ $(function(){initNavTree('array_8hpp_source.html',''); initResizable(true); });
 <div class="foldopen" id="foldopen00165" data-start="{" data-end="}">
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno"><a class="line" href="group__utils__std.html#gab8d45097fed36893d99fadfab415d285">  165</a></span>  <span class="keyword">constexpr</span> std::array&lt;T, R&gt; <a class="code hl_function" href="group__utils__std.html#gab8d45097fed36893d99fadfab415d285">make_initialized_array</a>(T v) {</div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <span class="keywordflow">return</span> [&amp;v]&lt;size_t... Is&gt;(std::index_sequence&lt;Is...&gt;) {</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>      <span class="keywordflow">return</span> std::array&lt;T, R&gt;{(Is, v)...}; <span class="comment">// NOLINT (always v, just a trick to have the pack)</span></div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>      <span class="keywordflow">return</span> std::array&lt;T, R&gt;{((<span class="keywordtype">void</span>)Is, v)...}; <span class="comment">// NOLINT (always v, just a trick to have the pack)</span></div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    }(std::make_index_sequence&lt;R&gt;{});</div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>  }</div>
 </div>
