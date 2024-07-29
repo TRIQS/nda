@@ -26,10 +26,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {os: ubuntu-22.04, cc: gcc-12, cxx: g++-12, doc: OFF}
-          - {os: ubuntu-22.04, cc: clang-15, cxx: clang++-15, doc: ON}
-          - {os: macos-12, cc: gcc-12, cxx: g++-12, doc: OFF}
-          - {os: macos-12, cc: clang, cxx: clang++, doc: OFF}
+          - {os: ubuntu-22.04, cc: gcc-12, cxx: g++-12, doc: OFF, cov: ON}
+          - {os: ubuntu-22.04, cc: clang-15, cxx: clang++-15, doc: ON, cov: OFF}
+          - {os: macos-12, cc: gcc-12, cxx: g++-12, doc: OFF, cov: OFF}
+          - {os: macos-12, cc: clang, cxx: clang++, doc: OFF, cov: OFF}
 
     runs-on: ${{ matrix.os }}
 
@@ -79,6 +79,15 @@ jobs:
         python3-sphinx
         python3-nbsphinx
 
+    - name: Install gcovr for test coverage
+      if: matrix.cov == 'ON'
+      run: |
+        python3 -m venv --system-site-packages $HOME/.venv/my_python
+        source $HOME/.venv/my_python/bin/activate
+        pip install gcovr
+        echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+        echo "PATH=$PATH" >> $GITHUB_ENV
+
     - name: Install homebrew dependencies
       if: matrix.os == 'macos-12'
       run: |
@@ -123,13 +132,25 @@ jobs:
         mv tmp_basic_array.hpp basic_array.hpp
         mv tmp_basic_array_view.hpp basic_array_view.hpp
 
-    - name: Build nda
+    - name: Build nda without test coverage
+      if: matrix.cov == 'OFF'
       env:
         CC: ${{ matrix.cc }}
         CXX: ${{ matrix.cxx }}
         LIBRARY_PATH: /usr/local/opt/llvm/lib
       run: |
         mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/install -DBuild_Documentation=${{ matrix.doc }} -DPythonSupport=ON
+        make -j2 || make -j1 VERBOSE=1
+
+    - name: Build nda with test coverage
+      if: matrix.cov == 'ON'
+      env:
+        CC: ${{ matrix.cc }}
+        CXX: ${{ matrix.cxx }}
+        LIBRARY_PATH: /usr/local/opt/llvm/lib
+        CXXFLAGS: "${{ env.CXXFLAGS }} --coverage"
+      run: |
+        mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/install -DPythonSupport=OFF -DCMAKE_BUILD_TYPE=Debug
         make -j2 || make -j1 VERBOSE=1
 
     - name: Test nda
@@ -139,6 +160,13 @@ jobs:
       run: |
         cd build
         ctest -j2 --output-on-failure
+
+    - name: Generate test coverage HTML output
+      if: matrix.cov == 'ON'
+      run: |
+        cd build
+        mkdir coverage
+        gcovr --gcov-executable "gcov-12" --root ../c++ --html-details -o coverage/coverage.html .
 
     - name: ccache statistics
       if: always()
@@ -157,3 +185,11 @@ jobs:
         folder: build/doc/html
         branch: github.io
         target-folder: docs/unstable
+
+    - name: Deploy test coverage
+      if: matrix.cov == 'ON' && github.ref == 'refs/heads/unstable'
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: build/coverage
+        branch: github.io
+        target-folder: docs/coverage
