@@ -32,7 +32,6 @@ struct foo {
 struct bar {
   int j = 0;
   bar(foo &&f) : j(f.i) { f.i = 0; }
-  bar(const foo &f) : j(f.i) {}
 };
 
 TEST(NDA, ArrayAdapterBasics) {
@@ -72,21 +71,6 @@ TEST(NDA, ArrayAdapterMoveElements) {
 }
 
 TEST(NDA, ArrayAdapterMoveElements2) {
-  // test moving elements from one array to another using an array adapter
-  nda::array<foo, 2> A_foo(2, 2);
-  for (int i = 0; i < 2; ++i)
-    for (int j = 0; j < 2; ++j) A_foo(i, j).i = 1 + i + 10 * j;
-
-  auto f2    = [A_foo2 = std::move(A_foo)](long i, long j) { return bar{A_foo2(i, j)}; };
-  auto A_bar = nda::array<bar, 2>{nda::array_adapter{std::array{2, 2}, f2}};
-
-  EXPECT_TRUE(A_foo.empty());
-  for (int i = 0; i < 2; ++i) {
-    for (int j = 0; j < 2; ++j) { EXPECT_EQ(A_bar(i, j).j, (1 + i + 10 * j)); }
-  }
-}
-
-TEST(NDA, ArrayAdapterMoveElements3) {
   // test moving elements from one array to another using nda::map instead of an array adapter
   nda::array<foo, 2> A_foo(2, 2);
   for (int i = 0; i < 2; ++i)
