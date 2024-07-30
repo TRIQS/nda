@@ -27,4 +27,5 @@
 #include "./layout/permutation.hpp"
 #include "./layout/policies.hpp"
 #include "./layout/range.hpp"
+#include "./layout/rect_str.hpp"
 #include "./layout/slice_static.hpp"
