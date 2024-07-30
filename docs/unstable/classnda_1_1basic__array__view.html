@@ -340,11 +340,11 @@ template&lt;typename... Ts&gt; </td></tr>
 <tr class="memitem:a55ccfa5caba7d92a645989705fceec08"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classnda_1_1basic__array__view.html">basic_array_view</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a55ccfa5caba7d92a645989705fceec08">operator=</a> (Initializer const &amp;initializer) noexcept</td></tr>
 <tr class="memdesc:a55ccfa5caba7d92a645989705fceec08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assignment operator uses an <a class="el" href="conceptnda_1_1ArrayInitializer.html" title="Check if a given type satisfies the array initializer concept for a given nda::MemoryArray type.">nda::ArrayInitializer</a> to assign to the view.  <br /></td></tr>
 <tr class="separator:a55ccfa5caba7d92a645989705fceec08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f9c3ee7c80e2ca685978197c6d740ee" id="r_a7f9c3ee7c80e2ca685978197c6d740ee"><td class="memTemplParams" colspan="2">template&lt;std::ranges::contiguous_range R&gt; <br />
-requires (Rank == 1 and not MemoryArray&lt;R&gt;)</td></tr>
-<tr class="memitem:a7f9c3ee7c80e2ca685978197c6d740ee"><td class="memTemplItemLeft" align="right" valign="top">auto &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a7f9c3ee7c80e2ca685978197c6d740ee">operator=</a> (R const &amp;rhs) noexcept</td></tr>
-<tr class="memdesc:a7f9c3ee7c80e2ca685978197c6d740ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assignment operator makes a deep copy of a general contiguous range and assigns it to the 1-dimensional view/array.  <br /></td></tr>
-<tr class="separator:a7f9c3ee7c80e2ca685978197c6d740ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01661601db64e83c70606be59956352b" id="r_a01661601db64e83c70606be59956352b"><td class="memTemplParams" colspan="2">template&lt;std::ranges::contiguous_range R&gt; <br />
+requires (Rank == 1 and not MemoryArray&lt;R&gt; and not <a class="el" href="group__utils__type__traits.html#ga6af5475247be0243312f9251f20e3ba6">is_scalar_for_v</a>&lt;R, <a class="el" href="classnda_1_1basic__array__view.html">self_t</a>&gt;)</td></tr>
+<tr class="memitem:a01661601db64e83c70606be59956352b"><td class="memTemplItemLeft" align="right" valign="top">auto &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a01661601db64e83c70606be59956352b">operator=</a> (R const &amp;rhs) noexcept</td></tr>
+<tr class="memdesc:a01661601db64e83c70606be59956352b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assignment operator makes a deep copy of a general contiguous range and assigns it to the 1-dimensional view/array.  <br /></td></tr>
+<tr class="separator:a01661601db64e83c70606be59956352b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15eb3612e1a9c61e1bfe4ea38ee20b4a" id="r_a15eb3612e1a9c61e1bfe4ea38ee20b4a"><td class="memTemplParams" colspan="2">template&lt;ArrayOfRank&lt; Rank &gt; RHS&gt; </td></tr>
 <tr class="memitem:a15eb3612e1a9c61e1bfe4ea38ee20b4a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classnda_1_1basic__array__view.html">basic_array_view</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a15eb3612e1a9c61e1bfe4ea38ee20b4a">operator=</a> (RHS const &amp;rhs) noexcept</td></tr>
 <tr class="memdesc:a15eb3612e1a9c61e1bfe4ea38ee20b4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assignment operator makes a deep copy of the contents of an <a class="el" href="conceptnda_1_1ArrayOfRank.html" title="Check if a given type is an nda::Array of a certain rank.">nda::ArrayOfRank</a> object.  <br /></td></tr>
@@ -1553,8 +1553,8 @@ template&lt;ArrayInitializer&lt; <a class="el" href="classnda_1_1basic__array__v
 
 </div>
 </div>
-<a id="a7f9c3ee7c80e2ca685978197c6d740ee" name="a7f9c3ee7c80e2ca685978197c6d740ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f9c3ee7c80e2ca685978197c6d740ee">&#9670;&#160;</a></span>operator=() <span class="overload">[3/5]</span></h2>
+<a id="a01661601db64e83c70606be59956352b" name="a01661601db64e83c70606be59956352b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01661601db64e83c70606be59956352b">&#9670;&#160;</a></span>operator=() <span class="overload">[3/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1562,7 +1562,7 @@ template&lt;ArrayInitializer&lt; <a class="el" href="classnda_1_1basic__array__v
 template&lt;typename ValueType , int Rank, typename LayoutPolicy , char Algebra, typename AccessorPolicy , typename OwningPolicy &gt; </div>
 <div class="memtemplate">
 template&lt;std::ranges::contiguous_range R&gt; <br />
-requires (Rank == 1 and not MemoryArray&lt;R&gt;)</div>
+requires (Rank == 1 and not MemoryArray&lt;R&gt; and not <a class="el" href="group__utils__type__traits.html#ga6af5475247be0243312f9251f20e3ba6">is_scalar_for_v</a>&lt;R, <a class="el" href="classnda_1_1basic__array__view.html">self_t</a>&gt;)</div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
