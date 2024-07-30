@@ -22,12 +22,11 @@ var searchData=
   ['get_5fncols_19',['get_ncols',['../group__linalg__blas.html#ga5894e5c9661cc8fdbfa37693de22f254',1,'nda::blas']]],
   ['get_5frepresentative_5fdata_20',['get_representative_data',['../classnda_1_1sym__grp.html#a7f3b8d72cdf6cba1bfa3b9fd161d29bf',1,'nda::sym_grp']]],
   ['get_5fsptr_21',['get_sptr',['../structnda_1_1mem_1_1handle__heap.html#ae946896e70e99eeb7577c53b6147dfe0',1,'nda::mem::handle_heap']]],
-  ['get_5fstring_5findices_22',['get_string_indices',['../classnda_1_1rect__str.html#aa03c3e4aeca1674d006b887470c83561',1,'nda::rect_str']]],
-  ['get_5fsym_5fclasses_23',['get_sym_classes',['../classnda_1_1sym__grp.html#a6506404d7429cd0155d5df05b8e82fa3',1,'nda::sym_grp']]],
-  ['getrf_24',['getrf',['../group__linalg__lapack.html#gad2fcbbe9516f85da7d1fa2ae1c3df79b',1,'nda::lapack']]],
-  ['getri_25',['getri',['../group__linalg__lapack.html#ga1b5ce50ac684f54e278746819c419ca1',1,'nda::lapack']]],
-  ['getrs_26',['getrs',['../group__linalg__lapack.html#gaaeb82496116119df161e38599e66e1a3',1,'nda::lapack']]],
-  ['group_5findices_5flayout_27',['group_indices_layout',['../group__layout__utils.html#gadf5843a7df68a72189225c765ce39511',1,'nda']]],
-  ['group_5findices_5fview_28',['group_indices_view',['../group__av__factories.html#gafc054e71fc39165fa411582663367e6e',1,'nda']]],
-  ['gtsv_29',['gtsv',['../group__linalg__lapack.html#ga114f8a73dbb612c779c6d8dc2170f301',1,'nda::lapack']]]
+  ['get_5fsym_5fclasses_22',['get_sym_classes',['../classnda_1_1sym__grp.html#a6506404d7429cd0155d5df05b8e82fa3',1,'nda::sym_grp']]],
+  ['getrf_23',['getrf',['../group__linalg__lapack.html#gad2fcbbe9516f85da7d1fa2ae1c3df79b',1,'nda::lapack']]],
+  ['getri_24',['getri',['../group__linalg__lapack.html#ga1b5ce50ac684f54e278746819c419ca1',1,'nda::lapack']]],
+  ['getrs_25',['getrs',['../group__linalg__lapack.html#gaaeb82496116119df161e38599e66e1a3',1,'nda::lapack']]],
+  ['group_5findices_5flayout_26',['group_indices_layout',['../group__layout__utils.html#gadf5843a7df68a72189225c765ce39511',1,'nda']]],
+  ['group_5findices_5fview_27',['group_indices_view',['../group__av__factories.html#gafc054e71fc39165fa411582663367e6e',1,'nda']]],
+  ['gtsv_28',['gtsv',['../group__linalg__lapack.html#ga114f8a73dbb612c779c6d8dc2170f301',1,'nda::lapack']]]
 ];

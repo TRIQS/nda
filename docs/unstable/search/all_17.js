@@ -24,7 +24,7 @@ var searchData=
   ['traits_21',['Type traits',['../group__utils__type__traits.html',1,'']]],
   ['traits_2ehpp_22',['traits.hpp',['../traits_8hpp.html',1,'']]],
   ['transformations_23',['Factories and transformations',['../group__av__factories.html',1,'']]],
-  ['transpose_24',['transpose',['../classnda_1_1basic__array.html#a362b65bb63bc0304ee11656fd0dbc4f8',1,'nda::basic_array::transpose()'],['../classnda_1_1basic__array.html#a8f4b63e85c2d394f8df6de41e340843a',1,'nda::basic_array::transpose() const'],['../classnda_1_1idx__map.html#a467a22f13e707152f920fe9bf0cb0ee7',1,'nda::idx_map::transpose()'],['../classnda_1_1rect__str.html#adabfd7c3607b89530398cae530a5fa6b',1,'nda::rect_str::transpose()'],['../group__av__factories.html#gab1366c1c79f31877f2d0a1596f323cee',1,'nda::transpose(A &amp;&amp;a)']]],
+  ['transpose_24',['transpose',['../classnda_1_1basic__array.html#a362b65bb63bc0304ee11656fd0dbc4f8',1,'nda::basic_array::transpose()'],['../classnda_1_1basic__array.html#a8f4b63e85c2d394f8df6de41e340843a',1,'nda::basic_array::transpose() const'],['../classnda_1_1idx__map.html#a467a22f13e707152f920fe9bf0cb0ee7',1,'nda::idx_map::transpose()'],['../group__av__factories.html#gab1366c1c79f31877f2d0a1596f323cee',1,'nda::transpose(A &amp;&amp;a)']]],
   ['transposed_5fview_25',['transposed_view',['../group__av__factories.html#ga193578b15703e8a6c5fd337235b6ab63',1,'nda']]],
   ['transposition_26',['transposition',['../group__utils__perms.html#ga080e7f971bbaca2888c61608d11afa80',1,'nda::permutations']]],
   ['type_20traits_27',['Type traits',['../group__utils__type__traits.html',1,'']]],

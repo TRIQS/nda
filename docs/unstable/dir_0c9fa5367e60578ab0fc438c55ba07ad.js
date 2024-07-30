@@ -6,6 +6,5 @@ var dir_0c9fa5367e60578ab0fc438c55ba07ad =
     [ "permutation.hpp", "permutation_8hpp.html", "permutation_8hpp" ],
     [ "policies.hpp", "layout_2policies_8hpp.html", "layout_2policies_8hpp" ],
     [ "range.hpp", "range_8hpp.html", "range_8hpp" ],
-    [ "rect_str.hpp", "rect__str_8hpp.html", null ],
     [ "slice_static.hpp", "slice__static_8hpp.html", "slice__static_8hpp" ]
 ];

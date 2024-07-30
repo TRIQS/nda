@@ -137,15 +137,15 @@ var menudata={children:[
 {text:"Memory layout",url:"group__layout.html",children:[
 {text:"Layout policies",url:"group__layout__pols.html",children:[
 {text:"basic_layout",url:"structnda_1_1basic__layout.html"},
-{text:"basic_layout_str",url:"structnda_1_1basic__layout__str.html"},
+{text:"basic_layout_str",url:"@ref nda::basic_layout_str"},
 {text:"C_layout",url:"structnda_1_1C__layout.html"},
-{text:"C_layout_str",url:"structnda_1_1C__layout__str.html"},
+{text:"C_layout_str",url:"@ref nda::C_layout_str"},
 {text:"C_stride_layout",url:"structnda_1_1C__stride__layout.html"},
-{text:"C_stride_layout_str",url:"structnda_1_1C__stride__layout__str.html"},
+{text:"C_stride_layout_str",url:"@ref nda::C_stride_layout_str"},
 {text:"F_layout",url:"structnda_1_1F__layout.html"},
-{text:"F_layout_str",url:"structnda_1_1F__layout__str.html"},
+{text:"F_layout_str",url:"@ref nda::F_layout_str"},
 {text:"F_stride_layout",url:"structnda_1_1F__stride__layout.html"},
-{text:"F_stride_layout_str",url:"structnda_1_1F__stride__layout__str.html"}]},
+{text:"F_stride_layout_str",url:"@ref nda::F_stride_layout_str"}]},
 {text:"Layout utilities",url:"group__layout__utils.html",children:[
 {text:"_linear_index_t",url:"structnda_1_1__linear__index__t.html"},
 {text:"ellipsis",url:"structnda_1_1ellipsis.html"},
@@ -153,7 +153,7 @@ var menudata={children:[
 {text:"layout_info_t",url:"structnda_1_1layout__info__t.html"}]},
 {text:"Mult-dimensional indexing",url:"group__layout__idx.html",children:[
 {text:"idx_map",url:"classnda_1_1idx__map.html"},
-{text:"rect_str",url:"classnda_1_1rect__str.html"}]}]},
+{text:"rect_str",url:"@ref nda::rect_str"}]}]},
 {text:"Memory management",url:"group__memory.html",children:[
 {text:"Address spaces",url:"group__mem__addrspcs.html"},
 {text:"Allocators",url:"group__mem__allocators.html",children:[

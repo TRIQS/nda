@@ -154,15 +154,15 @@ var NAVTREE =
       [ "Memory layout", "group__layout.html", [
         [ "Layout policies", "group__layout__pols.html", [
           [ "basic_layout", "structnda_1_1basic__layout.html", null ],
-          [ "basic_layout_str", "structnda_1_1basic__layout__str.html", null ],
+          [ "basic_layout_str", "@ref nda::basic_layout_str", null ],
           [ "C_layout", "structnda_1_1C__layout.html", null ],
-          [ "C_layout_str", "structnda_1_1C__layout__str.html", null ],
+          [ "C_layout_str", "@ref nda::C_layout_str", null ],
           [ "C_stride_layout", "structnda_1_1C__stride__layout.html", null ],
-          [ "C_stride_layout_str", "structnda_1_1C__stride__layout__str.html", null ],
+          [ "C_stride_layout_str", "@ref nda::C_stride_layout_str", null ],
           [ "F_layout", "structnda_1_1F__layout.html", null ],
-          [ "F_layout_str", "structnda_1_1F__layout__str.html", null ],
+          [ "F_layout_str", "@ref nda::F_layout_str", null ],
           [ "F_stride_layout", "structnda_1_1F__stride__layout.html", null ],
-          [ "F_stride_layout_str", "structnda_1_1F__stride__layout__str.html", null ]
+          [ "F_stride_layout_str", "@ref nda::F_stride_layout_str", null ]
         ] ],
         [ "Layout utilities", "group__layout__utils.html", [
           [ "_linear_index_t", "structnda_1_1__linear__index__t.html", null ],
@@ -172,7 +172,7 @@ var NAVTREE =
         ] ],
         [ "Mult-dimensional indexing", "group__layout__idx.html", [
           [ "idx_map", "classnda_1_1idx__map.html", null ],
-          [ "rect_str", "classnda_1_1rect__str.html", null ]
+          [ "rect_str", "@ref nda::rect_str", null ]
         ] ]
       ] ],
       [ "Memory management", "group__memory.html", [
@@ -235,8 +235,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"__impl__basic__array__view__common_8hpp_source.html",
-"mapped__functions_8hpp_source.html"
+"@ref nda::C_layout_str",
+"malloc_8hpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

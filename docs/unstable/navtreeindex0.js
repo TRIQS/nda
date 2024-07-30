@@ -1,5 +1,11 @@
 var NAVTREEINDEX0 =
 {
+"@ref nda::C_layout_str":[4,3,0,3],
+"@ref nda::C_stride_layout_str":[4,3,0,5],
+"@ref nda::F_layout_str":[4,3,0,7],
+"@ref nda::F_stride_layout_str":[4,3,0,9],
+"@ref nda::basic_layout_str":[4,3,0,1],
+"@ref nda::rect_str":[4,3,2,1],
 "__impl__basic__array__view__common_8hpp_source.html":[4,7,0,8],
 "accessors_8hpp.html":[4,7,0,9],
 "accessors_8hpp_source.html":[4,7,0,9],
@@ -54,7 +60,6 @@ var NAVTREEINDEX0 =
 "classnda_1_1mem_1_1multi__bucket.html":[4,4,1,4],
 "classnda_1_1mem_1_1segregator.html":[4,4,1,5],
 "classnda_1_1mem_1_1stats.html":[4,4,1,6],
-"classnda_1_1rect__str.html":[4,3,2,1],
 "classnda_1_1runtime__error.html":[4,6,1,0],
 "classnda_1_1sym__grp.html":[4,0,9,3],
 "clef_2clef_8hpp.html":[4,7,0,1,3],
@@ -244,10 +249,5 @@ var NAVTREEINDEX0 =
 "macros_8hpp.html":[4,7,0,30],
 "macros_8hpp_source.html":[4,7,0,30],
 "make__lazy_8hpp.html":[4,7,0,1,9],
-"make__lazy_8hpp_source.html":[4,7,0,1,9],
-"malloc_8hpp.html":[4,7,0,5,3],
-"malloc_8hpp_source.html":[4,7,0,5,3],
-"map_8hpp.html":[4,7,0,31],
-"map_8hpp_source.html":[4,7,0,31],
-"mapped__functions_8hpp.html":[4,7,0,32]
+"make__lazy_8hpp_source.html":[4,7,0,1,9]
 };
