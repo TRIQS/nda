@@ -79,33 +79,41 @@ jobs:
         python3-sphinx
         python3-nbsphinx
 
-    - name: Install gcovr for test coverage
-      if: matrix.cov == 'ON'
+    - name: set up compilers
       run: |
+        echo "CC=${{ matrix.cc }}" >> $GITHUB_ENV
+        echo "CXX=${{ matrix.cxx }}" >> $GITHUB_ENV
+
+    - name: set clang environment
+      if: ${{ contains(matrix.cxx, 'clang') }}
+      run: |
+        echo "CXXFLAGS=-stdlib=libc++" >> $GITHUB_ENV
+        echo "PATH=/usr/local/opt/llvm/bin:$PATH" >> $GITHUB_ENV
+        echo "LIBRARY_PATH=/usr/local/opt/llvm/lib" >> $GITHUB_ENV
+
+    - name: set up virtualenv
+      run: |
+        mkdir $HOME/.venv
         python3 -m venv --system-site-packages $HOME/.venv/my_python
         source $HOME/.venv/my_python/bin/activate
-        pip install gcovr
         echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
         echo "PATH=$PATH" >> $GITHUB_ENV
+
+    - name: set up test coverage
+      if: matrix.cov == 'ON'
+      run: |
+        pip install gcovr
+        echo "CXXFLAGS='$CXXFLAGS --coverage'" >> $GITHUB_ENV
 
     - name: Install homebrew dependencies
       if: matrix.os == 'macos-12'
       run: |
         brew install ccache gcc@12 llvm hdf5 open-mpi openblas
-        mkdir $HOME/.venv
-        python3 -m venv $HOME/.venv/my_python
-        source $HOME/.venv/my_python/bin/activate
         pip install mako numpy scipy mpi4py
         pip install -r requirements.txt
-        echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
-        echo "PATH=$PATH" >> $GITHUB_ENV
 
     - name: Build doxygen
       if: matrix.doc == 'ON'
-      env:
-        CC: ${{ matrix.cc }}
-        CXX: ${{ matrix.cxx }}
-        LIBRARY_PATH: /usr/local/opt/llvm/lib
       run: |
         cd $HOME
         git clone https://github.com/doxygen/doxygen.git
@@ -117,12 +125,6 @@ jobs:
         make -j 2 VERBOSE=1
         cp bin/doxygen /usr/local/bin/doxygen
 
-    - name: add clang cxxflags
-      if: ${{ contains(matrix.cxx, 'clang') }}
-      run: |
-        echo "PATH=/usr/local/opt/llvm/bin:$PATH" >> $GITHUB_ENV
-        echo "CXXFLAGS=-stdlib=libc++" >> $GITHUB_ENV
-
     - name: Prepare source files for doxygen
       if: matrix.doc == 'ON'
       working-directory: ./c++/nda
@@ -132,25 +134,9 @@ jobs:
         mv tmp_basic_array.hpp basic_array.hpp
         mv tmp_basic_array_view.hpp basic_array_view.hpp
 
-    - name: Build nda without test coverage
-      if: matrix.cov == 'OFF'
-      env:
-        CC: ${{ matrix.cc }}
-        CXX: ${{ matrix.cxx }}
-        LIBRARY_PATH: /usr/local/opt/llvm/lib
+    - name: Build nda
       run: |
-        mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/install -DBuild_Documentation=${{ matrix.doc }} -DPythonSupport=ON
-        make -j2 || make -j1 VERBOSE=1
-
-    - name: Build nda with test coverage
-      if: matrix.cov == 'ON'
-      env:
-        CC: ${{ matrix.cc }}
-        CXX: ${{ matrix.cxx }}
-        LIBRARY_PATH: /usr/local/opt/llvm/lib
-        CXXFLAGS: "${{ env.CXXFLAGS }} --coverage"
-      run: |
-        mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/install -DPythonSupport=OFF -DCMAKE_BUILD_TYPE=Debug
+        mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/install -DBuild_Documentation=${{ matrix.doc }} -DCMAKE_BUILD_TYPE=${{ matrix.cov == 'ON' && Debug || Release }}
         make -j2 || make -j1 VERBOSE=1
 
     - name: Test nda
