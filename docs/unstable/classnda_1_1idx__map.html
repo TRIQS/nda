@@ -190,6 +190,9 @@ requires (R != Rank)</td></tr>
 <tr class="memitem:a98c18009fc903752773534e4ee0d4da9" id="r_a98c18009fc903752773534e4ee0d4da9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a98c18009fc903752773534e4ee0d4da9">idx_map</a> (std::array&lt; long, Rank &gt; const &amp;shape, std::array&lt; long, Rank &gt; const &amp;<a class="el" href="#aadd801f4a3741ca3d1bbfca6c0b07041">strides</a>) noexcept(!check_stride_order)</td></tr>
 <tr class="memdesc:a98c18009fc903752773534e4ee0d4da9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new map from a given shape and strides.  <br /></td></tr>
 <tr class="separator:a98c18009fc903752773534e4ee0d4da9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a538420e44bfb0d1743266bf978ca485c" id="r_a538420e44bfb0d1743266bf978ca485c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a538420e44bfb0d1743266bf978ca485c">has_positive_strides</a> () const noexcept</td></tr>
+<tr class="memdesc:a538420e44bfb0d1743266bf978ca485c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Are all strides positive?  <br /></td></tr>
+<tr class="separator:a538420e44bfb0d1743266bf978ca485c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96b462aa805ac1e127065da4e3e55a89" id="r_a96b462aa805ac1e127065da4e3e55a89"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a96b462aa805ac1e127065da4e3e55a89">is_contiguous</a> () const noexcept</td></tr>
 <tr class="memdesc:a96b462aa805ac1e127065da4e3e55a89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is the data contiguous in memory?  <br /></td></tr>
 <tr class="separator:a96b462aa805ac1e127065da4e3e55a89"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -203,7 +206,7 @@ requires (R != Rank)</td></tr>
 <tr class="memdesc:a87630a456c9ef984fda71e279a1679d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the extents of all dimensions.  <br /></td></tr>
 <tr class="separator:a87630a456c9ef984fda71e279a1679d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32bebf379654edecc87db55281fe6bec" id="r_a32bebf379654edecc87db55281fe6bec"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a32bebf379654edecc87db55281fe6bec">min_stride</a> () const noexcept</td></tr>
-<tr class="memdesc:a32bebf379654edecc87db55281fe6bec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the value of the smallest stride.  <br /></td></tr>
+<tr class="memdesc:a32bebf379654edecc87db55281fe6bec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the value of the smallest stride (positive or negative).  <br /></td></tr>
 <tr class="separator:a32bebf379654edecc87db55281fe6bec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b06eac006dea6bf1dae630087f0b693" id="r_a0b06eac006dea6bf1dae630087f0b693"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
 <tr class="memitem:a0b06eac006dea6bf1dae630087f0b693"><td class="memTemplItemLeft" align="right" valign="top">__inline__ long&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a0b06eac006dea6bf1dae630087f0b693">operator()</a> (Args const &amp;...args) const noexcept(true)</td></tr>
@@ -332,7 +335,7 @@ template&lt;int Rank, uint64_t StaticExtents, uint64_t StrideOrder, <a class="el
 <p>For purely static maps, the shape is set to the static extents and the strides are assumed to be contiguous.</p>
 <p>For all other maps, the shape is set to zero and the strides are not initialized. </p>
 
-<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00310">310</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00318">318</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
 
 </div>
 </div>
@@ -377,7 +380,7 @@ template&lt;<a class="el" href="group__layout__utils.html#gade21b85df14c406b5671
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00327">327</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00335">335</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
 
 </div>
 </div>
@@ -423,7 +426,7 @@ template&lt;uint64_t SE, <a class="el" href="group__layout__utils.html#gade21b85
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00350">350</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00358">358</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
 
 </div>
 </div>
@@ -465,7 +468,7 @@ template&lt;int Rank, uint64_t StaticExtents, uint64_t StrideOrder, <a class="el
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00374">374</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00382">382</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
 
 </div>
 </div>
@@ -510,7 +513,7 @@ template&lt;std::integral Int = long&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00390">390</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00398">398</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
 
 </div>
 </div>
@@ -548,7 +551,7 @@ template&lt;int Rank, uint64_t StaticExtents, uint64_t StrideOrder, <a class="el
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00404">404</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00412">412</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
 
 </div>
 </div>
@@ -591,7 +594,7 @@ requires (<a class="el" href="#a62347196df8d4587735cc2abb7c4cdb0">stride_order_e
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00418">418</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00426">426</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
 
 </div>
 </div>
@@ -632,7 +635,7 @@ requires (R != Rank)</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00430">430</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00438">438</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
 
 </div>
 </div>
@@ -669,6 +672,38 @@ template&lt;int Rank, uint64_t StaticExtents, uint64_t StrideOrder, <a class="el
 
 </div>
 </div>
+<a id="a538420e44bfb0d1743266bf978ca485c" name="a538420e44bfb0d1743266bf978ca485c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a538420e44bfb0d1743266bf978ca485c">&#9670;&#160;</a></span>has_positive_strides()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int Rank, uint64_t StaticExtents, uint64_t StrideOrder, <a class="el" href="group__layout__utils.html#gade21b85df14c406b56717fd7703937b3">layout_prop_e</a> LayoutProp&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classnda_1_1idx__map.html">nda::idx_map</a>&lt; Rank, StaticExtents, StrideOrder, LayoutProp &gt;::has_positive_strides </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">nodiscard</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Are all strides positive? </p>
+<dl class="section return"><dt>Returns</dt><dd>True if all strides are positive, false otherwise. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00211">211</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
+
+</div>
+</div>
 <a id="a96b462aa805ac1e127065da4e3e55a89" name="a96b462aa805ac1e127065da4e3e55a89"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a96b462aa805ac1e127065da4e3e55a89">&#9670;&#160;</a></span>is_contiguous()</h2>
 
@@ -695,10 +730,10 @@ template&lt;int Rank, uint64_t StaticExtents, uint64_t StrideOrder, <a class="el
 </div><div class="memdoc">
 
 <p>Is the data contiguous in memory? </p>
-<p>The data is contiguous in memory if the size of the map is equal to the number of memory locations spanned by the map, i.e. the product of the largest stride times the length of the corresponding dimension.</p>
+<p>The data is contiguous in memory if the size of the map is equal to the number of memory locations spanned by the map, i.e. the absolute value of the product of the largest stride times the length of the corresponding dimension.</p>
 <dl class="section return"><dt>Returns</dt><dd>True if the data is contiguous in memory, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00200">200</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00201">201</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
 
 </div>
 </div>
@@ -730,7 +765,7 @@ template&lt;int Rank, uint64_t StaticExtents, uint64_t StrideOrder, <a class="el
 <p>Is the stride order equal to C-order? </p>
 <dl class="section return"><dt>Returns</dt><dd>True if the stride order is the identity permutation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00227">227</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00235">235</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
 
 </div>
 </div>
@@ -762,7 +797,7 @@ template&lt;int Rank, uint64_t StaticExtents, uint64_t StrideOrder, <a class="el
 <p>Is the stride order equal to Fortran-order? </p>
 <dl class="section return"><dt>Returns</dt><dd>True if the stride order is the reverse identity permutation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00233">233</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00241">241</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
 
 </div>
 </div>
@@ -794,7 +829,7 @@ template&lt;int Rank, uint64_t StaticExtents, uint64_t StrideOrder, <a class="el
 <p>Check if the shape and strides of the current map are compatible with its stride order. </p>
 <p>See <a class="el" href="#a1af5e60a5df33b87050de6bc46ccd2f5" title="Check if a given shape and strides are compatible with the stride order.">idx_map::is_stride_order_valid(Int *lenptr, Int *strptr)</a>). </p><dl class="section return"><dt>Returns</dt><dd>True if the shape and strides are compatible with the stride order. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00259">259</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00267">267</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
 
 </div>
 </div>
@@ -845,7 +880,7 @@ template&lt;std::integral Int&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if the given shape and strides are compatible with the stride order. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00244">244</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00252">252</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
 
 </div>
 </div>
@@ -875,10 +910,10 @@ template&lt;int Rank, uint64_t StaticExtents, uint64_t StrideOrder, <a class="el
 </div><div class="memdoc">
 
 <p>Is the data strided in memory with a constant stride? </p>
-<p>The data is strided in memory with a constant stride if the size of the map times the stride of the fastest dimension with an extent bigger than 1 is equal to the number of memory locations spanned by the map, i.e. the product of the largest stride times the length of the corresponding dimension.</p>
+<p>The data is strided in memory with a constant stride if the size of the map times the absolute value of the stride of the fastest dimension with an extent bigger than 1 is equal to the number of memory locations spanned by the map, i.e. the absolute value of the product of the largest stride times the length of the corresponding dimension.</p>
 <dl class="section return"><dt>Returns</dt><dd>True if the data is strided in memory with a constant stride, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00216">216</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00223">223</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
 
 </div>
 </div>
@@ -939,7 +974,7 @@ template&lt;int Rank, uint64_t StaticExtents, uint64_t StrideOrder, <a class="el
 </table>
 </div><div class="memdoc">
 
-<p>Get the value of the smallest stride. </p>
+<p>Get the value of the smallest stride (positive or negative). </p>
 <dl class="section return"><dt>Returns</dt><dd>Stride of the fastest varying dimension. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00190">190</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
@@ -994,7 +1029,7 @@ template&lt;typename... Args&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Linear/Flat index. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00512">512</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00520">520</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
 
 </div>
 </div>
@@ -1043,7 +1078,7 @@ template&lt;int R, uint64_t SE, uint64_t SO, <a class="el" href="group__layout__
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if their ranks, shapes and strides are equal. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00585">585</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00593">593</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
 
 </div>
 </div>
@@ -1154,7 +1189,7 @@ template&lt;typename... Args&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A std::pair containing the offset in memory, i.e. the flat index of the first element of the slice and the new <a class="el" href="classnda_1_1idx__map.html" title="Layout that specifies how to map multi-dimensional indices to a linear/flat index.">nda::idx_map</a>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00570">570</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00578">578</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
 
 </div>
 </div>
@@ -1236,7 +1271,7 @@ template&lt;int Rank, uint64_t StaticExtents, uint64_t StrideOrder, <a class="el
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Multi-dimensional index. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00543">543</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00551">551</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
 
 </div>
 </div>
@@ -1282,7 +1317,7 @@ template&lt;uint64_t Permutation&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>New <a class="el" href="classnda_1_1idx__map.html" title="Layout that specifies how to map multi-dimensional indices to a linear/flat index.">nda::idx_map</a> with permuted indices. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00604">604</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="idx__map_8hpp_source.html#l00612">612</a> of file <a class="el" href="idx__map_8hpp_source.html">idx_map.hpp</a>.</p>
 
 </div>
 </div>
