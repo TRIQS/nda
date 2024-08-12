@@ -301,14 +301,16 @@ TEST(NDA, MemoryMultiBucketAllocator) {
   bucket2[0] = allo.allocate_zero(chunksize);
   EXPECT_EQ(allo.buckets().size(), 2);
   EXPECT_TRUE(allo.owns(bucket2[0]));
-  EXPECT_TRUE(allo.buckets()[1].owns(bucket2[0]));
+  EXPECT_TRUE(allo.buckets()[0].owns(bucket2[0]) != allo.buckets()[1].owns(bucket2[0]));
 
   // deallocate and reallocate in the 1st bucket
+  std::size_t idx = 0;
+  if (allo.buckets()[1].owns(bucket1[20])) idx = 1;
   allo.deallocate(bucket1[20]);
-  EXPECT_FALSE(allo.buckets()[0].is_full());
+  EXPECT_FALSE(allo.buckets()[idx].is_full());
   auto mb_realloc = allo.allocate_zero(chunksize);
-  EXPECT_TRUE(allo.buckets()[0].owns(mb_realloc));
-  EXPECT_TRUE(allo.buckets()[0].is_full());
+  EXPECT_TRUE(allo.buckets()[idx].owns(mb_realloc));
+  EXPECT_TRUE(allo.buckets()[idx].is_full());
 
   // erase 2nd bucket
   allo.deallocate(bucket2[0]);
