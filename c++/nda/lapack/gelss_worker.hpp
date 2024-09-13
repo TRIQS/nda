@@ -224,7 +224,7 @@ namespace nda::lapack {
         //return matrix<dcomplex>{matrix<dcomplex>::layout_t{l, s}, std::move(arr_dag).storage()};
 
         // FIXME C++20 remove encode
-        array<dcomplex, 4> arr_dag = conj(permuted_indices_view<encode(std::array{0, 1, 3, 2})>(reshape(M, std::array{l[0], N, d, d})));
+        auto arr_dag = array<dcomplex, 4>{conj(permuted_indices_view<encode(std::array{0, 1, 3, 2})>(reshape(M, std::array{l[0], N, d, d})))};
 
         return matrix<dcomplex>{reshape(std::move(arr_dag), l)}; // move into a matrix
       };
@@ -235,7 +235,7 @@ namespace nda::lapack {
       auto [x, err]          = _lss_matrix(B_stack);
 
       // Resymmetrize results to cure small hermiticity violations
-      return {0.5 * (x + inner_adjoint(x)), err};
+      return {matrix<dcomplex>{0.5 * (x + inner_adjoint(x))}, err};
     }
   };
 

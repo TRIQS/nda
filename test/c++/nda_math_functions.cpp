@@ -96,8 +96,8 @@ TEST_F(NDAMathFunction, Atan) {
 }
 
 TEST_F(NDAMathFunction, Conj) {
-  auto B_d = nda::conj(A_d);
-  auto B_c = nda::conj(A_c);
+  decltype(auto) B_d = nda::conj(A_d);
+  decltype(auto) B_c = nda::conj(A_c);
   nda::for_each(shape, [&](auto... idxs) {
     EXPECT_EQ(B_d(idxs...), std::conj(A_d(idxs...)));
     EXPECT_EQ(B_c(idxs...), std::conj(A_c(idxs...)));
@@ -133,8 +133,8 @@ TEST_F(NDAMathFunction, Dagger) {
   using mat_c = nda::array<std::complex<double>, 2>;
 
   auto size = 5;
-  mat_d M_d = nda::array<double, 2>::rand(size, size) - 0.5;
-  mat_c M_c = nda::array<std::complex<double>, 2>::rand(size, size) - std::complex<double>{0.5, 0.5};
+  auto M_d  = mat_d{mat_d::rand(size, size) - 0.5};
+  auto M_c  = mat_c{mat_c::rand(size, size) - std::complex<double>{0.5, 0.5}};
   auto B_d  = nda::dagger(M_d);
   auto B_c  = nda::dagger(M_c);
   for (int i = 0; i < size; ++i) {

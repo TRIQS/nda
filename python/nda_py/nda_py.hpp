@@ -51,13 +51,13 @@ namespace nda::python {
       // We need to distinguish the special case where a is a RValue, in which case, the python will steal the ownership
       // by moving the elements one by one.
 
-      nda::array<cpp2py::pyref, A::rank> aobj = map([](auto &&x) {
+      auto aobj = make_regular(map([](auto &&x) -> cpp2py::pyref {
         if constexpr (is_regular_v<AUR> and !std::is_reference_v<AUR>)
           // nda::array rvalue (i.e. AUR is an array, and NOT a ref, so it matches array &&) Be sure to move
           return cpp2py::py_converter<T>::c2py(std::move(x));
         else
           return cpp2py::py_converter<T>::c2py(x);
-      })(a);
+      })(a));
       return make_numpy_proxy_from_array_or_view(std::move(aobj));
     }
   }

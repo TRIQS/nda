@@ -169,7 +169,7 @@ namespace c2py {
           cpp2py::pyref obj_c_order = make_numpy(obj);
           return nda::array<T, R>{converter_view_T::py2c(obj_c_order)};
         }
-        return converter_view_T::py2c(obj);
+        return nda::array<T, R>{converter_view_T::py2c(obj)};
       } else {
         auto p = make_numpy_proxy(obj);
         std::array<long, R> shape;

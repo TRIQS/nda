@@ -141,7 +141,7 @@ TEST(NDA, ViewsWithEmptyEllipsis) {
 
 TEST(NDA, ArithmeticWithEllipsis) {
   auto sum0 = [](auto const &A) {
-    nda::array<nda::get_value_t<decltype(A)>, nda::get_rank<decltype(A)> - 1> res = A(0, nda::ellipsis{});
+    auto res = make_regular(A(0, nda::ellipsis{}));
     for (size_t u = 1; u < A.shape()[0]; ++u) res += A(u, nda::ellipsis{});
     return res;
   };

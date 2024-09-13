@@ -141,7 +141,7 @@ namespace nda {
    */
   template <typename M>
   auto determinant(M const &m) {
-    auto m_copy = make_regular(m);
+    auto m_copy = basic_array{m};
     return determinant_in_place(m_copy);
   }
 
@@ -298,7 +298,7 @@ namespace nda {
     requires(get_algebra<M> == 'M')
   {
     EXPECTS(is_matrix_square(m, true));
-    auto r = make_regular(m);
+    auto r = nda::basic_array{m};
     inverse_in_place(r);
     return r;
   }

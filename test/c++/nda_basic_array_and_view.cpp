@@ -940,12 +940,6 @@ struct B {};
 char get_value_type(nda::array<A, 1>) { return 'A'; }
 char get_value_type(nda::array<B, 1>) { return 'B'; }
 
-TEST_F(NDAArrayAndView, AmbiguityOfOverloadedFunctions) {
-  nda::array<A, 1> A(2);
-  auto A_v = A();
-  EXPECT_EQ(get_value_type(A_v), 'A');
-}
-
 TEST_F(NDAArrayAndView, StrideOrderOfArrays) {
   const int size = 5;
   nda::matrix<int> M_c(size, size);

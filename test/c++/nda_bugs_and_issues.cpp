@@ -23,11 +23,12 @@
 #include <array>
 
 // Multiply an m-by-m matrix A by an m-by-n-by-p tensor B, combining the last two indices of B.
-nda::array<double, 3> arraymult(nda::matrix<double, nda::F_layout> a, nda::array<double, 3, nda::F_layout> b) {
+nda::array<double, 3> arraymult(nda::matrix_view<double, nda::F_layout> a, nda::array_view<double, 3, nda::F_layout> b) {
   auto [m, n, p] = b.shape();
   auto brs       = nda::reshape(b, std::array{m, n * p});
   auto bmat      = nda::matrix_const_view<double, nda::F_layout>(brs);
-  return nda::reshape(a * bmat, std::array{m, n, p});
+  auto res_F     = nda::reshape(make_regular(a * bmat), std::array{m, n, p});
+  return nda::array<double, 3>{res_F};
 }
 
 TEST(NDA, Issue34) {

@@ -102,8 +102,8 @@ template <typename X, typename Y>
  */
 template <typename X, typename Y>
 ::testing::AssertionResult array_are_close(X const &x, Y const &y, double precision = 1.e-10) {
-  nda::array<nda::get_value_t<X>, nda::get_rank<X>> x_reg = x;
-  nda::array<nda::get_value_t<X>, nda::get_rank<X>> y_reg = y;
+  auto x_reg = nda::basic_array{x};
+  auto y_reg = nda::basic_array{y};
 
   // check their shapes
   if (x_reg.shape() != y_reg.shape())
@@ -134,7 +134,7 @@ template <typename X, typename Y>
  */
 template <typename X>
 ::testing::AssertionResult array_almost_zero(X const &x) {
-  nda::array<nda::get_value_t<X>, nda::get_rank<X>> x_reg = x;
+  auto x_reg = nda::basic_array{x};
 
   constexpr double eps = 1.e-10;
   const auto max = max_element(abs(x_reg));

@@ -150,7 +150,7 @@ namespace nda {
     using storage_t = typename OwningPolicy::template handle<ValueType>;
 
     /// The associated regular (nda::basic_array) type.
-    using regular_type = basic_array<std::remove_const_t<ValueType>, Rank, C_layout, Algebra, heap<mem::get_addr_space<storage_t>>>;
+    using regular_t = basic_array<std::remove_const_t<ValueType>, Rank, C_layout, Algebra, heap<mem::get_addr_space<storage_t>>>;
 
     /// Number of dimensions of the view.
     static constexpr int rank = Rank;

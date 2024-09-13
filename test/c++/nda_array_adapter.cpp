@@ -76,7 +76,7 @@ TEST(NDA, ArrayAdapterMoveElements2) {
   for (int i = 0; i < 2; ++i)
     for (int j = 0; j < 2; ++j) A_foo(i, j).i = 1 + i + 10 * j;
 
-  nda::array<bar, 2> A_bar = nda::map([](auto &&a) { return bar{std::move(std::forward<foo>(a))}; })(A_foo);
+  auto A_bar = nda::array<bar, 2>{nda::map([](auto &&a) { return bar{std::move(std::forward<foo>(a))}; })(A_foo)};
 
   for (int i = 0; i < 2; ++i) {
     for (int j = 0; j < 2; ++j) {

@@ -86,8 +86,8 @@ TEST(NDA, InverseOfTensorProductOfMatrices) {
 
 TEST(NDA, MatrixVectorMultiplicationWithPermutedViews) {
   // generate some dummy data
-  nda::array<double, 3> A = nda::rand(3, 3, 3);
-  nda::vector<double> v   = nda::rand(3);
+  auto A = nda::array<double, 3>::rand(3, 3, 3);
+  auto v = nda::vector<double>::rand(3);
 
   // build permuted arrays
   auto B = nda::array<double, 3>{nda::permuted_indices_view<nda::encode(std::array<int, 3>{1, 2, 0})>(A)};

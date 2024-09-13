@@ -307,8 +307,8 @@ TEST(NDA, H5GenericArray) {
   check_3d_arrays_and_views(a_3d, g_3d);
 
   // 3d array in Fortran layout
-  auto g_3d_f                              = root.create_group("3d_f");
-  nda::array<foo, 3, nda::F_layout> a_3d_f = a_3d;
+  auto g_3d_f = root.create_group("3d_f");
+  auto a_3d_f = nda::array<foo, 3, nda::F_layout>{a_3d};
   check_3d_arrays_and_views(a_3d_f, g_3d_f);
 }
 
@@ -332,8 +332,8 @@ TEST(NDA, H5IntegerArray) {
   check_3d_arrays_and_views(a_3d, g_3d);
 
   // 3d array Fortran layout
-  auto g_3d_f                              = root.create_group("3d_f");
-  nda::array<int, 3, nda::F_layout> a_3d_f = a_3d;
+  auto g_3d_f = root.create_group("3d_f");
+  auto a_3d_f = nda::array<int, 3, nda::F_layout>{a_3d};
   check_3d_arrays_and_views(a_3d_f, g_3d_f);
 }
 
@@ -359,8 +359,8 @@ TEST(NDA, H5ComplexArray) {
   check_3d_arrays_and_views(a_3d, g_3d);
 
   // 3d array Fortran layout
-  auto g_3d_f                                               = root.create_group("3d_f");
-  nda::array<std::complex<double>, 3, nda::F_layout> a_3d_f = a_3d;
+  auto g_3d_f = root.create_group("3d_f");
+  auto a_3d_f = nda::array<std::complex<double>, 3, nda::F_layout>{a_3d};
   check_3d_arrays_and_views(a_3d_f, g_3d_f);
 }
 
@@ -395,7 +395,7 @@ TEST(NDA, H5DoubleIntoComplexArray) {
   // read into complex array
   nda::array<std::complex<double>, 2> a_c(2, 3);
   h5::read(file, "a_d", a_c);
-  EXPECT_ARRAY_NEAR(a_c, a_d);
+  EXPECT_ARRAY_NEAR(a_c, nda::array<std::complex<double>, 2>(a_d));
 }
 
 TEST(NDA, H5BlockMatrix) {
@@ -416,10 +416,9 @@ TEST(NDA, H5BlockMatrix) {
 
 TEST(NDA, H5ConstIssue) {
   // write a const array
-  auto a                              = nda::zeros<double>(2, 2);
-  nda::array<double, 2> const a_const = a;
+  auto const a = nda::zeros<double>(2, 2);
   h5::file file("const_issue.h5", 'w');
-  h5::write(file, "a_const", a_const());
+  h5::write(file, "a_const", a());
 }
 
 TEST(NDA, H5SystematicViewsOf3dArray) {

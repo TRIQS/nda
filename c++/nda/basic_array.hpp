@@ -134,7 +134,7 @@ namespace nda {
     using storage_t = typename ContainerPolicy::template handle<ValueType>;
 
     /// The associated regular type.
-    using regular_type = basic_array;
+    using regular_t = basic_array;
 
     /// Number of dimensions of the array.
     static constexpr int rank = Rank;
@@ -202,7 +202,7 @@ namespace nda {
     basic_array(basic_array &&) = default;
 
     /// Default copy constructor copies the memory handle and layout.
-    explicit basic_array(basic_array const &a) = default;
+    basic_array(basic_array const &a) = default;
 
     /**
      * @brief Construct an array from another array with a different algebra and/or container policy.
@@ -290,14 +290,15 @@ namespace nda {
      */
     template <ArrayOfRank<Rank> A>
       requires(HasValueTypeConstructibleFrom<A, ValueType>)
-    basic_array(A const &a) : lay(a.shape()), sto{lay.size(), mem::do_not_initialize} {
+    explicit basic_array(A const &a) : lay(a.shape()), sto{lay.size(), mem::do_not_initialize} {
       static_assert(std::is_constructible_v<ValueType, get_value_t<A>>, "Error in nda::basic_array: Incompatible value types in constructor");
       if constexpr (std::is_trivial_v<ValueType> or is_complex_v<ValueType>) {
         // trivial and complex value types can use the optimized assign_from_ndarray
-        if constexpr (std::is_same_v<ValueType, get_value_t<A>>)
+        if constexpr (std::is_same_v<ValueType, get_value_t<A>>) {
           assign_from_ndarray(a);
-        else
-          assign_from_ndarray(nda::map([](auto const &val) { return ValueType(val); })(a));
+	} else {
+          assign_from_ndarray(nda::map([](auto const &x) { return ValueType(x); })(a));
+	}
       } else {
         // general value types may not be default constructible -> use placement new
         nda::for_each(lay.lengths(), [&](auto const &...is) { new (sto.data() + lay(is...)) ValueType{a(is...)}; });

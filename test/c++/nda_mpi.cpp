@@ -140,7 +140,7 @@ TEST_F(NDAMpi, Scatter) {
 }
 
 TEST_F(NDAMpi, BroadcastTransposedMatrix) {
-  nda::matrix<std::complex<double>> M_t = transpose(M);
+  auto M_t = nda::matrix<std::complex<double>>{transpose(M)};
   nda::matrix<std::complex<double>> N;
   if (comm.rank() == 0) N = M_t;
   mpi::broadcast(N, comm, 0);
@@ -148,7 +148,7 @@ TEST_F(NDAMpi, BroadcastTransposedMatrix) {
 }
 
 TEST_F(NDAMpi, BroadcastTransposedArray) {
-  nda::array<long, 3> A_t = transpose(A);
+  auto A_t = nda::array<long, 3>{transpose(A)};
   nda::array<long, 3> B(2, 4, 6);
   if (comm.rank() == 0) B = A_t;
   mpi::broadcast(B, comm, 0);

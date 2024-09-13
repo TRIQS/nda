@@ -98,7 +98,7 @@ namespace nda::linalg {
   auto eigenelements(M const &m) {
     auto m_copy = matrix<typename M::value_type, F_layout>(m);
     auto ev     = detail::_eigen_element_impl(m_copy, 'V');
-    return std::pair<array<double, 1>, typename M::regular_type>{ev, m_copy};
+    return std::pair<array<double, 1>, typename M::regular_t>{ev, m_copy};
   }
 
   /**
