@@ -228,195 +228,197 @@ $(function(){initNavTree('layout__transforms_8hpp_source.html',''); initResizabl
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <a class="code hl_define" href="macros_8hpp.html#a7567b7d4327c64fde17a6551647061bd">EXPECTS_WITH_MESSAGE</a>(a.is_contiguous(), <span class="stringliteral">&quot;Error in nda::reshape: Only contiguous arrays/views are supported&quot;</span>);</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <a class="code hl_define" href="macros_8hpp.html#a7567b7d4327c64fde17a6551647061bd">EXPECTS_WITH_MESSAGE</a>(a.has_positive_strides(), <span class="stringliteral">&quot;Error in nda::reshape: Only arrays/views with positive strides are supported&quot;</span>)</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="comment">// restrict supported layouts (why?)</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="comment">// restrict supported layouts</span></div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keyword">using</span> A_t = std::remove_cvref_t&lt;A&gt;;</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    <span class="keyword">static_assert</span>(A_t::is_stride_order_C() <span class="keyword">or</span> A_t::is_stride_order_Fortran() <span class="keyword">or</span> R == 1,</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                  <span class="stringliteral">&quot;Error in nda::reshape: Only C or Fortran layouts are supported&quot;</span>);</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="comment">// prepare new idx_map</span></div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keyword">using</span> layout_t = <span class="keyword">typename</span> std::decay_t&lt;A&gt;::layout_policy_t::<span class="keyword">template</span> mapping&lt;R&gt;;</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keywordflow">return</span> map_layout_transform(std::forward&lt;A&gt;(a), layout_t{stdutil::make_std_array&lt;<span class="keywordtype">long</span>&gt;(new_shape)});</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  }</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="comment">// 1D case --&gt; resulting layout is always C</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="comment">// multi-dimensional case (only C or Fortran layout allowed) --&gt; resulting layout is the same as the input</span></div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keyword">using</span> layout_t = std::conditional_t&lt;(R == 1), <a class="code hl_struct" href="structnda_1_1C__layout.html">C_layout</a>::<span class="keyword">template</span> mapping&lt;1&gt;, <span class="keyword">typename</span> std::decay_t&lt;A&gt;::layout_policy_t::<span class="keyword">template</span> mapping&lt;R&gt;&gt;;</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <span class="keywordflow">return</span> map_layout_transform(std::forward&lt;A&gt;(a), layout_t{stdutil::make_std_array&lt;<span class="keywordtype">long</span>&gt;(new_shape)});</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  }</div>
 </div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">  126</span><span class="comment">   * @brief Reshape an nda::basic_array or nda::basic_array_view.</span></div>
-<div class="line"><span class="lineno">  127</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">  128</span><span class="comment">   * @details See nda::reshape(A &amp;&amp;, std::array&lt; Int, R &gt; const &amp;).</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>  <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">  128</span><span class="comment">   * @brief Reshape an nda::basic_array or nda::basic_array_view.</span></div>
 <div class="line"><span class="lineno">  129</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">  130</span><span class="comment">   * @tparam A nda::MemoryArray type.</span></div>
-<div class="line"><span class="lineno">  131</span><span class="comment">   * @tparam Ints Integral types</span></div>
-<div class="line"><span class="lineno">  132</span><span class="comment">   * @param a Array/View to reshape.</span></div>
-<div class="line"><span class="lineno">  133</span><span class="comment">   * @param is Extents of the new shape.</span></div>
-<div class="line"><span class="lineno">  134</span><span class="comment">   * @return An array/view with the new shape.</span></div>
-<div class="line"><span class="lineno">  135</span><span class="comment">   */</span></div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>  <span class="keyword">template</span> &lt;MemoryArray A, <a class="code hl_function" href="group__av__factories.html#ga1353ccff5582f8468ae9411b312b242c">std</a>::integral... Ints&gt;</div>
-<div class="foldopen" id="foldopen00137" data-start="{" data-end="}">
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno"><a class="line" href="group__av__factories.html#ga1353ccff5582f8468ae9411b312b242c">  137</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__factories.html#ga1353ccff5582f8468ae9411b312b242c">reshape</a>(A &amp;&amp;a, Ints... is) {</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="keywordflow">return</span> reshape(std::forward&lt;A&gt;(a), std::array&lt;<span class="keywordtype">long</span>, <span class="keyword">sizeof</span>...(Ints)&gt;{<span class="keyword">static_cast</span>&lt;<span class="keywordtype">long</span>&gt;(is)...});</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>  }</div>
+<div class="line"><span class="lineno">  130</span><span class="comment">   * @details See nda::reshape(A &amp;&amp;, std::array&lt; Int, R &gt; const &amp;).</span></div>
+<div class="line"><span class="lineno">  131</span><span class="comment">   *</span></div>
+<div class="line"><span class="lineno">  132</span><span class="comment">   * @tparam A nda::MemoryArray type.</span></div>
+<div class="line"><span class="lineno">  133</span><span class="comment">   * @tparam Ints Integral types</span></div>
+<div class="line"><span class="lineno">  134</span><span class="comment">   * @param a Array/View to reshape.</span></div>
+<div class="line"><span class="lineno">  135</span><span class="comment">   * @param is Extents of the new shape.</span></div>
+<div class="line"><span class="lineno">  136</span><span class="comment">   * @return An array/view with the new shape.</span></div>
+<div class="line"><span class="lineno">  137</span><span class="comment">   */</span></div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>  <span class="keyword">template</span> &lt;MemoryArray A, <a class="code hl_function" href="group__av__factories.html#ga1353ccff5582f8468ae9411b312b242c">std</a>::integral... Ints&gt;</div>
+<div class="foldopen" id="foldopen00139" data-start="{" data-end="}">
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno"><a class="line" href="group__av__factories.html#ga1353ccff5582f8468ae9411b312b242c">  139</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__factories.html#ga1353ccff5582f8468ae9411b312b242c">reshape</a>(A &amp;&amp;a, Ints... is) {</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <span class="keywordflow">return</span> reshape(std::forward&lt;A&gt;(a), std::array&lt;<span class="keywordtype">long</span>, <span class="keyword">sizeof</span>...(Ints)&gt;{<span class="keyword">static_cast</span>&lt;<span class="keywordtype">long</span>&gt;(is)...});</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>  }</div>
 </div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>  <span class="comment">/// @deprecated Use nda::reshape instead.</span></div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>  <span class="keyword">template</span> &lt;MemoryArray A, <a class="code hl_function" href="group__av__factories.html#gafe83d79fc85f5a2534d8be62d730dccf">std</a>::integral Int, <span class="keyword">auto</span> newRank&gt;</div>
-<div class="foldopen" id="foldopen00143" data-start="{" data-end="}">
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno"><a class="line" href="group__av__factories.html#gafe83d79fc85f5a2534d8be62d730dccf">  143</a></span>  [[deprecated(<span class="stringliteral">&quot;Please use reshape(arr, shape) instead&quot;</span>)]] <span class="keyword">auto</span> <a class="code hl_function" href="group__av__factories.html#gafe83d79fc85f5a2534d8be62d730dccf">reshaped_view</a>(A &amp;&amp;a, std::array&lt;Int, newRank&gt; <span class="keyword">const</span> &amp;new_shape) {</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    <span class="keywordflow">return</span> reshape(std::forward&lt;A&gt;(a), new_shape);</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>  }</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span> </div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>  <span class="comment">/// @deprecated Use nda::reshape instead.</span></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>  <span class="keyword">template</span> &lt;MemoryArray A, <a class="code hl_function" href="group__av__factories.html#gafe83d79fc85f5a2534d8be62d730dccf">std</a>::integral Int, <span class="keyword">auto</span> newRank&gt;</div>
+<div class="foldopen" id="foldopen00145" data-start="{" data-end="}">
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno"><a class="line" href="group__av__factories.html#gafe83d79fc85f5a2534d8be62d730dccf">  145</a></span>  [[deprecated(<span class="stringliteral">&quot;Please use reshape(arr, shape) instead&quot;</span>)]] <span class="keyword">auto</span> <a class="code hl_function" href="group__av__factories.html#gafe83d79fc85f5a2534d8be62d730dccf">reshaped_view</a>(A &amp;&amp;a, std::array&lt;Int, newRank&gt; <span class="keyword">const</span> &amp;new_shape) {</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    <span class="keywordflow">return</span> reshape(std::forward&lt;A&gt;(a), new_shape);</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  }</div>
 </div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">  148</span><span class="comment">   * @brief Flatten an nda::basic_array or nda::basic_array_view to a 1-dimensional array/view by reshaping it.</span></div>
-<div class="line"><span class="lineno">  149</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">  150</span><span class="comment">   * @details It calls nda::reshape with a 1-dimensional shape of the same size as the original array/view.</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>  <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">  150</span><span class="comment">   * @brief Flatten an nda::basic_array or nda::basic_array_view to a 1-dimensional array/view by reshaping it.</span></div>
 <div class="line"><span class="lineno">  151</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">  152</span><span class="comment">   * @tparam A nda::MemoryArray type.</span></div>
-<div class="line"><span class="lineno">  153</span><span class="comment">   * @param a Array/View to flatten.</span></div>
-<div class="line"><span class="lineno">  154</span><span class="comment">   * @return An 1-dimensional array/view with the same size as the original array/view.</span></div>
-<div class="line"><span class="lineno">  155</span><span class="comment">   */</span></div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>  <span class="keyword">template</span> &lt;MemoryArray A&gt;</div>
-<div class="foldopen" id="foldopen00157" data-start="{" data-end="}">
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno"><a class="line" href="group__av__factories.html#gaa01d35a8419bc78798737c4fa94ee042">  157</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__factories.html#gaa01d35a8419bc78798737c4fa94ee042">flatten</a>(A &amp;&amp;a) {</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="keywordflow">return</span> reshape(std::forward&lt;A&gt;(a), std::array{a.size()});</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>  }</div>
+<div class="line"><span class="lineno">  152</span><span class="comment">   * @details It calls nda::reshape with a 1-dimensional shape of the same size as the original array/view.</span></div>
+<div class="line"><span class="lineno">  153</span><span class="comment">   *</span></div>
+<div class="line"><span class="lineno">  154</span><span class="comment">   * @tparam A nda::MemoryArray type.</span></div>
+<div class="line"><span class="lineno">  155</span><span class="comment">   * @param a Array/View to flatten.</span></div>
+<div class="line"><span class="lineno">  156</span><span class="comment">   * @return An 1-dimensional array/view with the same size as the original array/view.</span></div>
+<div class="line"><span class="lineno">  157</span><span class="comment">   */</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  <span class="keyword">template</span> &lt;MemoryArray A&gt;</div>
+<div class="foldopen" id="foldopen00159" data-start="{" data-end="}">
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno"><a class="line" href="group__av__factories.html#gaa01d35a8419bc78798737c4fa94ee042">  159</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__factories.html#gaa01d35a8419bc78798737c4fa94ee042">flatten</a>(A &amp;&amp;a) {</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    <span class="keywordflow">return</span> reshape(std::forward&lt;A&gt;(a), std::array{a.size()});</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  }</div>
 </div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">  162</span><span class="comment">   * @brief Permute the indices/dimensions of an nda::basic_array or nda::basic_array_view.</span></div>
-<div class="line"><span class="lineno">  163</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">  164</span><span class="comment">   * @details It first calls the nda::idx_map::transpose method of the nda::idx_map of the array/view to get the new</span></div>
-<div class="line"><span class="lineno">  165</span><span class="comment">   * layout and then calls nda::map_layout_transform.</span></div>
-<div class="line"><span class="lineno">  166</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">  167</span><span class="comment">   * @tparam Permutation Permutation encoded as an integer to apply to the indices.</span></div>
-<div class="line"><span class="lineno">  168</span><span class="comment">   * @tparam A nda::MemoryArray type.</span></div>
-<div class="line"><span class="lineno">  169</span><span class="comment">   * @param a Array/View to permute.</span></div>
-<div class="line"><span class="lineno">  170</span><span class="comment">   * @return An array/view with permuted indices/dimensions.</span></div>
-<div class="line"><span class="lineno">  171</span><span class="comment">   */</span></div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>  <span class="keyword">template</span> &lt;uint64_t Permutation, MemoryArray A&gt;</div>
-<div class="foldopen" id="foldopen00173" data-start="{" data-end="}">
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno"><a class="line" href="group__av__factories.html#ga587a5b691704422771dcaa5fcbbf32b4">  173</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__factories.html#ga587a5b691704422771dcaa5fcbbf32b4">permuted_indices_view</a>(A &amp;&amp;a) {</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="keywordflow">return</span> map_layout_transform(std::forward&lt;A&gt;(a), a.indexmap().<span class="keyword">template</span> transpose&lt;Permutation&gt;());</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>  }</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>  <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">  164</span><span class="comment">   * @brief Permute the indices/dimensions of an nda::basic_array or nda::basic_array_view.</span></div>
+<div class="line"><span class="lineno">  165</span><span class="comment">   *</span></div>
+<div class="line"><span class="lineno">  166</span><span class="comment">   * @details It first calls the nda::idx_map::transpose method of the nda::idx_map of the array/view to get the new</span></div>
+<div class="line"><span class="lineno">  167</span><span class="comment">   * layout and then calls nda::map_layout_transform.</span></div>
+<div class="line"><span class="lineno">  168</span><span class="comment">   *</span></div>
+<div class="line"><span class="lineno">  169</span><span class="comment">   * @tparam Permutation Permutation encoded as an integer to apply to the indices.</span></div>
+<div class="line"><span class="lineno">  170</span><span class="comment">   * @tparam A nda::MemoryArray type.</span></div>
+<div class="line"><span class="lineno">  171</span><span class="comment">   * @param a Array/View to permute.</span></div>
+<div class="line"><span class="lineno">  172</span><span class="comment">   * @return An array/view with permuted indices/dimensions.</span></div>
+<div class="line"><span class="lineno">  173</span><span class="comment">   */</span></div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>  <span class="keyword">template</span> &lt;uint64_t Permutation, MemoryArray A&gt;</div>
+<div class="foldopen" id="foldopen00175" data-start="{" data-end="}">
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno"><a class="line" href="group__av__factories.html#ga587a5b691704422771dcaa5fcbbf32b4">  175</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__factories.html#ga587a5b691704422771dcaa5fcbbf32b4">permuted_indices_view</a>(A &amp;&amp;a) {</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <span class="keywordflow">return</span> map_layout_transform(std::forward&lt;A&gt;(a), a.indexmap().<span class="keyword">template</span> transpose&lt;Permutation&gt;());</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>  }</div>
 </div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>  <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">  178</span><span class="comment">   * @brief Transpose the memory layout of an nda::MemoryArray or an nda::expr_call.</span></div>
-<div class="line"><span class="lineno">  179</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">  180</span><span class="comment">   * @details For nda::MemoryArray types, it calls nda::permuted_indices_view with the reverse identity permutation.</span></div>
-<div class="line"><span class="lineno">  181</span><span class="comment">   * For nda::expr_call types, it calls nda::map with the transposed array.</span></div>
-<div class="line"><span class="lineno">  182</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">  183</span><span class="comment">   * @tparam A nda::MemoryArray or nda::expr_call type.</span></div>
-<div class="line"><span class="lineno">  184</span><span class="comment">   * @param a Array/View or expression call.</span></div>
-<div class="line"><span class="lineno">  185</span><span class="comment">   * @return An array/view with transposed memory layout or a new nda::expr_call with the transposed array as the</span></div>
-<div class="line"><span class="lineno">  186</span><span class="comment">   * argument.</span></div>
-<div class="line"><span class="lineno">  187</span><span class="comment">   */</span></div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> A&gt;</div>
-<div class="foldopen" id="foldopen00189" data-start="{" data-end="}">
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno"><a class="line" href="group__av__factories.html#gab1366c1c79f31877f2d0a1596f323cee">  189</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__factories.html#gab1366c1c79f31877f2d0a1596f323cee">transpose</a>(A &amp;&amp;a)</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    <span class="keyword">requires</span>(MemoryArray&lt;A&gt; <span class="keyword">or</span> is_instantiation_of_v&lt;<a class="code hl_struct" href="structnda_1_1expr__call.html">expr_call</a>, A&gt;)</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>  {</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (MemoryArray&lt;A&gt;) {</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>      <span class="keywordflow">return</span> permuted_indices_view&lt;encode(nda::permutations::reverse_identity&lt;get_rank&lt;A&gt;&gt;())&gt;(std::forward&lt;A&gt;(a));</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    } <span class="keywordflow">else</span> { <span class="comment">// expr_call</span></div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>      <span class="keyword">static_assert</span>(std::tuple_size_v&lt;<span class="keyword">decltype</span>(a.a)&gt; == 1, <span class="stringliteral">&quot;Error in nda::transpose: Cannot transpose expr_call with more than one array argument&quot;</span>);</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>      <span class="keywordflow">return</span> map(a.f)(transpose(std::get&lt;0&gt;(std::forward&lt;A&gt;(a).a)));</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    }</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>  }</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>  <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">  180</span><span class="comment">   * @brief Transpose the memory layout of an nda::MemoryArray or an nda::expr_call.</span></div>
+<div class="line"><span class="lineno">  181</span><span class="comment">   *</span></div>
+<div class="line"><span class="lineno">  182</span><span class="comment">   * @details For nda::MemoryArray types, it calls nda::permuted_indices_view with the reverse identity permutation.</span></div>
+<div class="line"><span class="lineno">  183</span><span class="comment">   * For nda::expr_call types, it calls nda::map with the transposed array.</span></div>
+<div class="line"><span class="lineno">  184</span><span class="comment">   *</span></div>
+<div class="line"><span class="lineno">  185</span><span class="comment">   * @tparam A nda::MemoryArray or nda::expr_call type.</span></div>
+<div class="line"><span class="lineno">  186</span><span class="comment">   * @param a Array/View or expression call.</span></div>
+<div class="line"><span class="lineno">  187</span><span class="comment">   * @return An array/view with transposed memory layout or a new nda::expr_call with the transposed array as the</span></div>
+<div class="line"><span class="lineno">  188</span><span class="comment">   * argument.</span></div>
+<div class="line"><span class="lineno">  189</span><span class="comment">   */</span></div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> A&gt;</div>
+<div class="foldopen" id="foldopen00191" data-start="{" data-end="}">
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno"><a class="line" href="group__av__factories.html#gab1366c1c79f31877f2d0a1596f323cee">  191</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__factories.html#gab1366c1c79f31877f2d0a1596f323cee">transpose</a>(A &amp;&amp;a)</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    <span class="keyword">requires</span>(MemoryArray&lt;A&gt; <span class="keyword">or</span> is_instantiation_of_v&lt;<a class="code hl_struct" href="structnda_1_1expr__call.html">expr_call</a>, A&gt;)</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>  {</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (MemoryArray&lt;A&gt;) {</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>      <span class="keywordflow">return</span> permuted_indices_view&lt;encode(nda::permutations::reverse_identity&lt;get_rank&lt;A&gt;&gt;())&gt;(std::forward&lt;A&gt;(a));</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    } <span class="keywordflow">else</span> { <span class="comment">// expr_call</span></div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>      <span class="keyword">static_assert</span>(std::tuple_size_v&lt;<span class="keyword">decltype</span>(a.a)&gt; == 1, <span class="stringliteral">&quot;Error in nda::transpose: Cannot transpose expr_call with more than one array argument&quot;</span>);</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>      <span class="keywordflow">return</span> map(a.f)(transpose(std::get&lt;0&gt;(std::forward&lt;A&gt;(a).a)));</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    }</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>  }</div>
 </div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>  <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">  201</span><span class="comment">   * @brief Transpose two indices/dimensions of an nda::basic_array or nda::basic_array_view.</span></div>
-<div class="line"><span class="lineno">  202</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">  203</span><span class="comment">   * @details It calls nda::permuted_indices_view with the permutation that represents the transposition of the given</span></div>
-<div class="line"><span class="lineno">  204</span><span class="comment">   * indices.</span></div>
-<div class="line"><span class="lineno">  205</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">  206</span><span class="comment">   * @tparam I First index/dimension to transpose.</span></div>
-<div class="line"><span class="lineno">  207</span><span class="comment">   * @tparam J Second index/dimension to transpose.</span></div>
-<div class="line"><span class="lineno">  208</span><span class="comment">   * @tparam A nda::MemoryArray type.</span></div>
-<div class="line"><span class="lineno">  209</span><span class="comment">   * @param a Array/View to transpose.</span></div>
-<div class="line"><span class="lineno">  210</span><span class="comment">   * @return An array/view with transposed indices/dimensions.</span></div>
-<div class="line"><span class="lineno">  211</span><span class="comment">   */</span></div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>  <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> I, <span class="keywordtype">int</span> J, MemoryArray A&gt;</div>
-<div class="foldopen" id="foldopen00213" data-start="{" data-end="}">
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno"><a class="line" href="group__av__factories.html#ga193578b15703e8a6c5fd337235b6ab63">  213</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__factories.html#ga193578b15703e8a6c5fd337235b6ab63">transposed_view</a>(A &amp;&amp;a)</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    <span class="keyword">requires</span>(is_regular_or_view_v&lt;A&gt;)</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>  {</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>    <span class="keywordflow">return</span> permuted_indices_view&lt;encode(permutations::transposition&lt;get_rank&lt;A&gt;&gt;(I, J))&gt;(std::forward&lt;A&gt;(a));</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>  }</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>  <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">  203</span><span class="comment">   * @brief Transpose two indices/dimensions of an nda::basic_array or nda::basic_array_view.</span></div>
+<div class="line"><span class="lineno">  204</span><span class="comment">   *</span></div>
+<div class="line"><span class="lineno">  205</span><span class="comment">   * @details It calls nda::permuted_indices_view with the permutation that represents the transposition of the given</span></div>
+<div class="line"><span class="lineno">  206</span><span class="comment">   * indices.</span></div>
+<div class="line"><span class="lineno">  207</span><span class="comment">   *</span></div>
+<div class="line"><span class="lineno">  208</span><span class="comment">   * @tparam I First index/dimension to transpose.</span></div>
+<div class="line"><span class="lineno">  209</span><span class="comment">   * @tparam J Second index/dimension to transpose.</span></div>
+<div class="line"><span class="lineno">  210</span><span class="comment">   * @tparam A nda::MemoryArray type.</span></div>
+<div class="line"><span class="lineno">  211</span><span class="comment">   * @param a Array/View to transpose.</span></div>
+<div class="line"><span class="lineno">  212</span><span class="comment">   * @return An array/view with transposed indices/dimensions.</span></div>
+<div class="line"><span class="lineno">  213</span><span class="comment">   */</span></div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>  <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> I, <span class="keywordtype">int</span> J, MemoryArray A&gt;</div>
+<div class="foldopen" id="foldopen00215" data-start="{" data-end="}">
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno"><a class="line" href="group__av__factories.html#ga193578b15703e8a6c5fd337235b6ab63">  215</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__factories.html#ga193578b15703e8a6c5fd337235b6ab63">transposed_view</a>(A &amp;&amp;a)</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>    <span class="keyword">requires</span>(is_regular_or_view_v&lt;A&gt;)</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>  {</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    <span class="keywordflow">return</span> permuted_indices_view&lt;encode(permutations::transposition&lt;get_rank&lt;A&gt;&gt;(I, J))&gt;(std::forward&lt;A&gt;(a));</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>  }</div>
 </div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span> </div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>  <span class="comment">// FIXME : use &quot;magnetic&quot; placeholder</span></div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>  <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">  221</span><span class="comment">   * @brief Create a new nda::basic_array or nda::basic_array_view by grouping indices together of a given array/view.</span></div>
-<div class="line"><span class="lineno">  222</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">  223</span><span class="comment">   * @details The resulting array/view has the same number of dimensions as given index groups.</span></div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span> </div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>  <span class="comment">// FIXME : use &quot;magnetic&quot; placeholder</span></div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>  <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">  223</span><span class="comment">   * @brief Create a new nda::basic_array or nda::basic_array_view by grouping indices together of a given array/view.</span></div>
 <div class="line"><span class="lineno">  224</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">  225</span><span class="comment">   * It first calls nda::group_indices_layout to create a new nda::idx_map with the grouped indices and then calls</span></div>
-<div class="line"><span class="lineno">  226</span><span class="comment">   * nda::map_layout_transform with the new layout.</span></div>
-<div class="line"><span class="lineno">  227</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">  228</span><span class="comment">   * It can be used as follows:</span></div>
+<div class="line"><span class="lineno">  225</span><span class="comment">   * @details The resulting array/view has the same number of dimensions as given index groups.</span></div>
+<div class="line"><span class="lineno">  226</span><span class="comment">   *</span></div>
+<div class="line"><span class="lineno">  227</span><span class="comment">   * It first calls nda::group_indices_layout to create a new nda::idx_map with the grouped indices and then calls</span></div>
+<div class="line"><span class="lineno">  228</span><span class="comment">   * nda::map_layout_transform with the new layout.</span></div>
 <div class="line"><span class="lineno">  229</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">  230</span><span class="comment">   * @code{.cpp}</span></div>
-<div class="line"><span class="lineno">  231</span><span class="comment">   * auto arr = nda::rand&lt;double&gt;(3, 4, 5, 6);</span></div>
-<div class="line"><span class="lineno">  232</span><span class="comment">   * auto view = nda::group_indices_view(arr, idx_group&lt;0, 1&gt;, idx_group&lt;2, 3&gt;);</span></div>
-<div class="line"><span class="lineno">  233</span><span class="comment">   * @endcode</span></div>
-<div class="line"><span class="lineno">  234</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">  235</span><span class="comment">   * In this examples a 4-dimensional array `arr` is transformed into a 2-dimensional view by grouping the first and</span></div>
-<div class="line"><span class="lineno">  236</span><span class="comment">   * the last two indices together.</span></div>
-<div class="line"><span class="lineno">  237</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">  238</span><span class="comment">   * @tparam A nda::MemoryArray type.</span></div>
-<div class="line"><span class="lineno">  239</span><span class="comment">   * @tparam IdxGrps Groups of indices.</span></div>
-<div class="line"><span class="lineno">  240</span><span class="comment">   * @param a Array/View to transform.</span></div>
-<div class="line"><span class="lineno">  241</span><span class="comment">   * @return An array/view with grouped indices.</span></div>
-<div class="line"><span class="lineno">  242</span><span class="comment">   */</span></div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>  <span class="keyword">template</span> &lt;MemoryArray A, <span class="keyword">typename</span>... IdxGrps&gt;</div>
-<div class="foldopen" id="foldopen00244" data-start="{" data-end="}">
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno"><a class="line" href="group__av__factories.html#gafc054e71fc39165fa411582663367e6e">  244</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__factories.html#gafc054e71fc39165fa411582663367e6e">group_indices_view</a>(A &amp;&amp;a, IdxGrps...) {</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    <span class="keywordflow">return</span> map_layout_transform(std::forward&lt;A&gt;(a), group_indices_layout(a.indexmap(), IdxGrps{}...));</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>  }</div>
+<div class="line"><span class="lineno">  230</span><span class="comment">   * It can be used as follows:</span></div>
+<div class="line"><span class="lineno">  231</span><span class="comment">   *</span></div>
+<div class="line"><span class="lineno">  232</span><span class="comment">   * @code{.cpp}</span></div>
+<div class="line"><span class="lineno">  233</span><span class="comment">   * auto arr = nda::rand&lt;double&gt;(3, 4, 5, 6);</span></div>
+<div class="line"><span class="lineno">  234</span><span class="comment">   * auto view = nda::group_indices_view(arr, idx_group&lt;0, 1&gt;, idx_group&lt;2, 3&gt;);</span></div>
+<div class="line"><span class="lineno">  235</span><span class="comment">   * @endcode</span></div>
+<div class="line"><span class="lineno">  236</span><span class="comment">   *</span></div>
+<div class="line"><span class="lineno">  237</span><span class="comment">   * In this examples a 4-dimensional array `arr` is transformed into a 2-dimensional view by grouping the first and</span></div>
+<div class="line"><span class="lineno">  238</span><span class="comment">   * the last two indices together.</span></div>
+<div class="line"><span class="lineno">  239</span><span class="comment">   *</span></div>
+<div class="line"><span class="lineno">  240</span><span class="comment">   * @tparam A nda::MemoryArray type.</span></div>
+<div class="line"><span class="lineno">  241</span><span class="comment">   * @tparam IdxGrps Groups of indices.</span></div>
+<div class="line"><span class="lineno">  242</span><span class="comment">   * @param a Array/View to transform.</span></div>
+<div class="line"><span class="lineno">  243</span><span class="comment">   * @return An array/view with grouped indices.</span></div>
+<div class="line"><span class="lineno">  244</span><span class="comment">   */</span></div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>  <span class="keyword">template</span> &lt;MemoryArray A, <span class="keyword">typename</span>... IdxGrps&gt;</div>
+<div class="foldopen" id="foldopen00246" data-start="{" data-end="}">
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno"><a class="line" href="group__av__factories.html#gafc054e71fc39165fa411582663367e6e">  246</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__factories.html#gafc054e71fc39165fa411582663367e6e">group_indices_view</a>(A &amp;&amp;a, IdxGrps...) {</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    <span class="keywordflow">return</span> map_layout_transform(std::forward&lt;A&gt;(a), group_indices_layout(a.indexmap(), IdxGrps{}...));</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>  }</div>
 </div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>  <span class="keyword">namespace</span> detail {</div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span> </div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    <span class="comment">// Append N fast dimensions to a given stride order.s</span></div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> N, <span class="keyword">auto</span> R&gt;</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    <span class="keyword">constexpr</span> std::array&lt;<span class="keywordtype">int</span>, R + N&gt; complete_stride_order_with_fast(std::array&lt;<span class="keywordtype">int</span>, R&gt; <span class="keyword">const</span> &amp;order) {</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>      <span class="keyword">auto</span> r = stdutil::make_initialized_array&lt;R + N&gt;(0);</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; R; ++i) r[i] = order[i];</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; N; ++i) r[R + i] = R + i;</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>      <span class="keywordflow">return</span> r;</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    }</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>  } <span class="comment">// namespace detail</span></div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>  <span class="keyword">namespace</span> detail {</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span> </div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    <span class="comment">// Append N fast dimensions to a given stride order.s</span></div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> N, <span class="keyword">auto</span> R&gt;</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    <span class="keyword">constexpr</span> std::array&lt;<span class="keywordtype">int</span>, R + N&gt; complete_stride_order_with_fast(std::array&lt;<span class="keywordtype">int</span>, R&gt; <span class="keyword">const</span> &amp;order) {</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>      <span class="keyword">auto</span> r = stdutil::make_initialized_array&lt;R + N&gt;(0);</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; R; ++i) r[i] = order[i];</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; N; ++i) r[R + i] = R + i;</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>      <span class="keywordflow">return</span> r;</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    }</div>
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span> </div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>  <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">  262</span><span class="comment">   * @brief Add `N` fast varying dimensions of size 1 to a given nda::basic_array or nda::basic_array_view.</span></div>
-<div class="line"><span class="lineno">  263</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">  264</span><span class="comment">   * @tparam N Number of dimensions to add.</span></div>
-<div class="line"><span class="lineno">  265</span><span class="comment">   * @tparam A nda::MemoryArray type.</span></div>
-<div class="line"><span class="lineno">  266</span><span class="comment">   * @param a Array/View to transform.</span></div>
-<div class="line"><span class="lineno">  267</span><span class="comment">   * @return An array/view with `N` dimensions of size 1 added to the original array/view.</span></div>
-<div class="line"><span class="lineno">  268</span><span class="comment">   */</span></div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>  <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> N, <span class="keyword">typename</span> A&gt;</div>
-<div class="foldopen" id="foldopen00270" data-start="{" data-end="}">
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno"><a class="line" href="group__av__factories.html#ga45f52137a4bfd2926583530f73c29c1c">  270</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__factories.html#ga45f52137a4bfd2926583530f73c29c1c">reinterpret_add_fast_dims_of_size_one</a>(A &amp;&amp;a)</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    <span class="keyword">requires</span>(nda::is_regular_or_view_v&lt;A&gt;)</div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>  {</div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    <span class="keyword">auto</span> <span class="keyword">const</span> &amp;lay = a.indexmap();</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    <span class="keyword">using</span> lay_t     = std::decay_t&lt;<span class="keyword">decltype</span>(lay)&gt;;</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span> </div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> uint64_t new_stride_order_encoded   = encode(detail::complete_stride_order_with_fast&lt;N&gt;(lay_t::stride_order));</div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> uint64_t new_static_extents_encoded = encode(stdutil::join(lay_t::static_extents, stdutil::make_initialized_array&lt;N&gt;(0)));</div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    <span class="keyword">using</span> new_lay_t = <a class="code hl_class" href="classnda_1_1idx__map.html">idx_map</a>&lt;get_rank&lt;A&gt; + N, new_static_extents_encoded, new_stride_order_encoded, lay_t::layout_prop&gt;;</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span> </div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    <span class="keyword">auto</span> ones_n = stdutil::make_initialized_array&lt;N&gt;(1l);</div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>    <span class="keywordflow">return</span> map_layout_transform(std::forward&lt;A&gt;(a), new_lay_t{stdutil::join(lay.lengths(), ones_n), stdutil::join(lay.strides(), ones_n)});</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>  }</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>  } <span class="comment">// namespace detail</span></div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span> </div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>  <span class="comment">/**</span></div>
+<div class="line"><span class="lineno">  264</span><span class="comment">   * @brief Add `N` fast varying dimensions of size 1 to a given nda::basic_array or nda::basic_array_view.</span></div>
+<div class="line"><span class="lineno">  265</span><span class="comment">   *</span></div>
+<div class="line"><span class="lineno">  266</span><span class="comment">   * @tparam N Number of dimensions to add.</span></div>
+<div class="line"><span class="lineno">  267</span><span class="comment">   * @tparam A nda::MemoryArray type.</span></div>
+<div class="line"><span class="lineno">  268</span><span class="comment">   * @param a Array/View to transform.</span></div>
+<div class="line"><span class="lineno">  269</span><span class="comment">   * @return An array/view with `N` dimensions of size 1 added to the original array/view.</span></div>
+<div class="line"><span class="lineno">  270</span><span class="comment">   */</span></div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>  <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> N, <span class="keyword">typename</span> A&gt;</div>
+<div class="foldopen" id="foldopen00272" data-start="{" data-end="}">
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno"><a class="line" href="group__av__factories.html#ga45f52137a4bfd2926583530f73c29c1c">  272</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__factories.html#ga45f52137a4bfd2926583530f73c29c1c">reinterpret_add_fast_dims_of_size_one</a>(A &amp;&amp;a)</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    <span class="keyword">requires</span>(nda::is_regular_or_view_v&lt;A&gt;)</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>  {</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    <span class="keyword">auto</span> <span class="keyword">const</span> &amp;lay = a.indexmap();</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    <span class="keyword">using</span> lay_t     = std::decay_t&lt;<span class="keyword">decltype</span>(lay)&gt;;</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span> </div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> uint64_t new_stride_order_encoded   = encode(detail::complete_stride_order_with_fast&lt;N&gt;(lay_t::stride_order));</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> uint64_t new_static_extents_encoded = encode(stdutil::join(lay_t::static_extents, stdutil::make_initialized_array&lt;N&gt;(0)));</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    <span class="keyword">using</span> new_lay_t = <a class="code hl_class" href="classnda_1_1idx__map.html">idx_map</a>&lt;get_rank&lt;A&gt; + N, new_static_extents_encoded, new_stride_order_encoded, lay_t::layout_prop&gt;;</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span> </div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    <span class="keyword">auto</span> ones_n = stdutil::make_initialized_array&lt;N&gt;(1l);</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    <span class="keywordflow">return</span> map_layout_transform(std::forward&lt;A&gt;(a), new_lay_t{stdutil::join(lay.lengths(), ones_n), stdutil::join(lay.strides(), ones_n)});</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>  }</div>
 </div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span> </div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>  <span class="comment">/** @} */</span></div>
 <div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span> </div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>} <span class="comment">// namespace nda</span></div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>  <span class="comment">/** @} */</span></div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span> </div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>} <span class="comment">// namespace nda</span></div>
 <div class="ttc" id="abasic__array__view_8hpp_html_a6860b29671093a28cf8ac41e630280ef"><div class="ttname"><a href="basic__array__view_8hpp.html#a6860b29671093a28cf8ac41e630280ef">std::swap</a></div><div class="ttdeci">void swap(nda::basic_array_view&lt; V1, R1, LP1, A1, AP1, OP1 &gt; &amp;a, nda::basic_array_view&lt; V2, R2, LP2, A2, AP2, OP2 &gt; &amp;b)=delete</div><div class="ttdoc">std::swap is deleted for nda::basic_array_view.</div></div>
 <div class="ttc" id="aclassnda_1_1array__iterator_3_011_00_01T_00_01Pointer_01_4_html_a14ca38d8f63fb4f1b70ab8de52112eb5"><div class="ttname"><a href="classnda_1_1array__iterator_3_011_00_01T_00_01Pointer_01_4.html#a14ca38d8f63fb4f1b70ab8de52112eb5">nda::array_iterator&lt; 1, T, Pointer &gt;::operator-</a></div><div class="ttdeci">friend std::ptrdiff_t operator-(array_iterator const &amp;lhs, array_iterator const &amp;rhs)</div><div class="ttdoc">Binary subtraction of two 1-dimensional array iterators.</div><div class="ttdef"><b>Definition</b> <a href="iterators_8hpp_source.html#l00491">iterators.hpp:491</a></div></div>
 <div class="ttc" id="aclassnda_1_1array__iterator_3_011_00_01T_00_01Pointer_01_4_html_a20f3d5f851349db1e10dae19cb0b7a5e"><div class="ttname"><a href="classnda_1_1array__iterator_3_011_00_01T_00_01Pointer_01_4.html#a20f3d5f851349db1e10dae19cb0b7a5e">nda::array_iterator&lt; 1, T, Pointer &gt;::operator&gt;=</a></div><div class="ttdeci">friend bool operator&gt;=(array_iterator const &amp;lhs, array_iterator const &amp;rhs)</div><div class="ttdoc">Greater-than or equal-to comparison operator for two 1-dimensional array iterators.</div><div class="ttdef"><b>Definition</b> <a href="iterators_8hpp_source.html#l00540">iterators.hpp:540</a></div></div>
@@ -699,15 +701,15 @@ $(function(){initNavTree('layout__transforms_8hpp_source.html',''); initResizabl
 <div class="ttc" id="aclassnda_1_1mem_1_1stats_html_acaa9825eca420a00bfaeb27d61b781a2"><div class="ttname"><a href="classnda_1_1mem_1_1stats.html#acaa9825eca420a00bfaeb27d61b781a2">nda::mem::stats::stats</a></div><div class="ttdeci">stats()=default</div><div class="ttdoc">Default constructor.</div></div>
 <div class="ttc" id="acusolver__interface_8cpp_html_aef984a3513485df78beeb305b440337f"><div class="ttname"><a href="cusolver__interface_8cpp.html#aef984a3513485df78beeb305b440337f">CUSOLVER_CHECK</a></div><div class="ttdeci">#define CUSOLVER_CHECK(X, info,...)</div><div class="ttdef"><b>Definition</b> <a href="cusolver__interface_8cpp_source.html#l00059">cusolver_interface.cpp:59</a></div></div>
 <div class="ttc" id="aexceptions_8hpp_html_a08802eb6df5c441dfbaefe6a2a0f5c7e"><div class="ttname"><a href="exceptions_8hpp.html#a08802eb6df5c441dfbaefe6a2a0f5c7e">NDA_RUNTIME_ERROR</a></div><div class="ttdeci">#define NDA_RUNTIME_ERROR</div><div class="ttdef"><b>Definition</b> <a href="exceptions_8hpp_source.html#l00032">exceptions.hpp:32</a></div></div>
-<div class="ttc" id="agroup__av__factories_html_ga1353ccff5582f8468ae9411b312b242c"><div class="ttname"><a href="group__av__factories.html#ga1353ccff5582f8468ae9411b312b242c">nda::reshape</a></div><div class="ttdeci">auto reshape(A &amp;&amp;a, Ints... is)</div><div class="ttdoc">Reshape an nda::basic_array or nda::basic_array_view.</div><div class="ttdef"><b>Definition</b> <a href="#l00137">layout_transforms.hpp:137</a></div></div>
-<div class="ttc" id="agroup__av__factories_html_ga193578b15703e8a6c5fd337235b6ab63"><div class="ttname"><a href="group__av__factories.html#ga193578b15703e8a6c5fd337235b6ab63">nda::transposed_view</a></div><div class="ttdeci">auto transposed_view(A &amp;&amp;a)</div><div class="ttdoc">Transpose two indices/dimensions of an nda::basic_array or nda::basic_array_view.</div><div class="ttdef"><b>Definition</b> <a href="#l00213">layout_transforms.hpp:213</a></div></div>
+<div class="ttc" id="agroup__av__factories_html_ga1353ccff5582f8468ae9411b312b242c"><div class="ttname"><a href="group__av__factories.html#ga1353ccff5582f8468ae9411b312b242c">nda::reshape</a></div><div class="ttdeci">auto reshape(A &amp;&amp;a, Ints... is)</div><div class="ttdoc">Reshape an nda::basic_array or nda::basic_array_view.</div><div class="ttdef"><b>Definition</b> <a href="#l00139">layout_transforms.hpp:139</a></div></div>
+<div class="ttc" id="agroup__av__factories_html_ga193578b15703e8a6c5fd337235b6ab63"><div class="ttname"><a href="group__av__factories.html#ga193578b15703e8a6c5fd337235b6ab63">nda::transposed_view</a></div><div class="ttdeci">auto transposed_view(A &amp;&amp;a)</div><div class="ttdoc">Transpose two indices/dimensions of an nda::basic_array or nda::basic_array_view.</div><div class="ttdef"><b>Definition</b> <a href="#l00215">layout_transforms.hpp:215</a></div></div>
 <div class="ttc" id="agroup__av__factories_html_ga1ae039252f35748e691cba9fa4c9ae15"><div class="ttname"><a href="group__av__factories.html#ga1ae039252f35748e691cba9fa4c9ae15">nda::rand</a></div><div class="ttdeci">auto rand(std::array&lt; Int, Rank &gt; const &amp;shape)</div><div class="ttdoc">Make an array of the given shape and initialize it with random values from the uniform distribution o...</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00165">basic_functions.hpp:165</a></div></div>
 <div class="ttc" id="agroup__av__factories_html_ga1ef017428f20125233751e5e985fdc90"><div class="ttname"><a href="group__av__factories.html#ga1ef017428f20125233751e5e985fdc90">nda::make_regular</a></div><div class="ttdeci">decltype(auto) make_regular(A &amp;&amp;a)</div><div class="ttdoc">Make a given object regular.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00238">basic_functions.hpp:238</a></div></div>
 <div class="ttc" id="agroup__av__factories_html_ga21ed59f95217d512e116f5558676f8e7"><div class="ttname"><a href="group__av__factories.html#ga21ed59f95217d512e116f5558676f8e7">nda::resize_or_check_if_view</a></div><div class="ttdeci">void resize_or_check_if_view(A &amp;a, std::array&lt; long, A::rank &gt; const &amp;sha)</div><div class="ttdoc">Resize a given regular array to the given shape or check if a given view as the correct shape.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00318">basic_functions.hpp:318</a></div></div>
 <div class="ttc" id="agroup__av__factories_html_ga29f120fb45f999b35c26f7f73930a424"><div class="ttname"><a href="group__av__factories.html#ga29f120fb45f999b35c26f7f73930a424">nda::to_unified</a></div><div class="ttdeci">decltype(auto) to_unified(A &amp;&amp;a)</div><div class="ttdoc">Convert an nda::MemoryArray to its regular type on unified memory.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00297">basic_functions.hpp:297</a></div></div>
-<div class="ttc" id="agroup__av__factories_html_ga45f52137a4bfd2926583530f73c29c1c"><div class="ttname"><a href="group__av__factories.html#ga45f52137a4bfd2926583530f73c29c1c">nda::reinterpret_add_fast_dims_of_size_one</a></div><div class="ttdeci">auto reinterpret_add_fast_dims_of_size_one(A &amp;&amp;a)</div><div class="ttdoc">Add N fast varying dimensions of size 1 to a given nda::basic_array or nda::basic_array_view.</div><div class="ttdef"><b>Definition</b> <a href="#l00270">layout_transforms.hpp:270</a></div></div>
+<div class="ttc" id="agroup__av__factories_html_ga45f52137a4bfd2926583530f73c29c1c"><div class="ttname"><a href="group__av__factories.html#ga45f52137a4bfd2926583530f73c29c1c">nda::reinterpret_add_fast_dims_of_size_one</a></div><div class="ttdeci">auto reinterpret_add_fast_dims_of_size_one(A &amp;&amp;a)</div><div class="ttdoc">Add N fast varying dimensions of size 1 to a given nda::basic_array or nda::basic_array_view.</div><div class="ttdef"><b>Definition</b> <a href="#l00272">layout_transforms.hpp:272</a></div></div>
 <div class="ttc" id="agroup__av__factories_html_ga57cc79af21f48abcdd340523029c7c48"><div class="ttname"><a href="group__av__factories.html#ga57cc79af21f48abcdd340523029c7c48">nda::make_const_view</a></div><div class="ttdeci">auto make_const_view(basic_array&lt; T, R, LP, A, CP &gt; const &amp;a)</div><div class="ttdoc">Make an nda::basic_array_view with a const value type from a given nda::basic_array.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00342">basic_functions.hpp:342</a></div></div>
-<div class="ttc" id="agroup__av__factories_html_ga587a5b691704422771dcaa5fcbbf32b4"><div class="ttname"><a href="group__av__factories.html#ga587a5b691704422771dcaa5fcbbf32b4">nda::permuted_indices_view</a></div><div class="ttdeci">auto permuted_indices_view(A &amp;&amp;a)</div><div class="ttdoc">Permute the indices/dimensions of an nda::basic_array or nda::basic_array_view.</div><div class="ttdef"><b>Definition</b> <a href="#l00173">layout_transforms.hpp:173</a></div></div>
+<div class="ttc" id="agroup__av__factories_html_ga587a5b691704422771dcaa5fcbbf32b4"><div class="ttname"><a href="group__av__factories.html#ga587a5b691704422771dcaa5fcbbf32b4">nda::permuted_indices_view</a></div><div class="ttdeci">auto permuted_indices_view(A &amp;&amp;a)</div><div class="ttdoc">Permute the indices/dimensions of an nda::basic_array or nda::basic_array_view.</div><div class="ttdef"><b>Definition</b> <a href="#l00175">layout_transforms.hpp:175</a></div></div>
 <div class="ttc" id="agroup__av__factories_html_ga5a0364362d7aac69cbab623215e7efa6"><div class="ttname"><a href="group__av__factories.html#ga5a0364362d7aac69cbab623215e7efa6">nda::map_layout_transform</a></div><div class="ttdeci">auto map_layout_transform(A &amp;&amp;a, NewLayoutType const &amp;new_layout)</div><div class="ttdoc">Transform the memory layout of an nda::basic_array or nda::basic_array_view.</div><div class="ttdef"><b>Definition</b> <a href="#l00070">layout_transforms.hpp:70</a></div></div>
 <div class="ttc" id="agroup__av__factories_html_ga5a796fa113c9779890711816e0e634c5"><div class="ttname"><a href="group__av__factories.html#ga5a796fa113c9779890711816e0e634c5">nda::zeros</a></div><div class="ttdeci">auto zeros(Ints... is)</div><div class="ttdoc">Make an array of the given shape on the given address space and zero-initialize it.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00083">basic_functions.hpp:83</a></div></div>
 <div class="ttc" id="agroup__av__factories_html_ga5e6f0a917ed3068ffa15842ee50f6e50"><div class="ttname"><a href="group__av__factories.html#ga5e6f0a917ed3068ffa15842ee50f6e50">nda::zeros</a></div><div class="ttdeci">auto zeros(std::array&lt; Int, Rank &gt; const &amp;shape)</div><div class="ttdoc">Make an array of the given shape on the given address space and zero-initialize it.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00061">basic_functions.hpp:61</a></div></div>
@@ -716,10 +718,10 @@ $(function(){initNavTree('layout__transforms_8hpp_source.html',''); initResizabl
 <div class="ttc" id="agroup__av__factories_html_ga8764fbd90ade51ac8616beb50b6b8a62"><div class="ttname"><a href="group__av__factories.html#ga8764fbd90ade51ac8616beb50b6b8a62">nda::to_host</a></div><div class="ttdeci">decltype(auto) to_host(A &amp;&amp;a)</div><div class="ttdoc">Convert an nda::MemoryArray to its regular type on host memory.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00261">basic_functions.hpp:261</a></div></div>
 <div class="ttc" id="agroup__av__factories_html_ga90cfe174f4a5bad65433f628ef634761"><div class="ttname"><a href="group__av__factories.html#ga90cfe174f4a5bad65433f628ef634761">nda::make_matrix_view</a></div><div class="ttdeci">auto make_matrix_view(basic_array_view&lt; T, R, LP, A, AP, OP &gt; const &amp;a)</div><div class="ttdoc">Make an nda::matrix_view of a given nda::basic_array_view.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00465">basic_functions.hpp:465</a></div></div>
 <div class="ttc" id="agroup__av__factories_html_ga99c26a440be6579fe146eee8c4442ff6"><div class="ttname"><a href="group__av__factories.html#ga99c26a440be6579fe146eee8c4442ff6">nda::arange</a></div><div class="ttdeci">auto arange(long last)</div><div class="ttdoc">Make a 1-dimensional integer array and initialize it with values of a given nda::range with a step si...</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00148">basic_functions.hpp:148</a></div></div>
-<div class="ttc" id="agroup__av__factories_html_gaa01d35a8419bc78798737c4fa94ee042"><div class="ttname"><a href="group__av__factories.html#gaa01d35a8419bc78798737c4fa94ee042">nda::flatten</a></div><div class="ttdeci">auto flatten(A &amp;&amp;a)</div><div class="ttdoc">Flatten an nda::basic_array or nda::basic_array_view to a 1-dimensional array/view by reshaping it.</div><div class="ttdef"><b>Definition</b> <a href="#l00157">layout_transforms.hpp:157</a></div></div>
+<div class="ttc" id="agroup__av__factories_html_gaa01d35a8419bc78798737c4fa94ee042"><div class="ttname"><a href="group__av__factories.html#gaa01d35a8419bc78798737c4fa94ee042">nda::flatten</a></div><div class="ttdeci">auto flatten(A &amp;&amp;a)</div><div class="ttdoc">Flatten an nda::basic_array or nda::basic_array_view to a 1-dimensional array/view by reshaping it.</div><div class="ttdef"><b>Definition</b> <a href="#l00159">layout_transforms.hpp:159</a></div></div>
 <div class="ttc" id="agroup__av__factories_html_gaa47d1e8768b732e2fb4712e61822839a"><div class="ttname"><a href="group__av__factories.html#gaa47d1e8768b732e2fb4712e61822839a">nda::make_matrix_view</a></div><div class="ttdeci">auto make_matrix_view(basic_array&lt; T, R, LP, A, CP &gt; const &amp;a)</div><div class="ttdoc">Make an nda::matrix_view of a given nda::basic_array.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00447">basic_functions.hpp:447</a></div></div>
 <div class="ttc" id="agroup__av__factories_html_gaaa05ec3fefbbb37c224f3c973229d0f5"><div class="ttname"><a href="group__av__factories.html#gaaa05ec3fefbbb37c224f3c973229d0f5">nda::ones</a></div><div class="ttdeci">auto ones(Ints... is)</div><div class="ttdoc">Make an array with the given dimensions and one-initialize it.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00118">basic_functions.hpp:118</a></div></div>
-<div class="ttc" id="agroup__av__factories_html_gab1366c1c79f31877f2d0a1596f323cee"><div class="ttname"><a href="group__av__factories.html#gab1366c1c79f31877f2d0a1596f323cee">nda::transpose</a></div><div class="ttdeci">auto transpose(A &amp;&amp;a)</div><div class="ttdoc">Transpose the memory layout of an nda::MemoryArray or an nda::expr_call.</div><div class="ttdef"><b>Definition</b> <a href="#l00189">layout_transforms.hpp:189</a></div></div>
+<div class="ttc" id="agroup__av__factories_html_gab1366c1c79f31877f2d0a1596f323cee"><div class="ttname"><a href="group__av__factories.html#gab1366c1c79f31877f2d0a1596f323cee">nda::transpose</a></div><div class="ttdeci">auto transpose(A &amp;&amp;a)</div><div class="ttdoc">Transpose the memory layout of an nda::MemoryArray or an nda::expr_call.</div><div class="ttdef"><b>Definition</b> <a href="#l00191">layout_transforms.hpp:191</a></div></div>
 <div class="ttc" id="agroup__av__factories_html_gab1ffd5cf23443671c20c49fb0f4f5c1d"><div class="ttname"><a href="group__av__factories.html#gab1ffd5cf23443671c20c49fb0f4f5c1d">nda::make_const_view</a></div><div class="ttdeci">auto make_const_view(basic_array_view&lt; T, R, LP, A, AP, OP &gt; const &amp;a)</div><div class="ttdoc">Make an nda::basic_array_view with a const value type from a given nda::basic_array_view.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00360">basic_functions.hpp:360</a></div></div>
 <div class="ttc" id="agroup__av__factories_html_gab3fd89e0758c7e679209e4f7ed914ea7"><div class="ttname"><a href="group__av__factories.html#gab3fd89e0758c7e679209e4f7ed914ea7">nda::to_device</a></div><div class="ttdeci">decltype(auto) to_device(A &amp;&amp;a)</div><div class="ttdoc">Convert an nda::MemoryArray to its regular type on device memory.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00279">basic_functions.hpp:279</a></div></div>
 <div class="ttc" id="agroup__av__factories_html_gabb272870e7c590ca06b94664db2946a3"><div class="ttname"><a href="group__av__factories.html#gabb272870e7c590ca06b94664db2946a3">nda::make_array_view</a></div><div class="ttdeci">auto make_array_view(basic_array&lt; T, R, LP, A, CP &gt; const &amp;a)</div><div class="ttdoc">Make an nda::array_view of a given nda::basic_array.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00377">basic_functions.hpp:377</a></div></div>
@@ -729,8 +731,8 @@ $(function(){initNavTree('layout__transforms_8hpp_source.html',''); initResizabl
 <div class="ttc" id="agroup__av__factories_html_gaef1718195a2be442d144b7647799ba8a"><div class="ttname"><a href="group__av__factories.html#gaef1718195a2be442d144b7647799ba8a">nda::make_array_view</a></div><div class="ttdeci">auto make_array_view(basic_array_view&lt; T, R, LP, A, AP, OP &gt; const &amp;a)</div><div class="ttdoc">Make an nda::array_view of a given nda::basic_array_view.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00395">basic_functions.hpp:395</a></div></div>
 <div class="ttc" id="agroup__av__factories_html_gaf06f490766f84271bb66553168570e2b"><div class="ttname"><a href="group__av__factories.html#gaf06f490766f84271bb66553168570e2b">nda::reshape</a></div><div class="ttdeci">auto reshape(A &amp;&amp;a, std::array&lt; Int, R &gt; const &amp;new_shape)</div><div class="ttdoc">Reshape an nda::basic_array or nda::basic_array_view.</div><div class="ttdef"><b>Definition</b> <a href="#l00108">layout_transforms.hpp:108</a></div></div>
 <div class="ttc" id="agroup__av__factories_html_gaf93e0a19277d0f2ed937e6d7339ee652"><div class="ttname"><a href="group__av__factories.html#gaf93e0a19277d0f2ed937e6d7339ee652">nda::concatenate</a></div><div class="ttdeci">auto concatenate(A0 const &amp;a0, As const &amp;...as)</div><div class="ttdoc">Join a sequence of nda::Array types along an existing axis.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00603">basic_functions.hpp:603</a></div></div>
-<div class="ttc" id="agroup__av__factories_html_gafc054e71fc39165fa411582663367e6e"><div class="ttname"><a href="group__av__factories.html#gafc054e71fc39165fa411582663367e6e">nda::group_indices_view</a></div><div class="ttdeci">auto group_indices_view(A &amp;&amp;a, IdxGrps...)</div><div class="ttdoc">Create a new nda::basic_array or nda::basic_array_view by grouping indices together of a given array/...</div><div class="ttdef"><b>Definition</b> <a href="#l00244">layout_transforms.hpp:244</a></div></div>
-<div class="ttc" id="agroup__av__factories_html_gafe83d79fc85f5a2534d8be62d730dccf"><div class="ttname"><a href="group__av__factories.html#gafe83d79fc85f5a2534d8be62d730dccf">nda::reshaped_view</a></div><div class="ttdeci">auto reshaped_view(A &amp;&amp;a, std::array&lt; Int, newRank &gt; const &amp;new_shape)</div><div class="ttdef"><b>Definition</b> <a href="#l00143">layout_transforms.hpp:143</a></div></div>
+<div class="ttc" id="agroup__av__factories_html_gafc054e71fc39165fa411582663367e6e"><div class="ttname"><a href="group__av__factories.html#gafc054e71fc39165fa411582663367e6e">nda::group_indices_view</a></div><div class="ttdeci">auto group_indices_view(A &amp;&amp;a, IdxGrps...)</div><div class="ttdoc">Create a new nda::basic_array or nda::basic_array_view by grouping indices together of a given array/...</div><div class="ttdef"><b>Definition</b> <a href="#l00246">layout_transforms.hpp:246</a></div></div>
+<div class="ttc" id="agroup__av__factories_html_gafe83d79fc85f5a2534d8be62d730dccf"><div class="ttname"><a href="group__av__factories.html#gafe83d79fc85f5a2534d8be62d730dccf">nda::reshaped_view</a></div><div class="ttdeci">auto reshaped_view(A &amp;&amp;a, std::array&lt; Int, newRank &gt; const &amp;new_shape)</div><div class="ttdef"><b>Definition</b> <a href="#l00145">layout_transforms.hpp:145</a></div></div>
 <div class="ttc" id="agroup__av__utils_html_ga17cb07f54c5452e23ad6a71a09e560d9"><div class="ttname"><a href="group__av__utils.html#ga17cb07f54c5452e23ad6a71a09e560d9">nda::first_dim</a></div><div class="ttdeci">long first_dim(A const &amp;a)</div><div class="ttdoc">Get the extent of the first dimension of the array.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00204">basic_functions.hpp:204</a></div></div>
 <div class="ttc" id="agroup__av__utils_html_ga27520f63afb420a97a49eb9ec5cda61e"><div class="ttname"><a href="group__av__utils.html#ga27520f63afb420a97a49eb9ec5cda61e">nda::is_view_v&lt; basic_array_view&lt; ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy &gt; &gt;</a></div><div class="ttdeci">constexpr bool is_view_v&lt; basic_array_view&lt; ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy &gt; &gt;</div><div class="ttdoc">Specialization of nda::is_view_v for nda::basic_array_view.</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00328">declarations.hpp:328</a></div></div>
 <div class="ttc" id="agroup__av__utils_html_ga2b4af8033b1f818bb76d07533189e8b8"><div class="ttname"><a href="group__av__utils.html#ga2b4af8033b1f818bb76d07533189e8b8">nda::is_regular_v&lt; basic_array&lt; ValueType, Rank, Layout, Algebra, ContainerPolicy &gt; &gt;</a></div><div class="ttdeci">constexpr bool is_regular_v&lt; basic_array&lt; ValueType, Rank, Layout, Algebra, ContainerPolicy &gt; &gt;</div><div class="ttdoc">Specialization of nda::is_regular_v for nda::basic_array.</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00324">declarations.hpp:324</a></div></div>

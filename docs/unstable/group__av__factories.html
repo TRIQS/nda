@@ -561,7 +561,7 @@ template&lt;MemoryArray A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An 1-dimensional array/view with the same size as the original array/view. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="layout__transforms_8hpp_source.html#l00157">157</a> of file <a class="el" href="layout__transforms_8hpp_source.html">layout_transforms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="layout__transforms_8hpp_source.html#l00159">159</a> of file <a class="el" href="layout__transforms_8hpp_source.html">layout_transforms.hpp</a>.</p>
 
 </div>
 </div>
@@ -594,7 +594,7 @@ template&lt;MemoryArray A, typename... IdxGrps&gt; </div>
 <p>It can be used as follows:</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> arr = nda::rand&lt;double&gt;(3, 4, 5, 6);</div>
 <div class="line"><span class="keyword">auto</span> view = <a class="code hl_function" href="#gafc054e71fc39165fa411582663367e6e">nda::group_indices_view</a>(arr, idx_group&lt;0, 1&gt;, idx_group&lt;2, 3&gt;);</div>
-<div class="ttc" id="agroup__av__factories_html_gafc054e71fc39165fa411582663367e6e"><div class="ttname"><a href="#gafc054e71fc39165fa411582663367e6e">nda::group_indices_view</a></div><div class="ttdeci">auto group_indices_view(A &amp;&amp;a, IdxGrps...)</div><div class="ttdoc">Create a new nda::basic_array or nda::basic_array_view by grouping indices together of a given array/...</div><div class="ttdef"><b>Definition</b> <a href="layout__transforms_8hpp_source.html#l00244">layout_transforms.hpp:244</a></div></div>
+<div class="ttc" id="agroup__av__factories_html_gafc054e71fc39165fa411582663367e6e"><div class="ttname"><a href="#gafc054e71fc39165fa411582663367e6e">nda::group_indices_view</a></div><div class="ttdeci">auto group_indices_view(A &amp;&amp;a, IdxGrps...)</div><div class="ttdoc">Create a new nda::basic_array or nda::basic_array_view by grouping indices together of a given array/...</div><div class="ttdef"><b>Definition</b> <a href="layout__transforms_8hpp_source.html#l00246">layout_transforms.hpp:246</a></div></div>
 </div><!-- fragment --><p>In this examples a 4-dimensional array <code>arr</code> is transformed into a 2-dimensional view by grouping the first and the last two indices together.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -611,7 +611,7 @@ template&lt;MemoryArray A, typename... IdxGrps&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An array/view with grouped indices. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="layout__transforms_8hpp_source.html#l00244">244</a> of file <a class="el" href="layout__transforms_8hpp_source.html">layout_transforms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="layout__transforms_8hpp_source.html#l00246">246</a> of file <a class="el" href="layout__transforms_8hpp_source.html">layout_transforms.hpp</a>.</p>
 
 </div>
 </div>
@@ -1170,7 +1170,7 @@ template&lt;uint64_t Permutation, MemoryArray A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An array/view with permuted indices/dimensions. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="layout__transforms_8hpp_source.html#l00173">173</a> of file <a class="el" href="layout__transforms_8hpp_source.html">layout_transforms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="layout__transforms_8hpp_source.html#l00175">175</a> of file <a class="el" href="layout__transforms_8hpp_source.html">layout_transforms.hpp</a>.</p>
 
 </div>
 </div>
@@ -1292,7 +1292,7 @@ requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An array/view with <code>N</code> dimensions of size 1 added to the original array/view. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="layout__transforms_8hpp_source.html#l00270">270</a> of file <a class="el" href="layout__transforms_8hpp_source.html">layout_transforms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="layout__transforms_8hpp_source.html#l00272">272</a> of file <a class="el" href="layout__transforms_8hpp_source.html">layout_transforms.hpp</a>.</p>
 
 </div>
 </div>
@@ -1337,7 +1337,7 @@ template&lt;MemoryArray A, std::integral... Ints&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An array/view with the new shape. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="layout__transforms_8hpp_source.html#l00137">137</a> of file <a class="el" href="layout__transforms_8hpp_source.html">layout_transforms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="layout__transforms_8hpp_source.html#l00139">139</a> of file <a class="el" href="layout__transforms_8hpp_source.html">layout_transforms.hpp</a>.</p>
 
 </div>
 </div>
@@ -1412,7 +1412,7 @@ template&lt;MemoryArray A, std::integral Int, auto newRank&gt; </div>
 <p><code>#include &lt;<a class="el" href="layout__transforms_8hpp.html">nda/layout_transforms.hpp</a>&gt;</code></p>
 <dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000011">Deprecated</a></b></dt><dd>Use <a class="el" href="#gaf06f490766f84271bb66553168570e2b" title="Reshape an nda::basic_array or nda::basic_array_view.">nda::reshape</a> instead. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="layout__transforms_8hpp_source.html#l00143">143</a> of file <a class="el" href="layout__transforms_8hpp_source.html">layout_transforms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="layout__transforms_8hpp_source.html#l00145">145</a> of file <a class="el" href="layout__transforms_8hpp_source.html">layout_transforms.hpp</a>.</p>
 
 </div>
 </div>
@@ -1614,7 +1614,7 @@ requires (MemoryArray&lt;A&gt; or <a class="el" href="group__utils__type__traits
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An array/view with transposed memory layout or a new <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> with the transposed array as the argument. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="layout__transforms_8hpp_source.html#l00189">189</a> of file <a class="el" href="layout__transforms_8hpp_source.html">layout_transforms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="layout__transforms_8hpp_source.html#l00191">191</a> of file <a class="el" href="layout__transforms_8hpp_source.html">layout_transforms.hpp</a>.</p>
 
 </div>
 </div>
@@ -1656,7 +1656,7 @@ requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An array/view with transposed indices/dimensions. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="layout__transforms_8hpp_source.html#l00213">213</a> of file <a class="el" href="layout__transforms_8hpp_source.html">layout_transforms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="layout__transforms_8hpp_source.html#l00215">215</a> of file <a class="el" href="layout__transforms_8hpp_source.html">layout_transforms.hpp</a>.</p>
 
 </div>
 </div>
