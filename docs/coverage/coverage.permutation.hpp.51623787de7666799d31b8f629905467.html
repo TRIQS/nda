@@ -27,7 +27,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2024-09-23 21:10:22</td>
+      <td>2024-09-23 21:25:14</td>
     </tr>
   </table>
 </div>
@@ -89,7 +89,7 @@
     <tr><td><a href="#l54">std::array&lt;int, 14ul&gt; nda::decode&lt;14ul&gt;(unsigned long) (line 54)</a></td><td>called 1 time, returned 1 time</td><td>100.0%</td></tr>
     <tr><td><a href="#l54">std::array&lt;int, 15ul&gt; nda::decode&lt;15ul&gt;(unsigned long) (line 54)</a></td><td>called 1 time, returned 1 time</td><td>100.0%</td></tr>
     <tr><td><a href="#l54">std::array&lt;int, 1ul&gt; nda::decode&lt;1ul&gt;(unsigned long) (line 54)</a></td><td>called 1 time, returned 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l200">std::array&lt;int, 1ul&gt; nda::permutations::identity&lt;1ul&gt;() (line 200)</a></td><td>called 2 times, returned 2 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l200">std::array&lt;int, 1ul&gt; nda::permutations::identity&lt;1ul&gt;() (line 200)</a></td><td>called 5 times, returned 5 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l54">std::array&lt;int, 2ul&gt; nda::decode&lt;2ul&gt;(unsigned long) (line 54)</a></td><td>called 1 time, returned 1 time</td><td>100.0%</td></tr>
     <tr><td><a href="#l200">std::array&lt;int, 2ul&gt; nda::permutations::identity&lt;2ul&gt;() (line 200)</a></td><td>called 3 times, returned 3 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l54">std::array&lt;int, 3ul&gt; nda::decode&lt;3ul&gt;(unsigned long) (line 54)</a></td><td>called 4 times, returned 4 times</td><td>100.0%</td></tr>
@@ -1690,14 +1690,14 @@
       <td class="lineno"><a id="l200" href="#l200">200</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">45697</td>
+      <td class="linecount coveredLine">45700</td>
       <td class="src coveredLine"><span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;</span><span class="w"> </span><span class="n">identity</span><span class="p">()</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l201" href="#l201">201</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">45697</td>
+      <td class="linecount coveredLine">45700</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stdutil</span><span class="o">::</span><span class="n">make_initialized_array</span><span class="o">&lt;</span><span class="n">N</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
@@ -1706,19 +1706,19 @@
         <details class="linebranchDetails">
         <summary class="linebranchSummary">2/2</summary>
         <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 27 times.</div>
-          <div class="takenBranch">&check; Branch 2 taken 11 times.</div>
+          <div class="takenBranch">&check; Branch 1 taken 30 times.</div>
+          <div class="takenBranch">&check; Branch 2 taken 14 times.</div>
         </div>
         </details>
       </td>
-      <td class="linecount coveredLine">182467</td>
+      <td class="linecount coveredLine">182473</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l203" href="#l203">203</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">45697</td>
+      <td class="linecount coveredLine">45700</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
