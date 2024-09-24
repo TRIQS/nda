@@ -116,3 +116,34 @@ TEST_F(NDAAlgorithm, CombineAlgorithmsWithArithmeticOps) {
   EXPECT_EQ(nda::sum(B), -18);
   EXPECT_EQ(nda::sum(A + B), 18);
 }
+
+TEST_F(NDAAlgorithm, HadamardProduct) {
+  nda::array<int, 2> A(3, 3), B(3, 3);
+  for (int i = 0; i < 3; ++i) {
+    for (int j = 0; j < 3; ++j) {
+      A(i, j) = i + 2 * j + 1;
+      B(i, j) = i - 3 * j;
+    }
+  }
+
+  // test with nda::array
+  auto Amat = nda::matrix<int>(A);
+  auto Bmat = nda::matrix<int>(B);
+  EXPECT_EQ(nda::hadamard(A, B), A * B);
+  EXPECT_EQ(nda::hadamard(Amat, Bmat), A * B);
+  EXPECT_EQ(nda::hadamard(Amat, B), A * B);
+
+  // test with std::array
+  auto arr1 = std::array<int, 3>{1, 2, 3};
+  auto arr2 = std::array<int, 3>{4, 5, 6};
+  EXPECT_EQ(nda::hadamard(arr1, arr2), arr1 * arr2);
+
+  // test with std::vector
+  auto vec1 = std::vector<long>{1, 2, 3};
+  auto vec2 = std::vector<double>{4, 5, 6};
+  auto vec3 = std::vector<double>{4, 10, 18};
+  EXPECT_EQ(nda::hadamard(vec1, vec2), vec3);
+
+  // test with arithmetic types
+  EXPECT_EQ(nda::hadamard(2, 3.0), 6.0);
+}

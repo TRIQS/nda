@@ -24,6 +24,7 @@
 #include "./concepts.hpp"
 #include "./layout/for_each.hpp"
 #include "./traits.hpp"
+#include "./map.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -197,6 +198,72 @@ namespace nda {
     requires(nda::is_scalar_v<get_value_t<A>>)
   {
     return fold(std::multiplies<>{}, a, get_value_t<A>{1});
+  }
+
+  /**
+   * @brief Hadamard product of two nda::Array objects.
+   * 
+   * @tparam A nda::Array type.
+   * @tparam B nda::Array type.
+   * @param a nda::Array object.
+   * @param b nda::Array object.
+   * @return nda::Array containing the elementwise product of the two input arrays.
+   */
+  template <Array A, Array B>
+    requires(nda::get_rank<A> == nda::get_rank<B>)
+  [[nodiscard]] constexpr auto hadamard(A &&a, B &&b) {
+    assert(a.shape() == b.shape());
+    return nda::map([](auto const &x, auto const &y) { return x * y; })(std::forward<A>(a), std::forward<B>(b));
+  }
+
+  /**
+   * @brief Hadamard product of two std::array objects.
+   * 
+   * @tparam T Data type of the arrays.
+   * @tparam R Size of the arrays.
+   * @param a std::array object.
+   * @param b std::array object.
+   * @return std::array containing the elementwise product of the two input arrays.
+   */
+  template <typename T, size_t R>
+  [[nodiscard]] constexpr auto hadamard(std::array<T, R> const &a, std::array<T, R> const &b) {
+    assert(a.size() == b.size());
+    return a * b;
+  }
+
+  /**
+   * @brief Hadamard product of two std::vector objects.
+   * 
+   * @tparam T Data type of the first input vector.
+   * @tparam U Data type of the second input vector.
+   * @param a std::vector object.
+   * @param b std::vector object.
+   * @return std::vector containing the elementwise product of the two input vectors.
+   */
+  template <typename T, typename U>
+  [[nodiscard]] constexpr auto hadamard(std::vector<T> const &a, std::vector<U> const &b) {
+    using TU = decltype(std::declval<T>() * std::declval<U>());
+    assert(a.size() == b.size());
+
+    std::vector<TU> c(a.size());
+    for (auto i : range(c.size())) c[i] = a[i] * b[i];
+    return c;
+  }
+
+  /**
+   * @brief Hadamard product of two arithmetic types.
+   * 
+   * @tparam T Data type of the first input.
+   * @tparam U Data type of the second input.
+   * @param a First input.
+   * @param b Second input.
+   * @return Product of the two inputs.
+   */
+  template <typename T, typename U>
+  constexpr auto hadamard(T a, U b)
+    requires(std::is_arithmetic_v<T> && std::is_arithmetic_v<U>)
+  {
+    return a * b;
   }
 
   /** @} */
