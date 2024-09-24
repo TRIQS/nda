@@ -261,7 +261,8 @@ namespace nda {
    */
   template <typename T, typename U>
   constexpr auto hadamard(T a, U b)
-    requires(std::is_arithmetic_v<T> && std::is_arithmetic_v<U>)
+    requires((std::is_arithmetic_v<T> || std::is_same_v<T, std::complex<typename T::value_type>>)
+             && (std::is_arithmetic_v<U> || std::is_same_v<U, std::complex<typename U::value_type>>))
   {
     return a * b;
   }

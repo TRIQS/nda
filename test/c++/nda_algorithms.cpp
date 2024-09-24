@@ -144,6 +144,10 @@ TEST_F(NDAAlgorithm, HadamardProduct) {
   auto vec3 = std::vector<double>{4, 10, 18};
   EXPECT_EQ(nda::hadamard(vec1, vec2), vec3);
 
-  // test with arithmetic types
+  // test with arithmetic types or complex
   EXPECT_EQ(nda::hadamard(2, 3.0), 6.0);
+
+  auto x = std::complex<long>{1, 2};
+  auto y = x * 3;
+  EXPECT_EQ(nda::hadamard(x, 3), y);
 }
