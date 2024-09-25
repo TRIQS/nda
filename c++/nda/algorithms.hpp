@@ -227,7 +227,6 @@ namespace nda {
    */
   template <typename T, size_t R>
   [[nodiscard]] constexpr auto hadamard(std::array<T, R> const &a, std::array<T, R> const &b) {
-    assert(a.size() == b.size());
     return a * b;
   }
 
