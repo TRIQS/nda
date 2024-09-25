@@ -218,14 +218,15 @@ namespace nda {
   /**
    * @brief Hadamard product of two std::array objects.
    * 
-   * @tparam T Data type of the arrays.
+   * @tparam T Data type of the first array.
+   * @tparam U Data type of the second array.
    * @tparam R Size of the arrays.
    * @param a std::array object.
    * @param b std::array object.
    * @return std::array containing the elementwise product of the two input arrays.
    */
-  template <typename T, size_t R>
-  [[nodiscard]] constexpr auto hadamard(std::array<T, R> const &a, std::array<T, R> const &b) {
+  template <typename T, typename U, size_t R>
+  [[nodiscard]] constexpr auto hadamard(std::array<T, R> const &a, std::array<U, R> const &b) {
     return a * b;
   }
 

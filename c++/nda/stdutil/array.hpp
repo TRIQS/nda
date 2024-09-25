@@ -105,15 +105,18 @@ namespace std { // has to be in the right namespace for ADL
   /**
    * @brief Multiply two std::array objects element-wise.
    *
-   * @tparam T Value type of the arrays.
+   * @tparam T Value type of the first array.
+   * @tparam U Value type of the second array.
    * @tparam R Size of the arrays.
    * @param lhs Left hand side std::array operand.
    * @param rhs Right hand side std::array operand.
    * @return std::array containing the element-wise product.
    */
-  template <typename T, size_t R>
-  constexpr std::array<T, R> operator*(std::array<T, R> const &lhs, std::array<T, R> const &rhs) {
-    std::array<T, R> res;
+  template <typename T, typename U, size_t R>
+  constexpr auto operator*(std::array<T, R> const &lhs, std::array<U, R> const &rhs) {
+    using TU = decltype(std::declval<T>() * std::declval<U>());
+
+    std::array<TU, R> res;
     for (int i = 0; i < R; ++i) res[i] = lhs[i] * rhs[i];
     return res;
   }

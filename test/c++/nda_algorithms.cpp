@@ -135,7 +135,7 @@ TEST_F(NDAAlgorithm, HadamardProduct) {
 
   // test with std::array
   auto arr1 = std::array<int, 3>{1, 2, 3};
-  auto arr2 = std::array<int, 3>{4, 5, 6};
+  auto arr2 = std::array<long, 3>{4, 5, 6};
   EXPECT_EQ(nda::hadamard(arr1, arr2), arr1 * arr2);
 
   // test with std::vector
