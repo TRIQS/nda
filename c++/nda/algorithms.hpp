@@ -241,7 +241,7 @@ namespace nda {
   template <typename T, typename U>
   [[nodiscard]] constexpr auto hadamard(std::vector<T> const &a, std::vector<U> const &b) {
     using TU = decltype(std::declval<T>() * std::declval<U>());
-    assert(a.size() == b.size());
+    EXPECTS(a.size() == b.size());
 
     std::vector<TU> c(a.size());
     for (auto i : range(c.size())) c[i] = a[i] * b[i];
