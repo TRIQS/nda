@@ -258,13 +258,7 @@ namespace nda {
    * @param b Second input.
    * @return Product of the two inputs.
    */
-  template <typename T, typename U>
-  constexpr auto hadamard(T a, U b)
-    requires((std::is_arithmetic_v<T> || std::is_same_v<T, std::complex<typename T::value_type>>)
-             && (std::is_arithmetic_v<U> || std::is_same_v<U, std::complex<typename U::value_type>>))
-  {
-    return a * b;
-  }
+  constexpr auto hadamard(nda::Scalar auto a, nda::Scalar auto b) { return a * b; }
 
   /** @} */
 
