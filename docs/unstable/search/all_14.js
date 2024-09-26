@@ -18,7 +18,7 @@ var searchData=
   ['print_2ehpp_15',['print.hpp',['../print_8hpp.html',1,'']]],
   ['print_5fhistogram_16',['print_histogram',['../classnda_1_1mem_1_1stats.html#a654a54e2728583b2dc41690a4e2c827b',1,'nda::mem::stats']]],
   ['print_5ftuple_17',['print_tuple',['../group__clef__utils.html#ga939b5f2a463e2e3f20130ea7d9216642',1,'nda::clef']]],
-  ['product_18',['product',['../group__av__algs.html#ga20fe5de812c1b0b5fa6964e50649c2fa',1,'nda::product()'],['../group__utils__std.html#gae4b418662bf69455beb672c5ef2d6301',1,'nda::stdutil::product()']]],
+  ['product_18',['product',['../group__av__algs.html#ga767f1ffe11006beb7dfe9318565ab789',1,'nda::product()'],['../group__utils__std.html#gae4b418662bf69455beb672c5ef2d6301',1,'nda::stdutil::product()']]],
   ['projects_19',['Integration in C++ projects',['../integration.html',1,'']]],
   ['prop_20',['prop',['../structnda_1_1layout__info__t.html#a351eb4acb2b4d8f3fd17fab9a7512adb',1,'nda::layout_info_t']]],
   ['ptr_21',['ptr',['../structnda_1_1mem_1_1blk__t.html#a96eb83f5e729b2c601dba97155cacee9',1,'nda::mem::blk_t']]]

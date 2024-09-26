@@ -11,6 +11,6 @@ var algorithms_8hpp =
     [ "hadamard", "algorithms_8hpp.html#ga3aec2e627c396aaeb87141efa7a49bc4", null ],
     [ "max_element", "algorithms_8hpp.html#ga0d54b733a7c15c15846de86a79d53025", null ],
     [ "min_element", "algorithms_8hpp.html#ga8dcf3b8eb2cf5460c47e825b4ec38534", null ],
-    [ "product", "algorithms_8hpp.html#ga20fe5de812c1b0b5fa6964e50649c2fa", null ],
-    [ "sum", "algorithms_8hpp.html#ga921e7e72f5b8a2699fc4cd2127383385", null ]
+    [ "product", "algorithms_8hpp.html#ga767f1ffe11006beb7dfe9318565ab789", null ],
+    [ "sum", "algorithms_8hpp.html#ga32b50e2bafb182294179bb1f2f0f5c9b", null ]
 ];

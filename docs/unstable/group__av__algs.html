@@ -118,7 +118,7 @@ $(function(){initNavTree('group__av__algs.html',''); initResizable(true); });
 <p>We can group the different algorithms into</p>
 <ul>
 <li>Algorithms similar to the standard library: <a class="el" href="#gace1353ca15a2382bf8d466fd69283a91" title="Do all elements of the array evaluate to true?">nda::all</a>, <a class="el" href="#ga70f4415b815978d94a661d7483567e57" title="Does any of the elements of the array evaluate to true?">nda::any</a>, <a class="el" href="#ga0d54b733a7c15c15846de86a79d53025" title="Find the maximum element of an array.">nda::max_element</a>, <a class="el" href="#ga8dcf3b8eb2cf5460c47e825b4ec38534" title="Find the minimum element of an array.">nda::min_element</a>.</li>
-<li>Reduction algorithms: <a class="el" href="#ga20fe5de812c1b0b5fa6964e50649c2fa" title="Multiply all the elements of an nda::Array object.">nda::product</a>, <a class="el" href="#ga921e7e72f5b8a2699fc4cd2127383385" title="Sum all the elements of an nda::Array object.">nda::sum</a>.</li>
+<li>Reduction algorithms: <a class="el" href="#ga767f1ffe11006beb7dfe9318565ab789" title="Multiply all the elements of an nda::Array object.">nda::product</a>, <a class="el" href="#ga32b50e2bafb182294179bb1f2f0f5c9b" title="Sum all the elements of an nda::Array object.">nda::sum</a>.</li>
 <li>Generic algorithm: <a class="el" href="#ga1ede47af1aafba0c08346ce98c767b7e" title="Perform a fold operation on the given nda::Array object.">nda::fold</a>.</li>
 </ul>
 <table class="memberdecls">
@@ -165,16 +165,16 @@ requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da94
 <tr class="memitem:ga8dcf3b8eb2cf5460c47e825b4ec38534"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga8dcf3b8eb2cf5460c47e825b4ec38534">nda::min_element</a> (A const &amp;a)</td></tr>
 <tr class="memdesc:ga8dcf3b8eb2cf5460c47e825b4ec38534"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the minimum element of an array.  <br /></td></tr>
 <tr class="separator:ga8dcf3b8eb2cf5460c47e825b4ec38534"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga20fe5de812c1b0b5fa6964e50649c2fa" id="r_ga20fe5de812c1b0b5fa6964e50649c2fa"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; <br />
-requires (<a class="el" href="group__utils__type__traits.html#gadb69652fdcf2bc3040818cfdd5d6f4ff">nda::is_scalar_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
-<tr class="memitem:ga20fe5de812c1b0b5fa6964e50649c2fa"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga20fe5de812c1b0b5fa6964e50649c2fa">nda::product</a> (A const &amp;a)</td></tr>
-<tr class="memdesc:ga20fe5de812c1b0b5fa6964e50649c2fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply all the elements of an <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object.  <br /></td></tr>
-<tr class="separator:ga20fe5de812c1b0b5fa6964e50649c2fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga921e7e72f5b8a2699fc4cd2127383385" id="r_ga921e7e72f5b8a2699fc4cd2127383385"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; <br />
-requires (<a class="el" href="group__utils__type__traits.html#gadb69652fdcf2bc3040818cfdd5d6f4ff">nda::is_scalar_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
-<tr class="memitem:ga921e7e72f5b8a2699fc4cd2127383385"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga921e7e72f5b8a2699fc4cd2127383385">nda::sum</a> (A const &amp;a)</td></tr>
-<tr class="memdesc:ga921e7e72f5b8a2699fc4cd2127383385"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sum all the elements of an <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object.  <br /></td></tr>
-<tr class="separator:ga921e7e72f5b8a2699fc4cd2127383385"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga767f1ffe11006beb7dfe9318565ab789" id="r_ga767f1ffe11006beb7dfe9318565ab789"><td class="memTemplParams" colspan="2">template&lt;Array A, typename Value  = get_value_t&lt;A&gt;&gt; <br />
+requires (<a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a>&lt;Value&gt; or <a class="el" href="conceptnda_1_1Array.html">nda::Array</a>&lt;Value&gt;)</td></tr>
+<tr class="memitem:ga767f1ffe11006beb7dfe9318565ab789"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga767f1ffe11006beb7dfe9318565ab789">nda::product</a> (A const &amp;a)</td></tr>
+<tr class="memdesc:ga767f1ffe11006beb7dfe9318565ab789"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply all the elements of an <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object.  <br /></td></tr>
+<tr class="separator:ga767f1ffe11006beb7dfe9318565ab789"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga32b50e2bafb182294179bb1f2f0f5c9b" id="r_ga32b50e2bafb182294179bb1f2f0f5c9b"><td class="memTemplParams" colspan="2">template&lt;Array A, typename Value  = get_value_t&lt;A&gt;&gt; <br />
+requires (<a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a>&lt;Value&gt; or <a class="el" href="conceptnda_1_1Array.html">nda::Array</a>&lt;Value&gt;)</td></tr>
+<tr class="memitem:ga32b50e2bafb182294179bb1f2f0f5c9b"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga32b50e2bafb182294179bb1f2f0f5c9b">nda::sum</a> (A const &amp;a)</td></tr>
+<tr class="memdesc:ga32b50e2bafb182294179bb1f2f0f5c9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sum all the elements of an <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object.  <br /></td></tr>
+<tr class="separator:ga32b50e2bafb182294179bb1f2f0f5c9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="gace1353ca15a2382bf8d466fd69283a91" name="gace1353ca15a2382bf8d466fd69283a91"></a>
@@ -202,7 +202,7 @@ template&lt;Array A&gt; </div>
 <div class="line"><span class="keyword">auto</span> greater0 = <a class="code hl_function" href="group__av__math.html#gaf8151ad99c4fe345cf168a5d01529a6a">nda::map</a>([](<span class="keyword">auto</span> x) { <span class="keywordflow">return</span> x &gt; 0.0; })(A);</div>
 <div class="line"><span class="keyword">auto</span> res = <a class="code hl_function" href="#gace1353ca15a2382bf8d466fd69283a91">nda::all</a>(greater0);</div>
 <div class="ttc" id="aclassnda_1_1basic__array_html_afee46ba48f00ff7d4c9ddb9890e0c451"><div class="ttname"><a href="classnda_1_1basic__array.html#afee46ba48f00ff7d4c9ddb9890e0c451">nda::basic_array::rand</a></div><div class="ttdeci">static basic_array rand(std::array&lt; Int, Rank &gt; const &amp;shape)</div><div class="ttdoc">Make a random-initialized array with the given shape.</div><div class="ttdef"><b>Definition</b> <a href="basic__array_8hpp_source.html#l00463">basic_array.hpp:463</a></div></div>
-<div class="ttc" id="agroup__av__algs_html_gace1353ca15a2382bf8d466fd69283a91"><div class="ttname"><a href="#gace1353ca15a2382bf8d466fd69283a91">nda::all</a></div><div class="ttdeci">bool all(A const &amp;a)</div><div class="ttdoc">Do all elements of the array evaluate to true?</div><div class="ttdef"><b>Definition</b> <a href="algorithms_8hpp_source.html#l00118">algorithms.hpp:118</a></div></div>
+<div class="ttc" id="agroup__av__algs_html_gace1353ca15a2382bf8d466fd69283a91"><div class="ttname"><a href="#gace1353ca15a2382bf8d466fd69283a91">nda::all</a></div><div class="ttdeci">bool all(A const &amp;a)</div><div class="ttdoc">Do all elements of the array evaluate to true?</div><div class="ttdef"><b>Definition</b> <a href="algorithms_8hpp_source.html#l00120">algorithms.hpp:120</a></div></div>
 <div class="ttc" id="agroup__av__math_html_gaf8151ad99c4fe345cf168a5d01529a6a"><div class="ttname"><a href="group__av__math.html#gaf8151ad99c4fe345cf168a5d01529a6a">nda::map</a></div><div class="ttdeci">mapped&lt; F &gt; map(F f)</div><div class="ttdoc">Create a lazy function call expression on arrays/views.</div><div class="ttdef"><b>Definition</b> <a href="map_8hpp_source.html#l00199">map.hpp:199</a></div></div>
 </div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -218,7 +218,7 @@ template&lt;Array A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if all elements of the array evaluate to true, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00118">118</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00120">120</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
 
 </div>
 </div>
@@ -246,7 +246,7 @@ template&lt;Array A&gt; </div>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> A = <a class="code hl_function" href="classnda_1_1basic__array.html#afee46ba48f00ff7d4c9ddb9890e0c451">nda::array&lt;double, 2&gt;::rand</a>(2, 3);</div>
 <div class="line"><span class="keyword">auto</span> greater05 = <a class="code hl_function" href="group__av__math.html#gaf8151ad99c4fe345cf168a5d01529a6a">nda::map</a>([](<span class="keyword">auto</span> x) { <span class="keywordflow">return</span> x &gt; 0.5; })(A);</div>
 <div class="line"><span class="keyword">auto</span> res = <a class="code hl_function" href="#ga70f4415b815978d94a661d7483567e57">nda::any</a>(greater05);</div>
-<div class="ttc" id="agroup__av__algs_html_ga70f4415b815978d94a661d7483567e57"><div class="ttname"><a href="#ga70f4415b815978d94a661d7483567e57">nda::any</a></div><div class="ttdeci">bool any(A const &amp;a)</div><div class="ttdoc">Does any of the elements of the array evaluate to true?</div><div class="ttdef"><b>Definition</b> <a href="algorithms_8hpp_source.html#l00097">algorithms.hpp:97</a></div></div>
+<div class="ttc" id="agroup__av__algs_html_ga70f4415b815978d94a661d7483567e57"><div class="ttname"><a href="#ga70f4415b815978d94a661d7483567e57">nda::any</a></div><div class="ttdeci">bool any(A const &amp;a)</div><div class="ttdoc">Does any of the elements of the array evaluate to true?</div><div class="ttdef"><b>Definition</b> <a href="algorithms_8hpp_source.html#l00099">algorithms.hpp:99</a></div></div>
 </div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
@@ -261,7 +261,7 @@ template&lt;Array A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if at least one element of the array evaluates to true, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00097">97</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00099">99</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
 
 </div>
 </div>
@@ -315,7 +315,7 @@ template&lt;Array A, typename F , typename R &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Result of the fold operation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00068">68</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00069">69</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
 
 </div>
 </div>
@@ -368,7 +368,7 @@ requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da94
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object representing the elementwise product of the two input objects. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00218">218</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00228">228</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
 
 </div>
 </div>
@@ -418,7 +418,7 @@ requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da94
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Product of the two inputs. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00265">265</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00275">275</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
 
 </div>
 </div>
@@ -471,7 +471,7 @@ template&lt;typename T , typename U , size_t R&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::array containing the elementwise product of the two input arrays. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00233">233</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00243">243</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
 
 </div>
 </div>
@@ -523,7 +523,7 @@ template&lt;typename T , typename U &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::vector containing the elementwise product of the two input vectors. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00247">247</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00257">257</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
 
 </div>
 </div>
@@ -562,7 +562,7 @@ template&lt;Array A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Maximum element of the array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00133">133</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00135">135</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
 
 </div>
 </div>
@@ -601,18 +601,18 @@ template&lt;Array A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Minimum element of the array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00152">152</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00154">154</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga20fe5de812c1b0b5fa6964e50649c2fa" name="ga20fe5de812c1b0b5fa6964e50649c2fa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga20fe5de812c1b0b5fa6964e50649c2fa">&#9670;&#160;</a></span>product()</h2>
+<a id="ga767f1ffe11006beb7dfe9318565ab789" name="ga767f1ffe11006beb7dfe9318565ab789"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga767f1ffe11006beb7dfe9318565ab789">&#9670;&#160;</a></span>product()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;Array A&gt; <br />
-requires (<a class="el" href="group__utils__type__traits.html#gadb69652fdcf2bc3040818cfdd5d6f4ff">nda::is_scalar_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+template&lt;Array A, typename Value  = get_value_t&lt;A&gt;&gt; <br />
+requires (<a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a>&lt;Value&gt; or <a class="el" href="conceptnda_1_1Array.html">nda::Array</a>&lt;Value&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">auto nda::product </td>
@@ -640,18 +640,18 @@ requires (<a class="el" href="group__utils__type__traits.html#gadb69652fdcf2bc30
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Product of all elements. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00201">201</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00207">207</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga921e7e72f5b8a2699fc4cd2127383385" name="ga921e7e72f5b8a2699fc4cd2127383385"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga921e7e72f5b8a2699fc4cd2127383385">&#9670;&#160;</a></span>sum()</h2>
+<a id="ga32b50e2bafb182294179bb1f2f0f5c9b" name="ga32b50e2bafb182294179bb1f2f0f5c9b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga32b50e2bafb182294179bb1f2f0f5c9b">&#9670;&#160;</a></span>sum()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;Array A&gt; <br />
-requires (<a class="el" href="group__utils__type__traits.html#gadb69652fdcf2bc3040818cfdd5d6f4ff">nda::is_scalar_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+template&lt;Array A, typename Value  = get_value_t&lt;A&gt;&gt; <br />
+requires (<a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a>&lt;Value&gt; or <a class="el" href="conceptnda_1_1Array.html">nda::Array</a>&lt;Value&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">auto nda::sum </td>
@@ -679,7 +679,7 @@ requires (<a class="el" href="group__utils__type__traits.html#gadb69652fdcf2bc30
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Sum of all elements. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00187">187</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00189">189</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
 
 </div>
 </div>
