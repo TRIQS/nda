@@ -141,6 +141,22 @@ template&lt;Array A, typename F &gt; </td></tr>
 <tr class="memitem:ga1ede47af1aafba0c08346ce98c767b7e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga1ede47af1aafba0c08346ce98c767b7e">nda::fold</a> (F f, A const &amp;a, R r)</td></tr>
 <tr class="memdesc:ga1ede47af1aafba0c08346ce98c767b7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a fold operation on the given <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object.  <br /></td></tr>
 <tr class="separator:ga1ede47af1aafba0c08346ce98c767b7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9ee51842bd47f09b28d6d36cdf289b62" id="r_ga9ee51842bd47f09b28d6d36cdf289b62"><td class="memTemplParams" colspan="2">template&lt;Array A, Array B&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">nda::get_rank</a>&lt;A&gt; == <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">nda::get_rank</a>&lt;B&gt;)</td></tr>
+<tr class="memitem:ga9ee51842bd47f09b28d6d36cdf289b62"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga9ee51842bd47f09b28d6d36cdf289b62">nda::hadamard</a> (A &amp;&amp;a, B &amp;&amp;b)</td></tr>
+<tr class="memdesc:ga9ee51842bd47f09b28d6d36cdf289b62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hadamard product of two <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> objects.  <br /></td></tr>
+<tr class="separator:ga9ee51842bd47f09b28d6d36cdf289b62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac201e48555bdb773ad45706882e787b5" id="r_gac201e48555bdb773ad45706882e787b5"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac201e48555bdb773ad45706882e787b5">nda::hadamard</a> (<a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a> auto a, <a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a> auto b)</td></tr>
+<tr class="memdesc:gac201e48555bdb773ad45706882e787b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hadamard product of two arithmetic types.  <br /></td></tr>
+<tr class="separator:gac201e48555bdb773ad45706882e787b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad8886854a020e7b28b63a96d6087485d" id="r_gad8886854a020e7b28b63a96d6087485d"><td class="memTemplParams" colspan="2">template&lt;typename T , typename U , size_t R&gt; </td></tr>
+<tr class="memitem:gad8886854a020e7b28b63a96d6087485d"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gad8886854a020e7b28b63a96d6087485d">nda::hadamard</a> (std::array&lt; T, R &gt; const &amp;a, std::array&lt; U, R &gt; const &amp;b)</td></tr>
+<tr class="memdesc:gad8886854a020e7b28b63a96d6087485d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hadamard product of two std::array objects.  <br /></td></tr>
+<tr class="separator:gad8886854a020e7b28b63a96d6087485d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3aec2e627c396aaeb87141efa7a49bc4" id="r_ga3aec2e627c396aaeb87141efa7a49bc4"><td class="memTemplParams" colspan="2">template&lt;typename T , typename U &gt; </td></tr>
+<tr class="memitem:ga3aec2e627c396aaeb87141efa7a49bc4"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga3aec2e627c396aaeb87141efa7a49bc4">nda::hadamard</a> (std::vector&lt; T &gt; const &amp;a, std::vector&lt; U &gt; const &amp;b)</td></tr>
+<tr class="memdesc:ga3aec2e627c396aaeb87141efa7a49bc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hadamard product of two std::vector objects.  <br /></td></tr>
+<tr class="separator:ga3aec2e627c396aaeb87141efa7a49bc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0d54b733a7c15c15846de86a79d53025" id="r_ga0d54b733a7c15c15846de86a79d53025"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; </td></tr>
 <tr class="memitem:ga0d54b733a7c15c15846de86a79d53025"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga0d54b733a7c15c15846de86a79d53025">nda::max_element</a> (A const &amp;a)</td></tr>
 <tr class="memdesc:ga0d54b733a7c15c15846de86a79d53025"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the maximum element of an array.  <br /></td></tr>
@@ -186,7 +202,7 @@ template&lt;Array A&gt; </div>
 <div class="line"><span class="keyword">auto</span> greater0 = <a class="code hl_function" href="group__av__math.html#gaf8151ad99c4fe345cf168a5d01529a6a">nda::map</a>([](<span class="keyword">auto</span> x) { <span class="keywordflow">return</span> x &gt; 0.0; })(A);</div>
 <div class="line"><span class="keyword">auto</span> res = <a class="code hl_function" href="#gace1353ca15a2382bf8d466fd69283a91">nda::all</a>(greater0);</div>
 <div class="ttc" id="aclassnda_1_1basic__array_html_afee46ba48f00ff7d4c9ddb9890e0c451"><div class="ttname"><a href="classnda_1_1basic__array.html#afee46ba48f00ff7d4c9ddb9890e0c451">nda::basic_array::rand</a></div><div class="ttdeci">static basic_array rand(std::array&lt; Int, Rank &gt; const &amp;shape)</div><div class="ttdoc">Make a random-initialized array with the given shape.</div><div class="ttdef"><b>Definition</b> <a href="basic__array_8hpp_source.html#l00463">basic_array.hpp:463</a></div></div>
-<div class="ttc" id="agroup__av__algs_html_gace1353ca15a2382bf8d466fd69283a91"><div class="ttname"><a href="#gace1353ca15a2382bf8d466fd69283a91">nda::all</a></div><div class="ttdeci">bool all(A const &amp;a)</div><div class="ttdoc">Do all elements of the array evaluate to true?</div><div class="ttdef"><b>Definition</b> <a href="algorithms_8hpp_source.html#l00113">algorithms.hpp:113</a></div></div>
+<div class="ttc" id="agroup__av__algs_html_gace1353ca15a2382bf8d466fd69283a91"><div class="ttname"><a href="#gace1353ca15a2382bf8d466fd69283a91">nda::all</a></div><div class="ttdeci">bool all(A const &amp;a)</div><div class="ttdoc">Do all elements of the array evaluate to true?</div><div class="ttdef"><b>Definition</b> <a href="algorithms_8hpp_source.html#l00118">algorithms.hpp:118</a></div></div>
 <div class="ttc" id="agroup__av__math_html_gaf8151ad99c4fe345cf168a5d01529a6a"><div class="ttname"><a href="group__av__math.html#gaf8151ad99c4fe345cf168a5d01529a6a">nda::map</a></div><div class="ttdeci">mapped&lt; F &gt; map(F f)</div><div class="ttdoc">Create a lazy function call expression on arrays/views.</div><div class="ttdef"><b>Definition</b> <a href="map_8hpp_source.html#l00199">map.hpp:199</a></div></div>
 </div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -202,7 +218,7 @@ template&lt;Array A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if all elements of the array evaluate to true, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00113">113</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00118">118</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
 
 </div>
 </div>
@@ -230,7 +246,7 @@ template&lt;Array A&gt; </div>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> A = <a class="code hl_function" href="classnda_1_1basic__array.html#afee46ba48f00ff7d4c9ddb9890e0c451">nda::array&lt;double, 2&gt;::rand</a>(2, 3);</div>
 <div class="line"><span class="keyword">auto</span> greater05 = <a class="code hl_function" href="group__av__math.html#gaf8151ad99c4fe345cf168a5d01529a6a">nda::map</a>([](<span class="keyword">auto</span> x) { <span class="keywordflow">return</span> x &gt; 0.5; })(A);</div>
 <div class="line"><span class="keyword">auto</span> res = <a class="code hl_function" href="#ga70f4415b815978d94a661d7483567e57">nda::any</a>(greater05);</div>
-<div class="ttc" id="agroup__av__algs_html_ga70f4415b815978d94a661d7483567e57"><div class="ttname"><a href="#ga70f4415b815978d94a661d7483567e57">nda::any</a></div><div class="ttdeci">bool any(A const &amp;a)</div><div class="ttdoc">Does any of the elements of the array evaluate to true?</div><div class="ttdef"><b>Definition</b> <a href="algorithms_8hpp_source.html#l00092">algorithms.hpp:92</a></div></div>
+<div class="ttc" id="agroup__av__algs_html_ga70f4415b815978d94a661d7483567e57"><div class="ttname"><a href="#ga70f4415b815978d94a661d7483567e57">nda::any</a></div><div class="ttdeci">bool any(A const &amp;a)</div><div class="ttdoc">Does any of the elements of the array evaluate to true?</div><div class="ttdef"><b>Definition</b> <a href="algorithms_8hpp_source.html#l00097">algorithms.hpp:97</a></div></div>
 </div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
@@ -245,7 +261,7 @@ template&lt;Array A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if at least one element of the array evaluates to true, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00092">92</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00097">97</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
 
 </div>
 </div>
@@ -299,7 +315,215 @@ template&lt;Array A, typename F , typename R &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Result of the fold operation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00063">63</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00068">68</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga9ee51842bd47f09b28d6d36cdf289b62" name="ga9ee51842bd47f09b28d6d36cdf289b62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9ee51842bd47f09b28d6d36cdf289b62">&#9670;&#160;</a></span>hadamard() <span class="overload">[1/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;Array A, Array B&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">nda::get_rank</a>&lt;A&gt; == <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">nda::get_rank</a>&lt;B&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::hadamard </td>
+          <td>(</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">B &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">nodiscard</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="algorithms_8hpp.html">nda/algorithms.hpp</a>&gt;</code></p>
+
+<p>Hadamard product of two <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> objects. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
+    <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
+    <tr><td class="paramname">b</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object representing the elementwise product of the two input objects. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00218">218</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gac201e48555bdb773ad45706882e787b5" name="gac201e48555bdb773ad45706882e787b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac201e48555bdb773ad45706882e787b5">&#9670;&#160;</a></span>hadamard() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::hadamard </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a> auto</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a> auto</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="algorithms_8hpp.html">nda/algorithms.hpp</a>&gt;</code></p>
+
+<p>Hadamard product of two arithmetic types. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td><a class="el" href="conceptnda_1_1Scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> type of the first input. </td></tr>
+    <tr><td class="paramname">U</td><td><a class="el" href="conceptnda_1_1Scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> type of the second input. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>First input. </td></tr>
+    <tr><td class="paramname">b</td><td>Second input. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Product of the two inputs. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00265">265</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gad8886854a020e7b28b63a96d6087485d" name="gad8886854a020e7b28b63a96d6087485d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad8886854a020e7b28b63a96d6087485d">&#9670;&#160;</a></span>hadamard() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename U , size_t R&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::hadamard </td>
+          <td>(</td>
+          <td class="paramtype">std::array&lt; T, R &gt; const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::array&lt; U, R &gt; const &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">nodiscard</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="algorithms_8hpp.html">nda/algorithms.hpp</a>&gt;</code></p>
+
+<p>Hadamard product of two std::array objects. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Value type of the first array. </td></tr>
+    <tr><td class="paramname">U</td><td>Value type of the second array. </td></tr>
+    <tr><td class="paramname">R</td><td>Size of the arrays. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>std::array object. </td></tr>
+    <tr><td class="paramname">b</td><td>std::array object. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::array containing the elementwise product of the two input arrays. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00233">233</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga3aec2e627c396aaeb87141efa7a49bc4" name="ga3aec2e627c396aaeb87141efa7a49bc4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3aec2e627c396aaeb87141efa7a49bc4">&#9670;&#160;</a></span>hadamard() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename U &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::hadamard </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; T &gt; const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; U &gt; const &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">nodiscard</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="algorithms_8hpp.html">nda/algorithms.hpp</a>&gt;</code></p>
+
+<p>Hadamard product of two std::vector objects. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Value type of the first input vector. </td></tr>
+    <tr><td class="paramname">U</td><td>Value type of the second input vector. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>std::vector object. </td></tr>
+    <tr><td class="paramname">b</td><td>std::vector object. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::vector containing the elementwise product of the two input vectors. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00247">247</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
 
 </div>
 </div>
@@ -338,7 +562,7 @@ template&lt;Array A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Maximum element of the array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00128">128</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00133">133</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
 
 </div>
 </div>
@@ -377,7 +601,7 @@ template&lt;Array A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Minimum element of the array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00147">147</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00152">152</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
 
 </div>
 </div>
@@ -416,7 +640,7 @@ requires (<a class="el" href="group__utils__type__traits.html#gadb69652fdcf2bc30
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Product of all elements. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00196">196</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00201">201</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
 
 </div>
 </div>
@@ -455,7 +679,7 @@ requires (<a class="el" href="group__utils__type__traits.html#gadb69652fdcf2bc30
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Sum of all elements. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00182">182</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="algorithms_8hpp_source.html#l00187">187</a> of file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
 
 </div>
 </div>

@@ -147,7 +147,7 @@ $(function(){initNavTree('norm_8hpp_source.html',''); initResizable(true); });
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">complex</span><span class="preprocessor">&gt;</span></div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">limits</span><span class="preprocessor">&gt;</span></div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">namespace</span> nda {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">namespace</span> <a class="code hl_function" href="group__av__algs.html#gac201e48555bdb773ad45706882e787b5">nda</a> {</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="comment">/**</span></div>
 <div class="line"><span class="lineno">   40</span><span class="comment">   * @ingroup linalg_tools</span></div>
@@ -174,7 +174,7 @@ $(function(){initNavTree('norm_8hpp_source.html',''); initResizable(true); });
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordflow">if</span> (p == 2.0) [[likely]] {</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (MemoryArray&lt;A&gt;)</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keywordflow">return</span> std::sqrt(std::real(nda::blas::dotc(a, a)));</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keywordflow">return</span> std::sqrt(std::real(<a class="code hl_function" href="group__av__algs.html#gac201e48555bdb773ad45706882e787b5">nda</a>::blas::dotc(a, a)));</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>      <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <span class="keywordflow">return</span> norm(make_regular(a));</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (p == 1.0) {</div>
@@ -196,6 +196,7 @@ $(function(){initNavTree('norm_8hpp_source.html',''); initResizable(true); });
 </div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>} <span class="comment">// namespace nda</span></div>
+<div class="ttc" id="agroup__av__algs_html_gac201e48555bdb773ad45706882e787b5"><div class="ttname"><a href="group__av__algs.html#gac201e48555bdb773ad45706882e787b5">nda::hadamard</a></div><div class="ttdeci">constexpr auto hadamard(nda::Scalar auto a, nda::Scalar auto b)</div><div class="ttdoc">Hadamard product of two arithmetic types.</div><div class="ttdef"><b>Definition</b> <a href="algorithms_8hpp_source.html#l00265">algorithms.hpp:265</a></div></div>
 <div class="ttc" id="agroup__linalg__tools_html_gad8506479079cc49e250be69f486ce617"><div class="ttname"><a href="group__linalg__tools.html#gad8506479079cc49e250be69f486ce617">nda::norm</a></div><div class="ttdeci">double norm(A const &amp;a, double p=2.0)</div><div class="ttdoc">Calculate the p-norm of an nda::ArrayOfRank&lt;1&gt; object  with scalar values. The p-norm is defined as.</div><div class="ttdef"><b>Definition</b> <a href="#l00058">norm.hpp:58</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

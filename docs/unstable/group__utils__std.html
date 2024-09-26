@@ -167,10 +167,10 @@ Functions</h2></td></tr>
 <tr class="memitem:gaedd4bb9fe174afa880deb1d5ff1bfe32"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::array&lt; T, R - N &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gaedd4bb9fe174afa880deb1d5ff1bfe32">nda::stdutil::mpop</a> (std::array&lt; T, R &gt; const &amp;a)</td></tr>
 <tr class="memdesc:gaedd4bb9fe174afa880deb1d5ff1bfe32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make a new std::array by popping the last <code>N</code> elements of an existing std::array.  <br /></td></tr>
 <tr class="separator:gaedd4bb9fe174afa880deb1d5ff1bfe32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga150bf6446a518f7929c3b77eb01831e3" id="r_ga150bf6446a518f7929c3b77eb01831e3"><td class="memTemplParams" colspan="2">template&lt;typename T , size_t R&gt; </td></tr>
-<tr class="memitem:ga150bf6446a518f7929c3b77eb01831e3"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::array&lt; T, R &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga150bf6446a518f7929c3b77eb01831e3">std::operator*</a> (std::array&lt; T, R &gt; const &amp;lhs, std::array&lt; T, R &gt; const &amp;rhs)</td></tr>
-<tr class="memdesc:ga150bf6446a518f7929c3b77eb01831e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply two std::array objects element-wise.  <br /></td></tr>
-<tr class="separator:ga150bf6446a518f7929c3b77eb01831e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga123c9c27f42fa662b906d6312f2ac57c" id="r_ga123c9c27f42fa662b906d6312f2ac57c"><td class="memTemplParams" colspan="2">template&lt;typename T , typename U , size_t R&gt; </td></tr>
+<tr class="memitem:ga123c9c27f42fa662b906d6312f2ac57c"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga123c9c27f42fa662b906d6312f2ac57c">std::operator*</a> (std::array&lt; T, R &gt; const &amp;lhs, std::array&lt; U, R &gt; const &amp;rhs)</td></tr>
+<tr class="memdesc:ga123c9c27f42fa662b906d6312f2ac57c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply two std::array objects element-wise.  <br /></td></tr>
+<tr class="separator:ga123c9c27f42fa662b906d6312f2ac57c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3dcc9bd7f252ccab3d08cbf04ff51b4d" id="r_ga3dcc9bd7f252ccab3d08cbf04ff51b4d"><td class="memTemplParams" colspan="2"><a id="ga3dcc9bd7f252ccab3d08cbf04ff51b4d" name="ga3dcc9bd7f252ccab3d08cbf04ff51b4d"></a>
 template&lt;typename T , typename U &gt; <br />
 requires (std::is_arithmetic_v&lt;T&gt; and std::is_arithmetic_v&lt;U&gt; and std::common_with&lt;T, U&gt; and !std::is_same_v&lt;T, U&gt;)</td></tr>
@@ -334,7 +334,7 @@ template&lt;typename T , auto R, typename U &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A copy of the input array with the additional element appended at the end. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00214">214</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00217">217</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
 
 </div>
 </div>
@@ -388,7 +388,7 @@ template&lt;typename T , typename U , size_t R&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Sum of the element-wise products of the two arrays. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00366">366</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00369">369</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
 
 </div>
 </div>
@@ -441,7 +441,7 @@ template&lt;typename T , typename U , size_t R&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A copy of the input array with the additional element prepended at the front. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00232">232</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00235">235</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
 
 </div>
 </div>
@@ -489,7 +489,7 @@ template&lt;int N, typename T , size_t R&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A copy of the input array with the first <code>N</code> elements removed. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00278">278</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00281">281</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
 
 </div>
 </div>
@@ -536,7 +536,7 @@ template&lt;typename T , size_t R&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A copy of the input array with the first element removed. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00293">293</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00296">296</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
 
 </div>
 </div>
@@ -589,7 +589,7 @@ template&lt;typename T , size_t R1, size_t R2&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">Array</a> of size <code>R1 + R2</code> containing the elements of the first array followed by the elements of the second array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00309">309</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00312">312</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
 
 </div>
 </div>
@@ -636,7 +636,7 @@ template&lt;size_t R, typename T &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::array initialized with the constant value. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00165">165</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00168">168</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
 
 </div>
 </div>
@@ -684,7 +684,7 @@ template&lt;typename T , typename U , size_t R&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::array with the same values as the input array and value type <code>T</code>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00181">181</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00184">184</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
 
 </div>
 </div>
@@ -732,30 +732,30 @@ template&lt;int N, typename T , size_t R&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A copy of the input array with the last <code>N</code> elements removed. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00249">249</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00252">252</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga150bf6446a518f7929c3b77eb01831e3" name="ga150bf6446a518f7929c3b77eb01831e3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga150bf6446a518f7929c3b77eb01831e3">&#9670;&#160;</a></span>operator*() <span class="overload">[1/2]</span></h2>
+<a id="ga123c9c27f42fa662b906d6312f2ac57c" name="ga123c9c27f42fa662b906d6312f2ac57c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga123c9c27f42fa662b906d6312f2ac57c">&#9670;&#160;</a></span>operator*() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T , size_t R&gt; </div>
+template&lt;typename T , typename U , size_t R&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::array&lt; T, R &gt; std::operator* </td>
+          <td class="memname">auto std::operator* </td>
           <td>(</td>
           <td class="paramtype">std::array&lt; T, R &gt; const &amp;</td>          <td class="paramname"><span class="paramname"><em>lhs</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::array&lt; T, R &gt; const &amp;</td>          <td class="paramname"><span class="paramname"><em>rhs</em></span>&#160;)</td>
+          <td class="paramtype">std::array&lt; U, R &gt; const &amp;</td>          <td class="paramname"><span class="paramname"><em>rhs</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -770,7 +770,8 @@ template&lt;typename T , size_t R&gt; </div>
 <p>Multiply two std::array objects element-wise. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">T</td><td>Value type of the arrays. </td></tr>
+    <tr><td class="paramname">T</td><td>Value type of the first array. </td></tr>
+    <tr><td class="paramname">U</td><td>Value type of the second array. </td></tr>
     <tr><td class="paramname">R</td><td>Size of the arrays. </td></tr>
   </table>
   </dd>
@@ -784,7 +785,7 @@ template&lt;typename T , size_t R&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::array containing the element-wise product. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00115">115</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00116">116</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
 
 </div>
 </div>
@@ -836,7 +837,7 @@ template&lt;typename T , size_t R&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::array containing the product of each element with the scalar. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00146">146</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00149">149</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
 
 </div>
 </div>
@@ -935,7 +936,7 @@ template&lt;typename T , size_t R&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::array containing the element-wise negation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00130">130</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00133">133</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1078,7 +1079,7 @@ template&lt;typename T , size_t R&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A copy of the input array with the last element removed. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00264">264</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00267">267</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1125,7 +1126,7 @@ template&lt;typename T , size_t R&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Product of all elements in the input array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00345">345</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00348">348</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1172,7 +1173,7 @@ template&lt;typename T , size_t R&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Sum of all the elements of the input array. If its size is zero, return a default constructed object of type <code>T</code>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00326">326</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00329">329</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1258,7 +1259,7 @@ template&lt;typename T , size_t R&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::vector of the same size and with the same values as the input array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00197">197</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="array_8hpp_source.html#l00200">200</a> of file <a class="el" href="array_8hpp_source.html">array.hpp</a>.</p>
 
 </div>
 </div>

@@ -142,7 +142,7 @@ $(function(){initNavTree('lapack_2interface_2cxx__interface_8hpp_source.html',''
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="stringliteral">&quot;./cusolver_interface.hpp&quot;</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#</span><span class="preprocessor">endif</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">namespace</span> nda::lapack::f77 {</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">namespace</span> <a class="code hl_function" href="group__av__algs.html#gac201e48555bdb773ad45706882e787b5">nda</a>::lapack::f77 {</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keywordtype">void</span> gelss(<span class="keywordtype">int</span> M, <span class="keywordtype">int</span> N, <span class="keywordtype">int</span> NRHS, <span class="keywordtype">double</span> *A, <span class="keywordtype">int</span> LDA, <span class="keywordtype">double</span> *B, <span class="keywordtype">int</span> LDB, <span class="keywordtype">double</span> *S, <span class="keywordtype">double</span> RCOND, <span class="keywordtype">int</span> &amp;RANK, <span class="keywordtype">double</span> *WORK, <span class="keywordtype">int</span> LWORK,</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>             <span class="keywordtype">double</span> *RWORK, <span class="keywordtype">int</span> &amp;INFO);</div>
@@ -185,7 +185,7 @@ $(function(){initNavTree('lapack_2interface_2cxx__interface_8hpp_source.html',''
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>} <span class="comment">// namespace nda::lapack::f77</span></div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="comment">// Useful routines from the BLAS interface</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="keyword">namespace</span> nda::lapack {</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="keyword">namespace</span> <a class="code hl_function" href="group__av__algs.html#gac201e48555bdb773ad45706882e787b5">nda</a>::lapack {</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  <span class="comment">// See nda::blas::get_ld.</span></div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <span class="keyword">using</span> blas::get_ld;</div>
@@ -206,6 +206,7 @@ $(function(){initNavTree('lapack_2interface_2cxx__interface_8hpp_source.html',''
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  <span class="keyword">using</span> blas::is_conj_array_expr;</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>} <span class="comment">// namespace nda::lapack</span></div>
+<div class="ttc" id="agroup__av__algs_html_gac201e48555bdb773ad45706882e787b5"><div class="ttname"><a href="group__av__algs.html#gac201e48555bdb773ad45706882e787b5">nda::hadamard</a></div><div class="ttdeci">constexpr auto hadamard(nda::Scalar auto a, nda::Scalar auto b)</div><div class="ttdoc">Hadamard product of two arithmetic types.</div><div class="ttdef"><b>Definition</b> <a href="algorithms_8hpp_source.html#l00265">algorithms.hpp:265</a></div></div>
 <div class="ttc" id="alapack_8h_html_a0088c3a1a0423b4738a704c24eb1054e"><div class="ttname"><a href="lapack_8h.html#a0088c3a1a0423b4738a704c24eb1054e">LAPACK_sggevx</a></div><div class="ttdeci">#define LAPACK_sggevx</div><div class="ttdef"><b>Definition</b> <a href="lapack_8h_source.html#l01489">lapack.h:1489</a></div></div>
 <div class="ttc" id="alapack_8h_html_a008e04546508064433d466e24edd5095"><div class="ttname"><a href="lapack_8h.html#a008e04546508064433d466e24edd5095">LAPACK_chegv</a></div><div class="ttdeci">#define LAPACK_chegv</div><div class="ttdef"><b>Definition</b> <a href="lapack_8h_source.html#l02016">lapack.h:2016</a></div></div>
 <div class="ttc" id="alapack_8h_html_a00988c55d83d00e76c5a53a7f57ed81b"><div class="ttname"><a href="lapack_8h.html#a00988c55d83d00e76c5a53a7f57ed81b">LAPACK_sorgrq</a></div><div class="ttdeci">#define LAPACK_sorgrq</div><div class="ttdef"><b>Definition</b> <a href="lapack_8h_source.html#l03151">lapack.h:3151</a></div></div>

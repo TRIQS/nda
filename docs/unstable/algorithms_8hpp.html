@@ -115,13 +115,18 @@ $(function(){initNavTree('algorithms_8hpp.html',''); initResizable(true); });
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="concepts_8hpp_source.html">./concepts.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="for__each_8hpp_source.html">./layout/for_each.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="range_8hpp_source.html">./layout/range.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="macros_8hpp_source.html">./macros.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="map_8hpp_source.html">./map.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="traits_8hpp_source.html">./traits.hpp</a>&quot;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
+<code>#include &lt;array&gt;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
 <code>#include &lt;cstdlib&gt;</code><br />
 <code>#include &lt;functional&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
+<code>#include &lt;vector&gt;</code><br />
 </div><a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Provides various algorithms to be used with <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> objects. </p>
 
@@ -152,6 +157,22 @@ template&lt;Array A, typename F &gt; </td></tr>
 <tr class="memitem:gab90a57511cc6f90cad3207acd73be60b"><td class="memTemplItemLeft" align="right" valign="top">double&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__math.html#gab90a57511cc6f90cad3207acd73be60b">nda::frobenius_norm</a> (A const &amp;a)</td></tr>
 <tr class="memdesc:gab90a57511cc6f90cad3207acd73be60b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the Frobenius norm of a 2-dimensional array.  <br /></td></tr>
 <tr class="separator:gab90a57511cc6f90cad3207acd73be60b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9ee51842bd47f09b28d6d36cdf289b62" id="r_ga9ee51842bd47f09b28d6d36cdf289b62"><td class="memTemplParams" colspan="2">template&lt;Array A, Array B&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">nda::get_rank</a>&lt;A&gt; == <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">nda::get_rank</a>&lt;B&gt;)</td></tr>
+<tr class="memitem:ga9ee51842bd47f09b28d6d36cdf289b62"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__algs.html#ga9ee51842bd47f09b28d6d36cdf289b62">nda::hadamard</a> (A &amp;&amp;a, B &amp;&amp;b)</td></tr>
+<tr class="memdesc:ga9ee51842bd47f09b28d6d36cdf289b62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hadamard product of two <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> objects.  <br /></td></tr>
+<tr class="separator:ga9ee51842bd47f09b28d6d36cdf289b62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac201e48555bdb773ad45706882e787b5" id="r_gac201e48555bdb773ad45706882e787b5"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__av__algs.html#gac201e48555bdb773ad45706882e787b5">nda::hadamard</a> (<a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a> auto a, <a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a> auto b)</td></tr>
+<tr class="memdesc:gac201e48555bdb773ad45706882e787b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hadamard product of two arithmetic types.  <br /></td></tr>
+<tr class="separator:gac201e48555bdb773ad45706882e787b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad8886854a020e7b28b63a96d6087485d" id="r_gad8886854a020e7b28b63a96d6087485d"><td class="memTemplParams" colspan="2">template&lt;typename T , typename U , size_t R&gt; </td></tr>
+<tr class="memitem:gad8886854a020e7b28b63a96d6087485d"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__algs.html#gad8886854a020e7b28b63a96d6087485d">nda::hadamard</a> (std::array&lt; T, R &gt; const &amp;a, std::array&lt; U, R &gt; const &amp;b)</td></tr>
+<tr class="memdesc:gad8886854a020e7b28b63a96d6087485d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hadamard product of two std::array objects.  <br /></td></tr>
+<tr class="separator:gad8886854a020e7b28b63a96d6087485d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3aec2e627c396aaeb87141efa7a49bc4" id="r_ga3aec2e627c396aaeb87141efa7a49bc4"><td class="memTemplParams" colspan="2">template&lt;typename T , typename U &gt; </td></tr>
+<tr class="memitem:ga3aec2e627c396aaeb87141efa7a49bc4"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__algs.html#ga3aec2e627c396aaeb87141efa7a49bc4">nda::hadamard</a> (std::vector&lt; T &gt; const &amp;a, std::vector&lt; U &gt; const &amp;b)</td></tr>
+<tr class="memdesc:ga3aec2e627c396aaeb87141efa7a49bc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hadamard product of two std::vector objects.  <br /></td></tr>
+<tr class="separator:ga3aec2e627c396aaeb87141efa7a49bc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0d54b733a7c15c15846de86a79d53025" id="r_ga0d54b733a7c15c15846de86a79d53025"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; </td></tr>
 <tr class="memitem:ga0d54b733a7c15c15846de86a79d53025"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__algs.html#ga0d54b733a7c15c15846de86a79d53025">nda::max_element</a> (A const &amp;a)</td></tr>
 <tr class="memdesc:ga0d54b733a7c15c15846de86a79d53025"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the maximum element of an array.  <br /></td></tr>
