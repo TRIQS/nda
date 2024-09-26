@@ -23,15 +23,19 @@
 
 #include "./concepts.hpp"
 #include "./layout/for_each.hpp"
-#include "./traits.hpp"
+#include "./layout/range.hpp"
+#include "./macros.hpp"
 #include "./map.hpp"
+#include "./traits.hpp"
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstdlib>
 #include <functional>
 #include <type_traits>
 #include <utility>
+#include <vector>
 
 namespace nda {
 
@@ -202,12 +206,12 @@ namespace nda {
 
   /**
    * @brief Hadamard product of two nda::Array objects.
-   * 
+   *
    * @tparam A nda::Array type.
    * @tparam B nda::Array type.
    * @param a nda::Array object.
    * @param b nda::Array object.
-   * @return nda::Array containing the elementwise product of the two input arrays.
+   * @return A lazy nda::expr_call object representing the elementwise product of the two input objects.
    */
   template <Array A, Array B>
     requires(nda::get_rank<A> == nda::get_rank<B>)
@@ -217,9 +221,9 @@ namespace nda {
 
   /**
    * @brief Hadamard product of two std::array objects.
-   * 
-   * @tparam T Data type of the first array.
-   * @tparam U Data type of the second array.
+   *
+   * @tparam T Value type of the first array.
+   * @tparam U Value type of the second array.
    * @tparam R Size of the arrays.
    * @param a std::array object.
    * @param b std::array object.
@@ -232,9 +236,9 @@ namespace nda {
 
   /**
    * @brief Hadamard product of two std::vector objects.
-   * 
-   * @tparam T Data type of the first input vector.
-   * @tparam U Data type of the second input vector.
+   *
+   * @tparam T Value type of the first input vector.
+   * @tparam U Value type of the second input vector.
    * @param a std::vector object.
    * @param b std::vector object.
    * @return std::vector containing the elementwise product of the two input vectors.
@@ -251,9 +255,9 @@ namespace nda {
 
   /**
    * @brief Hadamard product of two arithmetic types.
-   * 
-   * @tparam T Data type of the first input.
-   * @tparam U Data type of the second input.
+   *
+   * @tparam T nda::Scalar type of the first input.
+   * @tparam U nda::Scalar type of the second input.
    * @param a First input.
    * @param b Second input.
    * @return Product of the two inputs.
