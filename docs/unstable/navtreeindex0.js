@@ -138,7 +138,6 @@ var NAVTREEINDEX0 =
 "gather_8hpp_source.html":[4,7,0,6,1],
 "gelss_8hpp.html":[4,7,0,2,1],
 "gelss_8hpp_source.html":[4,7,0,2,1],
-"gelss__worker_8hpp.html":[4,7,0,2,2],
 "gelss__worker_8hpp_source.html":[4,7,0,2,2],
 "gemm_8hpp.html":[4,7,0,0,2],
 "gemm_8hpp_source.html":[4,7,0,0,2],
@@ -206,8 +205,8 @@ var NAVTREEINDEX0 =
 "handle_8hpp_source.html":[4,7,0,5,2],
 "idx__map_8hpp.html":[4,7,0,3,2],
 "idx__map_8hpp_source.html":[4,7,0,3,2],
-"index.html":[],
 "index.html":[0],
+"index.html":[],
 "index.html#motivation":[0,0],
 "index.html#start":[0,1],
 "installation.html":[1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX0 =
 "macros_8hpp.html":[4,7,0,30],
 "macros_8hpp_source.html":[4,7,0,30],
 "make__lazy_8hpp.html":[4,7,0,1,9],
-"make__lazy_8hpp_source.html":[4,7,0,1,9]
+"make__lazy_8hpp_source.html":[4,7,0,1,9],
+"malloc_8hpp.html":[4,7,0,5,3]
 };

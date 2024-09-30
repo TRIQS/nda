@@ -236,7 +236,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "@ref nda::C_layout_str",
-"malloc_8hpp.html"
+"malloc_8hpp_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
