@@ -274,6 +274,51 @@ TEST_F(NDAMpi, LazyGather) {
   }
 }
 
+TEST_F(NDAMpi, ScatterCLayout) {
+  // scatter a C-layout array
+  auto A_scatter1 = mpi::scatter(A, comm);
+  auto rg1        = itertools::chunk_range(0, A.shape()[0], comm.size(), comm.rank());
+  auto exp_shape1 = std::array<long, 3>{rg1.second - rg1.first, shape_3d[1], shape_3d[2]};
+  EXPECT_EQ(exp_shape1, A_scatter1.shape());
+  EXPECT_ARRAY_EQ(A(nda::range(rg1.first, rg1.second), nda::ellipsis{}), A_scatter1);
+
+  // scatter a C-layout array view
+  auto A_scatter2 = mpi::scatter(A(0, nda::ellipsis{}), comm);
+  auto rg2        = itertools::chunk_range(0, A.shape()[1], comm.size(), comm.rank());
+  auto exp_shape2 = std::array<long, 2>{rg2.second - rg2.first, shape_3d[2]};
+  EXPECT_EQ(exp_shape2, A_scatter2.shape());
+  EXPECT_ARRAY_EQ(A(0, nda::range(rg2.first, rg2.second), nda::ellipsis{}), A_scatter2);
+}
+
+TEST_F(NDAMpi, ScatterOtherLayouts) {
+  // scatter a non C-layout array by first reshaping it
+  constexpr auto perm     = decltype(A2)::layout_t::stride_order;
+  constexpr auto inv_perm = nda::permutations::inverse(perm);
+
+  auto A2_scatter   = mpi::scatter(nda::permuted_indices_view<nda::encode(inv_perm)>(A2), comm);
+  auto A2_scatter_v = nda::permuted_indices_view<nda::encode(perm)>(A2_scatter);
+  auto rg           = itertools::chunk_range(0, A2.shape()[1], comm.size(), comm.rank());
+  auto exp_shape    = std::array<long, 3>{shape_3d[0], rg.second - rg.first, shape_3d[2]};
+  EXPECT_EQ(exp_shape, A2_scatter_v.shape());
+  EXPECT_ARRAY_EQ(A2(nda::range::all, nda::range(rg.first, rg.second), nda::range::all), A2_scatter_v);
+}
+
+TEST_F(NDAMpi, LazyScatter) {
+  // lazy-scatter a C-layout array
+  decltype(A) A_scatter1 = nda::lazy_mpi_scatter(A, comm);
+  auto rg1               = itertools::chunk_range(0, A.shape()[0], comm.size(), comm.rank());
+  auto exp_shape1        = std::array<long, 3>{rg1.second - rg1.first, shape_3d[1], shape_3d[2]};
+  EXPECT_EQ(exp_shape1, A_scatter1.shape());
+  EXPECT_ARRAY_EQ(A(nda::range(rg1.first, rg1.second), nda::ellipsis{}), A_scatter1);
+
+  // scatter a C-layout array view
+  auto A_scatter2 = nda::array<long, 2>(nda::lazy_mpi_scatter(A(0, nda::ellipsis{}), comm));
+  auto rg2        = itertools::chunk_range(0, A.shape()[1], comm.size(), comm.rank());
+  auto exp_shape2 = std::array<long, 2>{rg2.second - rg2.first, shape_3d[2]};
+  EXPECT_EQ(exp_shape2, A_scatter2.shape());
+  EXPECT_ARRAY_EQ(A(0, nda::range(rg2.first, rg2.second), nda::ellipsis{}), A_scatter2);
+}
+
 TEST_F(NDAMpi, ReduceCLayout) {
   // reduce an array
   auto A_sum = mpi::reduce(A, comm);
@@ -386,18 +431,8 @@ TEST_F(NDAMpi, LazyReduce) {
 
   // lazy-allreduce an array in-place
   auto B2 = A2;
-  B2 = nda::lazy_mpi_reduce(B2, comm, root, true);
+  B2      = nda::lazy_mpi_reduce(B2, comm, root, true);
   EXPECT_ARRAY_EQ(nda::make_regular(A2 * mpi_size), B2);
-}
-
-TEST_F(NDAMpi, Scatter) {
-  // scatter an array
-  decltype(A) A_scatter = mpi::scatter(A, comm);
-  auto chunked_rg       = itertools::chunk_range(0, A.shape()[0], mpi_size, mpi_rank);
-  auto exp_shape        = A.shape();
-  exp_shape[0]          = chunked_rg.second - chunked_rg.first;
-  EXPECT_EQ(exp_shape, A_scatter.shape());
-  EXPECT_ARRAY_EQ(A(nda::range(chunked_rg.first, chunked_rg.second), nda::ellipsis{}), A_scatter);
 }
 
 TEST_F(NDAMpi, BroadcastTransposedMatrix) {
@@ -452,6 +487,23 @@ TEST_F(NDAMpi, VariousCollectiveCommunications) {
   // all reduce an array
   arr_t R2 = mpi::all_reduce(A, comm);
   EXPECT_ARRAY_NEAR(R2, mpi_size * A);
+}
+
+TEST_F(NDAMpi, PassingTemporaryObjects) {
+  auto A         = nda::array<int, 1>{1, 2, 3};
+  auto lazy_arr  = mpi::gather(nda::array<int, 1>{1, 2, 3}, comm);
+  auto res_arr   = nda::array<int, 1>(lazy_arr);
+  auto lazy_view = mpi::gather(A(), comm);
+  auto res_view  = nda::array<int, 1>(lazy_view);
+  if (comm.rank() == 0) {
+    for (long i = 0; i < comm.size(); ++i) {
+      EXPECT_ARRAY_EQ(res_arr(nda::range(i * 3, (i + 1) * 3)), A);
+      EXPECT_ARRAY_EQ(res_view(nda::range(i * 3, (i + 1) * 3)), A);
+    }
+  } else {
+    EXPECT_TRUE(res_arr.empty());
+    EXPECT_TRUE(res_view.empty());
+  }
 }
 
 MPI_TEST_MAIN

@@ -16,21 +16,71 @@
 
 /**
  * @file
- * @brief Provides an MPI scatter function for nda::Array types.
+ * @brief Provides an MPI scatter function for nda::basic_array or nda::basic_array_view types.
  */
 
 #pragma once
 
-#include "../basic_functions.hpp"
+#include "./utils.hpp"
 #include "../concepts.hpp"
-#include "../exceptions.hpp"
+#include "../declarations.hpp"
+#include "../macros.hpp"
 #include "../traits.hpp"
 
+#include <mpi.h>
 #include <mpi/mpi.hpp>
 
+#include <cstddef>
+#include <functional>
+#include <numeric>
+#include <span>
+#include <tuple>
 #include <type_traits>
 #include <utility>
-#include <vector>
+
+namespace nda::detail {
+
+  // Helper function to get the shape and total size of the scattered array/view.
+  template <typename A>
+    requires(is_regular_or_view_v<A> and std::decay_t<A>::is_stride_order_C())
+  auto mpi_scatter_shape_impl(A const &a, mpi::communicator comm, int root) {
+    auto dims = a.shape();
+    mpi::broadcast(dims, comm, root);
+    auto scattered_size = std::accumulate(dims.begin(), dims.end(), 1, std::multiplies<>());
+    auto stride0        = scattered_size / dims[0];
+    dims[0]             = mpi::chunk_length(dims[0], comm.size(), comm.rank());
+    return std::make_tuple(dims, scattered_size, stride0);
+  }
+
+  // Helper function that scatters arrays/views.
+  template <typename A1, typename A2>
+    requires(is_regular_or_view_v<A1> and std::decay_t<A1>::is_stride_order_C()
+             and is_regular_or_view_v<A2> and std::decay_t<A2>::is_stride_order_C())
+  void mpi_scatter_impl(A1 const &a_in, A2 &&a_out, mpi::communicator comm = {}, int root = 0) { // NOLINT
+    // check the ranks of the input arrays/views
+    EXPECTS_WITH_MESSAGE(detail::have_mpi_equal_ranks(a_in, comm), "Error in nda::detail::mpi_scatter_impl: Ranks of arrays/views must be equal")
+
+    // simply copy if there is no active MPI environment or if the communicator size is < 2
+    if (not mpi::has_env) {
+      a_out = a_in;
+      return;
+    }
+
+    // check if the input and output arrays/views can be used in the MPI call
+    if (comm.rank() == root) detail::check_layout_mpi_compatible(a_in, "detail::mpi_scatter_impl");
+    check_layout_mpi_compatible(a_out, "detail::mpi_scatter_impl");
+
+    // get output shape and resize or check the output array/view
+    auto [dims, scattered_size, stride0] = mpi_scatter_shape_impl(a_in, comm, root);
+    resize_or_check_if_view(a_out, dims);
+
+    // scatter the data
+    auto a_out_span = std::span{a_out.data(), static_cast<std::size_t>(a_out.size())};
+    auto a_in_span  = std::span{a_in.data(), static_cast<std::size_t>(a_in.size())};
+    mpi::scatter_range(a_in_span, a_out_span, scattered_size, comm, root, stride0);
+  }
+
+} // namespace nda::detail
 
 /**
  * @ingroup av_mpi
@@ -39,9 +89,10 @@
  * @details An object of this class is returned when scattering nda::Array objects across multiple MPI processes.
  *
  * It models an nda::ArrayInitializer, that means it can be used to initialize and assign to nda::basic_array and
- * nda::basic_array_view objects. The input array will be a chunked along its first dimension using `mpi::chunk_length`.
+ * nda::basic_array_view objects. The input array/view on the root process will be chunked along the first dimension
+ * into equal parts using `mpi::chunk_length` and scattered across all processes in the communicator.
  *
- * See nda::mpi_scatter for an example.
+ * See nda::mpi_scatter for an example and more information.
  *
  * @tparam A nda::Array type to be scattered.
  */
@@ -50,11 +101,11 @@ struct mpi::lazy<mpi::tag::scatter, A> {
   /// Value type of the array/view.
   using value_type = typename std::decay_t<A>::value_type;
 
-  /// Const view type of the array/view stored in the lazy object.
-  using const_view_type = decltype(std::declval<const A>()());
+  /// Type of the array/view stored in the lazy object.
+  using stored_type = A;
 
-  /// View of the array/view to be scattered.
-  const_view_type rhs;
+  /// Array/View to be scattered.
+  stored_type rhs;
 
   /// MPI communicator.
   mpi::communicator comm;
@@ -66,101 +117,130 @@ struct mpi::lazy<mpi::tag::scatter, A> {
   const bool all{false}; // NOLINT (const is fine here)
 
   /**
-   * @brief Compute the shape of the target array.
+   * @brief Compute the shape of the nda::ArrayInitializer object.
    *
-   * @details The target shape will be the same as the input shape, except that the first dimension of the input array
-   * is chunked into equal (as much as possible) parts using `mpi::chunk_length` and assigned to each MPI process.
+   * @details The input array/view on the root process is chunked along the first dimension into equal (as much as
+   * possible) parts using `mpi::chunk_length`.
+   *
+   * If the extent of the input array along the first dimension is not divisible by the number of processes, processes
+   * with lower ranks will receive more data than processes with higher ranks.
    *
    * @warning This makes an MPI call.
    *
-   * @return Shape of the target array.
+   * @return Shape of the nda::ArrayInitializer object.
    */
-  [[nodiscard]] auto shape() const {
-    auto dims = rhs.shape();
-    long dim0 = dims[0];
-    mpi::broadcast(dim0, comm, root);
-    dims[0] = mpi::chunk_length(dim0, comm.size(), comm.rank());
-    return dims;
-  }
+  [[nodiscard]] auto shape() const { return std::get<0>(nda::detail::mpi_scatter_shape_impl(rhs, comm, root)); }
 
   /**
    * @brief Execute the lazy MPI operation and write the result to a target array/view.
    *
-   * @tparam T nda::Array type of the target array/view.
+   * @details The data will be scattered directly into the memory handle of the target array/view.
+   *
+   * It is expected that all input arrays/views have the same rank on all processes. The function throws an exception,
+   * if
+   * - the input array/view on the root process is not contiguous with positive strides,
+   * - the target array/view is not contiguous with positive,
+   * - a target view does not have the correct shape or
+   * - if any of the MPI calls fails.
+   *
+   * @tparam T nda::Array type with C-layout.
    * @param target Target array/view.
    */
   template <nda::Array T>
+    requires(std::decay_t<T>::is_stride_order_C())
   void invoke(T &&target) const { // NOLINT (temporary views are allowed here)
-    if (not target.is_contiguous() or not target.has_positive_strides())
-      NDA_RUNTIME_ERROR << "Error in MPI scatter for nda::Array: Target array needs to be contiguous with positive strides";
-
-    static_assert(std::decay_t<A>::layout_t::stride_order_encoded == std::decay_t<T>::layout_t::stride_order_encoded,
-                  "Error in MPI scatter for nda::Array: Incompatible stride orders");
-
-    // special case for non-mpi runs
-    if (not mpi::has_env) {
-      target = rhs;
-      return;
-    }
-
-    // get target shape and resize or check the target array
-    auto dims = shape();
-    resize_or_check_if_view(target, dims);
-
-    // compute send counts, receive counts and memory displacements
-    auto dim0       = rhs.extent(0);
-    auto stride0    = rhs.indexmap().strides()[0];
-    auto sendcounts = std::vector<int>(comm.size());
-    auto displs     = std::vector<int>(comm.size() + 1, 0);
-    int recvcount   = mpi::chunk_length(dim0, comm.size(), comm.rank()) * stride0;
-    for (int r = 0; r < comm.size(); ++r) {
-      sendcounts[r] = mpi::chunk_length(dim0, comm.size(), r) * stride0;
-      displs[r + 1] = sendcounts[r] + displs[r];
-    }
-
-    // scatter the data
-    auto mpi_value_type = mpi::mpi_type<value_type>::get();
-    MPI_Scatterv((void *)rhs.data(), &sendcounts[0], &displs[0], mpi_value_type, (void *)target.data(), recvcount, mpi_value_type, root, comm.get());
+    nda::detail::mpi_scatter_impl(rhs, target, comm, root);
   }
 };
 
 namespace nda {
 
   /**
-   * @ingroup av_mpi
-   * @brief Implementation of an MPI scatter for nda::basic_array or nda::basic_array_view types.
+   * @addtogroup av_mpi
+   * @{
+   */
+
+  /**
+   * @brief Implementation of a lazy MPI scatter for nda::basic_array or nda::basic_array_view types.
    *
-   * @details Since the returned `mpi::lazy` object models an nda::ArrayInitializer, it can be used to initialize/assign
-   * to nda::basic_array and nda::basic_array_view objects:
+   * @details This function is lazy, i.e. it returns an mpi::lazy<mpi::tag::scatter, A> object without performing the
+   * actual MPI operation. Since the returned object models an nda::ArrayInitializer, it can be used to
+   * initialize/assign to nda::basic_array and nda::basic_array_view objects:
    *
    * @code{.cpp}
    * // create an array on all processes
-   * nda::array<int, 2> arr(10, 4);
+   * nda::array<int, 2> A(10, 4);
    *
    * // ...
    * // fill array on root process
    * // ...
    *
    * // scatter the array to all processes
-   * nda::array<int, 2> res = mpi::scatter(arr);
+   * nda::array<int, 2> B = nda::lazy_mpi_scatter(A);
    * @endcode
    *
-   * Here, the array `res` will have a shape of `(10 / comm.size(), 4)`.
+   * The behavior is otherwise identical to nda::mpi_scatter.
+   *
+   * @warning MPI calls are done in the `invoke` and `shape` methods of the `mpi::lazy` object. If one rank calls one of
+   * these methods, all ranks in the communicator need to call the same method. Otherwise, the program will deadlock.
    *
    * @tparam A nda::basic_array or nda::basic_array_view type.
    * @param a Array or view to be scattered.
    * @param comm `mpi::communicator` object.
    * @param root Rank of the root process.
-   * @param all Should all processes receive the result of the scatter (not used).
-   * @return An `mpi::lazy` object modelling an nda::ArrayInitializer.
+   * @return An mpi::lazy<mpi::tag::scatter, A> object modelling an nda::ArrayInitializer.
    */
   template <typename A>
-  ArrayInitializer<std::remove_reference_t<A>> auto mpi_scatter(A &&a, mpi::communicator comm = {}, int root = 0, bool all = false)
-    requires(is_regular_or_view_v<A>)
-  {
-    if (not a.is_contiguous() or not a.has_positive_strides())
-      NDA_RUNTIME_ERROR << "Error in MPI scatter for nda::Array: Array needs to be contiguous with positive strides";
-    return mpi::lazy<mpi::tag::scatter, A>{std::forward<A>(a), comm, root, all};
+    requires(is_regular_or_view_v<A> and std::decay_t<A>::is_stride_order_C())
+  ArrayInitializer<std::remove_reference_t<A>> auto lazy_mpi_scatter(A &&a, mpi::communicator comm = {}, int root = 0) {
+    return mpi::lazy<mpi::tag::scatter, A>{std::forward<A>(a), comm, root, true};
   }
+
+  /**
+   * @brief Implementation of an MPI scatter for nda::basic_array or nda::basic_array_view types.
+   *
+   * @details The function scatters a C-ordered input array/view from a root process across all processes in the given
+   * communicator. The array/view is chunked into equal parts along the first dimension using `mpi::chunk_length`.
+   *
+   * It is expected that all input arrays/views have the same rank on all processes. The function throws an exception,
+   * if
+   * - the input array/view is not contiguous with positive strides on the root process or
+   * - if any of the MPI calls fails.
+   *
+   * The input array/view on the root process is chunked along the first dimension into equal (as much as possible)
+   * parts using `mpi::chunk_length`. If the extent of the input array along the first dimension is not divisible by the
+   * number of processes, processes with lower ranks will receive more data than processes with higher ranks.
+   *
+   * @code{.cpp}
+   * // create an array on all processes
+   * nda::array<int, 2> A(10, 4);
+   *
+   * // ...
+   * // fill array on root process
+   * // ...
+   *
+   * // scatter the array to all processes
+   * auto B = mpi::scatter(A);
+   * @endcode
+   *
+   * Here, the array `B` has the shape `(10 / comm.size(), 4)` on each process (assuming that 10 is a multiple of
+   * `comm.size()`).
+   *
+   * @tparam A nda::basic_array or nda::basic_array_view type.
+   * @param a Array or view to be scattered.
+   * @param comm `mpi::communicator` object.
+   * @param root Rank of the root process.
+   * @return An nda::basic_array object with the result of the scattering.
+   */
+  template <typename A>
+    requires(is_regular_or_view_v<A> and std::decay_t<A>::is_stride_order_C())
+  auto mpi_scatter(A const &a, mpi::communicator comm = {}, int root = 0) {
+    using return_t = get_regular_t<A>;
+    return_t a_out;
+    detail::mpi_scatter_impl(a, a_out, comm, root);
+    return a_out;
+  }
+
+  /** @} */
 
 } // namespace nda
