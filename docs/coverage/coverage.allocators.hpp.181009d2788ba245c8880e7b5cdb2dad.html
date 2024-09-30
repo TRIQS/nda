@@ -27,7 +27,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2024-09-26 22:10:33</td>
+      <td>2024-09-30 15:23:28</td>
     </tr>
   </table>
 </div>
@@ -95,10 +95,10 @@
     <tr><td><a href="#l236">nda::mem::bucket&lt;8&gt;::data() const (line 236)</a></td><td>called 5 times, returned 5 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l212">nda::mem::bucket&lt;8&gt;::deallocate(nda::mem::blk_t) (line 212)</a></td><td>called 3 times, returned 3 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l230">nda::mem::bucket&lt;8&gt;::empty() const (line 230)</a></td><td>called 5 times, returned 5 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l224">nda::mem::bucket&lt;8&gt;::is_full() const (line 224)</a></td><td>called 72 times, returned 72 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l224">nda::mem::bucket&lt;8&gt;::is_full() const (line 224)</a></td><td>called 73 times, returned 73 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l242">nda::mem::bucket&lt;8&gt;::mask() const (line 242)</a></td><td>called 4 times, returned 4 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l171">nda::mem::bucket&lt;8&gt;::operator=(nda::mem::bucket&lt;8&gt;&amp;&amp;) (line 171)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l250">nda::mem::bucket&lt;8&gt;::owns(nda::mem::blk_t) const (line 250)</a></td><td>called 74 times, returned 74 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l250">nda::mem::bucket&lt;8&gt;::owns(nda::mem::blk_t) const (line 250)</a></td><td>called 77 times, returned 77 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l506">nda::mem::leak_check&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::allocate(unsigned long) (line 506)</a></td><td>called 13 times, returned 13 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l529">nda::mem::leak_check&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::deallocate(nda::mem::blk_t) (line 529)</a></td><td>called 13 times, returned 13 times</td><td>33.0%</td></tr>
     <tr><td><a href="#l544">nda::mem::leak_check&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::empty() const (line 544)</a></td><td>called 7 times, returned 7 times</td><td>100.0%</td></tr>
@@ -114,7 +114,7 @@
     <tr><td><a href="#l288">nda::mem::multi_bucket&lt;800&gt;::multi_bucket() (line 288)</a></td><td>called 1 time, returned 1 time</td><td>75.0%</td></tr>
     <tr><td><a href="#l308">nda::mem::multi_bucket&lt;8&gt;::allocate(unsigned long) (line 308)</a></td><td>called 66 times, returned 66 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l320">nda::mem::multi_bucket&lt;8&gt;::allocate_zero(unsigned long) (line 320)</a></td><td>called 66 times, returned 66 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l365">nda::mem::multi_bucket&lt;8&gt;::buckets() const (line 365)</a></td><td>called 9 times, returned 9 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l365">nda::mem::multi_bucket&lt;8&gt;::buckets() const (line 365)</a></td><td>called 13 times, returned 13 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l334">nda::mem::multi_bucket&lt;8&gt;::deallocate(nda::mem::blk_t) (line 334)</a></td><td>called 2 times, returned 2 times</td><td>53.0%</td></tr>
     <tr><td><a href="#l359">nda::mem::multi_bucket&lt;8&gt;::empty() const (line 359)</a></td><td>called 2 times, returned 2 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l275">nda::mem::multi_bucket&lt;8&gt;::find_non_full_bucket() (line 275)</a></td><td>called 1 time, returned 1 time</td><td>81.0%</td></tr>
@@ -162,7 +162,7 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">// Copyright (c) 2018-2022 Simons Foundation</span></td>
+      <td class="src "><span class="c1">// Copyright (c) 2018-2024 Simons Foundation</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l4" href="#l4">4</a></td>
@@ -260,7 +260,7 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">// Authors: Miguel Morales, Olivier Parcollet, Nils Wentzell</span></td>
+      <td class="src "><span class="c1">// Authors: Thomas Hahn, Olivier Parcollet, Nils Wentzell</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l18" href="#l18">18</a></td>
@@ -1722,7 +1722,7 @@
       <td class="lineno"><a id="l224" href="#l224">224</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">73</td>
+      <td class="linecount coveredLine">74</td>
       <td class="src coveredLine"><span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_full</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">noexcept</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">flags</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
@@ -1906,14 +1906,14 @@
         <details class="linebranchDetails">
         <summary class="linebranchSummary">4/4</summary>
         <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 0 taken 74 times.</div>
-          <div class="takenBranch">&check; Branch 1 taken 1 times.</div>
-          <div class="takenBranch">&check; Branch 2 taken 70 times.</div>
-          <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
+          <div class="takenBranch">&check; Branch 0 taken 76 times.</div>
+          <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+          <div class="takenBranch">&check; Branch 2 taken 71 times.</div>
+          <div class="takenBranch">&check; Branch 3 taken 5 times.</div>
         </div>
         </details>
       </td>
-      <td class="linecount coveredLine">75</td>
+      <td class="linecount coveredLine">78</td>
       <td class="src coveredLine"><span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">owns</span><span class="p">(</span><span class="n">blk_t</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">noexcept</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ptr</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ptr</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">TotalChunkSize</span><span class="p">;</span><span class="w"> </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
@@ -2819,7 +2819,7 @@
       <td class="lineno"><a id="l365" href="#l365">365</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">9</td>
+      <td class="linecount coveredLine">13</td>
       <td class="src coveredLine"><span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">buckets</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">noexcept</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">bu_vec</span><span class="p">;</span><span class="w"> </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
