@@ -38,92 +38,57 @@ namespace nda {
    * @{
    */
 
-  /**
-   * @brief Get the real part of a scalar.
-   *
-   * @tparam T Scalar type.
-   * @param t Scalar value.
-   * @return Real part of the scalar.
-   */
-  template <typename T>
-  auto real(T t)
-    requires(nda::is_scalar_v<T>)
-  {
-    if constexpr (is_complex_v<T>) {
-      return std::real(t);
-    } else {
-      return t;
+  namespace detail {
+
+    // Get the real part of a scalar.
+    template <typename T>
+    auto real(T t)
+      requires(nda::is_scalar_v<T>)
+    {
+      if constexpr (is_complex_v<T>) {
+        return std::real(t);
+      } else {
+        return t;
+      }
     }
-  }
 
-  /**
-   * @brief Get the complex conjugate of a scalar.
-   *
-   * @tparam T Scalar type.
-   * @param t Scalar value.
-   * @return The given scalar if it is not complex, otherwise its complex conjugate.
-   */
-  template <typename T>
-  auto conj(T t)
-    requires(nda::is_scalar_v<T>)
-  {
-    if constexpr (is_complex_v<T>) {
-      return std::conj(t);
-    } else {
-      return t;
+    // Get the complex conjugate of a scalar.
+    template <typename T>
+    auto conj(T t)
+      requires(nda::is_scalar_v<T>)
+    {
+      if constexpr (is_complex_v<T>) {
+        return std::conj(t);
+      } else {
+        return t;
+      }
     }
-  }
+
+    // Get the squared absolute value of a double.
+    inline double abs2(double x) { return x * x; }
+
+    // Get the squared absolute value of a std::complex<double>.
+    inline double abs2(std::complex<double> z) { return (conj(z) * z).real(); }
+
+    // Check if a std::complex<double> is NaN.
+    inline bool isnan(std::complex<double> const &z) { return std::isnan(z.real()) or std::isnan(z.imag()); }
+
+    // Functor for nda::detail::conj.
+    struct conj_f {
+      auto operator()(auto const &x) const { return conj(x); };
+    };
+
+  } // namespace detail
 
   /**
-   * @brief Get the squared absolute value of a double.
+   * @brief Function pow for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
    *
-   * @param x Double value.
-   * @return Squared absolute value of the given double.
-   */
-  inline double abs2(double x) { return x * x; }
-
-  /**
-   * @brief Get the squared absolute value of a std::complex<double>.
-   *
-   * @param z std::complex<double> value.
-   * @return Squared absolute value of the given complex number.
-   */
-  inline double abs2(std::complex<double> z) { return (conj(z) * z).real(); }
-
-  /**
-   * @brief Check if a std::complex<double> is NaN.
-   *
-   * @param z std::complex<double> value.
-   * @return True if either the real or imaginary part of the given complex number is `NaN`, false otherwise.
-   */
-  inline bool isnan(std::complex<double> const &z) { return std::isnan(z.real()) or std::isnan(z.imag()); }
-
-  /**
-   * @brief Calculate the integer power of an integer.
-   *
-   * @tparam T Integer type.
-   * @param x Base value.
-   * @param n Exponent value.
-   * @return The result of the base raised to the power of the exponent.
-   */
-  template <typename T>
-  T pow(T x, int n)
-    requires(std::is_integral_v<T>)
-  {
-    T r = 1;
-    for (int i = 0; i < n; ++i) r *= x;
-    return r;
-  }
-
-  /**
-   * @brief Lazy, coefficient-wise power function for nda::Array types.
-   *
-   * @tparam A nda::Array type.
-   * @param a nda::Array object.
+   * @tparam A nda::ArrayOrScalar type..
+   * @param a nda::ArrayOrScalar object.
    * @param p Exponent value.
-   * @return A lazy nda::expr_call object.
+   * @return A lazy nda::expr_call object (nda::Array) or the result of `std::pow` applied to the object (nda::Scalar).
    */
-  template <Array A>
+  template <ArrayOrScalar A>
   auto pow(A &&a, double p) {
     return nda::map([p](auto const &x) {
       using std::pow;
@@ -131,23 +96,19 @@ namespace nda {
     })(std::forward<A>(a));
   }
 
-  /// Wrapper for nda::conj.
-  struct conj_f {
-    /// Function call operator that forwards the call to nda::conj.
-    auto operator()(auto const &x) const { return conj(x); };
-  };
-
   /**
-   * @brief Lazy, coefficient-wise complex conjugate function for nda::Array types.
+   * @brief Function conj for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types with a complex
+   * value type).
    *
-   * @tparam A nda::Array type.
-   * @param a nda::Array object.
-   * @return A lazy nda::expr_call object if the array is complex valued, otherwise the array itself.
+   * @tparam A nda::ArrayOrScalar type..
+   * @param a nda::ArrayOrScalar object.
+   * @return A lazy nda::expr_call object (nda::Array and complex valued), the forwarded input object (nda::Array and
+   * not complex valued) or the complex conjugate of the scalar input.
    */
-  template <Array A>
+  template <ArrayOrScalar A>
   decltype(auto) conj(A &&a) {
     if constexpr (is_complex_v<get_value_t<A>>)
-      return nda::map(conj_f{})(std::forward<A>(a));
+      return nda::map(detail::conj_f{})(std::forward<A>(a));
     else
       return std::forward<A>(a);
   }

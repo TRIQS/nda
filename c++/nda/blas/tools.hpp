@@ -53,7 +53,7 @@ namespace nda::blas {
 
   /// Specialization of nda::blas::is_conj_array_expr for the conjugate lazy expressions.
   template <MemoryArray A>
-  static constexpr bool is_conj_array_expr<expr_call<conj_f, A>> = true;
+  static constexpr bool is_conj_array_expr<expr_call<detail::conj_f, A>> = true;
 
   // Specialization of nda::blas::is_conj_array_expr for cvref types.
   template <typename A>

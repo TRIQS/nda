@@ -36,6 +36,8 @@ struct NDAMathFunction : public ::testing::Test {
   nda::array<double, 3> A_d;
   nda::array<std::complex<double>, 3> A_c;
   static auto constexpr nan = std::numeric_limits<double>::quiet_NaN();
+  static auto constexpr dbl_c = -0.1234;
+  static auto constexpr cplx_c = std::complex<double>{-1.234, 2.345};
 };
 
 TEST_F(NDAMathFunction, Abs) {
@@ -45,6 +47,8 @@ TEST_F(NDAMathFunction, Abs) {
     EXPECT_DOUBLE_EQ(B_d(idxs...), std::abs(A_d(idxs...)));
     EXPECT_DOUBLE_EQ(B_c(idxs...), std::abs(A_c(idxs...)));
   });
+  EXPECT_DOUBLE_EQ(nda::abs(dbl_c), std::abs(dbl_c));
+  EXPECT_DOUBLE_EQ(nda::abs(cplx_c), std::abs(cplx_c));
 }
 
 TEST_F(NDAMathFunction, Abs2) {
@@ -54,6 +58,8 @@ TEST_F(NDAMathFunction, Abs2) {
     EXPECT_DOUBLE_EQ(B_d(idxs...), std::abs(A_d(idxs...)) * std::abs(A_d(idxs...)));
     EXPECT_DOUBLE_EQ(B_c(idxs...), std::abs(A_c(idxs...)) * std::abs(A_c(idxs...)));
   });
+  EXPECT_DOUBLE_EQ(nda::abs2(dbl_c), std::abs(dbl_c) * std::abs(dbl_c));
+  EXPECT_DOUBLE_EQ(nda::abs2(cplx_c), std::abs(cplx_c) * std::abs(cplx_c));
 }
 
 TEST_F(NDAMathFunction, Acos) {
@@ -63,6 +69,8 @@ TEST_F(NDAMathFunction, Acos) {
     EXPECT_DOUBLE_EQ(B_d(idxs...), std::acos(A_d(idxs...)));
     EXPECT_COMPLEX_NEAR(B_c(idxs...), std::acos(A_c(idxs...)), 1e-14);
   });
+  EXPECT_DOUBLE_EQ(nda::acos(dbl_c), std::acos(dbl_c));
+  EXPECT_COMPLEX_NEAR(nda::acos(cplx_c), std::acos(cplx_c));
 }
 
 TEST_F(NDAMathFunction, Asin) {
@@ -72,6 +80,8 @@ TEST_F(NDAMathFunction, Asin) {
     EXPECT_DOUBLE_EQ(B_d(idxs...), std::asin(A_d(idxs...)));
     EXPECT_COMPLEX_NEAR(B_c(idxs...), std::asin(A_c(idxs...)), 1e-14);
   });
+  EXPECT_DOUBLE_EQ(nda::asin(dbl_c), std::asin(dbl_c));
+  EXPECT_COMPLEX_NEAR(nda::asin(cplx_c), std::asin(cplx_c));
 }
 
 TEST_F(NDAMathFunction, Atan) {
@@ -81,6 +91,8 @@ TEST_F(NDAMathFunction, Atan) {
     EXPECT_DOUBLE_EQ(B_d(idxs...), std::atan(A_d(idxs...)));
     EXPECT_COMPLEX_NEAR(B_c(idxs...), std::atan(A_c(idxs...)), 1e-14);
   });
+  EXPECT_DOUBLE_EQ(nda::atan(dbl_c), std::atan(dbl_c));
+  EXPECT_COMPLEX_NEAR(nda::atan(cplx_c), std::atan(cplx_c));
 }
 
 TEST_F(NDAMathFunction, Conj) {
@@ -90,6 +102,8 @@ TEST_F(NDAMathFunction, Conj) {
     EXPECT_EQ(B_d(idxs...), std::conj(A_d(idxs...)));
     EXPECT_EQ(B_c(idxs...), std::conj(A_c(idxs...)));
   });
+  EXPECT_EQ(nda::conj(dbl_c), std::conj(dbl_c));
+  EXPECT_EQ(nda::conj(cplx_c), std::conj(cplx_c));
 }
 
 TEST_F(NDAMathFunction, Cos) {
@@ -99,6 +113,8 @@ TEST_F(NDAMathFunction, Cos) {
     EXPECT_DOUBLE_EQ(B_d(idxs...), std::cos(A_d(idxs...)));
     EXPECT_COMPLEX_NEAR(B_c(idxs...), std::cos(A_c(idxs...)), 1e-14);
   });
+  EXPECT_DOUBLE_EQ(nda::cos(dbl_c), std::cos(dbl_c));
+  EXPECT_COMPLEX_NEAR(nda::cos(cplx_c), std::cos(cplx_c));
 }
 
 TEST_F(NDAMathFunction, Cosh) {
@@ -108,6 +124,8 @@ TEST_F(NDAMathFunction, Cosh) {
     EXPECT_DOUBLE_EQ(B_d(idxs...), std::cosh(A_d(idxs...)));
     EXPECT_COMPLEX_NEAR(B_c(idxs...), std::cosh(A_c(idxs...)), 1e-14);
   });
+  EXPECT_DOUBLE_EQ(nda::cosh(dbl_c), std::cosh(dbl_c));
+  EXPECT_COMPLEX_NEAR(nda::cosh(cplx_c), std::cosh(cplx_c));
 }
 
 TEST_F(NDAMathFunction, Dagger) {
@@ -134,11 +152,14 @@ TEST_F(NDAMathFunction, Exp) {
     EXPECT_DOUBLE_EQ(B_d(idxs...), std::exp(A_d(idxs...)));
     EXPECT_COMPLEX_NEAR(B_c(idxs...), std::exp(A_c(idxs...)), 1e-14);
   });
+  EXPECT_DOUBLE_EQ(nda::exp(dbl_c), std::exp(dbl_c));
+  EXPECT_COMPLEX_NEAR(nda::exp(cplx_c), std::exp(cplx_c));
 }
 
 TEST_F(NDAMathFunction, Floor) {
   auto B_d = nda::make_regular(nda::floor(A_d));
   nda::for_each(shape, [&](auto... idxs) { EXPECT_EQ(B_d(idxs...), std::floor(A_d(idxs...))); });
+  EXPECT_DOUBLE_EQ(nda::floor(dbl_c), std::floor(dbl_c));
 }
 
 TEST_F(NDAMathFunction, FrobeniusNorm) {
@@ -155,6 +176,8 @@ TEST_F(NDAMathFunction, Imag) {
     EXPECT_EQ(B_d(idxs...), std::imag(A_d(idxs...)));
     EXPECT_EQ(B_c(idxs...), std::imag(A_c(idxs...)));
   });
+  EXPECT_EQ(nda::imag(dbl_c), std::imag(dbl_c));
+  EXPECT_EQ(nda::imag(cplx_c), std::imag(cplx_c));
 }
 
 TEST_F(NDAMathFunction, Isnan) {
@@ -168,6 +191,8 @@ TEST_F(NDAMathFunction, Isnan) {
     EXPECT_EQ(B_d(idxs...), std::isnan(A_d(idxs...)));
     EXPECT_EQ(B_c(idxs...), nda::isnan(A_c(idxs...)));
   });
+  EXPECT_EQ(nda::isnan(dbl_c), std::isnan(dbl_c));
+  EXPECT_EQ(nda::isnan(cplx_c), nda::detail::isnan(cplx_c));
 }
 
 TEST_F(NDAMathFunction, Log) {
@@ -178,6 +203,8 @@ TEST_F(NDAMathFunction, Log) {
     EXPECT_DOUBLE_EQ(B_d(idxs...), std::log(A_d(idxs...)));
     EXPECT_COMPLEX_NEAR(B_c(idxs...), std::log(A_c(idxs...)), 1e-14);
   });
+  EXPECT_DOUBLE_EQ(nda::log(nda::abs(dbl_c)), std::log(std::abs(dbl_c)));
+  EXPECT_COMPLEX_NEAR(nda::log(cplx_c), std::log(cplx_c));
 }
 
 TEST_F(NDAMathFunction, MapCustom) {
@@ -197,6 +224,8 @@ TEST_F(NDAMathFunction, Pow) {
     EXPECT_DOUBLE_EQ(B_d(idxs...), std::pow(A_d(idxs...), 2));
     EXPECT_COMPLEX_NEAR(B_c(idxs...), std::pow(A_c(idxs...), 2), 1e-14);
   });
+  EXPECT_DOUBLE_EQ(nda::pow(dbl_c, 2), std::pow(dbl_c, 2));
+  EXPECT_COMPLEX_NEAR(nda::pow(cplx_c, 2), std::pow(cplx_c, 2));
 }
 
 TEST_F(NDAMathFunction, Real) {
@@ -206,6 +235,8 @@ TEST_F(NDAMathFunction, Real) {
     EXPECT_EQ(B_d(idxs...), std::real(A_d(idxs...)));
     EXPECT_EQ(B_c(idxs...), std::real(A_c(idxs...)));
   });
+  EXPECT_EQ(nda::real(dbl_c), std::real(dbl_c));
+  EXPECT_EQ(nda::real(cplx_c), std::real(cplx_c));
 }
 
 TEST_F(NDAMathFunction, Sin) {
@@ -215,6 +246,8 @@ TEST_F(NDAMathFunction, Sin) {
     EXPECT_DOUBLE_EQ(B_d(idxs...), std::sin(A_d(idxs...)));
     EXPECT_COMPLEX_NEAR(B_c(idxs...), std::sin(A_c(idxs...)), 1e-14);
   });
+  EXPECT_DOUBLE_EQ(nda::sin(dbl_c), std::sin(dbl_c));
+  EXPECT_COMPLEX_NEAR(nda::sin(cplx_c), std::sin(cplx_c));
 }
 
 TEST_F(NDAMathFunction, Sinh) {
@@ -224,6 +257,8 @@ TEST_F(NDAMathFunction, Sinh) {
     EXPECT_DOUBLE_EQ(B_d(idxs...), std::sinh(A_d(idxs...)));
     EXPECT_COMPLEX_NEAR(B_c(idxs...), std::sinh(A_c(idxs...)), 1e-14);
   });
+  EXPECT_DOUBLE_EQ(nda::sinh(dbl_c), std::sinh(dbl_c));
+  EXPECT_COMPLEX_NEAR(nda::sinh(cplx_c), std::sinh(cplx_c));
 }
 
 TEST_F(NDAMathFunction, Sqrt) {
@@ -234,6 +269,8 @@ TEST_F(NDAMathFunction, Sqrt) {
     EXPECT_DOUBLE_EQ(B_d(idxs...), std::sqrt(A_d(idxs...)));
     EXPECT_COMPLEX_NEAR(B_c(idxs...), std::sqrt(A_c(idxs...)), 1e-14);
   });
+  EXPECT_DOUBLE_EQ(nda::sqrt(nda::abs(dbl_c)), std::sqrt(std::abs(dbl_c)));
+  EXPECT_COMPLEX_NEAR(nda::sqrt(cplx_c), std::sqrt(cplx_c));
 }
 
 TEST_F(NDAMathFunction, Tan) {
@@ -243,6 +280,8 @@ TEST_F(NDAMathFunction, Tan) {
     EXPECT_DOUBLE_EQ(B_d(idxs...), std::tan(A_d(idxs...)));
     EXPECT_COMPLEX_NEAR(B_c(idxs...), std::tan(A_c(idxs...)), 1e-14);
   });
+  EXPECT_DOUBLE_EQ(nda::tan(dbl_c), std::tan(dbl_c));
+  EXPECT_COMPLEX_NEAR(nda::tan(cplx_c), std::tan(cplx_c));
 }
 
 TEST_F(NDAMathFunction, Tanh) {
@@ -252,6 +291,8 @@ TEST_F(NDAMathFunction, Tanh) {
     EXPECT_DOUBLE_EQ(B_d(idxs...), std::tanh(A_d(idxs...)));
     EXPECT_COMPLEX_NEAR(B_c(idxs...), std::tanh(A_c(idxs...)), 1e-14);
   });
+  EXPECT_DOUBLE_EQ(nda::tanh(dbl_c), std::tanh(dbl_c));
+  EXPECT_COMPLEX_NEAR(nda::tanh(cplx_c), std::tanh(cplx_c));
 }
 
 TEST_F(NDAMathFunction, Trace) {
@@ -309,3 +350,4 @@ TEST_F(NDAMathFunction, CombineMathFunctionsWithArithmeticOps) {
   EXPECT_ARRAY_NEAR(mat_t(transpose(C)), C_transp);
   EXPECT_ARRAY_NEAR(mat_t(C * conj(transpose(C))), mat_t(transpose(conj(C) * transpose(C))));
 }
+

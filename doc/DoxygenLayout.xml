@@ -55,7 +55,6 @@
           <tab type="user" url="@ref mpi::lazy< mpi::tag::scatter, A >" title="mpi::lazy<mpi::tag::scatter, A>"/>
         </tab>
         <tab type="usergroup" url="@ref av_math" title="Mathematical functions">
-          <tab type="user" url="@ref nda::conj_f" title="conj_f"/>
           <tab type="user" url="@ref nda::expr_call" title="expr_call"/>
           <tab type="user" url="@ref nda::mapped" title="mapped"/>
         </tab>

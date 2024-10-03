@@ -1,6 +1,7 @@
 /**
  * @file
- * @brief Provides lazy, coefficient-wise array operations of standard mathematical functions.
+ * @brief Provides lazy, coefficient-wise array operations of standard mathematical functions together with overloads
+ * for nda::Scalar types.
  */
 
 #pragma once
@@ -29,12 +30,12 @@
   ----  normal mapping -------
 
   VIMEXPAND abs imag floor
-  /// \brief Lazy, coefficient-wise @ function for nda::Array types.
+  /// \brief Function @ for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type.
+  /// \param a nda::ArrayOrScalar object.
+  /// \return A lazy nda::expr_call object (nda::Array) or the result of `std::@` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto @(A &&a)  {
     return nda::map(
        [](auto const &x) {
@@ -46,26 +47,26 @@
  ---------  same, no using std::-------
 
   VIMEXPAND real abs2 isnan
-  /// \brief Lazy, coefficient-wise @ function for nda::Array types.
+  /// \brief Function @ for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type..
+  /// \param a nda::ArrayOrScalar object.
+  /// \return A lazy nda::expr_call object (nda::Array) or the result of `nda::detail::@` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto @(A &&a) {
     return nda::map(
-       [](auto const &x) {return @(x); })(std::forward<A>(a));
+       [](auto const &x) {return detail::@(x); })(std::forward<A>(a));
   }
 
  ---------  mapping with matrix excluded -------
 
   VIMEXPAND exp cos sin tan cosh sinh tanh acos asin atan log sqrt
-  /// \brief Lazy, coefficient-wise @ function for non-matrix nda::Array types.
+  /// \brief Function @ for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type.
+  /// \param a nda::ArrayOrScalar object.
+  /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::@` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto @(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
@@ -86,12 +87,12 @@ namespace nda {
   // --- VIMEXPAND_START  --DO NOT EDIT BELOW --
 
 
-  /// \brief Lazy, coefficient-wise abs function for nda::Array types.
+  /// \brief Function abs for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type.
+  /// \param a nda::ArrayOrScalar object.
+  /// \return A lazy nda::expr_call object (nda::Array) or the result of `std::abs` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto abs(A &&a)  {
     return nda::map(
        [](auto const &x) {
@@ -100,12 +101,12 @@ namespace nda {
        })(std::forward<A>(a));
   }
 
-  /// \brief Lazy, coefficient-wise imag function for nda::Array types.
+  /// \brief Function imag for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type.
+  /// \param a nda::ArrayOrScalar object.
+  /// \return A lazy nda::expr_call object (nda::Array) or the result of `std::imag` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto imag(A &&a)  {
     return nda::map(
        [](auto const &x) {
@@ -114,12 +115,12 @@ namespace nda {
        })(std::forward<A>(a));
   }
 
-  /// \brief Lazy, coefficient-wise floor function for nda::Array types.
+  /// \brief Function floor for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type.
+  /// \param a nda::ArrayOrScalar object.
+  /// \return A lazy nda::expr_call object (nda::Array) or the result of `std::floor` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto floor(A &&a)  {
     return nda::map(
        [](auto const &x) {
@@ -128,45 +129,45 @@ namespace nda {
        })(std::forward<A>(a));
   }
 
-  /// \brief Lazy, coefficient-wise real function for nda::Array types.
+  /// \brief Function real for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type..
+  /// \param a nda::ArrayOrScalar object.
+  /// \return A lazy nda::expr_call object (nda::Array) or the result of `nda::detail::real` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto real(A &&a) {
     return nda::map(
-       [](auto const &x) {return real(x); })(std::forward<A>(a));
+       [](auto const &x) {return detail::real(x); })(std::forward<A>(a));
   }
 
-  /// \brief Lazy, coefficient-wise abs2 function for nda::Array types.
+  /// \brief Function abs2 for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type..
+  /// \param a nda::ArrayOrScalar object.
+  /// \return A lazy nda::expr_call object (nda::Array) or the result of `nda::detail::abs2` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto abs2(A &&a) {
     return nda::map(
-       [](auto const &x) {return abs2(x); })(std::forward<A>(a));
+       [](auto const &x) {return detail::abs2(x); })(std::forward<A>(a));
   }
 
-  /// \brief Lazy, coefficient-wise isnan function for nda::Array types.
+  /// \brief Function isnan for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type..
+  /// \param a nda::ArrayOrScalar object.
+  /// \return A lazy nda::expr_call object (nda::Array) or the result of `nda::detail::isnan` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto isnan(A &&a) {
     return nda::map(
-       [](auto const &x) {return isnan(x); })(std::forward<A>(a));
+       [](auto const &x) {return detail::isnan(x); })(std::forward<A>(a));
   }
 
-  /// \brief Lazy, coefficient-wise exp function for non-matrix nda::Array types.
+  /// \brief Function exp for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type.
+  /// \param a nda::ArrayOrScalar object.
+  /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::exp` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto exp(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
@@ -175,12 +176,12 @@ namespace nda {
        })(std::forward<A>(a));
   }
 
-  /// \brief Lazy, coefficient-wise cos function for non-matrix nda::Array types.
+  /// \brief Function cos for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type.
+  /// \param a nda::ArrayOrScalar object.
+  /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::cos` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto cos(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
@@ -189,12 +190,12 @@ namespace nda {
        })(std::forward<A>(a));
   }
 
-  /// \brief Lazy, coefficient-wise sin function for non-matrix nda::Array types.
+  /// \brief Function sin for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type.
+  /// \param a nda::ArrayOrScalar object.
+  /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::sin` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto sin(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
@@ -203,12 +204,12 @@ namespace nda {
        })(std::forward<A>(a));
   }
 
-  /// \brief Lazy, coefficient-wise tan function for non-matrix nda::Array types.
+  /// \brief Function tan for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type.
+  /// \param a nda::ArrayOrScalar object.
+  /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::tan` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto tan(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
@@ -217,12 +218,12 @@ namespace nda {
        })(std::forward<A>(a));
   }
 
-  /// \brief Lazy, coefficient-wise cosh function for non-matrix nda::Array types.
+  /// \brief Function cosh for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type.
+  /// \param a nda::ArrayOrScalar object.
+  /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::cosh` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto cosh(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
@@ -231,12 +232,12 @@ namespace nda {
        })(std::forward<A>(a));
   }
 
-  /// \brief Lazy, coefficient-wise sinh function for non-matrix nda::Array types.
+  /// \brief Function sinh for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type.
+  /// \param a nda::ArrayOrScalar object.
+  /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::sinh` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto sinh(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
@@ -245,12 +246,12 @@ namespace nda {
        })(std::forward<A>(a));
   }
 
-  /// \brief Lazy, coefficient-wise tanh function for non-matrix nda::Array types.
+  /// \brief Function tanh for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type.
+  /// \param a nda::ArrayOrScalar object.
+  /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::tanh` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto tanh(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
@@ -259,12 +260,12 @@ namespace nda {
        })(std::forward<A>(a));
   }
 
-  /// \brief Lazy, coefficient-wise acos function for non-matrix nda::Array types.
+  /// \brief Function acos for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type.
+  /// \param a nda::ArrayOrScalar object.
+  /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::acos` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto acos(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
@@ -273,12 +274,12 @@ namespace nda {
        })(std::forward<A>(a));
   }
 
-  /// \brief Lazy, coefficient-wise asin function for non-matrix nda::Array types.
+  /// \brief Function asin for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type.
+  /// \param a nda::ArrayOrScalar object.
+  /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::asin` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto asin(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
@@ -287,12 +288,12 @@ namespace nda {
        })(std::forward<A>(a));
   }
 
-  /// \brief Lazy, coefficient-wise atan function for non-matrix nda::Array types.
+  /// \brief Function atan for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type.
+  /// \param a nda::ArrayOrScalar object.
+  /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::atan` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto atan(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
@@ -301,12 +302,12 @@ namespace nda {
        })(std::forward<A>(a));
   }
 
-  /// \brief Lazy, coefficient-wise log function for non-matrix nda::Array types.
+  /// \brief Function log for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type.
+  /// \param a nda::ArrayOrScalar object.
+  /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::log` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto log(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
@@ -315,12 +316,12 @@ namespace nda {
        })(std::forward<A>(a));
   }
 
-  /// \brief Lazy, coefficient-wise sqrt function for non-matrix nda::Array types.
+  /// \brief Function sqrt for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
   ///
-  /// \tparam A nda::Array type.
-  /// \param a nda::Array object.
-  /// \return A lazy nda::expr_call object.
-  template <Array A>
+  /// \tparam A nda::ArrayOrScalar type.
+  /// \param a nda::ArrayOrScalar object.
+  /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::sqrt` applied to the object (nda::Scalar).
+  template <ArrayOrScalar A>
   auto sqrt(A &&a) requires(get_algebra<A> != 'M') {
     return nda::map(
        [](auto const &x) {
@@ -330,4 +331,5 @@ namespace nda {
   }
 
   /** @} */
+
 }

@@ -184,6 +184,20 @@ namespace nda {
       EXPECTS(((as.shape() == a0.shape()) && ...)); // same shape
       return {f, {std::forward<A0>(a0), std::forward<As>(as)...}};
     }
+
+    /**
+     * @brief Function call operator that returns the result of the callable object applied to the scalar arguments.
+     *
+     * @tparam T0 First nda::Scalar argument type.
+     * @tparam Ts Rest of the nda::Scalar argument types.
+     * @param t0 First nda::Scalar argument.
+     * @param ts Rest of the nda::Scalar arguments.
+     * @return Result of the functor applied to the scalar arguments.
+     */
+    template <Scalar T0, Scalar... Ts>
+    auto operator()(T0 a0, Ts... as) const {
+      return f(a0, as...);
+    }
   };
 
   /**
