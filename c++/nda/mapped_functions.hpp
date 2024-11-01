@@ -28,7 +28,6 @@
 
 #include <cmath>
 #include <complex>
-#include <type_traits>
 #include <utility>
 
 namespace nda {
@@ -41,26 +40,12 @@ namespace nda {
   namespace detail {
 
     // Get the real part of a scalar.
-    template <typename T>
-    auto real(T t)
-      requires(nda::is_scalar_v<T>)
-    {
-      if constexpr (is_complex_v<T>) {
-        return std::real(t);
+    template <nda::Scalar S>
+    auto real(S x) {
+      if constexpr (is_complex_v<S>) {
+        return std::real(x);
       } else {
-        return t;
-      }
-    }
-
-    // Get the complex conjugate of a scalar.
-    template <typename T>
-    auto conj(T t)
-      requires(nda::is_scalar_v<T>)
-    {
-      if constexpr (is_complex_v<T>) {
-        return std::conj(t);
-      } else {
-        return t;
+        return x;
       }
     }
 
@@ -75,7 +60,14 @@ namespace nda {
 
     // Functor for nda::detail::conj.
     struct conj_f {
-      auto operator()(auto const &x) const { return conj(x); };
+      template <nda::Scalar S>
+      auto operator()(S x) const {
+        if constexpr (is_complex_v<S>) {
+          return std::conj(x);
+        } else {
+          return x;
+        }
+      }
     };
 
   } // namespace detail
