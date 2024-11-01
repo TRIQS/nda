@@ -27,9 +27,9 @@ jobs:
       matrix:
         include:
           - {os: ubuntu-24.04, cc: gcc, cxx: g++, doc: OFF, cov: ON}
-          - {os: ubuntu-24.04, cc: clang, cxx: clang++, doc: ON, cov: OFF}
+          - {os: ubuntu-24.04, cc: clang, cxx: clang++, doc: OFF, cov: OFF}
           - {os: macos-14, cc: gcc-14, cxx: g++-14, doc: OFF, cov: OFF}
-          - {os: macos-14, cc: clang, cxx: clang++, doc: OFF, cov: OFF}
+          - {os: macos-14, cc: clang, cxx: clang++, doc: ON, cov: OFF}
 
     runs-on: ${{ matrix.os }}
 
@@ -90,26 +90,11 @@ jobs:
       if: ${{ contains(matrix.os, 'macos') }}
       run: |
         brew update
-        brew install ccache gcc llvm hdf5 open-mpi openblas
+        brew install ccache gcc llvm hdf5 open-mpi openblas doxygen
         pip install mako numpy scipy mpi4py
         pip install -r requirements.txt
         echo "PATH=$(brew --prefix llvm)/bin:$(brew --prefix gcc)/bin:$PATH" >> $GITHUB_ENV
-
-    - name: Build doxygen
-      if: matrix.doc == 'ON'
-      env:
-        CC: ${{ matrix.cc }}
-        CXX: ${{ matrix.cxx }}
-      run: |
-        cd $HOME
-        git clone https://github.com/doxygen/doxygen.git
-        cd doxygen
-        git checkout Release_1_12_0
-        mkdir build
-        cd build
-        cmake .. -Duse_libclang=ON -Duse_libc++=OFF
-        make -j 2 VERBOSE=1
-        cp bin/doxygen /usr/local/bin/doxygen
+        echo "PYTHONPATH=$(brew --prefix llvm)/lib/python3.13/site-packages" >> $GITHUB_ENV
 
     - name: Add clang CXXFLAGS
       if: ${{ contains(matrix.cxx, 'clang') }}
