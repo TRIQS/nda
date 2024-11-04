@@ -9,11 +9,10 @@
   </head>
 
   <body>
+
     <header>
       <h1>GCC Code Coverage Report</h1>
-
       <hr/>
-
       <div class="summary">
 <div>
   <table class="legend">
@@ -23,11 +22,11 @@
     </tr>
     <tr>
       <th scope="row">File:</th>
-      <td>nda/linalg/det_and_inverse.hpp</td>
+      <td>linalg/det_and_inverse.hpp</td>
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2024-09-30 21:45:34</td>
+      <td>2024-11-04 16:20:40</td>
     </tr>
   </table>
 </div>
@@ -60,10 +59,8 @@
   </table>
 </div>
       </div>
-
       <hr/>
     </header>
-
     <nav>
 <details>
   <summary>List of functions</summary>
@@ -73,40 +70,39 @@
       <th>Call count</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l143">auto nda::determinant&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 143)</a></td><td>called 10 times, returned 10 times</td><td>80.0%</td></tr>
-    <tr><td><a href="#l143">auto nda::determinant&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 143)</a></td><td>called 4 times, returned 4 times</td><td>80.0%</td></tr>
-    <tr><td><a href="#l100">auto nda::determinant_in_place&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 100)</a></td><td>called 10 times, returned 10 times</td><td>51.0%</td></tr>
-    <tr><td><a href="#l100">auto nda::determinant_in_place&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 100)</a></td><td>called 4 times, returned 4 times</td><td>51.0%</td></tr>
-    <tr><td><a href="#l297">auto nda::inverse&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 297)</a></td><td>called 20 times, returned 20 times</td><td>47.0%</td></tr>
-    <tr><td><a href="#l297">auto nda::inverse&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 297)</a></td><td>called 1 time, returned 1 time</td><td>47.0%</td></tr>
-    <tr><td><a href="#l297">auto nda::inverse&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 297)</a></td><td>called 2 times, returned 2 times</td><td>47.0%</td></tr>
-    <tr><td><a href="#l297">auto nda::inverse&lt;nda::basic_array_view&lt;double, 2, nda::C_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;double, 2, nda::C_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;) (line 297)</a></td><td>called 3 times, returned 3 times</td><td>44.0%</td></tr>
-    <tr><td><a href="#l297">auto nda::inverse&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;) (line 297)</a></td><td>called 2 times, returned 2 times</td><td>44.0%</td></tr>
-    <tr><td><a href="#l297">auto nda::inverse&lt;nda::basic_array_view&lt;double, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;double, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;) (line 297)</a></td><td>called 2 times, returned 2 times</td><td>44.0%</td></tr>
-    <tr><td><a href="#l61">bool nda::is_matrix_square&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, bool) (line 61)</a></td><td>called 48 times, returned 48 times</td><td>39.0%</td></tr>
-    <tr><td><a href="#l61">bool nda::is_matrix_square&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, bool) (line 61)</a></td><td>called 9 times, returned 9 times</td><td>39.0%</td></tr>
-    <tr><td><a href="#l61">bool nda::is_matrix_square&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, bool) (line 61)</a></td><td>called 5 times, returned 5 times</td><td>39.0%</td></tr>
-    <tr><td><a href="#l61">bool nda::is_matrix_square&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, bool) (line 61)</a></td><td>called 3 times, returned 3 times</td><td>39.0%</td></tr>
-    <tr><td><a href="#l61">bool nda::is_matrix_square&lt;nda::basic_array_view&lt;double, 2, nda::C_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;double, 2, nda::C_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, bool) (line 61)</a></td><td>called 3 times, returned 3 times</td><td>39.0%</td></tr>
-    <tr><td><a href="#l61">bool nda::is_matrix_square&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, bool) (line 61)</a></td><td>called 2 times, returned 2 times</td><td>39.0%</td></tr>
-    <tr><td><a href="#l61">bool nda::is_matrix_square&lt;nda::basic_array_view&lt;double, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;double, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, bool) (line 61)</a></td><td>called 2 times, returned 2 times</td><td>39.0%</td></tr>
-    <tr><td><a href="#l169">void nda::inverse1_in_place&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 169)</a></td><td>called 2 times, returned 2 times</td><td>58.0%</td></tr>
+    <tr><td><a href="#l143">auto nda::determinant&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 143)</a></td><td>called 10 times</td><td>80.0%</td></tr>
+    <tr><td><a href="#l143">auto nda::determinant&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 143)</a></td><td>called 4 times</td><td>80.0%</td></tr>
+    <tr><td><a href="#l100">auto nda::determinant_in_place&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 100)</a></td><td>called 10 times</td><td>51.0%</td></tr>
+    <tr><td><a href="#l100">auto nda::determinant_in_place&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 100)</a></td><td>called 4 times</td><td>51.0%</td></tr>
+    <tr><td><a href="#l297">auto nda::inverse&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 297)</a></td><td>called 20 times</td><td>47.0%</td></tr>
+    <tr><td><a href="#l297">auto nda::inverse&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 297)</a></td><td>called 1 time</td><td>47.0%</td></tr>
+    <tr><td><a href="#l297">auto nda::inverse&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 297)</a></td><td>called 2 times</td><td>47.0%</td></tr>
+    <tr><td><a href="#l297">auto nda::inverse&lt;nda::basic_array_view&lt;double, 2, nda::C_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;double, 2, nda::C_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;) (line 297)</a></td><td>called 3 times</td><td>44.0%</td></tr>
+    <tr><td><a href="#l297">auto nda::inverse&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;) (line 297)</a></td><td>called 2 times</td><td>44.0%</td></tr>
+    <tr><td><a href="#l297">auto nda::inverse&lt;nda::basic_array_view&lt;double, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;double, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;) (line 297)</a></td><td>called 2 times</td><td>44.0%</td></tr>
+    <tr><td><a href="#l61">bool nda::is_matrix_square&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, bool) (line 61)</a></td><td>called 48 times</td><td>39.0%</td></tr>
+    <tr><td><a href="#l61">bool nda::is_matrix_square&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, bool) (line 61)</a></td><td>called 9 times</td><td>39.0%</td></tr>
+    <tr><td><a href="#l61">bool nda::is_matrix_square&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, bool) (line 61)</a></td><td>called 5 times</td><td>39.0%</td></tr>
+    <tr><td><a href="#l61">bool nda::is_matrix_square&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, bool) (line 61)</a></td><td>called 3 times</td><td>39.0%</td></tr>
+    <tr><td><a href="#l61">bool nda::is_matrix_square&lt;nda::basic_array_view&lt;double, 2, nda::C_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;double, 2, nda::C_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, bool) (line 61)</a></td><td>called 3 times</td><td>39.0%</td></tr>
+    <tr><td><a href="#l61">bool nda::is_matrix_square&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, bool) (line 61)</a></td><td>called 2 times</td><td>39.0%</td></tr>
+    <tr><td><a href="#l61">bool nda::is_matrix_square&lt;nda::basic_array_view&lt;double, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;double, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, bool) (line 61)</a></td><td>called 2 times</td><td>39.0%</td></tr>
+    <tr><td><a href="#l169">void nda::inverse1_in_place&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 169)</a></td><td>called 2 times</td><td>58.0%</td></tr>
     <tr><td><a href="#l169">void nda::inverse1_in_place&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 169)</a></td><td>not called</td><td>0.0%</td></tr>
     <tr><td><a href="#l169">void nda::inverse1_in_place&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 169)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l184">void nda::inverse2_in_place&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 184)</a></td><td>called 9 times, returned 9 times</td><td>64.0%</td></tr>
+    <tr><td><a href="#l184">void nda::inverse2_in_place&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 184)</a></td><td>called 9 times</td><td>64.0%</td></tr>
     <tr><td><a href="#l184">void nda::inverse2_in_place&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 184)</a></td><td>not called</td><td>0.0%</td></tr>
     <tr><td><a href="#l184">void nda::inverse2_in_place&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 184)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l210">void nda::inverse3_in_place&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 210)</a></td><td>called 11 times, returned 11 times</td><td>66.0%</td></tr>
-    <tr><td><a href="#l210">void nda::inverse3_in_place&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 210)</a></td><td>called 1 time, returned 1 time</td><td>66.0%</td></tr>
-    <tr><td><a href="#l210">void nda::inverse3_in_place&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 210)</a></td><td>called 2 times, returned 2 times</td><td>66.0%</td></tr>
-    <tr><td><a href="#l254">void nda::inverse_in_place&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 254)</a></td><td>called 25 times, returned 25 times</td><td>36.0%</td></tr>
-    <tr><td><a href="#l254">void nda::inverse_in_place&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 254)</a></td><td>called 3 times, returned 3 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l254">void nda::inverse_in_place&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 254)</a></td><td>called 2 times, returned 2 times</td><td>23.0%</td></tr>
+    <tr><td><a href="#l210">void nda::inverse3_in_place&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 210)</a></td><td>called 11 times</td><td>66.0%</td></tr>
+    <tr><td><a href="#l210">void nda::inverse3_in_place&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 210)</a></td><td>called 1 time</td><td>66.0%</td></tr>
+    <tr><td><a href="#l210">void nda::inverse3_in_place&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 210)</a></td><td>called 2 times</td><td>66.0%</td></tr>
+    <tr><td><a href="#l254">void nda::inverse_in_place&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 254)</a></td><td>called 25 times</td><td>36.0%</td></tr>
+    <tr><td><a href="#l254">void nda::inverse_in_place&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 254)</a></td><td>called 3 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l254">void nda::inverse_in_place&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 254)</a></td><td>called 2 times</td><td>23.0%</td></tr>
   </table>
 </details>
 
     </nav>
-
     <main>
 <div class="file-source">
   <table>
@@ -554,13 +550,13 @@
       <td class="lineno"><a id="l63" href="#l63">63</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/4</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
-          <div class="takenBranch">&check; Branch 1 taken 72 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/4</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
+            <div class="takenBranch">&check; Branch 1 taken 72 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">140</td>
@@ -885,11 +881,11 @@
       <td class="lineno"><a id="l109" href="#l109">109</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
-          <div class="takenBranch">&check; Branch 2 taken 14 times.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 14 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">28</td>
@@ -913,25 +909,25 @@
       <td class="lineno"><a id="l112" href="#l112">112</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/16</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 3 taken 14 times.</div>
-          <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 19 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 22 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 26 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 27 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/16</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 14 times.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 19 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 22 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 26 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 27 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">28</td>
@@ -962,11 +958,11 @@
       <td class="lineno"><a id="l116" href="#l116">116</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 14 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 14 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">28</td>
@@ -976,11 +972,11 @@
       <td class="lineno"><a id="l117" href="#l117">117</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 14 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 14 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">28</td>
@@ -990,25 +986,25 @@
       <td class="lineno"><a id="l118" href="#l118">118</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/16</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
-          <div class="takenBranch">&check; Branch 1 taken 14 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/16</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
+            <div class="takenBranch">&check; Branch 1 taken 14 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">28</td>
@@ -1046,11 +1042,11 @@
       <td class="lineno"><a id="l123" href="#l123">123</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 0 taken 30 times.</div>
-          <div class="takenBranch">&check; Branch 1 taken 14 times.</div>
-        </div>
+          <summary class="linebranchSummary">2/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 0 taken 30 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 14 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">88</td>
@@ -1074,11 +1070,11 @@
       <td class="lineno"><a id="l126" href="#l126">126</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 0 taken 14 times.</div>
-          <div class="takenBranch">&check; Branch 1 taken 16 times.</div>
-        </div>
+          <summary class="linebranchSummary">2/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 0 taken 14 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 16 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">60</td>
@@ -1102,11 +1098,11 @@
       <td class="lineno"><a id="l129" href="#l129">129</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 0 taken 6 times.</div>
-          <div class="takenBranch">&check; Branch 1 taken 8 times.</div>
-        </div>
+          <summary class="linebranchSummary">2/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 0 taken 6 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 8 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">28</td>
@@ -1214,11 +1210,11 @@
       <td class="lineno"><a id="l144" href="#l144">144</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 14 times.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 14 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">28</td>
@@ -1228,11 +1224,11 @@
       <td class="lineno"><a id="l145" href="#l145">145</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 14 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 14 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">56</td>
@@ -1410,30 +1406,30 @@
       <td class="lineno"><a id="l170" href="#l170">170</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/21</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
-          <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 19 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 22 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/21</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 19 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 22 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">8</td>
@@ -1569,15 +1565,15 @@
       <td class="lineno"><a id="l189" href="#l189">189</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">0/6</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">0/6</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">64</td>
@@ -1587,30 +1583,30 @@
       <td class="lineno"><a id="l190" href="#l190">190</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/21</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
-          <div class="takenBranch">&check; Branch 1 taken 9 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 19 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 22 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/21</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
+            <div class="takenBranch">&check; Branch 1 taken 9 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 19 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 22 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">16</td>
@@ -1767,15 +1763,15 @@
       <td class="lineno"><a id="l212" href="#l212">212</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">3/6</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-          <div class="takenBranch">&check; Branch 9 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
-          <div class="takenBranch">&check; Branch 12 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">3/6</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 9 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="takenBranch">&check; Branch 12 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">116</td>
@@ -1785,15 +1781,15 @@
       <td class="lineno"><a id="l213" href="#l213">213</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">3/6</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-          <div class="takenBranch">&check; Branch 9 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
-          <div class="takenBranch">&check; Branch 12 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">3/6</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 9 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="takenBranch">&check; Branch 12 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">116</td>
@@ -1803,15 +1799,15 @@
       <td class="lineno"><a id="l214" href="#l214">214</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">3/6</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-          <div class="takenBranch">&check; Branch 9 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
-          <div class="takenBranch">&check; Branch 12 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">3/6</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 9 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="takenBranch">&check; Branch 12 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">116</td>
@@ -1821,15 +1817,15 @@
       <td class="lineno"><a id="l215" href="#l215">215</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">3/6</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-          <div class="takenBranch">&check; Branch 9 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
-          <div class="takenBranch">&check; Branch 12 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">3/6</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 9 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="takenBranch">&check; Branch 12 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">116</td>
@@ -1839,15 +1835,15 @@
       <td class="lineno"><a id="l216" href="#l216">216</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">3/6</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-          <div class="takenBranch">&check; Branch 9 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
-          <div class="takenBranch">&check; Branch 12 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">3/6</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 9 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="takenBranch">&check; Branch 12 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">116</td>
@@ -1857,15 +1853,15 @@
       <td class="lineno"><a id="l217" href="#l217">217</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">3/6</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-          <div class="takenBranch">&check; Branch 9 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
-          <div class="takenBranch">&check; Branch 12 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">3/6</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 9 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="takenBranch">&check; Branch 12 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">116</td>
@@ -1875,15 +1871,15 @@
       <td class="lineno"><a id="l218" href="#l218">218</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">3/6</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-          <div class="takenBranch">&check; Branch 9 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
-          <div class="takenBranch">&check; Branch 12 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">3/6</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 9 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="takenBranch">&check; Branch 12 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">116</td>
@@ -1893,15 +1889,15 @@
       <td class="lineno"><a id="l219" href="#l219">219</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">3/6</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-          <div class="takenBranch">&check; Branch 9 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
-          <div class="takenBranch">&check; Branch 12 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">3/6</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 9 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="takenBranch">&check; Branch 12 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">116</td>
@@ -1911,15 +1907,15 @@
       <td class="lineno"><a id="l220" href="#l220">220</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">3/6</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-          <div class="takenBranch">&check; Branch 9 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
-          <div class="takenBranch">&check; Branch 12 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">3/6</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 9 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="takenBranch">&check; Branch 12 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">116</td>
@@ -1943,19 +1939,19 @@
       <td class="lineno"><a id="l223" href="#l223">223</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">5/10</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-          <div class="takenBranch">&check; Branch 6 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
-          <div class="takenBranch">&check; Branch 10 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="takenBranch">&check; Branch 13 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="takenBranch">&check; Branch 16 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">5/10</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="takenBranch">&check; Branch 6 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="takenBranch">&check; Branch 10 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="takenBranch">&check; Branch 13 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="takenBranch">&check; Branch 16 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">88</td>
@@ -1965,30 +1961,30 @@
       <td class="lineno"><a id="l224" href="#l224">224</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/21</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
-          <div class="takenBranch">&check; Branch 1 taken 12 times.</div>
-          <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 19 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 22 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">2/21</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
+            <div class="takenBranch">&check; Branch 1 taken 12 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 19 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 22 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">28</td>
@@ -2019,11 +2015,11 @@
       <td class="lineno"><a id="l228" href="#l228">228</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">28</td>
@@ -2033,11 +2029,11 @@
       <td class="lineno"><a id="l229" href="#l229">229</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">28</td>
@@ -2047,11 +2043,11 @@
       <td class="lineno"><a id="l230" href="#l230">230</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">28</td>
@@ -2061,11 +2057,11 @@
       <td class="lineno"><a id="l231" href="#l231">231</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">28</td>
@@ -2075,11 +2071,11 @@
       <td class="lineno"><a id="l232" href="#l232">232</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">28</td>
@@ -2089,11 +2085,11 @@
       <td class="lineno"><a id="l233" href="#l233">233</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">28</td>
@@ -2103,11 +2099,11 @@
       <td class="lineno"><a id="l234" href="#l234">234</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">28</td>
@@ -2117,11 +2113,11 @@
       <td class="lineno"><a id="l235" href="#l235">235</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">28</td>
@@ -2131,11 +2127,11 @@
       <td class="lineno"><a id="l236" href="#l236">236</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">28</td>
@@ -2271,27 +2267,27 @@
       <td class="lineno"><a id="l255" href="#l255">255</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/18</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 30 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-          <div class="takenBranch">&check; Branch 4 taken 30 times.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 19 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 22 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 25 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">2/18</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 30 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="takenBranch">&check; Branch 4 taken 30 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 19 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 22 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 25 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">58</td>
@@ -2315,11 +2311,11 @@
       <td class="lineno"><a id="l258" href="#l258">258</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
-          <div class="takenBranch">&check; Branch 2 taken 30 times.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 30 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">106</td>
@@ -2350,11 +2346,11 @@
       <td class="lineno"><a id="l262" href="#l262">262</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
-          <div class="takenBranch">&check; Branch 3 taken 28 times.</div>
-        </div>
+          <summary class="linebranchSummary">2/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 28 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">58</td>
@@ -2364,11 +2360,11 @@
       <td class="lineno"><a id="l263" href="#l263">263</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">4</td>
@@ -2399,11 +2395,11 @@
       <td class="lineno"><a id="l267" href="#l267">267</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 9 times.</div>
-          <div class="takenBranch">&check; Branch 3 taken 19 times.</div>
-        </div>
+          <summary class="linebranchSummary">2/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 9 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 19 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">54</td>
@@ -2413,11 +2409,11 @@
       <td class="lineno"><a id="l268" href="#l268">268</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 9 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 9 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">16</td>
@@ -2448,11 +2444,11 @@
       <td class="lineno"><a id="l272" href="#l272">272</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 14 times.</div>
-          <div class="takenBranch">&check; Branch 3 taken 5 times.</div>
-        </div>
+          <summary class="linebranchSummary">2/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 14 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 5 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">38</td>
@@ -2462,11 +2458,11 @@
       <td class="lineno"><a id="l273" href="#l273">273</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 14 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 14 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">28</td>
@@ -2511,11 +2507,11 @@
       <td class="lineno"><a id="l279" href="#l279">279</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 5 times.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 5 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">10</td>
@@ -2525,11 +2521,11 @@
       <td class="lineno"><a id="l280" href="#l280">280</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 5 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 5 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">10</td>
@@ -2539,25 +2535,25 @@
       <td class="lineno"><a id="l281" href="#l281">281</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/16</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
-          <div class="takenBranch">&check; Branch 1 taken 5 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/16</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
+            <div class="takenBranch">&check; Branch 1 taken 5 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">10</td>
@@ -2567,11 +2563,11 @@
       <td class="lineno"><a id="l282" href="#l282">282</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 5 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 5 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">10</td>
@@ -2581,25 +2577,25 @@
       <td class="lineno"><a id="l283" href="#l283">283</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/16</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
-          <div class="takenBranch">&check; Branch 1 taken 5 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/16</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
+            <div class="takenBranch">&check; Branch 1 taken 5 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">10</td>
@@ -2721,11 +2717,11 @@
       <td class="lineno"><a id="l300" href="#l300">300</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
-          <div class="takenBranch">&check; Branch 2 taken 30 times.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 30 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">58</td>
@@ -2742,11 +2738,11 @@
       <td class="lineno"><a id="l302" href="#l302">302</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 30 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 30 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">58</td>
@@ -2875,9 +2871,8 @@
 </div>
       <hr/>
     </main>
-
     <footer>
-      Generated by: <a href="http://gcovr.com/en/7.2">GCOVR (Version 7.2)</a>
+      Generated by: <a href="http://gcovr.com/en/8.2">GCOVR (Version 8.2)</a>
     </footer>
   </body>
 </html>

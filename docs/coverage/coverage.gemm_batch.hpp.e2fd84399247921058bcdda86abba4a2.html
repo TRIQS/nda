@@ -9,11 +9,10 @@
   </head>
 
   <body>
+
     <header>
       <h1>GCC Code Coverage Report</h1>
-
       <hr/>
-
       <div class="summary">
 <div>
   <table class="legend">
@@ -23,11 +22,11 @@
     </tr>
     <tr>
       <th scope="row">File:</th>
-      <td>nda/blas/gemm_batch.hpp</td>
+      <td>blas/gemm_batch.hpp</td>
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2024-09-30 21:45:34</td>
+      <td>2024-11-04 16:20:40</td>
     </tr>
   </table>
 </div>
@@ -60,10 +59,8 @@
   </table>
 </div>
       </div>
-
       <hr/>
     </header>
-
     <nav>
 <details>
   <summary>List of functions</summary>
@@ -73,27 +70,26 @@
       <th>Call count</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;false, nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time, returned 1 time</td><td>60.0%</td></tr>
-    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;false, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time, returned 1 time</td><td>51.0%</td></tr>
-    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;false, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time, returned 1 time</td><td>60.0%</td></tr>
-    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;false, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time, returned 1 time</td><td>51.0%</td></tr>
-    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;false, nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array_view&lt;double, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;double, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time, returned 1 time</td><td>51.0%</td></tr>
-    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;false, nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time, returned 1 time</td><td>51.0%</td></tr>
-    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;true, nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time, returned 1 time</td><td>60.0%</td></tr>
-    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;true, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time, returned 1 time</td><td>59.0%</td></tr>
-    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;true, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time, returned 1 time</td><td>60.0%</td></tr>
-    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;true, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time, returned 1 time</td><td>59.0%</td></tr>
-    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;true, nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array_view&lt;double, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;double, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time, returned 1 time</td><td>59.0%</td></tr>
-    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;true, nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time, returned 1 time</td><td>59.0%</td></tr>
-    <tr><td><a href="#l199">void nda::blas::gemm_vbatch&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 199)</a></td><td>called 1 time, returned 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l199">void nda::blas::gemm_vbatch&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 199)</a></td><td>called 1 time, returned 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l199">void nda::blas::gemm_vbatch&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 199)</a></td><td>called 1 time, returned 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l199">void nda::blas::gemm_vbatch&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 199)</a></td><td>called 1 time, returned 1 time</td><td>100.0%</td></tr>
+    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;false, nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time</td><td>60.0%</td></tr>
+    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;false, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time</td><td>51.0%</td></tr>
+    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;false, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time</td><td>60.0%</td></tr>
+    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;false, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time</td><td>51.0%</td></tr>
+    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;false, nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array_view&lt;double, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;double, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time</td><td>51.0%</td></tr>
+    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;false, nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time</td><td>51.0%</td></tr>
+    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;true, nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time</td><td>60.0%</td></tr>
+    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;true, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time</td><td>59.0%</td></tr>
+    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;true, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time</td><td>60.0%</td></tr>
+    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;true, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time</td><td>59.0%</td></tr>
+    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;true, nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array_view&lt;double, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;double, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time</td><td>59.0%</td></tr>
+    <tr><td><a href="#l69">void nda::blas::gemm_batch&lt;true, nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::allocator&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;&amp;) (line 69)</a></td><td>called 1 time</td><td>59.0%</td></tr>
+    <tr><td><a href="#l199">void nda::blas::gemm_vbatch&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 199)</a></td><td>called 1 time</td><td>100.0%</td></tr>
+    <tr><td><a href="#l199">void nda::blas::gemm_vbatch&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 199)</a></td><td>called 1 time</td><td>100.0%</td></tr>
+    <tr><td><a href="#l199">void nda::blas::gemm_vbatch&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 199)</a></td><td>called 1 time</td><td>100.0%</td></tr>
+    <tr><td><a href="#l199">void nda::blas::gemm_vbatch&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, std::vector&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, std::allocator&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt; &gt;&amp;) (line 199)</a></td><td>called 1 time</td><td>100.0%</td></tr>
   </table>
 </details>
 
     </nav>
-
     <main>
 <div class="file-source">
   <table>
@@ -597,29 +593,29 @@
       <td class="lineno"><a id="l71" href="#l71">71</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">3/20</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 12 times.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="takenBranch">&check; Branch 7 taken 12 times.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="takenBranch">&check; Branch 9 taken 12 times.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 26 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 27 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 29 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 30 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">3/20</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 12 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 12 times.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="takenBranch">&check; Branch 9 taken 12 times.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 26 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 27 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 29 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 30 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">24</td>
@@ -629,11 +625,11 @@
       <td class="lineno"><a id="l72" href="#l72">72</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
-          <div class="takenBranch">&check; Branch 2 taken 12 times.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 12 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">24</td>
@@ -804,25 +800,25 @@
       <td class="lineno"><a id="l96" href="#l96">96</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">8/16</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-          <div class="takenBranch">&check; Branch 6 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
-          <div class="takenBranch">&check; Branch 10 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="takenBranch">&check; Branch 14 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="takenBranch">&check; Branch 18 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 19 not taken.</div>
-          <div class="takenBranch">&check; Branch 22 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
-          <div class="takenBranch">&check; Branch 26 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 27 not taken.</div>
-          <div class="takenBranch">&check; Branch 30 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 31 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">8/16</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="takenBranch">&check; Branch 6 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="takenBranch">&check; Branch 10 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="takenBranch">&check; Branch 14 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="takenBranch">&check; Branch 18 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 19 not taken.</div>
+            <div class="takenBranch">&check; Branch 22 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="takenBranch">&check; Branch 26 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 27 not taken.</div>
+            <div class="takenBranch">&check; Branch 30 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 31 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">12</td>
@@ -832,41 +828,41 @@
       <td class="lineno"><a id="l97" href="#l97">97</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">16/32</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 6 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
-          <div class="takenBranch">&check; Branch 9 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
-          <div class="takenBranch">&check; Branch 14 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="takenBranch">&check; Branch 17 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="takenBranch">&check; Branch 22 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
-          <div class="takenBranch">&check; Branch 25 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 26 not taken.</div>
-          <div class="takenBranch">&check; Branch 30 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 31 not taken.</div>
-          <div class="takenBranch">&check; Branch 33 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 34 not taken.</div>
-          <div class="takenBranch">&check; Branch 38 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 39 not taken.</div>
-          <div class="takenBranch">&check; Branch 41 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 42 not taken.</div>
-          <div class="takenBranch">&check; Branch 46 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 47 not taken.</div>
-          <div class="takenBranch">&check; Branch 49 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 50 not taken.</div>
-          <div class="takenBranch">&check; Branch 54 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 55 not taken.</div>
-          <div class="takenBranch">&check; Branch 57 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 58 not taken.</div>
-          <div class="takenBranch">&check; Branch 62 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 63 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">16/32</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 6 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="takenBranch">&check; Branch 9 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="takenBranch">&check; Branch 14 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="takenBranch">&check; Branch 17 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="takenBranch">&check; Branch 22 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="takenBranch">&check; Branch 25 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 26 not taken.</div>
+            <div class="takenBranch">&check; Branch 30 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 31 not taken.</div>
+            <div class="takenBranch">&check; Branch 33 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 34 not taken.</div>
+            <div class="takenBranch">&check; Branch 38 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 39 not taken.</div>
+            <div class="takenBranch">&check; Branch 41 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 42 not taken.</div>
+            <div class="takenBranch">&check; Branch 46 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 47 not taken.</div>
+            <div class="takenBranch">&check; Branch 49 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 50 not taken.</div>
+            <div class="takenBranch">&check; Branch 54 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 55 not taken.</div>
+            <div class="takenBranch">&check; Branch 57 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 58 not taken.</div>
+            <div class="takenBranch">&check; Branch 62 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 63 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">132</td>
@@ -890,11 +886,11 @@
       <td class="lineno"><a id="l100" href="#l100">100</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 4 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">8</td>
@@ -904,15 +900,15 @@
       <td class="lineno"><a id="l101" href="#l101">101</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">3/6</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 4 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 4 taken 4 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          <div class="takenBranch">&check; Branch 7 taken 4 times.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">3/6</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 4 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">8</td>
@@ -971,41 +967,41 @@
       <td class="lineno"><a id="l109" href="#l109">109</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">16/32</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-          <div class="takenBranch">&check; Branch 4 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
-          <div class="takenBranch">&check; Branch 17 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 29 not taken.</div>
-          <div class="takenBranch">&check; Branch 30 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 42 not taken.</div>
-          <div class="takenBranch">&check; Branch 43 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 55 not taken.</div>
-          <div class="takenBranch">&check; Branch 56 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 68 not taken.</div>
-          <div class="takenBranch">&check; Branch 69 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 81 not taken.</div>
-          <div class="takenBranch">&check; Branch 82 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 94 not taken.</div>
-          <div class="takenBranch">&check; Branch 95 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 107 not taken.</div>
-          <div class="takenBranch">&check; Branch 108 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 120 not taken.</div>
-          <div class="takenBranch">&check; Branch 121 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 133 not taken.</div>
-          <div class="takenBranch">&check; Branch 134 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 146 not taken.</div>
-          <div class="takenBranch">&check; Branch 147 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 159 not taken.</div>
-          <div class="takenBranch">&check; Branch 160 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 172 not taken.</div>
-          <div class="takenBranch">&check; Branch 173 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 185 not taken.</div>
-          <div class="takenBranch">&check; Branch 186 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 198 not taken.</div>
-          <div class="takenBranch">&check; Branch 199 taken 2 times.</div>
-        </div>
+          <summary class="linebranchSummary">16/32</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="takenBranch">&check; Branch 4 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
+            <div class="takenBranch">&check; Branch 17 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 29 not taken.</div>
+            <div class="takenBranch">&check; Branch 30 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 42 not taken.</div>
+            <div class="takenBranch">&check; Branch 43 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 55 not taken.</div>
+            <div class="takenBranch">&check; Branch 56 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 68 not taken.</div>
+            <div class="takenBranch">&check; Branch 69 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 81 not taken.</div>
+            <div class="takenBranch">&check; Branch 82 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 94 not taken.</div>
+            <div class="takenBranch">&check; Branch 95 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 107 not taken.</div>
+            <div class="takenBranch">&check; Branch 108 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 120 not taken.</div>
+            <div class="takenBranch">&check; Branch 121 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 133 not taken.</div>
+            <div class="takenBranch">&check; Branch 134 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 146 not taken.</div>
+            <div class="takenBranch">&check; Branch 147 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 159 not taken.</div>
+            <div class="takenBranch">&check; Branch 160 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 172 not taken.</div>
+            <div class="takenBranch">&check; Branch 173 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 185 not taken.</div>
+            <div class="takenBranch">&check; Branch 186 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 198 not taken.</div>
+            <div class="takenBranch">&check; Branch 199 taken 2 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">264</td>
@@ -1043,25 +1039,25 @@
       <td class="lineno"><a id="l114" href="#l114">114</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">8/16</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 36 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 37 not taken.</div>
-          <div class="takenBranch">&check; Branch 42 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 43 not taken.</div>
-          <div class="takenBranch">&check; Branch 48 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 49 not taken.</div>
-          <div class="takenBranch">&check; Branch 54 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 55 not taken.</div>
-          <div class="takenBranch">&check; Branch 60 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 61 not taken.</div>
-          <div class="takenBranch">&check; Branch 66 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 67 not taken.</div>
-          <div class="takenBranch">&check; Branch 72 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 73 not taken.</div>
-          <div class="takenBranch">&check; Branch 78 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 79 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">8/16</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 36 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 37 not taken.</div>
+            <div class="takenBranch">&check; Branch 42 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 43 not taken.</div>
+            <div class="takenBranch">&check; Branch 48 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 49 not taken.</div>
+            <div class="takenBranch">&check; Branch 54 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 55 not taken.</div>
+            <div class="takenBranch">&check; Branch 60 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 61 not taken.</div>
+            <div class="takenBranch">&check; Branch 66 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 67 not taken.</div>
+            <div class="takenBranch">&check; Branch 72 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 73 not taken.</div>
+            <div class="takenBranch">&check; Branch 78 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 79 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">264</td>
@@ -1085,11 +1081,11 @@
       <td class="lineno"><a id="l117" href="#l117">117</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 8 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 8 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">16</td>
@@ -1099,11 +1095,11 @@
       <td class="lineno"><a id="l118" href="#l118">118</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 8 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 8 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">16</td>
@@ -1113,11 +1109,11 @@
       <td class="lineno"><a id="l119" href="#l119">119</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 8 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 8 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">16</td>
@@ -1197,17 +1193,17 @@
       <td class="lineno"><a id="l130" href="#l130">130</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">4/8</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 4 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 4 taken 4 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          <div class="takenBranch">&check; Branch 7 taken 4 times.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="takenBranch">&check; Branch 10 taken 4 times.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">4/8</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 4 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="takenBranch">&check; Branch 10 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">8</td>
@@ -1217,13 +1213,13 @@
       <td class="lineno"><a id="l131" href="#l131">131</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/4</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 4 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 4 taken 4 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">2/4</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 4 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">8</td>
@@ -1240,13 +1236,13 @@
       <td class="lineno"><a id="l133" href="#l133">133</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">3/4</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 4 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 7 taken 40 times.</div>
-          <div class="takenBranch">&check; Branch 8 taken 4 times.</div>
-        </div>
+          <summary class="linebranchSummary">3/4</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 40 times.</div>
+            <div class="takenBranch">&check; Branch 8 taken 4 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">88</td>
@@ -1284,25 +1280,25 @@
       <td class="lineno"><a id="l138" href="#l138">138</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/16</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 3 taken 40 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/16</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 40 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">80</td>
@@ -1312,25 +1308,25 @@
       <td class="lineno"><a id="l139" href="#l139">139</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/16</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 3 taken 40 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/16</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 40 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">80</td>
@@ -1340,25 +1336,25 @@
       <td class="lineno"><a id="l140" href="#l140">140</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/16</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 3 taken 40 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/16</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 40 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">80</td>
@@ -1375,11 +1371,11 @@
       <td class="lineno"><a id="l142" href="#l142">142</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 40 times.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 40 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">80</td>
@@ -1389,11 +1385,11 @@
       <td class="lineno"><a id="l143" href="#l143">143</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 40 times.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 40 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">80</td>
@@ -1403,11 +1399,11 @@
       <td class="lineno"><a id="l144" href="#l144">144</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 40 times.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 40 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">80</td>
@@ -1424,11 +1420,11 @@
       <td class="lineno"><a id="l146" href="#l146">146</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 40 times.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 40 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">80</td>
@@ -1438,11 +1434,11 @@
       <td class="lineno"><a id="l147" href="#l147">147</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 40 times.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 40 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">80</td>
@@ -1452,11 +1448,11 @@
       <td class="lineno"><a id="l148" href="#l148">148</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 40 times.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 40 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">80</td>
@@ -1536,11 +1532,11 @@
       <td class="lineno"><a id="l159" href="#l159">159</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 10 taken 4 times.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 10 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">8</td>
@@ -1578,25 +1574,25 @@
       <td class="lineno"><a id="l164" href="#l164">164</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/16</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/16</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">8</td>
@@ -1606,25 +1602,25 @@
       <td class="lineno"><a id="l165" href="#l165">165</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/16</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/16</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">8</td>
@@ -1634,25 +1630,25 @@
       <td class="lineno"><a id="l166" href="#l166">166</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/16</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/16</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">8</td>
@@ -1746,11 +1742,11 @@
       <td class="lineno"><a id="l179" href="#l179">179</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 7 taken 4 times.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 7 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">8</td>
@@ -2481,9 +2477,8 @@
 </div>
       <hr/>
     </main>
-
     <footer>
-      Generated by: <a href="http://gcovr.com/en/7.2">GCOVR (Version 7.2)</a>
+      Generated by: <a href="http://gcovr.com/en/8.2">GCOVR (Version 8.2)</a>
     </footer>
   </body>
 </html>

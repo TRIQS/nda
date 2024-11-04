@@ -9,11 +9,10 @@
   </head>
 
   <body>
+
     <header>
       <h1>GCC Code Coverage Report</h1>
-
       <hr/>
-
       <div class="summary">
 <div>
   <table class="legend">
@@ -23,11 +22,11 @@
     </tr>
     <tr>
       <th scope="row">File:</th>
-      <td>nda/blas/dot.hpp</td>
+      <td>blas/dot.hpp</td>
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2024-09-30 21:45:34</td>
+      <td>2024-11-04 16:20:40</td>
     </tr>
   </table>
 </div>
@@ -60,10 +59,8 @@
   </table>
 </div>
       </div>
-
       <hr/>
     </header>
-
     <nav>
 <details>
   <summary>List of functions</summary>
@@ -73,24 +70,23 @@
       <th>Call count</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l134">auto nda::blas::detail::_dot_impl&lt;false, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 134)</a></td><td>called 1 time, returned 1 time</td><td>69.0%</td></tr>
-    <tr><td><a href="#l134">auto nda::blas::detail::_dot_impl&lt;false, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 134)</a></td><td>called 1 time, returned 1 time</td><td>64.0%</td></tr>
-    <tr><td><a href="#l134">auto nda::blas::detail::_dot_impl&lt;true, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 134)</a></td><td>called 1 time, returned 1 time</td><td>69.0%</td></tr>
-    <tr><td><a href="#l134">auto nda::blas::detail::_dot_impl&lt;true, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 134)</a></td><td>called 1 time, returned 1 time</td><td>64.0%</td></tr>
-    <tr><td><a href="#l61">auto nda::blas::dot&lt;nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 61)</a></td><td>called 14 times, returned 14 times</td><td>67.0%</td></tr>
-    <tr><td><a href="#l61">auto nda::blas::dot&lt;nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 61)</a></td><td>called 2 times, returned 2 times</td><td>67.0%</td></tr>
-    <tr><td><a href="#l61">auto nda::blas::dot&lt;nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 61)</a></td><td>called 4 times, returned 4 times</td><td>67.0%</td></tr>
-    <tr><td><a href="#l61">auto nda::blas::dot&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 61)</a></td><td>called 1 time, returned 1 time</td><td>65.0%</td></tr>
-    <tr><td><a href="#l61">auto nda::blas::dot&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 61)</a></td><td>called 1 time, returned 1 time</td><td>65.0%</td></tr>
-    <tr><td><a href="#l176">auto nda::blas::dot_generic&lt;nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 176)</a></td><td>called 1 time, returned 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l176">auto nda::blas::dot_generic&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 176)</a></td><td>called 1 time, returned 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l103">auto nda::blas::dotc&lt;nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 103)</a></td><td>called 1 time, returned 1 time</td><td>47.0%</td></tr>
-    <tr><td><a href="#l103">auto nda::blas::dotc&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 103)</a></td><td>called 1 time, returned 1 time</td><td>65.0%</td></tr>
+    <tr><td><a href="#l134">auto nda::blas::detail::_dot_impl&lt;false, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 134)</a></td><td>called 1 time</td><td>69.0%</td></tr>
+    <tr><td><a href="#l134">auto nda::blas::detail::_dot_impl&lt;false, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 134)</a></td><td>called 1 time</td><td>64.0%</td></tr>
+    <tr><td><a href="#l134">auto nda::blas::detail::_dot_impl&lt;true, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 134)</a></td><td>called 1 time</td><td>69.0%</td></tr>
+    <tr><td><a href="#l134">auto nda::blas::detail::_dot_impl&lt;true, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 134)</a></td><td>called 1 time</td><td>64.0%</td></tr>
+    <tr><td><a href="#l61">auto nda::blas::dot&lt;nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 61)</a></td><td>called 14 times</td><td>67.0%</td></tr>
+    <tr><td><a href="#l61">auto nda::blas::dot&lt;nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 61)</a></td><td>called 2 times</td><td>67.0%</td></tr>
+    <tr><td><a href="#l61">auto nda::blas::dot&lt;nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 61)</a></td><td>called 4 times</td><td>67.0%</td></tr>
+    <tr><td><a href="#l61">auto nda::blas::dot&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 61)</a></td><td>called 1 time</td><td>65.0%</td></tr>
+    <tr><td><a href="#l61">auto nda::blas::dot&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 61)</a></td><td>called 1 time</td><td>65.0%</td></tr>
+    <tr><td><a href="#l176">auto nda::blas::dot_generic&lt;nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 176)</a></td><td>called 1 time</td><td>100.0%</td></tr>
+    <tr><td><a href="#l176">auto nda::blas::dot_generic&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 176)</a></td><td>called 1 time</td><td>100.0%</td></tr>
+    <tr><td><a href="#l103">auto nda::blas::dotc&lt;nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 103)</a></td><td>called 1 time</td><td>47.0%</td></tr>
+    <tr><td><a href="#l103">auto nda::blas::dotc&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (line 103)</a></td><td>called 1 time</td><td>65.0%</td></tr>
   </table>
 </details>
 
     </nav>
-
     <main>
 <div class="file-source">
   <table>
@@ -594,11 +590,11 @@
       <td class="lineno"><a id="l71" href="#l71">71</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-          <div class="takenBranch">&check; Branch 4 taken 22 times.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="takenBranch">&check; Branch 4 taken 22 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">43</td>
@@ -895,11 +891,11 @@
       <td class="lineno"><a id="l113" href="#l113">113</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-          <div class="takenBranch">&check; Branch 4 taken 2 times.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="takenBranch">&check; Branch 4 taken 2 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">26</td>
@@ -1056,27 +1052,27 @@
       <td class="lineno"><a id="l135" href="#l135">135</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/18</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
-          <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          <div class="takenBranch">&check; Branch 6 taken 4 times.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 26 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 27 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">2/18</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="takenBranch">&check; Branch 6 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 26 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 27 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">8</td>
@@ -1177,11 +1173,11 @@
       <td class="lineno"><a id="l149" href="#l149">149</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">8</td>
@@ -1191,16 +1187,16 @@
       <td class="lineno"><a id="l150" href="#l150">150</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">6/7</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 0 taken 8 times.</div>
-          <div class="takenBranch">&check; Branch 1 taken 6 times.</div>
-          <div class="takenBranch">&check; Branch 2 taken 4 times.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-          <div class="takenBranch">&check; Branch 4 taken 4 times.</div>
-          <div class="takenBranch">&check; Branch 5 taken 5 times.</div>
-          <div class="takenBranch">&check; Branch 6 taken 1 times.</div>
-        </div>
+          <summary class="linebranchSummary">6/7</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 0 taken 8 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 6 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="takenBranch">&check; Branch 4 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 5 taken 5 times.</div>
+            <div class="takenBranch">&check; Branch 6 taken 1 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">40</td>
@@ -1595,9 +1591,8 @@
 </div>
       <hr/>
     </main>
-
     <footer>
-      Generated by: <a href="http://gcovr.com/en/7.2">GCOVR (Version 7.2)</a>
+      Generated by: <a href="http://gcovr.com/en/8.2">GCOVR (Version 8.2)</a>
     </footer>
   </body>
 </html>

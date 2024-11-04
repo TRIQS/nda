@@ -9,11 +9,10 @@
   </head>
 
   <body>
+
     <header>
       <h1>GCC Code Coverage Report</h1>
-
       <hr/>
-
       <div class="summary">
 <div>
   <table class="legend">
@@ -23,11 +22,11 @@
     </tr>
     <tr>
       <th scope="row">File:</th>
-      <td>nda/blas/gemv.hpp</td>
+      <td>blas/gemv.hpp</td>
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2024-09-30 21:45:34</td>
+      <td>2024-11-04 16:20:40</td>
     </tr>
   </table>
 </div>
@@ -60,10 +59,8 @@
   </table>
 </div>
       </div>
-
       <hr/>
     </header>
-
     <nav>
 <details>
   <summary>List of functions</summary>
@@ -73,29 +70,28 @@
       <th>Call count</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l91">decltype(auto) nda::blas::gemv&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;)::{lambda&lt;typename $T0&gt;($T0 const&amp;)#1}::operator()&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) const (line 91)</a></td><td>called 6 times, returned 6 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 89)</a></td><td>called 16 times, returned 16 times</td><td>45.0%</td></tr>
-    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 89)</a></td><td>called 8 times, returned 8 times</td><td>44.0%</td></tr>
-    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 89)</a></td><td>called 5 times, returned 5 times</td><td>45.0%</td></tr>
-    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 89)</a></td><td>called 2 times, returned 2 times</td><td>44.0%</td></tr>
-    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 89)</a></td><td>called 4 times, returned 4 times</td><td>45.0%</td></tr>
-    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;&amp;&amp;) (line 89)</a></td><td>called 2 times, returned 2 times</td><td>45.0%</td></tr>
-    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 89)</a></td><td>called 1 time, returned 1 time</td><td>44.0%</td></tr>
-    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;&amp;&amp;) (line 89)</a></td><td>called 2 times, returned 2 times</td><td>44.0%</td></tr>
-    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 89)</a></td><td>called 1 time, returned 1 time</td><td>45.0%</td></tr>
-    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;&amp;&amp;) (line 89)</a></td><td>called 2 times, returned 2 times</td><td>45.0%</td></tr>
-    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 89)</a></td><td>called 1 time, returned 1 time</td><td>44.0%</td></tr>
-    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;&amp;&amp;) (line 89)</a></td><td>called 2 times, returned 2 times</td><td>44.0%</td></tr>
-    <tr><td><a href="#l57">void nda::blas::gemv_generic&lt;nda::basic_array&lt;int, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;int, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;int, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;int, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;int, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;int, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;int, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;int, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 57)</a></td><td>called 1 time, returned 1 time</td><td>65.0%</td></tr>
-    <tr><td><a href="#l57">void nda::blas::gemv_generic&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;&amp;&amp;) (line 57)</a></td><td>called 2 times, returned 2 times</td><td>63.0%</td></tr>
-    <tr><td><a href="#l57">void nda::blas::gemv_generic&lt;nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;&amp;&amp;) (line 57)</a></td><td>called 2 times, returned 2 times</td><td>63.0%</td></tr>
-    <tr><td><a href="#l57">void nda::blas::gemv_generic&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;&amp;&amp;) (line 57)</a></td><td>called 2 times, returned 2 times</td><td>63.0%</td></tr>
-    <tr><td><a href="#l57">void nda::blas::gemv_generic&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;&amp;&amp;) (line 57)</a></td><td>called 2 times, returned 2 times</td><td>63.0%</td></tr>
+    <tr><td><a href="#l91">decltype(auto) nda::blas::gemv&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;)::{lambda&lt;typename $T0&gt;($T0 const&amp;)#1}::operator()&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) const (line 91)</a></td><td>called 6 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 89)</a></td><td>called 16 times</td><td>45.0%</td></tr>
+    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 89)</a></td><td>called 8 times</td><td>44.0%</td></tr>
+    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 89)</a></td><td>called 5 times</td><td>45.0%</td></tr>
+    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 89)</a></td><td>called 2 times</td><td>44.0%</td></tr>
+    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 89)</a></td><td>called 4 times</td><td>45.0%</td></tr>
+    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;&amp;&amp;) (line 89)</a></td><td>called 2 times</td><td>45.0%</td></tr>
+    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 89)</a></td><td>called 1 time</td><td>44.0%</td></tr>
+    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;&amp;&amp;) (line 89)</a></td><td>called 2 times</td><td>44.0%</td></tr>
+    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 89)</a></td><td>called 1 time</td><td>45.0%</td></tr>
+    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;&amp;&amp;) (line 89)</a></td><td>called 2 times</td><td>45.0%</td></tr>
+    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 89)</a></td><td>called 1 time</td><td>44.0%</td></tr>
+    <tr><td><a href="#l89">void nda::blas::gemv&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;&amp;&amp;) (line 89)</a></td><td>called 2 times</td><td>44.0%</td></tr>
+    <tr><td><a href="#l57">void nda::blas::gemv_generic&lt;nda::basic_array&lt;int, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;int, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;int, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;int, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;int, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;int, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array&lt;int, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&gt;)()))&gt;::type, nda::basic_array&lt;int, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) (line 57)</a></td><td>called 1 time</td><td>65.0%</td></tr>
+    <tr><td><a href="#l57">void nda::blas::gemv_generic&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;&amp;&amp;) (line 57)</a></td><td>called 2 times</td><td>63.0%</td></tr>
+    <tr><td><a href="#l57">void nda::blas::gemv_generic&lt;nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;double, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;double, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;&amp;&amp;) (line 57)</a></td><td>called 2 times</td><td>63.0%</td></tr>
+    <tr><td><a href="#l57">void nda::blas::gemv_generic&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;&amp;&amp;) (line 57)</a></td><td>called 2 times</td><td>63.0%</td></tr>
+    <tr><td><a href="#l57">void nda::blas::gemv_generic&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::decay&lt;decltype (get_first_element((declval&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::F_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&gt;)()))&gt;::type, nda::basic_array_view&lt;std::complex&lt;double&gt;, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;&amp;&amp;) (line 57)</a></td><td>called 2 times</td><td>63.0%</td></tr>
   </table>
 </details>
 
     </nav>
-
     <main>
 <div class="file-source">
   <table>
@@ -508,11 +504,11 @@
       <td class="lineno"><a id="l58" href="#l58">58</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 3 taken 9 times.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 9 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">17</td>
@@ -522,11 +518,11 @@
       <td class="lineno"><a id="l59" href="#l59">59</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 3 taken 9 times.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 9 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">17</td>
@@ -536,11 +532,11 @@
       <td class="lineno"><a id="l60" href="#l60">60</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 18 times.</div>
-          <div class="takenBranch">&check; Branch 2 taken 9 times.</div>
-        </div>
+          <summary class="linebranchSummary">2/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 18 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 9 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">51</td>
@@ -550,11 +546,11 @@
       <td class="lineno"><a id="l61" href="#l61">61</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 8 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 8 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">34</td>
@@ -564,16 +560,16 @@
       <td class="lineno"><a id="l62" href="#l62">62</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">6/7</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 16 times.</div>
-          <div class="takenBranch">&check; Branch 3 taken 20 times.</div>
-          <div class="takenBranch">&check; Branch 4 taken 10 times.</div>
-          <div class="takenBranch">&check; Branch 5 taken 16 times.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="takenBranch">&check; Branch 9 taken 16 times.</div>
-          <div class="takenBranch">&check; Branch 10 taken 8 times.</div>
-        </div>
+          <summary class="linebranchSummary">6/7</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 16 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 20 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 10 times.</div>
+            <div class="takenBranch">&check; Branch 5 taken 16 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 9 taken 16 times.</div>
+            <div class="takenBranch">&check; Branch 10 taken 8 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">238</td>
@@ -870,25 +866,25 @@
       <td class="lineno"><a id="l104" href="#l104">104</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/16</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 3 taken 46 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/16</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 46 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">86</td>
@@ -898,25 +894,25 @@
       <td class="lineno"><a id="l105" href="#l105">105</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/16</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 3 taken 46 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/16</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 46 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">86</td>
@@ -926,25 +922,25 @@
       <td class="lineno"><a id="l106" href="#l106">106</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/16</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 3 taken 46 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/16</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 46 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">86</td>
@@ -954,25 +950,25 @@
       <td class="lineno"><a id="l107" href="#l107">107</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/16</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 3 taken 46 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/16</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 46 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">86</td>
@@ -982,25 +978,25 @@
       <td class="lineno"><a id="l108" href="#l108">108</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/16</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 3 taken 46 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/16</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 46 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">86</td>
@@ -1108,11 +1104,11 @@
       <td class="lineno"><a id="l123" href="#l123">123</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 11 taken 46 times.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 11 taken 46 times.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">86</td>
@@ -1171,9 +1167,8 @@
 </div>
       <hr/>
     </main>
-
     <footer>
-      Generated by: <a href="http://gcovr.com/en/7.2">GCOVR (Version 7.2)</a>
+      Generated by: <a href="http://gcovr.com/en/8.2">GCOVR (Version 8.2)</a>
     </footer>
   </body>
 </html>

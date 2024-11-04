@@ -9,11 +9,10 @@
   </head>
 
   <body>
+
     <header>
       <h1>GCC Code Coverage Report</h1>
-
       <hr/>
-
       <div class="summary">
 <div>
   <table class="legend">
@@ -23,11 +22,11 @@
     </tr>
     <tr>
       <th scope="row">File:</th>
-      <td>nda/blas/interface/cxx_interface.cpp</td>
+      <td>blas/interface/cxx_interface.cpp</td>
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2024-09-30 21:45:34</td>
+      <td>2024-11-04 16:20:40</td>
     </tr>
   </table>
 </div>
@@ -60,10 +59,8 @@
   </table>
 </div>
       </div>
-
       <hr/>
     </header>
-
     <nav>
 <details>
   <summary>List of functions</summary>
@@ -75,34 +72,33 @@
     </tr>
     <tr><td><a href="#l75">nda::blas::f77::axpy(int, double, double const*, int, double*, int) (line 75)</a></td><td>not called</td><td>0.0%</td></tr>
     <tr><td><a href="#l76">nda::blas::f77::axpy(int, std::complex&lt;double&gt;, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt;*, int) (line 76)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l71">nda::blas::f77::blacplx(std::complex&lt;double&gt; const*) (line 71)</a></td><td>called 292 times, returned 292 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l70">nda::blas::f77::blacplx(std::complex&lt;double&gt;*) (line 70)</a></td><td>called 405 times, returned 405 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l71">nda::blas::f77::blacplx(std::complex&lt;double&gt; const*) (line 71)</a></td><td>called 292 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l70">nda::blas::f77::blacplx(std::complex&lt;double&gt;*) (line 70)</a></td><td>called 405 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l81">nda::blas::f77::copy(int, double const*, int, double*, int) (line 81)</a></td><td>not called</td><td>0.0%</td></tr>
     <tr><td><a href="#l82">nda::blas::f77::copy(int, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt;*, int) (line 82)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l84">nda::blas::f77::dot(int, double const*, int, double const*, int) (line 84)</a></td><td>called 20 times, returned 20 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l85">nda::blas::f77::dot(int, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt; const*, int) (line 85)</a></td><td>called 2 times, returned 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l94">nda::blas::f77::dotc(int, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt; const*, int) (line 94)</a></td><td>called 9 times, returned 9 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l104">nda::blas::f77::gemm(char, char, int, int, int, double, double const*, int, double const*, int, double, double*, int) (line 104)</a></td><td>called 133 times, returned 133 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l108">nda::blas::f77::gemm(char, char, int, int, int, std::complex&lt;double&gt;, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt;, std::complex&lt;double&gt;*, int) (line 108)</a></td><td>called 120 times, returned 120 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l113">nda::blas::f77::gemm_batch(char, char, int, int, int, double, double const**, int, double const**, int, double, double**, int, int) (line 113)</a></td><td>called 2 times, returned 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l122">nda::blas::f77::gemm_batch(char, char, int, int, int, std::complex&lt;double&gt;, std::complex&lt;double&gt; const**, int, std::complex&lt;double&gt; const**, int, std::complex&lt;double&gt;, std::complex&lt;double&gt;**, int, int) (line 122)</a></td><td>called 2 times, returned 2 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l84">nda::blas::f77::dot(int, double const*, int, double const*, int) (line 84)</a></td><td>called 20 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l85">nda::blas::f77::dot(int, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt; const*, int) (line 85)</a></td><td>called 2 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l94">nda::blas::f77::dotc(int, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt; const*, int) (line 94)</a></td><td>called 9 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l104">nda::blas::f77::gemm(char, char, int, int, int, double, double const*, int, double const*, int, double, double*, int) (line 104)</a></td><td>called 133 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l108">nda::blas::f77::gemm(char, char, int, int, int, std::complex&lt;double&gt;, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt;, std::complex&lt;double&gt;*, int) (line 108)</a></td><td>called 120 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l113">nda::blas::f77::gemm_batch(char, char, int, int, int, double, double const**, int, double const**, int, double, double**, int, int) (line 113)</a></td><td>called 2 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l122">nda::blas::f77::gemm_batch(char, char, int, int, int, std::complex&lt;double&gt;, std::complex&lt;double&gt; const**, int, std::complex&lt;double&gt; const**, int, std::complex&lt;double&gt;, std::complex&lt;double&gt;**, int, int) (line 122)</a></td><td>called 2 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l157">nda::blas::f77::gemm_batch_strided(char, char, int, int, int, double, double const*, int, int, double const*, int, int, double, double*, int, int, int) (line 157)</a></td><td>not called</td><td>0.0%</td></tr>
     <tr><td><a href="#l167">nda::blas::f77::gemm_batch_strided(char, char, int, int, int, std::complex&lt;double&gt;, std::complex&lt;double&gt; const*, int, int, std::complex&lt;double&gt; const*, int, int, std::complex&lt;double&gt;, std::complex&lt;double&gt;*, int, int, int) (line 167)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l133">nda::blas::f77::gemm_vbatch(char, char, int*, int*, int*, double, double const**, int*, double const**, int*, double, double**, int*, int) (line 133)</a></td><td>called 2 times, returned 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l144">nda::blas::f77::gemm_vbatch(char, char, int*, int*, int*, std::complex&lt;double&gt;, std::complex&lt;double&gt; const**, int*, std::complex&lt;double&gt; const**, int*, std::complex&lt;double&gt;, std::complex&lt;double&gt;**, int*, int) (line 144)</a></td><td>called 2 times, returned 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l179">nda::blas::f77::gemv(char, int, int, double, double const*, int, double const*, int, double, double*, int) (line 179)</a></td><td>called 33 times, returned 33 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l182">nda::blas::f77::gemv(char, int, int, std::complex&lt;double&gt;, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt;, std::complex&lt;double&gt;*, int) (line 182)</a></td><td>called 13 times, returned 13 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l186">nda::blas::f77::ger(int, int, double, double const*, int, double const*, int, double*, int) (line 186)</a></td><td>called 3 times, returned 3 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l189">nda::blas::f77::ger(int, int, std::complex&lt;double&gt;, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt;*, int) (line 189)</a></td><td>called 2 times, returned 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l193">nda::blas::f77::scal(int, double, double*, int) (line 193)</a></td><td>called 1 time, returned 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l194">nda::blas::f77::scal(int, std::complex&lt;double&gt;, std::complex&lt;double&gt;*, int) (line 194)</a></td><td>called 1 time, returned 1 time</td><td>100.0%</td></tr>
+    <tr><td><a href="#l133">nda::blas::f77::gemm_vbatch(char, char, int*, int*, int*, double, double const**, int*, double const**, int*, double, double**, int*, int) (line 133)</a></td><td>called 2 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l144">nda::blas::f77::gemm_vbatch(char, char, int*, int*, int*, std::complex&lt;double&gt;, std::complex&lt;double&gt; const**, int*, std::complex&lt;double&gt; const**, int*, std::complex&lt;double&gt;, std::complex&lt;double&gt;**, int*, int) (line 144)</a></td><td>called 2 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l179">nda::blas::f77::gemv(char, int, int, double, double const*, int, double const*, int, double, double*, int) (line 179)</a></td><td>called 33 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l182">nda::blas::f77::gemv(char, int, int, std::complex&lt;double&gt;, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt;, std::complex&lt;double&gt;*, int) (line 182)</a></td><td>called 13 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l186">nda::blas::f77::ger(int, int, double, double const*, int, double const*, int, double*, int) (line 186)</a></td><td>called 3 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l189">nda::blas::f77::ger(int, int, std::complex&lt;double&gt;, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt;*, int) (line 189)</a></td><td>called 2 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l193">nda::blas::f77::scal(int, double, double*, int) (line 193)</a></td><td>called 1 time</td><td>100.0%</td></tr>
+    <tr><td><a href="#l194">nda::blas::f77::scal(int, std::complex&lt;double&gt;, std::complex&lt;double&gt;*, int) (line 194)</a></td><td>called 1 time</td><td>100.0%</td></tr>
     <tr><td><a href="#l196">nda::blas::f77::swap(int, double*, int, double*, int) (line 196)</a></td><td>not called</td><td>0.0%</td></tr>
     <tr><td><a href="#l197">nda::blas::f77::swap(int, std::complex&lt;double&gt;*, int, std::complex&lt;double&gt;*, int) (line 197)</a></td><td>not called</td><td>0.0%</td></tr>
   </table>
 </details>
 
     </nav>
-
     <main>
 <div class="file-source">
   <table>
@@ -739,11 +735,11 @@
       <td class="lineno"><a id="l90" href="#l90">90</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
-          <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">2</td>
@@ -809,11 +805,11 @@
       <td class="lineno"><a id="l99" href="#l99">99</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 3 taken 9 times.</div>
-          <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 3 taken 9 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">9</td>
@@ -956,11 +952,11 @@
       <td class="lineno"><a id="l119" href="#l119">119</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 20 times.</div>
-          <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
-        </div>
+          <summary class="linebranchSummary">2/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 20 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">22</td>
@@ -1033,11 +1029,11 @@
       <td class="lineno"><a id="l129" href="#l129">129</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 20 times.</div>
-          <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
-        </div>
+          <summary class="linebranchSummary">2/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 20 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">22</td>
@@ -1124,11 +1120,11 @@
       <td class="lineno"><a id="l141" href="#l141">141</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 20 times.</div>
-          <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
-        </div>
+          <summary class="linebranchSummary">2/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 20 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">22</td>
@@ -1215,11 +1211,11 @@
       <td class="lineno"><a id="l153" href="#l153">153</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 20 times.</div>
-          <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
-        </div>
+          <summary class="linebranchSummary">2/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 20 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">22</td>
@@ -1572,9 +1568,8 @@
 </div>
       <hr/>
     </main>
-
     <footer>
-      Generated by: <a href="http://gcovr.com/en/7.2">GCOVR (Version 7.2)</a>
+      Generated by: <a href="http://gcovr.com/en/8.2">GCOVR (Version 8.2)</a>
     </footer>
   </body>
 </html>

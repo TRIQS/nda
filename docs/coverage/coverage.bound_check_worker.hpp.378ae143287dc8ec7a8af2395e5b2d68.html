@@ -9,11 +9,10 @@
   </head>
 
   <body>
+
     <header>
       <h1>GCC Code Coverage Report</h1>
-
       <hr/>
-
       <div class="summary">
 <div>
   <table class="legend">
@@ -23,11 +22,11 @@
     </tr>
     <tr>
       <th scope="row">File:</th>
-      <td>nda/layout/bound_check_worker.hpp</td>
+      <td>layout/bound_check_worker.hpp</td>
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2024-09-30 21:45:34</td>
+      <td>2024-11-04 16:20:40</td>
     </tr>
   </table>
 </div>
@@ -60,10 +59,8 @@
   </table>
 </div>
       </div>
-
       <hr/>
     </header>
-
     <nav>
 <details>
   <summary>List of functions</summary>
@@ -73,149 +70,148 @@
       <th>Call count</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l77">nda::detail::bound_check_worker::accumulate_error_msg(std::__cxx11::basic_stringstream&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;&amp;, itertools::range const&amp;) (line 77)</a></td><td>called 6 times, returned 6 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l83">nda::detail::bound_check_worker::accumulate_error_msg(std::__cxx11::basic_stringstream&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;&amp;, itertools::range::all_t) (line 83)</a></td><td>called 7 times, returned 7 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l71">nda::detail::bound_check_worker::accumulate_error_msg(std::__cxx11::basic_stringstream&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;&amp;, long) (line 71)</a></td><td>called 36 times, returned 36 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l86">nda::detail::bound_check_worker::accumulate_error_msg(std::__cxx11::basic_stringstream&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;&amp;, nda::ellipsis) (line 86)</a></td><td>called 2 times, returned 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l55">nda::detail::bound_check_worker::check_current_dim(itertools::range const&amp;) (line 55)</a></td><td>called 138532 times, returned 138532 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l65">nda::detail::bound_check_worker::check_current_dim(itertools::range::all_t) (line 65)</a></td><td>called 3254 times, returned 3254 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l49">nda::detail::bound_check_worker::check_current_dim(long) (line 49)</a></td><td>called 20653124 times, returned 20653124 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l68">nda::detail::bound_check_worker::check_current_dim(nda::ellipsis) (line 68)</a></td><td>called 166 times, returned 166 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, int, int, int, int&gt;(int, long const*, int const&amp;, int const&amp;, int const&amp;, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 2 times, returned 2 times</td><td>31.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, int, int, int&gt;(int, long const*, int const&amp;, int const&amp;, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 1 time, returned 1 time</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, int, int, itertools::range::all_t&gt;(int, long const*, int const&amp;, int const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, int, int, nda::ellipsis&gt;(int, long const*, int const&amp;, int const&amp;, int const&amp;, int const&amp;, nda::ellipsis const&amp;) (line 106)</a></td><td>called 1 time, returned 1 time</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, int, int&gt;(int, long const*, int const&amp;, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 2530 times, returned 2526 times</td><td>74.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, int, itertools::range::all_t, int&gt;(int, long const*, int const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, int, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, int const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, int, itertools::range::all_t, nda::ellipsis&gt;(int, long const*, int const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, nda::ellipsis const&amp;) (line 106)</a></td><td>called 1 time, returned 1 time</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, int, itertools::range::all_t&gt;(int, long const*, int const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 28 times, returned 28 times</td><td>29.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, int&gt;(int, long const*, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 6165 times, returned 6165 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, itertools::range::all_t, int, int&gt;(int, long const*, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, itertools::range::all_t, int, itertools::range::all_t&gt;(int, long const*, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, itertools::range::all_t, int&gt;(int, long const*, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 24 times, returned 24 times</td><td>29.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, itertools::range::all_t, itertools::range::all_t, int&gt;(int, long const*, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, itertools::range::all_t, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 24 times, returned 24 times</td><td>29.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, itertools::range::all_t&gt;(int, long const*, int const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 20 times, returned 20 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, itertools::range&gt;(int, long const*, int const&amp;, int const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 3 times, returned 3 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, long&gt;(int, long const*, int const&amp;, int const&amp;, long const&amp;) (line 106)</a></td><td>called 10 times, returned 10 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, nda::ellipsis, int, itertools::range::all_t&gt;(int, long const*, int const&amp;, int const&amp;, nda::ellipsis const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 1 time, returned 1 time</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int&gt;(int, long const*, int const&amp;, int const&amp;) (line 106)</a></td><td>called 8395 times, returned 8393 times</td><td>70.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range, int, itertools::range&gt;(int, long const*, int const&amp;, itertools::range const&amp;, int const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 1 time, returned 0 time</td><td>65.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range, int&gt;(int, long const*, int const&amp;, itertools::range const&amp;, int const&amp;) (line 106)</a></td><td>called 1 time, returned 1 time</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range, itertools::range::all_t&gt;(int, long const*, int const&amp;, itertools::range const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 1 time, returned 1 time</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range, itertools::range&gt;(int, long const*, int const&amp;, itertools::range const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 3 times, returned 3 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, int, int, int&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, int, int, itertools::range::all_t&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, int, int&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 25 times, returned 25 times</td><td>29.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, int, itertools::range::all_t, int&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, int, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, int, itertools::range::all_t&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 25 times, returned 25 times</td><td>29.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, int, itertools::range&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 1 time, returned 1 time</td><td>29.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, int&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 30 times, returned 30 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, itertools::range, int&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, itertools::range const&amp;, int const&amp;) (line 106)</a></td><td>called 1 time, returned 0 time</td><td>65.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, itertools::range::all_t, int, int&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, itertools::range::all_t, int, itertools::range::all_t&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, itertools::range::all_t, int&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 26 times, returned 25 times</td><td>65.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, itertools::range::all_t, itertools::range::all_t, int&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, itertools::range::all_t, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 24 times, returned 24 times</td><td>29.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 542 times, returned 542 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, itertools::range&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 20 times, returned 20 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 8 times, returned 8 times</td><td>26.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range&gt;(int, long const*, int const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 4 times, returned 4 times</td><td>26.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, long, int&gt;(int, long const*, int const&amp;, long const&amp;, int const&amp;) (line 106)</a></td><td>called 15 times, returned 15 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, long, long&gt;(int, long const*, int const&amp;, long const&amp;, long const&amp;) (line 106)</a></td><td>called 92 times, returned 92 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, long&gt;(int, long const*, int const&amp;, long const&amp;) (line 106)</a></td><td>called 2 times, returned 2 times</td><td>26.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, nda::ellipsis, int, int, int&gt;(int, long const*, int const&amp;, nda::ellipsis const&amp;, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 1 time, returned 1 time</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, nda::ellipsis, int, int, itertools::range::all_t&gt;(int, long const*, int const&amp;, nda::ellipsis const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 1 time, returned 1 time</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, nda::ellipsis, int, int&gt;(int, long const*, int const&amp;, nda::ellipsis const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 2 times, returned 2 times</td><td>29.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, nda::ellipsis, int&gt;(int, long const*, int const&amp;, nda::ellipsis const&amp;, int const&amp;) (line 106)</a></td><td>called 2 times, returned 2 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, nda::ellipsis&gt;(int, long const*, int const&amp;, nda::ellipsis const&amp;) (line 106)</a></td><td>called 46 times, returned 46 times</td><td>26.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int&gt;(int, long const*, int const&amp;) (line 106)</a></td><td>called 15861489 times, returned 15861489 times</td><td>24.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, int, int, int&gt;(int, long const*, itertools::range const&amp;, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 1 time, returned 1 time</td><td>29.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, int, itertools::range&gt;(int, long const*, itertools::range const&amp;, int const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 562 times, returned 562 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, int&gt;(int, long const*, itertools::range const&amp;, int const&amp;) (line 106)</a></td><td>called 6 times, returned 4 times</td><td>59.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, itertools::range, itertools::range, itertools::range&gt;(int, long const*, itertools::range const&amp;, itertools::range const&amp;, itertools::range const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 1 time, returned 1 time</td><td>29.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, itertools::range, itertools::range&gt;(int, long const*, itertools::range const&amp;, itertools::range const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 45362 times, returned 45362 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, itertools::range::all_t, int&gt;(int, long const*, itertools::range const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 20 times, returned 20 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, itertools::range const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, itertools::range::all_t, itertools::range&gt;(int, long const*, itertools::range const&amp;, itertools::range::all_t const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 524 times, returned 524 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, itertools::range::all_t&gt;(int, long const*, itertools::range const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 9 times, returned 9 times</td><td>26.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, itertools::range&gt;(int, long const*, itertools::range const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 26 times, returned 26 times</td><td>26.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, nda::ellipsis, itertools::range&gt;(int, long const*, itertools::range const&amp;, nda::ellipsis const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 1 time, returned 1 time</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, nda::ellipsis&gt;(int, long const*, itertools::range const&amp;, nda::ellipsis const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>26.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, int, int, int&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, int, int, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, int, int&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 26 times, returned 25 times</td><td>74.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, int, itertools::range::all_t, int&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, int, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, int, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 24 times, returned 24 times</td><td>29.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, int&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 27 times, returned 27 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, itertools::range::all_t, int, int&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, itertools::range::all_t, int, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, itertools::range::all_t, int&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 24 times, returned 24 times</td><td>29.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, itertools::range::all_t, itertools::range::all_t, int&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, itertools::range::all_t, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 24 times, returned 24 times</td><td>29.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 63 times, returned 63 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, nda::ellipsis&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, nda::ellipsis const&amp;) (line 106)</a></td><td>called 1 time, returned 1 time</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 57 times, returned 56 times</td><td>59.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range, int, int&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 1 time, returned 0 time</td><td>65.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range, int&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range const&amp;, int const&amp;) (line 106)</a></td><td>called 3 times, returned 3 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 8 times, returned 8 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range, itertools::range&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 3 times, returned 3 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, int, int, int&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, int, int, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, int, int&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 25 times, returned 25 times</td><td>29.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, int, itertools::range::all_t, int&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, int, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, int, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 24 times, returned 24 times</td><td>29.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, int&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 14 times, returned 14 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, itertools::range::all_t, int, int&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, itertools::range::all_t, int, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, itertools::range::all_t, int&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 24 times, returned 24 times</td><td>29.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, itertools::range::all_t, itertools::range::all_t, int&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, itertools::range::all_t, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times, returned 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 25 times, returned 25 times</td><td>29.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 8 times, returned 8 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, itertools::range&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 3 times, returned 3 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 9 times, returned 9 times</td><td>26.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, long&gt;(int, long const*, itertools::range::all_t const&amp;, long const&amp;) (line 106)</a></td><td>called 30 times, returned 30 times</td><td>26.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, nda::ellipsis, int&gt;(int, long const*, itertools::range::all_t const&amp;, nda::ellipsis const&amp;, int const&amp;) (line 106)</a></td><td>called 1 time, returned 0 time</td><td>62.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 2 times, returned 2 times</td><td>24.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range&gt;(int, long const*, itertools::range const&amp;) (line 106)</a></td><td>called 96 times, returned 96 times</td><td>24.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;long, int, long&gt;(int, long const*, long const&amp;, int const&amp;, long const&amp;) (line 106)</a></td><td>called 40 times, returned 40 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;long, long, int, int&gt;(int, long const*, long const&amp;, long const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 12 times, returned 12 times</td><td>29.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;long, long, int&gt;(int, long const*, long const&amp;, long const&amp;, int const&amp;) (line 106)</a></td><td>called 22 times, returned 22 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;long, long, long, long, long, long&gt;(int, long const*, long const&amp;, long const&amp;, long const&amp;, long const&amp;, long const&amp;, long const&amp;) (line 106)</a></td><td>called 1840 times, returned 1840 times</td><td>31.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;long, long, long, long&gt;(int, long const*, long const&amp;, long const&amp;, long const&amp;, long const&amp;) (line 106)</a></td><td>called 3408 times, returned 3408 times</td><td>29.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;long, long, long&gt;(int, long const*, long const&amp;, long const&amp;, long const&amp;) (line 106)</a></td><td>called 193639 times, returned 193639 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;long, long&gt;(int, long const*, long const&amp;, long const&amp;) (line 106)</a></td><td>called 2062362 times, returned 2062362 times</td><td>26.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;long, nda::ellipsis&gt;(int, long const*, long const&amp;, nda::ellipsis const&amp;) (line 106)</a></td><td>called 6 times, returned 6 times</td><td>26.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;long&gt;(int, long const*, long const&amp;) (line 106)</a></td><td>called 11764 times, returned 11764 times</td><td>24.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;nda::ellipsis, int, int, int, int&gt;(int, long const*, nda::ellipsis const&amp;, int const&amp;, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 1 time, returned 1 time</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;nda::ellipsis, int, int, int, itertools::range::all_t&gt;(int, long const*, nda::ellipsis const&amp;, int const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 1 time, returned 1 time</td><td>30.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;nda::ellipsis, int, int&gt;(int, long const*, nda::ellipsis const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 1 time, returned 1 time</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;nda::ellipsis, int, itertools::range::all_t&gt;(int, long const*, nda::ellipsis const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 1 time, returned 1 time</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;nda::ellipsis, int&gt;(int, long const*, nda::ellipsis const&amp;, int const&amp;) (line 106)</a></td><td>called 62 times, returned 61 times</td><td>59.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;nda::ellipsis, itertools::range, int&gt;(int, long const*, nda::ellipsis const&amp;, itertools::range const&amp;, int const&amp;) (line 106)</a></td><td>called 1 time, returned 1 time</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;nda::ellipsis, itertools::range&gt;(int, long const*, nda::ellipsis const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 4 times, returned 4 times</td><td>26.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;nda::ellipsis, long&gt;(int, long const*, nda::ellipsis const&amp;, long const&amp;) (line 106)</a></td><td>called 3 times, returned 3 times</td><td>26.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;nda::ellipsis&gt;(int, long const*, nda::ellipsis const&amp;) (line 106)</a></td><td>called 15 times, returned 15 times</td><td>24.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;unsigned int&gt;(int, long const*, unsigned int const&amp;) (line 106)</a></td><td>called 10 times, returned 10 times</td><td>24.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;unsigned long, nda::ellipsis&gt;(int, long const*, unsigned long const&amp;, nda::ellipsis const&amp;) (line 106)</a></td><td>called 8 times, returned 8 times</td><td>26.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long&gt;(int, long const*, unsigned long const&amp;, unsigned long const&amp;, unsigned long const&amp;, unsigned long const&amp;, unsigned long const&amp;, unsigned long const&amp;) (line 106)</a></td><td>called 2 times, returned 2 times</td><td>31.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;unsigned long, unsigned long, unsigned long, unsigned long&gt;(int, long const*, unsigned long const&amp;, unsigned long const&amp;, unsigned long const&amp;, unsigned long const&amp;) (line 106)</a></td><td>called 6 times, returned 6 times</td><td>29.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;unsigned long, unsigned long, unsigned long&gt;(int, long const*, unsigned long const&amp;, unsigned long const&amp;, unsigned long const&amp;) (line 106)</a></td><td>called 6 times, returned 6 times</td><td>28.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;unsigned long, unsigned long&gt;(int, long const*, unsigned long const&amp;, unsigned long const&amp;) (line 106)</a></td><td>called 322 times, returned 322 times</td><td>26.0%</td></tr>
-    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;unsigned long&gt;(int, long const*, unsigned long const&amp;) (line 106)</a></td><td>called 92 times, returned 92 times</td><td>24.0%</td></tr>
+    <tr><td><a href="#l77">nda::detail::bound_check_worker::accumulate_error_msg(std::__cxx11::basic_stringstream&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;&amp;, itertools::range const&amp;) (line 77)</a></td><td>called 6 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l83">nda::detail::bound_check_worker::accumulate_error_msg(std::__cxx11::basic_stringstream&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;&amp;, itertools::range::all_t) (line 83)</a></td><td>called 7 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l71">nda::detail::bound_check_worker::accumulate_error_msg(std::__cxx11::basic_stringstream&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;&amp;, long) (line 71)</a></td><td>called 36 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l86">nda::detail::bound_check_worker::accumulate_error_msg(std::__cxx11::basic_stringstream&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt;&amp;, nda::ellipsis) (line 86)</a></td><td>called 2 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l55">nda::detail::bound_check_worker::check_current_dim(itertools::range const&amp;) (line 55)</a></td><td>called 138532 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l65">nda::detail::bound_check_worker::check_current_dim(itertools::range::all_t) (line 65)</a></td><td>called 3254 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l49">nda::detail::bound_check_worker::check_current_dim(long) (line 49)</a></td><td>called 20653124 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l68">nda::detail::bound_check_worker::check_current_dim(nda::ellipsis) (line 68)</a></td><td>called 166 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, int, int, int, int&gt;(int, long const*, int const&amp;, int const&amp;, int const&amp;, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 2 times</td><td>31.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, int, int, int&gt;(int, long const*, int const&amp;, int const&amp;, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 1 time</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, int, int, itertools::range::all_t&gt;(int, long const*, int const&amp;, int const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, int, int, nda::ellipsis&gt;(int, long const*, int const&amp;, int const&amp;, int const&amp;, int const&amp;, nda::ellipsis const&amp;) (line 106)</a></td><td>called 1 time</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, int, int&gt;(int, long const*, int const&amp;, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 2530 times</td><td>74.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, int, itertools::range::all_t, int&gt;(int, long const*, int const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, int, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, int const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, int, itertools::range::all_t, nda::ellipsis&gt;(int, long const*, int const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, nda::ellipsis const&amp;) (line 106)</a></td><td>called 1 time</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, int, itertools::range::all_t&gt;(int, long const*, int const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 28 times</td><td>29.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, int&gt;(int, long const*, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 6165 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, itertools::range::all_t, int, int&gt;(int, long const*, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, itertools::range::all_t, int, itertools::range::all_t&gt;(int, long const*, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, itertools::range::all_t, int&gt;(int, long const*, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 24 times</td><td>29.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, itertools::range::all_t, itertools::range::all_t, int&gt;(int, long const*, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, itertools::range::all_t, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 24 times</td><td>29.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, itertools::range::all_t&gt;(int, long const*, int const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 20 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, itertools::range&gt;(int, long const*, int const&amp;, int const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 3 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, long&gt;(int, long const*, int const&amp;, int const&amp;, long const&amp;) (line 106)</a></td><td>called 10 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int, nda::ellipsis, int, itertools::range::all_t&gt;(int, long const*, int const&amp;, int const&amp;, nda::ellipsis const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 1 time</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, int&gt;(int, long const*, int const&amp;, int const&amp;) (line 106)</a></td><td>called 8395 times</td><td>70.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range, int, itertools::range&gt;(int, long const*, int const&amp;, itertools::range const&amp;, int const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 1 time</td><td>65.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range, int&gt;(int, long const*, int const&amp;, itertools::range const&amp;, int const&amp;) (line 106)</a></td><td>called 1 time</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range, itertools::range::all_t&gt;(int, long const*, int const&amp;, itertools::range const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 1 time</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range, itertools::range&gt;(int, long const*, int const&amp;, itertools::range const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 3 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, int, int, int&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, int, int, itertools::range::all_t&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, int, int&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 25 times</td><td>29.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, int, itertools::range::all_t, int&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, int, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, int, itertools::range::all_t&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 25 times</td><td>29.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, int, itertools::range&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 1 time</td><td>29.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, int&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 30 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, itertools::range, int&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, itertools::range const&amp;, int const&amp;) (line 106)</a></td><td>called 1 time</td><td>65.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, itertools::range::all_t, int, int&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, itertools::range::all_t, int, itertools::range::all_t&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, itertools::range::all_t, int&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 26 times</td><td>65.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, itertools::range::all_t, itertools::range::all_t, int&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, itertools::range::all_t, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 24 times</td><td>29.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 542 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t, itertools::range&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 20 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range::all_t&gt;(int, long const*, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 8 times</td><td>26.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, itertools::range&gt;(int, long const*, int const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 4 times</td><td>26.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, long, int&gt;(int, long const*, int const&amp;, long const&amp;, int const&amp;) (line 106)</a></td><td>called 15 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, long, long&gt;(int, long const*, int const&amp;, long const&amp;, long const&amp;) (line 106)</a></td><td>called 92 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, long&gt;(int, long const*, int const&amp;, long const&amp;) (line 106)</a></td><td>called 2 times</td><td>26.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, nda::ellipsis, int, int, int&gt;(int, long const*, int const&amp;, nda::ellipsis const&amp;, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 1 time</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, nda::ellipsis, int, int, itertools::range::all_t&gt;(int, long const*, int const&amp;, nda::ellipsis const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 1 time</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, nda::ellipsis, int, int&gt;(int, long const*, int const&amp;, nda::ellipsis const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 2 times</td><td>29.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, nda::ellipsis, int&gt;(int, long const*, int const&amp;, nda::ellipsis const&amp;, int const&amp;) (line 106)</a></td><td>called 2 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int, nda::ellipsis&gt;(int, long const*, int const&amp;, nda::ellipsis const&amp;) (line 106)</a></td><td>called 46 times</td><td>26.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;int&gt;(int, long const*, int const&amp;) (line 106)</a></td><td>called 15861489 times</td><td>24.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, int, int, int&gt;(int, long const*, itertools::range const&amp;, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 1 time</td><td>29.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, int, itertools::range&gt;(int, long const*, itertools::range const&amp;, int const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 562 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, int&gt;(int, long const*, itertools::range const&amp;, int const&amp;) (line 106)</a></td><td>called 6 times</td><td>59.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, itertools::range, itertools::range, itertools::range&gt;(int, long const*, itertools::range const&amp;, itertools::range const&amp;, itertools::range const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 1 time</td><td>29.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, itertools::range, itertools::range&gt;(int, long const*, itertools::range const&amp;, itertools::range const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 45362 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, itertools::range::all_t, int&gt;(int, long const*, itertools::range const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 20 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, itertools::range const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, itertools::range::all_t, itertools::range&gt;(int, long const*, itertools::range const&amp;, itertools::range::all_t const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 524 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, itertools::range::all_t&gt;(int, long const*, itertools::range const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 9 times</td><td>26.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, itertools::range&gt;(int, long const*, itertools::range const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 26 times</td><td>26.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, nda::ellipsis, itertools::range&gt;(int, long const*, itertools::range const&amp;, nda::ellipsis const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 1 time</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range, nda::ellipsis&gt;(int, long const*, itertools::range const&amp;, nda::ellipsis const&amp;) (line 106)</a></td><td>called 5 times</td><td>26.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, int, int, int&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, int, int, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, int, int&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 26 times</td><td>74.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, int, itertools::range::all_t, int&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, int, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, int, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 24 times</td><td>29.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, int&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 27 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, itertools::range::all_t, int, int&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, itertools::range::all_t, int, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, itertools::range::all_t, int&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 24 times</td><td>29.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, itertools::range::all_t, itertools::range::all_t, int&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, itertools::range::all_t, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 24 times</td><td>29.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 63 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int, nda::ellipsis&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;, nda::ellipsis const&amp;) (line 106)</a></td><td>called 1 time</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, int&gt;(int, long const*, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 57 times</td><td>59.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range, int, int&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 1 time</td><td>65.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range, int&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range const&amp;, int const&amp;) (line 106)</a></td><td>called 3 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 8 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range, itertools::range&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 3 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, int, int, int&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, int, int, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, int, int&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 25 times</td><td>29.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, int, itertools::range::all_t, int&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, int, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, int, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 24 times</td><td>29.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, int&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 14 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, itertools::range::all_t, int, int&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, itertools::range::all_t, int, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, itertools::range::all_t, int&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 24 times</td><td>29.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, itertools::range::all_t, itertools::range::all_t, int&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, int const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, itertools::range::all_t, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 5 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 25 times</td><td>29.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 8 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range::all_t, itertools::range&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range::all_t const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 3 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, itertools::range&gt;(int, long const*, itertools::range::all_t const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 9 times</td><td>26.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, long&gt;(int, long const*, itertools::range::all_t const&amp;, long const&amp;) (line 106)</a></td><td>called 30 times</td><td>26.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t, nda::ellipsis, int&gt;(int, long const*, itertools::range::all_t const&amp;, nda::ellipsis const&amp;, int const&amp;) (line 106)</a></td><td>called 1 time</td><td>62.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range::all_t&gt;(int, long const*, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 2 times</td><td>24.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;itertools::range&gt;(int, long const*, itertools::range const&amp;) (line 106)</a></td><td>called 96 times</td><td>24.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;long, int, long&gt;(int, long const*, long const&amp;, int const&amp;, long const&amp;) (line 106)</a></td><td>called 40 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;long, long, int, int&gt;(int, long const*, long const&amp;, long const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 12 times</td><td>29.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;long, long, int&gt;(int, long const*, long const&amp;, long const&amp;, int const&amp;) (line 106)</a></td><td>called 22 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;long, long, long, long, long, long&gt;(int, long const*, long const&amp;, long const&amp;, long const&amp;, long const&amp;, long const&amp;, long const&amp;) (line 106)</a></td><td>called 1840 times</td><td>31.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;long, long, long, long&gt;(int, long const*, long const&amp;, long const&amp;, long const&amp;, long const&amp;) (line 106)</a></td><td>called 3408 times</td><td>29.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;long, long, long&gt;(int, long const*, long const&amp;, long const&amp;, long const&amp;) (line 106)</a></td><td>called 193639 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;long, long&gt;(int, long const*, long const&amp;, long const&amp;) (line 106)</a></td><td>called 2062362 times</td><td>26.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;long, nda::ellipsis&gt;(int, long const*, long const&amp;, nda::ellipsis const&amp;) (line 106)</a></td><td>called 6 times</td><td>26.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;long&gt;(int, long const*, long const&amp;) (line 106)</a></td><td>called 11764 times</td><td>24.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;nda::ellipsis, int, int, int, int&gt;(int, long const*, nda::ellipsis const&amp;, int const&amp;, int const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 1 time</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;nda::ellipsis, int, int, int, itertools::range::all_t&gt;(int, long const*, nda::ellipsis const&amp;, int const&amp;, int const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 1 time</td><td>30.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;nda::ellipsis, int, int&gt;(int, long const*, nda::ellipsis const&amp;, int const&amp;, int const&amp;) (line 106)</a></td><td>called 1 time</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;nda::ellipsis, int, itertools::range::all_t&gt;(int, long const*, nda::ellipsis const&amp;, int const&amp;, itertools::range::all_t const&amp;) (line 106)</a></td><td>called 1 time</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;nda::ellipsis, int&gt;(int, long const*, nda::ellipsis const&amp;, int const&amp;) (line 106)</a></td><td>called 62 times</td><td>59.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;nda::ellipsis, itertools::range, int&gt;(int, long const*, nda::ellipsis const&amp;, itertools::range const&amp;, int const&amp;) (line 106)</a></td><td>called 1 time</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;nda::ellipsis, itertools::range&gt;(int, long const*, nda::ellipsis const&amp;, itertools::range const&amp;) (line 106)</a></td><td>called 4 times</td><td>26.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;nda::ellipsis, long&gt;(int, long const*, nda::ellipsis const&amp;, long const&amp;) (line 106)</a></td><td>called 3 times</td><td>26.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;nda::ellipsis&gt;(int, long const*, nda::ellipsis const&amp;) (line 106)</a></td><td>called 15 times</td><td>24.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;unsigned int&gt;(int, long const*, unsigned int const&amp;) (line 106)</a></td><td>called 10 times</td><td>24.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;unsigned long, nda::ellipsis&gt;(int, long const*, unsigned long const&amp;, nda::ellipsis const&amp;) (line 106)</a></td><td>called 8 times</td><td>26.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long&gt;(int, long const*, unsigned long const&amp;, unsigned long const&amp;, unsigned long const&amp;, unsigned long const&amp;, unsigned long const&amp;, unsigned long const&amp;) (line 106)</a></td><td>called 2 times</td><td>31.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;unsigned long, unsigned long, unsigned long, unsigned long&gt;(int, long const*, unsigned long const&amp;, unsigned long const&amp;, unsigned long const&amp;, unsigned long const&amp;) (line 106)</a></td><td>called 6 times</td><td>29.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;unsigned long, unsigned long, unsigned long&gt;(int, long const*, unsigned long const&amp;, unsigned long const&amp;, unsigned long const&amp;) (line 106)</a></td><td>called 6 times</td><td>28.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;unsigned long, unsigned long&gt;(int, long const*, unsigned long const&amp;, unsigned long const&amp;) (line 106)</a></td><td>called 322 times</td><td>26.0%</td></tr>
+    <tr><td><a href="#l106">void nda::assert_in_bounds&lt;unsigned long&gt;(int, long const*, unsigned long const&amp;) (line 106)</a></td><td>called 92 times</td><td>24.0%</td></tr>
   </table>
 </details>
 
     </nav>
-
     <main>
 <div class="file-source">
   <table>
@@ -572,13 +568,13 @@
       <td class="lineno"><a id="l50" href="#l50">50</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">4/4</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 0 taken 20653120 times.</div>
-          <div class="takenBranch">&check; Branch 1 taken 4 times.</div>
-          <div class="takenBranch">&check; Branch 2 taken 10 times.</div>
-          <div class="takenBranch">&check; Branch 3 taken 20653110 times.</div>
-        </div>
+          <summary class="linebranchSummary">4/4</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 0 taken 20653120 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 10 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 20653110 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">20653124</td>
@@ -623,11 +619,11 @@
       <td class="lineno"><a id="l56" href="#l56">56</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 138529 times.</div>
-          <div class="takenBranch">&check; Branch 2 taken 3 times.</div>
-        </div>
+          <summary class="linebranchSummary">2/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 138529 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 3 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">138532</td>
@@ -651,17 +647,17 @@
       <td class="lineno"><a id="l59" href="#l59">59</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">7/8</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 0 taken 138527 times.</div>
-          <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
-          <div class="takenBranch">&check; Branch 2 taken 138526 times.</div>
-          <div class="takenBranch">&check; Branch 3 taken 1 times.</div>
-          <div class="takenBranch">&check; Branch 4 taken 138526 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          <div class="takenBranch">&check; Branch 6 taken 3 times.</div>
-          <div class="takenBranch">&check; Branch 7 taken 138523 times.</div>
-        </div>
+          <summary class="linebranchSummary">7/8</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 0 taken 138527 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 138526 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 138526 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="takenBranch">&check; Branch 6 taken 3 times.</div>
+            <div class="takenBranch">&check; Branch 7 taken 138523 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">138529</td>
@@ -755,11 +751,11 @@
       <td class="lineno"><a id="l72" href="#l72">72</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 0 taken 14 times.</div>
-          <div class="takenBranch">&check; Branch 1 taken 22 times.</div>
-        </div>
+          <summary class="linebranchSummary">2/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 0 taken 14 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 22 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">36</td>
@@ -804,11 +800,11 @@
       <td class="lineno"><a id="l78" href="#l78">78</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 0 taken 6 times.</div>
-          <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 0 taken 6 times.</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">6</td>
@@ -1063,19 +1059,19 @@
       <td class="lineno"><a id="l114" href="#l114">114</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">8/10</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 46618 times.</div>
-          <div class="takenBranch">&check; Branch 2 taken 39 times.</div>
-          <div class="takenBranch">&check; Branch 3 taken 27 times.</div>
-          <div class="takenBranch">&check; Branch 4 taken 45390 times.</div>
-          <div class="takenBranch">&check; Branch 5 taken 1093 times.</div>
-          <div class="takenBranch">&check; Branch 6 taken 1 times.</div>
-          <div class="takenBranch">&check; Branch 7 taken 45363 times.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="takenBranch">&check; Branch 10 taken 1 times.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">8/10</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 46618 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 39 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 27 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 45390 times.</div>
+            <div class="takenBranch">&check; Branch 5 taken 1093 times.</div>
+            <div class="takenBranch">&check; Branch 6 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 7 taken 45363 times.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="takenBranch">&check; Branch 10 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">36400638</td>
@@ -1099,11 +1095,11 @@
       <td class="lineno"><a id="l117" href="#l117">117</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 0 taken 18200378 times.</div>
-          <div class="takenBranch">&check; Branch 1 taken 16 times.</div>
-        </div>
+          <summary class="linebranchSummary">2/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 0 taken 18200378 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 16 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">72801244</td>
@@ -1134,11 +1130,11 @@
       <td class="lineno"><a id="l121" href="#l121">121</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 16 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 16 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">32</td>
@@ -1148,25 +1144,25 @@
       <td class="lineno"><a id="l122" href="#l122">122</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">9/16</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 11 times.</div>
-          <div class="takenBranch">&check; Branch 2 taken 4 times.</div>
-          <div class="takenBranch">&check; Branch 3 taken 1 times.</div>
-          <div class="takenBranch">&check; Branch 4 taken 9 times.</div>
-          <div class="takenBranch">&check; Branch 5 taken 3 times.</div>
-          <div class="takenBranch">&check; Branch 6 taken 1 times.</div>
-          <div class="takenBranch">&check; Branch 7 taken 5 times.</div>
-          <div class="takenBranch">&check; Branch 8 taken 3 times.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="takenBranch">&check; Branch 10 taken 5 times.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">9/16</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 11 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 9 times.</div>
+            <div class="takenBranch">&check; Branch 5 taken 3 times.</div>
+            <div class="takenBranch">&check; Branch 6 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 7 taken 5 times.</div>
+            <div class="takenBranch">&check; Branch 8 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="takenBranch">&check; Branch 10 taken 5 times.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">32</td>
@@ -1176,15 +1172,15 @@
       <td class="lineno"><a id="l123" href="#l123">123</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">3/6</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 16 times.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-          <div class="takenBranch">&check; Branch 5 taken 16 times.</div>
-          <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-          <div class="takenBranch">&check; Branch 8 taken 16 times.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">3/6</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 16 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 16 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 8 taken 16 times.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">32</td>
@@ -1222,9 +1218,8 @@
 </div>
       <hr/>
     </main>
-
     <footer>
-      Generated by: <a href="http://gcovr.com/en/7.2">GCOVR (Version 7.2)</a>
+      Generated by: <a href="http://gcovr.com/en/8.2">GCOVR (Version 8.2)</a>
     </footer>
   </body>
 </html>

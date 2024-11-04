@@ -9,11 +9,10 @@
   </head>
 
   <body>
+
     <header>
       <h1>GCC Code Coverage Report</h1>
-
       <hr/>
-
       <div class="summary">
 <div>
   <table class="legend">
@@ -23,11 +22,11 @@
     </tr>
     <tr>
       <th scope="row">File:</th>
-      <td>nda/sym_grp.hpp</td>
+      <td>sym_grp.hpp</td>
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2024-09-30 21:45:34</td>
+      <td>2024-11-04 16:20:40</td>
     </tr>
   </table>
 </div>
@@ -60,10 +59,8 @@
   </table>
 </div>
       </div>
-
       <hr/>
     </header>
-
     <nav>
 <details>
   <summary>List of functions</summary>
@@ -73,28 +70,27 @@
       <th>Call count</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l88">bool nda::is_valid&lt;nda::basic_array&lt;bool, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;bool, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::array&lt;long, static_cast&lt;unsigned long&gt;(get_rank&lt;nda::basic_array&lt;bool, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;)&gt; const&amp;) (line 88)</a></td><td>called 64 times, returned 64 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l88">bool nda::is_valid&lt;nda::basic_array&lt;bool, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;bool, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::array&lt;long, static_cast&lt;unsigned long&gt;(get_rank&lt;nda::basic_array&lt;bool, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;)&gt; const&amp;) (line 88)</a></td><td>called 128 times, returned 128 times</td><td>87.0%</td></tr>
-    <tr><td><a href="#l63">nda::operation::operator*(nda::operation const&amp;) (line 63)</a></td><td>called 192 times, returned 192 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l261">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::get_representative_data(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) const (line 261)</a></td><td>called 2 times, returned 2 times</td><td>78.0%</td></tr>
-    <tr><td><a href="#l171">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::get_sym_classes() const (line 171)</a></td><td>called 2 times, returned 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l295">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::sym_grp(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::vector&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, std::allocator&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt; &gt; &gt; const&amp;, long) (line 295)</a></td><td>called 2 times, returned 2 times</td><td>81.0%</td></tr>
-    <tr><td><a href="#l226">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const (line 226)</a></td><td>called 4 times, returned 4 times</td><td>84.0%</td></tr>
-    <tr><td><a href="#l261">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::get_representative_data(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) const (line 261)</a></td><td>called 1 time, returned 1 time</td><td>78.0%</td></tr>
-    <tr><td><a href="#l171">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::get_sym_classes() const (line 171)</a></td><td>called 1 time, returned 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l295">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::sym_grp(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::vector&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, std::allocator&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt; &gt; &gt; const&amp;, long) (line 295)</a></td><td>called 1 time, returned 1 time</td><td>89.0%</td></tr>
-    <tr><td><a href="#l226">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const (line 226)</a></td><td>called 3 times, returned 3 times</td><td>84.0%</td></tr>
-    <tr><td><a href="#l73">std::complex&lt;double&gt; nda::operation::operator()&lt;std::complex&lt;double&gt; &gt;(std::complex&lt;double&gt; const&amp;) const (line 73)</a></td><td>called 704 times, returned 704 times</td><td>42.0%</td></tr>
-    <tr><td><a href="#l192">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init&lt;NDA_SymGrpMatrixFlipShift_Test::TestBody()::{lambda(std::array&lt;long, 2ul&gt; const&amp;)#3}&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, NDA_SymGrpMatrixFlipShift_Test::TestBody()::{lambda(std::array&lt;long, 2ul&gt; const&amp;)#3} const&amp;, bool) const (line 192)</a></td><td>called 1 time, returned 1 time</td><td>56.0%</td></tr>
-    <tr><td><a href="#l192">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init&lt;NDA_SymGrpMatrixPermutation_Test::TestBody()::{lambda(std::array&lt;long, 2ul&gt; const&amp;)#3}&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, NDA_SymGrpMatrixPermutation_Test::TestBody()::{lambda(std::array&lt;long, 2ul&gt; const&amp;)#3} const&amp;, bool) const (line 192)</a></td><td>called 1 time, returned 1 time</td><td>56.0%</td></tr>
-    <tr><td><a href="#l275">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init_from_representative_data&lt;std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; const&amp;) const (line 275)</a></td><td>called 2 times, returned 2 times</td><td>92.0%</td></tr>
-    <tr><td><a href="#l192">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init&lt;NDA_SymGrpTensorCylicTriplet_Test::TestBody()::{lambda(std::array&lt;long, 6ul&gt; const&amp;)#3}&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, NDA_SymGrpTensorCylicTriplet_Test::TestBody()::{lambda(std::array&lt;long, 6ul&gt; const&amp;)#3} const&amp;, bool) const (line 192)</a></td><td>called 1 time, returned 1 time</td><td>56.0%</td></tr>
-    <tr><td><a href="#l275">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init_from_representative_data&lt;std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; const&amp;) const (line 275)</a></td><td>called 1 time, returned 1 time</td><td>92.0%</td></tr>
+    <tr><td><a href="#l88">bool nda::is_valid&lt;nda::basic_array&lt;bool, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;bool, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::array&lt;long, static_cast&lt;unsigned long&gt;(get_rank&lt;nda::basic_array&lt;bool, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;)&gt; const&amp;) (line 88)</a></td><td>called 64 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l88">bool nda::is_valid&lt;nda::basic_array&lt;bool, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;bool, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::array&lt;long, static_cast&lt;unsigned long&gt;(get_rank&lt;nda::basic_array&lt;bool, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;)&gt; const&amp;) (line 88)</a></td><td>called 128 times</td><td>87.0%</td></tr>
+    <tr><td><a href="#l63">nda::operation::operator*(nda::operation const&amp;) (line 63)</a></td><td>called 192 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l261">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::get_representative_data(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) const (line 261)</a></td><td>called 2 times</td><td>78.0%</td></tr>
+    <tr><td><a href="#l171">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::get_sym_classes() const (line 171)</a></td><td>called 2 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l295">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::sym_grp(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::vector&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, std::allocator&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt; &gt; &gt; const&amp;, long) (line 295)</a></td><td>called 2 times</td><td>81.0%</td></tr>
+    <tr><td><a href="#l226">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const (line 226)</a></td><td>called 4 times</td><td>84.0%</td></tr>
+    <tr><td><a href="#l261">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::get_representative_data(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) const (line 261)</a></td><td>called 1 time</td><td>78.0%</td></tr>
+    <tr><td><a href="#l171">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::get_sym_classes() const (line 171)</a></td><td>called 1 time</td><td>100.0%</td></tr>
+    <tr><td><a href="#l295">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::sym_grp(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::vector&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, std::allocator&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt; &gt; &gt; const&amp;, long) (line 295)</a></td><td>called 1 time</td><td>89.0%</td></tr>
+    <tr><td><a href="#l226">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const (line 226)</a></td><td>called 3 times</td><td>84.0%</td></tr>
+    <tr><td><a href="#l73">std::complex&lt;double&gt; nda::operation::operator()&lt;std::complex&lt;double&gt; &gt;(std::complex&lt;double&gt; const&amp;) const (line 73)</a></td><td>called 704 times</td><td>42.0%</td></tr>
+    <tr><td><a href="#l192">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init&lt;NDA_SymGrpMatrixFlipShift_Test::TestBody()::{lambda(std::array&lt;long, 2ul&gt; const&amp;)#3}&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, NDA_SymGrpMatrixFlipShift_Test::TestBody()::{lambda(std::array&lt;long, 2ul&gt; const&amp;)#3} const&amp;, bool) const (line 192)</a></td><td>called 1 time</td><td>56.0%</td></tr>
+    <tr><td><a href="#l192">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init&lt;NDA_SymGrpMatrixPermutation_Test::TestBody()::{lambda(std::array&lt;long, 2ul&gt; const&amp;)#3}&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, NDA_SymGrpMatrixPermutation_Test::TestBody()::{lambda(std::array&lt;long, 2ul&gt; const&amp;)#3} const&amp;, bool) const (line 192)</a></td><td>called 1 time</td><td>56.0%</td></tr>
+    <tr><td><a href="#l275">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init_from_representative_data&lt;std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; const&amp;) const (line 275)</a></td><td>called 2 times</td><td>92.0%</td></tr>
+    <tr><td><a href="#l192">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init&lt;NDA_SymGrpTensorCylicTriplet_Test::TestBody()::{lambda(std::array&lt;long, 6ul&gt; const&amp;)#3}&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, NDA_SymGrpTensorCylicTriplet_Test::TestBody()::{lambda(std::array&lt;long, 6ul&gt; const&amp;)#3} const&amp;, bool) const (line 192)</a></td><td>called 1 time</td><td>56.0%</td></tr>
+    <tr><td><a href="#l275">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init_from_representative_data&lt;std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; const&amp;) const (line 275)</a></td><td>called 1 time</td><td>92.0%</td></tr>
   </table>
 </details>
 
     </nav>
-
     <main>
 <div class="file-source">
   <table>
@@ -619,13 +615,13 @@
       <td class="lineno"><a id="l74" href="#l74">74</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/4</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
-          <div class="takenBranch">&check; Branch 1 taken 704 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/4</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
+            <div class="takenBranch">&check; Branch 1 taken 704 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">704</td>
@@ -635,11 +631,11 @@
       <td class="lineno"><a id="l75" href="#l75">75</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
-          <div class="takenBranch">&check; Branch 1 taken 704 times.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
+            <div class="takenBranch">&check; Branch 1 taken 704 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">704</td>
@@ -740,11 +736,11 @@
       <td class="lineno"><a id="l89" href="#l89">89</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 0 taken 892 times.</div>
-          <div class="takenBranch">&check; Branch 1 taken 188 times.</div>
-        </div>
+          <summary class="linebranchSummary">2/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 0 taken 892 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 188 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">2160</td>
@@ -754,15 +750,15 @@
       <td class="lineno"><a id="l90" href="#l90">90</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">5/6</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 892 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 6 taken 4 times.</div>
-          <div class="takenBranch">&check; Branch 7 taken 888 times.</div>
-          <div class="takenBranch">&check; Branch 8 taken 4 times.</div>
-          <div class="takenBranch">&check; Branch 9 taken 888 times.</div>
-        </div>
+          <summary class="linebranchSummary">5/6</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 892 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 6 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 7 taken 888 times.</div>
+            <div class="takenBranch">&check; Branch 8 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 9 taken 888 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">1784</td>
@@ -1486,11 +1482,11 @@
       <td class="lineno"><a id="l193" href="#l193">193</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
-          <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
+            <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">6</td>
@@ -1598,11 +1594,11 @@
       <td class="lineno"><a id="l208" href="#l208">208</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 5 taken 23 times.</div>
-          <div class="takenBranch">&check; Branch 6 taken 3 times.</div>
-        </div>
+          <summary class="linebranchSummary">2/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 5 taken 23 times.</div>
+            <div class="takenBranch">&check; Branch 6 taken 3 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">52</td>
@@ -1612,11 +1608,11 @@
       <td class="lineno"><a id="l209" href="#l209">209</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 3 taken 23 times.</div>
-          <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 3 taken 23 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">46</td>
@@ -1626,11 +1622,11 @@
       <td class="lineno"><a id="l210" href="#l210">210</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 23 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 23 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">46</td>
@@ -1640,11 +1636,11 @@
       <td class="lineno"><a id="l211" href="#l211">211</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 23 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 23 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">46</td>
@@ -1654,17 +1650,17 @@
       <td class="lineno"><a id="l212" href="#l212">212</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">5/8</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 6 taken 96 times.</div>
-          <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
-          <div class="takenBranch">&check; Branch 10 taken 96 times.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="takenBranch">&check; Branch 13 taken 96 times.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="takenBranch">&check; Branch 17 taken 96 times.</div>
-          <div class="takenBranch">&check; Branch 18 taken 23 times.</div>
-        </div>
+          <summary class="linebranchSummary">5/8</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 6 taken 96 times.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="takenBranch">&check; Branch 10 taken 96 times.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="takenBranch">&check; Branch 13 taken 96 times.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="takenBranch">&check; Branch 17 taken 96 times.</div>
+            <div class="takenBranch">&check; Branch 18 taken 23 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">238</td>
@@ -1793,11 +1789,11 @@
       <td class="lineno"><a id="l230" href="#l230">230</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 5 taken 62 times.</div>
-          <div class="takenBranch">&check; Branch 6 taken 7 times.</div>
-        </div>
+          <summary class="linebranchSummary">2/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 5 taken 62 times.</div>
+            <div class="takenBranch">&check; Branch 6 taken 7 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">138</td>
@@ -1821,17 +1817,17 @@
       <td class="lineno"><a id="l233" href="#l233">233</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">5/8</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 7 taken 256 times.</div>
-          <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          <div class="takenBranch">&check; Branch 10 taken 256 times.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="takenBranch">&check; Branch 13 taken 256 times.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="takenBranch">&check; Branch 18 taken 256 times.</div>
-          <div class="takenBranch">&check; Branch 19 taken 62 times.</div>
-        </div>
+          <summary class="linebranchSummary">5/8</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 7 taken 256 times.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="takenBranch">&check; Branch 10 taken 256 times.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="takenBranch">&check; Branch 13 taken 256 times.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="takenBranch">&check; Branch 18 taken 256 times.</div>
+            <div class="takenBranch">&check; Branch 19 taken 62 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">636</td>
@@ -1862,11 +1858,11 @@
       <td class="lineno"><a id="l237" href="#l237">237</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 6 taken 256 times.</div>
-          <div class="takenBranch">&check; Branch 7 taken 62 times.</div>
-        </div>
+          <summary class="linebranchSummary">2/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 6 taken 256 times.</div>
+            <div class="takenBranch">&check; Branch 7 taken 62 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">636</td>
@@ -1876,11 +1872,11 @@
       <td class="lineno"><a id="l238" href="#l238">238</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 256 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 256 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">512</td>
@@ -1890,11 +1886,11 @@
       <td class="lineno"><a id="l239" href="#l239">239</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 256 times.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 256 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">512</td>
@@ -1904,11 +1900,11 @@
       <td class="lineno"><a id="l240" href="#l240">240</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 256 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 256 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">512</td>
@@ -1918,11 +1914,11 @@
       <td class="lineno"><a id="l241" href="#l241">241</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 256 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 256 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">512</td>
@@ -1939,11 +1935,11 @@
       <td class="lineno"><a id="l243" href="#l243">243</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 0 taken 8 times.</div>
-          <div class="takenBranch">&check; Branch 1 taken 248 times.</div>
-        </div>
+          <summary class="linebranchSummary">2/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 0 taken 12 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 244 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">512</td>
@@ -1953,14 +1949,14 @@
       <td class="lineno"><a id="l244" href="#l244">244</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">16</td>
+      <td class="linecount coveredLine">24</td>
       <td class="src coveredLine"><span class="w">            </span><span class="n">max_diff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diff</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l245" href="#l245">245</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">16</td>
+      <td class="linecount coveredLine">24</td>
       <td class="src coveredLine"><span class="w">            </span><span class="n">max_idx</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">mapped_idx</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -1981,11 +1977,11 @@
       <td class="lineno"><a id="l248" href="#l248">248</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 256 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 256 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">512</td>
@@ -2093,11 +2089,11 @@
       <td class="lineno"><a id="l263" href="#l263">263</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">6</td>
@@ -2107,17 +2103,17 @@
       <td class="lineno"><a id="l264" href="#l264">264</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">5/8</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 10 taken 23 times.</div>
-          <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-          <div class="takenBranch">&check; Branch 13 taken 23 times.</div>
-          <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          <div class="takenBranch">&check; Branch 18 taken 23 times.</div>
-          <div class="takenBranch">&check; Branch 19 taken 3 times.</div>
-        </div>
+          <summary class="linebranchSummary">5/8</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 10 taken 23 times.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="takenBranch">&check; Branch 13 taken 23 times.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="takenBranch">&check; Branch 18 taken 23 times.</div>
+            <div class="takenBranch">&check; Branch 19 taken 3 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">52</td>
@@ -2211,13 +2207,13 @@
       <td class="lineno"><a id="l277" href="#l277">277</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">3/4</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 3 times.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-          <div class="takenBranch">&check; Branch 9 taken 23 times.</div>
-          <div class="takenBranch">&check; Branch 10 taken 3 times.</div>
-        </div>
+          <summary class="linebranchSummary">3/4</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="takenBranch">&check; Branch 9 taken 23 times.</div>
+            <div class="takenBranch">&check; Branch 10 taken 3 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">52</td>
@@ -2227,17 +2223,17 @@
       <td class="lineno"><a id="l278" href="#l278">278</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">5/8</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 8 taken 96 times.</div>
-          <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-          <div class="takenBranch">&check; Branch 12 taken 96 times.</div>
-          <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
-          <div class="takenBranch">&check; Branch 15 taken 96 times.</div>
-          <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
-          <div class="takenBranch">&check; Branch 19 taken 96 times.</div>
-          <div class="takenBranch">&check; Branch 20 taken 23 times.</div>
-        </div>
+          <summary class="linebranchSummary">5/8</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 8 taken 96 times.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="takenBranch">&check; Branch 12 taken 96 times.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+            <div class="takenBranch">&check; Branch 15 taken 96 times.</div>
+            <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
+            <div class="takenBranch">&check; Branch 19 taken 96 times.</div>
+            <div class="takenBranch">&check; Branch 20 taken 23 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">238</td>
@@ -2373,11 +2369,11 @@
       <td class="lineno"><a id="l297" href="#l297">297</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 3 times.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">6</td>
@@ -2408,11 +2404,11 @@
       <td class="lineno"><a id="l301" href="#l301">301</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">1/2</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 3 times.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">1/2</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">6</td>
@@ -2443,13 +2439,13 @@
       <td class="lineno"><a id="l305" href="#l305">305</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">4/4</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 16 times.</div>
-          <div class="takenBranch">&check; Branch 2 taken 48 times.</div>
-          <div class="takenBranch">&check; Branch 4 taken 7 times.</div>
-          <div class="takenBranch">&check; Branch 5 taken 25 times.</div>
-        </div>
+          <summary class="linebranchSummary">4/4</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 16 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 48 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 7 times.</div>
+            <div class="takenBranch">&check; Branch 5 taken 25 times.</div>
+          </div>
         </details>
       </td>
       <td class="linecount coveredLine">192</td>
@@ -2515,13 +2511,13 @@
       <td class="lineno"><a id="l314" href="#l314">314</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/4</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 2 taken 16 times.</div>
-          <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-          <div class="takenBranch">&check; Branch 6 taken 7 times.</div>
-          <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">2/4</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 2 taken 16 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="takenBranch">&check; Branch 6 taken 7 times.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">46</td>
@@ -2552,13 +2548,13 @@
       <td class="lineno"><a id="l318" href="#l318">318</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/4</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 16 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 4 taken 7 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">2/4</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 16 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 4 taken 7 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">23</td>
@@ -2582,13 +2578,13 @@
       <td class="lineno"><a id="l321" href="#l321">321</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-        <summary class="linebranchSummary">2/4</summary>
-        <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 1 taken 16 times.</div>
-          <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-          <div class="takenBranch">&check; Branch 4 taken 7 times.</div>
-          <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-        </div>
+          <summary class="linebranchSummary">2/4</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 16 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 4 taken 7 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+          </div>
         </details>
       </td>
       <td class="linecount partialCoveredLine">23</td>
@@ -2941,9 +2937,8 @@
 </div>
       <hr/>
     </main>
-
     <footer>
-      Generated by: <a href="http://gcovr.com/en/7.2">GCOVR (Version 7.2)</a>
+      Generated by: <a href="http://gcovr.com/en/8.2">GCOVR (Version 8.2)</a>
     </footer>
   </body>
 </html>

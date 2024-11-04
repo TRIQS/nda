@@ -9,11 +9,10 @@
   </head>
 
   <body>
+
     <header>
       <h1>GCC Code Coverage Report</h1>
-
       <hr/>
-
       <div class="summary">
 <div>
   <table class="legend">
@@ -23,11 +22,11 @@
     </tr>
     <tr>
       <th scope="row">File:</th>
-      <td>nda/lapack/interface/cxx_interface.cpp</td>
+      <td>lapack/interface/cxx_interface.cpp</td>
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2024-09-30 21:45:34</td>
+      <td>2024-11-04 16:20:40</td>
     </tr>
   </table>
 </div>
@@ -60,10 +59,8 @@
   </table>
 </div>
       </div>
-
       <hr/>
     </header>
-
     <nav>
 <details>
   <summary>List of functions</summary>
@@ -73,30 +70,29 @@
       <th>Call count</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l30">nda::lapack::f77::gelss(int, int, int, double*, int, double*, int, double*, double, int&amp;, double*, int, double*, int&amp;) (line 30)</a></td><td>called 4 times, returned 4 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l34">nda::lapack::f77::gelss(int, int, int, std::complex&lt;double&gt;*, int, std::complex&lt;double&gt;*, int, double*, double, int&amp;, std::complex&lt;double&gt;*, int, double*, int&amp;) (line 34)</a></td><td>called 4 times, returned 4 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l48">nda::lapack::f77::geqp3(int, int, double*, int, int*, double*, double*, int, double*, int&amp;) (line 48)</a></td><td>called 4 times, returned 4 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l51">nda::lapack::f77::geqp3(int, int, std::complex&lt;double&gt;*, int, int*, std::complex&lt;double&gt;*, std::complex&lt;double&gt;*, int, double*, int&amp;) (line 51)</a></td><td>called 4 times, returned 4 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l39">nda::lapack::f77::gesvd(char, char, int, int, double*, int, double*, double*, int, double*, int, double*, int, double*, int&amp;) (line 39)</a></td><td>called 4 times, returned 4 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l43">nda::lapack::f77::gesvd(char, char, int, int, std::complex&lt;double&gt;*, int, double*, std::complex&lt;double&gt;*, int, std::complex&lt;double&gt;*, int, std::complex&lt;double&gt;*, int, double*, int&amp;) (line 43)</a></td><td>called 4 times, returned 4 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l64">nda::lapack::f77::getrf(int, int, double*, int, int*, int&amp;) (line 64)</a></td><td>called 22 times, returned 22 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l65">nda::lapack::f77::getrf(int, int, std::complex&lt;double&gt;*, int, int*, int&amp;) (line 65)</a></td><td>called 1 time, returned 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l67">nda::lapack::f77::getri(int, double*, int, int const*, double*, int, int&amp;) (line 67)</a></td><td>called 16 times, returned 16 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l70">nda::lapack::f77::getri(int, std::complex&lt;double&gt;*, int, int const*, std::complex&lt;double&gt;*, int, int&amp;) (line 70)</a></td><td>called 2 times, returned 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l91">nda::lapack::f77::getrs(char, int, int, double const*, int, int const*, double*, int, int&amp;) (line 91)</a></td><td>called 1 time, returned 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l94">nda::lapack::f77::getrs(char, int, int, std::complex&lt;double&gt; const*, int, int const*, std::complex&lt;double&gt;*, int, int&amp;) (line 94)</a></td><td>called 1 time, returned 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l74">nda::lapack::f77::gtsv(int, int, double*, double*, double*, double*, int, int&amp;) (line 74)</a></td><td>called 3 times, returned 3 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l75">nda::lapack::f77::gtsv(int, int, std::complex&lt;double&gt;*, std::complex&lt;double&gt;*, std::complex&lt;double&gt;*, std::complex&lt;double&gt;*, int, int&amp;) (line 75)</a></td><td>called 6 times, returned 6 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l86">nda::lapack::f77::heev(char, char, int, std::complex&lt;double&gt;*, int, double*, std::complex&lt;double&gt;*, int&amp;, double*, int&amp;) (line 86)</a></td><td>called 4 times, returned 4 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l56">nda::lapack::f77::orgqr(int, int, int, double*, int, double*, double*, int, int&amp;) (line 56)</a></td><td>called 4 times, returned 4 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l30">nda::lapack::f77::gelss(int, int, int, double*, int, double*, int, double*, double, int&amp;, double*, int, double*, int&amp;) (line 30)</a></td><td>called 4 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l34">nda::lapack::f77::gelss(int, int, int, std::complex&lt;double&gt;*, int, std::complex&lt;double&gt;*, int, double*, double, int&amp;, std::complex&lt;double&gt;*, int, double*, int&amp;) (line 34)</a></td><td>called 4 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l48">nda::lapack::f77::geqp3(int, int, double*, int, int*, double*, double*, int, double*, int&amp;) (line 48)</a></td><td>called 4 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l51">nda::lapack::f77::geqp3(int, int, std::complex&lt;double&gt;*, int, int*, std::complex&lt;double&gt;*, std::complex&lt;double&gt;*, int, double*, int&amp;) (line 51)</a></td><td>called 4 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l39">nda::lapack::f77::gesvd(char, char, int, int, double*, int, double*, double*, int, double*, int, double*, int, double*, int&amp;) (line 39)</a></td><td>called 4 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l43">nda::lapack::f77::gesvd(char, char, int, int, std::complex&lt;double&gt;*, int, double*, std::complex&lt;double&gt;*, int, std::complex&lt;double&gt;*, int, std::complex&lt;double&gt;*, int, double*, int&amp;) (line 43)</a></td><td>called 4 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l64">nda::lapack::f77::getrf(int, int, double*, int, int*, int&amp;) (line 64)</a></td><td>called 22 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l65">nda::lapack::f77::getrf(int, int, std::complex&lt;double&gt;*, int, int*, int&amp;) (line 65)</a></td><td>called 1 time</td><td>100.0%</td></tr>
+    <tr><td><a href="#l67">nda::lapack::f77::getri(int, double*, int, int const*, double*, int, int&amp;) (line 67)</a></td><td>called 16 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l70">nda::lapack::f77::getri(int, std::complex&lt;double&gt;*, int, int const*, std::complex&lt;double&gt;*, int, int&amp;) (line 70)</a></td><td>called 2 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l91">nda::lapack::f77::getrs(char, int, int, double const*, int, int const*, double*, int, int&amp;) (line 91)</a></td><td>called 1 time</td><td>100.0%</td></tr>
+    <tr><td><a href="#l94">nda::lapack::f77::getrs(char, int, int, std::complex&lt;double&gt; const*, int, int const*, std::complex&lt;double&gt;*, int, int&amp;) (line 94)</a></td><td>called 1 time</td><td>100.0%</td></tr>
+    <tr><td><a href="#l74">nda::lapack::f77::gtsv(int, int, double*, double*, double*, double*, int, int&amp;) (line 74)</a></td><td>called 3 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l75">nda::lapack::f77::gtsv(int, int, std::complex&lt;double&gt;*, std::complex&lt;double&gt;*, std::complex&lt;double&gt;*, std::complex&lt;double&gt;*, int, int&amp;) (line 75)</a></td><td>called 6 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l86">nda::lapack::f77::heev(char, char, int, std::complex&lt;double&gt;*, int, double*, std::complex&lt;double&gt;*, int&amp;, double*, int&amp;) (line 86)</a></td><td>called 4 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l56">nda::lapack::f77::orgqr(int, int, int, double*, int, double*, double*, int, int&amp;) (line 56)</a></td><td>called 4 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l80">nda::lapack::f77::stev(char, int, double*, double*, double*, int, double*, int&amp;) (line 80)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l82">nda::lapack::f77::syev(char, char, int, double*, int, double*, double*, int&amp;, int&amp;) (line 82)</a></td><td>called 8 times, returned 8 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l60">nda::lapack::f77::ungqr(int, int, int, std::complex&lt;double&gt;*, int, std::complex&lt;double&gt;*, std::complex&lt;double&gt;*, int, int&amp;) (line 60)</a></td><td>called 4 times, returned 4 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l82">nda::lapack::f77::syev(char, char, int, double*, int, double*, double*, int&amp;, int&amp;) (line 82)</a></td><td>called 8 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l60">nda::lapack::f77::ungqr(int, int, int, std::complex&lt;double&gt;*, int, std::complex&lt;double&gt;*, std::complex&lt;double&gt;*, int, int&amp;) (line 60)</a></td><td>called 4 times</td><td>100.0%</td></tr>
   </table>
 </details>
 
     </nav>
-
     <main>
 <div class="file-source">
   <table>
@@ -803,9 +799,8 @@
 </div>
       <hr/>
     </main>
-
     <footer>
-      Generated by: <a href="http://gcovr.com/en/7.2">GCOVR (Version 7.2)</a>
+      Generated by: <a href="http://gcovr.com/en/8.2">GCOVR (Version 8.2)</a>
     </footer>
   </body>
 </html>
