@@ -135,6 +135,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a47a0c578e7ab0ed58e5d2d5f1ca1f6a8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structnda_1_1expr__call.html">expr_call</a>&lt; F, A0, As... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a47a0c578e7ab0ed58e5d2d5f1ca1f6a8">operator()</a> (A0 &amp;&amp;a0, As &amp;&amp;...as) const</td></tr>
 <tr class="memdesc:a47a0c578e7ab0ed58e5d2d5f1ca1f6a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function call operator that returns a lazy function call expression.  <br /></td></tr>
 <tr class="separator:a47a0c578e7ab0ed58e5d2d5f1ca1f6a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32889f90f3c6a19dcd36a8bc4f88807a" id="r_a32889f90f3c6a19dcd36a8bc4f88807a"><td class="memTemplParams" colspan="2">template&lt;Scalar T0, Scalar... Ts&gt; </td></tr>
+<tr class="memitem:a32889f90f3c6a19dcd36a8bc4f88807a"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a32889f90f3c6a19dcd36a8bc4f88807a">operator()</a> (T0 a0, Ts... as) const</td></tr>
+<tr class="memdesc:a32889f90f3c6a19dcd36a8bc4f88807a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function call operator that returns the result of the callable object applied to the scalar arguments.  <br /></td></tr>
+<tr class="separator:a32889f90f3c6a19dcd36a8bc4f88807a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -145,7 +149,7 @@ F&#160;</td><td class="memItemRight" valign="bottom"><b>f</b></td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a47a0c578e7ab0ed58e5d2d5f1ca1f6a8" name="a47a0c578e7ab0ed58e5d2d5f1ca1f6a8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a47a0c578e7ab0ed58e5d2d5f1ca1f6a8">&#9670;&#160;</a></span>operator()()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a47a0c578e7ab0ed58e5d2d5f1ca1f6a8">&#9670;&#160;</a></span>operator()() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -193,6 +197,58 @@ template&lt;Array A0, Array... As&gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="map_8hpp_source.html#l00183">183</a> of file <a class="el" href="map_8hpp_source.html">map.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a32889f90f3c6a19dcd36a8bc4f88807a" name="a32889f90f3c6a19dcd36a8bc4f88807a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32889f90f3c6a19dcd36a8bc4f88807a">&#9670;&#160;</a></span>operator()() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class F &gt; </div>
+<div class="memtemplate">
+template&lt;Scalar T0, Scalar... Ts&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="structnda_1_1mapped.html">nda::mapped</a>&lt; F &gt;::operator() </td>
+          <td>(</td>
+          <td class="paramtype">T0</td>          <td class="paramname"><span class="paramname"><em>a0</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Ts...</td>          <td class="paramname"><span class="paramname"><em>as</em></span>&#160;) const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Function call operator that returns the result of the callable object applied to the scalar arguments. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T0</td><td>First <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> argument type. </td></tr>
+    <tr><td class="paramname">Ts</td><td>Rest of the <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> argument types. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t0</td><td>First <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> argument. </td></tr>
+    <tr><td class="paramname">ts</td><td>Rest of the <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> arguments. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Result of the functor applied to the scalar arguments. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="map_8hpp_source.html#l00198">198</a> of file <a class="el" href="map_8hpp_source.html">map.hpp</a>.</p>
 
 </div>
 </div>

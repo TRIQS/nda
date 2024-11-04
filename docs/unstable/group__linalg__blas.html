@@ -146,17 +146,17 @@ requires ((Scalar&lt;X&gt; or MemoryVector&lt;X&gt;) and (Scalar&lt;Y&gt; or Mem
 <tr class="memdesc:ga7e95e8ebf1b6a4af268e5174089d78d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic implementation of <a class="el" href="#ga4a0c527485f297fb962d0574552d98f1" title="Interface to the BLAS dotc routine.">nda::blas::dotc</a> for types not supported by BLAS/LAPACK.  <br /></td></tr>
 <tr class="separator:ga7e95e8ebf1b6a4af268e5174089d78d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac86e76a5d23dc7fea5bc982fee45cf2c" id="r_gac86e76a5d23dc7fea5bc982fee45cf2c"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Matrix B, MemoryMatrix C&gt; <br />
-requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;) and (MemoryMatrix&lt;B&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;B&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4978dad05d6d210e5d0c3fb23ac6f2df">is_conj_array_expr</a>&lt;A&gt;) and (MemoryMatrix&lt;B&gt; or <a class="el" href="#ga4978dad05d6d210e5d0c3fb23ac6f2df">is_conj_array_expr</a>&lt;B&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
 <tr class="memitem:gac86e76a5d23dc7fea5bc982fee45cf2c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gac86e76a5d23dc7fea5bc982fee45cf2c">nda::blas::gemm</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; alpha, A const &amp;a, B const &amp;b, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; beta, C &amp;&amp;c)</td></tr>
 <tr class="memdesc:gac86e76a5d23dc7fea5bc982fee45cf2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS <code>gemm</code> routine.  <br /></td></tr>
 <tr class="separator:gac86e76a5d23dc7fea5bc982fee45cf2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf5df976ecdf5813d9a0fb760ac155a5e" id="r_gaf5df976ecdf5813d9a0fb760ac155a5e"><td class="memTemplParams" colspan="2">template&lt;bool VBATCH = false, Matrix A, Matrix B, MemoryMatrix C&gt; <br />
-requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;) and (MemoryMatrix&lt;B&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;B&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4978dad05d6d210e5d0c3fb23ac6f2df">is_conj_array_expr</a>&lt;A&gt;) and (MemoryMatrix&lt;B&gt; or <a class="el" href="#ga4978dad05d6d210e5d0c3fb23ac6f2df">is_conj_array_expr</a>&lt;B&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
 <tr class="memitem:gaf5df976ecdf5813d9a0fb760ac155a5e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gaf5df976ecdf5813d9a0fb760ac155a5e">nda::blas::gemm_batch</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; alpha, std::vector&lt; A &gt; const &amp;va, std::vector&lt; B &gt; const &amp;vb, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; beta, std::vector&lt; C &gt; &amp;vc)</td></tr>
 <tr class="memdesc:gaf5df976ecdf5813d9a0fb760ac155a5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements a batched version of <a class="el" href="#gac86e76a5d23dc7fea5bc982fee45cf2c" title="Interface to the BLAS gemm routine.">nda::blas::gemm</a> taking vectors of matrices as arguments.  <br /></td></tr>
 <tr class="separator:gaf5df976ecdf5813d9a0fb760ac155a5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0ab133463a49dcbd043eefd1ea2222c2" id="r_ga0ab133463a49dcbd043eefd1ea2222c2"><td class="memTemplParams" colspan="2">template&lt;ArrayOfRank&lt; 3 &gt; A, ArrayOfRank&lt; 3 &gt; B, MemoryArrayOfRank&lt; 3 &gt; C&gt; <br />
-requires ((MemoryArrayOfRank&lt;A, 3&gt; or (<a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;)) and (MemoryArrayOfRank&lt;B, 3&gt; or (<a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;B&gt;)) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+requires ((MemoryArrayOfRank&lt;A, 3&gt; or (<a class="el" href="#ga4978dad05d6d210e5d0c3fb23ac6f2df">is_conj_array_expr</a>&lt;A&gt;)) and (MemoryArrayOfRank&lt;B, 3&gt; or (<a class="el" href="#ga4978dad05d6d210e5d0c3fb23ac6f2df">is_conj_array_expr</a>&lt;B&gt;)) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
 <tr class="memitem:ga0ab133463a49dcbd043eefd1ea2222c2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga0ab133463a49dcbd043eefd1ea2222c2">nda::blas::gemm_batch_strided</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; alpha, A const &amp;a, B const &amp;b, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; beta, C &amp;&amp;c)</td></tr>
 <tr class="memdesc:ga0ab133463a49dcbd043eefd1ea2222c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements a strided batched version of <a class="el" href="#gac86e76a5d23dc7fea5bc982fee45cf2c" title="Interface to the BLAS gemm routine.">nda::blas::gemm</a> taking 3-dimensional arrays as arguments.  <br /></td></tr>
 <tr class="separator:ga0ab133463a49dcbd043eefd1ea2222c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,7 +169,7 @@ requires ((MemoryArrayOfRank&lt;A, 3&gt; or (<a class="el" href="#ga4e762fd4595b
 <tr class="memdesc:ga2eeb65c38d5f3d350f2724d3b2405ff6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrapper of <a class="el" href="#gaf5df976ecdf5813d9a0fb760ac155a5e" title="Implements a batched version of nda::blas::gemm taking vectors of matrices as arguments.">nda::blas::gemm_batch</a> that allows variable sized matrices.  <br /></td></tr>
 <tr class="separator:ga2eeb65c38d5f3d350f2724d3b2405ff6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga84a5774ad61465032707b75116bf4111" id="r_ga84a5774ad61465032707b75116bf4111"><td class="memTemplParams" colspan="2">template&lt;Matrix A, MemoryVector X, MemoryVector Y&gt; <br />
-requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, X, Y&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4978dad05d6d210e5d0c3fb23ac6f2df">is_conj_array_expr</a>&lt;A&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, X, Y&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
 <tr class="memitem:ga84a5774ad61465032707b75116bf4111"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga84a5774ad61465032707b75116bf4111">nda::blas::gemv</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; alpha, A const &amp;a, X const &amp;x, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; beta, Y &amp;&amp;y)</td></tr>
 <tr class="memdesc:ga84a5774ad61465032707b75116bf4111"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS <code>gemv</code> routine.  <br /></td></tr>
 <tr class="separator:ga84a5774ad61465032707b75116bf4111"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -195,7 +195,7 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
 <tr class="memdesc:gaa1abfb609f2aca8484d0aec40d3f1805"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the outer product of two contiguous arrays/views/scalars.  <br /></td></tr>
 <tr class="separator:gaa1abfb609f2aca8484d0aec40d3f1805"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5d5fdc9f0d2f9b96c37a223867c60f2b" id="r_ga5d5fdc9f0d2f9b96c37a223867c60f2b"><td class="memTemplParams" colspan="2">template&lt;typename X &gt; <br />
-requires (MemoryVector&lt;X&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;X&gt;)</td></tr>
+requires (MemoryVector&lt;X&gt; or <a class="el" href="#ga4978dad05d6d210e5d0c3fb23ac6f2df">is_conj_array_expr</a>&lt;X&gt;)</td></tr>
 <tr class="memitem:ga5d5fdc9f0d2f9b96c37a223867c60f2b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga5d5fdc9f0d2f9b96c37a223867c60f2b">nda::blas::scal</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; X &gt; alpha, X &amp;&amp;x)</td></tr>
 <tr class="memdesc:ga5d5fdc9f0d2f9b96c37a223867c60f2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS <code>scal</code> routine.  <br /></td></tr>
 <tr class="separator:ga5d5fdc9f0d2f9b96c37a223867c60f2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -216,16 +216,10 @@ template&lt;Array A&gt; </td></tr>
 <tr class="memitem:gaa270d9c3e10b12ca1406623ac3f93471"><td class="memTemplItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>nda::blas::has_F_layout</b></td></tr>
 <tr class="memdesc:gaa270d9c3e10b12ca1406623ac3f93471"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constexpr variable that is true if the given <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type has a Fortran memory layout. <br /></td></tr>
 <tr class="separator:gaa270d9c3e10b12ca1406623ac3f93471"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4e762fd4595b433d898daa5528192e49" id="r_ga4e762fd4595b433d898daa5528192e49"><td class="memTemplParams" colspan="2"><a id="ga4e762fd4595b433d898daa5528192e49" name="ga4e762fd4595b433d898daa5528192e49"></a>
-template&lt;typename A &gt; </td></tr>
-<tr class="memitem:ga4e762fd4595b433d898daa5528192e49"><td class="memTemplItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>nda::blas::is_conj_array_expr</b> = false</td></tr>
-<tr class="memdesc:ga4e762fd4595b433d898daa5528192e49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constexpr variable that is true if the given type is a conjugate lazy expression. <br /></td></tr>
-<tr class="separator:ga4e762fd4595b433d898daa5528192e49"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9e97e3492e7b5ff2bb256d30606d5f1e" id="r_ga9e97e3492e7b5ff2bb256d30606d5f1e"><td class="memTemplParams" colspan="2"><a id="ga9e97e3492e7b5ff2bb256d30606d5f1e" name="ga9e97e3492e7b5ff2bb256d30606d5f1e"></a>
-template&lt;MemoryArray A&gt; </td></tr>
-<tr class="memitem:ga9e97e3492e7b5ff2bb256d30606d5f1e"><td class="memTemplItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>nda::blas::is_conj_array_expr&lt; expr_call&lt; conj_f, A &gt; &gt;</b> = true</td></tr>
-<tr class="memdesc:ga9e97e3492e7b5ff2bb256d30606d5f1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <a class="el" href="#ga4e762fd4595b433d898daa5528192e49" title="Constexpr variable that is true if the given type is a conjugate lazy expression.">nda::blas::is_conj_array_expr</a> for the conjugate lazy expressions. <br /></td></tr>
-<tr class="separator:ga9e97e3492e7b5ff2bb256d30606d5f1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4978dad05d6d210e5d0c3fb23ac6f2df" id="r_ga4978dad05d6d210e5d0c3fb23ac6f2df"><td class="memTemplParams" colspan="2">template&lt;typename A &gt; </td></tr>
+<tr class="memitem:ga4978dad05d6d210e5d0c3fb23ac6f2df"><td class="memTemplItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga4978dad05d6d210e5d0c3fb23ac6f2df">nda::blas::is_conj_array_expr</a> = false</td></tr>
+<tr class="memdesc:ga4978dad05d6d210e5d0c3fb23ac6f2df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constexpr variable that is true if the given type is a conjugate lazy expression.  <br /></td></tr>
+<tr class="separator:ga4978dad05d6d210e5d0c3fb23ac6f2df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="gabec70205c2c9842f78ceb40c618bdafb" name="gabec70205c2c9842f78ceb40c618bdafb"></a>
@@ -425,7 +419,7 @@ template&lt;typename X , typename Y &gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;Matrix A, Matrix B, MemoryMatrix C&gt; <br />
-requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;) and (MemoryMatrix&lt;B&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;B&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4978dad05d6d210e5d0c3fb23ac6f2df">is_conj_array_expr</a>&lt;A&gt;) and (MemoryMatrix&lt;B&gt; or <a class="el" href="#ga4978dad05d6d210e5d0c3fb23ac6f2df">is_conj_array_expr</a>&lt;B&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">void nda::blas::gemm </td>
@@ -500,7 +494,7 @@ requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898da
 <div class="memproto">
 <div class="memtemplate">
 template&lt;bool VBATCH = false, Matrix A, Matrix B, MemoryMatrix C&gt; <br />
-requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;) and (MemoryMatrix&lt;B&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;B&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4978dad05d6d210e5d0c3fb23ac6f2df">is_conj_array_expr</a>&lt;A&gt;) and (MemoryMatrix&lt;B&gt; or <a class="el" href="#ga4978dad05d6d210e5d0c3fb23ac6f2df">is_conj_array_expr</a>&lt;B&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">void nda::blas::gemm_batch </td>
@@ -565,7 +559,7 @@ requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898da
 <div class="memproto">
 <div class="memtemplate">
 template&lt;ArrayOfRank&lt; 3 &gt; A, ArrayOfRank&lt; 3 &gt; B, MemoryArrayOfRank&lt; 3 &gt; C&gt; <br />
-requires ((MemoryArrayOfRank&lt;A, 3&gt; or (<a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;)) and (MemoryArrayOfRank&lt;B, 3&gt; or (<a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;B&gt;)) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+requires ((MemoryArrayOfRank&lt;A, 3&gt; or (<a class="el" href="#ga4978dad05d6d210e5d0c3fb23ac6f2df">is_conj_array_expr</a>&lt;A&gt;)) and (MemoryArrayOfRank&lt;B, 3&gt; or (<a class="el" href="#ga4978dad05d6d210e5d0c3fb23ac6f2df">is_conj_array_expr</a>&lt;B&gt;)) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">void nda::blas::gemm_batch_strided </td>
@@ -753,7 +747,7 @@ template&lt;Matrix A, Matrix B, MemoryMatrix C&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;Matrix A, MemoryVector X, MemoryVector Y&gt; <br />
-requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, X, Y&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4978dad05d6d210e5d0c3fb23ac6f2df">is_conj_array_expr</a>&lt;A&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, X, Y&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">void nda::blas::gemv </td>
@@ -1071,7 +1065,7 @@ template&lt;ArrayOrScalar A, ArrayOrScalar B&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename X &gt; <br />
-requires (MemoryVector&lt;X&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;X&gt;)</div>
+requires (MemoryVector&lt;X&gt; or <a class="el" href="#ga4978dad05d6d210e5d0c3fb23ac6f2df">is_conj_array_expr</a>&lt;X&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">void nda::blas::scal </td>
@@ -1150,6 +1144,37 @@ template&lt;bool conj, bool transpose&gt; </div>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="tools_8hpp_source.html#l00091">91</a> of file <a class="el" href="tools_8hpp_source.html">tools.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga4978dad05d6d210e5d0c3fb23ac6f2df" name="ga4978dad05d6d210e5d0c3fb23ac6f2df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4978dad05d6d210e5d0c3fb23ac6f2df">&#9670;&#160;</a></span>is_conj_array_expr</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename A &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static constexpr bool nda::blas::is_conj_array_expr&lt; <a class="el" href="structnda_1_1expr__call.html">expr_call</a>&lt; detail::conj_f, A &gt; &gt; = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="tools_8hpp.html">nda/blas/tools.hpp</a>&gt;</code></p>
+
+<p>Constexpr variable that is true if the given type is a conjugate lazy expression. </p>
+<p>Specialization of <a class="el" href="#ga4978dad05d6d210e5d0c3fb23ac6f2df" title="Constexpr variable that is true if the given type is a conjugate lazy expression.">nda::blas::is_conj_array_expr</a> for the conjugate lazy expressions. </p>
+
+<p class="definition">Definition at line <a class="el" href="tools_8hpp_source.html#l00052">52</a> of file <a class="el" href="tools_8hpp_source.html">tools.hpp</a>.</p>
 
 </div>
 </div>

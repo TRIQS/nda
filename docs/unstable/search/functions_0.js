@@ -1,7 +1,7 @@
 var searchData=
 [
   ['abs_0',['abs',['../group__clef__expr.html#ga39a50069295367718027fa8e75955247',1,'nda::clef::abs()'],['../group__av__math.html#ga4ed509e92dd77b65eadca1347b23af35',1,'nda::abs(A &amp;&amp;a)']]],
-  ['abs2_1',['abs2',['../group__av__math.html#ga57cbedcaafec37603d2a843f615e7ad9',1,'nda::abs2(double x)'],['../group__av__math.html#ga15809c995c3231d561636be94f072a15',1,'nda::abs2(std::complex&lt; double &gt; z)'],['../group__av__math.html#gac1d8ab79eedda3a771672ec4f410e69b',1,'nda::abs2(A &amp;&amp;a)']]],
+  ['abs2_1',['abs2',['../group__av__math.html#gac1d8ab79eedda3a771672ec4f410e69b',1,'nda']]],
   ['access_2',['access',['../structnda_1_1default__accessor_1_1accessor.html#af777c7c6d616174a13fce3af65de6ea3',1,'nda::default_accessor::accessor::access()'],['../structnda_1_1no__alias__accessor_1_1accessor.html#a3354829e8fe23bbb4567990fb6bca71c',1,'nda::no_alias_accessor::accessor::access()']]],
   ['acos_3',['acos',['../group__clef__expr.html#gaf226422f69330aa1add74e83d10701e3',1,'nda::clef::acos()'],['../group__av__math.html#gacf26e60ac50147f333697565cb8e43ea',1,'nda::acos(A &amp;&amp;a)']]],
   ['all_4',['all',['../group__av__algs.html#gace1353ca15a2382bf8d466fd69283a91',1,'nda']]],

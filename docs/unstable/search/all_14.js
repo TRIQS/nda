@@ -14,7 +14,7 @@ var searchData=
   ['policies_11',['policies',['../group__layout__pols.html',1,'Layout policies'],['../group__mem__pols.html',1,'Memory policies']]],
   ['policies_2ehpp_12',['policies.hpp',['../layout_2policies_8hpp.html',1,'(Global Namespace)'],['../mem_2policies_8hpp.html',1,'(Global Namespace)']]],
   ['pop_13',['pop',['../group__utils__std.html#ga372f86a44ea753a1845c8f056c7a2a2b',1,'nda::stdutil']]],
-  ['pow_14',['pow',['../group__clef__expr.html#gaa90a95616e4d2765f3cea52a2e88cf47',1,'nda::clef::pow()'],['../group__av__math.html#gae6f33275bfb34bbff764b662f192ac00',1,'nda::pow(T x, int n)'],['../group__av__math.html#ga6900d4319e73e27201a65f96d082289f',1,'nda::pow(A &amp;&amp;a, double p)']]],
+  ['pow_14',['pow',['../group__clef__expr.html#gaa90a95616e4d2765f3cea52a2e88cf47',1,'nda::clef::pow()'],['../group__av__math.html#ga6900d4319e73e27201a65f96d082289f',1,'nda::pow()']]],
   ['print_2ehpp_15',['print.hpp',['../print_8hpp.html',1,'']]],
   ['print_5fhistogram_16',['print_histogram',['../classnda_1_1mem_1_1stats.html#a654a54e2728583b2dc41690a4e2c827b',1,'nda::mem::stats']]],
   ['print_5ftuple_17',['print_tuple',['../group__clef__utils.html#ga939b5f2a463e2e3f20130ea7d9216642',1,'nda::clef']]],

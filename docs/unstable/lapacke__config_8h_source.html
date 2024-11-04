@@ -175,10 +175,10 @@ $(function(){initNavTree('lapacke__config_8h_source.html',''); initResizable(tru
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="preprocessor">#if defined(LAPACK_COMPLEX_STRUCTURE)</span></div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <span class="keywordtype">float</span> <a class="code hl_function" href="group__av__math.html#ga988c868e85f4f56b255fcf888edf5476">real</a>, <a class="code hl_function" href="group__av__math.html#gaa337f00c9324d22f827b9759adb22f18">imag</a>;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <span class="keywordtype">float</span> real, <a class="code hl_function" href="group__av__math.html#gaa337f00c9324d22f827b9759adb22f18">imag</a>;</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>} _lapack_complex_float;</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <span class="keywordtype">double</span> <a class="code hl_function" href="group__av__math.html#ga988c868e85f4f56b255fcf888edf5476">real</a>, <a class="code hl_function" href="group__av__math.html#gaa337f00c9324d22f827b9759adb22f18">imag</a>;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <span class="keywordtype">double</span> real, <a class="code hl_function" href="group__av__math.html#gaa337f00c9324d22f827b9759adb22f18">imag</a>;</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>} _lapack_complex_double;</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="preprocessor">#define lapack_complex_float _lapack_complex_float</span></div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="preprocessor">#define lapack_complex_double _lapack_complex_double</span></div>
@@ -245,8 +245,7 @@ $(function(){initNavTree('lapacke__config_8h_source.html',''); initResizable(tru
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="preprocessor">#endif </span><span class="comment">/* __cplusplus */</span><span class="preprocessor"></span></div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span><span class="preprocessor">#endif </span><span class="comment">/* _LAPACKE_CONFIG_H_ */</span><span class="preprocessor"></span></div>
-<div class="ttc" id="agroup__av__math_html_ga988c868e85f4f56b255fcf888edf5476"><div class="ttname"><a href="group__av__math.html#ga988c868e85f4f56b255fcf888edf5476">nda::real</a></div><div class="ttdeci">auto real(T t)</div><div class="ttdoc">Get the real part of a scalar.</div><div class="ttdef"><b>Definition</b> <a href="mapped__functions_8hpp_source.html#l00049">mapped_functions.hpp:49</a></div></div>
-<div class="ttc" id="agroup__av__math_html_gaa337f00c9324d22f827b9759adb22f18"><div class="ttname"><a href="group__av__math.html#gaa337f00c9324d22f827b9759adb22f18">nda::imag</a></div><div class="ttdeci">auto imag(A &amp;&amp;a)</div><div class="ttdoc">Lazy, coefficient-wise imag function for nda::Array types.</div><div class="ttdef"><b>Definition</b> <a href="mapped__functions_8hxx_source.html#l00109">mapped_functions.hxx:109</a></div></div>
+<div class="ttc" id="agroup__av__math_html_gaa337f00c9324d22f827b9759adb22f18"><div class="ttname"><a href="group__av__math.html#gaa337f00c9324d22f827b9759adb22f18">nda::imag</a></div><div class="ttdeci">auto imag(A &amp;&amp;a)</div><div class="ttdoc">Function imag for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).</div><div class="ttdef"><b>Definition</b> <a href="mapped__functions_8hxx_source.html#l00110">mapped_functions.hxx:110</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

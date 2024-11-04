@@ -77,7 +77,6 @@ var NAVTREE =
           [ "mpi::lazy<mpi::tag::scatter, A>", "structmpi_1_1lazy_3_01mpi_1_1tag_1_1scatter_00_01_a_01_4.html", null ]
         ] ],
         [ "Mathematical functions", "group__av__math.html", [
-          [ "conj_f", "structnda_1_1conj__f.html", null ],
           [ "expr_call", "structnda_1_1expr__call.html", null ],
           [ "mapped", "structnda_1_1mapped.html", null ]
         ] ],

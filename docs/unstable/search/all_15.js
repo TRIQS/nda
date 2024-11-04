@@ -6,7 +6,7 @@ var searchData=
   ['rand_3',['rand',['../classnda_1_1basic__array.html#afee46ba48f00ff7d4c9ddb9890e0c451',1,'nda::basic_array::rand(std::array&lt; Int, Rank &gt; const &amp;shape)'],['../classnda_1_1basic__array.html#ac25e1eebcc4bfc145a7d887ed3587ef2',1,'nda::basic_array::rand(Ints... is)'],['../group__av__factories.html#ga1ae039252f35748e691cba9fa4c9ae15',1,'nda::rand(std::array&lt; Int, Rank &gt; const &amp;shape)'],['../group__av__factories.html#ga6888305d7dafa3d8ae91eba441c8700c',1,'nda::rand(Ints... is)']]],
   ['range_2ehpp_4',['range.hpp',['../range_8hpp.html',1,'']]],
   ['rank_5',['rank',['../classnda_1_1basic__array.html#a2edc4ce929c6f0f12d9cf873ecd2c91b',1,'nda::basic_array::rank'],['../classnda_1_1basic__array__view.html#a2fb22cdf52eb965f95782f12420952e4',1,'nda::basic_array_view::rank'],['../classnda_1_1idx__map.html#a63b5b07ceed17e90dc61d3b78d7c8487',1,'nda::idx_map::rank()']]],
-  ['real_6',['real',['../group__av__math.html#ga988c868e85f4f56b255fcf888edf5476',1,'nda::real(T t)'],['../group__av__math.html#ga801930e88ab85629067870e91ab9f97f',1,'nda::real(A &amp;&amp;a)']]],
+  ['real_6',['real',['../group__av__math.html#ga801930e88ab85629067870e91ab9f97f',1,'nda']]],
   ['rebind_7',['rebind',['../classnda_1_1basic__array__view.html#addeb6bc8ab5bcec5771d47330ccdb768',1,'nda::basic_array_view']]],
   ['reduce_2ehpp_8',['reduce.hpp',['../reduce_8hpp.html',1,'']]],
   ['refcount_9',['refcount',['../structnda_1_1mem_1_1handle__shared.html#a5f42b47c1e3f62ac685085bd7d8e2894',1,'nda::mem::handle_shared']]],

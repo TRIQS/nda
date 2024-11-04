@@ -69,7 +69,6 @@ var menudata={children:[
 {text:"mpi::lazy<mpi::tag::reduce, A>",url:"structmpi_1_1lazy_3_01mpi_1_1tag_1_1reduce_00_01_a_01_4.html"},
 {text:"mpi::lazy<mpi::tag::scatter, A>",url:"structmpi_1_1lazy_3_01mpi_1_1tag_1_1scatter_00_01_a_01_4.html"}]},
 {text:"Mathematical functions",url:"group__av__math.html",children:[
-{text:"conj_f",url:"structnda_1_1conj__f.html"},
 {text:"expr_call",url:"structnda_1_1expr__call.html"},
 {text:"mapped",url:"structnda_1_1mapped.html"}]},
 {text:"Symmetries",url:"group__av__sym.html",children:[

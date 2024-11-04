@@ -2,7 +2,7 @@ var searchData=
 [
   ['a_0',['a',['../structnda_1_1expr__unary.html#a39c5061eb97d542f0cce1fd43f916783',1,'nda::expr_unary::a'],['../structnda_1_1expr__call.html#aa42ea85e2894d9ea18446bb1d0a1115d',1,'nda::expr_call::a']]],
   ['abs_1',['abs',['../group__clef__expr.html#ga39a50069295367718027fa8e75955247',1,'nda::clef::abs()'],['../group__av__math.html#ga4ed509e92dd77b65eadca1347b23af35',1,'nda::abs(A &amp;&amp;a)']]],
-  ['abs2_2',['abs2',['../group__av__math.html#ga57cbedcaafec37603d2a843f615e7ad9',1,'nda::abs2(double x)'],['../group__av__math.html#ga15809c995c3231d561636be94f072a15',1,'nda::abs2(std::complex&lt; double &gt; z)'],['../group__av__math.html#gac1d8ab79eedda3a771672ec4f410e69b',1,'nda::abs2(A &amp;&amp;a)']]],
+  ['abs2_2',['abs2',['../group__av__math.html#gac1d8ab79eedda3a771672ec4f410e69b',1,'nda']]],
   ['access_3',['access',['../structnda_1_1default__accessor_1_1accessor.html#af777c7c6d616174a13fce3af65de6ea3',1,'nda::default_accessor::accessor::access()'],['../structnda_1_1no__alias__accessor_1_1accessor.html#a3354829e8fe23bbb4567990fb6bca71c',1,'nda::no_alias_accessor::accessor::access()']]],
   ['accessor_4',['accessor',['../structnda_1_1default__accessor_1_1accessor.html',1,'nda::default_accessor::accessor&lt; T &gt;'],['../structnda_1_1no__alias__accessor_1_1accessor.html',1,'nda::no_alias_accessor::accessor&lt; T &gt;']]],
   ['accessor_5fpolicy_5ft_5',['accessor_policy_t',['../classnda_1_1basic__array__view.html#ad74d6f4c9a5054fd2ec4db9180495935',1,'nda::basic_array_view']]],

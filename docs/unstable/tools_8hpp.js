@@ -6,6 +6,5 @@ var tools_8hpp =
     [ "get_op", "tools_8hpp.html#gaf9028eaeb96ef5867bb66664aa831cb7", null ],
     [ "has_C_layout", "tools_8hpp.html#ga24228d6ce4cd37cb84f967a933287d95", null ],
     [ "has_F_layout", "tools_8hpp.html#gaa270d9c3e10b12ca1406623ac3f93471", null ],
-    [ "is_conj_array_expr", "tools_8hpp.html#ga4e762fd4595b433d898daa5528192e49", null ],
-    [ "is_conj_array_expr< expr_call< conj_f, A > >", "tools_8hpp.html#ga9e97e3492e7b5ff2bb256d30606d5f1e", null ]
+    [ "is_conj_array_expr", "tools_8hpp.html#ga4978dad05d6d210e5d0c3fb23ac6f2df", null ]
 ];

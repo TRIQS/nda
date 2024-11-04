@@ -25,5 +25,5 @@ var searchData=
   ['is_5fstride_5forder_5fvalid_22',['is_stride_order_valid',['../classnda_1_1idx__map.html#a1af5e60a5df33b87050de6bc46ccd2f5',1,'nda::idx_map::is_stride_order_valid(Int *lenptr, Int *strptr)'],['../classnda_1_1idx__map.html#a4b6ba3197f6c57cff9fccffdbb9b89c4',1,'nda::idx_map::is_stride_order_valid() const']]],
   ['is_5fstrided_5f1d_23',['is_strided_1d',['../classnda_1_1idx__map.html#a70c1f64cadc1b390707a919ea60ef8da',1,'nda::idx_map']]],
   ['is_5fvalid_24',['is_valid',['../group__utils__perms.html#ga506be5a2b784ed0b8145f75f14477229',1,'nda::permutations::is_valid()'],['../group__av__sym.html#ga600dcc224843d9e1c224dfdf54b71adf',1,'nda::is_valid(A const &amp;a, std::array&lt; long, static_cast&lt; std::size_t &gt;(get_rank&lt; A &gt;)&gt; const &amp;idx)']]],
-  ['isnan_25',['isnan',['../group__av__math.html#ga30a17b38d958a4b2ce4702d4ada7fccf',1,'nda::isnan(std::complex&lt; double &gt; const &amp;z)'],['../group__av__math.html#gaa79c8329c178c50f2eb1e3ff129750e6',1,'nda::isnan(A &amp;&amp;a)']]]
+  ['isnan_25',['isnan',['../group__av__math.html#gaa79c8329c178c50f2eb1e3ff129750e6',1,'nda']]]
 ];

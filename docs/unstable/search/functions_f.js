@@ -2,7 +2,7 @@ var searchData=
 [
   ['rand_0',['rand',['../classnda_1_1basic__array.html#afee46ba48f00ff7d4c9ddb9890e0c451',1,'nda::basic_array::rand(std::array&lt; Int, Rank &gt; const &amp;shape)'],['../classnda_1_1basic__array.html#ac25e1eebcc4bfc145a7d887ed3587ef2',1,'nda::basic_array::rand(Ints... is)'],['../group__av__factories.html#ga1ae039252f35748e691cba9fa4c9ae15',1,'nda::rand(std::array&lt; Int, Rank &gt; const &amp;shape)'],['../group__av__factories.html#ga6888305d7dafa3d8ae91eba441c8700c',1,'nda::rand(Ints... is)']]],
   ['rank_1',['rank',['../classnda_1_1idx__map.html#a63b5b07ceed17e90dc61d3b78d7c8487',1,'nda::idx_map']]],
-  ['real_2',['real',['../group__av__math.html#ga988c868e85f4f56b255fcf888edf5476',1,'nda::real(T t)'],['../group__av__math.html#ga801930e88ab85629067870e91ab9f97f',1,'nda::real(A &amp;&amp;a)']]],
+  ['real_2',['real',['../group__av__math.html#ga801930e88ab85629067870e91ab9f97f',1,'nda']]],
   ['rebind_3',['rebind',['../classnda_1_1basic__array__view.html#addeb6bc8ab5bcec5771d47330ccdb768',1,'nda::basic_array_view']]],
   ['refcount_4',['refcount',['../structnda_1_1mem_1_1handle__shared.html#a5f42b47c1e3f62ac685085bd7d8e2894',1,'nda::mem::handle_shared']]],
   ['reinterpret_5fadd_5ffast_5fdims_5fof_5fsize_5fone_5',['reinterpret_add_fast_dims_of_size_one',['../group__av__factories.html#ga45f52137a4bfd2926583530f73c29c1c',1,'nda']]],
