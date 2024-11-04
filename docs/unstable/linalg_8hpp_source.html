@@ -127,22 +127,25 @@ $(function(){initNavTree('linalg_8hpp_source.html',''); initResizable(true); });
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">//</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">// Authors: Thomas Hahn, Nils Wentzell</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">/**</span></div>
-<div class="line"><span class="lineno">   18</span><span class="comment"> * @file</span></div>
-<div class="line"><span class="lineno">   19</span><span class="comment"> * @brief Includes all relevant headers for the linear algebra functionality.</span></div>
-<div class="line"><span class="lineno">   20</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#</span><span class="preprocessor">pragma</span> <span class="preprocessor">once</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&quot;./blas.hpp&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&quot;./lapack.hpp&quot;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;<a class="code" href="blas_8hpp.html">./blas.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;<a class="code" href="lapack_8hpp.html">./lapack.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&quot;./linalg/cross_product.hpp&quot;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&quot;./linalg/det_and_inverse.hpp&quot;</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&quot;./linalg/dot.hpp&quot;</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&quot;./linalg/eigenelements.hpp&quot;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&quot;./linalg/matmul.hpp&quot;</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&quot;./linalg/norm.hpp&quot;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;<a class="code" href="cross__product_8hpp.html">./linalg/cross_product.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;<a class="code" href="det__and__inverse_8hpp.html">./linalg/det_and_inverse.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;<a class="code" href="linalg_2dot_8hpp.html">./linalg/dot.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;<a class="code" href="eigenelements_8hpp.html">./linalg/eigenelements.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;<a class="code" href="matmul_8hpp.html">./linalg/matmul.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &quot;<a class="code" href="norm_8hpp.html">./linalg/norm.hpp</a>&quot;</span></div>
+<div class="ttc" id="ablas_8hpp_html"><div class="ttname"><a href="blas_8hpp.html">blas.hpp</a></div><div class="ttdoc">Includes all BLAS relevant headers.</div></div>
+<div class="ttc" id="across__product_8hpp_html"><div class="ttname"><a href="cross__product_8hpp.html">cross_product.hpp</a></div><div class="ttdoc">Provides a cross product for 3-dimensional vectors or other arrays/views of rank 1.</div></div>
+<div class="ttc" id="adet__and__inverse_8hpp_html"><div class="ttname"><a href="det__and__inverse_8hpp.html">det_and_inverse.hpp</a></div><div class="ttdoc">Provides functions to compute the determinant and inverse of a matrix.</div></div>
+<div class="ttc" id="aeigenelements_8hpp_html"><div class="ttname"><a href="eigenelements_8hpp.html">eigenelements.hpp</a></div><div class="ttdoc">Provides eigenvalues and eigenvectors of a symmetric or hermitian matrix.</div></div>
+<div class="ttc" id="alapack_8hpp_html"><div class="ttname"><a href="lapack_8hpp.html">lapack.hpp</a></div><div class="ttdoc">Includes all LAPACK relevant headers.</div></div>
+<div class="ttc" id="alinalg_2dot_8hpp_html"><div class="ttname"><a href="linalg_2dot_8hpp.html">dot.hpp</a></div><div class="ttdoc">Provides a dot product for two arrays, a scalar and an array, or two scalars.</div></div>
+<div class="ttc" id="amatmul_8hpp_html"><div class="ttname"><a href="matmul_8hpp.html">matmul.hpp</a></div><div class="ttdoc">Provides matrix-matrix an matrix-vector multiplication.</div></div>
+<div class="ttc" id="anorm_8hpp_html"><div class="ttname"><a href="norm_8hpp.html">norm.hpp</a></div><div class="ttdoc">Provides the p-norm for general arrays/views of rank 1 and with scalar elements.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

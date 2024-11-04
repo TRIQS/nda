@@ -119,8 +119,8 @@ $(function(){initNavTree('structnda_1_1expr__unary.html',''); initResizable(true
 <p><code>#include &lt;<a class="el" href="arithmetic_8hpp_source.html">nda/arithmetic.hpp</a>&gt;</code></p>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;char OP, Array A&gt;<br />
-struct nda::expr_unary&lt; OP, A &gt;</div><p>Lazy unary expression for <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types. </p>
-<p>A lazy unary expression contains a single operand and a unary operation. It fulfills the <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> concept and can therefore be used in any other expression or function that expects an <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type.</p>
+struct nda::expr_unary&lt; OP, A &gt;</div><p>Lazy unary expression for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types. </p>
+<p>A lazy unary expression contains a single operand and a unary operation. It fulfills the <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> concept and can therefore be used in any other expression or function that expects an <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type.</p>
 <p>The only supported unary operation is the negation operation ('-').</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -130,7 +130,7 @@ struct nda::expr_unary&lt; OP, A &gt;</div><p>Lazy unary expression for <a class
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
@@ -144,17 +144,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a53a14614d4500b87a77a73e8c81f7792"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function call operator.  <br /></td></tr>
 <tr class="separator:a53a14614d4500b87a77a73e8c81f7792"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6f3bc7baa1944a7db08a3d983fbfb3b" id="r_ae6f3bc7baa1944a7db08a3d983fbfb3b"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae6f3bc7baa1944a7db08a3d983fbfb3b">shape</a> () const</td></tr>
-<tr class="memdesc:ae6f3bc7baa1944a7db08a3d983fbfb3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the shape of the <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> operand.  <br /></td></tr>
+<tr class="memdesc:ae6f3bc7baa1944a7db08a3d983fbfb3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the shape of the <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> operand.  <br /></td></tr>
 <tr class="separator:ae6f3bc7baa1944a7db08a3d983fbfb3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a4661e4de4cb4b09a3969f1615e00f1" id="r_a6a4661e4de4cb4b09a3969f1615e00f1"><td class="memItemLeft" align="right" valign="top">constexpr long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6a4661e4de4cb4b09a3969f1615e00f1">size</a> () const</td></tr>
-<tr class="memdesc:a6a4661e4de4cb4b09a3969f1615e00f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the total size of the <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> operand.  <br /></td></tr>
+<tr class="memdesc:a6a4661e4de4cb4b09a3969f1615e00f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the total size of the <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> operand.  <br /></td></tr>
 <tr class="separator:a6a4661e4de4cb4b09a3969f1615e00f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a39c5061eb97d542f0cce1fd43f916783" id="r_a39c5061eb97d542f0cce1fd43f916783"><td class="memItemLeft" align="right" valign="top"><a id="a39c5061eb97d542f0cce1fd43f916783" name="a39c5061eb97d542f0cce1fd43f916783"></a>
 A&#160;</td><td class="memItemRight" valign="bottom"><b>a</b></td></tr>
-<tr class="memdesc:a39c5061eb97d542f0cce1fd43f916783"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. <br /></td></tr>
+<tr class="memdesc:a39c5061eb97d542f0cce1fd43f916783"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. <br /></td></tr>
 <tr class="separator:a39c5061eb97d542f0cce1fd43f916783"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -186,7 +186,7 @@ template&lt;typename... Args&gt; </div>
 </div><div class="memdoc">
 
 <p>Function call operator. </p>
-<p>Forwards the arguments to the <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> operand and negates the result.</p>
+<p>Forwards the arguments to the <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> operand and negates the result.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Args</td><td>Types of the arguments. </td></tr>
@@ -199,7 +199,7 @@ template&lt;typename... Args&gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>If the result of the forwarded function call is another <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>, a new lazy expression is returned. Otherwise the result is negated and returned. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>If the result of the forwarded function call is another <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>, a new lazy expression is returned. Otherwise the result is negated and returned. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00076">76</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
 
@@ -230,7 +230,7 @@ template&lt;char OP, Array A&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Get the shape of the <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> operand. </p>
+<p>Get the shape of the <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> operand. </p>
 <dl class="section return"><dt>Returns</dt><dd><code>std::array&lt;long, Rank&gt;</code> object specifying the shape of the operand. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00084">84</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
@@ -262,7 +262,7 @@ template&lt;char OP, Array A&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Get the total size of the <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> operand. </p>
+<p>Get the total size of the <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> operand. </p>
 <dl class="section return"><dt>Returns</dt><dd>Number of elements contained in the operand. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00090">90</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>

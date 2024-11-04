@@ -153,15 +153,15 @@ $(function(){initNavTree('group__av__hdf5.html',''); initResizable(true); });
 Functions</h2></td></tr>
 <tr class="memitem:ga2bbce727dcb0638aac491a58bd2a6b28" id="r_ga2bbce727dcb0638aac491a58bd2a6b28"><td class="memTemplParams" colspan="2">template&lt;MemoryArray A, typename... IRs&gt; </td></tr>
 <tr class="memitem:ga2bbce727dcb0638aac491a58bd2a6b28"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga2bbce727dcb0638aac491a58bd2a6b28">nda::h5_read</a> (h5::group g, std::string const &amp;name, A &amp;a, std::tuple&lt; IRs... &gt; const &amp;slice={})</td></tr>
-<tr class="memdesc:ga2bbce727dcb0638aac491a58bd2a6b28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read into an <a class="el" href="conceptnda_1_1MemoryArray.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> from an HDF5 file.  <br /></td></tr>
+<tr class="memdesc:ga2bbce727dcb0638aac491a58bd2a6b28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read into an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> from an HDF5 file.  <br /></td></tr>
 <tr class="separator:ga2bbce727dcb0638aac491a58bd2a6b28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga45a1f6d57e999ad0cf8023e3d1b0ff2c" id="r_ga45a1f6d57e999ad0cf8023e3d1b0ff2c"><td class="memTemplParams" colspan="2">template&lt;MemoryArray A&gt; </td></tr>
 <tr class="memitem:ga45a1f6d57e999ad0cf8023e3d1b0ff2c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga45a1f6d57e999ad0cf8023e3d1b0ff2c">nda::h5_write</a> (h5::group g, std::string const &amp;name, A const &amp;a, bool compress=true)</td></tr>
-<tr class="memdesc:ga45a1f6d57e999ad0cf8023e3d1b0ff2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write an <a class="el" href="conceptnda_1_1MemoryArray.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> to a new dataset/subgroup into an HDF5 file.  <br /></td></tr>
+<tr class="memdesc:ga45a1f6d57e999ad0cf8023e3d1b0ff2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> to a new dataset/subgroup into an HDF5 file.  <br /></td></tr>
 <tr class="separator:ga45a1f6d57e999ad0cf8023e3d1b0ff2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa4dee39e09d66dbc7e09347ac8045475" id="r_gaa4dee39e09d66dbc7e09347ac8045475"><td class="memTemplParams" colspan="2">template&lt;MemoryArray A, typename... IRs&gt; </td></tr>
 <tr class="memitem:gaa4dee39e09d66dbc7e09347ac8045475"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gaa4dee39e09d66dbc7e09347ac8045475">nda::h5_write</a> (h5::group g, std::string const &amp;name, A const &amp;a, std::tuple&lt; IRs... &gt; const &amp;slice)</td></tr>
-<tr class="memdesc:gaa4dee39e09d66dbc7e09347ac8045475"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write an <a class="el" href="conceptnda_1_1MemoryArray.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> into a slice (hyperslab) of an existing dataset in an HDF5 file.  <br /></td></tr>
+<tr class="memdesc:gaa4dee39e09d66dbc7e09347ac8045475"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> into a slice (hyperslab) of an existing dataset in an HDF5 file.  <br /></td></tr>
 <tr class="separator:gaa4dee39e09d66dbc7e09347ac8045475"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab6fea3ef30e10b8ab043fe8fcfe26138" id="r_gab6fea3ef30e10b8ab043fe8fcfe26138"><td class="memTemplParams" colspan="2">template&lt;size_t NDim, typename... IRs&gt; </td></tr>
 <tr class="memitem:gab6fea3ef30e10b8ab043fe8fcfe26138"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gab6fea3ef30e10b8ab043fe8fcfe26138">nda::hyperslab_and_shape_from_slice</a> (std::tuple&lt; IRs... &gt; const &amp;slice, std::vector&lt; h5::hsize_t &gt; const &amp;ds_shape, bool is_complex)</td></tr>
@@ -202,7 +202,7 @@ template&lt;MemoryArray A, typename... IRs&gt; </div>
 
 <p><code>#include &lt;<a class="el" href="h5_8hpp.html">nda/h5.hpp</a>&gt;</code></p>
 
-<p>Read into an <a class="el" href="conceptnda_1_1MemoryArray.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> from an HDF5 file. </p>
+<p>Read into an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> from an HDF5 file. </p>
 <p>The following arrays/views are supported:</p><ul>
 <li>1-dimensional arrays/views of strings: The data is read into an <code>h5::char_buf</code> and then copied into the array/view.</li>
 <li>arbitrary arrays/views of scalars: The data is read directly from an <code>h5::dataset</code> into the array/view. If the stride order is not C-order, the data is first read into an array with C-order layout, before it is copied into the array/view. The data to be read from the dataset can be restricted by providing a slice.</li>
@@ -211,7 +211,7 @@ template&lt;MemoryArray A, typename... IRs&gt; </div>
 <dl class="section note"><dt>Note</dt><dd>While array objects will always be resized to fit the shape of the data read from the file, views must have the same shape as the data to be read. If this is not the case, an exception is thrown.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1MemoryArray.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> type. </td></tr>
     <tr><td class="paramname">IRs</td><td>Types in the slice, i.e. integer, <code>nda::range</code>, <code>nda::range::all_t</code> or <a class="el" href="structnda_1_1ellipsis.html" title="Mimics Python&#39;s ... syntax.">nda::ellipsis</a>. </td></tr>
   </table>
   </dd>
@@ -220,7 +220,7 @@ template&lt;MemoryArray A, typename... IRs&gt; </div>
   <table class="params">
     <tr><td class="paramname">g</td><td><code>h5::group</code> which contains the dataset/subgroup to read from. </td></tr>
     <tr><td class="paramname">name</td><td>Name of the dataset/subgroup. </td></tr>
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1MemoryArray.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> object to be read into. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> object to be read into. </td></tr>
     <tr><td class="paramname">slice</td><td>Optional tuple specifying the slice of the dataset to be read. </td></tr>
   </table>
   </dd>
@@ -263,7 +263,7 @@ template&lt;MemoryArray A&gt; </div>
 
 <p><code>#include &lt;<a class="el" href="h5_8hpp.html">nda/h5.hpp</a>&gt;</code></p>
 
-<p>Write an <a class="el" href="conceptnda_1_1MemoryArray.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> to a new dataset/subgroup into an HDF5 file. </p>
+<p>Write an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> to a new dataset/subgroup into an HDF5 file. </p>
 <p>The following arrays/views can be written to HDF5:</p><ul>
 <li>1-dimensional array/view of strings: It is first converted to an <code>h5::char_buf</code> before it is written.</li>
 <li>arbitrary array/view of scalars: The data is written directly into an <code>h5::dataset</code> with the same shape. If the stride order is not C-order, the elements of the array/view are first copied into an array with C-order layout.</li>
@@ -271,15 +271,15 @@ template&lt;MemoryArray A&gt; </div>
 </ul>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1MemoryArray.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">g</td><td><code>h5::group</code> in which the dataset/subgroup is created. </td></tr>
-    <tr><td class="paramname">name</td><td>Name of the dataset/subgroup to which the <a class="el" href="conceptnda_1_1MemoryArray.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> is written. </td></tr>
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1MemoryArray.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> to be written. </td></tr>
+    <tr><td class="paramname">name</td><td>Name of the dataset/subgroup to which the <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> is written. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> to be written. </td></tr>
     <tr><td class="paramname">compress</td><td>Whether to compress the dataset. </td></tr>
   </table>
   </dd>
@@ -322,12 +322,12 @@ template&lt;MemoryArray A, typename... IRs&gt; </div>
 
 <p><code>#include &lt;<a class="el" href="h5_8hpp.html">nda/h5.hpp</a>&gt;</code></p>
 
-<p>Write an <a class="el" href="conceptnda_1_1MemoryArray.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> into a slice (hyperslab) of an existing dataset in an HDF5 file. </p>
-<p>The hyperslab in the dataset is specified by providing a tuple of integer, <code>nda::range</code>, <code>nda::range::all_t</code> or <a class="el" href="structnda_1_1ellipsis.html" title="Mimics Python&#39;s ... syntax.">nda::ellipsis</a> objects. It's shape must match the shape of the <a class="el" href="conceptnda_1_1MemoryArray.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> to be written, otherwise an exception is thrown.</p>
+<p>Write an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> into a slice (hyperslab) of an existing dataset in an HDF5 file. </p>
+<p>The hyperslab in the dataset is specified by providing a tuple of integer, <code>nda::range</code>, <code>nda::range::all_t</code> or <a class="el" href="structnda_1_1ellipsis.html" title="Mimics Python&#39;s ... syntax.">nda::ellipsis</a> objects. It's shape must match the shape of the <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> to be written, otherwise an exception is thrown.</p>
 <p>Only arrays/views with scalar types can be written to a slice.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1MemoryArray.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> type. </td></tr>
     <tr><td class="paramname">IRs</td><td>Types in the slice, i.e. integer, <code>nda::range</code>, <code>nda::range::all_t</code> or <a class="el" href="structnda_1_1ellipsis.html" title="Mimics Python&#39;s ... syntax.">nda::ellipsis</a>. </td></tr>
   </table>
   </dd>
@@ -336,8 +336,8 @@ template&lt;MemoryArray A, typename... IRs&gt; </div>
   <table class="params">
     <tr><td class="paramname">g</td><td><code>h5::group</code> which contains the dataset. </td></tr>
     <tr><td class="paramname">name</td><td>Name of the dataset. </td></tr>
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1MemoryArray.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> to be written. </td></tr>
-    <tr><td class="paramname">slice</td><td>Tuple specifying the slice of the dataset to which the <a class="el" href="conceptnda_1_1MemoryArray.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> is written. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> to be written. </td></tr>
+    <tr><td class="paramname">slice</td><td>Tuple specifying the slice of the dataset to which the <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> is written. </td></tr>
   </table>
   </dd>
 </dl>
@@ -385,7 +385,7 @@ template&lt;size_t NDim, typename... IRs&gt; </div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">slice</td><td>Tuple specifying the slice of the dataset to which the <a class="el" href="conceptnda_1_1MemoryArray.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> is written. </td></tr>
+    <tr><td class="paramname">slice</td><td>Tuple specifying the slice of the dataset to which the <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> is written. </td></tr>
     <tr><td class="paramname">ds_shape</td><td>Shape of the underlying dataset. </td></tr>
     <tr><td class="paramname">is_complex</td><td>Whether the data is complex valued. </td></tr>
   </table>

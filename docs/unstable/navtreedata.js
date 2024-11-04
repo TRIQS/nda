@@ -50,20 +50,20 @@ var NAVTREE =
           [ "expr_unary", "structnda_1_1expr__unary.html", null ]
         ] ],
         [ "Array/View utilities", "group__av__utils.html", [
-          [ "Array", "conceptnda_1_1Array.html", null ],
-          [ "MemoryArray", "conceptnda_1_1MemoryArray.html", null ],
-          [ "ArrayOfRank", "conceptnda_1_1ArrayOfRank.html", null ],
-          [ "MemoryArrayOfRank", "conceptnda_1_1MemoryArrayOfRank.html", null ],
-          [ "ArrayOrScalar", "conceptnda_1_1ArrayOrScalar.html", null ],
-          [ "Matrix", "conceptnda_1_1Matrix.html", null ],
-          [ "Vector", "conceptnda_1_1Vector.html", null ],
-          [ "MemoryMatrix", "conceptnda_1_1MemoryMatrix.html", null ],
-          [ "MemoryVector", "conceptnda_1_1MemoryVector.html", null ],
-          [ "ArrayInitializer", "conceptnda_1_1ArrayInitializer.html", null ],
-          [ "HasValueTypeConstructibleFrom", "conceptnda_1_1HasValueTypeConstructibleFrom.html", null ],
+          [ "Array", "conceptnda_1_1_array.html", null ],
+          [ "MemoryArray", "conceptnda_1_1_memory_array.html", null ],
+          [ "ArrayOfRank", "conceptnda_1_1_array_of_rank.html", null ],
+          [ "MemoryArrayOfRank", "conceptnda_1_1_memory_array_of_rank.html", null ],
+          [ "ArrayOrScalar", "conceptnda_1_1_array_or_scalar.html", null ],
+          [ "Matrix", "conceptnda_1_1_matrix.html", null ],
+          [ "Vector", "conceptnda_1_1_vector.html", null ],
+          [ "MemoryMatrix", "conceptnda_1_1_memory_matrix.html", null ],
+          [ "MemoryVector", "conceptnda_1_1_memory_vector.html", null ],
+          [ "ArrayInitializer", "conceptnda_1_1_array_initializer.html", null ],
+          [ "HasValueTypeConstructibleFrom", "conceptnda_1_1_has_value_type_constructible_from.html", null ],
           [ "array_adapter", "classnda_1_1array__adapter.html", null ],
           [ "array_iterator<Rank, T, Pointer>", "classnda_1_1array__iterator.html", null ],
-          [ "array_iterator<1, T, Pointer>", "classnda_1_1array__iterator_3_011_00_01T_00_01Pointer_01_4.html", null ],
+          [ "array_iterator<1, T, Pointer>", "classnda_1_1array__iterator_3_011_00_01_t_00_01_pointer_01_4.html", null ],
           [ "default_accessor", "structnda_1_1default__accessor.html", null ],
           [ "default_accessor::accessor", "structnda_1_1default__accessor_1_1accessor.html", null ],
           [ "no_alias_accessor", "structnda_1_1no__alias__accessor.html", null ],
@@ -72,9 +72,9 @@ var NAVTREE =
         [ "Factories and transformations", "group__av__factories.html", null ],
         [ "HDF5 support", "group__av__hdf5.html", null ],
         [ "MPI support", "group__av__mpi.html", [
-          [ "mpi::lazy<mpi::tag::gather, A>", "structmpi_1_1lazy_3_01mpi_1_1tag_1_1gather_00_01A_01_4.html", null ],
-          [ "mpi::lazy<mpi::tag::reduce, A>", "structmpi_1_1lazy_3_01mpi_1_1tag_1_1reduce_00_01A_01_4.html", null ],
-          [ "mpi::lazy<mpi::tag::scatter, A>", "structmpi_1_1lazy_3_01mpi_1_1tag_1_1scatter_00_01A_01_4.html", null ]
+          [ "mpi::lazy<mpi::tag::gather, A>", "structmpi_1_1lazy_3_01mpi_1_1tag_1_1gather_00_01_a_01_4.html", null ],
+          [ "mpi::lazy<mpi::tag::reduce, A>", "structmpi_1_1lazy_3_01mpi_1_1tag_1_1reduce_00_01_a_01_4.html", null ],
+          [ "mpi::lazy<mpi::tag::scatter, A>", "structmpi_1_1lazy_3_01mpi_1_1tag_1_1scatter_00_01_a_01_4.html", null ]
         ] ],
         [ "Mathematical functions", "group__av__math.html", [
           [ "conj_f", "structnda_1_1conj__f.html", null ],
@@ -82,8 +82,8 @@ var NAVTREE =
           [ "mapped", "structnda_1_1mapped.html", null ]
         ] ],
         [ "Symmetries", "group__av__sym.html", [
-          [ "NdaSymmetry", "conceptnda_1_1NdaSymmetry.html", null ],
-          [ "NdaInitFunc", "conceptnda_1_1NdaInitFunc.html", null ],
+          [ "NdaSymmetry", "conceptnda_1_1_nda_symmetry.html", null ],
+          [ "NdaInitFunc", "conceptnda_1_1_nda_init_func.html", null ],
           [ "operation", "structnda_1_1operation.html", null ],
           [ "sym_grp", "classnda_1_1sym__grp.html", null ]
         ] ],
@@ -94,10 +94,10 @@ var NAVTREE =
         [ "CLEF utilities", "group__clef__utils.html", null ],
         [ "Evaluation of lazy objects", "group__clef__eval.html", [
           [ "clef::evaluator", "structnda_1_1clef_1_1evaluator.html", null ],
-          [ "clef::evaluator<expr<Tag,Childs...>, Pairs...>", "structnda_1_1clef_1_1evaluator_3_01expr_3_01Tag_00_01Childs_8_8_8_01_4_00_01Pairs_8_8_8_01_4.html", null ],
-          [ "clef::evaluator<make_fun_impl<T,Is...>,Pairs...>", "structnda_1_1clef_1_1evaluator_3_01make__fun__impl_3_01T_00_01Is_8_8_8_01_4_00_01Pairs_8_8_8_01_4.html", null ],
-          [ "clef::evaluator<placeholder<N>, pair<Is,Ts >...>", "structnda_1_1clef_1_1evaluator_3_01placeholder_3_01N_01_4_00_01pair_3_01Is_00_01Ts_01_4_8_8_8_01_4.html", null ],
-          [ "clef::evaluator<std::reference_wrapper<T>, Pairs...>", "structnda_1_1clef_1_1evaluator_3_01std_1_1reference__wrapper_3_01T_01_4_00_01Pairs_8_8_8_01_4.html", null ]
+          [ "clef::evaluator<expr<Tag,Childs...>, Pairs...>", "structnda_1_1clef_1_1evaluator_3_01expr_3_01_tag_00_01_childs_8_8_8_01_4_00_01_pairs_8_8_8_01_4.html", null ],
+          [ "clef::evaluator<make_fun_impl<T,Is...>,Pairs...>", "structnda_1_1clef_1_1evaluator_3_01make__fun__impl_3_01_t_00_01_is_8_8_8_01_4_00_01_pairs_8_8_8_01_4.html", null ],
+          [ "clef::evaluator<placeholder<N>, pair<Is,Ts >...>", "structnda_1_1clef_1_1evaluator_3_01placeholder_3_01_n_01_4_00_01pair_3_01_is_00_01_ts_01_4_8_8_8_01_4.html", null ],
+          [ "clef::evaluator<std::reference_wrapper<T>, Pairs...>", "structnda_1_1clef_1_1evaluator_3_01std_1_1reference__wrapper_3_01_t_01_4_00_01_pairs_8_8_8_01_4.html", null ]
         ] ],
         [ "Lazy expressions, functions and operations", "group__clef__expr.html", [
           [ "clef::expr", "structnda_1_1clef_1_1expr.html", null ],
@@ -155,13 +155,13 @@ var NAVTREE =
         [ "Layout policies", "group__layout__pols.html", [
           [ "basic_layout", "structnda_1_1basic__layout.html", null ],
           [ "basic_layout_str", "@ref nda::basic_layout_str", null ],
-          [ "C_layout", "structnda_1_1C__layout.html", null ],
+          [ "C_layout", "structnda_1_1_c__layout.html", null ],
           [ "C_layout_str", "@ref nda::C_layout_str", null ],
-          [ "C_stride_layout", "structnda_1_1C__stride__layout.html", null ],
+          [ "C_stride_layout", "structnda_1_1_c__stride__layout.html", null ],
           [ "C_stride_layout_str", "@ref nda::C_stride_layout_str", null ],
-          [ "F_layout", "structnda_1_1F__layout.html", null ],
+          [ "F_layout", "structnda_1_1_f__layout.html", null ],
           [ "F_layout_str", "@ref nda::F_layout_str", null ],
-          [ "F_stride_layout", "structnda_1_1F__stride__layout.html", null ],
+          [ "F_stride_layout", "structnda_1_1_f__stride__layout.html", null ],
           [ "F_stride_layout_str", "@ref nda::F_stride_layout_str", null ]
         ] ],
         [ "Layout utilities", "group__layout__utils.html", [
@@ -201,9 +201,9 @@ var NAVTREE =
           [ "stack", "structnda_1_1stack.html", null ]
         ] ],
         [ "Memory utilities", "group__mem__utils.html", [
-          [ "mem::Allocator", "conceptnda_1_1mem_1_1Allocator.html", null ],
-          [ "mem::Handle", "conceptnda_1_1mem_1_1Handle.html", null ],
-          [ "mem::OwningHandle", "conceptnda_1_1mem_1_1OwningHandle.html", null ],
+          [ "mem::Allocator", "conceptnda_1_1mem_1_1_allocator.html", null ],
+          [ "mem::Handle", "conceptnda_1_1mem_1_1_handle.html", null ],
+          [ "mem::OwningHandle", "conceptnda_1_1mem_1_1_owning_handle.html", null ],
           [ "mem::aligner", "structnda_1_1mem_1_1aligner.html", null ],
           [ "mem::do_not_initialize_t", "structnda_1_1mem_1_1do__not__initialize__t.html", null ],
           [ "mem::init_zero_t", "structnda_1_1mem_1_1init__zero__t.html", null ]
@@ -212,11 +212,11 @@ var NAVTREE =
       [ "Testing tools", "group__testing.html", null ],
       [ "Utilities", "group__utilities.html", [
         [ "Concepts", "group__utils__concepts.html", [
-          [ "CallableWithLongs", "conceptnda_1_1CallableWithLongs.html", null ],
-          [ "StdArrayOfLong", "conceptnda_1_1StdArrayOfLong.html", null ],
-          [ "Scalar", "conceptnda_1_1Scalar.html", null ],
-          [ "DoubleOrComplex", "conceptnda_1_1DoubleOrComplex.html", null ],
-          [ "InstantiationOf", "conceptnda_1_1InstantiationOf.html", null ]
+          [ "CallableWithLongs", "conceptnda_1_1_callable_with_longs.html", null ],
+          [ "StdArrayOfLong", "conceptnda_1_1_std_array_of_long.html", null ],
+          [ "Scalar", "conceptnda_1_1_scalar.html", null ],
+          [ "DoubleOrComplex", "conceptnda_1_1_double_or_complex.html", null ],
+          [ "InstantiationOf", "conceptnda_1_1_instantiation_of.html", null ]
         ] ],
         [ "Extensions to the standard library", "group__utils__std.html", [
           [ "runtime_error", "classnda_1_1runtime__error.html", null ]

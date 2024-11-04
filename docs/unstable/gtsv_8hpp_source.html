@@ -127,63 +127,30 @@ $(function(){initNavTree('gtsv_8hpp_source.html',''); initResizable(true); });
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">//</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">// Authors: Thomas Hahn, Nils Wentzell</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">/**</span></div>
-<div class="line"><span class="lineno">   18</span><span class="comment"> * @file</span></div>
-<div class="line"><span class="lineno">   19</span><span class="comment"> * @brief Provides a generic interface to the LAPACK `gtsv` routine.</span></div>
-<div class="line"><span class="lineno">   20</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#</span><span class="preprocessor">pragma</span> <span class="preprocessor">once</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&quot;./interface/cxx_interface.hpp&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&quot;../concepts.hpp&quot;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&quot;../macros.hpp&quot;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&quot;../mem/address_space.hpp&quot;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&quot;../traits.hpp&quot;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;<a class="code" href="lapack_2interface_2cxx__interface_8hpp.html">./interface/cxx_interface.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;<a class="code" href="concepts_8hpp.html">../concepts.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;<a class="code" href="macros_8hpp.html">../macros.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;<a class="code" href="address__space_8hpp.html">../mem/address_space.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;<a class="code" href="traits_8hpp.html">../traits.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">namespace</span> <a class="code hl_function" href="group__av__algs.html#gac201e48555bdb773ad45706882e787b5">nda</a>::lapack {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">namespace </span>nda::lapack {</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">   33</span><span class="comment">   * @ingroup linalg_lapack</span></div>
-<div class="line"><span class="lineno">   34</span><span class="comment">   * @brief Interface to the LAPACK `gtsv` routine.</span></div>
-<div class="line"><span class="lineno">   35</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">   36</span><span class="comment">   * @details Solves the equation</span></div>
-<div class="line"><span class="lineno">   37</span><span class="comment">   * \f[</span></div>
-<div class="line"><span class="lineno">   38</span><span class="comment">   *   \mathbf{A} \mathbf{X} = \mathbf{B},</span></div>
-<div class="line"><span class="lineno">   39</span><span class="comment">   * \f]</span></div>
-<div class="line"><span class="lineno">   40</span><span class="comment">   * where \f$ \mathbf{A} \f$ is an n-by-n tridiagonal matrix, by Gaussian elimination with partial pivoting.</span></div>
-<div class="line"><span class="lineno">   41</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">   42</span><span class="comment">   * Note that the equation \f$ \mathbf{A}^T \mathbf{X} = \mathbf{B} \f$ may be solved by interchanging the order of the</span></div>
-<div class="line"><span class="lineno">   43</span><span class="comment">   * arguments containing the subdiagonal elements.</span></div>
-<div class="line"><span class="lineno">   44</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">   45</span><span class="comment">   * @tparam DL nda::MemoryVector type.</span></div>
-<div class="line"><span class="lineno">   46</span><span class="comment">   * @tparam D nda::MemoryVector type.</span></div>
-<div class="line"><span class="lineno">   47</span><span class="comment">   * @tparam DU nda::MemoryVector type.</span></div>
-<div class="line"><span class="lineno">   48</span><span class="comment">   * @tparam B nda::MemoryArray type.</span></div>
-<div class="line"><span class="lineno">   49</span><span class="comment">   * @param dl Input/Output vector. On entry, it must contain the (n-1) subdiagonal elements of \f$ \mathbf{A} \f$. On</span></div>
-<div class="line"><span class="lineno">   50</span><span class="comment">   * exit, it is overwritten by the (n-2) elements of the second superdiagonal of the upper triangular matrix</span></div>
-<div class="line"><span class="lineno">   51</span><span class="comment">   * \f$ \mathbf{U} \f$ from the LU factorization of \f$ \mathbf{A} \f$.</span></div>
-<div class="line"><span class="lineno">   52</span><span class="comment">   * @param d Input/Output vector. On entry, it must contain the diagonal elements of \f$ \mathbf{A} \f$. On exit, it is</span></div>
-<div class="line"><span class="lineno">   53</span><span class="comment">   * overwritten by the n diagonal elements of \f$ \mathbf{U} \f$.</span></div>
-<div class="line"><span class="lineno">   54</span><span class="comment">   * @param du Input/Output vector. On entry, it must contain the (n-1) superdiagonal elements of \f$ \mathbf{A} \f$. On</span></div>
-<div class="line"><span class="lineno">   55</span><span class="comment">   * exit, it is overwritten by the (n-1) elements of the first superdiagonal of \f$ \mathbf{U} \f$ .</span></div>
-<div class="line"><span class="lineno">   56</span><span class="comment">   * @param b Input/Output array. On entry, the n-by-nrhs right hand side matrix \f$ \mathbf{B} \f$. On exit, if</span></div>
-<div class="line"><span class="lineno">   57</span><span class="comment">   * `INFO == 0`, the n-by-nrhs solution matrix \f$ \mathbf{X} \f$.</span></div>
-<div class="line"><span class="lineno">   58</span><span class="comment">   * @return Integer return code from the LAPACK call.</span></div>
-<div class="line"><span class="lineno">   59</span><span class="comment">   */</span></div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <span class="keyword">template</span> &lt;MemoryVector DL, MemoryVector D, MemoryVector DU, MemoryArray B&gt;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keyword">requires</span>(have_same_value_type_v&lt;DL, D, DU, B&gt; <span class="keyword">and</span> mem::on_host&lt;DL, D, DU, B&gt; <span class="keyword">and</span> is_blas_lapack_v&lt;get_value_t&lt;DL&gt;&gt;)</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keyword">requires</span>(<a class="code hl_variable" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v&lt;DL, D, DU, B&gt;</a> and <a class="code hl_variable" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c785135d7916b">mem::on_host&lt;DL, D, DU, B&gt;</a> and <a class="code hl_variable" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v&lt;get_value_t&lt;DL&gt;</a>&gt;)</div>
 <div class="foldopen" id="foldopen00062" data-start="{" data-end="}">
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="group__linalg__lapack.html#ga114f8a73dbb612c779c6d8dc2170f301">   62</a></span>  <span class="keywordtype">int</span> <a class="code hl_function" href="group__linalg__lapack.html#ga114f8a73dbb612c779c6d8dc2170f301">gtsv</a>(DL &amp;&amp;dl, D &amp;&amp;d, DU &amp;&amp;du, B &amp;&amp;b) { <span class="comment">// NOLINT (temporary views are allowed here)</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keyword">static_assert</span>((get_rank&lt;B&gt; == 1 <span class="keyword">or</span> get_rank&lt;B&gt; == 2), <span class="stringliteral">&quot;Error in nda::lapack::gtsv: B must be an matrix/array/view of rank 1 or 2&quot;</span>);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keyword">static_assert</span>((<a class="code hl_variable" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank&lt;B&gt;</a> == 1 or <a class="code hl_variable" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank&lt;B&gt;</a> == 2), <span class="stringliteral">&quot;Error in nda::lapack::gtsv: B must be an matrix/array/view of rank 1 or 2&quot;</span>);</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="comment">// get and check dimensions of input arrays</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <a class="code hl_define" href="macros_8hpp.html#a456e2e210ac41b1f0f4979fc58555ce6">EXPECTS</a>(dl.extent(0) == d.extent(0) - 1); <span class="comment">// &quot;gtsv : dimension mismatch between sub-diagonal and diagonal vectors &quot;</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <a class="code hl_define" href="macros_8hpp.html#a456e2e210ac41b1f0f4979fc58555ce6">EXPECTS</a>(du.extent(0) == d.extent(0) - 1); <span class="comment">// &quot;gtsv : dimension mismatch between super-diagonal and diagonal vectors &quot;</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <a class="code hl_define" href="macros_8hpp.html#a456e2e210ac41b1f0f4979fc58555ce6">EXPECTS</a>(b.extent(0) == d.extent(0));      <span class="comment">// &quot;gtsv : dimension mismatch between diagonal vector and RHS matrix, &quot;</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    EXPECTS(dl.extent(0) == d.extent(0) - 1); <span class="comment">// &quot;gtsv : dimension mismatch between sub-diagonal and diagonal vectors &quot;</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    EXPECTS(du.extent(0) == d.extent(0) - 1); <span class="comment">// &quot;gtsv : dimension mismatch between super-diagonal and diagonal vectors &quot;</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    EXPECTS(b.extent(0) == d.extent(0));      <span class="comment">// &quot;gtsv : dimension mismatch between diagonal vector and RHS matrix, &quot;</span></div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="comment">// perform actual library call</span></div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keywordtype">int</span> N    = d.extent(0);</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keywordtype">int</span> NRHS = (get_rank&lt;B&gt; == 2 ? b.extent(1) : 1);</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keywordtype">int</span> NRHS = (<a class="code hl_variable" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank&lt;B&gt;</a> == 2 ? b.extent(1) : 1);</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordtype">int</span> info = 0;</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    f77::gtsv(N, NRHS, dl.data(), d.data(), du.data(), b.data(), N, info);</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordflow">return</span> info;</div>
@@ -191,9 +158,16 @@ $(function(){initNavTree('gtsv_8hpp_source.html',''); initResizable(true); });
 </div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>} <span class="comment">// namespace nda::lapack</span></div>
-<div class="ttc" id="agroup__av__algs_html_gac201e48555bdb773ad45706882e787b5"><div class="ttname"><a href="group__av__algs.html#gac201e48555bdb773ad45706882e787b5">nda::hadamard</a></div><div class="ttdeci">constexpr auto hadamard(nda::Scalar auto a, nda::Scalar auto b)</div><div class="ttdoc">Hadamard product of two arithmetic types.</div><div class="ttdef"><b>Definition</b> <a href="algorithms_8hpp_source.html#l00275">algorithms.hpp:275</a></div></div>
+<div class="ttc" id="aaddress__space_8hpp_html"><div class="ttname"><a href="address__space_8hpp.html">address_space.hpp</a></div><div class="ttdoc">Provides definitions and type traits involving the different memory address spaces supported by nda.</div></div>
+<div class="ttc" id="aconcepts_8hpp_html"><div class="ttname"><a href="concepts_8hpp.html">concepts.hpp</a></div><div class="ttdoc">Provides concepts for the nda library.</div></div>
+<div class="ttc" id="agroup__av__utils_html_ga62eb26ca688c9730a4590c264b51c64b"><div class="ttname"><a href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">nda::have_same_value_type_v</a></div><div class="ttdeci">constexpr bool have_same_value_type_v</div><div class="ttdoc">Constexpr variable that is true if all types in As have the same value type as A0.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00196">traits.hpp:196</a></div></div>
+<div class="ttc" id="agroup__av__utils_html_ga7277dc5070c1ad04d29465da947e444e"><div class="ttname"><a href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">nda::get_rank</a></div><div class="ttdeci">constexpr int get_rank</div><div class="ttdoc">Constexpr variable that specifies the rank of an nda::Array or of a contiguous 1-dimensional range.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00136">traits.hpp:136</a></div></div>
 <div class="ttc" id="agroup__linalg__lapack_html_ga114f8a73dbb612c779c6d8dc2170f301"><div class="ttname"><a href="group__linalg__lapack.html#ga114f8a73dbb612c779c6d8dc2170f301">nda::lapack::gtsv</a></div><div class="ttdeci">int gtsv(DL &amp;&amp;dl, D &amp;&amp;d, DU &amp;&amp;du, B &amp;&amp;b)</div><div class="ttdoc">Interface to the LAPACK gtsv routine.</div><div class="ttdef"><b>Definition</b> <a href="#l00062">gtsv.hpp:62</a></div></div>
-<div class="ttc" id="amacros_8hpp_html_a456e2e210ac41b1f0f4979fc58555ce6"><div class="ttname"><a href="macros_8hpp.html#a456e2e210ac41b1f0f4979fc58555ce6">EXPECTS</a></div><div class="ttdeci">#define EXPECTS(X)</div><div class="ttdef"><b>Definition</b> <a href="macros_8hpp_source.html#l00059">macros.hpp:59</a></div></div>
+<div class="ttc" id="agroup__mem__addrspcs_html_ga8aaa632e292a69266e4c785135d7916b"><div class="ttname"><a href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c785135d7916b">nda::mem::on_host</a></div><div class="ttdeci">static constexpr bool on_host</div><div class="ttdoc">Constexpr variable that is true if all given types have a Host address space.</div><div class="ttdef"><b>Definition</b> <a href="address__space_8hpp_source.html#l00160">address_space.hpp:160</a></div></div>
+<div class="ttc" id="agroup__utils__type__traits_html_ga30a65f6fd37a3801c89552edcd6f7bda"><div class="ttname"><a href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">nda::is_blas_lapack_v</a></div><div class="ttdeci">constexpr bool is_blas_lapack_v</div><div class="ttdoc">Alias for nda::is_double_or_complex_v.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00102">traits.hpp:102</a></div></div>
+<div class="ttc" id="alapack_2interface_2cxx__interface_8hpp_html"><div class="ttname"><a href="lapack_2interface_2cxx__interface_8hpp.html">cxx_interface.hpp</a></div><div class="ttdoc">Provides a C++ interface for various LAPACK routines.</div></div>
+<div class="ttc" id="amacros_8hpp_html"><div class="ttname"><a href="macros_8hpp.html">macros.hpp</a></div><div class="ttdoc">Macros used in the nda library.</div></div>
+<div class="ttc" id="atraits_8hpp_html"><div class="ttname"><a href="traits_8hpp.html">traits.hpp</a></div><div class="ttdoc">Provides type traits for the nda library.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

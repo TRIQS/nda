@@ -127,78 +127,39 @@ $(function(){initNavTree('array__adapter_8hpp_source.html',''); initResizable(tr
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">//</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">// Authors: Thomas Hahn, Olivier Parcollet, Nils Wentzell</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">/**</span></div>
-<div class="line"><span class="lineno">   18</span><span class="comment"> * @file</span></div>
-<div class="line"><span class="lineno">   19</span><span class="comment"> * @brief Provides an array adapter class.</span></div>
-<div class="line"><span class="lineno">   20</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#</span><span class="preprocessor">pragma</span> <span class="preprocessor">once</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&quot;./concepts.hpp&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&quot;./stdutil/array.hpp&quot;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;<a class="code" href="concepts_8hpp.html">./concepts.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;<a class="code" href="array_8hpp.html">./stdutil/array.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">array</span><span class="preprocessor">&gt;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#</span><span class="preprocessor">include</span> <span class="preprocessor">&lt;</span><span class="preprocessor">type_traits</span><span class="preprocessor">&gt;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;array&gt;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &lt;type_traits&gt;</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">namespace</span> <a class="code hl_function" href="group__av__algs.html#gac201e48555bdb773ad45706882e787b5">nda</a> {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">namespace </span>nda {</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">   33</span><span class="comment">   * @addtogroup av_utils</span></div>
-<div class="line"><span class="lineno">   34</span><span class="comment">   * @{</span></div>
-<div class="line"><span class="lineno">   35</span><span class="comment">   */</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">   38</span><span class="comment">   * @brief Adapter that consists of a shape and a callable object, which takes `R` integers as arguments (just like an</span></div>
-<div class="line"><span class="lineno">   39</span><span class="comment">   * nda::basic_array or nda::basic_array_view).</span></div>
-<div class="line"><span class="lineno">   40</span><span class="comment">   *</span></div>
-<div class="line"><span class="lineno">   41</span><span class="comment">   * @tparam R Rank of the adapter.</span></div>
-<div class="line"><span class="lineno">   42</span><span class="comment">   * @tparam F Callable type.</span></div>
-<div class="line"><span class="lineno">   43</span><span class="comment">   */</span></div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> R, <span class="keyword">typename</span> F&gt;</div>
 <div class="foldopen" id="foldopen00045" data-start="{" data-end="};">
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classnda_1_1array__adapter.html">   45</a></span>  <span class="keyword">class</span> <a class="code hl_class" href="classnda_1_1array__adapter.html">array_adapter</a> {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">static_assert</span>(CallableWithLongs&lt;F, R&gt;, <span class="stringliteral">&quot;Error in nda::array_adapter: Lambda should be callable with R integers&quot;</span>);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classnda_1_1array__adapter.html">   45</a></span>  <span class="keyword">class </span><a class="code hl_class" href="classnda_1_1array__adapter.html">array_adapter</a> {</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">static_assert</span>(<a class="code hl_concept" href="conceptnda_1_1_callable_with_longs.html">CallableWithLongs&lt;F, R&gt;</a>, <span class="stringliteral">&quot;Error in nda::array_adapter: Lambda should be callable with R integers&quot;</span>);</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="comment">// Shape of the array.</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::array&lt;<span class="keywordtype">long</span>, R&gt; myshape;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::array&lt;long, R&gt; myshape;</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="comment">// Callable object.</span></div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    F f;</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">   56</span><span class="comment">     * @brief Construct a new array adapter object.</span></div>
-<div class="line"><span class="lineno">   57</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">   58</span><span class="comment">     * @tparam Int Integer type.</span></div>
-<div class="line"><span class="lineno">   59</span><span class="comment">     * @param shape Shape of the adapater.</span></div>
-<div class="line"><span class="lineno">   60</span><span class="comment">     * @param f Callable object.</span></div>
-<div class="line"><span class="lineno">   61</span><span class="comment">     */</span></div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Int&gt;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classnda_1_1array__adapter.html#a4717eb82c831690a7325265de281db8d">   63</a></span>    <a class="code hl_function" href="classnda_1_1array__adapter.html#a4717eb82c831690a7325265de281db8d">array_adapter</a>(std::array&lt;Int, R&gt; <span class="keyword">const</span> &amp;shape, F f) : myshape(stdutil::make_std_array&lt;<span class="keywordtype">long</span>&gt;(shape)), f(f) {}</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classnda_1_1array__adapter.html#a4717eb82c831690a7325265de281db8d">   63</a></span>    <a class="code hl_function" href="classnda_1_1array__adapter.html#a4717eb82c831690a7325265de281db8d">array_adapter</a>(std::array&lt;Int, R&gt; <span class="keyword">const</span> &amp;<a class="code hl_function" href="classnda_1_1array__adapter.html#ad10d12850c934345494e30388eb2100b">shape</a>, F f) : myshape(stdutil::make_std_array&lt;long&gt;(<a class="code hl_function" href="classnda_1_1array__adapter.html#ad10d12850c934345494e30388eb2100b">shape</a>)), f(f) {}</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">   66</span><span class="comment">     * @brief Get shape of the adapter.</span></div>
-<div class="line"><span class="lineno">   67</span><span class="comment">     * @return `std::array&lt;long, R&gt;` object specifying the shape of the adapter.</span></div>
-<div class="line"><span class="lineno">   68</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="classnda_1_1array__adapter.html#ad10d12850c934345494e30388eb2100b">   69</a></span>    [[<a class="code hl_class" href="classnda_1_1array__adapter.html">nodiscard</a>]] <span class="keyword">auto</span> <span class="keyword">const</span> &amp;<a class="code hl_function" href="classnda_1_1array__adapter.html#ad10d12850c934345494e30388eb2100b">shape</a>() <span class="keyword">const</span> { <span class="keywordflow">return</span> myshape; }</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="classnda_1_1array__adapter.html#ad10d12850c934345494e30388eb2100b">   69</a></span>    [[nodiscard]] <span class="keyword">auto</span> <span class="keyword">const</span> &amp;<a class="code hl_function" href="classnda_1_1array__adapter.html#ad10d12850c934345494e30388eb2100b">shape</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> myshape; }</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">   72</span><span class="comment">     * @brief Get the total size of the adapter.</span></div>
-<div class="line"><span class="lineno">   73</span><span class="comment">     * @return Number of elements in the adapter.</span></div>
-<div class="line"><span class="lineno">   74</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="classnda_1_1array__adapter.html#a84ff2097a97769e624de5ab5605a4df1">   75</a></span>    [[<a class="code hl_class" href="classnda_1_1array__adapter.html">nodiscard</a>]] <span class="keywordtype">long</span> <a class="code hl_function" href="classnda_1_1array__adapter.html#a84ff2097a97769e624de5ab5605a4df1">size</a>() <span class="keyword">const</span> { <span class="keywordflow">return</span> stdutil::product(myshape); }</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="classnda_1_1array__adapter.html#a84ff2097a97769e624de5ab5605a4df1">   75</a></span>    [[nodiscard]] <span class="keywordtype">long</span> <a class="code hl_function" href="classnda_1_1array__adapter.html#a84ff2097a97769e624de5ab5605a4df1">size</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="group__utils__std.html#gae4b418662bf69455beb672c5ef2d6301">stdutil::product</a>(myshape); }</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">   78</span><span class="comment">     * @brief Function call operator simply forwards the arguments to the callable object.</span></div>
-<div class="line"><span class="lineno">   79</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">   80</span><span class="comment">     * @tparam Ints Integer types (convertible to long).</span></div>
-<div class="line"><span class="lineno">   81</span><span class="comment">     * @param i0 First argument.</span></div>
-<div class="line"><span class="lineno">   82</span><span class="comment">     * @param is Rest of the arguments.</span></div>
-<div class="line"><span class="lineno">   83</span><span class="comment">     */</span></div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Ints&gt;</div>
 <div class="foldopen" id="foldopen00085" data-start="{" data-end="}">
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="classnda_1_1array__adapter.html#a6da7cb0261e2b7e01913120378717e90">   85</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="classnda_1_1array__adapter.html#a6da7cb0261e2b7e01913120378717e90">operator</a>()(<span class="keywordtype">long</span> i0, Ints... is) <span class="keyword">const</span> {</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>      <span class="keyword">static_assert</span>((std::is_convertible_v&lt;Ints, <span class="keywordtype">long</span>&gt; <span class="keyword">and</span> ...), <span class="stringliteral">&quot;Error in nda::array_adapter: Arguments must be convertible to long&quot;</span>);</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="classnda_1_1array__adapter.html#a6da7cb0261e2b7e01913120378717e90">   85</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="classnda_1_1array__adapter.html#a6da7cb0261e2b7e01913120378717e90">operator()</a>(<span class="keywordtype">long</span> i0, Ints... is)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>      <span class="keyword">static_assert</span>((std::is_convertible_v&lt;Ints, long&gt; and ...), <span class="stringliteral">&quot;Error in nda::array_adapter: Arguments must be convertible to long&quot;</span>);</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>      <span class="keywordflow">return</span> f(i0, is...);</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    }</div>
 </div>
@@ -206,26 +167,23 @@ $(function(){initNavTree('array__adapter_8hpp_source.html',''); initResizable(tr
 </div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  <span class="comment">// Class template argument deduction guides.</span></div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  <span class="keyword">template</span> &lt;<span class="keyword">auto</span> R, <span class="keyword">typename</span> Int, <span class="keyword">typename</span> F&gt;</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  array_adapter(std::array&lt;Int, R&gt;, F) -&gt; <a class="code hl_class" href="classnda_1_1array__adapter.html">array_adapter</a>&lt;R, F&gt;;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  <span class="keyword">template</span> &lt;auto R, <span class="keyword">typename</span> Int, <span class="keyword">typename</span> F&gt;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  array_adapter(std::array&lt;Int, R&gt;, F) -&gt; array_adapter&lt;R, F&gt;;</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  <span class="comment">/** @} */</span></div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  <span class="comment">/**</span></div>
-<div class="line"><span class="lineno">   98</span><span class="comment">   * @ingroup utils_type_traits</span></div>
-<div class="line"><span class="lineno">   99</span><span class="comment">   * @brief Specialization of nda::get_algebra for nda::array_adapter.</span></div>
-<div class="line"><span class="lineno">  100</span><span class="comment">   */</span></div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> <a class="code hl_variable" href="group__utils__type__traits.html#ga3632b7e323ca3102890f381eb2c8d620">R</a>, <span class="keyword">typename</span> <a class="code hl_variable" href="group__utils__type__traits.html#ga3632b7e323ca3102890f381eb2c8d620">F</a>&gt;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="group__utils__type__traits.html#ga3632b7e323ca3102890f381eb2c8d620">  102</a></span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">char</span> <a class="code hl_variable" href="group__utils__type__traits.html#ga3632b7e323ca3102890f381eb2c8d620">get_algebra</a>&lt;<a class="code hl_variable" href="group__utils__type__traits.html#ga3632b7e323ca3102890f381eb2c8d620">array_adapter</a>&lt;<a class="code hl_variable" href="group__utils__type__traits.html#ga3632b7e323ca3102890f381eb2c8d620">R</a>, <a class="code hl_variable" href="group__utils__type__traits.html#ga3632b7e323ca3102890f381eb2c8d620">F</a>&gt;&gt; = <span class="stringliteral">&#39;A&#39;</span>;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> R, <span class="keyword">typename</span> F&gt;</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="group__utils__type__traits.html#ga3632b7e323ca3102890f381eb2c8d620">  102</a></span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">char</span> <a class="code hl_variable" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra&lt;array_adapter&lt;R, F&gt;</a>&gt; = <span class="charliteral">&#39;A&#39;</span>;</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>} <span class="comment">// namespace nda</span></div>
+<div class="ttc" id="aarray_8hpp_html"><div class="ttname"><a href="array_8hpp.html">array.hpp</a></div><div class="ttdoc">Provides utility functions for std::array.</div></div>
 <div class="ttc" id="aclassnda_1_1array__adapter_html"><div class="ttname"><a href="classnda_1_1array__adapter.html">nda::array_adapter</a></div><div class="ttdoc">Adapter that consists of a shape and a callable object, which takes R integers as arguments (just lik...</div><div class="ttdef"><b>Definition</b> <a href="#l00045">array_adapter.hpp:45</a></div></div>
 <div class="ttc" id="aclassnda_1_1array__adapter_html_a4717eb82c831690a7325265de281db8d"><div class="ttname"><a href="classnda_1_1array__adapter.html#a4717eb82c831690a7325265de281db8d">nda::array_adapter::array_adapter</a></div><div class="ttdeci">array_adapter(std::array&lt; Int, R &gt; const &amp;shape, F f)</div><div class="ttdoc">Construct a new array adapter object.</div><div class="ttdef"><b>Definition</b> <a href="#l00063">array_adapter.hpp:63</a></div></div>
 <div class="ttc" id="aclassnda_1_1array__adapter_html_a6da7cb0261e2b7e01913120378717e90"><div class="ttname"><a href="classnda_1_1array__adapter.html#a6da7cb0261e2b7e01913120378717e90">nda::array_adapter::operator()</a></div><div class="ttdeci">auto operator()(long i0, Ints... is) const</div><div class="ttdoc">Function call operator simply forwards the arguments to the callable object.</div><div class="ttdef"><b>Definition</b> <a href="#l00085">array_adapter.hpp:85</a></div></div>
 <div class="ttc" id="aclassnda_1_1array__adapter_html_a84ff2097a97769e624de5ab5605a4df1"><div class="ttname"><a href="classnda_1_1array__adapter.html#a84ff2097a97769e624de5ab5605a4df1">nda::array_adapter::size</a></div><div class="ttdeci">long size() const</div><div class="ttdoc">Get the total size of the adapter.</div><div class="ttdef"><b>Definition</b> <a href="#l00075">array_adapter.hpp:75</a></div></div>
 <div class="ttc" id="aclassnda_1_1array__adapter_html_ad10d12850c934345494e30388eb2100b"><div class="ttname"><a href="classnda_1_1array__adapter.html#ad10d12850c934345494e30388eb2100b">nda::array_adapter::shape</a></div><div class="ttdeci">auto const &amp; shape() const</div><div class="ttdoc">Get shape of the adapter.</div><div class="ttdef"><b>Definition</b> <a href="#l00069">array_adapter.hpp:69</a></div></div>
-<div class="ttc" id="agroup__av__algs_html_gac201e48555bdb773ad45706882e787b5"><div class="ttname"><a href="group__av__algs.html#gac201e48555bdb773ad45706882e787b5">nda::hadamard</a></div><div class="ttdeci">constexpr auto hadamard(nda::Scalar auto a, nda::Scalar auto b)</div><div class="ttdoc">Hadamard product of two arithmetic types.</div><div class="ttdef"><b>Definition</b> <a href="algorithms_8hpp_source.html#l00275">algorithms.hpp:275</a></div></div>
-<div class="ttc" id="agroup__utils__type__traits_html_ga3632b7e323ca3102890f381eb2c8d620"><div class="ttname"><a href="group__utils__type__traits.html#ga3632b7e323ca3102890f381eb2c8d620">nda::get_algebra&lt; array_adapter&lt; R, F &gt; &gt;</a></div><div class="ttdeci">constexpr char get_algebra&lt; array_adapter&lt; R, F &gt; &gt;</div><div class="ttdoc">Specialization of nda::get_algebra for nda::array_adapter.</div><div class="ttdef"><b>Definition</b> <a href="#l00102">array_adapter.hpp:102</a></div></div>
+<div class="ttc" id="aconceptnda_1_1_callable_with_longs_html"><div class="ttname"><a href="conceptnda_1_1_callable_with_longs.html">nda::CallableWithLongs</a></div><div class="ttdoc">Check if a given type can be called with a certain number of long arguments.</div><div class="ttdef"><b>Definition</b> <a href="concepts_8hpp_source.html#l00053">concepts.hpp:53</a></div></div>
+<div class="ttc" id="aconcepts_8hpp_html"><div class="ttname"><a href="concepts_8hpp.html">concepts.hpp</a></div><div class="ttdoc">Provides concepts for the nda library.</div></div>
+<div class="ttc" id="agroup__av__utils_html_ga060aafc7ad640e675fce38b5eaf95aab"><div class="ttname"><a href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">nda::get_algebra</a></div><div class="ttdeci">constexpr char get_algebra</div><div class="ttdoc">Constexpr variable that specifies the algebra of a type.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00126">traits.hpp:126</a></div></div>
+<div class="ttc" id="agroup__utils__std_html_gae4b418662bf69455beb672c5ef2d6301"><div class="ttname"><a href="group__utils__std.html#gae4b418662bf69455beb672c5ef2d6301">nda::stdutil::product</a></div><div class="ttdeci">constexpr auto product(std::array&lt; T, R &gt; const &amp;a)</div><div class="ttdoc">Calculate the product of all elements in a std::array.</div><div class="ttdef"><b>Definition</b> <a href="array_8hpp_source.html#l00348">array.hpp:348</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

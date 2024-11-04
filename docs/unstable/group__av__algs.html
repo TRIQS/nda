@@ -139,14 +139,14 @@ template&lt;Array A, typename F &gt; </td></tr>
 <tr class="separator:ga66519bf80315973770c266a4d10eb054"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1ede47af1aafba0c08346ce98c767b7e" id="r_ga1ede47af1aafba0c08346ce98c767b7e"><td class="memTemplParams" colspan="2">template&lt;Array A, typename F , typename R &gt; </td></tr>
 <tr class="memitem:ga1ede47af1aafba0c08346ce98c767b7e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga1ede47af1aafba0c08346ce98c767b7e">nda::fold</a> (F f, A const &amp;a, R r)</td></tr>
-<tr class="memdesc:ga1ede47af1aafba0c08346ce98c767b7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a fold operation on the given <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object.  <br /></td></tr>
+<tr class="memdesc:ga1ede47af1aafba0c08346ce98c767b7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a fold operation on the given <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object.  <br /></td></tr>
 <tr class="separator:ga1ede47af1aafba0c08346ce98c767b7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9ee51842bd47f09b28d6d36cdf289b62" id="r_ga9ee51842bd47f09b28d6d36cdf289b62"><td class="memTemplParams" colspan="2">template&lt;Array A, Array B&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">nda::get_rank</a>&lt;A&gt; == <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">nda::get_rank</a>&lt;B&gt;)</td></tr>
 <tr class="memitem:ga9ee51842bd47f09b28d6d36cdf289b62"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga9ee51842bd47f09b28d6d36cdf289b62">nda::hadamard</a> (A &amp;&amp;a, B &amp;&amp;b)</td></tr>
-<tr class="memdesc:ga9ee51842bd47f09b28d6d36cdf289b62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hadamard product of two <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> objects.  <br /></td></tr>
+<tr class="memdesc:ga9ee51842bd47f09b28d6d36cdf289b62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hadamard product of two <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> objects.  <br /></td></tr>
 <tr class="separator:ga9ee51842bd47f09b28d6d36cdf289b62"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac201e48555bdb773ad45706882e787b5" id="r_gac201e48555bdb773ad45706882e787b5"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac201e48555bdb773ad45706882e787b5">nda::hadamard</a> (<a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a> auto a, <a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a> auto b)</td></tr>
+<tr class="memitem:gac201e48555bdb773ad45706882e787b5" id="r_gac201e48555bdb773ad45706882e787b5"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac201e48555bdb773ad45706882e787b5">nda::hadamard</a> (<a class="el" href="conceptnda_1_1_scalar.html">nda::Scalar</a> auto a, <a class="el" href="conceptnda_1_1_scalar.html">nda::Scalar</a> auto b)</td></tr>
 <tr class="memdesc:gac201e48555bdb773ad45706882e787b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hadamard product of two arithmetic types.  <br /></td></tr>
 <tr class="separator:gac201e48555bdb773ad45706882e787b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad8886854a020e7b28b63a96d6087485d" id="r_gad8886854a020e7b28b63a96d6087485d"><td class="memTemplParams" colspan="2">template&lt;typename T , typename U , size_t R&gt; </td></tr>
@@ -166,14 +166,14 @@ requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da94
 <tr class="memdesc:ga8dcf3b8eb2cf5460c47e825b4ec38534"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the minimum element of an array.  <br /></td></tr>
 <tr class="separator:ga8dcf3b8eb2cf5460c47e825b4ec38534"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga767f1ffe11006beb7dfe9318565ab789" id="r_ga767f1ffe11006beb7dfe9318565ab789"><td class="memTemplParams" colspan="2">template&lt;Array A, typename Value  = get_value_t&lt;A&gt;&gt; <br />
-requires (<a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a>&lt;Value&gt; or <a class="el" href="conceptnda_1_1Array.html">nda::Array</a>&lt;Value&gt;)</td></tr>
+requires (<a class="el" href="conceptnda_1_1_scalar.html">nda::Scalar</a>&lt;Value&gt; or <a class="el" href="conceptnda_1_1_array.html">nda::Array</a>&lt;Value&gt;)</td></tr>
 <tr class="memitem:ga767f1ffe11006beb7dfe9318565ab789"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga767f1ffe11006beb7dfe9318565ab789">nda::product</a> (A const &amp;a)</td></tr>
-<tr class="memdesc:ga767f1ffe11006beb7dfe9318565ab789"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply all the elements of an <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object.  <br /></td></tr>
+<tr class="memdesc:ga767f1ffe11006beb7dfe9318565ab789"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply all the elements of an <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object.  <br /></td></tr>
 <tr class="separator:ga767f1ffe11006beb7dfe9318565ab789"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga32b50e2bafb182294179bb1f2f0f5c9b" id="r_ga32b50e2bafb182294179bb1f2f0f5c9b"><td class="memTemplParams" colspan="2">template&lt;Array A, typename Value  = get_value_t&lt;A&gt;&gt; <br />
-requires (<a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a>&lt;Value&gt; or <a class="el" href="conceptnda_1_1Array.html">nda::Array</a>&lt;Value&gt;)</td></tr>
+requires (<a class="el" href="conceptnda_1_1_scalar.html">nda::Scalar</a>&lt;Value&gt; or <a class="el" href="conceptnda_1_1_array.html">nda::Array</a>&lt;Value&gt;)</td></tr>
 <tr class="memitem:ga32b50e2bafb182294179bb1f2f0f5c9b"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga32b50e2bafb182294179bb1f2f0f5c9b">nda::sum</a> (A const &amp;a)</td></tr>
-<tr class="memdesc:ga32b50e2bafb182294179bb1f2f0f5c9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sum all the elements of an <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object.  <br /></td></tr>
+<tr class="memdesc:ga32b50e2bafb182294179bb1f2f0f5c9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sum all the elements of an <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object.  <br /></td></tr>
 <tr class="separator:ga32b50e2bafb182294179bb1f2f0f5c9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
@@ -197,7 +197,7 @@ template&lt;Array A&gt; </div>
 <p><code>#include &lt;<a class="el" href="algorithms_8hpp.html">nda/algorithms.hpp</a>&gt;</code></p>
 
 <p>Do all elements of the array evaluate to true? </p>
-<p>The given <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object can also be some lazy expression that evaluates to a boolean. For example:</p>
+<p>The given <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object can also be some lazy expression that evaluates to a boolean. For example:</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> A = <a class="code hl_function" href="classnda_1_1basic__array.html#afee46ba48f00ff7d4c9ddb9890e0c451">nda::array&lt;double, 2&gt;::rand</a>(2, 3);</div>
 <div class="line"><span class="keyword">auto</span> greater0 = <a class="code hl_function" href="group__av__math.html#gaf8151ad99c4fe345cf168a5d01529a6a">nda::map</a>([](<span class="keyword">auto</span> x) { <span class="keywordflow">return</span> x &gt; 0.0; })(A);</div>
 <div class="line"><span class="keyword">auto</span> res = <a class="code hl_function" href="#gace1353ca15a2382bf8d466fd69283a91">nda::all</a>(greater0);</div>
@@ -206,13 +206,13 @@ template&lt;Array A&gt; </div>
 <div class="ttc" id="agroup__av__math_html_gaf8151ad99c4fe345cf168a5d01529a6a"><div class="ttname"><a href="group__av__math.html#gaf8151ad99c4fe345cf168a5d01529a6a">nda::map</a></div><div class="ttdeci">mapped&lt; F &gt; map(F f)</div><div class="ttdoc">Create a lazy function call expression on arrays/views.</div><div class="ttdef"><b>Definition</b> <a href="map_8hpp_source.html#l00199">map.hpp:199</a></div></div>
 </div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>
@@ -242,20 +242,20 @@ template&lt;Array A&gt; </div>
 <p><code>#include &lt;<a class="el" href="algorithms_8hpp.html">nda/algorithms.hpp</a>&gt;</code></p>
 
 <p>Does any of the elements of the array evaluate to true? </p>
-<p>The given <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object can also be some lazy expression that evaluates to a boolean. For example:</p>
+<p>The given <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object can also be some lazy expression that evaluates to a boolean. For example:</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> A = <a class="code hl_function" href="classnda_1_1basic__array.html#afee46ba48f00ff7d4c9ddb9890e0c451">nda::array&lt;double, 2&gt;::rand</a>(2, 3);</div>
 <div class="line"><span class="keyword">auto</span> greater05 = <a class="code hl_function" href="group__av__math.html#gaf8151ad99c4fe345cf168a5d01529a6a">nda::map</a>([](<span class="keyword">auto</span> x) { <span class="keywordflow">return</span> x &gt; 0.5; })(A);</div>
 <div class="line"><span class="keyword">auto</span> res = <a class="code hl_function" href="#ga70f4415b815978d94a661d7483567e57">nda::any</a>(greater05);</div>
 <div class="ttc" id="agroup__av__algs_html_ga70f4415b815978d94a661d7483567e57"><div class="ttname"><a href="#ga70f4415b815978d94a661d7483567e57">nda::any</a></div><div class="ttdeci">bool any(A const &amp;a)</div><div class="ttdoc">Does any of the elements of the array evaluate to true?</div><div class="ttdef"><b>Definition</b> <a href="algorithms_8hpp_source.html#l00099">algorithms.hpp:99</a></div></div>
 </div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>
@@ -293,13 +293,13 @@ template&lt;Array A, typename F , typename R &gt; </div>
 
 <p><code>#include &lt;<a class="el" href="algorithms_8hpp.html">nda/algorithms.hpp</a>&gt;</code></p>
 
-<p>Perform a fold operation on the given <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </p>
+<p>Perform a fold operation on the given <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </p>
 <p>It calculates the following (where r is an initial value);</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> res = f(...f(f(f(r, a(0,...,0)), a(0,...,1)), a(0,...,2)), ...);</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>The array is always traversed in C-order.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
     <tr><td class="paramname">F</td><td>Callable type. </td></tr>
     <tr><td class="paramname">R</td><td>Type of the initial value. </td></tr>
   </table>
@@ -308,7 +308,7 @@ template&lt;Array A, typename F , typename R &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">f</td><td>Callable object taking two arguments compatible with the initial value and the array value type. </td></tr>
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
     <tr><td class="paramname">r</td><td>Initial value. </td></tr>
   </table>
   </dd>
@@ -351,18 +351,18 @@ requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da94
 
 <p><code>#include &lt;<a class="el" href="algorithms_8hpp.html">nda/algorithms.hpp</a>&gt;</code></p>
 
-<p>Hadamard product of two <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> objects. </p>
+<p>Hadamard product of two <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> objects. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
-    <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
+    <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
-    <tr><td class="paramname">b</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
+    <tr><td class="paramname">b</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>
@@ -384,12 +384,12 @@ requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da94
         <tr>
           <td class="memname">auto nda::hadamard </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a> auto</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+          <td class="paramtype"><a class="el" href="conceptnda_1_1_scalar.html">nda::Scalar</a> auto</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a> auto</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="conceptnda_1_1_scalar.html">nda::Scalar</a> auto</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -404,8 +404,8 @@ requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da94
 <p>Hadamard product of two arithmetic types. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">T</td><td><a class="el" href="conceptnda_1_1Scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> type of the first input. </td></tr>
-    <tr><td class="paramname">U</td><td><a class="el" href="conceptnda_1_1Scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> type of the second input. </td></tr>
+    <tr><td class="paramname">T</td><td><a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> type of the first input. </td></tr>
+    <tr><td class="paramname">U</td><td><a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> type of the second input. </td></tr>
   </table>
   </dd>
 </dl>
@@ -550,13 +550,13 @@ template&lt;Array A&gt; </div>
 <p>It uses <a class="el" href="#ga1ede47af1aafba0c08346ce98c767b7e" title="Perform a fold operation on the given nda::Array object.">nda::fold</a> and <code>std::max</code>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>
@@ -589,13 +589,13 @@ template&lt;Array A&gt; </div>
 <p>It uses <a class="el" href="#ga1ede47af1aafba0c08346ce98c767b7e" title="Perform a fold operation on the given nda::Array object.">nda::fold</a> and <code>std::min</code>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>
@@ -612,7 +612,7 @@ template&lt;Array A&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;Array A, typename Value  = get_value_t&lt;A&gt;&gt; <br />
-requires (<a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a>&lt;Value&gt; or <a class="el" href="conceptnda_1_1Array.html">nda::Array</a>&lt;Value&gt;)</div>
+requires (<a class="el" href="conceptnda_1_1_scalar.html">nda::Scalar</a>&lt;Value&gt; or <a class="el" href="conceptnda_1_1_array.html">nda::Array</a>&lt;Value&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">auto nda::product </td>
@@ -625,16 +625,16 @@ requires (<a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a>&lt;Valu
 
 <p><code>#include &lt;<a class="el" href="algorithms_8hpp.html">nda/algorithms.hpp</a>&gt;</code></p>
 
-<p>Multiply all the elements of an <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </p>
+<p>Multiply all the elements of an <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>
@@ -651,7 +651,7 @@ requires (<a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a>&lt;Valu
 <div class="memproto">
 <div class="memtemplate">
 template&lt;Array A, typename Value  = get_value_t&lt;A&gt;&gt; <br />
-requires (<a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a>&lt;Value&gt; or <a class="el" href="conceptnda_1_1Array.html">nda::Array</a>&lt;Value&gt;)</div>
+requires (<a class="el" href="conceptnda_1_1_scalar.html">nda::Scalar</a>&lt;Value&gt; or <a class="el" href="conceptnda_1_1_array.html">nda::Array</a>&lt;Value&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">auto nda::sum </td>
@@ -664,16 +664,16 @@ requires (<a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a>&lt;Valu
 
 <p><code>#include &lt;<a class="el" href="algorithms_8hpp.html">nda/algorithms.hpp</a>&gt;</code></p>
 
-<p>Sum all the elements of an <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </p>
+<p>Sum all the elements of an <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </td></tr>
   </table>
   </dd>
 </dl>

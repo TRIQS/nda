@@ -1,8 +1,8 @@
 var searchData=
 [
   ['f_0',['f',['../structnda_1_1expr__call.html#acd83369370b4593e1573f7c5e53a9aeb',1,'nda::expr_call::f'],['../structnda_1_1mapped.html#a70b4df90fcfba5f638773b0a97ebf0c9',1,'nda::mapped::f']]],
-  ['f_5flayout_1',['F_layout',['../structnda_1_1F__layout.html',1,'nda']]],
-  ['f_5fstride_5flayout_2',['F_stride_layout',['../structnda_1_1F__stride__layout.html',1,'nda']]],
+  ['f_5flayout_1',['F_layout',['../structnda_1_1_f__layout.html',1,'nda']]],
+  ['f_5fstride_5flayout_2',['F_stride_layout',['../structnda_1_1_f__stride__layout.html',1,'nda']]],
   ['factories_20and_20transformations_3',['Factories and transformations',['../group__av__factories.html',1,'']]],
   ['fetchcontent_4',['FetchContent',['../integration.html#fetch',1,'']]],
   ['find_5fpackage_5',['find_package',['../integration.html#find_package',1,'']]],

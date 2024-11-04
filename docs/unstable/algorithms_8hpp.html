@@ -129,7 +129,7 @@ $(function(){initNavTree('algorithms_8hpp.html',''); initResizable(true); });
 <code>#include &lt;utility&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 </div><a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Provides various algorithms to be used with <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> objects. </p>
+<div class="textblock"><p>Provides various algorithms to be used with <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> objects. </p>
 
 <p class="definition">Definition in file <a class="el" href="algorithms_8hpp_source.html">algorithms.hpp</a>.</p>
 </div>
@@ -152,7 +152,7 @@ template&lt;Array A, typename F &gt; </td></tr>
 <tr class="separator:ga66519bf80315973770c266a4d10eb054"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1ede47af1aafba0c08346ce98c767b7e" id="r_ga1ede47af1aafba0c08346ce98c767b7e"><td class="memTemplParams" colspan="2">template&lt;Array A, typename F , typename R &gt; </td></tr>
 <tr class="memitem:ga1ede47af1aafba0c08346ce98c767b7e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__algs.html#ga1ede47af1aafba0c08346ce98c767b7e">nda::fold</a> (F f, A const &amp;a, R r)</td></tr>
-<tr class="memdesc:ga1ede47af1aafba0c08346ce98c767b7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a fold operation on the given <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object.  <br /></td></tr>
+<tr class="memdesc:ga1ede47af1aafba0c08346ce98c767b7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a fold operation on the given <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object.  <br /></td></tr>
 <tr class="separator:ga1ede47af1aafba0c08346ce98c767b7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab90a57511cc6f90cad3207acd73be60b" id="r_gab90a57511cc6f90cad3207acd73be60b"><td class="memTemplParams" colspan="2">template&lt;ArrayOfRank&lt; 2 &gt; A&gt; </td></tr>
 <tr class="memitem:gab90a57511cc6f90cad3207acd73be60b"><td class="memTemplItemLeft" align="right" valign="top">double&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__math.html#gab90a57511cc6f90cad3207acd73be60b">nda::frobenius_norm</a> (A const &amp;a)</td></tr>
@@ -161,9 +161,9 @@ template&lt;Array A, typename F &gt; </td></tr>
 <tr class="memitem:ga9ee51842bd47f09b28d6d36cdf289b62" id="r_ga9ee51842bd47f09b28d6d36cdf289b62"><td class="memTemplParams" colspan="2">template&lt;Array A, Array B&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">nda::get_rank</a>&lt;A&gt; == <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">nda::get_rank</a>&lt;B&gt;)</td></tr>
 <tr class="memitem:ga9ee51842bd47f09b28d6d36cdf289b62"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__algs.html#ga9ee51842bd47f09b28d6d36cdf289b62">nda::hadamard</a> (A &amp;&amp;a, B &amp;&amp;b)</td></tr>
-<tr class="memdesc:ga9ee51842bd47f09b28d6d36cdf289b62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hadamard product of two <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> objects.  <br /></td></tr>
+<tr class="memdesc:ga9ee51842bd47f09b28d6d36cdf289b62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hadamard product of two <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> objects.  <br /></td></tr>
 <tr class="separator:ga9ee51842bd47f09b28d6d36cdf289b62"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac201e48555bdb773ad45706882e787b5" id="r_gac201e48555bdb773ad45706882e787b5"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__av__algs.html#gac201e48555bdb773ad45706882e787b5">nda::hadamard</a> (<a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a> auto a, <a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a> auto b)</td></tr>
+<tr class="memitem:gac201e48555bdb773ad45706882e787b5" id="r_gac201e48555bdb773ad45706882e787b5"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__av__algs.html#gac201e48555bdb773ad45706882e787b5">nda::hadamard</a> (<a class="el" href="conceptnda_1_1_scalar.html">nda::Scalar</a> auto a, <a class="el" href="conceptnda_1_1_scalar.html">nda::Scalar</a> auto b)</td></tr>
 <tr class="memdesc:gac201e48555bdb773ad45706882e787b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hadamard product of two arithmetic types.  <br /></td></tr>
 <tr class="separator:gac201e48555bdb773ad45706882e787b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad8886854a020e7b28b63a96d6087485d" id="r_gad8886854a020e7b28b63a96d6087485d"><td class="memTemplParams" colspan="2">template&lt;typename T , typename U , size_t R&gt; </td></tr>
@@ -183,14 +183,14 @@ requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da94
 <tr class="memdesc:ga8dcf3b8eb2cf5460c47e825b4ec38534"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the minimum element of an array.  <br /></td></tr>
 <tr class="separator:ga8dcf3b8eb2cf5460c47e825b4ec38534"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga767f1ffe11006beb7dfe9318565ab789" id="r_ga767f1ffe11006beb7dfe9318565ab789"><td class="memTemplParams" colspan="2">template&lt;Array A, typename Value  = get_value_t&lt;A&gt;&gt; <br />
-requires (<a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a>&lt;Value&gt; or <a class="el" href="conceptnda_1_1Array.html">nda::Array</a>&lt;Value&gt;)</td></tr>
+requires (<a class="el" href="conceptnda_1_1_scalar.html">nda::Scalar</a>&lt;Value&gt; or <a class="el" href="conceptnda_1_1_array.html">nda::Array</a>&lt;Value&gt;)</td></tr>
 <tr class="memitem:ga767f1ffe11006beb7dfe9318565ab789"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__algs.html#ga767f1ffe11006beb7dfe9318565ab789">nda::product</a> (A const &amp;a)</td></tr>
-<tr class="memdesc:ga767f1ffe11006beb7dfe9318565ab789"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply all the elements of an <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object.  <br /></td></tr>
+<tr class="memdesc:ga767f1ffe11006beb7dfe9318565ab789"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply all the elements of an <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object.  <br /></td></tr>
 <tr class="separator:ga767f1ffe11006beb7dfe9318565ab789"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga32b50e2bafb182294179bb1f2f0f5c9b" id="r_ga32b50e2bafb182294179bb1f2f0f5c9b"><td class="memTemplParams" colspan="2">template&lt;Array A, typename Value  = get_value_t&lt;A&gt;&gt; <br />
-requires (<a class="el" href="conceptnda_1_1Scalar.html">nda::Scalar</a>&lt;Value&gt; or <a class="el" href="conceptnda_1_1Array.html">nda::Array</a>&lt;Value&gt;)</td></tr>
+requires (<a class="el" href="conceptnda_1_1_scalar.html">nda::Scalar</a>&lt;Value&gt; or <a class="el" href="conceptnda_1_1_array.html">nda::Array</a>&lt;Value&gt;)</td></tr>
 <tr class="memitem:ga32b50e2bafb182294179bb1f2f0f5c9b"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__algs.html#ga32b50e2bafb182294179bb1f2f0f5c9b">nda::sum</a> (A const &amp;a)</td></tr>
-<tr class="memdesc:ga32b50e2bafb182294179bb1f2f0f5c9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sum all the elements of an <a class="el" href="conceptnda_1_1Array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object.  <br /></td></tr>
+<tr class="memdesc:ga32b50e2bafb182294179bb1f2f0f5c9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sum all the elements of an <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object.  <br /></td></tr>
 <tr class="separator:ga32b50e2bafb182294179bb1f2f0f5c9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
