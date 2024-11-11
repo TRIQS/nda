@@ -185,14 +185,14 @@ namespace nda {
    * these methods, all ranks in the communicator need to call the same method. Otherwise, the program will deadlock.
    *
    * @tparam A nda::basic_array or nda::basic_array_view type.
-   * @param a Array or view to be scattered.
+   * @param a Array/view to be scattered.
    * @param comm `mpi::communicator` object.
    * @param root Rank of the root process.
    * @return An mpi::lazy<mpi::tag::scatter, A> object modelling an nda::ArrayInitializer.
    */
   template <typename A>
     requires(is_regular_or_view_v<A> and std::decay_t<A>::is_stride_order_C())
-  ArrayInitializer<std::remove_reference_t<A>> auto lazy_mpi_scatter(A &&a, mpi::communicator comm = {}, int root = 0) {
+  auto lazy_mpi_scatter(A &&a, mpi::communicator comm = {}, int root = 0) {
     return mpi::lazy<mpi::tag::scatter, A>{std::forward<A>(a), comm, root, true};
   }
 
@@ -227,7 +227,7 @@ namespace nda {
    * `comm.size()`).
    *
    * @tparam A nda::basic_array or nda::basic_array_view type.
-   * @param a Array or view to be scattered.
+   * @param a Array/view to be scattered.
    * @param comm `mpi::communicator` object.
    * @param root Rank of the root process.
    * @return An nda::basic_array object with the result of the scattering.

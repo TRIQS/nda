@@ -58,7 +58,7 @@ namespace nda {
    * @endcode
    *
    * @tparam A nda::basic_array or nda::basic_array_view type.
-   * @param a Array or view to be broadcasted from/into.
+   * @param a Array/view to be broadcasted from/into.
    * @param comm `mpi::communicator` object.
    * @param root Rank of the root process.
    */

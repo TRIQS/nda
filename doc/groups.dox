@@ -163,11 +163,11 @@
  * The following example demonstrates some of these features:
  *
  * @code{.cpp}
+ * #include <mpi/mpi.hpp>
  * #include <nda/mpi.hpp>
  * #include <nda/nda.hpp>
  *
  * #include <iostream>
- * #include <mpi/mpi.hpp>
  *
  * int main(int argc, char **argv) {
  *   // initialize MPI environment
@@ -178,14 +178,11 @@
  *   nda::array<int, 2> A(2, 2);
  *   A() = comm.rank();
  *
- *   // reduce the array over all processes, which returns an mpi::lazy proxy object
- *   auto lazy_sum = mpi::reduce(A);
- *
- *   // since it satisfies the nda::ArrayInitializer concept, we can use it to initialize an nda::array
- *   nda::array<int, 2> sum(lazy_sum);
+ *   // reduce the array over all processes
+ *   auto A_sum = mpi::reduce(A);
  *
  *   // print the result
- *   if (comm.rank() == 0) std::cout << sum << std::endl;
+ *   if (comm.rank() == 0) std::cout << A_sum << std::endl;
  * }
  * @endcode
  *

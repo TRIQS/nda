@@ -194,7 +194,7 @@ namespace nda {
    * these methods, all ranks in the communicator need to call the same method. Otherwise, the program will deadlock.
    *
    * @tparam A nda::basic_array or nda::basic_array_view type with C-layout.
-   * @param a Array or view to be gathered.
+   * @param a Array/view to be gathered.
    * @param comm `mpi::communicator` object.
    * @param root Rank of the root process.
    * @param all Should all processes receive the result of the gather.
@@ -202,7 +202,7 @@ namespace nda {
    */
   template <typename A>
     requires(is_regular_or_view_v<A> and std::decay_t<A>::is_stride_order_C())
-  ArrayInitializer<std::remove_reference_t<A>> auto lazy_mpi_gather(A &&a, mpi::communicator comm = {}, int root = 0, bool all = false) {
+  auto lazy_mpi_gather(A &&a, mpi::communicator comm = {}, int root = 0, bool all = false) {
     return mpi::lazy<mpi::tag::gather, A>{std::forward<A>(a), comm, root, all};
   }
 
@@ -239,7 +239,7 @@ namespace nda {
    * Here, the array `B` has the shape `(3 * comm.size(), 4)` on the root process and `(0, 0)` on all other processes.
    *
    * @tparam A nda::basic_array or nda::basic_array_view type with C-layout.
-   * @param a Array or view to be gathered.
+   * @param a Array/view to be gathered.
    * @param comm `mpi::communicator` object.
    * @param root Rank of the root process.
    * @param all Should all processes receive the result of the gather.

@@ -209,8 +209,9 @@ namespace nda {
    * nda::array<int, 2> B = nda::lazy_mpi_reduce(A);
    * @endcode
    *
-   * The behavior is otherwise identical to nda::mpi_reduce and nda::mpi_reduce_in_place. The reduction is performed
-   * in-place if the target and input array/view are the same (if the underlying data pointer is the same), e.g.
+   * The behavior is otherwise identical to nda::mpi_reduce and nda::mpi_reduce_in_place.
+   *
+   * The reduction is performed in-place if the target and input array/view are the same, e.g.
    *
    * @code{.cpp}
    * A = mpi::reduce(A);
@@ -220,7 +221,7 @@ namespace nda {
    * ranks in the communicator need to call the same method. Otherwise, the program will deadlock.
    *
    * @tparam A nda::basic_array or nda::basic_array_view type.
-   * @param a Array or view to be reduced.
+   * @param a Array/view to be reduced.
    * @param comm `mpi::communicator` object.
    * @param root Rank of the root process.
    * @param all Should all processes receive the result of the reduction.
@@ -229,8 +230,7 @@ namespace nda {
    */
   template <typename A>
     requires(is_regular_or_view_v<A>)
-  ArrayInitializer<std::remove_reference_t<A>> auto lazy_mpi_reduce(A &&a, mpi::communicator comm = {}, int root = 0, bool all = false,
-                                                                    MPI_Op op = MPI_SUM) {
+  auto lazy_mpi_reduce(A &&a, mpi::communicator comm = {}, int root = 0, bool all = false, MPI_Op op = MPI_SUM) {
     return mpi::lazy<mpi::tag::reduce, A>{std::forward<A>(a), comm, root, all, op};
   }
 
@@ -259,7 +259,7 @@ namespace nda {
    * before the MPI call on all other processes.
    *
    * @tparam A nda::basic_array or nda::basic_array_view type.
-   * @param a Array or view to be reduced.
+   * @param a Array/view to be reduced.
    * @param comm `mpi::communicator` object.
    * @param root Rank of the root process.
    * @param all Should all processes receive the result of the reduction.
@@ -303,7 +303,7 @@ namespace nda {
    * Here, the array `B` has the shape `(3, 4)` on the root process and `(0, 0)` on all other processes.
    *
    * @tparam A nda::basic_array or nda::basic_array_view type.
-   * @param a Array or view to be reduced.
+   * @param a Array/view to be reduced.
    * @param comm `mpi::communicator` object.
    * @param root Rank of the root process.
    * @param all Should all processes receive the result of the reduction.
