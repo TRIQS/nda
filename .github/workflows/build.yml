@@ -26,8 +26,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {os: ubuntu-24.04, cc: gcc, cxx: g++, doc: OFF, cov: OFF}
-          - {os: ubuntu-24.04, cc: clang, cxx: clang++, doc: OFF, cov: ON}
+          - {os: ubuntu-24.04, cc: gcc, cxx: g++, doc: OFF, cov: ON}
+          - {os: ubuntu-24.04, cc: clang, cxx: clang++, doc: OFF, cov: OFF}
           - {os: macos-14, cc: gcc-14, cxx: g++-14, doc: OFF, cov: OFF}
           - {os: macos-14, cc: clang, cxx: clang++, doc: ON, cov: OFF}
 
@@ -55,10 +55,10 @@ jobs:
         gfortran
         hdf5-tools
         libblas-dev
-        libclang-15-dev
-        libc++-15-dev
-        libc++abi-15-dev
-        libomp-15-dev
+        libclang-dev
+        libc++-dev
+        libc++abi-dev
+        libomp-dev
         libfftw3-dev
         libgfortran5
         libgmp-dev
@@ -78,39 +78,33 @@ jobs:
         python3-sphinx
         python3-nbsphinx
 
+    - name: Set up virtualenv
+      run: |
+        mkdir $HOME/.venv
+        python3 -m venv --system-site-packages $HOME/.venv/my_python
+        source $HOME/.venv/my_python/bin/activate
+        echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+        echo "PATH=$PATH" >> $GITHUB_ENV
+
     - name: Install homebrew dependencies
       if: ${{ contains(matrix.os, 'macos') }}
       run: |
-        brew install ccache gcc@12 llvm hdf5 open-mpi openblas
-        mkdir $HOME/.venv
-        python3 -m venv $HOME/.venv/my_python
-        source $HOME/.venv/my_python/bin/activate
+        brew update
+        brew install ccache gcc llvm hdf5 open-mpi openblas doxygen
         pip install mako numpy scipy mpi4py
         pip install -r requirements.txt
-        echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
         echo "PATH=$(brew --prefix llvm)/bin:$(brew --prefix gcc)/bin:$PATH" >> $GITHUB_ENV
+        echo "PYTHONPATH=$(brew --prefix llvm)/lib/python3.13/site-packages" >> $GITHUB_ENV
 
-    - name: Build doxygen
-      if: matrix.doc == 'ON'
-      env:
-        CC: ${{ matrix.cc }}
-        CXX: ${{ matrix.cxx }}
-        LIBRARY_PATH: /usr/local/opt/llvm/lib
-      run: |
-        cd $HOME
-        git clone https://github.com/doxygen/doxygen.git
-        cd doxygen
-        git checkout 0a7e79813
-        mkdir build
-        cd build
-        cmake .. -Duse_libclang=ON -Dstatic_libclang=ON -Duse_libc++=OFF -DLLVM_ROOT=/usr/lib/llvm-15/lib/cmake/llvm -DClang_ROOT=/usr/lib/llvm-15/lib/cmake/clang
-        make -j 2 VERBOSE=1
-        cp bin/doxygen /usr/local/bin/doxygen
-
-    - name: add clang cxxflags
+    - name: Add clang CXXFLAGS
       if: ${{ contains(matrix.cxx, 'clang') }}
       run: |
         echo "CXXFLAGS=-stdlib=libc++" >> $GITHUB_ENV
+
+    - name: Add clang LDFLAGS for macos to link against brew's libc++
+      if: ${{ contains(matrix.os, 'macos') && contains(matrix.cxx, 'clang') }}
+      run: |
+        echo 'LDFLAGS="-L$(brew --prefix llvm)/lib/c++ -L$(brew --prefix llvm)/lib -lunwind"' >> $GITHUB_ENV
 
     - name: Prepare source files for doxygen
       if: matrix.doc == 'ON'
@@ -126,7 +120,7 @@ jobs:
         CC: ${{ matrix.cc }}
         CXX: ${{ matrix.cxx }}
       run: |
-        mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/install -DBuild_Documentation=${{ matrix.doc }} -DPythonSupport=ON
+        mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/install -DPythonSupport=ON -DBuild_Documentation=${{ matrix.doc }}
         make -j2 || make -j1 VERBOSE=1
 
     - name: Test nda
