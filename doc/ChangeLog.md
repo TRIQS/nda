@@ -4,6 +4,8 @@
 
 NDA Version 1.3.0 is a release that
 * Adds new functionality to the symmetry library
+* Adds extensive doxygen documentation to the public API
+* Generates reference documentation for website using doxygen
 * Optimizes CLEF by removing redundant copies
 * Extends the LAPACK/BLAS functionality
 * Improves the interface to read/write HDF5 files
@@ -17,18 +19,28 @@ Find below an itemized list of changes in this release.
 * Allow nda::flatten to be called for non-trivial memory layouts
 * Fix bug in for_each_static_impl, clean up layout/for_each.hpp and add tests
 * Fix bug in encode function, clean up layout/permutation.hpp and add tests
+* Fix Intel vs GNU ABI when building against MKL
+* Fix bug in clef evaluator and add corresponding tests
 * Improve h5 interface by removing unnecessary copies and restrictions and update tests
 * Remove redundant files c++/nda/TODO and c++/nda/mapped_functions.vim
 * Avoid redundant copies in clef evaluation
 * Add sym_grp functions to obtain / initialize from representative data
 * Add nda::concatenate implementation
-* Fix bug in clef evaluator and add corresponding tests
 * Update Dockerfile.msan to more recent Ubuntu and library versions
 * Generalize nda::transpose to work with arrays of arbitrary rank
 * Protect nda::reshape, should not allow non-standard memory order
 * Remove redundant ARRAY_INT definition
 * Add layout_to_policy trait specialization for Fortran layouts
 * Use Default Seed for std::mt19937 construction
+* Throw std::bad_alloc for failed memory allocation in handle and basic_array construction
+* Various smaller code readability improvements
+* Add missing includes in various files
+* Regenerate Apache copyright headers
+* Format .clang-tidy
+
+### doc
+* Add extensive documentation of public API using Doxygen doc strings
+* Use doxygen to automatically generate documentation
 
 ### cmake
 * Disable -ffast-math by default for intel compilers
@@ -40,11 +52,15 @@ Find below an itemized list of changes in this release.
 * Run NDA checks also in RelWithDebInfo build mode
 * Disable finite-math-only for IntelLLVM compiler
 * When using mkl enforce single dynamic lib and explicitly set mkl_interface_layer (#48)
+* Disable BadAlloc test when ASAN is ON
 
 ### jenkins
 * Enable PythonSupport on all CIs
 * Add ubuntu-intel build
 * Fix ubuntu-intel gpg file in Dockerfile
+
+### ghactions
+* Build and deploy documentation
 
 ### blas/lapack
 * Fix type error in magma interface
