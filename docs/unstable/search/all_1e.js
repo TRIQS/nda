@@ -8,7 +8,7 @@ var searchData=
   ['using_20automatic_20assignment_5',['Initializing an array using automatic assignment',['../ex3.html#ex3_p6',1,'']]],
   ['using_20linear_20algebra_20tools_6',['Using linear algebra tools',['../ex8.html#ex8_p7',1,'']]],
   ['using_20the_20blas_20lapack_20interface_7',['Using the BLAS/LAPACK interface',['../ex8.html#ex8_p8',1,'']]],
-  ['utilities_8',['Utilities',['../group__utilities.html',1,'Utilities'],['../documentation.html#autotoc_md22',1,'Utilities']]],
+  ['utilities_8',['Utilities',['../group__utilities.html',1,'Utilities'],['../documentation.html#autotoc_md24',1,'Utilities']]],
   ['utilities_9',['utilities',['../group__av__utils.html',1,'Array/View utilities'],['../group__clef__utils.html',1,'CLEF utilities'],['../group__layout__utils.html',1,'Layout utilities'],['../group__mem__utils.html',1,'Memory utilities']]],
   ['utils_2ehpp_10',['utils.hpp',['../clef_2utils_8hpp.html',1,'(Global Namespace)'],['../mpi_2utils_8hpp.html',1,'(Global Namespace)']]]
 ];

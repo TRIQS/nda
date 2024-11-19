@@ -27,13 +27,14 @@ var searchData=
   ['divides_24',['divides',['../structnda_1_1clef_1_1tags_1_1divides.html',1,'nda::clef::tags']]],
   ['do_5fnot_5finitialize_25',['do_not_initialize',['../group__mem__utils.html#gaaf43ba395f5c335f1487ed80dda035b7',1,'nda::mem']]],
   ['do_5fnot_5finitialize_5ft_26',['do_not_initialize_t',['../structnda_1_1mem_1_1do__not__initialize__t.html',1,'nda::mem']]],
-  ['doc_27',['Doc',['../changelog.html#autotoc_md13',1,'']]],
-  ['documentation_28',['API Documentation',['../documentation.html',1,'']]],
-  ['doing_20linear_20algebra_20with_20arrays_29',['Doing linear algebra with arrays',['../ex1.html#ex1_p11',1,'']]],
-  ['dot_30',['dot',['../group__linalg__blas.html#gabec70205c2c9842f78ceb40c618bdafb',1,'nda::blas::dot()'],['../group__linalg__tools.html#ga432349969f2f13802bed8f1b06bc1b59',1,'nda::dot()']]],
-  ['dot_2ehpp_31',['dot.hpp',['../blas_2dot_8hpp.html',1,'(Global Namespace)'],['../linalg_2dot_8hpp.html',1,'(Global Namespace)']]],
-  ['dot_5fgeneric_32',['dot_generic',['../group__linalg__blas.html#ga08f16c1e39202bdd2a820e94a651283a',1,'nda::blas']]],
-  ['dot_5fproduct_33',['dot_product',['../group__utils__std.html#gaeb9739b92ba5275cb829402f2c290374',1,'nda::stdutil']]],
-  ['dotc_34',['dotc',['../group__linalg__blas.html#ga4a0c527485f297fb962d0574552d98f1',1,'nda::blas::dotc()'],['../group__linalg__tools.html#ga0d3bdc2a0527996e49ca1181091e396b',1,'nda::dotc()']]],
-  ['dotc_5fgeneric_35',['dotc_generic',['../group__linalg__blas.html#ga7e95e8ebf1b6a4af268e5174089d78d3',1,'nda::blas']]]
+  ['doc_27',['Doc',['../changelog.html#autotoc_md15',1,'']]],
+  ['doc_28',['doc',['../changelog.html#autotoc_md2',1,'']]],
+  ['documentation_29',['API Documentation',['../documentation.html',1,'']]],
+  ['doing_20linear_20algebra_20with_20arrays_30',['Doing linear algebra with arrays',['../ex1.html#ex1_p11',1,'']]],
+  ['dot_31',['dot',['../group__linalg__blas.html#gabec70205c2c9842f78ceb40c618bdafb',1,'nda::blas::dot()'],['../group__linalg__tools.html#ga432349969f2f13802bed8f1b06bc1b59',1,'nda::dot()']]],
+  ['dot_2ehpp_32',['dot.hpp',['../blas_2dot_8hpp.html',1,'(Global Namespace)'],['../linalg_2dot_8hpp.html',1,'(Global Namespace)']]],
+  ['dot_5fgeneric_33',['dot_generic',['../group__linalg__blas.html#ga08f16c1e39202bdd2a820e94a651283a',1,'nda::blas']]],
+  ['dot_5fproduct_34',['dot_product',['../group__utils__std.html#gaeb9739b92ba5275cb829402f2c290374',1,'nda::stdutil']]],
+  ['dotc_35',['dotc',['../group__linalg__blas.html#ga4a0c527485f297fb962d0574552d98f1',1,'nda::blas::dotc()'],['../group__linalg__tools.html#ga0d3bdc2a0527996e49ca1181091e396b',1,'nda::dotc()']]],
+  ['dotc_5fgeneric_36',['dotc_generic',['../group__linalg__blas.html#ga7e95e8ebf1b6a4af268e5174089d78d3',1,'nda::blas']]]
 ];
