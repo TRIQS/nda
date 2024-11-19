@@ -1,11 +1,5 @@
 var NAVTREEINDEX0 =
 {
-"@ref nda::C_layout_str":[4,3,0,3],
-"@ref nda::C_stride_layout_str":[4,3,0,5],
-"@ref nda::F_layout_str":[4,3,0,7],
-"@ref nda::F_stride_layout_str":[4,3,0,9],
-"@ref nda::basic_layout_str":[4,3,0,1],
-"@ref nda::rect_str":[4,3,2,1],
 "__impl__basic__array__view__common_8hpp_source.html":[4,7,0,8],
 "accessors_8hpp.html":[4,7,0,9],
 "accessors_8hpp_source.html":[4,7,0,9],
@@ -126,6 +120,14 @@ var NAVTREEINDEX0 =
 "eigenelements_8hpp_source.html":[4,7,0,4,3],
 "eval_8hpp.html":[4,7,0,1,4],
 "eval_8hpp_source.html":[4,7,0,1,4],
+"ex1.html":[3,0],
+"ex2.html":[3,1],
+"ex3.html":[3,2],
+"ex4.html":[3,3],
+"ex5.html":[3,4],
+"ex6.html":[3,5],
+"ex7.html":[3,6],
+"ex8.html":[3,7],
 "examples.html":[3],
 "exceptions_8hpp.html":[4,7,0,21],
 "exceptions_8hpp_source.html":[4,7,0,21],
@@ -247,7 +249,5 @@ var NAVTREEINDEX0 =
 "linalg_8hpp_source.html":[4,7,0,29],
 "literals_8hpp.html":[4,7,0,1,8],
 "literals_8hpp_source.html":[4,7,0,1,8],
-"macros_8hpp.html":[4,7,0,30],
-"macros_8hpp_source.html":[4,7,0,30],
-"make__lazy_8hpp.html":[4,7,0,1,9]
+"macros_8hpp.html":[4,7,0,30]
 };

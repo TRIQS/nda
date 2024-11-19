@@ -39,7 +39,16 @@ var NAVTREE =
         [ "add_subdirectory", "integration.html#add_sub", null ]
       ] ]
     ] ],
-    [ "Examples", "examples.html", null ],
+    [ "Examples", "examples.html", [
+      [ "Example 1: A quick overview", "ex1.html", null ],
+      [ "Example 2: Constructing arrays", "ex2.html", null ],
+      [ "Example 3: Initializing arrays", "ex3.html", null ],
+      [ "Example 4: Views and slices", "ex4.html", null ],
+      [ "Example 5: HDF5 support", "ex5.html", null ],
+      [ "Example 6: MPI support", "ex6.html", null ],
+      [ "Example 7: Making use of symmetries", "ex7.html", null ],
+      [ "Example 8: Linear algebra support", "ex8.html", null ]
+    ] ],
     [ "API Documentation", "documentation.html", [
       [ "Arrays and views", "group__arrays__views.html", [
         [ "basic_array", "classnda_1_1basic__array.html", null ],
@@ -153,15 +162,10 @@ var NAVTREE =
       [ "Memory layout", "group__layout.html", [
         [ "Layout policies", "group__layout__pols.html", [
           [ "basic_layout", "structnda_1_1basic__layout.html", null ],
-          [ "basic_layout_str", "@ref nda::basic_layout_str", null ],
           [ "C_layout", "structnda_1_1_c__layout.html", null ],
-          [ "C_layout_str", "@ref nda::C_layout_str", null ],
           [ "C_stride_layout", "structnda_1_1_c__stride__layout.html", null ],
-          [ "C_stride_layout_str", "@ref nda::C_stride_layout_str", null ],
           [ "F_layout", "structnda_1_1_f__layout.html", null ],
-          [ "F_layout_str", "@ref nda::F_layout_str", null ],
-          [ "F_stride_layout", "structnda_1_1_f__stride__layout.html", null ],
-          [ "F_stride_layout_str", "@ref nda::F_stride_layout_str", null ]
+          [ "F_stride_layout", "structnda_1_1_f__stride__layout.html", null ]
         ] ],
         [ "Layout utilities", "group__layout__utils.html", [
           [ "_linear_index_t", "structnda_1_1__linear__index__t.html", null ],
@@ -170,8 +174,7 @@ var NAVTREE =
           [ "layout_info_t", "structnda_1_1layout__info__t.html", null ]
         ] ],
         [ "Mult-dimensional indexing", "group__layout__idx.html", [
-          [ "idx_map", "classnda_1_1idx__map.html", null ],
-          [ "rect_str", "@ref nda::rect_str", null ]
+          [ "idx_map", "classnda_1_1idx__map.html", null ]
         ] ]
       ] ],
       [ "Memory management", "group__memory.html", [
@@ -234,8 +237,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"@ref nda::C_layout_str",
-"make__lazy_8hpp_source.html"
+"__impl__basic__array__view__common_8hpp_source.html",
+"macros_8hpp_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

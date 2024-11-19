@@ -1,5 +1,7 @@
 var NAVTREEINDEX1 =
 {
+"macros_8hpp_source.html":[4,7,0,30],
+"make__lazy_8hpp.html":[4,7,0,1,9],
 "make__lazy_8hpp_source.html":[4,7,0,1,9],
 "malloc_8hpp.html":[4,7,0,5,3],
 "malloc_8hpp_source.html":[4,7,0,5,3],
@@ -60,10 +62,10 @@ var NAVTREEINDEX1 =
 "structmpi_1_1lazy_3_01mpi_1_1tag_1_1reduce_00_01_a_01_4.html":[4,0,7,1],
 "structmpi_1_1lazy_3_01mpi_1_1tag_1_1scatter_00_01_a_01_4.html":[4,0,7,2],
 "structnda_1_1__linear__index__t.html":[4,3,1,0],
-"structnda_1_1_c__layout.html":[4,3,0,2],
-"structnda_1_1_c__stride__layout.html":[4,3,0,4],
-"structnda_1_1_f__layout.html":[4,3,0,6],
-"structnda_1_1_f__stride__layout.html":[4,3,0,8],
+"structnda_1_1_c__layout.html":[4,3,0,1],
+"structnda_1_1_c__stride__layout.html":[4,3,0,2],
+"structnda_1_1_f__layout.html":[4,3,0,3],
+"structnda_1_1_f__stride__layout.html":[4,3,0,4],
 "structnda_1_1basic__layout.html":[4,3,0,0],
 "structnda_1_1borrowed.html":[4,4,3,0],
 "structnda_1_1clef_1_1evaluator.html":[4,1,2,0],

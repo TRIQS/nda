@@ -121,26 +121,26 @@ $(function(){initNavTree('group__av__math.html',''); initResizable(true); });
 <li><a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a>: A lazy function call expression.</li>
 </ul>
 <p>This lazy function call expression satisfies the <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> concept and can therefore be used to assign to or construct <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> and <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> objects. Another way to evaluate lazy expressions is with <a class="el" href="group__av__factories.html#ga1ef017428f20125233751e5e985fdc90" title="Make a given object regular.">nda::make_regular</a>:</p>
-<div class="fragment"><div class="line"><span class="comment">// create two arrays A and B</span></div>
+<div class="fragment"><div class="line"><span class="comment">// create an array A</span></div>
 <div class="line"><span class="keyword">auto</span> A = <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;int, 2&gt;</a>({{1, 2}, {3, 4}});</div>
-<div class="line"><span class="keyword">auto</span> B = <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;int, 2&gt;</a>({{5, 6}, {7, 8}});</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// add them elementwise</span></div>
-<div class="line"><span class="keyword">auto</span> ex = A + B; <span class="comment">// ex is an nda::expr object</span></div>
+<div class="line"><span class="comment">// square the elements of A</span></div>
+<div class="line"><span class="keyword">auto</span> ex = <a class="code hl_function" href="#ga6900d4319e73e27201a65f96d082289f">nda::pow</a>(A, 2); <span class="comment">// ex is a lazy expression</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// evaluate the lazy expression by constructing a new array</span></div>
-<div class="line"><a class="code hl_class" href="classnda_1_1basic__array.html">nda::array&lt;int, 2&gt;</a> C = ex;</div>
+<div class="line"><a class="code hl_class" href="classnda_1_1basic__array.html">nda::array&lt;int, 2&gt;</a> A_sq = ex;</div>
+<div class="line">std::cout &lt;&lt; A_sq &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// evaluate the lazy expression using nda::make_regular</span></div>
-<div class="line"><span class="keyword">auto</span> D = <a class="code hl_function" href="group__av__factories.html#ga1ef017428f20125233751e5e985fdc90">nda::make_regular</a>(ex);</div>
+<div class="line">std::cout &lt;&lt; <a class="code hl_function" href="group__av__factories.html#ga1ef017428f20125233751e5e985fdc90">nda::make_regular</a>(ex) &lt;&lt; std::endl;</div>
 <div class="ttc" id="aclassnda_1_1basic__array_html"><div class="ttname"><a href="classnda_1_1basic__array.html">nda::basic_array</a></div><div class="ttdoc">A generic multi-dimensional array.</div><div class="ttdef"><b>Definition</b> <a href="basic__array_8hpp_source.html#l00113">basic_array.hpp:113</a></div></div>
 <div class="ttc" id="agroup__av__factories_html_ga1ef017428f20125233751e5e985fdc90"><div class="ttname"><a href="group__av__factories.html#ga1ef017428f20125233751e5e985fdc90">nda::make_regular</a></div><div class="ttdeci">decltype(auto) make_regular(A &amp;&amp;a)</div><div class="ttdoc">Make a given object regular.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00238">basic_functions.hpp:238</a></div></div>
+<div class="ttc" id="agroup__av__math_html_ga6900d4319e73e27201a65f96d082289f"><div class="ttname"><a href="#ga6900d4319e73e27201a65f96d082289f">nda::pow</a></div><div class="ttdeci">auto pow(A &amp;&amp;a, double p)</div><div class="ttdoc">Function pow for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).</div><div class="ttdef"><b>Definition</b> <a href="mapped__functions_8hpp_source.html#l00088">mapped_functions.hpp:88</a></div></div>
 <div class="ttc" id="agroup__av__types_html_ga72f3fdf9760fa22c35442cdf2eb6768d"><div class="ttname"><a href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array</a></div><div class="ttdeci">basic_array&lt; ValueType, Rank, Layout, 'A', ContainerPolicy &gt; array</div><div class="ttdoc">Alias template of an nda::basic_array with an 'A' algebra.</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00075">declarations.hpp:75</a></div></div>
 </div><!-- fragment --><p>Output:</p>
-<div class="fragment"><div class="line">C:</div>
-<div class="line">[[1,4]</div>
+<div class="fragment"><div class="line">[[1,4]</div>
 <div class="line"> [9,16]]</div>
-<div class="line">D:</div>
+<div class="line"> </div>
 <div class="line">[[1,4]</div>
 <div class="line"> [9,16]]</div>
 </div><!-- fragment --><table class="memberdecls">

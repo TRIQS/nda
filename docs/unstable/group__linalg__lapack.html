@@ -414,7 +414,7 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the m-by-n matrix to be factored. On exit, the factors \( \mathbf{L} \) and \( \mathbf{U} \) from the factorization \( \mathbf{A} = \mathbf{P L U} \); the unit diagonal elements of \( \mathbf{L} \) are not stored. </td></tr>
-    <tr><td class="paramname">ipiv</td><td>Output vector. The pivot indices from <code>getrf</code>, i.e. for <code>1 &lt;= i &lt;= N</code>, row i of the matrix was interchanged with row <code>ipiv(i)</code>. </td></tr>
+    <tr><td class="paramname">ipiv</td><td>Output vector. The pivot indices from <code>getrf</code>, i.e. for <code>1 &lt;= i &lt;= n</code>, row i of the matrix was interchanged with row <code>ipiv(i)</code>. </td></tr>
   </table>
   </dd>
 </dl>
@@ -512,7 +512,7 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
   <table class="tparams">
     <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
     <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
-    <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> type. </td></tr>
+    <tr><td class="paramname">IPIV</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> type. </td></tr>
   </table>
   </dd>
 </dl>
@@ -521,7 +521,7 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
     <tr><td class="paramname">a</td><td>Input matrix. The factors \( \mathbf{L} \) and \( \mathbf{U} \) from the factorization  \( \mathbf{A}
 = \mathbf{P L U} \) as computed by <code>getrf</code>. </td></tr>
     <tr><td class="paramname">b</td><td>Input/output matrix. On entry, the right hand side matrix \( \mathbf{B} \). On exit, the solution matrix \( \mathbf{X} \). </td></tr>
-    <tr><td class="paramname">ipiv</td><td>Input vector. The pivot indices from <code>getrf</code>, i.e. for <code>1 &lt;= i &lt;= N</code>, row i of the matrix was interchanged with row <code>ipiv(i)</code>. </td></tr>
+    <tr><td class="paramname">ipiv</td><td>Input vector. The pivot indices from <code>getrf</code>, i.e. for <code>1 &lt;= i &lt;= n</code>, row i of the matrix was interchanged with row <code>ipiv(i)</code>. </td></tr>
   </table>
   </dd>
 </dl>

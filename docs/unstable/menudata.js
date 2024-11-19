@@ -34,7 +34,15 @@ var menudata={children:[
 {text:"FetchContent",url:"integration.html#fetch"},
 {text:"find_package",url:"integration.html#find_package"},
 {text:"add_subdirectory",url:"integration.html#add_sub"}]}]},
-{text:"Examples",url:"examples.html"},
+{text:"Examples",url:"examples.html",children:[
+{text:"Example 1: A quick overview",url:"ex1.html"},
+{text:"Example 2: Constructing arrays",url:"ex2.html"},
+{text:"Example 3: Initializing arrays",url:"ex3.html"},
+{text:"Example 4: Views and slices",url:"ex4.html"},
+{text:"Example 5: HDF5 support",url:"ex5.html"},
+{text:"Example 6: MPI support",url:"ex6.html"},
+{text:"Example 7: Making use of symmetries",url:"ex7.html"},
+{text:"Example 8: Linear algebra support",url:"ex8.html"}]},
 {text:"API Documentation",url:"documentation.html",children:[
 {text:"Arrays and views",url:"group__arrays__views.html",children:[
 {text:"basic_array",url:"classnda_1_1basic__array.html"},
@@ -136,23 +144,17 @@ var menudata={children:[
 {text:"Memory layout",url:"group__layout.html",children:[
 {text:"Layout policies",url:"group__layout__pols.html",children:[
 {text:"basic_layout",url:"structnda_1_1basic__layout.html"},
-{text:"basic_layout_str",url:"@ref nda::basic_layout_str"},
 {text:"C_layout",url:"structnda_1_1_c__layout.html"},
-{text:"C_layout_str",url:"@ref nda::C_layout_str"},
 {text:"C_stride_layout",url:"structnda_1_1_c__stride__layout.html"},
-{text:"C_stride_layout_str",url:"@ref nda::C_stride_layout_str"},
 {text:"F_layout",url:"structnda_1_1_f__layout.html"},
-{text:"F_layout_str",url:"@ref nda::F_layout_str"},
-{text:"F_stride_layout",url:"structnda_1_1_f__stride__layout.html"},
-{text:"F_stride_layout_str",url:"@ref nda::F_stride_layout_str"}]},
+{text:"F_stride_layout",url:"structnda_1_1_f__stride__layout.html"}]},
 {text:"Layout utilities",url:"group__layout__utils.html",children:[
 {text:"_linear_index_t",url:"structnda_1_1__linear__index__t.html"},
 {text:"ellipsis",url:"structnda_1_1ellipsis.html"},
 {text:"idx_group_t",url:"structnda_1_1idx__group__t.html"},
 {text:"layout_info_t",url:"structnda_1_1layout__info__t.html"}]},
 {text:"Mult-dimensional indexing",url:"group__layout__idx.html",children:[
-{text:"idx_map",url:"classnda_1_1idx__map.html"},
-{text:"rect_str",url:"@ref nda::rect_str"}]}]},
+{text:"idx_map",url:"classnda_1_1idx__map.html"}]}]},
 {text:"Memory management",url:"group__memory.html",children:[
 {text:"Address spaces",url:"group__mem__addrspcs.html"},
 {text:"Allocators",url:"group__mem__allocators.html",children:[

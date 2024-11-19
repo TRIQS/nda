@@ -118,9 +118,35 @@ $(function(){initNavTree('examples.html',''); initResizable(true); });
   </li>
 </ul>
 </div>
-<div class="textblock"><h1><a class="anchor" id="compiling"></a>
+<div class="textblock"><table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Example   </th><th class="markdownTableHeadNone">Description    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="ex1.html">Example 1: A quick overview</a>   </td><td class="markdownTableBodyNone">A short introduction to <b>nda</b>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="ex2.html">Example 2: Constructing arrays</a>   </td><td class="markdownTableBodyNone">Different ways to construct and get started with arrays    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="ex3.html">Example 3: Initializing arrays</a>   </td><td class="markdownTableBodyNone">Different ways to initialize already constructed arrays    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="ex4.html">Example 4: Views and slices</a>   </td><td class="markdownTableBodyNone">How to take views and slices of arrays    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="ex5.html">Example 5: HDF5 support</a>   </td><td class="markdownTableBodyNone">How to write/read arrays and views to/from HDF5 files    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="ex6.html">Example 6: MPI support</a>   </td><td class="markdownTableBodyNone">How to broadcast, gather, scatter and reduce arrays and views    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="ex7.html">Example 7: Making use of symmetries</a>   </td><td class="markdownTableBodyNone">How to use symmetries with <b>nda</b> arrays    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="ex8.html">Example 8: Linear algebra support</a>   </td><td class="markdownTableBodyNone">Doing linear algebra with <b>nda</b> arrys   </td></tr>
+</table>
+<h1><a class="anchor" id="compiling"></a>
 Compiling the examples</h1>
-<p>All examples have been compiled on a MacBook Pro with an Apple M2 Max chip and <a href="https://www.hdfgroup.org/solutions/hdf5/">HDF5</a> 1.14.3 installed via <a href="https://brew.sh/">homebrew</a>. We further used clang 17.0.6 together with cmake 3.29.1.</p>
+<p>All examples have been compiled on a MacBook Pro with an Apple M2 Max chip with</p><ul>
+<li><a href="https://www.hdfgroup.org/solutions/hdf5/">HDF5</a> 1.14.3,</li>
+<li><a href="https://www.open-mpi.org/">open-mpi</a> 5.0.1 and</li>
+<li><a href="https://www.openblas.net/">OpenBLAS</a> 0.3.27</li>
+</ul>
+<p>installed via <a href="https://brew.sh/">homebrew</a>.</p>
+<p>We further used clang 19.1.2 together with cmake 3.30.5.</p>
 <p>Assuming that <b>nda</b> has been installed locally (see <a class="el" href="installation.html">Installation</a>) and that the actual example code is in a file <code>main.cpp</code>, the following generic <code>CMakeLists.txt</code> should work for all examples (see also <a class="el" href="integration.html">Integration in C++ projects</a>):</p>
 <div class="fragment"><div class="line">cmake_minimum_required(VERSION 3.20)</div>
 <div class="line">project(example CXX)</div>

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['deprecated_20list_0',['Deprecated List',['../deprecated.html',1,'']]],
-  ['documentation_1',['API Documentation',['../documentation.html',1,'']]]
+  ['3_3a_20initializing_20arrays_0',['Example 3: Initializing arrays',['../ex3.html',1,'']]]
 ];
