@@ -28,8 +28,9 @@ var searchData=
   ['min_5fstride_25',['min_stride',['../classnda_1_1idx__map.html#a32bebf379654edecc87db55281fe6bec',1,'nda::idx_map']]],
   ['mpi_5fbroadcast_26',['mpi_broadcast',['../group__av__mpi.html#ga6df12000d826688a8203af93d6b6838e',1,'nda']]],
   ['mpi_5fgather_27',['mpi_gather',['../group__av__mpi.html#ga62aacd4df1ae34a7690e68d93c7429be',1,'nda']]],
-  ['mpi_5freduce_28',['mpi_reduce',['../group__av__mpi.html#ga577441dab1b10ae74cf6b1514e35e1d1',1,'nda']]],
-  ['mpi_5fscatter_29',['mpi_scatter',['../group__av__mpi.html#ga304b0d0ae4f9c8c688e880ec9ff74b2f',1,'nda']]],
-  ['mpop_30',['mpop',['../group__utils__std.html#gaedd4bb9fe174afa880deb1d5ff1bfe32',1,'nda::stdutil']]],
-  ['multi_5fbucket_31',['multi_bucket',['../classnda_1_1mem_1_1multi__bucket.html#a4acb0c47e202babde7a9588e6e46fd66',1,'nda::mem::multi_bucket::multi_bucket()'],['../classnda_1_1mem_1_1multi__bucket.html#af38beed4dcd7954d80c95c8c6d8d5e6f',1,'nda::mem::multi_bucket::multi_bucket(multi_bucket const &amp;)=delete'],['../classnda_1_1mem_1_1multi__bucket.html#a0497dbbb5c8868fe3d900ec14ac39f4c',1,'nda::mem::multi_bucket::multi_bucket(multi_bucket &amp;&amp;)=default']]]
+  ['mpi_5freduce_28',['mpi_reduce',['../group__av__mpi.html#ga3edd8f70f2213d38b391743ddab967b3',1,'nda']]],
+  ['mpi_5freduce_5fin_5fplace_29',['mpi_reduce_in_place',['../group__av__mpi.html#gac31ef46b7cffb19adbbb1ff06f9fcd8a',1,'nda']]],
+  ['mpi_5fscatter_30',['mpi_scatter',['../group__av__mpi.html#ga3c70e635ce6fd776980edc3b44f5823b',1,'nda']]],
+  ['mpop_31',['mpop',['../group__utils__std.html#gaedd4bb9fe174afa880deb1d5ff1bfe32',1,'nda::stdutil']]],
+  ['multi_5fbucket_32',['multi_bucket',['../classnda_1_1mem_1_1multi__bucket.html#a4acb0c47e202babde7a9588e6e46fd66',1,'nda::mem::multi_bucket::multi_bucket()'],['../classnda_1_1mem_1_1multi__bucket.html#af38beed4dcd7954d80c95c8c6d8d5e6f',1,'nda::mem::multi_bucket::multi_bucket(multi_bucket const &amp;)=delete'],['../classnda_1_1mem_1_1multi__bucket.html#a0497dbbb5c8868fe3d900ec14ac39f4c',1,'nda::mem::multi_bucket::multi_bucket(multi_bucket &amp;&amp;)=default']]]
 ];

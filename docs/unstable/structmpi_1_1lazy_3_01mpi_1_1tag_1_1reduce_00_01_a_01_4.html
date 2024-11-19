@@ -122,8 +122,8 @@ $(function(){initNavTree('structmpi_1_1lazy_3_01mpi_1_1tag_1_1reduce_00_01_a_01_
 <div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="conceptnda_1_1_array.html">nda::Array</a> A&gt;<br />
 struct mpi::lazy&lt; mpi::tag::reduce, A &gt;</div><p>Specialization of the <code>mpi::lazy</code> class for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types and the <code>mpi::tag::reduce</code> tag. </p>
 <p>An object of this class is returned when reducing <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> objects across multiple MPI processes.</p>
-<p>It models an <a class="el" href="conceptnda_1_1_array_initializer.html" title="Check if a given type satisfies the array initializer concept for a given nda::MemoryArray type.">nda::ArrayInitializer</a>, that means it can be used to initialize and assign to <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> and <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> objects. The target array will have the same shape as the input arrays.</p>
-<p>See <a class="el" href="group__av__mpi.html#ga577441dab1b10ae74cf6b1514e35e1d1" title="Implementation of an MPI reduce for nda::basic_array or nda::basic_array_view types.">nda::mpi_reduce</a> for an example.</p>
+<p>It models an <a class="el" href="conceptnda_1_1_array_initializer.html" title="Check if a given type satisfies the array initializer concept for a given nda::MemoryArray type.">nda::ArrayInitializer</a>, that means it can be used to initialize and assign to <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> and <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> objects. The result will be the reduction of the input arrays/views with respect to the given MPI operation.</p>
+<p>See <a class="el" href="group__av__mpi.html#ga25b48c45dd81070934be0b1ef45b72af" title="Implementation of a lazy MPI reduce for nda::basic_array or nda::basic_array_view types.">nda::lazy_mpi_reduce</a> for an example.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type to be reduced. </td></tr>
@@ -131,14 +131,14 @@ struct mpi::lazy&lt; mpi::tag::reduce, A &gt;</div><p>Specialization of the <cod
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="reduce_8hpp_source.html#l00050">50</a> of file <a class="el" href="reduce_8hpp_source.html">reduce.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reduce_8hpp_source.html#l00121">121</a> of file <a class="el" href="reduce_8hpp_source.html">reduce.hpp</a>.</p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a47bdc6baaf3e390a33f91de66af85572" id="r_a47bdc6baaf3e390a33f91de66af85572"><td class="memItemLeft" align="right" valign="top"><a id="a47bdc6baaf3e390a33f91de66af85572" name="a47bdc6baaf3e390a33f91de66af85572"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>const_view_type</b> = decltype(std::declval&lt;const A&gt;()())</td></tr>
-<tr class="memdesc:a47bdc6baaf3e390a33f91de66af85572"><td class="mdescLeft">&#160;</td><td class="mdescRight">Const view type of the array/view stored in the lazy object. <br /></td></tr>
-<tr class="separator:a47bdc6baaf3e390a33f91de66af85572"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa632a3b8d4cf99b84f81c6ec43494478" id="r_aa632a3b8d4cf99b84f81c6ec43494478"><td class="memItemLeft" align="right" valign="top"><a id="aa632a3b8d4cf99b84f81c6ec43494478" name="aa632a3b8d4cf99b84f81c6ec43494478"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>stored_type</b> = A</td></tr>
+<tr class="memdesc:aa632a3b8d4cf99b84f81c6ec43494478"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of the array/view stored in the lazy object. <br /></td></tr>
+<tr class="separator:aa632a3b8d4cf99b84f81c6ec43494478"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad7841c53e578a4c6085f2f3a12d96faf" id="r_ad7841c53e578a4c6085f2f3a12d96faf"><td class="memItemLeft" align="right" valign="top"><a id="ad7841c53e578a4c6085f2f3a12d96faf" name="ad7841c53e578a4c6085f2f3a12d96faf"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = typename std::decay_t&lt;A&gt;::value_type</td></tr>
 <tr class="memdesc:ad7841c53e578a4c6085f2f3a12d96faf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Value type of the array/view. <br /></td></tr>
@@ -151,7 +151,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a60bd9254cc07cd5cea749fe723aa6b7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the lazy MPI operation and write the result to a target array/view.  <br /></td></tr>
 <tr class="separator:a60bd9254cc07cd5cea749fe723aa6b7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a09bdd8d182dc5282c9cf342f6be31744" id="r_a09bdd8d182dc5282c9cf342f6be31744"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a09bdd8d182dc5282c9cf342f6be31744">shape</a> () const</td></tr>
-<tr class="memdesc:a09bdd8d182dc5282c9cf342f6be31744"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the shape of the target array.  <br /></td></tr>
+<tr class="memdesc:a09bdd8d182dc5282c9cf342f6be31744"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the shape of the <a class="el" href="conceptnda_1_1_array_initializer.html" title="Check if a given type satisfies the array initializer concept for a given nda::MemoryArray type.">nda::ArrayInitializer</a> object.  <br /></td></tr>
 <tr class="separator:a09bdd8d182dc5282c9cf342f6be31744"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -168,10 +168,10 @@ mpi::communicator&#160;</td><td class="memItemRight" valign="bottom"><b>comm</b>
 const MPI_Op&#160;</td><td class="memItemRight" valign="bottom"><b>op</b> {MPI_SUM}</td></tr>
 <tr class="memdesc:aa11e183cda85691eafe7414ec11551fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">MPI reduction operation. <br /></td></tr>
 <tr class="separator:aa11e183cda85691eafe7414ec11551fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a02b0ffa552dbdb39697c7c2c02d70417" id="r_a02b0ffa552dbdb39697c7c2c02d70417"><td class="memItemLeft" align="right" valign="top"><a id="a02b0ffa552dbdb39697c7c2c02d70417" name="a02b0ffa552dbdb39697c7c2c02d70417"></a>
-<a class="el" href="#a47bdc6baaf3e390a33f91de66af85572">const_view_type</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rhs</b></td></tr>
-<tr class="memdesc:a02b0ffa552dbdb39697c7c2c02d70417"><td class="mdescLeft">&#160;</td><td class="mdescRight">View of the array/view to be reduced. <br /></td></tr>
-<tr class="separator:a02b0ffa552dbdb39697c7c2c02d70417"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a230088768939b21be10acc38fe2bee15" id="r_a230088768939b21be10acc38fe2bee15"><td class="memItemLeft" align="right" valign="top"><a id="a230088768939b21be10acc38fe2bee15" name="a230088768939b21be10acc38fe2bee15"></a>
+<a class="el" href="#aa632a3b8d4cf99b84f81c6ec43494478">stored_type</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rhs</b></td></tr>
+<tr class="memdesc:a230088768939b21be10acc38fe2bee15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array/View to be reduced. <br /></td></tr>
+<tr class="separator:a230088768939b21be10acc38fe2bee15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3377c9b4aea478bec6efad649d86156" id="r_ae3377c9b4aea478bec6efad649d86156"><td class="memItemLeft" align="right" valign="top"><a id="ae3377c9b4aea478bec6efad649d86156" name="ae3377c9b4aea478bec6efad649d86156"></a>
 const int&#160;</td><td class="memItemRight" valign="bottom"><b>root</b> {0}</td></tr>
 <tr class="memdesc:ae3377c9b4aea478bec6efad649d86156"><td class="mdescLeft">&#160;</td><td class="mdescRight">MPI root process. <br /></td></tr>
@@ -206,7 +206,14 @@ template&lt;<a class="el" href="conceptnda_1_1_array.html">nda::Array</a> T&gt; 
 </div><div class="memdoc">
 
 <p>Execute the lazy MPI operation and write the result to a target array/view. </p>
-<p>If the target array/view is the same as the input array/view, i.e. if their data pointers are the same, the reduction is performed in-place.</p>
+<p>The data will be reduced directly into the memory handle of the target array/view. If the target array/view is the same as the input array/view, i.e. if their data pointers are the same, the reduction is performed in-place.</p>
+<p>Types which cannot be reduced directly, i.e. which do not have an MPI type, are reduced element-wise.</p>
+<p>For MPI compatible types, the function throws an exception, if</p><ul>
+<li>the input array/view is not contiguous with positive strides.</li>
+<li>the target array/view is not contiguous with positive strides on receiving ranks.</li>
+<li>the operation is performed in-place but the target and input array have different sizes.</li>
+<li>the operation is performed out-of-place and the memory of the target and input array/view overlap.</li>
+</ul>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type of the target array/view. </td></tr>
@@ -220,7 +227,7 @@ template&lt;<a class="el" href="conceptnda_1_1_array.html">nda::Array</a> T&gt; 
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="reduce_8hpp_source.html#l00089">89</a> of file <a class="el" href="reduce_8hpp_source.html">reduce.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reduce_8hpp_source.html#l00177">177</a> of file <a class="el" href="reduce_8hpp_source.html">reduce.hpp</a>.</p>
 
 </div>
 </div>
@@ -249,11 +256,15 @@ template&lt;<a class="el" href="conceptnda_1_1_array.html">nda::Array</a> A&gt; 
 </table>
 </div><div class="memdoc">
 
-<p>Compute the shape of the target array. </p>
-<dl class="section note"><dt>Note</dt><dd>It is assumed that the shape of the input array is the same for all MPI processes. </dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>Shape of the input array. </dd></dl>
+<p>Compute the shape of the <a class="el" href="conceptnda_1_1_array_initializer.html" title="Check if a given type satisfies the array initializer concept for a given nda::MemoryArray type.">nda::ArrayInitializer</a> object. </p>
+<p>The shape of the initializer objects depends on the MPI rank and whether it receives the data or not:</p>
+<ul>
+<li>On receiving ranks, the shape is the same as the shape of the input array/view.</li>
+<li>On non-receiving ranks, the shape has the rank of the input array/view with only zeros, i.e. it is empty.</li>
+</ul>
+<dl class="section return"><dt>Returns</dt><dd>Shape of the <a class="el" href="conceptnda_1_1_array_initializer.html" title="Check if a given type satisfies the array initializer concept for a given nda::MemoryArray type.">nda::ArrayInitializer</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="reduce_8hpp_source.html#l00077">77</a> of file <a class="el" href="reduce_8hpp_source.html">reduce.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reduce_8hpp_source.html#l00153">153</a> of file <a class="el" href="reduce_8hpp_source.html">reduce.hpp</a>.</p>
 
 </div>
 </div>

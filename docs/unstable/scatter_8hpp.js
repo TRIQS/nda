@@ -1,4 +1,5 @@
 var scatter_8hpp =
 [
-    [ "mpi_scatter", "scatter_8hpp.html#ga304b0d0ae4f9c8c688e880ec9ff74b2f", null ]
+    [ "lazy_mpi_scatter", "scatter_8hpp.html#ga0f43d84528266dc455e91125144e56b0", null ],
+    [ "mpi_scatter", "scatter_8hpp.html#ga3c70e635ce6fd776980edc3b44f5823b", null ]
 ];

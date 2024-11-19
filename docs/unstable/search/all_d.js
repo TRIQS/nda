@@ -27,7 +27,7 @@ var searchData=
   ['inverse2_5fin_5fplace_24',['inverse2_in_place',['../group__linalg__tools.html#ga6d7a0ac0080632972b5854123550ce37',1,'nda']]],
   ['inverse3_5fin_5fplace_25',['inverse3_in_place',['../group__linalg__tools.html#ga23f56fb167a83085bfb6768672c986d6',1,'nda']]],
   ['inverse_5fin_5fplace_26',['inverse_in_place',['../group__linalg__tools.html#gab84970093e3fde0f5905f895120c7d60',1,'nda']]],
-  ['invoke_27',['invoke',['../structmpi_1_1lazy_3_01mpi_1_1tag_1_1gather_00_01_a_01_4.html#a2cf68926466988acabb1079e93831287',1,'mpi::lazy&lt; mpi::tag::gather, A &gt;::invoke()'],['../structmpi_1_1lazy_3_01mpi_1_1tag_1_1reduce_00_01_a_01_4.html#a60bd9254cc07cd5cea749fe723aa6b7b',1,'mpi::lazy&lt; mpi::tag::reduce, A &gt;::invoke()'],['../structmpi_1_1lazy_3_01mpi_1_1tag_1_1scatter_00_01_a_01_4.html#a2b2739b3d056b30cb9d0773b95725f67',1,'mpi::lazy&lt; mpi::tag::scatter, A &gt;::invoke()']]],
+  ['invoke_27',['invoke',['../structmpi_1_1lazy_3_01mpi_1_1tag_1_1gather_00_01_a_01_4.html#a2cf68926466988acabb1079e93831287',1,'mpi::lazy&lt; mpi::tag::gather, A &gt;::invoke()'],['../structmpi_1_1lazy_3_01mpi_1_1tag_1_1reduce_00_01_a_01_4.html#a60bd9254cc07cd5cea749fe723aa6b7b',1,'mpi::lazy&lt; mpi::tag::reduce, A &gt;::invoke()'],['../structmpi_1_1lazy_3_01mpi_1_1tag_1_1scatter_00_01_a_01_4.html#a2da2a40e936631f32fc0350f2cf0c1a8',1,'mpi::lazy&lt; mpi::tag::scatter, A &gt;::invoke()']]],
   ['io_2ehpp_28',['io.hpp',['../io_8hpp.html',1,'']]],
   ['is_5fany_5flazy_29',['is_any_lazy',['../group__clef__utils.html#gaf4a34ec80a1f0d50945e918807a6f318',1,'nda::clef']]],
   ['is_5fany_5fof_30',['is_any_of',['../group__utils__type__traits.html#ga839a318188b3243b390ebfe7ecf5ba79',1,'nda']]],
