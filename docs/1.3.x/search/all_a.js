@@ -9,7 +9,7 @@ var searchData=
   ['fetchcontent_6',['FetchContent',['../integration.html#fetch',1,'']]],
   ['find_5fpackage_7',['find_package',['../integration.html#find_package',1,'']]],
   ['first_5fdim_8',['first_dim',['../group__av__utils.html#ga17cb07f54c5452e23ad6a71a09e560d9',1,'nda']]],
-  ['fixes_9',['Fixes',['../changelog.html#autotoc_md14',1,'']]],
+  ['fixes_9',['Fixes',['../changelog.html#autotoc_md16',1,'']]],
   ['flatten_10',['flatten',['../group__av__factories.html#gaa01d35a8419bc78798737c4fa94ee042',1,'nda']]],
   ['floor_11',['floor',['../group__clef__expr.html#ga0481af7c923b471e08dec84fd812e60f',1,'nda::clef::floor()'],['../group__av__math.html#ga49ef054fc157295d915b1651edb67848',1,'nda::floor(A &amp;&amp;a)']]],
   ['fold_12',['fold',['../group__av__algs.html#ga1ede47af1aafba0c08346ce98c767b7e',1,'nda::fold(F f, A const &amp;a, R r)'],['../group__av__algs.html#ga66519bf80315973770c266a4d10eb054',1,'nda::fold(F f, A const &amp;a)']]],
@@ -25,6 +25,6 @@ var searchData=
   ['front_5fpop_22',['front_pop',['../group__utils__std.html#gade66f148c03d164b13c2cadf191d9715',1,'nda::stdutil']]],
   ['function_23',['function',['../structnda_1_1clef_1_1tags_1_1function.html',1,'nda::clef::tags']]],
   ['function_2ehpp_24',['function.hpp',['../function_8hpp.html',1,'']]],
-  ['functions_25',['functions',['../documentation.html#autotoc_md17',1,'CLEF - Compile-time lazy expressions and functions'],['../group__clef.html',1,'Compile-time lazy expressions and functions'],['../group__av__math.html',1,'Mathematical functions']]],
+  ['functions_25',['functions',['../documentation.html#autotoc_md19',1,'CLEF - Compile-time lazy expressions and functions'],['../group__clef.html',1,'Compile-time lazy expressions and functions'],['../group__av__math.html',1,'Mathematical functions']]],
   ['functions_20and_20operations_26',['Lazy expressions, functions and operations',['../group__clef__expr.html',1,'']]]
 ];

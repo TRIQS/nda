@@ -7,11 +7,11 @@ var searchData=
   ['vector_2ehpp_4',['vector.hpp',['../vector_8hpp.html',1,'']]],
   ['vector_5fconst_5fview_5',['vector_const_view',['../group__av__types.html#gaa79ab442f2c6817ea1748d4208dccf21',1,'nda']]],
   ['vector_5fview_6',['vector_view',['../group__av__types.html#ga032616a51fb8b6ed94dd01bfe7804258',1,'nda']]],
-  ['version_201_201_200_7',['Version 1.1.0',['../changelog.html#autotoc_md15',1,'']]],
-  ['version_201_202_200_8',['Version 1.2.0',['../changelog.html#autotoc_md5',1,'']]],
+  ['version_201_201_200_7',['Version 1.1.0',['../changelog.html#autotoc_md17',1,'']]],
+  ['version_201_202_200_8',['Version 1.2.0',['../changelog.html#autotoc_md7',1,'']]],
   ['version_201_203_200_9',['Version 1.3.0',['../changelog.html#autotoc_md0',1,'']]],
   ['versions_10',['Versions',['../installation.html#versions',1,'']]],
   ['view_20utilities_11',['Array/View utilities',['../group__av__utils.html',1,'']]],
-  ['views_12',['views',['../group__arrays__views.html',1,'Arrays and views'],['../documentation.html#autotoc_md16',1,'Arrays and views']]],
+  ['views_12',['views',['../group__arrays__views.html',1,'Arrays and views'],['../documentation.html#autotoc_md18',1,'Arrays and views']]],
   ['vstack_13',['vstack',['../group__av__factories.html#gafac25d084c3001cee0f7d16e18cfb782',1,'nda']]]
 ];

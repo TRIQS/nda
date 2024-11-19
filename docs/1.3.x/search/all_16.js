@@ -38,13 +38,13 @@ var searchData=
   ['subscript_35',['subscript',['../structnda_1_1clef_1_1tags_1_1subscript.html',1,'nda::clef::tags']]],
   ['sum_36',['sum',['../group__av__algs.html#ga921e7e72f5b8a2699fc4cd2127383385',1,'nda::sum()'],['../group__clef__expr.html#ga6beac72e3606fb931e359c26c53fde5a',1,'nda::clef::sum(Expr const &amp;ex, clef::pair&lt; N, D &gt; d)'],['../group__clef__expr.html#ga1c890cf78c62772f08eb69a512755046',1,'nda::clef::sum(Expr const &amp;ex, D0 &amp;&amp;d0, D1 &amp;&amp;d1, Ds &amp;&amp;...ds)'],['../group__utils__std.html#gac72741ad2a4b8dba32b66a2e7d8d9f5d',1,'nda::stdutil::sum()']]],
   ['sum_2ehpp_37',['sum.hpp',['../sum_8hpp.html',1,'']]],
-  ['support_38',['GPU Support',['../changelog.html#autotoc_md9',1,'']]],
+  ['support_38',['GPU Support',['../changelog.html#autotoc_md11',1,'']]],
   ['support_39',['support',['../group__av__hdf5.html',1,'HDF5 support'],['../group__av__mpi.html',1,'MPI support']]],
   ['swap_40',['swap',['../classnda_1_1basic__array__view.html#aceb1669d92de29e8564c8b63bcb8919b',1,'nda::basic_array_view::swap'],['../basic__array__view_8hpp.html#a6860b29671093a28cf8ac41e630280ef',1,'std::swap()']]],
   ['sym_5fclass_5ft_41',['sym_class_t',['../classnda_1_1sym__grp.html#aa65f9f871873c74088acf48144acbf11',1,'nda::sym_grp']]],
   ['sym_5fgrp_42',['sym_grp',['../classnda_1_1sym__grp.html',1,'nda::sym_grp&lt; F, A &gt;'],['../classnda_1_1sym__grp.html#ae84dfc55da3d9293b295c090eb0b51d4',1,'nda::sym_grp::sym_grp()=default'],['../classnda_1_1sym__grp.html#ad9361a0e379e37213dbea0f37ddf4192',1,'nda::sym_grp::sym_grp(A const &amp;a, std::vector&lt; F &gt; const &amp;sym_list, long const max_length=0)']]],
   ['sym_5fgrp_2ehpp_43',['sym_grp.hpp',['../sym__grp_8hpp.html',1,'']]],
   ['sym_5fidx_5ft_44',['sym_idx_t',['../classnda_1_1sym__grp.html#a8d9ee8d5f2fa8ae2da1f39f09b4905d9',1,'nda::sym_grp']]],
-  ['symmetries_45',['Symmetries',['../group__av__sym.html',1,'Symmetries'],['../changelog.html#autotoc_md10',1,'Symmetries']]],
+  ['symmetries_45',['Symmetries',['../group__av__sym.html',1,'Symmetries'],['../changelog.html#autotoc_md12',1,'Symmetries']]],
   ['symmetrize_46',['symmetrize',['../classnda_1_1sym__grp.html#ac9951d89e831a1521eeb322b37d5a641',1,'nda::sym_grp']]]
 ];

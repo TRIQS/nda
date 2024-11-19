@@ -115,6 +115,8 @@ $(function(){initNavTree('changelog.html',''); initResizable(true); });
 Version 1.3.0</h2>
 <p>NDA Version 1.3.0 is a release that</p><ul>
 <li>Adds new functionality to the symmetry library</li>
+<li>Adds extensive doxygen documentation to the public API</li>
+<li>Generates reference documentation for website using doxygen</li>
 <li>Optimizes CLEF by removing redundant copies</li>
 <li>Extends the LAPACK/BLAS functionality</li>
 <li>Improves the interface to read/write HDF5 files</li>
@@ -128,20 +130,32 @@ General</h3>
 <li>Allow <a class="el" href="group__av__factories.html#gaa01d35a8419bc78798737c4fa94ee042" title="Flatten an nda::basic_array or nda::basic_array_view to a 1-dimensional array/view by reshaping it.">nda::flatten</a> to be called for non-trivial memory layouts</li>
 <li>Fix bug in for_each_static_impl, clean up <a class="el" href="for__each_8hpp.html" title="Provides for_each functions for multi-dimensional arrays/views.">layout/for_each.hpp</a> and add tests</li>
 <li>Fix bug in encode function, clean up <a class="el" href="permutation_8hpp.html" title="Provides utilities to work with permutations and to compactly encode/decode std::array objects.">layout/permutation.hpp</a> and add tests</li>
+<li>Fix Intel vs GNU ABI when building against MKL</li>
+<li>Fix bug in clef evaluator and add corresponding tests</li>
 <li>Improve h5 interface by removing unnecessary copies and restrictions and update tests</li>
 <li>Remove redundant files c++/nda/TODO and c++/nda/mapped_functions.vim</li>
 <li>Avoid redundant copies in clef evaluation</li>
 <li>Add sym_grp functions to obtain / initialize from representative data</li>
 <li>Add <a class="el" href="group__av__factories.html#gaf93e0a19277d0f2ed937e6d7339ee652" title="Join a sequence of nda::Array types along an existing axis.">nda::concatenate</a> implementation</li>
-<li>Fix bug in clef evaluator and add corresponding tests</li>
 <li>Update Dockerfile.msan to more recent Ubuntu and library versions</li>
 <li>Generalize <a class="el" href="group__av__factories.html#gab1366c1c79f31877f2d0a1596f323cee" title="Transpose the memory layout of an nda::MemoryArray or an nda::expr_call.">nda::transpose</a> to work with arrays of arbitrary rank</li>
 <li>Protect <a class="el" href="group__av__factories.html#gaf06f490766f84271bb66553168570e2b" title="Reshape an nda::basic_array or nda::basic_array_view.">nda::reshape</a>, should not allow non-standard memory order</li>
 <li>Remove redundant ARRAY_INT definition</li>
 <li>Add layout_to_policy trait specialization for Fortran layouts</li>
 <li>Use Default Seed for std::mt19937 construction</li>
+<li>Throw std::bad_alloc for failed memory allocation in handle and basic_array construction</li>
+<li>Various smaller code readability improvements</li>
+<li>Add missing includes in various files</li>
+<li>Regenerate Apache copyright headers</li>
+<li>Format .clang-tidy</li>
 </ul>
 <h3><a class="anchor" id="autotoc_md2"></a>
+doc</h3>
+<ul>
+<li>Add extensive documentation of public API using Doxygen doc strings</li>
+<li>Use doxygen to automatically generate documentation</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md3"></a>
 cmake</h3>
 <ul>
 <li>Disable -ffast-math by default for intel compilers</li>
@@ -153,15 +167,21 @@ cmake</h3>
 <li>Run NDA checks also in RelWithDebInfo build mode</li>
 <li>Disable finite-math-only for IntelLLVM compiler</li>
 <li>When using mkl enforce single dynamic lib and explicitly set mkl_interface_layer (#48)</li>
+<li>Disable BadAlloc test when ASAN is ON</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md3"></a>
+<h3><a class="anchor" id="autotoc_md4"></a>
 jenkins</h3>
 <ul>
 <li>Enable PythonSupport on all CIs</li>
 <li>Add ubuntu-intel build</li>
 <li>Fix ubuntu-intel gpg file in Dockerfile</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md4"></a>
+<h3><a class="anchor" id="autotoc_md5"></a>
+ghactions</h3>
+<ul>
+<li>Build and deploy documentation</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md6"></a>
 blas/lapack</h3>
 <ul>
 <li>Fix type error in magma interface</li>
@@ -170,7 +190,7 @@ blas/lapack</h3>
 <li>Allow temporary views in call to lapack::getrs</li>
 <li>Fix MKL version check when using BLAS gemm_batch_strided</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md5"></a>
+<h2><a class="anchor" id="autotoc_md7"></a>
 Version 1.2.0</h2>
 <p>NDA Version 1.2.0 is a release that</p><ul>
 <li>Introduces NVidia GPU support for array and view types</li>
@@ -182,7 +202,7 @@ Version 1.2.0</h2>
 </ul>
 <p>We thank all the people who have contributed to this release: Thomas Hahn, Alexander Hampel, Dominik Kiese, Sergei Iskakoff, Harrison LaBollita, Henri Menke, Miguel Morales, Olivier Parcollet, Dylan Simon, Nils Wentzell</p>
 <p>Find below an itemized list of changes in this release.</p>
-<h3><a class="anchor" id="autotoc_md6"></a>
+<h3><a class="anchor" id="autotoc_md8"></a>
 General</h3>
 <ul>
 <li>Add new test for matmul with permuted view</li>
@@ -250,7 +270,7 @@ General</h3>
 <li>Clang-format all source files</li>
 <li>General cleanup</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md7"></a>
+<h3><a class="anchor" id="autotoc_md9"></a>
 cmake</h3>
 <ul>
 <li>Find and Link against openmp</li>
@@ -274,14 +294,14 @@ cmake</h3>
 <li>Add missing find_dep(Cpp2Py 2.0) to nda-config.cmake.in</li>
 <li>General cleanup</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md8"></a>
+<h3><a class="anchor" id="autotoc_md10"></a>
 Concepts</h3>
 <ul>
 <li>Use C++20 concepts to constrain various generic functions and classes</li>
 <li>Introduce concepts: Array, MemoryArray, Matrix, Vector, Handle</li>
 <li>Various concept related simplifications and refactoring</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md9"></a>
+<h3><a class="anchor" id="autotoc_md11"></a>
 GPU Support</h3>
 <ul>
 <li>Introduce GPU support for arrays and views</li>
@@ -297,7 +317,7 @@ GPU Support</h3>
 <li>Allow multiple arguments to on_host, on_device traits. Add on_unified trait</li>
 <li>Add address space generic memory operations: malloc, free, memset, memcpy</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md10"></a>
+<h3><a class="anchor" id="autotoc_md12"></a>
 Symmetries</h3>
 <ul>
 <li>Add sym_grp class to perform symmetry operations on arrays</li>
@@ -306,7 +326,7 @@ Symmetries</h3>
 <li>'symmetrize' method to symmetrize an existing array</li>
 <li>'init' method to init an array with the minimum number of rhs evaluations</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md11"></a>
+<h3><a class="anchor" id="autotoc_md13"></a>
 jenkins</h3>
 <ul>
 <li>Specificy LAPACK_ROOT for osx builds</li>
@@ -314,7 +334,7 @@ jenkins</h3>
 <li>Don't keep / publish any nda install</li>
 <li>Synchronize Jenkinsfile with app4triqs</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md12"></a>
+<h3><a class="anchor" id="autotoc_md14"></a>
 lapack/blas</h3>
 <ul>
 <li>General cleanup and doc improvements in bindings</li>
@@ -323,7 +343,7 @@ lapack/blas</h3>
 <li>Simplify logic in gemm</li>
 <li>Rename 'trans' to 'op' in the blas bindings</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md13"></a>
+<h3><a class="anchor" id="autotoc_md15"></a>
 Doc</h3>
 <ul>
 <li>Add document on design principles for arrays, views and lazy expressions</li>
@@ -331,7 +351,7 @@ Doc</h3>
 <li>Provide a link to install instructions in README.md</li>
 <li>Add additional build options to doc/install.rst</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md14"></a>
+<h3><a class="anchor" id="autotoc_md16"></a>
 Fixes</h3>
 <ul>
 <li>Fix signature of expr::operator[]</li>
@@ -353,7 +373,7 @@ Fixes</h3>
 <li>Enable bound-checking for range-based array slicing FIX #22</li>
 <li>Fix out of bounds error in lapack::gtsv</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md15"></a>
+<h2><a class="anchor" id="autotoc_md17"></a>
 Version 1.1.0</h2>
 <p>nda is a C++ library providing an efficient and flexible multi-dimensional array class. It is an essential building-block of the TRIQS project. Some features include</p><ul>
 <li>coded in C++20 using concepts</li>
