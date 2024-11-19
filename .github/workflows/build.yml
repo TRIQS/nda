@@ -26,10 +26,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {os: ubuntu-24.04, cc: gcc, cxx: g++}
-          - {os: ubuntu-24.04, cc: clang, cxx: clang++}
-          - {os: macos-14, cc: gcc-14, cxx: g++-14}
-          - {os: macos-14, cc: clang, cxx: clang++}
+          - {os: ubuntu-24.04, cc: gcc, cxx: g++, doc: OFF, cov: ON}
+          - {os: ubuntu-24.04, cc: clang, cxx: clang++, doc: OFF, cov: OFF}
+          - {os: macos-14, cc: gcc-14, cxx: g++-14, doc: OFF, cov: OFF}
+          - {os: macos-14, cc: clang, cxx: clang++, doc: ON, cov: OFF}
 
     runs-on: ${{ matrix.os }}
 
@@ -55,7 +55,6 @@ jobs:
         gfortran
         hdf5-tools
         libblas-dev
-        libboost-dev
         libclang-dev
         libc++-dev
         libc++abi-dev
@@ -79,16 +78,23 @@ jobs:
         python3-sphinx
         python3-nbsphinx
 
-    - name: Install homebrew dependencies
-      if: ${{ contains(matrix.os, 'macos') }}
+    - name: Set up virtualenv
       run: |
-        brew update
-        brew install ccache gcc llvm boost fftw hdf5 open-mpi openblas
         mkdir $HOME/.venv
         python3 -m venv --system-site-packages $HOME/.venv/my_python
         source $HOME/.venv/my_python/bin/activate
         echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+        echo "PATH=$PATH" >> $GITHUB_ENV
+
+    - name: Install homebrew dependencies
+      if: ${{ contains(matrix.os, 'macos') }}
+      run: |
+        brew update
+        brew install ccache gcc llvm hdf5 open-mpi openblas doxygen
+        pip install mako numpy scipy mpi4py
+        pip install -r requirements.txt
         echo "PATH=$(brew --prefix llvm)/bin:$(brew --prefix gcc)/bin:$PATH" >> $GITHUB_ENV
+        echo "PYTHONPATH=$(brew --prefix llvm)/lib/python3.13/site-packages" >> $GITHUB_ENV
 
     - name: Add clang CXXFLAGS
       if: ${{ contains(matrix.cxx, 'clang') }}
@@ -99,19 +105,6 @@ jobs:
       if: ${{ contains(matrix.os, 'macos') && contains(matrix.cxx, 'clang') }}
       run: |
         echo 'LDFLAGS="-L$(brew --prefix llvm)/lib/c++ -L$(brew --prefix llvm)/lib -lunwind"' >> $GITHUB_ENV
-
-    - name: Build & Install TRIQS
-      env:
-        CC: ${{ matrix.cc }}
-        CXX: ${{ matrix.cxx }}
-      run: |
-        echo 'LDFLAGS="-L$(brew --prefix llvm)/lib/c++ -L$(brew --prefix llvm)/lib -lunwind"' >> $GITHUB_ENV
-
-    - name: Set up test coverage
-      if: matrix.cov == 'ON'
-      run: |
-        pip install gcovr
-        echo "CXXFLAGS=--coverage" >> $GITHUB_ENV
 
     - name: Prepare source files for doxygen
       if: matrix.doc == 'ON'
@@ -127,7 +120,7 @@ jobs:
         CC: ${{ matrix.cc }}
         CXX: ${{ matrix.cxx }}
       run: |
-        mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/install -DPythonSupport=ON -DBuild_Documentation=${{ matrix.doc }} -DCMAKE_BUILD_TYPE=${{ matrix.cov == 'ON' && 'Debug' || 'Release' }}
+        mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/install -DPythonSupport=ON -DBuild_Documentation=${{ matrix.doc }}
         make -j2 || make -j1 VERBOSE=1
 
     - name: Test nda
