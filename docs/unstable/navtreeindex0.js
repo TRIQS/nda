@@ -64,6 +64,8 @@ var NAVTREEINDEX0 =
 "classnda_1_1sym__grp.html":[4,0,9,3],
 "clef_2clef_8hpp.html":[4,7,0,1,3],
 "clef_2clef_8hpp_source.html":[4,7,0,1,3],
+"clef_2utils_8hpp.html":[4,7,0,1,13],
+"clef_2utils_8hpp_source.html":[4,7,0,1,13],
 "clef_8hpp.html":[4,7,0,17],
 "clef_8hpp_source.html":[4,7,0,17],
 "complex_8hpp.html":[4,7,0,7,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX0 =
 "literals_8hpp_source.html":[4,7,0,1,8],
 "macros_8hpp.html":[4,7,0,30],
 "macros_8hpp_source.html":[4,7,0,30],
-"make__lazy_8hpp.html":[4,7,0,1,9],
-"make__lazy_8hpp_source.html":[4,7,0,1,9],
-"malloc_8hpp.html":[4,7,0,5,3]
+"make__lazy_8hpp.html":[4,7,0,1,9]
 };

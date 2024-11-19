@@ -113,13 +113,14 @@ $(function(){initNavTree('broadcast_8hpp.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">broadcast.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="basic__functions_8hpp_source.html">../basic_functions.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="exceptions_8hpp_source.html">../exceptions.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="mpi_2utils_8hpp_source.html">./utils.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="basic__functions_8hpp_source.html">../basic_functions.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="traits_8hpp_source.html">../traits.hpp</a>&quot;</code><br />
 <code>#include &lt;mpi/mpi.hpp&gt;</code><br />
+<code>#include &lt;cstddef&gt;</code><br />
+<code>#include &lt;span&gt;</code><br />
 </div><a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Provides an MPI broadcast function for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types. </p>
+<div class="textblock"><p>Provides an MPI broadcast function for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types. </p>
 
 <p class="definition">Definition in file <a class="el" href="broadcast_8hpp_source.html">broadcast.hpp</a>.</p>
 </div>
@@ -127,11 +128,11 @@ $(function(){initNavTree('broadcast_8hpp.html',''); initResizable(true); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gad593c6f51440e4599859c13ffd1e3579" id="r_gad593c6f51440e4599859c13ffd1e3579"><td class="memTemplParams" colspan="2">template&lt;typename A &gt; <br />
+<tr class="memitem:ga6df12000d826688a8203af93d6b6838e" id="r_ga6df12000d826688a8203af93d6b6838e"><td class="memTemplParams" colspan="2">template&lt;typename A &gt; <br />
 requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt;)</td></tr>
-<tr class="memitem:gad593c6f51440e4599859c13ffd1e3579"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__mpi.html#gad593c6f51440e4599859c13ffd1e3579">nda::mpi_broadcast</a> (A &amp;a, mpi::communicator comm={}, int root=0)</td></tr>
-<tr class="memdesc:gad593c6f51440e4599859c13ffd1e3579"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI broadcast for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types.  <br /></td></tr>
-<tr class="separator:gad593c6f51440e4599859c13ffd1e3579"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6df12000d826688a8203af93d6b6838e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__mpi.html#ga6df12000d826688a8203af93d6b6838e">nda::mpi_broadcast</a> (A &amp;&amp;a, mpi::communicator comm={}, int root=0)</td></tr>
+<tr class="memdesc:ga6df12000d826688a8203af93d6b6838e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI broadcast for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types.  <br /></td></tr>
+<tr class="separator:ga6df12000d826688a8203af93d6b6838e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

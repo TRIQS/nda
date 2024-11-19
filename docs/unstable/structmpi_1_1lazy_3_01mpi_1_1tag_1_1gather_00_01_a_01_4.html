@@ -122,8 +122,8 @@ $(function(){initNavTree('structmpi_1_1lazy_3_01mpi_1_1tag_1_1gather_00_01_a_01_
 <div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="conceptnda_1_1_array.html">nda::Array</a> A&gt;<br />
 struct mpi::lazy&lt; mpi::tag::gather, A &gt;</div><p>Specialization of the <code>mpi::lazy</code> class for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types and the <code>mpi::tag::gather</code> tag. </p>
 <p>An object of this class is returned when gathering <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> objects across multiple MPI processes.</p>
-<p>It models an <a class="el" href="conceptnda_1_1_array_initializer.html" title="Check if a given type satisfies the array initializer concept for a given nda::MemoryArray type.">nda::ArrayInitializer</a>, that means it can be used to initialize and assign to <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> and <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> objects. The target array will be a concatenation of the input arrays along the first dimension (see <a class="el" href="group__av__factories.html#gaf93e0a19277d0f2ed937e6d7339ee652" title="Join a sequence of nda::Array types along an existing axis.">nda::concatenate</a>).</p>
-<p>See <a class="el" href="group__av__mpi.html#ga565a8a02ef52beca274c20f157e006e9" title="Implementation of an MPI gather for nda::basic_array or nda::basic_array_view types.">nda::mpi_gather</a> for an example.</p>
+<p>It models an <a class="el" href="conceptnda_1_1_array_initializer.html" title="Check if a given type satisfies the array initializer concept for a given nda::MemoryArray type.">nda::ArrayInitializer</a>, that means it can be used to initialize and assign to <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> and <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> objects. The result will be a concatenation of the input arrays/views along their first dimension.</p>
+<p>See <a class="el" href="group__av__mpi.html#ga7a382ca7f3ff0258778e5676f42e698b" title="Implementation of a lazy MPI gather for nda::basic_array or nda::basic_array_view types.">nda::lazy_mpi_gather</a> for an example and more information.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type to be gathered. </td></tr>
@@ -131,14 +131,14 @@ struct mpi::lazy&lt; mpi::tag::gather, A &gt;</div><p>Specialization of the <cod
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="gather_8hpp_source.html#l00050">50</a> of file <a class="el" href="gather_8hpp_source.html">gather.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="gather_8hpp_source.html#l00109">109</a> of file <a class="el" href="gather_8hpp_source.html">gather.hpp</a>.</p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:aaf3fd07af43a2e78b3a1d80d942c7adc" id="r_aaf3fd07af43a2e78b3a1d80d942c7adc"><td class="memItemLeft" align="right" valign="top"><a id="aaf3fd07af43a2e78b3a1d80d942c7adc" name="aaf3fd07af43a2e78b3a1d80d942c7adc"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>const_view_type</b> = decltype(std::declval&lt;const A&gt;()())</td></tr>
-<tr class="memdesc:aaf3fd07af43a2e78b3a1d80d942c7adc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Const view type of the array/view stored in the lazy object. <br /></td></tr>
-<tr class="separator:aaf3fd07af43a2e78b3a1d80d942c7adc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3b20a0c87aea4d13f14c90fa2e735af" id="r_aa3b20a0c87aea4d13f14c90fa2e735af"><td class="memItemLeft" align="right" valign="top"><a id="aa3b20a0c87aea4d13f14c90fa2e735af" name="aa3b20a0c87aea4d13f14c90fa2e735af"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>stored_type</b> = A</td></tr>
+<tr class="memdesc:aa3b20a0c87aea4d13f14c90fa2e735af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of the array/view stored in the lazy object. <br /></td></tr>
+<tr class="separator:aa3b20a0c87aea4d13f14c90fa2e735af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab108ca4d981634e8331f5fdeee9185df" id="r_ab108ca4d981634e8331f5fdeee9185df"><td class="memItemLeft" align="right" valign="top"><a id="ab108ca4d981634e8331f5fdeee9185df" name="ab108ca4d981634e8331f5fdeee9185df"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = typename std::decay_t&lt;A&gt;::value_type</td></tr>
 <tr class="memdesc:ab108ca4d981634e8331f5fdeee9185df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Value type of the array/view. <br /></td></tr>
@@ -146,12 +146,13 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = typ
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a88407d104c7eddde275cbef394c7c091" id="r_a88407d104c7eddde275cbef394c7c091"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="conceptnda_1_1_array.html">nda::Array</a> T&gt; </td></tr>
-<tr class="memitem:a88407d104c7eddde275cbef394c7c091"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a88407d104c7eddde275cbef394c7c091">invoke</a> (T &amp;&amp;target) const</td></tr>
-<tr class="memdesc:a88407d104c7eddde275cbef394c7c091"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the lazy MPI operation and write the result to a target array/view.  <br /></td></tr>
-<tr class="separator:a88407d104c7eddde275cbef394c7c091"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cf68926466988acabb1079e93831287" id="r_a2cf68926466988acabb1079e93831287"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="conceptnda_1_1_array.html">nda::Array</a> T&gt; <br />
+requires (std::decay_t&lt;T&gt;::is_stride_order_C())</td></tr>
+<tr class="memitem:a2cf68926466988acabb1079e93831287"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a2cf68926466988acabb1079e93831287">invoke</a> (T &amp;&amp;target) const</td></tr>
+<tr class="memdesc:a2cf68926466988acabb1079e93831287"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the lazy MPI operation and write the result to a target array/view.  <br /></td></tr>
+<tr class="separator:a2cf68926466988acabb1079e93831287"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3de77b0f641f882dc5078ae582105146" id="r_a3de77b0f641f882dc5078ae582105146"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3de77b0f641f882dc5078ae582105146">shape</a> () const</td></tr>
-<tr class="memdesc:a3de77b0f641f882dc5078ae582105146"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the shape of the target array.  <br /></td></tr>
+<tr class="memdesc:a3de77b0f641f882dc5078ae582105146"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the shape of the <a class="el" href="conceptnda_1_1_array_initializer.html" title="Check if a given type satisfies the array initializer concept for a given nda::MemoryArray type.">nda::ArrayInitializer</a> object.  <br /></td></tr>
 <tr class="separator:a3de77b0f641f882dc5078ae582105146"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -164,25 +165,26 @@ const bool&#160;</td><td class="memItemRight" valign="bottom"><b>all</b> {false}
 mpi::communicator&#160;</td><td class="memItemRight" valign="bottom"><b>comm</b></td></tr>
 <tr class="memdesc:acca1f9948fed6092ba5245f1dd808ba5"><td class="mdescLeft">&#160;</td><td class="mdescRight">MPI communicator. <br /></td></tr>
 <tr class="separator:acca1f9948fed6092ba5245f1dd808ba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59ff23e2d148dc5b4b523694792d4cd5" id="r_a59ff23e2d148dc5b4b523694792d4cd5"><td class="memItemLeft" align="right" valign="top"><a id="a59ff23e2d148dc5b4b523694792d4cd5" name="a59ff23e2d148dc5b4b523694792d4cd5"></a>
-<a class="el" href="#aaf3fd07af43a2e78b3a1d80d942c7adc">const_view_type</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rhs</b></td></tr>
-<tr class="memdesc:a59ff23e2d148dc5b4b523694792d4cd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">View of the array/view to be gathered. <br /></td></tr>
-<tr class="separator:a59ff23e2d148dc5b4b523694792d4cd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb3d87f1d5a7fe4d63e86b8eff830b19" id="r_aeb3d87f1d5a7fe4d63e86b8eff830b19"><td class="memItemLeft" align="right" valign="top"><a id="aeb3d87f1d5a7fe4d63e86b8eff830b19" name="aeb3d87f1d5a7fe4d63e86b8eff830b19"></a>
+<a class="el" href="#aa3b20a0c87aea4d13f14c90fa2e735af">stored_type</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rhs</b></td></tr>
+<tr class="memdesc:aeb3d87f1d5a7fe4d63e86b8eff830b19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array/View to be gathered. <br /></td></tr>
+<tr class="separator:aeb3d87f1d5a7fe4d63e86b8eff830b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f5c57a2a9fed258a713eb0d48917ce8" id="r_a0f5c57a2a9fed258a713eb0d48917ce8"><td class="memItemLeft" align="right" valign="top"><a id="a0f5c57a2a9fed258a713eb0d48917ce8" name="a0f5c57a2a9fed258a713eb0d48917ce8"></a>
 const int&#160;</td><td class="memItemRight" valign="bottom"><b>root</b> {0}</td></tr>
 <tr class="memdesc:a0f5c57a2a9fed258a713eb0d48917ce8"><td class="mdescLeft">&#160;</td><td class="mdescRight">MPI root process. <br /></td></tr>
 <tr class="separator:a0f5c57a2a9fed258a713eb0d48917ce8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a88407d104c7eddde275cbef394c7c091" name="a88407d104c7eddde275cbef394c7c091"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a88407d104c7eddde275cbef394c7c091">&#9670;&#160;</a></span>invoke()</h2>
+<a id="a2cf68926466988acabb1079e93831287" name="a2cf68926466988acabb1079e93831287"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2cf68926466988acabb1079e93831287">&#9670;&#160;</a></span>invoke()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;<a class="el" href="conceptnda_1_1_array.html">nda::Array</a> A&gt; </div>
 <div class="memtemplate">
-template&lt;<a class="el" href="conceptnda_1_1_array.html">nda::Array</a> T&gt; </div>
+template&lt;<a class="el" href="conceptnda_1_1_array.html">nda::Array</a> T&gt; <br />
+requires (std::decay_t&lt;T&gt;::is_stride_order_C())</div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -202,9 +204,16 @@ template&lt;<a class="el" href="conceptnda_1_1_array.html">nda::Array</a> T&gt; 
 </div><div class="memdoc">
 
 <p>Execute the lazy MPI operation and write the result to a target array/view. </p>
+<p>The data will be gathered directly into the memory handle of the target array/view.</p>
+<p>It is expected that all input arrays/views have the same shape on all processes except for the first dimension. The function throws an exception, if</p><ul>
+<li>the input array/view is not contiguous with positive strides,</li>
+<li>the target array/view is not contiguous with positive strides on receiving ranks,</li>
+<li>a target view does not have the correct shape on receiving ranks or</li>
+<li>if any of the MPI calls fails.</li>
+</ul>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">T</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type of the target array/view. </td></tr>
+    <tr><td class="paramname">T</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type with C-layout. </td></tr>
   </table>
   </dd>
 </dl>
@@ -215,7 +224,7 @@ template&lt;<a class="el" href="conceptnda_1_1_array.html">nda::Array</a> T&gt; 
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="gather_8hpp_source.html#l00098">98</a> of file <a class="el" href="gather_8hpp_source.html">gather.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="gather_8hpp_source.html#l00160">160</a> of file <a class="el" href="gather_8hpp_source.html">gather.hpp</a>.</p>
 
 </div>
 </div>
@@ -244,12 +253,15 @@ template&lt;<a class="el" href="conceptnda_1_1_array.html">nda::Array</a> A&gt; 
 </table>
 </div><div class="memdoc">
 
-<p>Compute the shape of the target array. </p>
-<p>It is assumed that the shape of the input array is the same for all MPI processes except for the first dimension. The target shape will then be the same as the input shape, except that the extent of its first dimension will be the sum of the extents of the input arrays along the first dimension.</p>
+<p>Compute the shape of the <a class="el" href="conceptnda_1_1_array_initializer.html" title="Check if a given type satisfies the array initializer concept for a given nda::MemoryArray type.">nda::ArrayInitializer</a> object. </p>
+<p>The input arrays/views are simply concatenated along their first dimension. The shape of the initializer object depends on the MPI rank and whether it receives the data or not:</p><ul>
+<li>On receiving ranks, the shape is the same as the shape of the input array/view except for the first dimension, which is the sum of the extents of all input arrays/views along the first dimension.</li>
+<li>On non-receiving ranks, the shape is empty, i.e. <code>(0,0,...,0)</code>.</li>
+</ul>
 <dl class="section warning"><dt>Warning</dt><dd>This makes an MPI call.</dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>Shape of the target array. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Shape of the <a class="el" href="conceptnda_1_1_array_initializer.html" title="Check if a given type satisfies the array initializer concept for a given nda::MemoryArray type.">nda::ArrayInitializer</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="gather_8hpp_source.html#l00080">80</a> of file <a class="el" href="gather_8hpp_source.html">gather.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="gather_8hpp_source.html#l00141">141</a> of file <a class="el" href="gather_8hpp_source.html">gather.hpp</a>.</p>
 
 </div>
 </div>

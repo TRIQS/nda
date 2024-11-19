@@ -1,5 +1,7 @@
 var NAVTREEINDEX1 =
 {
+"make__lazy_8hpp_source.html":[4,7,0,1,9],
+"malloc_8hpp.html":[4,7,0,5,3],
 "malloc_8hpp_source.html":[4,7,0,5,3],
 "map_8hpp.html":[4,7,0,31],
 "map_8hpp_source.html":[4,7,0,31],
@@ -21,6 +23,8 @@ var NAVTREEINDEX1 =
 "memcpy_8hpp_source.html":[4,7,0,5,4],
 "memset_8hpp.html":[4,7,0,5,5],
 "memset_8hpp_source.html":[4,7,0,5,5],
+"mpi_2utils_8hpp.html":[4,7,0,6,4],
+"mpi_2utils_8hpp_source.html":[4,7,0,6,4],
 "mpi_8hpp.html":[4,7,0,36],
 "mpi_8hpp_source.html":[4,7,0,36],
 "nda_8hpp.html":[4,7,0,37],
@@ -143,8 +147,6 @@ var NAVTREEINDEX1 =
 "traits_8hpp_source.html":[4,7,0,41],
 "ungqr_8hpp.html":[4,7,0,2,10],
 "ungqr_8hpp_source.html":[4,7,0,2,10],
-"utils_8hpp.html":[4,7,0,1,13],
-"utils_8hpp_source.html":[4,7,0,1,13],
 "vector_8hpp.html":[4,7,0,1,0,1],
 "vector_8hpp_source.html":[4,7,0,1,0,1]
 };
