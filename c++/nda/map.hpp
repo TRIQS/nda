@@ -195,8 +195,8 @@ namespace nda {
      * @return Result of the functor applied to the scalar arguments.
      */
     template <Scalar T0, Scalar... Ts>
-    auto operator()(T0 a0, Ts... as) const {
-      return f(a0, as...);
+    auto operator()(T0 t0, Ts... ts) const {
+      return f(t0, ts...);
     }
   };
 
