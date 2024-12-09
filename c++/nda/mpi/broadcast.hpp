@@ -45,17 +45,7 @@ namespace nda {
    * - the array/view is not contiguous with positive strides or
    * - one of the MPI calls fails.
    *
-   * @code{.cpp}
-   * // create an array on all processes
-   * nda::array<int, 2> A(3, 4);
-   *
-   * // ...
-   * // fill array on root process
-   * // ...
-   *
-   * // broadcast the array to all processes
-   * mpi::broadcast(A);
-   * @endcode
+   * See @ref ex6_p1 for an example.
    *
    * @tparam A nda::basic_array or nda::basic_array_view type.
    * @param a Array/view to be broadcasted from/into.

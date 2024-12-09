@@ -61,7 +61,38 @@ namespace nda {
    * @{
    */
 
-  // Helper function that (all)gathers arrays/views.
+  /**
+   * @brief Implementation of an MPI gather for nda::basic_array or nda::basic_array_view types using a C-style API.
+   *
+   * @details The function gathers C-ordered input arrays/views from all processes in the given communicator and
+   * makes the result available on the root process (`all == false`) or on all processes (`all == true`). The
+   * arrays/views are joined along the first dimension.
+   *
+   * It is expected that all input arrays/views have the same shape on all processes except for the first dimension. The
+   * function throws an exception, if
+   * - the input array/view is not contiguous with positive strides,
+   * - the output array/view is not contiguous with positive strides on receiving ranks,
+   * - the output view does not have the correct shape on receiving ranks or
+   * - any of the MPI calls fails.
+   *
+   * The input arrays/views are simply concatenated along their first dimension. The content of the output array/view
+   * depends on the MPI rank and whether it receives the data or not:
+   * - On receiving ranks, it contains the gathered data and has a shape that is the same as the shape of the input
+   * array/view except for the first dimension, which is the sum of the extents of all input arrays/views along the
+   * first dimension.
+   * - On non-receiving ranks, the output array/view is ignored and left unchanged.
+   *
+   * If `mpi::has_env` is false or if the communicator size is < 2, it simply copies the input array/view to the output
+   * array/view.
+   *
+   * @tparam A1 nda::basic_array or nda::basic_array_view type with C-layout.
+   * @tparam A2 nda::basic_array or nda::basic_array_view type with C-layout.
+   * @param a_in Array/view to be gathered.
+   * @param a_out Array/view to gather into.
+   * @param comm `mpi::communicator` object.
+   * @param root Rank of the root process.
+   * @param all Should all processes receive the result of the gather.
+   */
   template <typename A1, typename A2>
     requires(is_regular_or_view_v<A1> and std::decay_t<A1>::is_stride_order_C()
              and is_regular_or_view_v<A2> and std::decay_t<A2>::is_stride_order_C())
@@ -103,21 +134,9 @@ namespace nda {
    *
    * @details This function is lazy, i.e. it returns an mpi::lazy<mpi::tag::gather, A> object without performing the
    * actual MPI operation. Since the returned object models an nda::ArrayInitializer, it can be used to
-   * initialize/assign to nda::basic_array and nda::basic_array_view objects:
+   * initialize/assign to nda::basic_array and nda::basic_array_view objects.
    *
-   * @code{.cpp}
-   * // create an array on all processes
-   * nda::array<int, 2> A(3, 4);
-   *
-   * // ...
-   * // fill array on each process
-   * // ...
-   *
-   * // gather the arrays on the root process
-   * nda::array<int, 2> B = nda::lazy_mpi_gather(A);
-   * @endcode
-   *
-   * The behavior is otherwise identical to nda::mpi_gather.
+   * The behavior is otherwise similar to nda::mpi_gather.
    *
    * @warning MPI calls are done in the `invoke` and `shape` methods of the `mpi::lazy` object. If one rank calls one of
    * these methods, all ranks in the communicator need to call the same method. Otherwise, the program will deadlock.
@@ -142,30 +161,9 @@ namespace nda {
    * makes the result available on the root process (`all == false`) or on all processes (`all == true`). The
    * arrays/views are joined along the first dimension.
    *
-   * It is expected that all input arrays/views have the same shape on all processes except for the first dimension. The
-   * function throws an exception, if
-   * - the input array/view is not contiguous with positive strides or
-   * - any of the MPI calls fails.
+   * It simply constructs an empty array and then calls nda::mpi_gather_capi.
    *
-   * The input arrays/views are simply concatenated along their first dimension. The shape of the resulting array
-   * depends on the MPI rank and whether it receives the data or not:
-   * - On receiving ranks, the shape is the same as the shape of the input array/view except for the first dimension,
-   * which is the sum of the extents of all input arrays/views along the first dimension.
-   * - On non-receiving ranks, the shape is empty, i.e. `(0,0,...,0)`.
-   *
-   * @code{.cpp}
-   * // create an array on all processes
-   * nda::array<int, 2> A(3, 4);
-   *
-   * // ...
-   * // fill array on each process
-   * // ...
-   *
-   * // gather the arrays on the root process
-   * auto B = mpi::gather(A);
-   * @endcode
-   *
-   * Here, the array `B` has the shape `(3 * comm.size(), 4)` on the root process and `(0, 0)` on all other processes.
+   * See @ref ex6_p2 for examples.
    *
    * @tparam A nda::basic_array or nda::basic_array_view type with C-layout.
    * @param a Array/view to be gathered.

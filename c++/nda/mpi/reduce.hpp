@@ -76,7 +76,39 @@ namespace nda {
    * @{
    */
 
-  // Helper function that (all)reduces arrays/views.
+  /**
+   * @brief Implementation of an MPI reduce for nda::basic_array or nda::basic_array_view types using a C-style API.
+   *
+   * @details The function reduces input arrays/views from all processes in the given communicator and makes the result
+   * available on the root process (`all == false`) or on all processes (`all == true`).
+   *
+   * It is expected that all input arrays/views have the same shape on all processes. The function throws an exception,
+   * if
+   * - the input array/view is not contiguous with positive strides (only for MPI compatible types),
+   * - the output array/view is not contiguous with positive strides on receiving ranks,
+   * - the output view does not have the correct shape on receiving ranks,
+   * - the data storage of the output array/view overlaps with the input array/view or
+   * - any of the MPI calls fails.
+   *
+   * The content of the output array/view depends on the MPI rank and whether it receives the data or not:
+   * - On receiving ranks, it contains the reduced data and has a shape that is the same as the shape of the input
+   * array/view.
+   * - On non-receiving ranks, the output array/view is ignored and left unchanged.
+   *
+   * Types which cannot be reduced directly, i.e. which do not have an MPI type, are reduced element-wise.
+   *
+   * If `mpi::has_env` is false or if the communicator size is < 2, it simply copies the input array/view to the output
+   * array/view.
+   *
+   * @tparam A1 nda::basic_array or nda::basic_array_view type.
+   * @tparam A2 nda::basic_array or nda::basic_array_view type.
+   * @param a_in Array/view to be reduced.
+   * @param a_out Array/view to reduce into.
+   * @param comm `mpi::communicator` object.
+   * @param root Rank of the root process.
+   * @param all Should all processes receive the result of the reduction.
+   * @param op MPI reduction operation.
+   */
   template <typename A1, typename A2>
     requires(is_regular_or_view_v<A1> && is_regular_or_view_v<A2>)
   void mpi_reduce_capi(A1 const &a_in, A2 &&a_out, mpi::communicator comm = {}, int root = 0, bool all = false, MPI_Op op = MPI_SUM) { // NOLINT
@@ -117,19 +149,7 @@ namespace nda {
    * actual MPI operation. Since the returned object models an nda::ArrayInitializer, it can be used to
    * initialize/assign to nda::basic_array and nda::basic_array_view objects:
    *
-   * @code{.cpp}
-   * // create an array on all processes
-   * nda::array<int, 2> A(3, 4);
-   *
-   * // ...
-   * // fill array on each process
-   * // ...
-   *
-   * // reduce the array on the root process
-   * nda::array<int, 2> B = nda::lazy_mpi_reduce(A);
-   * @endcode
-   *
-   * The behavior is otherwise identical to nda::mpi_reduce and nda::mpi_reduce_in_place.
+   * The behavior is otherwise similar to nda::mpi_reduce and nda::mpi_reduce_in_place.
    *
    * The reduction is performed in-place if the target and input array/view are the same, e.g.
    *
@@ -161,22 +181,9 @@ namespace nda {
    * result available on the root process (`all == false`) or on all processes (`all == true`).
    *
    * The behavior and requirements are similar to nda::mpi_reduce, except that the function does not return a new array.
-   * Instead it writes the result directly into the given array/view on receiving ranks:
+   * Instead it writes the result directly into the given array/view on receiving ranks.
    *
-   * @code{.cpp}
-   * // create an array on all processes
-   * nda::array<int, 2> A(3, 4);
-   *
-   * // ...
-   * // fill array on each process
-   * // ...
-   *
-   * // reduce the array on the root process
-   * mpi::reduce_in_place(A);
-   * @endcode
-   *
-   * Here, the array `A` will contain the result of the reduction on the root process (rank 0) and will be the same as
-   * before the MPI call on all other processes.
+   * See @ref ex6_p4 for an example.
    *
    * @tparam A nda::basic_array or nda::basic_array_view type.
    * @param a Array/view to be reduced.
@@ -197,30 +204,9 @@ namespace nda {
    * @details The function reduces input arrays/views from all processes in the given communicator and makes the result
    * available on the root process (`all == false`) or on all processes (`all == true`).
    *
-   * It is expected that all input arrays/views have the same shape on all processes. The function throws an exception,
-   * if
-   * - the input array/view is not contiguous with positive strides (only for MPI compatible types) or
-   * - any of the MPI calls fails.
+   * It simply constructs an empty array and then calls nda::mpi_gather_capi.
    *
-   * The shape of the resulting array depends on the MPI rank and whether it receives the data or not:
-   * - On receiving ranks, the shape is the same as the shape of the input array/view.
-   * - On non-receiving ranks, the shape has the rank of the input array/view with only zeros, i.e. it is empty.
-   *
-   * Types which cannot be reduced directly, i.e. which do not have an MPI type, are reduced element-wise.
-   *
-   * @code{.cpp}
-   * // create an array on all processes
-   * nda::array<int, 2> A(3, 4);
-   *
-   * // ...
-   * // fill array on each process
-   * // ...
-   *
-   * // reduce the array on the root process
-   * auto B = mpi::reduce(A);
-   * @endcode
-   *
-   * Here, the array `B` has the shape `(3, 4)` on the root process and `(0, 0)` on all other processes.
+   * See @ref ex6_p4 for an example.
    *
    * @tparam A nda::basic_array or nda::basic_array_view type.
    * @param a Array/view to be reduced.

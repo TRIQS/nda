@@ -61,7 +61,33 @@ namespace nda {
    * @{
    */
 
-  // Helper function that scatters arrays/views.
+  /**
+   * @brief Implementation of an MPI scatter for nda::basic_array or nda::basic_array_view types using a C-style API.
+   *
+   * @details The function scatters a C-ordered input array/view from a root process across all processes in the given
+   * communicator. The array/view is chunked into equal parts along the first dimension using `mpi::chunk_length`.
+   *
+   * It is expected that all input arrays/views have the same rank on all processes. The function throws an exception,
+   * if
+   * - the input array/view is not contiguous with positive strides on the root process,
+   * - the output array/view is not contiguous with positive strides,
+   * - the output view does not have the correct shape or
+   * - any of the MPI calls fails.
+   *
+   * The input array/view on the root process is chunked along the first dimension into equal (as much as possible)
+   * parts using `mpi::chunk_length`. If the extent of the input array along the first dimension is not divisible by the
+   * number of processes, processes with lower ranks will receive more data than processes with higher ranks.
+   *
+   * If `mpi::has_env` is false or if the communicator size is < 2, it simply copies the input array/view to the output
+   * array/view.
+   *
+   * @tparam A1 nda::basic_array or nda::basic_array_view type with C-layout.
+   * @tparam A2 nda::basic_array or nda::basic_array_view type with C-layout.
+   * @param a_in Array/view to be scattered.
+   * @param a_out Array/view to scatter into.
+   * @param comm `mpi::communicator` object.
+   * @param root Rank of the root process.
+   */
   template <typename A1, typename A2>
     requires(is_regular_or_view_v<A1> and std::decay_t<A1>::is_stride_order_C()
              and is_regular_or_view_v<A2> and std::decay_t<A2>::is_stride_order_C())
@@ -70,7 +96,7 @@ namespace nda {
     EXPECTS_WITH_MESSAGE(detail::have_mpi_equal_ranks(a_in, comm), "Error in nda::mpi_scatter_capi: Ranks of arrays/views must be equal")
 
     // simply copy if there is no active MPI environment or if the communicator size is < 2
-    if (not mpi::has_env) {
+    if (not mpi::has_env || comm.size() < 2) {
       a_out = a_in;
       return;
     }
@@ -94,21 +120,9 @@ namespace nda {
    *
    * @details This function is lazy, i.e. it returns an mpi::lazy<mpi::tag::scatter, A> object without performing the
    * actual MPI operation. Since the returned object models an nda::ArrayInitializer, it can be used to
-   * initialize/assign to nda::basic_array and nda::basic_array_view objects:
+   * initialize/assign to nda::basic_array and nda::basic_array_view objects.
    *
-   * @code{.cpp}
-   * // create an array on all processes
-   * nda::array<int, 2> A(10, 4);
-   *
-   * // ...
-   * // fill array on root process
-   * // ...
-   *
-   * // scatter the array to all processes
-   * nda::array<int, 2> B = nda::lazy_mpi_scatter(A);
-   * @endcode
-   *
-   * The behavior is otherwise identical to nda::mpi_scatter.
+   * The behavior is otherwise similar to nda::mpi_scatter.
    *
    * @warning MPI calls are done in the `invoke` and `shape` methods of the `mpi::lazy` object. If one rank calls one of
    * these methods, all ranks in the communicator need to call the same method. Otherwise, the program will deadlock.
@@ -131,29 +145,9 @@ namespace nda {
    * @details The function scatters a C-ordered input array/view from a root process across all processes in the given
    * communicator. The array/view is chunked into equal parts along the first dimension using `mpi::chunk_length`.
    *
-   * It is expected that all input arrays/views have the same rank on all processes. The function throws an exception,
-   * if
-   * - the input array/view is not contiguous with positive strides on the root process or
-   * - if any of the MPI calls fails.
+   * It simply constructs an empty array and then calls nda::mpi_scatter_capi.
    *
-   * The input array/view on the root process is chunked along the first dimension into equal (as much as possible)
-   * parts using `mpi::chunk_length`. If the extent of the input array along the first dimension is not divisible by the
-   * number of processes, processes with lower ranks will receive more data than processes with higher ranks.
-   *
-   * @code{.cpp}
-   * // create an array on all processes
-   * nda::array<int, 2> A(10, 4);
-   *
-   * // ...
-   * // fill array on root process
-   * // ...
-   *
-   * // scatter the array to all processes
-   * auto B = mpi::scatter(A);
-   * @endcode
-   *
-   * Here, the array `B` has the shape `(10 / comm.size(), 4)` on each process (assuming that 10 is a multiple of
-   * `comm.size()`).
+   * See @ref ex6_p3 for an example.
    *
    * @tparam A nda::basic_array or nda::basic_array_view type.
    * @param a Array/view to be scattered.
