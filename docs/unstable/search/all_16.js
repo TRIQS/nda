@@ -66,11 +66,14 @@ var searchData=
   ['mpi_2ehpp_63',['mpi.hpp',['../mpi_8hpp.html',1,'']]],
   ['mpi_5fbroadcast_64',['mpi_broadcast',['../group__av__mpi.html#ga6df12000d826688a8203af93d6b6838e',1,'nda']]],
   ['mpi_5fgather_65',['mpi_gather',['../group__av__mpi.html#ga62aacd4df1ae34a7690e68d93c7429be',1,'nda']]],
-  ['mpi_5freduce_66',['mpi_reduce',['../group__av__mpi.html#ga3edd8f70f2213d38b391743ddab967b3',1,'nda']]],
-  ['mpi_5freduce_5fin_5fplace_67',['mpi_reduce_in_place',['../group__av__mpi.html#gac31ef46b7cffb19adbbb1ff06f9fcd8a',1,'nda']]],
-  ['mpi_5fscatter_68',['mpi_scatter',['../group__av__mpi.html#ga3c70e635ce6fd776980edc3b44f5823b',1,'nda']]],
-  ['mpop_69',['mpop',['../group__utils__std.html#gaedd4bb9fe174afa880deb1d5ff1bfe32',1,'nda::stdutil']]],
-  ['multi_20dimensional_20indexing_70',['Multi-dimensional indexing',['../group__layout__idx.html',1,'']]],
-  ['multi_5fbucket_71',['multi_bucket',['../classnda_1_1mem_1_1multi__bucket.html',1,'nda::mem::multi_bucket&lt; ChunkSize &gt;'],['../classnda_1_1mem_1_1multi__bucket.html#a4acb0c47e202babde7a9588e6e46fd66',1,'nda::mem::multi_bucket::multi_bucket()'],['../classnda_1_1mem_1_1multi__bucket.html#af38beed4dcd7954d80c95c8c6d8d5e6f',1,'nda::mem::multi_bucket::multi_bucket(multi_bucket const &amp;)=delete'],['../classnda_1_1mem_1_1multi__bucket.html#a0497dbbb5c8868fe3d900ec14ac39f4c',1,'nda::mem::multi_bucket::multi_bucket(multi_bucket &amp;&amp;)=default']]],
-  ['multiplies_72',['multiplies',['../structnda_1_1clef_1_1tags_1_1multiplies.html',1,'nda::clef::tags']]]
+  ['mpi_5fgather_5fcapi_66',['mpi_gather_capi',['../group__av__mpi.html#gaf5fa72e07e5eb1972ebbc6e6396fe3b3',1,'nda']]],
+  ['mpi_5freduce_67',['mpi_reduce',['../group__av__mpi.html#ga3edd8f70f2213d38b391743ddab967b3',1,'nda']]],
+  ['mpi_5freduce_5fcapi_68',['mpi_reduce_capi',['../group__av__mpi.html#ga51224e436e40aad207aec1c7f237a7de',1,'nda']]],
+  ['mpi_5freduce_5fin_5fplace_69',['mpi_reduce_in_place',['../group__av__mpi.html#gac31ef46b7cffb19adbbb1ff06f9fcd8a',1,'nda']]],
+  ['mpi_5fscatter_70',['mpi_scatter',['../group__av__mpi.html#ga3c70e635ce6fd776980edc3b44f5823b',1,'nda']]],
+  ['mpi_5fscatter_5fcapi_71',['mpi_scatter_capi',['../group__av__mpi.html#ga9a693c512671b934773d5aad1a5a646f',1,'nda']]],
+  ['mpop_72',['mpop',['../group__utils__std.html#gaedd4bb9fe174afa880deb1d5ff1bfe32',1,'nda::stdutil']]],
+  ['multi_20dimensional_20indexing_73',['Multi-dimensional indexing',['../group__layout__idx.html',1,'']]],
+  ['multi_5fbucket_74',['multi_bucket',['../classnda_1_1mem_1_1multi__bucket.html',1,'nda::mem::multi_bucket&lt; ChunkSize &gt;'],['../classnda_1_1mem_1_1multi__bucket.html#a4acb0c47e202babde7a9588e6e46fd66',1,'nda::mem::multi_bucket::multi_bucket()'],['../classnda_1_1mem_1_1multi__bucket.html#af38beed4dcd7954d80c95c8c6d8d5e6f',1,'nda::mem::multi_bucket::multi_bucket(multi_bucket const &amp;)=delete'],['../classnda_1_1mem_1_1multi__bucket.html#a0497dbbb5c8868fe3d900ec14ac39f4c',1,'nda::mem::multi_bucket::multi_bucket(multi_bucket &amp;&amp;)=default']]],
+  ['multiplies_75',['multiplies',['../structnda_1_1clef_1_1tags_1_1multiplies.html',1,'nda::clef::tags']]]
 ];
