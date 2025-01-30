@@ -1,24 +1,9 @@
 var searchData=
 [
-  ['nda_3a_3aarray_0',['Array',['../conceptnda_1_1_array.html',1,'nda']]],
-  ['nda_3a_3aarrayinitializer_1',['ArrayInitializer',['../conceptnda_1_1_array_initializer.html',1,'nda']]],
-  ['nda_3a_3aarrayofrank_2',['ArrayOfRank',['../conceptnda_1_1_array_of_rank.html',1,'nda']]],
-  ['nda_3a_3aarrayorscalar_3',['ArrayOrScalar',['../conceptnda_1_1_array_or_scalar.html',1,'nda']]],
-  ['nda_3a_3acallablewithlongs_4',['CallableWithLongs',['../conceptnda_1_1_callable_with_longs.html',1,'nda']]],
-  ['nda_3a_3adoubleorcomplex_5',['DoubleOrComplex',['../conceptnda_1_1_double_or_complex.html',1,'nda']]],
-  ['nda_3a_3ahasvaluetypeconstructiblefrom_6',['HasValueTypeConstructibleFrom',['../conceptnda_1_1_has_value_type_constructible_from.html',1,'nda']]],
-  ['nda_3a_3ainstantiationof_7',['InstantiationOf',['../conceptnda_1_1_instantiation_of.html',1,'nda']]],
-  ['nda_3a_3amatrix_8',['Matrix',['../conceptnda_1_1_matrix.html',1,'nda']]],
-  ['nda_3a_3amem_3a_3aallocator_9',['Allocator',['../conceptnda_1_1mem_1_1_allocator.html',1,'nda::mem']]],
-  ['nda_3a_3amem_3a_3ahandle_10',['Handle',['../conceptnda_1_1mem_1_1_handle.html',1,'nda::mem']]],
-  ['nda_3a_3amem_3a_3aowninghandle_11',['OwningHandle',['../conceptnda_1_1mem_1_1_owning_handle.html',1,'nda::mem']]],
-  ['nda_3a_3amemoryarray_12',['MemoryArray',['../conceptnda_1_1_memory_array.html',1,'nda']]],
-  ['nda_3a_3amemoryarrayofrank_13',['MemoryArrayOfRank',['../conceptnda_1_1_memory_array_of_rank.html',1,'nda']]],
-  ['nda_3a_3amemorymatrix_14',['MemoryMatrix',['../conceptnda_1_1_memory_matrix.html',1,'nda']]],
-  ['nda_3a_3amemoryvector_15',['MemoryVector',['../conceptnda_1_1_memory_vector.html',1,'nda']]],
-  ['nda_3a_3andainitfunc_16',['NdaInitFunc',['../conceptnda_1_1_nda_init_func.html',1,'nda']]],
-  ['nda_3a_3andasymmetry_17',['NdaSymmetry',['../conceptnda_1_1_nda_symmetry.html',1,'nda']]],
-  ['nda_3a_3ascalar_18',['Scalar',['../conceptnda_1_1_scalar.html',1,'nda']]],
-  ['nda_3a_3astdarrayoflong_19',['StdArrayOfLong',['../conceptnda_1_1_std_array_of_long.html',1,'nda']]],
-  ['nda_3a_3avector_20',['Vector',['../conceptnda_1_1_vector.html',1,'nda']]]
+  ['allocator_0',['Allocator',['../conceptnda_1_1mem_1_1_allocator.html',1,'nda::mem']]],
+  ['anyof_1',['AnyOf',['../conceptnda_1_1_any_of.html',1,'nda']]],
+  ['array_2',['Array',['../conceptnda_1_1_array.html',1,'nda']]],
+  ['arrayinitializer_3',['ArrayInitializer',['../conceptnda_1_1_array_initializer.html',1,'nda']]],
+  ['arrayofrank_4',['ArrayOfRank',['../conceptnda_1_1_array_of_rank.html',1,'nda']]],
+  ['arrayorscalar_5',['ArrayOrScalar',['../conceptnda_1_1_array_or_scalar.html',1,'nda']]]
 ];

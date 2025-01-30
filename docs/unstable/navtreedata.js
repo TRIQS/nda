@@ -238,8 +238,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "__impl__basic__array__view__common_8hpp_source.html",
-"macros_8hpp_source.html"
+"make__lazy_8hpp.html"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronisation';
-var SYNCOFFMSG = 'click to enable panel synchronisation';
+var SYNCONMSG = 'click to disable panel synchronization';
+var SYNCOFFMSG = 'click to enable panel synchronization';
