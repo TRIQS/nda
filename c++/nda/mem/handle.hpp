@@ -952,7 +952,7 @@ namespace nda::mem {
     mutable std::shared_ptr<void> sptr;
 
     // Type of the memory block, i.e. a pointer to the data and its size.
-    using blk_T_t = std::tuple<T *, size_t, void *>;
+    using blk_T_t = std::tuple<T *, size_t, mpi::shared_window<char> *>;
 
     // Release the handled memory (data pointer and size are not set to null here).
     static void destruct(blk_T_t b) noexcept {

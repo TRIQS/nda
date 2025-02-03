@@ -463,8 +463,10 @@ namespace nda::mem {
    *
    * @tparam A nda::mem::Allocator type to wrap.
    */
+  template <typename Allocator>
+  class leak_check;
   template <Allocator A>
-  class leak_check : A {
+  class leak_check<A> : A {
     // Total memory used by the allocator.
     long memory_used = 0;
 
@@ -530,6 +532,104 @@ namespace nda::mem {
      * @param b nda::mem::blk_t memory block to deallocate.
      */
     void deallocate(blk_t b) noexcept {
+      memory_used -= b.s;
+      if (memory_used < 0) {
+#ifndef NDEBUG
+        std::cerr << "Memory used by allocator < 0: Memory block to be deleted: b.s = " << b.s << ", b.ptr = " << (void *)b.ptr << "\n";
+        std::abort();
+#endif
+      }
+      A::deallocate(b);
+    }
+
+    /**
+     * @brief Check if the base allocator is empty.
+     * @return True if no memory is currently being used.
+     */
+    [[nodiscard]] bool empty() const { return (memory_used == 0); }
+
+    /**
+     * @brief Check if a given nda::mem::blk_t memory block is owned by the base allocator.
+     *
+     * @param b nda::mem::blk_t memory block.
+     * @return True if the base allocator owns the memory block.
+     */
+    [[nodiscard]] bool owns(blk_t b) const noexcept { return A::owns(b); }
+
+    /**
+     * @brief Get the total memory used by the base allocator.
+     * @return The size of the memory which has been allocated and not yet deallocated.
+     */
+    [[nodiscard]] long get_memory_used() const noexcept { return memory_used; }
+  };
+
+  template <SharedMemoryAllocator A>
+  class leak_check<A> : A {
+    // Total memory used by the allocator.
+    long memory_used = 0;
+
+    public:
+    /// nda::mem::AddressSpace in which the memory is allocated.
+    static constexpr auto address_space = A::address_space;
+
+    /// Default constructor.
+    leak_check() = default;
+
+    /// Deleted copy constructor.
+    leak_check(leak_check const &) = delete;
+
+    /// Default move constructor.
+    leak_check(leak_check &&) = default;
+
+    /// Deleted copy assignment operator.
+    leak_check &operator=(leak_check const &) = delete;
+
+    /// Default move assignment operator.
+    leak_check &operator=(leak_check &&) = default;
+
+    /**
+     * @brief Destructor that checks for memory leaks.
+     * @details In debug mode, it aborts the program if there is a memory leak.
+     */
+    ~leak_check() {
+      if (!empty()) {
+#ifndef NDEBUG
+        std::cerr << "Memory leak in allocator: " << memory_used << " bytes leaked\n";
+        std::abort();
+#endif
+      }
+    }
+
+    /**
+     * @brief Allocate memory and update the total memory used.
+     *
+     * @param s Size in bytes of the memory to allocate.
+     * @return nda::mem::blk_t memory block.
+     */
+    blk_shm_t allocate(size_t s, mpi::shared_communicator c = mpi::communicator{}.split_shared()) {
+      blk_shm_t b = A::allocate(s, c);
+      memory_used += b.s;
+      return b;
+    }
+
+    /**
+     * @brief Allocate memory, set it to zero and update the total memory used.
+     *
+     * @param s Size in bytes of the memory to allocate.
+     * @return nda::mem::blk_t memory block.
+     */
+    blk_shm_t allocate_zero(size_t s, mpi::shared_communicator c = mpi::communicator{}.split_shared()) {
+      blk_shm_t b = A::allocate_zero(s, c);
+      memory_used += b.s;
+      return b;
+    }
+
+    /**
+     * @brief Deallocate memory and update the total memory used.
+     * @details In debug mode, it aborts the program if the total memory used is smaller than zero.
+     * @param b nda::mem::blk_t memory block to deallocate.
+     */
+    void deallocate(blk_shm_t b) noexcept {
       memory_used -= b.s;
       if (memory_used < 0) {
 #ifndef NDEBUG
