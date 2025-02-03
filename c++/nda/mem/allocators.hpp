@@ -52,9 +52,18 @@ namespace nda::mem {
 
     /// Size of the memory block in bytes.
     size_t s = 0;
+  };
 
-    /// Pointer to special data required by the allocator.
-    void *userdata = nullptr;
+  /// Memory block consisting of a pointer, its size and the MPI shared memory window managing it.
+  struct blk_shm_t {
+    /// Pointer to the memory block.
+    char *ptr = nullptr;
+
+    /// Size of the memory block in bytes.
+    size_t s = 0;
+
+    /// Pointer to the MPI shared memory window.
+    mpi::shared_window<char> *win = nullptr;
   };
 
   /**
@@ -677,32 +686,12 @@ namespace nda::mem {
      * @brief Allocate memory using mpi::shared_window.
      *
      * @param s Size in bytes of the memory to allocate.
-     * @return nda::mem::blk_t memory block.
-     */
-    static blk_t allocate(size_t s) noexcept {
-      return allocate(s, mpi::communicator{}.split_shared());
-    }
-
-    /**
-     * @brief Allocate memory using mpi::shared_window.
-     *
-     * @param s Size in bytes of the memory to allocate.
      * @param shm MPI shared memory communicator.
      * @return nda::mem::blk_t memory block.
      */
-    static blk_t allocate(MPI_Aint s, mpi::shared_communicator shm) noexcept {
+    static blk_shm_t allocate(MPI_Aint s, mpi::shared_communicator shm = mpi::communicator{}.split_shared()) noexcept {
       auto *win = new mpi::shared_window<char>{shm, shm.rank() == 0 ? s : 0};
-      return {(char *)win->base(0), (std::size_t)s, (void *)win}; // NOLINT
-    }
-
-    /**
-     * @brief Allocate memory and set it to zero.
-     *
-     * @param s Size in bytes of the memory to allocate.
-     * @return nda::mem::blk_t memory block.
-     */
-    static blk_t allocate_zero(size_t s) noexcept {
-      return allocate_zero(s, mpi::communicator{}.split_shared());
+      return {(char *)win->base(0), (std::size_t)s, win}; // NOLINT
     }
 
     /**
@@ -712,7 +701,7 @@ namespace nda::mem {
      * @param shm MPI shared memory communicator.
      * @return nda::mem::blk_t memory block.
      */
-    static blk_t allocate_zero(MPI_Aint s, mpi::shared_communicator shm) noexcept {
+    static blk_shm_t allocate_zero(MPI_Aint s, mpi::shared_communicator shm = mpi::communicator{}.split_shared()) noexcept {
       auto *win = new mpi::shared_window<char>{shm, shm.rank() == 0 ? s : 0};
       char *baseptr = win->base(0);
       win->fence();
@@ -720,15 +709,15 @@ namespace nda::mem {
           std::memset(baseptr, 0, s);
       }
       win->fence();
-      return {baseptr, (std::size_t)s, (void *)win}; // NOLINT
+      return {baseptr, (std::size_t)s, win}; // NOLINT
     }
 
     /**
      * @brief Deallocate memory using mpi::shared_window.
      * @param b nda::mem::blk_t memory block to deallocate.
      */
-    static void deallocate(blk_t b) noexcept {
-      delete static_cast<mpi::shared_window<char>*>(b.userdata);
+    static void deallocate(blk_shm_t b) noexcept {
+      delete b.win;
     }
   };
 

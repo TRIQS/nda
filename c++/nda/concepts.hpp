@@ -13,6 +13,8 @@
 #include "./stdutil/concepts.hpp"
 #include "./traits.hpp"
 
+#include <mpi/communicator.hpp>
+
 #include <array>
 #include <concepts>
 #include <type_traits>
@@ -123,6 +125,7 @@ namespace nda {
     /// @cond
     // Forward declarations.
     struct blk_t;
+    struct blk_shm_t;
     enum class AddressSpace;
     /// @endcond
 
@@ -142,6 +145,14 @@ namespace nda {
       { a.allocate(size_t{}) } noexcept -> std::same_as<blk_t>;
       { a.allocate_zero(size_t{}) } noexcept -> std::same_as<blk_t>;
       { a.deallocate(std::declval<blk_t>()) } noexcept;
+      { A::address_space } -> std::same_as<AddressSpace const &>;
+    };
+
+    template <typename A>
+    concept SharedMemoryAllocator = requires(A &a) {
+      { a.allocate(MPI_Aint{}, mpi::shared_communicator{}) } noexcept -> std::same_as<blk_shm_t>;
+      { a.allocate_zero(MPI_Aint{}, mpi::shared_communicator{}) } noexcept -> std::same_as<blk_shm_t>;
+      { a.deallocate(std::declval<blk_shm_t>()) } noexcept;
       { A::address_space } -> std::same_as<AddressSpace const &>;
     };
 

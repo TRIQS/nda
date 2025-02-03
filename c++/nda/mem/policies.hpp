@@ -103,6 +103,20 @@ namespace nda {
     using handle = mem::handle_borrowed<T, AdrSp>;
   };
 
+  /**
+   * @brief Memory policy using an nda::mem::handle_heap.
+   * @tparam Allocator Allocator type to be used.
+   */
+  template <typename SharedMemoryAllocator>
+  struct shared_memory {
+    /**
+     * @brief Handle type for the policy.
+     * @tparam T Value type of the data.
+     */
+    template <typename T>
+    using handle = mem::handle_shm<T, SharedMemoryAllocator>;
+  };
+
   /** @} */
 
 } // namespace nda
