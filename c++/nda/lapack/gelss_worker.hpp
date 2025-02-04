@@ -109,7 +109,7 @@ namespace nda::lapack {
      * @brief Get the singular values, i.e. the diagonal elements of the matrix \f$ \mathbf{S} \f$.
      * @return 1-dimensional nda::array containing the singular values.
      */
-    [[nodiscard]] auto const &S_vec() const { return s_; }
+    [[nodiscard]] array<double, 1> const &S_vec() const { return s_; }
 
     /**
      * @brief Construct a new worker object for a given matrix \f$ \mathbf{A} \f$ .
@@ -118,7 +118,7 @@ namespace nda::lapack {
      * \f$ \mathbf{A}^{+} \f$, its singular values \f$ \mathbf{s} = \mathrm{diag}(\mathbf{S}) \f$ and the matrix \f$
      * \mathbf{U}_N^H \f$. The latter is used to calculate the error of the least squares problem.
      *
-     * @param A %Matrix \f$ A \f$ used in the least squares problem.
+     * @param A %Matrix \f$ \mathbf{A} \f$ used in the least squares problem.
      */
     gelss_worker(matrix_const_view<T> A) : M_(A.extent(0)), N_(A.extent(1)), s_(std::min(M_, N_)) {
       if (N_ > M_) NDA_RUNTIME_ERROR << "Error in nda::lapack::gelss_worker: Matrix A cannot have more columns than rows";
@@ -152,7 +152,8 @@ namespace nda::lapack {
      * \f]
      *
      * @param B Right hand side matrix.
-     * @return A `std::pair` containing the solution matrix \f$ \mathbf{X} \f$ and the error \f$ \epsilon \f$.
+     * @return A `std::pair<matrix<T>, double>` containing the solution matrix \f$ \mathbf{X} \f$ and the error \f$
+     * \epsilon \f$.
      */
     auto operator()(matrix_const_view<T> B, std::optional<long> /* inner_matrix_dim */ = {}) const {
       using std::sqrt;
@@ -162,7 +163,7 @@ namespace nda::lapack {
         for (long i : range(B.shape()[1])) err_vec.push_back(frobenius_norm(U_N_H_ * B(range::all, range(i, i + 1))) / sqrt(B.shape()[0]));
         err = *std::ranges::max_element(err_vec);
       }
-      return std::make_pair(A_plus_ * B, err);
+      return std::pair<matrix<T>, double>{A_plus_ * B, err};
     }
 
     /**
@@ -172,13 +173,14 @@ namespace nda::lapack {
      * the error \f$ \epsilon = \frac{ \left\| \mathbf{U}_N^H \mathbf{b} \right\|_2 }{ \sqrt{N} } \f$.
      *
      * @param b Right hand side vector.
-     * @return A `std::pair` containing the solution vector \f$ \mathbf{x} \f$ and the error \f$ \epsilon \f$.
+     * @return A `std::pair<vector<T>, double>` containing the solution vector \f$ \mathbf{x} \f$ and the error \f$
+     * \epsilon \f$.
      */
     auto operator()(vector_const_view<T> b, std::optional<long> /*inner_matrix_dim*/ = {}) const {
       using std::sqrt;
       double err = 0.0;
       if (M_ != N_) { err = norm(U_N_H_ * b) / sqrt(b.size()); }
-      return std::make_pair(A_plus_ * b, err);
+      return std::pair<vector<T>, double>{A_plus_ * b, err};
     }
   };
 
@@ -209,29 +211,29 @@ namespace nda::lapack {
     using dcomplex = std::complex<double>;
 
     // Worker for the original least squares problem.
-    gelss_worker<dcomplex> lss_orig_;
+    gelss_worker<dcomplex> lss_;
 
     // Worker for the extended least squares problem.
-    gelss_worker<dcomplex> lss_;
+    gelss_worker<dcomplex> lss_herm_;
 
     public:
     /**
      * @brief Get the number of variables of the given problem.
      * @return Number of columns of the matrix \f$ \mathbf{A} \f$.
      */
-    int n_var() const { return lss_.n_var(); }
+    int n_var() const { return lss_herm_.n_var(); }
 
     /**
      * @brief Get the singular values of the original matrix \f$ A \f$.
      * @return 1-dimensional nda::array containing the singular values.
      */
-    [[nodiscard]] auto const &S_vec() const { return lss_orig_.S_vec(); }
+    [[nodiscard]] array<double, 1> const &S_vec() const { return lss_.S_vec(); }
 
     /**
      * @brief Construct a new worker object for a given matrix \f$ \mathbf{A} \f$.
-     * @param A %Matrix \f$ A \f$ used in the least squares problem.
+     * @param A %Matrix \f$ \mathbf{A} \f$ used in the least squares problem.
      */
-    gelss_worker_hermitian(matrix<dcomplex> A) : lss_orig_(A), lss_(vstack(A, conj(A))) {}
+    gelss_worker_hermitian(matrix_const_view<dcomplex> A) : lss_(A), lss_herm_(vstack(A, conj(A))) {}
 
     /**
      * @brief Solve the least squares problem for a given right hand side matrix \f$ \mathbf{B} \f$.
@@ -241,26 +243,27 @@ namespace nda::lapack {
      *
      * @param B Right hand side matrix.
      * @param inner_matrix_dim Inner matrix dimension \f$ d \f$.
-     * @return A `std::pair` containing the solution matrix \f$ \mathbf{X} \f$ and the error \f$ \epsilon \f$.
+     * @return A `std::pair<matrix<dcomplex>, double>` containing the solution matrix \f$ \mathbf{X} \f$ and the error
+     * \f$ \epsilon \f$.
      */
-    std::pair<matrix<dcomplex>, double> operator()(matrix_const_view<dcomplex> B, std::optional<long> inner_matrix_dim = {}) const {
+    auto operator()(matrix_const_view<dcomplex> B, std::optional<long> inner_matrix_dim = {}) const {
       if (not inner_matrix_dim.has_value())
         NDA_RUNTIME_ERROR << "Error in nda::lapack::gelss_worker_hermitian: Inner matrix dimension required for hermitian least square fitting";
       long d = *inner_matrix_dim;
 
-      // take the inner 'adjoint' of a matrix M:
-      // * reshape M -> M': (M, N) -> (M, N', d, d)
-      // * for each m and n: M'(m, n, :, :) -> M'(m, n, :, :)^/dagger
-      // * reshape M' -> M: (M, N', d, d) -> (M, N)
-      auto inner_adjoint = [d](auto &M) {
-        NDA_ASSERT2(M.shape()[1] % (d * d) == 0, "Error in nda::lapack::gelss_worker_hermitian: Data shape incompatible with inner matrix dimension");
-        auto shape = M.shape();
+      // take the inner 'adjoint' of a matrix C:
+      // * reshape C -> C': (M, N) -> (M, N', d, d)
+      // * for each m and n: C'(m, n, :, :) -> C'(m, n, :, :)^/dagger
+      // * reshape C' -> C: (M, N', d, d) -> (M, N)
+      auto inner_adjoint = [d](auto &C) {
+        NDA_ASSERT2(C.shape()[1] % (d * d) == 0, "Error in nda::lapack::gelss_worker_hermitian: Data shape incompatible with inner matrix dimension");
+        auto shape = C.shape();
 
         // get extent N' of second dimension
         long N = shape[1] / (d * d);
 
         // reshape, transpose and take the complex conjugate
-        array<dcomplex, 4> arr_dag = conj(permuted_indices_view<encode(std::array{0, 1, 3, 2})>(reshape(M, std::array{shape[0], N, d, d})));
+        array<dcomplex, 4> arr_dag = conj(permuted_indices_view<encode(std::array{0, 1, 3, 2})>(reshape(C, std::array{shape[0], N, d, d})));
 
         // return the result in a new matrix
         return matrix<dcomplex>{reshape(std::move(arr_dag), shape)};
@@ -268,10 +271,10 @@ namespace nda::lapack {
 
       // solve the extended system vstack(A, A*) * X = vstack(B, B_dag)
       auto B_dag    = inner_adjoint(B);
-      auto [x, err] = lss_(vstack(B, B_dag));
+      auto [x, err] = lss_herm_(vstack(B, B_dag));
 
-      // resymmetrize the results to cure small symmetry violations
-      return {0.5 * (x + inner_adjoint(x)), err};
+      // resymmetrize the results to cure small hermiticity violations
+      return std::pair<matrix<dcomplex>, double>{0.5 * (x + inner_adjoint(x)), err};
     }
   };
 
