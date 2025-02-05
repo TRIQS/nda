@@ -63,7 +63,7 @@ namespace nda::mem {
     size_t s = 0;
 
     /// Pointer to the MPI shared memory window.
-    mpi::shared_window<char> *win = nullptr;
+    void *userdata = nullptr;
   };
 
   /**
@@ -563,7 +563,7 @@ namespace nda::mem {
     [[nodiscard]] long get_memory_used() const noexcept { return memory_used; }
   };
 
-  template <SharedMemoryAllocator A>
+  template <MPISharedMemoryAllocator A>
   class leak_check<A> : A {
     // Total memory used by the allocator.
     long memory_used = 0;
@@ -762,22 +762,22 @@ namespace nda::mem {
    *
    * Allocates the same amount of memory on each shared memory island.
    */
-  class shared_allocator {
+  class mpi_shm_allocator {
     public:
     /// Default constructor.
-    shared_allocator()                                    = default;
+    mpi_shm_allocator()                                    = default;
 
     /// Deleted copy constructor.
-    shared_allocator(shared_allocator const &)            = delete;
+    mpi_shm_allocator(mpi_shm_allocator const &)            = delete;
 
     /// Default move constructor.
-    shared_allocator(shared_allocator &&)                 = default;
+    mpi_shm_allocator(mpi_shm_allocator &&)                 = default;
 
     /// Deleted copy assignment operator.
-    shared_allocator &operator=(shared_allocator const &) = delete;
+    mpi_shm_allocator &operator=(mpi_shm_allocator const &) = delete;
 
     /// Default move assignment operator.
-    shared_allocator &operator=(shared_allocator &&)      = default;
+    mpi_shm_allocator &operator=(mpi_shm_allocator &&)      = default;
 
     /// MPI shared memory always lives in the Host address space.
     static constexpr auto address_space = Host;
@@ -791,7 +791,7 @@ namespace nda::mem {
      */
     static blk_shm_t allocate(MPI_Aint s, mpi::shared_communicator shm = mpi::communicator{}.split_shared()) noexcept {
       auto *win = new mpi::shared_window<char>{shm, shm.rank() == 0 ? s : 0};
-      return {(char *)win->base(0), (std::size_t)s, win}; // NOLINT
+      return {(char *)win->base(0), (std::size_t)s, (void *)win}; // NOLINT
     }
 
     /**
@@ -809,7 +809,7 @@ namespace nda::mem {
           std::memset(baseptr, 0, s);
       }
       win->fence();
-      return {baseptr, (std::size_t)s, win}; // NOLINT
+      return {baseptr, (std::size_t)s, (void *)win}; // NOLINT
     }
 
     /**
@@ -817,7 +817,7 @@ namespace nda::mem {
      * @param b nda::mem::blk_t memory block to deallocate.
      */
     static void deallocate(blk_shm_t b) noexcept {
-      delete b.win;
+        delete static_cast<mpi::shared_window<char>*>(b.userdata);
     }
   };
 

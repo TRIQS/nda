@@ -149,9 +149,9 @@ namespace nda {
     };
 
     template <typename A>
-    concept SharedMemoryAllocator = requires(A &a) {
-      { a.allocate(MPI_Aint{}, mpi::shared_communicator{}) } noexcept -> std::same_as<blk_shm_t>;
-      { a.allocate_zero(MPI_Aint{}, mpi::shared_communicator{}) } noexcept -> std::same_as<blk_shm_t>;
+    concept MPISharedMemoryAllocator = requires(A &a) {
+      { a.allocate(size_t{}, mpi::shared_communicator{}) } noexcept -> std::same_as<blk_shm_t>;
+      { a.allocate_zero(size_t{}, mpi::shared_communicator{}) } noexcept -> std::same_as<blk_shm_t>;
       { a.deallocate(std::declval<blk_shm_t>()) } noexcept;
       { A::address_space } -> std::same_as<AddressSpace const &>;
     };

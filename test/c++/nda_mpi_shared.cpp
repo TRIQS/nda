@@ -19,13 +19,20 @@
 #include "./test_common.hpp"
 
 #include <nda/basic_array.hpp>
+#include <nda/shared_array.hpp>
 #include <nda/mem.hpp>
 
 // ==============================================================
 
 TEST(SHM, Allocator) { //NOLINT
-  nda::basic_array<long, 2, nda::C_layout, 'A', nda::shared_memory<nda::mem::shared_allocator>> A(3, 3);
+  nda::basic_array<long, 2, nda::C_layout, 'A', nda::mpi_shared_memory<nda::mem::mpi_shm_allocator>> A(3, 3);
   EXPECT_EQ(A.shape(), (shape_t<2>{3, 3}));
+}
+
+TEST(SHM, Constructor) { //NOLINT
+  mpi::communicator world;
+  mpi::shared_communicator shm = world.split_shared();
+  nda::shared_array<long, 2> A(shm);
 }
 
 MPI_TEST_MAIN;

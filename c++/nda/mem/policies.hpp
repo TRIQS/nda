@@ -107,14 +107,14 @@ namespace nda {
    * @brief Memory policy using an nda::mem::handle_heap.
    * @tparam Allocator Allocator type to be used.
    */
-  template <typename SharedMemoryAllocator>
-  struct shared_memory {
+  template <typename MPISharedMemoryAllocator>
+  struct mpi_shared_memory {
     /**
      * @brief Handle type for the policy.
      * @tparam T Value type of the data.
      */
     template <typename T>
-    using handle = mem::handle_shm<T, SharedMemoryAllocator>;
+    using handle = mem::handle_mpi_shm<T, MPISharedMemoryAllocator>;
   };
 
   /** @} */
