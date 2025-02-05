@@ -1,8 +1,8 @@
 var searchData=
 [
   ['gelss_0',['gelss',['../group__linalg__lapack.html#gacdce702f396e0fa3906584024451ffa8',1,'nda::lapack']]],
-  ['gelss_5fworker_1',['gelss_worker',['../classnda_1_1lapack_1_1gelss__worker.html#a5fe9a0b7acf9309405c7304e8432112f',1,'nda::lapack::gelss_worker']]],
-  ['gelss_5fworker_5fhermitian_2',['gelss_worker_hermitian',['../structnda_1_1lapack_1_1gelss__worker__hermitian.html#ad0b694ad3a2592158ff6f8b1a3a8b7fe',1,'nda::lapack::gelss_worker_hermitian']]],
+  ['gelss_5fworker_1',['gelss_worker',['../classnda_1_1lapack_1_1gelss__worker.html#a65b9395c0fb4b0a10d1ce98e1a7ec68e',1,'nda::lapack::gelss_worker']]],
+  ['gelss_5fworker_5fhermitian_2',['gelss_worker_hermitian',['../structnda_1_1lapack_1_1gelss__worker__hermitian.html#a9c4dbc5ef78006712f5b05e3296daf25',1,'nda::lapack::gelss_worker_hermitian']]],
   ['gemm_3',['gemm',['../group__linalg__blas.html#gac86e76a5d23dc7fea5bc982fee45cf2c',1,'nda::blas']]],
   ['gemm_5fbatch_4',['gemm_batch',['../group__linalg__blas.html#gaf5df976ecdf5813d9a0fb760ac155a5e',1,'nda::blas']]],
   ['gemm_5fbatch_5fstrided_5',['gemm_batch_strided',['../group__linalg__blas.html#ga0ab133463a49dcbd043eefd1ea2222c2',1,'nda::blas']]],
