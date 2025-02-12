@@ -1107,6 +1107,20 @@ namespace nda::mem {
     }
 
     /**
+     * @brief Construct a handle by allocating memory for the data of a given size and a communicator without initializing iz
+     * @param size Size of the data (number of elements).
+     * @param comm Shared communicator
+     */
+     handle_mpi_shm(long size, mpi::shared_communicator comm, do_not_initialize_t) {
+      if (size == 0) return;
+      auto b = allocator.allocate(size * sizeof(T), comm);
+      if (not b.ptr) throw std::bad_alloc{};
+      _data = (T *)b.ptr;
+      _size = size;
+      _userdata = b.userdata;
+    }
+
+    /**
      * @brief Construct a handle by allocating memory for the data of a given size and initializing it to zero.
      * @param size Size of the data (number of elements).
      */
@@ -1120,13 +1134,13 @@ namespace nda::mem {
     }
 
     /**
-     * @brief change
-     * @param size change
-     * @param comm change
+     * @brief Construct a handle by allocating memory for the data of a given size and communicator and initializing it to zero.
+     * @param size Size of the data (number of elements).
+     * @param comm Shared communicator
      */
-    handle_mpi_shm(long size, mpi::shared_communicator comm, do_not_initialize_t) {
+     handle_mpi_shm(long size, mpi::shared_communicator comm, init_zero_t) {
       if (size == 0) return;
-      auto b = allocator.allocate(size * sizeof(T), comm);
+      auto b = allocator.allocate_zero(size * sizeof(T), comm);
       if (not b.ptr) throw std::bad_alloc{};
       _data = (T *)b.ptr;
       _size = size;
@@ -1153,6 +1167,24 @@ namespace nda::mem {
         b = allocator.allocate_zero(size * sizeof(T));
       else
         b = allocator.allocate(size * sizeof(T));
+      if (not b.ptr) throw std::bad_alloc{};
+      _data = (T *)b.ptr;
+      _size = size;
+      _userdata = b.userdata;
+
+      // call placement new for non trivial and non complex types
+      if constexpr (!std::is_trivial_v<T> and !is_complex_v<T>) {
+        for (size_t i = 0; i < size; ++i) new (_data + i) T();
+      }
+    }
+
+    handle_mpi_shm(long size, mpi::shared_communicator comm) {
+      if (size == 0) return;
+      blk_shm_t b;
+      if constexpr (is_complex_v<T> && init_dcmplx)
+        b = allocator.allocate_zero(size * sizeof(T), comm);
+      else
+        b = allocator.allocate(size * sizeof(T), comm);
       if (not b.ptr) throw std::bad_alloc{};
       _data = (T *)b.ptr;
       _size = size;

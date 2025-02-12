@@ -157,9 +157,20 @@ namespace nda {
 
     public:
 //XXX
+    // Construct an array with a given shape and memory policy without initializing the memory.
     template<std::integral Int = long>
     basic_array(std::array<Int, Rank> const &shape, const ContainerPolicy &cp, mem::do_not_initialize_t tag)
     : lay{shape}, sto{ lay.size(), cp.comm, tag } {}
+
+    // Construct an array with a given shape and memory policy and initializing the memory with zeros.
+    template<std::integral Int = long>
+    basic_array(std::array<Int, Rank> const &shape, const ContainerPolicy &cp, mem::init_zero_t)
+    : lay{shape}, sto{ lay.size(), cp.comm, mem::init_zero } {}
+
+    // Construct an array with a given shape and memory policy initialize the memory depending on the value type.
+    template<std::integral Int = long>
+    basic_array(std::array<Int, Rank> const &shape, const ContainerPolicy &cp)
+    : lay{shape}, sto{ lay.size(), cp.comm} {}
 
     /**
      * @brief Convert the current array to a view with an 'A' (array) algebra.
