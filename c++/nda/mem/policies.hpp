@@ -109,6 +109,9 @@ namespace nda {
    */
   template <typename MPISharedMemoryAllocator>
   struct mpi_shared_memory {
+    mpi::shared_communicator comm;
+
+    mpi_shared_memory(mpi::shared_communicator c) : comm(c) {}
     /**
      * @brief Handle type for the policy.
      * @tparam T Value type of the data.

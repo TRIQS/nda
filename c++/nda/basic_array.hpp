@@ -156,6 +156,11 @@ namespace nda {
     basic_array(std::array<Int, Rank> const &shape, mem::init_zero_t) : lay{shape}, sto{lay.size(), mem::init_zero} {}
 
     public:
+//XXX
+    template<std::integral Int = long>
+    basic_array(std::array<Int, Rank> const &shape, const ContainerPolicy &cp, mem::do_not_initialize_t tag)
+    : lay{shape}, sto{ lay.size(), cp.comm, tag } {}
+
     /**
      * @brief Convert the current array to a view with an 'A' (array) algebra.
      * @return An nda::basic_array_view of the current array.

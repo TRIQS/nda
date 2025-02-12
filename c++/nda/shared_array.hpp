@@ -34,8 +34,35 @@ namespace nda {
     mpi::shared_communicator _c{mpi::communicator{}.split_shared()};
   public:
     using Base::Base;
-    shared_array(mpi::shared_communicator c) : _c(c) {
 
+    shared_array() : _c(mpi::communicator{}.split_shared()) {};
+
+    shared_array(mpi::shared_communicator c) : _c(c) {};
+
+    shared_array(mpi::shared_communicator c, std::array<long, Rank> const &shape,mem::do_not_initialize_t tag = mem::do_not_initialize)
+    : Base(shape, nda::mpi_shared_memory<nda::mem::mpi_shm_allocator>{c}, tag), _c(c) {}
+
+    shared_array(const shared_array&) = delete;
+
+    shared_array& operator=(const shared_array&) = delete;
+
+    shared_array(shared_array&& other) noexcept : Base(std::move(other)), _c(std::move(other._c)) {
+      other.reset();
     };
+
+    shared_array& operator=(shared_array&& other) noexcept {
+      if (this != &other) {
+        Base::operator=(std::move(other));
+        _c = std::move(other._c);
+        other.reset();
+    }
+    return *this;
+    };
+
+    // TODO: Fix this, check move constructor in communicator
+    void reset() {
+      Base::operator=(Base{});
+      _c = mpi::shared_communicator{}.split_shared();
+    }
   };
 } // namespace nda

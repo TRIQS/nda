@@ -1120,6 +1120,22 @@ namespace nda::mem {
     }
 
     /**
+     * @brief change
+     * @param size change
+     * @param comm change
+     */
+    handle_mpi_shm(long size, mpi::shared_communicator comm, do_not_initialize_t) {
+      if (size == 0) return;
+      auto b = allocator.allocate(size * sizeof(T), comm);
+      if (not b.ptr) throw std::bad_alloc{};
+      _data = (T *)b.ptr;
+      _size = size;
+      _userdata = b.userdata;
+    }
+
+
+
+    /**
      * @brief Construct a handle by allocating memory for the data of a given size and initializing it depending on the
      * value type.
      *
