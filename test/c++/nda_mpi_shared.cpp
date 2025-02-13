@@ -20,6 +20,7 @@
 
 #include <nda/basic_array.hpp>
 #include <nda/shared_array.hpp>
+#include <nda/distributed_shared_array.hpp>
 #include <nda/mem.hpp>
 
 // ==============================================================
@@ -139,7 +140,7 @@ TEST(SHM, ConstructWithShape) {
   for (int i = 0; i < 3; ++i) {
     for (int j = 0; j < 3; ++j) {
       //EXPECT_EQ(A(i, j), i * 10 + j);
-      std::cout << "[rank " << world.rank() << "] " << A(i,j) << " ";
+      //std::cout << "[rank " << world.rank() << "] " << A(i,j) << " ";
     }
     std::cout << "\n";
   }
@@ -164,21 +165,26 @@ TEST(SHM, ForEachChunked) {
     std::cout << "\n";
   }
 }
-/*
-  TEST(SHM, ParallelReadWrite) {
+
+TEST(SHM, DistributedShared) {
   mpi::communicator world;
   mpi::shared_communicator shm = world.split_shared();
-  nda::shared_array<int, 2> A(shm);
-  A.resize({2, 2});
 
-  A(shm.rank(), shm.rank()) = shm.rank() + 100;
+  shape_t<2> global_shape = {3, 3};
+  nda::distributed_shared_array<int, 2> D(global_shape, world);
 
-  shm.barrier();
+  D.for_each_chunked([&shm](int &elem) { elem = shm.rank(); },shm.size(), shm.rank());
 
-  for (int r = 0; r < shm.size(); ++r) {
-  EXPECT_EQ(A(r, r), r + 100);
+  auto local_dims = D.local().indexmap().lengths();
+
+  for (int i = 0; i < local_dims[0]; ++i) {
+    std::cout << "[Node " << shm.rank() << "] ";
+    for (int j = 0; j < local_dims[1]; ++j) {
+      std::cout << D.local()(i, j) << " ";
+    }
+    std::cout << "\n";
   }
-  }
-*/
+
+}
 
 MPI_TEST_MAIN;
