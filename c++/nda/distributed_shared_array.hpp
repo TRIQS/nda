@@ -36,16 +36,17 @@ private:
     local_array_t local_array;
     shape_t global_shape;
 
-    int num_nodes;
-    int my_node_index;
+    int num_nodes; // Number of nodes participating
+    int my_node_index; // Rank of head process in head communicator
 
 public:
     //Constructor takes global shape and communicator
     explicit distributed_shared_array(const shape_t &_global_shape, const mpi::communicator _world)
     : world(_world), shm(world.split_shared()), global_shape(_global_shape) {
-        int total_dim = _global_shape[0];
 
+        // form head communicator
         auto head = world.split(shm.rank() == 0 ? 0 : MPI_UNDEFINED);
+
         if (!head.is_null()) {
             num_nodes = head.size();
             my_node_index = head.rank();
@@ -55,13 +56,13 @@ public:
         mpi::broadcast(num_nodes, world);
         mpi::broadcast(my_node_index, shm);
 
-        int total_rows = static_cast<int>(total_dim);
+        int total_rows = _global_shape[0];
         int base = total_rows / num_nodes;
         int remainder = total_rows % num_nodes;
         int local_rows = base + (my_node_index < remainder ? 1 : 0);
 
         shape_t local_shape = global_shape;
-        local_shape[0] = local_rows;
+        local_shape[0] = local_rows; //use .resize() ?
 
         local_array = local_array_t(local_shape, shm);
     }

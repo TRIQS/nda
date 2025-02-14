@@ -175,8 +175,9 @@ TEST(SHM, DistributedShared) {
 
   D.for_each_chunked([&shm](int &elem) { elem = shm.rank(); },shm.size(), shm.rank());
 
-  auto local_dims = D.local().indexmap().lengths();
+  auto local_dims = D.local().indexmap().lengths(); // Return `std::array<long, Rank>` containing the extent of each dimension. shape{1,3} at each node
 
+  // print local array at each Node
   for (int i = 0; i < local_dims[0]; ++i) {
     std::cout << "[Node " << shm.rank() << "] ";
     for (int j = 0; j < local_dims[1]; ++j) {
@@ -184,7 +185,6 @@ TEST(SHM, DistributedShared) {
     }
     std::cout << "\n";
   }
-
 }
 
 MPI_TEST_MAIN;
