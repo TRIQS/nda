@@ -36,10 +36,13 @@ private:
     local_array_t local_array;
     shape_t global_shape;
 
-    int num_nodes; // Number of nodes participating
-    int my_node_index; // Rank of head process in head communicator
+    long num_nodes; // Number of nodes participating
+    long my_node_index; // Rank of head process in head communicator
 
 public:
+
+    distributed_shared_array() = default;
+
     //Constructor takes global shape and communicator
     explicit distributed_shared_array(const shape_t &_global_shape, const mpi::communicator _world)
     : world(_world), shm(world.split_shared()), global_shape(_global_shape) {
@@ -67,12 +70,39 @@ public:
         local_array = local_array_t(local_shape, shm);
     }
 
+    explicit distributed_shared_array(const distributed_shared_array&) = default;
+
+    distributed_shared_array(distributed_shared_array&&) = default;
+
+    distributed_shared_array& operator=(const distributed_shared_array&) = default;
+
+    distributed_shared_array& operator=(distributed_shared_array&&) = default;
+
+
     local_array_t &local() { return local_array; }
     const shape_t &shape() const { return global_shape; }
+
+    void fence(bool global_sync = false) {
+        if (!global_sync) {
+            fence(&local_array);
+        } else {
+            world.barrier();
+        }
+
+    }
+
 
     template <typename Functor>
     void for_each_chunked(Functor &&f, long n_chunks, long rank) {
         nda::for_each_chunked(std::forward<Functor>(f), local_array, n_chunks, rank);
+    }
+
+    template <typename Functor>
+    void for_each(Functor&& f) {
+        auto &lay = local_array.indexmap();
+        for (long i = 0; i < lay.size(); ++i) {
+            f(local_array(nda::_linear_index_t{i}));
+        }
     }
 
 };

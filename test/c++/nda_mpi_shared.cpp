@@ -187,4 +187,38 @@ TEST(SHM, DistributedShared) {
   }
 }
 
+TEST(SHM, DistributedSum) {
+  mpi::communicator world;
+  mpi::shared_communicator shm = world.split_shared();
+
+  constexpr int total_rows = 4;
+  constexpr int ncols      = 4;
+  shape_t<2> global_shape = {total_rows, ncols};
+
+  nda::distributed_shared_array<int, 2> D(global_shape, world);
+
+  D.for_each_chunked([&shm](int &elem) { elem = shm.rank(); },shm.size(), shm.rank());
+
+  D.fence();
+
+  int local_sum = 0;
+  if (shm.rank() == 0) {
+  auto dims = D.local().indexmap().lengths();
+  for (int i = 0; i < dims[0]; ++i) {
+    std::cout << "[Node " << world.rank() << "] ";
+    for (int j = 0; j < dims[1]; ++j) {
+      std::cout << D.local()(i, j) << " ";
+      local_sum += D.local()(i, j);
+    }
+    std::cout << std::endl;
+  }
+}
+
+  int global_sum = 0;
+  MPI_Allreduce(&local_sum, &global_sum, 1, MPI_INT, MPI_SUM, world.get());
+
+  std::cout << "Global sum: " << global_sum << std::endl;
+
+}
+
 MPI_TEST_MAIN;
