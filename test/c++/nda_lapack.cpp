@@ -200,9 +200,9 @@ TEST(NDA, LAPACKGelss) {
 }
 
 // Test LAPACK getrs, getrf and getri functions.
-template <typename value_t>
+template <typename value_t, typename Layout>
 void test_getrs_getrf_getri() {
-  using matrix_t = matrix<value_t, F_layout>;
+  using matrix_t = matrix<value_t, Layout>;
 
   auto A = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
   auto B = matrix_t{{1, 5}, {4, 5}, {3, 6}};
@@ -229,6 +229,8 @@ void test_getrs_getrf_getri() {
 }
 
 TEST(NDA, LAPAKCGetrsGetrfAndGetri) {
-  test_getrs_getrf_getri<double>();
-  test_getrs_getrf_getri<std::complex<double>>();
+  test_getrs_getrf_getri<double, C_layout>();
+  test_getrs_getrf_getri<double, F_layout>();
+  test_getrs_getrf_getri<std::complex<double>, C_layout>();
+  test_getrs_getrf_getri<std::complex<double>, F_layout>();
 }
