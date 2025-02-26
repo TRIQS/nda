@@ -23,6 +23,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
+#include <limits>
 #include <memory>
 #include <vector>
 #include <utility>
@@ -46,7 +47,7 @@ namespace nda::mem {
    */
 
   /// Memory block consisting of a pointer and its size.
-  struct blk_t {
+  struct blk_slim_t {
     /// Pointer to the memory block.
     char *ptr = nullptr;
 
@@ -55,7 +56,7 @@ namespace nda::mem {
   };
 
   /// Memory block consisting of a pointer, its size and the MPI shared memory window managing it.
-  struct blk_shm_t {
+  struct blk_fat_t {
     /// Pointer to the memory block.
     char *ptr = nullptr;
 
@@ -91,7 +92,10 @@ namespace nda::mem {
     /// nda::mem::AddressSpace in which the memory is allocated.
     static constexpr auto address_space = AdrSp;
 
-    /**
+    /// Type of allocated block.
+    using blk_t = blk_slim_t;
+
+   /**
      * @brief Allocate memory using nda::mem::malloc.
      *
      * @param s Size in bytes of the memory to allocate.
@@ -153,6 +157,9 @@ namespace nda::mem {
 
     /// Only `Host` nda::mem::AddressSpace is supported for this allocator.
     static constexpr auto address_space = Host;
+
+    /// Type of allocated block.
+    using blk_t = blk_slim_t;
 
 #ifdef NDA_USE_ASAN
     bucket() { __asan_poison_memory_region(p, TotalChunkSize); }
@@ -287,6 +294,9 @@ namespace nda::mem {
     /// Only `Host` nda::mem::AddressSpace is supported for this allocator.
     static constexpr auto address_space = Host;
 
+    /// Type of allocated block.
+    using blk_t = typename b_t::blk_t;
+
     /// Default constructor.
     multi_bucket() : bu_vec(1), bu(bu_vec.begin()) {}
 
@@ -400,9 +410,13 @@ namespace nda::mem {
 
     public:
     static_assert(A::address_space == B::address_space);
+    static_assert(std::is_same_v<typename A::blk_t, typename B::blk_t>);
 
     /// nda::mem::AddressSpace in which the memory is allocated.
     static constexpr auto address_space = A::address_space;
+
+    /// Type of allocated block.
+    using blk_t = typename A::blk_t;
 
     /// Default constructor.
     segregator() = default;
@@ -463,16 +477,17 @@ namespace nda::mem {
    *
    * @tparam A nda::mem::Allocator type to wrap.
    */
-  template <typename Allocator>
-  class leak_check;
   template <Allocator A>
-  class leak_check<A> : A {
+  class leak_check : A {
     // Total memory used by the allocator.
     long memory_used = 0;
 
     public:
     /// nda::mem::AddressSpace in which the memory is allocated.
     static constexpr auto address_space = A::address_space;
+
+    /// Type of allocated block.
+    using blk_t = typename A::blk_t;
 
     /// Default constructor.
     leak_check() = default;
@@ -563,104 +578,6 @@ namespace nda::mem {
     [[nodiscard]] long get_memory_used() const noexcept { return memory_used; }
   };
 
-  template <MPISharedMemoryAllocator A>
-  class leak_check<A> : A {
-    // Total memory used by the allocator.
-    long memory_used = 0;
-
-    public:
-    /// nda::mem::AddressSpace in which the memory is allocated.
-    static constexpr auto address_space = A::address_space;
-
-    /// Default constructor.
-    leak_check() = default;
-
-    /// Deleted copy constructor.
-    leak_check(leak_check const &) = delete;
-
-    /// Default move constructor.
-    leak_check(leak_check &&) = default;
-
-    /// Deleted copy assignment operator.
-    leak_check &operator=(leak_check const &) = delete;
-
-    /// Default move assignment operator.
-    leak_check &operator=(leak_check &&) = default;
-
-    /**
-     * @brief Destructor that checks for memory leaks.
-     * @details In debug mode, it aborts the program if there is a memory leak.
-     */
-    ~leak_check() {
-      if (!empty()) {
-#ifndef NDEBUG
-        std::cerr << "Memory leak in allocator: " << memory_used << " bytes leaked\n";
-        std::abort();
-#endif
-      }
-    }
-
-    /**
-     * @brief Allocate memory and update the total memory used.
-     *
-     * @param s Size in bytes of the memory to allocate.
-     * @return nda::mem::blk_t memory block.
-     */
-    blk_shm_t allocate(size_t s, mpi::shared_communicator c = mpi::communicator{}.split_shared()) {
-      blk_shm_t b = A::allocate(s, c);
-      memory_used += b.s;
-      return b;
-    }
-
-    /**
-     * @brief Allocate memory, set it to zero and update the total memory used.
-     *
-     * @param s Size in bytes of the memory to allocate.
-     * @return nda::mem::blk_t memory block.
-     */
-    blk_shm_t allocate_zero(size_t s, mpi::shared_communicator c = mpi::communicator{}.split_shared()) {
-      blk_shm_t b = A::allocate_zero(s, c);
-      memory_used += b.s;
-      return b;
-    }
-
-    /**
-     * @brief Deallocate memory and update the total memory used.
-     * @details In debug mode, it aborts the program if the total memory used is smaller than zero.
-     * @param b nda::mem::blk_t memory block to deallocate.
-     */
-    void deallocate(blk_shm_t b) noexcept {
-      memory_used -= b.s;
-      if (memory_used < 0) {
-#ifndef NDEBUG
-        std::cerr << "Memory used by allocator < 0: Memory block to be deleted: b.s = " << b.s << ", b.ptr = " << (void *)b.ptr << "\n";
-        std::abort();
-#endif
-      }
-      A::deallocate(b);
-    }
-
-    /**
-     * @brief Check if the base allocator is empty.
-     * @return True if no memory is currently being used.
-     */
-    [[nodiscard]] bool empty() const { return (memory_used == 0); }
-
-    /**
-     * @brief Check if a given nda::mem::blk_t memory block is owned by the base allocator.
-     *
-     * @param b nda::mem::blk_t memory block.
-     * @return True if the base allocator owns the memory block.
-     */
-    [[nodiscard]] bool owns(blk_t b) const noexcept { return A::owns(b); }
-
-    /**
-     * @brief Get the total memory used by the base allocator.
-     * @return The size of the memory which has been allocated and not yet deallocated.
-     */
-    [[nodiscard]] long get_memory_used() const noexcept { return memory_used; }
-  };
-
   /**
    * @brief Wrap an allocator to gather statistics about memory allocation.
    *
@@ -678,6 +595,9 @@ namespace nda::mem {
     public:
     /// nda::mem::AddressSpace in which the memory is allocated.
     static constexpr auto address_space = A::address_space;
+
+    /// Type of allocated block.
+    using blk_t = typename A::blk_t;
 
     /// Default constructor.
     stats() = default;
@@ -780,7 +700,13 @@ namespace nda::mem {
     mpi_shm_allocator &operator=(mpi_shm_allocator &&)      = default;
 
     /// MPI shared memory always lives in the Host address space.
-    static constexpr auto address_space = Host;
+    static constexpr auto address_space = MPISharedMemory;
+
+    /// Default communicator for MPI shared memory allocations.
+    static mpi::shared_communicator shm;
+
+    /// Type of allocated block.
+    using blk_t = blk_fat_t;
 
     /**
      * @brief Allocate memory using mpi::shared_window.
@@ -789,8 +715,9 @@ namespace nda::mem {
      * @param shm MPI shared memory communicator.
      * @return nda::mem::blk_t memory block.
      */
-    static blk_shm_t allocate(MPI_Aint s, mpi::shared_communicator shm = mpi::communicator{}.split_shared()) noexcept {
-      auto *win = new mpi::shared_window<char>{shm, shm.rank() == 0 ? s : 0};
+    static blk_t allocate(size_t s) noexcept {
+      ASSERT(s <= std::numeric_limits<MPI_Aint>::max());
+      auto *win = new mpi::shared_window<char>{shm, shm.rank() == 0 ? (MPI_Aint)s : 0};
       return {(char *)win->base(0), (std::size_t)s, (void *)win}; // NOLINT
     }
 
@@ -801,8 +728,9 @@ namespace nda::mem {
      * @param shm MPI shared memory communicator.
      * @return nda::mem::blk_t memory block.
      */
-    static blk_shm_t allocate_zero(MPI_Aint s, mpi::shared_communicator shm = mpi::communicator{}.split_shared()) noexcept {
-      auto *win = new mpi::shared_window<char>{shm, shm.rank() == 0 ? s : 0};
+    static blk_t allocate_zero(size_t s) noexcept {
+      ASSERT(s <= std::numeric_limits<MPI_Aint>::max());
+      auto *win = new mpi::shared_window<char>{shm, shm.rank() == 0 ? (MPI_Aint)s : 0};
       char *baseptr = win->base(0);
       win->fence();
       if (shm.rank() == 0) {
@@ -816,11 +744,13 @@ namespace nda::mem {
      * @brief Deallocate memory using mpi::shared_window.
      * @param b nda::mem::blk_t memory block to deallocate.
      */
-    static void deallocate(blk_shm_t b) noexcept {
+    static void deallocate(blk_t b) noexcept {
         delete static_cast<mpi::shared_window<char>*>(b.userdata);
     }
   };
 
   /** @} */
+
+  inline mpi::shared_communicator mpi_shm_allocator::shm{MPI_COMM_NULL};
 
 } // namespace nda::mem

@@ -28,9 +28,9 @@
 namespace nda {
 
 template <typename ValueType, int Rank, typename LayoutPolicy = C_layout, char Algebra = 'A'>
-class shared_array : public basic_array<ValueType, Rank, LayoutPolicy, Algebra, nda::mpi_shared_memory<nda::mem::mpi_shm_allocator>> {
+class shared_array : public basic_array<ValueType, Rank, LayoutPolicy, Algebra, nda::heap_basic<nda::mem::mpi_shm_allocator>> {
 public:
-  using base_t = basic_array<ValueType, Rank, LayoutPolicy, Algebra, nda::mpi_shared_memory<nda::mem::mpi_shm_allocator>>;
+  using base_t = basic_array<ValueType, Rank, LayoutPolicy, Algebra, nda::heap_basic<nda::mem::mpi_shm_allocator>>;
   using layout_t = base_t::layout_t;
   using storage_t = base_t::storage_t;
 private:
@@ -44,7 +44,7 @@ public:
   explicit shared_array(std::array<Int, Rank> const &shape) : base_t() {}
 
   template <std::integral Int = long>
-  explicit shared_array(std::array<Int, Rank> const &shape, mpi::shared_communicator c) : base_t(layout_t{shape}, storage_t{layout_t{shape}.size(), c}), _c(c) {}
+  explicit shared_array(std::array<Int, Rank> const &shape, mpi::shared_communicator c) : base_t(layout_t{shape}, storage_t{layout_t{shape}.size()}), _c(c) {}
 
   explicit shared_array(const shared_array&) = default;
 
@@ -56,12 +56,12 @@ public:
 
   mpi::shared_communicator comm() const { return _c; }
 
-  mpi::shared_window<char> &win() const { return *static_cast<mpi::shared_window<char>*>(this->storage().userdata()); }
+  // mpi::shared_window<char> &win() const { return *(this->storage().template userdata<mpi::shared_window<char>*>()); }
 };
 
 template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra>
 void fence(shared_array<ValueType, Rank, LayoutPolicy, Algebra> const &array) {
-  array.win().fence();
+  // array.win().fence();
 }
 
 template <typename Functor, typename ValueType, int Rank, typename LayoutPolicy, char Algebra>

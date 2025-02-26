@@ -103,23 +103,6 @@ namespace nda {
     using handle = mem::handle_borrowed<T, AdrSp>;
   };
 
-  /**
-   * @brief Memory policy using an nda::mem::handle_heap.
-   * @tparam Allocator Allocator type to be used.
-   */
-  template <typename MPISharedMemoryAllocator>
-  struct mpi_shared_memory {
-    mpi::shared_communicator comm;
-
-    mpi_shared_memory(mpi::shared_communicator c) : comm(c) {}
-    /**
-     * @brief Handle type for the policy.
-     * @tparam T Value type of the data.
-     */
-    template <typename T>
-    using handle = mem::handle_mpi_shm<T, MPISharedMemoryAllocator>;
-  };
-
   /** @} */
 
 } // namespace nda

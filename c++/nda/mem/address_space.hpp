@@ -48,7 +48,7 @@ namespace nda::mem {
    * - `Device`: Address on GPU memory.
    * - `Unified`: CUDA Unified memory address.
    */
-  enum class AddressSpace { None, Host, Device, Unified }; // Do not change order!
+enum class AddressSpace { None, Host, Device, Unified, MPISharedMemory }; // Do not change order!
 
   /// Using declaration for the `Device` address space (see nda::mem::AddressSpace).
   using AddressSpace::Device;
@@ -61,6 +61,9 @@ namespace nda::mem {
 
   /// Using declaration for the `Unified` address space (see nda::mem::AddressSpace).
   using AddressSpace::Unified;
+
+  /// Using declaration for the `MPISharedMemory` address space (see nda::mem::AddressSpace).
+  using AddressSpace::MPISharedMemory;
 
   /**
    * @brief Variable template providing the address space for different types.
@@ -91,13 +94,40 @@ namespace nda::mem {
    * @tparam A2 Second address space.
    * @tparam As Remaining address spaces.
    */
-  template <AddressSpace A1, AddressSpace A2 = None, AddressSpace... As>
-  constexpr AddressSpace combine = []() {
-    static_assert(!(A1 == Host && A2 == Device) && !(A1 == Device && A2 == Host),
-                  "Error in nda::mem::combine: Cannot combine Host and Device address spaces");
-    if constexpr (sizeof...(As) > 0) { return combine<std::max(A1, A2), As...>; }
-    return std::max(A1, A2);
-  }();
+  template <AddressSpace... As>
+  constexpr AddressSpace combine;
+
+  template <AddressSpace A1, AddressSpace A2, AddressSpace... As>
+  constexpr AddressSpace combine<A1, A2, As...> = combine<combine<A1, A2>, As...>;
+
+  template <AddressSpace A1>
+  constexpr AddressSpace combine<A1> = A1;
+
+  template <AddressSpace A1>
+  constexpr AddressSpace combine<A1, None> = A1;
+
+  template <AddressSpace A1>
+  constexpr AddressSpace combine<None, A1> = A1;
+
+  template <>
+  constexpr AddressSpace combine<None, None> = None;
+
+  template <>
+  constexpr AddressSpace combine<Host, Host> = Host;
+  template <>
+  constexpr AddressSpace combine<Host, Unified> = Unified;
+  template <>
+  constexpr AddressSpace combine<Unified, Host> = Unified;
+
+  template <>
+  constexpr AddressSpace combine<Device, Device> = Device;
+  template <>
+  constexpr AddressSpace combine<Device, Unified> = Unified;
+  template <>
+  constexpr AddressSpace combine<Unified, Device> = Unified;
+
+  template <>
+  constexpr AddressSpace combine<MPISharedMemory, MPISharedMemory> = MPISharedMemory;
 
   /**
    * @brief Get common address space for a number of given nda::Array types.
@@ -164,6 +194,11 @@ namespace nda::mem {
     requires(sizeof...(Ts) > 0)
   static constexpr bool on_unified = ((get_addr_space<Ts> == mem::Unified) and ...);
 
+  /// Constexpr variable that is true if all given types have a `MPISharedMemory` address space.
+  template <typename... Ts>
+    requires(sizeof...(Ts) > 0)
+  static constexpr bool on_mpi_shared_memory = ((get_addr_space<Ts> == mem::MPISharedMemory) and ...);
+
   /// Constexpr variable that is true if all given types have the same address space.
   template <typename A0, typename... A>
   static constexpr bool have_same_addr_space = ((get_addr_space<A0> == get_addr_space<A>) and ... and true);
@@ -176,9 +211,13 @@ namespace nda::mem {
   template <typename... Ts>
   static constexpr bool have_device_compatible_addr_space = ((on_device<Ts> or on_unified<Ts>) and ...);
 
+  /// Constexpr variable that is true if all given types have an address space compatible with `MPISharedMemory`.
+  template <typename... Ts>
+  static constexpr bool have_mpi_shared_memory_compatible_addr_space = (on_mpi_shared_memory<Ts> and ...);
+
   /// Constexpr variable that is true if all given types have compatible address spaces.
   template <typename... Ts>
-  static constexpr bool have_compatible_addr_space = (have_host_compatible_addr_space<Ts...> or have_device_compatible_addr_space<Ts...>);
+  static constexpr bool have_compatible_addr_space = (have_host_compatible_addr_space<Ts...> or have_device_compatible_addr_space<Ts...> or have_mpi_shared_memory_compatible_addr_space<Ts...>);
 
   // Test various combinations of address spaces.
   static_assert(combine<None, None> == None);
@@ -195,6 +234,9 @@ namespace nda::mem {
   static_assert(combine<Host, Unified> == Unified);
   static_assert(combine<Unified, Host> == Unified);
 
+  static_assert(combine<MPISharedMemory, None> == MPISharedMemory);
+  static_assert(combine<None, MPISharedMemory> == MPISharedMemory);
+  static_assert(combine<MPISharedMemory, MPISharedMemory> == MPISharedMemory);
   /** @} */
 
 } // namespace nda::mem

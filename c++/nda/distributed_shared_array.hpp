@@ -84,7 +84,7 @@ public:
 
     void fence(bool global_sync = false) {
         if (!global_sync) {
-            fence(&local_array);
+            nda::fence(local_array);
         } else {
             world.barrier();
         }

@@ -26,7 +26,7 @@
 // ==============================================================
 
 TEST(SHM, Allocator) { //NOLINT
-  nda::basic_array<long, 2, nda::C_layout, 'A', nda::mpi_shared_memory<nda::mem::mpi_shm_allocator>> A(3, 3);
+  nda::basic_array<long, 2, nda::C_layout, 'A', nda::heap_basic<nda::mem::mpi_shm_allocator>> A(3, 3);
   EXPECT_EQ(A.shape(), (shape_t<2>{3, 3}));
 
   for (int i = 0; i < 3; ++i) {
