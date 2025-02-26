@@ -23,6 +23,7 @@
 
 #include "./interface/cxx_interface.hpp"
 #include "../concepts.hpp"
+#include "../declarations.hpp"
 #include "../macros.hpp"
 #include "../mem/address_space.hpp"
 #include "../traits.hpp"
@@ -47,6 +48,10 @@ namespace nda::lapack {
    * - \f$ \mathbf{A}^H \mathbf{X} = \mathbf{B} \f$
    *
    * with a general n-by-n matrix \f$ \mathbf{A} \f$ using the LU factorization computed by `getrf`.
+   *
+   * @note If the matrix \f$ \mathbf{B} \f$ is in C-layout, it will create a temporary copy of it with Fortran layout
+   * before calling the LAPACK routine. After the call, the result will be copied back to the original array. This might
+   * be inefficient for large matrices and it is recommended to use Fortran layout for input matrices.
    *
    * @tparam A nda::MemoryMatrix type.
    * @tparam B nda::MemoryMatrix type.
@@ -77,13 +82,23 @@ namespace nda::lapack {
     // perform actual library call
     int info = 0;
     if constexpr (mem::have_device_compatible_addr_space<A, B, IPIV>) {
+      // only allow Fortran layout to avoid additional copies on the device
+      static_assert(has_F_layout<B>, "Error in nda::lapack::getrs: B must have Fortran layout when used on the device");
 #if defined(NDA_HAVE_DEVICE)
       device::getrs(op_a, get_ncols(a), get_ncols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
 #else
       compile_error_no_gpu();
 #endif
     } else {
-      f77::getrs(op_a, get_ncols(a), get_ncols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
+      if constexpr (has_F_layout<B>) {
+        // B is a matrix with Fortran layout
+        f77::getrs(op_a, get_ncols(a), get_ncols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
+      } else {
+        // B is a matrix with C layout
+        matrix<get_value_t<B>, F_layout> b_f{b};
+        f77::getrs(op_a, get_ncols(a), get_ncols(b_f), a.data(), get_ld(a), ipiv.data(), b_f.data(), get_ld(b_f), info);
+        b = b_f;
+      }
     }
     return info;
   }
