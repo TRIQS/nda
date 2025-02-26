@@ -23,6 +23,7 @@
 
 #include "./interface/cxx_interface.hpp"
 #include "../concepts.hpp"
+#include "../declarations.hpp"
 #include "../macros.hpp"
 #include "../mem/address_space.hpp"
 #include "../traits.hpp"
@@ -41,6 +42,10 @@ namespace nda::lapack {
    *
    * Note that the equation \f$ \mathbf{A}^T \mathbf{X} = \mathbf{B} \f$ may be solved by interchanging the order of the
    * arguments containing the subdiagonal elements.
+   *
+   * @note If the array \f$ \mathbf{B} \f$ is a matrix in C-layout, it will create a temporary copy of it with Fortran
+   * layout before calling the LAPACK routine. After the call, the result will be copied back to the original array.
+   * This might be inefficient for large arrays and it is recommended to use Fortran layout for input arrays.
    *
    * @tparam DL nda::MemoryVector type.
    * @tparam D nda::MemoryVector type.
@@ -62,16 +67,26 @@ namespace nda::lapack {
   int gtsv(DL &&dl, D &&d, DU &&du, B &&b) { // NOLINT (temporary views are allowed here)
     static_assert((get_rank<B> == 1 or get_rank<B> == 2), "Error in nda::lapack::gtsv: B must be an matrix/array/view of rank 1 or 2");
 
-    // get and check dimensions of input arrays
-    EXPECTS(dl.extent(0) == d.extent(0) - 1); // "gtsv : dimension mismatch between sub-diagonal and diagonal vectors "
-    EXPECTS(du.extent(0) == d.extent(0) - 1); // "gtsv : dimension mismatch between super-diagonal and diagonal vectors "
-    EXPECTS(b.extent(0) == d.extent(0));      // "gtsv : dimension mismatch between diagonal vector and RHS matrix, "
+    // check dimensions of input arrays
+    EXPECTS(dl.extent(0) == d.extent(0) - 1);
+    EXPECTS(du.extent(0) == d.extent(0) - 1);
+    EXPECTS(b.extent(0) == d.extent(0));
 
-    // perform actual library call
-    int N    = d.extent(0);
-    int NRHS = (get_rank<B> == 2 ? b.extent(1) : 1);
+    // perform actual library call depending on the array B
     int info = 0;
-    f77::gtsv(N, NRHS, dl.data(), d.data(), du.data(), b.data(), N, info);
+    if constexpr (get_rank<B> == 1) {
+      // B is a vector
+      f77::gtsv(d.extent(0), 1, dl.data(), d.data(), du.data(), b.data(), d.extent(0), info);
+    } else if constexpr (has_F_layout<B>) {
+      // B is a matrix with Fortran layout
+      f77::gtsv(d.extent(0), b.extent(1), dl.data(), d.data(), du.data(), b.data(), get_ld(b), info);
+    } else {
+      // B is a matrix with C layout
+      matrix<get_value_t<B>, F_layout> b_f{b};
+      f77::gtsv(d.extent(0), b.extent(1), dl.data(), d.data(), du.data(), b_f.data(), get_ld(b_f), info);
+      b = b_f;
+    }
+
     return info;
   }
 
