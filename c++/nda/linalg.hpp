@@ -30,3 +30,4 @@
 #include "./linalg/eigenelements.hpp"
 #include "./linalg/matmul.hpp"
 #include "./linalg/norm.hpp"
+#include "./linalg/solve.hpp"
