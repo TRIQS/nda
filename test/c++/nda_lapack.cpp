@@ -207,12 +207,12 @@ void test_getrs_getrf_getri() {
   auto A = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
   auto B = matrix_t{{1, 5}, {4, 5}, {3, 6}};
 
-  // solve A * x = B using the exact matrix inverse
+  // solve A * X = B using the exact matrix inverse
   auto Ainv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
-  auto X1   = matrix_t{Ainv * B};
-  EXPECT_ARRAY_NEAR(matrix_t{A * X1}, B);
+  auto X    = matrix_t{Ainv * B};
+  EXPECT_ARRAY_NEAR(matrix_t{A * X}, B);
 
-  // solve A * x = B using getrf and getrs
+  // solve A * X = B using getrf and getrs
   auto Acopy = matrix_t{A};
   auto Bcopy = matrix_t{B};
   array<int, 1> ipiv(3);
@@ -220,7 +220,15 @@ void test_getrs_getrf_getri() {
   lapack::getrs(Acopy, Bcopy, ipiv);
   auto X2 = matrix_t{Bcopy};
   EXPECT_ARRAY_NEAR(matrix_t{A * X2}, B);
-  EXPECT_ARRAY_NEAR(X1, X2);
+  EXPECT_ARRAY_NEAR(X, X2);
+
+  // solve A * x = b using getrf and getrs
+  Acopy = A;
+  auto b = vector<value_t>{B(range::all, 0)};
+  lapack::getrf(Acopy, ipiv);
+  lapack::getrs(Acopy, b, ipiv);
+  EXPECT_ARRAY_NEAR(A * b, B(range::all, 0));
+  EXPECT_ARRAY_NEAR(X(range::all, 0), b);
 
   // compute the inverse of A using getrf and getri
   auto Ainv2 = Acopy;

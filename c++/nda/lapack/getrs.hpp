@@ -49,12 +49,12 @@ namespace nda::lapack {
    *
    * with a general n-by-n matrix \f$ \mathbf{A} \f$ using the LU factorization computed by `getrf`.
    *
-   * @note If the matrix \f$ \mathbf{B} \f$ is in C-layout, it will create a temporary copy of it with Fortran layout
-   * before calling the LAPACK routine. After the call, the result will be copied back to the original array. This might
-   * be inefficient for large matrices and it is recommended to use Fortran layout for input matrices.
+   * @note If the right hand side is a C-layout matrix \f$ \mathbf{B} \f$, it will create a temporary copy with Fortran
+   * layout before the LAPACK call, which is then copied back into the original matrix. This might be inefficient for
+   * large matrices and it is recommended to use Fortran layout.
    *
    * @tparam A nda::MemoryMatrix type.
-   * @tparam B nda::MemoryMatrix type.
+   * @tparam B nda::MemoryArray type.
    * @tparam IPIV nda::MemoryVector type.
    * @param a Input matrix. The factors \f$ \mathbf{L} \f$ and \f$ \mathbf{U} \f$ from the factorization \f$ \mathbf{A}
    * = \mathbf{P L U} \f$ as computed by `getrf`.
@@ -64,10 +64,13 @@ namespace nda::lapack {
    * interchanged with row `ipiv(i)`.
    * @return Integer return code from the LAPACK call.
    */
-  template <MemoryMatrix A, MemoryMatrix B, MemoryVector IPIV>
+  template <MemoryMatrix A, MemoryArray B, MemoryVector IPIV>
     requires(have_same_value_type_v<A, B> and mem::have_compatible_addr_space<A, B, IPIV> and is_blas_lapack_v<get_value_t<A>>)
   int getrs(A const &a, B &&b, IPIV const &ipiv) { // NOLINT (temporary views are allowed here)
     static_assert(std::is_same_v<get_value_t<IPIV>, int>, "Error in nda::lapack::getrs: Pivoting array must have elements of type int");
+    static_assert(get_rank<B> == 1 || get_rank<B> == 2, "Error in nda::lapack::getrs: Right hand side must have rank 1 or 2");
+    static_assert(not mem::have_device_compatible_addr_space<B> or blas::has_F_layout<B> or get_rank<B> == 1,
+                  "Error in nda::lapack::getrs: B must have Fortran layout when used on the device");
     EXPECTS(ipiv.size() >= std::min(a.extent(0), a.extent(1)));
 
     // must be lapack compatible
@@ -82,15 +85,13 @@ namespace nda::lapack {
     // perform actual library call
     int info = 0;
     if constexpr (mem::have_device_compatible_addr_space<A, B, IPIV>) {
-      // only allow Fortran layout to avoid additional copies on the device
-      static_assert(has_F_layout<B>, "Error in nda::lapack::getrs: B must have Fortran layout when used on the device");
 #if defined(NDA_HAVE_DEVICE)
       device::getrs(op_a, get_ncols(a), get_ncols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
 #else
       compile_error_no_gpu();
 #endif
     } else {
-      if constexpr (has_F_layout<B>) {
+      if constexpr (has_F_layout<B> or get_rank<B> == 1) {
         // B is a matrix with Fortran layout
         f77::getrs(op_a, get_ncols(a), get_ncols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
       } else {
