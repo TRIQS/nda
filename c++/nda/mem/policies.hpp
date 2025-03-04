@@ -100,7 +100,7 @@ namespace nda {
      * @tparam T Value type of the data.
      */
     template <typename T>
-    using handle = mem::handle_borrowed<T, AdrSp>;
+    using handle = mem::handle_borrowed<T, nda::mem::mallocator<>, AdrSp>;
   };
 
   /** @} */

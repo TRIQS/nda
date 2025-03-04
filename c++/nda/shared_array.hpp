@@ -36,15 +36,23 @@ public:
 private:
   mpi::shared_communicator _c{mpi::communicator{}.split_shared()};
 public:
-  shared_array() : base_t() {};
+  shared_array() : base_t() {
+    nda::mem::mpi_shm_allocator::init(_c);
+  };
 
-  shared_array(mpi::shared_communicator c) : base_t(), _c(c) {};
+  shared_array(mpi::shared_communicator c) : base_t(), _c(c) {
+    nda::mem::mpi_shm_allocator::init(c);
+  };
 
   template <std::integral Int = long>
-  explicit shared_array(std::array<Int, Rank> const &shape) : base_t() {}
+  explicit shared_array(std::array<Int, Rank> const &shape) : base_t() {
+    nda::mem::mpi_shm_allocator::init(_c);
+  }
 
   template <std::integral Int = long>
-  explicit shared_array(std::array<Int, Rank> const &shape, mpi::shared_communicator c) : base_t(layout_t{shape}, storage_t{layout_t{shape}.size()}), _c(c) {}
+  explicit shared_array(std::array<Int, Rank> const &shape, mpi::shared_communicator c) : base_t(layout_t{shape}, storage_t{layout_t{shape}.size()}), _c(c) {
+    nda::mem::mpi_shm_allocator::init(c);
+  }
 
   explicit shared_array(const shared_array&) = default;
 
@@ -56,12 +64,12 @@ public:
 
   mpi::shared_communicator comm() const { return _c; }
 
-  // mpi::shared_window<char> &win() const { return *(this->storage().template userdata<mpi::shared_window<char>*>()); }
+  mpi::shared_window<char> &win() const { return *(this->storage().template userdata<mpi::shared_window<char> *>()); }
 };
 
 template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra>
 void fence(shared_array<ValueType, Rank, LayoutPolicy, Algebra> const &array) {
-  // array.win().fence();
+    array.win().fence();
 }
 
 template <typename Functor, typename ValueType, int Rank, typename LayoutPolicy, char Algebra>

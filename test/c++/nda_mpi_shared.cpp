@@ -25,7 +25,12 @@
 
 // ==============================================================
 
+
 TEST(SHM, Allocator) { //NOLINT
+  mpi::communicator world;
+  mpi::shared_communicator shm = world.split_shared();
+  nda::mem::mpi_shm_allocator::init(shm);
+
   nda::basic_array<long, 2, nda::C_layout, 'A', nda::heap_basic<nda::mem::mpi_shm_allocator>> A(3, 3);
   EXPECT_EQ(A.shape(), (shape_t<2>{3, 3}));
 
@@ -42,15 +47,18 @@ TEST(SHM, Allocator) { //NOLINT
   }
 }
 
+
 TEST(SHM, Constructor) { //NOLINT
   mpi::communicator world;
   mpi::shared_communicator shm = world.split_shared();
+  nda::mem::mpi_shm_allocator::init(shm);
   nda::shared_array<long, 2> A(shm);
 }
 
 TEST(SHM, AccessElement) {
   mpi::communicator world;
   mpi::shared_communicator shm = world.split_shared();
+  nda::mem::mpi_shm_allocator::init(shm);
   nda::shared_array<int, 2> A(shm);
   A.resize({3,3});
 
@@ -61,6 +69,7 @@ TEST(SHM, AccessElement) {
 TEST(SHM, MoveSemantic) {
   mpi::communicator world;
   mpi::shared_communicator shm = world.split_shared();
+  nda::mem::mpi_shm_allocator::init(shm);
   nda::shared_array<double, 2> A(shm);
 
   A.resize({4, 4});
@@ -75,6 +84,7 @@ TEST(SHM, MoveSemantic) {
 TEST(SHM, SubArray) {
   mpi::communicator world;
   mpi::shared_communicator shm = world.split_shared();
+  nda::mem::mpi_shm_allocator::init(shm);
   nda::shared_array<double, 2> A(shm);
 
   A.resize({4, 4});
@@ -94,6 +104,7 @@ TEST(SHM, SubArray) {
 TEST(SHM, SyncAcrossRanks) {
   mpi::communicator world;
   mpi::shared_communicator shm = world.split_shared();
+  nda::mem::mpi_shm_allocator::init(shm);
   nda::shared_array<int, 2> A(shm);
 
   A.resize({2, 2});
@@ -112,6 +123,7 @@ TEST(SHM, SyncAcrossRanks) {
 TEST(SHM, ConstructWithShape) {
   mpi::communicator world;
   mpi::shared_communicator shm = world.split_shared();
+  nda::mem::mpi_shm_allocator::init(shm);
 
   shape_t<2> shape = {3, 3};
 
@@ -150,6 +162,7 @@ TEST(SHM, ConstructWithShape) {
 TEST(SHM, ForEachChunked) {
   mpi::communicator world;
   mpi::shared_communicator shm = world.split_shared();
+  nda::mem::mpi_shm_allocator::init(shm);
 
   shape_t<2> shape = {3, 3};
 
@@ -169,6 +182,7 @@ TEST(SHM, ForEachChunked) {
 TEST(SHM, DistributedShared) {
   mpi::communicator world;
   mpi::shared_communicator shm = world.split_shared();
+  nda::mem::mpi_shm_allocator::init(shm);
 
   shape_t<2> global_shape = {3, 3};
   nda::distributed_shared_array<int, 2> D(global_shape, world);
@@ -190,6 +204,7 @@ TEST(SHM, DistributedShared) {
 TEST(SHM, DistributedSum) {
   mpi::communicator world;
   mpi::shared_communicator shm = world.split_shared();
+  nda::mem::mpi_shm_allocator::init(shm);
 
   constexpr int total_rows = 4;
   constexpr int ncols      = 4;

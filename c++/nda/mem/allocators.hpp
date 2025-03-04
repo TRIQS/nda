@@ -705,6 +705,12 @@ namespace nda::mem {
     /// Default communicator for MPI shared memory allocations.
     static mpi::shared_communicator shm;
 
+    static void init(mpi::shared_communicator comm) {
+
+        shm = comm;
+
+    }
+
     /// Type of allocated block.
     using blk_t = blk_fat_t;
 
