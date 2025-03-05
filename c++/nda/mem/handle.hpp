@@ -836,40 +836,40 @@ namespace nda::mem {
     [[nodiscard]] long size() const noexcept { return _size; }
   };
 
-  /*
-  *
-  *
-  *
-  */
-
-  /*
-  template <typename H, typename = void>
-  struct has_allocator : std::false_type {};
-
-  template <typename H>
-  struct has_allocator<H, std::void_t<typename H::allocator_type>> : std::true_type {};
-  */
-
-  template <typename T, Allocator A, AddressSpace AdrSp>
+  /**
+   * @brief Base Template
+   *
+   * @tparam T Value type of the data.
+   * @tparam A Allocator type. How the memory was allocated
+   * @tparam AdrSp nda::mem::AddressSpace in which the memory is allocated.
+   */
+  template <typename T, Allocator A, AddressSpace AdrSp = A::address_space>
   struct handle_borrowed_x {
     using T0 = std::remove_const_t<T>;
     T* _data = nullptr;
 
-    //generic case -> no tracking
-    const void * _parent = nullptr;
+    const handle_heap<T0, A> * _parent = nullptr;
 
     handle_borrowed_x() = default;
 
     explicit handle_borrowed_x(T* data) noexcept : _data(data) {}
 
     template<Handle H>
-    handle_borrowed_x(H const &h, long offset = 0) noexcept : _data(h.data() + offset) {}
+      requires std::is_convertible_v<H const*, handle_heap<T0, A> const*>
+    handle_borrowed_x(H const &h, long offset = 0) noexcept :
+    _data(h.data() + offset), _parent(static_cast<const handle_heap<T0, A>*>(&h)) {}
 
     T* data() const noexcept { return _data; }
     const void* parent() const noexcept { return _parent; }
 
   };
 
+  /**
+   * @brief Partial Specialization default Allocator type
+   *
+   * @tparam T Value type of the data.
+   * @tparam AdrSp nda::mem::AddressSpace
+   */
   template <typename T, AddressSpace AdrSp>
   struct handle_borrowed_x<T, mallocator<>, AdrSp> {
     using T0 = std::remove_const_t<T>;
@@ -892,11 +892,6 @@ namespace nda::mem {
     T* data() const noexcept { return _data; }
     const handle_heap<T0, mallocator<>>* parent() const noexcept { return _parent; }
   };
-  /*
-  *
-  *
-  *
-  */
 
 
   /**
