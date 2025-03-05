@@ -27,53 +27,18 @@
 
 namespace nda {
 
-template <typename ValueType, int Rank, typename LayoutPolicy = C_layout, char Algebra = 'A'>
-class shared_array : public basic_array<ValueType, Rank, LayoutPolicy, Algebra, nda::heap_basic<nda::mem::mpi_shm_allocator>> {
-public:
-  using base_t = basic_array<ValueType, Rank, LayoutPolicy, Algebra, nda::heap_basic<nda::mem::mpi_shm_allocator>>;
-  using layout_t = base_t::layout_t;
-  using storage_t = base_t::storage_t;
-private:
-  mpi::shared_communicator _c{mpi::communicator{}.split_shared()};
-public:
-  shared_array() : base_t() {
-    nda::mem::mpi_shm_allocator::init(_c);
-  };
+  template <typename ValueType, int Rank, typename Layout = C_layout, typename ContainerPolicy = heap_basic<mem::mpi_shm_allocator>>
+  using shared_array = basic_array<ValueType, Rank, Layout, 'A', ContainerPolicy>;
 
-  shared_array(mpi::shared_communicator c) : base_t(), _c(c) {
-    nda::mem::mpi_shm_allocator::init(c);
-  };
-
-  template <std::integral Int = long>
-  explicit shared_array(std::array<Int, Rank> const &shape) : base_t() {
-    nda::mem::mpi_shm_allocator::init(_c);
-  }
-
-  template <std::integral Int = long>
-  explicit shared_array(std::array<Int, Rank> const &shape, mpi::shared_communicator c) : base_t(layout_t{shape}, storage_t{layout_t{shape}.size()}), _c(c) {
-    nda::mem::mpi_shm_allocator::init(c);
-  }
-
-  explicit shared_array(const shared_array&) = default;
-
-  shared_array& operator=(const shared_array&) = default;
-
-  shared_array(shared_array&& other) = default;
-
-  shared_array& operator=(shared_array&& other) = default;
-
-  mpi::shared_communicator comm() const { return _c; }
-
-  mpi::shared_window<char> &win() const { return *(this->storage().template userdata<mpi::shared_window<char> *>()); }
-};
-
-template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra>
-void fence(shared_array<ValueType, Rank, LayoutPolicy, Algebra> const &array) {
-    array.win().fence();
+template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename ContainerPolicy>
+void fence(basic_array<ValueType, Rank, LayoutPolicy, Algebra, ContainerPolicy> const &array) {
+  auto sto = array.storage();
+  mpi::shared_window<char> *win = sto.template userdata<mpi::shared_window<char> *>();
+  win->fence();
 }
 
-template <typename Functor, typename ValueType, int Rank, typename LayoutPolicy, char Algebra>
-void for_each_chunked(Functor &&f, shared_array<ValueType, Rank, LayoutPolicy, Algebra> &array, long n_chunks, long rank) {
+template <typename Functor, typename ValueType, int Rank, typename LayoutPolicy>
+void for_each_chunked(Functor &&f, shared_array<ValueType, Rank, LayoutPolicy> &array, long n_chunks, long rank) {
   auto &lay = array.indexmap();
   auto slice = itertools::chunk_range(0, lay.size(), n_chunks, rank);
   for (int i = slice.first; i < slice.second; ++i) {

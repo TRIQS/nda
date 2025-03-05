@@ -91,7 +91,7 @@ TEST(NDA, CustomAllocator) {
   nda::mem::mpi_shm_allocator::init(shm);
   nda::mem::handle_heap<int, nda::mem::mpi_shm_allocator> h(10);
 
-  nda::mem::handle_borrowed<int, nda::mem::mallocator<>, nda::mem::AddressSpace::MPISharedMemory> hb(h);
+  nda::mem::handle_borrowed<int, nda::mem::AddressSpace::MPISharedMemory, nda::mem::mallocator<>> hb(h);
 
   EXPECT_EQ(hb.parent(), nullptr);
 }
@@ -120,7 +120,7 @@ TEST(NDA, CustomAllocatorMatching) {
   nda::mem::mpi_shm_allocator::init(shm);
   nda::mem::handle_heap<int, nda::mem::mpi_shm_allocator> h(10);
 
-  nda::mem::handle_borrowed<int, nda::mem::mpi_shm_allocator, nda::mem::AddressSpace::MPISharedMemory> hb(h);
+  nda::mem::handle_borrowed<int, nda::mem::AddressSpace::MPISharedMemory, nda::mem::mpi_shm_allocator> hb(h);
 
   EXPECT_NE(hb.parent(), nullptr);
   EXPECT_EQ(h.data(), hb.data());

@@ -345,9 +345,12 @@ namespace nda::mem {
     static_assert(std::is_copy_constructible_v<T>, "nda::mem::handle_stack requires the value_type to be copy constructible");
     static_assert(std::is_nothrow_destructible_v<T>, "nda::mem::handle_stack requires the value_type to have a non-throwing destructor");
 
+    /// Type of the allocated block.
+    using blk_t = std::array<char, sizeof(T) * Size>;
+
     private:
     // Memory buffer on the stack to store the data.
-    std::array<char, sizeof(T) * Size> buffer;
+    blk_t buffer;
 
     public:
     /// Value type of the data.
@@ -742,15 +745,12 @@ namespace nda::mem {
   struct handle_shared {
     static_assert(std::is_nothrow_destructible_v<T>, "nda::mem::handle_shared requires the value_type to have a non-throwing destructor");
 
+    // Type of allocated block.
+    using blk_t = blk_slim_t;
+
     private:
-    // Pointer to the start of the actual data.
-    T *_data = nullptr;
-
-    // Size of the data (number of T elements). Invariant: size > 0 iif data != 0.
-    size_t _size = 0;
-
-    // Type of the memory block, i.e. a pointer to the data and its size.
-    using blk_t = std::pair<T *, size_t>;
+    // Block of the actual data.
+    blk_t _blk{};
 
     // For shared ownership (points to a blk_T_t).
     std::shared_ptr<void> sptr;
@@ -774,7 +774,7 @@ namespace nda::mem {
      * @param foreign_decref Function to decrease the reference count of the shared object.
      */
     handle_shared(T *data, size_t size, void *foreign_handle, void (*foreign_decref)(void *)) noexcept
-       : _data(data), _size(size), sptr{foreign_handle, foreign_decref} {}
+      : _blk{(char *)data, size}, sptr{foreign_handle, foreign_decref} {}
 
     /**
      * @brief Construct a shared handle from an nda::mem::handle_heap.
@@ -785,8 +785,118 @@ namespace nda::mem {
     template <Allocator A>
     handle_shared(handle_heap<T, A> const &h) noexcept
       requires(A::address_space == address_space)
-       : _data(h.data()), _size(h.size()) {
+        : _blk{(char *)h.data(), (size_t)h.size()} {
       if (not h.is_null()) sptr = h.get_sptr();
+    }
+
+    /**
+     * @brief Subscript operator to access the data.
+     *
+     * @param i Index of the element to access.
+     * @return Reference to the element at the given index.
+     */
+    [[nodiscard]] T &operator[](long i) noexcept { return ((T *)_blk.ptr)[i]; }
+
+    /**
+     * @brief Subscript operator to access the data.
+     *
+     * @param i Index of the element to access.
+     * @return Const reference to the element at the given index.
+     */
+    [[nodiscard]] T const &operator[](long i) const noexcept { return ((T *)_blk.ptr)[i]; }
+
+    /**
+     * @brief Check if the handle is in a null state.
+     * @return True if the data is a `nullptr` (and the size is 0).
+     */
+    [[nodiscard]] bool is_null() const noexcept {
+#ifdef NDA_DEBUG
+      // Check the Invariants in Debug Mode
+      EXPECTS((_blk.ptr == nullptr) == (_blk.s == 0));
+#endif
+      return _blk.ptr == nullptr;
+    }
+
+    /**
+     * @brief Get the reference count of the shared object.
+     * @return Reference count of the shared pointer.
+     */
+    [[nodiscard]] long refcount() const noexcept { return sptr.use_count(); }
+
+    /**
+     * @brief Get a pointer to the stored data.
+     * @return Pointer to the start of the handled memory.
+     */
+    [[nodiscard]] T *data() const noexcept { return (T *)_blk.ptr; }
+
+    /**
+     * @brief Get the size of the handle.
+     * @return Number of elements of type `T` in the handled memory.
+     */
+    [[nodiscard]] long size() const noexcept { return _blk.s; }
+  };
+
+
+  /**
+   * @brief A non-owning handle for a memory block on the heap.
+   *
+   * @tparam T Value type of the data.
+   * @tparam AdrSp nda::mem::AddressSpace in which the memory is allocated.
+   */
+  template <typename T, AddressSpace AdrSp = Host, mem::Allocator A = mem::mallocator<AdrSp>>
+  struct handle_borrowed {
+    private:
+    // Value type of the data with const removed.
+    using T0 = std::remove_const_t<T>;
+
+    using handle_t = handle_heap<T0, A>;
+
+    // Parent handle (required for regular -> shared promotion in Python Converter).
+    handle_t const *_parent = nullptr;
+
+    // Pointer to the start of the actual data.
+    T *_data = nullptr;
+
+    public:
+    /// Value type of the data.
+    using value_type = T;
+
+    /// Type of the borrowed block.
+    using blk_t = typename handle_heap<T0, A>::blk_t;
+
+    /// nda::mem::AddressSpace in which the memory is allocated.
+    static constexpr auto address_space = AdrSp;
+
+    /// Default constructor leaves the handle in a null state (nullptr).
+    handle_borrowed() = default;
+
+    /// Default move assignment operator.
+    handle_borrowed &operator=(handle_borrowed &&) = default;
+
+    /// Default copy constructor.
+    handle_borrowed(handle_borrowed const &) = default;
+
+    /// Default copy assignment operator.
+    handle_borrowed &operator=(handle_borrowed const &) = default;
+
+    /**
+     * @brief Construct a borrowed handle from a pointer to the data.
+     * @param ptr Pointer to the start of the data.
+     */
+    handle_borrowed(T *ptr) noexcept : _data(ptr) {}
+
+    /**
+     * @brief Construct a borrowed handle from a another handle.
+     *
+     * @tparam H nda::mem::Handle type.
+     * @param h Other handle.
+     * @param offset Pointer offset from the start of the data (in number of elements).
+     */
+    template <Handle H>
+      requires(address_space == H::address_space and (std::is_const_v<value_type> or !std::is_const_v<typename H::value_type>)
+               and std::is_same_v<const value_type, const typename H::value_type>)
+    handle_borrowed(H const &h, long offset = 0) noexcept : _data(h.data() + offset) {
+      if constexpr (std::is_same_v<H, handle_t>) _parent = &h;
     }
 
     /**
@@ -807,175 +917,22 @@ namespace nda::mem {
 
     /**
      * @brief Check if the handle is in a null state.
-     * @return True if the data is a `nullptr` (and the size is 0).
+     * @return True if the data is a `nullptr`.
      */
-    [[nodiscard]] bool is_null() const noexcept {
-#ifdef NDA_DEBUG
-      // Check the Invariants in Debug Mode
-      EXPECTS((_data == nullptr) == (_size == 0));
-#endif
-      return _data == nullptr;
-    }
+    [[nodiscard]] bool is_null() const noexcept { return _data == nullptr; }
 
     /**
-     * @brief Get the reference count of the shared object.
-     * @return Reference count of the shared pointer.
+     * @brief Get a pointer to the parent handle.
+     * @return Pointer to the parent handle.
      */
-    [[nodiscard]] long refcount() const noexcept { return sptr.use_count(); }
+    [[nodiscard]] handle_t const *parent() const { return _parent; }
 
     /**
      * @brief Get a pointer to the stored data.
      * @return Pointer to the start of the handled memory.
      */
     [[nodiscard]] T *data() const noexcept { return _data; }
-
-    /**
-     * @brief Get the size of the handle.
-     * @return Number of elements of type `T` in the handled memory.
-     */
-    [[nodiscard]] long size() const noexcept { return _size; }
   };
-
-  /**
-   * @brief Base Template
-   *
-   * @tparam T Value type of the data.
-   * @tparam A Allocator type. How the memory was allocated
-   * @tparam AdrSp nda::mem::AddressSpace in which the memory is allocated.
-   */
-  template <typename T, Allocator A, AddressSpace AdrSp = A::address_space>
-  struct handle_borrowed_x {
-    using T0 = std::remove_const_t<T>;
-    T* _data = nullptr;
-
-    const handle_heap<T0, A> * _parent = nullptr;
-
-    handle_borrowed_x() = default;
-
-    explicit handle_borrowed_x(T* data) noexcept : _data(data) {}
-
-    template<Handle H>
-      requires std::is_convertible_v<H const*, handle_heap<T0, A> const*>
-    handle_borrowed_x(H const &h, long offset = 0) noexcept :
-    _data(h.data() + offset), _parent(static_cast<const handle_heap<T0, A>*>(&h)) {}
-
-    T* data() const noexcept { return _data; }
-    const void* parent() const noexcept { return _parent; }
-
-  };
-
-  /**
-   * @brief Partial Specialization default Allocator type
-   *
-   * @tparam T Value type of the data.
-   * @tparam AdrSp nda::mem::AddressSpace
-   */
-  template <typename T, AddressSpace AdrSp>
-  struct handle_borrowed_x<T, mallocator<>, AdrSp> {
-    using T0 = std::remove_const_t<T>;
-    T* _data = nullptr;
-    const handle_heap<T0, mallocator<>>* _parent = nullptr;
-
-    handle_borrowed_x() = default;
-
-    explicit handle_borrowed_x(T* data) noexcept : _data(data) {}
-
-    template <Handle H>
-    handle_borrowed_x(H const &h, long offset = 0) noexcept
-    : _data(h.data() + offset)
-    {
-    // Track the parent only if H is exactly handle_heap<T0, mallocator<>>
-      if constexpr (std::is_same_v<H, handle_heap<T0, mallocator<>>>)
-        _parent = &h;
-    }
-
-    T* data() const noexcept { return _data; }
-    const handle_heap<T0, mallocator<>>* parent() const noexcept { return _parent; }
-  };
-
-
-  /**
-   * @brief A non-owning handle for a memory block on the heap.
-   *
-   * @tparam T Value type of the data.
-   * @tparam AdrSp nda::mem::AddressSpace in which the memory is allocated.
-   */
-   template <typename T, Allocator A = mallocator<>, AddressSpace AdrSp = Host>
-   struct handle_borrowed : public handle_borrowed_x<T, A, AdrSp> {
-     private:
-
-     public:
-     using base = handle_borrowed_x<T, A, AdrSp>;
-     /// Value type of the data.
-     using value_type = T;
-
-     /// nda::mem::AddressSpace in which the memory is allocated.
-     static constexpr auto address_space = AdrSp;
-
-     /// Default constructor leaves the handle in a null state (nullptr).
-     handle_borrowed() = default;
-
-     /// Default move assignment operator.
-     handle_borrowed &operator=(handle_borrowed &&) = default;
-
-     /// Default copy constructor.
-     handle_borrowed(handle_borrowed const &) = default;
-
-     /// Default copy assignment operator.
-     handle_borrowed &operator=(handle_borrowed const &) = default;
-
-     /**
-      * @brief Construct a borrowed handle from a pointer to the data.
-      * @param ptr Pointer to the start of the data.
-      */
-     explicit handle_borrowed(T *ptr) noexcept : base(ptr) {}
-
-     /**
-      * @brief Construct a borrowed handle from a another handle.
-      *
-      * @tparam H nda::mem::Handle type.
-      * @param h Other handle.
-      * @param offset Pointer offset from the start of the data (in number of elements).
-      */
-     template <Handle H>
-       requires(address_space == H::address_space and (std::is_const_v<value_type> or !std::is_const_v<typename H::value_type>)
-                and std::is_same_v<const value_type, const typename H::value_type>)
-     handle_borrowed(H const &h, long offset = 0) noexcept : base(h ,offset) {}
-
-     /**
-      * @brief Subscript operator to access the data.
-      *
-      * @param i Index of the element to access.
-      * @return Reference to the element at the given index.
-      */
-     [[nodiscard]] T &operator[](long i) noexcept { return this->data()[i]; }
-
-     /**
-      * @brief Subscript operator to access the data.
-      *
-      * @param i Index of the element to access.
-      * @return Const reference to the element at the given index.
-      */
-     [[nodiscard]] T const &operator[](long i) const noexcept { return this->data()[i]; }
-
-     /**
-      * @brief Check if the handle is in a null state.
-      * @return True if the data is a `nullptr`.
-      */
-     [[nodiscard]] bool is_null() const noexcept { return this->data() == nullptr; }
-
-     /**
-      * @brief Get a pointer to the parent handle.
-      * @return Pointer to the parent handle.
-      */
-     [[nodiscard]] const void* parent() const { return base::parent(); }
-
-     /**
-      * @brief Get a pointer to the stored data.
-      * @return Pointer to the start of the handled memory.
-      */
-     [[nodiscard]] T *data() const noexcept { return base::data(); }
-   };
 
   /** @} */
 

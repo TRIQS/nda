@@ -160,6 +160,7 @@ namespace nda {
     template <typename H, typename T = typename std::remove_cvref_t<H>::value_type>
     concept Handle = requires(H const &h) {
       requires std::is_same_v<typename std::remove_cvref_t<H>::value_type, T>;
+      typename H::blk_t;
       { h.is_null() } noexcept -> std::same_as<bool>;
       { h.data() } noexcept -> std::same_as<T *>;
       { H::address_space } -> std::same_as<AddressSpace const &>;

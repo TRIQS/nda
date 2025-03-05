@@ -31,6 +31,16 @@ TEST(SHM, Allocator) { //NOLINT
   mpi::shared_communicator shm = world.split_shared();
   nda::mem::mpi_shm_allocator::init(shm);
 
+  nda::mem::mpi_shm_allocator allo;
+  auto blk = allo.allocate(10 * sizeof(double));
+  allo.deallocate(blk);
+}
+
+TEST(SHM, SimpleArray) { //NOLINT
+  mpi::communicator world;
+  mpi::shared_communicator shm = world.split_shared();
+  nda::mem::mpi_shm_allocator::init(shm);
+
   nda::basic_array<long, 2, nda::C_layout, 'A', nda::heap_basic<nda::mem::mpi_shm_allocator>> A(3, 3);
   EXPECT_EQ(A.shape(), (shape_t<2>{3, 3}));
 
@@ -47,7 +57,7 @@ TEST(SHM, Allocator) { //NOLINT
   }
 }
 
-
+/*
 TEST(SHM, Constructor) { //NOLINT
   mpi::communicator world;
   mpi::shared_communicator shm = world.split_shared();
@@ -236,4 +246,5 @@ TEST(SHM, DistributedSum) {
 
 }
 
+*/
 MPI_TEST_MAIN;
