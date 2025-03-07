@@ -27,14 +27,44 @@
 
 namespace nda {
 
-  template <typename ValueType, int Rank, typename Layout = C_layout, typename ContainerPolicy = heap_basic<mem::mpi_shm_allocator>>
-  using shared_array = basic_array<ValueType, Rank, Layout, 'A', ContainerPolicy>;
+template <typename ValueType, int Rank, typename Layout = C_layout, typename ContainerPolicy = heap_basic<mem::mpi_shm_allocator>>
+using shared_array = basic_array<ValueType, Rank, Layout, 'A', ContainerPolicy>;
+
+/// Helper function at compile time: attempts to get MPI window (if it exists)
+template <typename H>
+concept HasUserdata = mem::Handle<H> && requires(H h) {
+  { h.template userdata<mpi::shared_window<char>*>() } -> std::convertible_to<mpi::shared_window<char>*>;
+};
+
+/// Helper function: Extracts the MPI shared window from a handle, if available.
+template <typename H>
+  requires mem::Handle<H>
+mpi::shared_window<char>* get_win(H const& h) {
+  if constexpr (HasUserdata<H>) {
+    if (auto win = h.template userdata<mpi::shared_window<char>*>(); win) {
+      return win;
+    }
+  }
+
+  if constexpr (requires { h.parent(); }) {
+    if (auto parent = h.parent(); parent) {
+      if constexpr (HasUserdata<decltype(*parent)>) {
+        return parent->template userdata<mpi::shared_window<char>*>();
+      }
+    }
+  }
+  return nullptr;
+}
 
 template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename ContainerPolicy>
 void fence(basic_array<ValueType, Rank, LayoutPolicy, Algebra, ContainerPolicy> const &array) {
   auto sto = array.storage();
-  mpi::shared_window<char> *win = sto.template userdata<mpi::shared_window<char> *>();
-  win->fence();
+  mpi::shared_window<char>* win = get_win(sto);
+  if (win) {
+    win->fence();
+  } else {
+    static_assert(HasUserdata<decltype(sto)>, "fence: storage type does not support MPI shared window");
+  }
 }
 
 template <typename Functor, typename ValueType, int Rank, typename LayoutPolicy>

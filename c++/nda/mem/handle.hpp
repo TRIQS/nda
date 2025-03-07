@@ -934,6 +934,51 @@ namespace nda::mem {
     [[nodiscard]] T *data() const noexcept { return _data; }
   };
 
+  template <typename T>
+  struct handle_borrowed<T, MPISharedMemory, mem::mpi_shm_allocator> {
+    private:
+
+    using T0 = std::remove_const_t<T>;
+    using handle_t = handle_heap<T0, mem::mpi_shm_allocator>;
+
+    handle_t const * _parent = nullptr;
+    T* _data = nullptr;
+
+    public:
+
+    using value_type = T;
+
+    handle_borrowed() = default;
+    handle_borrowed(handle_borrowed const&) = default;
+    handle_borrowed(handle_borrowed&&) = default;
+    handle_borrowed& operator=(handle_borrowed const&) = default;
+    handle_borrowed& operator=(handle_borrowed&&) = default;
+
+    template<Handle H>
+      requires (H::address_space == MPISharedMemory
+                and (std::is_const_v<value_type> or !std::is_const_v<typename H::value_type>)
+                and std::is_same_v<const value_type, const typename H::value_type>
+                and std::is_same_v<typename H::allocator_type, mem::mpi_shm_allocator>)
+    handle_borrowed(H const &h, long offset = 0) : _data(h.data() + offset) {
+      if constexpr (std::is_same_v<H, handle_t>)
+        _parent = &h;
+    }
+
+    [[nodiscard]] handle_t const *parent() const { return _parent; }
+
+    [[nodiscard]] T *data() const noexcept { return _data; }
+
+    template <typename U>
+    [[nodiscard]] U userdata() const noexcept {
+      if (_parent) {
+        return _parent->template userdata<U>();
+      }
+      // avoid warnings
+      return static_cast<U>(nullptr);
+    }
+
+  };
+
   /** @} */
 
 } // namespace nda::mem

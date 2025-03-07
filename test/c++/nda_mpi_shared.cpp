@@ -58,6 +58,38 @@ TEST(SHM, SimpleArray) { //NOLINT
 }
 
 /*
+TEST(SHM, FenceTest) {
+  mpi::communicator world;
+  mpi::shared_communicator shm = world.split_shared();
+  nda::mem::mpi_shm_allocator::init(shm);
+
+  nda::shared_array<int, 2> A;
+  A.resize({2, 2});
+
+  if (shm.rank() == 0) {
+    A(0, 0) = 10;
+    A(0, 1) = 20;
+    A(1, 0) = 30;
+    A(1, 1) = 40;
+  }
+
+  nda::fence(A);
+
+  EXPECT_EQ(A(0, 0), 10);
+  EXPECT_EQ(A(0, 1), 20);
+  EXPECT_EQ(A(1, 0), 30);
+  EXPECT_EQ(A(1, 1), 40);
+
+  for (int i = 0; i < 2; ++i) {
+    for (int j = 0; j < 2; ++j) {
+      std::cout << "[rank " << shm.rank() << "] A(" << i << ", " << j
+                << ") = " << A(i, j) << "\n";
+    }
+  }
+}
+  */
+
+/*
 TEST(SHM, Constructor) { //NOLINT
   mpi::communicator world;
   mpi::shared_communicator shm = world.split_shared();
