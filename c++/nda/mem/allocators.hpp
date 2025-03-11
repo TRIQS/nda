@@ -95,7 +95,7 @@ namespace nda::mem {
     /// Type of allocated block.
     using blk_t = blk_slim_t;
 
-   /**
+    /**
      * @brief Allocate memory using nda::mem::malloc.
      *
      * @param s Size in bytes of the memory to allocate.
@@ -685,19 +685,19 @@ namespace nda::mem {
   class mpi_shm_allocator {
     public:
     /// Default constructor.
-    mpi_shm_allocator()                                    = default;
+    mpi_shm_allocator() = default;
 
     /// Deleted copy constructor.
-    mpi_shm_allocator(mpi_shm_allocator const &)            = delete;
+    mpi_shm_allocator(mpi_shm_allocator const &) = delete;
 
     /// Default move constructor.
-    mpi_shm_allocator(mpi_shm_allocator &&)                 = default;
+    mpi_shm_allocator(mpi_shm_allocator &&) = default;
 
     /// Deleted copy assignment operator.
     mpi_shm_allocator &operator=(mpi_shm_allocator const &) = delete;
 
     /// Default move assignment operator.
-    mpi_shm_allocator &operator=(mpi_shm_allocator &&)      = default;
+    mpi_shm_allocator &operator=(mpi_shm_allocator &&) = default;
 
     /// MPI shared memory always lives in the Host address space.
     static constexpr auto address_space = MPISharedMemory;
@@ -705,16 +705,31 @@ namespace nda::mem {
     /// Default communicator for MPI shared memory allocations.
     static mpi::shared_communicator shm;
 
-    /// Initialize the shared communicator
-    static void init(mpi::shared_communicator comm) { shm = comm; }
-
-    /// Set the shared communicator to default if the user forgets to initialize it
-    static mpi::shared_communicator &get_shm() {
-      if (shm.get() == MPI_COMM_NULL) {
-        shm = mpi::communicator{}.split_shared();
-      }
+    private:
+    /**
+     * @brief Return reference to the singleton for the global MPI shared communicator instance of the MPI shared memory allocator.
+     *
+     * @warning This function is not thread-safe.
+     */
+    static mpi::shared_communicator &_impl_communicator() {
+      static mpi::shared_communicator shm = mpi::communicator{}.split_shared();
       return shm;
     }
+
+    public:
+    /**
+     * @brief Return the global MPI shared communicator instance of the MPI shared memory allocator.
+     *
+     * @warning This function is not thread-safe.
+     */
+    inline static mpi::shared_communicator get_communicator() { return _impl_communicator(); }
+
+    /**
+     * @brief Set the global MPI shared communicator instance of the MPI shared memory allocator.
+     *
+     * @warning This function is not thread-safe.
+     */
+    inline static void set_communicator(mpi::shared_communicator const &shm) { _impl_communicator() = shm; }
 
     /// Type of allocated block.
     using blk_t = blk_fat_t;
@@ -728,8 +743,8 @@ namespace nda::mem {
      */
     static blk_t allocate(size_t s) noexcept {
       ASSERT(s <= std::numeric_limits<MPI_Aint>::max());
-      shm = get_shm();
-      auto *win = new mpi::shared_window<char>{shm, shm.rank() == 0 ? (MPI_Aint)s : 0};
+      auto const &shm = _impl_communicator();
+      auto *win       = new mpi::shared_window<char>{shm, shm.rank() == 0 ? (MPI_Aint)s : 0};
       return {(char *)win->base(0), (std::size_t)s, (void *)win}; // NOLINT
     }
 
@@ -742,13 +757,11 @@ namespace nda::mem {
      */
     static blk_t allocate_zero(size_t s) noexcept {
       ASSERT(s <= std::numeric_limits<MPI_Aint>::max());
-      shm = get_shm();
-      auto *win = new mpi::shared_window<char>{shm, shm.rank() == 0 ? (MPI_Aint)s : 0};
-      char *baseptr = win->base(0);
+      auto const &shm = _impl_communicator();
+      auto *win       = new mpi::shared_window<char>{shm, shm.rank() == 0 ? (MPI_Aint)s : 0};
+      char *baseptr   = win->base(0);
       win->fence();
-      if (shm.rank() == 0) {
-          std::memset(baseptr, 0, s);
-      }
+      if (shm.rank() == 0) { std::memset(baseptr, 0, s); }
       win->fence();
       return {baseptr, (std::size_t)s, (void *)win}; // NOLINT
     }
@@ -757,12 +770,8 @@ namespace nda::mem {
      * @brief Deallocate memory using mpi::shared_window.
      * @param b nda::mem::blk_t memory block to deallocate.
      */
-    static void deallocate(blk_t b) noexcept {
-        delete static_cast<mpi::shared_window<char>*>(b.userdata);
-    }
+    static void deallocate(blk_t b) noexcept { delete static_cast<mpi::shared_window<char> *>(b.userdata); }
   };
-
-  inline mpi::shared_communicator mpi_shm_allocator::shm{MPI_COMM_NULL};
 
   /** @} */
 

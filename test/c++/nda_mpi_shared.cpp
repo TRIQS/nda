@@ -80,8 +80,7 @@ TEST(SHM, SubArray) {
 }
 
 TEST(SHM, SyncAcrossRanks) {
-  mpi::shared_communicator shm = mpi::communicator{}.split_shared();
-  nda::mem::mpi_shm_allocator::init(shm);
+  auto shm = nda::mem::mpi_shm_allocator::get_communicator();
   nda::shared_array<int, 2> A;
 
   A.resize({2, 2});
@@ -98,9 +97,7 @@ TEST(SHM, SyncAcrossRanks) {
 }
 
 TEST(SHM, ConstructWithShape) {
-  mpi::shared_communicator shm = mpi::communicator{}.split_shared();
-  nda::mem::mpi_shm_allocator::init(shm);
-
+  auto shm = nda::mem::mpi_shm_allocator::get_communicator();
   shape_t<2> shape = {3, 3};
   nda::shared_array<int, 2> A(shape);
 
