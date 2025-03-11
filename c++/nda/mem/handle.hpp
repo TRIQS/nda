@@ -106,7 +106,7 @@ namespace nda::mem {
     // Release the handled memory (data pointer and size are not set to null here).
     static void destruct(blk_t b) noexcept {
       T *data     = (T *)b.ptr;
-      size_t size = b.s;
+      size_t size = b.s / sizeof(T);
 
       // do nothing if the data is null
       if (data == nullptr) return;
@@ -188,7 +188,7 @@ namespace nda::mem {
       if constexpr (std::is_trivially_copyable_v<T>) {
         memcpy<address_space, address_space>(_blk.ptr, h.data(), h.size() * sizeof(T));
       } else {
-        for (size_t i = 0; i < _blk.s; ++i) new (_blk.ptr + i) T(h[i]);
+        for (size_t i = 0; i < size(); ++i) new (data() + i) T(h[i]);
       }
     }
 
@@ -213,11 +213,11 @@ namespace nda::mem {
     explicit handle_heap(H const &h) : handle_heap(h.size(), do_not_initialize) {
       if (is_null()) return;
       if constexpr (std::is_trivially_copyable_v<T>) {
-        memcpy<address_space, H::address_space>((void *)_blk.ptr, (void *)h.data(), _blk.s * sizeof(T));
+        memcpy<address_space, H::address_space>(_blk.ptr, h.data(), h.size() * sizeof(T));
       } else {
         static_assert(address_space == H::address_space,
                       "Constructing an nda::mem::handle_heap from a handle of a different address space requires a trivially copyable value_type");
-        for (size_t i = 0; i < _blk.s; ++i) new (_blk.ptr + i) T(h[i]);
+        for (size_t i = 0; i < size(); ++i) new (data() + i) T(h[i]);
       }
     }
 
@@ -279,7 +279,7 @@ namespace nda::mem {
 
       // call placement new for non trivial and non complex types
       if constexpr (!std::is_trivial_v<T> and !is_complex_v<T>) {
-        for (size_t i = 0; i < size; ++i) new (_blk.ptr + i) T();
+        for (size_t i = 0; i < size; ++i) new (data() + i) T();
       }
     }
 
@@ -321,7 +321,7 @@ namespace nda::mem {
      * @brief Get the size of the handle.
      * @return Number of elements of type `T` in the handled memory.
      */
-    [[nodiscard]] long size() const noexcept { return _blk.s; }
+    [[nodiscard]] long size() const noexcept { return _blk.s / sizeof(T); }
 
     /**
      * @brief Get the pointer to the userdata.
@@ -835,7 +835,7 @@ namespace nda::mem {
      * @brief Get the size of the handle.
      * @return Number of elements of type `T` in the handled memory.
      */
-    [[nodiscard]] long size() const noexcept { return _blk.s; }
+    [[nodiscard]] long size() const noexcept { return _blk.s / sizeof(T); }
   };
 
   /**
