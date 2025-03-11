@@ -705,7 +705,16 @@ namespace nda::mem {
     /// Default communicator for MPI shared memory allocations.
     static mpi::shared_communicator shm;
 
+    /// Initialize the shared communicator
     static void init(mpi::shared_communicator comm) { shm = comm; }
+
+    /// Set the shared communicator to default if the user forgets to initialize it
+    static mpi::shared_communicator &get_shm() {
+      if (shm.get() == MPI_COMM_NULL) {
+        shm = mpi::communicator{}.split_shared();
+      }
+      return shm;
+    }
 
     /// Type of allocated block.
     using blk_t = blk_fat_t;
@@ -719,6 +728,7 @@ namespace nda::mem {
      */
     static blk_t allocate(size_t s) noexcept {
       ASSERT(s <= std::numeric_limits<MPI_Aint>::max());
+      shm = get_shm();
       auto *win = new mpi::shared_window<char>{shm, shm.rank() == 0 ? (MPI_Aint)s : 0};
       return {(char *)win->base(0), (std::size_t)s, (void *)win}; // NOLINT
     }
@@ -732,6 +742,7 @@ namespace nda::mem {
      */
     static blk_t allocate_zero(size_t s) noexcept {
       ASSERT(s <= std::numeric_limits<MPI_Aint>::max());
+      shm = get_shm();
       auto *win = new mpi::shared_window<char>{shm, shm.rank() == 0 ? (MPI_Aint)s : 0};
       char *baseptr = win->base(0);
       win->fence();
@@ -751,8 +762,8 @@ namespace nda::mem {
     }
   };
 
-  /** @} */
-
   inline mpi::shared_communicator mpi_shm_allocator::shm{MPI_COMM_NULL};
+
+  /** @} */
 
 } // namespace nda::mem

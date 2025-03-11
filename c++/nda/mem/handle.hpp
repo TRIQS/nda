@@ -105,7 +105,7 @@ namespace nda::mem {
 
     // Release the handled memory (data pointer and size are not set to null here).
     static void destruct(blk_t b) noexcept {
-      T *data = (T *)b.ptr;
+      T *data     = (T *)b.ptr;
       size_t size = b.s;
 
       // do nothing if the data is null
@@ -328,8 +328,10 @@ namespace nda::mem {
      * @return Pointer to the userdata.
      */
     template <typename U>
-    requires requires { _blk.userdata; }
-    [[nodiscard]] U userdata() const noexcept { return static_cast<U>(_blk.userdata); }
+      requires requires { _blk.userdata; }
+    [[nodiscard]] U userdata() const noexcept {
+      return static_cast<U>(_blk.userdata);
+    }
   };
 
   /**
@@ -774,7 +776,7 @@ namespace nda::mem {
      * @param foreign_decref Function to decrease the reference count of the shared object.
      */
     handle_shared(T *data, size_t size, void *foreign_handle, void (*foreign_decref)(void *)) noexcept
-      : _blk{(char *)data, size}, sptr{foreign_handle, foreign_decref} {}
+       : _blk{(char *)data, size}, sptr{foreign_handle, foreign_decref} {}
 
     /**
      * @brief Construct a shared handle from an nda::mem::handle_heap.
@@ -785,7 +787,7 @@ namespace nda::mem {
     template <Allocator A>
     handle_shared(handle_heap<T, A> const &h) noexcept
       requires(A::address_space == address_space)
-        : _blk{(char *)h.data(), (size_t)h.size()} {
+       : _blk{(char *)h.data(), (size_t)h.size()} {
       if (not h.is_null()) sptr = h.get_sptr();
     }
 
@@ -836,14 +838,14 @@ namespace nda::mem {
     [[nodiscard]] long size() const noexcept { return _blk.s; }
   };
 
-
   /**
    * @brief A non-owning handle for a memory block on the heap.
    *
    * @tparam T Value type of the data.
    * @tparam AdrSp nda::mem::AddressSpace in which the memory is allocated.
+   * @tparam Allocator nda::mem::allocator how the memory is allocated.
    */
-  template <typename T, AddressSpace AdrSp = Host, mem::Allocator A = mem::mallocator<AdrSp>>
+  template <typename T, AddressSpace AdrSp = Host, Allocator A = mallocator<AdrSp>>
   struct handle_borrowed {
     private:
     // Value type of the data with const removed.
@@ -932,52 +934,23 @@ namespace nda::mem {
      * @return Pointer to the start of the handled memory.
      */
     [[nodiscard]] T *data() const noexcept { return _data; }
-  };
 
-  template <typename T>
-  struct handle_borrowed<T, MPISharedMemory, mem::mpi_shm_allocator> {
-    private:
-
-    using T0 = std::remove_const_t<T>;
-    using handle_t = handle_heap<T0, mem::mpi_shm_allocator>;
-
-    handle_t const * _parent = nullptr;
-    T* _data = nullptr;
-
-    public:
-
-    using value_type = T;
-
-    handle_borrowed() = default;
-    handle_borrowed(handle_borrowed const&) = default;
-    handle_borrowed(handle_borrowed&&) = default;
-    handle_borrowed& operator=(handle_borrowed const&) = default;
-    handle_borrowed& operator=(handle_borrowed&&) = default;
-
-    template<Handle H>
-      requires (H::address_space == MPISharedMemory
-                and (std::is_const_v<value_type> or !std::is_const_v<typename H::value_type>)
-                and std::is_same_v<const value_type, const typename H::value_type>
-                and std::is_same_v<typename H::allocator_type, mem::mpi_shm_allocator>)
-    handle_borrowed(H const &h, long offset = 0) : _data(h.data() + offset) {
-      if constexpr (std::is_same_v<H, handle_t>)
-        _parent = &h;
-    }
-
-    [[nodiscard]] handle_t const *parent() const { return _parent; }
-
-    [[nodiscard]] T *data() const noexcept { return _data; }
-
+    /**
+     * @brief Get the pointer to the userdata from borrowed handle.
+     * @return Pointer to the userdata if the parent handle exists.
+     */
     template <typename U>
+      requires requires { _parent->template userdata<U>(); }
     [[nodiscard]] U userdata() const noexcept {
-      if (_parent) {
-        return _parent->template userdata<U>();
-      }
-      // avoid warnings
+      if (_parent) { return _parent->template userdata<U>(); }
       return static_cast<U>(nullptr);
     }
-
   };
+
+  /*
+  template <typename T>
+  struct handle_borrowed<T, MPISharedMemory, mpi_shm_allocator> {};
+  */
 
   /** @} */
 
