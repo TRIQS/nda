@@ -97,7 +97,7 @@ TEST(SHM, SyncAcrossRanks) {
 }
 
 TEST(SHM, ConstructWithShape) {
-  auto shm = nda::mem::mpi_shm_allocator::get_communicator();
+  auto shm         = nda::mem::mpi_shm_allocator::get_communicator();
   shape_t<2> shape = {3, 3};
   nda::shared_array<int, 2> A(shape);
 
@@ -118,8 +118,7 @@ TEST(SHM, ConstructWithShape) {
 /*
 TEST(SHM, Fences) {
   mpi::communicator world;
-  mpi::shared_communicator shm = mpi::communicator{}.split_shared();
-  nda::mem::mpi_shm_allocator::init(shm);
+  mpi::shared_communicator shm = world.split_shared();
 
   shape_t<2> shape = {3, 3};
 
@@ -128,29 +127,28 @@ TEST(SHM, Fences) {
   EXPECT_EQ(A.shape(), shape);
 
   fence(A);
+
   if (shm.rank() == 0) {
     for (int i = 0; i < 3; ++i) {
-      for (int j = 0; j < 3; ++j) {
-        A(i, j) = 0;
-      }
+      for (int j = 0; j < 3; ++j) { A(i, j) = 0; }
     }
   }
-  fence(A);
 
-  fence(A);
-  for (int i = 0; i < 3; ++i) {
-    for (int j = 0; j < 3; ++j) {
-      A(i, j) += shm.rank();
-    }
-  }
   fence(A);
 
   for (int i = 0; i < 3; ++i) {
-    for (int j = 0; j < 3; ++j) {
-      // EXPECT_EQ(A(i, j), i * 10 + j);
-      std::cout << "[rank " << world.rank() << "] " << A(i,j) << " ";
-    }
-    std::cout << "\n";
+    for (int j = 0; j < 3; ++j) { A(i, j) += shm.rank(); }
+  }
+
+  fence(A);
+
+  int sum = 0;
+  for (int r = 0; r < shm.size(); ++r) { sum += r; }
+
+  shm.barrier();
+
+  for (int i = 0; i < 3; ++i) {
+    for (int j = 0; j < 3; ++j) { EXPECT_EQ(A(i, j), sum); }
   }
 }
 */
@@ -159,13 +157,32 @@ TEST(SHM, Fences) {
 TEST(SHM, ForEachChunked) {
   mpi::communicator world;
   mpi::shared_communicator shm = world.split_shared();
-  nda::mem::mpi_shm_allocator::init(shm);
 
   shape_t<2> shape = {3, 3};
 
   nda::shared_array<int, 2> A(shape);
 
-  nda::for_each_chunked([&shm](int &i) { i = shm.rank(); }, A, shm.size(), shm.rank());
+  int n_chunks = shm.size();
+  int my_chunk = shm.rank();
+
+  nda::for_each_chunked([&shm](int &i) { i = shm.rank(); }, A, n_chunks, my_chunk);
+
+  int total_elements = shape[0] * shape[1];
+
+  int base_count = total_elements / n_chunks;
+  int remainder = total_elements % n_chunks;
+
+  auto expected_for_index = [=](int k) -> int {
+    int start = 0;
+    for (int i = 0; i < n_chunks; i++) {
+      int count = base_count + (i < remainder ? 1 : 0);
+      if (k < start + count) {
+        return i;
+      }
+      start += count;
+    }
+    return -1;
+  };
 
   for (int i = 0; i < 3; ++i) {
     std::cout << "[rank " << world.rank() << "] ";

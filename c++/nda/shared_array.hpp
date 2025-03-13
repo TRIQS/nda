@@ -52,6 +52,148 @@ namespace nda {
   using shared_array = basic_array<ValueType, Rank, Layout, 'A', ContainerPolicy>;
 
   /**
+   * @brief Alias template of an nda::shared_array_view with an 'A' algebra, nda::default_accessor and nda::borrowed
+   * owning policy.
+   *
+   * @tparam ValueType Value type of the view.
+   * @tparam Rank Rank of the view.
+   * @tparam Layout Layout policy of the view.
+   */
+  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
+  using shared_array_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
+
+  /**
+   * @brief Same as shared_array_view except for const value types.
+   *
+   * @tparam ValueType Value type of the view.
+   * @tparam Rank Rank of the view.
+   * @tparam Layout Layout policy of the view.
+   */
+  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
+  using shared_array_const_view =
+     basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
+
+  /**
+   * @brief Alias template for a contiguous shared array view.
+   *
+   * This alias is a specialization of basic_array_view that represents a contiguous shared array view in MPI shared memory.
+   * It requires the layout to have a contiguous memory mapping.
+   *
+   * @tparam ValueType The type of the elements in the view.
+   * @tparam Rank The number of dimensions in the view.
+   * @tparam Layout The memory layout policy (default is C_layout) that must have contiguous memory layout properties.
+   */
+  template <typename ValueType, int Rank, typename Layout = C_layout>
+    requires(has_contiguous(Layout::template mapping<Rank>::layout_prop))
+  using shared_array_contiguous_view =
+     basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
+
+  /**
+   * @brief Alias template for a contiguous shared array const view.
+   *
+   * This alias is a specialization of basic_array_view that represents a contiguous shared array view with constant elements in MPI shared memory.
+   * It requires the layout to guarantee contiguous memory storage.
+   *
+   * @tparam ValueType The type of the elements in the view.
+   * @tparam Rank The number of dimensions in the view.
+   * @tparam Layout The memory layout policy (default is C_layout) that must have contiguous memory layout properties.
+   */
+  template <typename ValueType, int Rank, typename Layout = C_layout>
+    requires(has_contiguous(Layout::template mapping<Rank>::layout_prop))
+  using shared_array_contiguous_const_view =
+     basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
+
+  /**
+   * @brief Alias for matrices allocated in MPI shared memory.
+   *
+   * This alias creates a basic_array with:
+   *  - ValueType: The type of the data stored in the matrix.
+   *  - Rank: The number of dimensions.
+   *  - Layout: The memory layout policy (default is C_layout).
+   *  - Algebra: Set to 'M' for matrix algebra.
+   *  - ContainerPolicy: Uses heap_basic with mpi_shm_allocator to allocate memory on an MPI shared memory island.
+   *
+   * @tparam ValueType The type of the elements stored in the matrix.
+   * @tparam Rank The number of dimensions of the matrix.
+   * @tparam Layout The memory layout policy.
+   * @tparam ContainerPolicy The container policy for memory allocation.
+   */
+  template <typename ValueType, int Rank, typename Layout = C_layout, typename ContainerPolicy = heap_basic<mem::mpi_shm_allocator>>
+  using shared_matrix = basic_array<ValueType, Rank, Layout, 'M', ContainerPolicy>;
+
+  /**
+   * @brief Alias template for a shared matrix view.
+   *
+   * This alias represents a non-owning view of a matrix allocated in MPI shared memory.
+   * It uses the default accessor and a borrowed owning policy with MPI shared memory settings.
+   *
+   * @tparam ValueType The type of the elements in the view.
+   * @tparam Rank The number of dimensions of the view.
+   * @tparam Layout The memory layout policy (default is C_stride_layout).
+   */
+  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
+  using shared_matrix_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
+
+  /**
+   * @brief Alias template for a const shared matrix view.
+   *
+   * This alias represents a non-owning view of a matrix with constant elements allocated in MPI shared memory.
+   * It employs matrix algebra ('M') along with the default accessor and a borrowed owning policy.
+   *
+   * @tparam ValueType The type of the elements in the view.
+   * @tparam Rank The number of dimensions of the view.
+   * @tparam Layout The memory layout policy (default is C_stride_layout).
+   */
+  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
+  using shared_matrix_const_view =
+     basic_array_view<ValueType const, Rank, Layout, 'M', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
+
+  /**
+   * @brief Alias for vectors allocated in MPI shared memory.
+   *
+   * This alias creates a basic_array specifically for vector algebra, with:
+   *  - ValueType: The type of the data stored in the vector.
+   *  - Rank: The number of dimensions (usually 1 for vectors).
+   *  - Layout: The memory layout policy (default is C_layout).
+   *  - Algebra: Set to 'V' for vector algebra.
+   *  - ContainerPolicy: Uses heap_basic with mpi_shm_allocator to allocate memory on an MPI shared memory island.
+   *
+   * @tparam ValueType The type of the elements stored in the vector.
+   * @tparam Rank The number of dimensions of the vector.
+   * @tparam Layout The memory layout policy.
+   * @tparam ContainerPolicy The container policy for memory allocation.
+   */
+  template <typename ValueType, int Rank, typename Layout = C_layout, typename ContainerPolicy = heap_basic<mem::mpi_shm_allocator>>
+  using shared_vector = basic_array<ValueType, Rank, Layout, 'V', ContainerPolicy>;
+
+  /**
+   * @brief Alias template for a shared vector view.
+   *
+   * This alias represents a non-owning view of a vector allocated in MPI shared memory.
+   * It uses the default accessor and a borrowed owning policy with MPI shared memory.
+   *
+   * @tparam ValueType The type of the elements in the view.
+   * @tparam Rank The number of dimensions of the view.
+   * @tparam Layout The memory layout policy (default is C_stride_layout).
+   */
+  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
+  using shared_vector_view = basic_array_view<ValueType, Rank, Layout, 'V', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
+
+  /**
+   * @brief Alias template for a const shared vector view.
+   *
+   * This alias represents a non-owning view of a vector with constant elements allocated in MPI shared memory.
+   * It uses the default accessor and a borrowed owning policy with MPI shared memory.
+   *
+   * @tparam ValueType The type of the elements in the view.
+   * @tparam Rank The number of dimensions of the view.
+   * @tparam Layout The memory layout policy (default is C_stride_layout).
+   */
+  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
+  using shared_vector_const_view =
+     basic_array_view<ValueType const, Rank, Layout, 'V', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
+
+  /**
    * @brief Extracts the MPI shared memory window from a handle, if available.
    *
    * @tparam H A handle type satisfying mem::Handle.
@@ -81,12 +223,8 @@ namespace nda {
   void fence(basic_array<ValueType, Rank, LayoutPolicy, Algebra, ContainerPolicy> const &array) {
     auto const &sto               = array.storage();
     mpi::shared_window<char> *win = get_win(sto);
-    if (win) {
-      win->fence();
-    } else {
-      ASSERT_WITH_MESSAGE(
-         requires { sto.template userdata<mpi::shared_window<char> *>(); }, "fence: storage type does not support MPI shared window");
-    }
+    ASSERT_WITH_MESSAGE(requires { sto.template userdata<mpi::shared_window<char> *>(); }, "fence: storage type does not support MPI shared window");
+    win->fence();
   }
 
   /**

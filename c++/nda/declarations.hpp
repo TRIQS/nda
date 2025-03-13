@@ -64,17 +64,6 @@ namespace nda {
   using array = basic_array<ValueType, Rank, Layout, 'A', ContainerPolicy>;
 
   /**
-   * @brief Alias template of an nda::shared_array with an 'A' algebra.
-   *
-   * @tparam ValueType Value type of the array.
-   * @tparam Rank Rank of the array.
-   * @tparam Layout Layout policy of the array.
-   * @tparam ContainerPolicy Memory policy of the array.
-   */
-  template <typename ValueType, int Rank, typename Layout = C_layout, typename ContainerPolicy = heap_basic<mem::mpi_shm_allocator>>
-  using shared_array = basic_array<ValueType, Rank, Layout, 'A', ContainerPolicy>;
-
-  /**
    * @brief Alias template of an nda::basic_array_view with an 'A' algebra, nda::default_accessor and nda::borrowed
    * owning policy.
    *
@@ -84,18 +73,6 @@ namespace nda {
    */
   template <typename ValueType, int Rank, typename Layout = C_stride_layout>
   using array_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<>>;
-
-  /**
-   * @brief Alias template of an nda::shared_array_view with an 'A' algebra, nda::default_accessor and nda::borrowed
-   * owning policy.
-   *
-   * @tparam ValueType Value type of the view.
-   * @tparam Rank Rank of the view.
-   * @tparam Layout Layout policy of the view.
-   */
-  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
-  using shared_array_view =
-     basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
 
   /**
    * @brief Same as nda::array_view except for const value types.
@@ -108,17 +85,6 @@ namespace nda {
   using array_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<>>;
 
   /**
-   * @brief Same as shared_array_view except for const value types.
-   *
-   * @tparam ValueType Value type of the view.
-   * @tparam Rank Rank of the view.
-   * @tparam Layout Layout policy of the view.
-   */
-  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
-  using shared_array_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor,
-                                                   borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
-
-  /**
    * @brief Same as nda::array_view except for contiguous memory layouts.
    *
    * @tparam ValueType Value type of the view.
@@ -128,12 +94,6 @@ namespace nda {
   template <typename ValueType, int Rank, typename Layout = C_layout>
     requires(has_contiguous(Layout::template mapping<Rank>::layout_prop))
   using array_contiguous_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<>>;
-
-  ////
-  template <typename ValueType, int Rank, typename Layout = C_layout>
-    requires(has_contiguous(Layout::template mapping<Rank>::layout_prop))
-  using shared_array_contiguous_view =
-     basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
 
   /**
    * @brief Same as nda::array_const_view except for contiguous memory layouts.
@@ -146,12 +106,6 @@ namespace nda {
     requires(has_contiguous(Layout::template mapping<Rank>::layout_prop))
   using array_contiguous_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<>>;
 
-  ////
-  template <typename ValueType, int Rank, typename Layout = C_layout>
-    requires(has_contiguous(Layout::template mapping<Rank>::layout_prop))
-  using shared_array_contiguous_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor,
-                                                              borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
-
   /**
    * @brief Alias template of an nda::basic_array with rank 2 and an 'M' algebra.
    *
@@ -161,10 +115,6 @@ namespace nda {
    */
   template <typename ValueType, typename Layout = C_layout, typename ContainerPolicy = heap<>>
   using matrix = basic_array<ValueType, 2, Layout, 'M', ContainerPolicy>;
-
-  ////
-  template <typename ValueType, int Rank, typename Layout = C_layout, typename ContainerPolicy = heap_basic<mem::mpi_shm_allocator>>
-  using shared_matrix = basic_array<ValueType, Rank, Layout, 'M', ContainerPolicy>;
 
   /**
    * @brief Alias template of an nda::basic_array_view with rank 2, an 'M' algebra, nda::default_accessor and
@@ -176,11 +126,6 @@ namespace nda {
   template <typename ValueType, typename Layout = C_stride_layout>
   using matrix_view = basic_array_view<ValueType, 2, Layout, 'M', default_accessor, borrowed<>>;
 
-  ////
-  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
-  using shared_matrix_view =
-     basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
-
   /**
    * @brief Same as nda::matrix_view except for const value types.
    *
@@ -190,11 +135,6 @@ namespace nda {
   template <typename ValueType, typename Layout = C_stride_layout>
   using matrix_const_view = basic_array_view<ValueType const, 2, Layout, 'M', default_accessor, borrowed<>>;
 
-  ////
-  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
-  using shared_matrix_const_view = basic_array_view<ValueType const, Rank, Layout, 'M', default_accessor,
-                                                    borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
-
   /**
    * @brief Alias template of an nda::basic_array with rank 1 and a 'V' algebra.
    *
@@ -203,10 +143,6 @@ namespace nda {
    */
   template <typename ValueType, typename ContainerPolicy = heap<>>
   using vector = basic_array<ValueType, 1, C_layout, 'V', ContainerPolicy>;
-
-  ////
-  template <typename ValueType, int Rank, typename Layout = C_layout, typename ContainerPolicy = heap_basic<mem::mpi_shm_allocator>>
-  using shared_vector = basic_array<ValueType, Rank, Layout, 'V', ContainerPolicy>;
 
   /**
    * @brief Alias template of an nda::basic_array_view with rank 1, a 'V' algebra, nda::default_accessor and
@@ -218,11 +154,6 @@ namespace nda {
   template <typename ValueType, typename Layout = C_stride_layout>
   using vector_view = basic_array_view<ValueType, 1, Layout, 'V', default_accessor, borrowed<>>;
 
-  ////
-  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
-  using shared_vector_view =
-     basic_array_view<ValueType, Rank, Layout, 'V', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
-
   /**
    * @brief Same as nda::vector_view except for const value types.
    *
@@ -231,11 +162,6 @@ namespace nda {
    */
   template <typename ValueType, typename Layout = C_stride_layout>
   using vector_const_view = basic_array_view<ValueType const, 1, Layout, 'V', default_accessor, borrowed<>>;
-
-  ////
-  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
-  using shared_vector_const_view = basic_array_view<ValueType const, Rank, Layout, 'V', default_accessor,
-                                                    borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
 
   /**
    * @ingroup av_utils

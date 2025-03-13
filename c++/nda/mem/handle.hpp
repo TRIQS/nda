@@ -845,7 +845,7 @@ namespace nda::mem {
    * @tparam AdrSp nda::mem::AddressSpace in which the memory is allocated.
    * @tparam Allocator nda::mem::allocator how the memory is allocated.
    */
-  template <typename T, AddressSpace AdrSp = Host, Allocator A = mallocator<AdrSp>>
+  template <typename T, AddressSpace AdrSp = Host, Allocator A = std::conditional_t<AdrSp == MPISharedMemory, mpi_shm_allocator, mallocator<AdrSp>>>
   struct handle_borrowed {
     private:
     // Value type of the data with const removed.
@@ -940,18 +940,12 @@ namespace nda::mem {
      * @return Pointer to the userdata if the parent handle exists.
      */
     template <typename U>
-      requires requires { _parent->template userdata<U>(); }
+      requires(std::is_pointer_v<U> and requires { _parent->template userdata<U>(); })
     [[nodiscard]] U userdata() const noexcept {
       if (_parent) { return _parent->template userdata<U>(); }
       return static_cast<U>(nullptr);
     }
   };
-
-  /*
-  template <typename T>
-  struct handle_borrowed<T, MPISharedMemory, mpi_shm_allocator> {};
-  */
-
   /** @} */
 
 } // namespace nda::mem
