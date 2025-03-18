@@ -32,6 +32,15 @@
 
 namespace nda {
 
+  template <typename shm>
+  concept SharedArray =
+     (shm::storage_t::address_space == mem::MPISharedMemory) && std::is_same_v<typename shm::container_policy_t, heap_basic<mem::mpi_shm_allocator>>;
+
+  /**
+   * @addtogroup av_types
+   * @{
+   */
+
   /**
    * @brief Alias for arrays allocated in MPI shared memory.
    *
@@ -193,19 +202,62 @@ namespace nda {
   using shared_vector_const_view =
      basic_array_view<ValueType const, Rank, Layout, 'V', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
 
+  /** @} */
+
   /**
-   * @brief Extracts the MPI shared memory window from a handle, if available.
+   * @addtogroup av_utils
+   * @{
+   */
+
+  /// Specialization of nda::is_regular_v for nda::shared_array.
+  template <typename ValueType, int Rank, typename Layout, typename ContainerPolicy>
+  inline constexpr bool is_regular_v<shared_array<ValueType, Rank, Layout, ContainerPolicy>> = true;
+
+  /// Specialization of nda::get_algebra for nda::shared_array types.
+  template <typename ValueType, int Rank, typename Layout, typename ContainerPolicy>
+  inline constexpr char get_algebra<shared_array<ValueType, Rank, Layout, ContainerPolicy>> = 'A';
+
+  /// Specialization of nda::get_layout_info for nda::shared_array types.
+  template <typename ValueType, int Rank, typename Layout, typename ContainerPolicy>
+  inline constexpr layout_info_t get_layout_info<shared_array<ValueType, Rank, Layout, ContainerPolicy>> =
+     basic_array<ValueType, Rank, Layout, 'A', ContainerPolicy>::layout_t::layout_info;
+
+  /**
+   * @brief Get the type of the nda::shared_array that would be obtained by constructing an array from a given type.
+   * @tparam T Type to construct an array from.
+   */
+  template <typename T, typename T2 = std::remove_reference_t<T> /* Keep this: Fix for gcc11 bug */>
+  using get_regular_t = decltype(basic_array{std::declval<T>()});
+
+  /**
+    * @brief Get the type of the nda::basic_array that would be obtained by constructing an array on host memory from a
+    * given type.
+    *
+    * @tparam T Type to construct an array from.
+    */
+  template <typename T, typename RT = get_regular_t<T>>
+  using get_regular_shm_t =
+     std::conditional_t<mem::on_mpi_shared_memory<RT>, RT,
+                        shared_array<get_value_t<RT>, get_rank<RT>, get_contiguous_layout_policy<get_rank<RT>, get_layout_info<RT>.stride_order>,
+                                     heap<mem::MPISharedMemory>>>;
+
+  /** @} */
+
+  /**
+   * @brief Extracts the MPI shared memory window from a shared array with correct policy.
    *
-   * @tparam H A handle type satisfying mem::Handle.
-   * @param h The handle from which to extract the MPI shared window.
+   * @tparam ValueType The type of the elements in the array.
+   * @tparam Rank The number of dimensions.
+   * @tparam LayoutPolicy The memory layout policy.
+   * @tparam Algebra The algebra identifier (should be 'A' for shared_array).
+   * @tparam ContainerPolicy The container policy used for memory allocation.
+   * @param array A const reference to the basic_array.
    * @return Pointer to an mpi::shared_window<char> if available; nullptr otherwise.
    */
-  template <typename H>
-    requires mem::Handle<H>
-  mpi::shared_window<char> *get_win(H const &h) {
-    if constexpr (requires { h.template userdata<mpi::shared_window<char> *>(); }) {
-      if (auto win = h.template userdata<mpi::shared_window<char> *>(); win) { return win; }
-    }
+  template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename ContainerPolicy>
+  mpi::shared_window<char> *get_window(basic_array<ValueType, Rank, LayoutPolicy, Algebra, ContainerPolicy> const &array) {
+    auto const &sto = array.storage();
+    if constexpr (requires { sto.template userdata<mpi::shared_window<char> *>(); }) { return sto.template userdata<mpi::shared_window<char> *>(); }
     return nullptr;
   }
 
@@ -217,13 +269,11 @@ namespace nda {
    * @tparam LayoutPolicy The memory layout policy.
    * @tparam Algebra The algebra identifier (should be 'A' for shared_array).
    * @tparam ContainerPolicy The container policy used for memory allocation.
-   * @param array A const reference to the basic_array to be synchronized.
+   * @param array A const reference to the basic_array.
    */
   template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename ContainerPolicy>
   void fence(basic_array<ValueType, Rank, LayoutPolicy, Algebra, ContainerPolicy> const &array) {
-    auto const &sto               = array.storage();
-    mpi::shared_window<char> *win = get_win(sto);
-    ASSERT_WITH_MESSAGE(requires { sto.template userdata<mpi::shared_window<char> *>(); }, "fence: storage type does not support MPI shared window");
+    mpi::shared_window<char> *win = get_window(array);
     win->fence();
   }
 

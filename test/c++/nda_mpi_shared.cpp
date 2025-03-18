@@ -24,6 +24,61 @@
 
 // ==============================================================
 
+TEST(SHM, SharedArrayAllocation) {
+  nda::shared_array<int, 2> A({2, 2});
+
+  EXPECT_EQ(A.shape(), (shape_t<2>{2, 2}));
+  EXPECT_NO_THROW(A(0, 0) = 5);
+  EXPECT_EQ(A(0, 0), 5);
+}
+
+TEST(SHM, MPIFence) {
+  nda::shared_array<int, 2> A({2, 2});
+
+  A(0, 0) = 42;
+
+  nda::fence(A);
+  EXPECT_EQ(A(0, 0), 42);
+}
+
+TEST(SHM, SharedArrayViewAccess) {
+  nda::shared_array<int, 2> A({2, 2});
+  A(1, 1) = 11;
+
+  nda::fence(A);
+  EXPECT_EQ(A(1, 1), 11);
+
+  nda::shared_array_view<int, 2> view = A;
+
+  EXPECT_EQ(view(1, 1), 11);
+  nda::fence(A);
+  view(1, 1) = 99;
+
+  EXPECT_EQ(A(1, 1), 99);
+}
+
+TEST(SHM, ViewSync) {
+  nda::shared_array<int, 2> A({2, 2});
+  nda::shared_array_view<int, 2> view = A;
+
+  view(1, 1) = 5;
+
+  nda::fence(A);
+
+  EXPECT_EQ(view(1, 1), 5);
+}
+
+// Test with borrowed handle?
+
+// -------------------------
+
+TEST(SHM, Concept) {
+  static_assert(nda::SharedArray<nda::shared_array<int, 2>>);
+  static_assert(nda::SharedArray<nda::basic_array<int, 2, nda::C_layout, 'A', nda::heap_basic<nda::mem::mpi_shm_allocator>>>);
+  static_assert(!nda::SharedArray<nda::basic_array<int, 2, nda::C_layout, 'A', nda::heap<>>>);
+  static_assert(!nda::SharedArray<nda::shared_array<int, 2, nda::C_layout, nda::heap<>>>);
+}
+
 TEST(SHM, Allocator) { //NOLINT
   nda::mem::mpi_shm_allocator allo;
   auto blk = allo.allocate(10 * sizeof(double));
@@ -31,7 +86,6 @@ TEST(SHM, Allocator) { //NOLINT
 }
 
 TEST(SHM, SimpleArray) { //NOLINT
-
   nda::basic_array<long, 2, nda::C_layout, 'A', nda::heap_basic<nda::mem::mpi_shm_allocator>> A(3, 3);
   EXPECT_EQ(A.shape(), (shape_t<2>{3, 3}));
 
