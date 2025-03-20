@@ -24,21 +24,112 @@
 
 // ==============================================================
 
+using shm_allocator = nda::mem::mpi_shm_allocator;
+
 TEST(SHM, SharedArrayAllocation) {
   nda::shared_array<int, 2> A({2, 2});
+  int expected = 5;
 
   EXPECT_EQ(A.shape(), (shape_t<2>{2, 2}));
-  EXPECT_NO_THROW(A(0, 0) = 5);
-  EXPECT_EQ(A(0, 0), 5);
+  A(0, 0) = expected;
+  EXPECT_EQ(A(0, 0), expected);
 }
 
 TEST(SHM, MPIFence) {
+  auto shm    = shm_allocator::get_communicator();
+  int my_rank = (shm.size() > 2) ? 2 : 0;
   nda::shared_array<int, 2> A({2, 2});
 
-  A(0, 0) = 42;
+  if (shm.rank() == my_rank) { A(1, 1) = my_rank; }
 
   nda::fence(A);
-  EXPECT_EQ(A(0, 0), 42);
+
+  EXPECT_EQ(A(1, 1), my_rank);
+}
+
+TEST(SHM, LordOfRings) {
+  auto shm = shm_allocator::get_communicator();
+  int rank = shm.rank();
+  int size = shm.size();
+
+  nda::shared_array<int, 1> A(shape_t<1>{size});
+
+  int right = (rank + 1) % size;
+
+  A(rank) = right;
+
+  nda::fence(A);
+
+  for (int i = 0; i < size; i++) {
+    int expected = (i + 1) % size;
+    EXPECT_EQ(A(i), expected);
+  }
+}
+
+
+TEST(SHM, Fences) {
+  auto shm         = shm_allocator::get_communicator();
+  int my_rank      = shm.rank();
+  int size         = shm.size();
+  int expected_sum = (size * (size - 1)) / 2;
+  shape_t<2> shape = {3, 3};
+
+  nda::shared_array<int, 2> A(shape);
+
+  EXPECT_EQ(A.shape(), shape);
+
+  for (int i = 0; i < shape[0]; ++i) {
+    for (int j = 0; j < shape[1]; ++j) { A(i, j) = 0; }
+  }
+
+  nda::fence(A);
+
+  /// TODO: Find another way.
+  for (int r = 0; r < size; r++) {
+    if (my_rank == r) {
+      for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+          A(i, j) += my_rank;
+        }
+      }
+    }
+    fence(A);
+  }
+
+  /*
+  for (int i = 0; i < 3; ++i) {
+    for (int j = 0; j < 3; ++j) {
+      nda::fence(A);
+      A(i, j) += my_rank;
+      nda::fence(A);
+    }
+  }
+  */
+
+  for (int i = 0; i < 3; ++i) {
+    for (int j = 0; j < 3; ++j) { EXPECT_EQ(A(i, j), expected_sum); }
+  }
+}
+
+
+TEST(SHM, RowSum) {
+  auto shm         = shm_allocator::get_communicator();
+  int rank         = shm.rank();
+  int size         = shm.size();
+  int expected_sum = (size * (size - 1)) / 2;
+  shape_t<2> shape = {size, 10};
+
+  nda::shared_array<int, 2> A(shape);
+
+  for (int j = 0; j < 10; j++) { A(rank, j) = rank; }
+
+  nda::fence(A);
+
+  for (int j = 0; j < 10; j++) {
+    int colSum = 0;
+    for (int i = 0; i < size; i++) { colSum += A(i, j); }
+    EXPECT_EQ(colSum, expected_sum);
+  }
 }
 
 TEST(SHM, SharedArrayViewAccess) {
@@ -53,7 +144,7 @@ TEST(SHM, SharedArrayViewAccess) {
   EXPECT_EQ(view(1, 1), 11);
   nda::fence(A);
   view(1, 1) = 99;
-
+  nda::fence(A);
   EXPECT_EQ(A(1, 1), 99);
 }
 
@@ -63,14 +154,77 @@ TEST(SHM, ViewSync) {
 
   view(1, 1) = 5;
 
-  nda::fence(A);
+  nda::fence(view);
 
   EXPECT_EQ(view(1, 1), 5);
 }
 
-// Test with borrowed handle?
+//TODO: make test better.
+TEST(SHM, SharedBorrowed) {
+  using basic_array_borrowed_type =
+     nda::basic_array<int, 2, nda::C_layout, 'A', nda::borrowed<nda::mem::MPISharedMemory, nda::mem::mpi_shm_allocator>>;
+  using layout  = typename basic_array_borrowed_type::layout_t;
+  using storage = typename basic_array_borrowed_type::storage_t;
 
-// -------------------------
+  layout arr = std::array{4, 4};
+
+  nda::mem::handle_heap<int, nda::mem::mpi_shm_allocator> h(16);
+  nda::mem::handle_borrowed<int, nda::mem::MPISharedMemory, nda::mem::mpi_shm_allocator> hb(h);
+
+  storage sto = hb;
+
+  basic_array_borrowed_type A(arr, std::move(sto));
+
+  A(2, 2) = 42;
+  nda::fence(A);
+  EXPECT_EQ(A(2, 2), 42);
+}
+
+// Test with borrowed and handle ===========================================================
+TEST(NDA, DefaultAllocator) {
+  nda::mem::handle_heap<int, nda::mem::mallocator<>> h(10);
+
+  nda::mem::handle_borrowed<int> hb(h);
+
+  EXPECT_NE(hb.parent(), nullptr);
+
+  EXPECT_EQ(h.data(), hb.data());
+}
+
+TEST(NDA, CustomAllocator) {
+  nda::mem::handle_heap<int, nda::mem::mpi_shm_allocator> h(10);
+
+  nda::mem::handle_borrowed<int, nda::mem::AddressSpace::MPISharedMemory, nda::mem::mallocator<>> hb(h);
+
+  EXPECT_EQ(hb.parent(), nullptr);
+}
+
+TEST(NDA, BorrowFromPointer) {
+  int arr[5] = {1, 2, 3, 4, 5};
+
+  nda::mem::handle_borrowed<int> hb(arr);
+  EXPECT_EQ(hb.data(), arr);
+
+  EXPECT_EQ(hb.parent(), nullptr);
+}
+
+TEST(NDA, BorrowWithOffset) {
+  nda::mem::handle_heap<int, nda::mem::mallocator<>> h(10);
+
+  nda::mem::handle_borrowed<int> hb(h, 2);
+  EXPECT_EQ(hb.data(), h.data() + 2);
+
+  EXPECT_NE(hb.parent(), nullptr);
+}
+
+TEST(NDA, CustomAllocatorMatching) {
+  nda::mem::handle_heap<int, nda::mem::mpi_shm_allocator> h(10);
+
+  nda::mem::handle_borrowed<int, nda::mem::AddressSpace::MPISharedMemory, nda::mem::mpi_shm_allocator> hb(h);
+
+  EXPECT_NE(hb.parent(), nullptr);
+  EXPECT_EQ(h.data(), hb.data());
+}
 
 TEST(SHM, Concept) {
   static_assert(nda::SharedArray<nda::shared_array<int, 2>>);
@@ -80,9 +234,30 @@ TEST(SHM, Concept) {
 }
 
 TEST(SHM, Allocator) { //NOLINT
-  nda::mem::mpi_shm_allocator allo;
-  auto blk = allo.allocate(10 * sizeof(double));
-  allo.deallocate(blk);
+  constexpr int num_elements = 11;
+  constexpr int bytes        = num_elements * sizeof(int);
+
+  shm_allocator allocator;
+  auto blk = allocator.allocate(bytes);
+  int *ptr = reinterpret_cast<int *>(blk.ptr);
+  EXPECT_NE(ptr, nullptr);
+
+  for (int i = 0; i < num_elements; i++) { ptr[i] = i; }
+  for (int i = 0; i < num_elements; i++) { EXPECT_EQ(ptr[i], i); }
+
+  auto zero_blk = allocator.allocate_zero(bytes);
+  int *zero_ptr = reinterpret_cast<int *>(zero_blk.ptr);
+
+  ASSERT_NE(zero_ptr, nullptr);
+
+  for (size_t i = 0; i < num_elements; i++) { EXPECT_EQ(zero_ptr[i], 0); }
+
+#ifdef ADDRESS_SANITIZER
+  EXPECT_DEATH(ptr[num_elements] = 42.0);
+#endif
+
+  allocator.deallocate(blk);
+  allocator.deallocate(zero_blk);
 }
 
 TEST(SHM, SimpleArray) { //NOLINT
@@ -134,7 +309,7 @@ TEST(SHM, SubArray) {
 }
 
 TEST(SHM, SyncAcrossRanks) {
-  auto shm = nda::mem::mpi_shm_allocator::get_communicator();
+  auto shm = shm_allocator::get_communicator();
   nda::shared_array<int, 2> A;
 
   A.resize({2, 2});
@@ -169,82 +344,33 @@ TEST(SHM, ConstructWithShape) {
   }
 }
 
-/*
-TEST(SHM, Fences) {
-  mpi::communicator world;
-  mpi::shared_communicator shm = world.split_shared();
-
-  shape_t<2> shape = {3, 3};
-
-  nda::shared_array<int, 2> A(shape);
-
-  EXPECT_EQ(A.shape(), shape);
-
-  fence(A);
-
-  if (shm.rank() == 0) {
-    for (int i = 0; i < 3; ++i) {
-      for (int j = 0; j < 3; ++j) { A(i, j) = 0; }
-    }
-  }
-
-  fence(A);
-
-  for (int i = 0; i < 3; ++i) {
-    for (int j = 0; j < 3; ++j) { A(i, j) += shm.rank(); }
-  }
-
-  fence(A);
-
-  int sum = 0;
-  for (int r = 0; r < shm.size(); ++r) { sum += r; }
-
-  shm.barrier();
-
-  for (int i = 0; i < 3; ++i) {
-    for (int j = 0; j < 3; ++j) { EXPECT_EQ(A(i, j), sum); }
-  }
-}
-*/
-
-/*
 TEST(SHM, ForEachChunked) {
-  mpi::communicator world;
-  mpi::shared_communicator shm = world.split_shared();
-
-  shape_t<2> shape = {3, 3};
+  auto shm         = shm_allocator::get_communicator();
+  int my_chunk     = shm.rank();
+  int n_chunk      = shm.size();
+  shape_t<2> shape = {5, 5};
+  int total        = shape[0] * shape[1];
 
   nda::shared_array<int, 2> A(shape);
 
-  int n_chunks = shm.size();
-  int my_chunk = shm.rank();
+  nda::for_each_chunked([&shm](int &i) { i = shm.rank(); }, A, n_chunk, my_chunk);
 
-  nda::for_each_chunked([&shm](int &i) { i = shm.rank(); }, A, n_chunks, my_chunk);
+  nda::fence(A);
 
-  int total_elements = shape[0] * shape[1];
+  std::vector<int> expected(total, -1);
+  int start = 0;
+  for (int r = 0; r < n_chunk; r++) {
+    int count = total / n_chunk + (r < (total % n_chunk) ? 1 : 0);
+    for (int idx = start; idx < start + count; idx++) { expected[idx] = r; }
+    start += count;
+  }
 
-  int base_count = total_elements / n_chunks;
-  int remainder = total_elements % n_chunks;
-
-  auto expected_for_index = [=](int k) -> int {
-    int start = 0;
-    for (int i = 0; i < n_chunks; i++) {
-      int count = base_count + (i < remainder ? 1 : 0);
-      if (k < start + count) {
-        return i;
-      }
-      start += count;
+  for (int i = 0; i < shape[0]; i++) {
+    for (int j = 0; j < shape[1]; j++) {
+      int linear_index = i * shape[1] + j;
+      int exp_val      = expected[linear_index];
+      EXPECT_EQ(A(i, j), exp_val);
     }
-    return -1;
-  };
-
-  for (int i = 0; i < 3; ++i) {
-    std::cout << "[rank " << world.rank() << "] ";
-    for (int j = 0; j < 3; ++j) {
-      std::cout << A(i,j) << " ";
-    }
-    std::cout << "\n";
   }
 }
-*/
 MPI_TEST_MAIN;

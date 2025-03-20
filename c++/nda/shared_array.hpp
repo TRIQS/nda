@@ -32,12 +32,13 @@
 
 namespace nda {
 
+  /// Concept for a valid shared array.
   template <typename shm>
   concept SharedArray =
      (shm::storage_t::address_space == mem::MPISharedMemory) && std::is_same_v<typename shm::container_policy_t, heap_basic<mem::mpi_shm_allocator>>;
 
   /**
-   * @addtogroup av_types
+   * @addtogroup shared_av_types
    * @{
    */
 
@@ -205,7 +206,7 @@ namespace nda {
   /** @} */
 
   /**
-   * @addtogroup av_utils
+   * @addtogroup shared_av_utils
    * @{
    */
 
@@ -262,6 +263,25 @@ namespace nda {
   }
 
   /**
+   * @brief Extracts the MPI shared memory window from a shared array with correct policy.
+   *
+   * @tparam ValueType The type of the elements in the array.
+   * @tparam Rank The number of dimensions.
+   * @tparam LayoutPolicy The memory layout policy.
+   * @tparam Algebra The algebra identifier (should be 'A' for shared_array).
+   * @tparam AccessorPolicy Policy determining how the data pointer is accessed.
+   * @tparam OwningPolicy Policy determining the ownership of the data.
+   * @param array A const reference to the basic_array_view.
+   * @return Pointer to an mpi::shared_window<char> if available; nullptr otherwise.
+   */
+  template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename AccessorPolicy, typename OwningPolicy>
+  mpi::shared_window<char> *get_window(basic_array_view<ValueType, Rank, LayoutPolicy, Algebra, AccessorPolicy, OwningPolicy> const &array_view) {
+    auto const &sto = array_view.storage();
+    if constexpr (requires { sto.template userdata<mpi::shared_window<char> *>(); }) { return sto.template userdata<mpi::shared_window<char> *>(); }
+    return nullptr;
+  }
+
+  /**
    * @brief Synchronizes a shared array using the underlying MPI shared window.
    *
    * @tparam ValueType The type of the elements in the array.
@@ -274,6 +294,26 @@ namespace nda {
   template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename ContainerPolicy>
   void fence(basic_array<ValueType, Rank, LayoutPolicy, Algebra, ContainerPolicy> const &array) {
     mpi::shared_window<char> *win = get_window(array);
+    ASSERT(win != nullptr);
+    win->fence();
+  }
+
+  /**
+   * @brief Synchronizes a shared array using the underlying MPI shared window.
+   *
+   * @tparam ValueType The type of the elements in the array.
+   * @tparam Rank The number of dimensions.
+   * @tparam LayoutPolicy The memory layout policy.
+   * @tparam Algebra The algebra identifier (should be 'A' for shared_array).
+   * @tparam Algebra The algebra identifier (should be 'A' for shared_array).
+   * @tparam AccessorPolicy Policy determining how the data pointer is accessed.
+   * @tparam OwningPolicy Policy determining the ownership of the data.
+   * @param array A const reference to the basic_array.
+   */
+  template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename AccessorPolicy, typename OwningPolicy>
+  void fence(basic_array_view<ValueType, Rank, LayoutPolicy, Algebra, AccessorPolicy, OwningPolicy> const &array_view) {
+    mpi::shared_window<char> *win = get_window(array_view);
+    ASSERT(win != nullptr);
     win->fence();
   }
 
@@ -287,7 +327,8 @@ namespace nda {
    * @tparam Functor The type of the function or callable object.
    * @tparam ValueType The type of the array elements.
    * @tparam Rank The number of dimensions.
-   * @tparam LayoutPolicy The memory layout policy.
+   * @tparam AccessorPolicy Policy determining how the data pointer is accessed.
+   * @tparam OwningPolicy Policy determining the ownership of the data.
    * @param f The functor to apply to each array element.
    * @param array The shared_array on which to operate.
    * @param n_chunks The total number of chunks to divide the array into.
@@ -295,6 +336,30 @@ namespace nda {
    */
   template <typename Functor, typename ValueType, int Rank, typename LayoutPolicy>
   void for_each_chunked(Functor &&f, shared_array<ValueType, Rank, LayoutPolicy> &array, long n_chunks, long rank) {
+    auto &lay  = array.indexmap();
+    auto slice = itertools::chunk_range(0, lay.size(), n_chunks, rank);
+    for (int i = slice.first; i < slice.second; ++i) { f(array(nda::_linear_index_t{i})); }
+  }
+
+  /**
+   * @brief Applies a functor to each chunk of a shared array.
+   *
+   * This function divides the array (via its index map) into a number of chunks and
+   * applies the provided functor to each element in the specified chunk. This is useful
+   * for distributed processing over MPI shared memory.
+   *
+   * @tparam Functor The type of the function or callable object.
+   * @tparam ValueType The type of the array elements.
+   * @tparam Rank The number of dimensions.
+   * @tparam LayoutPolicy The memory layout policy.
+   * @tparam Algebra The algebra identifier (should be 'A' for shared_array).
+   * @param f The functor to apply to each array element.
+   * @param array The shared_array on which to operate.
+   * @param n_chunks The total number of chunks to divide the array into.
+   * @param rank The rank (chunk index) to process.
+   */
+  template <typename Functor, typename ValueType, int Rank, typename LayoutPolicy>
+  void for_each_chunked(Functor &&f, shared_array_view<ValueType, Rank, LayoutPolicy> &array, long n_chunks, long rank) {
     auto &lay  = array.indexmap();
     auto slice = itertools::chunk_range(0, lay.size(), n_chunks, rank);
     for (int i = slice.first; i < slice.second; ++i) { f(array(nda::_linear_index_t{i})); }
