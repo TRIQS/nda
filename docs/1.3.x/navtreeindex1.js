@@ -1,6 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"mapped__functions_8hpp_source.html":[4,7,0,32],
 "mapped__functions_8hxx.html":[4,7,0,33],
 "mapped__functions_8hxx_source.html":[4,7,0,33],
 "math_8hpp.html":[4,7,0,1,0,0],

@@ -4,7 +4,8 @@ var searchData=
   ['unaryplus_1',['unaryplus',['../structnda_1_1clef_1_1tags_1_1unaryplus.html',1,'nda::clef::tags']]],
   ['ungqr_2',['ungqr',['../group__linalg__lapack.html#ga59f102523a092fc5de99718a7821cf7e',1,'nda::lapack']]],
   ['ungqr_2ehpp_3',['ungqr.hpp',['../ungqr_8hpp.html',1,'']]],
-  ['utilities_4',['Utilities',['../group__utilities.html',1,'Utilities'],['../documentation.html#autotoc_md24',1,'Utilities']]],
-  ['utilities_5',['utilities',['../group__av__utils.html',1,'Array/View utilities'],['../group__clef__utils.html',1,'CLEF utilities'],['../group__layout__utils.html',1,'Layout utilities'],['../group__mem__utils.html',1,'Memory utilities']]],
-  ['utils_2ehpp_6',['utils.hpp',['../utils_8hpp.html',1,'']]]
+  ['unified_4',['Unified',['../address__space_8hpp.html#a1dbd464eef96e9cc4151734185a50c7a',1,'nda::mem']]],
+  ['utilities_5',['Utilities',['../group__utilities.html',1,'Utilities'],['../documentation.html#autotoc_md24',1,'Utilities']]],
+  ['utilities_6',['utilities',['../group__av__utils.html',1,'Array/View utilities'],['../group__clef__utils.html',1,'CLEF utilities'],['../group__layout__utils.html',1,'Layout utilities'],['../group__mem__utils.html',1,'Memory utilities']]],
+  ['utils_2ehpp_7',['utils.hpp',['../utils_8hpp.html',1,'']]]
 ];

@@ -18,6 +18,6 @@ var searchData=
   ['get_5flayout_5finfo_3c_20basic_5farray_5fview_3c_20valuetype_2c_20rank_2c_20layout_2c_20algebra_2c_20accessorpolicy_2c_20owningpolicy_20_3e_20_3e_15',['get_layout_info&lt; basic_array_view&lt; ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy &gt; &gt;',['../group__av__utils.html#gaac262f9913e9c1164b11e728e96f3b07',1,'nda']]],
   ['get_5flayout_5finfo_3c_20expr_3c_20op_2c_20l_2c_20r_20_3e_20_3e_16',['get_layout_info&lt; expr&lt; OP, L, R &gt; &gt;',['../group__av__utils.html#ga4199dbd8208aa91ca2efd2f0a91af3c6',1,'nda']]],
   ['get_5flayout_5finfo_3c_20expr_5funary_3c_20op_2c_20a_20_3e_20_3e_17',['get_layout_info&lt; expr_unary&lt; OP, A &gt; &gt;',['../group__av__utils.html#ga580ce1a693fb911d33331828bd954458',1,'nda']]],
-  ['get_5fop_18',['get_op',['../group__linalg__blas.html#gaf9028eaeb96ef5867bb66664aa831cb7',1,'nda::blas']]],
+  ['get_5fop_18',['get_op',['../group__linalg__blas.html#gaf9028eaeb96ef5867bb66664aa831cb7',1,'nda::blas::get_op'],['../lapack_2interface_2cxx__interface_8hpp.html#af9028eaeb96ef5867bb66664aa831cb7',1,'nda::lapack::get_op']]],
   ['get_5frank_19',['get_rank',['../group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e',1,'nda']]]
 ];

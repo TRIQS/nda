@@ -1,4 +1,4 @@
 var gtsv_8hpp =
 [
-    [ "gtsv", "gtsv_8hpp.html#ga114f8a73dbb612c779c6d8dc2170f301", null ]
+    [ "nda::lapack::gtsv", "group__linalg__lapack.html#ga114f8a73dbb612c779c6d8dc2170f301", null ]
 ];
