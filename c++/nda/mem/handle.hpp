@@ -185,10 +185,32 @@ namespace nda::mem {
      */
     explicit handle_heap(handle_heap const &h) : handle_heap(h.size(), do_not_initialize) {
       if (is_null()) return;
-      if constexpr (std::is_trivially_copyable_v<T>) {
-        memcpy<address_space, address_space>(_blk.ptr, h.data(), h.size() * sizeof(T));
+
+      if constexpr (std::is_same_v<A, nda::mem::mpi_shm_allocator>) {
+        mpi::shared_window<char> *win = h.userdata();
+        mpi::shared_communicator shm  = win->get_communicator();
+
+        int rank = shm.rank();
+        int size = shm.size();
+
+        auto chunk = itertools::chunk_range(0, h.size(), size, rank);
+        if constexpr (std::is_trivially_copyable_v<T>) {
+          int start_byte = chunk.first * sizeof(T);
+          int end_byte   = chunk.second * sizeof(T);
+          int num_bytes  = end_byte - start_byte;
+
+          memcpy<address_space, address_space>(_blk.ptr + start_byte, h.data() + start_byte, num_bytes); /// is cast needed?
+        } else {
+          for (size_t i = chunk.first; i < chunk.second; ++i) new (data() + i) T(h[i]);
+        }
+
+        win->fence();
       } else {
-        for (size_t i = 0; i < size(); ++i) new (data() + i) T(h[i]);
+        if constexpr (std::is_trivially_copyable_v<T>) {
+          memcpy<address_space, address_space>(_blk.ptr, h.data(), h.size() * sizeof(T));
+        } else {
+          for (size_t i = 0; i < size(); ++i) new (data() + i) T(h[i]);
+        }
       }
     }
 
@@ -199,7 +221,12 @@ namespace nda::mem {
      * @param h Source handle.
      */
     handle_heap &operator=(handle_heap const &h) {
-      *this = handle_heap{h};
+      if (this != &h) { /// Prevent self-assignment
+        if (!sptr && !is_null()) {
+          destruct(_blk); // Cleanup existing data before copying.
+        }
+        *this = handle_heap{h};
+      }
       return *this;
     }
 
@@ -212,12 +239,35 @@ namespace nda::mem {
     template <OwningHandle<value_type> H>
     explicit handle_heap(H const &h) : handle_heap(h.size(), do_not_initialize) {
       if (is_null()) return;
-      if constexpr (std::is_trivially_copyable_v<T>) {
-        memcpy<address_space, H::address_space>(_blk.ptr, h.data(), h.size() * sizeof(T));
+      if constexpr (std::is_same_v<A, nda::mem::mpi_shm_allocator>) {
+        mpi::shared_window<char> *win = h.userdata();
+        mpi::shared_communicator shm  = win->get_communicator();
+
+        int rank = shm.rank();
+        int size = shm.size();
+
+        auto chunk = itertools::chunk_range(0, h.size(), size, rank);
+        if constexpr (std::is_trivially_copyable_v<T>) {
+          int start_byte = chunk.first * sizeof(T);
+          int end_byte   = chunk.second * sizeof(T);
+          int num_bytes  = end_byte - start_byte;
+
+          memcpy<address_space, address_space>(_blk.ptr + start_byte, h.data() + start_byte, num_bytes); /// is cast needed?
+        } else {
+          static_assert(address_space == H::address_space,
+                        "Constructing an nda::mem::handle_heap from a handle of a different address space requires a trivially copyable value_type");
+          for (size_t i = chunk.first; i < chunk.second; ++i) new (data() + i) T(h[i]);
+        }
+
+        win->fence();
       } else {
-        static_assert(address_space == H::address_space,
-                      "Constructing an nda::mem::handle_heap from a handle of a different address space requires a trivially copyable value_type");
-        for (size_t i = 0; i < size(); ++i) new (data() + i) T(h[i]);
+        if constexpr (std::is_trivially_copyable_v<T>) {
+          memcpy<address_space, address_space>(_blk.ptr, h.data(), h.size() * sizeof(T));
+        } else {
+          static_assert(address_space == H::address_space,
+                        "Constructing an nda::mem::handle_heap from a handle of a different address space requires a trivially copyable value_type");
+          for (size_t i = 0; i < size(); ++i) new (data() + i) T(h[i]);
+        }
       }
     }
 
@@ -327,10 +377,11 @@ namespace nda::mem {
      * @brief Get the pointer to the userdata.
      * @return Pointer to the userdata.
      */
-    template <typename U>
-      requires requires { _blk.userdata; }
-    [[nodiscard]] U userdata() const noexcept {
-      return static_cast<U>(_blk.userdata);
+
+    [[nodiscard]] mpi::shared_window<char> *userdata() const noexcept
+      requires(requires { _blk.userdata; })
+    {
+      return static_cast<mpi::shared_window<char> *>(_blk.userdata);
     }
   };
 
@@ -939,11 +990,12 @@ namespace nda::mem {
      * @brief Get the pointer to the userdata from borrowed handle.
      * @return Pointer to the userdata if the parent handle exists.
      */
-    template <typename U>
-      requires(std::is_pointer_v<U> and requires { _parent->template userdata<U>(); })
-    [[nodiscard]] U userdata() const noexcept {
-      if (_parent) { return _parent->template userdata<U>(); }
-      return static_cast<U>(nullptr);
+
+    [[nodiscard]] mpi::shared_window<char> *userdata() const noexcept
+      requires(requires { _parent->userdata(); })
+    {
+      if (_parent) { return _parent->userdata(); }
+      return static_cast<mpi::shared_window<char> *>(nullptr);
     }
   };
   /** @} */

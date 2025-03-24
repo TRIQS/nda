@@ -258,7 +258,7 @@ namespace nda {
   template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename ContainerPolicy>
   mpi::shared_window<char> *get_window(basic_array<ValueType, Rank, LayoutPolicy, Algebra, ContainerPolicy> const &array) {
     auto const &sto = array.storage();
-    if constexpr (requires { sto.template userdata<mpi::shared_window<char> *>(); }) { return sto.template userdata<mpi::shared_window<char> *>(); }
+    if constexpr (requires { sto.userdata(); }) { return sto.userdata(); }
     return nullptr;
   }
 
@@ -277,7 +277,7 @@ namespace nda {
   template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   mpi::shared_window<char> *get_window(basic_array_view<ValueType, Rank, LayoutPolicy, Algebra, AccessorPolicy, OwningPolicy> const &array_view) {
     auto const &sto = array_view.storage();
-    if constexpr (requires { sto.template userdata<mpi::shared_window<char> *>(); }) { return sto.template userdata<mpi::shared_window<char> *>(); }
+    if constexpr (requires { sto.userdata(); }) { return sto.userdata(); }
     return nullptr;
   }
 

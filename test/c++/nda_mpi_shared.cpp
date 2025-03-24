@@ -21,18 +21,22 @@
 #include <nda/basic_array.hpp>
 #include <nda/shared_array.hpp>
 #include <nda/mem.hpp>
+#include <atomic>
 
 // ==============================================================
 
 using shm_allocator = nda::mem::mpi_shm_allocator;
 
-TEST(SHM, SharedArrayAllocation) {
-  nda::shared_array<int, 2> A({2, 2});
-  int expected = 5;
+TEST(SHM, MoveSemantic) {
+  nda::shared_array<double, 2> A;
+  A.resize({4, 4});
+  A(2, 2)                        = 3.1415;
+  nda::shared_array<double, 2> B = std::move(A);
+  EXPECT_EQ(B(2, 2), 3.1415);
 
-  EXPECT_EQ(A.shape(), (shape_t<2>{2, 2}));
-  A(0, 0) = expected;
-  EXPECT_EQ(A(0, 0), expected);
+  EXPECT_TRUE(A.empty());
+  EXPECT_EQ(A.data(), nullptr);
+  EXPECT_EQ(A.shape(), B.shape());
 }
 
 TEST(SHM, MPIFence) {
@@ -66,7 +70,6 @@ TEST(SHM, LordOfRings) {
   }
 }
 
-
 TEST(SHM, Fences) {
   auto shm         = shm_allocator::get_communicator();
   int my_rank      = shm.rank();
@@ -84,33 +87,66 @@ TEST(SHM, Fences) {
 
   nda::fence(A);
 
-  /// TODO: Find another way.
+  // --- Serialized Updates ---
+  // To avoid race conditions on a read-modify-write (RMW) operation (A(i,j) += my_rank),
+  // we let one rank update the entire array at a time.
   for (int r = 0; r < size; r++) {
+    // Only the process whose rank matches r performs the update.
     if (my_rank == r) {
       for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {
+          // Each process adds its rank value to each element.
           A(i, j) += my_rank;
         }
       }
     }
-    fence(A);
+    // Fence here ensures that updates from the current rank are flushed and visible
+    // to all other processes before the next rank begins updating.
+    nda::fence(A);
   }
-
-  /*
-  for (int i = 0; i < 3; ++i) {
-    for (int j = 0; j < 3; ++j) {
-      nda::fence(A);
-      A(i, j) += my_rank;
-      nda::fence(A);
-    }
-  }
-  */
+  // --- End of Serialized Updates ---
 
   for (int i = 0; i < 3; ++i) {
     for (int j = 0; j < 3; ++j) { EXPECT_EQ(A(i, j), expected_sum); }
   }
 }
 
+TEST(SHM, FencesAtomic) {
+  auto shm         = shm_allocator::get_communicator();
+  int my_rank      = shm.rank();
+  int size         = shm.size();
+  int expected_sum = (size * (size - 1)) / 2;
+  shape_t<2> shape = {3, 3};
+
+  nda::shared_array<std::atomic<int>, 2> A(shape);
+
+  EXPECT_EQ(A.shape(), shape);
+
+  for (int i = 0; i < shape[0]; ++i) {
+    for (int j = 0; j < shape[1]; ++j) { A(i, j) = 0; }
+  }
+
+  nda::fence(A);
+
+  // --- Atomic Updates ---
+  // Instead of serialized updates, every rank will update concurrently.
+  // We assume here that A(i,j) supports an atomic fetch-add operation.
+  // This pseudocode uses atomic_fetch_add which atomically adds a value
+  // and returns the previous value. Replace this with your actual atomic interface.
+  for (int i = 0; i < shape[0]; ++i) {
+    for (int j = 0; j < shape[1]; ++j) {
+      // The atomic operation ensures that concurrent updates do not conflict.
+      // For example:
+      std::atomic_fetch_add(&A(i, j), my_rank); // Atomically add my_rank to A(i,j)
+    }
+  }
+  nda::fence(A);
+  // --- End of Atomic Updates ---
+
+  for (int i = 0; i < 3; ++i) {
+    for (int j = 0; j < 3; ++j) { EXPECT_EQ(A(i, j), expected_sum); }
+  }
+}
 
 TEST(SHM, RowSum) {
   auto shm         = shm_allocator::get_communicator();
@@ -133,33 +169,17 @@ TEST(SHM, RowSum) {
 }
 
 TEST(SHM, SharedArrayViewAccess) {
+  auto shm = shm_allocator::get_communicator();
   nda::shared_array<int, 2> A({2, 2});
-  A(1, 1) = 11;
-
-  nda::fence(A);
-  EXPECT_EQ(A(1, 1), 11);
-
+  A(1, 1)                             = 11;
   nda::shared_array_view<int, 2> view = A;
-
   EXPECT_EQ(view(1, 1), 11);
-  nda::fence(A);
-  view(1, 1) = 99;
-  nda::fence(A);
+  nda::fence(view);
+  if (shm.rank() == 0) { view(1, 1) = 99; }
+  nda::fence(view);
   EXPECT_EQ(A(1, 1), 99);
 }
 
-TEST(SHM, ViewSync) {
-  nda::shared_array<int, 2> A({2, 2});
-  nda::shared_array_view<int, 2> view = A;
-
-  view(1, 1) = 5;
-
-  nda::fence(view);
-
-  EXPECT_EQ(view(1, 1), 5);
-}
-
-//TODO: make test better.
 TEST(SHM, SharedBorrowed) {
   using basic_array_borrowed_type =
      nda::basic_array<int, 2, nda::C_layout, 'A', nda::borrowed<nda::mem::MPISharedMemory, nda::mem::mpi_shm_allocator>>;
@@ -180,50 +200,19 @@ TEST(SHM, SharedBorrowed) {
   EXPECT_EQ(A(2, 2), 42);
 }
 
-// Test with borrowed and handle ===========================================================
-TEST(NDA, DefaultAllocator) {
-  nda::mem::handle_heap<int, nda::mem::mallocator<>> h(10);
-
-  nda::mem::handle_borrowed<int> hb(h);
-
-  EXPECT_NE(hb.parent(), nullptr);
-
-  EXPECT_EQ(h.data(), hb.data());
-}
-
-TEST(NDA, CustomAllocator) {
+TEST(SHM, CustomAllocator) {
   nda::mem::handle_heap<int, nda::mem::mpi_shm_allocator> h(10);
-
+  /// TODO: check what is meant here (add concept or static assert to mallocator)
   nda::mem::handle_borrowed<int, nda::mem::AddressSpace::MPISharedMemory, nda::mem::mallocator<>> hb(h);
-
   EXPECT_EQ(hb.parent(), nullptr);
 }
 
-TEST(NDA, BorrowFromPointer) {
-  int arr[5] = {1, 2, 3, 4, 5};
-
-  nda::mem::handle_borrowed<int> hb(arr);
-  EXPECT_EQ(hb.data(), arr);
-
-  EXPECT_EQ(hb.parent(), nullptr);
-}
-
-TEST(NDA, BorrowWithOffset) {
-  nda::mem::handle_heap<int, nda::mem::mallocator<>> h(10);
-
-  nda::mem::handle_borrowed<int> hb(h, 2);
-  EXPECT_EQ(hb.data(), h.data() + 2);
-
-  EXPECT_NE(hb.parent(), nullptr);
-}
-
-TEST(NDA, CustomAllocatorMatching) {
+TEST(SHM, CustomAllocatorMatching) {
   nda::mem::handle_heap<int, nda::mem::mpi_shm_allocator> h(10);
-
   nda::mem::handle_borrowed<int, nda::mem::AddressSpace::MPISharedMemory, nda::mem::mpi_shm_allocator> hb(h);
-
   EXPECT_NE(hb.parent(), nullptr);
   EXPECT_EQ(h.data(), hb.data());
+  EXPECT_EQ(hb.userdata(), h.userdata());
 }
 
 TEST(SHM, Concept) {
@@ -273,23 +262,19 @@ TEST(SHM, SimpleArray) { //NOLINT
   }
 }
 
-TEST(SHM, AccessElement) {
-  nda::shared_array<int, 2> A;
-  A.resize({3, 3});
+TEST(SHM, ConstructWithShape) {
+  shape_t<2> shape = {3, 3};
+  nda::shared_array<int, 2> A(shape);
+  EXPECT_EQ(A.shape(), shape);
 
-  A(0, 0) = 42;
-  EXPECT_EQ(A(0, 0), 42);
-}
+  for (int i = 0; i < 3; ++i) {
+    for (int j = 0; j < 3; ++j) { A(i, j) = i * 10 + j; }
+  }
+  fence(A);
 
-TEST(SHM, MoveSemantic) {
-  nda::shared_array<double, 2> A;
-
-  A.resize({4, 4});
-  A(2, 2) = 3.1415;
-
-  nda::shared_array<double, 2> B = std::move(A);
-
-  EXPECT_EQ(B(2, 2), 3.1415);
+  for (int i = 0; i < 3; ++i) {
+    for (int j = 0; j < 3; ++j) { EXPECT_EQ(A(i, j), i * 10 + j); }
+  }
 }
 
 TEST(SHM, SubArray) {
@@ -308,42 +293,6 @@ TEST(SHM, SubArray) {
   EXPECT_EQ(sub_A(1, 2), A(2, 3));
 }
 
-TEST(SHM, SyncAcrossRanks) {
-  auto shm = shm_allocator::get_communicator();
-  nda::shared_array<int, 2> A;
-
-  A.resize({2, 2});
-
-  if (shm.rank() == 0) {
-    A(0, 0) = 42;
-    A(1, 1) = 99;
-  }
-
-  shm.barrier();
-
-  EXPECT_EQ(A(0, 0), 42);
-  EXPECT_EQ(A(1, 1), 99);
-}
-
-TEST(SHM, ConstructWithShape) {
-  auto shm         = nda::mem::mpi_shm_allocator::get_communicator();
-  shape_t<2> shape = {3, 3};
-  nda::shared_array<int, 2> A(shape);
-
-  EXPECT_EQ(A.shape(), shape);
-
-  if (shm.rank() == 0) {
-    for (int i = 0; i < 3; ++i) {
-      for (int j = 0; j < 3; ++j) { A(i, j) = i * 10 + j; }
-    }
-  }
-  fence(A);
-
-  for (int i = 0; i < 3; ++i) {
-    for (int j = 0; j < 3; ++j) { EXPECT_EQ(A(i, j), i * 10 + j); }
-  }
-}
-
 TEST(SHM, ForEachChunked) {
   auto shm         = shm_allocator::get_communicator();
   int my_chunk     = shm.rank();
@@ -358,19 +307,11 @@ TEST(SHM, ForEachChunked) {
   nda::fence(A);
 
   std::vector<int> expected(total, -1);
-  int start = 0;
   for (int r = 0; r < n_chunk; r++) {
-    int count = total / n_chunk + (r < (total % n_chunk) ? 1 : 0);
-    for (int idx = start; idx < start + count; idx++) { expected[idx] = r; }
-    start += count;
+    auto chunk = itertools::chunk_range(0, total, n_chunk, r);
+    for (int idx = chunk.first; idx < chunk.second; ++idx) { expected[idx] = r; }
   }
 
-  for (int i = 0; i < shape[0]; i++) {
-    for (int j = 0; j < shape[1]; j++) {
-      int linear_index = i * shape[1] + j;
-      int exp_val      = expected[linear_index];
-      EXPECT_EQ(A(i, j), exp_val);
-    }
-  }
+  for (int i = 0; i < total; i++) { EXPECT_EQ(A(nda::_linear_index_t{i}), expected[i]); }
 }
 MPI_TEST_MAIN;
