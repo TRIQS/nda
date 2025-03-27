@@ -24,6 +24,7 @@
 #include <atomic>
 
 // ==============================================================
+using mpi_shm_allocator = nda::mem::mallocator<nda::mem::MPISharedMemory>;
 
 TEST(SHM, MoveSemantic) {
   nda::shared_array<double, 2> A;
@@ -173,14 +174,14 @@ TEST(SHM, SharedArrayViewAccess) {
 
 TEST(SHM, SharedBorrowed) {
   using basic_array_borrowed_type =
-     nda::basic_array<int, 2, nda::C_layout, 'A', nda::borrowed<nda::mem::MPISharedMemory, nda::mem::mpi_shm_allocator>>;
+     nda::basic_array<int, 2, nda::C_layout, 'A', nda::borrowed<nda::mem::MPISharedMemory>>;
   using layout  = typename basic_array_borrowed_type::layout_t;
   using storage = typename basic_array_borrowed_type::storage_t;
 
   layout arr = std::array{4, 4};
 
-  nda::mem::handle_heap<int, nda::mem::mpi_shm_allocator> h(16);
-  nda::mem::handle_borrowed<int, nda::mem::MPISharedMemory, nda::mem::mpi_shm_allocator> hb(h);
+  nda::mem::handle_heap<int, mpi_shm_allocator> h(16);
+  nda::mem::handle_borrowed<int, nda::mem::MPISharedMemory> hb(h);
 
   storage sto = hb;
 
@@ -191,16 +192,17 @@ TEST(SHM, SharedBorrowed) {
   EXPECT_EQ(A(2, 2), 42);
 }
 
-TEST(SHM, CustomAllocator) {
-  nda::mem::handle_heap<int, nda::mem::mpi_shm_allocator> h(10);
-  /// TODO: check what is meant here (add concept or static assert to mallocator)
-  nda::mem::handle_borrowed<int, nda::mem::AddressSpace::MPISharedMemory, nda::mem::mallocator<>> hb(h);
-  EXPECT_EQ(hb.parent(), nullptr);
+
+TEST(SHM, MPIShmAllocator) {
+  nda::mem::handle_heap<int, mpi_shm_allocator> h(10);
+  nda::mem::handle_borrowed<int, nda::mem::MPISharedMemory> hb(h);
+  EXPECT_NE(hb.parent(), nullptr);
 }
 
+
 TEST(SHM, CustomAllocatorMatching) {
-  nda::mem::handle_heap<int, nda::mem::mpi_shm_allocator> h(10);
-  nda::mem::handle_borrowed<int, nda::mem::AddressSpace::MPISharedMemory, nda::mem::mpi_shm_allocator> hb(h);
+  nda::mem::handle_heap<int, mpi_shm_allocator> h(10);
+  nda::mem::handle_borrowed<int, nda::mem::MPISharedMemory> hb(h);
   EXPECT_NE(hb.parent(), nullptr);
   EXPECT_EQ(h.data(), hb.data());
   EXPECT_EQ(hb.userdata(), h.userdata());
@@ -208,7 +210,7 @@ TEST(SHM, CustomAllocatorMatching) {
 
 TEST(SHM, Concept) {
   static_assert(nda::SharedArray<nda::shared_array<int, 2>>);
-  static_assert(nda::SharedArray<nda::basic_array<int, 2, nda::C_layout, 'A', nda::heap_basic<nda::mem::mpi_shm_allocator>>>);
+  static_assert(nda::SharedArray<nda::basic_array<int, 2, nda::C_layout, 'A', nda::heap_basic<mpi_shm_allocator>>>);
   static_assert(!nda::SharedArray<nda::basic_array<int, 2, nda::C_layout, 'A', nda::heap<>>>);
   static_assert(!nda::SharedArray<nda::shared_array<int, 2, nda::C_layout, nda::heap<>>>);
 }
@@ -217,7 +219,7 @@ TEST(SHM, Allocator) { //NOLINT
   constexpr int num_elements = 11;
   constexpr int bytes        = num_elements * sizeof(int);
 
-  nda::mem::mpi_shm_allocator allocator;
+  mpi_shm_allocator allocator;
   auto blk = allocator.allocate(bytes);
   int *ptr = reinterpret_cast<int *>(blk.ptr);
   EXPECT_NE(ptr, nullptr);
@@ -241,7 +243,7 @@ TEST(SHM, Allocator) { //NOLINT
 }
 
 TEST(SHM, SimpleArray) { //NOLINT
-  nda::basic_array<long, 2, nda::C_layout, 'A', nda::heap_basic<nda::mem::mpi_shm_allocator>> A(3, 3);
+  nda::basic_array<long, 2, nda::C_layout, 'A', nda::heap_basic<mpi_shm_allocator>> A(3, 3);
   EXPECT_EQ(A.shape(), (shape_t<2>{3, 3}));
 
   for (int i = 0; i < 3; ++i) {
@@ -308,7 +310,7 @@ TEST(SHM, ForEachChunked) {
 
 /*
 TEST(MPISharedMemory, HandleHeapCopyConstructor) {
-  using allocator_type = nda::mem::mpi_shm_allocator;
+  using allocator_type = mpi_shm_allocator;
   nda::mem::handle_heap<int, allocator_type> h_original(100);
 
   for (int i = 0; i < h_original.size(); ++i) {

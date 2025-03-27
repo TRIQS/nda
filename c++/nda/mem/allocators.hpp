@@ -103,7 +103,6 @@ namespace nda::mem {
      */
     static blk_t allocate(size_t s) noexcept {
       if constexpr (AdrSp == mem::MPISharedMemory) {
-        // mpi_shm_allocator<>{}.allocate(s);
         ASSERT(s <= std::numeric_limits<MPI_Aint>::max());
         auto const &shm = mem::default_alloc::get_communicator();
         auto *win       = new mpi::shared_window<char>{shm, shm.rank() == 0 ? (MPI_Aint)s : 0};
@@ -700,75 +699,6 @@ namespace nda::mem {
       for (int i = 0; i < 64; ++i) { os << "[2^" << i << ", 2^" << i + 1 << "): " << hist[63 - i] << "\n"; }
     }
   };
-
-  /**
-   * @brief Custom allocator that uses mpi::shared_window to allocate memory.
-   * @tparam AdrSp nda::mem::AddressSpace in which the memory is allocated.
-   *
-   * Allocates the same amount of memory on each shared memory island.
-   */
-  class mpi_shm_allocator {
-    public:
-    /// Default constructor.
-    mpi_shm_allocator() = default;
-
-    /// Deleted copy constructor.
-    mpi_shm_allocator(mpi_shm_allocator const &) = delete;
-
-    /// Default move constructor.
-    mpi_shm_allocator(mpi_shm_allocator &&) = default;
-
-    /// Deleted copy assignment operator.
-    mpi_shm_allocator &operator=(mpi_shm_allocator const &) = delete;
-
-    /// Default move assignment operator.
-    mpi_shm_allocator &operator=(mpi_shm_allocator &&) = default;
-
-    /// MPI shared memory always lives in the Host address space.
-    static constexpr auto address_space = MPISharedMemory;
-
-    /// Type of allocated block.
-    using blk_t = blk_fat_t;
-
-    /**
-     * @brief Allocate memory using mpi::shared_window.
-     *
-     * @param s Size in bytes of the memory to allocate.
-     * @param shm MPI shared memory communicator.
-     * @return nda::mem::blk_t memory block.
-     */
-    static blk_t allocate(size_t s) noexcept {
-      ASSERT(s <= std::numeric_limits<MPI_Aint>::max());
-      auto const &shm = mem::default_alloc::get_communicator();
-      auto *win       = new mpi::shared_window<char>{shm, shm.rank() == 0 ? (MPI_Aint)s : 0};
-      return {(char *)win->base(0), (std::size_t)s, (void *)win}; // NOLINT
-    }
-
-    /**
-     * @brief Allocate memory and set it to zero.
-     *
-     * @param s Size in bytes of the memory to allocate.
-     * @param shm MPI shared memory communicator.
-     * @return nda::mem::blk_t memory block.
-     */
-    static blk_t allocate_zero(size_t s) noexcept {
-      ASSERT(s <= std::numeric_limits<MPI_Aint>::max());
-      auto const &shm = mem::default_alloc::get_communicator();
-      auto *win       = new mpi::shared_window<char>{shm, shm.rank() == 0 ? (MPI_Aint)s : 0};
-      char *baseptr   = win->base(0);
-      win->fence();
-      if (shm.rank() == 0) { std::memset(baseptr, 0, s); }
-      win->fence();
-      return {baseptr, (std::size_t)s, (void *)win}; // NOLINT
-    }
-
-    /**
-     * @brief Deallocate memory using mpi::shared_window.
-     * @param b nda::mem::blk_t memory block to deallocate.
-     */
-    static void deallocate(blk_t b) noexcept { delete static_cast<mpi::shared_window<char> *>(b.userdata); }
-  };
-
   /** @} */
 
 } // namespace nda::mem

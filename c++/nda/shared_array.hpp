@@ -21,7 +21,7 @@
  * @brief Provides the class and utilities for arrays in MPI shared memory.
  *
  * This header defines a shared_array alias that specializes basic_array
- * for arrays allocated in MPI shared memory using the nda::mem::mpi_shm_allocator.
+ * for arrays allocated in MPI shared memory using the nda::mem::mallocator.
  * It also provides helper functions such as get_win(), fence(), and for_each_chunked()
  * to facilitate MPI synchronization and chunked iteration.
  */
@@ -34,8 +34,7 @@ namespace nda {
 
   /// Concept for a valid shared array.
   template <typename shm>
-  concept SharedArray =
-     (shm::storage_t::address_space == mem::MPISharedMemory) && std::is_same_v<typename shm::container_policy_t, heap_basic<mem::mpi_shm_allocator>>;
+  concept SharedArray = shm::storage_t::address_space == mem::MPISharedMemory;
 
   /**
    * @addtogroup shared_av_types
@@ -50,7 +49,7 @@ namespace nda {
    *  - Rank: The number of dimensions of the array.
    *  - Layout: The layout policy (default is C_layout).
    *  - Algebra: Set to 'A' for shared arrays.
-   *  - ContainerPolicy: Uses heap_basic with mpi_shm_allocator to allocate memory on an MPI shared memory island.
+   *  - ContainerPolicy: Uses heap_basic with mallocator to allocate memory on an MPI shared memory island.
    *
    * @tparam ValueType The type of the elements stored in the array.
    * @tparam Rank The number of dimensions.
@@ -58,7 +57,7 @@ namespace nda {
    * @tparam ContainerPolicy The container policy for memory allocation.
    */
 
-  template <typename ValueType, int Rank, typename Layout = C_layout, typename ContainerPolicy = heap_basic<mem::mpi_shm_allocator>>
+  template <typename ValueType, int Rank, typename Layout = C_layout, typename ContainerPolicy = heap<mem::MPISharedMemory>>
   using shared_array = basic_array<ValueType, Rank, Layout, 'A', ContainerPolicy>;
 
   /**
@@ -70,7 +69,7 @@ namespace nda {
    * @tparam Layout Layout policy of the view.
    */
   template <typename ValueType, int Rank, typename Layout = C_stride_layout>
-  using shared_array_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
+  using shared_array_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory>>;
 
   /**
    * @brief Same as shared_array_view except for const value types.
@@ -81,7 +80,7 @@ namespace nda {
    */
   template <typename ValueType, int Rank, typename Layout = C_stride_layout>
   using shared_array_const_view =
-     basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
+     basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory>>;
 
   /**
    * @brief Alias template for a contiguous shared array view.
@@ -96,7 +95,7 @@ namespace nda {
   template <typename ValueType, int Rank, typename Layout = C_layout>
     requires(has_contiguous(Layout::template mapping<Rank>::layout_prop))
   using shared_array_contiguous_view =
-     basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
+     basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory>>;
 
   /**
    * @brief Alias template for a contiguous shared array const view.
@@ -111,7 +110,7 @@ namespace nda {
   template <typename ValueType, int Rank, typename Layout = C_layout>
     requires(has_contiguous(Layout::template mapping<Rank>::layout_prop))
   using shared_array_contiguous_const_view =
-     basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
+     basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory>>;
 
   /**
    * @brief Alias for matrices allocated in MPI shared memory.
@@ -121,14 +120,14 @@ namespace nda {
    *  - Rank: The number of dimensions.
    *  - Layout: The memory layout policy (default is C_layout).
    *  - Algebra: Set to 'M' for matrix algebra.
-   *  - ContainerPolicy: Uses heap_basic with mpi_shm_allocator to allocate memory on an MPI shared memory island.
+   *  - ContainerPolicy: Uses heap_basic with mallocator to allocate memory on an MPI shared memory island.
    *
    * @tparam ValueType The type of the elements stored in the matrix.
    * @tparam Rank The number of dimensions of the matrix.
    * @tparam Layout The memory layout policy.
    * @tparam ContainerPolicy The container policy for memory allocation.
    */
-  template <typename ValueType, int Rank, typename Layout = C_layout, typename ContainerPolicy = heap_basic<mem::mpi_shm_allocator>>
+  template <typename ValueType, int Rank, typename Layout = C_layout, typename ContainerPolicy = heap<mem::MPISharedMemory>>
   using shared_matrix = basic_array<ValueType, Rank, Layout, 'M', ContainerPolicy>;
 
   /**
@@ -142,7 +141,7 @@ namespace nda {
    * @tparam Layout The memory layout policy (default is C_stride_layout).
    */
   template <typename ValueType, int Rank, typename Layout = C_stride_layout>
-  using shared_matrix_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
+  using shared_matrix_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory>>;
 
   /**
    * @brief Alias template for a const shared matrix view.
@@ -156,7 +155,7 @@ namespace nda {
    */
   template <typename ValueType, int Rank, typename Layout = C_stride_layout>
   using shared_matrix_const_view =
-     basic_array_view<ValueType const, Rank, Layout, 'M', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
+     basic_array_view<ValueType const, Rank, Layout, 'M', default_accessor, borrowed<mem::MPISharedMemory>>;
 
   /**
    * @brief Alias for vectors allocated in MPI shared memory.
@@ -166,14 +165,14 @@ namespace nda {
    *  - Rank: The number of dimensions (usually 1 for vectors).
    *  - Layout: The memory layout policy (default is C_layout).
    *  - Algebra: Set to 'V' for vector algebra.
-   *  - ContainerPolicy: Uses heap_basic with mpi_shm_allocator to allocate memory on an MPI shared memory island.
+   *  - ContainerPolicy: Uses heap_basic with mallocator to allocate memory on an MPI shared memory island.
    *
    * @tparam ValueType The type of the elements stored in the vector.
    * @tparam Rank The number of dimensions of the vector.
    * @tparam Layout The memory layout policy.
    * @tparam ContainerPolicy The container policy for memory allocation.
    */
-  template <typename ValueType, int Rank, typename Layout = C_layout, typename ContainerPolicy = heap_basic<mem::mpi_shm_allocator>>
+  template <typename ValueType, int Rank, typename Layout = C_layout, typename ContainerPolicy = heap<mem::MPISharedMemory>>
   using shared_vector = basic_array<ValueType, Rank, Layout, 'V', ContainerPolicy>;
 
   /**
@@ -187,7 +186,7 @@ namespace nda {
    * @tparam Layout The memory layout policy (default is C_stride_layout).
    */
   template <typename ValueType, int Rank, typename Layout = C_stride_layout>
-  using shared_vector_view = basic_array_view<ValueType, Rank, Layout, 'V', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
+  using shared_vector_view = basic_array_view<ValueType, Rank, Layout, 'V', default_accessor, borrowed<mem::MPISharedMemory>>;
 
   /**
    * @brief Alias template for a const shared vector view.
@@ -201,7 +200,7 @@ namespace nda {
    */
   template <typename ValueType, int Rank, typename Layout = C_stride_layout>
   using shared_vector_const_view =
-     basic_array_view<ValueType const, Rank, Layout, 'V', default_accessor, borrowed<mem::MPISharedMemory, mem::mpi_shm_allocator>>;
+     basic_array_view<ValueType const, Rank, Layout, 'V', default_accessor, borrowed<mem::MPISharedMemory>>;
 
   /** @} */
 

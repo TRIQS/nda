@@ -186,7 +186,7 @@ namespace nda::mem {
     explicit handle_heap(handle_heap const &h) : handle_heap(h.size(), do_not_initialize) {
       if (is_null()) return;
 
-      if constexpr (std::is_same_v<A, nda::mem::mpi_shm_allocator>) {
+      if constexpr (A::address_space == nda::mem::MPISharedMemory) {
         mpi::shared_window<char> *win = h.userdata();
         mpi::shared_communicator shm  = win->get_communicator();
 
@@ -241,7 +241,7 @@ namespace nda::mem {
     template <OwningHandle<value_type> H>
     explicit handle_heap(H const &h) : handle_heap(h.size(), do_not_initialize) {
       if (is_null()) return;
-      if constexpr (std::is_same_v<A, nda::mem::mpi_shm_allocator>) {
+      if constexpr (A::address_space == nda::mem::MPISharedMemory) {
         mpi::shared_window<char> *win = h.userdata();
         mpi::shared_communicator shm  = win->get_communicator();
 
@@ -898,7 +898,7 @@ namespace nda::mem {
    * @tparam AdrSp nda::mem::AddressSpace in which the memory is allocated.
    * @tparam Allocator nda::mem::allocator how the memory is allocated.
    */
-  template <typename T, AddressSpace AdrSp = Host, Allocator A = std::conditional_t<AdrSp == MPISharedMemory, mpi_shm_allocator, mallocator<AdrSp>>>
+  template <typename T, AddressSpace AdrSp = Host, Allocator A = mallocator<AdrSp>>
   struct handle_borrowed {
     private:
     // Value type of the data with const removed.
