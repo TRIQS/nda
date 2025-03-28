@@ -224,7 +224,7 @@ namespace nda::mem {
       if (this != std::addressof(h)) {
         if (!sptr && !is_null()) {
           destruct(_blk);
-          /// TODO: (check if this is the correct solution) Reset the blk to null state to avoid double free from the move constructor when it is null
+          /// Reset the blk to null state to avoid double free from the move constructor when it is null
           _blk = blk_t{};
         }
         *this = handle_heap{h};
@@ -898,13 +898,13 @@ namespace nda::mem {
    * @tparam AdrSp nda::mem::AddressSpace in which the memory is allocated.
    * @tparam Allocator nda::mem::allocator how the memory is allocated.
    */
-  template <typename T, AddressSpace AdrSp = Host, Allocator A = mallocator<AdrSp>>
+  template <typename T, AddressSpace AdrSp = Host> /// TODO: remove allocator A
   struct handle_borrowed {
     private:
     // Value type of the data with const removed.
     using T0 = std::remove_const_t<T>;
 
-    using handle_t = handle_heap<T0, A>;
+    using handle_t = handle_heap<T0, mallocator<AdrSp>>;
 
     // Parent handle (required for regular -> shared promotion in Python Converter).
     handle_t const *_parent = nullptr;
@@ -917,7 +917,7 @@ namespace nda::mem {
     using value_type = T;
 
     /// Type of the borrowed block.
-    using blk_t = typename handle_heap<T0, A>::blk_t;
+    using blk_t = typename handle_heap<T0, mallocator<AdrSp>>::blk_t;
 
     /// nda::mem::AddressSpace in which the memory is allocated.
     static constexpr auto address_space = AdrSp;

@@ -32,7 +32,7 @@ namespace nda::mem {
    *
    * @note This class is not thread-safe. Concurrent modifications may lead to undefined behavior.
    */
-  class default_alloc {
+  class default_alloc {/// mpi_shm + default constructor in private
     /**
      * @brief Return reference to the singleton for the global MPI shared communicator instance of the MPI shared memory allocator.
      *
@@ -81,8 +81,10 @@ namespace nda::mem {
       ptr = std::malloc(size); // NOLINT (we want to return a void*)
     } else if constexpr (AdrSp == Device) {
       device_error_check(cudaMalloc((void **)&ptr, size), "cudaMalloc");
-    } else {
+    } else if constexpr (AdrSp == Unified){
       device_error_check(cudaMallocManaged((void **)&ptr, size), "cudaMallocManaged");
+    } else {
+      static_assert(false, "Not implemented!");
     }
     return ptr;
   }
@@ -104,8 +106,10 @@ namespace nda::mem {
 
     if constexpr (AdrSp == Host) {
       std::free(p); // NOLINT (we want to call free with a void*)
-    } else {
+    } else if (have_device_compatible_addr_space<AdrSp>){
       device_error_check(cudaFree(p), "cudaFree");
+    } else {
+      static_assert(false, "Not implemented!");
     }
   }
 

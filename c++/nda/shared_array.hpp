@@ -33,6 +33,7 @@
 namespace nda {
 
   /// Concept for a valid shared array.
+  /// storage array has userdata in addition
   template <typename shm>
   concept SharedArray = shm::storage_t::address_space == mem::MPISharedMemory;
 
