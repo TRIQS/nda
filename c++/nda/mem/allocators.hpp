@@ -104,7 +104,7 @@ namespace nda::mem {
     static blk_t allocate(size_t s) noexcept {
       if constexpr (AdrSp == mem::MPISharedMemory) {
         ASSERT(s <= std::numeric_limits<MPI_Aint>::max());
-        auto const &shm = mem::default_alloc::get_communicator();
+        auto const &shm = mem::mpi_shm::get_communicator();
         auto *win       = new mpi::shared_window<char>{shm, shm.rank() == 0 ? (MPI_Aint)s : 0};
         return {(char *)win->base(0), (std::size_t)s, (void *)win};
       } else {
@@ -117,6 +117,7 @@ namespace nda::mem {
      *
      * @details The behavior depends on the address space:
      * - It uses std::calloc for `Host` nda::mem::AddressSpace.
+     * - Uses mpi::shared_window for `MPISharedMemory`.
      * - Otherwise it uses nda::mem::malloc and nda::mem::memset.
      *
      * @param s Size in bytes of the memory to allocate.
@@ -127,7 +128,7 @@ namespace nda::mem {
         return {(char *)std::calloc(s, 1 /* byte */), s}; // NOLINT (C-style cast is fine here)
       } else if constexpr (AdrSp == mem::MPISharedMemory) {
         ASSERT(s <= std::numeric_limits<MPI_Aint>::max());
-        auto const &shm = mem::default_alloc::get_communicator();
+        auto const &shm = mem::mpi_shm::get_communicator();
         auto *win       = new mpi::shared_window<char>{shm, shm.rank() == 0 ? (MPI_Aint)s : 0};
         char *baseptr   = win->base(0);
         win->fence();

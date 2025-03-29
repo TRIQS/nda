@@ -898,7 +898,7 @@ namespace nda::mem {
    * @tparam AdrSp nda::mem::AddressSpace in which the memory is allocated.
    * @tparam Allocator nda::mem::allocator how the memory is allocated.
    */
-  template <typename T, AddressSpace AdrSp = Host> /// TODO: remove allocator A
+  template <typename T, AddressSpace AdrSp = Host>
   struct handle_borrowed {
     private:
     // Value type of the data with const removed.

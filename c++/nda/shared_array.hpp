@@ -34,8 +34,10 @@ namespace nda {
 
   /// Concept for a valid shared array.
   /// storage array has userdata in addition
-  template <typename shm>
-  concept SharedArray = shm::storage_t::address_space == mem::MPISharedMemory;
+  template <typename Array>
+  concept SharedArray = requires(Array a) {
+    { a.storage().userdata() } -> std::convertible_to<mpi::shared_window<char> *>;
+  } && Array::storage_t::address_space == mem::MPISharedMemory;
 
   /**
    * @addtogroup shared_av_types
@@ -80,8 +82,7 @@ namespace nda {
    * @tparam Layout Layout policy of the view.
    */
   template <typename ValueType, int Rank, typename Layout = C_stride_layout>
-  using shared_array_const_view =
-     basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory>>;
+  using shared_array_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory>>;
 
   /**
    * @brief Alias template for a contiguous shared array view.
@@ -95,8 +96,7 @@ namespace nda {
    */
   template <typename ValueType, int Rank, typename Layout = C_layout>
     requires(has_contiguous(Layout::template mapping<Rank>::layout_prop))
-  using shared_array_contiguous_view =
-     basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory>>;
+  using shared_array_contiguous_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory>>;
 
   /**
    * @brief Alias template for a contiguous shared array const view.
@@ -110,8 +110,7 @@ namespace nda {
    */
   template <typename ValueType, int Rank, typename Layout = C_layout>
     requires(has_contiguous(Layout::template mapping<Rank>::layout_prop))
-  using shared_array_contiguous_const_view =
-     basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory>>;
+  using shared_array_contiguous_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory>>;
 
   /**
    * @brief Alias for matrices allocated in MPI shared memory.
@@ -155,8 +154,7 @@ namespace nda {
    * @tparam Layout The memory layout policy (default is C_stride_layout).
    */
   template <typename ValueType, int Rank, typename Layout = C_stride_layout>
-  using shared_matrix_const_view =
-     basic_array_view<ValueType const, Rank, Layout, 'M', default_accessor, borrowed<mem::MPISharedMemory>>;
+  using shared_matrix_const_view = basic_array_view<ValueType const, Rank, Layout, 'M', default_accessor, borrowed<mem::MPISharedMemory>>;
 
   /**
    * @brief Alias for vectors allocated in MPI shared memory.
@@ -200,8 +198,7 @@ namespace nda {
    * @tparam Layout The memory layout policy (default is C_stride_layout).
    */
   template <typename ValueType, int Rank, typename Layout = C_stride_layout>
-  using shared_vector_const_view =
-     basic_array_view<ValueType const, Rank, Layout, 'V', default_accessor, borrowed<mem::MPISharedMemory>>;
+  using shared_vector_const_view = basic_array_view<ValueType const, Rank, Layout, 'V', default_accessor, borrowed<mem::MPISharedMemory>>;
 
   /** @} */
 
@@ -256,6 +253,7 @@ namespace nda {
    * @return Pointer to an mpi::shared_window<char> if available; nullptr otherwise.
    */
   template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename ContainerPolicy>
+  //requires SharedArray<basic_array<ValueType, Rank, LayoutPolicy, Algebra, ContainerPolicy>>
   mpi::shared_window<char> *get_window(basic_array<ValueType, Rank, LayoutPolicy, Algebra, ContainerPolicy> const &array) {
     auto const &sto = array.storage();
     if constexpr (requires { sto.userdata(); }) { return sto.userdata(); }
@@ -275,6 +273,7 @@ namespace nda {
    * @return Pointer to an mpi::shared_window<char> if available; nullptr otherwise.
    */
   template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename AccessorPolicy, typename OwningPolicy>
+  //requires SharedArray<basic_array_view<ValueType, Rank, LayoutPolicy, Algebra, OwningPolicy>>
   mpi::shared_window<char> *get_window(basic_array_view<ValueType, Rank, LayoutPolicy, Algebra, AccessorPolicy, OwningPolicy> const &array_view) {
     auto const &sto = array_view.storage();
     if constexpr (requires { sto.userdata(); }) { return sto.userdata(); }

@@ -39,7 +39,7 @@ TEST(SHM, MoveSemantic) {
 }
 
 TEST(SHM, MPIFence) {
-  auto shm    = nda::mem::default_alloc::get_communicator();
+  auto shm    = nda::mem::mpi_shm::get_communicator();
   int my_rank = (shm.size() > 2) ? 2 : 0;
   nda::shared_array<int, 2> A({2, 2});
 
@@ -51,7 +51,7 @@ TEST(SHM, MPIFence) {
 }
 
 TEST(SHM, LordOfRings) {
-  auto shm = nda::mem::default_alloc::get_communicator();
+  auto shm = nda::mem::mpi_shm::get_communicator();
   int rank = shm.rank();
   int size = shm.size();
 
@@ -70,7 +70,7 @@ TEST(SHM, LordOfRings) {
 }
 
 TEST(SHM, Fences) {
-  auto shm         = nda::mem::default_alloc::get_communicator();
+  auto shm         = nda::mem::mpi_shm::get_communicator();
   int my_rank      = shm.rank();
   int size         = shm.size();
   int expected_sum = (size * (size - 1)) / 2;
@@ -109,7 +109,7 @@ TEST(SHM, Fences) {
 }
 
 TEST(SHM, FencesAtomic) {
-  auto shm         = nda::mem::default_alloc::get_communicator();
+  auto shm         = nda::mem::mpi_shm::get_communicator();
   int my_rank      = shm.rank();
   int size         = shm.size();
   int expected_sum = (size * (size - 1)) / 2;
@@ -141,7 +141,7 @@ TEST(SHM, FencesAtomic) {
 }
 
 TEST(SHM, RowSum) {
-  auto shm         = nda::mem::default_alloc::get_communicator();
+  auto shm         = nda::mem::mpi_shm::get_communicator();
   int rank         = shm.rank();
   int size         = shm.size();
   int expected_sum = (size * (size - 1)) / 2;
@@ -161,7 +161,7 @@ TEST(SHM, RowSum) {
 }
 
 TEST(SHM, SharedArrayViewAccess) {
-  auto shm = nda::mem::default_alloc::get_communicator();
+  auto shm = nda::mem::mpi_shm::get_communicator();
   nda::shared_array<int, 2> A({2, 2});
   A(1, 1)                             = 11;
   nda::shared_array_view<int, 2> view = A;
@@ -173,10 +173,9 @@ TEST(SHM, SharedArrayViewAccess) {
 }
 
 TEST(SHM, SharedBorrowed) {
-  using basic_array_borrowed_type =
-     nda::basic_array<int, 2, nda::C_layout, 'A', nda::borrowed<nda::mem::MPISharedMemory>>;
-  using layout  = typename basic_array_borrowed_type::layout_t;
-  using storage = typename basic_array_borrowed_type::storage_t;
+  using basic_array_borrowed_type = nda::basic_array<int, 2, nda::C_layout, 'A', nda::borrowed<nda::mem::MPISharedMemory>>;
+  using layout                    = typename basic_array_borrowed_type::layout_t;
+  using storage                   = typename basic_array_borrowed_type::storage_t;
 
   layout arr = std::array{4, 4};
 
@@ -192,13 +191,11 @@ TEST(SHM, SharedBorrowed) {
   EXPECT_EQ(A(2, 2), 42);
 }
 
-
 TEST(SHM, MPIShmAllocator) {
   nda::mem::handle_heap<int, mpi_shm_allocator> h(10);
   nda::mem::handle_borrowed<int, nda::mem::MPISharedMemory> hb(h);
   EXPECT_NE(hb.parent(), nullptr);
 }
-
 
 TEST(SHM, CustomAllocatorMatching) {
   nda::mem::handle_heap<int, mpi_shm_allocator> h(10);
@@ -287,7 +284,7 @@ TEST(SHM, SubArray) {
 }
 
 TEST(SHM, ForEachChunked) {
-  auto shm         = nda::mem::default_alloc::get_communicator();
+  auto shm         = nda::mem::mpi_shm::get_communicator();
   int my_chunk     = shm.rank();
   int n_chunk      = shm.size();
   shape_t<2> shape = {5, 5};
