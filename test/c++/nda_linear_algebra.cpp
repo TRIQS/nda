@@ -404,7 +404,7 @@ void test_solve() {
 
   // solve A * X = B using the exact matrix inverse
   auto Ainv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
-  auto X   = matrix_t{Ainv * B};
+  auto X    = matrix_t{Ainv * B};
   EXPECT_ARRAY_NEAR(matrix_t{A * X}, B);
 
   // solve A * X = B using solve_in_place
@@ -415,7 +415,7 @@ void test_solve() {
   EXPECT_ARRAY_NEAR(X, Bcopy);
 
   // solve A * x = b using solve_in_place
-  Acopy = A;
+  Acopy  = A;
   auto b = vector_t{B(nda::range::all, 0)};
   nda::solve_in_place(Acopy, b);
   EXPECT_ARRAY_NEAR(A * b, B(nda::range::all, 0));
@@ -437,4 +437,35 @@ TEST(NDA, LinearAlgebraSolve) {
   test_solve<double, nda::F_layout>();
   test_solve<std::complex<double>, nda::C_layout>();
   test_solve<std::complex<double>, nda::F_layout>();
+}
+
+// Check the SVD of a matrix.
+template <typename value_t, typename Layout>
+void test_svd() {
+  using matrix_t = nda::matrix<value_t, Layout>;
+
+  auto A = matrix_t{{2, -2, 1}, {-4, -8, -8}};
+  auto s = nda::vector<double>{12, 3};
+
+  // compute the SVD of A
+  auto [U_1, s_1, VH_1] = nda::svd(A);
+  auto S_1              = matrix_t::zeros(A.shape());
+  for (auto i : nda::range(2)) S_1(i, i) = s_1(i);
+  EXPECT_ARRAY_NEAR(s_1, s, 1e-14);
+  EXPECT_ARRAY_NEAR(A, U_1 * S_1 * VH_1, 1e-14);
+
+  // compute the SVD of A in place
+  auto A_copy           = A;
+  auto [U_2, s_2, VH_2] = nda::svd_in_place(A_copy);
+  auto S_2              = matrix_t::zeros(A.shape());
+  for (auto i : nda::range(2)) S_2(i, i) = s_2(i);
+  EXPECT_ARRAY_NEAR(s, s_2, 1e-14);
+  EXPECT_ARRAY_NEAR(A, U_2 * S_2 * VH_2, 1e-14);
+}
+
+TEST(NDA, LinearAlgebraSVD) {
+  test_svd<double, nda::C_layout>();
+  test_svd<double, nda::F_layout>();
+  test_svd<std::complex<double>, nda::C_layout>();
+  test_svd<std::complex<double>, nda::F_layout>();
 }
