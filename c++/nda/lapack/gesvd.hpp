@@ -22,6 +22,7 @@
 #pragma once
 
 #include "./interface/cxx_interface.hpp"
+#include "../basic_functions.hpp"
 #include "../concepts.hpp"
 #include "../declarations.hpp"
 #include "../exceptions.hpp"
@@ -71,14 +72,19 @@ namespace nda::lapack {
    * @return Integer return code from the LAPACK call.
    */
   template <MemoryMatrix A, MemoryVector S, MemoryMatrix U, MemoryMatrix VT>
-    requires(have_same_value_type_v<A, U, VT> and mem::have_compatible_addr_space<A, S, U, VT> and is_blas_lapack_v<get_value_t<A>>)
+    requires(have_same_value_type_v<A, U, VT> and mem::have_compatible_addr_space<A, S, U, VT> and is_blas_lapack_v<get_value_t<A>>
+             and std::same_as<double, std::remove_cvref_t<get_value_t<S>>>)
   int gesvd(A &&a, S &&s, U &&u, VT &&vt) { // NOLINT (temporary views are allowed here)
-    static_assert(has_F_layout<A> and has_F_layout<U> and has_F_layout<VT>, "Error in nda::lapack::gesvd: C order not supported");
+    static_assert(has_C_layout<A> == has_C_layout<U> and has_C_layout<A> == has_C_layout<VT>,
+                  "Error in nda::lapack::gesvd: Matrix layouts have to be the same");
 
+    // check the dimensions of the input arrays/views and resize if necessary
     auto dm = std::min(a.extent(0), a.extent(1));
-    if (s.size() < dm) s.resize(dm);
+    if (s.size() < dm) resize_or_check_if_view(s, {dm});
+    if (u.extent(0) < a.extent(0) || u.extent(1) < a.extent(0)) resize_or_check_if_view(u, {a.extent(0), a.extent(0)});
+    if (vt.extent(0) < a.extent(1) || vt.extent(1) < a.extent(1)) resize_or_check_if_view(vt, {a.extent(1), a.extent(1)});
 
-    // must be lapack compatible
+    // input arrays/views must be lapack compatible
     EXPECTS(a.indexmap().min_stride() == 1);
     EXPECTS(s.indexmap().min_stride() == 1);
     EXPECTS(u.indexmap().min_stride() == 1);
@@ -102,16 +108,25 @@ namespace nda::lapack {
     value_type bufferSize_T{};
     auto rwork = array<double, 1, C_layout, heap<mem::get_addr_space<A>>>(5 * dm);
     int info   = 0;
-    gesvd_call('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), s.data(), u.data(), get_ld(u), vt.data(), get_ld(vt), &bufferSize_T, -1,
-               rwork.data(), info);
+    if constexpr (has_C_layout<A>) {
+      gesvd_call('A', 'A', a.extent(1), a.extent(0), a.data(), get_ld(a), s.data(), vt.data(), get_ld(vt), u.data(), get_ld(u), &bufferSize_T, -1,
+                 rwork.data(), info);
+    } else {
+      gesvd_call('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), s.data(), u.data(), get_ld(u), vt.data(), get_ld(vt), &bufferSize_T, -1,
+                 rwork.data(), info);
+    }
     int bufferSize = static_cast<int>(std::ceil(std::real(bufferSize_T)));
 
     // allocate work buffer and perform actual library call
     nda::array<value_type, 1, C_layout, heap<mem::get_addr_space<A>>> work(bufferSize);
-    gesvd_call('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), s.data(), u.data(), get_ld(u), vt.data(), get_ld(vt), work.data(), bufferSize,
-               rwork.data(), info);
+    if constexpr (has_C_layout<A>) {
+      gesvd_call('A', 'A', a.extent(1), a.extent(0), a.data(), get_ld(a), s.data(), vt.data(), get_ld(vt), u.data(), get_ld(u), work.data(),
+                 bufferSize, rwork.data(), info);
+    } else {
+      gesvd_call('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), s.data(), u.data(), get_ld(u), vt.data(), get_ld(vt), work.data(),
+                 bufferSize, rwork.data(), info);
+    }
 
-    if (info) NDA_RUNTIME_ERROR << "Error in nda::lapack::gesvd: info = " << info;
     return info;
   }
 
