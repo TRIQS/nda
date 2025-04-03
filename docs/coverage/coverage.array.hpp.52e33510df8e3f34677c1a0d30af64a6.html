@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2025-02-05 17:52:34</td>
+      <td>2025-04-03 21:31:06</td>
     </tr>
   </table>
 </div>
@@ -120,12 +120,12 @@
     <tr><td><a href="#l235">std::array&lt;long, (1ul)+(1)&gt; nda::stdutil::front_append&lt;long, long, 1ul&gt;(std::array&lt;long, 1ul&gt; const&amp;, long const&amp;) (line 235)</a></td><td>called 155 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l235">std::array&lt;long, (2ul)+(1)&gt; nda::stdutil::front_append&lt;long, long, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;, long const&amp;) (line 235)</a></td><td>called 15 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l312">std::array&lt;long, (2ul)+(2ul)&gt; nda::stdutil::join&lt;long, 2ul, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;, std::array&lt;long, 2ul&gt; const&amp;) (line 312)</a></td><td>called 5 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l168">std::array&lt;long, 1ul&gt; nda::stdutil::make_initialized_array&lt;1ul, long&gt;(long) (line 168)</a></td><td>called 7961666 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l168">std::array&lt;long, 1ul&gt; nda::stdutil::make_initialized_array&lt;1ul, long&gt;(long) (line 168)</a></td><td>called 7961681 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l184">std::array&lt;long, 1ul&gt; nda::stdutil::make_std_array&lt;long, long, 1ul&gt;(std::array&lt;long, 1ul&gt; const&amp;) (line 184)</a></td><td>called 7960942 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l168">std::array&lt;long, 2ul&gt; nda::stdutil::make_initialized_array&lt;2ul, long&gt;(long) (line 168)</a></td><td>called 4327 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l168">std::array&lt;long, 2ul&gt; nda::stdutil::make_initialized_array&lt;2ul, long&gt;(long) (line 168)</a></td><td>called 4470 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l184">std::array&lt;long, 2ul&gt; nda::stdutil::make_std_array&lt;long, int, 2ul&gt;(std::array&lt;int, 2ul&gt; const&amp;) (line 184)</a></td><td>called 5 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l184">std::array&lt;long, 2ul&gt; nda::stdutil::make_std_array&lt;long, long, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;) (line 184)</a></td><td>called 1738 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l168">std::array&lt;long, 3ul&gt; nda::stdutil::make_initialized_array&lt;3ul, long&gt;(long) (line 168)</a></td><td>called 24513 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l168">std::array&lt;long, 3ul&gt; nda::stdutil::make_initialized_array&lt;3ul, long&gt;(long) (line 168)</a></td><td>called 24585 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l184">std::array&lt;long, 3ul&gt; nda::stdutil::make_std_array&lt;long, int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;) (line 184)</a></td><td>called 1 time</td><td>100.0%</td></tr>
     <tr><td><a href="#l184">std::array&lt;long, 3ul&gt; nda::stdutil::make_std_array&lt;long, long, 3ul&gt;(std::array&lt;long, 3ul&gt; const&amp;) (line 184)</a></td><td>called 23184 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l168">std::array&lt;long, 4ul&gt; nda::stdutil::make_initialized_array&lt;4ul, long&gt;(long) (line 168)</a></td><td>called 307 times</td><td>100.0%</td></tr>
@@ -1410,28 +1410,28 @@
       <td class="lineno"><a id="l168" href="#l168">168</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">16083245</td>
+      <td class="linecount coveredLine">16083705</td>
       <td class="src coveredLine"><span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">R</span><span class="o">&gt;</span><span class="w"> </span><span class="n">make_initialized_array</span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l169" href="#l169">169</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">24124860</td>
+      <td class="linecount coveredLine">24125550</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="n">v</span><span class="p">]</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">...</span><span class="w"> </span><span class="n">Is</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">index_sequence</span><span class="o">&lt;</span><span class="n">Is</span><span class="p">...</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l170" href="#l170">170</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">8041630</td>
+      <td class="linecount coveredLine">8041860</td>
       <td class="src coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">R</span><span class="o">&gt;</span><span class="p">{((</span><span class="kt">void</span><span class="p">)</span><span class="n">Is</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">)...};</span><span class="w"> </span><span class="c1">// NOLINT (always v, just a trick to have the pack)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l171" href="#l171">171</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">16083245</td>
+      <td class="linecount coveredLine">16083705</td>
       <td class="src coveredLine"><span class="w">    </span><span class="p">}(</span><span class="n">std</span><span class="o">::</span><span class="n">make_index_sequence</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span><span class="p">{});</span></td>
     </tr>
     <tr class="source-line">
@@ -1522,7 +1522,7 @@
       <td class="lineno"><a id="l184" href="#l184">184</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">15972828</td>
+      <td class="linecount coveredLine">15973058</td>
       <td class="src coveredLine"><span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">R</span><span class="o">&gt;</span><span class="w"> </span><span class="n">make_std_array</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">U</span><span class="p">,</span><span class="w"> </span><span class="n">R</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
@@ -1536,7 +1536,7 @@
       <td class="lineno"><a id="l186" href="#l186">186</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">15972828</td>
+      <td class="linecount coveredLine">15973058</td>
       <td class="src coveredLine"><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">R</span><span class="o">&gt;</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">make_initialized_array</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span><span class="p">(</span><span class="n">T</span><span class="p">{});</span></td>
     </tr>
     <tr class="source-line">
@@ -1550,14 +1550,14 @@
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">32043429</td>
+      <td class="linecount coveredLine">32044176</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">R</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">u</span><span class="p">)</span><span class="w"> </span><span class="n">result</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">u</span><span class="p">];</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l188" href="#l188">188</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">15972828</td>
+      <td class="linecount coveredLine">15973058</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
