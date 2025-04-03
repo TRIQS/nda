@@ -44,12 +44,12 @@
 
 #ifdef NDEBUG
 
-#define EXPECTS(X)
-#define ASSERT(X)
-#define ENSURES(X)
-#define EXPECTS_WITH_MESSAGE(X, ...)
-#define ASSERT_WITH_MESSAGE(X, ...)
-#define ENSURES_WITH_MESSAGE(X, ...)
+#define EXPECTS(X) {}
+#define ASSERT(X) {}
+#define ENSURES(X) {}
+#define EXPECTS_WITH_MESSAGE(X, ...) {}
+#define ASSERT_WITH_MESSAGE(X, ...) {}
+#define ENSURES_WITH_MESSAGE(X, ...) {}
 
 #else
 
