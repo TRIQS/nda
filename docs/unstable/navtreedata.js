@@ -80,11 +80,7 @@ var NAVTREE =
         ] ],
         [ "Factories and transformations", "group__av__factories.html", null ],
         [ "HDF5 support", "group__av__hdf5.html", null ],
-        [ "MPI support", "group__av__mpi.html", [
-          [ "mpi::lazy<mpi::tag::gather, A>", "structmpi_1_1lazy_3_01mpi_1_1tag_1_1gather_00_01_a_01_4.html", null ],
-          [ "mpi::lazy<mpi::tag::reduce, A>", "structmpi_1_1lazy_3_01mpi_1_1tag_1_1reduce_00_01_a_01_4.html", null ],
-          [ "mpi::lazy<mpi::tag::scatter, A>", "structmpi_1_1lazy_3_01mpi_1_1tag_1_1scatter_00_01_a_01_4.html", null ]
-        ] ],
+        [ "MPI support", "group__av__mpi.html", null ],
         [ "Mathematical functions", "group__av__math.html", [
           [ "expr_call", "structnda_1_1expr__call.html", null ],
           [ "mapped", "structnda_1_1mapped.html", null ]

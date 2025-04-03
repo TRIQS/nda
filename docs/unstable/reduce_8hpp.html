@@ -109,7 +109,6 @@ $(function(){initNavTree('reduce_8hpp.html',''); initResizable(true); });
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">reduce.hpp File Reference</div></div>
 </div><!--header-->
@@ -124,8 +123,6 @@ $(function(){initNavTree('reduce_8hpp.html',''); initResizable(true); });
 <code>#include &quot;<a class="el" href="traits_8hpp_source.html">../traits.hpp</a>&quot;</code><br />
 <code>#include &lt;mpi.h&gt;</code><br />
 <code>#include &lt;mpi/mpi.hpp&gt;</code><br />
-<code>#include &lt;array&gt;</code><br />
-<code>#include &lt;cmath&gt;</code><br />
 <code>#include &lt;cstddef&gt;</code><br />
 <code>#include &lt;span&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
@@ -137,34 +134,18 @@ $(function(){initNavTree('reduce_8hpp.html',''); initResizable(true); });
 </div>
 <p><a href="reduce_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpi_1_1lazy_3_01mpi_1_1tag_1_1reduce_00_01_a_01_4.html">mpi::lazy&lt; mpi::tag::reduce, A &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of the <code>mpi::lazy</code> class for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types and the <code>mpi::tag::reduce</code> tag.  <a href="structmpi_1_1lazy_3_01mpi_1_1tag_1_1reduce_00_01_a_01_4.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga25b48c45dd81070934be0b1ef45b72af" id="r_ga25b48c45dd81070934be0b1ef45b72af"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; <br />
-requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt;)</td></tr>
-<tr class="memitem:ga25b48c45dd81070934be0b1ef45b72af"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__mpi.html#ga25b48c45dd81070934be0b1ef45b72af">nda::lazy_mpi_reduce</a> (A &amp;&amp;a, mpi::communicator comm={}, int root=0, bool <a class="el" href="group__av__algs.html#gace1353ca15a2382bf8d466fd69283a91">all</a>=false, MPI_Op op=MPI_SUM)</td></tr>
-<tr class="memdesc:ga25b48c45dd81070934be0b1ef45b72af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of a lazy MPI reduce for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types.  <br /></td></tr>
-<tr class="separator:ga25b48c45dd81070934be0b1ef45b72af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3edd8f70f2213d38b391743ddab967b3" id="r_ga3edd8f70f2213d38b391743ddab967b3"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt;)</td></tr>
 <tr class="memitem:ga3edd8f70f2213d38b391743ddab967b3"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__mpi.html#ga3edd8f70f2213d38b391743ddab967b3">nda::mpi_reduce</a> (A const &amp;a, mpi::communicator comm={}, int root=0, bool <a class="el" href="group__av__algs.html#gace1353ca15a2382bf8d466fd69283a91">all</a>=false, MPI_Op op=MPI_SUM)</td></tr>
 <tr class="memdesc:ga3edd8f70f2213d38b391743ddab967b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI reduce for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types.  <br /></td></tr>
 <tr class="separator:ga3edd8f70f2213d38b391743ddab967b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga51224e436e40aad207aec1c7f237a7de" id="r_ga51224e436e40aad207aec1c7f237a7de"><td class="memTemplParams" colspan="2">template&lt;typename A1, typename A2&gt; <br />
+<tr class="memitem:ga663e553746cc0923df57b83c2c742eba" id="r_ga663e553746cc0923df57b83c2c742eba"><td class="memTemplParams" colspan="2">template&lt;typename A1, typename A2&gt; <br />
 requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A1&gt; &amp;&amp; <a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A2&gt;)</td></tr>
-<tr class="memitem:ga51224e436e40aad207aec1c7f237a7de"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__mpi.html#ga51224e436e40aad207aec1c7f237a7de">nda::mpi_reduce_capi</a> (A1 const &amp;a_in, A2 &amp;&amp;a_out, mpi::communicator comm={}, int root=0, bool <a class="el" href="group__av__algs.html#gace1353ca15a2382bf8d466fd69283a91">all</a>=false, MPI_Op op=MPI_SUM)</td></tr>
-<tr class="memdesc:ga51224e436e40aad207aec1c7f237a7de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI reduce for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types using a C-style API.  <br /></td></tr>
-<tr class="separator:ga51224e436e40aad207aec1c7f237a7de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac31ef46b7cffb19adbbb1ff06f9fcd8a" id="r_gac31ef46b7cffb19adbbb1ff06f9fcd8a"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; <br />
-requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt;)</td></tr>
-<tr class="memitem:gac31ef46b7cffb19adbbb1ff06f9fcd8a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__mpi.html#gac31ef46b7cffb19adbbb1ff06f9fcd8a">nda::mpi_reduce_in_place</a> (A &amp;&amp;a, mpi::communicator comm={}, int root=0, bool <a class="el" href="group__av__algs.html#gace1353ca15a2382bf8d466fd69283a91">all</a>=false, MPI_Op op=MPI_SUM)</td></tr>
-<tr class="memdesc:gac31ef46b7cffb19adbbb1ff06f9fcd8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an in-place MPI reduce for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types.  <br /></td></tr>
-<tr class="separator:gac31ef46b7cffb19adbbb1ff06f9fcd8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga663e553746cc0923df57b83c2c742eba"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__mpi.html#ga663e553746cc0923df57b83c2c742eba">nda::mpi_reduce_into</a> (A1 const &amp;a_in, A2 &amp;&amp;a_out, mpi::communicator comm={}, int root=0, bool <a class="el" href="group__av__algs.html#gace1353ca15a2382bf8d466fd69283a91">all</a>=false, MPI_Op op=MPI_SUM)</td></tr>
+<tr class="memdesc:ga663e553746cc0923df57b83c2c742eba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI reduce for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types that reduces directly into an existing array/view.  <br /></td></tr>
+<tr class="separator:ga663e553746cc0923df57b83c2c742eba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

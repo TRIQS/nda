@@ -72,10 +72,7 @@ var menudata={children:[
 {text:"no_alias_accessor::accessor",url:"structnda_1_1no__alias__accessor_1_1accessor.html"}]},
 {text:"Factories and transformations",url:"group__av__factories.html"},
 {text:"HDF5 support",url:"group__av__hdf5.html"},
-{text:"MPI support",url:"group__av__mpi.html",children:[
-{text:"mpi::lazy<mpi::tag::gather, A>",url:"structmpi_1_1lazy_3_01mpi_1_1tag_1_1gather_00_01_a_01_4.html"},
-{text:"mpi::lazy<mpi::tag::reduce, A>",url:"structmpi_1_1lazy_3_01mpi_1_1tag_1_1reduce_00_01_a_01_4.html"},
-{text:"mpi::lazy<mpi::tag::scatter, A>",url:"structmpi_1_1lazy_3_01mpi_1_1tag_1_1scatter_00_01_a_01_4.html"}]},
+{text:"MPI support",url:"group__av__mpi.html"},
 {text:"Mathematical functions",url:"group__av__math.html",children:[
 {text:"expr_call",url:"structnda_1_1expr__call.html"},
 {text:"mapped",url:"structnda_1_1mapped.html"}]},

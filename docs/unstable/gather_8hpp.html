@@ -109,7 +109,6 @@ $(function(){initNavTree('gather_8hpp.html',''); initResizable(true); });
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">gather.hpp File Reference</div></div>
 </div><!--header-->
@@ -124,11 +123,8 @@ $(function(){initNavTree('gather_8hpp.html',''); initResizable(true); });
 <code>#include &quot;<a class="el" href="traits_8hpp_source.html">../traits.hpp</a>&quot;</code><br />
 <code>#include &lt;mpi/mpi.hpp&gt;</code><br />
 <code>#include &lt;cstddef&gt;</code><br />
-<code>#include &lt;functional&gt;</code><br />
-<code>#include &lt;numeric&gt;</code><br />
 <code>#include &lt;span&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
-<code>#include &lt;utility&gt;</code><br />
 </div><a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Provides an MPI gather function for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types. </p>
 
@@ -136,29 +132,18 @@ $(function(){initNavTree('gather_8hpp.html',''); initResizable(true); });
 </div>
 <p><a href="gather_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpi_1_1lazy_3_01mpi_1_1tag_1_1gather_00_01_a_01_4.html">mpi::lazy&lt; mpi::tag::gather, A &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of the <code>mpi::lazy</code> class for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types and the <code>mpi::tag::gather</code> tag.  <a href="structmpi_1_1lazy_3_01mpi_1_1tag_1_1gather_00_01_a_01_4.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga2750b2e427228637ab0d7e1e72b34a10" id="r_ga2750b2e427228637ab0d7e1e72b34a10"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; <br />
-requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt; and std::decay_t&lt;A&gt;::is_stride_order_C())</td></tr>
-<tr class="memitem:ga2750b2e427228637ab0d7e1e72b34a10"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__mpi.html#ga2750b2e427228637ab0d7e1e72b34a10">nda::lazy_mpi_gather</a> (A &amp;&amp;a, mpi::communicator comm={}, int root=0, bool <a class="el" href="group__av__algs.html#gace1353ca15a2382bf8d466fd69283a91">all</a>=false)</td></tr>
-<tr class="memdesc:ga2750b2e427228637ab0d7e1e72b34a10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of a lazy MPI gather for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types.  <br /></td></tr>
-<tr class="separator:ga2750b2e427228637ab0d7e1e72b34a10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga62aacd4df1ae34a7690e68d93c7429be" id="r_ga62aacd4df1ae34a7690e68d93c7429be"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt; and std::decay_t&lt;A&gt;::is_stride_order_C())</td></tr>
 <tr class="memitem:ga62aacd4df1ae34a7690e68d93c7429be"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__mpi.html#ga62aacd4df1ae34a7690e68d93c7429be">nda::mpi_gather</a> (A const &amp;a, mpi::communicator comm={}, int root=0, bool <a class="el" href="group__av__algs.html#gace1353ca15a2382bf8d466fd69283a91">all</a>=false)</td></tr>
 <tr class="memdesc:ga62aacd4df1ae34a7690e68d93c7429be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI gather for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types.  <br /></td></tr>
 <tr class="separator:ga62aacd4df1ae34a7690e68d93c7429be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf5fa72e07e5eb1972ebbc6e6396fe3b3" id="r_gaf5fa72e07e5eb1972ebbc6e6396fe3b3"><td class="memTemplParams" colspan="2">template&lt;typename A1, typename A2&gt; <br />
+<tr class="memitem:gabb73c0a539d4cd1edcad9c431ca716a4" id="r_gabb73c0a539d4cd1edcad9c431ca716a4"><td class="memTemplParams" colspan="2">template&lt;typename A1, typename A2&gt; <br />
 requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A1&gt; and std::decay_t&lt;A1&gt;::is_stride_order_C() and <a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A2&gt; and std::decay_t&lt;A2&gt;::is_stride_order_C())</td></tr>
-<tr class="memitem:gaf5fa72e07e5eb1972ebbc6e6396fe3b3"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__mpi.html#gaf5fa72e07e5eb1972ebbc6e6396fe3b3">nda::mpi_gather_capi</a> (A1 const &amp;a_in, A2 &amp;&amp;a_out, mpi::communicator comm={}, int root=0, bool <a class="el" href="group__av__algs.html#gace1353ca15a2382bf8d466fd69283a91">all</a>=false)</td></tr>
-<tr class="memdesc:gaf5fa72e07e5eb1972ebbc6e6396fe3b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI gather for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types using a C-style API.  <br /></td></tr>
-<tr class="separator:gaf5fa72e07e5eb1972ebbc6e6396fe3b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabb73c0a539d4cd1edcad9c431ca716a4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__mpi.html#gabb73c0a539d4cd1edcad9c431ca716a4">nda::mpi_gather_into</a> (A1 const &amp;a_in, A2 &amp;&amp;a_out, mpi::communicator comm={}, int root=0, bool <a class="el" href="group__av__algs.html#gace1353ca15a2382bf8d466fd69283a91">all</a>=false)</td></tr>
+<tr class="memdesc:gabb73c0a539d4cd1edcad9c431ca716a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI gather for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types that gathers directly into an existing array/view.  <br /></td></tr>
+<tr class="separator:gabb73c0a539d4cd1edcad9c431ca716a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

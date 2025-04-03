@@ -127,6 +127,9 @@ $(function(){initNavTree('ex6.html',''); initResizable(true); });
       <li class="level2">
         <a href="#ex6_p4">Reducing an array/view</a>
       </li>
+      <li class="level2">
+        <a href="#ex6_p5">Using existing arrays/views</a>
+      </li>
     </ul>
   </li>
 </ul>
@@ -244,7 +247,7 @@ Broadcasting an array/view</h2>
 <div class="line">Rank 3:</div>
 <div class="line">[[0,0,0,1]</div>
 <div class="line"> [0,0,0,1]]</div>
-</div><!-- fragment --><p>If <code>A</code> would not be in Fortran-order, this code snippet wouldn't compile since the elements of a single column are not contiguous in memory in C-order.</p>
+</div><!-- fragment --><p>If <code>A</code> would not be in Fortran-order, this code snippet would still compile and also give us the expected output. However, since the elements of a single column are not contiguous in memory in C-order, it would broadcast each element separately. This can have enormous implications on the performance. We recommend to always use MPI routines with contiguous arrays/views, so that <b>nda</b> can make the MPI calls as efficiently as possible.</p>
 <blockquote class="doxtable">
 <p><b>Note</b>: All MPI routines have certain requirements for the arrays/views involved in the operation. Please check out the documentation of the individual function, e.g. in this case <a class="el" href="group__av__mpi.html#ga6df12000d826688a8203af93d6b6838e" title="Implementation of an MPI broadcast for nda::basic_array or nda::basic_array_view types.">nda::mpi_broadcast</a>, if you have doubts. </p>
 </blockquote>
@@ -361,7 +364,7 @@ Scattering an array/view</h2>
 <div class="line">Rank 3:</div>
 <div class="line">[[3,3]</div>
 <div class="line"> [3,3]]</div>
-</div><!-- fragment --><p>Similar to the <a class="el" href="group__av__mpi.html#ga62aacd4df1ae34a7690e68d93c7429be" title="Implementation of an MPI gather for nda::basic_array or nda::basic_array_view types.">nda::mpi_gather</a>, <a class="el" href="group__av__mpi.html#ga3c70e635ce6fd776980edc3b44f5823b" title="Implementation of an MPI scatter for nda::basic_array or nda::basic_array_view types.">nda::mpi_scatter</a> requires the input and output arrays to be in C-order.</p>
+</div><!-- fragment --><p>Similar to <a class="el" href="group__av__mpi.html#ga62aacd4df1ae34a7690e68d93c7429be" title="Implementation of an MPI gather for nda::basic_array or nda::basic_array_view types.">nda::mpi_gather</a>, <a class="el" href="group__av__mpi.html#ga3c70e635ce6fd776980edc3b44f5823b" title="Implementation of an MPI scatter for nda::basic_array or nda::basic_array_view types.">nda::mpi_scatter</a> requires the input and output arrays to be in C-order.</p>
 <p>If the extent along the first dimension is not divisible by the number of MPI ranks, processes with lower ranks will receive more data than others:</p>
 <div class="fragment"><div class="line"><span class="comment">// scatter an array with extents not divisible by the number of ranks</span></div>
 <div class="line"><span class="keyword">auto</span> C_s = mpi::scatter(C, comm, 2);</div>
@@ -416,8 +419,30 @@ Reducing an array/view</h2>
 <div class="line">Rank 1:</div>
 <div class="line">[[6,6]</div>
 <div class="line"> [6,6]]</div>
-</div><!-- fragment --><p>In contrast to the standard <code>mpi::all_reduce</code> function, the in-place operation does not create and return a new array. Instead the result is directly written into the input array. </p>
-</div></div><!-- contents -->
+</div><!-- fragment --><p>In contrast to the standard <code>mpi::all_reduce</code> function, the in-place operation does not create and return a new array. Instead the result is directly written into the input array.</p>
+<h2><a class="anchor" id="ex6_p5"></a>
+Using existing arrays/views</h2>
+<p>Note that the functions <a class="el" href="group__av__mpi.html#ga3edd8f70f2213d38b391743ddab967b3" title="Implementation of an MPI reduce for nda::basic_array or nda::basic_array_view types.">nda::mpi_reduce</a>, <a class="el" href="group__av__mpi.html#ga62aacd4df1ae34a7690e68d93c7429be" title="Implementation of an MPI gather for nda::basic_array or nda::basic_array_view types.">nda::mpi_gather</a> and <a class="el" href="group__av__mpi.html#ga3c70e635ce6fd776980edc3b44f5823b" title="Implementation of an MPI scatter for nda::basic_array or nda::basic_array_view types.">nda::mpi_scatter</a> all return a newly constructed array which contains the result of the respective MPI operation. In case of large amounts of data, constructing a new obejct can be expensive and use a lot of additional memory.</p>
+<p>If there already exists an array/view that can be used as a receive (output) buffer, we can avoid this additional overhead by calling <a class="el" href="group__av__mpi.html#ga663e553746cc0923df57b83c2c742eba" title="Implementation of an MPI reduce for nda::basic_array or nda::basic_array_view types that reduces dire...">nda::mpi_reduce_into</a>, <a class="el" href="group__av__mpi.html#gabb73c0a539d4cd1edcad9c431ca716a4" title="Implementation of an MPI gather for nda::basic_array or nda::basic_array_view types that gathers dire...">nda::mpi_gather_into</a> or <a class="el" href="group__av__mpi.html#gae423dc9b0c850f1650fa2803b7123f80" title="Implementation of an MPI scatter for nda::basic_array or nda::basic_array_view types that scatters di...">nda::mpi_scatter_into</a> instead. The <code>mpi_xxx_into</code> functions work exactly as their <code>mpi_xxx</code> counterparts except that they take an additional array/view as an argument into which the results are written, e.g.</p>
+<div class="fragment"><div class="line"><span class="comment">// scatter a view into an existing array</span></div>
+<div class="line"><span class="keyword">auto</span> C_into = <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;int, 2&gt;</a>(2, 2);</div>
+<div class="line">mpi::scatter_into(B_rg, C_into, comm, root);</div>
+<div class="line">print(C_into, comm);</div>
+<div class="line">comm.barrier();</div>
+</div><!-- fragment --><p>Output:</p>
+<div class="fragment"><div class="line">Rank 0:</div>
+<div class="line">[[0,0]</div>
+<div class="line"> [0,0]]</div>
+<div class="line">Rank 2:</div>
+<div class="line">[[2,2]</div>
+<div class="line"> [2,2]]</div>
+<div class="line">Rank 3:</div>
+<div class="line">[[3,3]</div>
+<div class="line"> [3,3]]</div>
+<div class="line">Rank 1:</div>
+<div class="line">[[1,1]</div>
+<div class="line"> [1,1]]</div>
+</div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->

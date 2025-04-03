@@ -109,7 +109,6 @@ $(function(){initNavTree('scatter_8hpp.html',''); initResizable(true); });
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">scatter.hpp File Reference</div></div>
 </div><!--header-->
@@ -135,29 +134,18 @@ $(function(){initNavTree('scatter_8hpp.html',''); initResizable(true); });
 </div>
 <p><a href="scatter_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpi_1_1lazy_3_01mpi_1_1tag_1_1scatter_00_01_a_01_4.html">mpi::lazy&lt; mpi::tag::scatter, A &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of the <code>mpi::lazy</code> class for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types and the <code>mpi::tag::scatter</code> tag.  <a href="structmpi_1_1lazy_3_01mpi_1_1tag_1_1scatter_00_01_a_01_4.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga0f43d84528266dc455e91125144e56b0" id="r_ga0f43d84528266dc455e91125144e56b0"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; <br />
-requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt; and std::decay_t&lt;A&gt;::is_stride_order_C())</td></tr>
-<tr class="memitem:ga0f43d84528266dc455e91125144e56b0"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__mpi.html#ga0f43d84528266dc455e91125144e56b0">nda::lazy_mpi_scatter</a> (A &amp;&amp;a, mpi::communicator comm={}, int root=0)</td></tr>
-<tr class="memdesc:ga0f43d84528266dc455e91125144e56b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of a lazy MPI scatter for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types.  <br /></td></tr>
-<tr class="separator:ga0f43d84528266dc455e91125144e56b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3c70e635ce6fd776980edc3b44f5823b" id="r_ga3c70e635ce6fd776980edc3b44f5823b"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt; and std::decay_t&lt;A&gt;::is_stride_order_C())</td></tr>
 <tr class="memitem:ga3c70e635ce6fd776980edc3b44f5823b"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__mpi.html#ga3c70e635ce6fd776980edc3b44f5823b">nda::mpi_scatter</a> (A const &amp;a, mpi::communicator comm={}, int root=0)</td></tr>
 <tr class="memdesc:ga3c70e635ce6fd776980edc3b44f5823b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI scatter for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types.  <br /></td></tr>
 <tr class="separator:ga3c70e635ce6fd776980edc3b44f5823b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9a693c512671b934773d5aad1a5a646f" id="r_ga9a693c512671b934773d5aad1a5a646f"><td class="memTemplParams" colspan="2">template&lt;typename A1, typename A2&gt; <br />
+<tr class="memitem:gae423dc9b0c850f1650fa2803b7123f80" id="r_gae423dc9b0c850f1650fa2803b7123f80"><td class="memTemplParams" colspan="2">template&lt;typename A1, typename A2&gt; <br />
 requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A1&gt; and std::decay_t&lt;A1&gt;::is_stride_order_C() and <a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A2&gt; and std::decay_t&lt;A2&gt;::is_stride_order_C())</td></tr>
-<tr class="memitem:ga9a693c512671b934773d5aad1a5a646f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__mpi.html#ga9a693c512671b934773d5aad1a5a646f">nda::mpi_scatter_capi</a> (A1 const &amp;a_in, A2 &amp;&amp;a_out, mpi::communicator comm={}, int root=0)</td></tr>
-<tr class="memdesc:ga9a693c512671b934773d5aad1a5a646f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI scatter for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types using a C-style API.  <br /></td></tr>
-<tr class="separator:ga9a693c512671b934773d5aad1a5a646f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae423dc9b0c850f1650fa2803b7123f80"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__av__mpi.html#gae423dc9b0c850f1650fa2803b7123f80">nda::mpi_scatter_into</a> (A1 const &amp;a_in, A2 &amp;&amp;a_out, mpi::communicator comm={}, int root=0)</td></tr>
+<tr class="memdesc:gae423dc9b0c850f1650fa2803b7123f80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI scatter for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types that scatters directly into an existing array/view.  <br /></td></tr>
+<tr class="separator:gae423dc9b0c850f1650fa2803b7123f80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

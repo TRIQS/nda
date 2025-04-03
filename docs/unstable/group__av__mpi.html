@@ -109,7 +109,6 @@ $(function(){initNavTree('group__av__mpi.html',''); initResizable(true); });
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">MPI support<div class="ingroups"><a class="el" href="group__arrays__views.html">Arrays and views</a></div></div></div>
 </div><!--header-->
@@ -145,36 +144,10 @@ $(function(){initNavTree('group__av__mpi.html',''); initResizable(true); });
 </div><!-- fragment --><p>Running with 4 cores outputs:</p>
 <div class="fragment"><div class="line">[[6,6]</div>
 <div class="line"> [6,6]]</div>
-</div><!-- fragment --><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpi_1_1lazy_3_01mpi_1_1tag_1_1gather_00_01_a_01_4.html">mpi::lazy&lt; mpi::tag::gather, A &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of the <code>mpi::lazy</code> class for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types and the <code>mpi::tag::gather</code> tag.  <a href="structmpi_1_1lazy_3_01mpi_1_1tag_1_1gather_00_01_a_01_4.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpi_1_1lazy_3_01mpi_1_1tag_1_1reduce_00_01_a_01_4.html">mpi::lazy&lt; mpi::tag::reduce, A &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of the <code>mpi::lazy</code> class for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types and the <code>mpi::tag::reduce</code> tag.  <a href="structmpi_1_1lazy_3_01mpi_1_1tag_1_1reduce_00_01_a_01_4.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpi_1_1lazy_3_01mpi_1_1tag_1_1scatter_00_01_a_01_4.html">mpi::lazy&lt; mpi::tag::scatter, A &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of the <code>mpi::lazy</code> class for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types and the <code>mpi::tag::scatter</code> tag.  <a href="structmpi_1_1lazy_3_01mpi_1_1tag_1_1scatter_00_01_a_01_4.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
+</div><!-- fragment --><p>Se <a class="el" href="ex6.html">Example 6: MPI support</a> for a more in-depth example.</p>
+<table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga2750b2e427228637ab0d7e1e72b34a10" id="r_ga2750b2e427228637ab0d7e1e72b34a10"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; <br />
-requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt; and std::decay_t&lt;A&gt;::is_stride_order_C())</td></tr>
-<tr class="memitem:ga2750b2e427228637ab0d7e1e72b34a10"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga2750b2e427228637ab0d7e1e72b34a10">nda::lazy_mpi_gather</a> (A &amp;&amp;a, mpi::communicator comm={}, int root=0, bool <a class="el" href="group__av__algs.html#gace1353ca15a2382bf8d466fd69283a91">all</a>=false)</td></tr>
-<tr class="memdesc:ga2750b2e427228637ab0d7e1e72b34a10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of a lazy MPI gather for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types.  <br /></td></tr>
-<tr class="separator:ga2750b2e427228637ab0d7e1e72b34a10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga25b48c45dd81070934be0b1ef45b72af" id="r_ga25b48c45dd81070934be0b1ef45b72af"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; <br />
-requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt;)</td></tr>
-<tr class="memitem:ga25b48c45dd81070934be0b1ef45b72af"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga25b48c45dd81070934be0b1ef45b72af">nda::lazy_mpi_reduce</a> (A &amp;&amp;a, mpi::communicator comm={}, int root=0, bool <a class="el" href="group__av__algs.html#gace1353ca15a2382bf8d466fd69283a91">all</a>=false, MPI_Op op=MPI_SUM)</td></tr>
-<tr class="memdesc:ga25b48c45dd81070934be0b1ef45b72af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of a lazy MPI reduce for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types.  <br /></td></tr>
-<tr class="separator:ga25b48c45dd81070934be0b1ef45b72af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0f43d84528266dc455e91125144e56b0" id="r_ga0f43d84528266dc455e91125144e56b0"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; <br />
-requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt; and std::decay_t&lt;A&gt;::is_stride_order_C())</td></tr>
-<tr class="memitem:ga0f43d84528266dc455e91125144e56b0"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga0f43d84528266dc455e91125144e56b0">nda::lazy_mpi_scatter</a> (A &amp;&amp;a, mpi::communicator comm={}, int root=0)</td></tr>
-<tr class="memdesc:ga0f43d84528266dc455e91125144e56b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of a lazy MPI scatter for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types.  <br /></td></tr>
-<tr class="separator:ga0f43d84528266dc455e91125144e56b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6df12000d826688a8203af93d6b6838e" id="r_ga6df12000d826688a8203af93d6b6838e"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt;)</td></tr>
 <tr class="memitem:ga6df12000d826688a8203af93d6b6838e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga6df12000d826688a8203af93d6b6838e">nda::mpi_broadcast</a> (A &amp;&amp;a, mpi::communicator comm={}, int root=0)</td></tr>
@@ -185,217 +158,33 @@ requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217
 <tr class="memitem:ga62aacd4df1ae34a7690e68d93c7429be"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga62aacd4df1ae34a7690e68d93c7429be">nda::mpi_gather</a> (A const &amp;a, mpi::communicator comm={}, int root=0, bool <a class="el" href="group__av__algs.html#gace1353ca15a2382bf8d466fd69283a91">all</a>=false)</td></tr>
 <tr class="memdesc:ga62aacd4df1ae34a7690e68d93c7429be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI gather for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types.  <br /></td></tr>
 <tr class="separator:ga62aacd4df1ae34a7690e68d93c7429be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf5fa72e07e5eb1972ebbc6e6396fe3b3" id="r_gaf5fa72e07e5eb1972ebbc6e6396fe3b3"><td class="memTemplParams" colspan="2">template&lt;typename A1, typename A2&gt; <br />
+<tr class="memitem:gabb73c0a539d4cd1edcad9c431ca716a4" id="r_gabb73c0a539d4cd1edcad9c431ca716a4"><td class="memTemplParams" colspan="2">template&lt;typename A1, typename A2&gt; <br />
 requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A1&gt; and std::decay_t&lt;A1&gt;::is_stride_order_C() and <a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A2&gt; and std::decay_t&lt;A2&gt;::is_stride_order_C())</td></tr>
-<tr class="memitem:gaf5fa72e07e5eb1972ebbc6e6396fe3b3"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gaf5fa72e07e5eb1972ebbc6e6396fe3b3">nda::mpi_gather_capi</a> (A1 const &amp;a_in, A2 &amp;&amp;a_out, mpi::communicator comm={}, int root=0, bool <a class="el" href="group__av__algs.html#gace1353ca15a2382bf8d466fd69283a91">all</a>=false)</td></tr>
-<tr class="memdesc:gaf5fa72e07e5eb1972ebbc6e6396fe3b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI gather for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types using a C-style API.  <br /></td></tr>
-<tr class="separator:gaf5fa72e07e5eb1972ebbc6e6396fe3b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabb73c0a539d4cd1edcad9c431ca716a4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gabb73c0a539d4cd1edcad9c431ca716a4">nda::mpi_gather_into</a> (A1 const &amp;a_in, A2 &amp;&amp;a_out, mpi::communicator comm={}, int root=0, bool <a class="el" href="group__av__algs.html#gace1353ca15a2382bf8d466fd69283a91">all</a>=false)</td></tr>
+<tr class="memdesc:gabb73c0a539d4cd1edcad9c431ca716a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI gather for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types that gathers directly into an existing array/view.  <br /></td></tr>
+<tr class="separator:gabb73c0a539d4cd1edcad9c431ca716a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3edd8f70f2213d38b391743ddab967b3" id="r_ga3edd8f70f2213d38b391743ddab967b3"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt;)</td></tr>
 <tr class="memitem:ga3edd8f70f2213d38b391743ddab967b3"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga3edd8f70f2213d38b391743ddab967b3">nda::mpi_reduce</a> (A const &amp;a, mpi::communicator comm={}, int root=0, bool <a class="el" href="group__av__algs.html#gace1353ca15a2382bf8d466fd69283a91">all</a>=false, MPI_Op op=MPI_SUM)</td></tr>
 <tr class="memdesc:ga3edd8f70f2213d38b391743ddab967b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI reduce for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types.  <br /></td></tr>
 <tr class="separator:ga3edd8f70f2213d38b391743ddab967b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga51224e436e40aad207aec1c7f237a7de" id="r_ga51224e436e40aad207aec1c7f237a7de"><td class="memTemplParams" colspan="2">template&lt;typename A1, typename A2&gt; <br />
+<tr class="memitem:ga663e553746cc0923df57b83c2c742eba" id="r_ga663e553746cc0923df57b83c2c742eba"><td class="memTemplParams" colspan="2">template&lt;typename A1, typename A2&gt; <br />
 requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A1&gt; &amp;&amp; <a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A2&gt;)</td></tr>
-<tr class="memitem:ga51224e436e40aad207aec1c7f237a7de"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga51224e436e40aad207aec1c7f237a7de">nda::mpi_reduce_capi</a> (A1 const &amp;a_in, A2 &amp;&amp;a_out, mpi::communicator comm={}, int root=0, bool <a class="el" href="group__av__algs.html#gace1353ca15a2382bf8d466fd69283a91">all</a>=false, MPI_Op op=MPI_SUM)</td></tr>
-<tr class="memdesc:ga51224e436e40aad207aec1c7f237a7de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI reduce for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types using a C-style API.  <br /></td></tr>
-<tr class="separator:ga51224e436e40aad207aec1c7f237a7de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac31ef46b7cffb19adbbb1ff06f9fcd8a" id="r_gac31ef46b7cffb19adbbb1ff06f9fcd8a"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; <br />
-requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt;)</td></tr>
-<tr class="memitem:gac31ef46b7cffb19adbbb1ff06f9fcd8a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gac31ef46b7cffb19adbbb1ff06f9fcd8a">nda::mpi_reduce_in_place</a> (A &amp;&amp;a, mpi::communicator comm={}, int root=0, bool <a class="el" href="group__av__algs.html#gace1353ca15a2382bf8d466fd69283a91">all</a>=false, MPI_Op op=MPI_SUM)</td></tr>
-<tr class="memdesc:gac31ef46b7cffb19adbbb1ff06f9fcd8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an in-place MPI reduce for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types.  <br /></td></tr>
-<tr class="separator:gac31ef46b7cffb19adbbb1ff06f9fcd8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga663e553746cc0923df57b83c2c742eba"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga663e553746cc0923df57b83c2c742eba">nda::mpi_reduce_into</a> (A1 const &amp;a_in, A2 &amp;&amp;a_out, mpi::communicator comm={}, int root=0, bool <a class="el" href="group__av__algs.html#gace1353ca15a2382bf8d466fd69283a91">all</a>=false, MPI_Op op=MPI_SUM)</td></tr>
+<tr class="memdesc:ga663e553746cc0923df57b83c2c742eba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI reduce for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types that reduces directly into an existing array/view.  <br /></td></tr>
+<tr class="separator:ga663e553746cc0923df57b83c2c742eba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3c70e635ce6fd776980edc3b44f5823b" id="r_ga3c70e635ce6fd776980edc3b44f5823b"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt; and std::decay_t&lt;A&gt;::is_stride_order_C())</td></tr>
 <tr class="memitem:ga3c70e635ce6fd776980edc3b44f5823b"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga3c70e635ce6fd776980edc3b44f5823b">nda::mpi_scatter</a> (A const &amp;a, mpi::communicator comm={}, int root=0)</td></tr>
 <tr class="memdesc:ga3c70e635ce6fd776980edc3b44f5823b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI scatter for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types.  <br /></td></tr>
 <tr class="separator:ga3c70e635ce6fd776980edc3b44f5823b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9a693c512671b934773d5aad1a5a646f" id="r_ga9a693c512671b934773d5aad1a5a646f"><td class="memTemplParams" colspan="2">template&lt;typename A1, typename A2&gt; <br />
+<tr class="memitem:gae423dc9b0c850f1650fa2803b7123f80" id="r_gae423dc9b0c850f1650fa2803b7123f80"><td class="memTemplParams" colspan="2">template&lt;typename A1, typename A2&gt; <br />
 requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A1&gt; and std::decay_t&lt;A1&gt;::is_stride_order_C() and <a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A2&gt; and std::decay_t&lt;A2&gt;::is_stride_order_C())</td></tr>
-<tr class="memitem:ga9a693c512671b934773d5aad1a5a646f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga9a693c512671b934773d5aad1a5a646f">nda::mpi_scatter_capi</a> (A1 const &amp;a_in, A2 &amp;&amp;a_out, mpi::communicator comm={}, int root=0)</td></tr>
-<tr class="memdesc:ga9a693c512671b934773d5aad1a5a646f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI scatter for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types using a C-style API.  <br /></td></tr>
-<tr class="separator:ga9a693c512671b934773d5aad1a5a646f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae423dc9b0c850f1650fa2803b7123f80"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gae423dc9b0c850f1650fa2803b7123f80">nda::mpi_scatter_into</a> (A1 const &amp;a_in, A2 &amp;&amp;a_out, mpi::communicator comm={}, int root=0)</td></tr>
+<tr class="memdesc:gae423dc9b0c850f1650fa2803b7123f80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI scatter for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types that scatters directly into an existing array/view.  <br /></td></tr>
+<tr class="separator:gae423dc9b0c850f1650fa2803b7123f80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga2750b2e427228637ab0d7e1e72b34a10" name="ga2750b2e427228637ab0d7e1e72b34a10"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2750b2e427228637ab0d7e1e72b34a10">&#9670;&#160;</a></span>lazy_mpi_gather()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename A&gt; <br />
-requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt; and std::decay_t&lt;A&gt;::is_stride_order_C())</div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto nda::lazy_mpi_gather </td>
-          <td>(</td>
-          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">mpi::communicator</td>          <td class="paramname"><span class="paramname"><em>comm</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>root</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>all</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="gather_8hpp.html">nda/mpi/gather.hpp</a>&gt;</code></p>
-
-<p>Implementation of a lazy MPI gather for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types. </p>
-<p>This function is lazy, i.e. it returns an <a class="el" href="structmpi_1_1lazy_3_01mpi_1_1tag_1_1gather_00_01_a_01_4.html" title="Specialization of the mpi::lazy class for nda::Array types and the mpi::tag::gather tag.">mpi::lazy&lt;mpi::tag::gather, A&gt;</a> object without performing the actual MPI operation. Since the returned object models an <a class="el" href="conceptnda_1_1_array_initializer.html" title="Check if a given type satisfies the array initializer concept for a given nda::MemoryArray type.">nda::ArrayInitializer</a>, it can be used to initialize/assign to <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> and <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> objects.</p>
-<p>The behavior is otherwise similar to <a class="el" href="#ga62aacd4df1ae34a7690e68d93c7429be" title="Implementation of an MPI gather for nda::basic_array or nda::basic_array_view types.">nda::mpi_gather</a>.</p>
-<dl class="section warning"><dt>Warning</dt><dd>MPI calls are done in the <code>invoke</code> and <code>shape</code> methods of the <code>mpi::lazy</code> object. If one rank calls one of these methods, all ranks in the communicator need to call the same method. Otherwise, the program will deadlock.</dd></dl>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> type with C-layout. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">a</td><td>Array/view to be gathered. </td></tr>
-    <tr><td class="paramname">comm</td><td><code>mpi::communicator</code> object. </td></tr>
-    <tr><td class="paramname">root</td><td>Rank of the root process. </td></tr>
-    <tr><td class="paramname">all</td><td>Should all processes receive the result of the gather. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="structmpi_1_1lazy_3_01mpi_1_1tag_1_1gather_00_01_a_01_4.html" title="Specialization of the mpi::lazy class for nda::Array types and the mpi::tag::gather tag.">mpi::lazy&lt;mpi::tag::gather, A&gt;</a> object modelling an <a class="el" href="conceptnda_1_1_array_initializer.html" title="Check if a given type satisfies the array initializer concept for a given nda::MemoryArray type.">nda::ArrayInitializer</a>. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="gather_8hpp_source.html#l00153">153</a> of file <a class="el" href="gather_8hpp_source.html">gather.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ga25b48c45dd81070934be0b1ef45b72af" name="ga25b48c45dd81070934be0b1ef45b72af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga25b48c45dd81070934be0b1ef45b72af">&#9670;&#160;</a></span>lazy_mpi_reduce()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename A&gt; <br />
-requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt;)</div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto nda::lazy_mpi_reduce </td>
-          <td>(</td>
-          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">mpi::communicator</td>          <td class="paramname"><span class="paramname"><em>comm</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>root</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>all</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">MPI_Op</td>          <td class="paramname"><span class="paramname"><em>op</em></span><span class="paramdefsep"> = </span><span class="paramdefval">MPI_SUM</span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="reduce_8hpp.html">nda/mpi/reduce.hpp</a>&gt;</code></p>
-
-<p>Implementation of a lazy MPI reduce for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types. </p>
-<p>This function is lazy, i.e. it returns an <a class="el" href="structmpi_1_1lazy_3_01mpi_1_1tag_1_1reduce_00_01_a_01_4.html" title="Specialization of the mpi::lazy class for nda::Array types and the mpi::tag::reduce tag.">mpi::lazy&lt;mpi::tag::reduce, A&gt;</a> object without performing the actual MPI operation. Since the returned object models an <a class="el" href="conceptnda_1_1_array_initializer.html" title="Check if a given type satisfies the array initializer concept for a given nda::MemoryArray type.">nda::ArrayInitializer</a>, it can be used to initialize/assign to <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> and <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> objects:</p>
-<p>The behavior is otherwise similar to <a class="el" href="#ga3edd8f70f2213d38b391743ddab967b3" title="Implementation of an MPI reduce for nda::basic_array or nda::basic_array_view types.">nda::mpi_reduce</a> and <a class="el" href="#gac31ef46b7cffb19adbbb1ff06f9fcd8a" title="Implementation of an in-place MPI reduce for nda::basic_array or nda::basic_array_view types.">nda::mpi_reduce_in_place</a>.</p>
-<p>The reduction is performed in-place if the target and input array/view are the same, e.g.</p>
-<div class="fragment"><div class="line">A = mpi::reduce(A);</div>
-</div><!-- fragment --><dl class="section warning"><dt>Warning</dt><dd>MPI calls are done in the <code>invoke</code> method of the <code>mpi::lazy</code> object. If one rank calls this methods, all ranks in the communicator need to call the same method. Otherwise, the program will deadlock.</dd></dl>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> type. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">a</td><td>Array/view to be reduced. </td></tr>
-    <tr><td class="paramname">comm</td><td><code>mpi::communicator</code> object. </td></tr>
-    <tr><td class="paramname">root</td><td>Rank of the root process. </td></tr>
-    <tr><td class="paramname">all</td><td>Should all processes receive the result of the reduction. </td></tr>
-    <tr><td class="paramname">op</td><td>MPI reduction operation. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="structmpi_1_1lazy_3_01mpi_1_1tag_1_1reduce_00_01_a_01_4.html" title="Specialization of the mpi::lazy class for nda::Array types and the mpi::tag::reduce tag.">mpi::lazy&lt;mpi::tag::reduce, A&gt;</a> object modelling an <a class="el" href="conceptnda_1_1_array_initializer.html" title="Check if a given type satisfies the array initializer concept for a given nda::MemoryArray type.">nda::ArrayInitializer</a>. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="reduce_8hpp_source.html#l00173">173</a> of file <a class="el" href="reduce_8hpp_source.html">reduce.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ga0f43d84528266dc455e91125144e56b0" name="ga0f43d84528266dc455e91125144e56b0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0f43d84528266dc455e91125144e56b0">&#9670;&#160;</a></span>lazy_mpi_scatter()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename A&gt; <br />
-requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt; and std::decay_t&lt;A&gt;::is_stride_order_C())</div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto nda::lazy_mpi_scatter </td>
-          <td>(</td>
-          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">mpi::communicator</td>          <td class="paramname"><span class="paramname"><em>comm</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>root</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="scatter_8hpp.html">nda/mpi/scatter.hpp</a>&gt;</code></p>
-
-<p>Implementation of a lazy MPI scatter for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types. </p>
-<p>This function is lazy, i.e. it returns an <a class="el" href="structmpi_1_1lazy_3_01mpi_1_1tag_1_1scatter_00_01_a_01_4.html" title="Specialization of the mpi::lazy class for nda::Array types and the mpi::tag::scatter tag.">mpi::lazy&lt;mpi::tag::scatter, A&gt;</a> object without performing the actual MPI operation. Since the returned object models an <a class="el" href="conceptnda_1_1_array_initializer.html" title="Check if a given type satisfies the array initializer concept for a given nda::MemoryArray type.">nda::ArrayInitializer</a>, it can be used to initialize/assign to <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> and <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> objects.</p>
-<p>The behavior is otherwise similar to <a class="el" href="#ga3c70e635ce6fd776980edc3b44f5823b" title="Implementation of an MPI scatter for nda::basic_array or nda::basic_array_view types.">nda::mpi_scatter</a>.</p>
-<dl class="section warning"><dt>Warning</dt><dd>MPI calls are done in the <code>invoke</code> and <code>shape</code> methods of the <code>mpi::lazy</code> object. If one rank calls one of these methods, all ranks in the communicator need to call the same method. Otherwise, the program will deadlock.</dd></dl>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> type. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">a</td><td>Array/view to be scattered. </td></tr>
-    <tr><td class="paramname">comm</td><td><code>mpi::communicator</code> object. </td></tr>
-    <tr><td class="paramname">root</td><td>Rank of the root process. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="structmpi_1_1lazy_3_01mpi_1_1tag_1_1scatter_00_01_a_01_4.html" title="Specialization of the mpi::lazy class for nda::Array types and the mpi::tag::scatter tag.">mpi::lazy&lt;mpi::tag::scatter, A&gt;</a> object modelling an <a class="el" href="conceptnda_1_1_array_initializer.html" title="Check if a given type satisfies the array initializer concept for a given nda::MemoryArray type.">nda::ArrayInitializer</a>. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="scatter_8hpp_source.html#l00138">138</a> of file <a class="el" href="scatter_8hpp_source.html">scatter.hpp</a>.</p>
-
-</div>
-</div>
 <a id="ga6df12000d826688a8203af93d6b6838e" name="ga6df12000d826688a8203af93d6b6838e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga6df12000d826688a8203af93d6b6838e">&#9670;&#160;</a></span>mpi_broadcast()</h2>
 
@@ -426,13 +215,10 @@ requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217
 <p><code>#include &lt;<a class="el" href="broadcast_8hpp.html">nda/mpi/broadcast.hpp</a>&gt;</code></p>
 
 <p>Implementation of an MPI broadcast for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types. </p>
-<p>For the root process, the array/view is broadcasted to all other processes. For non-root processes, the array/view is resized/checked to match the broadcasted dimensions and the data is written into the given array/view.</p>
-<p>Throws an exception, if</p><ul>
-<li>a given view does not have the correct shape,</li>
-<li>the array/view is not contiguous with positive strides or</li>
-<li>one of the MPI calls fails.</li>
-</ul>
+<p>For the root process, the array/view is broadcasted to all other processes. For non-root processes, the array/view is resized/checked to match the broadcasted dimensions and the data is written into the given array/view. The actual broadcasting is done by calling <code>mpi::broadcast_range</code>.</p>
+<p>It throws an exception, if a given view does not have the correct shape.</p>
 <p>See <a class="el" href="ex6.html#ex6_p1">Broadcasting an array/view</a> for an example.</p>
+<dl class="section note"><dt>Note</dt><dd>If the array/view is contiguous with positive strides and if the value type is MPI compatible, the data is broadcasted using a single <code>MPI_Bcast</code> call. Otherwise, the data is broadcasted element-wise which can have considerable performance implications. Consider copying the data into a contiguous array/view before broadcasting.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">A</td><td><a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> type. </td></tr>
@@ -448,7 +234,7 @@ requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="broadcast_8hpp_source.html#l00056">56</a> of file <a class="el" href="broadcast_8hpp_source.html">broadcast.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="broadcast_8hpp_source.html#l00057">57</a> of file <a class="el" href="broadcast_8hpp_source.html">broadcast.hpp</a>.</p>
 
 </div>
 </div>
@@ -488,7 +274,7 @@ requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217
 
 <p>Implementation of an MPI gather for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types. </p>
 <p>The function gathers C-ordered input arrays/views from all processes in the given communicator and makes the result available on the root process (<code>all == false</code>) or on all processes (<code>all == true</code>). The arrays/views are joined along the first dimension.</p>
-<p>It simply constructs an empty array and then calls <a class="el" href="#gaf5fa72e07e5eb1972ebbc6e6396fe3b3" title="Implementation of an MPI gather for nda::basic_array or nda::basic_array_view types using a C-style A...">nda::mpi_gather_capi</a>.</p>
+<p>It simply constructs an empty array and then calls <a class="el" href="#gabb73c0a539d4cd1edcad9c431ca716a4" title="Implementation of an MPI gather for nda::basic_array or nda::basic_array_view types that gathers dire...">nda::mpi_gather_into</a>.</p>
 <p>See <a class="el" href="ex6.html#ex6_p2">Gathering an array/view</a> for examples.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -507,12 +293,12 @@ requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> object with the result of the gathering. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="gather_8hpp_source.html#l00177">177</a> of file <a class="el" href="gather_8hpp_source.html">gather.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="gather_8hpp_source.html#l00138">138</a> of file <a class="el" href="gather_8hpp_source.html">gather.hpp</a>.</p>
 
 </div>
 </div>
-<a id="gaf5fa72e07e5eb1972ebbc6e6396fe3b3" name="gaf5fa72e07e5eb1972ebbc6e6396fe3b3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaf5fa72e07e5eb1972ebbc6e6396fe3b3">&#9670;&#160;</a></span>mpi_gather_capi()</h2>
+<a id="gabb73c0a539d4cd1edcad9c431ca716a4" name="gabb73c0a539d4cd1edcad9c431ca716a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabb73c0a539d4cd1edcad9c431ca716a4">&#9670;&#160;</a></span>mpi_gather_into()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -521,7 +307,7 @@ template&lt;typename A1, typename A2&gt; <br />
 requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A1&gt; and std::decay_t&lt;A1&gt;::is_stride_order_C() and <a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A2&gt; and std::decay_t&lt;A2&gt;::is_stride_order_C())</div>
       <table class="memname">
         <tr>
-          <td class="memname">void nda::mpi_gather_capi </td>
+          <td class="memname">void nda::mpi_gather_into </td>
           <td>(</td>
           <td class="paramtype">A1 const &amp;</td>          <td class="paramname"><span class="paramname"><em>a_in</em></span>, </td>
         </tr>
@@ -550,19 +336,18 @@ requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217
 
 <p><code>#include &lt;<a class="el" href="gather_8hpp.html">nda/mpi/gather.hpp</a>&gt;</code></p>
 
-<p>Implementation of an MPI gather for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types using a C-style API. </p>
+<p>Implementation of an MPI gather for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types that gathers directly into an existing array/view. </p>
 <p>The function gathers C-ordered input arrays/views from all processes in the given communicator and makes the result available on the root process (<code>all == false</code>) or on all processes (<code>all == true</code>). The arrays/views are joined along the first dimension.</p>
-<p>It is expected that all input arrays/views have the same shape on all processes except for the first dimension. The function throws an exception, if</p><ul>
-<li>the input array/view is not contiguous with positive strides,</li>
-<li>the output array/view is not contiguous with positive strides on receiving ranks,</li>
-<li>the output view does not have the correct shape on receiving ranks or</li>
-<li>any of the MPI calls fails.</li>
+<p>It is expected that all input arrays/views have the same shape on all processes except for the first dimension. The function throws an exception if</p><ul>
+<li>an input array/view is not contiguous with positive strides,</li>
+<li>an output array/view is not contiguous with positive strides on receiving ranks or</li>
+<li>if an output view does not have the correct shape on receiving ranks.</li>
 </ul>
-<p>The input arrays/views are simply concatenated along their first dimension. The content of the output array/view depends on the MPI rank and whether it receives the data or not:</p><ul>
+<p>The actual gathering is done by calling <code>mpi::gather_range</code>. The input arrays/views are simply concatenated along their first dimension. The content of the output array/view depends on the MPI rank and whether it receives the data or not:</p><ul>
 <li>On receiving ranks, it contains the gathered data and has a shape that is the same as the shape of the input array/view except for the first dimension, which is the sum of the extents of all input arrays/views along the first dimension.</li>
 <li>On non-receiving ranks, the output array/view is ignored and left unchanged.</li>
 </ul>
-<p>If <code>mpi::has_env</code> is false or if the communicator size is &lt; 2, it simply copies the input array/view to the output array/view.</p>
+<dl class="section note"><dt>Note</dt><dd>Gathering is only supported for contiguous arrays/views with positive strides and with MPI compatible value types.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">A1</td><td><a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> type with C-layout. </td></tr>
@@ -581,7 +366,7 @@ requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="gather_8hpp_source.html#l00099">99</a> of file <a class="el" href="gather_8hpp_source.html">gather.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="gather_8hpp_source.html#l00096">96</a> of file <a class="el" href="gather_8hpp_source.html">gather.hpp</a>.</p>
 
 </div>
 </div>
@@ -626,8 +411,13 @@ requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217
 
 <p>Implementation of an MPI reduce for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types. </p>
 <p>The function reduces input arrays/views from all processes in the given communicator and makes the result available on the root process (<code>all == false</code>) or on all processes (<code>all == true</code>).</p>
-<p>It simply constructs an empty array and then calls <a class="el" href="#gaf5fa72e07e5eb1972ebbc6e6396fe3b3" title="Implementation of an MPI gather for nda::basic_array or nda::basic_array_view types using a C-style A...">nda::mpi_gather_capi</a>.</p>
+<p>It first default constructs an <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> object on the heap with its value type equal to the return type of <code>reduce(std::declval&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc" title="Get the value type of an array/view or a scalar type.">get_value_t</a>&lt;A&gt;&gt;())</code> and the same rank and algebra as the input array/view. On receiving ranks, the output array is then resized to the shape of the input array/view.</p>
+<p>The actual reduction is done by calling <a class="el" href="#ga663e553746cc0923df57b83c2c742eba" title="Implementation of an MPI reduce for nda::basic_array or nda::basic_array_view types that reduces dire...">nda::mpi_reduce_into</a> with the input array/view and the constructed output array. The content of the returned array depends on the MPI rank and whether it receives the data or not:</p><ul>
+<li>On receiving ranks, it contains the reduced data.</li>
+<li>On non-receiving ranks, the array is empty.</li>
+</ul>
 <p>See <a class="el" href="ex6.html#ex6_p4">Reducing an array/view</a> for an example.</p>
+<dl class="section note"><dt>Note</dt><dd>If the input arrays/views are contiguous with positive strides and if the value type is MPI compatible, the data is reduced using a single <code>MPI_Reduce</code> or <code>MPI_Allreduce</code> call. Otherwise, the data is reduced element-wise, which can have considerable performance implications. Consider copying the data into a contiguous array/view before reducing.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">A</td><td><a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> type. </td></tr>
@@ -646,12 +436,12 @@ requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> object with the result of the reduction. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="reduce_8hpp_source.html#l00221">221</a> of file <a class="el" href="reduce_8hpp_source.html">reduce.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reduce_8hpp_source.html#l00140">140</a> of file <a class="el" href="reduce_8hpp_source.html">reduce.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga51224e436e40aad207aec1c7f237a7de" name="ga51224e436e40aad207aec1c7f237a7de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga51224e436e40aad207aec1c7f237a7de">&#9670;&#160;</a></span>mpi_reduce_capi()</h2>
+<a id="ga663e553746cc0923df57b83c2c742eba" name="ga663e553746cc0923df57b83c2c742eba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga663e553746cc0923df57b83c2c742eba">&#9670;&#160;</a></span>mpi_reduce_into()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -660,7 +450,7 @@ template&lt;typename A1, typename A2&gt; <br />
 requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A1&gt; &amp;&amp; <a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A2&gt;)</div>
       <table class="memname">
         <tr>
-          <td class="memname">void nda::mpi_reduce_capi </td>
+          <td class="memname">void nda::mpi_reduce_into </td>
           <td>(</td>
           <td class="paramtype">A1 const &amp;</td>          <td class="paramname"><span class="paramname"><em>a_in</em></span>, </td>
         </tr>
@@ -694,21 +484,14 @@ requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217
 
 <p><code>#include &lt;<a class="el" href="reduce_8hpp.html">nda/mpi/reduce.hpp</a>&gt;</code></p>
 
-<p>Implementation of an MPI reduce for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types using a C-style API. </p>
+<p>Implementation of an MPI reduce for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types that reduces directly into an existing array/view. </p>
 <p>The function reduces input arrays/views from all processes in the given communicator and makes the result available on the root process (<code>all == false</code>) or on all processes (<code>all == true</code>).</p>
-<p>It is expected that all input arrays/views have the same shape on all processes. The function throws an exception, if</p><ul>
-<li>the input array/view is not contiguous with positive strides (only for MPI compatible types),</li>
-<li>the output array/view is not contiguous with positive strides on receiving ranks,</li>
-<li>the output view does not have the correct shape on receiving ranks,</li>
-<li>the data storage of the output array/view overlaps with the input array/view or</li>
-<li>any of the MPI calls fails.</li>
-</ul>
-<p>The content of the output array/view depends on the MPI rank and whether it receives the data or not:</p><ul>
+<p>It is expected that all input arrays/views have the same shape on all processes. The function throws an exception, if an output view does not have the correct shape on receiving ranks.</p>
+<p>The actual reduction is done by calling <code>mpi::reduce_range</code>. The content of the output array/view depends on the MPI rank and whether it receives the data or not:</p><ul>
 <li>On receiving ranks, it contains the reduced data and has a shape that is the same as the shape of the input array/view.</li>
 <li>On non-receiving ranks, the output array/view is ignored and left unchanged.</li>
 </ul>
-<p>Types which cannot be reduced directly, i.e. which do not have an MPI type, are reduced element-wise.</p>
-<p>If <code>mpi::has_env</code> is false or if the communicator size is &lt; 2, it simply copies the input array/view to the output array/view.</p>
+<dl class="section note"><dt>Note</dt><dd>If the input/output arrays/views are contiguous with positive strides and if the value type is MPI compatible, the data is reduced using a single <code>MPI_Reduce</code> or <code>MPI_Allreduce</code> call. Otherwise, the data is reduced element-wise, which can have considerable performance implications. Consider copying the data into a contiguous array/view before reducing.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">A1</td><td><a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> type. </td></tr>
@@ -728,71 +511,7 @@ requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="reduce_8hpp_source.html#l00114">114</a> of file <a class="el" href="reduce_8hpp_source.html">reduce.hpp</a>.</p>
-
-</div>
-</div>
-<a id="gac31ef46b7cffb19adbbb1ff06f9fcd8a" name="gac31ef46b7cffb19adbbb1ff06f9fcd8a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac31ef46b7cffb19adbbb1ff06f9fcd8a">&#9670;&#160;</a></span>mpi_reduce_in_place()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename A&gt; <br />
-requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt;)</div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void nda::mpi_reduce_in_place </td>
-          <td>(</td>
-          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">mpi::communicator</td>          <td class="paramname"><span class="paramname"><em>comm</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>root</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>all</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">MPI_Op</td>          <td class="paramname"><span class="paramname"><em>op</em></span><span class="paramdefsep"> = </span><span class="paramdefval">MPI_SUM</span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="reduce_8hpp.html">nda/mpi/reduce.hpp</a>&gt;</code></p>
-
-<p>Implementation of an in-place MPI reduce for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types. </p>
-<p>The function in-place reduces arrays/views from all processes in the given communicator and makes the result available on the root process (<code>all == false</code>) or on all processes (<code>all == true</code>).</p>
-<p>The behavior and requirements are similar to <a class="el" href="#ga3edd8f70f2213d38b391743ddab967b3" title="Implementation of an MPI reduce for nda::basic_array or nda::basic_array_view types.">nda::mpi_reduce</a>, except that the function does not return a new array. Instead it writes the result directly into the given array/view on receiving ranks.</p>
-<p>See <a class="el" href="ex6.html#ex6_p4">Reducing an array/view</a> for an example.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> type. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">a</td><td>Array/view to be reduced. </td></tr>
-    <tr><td class="paramname">comm</td><td><code>mpi::communicator</code> object. </td></tr>
-    <tr><td class="paramname">root</td><td>Rank of the root process. </td></tr>
-    <tr><td class="paramname">all</td><td>Should all processes receive the result of the reduction. </td></tr>
-    <tr><td class="paramname">op</td><td>MPI reduction operation. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="reduce_8hpp_source.html#l00197">197</a> of file <a class="el" href="reduce_8hpp_source.html">reduce.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="reduce_8hpp_source.html#l00080">80</a> of file <a class="el" href="reduce_8hpp_source.html">reduce.hpp</a>.</p>
 
 </div>
 </div>
@@ -827,7 +546,7 @@ requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217
 
 <p>Implementation of an MPI scatter for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types. </p>
 <p>The function scatters a C-ordered input array/view from a root process across all processes in the given communicator. The array/view is chunked into equal parts along the first dimension using <code>mpi::chunk_length</code>.</p>
-<p>It simply constructs an empty array and then calls <a class="el" href="#ga9a693c512671b934773d5aad1a5a646f" title="Implementation of an MPI scatter for nda::basic_array or nda::basic_array_view types using a C-style ...">nda::mpi_scatter_capi</a>.</p>
+<p>It simply constructs an empty array and then calls <a class="el" href="#gae423dc9b0c850f1650fa2803b7123f80" title="Implementation of an MPI scatter for nda::basic_array or nda::basic_array_view types that scatters di...">nda::mpi_scatter_into</a>.</p>
 <p>See <a class="el" href="ex6.html#ex6_p3">Scattering an array/view</a> for an example.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -845,12 +564,12 @@ requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> object with the result of the scattering. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="scatter_8hpp_source.html#l00160">160</a> of file <a class="el" href="scatter_8hpp_source.html">scatter.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="scatter_8hpp_source.html#l00132">132</a> of file <a class="el" href="scatter_8hpp_source.html">scatter.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga9a693c512671b934773d5aad1a5a646f" name="ga9a693c512671b934773d5aad1a5a646f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9a693c512671b934773d5aad1a5a646f">&#9670;&#160;</a></span>mpi_scatter_capi()</h2>
+<a id="gae423dc9b0c850f1650fa2803b7123f80" name="gae423dc9b0c850f1650fa2803b7123f80"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae423dc9b0c850f1650fa2803b7123f80">&#9670;&#160;</a></span>mpi_scatter_into()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -859,7 +578,7 @@ template&lt;typename A1, typename A2&gt; <br />
 requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A1&gt; and std::decay_t&lt;A1&gt;::is_stride_order_C() and <a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A2&gt; and std::decay_t&lt;A2&gt;::is_stride_order_C())</div>
       <table class="memname">
         <tr>
-          <td class="memname">void nda::mpi_scatter_capi </td>
+          <td class="memname">void nda::mpi_scatter_into </td>
           <td>(</td>
           <td class="paramtype">A1 const &amp;</td>          <td class="paramname"><span class="paramname"><em>a_in</em></span>, </td>
         </tr>
@@ -883,16 +602,15 @@ requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217
 
 <p><code>#include &lt;<a class="el" href="scatter_8hpp.html">nda/mpi/scatter.hpp</a>&gt;</code></p>
 
-<p>Implementation of an MPI scatter for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types using a C-style API. </p>
+<p>Implementation of an MPI scatter for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types that scatters directly into an existing array/view. </p>
 <p>The function scatters a C-ordered input array/view from a root process across all processes in the given communicator. The array/view is chunked into equal parts along the first dimension using <code>mpi::chunk_length</code>.</p>
 <p>It is expected that all input arrays/views have the same rank on all processes. The function throws an exception, if</p><ul>
 <li>the input array/view is not contiguous with positive strides on the root process,</li>
-<li>the output array/view is not contiguous with positive strides,</li>
-<li>the output view does not have the correct shape or</li>
-<li>any of the MPI calls fails.</li>
+<li>an output array/view is not contiguous with positive strides or</li>
+<li>an output view does not have the correct shape.</li>
 </ul>
-<p>The input array/view on the root process is chunked along the first dimension into equal (as much as possible) parts using <code>mpi::chunk_length</code>. If the extent of the input array along the first dimension is not divisible by the number of processes, processes with lower ranks will receive more data than processes with higher ranks.</p>
-<p>If <code>mpi::has_env</code> is false or if the communicator size is &lt; 2, it simply copies the input array/view to the output array/view.</p>
+<p>The actual scattering is done by calling <code>mpi::scatter_range</code>. The input array/view on the root process is chunked along the first dimension into equal (as much as possible) parts using <code>mpi::chunk_length</code>. If the extent of the input array along the first dimension is not divisible by the number of processes, processes with lower ranks will receive more data than processes with higher ranks.</p>
+<dl class="section note"><dt>Note</dt><dd>Scattering is only supported for contiguous arrays/views with positive strides and with MPI compatible value types.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">A1</td><td><a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> type with C-layout. </td></tr>
@@ -910,7 +628,7 @@ requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="scatter_8hpp_source.html#l00094">94</a> of file <a class="el" href="scatter_8hpp_source.html">scatter.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="scatter_8hpp_source.html#l00096">96</a> of file <a class="el" href="scatter_8hpp_source.html">scatter.hpp</a>.</p>
 
 </div>
 </div>
