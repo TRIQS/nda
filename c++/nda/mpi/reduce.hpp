@@ -33,41 +33,10 @@
 #include <mpi.h>
 #include <mpi/mpi.hpp>
 
-#include <array>
-#include <cmath>
 #include <cstddef>
 #include <span>
 #include <type_traits>
 #include <utility>
-
-namespace nda::detail {
-
-  // Helper function that (all)reduces arrays/views in-place.
-  template <typename A>
-    requires(is_regular_or_view_v<A>)
-  void mpi_reduce_in_place_impl(A &&a_out, mpi::communicator comm = {}, int root = 0, bool all = false, MPI_Op op = MPI_SUM) { // NOLINT
-    // check the shape of the input arrays/views
-    EXPECTS_WITH_MESSAGE(have_mpi_equal_shapes(a_out, comm), "Error in nda::detail::mpi_reduce_in_place_impl: Shapes of arrays/views must be equal")
-
-    // do nothing if there is no active MPI environment or if the communicator size is < 2
-    if (not mpi::has_env || comm.size() < 2) { return; }
-
-    // reduce the arrays/views
-    using value_type = typename std::decay_t<A>::value_type;
-    if constexpr (not mpi::has_mpi_type<value_type>) {
-      // arrays/views of non-MPI types are reduced element-wise
-      nda::for_each(a_out.shape(), [&](auto... args) { mpi::reduce_in_place(a_out(args...), comm, root, all, op); });
-    } else {
-      // for MPI-types we have to perform some checks on the input/ouput arrays/views
-      check_layout_mpi_compatible(a_out, "detail::mpi_reduce_in_place_impl");
-
-      // reduce the data
-      auto a_out_span = std::span{a_out.data(), static_cast<std::size_t>(a_out.size())};
-      mpi::reduce_in_place_range(a_out_span, comm, root, all, op);
-    }
-  }
-
-} // namespace nda::detail
 
 namespace nda {
 
@@ -77,28 +46,25 @@ namespace nda {
    */
 
   /**
-   * @brief Implementation of an MPI reduce for nda::basic_array or nda::basic_array_view types using a C-style API.
+   * @brief Implementation of an MPI reduce for nda::basic_array or nda::basic_array_view types that reduces directly
+   * into an existing array/view.
    *
    * @details The function reduces input arrays/views from all processes in the given communicator and makes the result
    * available on the root process (`all == false`) or on all processes (`all == true`).
    *
    * It is expected that all input arrays/views have the same shape on all processes. The function throws an exception,
-   * if
-   * - the input array/view is not contiguous with positive strides (only for MPI compatible types),
-   * - the output array/view is not contiguous with positive strides on receiving ranks,
-   * - the output view does not have the correct shape on receiving ranks,
-   * - the data storage of the output array/view overlaps with the input array/view or
-   * - any of the MPI calls fails.
+   * if an output view does not have the correct shape on receiving ranks.
    *
-   * The content of the output array/view depends on the MPI rank and whether it receives the data or not:
+   * The actual reduction is done by calling `mpi::reduce_range`. The content of the output array/view depends on the
+   * MPI rank and whether it receives the data or not:
    * - On receiving ranks, it contains the reduced data and has a shape that is the same as the shape of the input
    * array/view.
    * - On non-receiving ranks, the output array/view is ignored and left unchanged.
    *
-   * Types which cannot be reduced directly, i.e. which do not have an MPI type, are reduced element-wise.
-   *
-   * If `mpi::has_env` is false or if the communicator size is < 2, it simply copies the input array/view to the output
-   * array/view.
+   * @note If the input/output arrays/views are contiguous with positive strides and if the value type is MPI
+   * compatible, the data is reduced using a single `MPI_Reduce` or `MPI_Allreduce` call. Otherwise, the data is reduced
+   * element-wise, which can have considerable performance implications. Consider copying the data into a contiguous
+   * array/view before reducing.
    *
    * @tparam A1 nda::basic_array or nda::basic_array_view type.
    * @tparam A2 nda::basic_array or nda::basic_array_view type.
@@ -111,91 +77,32 @@ namespace nda {
    */
   template <typename A1, typename A2>
     requires(is_regular_or_view_v<A1> && is_regular_or_view_v<A2>)
-  void mpi_reduce_capi(A1 const &a_in, A2 &&a_out, mpi::communicator comm = {}, int root = 0, bool all = false, MPI_Op op = MPI_SUM) { // NOLINT
+  void mpi_reduce_into(A1 const &a_in, A2 &&a_out, mpi::communicator comm = {}, int root = 0, bool all = false, MPI_Op op = MPI_SUM) { // NOLINT
     // check the shape of the input arrays/views
-    EXPECTS_WITH_MESSAGE(detail::have_mpi_equal_shapes(a_in, comm), "Error in nda::mpi_reduce_capi: Shapes of arrays/views must be equal")
+    EXPECTS_WITH_MESSAGE(detail::have_mpi_equal_shapes(a_in, comm), "Error in nda::mpi_reduce_into: Shapes of arrays/views must be equal");
 
-    // simply copy if there is no active MPI environment or if the communicator size is < 2
-    if (not mpi::has_env || comm.size() < 2) {
-      a_out = a_in;
-      return;
-    }
+    // resize or check the output array/view on receiving ranks
+    bool const receives = (all || (comm.rank() == root));
+    if (receives) resize_or_check_if_view(a_out, a_in.shape());
 
-    // reduce the arrays/views
-    using value_type = typename std::decay_t<A1>::value_type;
-    if constexpr (not mpi::has_mpi_type<value_type>) {
-      // arrays/views of non-MPI types are reduced element-wise
-      a_out = nda::map([&](auto const &x) { return mpi::reduce(x, comm, root, all, op); })(a_in);
-    } else {
-      // for MPI-types we have to perform some checks on the input and ouput arrays/views
-      detail::check_layout_mpi_compatible(a_in, "mpi_reduce_capi");
-      if ((comm.rank() == root) || all) {
-        detail::check_layout_mpi_compatible(a_out, "mpi_reduce_capi");
-        resize_or_check_if_view(a_out, a_in.shape());
-        if (std::abs(a_out.data() - a_in.data()) < a_in.size()) NDA_RUNTIME_ERROR << "Error in nda::mpi_reduce_capi: Overlapping arrays";
+    // call mpi::reduce_range with a span if the input and output arrays/views are contiguous with positive strides
+    // (on non-receiving ranks, the output should always be contiguous since it is not used)
+    if (a_in.is_contiguous() and a_in.has_positive_strides()) {
+      auto a_in_span = std::span{a_in.data(), static_cast<std::size_t>(a_in.size())};
+      if ((a_out.is_contiguous() and a_out.has_positive_strides()) || !receives) {
+        auto a_out_span = std::span{a_out.data(), static_cast<std::size_t>(a_out.size())};
+        mpi::reduce_range(a_in_span, a_out_span, comm, root, all, op);
+      } else {
+        mpi::reduce_range(a_in_span, a_out, comm, root, all, op);
       }
-
-      // reduce the data
-      auto a_out_span = std::span{a_out.data(), static_cast<std::size_t>(a_out.size())};
-      auto a_in_span  = std::span{a_in.data(), static_cast<std::size_t>(a_in.size())};
-      mpi::reduce_range(a_in_span, a_out_span, comm, root, all, op);
+    } else {
+      if ((a_out.is_contiguous() and a_out.has_positive_strides()) || !receives) {
+        auto a_out_span = std::span{a_out.data(), static_cast<std::size_t>(a_out.size())};
+        mpi::reduce_range(a_in, a_out_span, comm, root, all, op);
+      } else {
+        mpi::reduce_range(a_in, a_out, comm, root, all, op);
+      }
     }
-  }
-
-  /**
-   * @brief Implementation of a lazy MPI reduce for nda::basic_array or nda::basic_array_view types.
-   *
-   * @details This function is lazy, i.e. it returns an mpi::lazy<mpi::tag::reduce, A> object without performing the
-   * actual MPI operation. Since the returned object models an nda::ArrayInitializer, it can be used to
-   * initialize/assign to nda::basic_array and nda::basic_array_view objects:
-   *
-   * The behavior is otherwise similar to nda::mpi_reduce and nda::mpi_reduce_in_place.
-   *
-   * The reduction is performed in-place if the target and input array/view are the same, e.g.
-   *
-   * @code{.cpp}
-   * A = mpi::reduce(A);
-   * @endcode
-   *
-   * @warning MPI calls are done in the `invoke` method of the `mpi::lazy` object. If one rank calls this methods, all
-   * ranks in the communicator need to call the same method. Otherwise, the program will deadlock.
-   *
-   * @tparam A nda::basic_array or nda::basic_array_view type.
-   * @param a Array/view to be reduced.
-   * @param comm `mpi::communicator` object.
-   * @param root Rank of the root process.
-   * @param all Should all processes receive the result of the reduction.
-   * @param op MPI reduction operation.
-   * @return An mpi::lazy<mpi::tag::reduce, A> object modelling an nda::ArrayInitializer.
-   */
-  template <typename A>
-    requires(is_regular_or_view_v<A>)
-  auto lazy_mpi_reduce(A &&a, mpi::communicator comm = {}, int root = 0, bool all = false, MPI_Op op = MPI_SUM) {
-    return mpi::lazy<mpi::tag::reduce, A>{std::forward<A>(a), comm, root, all, op};
-  }
-
-  /**
-   * @brief Implementation of an in-place MPI reduce for nda::basic_array or nda::basic_array_view types.
-   *
-   * @details The function in-place reduces arrays/views from all processes in the given communicator and makes the
-   * result available on the root process (`all == false`) or on all processes (`all == true`).
-   *
-   * The behavior and requirements are similar to nda::mpi_reduce, except that the function does not return a new array.
-   * Instead it writes the result directly into the given array/view on receiving ranks.
-   *
-   * See @ref ex6_p4 for an example.
-   *
-   * @tparam A nda::basic_array or nda::basic_array_view type.
-   * @param a Array/view to be reduced.
-   * @param comm `mpi::communicator` object.
-   * @param root Rank of the root process.
-   * @param all Should all processes receive the result of the reduction.
-   * @param op MPI reduction operation.
-   */
-  template <typename A>
-    requires(is_regular_or_view_v<A>)
-  void mpi_reduce_in_place(A &&a, mpi::communicator comm = {}, int root = 0, bool all = false, MPI_Op op = MPI_SUM) { // NOLINT
-    detail::mpi_reduce_in_place_impl(a, comm, root, all, op);
   }
 
   /**
@@ -204,9 +111,21 @@ namespace nda {
    * @details The function reduces input arrays/views from all processes in the given communicator and makes the result
    * available on the root process (`all == false`) or on all processes (`all == true`).
    *
-   * It simply constructs an empty array and then calls nda::mpi_gather_capi.
+   * It first default constructs an nda::basic_array object on the heap with its value type equal to the return type of
+   * `reduce(std::declval<get_value_t<A>>())` and the same rank and algebra as the input array/view. On receiving ranks,
+   * the output array is then resized to the shape of the input array/view.
+   *
+   * The actual reduction is done by calling nda::mpi_reduce_into with the input array/view and the constructed output
+   * array. The content of the returned array depends on the MPI rank and whether it receives the data or not:
+   * - On receiving ranks, it contains the reduced data.
+   * - On non-receiving ranks, the array is empty.
    *
    * See @ref ex6_p4 for an example.
+   *
+   * @note If the input arrays/views are contiguous with positive strides and if the value type is MPI compatible, the
+   * data is reduced using a single `MPI_Reduce` or `MPI_Allreduce` call. Otherwise, the data is reduced element-wise,
+   * which can have considerable performance implications. Consider copying the data into a contiguous array/view before
+   * reducing.
    *
    * @tparam A nda::basic_array or nda::basic_array_view type.
    * @param a Array/view to be reduced.
@@ -219,92 +138,13 @@ namespace nda {
   template <typename A>
     requires(is_regular_or_view_v<A>)
   auto mpi_reduce(A const &a, mpi::communicator comm = {}, int root = 0, bool all = false, MPI_Op op = MPI_SUM) {
-    using return_t = get_regular_t<A>;
+    using value_t  = std::remove_cvref_t<decltype(mpi::reduce(std::declval<get_value_t<A>>()))>;
+    using return_t = basic_array<value_t, get_rank<A>, typename A::layout_policy_t::contiguous_t, get_algebra<A>, heap<>>;
     return_t a_out;
-    mpi_reduce_capi(a, a_out, comm, root, all, op);
+    mpi_reduce_into(a, a_out, comm, root, all, op);
     return a_out;
   }
 
   /** @} */
 
 } // namespace nda
-
-/**
- * @ingroup av_mpi
- * @brief Specialization of the `mpi::lazy` class for nda::Array types and the `mpi::tag::reduce` tag.
- *
- * @details An object of this class is returned when reducing nda::Array objects across multiple MPI processes.
- *
- * It models an nda::ArrayInitializer, that means it can be used to initialize and assign to nda::basic_array and
- * nda::basic_array_view objects. The result will be the reduction of the input arrays/views with respect to the given
- * MPI operation.
- *
- * See nda::lazy_mpi_reduce for an example.
- *
- * @tparam A nda::Array type to be reduced.
- */
-template <nda::Array A>
-struct mpi::lazy<mpi::tag::reduce, A> {
-  /// Value type of the array/view.
-  using value_type = typename std::decay_t<A>::value_type;
-
-  /// Type of the array/view stored in the lazy object.
-  using stored_type = A;
-
-  /// Array/View to be reduced.
-  stored_type rhs;
-
-  /// MPI communicator.
-  mpi::communicator comm;
-
-  /// MPI root process.
-  const int root{0}; // NOLINT (const is fine here)
-
-  /// Should all processes receive the result.
-  const bool all{false}; // NOLINT (const is fine here)
-
-  /// MPI reduction operation.
-  const MPI_Op op{MPI_SUM}; // NOLINT (const is fine here)
-
-  /**
-   * @brief Compute the shape of the nda::ArrayInitializer object.
-   *
-   * @details The shape of the initializer objects depends on the MPI rank and whether it receives the data or not:
-   *
-   * - On receiving ranks, the shape is the same as the shape of the input array/view.
-   * - On non-receiving ranks, the shape has the rank of the input array/view with only zeros, i.e. it is empty.
-   *
-   * @return Shape of the nda::ArrayInitializer object.
-   */
-  [[nodiscard]] auto shape() const {
-    if ((comm.rank() == root) || all) return rhs.shape();
-    return std::array<long, std::remove_cvref_t<stored_type>::rank>{};
-  }
-
-  /**
-   * @brief Execute the lazy MPI operation and write the result to a target array/view.
-   *
-   * @details The data will be reduced directly into the memory handle of the target array/view. If the target
-   * array/view is the same as the input array/view, i.e. if their data pointers are the same, the reduction is
-   * performed in-place.
-   *
-   * Types which cannot be reduced directly, i.e. which do not have an MPI type, are reduced element-wise.
-   *
-   * For MPI compatible types, the function throws an exception, if
-   * - the input array/view is not contiguous with positive strides.
-   * - the target array/view is not contiguous with positive strides on receiving ranks.
-   * - the operation is performed in-place but the target and input array have different sizes.
-   * - the operation is performed out-of-place and the memory of the target and input array/view overlap.
-   *
-   * @tparam T nda::Array type of the target array/view.
-   * @param target Target array/view.
-   */
-  template <nda::Array T>
-  void invoke(T &&target) const { // NOLINT (temporary views are allowed here)
-    if (target.data() == rhs.data()) {
-      nda::detail::mpi_reduce_in_place_impl(target, comm, root, all, op);
-    } else {
-      nda::mpi_reduce_capi(rhs, target, comm, root, all, op);
-    }
-  }
-};

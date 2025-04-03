@@ -158,8 +158,10 @@ Rank 3:
  [0,0,0,1]]
 ```
 
-If `A` would not be in Fortran-order, this code snippet wouldn't compile since the elements of a single column are not
-contiguous in memory in C-order.
+If `A` would not be in Fortran-order, this code snippet would still compile and also give us the expected output.
+However, since the elements of a single column are not contiguous in memory in C-order, it would broadcast each element
+separately. This can have enormous implications on the performance. We recommend to always use MPI routines with
+contiguous arrays/views, so that **nda** can make the MPI calls as efficiently as possible.
 
 > **Note**: All MPI routines have certain requirements for the arrays/views involved in the operation. Please check out
 > the documentation of the individual function, e.g. in this case nda::mpi_broadcast, if you have doubts.
@@ -342,7 +344,7 @@ Rank 3:
  [3,3]]
 ```
 
-Similar to the nda::mpi_gather, nda::mpi_scatter requires the input and output arrays to be in C-order.
+Similar to nda::mpi_gather, nda::mpi_scatter requires the input and output arrays to be in C-order.
 
 If the extent along the first dimension is not divisible by the number of MPI ranks, processes with lower ranks will
 receive more data than others:
@@ -438,3 +440,40 @@ Rank 1:
 
 In contrast to the standard `mpi::all_reduce` function, the in-place operation does not create and return a new array.
 Instead the result is directly written into the input array.
+
+@subsection ex6_p5 Using existing arrays/views
+
+Note that the functions nda::mpi_reduce, nda::mpi_gather and nda::mpi_scatter all return a newly constructed array which
+contains the result of the respective MPI operation.
+In case of large amounts of data, constructing a new obejct can be expensive and use a lot of additional memory.
+
+If there already exists an array/view that can be used as a receive (output) buffer, we can avoid this additional
+overhead by calling nda::mpi_reduce_into, nda::mpi_gather_into or nda::mpi_scatter_into instead.
+The `mpi_xxx_into` functions work exactly as their `mpi_xxx` counterparts except that they take an additional array/view
+as an argument into which the results are written, e.g.
+
+```cpp
+// scatter a view into an existing array
+auto C_into = nda::array<int, 2>(2, 2);
+mpi::scatter_into(B_rg, C_into, comm, root);
+print(C_into, comm);
+comm.barrier();
+```
+
+Output:
+
+```
+Rank 0:
+[[0,0]
+ [0,0]]
+Rank 2:
+[[2,2]
+ [2,2]]
+Rank 3:
+[[3,3]
+ [3,3]]
+Rank 1:
+[[1,1]
+ [1,1]]
+```
+
