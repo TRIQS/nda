@@ -62,7 +62,7 @@ namespace nda {
     // Given an array/view, prepare and return the corresponding h5::array_view to be written/read into.
     template <MemoryArray A>
     auto prepare_h5_array_view(const A &a) {
-      auto [parent_shape, h5_strides] = h5::array_interface::get_parent_shape_and_h5_strides(a.indexmap().strides().data(), A::rank, a.size());
+      auto [parent_shape, h5_strides] = h5::array_interface::get_parent_shape_and_h5_strides(a.indexmap().strides().data(), A::rank, a.shape().data());
       auto v = h5::array_interface::array_view{h5::hdf5_type<get_value_t<A>>(), (void *)a.data(), A::rank, is_complex_v<typename A::value_type>};
       for (int u = 0; u < A::rank; ++u) {
         v.slab.count[u]   = a.shape()[u];
