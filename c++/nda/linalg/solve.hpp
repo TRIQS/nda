@@ -76,7 +76,7 @@ namespace nda {
 
     // check dimensions
     EXPECTS_WITH_MESSAGE(a.shape()[0] == a.shape()[1], "Error in nda::solve_in_place: Matrix A is not square");
-    EXPECTS_WITH_MESSAGE(a.shape()[1] == b.shape()[0], "Error in nda::solve_in_place: Dimension mismatch between matrix A and B");
+    EXPECTS_WITH_MESSAGE(a.shape()[0] == b.shape()[0], "Error in nda::solve_in_place: Dimension mismatch between matrix A and B");
 
     // pivot indices vector
     auto ipiv = vector<int, heap<addr_space>>(a.shape()[0]);

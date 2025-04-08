@@ -73,16 +73,16 @@ namespace nda::lapack {
    */
   template <MemoryMatrix A, MemoryVector S, MemoryMatrix U, MemoryMatrix VT>
     requires(have_same_value_type_v<A, U, VT> and mem::have_compatible_addr_space<A, S, U, VT> and is_blas_lapack_v<get_value_t<A>>
-             and std::same_as<double, std::remove_cvref_t<get_value_t<S>>>)
+             and std::same_as<double, get_value_t<S>>)
   int gesvd(A &&a, S &&s, U &&u, VT &&vt) { // NOLINT (temporary views are allowed here)
     static_assert(has_C_layout<A> == has_C_layout<U> and has_C_layout<A> == has_C_layout<VT>,
                   "Error in nda::lapack::gesvd: Matrix layouts have to be the same");
 
-    // check the dimensions of the input arrays/views and resize if necessary
+    // check the dimensions of the output arrays/views and resize if necessary
     auto dm = std::min(a.extent(0), a.extent(1));
-    if (s.size() < dm) resize_or_check_if_view(s, {dm});
-    if (u.extent(0) < a.extent(0) || u.extent(1) < a.extent(0)) resize_or_check_if_view(u, {a.extent(0), a.extent(0)});
-    if (vt.extent(0) < a.extent(1) || vt.extent(1) < a.extent(1)) resize_or_check_if_view(vt, {a.extent(1), a.extent(1)});
+    resize_or_check_if_view(s, {dm});
+    resize_or_check_if_view(u, {a.extent(0), a.extent(0)});
+    resize_or_check_if_view(vt, {a.extent(1), a.extent(1)});
 
     // input arrays/views must be lapack compatible
     EXPECTS(a.indexmap().min_stride() == 1);

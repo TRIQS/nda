@@ -101,10 +101,7 @@ namespace nda {
   template <Matrix A>
     requires(is_blas_lapack_v<get_value_t<A>>)
   auto svd(A const &a) { // NOLINT (temporary views are allowed here)
-    using layout_policy       = detail::layout_to_policy<typename A::layout_t>::type;
-    constexpr auto addr_space = mem::get_addr_space<A>;
-    auto a_copy               = matrix<get_value_t<A>, layout_policy, heap<addr_space>>(a);
-    return svd_in_place(a_copy);
+    return svd_in_place(basic_array{a});
   }
 
   /** @} */

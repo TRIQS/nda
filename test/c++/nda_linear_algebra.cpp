@@ -450,7 +450,7 @@ void test_svd() {
   // compute the SVD of A
   auto [U_1, s_1, VH_1] = nda::svd(A);
   auto S_1              = matrix_t::zeros(A.shape());
-  for (auto i : nda::range(2)) S_1(i, i) = s_1(i);
+  diagonal(S_1)         = s_1;
   EXPECT_ARRAY_NEAR(s_1, s, 1e-14);
   EXPECT_ARRAY_NEAR(A, U_1 * S_1 * VH_1, 1e-14);
 
@@ -458,7 +458,7 @@ void test_svd() {
   auto A_copy           = A;
   auto [U_2, s_2, VH_2] = nda::svd_in_place(A_copy);
   auto S_2              = matrix_t::zeros(A.shape());
-  for (auto i : nda::range(2)) S_2(i, i) = s_2(i);
+  diagonal(S_2)         = s_2;
   EXPECT_ARRAY_NEAR(s, s_2, 1e-14);
   EXPECT_ARRAY_NEAR(A, U_2 * S_2 * VH_2, 1e-14);
 }
