@@ -29,6 +29,10 @@
 #include "../mem/address_space.hpp"
 #include "../traits.hpp"
 
+#ifndef NDA_HAVE_DEVICE
+#include "../device.hpp"
+#endif // NDA_HAVE_DEVICE
+
 #include <algorithm>
 #include <cmath>
 #include <complex>
@@ -58,15 +62,16 @@ namespace nda::lapack {
     requires(mem::have_compatible_addr_space<A, IPIV> and is_blas_lapack_v<get_value_t<A>>)
   int getri(A &&a, IPIV const &ipiv) { // NOLINT (temporary views are allowed here)
     static_assert(std::is_same_v<get_value_t<IPIV>, int>, "Error in nda::lapack::getri: Pivoting array must have elements of type int");
-    auto dm = std::min(a.extent(0), a.extent(1));
 
-    if (ipiv.size() < dm)
-      NDA_RUNTIME_ERROR << "Error in nda::lapack::getri: Pivot index array size " << ipiv.size() << " smaller than required size " << dm;
+    // check the dimensions of the input/output arrays/views and resize if necessary
+    EXPECTS(a.extent(0) == a.extent(1));
+    EXPECTS(ipiv.size() >= a.extent(0));
 
-    // must be lapack compatible
+    // arrays/views must be LAPACK compatible
     EXPECTS(a.indexmap().min_stride() == 1);
     EXPECTS(ipiv.indexmap().min_stride() == 1);
 
+    // perform the LAPACK calls
     int info = 0;
     if constexpr (mem::have_device_compatible_addr_space<A, IPIV>) {
 #if defined(NDA_HAVE_DEVICE)

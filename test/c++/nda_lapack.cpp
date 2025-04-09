@@ -33,7 +33,7 @@ void test_gtsv(auto dl, auto d, auto du, auto B, auto ref_sol) {
 }
 
 TEST(NDA, LAPACKGtsvDouble) {
-  auto check = []<typename value_t, typename Layout>() {
+  auto check = []<typename value_t>() {
     // sub-diagonal, diagonal, and super-diagonal elements
     vector<value_t> subdiag_vec   = {4, 3, 2, 1};
     vector<value_t> diag_vec      = {1, 2, 3, 4, 5};
@@ -42,14 +42,14 @@ TEST(NDA, LAPACKGtsvDouble) {
     // right hand side
     vector<value_t> B1 = {6, 2, 7, 4, 5};
     vector<value_t> B2 = {1, 3, 8, 9, 10};
-    auto B             = matrix<value_t, Layout>(5, 2);
+    auto B             = matrix<value_t, F_layout>(5, 2);
     B(range::all, 0)   = B1;
     B(range::all, 1)   = B2;
 
     // reference solutions
     vector<double> ref_sol_1 = {43.0 / 33.0, 155.0 / 33.0, -208.0 / 33.0, 130.0 / 33.0, 7.0 / 33.0};
     vector<double> ref_sol_2 = {-28.0 / 33.0, 61.0 / 33.0, 89.0 / 66.0, -35.0 / 66.0, 139.0 / 66.0};
-    matrix<double, Layout> ref_sol(5, 2);
+    matrix<double, F_layout> ref_sol(5, 2);
     ref_sol(range::all, 0) = ref_sol_1;
     ref_sol(range::all, 1) = ref_sol_2;
 
@@ -58,40 +58,33 @@ TEST(NDA, LAPACKGtsvDouble) {
     test_gtsv(subdiag_vec, diag_vec, superdiag_vec, B, ref_sol);
   };
 
-  check.operator()<double, C_layout>();
-  check.operator()<double, F_layout>();
-  check.operator()<std::complex<double>, C_layout>();
-  check.operator()<std::complex<double>, F_layout>();
+  check.operator()<double>();
+  check.operator()<std::complex<double>>();
 }
 
 TEST(NDA, LAPACKGtsvComplex) {
-  auto check = []<typename Layout>() {
-    // sub-diagonal, diagonal, and super-diagonal elements
-    vector<std::complex<double>> subdiag_vec   = {-4i, -3i, -2i, -1i};
-    vector<std::complex<double>> diag_vec      = {1, 2, 3, 4, 5};
-    vector<std::complex<double>> superdiag_vec = {1i, 2i, 3i, 4i};
+  // sub-diagonal, diagonal, and super-diagonal elements
+  vector<std::complex<double>> subdiag_vec   = {-4i, -3i, -2i, -1i};
+  vector<std::complex<double>> diag_vec      = {1, 2, 3, 4, 5};
+  vector<std::complex<double>> superdiag_vec = {1i, 2i, 3i, 4i};
 
-    // right hand side
-    vector<std::complex<double>> B1 = {6 + 0i, 2i, 7 + 0i, 4i, 5 + 0i};
-    vector<std::complex<double>> B2 = {1i, 3 + 0i, 8i, 9 + 0i, 10i};
-    matrix<std::complex<double>, Layout> B(5, 2);
-    B(range::all, 0) = B1;
-    B(range::all, 1) = B2;
+  // right hand side
+  vector<std::complex<double>> B1 = {6 + 0i, 2i, 7 + 0i, 4i, 5 + 0i};
+  vector<std::complex<double>> B2 = {1i, 3 + 0i, 8i, 9 + 0i, 10i};
+  matrix<std::complex<double>, F_layout> B(5, 2);
+  B(range::all, 0) = B1;
+  B(range::all, 1) = B2;
 
-    // reference solutions
-    vector<std::complex<double>> ref_sol_1 = {137.0 / 33.0 + 0i, -61i / 33.0, 368.0 / 33.0 + 0i, 230i / 33.0, -13.0 / 33.0 + 0i};
-    vector<std::complex<double>> ref_sol_2 = {-35i / 33.0, 68.0 / 33.0 + 0i, -103i / 66.0, 415.0 / 66.0 + 0i, 215i / 66.0};
-    matrix<std::complex<double>, Layout> ref_sol(5, 2);
-    ref_sol(range::all, 0) = ref_sol_1;
-    ref_sol(range::all, 1) = ref_sol_2;
+  // reference solutions
+  vector<std::complex<double>> ref_sol_1 = {137.0 / 33.0 + 0i, -61i / 33.0, 368.0 / 33.0 + 0i, 230i / 33.0, -13.0 / 33.0 + 0i};
+  vector<std::complex<double>> ref_sol_2 = {-35i / 33.0, 68.0 / 33.0 + 0i, -103i / 66.0, 415.0 / 66.0 + 0i, 215i / 66.0};
+  matrix<std::complex<double>, F_layout> ref_sol(5, 2);
+  ref_sol(range::all, 0) = ref_sol_1;
+  ref_sol(range::all, 1) = ref_sol_2;
 
-    test_gtsv(subdiag_vec, diag_vec, superdiag_vec, B1, ref_sol_1);
-    test_gtsv(subdiag_vec, diag_vec, superdiag_vec, B2, ref_sol_2);
-    test_gtsv(subdiag_vec, diag_vec, superdiag_vec, B, ref_sol);
-  };
-
-  check.operator()<C_layout>();
-  check.operator()<F_layout>();
+  test_gtsv(subdiag_vec, diag_vec, superdiag_vec, B1, ref_sol_1);
+  test_gtsv(subdiag_vec, diag_vec, superdiag_vec, B2, ref_sol_2);
+  test_gtsv(subdiag_vec, diag_vec, superdiag_vec, B, ref_sol);
 }
 
 // Test LAPACK gesvd function.
@@ -204,7 +197,8 @@ TEST(NDA, LAPACKGelss) {
 // Test LAPACK getrs, getrf and getri functions.
 template <typename value_t, typename Layout>
 void test_getrs_getrf_getri() {
-  using matrix_t = matrix<value_t, Layout>;
+  using matrix_t   = matrix<value_t, Layout>;
+  using f_matrix_t = matrix<value_t, F_layout>;
 
   auto A = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
   auto B = matrix_t{{1, 5}, {4, 5}, {3, 6}};
@@ -216,7 +210,7 @@ void test_getrs_getrf_getri() {
 
   // solve A * X = B using getrf and getrs
   auto Acopy = matrix_t{A};
-  auto Bcopy = matrix_t{B};
+  auto Bcopy = f_matrix_t{B};
   array<int, 1> ipiv(3);
   lapack::getrf(Acopy, ipiv);
   lapack::getrs(Acopy, Bcopy, ipiv);
@@ -238,9 +232,60 @@ void test_getrs_getrf_getri() {
   EXPECT_ARRAY_NEAR(Ainv, Ainv2);
 }
 
-TEST(NDA, LAPAKCGetrsGetrfAndGetri) {
+TEST(NDA, LAPACKGetrsGetrfAndGetri) {
   test_getrs_getrf_getri<double, C_layout>();
   test_getrs_getrf_getri<double, F_layout>();
   test_getrs_getrf_getri<std::complex<double>, C_layout>();
   test_getrs_getrf_getri<std::complex<double>, F_layout>();
+}
+
+TEST(NDA, LAPACKGetrfWithRectangularMatrix) {
+  using f_matrix_t = matrix<double, F_layout>;
+  // using c_matrix_t = matrix<double, C_layout>;
+
+  auto A    = f_matrix_t{{1, 5}, {4, 5}, {3, 6}};
+  auto AT   = f_matrix_t(nda::transpose(A));
+  auto A_c  = matrix<double, C_layout>{A};
+  auto AT_c = matrix<double, C_layout>{AT};
+  auto ipiv = array<int, 1>(2);
+
+  // get the matrices P, L, U from getrf output
+  auto get_plu = [](auto const &M, auto const &ipiv, int m, int n) {
+    using layout_t = std::conditional_t<blas::has_C_layout<decltype(M)>, C_layout, F_layout>;
+    auto P         = matrix<double, layout_t>::zeros(m, m);
+    auto L         = matrix<double, layout_t>::zeros(m, m);
+    auto U         = matrix<double, layout_t>::zeros(m, n);
+    diagonal(P)    = 1;
+    diagonal(L)    = 1;
+    for (int i = 0; i < ipiv.size(); ++i) deep_swap(P(i, nda::range::all), P(ipiv(i) - 1, nda::range::all));
+    for (int i = 0; i < m; ++i) {
+      L(i, nda::range(i))    = (blas::has_C_layout<decltype(M)> ? M(nda::range(i), i) : M(i, nda::range(i)));
+      U(i, nda::range(i, n)) = (blas::has_C_layout<decltype(M)> ? M(nda::range(i, n), i) : M(i, nda::range(i, n)));
+    }
+    return std::make_tuple(P, L, U);
+  };
+
+  // LU decomposition for 3x2 Fortran layout matrix
+  auto LU_f_32 = A;
+  lapack::getrf(LU_f_32, ipiv);
+  auto [P_f_32, L_f_32, U_f_32] = get_plu(LU_f_32, ipiv, 3, 2);
+  EXPECT_ARRAY_NEAR(P_f_32 * A, L_f_32 * U_f_32);
+
+  // LU decomposition for 2x3 Fortran layout matrix
+  auto LU_f_23 = AT;
+  lapack::getrf(LU_f_23, ipiv);
+  auto [P_f_23, L_f_23, U_f_23] = get_plu(LU_f_23, ipiv, 2, 3);
+  EXPECT_ARRAY_NEAR(P_f_23 * AT, L_f_23 * U_f_23);
+
+  // LU decomposition for 3x2 C layout matrix
+  auto LU_c_32 = A_c;
+  lapack::getrf(LU_c_32, ipiv);
+  auto [P_c_32, L_c_32, U_c_32] = get_plu(LU_c_32, ipiv, 2, 3);
+  EXPECT_ARRAY_NEAR(P_c_32 * nda::transpose(A_c), L_c_32 * U_c_32);
+
+  // LU decomposition for 2x3 C layout matrix
+  auto LU_c_23 = AT_c;
+  lapack::getrf(LU_c_23, ipiv);
+  auto [P_c_23, L_c_23, U_c_23] = get_plu(LU_c_23, ipiv, 3, 2);
+  EXPECT_ARRAY_NEAR(P_c_23 * nda::transpose(AT_c), L_c_23 * U_c_23);
 }

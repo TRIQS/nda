@@ -66,27 +66,16 @@ namespace nda::lapack {
     requires(have_same_value_type_v<DL, D, DU, B> and mem::on_host<DL, D, DU, B> and is_blas_lapack_v<get_value_t<DL>>)
   int gtsv(DL &&dl, D &&d, DU &&du, B &&b) { // NOLINT (temporary views are allowed here)
     static_assert((get_rank<B> == 1 or get_rank<B> == 2), "Error in nda::lapack::gtsv: B must be an matrix/array/view of rank 1 or 2");
+    static_assert(has_F_layout<B> or get_rank<B> == 1, "Error in nda::lapack::getrs: B must have Fortran layout or rank 1");
 
-    // check dimensions of input arrays
+    // check the dimensions of the input/output arrays/views
     EXPECTS(dl.extent(0) == d.extent(0) - 1);
     EXPECTS(du.extent(0) == d.extent(0) - 1);
     EXPECTS(b.extent(0) == d.extent(0));
 
-    // perform actual library call depending on the array B
+    // perform actual library call
     int info = 0;
-    if constexpr (get_rank<B> == 1) {
-      // B is a vector
-      f77::gtsv(d.extent(0), 1, dl.data(), d.data(), du.data(), b.data(), d.extent(0), info);
-    } else if constexpr (has_F_layout<B>) {
-      // B is a matrix with Fortran layout
-      f77::gtsv(d.extent(0), b.extent(1), dl.data(), d.data(), du.data(), b.data(), get_ld(b), info);
-    } else {
-      // B is a matrix with C layout
-      matrix<get_value_t<B>, F_layout> b_f{b};
-      f77::gtsv(d.extent(0), b.extent(1), dl.data(), d.data(), du.data(), b_f.data(), get_ld(b_f), info);
-      b = b_f;
-    }
-
+    f77::gtsv(d.extent(0), (get_rank<B> == 2 ? b.extent(1) : 1), dl.data(), d.data(), du.data(), b.data(), get_ld(b), info);
     return info;
   }
 

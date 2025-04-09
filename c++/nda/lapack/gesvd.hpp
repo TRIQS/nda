@@ -39,6 +39,7 @@
 #include <algorithm>
 #include <cmath>
 #include <complex>
+#include <concepts>
 #include <utility>
 
 namespace nda::lapack {
@@ -84,7 +85,7 @@ namespace nda::lapack {
     resize_or_check_if_view(u, {a.extent(0), a.extent(0)});
     resize_or_check_if_view(vt, {a.extent(1), a.extent(1)});
 
-    // input arrays/views must be lapack compatible
+    // arrays/views must be LAPACK compatible
     EXPECTS(a.indexmap().min_stride() == 1);
     EXPECTS(s.indexmap().min_stride() == 1);
     EXPECTS(u.indexmap().min_stride() == 1);
@@ -118,7 +119,7 @@ namespace nda::lapack {
     int bufferSize = static_cast<int>(std::ceil(std::real(bufferSize_T)));
 
     // allocate work buffer and perform actual library call
-    nda::array<value_type, 1, C_layout, heap<mem::get_addr_space<A>>> work(bufferSize);
+    array<value_type, 1, C_layout, heap<mem::get_addr_space<A>>> work(bufferSize);
     if constexpr (has_C_layout<A>) {
       gesvd_call('A', 'A', a.extent(1), a.extent(0), a.data(), get_ld(a), s.data(), vt.data(), get_ld(vt), u.data(), get_ld(u), work.data(),
                  bufferSize, rwork.data(), info);

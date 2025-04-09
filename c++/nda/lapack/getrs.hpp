@@ -49,10 +49,6 @@ namespace nda::lapack {
    *
    * with a general n-by-n matrix \f$ \mathbf{A} \f$ using the LU factorization computed by `getrf`.
    *
-   * @note If the right hand side is a C-layout matrix \f$ \mathbf{B} \f$, it will create a temporary copy with Fortran
-   * layout before the LAPACK call, which is then copied back into the original matrix. This might be inefficient for
-   * large matrices and it is recommended to use Fortran layout.
-   *
    * @tparam A nda::MemoryMatrix type.
    * @tparam B nda::MemoryArray type.
    * @tparam IPIV nda::MemoryVector type.
@@ -69,18 +65,20 @@ namespace nda::lapack {
   int getrs(A const &a, B &&b, IPIV const &ipiv) { // NOLINT (temporary views are allowed here)
     static_assert(std::is_same_v<get_value_t<IPIV>, int>, "Error in nda::lapack::getrs: Pivoting array must have elements of type int");
     static_assert(get_rank<B> == 1 || get_rank<B> == 2, "Error in nda::lapack::getrs: Right hand side must have rank 1 or 2");
-    static_assert(not mem::have_device_compatible_addr_space<B> or blas::has_F_layout<B> or get_rank<B> == 1,
-                  "Error in nda::lapack::getrs: B must have Fortran layout when used on the device");
+    static_assert(has_F_layout<B> or get_rank<B> == 1, "Error in nda::lapack::getrs: B must have Fortran layout or rank 1");
+
+    // check the dimensions of the input/output arrays/views and resize if necessary
+    EXPECTS(a.extent(0) == a.extent(1));
+    EXPECTS(b.extent(0) == a.extent(0));
     EXPECTS(ipiv.size() >= std::min(a.extent(0), a.extent(1)));
 
-    // must be lapack compatible
+    // arrays/views must be LAPACK compatible
     EXPECTS(a.indexmap().min_stride() == 1);
     EXPECTS(b.indexmap().min_stride() == 1);
     EXPECTS(ipiv.indexmap().min_stride() == 1);
 
-    // check for lazy expressions
-    static constexpr bool conj_A = is_conj_array_expr<A>;
-    char op_a                    = get_op<conj_A, /* transpose = */ has_C_layout<A>>;
+    // check for lazy expressions and C-layout
+    char op_a = get_op<is_conj_array_expr<A>, has_C_layout<A>>;
 
     // perform actual library call
     int info = 0;
@@ -91,15 +89,7 @@ namespace nda::lapack {
       compile_error_no_gpu();
 #endif
     } else {
-      if constexpr (has_F_layout<B> or get_rank<B> == 1) {
-        // B is a matrix with Fortran layout
-        f77::getrs(op_a, get_ncols(a), get_ncols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
-      } else {
-        // B is a matrix with C layout
-        matrix<get_value_t<B>, F_layout> b_f{b};
-        f77::getrs(op_a, get_ncols(a), get_ncols(b_f), a.data(), get_ld(a), ipiv.data(), b_f.data(), get_ld(b_f), info);
-        b = b_f;
-      }
+      f77::getrs(op_a, get_ncols(a), get_ncols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
     }
     return info;
   }
