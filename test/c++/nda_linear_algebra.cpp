@@ -407,12 +407,12 @@ void test_solve() {
   EXPECT_ARRAY_NEAR(matrix_t{A * X}, B);
 
   // solve A * X = B using solve
-  auto X2 = nda::solve(A, B);
+  auto X2 = nda::linalg::solve(A, B);
   EXPECT_ARRAY_NEAR(matrix_t{A * X2}, B);
   EXPECT_ARRAY_NEAR(X, X2);
 
   // solve A * x = b using solve
-  auto x = nda::solve(A, B(nda::range::all, 0));
+  auto x = nda::linalg::solve(A, B(nda::range::all, 0));
   EXPECT_ARRAY_NEAR(A * x, B(nda::range::all, 0));
   EXPECT_ARRAY_NEAR(X(nda::range::all, 0), x);
 }
@@ -433,7 +433,7 @@ void test_svd() {
   auto s = nda::vector<double>{12, 3};
 
   // compute the SVD of A
-  auto [U_1, s_1, VH_1] = nda::svd(A);
+  auto [U_1, s_1, VH_1] = nda::linalg::svd(A);
   auto S_1              = matrix_t::zeros(A.shape());
   diagonal(S_1)         = s_1;
   EXPECT_ARRAY_NEAR(s_1, s, 1e-14);

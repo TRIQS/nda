@@ -36,7 +36,7 @@
 
 #include <type_traits>
 
-namespace nda {
+namespace nda::linalg {
 
   /**
    * @addtogroup linalg_tools
@@ -107,4 +107,4 @@ namespace nda {
 
   /** @} */
 
-} // namespace nda
+} // namespace nda::linalg

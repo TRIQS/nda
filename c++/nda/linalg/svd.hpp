@@ -36,7 +36,7 @@
 #include <tuple>
 #include <type_traits>
 
-namespace nda {
+namespace nda::linalg {
 
   /**
    * @addtogroup linalg_tools
@@ -49,7 +49,7 @@ namespace nda {
     template <MemoryMatrix A>
       requires(is_blas_lapack_v<get_value_t<A>>)
     auto svd_in_place(A &&a) { // NOLINT (temporary views are allowed here)
-      using layout_policy       = detail::layout_to_policy<typename std::remove_cvref_t<A>::layout_t>::type;
+      using layout_policy       = nda::detail::layout_to_policy<typename std::remove_cvref_t<A>::layout_t>::type;
       constexpr auto addr_space = mem::get_addr_space<A>;
 
       // vector s and matrices U and V^H
@@ -95,4 +95,4 @@ namespace nda {
 
   /** @} */
 
-} // namespace nda
+} // namespace nda::linalg

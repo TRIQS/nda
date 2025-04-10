@@ -57,9 +57,9 @@ namespace nda {
     static constexpr bool is_valid_gemm_triple = []() {
       using blas::has_F_layout;
       if constexpr (has_F_layout<C>) {
-        return !(conj_A and has_F_layout<A>)and!(conj_B and has_F_layout<B>);
+        return !(conj_A and has_F_layout<A>) and !(conj_B and has_F_layout<B>);
       } else {
-        return !(conj_B and !has_F_layout<B>)and!(conj_A and !has_F_layout<A>);
+        return !(conj_B and !has_F_layout<B>) and !(conj_A and !has_F_layout<A>);
       }
     }();
 
