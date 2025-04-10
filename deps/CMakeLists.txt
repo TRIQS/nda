@@ -87,7 +87,7 @@ external_dependency(itertools
 external_dependency(h5
   GIT_REPO https://github.com/TRIQS/h5
   VERSION 1.3
-  GIT_TAG ubstable
+  GIT_TAG unstable
 )
 
 # -- MPI --
