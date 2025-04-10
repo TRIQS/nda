@@ -397,7 +397,6 @@ TEST(NDA, LinearAlgebraNormExample) {
 template <typename value_t, typename Layout>
 void test_solve() {
   using matrix_t = nda::matrix<value_t, Layout>;
-  using vector_t = nda::vector<value_t>;
 
   auto A = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
   auto B = matrix_t{{1, 5}, {4, 5}, {3, 6}};
@@ -406,20 +405,6 @@ void test_solve() {
   auto Ainv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
   auto X    = matrix_t{Ainv * B};
   EXPECT_ARRAY_NEAR(matrix_t{A * X}, B);
-
-  // solve A * X = B using solve_in_place
-  auto Acopy = matrix_t{A};
-  auto Bcopy = matrix_t{B};
-  nda::solve_in_place(Acopy, Bcopy);
-  EXPECT_ARRAY_NEAR(matrix_t{A * Bcopy}, B);
-  EXPECT_ARRAY_NEAR(X, Bcopy);
-
-  // solve A * x = b using solve_in_place
-  Acopy  = A;
-  auto b = vector_t{B(nda::range::all, 0)};
-  nda::solve_in_place(Acopy, b);
-  EXPECT_ARRAY_NEAR(A * b, B(nda::range::all, 0));
-  EXPECT_ARRAY_NEAR(X(nda::range::all, 0), b);
 
   // solve A * X = B using solve
   auto X2 = nda::solve(A, B);
@@ -453,14 +438,6 @@ void test_svd() {
   diagonal(S_1)         = s_1;
   EXPECT_ARRAY_NEAR(s_1, s, 1e-14);
   EXPECT_ARRAY_NEAR(A, U_1 * S_1 * VH_1, 1e-14);
-
-  // compute the SVD of A in place
-  auto A_copy           = A;
-  auto [U_2, s_2, VH_2] = nda::svd_in_place(A_copy);
-  auto S_2              = matrix_t::zeros(A.shape());
-  diagonal(S_2)         = s_2;
-  EXPECT_ARRAY_NEAR(s, s_2, 1e-14);
-  EXPECT_ARRAY_NEAR(A, U_2 * S_2 * VH_2, 1e-14);
 }
 
 TEST(NDA, LinearAlgebraSVD) {

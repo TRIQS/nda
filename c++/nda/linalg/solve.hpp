@@ -43,52 +43,31 @@ namespace nda {
    * @{
    */
 
-  /**
-   * @brief Solve a system of linear equations in place.
-   *
-   * @details The function solves a system of linear equations
-   *
-   * - \f$ \mathbf{A X} = \mathbf{B} \f$ or
-   * - \f$ \mathbf{A} \mathbf{x} = \mathbf{b} \f$,
-   *
-   * with a general n-by-n matrix \f$ \mathbf{A} \f$ and n-by-m  matrices \f$ \mathbf{X} \f$ and \f$ \mathbf{B} \f$ or
-   * vectors \f$ \mathbf{x} \f$ and \f$ \mathbf{b} \f$.
-   *
-   * It uses nda::lapack::getrf to compute the LU factorization of the matrix \f$ \mathbf{A} \f$ and then
-   * nda::lapack::getrs to solve the system of linear equations. An exception is thrown, if the LAPACK calls return a
-   * non-zero value.
-   *
-   * @note If the right hand side is a C-layout matrix \f$ \mathbf{B} \f$, it will create a temporary copy with Fortran
-   * layout inside the nda::lapack::getrs call, which is then copied back into the original matrix. This might be
-   * inefficient for large matrices and it is recommended to use Fortran layout.
-   *
-   * @tparam A nda::MemoryMatrix type.
-   * @tparam B nda::MemoryArray type of rank 1 or 2.
-   * @param a Input/output matrix. On entry, the left hand side matrix \f$ \mathbf{A} \f$. On exit, the result from the
-   * nda::lapack::getrf call.
-   * @param b Input/output matrix. On entry, the right hand side matrix \f$ \mathbf{B} \f$ (vector \f$ \mathbf{b} \f$).
-   * On exit, the solution matrix \f$ \mathbf{X} \f$ (vector \f$ \mathbf{x} \f$).
-   */
-  template <MemoryMatrix A, MemoryArray B>
-    requires(have_same_value_type_v<A, B> and mem::have_compatible_addr_space<A, B> and is_blas_lapack_v<get_value_t<A>>)
-  void solve_in_place(A &&a, B &&b) { // NOLINT (temporary views are allowed here)
-    constexpr auto addr_space = mem::common_addr_space<A, B>;
+  namespace detail {
 
-    // check dimensions
-    EXPECTS_WITH_MESSAGE(a.shape()[0] == a.shape()[1], "Error in nda::solve_in_place: Matrix A is not square");
-    EXPECTS_WITH_MESSAGE(a.shape()[0] == b.shape()[0], "Error in nda::solve_in_place: Dimension mismatch between matrix A and B");
+    // Function to solve a system of linear equations in place.
+    template <MemoryMatrix A, MemoryArray B>
+      requires(have_same_value_type_v<A, B> and mem::have_compatible_addr_space<A, B> and is_blas_lapack_v<get_value_t<A>>)
+    void solve_in_place(A &&a, B &&b) { // NOLINT (temporary views are allowed here)
+      constexpr auto addr_space = mem::common_addr_space<A, B>;
 
-    // pivot indices vector
-    auto ipiv = vector<int, heap<addr_space>>(a.shape()[0]);
+      // check dimensions
+      EXPECTS_WITH_MESSAGE(a.shape()[0] == a.shape()[1], "Error in nda::solve_in_place: Matrix A is not square");
+      EXPECTS_WITH_MESSAGE(a.shape()[0] == b.shape()[0], "Error in nda::solve_in_place: Dimension mismatch between matrix A and B");
 
-    // call lapack getrf
-    int info = lapack::getrf(a, ipiv);
-    if (info != 0) NDA_RUNTIME_ERROR << "Error in nda::solve_in_place: getrf returned a non-zero value: info = " << info;
+      // pivot indices vector
+      auto ipiv = vector<int, heap<addr_space>>(a.shape()[0]);
 
-    // call lapack getrs
-    info = lapack::getrs(a, b, ipiv);
-    if (info != 0) NDA_RUNTIME_ERROR << "Error in nda::solve_in_place: getrs returned a non-zero value: info = " << info;
-  }
+      // call lapack getrf
+      int info = lapack::getrf(a, ipiv);
+      if (info != 0) NDA_RUNTIME_ERROR << "Error in nda::solve_in_place: getrf returned a non-zero value: info = " << info;
+
+      // call lapack getrs
+      info = lapack::getrs(a, b, ipiv);
+      if (info != 0) NDA_RUNTIME_ERROR << "Error in nda::solve_in_place: getrs returned a non-zero value: info = " << info;
+    }
+
+  } // namespace detail
 
   /**
    * @brief Solve a system of linear equations.
@@ -101,8 +80,11 @@ namespace nda {
    * with a general n-by-n matrix \f$ \mathbf{A} \f$ and n-by-m  matrices \f$ \mathbf{X} \f$ and \f$ \mathbf{B} \f$ or
    * vectors \f$ \mathbf{x} \f$ and \f$ \mathbf{b} \f$.
    *
-   * It makes a copy of the input matrix \f$ \mathbf{A} \f$ and the input matrix/vector \f$ \mathbf{B} \f$/\f$
-   * \mathbf{b} \f$ and then calls nda::solve_in_place with the copies.
+   * It first makes a copy of the input matrix \f$ \mathbf{A} \f$ and the input matrix/vector \f$ \mathbf{B} \f$/\f$
+   * \mathbf{b} \f$ and then uses nda::lapack::getrf to compute the LU factorization of the matrix \f$ \mathbf{A} \f$
+   * which in turn is forwarded to nda::lapack::getrs to solve the system of linear equations.
+   *
+   * An exception is thrown, if the LAPACK calls return a non-zero value.
    *
    * @note If the right hand side is a matrix, the solution matrix \f$ \mathbf{X} \f$ is always returned in Fortran
    * layout.
@@ -119,7 +101,7 @@ namespace nda {
     using b_type = std::conditional_t<get_rank<B> == 1, vector<get_value_t<B>>, matrix<get_value_t<B>, F_layout>>;
     auto a_copy  = matrix<get_value_t<A>, F_layout>(a);
     auto b_copy  = b_type(b);
-    solve_in_place(a_copy, b_copy);
+    detail::solve_in_place(a_copy, b_copy);
     return b_copy;
   }
 

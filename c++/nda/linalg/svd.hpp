@@ -43,44 +43,28 @@ namespace nda {
    * @{
    */
 
-  /**
-   * @brief Compute the singular value decomposition (SVD) of a matrix in place.
-   *
-   * @details The function computes the SVD of a given m-by-n matrix \f$ \mathbf{A} \f$:
-   * \f[
-   *   \mathbf{A} = \mathbf{U} \mathbf{S} \mathbf{V}^H \; ,
-   * \f]
-   * where \f$ \mathbf{U} \f$ is a unitary m-by-m matrix, \f$ \mathbf{V} \f$ is a unitary n-by-n matrix and \f$
-   * \mathbf{S} \f$ is an m-by-n matrix with non-negative real numbers on the diagonal.
-   *
-   * It first constructs the output vector \f$ \mathbf{s} \f$, which contains the singular values, and the output
-   * matrices \f$ \mathbf{U} \f$ and \f$ \mathbf{V}^H \f$. It then calls nda::lapack::gesvd to compute the SVD.
-   *
-   * @note If the input matrix \f$ \mathbf{A} \f$ is in Fortran layout, the output matrices \f$ \mathbf{U} \f$ and
-   * \f$ \mathbf{V}^H \f$ are also in Fortran layout. Otherwise, they are in C layout.
-   *
-   * @tparam A nda::MemoryMatrix type.
-   * @param a Input/output matrix. On entry, the m-by-n matrix \f$ \mathbf{A} \f$. On exit, the contents of \f$
-   * \mathbf{A} \f$ are destroyed.
-   * @return `std::tuple` containing \f$ \mathbf{U} \f$, \f$ \mathbf{s} \f$ and \f$ \mathbf{V}^H \f$.
-   */
-  template <MemoryMatrix A>
-    requires(is_blas_lapack_v<get_value_t<A>>)
-  auto svd_in_place(A &&a) { // NOLINT (temporary views are allowed here)
-    using layout_policy       = detail::layout_to_policy<typename std::remove_cvref_t<A>::layout_t>::type;
-    constexpr auto addr_space = mem::get_addr_space<A>;
+  namespace detail {
 
-    // vector s and matrices U and V^H
-    auto s  = vector<double, heap<addr_space>>(std::min(a.extent(0), a.extent(1)));
-    auto U  = matrix<get_value_t<A>, layout_policy, heap<addr_space>>(a.extent(0), a.extent(0));
-    auto VH = matrix<get_value_t<A>, layout_policy, heap<addr_space>>(a.extent(1), a.extent(1));
+    // Function to compute the singular value decomposition in place.
+    template <MemoryMatrix A>
+      requires(is_blas_lapack_v<get_value_t<A>>)
+    auto svd_in_place(A &&a) { // NOLINT (temporary views are allowed here)
+      using layout_policy       = detail::layout_to_policy<typename std::remove_cvref_t<A>::layout_t>::type;
+      constexpr auto addr_space = mem::get_addr_space<A>;
 
-    // call lapack gesvd
-    int info = lapack::gesvd(a, s, U, VH);
-    if (info != 0) NDA_RUNTIME_ERROR << "Error in nda::svd_in_place: gesvd returned a non-zero value: info = " << info;
+      // vector s and matrices U and V^H
+      auto s  = vector<double, heap<addr_space>>(std::min(a.extent(0), a.extent(1)));
+      auto U  = matrix<get_value_t<A>, layout_policy, heap<addr_space>>(a.extent(0), a.extent(0));
+      auto VH = matrix<get_value_t<A>, layout_policy, heap<addr_space>>(a.extent(1), a.extent(1));
 
-    return std::make_tuple(U, s, VH);
-  }
+      // call lapack gesvd
+      int info = lapack::gesvd(a, s, U, VH);
+      if (info != 0) NDA_RUNTIME_ERROR << "Error in nda::svd_in_place: gesvd returned a non-zero value: info = " << info;
+
+      return std::make_tuple(U, s, VH);
+    }
+
+  } // namespace detail
 
   /**
    * @brief Compute the singular value decomposition (SVD) of a matrix.
@@ -92,7 +76,12 @@ namespace nda {
    * where \f$ \mathbf{U} \f$ is a unitary m-by-m matrix, \f$ \mathbf{V} \f$ is a unitary n-by-n matrix and \f$
    * \mathbf{S} \f$ is an m-by-n matrix with non-negative real numbers on the diagonal.
    *
-   * It first makes a copy of the input matrix \f$ \mathbf{A} \f$ and then calls nda::svd_in_place with the copy.
+   * It first makes a copy of the input matrix \f$ \mathbf{A} \f$ and constructs the output vector \f$ \mathbf{s} \f$,
+   * which contains the singular values, and the output matrices \f$ \mathbf{U} \f$ and \f$ \mathbf{V}^H \f$. The SVD is
+   * performed by calling nda::lapack::gesvd.
+   *
+   * @note If the input matrix \f$ \mathbf{A} \f$ is in Fortran layout, the output matrices \f$ \mathbf{U} \f$ and
+   * \f$ \mathbf{V}^H \f$ are also in Fortran layout. Otherwise, they are in C layout.
    *
    * @tparam A nda::MemoryMatrix type.
    * @param a Input matrix \f$ \mathbf{A} \f$.
@@ -101,7 +90,7 @@ namespace nda {
   template <Matrix A>
     requires(is_blas_lapack_v<get_value_t<A>>)
   auto svd(A const &a) { // NOLINT (temporary views are allowed here)
-    return svd_in_place(basic_array{a});
+    return detail::svd_in_place(basic_array{a});
   }
 
   /** @} */
