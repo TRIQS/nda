@@ -177,7 +177,7 @@ namespace nda::linalg {
    */
   template <typename M>
   auto eigenelements(M const &m) {
-    auto m_copy = matrix<typename M::value_type, F_layout>(m);
+    auto m_copy = matrix<get_value_t<M>, F_layout>(m);
     auto ev     = detail::_eigen_element_impl(m_copy, 'V');
     return std::pair<array<double, 1>, typename M::regular_type>{ev, m_copy};
   }
@@ -226,11 +226,10 @@ namespace nda::linalg {
    * @return Pair consisting of the array of eigenvalues and the matrix containing the eigenvectors as columns
    */
   template <typename M>
-  std::pair<array<std::complex<double>, 1>, typename M::regular_type> geigenelements(M const &m) {
-    auto m_copy = matrix<typename M::value_type, F_layout>(m);
+  auto geigenelements(M const &m) {
+    auto m_copy = matrix<get_value_t<M>, F_layout>(m);
     auto ev     = detail::_geigen_element_impl(m_copy, 'V');
-
-    return {ev, m_copy};
+    return std::pair<array<std::complex<double>, 1>, typename M::regular_type>{ev, m_copy};
   }
 
   //--------------------------------
@@ -242,7 +241,7 @@ namespace nda::linalg {
    * @return The array of eigenvalues
    */
   template <typename M>
-  array<std::complex<double>, 1> geigenvalues(M const &m) {
+  auto geigenvalues(M const &m) {
     auto m_copy = matrix<typename M::value_type, F_layout>(m);
     return detail::_geigen_element_impl(m_copy, 'N');
   }
@@ -257,7 +256,7 @@ namespace nda::linalg {
    * @return The array of eigenvalues
    */
   template <typename M>
-  array<std::complex<double>, 1> geigenvalues_in_place(M &m) {
+  auto geigenvalues_in_place(M &m) {
     return detail::_geigen_element_impl(m, 'N');
   }
 
@@ -270,11 +269,11 @@ namespace nda::linalg {
    * @return Pair consisting of the array of eigenvalues and the matrix containing the eigenvectors as columns
    */
   template <typename M>
-  std::pair<array<double, 1>, typename M::regular_type> eigenelements(M const &A, M const &B) {
-    auto A_copy = matrix<typename M::value_type, F_layout>(A);
-    auto B_copy = matrix<typename M::value_type, F_layout>(B);
+  auto eigenelements(M const &A, M const &B) {
+    auto A_copy = matrix<get_value_t<M>, F_layout>(A);
+    auto B_copy = matrix<get_value_t<M>, F_layout>(B);
     auto ev     = detail::_eigen_element_impl(A_copy, B_copy, 'V');
-    return {ev, A_copy};
+    return std::pair<array<double, 1>, typename M::regular_type>{ev, A_copy};
   }
 
   //--------------------------------
@@ -285,7 +284,7 @@ namespace nda::linalg {
    * @return The array of eigenvalues
    */
   template <typename M>
-  array<double, 1> eigenvalues(M const &A, M const& B) {
+  auto eigenvalues(M const &A, M const& B) {
     auto A_copy = matrix<typename M::value_type, F_layout>(A);
     auto B_copy = matrix<typename M::value_type, F_layout>(B);
     return detail::_eigen_element_impl(A_copy, B_copy, 'N');
@@ -301,7 +300,7 @@ namespace nda::linalg {
    * @return The array of eigenvalues
    */
   template <typename M>
-  array<double, 1> eigenvalues_in_place(M *&A, M *&B) {
+  auto eigenvalues_in_place(M *&A, M *&B) {
     return detail::_eigen_element_impl(A, B, 'N');
   }
 
