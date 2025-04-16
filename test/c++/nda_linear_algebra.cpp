@@ -276,8 +276,8 @@ TEST(NDA, LinearAlgebraMatvecmulPromotion) {
 template <typename M, typename V1, typename V2>
 void check_eig(M const &m, V1 const &vectors, V2 const &values) {
   using T_eigval = typename std::decay_t<V2>::value_type;
-  for (auto i : range(0, m.extent(0))) {
-    EXPECT_ARRAY_NEAR(matvecmul(m, vectors(_, i)) * T_eigval(1.0), values(i) * vectors(_, i), 1.e-13);
+  for (auto i : nda::range(0, m.extent(0))) {
+    EXPECT_ARRAY_NEAR(matvecmul(m, vectors(nda::range::all, i)) * T_eigval(1.0), values(i) * vectors(nda::range::all, i), 1.e-13);
   }
 }
 
@@ -306,7 +306,7 @@ TEST(NDA, LinearAlgebraEigenelements) {
     }
   }
   test_eigenelements(A);
-  test_egienelements(A, false);
+  test_eigenelements(A, false);
   test_generalize_eigenelements(A, S);
 
   A()     = 0;
@@ -345,15 +345,15 @@ TEST(NDA, LinearAlgebraEigenelements) {
   test_eigenelements(E, false);
 
   // real non-symmetric case with Fortran layout
-  nda::matrix<double, F_layout> F{{2.8, 1.2}, {3.1, 1.4}};
+  nda::matrix<double, nda::F_layout> F{{2.8, 1.2}, {3.1, 1.4}};
   test_eigenelements(F, false);
 
   // complex non-hermitian case with C layout
-  matrix<std::complex<double>> G{{{1.6, 0.0}, {0.0, 1.1}}, {{0.0, 1.1}, {2.3, 0.0}}};
+  nda::matrix<std::complex<double>> G{{{1.6, 0.0}, {0.0, 1.1}}, {{0.0, 1.1}, {2.3, 0.0}}};
   test_eigenelements(G, false);
 
   // complex non-hermitian case with Fortran layout
-  matrix<std::complex<double>, F_layout> H{{{0.0, 1.6}, {1.5, 0.0}}, {{0.0, 1.1}, {2.8, 0.0}}};
+  nda::matrix<std::complex<double>, nda::F_layout> H{{{0.0, 1.6}, {1.5, 0.0}}, {{0.0, 1.1}, {2.8, 0.0}}};
   test_eigenelements(H, false);
 
 }

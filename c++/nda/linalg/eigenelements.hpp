@@ -74,6 +74,87 @@ namespace nda::linalg {
       return ev;
     }
 
+    //--------- Generalized eigenproblem for symmetric matrices ----------
+    // dispatch the implementation of invoke for T = double or complex
+    template <typename M>
+    auto _eigen_element_impl(M &&A, M &&B, char compz) {
+
+      EXPECTS((not A.empty()));
+      EXPECTS(is_matrix_square(A, true));
+      EXPECTS(A.indexmap().is_contiguous());
+
+      EXPECTS((not B.empty()));
+      EXPECTS(is_matrix_square(B, true));
+      EXPECTS(B.indexmap().is_contiguous());
+
+      EXPECTS(A.extent(0) == B.extent(0));
+
+      int dim = A.extent(0);
+
+      using T = typename std::decay_t<M>::value_type;
+
+      array<double, 1> ev(dim);
+      int lwork = 64 * dim;
+      array<T, 1> work(lwork);
+      array<double, 1> work2(is_complex_v<T> ? lwork : 0);
+
+#if defined(__has_feature)
+#if __has_feature(memory_sanitizer)
+      work2 = 0;
+      work  = 0;
+      ev    = 0;
+#endif
+#endif
+
+      int info = 0;
+      if constexpr (not is_complex_v<T>) {
+        lapack::f77::sygv(1, compz, 'U', dim, A.data(), dim, B.data(), dim, ev.data(), work.data(), lwork, info);
+      } else {
+        lapack::f77::hegv(1, compz, 'U', dim, A.data(), dim, B.data(), dim, ev.data(), work.data(), lwork, work2.data(), info);
+      }
+      if (info) NDA_RUNTIME_ERROR << "Diagonalization error";
+      return ev;
+    }
+
+    //--------- eigen problem for nonsymmetric matrices ----------
+
+    // dispatch the implementation of invoke for T = double or complex
+    // require an additional copy for eigenvectors if compz = 'V'
+    // only concern the right eigenvector v of matrix m: m * v = ev * v
+    template <typename M>
+    auto _geigen_element_impl(M &&m, char compz) {
+
+      EXPECTS((not m.empty()));
+      EXPECTS(is_matrix_square(m, true));
+      EXPECTS(m.indexmap().is_contiguous());
+
+      int dim = m.extent(0);
+
+      using T = typename std::decay_t<M>::value_type;
+
+      array<std::complex<double>, 1> ev(dim);
+      auto vecs = matrix<T, F_layout>((compz=='V')? dim : 0, (compz=='V')? dim : 0);
+      int lwork = 64 * dim;
+      array<T, 1> work(lwork);
+      array<double, 1> work2(is_complex_v<T> ? lwork : 0);
+
+      int info = 0;
+      if constexpr (not is_complex_v<T>) {
+        array<double, 1> ev_r(dim);
+        array<double, 1> ev_i(dim);
+        lapack::f77::geev('N', compz, dim, m.data(), dim, ev_r.data(), ev_i.data(), vecs.data(), dim, vecs.data(), dim,
+                          work.data(), lwork, info);
+        for (long i = 0; i < dim; ++i) ev(i) = std::complex<double>(ev_r(i), ev_i(i));
+
+      } else {
+        lapack::f77::geev('N', compz, dim, m.data(), dim, ev.data(), vecs.data(), dim, vecs.data(), dim,
+                          work.data(), lwork, work2.data(), info);
+      }
+      if (info) NDA_RUNTIME_ERROR << "Diagonalization error";
+      if (compz=='V') m() = vecs;
+      return ev;
+    }
+
   } // namespace detail
 
   /**
@@ -136,44 +217,6 @@ namespace nda::linalg {
     return detail::_eigen_element_impl(m, 'N');
   }
 
-  //--------- eigen problem for nonsymmetric matrices ----------
-
-  // dispatch the implementation of invoke for T = double or complex
-  // require an additional copy for eigenvectors if compz = 'V'
-  // only concern the right eigenvector v of matrix m: m * v = ev * v
-  template <typename M>
-  auto _geigen_element_impl(M &&m, char compz) {
-
-    EXPECTS((not m.empty()));
-    EXPECTS(is_matrix_square(m, true));
-    EXPECTS(m.indexmap().is_contiguous());
-
-    int dim = m.extent(0);
-
-    using T = typename std::decay_t<M>::value_type;
-
-    array<std::complex<double>, 1> ev(dim);
-    auto vecs = matrix<T, F_layout>((compz=='V')? dim : 0, (compz=='V')? dim : 0);
-    int lwork = 64 * dim;
-    array<T, 1> work(lwork);
-    array<double, 1> work2(is_complex_v<T> ? lwork : 0);
-
-    int info = 0;
-    if constexpr (not is_complex_v<T>) {
-      array<double, 1> ev_r(dim);
-      array<double, 1> ev_i(dim);
-      lapack::f77::geev('N', compz, dim, m.data(), dim, ev_r.data(), ev_i.data(), vecs.data(), dim, vecs.data(), dim,
-                        work.data(), lwork, info);
-      for (long i = 0; i < dim; ++i) ev(i) = std::complex<double>(ev_r(i), ev_i(i));
-
-    } else {
-      lapack::f77::geev('N', compz, dim, m.data(), dim, ev.data(), vecs.data(), dim, vecs.data(), dim,
-                        work.data(), lwork, work2.data(), info);
-    }
-    if (info) NDA_RUNTIME_ERROR << "Diagonalization error";
-    if (compz=='V') m() = vecs;
-    return ev;
-  }
 
   //--------------------------------
 
@@ -185,7 +228,7 @@ namespace nda::linalg {
   template <typename M>
   std::pair<array<std::complex<double>, 1>, typename M::regular_type> geigenelements(M const &m) {
     auto m_copy = matrix<typename M::value_type, F_layout>(m);
-    auto ev     = _geigen_element_impl(m_copy, 'V');
+    auto ev     = detail::_geigen_element_impl(m_copy, 'V');
 
     return {ev, m_copy};
   }
@@ -201,7 +244,7 @@ namespace nda::linalg {
   template <typename M>
   array<std::complex<double>, 1> geigenvalues(M const &m) {
     auto m_copy = matrix<typename M::value_type, F_layout>(m);
-    return _geigen_element_impl(m_copy, 'N');
+    return detail::_geigen_element_impl(m_copy, 'N');
   }
 
   //--------------------------------
@@ -214,51 +257,8 @@ namespace nda::linalg {
    * @return The array of eigenvalues
    */
   template <typename M>
-  array<std::complex<double>, 1> geigenvalues_in_place(M *&m) {
-    return _geigen_element_impl(m, 'N');
-  }
-
-  //--------- Generalized eigenproblem for symmetric matrices ----------
-
-  template <typename M>
-  // dispatch the implementation of invoke for T = double or complex
-  auto _eigen_element_impl(M &&A, M &&B, char compz) {
-
-    EXPECTS((not A.empty()));
-    EXPECTS(is_matrix_square(A, true));
-    EXPECTS(A.indexmap().is_contiguous());
-
-    EXPECTS((not B.empty()));
-    EXPECTS(is_matrix_square(B, true));
-    EXPECTS(B.indexmap().is_contiguous());
-
-    EXPECTS(A.extent(0) == B.extent(0));
-
-    int dim = A.extent(0);
-
-    using T = typename std::decay_t<M>::value_type;
-
-    array<double, 1> ev(dim);
-    int lwork = 64 * dim;
-    array<T, 1> work(lwork);
-    array<double, 1> work2(is_complex_v<T> ? lwork : 0);
-
-#if defined(__has_feature)
-#if __has_feature(memory_sanitizer)
-    work2 = 0;
-    work  = 0;
-    ev    = 0;
-#endif
-#endif
-
-    int info = 0;
-    if constexpr (not is_complex_v<T>) {
-      lapack::f77::sygv(1, compz, 'U', dim, A.data(), dim, B.data(), dim, ev.data(), work.data(), lwork, info);
-    } else {
-      lapack::f77::hegv(1, compz, 'U', dim, A.data(), dim, B.data(), dim, ev.data(), work.data(), lwork, work2.data(), info);
-    }
-    if (info) NDA_RUNTIME_ERROR << "Diagonalization error";
-    return ev;
+  array<std::complex<double>, 1> geigenvalues_in_place(M &m) {
+    return detail::_geigen_element_impl(m, 'N');
   }
 
   //--------------------------------
@@ -273,7 +273,7 @@ namespace nda::linalg {
   std::pair<array<double, 1>, typename M::regular_type> eigenelements(M const &A, M const &B) {
     auto A_copy = matrix<typename M::value_type, F_layout>(A);
     auto B_copy = matrix<typename M::value_type, F_layout>(B);
-    auto ev     = _eigen_element_impl(A_copy, B_copy, 'V');
+    auto ev     = detail::_eigen_element_impl(A_copy, B_copy, 'V');
     return {ev, A_copy};
   }
 
@@ -288,7 +288,7 @@ namespace nda::linalg {
   array<double, 1> eigenvalues(M const &A, M const& B) {
     auto A_copy = matrix<typename M::value_type, F_layout>(A);
     auto B_copy = matrix<typename M::value_type, F_layout>(B);
-    return _eigen_element_impl(A_copy, B_copy, 'N');
+    return detail::_eigen_element_impl(A_copy, B_copy, 'N');
   }
 
   //--------------------------------
@@ -302,7 +302,7 @@ namespace nda::linalg {
    */
   template <typename M>
   array<double, 1> eigenvalues_in_place(M *&A, M *&B) {
-    return _eigen_element_impl(A, B, 'N');
+    return detail::_eigen_element_impl(A, B, 'N');
   }
 
   /** @} */
