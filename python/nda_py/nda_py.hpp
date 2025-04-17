@@ -8,21 +8,27 @@
 #include <nda/nda.hpp>
 #include <nda/concepts.hpp>
 
+#ifdef CLAIR_C2PY
+#include <c2py/converters/numpy_proxy.hpp>
+#define C2PY_CPP2PY_NAMESPACE c2py
+#else
 #include <cpp2py/py_converter.hpp>
 #include <cpp2py/numpy_proxy.hpp>
+#define C2PY_CPP2PY_NAMESPACE cpp2py
+#endif
 
 #include "make_py_capsule.hpp"
 
 namespace nda::python {
 
-  using cpp2py::npy_type;
+  using C2PY_CPP2PY_NAMESPACE::npy_type;
 
   // Given an array or a view, it returns the numpy_proxy viewing its data
   // NB : accepts ref, rvalue ref
   // AUR is array<T,R> or array_view<T, R>, but NOT a the Array concept.
   // It must be a container or a view.
   template <MemoryArray AUR>
-  cpp2py::numpy_proxy make_numpy_proxy_from_array_or_view(AUR &&a)
+  C2PY_CPP2PY_NAMESPACE::numpy_proxy make_numpy_proxy_from_array_or_view(AUR &&a)
     requires(is_regular_or_view_v<AUR>)
   {
 
@@ -33,7 +39,7 @@ namespace nda::python {
 
     // If T is a type which has a native Numpy equivalent, or it is PyObject *  or pyref.
     // we simply take a numpy of the data
-    if constexpr (cpp2py::has_npy_type<T>) {
+    if constexpr (C2PY_CPP2PY_NAMESPACE::has_npy_type<T>) {
       std::vector<long> extents(A::rank), strides(A::rank);
 
       for (int i = 0; i < A::rank; ++i) {
@@ -56,15 +62,17 @@ namespace nda::python {
       // We need to distinguish the special case where a is a RValue, in which case, the python will steal the ownership
       // by moving the elements one by one.
 
-      nda::array<cpp2py::pyref, A::rank> aobj = map([](auto &&x) {
+      nda::array<C2PY_CPP2PY_NAMESPACE::pyref, A::rank> aobj = map([](auto &&x) {
         if constexpr (is_regular_v<AUR> and !std::is_reference_v<AUR>)
           // nda::array rvalue (i.e. AUR is an array, and NOT a ref, so it matches array &&) Be sure to move
-          return cpp2py::py_converter<T>::c2py(std::move(x));
+          return C2PY_CPP2PY_NAMESPACE::py_converter<T>::c2py(std::move(x));
         else
-          return cpp2py::py_converter<T>::c2py(x);
+          return C2PY_CPP2PY_NAMESPACE::py_converter<T>::c2py(x);
       })(a);
       return make_numpy_proxy_from_array_or_view(std::move(aobj));
     }
   }
+
+#undef C2PY_CPP2PY_NAMESPACE
 
 } // namespace nda::python
