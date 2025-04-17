@@ -508,7 +508,7 @@ template&lt;typename C, typename A, typename B&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="structnda_1_1clef_1_1expr.html" title="Single node of the expression tree.">nda::clef::expr</a> object with the nda::clef::tags::ternary tag and the given operands forwarded as its child nodes. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="operation_8hpp_source.html#l00222">222</a> of file <a class="el" href="operation_8hpp_source.html">operation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="operation_8hpp_source.html#l00211">211</a> of file <a class="el" href="operation_8hpp_source.html">operation.hpp</a>.</p>
 
 </div>
 </div>
@@ -546,7 +546,7 @@ template&lt;typename T&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="structnda_1_1clef_1_1expr.html" title="Single node of the expression tree.">nda::clef::expr</a> with the <a class="el" href="structnda_1_1clef_1_1tags_1_1terminal.html" title="Tag to indicate a terminal node in the expression tree.">nda::clef::tags::terminal</a> tag containing either a copy of the object itself (if it is moved) or a reference to the object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="make__lazy_8hpp_source.html#l00045">45</a> of file <a class="el" href="make__lazy_8hpp_source.html">make_lazy.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="make__lazy_8hpp_source.html#l00034">34</a> of file <a class="el" href="make__lazy_8hpp_source.html">make_lazy.hpp</a>.</p>
 
 </div>
 </div>
@@ -592,7 +592,7 @@ requires (<a class="el" href="group__clef__utils.html#gaf4a34ec80a1f0d50945e9188
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="structnda_1_1clef_1_1expr.html" title="Single node of the expression tree.">nda::clef::expr</a> with the <a class="el" href="structnda_1_1clef_1_1tags_1_1function.html" title="Tag for function call expressions.">nda::clef::tags::function</a> tag containing the callable and the forwarded arguments. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="make__lazy_8hpp_source.html#l00074">74</a> of file <a class="el" href="make__lazy_8hpp_source.html">make_lazy.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="make__lazy_8hpp_source.html#l00063">63</a> of file <a class="el" href="make__lazy_8hpp_source.html">make_lazy.hpp</a>.</p>
 
 </div>
 </div>
@@ -630,7 +630,7 @@ template&lt;typename T&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="structnda_1_1clef_1_1expr.html" title="Single node of the expression tree.">nda::clef::expr</a> with the <a class="el" href="structnda_1_1clef_1_1tags_1_1terminal.html" title="Tag to indicate a terminal node in the expression tree.">nda::clef::tags::terminal</a> tag containing a copy of the object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="make__lazy_8hpp_source.html#l00057">57</a> of file <a class="el" href="make__lazy_8hpp_source.html">make_lazy.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="make__lazy_8hpp_source.html#l00046">46</a> of file <a class="el" href="make__lazy_8hpp_source.html">make_lazy.hpp</a>.</p>
 
 </div>
 </div>
@@ -676,7 +676,7 @@ requires (<a class="el" href="group__clef__utils.html#gaf4a34ec80a1f0d50945e9188
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="structnda_1_1clef_1_1expr.html" title="Single node of the expression tree.">nda::clef::expr</a> with the <a class="el" href="structnda_1_1clef_1_1tags_1_1subscript.html" title="Tag for subscript expressions.">nda::clef::tags::subscript</a> tag containing the subscriptable object and the forwarded arguments. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="make__lazy_8hpp_source.html#l00093">93</a> of file <a class="el" href="make__lazy_8hpp_source.html">make_lazy.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="make__lazy_8hpp_source.html#l00082">82</a> of file <a class="el" href="make__lazy_8hpp_source.html">make_lazy.hpp</a>.</p>
 
 </div>
 </div>
@@ -712,8 +712,8 @@ template&lt;typename T, typename... Phs&gt; </div>
 <div class="line"><span class="keyword">auto</span> f = <a class="code hl_function" href="#ga040cc4ae14e639c61bcb3af8891265f3">nda::clef::make_function</a>(ex, i_, j_);</div>
 <div class="line"><span class="keyword">auto</span> res = f(1, 2);    <span class="comment">// int res = 3;</span></div>
 <div class="line"><span class="keyword">auto</span> res2 = f(1.5, 2); <span class="comment">// double res2 = 3.5;</span></div>
-<div class="ttc" id="agroup__clef__expr_html_ga040cc4ae14e639c61bcb3af8891265f3"><div class="ttname"><a href="#ga040cc4ae14e639c61bcb3af8891265f3">nda::clef::make_function</a></div><div class="ttdeci">__inline__ auto make_function(T &amp;&amp;obj, Phs...)</div><div class="ttdoc">Factory function for nda::clef::make_fun_impl objects.</div><div class="ttdef"><b>Definition</b> <a href="function_8hpp_source.html#l00100">function.hpp:100</a></div></div>
-<div class="ttc" id="astructnda_1_1clef_1_1placeholder_html"><div class="ttname"><a href="structnda_1_1clef_1_1placeholder.html">nda::clef::placeholder</a></div><div class="ttdoc">A placeholder is an empty struct, labelled by an int.</div><div class="ttdef"><b>Definition</b> <a href="placeholder_8hpp_source.html#l00061">placeholder.hpp:61</a></div></div>
+<div class="ttc" id="agroup__clef__expr_html_ga040cc4ae14e639c61bcb3af8891265f3"><div class="ttname"><a href="#ga040cc4ae14e639c61bcb3af8891265f3">nda::clef::make_function</a></div><div class="ttdeci">__inline__ auto make_function(T &amp;&amp;obj, Phs...)</div><div class="ttdoc">Factory function for nda::clef::make_fun_impl objects.</div><div class="ttdef"><b>Definition</b> <a href="function_8hpp_source.html#l00089">function.hpp:89</a></div></div>
+<div class="ttc" id="astructnda_1_1clef_1_1placeholder_html"><div class="ttname"><a href="structnda_1_1clef_1_1placeholder.html">nda::clef::placeholder</a></div><div class="ttdoc">A placeholder is an empty struct, labelled by an int.</div><div class="ttdef"><b>Definition</b> <a href="placeholder_8hpp_source.html#l00050">placeholder.hpp:50</a></div></div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>There is no check if the given placeholders actually match placeholders in the object to be evaluated.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -730,7 +730,7 @@ template&lt;typename T, typename... Phs&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A callable <a class="el" href="structnda_1_1clef_1_1make__fun__impl.html" title="Helper struct to simplify calls to nda::clef::eval.">nda::clef::make_fun_impl</a> object that takes as many arguments as placeholders were given. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="function_8hpp_source.html#l00100">100</a> of file <a class="el" href="function_8hpp_source.html">function.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="function_8hpp_source.html#l00089">89</a> of file <a class="el" href="function_8hpp_source.html">function.hpp</a>.</p>
 
 </div>
 </div>
@@ -774,7 +774,7 @@ template&lt;typename Tag, typename... Args&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Result of actually performing the operation on the operands. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="operation_8hpp_source.html#l00255">255</a> of file <a class="el" href="operation_8hpp_source.html">operation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="operation_8hpp_source.html#l00244">244</a> of file <a class="el" href="operation_8hpp_source.html">operation.hpp</a>.</p>
 
 </div>
 </div>
@@ -818,7 +818,7 @@ template&lt;typename Tag, typename... Args&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="structnda_1_1clef_1_1expr.html" title="Single node of the expression tree.">nda::clef::expr</a> for the given operation and operands. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="operation_8hpp_source.html#l00239">239</a> of file <a class="el" href="operation_8hpp_source.html">operation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="operation_8hpp_source.html#l00228">228</a> of file <a class="el" href="operation_8hpp_source.html">operation.hpp</a>.</p>
 
 </div>
 </div>
@@ -851,7 +851,7 @@ template&lt;typename Expr, int N, typename D&gt; </div>
 <div class="line"><span class="keyword">auto</span> domain = std::vector{1, 2, 3};</div>
 <div class="line"><span class="keyword">auto</span> ex = i_ * i_;</div>
 <div class="line"><span class="keyword">auto</span> res = <a class="code hl_function" href="#ga6beac72e3606fb931e359c26c53fde5a">nda::clef::sum</a>(ex, i_ = domain); <span class="comment">// int res = 14;</span></div>
-<div class="ttc" id="agroup__clef__expr_html_ga6beac72e3606fb931e359c26c53fde5a"><div class="ttname"><a href="#ga6beac72e3606fb931e359c26c53fde5a">nda::clef::sum</a></div><div class="ttdeci">decltype(auto) sum(Expr const &amp;ex, clef::pair&lt; N, D &gt; d)</div><div class="ttdoc">Sum an expression over a 1-dimensional domain.</div><div class="ttdef"><b>Definition</b> <a href="sum_8hpp_source.html#l00076">sum.hpp:76</a></div></div>
+<div class="ttc" id="agroup__clef__expr_html_ga6beac72e3606fb931e359c26c53fde5a"><div class="ttname"><a href="#ga6beac72e3606fb931e359c26c53fde5a">nda::clef::sum</a></div><div class="ttdeci">decltype(auto) sum(Expr const &amp;ex, clef::pair&lt; N, D &gt; d)</div><div class="ttdoc">Sum an expression over a 1-dimensional domain.</div><div class="ttdef"><b>Definition</b> <a href="sum_8hpp_source.html#l00065">sum.hpp:65</a></div></div>
 </div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Expr</td><td>Type of the expression. </td></tr>
@@ -869,7 +869,7 @@ template&lt;typename Expr, int N, typename D&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Either the result of the summation or a new lazy expression. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sum_8hpp_source.html#l00076">76</a> of file <a class="el" href="sum_8hpp_source.html">sum.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="sum_8hpp_source.html#l00065">65</a> of file <a class="el" href="sum_8hpp_source.html">sum.hpp</a>.</p>
 
 </div>
 </div>
@@ -934,7 +934,7 @@ template&lt;typename Expr, typename D0, typename D1, typename... Ds&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Either the result of the summation or a new lazy expression. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sum_8hpp_source.html#l00109">109</a> of file <a class="el" href="sum_8hpp_source.html">sum.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="sum_8hpp_source.html#l00098">98</a> of file <a class="el" href="sum_8hpp_source.html">sum.hpp</a>.</p>
 
 </div>
 </div>

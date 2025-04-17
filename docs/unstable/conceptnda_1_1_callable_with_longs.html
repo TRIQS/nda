@@ -124,7 +124,7 @@ $(function(){initNavTree('conceptnda_1_1_callable_with_longs.html',''); initResi
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="concepts_8hpp_source.html#l00053">53</a> of file <a class="el" href="concepts_8hpp_source.html">concepts.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="concepts_8hpp_source.html#l00042">42</a> of file <a class="el" href="concepts_8hpp_source.html">concepts.hpp</a>.</p>
 </div><h2 class="groupheader">Concept definition</h2>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> A, <span class="keywordtype">int</span> R&gt;</div>
 <div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="conceptnda_1_1_callable_with_longs.html">nda::CallableWithLongs</a> =  <span class="keyword">requires</span>(A <span class="keyword">const</span> &amp;a) {</div>
@@ -132,7 +132,7 @@ $(function(){initNavTree('conceptnda_1_1_callable_with_longs.html',''); initResi
 <div class="line">    []&lt;<span class="keyword">auto</span>... Is&gt;(std::index_sequence&lt;Is...&gt;, <span class="keyword">auto</span> <span class="keyword">const</span> &amp;aa) -&gt; <span class="keyword">decltype</span>(aa(<span class="keywordtype">long</span>(Is)...)) {<span class="keywordflow">return</span> aa(<span class="keywordtype">long</span>(Is)...);}</div>
 <div class="line">    (std::make_index_sequence&lt;R&gt;{}, a);</div>
 <div class="line">  }</div>
-<div class="ttc" id="aconceptnda_1_1_callable_with_longs_html"><div class="ttname"><a href="conceptnda_1_1_callable_with_longs.html">nda::CallableWithLongs</a></div><div class="ttdoc">Check if a given type can be called with a certain number of long arguments.</div><div class="ttdef"><b>Definition</b> <a href="concepts_8hpp_source.html#l00053">concepts.hpp:53</a></div></div>
+<div class="ttc" id="aconceptnda_1_1_callable_with_longs_html"><div class="ttname"><a href="conceptnda_1_1_callable_with_longs.html">nda::CallableWithLongs</a></div><div class="ttdoc">Check if a given type can be called with a certain number of long arguments.</div><div class="ttdef"><b>Definition</b> <a href="concepts_8hpp_source.html#l00042">concepts.hpp:42</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -111,105 +111,94 @@ $(function(){initNavTree('scatter_8hpp_source.html',''); initResizable(true); })
   <div class="headertitle"><div class="title">scatter.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="scatter_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright (c) 2020-2024 Simons Foundation</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">//</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// you may not use this file except in compliance with the License.</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">// You may obtain a copy of the License at</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment">//</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">//     http://www.apache.org/licenses/LICENSE-2.0.txt</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">//</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment">// Unless required by applicable law or agreed to in writing, software</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">// See the License for the specific language governing permissions and</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">// limitations under the License.</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">//</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">// Authors: Thomas Hahn, Olivier Parcollet, Nils Wentzell</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span></div>
+<a href="scatter_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright (c) 2020--present, The Simons Foundation</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// This file is part of TRIQS/nda and is licensed under the Apache License, Version 2.0.</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// SPDX-License-Identifier: Apache-2.0</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// See LICENSE in the root of this distribution for details.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="mpi_2utils_8hpp.html">./utils.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="concepts_8hpp.html">../concepts.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="declarations_8hpp.html">../declarations.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;<a class="code" href="macros_8hpp.html">../macros.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;<a class="code" href="traits_8hpp.html">../traits.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;mpi.h&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;mpi/mpi.hpp&gt;</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;<a class="code" href="mpi_2utils_8hpp.html">./utils.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;<a class="code" href="concepts_8hpp.html">../concepts.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;<a class="code" href="declarations_8hpp.html">../declarations.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;<a class="code" href="macros_8hpp.html">../macros.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;<a class="code" href="traits_8hpp.html">../traits.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;cstddef&gt;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;functional&gt;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;numeric&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;span&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;tuple&gt;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;type_traits&gt;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &lt;mpi.h&gt;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &lt;mpi/mpi.hpp&gt;</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &lt;cstddef&gt;</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#include &lt;functional&gt;</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#include &lt;numeric&gt;</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#include &lt;span&gt;</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#include &lt;tuple&gt;</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include &lt;type_traits&gt;</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword">namespace </span>nda::detail {</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <span class="comment">// Helper function to get the shape and total size of the scattered array/view as well as the stride along the first</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="comment">// dimension.</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> A&gt;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">requires</span>(<a class="code hl_variable" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v&lt;A&gt;</a> and std::decay_t&lt;A&gt;::is_stride_order_C())</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keyword">auto</span> mpi_scatter_shape_impl(A <span class="keyword">const</span> &amp;a, mpi::communicator comm, <span class="keywordtype">int</span> root) {</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keyword">auto</span> dims = a.shape();</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    mpi::broadcast(dims, comm, root);</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">auto</span> scattered_size = std::accumulate(dims.begin(), dims.end(), 1, std::multiplies&lt;&gt;());</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keyword">auto</span> stride0        = scattered_size / dims[0];</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    dims[0]             = mpi::chunk_length(dims[0], comm.size(), comm.rank());</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordflow">return</span> std::make_tuple(dims, scattered_size, stride0);</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  }</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>} <span class="comment">// namespace nda::detail</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keyword">namespace </span>nda {</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span></div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> A1, <span class="keyword">typename</span> A2&gt;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keyword">requires</span>(<a class="code hl_variable" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v&lt;A1&gt;</a> and std::decay_t&lt;A1&gt;::is_stride_order_C()</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>             and <a class="code hl_variable" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A2&gt; and std::decay_t&lt;A2&gt;::is_stride_order_C())</div>
-<div class="foldopen" id="foldopen00096" data-start="{" data-end="}">
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno"><a class="line" href="group__av__mpi.html#gae423dc9b0c850f1650fa2803b7123f80">   96</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="group__av__mpi.html#gae423dc9b0c850f1650fa2803b7123f80">mpi_scatter_into</a>(A1 const &amp;a_in, A2 &amp;&amp;a_out, mpi::communicator comm = {}, <span class="keywordtype">int</span> root = 0) { <span class="comment">// NOLINT</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="comment">// check the ranks of the input arrays/views</span></div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    EXPECTS_WITH_MESSAGE(detail::have_mpi_equal_ranks(a_in, comm), <span class="stringliteral">&quot;Error in nda::mpi_scatter_into: Ranks of arrays/views must be equal&quot;</span>)</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="comment">// check if the input and output arrays/views can be used in the MPI call</span></div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    if (comm.rank() == root) detail::check_layout_mpi_compatible(a_in, <span class="stringliteral">&quot;mpi_scatter_into&quot;</span>);</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    detail::check_layout_mpi_compatible(a_out, <span class="stringliteral">&quot;mpi_scatter_into&quot;</span>);</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="comment">// get output shape and resize or check the output array/view</span></div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    auto [dims, scattered_size, stride0] = detail::mpi_scatter_shape_impl(a_in, comm, root);</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <a class="code hl_function" href="group__av__factories.html#ga21ed59f95217d512e116f5558676f8e7">resize_or_check_if_view</a>(a_out, dims);</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <span class="comment">// scatter the data</span></div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    auto a_out_span = std::span{a_out.data(), <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(a_out.size())};</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keyword">auto</span> a_in_span  = std::span{a_in.data(), <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(a_in.size())};</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    mpi::scatter_range(a_in_span, a_out_span, scattered_size, comm, root, stride0);</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  }</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">namespace </span>nda::detail {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="comment">// Helper function to get the shape and total size of the scattered array/view as well as the stride along the first</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="comment">// dimension.</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> A&gt;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keyword">requires</span>(<a class="code hl_variable" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v&lt;A&gt;</a> and std::decay_t&lt;A&gt;::is_stride_order_C())</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keyword">auto</span> mpi_scatter_shape_impl(A <span class="keyword">const</span> &amp;a, mpi::communicator comm, <span class="keywordtype">int</span> root) {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">auto</span> dims = a.shape();</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    mpi::broadcast(dims, comm, root);</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keyword">auto</span> scattered_size = std::accumulate(dims.begin(), dims.end(), 1, std::multiplies&lt;&gt;());</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">auto</span> stride0        = scattered_size / dims[0];</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    dims[0]             = mpi::chunk_length(dims[0], comm.size(), comm.rank());</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordflow">return</span> std::make_tuple(dims, scattered_size, stride0);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  }</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>} <span class="comment">// namespace nda::detail</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keyword">namespace </span>nda {</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> A1, <span class="keyword">typename</span> A2&gt;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keyword">requires</span>(<a class="code hl_variable" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v&lt;A1&gt;</a> and std::decay_t&lt;A1&gt;::is_stride_order_C()</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>             and <a class="code hl_variable" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A2&gt; and std::decay_t&lt;A2&gt;::is_stride_order_C())</div>
+<div class="foldopen" id="foldopen00085" data-start="{" data-end="}">
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="group__av__mpi.html#gae423dc9b0c850f1650fa2803b7123f80">   85</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="group__av__mpi.html#gae423dc9b0c850f1650fa2803b7123f80">mpi_scatter_into</a>(A1 const &amp;a_in, A2 &amp;&amp;a_out, mpi::communicator comm = {}, <span class="keywordtype">int</span> root = 0) { <span class="comment">// NOLINT</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="comment">// check the ranks of the input arrays/views</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    EXPECTS_WITH_MESSAGE(detail::have_mpi_equal_ranks(a_in, comm), <span class="stringliteral">&quot;Error in nda::mpi_scatter_into: Ranks of arrays/views must be equal&quot;</span>)</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="comment">// check if the input and output arrays/views can be used in the MPI call</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    if (comm.rank() == root) detail::check_layout_mpi_compatible(a_in, <span class="stringliteral">&quot;mpi_scatter_into&quot;</span>);</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    detail::check_layout_mpi_compatible(a_out, <span class="stringliteral">&quot;mpi_scatter_into&quot;</span>);</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="comment">// get output shape and resize or check the output array/view</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    auto [dims, scattered_size, stride0] = detail::mpi_scatter_shape_impl(a_in, comm, root);</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <a class="code hl_function" href="group__av__factories.html#ga21ed59f95217d512e116f5558676f8e7">resize_or_check_if_view</a>(a_out, dims);</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="comment">// scatter the data</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    auto a_out_span = std::span{a_out.data(), <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(a_out.size())};</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <span class="keyword">auto</span> a_in_span  = std::span{a_in.data(), <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(a_in.size())};</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    mpi::scatter_range(a_in_span, a_out_span, scattered_size, comm, root, stride0);</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  }</div>
 </div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span></div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> A&gt;</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    <span class="keyword">requires</span>(<a class="code hl_variable" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v&lt;A&gt;</a> and std::decay_t&lt;A&gt;::is_stride_order_C())</div>
-<div class="foldopen" id="foldopen00132" data-start="{" data-end="}">
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno"><a class="line" href="group__av__mpi.html#ga3c70e635ce6fd776980edc3b44f5823b">  132</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__mpi.html#ga3c70e635ce6fd776980edc3b44f5823b">mpi_scatter</a>(A <span class="keyword">const</span> &amp;a, mpi::communicator comm = {}, <span class="keywordtype">int</span> root = 0) {</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="keyword">using </span>return_t = <a class="code hl_typedef" href="group__av__utils.html#ga0e44dfcf65b12625fe16a983a144ef6d">get_regular_t&lt;A&gt;</a>;</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    return_t a_out;</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    mpi::scatter_into(a, a_out, comm, root);</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    <span class="keywordflow">return</span> a_out;</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>  }</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> A&gt;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keyword">requires</span>(<a class="code hl_variable" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v&lt;A&gt;</a> and std::decay_t&lt;A&gt;::is_stride_order_C())</div>
+<div class="foldopen" id="foldopen00121" data-start="{" data-end="}">
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno"><a class="line" href="group__av__mpi.html#ga3c70e635ce6fd776980edc3b44f5823b">  121</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__mpi.html#ga3c70e635ce6fd776980edc3b44f5823b">mpi_scatter</a>(A <span class="keyword">const</span> &amp;a, mpi::communicator comm = {}, <span class="keywordtype">int</span> root = 0) {</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keyword">using </span>return_t = <a class="code hl_typedef" href="group__av__utils.html#ga0e44dfcf65b12625fe16a983a144ef6d">get_regular_t&lt;A&gt;</a>;</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    return_t a_out;</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    mpi::scatter_into(a, a_out, comm, root);</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="keywordflow">return</span> a_out;</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  }</div>
 </div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span></div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>} <span class="comment">// namespace nda</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>} <span class="comment">// namespace nda</span></div>
 <div class="ttc" id="aconcepts_8hpp_html"><div class="ttname"><a href="concepts_8hpp.html">concepts.hpp</a></div><div class="ttdoc">Provides concepts for the nda library.</div></div>
 <div class="ttc" id="adeclarations_8hpp_html"><div class="ttname"><a href="declarations_8hpp.html">declarations.hpp</a></div><div class="ttdoc">Provides various convenient aliases and helper functions for nda::basic_array and nda::basic_array_vi...</div></div>
-<div class="ttc" id="agroup__av__factories_html_ga21ed59f95217d512e116f5558676f8e7"><div class="ttname"><a href="group__av__factories.html#ga21ed59f95217d512e116f5558676f8e7">nda::resize_or_check_if_view</a></div><div class="ttdeci">void resize_or_check_if_view(A &amp;a, std::array&lt; long, A::rank &gt; const &amp;sha)</div><div class="ttdoc">Resize a given regular array to the given shape or check if a given view as the correct shape.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00318">basic_functions.hpp:318</a></div></div>
-<div class="ttc" id="agroup__av__mpi_html_ga3c70e635ce6fd776980edc3b44f5823b"><div class="ttname"><a href="group__av__mpi.html#ga3c70e635ce6fd776980edc3b44f5823b">nda::mpi_scatter</a></div><div class="ttdeci">auto mpi_scatter(A const &amp;a, mpi::communicator comm={}, int root=0)</div><div class="ttdoc">Implementation of an MPI scatter for nda::basic_array or nda::basic_array_view types.</div><div class="ttdef"><b>Definition</b> <a href="#l00132">scatter.hpp:132</a></div></div>
-<div class="ttc" id="agroup__av__mpi_html_gae423dc9b0c850f1650fa2803b7123f80"><div class="ttname"><a href="group__av__mpi.html#gae423dc9b0c850f1650fa2803b7123f80">nda::mpi_scatter_into</a></div><div class="ttdeci">void mpi_scatter_into(A1 const &amp;a_in, A2 &amp;&amp;a_out, mpi::communicator comm={}, int root=0)</div><div class="ttdoc">Implementation of an MPI scatter for nda::basic_array or nda::basic_array_view types that scatters di...</div><div class="ttdef"><b>Definition</b> <a href="#l00096">scatter.hpp:96</a></div></div>
-<div class="ttc" id="agroup__av__utils_html_ga0e44dfcf65b12625fe16a983a144ef6d"><div class="ttname"><a href="group__av__utils.html#ga0e44dfcf65b12625fe16a983a144ef6d">nda::get_regular_t</a></div><div class="ttdeci">decltype(basic_array{std::declval&lt; T &gt;()}) get_regular_t</div><div class="ttdoc">Get the type of the nda::basic_array that would be obtained by constructing an array from a given typ...</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00360">declarations.hpp:360</a></div></div>
-<div class="ttc" id="agroup__av__utils_html_gad19aaebe79b6d698a818828217032489"><div class="ttname"><a href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">nda::is_regular_or_view_v</a></div><div class="ttdeci">constexpr bool is_regular_or_view_v</div><div class="ttdoc">Constexpr variable that is true if type A is either a regular array or a view.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00163">traits.hpp:163</a></div></div>
+<div class="ttc" id="agroup__av__factories_html_ga21ed59f95217d512e116f5558676f8e7"><div class="ttname"><a href="group__av__factories.html#ga21ed59f95217d512e116f5558676f8e7">nda::resize_or_check_if_view</a></div><div class="ttdeci">void resize_or_check_if_view(A &amp;a, std::array&lt; long, A::rank &gt; const &amp;sha)</div><div class="ttdoc">Resize a given regular array to the given shape or check if a given view as the correct shape.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00307">basic_functions.hpp:307</a></div></div>
+<div class="ttc" id="agroup__av__mpi_html_ga3c70e635ce6fd776980edc3b44f5823b"><div class="ttname"><a href="group__av__mpi.html#ga3c70e635ce6fd776980edc3b44f5823b">nda::mpi_scatter</a></div><div class="ttdeci">auto mpi_scatter(A const &amp;a, mpi::communicator comm={}, int root=0)</div><div class="ttdoc">Implementation of an MPI scatter for nda::basic_array or nda::basic_array_view types.</div><div class="ttdef"><b>Definition</b> <a href="#l00121">scatter.hpp:121</a></div></div>
+<div class="ttc" id="agroup__av__mpi_html_gae423dc9b0c850f1650fa2803b7123f80"><div class="ttname"><a href="group__av__mpi.html#gae423dc9b0c850f1650fa2803b7123f80">nda::mpi_scatter_into</a></div><div class="ttdeci">void mpi_scatter_into(A1 const &amp;a_in, A2 &amp;&amp;a_out, mpi::communicator comm={}, int root=0)</div><div class="ttdoc">Implementation of an MPI scatter for nda::basic_array or nda::basic_array_view types that scatters di...</div><div class="ttdef"><b>Definition</b> <a href="#l00085">scatter.hpp:85</a></div></div>
+<div class="ttc" id="agroup__av__utils_html_ga0e44dfcf65b12625fe16a983a144ef6d"><div class="ttname"><a href="group__av__utils.html#ga0e44dfcf65b12625fe16a983a144ef6d">nda::get_regular_t</a></div><div class="ttdeci">decltype(basic_array{std::declval&lt; T &gt;()}) get_regular_t</div><div class="ttdoc">Get the type of the nda::basic_array that would be obtained by constructing an array from a given typ...</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00349">declarations.hpp:349</a></div></div>
+<div class="ttc" id="agroup__av__utils_html_gad19aaebe79b6d698a818828217032489"><div class="ttname"><a href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">nda::is_regular_or_view_v</a></div><div class="ttdeci">constexpr bool is_regular_or_view_v</div><div class="ttdoc">Constexpr variable that is true if type A is either a regular array or a view.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00152">traits.hpp:152</a></div></div>
 <div class="ttc" id="amacros_8hpp_html"><div class="ttname"><a href="macros_8hpp.html">macros.hpp</a></div><div class="ttdoc">Macros used in the nda library.</div></div>
 <div class="ttc" id="ampi_2utils_8hpp_html"><div class="ttname"><a href="mpi_2utils_8hpp.html">utils.hpp</a></div><div class="ttdoc">Provides various utility functions used by the MPI interface of nda.</div></div>
 <div class="ttc" id="atraits_8hpp_html"><div class="ttname"><a href="traits_8hpp.html">traits.hpp</a></div><div class="ttdoc">Provides type traits for the nda library.</div></div>

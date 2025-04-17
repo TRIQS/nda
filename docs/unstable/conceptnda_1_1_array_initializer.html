@@ -124,7 +124,7 @@ $(function(){initNavTree('conceptnda_1_1_array_initializer.html',''); initResiza
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="concepts_8hpp_source.html#l00336">336</a> of file <a class="el" href="concepts_8hpp_source.html">concepts.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="concepts_8hpp_source.html#l00325">325</a> of file <a class="el" href="concepts_8hpp_source.html">concepts.hpp</a>.</p>
 </div><h2 class="groupheader">Concept definition</h2>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> A, <span class="keyword">typename</span> B&gt;</div>
 <div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="conceptnda_1_1_array_initializer.html">nda::ArrayInitializer</a> =  <span class="keyword">requires</span>(A <span class="keyword">const</span> &amp;a) {</div>
@@ -132,9 +132,9 @@ $(function(){initNavTree('conceptnda_1_1_array_initializer.html',''); initResiza
 <div class="line">    <span class="keyword">typename</span> std::remove_cvref_t&lt;A&gt;::value_type;</div>
 <div class="line">    <span class="keyword">requires</span> <a class="code hl_concept" href="conceptnda_1_1_memory_array.html">MemoryArray&lt;B&gt;</a> &amp;&amp; <span class="keyword">requires</span>(B &amp;b) { a.invoke(b); }; </div>
 <div class="line">  }</div>
-<div class="ttc" id="aconceptnda_1_1_array_initializer_html"><div class="ttname"><a href="conceptnda_1_1_array_initializer.html">nda::ArrayInitializer</a></div><div class="ttdoc">Check if a given type satisfies the array initializer concept for a given nda::MemoryArray type.</div><div class="ttdef"><b>Definition</b> <a href="concepts_8hpp_source.html#l00336">concepts.hpp:336</a></div></div>
-<div class="ttc" id="aconceptnda_1_1_memory_array_html"><div class="ttname"><a href="conceptnda_1_1_memory_array.html">nda::MemoryArray</a></div><div class="ttdoc">Check if a given type satisfies the memory array concept.</div><div class="ttdef"><b>Definition</b> <a href="concepts_8hpp_source.html#l00259">concepts.hpp:259</a></div></div>
-<div class="ttc" id="aconceptnda_1_1_std_array_of_long_html"><div class="ttname"><a href="conceptnda_1_1_std_array_of_long.html">nda::StdArrayOfLong</a></div><div class="ttdoc">Check if a given type is of type std::array&lt;long, R&gt; for some arbitrary R.</div><div class="ttdef"><b>Definition</b> <a href="concepts_8hpp_source.html#l00112">concepts.hpp:112</a></div></div>
+<div class="ttc" id="aconceptnda_1_1_array_initializer_html"><div class="ttname"><a href="conceptnda_1_1_array_initializer.html">nda::ArrayInitializer</a></div><div class="ttdoc">Check if a given type satisfies the array initializer concept for a given nda::MemoryArray type.</div><div class="ttdef"><b>Definition</b> <a href="concepts_8hpp_source.html#l00325">concepts.hpp:325</a></div></div>
+<div class="ttc" id="aconceptnda_1_1_memory_array_html"><div class="ttname"><a href="conceptnda_1_1_memory_array.html">nda::MemoryArray</a></div><div class="ttdoc">Check if a given type satisfies the memory array concept.</div><div class="ttdef"><b>Definition</b> <a href="concepts_8hpp_source.html#l00248">concepts.hpp:248</a></div></div>
+<div class="ttc" id="aconceptnda_1_1_std_array_of_long_html"><div class="ttname"><a href="conceptnda_1_1_std_array_of_long.html">nda::StdArrayOfLong</a></div><div class="ttdoc">Check if a given type is of type std::array&lt;long, R&gt; for some arbitrary R.</div><div class="ttdef"><b>Definition</b> <a href="concepts_8hpp_source.html#l00101">concepts.hpp:101</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

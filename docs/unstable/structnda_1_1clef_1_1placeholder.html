@@ -125,9 +125,9 @@ struct nda::clef::placeholder&lt; N &gt;</div><p>A placeholder is an empty struc
 <div class="line"><a class="code hl_struct" href="structnda_1_1clef_1_1placeholder.html">nda::clef::placeholder&lt;1&gt;</a> j_;</div>
 <div class="line"><span class="keyword">auto</span> <a class="code hl_struct" href="structnda_1_1clef_1_1expr.html">expr</a> = i_ + j_;</div>
 <div class="line"><span class="keyword">auto</span> res = <a class="code hl_function" href="group__clef__eval.html#ga9d751d0f6de2537471069ff045f22dfb">nda::clef::eval</a>(<a class="code hl_struct" href="structnda_1_1clef_1_1expr.html">expr</a>, i_ = 1.0, j_ = 2.0); <span class="comment">// double res = 3.0;</span></div>
-<div class="ttc" id="agroup__clef__eval_html_ga9d751d0f6de2537471069ff045f22dfb"><div class="ttname"><a href="group__clef__eval.html#ga9d751d0f6de2537471069ff045f22dfb">nda::clef::eval</a></div><div class="ttdeci">__inline__ decltype(auto) eval(T const &amp;obj, Pairs &amp;&amp;...pairs)</div><div class="ttdoc">Generic function to evaluate expressions and other types.</div><div class="ttdef"><b>Definition</b> <a href="eval_8hpp_source.html#l00197">eval.hpp:197</a></div></div>
-<div class="ttc" id="astructnda_1_1clef_1_1expr_html"><div class="ttname"><a href="structnda_1_1clef_1_1expr.html">nda::clef::expr</a></div><div class="ttdoc">Single node of the expression tree.</div><div class="ttdef"><b>Definition</b> <a href="expression_8hpp_source.html#l00076">expression.hpp:76</a></div></div>
-<div class="ttc" id="astructnda_1_1clef_1_1placeholder_html"><div class="ttname"><a href="structnda_1_1clef_1_1placeholder.html">nda::clef::placeholder</a></div><div class="ttdoc">A placeholder is an empty struct, labelled by an int.</div><div class="ttdef"><b>Definition</b> <a href="placeholder_8hpp_source.html#l00061">placeholder.hpp:61</a></div></div>
+<div class="ttc" id="agroup__clef__eval_html_ga9d751d0f6de2537471069ff045f22dfb"><div class="ttname"><a href="group__clef__eval.html#ga9d751d0f6de2537471069ff045f22dfb">nda::clef::eval</a></div><div class="ttdeci">__inline__ decltype(auto) eval(T const &amp;obj, Pairs &amp;&amp;...pairs)</div><div class="ttdoc">Generic function to evaluate expressions and other types.</div><div class="ttdef"><b>Definition</b> <a href="eval_8hpp_source.html#l00186">eval.hpp:186</a></div></div>
+<div class="ttc" id="astructnda_1_1clef_1_1expr_html"><div class="ttname"><a href="structnda_1_1clef_1_1expr.html">nda::clef::expr</a></div><div class="ttdoc">Single node of the expression tree.</div><div class="ttdef"><b>Definition</b> <a href="expression_8hpp_source.html#l00065">expression.hpp:65</a></div></div>
+<div class="ttc" id="astructnda_1_1clef_1_1placeholder_html"><div class="ttname"><a href="structnda_1_1clef_1_1placeholder.html">nda::clef::placeholder</a></div><div class="ttdoc">A placeholder is an empty struct, labelled by an int.</div><div class="ttdef"><b>Definition</b> <a href="placeholder_8hpp_source.html#l00050">placeholder.hpp:50</a></div></div>
 </div><!-- fragment --><p>Here <code>expr</code> is a lazy binary <a class="el" href="structnda_1_1clef_1_1expr.html" title="Single node of the expression tree.">nda::clef::expr</a> with the <a class="el" href="structnda_1_1clef_1_1tags_1_1plus.html" title="Tag for binary + expressions.">nda::clef::tags::plus</a> tag, which can be evaluated later on with the <a class="el" href="group__clef__eval.html#ga9d751d0f6de2537471069ff045f22dfb" title="Generic function to evaluate expressions and other types.">nda::clef::eval</a> function and by assigning values to the placeholders (see <a class="el" href="structnda_1_1clef_1_1pair.html" title="A pair consisting of a placeholder and its assigned value.">nda::clef::pair</a>).</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -136,7 +136,7 @@ struct nda::clef::placeholder&lt; N &gt;</div><p>A placeholder is an empty struc
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="placeholder_8hpp_source.html#l00061">61</a> of file <a class="el" href="placeholder_8hpp_source.html">placeholder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="placeholder_8hpp_source.html#l00050">50</a> of file <a class="el" href="placeholder_8hpp_source.html">placeholder.hpp</a>.</p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -203,7 +203,7 @@ template&lt;typename... Args&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="structnda_1_1clef_1_1expr.html" title="Single node of the expression tree.">nda::clef::expr</a> object with the <a class="el" href="structnda_1_1clef_1_1tags_1_1function.html" title="Tag for function call expressions.">nda::clef::tags::function</a> tag containing the placeholder (for the callable) and the given arguments. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="placeholder_8hpp_source.html#l00088">88</a> of file <a class="el" href="placeholder_8hpp_source.html">placeholder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="placeholder_8hpp_source.html#l00077">77</a> of file <a class="el" href="placeholder_8hpp_source.html">placeholder.hpp</a>.</p>
 
 </div>
 </div>
@@ -249,7 +249,7 @@ template&lt;typename RHS&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="structnda_1_1clef_1_1pair.html" title="A pair consisting of a placeholder and its assigned value.">nda::clef::pair</a> object, containing the integer label of the placeholder and the value assigned to it. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="placeholder_8hpp_source.html#l00075">75</a> of file <a class="el" href="placeholder_8hpp_source.html">placeholder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="placeholder_8hpp_source.html#l00064">64</a> of file <a class="el" href="placeholder_8hpp_source.html">placeholder.hpp</a>.</p>
 
 </div>
 </div>
@@ -295,7 +295,7 @@ template&lt;typename T&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="structnda_1_1clef_1_1expr.html" title="Single node of the expression tree.">nda::clef::expr</a> object with the <a class="el" href="structnda_1_1clef_1_1tags_1_1subscript.html" title="Tag for subscript expressions.">nda::clef::tags::subscript</a> tag containing the placeholder (for the object to be accessed) and the given argument. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="placeholder_8hpp_source.html#l00101">101</a> of file <a class="el" href="placeholder_8hpp_source.html">placeholder.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="placeholder_8hpp_source.html#l00090">90</a> of file <a class="el" href="placeholder_8hpp_source.html">placeholder.hpp</a>.</p>
 
 </div>
 </div>

@@ -111,174 +111,163 @@ $(function(){initNavTree('io_8hpp_source.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">io.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="io_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright (c) 2019-2024 Simons Foundation</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">//</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// you may not use this file except in compliance with the License.</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">// You may obtain a copy of the License at</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment">//</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">//     http://www.apache.org/licenses/LICENSE-2.0.txt</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">//</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment">// Unless required by applicable law or agreed to in writing, software</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">// See the License for the specific language governing permissions and</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">// limitations under the License.</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">//</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">// Authors: Thomas Hahn, Olivier Parcollet, Nils Wentzell</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;<a class="code" href="clef_2clef_8hpp.html">./clef.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;functional&gt;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &lt;tuple&gt;</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &lt;type_traits&gt;</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">namespace </span>nda::clef {</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> N&gt;</div>
-<div class="foldopen" id="foldopen00047" data-start="{" data-end="}">
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="group__clef__utils.html#ga286cbbf475c7baf6980e213d84cfacba">   47</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, <a class="code hl_struct" href="structnda_1_1clef_1_1placeholder.html">placeholder&lt;N&gt;</a>) {</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordflow">return</span> sout &lt;&lt; <span class="stringliteral">&quot;_&quot;</span> &lt;&lt; N;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  }</div>
+<a href="io_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright (c) 2019--present, The Simons Foundation</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// This file is part of TRIQS/nda and is licensed under the Apache License, Version 2.0.</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// SPDX-License-Identifier: Apache-2.0</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// See LICENSE in the root of this distribution for details.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="clef_2clef_8hpp.html">./clef.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;functional&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;tuple&gt;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;type_traits&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">namespace </span>nda::clef {</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> N&gt;</div>
+<div class="foldopen" id="foldopen00036" data-start="{" data-end="}">
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="group__clef__utils.html#ga286cbbf475c7baf6980e213d84cfacba">   36</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, <a class="code hl_struct" href="structnda_1_1clef_1_1placeholder.html">placeholder&lt;N&gt;</a>) {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordflow">return</span> sout &lt;&lt; <span class="stringliteral">&quot;_&quot;</span> &lt;&lt; N;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  }</div>
 </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen00060" data-start="{" data-end="}">
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="group__clef__utils.html#gafe96920bb564270040bcadfeb05cae70">   60</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, std::reference_wrapper&lt;T&gt; <span class="keyword">const</span> &amp;wrapper) {</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordflow">return</span> sout &lt;&lt; wrapper.get();</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  }</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00049" data-start="{" data-end="}">
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="group__clef__utils.html#gafe96920bb564270040bcadfeb05cae70">   49</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, std::reference_wrapper&lt;T&gt; <span class="keyword">const</span> &amp;wrapper) {</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordflow">return</span> sout &lt;&lt; wrapper.get();</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  }</div>
 </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <span class="comment">// Overload of nda::clef::variadic_print for the case of an empty list of arguments.</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <span class="keyword">inline</span> std::ostream &amp;variadic_print(std::ostream &amp;sout) { <span class="keywordflow">return</span> sout; }</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span></div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T0, <span class="keyword">typename</span>... Ts&gt;</div>
-<div class="foldopen" id="foldopen00078" data-start="{" data-end="}">
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="group__clef__utils.html#gaff1ff736e013c18c590a4c36e19737c2">   78</a></span>  std::ostream &amp;variadic_print(std::ostream &amp;sout, T0 &amp;&amp;t0, Ts &amp;&amp;...ts) {</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    sout &lt;&lt; std::forward&lt;T0&gt;(t0) &lt;&lt; (<span class="keyword">sizeof</span>...(Ts) &gt; 0 ? <span class="stringliteral">&quot;, &quot;</span> : <span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    variadic_print(sout, std::forward&lt;Ts&gt;(ts)...);</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keywordflow">return</span> sout;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  }</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="comment">// Overload of nda::clef::variadic_print for the case of an empty list of arguments.</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <span class="keyword">inline</span> std::ostream &amp;variadic_print(std::ostream &amp;sout) { <span class="keywordflow">return</span> sout; }</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T0, <span class="keyword">typename</span>... Ts&gt;</div>
+<div class="foldopen" id="foldopen00067" data-start="{" data-end="}">
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="group__clef__utils.html#gaff1ff736e013c18c590a4c36e19737c2">   67</a></span>  std::ostream &amp;variadic_print(std::ostream &amp;sout, T0 &amp;&amp;t0, Ts &amp;&amp;...ts) {</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    sout &lt;&lt; std::forward&lt;T0&gt;(t0) &lt;&lt; (<span class="keyword">sizeof</span>...(Ts) &gt; 0 ? <span class="stringliteral">&quot;, &quot;</span> : <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    variadic_print(sout, std::forward&lt;Ts&gt;(ts)...);</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keywordflow">return</span> sout;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  }</div>
 </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <span class="keyword">namespace </span>detail {</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="comment">// Helper struct to print a std::tuple recursively to std::ostream.</span></div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> C, <span class="keywordtype">int</span> N&gt;</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keyword">struct </span>print_tuple_impl {</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>      <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tuple&gt;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>      <span class="keywordtype">void</span> operator()(std::ostream &amp;sout, Tuple <span class="keyword">const</span> &amp;t) {</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        sout &lt;&lt; std::get&lt;C&gt;(t) &lt;&lt; (C != N - 1 ? <span class="stringliteral">&quot;, &quot;</span> : <span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        print_tuple_impl&lt;C + 1, N&gt;()(sout, t);</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>      }</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    };</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="comment">// Helper struct to print a std::tuple recursively to std::ostream (end of the recursion).</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> N&gt;</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keyword">struct </span>print_tuple_impl&lt;N, N&gt; {</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>      <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tuple&gt;</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>      <span class="keywordtype">void</span> operator()(std::ostream &amp;, Tuple <span class="keyword">const</span> &amp;) {}</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    };</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  } <span class="comment">// namespace detail</span></div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span></div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tuple&gt;</div>
-<div class="foldopen" id="foldopen00114" data-start="{" data-end="}">
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="group__clef__utils.html#ga939b5f2a463e2e3f20130ea7d9216642">  114</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__utils.html#ga939b5f2a463e2e3f20130ea7d9216642">print_tuple</a>(std::ostream &amp;sout, Tuple <span class="keyword">const</span> &amp;t) {</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    detail::print_tuple_impl&lt;1, std::tuple_size_v&lt;Tuple&gt;&gt;()(sout, t);</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keywordflow">return</span> sout;</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  }</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="keyword">namespace </span>detail {</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="comment">// Helper struct to print a std::tuple recursively to std::ostream.</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> C, <span class="keywordtype">int</span> N&gt;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keyword">struct </span>print_tuple_impl {</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>      <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tuple&gt;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>      <span class="keywordtype">void</span> operator()(std::ostream &amp;sout, Tuple <span class="keyword">const</span> &amp;t) {</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        sout &lt;&lt; std::get&lt;C&gt;(t) &lt;&lt; (C != N - 1 ? <span class="stringliteral">&quot;, &quot;</span> : <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        print_tuple_impl&lt;C + 1, N&gt;()(sout, t);</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>      }</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    };</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="comment">// Helper struct to print a std::tuple recursively to std::ostream (end of the recursion).</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> N&gt;</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keyword">struct </span>print_tuple_impl&lt;N, N&gt; {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>      <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tuple&gt;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>      <span class="keywordtype">void</span> operator()(std::ostream &amp;, Tuple <span class="keyword">const</span> &amp;) {}</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    };</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  } <span class="comment">// namespace detail</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tuple&gt;</div>
+<div class="foldopen" id="foldopen00103" data-start="{" data-end="}">
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="group__clef__utils.html#ga939b5f2a463e2e3f20130ea7d9216642">  103</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__utils.html#ga939b5f2a463e2e3f20130ea7d9216642">print_tuple</a>(std::ostream &amp;sout, Tuple <span class="keyword">const</span> &amp;t) {</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    detail::print_tuple_impl&lt;1, std::tuple_size_v&lt;Tuple&gt;&gt;()(sout, t);</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keywordflow">return</span> sout;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  }</div>
 </div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span></div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tag, <span class="keyword">typename</span> L&gt;</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <span class="keyword">requires</span> std::is_base_of_v&lt;tags::unary_op, Tag&gt;</div>
-<div class="foldopen" id="foldopen00130" data-start="{" data-end="}">
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno"><a class="line" href="group__clef__utils.html#ga323f896f8b42f86185a2fbe3fdde67fe">  130</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, <a class="code hl_struct" href="structnda_1_1clef_1_1expr.html">expr&lt;Tag, L&gt;</a> <span class="keyword">const</span> &amp;ex) {</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    <span class="keywordflow">return</span> sout &lt;&lt; <span class="stringliteral">&quot;(&quot;</span> &lt;&lt; Tag::name() &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; std::get&lt;0&gt;(ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>) &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>  }</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tag, <span class="keyword">typename</span> L&gt;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    <span class="keyword">requires</span> std::is_base_of_v&lt;tags::unary_op, Tag&gt;</div>
+<div class="foldopen" id="foldopen00119" data-start="{" data-end="}">
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="group__clef__utils.html#ga323f896f8b42f86185a2fbe3fdde67fe">  119</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, <a class="code hl_struct" href="structnda_1_1clef_1_1expr.html">expr&lt;Tag, L&gt;</a> <span class="keyword">const</span> &amp;ex) {</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keywordflow">return</span> sout &lt;&lt; <span class="stringliteral">&quot;(&quot;</span> &lt;&lt; Tag::name() &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; std::get&lt;0&gt;(ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>) &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  }</div>
 </div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span></div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tag, <span class="keyword">typename</span> L, <span class="keyword">typename</span> R&gt;</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <span class="keyword">requires</span> std::is_base_of_v&lt;tags::binary_op, Tag&gt;</div>
-<div class="foldopen" id="foldopen00146" data-start="{" data-end="}">
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno"><a class="line" href="group__clef__utils.html#ga0c28762b97869024db090c5c09f377bb">  146</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, <a class="code hl_struct" href="structnda_1_1clef_1_1expr.html">expr&lt;Tag, L, R&gt;</a> <span class="keyword">const</span> &amp;ex) {</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="keywordflow">return</span> sout &lt;&lt; <span class="stringliteral">&quot;(&quot;</span> &lt;&lt; std::get&lt;0&gt;(ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>) &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; Tag::name() &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; std::get&lt;1&gt;(ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>) &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  }</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Tag, <span class="keyword">typename</span> L, <span class="keyword">typename</span> R&gt;</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keyword">requires</span> std::is_base_of_v&lt;tags::binary_op, Tag&gt;</div>
+<div class="foldopen" id="foldopen00135" data-start="{" data-end="}">
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno"><a class="line" href="group__clef__utils.html#ga0c28762b97869024db090c5c09f377bb">  135</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, <a class="code hl_struct" href="structnda_1_1clef_1_1expr.html">expr&lt;Tag, L, R&gt;</a> <span class="keyword">const</span> &amp;ex) {</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    <span class="keywordflow">return</span> sout &lt;&lt; <span class="stringliteral">&quot;(&quot;</span> &lt;&lt; std::get&lt;0&gt;(ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>) &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; Tag::name() &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; std::get&lt;1&gt;(ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>) &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>  }</div>
 </div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span></div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> C, <span class="keyword">typename</span> A, <span class="keyword">typename</span> B&gt;</div>
-<div class="foldopen" id="foldopen00161" data-start="{" data-end="}">
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno"><a class="line" href="group__clef__utils.html#ga5ba7b914d452aee6ea65d0a50630d874">  161</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, <a class="code hl_struct" href="structnda_1_1clef_1_1expr.html">expr&lt;tags::if_else, C, A, B&gt;</a> <span class="keyword">const</span> &amp;ex) {</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="keywordflow">return</span> sout &lt;&lt; <span class="stringliteral">&quot;(&quot;</span> &lt;&lt; std::get&lt;0&gt;(ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>) &lt;&lt; <span class="stringliteral">&quot; ? &quot;</span> &lt;&lt; std::get&lt;1&gt;(ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>) &lt;&lt; <span class="stringliteral">&quot; : &quot;</span> &lt;&lt; std::get&lt;2&gt;(ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>) &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>  }</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span></div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> C, <span class="keyword">typename</span> A, <span class="keyword">typename</span> B&gt;</div>
+<div class="foldopen" id="foldopen00150" data-start="{" data-end="}">
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno"><a class="line" href="group__clef__utils.html#ga5ba7b914d452aee6ea65d0a50630d874">  150</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, <a class="code hl_struct" href="structnda_1_1clef_1_1expr.html">expr&lt;tags::if_else, C, A, B&gt;</a> <span class="keyword">const</span> &amp;ex) {</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    <span class="keywordflow">return</span> sout &lt;&lt; <span class="stringliteral">&quot;(&quot;</span> &lt;&lt; std::get&lt;0&gt;(ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>) &lt;&lt; <span class="stringliteral">&quot; ? &quot;</span> &lt;&lt; std::get&lt;1&gt;(ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>) &lt;&lt; <span class="stringliteral">&quot; : &quot;</span> &lt;&lt; std::get&lt;2&gt;(ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>) &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>  }</div>
 </div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span></div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Ts&gt;</div>
-<div class="foldopen" id="foldopen00174" data-start="{" data-end="}">
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno"><a class="line" href="group__clef__utils.html#ga86a676abecc42b6c00623c39b59f2613">  174</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, <a class="code hl_struct" href="structnda_1_1clef_1_1expr.html">expr&lt;tags::function, Ts...&gt;</a> <span class="keyword">const</span> &amp;ex) {</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    sout &lt;&lt; <span class="stringliteral">&quot;lambda&quot;</span></div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>         &lt;&lt; <span class="stringliteral">&quot;(&quot;</span>;</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <a class="code hl_function" href="group__clef__utils.html#ga939b5f2a463e2e3f20130ea7d9216642">print_tuple</a>(sout, ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>);</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    <span class="keywordflow">return</span> sout &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>  }</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span></div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Ts&gt;</div>
+<div class="foldopen" id="foldopen00163" data-start="{" data-end="}">
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno"><a class="line" href="group__clef__utils.html#ga86a676abecc42b6c00623c39b59f2613">  163</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, <a class="code hl_struct" href="structnda_1_1clef_1_1expr.html">expr&lt;tags::function, Ts...&gt;</a> <span class="keyword">const</span> &amp;ex) {</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    sout &lt;&lt; <span class="stringliteral">&quot;lambda&quot;</span></div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>         &lt;&lt; <span class="stringliteral">&quot;(&quot;</span>;</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <a class="code hl_function" href="group__clef__utils.html#ga939b5f2a463e2e3f20130ea7d9216642">print_tuple</a>(sout, ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>);</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <span class="keywordflow">return</span> sout &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>  }</div>
 </div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span></div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Ts&gt;</div>
-<div class="foldopen" id="foldopen00190" data-start="{" data-end="}">
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno"><a class="line" href="group__clef__utils.html#gab6156d3c69c04067003787f9c55536c8">  190</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, <a class="code hl_struct" href="structnda_1_1clef_1_1expr.html">expr&lt;tags::subscript, Ts...&gt;</a> <span class="keyword">const</span> &amp;ex) {</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    sout &lt;&lt; <span class="stringliteral">&quot;lambda&quot;</span></div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>         &lt;&lt; <span class="stringliteral">&quot;[&quot;</span>;</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    <a class="code hl_function" href="group__clef__utils.html#ga939b5f2a463e2e3f20130ea7d9216642">print_tuple</a>(sout, ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>);</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    <span class="keywordflow">return</span> sout &lt;&lt; <span class="stringliteral">&quot;]&quot;</span>;</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>  }</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span></div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Ts&gt;</div>
+<div class="foldopen" id="foldopen00179" data-start="{" data-end="}">
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno"><a class="line" href="group__clef__utils.html#gab6156d3c69c04067003787f9c55536c8">  179</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, <a class="code hl_struct" href="structnda_1_1clef_1_1expr.html">expr&lt;tags::subscript, Ts...&gt;</a> <span class="keyword">const</span> &amp;ex) {</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    sout &lt;&lt; <span class="stringliteral">&quot;lambda&quot;</span></div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>         &lt;&lt; <span class="stringliteral">&quot;[&quot;</span>;</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    <a class="code hl_function" href="group__clef__utils.html#ga939b5f2a463e2e3f20130ea7d9216642">print_tuple</a>(sout, ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>);</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    <span class="keywordflow">return</span> sout &lt;&lt; <span class="stringliteral">&quot;]&quot;</span>;</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>  }</div>
 </div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span></div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen00206" data-start="{" data-end="}">
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno"><a class="line" href="group__clef__utils.html#ga8f88268e4ae0cbe1bf7539361beb6d11">  206</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, <a class="code hl_struct" href="structnda_1_1clef_1_1expr.html">expr&lt;tags::terminal, T&gt;</a> <span class="keyword">const</span> &amp;ex) {</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    <span class="keywordflow">return</span> sout &lt;&lt; std::get&lt;0&gt;(ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>);</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>  }</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span></div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00195" data-start="{" data-end="}">
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno"><a class="line" href="group__clef__utils.html#ga8f88268e4ae0cbe1bf7539361beb6d11">  195</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, <a class="code hl_struct" href="structnda_1_1clef_1_1expr.html">expr&lt;tags::terminal, T&gt;</a> <span class="keyword">const</span> &amp;ex) {</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    <span class="keywordflow">return</span> sout &lt;&lt; std::get&lt;0&gt;(ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>);</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>  }</div>
 </div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span></div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen00219" data-start="{" data-end="}">
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno"><a class="line" href="group__clef__utils.html#ga89c51654131ba9068ec4656161a1c2ad">  219</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, <a class="code hl_struct" href="structnda_1_1clef_1_1expr.html">expr&lt;tags::subscript, T&gt;</a> <span class="keyword">const</span> &amp;ex) {</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    <span class="keywordflow">return</span> sout &lt;&lt; std::get&lt;0&gt;(ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>) &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; std::get&lt;1&gt;(ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>) &lt;&lt; <span class="stringliteral">&quot;]&quot;</span>;</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>  }</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span></div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00208" data-start="{" data-end="}">
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno"><a class="line" href="group__clef__utils.html#ga89c51654131ba9068ec4656161a1c2ad">  208</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, <a class="code hl_struct" href="structnda_1_1clef_1_1expr.html">expr&lt;tags::subscript, T&gt;</a> <span class="keyword">const</span> &amp;ex) {</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    <span class="keywordflow">return</span> sout &lt;&lt; std::get&lt;0&gt;(ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>) &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; std::get&lt;1&gt;(ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>) &lt;&lt; <span class="stringliteral">&quot;]&quot;</span>;</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>  }</div>
 </div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span></div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="foldopen" id="foldopen00232" data-start="{" data-end="}">
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno"><a class="line" href="group__clef__utils.html#gae32abd16f763a8e65a3c395a528c987d">  232</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, <a class="code hl_struct" href="structnda_1_1clef_1_1expr.html">expr&lt;tags::negate, T&gt;</a> <span class="keyword">const</span> &amp;ex) {</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    <span class="keywordflow">return</span> sout &lt;&lt; <span class="stringliteral">&quot;-(&quot;</span> &lt;&lt; std::get&lt;0&gt;(ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>) &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>  }</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span></div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen00221" data-start="{" data-end="}">
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno"><a class="line" href="group__clef__utils.html#gae32abd16f763a8e65a3c395a528c987d">  221</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, <a class="code hl_struct" href="structnda_1_1clef_1_1expr.html">expr&lt;tags::negate, T&gt;</a> <span class="keyword">const</span> &amp;ex) {</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    <span class="keywordflow">return</span> sout &lt;&lt; <span class="stringliteral">&quot;-(&quot;</span> &lt;&lt; std::get&lt;0&gt;(ex.<a class="code hl_variable" href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">childs</a>) &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>  }</div>
 </div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span></div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Expr, <span class="keywordtype">int</span>... Is&gt;</div>
-<div class="foldopen" id="foldopen00246" data-start="{" data-end="}">
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno"><a class="line" href="group__clef__utils.html#ga6b49341b6d9207839b5c9e93415dd7db">  246</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, <a class="code hl_struct" href="structnda_1_1clef_1_1make__fun__impl.html">make_fun_impl&lt;Expr, Is...&gt;</a> <span class="keyword">const</span> &amp;f) {</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    sout &lt;&lt; <span class="stringliteral">&quot;lazy function : (&quot;</span>;</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>    variadic_print(sout, <a class="code hl_struct" href="structnda_1_1clef_1_1placeholder.html">placeholder&lt;Is&gt;</a>()...);</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    <span class="keywordflow">return</span> sout &lt;&lt; <span class="stringliteral">&quot;) --&gt; &quot;</span> &lt;&lt; f.<a class="code hl_variable" href="structnda_1_1clef_1_1make__fun__impl.html#a54088d58ba49cf56dff861e5d0d20441">obj</a>;</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>  }</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span></div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Expr, <span class="keywordtype">int</span>... Is&gt;</div>
+<div class="foldopen" id="foldopen00235" data-start="{" data-end="}">
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno"><a class="line" href="group__clef__utils.html#ga6b49341b6d9207839b5c9e93415dd7db">  235</a></span>  std::ostream &amp;<a class="code hl_function" href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">operator&lt;&lt;</a>(std::ostream &amp;sout, <a class="code hl_struct" href="structnda_1_1clef_1_1make__fun__impl.html">make_fun_impl&lt;Expr, Is...&gt;</a> <span class="keyword">const</span> &amp;f) {</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    sout &lt;&lt; <span class="stringliteral">&quot;lazy function : (&quot;</span>;</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    variadic_print(sout, <a class="code hl_struct" href="structnda_1_1clef_1_1placeholder.html">placeholder&lt;Is&gt;</a>()...);</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    <span class="keywordflow">return</span> sout &lt;&lt; <span class="stringliteral">&quot;) --&gt; &quot;</span> &lt;&lt; f.<a class="code hl_variable" href="structnda_1_1clef_1_1make__fun__impl.html#a54088d58ba49cf56dff861e5d0d20441">obj</a>;</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>  }</div>
 </div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span></div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span> </div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>} <span class="comment">// namespace nda::clef</span></div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span></div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span> </div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>} <span class="comment">// namespace nda::clef</span></div>
 <div class="ttc" id="aclef_2clef_8hpp_html"><div class="ttname"><a href="clef_2clef_8hpp.html">clef.hpp</a></div><div class="ttdoc">Includes all relevant headers for the core clef library.</div></div>
-<div class="ttc" id="agroup__clef__autoassign_html_ga5e0a269e5b69ff3872a7ce85e97bfe38"><div class="ttname"><a href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">nda::clef::operator&lt;&lt;</a></div><div class="ttdeci">__inline__ void operator&lt;&lt;(expr&lt; tags::function, F, placeholder&lt; Is &gt;... &gt; const &amp;ex, RHS &amp;&amp;rhs)</div><div class="ttdoc">Assign values to the underlying object of a lazy function call expression.</div><div class="ttdef"><b>Definition</b> <a href="auto__assign_8hpp_source.html#l00106">auto_assign.hpp:106</a></div></div>
-<div class="ttc" id="agroup__clef__utils_html_ga939b5f2a463e2e3f20130ea7d9216642"><div class="ttname"><a href="group__clef__utils.html#ga939b5f2a463e2e3f20130ea7d9216642">nda::clef::print_tuple</a></div><div class="ttdeci">std::ostream &amp; print_tuple(std::ostream &amp;sout, Tuple const &amp;t)</div><div class="ttdoc">Print a std::tuple to std::ostream.</div><div class="ttdef"><b>Definition</b> <a href="#l00114">io.hpp:114</a></div></div>
-<div class="ttc" id="astructnda_1_1clef_1_1expr_html"><div class="ttname"><a href="structnda_1_1clef_1_1expr.html">nda::clef::expr</a></div><div class="ttdoc">Single node of the expression tree.</div><div class="ttdef"><b>Definition</b> <a href="expression_8hpp_source.html#l00076">expression.hpp:76</a></div></div>
-<div class="ttc" id="astructnda_1_1clef_1_1expr_html_ad6e985d027e555f68c437251ba02cb31"><div class="ttname"><a href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">nda::clef::expr::childs</a></div><div class="ttdeci">childs_t childs</div><div class="ttdoc">Child nodes of the current expression node.</div><div class="ttdef"><b>Definition</b> <a href="expression_8hpp_source.html#l00081">expression.hpp:81</a></div></div>
-<div class="ttc" id="astructnda_1_1clef_1_1make__fun__impl_html"><div class="ttname"><a href="structnda_1_1clef_1_1make__fun__impl.html">nda::clef::make_fun_impl</a></div><div class="ttdoc">Helper struct to simplify calls to nda::clef::eval.</div><div class="ttdef"><b>Definition</b> <a href="function_8hpp_source.html#l00052">function.hpp:52</a></div></div>
-<div class="ttc" id="astructnda_1_1clef_1_1make__fun__impl_html_a54088d58ba49cf56dff861e5d0d20441"><div class="ttname"><a href="structnda_1_1clef_1_1make__fun__impl.html#a54088d58ba49cf56dff861e5d0d20441">nda::clef::make_fun_impl::obj</a></div><div class="ttdeci">T obj</div><div class="ttdoc">Object to be evaluated.</div><div class="ttdef"><b>Definition</b> <a href="function_8hpp_source.html#l00054">function.hpp:54</a></div></div>
-<div class="ttc" id="astructnda_1_1clef_1_1placeholder_html"><div class="ttname"><a href="structnda_1_1clef_1_1placeholder.html">nda::clef::placeholder</a></div><div class="ttdoc">A placeholder is an empty struct, labelled by an int.</div><div class="ttdef"><b>Definition</b> <a href="placeholder_8hpp_source.html#l00061">placeholder.hpp:61</a></div></div>
+<div class="ttc" id="agroup__clef__autoassign_html_ga5e0a269e5b69ff3872a7ce85e97bfe38"><div class="ttname"><a href="group__clef__autoassign.html#ga5e0a269e5b69ff3872a7ce85e97bfe38">nda::clef::operator&lt;&lt;</a></div><div class="ttdeci">__inline__ void operator&lt;&lt;(expr&lt; tags::function, F, placeholder&lt; Is &gt;... &gt; const &amp;ex, RHS &amp;&amp;rhs)</div><div class="ttdoc">Assign values to the underlying object of a lazy function call expression.</div><div class="ttdef"><b>Definition</b> <a href="auto__assign_8hpp_source.html#l00095">auto_assign.hpp:95</a></div></div>
+<div class="ttc" id="agroup__clef__utils_html_ga939b5f2a463e2e3f20130ea7d9216642"><div class="ttname"><a href="group__clef__utils.html#ga939b5f2a463e2e3f20130ea7d9216642">nda::clef::print_tuple</a></div><div class="ttdeci">std::ostream &amp; print_tuple(std::ostream &amp;sout, Tuple const &amp;t)</div><div class="ttdoc">Print a std::tuple to std::ostream.</div><div class="ttdef"><b>Definition</b> <a href="#l00103">io.hpp:103</a></div></div>
+<div class="ttc" id="astructnda_1_1clef_1_1expr_html"><div class="ttname"><a href="structnda_1_1clef_1_1expr.html">nda::clef::expr</a></div><div class="ttdoc">Single node of the expression tree.</div><div class="ttdef"><b>Definition</b> <a href="expression_8hpp_source.html#l00065">expression.hpp:65</a></div></div>
+<div class="ttc" id="astructnda_1_1clef_1_1expr_html_ad6e985d027e555f68c437251ba02cb31"><div class="ttname"><a href="structnda_1_1clef_1_1expr.html#ad6e985d027e555f68c437251ba02cb31">nda::clef::expr::childs</a></div><div class="ttdeci">childs_t childs</div><div class="ttdoc">Child nodes of the current expression node.</div><div class="ttdef"><b>Definition</b> <a href="expression_8hpp_source.html#l00070">expression.hpp:70</a></div></div>
+<div class="ttc" id="astructnda_1_1clef_1_1make__fun__impl_html"><div class="ttname"><a href="structnda_1_1clef_1_1make__fun__impl.html">nda::clef::make_fun_impl</a></div><div class="ttdoc">Helper struct to simplify calls to nda::clef::eval.</div><div class="ttdef"><b>Definition</b> <a href="function_8hpp_source.html#l00041">function.hpp:41</a></div></div>
+<div class="ttc" id="astructnda_1_1clef_1_1make__fun__impl_html_a54088d58ba49cf56dff861e5d0d20441"><div class="ttname"><a href="structnda_1_1clef_1_1make__fun__impl.html#a54088d58ba49cf56dff861e5d0d20441">nda::clef::make_fun_impl::obj</a></div><div class="ttdeci">T obj</div><div class="ttdoc">Object to be evaluated.</div><div class="ttdef"><b>Definition</b> <a href="function_8hpp_source.html#l00043">function.hpp:43</a></div></div>
+<div class="ttc" id="astructnda_1_1clef_1_1placeholder_html"><div class="ttname"><a href="structnda_1_1clef_1_1placeholder.html">nda::clef::placeholder</a></div><div class="ttdoc">A placeholder is an empty struct, labelled by an int.</div><div class="ttdef"><b>Definition</b> <a href="placeholder_8hpp_source.html#l00050">placeholder.hpp:50</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

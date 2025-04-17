@@ -158,7 +158,7 @@ $(function(){initNavTree('ex5.html',''); initResizable(true); });
 <div class="line"><span class="keyword">auto</span> A = <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;int, 2&gt;</a>(5, 5);</div>
 <div class="line"><span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; <span class="keyword">auto</span> &amp;x : A) x = i++;</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;A = &quot;</span> &lt;&lt; A &lt;&lt; std::endl;</div>
-<div class="ttc" id="agroup__av__types_html_ga72f3fdf9760fa22c35442cdf2eb6768d"><div class="ttname"><a href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array</a></div><div class="ttdeci">basic_array&lt; ValueType, Rank, Layout, &#39;A&#39;, ContainerPolicy &gt; array</div><div class="ttdoc">Alias template of an nda::basic_array with an &#39;A&#39; algebra.</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00075">declarations.hpp:75</a></div></div>
+<div class="ttc" id="agroup__av__types_html_ga72f3fdf9760fa22c35442cdf2eb6768d"><div class="ttname"><a href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array</a></div><div class="ttdeci">basic_array&lt; ValueType, Rank, Layout, &#39;A&#39;, ContainerPolicy &gt; array</div><div class="ttdoc">Alias template of an nda::basic_array with an &#39;A&#39; algebra.</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00064">declarations.hpp:64</a></div></div>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">A =</div>
 <div class="line">[[0,1,2,3,4]</div>
@@ -231,7 +231,7 @@ Reading into an array/view</h2>
 <div class="line"><span class="keyword">auto</span> B_v = B(nda::range(1, 4), nda::range(0, 5, 2));</div>
 <div class="line">h5::read(file, <span class="stringliteral">&quot;A_v&quot;</span>, B_v);</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;B = &quot;</span> &lt;&lt; B &lt;&lt; std::endl;</div>
-<div class="ttc" id="agroup__av__factories_html_ga5e6f0a917ed3068ffa15842ee50f6e50"><div class="ttname"><a href="group__av__factories.html#ga5e6f0a917ed3068ffa15842ee50f6e50">nda::zeros</a></div><div class="ttdeci">auto zeros(std::array&lt; Int, Rank &gt; const &amp;shape)</div><div class="ttdoc">Make an array of the given shape on the given address space and zero-initialize it.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00061">basic_functions.hpp:61</a></div></div>
+<div class="ttc" id="agroup__av__factories_html_ga5e6f0a917ed3068ffa15842ee50f6e50"><div class="ttname"><a href="group__av__factories.html#ga5e6f0a917ed3068ffa15842ee50f6e50">nda::zeros</a></div><div class="ttdeci">auto zeros(std::array&lt; Int, Rank &gt; const &amp;shape)</div><div class="ttdoc">Make an array of the given shape on the given address space and zero-initialize it.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00050">basic_functions.hpp:50</a></div></div>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">B =</div>
 <div class="line">[[0,0,0,0,0]</div>

@@ -172,7 +172,7 @@ Broadcasting an array/view</h2>
 <div class="line">}</div>
 <div class="line">print(A, comm);</div>
 <div class="line">comm.barrier();</div>
-<div class="ttc" id="agroup__av__types_html_ga72f3fdf9760fa22c35442cdf2eb6768d"><div class="ttname"><a href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array</a></div><div class="ttdeci">basic_array&lt; ValueType, Rank, Layout, &#39;A&#39;, ContainerPolicy &gt; array</div><div class="ttdoc">Alias template of an nda::basic_array with an &#39;A&#39; algebra.</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00075">declarations.hpp:75</a></div></div>
+<div class="ttc" id="agroup__av__types_html_ga72f3fdf9760fa22c35442cdf2eb6768d"><div class="ttname"><a href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array</a></div><div class="ttdeci">basic_array&lt; ValueType, Rank, Layout, &#39;A&#39;, ContainerPolicy &gt; array</div><div class="ttdoc">Alias template of an nda::basic_array with an &#39;A&#39; algebra.</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00064">declarations.hpp:64</a></div></div>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">Rank 2:</div>
 <div class="line">[]</div>
@@ -287,7 +287,7 @@ Gathering an array/view</h2>
 <div class="line"><span class="keyword">auto</span> B_rg = mpi::gather(B_r, comm, root);</div>
 <div class="line">print(B_rg, comm);</div>
 <div class="line">comm.barrier();</div>
-<div class="ttc" id="agroup__av__factories_html_gaf06f490766f84271bb66553168570e2b"><div class="ttname"><a href="group__av__factories.html#gaf06f490766f84271bb66553168570e2b">nda::reshape</a></div><div class="ttdeci">auto reshape(A &amp;&amp;a, std::array&lt; Int, R &gt; const &amp;new_shape)</div><div class="ttdoc">Reshape an nda::basic_array or nda::basic_array_view.</div><div class="ttdef"><b>Definition</b> <a href="layout__transforms_8hpp_source.html#l00108">layout_transforms.hpp:108</a></div></div>
+<div class="ttc" id="agroup__av__factories_html_gaf06f490766f84271bb66553168570e2b"><div class="ttname"><a href="group__av__factories.html#gaf06f490766f84271bb66553168570e2b">nda::reshape</a></div><div class="ttdeci">auto reshape(A &amp;&amp;a, std::array&lt; Int, R &gt; const &amp;new_shape)</div><div class="ttdoc">Reshape an nda::basic_array or nda::basic_array_view.</div><div class="ttdef"><b>Definition</b> <a href="layout__transforms_8hpp_source.html#l00097">layout_transforms.hpp:97</a></div></div>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">Rank 1:</div>
 <div class="line">[]</div>
@@ -312,7 +312,7 @@ Gathering an array/view</h2>
 <div class="line"><span class="keyword">auto</span> B_fg = mpi::gather(<a class="code hl_function" href="group__av__factories.html#gab1366c1c79f31877f2d0a1596f323cee">nda::transpose</a>(B_f), comm, root);</div>
 <div class="line">print(B_fg, comm);</div>
 <div class="line">comm.barrier();</div>
-<div class="ttc" id="agroup__av__factories_html_gab1366c1c79f31877f2d0a1596f323cee"><div class="ttname"><a href="group__av__factories.html#gab1366c1c79f31877f2d0a1596f323cee">nda::transpose</a></div><div class="ttdeci">auto transpose(A &amp;&amp;a)</div><div class="ttdoc">Transpose the memory layout of an nda::MemoryArray or an nda::expr_call.</div><div class="ttdef"><b>Definition</b> <a href="layout__transforms_8hpp_source.html#l00191">layout_transforms.hpp:191</a></div></div>
+<div class="ttc" id="agroup__av__factories_html_gab1366c1c79f31877f2d0a1596f323cee"><div class="ttname"><a href="group__av__factories.html#gab1366c1c79f31877f2d0a1596f323cee">nda::transpose</a></div><div class="ttdeci">auto transpose(A &amp;&amp;a)</div><div class="ttdoc">Transpose the memory layout of an nda::MemoryArray or an nda::expr_call.</div><div class="ttdef"><b>Definition</b> <a href="layout__transforms_8hpp_source.html#l00180">layout_transforms.hpp:180</a></div></div>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">Rank 1:</div>
 <div class="line">[]</div>

@@ -120,14 +120,14 @@ $(function(){initNavTree('group__clef__autoassign.html',''); initResizable(true)
 <div class="line"><a class="code hl_struct" href="structnda_1_1clef_1_1placeholder.html">nda::clef::placeholder&lt;1&gt;</a> j_;</div>
 <div class="line"><a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;int, 2&gt;</a> a(2, 3);</div>
 <div class="line">a(i_, j_) &lt;&lt; 10 * i_ + j_;</div>
-<div class="ttc" id="agroup__av__types_html_ga72f3fdf9760fa22c35442cdf2eb6768d"><div class="ttname"><a href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array</a></div><div class="ttdeci">basic_array&lt; ValueType, Rank, Layout, &#39;A&#39;, ContainerPolicy &gt; array</div><div class="ttdoc">Alias template of an nda::basic_array with an &#39;A&#39; algebra.</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00075">declarations.hpp:75</a></div></div>
-<div class="ttc" id="astructnda_1_1clef_1_1placeholder_html"><div class="ttname"><a href="structnda_1_1clef_1_1placeholder.html">nda::clef::placeholder</a></div><div class="ttdoc">A placeholder is an empty struct, labelled by an int.</div><div class="ttdef"><b>Definition</b> <a href="placeholder_8hpp_source.html#l00061">placeholder.hpp:61</a></div></div>
+<div class="ttc" id="agroup__av__types_html_ga72f3fdf9760fa22c35442cdf2eb6768d"><div class="ttname"><a href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array</a></div><div class="ttdeci">basic_array&lt; ValueType, Rank, Layout, &#39;A&#39;, ContainerPolicy &gt; array</div><div class="ttdoc">Alias template of an nda::basic_array with an &#39;A&#39; algebra.</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00064">declarations.hpp:64</a></div></div>
+<div class="ttc" id="astructnda_1_1clef_1_1placeholder_html"><div class="ttname"><a href="structnda_1_1clef_1_1placeholder.html">nda::clef::placeholder</a></div><div class="ttdoc">A placeholder is an empty struct, labelled by an int.</div><div class="ttdef"><b>Definition</b> <a href="placeholder_8hpp_source.html#l00050">placeholder.hpp:50</a></div></div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>The <code>operator&lt;&lt;</code> in line 3 calls the <code>clef_auto_assign</code> overload for <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> objects.</dd></dl>
 <p>We can also use auto assignment to fill a std::vector of size 3 with the values 10, 20 and 30:</p>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structnda_1_1clef_1_1placeholder.html">nda::clef::placeholder&lt;0&gt;</a> i_;</div>
 <div class="line">std::vector&lt;int&gt; v(3);</div>
 <div class="line"><a class="code hl_function" href="group__clef__expr.html#ga2b0dc5d35be11cfea1e48d9759b9c848">nda::clef::make_expr</a>(v)[i_] &lt;&lt; 10 * (i_ + 1);</div>
-<div class="ttc" id="agroup__clef__expr_html_ga2b0dc5d35be11cfea1e48d9759b9c848"><div class="ttname"><a href="group__clef__expr.html#ga2b0dc5d35be11cfea1e48d9759b9c848">nda::clef::make_expr</a></div><div class="ttdeci">auto make_expr(T &amp;&amp;t)</div><div class="ttdoc">Create a terminal expression node of an object.</div><div class="ttdef"><b>Definition</b> <a href="make__lazy_8hpp_source.html#l00045">make_lazy.hpp:45</a></div></div>
+<div class="ttc" id="agroup__clef__expr_html_ga2b0dc5d35be11cfea1e48d9759b9c848"><div class="ttname"><a href="group__clef__expr.html#ga2b0dc5d35be11cfea1e48d9759b9c848">nda::clef::make_expr</a></div><div class="ttdeci">auto make_expr(T &amp;&amp;t)</div><div class="ttdoc">Create a terminal expression node of an object.</div><div class="ttdef"><b>Definition</b> <a href="make__lazy_8hpp_source.html#l00034">make_lazy.hpp:34</a></div></div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>The <code>operator&lt;&lt;</code> in line 3 calls the <code>clef_auto_assign_subscript</code> overload for std::vector objects.</dd></dl>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -215,7 +215,7 @@ template&lt;typename Tag, typename... Childs, typename RHS&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="auto__assign_8hpp_source.html#l00083">83</a> of file <a class="el" href="auto__assign_8hpp_source.html">auto_assign.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="auto__assign_8hpp_source.html#l00072">72</a> of file <a class="el" href="auto__assign_8hpp_source.html">auto_assign.hpp</a>.</p>
 
 </div>
 </div>
@@ -259,7 +259,7 @@ template&lt;typename T, typename RHS&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="auto__assign_8hpp_source.html#l00067">67</a> of file <a class="el" href="auto__assign_8hpp_source.html">auto_assign.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="auto__assign_8hpp_source.html#l00056">56</a> of file <a class="el" href="auto__assign_8hpp_source.html">auto_assign.hpp</a>.</p>
 
 </div>
 </div>
@@ -303,7 +303,7 @@ template&lt;typename T, typename RHS&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="auto__assign_8hpp_source.html#l00052">52</a> of file <a class="el" href="auto__assign_8hpp_source.html">auto_assign.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="auto__assign_8hpp_source.html#l00041">41</a> of file <a class="el" href="auto__assign_8hpp_source.html">auto_assign.hpp</a>.</p>
 
 </div>
 </div>
@@ -346,7 +346,7 @@ template&lt;Array A, typename F&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00532">532</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00521">521</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -391,7 +391,7 @@ template&lt;typename Tag, typename... Childs, typename RHS&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="auto__assign__subscript_8hpp_source.html#l00087">87</a> of file <a class="el" href="auto__assign__subscript_8hpp_source.html">auto_assign_subscript.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="auto__assign__subscript_8hpp_source.html#l00076">76</a> of file <a class="el" href="auto__assign__subscript_8hpp_source.html">auto_assign_subscript.hpp</a>.</p>
 
 </div>
 </div>
@@ -435,7 +435,7 @@ template&lt;typename T, typename RHS&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="auto__assign__subscript_8hpp_source.html#l00071">71</a> of file <a class="el" href="auto__assign__subscript_8hpp_source.html">auto_assign_subscript.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="auto__assign__subscript_8hpp_source.html#l00060">60</a> of file <a class="el" href="auto__assign__subscript_8hpp_source.html">auto_assign_subscript.hpp</a>.</p>
 
 </div>
 </div>
@@ -479,7 +479,7 @@ template&lt;typename T, typename RHS&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="auto__assign__subscript_8hpp_source.html#l00056">56</a> of file <a class="el" href="auto__assign__subscript_8hpp_source.html">auto_assign_subscript.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="auto__assign__subscript_8hpp_source.html#l00045">45</a> of file <a class="el" href="auto__assign__subscript_8hpp_source.html">auto_assign_subscript.hpp</a>.</p>
 
 </div>
 </div>
@@ -522,7 +522,7 @@ template&lt;typename T, typename F&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="vector_8hpp_source.html#l00061">61</a> of file <a class="el" href="vector_8hpp_source.html">vector.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vector_8hpp_source.html#l00050">50</a> of file <a class="el" href="vector_8hpp_source.html">vector.hpp</a>.</p>
 
 </div>
 </div>
@@ -567,7 +567,7 @@ template&lt;typename F, typename RHS, int... Is&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="auto__assign_8hpp_source.html#l00106">106</a> of file <a class="el" href="auto__assign_8hpp_source.html">auto_assign.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="auto__assign_8hpp_source.html#l00095">95</a> of file <a class="el" href="auto__assign_8hpp_source.html">auto_assign.hpp</a>.</p>
 
 </div>
 </div>
@@ -612,7 +612,7 @@ template&lt;typename T, typename RHS, int... Is&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="auto__assign__subscript_8hpp_source.html#l00110">110</a> of file <a class="el" href="auto__assign__subscript_8hpp_source.html">auto_assign_subscript.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="auto__assign__subscript_8hpp_source.html#l00099">99</a> of file <a class="el" href="auto__assign__subscript_8hpp_source.html">auto_assign_subscript.hpp</a>.</p>
 
 </div>
 </div>

@@ -138,8 +138,8 @@ class nda::basic_array&lt; ValueType, Rank, LayoutPolicy, Algebra, ContainerPoli
 <div class="line"><span class="comment">// assign the value 42 to the first row</span></div>
 <div class="line">arr(0, <a class="code hl_struct" href="structnda_1_1ellipsis.html">nda::ellipsis</a>{}) = 42;</div>
 <div class="line">std::cout &lt;&lt; arr &lt;&lt; std::endl;</div>
-<div class="ttc" id="agroup__av__factories_html_gae219356600666990aed1a80bc164eab9"><div class="ttname"><a href="group__av__factories.html#gae219356600666990aed1a80bc164eab9">nda::ones</a></div><div class="ttdeci">auto ones(std::array&lt; Int, Rank &gt; const &amp;shape)</div><div class="ttdoc">Make an array of the given shape and one-initialize it.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00099">basic_functions.hpp:99</a></div></div>
-<div class="ttc" id="astructnda_1_1ellipsis_html"><div class="ttname"><a href="structnda_1_1ellipsis.html">nda::ellipsis</a></div><div class="ttdoc">Mimics Python&#39;s ... syntax.</div><div class="ttdef"><b>Definition</b> <a href="range_8hpp_source.html#l00049">range.hpp:49</a></div></div>
+<div class="ttc" id="agroup__av__factories_html_gae219356600666990aed1a80bc164eab9"><div class="ttname"><a href="group__av__factories.html#gae219356600666990aed1a80bc164eab9">nda::ones</a></div><div class="ttdeci">auto ones(std::array&lt; Int, Rank &gt; const &amp;shape)</div><div class="ttdoc">Make an array of the given shape and one-initialize it.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00088">basic_functions.hpp:88</a></div></div>
+<div class="ttc" id="astructnda_1_1ellipsis_html"><div class="ttname"><a href="structnda_1_1ellipsis.html">nda::ellipsis</a></div><div class="ttdoc">Mimics Python&#39;s ... syntax.</div><div class="ttdef"><b>Definition</b> <a href="range_8hpp_source.html#l00036">range.hpp:36</a></div></div>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">[[1,1]</div>
 <div class="line"> [1,1]</div>
@@ -160,7 +160,7 @@ class nda::basic_array&lt; ValueType, Rank, LayoutPolicy, Algebra, ContainerPoli
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00113">113</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00100">100</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -529,7 +529,7 @@ template&lt;char A, typename CP&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00217">217</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00204">204</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -576,7 +576,7 @@ requires (sizeof...(Ints) == Rank)</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00230">230</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00217">217</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -628,7 +628,7 @@ requires ((Rank == 1 and <a class="el" href="group__utils__type__traits.html#ga6
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00245">245</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00232">232</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -675,7 +675,7 @@ requires (std::is_default_constructible_v&lt;ValueType&gt;)</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00260">260</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00247">247</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -713,7 +713,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00271">271</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00258">258</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -756,7 +756,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00283">283</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00270">270</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -802,7 +802,7 @@ requires (HasValueTypeConstructibleFrom&lt;A, ValueType&gt;)</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00293">293</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00280">280</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -848,7 +848,7 @@ template&lt;ArrayInitializer&lt; <a class="el" href="classnda_1_1basic__array.ht
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00317">317</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00304">304</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -885,7 +885,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00339">339</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00326">326</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -922,7 +922,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00350">350</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00337">337</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -959,7 +959,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00365">365</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00352">352</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1006,7 +1006,7 @@ requires (Rank == 2)</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00390">390</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00377">377</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1039,7 +1039,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 <p>Convert the current array to a view with an 'A' (array) algebra. </p>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> of the current array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00176">176</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00163">163</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1071,7 +1071,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 <p>Convert the current array to a view with an 'A' (array) algebra. </p>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> of the current array with const value type. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00182">182</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00169">169</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1126,7 +1126,7 @@ template&lt;char ResultAlgebra, bool SelfIsRvalue, typename Self, typename... Ts
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Result of the function call depending on the given arguments and type of the view/array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00788">788</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00764">764</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1158,7 +1158,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 <p>Get a pointer to the actual data (in general this is not the beginning of the memory block for a view). </p>
 <dl class="section return"><dt>Returns</dt><dd>Const pointer to the first element of the view/array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00652">652</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00628">628</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1190,7 +1190,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 <p>Get a pointer to the actual data (in general this is not the beginning of thr memory block for a view). </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to the first element of the view/array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00658">658</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00634">634</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1222,7 +1222,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 <p>Is the view/array empty? </p>
 <dl class="section return"><dt>Returns</dt><dd>True if the view/array does not contain any elements. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00694">694</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00670">670</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1254,7 +1254,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 <p>Get the extent of the i<sup>th</sup> dimension. </p>
 <dl class="section return"><dt>Returns</dt><dd>Number of elements along the i<sup>th</sup> dimension. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00703">703</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00679">679</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1286,7 +1286,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 <p>Are all the strides of the memory layout of the view/array positive? </p>
 <dl class="section return"><dt>Returns</dt><dd>True if the <a class="el" href="classnda_1_1idx__map.html" title="Layout that specifies how to map multi-dimensional indices to a linear/flat index.">nda::idx_map</a> has positive strides, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00688">688</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00664">664</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1318,7 +1318,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 <p>Get the memory layout of the view/array. </p>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classnda_1_1idx__map.html" title="Layout that specifies how to map multi-dimensional indices to a linear/flat index.">nda::idx_map</a> specifying the layout of the view/array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00620">620</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00596">596</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1350,7 +1350,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 <p>Get a range that generates all valid index tuples. </p>
 <dl class="section return"><dt>Returns</dt><dd>An <code>itertools::multiplied</code> range that can be used to iterate over all valid index tuples. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00720">720</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00696">696</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1382,7 +1382,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 <p>Is the memory layout of the view/array contiguous? </p>
 <dl class="section return"><dt>Returns</dt><dd>True if the <a class="el" href="classnda_1_1idx__map.html" title="Layout that specifies how to map multi-dimensional indices to a linear/flat index.">nda::idx_map</a> is contiguous, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00682">682</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00658">658</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1412,7 +1412,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 </div><div class="memdoc">
 <dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000005">Deprecated</a></b></dt><dd>Use <a class="el" href="#a6d8c573b1dc4875c276054c6e988ddd3" title="Is the view/array empty?">empty()</a> instead. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00697">697</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00673">673</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1444,7 +1444,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 <p>Is the stride order of the view/array in C-order? </p>
 <dl class="section return"><dt>Returns</dt><dd>True if the stride order of the <a class="el" href="classnda_1_1idx__map.html" title="Layout that specifies how to map multi-dimensional indices to a linear/flat index.">nda::idx_map</a> is C-order, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00726">726</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00702">702</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1476,7 +1476,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 <p>Is the stride order of the view/array in Fortran-order? </p>
 <dl class="section return"><dt>Returns</dt><dd>True if the stride order of the <a class="el" href="classnda_1_1idx__map.html" title="Layout that specifies how to map multi-dimensional indices to a linear/flat index.">nda::idx_map</a> is Fortran-order, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00732">732</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00708">708</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1523,7 +1523,7 @@ requires (sizeof...(Ints) == Rank)</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>One-initialized array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00446">446</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00433">433</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1570,7 +1570,7 @@ requires (<a class="el" href="group__utils__type__traits.html#gadb69652fdcf2bc30
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>One-initialized array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00430">430</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00417">417</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1609,7 +1609,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Const reference to the element at the given linear index. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00743">743</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00719">719</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1669,7 +1669,7 @@ template&lt;typename... Ts&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Result of the function call depending on the given arguments and type of the view/array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00853">853</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00829">829</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1717,7 +1717,7 @@ template&lt;typename RHS&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Reference to this object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l01009">1009</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00985">985</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1765,7 +1765,7 @@ template&lt;typename RHS&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Reference to this object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00973">973</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00949">949</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1813,7 +1813,7 @@ template&lt;typename RHS&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Reference to this object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00991">991</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00967">967</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1861,7 +1861,7 @@ template&lt;typename RHS&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Reference to this object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l01027">1027</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l01003">1003</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1908,7 +1908,7 @@ template&lt;char A, typename CP&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00513">513</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00500">500</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -1954,7 +1954,7 @@ template&lt;ArrayInitializer&lt; <a class="el" href="classnda_1_1basic__array.ht
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00562">562</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00549">549</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -2001,7 +2001,7 @@ requires (Rank == 1 and not MemoryArray&lt;R&gt; and not <a class="el" href="gro
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Reference to this object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l01041">1041</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l01017">1017</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -2047,7 +2047,7 @@ template&lt;ArrayOfRank&lt; Rank &gt; RHS&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00528">528</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00515">515</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -2097,7 +2097,7 @@ requires (<a class="el" href="group__utils__type__traits.html#ga6af5475247be0243
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00545">545</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00532">532</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -2152,7 +2152,7 @@ template&lt;typename T&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Result of the subscript operation depending on the given argument and type of the view/array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00893">893</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00869">869</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -2200,7 +2200,7 @@ requires (sizeof...(Ints) == Rank)</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Random-initialized array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00490">490</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00477">477</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -2248,7 +2248,7 @@ requires (std::is_floating_point_v&lt;ValueType&gt; or <a class="el" href="group
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Random-initialized array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00463">463</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00450">450</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -2294,7 +2294,7 @@ template&lt;std::integral... Ints&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00579">579</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00566">566</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -2332,7 +2332,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00594">594</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00581">581</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -2364,7 +2364,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 <p>Get the shape of the view/array. </p>
 <dl class="section return"><dt>Returns</dt><dd><code>std::array&lt;long, Rank&gt;</code> object specifying the shape of the view/array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00664">664</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00640">640</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -2394,7 +2394,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 </div><div class="memdoc">
 <dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000006">Deprecated</a></b></dt><dd>Use <code>extent(i)</code> or <code><a class="el" href="#adab520b56c36cf8eabffee5f869ce15a" title="Get the shape of the view/array.">shape()</a>[i]</code> instead. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00714">714</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00690">690</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -2426,7 +2426,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 <p>Get the total size of the view/array. </p>
 <dl class="section return"><dt>Returns</dt><dd>Number of elements contained in the view/array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00676">676</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00652">652</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -2458,7 +2458,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 <p>Get the data storage of the view/array. </p>
 <dl class="section return"><dt>Returns</dt><dd>A copy of the memory handle of the view/array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00638">638</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00614">614</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -2490,7 +2490,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 <p>Get the data storage of the view/array. </p>
 <dl class="section return"><dt>Returns</dt><dd>A reference to the memory handle of the view/array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00632">632</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00608">608</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -2522,7 +2522,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 <p>Get the data storage of the view/array. </p>
 <dl class="section return"><dt>Returns</dt><dd>A const reference to the memory handle of the view/array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00626">626</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00602">602</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -2554,7 +2554,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 <p>Get the stride order of the memory layout of the view/array (see <a class="el" href="classnda_1_1idx__map.html" title="Layout that specifies how to map multi-dimensional indices to a linear/flat index.">nda::idx_map</a> for more details on how we define stride orders). </p>
 <dl class="section return"><dt>Returns</dt><dd><code>std::array&lt;int, Rank&gt;</code> object specifying the stride order. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00646">646</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00622">622</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -2586,7 +2586,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 <p>Get the strides of the view/array (see <a class="el" href="classnda_1_1idx__map.html" title="Layout that specifies how to map multi-dimensional indices to a linear/flat index.">nda::idx_map</a> for more details on how we define strides). </p>
 <dl class="section return"><dt>Returns</dt><dd><code>std::array&lt;long, Rank&gt;</code> object specifying the strides of the view/array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00670">670</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00646">646</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -2616,7 +2616,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 </div><div class="memdoc">
 <dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000003">Deprecated</a></b></dt><dd>Create the transpose of a 2-dimensional array. Use <a class="el" href="group__av__factories.html#gab1366c1c79f31877f2d0a1596f323cee" title="Transpose the memory layout of an nda::MemoryArray or an nda::expr_call.">nda::transpose</a> instead. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00185">185</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00172">172</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -2646,7 +2646,7 @@ template&lt;typename ValueType, int Rank, typename LayoutPolicy, char Algebra, t
 </div><div class="memdoc">
 <dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000004">Deprecated</a></b></dt><dd>Create the transpose of a 2-dimensional array. Use <a class="el" href="group__av__factories.html#gab1366c1c79f31877f2d0a1596f323cee" title="Transpose the memory layout of an nda::MemoryArray or an nda::expr_call.">nda::transpose</a> instead. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00192">192</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00179">179</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -2693,7 +2693,7 @@ requires (sizeof...(Ints) == Rank)</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Zero-initialized array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00416">416</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00403">403</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>
@@ -2740,7 +2740,7 @@ requires (std::is_standard_layout_v&lt;ValueType&gt; &amp;&amp; std::is_triviall
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Zero-initialized array. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00402">402</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__array_8hpp_source.html#l00389">389</a> of file <a class="el" href="basic__array_8hpp_source.html">basic_array.hpp</a>.</p>
 
 </div>
 </div>

@@ -111,48 +111,37 @@ $(function(){initNavTree('cross__product_8hpp_source.html',''); initResizable(tr
   <div class="headertitle"><div class="title">cross_product.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="cross__product_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright (c) 2020-2024 Simons Foundation</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">//</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// you may not use this file except in compliance with the License.</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">// You may obtain a copy of the License at</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment">//</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">//     http://www.apache.org/licenses/LICENSE-2.0.txt</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">//</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment">// Unless required by applicable law or agreed to in writing, software</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">// See the License for the specific language governing permissions and</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">// limitations under the License.</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">//</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">// Authors: Thomas Hahn, Olivier Parcollet, Nils Wentzell</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;<a class="code" href="declarations_8hpp.html">../declarations.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;<a class="code" href="macros_8hpp.html">../macros.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;<a class="code" href="traits_8hpp.html">../traits.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">namespace </span>nda::linalg {</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> V&gt;</div>
-<div class="foldopen" id="foldopen00040" data-start="{" data-end="}">
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="group__linalg__tools.html#ga25ac6b5f84880602b6c042d7b08fdafa">   40</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__linalg__tools.html#ga25ac6b5f84880602b6c042d7b08fdafa">cross_product</a>(V <span class="keyword">const</span> &amp;x, V <span class="keyword">const</span> &amp;y) {</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    EXPECTS_WITH_MESSAGE(x.shape()[0] == 3, <span class="stringliteral">&quot;nda::linalg::cross_product: Only defined for 3-dimensional vectors&quot;</span>);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    EXPECTS_WITH_MESSAGE(y.shape()[0] == 3, <span class="stringliteral">&quot;nda::linalg::cross_product: Only defined for 3-dimensional vectors&quot;</span>);</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">array&lt;get_value_t&lt;V&gt;</a>, 1&gt; r(3);</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    r(0) = x(1) * y(2) - y(1) * x(2);</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    r(1) = -x(0) * y(2) + y(0) * x(2);</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    r(2) = x(0) * y(1) - y(0) * x(1);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordflow">return</span> r;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  }</div>
+<a href="cross__product_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright (c) 2020--present, The Simons Foundation</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// This file is part of TRIQS/nda and is licensed under the Apache License, Version 2.0.</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// SPDX-License-Identifier: Apache-2.0</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// See LICENSE in the root of this distribution for details.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="declarations_8hpp.html">../declarations.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="macros_8hpp.html">../macros.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="traits_8hpp.html">../traits.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">namespace </span>nda::linalg {</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> V&gt;</div>
+<div class="foldopen" id="foldopen00029" data-start="{" data-end="}">
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="group__linalg__tools.html#ga25ac6b5f84880602b6c042d7b08fdafa">   29</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__linalg__tools.html#ga25ac6b5f84880602b6c042d7b08fdafa">cross_product</a>(V <span class="keyword">const</span> &amp;x, V <span class="keyword">const</span> &amp;y) {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    EXPECTS_WITH_MESSAGE(x.shape()[0] == 3, <span class="stringliteral">&quot;nda::linalg::cross_product: Only defined for 3-dimensional vectors&quot;</span>);</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    EXPECTS_WITH_MESSAGE(y.shape()[0] == 3, <span class="stringliteral">&quot;nda::linalg::cross_product: Only defined for 3-dimensional vectors&quot;</span>);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">array&lt;get_value_t&lt;V&gt;</a>, 1&gt; r(3);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    r(0) = x(1) * y(2) - y(1) * x(2);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    r(1) = -x(0) * y(2) + y(0) * x(2);</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    r(2) = x(0) * y(1) - y(0) * x(1);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keywordflow">return</span> r;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  }</div>
 </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>} <span class="comment">// namespace nda::linalg</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>} <span class="comment">// namespace nda::linalg</span></div>
 <div class="ttc" id="adeclarations_8hpp_html"><div class="ttname"><a href="declarations_8hpp.html">declarations.hpp</a></div><div class="ttdoc">Provides various convenient aliases and helper functions for nda::basic_array and nda::basic_array_vi...</div></div>
-<div class="ttc" id="agroup__av__types_html_ga72f3fdf9760fa22c35442cdf2eb6768d"><div class="ttname"><a href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array</a></div><div class="ttdeci">basic_array&lt; ValueType, Rank, Layout, &#39;A&#39;, ContainerPolicy &gt; array</div><div class="ttdoc">Alias template of an nda::basic_array with an &#39;A&#39; algebra.</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00075">declarations.hpp:75</a></div></div>
-<div class="ttc" id="agroup__linalg__tools_html_ga25ac6b5f84880602b6c042d7b08fdafa"><div class="ttname"><a href="group__linalg__tools.html#ga25ac6b5f84880602b6c042d7b08fdafa">nda::linalg::cross_product</a></div><div class="ttdeci">auto cross_product(V const &amp;x, V const &amp;y)</div><div class="ttdoc">Compute the cross product of two 3-dimensional vectors.</div><div class="ttdef"><b>Definition</b> <a href="#l00040">cross_product.hpp:40</a></div></div>
+<div class="ttc" id="agroup__av__types_html_ga72f3fdf9760fa22c35442cdf2eb6768d"><div class="ttname"><a href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array</a></div><div class="ttdeci">basic_array&lt; ValueType, Rank, Layout, &#39;A&#39;, ContainerPolicy &gt; array</div><div class="ttdoc">Alias template of an nda::basic_array with an &#39;A&#39; algebra.</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00064">declarations.hpp:64</a></div></div>
+<div class="ttc" id="agroup__linalg__tools_html_ga25ac6b5f84880602b6c042d7b08fdafa"><div class="ttname"><a href="group__linalg__tools.html#ga25ac6b5f84880602b6c042d7b08fdafa">nda::linalg::cross_product</a></div><div class="ttdeci">auto cross_product(V const &amp;x, V const &amp;y)</div><div class="ttdoc">Compute the cross product of two 3-dimensional vectors.</div><div class="ttdef"><b>Definition</b> <a href="#l00029">cross_product.hpp:29</a></div></div>
 <div class="ttc" id="amacros_8hpp_html"><div class="ttname"><a href="macros_8hpp.html">macros.hpp</a></div><div class="ttdoc">Macros used in the nda library.</div></div>
 <div class="ttc" id="atraits_8hpp_html"><div class="ttname"><a href="traits_8hpp.html">traits.hpp</a></div><div class="ttdoc">Provides type traits for the nda library.</div></div>
 </div><!-- fragment --></div><!-- contents -->

@@ -123,8 +123,8 @@ struct nda::expr_call&lt; F, As &gt;</div><p>A lazy function call expression on 
 <p>The lazy expression call fulfils the <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> concept and can therefore be assigned to other <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> objects. For example:</p>
 <div class="fragment"><div class="line"><a class="code hl_typedef" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1">nda::matrix&lt;int&gt;</a> mat{{1, 2}, {3, 4}};</div>
 <div class="line"><a class="code hl_typedef" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1">nda::matrix&lt;int&gt;</a> pmat = <a class="code hl_function" href="group__av__math.html#ga6900d4319e73e27201a65f96d082289f">nda::pow</a>(mat, 2);</div>
-<div class="ttc" id="agroup__av__math_html_ga6900d4319e73e27201a65f96d082289f"><div class="ttname"><a href="group__av__math.html#ga6900d4319e73e27201a65f96d082289f">nda::pow</a></div><div class="ttdeci">auto pow(A &amp;&amp;a, double p)</div><div class="ttdoc">Function pow for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).</div><div class="ttdef"><b>Definition</b> <a href="mapped__functions_8hpp_source.html#l00088">mapped_functions.hpp:88</a></div></div>
-<div class="ttc" id="agroup__av__types_html_gacf63083a75025ccec1ee927d1bade8d1"><div class="ttname"><a href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1">nda::matrix</a></div><div class="ttdeci">basic_array&lt; ValueType, 2, Layout, &#39;M&#39;, ContainerPolicy &gt; matrix</div><div class="ttdoc">Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00128">declarations.hpp:128</a></div></div>
+<div class="ttc" id="agroup__av__math_html_ga6900d4319e73e27201a65f96d082289f"><div class="ttname"><a href="group__av__math.html#ga6900d4319e73e27201a65f96d082289f">nda::pow</a></div><div class="ttdeci">auto pow(A &amp;&amp;a, double p)</div><div class="ttdoc">Function pow for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).</div><div class="ttdef"><b>Definition</b> <a href="mapped__functions_8hpp_source.html#l00077">mapped_functions.hpp:77</a></div></div>
+<div class="ttc" id="agroup__av__types_html_gacf63083a75025ccec1ee927d1bade8d1"><div class="ttname"><a href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1">nda::matrix</a></div><div class="ttdeci">basic_array&lt; ValueType, 2, Layout, &#39;M&#39;, ContainerPolicy &gt; matrix</div><div class="ttdoc">Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00117">declarations.hpp:117</a></div></div>
 </div><!-- fragment --><p>Here, <code>nda::pow(mat, 2)</code> returns a lazy expression call object which is then used in the constructor of <code>pmat</code>.</p>
 <p>The callable object should take the array/view elements as arguments.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
@@ -135,7 +135,7 @@ struct nda::expr_call&lt; F, As &gt;</div><p>A lazy function call expression on 
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="map_8hpp_source.html#l00090">90</a> of file <a class="el" href="map_8hpp_source.html">map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="map_8hpp_source.html#l00079">79</a> of file <a class="el" href="map_8hpp_source.html">map.hpp</a>.</p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -210,7 +210,7 @@ template&lt;typename... Args&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The result of the function call (depends on the callable and the arguments). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="map_8hpp_source.html#l00129">129</a> of file <a class="el" href="map_8hpp_source.html">map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="map_8hpp_source.html#l00118">118</a> of file <a class="el" href="map_8hpp_source.html">map.hpp</a>.</p>
 
 </div>
 </div>
@@ -258,7 +258,7 @@ template&lt;typename Arg&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The result of the subscript operation (depends on the callable and the arguments). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="map_8hpp_source.html#l00146">146</a> of file <a class="el" href="map_8hpp_source.html">map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="map_8hpp_source.html#l00135">135</a> of file <a class="el" href="map_8hpp_source.html">map.hpp</a>.</p>
 
 </div>
 </div>
@@ -290,7 +290,7 @@ template&lt;typename F, Array... As&gt; </div>
 <p>Get the shape of the <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> objects. </p>
 <dl class="section return"><dt>Returns</dt><dd><code>std::array&lt;long, Rank&gt;</code> object specifying the shape of each <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="map_8hpp_source.html#l00155">155</a> of file <a class="el" href="map_8hpp_source.html">map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="map_8hpp_source.html#l00144">144</a> of file <a class="el" href="map_8hpp_source.html">map.hpp</a>.</p>
 
 </div>
 </div>
@@ -322,7 +322,7 @@ template&lt;typename F, Array... As&gt; </div>
 <p>Get the total size of the <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> objects. </p>
 <dl class="section return"><dt>Returns</dt><dd>Number of elements contained in each <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="map_8hpp_source.html#l00161">161</a> of file <a class="el" href="map_8hpp_source.html">map.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="map_8hpp_source.html#l00150">150</a> of file <a class="el" href="map_8hpp_source.html">map.hpp</a>.</p>
 
 </div>
 </div>

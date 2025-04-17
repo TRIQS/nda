@@ -234,7 +234,7 @@ template&lt;typename... Ts&gt; </td></tr>
 <li><code>Unified</code>: CUDA Unified memory address. </li>
 </ul>
 
-<p class="definition">Definition at line <a class="el" href="address__space_8hpp_source.html#l00060">60</a> of file <a class="el" href="address__space_8hpp_source.html">address_space.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="address__space_8hpp_source.html#l00049">49</a> of file <a class="el" href="address__space_8hpp_source.html">address_space.hpp</a>.</p>
 
 </div>
 </div>
@@ -267,7 +267,7 @@ template&lt;AddressSpace... AdrSpcs&gt; </div>
 <div class="line">    <span class="keyword">static_assert</span>(<a class="code hl_variable" href="group__mem__utils.html#ga332eb62504ae4f22585e078bc2e40568">nda::have_device</a> or ((AdrSpcs == Host) &amp; ...),</div>
 <div class="line">                  <span class="stringliteral">&quot;Error in nda::mem::check_adr_sp_valid: Device address space requires compiling with GPU support.&quot;</span>);</div>
 <div class="line">  }</div>
-<div class="ttc" id="agroup__mem__utils_html_ga332eb62504ae4f22585e078bc2e40568"><div class="ttname"><a href="group__mem__utils.html#ga332eb62504ae4f22585e078bc2e40568">nda::have_device</a></div><div class="ttdeci">static constexpr bool have_device</div><div class="ttdoc">Constexpr variable that is true if the project is configured with GPU support.</div><div class="ttdef"><b>Definition</b> <a href="device_8hpp_source.html#l00143">device.hpp:143</a></div></div>
+<div class="ttc" id="agroup__mem__utils_html_ga332eb62504ae4f22585e078bc2e40568"><div class="ttname"><a href="group__mem__utils.html#ga332eb62504ae4f22585e078bc2e40568">nda::have_device</a></div><div class="ttdeci">static constexpr bool have_device</div><div class="ttdoc">Constexpr variable that is true if the project is configured with GPU support.</div><div class="ttdef"><b>Definition</b> <a href="device_8hpp_source.html#l00132">device.hpp:132</a></div></div>
 </div><!-- fragment -->
 <p>Check validity of a set of <a class="el" href="#ga03c36f393776e30005ebfc907bde9e0d" title="Enum providing identifiers for the different memory address spaces.">nda::mem::AddressSpace</a> values. </p>
 <p>Checks that the address spaces are not <code>None</code> and that the <code>Device</code> or <code>Unified</code> address spaces are only used when compiling with GPU support.</p>
@@ -278,7 +278,7 @@ template&lt;AddressSpace... AdrSpcs&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="address__space_8hpp_source.html#l00151">151</a> of file <a class="el" href="address__space_8hpp_source.html">address_space.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="address__space_8hpp_source.html#l00140">140</a> of file <a class="el" href="address__space_8hpp_source.html">address_space.hpp</a>.</p>
 
 </div>
 </div>
@@ -311,7 +311,7 @@ template&lt;<a class="el" href="#ga03c36f393776e30005ebfc907bde9e0d">AddressSpac
 <div class="line">    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">sizeof</span>...(As) &gt; 0) { <span class="keywordflow">return</span> <a class="code hl_variable" href="#ga6127fb9e77d6a679dc1203c887bb58c2">combine</a>&lt;std::max(A1, A2), As...&gt;; }</div>
 <div class="line">    <span class="keywordflow">return</span> std::max(A1, A2);</div>
 <div class="line">  }()</div>
-<div class="ttc" id="agroup__mem__addrspcs_html_ga6127fb9e77d6a679dc1203c887bb58c2"><div class="ttname"><a href="#ga6127fb9e77d6a679dc1203c887bb58c2">nda::mem::combine</a></div><div class="ttdeci">constexpr AddressSpace combine</div><div class="ttdoc">Promotion rules for nda::mem::AddressSpace values.</div><div class="ttdef"><b>Definition</b> <a href="address__space_8hpp_source.html#l00104">address_space.hpp:104</a></div></div>
+<div class="ttc" id="agroup__mem__addrspcs_html_ga6127fb9e77d6a679dc1203c887bb58c2"><div class="ttname"><a href="#ga6127fb9e77d6a679dc1203c887bb58c2">nda::mem::combine</a></div><div class="ttdeci">constexpr AddressSpace combine</div><div class="ttdoc">Promotion rules for nda::mem::AddressSpace values.</div><div class="ttdef"><b>Definition</b> <a href="address__space_8hpp_source.html#l00093">address_space.hpp:93</a></div></div>
 </div><!-- fragment -->
 <p>Promotion rules for <a class="el" href="#ga03c36f393776e30005ebfc907bde9e0d" title="Enum providing identifiers for the different memory address spaces.">nda::mem::AddressSpace</a> values. </p>
 <p><code>Host</code> and <code>Device</code> address spaces are not compatible and will result in a compilation error.</p>
@@ -328,7 +328,7 @@ template&lt;<a class="el" href="#ga03c36f393776e30005ebfc907bde9e0d">AddressSpac
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="address__space_8hpp_source.html#l00104">104</a> of file <a class="el" href="address__space_8hpp_source.html">address_space.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="address__space_8hpp_source.html#l00093">93</a> of file <a class="el" href="address__space_8hpp_source.html">address_space.hpp</a>.</p>
 
 </div>
 </div>
@@ -366,7 +366,7 @@ template&lt;MemoryArray A1, MemoryArray... As&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="address__space_8hpp_source.html#l00120">120</a> of file <a class="el" href="address__space_8hpp_source.html">address_space.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="address__space_8hpp_source.html#l00109">109</a> of file <a class="el" href="address__space_8hpp_source.html">address_space.hpp</a>.</p>
 
 </div>
 </div>
@@ -402,7 +402,7 @@ template&lt;typename T&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="address__space_8hpp_source.html#l00080">80</a> of file <a class="el" href="address__space_8hpp_source.html">address_space.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="address__space_8hpp_source.html#l00069">69</a> of file <a class="el" href="address__space_8hpp_source.html">address_space.hpp</a>.</p>
 
 </div>
 </div>

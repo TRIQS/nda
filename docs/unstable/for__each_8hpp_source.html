@@ -111,111 +111,98 @@ $(function(){initNavTree('for__each_8hpp_source.html',''); initResizable(true); 
   <div class="headertitle"><div class="title">for_each.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="for__each_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright (c) 2018 Commissariat à l&#39;énergie atomique et aux énergies alternatives (CEA)</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// Copyright (c) 2018 Centre national de la recherche scientifique (CNRS)</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// Copyright (c) 2018-2024 Simons Foundation</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">//</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment">// you may not use this file except in compliance with the License.</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">// You may obtain a copy of the License at</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">//</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment">//     http://www.apache.org/licenses/LICENSE-2.0.txt</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">//</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">// Unless required by applicable law or agreed to in writing, software</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">// See the License for the specific language governing permissions and</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">// limitations under the License.</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment">//</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">// Authors: Thomas Hahn, Olivier Parcollet, Nils Wentzell</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;<a class="code" href="permutation_8hpp.html">./permutation.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;<a class="code" href="array_8hpp.html">../stdutil/array.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &lt;array&gt;</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &lt;concepts&gt;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">namespace </span>nda {</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keyword">namespace </span>detail {</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="comment">// Get the i-th slowest moving dimension from a given encoded stride order.</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> R&gt;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keyword">constexpr</span> <span class="keywordtype">int</span> index_from_stride_order(uint64_t stride_order, <span class="keywordtype">int</span> i) {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      <span class="keywordflow">if</span> (stride_order == 0) <span class="keywordflow">return</span> i;                 <span class="comment">// default C-order</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>      <span class="keyword">auto</span> stride_order_arr = <a class="code hl_function" href="group__utils__perms.html#ga4cacfaf05a2e8db86e8ae76e79c8a404">decode&lt;R&gt;</a>(stride_order); <span class="comment">// FIXME C++20</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>      <span class="keywordflow">return</span> stride_order_arr[i];</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    }</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="comment">// Get the extent of an array along its i-th dimension.</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> I, <span class="keywordtype">int</span> R, u<span class="keywordtype">int</span>64_t StaticExtents, std::<span class="keywordtype">int</span>egral Int = <span class="keywordtype">long</span>&gt;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">constexpr</span> <span class="keywordtype">long</span> get_extent(std::array&lt;Int, R&gt; <span class="keyword">const</span> &amp;shape) {</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (StaticExtents == 0) {</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="comment">// dynamic extents</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keywordflow">return</span> shape[I];</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="comment">// full/partial static extents</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="group__av__utils.html#ga3b2b4deac1bfd2ead0323752d2cec806">static_extents</a> = <a class="code hl_function" href="group__utils__perms.html#ga4cacfaf05a2e8db86e8ae76e79c8a404">decode&lt;R&gt;</a>(StaticExtents); <span class="comment">// FIXME C++20</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_function" href="group__av__utils.html#ga3b2b4deac1bfd2ead0323752d2cec806">static_extents</a>[I] == 0)</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>          <span class="keywordflow">return</span> shape[I];</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>          <span class="keywordflow">return</span> <a class="code hl_function" href="group__av__utils.html#ga3b2b4deac1bfd2ead0323752d2cec806">static_extents</a>[I];</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>      }</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    }</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="comment">// Apply a callable object recursively to all possible index values of a given shape.</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> I, u<span class="keywordtype">int</span>64_t StaticExtents, u<span class="keywordtype">int</span>64_t Str<span class="keywordtype">id</span>eOrder, <span class="keyword">typename</span> F, <span class="keywordtype">size_t</span> R, std::<span class="keywordtype">int</span>egral Int = <span class="keywordtype">long</span>&gt;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    FORCEINLINE <span class="keywordtype">void</span> for_each_static_impl(std::array&lt;Int, R&gt; <span class="keyword">const</span> &amp;shape, std::array&lt;long, R&gt; &amp;idxs, F &amp;f) {</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (I == R) {</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        <span class="comment">// end of recursion</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        std::apply(f, idxs);</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <span class="comment">// get the dimension over which to iterate and its extent</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> J = index_from_stride_order&lt;R&gt;(StrideOrder, I);</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keyword">const</span> <span class="keywordtype">long</span> imax        = get_extent&lt;J, R, StaticExtents&gt;(shape);</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="comment">// loop over all indices of the current dimension</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keywordflow">for</span> (<span class="keywordtype">long</span> i = 0; i &lt; imax; ++i) {</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>          <span class="comment">// recursive call for the next dimension</span></div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>          for_each_static_impl&lt;I + 1, StaticExtents, StrideOrder&gt;(shape, idxs, f);</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>          ++idxs[J];</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        }</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        idxs[J] = 0;</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>      }</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    }</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  } <span class="comment">// namespace detail</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span></div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  <span class="keyword">template</span> &lt;u<span class="keywordtype">int</span>64_t StaticExtents, u<span class="keywordtype">int</span>64_t Str<span class="keywordtype">id</span>eOrder, <span class="keyword">typename</span> F, auto R, std::<span class="keywordtype">int</span>egral Int = <span class="keywordtype">long</span>&gt;</div>
-<div class="foldopen" id="foldopen00108" data-start="{" data-end="}">
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno"><a class="line" href="group__layout__utils.html#ga4af3418db6d33f5f6463330620cf7dee">  108</a></span>  FORCEINLINE <span class="keywordtype">void</span> <a class="code hl_function" href="group__layout__utils.html#ga4af3418db6d33f5f6463330620cf7dee">for_each_static</a>(std::array&lt;Int, R&gt; <span class="keyword">const</span> &amp;shape, F &amp;&amp;f) { <span class="comment">// NOLINT (we do not want to forward here)</span></div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keyword">auto</span> idxs = <a class="code hl_function" href="group__utils__std.html#gab8d45097fed36893d99fadfab415d285">nda::stdutil::make_initialized_array&lt;R&gt;</a>(0l);</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    detail::for_each_static_impl&lt;0, StaticExtents, StrideOrder&gt;(shape, idxs, f);</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  }</div>
+<a href="for__each_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright (c) 2018--present, The Simons Foundation</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// This file is part of TRIQS/nda and is licensed under the Apache License, Version 2.0.</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// SPDX-License-Identifier: Apache-2.0</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// See LICENSE in the root of this distribution for details.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="permutation_8hpp.html">./permutation.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="array_8hpp.html">../stdutil/array.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;array&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;concepts&gt;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">namespace </span>nda {</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keyword">namespace </span>detail {</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="comment">// Get the i-th slowest moving dimension from a given encoded stride order.</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> R&gt;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keyword">constexpr</span> <span class="keywordtype">int</span> index_from_stride_order(uint64_t stride_order, <span class="keywordtype">int</span> i) {</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>      <span class="keywordflow">if</span> (stride_order == 0) <span class="keywordflow">return</span> i;                 <span class="comment">// default C-order</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>      <span class="keyword">auto</span> stride_order_arr = <a class="code hl_function" href="group__utils__perms.html#ga4cacfaf05a2e8db86e8ae76e79c8a404">decode&lt;R&gt;</a>(stride_order); <span class="comment">// FIXME C++20</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>      <span class="keywordflow">return</span> stride_order_arr[i];</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    }</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="comment">// Get the extent of an array along its i-th dimension.</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> I, <span class="keywordtype">int</span> R, u<span class="keywordtype">int</span>64_t StaticExtents, std::<span class="keywordtype">int</span>egral Int = <span class="keywordtype">long</span>&gt;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">constexpr</span> <span class="keywordtype">long</span> get_extent(std::array&lt;Int, R&gt; <span class="keyword">const</span> &amp;shape) {</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (StaticExtents == 0) {</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="comment">// dynamic extents</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        <span class="keywordflow">return</span> shape[I];</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="comment">// full/partial static extents</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="group__av__utils.html#ga3b2b4deac1bfd2ead0323752d2cec806">static_extents</a> = <a class="code hl_function" href="group__utils__perms.html#ga4cacfaf05a2e8db86e8ae76e79c8a404">decode&lt;R&gt;</a>(StaticExtents); <span class="comment">// FIXME C++20</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_function" href="group__av__utils.html#ga3b2b4deac1bfd2ead0323752d2cec806">static_extents</a>[I] == 0)</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>          <span class="keywordflow">return</span> shape[I];</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>          <span class="keywordflow">return</span> <a class="code hl_function" href="group__av__utils.html#ga3b2b4deac1bfd2ead0323752d2cec806">static_extents</a>[I];</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>      }</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    }</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="comment">// Apply a callable object recursively to all possible index values of a given shape.</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">template</span> &lt;<span class="keywordtype">int</span> I, u<span class="keywordtype">int</span>64_t StaticExtents, u<span class="keywordtype">int</span>64_t Str<span class="keywordtype">id</span>eOrder, <span class="keyword">typename</span> F, <span class="keywordtype">size_t</span> R, std::<span class="keywordtype">int</span>egral Int = <span class="keywordtype">long</span>&gt;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    FORCEINLINE <span class="keywordtype">void</span> for_each_static_impl(std::array&lt;Int, R&gt; <span class="keyword">const</span> &amp;shape, std::array&lt;long, R&gt; &amp;idxs, F &amp;f) {</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (I == R) {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="comment">// end of recursion</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        std::apply(f, idxs);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="comment">// get the dimension over which to iterate and its extent</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">int</span> J = index_from_stride_order&lt;R&gt;(StrideOrder, I);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keyword">const</span> <span class="keywordtype">long</span> imax        = get_extent&lt;J, R, StaticExtents&gt;(shape);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <span class="comment">// loop over all indices of the current dimension</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        <span class="keywordflow">for</span> (<span class="keywordtype">long</span> i = 0; i &lt; imax; ++i) {</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>          <span class="comment">// recursive call for the next dimension</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>          for_each_static_impl&lt;I + 1, StaticExtents, StrideOrder&gt;(shape, idxs, f);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>          ++idxs[J];</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        }</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        idxs[J] = 0;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>      }</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    }</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  } <span class="comment">// namespace detail</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  <span class="keyword">template</span> &lt;u<span class="keywordtype">int</span>64_t StaticExtents, u<span class="keywordtype">int</span>64_t Str<span class="keywordtype">id</span>eOrder, <span class="keyword">typename</span> F, auto R, std::<span class="keywordtype">int</span>egral Int = <span class="keywordtype">long</span>&gt;</div>
+<div class="foldopen" id="foldopen00095" data-start="{" data-end="}">
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="group__layout__utils.html#ga4af3418db6d33f5f6463330620cf7dee">   95</a></span>  FORCEINLINE <span class="keywordtype">void</span> <a class="code hl_function" href="group__layout__utils.html#ga4af3418db6d33f5f6463330620cf7dee">for_each_static</a>(std::array&lt;Int, R&gt; <span class="keyword">const</span> &amp;shape, F &amp;&amp;f) { <span class="comment">// NOLINT (we do not want to forward here)</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keyword">auto</span> idxs = <a class="code hl_function" href="group__utils__std.html#gab8d45097fed36893d99fadfab415d285">nda::stdutil::make_initialized_array&lt;R&gt;</a>(0l);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    detail::for_each_static_impl&lt;0, StaticExtents, StrideOrder&gt;(shape, idxs, f);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  }</div>
 </div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span></div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> F, auto R, std::<span class="keywordtype">int</span>egral Int = <span class="keywordtype">long</span>&gt;</div>
-<div class="foldopen" id="foldopen00129" data-start="{" data-end="}">
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno"><a class="line" href="group__layout__utils.html#ga3cad3c1ccde2290cf1f53ee627e54bf6">  129</a></span>  FORCEINLINE <span class="keywordtype">void</span> <a class="code hl_function" href="group__layout__utils.html#ga3cad3c1ccde2290cf1f53ee627e54bf6">for_each</a>(std::array&lt;Int, R&gt; <span class="keyword">const</span> &amp;shape, F &amp;&amp;f) { <span class="comment">// NOLINT (we do not want to forward here)</span></div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    <span class="keyword">auto</span> idxs = <a class="code hl_function" href="group__utils__std.html#gab8d45097fed36893d99fadfab415d285">nda::stdutil::make_initialized_array&lt;R&gt;</a>(0l);</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    detail::for_each_static_impl&lt;0, 0, 0&gt;(shape, idxs, f);</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>  }</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> F, auto R, std::<span class="keywordtype">int</span>egral Int = <span class="keywordtype">long</span>&gt;</div>
+<div class="foldopen" id="foldopen00116" data-start="{" data-end="}">
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno"><a class="line" href="group__layout__utils.html#ga3cad3c1ccde2290cf1f53ee627e54bf6">  116</a></span>  FORCEINLINE <span class="keywordtype">void</span> <a class="code hl_function" href="group__layout__utils.html#ga3cad3c1ccde2290cf1f53ee627e54bf6">for_each</a>(std::array&lt;Int, R&gt; <span class="keyword">const</span> &amp;shape, F &amp;&amp;f) { <span class="comment">// NOLINT (we do not want to forward here)</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    <span class="keyword">auto</span> idxs = <a class="code hl_function" href="group__utils__std.html#gab8d45097fed36893d99fadfab415d285">nda::stdutil::make_initialized_array&lt;R&gt;</a>(0l);</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    detail::for_each_static_impl&lt;0, 0, 0&gt;(shape, idxs, f);</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  }</div>
 </div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span></div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>} <span class="comment">// namespace nda</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>} <span class="comment">// namespace nda</span></div>
 <div class="ttc" id="aarray_8hpp_html"><div class="ttname"><a href="array_8hpp.html">array.hpp</a></div><div class="ttdoc">Provides utility functions for std::array.</div></div>
-<div class="ttc" id="agroup__av__utils_html_ga3b2b4deac1bfd2ead0323752d2cec806"><div class="ttname"><a href="group__av__utils.html#ga3b2b4deac1bfd2ead0323752d2cec806">nda::static_extents</a></div><div class="ttdeci">constexpr uint64_t static_extents(int i0, Is... is)</div><div class="ttdoc">Encode the given shape into a single integer using the nda::encode function.</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00187">declarations.hpp:187</a></div></div>
-<div class="ttc" id="agroup__layout__utils_html_ga3cad3c1ccde2290cf1f53ee627e54bf6"><div class="ttname"><a href="group__layout__utils.html#ga3cad3c1ccde2290cf1f53ee627e54bf6">nda::for_each</a></div><div class="ttdeci">__inline__ void for_each(std::array&lt; Int, R &gt; const &amp;shape, F &amp;&amp;f)</div><div class="ttdoc">Loop over all possible index values of a given shape and apply a function to them.</div><div class="ttdef"><b>Definition</b> <a href="#l00129">for_each.hpp:129</a></div></div>
-<div class="ttc" id="agroup__layout__utils_html_ga4af3418db6d33f5f6463330620cf7dee"><div class="ttname"><a href="group__layout__utils.html#ga4af3418db6d33f5f6463330620cf7dee">nda::for_each_static</a></div><div class="ttdeci">__inline__ void for_each_static(std::array&lt; Int, R &gt; const &amp;shape, F &amp;&amp;f)</div><div class="ttdoc">Loop over all possible index values of a given shape and apply a function to them.</div><div class="ttdef"><b>Definition</b> <a href="#l00108">for_each.hpp:108</a></div></div>
-<div class="ttc" id="agroup__utils__perms_html_ga4cacfaf05a2e8db86e8ae76e79c8a404"><div class="ttname"><a href="group__utils__perms.html#ga4cacfaf05a2e8db86e8ae76e79c8a404">nda::decode</a></div><div class="ttdeci">constexpr std::array&lt; int, N &gt; decode(uint64_t binary_representation)</div><div class="ttdoc">Decode a uint64_t into a std::array&lt;int, N&gt;.</div><div class="ttdef"><b>Definition</b> <a href="permutation_8hpp_source.html#l00054">permutation.hpp:54</a></div></div>
-<div class="ttc" id="agroup__utils__std_html_gab8d45097fed36893d99fadfab415d285"><div class="ttname"><a href="group__utils__std.html#gab8d45097fed36893d99fadfab415d285">nda::stdutil::make_initialized_array</a></div><div class="ttdeci">constexpr std::array&lt; T, R &gt; make_initialized_array(T v)</div><div class="ttdoc">Create a new std::array object initialized with a specific value.</div><div class="ttdef"><b>Definition</b> <a href="array_8hpp_source.html#l00168">array.hpp:168</a></div></div>
+<div class="ttc" id="agroup__av__utils_html_ga3b2b4deac1bfd2ead0323752d2cec806"><div class="ttname"><a href="group__av__utils.html#ga3b2b4deac1bfd2ead0323752d2cec806">nda::static_extents</a></div><div class="ttdeci">constexpr uint64_t static_extents(int i0, Is... is)</div><div class="ttdoc">Encode the given shape into a single integer using the nda::encode function.</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00176">declarations.hpp:176</a></div></div>
+<div class="ttc" id="agroup__layout__utils_html_ga3cad3c1ccde2290cf1f53ee627e54bf6"><div class="ttname"><a href="group__layout__utils.html#ga3cad3c1ccde2290cf1f53ee627e54bf6">nda::for_each</a></div><div class="ttdeci">__inline__ void for_each(std::array&lt; Int, R &gt; const &amp;shape, F &amp;&amp;f)</div><div class="ttdoc">Loop over all possible index values of a given shape and apply a function to them.</div><div class="ttdef"><b>Definition</b> <a href="#l00116">for_each.hpp:116</a></div></div>
+<div class="ttc" id="agroup__layout__utils_html_ga4af3418db6d33f5f6463330620cf7dee"><div class="ttname"><a href="group__layout__utils.html#ga4af3418db6d33f5f6463330620cf7dee">nda::for_each_static</a></div><div class="ttdeci">__inline__ void for_each_static(std::array&lt; Int, R &gt; const &amp;shape, F &amp;&amp;f)</div><div class="ttdoc">Loop over all possible index values of a given shape and apply a function to them.</div><div class="ttdef"><b>Definition</b> <a href="#l00095">for_each.hpp:95</a></div></div>
+<div class="ttc" id="agroup__utils__perms_html_ga4cacfaf05a2e8db86e8ae76e79c8a404"><div class="ttname"><a href="group__utils__perms.html#ga4cacfaf05a2e8db86e8ae76e79c8a404">nda::decode</a></div><div class="ttdeci">constexpr std::array&lt; int, N &gt; decode(uint64_t binary_representation)</div><div class="ttdoc">Decode a uint64_t into a std::array&lt;int, N&gt;.</div><div class="ttdef"><b>Definition</b> <a href="permutation_8hpp_source.html#l00043">permutation.hpp:43</a></div></div>
+<div class="ttc" id="agroup__utils__std_html_gab8d45097fed36893d99fadfab415d285"><div class="ttname"><a href="group__utils__std.html#gab8d45097fed36893d99fadfab415d285">nda::stdutil::make_initialized_array</a></div><div class="ttdeci">constexpr std::array&lt; T, R &gt; make_initialized_array(T v)</div><div class="ttdoc">Create a new std::array object initialized with a specific value.</div><div class="ttdef"><b>Definition</b> <a href="array_8hpp_source.html#l00155">array.hpp:155</a></div></div>
 <div class="ttc" id="apermutation_8hpp_html"><div class="ttname"><a href="permutation_8hpp.html">permutation.hpp</a></div><div class="ttdoc">Provides utilities to work with permutations and to compactly encode/decode std::array objects.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
