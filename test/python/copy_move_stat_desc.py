@@ -1,3 +1,8 @@
+# Copyright (c) 2020--present, The Simons Foundation
+# This file is part of TRIQS/nda and is licensed under the Apache License, Version 2.0.
+# SPDX-License-Identifier: Apache-2.0
+# See LICENSE in the root of this distribution for details.
+
 # Generated automatically using the command :
 # c++2py copy_move_stat.hpp -C nda_py -m copy_move_stat -o copy_move_stat --cxxflags="-std=c++17" --includes=./../../c++ --includes=./../../python --target_file_only
 from cpp2py.wrap_generator import *
