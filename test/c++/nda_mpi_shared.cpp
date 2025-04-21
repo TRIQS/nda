@@ -209,7 +209,6 @@ TEST(SHM, Concept) {
   static_assert(nda::SharedArray<nda::shared_array<int, 2>>);
   static_assert(nda::SharedArray<nda::basic_array<int, 2, nda::C_layout, 'A', nda::heap_basic<mpi_shm_allocator>>>);
   static_assert(!nda::SharedArray<nda::basic_array<int, 2, nda::C_layout, 'A', nda::heap<>>>);
-  static_assert(!nda::SharedArray<nda::shared_array<int, 2, nda::C_layout, nda::heap<>>>);
 }
 
 TEST(SHM, Allocator) { //NOLINT

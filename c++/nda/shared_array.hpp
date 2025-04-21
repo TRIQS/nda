@@ -52,16 +52,14 @@ namespace nda {
    *  - Rank: The number of dimensions of the array.
    *  - Layout: The layout policy (default is C_layout).
    *  - Algebra: Set to 'A' for shared arrays.
-   *  - ContainerPolicy: Uses heap_basic with mallocator to allocate memory on an MPI shared memory island.
    *
    * @tparam ValueType The type of the elements stored in the array.
    * @tparam Rank The number of dimensions.
    * @tparam Layout The memory layout policy.
-   * @tparam ContainerPolicy The container policy for memory allocation.
    */
 
-  template <typename ValueType, int Rank, typename Layout = C_layout, typename ContainerPolicy = heap<mem::MPISharedMemory>>
-  using shared_array = basic_array<ValueType, Rank, Layout, 'A', ContainerPolicy>;
+  template <typename ValueType, int Rank, typename Layout = C_layout>
+  using shared_array = basic_array<ValueType, Rank, Layout, 'A', heap<mem::MPISharedMemory>>;
 
   /**
    * @brief Alias template of an nda::shared_array_view with an 'A' algebra, nda::default_accessor and nda::borrowed
@@ -94,7 +92,7 @@ namespace nda {
    * @tparam Rank The number of dimensions in the view.
    * @tparam Layout The memory layout policy (default is C_layout) that must have contiguous memory layout properties.
    */
-  template <typename ValueType, int Rank, typename Layout = C_layout>
+  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
     requires(has_contiguous(Layout::template mapping<Rank>::layout_prop))
   using shared_array_contiguous_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory>>;
 
@@ -105,10 +103,9 @@ namespace nda {
    * It requires the layout to guarantee contiguous memory storage.
    *
    * @tparam ValueType The type of the elements in the view.
-   * @tparam Rank The number of dimensions in the view.
-   * @tparam Layout The memory layout policy (default is C_layout) that must have contiguous memory layout properties.
+   * @tparam Layout The memory layout policy (default is C_stride_layout) that must have contiguous memory layout properties.
    */
-  template <typename ValueType, int Rank, typename Layout = C_layout>
+  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
     requires(has_contiguous(Layout::template mapping<Rank>::layout_prop))
   using shared_array_contiguous_const_view = basic_array_view<ValueType const, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory>>;
 
@@ -123,12 +120,10 @@ namespace nda {
    *  - ContainerPolicy: Uses heap_basic with mallocator to allocate memory on an MPI shared memory island.
    *
    * @tparam ValueType The type of the elements stored in the matrix.
-   * @tparam Rank The number of dimensions of the matrix.
    * @tparam Layout The memory layout policy.
-   * @tparam ContainerPolicy The container policy for memory allocation.
    */
-  template <typename ValueType, int Rank, typename Layout = C_layout, typename ContainerPolicy = heap<mem::MPISharedMemory>>
-  using shared_matrix = basic_array<ValueType, Rank, Layout, 'M', ContainerPolicy>;
+  template <typename ValueType, typename Layout = C_layout>
+  using shared_matrix = basic_array<ValueType, 2 , Layout, 'M', heap<mem::MPISharedMemory>>;
 
   /**
    * @brief Alias template for a shared matrix view.
@@ -137,11 +132,10 @@ namespace nda {
    * It uses the default accessor and a borrowed owning policy with MPI shared memory settings.
    *
    * @tparam ValueType The type of the elements in the view.
-   * @tparam Rank The number of dimensions of the view.
    * @tparam Layout The memory layout policy (default is C_stride_layout).
    */
-  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
-  using shared_matrix_view = basic_array_view<ValueType, Rank, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory>>;
+  template <typename ValueType, typename Layout = C_stride_layout>
+  using shared_matrix_view = basic_array_view<ValueType, 2, Layout, 'A', default_accessor, borrowed<mem::MPISharedMemory>>;
 
   /**
    * @brief Alias template for a const shared matrix view.
@@ -150,11 +144,10 @@ namespace nda {
    * It employs matrix algebra ('M') along with the default accessor and a borrowed owning policy.
    *
    * @tparam ValueType The type of the elements in the view.
-   * @tparam Rank The number of dimensions of the view.
    * @tparam Layout The memory layout policy (default is C_stride_layout).
    */
-  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
-  using shared_matrix_const_view = basic_array_view<ValueType const, Rank, Layout, 'M', default_accessor, borrowed<mem::MPISharedMemory>>;
+  template <typename ValueType, typename Layout = C_stride_layout>
+  using shared_matrix_const_view = basic_array_view<ValueType const, 2, Layout, 'M', default_accessor, borrowed<mem::MPISharedMemory>>;
 
   /**
    * @brief Alias for vectors allocated in MPI shared memory.
@@ -167,12 +160,9 @@ namespace nda {
    *  - ContainerPolicy: Uses heap_basic with mallocator to allocate memory on an MPI shared memory island.
    *
    * @tparam ValueType The type of the elements stored in the vector.
-   * @tparam Rank The number of dimensions of the vector.
-   * @tparam Layout The memory layout policy.
-   * @tparam ContainerPolicy The container policy for memory allocation.
    */
-  template <typename ValueType, int Rank, typename Layout = C_layout, typename ContainerPolicy = heap<mem::MPISharedMemory>>
-  using shared_vector = basic_array<ValueType, Rank, Layout, 'V', ContainerPolicy>;
+  template <typename ValueType>
+  using shared_vector = basic_array<ValueType, 1, C_layout, 'V', heap<mem::MPISharedMemory>>;
 
   /**
    * @brief Alias template for a shared vector view.
@@ -184,8 +174,8 @@ namespace nda {
    * @tparam Rank The number of dimensions of the view.
    * @tparam Layout The memory layout policy (default is C_stride_layout).
    */
-  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
-  using shared_vector_view = basic_array_view<ValueType, Rank, Layout, 'V', default_accessor, borrowed<mem::MPISharedMemory>>;
+  template <typename ValueType, typename Layout = C_stride_layout>
+  using shared_vector_view = basic_array_view<ValueType, 1, Layout, 'V', default_accessor, borrowed<mem::MPISharedMemory>>;
 
   /**
    * @brief Alias template for a const shared vector view.
@@ -197,8 +187,8 @@ namespace nda {
    * @tparam Rank The number of dimensions of the view.
    * @tparam Layout The memory layout policy (default is C_stride_layout).
    */
-  template <typename ValueType, int Rank, typename Layout = C_stride_layout>
-  using shared_vector_const_view = basic_array_view<ValueType const, Rank, Layout, 'V', default_accessor, borrowed<mem::MPISharedMemory>>;
+  template <typename ValueType, typename Layout = C_stride_layout>
+  using shared_vector_const_view = basic_array_view<ValueType const, 1, Layout, 'V', default_accessor, borrowed<mem::MPISharedMemory>>;
 
   /** @} */
 
@@ -206,19 +196,6 @@ namespace nda {
    * @addtogroup shared_av_utils
    * @{
    */
-
-  /// Specialization of nda::is_regular_v for nda::shared_array.
-  template <typename ValueType, int Rank, typename Layout, typename ContainerPolicy>
-  inline constexpr bool is_regular_v<shared_array<ValueType, Rank, Layout, ContainerPolicy>> = true;
-
-  /// Specialization of nda::get_algebra for nda::shared_array types.
-  template <typename ValueType, int Rank, typename Layout, typename ContainerPolicy>
-  inline constexpr char get_algebra<shared_array<ValueType, Rank, Layout, ContainerPolicy>> = 'A';
-
-  /// Specialization of nda::get_layout_info for nda::shared_array types.
-  template <typename ValueType, int Rank, typename Layout, typename ContainerPolicy>
-  inline constexpr layout_info_t get_layout_info<shared_array<ValueType, Rank, Layout, ContainerPolicy>> =
-     basic_array<ValueType, Rank, Layout, 'A', ContainerPolicy>::layout_t::layout_info;
 
   /**
    * @brief Get the type of the nda::shared_array that would be obtained by constructing an array from a given type.
@@ -236,8 +213,7 @@ namespace nda {
   template <typename T, typename RT = get_regular_t<T>>
   using get_regular_shm_t =
      std::conditional_t<mem::on_mpi_shared_memory<RT>, RT,
-                        shared_array<get_value_t<RT>, get_rank<RT>, get_contiguous_layout_policy<get_rank<RT>, get_layout_info<RT>.stride_order>,
-                                     heap<mem::MPISharedMemory>>>;
+                        shared_array<get_value_t<RT>, get_rank<RT>, get_contiguous_layout_policy<get_rank<RT>, get_layout_info<RT>.stride_order>>>;
 
   /** @} */
 
@@ -335,30 +311,6 @@ namespace nda {
    */
   template <typename Functor, typename ValueType, int Rank, typename LayoutPolicy>
   void for_each_chunked(Functor &&f, shared_array<ValueType, Rank, LayoutPolicy> &array, long n_chunks, long rank) {
-    auto &lay  = array.indexmap();
-    auto slice = itertools::chunk_range(0, lay.size(), n_chunks, rank);
-    for (int i = slice.first; i < slice.second; ++i) { f(array(nda::_linear_index_t{i})); }
-  }
-
-  /**
-   * @brief Applies a functor to each chunk of a shared array.
-   *
-   * This function divides the array (via its index map) into a number of chunks and
-   * applies the provided functor to each element in the specified chunk. This is useful
-   * for distributed processing over MPI shared memory.
-   *
-   * @tparam Functor The type of the function or callable object.
-   * @tparam ValueType The type of the array elements.
-   * @tparam Rank The number of dimensions.
-   * @tparam LayoutPolicy The memory layout policy.
-   * @tparam Algebra The algebra identifier (should be 'A' for shared_array).
-   * @param f The functor to apply to each array element.
-   * @param array The shared_array on which to operate.
-   * @param n_chunks The total number of chunks to divide the array into.
-   * @param rank The rank (chunk index) to process.
-   */
-  template <typename Functor, typename ValueType, int Rank, typename LayoutPolicy>
-  void for_each_chunked(Functor &&f, shared_array_view<ValueType, Rank, LayoutPolicy> &array, long n_chunks, long rank) {
     auto &lay  = array.indexmap();
     auto slice = itertools::chunk_range(0, lay.size(), n_chunks, rank);
     for (int i = slice.first; i < slice.second; ++i) { f(array(nda::_linear_index_t{i})); }

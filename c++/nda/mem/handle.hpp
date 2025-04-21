@@ -199,7 +199,7 @@ namespace nda::mem {
           int end_byte   = chunk.second * sizeof(T);
           int num_bytes  = end_byte - start_byte;
 
-          memcpy<address_space, address_space>(_blk.ptr + start_byte, h.data() + start_byte, num_bytes);
+          memcpy<address_space, address_space>(_blk.ptr + start_byte, h._blk.ptr + start_byte, num_bytes);
         } else {
           for (size_t i = chunk.first; i < chunk.second; ++i) new (data() + i) T(h[i]);
         }
@@ -222,11 +222,6 @@ namespace nda::mem {
      */
     handle_heap &operator=(handle_heap const &h) {
       if (this != std::addressof(h)) {
-        if (!sptr && !is_null()) {
-          destruct(_blk);
-          /// Reset the blk to null state to avoid double free from the move constructor when it is null
-          _blk = blk_t{};
-        }
         *this = handle_heap{h};
       }
       return *this;
@@ -254,7 +249,7 @@ namespace nda::mem {
           int end_byte   = chunk.second * sizeof(T);
           int num_bytes  = end_byte - start_byte;
 
-          memcpy<address_space, address_space>(_blk.ptr + start_byte, h.data() + start_byte, num_bytes); /// is cast needed?
+          memcpy<address_space, address_space>(_blk.ptr + start_byte, h._blk.ptr + start_byte, num_bytes);
         } else {
           static_assert(address_space == H::address_space,
                         "Constructing an nda::mem::handle_heap from a handle of a different address space requires a trivially copyable value_type");

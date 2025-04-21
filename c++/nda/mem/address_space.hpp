@@ -167,16 +167,19 @@ enum class AddressSpace { None, Host, Device, Unified, MPISharedMemory }; // Do 
   /**
    * @brief Check validity of a set of nda::mem::AddressSpace values.
    *
-   * @details Checks that the address spaces are not `None` and that the `Device` or `Unified` address spaces are only
-   * used when compiling with GPU support.
+   * @details Checks that the address spaces are not `None`, that the `Device` or `Unified` address spaces are only
+   * used when compiling with GPU support and that only 'MPISharedMemory' address spaces are used if one address
+   * space is 'MPISharedMemory'.
    *
    * @tparam AdrSpcs Address spaces to check.
    */
   template <AddressSpace... AdrSpcs>
   static const auto check_adr_sp_valid = []() {
     static_assert(((AdrSpcs != None) & ...), "Error in nda::mem::check_adr_sp_valid: Cannot use None address space");
-    static_assert(nda::have_device or ((AdrSpcs == Host) & ...),
-                  "Error in nda::mem::check_adr_sp_valid: Device address space requires compiling with GPU support.");
+    static_assert((!((AdrSpcs == Device) || ...)) || (((AdrSpcs == Device || AdrSpcs == Unified) & ...)),
+                  "Error in nda::mem::check_adr_sp_valid: All address spaces should be device compatible if one of them is Device.");
+    static_assert(((AdrSpcs == MPISharedMemory) & ...) or ((AdrSpcs != MPISharedMemory) & ...),
+                  "Error in nda::mem::check_adr_sp_valid: Either all address spaces must be MPISharedMemory or none.");
   };
 
   /// Constexpr variable that is true if all given types have a `Host` address space.

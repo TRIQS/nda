@@ -43,6 +43,8 @@ namespace nda::mem {
 
     if constexpr (DestAdrSp == Host && SrcAdrSp == Host) {
       std::memcpy(dest, src, count);
+    } else if constexpr (DestAdrSp == nda::mem::MPISharedMemory && SrcAdrSp == nda::mem::MPISharedMemory) {
+      std::memcpy(dest, src, count); //  FIXME
     } else if constexpr (have_device_compatible_addr_space<SrcAdrSp, DestAdrSp>) {
       device_error_check(cudaMemcpy(dest, src, count, cudaMemcpyDefault), "cudaMemcpy");
     } else {
@@ -80,6 +82,10 @@ namespace nda::mem {
     if constexpr (DestAdrSp == Host && SrcAdrSp == Host) {
       auto *desti = static_cast<unsigned char *>(dest);
       auto *srci  = static_cast<const unsigned char *>(src);
+      for (size_t i = 0; i < height; ++i, desti += dpitch, srci += spitch) std::memcpy(desti, srci, width);
+    } else if constexpr (DestAdrSp == MPISharedMemory && SrcAdrSp == MPISharedMemory) {
+      auto *desti = static_cast<unsigned char *>(dest);
+      auto *srci  = static_cast<const unsigned char *>(src); // FIXME
       for (size_t i = 0; i < height; ++i, desti += dpitch, srci += spitch) std::memcpy(desti, srci, width);
     } else if constexpr (have_device_compatible_addr_space<SrcAdrSp, DestAdrSp>) {
       device_error_check(cudaMemcpy2D(dest, dpitch, src, spitch, width, height, cudaMemcpyDefault), "cudaMemcpy2D");
