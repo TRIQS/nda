@@ -103,7 +103,7 @@ namespace nda {
    * @return A view with the 'V' algebra of the diagonal of the array/view.
    */
   template <MemoryArrayOfRank<2> M>
-  ArrayOfRank<1> auto diagonal(M &m) {
+  ArrayOfRank<1> auto diagonal(M &&m) {
     long dim    = std::min(m.shape()[0], m.shape()[1]);
     long stride = stdutil::sum(m.indexmap().strides());
     using vector_view_t =
