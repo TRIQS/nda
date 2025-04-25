@@ -8,7 +8,7 @@
 #include <nda/nda.hpp>
 #include <nda/concepts.hpp>
 
-#ifdef CLAIR_C2PY
+#ifdef C2PY_INCLUDED
 #include <c2py/converters/numpy_proxy.hpp>
 #define C2PY_CPP2PY_NAMESPACE c2py
 #else

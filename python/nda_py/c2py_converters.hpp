@@ -164,14 +164,14 @@ namespace c2py {
       // if obj is not an numpy, we make a numpy and rerun
       if (not PyArray_Check(obj) or (PyArray_Check(obj) and has_npy_type<T> and (PyArray_TYPE((PyArrayObject *)(obj)) != npy_type<T>))) {
 
-        cpp2py::pyref numpy_obj = make_numpy(obj);
+        pyref numpy_obj = make_numpy(obj);
         EXPECTS(not PyErr_Occurred());
         return py2c(numpy_obj);
       }
 
       if constexpr (has_npy_type<T>) {
         if (not numpy_check_layout<R, nda::C_layout>(obj)) {
-          cpp2py::pyref obj_c_order = make_numpy(obj);
+          pyref obj_c_order = make_numpy(obj);
           return nda::array<T, R>{converter_view_T::py2c(obj_c_order)};
         }
         return converter_view_T::py2c(obj);

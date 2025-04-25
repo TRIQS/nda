@@ -7,6 +7,7 @@
 
 #include <cpp2py/py_converter.hpp>
 #include <nda_py/nda_py.hpp>
+#include <cpp2py/numpy_proxy.hpp>
 
 namespace cpp2py {
 
