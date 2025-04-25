@@ -20,7 +20,7 @@ var searchData=
   ['device_2ehpp_17',['device.hpp',['../device_8hpp.html',1,'']]],
   ['device_5ferror_5fcheck_18',['device_error_check',['../group__mem__utils.html#ga2e15ff366fb42873122bcdf6ac5adb51',1,'device.hpp']]],
   ['diag_19',['diag',['../group__av__factories.html#ga3c1d2dbd1fdb0e666829b532fcc46da4',1,'nda']]],
-  ['diagonal_20',['diagonal',['../group__av__factories.html#ga23734f3456a3a27317ecd99fc7fc98b0',1,'nda']]],
+  ['diagonal_20',['diagonal',['../group__av__factories.html#gad73d17b3c916c0a15e6d1b1e9d4ee017',1,'nda']]],
   ['difference_5ftype_21',['difference_type',['../classnda_1_1array__iterator.html#a27b5b34ea3dccd7fb1a7337cb2eca9b0',1,'nda::array_iterator::difference_type'],['../classnda_1_1array__iterator_3_011_00_01_t_00_01_pointer_01_4.html#aeeaa546d30322c28f18111e8e81ae48f',1,'nda::array_iterator&lt; 1, T, Pointer &gt;::difference_type'],['../classnda_1_1array__iterator.html#a27b5b34ea3dccd7fb1a7337cb2eca9b0',1,'nda::array_iterator&lt; 1, T, Pointer &gt;::difference_type']]],
   ['dimensional_20arrays_20views_20of_20strings_22',['Writing/Reading 1-dimensional arrays/views of strings',['../ex5.html#ex5_p5',1,'']]],
   ['dimensional_20indexing_23',['Multi-dimensional indexing',['../group__layout__idx.html',1,'']]],
