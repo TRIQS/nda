@@ -73,13 +73,13 @@ namespace nda::tensor {
 
     if constexpr (mem::have_device_compatible_addr_space<A,B>) {
 #if defined(NDA_HAVE_CUTENSOR)
-      cutensor::cutensor_desc<value_t,get_rank<A>> a_t(a,op::ID);
-      cutensor::cutensor_desc<value_t,get_rank<B>> b_t(b,op::ID);
+      value_t res;
+      cutensor::cutensor_desc<value_t,get_rank<A>> a_t(a);
+      cutensor::cutensor_desc<value_t,get_rank<B>> b_t(b);
       value_t* z = (value_t*)mem::malloc<mem::Device>(sizeof(value_t));
       mem::memset<mem::Device>(z,0,sizeof(value_t));
-      cutensor::cutensor_desc<value_t,0> z_t(z,op::ID);
-      cutensor::contract(value_t{1},a_t,a.data(),indxX,b_t,b.data(),indxY,value_t{0},z_t,z,"");
-      value_t res;
+      cutensor::cutensor_desc<value_t,0> z_t(z);
+      cutensor::contract(value_t{1},a_t,op::ID,a.data(),indxX,b_t,op::ID,b.data(),indxY,value_t{0},z_t,op::ID,z,"");
       mem::memcpy<mem::Host,mem::Device>(&res,z,sizeof(value_t));
       mem::free<mem::Device>(z);
       return res;

@@ -22,44 +22,42 @@
 #include "nda/exceptions.hpp"
 #include "cuda_runtime.h"
 
+#include "nda/tensor/interface/cutensor_interface.hpp"
+
 // use by default for now...
 //#define USE_CUTENSOR_CACHE
 
 namespace nda::tensor::cutensor {
 
-  cutensorHandle_t* get_handle_ptr() {
+  cutensorHandle_t& get_handle_ptr() {
     struct handle_t {
       handle_t() 
       { 
-        cutensorInit(&h); 
+        cutensorCreate(&h); 
 #if defined(USE_CUTENSOR_CACHE)
         constexpr int32_t numCachelines = 1024;
         const size_t sizeCache = numCachelines * sizeof(cutensorPlanCacheline_t);
         cachelines = (cutensorPlanCacheline_t*) malloc(sizeCache);
-        auto err = cutensorHandleAttachPlanCachelines(&h, cachelines, numCachelines);
-        cudaDeviceSynchronize();
-        if (err != CUTENSOR_STATUS_SUCCESS) NDA_RUNTIME_ERROR << std::string("cutensorHandleAttachPlanCachelines failed with error code ") + std::to_string(err) <<", "  <<cutensorGetErrorString(err); 
+        CUTENSOR_CHECK(cutensorHandleAttachPlanCachelines, &h, cachelines, numCachelines);
 #endif
       }
       ~handle_t() 
       {  
 #if defined(USE_CUTENSOR_CACHE)
-	auto err = cutensorHandleDetachPlanCachelines(&h);
-        cudaDeviceSynchronize();
-        if (err != CUTENSOR_STATUS_SUCCESS) NDA_RUNTIME_ERROR << "cutensorHandleDetachPlanCachelines failed with error code "  <<std::to_string(err) <<", " <<cutensorGetErrorString(err); 
+        CUTENSOR_CHECK(cutensorHandleDetachPlanCachelines,&h);
         free(cachelines);
 #endif
+        CUTENSOR_CHECK(cutensorDestroy,h);
       }
-      cutensorHandle_t* get() { return std::addressof(h); }
 
-      private:
       cutensorHandle_t h = {};
+      private:
 #if defined(USE_CUTENSOR_CACHE)
       cutensorPlanCacheline_t* cachelines;
 #endif
     };
     static handle_t h = {};
-    return h.get();
+    return h.h;
   }
 
   // always synchronize for now

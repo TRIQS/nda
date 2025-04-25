@@ -49,12 +49,12 @@ namespace nda::tensor {
     } else { // on device
 #if defined(NDA_HAVE_CUTENSOR)
       std::string indx = default_index<uint8_t(rank)>();
-      cutensor::cutensor_desc<value_t,rank> a_t(a,op::ID);
+      cutensor::cutensor_desc<value_t,rank> a_t(a);
       value_t* z = (value_t*)mem::malloc<mem::Device>(sizeof(value_t));
       mem::memcpy<mem::Device,mem::Host>(z,&alpha,sizeof(value_t));
-      cutensor::cutensor_desc<value_t,0> z_t(z,op::ID);
-      cutensor::elementwise_binary(value_t{1},z_t,z,"",
-                                   value_t{0},a_t,a.data(),indx,
+      cutensor::cutensor_desc<value_t,0> z_t(z);
+      cutensor::elementwise_binary(value_t{1},z_t,op::ID,z,"",
+                                   value_t{0},a_t,op::ID,a.data(),indx,
                                    a.data(),op::SUM);
       mem::free<mem::Device>(z);
 #else

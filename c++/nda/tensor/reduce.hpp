@@ -66,11 +66,11 @@ namespace nda::tensor {
 #endif
     } else { // on device
 #if defined(NDA_HAVE_CUTENSOR)
-      cutensor::cutensor_desc<value_t,rank> a_t(a,op::ID);
+      value_t res;  
+      cutensor::cutensor_desc<value_t,rank> a_t(a);
       std::string indx = default_index<uint8_t(rank)>(); 
       value_t* z = (value_t*)mem::malloc<mem::Device>(sizeof(value_t));
-      cutensor::reduce(value_t{1.0},a_t,a.data(),indx,z,oper);
-      value_t res;  
+      cutensor::reduce(value_t{1.0},a_t,op::ID,a.data(),indx,z,oper);
       mem::memcpy<mem::Host,mem::Device>(&res,z,sizeof(value_t));
       mem::free<mem::Device>(z);
       return res;

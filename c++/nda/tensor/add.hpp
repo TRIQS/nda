@@ -69,10 +69,10 @@ namespace nda::tensor {
     if constexpr (mem::have_device_compatible_addr_space<A,B>) {
 #if defined(NDA_HAVE_CUTENSOR)
       op::TENSOR_OP a_op = conj_A ? op::CONJ : op::ID;
-      cutensor::cutensor_desc<value_t,get_rank<A>> a_t(a,a_op);
-      cutensor::cutensor_desc<value_t,get_rank<B>> b_t(b,op::ID);
-      cutensor::elementwise_binary(alpha,a_t,a.data(),indxX.data(),
-				   beta ,b_t,b.data(),indxY.data(),
+      cutensor::cutensor_desc<value_t,get_rank<A>> a_t(a);
+      cutensor::cutensor_desc<value_t,get_rank<B>> b_t(b);
+      cutensor::elementwise_binary(alpha,a_t,a_op,a.data(),indxX.data(),
+				   beta ,b_t,op::ID,b.data(),indxY.data(),
 				   b.data(),op::SUM);
 #else
       static_assert(always_false<bool>," add on device requires gpu tensor operations backend. ");
@@ -129,10 +129,10 @@ namespace nda::tensor {
 #if defined(NDA_HAVE_CUTENSOR)
       op::TENSOR_OP a_op = conj_A ? op::CONJ : op::ID;
       op::TENSOR_OP b_op = conj_B ? op::CONJ : op::ID;
-      cutensor::cutensor_desc<value_t,get_rank<A>> a_t(a,a_op);
-      cutensor::cutensor_desc<value_t,get_rank<B>> b_t(b,b_op);
-      cutensor::elementwise_binary(alpha,a_t,a.data(),indxX,
-                                   beta ,b_t,b.data(),indxY,
+      cutensor::cutensor_desc<value_t,get_rank<A>> a_t(a);
+      cutensor::cutensor_desc<value_t,get_rank<B>> b_t(b);
+      cutensor::elementwise_binary(alpha,a_t,a_op,a.data(),indxX,
+                                   beta ,b_t,b_op,b.data(),indxY,
                                    c.data(),op::SUM);
 #else
       static_assert(always_false<bool>," add on device requires gpu tensor operations backend. ");

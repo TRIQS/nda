@@ -32,7 +32,7 @@
 namespace nda::tensor::cutensor {
 
   // defined in cutensor_interface.cpp 
-  cutensorHandle_t* get_handle_ptr();
+  cutensorHandle_t& get_handle_ptr();
   
 // MAM: always synchronize for now...
 #define CUTENSOR_CHECK(X, ...)               \
@@ -71,16 +71,16 @@ namespace nda::tensor::cutensor {
 
   //cudaDataType_t 
   template<typename T> auto data_type = std::enable_if_t<sizeof(T*)==0>{};
-  template<> inline auto data_type<float>                = CUDA_R_32F;    
-  template<> inline auto data_type<double>               = CUDA_R_64F;    
-  template<> inline auto data_type<std::complex<float>>  = CUDA_C_32F;    
-  template<> inline auto data_type<std::complex<double>> = CUDA_C_64F;    
+  template<> inline auto data_type<float>                = CUTENSOR_R_32F;    
+  template<> inline auto data_type<double>               = CUTENSOR_R_64F;    
+  template<> inline auto data_type<std::complex<float>>  = CUTENSOR_C_32F;    
+  template<> inline auto data_type<std::complex<double>> = CUTENSOR_C_64F;    
 
   template<typename T> auto compute_type = std::enable_if_t<sizeof(T*)==0>{};
-  template<> inline auto compute_type<float>                = CUTENSOR_COMPUTE_32F;
-  template<> inline auto compute_type<double>               = CUTENSOR_COMPUTE_64F;
-  template<> inline auto compute_type<std::complex<float>>  = CUTENSOR_COMPUTE_32F;
-  template<> inline auto compute_type<std::complex<double>> = CUTENSOR_COMPUTE_64F;
+  template<> inline auto compute_type<float>                = CUTENSOR_COMPUTE_DESC_32F;
+  template<> inline auto compute_type<double>               = CUTENSOR_COMPUTE_DESC_64F;
+  template<> inline auto compute_type<std::complex<float>>  = CUTENSOR_COMPUTE_DESC_32F;
+  template<> inline auto compute_type<std::complex<double>> = CUTENSOR_COMPUTE_DESC_64F;
 
   // define a compute_type that takes 3 types and a bool and returns the appropriate compute type, for the bool set to true it will lead to the "fast" version using e.g. CUTENSOR_COMPUTE_TF32 and CUTENSOR_COMPUTE_32F in case of double precision calculations
 
@@ -91,157 +91,143 @@ namespace nda::tensor::cutensor {
 
     // MAM: out of safety, since I don't know how cutensor operates
     std::array<long, rank> lens_, strides_;
-    uint32_t alignment_ = 0;
+    uint32_t alignment_ = 256;      // MAM: need to get this dynamically somehow...
     cutensorTensorDescriptor_t desc_ = {};
 
     cutensor_desc() = delete;
     template<::nda::MemoryArrayOfRank<Rank> Arr>
     requires( Rank > 0 )
-    cutensor_desc(Arr const& a, op::TENSOR_OP const oper = op::ID) :
+    cutensor_desc(Arr const& a) :
       lens_(a.shape()),
       strides_(a.strides())
     {
-      CUTENSOR_CHECK(cutensorInitTensorDescriptor, get_handle_ptr(), &desc_, uint32_t(Rank), 
-  		     lens_.data(), strides_.data(), data_type<ValueType>, cutensor_op(oper)); 
-      CUTENSOR_CHECK(cutensorGetAlignmentRequirement, get_handle_ptr(), (const void *)a.data(),
-		     &desc_, &alignment_); 
+      CUTENSOR_CHECK(cutensorCreateTensorDescriptor, get_handle_ptr(), &desc_, uint32_t(Rank), 
+  		     lens_.data(), strides_.data(), data_type<ValueType>, alignment_); 
     }
-    cutensor_desc(ValueType *a, op::TENSOR_OP const oper = op::ID) :
+    cutensor_desc(ValueType*) :
       lens_{},strides_{}
     {
       static_assert( Rank==0, "Rank mismatch.");
-      CUTENSOR_CHECK(cutensorInitTensorDescriptor, get_handle_ptr(), &desc_, uint32_t(Rank),
-                     NULL, NULL, data_type<ValueType>, cutensor_op(oper));
-      CUTENSOR_CHECK(cutensorGetAlignmentRequirement, get_handle_ptr(), (void *)a,
-                     &desc_, &alignment_);
+      CUTENSOR_CHECK(cutensorCreateTensorDescriptor, get_handle_ptr(), &desc_, uint32_t(Rank),
+                     NULL, NULL, data_type<ValueType>, alignment_);
     }
-    ~cutensor_desc() = default;
+    ~cutensor_desc() {
+      cutensorDestroyTensorDescriptor(desc_);
+    } 
 
     cutensor_desc(cutensor_desc const&) = delete;
     cutensor_desc(cutensor_desc&& other) = default;
 
     uint32_t alignment() const { return alignment_; }
-    cutensorTensorDescriptor_t* desc() { return std::addressof(desc_); }
-    cutensorTensorDescriptor_t const* desc() const { return std::addressof(desc_); }
+    cutensorTensorDescriptor_t& desc() { return desc_; }
+    cutensorTensorDescriptor_t const& desc() const { return desc_; }
+  };
+
+  struct cutensor_plan_t
+  {
+    /* default constructor */
+    cutensor_plan_t() = default;
+
+    /* construct using an operation */
+    cutensor_plan_t(cutensorOperationDescriptor_t& desc, 
+                    bool alloc = true,
+                    cutensorAlgo_t const algo = CUTENSOR_ALGO_DEFAULT,
+                    cutensorWorksizePreference_t const workspacePref = CUTENSOR_WORKSPACE_DEFAULT):
+                    plan{},workspaceSizeEstimate(0),worksize(0),work(nullptr) 
+    {
+      // Set the algorithm to use, no JIT yet!
+      cutensorPlanPreference_t planPref;
+      CUTENSOR_CHECK( cutensorCreatePlanPreference, get_handle_ptr(), &planPref,
+                      algo, CUTENSOR_JIT_MODE_NONE);
+
+      CUTENSOR_CHECK( cutensorEstimateWorkspaceSize, get_handle_ptr(), desc, planPref,
+                                    workspacePref, &workspaceSizeEstimate);
+
+      // Create Contraction Plan
+      CUTENSOR_CHECK( cutensorCreatePlan, get_handle_ptr(), std::addressof(plan), desc,
+                                              planPref, workspaceSizeEstimate);
+
+      if( alloc ) {
+        uint64_t actualWorkspaceSize = 0;
+        CUTENSOR_CHECK(cutensorPlanGetAttribute,get_handle_ptr(),plan,CUTENSOR_PLAN_REQUIRED_WORKSPACE,
+                                 &actualWorkspaceSize,sizeof(actualWorkspaceSize));
+        resize_workspace_if_needed(workspaceSizeEstimate);
+      }
+    } 
+
+    ~cutensor_plan_t() { clear(); }
+
+    cutensor_plan_t(cutensor_plan_t const& other) = delete;
+    cutensor_plan_t(cutensor_plan_t && other) :
+      plan(other.plan),workspaceSizeEstimate(other.workspaceSizeEstimate),
+      worksize(other.worksize),work(other.work)
+    {
+      other.work = nullptr;
+      other.clear();
+    }
+
+    void clear() {
+      if(work != nullptr) cudaFree(work);
+      cutensorDestroyPlan(plan);
+      work=nullptr;
+      worksize=0;
+      workspaceSizeEstimate=0;
+    }
+
+    uint64_t get_workspace_size() const { return worksize; } 
+    void* get_workspace() { return work; }
+
+    void resize_workspace_if_needed(uint64_t size) {
+      if(size > worksize) {
+        worksize = size;
+        if(work != nullptr) cudaFree(work); 
+        work = nullptr; 
+        device_error_check( cudaMalloc((void**) &work, worksize), "cudaMalloc" );
+      } 
+    }
+
+    cutensorPlan_t plan = {}; 
+    uint64_t workspaceSizeEstimate = 0;
+
+    private:
+    uint64_t worksize = 0;
+    void* work = nullptr;
   };
 
   /*************************************************************************
    *                            contraction                                *
    ************************************************************************/
 
-  struct contract_plan_t
-  {
-    contract_plan_t() { plan = new cutensorContractionPlan_t{}; }
-    ~contract_plan_t() { clear(); }
-
-    // what should I do here?
-    contract_plan_t(contract_plan_t const& other) = delete;
-
-    contract_plan_t(contract_plan_t && other) :
-      plan(other.plan),worksize(other.worksize),work(other.work)
-    {
-      other.plan = nullptr;
-      other.worksize = 0;
-      other.work = nullptr;
-    }
-
-    void clear() {
-      if(plan != nullptr) delete plan;
-      if(work != nullptr) cudaFree(work);
-      plan = nullptr;
-      worksize=0;
-      work=nullptr;
-    }
-
-    cutensorContractionPlan_t* plan = nullptr;
-    size_t worksize = 0;
-    void* work = nullptr;
-  };
-
-  template<typename value_t, int rA, int rB, int rC>
-  requires( rA>0 and rB>0 and rC>=0 )
-  contract_plan_t create_contract_plan(
-	    cutensor_desc<value_t,rA> const& descA, std::string_view idxA,
-            cutensor_desc<value_t,rB> const& descB, std::string_view idxB,
-            cutensor_desc<value_t,rC> & descC, std::string_view idxC,
-	    bool alloc = true)
-  { 
-    std::array<int,rA> modeA;	 
-    std::array<int,rB> modeB;	 
-    std::array<int,rC> modeC;
-    std::copy_n(idxA.begin(),rA,modeA.begin());	 
-    std::copy_n(idxB.begin(),rB,modeB.begin());	 
-    if constexpr (rC > 0) std::copy_n(idxC.begin(),rC,modeC.begin());	 
-
-    // Create the Contraction Descriptor
-    cutensorContractionDescriptor_t desc;
-    int* modeC_data = (rC>0?modeC.data():NULL); 
-    CUTENSOR_CHECK( cutensorInitContractionDescriptor, get_handle_ptr(), &desc,
-              descA.desc(), modeA.data(), descA.alignment(),
-              descB.desc(), modeB.data(), descB.alignment(),
-              descC.desc(), modeC_data, descC.alignment(),
-              descC.desc(), modeC_data, descC.alignment(),
-              compute_type<value_t> );
-
-    // Set the algorithm to use
-    cutensorContractionFind_t find;
-    CUTENSOR_CHECK( cutensorInitContractionFind, get_handle_ptr(), &find,
-                  CUTENSOR_ALGO_DEFAULT) ;
-
-    contract_plan_t plan;
-
-    // Query workspace
-    CUTENSOR_CHECK( cutensorContractionGetWorkspaceSize, get_handle_ptr(), &desc, &find,
-                  CUTENSOR_WORKSPACE_RECOMMENDED, &plan.worksize ) ;
-
-    if( alloc and plan.worksize > 0 )
-      device_error_check( cudaMalloc((void**) &plan.work, plan.worksize), "cudaMalloc" );
-
-    // Create Contraction Plan
-    CUTENSOR_CHECK( cutensorInitContractionPlan, get_handle_ptr(), plan.plan, &desc,
-                                            &find, plan.worksize);
-
-    return plan;
-  }
-
-  template<typename value_t>
-  void contract(contract_plan_t &plan, 
-		value_t alpha, value_t const* A_d, value_t const* B_d,
-		value_t beta , value_t * C_d)
-  {
-    if(plan.work != nullptr)  {
-
-      CUTENSOR_CHECK( cutensorContraction, get_handle_ptr(), plan.plan,
-                      (void*)&alpha, A_d, B_d, (void*)&beta,  C_d, C_d,
-                      plan.work, plan.worksize, 0 );
-
-    } else {  
-
-      void* work = nullptr;
-      if(plan.worksize > 0)
-        device_error_check( cudaMalloc((void**) &work, plan.worksize), "cudaMalloc" );
-
-      // Execute the tensor contraction
-      CUTENSOR_CHECK( cutensorContraction, get_handle_ptr(), plan.plan,
-                     (void*)&alpha, A_d, B_d, (void*)&beta,  C_d, C_d,
-                     work, plan.worksize, 0 );
-
-      if(plan.worksize > 0)
-        cudaFree(work);
-    }
-  }
-
   template<typename value_t, int rA, int rB, int rC>
   requires( rA>0 and rB>0 and rC>=0 )
   void contract(value_t alpha,
-            cutensor_desc<value_t,rA> const& descA, value_t const* A_d, std::string_view idxA,
-            cutensor_desc<value_t,rB> const& descB, value_t const* B_d, std::string_view idxB,
+            cutensor_desc<value_t,rA> const& descA, op::TENSOR_OP op_A, value_t const* A_d, std::string_view idxA,
+            cutensor_desc<value_t,rB> const& descB, op::TENSOR_OP op_B, value_t const* B_d, std::string_view idxB,
             value_t beta,
-            cutensor_desc<value_t,rC> & descC, value_t * C_d, std::string_view idxC)
+            cutensor_desc<value_t,rC> & descC, op::TENSOR_OP op_C, value_t * C_d, std::string_view idxC)
   {
-    // don't allocate during plan creation when buffer is ready, allocate on the fly on contract!
-    auto plan = create_contract_plan(descA,idxA,descB,idxB,descC,idxC,true);
-    contract(plan,alpha,A_d,B_d,beta,C_d);
+    std::array<int,rA> modeA;
+    std::array<int,rB> modeB;
+    std::array<int,rC> modeC;
+    std::copy_n(idxA.begin(),rA,modeA.begin());
+    std::copy_n(idxB.begin(),rB,modeB.begin());
+    if constexpr (rC > 0) std::copy_n(idxC.begin(),rC,modeC.begin());
+
+    // Create the Contraction Descriptor
+    cutensorOperationDescriptor_t desc;
+    int* modeC_data = (rC>0?modeC.data():NULL);
+    CUTENSOR_CHECK( cutensorCreateContraction, get_handle_ptr(), &desc,
+              descA.desc(), modeA.data(), cutensor_op(op_A),
+              descB.desc(), modeB.data(), cutensor_op(op_B),
+              descC.desc(), modeC_data, cutensor_op(op_C),
+              descC.desc(), modeC_data,
+              compute_type<value_t> );
+
+    cutensor_plan_t plan(desc,true);
+    // MAM: manage streams later
+    CUTENSOR_CHECK(cutensorContract, get_handle_ptr(), plan.plan,  
+                      (void*)&alpha, A_d, B_d, (void*)&beta,  C_d, C_d,
+                      plan.get_workspace(), plan.get_workspace_size(), 0);
   }
 
 
@@ -252,24 +238,43 @@ namespace nda::tensor::cutensor {
   template<typename value_t, int rA, int rB>
   requires( rA >= 0 and rB > 0 and rB >= rA )
   void elementwise_binary(value_t alpha, 
-	cutensor_desc<value_t,rA> const& descA, value_t const* A_d, std::string_view idxA,
+	cutensor_desc<value_t,rA> const& descA, op::TENSOR_OP op_A, value_t const* A_d, std::string_view idxA,
         value_t gamma,
-        cutensor_desc<value_t,rB> const& descB, value_t const* B_d, std::string_view idxB,
+        cutensor_desc<value_t,rB> const& descB, op::TENSOR_OP op_B, value_t const* B_d, std::string_view idxB,
         value_t * C_d, op::TENSOR_OP oper)
   {
     std::array<int,rB> modeB;
     std::copy_n(idxB.begin(),rB,modeB.begin());
 
     if constexpr (rA > 0) {
+
       std::array<int,rA> modeA;
       std::copy_n(idxA.begin(),rA,modeA.begin());
-      CUTENSOR_CHECK( cutensorElementwiseBinary, get_handle_ptr(), (void*) &alpha, 
-	A_d, descA.desc(), modeA.data(), (void*) &gamma, B_d, descB.desc(), modeB.data(),	 
-	C_d, descB.desc(), modeB.data(), cutensor_op(oper), data_type<value_t>, 0);
+
+      cutensorOperationDescriptor_t desc;
+      CUTENSOR_CHECK(cutensorCreateElementwiseBinary, get_handle_ptr(), &desc,
+                              descA.desc(), modeA.data(), cutensor_op(op_A),
+                              descB.desc(), modeB.data(), cutensor_op(op_B),
+                              descB.desc(), modeB.data(), cutensor_op(oper), compute_type<value_t>);
+    
+      cutensor_plan_t plan(desc,false);
+      // MAM: manage streams later
+      CUTENSOR_CHECK(cutensorElementwiseBinaryExecute, get_handle_ptr(), plan.plan,
+                 (const void*)&alpha, A_d, (void*) &gamma, B_d, C_d, 0);
+
     } else {
-      CUTENSOR_CHECK( cutensorElementwiseBinary, get_handle_ptr(), (void*) &alpha, 
-	A_d, descA.desc(), NULL, (void*) &gamma, B_d, descB.desc(), modeB.data(), 
-	C_d, descB.desc(), modeB.data(), cutensor_op(oper), data_type<value_t>, 0);
+
+      cutensorOperationDescriptor_t desc;
+      CUTENSOR_CHECK(cutensorCreateElementwiseBinary, get_handle_ptr(), &desc,
+                              descA.desc(), NULL, cutensor_op(op_A),
+                              descB.desc(), modeB.data(), cutensor_op(op_B), 
+                              descB.desc(), modeB.data(), cutensor_op(oper), compute_type<value_t>);
+      
+      cutensor_plan_t plan(desc,false);
+      // MAM: manage streams later
+      CUTENSOR_CHECK(cutensorElementwiseBinaryExecute, get_handle_ptr(), plan.plan,
+                 (const void*)&alpha, A_d, (void*) &gamma, B_d, C_d, 0);
+
     }
 
   }
@@ -282,7 +287,7 @@ namespace nda::tensor::cutensor {
   //      new data_type<typeA,typeB> with allowed combinations...
   template<typename value_t, int rank>
   void permute(value_t alpha,
-        cutensor_desc<value_t,rank> const& descA, value_t const* A_d, std::string_view const idxA,
+        cutensor_desc<value_t,rank> const& descA, op::TENSOR_OP op_A, value_t const* A_d, std::string_view const idxA,
         cutensor_desc<value_t,rank> const& descB, value_t * B_d, std::string_view const idxB)
   {
     std::array<int,rank> modeA;
@@ -290,20 +295,26 @@ namespace nda::tensor::cutensor {
     std::copy_n(idxA.begin(),rank,modeA.begin());
     std::copy_n(idxB.begin(),rank,modeB.begin());
 
-    CUTENSOR_CHECK( cutensorPermutation, get_handle_ptr(), (void*) &alpha,
-        A_d, descA.desc(), modeA.data(), B_d, descB.desc(), modeB.data(),
-        data_type<value_t>, 0);
+    cutensorOperationDescriptor_t desc;
+    CUTENSOR_CHECK(cutensorCreatePermutation, get_handle_ptr(), &desc,
+                            descA.desc(), modeA.data(), cutensor_op(op_A),
+                            descB.desc(), modeB.data(), compute_type<value_t>);
+
+    cutensor_plan_t plan(desc,false);
+    // MAM: manage streams later
+    CUTENSOR_CHECK(cutensorPermute, get_handle_ptr(), plan.plan,
+               (const void*)&alpha, A_d, B_d, 0);
   }
 
   /*************************************************************************
-   *                              permute                                  *
+   *                              reduce                                   *
    ************************************************************************/
 
   template<typename value_t, int rA, int rB>
   void reduce(value_t alpha,
-        cutensor_desc<value_t,rA> const& descA, value_t const* A_d, std::string_view const idxA,
+        cutensor_desc<value_t,rA> const& descA, op::TENSOR_OP op_A, value_t const* A_d, std::string_view const idxA,
         value_t beta,
-        cutensor_desc<value_t,rB> const& descB, value_t const* B_d, std::string_view const idxB,
+        cutensor_desc<value_t,rB> const& descB, op::TENSOR_OP op_B, value_t const* B_d, std::string_view const idxB,
         value_t * C_d, op::TENSOR_OP oper)
   {
     std::array<int,rA> modeA;
@@ -311,60 +322,51 @@ namespace nda::tensor::cutensor {
     std::copy_n(idxA.begin(),rA,modeA.begin());
     std::copy_n(idxB.begin(),rB,modeB.begin());
 
-    uint64_t workspaceSize = 0;
-    CUTENSOR_CHECK( cutensorReductionGetWorkspaceSize, get_handle_ptr(), 
-        A_d, descA.desc(), modeA.data(), B_d, descB.desc(), modeB.data(),
-        C_d, descB.desc(), modeB.data(), cutensor_op(oper), 
-	compute_type<value_t>, &workspaceSize);
+    cutensorOperationDescriptor_t desc;
+    CUTENSOR_CHECK(cutensorCreateReduction, get_handle_ptr(), &desc,
+                            descA.desc(), modeA.data(), cutensor_op(op_A),  
+                            descB.desc(), modeB.data(), cutensor_op(op_B),
+                            descB.desc(), modeB.data(), cutensor_op(oper),
+                            compute_type<value_t>);
 
-    // MAM: use buffer!
-    void* work;
-    if( workspaceSize > 0 )
-      device_error_check( cudaMalloc((void**) &work, workspaceSize), "cudaMalloc" );
+    cutensor_plan_t plan(desc,true);
+    // MAM: manage streams later
+    CUTENSOR_CHECK(cutensorReduce, get_handle_ptr(), plan.plan,
+               (const void*)&alpha, A_d,
+               (const void*)&beta,  B_d,
+               C_d, plan.get_workspace(), plan.get_workspace_size(), 0); 
 
-    CUTENSOR_CHECK( cutensorReduction, get_handle_ptr(), (void*) &alpha, 
-        A_d, descA.desc(), modeA.data(), (void*) &beta, B_d, descB.desc(), modeB.data(),
-        C_d, descB.desc(), modeB.data(), cutensor_op(oper), compute_type<value_t>, 
-	work, workspaceSize, 0);
-
-    if( workspaceSize > 0 )
-      cudaFree(work);
   }
 
   template<typename value_t, int rA>
   void reduce(value_t alpha,
-        cutensor_desc<value_t,rA> const& descA, value_t const* A_d, std::string_view const idxA,
+        cutensor_desc<value_t,rA> const& descA, op::TENSOR_OP op_A, value_t const* A_d, std::string_view const idxA,
         value_t * C_d, op::TENSOR_OP oper)
   {
+    value_t beta(0);
     std::array<int,rA> modeA;
     std::copy_n(idxA.begin(),rA,modeA.begin());
 
-    uint32_t alignment_ = 0;
-    cutensorTensorDescriptor_t desc_;
-    CUTENSOR_CHECK(cutensorInitTensorDescriptor, get_handle_ptr(), &desc_, 0,
-                   NULL, NULL, data_type<value_t>, CUTENSOR_OP_IDENTITY);
-    CUTENSOR_CHECK(cutensorGetAlignmentRequirement, get_handle_ptr(), (void *) C_d,
-                   &desc_, &alignment_);
+    uint32_t alignment_ = 256;
+    cutensorTensorDescriptor_t Tdesc_;
+    CUTENSOR_CHECK(cutensorCreateTensorDescriptor, get_handle_ptr(), &Tdesc_, 0,
+                   NULL, NULL, data_type<value_t>, alignment_);
 
-    uint64_t workspaceSize = 0;
-    CUTENSOR_CHECK( cutensorReductionGetWorkspaceSize, get_handle_ptr(),
-        A_d, descA.desc(), modeA.data(), C_d, &desc_, NULL,
-        C_d, &desc_, NULL, cutensor_op(oper),
-        compute_type<value_t>, &workspaceSize);
+    cutensorOperationDescriptor_t Opdesc;
+    CUTENSOR_CHECK(cutensorCreateReduction, get_handle_ptr(), &Opdesc,
+                            descA.desc(), modeA.data(), cutensor_op(op_A),
+                            Tdesc_, nullptr, cutensor_op(op::ID),
+                            Tdesc_, nullptr, cutensor_op(oper),
+                            compute_type<value_t>);
 
-    // MAM: use buffer!
-    void* work;
-    if( workspaceSize > 0 )
-      device_error_check( cudaMalloc((void**) &work, workspaceSize), "cudaMalloc" );
+    cutensor_plan_t plan(Opdesc,true);
+    // MAM: manage streams later
+    CUTENSOR_CHECK(cutensorReduce, get_handle_ptr(), plan.plan,
+               (const void*)&alpha, A_d,
+               (const void*)&beta,  C_d,
+               C_d, plan.get_workspace(), plan.get_workspace_size(), 0);
 
-    value_t beta{0}; 
-    CUTENSOR_CHECK( cutensorReduction, get_handle_ptr(), (void*) &alpha,
-        A_d, descA.desc(), modeA.data(), (void*) &beta, C_d, &desc_, NULL,
-        C_d, &desc_, NULL, cutensor_op(oper), compute_type<value_t>,
-        work, workspaceSize, 0);
-
-    if( workspaceSize > 0 )
-      cudaFree(work);
+    cutensorDestroyTensorDescriptor(Tdesc_);
   }
 
 

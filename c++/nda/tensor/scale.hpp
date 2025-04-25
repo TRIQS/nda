@@ -32,38 +32,9 @@
 
 namespace nda::tensor {
 
-  /**
-   * Compute A(...) = alpha * A(...) 
-   */
-  template <MemoryArray A>
-  requires(is_blas_lapack_v<get_value_t<A>>) 
-  void scale(get_value_t<A> alpha, A &&a) {
-
-    using value_t = get_value_t<A>;
-    constexpr int rank = get_rank<A>;
-
-    if constexpr (mem::on_host<A>) {
-//#if defined(NDA_HAVE_TBLIS)
-//      nda_tblis::tensor<value_t,get_rank<A>> a_t(a,alpha);
-//      std::string indx = default_index<uint8_t(get_rank<A>)>(); 
-//      ::tblis::tblis_tensor_scale(NULL,NULL,&a_t,indx.data());
-//#else
-      a() *= alpha;
-//#endif
-    } else { // on device
-#if defined(NDA_HAVE_CUTENSOR)
-      cutensor::cutensor_desc<value_t,rank> a_t(a,op::ID);
-      std::string indx = default_index<uint8_t(rank)>();
-      cutensor::permute(alpha, a_t, a.data(), indx, a_t, a.data(), indx);
-#else
-      static_assert(always_false<bool>," scale on device requires gpu tensor operations backend. ");
-#endif
-    }
-  }
-
   template <MemoryArray A>
   requires(is_blas_lapack_v<get_value_t<A>>)
-  void scale(get_value_t<A> alpha, A &&a, op::TENSOR_OP oper) {
+  void scale(get_value_t<A> alpha, A &&a, op::TENSOR_OP oper = op::ID) {
 
     using value_t = get_value_t<A>;
     constexpr int rank = get_rank<A>;
@@ -90,10 +61,9 @@ namespace nda::tensor {
       };
     } else { // on device
 #if defined(NDA_HAVE_CUTENSOR)
-      cutensor::cutensor_desc<value_t,rank> a_t(a,oper);
-      cutensor::cutensor_desc<value_t,rank> b_t(a,op::ID);
+      cutensor::cutensor_desc<value_t,rank> a_t(a);
       std::string indx = default_index<uint8_t(rank)>();
-      cutensor::permute(alpha, a_t, a.data(), indx, b_t, a.data(), indx);
+      cutensor::permute(alpha, a_t, oper, a.data(), indx, a_t, a.data(), indx);
 #else
       static_assert(always_false<bool>," scale on device requires gpu tensor operations backend. ");
 #endif

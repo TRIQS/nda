@@ -76,10 +76,10 @@ namespace nda::tensor {
       // pull more generic operands!
       op::TENSOR_OP a_op = conj_A ? op::CONJ : op::ID;
       op::TENSOR_OP b_op = conj_B ? op::CONJ : op::ID;
-      cutensor::cutensor_desc<value_t,get_rank<A>> a_t(a,a_op);
-      cutensor::cutensor_desc<value_t,get_rank<B>> b_t(b,b_op);
-      cutensor::cutensor_desc<value_t,get_rank<C>> c_t(c,op::ID);
-      cutensor::contract(alpha,a_t,a.data(),indxX,b_t,b.data(),indxY,beta,c_t,c.data(),indxC);
+      cutensor::cutensor_desc<value_t,get_rank<A>> a_t(a);
+      cutensor::cutensor_desc<value_t,get_rank<B>> b_t(b);
+      cutensor::cutensor_desc<value_t,get_rank<C>> c_t(c);
+      cutensor::contract(alpha,a_t,a_op,a.data(),indxX,b_t,b_op,b.data(),indxY,beta,c_t,op::ID,c.data(),indxC);
 #else
       static_assert(always_false<bool>," contract on device requires gpu tensor contraction backend. ");
 #endif
