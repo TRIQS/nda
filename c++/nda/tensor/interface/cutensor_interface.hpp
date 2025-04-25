@@ -25,7 +25,7 @@
 #include "nda/traits.hpp"
 #include "nda/macros.hpp"
 #include "nda/exceptions.hpp"
-#include "nda/mem/device.hpp"
+#include "nda/device.hpp"
 #include "nda/tensor/tools.hpp"
 #include "cuda_runtime.h"
 
@@ -195,7 +195,7 @@ namespace nda::tensor::cutensor {
                   CUTENSOR_WORKSPACE_RECOMMENDED, &plan.worksize ) ;
 
     if( alloc and plan.worksize > 0 )
-      mem::device_check( cudaMalloc((void**) &plan.work, plan.worksize), "cudaMalloc" );
+      device_error_check( cudaMalloc((void**) &plan.work, plan.worksize), "cudaMalloc" );
 
     // Create Contraction Plan
     CUTENSOR_CHECK( cutensorInitContractionPlan, get_handle_ptr(), plan.plan, &desc,
@@ -219,7 +219,7 @@ namespace nda::tensor::cutensor {
 
       void* work = nullptr;
       if(plan.worksize > 0)
-        mem::device_check( cudaMalloc((void**) &work, plan.worksize), "cudaMalloc" );
+        device_error_check( cudaMalloc((void**) &work, plan.worksize), "cudaMalloc" );
 
       // Execute the tensor contraction
       CUTENSOR_CHECK( cutensorContraction, get_handle_ptr(), plan.plan,
@@ -320,7 +320,7 @@ namespace nda::tensor::cutensor {
     // MAM: use buffer!
     void* work;
     if( workspaceSize > 0 )
-      mem::device_check( cudaMalloc((void**) &work, workspaceSize), "cudaMalloc" );
+      device_error_check( cudaMalloc((void**) &work, workspaceSize), "cudaMalloc" );
 
     CUTENSOR_CHECK( cutensorReduction, get_handle_ptr(), (void*) &alpha, 
         A_d, descA.desc(), modeA.data(), (void*) &beta, B_d, descB.desc(), modeB.data(),
@@ -355,7 +355,7 @@ namespace nda::tensor::cutensor {
     // MAM: use buffer!
     void* work;
     if( workspaceSize > 0 )
-      mem::device_check( cudaMalloc((void**) &work, workspaceSize), "cudaMalloc" );
+      device_error_check( cudaMalloc((void**) &work, workspaceSize), "cudaMalloc" );
 
     value_t beta{0}; 
     CUTENSOR_CHECK( cutensorReduction, get_handle_ptr(), (void*) &alpha,
