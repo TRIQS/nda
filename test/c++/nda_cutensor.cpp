@@ -17,12 +17,16 @@
 #include <algorithm>
 #include <type_traits>
 #include "test_common.hpp"
+#include "nda/gtest_tools.hpp"
 
+#include <nda/nda.hpp>
 #include <nda/tensor.hpp>
 #include <nda/traits.hpp>
 //#include <nda/clef/literals.hpp>
 
 using nda::F_layout;
+using nda::C_layout;
+using dcomplex = std::complex<double>;
 //using namespace clef::literals;
 
 //----------------------------
@@ -30,10 +34,11 @@ using nda::F_layout;
 template <typename value_t, typename Layout>
 void test_contract() {
 
+  nda::range::all_t _    = {};
   // MAM: add tests passing matrix view's
   using other_layout = std::conditional_t<std::is_same_v<Layout, C_layout>, F_layout, C_layout>;
   { // ik,kj->ij
-    matrix<value_t, Layout> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3{{1, 0}, {0, 1}};
+    nda::matrix<value_t, Layout> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3{{1, 0}, {0, 1}};
     nda::cumatrix<value_t, Layout> M1_d{M1}, M2_d{M2}, M3_d{M3};
 
     nda::tensor::contract(1.0, M1_d, "ik", M2_d, "kj", 1.0, M3_d, "ij");
@@ -82,8 +87,8 @@ void test_contract() {
 
   // mixed layouts
   { // ik,kj->ij
-    matrix<value_t, Layout> M1{{0, 1}, {1, 2}}, M3{{1, 0}, {0, 1}};
-    matrix<value_t, other_layout> M2{{1, 1}, {1, 1}};
+    nda::matrix<value_t, Layout> M1{{0, 1}, {1, 2}}, M3{{1, 0}, {0, 1}};
+    nda::matrix<value_t, other_layout> M2{{1, 1}, {1, 1}};
     nda::cumatrix<value_t, Layout> M1_d{M1}, M3_d{M3};
     nda::cumatrix<value_t, other_layout> M2_d{M2};
     nda::tensor::contract(1.0, M1_d, "ik", M2_d, "kj", 1.0, M3_d, "ij");
@@ -138,7 +143,7 @@ void test_outer_product_contract() {
 
   using other_layout = std::conditional_t<std::is_same_v<Layout, C_layout>, F_layout, C_layout>;
   { // i,j->ij
-    matrix<value_t, Layout> M3{{1, 0}, {0, 1}};
+    nda::matrix<value_t, Layout> M3{{1, 0}, {0, 1}};
     nda::array<value_t, 1, Layout> M1{{value_t{1}, value_t{2}}}, M2{{value_t{3}, value_t{4}}};
 
     nda::cumatrix<value_t, Layout> M3_d{M3};
@@ -151,7 +156,7 @@ void test_outer_product_contract() {
   }
 
   { // i,ij->ij
-    matrix<value_t, Layout> M2{{1, 2}, {3, 4}}, M3{{1, 0}, {0, 1}};
+    nda::matrix<value_t, Layout> M2{{1, 2}, {3, 4}}, M3{{1, 0}, {0, 1}};
     nda::array<value_t, 1, Layout> M1{{value_t{2}, value_t{3}}};
 
     nda::cumatrix<value_t, Layout> M2_d{M2}, M3_d{M3};
@@ -164,7 +169,7 @@ void test_outer_product_contract() {
   }
 
   { // i,j->ij
-    matrix<value_t, other_layout> M3{{1, 0}, {0, 1}};
+    nda::matrix<value_t, other_layout> M3{{1, 0}, {0, 1}};
     nda::array<value_t, 1, Layout> M1{{value_t{1}, value_t{2}}}, M2{{value_t{3}, value_t{4}}};
 
     nda::cumatrix<value_t, other_layout> M3_d{M3};
@@ -177,8 +182,8 @@ void test_outer_product_contract() {
   }
 
   { // i,ij->ij
-    matrix<value_t, other_layout> M2{{1, 2}, {3, 4}};
-    matrix<value_t, Layout> M3{{1, 0}, {0, 1}};
+    nda::matrix<value_t, other_layout> M2{{1, 2}, {3, 4}};
+    nda::matrix<value_t, Layout> M3{{1, 0}, {0, 1}};
     nda::array<value_t, 1, Layout> M1{{value_t{2}, value_t{3}}};
 
     nda::cumatrix<value_t, other_layout> M2_d{M2};
@@ -199,6 +204,7 @@ TEST(TENSOR, zouter_product_contractF) { test_outer_product_contract<std::comple
 
 template <typename value_t, typename Layout>
 void test_add() {
+  nda::range::all_t _    = {};
   nda::array<value_t, 3, Layout> M1{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
   nda::array<value_t, 3, Layout> M2{{{0, 2}, {4, 6}}, {{8, 10}, {12, 14}}};
   nda::array<value_t, 3, Layout> M3(2, 2, 2);
@@ -247,6 +253,7 @@ TEST(TENSOR, zaddF) { test_add<dcomplex, F_layout>(); } //NOLINT
 
 template <typename value_t, typename Layout>
 void test_set() {
+  nda::range::all_t _    = {};
   {
     nda::array<value_t, 3, Layout> M1{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
     nda::cuarray<value_t, 3, Layout> M1_d{M1};
