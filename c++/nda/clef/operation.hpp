@@ -20,6 +20,22 @@
 
 namespace nda::clef {
 
+  /// During a partial evaluation of an expression, the
+  // function nodes can be evaluated in 2 ways :
+  // - default : the function is evaluated iif all the arguments are non lazy
+  //             otherwise the node is kept, with its children replaced by evaluation
+  //             i.e. the function is NOT called.
+  // - if true : the function is CALLED with all the arguments, lazy of not.
+  //             It is not the default, as the function/object must be properly
+  //             implemented, by MOVING the argument in a new function node
+  //             with make_expr_call
+  template <typename F>
+  constexpr bool supports_partial_eval_of_calls = false;
+
+  /// Same as supports_partial_eval_of_calls but for the subscript operator
+  template <typename F>
+  constexpr bool supports_partial_eval_of_subscript = false;
+
   /**
    * @addtogroup clef_expr
    * @{
@@ -81,7 +97,9 @@ namespace nda::clef {
      * @return Result of the function call.
      */
     template <typename F, typename... Args>
-    FORCEINLINE decltype(auto) operator()(F &&f, Args &&...args) const {
+    FORCEINLINE auto operator()(F &&f, Args &&...args)
+       -> decltype(detail::fget(std::forward<F>(f))(detail::fget(std::forward<Args>(args))...)) const {
+      // trailing decltype is necessary for requires later in operation<Tag>
       return detail::fget(std::forward<F>(f))(detail::fget(std::forward<Args>(args))...);
     }
   };
@@ -99,7 +117,8 @@ namespace nda::clef {
      * @return Result of the subscript operation.
      */
     template <typename F, typename... Args>
-    FORCEINLINE decltype(auto) operator()(F &&f, Args &&...args) const {
+    FORCEINLINE auto operator()(F &&f, Args &&...args)
+       -> decltype(detail::fget(std::forward<F>(f)).operator[](detail::fget(std::forward<Args>(args))...)) const {
       // directly calling [args...] breaks clang
       return detail::fget(std::forward<F>(f)).operator[](detail::fget(std::forward<Args>(args))...);
     }
@@ -224,9 +243,18 @@ namespace nda::clef {
    * @param args Operands.
    * @return An nda::clef::expr for the given operation and operands.
    */
+
   template <typename Tag, typename... Args>
   FORCEINLINE auto op_dispatch(std::true_type, Args &&...args) {
-    return expr<Tag, expr_storage_t<Args>...>{Tag(), std::forward<Args>(args)...};
+    using Arg0 = std::decay_t<std::tuple_element_t<0, std::tuple<Args...>>>;
+    if constexpr (not(std::is_same_v<Tag, tags::function> and not supports_partial_eval_of_calls<Arg0>) and  //
+                  not(std::is_same_v<Tag, tags::subscript> and not supports_partial_eval_of_subscript<Arg0>) //and //
+                  //requires { operation<Tag>()(std::forward<Args>(args)...); }
+    ) {
+      return operation<Tag>()(std::forward<Args>(args)...);
+    } else {
+      return expr<Tag, expr_storage_t<Args>...>{Tag(), std::forward<Args>(args)...};
+    }
   }
 
   /**

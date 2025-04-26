@@ -114,10 +114,27 @@ namespace nda::clef {
      * @return An nda::clef::expr object with the nda::clef::tags::function tag containing the current expression node
      * as the first child node and the other arguments as the remaining child nodes.
      */
+#ifdef __cpp_explicit_this_parameter
+    template <typename Self, typename... Args>
+    auto operator()(this Self &&self, Args &&...args) {
+      return expr<tags::function, expr, expr_storage_t<Args>...>{tags::function(), std::forward<Self>(self), std::forward<Args>(args)...};
+    }
+#else
     template <typename... Args>
-    auto operator()(Args &&...args) const {
+    auto operator()(Args &&...args) const & {
       return expr<tags::function, expr, expr_storage_t<Args>...>{tags::function(), *this, std::forward<Args>(args)...};
     }
+
+    template <typename... Args>
+    auto operator()(Args &&...args) & {
+      return expr<tags::function, expr, expr_storage_t<Args>...>{tags::function(), *this, std::forward<Args>(args)...};
+    }
+
+    template <typename... Args>
+    auto operator()(Args &&...args) && {
+      return expr<tags::function, expr, expr_storage_t<Args>...>{tags::function(), std::move(*this), std::forward<Args>(args)...};
+    }
+#endif
   };
 
   namespace detail {

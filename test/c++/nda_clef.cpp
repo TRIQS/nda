@@ -12,6 +12,7 @@
 #include <array>
 #include <functional>
 #include <iostream>
+#include <sstream>
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -473,4 +474,53 @@ TEST_F(CLEF, SumExpressionOverDomain) {
   EXPECT_EQ(clef::sum(ex3, x0_ = dom1, x1_ = dom2), 5 + 2 * 6 + 3 * 7 + 2 * 8 + 9);
   EXPECT_EQ(dom1.size(), 3);
   EXPECT_EQ(clef::sum(ex3, x0_ = std::vector{1, 2, 3}, x1_ = std::vector{4, 5, 6}), 5 + 2 * 6 + 3 * 7 + 2 * 8 + 9);
+}
+
+// ========= Deep Evaluation of Function Calls ==========
+int f1(int x) {
+  //std::cerr << "Eval f1 " << x << std::endl;
+  return 100 * x;
+}
+CLEF_MAKE_FNT_LAZY(f1);
+
+struct _f3 {
+  auto operator()(auto x, auto y) const {
+    if constexpr (nda::clef::is_lazy<decltype(x)>) {
+      if constexpr (nda::clef::is_lazy<decltype(y)>) {
+        return make_expr_call(*this, x, y);
+      } else {
+        // std::cerr << "Eval f3 ONE LAZY " << x << " " << y << std::endl;
+        return f1(x) + auto{y};
+      }
+    } else {
+      // std::cerr << "Eval f3 " << x << " " << y << std::endl;
+      return 10 * x + y;
+    }
+  }
+};
+template <>
+constexpr bool nda::clef::supports_partial_eval_of_calls<_f3> = true;
+
+static constexpr _f3 f3{};
+std::ostream &operator<<(std::ostream &out, _f3) { return out << "f3"; }
+
+TEST_F(CLEF, DeepEval1) {
+  nda::clef::placeholder<0> x_;
+  nda::clef::placeholder<1> y_;
+  nda::clef::placeholder<2> z_;
+  auto ex = x_ + (10 * y_ + 100 * z_);
+  auto ev = eval(ex, y_ = 20, z_ = 30);
+  std::stringstream s1, s2;
+  s1 << ev;
+  s2 << x_ + 3200;
+  EXPECT_EQ(s1.str(), s2.str());
+  EXPECT_EQ(eval(ev, x_ = 1), 1 + 10 * 20 + 100 * 30);
+}
+
+TEST_F(CLEF, DeepEvalFntCall) {
+  nda::clef::placeholder<0> x_;
+  nda::clef::placeholder<1> y_;
+  auto ex = x_ + f3(x_, y_);
+  auto ev = eval(ex, y_ = 20);
+  EXPECT_EQ(eval(ev, x_ = 1), 1 + f1(1) + 20);
 }
