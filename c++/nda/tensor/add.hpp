@@ -172,6 +172,45 @@ namespace nda::tensor {
     return add(get_value_t<X>{1.0},x,indxX,get_value_t<Y>{0.0},y,indxY,std::forward<C>(c),indxC);
   }
 
+  template <Array X, MemoryArray B>
+  requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and
+           have_same_value_type_v<X, B> and is_blas_lapack_v<get_value_t<X>>)
+  void add(X const &x, B &&b)
+  {
+    constexpr int rank = get_rank<B>; 
+    using nda::blas::is_conj_array_expr;
+    auto to_mat = []<typename Z>(Z const &z) -> auto & {
+      if constexpr (is_conj_array_expr<Z>)
+        return std::get<0>(z.a);
+      else
+        return z;
+    };
+    auto &a = to_mat(x);
+    using A = decltype(a);
+    static_assert(rank == get_rank<A>, "Rank mismatch.");
+    std::string indx = default_index<uint8_t(rank)>();
+    return add(x,indx,std::forward<B>(b),indx);
+  }
+
+  template <Array X, MemoryArray B>
+  requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and
+           have_same_value_type_v<X, B> and is_blas_lapack_v<get_value_t<X>>)
+  void add(get_value_t<X> alpha, X const &x, get_value_t<B> beta, B &&b)
+  {
+    constexpr int rank = get_rank<B>;
+    using nda::blas::is_conj_array_expr;
+    auto to_mat = []<typename Z>(Z const &z) -> auto & {
+      if constexpr (is_conj_array_expr<Z>)
+        return std::get<0>(z.a);
+      else
+        return z;
+    };
+    auto &a = to_mat(x);
+    using A = decltype(a);
+    static_assert(rank == get_rank<A>, "Rank mismatch.");
+    std::string indx = default_index<uint8_t(rank)>();
+    return add(alpha,x,indx,beta,std::forward<B>(b),indx);
+  }
 
 
 } // namespace nda::tensor
