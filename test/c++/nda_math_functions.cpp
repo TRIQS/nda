@@ -24,8 +24,8 @@ struct NDAMathFunction : public ::testing::Test {
   std::array<long, 3> shape{2, 3, 4};
   nda::array<double, 3> A_d;
   nda::array<std::complex<double>, 3> A_c;
-  static auto constexpr nan = std::numeric_limits<double>::quiet_NaN();
-  static auto constexpr dbl_c = -0.1234;
+  static auto constexpr nan    = std::numeric_limits<double>::quiet_NaN();
+  static auto constexpr dbl_c  = -0.1234;
   static auto constexpr cplx_c = std::complex<double>{-1.234, 2.345};
 };
 
@@ -339,4 +339,3 @@ TEST_F(NDAMathFunction, CombineMathFunctionsWithArithmeticOps) {
   EXPECT_ARRAY_NEAR(mat_t(transpose(C)), C_transp);
   EXPECT_ARRAY_NEAR(mat_t(C * conj(transpose(C))), mat_t(transpose(conj(C) * transpose(C))));
 }
-

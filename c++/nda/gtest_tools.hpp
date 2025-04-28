@@ -126,7 +126,7 @@ template <typename X>
   nda::array<nda::get_value_t<X>, nda::get_rank<X>> x_reg = x;
 
   constexpr double eps = 1.e-10;
-  const auto max = max_element(abs(x_reg));
+  const auto max       = max_element(abs(x_reg));
   if (x_reg.size() == 0 || max < eps)
     return ::testing::AssertionSuccess();
   else

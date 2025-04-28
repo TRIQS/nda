@@ -186,7 +186,7 @@ namespace nda {
 
   /// Constexpr variable that is true if all types in `As` have the same rank as `A0`.
   template <typename A0, typename... As>
-  inline constexpr bool have_same_rank_v = ((get_rank<A0> == get_rank<As>)and... and true);
+  inline constexpr bool have_same_rank_v = ((get_rank<A0> == get_rank<As>) and ... and true);
 
   /** @} */
 

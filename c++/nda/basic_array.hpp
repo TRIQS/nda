@@ -451,8 +451,8 @@ namespace nda {
       requires(std::is_floating_point_v<ValueType> or nda::is_complex_v<ValueType>)
     {
       using namespace std::complex_literals;
-      auto static gen  = std::mt19937(std::random_device{}());
-      auto res         = basic_array{shape};
+      auto static gen = std::mt19937(std::random_device{}());
+      auto res        = basic_array{shape};
       if constexpr (nda::is_complex_v<ValueType>) {
         auto static dist = std::uniform_real_distribution<typename ValueType::value_type>(0.0, 1.0);
         for (auto &x : res) x = dist(gen) + 1i * dist(gen);

@@ -274,7 +274,7 @@ namespace nda::slice_static {
       static constexpr std::array<int, P> new_stride_order = slice_stride_order(IdxMap::stride_order, n_of_p);
 
       // compile-time layout properties of the resulting index map
-      static constexpr bool has_only_rangeall_and_long = ((std::is_constructible_v<long, Args> or std::is_base_of_v<range::all_t, Args>)and...);
+      static constexpr bool has_only_rangeall_and_long = ((std::is_constructible_v<long, Args> or std::is_base_of_v<range::all_t, Args>) and ...);
       static constexpr layout_prop_e li =
          slice_layout_prop(P, has_only_rangeall_and_long, args_is_rangeall, IdxMap::stride_order, IdxMap::layout_prop, e_pos, e_len);
 

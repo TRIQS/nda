@@ -20,8 +20,7 @@ namespace nda::clef::literals {
    */
 
   // Define literal placeholders starting from the end of the allowed index spectrum.
-#define PH(I)                                                                                                                                        \
-  (placeholder<63 - (I)> {})
+#define PH(I) (placeholder<63 - (I)>{})
 
   /// Generic placeholder #1.
   constexpr auto i_ = PH(0);
@@ -58,6 +57,6 @@ namespace nda::clef::literals {
 
 #undef PH
 
-/** @} */
+  /** @} */
 
 } // namespace nda::clef::literals

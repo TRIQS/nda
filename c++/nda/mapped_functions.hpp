@@ -40,8 +40,7 @@ namespace nda {
 
     // Get the complex conjugate of a scalar.
     template <nda::Scalar S>
-    auto conj(S x)
-    {
+    auto conj(S x) {
       if constexpr (is_complex_v<S>) {
         return std::conj(x);
       } else {

@@ -102,7 +102,7 @@ H check_handle() {
 #ifdef __clang__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wself-assign-overloaded"
-#endif // __clang__
+#endif             // __clang__
   handle = handle; // NOLINT (we want to check self assignment)
 #ifdef __clang__
 #pragma GCC diagnostic pop
@@ -290,7 +290,7 @@ TEST(NDA, MemoryMultiBucketAllocator) {
   EXPECT_TRUE(allo.owns(bucket2[0]));
   // The new bucket may be first inside allo.buckets(),
   // as it respects memory ordering. Let's get the indeces
-  std::size_t first_bucket_idx = allo.buckets()[1].owns(bucket1[0]);
+  std::size_t first_bucket_idx  = allo.buckets()[1].owns(bucket1[0]);
   std::size_t second_bucket_idx = allo.buckets()[1].owns(bucket2[0]);
   EXPECT_TRUE(allo.buckets()[first_bucket_idx].is_full());
   EXPECT_FALSE(allo.buckets()[first_bucket_idx].owns(bucket2[0]));

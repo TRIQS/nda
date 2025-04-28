@@ -511,7 +511,7 @@ namespace nda::mem {
     static constexpr auto address_space = Host;
 
     /// Default constructor.
-    handle_sso(){}; // NOLINT (user-defined constructor to avoid value initialization of the buffer)
+    handle_sso() {}; // NOLINT (user-defined constructor to avoid value initialization of the buffer)
 
     /**
      * @brief Destructor for the handle.

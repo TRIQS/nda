@@ -42,7 +42,7 @@ struct toy_mat1_t {
 
 struct toy_mat2_t {
   sso<1000>::handle<double> storage;
-  toy_mat2_t(){}; // Custom constructor -> Not an aggregate type
+  toy_mat2_t() {}; // Custom constructor -> Not an aggregate type
 };
 
 BENCH_EXPR(constr_toy_mat1, toy_mat1_t{});
