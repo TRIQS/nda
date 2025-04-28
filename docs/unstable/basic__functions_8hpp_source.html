@@ -441,7 +441,7 @@ $(function(){initNavTree('basic__functions_8hpp_source.html',''); initResizable(
 <div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>    <span class="comment">// slicing helper function</span></div>
 <div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>    <span class="keyword">auto</span> slice_Axis = [](<a class="code hl_concept" href="conceptnda_1_1_array.html">Array</a> <span class="keyword">auto</span> &amp;a, range r) {</div>
 <div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span>      <span class="keyword">auto</span> all_or_range = std::make_tuple(range::all, r);</div>
-<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span>      <span class="keywordflow">return</span> [&amp;]&lt;<span class="keyword">auto</span>... Is&gt;(std::index_sequence&lt;Is...&gt;) { <span class="keywordflow">return</span> a(std::get&lt;Is == Axis&gt;(all_or_range)...); }(std::make_index_sequence&lt;rank&gt;{});</div>
+<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span>      <span class="keywordflow">return</span> [&amp;]&lt;<span class="keyword">auto</span>... Is&gt;(std::index_sequence&lt;Is...&gt;) { <span class="keywordflow">return</span> a(std::get &lt; Is == Axis &gt; (all_or_range)...); }(std::make_index_sequence&lt;rank&gt;{});</div>
 <div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>    };</div>
 <div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span> </div>
 <div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>    <span class="comment">// initialize concatenated array</span></div>

@@ -156,272 +156,273 @@ $(function(){initNavTree('h5_8hpp_source.html',''); initResizable(true); });
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="comment">// Given an array/view, prepare and return the corresponding h5::array_view to be written/read into.</span></div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">template</span> &lt;MemoryArray A&gt;</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">auto</span> prepare_h5_array_view(<span class="keyword">const</span> A &amp;a) {</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>      <span class="keyword">auto</span> [parent_shape, h5_strides] = h5::array_interface::get_parent_shape_and_h5_strides(a.indexmap().strides().data(), A::rank, a.shape().data());</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>      <span class="keyword">auto</span> v = h5::array_interface::array_view{h5::hdf5_type&lt;get_value_t&lt;A&gt;&gt;(), (<span class="keywordtype">void</span> *)a.data(), A::rank, <a class="code hl_variable" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v&lt;typename A::value_type&gt;</a>};</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> u = 0; u &lt; A::rank; ++u) {</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        v.slab.count[u]   = a.shape()[u];</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        v.slab.stride[u]  = h5_strides[u];</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        v.parent_shape[u] = parent_shape[u];</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>      }</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>      <span class="keywordflow">return</span> v;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    }</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="comment">// Create an h5::char_buf from an 1-dimensional nda::MemoryArray.</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keyword">template</span> &lt;MemoryArrayOfRank&lt;1&gt; A&gt;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    h5::char_buf to_char_buf(A <span class="keyword">const</span> &amp;a) {</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>      <span class="comment">// get size of longest string</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>      <span class="keywordtype">size_t</span> s = 0;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;x : a) s = std::max(s, x.size() + 1);</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>      <span class="comment">// copy each string to a buffer and pad with zeros</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>      std::vector&lt;char&gt; buf;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>      buf.resize(a.size() * s, 0x00);</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>      <span class="keywordtype">size_t</span> i = 0;</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;x : a) {</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        strcpy(&amp;buf[i * s], x.c_str());</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        ++i;</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>      }</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>      <span class="comment">// return h5::char_buf</span></div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>      <span class="keyword">auto</span> len = h5::v_t{size_t(a.size()), s};</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>      <span class="keywordflow">return</span> {buf, len};</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    }</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="comment">// Write an h5::char_buf into a 1-dimensional nda::MemoryArray.</span></div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keyword">template</span> &lt;MemoryArrayOfRank&lt;1&gt; A&gt;</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keywordtype">void</span> from_char_buf(h5::char_buf <span class="keyword">const</span> &amp;cb, A &amp;a) {</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>      <span class="comment">// prepare the array</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>      resize_or_check(a, std::array&lt;long, 1&gt;{<span class="keyword">static_cast&lt;</span><span class="keywordtype">long</span><span class="keyword">&gt;</span>(cb.lengths[0])});</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>      <span class="comment">// loop over all strings</span></div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>      <span class="keyword">auto</span> len_string = cb.lengths[1];</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>      <span class="keywordtype">size_t</span> i        = 0;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;x : a) {</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        x = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        x.append(&amp;cb.buffer[i * len_string]);</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        ++i;</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>      }</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    }</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  } <span class="comment">// namespace detail</span></div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span></div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  <span class="keyword">template</span> &lt;MemoryArray A&gt;</div>
-<div class="foldopen" id="foldopen00119" data-start="{" data-end="}">
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="group__av__hdf5.html#ga45a1f6d57e999ad0cf8023e3d1b0ff2c">  119</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="group__av__hdf5.html#ga45a1f6d57e999ad0cf8023e3d1b0ff2c">h5_write</a>(h5::group g, std::string <span class="keyword">const</span> &amp;name, A <span class="keyword">const</span> &amp;a, <span class="keywordtype">bool</span> compress = <span class="keyword">true</span>) {</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;nda::get_value_t&lt;A&gt;, std::string&gt;) {</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>      <span class="comment">// 1-dimensional array/view of strings</span></div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>      <a class="code hl_function" href="group__av__hdf5.html#ga45a1f6d57e999ad0cf8023e3d1b0ff2c">h5_write</a>(g, name, detail::to_char_buf(a));</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_variable" href="group__utils__type__traits.html#gadb69652fdcf2bc3040818cfdd5d6f4ff">is_scalar_v&lt;typename A::value_type&gt;</a>) {</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>      <span class="comment">// n-dimensional array/view of scalars</span></div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>      <span class="comment">// make a copy if the array/view is not in C-order and write the copy</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>      <span class="keywordflow">if</span> (not a.indexmap().is_stride_order_C()) {</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        <span class="keyword">using </span>h5_arr_t  = <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;get_value_t&lt;A&gt;</a>, A::rank&gt;;</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="keyword">auto</span> a_c_layout = h5_arr_t{a.shape()};</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        a_c_layout()    = a;</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        <a class="code hl_function" href="group__av__hdf5.html#ga45a1f6d57e999ad0cf8023e3d1b0ff2c">h5_write</a>(g, name, a_c_layout, compress);</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>      }</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>      <span class="comment">// prepare the h5::array_view and write it</span></div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>      <span class="keyword">auto</span> v = detail::prepare_h5_array_view(a);</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>      h5::array_interface::write(g, name, v, compress);</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>      <span class="comment">// n-dimensional array/view of some generic unknown type</span></div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>      <span class="keyword">auto</span> g2 = g.create_group(name);</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>      <a class="code hl_function" href="group__av__hdf5.html#ga45a1f6d57e999ad0cf8023e3d1b0ff2c">h5_write</a>(g2, <span class="stringliteral">&quot;shape&quot;</span>, a.shape());</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>      <span class="keyword">auto</span> make_name = [](<span class="keyword">auto</span> i0, <span class="keyword">auto</span>... is) { <span class="keywordflow">return</span> (<a class="code hl_function" href="group__utils__std.html#gac7b064be9fe6a90baf339d17a134e5dc">std::to_string</a>(i0) + ... + (<span class="stringliteral">&quot;_&quot;</span> + <a class="code hl_function" href="group__utils__std.html#gac7b064be9fe6a90baf339d17a134e5dc">std::to_string</a>(is))); };</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>      <a class="code hl_function" href="group__layout__utils.html#ga3cad3c1ccde2290cf1f53ee627e54bf6">nda::for_each</a>(a.shape(), [&amp;](<span class="keyword">auto</span>... is) { h5_write(g2, make_name(is...), a(is...)); });</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    }</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>  }</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>      <span class="keyword">auto</span> [parent_shape, h5_strides] =</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>         h5::array_interface::get_parent_shape_and_h5_strides(a.indexmap().strides().data(), A::rank, a.shape().data());</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>      <span class="keyword">auto</span> v = h5::array_interface::array_view{h5::hdf5_type&lt;get_value_t&lt;A&gt;&gt;(), (<span class="keywordtype">void</span> *)a.data(), A::rank, <a class="code hl_variable" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v&lt;typename A::value_type&gt;</a>};</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> u = 0; u &lt; A::rank; ++u) {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        v.slab.count[u]   = a.shape()[u];</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        v.slab.stride[u]  = h5_strides[u];</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        v.parent_shape[u] = parent_shape[u];</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>      }</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>      <span class="keywordflow">return</span> v;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    }</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="comment">// Create an h5::char_buf from an 1-dimensional nda::MemoryArray.</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keyword">template</span> &lt;MemoryArrayOfRank&lt;1&gt; A&gt;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    h5::char_buf to_char_buf(A <span class="keyword">const</span> &amp;a) {</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>      <span class="comment">// get size of longest string</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>      <span class="keywordtype">size_t</span> s = 0;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;x : a) s = std::max(s, x.size() + 1);</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>      <span class="comment">// copy each string to a buffer and pad with zeros</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>      std::vector&lt;char&gt; buf;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>      buf.resize(a.size() * s, 0x00);</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>      <span class="keywordtype">size_t</span> i = 0;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;x : a) {</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        strcpy(&amp;buf[i * s], x.c_str());</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        ++i;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>      }</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>      <span class="comment">// return h5::char_buf</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>      <span class="keyword">auto</span> len = h5::v_t{size_t(a.size()), s};</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>      <span class="keywordflow">return</span> {buf, len};</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    }</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="comment">// Write an h5::char_buf into a 1-dimensional nda::MemoryArray.</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keyword">template</span> &lt;MemoryArrayOfRank&lt;1&gt; A&gt;</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keywordtype">void</span> from_char_buf(h5::char_buf <span class="keyword">const</span> &amp;cb, A &amp;a) {</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>      <span class="comment">// prepare the array</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>      resize_or_check(a, std::array&lt;long, 1&gt;{<span class="keyword">static_cast&lt;</span><span class="keywordtype">long</span><span class="keyword">&gt;</span>(cb.lengths[0])});</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>      <span class="comment">// loop over all strings</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>      <span class="keyword">auto</span> len_string = cb.lengths[1];</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>      <span class="keywordtype">size_t</span> i        = 0;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;x : a) {</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        x = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        x.append(&amp;cb.buffer[i * len_string]);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        ++i;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>      }</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    }</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  } <span class="comment">// namespace detail</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  <span class="keyword">template</span> &lt;MemoryArray A&gt;</div>
+<div class="foldopen" id="foldopen00120" data-start="{" data-end="}">
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno"><a class="line" href="group__av__hdf5.html#ga45a1f6d57e999ad0cf8023e3d1b0ff2c">  120</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="group__av__hdf5.html#ga45a1f6d57e999ad0cf8023e3d1b0ff2c">h5_write</a>(h5::group g, std::string <span class="keyword">const</span> &amp;name, A <span class="keyword">const</span> &amp;a, <span class="keywordtype">bool</span> compress = <span class="keyword">true</span>) {</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;nda::get_value_t&lt;A&gt;, std::string&gt;) {</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>      <span class="comment">// 1-dimensional array/view of strings</span></div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>      <a class="code hl_function" href="group__av__hdf5.html#ga45a1f6d57e999ad0cf8023e3d1b0ff2c">h5_write</a>(g, name, detail::to_char_buf(a));</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_variable" href="group__utils__type__traits.html#gadb69652fdcf2bc3040818cfdd5d6f4ff">is_scalar_v&lt;typename A::value_type&gt;</a>) {</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>      <span class="comment">// n-dimensional array/view of scalars</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>      <span class="comment">// make a copy if the array/view is not in C-order and write the copy</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>      <span class="keywordflow">if</span> (not a.indexmap().is_stride_order_C()) {</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="keyword">using </span>h5_arr_t  = <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;get_value_t&lt;A&gt;</a>, A::rank&gt;;</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        <span class="keyword">auto</span> a_c_layout = h5_arr_t{a.shape()};</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        a_c_layout()    = a;</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        <a class="code hl_function" href="group__av__hdf5.html#ga45a1f6d57e999ad0cf8023e3d1b0ff2c">h5_write</a>(g, name, a_c_layout, compress);</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>      }</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>      <span class="comment">// prepare the h5::array_view and write it</span></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>      <span class="keyword">auto</span> v = detail::prepare_h5_array_view(a);</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>      h5::array_interface::write(g, name, v, compress);</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>      <span class="comment">// n-dimensional array/view of some generic unknown type</span></div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>      <span class="keyword">auto</span> g2 = g.create_group(name);</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>      <a class="code hl_function" href="group__av__hdf5.html#ga45a1f6d57e999ad0cf8023e3d1b0ff2c">h5_write</a>(g2, <span class="stringliteral">&quot;shape&quot;</span>, a.shape());</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>      <span class="keyword">auto</span> make_name = [](<span class="keyword">auto</span> i0, <span class="keyword">auto</span>... is) { <span class="keywordflow">return</span> (<a class="code hl_function" href="group__utils__std.html#gac7b064be9fe6a90baf339d17a134e5dc">std::to_string</a>(i0) + ... + (<span class="stringliteral">&quot;_&quot;</span> + <a class="code hl_function" href="group__utils__std.html#gac7b064be9fe6a90baf339d17a134e5dc">std::to_string</a>(is))); };</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>      <a class="code hl_function" href="group__layout__utils.html#ga3cad3c1ccde2290cf1f53ee627e54bf6">nda::for_each</a>(a.shape(), [&amp;](<span class="keyword">auto</span>... is) { h5_write(g2, make_name(is...), a(is...)); });</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    }</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>  }</div>
 </div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span></div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  <span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span> NDim, <span class="keyword">typename</span>... IRs&gt;</div>
-<div class="foldopen" id="foldopen00162" data-start="{" data-end="}">
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno"><a class="line" href="group__av__hdf5.html#gab6fea3ef30e10b8ab043fe8fcfe26138">  162</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__hdf5.html#gab6fea3ef30e10b8ab043fe8fcfe26138">hyperslab_and_shape_from_slice</a>(std::tuple&lt;IRs...&gt; <span class="keyword">const</span> &amp;slice, std::vector&lt;h5::hsize_t&gt; <span class="keyword">const</span> &amp;ds_shape, <span class="keywordtype">bool</span> is_complex) {</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    <span class="comment">// number of parameters specifying the slice</span></div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> size_of_slice = <span class="keyword">sizeof</span>...(IRs);</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span> </div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <span class="comment">// number of nda::ellipsis objects in the slice (only 1 is allowed)</span></div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> ellipsis_count = (std::is_same_v&lt;IRs, ellipsis&gt; + ... + 0);</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <span class="keyword">static_assert</span>(ellipsis_count &lt; 2, <span class="stringliteral">&quot;Error in nda::hyperslab_and_shape_from_slice: Only a single ellipsis is allowed in slicing&quot;</span>);</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> has_ellipsis = (ellipsis_count == 1);</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span> </div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    <span class="comment">// position of the ellipsis in the slice parameters</span></div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> ellipsis_position = [&amp;]&lt;<span class="keywordtype">size_t</span>... Is&gt;(std::index_sequence&lt;Is...&gt;) {</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (has_ellipsis) <span class="keywordflow">return</span> ((std::is_same_v&lt;IRs, ellipsis&gt; * Is) + ... + 0);</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>      <span class="keywordflow">return</span> size_of_slice;</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    }(std::index_sequence_for&lt;IRs...&gt;{});</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <span class="comment">// number of integers in the slice parameters</span></div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> integer_count = (std::integral&lt;IRs&gt; + ... + 0);</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    <span class="comment">// number of nda::range and nda::range::all_t objects in the slice parameters</span></div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> range_count = size_of_slice - integer_count - ellipsis_count;</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    <span class="keyword">static_assert</span>((has_ellipsis &amp;&amp; range_count &lt;= NDim) || range_count == NDim,</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                  <span class="stringliteral">&quot;Error in nda::hyperslab_and_shape_from_slice: Rank does not match the number of non-trivial slice dimensions&quot;</span>);</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span> </div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    <span class="comment">// number of dimensions spanned by the ellipsis</span></div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> ellipsis_width = NDim - range_count;</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span> </div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    <span class="comment">// number of dimensions in the hyperslab</span></div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> slab_rank = NDim + integer_count;</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span> </div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    <span class="comment">// check rank of the dataset (must match the rank of the hyperslabs)</span></div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    <span class="keyword">auto</span> ds_rank = ds_shape.size() - is_complex;</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    <span class="keywordflow">if</span> (slab_rank != ds_rank)</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>      NDA_RUNTIME_ERROR &lt;&lt; <span class="stringliteral">&quot;Error in nda::hyperslab_and_shape_from_slice: Incompatible dataset and slice ranks: &quot;</span> &lt;&lt; ds_rank</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                        &lt;&lt; <span class="stringliteral">&quot; != &quot;</span> &lt;&lt; size_of_slice;</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="comment">// create and return the hyperslab and the shape array</span></div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    <span class="keyword">auto</span> slab  = h5::array_interface::hyperslab(slab_rank, is_complex);</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="keyword">auto</span> shape = std::array&lt;long, NDim&gt;{};</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    [&amp;, m = 0]&lt;<span class="keywordtype">size_t</span>... Is&gt;(std::index_sequence&lt;Is...&gt;) <span class="keyword">mutable</span> {</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>      (</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>         [&amp;]&lt;<span class="keyword">typename</span> IR&gt;(<span class="keywordtype">size_t</span> n, IR <span class="keyword">const</span> &amp;ir) <span class="keyword">mutable</span> {</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>           <span class="keywordflow">if</span> (n &gt; ellipsis_position) n += (ellipsis_width - 1);</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>           <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::integral&lt;IR&gt;) {</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>             slab.offset[n] = ir;</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>             slab.count[n]  = 1;</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>           } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;IR, nda::ellipsis&gt;) {</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>             <span class="keywordflow">for</span> (<span class="keyword">auto</span> k : range(n, n + ellipsis_width)) {</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>               slab.count[k] = ds_shape[k];</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>               shape[m++]    = ds_shape[k];</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>             }</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>           } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;IR, nda::range&gt;) {</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>             slab.offset[n] = ir.first();</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>             slab.stride[n] = ir.step();</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>             slab.count[n]  = ir.size();</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>             shape[m++]     = ir.size();</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>           } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>             <span class="keyword">static_assert</span>(std::is_same_v&lt;IR, nda::range::all_t&gt;);</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>             slab.count[n] = ds_shape[n];</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>             shape[m++]    = ds_shape[n];</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>           }</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>         }(Is, std::get&lt;Is&gt;(slice)),</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>         ...);</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    }(std::make_index_sequence&lt;size_of_slice&gt;{});</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    <span class="keywordflow">return</span> std::make_pair(slab, shape);</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>  }</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span></div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>  <span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span> NDim, <span class="keyword">typename</span>... IRs&gt;</div>
+<div class="foldopen" id="foldopen00163" data-start="{" data-end="}">
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno"><a class="line" href="group__av__hdf5.html#gab6fea3ef30e10b8ab043fe8fcfe26138">  163</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__hdf5.html#gab6fea3ef30e10b8ab043fe8fcfe26138">hyperslab_and_shape_from_slice</a>(std::tuple&lt;IRs...&gt; <span class="keyword">const</span> &amp;slice, std::vector&lt;h5::hsize_t&gt; <span class="keyword">const</span> &amp;ds_shape, <span class="keywordtype">bool</span> is_complex) {</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="comment">// number of parameters specifying the slice</span></div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> size_of_slice = <span class="keyword">sizeof</span>...(IRs);</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <span class="comment">// number of nda::ellipsis objects in the slice (only 1 is allowed)</span></div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> ellipsis_count = (std::is_same_v&lt;IRs, ellipsis&gt; + ... + 0);</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <span class="keyword">static_assert</span>(ellipsis_count &lt; 2, <span class="stringliteral">&quot;Error in nda::hyperslab_and_shape_from_slice: Only a single ellipsis is allowed in slicing&quot;</span>);</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> has_ellipsis = (ellipsis_count == 1);</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    <span class="comment">// position of the ellipsis in the slice parameters</span></div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> ellipsis_position = [&amp;]&lt;<span class="keywordtype">size_t</span>... Is&gt;(std::index_sequence&lt;Is...&gt;) {</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (has_ellipsis) <span class="keywordflow">return</span> ((std::is_same_v&lt;IRs, ellipsis&gt; * Is) + ... + 0);</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>      <span class="keywordflow">return</span> size_of_slice;</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    }(std::index_sequence_for&lt;IRs...&gt;{});</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span> </div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    <span class="comment">// number of integers in the slice parameters</span></div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> integer_count = (std::integral&lt;IRs&gt; + ... + 0);</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    <span class="comment">// number of nda::range and nda::range::all_t objects in the slice parameters</span></div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> range_count = size_of_slice - integer_count - ellipsis_count;</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    <span class="keyword">static_assert</span>((has_ellipsis &amp;&amp; range_count &lt;= NDim) || range_count == NDim,</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                  <span class="stringliteral">&quot;Error in nda::hyperslab_and_shape_from_slice: Rank does not match the number of non-trivial slice dimensions&quot;</span>);</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span> </div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    <span class="comment">// number of dimensions spanned by the ellipsis</span></div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> ellipsis_width = NDim - range_count;</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="comment">// number of dimensions in the hyperslab</span></div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> slab_rank = NDim + integer_count;</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    <span class="comment">// check rank of the dataset (must match the rank of the hyperslabs)</span></div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    <span class="keyword">auto</span> ds_rank = ds_shape.size() - is_complex;</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    <span class="keywordflow">if</span> (slab_rank != ds_rank)</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>      NDA_RUNTIME_ERROR &lt;&lt; <span class="stringliteral">&quot;Error in nda::hyperslab_and_shape_from_slice: Incompatible dataset and slice ranks: &quot;</span> &lt;&lt; ds_rank</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                        &lt;&lt; <span class="stringliteral">&quot; != &quot;</span> &lt;&lt; size_of_slice;</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    <span class="comment">// create and return the hyperslab and the shape array</span></div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="keyword">auto</span> slab  = h5::array_interface::hyperslab(slab_rank, is_complex);</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <span class="keyword">auto</span> shape = std::array&lt;long, NDim&gt;{};</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    [&amp;, m = 0]&lt;<span class="keywordtype">size_t</span>... Is&gt;(std::index_sequence&lt;Is...&gt;) <span class="keyword">mutable</span> {</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>      (</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>         [&amp;]&lt;<span class="keyword">typename</span> IR&gt;(<span class="keywordtype">size_t</span> n, IR <span class="keyword">const</span> &amp;ir) <span class="keyword">mutable</span> {</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>           <span class="keywordflow">if</span> (n &gt; ellipsis_position) n += (ellipsis_width - 1);</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>           <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::integral&lt;IR&gt;) {</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>             slab.offset[n] = ir;</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>             slab.count[n]  = 1;</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>           } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;IR, nda::ellipsis&gt;) {</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>             <span class="keywordflow">for</span> (<span class="keyword">auto</span> k : range(n, n + ellipsis_width)) {</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>               slab.count[k] = ds_shape[k];</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>               shape[m++]    = ds_shape[k];</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>             }</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>           } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;IR, nda::range&gt;) {</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>             slab.offset[n] = ir.first();</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>             slab.stride[n] = ir.step();</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>             slab.count[n]  = ir.size();</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>             shape[m++]     = ir.size();</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>           } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>             <span class="keyword">static_assert</span>(std::is_same_v&lt;IR, nda::range::all_t&gt;);</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>             slab.count[n] = ds_shape[n];</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>             shape[m++]    = ds_shape[n];</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>           }</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>         }(Is, std::get&lt;Is&gt;(slice)),</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>         ...);</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    }(std::make_index_sequence&lt;size_of_slice&gt;{});</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    <span class="keywordflow">return</span> std::make_pair(slab, shape);</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>  }</div>
 </div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span></div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>  <span class="keyword">template</span> &lt;MemoryArray A, <span class="keyword">typename</span>... IRs&gt;</div>
-<div class="foldopen" id="foldopen00245" data-start="{" data-end="}">
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno"><a class="line" href="group__av__hdf5.html#gaa4dee39e09d66dbc7e09347ac8045475">  245</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="group__av__hdf5.html#ga45a1f6d57e999ad0cf8023e3d1b0ff2c">h5_write</a>(h5::group g, std::string <span class="keyword">const</span> &amp;name, A <span class="keyword">const</span> &amp;a, std::tuple&lt;IRs...&gt; <span class="keyword">const</span> &amp;slice) {</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    <span class="comment">// compile-time checks</span></div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    <span class="keyword">constexpr</span> <span class="keywordtype">int</span> size_of_slice = <span class="keyword">sizeof</span>...(IRs);</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>    <span class="keyword">static_assert</span>(size_of_slice &gt; 0, <span class="stringliteral">&quot;Error in nda::h5_write: Invalid empty slice&quot;</span>);</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    <span class="keyword">static_assert</span>(<a class="code hl_variable" href="group__utils__type__traits.html#gadb69652fdcf2bc3040818cfdd5d6f4ff">is_scalar_v&lt;typename A::value_type&gt;</a>, <span class="stringliteral">&quot;Error in nda::h5_write: Slicing is only supported for scalar types&quot;</span>);</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_complex = <a class="code hl_variable" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v&lt;typename A::value_type&gt;</a>;</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span> </div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    <span class="comment">// make a copy if the array/view is not in C-order and write the copy</span></div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    <span class="keywordflow">if</span> (not a.indexmap().is_stride_order_C()) {</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>      <span class="keyword">using </span>h5_arr_t  = <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;get_value_t&lt;A&gt;</a>, A::rank&gt;;</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>      <span class="keyword">auto</span> a_c_layout = h5_arr_t{a.shape()};</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>      a_c_layout()    = a;</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>      <a class="code hl_function" href="group__av__hdf5.html#ga45a1f6d57e999ad0cf8023e3d1b0ff2c">h5_write</a>(g, name, a_c_layout, slice);</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>      <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    }</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span> </div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    <span class="comment">// get dataset info and check that the datatypes of the dataset and the array match</span></div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    <span class="keyword">auto</span> ds_info = h5::array_interface::get_dataset_info(g, name);</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    <span class="keywordflow">if</span> (is_complex != ds_info.has_complex_attribute)</div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>      NDA_RUNTIME_ERROR &lt;&lt; <span class="stringliteral">&quot;Error in nda::h5_write: Dataset and array/view must both be complex or non-complex&quot;</span>;</div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span> </div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    <span class="comment">// get hyperslab and shape from the slice and check that the shapes match</span></div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>    <span class="keyword">auto</span> <span class="keyword">const</span> [sl, sh] = <a class="code hl_function" href="group__av__hdf5.html#gab6fea3ef30e10b8ab043fe8fcfe26138">hyperslab_and_shape_from_slice&lt;A::rank&gt;</a>(slice, ds_info.lengths, is_complex);</div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    <span class="keywordflow">if</span> (sh != a.shape()) NDA_RUNTIME_ERROR &lt;&lt; <span class="stringliteral">&quot;Error in nda::h5_write: Incompatible slice and array shape: &quot;</span> &lt;&lt; sh &lt;&lt; <span class="stringliteral">&quot; != &quot;</span> &lt;&lt; a.shape();</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span> </div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    <span class="comment">// prepare the h5::array_view and write it</span></div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    <span class="keyword">auto</span> v = detail::prepare_h5_array_view(a);</div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    h5::array_interface::write_slice(g, name, v, sl);</div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>  }</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span></div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>  <span class="keyword">template</span> &lt;MemoryArray A, <span class="keyword">typename</span>... IRs&gt;</div>
+<div class="foldopen" id="foldopen00246" data-start="{" data-end="}">
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno"><a class="line" href="group__av__hdf5.html#gaa4dee39e09d66dbc7e09347ac8045475">  246</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="group__av__hdf5.html#ga45a1f6d57e999ad0cf8023e3d1b0ff2c">h5_write</a>(h5::group g, std::string <span class="keyword">const</span> &amp;name, A <span class="keyword">const</span> &amp;a, std::tuple&lt;IRs...&gt; <span class="keyword">const</span> &amp;slice) {</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    <span class="comment">// compile-time checks</span></div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>    <span class="keyword">constexpr</span> <span class="keywordtype">int</span> size_of_slice = <span class="keyword">sizeof</span>...(IRs);</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    <span class="keyword">static_assert</span>(size_of_slice &gt; 0, <span class="stringliteral">&quot;Error in nda::h5_write: Invalid empty slice&quot;</span>);</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    <span class="keyword">static_assert</span>(<a class="code hl_variable" href="group__utils__type__traits.html#gadb69652fdcf2bc3040818cfdd5d6f4ff">is_scalar_v&lt;typename A::value_type&gt;</a>, <span class="stringliteral">&quot;Error in nda::h5_write: Slicing is only supported for scalar types&quot;</span>);</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_complex = <a class="code hl_variable" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v&lt;typename A::value_type&gt;</a>;</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    <span class="comment">// make a copy if the array/view is not in C-order and write the copy</span></div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    <span class="keywordflow">if</span> (not a.indexmap().is_stride_order_C()) {</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>      <span class="keyword">using </span>h5_arr_t  = <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;get_value_t&lt;A&gt;</a>, A::rank&gt;;</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>      <span class="keyword">auto</span> a_c_layout = h5_arr_t{a.shape()};</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>      a_c_layout()    = a;</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>      <a class="code hl_function" href="group__av__hdf5.html#ga45a1f6d57e999ad0cf8023e3d1b0ff2c">h5_write</a>(g, name, a_c_layout, slice);</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>      <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    }</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span> </div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    <span class="comment">// get dataset info and check that the datatypes of the dataset and the array match</span></div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    <span class="keyword">auto</span> ds_info = h5::array_interface::get_dataset_info(g, name);</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    <span class="keywordflow">if</span> (is_complex != ds_info.has_complex_attribute)</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>      NDA_RUNTIME_ERROR &lt;&lt; <span class="stringliteral">&quot;Error in nda::h5_write: Dataset and array/view must both be complex or non-complex&quot;</span>;</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span> </div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>    <span class="comment">// get hyperslab and shape from the slice and check that the shapes match</span></div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    <span class="keyword">auto</span> <span class="keyword">const</span> [sl, sh] = <a class="code hl_function" href="group__av__hdf5.html#gab6fea3ef30e10b8ab043fe8fcfe26138">hyperslab_and_shape_from_slice&lt;A::rank&gt;</a>(slice, ds_info.lengths, is_complex);</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>    <span class="keywordflow">if</span> (sh != a.shape()) NDA_RUNTIME_ERROR &lt;&lt; <span class="stringliteral">&quot;Error in nda::h5_write: Incompatible slice and array shape: &quot;</span> &lt;&lt; sh &lt;&lt; <span class="stringliteral">&quot; != &quot;</span> &lt;&lt; a.shape();</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span> </div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    <span class="comment">// prepare the h5::array_view and write it</span></div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    <span class="keyword">auto</span> v = detail::prepare_h5_array_view(a);</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    h5::array_interface::write_slice(g, name, v, sl);</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>  }</div>
 </div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span></div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>  <span class="keyword">template</span> &lt;MemoryArray A, <span class="keyword">typename</span>... IRs&gt;</div>
-<div class="foldopen" id="foldopen00297" data-start="{" data-end="}">
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno"><a class="line" href="group__av__hdf5.html#ga2bbce727dcb0638aac491a58bd2a6b28">  297</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="group__av__hdf5.html#ga2bbce727dcb0638aac491a58bd2a6b28">h5_read</a>(h5::group g, std::string <span class="keyword">const</span> &amp;name, A &amp;a, std::tuple&lt;IRs...&gt; <span class="keyword">const</span> &amp;slice = {}) {</div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>    <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> slicing = (<span class="keyword">sizeof</span>...(IRs) &gt; 0);</div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span> </div>
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;typename A::value_type, std::string&gt;) {</div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>      <span class="comment">// 1-dimensional array/view of strings</span></div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>      <span class="keyword">static_assert</span>(!slicing, <span class="stringliteral">&quot;Error in nda::h5_read: Slicing not supported for arrays/views of strings&quot;</span>);</div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>      h5::char_buf cb;</div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>      <a class="code hl_function" href="group__av__hdf5.html#ga2bbce727dcb0638aac491a58bd2a6b28">h5_read</a>(g, name, cb);</div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>      detail::from_char_buf(cb, a);</div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_variable" href="group__utils__type__traits.html#gadb69652fdcf2bc3040818cfdd5d6f4ff">is_scalar_v&lt;typename A::value_type&gt;</a>) {</div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>      <span class="comment">// n-dimensional array/view of scalars</span></div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>      <span class="comment">// read into a temporary array if the array/view is not in C-order and copy the elements</span></div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>      <span class="keywordflow">if</span> (not a.indexmap().is_stride_order_C()) {</div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>        <span class="keyword">using </span>h5_arr_t  = <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;typename A::value_type, A::rank&gt;</a>;</div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>        <span class="keyword">auto</span> a_c_layout = h5_arr_t{};</div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>        <a class="code hl_function" href="group__av__hdf5.html#ga2bbce727dcb0638aac491a58bd2a6b28">h5_read</a>(g, name, a_c_layout, slice);</div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>        detail::resize_or_check(a, a_c_layout.shape());</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>        a() = a_c_layout;</div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>      }</div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span> </div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>      <span class="comment">// get dataset info</span></div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>      <span class="keyword">auto</span> ds_info = h5::array_interface::get_dataset_info(g, name);</div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span> </div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>      <span class="comment">// allow to read non-complex data into a complex array</span></div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>      <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_complex = <a class="code hl_variable" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v&lt;typename A::value_type&gt;</a>;</div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (is_complex) {</div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>        <span class="keywordflow">if</span> (!ds_info.has_complex_attribute) {</div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>          <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">array&lt;double, A::rank&gt;</a> tmp;</div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>          <a class="code hl_function" href="group__av__hdf5.html#ga2bbce727dcb0638aac491a58bd2a6b28">h5_read</a>(g, name, tmp, slice);</div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>          a = tmp;</div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>          <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>        }</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>      }</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span> </div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>      <span class="comment">// get the hyperslab and the shape of the slice</span></div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>      std::array&lt;long, A::rank&gt; shape{};</div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>      <span class="keyword">auto</span> slab = h5::array_interface::hyperslab{};</div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (slicing) {</div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>        <span class="keyword">auto</span> <span class="keyword">const</span> [sl, sh] = <a class="code hl_function" href="group__av__hdf5.html#gab6fea3ef30e10b8ab043fe8fcfe26138">hyperslab_and_shape_from_slice&lt;A::rank&gt;</a>(slice, ds_info.lengths, is_complex);</div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>        slab                = sl;</div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>        shape               = sh;</div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> u = 0; u &lt; A::rank; ++u) shape[u] = ds_info.lengths[u]; <span class="comment">// NB : correct for complex</span></div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>      }</div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span> </div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>      <span class="comment">// resize the array or check that the shape matches</span></div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>      detail::resize_or_check(a, shape);</div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span> </div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>      <span class="comment">// check the rank of the dataset and the array</span></div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>      <span class="keyword">auto</span> ds_rank = ds_info.rank() - is_complex;</div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>      <span class="keywordflow">if</span> (!slicing &amp;&amp; ds_rank != A::rank)</div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>        NDA_RUNTIME_ERROR &lt;&lt; <span class="stringliteral">&quot;Error in nda::h5_read: Incompatible dataset and array ranks: &quot;</span> &lt;&lt; ds_rank &lt;&lt; <span class="stringliteral">&quot; != &quot;</span> &lt;&lt; A::rank;</div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span> </div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>      <span class="comment">// prepare the h5::array_view and read into it</span></div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>      <span class="keyword">auto</span> v = detail::prepare_h5_array_view(a);</div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>      h5::array_interface::read(g, name, v, slab);</div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>      <span class="comment">// n-dimensional array/view of some generic unknown type</span></div>
-<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>      <span class="keyword">static_assert</span>(!slicing, <span class="stringliteral">&quot;Error in nda::h5_read: Slicing not supported for arrays/views of generic types&quot;</span>);</div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>      <span class="keyword">auto</span> g2 = g.open_group(name);</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span> </div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>      <span class="comment">// get and check the shape or resize the array</span></div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>      std::array&lt;long, A::rank&gt; h5_shape;</div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>      <a class="code hl_function" href="group__av__hdf5.html#ga2bbce727dcb0638aac491a58bd2a6b28">h5_read</a>(g2, <span class="stringliteral">&quot;shape&quot;</span>, h5_shape);</div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>      detail::resize_or_check(a, h5_shape);</div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span> </div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>      <span class="comment">// read element-by-element using the appropriate h5_read implementation</span></div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>      <span class="keyword">auto</span> make_name = [](<span class="keyword">auto</span> i0, <span class="keyword">auto</span>... is) { <span class="keywordflow">return</span> (<a class="code hl_function" href="group__utils__std.html#gac7b064be9fe6a90baf339d17a134e5dc">std::to_string</a>(i0) + ... + (<span class="stringliteral">&quot;_&quot;</span> + <a class="code hl_function" href="group__utils__std.html#gac7b064be9fe6a90baf339d17a134e5dc">std::to_string</a>(is))); };</div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>      <a class="code hl_function" href="group__layout__utils.html#ga3cad3c1ccde2290cf1f53ee627e54bf6">nda::for_each</a>(a.shape(), [&amp;](<span class="keyword">auto</span>... is) { h5_read(g2, make_name(is...), a(is...)); });</div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>    }</div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>  }</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span></div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>  <span class="keyword">template</span> &lt;MemoryArray A, <span class="keyword">typename</span>... IRs&gt;</div>
+<div class="foldopen" id="foldopen00298" data-start="{" data-end="}">
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno"><a class="line" href="group__av__hdf5.html#ga2bbce727dcb0638aac491a58bd2a6b28">  298</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="group__av__hdf5.html#ga2bbce727dcb0638aac491a58bd2a6b28">h5_read</a>(h5::group g, std::string <span class="keyword">const</span> &amp;name, A &amp;a, std::tuple&lt;IRs...&gt; <span class="keyword">const</span> &amp;slice = {}) {</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>    <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> slicing = (<span class="keyword">sizeof</span>...(IRs) &gt; 0);</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span> </div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;typename A::value_type, std::string&gt;) {</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>      <span class="comment">// 1-dimensional array/view of strings</span></div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>      <span class="keyword">static_assert</span>(!slicing, <span class="stringliteral">&quot;Error in nda::h5_read: Slicing not supported for arrays/views of strings&quot;</span>);</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>      h5::char_buf cb;</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>      <a class="code hl_function" href="group__av__hdf5.html#ga2bbce727dcb0638aac491a58bd2a6b28">h5_read</a>(g, name, cb);</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>      detail::from_char_buf(cb, a);</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_variable" href="group__utils__type__traits.html#gadb69652fdcf2bc3040818cfdd5d6f4ff">is_scalar_v&lt;typename A::value_type&gt;</a>) {</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>      <span class="comment">// n-dimensional array/view of scalars</span></div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>      <span class="comment">// read into a temporary array if the array/view is not in C-order and copy the elements</span></div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>      <span class="keywordflow">if</span> (not a.indexmap().is_stride_order_C()) {</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>        <span class="keyword">using </span>h5_arr_t  = <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;typename A::value_type, A::rank&gt;</a>;</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>        <span class="keyword">auto</span> a_c_layout = h5_arr_t{};</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>        <a class="code hl_function" href="group__av__hdf5.html#ga2bbce727dcb0638aac491a58bd2a6b28">h5_read</a>(g, name, a_c_layout, slice);</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>        detail::resize_or_check(a, a_c_layout.shape());</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>        a() = a_c_layout;</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>      }</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span> </div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>      <span class="comment">// get dataset info</span></div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>      <span class="keyword">auto</span> ds_info = h5::array_interface::get_dataset_info(g, name);</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span> </div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>      <span class="comment">// allow to read non-complex data into a complex array</span></div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>      <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_complex = <a class="code hl_variable" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v&lt;typename A::value_type&gt;</a>;</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (is_complex) {</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>        <span class="keywordflow">if</span> (!ds_info.has_complex_attribute) {</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>          <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">array&lt;double, A::rank&gt;</a> tmp;</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>          <a class="code hl_function" href="group__av__hdf5.html#ga2bbce727dcb0638aac491a58bd2a6b28">h5_read</a>(g, name, tmp, slice);</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>          a = tmp;</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>          <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>        }</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>      }</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span> </div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>      <span class="comment">// get the hyperslab and the shape of the slice</span></div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>      std::array&lt;long, A::rank&gt; shape{};</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>      <span class="keyword">auto</span> slab = h5::array_interface::hyperslab{};</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (slicing) {</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>        <span class="keyword">auto</span> <span class="keyword">const</span> [sl, sh] = <a class="code hl_function" href="group__av__hdf5.html#gab6fea3ef30e10b8ab043fe8fcfe26138">hyperslab_and_shape_from_slice&lt;A::rank&gt;</a>(slice, ds_info.lengths, is_complex);</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>        slab                = sl;</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>        shape               = sh;</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> u = 0; u &lt; A::rank; ++u) shape[u] = ds_info.lengths[u]; <span class="comment">// NB : correct for complex</span></div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>      }</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span> </div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>      <span class="comment">// resize the array or check that the shape matches</span></div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>      detail::resize_or_check(a, shape);</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span> </div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>      <span class="comment">// check the rank of the dataset and the array</span></div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>      <span class="keyword">auto</span> ds_rank = ds_info.rank() - is_complex;</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>      <span class="keywordflow">if</span> (!slicing &amp;&amp; ds_rank != A::rank)</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>        NDA_RUNTIME_ERROR &lt;&lt; <span class="stringliteral">&quot;Error in nda::h5_read: Incompatible dataset and array ranks: &quot;</span> &lt;&lt; ds_rank &lt;&lt; <span class="stringliteral">&quot; != &quot;</span> &lt;&lt; A::rank;</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span> </div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>      <span class="comment">// prepare the h5::array_view and read into it</span></div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>      <span class="keyword">auto</span> v = detail::prepare_h5_array_view(a);</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>      h5::array_interface::read(g, name, v, slab);</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>      <span class="comment">// n-dimensional array/view of some generic unknown type</span></div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>      <span class="keyword">static_assert</span>(!slicing, <span class="stringliteral">&quot;Error in nda::h5_read: Slicing not supported for arrays/views of generic types&quot;</span>);</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>      <span class="keyword">auto</span> g2 = g.open_group(name);</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span> </div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>      <span class="comment">// get and check the shape or resize the array</span></div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>      std::array&lt;long, A::rank&gt; h5_shape;</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>      <a class="code hl_function" href="group__av__hdf5.html#ga2bbce727dcb0638aac491a58bd2a6b28">h5_read</a>(g2, <span class="stringliteral">&quot;shape&quot;</span>, h5_shape);</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>      detail::resize_or_check(a, h5_shape);</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span> </div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>      <span class="comment">// read element-by-element using the appropriate h5_read implementation</span></div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>      <span class="keyword">auto</span> make_name = [](<span class="keyword">auto</span> i0, <span class="keyword">auto</span>... is) { <span class="keywordflow">return</span> (<a class="code hl_function" href="group__utils__std.html#gac7b064be9fe6a90baf339d17a134e5dc">std::to_string</a>(i0) + ... + (<span class="stringliteral">&quot;_&quot;</span> + <a class="code hl_function" href="group__utils__std.html#gac7b064be9fe6a90baf339d17a134e5dc">std::to_string</a>(is))); };</div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>      <a class="code hl_function" href="group__layout__utils.html#ga3cad3c1ccde2290cf1f53ee627e54bf6">nda::for_each</a>(a.shape(), [&amp;](<span class="keyword">auto</span>... is) { h5_read(g2, make_name(is...), a(is...)); });</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>    }</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>  }</div>
 </div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span></div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span> </div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>} <span class="comment">// namespace nda</span></div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span></div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span> </div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>} <span class="comment">// namespace nda</span></div>
 <div class="ttc" id="aconcepts_8hpp_html"><div class="ttname"><a href="concepts_8hpp.html">concepts.hpp</a></div><div class="ttdoc">Provides concepts for the nda library.</div></div>
 <div class="ttc" id="adeclarations_8hpp_html"><div class="ttname"><a href="declarations_8hpp.html">declarations.hpp</a></div><div class="ttdoc">Provides various convenient aliases and helper functions for nda::basic_array and nda::basic_array_vi...</div></div>
 <div class="ttc" id="aexceptions_8hpp_html"><div class="ttname"><a href="exceptions_8hpp.html">exceptions.hpp</a></div><div class="ttdoc">Provides a custom runtime error class and macros to assert conditions and throw exceptions.</div></div>
 <div class="ttc" id="afor__each_8hpp_html"><div class="ttname"><a href="for__each_8hpp.html">for_each.hpp</a></div><div class="ttdoc">Provides for_each functions for multi-dimensional arrays/views.</div></div>
-<div class="ttc" id="agroup__av__hdf5_html_ga2bbce727dcb0638aac491a58bd2a6b28"><div class="ttname"><a href="group__av__hdf5.html#ga2bbce727dcb0638aac491a58bd2a6b28">nda::h5_read</a></div><div class="ttdeci">void h5_read(h5::group g, std::string const &amp;name, A &amp;a, std::tuple&lt; IRs... &gt; const &amp;slice={})</div><div class="ttdoc">Read into an nda::MemoryArray from an HDF5 file.</div><div class="ttdef"><b>Definition</b> <a href="#l00297">h5.hpp:297</a></div></div>
-<div class="ttc" id="agroup__av__hdf5_html_ga45a1f6d57e999ad0cf8023e3d1b0ff2c"><div class="ttname"><a href="group__av__hdf5.html#ga45a1f6d57e999ad0cf8023e3d1b0ff2c">nda::h5_write</a></div><div class="ttdeci">void h5_write(h5::group g, std::string const &amp;name, A const &amp;a, bool compress=true)</div><div class="ttdoc">Write an nda::MemoryArray to a new dataset/subgroup into an HDF5 file.</div><div class="ttdef"><b>Definition</b> <a href="#l00119">h5.hpp:119</a></div></div>
-<div class="ttc" id="agroup__av__hdf5_html_gab6fea3ef30e10b8ab043fe8fcfe26138"><div class="ttname"><a href="group__av__hdf5.html#gab6fea3ef30e10b8ab043fe8fcfe26138">nda::hyperslab_and_shape_from_slice</a></div><div class="ttdeci">auto hyperslab_and_shape_from_slice(std::tuple&lt; IRs... &gt; const &amp;slice, std::vector&lt; h5::hsize_t &gt; const &amp;ds_shape, bool is_complex)</div><div class="ttdoc">Construct an h5::array_interface::hyperslab and the corresponding shape from a given slice,...</div><div class="ttdef"><b>Definition</b> <a href="#l00162">h5.hpp:162</a></div></div>
+<div class="ttc" id="agroup__av__hdf5_html_ga2bbce727dcb0638aac491a58bd2a6b28"><div class="ttname"><a href="group__av__hdf5.html#ga2bbce727dcb0638aac491a58bd2a6b28">nda::h5_read</a></div><div class="ttdeci">void h5_read(h5::group g, std::string const &amp;name, A &amp;a, std::tuple&lt; IRs... &gt; const &amp;slice={})</div><div class="ttdoc">Read into an nda::MemoryArray from an HDF5 file.</div><div class="ttdef"><b>Definition</b> <a href="#l00298">h5.hpp:298</a></div></div>
+<div class="ttc" id="agroup__av__hdf5_html_ga45a1f6d57e999ad0cf8023e3d1b0ff2c"><div class="ttname"><a href="group__av__hdf5.html#ga45a1f6d57e999ad0cf8023e3d1b0ff2c">nda::h5_write</a></div><div class="ttdeci">void h5_write(h5::group g, std::string const &amp;name, A const &amp;a, bool compress=true)</div><div class="ttdoc">Write an nda::MemoryArray to a new dataset/subgroup into an HDF5 file.</div><div class="ttdef"><b>Definition</b> <a href="#l00120">h5.hpp:120</a></div></div>
+<div class="ttc" id="agroup__av__hdf5_html_gab6fea3ef30e10b8ab043fe8fcfe26138"><div class="ttname"><a href="group__av__hdf5.html#gab6fea3ef30e10b8ab043fe8fcfe26138">nda::hyperslab_and_shape_from_slice</a></div><div class="ttdeci">auto hyperslab_and_shape_from_slice(std::tuple&lt; IRs... &gt; const &amp;slice, std::vector&lt; h5::hsize_t &gt; const &amp;ds_shape, bool is_complex)</div><div class="ttdoc">Construct an h5::array_interface::hyperslab and the corresponding shape from a given slice,...</div><div class="ttdef"><b>Definition</b> <a href="#l00163">h5.hpp:163</a></div></div>
 <div class="ttc" id="agroup__av__types_html_ga72f3fdf9760fa22c35442cdf2eb6768d"><div class="ttname"><a href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array</a></div><div class="ttdeci">basic_array&lt; ValueType, Rank, Layout, &#39;A&#39;, ContainerPolicy &gt; array</div><div class="ttdoc">Alias template of an nda::basic_array with an &#39;A&#39; algebra.</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00064">declarations.hpp:64</a></div></div>
 <div class="ttc" id="agroup__layout__utils_html_ga3cad3c1ccde2290cf1f53ee627e54bf6"><div class="ttname"><a href="group__layout__utils.html#ga3cad3c1ccde2290cf1f53ee627e54bf6">nda::for_each</a></div><div class="ttdeci">__inline__ void for_each(std::array&lt; Int, R &gt; const &amp;shape, F &amp;&amp;f)</div><div class="ttdoc">Loop over all possible index values of a given shape and apply a function to them.</div><div class="ttdef"><b>Definition</b> <a href="for__each_8hpp_source.html#l00116">for_each.hpp:116</a></div></div>
 <div class="ttc" id="agroup__utils__std_html_gac7b064be9fe6a90baf339d17a134e5dc"><div class="ttname"><a href="group__utils__std.html#gac7b064be9fe6a90baf339d17a134e5dc">std::to_string</a></div><div class="ttdeci">std::string to_string(std::array&lt; T, R &gt; const &amp;a)</div><div class="ttdoc">Get a string representation of a std::array.</div><div class="ttdef"><b>Definition</b> <a href="array_8hpp_source.html#l00052">array.hpp:52</a></div></div>

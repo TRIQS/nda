@@ -193,7 +193,7 @@ $(function(){initNavTree('gtest__tools_8hpp_source.html',''); initResizable(true
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;nda::get_value_t&lt;X&gt;</a>, <a class="code hl_variable" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">nda::get_rank&lt;X&gt;</a>&gt; x_reg = x;</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>  <span class="keyword">constexpr</span> <span class="keywordtype">double</span> eps = 1.e-10;</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>  <span class="keyword">const</span> <span class="keyword">auto</span> max = max_element(abs(x_reg));</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>  <span class="keyword">const</span> <span class="keyword">auto</span> max       = max_element(abs(x_reg));</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>  <span class="keywordflow">if</span> (x_reg.<a class="code hl_function" href="classnda_1_1basic__array.html#adaef0a2cc57bbc2fe34afe25eb58b011">size</a>() == 0 || max &lt; eps)</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    return ::testing::AssertionSuccess();</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>  <span class="keywordflow">else</span></div>
