@@ -344,11 +344,11 @@ void check_eig(M const &m, V1 const &vectors, V2 const &values) {
 
 TEST(NDA, LinearAlgebraEigenelements) {
   // calculate eigenvalues and eigenvectors and check that they are correct
-  auto test_eigenelements = [](auto &&M) {
-    auto [ev1, vecs] = nda::linalg::eigenelements(M);
+  auto test_eigenelements = [](auto &&M, bool hermitian = true) {
+    auto [ev1, vecs] = (hermitian) ? nda::linalg::eigenelements(M) : nda::linalg::geigenelements(M);
     check_eig(M, vecs, ev1);
     auto Mcopy = M;
-    auto ev2   = nda::linalg::eigenvalues_in_place(Mcopy);
+    auto ev2   = (hermitian) ? nda::linalg::eigenvalues_in_place(Mcopy) : nda::linalg::geigenvalues_in_place(Mcopy);
     EXPECT_ARRAY_NEAR(ev1, ev2);
   };
 
@@ -361,6 +361,7 @@ TEST(NDA, LinearAlgebraEigenelements) {
     }
   }
   test_eigenelements(A);
+  test_egienelements(A, false);
 
   A()     = 0;
   A(0, 1) = 1;
@@ -369,24 +370,45 @@ TEST(NDA, LinearAlgebraEigenelements) {
   A(0, 2) = 2;
   A(2, 0) = 2;
   test_eigenelements(A);
+  test_eigenelements(A, false);
 
   A()     = 0;
   A(0, 1) = 1;
   A(1, 0) = 1;
   A(2, 2) = 8;
   test_eigenelements(A);
+  test_eigenelements(A, false);
 
   // double matrix in Fortran layout
   nda::matrix<double, nda::F_layout> D{{1.3, 1.2}, {1.2, 2.2}};
   test_eigenelements(D);
+  test_eigenelements(D, false);
 
   // complex matrix in C layout
   nda::matrix<std::complex<double>> B{{{1.0, 0.0}, {0.0, 1.0}}, {{0.0, -1.0}, {2.0, 0.0}}};
   test_eigenelements(B);
+  test_eigenelements(B, false);
 
   // complex matrix in Fortran layout
   nda::matrix<std::complex<double>, nda::F_layout> C{{{1.3, 0.0}, {0.0, 1.1}}, {{0.0, -1.1}, {2.4, 0.0}}};
   test_eigenelements(C);
+  test_eigenelements(C, false);
+
+  // real non-symmetric case with C layout
+  nda::matrix<double> E{{1.3, 1.8}, {2.1, 1.0}};
+  test_eigenelements(E, false);
+
+  // real non-symmetric case with Fortran layout
+  nda::matrix<double, F_layout> F{{2.8, 1.2}, {3.1, 1.4}};
+  test_eigenelements(F, false);
+
+  // complex non-hermitian case with C layout
+  matrix<std::complex<double>> G{{{1.6, 0.0}, {0.0, 1.1}}, {{0.0, 1.1}, {2.3, 0.0}}};
+  test_eigenelements(G, false);
+
+  // complex non-hermitian case with Fortran layout
+  matrix<std::complex<double>, F_layout> H{{{0.0, 1.6}, {1.5, 0.0}}, {{0.0, 1.1}, {2.8, 0.0}}};
+  test_eigenelements(H, false);
 }
 
 TEST(NDA, LinearAlgebraNormZeros) {
