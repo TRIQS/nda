@@ -532,8 +532,13 @@ void fill_with_scalar(Scalar const &scalar) noexcept {
         auto [n_bl, bl_size, bl_str] = *bl_layout;
         mem::fill2D_n<mem::get_addr_space<self_t>>(data(), bl_str, bl_size, n_bl, value_type(scalar));
       } else {
-        // MAM: implement recursive call to fill_with_scalar on (i,nda::ellipsis{})
-        NDA_RUNTIME_ERROR << "fill_with_scalar: Not implemented yet for general layout. ";
+#if defined(NDA_HAVE_CUTENSOR)
+        if constexpr (is_blas_lapack_v<value_type>) {
+          tensor::set(value_type(scalar), *this);
+        } else
+#endif
+          // MAM: implement recursive call to fill_with_scalar on (i,nda::ellipsis{})
+          NDA_RUNTIME_ERROR << "fill_with_scalar: Not implemented yet for general layout. ";
       }
     }
   }

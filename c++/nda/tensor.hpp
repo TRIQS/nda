@@ -17,16 +17,15 @@
 #pragma once
 
 /// Tensor operations Interface
-namespace nda::tensor {
-  enum REDUCE_OP { REDUCE_SUM, REDUCE_MAX, REDUCE_MIN };
-  enum UNARY_OP { ID_UOP, CONJ_UOP, SQRT_UOP, ABS_UOP, NEG_UOP };
-  enum BINARY_OP { SUM_BOP, MUL_BOP, MAX_BOP, MIN_BOP };
-} // namespace nda::tensor
+namespace nda::tensor {}
 
 #include "blas/tools.hpp"
+#include "tensor/tools.hpp"
 #include "tensor/contract.hpp"
 #include "tensor/add.hpp"
 #include "tensor/set.hpp"
 #include "tensor/scale.hpp"
 #include "tensor/dot.hpp"
 #include "tensor/reduce.hpp"
+#include "tensor/assign.hpp"
+#include "tensor/elementwise.hpp"
