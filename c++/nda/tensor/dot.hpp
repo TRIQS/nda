@@ -17,10 +17,13 @@
 #pragma once
 #include <complex>
 #include <string_view>
-#include "../exceptions.hpp"
-#include "../traits.hpp"
-#include "../declarations.hpp"
-#include "../mem/address_space.hpp"
+#include "nda/exceptions.hpp"
+#include "nda/traits.hpp"
+#include "nda/declarations.hpp"
+#include "nda/mem/address_space.hpp"
+#include "nda/mem/memset.hpp"
+#include "nda/mem/malloc.hpp"
+#include "nda/mem/memcpy.hpp"
 
 #if defined(NDA_HAVE_TBLIS)
 #include "interface/tblis_interface.hpp"
@@ -59,12 +62,28 @@ namespace nda::tensor {
 
     using A = decltype(a);
     using B = decltype(b);
-    static_assert(mem::have_same_addr_space_v<A, B>, "Matrices must have same memory address space");
+    static_assert(mem::have_compatible_addr_space<A, B>, "Matrices must have compatible memory address space");
 
-    if (get_rank<A> != indxX.size()) NDA_RUNTIME_ERROR << "tensor::dot: Rank mismatch \n";
-    if (get_rank<B> != indxY.size()) NDA_RUNTIME_ERROR << "tensor::dot: Rank mismatch \n";
+    if (get_rank<A> != indxX.size()) NDA_RUNTIME_ERROR << "tensor::dot: Rank mismatch in A,indx\n";
+    if (get_rank<B> != indxY.size()) NDA_RUNTIME_ERROR << "tensor::dot: Rank mismatch in B,indx\n";
+    if (get_rank<A> != get_rank<B>) NDA_RUNTIME_ERROR << "tensor::dot: Rank mismatch in A,B\n";
 
-    if constexpr (mem::on_host<A>) {
+    if constexpr (mem::have_device_compatible_addr_space<A, B>) {
+#if defined(NDA_HAVE_CUTENSOR)
+      value_t res;
+      cutensor::cutensor_desc<value_t, get_rank<A>> a_t(a);
+      cutensor::cutensor_desc<value_t, get_rank<B>> b_t(b);
+      value_t *z = (value_t *)mem::malloc<mem::Device>(sizeof(value_t));
+      mem::memset<mem::Device>(z, 0, sizeof(value_t));
+      cutensor::cutensor_desc<value_t, 0> z_t(z);
+      cutensor::contract(value_t{1}, a_t, op::ID, a.data(), indxX, b_t, op::ID, b.data(), indxY, value_t{0}, z_t, op::ID, z, "");
+      mem::memcpy<mem::Host, mem::Device>(&res, z, sizeof(value_t));
+      mem::free<mem::Device>(z);
+      return res;
+#else
+      static_assert(always_false<bool>, " dot on device requires gpu tensor operations backend. ");
+#endif
+    } else { // on host
 #if defined(NDA_HAVE_TBLIS)
       nda_tblis::tensor<value_t, get_rank<A>> a_t(a);
       nda_tblis::tensor<value_t, get_rank<B>> b_t(b);
@@ -73,13 +92,6 @@ namespace nda::tensor {
       return res.value();
 #else
       static_assert(always_false<bool>, " dot on host requires cpu tensor operations backend. ");
-#endif
-    } else { // on device
-#if defined(NDA_HAVE_CUTENSOR)
-      //      cutensor::termbyterm();
-      static_assert(always_false<bool>, " dot on device cuTensor!!!. ");
-#else
-      static_assert(always_false<bool>, " dot on device requires gpu tensor operations backend. ");
 #endif
     }
     return get_value_t<X>{0};
