@@ -16,6 +16,7 @@
 #include "./declarations.hpp"
 #include "./exceptions.hpp"
 #include "./iterators.hpp"
+#include "layout/slice_static.hpp"
 #include "./layout/for_each.hpp"
 #include "./layout/idx_map.hpp"
 #include "./layout/permutation.hpp"
@@ -23,6 +24,8 @@
 #include "./macros.hpp"
 #include "./mem/address_space.hpp"
 #include "./mem/memcpy.hpp"
+#include "./mem/memset.hpp"
+#include "./mem/fill.hpp"
 #include "./mem/policies.hpp"
 #include "./traits.hpp"
 
