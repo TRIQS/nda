@@ -12,7 +12,7 @@ endif()
 if(NOT CutensorSupport)
   list(REMOVE_ITEM all_tests "nda_cutensor.cpp")
 endif()
-if(NOT Use_Tblis)
+if(NOT TblisSupport)
   list(REMOVE_ITEM all_tests "nda_tblis.cpp")
 endif()
 
