@@ -78,6 +78,48 @@ namespace nda::blas {
     }
   }
 
+  /**
+   * Calls ger on a matrix, matrix_view, array, array_view of rank 2
+   *  m += alpha * x * ty
+   *
+   * @tparam X array, array_view of rank 1
+   * @tparam Y array, array_view of rank 1
+   * @tparam M matrix, matrix_view, array, array_view of rank 2
+   * @param alpha
+   * @param x 
+   * @param y
+   * @param m The result. Can be a temporary view. 
+   *         
+   * @StaticPrecondition : X, Y, M have the same value_type and it is complex<double> or double         
+   * @Precondition : 
+   *       * m has the correct dimension given a, b. 
+   */
+  template <MemoryVector X, MemoryVector Y, MemoryMatrix M>
+    requires(have_same_value_type_v<X, Y, M> and mem::have_compatible_addr_space<X, Y, M> and is_blas_lapack_v<get_value_t<X>>)
+  void gerc(get_value_t<X> alpha, X const &x, Y const &y, M &&m) {
+
+    EXPECTS(m.extent(0) == x.extent(0));
+    EXPECTS(m.extent(1) == y.extent(0));
+    // Must be lapack compatible
+    EXPECTS(m.indexmap().min_stride() == 1);
+
+    // if in C, we need to call fortran with transposed matrix
+    if (has_C_layout<M>) {
+      gerc(alpha, y, x, transpose(m));
+      return;
+    }
+
+    if constexpr (mem::have_device_compatible_addr_space<X, Y, M>) {
+#if defined(NDA_HAVE_DEVICE)
+      device::gerc(m.extent(0), m.extent(1), alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], m.data(), get_ld(m));
+#else
+      static_assert(always_false<bool>, " blas on device without gpu support! Compile for GPU. ");
+#endif
+    } else {
+      f77::gerc(m.extent(0), m.extent(1), alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], m.data(), get_ld(m));
+    }
+  }
+
   /** @} */
 
 } // namespace nda::blas
