@@ -106,15 +106,15 @@ endif()
 
 # ========= TBLIS ==========
 
-option(Use_Tblis "Use TBLIS library" OFF)
-if(Use_Tblis)
+option(TblisSupport "Use TBLIS library" OFF)
+if(TblisSupport)
   message(STATUS "-------- TBLIS detection -------------")
   # no find package, :-(, doing it by hand
   if(NOT DEFINED TBLIS_ROOT AND DEFINED ENV{TBLIS_ROOT})
     set(TBLIS_ROOT $ENV{TBLIS_ROOT})
   endif()
   if(NOT DEFINED TBLIS_ROOT)
-    message(FATAL_ERROR "Error: Please set TBLIS_ROOT when Use_Tblis is set to ON")
+    message(FATAL_ERROR "Error: Please set TBLIS_ROOT when TblisSupport is set to ON")
   endif()
   message(STATUS "TBLIS_ROOT: ${TBLIS_ROOT}") 
   # MAM: improve this, need to check if library is in TBLIS_ROOT/include, TBLIS_ROOT/lib
