@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <mpi/mpi.hpp>
+
 #ifdef NDA_HAVE_CUDA
 #include "./exceptions.hpp"
 
@@ -17,11 +19,18 @@
 #include <cublas_v2.h>
 
 #include <complex>
+#include <iostream>
 #include <exception>
 #include <string>
 #endif // NDA_HAVE_CUDA
 
 namespace nda {
+
+#ifdef NDA_HAVE_CUDA
+  using devStream_t = cudaStream_t;
+#else
+  using devStream_t = int;
+#endif
 
   /**
    * @addtogroup mem_utils
@@ -53,10 +62,11 @@ namespace nda {
    */
   inline void device_error_check(cudaError_t success, std::string message = "") {
     if (success != cudaSuccess) {
-      NDA_RUNTIME_ERROR << "Cuda runtime error: " << std::to_string(success) << "\n"
-                        << " message: " << message << "\n"
-                        << " cudaGetErrorName: " << std::string(cudaGetErrorName(success)) << "\n"
-                        << " cudaGetErrorString: " << std::string(cudaGetErrorString(success)) << "\n";
+      std::cerr << "Cuda runtime error: " << std::to_string(success) << "\n"
+                << " message: " << message << "\n"
+                << " cudaGetErrorName: " << std::string(cudaGetErrorName(success)) << "\n"
+                << " cudaGetErrorString: " << std::string(cudaGetErrorString(success)) << "\n";
+      mpi::communicator{}.abort(31);
     }
   }
 

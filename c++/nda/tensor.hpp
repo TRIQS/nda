@@ -17,16 +17,26 @@
 #pragma once
 
 /// Tensor operations Interface
-namespace nda::tensor {
-  enum REDUCE_OP { REDUCE_SUM, REDUCE_MAX, REDUCE_MIN };
-  enum UNARY_OP { ID_UOP, CONJ_UOP, SQRT_UOP, ABS_UOP, NEG_UOP };
-  enum BINARY_OP { SUM_BOP, MUL_BOP, MAX_BOP, MIN_BOP };
-} // namespace nda::tensor
+namespace nda::tensor {}
 
 #include "blas/tools.hpp"
+#include "tensor/tools.hpp"
 #include "tensor/contract.hpp"
 #include "tensor/add.hpp"
 #include "tensor/set.hpp"
 #include "tensor/scale.hpp"
 #include "tensor/dot.hpp"
 #include "tensor/reduce.hpp"
+#include "tensor/assign.hpp"
+#include "tensor/elementwise.hpp"
+
+namespace nda::tensor {
+#if defined(NDA_HAVE_CUTENSOR)
+  inline bool get_device_synchronization() { return nda::tensor::cutensor::get_synchronization(); }
+  inline void set_device_synchronization(bool s_) { nda::tensor::cutensor::set_synchronization(s_); }
+#else
+  inline static bool __synchronize__ = true;
+  inline bool get_device_synchronization() { return __synchronize__; }
+  inline void set_device_synchronization(bool s_) { __synchronize__ = s_; }
+#endif
+} // namespace nda::tensor

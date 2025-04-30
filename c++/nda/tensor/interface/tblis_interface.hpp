@@ -24,47 +24,39 @@
 
 namespace nda::tensor::nda_tblis {
 
-  // make this constexpr???
-  template <uint8_t N>
-  std::string default_index() {
-    std::string indx{size_t(N)};
-    for (uint8_t i = 0; i < N; i++) indx[i] = static_cast<char>(i);
-    return indx;
-  }
-
   // Following design choices of correaa@boost::multi
   template <class T>
   auto init_scalar = std::enable_if_t<sizeof(T *) == 0>{};
   template <>
-  auto init_scalar<float> = ::tblis::tblis_init_scalar_s;
+  auto inline init_scalar<float> = ::tblis::tblis_init_scalar_s;
   template <>
-  auto init_scalar<double> = ::tblis::tblis_init_scalar_d;
+  auto inline init_scalar<double> = ::tblis::tblis_init_scalar_d;
   template <>
-  auto init_scalar<std::complex<float>> = ::tblis::tblis_init_scalar_c;
+  auto inline init_scalar<std::complex<float>> = ::tblis::tblis_init_scalar_c;
   template <>
-  auto init_scalar<std::complex<double>> = ::tblis::tblis_init_scalar_z;
+  auto inline init_scalar<std::complex<double>> = ::tblis::tblis_init_scalar_z;
 
   template <class T>
   auto init_tensor = std::enable_if_t<sizeof(T *) == 0>{};
   template <>
-  auto init_tensor<float> = ::tblis::tblis_init_tensor_s;
+  auto inline init_tensor<float> = ::tblis::tblis_init_tensor_s;
   template <>
-  auto init_tensor<double> = ::tblis::tblis_init_tensor_d;
+  auto inline init_tensor<double> = ::tblis::tblis_init_tensor_d;
   template <>
-  auto init_tensor<std::complex<float>> = ::tblis::tblis_init_tensor_c;
+  auto inline init_tensor<std::complex<float>> = ::tblis::tblis_init_tensor_c;
   template <>
-  auto init_tensor<std::complex<double>> = ::tblis::tblis_init_tensor_z;
+  auto inline init_tensor<std::complex<double>> = ::tblis::tblis_init_tensor_z;
 
   template <class T>
   auto init_tensor_scaled = std::enable_if_t<sizeof(T *) == 0>{};
   template <>
-  auto init_tensor_scaled<float> = ::tblis::tblis_init_tensor_scaled_s;
+  auto inline init_tensor_scaled<float> = ::tblis::tblis_init_tensor_scaled_s;
   template <>
-  auto init_tensor_scaled<double> = ::tblis::tblis_init_tensor_scaled_d;
+  auto inline init_tensor_scaled<double> = ::tblis::tblis_init_tensor_scaled_d;
   template <>
-  auto init_tensor_scaled<std::complex<float>> = ::tblis::tblis_init_tensor_scaled_c;
+  auto inline init_tensor_scaled<std::complex<float>> = ::tblis::tblis_init_tensor_scaled_c;
   template <>
-  auto init_tensor_scaled<std::complex<double>> = ::tblis::tblis_init_tensor_scaled_z;
+  auto inline init_tensor_scaled<std::complex<double>> = ::tblis::tblis_init_tensor_scaled_z;
 
   template <class ValueType>
   struct scalar : ::tblis::tblis_scalar {
@@ -76,7 +68,7 @@ namespace nda::tensor::nda_tblis {
     ValueType value() const { return ::tblis::tblis_scalar::get<ValueType>(); }
   };
 
-  template <class ValueType, size_t Rank>
+  template <class ValueType, int Rank>
   struct tensor : ::tblis::tblis_tensor {
 
     using value_type          = ValueType;
