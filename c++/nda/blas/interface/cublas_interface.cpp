@@ -8,6 +8,9 @@
  * @brief Implementation details for blas/interface/cublas_interface.hpp.
  */
 
+#include <mpi/mpi.hpp>
+#include <nda/nda.hpp>
+#include <nda/device.hpp>
 #include "./cublas_interface.hpp"
 #include "../tools.hpp"
 #include "../../device.hpp"
@@ -18,6 +21,22 @@
 #endif
 
 namespace nda::blas::device {
+
+  static const char *_cudaGetErrorEnum(cublasStatus_t error) {
+    switch (error) {
+      case CUBLAS_STATUS_SUCCESS: return "CUBLAS_STATUS_SUCCESS";
+      case CUBLAS_STATUS_NOT_INITIALIZED: return "CUBLAS_STATUS_NOT_INITIALIZED";
+      case CUBLAS_STATUS_ALLOC_FAILED: return "CUBLAS_STATUS_ALLOC_FAILED";
+      case CUBLAS_STATUS_INVALID_VALUE: return "CUBLAS_STATUS_INVALID_VALUE";
+      case CUBLAS_STATUS_ARCH_MISMATCH: return "CUBLAS_STATUS_ARCH_MISMATCH";
+      case CUBLAS_STATUS_MAPPING_ERROR: return "CUBLAS_STATUS_MAPPING_ERROR";
+      case CUBLAS_STATUS_EXECUTION_FAILED: return "CUBLAS_STATUS_EXECUTION_FAILED";
+      case CUBLAS_STATUS_INTERNAL_ERROR: return "CUBLAS_STATUS_INTERNAL_ERROR";
+      case CUBLAS_STATUS_NOT_SUPPORTED: return "CUBLAS_STATUS_NOT_SUPPORTED";
+      case CUBLAS_STATUS_LICENSE_ERROR: return "CUBLAS_STATUS_LICENSE_ERROR";
+    }
+    return "<unknown>";
+  }
 
   // Local function to get unique CuBlas handle.
   inline cublasHandle_t &get_handle() {
@@ -68,16 +87,16 @@ namespace nda::blas::device {
   {                                                                                                                                                  \
     auto err = X(get_handle(), __VA_ARGS__);                                                                                                         \
     if (err != CUBLAS_STATUS_SUCCESS) {                                                                                                              \
-      NDA_RUNTIME_ERROR << AS_STRING(X) << " failed \n"                                                                                              \
-                        << " cublasGetStatusName: " << cublasGetStatusName(err) << "\n"                                                              \
-                        << " cublasGetStatusString: " << cublasGetStatusString(err) << "\n";                                                         \
+      std::cerr << AS_STRING(X) << " failed with error code: " << std::to_string(err) << ", error message: " << _cudaGetErrorEnum(err) << std::endl; \
+      mpi::communicator{}.abort(11);                                                                                                                 \
     }                                                                                                                                                \
     if (synchronize) {                                                                                                                               \
       auto errsync = cudaDeviceSynchronize();                                                                                                        \
       if (errsync != cudaSuccess) {                                                                                                                  \
-        NDA_RUNTIME_ERROR << " cudaDeviceSynchronize failed after call to: " << AS_STRING(X) << "\n"                                                 \
-                          << " cudaGetErrorName: " << cudaGetErrorName(errsync) << "\n"                                                              \
-                          << " cudaGetErrorString: " << cudaGetErrorString(errsync) << "\n";                                                         \
+        std::cerr << " cudaDeviceSynchronize failed after call to: " << AS_STRING(X) " \n "                                                          \
+                  << " cudaGetErrorName: " << std::string(cudaGetErrorName(errsync)) << "\n"                                                         \
+                  << " cudaGetErrorString: " << std::string(cudaGetErrorString(errsync)) << std::endl;                                                    \
+        mpi::communicator{}.abort(11);                                                                                                               \
       }                                                                                                                                              \
     }                                                                                                                                                \
   }

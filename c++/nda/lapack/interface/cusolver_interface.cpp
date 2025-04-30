@@ -7,6 +7,7 @@
  * @file
  * @brief Implementation details for lapack/interface/cusolver_interface.hpp.
  */
+#include <mpi/mpi.hpp>
 #include <nda/nda.hpp>
 #include "./cusolver_interface.hpp"
 #include "../../basic_array.hpp"
@@ -49,13 +50,17 @@ namespace nda::lapack::device {
 // Macro to check cusolver calls.
 #define CUSOLVER_CHECK(X, info, ...)                                                                                                                 \
   auto err = X(get_handle(), __VA_ARGS__, get_info_ptr());                                                                                           \
-  if (err != CUSOLVER_STATUS_SUCCESS) { NDA_RUNTIME_ERROR << AS_STRING(X) << " failed with error code " << std::to_string(err); }                    \
+  if (err != CUSOLVER_STATUS_SUCCESS) {                                                                                                              \
+    std::cerr << AS_STRING(X) << " failed with error code " << std::to_string(err) << std::endl;                                                                  \
+    mpi::communicator{}.abort(11);                                                                                                                   \
+  }                                                                                                                                                  \
   if (synchronize) {                                                                                                                                 \
-    auto errsync = cudaDeviceSynchronize();                                                                                                          \
-    if (errsync != cudaSuccess) {                                                                                                                    \
-      NDA_RUNTIME_ERROR << " cudaDeviceSynchronize failed after call to: " << AS_STRING(X) " \n "                                                    \
-                        << " cudaGetErrorName: " << std::string(cudaGetErrorName(errsync)) << "\n"                                                   \
-                        << " cudaGetErrorString: " << std::string(cudaGetErrorString(errsync)) << "\n";                                              \
+    auto err1 = cudaDeviceSynchronize();                                                                                                             \
+    if (err1 != cudaSuccess) {                                                                                                                       \
+      std::cerr << " cudaDeviceSynchronize failed after call to: " << AS_STRING(X) " \n "                                                            \
+                << " cudaGetErrorName: " << std::string(cudaGetErrorName(err1)) << "\n"                                                              \
+                << " cudaGetErrorString: " << std::string(cudaGetErrorString(err1)) << std::endl;                                                         \
+      mpi::communicator{}.abort(11);                                                                                                                 \
     }                                                                                                                                                \
   }                                                                                                                                                  \
   info = *get_info_ptr();

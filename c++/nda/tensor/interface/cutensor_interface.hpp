@@ -21,6 +21,8 @@
 #include <complex>
 #include "cutensor.h"
 
+#include <mpi/mpi.hpp>
+
 #include "nda/concepts.hpp"
 #include "nda/traits.hpp"
 #include "nda/macros.hpp"
@@ -39,8 +41,10 @@ namespace nda::tensor::cutensor {
   {                                                                                                                                                  \
     auto err = X(__VA_ARGS__);                                                                                                                       \
     cudaDeviceSynchronize();                                                                                                                         \
-    if (err != CUTENSOR_STATUS_SUCCESS)                                                                                                              \
-      NDA_RUNTIME_ERROR << AS_STRING(X) << " failed with error code " << std::to_string(err) << ", " << cutensorGetErrorString(err);                 \
+    if (err != CUTENSOR_STATUS_SUCCESS) {                                                                                                            \
+      std::cerr << AS_STRING(X) << " failed with error code " << std::to_string(err) << ", " << cutensorGetErrorString(err) << std::endl;            \
+      mpi::communicator{}.abort(11);                                                                                                                 \
+    }                                                                                                                                                \
   }
 
   // cutensorOperator_t
