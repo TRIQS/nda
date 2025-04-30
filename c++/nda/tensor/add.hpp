@@ -17,10 +17,10 @@
 #pragma once
 #include <complex>
 #include <string_view>
-#include "../exceptions.hpp"
-#include "../traits.hpp"
-#include "../declarations.hpp"
-#include "../mem/address_space.hpp"
+#include "nda/exceptions.hpp"
+#include "nda/traits.hpp"
+#include "nda/declarations.hpp"
+#include "nda/mem/address_space.hpp"
 
 #if defined(NDA_HAVE_TBLIS)
 #include "interface/tblis_interface.hpp"
@@ -43,8 +43,55 @@ namespace nda::tensor {
    */
   template <Array X, MemoryArray B>
     requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and have_same_value_type_v<X, B> and is_blas_lapack_v<get_value_t<X>>)
-  void add(get_value_t<X> alpha, X const &x, std::string_view const indxX, get_value_t<X> beta, B &&y, std::string_view const indxY) {
+  void add(get_value_t<X> alpha, X const &x, std::string_view const indxX, get_value_t<X> beta, B &&b, std::string_view const indxY,
+           devStream_t const stream = 0) {
 
+    using nda::blas::is_conj_array_expr;
+    using value_t = get_value_t<X>;
+    auto to_mat   = []<typename Z>(Z const &z) -> auto   &{
+      if constexpr (is_conj_array_expr<Z>)
+        return std::get<0>(z.a);
+      else
+        return z;
+    };
+    auto &a = to_mat(x);
+
+    static constexpr bool conj_A = is_conj_array_expr<X>;
+
+    using A = decltype(a);
+    static_assert(mem::have_compatible_addr_space<A, B>, "Matrices must have compatible memory address space");
+
+    if (get_rank<A> != indxX.size()) NDA_RUNTIME_ERROR << "tensor::add: Rank mismatch \n";
+    if (get_rank<B> != indxY.size()) NDA_RUNTIME_ERROR << "tensor::add: Rank mismatch \n";
+    if (get_rank<A> != get_rank<B>) NDA_RUNTIME_ERROR << "tensor::add: Rank mismatch \n";
+
+    if constexpr (mem::have_device_compatible_addr_space<A, B>) {
+#if defined(NDA_HAVE_CUTENSOR)
+      op::TENSOR_OP a_op = conj_A ? op::CONJ : op::ID;
+      cutensor::cutensor_desc<value_t, get_rank<A>> a_t(a);
+      cutensor::cutensor_desc<value_t, get_rank<B>> b_t(b);
+      cutensor::elementwise_binary(alpha, a_t, a_op, a.data(), indxX.data(), beta, b_t, op::ID, b.data(), indxY.data(), b.data(), op::SUM, stream);
+#else
+      static_assert(always_false<bool>, " add on device requires gpu tensor operations backend. ");
+#endif
+    } else {
+#if defined(NDA_HAVE_TBLIS)
+      // no conj in tblis yet!
+      static_assert(not conj_A, "Error: No conj in tblis yet!");
+      nda_tblis::tensor<value_t, get_rank<A>> a_t(a, alpha);
+      nda_tblis::tensor<value_t, get_rank<B>> b_t(b, beta);
+      ::tblis::tblis_tensor_add(NULL, NULL, &a_t, indxX.data(), &b_t, indxY.data());
+#else
+      static_assert(always_false<bool>, " add on host requires cpu tensor operations backend. ");
+#endif
+    }
+  }
+
+  template <Array X, Array Y, MemoryArray C>
+    requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and (MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>)
+             and have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>)
+  void add(get_value_t<X> alpha, X const &x, std::string_view const indxX, get_value_t<Y> beta, Y const &y, std::string_view const indxY, C &&c,
+           std::string_view const indxC, devStream_t const stream = 0) {
     using nda::blas::is_conj_array_expr;
     using value_t = get_value_t<X>;
     auto to_mat   = []<typename Z>(Z const &z) -> auto   &{
@@ -57,32 +104,94 @@ namespace nda::tensor {
     auto &b = to_mat(y);
 
     static constexpr bool conj_A = is_conj_array_expr<X>;
-
-    // no conj in tblis yet!
-    static_assert(not conj_A, "Error: No conj in tblis yet!");
+    static constexpr bool conj_B = is_conj_array_expr<Y>;
 
     using A = decltype(a);
-    static_assert(mem::have_same_addr_space_v<A, B>, "Matrices must have same memory address space");
+    using B = decltype(b);
+    static_assert(mem::have_compatible_addr_space<A, B, C>, "Matrices must have compatible memory address space");
 
     if (get_rank<A> != indxX.size()) NDA_RUNTIME_ERROR << "tensor::add: Rank mismatch \n";
     if (get_rank<B> != indxY.size()) NDA_RUNTIME_ERROR << "tensor::add: Rank mismatch \n";
+    if (get_rank<C> != indxC.size()) NDA_RUNTIME_ERROR << "tensor::add: Rank mismatch \n";
+    if (get_rank<A> != get_rank<B>) NDA_RUNTIME_ERROR << "tensor::add: Rank mismatch \n";
+    if (get_rank<A> != get_rank<C>) NDA_RUNTIME_ERROR << "tensor::add: Rank mismatch \n";
+    if (indxY != indxC) NDA_RUNTIME_ERROR << "tensor::add: indxB != indxC";
+    if (b.strides() != c.strides() or b.shape() != c.shape() or b.stride_order() != c.stride_order())
+      NDA_RUNTIME_ERROR << " tensor::add: Tensor's B and C must have identical strides, shapes and stride_orders.";
 
-    if constexpr (mem::on_host<A>) {
-#if defined(NDA_HAVE_TBLIS)
-      nda_tblis::tensor<value_t, get_rank<A>> a_t(a, alpha);
-      nda_tblis::tensor<value_t, get_rank<B>> b_t(b, beta);
-      ::tblis::tblis_tensor_add(NULL, NULL, &a_t, indxX.data(), &b_t, indxY.data());
-#else
-      static_assert(always_false<bool>, " add on host requires cpu tensor operations backend. ");
-#endif
-    } else { // on device
+    if constexpr (mem::have_device_compatible_addr_space<A, B>) {
 #if defined(NDA_HAVE_CUTENSOR)
-      //      cutensor::termbyterm();
-      static_assert(always_false<bool>, " add on device cuTensor!!!. ");
+      op::TENSOR_OP a_op = conj_A ? op::CONJ : op::ID;
+      op::TENSOR_OP b_op = conj_B ? op::CONJ : op::ID;
+      cutensor::cutensor_desc<value_t, get_rank<A>> a_t(a);
+      cutensor::cutensor_desc<value_t, get_rank<B>> b_t(b);
+      cutensor::elementwise_binary(alpha, a_t, a_op, a.data(), indxX, beta, b_t, b_op, b.data(), indxY, c.data(), op::SUM, stream);
 #else
       static_assert(always_false<bool>, " add on device requires gpu tensor operations backend. ");
 #endif
+    } else { // on host
+#if defined(NDA_HAVE_TBLIS)
+      // no conj in tblis yet!
+      static_assert(not conj_A and not conj_B, "Error: No conj in tblis yet!");
+      nda_tblis::tensor<value_t, get_rank<A>> a_t(a, alpha);
+      nda_tblis::tensor<value_t, get_rank<C>> c_t(c, value_t{1.0});
+      // if conditions on B/C being compatible are relaxed, this needs to change!
+      c() = beta * b();
+      ::tblis::tblis_tensor_add(NULL, NULL, &a_t, indxX.data(), &c_t, indxC.data());
+#else
+      static_assert(always_false<bool>, " add on host requires cpu tensor operations backend. ");
+#endif
     }
+  }
+
+  template <Array X, MemoryArray B>
+    requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and have_same_value_type_v<X, B> and is_blas_lapack_v<get_value_t<X>>)
+  void add(X const &x, std::string_view const indxX, B &&b, std::string_view const indxY, devStream_t const stream = 0) {
+    return add(get_value_t<X>{1.0}, x, indxX, get_value_t<X>{0.0}, std::forward<B>(b), indxY, stream);
+  }
+
+  template <Array X, Array Y, MemoryArray C>
+    requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and (MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>)
+             and have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>)
+  void add(X const &x, std::string_view const indxX, Y const &y, std::string_view const indxY, C &&c, std::string_view const indxC,
+           devStream_t const stream = 0) {
+    return add(get_value_t<X>{1.0}, x, indxX, get_value_t<Y>{0.0}, y, indxY, std::forward<C>(c), indxC, stream);
+  }
+
+  template <Array X, MemoryArray B>
+    requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and have_same_value_type_v<X, B> and is_blas_lapack_v<get_value_t<X>>)
+  void add(X const &x, B &&b, devStream_t const stream = 0) {
+    constexpr int rank = get_rank<B>;
+    using nda::blas::is_conj_array_expr;
+    auto to_mat = []<typename Z>(Z const &z) -> auto & {
+      if constexpr (is_conj_array_expr<Z>)
+        return std::get<0>(z.a);
+      else
+        return z;
+    };
+    auto &a = to_mat(x);
+    using A = decltype(a);
+    static_assert(rank == get_rank<A>, "Rank mismatch.");
+    std::string indx = default_index<uint8_t(rank)>();
+    return add(x, indx, std::forward<B>(b), indx, stream);
+  }
+
+  template <Array X, MemoryArray B>
+    requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and have_same_value_type_v<X, B> and is_blas_lapack_v<get_value_t<X>>)
+  void add(get_value_t<X> alpha, X const &x, get_value_t<B> beta, B &&b, devStream_t const stream = 0) {
+    constexpr int rank = get_rank<B>;
+    using nda::blas::is_conj_array_expr;
+    auto to_mat = []<typename Z>(Z const &z) -> auto & {
+      if constexpr (is_conj_array_expr<Z>)
+        return std::get<0>(z.a);
+      else
+        return z;
+    };
+    auto &a = to_mat(x);
+    using A = decltype(a);
+    static_assert(rank == get_rank<A>, "Rank mismatch.");
+    std::string indx = default_index<uint8_t(rank)>();
+    return add(alpha, x, indx, beta, std::forward<B>(b), indx, stream);
   }
 
 } // namespace nda::tensor

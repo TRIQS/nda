@@ -79,7 +79,8 @@ endif()
 
 # GPU support
 option(CudaSupport "Build with Cuda support" OFF)
-option(Use_Magma "Enable GEMM vBatch using Magma" OFF)
+option(CutensorSupport "Use CuTensor library" OFF)
+option(MagmaSupport "Enable GEMM vBatch using Magma" OFF)
 
 # ############
 # Global Compilation Settings

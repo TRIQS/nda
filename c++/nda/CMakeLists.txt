@@ -2,6 +2,9 @@ file(GLOB_RECURSE sources *.cpp)
 if(NOT CudaSupport)
   list(FILTER sources EXCLUDE REGEX "(cublas_interface|cusolver_interface)")
 endif()
+if(NOT CutensorSupport)
+  list(FILTER sources EXCLUDE REGEX "cutensor_interface")
+endif()
 add_library(${PROJECT_NAME}_c ${sources})
 add_library(${PROJECT_NAME}::${PROJECT_NAME}_c ALIAS ${PROJECT_NAME}_c)
 
@@ -93,18 +96,55 @@ endif()
 target_link_libraries(${PROJECT_NAME}_c PRIVATE blas_lapack)
 install(TARGETS blas_lapack EXPORT ${PROJECT_NAME}-targets)
 
-# ========= CudaRT & CuBLAS ==========
+# ========= CudaRT, CuBLAS, CuSolver & CuTensor ==========
 
 if(CudaSupport)
   message(STATUS "-------- CUDAToolkit detection -------------")
-  find_package(CUDAToolkit REQUIRED)
+  find_package(CUDAToolkit REQUIRED 11)
   target_link_libraries(${PROJECT_NAME}_c PUBLIC CUDA::cudart CUDA::cublas CUDA::cusolver)
   target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_CUDA NDA_HAVE_DEVICE)
+
+  if(CutensorSupport)
+    message(STATUS "-------- cutensor detection -------------")
+    if(NOT DEFINED ENV{CUTENSOR_ROOT} AND NOT DEFINED CUTENSOR_ROOT)
+      message(FATAL_ERROR "CUTENSOR_ROOT not set!")
+    endif() 
+    if(DEFINED ENV{CUTENSOR_ROOT})
+      set(CUTENSOR_ROOT "$ENV{CUTENSOR_ROOT}")
+    endif()
+    message("-- Looking for cuTENSOR in ${CUTENSOR_ROOT}")
+    if(NOT EXISTS ${CUTENSOR_ROOT})
+      message(FATAL_ERROR "Cannot find CUTENSOR_ROOT")
+    endif()
+
+    if(NOT TARGET cutensor)
+      add_library(cutensor SHARED IMPORTED)
+      if(WIN32)
+        set(CUTENSOR_LIBRARY_NAME "cutensor.dll")
+        set(CUTENSOR_LIBRARY_DEF "cutensor.lib")
+      else()
+        set(CUTENSOR_LIBRARY_NAME "libcutensor.so")
+      endif()
+      if((${CUDAToolkit_VERSION_MAJOR} GREATER_EQUAL 12))
+        set(LIB_DIR "/lib/12")
+      elseif((${CUDAToolkit_VERSION_MAJOR} GREATER_EQUAL 11) AND (${CUDAToolkit_VERSION_MINOR} GREATER_EQUAL 1))
+        set(LIB_DIR "/lib/11")
+      elseif((${CUDAToolkit_VERSION_MAJOR} GREATER_EQUAL 11) AND (${CUDAToolkit_VERSION_MINOR} LESS_EQUAL 0))
+        set(LIB_DIR "/lib/11.0")
+      endif()
+      set_target_properties(cutensor PROPERTIES
+        IMPORTED_LOCATION "${CUTENSOR_ROOT}/${LIB_DIR}/${CUTENSOR_LIBRARY_NAME}"
+        IMPORTED_IMPLIB "${CUTENSOR_ROOT}/${LIB_DIR}/${CUTENSOR_LIBRARY_DEF}"
+        INTERFACE_INCLUDE_DIRECTORIES "${CUTENSOR_ROOT}/include")
+    endif()
+    target_link_libraries(${PROJECT_NAME}_c PUBLIC cutensor)
+    target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_CUTENSOR)
+  endif()
 endif()
 
 # ========= Magma ==========
 
-if(Use_Magma)
+if(MagmaSupport)
   message(STATUS "-------- Magma detection -------------")
   find_package(Magma REQUIRED)
   target_link_libraries(${PROJECT_NAME}_c PUBLIC magma)
@@ -114,9 +154,9 @@ endif()
 
 # ========= TBLIS ==========
 
-message(STATUS "-------- TBLIS detection -------------")
 option(Use_Tblis "Use TBLIS library" OFF)
 if(Use_Tblis)
+  message(STATUS "-------- TBLIS detection -------------")
   # no find package, :-(, doing it by hand
   if(NOT DEFINED TBLIS_ROOT AND DEFINED ENV{TBLIS_ROOT})
     set(TBLIS_ROOT $ENV{TBLIS_ROOT})
