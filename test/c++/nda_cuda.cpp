@@ -109,6 +109,19 @@ TEST(NDA, CudaAssignFromView) {
   EXPECT_ARRAY_EQ(B, A(nda::range::all, 0, 0, 0));
 }
 
+TEST(NDA, CudaFill) {
+  // Contiguous fill
+  auto A_d = cuarray_t<2>(N, N);
+  A_d      = 1.0;
+  EXPECT_ARRAY_EQ(to_host(A_d), nda::ones<value_t>(N, N));
+
+  // Non-contiguous fill
+  auto B_d                                   = cuarray_t<2>(N, N);
+  B_d(nda::range::all, nda::range(N / 2))    = 1.0;
+  B_d(nda::range::all, nda::range(N / 2, N)) = 1.0;
+  EXPECT_ARRAY_EQ(to_host(B_d), nda::ones<value_t>(N, N));
+}
+
 TEST(NDA, CudaStorage) {
   auto h1      = nda::mem::handle_heap<int>{10};
   h1.data()[2] = 89;
