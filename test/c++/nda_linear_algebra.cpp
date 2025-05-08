@@ -381,3 +381,30 @@ TEST(NDA, LinearAlgebraNormExample) {
   EXPECT_EQ(nda::norm(v, std::numeric_limits<double>::infinity()), 2.5);
   EXPECT_EQ(nda::norm(v, -std::numeric_limits<double>::infinity()), 0.0);
 }
+
+// Test the outer product function.
+template <typename T, typename Layout>
+void test_outer_product() {
+  // outer product of two arrays
+  auto A = nda::array<T, 2, Layout>::rand(2, 3);
+  auto B = nda::array<T, 3, Layout>::rand(4, 5, 6);
+  auto C = nda::array<T, 5, Layout>(2, 3, 4, 5, 6);
+  for (auto [i, j] : A.indices())
+    for (auto [k, l, m] : B.indices()) C(i, j, k, l, m) = A(i, j) * B(k, l, m);
+  EXPECT_ARRAY_NEAR(C, nda::linalg::outer_product(A, B));
+
+  // outer product of two vectors
+  nda::vector<T> v{1, 2};
+  nda::vector<T> w{3, 4, 5};
+  auto M = nda::linalg::outer_product(v, w);
+  static_assert(nda::get_algebra<decltype(M)> == 'M');
+  static_assert(nda::blas::has_C_layout<decltype(M)>);
+  EXPECT_ARRAY_NEAR(nda::matrix<T>{{3, 4, 5}, {6, 8, 10}}, M);
+}
+
+TEST(NDA, LinearAlgebraOuterProduct) {
+  test_outer_product<double, nda::C_layout>();
+  test_outer_product<double, nda::F_layout>();
+  test_outer_product<std::complex<double>, nda::C_layout>();
+  test_outer_product<std::complex<double>, nda::F_layout>();
+}
