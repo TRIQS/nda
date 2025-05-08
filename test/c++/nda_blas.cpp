@@ -159,40 +159,49 @@ TEST(NDA, BLASGer) {
   test_ger<std::complex<double>, nda::C_layout>();
 }
 
-// Test the BLAS dot function and its generic implementation.
-template <typename value_t>
-void test_dot() {
-  nda::vector<value_t> a{1, 2, 3, 4, 5};
-  nda::vector<value_t> b{10, 20, 30, 40, 50};
-  if constexpr (nda::is_complex_v<value_t>) {
+// Test the BLAS dot/dotc function.
+template <typename T, bool star>
+void test_dot(auto dot) {
+  auto exp_dot = [](auto const &a, auto const &b) {
+    T res = 0.0;
+    for (size_t i = 0; i < a.size(); ++i) {
+      if constexpr (star and nda::is_complex_v<T>) {
+        res += std::conj(a(i)) * b(i);
+      } else {
+        res += a(i) * b(i);
+      }
+    }
+    return res;
+  };
+  nda::vector<T> a{1, 2, 3, 4, 5};
+  nda::vector<T> b{10, 20, 30, 40, 50};
+  if constexpr (nda::is_complex_v<T>) {
     a *= 1 + 1i;
     b *= 1 + 2i;
   }
 
-  EXPECT_COMPLEX_NEAR(nda::blas::dot(a, b), nda::blas::dot_generic(a, b), 1.e-14);
+  // vector dot vector
+  EXPECT_COMPLEX_NEAR(dot(a, b), exp_dot(a, b), 1.e-14);
+
+  // size 0 vectors
+  EXPECT_EQ(dot(nda::vector<T>{}, nda::vector<T>{}), T(0));
+
+  // strided vector dot strided vector
+  auto a_v = a(nda::range(0, 5, 2));
+  auto b_v = b(nda::range(0, 5, 2));
+  EXPECT_COMPLEX_NEAR(dot(a_v, b_v), exp_dot(a_v, b_v), 1.e-14);
 }
 
 TEST(NDA, BLASDot) {
-  test_dot<double>();
-  test_dot<std::complex<double>>();
-}
-
-// Test the BLAS dotc function and its generic implementation.
-template <typename value_t>
-void test_dotc() {
-  nda::vector<value_t> a{1, 2, 3, 4, 5};
-  nda::vector<value_t> b{10, 20, 30, 40, 50};
-  if constexpr (nda::is_complex_v<value_t>) {
-    a *= 1 + 1i;
-    b *= 1 + 2i;
-  }
-
-  EXPECT_COMPLEX_NEAR(nda::blas::dotc(a, b), nda::blas::dotc_generic(a, b), 1.e-14);
+  auto dot = []<typename A, typename B>(A &&a, B &&b) { return nda::blas::dot(std::forward<A>(a), std::forward<B>(b)); };
+  test_dot<double, false>(dot);
+  test_dot<std::complex<double>, false>(dot);
 }
 
 TEST(NDA, BLASDotc) {
-  test_dotc<double>();
-  test_dotc<std::complex<double>>();
+  auto dotc = []<typename A, typename B>(A &&a, B &&b) { return nda::blas::dotc(std::forward<A>(a), std::forward<B>(b)); };
+  test_dot<double, true>(dotc);
+  test_dot<std::complex<double>, true>(dotc);
 }
 
 // Test the BLAS scal function.
