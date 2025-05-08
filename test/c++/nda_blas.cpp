@@ -184,21 +184,41 @@ TEST(NDA, BLASDotc) {
 }
 
 // Test the BLAS scal function.
-template <typename value_t>
-void test_scal() {
-  nda::vector<value_t> a{1, 2, 3, 4, 5};
-  value_t x = 3.0;
-  if constexpr (nda::is_complex_v<value_t>) {
-    a *= 1 + 1i;
-    x = 3.0 + 2.0i;
-  }
-
-  auto exp = nda::make_regular(x * a);
-  nda::blas::scal(x, a);
-  EXPECT_ARRAY_NEAR(a, exp);
+TEST(NDA, BLASScalEmptyVector) {
+  nda::vector<double> v;
+  nda::blas::scal(3.0, v);
+  EXPECT_TRUE(v.empty());
 }
 
-TEST(NDA, BLASScal) {
-  test_scal<double>();
-  test_scal<std::complex<double>>();
+TEST(NDA, BLASScalDouble) {
+  nda::vector<double> v{1, 2, 3, 4, 5};
+
+  // scale by a double
+  auto v1 = v;
+  auto xd = 3.0;
+  nda::blas::scal(xd, v1);
+  EXPECT_ARRAY_NEAR(v1, xd * v);
+
+  // scale by an integer
+  auto v2 = v;
+  auto xi = 3;
+  nda::blas::scal(xi, v2);
+  EXPECT_ARRAY_NEAR(v2, xi * v);
+}
+
+TEST(NDA, BLASScalComplex) {
+  nda::vector<std::complex<double>> v{1, 2, 3, 4, 5};
+  v *= 1 - 1i;
+
+  // scale by a double
+  auto v1 = v;
+  auto xd = 3.0;
+  nda::blas::scal(xd, v1);
+  EXPECT_ARRAY_NEAR(v1, xd * v);
+
+  // scale by a complex double
+  auto v2 = v;
+  auto xc = 3.0 + 2.0i;
+  nda::blas::scal(xc, v2);
+  EXPECT_ARRAY_NEAR(v2, xc * v);
 }
