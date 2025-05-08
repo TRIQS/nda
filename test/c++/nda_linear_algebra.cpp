@@ -12,29 +12,60 @@
 #include <limits>
 #include <type_traits>
 
-TEST(NDA, LinearAlgebraDotProduct) {
-  nda::array<double, 1> a(2), a2(2), c(2);
-  a() = 2.0;
-  c() = 1;
-  nda::array<int, 1> b(2);
-  b() = 3;
-  a2  = 2 * a;
-
-  EXPECT_DOUBLE_EQ(dot(a, b), 12);
-  EXPECT_DOUBLE_EQ(dot(a2, a), 16);
-  EXPECT_DOUBLE_EQ(dot(a2, b), 24);
-  EXPECT_DOUBLE_EQ(dot(a2 - a, b), 12);
+// Test the generic dot/dotc function.
+auto exp_dot(auto const &a, auto const &b) {
+  auto res = a(0) * b(0);
+  for (size_t i = 1; i < a.size(); ++i) res += a(i) * b(i);
+  return res;
 }
 
-TEST(NDA, LinearAlgebraComplexDotProduct) {
-  // added by I. Krivenko, #122
-  // test the complex version, especially with the zdotu workaround on macOS
-  nda::array<std::complex<double>, 1> v(2);
-  v(0) = 0;
-  v(1) = {0, 1};
+auto exp_dotc(auto const &a, auto const &b) {
+  auto res = std::conj(a(0)) * b(0);
+  for (size_t i = 1; i < a.size(); ++i) res += std::conj(a(i)) * b(i);
+  return res;
+}
 
-  EXPECT_COMPLEX_NEAR(nda::blas::dot(v, v), -1);
-  EXPECT_COMPLEX_NEAR(nda::blas::dotc(v, v), 1);
+TEST(NDA, LinearAlgebraDotProduct) {
+  // scalars
+  std::complex<double> u{1, 2};
+  std::complex<double> v{3, -4};
+  EXPECT_EQ(nda::linalg::dot(1, 2), 2);
+  EXPECT_EQ(nda::linalg::dotc(1, 2), 2);
+  EXPECT_DOUBLE_EQ(nda::linalg::dot(2, -5.0), -10.0);
+  EXPECT_DOUBLE_EQ(nda::linalg::dotc(2, -5.0), -10.0);
+  EXPECT_COMPLEX_NEAR(nda::linalg::dot(u, v), u * v);
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(u, v), std::conj(u) * v);
+
+  // BLAS compatible vectors
+  nda::vector<double> a{1, 2, 3, 4, 5};
+  nda::vector<double> b{10, 20, 30, 40, 50};
+  EXPECT_DOUBLE_EQ(nda::linalg::dot(a, b), nda::blas::dot(a, b));
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(a, b), nda::blas::dotc(a, b));
+
+  nda::vector<std::complex<double>> c = a * (1.1 - 2.1i);
+  nda::vector<std::complex<double>> d = b * (3 + 4i);
+  EXPECT_COMPLEX_NEAR(nda::linalg::dot(c, d), exp_dot(c, d));
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(c, d), exp_dotc(c, d));
+
+  // vectors with different value types
+  EXPECT_COMPLEX_NEAR(nda::linalg::dot(a, c), exp_dot(a, c));
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(a, c), exp_dotc(a, c));
+
+  nda::vector<int> e{1, 2, 3, 4, 5};
+  EXPECT_EQ(nda::linalg::dot(e, e), exp_dot(e, e));
+  EXPECT_DOUBLE_EQ(nda::linalg::dot(e, b), exp_dot(e, b));
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(e, b), exp_dotc(e, b));
+
+  // lazy expressions
+  auto sin_a = nda::make_regular(nda::sin(a));
+  EXPECT_DOUBLE_EQ(nda::linalg::dot(nda::sin(a), b), exp_dot(sin_a, b));
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(nda::sin(a), b), exp_dotc(sin_a, b));
+
+  // (strided) vector views
+  auto c_v = c(nda::range(0, 5, 2));
+  auto d_v = d(nda::range(1, 4));
+  EXPECT_COMPLEX_NEAR(nda::linalg::dot(c_v, d_v), exp_dot(c_v, d_v));
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(c_v, d_v), exp_dotc(c_v, d_v));
 }
 
 // Test matrix-matrix multiplication for specific memory layouts.
