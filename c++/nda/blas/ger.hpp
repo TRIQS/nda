@@ -5,27 +5,23 @@
 
 /**
  * @file
- * @brief Provides a generic interface to the BLAS `ger` routine and an outer product routine.
+ * @brief Provides a generic interface to the BLAS `ger` and `geru` routine.
  */
 
 #pragma once
 
 #include "./interface/cxx_interface.hpp"
 #include "./tools.hpp"
-#include "../basic_functions.hpp"
 #include "../concepts.hpp"
-#include "../exceptions.hpp"
 #include "../layout_transforms.hpp"
+#include "../layout/policies.hpp"
 #include "../macros.hpp"
 #include "../mem/address_space.hpp"
-#include "../stdutil/array.hpp"
 #include "../traits.hpp"
 
 #ifndef NDA_HAVE_DEVICE
 #include "../device.hpp"
-#endif
-
-#include <array>
+#endif // NDA_HAVE_DEVICE
 
 namespace nda::blas {
 
@@ -35,38 +31,42 @@ namespace nda::blas {
    */
 
   /**
-   * @brief Interface to the BLAS `ger` routine.
+   * @brief Interface to the BLAS `ger` and `geru` routine.
    *
    * @details This function performs the rank 1 operation
    * \f[
-   *   \mathbf{M} \leftarrow \alpha \mathbf{x} \mathbf{y}^H + \mathbf{M} ;,
+   *   \mathbf{M} \leftarrow \alpha \mathbf{x} \mathbf{y}^T + \mathbf{M} \; ,
    * \f]
-   * where \f$ \alpha \f$ is a scalar, \f$ \mathbf{x} \f$ is an m element vector, \f$ \mathbf{y} \f$ is an n element
-   * vector and \f$ \mathbf{M} \f$ is an m-by-n matrix.
+   * where \f$ \alpha \f$ is a scalar, \f$ \mathbf{x} \f$ is an \f$ m \f$ element vector, \f$ \mathbf{y} \f$ is an \f$ n
+   * \f$ element vector and \f$ \mathbf{M} \f$ is an \f$ m \times n \f$ matrix.
+   * 
+   * @note The vector \f$ \mathbf{y} \f$ is never conjugated. Even for complex types. Use nda::blas::gerc for that.
    *
    * @tparam X nda::MemoryVector type.
    * @tparam Y nda::MemoryVector type.
    * @tparam M nda::MemoryMatrix type.
-   * @param alpha Input scalar.
-   * @param x Input left vector (column vector) of size m.
-   * @param y Input right vector (row vector) of size n.
-   * @param m Input/Output matrix of size m-by-n to which the outer product is added.
+   * @param alpha Input scalar \f$ \alpha \f$.
+   * @param x Input vector \f$ \mathbf{x} \f$ of size \f$ m \f$.
+   * @param y Input vector \f$ \mathbf{y} \f$  of size \f$ n \f$.
+   * @param m Input/Output matrix \f$ \mathbf{M} \f$  of size \f$ m \times n \f$ to which the outer product is added.
    */
   template <MemoryVector X, MemoryVector Y, MemoryMatrix M>
     requires(have_same_value_type_v<X, Y, M> and mem::have_compatible_addr_space<X, Y, M> and is_blas_lapack_v<get_value_t<X>>)
   void ger(get_value_t<X> alpha, X const &x, Y const &y, M &&m) { // NOLINT (temporary views are allowed here)
-    EXPECTS(m.extent(0) == x.extent(0));
-    EXPECTS(m.extent(1) == y.extent(0));
-
-    // must be lapack compatible
-    EXPECTS(m.indexmap().min_stride() == 1);
-
-    // if in C, we need to call fortran with transposed matrix
-    if (has_C_layout<M>) {
+    // for C-layout arrays/views, call ger with the transpose and swap x and y
+    if constexpr (has_C_layout<M>) {
       ger(alpha, y, x, transpose(m));
       return;
     }
 
+    // check the dimensions of the input/output arrays/views
+    EXPECTS(m.extent(0) == x.size());
+    EXPECTS(m.extent(1) == y.size());
+
+    // arrays/views must be BLAS compatible
+    EXPECTS(m.indexmap().min_stride() == 1);
+
+    // perform actual library call
     if constexpr (mem::have_device_compatible_addr_space<X, Y, M>) {
 #if defined(NDA_HAVE_DEVICE)
       device::ger(m.extent(0), m.extent(1), alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], m.data(), get_ld(m));
@@ -75,43 +75,6 @@ namespace nda::blas {
 #endif
     } else {
       f77::ger(m.extent(0), m.extent(1), alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], m.data(), get_ld(m));
-    }
-  }
-
-  /**
-   * @brief Calculate the outer product of two contiguous arrays/views/scalars.
-   *
-   * @details For general multidimensional arrays/views, it calculates their tensor outer product, i.e.
-   * ```
-   * c(i,j,k,...,u,v,w,...) = a(i,j,k,...) * b(u,v,w,...)
-   * ```
-   * If one of the arguments is a scalar, it multiplies each element of the other argument by the scalar which returns a
-   * lazy nda::expr object.
-   *
-   * If both arguments are scalars, it returns their products.
-   *
-   * @tparam A nda::ArrayOrScalar type.
-   * @tparam B nda::ArrayOrScalar type.
-   * @param a Input array/scalar.
-   * @param b Input array/scalar.
-   * @return (Lazy) Outer product.
-   */
-  template <ArrayOrScalar A, ArrayOrScalar B>
-  auto outer_product(A const &a, B const &b) {
-    if constexpr (Scalar<A> or Scalar<B>) {
-      return a * b;
-    } else {
-      if (not a.is_contiguous()) NDA_RUNTIME_ERROR << "Error in nda::blas::outer_product: First argument has non-contiguous layout";
-      if (not b.is_contiguous()) NDA_RUNTIME_ERROR << "Error in nda::blas::outer_product: Second argument has non-contiguous layout";
-
-      // use BLAS ger to calculate the outer product
-      auto res   = zeros<get_value_t<A>, mem::common_addr_space<A, B>>(stdutil::join(a.shape(), b.shape()));
-      auto a_vec = reshape(a, std::array{a.size()});
-      auto b_vec = reshape(b, std::array{b.size()});
-      auto mat   = reshape(res, std::array{a.size(), b.size()});
-      ger(1.0, a_vec, b_vec, mat);
-
-      return res;
     }
   }
 

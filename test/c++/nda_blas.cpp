@@ -119,14 +119,37 @@ TEST(NDA, BLASGemv) {
 }
 
 // Test the BLAS ger function.
-template <typename value_t, typename Layout>
+template <typename T, typename Layout>
 void test_ger() {
-  nda::matrix<value_t, Layout> M(2, 2);
-  M = 0;
-  nda::array<value_t, 1> v{1, 2};
+  // resulting 2 x 2 matrix
+  auto M1 = nda::matrix<T, Layout>::zeros(2, 2);
+  nda::vector<T> v{1, 2};
+  nda::blas::ger(1.0, v, v, M1);
+  EXPECT_ARRAY_NEAR(M1, nda::matrix<T>{{1, 2}, {2, 4}});
+  nda::blas::ger(1.0, v, v, M1);
+  EXPECT_ARRAY_NEAR(M1, nda::matrix<T>{{2, 4}, {4, 8}});
 
-  nda::blas::ger(1.0, v, v, M);
-  EXPECT_ARRAY_NEAR(M, nda::matrix<value_t>{{1, 2}, {2, 4}});
+  // resulting 2 x 3 matrix
+  auto M2 = nda::matrix<T, Layout>::zeros(2, 3);
+  nda::vector<T> w{3, 4, 5};
+  nda::blas::ger(1.0, v, w, M2);
+  EXPECT_ARRAY_NEAR(M2, nda::matrix<T>{{3, 4, 5}, {6, 8, 10}});
+  nda::blas::ger(1.0, v, w, M2);
+  EXPECT_ARRAY_NEAR(M2, nda::matrix<T>{{6, 8, 10}, {12, 16, 20}});
+
+  // resulting 3 x 2 matrix
+  auto M3 = nda::matrix<T, Layout>::zeros(3, 2);
+  nda::blas::ger(1.0, w, v, M3);
+  EXPECT_ARRAY_NEAR(M3, nda::matrix<T>{{3, 6}, {4, 8}, {5, 10}});
+  nda::blas::ger(1.0, w, v, M3);
+  EXPECT_ARRAY_NEAR(M3, nda::matrix<T>{{6, 12}, {8, 16}, {10, 20}});
+
+  // outer product of strided views
+  M2             = 0;
+  auto v_strided = nda::vector<T>{0, 1, 0, 2, 0};
+  auto w_strided = nda::vector<T>{3, 0, 0, 4, 0, 0, 5};
+  nda::blas::ger(2.0, v_strided(nda::range(1, 5, 2)), w_strided(nda::range(0, 7, 3)), M2);
+  EXPECT_ARRAY_NEAR(M2, nda::matrix<T>{{6, 8, 10}, {12, 16, 20}});
 }
 
 TEST(NDA, BLASGer) {
@@ -134,17 +157,6 @@ TEST(NDA, BLASGer) {
   test_ger<double, nda::F_layout>();
   test_ger<std::complex<double>, nda::C_layout>();
   test_ger<std::complex<double>, nda::C_layout>();
-}
-
-TEST(NDA, BLASOuterProduct) {
-  auto N = nda::rand<double>(2, 3);
-  auto M = nda::rand<double>(4, 5);
-
-  nda::array<double, 4> P(2, 3, 4, 5);
-  for (auto [i, j] : N.indices())
-    for (auto [k, l] : M.indices()) P(i, j, k, l) = N(i, j) * M(k, l);
-
-  EXPECT_ARRAY_NEAR(P, nda::blas::outer_product(N, M));
 }
 
 // Test the BLAS dot function and its generic implementation.
