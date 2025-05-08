@@ -14,7 +14,7 @@
 
 #if defined(NDA_HAVE_CUDA)
 #include "./cublas_interface.hpp"
-#endif
+#endif // NDA_HAVE_CUDA
 
 namespace nda::blas::f77 {
 

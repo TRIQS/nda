@@ -78,7 +78,7 @@ namespace nda::blas {
    */
   template <bool conj, bool transpose>
   const char get_op = []() {
-    static_assert(!(conj and not transpose), "Error in nda::blas::get_op: Cannot use conjugate operation alone in blas operations");
+    static_assert(!(conj and not transpose), "Error in nda::blas::get_op: Cannot use conjugate operation alone in BLAS operations");
     if constexpr (conj and transpose)
       return 'C';
     else if constexpr (transpose)
@@ -88,27 +88,43 @@ namespace nda::blas {
   }();
 
   /**
-   * @brief Get the leading dimension in LAPACK jargon of an nda::MemoryMatrix.
+   * @brief Get the leading dimension of an nda::MemoryArray with rank 1 or 2 for LAPACK calls.
    *
-   * @tparam A nda::MemoryMatrix type.
-   * @param a nda::MemoryMatrix object.
-   * @return Leading dimension.
+   * @details The leading dimension is the stride between two consecutive columns (rows) of a matrix in Fortran (C)
+   * layout. For 1-dimensional arrays, we simply return the size of the array.
+   *
+   * @tparam A nda::MemoryArray type.
+   * @param a nda::MemoryArray object.
+   * @return Leading dimension for BLAS/LAPACK calls.
    */
-  template <MemoryMatrix A>
+  template <MemoryArray A>
+    requires(get_rank<A> == 1 or get_rank<A> == 2)
   int get_ld(A const &a) {
-    return a.indexmap().strides()[has_F_layout<A> ? 1 : 0];
+    if constexpr (get_rank<A> == 1) {
+      return a.size();
+    } else {
+      return a.indexmap().strides()[has_F_layout<A> ? 1 : 0];
+    }
   }
 
   /**
-   * @brief Get the number of columns in LAPACK jargon of an nda::MemoryMatrix.
+   * @brief Get the number of columns of an nda::MemoryArray with rank 1 or 2 for BLAS/LAPACK calls.
    *
-   * @tparam A nda::MemoryMatrix type.
-   * @param a nda::MemoryMatrix object.
-   * @return Number of columns.
+   * @details The number of columns corresponds to the extent of the second (first) dimension of a matrix in Fortran
+   * (C) layout. For 1-dimensional arrays, we return 1.
+   *
+   * @tparam A nda::MemoryArray type.
+   * @param a nda::MemoryArray object.
+   * @return Number of columns for BLAS/LAPACK calls.
    */
-  template <MemoryMatrix A>
+  template <MemoryArray A>
+    requires(get_rank<A> == 1 or get_rank<A> == 2)
   int get_ncols(A const &a) {
-    return a.shape()[has_F_layout<A> ? 1 : 0];
+    if constexpr (get_rank<A> == 1) {
+      return 1;
+    } else {
+      return a.shape()[has_F_layout<A> ? 1 : 0];
+    }
   }
 
   /** @} */
