@@ -11,10 +11,13 @@
 #pragma once
 
 #include "./nda.hpp"
-#include "./mpi.hpp"
+#ifdef MPI_SUPPORT
+#include "mpi.hpp"
+#endif
+
+#include "../../cmake-build-release/deps/itertools_src/c++/itertools/itertools.hpp"
 
 #include <itertools/omp_chunk.hpp>
-#include <mpi/mpi.hpp>
 
 #include <array>
 #include <concepts>
@@ -182,7 +185,7 @@ namespace nda {
       if (parallel) {
         // reset input array to allow for mpi reduction
         a() = 0.0;
-
+#ifdef MPI_SUPPORT
 #pragma omp parallel
         for (auto const &sym_class : itertools::omp_chunk(mpi::chunk(sym_classes))) {
           auto idx           = a.indexmap().to_idx(sym_class[0].first);
@@ -190,9 +193,25 @@ namespace nda {
           std::apply(a, idx) = ref_val;
           for (auto const &[lin_idx, op] : sym_class) { std::apply(a, a.indexmap().to_idx(lin_idx)) = op(ref_val); }
         }
-
         // distribute data among all ranks
         a = mpi::all_reduce(a);
+#elifdef _OPENMP
+#pragma omp parallel
+        for (auto const &sym_class : itertools::omp_chunk(sym_classes)) {
+          auto idx           = a.indexmap().to_idx(sym_class[0].first);
+          auto ref_val       = init_func(idx);
+          std::apply(a, idx) = ref_val;
+          for (auto const &[lin_idx, op] : sym_class) { std::apply(a, a.indexmap().to_idx(lin_idx)) = op(ref_val); }
+        }
+#else
+        for (auto const &sym_class : sym_classes) {
+          auto idx           = a.indexmap().to_idx(sym_class[0].first);
+          auto ref_val       = init_func(idx);
+          std::apply(a, idx) = ref_val;
+          for (auto const &[lin_idx, op] : sym_class) { std::apply(a, a.indexmap().to_idx(lin_idx)) = op(ref_val); }
+        }
+#endif
+
       } else {
         for (auto const &sym_class : sym_classes) {
           auto idx           = a.indexmap().to_idx(sym_class[0].first);

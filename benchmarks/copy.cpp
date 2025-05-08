@@ -10,8 +10,10 @@ using value_t = double;
 template <size_t Rank>
 using array_t = nda::array<value_t, Rank>;
 
+#ifdef NDA_CUDA_SUPPORT
 template <size_t Rank>
 using device_array_t = nda::cuarray<value_t, Rank>;
+#endif
 
 const long KBmin = 8;
 const long KBmax = 1 << 15;
@@ -27,8 +29,9 @@ static void Copy(benchmark::State &state) {
   state.counters["processed"] = double(NBytes);
 }
 BENCHMARK_TEMPLATE(Copy, array_t<1>)->RangeMultiplier(8)->Range(KBmin, KBmax);        // NOLINT
+#ifdef NDA_CUDA_SUPPORT
 BENCHMARK_TEMPLATE(Copy, device_array_t<1>)->RangeMultiplier(8)->Range(KBmin, KBmax); // NOLINT
-
+#endif
 template <typename Array>
 static void Copy1DStrided(benchmark::State &state) {
   long NBytes = state.range(0) * 1024;
@@ -44,7 +47,9 @@ static void Copy1DStrided(benchmark::State &state) {
   state.counters["step"]      = double(step);
 }
 BENCHMARK_TEMPLATE(Copy1DStrided, array_t<1>)->RangeMultiplier(8)->Range(KBmin, KBmax);        // NOLINT
+#ifdef NDA_CUDA_SUPPORT
 BENCHMARK_TEMPLATE(Copy1DStrided, device_array_t<1>)->RangeMultiplier(8)->Range(KBmin, KBmax); // NOLINT
+#endif
 
 template <typename DstArray, typename SrcArray>
 static void CopyBlockStrided(benchmark::State &state) {
@@ -63,6 +68,8 @@ static void CopyBlockStrided(benchmark::State &state) {
   state.counters["n_blocks"]  = double(n_blocks);
 }
 BENCHMARK_TEMPLATE(CopyBlockStrided, array_t<2>, array_t<2>)->RangeMultiplier(8)->Range(KBmin, KBmax);               // NOLINT
+#ifdef NDA_CUDA_SUPPORT
 BENCHMARK_TEMPLATE(CopyBlockStrided, device_array_t<2>, device_array_t<2>)->RangeMultiplier(8)->Range(KBmin, KBmax); // NOLINT
 BENCHMARK_TEMPLATE(CopyBlockStrided, array_t<2>, device_array_t<2>)->RangeMultiplier(8)->Range(KBmin, KBmax);        // NOLINT
 BENCHMARK_TEMPLATE(CopyBlockStrided, device_array_t<2>, array_t<2>)->RangeMultiplier(8)->Range(KBmin, KBmax);        // NOLINT
+#endif

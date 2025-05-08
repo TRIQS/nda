@@ -7,7 +7,7 @@
 
 #include <nda/clef/literals.hpp>
 #include <nda/gtest_tools.hpp>
-#include <nda/h5.hpp>
+#include <nda/hdf5/h5.hpp>
 #include <nda/nda.hpp>
 
 #include <h5/h5.hpp>

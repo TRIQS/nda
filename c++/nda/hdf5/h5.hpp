@@ -10,12 +10,12 @@
 
 #pragma once
 
-#include "./concepts.hpp"
-#include "./declarations.hpp"
-#include "./exceptions.hpp"
-#include "./layout/for_each.hpp"
-#include "./layout/range.hpp"
-#include "./traits.hpp"
+#include "../concepts.hpp"
+#include "../declarations.hpp"
+#include "../exceptions.hpp"
+#include "../layout/for_each.hpp"
+#include "../layout/range.hpp"
+#include "../traits.hpp"
 
 #include <h5/h5.hpp>
 
