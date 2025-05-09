@@ -49,6 +49,24 @@ namespace nda::blas {
     requires(!std::is_same_v<A, std::remove_cvref_t<A>>)
   static constexpr bool is_conj_array_expr<A> = is_conj_array_expr<std::remove_cvref_t<A>>;
 
+  /**
+   * @brief Get the underlying array of a conjugate lazy expression or return the array itself in case it is an
+   * nda::MemoryArray.
+   *
+   * @tparam A nda::Array type.
+   * @param a Conjugate expression or array/view.
+   * @return nda::MemoryArray object.
+   */
+  template <Array A>
+    requires(MemoryArray<A> or is_conj_array_expr<A>)
+  MemoryArray decltype(auto) get_array(A &&a) {
+    if constexpr (is_conj_array_expr<A>) {
+      return std::get<0>(std::forward<A>(a).a);
+    } else {
+      return std::forward<A>(a);
+    }
+  }
+
   /// Constexpr variable that is true if the given nda::Array type has a Fortran memory layout.
   template <Array A>
     requires(MemoryArray<A> or is_conj_array_expr<A>)
