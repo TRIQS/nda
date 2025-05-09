@@ -98,14 +98,14 @@ namespace nda::mem {
   }();
 
   /**
-   * @brief Get common address space for a number of given nda::MemoryArray types.
+   * @brief Get common address space for a number of given nda::Array types.
    *
    * @details See nda::mem::combine for how the address spaces are combined.
    *
-   * @tparam A1 nda::MemoryArray type.
-   * @tparam As nda::MemoryArray types.
+   * @tparam A1 nda::Array type.
+   * @tparam As nda::Array types.
    */
-  template <MemoryArray A1, MemoryArray... As>
+  template <Array A1, Array... As>
   constexpr AddressSpace common_addr_space = combine<get_addr_space<A1>, get_addr_space<As>...>;
 
   /// Specialization of nda::mem::get_addr_space for nda::Memory Array types.
