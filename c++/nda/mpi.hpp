@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include "broadcast.hpp"
-#include "gather.hpp"
-#include "reduce.hpp"
-#include "scatter.hpp"
-#include "utils.hpp"
+#include "mpi/broadcast.hpp"
+#include "mpi/gather.hpp"
+#include "mpi/reduce.hpp"
+#include "mpi/scatter.hpp"
+#include "mpi/utils.hpp"

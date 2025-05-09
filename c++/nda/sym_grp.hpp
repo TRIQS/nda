@@ -15,8 +15,7 @@
 #include "mpi.hpp"
 #endif
 
-#include "../../cmake-build-release/deps/itertools_src/c++/itertools/itertools.hpp"
-
+#include <itertools/itertools.hpp>
 #include <itertools/omp_chunk.hpp>
 
 #include <array>

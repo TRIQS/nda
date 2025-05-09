@@ -1,9 +1,11 @@
 # Copy h5 files to binary dir
 if(HDF5Support)
+  find_package(HDF5 REQUIRED COMPONENTS C HL)
   file(GLOB_RECURSE all_h5_ref_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.ref.h5)
   foreach(file ${all_h5_ref_files})
     configure_file(${file} ${file} COPYONLY)
   endforeach()
+
 endif()
 # List of all tests
 file(GLOB_RECURSE all_tests RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
@@ -28,7 +30,7 @@ foreach(test ${all_tests})
   add_executable(${test_name} ${test})
   target_link_libraries(${test_name} ${PROJECT_NAME}_c gtest_main ${PROJECT_NAME}_warnings)
   if (HDF5Support)
-    target_link_libraries(${test_name} h5::h5)
+    target_link_libraries(${test_name} hdf5::hdf5)
   endif()
   target_compile_options(${test_name}  PRIVATE "${ARGV1}")
   set_property(TARGET ${test_name} PROPERTY RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test_dir})

@@ -41,7 +41,7 @@ target_link_libraries(${PROJECT_NAME}_c PUBLIC itertools::itertools_c)
 # Link against HDF5 C++ Interface
 if(HDF5Support)
   message(STATUS "-------- HDF5 detection -------------")
-  add_subdirectory(hdf5)
+  target_link_libraries(${PROJECT_NAME}_c PUBLIC h5::h5_c)
 endif()
 
 # Link against MPI C++ Interface
@@ -55,12 +55,6 @@ if (OpenMPSupport)
     message(STATUS "-------- OpenMP detection -------------")
     find_package(OpenMP REQUIRED COMPONENTS CXX)
     target_link_libraries(${PROJECT_NAME}_c PUBLIC OpenMP::OpenMP_CXX)
-else ()
-    # ignore unknown pragmas when OpenMP is not used in msvc, clang, icc, gcc
-    target_compile_options(${PROJECT_NAME}_c PUBLIC
-            $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang,IntelLLVM>:-Wno-unknown-pragmas>
-            $<$<CXX_COMPILER_ID:MSVC>:/wd4068>  # MSVC: disable unknown pragma warning (C4068)
-    )
 endif ()
 
 # ========= Blas / Lapack ==========
