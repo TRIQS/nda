@@ -17,6 +17,7 @@
 #pragma once
 
 #include <array>
+#include <cstdint>
 
 #if defined(NDA_HAVE_CUDA)
 #include <cuda_runtime.h>
@@ -33,8 +34,8 @@ namespace nda::tensor {
   // can I make this constexpr???
   template <uint8_t N>
   std::string default_index() {
-    std::string indx{size_t(N)};
-    for (uint8_t i = 0; i < N; i++) indx[i] = static_cast<char>(i);
+    std::string indx(N,'0');
+    for (uint8_t i = 0; i < N; i++) indx[i] = '0'+i; 
     return indx;
   }
 
@@ -43,9 +44,18 @@ namespace nda::tensor {
   std::string default_index(std::array<int, N> const &order) {
     // MAM: use characters if N>=10!
     static_assert(N > 0 and N < 10, "Index out of bounds.");
-    std::string indx{N};
-    for (uint8_t i = 0; i < N; i++) indx[i] = static_cast<char>(order[i]);
+    std::string indx(N,'0');
+    for (uint8_t i = 0; i < N; i++) indx[i] = '0'+order[i];
     return indx;
+  }
+
+  namespace detail {
+
+    template <typename T>
+    concept LessThanComparable = requires (T a, T b) {
+      { a < b } -> std::convertible_to<bool>;
+    };
+
   }
 
   // contraction_plan_t = std::variant<dummy_contract_t,cutensor::contract_plan_t>;

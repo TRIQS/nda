@@ -62,7 +62,26 @@ namespace nda::tensor {
       }
       return res.value();
 #else
-      static_assert(always_false<bool>, " reduce on host requires cpu tensor operations backend. ");
+      if (oper == op::SUM) {
+        return nda::sum(a);
+      } else if (oper == op::MAX) {
+        if constexpr (detail::LessThanComparable<value_t>) {
+          return nda::max_element(a);
+        } else {
+          NDA_RUNTIME_ERROR << "tensor::reduce: LessThanComparable failed on type."; 
+          return value_t(0);
+        }
+      } else if (oper == op::MIN) {
+        if constexpr (detail::LessThanComparable<value_t>) {
+          return nda::min_element(a);
+        } else {
+          NDA_RUNTIME_ERROR << "tensor::reduce: LessThanComparable failed on type.";
+          return value_t(0);
+        }
+      } else {
+        NDA_RUNTIME_ERROR << "tensor::reduce: Unknown reduction operation.";
+        return value_t(0);
+      }
 #endif
     } else { // on device
 #if defined(NDA_HAVE_CUTENSOR)
