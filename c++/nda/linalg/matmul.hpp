@@ -12,7 +12,6 @@
 
 #include "../basic_functions.hpp"
 #include "../blas/gemm.hpp"
-#include "../blas/gemv.hpp"
 #include "../blas/tools.hpp"
 #include "../concepts.hpp"
 #include "../declarations.hpp"
@@ -119,69 +118,6 @@ namespace nda {
     } else {
       // for other value types we use a generic implementation
       blas::gemm_generic(1, a, b, 0, result);
-    }
-    return result;
-  }
-
-  /**
-   * @brief Perform a matrix-vector multiplication.
-   *
-   * @details It is generic in the sense that it allows the input matrix and vector to belong to a different
-   * nda::mem::AddressSpace (as long as they are compatible).
-   *
-   * If possible, it uses nda::blas::gemv, otherwise it calls nda::blas::gemv_generic.
-   *
-   * @tparam A nda::Matrix type of lhs operand.
-   * @tparam X nda::Vector type of rhs operand.
-   * @param a Left hand side matrix operand.
-   * @param x Right hand side vector operand.
-   * @return Result of the matrix-vector multiplication.
-   */
-  template <Matrix A, Vector X>
-  auto matvecmul(A &&a, X &&x) { // NOLINT (temporary views are allowed here)
-    // check dimensions
-    EXPECTS_WITH_MESSAGE(a.shape()[1] == x.shape()[0], "Error in nda::matvecmul: Dimension mismatch in matrix-vector product");
-
-    // check address space compatibility
-    static constexpr auto L_adr_spc = mem::get_addr_space<A>;
-    static constexpr auto R_adr_spc = mem::get_addr_space<X>;
-    static_assert(L_adr_spc == R_adr_spc, "Error in nda::matvecmul: Matrix-vector product requires arguments with same address spaces");
-    static_assert(L_adr_spc != mem::None);
-
-    // get resulting value type and vector type
-    using value_t  = decltype(get_value_t<A>{} * get_value_t<X>{});
-    using vector_t = vector<value_t, heap<L_adr_spc>>;
-
-    // perform matrix-matrix multiplication
-    auto result = vector_t(a.shape()[0]);
-    if constexpr (is_blas_lapack_v<value_t>) {
-      // for double or complex value types we use blas::gemv
-      // lambda to form a new array with the correct value type if necessary
-      auto as_container = []<Array B>(B &&b) -> decltype(auto) {
-        if constexpr (std::is_same_v<get_value_t<B>, value_t> and (MemoryMatrix<B> or (Matrix<B> and blas::is_conj_array_expr<B>)))
-          return std::forward<B>(b);
-        else
-          return basic_array<value_t, get_rank<B>, C_layout, 'A', heap<L_adr_spc>>{std::forward<B>(b)};
-      };
-
-      // MSAN has no way to know that we are calling with beta = 0, hence this is not necessary.
-      // Of course, in production code, we do NOT waste time to do this.
-#if defined(__has_feature)
-#if __has_feature(memory_sanitizer)
-      result = 0;
-#endif
-#endif
-
-      // for expressions of the kind 'conj(M) * V' with a Matrix in Fortran Layout, we have to explicitly
-      // form the conj operation in memory as gemv only provides op tags 'N', 'T' and 'C' (hermitian conjugate)
-      if constexpr (blas::is_conj_array_expr<decltype(as_container(a))> and blas::has_F_layout<decltype(as_container(a))>) {
-        blas::gemv(1, make_regular(as_container(a)), as_container(x), 0, result);
-      } else {
-        blas::gemv(1, as_container(a), as_container(x), 0, result);
-      }
-    } else {
-      // for other value types we use a generic implementation
-      blas::gemv_generic(1, a, x, 0, result);
     }
     return result;
   }

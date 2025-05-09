@@ -18,5 +18,6 @@
 #include "./linalg/dot.hpp"
 #include "./linalg/eigenelements.hpp"
 #include "./linalg/matmul.hpp"
+#include "./linalg/matvecmul.hpp"
 #include "./linalg/norm.hpp"
 #include "./linalg/outer_product.hpp"

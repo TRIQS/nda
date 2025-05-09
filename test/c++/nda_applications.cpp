@@ -88,7 +88,7 @@ TEST(NDA, MatrixVectorMultiplicationWithPermutedViews) {
     auto Cmat = nda::matrix_view<double>{C(k, nda::ellipsis{})};
     EXPECT_EQ_ARRAY(Amat, Bmat);
     EXPECT_EQ_ARRAY(Amat * v, Bmat * v);
-    EXPECT_DEBUG_DEATH(Cmat * v, "gemv");
+    EXPECT_EQ_ARRAY(Amat * v, Cmat * v);
   }
 }
 

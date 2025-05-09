@@ -77,38 +77,52 @@ TEST(NDA, BLASGemmVbatch) {
   test_gemm_vbatch<std::complex<double>, nda::F_layout>();
 }
 
-// Test the BLAS gemv function and its generic implementation.
-template <typename value_t, typename Layout>
+// Test the BLAS gemv function.
+template <typename T, typename Layout>
 void test_gemv() {
-  using namespace nda::clef::literals;
+  auto x       = nda::vector<T>{1, 2, 3};
+  auto x_t     = nda::vector<T>{1, 2, 3, 4};
+  auto exp_y   = nda::vector<T>{14, 32, 50, 68};
+  auto exp_y_t = nda::vector<T>{70, 80, 90};
+  auto A       = nda::matrix<T, Layout>(4, 3);
+  nda::for_each(A.shape(), [&A](auto i, auto j) { A(i, j) = i * 3 + j + 1; });
+  if constexpr (nda::is_complex_v<T>) {
+    A *= 1 - 1i;
+    x *= 2 - 1i;
+    x_t *= 2 - 1i;
+    exp_y *= (1 - 1i) * (2 - 1i);
+    exp_y_t *= (1 - 1i) * (2 - 1i);
+  }
 
-  nda::matrix<value_t, Layout> A(5, 5);
-  A(i_, j_) << i_ + 2 * j_ + 1;
+  // y = A * x
+  auto y = nda::vector<T>(4);
+  nda::blas::gemv(1.0, A, x, 0.0, y);
+  EXPECT_ARRAY_NEAR(y, exp_y);
 
-  nda::vector<value_t> v(5), w(5);
-  v() = 1;
-  w() = 0;
+  // y = 3 * A * x + 2y
+  nda::blas::gemv(3, A, x, 2, y);
+  EXPECT_ARRAY_NEAR(y, 5 * exp_y);
 
-  nda::range rg(1, 3);
-  nda::blas::gemv(1, A(rg, rg), v(rg), 0, w(rg));
-  EXPECT_ARRAY_NEAR(w, nda::vector<value_t>{0, 10, 12, 0, 0});
+  // y_t = A^T * x_t
+  auto y_t = nda::vector<T>(3);
+  nda::blas::gemv(1.0, nda::transpose(A), x_t, 0.0, y_t);
+  EXPECT_ARRAY_NEAR(y_t, exp_y_t);
 
-  nda::vector<value_t> w_gen(5);
-  w_gen() = 0;
-  nda::blas::gemv_generic(1, A(rg, rg), v(rg), 0, w_gen(rg));
-  EXPECT_ARRAY_NEAR(w_gen, nda::vector<value_t>{0, 10, 12, 0, 0});
-
-  auto AT = nda::make_regular(transpose(A));
-  nda::blas::gemv(1, AT(rg, rg), v(rg), 0, w(rg));
-  EXPECT_ARRAY_NEAR(w, nda::vector<value_t>{0, 9, 13, 0, 0});
-
-  nda::blas::gemv_generic(1, AT(rg, rg), v(rg), 0, w_gen(rg));
-  EXPECT_ARRAY_NEAR(w_gen, nda::vector<value_t>{0, 9, 13, 0, 0});
-
-  // test operator*
-  w()   = -8;
-  w(rg) = AT(rg, rg) * v(rg);
-  EXPECT_ARRAY_NEAR(w, nda::vector<value_t>{-8, 9, 13, -8, -8});
+  if constexpr (std::same_as<Layout, nda::F_layout>) {
+    // y_h = A^H * x_t
+    auto exp_y_h = exp_y_t;
+    if constexpr (nda::is_complex_v<T>) exp_y_h = nda::vector<T>{210 + 70i, 240 + 80i, 270 + 90i};
+    auto y_h = nda::vector<T>(3);
+    nda::blas::gemv(1.0, nda::dagger(A), x_t, 0.0, y_h);
+    EXPECT_ARRAY_NEAR(y_h, exp_y_h);
+  } else {
+    // contiguous matrix view * strided vector view
+    auto x_v                 = nda::vector<T>(6);
+    x_v(nda::range(0, 6, 2)) = x;
+    auto y_v                 = nda::vector<T>(4);
+    nda::blas::gemv(1, A(nda::range(2), nda::range::all), x_v(nda::range(0, 6, 2)), 0, y(nda::range(0, 4, 2)));
+    EXPECT_ARRAY_NEAR(y(nda::range(0, 4, 2)), exp_y(nda::range(2)));
+  }
 }
 
 TEST(NDA, BLASGemv) {

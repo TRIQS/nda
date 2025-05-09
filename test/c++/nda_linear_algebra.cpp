@@ -68,6 +68,85 @@ TEST(NDA, LinearAlgebraDotProduct) {
   EXPECT_COMPLEX_NEAR(nda::linalg::dotc(c_v, d_v), exp_dotc(c_v, d_v));
 }
 
+// Test the generic matvecmul function.
+template <typename T, typename Layout>
+void test_matvecmul() {
+  auto x       = nda::vector<T>{1, 2, 3};
+  auto x_t     = nda::vector<T>{1, 2, 3, 4};
+  auto exp_y   = nda::vector<T>{14, 32, 50, 68};
+  auto exp_y_t = nda::vector<T>{70, 80, 90};
+  auto A       = nda::matrix<T, Layout>(4, 3);
+  nda::for_each(A.shape(), [&A](auto i, auto j) { A(i, j) = i * 3 + j + 1; });
+  if constexpr (nda::is_complex_v<T>) {
+    A *= 1 - 1i;
+    x *= 2 - 1i;
+    x_t *= 2 - 1i;
+    exp_y *= (1 - 1i) * (2 - 1i);
+    exp_y_t *= (1 - 1i) * (2 - 1i);
+  }
+
+  // y = A * x
+  auto y = nda::linalg::matvecmul(A, x);
+  EXPECT_ARRAY_NEAR(y, exp_y);
+
+  // y_t = A^T * x_t
+  auto y_t = nda::linalg::matvecmul(nda::transpose(A), x_t);
+  EXPECT_ARRAY_NEAR(y_t, exp_y_t);
+
+  // y_h = A^H * x_t
+  auto exp_y_h = exp_y_t;
+  if constexpr (nda::is_complex_v<T>) exp_y_h = nda::vector<T>{210 + 70i, 240 + 80i, 270 + 90i};
+  auto y_h = nda::linalg::matvecmul(nda::conj(nda::transpose(A)), x_t);
+  EXPECT_ARRAY_NEAR(y_h, exp_y_h);
+
+  // strided matrix and vector views
+  auto y_v = nda::linalg::matvecmul(A(nda::range(0, 4, 2), nda::range(0, 3, 2)), x(nda::range(0, 3, 2)));
+  if constexpr (nda::is_complex_v<T>) {
+    EXPECT_ARRAY_EQ(y_v, (nda::vector<T>{10 - 30i, 34 - 102i}));
+  } else {
+    EXPECT_ARRAY_EQ(y_v, (nda::vector<T>{10, 34}));
+  }
+}
+
+TEST(NDA, LinearAlgebraMatvecmulGenericGemvBranch) {
+  test_matvecmul<long, nda::C_layout>();
+  test_matvecmul<long, nda::F_layout>();
+}
+
+TEST(NDA, LinearAlgebraMatvecmulBLASBranch) {
+  test_matvecmul<double, nda::C_layout>();
+  test_matvecmul<double, nda::F_layout>();
+  test_matvecmul<std::complex<double>, nda::C_layout>();
+  test_matvecmul<std::complex<double>, nda::F_layout>();
+}
+
+TEST(NDA, LinearAlgebraMatvecmulPromotion) {
+  auto A_i = nda::matrix<int>{{1, 2}, {3, 4}};
+  auto A_d = nda::matrix<double>{{1, 2}, {3, 4}};
+  auto w_i = nda::vector<int>{1, 1};
+  auto w_d = nda::vector<double>{1, 1};
+
+  auto v_d1 = nda::linalg::matvecmul(A_d, w_i);
+  static_assert(std::same_as<nda::get_value_t<decltype(v_d1)>, double>);
+  EXPECT_ARRAY_NEAR(v_d1, (nda::vector<double>{3, 7}), 1.e-13);
+
+  auto v_d2 = nda::linalg::matvecmul(A_i, w_d);
+  static_assert(std::same_as<nda::get_value_t<decltype(v_d2)>, double>);
+  EXPECT_ARRAY_NEAR(v_d2, (nda::vector<double>{3, 7}), 1.e-13);
+
+  auto v_i = nda::linalg::matvecmul(A_i, w_i);
+  static_assert(std::same_as<nda::get_value_t<decltype(v_i)>, int>);
+  EXPECT_ARRAY_EQ(v_i, (nda::vector<int>{3, 7}));
+}
+
+TEST(NDA, LinearAlgebraMatvecmulWithLazyExpressions) {
+  auto A     = nda::array<double, 2>{{1, 2}, {3, 4}};
+  auto A_sin = nda::array<double, 2>{nda::sin(A)};
+  auto w     = nda::vector<double>{1, 1};
+  auto w_sin = nda::vector<double>{nda::sin(w)};
+  EXPECT_ARRAY_NEAR(nda::linalg::matvecmul(nda::sin(A), nda::sin(w)), nda::linalg::matvecmul(A_sin, w_sin), 1.e-13);
+}
+
 // Test matrix-matrix multiplication for specific memory layouts.
 template <typename T, typename L1, typename L2, typename L3>
 void test_matmul() {
@@ -280,23 +359,11 @@ TEST(NDA, LinearAlgebraInverseSmall) {
   }
 }
 
-TEST(NDA, LinearAlgebraMatvecmulPromotion) {
-  nda::matrix<int> A_i    = {{1, 2}, {3, 4}};
-  nda::matrix<double> A_d = {{1, 2}, {3, 4}};
-  nda::array<int, 1> v_i, w_i    = {1, 1};
-  nda::array<double, 1> v_d, w_d = {1, 1};
-
-  v_d = matvecmul(A_d, w_i);
-  v_i = matvecmul(A_i, w_i);
-
-  EXPECT_ARRAY_NEAR(v_d, v_i, 1.e-13);
-}
-
 // Check that the eigenvectors/values are correct.
 template <typename M, typename V1, typename V2>
 void check_eig(M const &m, V1 const &vectors, V2 const &values) {
   for (auto i : nda::range(0, m.extent(0))) {
-    EXPECT_ARRAY_NEAR(matvecmul(m, vectors(nda::range::all, i)), values(i) * vectors(nda::range::all, i), 1.e-13);
+    EXPECT_ARRAY_NEAR(nda::linalg::matvecmul(m, vectors(nda::range::all, i)), values(i) * vectors(nda::range::all, i), 1.e-13);
   }
 }
 
