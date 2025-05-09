@@ -13,6 +13,7 @@
 #include "./concepts.hpp"
 #include "./declarations.hpp"
 #include "./linalg/matmul.hpp"
+#include "./linalg/matvecmul.hpp"
 #include "./linalg/det_and_inverse.hpp"
 #include "./macros.hpp"
 #include "./stdutil/complex.hpp"
@@ -423,7 +424,7 @@ namespace nda {
         return matmul(std::forward<L>(l), std::forward<R>(r));
       else
         // matrix * vector
-        return matvecmul(std::forward<L>(l), std::forward<R>(r));
+        return linalg::matvecmul(std::forward<L>(l), std::forward<R>(r));
     }
   }
 
