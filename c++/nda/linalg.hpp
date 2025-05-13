@@ -20,4 +20,5 @@
 #include "./linalg/matmul.hpp"
 #include "./linalg/matvecmul.hpp"
 #include "./linalg/norm.hpp"
+#include "./linalg/svd.hpp"
 #include "./linalg/outer_product.hpp"
