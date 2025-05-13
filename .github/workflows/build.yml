@@ -125,7 +125,7 @@ jobs:
           for hdf5 in ON OFF; do
             for openmp in ON OFF; do
               for mpi in ON OFF; do
-                echo "::group::[Config] HDF5=$hdf5 OMP=$openmp MPI=$mpi
+                echo "::group::[Config] HDF5=$hdf5 OMP=$openmp MPI=$mpi"
                 rm -rf build && mkdir build && cd build
                 cmake .. \
                   -DCMAKE_INSTALL_PREFIX=$HOME/install \
