@@ -111,9 +111,9 @@ TEST(NDA, LAPACKGtsv) {
 }
 
 // Test LAPACK gesvd function.
-template <typename value_t>
+template <typename T, typename Layout>
 void test_gesvd() {
-  using matrix_t = matrix<value_t, F_layout>;
+  using matrix_t = matrix<T, Layout>;
 
   auto A      = matrix_t{{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}}};
   auto [m, n] = A.shape();
@@ -131,8 +131,10 @@ void test_gesvd() {
 }
 
 TEST(NDA, LAPACKGesvd) {
-  test_gesvd<double>();
-  test_gesvd<std::complex<double>>();
+  test_gesvd<double, C_layout>();
+  test_gesvd<double, F_layout>();
+  test_gesvd<std::complex<double>, C_layout>();
+  test_gesvd<std::complex<double>, F_layout>();
 }
 
 // Test LAPACK geqp3, orgqr and ungqr functions.
