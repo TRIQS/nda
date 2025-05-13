@@ -481,3 +481,34 @@ TEST(NDA, LinearAlgebraOuterProduct) {
   test_outer_product<std::complex<double>, nda::C_layout>();
   test_outer_product<std::complex<double>, nda::F_layout>();
 }
+
+// Test the svd functions.
+template <typename T, typename Layout>
+void test_svd() {
+  using matrix_t = nda::matrix<T, Layout>;
+
+  auto A = matrix_t{{2, -2, 1}, {-4, -8, -8}};
+  auto s = nda::vector<double>{12, 3};
+
+  // compute the SVD of A
+  auto [U_1, s_1, VH_1] = nda::linalg::svd(A);
+  auto S_1              = matrix_t::zeros(A.shape());
+  diagonal(S_1)         = s_1;
+  EXPECT_ARRAY_NEAR(s_1, s, 1e-14);
+  EXPECT_ARRAY_NEAR(A, U_1 * S_1 * VH_1, 1e-14);
+
+  // compute the SVD of A in place
+  auto A_copy           = A;
+  auto [U_2, s_2, VH_2] = nda::linalg::svd_in_place(A_copy);
+  auto S_2              = matrix_t::zeros(A.shape());
+  diagonal(S_2)         = s_2;
+  EXPECT_ARRAY_NEAR(s, s_2, 1e-14);
+  EXPECT_ARRAY_NEAR(A, U_2 * S_2 * VH_2, 1e-14);
+}
+
+TEST(NDA, LinearAlgebraSVD) {
+  test_svd<double, nda::C_layout>();
+  test_svd<double, nda::F_layout>();
+  test_svd<std::complex<double>, nda::C_layout>();
+  test_svd<std::complex<double>, nda::F_layout>();
+}
