@@ -10,6 +10,7 @@
 
 #include <complex>
 #include <vector>
+#include <utility>
 
 // Test the BLAS gemm function.
 template <typename T, typename Layout1, typename Layout2, typename Layout3>
@@ -76,46 +77,74 @@ TEST(NDA, BLASGemm) {
   test_gemm<std::complex<double>, nda::F_layout, nda::F_layout, nda::F_layout>();
 }
 
-// Test the BLAS gemm_batch function.
-template <typename value_t, typename Layout>
+// Test the BLAS gemm_batch, gemm_vbatch and gemm_batch_strided functions.
+template <typename T, typename Layout, bool is_vbatch>
 void test_gemm_batch() {
-  int batch_count = 10;
-  long size       = 64;
+  int const batch_count = 4;
+  long size             = 2;
+  long fac              = 2;
+  if constexpr (!is_vbatch) {
+    size = 16;
+    fac  = 1;
+  }
 
-  auto vec_A = std::vector(batch_count, nda::matrix<value_t, Layout>::rand({size, size}));
-  auto vec_B = std::vector(batch_count, nda::matrix<value_t, Layout>::rand({size, size}));
-  auto vec_C = std::vector(batch_count, nda::matrix<value_t, Layout>::zeros({size, size}));
-  nda::blas::gemm_batch(1.0, vec_A, vec_B, 0.0, vec_C);
+  // create vector of matrices
+  std::vector<nda::matrix<T, Layout>> vec_A, vec_B, vec_C, exp_C;
+  for ([[maybe_unused]] auto i : nda::range(batch_count)) {
+    vec_A.push_back(nda::matrix<T, Layout>::rand({size, size}));
+    vec_B.push_back(nda::matrix<T, Layout>::rand({size, size}));
+    vec_C.push_back(nda::matrix<T, Layout>::zeros({size, size}));
+    auto tmp = nda::matrix<T, Layout>::zeros({size, size});
+    nda::blas::gemm(1.0, vec_A.back(), vec_B.back(), 0.0, tmp);
+    exp_C.push_back(std::move(tmp));
+    size *= fac;
+  }
 
-  for (auto i : nda::range(batch_count)) EXPECT_ARRAY_NEAR(make_regular(vec_A[i] * vec_B[i]), vec_C[i]);
+  // test batched gemm routines
+  if constexpr (is_vbatch) {
+    nda::blas::gemm_vbatch(1.0, vec_A, vec_B, 0.0, vec_C);
+  } else {
+    nda::blas::gemm_batch(1.0, vec_A, vec_B, 0.0, vec_C);
+  }
+  for (auto i : nda::range(batch_count)) EXPECT_ARRAY_NEAR(vec_C[i], exp_C[i]);
 }
 
 TEST(NDA, BLASGemmBatch) {
-  test_gemm_batch<double, nda::C_layout>();
-  test_gemm_batch<double, nda::F_layout>();
-  test_gemm_batch<std::complex<double>, nda::C_layout>();
-  test_gemm_batch<std::complex<double>, nda::F_layout>();
-}
-
-// Test the BLAS gemm_vbatch function.
-template <typename value_t, typename Layout>
-void test_gemm_vbatch() {
-  int batch_count = 10;
-  long size       = 64;
-
-  auto vec_A = std::vector(batch_count, nda::matrix<value_t, Layout>::rand({size, size}));
-  auto vec_B = std::vector(batch_count, nda::matrix<value_t, Layout>::rand({size, size}));
-  auto vec_C = std::vector(batch_count, nda::matrix<value_t, Layout>::zeros({size, size}));
-  nda::blas::gemm_vbatch(1.0, vec_A, vec_B, 0.0, vec_C);
-
-  for (auto i : nda::range(batch_count)) EXPECT_ARRAY_NEAR(make_regular(vec_A[i] * vec_B[i]), vec_C[i]);
+  test_gemm_batch<double, nda::C_layout, false>();
+  test_gemm_batch<double, nda::F_layout, false>();
+  test_gemm_batch<std::complex<double>, nda::C_layout, false>();
+  test_gemm_batch<std::complex<double>, nda::F_layout, false>();
 }
 
 TEST(NDA, BLASGemmVbatch) {
-  test_gemm_vbatch<double, nda::C_layout>();
-  test_gemm_vbatch<double, nda::F_layout>();
-  test_gemm_vbatch<std::complex<double>, nda::C_layout>();
-  test_gemm_vbatch<std::complex<double>, nda::F_layout>();
+  test_gemm_batch<double, nda::C_layout, true>();
+  test_gemm_batch<double, nda::F_layout, true>();
+  test_gemm_batch<std::complex<double>, nda::C_layout, true>();
+  test_gemm_batch<std::complex<double>, nda::F_layout, true>();
+}
+
+template <typename T, typename Layout>
+void test_gemm_batch_strided() {
+  int const batch_count = 10;
+  long const size       = 16;
+
+  // create arrays
+  auto arr_A = nda::array<T, 3, Layout>::rand({batch_count, size, size});
+  auto arr_B = nda::array<T, 3, Layout>::rand({batch_count, size, size});
+  auto arr_C = nda::array<T, 3, Layout>::zeros({batch_count, size, size});
+
+  // test strided, batched gemm routine
+  nda::blas::gemm_batch_strided(1.0, arr_A, arr_B, 0.0, arr_C);
+  for (auto i : nda::range(batch_count)) {
+    auto tmp = nda::matrix<T, Layout>::zeros({size, size});
+    nda::blas::gemm(1.0, arr_A(i, nda::range::all, nda::range::all), arr_B(i, nda::range::all, nda::range::all), 0.0, tmp);
+    EXPECT_ARRAY_NEAR(arr_C(i, nda::range::all, nda::range::all), tmp);
+  }
+}
+
+TEST(NDA, BLASGemmBatchStrided) {
+  test_gemm_batch_strided<double, nda::C_layout>();
+  test_gemm_batch_strided<std::complex<double>, nda::C_layout>();
 }
 
 // Test the BLAS gemv function.
