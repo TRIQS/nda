@@ -14,33 +14,7 @@
 #include <tuple>
 
 #include <nda/h5.hpp>
-//#include <hdf5_hl.h>
-
 #include <H5Tpublic.h> // HDF5 type creation API
-#include "hdf5.h"
-
-namespace h5 {
-  template <typename T>
-    requires(h5::is_h5_compound<T>)
-  void h5_write(h5::group g, std::string const &name, T const &x) {
-    h5::object s_type = h5::detail::hid_t_of<T>();
-    hsize_t dims[1]   = {1};                             //NOLINT
-    h5::object space  = H5Screate_simple(1, dims, NULL); //NOLINT
-    h5::object dset   = H5Dcreate2(g, name.c_str(), s_type, space, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-    H5Dwrite(dset, s_type, H5S_ALL, H5S_ALL, H5P_DEFAULT, &x);
-  }
-
-  template <typename T>
-    requires(h5::is_h5_compound<T>)
-  void h5_read(h5::group g, std::string const &name, T &x) {
-    h5::object s_type = h5::detail::hid_t_of<T>();
-    hsize_t dims[1]   = {1};                             //NOLINT
-    h5::object space  = H5Screate_simple(1, dims, NULL); //NOLINT
-    h5::object dset   = H5Dopen2(g, name.c_str(), H5P_DEFAULT);
-    H5Dread(dset, s_type, H5S_ALL, H5S_ALL, H5P_DEFAULT, &x);
-  }
-} // namespace h5
-
 struct S {
   int a;
   double x;
