@@ -15,99 +15,65 @@
 using namespace nda;
 
 // Test LAPACK gtsv function.
-template <typename value_t>
-void test_gtsv() {
-  // sub-diagonal, diagonal, and super-diagonal elements
-  vector<value_t> subdiag_vec   = {4, 3, 2, 1};
-  vector<value_t> diag_vec      = {1, 2, 3, 4, 5};
-  vector<value_t> superdiag_vec = {1, 2, 3, 4};
-
-  // right hand side
-  vector<value_t> B1 = {6, 2, 7, 4, 5};
-  vector<value_t> B2 = {1, 3, 8, 9, 10};
-  auto B             = matrix<value_t, F_layout>(5, 2);
-  B(range::all, 0)   = B1;
-  B(range::all, 1)   = B2;
-
-  // reference solutions
-  vector<double> ref_sol_1 = {43.0 / 33.0, 155.0 / 33.0, -208.0 / 33.0, 130.0 / 33.0, 7.0 / 33.0};
-  vector<double> ref_sol_2 = {-28.0 / 33.0, 61.0 / 33.0, 89.0 / 66.0, -35.0 / 66.0, 139.0 / 66.0};
-  matrix<double, F_layout> ref_sol(5, 2);
-  ref_sol(range::all, 0) = ref_sol_1;
-  ref_sol(range::all, 1) = ref_sol_2;
-
-  {
-    auto dl(subdiag_vec);
-    auto d(diag_vec);
-    auto du(superdiag_vec);
-    int info = lapack::gtsv(dl, d, du, B1);
-    EXPECT_EQ(info, 0);
-    EXPECT_ARRAY_NEAR(B1, ref_sol_1);
-  }
-  {
-    auto dl(subdiag_vec);
-    auto d(diag_vec);
-    auto du(superdiag_vec);
-    int info = lapack::gtsv(dl, d, du, B2);
-    EXPECT_EQ(info, 0);
-    EXPECT_ARRAY_NEAR(B2, ref_sol_2);
-  }
-  {
-    auto dl(subdiag_vec);
-    auto d(diag_vec);
-    auto du(superdiag_vec);
-    int info = lapack::gtsv(dl, d, du, B);
-    EXPECT_EQ(info, 0);
-    EXPECT_ARRAY_NEAR(B, ref_sol);
-  }
+void test_gtsv(auto dl, auto d, auto du, auto B, auto exp) {
+  int info = lapack::gtsv(dl, d, du, B);
+  EXPECT_EQ(info, 0);
+  EXPECT_ARRAY_NEAR(B, exp);
 }
-TEST(NDA, LAPACKGtsv) {
-  test_gtsv<double>();
-  test_gtsv<std::complex<double>>();
 
-  // test cgtsv
-  vector<std::complex<double>> subdiag_vec   = {-4i, -3i, -2i, -1i};
-  vector<std::complex<double>> diag_vec      = {1, 2, 3, 4, 5};
-  vector<std::complex<double>> superdiag_vec = {1i, 2i, 3i, 4i};
+TEST(NDA, LAPACKGtsvDouble) {
+  auto check = []<typename T>() {
+    // sub-diagonal, diagonal, and super-diagonal elements
+    auto dl = vector<T>{4, 3, 2, 1};
+    auto d  = vector<T>{1, 2, 3, 4, 5};
+    auto du = vector<T>{1, 2, 3, 4};
 
-  // right hand side
-  vector<std::complex<double>> B1 = {6 + 0i, 2i, 7 + 0i, 4i, 5 + 0i};
-  vector<std::complex<double>> B2 = {1i, 3 + 0i, 8i, 9 + 0i, 10i};
-  matrix<std::complex<double>, F_layout> B(5, 2);
-  B(range::all, 0) = B1;
-  B(range::all, 1) = B2;
+    // right hand sides
+    auto b1          = vector<T>{6, 2, 7, 4, 5};
+    auto b2          = vector<T>{1, 3, 8, 9, 10};
+    auto B           = matrix<T, F_layout>(5, 2);
+    B(range::all, 0) = b1;
+    B(range::all, 1) = b2;
 
-  // reference solutions
-  vector<std::complex<double>> ref_sol_1 = {137.0 / 33.0 + 0i, -61i / 33.0, 368.0 / 33.0 + 0i, 230i / 33.0, -13.0 / 33.0 + 0i};
-  vector<std::complex<double>> ref_sol_2 = {-35i / 33.0, 68.0 / 33.0 + 0i, -103i / 66.0, 415.0 / 66.0 + 0i, 215i / 66.0};
-  matrix<std::complex<double>, F_layout> ref_sol(5, 2);
-  ref_sol(range::all, 0) = ref_sol_1;
-  ref_sol(range::all, 1) = ref_sol_2;
+    // expected solutions
+    auto exp_x1          = vector<double>{43.0 / 33.0, 155.0 / 33.0, -208.0 / 33.0, 130.0 / 33.0, 7.0 / 33.0};
+    auto exp_x2          = vector<double>{-28.0 / 33.0, 61.0 / 33.0, 89.0 / 66.0, -35.0 / 66.0, 139.0 / 66.0};
+    auto exp_X           = matrix<double, F_layout>(5, 2);
+    exp_X(range::all, 0) = exp_x1;
+    exp_X(range::all, 1) = exp_x2;
 
-  {
-    auto dl(subdiag_vec);
-    auto d(diag_vec);
-    auto du(superdiag_vec);
-    int info = lapack::gtsv(dl, d, du, B1);
-    EXPECT_EQ(info, 0);
-    EXPECT_ARRAY_NEAR(B1, ref_sol_1);
-  }
-  {
-    auto dl(subdiag_vec);
-    auto d(diag_vec);
-    auto du(superdiag_vec);
-    int info = lapack::gtsv(dl, d, du, B2);
-    EXPECT_EQ(info, 0);
-    EXPECT_ARRAY_NEAR(B2, ref_sol_2);
-  }
-  {
-    auto dl(subdiag_vec);
-    auto d(diag_vec);
-    auto du(superdiag_vec);
-    int info = lapack::gtsv(dl, d, du, B);
-    EXPECT_EQ(info, 0);
-    EXPECT_ARRAY_NEAR(B, ref_sol);
-  }
+    test_gtsv(dl, d, du, b1, exp_x1);
+    test_gtsv(dl, d, du, b2, exp_x2);
+    test_gtsv(dl, d, du, B, exp_X);
+  };
+
+  check.operator()<double>();
+  check.operator()<std::complex<double>>();
+}
+
+TEST(NDA, LAPACKGtsvComplex) {
+  // sub-diagonal, diagonal, and super-diagonal elements
+  auto dl = vector<std::complex<double>>{-4i, -3i, -2i, -1i};
+  auto d  = vector<std::complex<double>>{1, 2, 3, 4, 5};
+  auto du = vector<std::complex<double>>{1i, 2i, 3i, 4i};
+
+  // right hand sides
+  auto b1          = vector<std::complex<double>>{6 + 0i, 2i, 7 + 0i, 4i, 5 + 0i};
+  auto b2          = vector<std::complex<double>>{1i, 3 + 0i, 8i, 9 + 0i, 10i};
+  auto B           = matrix<std::complex<double>, F_layout>(5, 2);
+  B(range::all, 0) = b1;
+  B(range::all, 1) = b2;
+
+  // expected solutions
+  auto exp_x1          = vector<std::complex<double>>{137.0 / 33.0 + 0i, -61i / 33.0, 368.0 / 33.0 + 0i, 230i / 33.0, -13.0 / 33.0 + 0i};
+  auto exp_x2          = vector<std::complex<double>>{-35i / 33.0, 68.0 / 33.0 + 0i, -103i / 66.0, 415.0 / 66.0 + 0i, 215i / 66.0};
+  auto exp_X           = matrix<std::complex<double>, F_layout>(5, 2);
+  exp_X(range::all, 0) = exp_x1;
+  exp_X(range::all, 1) = exp_x2;
+
+  test_gtsv(dl, d, du, b1, exp_x1);
+  test_gtsv(dl, d, du, b2, exp_x2);
+  test_gtsv(dl, d, du, B, exp_X);
 }
 
 // Test LAPACK gesvd function.
