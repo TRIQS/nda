@@ -47,7 +47,13 @@ endif()
 # Link against MPI C++ Interface
 if (MPISupport)
   message(STATUS "-------- MPI detection -------------")
-  add_subdirectory(mpi)
+  target_link_libraries(${PROJECT_NAME}_c PUBLIC mpi::mpi_c)
+
+  target_compile_definitions(${PROJECT_NAME}_c PUBLIC
+          $<BUILD_INTERFACE:MPI_SUPPORT>
+          $<INSTALL_INTERFACE:MPI_SUPPORT>
+  )
+
 endif()
 
 # OpenMP
@@ -98,7 +104,10 @@ if(CudaSupport)
   message(STATUS "-------- CUDAToolkit detection -------------")
   find_package(CUDAToolkit REQUIRED)
   target_link_libraries(${PROJECT_NAME}_c PUBLIC CUDA::cudart CUDA::cublas CUDA::cusolver)
-  target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_CUDA NDA_HAVE_DEVICE)
+  target_compile_definitions(${PROJECT_NAME}_c PUBLIC
+          $<BUILD_INTERFACE:NDA_HAVE_CUDA NDA_HAVE_DEVICE>
+          $<INSTALL_INTERFACE:NDA_HAVE_CUDA NDA_HAVE_DEVICE>
+  )
 endif()
 
 # ========= Magma ==========
