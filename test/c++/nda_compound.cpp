@@ -39,16 +39,19 @@ constexpr bool h5::is_h5_compound<S> = true;
 
 TEST(NDA, H5Compound) {
   nda::array<S, 1> A{{1, 2.0}, {3, 4.0}, {5, 6.0}, {7, 8.0}, {9, 10.0}}; // NOLINT
-
+  S s{1, 1.3, -1};                                                       // NOLINT
   static_assert(requires { h5::detail::hid_t_of<decltype(A)::value_type>(); });
   {
     h5::file out("compound.h5", 'w');
     h5::write(out, "A", A);
+    h5::write(out, "s", s);
   }
 
   {
     h5::file in("compound.h5", 'r');
-    auto B = h5::read<nda::array<S, 1>>(in, "A");
+    auto B  = h5::read<nda::array<S, 1>>(in, "A");
+    auto sb = h5::read<S>(in, "s");
     EXPECT_EQ(A, B);
+    EXPECT_EQ(s, sb);
   }
 };
