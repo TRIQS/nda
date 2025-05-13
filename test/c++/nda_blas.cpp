@@ -11,28 +11,69 @@
 #include <complex>
 #include <vector>
 
-// Test the BLAS gemm function and its generic implementation.
-template <typename value_t, typename Layout>
+// Test the BLAS gemm function.
+template <typename T, typename Layout1, typename Layout2, typename Layout3>
 void test_gemm() {
-  nda::matrix<value_t, Layout> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3{{1, 0}, {0, 1}}, M3_gen;
-  M3_gen = M3;
+  constexpr auto a_is_f_layout = std::same_as<Layout1, nda::F_layout>;
+  constexpr auto b_is_f_layout = std::same_as<Layout2, nda::F_layout>;
+  constexpr auto c_is_f_layout = std::same_as<Layout3, nda::F_layout>;
+  auto A                       = nda::matrix<T, Layout1>{{1, 2, 3}, {4, 5, 6}};
+  auto B                       = nda::matrix<T, Layout2>{{1, 2}, {3, 4}, {5, 6}};
+  auto exp_C                   = nda::matrix<T, Layout3>{{22, 28}, {49, 64}};
+  if constexpr (nda::is_complex_v<T>) {
+    A *= 1 - 1i;
+    B *= 2 - 1i;
+    exp_C *= (1 - 1i) * (2 - 1i);
+  }
 
-  nda::blas::gemm(1.0, M1, M2, 1.0, M3);
-  EXPECT_ARRAY_NEAR(M1, nda::matrix<value_t>{{0, 1}, {1, 2}});
-  EXPECT_ARRAY_NEAR(M2, nda::matrix<value_t>{{1, 1}, {1, 1}});
-  EXPECT_ARRAY_NEAR(M3, nda::matrix<value_t>{{2, 1}, {3, 4}});
+  // C = A * B
+  auto C = nda::matrix<T, Layout3>(2, 2);
+  nda::blas::gemm(1.0, A, B, 0.0, C);
+  EXPECT_ARRAY_NEAR(C, exp_C);
 
-  nda::blas::gemm_generic(1.0, M1, M2, 1.0, M3_gen);
-  EXPECT_ARRAY_NEAR(M1, nda::matrix<value_t>{{0, 1}, {1, 2}});
-  EXPECT_ARRAY_NEAR(M2, nda::matrix<value_t>{{1, 1}, {1, 1}});
-  EXPECT_ARRAY_NEAR(M3_gen, nda::matrix<value_t>{{2, 1}, {3, 4}});
+  // C = 3 * A * B + 2 * C
+  nda::blas::gemm(3, A, B, 2, C);
+  EXPECT_ARRAY_NEAR(C, 5 * exp_C);
+
+  // C_t = B^T * A^T
+  auto C_t = nda::matrix<T, Layout3>(2, 2);
+  nda::blas::gemm(1.0, nda::transpose(B), nda::transpose(A), 0.0, C_t);
+  EXPECT_ARRAY_NEAR(C_t, nda::transpose(exp_C));
+
+  // C_h = B^H * A^H
+  if constexpr ((a_is_f_layout and b_is_f_layout and c_is_f_layout) or (!a_is_f_layout and !b_is_f_layout and !c_is_f_layout)) {
+    auto C_h = nda::matrix<T, Layout3>(2, 2);
+    nda::blas::gemm(1.0, nda::dagger(B), nda::dagger(A), 0.0, C_h);
+    EXPECT_ARRAY_NEAR(C_h, nda::dagger(exp_C));
+  }
+
+  // contiguous matrix views
+  if constexpr (a_is_f_layout and !b_is_f_layout and !c_is_f_layout) {
+    auto exp_C_v = nda::matrix<T, Layout3>{{13, 16}, {37, 46}};
+    if constexpr (nda::is_complex_v<T>) exp_C_v *= (1 - 1i) * (2 - 1i);
+    auto C_v = nda::matrix<T, Layout3>(5, 2);
+    nda::blas::gemm(1.0, A(nda::range::all, nda::range(0, 2)), B(nda::range(1, 3), nda::range::all), 0.0, C_v(nda::range(2, 4), nda::range::all));
+    EXPECT_ARRAY_NEAR(C_v(nda::range(2, 4), nda::range::all), exp_C_v);
+  }
 }
 
 TEST(NDA, BLASGemm) {
-  test_gemm<double, nda::C_layout>();
-  test_gemm<double, nda::F_layout>();
-  test_gemm<std::complex<double>, nda::C_layout>();
-  test_gemm<std::complex<double>, nda::F_layout>();
+  test_gemm<double, nda::C_layout, nda::C_layout, nda::C_layout>();
+  test_gemm<double, nda::C_layout, nda::C_layout, nda::F_layout>();
+  test_gemm<double, nda::C_layout, nda::F_layout, nda::C_layout>();
+  test_gemm<double, nda::C_layout, nda::F_layout, nda::F_layout>();
+  test_gemm<double, nda::F_layout, nda::C_layout, nda::C_layout>();
+  test_gemm<double, nda::F_layout, nda::C_layout, nda::F_layout>();
+  test_gemm<double, nda::F_layout, nda::F_layout, nda::C_layout>();
+  test_gemm<double, nda::F_layout, nda::F_layout, nda::F_layout>();
+  test_gemm<std::complex<double>, nda::C_layout, nda::C_layout, nda::C_layout>();
+  test_gemm<std::complex<double>, nda::C_layout, nda::C_layout, nda::F_layout>();
+  test_gemm<std::complex<double>, nda::C_layout, nda::F_layout, nda::C_layout>();
+  test_gemm<std::complex<double>, nda::C_layout, nda::F_layout, nda::F_layout>();
+  test_gemm<std::complex<double>, nda::F_layout, nda::C_layout, nda::C_layout>();
+  test_gemm<std::complex<double>, nda::F_layout, nda::C_layout, nda::F_layout>();
+  test_gemm<std::complex<double>, nda::F_layout, nda::F_layout, nda::C_layout>();
+  test_gemm<std::complex<double>, nda::F_layout, nda::F_layout, nda::F_layout>();
 }
 
 // Test the BLAS gemm_batch function.

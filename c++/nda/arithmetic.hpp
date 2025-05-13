@@ -421,7 +421,7 @@ namespace nda {
       static_assert(r_algebra != 'A', "Error in nda::operator*: Can not multiply a matrix by an array");
       if constexpr (r_algebra == 'M')
         // matrix * matrix
-        return matmul(std::forward<L>(l), std::forward<R>(r));
+        return linalg::matmul(std::forward<L>(l), std::forward<R>(r));
       else
         // matrix * vector
         return linalg::matvecmul(std::forward<L>(l), std::forward<R>(r));
