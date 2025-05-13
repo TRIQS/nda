@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <complex>
+#include <type_traits>
 
 using namespace nda;
 
@@ -104,39 +105,41 @@ TEST(NDA, LAPACKGesvd) {
 }
 
 // Test LAPACK geqp3, orgqr and ungqr functions.
-template <typename value_t, bool wide_matrix = false>
+template <typename T, bool wide_matrix = false>
 void test_geqp3_orgqr_ungqr() {
-  using matrix_t = matrix<value_t, F_layout>;
+  using matrix_t = matrix<T, F_layout>;
 
   auto A = matrix_t{{{1, 1, 1}, {3, 2, 4}, {5, 3, 2}, {2, 4, 5}, {4, 5, 3}}};
-  if (wide_matrix) A = matrix_t{transpose(A)};
+  if constexpr (wide_matrix) A = matrix_t{transpose(A)};
   auto [m, n] = A.shape();
 
   // compute QR factorization with column pivoting, i.e. A * P = Q * R
   auto jpvt = nda::zeros<int>(n);
-  auto tau  = nda::vector<value_t>(std::min(m, n));
+  auto tau  = nda::vector<T>(std::min(m, n));
   auto Q    = matrix_t{A};
   lapack::geqp3(Q, jpvt, tau);
 
   // compute A * P by permuting columns of A
+  jpvt -= 1;
   auto AP = matrix_t{A};
   for (int j = 0; j < n; ++j) { AP(range::all, j) = A(range::all, jpvt(j)); }
 
   // extract upper triangular matrix R
-  auto R = nda::matrix<value_t, F_layout>::zeros(std::min(m, n), n);
+  auto R = nda::matrix<T, F_layout>::zeros(std::min(m, n), n);
   for (int i = 0; i < std::min(m, n); ++i) {
     for (int j = i; j < n; ++j) { R(i, j) = Q(i, j); }
   }
 
   // extract matrix Q with orthonormal columns
-  if constexpr (std::is_same_v<value_t, double>) {
-    lapack::orgqr(Q, tau);
+  if constexpr (std::is_same_v<T, double>) {
+    lapack::orgqr(Q(range::all, range(std::min(m, n))), tau);
   } else {
-    lapack::ungqr(Q, tau);
+    lapack::ungqr(Q(range::all, range(std::min(m, n))), tau);
   }
 
   EXPECT_ARRAY_NEAR(AP, Q(range::all, range(std::min(m, n))) * R, 1e-14);
 }
+
 TEST(NDA, LAPACKGeqp3UngqrAndOrgqr) {
   // tall matrix, i.e. n_rows > n_cols
   test_geqp3_orgqr_ungqr<double>();
