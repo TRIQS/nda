@@ -81,4 +81,7 @@ namespace nda::lapack {
   // See nda::blas::is_conj_array_expr.
   using blas::is_conj_array_expr;
 
+  // See nda::blas::get_array.
+  using blas::get_array;
+
 } // namespace nda::lapack

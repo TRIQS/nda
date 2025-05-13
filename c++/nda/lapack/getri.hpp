@@ -11,14 +11,13 @@
 #pragma once
 
 #include "./interface/cxx_interface.hpp"
+#include "../basic_array.hpp"
 #include "../concepts.hpp"
 #include "../declarations.hpp"
-#include "../exceptions.hpp"
 #include "../macros.hpp"
 #include "../mem/address_space.hpp"
 #include "../traits.hpp"
 
-#include <algorithm>
 #include <cmath>
 #include <complex>
 #include <type_traits>
@@ -29,7 +28,8 @@ namespace nda::lapack {
    * @ingroup linalg_lapack
    * @brief Interface to the LAPACK `getri` routine.
    *
-   * @details Computes the inverse of a matrix using the LU factorization computed by `getrf`.
+   * @details Computes the inverse of an \f$ n \times n \f$ matrix \f$ \mathbf{A} \f$ matrix using the LU factorization
+   * computed by nda::lapack::getrf.
    *
    * This method inverts \f$ \mathbf{U} \f$ and then computes \f$ \mathrm{inv}(\mathbf{A}) \f$ by solving the system
    * \f$ \mathrm{inv}(\mathbf{A}) L = \mathrm{inv}(\mathbf{U}) \f$ for \f$ \mathrm{inv}(\mathbf{A}) \f$.
@@ -37,48 +37,40 @@ namespace nda::lapack {
    * @tparam A nda::MemoryMatrix type.
    * @tparam IPIV nda::MemoryVector type.
    * @param a Input/output matrix. On entry, the factors \f$ \mathbf{L} \f$ and \f$ \mathbf{U} \f$ from the
-   * factorization \f$ \mathbf{A} = \mathbf{P L U} \f$ as computed by `getrf`. On exit, if `INFO == 0`, the inverse of
-   * the original matrix \f$ \mathbf{A} \f$.
-   * @param ipiv Input vector. The pivot indices from `getrf`, i.e. for `1 <= i <= N`, row i of the matrix was
-   * interchanged with row `ipiv(i)`.
+   * factorization \f$ \mathbf{A} = \mathbf{P L U} \f$ as computed by nda::lapack::getrf. On exit, if `INFO == 0`, the
+   * inverse of the original matrix \f$ \mathbf{A} \f$.
+   * @param ipiv Input vector. The pivot indices from nda::lapack::getrf, i.e. for \f$ 1 \leq i \leq n \f$, row i of the
+   * matrix was interchanged with row `ipiv(i)`.
    * @return Integer return code from the LAPACK call.
    */
   template <MemoryMatrix A, MemoryVector IPIV>
-    requires(mem::have_compatible_addr_space<A, IPIV> and is_blas_lapack_v<get_value_t<A>>)
+    requires(mem::have_host_compatible_addr_space<A, IPIV> and is_blas_lapack_v<get_value_t<A>> and std::is_same_v<get_value_t<IPIV>, int>)
   int getri(A &&a, IPIV const &ipiv) { // NOLINT (temporary views are allowed here)
-    static_assert(std::is_same_v<get_value_t<IPIV>, int>, "Error in nda::lapack::getri: Pivoting array must have elements of type int");
-    auto dm = std::min(a.extent(0), a.extent(1));
+    // check the dimensions of the input/output arrays/views
+    auto const [m, n] = a.shape();
+    EXPECTS(m == n);
+    EXPECTS(ipiv.size() == n);
 
-    if (ipiv.size() < dm)
-      NDA_RUNTIME_ERROR << "Error in nda::lapack::getri: Pivot index array size " << ipiv.size() << " smaller than required size " << dm;
-
-    // must be lapack compatible
+    // arrays/views must be LAPACK compatible
     EXPECTS(a.indexmap().min_stride() == 1);
     EXPECTS(ipiv.indexmap().min_stride() == 1);
 
-    int info = 0;
-    if constexpr (mem::have_device_compatible_addr_space<A, IPIV>) {
-#if defined(NDA_HAVE_DEVICE)
-      device::getri(a.extent(0), a.data(), get_ld(a), ipiv.data(), NULL, 0, info);
-#else
-      compile_error_no_gpu();
-#endif
-    } else {
-      // first call to get the optimal buffersize
-      using value_type = get_value_t<A>;
-      value_type bufferSize_T{};
-      f77::getri(a.extent(0), a.data(), get_ld(a), ipiv.data(), &bufferSize_T, -1, info);
-      int bufferSize = static_cast<int>(std::ceil(std::real(bufferSize_T)));
+    // first call to get the optimal buffer size
+    using value_type = get_value_t<A>;
+    int info         = 0;
+    value_type tmp_lwork{};
+    f77::getri(n, a.data(), get_ld(a), ipiv.data(), &tmp_lwork, -1, info);
+    int lwork = static_cast<int>(std::ceil(std::real(tmp_lwork)));
 
-      // allocate work buffer and perform actual library call
-      array<value_type, 1> work(bufferSize);
+    // allocate work buffer and perform actual library call
+    array<value_type, 1> work(lwork);
 #if defined(__has_feature)
 #if __has_feature(memory_sanitizer)
-      work = 0;
+    work = 0;
 #endif
 #endif
-      f77::getri(a.extent(0), a.data(), get_ld(a), ipiv.data(), work.data(), bufferSize, info);
-    }
+    f77::getri(n, a.data(), get_ld(a), ipiv.data(), work.data(), lwork, info);
+
     return info;
   }
 
