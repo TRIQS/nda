@@ -36,43 +36,6 @@ namespace nda {
    */
 
   /**
-   * @brief Check if a given array/view is square, i.e. if the first dimension has the same extent as the second
-   * dimension.
-   *
-   * @note It does not check if the array/view has rank 2.
-   *
-   * @tparam A Array/View type.
-   * @param a Array/View object.
-   * @param print_error If true, print an error message if the matrix is not square.
-   * @return True if the array/view is square, false otherwise.
-   */
-  template <typename A>
-  bool is_matrix_square(A const &a, bool print_error = false) {
-    bool r = (a.shape()[0] == a.shape()[1]);
-    if (not r and print_error)
-      std::cerr << "Error in nda::detail::is_matrix_square: Dimensions are: (" << a.shape()[0] << "," << a.shape()[1] << ")\n" << std::endl;
-    return r;
-  }
-
-  /**
-   * @brief Check if a given array/view is diagonal, i.e. if it is square (see nda::is_matrix_square) and all the the
-   * off-diagonal elements are zero.
-   *
-   * @note It does not check if the array/view has rank 2.
-   *
-   * @tparam A Array/View type.
-   * @param a Array/View object.
-   * @param print_error If true, print an error message if the matrix is not diagonal.
-   * @return True if the array/view is diagonal, false otherwise.
-   */
-  template <typename A>
-  bool is_matrix_diagonal(A const &a, bool print_error = false) {
-    bool r = is_matrix_square(a) and a == diag(diagonal(a));
-    if (not r and print_error) std::cerr << "Error in nda::detail::is_matrix_diagonal: Non-diagonal matrix: " << a << std::endl;
-    return r;
-  }
-
-  /**
    * @brief Compute the determinant of a square matrix/view.
    *
    * @details It uses nda::lapack::getrf to compute the LU decomposition of the matrix and then calculates the

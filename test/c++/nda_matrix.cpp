@@ -143,13 +143,19 @@ TEST(NDA, MatrixSliceDagger) {
   EXPECT_ARRAY_NEAR(M_slice_dag, exp_slice, 1.e-14);
 }
 
-TEST(NDA, IdentityMatrix) { EXPECT_EQ_ARRAY(nda::eye<long>(3), (nda::matrix<long>{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}})); }
+TEST(NDA, IdentityMatrix) {
+  EXPECT_EQ_ARRAY(nda::eye<long>(3), (nda::matrix<long>{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}));
+  EXPECT_TRUE(nda::is_matrix_square(nda::eye<long>(3)));
+  EXPECT_TRUE(nda::is_matrix_diagonal(nda::eye<double>(3)));
+}
 
 TEST(NDA, DiagonalMatrix) {
   auto v = nda::vector<int>{1, 2, 3};
   auto M = nda::diag(v);
   EXPECT_EQ_ARRAY(M, (nda::matrix<int>{{1, 0, 0}, {0, 2, 0}, {0, 0, 3}}));
   EXPECT_EQ_ARRAY(nda::diagonal(M), v);
+  EXPECT_TRUE(nda::is_matrix_diagonal(M));
+  EXPECT_TRUE(nda::is_matrix_square(M));
 
   nda::diagonal(M) += v;
   EXPECT_EQ_ARRAY(nda::diagonal(M), 2 * v);
@@ -160,6 +166,8 @@ TEST(NDA, MatrixSlice) {
   auto v = M(nda::range(2, 4), 7);
   static_assert(decltype(v)::layout_t::layout_prop == nda::layout_prop_e::strided_1d);
   static_assert(nda::has_contiguous(decltype(v)::layout_t::layout_prop) == false);
+  EXPECT_TRUE(nda::is_matrix_square(M));
+  EXPECT_FALSE(nda::is_matrix_square(M(nda::range(2, 4), nda::range::all)));
 }
 
 TEST(NDA, MatrixAlgebra) {
