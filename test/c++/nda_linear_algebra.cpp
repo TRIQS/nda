@@ -559,3 +559,14 @@ TEST(NDA, LinearAlgebraSVD) {
   test_svd<std::complex<double>, nda::C_layout>();
   test_svd<std::complex<double>, nda::F_layout>();
 }
+
+// Test the cross product function.
+TEST(NDA, LinearAlgebraCrossProduct) {
+  nda::vector<double> e1{1, 0, 0};
+  nda::vector<double> e2{0, 1, 0};
+  nda::vector<double> e3{0, 0, 1};
+
+  EXPECT_ARRAY_NEAR(nda::linalg::cross_product(e1, e2), e3);
+  EXPECT_ARRAY_NEAR(nda::linalg::cross_product(e2, e3), e1);
+  EXPECT_ARRAY_NEAR(nda::linalg::cross_product(e3, e1), e2);
+}
