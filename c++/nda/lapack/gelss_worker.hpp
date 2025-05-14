@@ -3,6 +3,11 @@
 // SPDX-License-Identifier: Apache-2.0
 // See LICENSE in the root of this distribution for details.
 
+/**
+ * @file
+ * @brief Provides a class that can solve multiple linear least squares problems for a given matrix \f$ \mathbf{A} \f$.
+ */
+
 #pragma once
 
 #include "./gesvd.hpp"
@@ -75,18 +80,6 @@ namespace nda::lapack {
    */
   template <typename T>
   class gelss_worker {
-    // Number of rows (M) and columns (N) of the Matrix A.
-    long M_, N_;
-
-    // Pseudo inverse of A, i.e. A^{+} = V * \Sigma^{+} * U^H.
-    matrix<T> A_plus_;
-
-    // U_N^H defining the error of the least squares problem.
-    matrix<T> U_N_H_;
-
-    // Array containing the singular values.
-    array<double, 1> s_;
-
     public:
     /**
      * @brief Get the number of variables of the given problem, i.e. the size of the vector \f$ \mathbf{x} \f$.
@@ -171,6 +164,19 @@ namespace nda::lapack {
       if (M_ != N_) { err = norm(U_N_H_ * b) / sqrt(b.size()); }
       return std::pair<vector<T>, double>{A_plus_ * b, err};
     }
+
+    private:
+    // Number of rows (M) and columns (N) of the Matrix A.
+    long M_, N_;
+
+    // Pseudo inverse of A, i.e. A^{+} = V * \Sigma^{+} * U^H.
+    matrix<T> A_plus_;
+
+    // U_N^H defining the error of the least squares problem.
+    matrix<T> U_N_H_;
+
+    // Array containing the singular values.
+    array<double, 1> s_;
   };
 
   /**
@@ -194,17 +200,7 @@ namespace nda::lapack {
    *
    * See `triqs::mesh::tail_fitter` for more information.
    */
-  struct gelss_worker_hermitian {
-    private:
-    // Complex double type.
-    using dcomplex = std::complex<double>;
-
-    // Worker for the original least squares problem.
-    gelss_worker<dcomplex> lss_;
-
-    // Worker for the extended least squares problem.
-    gelss_worker<dcomplex> lss_herm_;
-
+  class gelss_worker_hermitian {
     public:
     /**
      * @brief Get the number of variables of the given problem.
@@ -222,7 +218,7 @@ namespace nda::lapack {
      * @brief Construct a new worker object for a given matrix \f$ \mathbf{A} \f$.
      * @param A %Matrix \f$ \mathbf{A} \f$ used in the least squares problem.
      */
-    gelss_worker_hermitian(matrix_const_view<dcomplex> A) : lss_(A), lss_herm_(vstack(A, conj(A))) {}
+    gelss_worker_hermitian(matrix_const_view<std::complex<double>> A) : lss_(A), lss_herm_(vstack(A, conj(A))) {}
 
     /**
      * @brief Solve the least squares problem for a given right hand side matrix \f$ \mathbf{B} \f$.
@@ -232,10 +228,10 @@ namespace nda::lapack {
      *
      * @param B Right hand side matrix.
      * @param inner_matrix_dim Inner matrix dimension \f$ d \f$.
-     * @return A `std::pair<matrix<dcomplex>, double>` containing the solution matrix \f$ \mathbf{X} \f$ and the error
+     * @return A `std::pair<matrix<std::complex<double>>, double>` containing the solution matrix \f$ \mathbf{X} \f$ and the error
      * \f$ \epsilon \f$.
      */
-    auto operator()(matrix_const_view<dcomplex> B, std::optional<long> inner_matrix_dim = {}) const {
+    auto operator()(matrix_const_view<std::complex<double>> B, std::optional<long> inner_matrix_dim = {}) const {
       if (not inner_matrix_dim.has_value())
         NDA_RUNTIME_ERROR << "Error in nda::lapack::gelss_worker_hermitian: Inner matrix dimension required for hermitian least square fitting";
       long d = *inner_matrix_dim;
@@ -252,10 +248,11 @@ namespace nda::lapack {
         long N = shape[1] / (d * d);
 
         // reshape, transpose and take the complex conjugate
-        array<dcomplex, 4> arr_dag = conj(permuted_indices_view<encode(std::array{0, 1, 3, 2})>(reshape(C, std::array{shape[0], N, d, d})));
+        array<std::complex<double>, 4> arr_dag =
+           conj(permuted_indices_view<encode(std::array{0, 1, 3, 2})>(reshape(C, std::array{shape[0], N, d, d})));
 
         // return the result in a new matrix
-        return matrix<dcomplex>{reshape(std::move(arr_dag), shape)};
+        return matrix<std::complex<double>>{reshape(std::move(arr_dag), shape)};
       };
 
       // solve the extended system vstack(A, A*) * X = vstack(B, B_dag)
@@ -263,8 +260,15 @@ namespace nda::lapack {
       auto [x, err] = lss_herm_(vstack(B, B_dag));
 
       // resymmetrize the results to cure small hermiticity violations
-      return std::pair<matrix<dcomplex>, double>{0.5 * (x + inner_adjoint(x)), err};
+      return std::pair<matrix<std::complex<double>>, double>{0.5 * (x + inner_adjoint(x)), err};
     }
+
+    private:
+    // Worker for the original least squares problem.
+    gelss_worker<std::complex<double>> lss_;
+
+    // Worker for the extended least squares problem.
+    gelss_worker<std::complex<double>> lss_herm_;
   };
 
   /** @} */

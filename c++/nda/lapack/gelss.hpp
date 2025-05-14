@@ -12,9 +12,9 @@
 
 #include "./interface/cxx_interface.hpp"
 #include "../basic_array.hpp"
+#include "../basic_functions.hpp"
 #include "../concepts.hpp"
 #include "../declarations.hpp"
-#include "../exceptions.hpp"
 #include "../macros.hpp"
 #include "../mem/address_space.hpp"
 #include "../traits.hpp"
@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <cmath>
 #include <complex>
+#include <type_traits>
 
 namespace nda::lapack {
 
@@ -31,68 +32,67 @@ namespace nda::lapack {
    *
    * @details Computes the minimum norm solution to a complex linear least squares problem:
    * \f[
-   *   \min_x | \mathbf{b} - \mathbf{A x} |_2
+   *   \min_{\mathbf{x}} | \mathbf{b} - \mathbf{A x} |_2
    * \f]
-   * using the singular value decomposition (SVD) of \f$ \mathbf{A} \f$. \f$ \mathbf{A} \f$ is an m-by-n matrix which
-   * may be rank-deficient.
+   * using the singular value decomposition (SVD) of \f$ \mathbf{A} \f$. \f$ \mathbf{A} \f$ is an \f$ m \times n \f$
+   * matrix which may be rank-deficient.
    *
    * Several right hand side vectors \f$ \mathbf{b} \f$ and solution vectors \f$ \mathbf{x} \f$ can be handled in a
-   * single call; they are stored as the columns of the m-by-nrhs right hand side matrix \f$ \mathbf{B} \f$ and the
-   * n-by-nrhs solution matrix \f$ \mathbf{X} \f$.
+   * single call; they are stored as the columns of the \f$ m \times n_{\mathrm{rhs}} \f$ right hand side matrix \f$
+   * \mathbf{B} \f$ and the \f$ n \times n_{\mathrm{rhs}} \f$ solution matrix \f$ \mathbf{X} \f$.
    *
    * The effective rank of \f$ \mathbf{A} \f$ is determined by treating as zero those singular values which are less
-   * than `rcond` times the largest singular value.
+   * than \f$ r_{\mathrm{cond}} \f$ times the largest singular value.
    *
    * @tparam A nda::MemoryMatrix type.
    * @tparam B nda::MemoryArray type.
    * @tparam S nda::MemoryVector type.
-   * @param a Input/output matrix. On entry, the m-by-n matrix \f$ \mathbf{A} \f$. On exit, the first `min(m,n)` rows of
-   * \f$ \mathbf{A} \f$ are overwritten with its right singular vectors, stored rowwise.
-   * @param b Input/output array. On entry, the m-by-nrhs right hand side matrix \f$ \mathbf{B} \f$. On exit,
-   * \f$ \mathbf{B} \f$ is overwritten by the n-by-nrhs solution matrix \f$ \mathbf{X} \f$. If `m >= n` and `RANK == n`,
-   * the residual sum-of-squares for the solution in the i-th column is given by the sum of squares of the modulus of
-   * elements `n+1:m` in that column.
-   * @param s Output vector. The singular values of \f$ \mathbf{A} \f$ in decreasing order. The condition number of A in
-   * the 2-norm is `s(1)/s(min(m,n))`.
-   * @param rcond It is used to determine the effective rank of \f$ \mathbf{A} \f$. Singular values `s(i) <= rcond *
-   * s(1)` are treated as zero. If `rcond < 0`, machine precision is used instead.
-   * @param rank Output variable of the effective rank of \f$ \mathbf{A} \f$, i.e., the number of singular values which
-   * are greater than `rcond * s(1)`.
+   * @param a Input/output matrix. On entry, the \f$ m \times n \f$ matrix \f$ \mathbf{A} \f$. On exit, the first \f$
+   * \min(m,n) \f$ rows of \f$ \mathbf{A} \f$ are overwritten with its right singular vectors, stored rowwise.
+   * @param b Input/output array. On entry, the \f$ m \times n_{\mathrm{rhs}} \f$ right hand side matrix \f$ \mathbf{B}
+   * \f$. On exit, \f$ \mathbf{B} \f$ is overwritten by the \f$ n \times n_{\mathrm{rhs}} \f$ solution matrix \f$
+   * \mathbf{X} \f$. If \f$ m \geq n \f$ and if the effective rank is equal \f$ n \f$, the residual sum-of-squares for
+   * the solution in the i<sup>th</sup> column is given by the sum of squares of the modulus of elements \f$ n + 1 \f$
+   * to \f$ m \f$ in that column.
+   * @param s Output vector. The singular values of \f$ \mathbf{A} \f$ in decreasing order. The condition number of \f$
+   * \mathbf{A} \f$ in the 2-norm is \f$ s_1 / s_{min(m,n)} \f$.
+   * @param rcond It is used to determine the effective rank of \f$ \mathbf{A} \f$. Singular values \f$ s_i \leq
+   * r_{\mathrm{cond}} s_1 \f$ are treated as zero. If \f$ r_{\mathrm{cond}} < 0 \f$, machine precision is used instead.
+   * @param rank Output variable. The effective rank of \f$ \mathbf{A} \f$, i.e. the number of singular values which
+   * are greater than \f$ r_{\mathrm{cond}} s_1 \f$.
    * @return Integer return code.
    */
   template <MemoryMatrix A, MemoryArray B, MemoryVector S>
-    requires(have_same_value_type_v<A, B> and mem::on_host<A, B, S> and is_blas_lapack_v<get_value_t<A>>)
+    requires(have_same_value_type_v<A, B> and mem::have_host_compatible_addr_space<A, B, S> and is_blas_lapack_v<get_value_t<A>>)
   int gelss(A &&a, B &&b, S &&s, double rcond, int &rank) { // NOLINT (temporary views are allowed here)
-    static_assert(has_F_layout<A> and has_F_layout<B>, "Error in nda::lapack::gelss: C order not supported");
-    static_assert(MemoryVector<B> or MemoryMatrix<B>, "Error in nda::lapack::gelss: B must be a vector or a matrix");
+    static_assert(std::is_same_v<get_value_t<S>, double>, "Error in nda::lapack::gelss: Singular value array must have elements of type double");
+    static_assert(has_F_layout<A> and has_F_layout<B>, "Error in nda::lapack::gelss: Matrices/arrays must have Fortran layout");
+    static_assert(get_rank<B> == 1 || get_rank<B> == 2, "Error in nda::lapack::gelss: Right hand side must have rank 1 or 2");
 
-    auto dm = std::min(a.extent(0), a.extent(1));
-    if (s.size() < dm) s.resize(dm);
+    // check the dimensions of the input/output arrays/views and resize if necessary
+    auto const [m, n] = a.shape();
+    auto const k      = std::min(m, n);
+    resize_or_check_if_view(s, {k});
+    EXPECTS(b.extent(0) == m);
 
-    // must be lapack compatible
+    // arrays/views must be LAPACK compatible
     EXPECTS(a.indexmap().min_stride() == 1);
     EXPECTS(b.indexmap().min_stride() == 1);
     EXPECTS(s.indexmap().min_stride() == 1);
 
-    // first call to get the optimal bufferSize
+    // first call to get the optimal buffer size
     using value_type = get_value_t<A>;
-    value_type bufferSize_T{};
-    auto rwork = array<double, 1>(5 * dm);
+    value_type tmp_lwork{};
+    auto rwork = array<double, 1>(5 * k);
     int info   = 0;
-    int nrhs = 1, ldb = b.size(); // defaults for B MemoryVector
-    if constexpr (MemoryMatrix<B>) {
-      nrhs = b.extent(1);
-      ldb  = get_ld(b);
-    }
-    f77::gelss(a.extent(0), a.extent(1), nrhs, a.data(), get_ld(a), b.data(), ldb, s.data(), rcond, rank, &bufferSize_T, -1, rwork.data(), info);
-    int bufferSize = static_cast<int>(std::ceil(std::real(bufferSize_T)));
+    int nrhs   = (get_rank<B> == 2 ? b.extent(1) : 1);
+    f77::gelss(m, n, nrhs, a.data(), get_ld(a), b.data(), get_ld(b), s.data(), rcond, rank, &tmp_lwork, -1, rwork.data(), info);
+    int lwork = static_cast<int>(std::ceil(std::real(tmp_lwork)));
 
     // allocate work buffer and perform actual library call
-    array<value_type, 1> work(bufferSize);
-    f77::gelss(a.extent(0), a.extent(1), nrhs, a.data(), get_ld(a), b.data(), ldb, s.data(), rcond, rank, work.data(), bufferSize, rwork.data(),
-               info);
+    array<value_type, 1> work(lwork);
+    f77::gelss(m, n, nrhs, a.data(), get_ld(a), b.data(), get_ld(b), s.data(), rcond, rank, work.data(), lwork, rwork.data(), info);
 
-    if (info) NDA_RUNTIME_ERROR << "Error in nda::lapack::gelss: info = " << info;
     return info;
   }
 
