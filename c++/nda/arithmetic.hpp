@@ -12,9 +12,9 @@
 
 #include "./concepts.hpp"
 #include "./declarations.hpp"
+#include "./linalg/inv.hpp"
 #include "./linalg/matmul.hpp"
 #include "./linalg/matvecmul.hpp"
-#include "./linalg/det_and_inverse.hpp"
 #include "./macros.hpp"
 #include "./stdutil/complex.hpp"
 #include "./traits.hpp"

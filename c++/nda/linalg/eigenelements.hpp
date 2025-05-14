@@ -10,13 +10,13 @@
 
 #pragma once
 
-#include "./det_and_inverse.hpp"
 #include "../basic_array.hpp"
 #include "../declarations.hpp"
 #include "../exceptions.hpp"
 #include "../lapack/interface/cxx_interface.hpp"
 #include "../layout/policies.hpp"
 #include "../macros.hpp"
+#include "../matrix_functions.hpp"
 #include "../traits.hpp"
 
 #include <type_traits>

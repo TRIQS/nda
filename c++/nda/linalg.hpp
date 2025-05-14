@@ -14,9 +14,10 @@
 #include "./lapack.hpp"
 
 #include "./linalg/cross_product.hpp"
-#include "./linalg/det_and_inverse.hpp"
+#include "./linalg/det.hpp"
 #include "./linalg/dot.hpp"
 #include "./linalg/eigenelements.hpp"
+#include "./linalg/inv.hpp"
 #include "./linalg/matmul.hpp"
 #include "./linalg/matvecmul.hpp"
 #include "./linalg/norm.hpp"
