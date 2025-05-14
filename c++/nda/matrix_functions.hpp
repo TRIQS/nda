@@ -22,6 +22,7 @@
 
 #include <algorithm>
 #include <concepts>
+#include <iostream>
 #include <ranges>
 #include <type_traits>
 
@@ -92,7 +93,7 @@ namespace nda {
    * @return A view with the 'V' algebra of the diagonal of the array/view.
    */
   template <MemoryArrayOfRank<2> M>
-  ArrayOfRank<1> auto diagonal(M &&m) {
+  ArrayOfRank<1> auto diagonal(M &&m) { // NOLINT
     long dim    = std::min(m.shape()[0], m.shape()[1]);
     long stride = stdutil::sum(m.indexmap().strides());
     using vector_view_t =
@@ -146,6 +147,38 @@ namespace nda {
     res(range(0, n), range::all)     = a;
     res(range(n, n + p), range::all) = b;
     return res;
+  }
+
+  /**
+   * @brief Check if a given matrix is square, i.e. if the first dimension has the same extent as the second
+   * dimension.
+   *
+   * @tparam A nda::Matrix type.
+   * @param a Matrix to be checked.
+   * @param print_error If true, print an error message if the matrix is not square.
+   * @return True if the matrix is square, false otherwise.
+   */
+  template <Matrix A>
+  bool is_matrix_square(A const &a, bool print_error = false) {
+    auto const [m, n] = a.shape();
+    if (m != n and print_error) std::cerr << "Error in nda::is_matrix_square: Dimensions are: (" << m << "," << n << ")\n" << std::endl;
+    return m == n;
+  }
+
+  /**
+   * @brief Check if a given matrix is diagonal, i.e. if it is square (see nda::is_matrix_square) and all the the
+   * off-diagonal elements are zero.
+   *
+   * @tparam A nda::Matrix type.
+   * @param a Matrix to be checked.
+   * @param print_error If true, print an error message if the matrix is not diagonal.
+   * @return True if the matrix is diagonal, false otherwise.
+   */
+  template <Matrix A>
+  bool is_matrix_diagonal(A const &a, bool print_error = false) {
+    bool const r = is_matrix_square(a) and a == diag(diagonal(a));
+    if (not r and print_error) std::cerr << "Error in nda::is_matrix_diagonal: Non-diagonal matrix: " << a << std::endl;
+    return r;
   }
 
   /** @} */
