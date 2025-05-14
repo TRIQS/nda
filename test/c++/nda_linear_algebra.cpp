@@ -389,45 +389,45 @@ TEST(NDA, LinearAlgebraEigenelements) {
   test_eigenelements(C);
 }
 
+// Test the norm function.
+bool check_norm_p(auto &v, double p) { return nda::linalg::norm(v, p) == std::pow(nda::sum(nda::pow(nda::abs(v), p)), 1.0 / p); };
+
 TEST(NDA, LinearAlgebraNormZeros) {
   const int size = 100;
   auto v         = nda::zeros<double>(size);
 
-  EXPECT_EQ(nda::norm(v), nda::norm(v, 2.0));
-  EXPECT_EQ(nda::norm(v, 0.0), 0.0);
-  EXPECT_EQ(nda::norm(v, 1.0), 0.0);
-  EXPECT_EQ(nda::norm(v, 2.0), 0.0);
-  EXPECT_EQ(nda::norm(v, std::numeric_limits<double>::infinity()), 0.0);
-  EXPECT_EQ(nda::norm(v, -std::numeric_limits<double>::infinity()), 0.0);
-  EXPECT_EQ(nda::norm(v, 1.5), 0.0);
+  EXPECT_EQ(nda::linalg::norm(v), nda::linalg::norm(v, 2.0));
+  EXPECT_EQ(nda::linalg::norm(v, 0.0), 0.0);
+  EXPECT_EQ(nda::linalg::norm(v, 1.0), 0.0);
+  EXPECT_EQ(nda::linalg::norm(v, 2.0), 0.0);
+  EXPECT_EQ(nda::linalg::norm(v, std::numeric_limits<double>::infinity()), 0.0);
+  EXPECT_EQ(nda::linalg::norm(v, -std::numeric_limits<double>::infinity()), 0.0);
+  EXPECT_EQ(nda::linalg::norm(v, 1.5), 0.0);
 }
 
 TEST(NDA, LinearAlgebraNormOnes) {
   const int size = 100;
   auto v         = nda::ones<double>(size);
 
-  EXPECT_EQ(nda::norm(v), nda::norm(v, 2.0));
-  EXPECT_EQ(nda::norm(v, 0.0), size);
-  EXPECT_EQ(nda::norm(v, 1.0), size);
-  EXPECT_EQ(nda::norm(v, 2.0), std::sqrt(size));
-  EXPECT_EQ(nda::norm(v, std::numeric_limits<double>::infinity()), 1);
-  EXPECT_EQ(nda::norm(v, -std::numeric_limits<double>::infinity()), 1);
-  EXPECT_EQ(nda::norm(v, 1.5), std::pow(double(size), 1.0 / 1.5));
+  EXPECT_EQ(nda::linalg::norm(v), nda::linalg::norm(v, 2.0));
+  EXPECT_EQ(nda::linalg::norm(v, 0.0), size);
+  EXPECT_EQ(nda::linalg::norm(v, 1.0), size);
+  EXPECT_EQ(nda::linalg::norm(v, 2.0), std::sqrt(size));
+  EXPECT_EQ(nda::linalg::norm(v, std::numeric_limits<double>::infinity()), 1);
+  EXPECT_EQ(nda::linalg::norm(v, -std::numeric_limits<double>::infinity()), 1);
+  EXPECT_EQ(nda::linalg::norm(v, 1.5), std::pow(double(size), 1.0 / 1.5));
 }
-
-// Check that the p-norm is correct by comparing it to its definition.
-bool check_norm_p(auto &v, double p) { return norm(v, p) == std::pow(nda::sum(nda::pow(nda::abs(v), p)), 1.0 / p); };
 
 TEST(NDA, LinearAlgebraNormRand) {
   const int size = 100;
   auto v         = nda::rand<double>(size);
 
-  EXPECT_EQ(nda::norm(v), nda::norm(v, 2.0));
-  EXPECT_EQ(nda::norm(v, 0.0), size);
-  EXPECT_EQ(nda::norm(v, 1.0), nda::sum(abs(v)));
-  EXPECT_EQ(nda::norm(v, 2.0), std::sqrt(std::real(nda::blas::dotc(v, v))));
-  EXPECT_EQ(nda::norm(v, std::numeric_limits<double>::infinity()), nda::max_element(v));
-  EXPECT_EQ(nda::norm(v, -std::numeric_limits<double>::infinity()), nda::min_element(v));
+  EXPECT_EQ(nda::linalg::norm(v), nda::linalg::norm(v, 2.0));
+  EXPECT_EQ(nda::linalg::norm(v, 0.0), size);
+  EXPECT_EQ(nda::linalg::norm(v, 1.0), nda::sum(abs(v)));
+  EXPECT_EQ(nda::linalg::norm(v, 2.0), std::sqrt(std::real(nda::blas::dotc(v, v))));
+  EXPECT_EQ(nda::linalg::norm(v, std::numeric_limits<double>::infinity()), nda::max_element(v));
+  EXPECT_EQ(nda::linalg::norm(v, -std::numeric_limits<double>::infinity()), nda::min_element(v));
 
   EXPECT_TRUE((check_norm_p(v, -1.5)));
   EXPECT_TRUE((check_norm_p(v, -1.0)));
@@ -435,12 +435,11 @@ TEST(NDA, LinearAlgebraNormRand) {
 }
 
 TEST(NDA, LinearAlgebraNormExample) {
-  // check various p-norms of a vector
   auto run_checks = [](auto const &v) {
-    EXPECT_EQ(nda::norm(v), nda::norm(v, 2.0));
-    EXPECT_EQ(nda::norm(v, 0.0), 3);
-    EXPECT_EQ(nda::norm(v, 1.0), 4);
-    EXPECT_NEAR(nda::norm(v, 2.0), std::sqrt(7.5), 1e-15);
+    EXPECT_EQ(nda::linalg::norm(v), nda::linalg::norm(v, 2.0));
+    EXPECT_EQ(nda::linalg::norm(v, 0.0), 3);
+    EXPECT_EQ(nda::linalg::norm(v, 1.0), 4);
+    EXPECT_NEAR(nda::linalg::norm(v, 2.0), std::sqrt(7.5), 1e-15);
 
     EXPECT_TRUE((check_norm_p(v, -1.5)));
     EXPECT_TRUE((check_norm_p(v, -1.0)));
@@ -451,8 +450,8 @@ TEST(NDA, LinearAlgebraNormExample) {
   run_checks(v);
   run_checks(1i * v);
   run_checks((1 + 1i) / sqrt(2) * v);
-  EXPECT_EQ(nda::norm(v, std::numeric_limits<double>::infinity()), 2.5);
-  EXPECT_EQ(nda::norm(v, -std::numeric_limits<double>::infinity()), 0.0);
+  EXPECT_EQ(nda::linalg::norm(v, std::numeric_limits<double>::infinity()), 2.5);
+  EXPECT_EQ(nda::linalg::norm(v, -std::numeric_limits<double>::infinity()), 0.0);
 }
 
 // Test the outer product function.
@@ -530,7 +529,7 @@ TEST(NDA, LinearAlgebraSolve) {
   test_solve<std::complex<double>, nda::F_layout>();
 }
 
-// Test the svd functions.
+// Test the svd and svd_in_place functions.
 template <typename T, typename Layout>
 void test_svd() {
   using matrix_t = nda::matrix<T, Layout>;

@@ -161,7 +161,7 @@ namespace nda::lapack {
     auto operator()(vector_const_view<T> b, std::optional<long> /*inner_matrix_dim*/ = {}) const {
       using std::sqrt;
       double err = 0.0;
-      if (M_ != N_) { err = norm(U_N_H_ * b) / sqrt(b.size()); }
+      if (M_ != N_) { err = nda::linalg::norm(U_N_H_ * b) / sqrt(b.size()); }
       return std::pair<vector<T>, double>{A_plus_ * b, err};
     }
 
