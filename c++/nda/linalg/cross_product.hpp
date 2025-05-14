@@ -5,35 +5,40 @@
 
 /**
  * @file
- * @brief Provides a cross product for 3-dimensional vectors or other arrays/views of rank 1.
+ * @brief Provides a cross product for 3-dimensional vectors.
  */
 
 #pragma once
 
+#include "../basic_array.hpp"
+#include "../concepts.hpp"
 #include "../declarations.hpp"
 #include "../macros.hpp"
-#include "../traits.hpp"
+#include "../mem/address_space.hpp"
+#include "../mem/policies.hpp"
 
 namespace nda::linalg {
 
   /**
    * @ingroup linalg_tools
-   * @brief Compute the cross product of two 3-dimensional vectors.
+   * @brief Compute the cross product \f$ \mathbf{x} \times \mathbf{y} \f$ of two 3-dimensional vectors \f$ \mathbf{x} 
+   * \f$ and \f$ \mathbf{y} \f$.
    *
-   * @tparam V Vector type.
-   * @param x Left hand side vector.
-   * @param y Right hand side vector.
-   * @return nda::array of rank 1 containing the cross product of the two vectors.
+   * @tparam X nda::Vector type.
+   * @tparam Y nda::Vector type.
+   * @param x Input vector \f$ \mathbf{x} \f$.
+   * @param y Input vector \f$ \mathbf{y} \f$.
+   * @return nda::vector containing the cross product of the two vectors.
    */
-  template <typename V>
-  auto cross_product(V const &x, V const &y) {
-    EXPECTS_WITH_MESSAGE(x.shape()[0] == 3, "nda::linalg::cross_product: Only defined for 3-dimensional vectors");
-    EXPECTS_WITH_MESSAGE(y.shape()[0] == 3, "nda::linalg::cross_product: Only defined for 3-dimensional vectors");
-    array<get_value_t<V>, 1> r(3);
-    r(0) = x(1) * y(2) - y(1) * x(2);
-    r(1) = -x(0) * y(2) + y(0) * x(2);
-    r(2) = x(0) * y(1) - y(0) * x(1);
-    return r;
+  template <Vector X, Vector Y>
+    requires(nda::mem::have_host_compatible_addr_space<X, Y>)
+  auto cross_product(X const &x, Y const &y) {
+    EXPECTS(x.size() == 3 and y.size() == 3);
+    auto res = vector<decltype(x(0) * y(0)), nda::heap<nda::mem::common_addr_space<X, Y>>>(3);
+    res(0)   = x(1) * y(2) - y(1) * x(2);
+    res(1)   = -x(0) * y(2) + y(0) * x(2);
+    res(2)   = x(0) * y(1) - y(0) * x(1);
+    return res;
   }
 
 } // namespace nda::linalg
