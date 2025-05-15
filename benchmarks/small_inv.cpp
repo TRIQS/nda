@@ -12,7 +12,7 @@ static void inv(benchmark::State &state) {
   for (int i = 0; i < N; ++i)
     for (int j = 0; j < N; ++j) W(i, j) = (i > j ? 0.5 + i + 2.5 * j : i * 0.8 - j - 0.5);
 
-  while (state.KeepRunning()) { benchmark::DoNotOptimize(Wi = inverse(W)); }
+  while (state.KeepRunning()) { benchmark::DoNotOptimize(Wi = nda::linalg::inv(W)); }
 }
 
 BENCHMARK_TEMPLATE(inv, 1);

@@ -496,7 +496,7 @@ namespace nda {
     // two matrices: M / M
     if constexpr (l_algebra == 'M') {
       static_assert(r_algebra == 'M', "Error in nda::operator*: Can not divide a matrix by an array/vector");
-      return std::forward<L>(l) * inverse(matrix<get_value_t<R>>{std::forward<R>(r)});
+      return std::forward<L>(l) * linalg::inv(matrix<get_value_t<R>>{std::forward<R>(r)});
     }
   }
 
@@ -533,7 +533,7 @@ namespace nda {
   Array auto operator/(S &&s, A &&a) { // NOLINT (S&& is mandatory for proper concept Array <: typename to work)
     static constexpr char algebra = get_algebra<A>;
     if constexpr (algebra == 'M')
-      return s * inverse(matrix<get_value_t<A>>{std::forward<A>(a)});
+      return s * linalg::inv(matrix<get_value_t<A>>{std::forward<A>(a)});
     else
       return expr<'/', std::decay_t<S>, A>{s, std::forward<A>(a)};
   }

@@ -12,6 +12,8 @@
 #include <limits>
 #include <type_traits>
 
+using namespace std::complex_literals;
+
 // Test the generic dot/dotc function.
 auto exp_dot(auto const &a, auto const &b) {
   auto res = a(0) * b(0);
@@ -254,84 +256,77 @@ TEST(NDA, LinearAlgebraDeterminant) {
   test_determinant<nda::C_layout>();
 }
 
-// Test inverse for a specific memory layout.
-template <typename L>
-void test_inverse() {
-  using matrix_t = nda::matrix<double, L>;
+// Test general inverse functions.
+template <typename T, typename Layout>
+void test_inv() {
+  using matrix_t = nda::matrix<T, Layout>;
+  T fac          = 1.0;
+  if constexpr (nda::is_complex_v<T>) fac = 1.0i;
 
-  matrix_t W(3, 3), Winv(3, 3);
-  for (int i = 0; i < 3; ++i)
-    for (int j = 0; j < 3; ++j) W(i, j) = (i > j ? i + 2.5 * j : i * 0.8 - j);
+  // A is 3x3, B is 2x2, C is 1x1
+  auto A = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
+  A *= fac;
+  auto Ainv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
+  Ainv /= fac;
+  auto B = matrix_t{{1, 2}, {0, 1}};
+  B *= fac;
+  auto Binv = matrix_t{{1, -2}, {0, 1}};
+  Binv /= fac;
+  auto C = matrix_t{{3}};
+  C *= fac;
+  auto Cinv = matrix_t{{1.0 / 3.0}};
+  Cinv /= fac;
 
-  Winv = inverse(W);
-  EXPECT_NEAR(determinant(Winv), -1 / 7.8, 1.e-12);
+  // lambda that checks inverse functions for small matrices
+  auto check_small_mat = [](auto const &M, auto const &Minv, auto opt_inv) {
+    auto Minv2 = nda::linalg::inv(M);
+    EXPECT_ARRAY_NEAR(Minv, Minv2);
+    Minv2 = nda::linalg::inv(Minv2);
+    EXPECT_ARRAY_NEAR(M, Minv2);
 
-  nda::matrix<double, nda::F_layout> id(W * Winv);
-  for (int i = 0; i < 3; ++i)
-    for (int j = 0; j < 3; ++j) EXPECT_NEAR(std::abs(id(i, j)), (i == j ? 1 : 0), 1.e-13);
+    auto Minv3 = M;
+    nda::linalg::inv_in_place(Minv3);
+    EXPECT_ARRAY_NEAR(Minv, Minv3);
+    nda::linalg::inv_in_place(Minv3);
+    EXPECT_ARRAY_NEAR(M, Minv3);
 
-  // calculate the inverse of the inverse by calling the lapack routines directly
-  nda::array<int, 1> ipiv(3);
-  ipiv     = 0;
-  int info = nda::lapack::getrf(Winv, ipiv);
-  EXPECT_EQ(info, 0);
-  info = nda::lapack::getri(Winv, ipiv);
-  EXPECT_EQ(info, 0);
-  EXPECT_ARRAY_NEAR(Winv, W, 1.e-12);
+    auto Minv4 = M;
+    opt_inv(Minv4);
+    EXPECT_ARRAY_NEAR(Minv, Minv4);
+    opt_inv(Minv4);
+    EXPECT_ARRAY_NEAR(M, Minv4);
+  };
+
+  check_small_mat(A, Ainv, [](auto &M) { return nda::linalg::inv_in_place_3d(M); });
+  check_small_mat(B, Binv, [](auto &M) { return nda::linalg::inv_in_place_2d(M); });
+  check_small_mat(C, Cinv, [](auto &M) { return nda::linalg::inv_in_place_1d(M); });
+
+  // matrix view
+  EXPECT_ARRAY_NEAR(nda::linalg::inv(A(nda::range(0, 2), nda::range(0, 2))), Binv);
+
+  // 4x4 matrix
+  auto D = matrix_t{{2, 2, 2, 2}, {2, 4, 6, 8}, {2, 6, 12, 20}, {2, 8, 20, 40}};
+  D *= fac;
+  auto Dinv = matrix_t{{2, -3, 2, -0.5}, {-3, 7, -5.5, 1.5}, {2, -5.5, 5, -1.5}, {-0.5, 1.5, -1.5, 0.5}};
+  Dinv /= fac;
+
+  auto Dinv2 = nda::linalg::inv(D);
+  EXPECT_ARRAY_NEAR(Dinv, Dinv2);
+  Dinv2 = nda::linalg::inv(Dinv2);
+  EXPECT_ARRAY_NEAR(D, Dinv2);
+
+  auto Dinv3 = D;
+  nda::linalg::inv_in_place(Dinv3);
+  EXPECT_ARRAY_NEAR(Dinv, Dinv3);
+  nda::linalg::inv_in_place(Dinv3);
+  EXPECT_ARRAY_NEAR(D, Dinv3);
 }
 
 TEST(NDA, LinearAlgebraInverse) {
-  test_inverse<nda::F_layout>();
-  test_inverse<nda::C_layout>();
-}
-
-TEST(NDA, LinearAlgebraInverseInvolution) {
-  using matrix_t = nda::matrix<double, nda::C_layout>;
-
-  matrix_t W(3, 3);
-  for (int i = 0; i < 3; ++i)
-    for (int j = 0; j < 3; ++j) W(i, j) = (i > j ? i + 2.5 * j : i * 0.8 - j);
-  auto W_copy = W;
-
-  W = inverse(W);
-  W = inverse(W);
-  EXPECT_ARRAY_NEAR(W, W_copy, 1.e-12);
-}
-
-TEST(NDA, LinearAlgebraInverseSlice) {
-  using matrix_t = nda::matrix<double, nda::C_layout>;
-
-  matrix_t W(3, 3);
-  for (int i = 0; i < 3; ++i)
-    for (int j = 0; j < 3; ++j) W(i, j) = (i > j ? i + 2.5 * j : i * 0.8 - j);
-
-  auto V        = W(nda::range(0, 3, 2), nda::range(0, 3, 2));
-  matrix_t Vinv = inverse(V);
-  matrix_t Vinv_ref{{-0.1, 0.5}, {-0.5, 0.0}};
-  EXPECT_ARRAY_NEAR(Vinv, Vinv_ref, 1.e-12);
-
-  W = inverse(W);
-
-  auto U        = W(nda::range(0, 3, 2), nda::range(0, 3, 2));
-  matrix_t Uinv = inverse(U);
-  matrix_t Uinv_ref{{-5.0, 4.0}, {24.5, -27.4}};
-  EXPECT_ARRAY_NEAR(Uinv, Uinv_ref, 1.e-12);
-}
-
-TEST(NDA, LinearAlgebraInverseSmall) {
-  for (auto n : {1, 2, 3}) {
-
-    nda::matrix<double> W(n, n);
-    for (int i = 0; i < n; ++i)
-      for (int j = 0; j < n; ++j) W(i, j) = (i > j ? 0.5 + i + 2.5 * j : i * 0.8 - j - 0.5);
-
-    auto Winv = inverse(W);
-    EXPECT_NEAR(determinant(Winv), 1.0 / determinant(W), 1.e-12);
-    EXPECT_ARRAY_NEAR(W * Winv, nda::eye<double>(n), 1.e-13);
-
-    auto Winv_inv = inverse(Winv);
-    EXPECT_ARRAY_NEAR(Winv_inv, W, 1.e-12);
-  }
+  test_inv<double, nda::C_layout>();
+  test_inv<double, nda::F_layout>();
+  test_inv<std::complex<double>, nda::C_layout>();
+  test_inv<std::complex<double>, nda::F_layout>();
 }
 
 // Check that the eigenvectors/values are correct.

@@ -19,14 +19,14 @@ TEST(NDA, InverseOfTensorProductOfMatrices) {
   nda::matrix<double> B(2, 2), C(3, 3), Binv, Cinv;
   C(i_, j_) << 1.7 / (3.4 * i_ - 2.3 * j_ + 1);
   B(i_, j_) << 2 * i_ + j_;
-  Binv = inverse(B);
-  Cinv = inverse(C);
+  Binv = nda::linalg::inv(B);
+  Cinv = nda::linalg::inv(C);
 
   {
     nda::array<double, 4> A(2, 3, 2, 3);
     A(i_, j_, k_, l_) << B(i_, k_) * C(j_, l_);
     auto M = make_matrix_view(group_indices_view(A, nda::idx_group<0, 1>, nda::idx_group<2, 3>));
-    M      = inverse(M);
+    M      = nda::linalg::inv(M);
     nda::array<double, 4> R(A.shape());
     R(i_, j_, k_, l_) << Binv(i_, k_) * Cinv(j_, l_);
     EXPECT_ARRAY_NEAR(R, A, 5.e-15);
@@ -36,7 +36,7 @@ TEST(NDA, InverseOfTensorProductOfMatrices) {
     nda::array<double, 4> A(2, 3, 2, 3);
     A(i_, j_, k_, l_) << B(i_, k_) * C(j_, l_);
     auto M = make_matrix_view(group_indices_view(A, nda::idx_group<2, 3>, nda::idx_group<0, 1>));
-    M      = inverse(M);
+    M      = nda::linalg::inv(M);
     nda::array<double, 4> R(A.shape());
     R(i_, j_, k_, l_) << Binv(i_, k_) * Cinv(j_, l_);
     EXPECT_ARRAY_NEAR(R, A, 5.e-15);
@@ -46,7 +46,7 @@ TEST(NDA, InverseOfTensorProductOfMatrices) {
     nda::array<double, 4, nda::basic_layout<0, nda::encode(std::array{1, 0, 3, 2}), nda::layout_prop_e::contiguous>> A(2, 3, 2, 3);
     A(i_, j_, k_, l_) << B(i_, k_) * C(j_, l_);
     auto M = make_matrix_view(group_indices_view(A, nda::idx_group<0, 1>, nda::idx_group<2, 3>));
-    M      = inverse(M);
+    M      = nda::linalg::inv(M);
     nda::array<double, 4> R(A.shape());
     R(i_, j_, k_, l_) << Binv(i_, k_) * Cinv(j_, l_);
     EXPECT_ARRAY_NEAR(R, A, 5.e-15);
@@ -56,7 +56,7 @@ TEST(NDA, InverseOfTensorProductOfMatrices) {
     nda::array<double, 4, nda::basic_layout<0, nda::encode(std::array{1, 0, 3, 2}), nda::layout_prop_e::contiguous>> A(2, 3, 2, 3);
     A(i_, j_, k_, l_) << B(i_, k_) * C(j_, l_);
     auto M = make_matrix_view(group_indices_view(A, nda::idx_group<2, 3>, nda::idx_group<0, 1>));
-    M      = inverse(M);
+    M      = nda::linalg::inv(M);
     nda::array<double, 4> R(A.shape());
     R(i_, j_, k_, l_) << Binv(i_, k_) * Cinv(j_, l_);
     EXPECT_ARRAY_NEAR(R, A, 5.e-15);
@@ -66,7 +66,7 @@ TEST(NDA, InverseOfTensorProductOfMatrices) {
     nda::array<double, 4, nda::basic_layout<0, nda::encode(std::array{0, 2, 1, 3}), nda::layout_prop_e::contiguous>> A(2, 2, 3, 3);
     A(i_, k_, j_, l_) << B(i_, k_) * C(j_, l_);
     auto M = make_matrix_view(group_indices_view(A, nda::idx_group<0, 2>, nda::idx_group<1, 3>));
-    M      = inverse(M);
+    M      = nda::linalg::inv(M);
     nda::array<double, 4> R(A.shape());
     R(i_, k_, j_, l_) << Binv(i_, k_) * Cinv(j_, l_);
     EXPECT_ARRAY_NEAR(R, A, 5.e-15);
