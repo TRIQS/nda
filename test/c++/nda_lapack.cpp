@@ -15,6 +15,7 @@
 #include <type_traits>
 
 using namespace nda;
+using namespace std::complex_literals;
 
 // Test LAPACK gtsv function.
 void test_gtsv(auto dl, auto d, auto du, auto B, auto exp) {
