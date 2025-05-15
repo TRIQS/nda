@@ -235,30 +235,9 @@ TEST(NDA, LinearAlgebraMatmulWithLazyExpressions) {
   EXPECT_ARRAY_NEAR(nda::linalg::matmul(nda::sin(A), nda::sin(A)), nda::linalg::matmul(A_sin, A_sin), 1.e-13);
 }
 
-// Test determinant for a specific memory layout.
-template <typename L>
-void test_determinant() {
-  nda::matrix<double, L> W1(1, 1);
-  W1(0, 0) = 1.0;
-  EXPECT_NEAR(determinant(W1), 1.0, 1.e-12);
-
-  nda::matrix<double, L> W2{{1.0, 2.0}, {3.0, 4.0}};
-  EXPECT_NEAR(determinant(W2), -2.0, 1.e-12);
-
-  nda::matrix<double, L> W3(3, 3);
-  for (int i = 0; i < 3; ++i)
-    for (int j = 0; j < 3; ++j) W3(i, j) = (i > j ? i + 2.5 * j : i * 0.8 - j);
-  EXPECT_NEAR(determinant(W3), -7.8, 1.e-12);
-}
-
-TEST(NDA, LinearAlgebraDeterminant) {
-  test_determinant<nda::F_layout>();
-  test_determinant<nda::C_layout>();
-}
-
-// Test general inverse functions.
+// Test general inverse and determinant functions.
 template <typename T, typename Layout>
-void test_inv() {
+void test_inv_and_det() {
   using matrix_t = nda::matrix<T, Layout>;
   T fac          = 1.0;
   if constexpr (nda::is_complex_v<T>) fac = 1.0i;
@@ -268,65 +247,79 @@ void test_inv() {
   A *= fac;
   auto Ainv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
   Ainv /= fac;
+  T detA = std::pow(fac, 3);
   auto B = matrix_t{{1, 2}, {0, 1}};
   B *= fac;
   auto Binv = matrix_t{{1, -2}, {0, 1}};
   Binv /= fac;
+  T detB = std::pow(fac, 2);
   auto C = matrix_t{{3}};
   C *= fac;
   auto Cinv = matrix_t{{1.0 / 3.0}};
   Cinv /= fac;
+  T detC = 3 * fac;
 
   // lambda that checks inverse functions for small matrices
-  auto check_small_mat = [](auto const &M, auto const &Minv, auto opt_inv) {
+  auto check_small_mat = [](auto const &M, auto const &Minv, auto detM, auto opt_inv) {
     auto Minv2 = nda::linalg::inv(M);
     EXPECT_ARRAY_NEAR(Minv, Minv2);
+    EXPECT_COMPLEX_NEAR(nda::linalg::det(Minv2), 1.0 / detM);
     Minv2 = nda::linalg::inv(Minv2);
     EXPECT_ARRAY_NEAR(M, Minv2);
+    EXPECT_COMPLEX_NEAR(nda::linalg::det(Minv2), detM);
 
     auto Minv3 = M;
     nda::linalg::inv_in_place(Minv3);
     EXPECT_ARRAY_NEAR(Minv, Minv3);
+    EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Minv3), 1.0 / detM);
     nda::linalg::inv_in_place(Minv3);
     EXPECT_ARRAY_NEAR(M, Minv3);
+    EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Minv3), detM);
 
     auto Minv4 = M;
     opt_inv(Minv4);
     EXPECT_ARRAY_NEAR(Minv, Minv4);
+    EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Minv4), 1.0 / detM);
     opt_inv(Minv4);
     EXPECT_ARRAY_NEAR(M, Minv4);
+    EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Minv4), detM);
   };
 
-  check_small_mat(A, Ainv, [](auto &M) { return nda::linalg::inv_in_place_3d(M); });
-  check_small_mat(B, Binv, [](auto &M) { return nda::linalg::inv_in_place_2d(M); });
-  check_small_mat(C, Cinv, [](auto &M) { return nda::linalg::inv_in_place_1d(M); });
+  check_small_mat(A, Ainv, detA, [](auto &M) { return nda::linalg::inv_in_place_3d(M); });
+  check_small_mat(B, Binv, detB, [](auto &M) { return nda::linalg::inv_in_place_2d(M); });
+  check_small_mat(C, Cinv, detC, [](auto &M) { return nda::linalg::inv_in_place_1d(M); });
 
   // matrix view
   EXPECT_ARRAY_NEAR(nda::linalg::inv(A(nda::range(0, 2), nda::range(0, 2))), Binv);
+  EXPECT_COMPLEX_NEAR(nda::linalg::det(A(nda::range(0, 2), nda::range(0, 2))), detB);
 
   // 4x4 matrix
   auto D = matrix_t{{2, 2, 2, 2}, {2, 4, 6, 8}, {2, 6, 12, 20}, {2, 8, 20, 40}};
   D *= fac;
   auto Dinv = matrix_t{{2, -3, 2, -0.5}, {-3, 7, -5.5, 1.5}, {2, -5.5, 5, -1.5}, {-0.5, 1.5, -1.5, 0.5}};
   Dinv /= fac;
+  T detD = 16 * std::pow(fac, 4);
 
   auto Dinv2 = nda::linalg::inv(D);
   EXPECT_ARRAY_NEAR(Dinv, Dinv2);
+  EXPECT_COMPLEX_NEAR(nda::linalg::det(Dinv2), 1.0 / detD);
   Dinv2 = nda::linalg::inv(Dinv2);
   EXPECT_ARRAY_NEAR(D, Dinv2);
+  EXPECT_COMPLEX_NEAR(nda::linalg::det(Dinv2), detD);
 
   auto Dinv3 = D;
   nda::linalg::inv_in_place(Dinv3);
   EXPECT_ARRAY_NEAR(Dinv, Dinv3);
   nda::linalg::inv_in_place(Dinv3);
   EXPECT_ARRAY_NEAR(D, Dinv3);
+  EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Dinv3), detD);
 }
 
-TEST(NDA, LinearAlgebraInverse) {
-  test_inv<double, nda::C_layout>();
-  test_inv<double, nda::F_layout>();
-  test_inv<std::complex<double>, nda::C_layout>();
-  test_inv<std::complex<double>, nda::F_layout>();
+TEST(NDA, LinearAlgebraInvAndDet) {
+  test_inv_and_det<double, nda::C_layout>();
+  test_inv_and_det<double, nda::F_layout>();
+  test_inv_and_det<std::complex<double>, nda::C_layout>();
+  test_inv_and_det<std::complex<double>, nda::F_layout>();
 }
 
 // Check that the eigenvectors/values are correct.

@@ -12,6 +12,8 @@
 #include <vector>
 #include <utility>
 
+using namespace std::complex_literals;
+
 // Test the BLAS gemm function.
 template <typename T, typename Layout1, typename Layout2, typename Layout3>
 void test_gemm() {
