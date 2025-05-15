@@ -175,5 +175,5 @@ TEST(NDA, MatrixAlgebra) {
   auto M2   = nda::matrix<double>{{1, 2}, {2, 1}};
   auto prod = nda::matrix<double>{{5, 4}, {11, 10}};
   EXPECT_EQ(prod, nda::make_regular(M1 * M2));
-  EXPECT_EQ(nda::make_regular(M1 / M2), nda::make_regular(M1 * nda::inverse(M2)));
+  EXPECT_EQ(nda::make_regular(M1 / M2), nda::make_regular(M1 * nda::linalg::inv(M2)));
 }

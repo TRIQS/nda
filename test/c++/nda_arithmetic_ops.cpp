@@ -178,7 +178,7 @@ TEST_F(NDAArithmeticOps, ScalarDivision) {
 
   // scalar - matrix division
   auto N_d        = x / M_d_sq;
-  auto inv_M_d_sq = nda::inverse(M_d_sq);
+  auto inv_M_d_sq = nda::linalg::inv(M_d_sq);
   nda::for_each(mat_sq_shape, [&](auto... idxs) { EXPECT_DOUBLE_EQ(N_d(idxs...), x * inv_M_d_sq(idxs...)); });
 
   // matrix - scalar division
@@ -425,7 +425,7 @@ TEST_F(NDAArithmeticOps, MatrixExpressions) {
   EXPECT_ARRAY_NEAR(nda::matrix<double>(A_d * (B_d + C_d)), (nda::matrix<long>{{22, 56}, {262, 666}}));
 
   // matrix division
-  EXPECT_ARRAY_NEAR(nda::matrix<double>(2 * nda::inverse(A_d)), nda::matrix<double>(2 / A_d));
+  EXPECT_ARRAY_NEAR(nda::matrix<double>(2 * nda::linalg::inv(A_d)), nda::matrix<double>(2 / A_d));
 
   // scalar division
   EXPECT_ARRAY_NEAR(nda::matrix<double>(A_d / 2), (nda::matrix<double>{{0.0, 0.5}, {5.0, 5.5}}));
