@@ -5,7 +5,7 @@
 
 /**
  * @file
- * @brief Provides a generic interface to the BLAS `ger` and `geru` routine.
+ * @brief Provides a generic interface to the BLAS `ger`, `geru` and `gerc` routine.
  */
 
 #pragma once
@@ -75,6 +75,54 @@ namespace nda::blas {
 #endif
     } else {
       f77::ger(m.extent(0), m.extent(1), alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], m.data(), get_ld(m));
+    }
+  }
+
+  /**
+   * @brief Interface to the BLAS `gerc` routine.
+   * 
+   * @details This function performs the rank 1 operation
+   * \f[
+   *   \mathbf{M} \leftarrow \alpha \mathbf{x} \mathbf{y}^H + \mathbf{M} \; ,
+   * \f]
+   * where \f$ \alpha \f$ is a scalar, \f$ \mathbf{x} \f$ is an \f$ m \f$ element vector, \f$ \mathbf{y} \f$ is an \f$ n
+   * \f$ element vector and \f$ \mathbf{M} \f$ is an \f$ m \times n \f$ matrix.
+   * 
+   * If the value type of the input vectors/matrix is real, it calls nda::blas::ger.
+   * 
+   * @note Matrix \f$ \mathbf{M} \f$ has to be in Fortran layout.
+   *
+   * @tparam X nda::MemoryVector type.
+   * @tparam Y nda::MemoryVector type.
+   * @tparam M nda::MemoryMatrix type.
+   * @param alpha Input scalar \f$ \alpha \f$.
+   * @param x Input vector \f$ \mathbf{x} \f$ of size \f$ m \f$.
+   * @param y Input vector \f$ \mathbf{y} \f$  of size \f$ n \f$.
+   * @param m Input/Output matrix \f$ \mathbf{M} \f$  of size \f$ m \times n \f$ to which the outer product is added.
+   */
+  template <MemoryVector X, MemoryVector Y, MemoryMatrix M>
+    requires(have_same_value_type_v<X, Y, M> and mem::have_compatible_addr_space<X, Y, M> and is_blas_lapack_v<get_value_t<X>>)
+  void gerc(get_value_t<X> alpha, X const &x, Y const &y, M &&m) { // NOLINT (temporary views are allowed here)
+    static_assert(has_F_layout<M>, "Error in nda::blas::gerc: M must be in Fortran layout");
+
+    // check the dimensions of the input/output arrays/views
+    EXPECTS(m.extent(0) == x.size());
+    EXPECTS(m.extent(1) == y.size());
+
+    // arrays/views must be BLAS compatible
+    EXPECTS(m.indexmap().min_stride() == 1);
+
+    // perform actual library call
+    if constexpr (!is_complex_v<get_value_t<X>>) {
+      return ger(alpha, x, y, m);
+    } else if constexpr (mem::have_device_compatible_addr_space<X, Y, M>) {
+#if defined(NDA_HAVE_DEVICE)
+      device::gerc(m.extent(0), m.extent(1), alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], m.data(), get_ld(m));
+#else
+      compile_error_no_gpu();
+#endif
+    } else {
+      f77::gerc(m.extent(0), m.extent(1), alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], m.data(), get_ld(m));
     }
   }
 

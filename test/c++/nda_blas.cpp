@@ -204,45 +204,67 @@ TEST(NDA, BLASGemv) {
   test_gemv<std::complex<double>, nda::F_layout>();
 }
 
-// Test the BLAS ger function.
-template <typename T, typename Layout>
-void test_ger() {
+// Test the BLAS ger/gerc function.
+template <typename T, typename Layout, bool star>
+void test_ger(auto ger) {
+  T fac = 1.0;
+  if constexpr (nda::is_complex_v<T>) fac = 1.0i;
+
   // resulting 2 x 2 matrix
+  auto exp_M1 = nda::matrix<T>{{1, 2}, {2, 4}};
+  if constexpr (nda::is_complex_v<T> and not star) exp_M1 *= -1;
   auto M1 = nda::matrix<T, Layout>::zeros(2, 2);
   nda::vector<T> v{1, 2};
-  nda::blas::ger(1.0, v, v, M1);
-  EXPECT_ARRAY_NEAR(M1, nda::matrix<T>{{1, 2}, {2, 4}});
-  nda::blas::ger(1.0, v, v, M1);
-  EXPECT_ARRAY_NEAR(M1, nda::matrix<T>{{2, 4}, {4, 8}});
+  v *= fac;
+  ger(1.0, v, v, M1);
+  EXPECT_ARRAY_NEAR(M1, exp_M1);
+  ger(1.0, v, v, M1);
+  EXPECT_ARRAY_NEAR(M1, exp_M1 * 2);
 
   // resulting 2 x 3 matrix
+  auto exp_M2 = nda::matrix<T>{{3, 4, 5}, {6, 8, 10}};
+  if constexpr (nda::is_complex_v<T>) exp_M2 *= fac;
   auto M2 = nda::matrix<T, Layout>::zeros(2, 3);
   nda::vector<T> w{3, 4, 5};
-  nda::blas::ger(1.0, v, w, M2);
-  EXPECT_ARRAY_NEAR(M2, nda::matrix<T>{{3, 4, 5}, {6, 8, 10}});
-  nda::blas::ger(1.0, v, w, M2);
-  EXPECT_ARRAY_NEAR(M2, nda::matrix<T>{{6, 8, 10}, {12, 16, 20}});
+  ger(1.0, v, w, M2);
+  EXPECT_ARRAY_NEAR(M2, exp_M2);
+  ger(1.0, v, w, M2);
+  EXPECT_ARRAY_NEAR(M2, exp_M2 * 2);
 
   // resulting 3 x 2 matrix
+  auto exp_M3 = nda::matrix<T>{{3, 6}, {4, 8}, {5, 10}};
+  if constexpr (nda::is_complex_v<T> and not star) exp_M3 *= fac;
+  if constexpr (nda::is_complex_v<T> and star) exp_M3 *= -fac;
   auto M3 = nda::matrix<T, Layout>::zeros(3, 2);
-  nda::blas::ger(1.0, w, v, M3);
-  EXPECT_ARRAY_NEAR(M3, nda::matrix<T>{{3, 6}, {4, 8}, {5, 10}});
-  nda::blas::ger(1.0, w, v, M3);
-  EXPECT_ARRAY_NEAR(M3, nda::matrix<T>{{6, 12}, {8, 16}, {10, 20}});
+  ger(1.0, w, v, M3);
+  EXPECT_ARRAY_NEAR(M3, exp_M3);
+  ger(1.0, w, v, M3);
+  EXPECT_ARRAY_NEAR(M3, exp_M3 * 2);
 
   // outer product of strided views
-  M2             = 0;
+  auto exp_M4 = nda::matrix<T>{{6, 8, 10}, {12, 16, 20}};
+  if constexpr (nda::is_complex_v<T> and not star) exp_M4 *= -1.0;
+  auto M4        = nda::matrix<T, Layout>::zeros(2, 3);
   auto v_strided = nda::vector<T>{0, 1, 0, 2, 0};
+  v_strided *= fac;
   auto w_strided = nda::vector<T>{3, 0, 0, 4, 0, 0, 5};
-  nda::blas::ger(2.0, v_strided(nda::range(1, 5, 2)), w_strided(nda::range(0, 7, 3)), M2);
-  EXPECT_ARRAY_NEAR(M2, nda::matrix<T>{{6, 8, 10}, {12, 16, 20}});
+  w_strided *= fac;
+  ger(2.0, v_strided(nda::range(1, 5, 2)), w_strided(nda::range(0, 7, 3)), M4);
+  EXPECT_ARRAY_NEAR(M4, exp_M4);
 }
 
 TEST(NDA, BLASGer) {
-  test_ger<double, nda::C_layout>();
-  test_ger<double, nda::F_layout>();
-  test_ger<std::complex<double>, nda::C_layout>();
-  test_ger<std::complex<double>, nda::C_layout>();
+  auto ger = [](auto alpha, auto &&x, auto &&y, auto &&m) { return nda::blas::ger(alpha, x, y, m); };
+  test_ger<double, nda::C_layout, false>(ger);
+  test_ger<double, nda::F_layout, false>(ger);
+  test_ger<std::complex<double>, nda::C_layout, false>(ger);
+  test_ger<std::complex<double>, nda::F_layout, false>(ger);
+}
+
+TEST(NDA, BLASGerc) {
+  auto gerc = [](auto alpha, auto &&x, auto &&y, auto &&m) { return nda::blas::gerc(alpha, x, y, m); };
+  test_ger<double, nda::F_layout, true>(gerc);
+  test_ger<std::complex<double>, nda::F_layout, true>(gerc);
 }
 
 // Test the BLAS dot/dotc function.
