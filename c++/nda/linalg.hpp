@@ -16,7 +16,7 @@
 #include "./linalg/cross_product.hpp"
 #include "./linalg/det.hpp"
 #include "./linalg/dot.hpp"
-#include "./linalg/eigenelements.hpp"
+#include "./linalg/eigh.hpp"
 #include "./linalg/inv.hpp"
 #include "./linalg/matmul.hpp"
 #include "./linalg/matvecmul.hpp"
