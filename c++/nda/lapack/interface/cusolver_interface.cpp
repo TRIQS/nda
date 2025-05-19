@@ -7,7 +7,6 @@
  * @file
  * @brief Implementation details for lapack/interface/cusolver_interface.hpp.
  */
-#include <mpi/mpi.hpp>
 #include <nda/nda.hpp>
 #include "./cusolver_interface.hpp"
 #include "../../basic_array.hpp"

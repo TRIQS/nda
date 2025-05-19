@@ -331,7 +331,7 @@ TEST_F(NDAArrayAndView, CrossConstructDoubleFromIntArray) {
 
 TEST_F(NDAArrayAndView, CrossConstructComplexFromDoubleArray) {
   // construct a complex array from a double array
-  nda::array<double, 2> A_d(2, 2);
+  auto A_d = nda::rand<double>(2, 2);
   nda::array<std::complex<double>, 2> A_c(2, 2);
 
   // double from complex does not compile
@@ -954,7 +954,7 @@ TEST_F(NDAArrayAndView, StrideOrderOfArrays) {
 }
 
 #if defined(__has_feature)
-#if !__has_feature(address_sanitizer)
+#if !__has_feature(address_sanitizer) && !__has_feature(memory_sanitizer)
 TEST_F(NDAArrayAndView, BadAlloc) { EXPECT_THROW(nda::vector<int>(long(1e16)), std::bad_alloc); }
 #endif
 #endif

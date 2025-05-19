@@ -46,8 +46,14 @@ namespace nda::blas {
   void gemv_generic(get_value_t<A> alpha, A const &a, X const &x, get_value_t<A> beta, Y &&y) { // NOLINT (temporary views are allowed here)
     EXPECTS(a.extent(1) == x.extent(0));
     EXPECTS(a.extent(0) == y.extent(0));
+
+    if (beta == 0.0) {
+      y = 0 * alpha;
+    } else {
+      y *= beta;
+    }
+
     for (int i = 0; i < a.extent(0); ++i) {
-      y(i) = beta * y(i);
       for (int k = 0; k < a.extent(1); ++k) y(i) += alpha * a(i, k) * x(k);
     }
   }

@@ -50,9 +50,15 @@ namespace nda::blas {
     EXPECTS(a.extent(1) == b.extent(0));
     EXPECTS(a.extent(0) == c.extent(0));
     EXPECTS(b.extent(1) == c.extent(1));
+
+    if (beta == 0.0) {
+      c = 0 * alpha;
+    } else {
+      c *= beta;
+    }
+
     for (int i = 0; i < a.extent(0); ++i) {
       for (int j = 0; j < b.extent(1); ++j) {
-        c(i, j) = beta * c(i, j);
         for (int k = 0; k < a.extent(1); ++k) c(i, j) += alpha * a(i, k) * b(k, j);
       }
     }

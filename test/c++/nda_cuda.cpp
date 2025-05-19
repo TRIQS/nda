@@ -109,8 +109,8 @@ TEST(NDA, CudaAssignFromView) {
   EXPECT_ARRAY_EQ(B, A(nda::range::all, 0, 0, 0));
 }
 
-TEST(NDA, CudaFill) {
-
+TEST(NDA, CudaFill) 
+{
   {
     auto A = array_t<1>(N,2.5);
     auto A_d = cuarray_t<1>(N);
@@ -139,6 +139,19 @@ TEST(NDA, CudaFill) {
     A_v() = value_t{1.0};
     nda::mem::fill2D_n<nda::mem::Device>(A_d.data(),A_v.strides()[0],A_v.extent(1),A_v.extent(0),value_t{1.0});
     EXPECT_ARRAY_EQ(nda::to_host(A_d), A);
+  }
+
+  {
+    // Contiguous fill
+    auto A_d = cuarray_t<2>(N, N);
+    A_d      = 1.0;
+    EXPECT_ARRAY_EQ(to_host(A_d), nda::ones<value_t>(N, N));
+
+    // Non-contiguous fill
+    auto B_d                                   = cuarray_t<2>(N, N);
+    B_d(nda::range::all, nda::range(N / 2))    = 1.0;
+    B_d(nda::range::all, nda::range(N / 2, N)) = 1.0;
+    EXPECT_ARRAY_EQ(to_host(B_d), nda::ones<value_t>(N, N));
   }
 }
 

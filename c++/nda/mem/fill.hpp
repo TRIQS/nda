@@ -21,67 +21,91 @@
 #include <vector>
 
 #include "address_space.hpp"
-#include "../macros.hpp"
 #include "../traits.hpp"
 
 namespace nda::mem {
 
+  /**
+   * @brief Fills a range of memory with a specified value.
+   *
+   * The behavior depends on the AddressSpace (Host, Device, or Unified).
+   *
+   * @tparam AdrSp The address space (e.g., Host, Device, Unified).
+   * @tparam T The type of the elements to fill.
+   * @param first Pointer to the beginning of the range.
+   * @param count Number of elements to fill.
+   * @param value The value to fill the range with.
+   * @return Pointer to the end of the filled range.
+   */
   template <AddressSpace AdrSp, typename T>
+    requires(nda::is_scalar_or_convertible_v<T>)
   T *fill_n(T *first, size_t count, const T &value) {
     check_adr_sp_valid<AdrSp>();
-    static_assert(nda::is_scalar_or_convertible_v<T>, "Incompatible scalar type");
     static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
 
     if constexpr (AdrSp == Host) {
       return std::fill_n(first, count, value);
     } else { // Device or Unified
-      if (std::find_if((char const *)(&value), (char const *)(&value) + sizeof(T), [](char c) { return c != 0; })
-          == (char const *)(&value) + sizeof(T)) {
-        device_error_check(cudaMemset((void *)first, 0, count * sizeof(T)), "cudaMemset");
+      auto value_bytes = std::as_bytes(std::span(&value, 1));
+      bool is_zero     = std::ranges::equal(value_bytes, std::views::repeat(std::byte{0}));
+      if (is_zero) {
+        device_error_check(cudaMemset(first, 0, count * sizeof(T)), "cudaMemset");
       } else {
-        // MAM: temporary, use kernel/thrust/foreach/... when available
-        int v             = 0;
-        uint8_t const *ui = reinterpret_cast<uint8_t const *>(&value);
-        uint8_t *fn       = reinterpret_cast<uint8_t *>(first);
         for (int n = 0; n < sizeof(T); ++n) {
-          v = 0; // just in case
-          v = *(ui + n);
-          device_error_check(cudaMemset2D((void *)(fn + n), sizeof(T), v, 1, count), "cudaMemset2D");
+          const int byte_value = static_cast<int>(value_bytes[n]);
+          device_error_check(cudaMemset2D((char *)(first) + n, sizeof(T), byte_value, 1, count), "cudaMemset2D");
         }
       }
       return first + count;
     }
   }
 
+  /**
+   * @brief Fills a range of memory between two pointers with a specified value.
+   *
+   * Internally calls `fill_n`.
+   *
+   * @tparam AdrSp The address space (e.g., Host, Device, Unified).
+   * @tparam T The type of the elements to fill.
+   * @param first Pointer to the beginning of the range.
+   * @param end Pointer to the end of the range.
+   * @param value The value to fill the range with.
+   * @return Pointer to the end of the filled range.
+   */
   template <AddressSpace AdrSp, typename T>
     requires(nda::is_scalar_or_convertible_v<T>)
   T *fill(T *first, T *end, const T &value) {
-    check_adr_sp_valid<AdrSp>();
-    static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
-
     if (std::distance(first, end) > 0) return fill_n<AdrSp>(first, std::distance(first, end), value);
     return first;
   }
 
+  /**
+   * @brief Fills a 2D memory region with a specified value.
+   *
+   * The behavior depends on the AddressSpace (Host, Device, or Unified).
+   *
+   * @tparam AdrSp The address space (e.g., Host, Device, Unified).
+   * @tparam T The type of the elements to fill.
+   * @param first Pointer to the beginning of the 2D memory region.
+   * @param pitch The memory pitch between rows.
+   * @param width The number of elements to fill in each row.
+   * @param height The number of rows to fill.
+   * @param value The value to fill the 2D region with.
+   */
   template <AddressSpace AdrSp, typename T>
     requires(nda::is_scalar_or_convertible_v<T>)
   void fill2D_n(T *first, size_t pitch, size_t width, size_t height, const T &value) {
     check_adr_sp_valid<AdrSp>();
     static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
+    static_assert(AdrSp == mem::Device or AdrSp == mem::Unified, "Not implemented for host memory");
 
-    if constexpr (AdrSp == Host) {
-    } else { // Device or Unified
-      if (std::find_if((char const *)(&value), (char const *)(&value) + sizeof(T), [](char c) { return c != 0; })
-          == (char const *)(&value) + sizeof(T)) {
-        device_error_check(cudaMemset2D((void *)first, pitch * sizeof(T), 0, width * sizeof(T), height), "cudaMemset2D");
-      } else {
-        // MAM: temporary, use kernel/thrust/foreach/... when available
-        // as a temporary version, can also loop over rows...
-        std::vector<T> v(width * height, value);
-        device_error_check(
-           cudaMemcpy2D((void *)first, pitch * sizeof(T), (void *)v.data(), width * sizeof(T), width * sizeof(T), height, cudaMemcpyDefault),
-           "cudaMemcpy2D");
-      }
+    bool is_zero = std::ranges::equal(std::as_bytes(std::span(&value, 1)), std::views::repeat(std::byte{0}));
+    if (is_zero) {
+      device_error_check(cudaMemset2D(first, pitch * sizeof(T), 0, width * sizeof(T), height), "cudaMemset2D");
+    } else {
+      std::vector<T> v(width * height, value);
+      device_error_check(cudaMemcpy2D(first, pitch * sizeof(T), v.data(), width * sizeof(T), width * sizeof(T), height, cudaMemcpyDefault),
+                         "cudaMemcpy2D");
     }
   }
 

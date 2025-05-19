@@ -531,7 +531,6 @@ void fill_with_scalar(Scalar const &scalar) noexcept {
       if (bl_layout) {
         auto [n_bl, bl_size, bl_str] = *bl_layout;
         mem::fill2D_n<mem::get_addr_space<self_t>>(data(), bl_str, bl_size, n_bl, value_type(scalar));
-        return;
       } else {
 #if defined(NDA_HAVE_CUTENSOR)
         if constexpr (is_blas_lapack_v<value_type>) {
@@ -560,12 +559,6 @@ void assign_from_scalar(Scalar const &scalar) noexcept {
       fill_with_scalar(0);
     else
       fill_with_scalar(Scalar{0 * scalar}); // FIXME : improve this
-    const long imax = std::min(extent(0), extent(1));
-    if constexpr (mem::on_host<self_t>) {
-      for (long i = 0; i < imax; ++i) operator()(i, i) = scalar;
-    } else if constexpr (mem::on_device<self_t> or mem::on_unified<self_t>) {
-      size_t dstr = lay.strides()[layout_t::is_stride_order_Fortran() ? 1 : 0] + 1;
-      mem::fill2D_n<mem::get_addr_space<self_t>>(data(), dstr, 1, imax, value_type(scalar));
-    }
+    diagonal(*this).fill_with_scalar(scalar);
   }
 }
