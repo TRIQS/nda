@@ -252,6 +252,92 @@ TEST(TENSOR, zadd) { test_add<dcomplex, C_layout>(); }  //NOLINT
 TEST(TENSOR, zaddF) { test_add<dcomplex, F_layout>(); } //NOLINT
 
 template <typename value_t, typename Layout>
+void test_elementwise() {
+  using nda::tensor::op::SUM;
+  using nda::tensor::op::MUL;
+  nda::range::all_t _ = {};
+  nda::array<value_t, 3, Layout> M1{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
+  nda::array<value_t, 3, Layout> M2{{{0, 2}, {4, 6}}, {{8, 10}, {12, 14}}};
+  nda::cuarray<value_t, 3, Layout> M1_d{M1}, M2_d{M2};
+
+  nda::tensor::elementwise(M1_d, "ijk",  M2_d, "ijk", SUM);
+  EXPECT_ARRAY_NEAR(to_host(M2_d), M1); 
+
+  nda::tensor::elementwise(1.0, M1_d, 1.0, M2_d, SUM);
+  EXPECT_ARRAY_NEAR(to_host(M2_d), M2); 
+
+  nda::tensor::elementwise(2.0, M1_d, 1.0, M2_d, SUM);
+  EXPECT_ARRAY_NEAR(to_host(M2_d), nda::array<value_t, 3>{{{0, 4}, {8, 12}}, {{16, 20}, {24, 28}}}); 
+
+  nda::tensor::elementwise(0.0, M1_d, 3.0, M2_d(_, _, _), SUM);
+  EXPECT_ARRAY_NEAR(to_host(M2_d), nda::array<value_t, 3>{{{0, 12}, {24, 36}}, {{48, 60}, {72, 84}}});
+
+  nda::tensor::elementwise(2.0, M1_d, "ijk", 0.0, M2_d, "ijk", SUM);
+  EXPECT_ARRAY_NEAR(to_host(M2_d), nda::array<value_t, 3>{{{0, 2}, {4, 6}}, {{8, 10}, {12, 14}}});
+
+  nda::tensor::elementwise(5.0, M1_d, "kij", 7.0, M2_d, "ijk", SUM);
+  EXPECT_ARRAY_NEAR(to_host(M2_d), nda::array<value_t, 3>{{{0, 34}, {33, 67}}, {{66, 100}, {99, 133}}});
+
+  nda::tensor::elementwise(1.0, M1_d, 1.0, M2_d, SUM);
+  EXPECT_ARRAY_NEAR(to_host(M2_d), nda::array<value_t, 3>{{{0, 35}, {35, 70}}, {{70, 105}, {105, 140}}});
+
+  nda::tensor::elementwise(2.0, M1_d, "ijk", 0.0, M2_d, "ijk", SUM); // to reset to original M2
+  EXPECT_ARRAY_NEAR(to_host(M2_d), M2); 
+
+  nda::tensor::elementwise(2.0, M1_d, 1.0, M2_d, MUL);
+  EXPECT_ARRAY_NEAR(to_host(M2_d), nda::array<value_t, 3>{{{0, 4}, {16, 36}}, {{64, 100}, {144, 196}}}); 
+}
+
+TEST(TENSOR, elementwise) { test_elementwise<double, C_layout>(); }     //NOLINT
+TEST(TENSOR, elementwiseF) { test_elementwise<double, F_layout>(); }    //NOLINT
+TEST(TENSOR, zelementwise) { test_elementwise<dcomplex, C_layout>(); }  //NOLINT
+TEST(TENSOR, zelementwiseF) { test_elementwise<dcomplex, F_layout>(); } //NOLINT
+
+template <typename value_t, typename Layout>
+void test_assign() {
+  nda::range::all_t _ = {};
+  {
+    nda::array<value_t, 3, Layout> M1{{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
+    nda::cuarray<value_t, 3, Layout> M1_d{M1};
+    nda::cuarray<value_t, 3, Layout> M2_d{M1};
+    M2_d() = 0.0;
+
+    nda::tensor::assign(M1_d, M2_d);
+    EXPECT_ARRAY_NEAR(nda::to_host(M2_d), M1); 
+
+    nda::tensor::assign(2, M1_d, M2_d);
+    EXPECT_ARRAY_NEAR(nda::to_host(M2_d), nda::array<value_t, 3>{{{0, 2}, {4, 6}}, {{8, 10}, {12, 14}}});
+
+    EXPECT_ARRAY_NEAR(nda::to_host(M2_d), nda::array<value_t, 3>{{{0, 2}, {4, 6}}, {{8, 10}, {12, 14}}});
+
+    nda::tensor::assign(M1_d, "ikj", M2_d, "ijk");
+    EXPECT_ARRAY_NEAR(nda::to_host(M2_d), nda::array<value_t, 3>{{{0, 2}, {1, 3}}, {{4, 6}, {5, 7}}});
+  }
+  { // some complicated case...
+    using rg = nda::range;
+    nda::array<value_t, 5, Layout> M1(4, 5, 4, 4, 7);
+    M1() = 0;
+    nda::cuarray<value_t, 5, Layout> M1_d{M1};
+    nda::cuarray<value_t, 5, Layout> M2_d{M1};
+    nda::tensor::set(2, M1_d(rg(0, 4, 2), rg(0, 4, 2), _, rg(0, 3), rg(0, 5, 3)));
+    nda::tensor::assign(2.5, M1_d, "kjlim", M2_d, "ijklm");
+    M1 = M1_d;
+    auto M2 = nda::to_host(M2_d);
+    for(int i=0; i<M2.extent(0); ++i)
+    for(int j=0; j<M2.extent(1); ++j)
+    for(int k=0; k<M2.extent(2); ++k)
+    for(int l=0; l<M2.extent(3); ++l)
+    for(int m=0; m<M2.extent(4); ++m)
+      EXPECT_EQ(M2(i,j,k,l,m), 2.5*M1(k,j,l,i,m)); 
+  }
+}
+
+TEST(TENSOR, assign) { test_assign<double, C_layout>(); }     //NOLINT
+TEST(TENSOR, assignF) { test_assign<double, F_layout>(); }    //NOLINT
+TEST(TENSOR, zassign) { test_assign<dcomplex, C_layout>(); }  //NOLINT
+TEST(TENSOR, zassignF) { test_assign<dcomplex, F_layout>(); } //NOLINT
+
+template <typename value_t, typename Layout>
 void test_set() {
   nda::range::all_t _ = {};
   {

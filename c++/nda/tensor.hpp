@@ -27,3 +27,5 @@ namespace nda::tensor {}
 #include "tensor/scale.hpp"
 #include "tensor/dot.hpp"
 #include "tensor/reduce.hpp"
+#include "tensor/assign.hpp"
+#include "tensor/elementwise.hpp"

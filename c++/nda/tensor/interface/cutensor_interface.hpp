@@ -213,8 +213,8 @@ namespace nda::tensor::cutensor {
 
   template <typename value_t, int rA, int rB>
     requires(rA >= 0 and rB > 0 and rB >= rA)
-  void elementwise_binary(value_t alpha, cutensor_desc<value_t, rA> const &descA, op::TENSOR_OP op_A, value_t const *A_d, std::string_view idxA,
-                          value_t gamma, cutensor_desc<value_t, rB> const &descB, op::TENSOR_OP op_B, value_t const *B_d, std::string_view idxB,
+  void elementwise_binary(value_t const alpha, cutensor_desc<value_t, rA> const &descA, op::TENSOR_OP op_A, value_t const *A_d, std::string_view idxA,
+                          value_t const gamma, cutensor_desc<value_t, rB> const &descB, op::TENSOR_OP op_B, value_t const *B_d, std::string_view idxB,
                           value_t *C_d, op::TENSOR_OP oper) {
     std::array<int, rB> modeB;
     std::copy_n(idxB.begin(), rB, modeB.begin());
@@ -251,7 +251,7 @@ namespace nda::tensor::cutensor {
   // MAM: this routine could be used to convert value_types, generalized later! need
   //      new data_type<typeA,typeB> with allowed combinations...
   template <typename value_t, int rank>
-  void permute(value_t alpha, cutensor_desc<value_t, rank> const &descA, op::TENSOR_OP op_A, value_t const *A_d, std::string_view const idxA,
+  void permute(value_t const alpha, cutensor_desc<value_t, rank> const &descA, op::TENSOR_OP op_A, value_t const *A_d, std::string_view const idxA,
                cutensor_desc<value_t, rank> const &descB, value_t *B_d, std::string_view const idxB) {
     std::array<int, rank> modeA;
     std::array<int, rank> modeB;
@@ -272,7 +272,7 @@ namespace nda::tensor::cutensor {
    ************************************************************************/
 
   template <typename value_t, int rA, int rB>
-  void reduce(value_t alpha, cutensor_desc<value_t, rA> const &descA, op::TENSOR_OP op_A, value_t const *A_d, std::string_view const idxA,
+  void reduce(value_t const alpha, cutensor_desc<value_t, rA> const &descA, op::TENSOR_OP op_A, value_t const *A_d, std::string_view const idxA,
               value_t beta, cutensor_desc<value_t, rB> const &descB, op::TENSOR_OP op_B, value_t const *B_d, std::string_view const idxB,
               value_t *C_d, op::TENSOR_OP oper) {
     std::array<int, rA> modeA;
@@ -291,7 +291,7 @@ namespace nda::tensor::cutensor {
   }
 
   template <typename value_t, int rA>
-  void reduce(value_t alpha, cutensor_desc<value_t, rA> const &descA, op::TENSOR_OP op_A, value_t const *A_d, std::string_view const idxA,
+  void reduce(value_t const alpha, cutensor_desc<value_t, rA> const &descA, op::TENSOR_OP op_A, value_t const *A_d, std::string_view const idxA,
               value_t *C_d, op::TENSOR_OP oper) {
     value_t beta(0);
     std::array<int, rA> modeA;
