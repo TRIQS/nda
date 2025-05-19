@@ -68,13 +68,13 @@ namespace nda::lapack::f77 {
 
   void stev(char J, int N, double *D, double *E, double *Z, int ldz, double *work, int &info) { LAPACK_dstev(&J, &N, D, E, Z, &ldz, work, &info); }
 
-  void syev(char JOBZ, char UPLO, int N, double *A, int LDA, double *W, double *work, int &lwork, int &info) {
+  void syev(char JOBZ, char UPLO, int N, double *A, int LDA, double *W, double *work, int lwork, int &info) {
     LAPACK_dsyev(&JOBZ, &UPLO, &N, A, &LDA, W, work, &lwork, &info);
   }
 
-  void heev(char JOBZ, char UPLO, int N, std::complex<double> *A, int LDA, double *W, std::complex<double> *work, int &lwork, double *work2,
+  void heev(char JOBZ, char UPLO, int N, std::complex<double> *A, int LDA, double *W, std::complex<double> *work, int lwork, double *rwork,
             int &info) {
-    LAPACK_zheev(&JOBZ, &UPLO, &N, A, &LDA, W, work, &lwork, work2, &info);
+    LAPACK_zheev(&JOBZ, &UPLO, &N, A, &LDA, W, work, &lwork, rwork, &info);
   }
 
   void getrs(char op, int N, int NRHS, double const *A, int LDA, int const *ipiv, double *B, int LDB, int &info) {

@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <complex>
+#include <numbers>
 #include <tuple>
 #include <type_traits>
 
@@ -298,4 +299,89 @@ TEST(NDA, LAPACKGetrfWithRectangularMatrix) {
   lapack::getrf(LU_c_23, ipiv);
   auto [P_c_23, L_c_23, U_c_23] = get_plu(LU_c_23, ipiv, 3, 2);
   EXPECT_ARRAY_NEAR(P_c_23 * nda::transpose(AT_c), L_c_23 * U_c_23);
+}
+
+// Check that the eigenvectors/values are correct.
+void check_eigen(auto const &A, auto const &V, auto const &l) {
+  for (auto i : nda::range(0, A.extent(0))) { EXPECT_ARRAY_NEAR(A * V(nda::range::all, i), l(i) * V(nda::range::all, i)); }
+}
+
+void check_eigen(auto const &A, auto const &B, auto const &V, auto const &l, int itype = 1) {
+  for (auto i : nda::range(0, A.extent(0))) {
+    if (itype == 1) {
+      EXPECT_ARRAY_NEAR(A * V(nda::range::all, i), l(i) * B * V(nda::range::all, i));
+    } else if (itype == 2) {
+      EXPECT_ARRAY_NEAR(A * B * V(nda::range::all, i), l(i) * V(nda::range::all, i));
+    } else {
+      EXPECT_ARRAY_NEAR(B * A * V(nda::range::all, i), l(i) * V(nda::range::all, i));
+    }
+  }
+}
+
+// Create a symmetric or hermitian matrix with restricted eigenvalues.
+template <typename T>
+auto syhe_matrix(int n, double a = 1e-6, double b = 1.0) {
+  using matrix_t = nda::matrix<T, nda::F_layout>;
+
+  // orthogonal/unitary matrix Q
+  auto jpvt = nda::zeros<int>(n);
+  auto tau  = nda::vector<T>(n);
+  auto Q    = nda::matrix<T, nda::F_layout>::rand(n, n);
+  nda::lapack::geqp3(Q, jpvt, tau);
+  if constexpr (nda::is_complex_v<T>) {
+    nda::lapack::ungqr(Q, tau);
+  } else {
+    nda::lapack::orgqr(Q, tau);
+  }
+
+  // diagonal matrix containing the eigenvalues
+  auto D = nda::eye<double>(n) * a + nda::diag(nda::vector<double>::rand(n)) * (b - a);
+
+  // return Q * D * Q^H (hermitian/symmetric)
+  return matrix_t{Q * D * nda::dagger(Q)};
+}
+
+// Test LAPACK syev and heev functions.
+template <typename T>
+void test_syev_heev(auto xxev) {
+  for (auto i : nda::range(1, 6)) {
+    auto A = syhe_matrix<T>(i, -1, 1);
+
+    // compute eigenvalues and eigenvectors
+    auto A1 = A;
+    auto w1 = nda::vector<double>(i);
+    xxev(A1, w1);
+    check_eigen(A, A1, w1);
+
+    // compute eigenvalues only
+    auto A2 = A;
+    auto w2 = nda::vector<double>{};
+    xxev(A2, w2, 'N');
+    EXPECT_ARRAY_NEAR(w2, w1);
+
+    // compute eigenvalues and eigenvectors of the transpose
+    auto A3 = nda::matrix<T, nda::C_layout>{A};
+    auto w3 = nda::vector<double>(i);
+    xxev(nda::transpose(A3), w3);
+    EXPECT_ARRAY_NEAR(w3, w1);
+    if constexpr (nda::is_complex_v<T>) {
+      check_eigen(nda::transpose(A), nda::transpose(A3), w3);
+    } else {
+      check_eigen(A, nda::transpose(A3), w3);
+      EXPECT_ARRAY_NEAR(nda::transpose(A3), A1);
+    }
+
+    // compute eigenvalues and eigenvectors of a view
+    if (i > 3) {
+      auto A4 = A;
+      auto w4 = nda::vector<double>{};
+      xxev(A4(nda::range(3), nda::range(3)), w4);
+      check_eigen(A(nda::range(3), nda::range(3)), A4(nda::range(3), nda::range(3)), w4);
+    }
+  }
+}
+
+TEST(NDA, LAPACKSyevAndHeev) {
+  test_syev_heev<double>([](auto &&...ts) { return lapack::syev(ts...); });
+  test_syev_heev<std::complex<double>>([](auto &&...ts) { return lapack::heev(ts...); });
 }
