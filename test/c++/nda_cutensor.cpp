@@ -284,8 +284,11 @@ void test_elementwise() {
   nda::tensor::elementwise(2.0, M1_d, "ijk", 0.0, M2_d, "ijk", SUM); // to reset to original M2
   EXPECT_ARRAY_NEAR(to_host(M2_d), M2); 
 
+  nda::tensor::elementwise(2.0, M1_d(0,_,_), "jk", 0.0, M2_d, "ijk", SUM); 
+  EXPECT_ARRAY_NEAR(to_host(M2_d), nda::array<value_t, 3>{{{0, 2}, {4, 6}}, {{0, 2}, {4, 6}}}); 
+
   nda::tensor::elementwise(2.0, M1_d, 1.0, M2_d, MUL);
-  EXPECT_ARRAY_NEAR(to_host(M2_d), nda::array<value_t, 3>{{{0, 4}, {16, 36}}, {{64, 100}, {144, 196}}}); 
+  EXPECT_ARRAY_NEAR(to_host(M2_d), nda::array<value_t, 3>{{{0, 4}, {16, 36}}, {{0, 20}, {48, 84}}}); 
 }
 
 TEST(TENSOR, elementwise) { test_elementwise<double, C_layout>(); }     //NOLINT
