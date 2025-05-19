@@ -18,5 +18,7 @@
 #include "./lapack/getri.hpp"
 #include "./lapack/getrs.hpp"
 #include "./lapack/gtsv.hpp"
+#include "./lapack/heev.hpp"
 #include "./lapack/orgqr.hpp"
+#include "./lapack/syev.hpp"
 #include "./lapack/ungqr.hpp"
