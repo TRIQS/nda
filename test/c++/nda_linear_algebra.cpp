@@ -315,58 +315,87 @@ TEST(NDA, LinearAlgebraInvAndDet) {
 }
 
 // Check that the eigenvectors/values are correct.
-template <typename M, typename V1, typename V2>
-void check_eig(M const &m, V1 const &vectors, V2 const &values) {
-  for (auto i : nda::range(0, m.extent(0))) {
-    EXPECT_ARRAY_NEAR(nda::linalg::matvecmul(m, vectors(nda::range::all, i)), values(i) * vectors(nda::range::all, i), 1.e-13);
+void check_eigen(auto const &A, auto const &V, auto const &l) {
+  for (auto i : nda::range(0, A.extent(0))) { EXPECT_ARRAY_NEAR(A * V(nda::range::all, i), l(i) * V(nda::range::all, i)); }
+}
+
+void check_eigen(auto const &A, auto const &B, auto const &V, auto const &l, int itype = 1) {
+  for (auto i : nda::range(0, A.extent(0))) {
+    if (itype == 1) {
+      EXPECT_ARRAY_NEAR(A * V(nda::range::all, i), l(i) * B * V(nda::range::all, i));
+    } else if (itype == 2) {
+      EXPECT_ARRAY_NEAR(A * B * V(nda::range::all, i), l(i) * V(nda::range::all, i));
+    } else {
+      EXPECT_ARRAY_NEAR(B * A * V(nda::range::all, i), l(i) * V(nda::range::all, i));
+    }
   }
 }
 
-TEST(NDA, LinearAlgebraEigenelements) {
-  // calculate eigenvalues and eigenvectors and check that they are correct
-  auto test_eigenelements = [](auto &&M) {
-    auto [ev1, vecs] = nda::linalg::eigenelements(M);
-    check_eig(M, vecs, ev1);
-    auto Mcopy = M;
-    auto ev2   = nda::linalg::eigenvalues_in_place(Mcopy);
-    EXPECT_ARRAY_NEAR(ev1, ev2);
-  };
+// Create a symmetric or hermitian matrix with restricted eigenvalues.
+template <typename T>
+auto syhe_matrix(int n, double a = 1e-6, double b = 1.0) {
+  using matrix_t = nda::matrix<T, nda::F_layout>;
 
-  // double matrix in C layout
-  nda::matrix<double> A(3, 3);
-  for (int i = 0; i < 3; ++i) {
-    for (int j = 0; j <= i; ++j) {
-      A(i, j) = (i > j ? i + 2 * j : i - j);
-      A(j, i) = A(i, j);
-    }
+  // orthogonal/unitary matrix Q
+  auto jpvt = nda::zeros<int>(n);
+  auto tau  = nda::vector<T>(n);
+  auto Q    = nda::matrix<T, nda::F_layout>::rand(n, n);
+  nda::lapack::geqp3(Q, jpvt, tau);
+  if constexpr (nda::is_complex_v<T>) {
+    nda::lapack::ungqr(Q, tau);
+  } else {
+    nda::lapack::orgqr(Q, tau);
   }
-  test_eigenelements(A);
 
-  A()     = 0;
-  A(0, 1) = 1;
-  A(1, 0) = 1;
-  A(2, 2) = 8;
-  A(0, 2) = 2;
-  A(2, 0) = 2;
-  test_eigenelements(A);
+  // diagonal matrix containing the eigenvalues
+  auto D = nda::eye<double>(n) * a + nda::diag(nda::rand(n)) * (b - a);
 
-  A()     = 0;
-  A(0, 1) = 1;
-  A(1, 0) = 1;
-  A(2, 2) = 8;
-  test_eigenelements(A);
+  // return Q * D * Q^H (hermitian/symmetric)
+  return matrix_t{Q * D * nda::dagger(Q)};
+}
 
-  // double matrix in Fortran layout
-  nda::matrix<double, nda::F_layout> D{{1.3, 1.2}, {1.2, 2.2}};
-  test_eigenelements(D);
+// Test the eigh and eigvalsh functions.
+template <typename T>
+void test_eigh_eigvalsh() {
+  for (auto i : nda::range(1, 6)) {
+    auto A = syhe_matrix<T>(i, -1, 1);
 
-  // complex matrix in C layout
-  nda::matrix<std::complex<double>> B{{{1.0, 0.0}, {0.0, 1.0}}, {{0.0, -1.0}, {2.0, 0.0}}};
-  test_eigenelements(B);
+    // use eigh to compute eigenvalues and eigenvectors
+    auto [w1, V1] = nda::linalg::eigh(A);
+    check_eigen(A, V1, w1);
 
-  // complex matrix in Fortran layout
-  nda::matrix<std::complex<double>, nda::F_layout> C{{{1.3, 0.0}, {0.0, 1.1}}, {{0.0, -1.1}, {2.4, 0.0}}};
-  test_eigenelements(C);
+    // use eigh_in_place to compute eigenvalues and eigenvectors
+    auto V2 = A;
+    auto w2 = nda::linalg::eigh_in_place(V2);
+    check_eigen(A, V2, w2);
+    EXPECT_ARRAY_NEAR(V1, V2);
+    EXPECT_ARRAY_NEAR(w1, w2);
+
+    // use eigvalsh to compute eigenvalues only
+    auto w3 = nda::linalg::eigvalsh(A);
+    EXPECT_ARRAY_NEAR(w1, w3);
+
+    // use eigvalsh_in_place to compute eigenvalues only
+    auto A4 = A;
+    auto w4 = nda::linalg::eigvalsh_in_place(A4);
+    EXPECT_ARRAY_NEAR(w1, w4);
+
+    // use eigh with a C-layout matrix
+    auto A5       = nda::matrix<T, nda::C_layout>{A};
+    auto [w5, V5] = nda::linalg::eigh(A5);
+    check_eigen(A5, V5, w5);
+    EXPECT_ARRAY_NEAR(V1, V5);
+    EXPECT_ARRAY_NEAR(w1, w5);
+
+    // use eigvalsh with a C-layout matrix
+    auto w6 = nda::linalg::eigvalsh(A5);
+    EXPECT_ARRAY_NEAR(w1, w6);
+  }
+}
+
+TEST(NDA, LinearAlgebraEighAndEigvalsh) {
+  test_eigh_eigvalsh<double>();
+  test_eigh_eigvalsh<std::complex<double>>();
 }
 
 // Test the norm function.
@@ -400,7 +429,7 @@ TEST(NDA, LinearAlgebraNormOnes) {
 
 TEST(NDA, LinearAlgebraNormRand) {
   const int size = 100;
-  auto v         = nda::rand<double>(size);
+  auto v         = nda::rand(size);
 
   EXPECT_EQ(nda::linalg::norm(v), nda::linalg::norm(v, 2.0));
   EXPECT_EQ(nda::linalg::norm(v, 0.0), size);
