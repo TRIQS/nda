@@ -77,6 +77,15 @@ namespace nda::lapack::f77 {
     LAPACK_zheev(&JOBZ, &UPLO, &N, A, &LDA, W, work, &lwork, rwork, &info);
   }
 
+  void sygv(int ITYPE, char JOBZ, char UPLO, int N, double *A, int LDA, double *B, int LDB, double *W, double *work, int lwork, int &info) {
+    LAPACK_dsygv(&ITYPE, &JOBZ, &UPLO, &N, A, &LDA, B, &LDB, W, work, &lwork, &info);
+  }
+
+  void hegv(int ITYPE, char JOBZ, char UPLO, int N, std::complex<double> *A, int LDA, std::complex<double> *B, int LDB, double *W,
+            std::complex<double> *work, int lwork, double *rwork, int &info) {
+    LAPACK_zhegv(&ITYPE, &JOBZ, &UPLO, &N, A, &LDA, B, &LDB, W, work, &lwork, rwork, &info);
+  }
+
   void getrs(char op, int N, int NRHS, double const *A, int LDA, int const *ipiv, double *B, int LDB, int &info) {
     LAPACK_dgetrs(&op, &N, &NRHS, A, &LDA, ipiv, B, &LDB, &info);
   }
