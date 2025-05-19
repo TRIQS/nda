@@ -90,11 +90,13 @@ namespace nda::tensor {
       // write routine that creates permuted view
       if(indxX != indxY)
         NDA_RUNTIME_ERROR << "tensor::assign: Index permutation not yet implemented.";
-      switch (binary_oper) {
-        case op::SUM: b = alpha * a + beta * b; break;
-        case op::MUL: b = (alpha * a) * (beta * b); break;
-        default: NDA_RUNTIME_ERROR << "Unknown binary operation.";
-      };
+      if constexpr (get_rank<A> == get_rank<B>) {
+        switch (binary_oper) {
+          case op::SUM: b = alpha * a + beta * b; break;
+          case op::MUL: b = (alpha * a) * (beta * b); break;
+          default: NDA_RUNTIME_ERROR << "Unknown binary operation.";
+        };
+      }
     }
   }
 
