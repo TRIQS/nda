@@ -19,6 +19,8 @@
 #include <cstdlib>
 #include <algorithm>
 #include <vector>
+#include <span>
+#include <ranges>
 
 #include "address_space.hpp"
 #include "../traits.hpp"
@@ -47,8 +49,11 @@ namespace nda::mem {
       return std::fill_n(first, count, value);
     } else { // Device or Unified
       auto value_bytes = std::as_bytes(std::span(&value, 1));
-      bool is_zero     = std::ranges::equal(value_bytes, std::views::repeat(std::byte{0}));
-      if (is_zero) {
+// MAM: can we avoid C++23
+//      bool is_zero     = std::ranges::equal(value_bytes, std::views::repeat(std::byte{0}));
+//      if (is_zero) {
+      if (std::find_if((char const *)(&value), (char const *)(&value) + sizeof(T), [](char c) { return c != 0; })
+          == (char const *)(&value) + sizeof(T)) {
         device_error_check(cudaMemset(first, 0, count * sizeof(T)), "cudaMemset");
       } else {
         for (int n = 0; n < sizeof(T); ++n) {
@@ -99,8 +104,11 @@ namespace nda::mem {
     static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
     static_assert(AdrSp == mem::Device or AdrSp == mem::Unified, "Not implemented for host memory");
 
-    bool is_zero = std::ranges::equal(std::as_bytes(std::span(&value, 1)), std::views::repeat(std::byte{0}));
-    if (is_zero) {
+// MAM: can we avoid C++23
+//    bool is_zero = std::ranges::equal(std::as_bytes(std::span(&value, 1)), std::views::repeat(std::byte{0}));
+//    if (is_zero) {
+    if (std::find_if((char const *)(&value), (char const *)(&value) + sizeof(T), [](char c) { return c != 0; })
+            == (char const *)(&value) + sizeof(T)) {      
       device_error_check(cudaMemset2D(first, pitch * sizeof(T), 0, width * sizeof(T), height), "cudaMemset2D");
     } else {
       std::vector<T> v(width * height, value);
