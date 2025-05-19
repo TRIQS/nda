@@ -386,3 +386,47 @@ TEST(NDA, LAPACKSyevAndHeev) {
   test_syev_heev<double>([](auto &&...ts) { return lapack::syev(ts...); });
   test_syev_heev<std::complex<double>>([](auto &&...ts) { return lapack::heev(ts...); });
 }
+
+// Test LAPACK sygv and hegv functions.
+template <typename T>
+void test_sygv_hegv(int itype, auto xxgv) {
+  for (auto i : nda::range(1, 6)) {
+    auto A = syhe_matrix<T>(i, -1, 1);
+    auto B = syhe_matrix<T>(i, 1e-6, 1);
+
+    // compute eigenvalues and eigenvectors
+    auto A1 = A;
+    auto B1 = B;
+    auto w1 = nda::vector<double>(i);
+    xxgv(A1, B1, w1, 'V', itype);
+    check_eigen(A, B, A1, w1, itype);
+
+    // compute eigenvalues only
+    auto A2 = A;
+    auto B2 = B;
+    auto w2 = nda::vector<double>{};
+    xxgv(A2, B2, w2, 'N', itype);
+    EXPECT_ARRAY_NEAR(w2, w1);
+
+    // compute eigenvalues and eigenvectors of a view
+    if (i > 3) {
+      auto A3 = A;
+      auto B3 = B;
+      auto w3 = nda::vector<double>{};
+      auto rg = nda::range(3);
+      xxgv(A3(rg, rg), B3(rg, rg), w3, 'V', itype);
+      check_eigen(A(rg, rg), B(rg, rg), A3(rg, rg), w3, itype);
+    }
+  }
+}
+
+TEST(NDA, LAPACKSyegvAndHegv) {
+  auto sygv = [](auto &&...ts) { return lapack::sygv(ts...); };
+  auto hegv = [](auto &&...ts) { return lapack::hegv(ts...); };
+  test_sygv_hegv<double>(1, sygv);
+  test_sygv_hegv<double>(2, sygv);
+  test_sygv_hegv<double>(3, sygv);
+  test_sygv_hegv<std::complex<double>>(1, hegv);
+  test_sygv_hegv<std::complex<double>>(2, hegv);
+  test_sygv_hegv<std::complex<double>>(3, hegv);
+}
