@@ -398,6 +398,58 @@ TEST(NDA, LinearAlgebraEighAndEigvalsh) {
   test_eigh_eigvalsh<std::complex<double>>();
 }
 
+// Test the eigh and eigvalsh functions for generalized eigenvalue problems.
+template <typename T>
+void test_generalized_eigh_eigvalsh(int itype) {
+  for (auto i : nda::range(1, 6)) {
+    auto A = syhe_matrix<T>(i, -1, 1);
+    auto B = syhe_matrix<T>(i, 1e-6, 1);
+
+    // use eigh to compute eigenvalues and eigenvectors
+    auto [w1, V1] = nda::linalg::eigh(A, B, itype);
+    check_eigen(A, B, V1, w1, itype);
+
+    // use eigh_in_place to compute eigenvalues and eigenvectors
+    auto V2 = A;
+    auto B2 = B;
+    auto w2 = nda::linalg::eigh_in_place(V2, B2, itype);
+    check_eigen(A, B, V2, w2, itype);
+    EXPECT_ARRAY_NEAR(V1, V2);
+    EXPECT_ARRAY_NEAR(w1, w2);
+
+    // use eigvalsh to compute eigenvalues only
+    auto w3 = nda::linalg::eigvalsh(A, B, itype);
+    EXPECT_ARRAY_NEAR(w1, w3);
+
+    // use eigvalsh_in_place to compute eigenvalues only
+    auto A4 = A;
+    auto B4 = B;
+    auto w4 = nda::linalg::eigvalsh_in_place(A4, B4, itype);
+    EXPECT_ARRAY_NEAR(w1, w4);
+
+    // use eigh with a C-layout matrices
+    auto A5       = nda::matrix<T, nda::C_layout>{A};
+    auto B5       = nda::matrix<T, nda::C_layout>{B};
+    auto [w5, V5] = nda::linalg::eigh(A5, B5, itype);
+    check_eigen(A, B, V5, w5, itype);
+    EXPECT_ARRAY_NEAR(V1, V5);
+    EXPECT_ARRAY_NEAR(w1, w5);
+
+    // use eigvalsh with a C-layout matrices
+    auto w6 = nda::linalg::eigvalsh(A5, B5, itype);
+    EXPECT_ARRAY_NEAR(w1, w6);
+  }
+}
+
+TEST(NDA, LinearAlgebraGeneralizedEighAndEigvalsh) {
+  test_generalized_eigh_eigvalsh<double>(1);
+  test_generalized_eigh_eigvalsh<double>(2);
+  test_generalized_eigh_eigvalsh<double>(3);
+  test_generalized_eigh_eigvalsh<std::complex<double>>(1);
+  test_generalized_eigh_eigvalsh<std::complex<double>>(2);
+  test_generalized_eigh_eigvalsh<std::complex<double>>(3);
+}
+
 // Test the norm function.
 bool check_norm_p(auto &v, double p) { return nda::linalg::norm(v, p) == std::pow(nda::sum(nda::pow(nda::abs(v), p)), 1.0 / p); };
 
