@@ -110,16 +110,48 @@ TEST(NDA, CudaAssignFromView) {
 }
 
 TEST(NDA, CudaFill) {
-  // Contiguous fill
-  auto A_d = cuarray_t<2>(N, N);
-  A_d      = 1.0;
-  EXPECT_ARRAY_EQ(to_host(A_d), nda::ones<value_t>(N, N));
+  {
+    auto A   = array_t<1>(N, 2.5);
+    auto A_d = cuarray_t<1>(N);
+    nda::mem::fill_n<nda::mem::Device>(A_d.data(), N, A[0]);
+    EXPECT_ARRAY_EQ(nda::to_host(A_d), A);
 
-  // Non-contiguous fill
-  auto B_d                                   = cuarray_t<2>(N, N);
-  B_d(nda::range::all, nda::range(N / 2))    = 1.0;
-  B_d(nda::range::all, nda::range(N / 2, N)) = 1.0;
-  EXPECT_ARRAY_EQ(to_host(B_d), nda::ones<value_t>(N, N));
+    A() = 3.5;
+    nda::mem::fill<nda::mem::Device>(A_d.data(), A_d.data() + N, A[0]);
+    EXPECT_ARRAY_EQ(nda::to_host(A_d), A);
+
+    A() = 0.0;
+    nda::mem::fill_n<nda::mem::Device>(A_d.data(), N, A[0]);
+    EXPECT_ARRAY_EQ(nda::to_host(A_d), A);
+  }
+
+  {
+    // this assumes C_stride layout
+    auto A   = array_t<2>(2 * N, N);
+    auto A_d = cuarray_t<2>(2 * N, N);
+
+    A() = 5.0;
+    nda::mem::fill2D_n<nda::mem::Device>(A_d.data(), A_d.strides()[0], A_d.extent(1), A_d.extent(0), A(0, 0));
+    EXPECT_ARRAY_EQ(nda::to_host(A_d), A);
+
+    auto A_v = A(nda::range(0, 2 * N, 2), nda::range::all);
+    A_v()    = 1.0;
+    nda::mem::fill2D_n<nda::mem::Device>(A_d.data(), A_v.strides()[0], A_v.extent(1), A_v.extent(0), A_v(0, 0));
+    EXPECT_ARRAY_EQ(nda::to_host(A_d), A);
+  }
+
+  {
+    // Contiguous fill
+    auto A_d = cuarray_t<2>(N, N);
+    A_d      = 1.0;
+    EXPECT_ARRAY_EQ(to_host(A_d), nda::ones<value_t>(N, N));
+
+    // Non-contiguous fill
+    auto B_d                                   = cuarray_t<2>(N, N);
+    B_d(nda::range::all, nda::range(N / 2))    = 1.0;
+    B_d(nda::range::all, nda::range(N / 2, N)) = 1.0;
+    EXPECT_ARRAY_EQ(to_host(B_d), nda::ones<value_t>(N, N));
+  }
 }
 
 TEST(NDA, CudaStorage) {
