@@ -54,7 +54,7 @@ namespace nda::mem {
         device_error_check(cudaMemset(first, 0, count * sizeof(T)), "cudaMemset");
       } else {
         for (int n = 0; n < sizeof(T); ++n) {
-          const int byte_value = static_cast<int>(value_bytes[n]);
+          const int byte_value [[maybe_unused]] = static_cast<int>(value_bytes[n]);
           device_error_check(cudaMemset2D((char *)(first) + n, sizeof(T), byte_value, 1, count), "cudaMemset2D");
         }
       }
@@ -96,7 +96,7 @@ namespace nda::mem {
    */
   template <AddressSpace AdrSp, typename T>
     requires(nda::is_scalar_or_convertible_v<T>)
-  void fill2D_n(T *first, size_t pitch, size_t width, size_t height, const T &value) {
+  void fill2D_n(T *first [[maybe_unused]], size_t pitch [[maybe_unused]], size_t width, size_t height, const T &value) {
     check_adr_sp_valid<AdrSp>();
     static_assert(nda::have_device == nda::have_cuda, "Adjust function for new device types");
     static_assert(AdrSp == mem::Device or AdrSp == mem::Unified, "Not implemented for host memory");
