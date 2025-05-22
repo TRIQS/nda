@@ -63,7 +63,7 @@ namespace nda::mem {
    * @tparam DestAdrSp nda::mem::AddressSpace of the destination.
    * @tparam SrcAdrSp nda::mem::AddressSpace of the source.
    * @param dest Pointer to the destination memory.
-   * @param dpitch Pitch of destination memory
+   * @param dpitch Pitch of destination memory.
    * @param src Pointer to the source memory.
    * @param spitch Pitch of source memory.
    * @param width Width of matrix transfer (columns in bytes).
