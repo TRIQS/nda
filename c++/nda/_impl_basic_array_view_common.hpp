@@ -438,11 +438,13 @@ auto &operator=(R const &rhs) noexcept
 private:
 // Implementation of the assignment from an n-dimensional array type.
 template <typename RHS>
-void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
+void assign_from_ndarray(RHS const &rhs) noexcept {
 #ifdef NDA_ENFORCE_BOUNDCHECK
-  if (this->shape() != rhs.shape())
-    NDA_RUNTIME_ERROR << "Error in assign_from_ndarray: Size mismatch:"
-                      << "\n LHS.shape() = " << this->shape() << "\n RHS.shape() = " << rhs.shape();
+  if (this->shape() != rhs.shape()) {
+    std::cerr << "Error in assign_from_ndarray: Size mismatch:"
+              << "\n LHS.shape() = " << this->shape() << "\n RHS.shape() = " << rhs.shape() << std::endl;
+    std::terminate();
+  }
 #endif
   // compile-time check if assignment is possible
   static_assert(std::is_assignable_v<value_type &, get_value_t<RHS>>, "Error in assign_from_ndarray: Incompatible value types");
@@ -470,7 +472,10 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
         auto [n_bl_dst, bl_size_dst, bl_str_dst] = *bl_layout_dst;
         auto [n_bl_src, bl_size_src, bl_str_src] = *bl_layout_src;
         // check that the total memory size is the same
-        if (n_bl_dst * bl_size_dst != n_bl_src * bl_size_src) NDA_RUNTIME_ERROR << "Error in assign_from_ndarray: Incompatible block sizes";
+        if (n_bl_dst * bl_size_dst != n_bl_src * bl_size_src) {
+          std::cerr << "Error in assign_from_ndarray: Incompatible block sizes" << std::endl;
+          std::terminate();
+        }
         // if either destination or source consists of a single block, we can chunk it up to make the layouts compatible
         if (n_bl_dst == 1 && n_bl_src > 1) {
           n_bl_dst = n_bl_src;
@@ -494,7 +499,8 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
   }
   // otherwise fallback to elementwise assignment
   if constexpr (mem::on_device<self_t> || mem::on_device<RHS>) {
-    NDA_RUNTIME_ERROR << "Error in assign_from_ndarray: Fallback to elementwise assignment not implemented for arrays/views on the GPU";
+    std::cerr << "Error in assign_from_ndarray: Elementwise assignment not implemented for arrays/views on the GPU" << std::endl;
+    std::terminate();
   }
   nda::for_each(shape(), [this, &rhs](auto const &...args) { (*this)(args...) = rhs(args...); });
 }
@@ -502,7 +508,6 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
 // Implementation to fill a view/array with a constant scalar value.
 template <typename Scalar>
 void fill_with_scalar(Scalar const &scalar) noexcept {
-  // we make a special implementation if the array is strided in 1d or contiguous
   if constexpr (mem::on_host<self_t>) {
     if constexpr (has_layout_strided_1d<self_t>) {
       const long L             = size();
@@ -517,8 +522,8 @@ void fill_with_scalar(Scalar const &scalar) noexcept {
     } else {
       for (auto &x : *this) x = scalar;
     }
-  } else if constexpr (mem::on_device<self_t> or mem::on_unified<self_t>) { // on device
-    if constexpr (has_layout_strided_1d<self_t>) {                          // possibly contiguous
+  } else if constexpr (mem::on_device<self_t> or mem::on_unified<self_t>) {
+    if constexpr (has_layout_strided_1d<self_t>) {
       if constexpr (has_contiguous_layout<self_t>) {
         mem::fill_n<mem::get_addr_space<self_t>>(data(), size(), value_type(scalar));
       } else {
@@ -526,14 +531,14 @@ void fill_with_scalar(Scalar const &scalar) noexcept {
         mem::fill2D_n<mem::get_addr_space<self_t>>(data(), stri, 1, size(), value_type(scalar));
       }
     } else {
-      // check for 2D layout
       auto bl_layout = get_block_layout(*this);
       if (bl_layout) {
         auto [n_bl, bl_size, bl_str] = *bl_layout;
         mem::fill2D_n<mem::get_addr_space<self_t>>(data(), bl_str, bl_size, n_bl, value_type(scalar));
       } else {
         // MAM: implement recursive call to fill_with_scalar on (i,nda::ellipsis{})
-        NDA_RUNTIME_ERROR << "fill_with_scalar: Not implemented yet for general layout. ";
+        std::cerr << "Error in fill_with_scalar: Only block strided arrays/views are supported on the GPU";
+        std::terminate();
       }
     }
   }

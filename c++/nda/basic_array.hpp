@@ -14,14 +14,16 @@
 #include "./basic_array_view.hpp"
 #include "./basic_functions.hpp"
 #include "./concepts.hpp"
-#include "./exceptions.hpp"
 #include "./iterators.hpp"
 #include "./layout/for_each.hpp"
 #include "./layout/permutation.hpp"
 #include "./layout/range.hpp"
+#include "./layout/slice_static.hpp"
 #include "./layout_transforms.hpp"
 #include "./macros.hpp"
+#include "./matrix_functions.hpp"
 #include "./mem/address_space.hpp"
+#include "./mem/fill.hpp"
 #include "./mem/memcpy.hpp"
 #include "./mem/policies.hpp"
 #include "./stdutil/array.hpp"
@@ -31,16 +33,13 @@
 #include <array>
 #include <complex>
 #include <concepts>
+#include <exception>
 #include <initializer_list>
+#include <iostream>
 #include <random>
 #include <ranges>
 #include <type_traits>
 #include <utility>
-
-#ifdef NDA_ENFORCE_BOUNDCHECK
-#include <exception>
-#include <iostream>
-#endif // NDA_ENFORCE_BOUNDCHECK
 
 namespace nda {
 
