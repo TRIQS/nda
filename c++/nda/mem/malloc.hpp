@@ -42,7 +42,7 @@ namespace nda::mem {
     void *ptr = nullptr;
     if constexpr (AdrSp == Host) {
       ptr = std::malloc(size); // NOLINT (we want to return a void*)
-    } else if constexpr (AdrSp == Device) {
+    } else if constexpr (AdrSp == Device) { // NOLINT (branch is not repeated)
       device_error_check(cudaMalloc((void **)&ptr, size), "cudaMalloc");
     } else {
       device_error_check(cudaMallocManaged((void **)&ptr, size), "cudaMallocManaged");

@@ -16,28 +16,34 @@
 
 #pragma once
 
-#include <cstdlib>
-#include <algorithm>
-#include <vector>
-#include <span>
-#include <ranges>
-
-#include "address_space.hpp"
+#include "./address_space.hpp"
+#include "../device.hpp"
 #include "../traits.hpp"
+
+#include <algorithm>
+#include <cstddef>
+#include <cstdlib>
+#include <iterator>
+#include <ranges>
+#include <span>
+#include <vector>
 
 namespace nda::mem {
 
   /**
-   * @brief Fills a range of memory with a specified value.
+   * @brief Fill a range of memory with a specified value.
    *
-   * The behavior depends on the AddressSpace (Host, Device, or Unified).
+   * @details The behaviour of the function depends on the address spaces:
+   * - For `Host`, it simply calls `std::fill_n`.
+   * - For `Device` and `Unified`, it calls `cudaMemset` or `cudaMemset2D` to transfer each byte of the value to the
+   * destination memory.
    *
-   * @tparam AdrSp The address space (e.g., Host, Device, Unified).
-   * @tparam T The type of the elements to fill.
-   * @param first Pointer to the beginning of the range.
+   * @tparam AdrSp nda::mem::AddressSpace of the destination.
+   * @tparam T Value type.
+   * @param first Pointer to the beginning of the destination memory.
    * @param count Number of elements to fill.
-   * @param value The value to fill the range with.
-   * @return Pointer to the end of the filled range.
+   * @param value Value to fill the memory with.
+   * @return Pointer one past the last element filled.
    */
   template <AddressSpace AdrSp, typename T>
     requires(nda::is_scalar_or_convertible_v<T>)
@@ -54,8 +60,7 @@ namespace nda::mem {
         device_error_check(cudaMemset(first, 0, count * sizeof(T)), "cudaMemset");
       } else {
         for (int n = 0; n < sizeof(T); ++n) {
-          const int byte_value [[maybe_unused]] = static_cast<int>(value_bytes[n]);
-          device_error_check(cudaMemset2D((char *)(first) + n, sizeof(T), byte_value, 1, count), "cudaMemset2D");
+          device_error_check(cudaMemset2D((char *)(first) + n, sizeof(T), static_cast<int>(value_bytes[n]), 1, count), "cudaMemset2D");
         }
       }
       return first + count;
@@ -63,16 +68,16 @@ namespace nda::mem {
   }
 
   /**
-   * @brief Fills a range of memory between two pointers with a specified value.
+   * @brief Fill a range of memory between two pointers with a specified value.
    *
-   * Internally calls `fill_n`.
+   * @details It simply calls nda::mem::fill_n with the number of elements calculated from the pointers.
    *
-   * @tparam AdrSp The address space (e.g., Host, Device, Unified).
-   * @tparam T The type of the elements to fill.
-   * @param first Pointer to the beginning of the range.
-   * @param end Pointer to the end of the range.
-   * @param value The value to fill the range with.
-   * @return Pointer to the end of the filled range.
+   * @tparam AdrSp nda::mem::AddressSpace of the destination.
+   * @tparam T Value type.
+   * @param first Pointer to the beginning of the destination memory.
+   * @param end Pointer to the end of the destination memory.
+   * @param value Value to fill the memory with.
+   * @return Pointer one past the last element filled.
    */
   template <AddressSpace AdrSp, typename T>
     requires(nda::is_scalar_or_convertible_v<T>)
@@ -82,17 +87,20 @@ namespace nda::mem {
   }
 
   /**
-   * @brief Fills a 2D memory region with a specified value.
+   * @brief Fill a 2D memory region with a specified value.
    *
-   * The behavior depends on the AddressSpace (Host, Device, or Unified).
+   * @details The behaviour of the function depends on the address spaces:
+   * - For `Host`, the function is not implemented.
+   * - For `Device` and `Unified`, it calls `cudaMemset2D` or `cudaMemcpy2D` to fill the 2D memory region with the 
+   * specified value.
    *
-   * @tparam AdrSp The address space (e.g., Host, Device, Unified).
-   * @tparam T The type of the elements to fill.
-   * @param first Pointer to the beginning of the 2D memory region.
-   * @param pitch The memory pitch between rows.
-   * @param width The number of elements to fill in each row.
-   * @param height The number of rows to fill.
-   * @param value The value to fill the 2D region with.
+   * @tparam AdrSp nda::mem::AddressSpace of the destination.
+   * @tparam T Value type.
+   * @param first Pointer to the beginning of the destination memory.
+   * @param pitch Pitch of destination memory.
+   * @param width Number of elements to fill in each row.
+   * @param height Number of rows to fill.
+   * @param value Value to fill the memory with.
    */
   template <AddressSpace AdrSp, typename T>
     requires(nda::is_scalar_or_convertible_v<T>)
