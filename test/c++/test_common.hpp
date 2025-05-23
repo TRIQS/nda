@@ -5,11 +5,6 @@
 
 #pragma once
 
-#include <gtest/gtest.h>
-
-#include <array>
-#include <numeric>
-
 #ifndef NDA_DEBUG
 #define NDA_DEBUG
 #endif // NDA_DEBUG
@@ -17,6 +12,12 @@
 #ifndef NDA_ENFORCE_BOUNDCHECK
 #define NDA_ENFORCE_BOUNDCHECK
 #endif // NDA_ENFORCE_BOUNDCHECK
+
+#include <gtest/gtest.h>
+#include <nda/nda.hpp>
+
+#include <array>
+#include <numeric>
 
 // Check if function arguments are equal.
 template <typename T, typename... Ts>
@@ -99,3 +100,15 @@ struct array_of_rank {
   [[nodiscard]] auto size() const { return std::accumulate(shape_.begin(), shape_.end(), 1l, std::multiplies<>{}); }
   [[nodiscard]] auto operator()(auto &&...) const { return static_cast<value_type>(R); }
 };
+
+// Return the array in the given address space.
+template <nda::mem::AddressSpace AS, nda::MemoryArray A>
+decltype(auto) to_addr_space(A &&a) {
+  if constexpr (AS == nda::mem::Host) {
+    return nda::get_regular_host_t<A>{std::forward<A>(a)};
+  } else if constexpr (AS == nda::mem::Device) {
+    return nda::get_regular_device_t<A>{std::forward<A>(a)};
+  } else if constexpr (AS == nda::mem::Unified) {
+    return nda::get_regular_unified_t<A>{std::forward<A>(a)};
+  }
+}
