@@ -26,9 +26,6 @@ namespace nda::lapack::device {
   void getrf(int M, int N, double *A, int LDA, int *ipiv, int &info);
   void getrf(int M, int N, dcomplex *A, int LDA, int *ipiv, int &info);
 
-  void getri(int N, double *A, int LDA, int *ipiv, double *WORK, int LWORK, int &info);
-  void getri(int N, dcomplex *A, int LDA, int *ipiv, dcomplex *WORK, int LWORK, int &info);
-
   void getrs(char op, int N, int NRHS, double const *A, int LDA, int const *ipiv, double *B, int LDB, int &info);
   void getrs(char op, int N, int NRHS, dcomplex const *A, int LDA, int const *ipiv, dcomplex *B, int LDB, int &info);
 
