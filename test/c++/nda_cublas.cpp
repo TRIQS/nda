@@ -13,18 +13,6 @@
 #include <utility>
 #include <vector>
 
-// Return the array in the given address space.
-template <nda::mem::AddressSpace AS, nda::MemoryArray A>
-decltype(auto) to_addr_space(A &&a) {
-  if constexpr (AS == nda::mem::Host) {
-    return nda::get_regular_host_t<A>{std::forward<A>(a)};
-  } else if constexpr (AS == nda::mem::Device) {
-    return nda::get_regular_device_t<A>{std::forward<A>(a)};
-  } else if constexpr (AS == nda::mem::Unified) {
-    return nda::get_regular_unified_t<A>{std::forward<A>(a)};
-  }
-}
-
 // Test the CUBLAS gemm function.
 template <typename T, typename Layout1, typename Layout2, typename Layout3, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2,
           nda::mem::AddressSpace AS3>
