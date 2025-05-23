@@ -75,6 +75,15 @@ namespace nda::lapack {
     resize_or_check_if_view(u, {m, m});
     resize_or_check_if_view(vt, {n, n});
 
+    // cusolverDn?gesvd only supports matrices with m >= n
+    if constexpr (mem::have_device_compatible_addr_space<A, S, U, VT>) {
+      if constexpr (has_C_layout<A>) {
+        EXPECTS(n >= m);
+      } else {
+        EXPECTS(m >= n);
+      }
+    }
+
     // arrays/views must be LAPACK compatible
     EXPECTS(a.indexmap().min_stride() == 1);
     EXPECTS(s.indexmap().min_stride() == 1);
