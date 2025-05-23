@@ -12,6 +12,7 @@
 
 #include "./gesvd.hpp"
 #include "../algorithms.hpp"
+#include "../arithmetic.hpp"
 #include "../basic_array.hpp"
 #include "../declarations.hpp"
 #include "../exceptions.hpp"
