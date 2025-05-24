@@ -43,7 +43,7 @@ namespace nda::tensor {
    */
   template <Array X, MemoryArray B>
     requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and have_same_value_type_v<X, B> and is_blas_lapack_v<get_value_t<X>>)
-  void add(get_value_t<X> alpha, X const &x, std::string_view const indxX, get_value_t<X> beta, B &&b, std::string_view const indxY) {
+  void add(get_value_t<X> alpha, X const &x, std::string_view const indxX, get_value_t<X> beta, B &&b, std::string_view const indxY, devStream_t const stream = 0) {
 
     using nda::blas::is_conj_array_expr;
     using value_t = get_value_t<X>;
@@ -69,7 +69,7 @@ namespace nda::tensor {
       op::TENSOR_OP a_op = conj_A ? op::CONJ : op::ID;
       cutensor::cutensor_desc<value_t, get_rank<A>> a_t(a);
       cutensor::cutensor_desc<value_t, get_rank<B>> b_t(b);
-      cutensor::elementwise_binary(alpha, a_t, a_op, a.data(), indxX.data(), beta, b_t, op::ID, b.data(), indxY.data(), b.data(), op::SUM);
+      cutensor::elementwise_binary(alpha, a_t, a_op, a.data(), indxX.data(), beta, b_t, op::ID, b.data(), indxY.data(), b.data(), op::SUM,stream);
 #else
       static_assert(always_false<bool>, " add on device requires gpu tensor operations backend. ");
 #endif
@@ -90,7 +90,7 @@ namespace nda::tensor {
     requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and (MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>)
              and have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>)
   void add(get_value_t<X> alpha, X const &x, std::string_view const indxX, get_value_t<Y> beta, Y const &y, std::string_view const indxY, C &&c,
-           std::string_view const indxC) {
+           std::string_view const indxC, devStream_t const stream = 0) {
     using nda::blas::is_conj_array_expr;
     using value_t = get_value_t<X>;
     auto to_mat   = []<typename Z>(Z const &z) -> auto   &{
@@ -124,7 +124,7 @@ namespace nda::tensor {
       op::TENSOR_OP b_op = conj_B ? op::CONJ : op::ID;
       cutensor::cutensor_desc<value_t, get_rank<A>> a_t(a);
       cutensor::cutensor_desc<value_t, get_rank<B>> b_t(b);
-      cutensor::elementwise_binary(alpha, a_t, a_op, a.data(), indxX, beta, b_t, b_op, b.data(), indxY, c.data(), op::SUM);
+      cutensor::elementwise_binary(alpha, a_t, a_op, a.data(), indxX, beta, b_t, b_op, b.data(), indxY, c.data(), op::SUM, stream);
 #else
       static_assert(always_false<bool>, " add on device requires gpu tensor operations backend. ");
 #endif
@@ -145,20 +145,21 @@ namespace nda::tensor {
 
   template <Array X, MemoryArray B>
     requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and have_same_value_type_v<X, B> and is_blas_lapack_v<get_value_t<X>>)
-  void add(X const &x, std::string_view const indxX, B &&b, std::string_view const indxY) {
-    return add(get_value_t<X>{1.0}, x, indxX, get_value_t<X>{0.0}, std::forward<B>(b), indxY);
+  void add(X const &x, std::string_view const indxX, B &&b, std::string_view const indxY,
+           devStream_t const stream = 0) {
+    return add(get_value_t<X>{1.0}, x, indxX, get_value_t<X>{0.0}, std::forward<B>(b), indxY, stream);
   }
 
   template <Array X, Array Y, MemoryArray C>
     requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and (MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>)
              and have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>)
-  void add(X const &x, std::string_view const indxX, Y const &y, std::string_view const indxY, C &&c, std::string_view const indxC) {
-    return add(get_value_t<X>{1.0}, x, indxX, get_value_t<Y>{0.0}, y, indxY, std::forward<C>(c), indxC);
+  void add(X const &x, std::string_view const indxX, Y const &y, std::string_view const indxY, C &&c, std::string_view const indxC, devStream_t const stream = 0) {
+    return add(get_value_t<X>{1.0}, x, indxX, get_value_t<Y>{0.0}, y, indxY, std::forward<C>(c), indxC, stream);
   }
 
   template <Array X, MemoryArray B>
     requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and have_same_value_type_v<X, B> and is_blas_lapack_v<get_value_t<X>>)
-  void add(X const &x, B &&b) {
+  void add(X const &x, B &&b, devStream_t const stream = 0) {
     constexpr int rank = get_rank<B>;
     using nda::blas::is_conj_array_expr;
     auto to_mat = []<typename Z>(Z const &z) -> auto & {
@@ -171,12 +172,12 @@ namespace nda::tensor {
     using A = decltype(a);
     static_assert(rank == get_rank<A>, "Rank mismatch.");
     std::string indx = default_index<uint8_t(rank)>();
-    return add(x, indx, std::forward<B>(b), indx);
+    return add(x, indx, std::forward<B>(b), indx, stream);
   }
 
   template <Array X, MemoryArray B>
     requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and have_same_value_type_v<X, B> and is_blas_lapack_v<get_value_t<X>>)
-  void add(get_value_t<X> alpha, X const &x, get_value_t<B> beta, B &&b) {
+  void add(get_value_t<X> alpha, X const &x, get_value_t<B> beta, B &&b, devStream_t const stream = 0) {
     constexpr int rank = get_rank<B>;
     using nda::blas::is_conj_array_expr;
     auto to_mat = []<typename Z>(Z const &z) -> auto & {
@@ -189,7 +190,7 @@ namespace nda::tensor {
     using A = decltype(a);
     static_assert(rank == get_rank<A>, "Rank mismatch.");
     std::string indx = default_index<uint8_t(rank)>();
-    return add(alpha, x, indx, beta, std::forward<B>(b), indx);
+    return add(alpha, x, indx, beta, std::forward<B>(b), indx, stream);
   }
 
 } // namespace nda::tensor

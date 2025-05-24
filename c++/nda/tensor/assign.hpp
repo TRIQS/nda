@@ -41,7 +41,8 @@ namespace nda::tensor {
              is_blas_lapack_v<get_value_t<X>> and is_blas_lapack_v<get_value_t<B>> and 
              have_same_value_type_v<X, B>)
   void assign(get_value_t<X> alpha, X const& x, std::string indxA,
-                                    B &&     b, std::string indxB) {
+                                    B &&     b, std::string indxB,
+              devStream_t const stream = 0) {
 
     using nda::blas::is_conj_array_expr;
     using value_t = get_value_t<X>;
@@ -70,7 +71,7 @@ namespace nda::tensor {
       cutensor::cutensor_desc<value_t, rank> a_t(a);
       cutensor::cutensor_desc<value_t, rank> b_t(b);
       op::TENSOR_OP oper = ( conj_A ? op::CONJ : op::ID );
-      cutensor::permute(alpha, a_t, oper, a.data(), indxA, b_t, b.data(), indxB);
+      cutensor::permute(alpha, a_t, oper, a.data(), indxA, b_t, b.data(), indxB, stream);
 #else
       static_assert(always_false<bool>, " scale on device requires gpu tensor operations backend. ");
 #endif
@@ -82,11 +83,11 @@ namespace nda::tensor {
              get_rank<X> == get_rank<B> and
              is_blas_lapack_v<get_value_t<X>> and is_blas_lapack_v<get_value_t<B>> and 
              have_same_value_type_v<X, B>)
-  void assign(get_value_t<X> alpha, X const& x, B &&b)
+  void assign(get_value_t<X> alpha, X const& x, B &&b, devStream_t const stream = 0)
   {
     constexpr int rank = get_rank<X>;
     std::string indx = default_index<uint8_t(rank)>();
-    assign(alpha,x,indx,b,indx);
+    assign(alpha,x,indx,b,indx,stream);
   }
   
   template <Array X, MemoryArray B>
@@ -94,11 +95,11 @@ namespace nda::tensor {
              get_rank<X> == get_rank<B> and
              is_blas_lapack_v<get_value_t<X>> and is_blas_lapack_v<get_value_t<B>> and 
              have_same_value_type_v<X, B>)
-  void assign(X const& x, B &&b)
+  void assign(X const& x, B &&b, devStream_t const stream = 0)
   {
     constexpr int rank = get_rank<X>;
     std::string indx = default_index<uint8_t(rank)>();
-    assign(get_value_t<X>{1.0},x,indx,b,indx);
+    assign(get_value_t<X>{1.0},x,indx,b,indx,stream);
   }
 
   template <Array X, MemoryArray B>
@@ -106,9 +107,9 @@ namespace nda::tensor {
              get_rank<X> == get_rank<B> and
              is_blas_lapack_v<get_value_t<X>> and is_blas_lapack_v<get_value_t<B>> and 
              have_same_value_type_v<X, B>)
-  void assign(X const& x, std::string indxA, B &&b, std::string indxB) 
+  void assign(X const& x, std::string indxA, B &&b, std::string indxB, devStream_t const stream = 0) 
   {
-    assign(get_value_t<X>{1.0},x,indxA,b,indxB);
+    assign(get_value_t<X>{1.0},x,indxA,b,indxB,stream);
   } 
 
 

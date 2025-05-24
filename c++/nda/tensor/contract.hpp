@@ -46,7 +46,7 @@ namespace nda::tensor {
              (MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>) and              //
              have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>) //
   void contract(get_value_t<X> alpha, X const &x, std::string_view const indxX, Y const &y, std::string_view const indxY, get_value_t<X> beta, C &&c,
-                std::string_view const indxC) {
+                std::string_view const indxC, devStream_t const stream = 0) {
 
     using nda::blas::is_conj_array_expr;
     using value_t = get_value_t<X>;
@@ -78,7 +78,7 @@ namespace nda::tensor {
       cutensor::cutensor_desc<value_t, get_rank<A>> a_t(a);
       cutensor::cutensor_desc<value_t, get_rank<B>> b_t(b);
       cutensor::cutensor_desc<value_t, get_rank<C>> c_t(c);
-      cutensor::contract(alpha, a_t, a_op, a.data(), indxX, b_t, b_op, b.data(), indxY, beta, c_t, op::ID, c.data(), indxC);
+      cutensor::contract(alpha, a_t, a_op, a.data(), indxX, b_t, b_op, b.data(), indxY, beta, c_t, op::ID, c.data(), indxC, stream);
 #else
       static_assert(always_false<bool>, " contract on device requires gpu tensor contraction backend. ");
 #endif
@@ -102,8 +102,8 @@ namespace nda::tensor {
     requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and              //
              (MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>) and              //
              have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>) //
-  void contract(X const &x, std::string_view const indxX, Y const &y, std::string_view const indxY, C &&c, std::string_view const indxC) {
-    contract(get_value_t<X>{1.0}, x, indxX, y, indxY, get_value_t<X>{0.0}, std::forward<C>(c), indxC);
+  void contract(X const &x, std::string_view const indxX, Y const &y, std::string_view const indxY, C &&c, std::string_view const indxC, devStream_t const stream = 0) {
+    contract(get_value_t<X>{1.0}, x, indxX, y, indxY, get_value_t<X>{0.0}, std::forward<C>(c), indxC, stream);
   }
 
 } // namespace nda::tensor

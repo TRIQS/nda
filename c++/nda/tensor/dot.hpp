@@ -77,6 +77,7 @@ namespace nda::tensor {
       mem::memset<mem::Device>(z, 0, sizeof(value_t));
       cutensor::cutensor_desc<value_t, 0> z_t(z);
       cutensor::contract(value_t{1}, a_t, op::ID, a.data(), indxX, b_t, op::ID, b.data(), indxY, value_t{0}, z_t, op::ID, z, "");
+      cudaDeviceSynchronize();  // for sync in case it is turned off 
       mem::memcpy<mem::Host, mem::Device>(&res, z, sizeof(value_t));
       mem::free<mem::Device>(z);
       return res;

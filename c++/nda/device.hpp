@@ -26,6 +26,12 @@
 
 namespace nda {
 
+#ifdef NDA_HAVE_CUDA
+  using devStream_t = cudaStream_t;
+#else
+  using devStream_t = int; 
+#endif
+
   /**
    * @addtogroup mem_utils
    * @{

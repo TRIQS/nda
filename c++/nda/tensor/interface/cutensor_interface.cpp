@@ -59,7 +59,9 @@ namespace nda::tensor::cutensor {
     return h.h;
   }
 
-  // always synchronize for now
-  //static bool synchronize = true;
+  // control device synchronization during cutensor calls 
+  bool synchronize = true;
+  bool get_synchronization() {return synchronize;}
+  void set_synchronization(bool s_) {synchronize = s_;}
 
 } // namespace nda::tensor::cutensor
