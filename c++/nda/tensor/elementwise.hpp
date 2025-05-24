@@ -88,8 +88,7 @@ namespace nda::tensor {
 #endif
     } else {
       // write routine that creates permuted view
-      if(indxX != indxY)
-        NDA_RUNTIME_ERROR << "tensor::assign: Index permutation not yet implemented.";
+      if (indxX != indxY) NDA_RUNTIME_ERROR << "tensor::assign: Index permutation not yet implemented.";
       if constexpr (get_rank<A> == get_rank<B>) {
         switch (binary_oper) {
           case op::SUM: b = alpha * a + beta * b; break;
@@ -136,7 +135,5 @@ namespace nda::tensor {
   {
     elementwise(get_value_t<X>{1.0},x,indxX,get_value_t<Y>{0.0},y,indxY,binary_oper,stream);
   }
-
-
 
 } // namespace nda::tensor

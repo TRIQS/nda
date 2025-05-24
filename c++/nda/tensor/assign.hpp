@@ -47,7 +47,7 @@ namespace nda::tensor {
     using nda::blas::is_conj_array_expr;
     using value_t = get_value_t<X>;
     constexpr int rank = get_rank<X>;
-    auto to_mat   = []<typename Z>(Z const &z) -> auto   &{
+    auto to_mat        = []<typename Z>(Z const &z) -> auto        &{
       if constexpr (is_conj_array_expr<Z>)
         return std::get<0>(z.a);
       else
@@ -59,13 +59,12 @@ namespace nda::tensor {
 
     if constexpr (mem::on_host<X>) {
       // write routine that creates permuted view
-      if(indxA != indxB)
-        NDA_RUNTIME_ERROR << "tensor::assign: Index permutation not yet implemented.";
-      if(conj_A) {
-        b = alpha * nda::conj( a );
+      if (indxA != indxB) NDA_RUNTIME_ERROR << "tensor::assign: Index permutation not yet implemented.";
+      if (conj_A) {
+        b = alpha * nda::conj(a);
       } else {
         b = alpha * a;
-      }  
+      }
     } else { // on device
 #if defined(NDA_HAVE_CUTENSOR)
       cutensor::cutensor_desc<value_t, rank> a_t(a);
@@ -111,6 +110,5 @@ namespace nda::tensor {
   {
     assign(get_value_t<X>{1.0},x,indxA,b,indxB,stream);
   } 
-
 
 } // namespace nda::tensor

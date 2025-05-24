@@ -109,35 +109,34 @@ TEST(NDA, CudaAssignFromView) {
   EXPECT_ARRAY_EQ(B, A(nda::range::all, 0, 0, 0));
 }
 
-TEST(NDA, CudaFill) 
-{
+TEST(NDA, CudaFill) {
   {
-    auto A = array_t<1>(N,2.5);
+    auto A   = array_t<1>(N, 2.5);
     auto A_d = cuarray_t<1>(N);
-    nda::mem::fill_n<nda::mem::Device>(A_d.data(),N,value_t{2.5});
-    EXPECT_ARRAY_EQ(nda::to_host(A_d), A); 
+    nda::mem::fill_n<nda::mem::Device>(A_d.data(), N, A[0]);
+    EXPECT_ARRAY_EQ(nda::to_host(A_d), A);
 
-    A() = value_t{3.5};
-    nda::mem::fill<nda::mem::Device>(A_d.data(),A_d.data()+N,value_t{3.5});
-    EXPECT_ARRAY_EQ(nda::to_host(A_d), A); 
+    A() = 3.5;
+    nda::mem::fill<nda::mem::Device>(A_d.data(), A_d.data() + N, A[0]);
+    EXPECT_ARRAY_EQ(nda::to_host(A_d), A);
 
-    A() = value_t{0.0};
-    nda::mem::fill_n<nda::mem::Device>(A_d.data(),N,value_t{0.0});
+    A() = 0.0;
+    nda::mem::fill_n<nda::mem::Device>(A_d.data(), N, A[0]);
     EXPECT_ARRAY_EQ(nda::to_host(A_d), A);
   }
 
   {
     // this assumes C_stride layout
-    auto A = array_t<2>(2*N,N);
-    auto A_d = cuarray_t<2>(2*N,N);
+    auto A   = array_t<2>(2 * N, N);
+    auto A_d = cuarray_t<2>(2 * N, N);
 
-    A() = value_t{5.0};
-    nda::mem::fill2D_n<nda::mem::Device>(A_d.data(),A_d.strides()[0],A_d.extent(1),A_d.extent(0),value_t{5.0});
+    A() = 5.0;
+    nda::mem::fill2D_n<nda::mem::Device>(A_d.data(), A_d.strides()[0], A_d.extent(1), A_d.extent(0), A(0, 0));
     EXPECT_ARRAY_EQ(nda::to_host(A_d), A);
-    
-    auto A_v = A( nda::range(0,2*N,2), nda::range::all );
-    A_v() = value_t{1.0};
-    nda::mem::fill2D_n<nda::mem::Device>(A_d.data(),A_v.strides()[0],A_v.extent(1),A_v.extent(0),value_t{1.0});
+
+    auto A_v = A(nda::range(0, 2 * N, 2), nda::range::all);
+    A_v()    = 1.0;
+    nda::mem::fill2D_n<nda::mem::Device>(A_d.data(), A_v.strides()[0], A_v.extent(1), A_v.extent(0), A_v(0, 0));
     EXPECT_ARRAY_EQ(nda::to_host(A_d), A);
   }
 

@@ -273,6 +273,7 @@ namespace nda::tensor::cutensor {
 
       cutensor_plan_t plan(desc, false);
       CUTENSOR_CHECK_STREAM(cutensorElementwiseBinaryExecute, stream, get_handle_ptr(), plan.plan, (const void *)&alpha, A_d, (void *)&gamma, B_d, C_d, stream);
+
     }
   }
 
@@ -341,7 +342,6 @@ namespace nda::tensor::cutensor {
     cutensor_plan_t plan(Opdesc, true);
     CUTENSOR_CHECK_STREAM(cutensorReduce, stream, get_handle_ptr(), plan.plan, (const void *)&alpha, A_d, (const void *)&beta, C_d, C_d, plan.get_workspace(),
                    plan.get_workspace_size(), stream);
-
     cutensorDestroyTensorDescriptor(Tdesc_);
   }
 

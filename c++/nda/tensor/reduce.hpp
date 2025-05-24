@@ -68,7 +68,7 @@ namespace nda::tensor {
         if constexpr (detail::LessThanComparable<value_t>) {
           return nda::max_element(a);
         } else {
-          NDA_RUNTIME_ERROR << "tensor::reduce: LessThanComparable failed on type."; 
+          NDA_RUNTIME_ERROR << "tensor::reduce: LessThanComparable failed on type.";
           return value_t(0);
         }
       } else if (oper == op::MIN) {
