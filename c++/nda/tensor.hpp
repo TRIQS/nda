@@ -30,6 +30,8 @@ namespace nda::tensor {}
 #include "tensor/assign.hpp"
 #include "tensor/elementwise.hpp"
 
+namespace nda::tensor
+{
 #if defined(NDA_HAVE_CUTENSOR)
   inline bool get_device_synchronization() {
     return nda::tensor::cutensor::get_synchronization();
@@ -46,3 +48,5 @@ namespace nda::tensor {}
     __synchronize__ = s_;
   }
 #endif
+}
+
