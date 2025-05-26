@@ -455,6 +455,10 @@ void assign_from_ndarray(RHS const &rhs) noexcept {
   // do both operands have the same stride order?
   static constexpr bool same_stride_order = get_layout_info<self_t>.stride_order == get_layout_info<RHS>.stride_order;
 
+  // compile-time check for device arrays to avoid runtime errors
+  static_assert(!(mem::on_device<self_t> or mem::on_device<RHS>) or (both_in_memory and same_stride_order and have_same_value_type_v<self_t, RHS>),
+                "Error in assign_from_ndarray: Assignment to/from device arrays is not supported for the given types.");
+
   // prefer optimized options if possible
   if constexpr (both_in_memory and same_stride_order) {
     if (rhs.empty()) return;
