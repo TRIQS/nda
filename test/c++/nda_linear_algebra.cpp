@@ -8,9 +8,10 @@
 #include <nda/gtest_tools.hpp>
 #include <nda/nda.hpp>
 
+#include <cmath>
 #include <complex>
+#include <concepts>
 #include <limits>
-#include <type_traits>
 
 using namespace std::complex_literals;
 
@@ -150,11 +151,11 @@ TEST(NDA, LinearAlgebraMatvecmulWithLazyExpressions) {
 }
 
 // Test the generic matmul function.
-template <typename T, typename Layout1, typename Layout2, typename Layout3>
+template <typename T, typename Layout1, typename Layout2>
 void test_matmul() {
   auto A     = nda::matrix<T, Layout1>{{1, 2, 3}, {4, 5, 6}};
   auto B     = nda::matrix<T, Layout2>{{1, 2}, {3, 4}, {5, 6}};
-  auto exp_C = nda::matrix<T, Layout3>{{22, 28}, {49, 64}};
+  auto exp_C = nda::matrix<T>{{22, 28}, {49, 64}};
   if constexpr (nda::is_complex_v<T>) {
     A *= 1 - 1i;
     B *= 2 - 1i;
@@ -174,42 +175,30 @@ void test_matmul() {
   EXPECT_ARRAY_NEAR(C_h, nda::dagger(exp_C));
 
   // strided matrix views
-  auto exp_C_v = nda::matrix<T, Layout3>{{16, 20}, {34, 44}};
+  auto exp_C_v = nda::matrix<T>{{16, 20}, {34, 44}};
   if constexpr (nda::is_complex_v<T>) exp_C_v *= (1 - 1i) * (2 - 1i);
-  auto C_v = nda::matrix<T, Layout3>(4, 4);
+  auto C_v = nda::matrix<T>(4, 4);
   C_v(nda::range(0, 4, 2), nda::range(0, 4, 2)) =
      nda::linalg::matmul(A(nda::range::all, nda::range(0, 3, 2)), B(nda::range(0, 3, 2), nda::range::all));
   EXPECT_ARRAY_NEAR(C_v(nda::range(0, 4, 2), nda::range(0, 4, 2)), exp_C_v);
 }
 
 TEST(NDA, LinearAlgebraMatmulGenericGemmBranch) {
-  test_matmul<long, nda::C_layout, nda::C_layout, nda::C_layout>();
-  test_matmul<long, nda::C_layout, nda::C_layout, nda::F_layout>();
-  test_matmul<long, nda::C_layout, nda::F_layout, nda::F_layout>();
-  test_matmul<long, nda::C_layout, nda::F_layout, nda::C_layout>();
-  test_matmul<long, nda::F_layout, nda::F_layout, nda::F_layout>();
-  test_matmul<long, nda::F_layout, nda::C_layout, nda::F_layout>();
-  test_matmul<long, nda::F_layout, nda::F_layout, nda::C_layout>();
-  test_matmul<long, nda::F_layout, nda::C_layout, nda::C_layout>();
+  test_matmul<long, nda::C_layout, nda::C_layout>();
+  test_matmul<long, nda::C_layout, nda::F_layout>();
+  test_matmul<long, nda::F_layout, nda::F_layout>();
+  test_matmul<long, nda::F_layout, nda::C_layout>();
 }
 
 TEST(NDA, LinearAlgebraMatmulBLASBranch) {
-  test_matmul<double, nda::C_layout, nda::C_layout, nda::C_layout>();
-  test_matmul<double, nda::C_layout, nda::C_layout, nda::F_layout>();
-  test_matmul<double, nda::C_layout, nda::F_layout, nda::F_layout>();
-  test_matmul<double, nda::C_layout, nda::F_layout, nda::C_layout>();
-  test_matmul<double, nda::F_layout, nda::F_layout, nda::F_layout>();
-  test_matmul<double, nda::F_layout, nda::C_layout, nda::F_layout>();
-  test_matmul<double, nda::F_layout, nda::F_layout, nda::C_layout>();
-  test_matmul<double, nda::F_layout, nda::C_layout, nda::C_layout>();
-  test_matmul<std::complex<double>, nda::C_layout, nda::C_layout, nda::C_layout>();
-  test_matmul<std::complex<double>, nda::C_layout, nda::C_layout, nda::F_layout>();
-  test_matmul<std::complex<double>, nda::C_layout, nda::F_layout, nda::F_layout>();
-  test_matmul<std::complex<double>, nda::C_layout, nda::F_layout, nda::C_layout>();
-  test_matmul<std::complex<double>, nda::F_layout, nda::F_layout, nda::F_layout>();
-  test_matmul<std::complex<double>, nda::F_layout, nda::C_layout, nda::F_layout>();
-  test_matmul<std::complex<double>, nda::F_layout, nda::F_layout, nda::C_layout>();
-  test_matmul<std::complex<double>, nda::F_layout, nda::C_layout, nda::C_layout>();
+  test_matmul<double, nda::C_layout, nda::C_layout>();
+  test_matmul<double, nda::C_layout, nda::F_layout>();
+  test_matmul<double, nda::F_layout, nda::F_layout>();
+  test_matmul<double, nda::F_layout, nda::C_layout>();
+  test_matmul<std::complex<double>, nda::C_layout, nda::C_layout>();
+  test_matmul<std::complex<double>, nda::C_layout, nda::F_layout>();
+  test_matmul<std::complex<double>, nda::F_layout, nda::F_layout>();
+  test_matmul<std::complex<double>, nda::F_layout, nda::C_layout>();
 }
 
 TEST(NDA, LinearAlgebraMatumulPromoteValueType) {
@@ -217,15 +206,15 @@ TEST(NDA, LinearAlgebraMatumulPromoteValueType) {
   auto A_d = nda::matrix<double>{{1, 2}, {3, 4}};
 
   auto B_d1 = nda::linalg::matmul(A_d, A_i);
-  static_assert(std::is_same_v<nda::get_value_t<decltype(B_d1)>, double>);
+  static_assert(std::same_as<nda::get_value_t<decltype(B_d1)>, double>);
   EXPECT_ARRAY_NEAR(B_d1, (nda::matrix<double>{{7, 10}, {15, 22}}), 1.e-13);
 
   auto B_d2 = nda::linalg::matmul(A_d, A_d);
-  static_assert(std::is_same_v<nda::get_value_t<decltype(B_d2)>, double>);
+  static_assert(std::same_as<nda::get_value_t<decltype(B_d2)>, double>);
   EXPECT_ARRAY_NEAR(B_d2, (nda::matrix<double>{{7, 10}, {15, 22}}), 1.e-13);
 
   auto B_i = nda::linalg::matmul(A_i, A_i);
-  static_assert(std::is_same_v<nda::get_value_t<decltype(B_i)>, int>);
+  static_assert(std::same_as<nda::get_value_t<decltype(B_i)>, int>);
   EXPECT_ARRAY_NEAR(B_i, (nda::matrix<int>{{7, 10}, {15, 22}}), 1.e-13);
 }
 
