@@ -402,6 +402,12 @@
  */
 
 /**
+ * @defgroup linalg_blas_utils BLAS utilities
+ * @ingroup linalg
+ * @brief Utilities for the BLAS/LAPACK interface.
+ */
+
+/**
  * @defgroup linalg_lapack LAPACK interface
  * @ingroup linalg
  * @brief Interface to parts of the LAPACK library.

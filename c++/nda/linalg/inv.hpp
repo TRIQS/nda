@@ -170,7 +170,7 @@ namespace nda::linalg {
    * @details The given matrix/view is not modified. It first makes a copy of the matrix/view and then 
    * 
    * - uses nda::lapack::getrf and nda::lapack::getrs to compute the inverse in case the matrix's memory space is 
-   * compatible with the device memory space. The resulting inverse matrix is always in Fortran layout.
+   * compatible with the device memory space. The resulting inverse matrix is always in nda::F_layout.
    * - calls nda::linalg::inv_in_place if the matrix is stored on the host memory space.
    * 
    * @warning This function makes copies of the input arrays/views. When working on the device memory space, this may

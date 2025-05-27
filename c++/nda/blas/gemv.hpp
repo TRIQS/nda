@@ -38,7 +38,7 @@ namespace nda::blas {
    *
    * - \f$ \mathbf{y} \leftarrow \alpha \mathbf{A} \mathbf{x} + \beta \mathbf{y} \f$,
    * - \f$ \mathbf{y} \leftarrow \alpha \mathbf{A}^* \mathbf{x} + \beta \mathbf{y} \f$ (only if \f$ \mathbf{A} \f$ is
-   * in C-layout),
+   * in nda::C_layout),
    *
    * where \f$ \alpha \f$ and \f$ \beta \f$ are scalars, \f$ \mathbf{A} \f$ is an \f$ m \times n \f$ matrix and \f$
    * \mathbf{x} \f$ and \f$ \mathbf{y} \f$ are vectors of sizes \f$ n \f$ and \f$ m \f$, respectively.
@@ -49,7 +49,7 @@ namespace nda::blas {
    * @param alpha Input scalar \f$ \alpha \f$.
    * @param a Input matrix \f$ \mathbf{A} \f$ of size \f$ m \times n \f$.
    * @param x Input vector \f$ \mathbf{x} \f$ of size \f$ n \f$.
-   * @param beta Input scalar \f$ beta \f$.
+   * @param beta Input scalar \f$ \beta \f$.
    * @param y Input/Output vector \f$ \mathbf{y} \f$ of size \f$ m \f$.
    */
   template <Matrix A, MemoryVector X, MemoryVector Y>

@@ -32,7 +32,7 @@ namespace nda::lapack {
    *
    * @details Computes all eigenvalues \f$ \lambda_i \f$ and, optionally, eigenvectors \f$ \mathbf{v}_i \f$ of a complex 
    * generalized Hermitian-definite eigenvalue problem of the form
-   * - \f$ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{B} \mathbf{v}_i \f$ \f$ (`itype = 1`),
+   * - \f$ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{B} \mathbf{v}_i \f$ (`itype = 1`),
    * - \f$ \mathbf{A} \mathbf{B} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ (`itype = 2`) or
    * - \f$ \mathbf{B} \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ (`itype = 3`).
    *
@@ -41,10 +41,10 @@ namespace nda::lapack {
    *
    * @tparam A nda::MemoryMatrix with complex value type.
    * @tparam B nda::MemoryMatrix with complex value type.
-   * @param a Input/output matrix. On entry, the Hermitian matrix \f$ \mathbf{A} \f$. On exit, if `jobz = 'V'`, \f$ 
+   * @param a Input/output matrix. On entry, the Hermitian matrix \f$ \mathbf{A} \f$. On exit, if `jobz = V`, \f$ 
    * \mathbf{A} \f$ contains the matrix \f$ \mathbf{V} \f$ of normalized eigenvectors such that \f$ \mathbf{V}^H 
    * \mathbf{B} \mathbf{V} = \mathbf{I} \f$ (if `itype = 1` or `itype = 2`) or \f$ \mathbf{V}^H \mathbf{B}^{-1} 
-   * \mathbf{V} = \mathbf{I} \f$ (if `itype = 3`). If `jobz = 'N'`, then on exit \f$ \mathbf{A} \f$ is destroyed.
+   * \mathbf{V} = \mathbf{I} \f$ (if `itype = 3`). If `jobz = N`, then on exit \f$ \mathbf{A} \f$ is destroyed.
    * @param b Input/output matrix. On entry, the symmetric positive definite matrix \f$ \mathbf{B} \f$. On exit, the 
    * part of \f$ \mathbf{B} \f$ containing the matrix is overwritten by the triangular factor \f$ \mathbf{U} \f$ or 
    * \f$ \mathbf{L} \f$ from a Cholesky factorization.

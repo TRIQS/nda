@@ -33,13 +33,13 @@ namespace nda::lapack {
    * @details Computes all eigenvalues \f$ \lambda_i \f$ and, optionally, eigenvectors \f$ \mathbf{v}_i \f$ of a complex 
    * hermitian matrix eigenvalue problem of the form
    * \f[
-   *   \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ \; ,
+   *   \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \; ,
    * \f]
    * for a given complex hermitian matrix \f$ \mathbf{A} \f$.
    *
    * @tparam A nda::MemoryMatrix with complex value type.
-   * @param a Input/output matrix. On entry, the hermitian matrix \f$ \mathbf{A} \f$. On exit, if `jobz = 'V'`, \f$ 
-   * \mathbf{A} \f$ contains the orthonormal eigenvectors of the matrix \f$ \mathbf{A} \f$. If `jobz = 'N'`, then on 
+   * @param a Input/output matrix. On entry, the hermitian matrix \f$ \mathbf{A} \f$. On exit, if `jobz = V`, \f$ 
+   * \mathbf{A} \f$ contains the orthonormal eigenvectors of the matrix \f$ \mathbf{A} \f$. If `jobz = N`, then on 
    * exit \f$ \mathbf{A} \f$ is destroyed.
    * @param w Output vector. The eigenvalues in ascending order.
    * @param jobz Character indicating whether to compute eigenvectors and eigenvalues ('V') or eigenvalues only ('N').

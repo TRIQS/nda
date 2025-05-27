@@ -22,7 +22,7 @@
 namespace nda {
 
   /**
-   * @ingroup linalg_blas
+   * @ingroup linalg_blas_utils
    * @brief Alias for `std::complex<double>` type.
    */
   using dcomplex = std::complex<double>;
@@ -32,7 +32,7 @@ namespace nda {
 namespace nda::blas {
 
   /**
-   * @addtogroup linalg_blas
+   * @addtogroup linalg_blas_utils
    * @{
    */
 
@@ -67,7 +67,7 @@ namespace nda::blas {
     }
   }
 
-  /// Constexpr variable that is true if the given nda::Array type has a Fortran memory layout.
+  /// Constexpr variable that is true if the given nda::Array type has nda::F_layout.
   template <Array A>
     requires(MemoryArray<A> or is_conj_array_expr<A>)
   static constexpr bool has_F_layout = []() {
@@ -77,7 +77,7 @@ namespace nda::blas {
       return std::remove_cvref_t<A>::is_stride_order_Fortran();
   }();
 
-  /// Constexpr variable that is true if the given nda::Array type has a C memory layout.
+  /// Constexpr variable that is true if the given nda::Array type has nda::C_layout.
   template <Array A>
     requires(MemoryArray<A> or is_conj_array_expr<A>)
   static constexpr bool has_C_layout = []() {
@@ -106,7 +106,7 @@ namespace nda::blas {
   }();
 
   /**
-   * @brief Get the leading dimension of an nda::MemoryArray with rank 1 or 2 for LAPACK calls.
+   * @brief Get the leading dimension of an nda::MemoryArray with rank 1 or 2 for BLAS/LAPACK calls.
    *
    * @details The leading dimension is the stride between two consecutive columns (rows) of a matrix in Fortran (C)
    * layout. For 1-dimensional arrays, we simply return the size of the array.

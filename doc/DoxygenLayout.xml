@@ -126,6 +126,7 @@
       </tab>
       <tab type="usergroup" url="@ref linalg" title="Linear algebra">
         <tab type="user" url="@ref linalg_blas" title="BLAS interface"/>
+        <tab type="user" url="@ref linalg_blas_utils" title="BLAS utilities"/>
         <tab type="usergroup" url="@ref linalg_lapack" title="LAPACK interface">
           <tab type="user" url="@ref nda::lapack::gelss_worker" title="lapack::gelss_worker"/>
           <tab type="user" url="@ref nda::lapack::gelss_worker_hermitian" title="lapack::gelss_worker_hermitian"/>

@@ -60,8 +60,8 @@ namespace nda::linalg {
    *
    * An exception is thrown, if the LAPACK call returns a non-zero value.
    *
-   * @note If the input matrix \f$ \mathbf{A} \f$ is in Fortran layout, the output matrices \f$ \mathbf{U} \f$ and
-   * \f$ \mathbf{V}^H \f$ are also in Fortran layout. Otherwise, they are in C layout.
+   * @note If the input matrix \f$ \mathbf{A} \f$ is in nda::F_layout, the output matrices \f$ \mathbf{U} \f$ and
+   * \f$ \mathbf{V}^H \f$ are also in nda::F_layout. Otherwise, they are in nda::C_layout.
    *
    * @tparam A nda::MemoryMatrix type.
    * @param a Input/output matrix. On entry, the \f$ m \times n \f$ matrix \f$ \mathbf{A} \f$. On exit, the contents of
@@ -99,8 +99,8 @@ namespace nda::linalg {
    *
    * It calls nda::linalg::svd_in_place with a copy of the input matrix \f$ \mathbf{A} \f$.
    *
-   * @note If the input matrix \f$ \mathbf{A} \f$ is in Fortran layout, the output matrices \f$ \mathbf{U} \f$ and
-   * \f$ \mathbf{V}^H \f$ are also in Fortran layout. Otherwise, they are in C layout.
+   * @note If the input matrix \f$ \mathbf{A} \f$ is in nda::F_layout, the output matrices \f$ \mathbf{U} \f$ and
+   * \f$ \mathbf{V}^H \f$ are also in nda::F_layout. Otherwise, they are in nda::C_layout.
    * 
    * @warning This function makes copies of the input arrays/views. When working on the device memory space, this may
    * lead to runtime errors if the copying fails.
