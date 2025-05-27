@@ -84,7 +84,7 @@ namespace nda::linalg {
    * @details It computes the eigenvectors \f$ \mathbf{v}_i \f$ and eigenvalues \f$ \lambda_i \f$ of the matrix \f$ 
    * \mathbf{A} \f$ such that
    * \f[
-   *  \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ \; .
+   *  \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \; .
    * \f]
    * 
    * If the elements of \f$ \mathbf{A} \f$ are real, it calls nda::lapack::syev. If the elements of \f$ \mathbf{A} \f$ 
@@ -111,7 +111,7 @@ namespace nda::linalg {
    *
    * @details It computes the eigenvectors \f$ \mathbf{v}_i \f$ and eigenvalues \f$ \lambda_i \f$ of one of the 
    * following eigenvalue problems:
-   * - \f$ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{B} \mathbf{v}_i \f$ \f$ (`itype = 1`),
+   * - \f$ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{B} \mathbf{v}_i \f$ (`itype = 1`),
    * - \f$ \mathbf{A} \mathbf{B} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ (`itype = 2`) or
    * - \f$ \mathbf{B} \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ (`itype = 3`).
    * 
@@ -147,7 +147,7 @@ namespace nda::linalg {
    * @details It computes the eigenvectors \f$ \mathbf{v}_i \f$ and eigenvalues \f$ \lambda_i \f$ of the matrix \f$ 
    * \mathbf{A} \f$ such that
    * \f[
-   *  \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ \; .
+   *  \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \; .
    * \f]
    * 
    * It makes a copy of the given matrix/view and calls nda::linalg::eigh_in_place with the copy.
@@ -155,7 +155,7 @@ namespace nda::linalg {
    * @tparam A nda::Matrix type.
    * @param a Input matrix. The matrix \f$ \mathbf{A} \f$.
    * @return `std::pair` containing an nda::array with the real eigenvalues \f$ \lambda_i \f$ in ascending order and an 
-   * nda::matrix in Fortran layout containing the eigenvectors \f$ \mathbf{v}_i \f$ in its columns.
+   * nda::matrix in nda::F_layout containing the eigenvectors \f$ \mathbf{v}_i \f$ in its columns.
    */
   template <Matrix A>
     requires(Scalar<get_value_t<A>>)
@@ -172,7 +172,7 @@ namespace nda::linalg {
    *
    * @details It computes the eigenvectors \f$ \mathbf{v}_i \f$ and eigenvalues \f$ \lambda_i \f$ of one of the 
    * following eigenvalue problems:
-   * - \f$ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{B} \mathbf{v}_i \f$ \f$ (`itype = 1`),
+   * - \f$ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{B} \mathbf{v}_i \f$ (`itype = 1`),
    * - \f$ \mathbf{A} \mathbf{B} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ (`itype = 2`) or
    * - \f$ \mathbf{B} \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ (`itype = 3`).
    * 
@@ -184,7 +184,7 @@ namespace nda::linalg {
    * @param b Input matrix. The matrix \f$ \mathbf{B} \f$. 
    * @param itype Specifies the problem to be solved.
    * @return `std::pair` containing an nda::array with the real eigenvalues \f$ \lambda_i \f$ in ascending order and an 
-   * nda::matrix in Fortran layout containing the eigenvectors \f$ \mathbf{v}_i \f$ in its columns.
+   * nda::matrix in nda::F_layout containing the eigenvectors \f$ \mathbf{v}_i \f$ in its columns.
    */
   template <Matrix A, Matrix B>
     requires(Scalar<get_value_t<A>> and Scalar<get_value_t<B>>)
@@ -201,7 +201,7 @@ namespace nda::linalg {
    *
    * @details It computes the eigenvalues \f$ \lambda_i \f$ of the matrix \f$ \mathbf{A} \f$ such that
    * \f[
-   *  \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ \; .
+   *  \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \; .
    * \f]
    * 
    * If the elements of \f$ \mathbf{A} \f$ are real, it calls nda::lapack::syev. If the elements of \f$ \mathbf{A} \f$ 
@@ -227,7 +227,7 @@ namespace nda::linalg {
    * problem.
    *
    * @details It computes the eigenvalues \f$ \lambda_i \f$ of one of the following eigenvalue problems:
-   * - \f$ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{B} \mathbf{v}_i \f$ \f$ (`itype = 1`),
+   * - \f$ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{B} \mathbf{v}_i \f$ (`itype = 1`),
    * - \f$ \mathbf{A} \mathbf{B} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ (`itype = 2`) or
    * - \f$ \mathbf{B} \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ (`itype = 3`).
    * 
@@ -262,7 +262,7 @@ namespace nda::linalg {
    *
    * @details It computes the eigenvalues \f$ \lambda_i \f$ of the matrix \f$ \mathbf{A} \f$ such that
    * \f[
-   *  \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ \; .
+   *  \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \; .
    * \f]
    * 
    * It makes a copy of the given matrix/view and calls nda::linalg::eigvalsh_in_place with the copy.
@@ -284,7 +284,7 @@ namespace nda::linalg {
    * problem.
    *
    * @details It computes the eigenvalues \f$ \lambda_i \f$ of one of the following eigenvalue problems:
-   * - \f$ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{B} \mathbf{v}_i \f$ \f$ (`itype = 1`),
+   * - \f$ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{B} \mathbf{v}_i \f$ (`itype = 1`),
    * - \f$ \mathbf{A} \mathbf{B} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ (`itype = 2`) or
    * - \f$ \mathbf{B} \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ (`itype = 3`).
    * 

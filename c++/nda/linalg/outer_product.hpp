@@ -35,7 +35,7 @@ namespace nda::linalg {
    *
    * The outer product is performed by calling nda::blas::ger, which imposes various constraints on the supported input
    * arrays/views, e.g.
-   * - their memory layouts have to be the same and either C- or Fortran,
+   * - their memory layouts have to be the same and either nda::C_layout or nda::F_layout,
    * - they have to be contiguous in memory,
    * - etc.
    *

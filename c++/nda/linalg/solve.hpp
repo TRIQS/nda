@@ -61,7 +61,7 @@ namespace nda::linalg {
    *
    * An exception is thrown, if the LAPACK calls return a non-zero value.
    *
-   * @note For a right hand side matrix \f$ \mathbf{B} \f$ Fortran layout is required.
+   * @note Right hand side matrix \f$ \mathbf{B} \f$ must have nda::F_layout.
    *
    * @tparam A nda::MemoryMatrix type.
    * @tparam B nda::MemoryArray type of rank 1 or 2.
@@ -110,8 +110,8 @@ namespace nda::linalg {
    * It calls nda::linalg::solve_in_place with a copy of the input matrix \f$ \mathbf{A} \f$
    * and the right hand side matrix \f$ \mathbf{B} \f$ or vector \f$ \mathbf{b} \f$.
    *
-   * @note The solution matrix \f$ \mathbf{X} \f$ is always in Fortran layout.
-   *
+   * @note The solution matrix \f$ \mathbf{X} \f$ is always in nda::F_layout.
+   * 
    * @warning This function makes copies of the input arrays/views. When working on the device memory space, this may
    * lead to runtime errors if the copying fails.
    *
