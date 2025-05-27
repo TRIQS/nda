@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
 }
 ```
 
-@subsection ex3_p1 Assigning a scalar to an array
+@section ex3_p1 Assigning a scalar to an array
 
 The simplest way to initialize an array is to assign a scalar to it:
 
@@ -72,7 +72,7 @@ Output:
 A_arr = [[1,2,3],[1,2,3],[1,2,3],[1,2,3]]
 ```
 
-@subsection ex3_p2 Copy/Move assignment
+@section ex3_p2 Copy/Move assignment
 
 The copy and move assignment operations behave as expected:
 
@@ -108,7 +108,7 @@ M_copy.empty() = 1
 
 > **Note**: Be careful when reusing an object after it has been moved (see the note at @ref ex2_p3)!
 
-@subsection ex3_p3 Assigning an nda::Array to an array
+@section ex3_p3 Assigning an nda::Array to an array
 
 To assign an object that satisfies the nda::Array concept to an array is similar to @ref ex2_p5.
 
@@ -145,7 +145,7 @@ correct shape.
 This is not true for the second assignment.
 `A2` has been default constructed and therefore has a size of 0.
 
-@subsection ex3_p4 Assigning a contiguous range
+@section ex3_p4 Assigning a contiguous range
 
 It is possible to assign an object that satisfies the `std::ranges::contiguous_range` concept to an 1-dimensional array:
 
@@ -165,7 +165,7 @@ A_vec = [1,2,3,4,5]
 
 As expected, the elements of the range are simply copied into the array.
 
-@subsection ex3_p5 Initializing an array manually
+@section ex3_p5 Initializing an array manually
 
 We can also initialize an array by assigning to each element manually.
 This can be done in different ways.
@@ -230,7 +230,7 @@ For example,
 While the traditional for-loops are perhaps the most flexible option, it becomes tedious quite fast with increasing
 dimensionality.
 
-@subsection ex3_p6 Initializing an array using automatic assignment
+@section ex3_p6 Initializing an array using automatic assignment
 
 This has already been explained in @ref ex1_p12.
 

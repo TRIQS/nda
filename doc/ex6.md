@@ -34,7 +34,7 @@ The examples below are run on 4 processes.
 > **Note**: Only regular arrays and views are allowed in the **nda** MPI routines, no lazy expressions. You can use
 > nda::make_regular to turn your lazy expressions into regular arrays.
 
-@subsection ex6_p1 Broadcasting an array/view
+@section ex6_p1 Broadcasting an array/view
 
 Let us first default construct an array on all MPI ranks and then resize and initialize it on rank 0, the root rank:
 
@@ -166,7 +166,7 @@ contiguous arrays/views, so that **nda** can make the MPI calls as efficiently a
 > **Note**: All MPI routines have certain requirements for the arrays/views involved in the operation. Please check out
 > the documentation of the individual function, e.g. in this case nda::mpi_broadcast, if you have doubts.
 
-@subsection ex6_p2 Gathering an array/view
+@section ex6_p2 Gathering an array/view
 
 Suppose we have a 1-dimensional array with rank specific elements and sizes:
 
@@ -313,7 +313,7 @@ Rank 3:
 []
 ```
 
-@subsection ex6_p3 Scattering an array/view
+@section ex6_p3 Scattering an array/view
 
 Scattering of an array/view is basically the inverse operation of gathering.
 It takes an array/view and splits it along the first dimensions as evenly as possible among the processes.
@@ -373,7 +373,7 @@ Here, a 2-by-2 array is scattered from rank 2 to all other processes.
 It is split along the first dimension and the resulting 1-by-2 subarrays are sent to the ranks 0 and 1 while the ranks
 2 and 3 do not receive any data.
 
-@subsection ex6_p4 Reducing an array/view
+@section ex6_p4 Reducing an array/view
 
 Let us reduce the same 2-by-2 arrays from above.
 Be default, `mpi::reduce` performs an element-wise summation among the ranks in the communicator and makes the result
@@ -441,7 +441,7 @@ Rank 1:
 In contrast to the standard `mpi::all_reduce` function, the in-place operation does not create and return a new array.
 Instead the result is directly written into the input array.
 
-@subsection ex6_p5 Using existing arrays/views
+@section ex6_p5 Using existing arrays/views
 
 Note that the functions nda::mpi_reduce, nda::mpi_gather and nda::mpi_scatter all return a newly constructed array which
 contains the result of the respective MPI operation.

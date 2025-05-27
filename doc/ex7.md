@@ -35,7 +35,7 @@ Here, we have defined some basic quantities/types:
 
 Let's take a look at a simple example.
 
-@subsection ex7_p1 Defining the symmetry
+@section ex7_p1 Defining the symmetry
 
 We start by defining a hermitian symmetry for our matrix.
 A symmetry is simply an object of type `sym_func_t` that specifies how elements in an array are related to one another.
@@ -53,7 +53,7 @@ The two lines have the following meaning:
 1. Diagonal elements are not related to any other elements (except to themselves by the identity operation).
 2. Off-diagonal elements with an index `(i,j)` are related to the element `(j,i)` by a complex conjugation.
 
-@subsection ex7_p2 Constructing the symmetry group
+@section ex7_p2 Constructing the symmetry group
 
 Once all of the desired symmetries have been defined, we can construct an nda::sym_grp object:
 
@@ -137,7 +137,7 @@ Output:
 Now we can see why the elements 0, 4 and 8 are in their own symmetry class and elements 1 and 3, 2 and 6 and elements 5
 and 7 are related to each other via a complex conjugation.
 
-@subsection ex7_p3 Initializing an array
+@section ex7_p3 Initializing an array
 
 One of the features of symmetry groups is that they can be used to initialize or assign to an existing array with an
 initializer function satisfying the nda::NdaInitFunc concept:
@@ -196,7 +196,7 @@ In our simple example, this does not really make a difference but for large arra
 is much smaller than the size of the array and where evaluating `init_func` is expensive, this can give a considerable
 speedup.
 
-@subsection ex7_p4 Representative data
+@section ex7_p4 Representative data
 
 We have already learned above about representative elements of symmetry classes.
 The symmetry group object gives us access to those elements:
@@ -238,7 +238,7 @@ B =
 
 Here, we first multiplied the original representative data by 2 and then initialized a new array with it.
 
-@subsection ex7_p5 Symmetrizing an array
+@section ex7_p5 Symmetrizing an array
 
 The nda::sym_grp class provides a method that let's us symmetrize an existing array and simultaneously obtain the
 maximum symmetry violation.

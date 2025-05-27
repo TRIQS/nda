@@ -47,7 +47,7 @@ A =
 > writing/reading to/from HDF5, the interface always checks if the arrays/views are in C-order. If this is not the case,
 > it will use a temporary C-order array to perform the writing/reading.
 
-@subsection ex5_p1 Writing an array/view
+@section ex5_p1 Writing an array/view
 
 Writing an array to an HDF5 file is as simple as
 
@@ -115,7 +115,7 @@ In this case, a 3-by-3 view.
 > h5::write(file, "A", A, /* compression off */ false);
 > ```
 
-@subsection ex5_p2 Reading into an array/view
+@section ex5_p2 Reading into an array/view
 
 Reading a full dataset into an array is straightforward:
 
@@ -166,7 +166,7 @@ B =
 Here, we read the 3-by-3 dataset `A_v` into a view `B_v` consisting of every other column and the rows 1, 2 and 3 of the
 underlying 5-by-5 array `B`.
 
-@subsection ex5_p3 Writing to a slice of an existing dataset
+@section ex5_p3 Writing to a slice of an existing dataset
 
 So far we have only written to an automatically created dataset with exactly the same size and shape as the array/view
 that is being written.
@@ -259,7 +259,7 @@ DATASET "/B" {
 }
 ```
 
-@subsection ex5_p4 Reading a slice from an existing dataset
+@section ex5_p4 Reading a slice from an existing dataset
 
 Instead of reading the full dataset as we have done before, it is possible to specify a slice of the dataset that should
 be read.
@@ -297,7 +297,7 @@ C =
  [15,16,17,18,19]]
 ```
 
-@subsection ex5_p5 Writing/Reading 1-dimensional arrays/views of strings
+@section ex5_p5 Writing/Reading 1-dimensional arrays/views of strings
 
 For the user, writing and reading an 1-dimensional array/view of strings works exactly the same way as with an
 array/view of arithmetic scalars:
@@ -338,7 +338,7 @@ DATASET "/S" {
 }
 ```
 
-@subsection ex5_p6 Writing/Reading arrays/views of generic types
+@section ex5_p6 Writing/Reading arrays/views of generic types
 
 **nda** allows us to write/read arbitrary arrays/views as long as the objects contained in the array have specialized
 `h5_write` and `h5_read` functions (see [h5 docs](https://triqs.github.io/h5/unstable/group__rw__generic.html)).

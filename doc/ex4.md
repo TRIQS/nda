@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
 }
 ```
 
-@subsection ex4_p1 Creating a full view on an array/view
+@section ex4_p1 Creating a full view on an array/view
 
 We have already seen in @ref ex1_p6 how we can get a full view on an existing array by doing an empty function call:
 
@@ -63,7 +63,7 @@ A_vv =
  [20,21,22,23,24]]
 ```
 
-@subsection ex4_p2 Value type of views
+@section ex4_p2 Value type of views
 
 While the value type of an array is always non-const, views can have const or non-const value types.
 
@@ -106,7 +106,7 @@ As expected, we cannot assign to const arrays/views or views with a const value 
 A_vc(0, 0) = -2;
 ```
 
-@subsection ex4_p3 Creating a slice of an array/view
+@section ex4_p3 Creating a slice of an array/view
 
 @ref ex1_p7 has already explained what a slice is and how we can create one.
 In the following, we will give some more examples to show how slices can be used in practice.
@@ -183,7 +183,7 @@ S_3 =
  [20,22,24]]
 ```
 
-@subsection ex4_p4 Assigning to views
+@section ex4_p4 Assigning to views
 
 Before assigning to the view `S_3`, let's make a copy of its contents so that we can restore everything later on:
 
@@ -261,7 +261,7 @@ A =
 > **Note**: In contrast to arrays, views cannot be resized. When assigning some general nda::Array object to a view,
 > their shapes have to match, otherwise this may result in undefined behavior.
 
-@subsection ex4_p5 Copy/Move operations
+@section ex4_p5 Copy/Move operations
 
 The copy and move operations of views are a little bit different than their array counterparts:
 
@@ -307,7 +307,7 @@ C =
  [20,22,24]]
 ```
 
-@subsection ex4_p6 Operating on views/slices
+@section ex4_p6 Operating on views/slices
 
 We can perform various arithmetic operations, mathematical functions and algorithms with views and slices just like we
 did with arrays in @ref ex1_p8 and @ref ex1_p9.
@@ -336,7 +336,7 @@ sum(S_3) = 108
 product(S_3) = 0
 ```
 
-@subsection ex4_p7 Rebinding a view to another array/view
+@section ex4_p7 Rebinding a view to another array/view
 
 If we want to bind an existing view to a new array/view/memory location, we cannot simply use the copy assignment (since
 it makes a deep copy of the view's contents). Instead we have to call nda::basic_array_view::rebind:
@@ -355,7 +355,7 @@ S_3.data() == C_v.data() = 0
 S_3.data() == C_v.data() = 1
 ```
 
-@subsection ex4_p8 Viewing generic 1-dimensional ranges
+@section ex4_p8 Viewing generic 1-dimensional ranges
 
 The views in **nda** can also view generic 1-dimensional ranges like `std::vector` or `std::array`.
 The only requirement is that they are contiguous:
@@ -378,7 +378,7 @@ arr_v = [1,2,3,4,5]
 arr = (2 4 6 8 10)
 ```
 
-@subsection ex4_p9 Factories and transformations
+@section ex4_p9 Factories and transformations
 
 @ref av_factories contain various functions to create new and transform existing views.
 
