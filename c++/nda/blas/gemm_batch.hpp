@@ -60,7 +60,7 @@ namespace nda::blas {
   } // namespace detail
 
   /**
-   * @brief Interface to MKL's `gemm_batch` and `gemm_vbatch` routines.
+   * @brief Interface to MKL's/CUDA's `gemm_batch` and `gemm_vbatch` routines.
    *
    * @details This routine is a batched version of nda::blas::gemm, performing multiple `gemm` operations in a single
    * call. Each `gemm` operation performs a matrix-matrix product.
@@ -74,10 +74,10 @@ namespace nda::blas {
    * @tparam A nda::Matrix type.
    * @tparam B nda::Matrix type.
    * @tparam C nda::MemoryMatrix type.
-   * @param alpha Input scalar.
+   * @param alpha Input scalar \f$ \alpha \f$.
    * @param va `std::vector` of input matrices.
    * @param vb `std::vector` of input matrices.
-   * @param beta Input scalar.
+   * @param beta Input scalar \f$ \beta \f$.
    * @param vc `std::vector` of input/output matrices.
    */
   template <bool is_vbatch = false, Matrix A, Matrix B, MemoryMatrix C>
@@ -170,17 +170,17 @@ namespace nda::blas {
   }
 
   /**
-   * @brief Interface to MKL's `gemm_vbatch` routine.
+   * @brief Interface to MKL's/Magma's `gemm_vbatch` routine.
    *
    * @details It simply calls nda::blas::gemm_batch with `is_vbatch` set to true.
    *
    * @tparam A nda::Matrix type.
    * @tparam B nda::Matrix type.
    * @tparam C nda::MemoryMatrix type.
-   * @param alpha Input scalar.
+   * @param alpha Input scalar \f$ \alpha \f$.
    * @param va `std::vector` of input matrices.
    * @param vb `std::vector` of input matrices.
-   * @param beta Input scalar.
+   * @param beta Input scalar \f$ \beta \f$.
    * @param vc `std::vector` of input/output matrices.
    */
   template <Matrix A, Matrix B, MemoryMatrix C>
@@ -189,7 +189,7 @@ namespace nda::blas {
   }
 
   /**
-   * @brief Implements a strided batched version of nda::blas::gemm taking 3-dimensional arrays as arguments.
+   * @brief Interface to MKL's/CUDA's `gemm_batch_strided` routine.
    *
    * @details This function is similar to nda::blas::gemm_batch except that it takes 3-dimensional arrays as arguments
    * instead of vectors of matrices. The first dimension of the arrays indexes the matrices to be multiplied.
@@ -197,10 +197,10 @@ namespace nda::blas {
    * @tparam A nda::ArrayOfRank<3> type.
    * @tparam B nda::ArrayOfRank<3> type.
    * @tparam C nda::ArrayOfRank<3> type.
-   * @param alpha Input scalar.
+   * @param alpha Input scalar \f$ \alpha \f$.
    * @param a 3-dimensional input array.
    * @param b 3-dimensional input array.
-   * @param beta Input scalar.
+   * @param beta Input scalar \f$ \beta \f$.
    * @param c 3-dimensional input/output array.
    */
   template <ArrayOfRank<3> A, ArrayOfRank<3> B, MemoryArrayOfRank<3> C>

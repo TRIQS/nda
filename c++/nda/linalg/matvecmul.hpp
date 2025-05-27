@@ -91,9 +91,12 @@ namespace nda::linalg {
   /**
    * @brief Compute the matrix-vector product of an nda::matrix and an nda::vector object.
    *
-   * @details This function computes the matrix-vector product \f$ \mathrm{op}_1(\mathbf{A}) \mathrm{op}_2(\mathbf{x})
-   * \f$, where \f$ \mathbf{A} \f$ is an \f$ m \times n \f$ matrix, \f$ \mathbf{x} \f$ is a vector of size \f$ n \f$,
-   * and \f$ \mathrm{op}_i \f$ can be some lazy operation, e.g. nda::conj, nda::sin, etc.
+   * @details This function computes the matrix-vector product 
+   * \f[ 
+   *   \mathrm{op}_A(\mathbf{A}) \mathrm{op}_x(\mathbf{x}) \; ,
+   * \f]
+   * where \f$ \mathrm{op}_A(\mathbf{A}) \f$ is an \f$ m \times n \f$ matrix and \f$ \mathrm{op}_x(\mathbf{x}) \f$ is a 
+   * vector of size \f$ n \f$. \f$ \mathrm{op}_i \f$ can be some lazy operation, e.g. nda::conj, nda::sin, etc.
    *
    * We try to call nda::blas::gemv whenever possible, i.e. when the value type of the result is compatible with
    * nda::is_blas_lapack_v, even if this requires to make copies of the input arrays/views. Otherwise, we perform a very
@@ -107,8 +110,8 @@ namespace nda::linalg {
    *
    * @tparam A nda::Matrix type.
    * @tparam X nda::Vector type.
-   * @param a Input matrix \f$ \mathbf{A} \f$ of size \f$ m \times n \f$.
-   * @param x Input vector \f$ \mathbf{x} \f$ of size \f$ n \f$.
+   * @param a Input matrix \f$ \mathrm{op}_A(\mathbf{A}) \f$ of size \f$ m \times n \f$.
+   * @param x Input vector \f$ \mathrm{op}_x(\mathbf{x}) \f$ of size \f$ n \f$.
    * @return Resulting vector of the matrix-vector multiplication of size \f$ m \f$.
    */
   template <Matrix A, Vector X>

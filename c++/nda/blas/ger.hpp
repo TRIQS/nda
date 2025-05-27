@@ -90,7 +90,7 @@ namespace nda::blas {
    * 
    * If the value type of the input vectors/matrix is real, it calls nda::blas::ger.
    * 
-   * @note Matrix \f$ \mathbf{M} \f$ has to be in Fortran layout.
+   * @note \f$ \mathbf{M} \f$ has to be in nda::F_layout.
    *
    * @tparam X nda::MemoryVector type.
    * @tparam Y nda::MemoryVector type.

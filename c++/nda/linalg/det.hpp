@@ -41,7 +41,7 @@ namespace nda::linalg {
    * @tparam M nda::Matrix type.
    * @param m Input/output matrix. On entry, the matrix \f$ \mathbf{M} \f$. On exit, the matrix \f$ \mathbf{M} \f$ or
    * the LU decomposition of \f$ \mathbf{M} \f$ from nda::lapack::getrf.
-   * @return \f$ \det(\mathbf{M}) \f$.
+   * @return The determinant \f$ \det(\mathbf{M}) \f$.
    */
   template <Matrix M>
     requires(get_algebra<M> == 'M' and nda::mem::have_host_compatible_addr_space<M> and is_blas_lapack_v<get_value_t<M>>)
@@ -88,7 +88,7 @@ namespace nda::linalg {
    *
    * @tparam M nda::MemoryMatrix type.
    * @param m Input matrix. The matrix \f$ \mathbf{M} \f$. 
-   * @return The inverse matrix \f$ \mathbf{M}^{-1} \f$.
+   * @return The determinant \f$ \det(\mathbf{M}) \f$.
    */
   template <Matrix M>
     requires(get_algebra<M> == 'M' and nda::mem::have_host_compatible_addr_space<M> and is_blas_lapack_v<get_value_t<M>>)

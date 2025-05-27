@@ -40,13 +40,13 @@ namespace nda::blas {
    * \f]
    * where \f$ \mathrm{op}(\mathbf{X}) \f$ is one of
    * - \f$ \mathrm{op}(\mathbf{X}) = \mathbf{X} \f$ or,
-   * - \f$ \mathrm{op}(\mathbf{X}) = \mathbf{X}^* \f$ (only if \f$ \mathbf{X} \f$ is in C-layout).
+   * - \f$ \mathrm{op}(\mathbf{X}) = \mathbf{X}^* \f$ (only if \f$ \mathbf{X} \f$ is in nda::C_layout).
    *
    * Here, \f$ \alpha \f$ and \f$ \beta \f$ are scalars, and \f$ \mathbf{A} \f$, \f$ \mathbf{B} \f$ and \f$ \mathbf{C}
    * \f$ are matrices of size \f$ m \times k \f$, \f$ k \times n \f$ and \f$ m \times n \f$, respectively.
    *
-   * @note If matrix \f$ \mathbf{C} \f$ is in C-layout, we transpose both \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ and
-   * swap their order.
+   * @note If matrix \f$ \mathbf{C} \f$ is in nda::C_layout, we transpose both \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ 
+   * and swap their order.
    *
    * @tparam A nda::Matrix type.
    * @tparam B nda::Matrix type.
@@ -54,7 +54,7 @@ namespace nda::blas {
    * @param alpha Input scalar \f$ \alpha \f$.
    * @param a Input matrix \f$ \mathrm{op}_A(\mathbf{A}) \f$ of size \f$ m \times k \f$.
    * @param b Input matrix \f$ \mathrm{op}_B(\mathbf{B}) \f$ of size \f$ k \times n \f$.
-   * @param beta Input scalar \f$ beta \f$.
+   * @param beta Input scalar \f$ \beta \f$.
    * @param c Input/Output matrix \f$ \mathbf{C} \f$ of size \f$ m \times n \f$.
    */
   template <Matrix A, Matrix B, MemoryMatrix C>

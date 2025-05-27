@@ -97,9 +97,13 @@ namespace nda::linalg {
   /**
    * @brief Compute the matrix-matrix product of two nda::matrix objects.
    *
-   * @details This function computes the matrix-matrix product \f$ \mathrm{op}_1(\mathbf{A}) \mathrm{op}_2(\mathbf{B})
-   * \f$, where \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ are \f$ m \times k \f$ and \f$ k \times n \f$ matrices
-   * respectively, \f$ \mathrm{op}_i \f$ can be some lazy operation, e.g. nda::conj, nda::sin, etc.
+   * @details This function computes the matrix-matrix product 
+   * \f[
+   *   \mathrm{op}_A(\mathbf{A}) \mathrm{op}_B(\mathbf{B}) \; ,
+   * \f]
+   * where \f$ \mathrm{op}_A(\mathbf{A}) \f$ and \f$ \mathrm{op}_B(\mathbf{B}) \f$ are \f$ m \times k \f$ and \f$ k 
+   * \times n \f$ matrices, respectively. \f$ \mathrm{op}_i \f$ can be some lazy operation, e.g. nda::conj, nda::sin, 
+   * etc.
    *
    * We try to call nda::blas::gemm whenever possible, i.e. when the value type of the result is compatible with
    * nda::is_blas_lapack_v, even if this requires to make copies of the input arrays/views. Otherwise, we perform a very
@@ -109,15 +113,15 @@ namespace nda::linalg {
    * nda::blas::gemm.
    *
    * @note The layout of the returned matrix depends on the layout of the input matrices. If both input matrices are in
-   * Fortran-layout, the returned matrix is also in Fortran layout. Otherwise, it is in C-layout.
+   * nda::F_layout, the returned matrix is also in nda::F_layout. Otherwise, it is in nda::C_layout.
    * 
    * @warning This function might make copies of the input arrays/views. When working on the device memory space, this 
    * may lead to runtime errors if the copying fails.
    *
    * @tparam A nda::Matrix type.
    * @tparam B nda::Matrix type.
-   * @param a Input matrix \f$ \mathbf{A} \f$ of size \f$ m \times k \f$.
-   * @param b Input matrix \f$ \mathbf{B} \f$ of size \f$ k \times n \f$.
+   * @param a Input matrix \f$ \mathrm{op}_A(\mathbf{A}) \f$ of size \f$ m \times k \f$.
+   * @param b Input matrix \f$ \mathrm{op}_B(\mathbf{B}) \f$ of size \f$ k \times n \f$.
    * @return Resulting matrix of the matrix-matrix multiplication of size \f$ m \times n \f$.
    */
   template <Matrix A, Matrix B>
