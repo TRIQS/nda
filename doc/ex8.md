@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
 Before showing some linear algebra related operations, let us first introduce the nda::matrix and nda::vector types and
 highlight their similarities and differences with respect to nda::array.
 
-@subsection ex8_p1 Matrix and vector types
+@section ex8_p1 Matrix and vector types
 
 As already mentioned in the quick introduction @ref ex1_p11, **nda** provides an nda::matrix and an nda::vector type.
 Both are specializations of the general nda::basic_array with the following features:
@@ -30,7 +30,7 @@ Their algebras determine how matrices and vectors behave in certain operations a
 
 Otherwise, everything that is true for nda::basic_array objects is also true for nda::matrix and nda::vector objects.
 
-@subsection ex8_p2 Constructing matrices and vectors
+@section ex8_p2 Constructing matrices and vectors
 
 To construct a matrix or a vector, we can use the same methods as for nda::array objects.
 We refer the user to @ref ex2 for more information.
@@ -72,7 +72,7 @@ D =
 nda::eye constructs an identity matrix of a certain size and nda::diag takes a 1-dimensional array and constructs a
 square diagonal matrix containing the values of the given array.
 
-@subsection ex8_p3 Initializing and assigning to matrices and vectors
+@section ex8_p3 Initializing and assigning to matrices and vectors
 
 Again, initializing and assigning to matrices and vectors works (almost) exactly in the same way as it does for arrays
 (see @ref ex3)
@@ -100,7 +100,7 @@ M =
 v = [2.7182,2.7182,2.7182]
 ```
 
-@subsection ex8_p4 Views on matrices and vectors
+@section ex8_p4 Views on matrices and vectors
 
 There are some @ref av_factories for views that are specific to matrices and vectors, otherwise everything mentioned in
 @ref ex4 still applies:
@@ -131,7 +131,7 @@ Algebra of A: A
 Algebra of A_mv: M
 ```
 
-@subsection ex8_p5 HDF5, MPI and symmetry support for matrices and vectors
+@section ex8_p5 HDF5, MPI and symmetry support for matrices and vectors
 
 We refer the user to the examples
 - @ref ex5,
@@ -140,7 +140,7 @@ We refer the user to the examples
 
 There are no mentionable differences between arrays, matrices and vectors regarding those features.
 
-@subsection ex8_p6 Arithmetic operations with matrices and vectors
+@section ex8_p6 Arithmetic operations with matrices and vectors
 
 Here the algebra of the involved types becomes important.
 In section @ref ex1_p8, we have shortly introduced how arithmetic operations are implemented in **nda** in terms of lazy
@@ -183,7 +183,7 @@ Then the following operations are allowed  (all operations are lazy unless menti
   - `s1 / M1`: multiplies (lazy) the scalar with the inverse (non-lazy) of `M1`, only square matrices are allowed (since
     `M1` is inverted), result is also square with the same size
 
-@subsection ex8_p7 Using linear algebra tools
+@section ex8_p7 Using linear algebra tools
 
 In addition to the basic matrix-matrix and matrix-vector multiplications described above, **nda** provides some useful
 @ref linalg_tools.
@@ -324,7 +324,7 @@ M1_reconstructed =
  [-12,13,1]]
 ```
 
-@subsection ex8_p8 Using the BLAS/LAPACK interface
+@section ex8_p8 Using the BLAS/LAPACK interface
 
 While the functions in @ref linalg_tools offer a very user-friendly experience, @ref linalg_blas and @ref linalg_lapack
 are more low-level and usually require more input from the users.

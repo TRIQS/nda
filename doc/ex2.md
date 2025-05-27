@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
 }
 ```
 
-@subsection ex2_p1 Default constructor
+@section ex2_p1 Default constructor
 
 The default constructor creates an empty array of size 0:
 
@@ -65,7 +65,7 @@ A.size() = 100
 A.shape() = (10 10)
 ```
 
-@subsection ex2_p2 Constructing an array with a given shape
+@section ex2_p2 Constructing an array with a given shape
 
 The usual way to create an array is by specifying its shape.
 While the shape is a runtime parameter, the rank of the array still has to be known at compile-time (it is a template
@@ -105,7 +105,7 @@ v1.size() = 5
 v1.shape() = (5)
 ```
 
-@subsection ex2_p3 Copy/Move constructors
+@section ex2_p3 Copy/Move constructors
 
 The copy and move constructors behave as expected:
 
@@ -142,7 +142,7 @@ v2.empty() = 1
 > **Note**: After moving, the vector `v2` is empty, i.e. its memory handle does not manage any memory at the moment. To
 > use it, one should again resize it, so that new memory is allocated.
 
-@subsection ex2_p4 Constructing an array from its data
+@section ex2_p4 Constructing an array from its data
 
 1-, 2- and 3-dimensional arrays can be constructed directly from their data using `std::initializer_list` objects:
 - a 1-dimensional array is constructed from a single list,
@@ -186,7 +186,7 @@ A3.size() = 12
 A3.shape() = (2 3 2)
 ```
 
-@subsection ex2_p5 Constructing an array from an nda::Array
+@section ex2_p5 Constructing an array from an nda::Array
 
 We can also construct an array from any object that satisfies the nda::Array concept, has a compatible value type and
 the same rank.
@@ -225,7 +225,7 @@ A2_f.size() = 6
 A2_f.shape() = (3 2)
 ```
 
-@subsection ex2_p6 Factories and transformations
+@section ex2_p6 Factories and transformations
 
 **nda** provides various factory functions and transformations that allow us to construct special arrays very easily
 either from scratch or from some other input arrays.

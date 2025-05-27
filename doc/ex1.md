@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 }
 ```
 
-@subsection ex1_p1 Creating and initializing an array
+@section ex1_p1 Creating and initializing an array
 
 In its simplest form, an nda::array has 2 template parameters
 
@@ -45,7 +45,7 @@ We could have achieved the same using the constructor which takes `std::initiali
 auto A2 = nda::array<int, 2>{{0, 1}, {2, 3}, {4, 5}};
 ```
 
-@subsection ex1_p2 Choosing a memory layout
+@section ex1_p2 Choosing a memory layout
 
 By default, nda::array stores its elements in C-order. To create an array in Fortran-order, we can specify a third
 template parameter:
@@ -61,7 +61,7 @@ Here, nda::F_layout is one of the @ref layout_pols.
 While in 2-dimensions, the only possibilities are C-order or Fortran-order, in higher dimensions one can also specify
 other stride orders (see nda::basic_layout and nda::basic_layout_str).
 
-@subsection ex1_p3 Printing an array
+@section ex1_p3 Printing an array
 
 Let's check the contents, sizes and shapes of the arrays using the overloaded streaming operators:
 
@@ -115,7 +115,7 @@ You can see the difference between the memory layouts of the array:
 >  [4,5]]
 > ```
 
-@subsection ex1_p4 Accessing single elements
+@section ex1_p4 Accessing single elements
 
 We can access single elements of the array using the function call operator of the array object.
 For a 2-dimensional array, we have to pass exactly two indices, otherwise it won't compile:
@@ -153,7 +153,7 @@ B(2, 1) = 100
 > A(3, 2) = 9
 > ```
 
-@subsection ex1_p5 Assigning to an array
+@section ex1_p5 Assigning to an array
 
 It is straightforward to assign a scalar or another array to an existing array:
 
@@ -180,7 +180,7 @@ A =
  [2,100]]
 ```
 
-@subsection ex1_p6 Working with views
+@section ex1_p6 Working with views
 
 Views offer a lightweight and efficient way to manipulate and operate on existing arrays since they do not own their
 data, i.e. there is no memory allocation or copying involved when creating a view (see nda::basic_array_view).
@@ -228,7 +228,7 @@ A =
 In most cases, views will just behave like arrays and the majority of functions and operations that can be performed
 with arrays, also work with views.
 
-@subsection ex1_p7 Working with slices
+@section ex1_p7 Working with slices
 
 A slice is a view on only some parts of an existing array.
 
@@ -282,7 +282,7 @@ A =
  [2,100]]
 ```
 
-@subsection ex1_p8 Performing arithmetic operations
+@section ex1_p8 Performing arithmetic operations
 
 We can perform various @ref av_ops with arrays and views.
 Arithmetic operations are (mostly) implemented as lazy expressions. That means the operations are not performed right
@@ -370,7 +370,7 @@ M1 * M2 =
 Here, an nda::matrix is the same as an nda::array of rank 2, except that it belongs to the ``'M'`` algebra instead of
 the ``'A'`` algebra.
 
-@subsection ex1_p9 Applying mathematical functions and algorithms
+@section ex1_p9 Applying mathematical functions and algorithms
 
 Similar to arithmetic operations, most of the @ref av_math that can operate on arrays and views return a lazy function
 call expression (nda::expr_call) and are sensitive to their algebras:
@@ -433,7 +433,7 @@ They expect the given array elements to have a `bool` value type which is not th
 We therefore use nda::map to create a lazy nda::expr_call that returns a `bool` upon calling it.
 Since nda::expr_call fulfills the nda::Array concept, it can be passed to the algorithms.
 
-@subsection ex1_p10 Writing/Reading HDF5
+@section ex1_p10 Writing/Reading HDF5
 
 Writing arrays and views to HDF5 files using **nda's** @ref av_hdf5 is as easy as
 
@@ -478,7 +478,7 @@ C_copy =
  [3,4]]
 ```
 
-@subsection ex1_p11 Doing linear algebra with arrays
+@section ex1_p11 Doing linear algebra with arrays
 
 **nda** has a @ref linalg_blas and an @ref linalg_lapack and provides the nda::matrix and nda::vector types.
 While nda::matrix is a 2-dimensional array belonging to the ``'M'`` algebra, nda::vector is a 1-dimensional array
@@ -534,7 +534,7 @@ M3 * x = [5,8]
 > **Note**: Matrix-matrix and matrix-vector multiplication do not return lazy expressions, since they call the
 > corresponding BLAS routines directly, while element-wise array-array multiplication does return a lazy expression.
 
-@subsection ex1_p12 Initializing with CLEF's automatic assignment
+@section ex1_p12 Initializing with CLEF's automatic assignment
 
 **nda** contains the @ref clef (CLEF) library which is a more or less standalone implementation of general lazy
 expressions.
@@ -567,7 +567,7 @@ assign the result to the corresponding array element, e.g. `F(3, 4) = 3 * 7 + 4 
 This is especially helpful for high-dimensional arrays where the element at `(i, j, ..., k)` can be written as some
 function \f$ g \f$ of its indices, i.e. \f$ F_{ij \dots k} = g(i, j, \dots, k) \f$.
 
-@subsection ex1_p13 Further examples
+@section ex1_p13 Further examples
 
 The above features constitute only a fraction of what you can do with **nda**.
 
