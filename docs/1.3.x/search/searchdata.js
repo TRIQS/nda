@@ -10,7 +10,7 @@ var indexSectionsWithContent =
   7: "dhnu",
   8: "dos",
   9: "abcdefhilmopstuv",
-  10: "acdeilop",
+  10: "0123abcdefgijlmopstuvw",
   11: "acdhimnosv"
 };
 

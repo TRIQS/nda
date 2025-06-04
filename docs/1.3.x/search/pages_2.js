@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['deprecated_20list_0',['Deprecated List',['../deprecated.html',1,'']]],
-  ['documentation_1',['API Documentation',['../documentation.html',1,'']]]
+  ['2_200_0',['Version 1.2.0',['../changelog.html#autotoc_md7',1,'']]]
 ];

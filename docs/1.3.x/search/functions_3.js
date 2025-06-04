@@ -7,7 +7,7 @@ var searchData=
   ['determinant_4',['determinant',['../group__linalg__tools.html#ga88d96daa5c131cf8058f36e82bffb6d3',1,'nda::determinant()'],['../group__linalg__tools.html#ga3565866878e69b212b1bb03757000b7d',1,'nda::clef::determinant()']]],
   ['determinant_5fin_5fplace_5',['determinant_in_place',['../group__linalg__tools.html#ga16e095b23aa9e6d1afe299607776f893',1,'nda']]],
   ['diag_6',['diag',['../group__av__factories.html#ga3c1d2dbd1fdb0e666829b532fcc46da4',1,'nda']]],
-  ['diagonal_7',['diagonal',['../group__av__factories.html#ga23734f3456a3a27317ecd99fc7fc98b0',1,'nda']]],
+  ['diagonal_7',['diagonal',['../group__av__factories.html#gad73d17b3c916c0a15e6d1b1e9d4ee017',1,'nda']]],
   ['dot_8',['dot',['../group__linalg__blas.html#gabec70205c2c9842f78ceb40c618bdafb',1,'nda::blas::dot()'],['../group__linalg__tools.html#ga432349969f2f13802bed8f1b06bc1b59',1,'nda::dot()']]],
   ['dot_5fgeneric_9',['dot_generic',['../group__linalg__blas.html#ga08f16c1e39202bdd2a820e94a651283a',1,'nda::blas']]],
   ['dot_5fproduct_10',['dot_product',['../group__utils__std.html#gaeb9739b92ba5275cb829402f2c290374',1,'nda::stdutil']]],
