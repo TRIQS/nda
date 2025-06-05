@@ -499,11 +499,9 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
     }
   }
   // otherwise fallback to elementwise assignment
-  if constexpr (mem::have_host_compatible_addr_space<self_t,RHS>) {
-    nda::for_each(shape(), [this, &rhs](auto const &...args) { (*this)(args...) = rhs(args...); });
-  } else if constexpr (mem::have_device_compatible_addr_space<self_t,RHS>) {
+  if constexpr (mem::have_device_compatible_addr_space<self_t,RHS>) {
     tensor::assign(rhs,*this);
-  } else {
+  } else if constexpr (mem::on_device<self_t> or mem::on_device<RHS>) {
     // this is a dev/host copy, make copies and copy contigous arrays over bus
     if(rhs.is_contiguous()) {
       auto B_copy = make_regular(*this);
@@ -519,6 +517,8 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
         (*this)() = B_copy();
       }
     }
+  } else {
+    nda::for_each(shape(), [this, &rhs](auto const &...args) { (*this)(args...) = rhs(args...); });
   }
 }
 
