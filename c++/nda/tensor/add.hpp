@@ -81,7 +81,8 @@ namespace nda::tensor {
       nda_tblis::tensor<value_t, get_rank<B>> b_t(b, beta);
       ::tblis::tblis_tensor_add(NULL, NULL, &a_t, indxX.data(), &b_t, indxY.data());
 #else
-      static_assert(always_false<bool>, " add on host requires cpu tensor operations backend. ");
+      if (indxX != indxY) NDA_RUNTIME_ERROR << "tensor::add: custom indx not implemented without tblis."; 
+      b() = alpha*a() + beta*b();
 #endif
     }
   }
@@ -138,7 +139,8 @@ namespace nda::tensor {
       c() = beta * b();
       ::tblis::tblis_tensor_add(NULL, NULL, &a_t, indxX.data(), &c_t, indxC.data());
 #else
-      static_assert(always_false<bool>, " add on host requires cpu tensor operations backend. ");
+      if (indxX != indxY or indxY != indxC) NDA_RUNTIME_ERROR << "tensor::add: custom indx not implemented without tblis."; 
+      c() = alpha*a() + beta*b();
 #endif
     }
   }
