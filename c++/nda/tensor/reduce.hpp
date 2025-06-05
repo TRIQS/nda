@@ -90,7 +90,7 @@ namespace nda::tensor {
       std::string indx = default_index<uint8_t(rank)>();
       value_t *z       = (value_t *)mem::malloc<mem::Device>(sizeof(value_t));
       cutensor::reduce(value_t{1.0}, a_t, op::ID, a.data(), indx, z, oper);
-      cudaDeviceSynchronize();  // for sync in case it is turned off 
+      cudaDeviceSynchronize(); // for sync in case it is turned off
       mem::memcpy<mem::Host, mem::Device>(&res, z, sizeof(value_t));
       mem::free<mem::Device>(z);
       return res;

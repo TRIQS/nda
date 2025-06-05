@@ -51,7 +51,7 @@ namespace nda::lapack::device {
 #define CUSOLVER_CHECK(X, info, ...)                                                                                                                 \
   auto err = X(get_handle(), __VA_ARGS__, get_info_ptr());                                                                                           \
   if (err != CUSOLVER_STATUS_SUCCESS) {                                                                                                              \
-    std::cerr << AS_STRING(X) << " failed with error code " << std::to_string(err) << std::endl;                                                                  \
+    std::cerr << AS_STRING(X) << " failed with error code " << std::to_string(err) << std::endl;                                                     \
     mpi::communicator{}.abort(11);                                                                                                                   \
   }                                                                                                                                                  \
   if (synchronize) {                                                                                                                                 \
@@ -59,7 +59,7 @@ namespace nda::lapack::device {
     if (err1 != cudaSuccess) {                                                                                                                       \
       std::cerr << " cudaDeviceSynchronize failed after call to: " << AS_STRING(X) " \n "                                                            \
                 << " cudaGetErrorName: " << std::string(cudaGetErrorName(err1)) << "\n"                                                              \
-                << " cudaGetErrorString: " << std::string(cudaGetErrorString(err1)) << std::endl;                                                         \
+                << " cudaGetErrorString: " << std::string(cudaGetErrorString(err1)) << std::endl;                                                    \
       mpi::communicator{}.abort(11);                                                                                                                 \
     }                                                                                                                                                \
   }                                                                                                                                                  \

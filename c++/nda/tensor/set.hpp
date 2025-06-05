@@ -54,7 +54,7 @@ namespace nda::tensor {
       mem::memcpy<mem::Device, mem::Host>(z, &alpha, sizeof(value_t));
       cutensor::cutensor_desc<value_t, 0> z_t(z);
       cutensor::elementwise_binary(value_t{1}, z_t, op::ID, z, "", value_t{0}, a_t, op::ID, a.data(), indx, a.data(), op::SUM);
-      cudaDeviceSynchronize();  // for sync in case it is turned off 
+      cudaDeviceSynchronize(); // for sync in case it is turned off
       mem::free<mem::Device>(z);
 #else
       static_assert(always_false<bool>, " set on device requires gpu tensor operations backend. ");

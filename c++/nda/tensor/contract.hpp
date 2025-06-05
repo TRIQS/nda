@@ -102,7 +102,8 @@ namespace nda::tensor {
     requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and              //
              (MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>) and              //
              have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>) //
-  void contract(X const &x, std::string_view const indxX, Y const &y, std::string_view const indxY, C &&c, std::string_view const indxC, devStream_t const stream = 0) {
+  void contract(X const &x, std::string_view const indxX, Y const &y, std::string_view const indxY, C &&c, std::string_view const indxC,
+                devStream_t const stream = 0) {
     contract(get_value_t<X>{1.0}, x, indxX, y, indxY, get_value_t<X>{0.0}, std::forward<C>(c), indxC, stream);
   }
 

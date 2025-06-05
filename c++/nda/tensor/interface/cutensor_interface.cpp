@@ -59,9 +59,9 @@ namespace nda::tensor::cutensor {
     return h.h;
   }
 
-  // control device synchronization during cutensor calls 
+  // control device synchronization during cutensor calls
   bool synchronize = true;
-  bool get_synchronization() {return synchronize;}
-  void set_synchronization(bool s_) {synchronize = s_;}
+  bool get_synchronization() { return synchronize; }
+  void set_synchronization(bool s_) { synchronize = s_; }
 
 } // namespace nda::tensor::cutensor

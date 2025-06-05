@@ -30,23 +30,13 @@ namespace nda::tensor {}
 #include "tensor/assign.hpp"
 #include "tensor/elementwise.hpp"
 
-namespace nda::tensor
-{
+namespace nda::tensor {
 #if defined(NDA_HAVE_CUTENSOR)
-  inline bool get_device_synchronization() {
-    return nda::tensor::cutensor::get_synchronization();
-  }
-  inline void set_device_synchronization(bool s_) {
-    nda::tensor::cutensor::set_synchronization(s_);
-  }
+  inline bool get_device_synchronization() { return nda::tensor::cutensor::get_synchronization(); }
+  inline void set_device_synchronization(bool s_) { nda::tensor::cutensor::set_synchronization(s_); }
 #else
   inline static bool __synchronize__ = true;
-  inline bool get_device_synchronization() {
-    return __synchronize__;
-  }
-  inline void set_device_synchronization(bool s_) {
-    __synchronize__ = s_;
-  }
+  inline bool get_device_synchronization() { return __synchronize__; }
+  inline void set_device_synchronization(bool s_) { __synchronize__ = s_; }
 #endif
-}
-
+} // namespace nda::tensor

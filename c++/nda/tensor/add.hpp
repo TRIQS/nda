@@ -43,7 +43,8 @@ namespace nda::tensor {
    */
   template <Array X, MemoryArray B>
     requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and have_same_value_type_v<X, B> and is_blas_lapack_v<get_value_t<X>>)
-  void add(get_value_t<X> alpha, X const &x, std::string_view const indxX, get_value_t<X> beta, B &&b, std::string_view const indxY, devStream_t const stream = 0) {
+  void add(get_value_t<X> alpha, X const &x, std::string_view const indxX, get_value_t<X> beta, B &&b, std::string_view const indxY,
+           devStream_t const stream = 0) {
 
     using nda::blas::is_conj_array_expr;
     using value_t = get_value_t<X>;
@@ -69,7 +70,7 @@ namespace nda::tensor {
       op::TENSOR_OP a_op = conj_A ? op::CONJ : op::ID;
       cutensor::cutensor_desc<value_t, get_rank<A>> a_t(a);
       cutensor::cutensor_desc<value_t, get_rank<B>> b_t(b);
-      cutensor::elementwise_binary(alpha, a_t, a_op, a.data(), indxX.data(), beta, b_t, op::ID, b.data(), indxY.data(), b.data(), op::SUM,stream);
+      cutensor::elementwise_binary(alpha, a_t, a_op, a.data(), indxX.data(), beta, b_t, op::ID, b.data(), indxY.data(), b.data(), op::SUM, stream);
 #else
       static_assert(always_false<bool>, " add on device requires gpu tensor operations backend. ");
 #endif
@@ -147,15 +148,15 @@ namespace nda::tensor {
 
   template <Array X, MemoryArray B>
     requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and have_same_value_type_v<X, B> and is_blas_lapack_v<get_value_t<X>>)
-  void add(X const &x, std::string_view const indxX, B &&b, std::string_view const indxY,
-           devStream_t const stream = 0) {
+  void add(X const &x, std::string_view const indxX, B &&b, std::string_view const indxY, devStream_t const stream = 0) {
     return add(get_value_t<X>{1.0}, x, indxX, get_value_t<X>{0.0}, std::forward<B>(b), indxY, stream);
   }
 
   template <Array X, Array Y, MemoryArray C>
     requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and (MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>)
              and have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>)
-  void add(X const &x, std::string_view const indxX, Y const &y, std::string_view const indxY, C &&c, std::string_view const indxC, devStream_t const stream = 0) {
+  void add(X const &x, std::string_view const indxX, Y const &y, std::string_view const indxY, C &&c, std::string_view const indxC,
+           devStream_t const stream = 0) {
     return add(get_value_t<X>{1.0}, x, indxX, get_value_t<Y>{0.0}, y, indxY, std::forward<C>(c), indxC, stream);
   }
 

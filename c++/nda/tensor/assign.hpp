@@ -34,19 +34,16 @@
 
 namespace nda::tensor {
 
- /*
+  /*
   * B(...) = a*Op(A(...))
-  */ 
+  */
   template <Array X, MemoryArray B>
-    requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and
-             get_rank<X> == get_rank<B> and
-             have_same_value_type_v<X, B>)
-  void assign(get_value_t<X> alpha, X const& x, std::string indxA,
-                                    B &&     b, std::string indxB,
-              devStream_t const stream = 0) {
+    requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and get_rank<X> == get_rank<B> and is_blas_lapack_v<get_value_t<X>>
+             and is_blas_lapack_v<get_value_t<B>> and have_same_value_type_v<X, B>)
+  void assign(get_value_t<X> alpha, X const &x, std::string indxA, B &&b, std::string indxB, devStream_t const stream = 0) {
 
     using nda::blas::is_conj_array_expr;
-    using value_t = get_value_t<X>;
+    using value_t      = get_value_t<X>;
     constexpr int rank = get_rank<X>;
     auto to_mat        = []<typename Z>(Z const &z) -> auto        &{
       if constexpr (is_conj_array_expr<Z>)

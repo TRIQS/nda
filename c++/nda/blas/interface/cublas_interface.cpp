@@ -95,7 +95,7 @@ namespace nda::blas::device {
       if (errsync != cudaSuccess) {                                                                                                                  \
         std::cerr << " cudaDeviceSynchronize failed after call to: " << AS_STRING(X) " \n "                                                          \
                   << " cudaGetErrorName: " << std::string(cudaGetErrorName(errsync)) << "\n"                                                         \
-                  << " cudaGetErrorString: " << std::string(cudaGetErrorString(errsync)) << std::endl;                                                    \
+                  << " cudaGetErrorString: " << std::string(cudaGetErrorString(errsync)) << std::endl;                                               \
         mpi::communicator{}.abort(11);                                                                                                               \
       }                                                                                                                                              \
     }                                                                                                                                                \
