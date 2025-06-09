@@ -55,47 +55,45 @@ namespace nda::tensor {
 
     static constexpr bool conj_A = is_conj_array_expr<X>;
     if constexpr (not is_blas_lapack_v<get_value_t<X>>) {
-      if(alpha != get_value_t<X>{1} or conj_A) 
-        NDA_RUNTIME_ERROR << "tensor::assign: Integer type require alpha=1 and no conjugation."; 
+      if (alpha != get_value_t<X>{1} or conj_A) NDA_RUNTIME_ERROR << "tensor::assign: Integer type require alpha=1 and no conjugation.";
     }
 
-    // prioritize device 
-    if constexpr(mem::have_device_compatible_addr_space<A, B>) { // on device
-      auto rec_until = [] (auto&& A_, auto&& B_) -> void {
-        auto rec_until_impl = [] (auto&& At, auto&& Bt, auto& impl) -> void {
-          if constexpr ( (rank == 1) or 
-                    ((has_layout_strided_1d<decltype(At)> or has_contiguous_layout<decltype(At)>) and
-                     (has_layout_strided_1d<decltype(Bt)> or has_contiguous_layout<decltype(Bt)>))
-                       ) {
+    // prioritize device
+    if constexpr (mem::have_device_compatible_addr_space<A, B>) { // on device
+      auto rec_until = [](auto &&A_, auto &&B_) -> void {
+        auto rec_until_impl = [](auto &&At, auto &&Bt, auto &impl) -> void {
+          if constexpr ((rank == 1)
+                        or ((has_layout_strided_1d<decltype(At)> or has_contiguous_layout<decltype(At)>)and(
+                           has_layout_strided_1d<decltype(Bt)> or has_contiguous_layout<decltype(Bt)>))) {
             Bt() = At();
           } else {
             long n = Bt.extent(0);
-            for( long i=0; i<n; ++i) impl(At(i,::nda::ellipsis{}),Bt(i,::nda::ellipsis{}), impl);
+            for (long i = 0; i < n; ++i) impl(At(i, ::nda::ellipsis{}), Bt(i, ::nda::ellipsis{}), impl);
           }
         };
-        rec_until_impl(A_,B_,rec_until_impl);
+        rec_until_impl(A_, B_, rec_until_impl);
       };
 
       if constexpr (is_blas_lapack_v<get_value_t<X>>) {
 #if defined(NDA_HAVE_CUTENSOR)
         cutensor::cutensor_desc<value_t, rank> a_t(a);
         cutensor::cutensor_desc<value_t, rank> b_t(b);
-        op::TENSOR_OP oper = ( conj_A ? op::CONJ : op::ID );
+        op::TENSOR_OP oper = (conj_A ? op::CONJ : op::ID);
         cutensor::permute(alpha, a_t, oper, a.data(), indxA, b_t, b.data(), indxB, stream);
 #else
         if (indxA != indxB) NDA_RUNTIME_ERROR << "tensor::assign: Index permutation not yet implemented in device memory without cutensor.";
-        if(alpha == get_value_t<X>{1} and not conj_A) {
-          rec_until(a,b); 
+        if (alpha == get_value_t<X>{1} and not conj_A) {
+          rec_until(a, b);
         } else {
           using Array_t = typename std::decay_t<A>::regular_type;
           Array_t a_copy(a);
           // this will currently fail at compile time without cutensor
-          scale(alpha,a_copy,(conj_A?(op::CONJ):(op::ID))); 
-          rec_until(a_copy,b); 
+          scale(alpha, a_copy, (conj_A ? (op::CONJ) : (op::ID)));
+          rec_until(a_copy, b);
         }
 #endif
       } else {
-        rec_until(a,b);
+        rec_until(a, b);
       }
     } else if constexpr (mem::have_host_compatible_addr_space<A, B>) { // on host or unified
       // write routine that creates permuted view
@@ -108,47 +106,37 @@ namespace nda::tensor {
     } else {
       // fallback tp operator() with possible copy
       if (indxA != indxB) NDA_RUNTIME_ERROR << "tensor::assign: Index permutation not yet implemented with host/device case.";
-      if(alpha == get_value_t<X>{1} and not conj_A) {
-        b() = a();  
-      } else {     
+      if (alpha == get_value_t<X>{1} and not conj_A) {
+        b() = a();
+      } else {
         using Array_t = typename std::decay_t<A>::regular_type;
         Array_t a_copy(a);
-        if constexpr (is_blas_lapack_v<get_value_t<X>>) 
-          scale(alpha,a_copy,(conj_A?(op::CONJ):(op::ID))); 
+        if constexpr (is_blas_lapack_v<get_value_t<X>>) scale(alpha, a_copy, (conj_A ? (op::CONJ) : (op::ID)));
         b() = a_copy();
       }
     }
   }
 
   template <Array X, MemoryArray B>
-    requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and
-             get_rank<X> == get_rank<B> and
-             have_same_value_type_v<X, B>)
-  void assign(get_value_t<X> alpha, X const& x, B &&b, devStream_t const stream = 0)
-  {
+  requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>)and get_rank<X> == get_rank<B> and have_same_value_type_v<X, B>) void assign(
+     get_value_t<X> alpha, X const &x, B &&b, devStream_t const stream = 0) {
     constexpr int rank = get_rank<X>;
     std::string indx = default_index<uint8_t(rank)>();
     assign(alpha,x,indx,b,indx,stream);
   }
-  
+
   template <Array X, MemoryArray B>
-    requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and
-             get_rank<X> == get_rank<B> and
-             have_same_value_type_v<X, B>)
-  void assign(X const& x, B &&b, devStream_t const stream = 0)
-  {
+  requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>)and get_rank<X> == get_rank<B> and have_same_value_type_v<X, B>) void assign(
+     X const &x, B &&b, devStream_t const stream = 0) {
     constexpr int rank = get_rank<X>;
     std::string indx = default_index<uint8_t(rank)>();
-    assign(get_value_t<X>{1},x,indx,b,indx,stream);
+    assign(get_value_t<X>{1}, x, indx, b, indx, stream);
   }
 
   template <Array X, MemoryArray B>
-    requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and
-             get_rank<X> == get_rank<B> and
-             have_same_value_type_v<X, B>)
-  void assign(X const& x, std::string indxA, B &&b, std::string indxB, devStream_t const stream = 0) 
-  {
-    assign(get_value_t<X>{1},x,indxA,b,indxB,stream);
-  } 
+  requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>)and get_rank<X> == get_rank<B> and have_same_value_type_v<X, B>) void assign(
+     X const &x, std::string indxA, B &&b, std::string indxB, devStream_t const stream = 0) {
+    assign(get_value_t<X>{1}, x, indxA, b, indxB, stream);
+  }
 
 } // namespace nda::tensor

@@ -448,8 +448,7 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
   static_assert(std::is_assignable_v<value_type &, get_value_t<RHS>>, "Error in assign_from_ndarray: Incompatible value types");
 
   // no expr_call on device yet
-  if constexpr (mem::on_device<self_t> or mem::on_device<RHS>)
-  {
+  if constexpr (mem::on_device<self_t> or mem::on_device<RHS>) {
     // compile time check for no expr_call objects on RHS
   }
 
@@ -500,22 +499,22 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
   }
   // otherwise fallback to elementwise assignment
   if constexpr (mem::have_device_compatible_addr_space<self_t, RHS>) {
-    tensor::assign(rhs,*this);
+    tensor::assign(rhs, *this);
   } else if constexpr (mem::on_device<self_t> or mem::on_device<RHS>) {
     // this is a dev/host copy, make copies and copy contigous arrays over bus
     // this is a problem when RHS is an expression, fix!
-    if(rhs.is_contiguous()) {
+    if (rhs.is_contiguous()) {
       auto B_copy = make_regular(*this);
-      B_copy() = rhs();
-      (*this)() = B_copy();
+      B_copy()    = rhs();
+      (*this)()   = B_copy();
     } else {
       auto rhs_copy = make_regular(rhs);
-      if(this->is_contiguous()) {
+      if (this->is_contiguous()) {
         (*this)() = rhs_copy();
       } else {
         auto B_copy = make_regular(*this);
-        B_copy() = rhs_copy();
-        (*this)() = B_copy();
+        B_copy()    = rhs_copy();
+        (*this)()   = B_copy();
       }
     }
   } else {
