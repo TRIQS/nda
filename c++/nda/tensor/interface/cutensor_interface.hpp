@@ -63,8 +63,6 @@ namespace nda::tensor::cutensor {
     }                                                                                                                                                \
   }
 
-
-
 #define CUTENSOR_SYNC_IF_SET_STREAM(S)                                                                                                               \
   {                                                                                                                                                  \
     if (synchronize) {                                                                                                                               \
@@ -108,8 +106,6 @@ namespace nda::tensor::cutensor {
   template <>
   inline auto data_type<std::complex<double>> = CUTENSOR_C_64F;
 
-  
-
   template <typename T>
   auto compute_type = std::enable_if_t<sizeof(T *) == 0>{};
   template <>
@@ -121,21 +117,29 @@ namespace nda::tensor::cutensor {
   template <>
   inline auto compute_type<std::complex<double>> = CUTENSOR_COMPUTE_DESC_64F;
 
-  template<typename T>
-  uint32_t find_alignment(T* p) {
-    if(uintptr_t(p) % uint32_t(256) == 0) return uint32_t(256); 
-    else if(uintptr_t(p) % uint32_t(64) == 0) return uint32_t(64); 
-    else if(uintptr_t(p) % uint32_t(32) == 0) return uint32_t(32); 
-    else if(uintptr_t(p) % uint32_t(16) == 0) return uint32_t(16); 
-    else if(uintptr_t(p) % uint32_t(8) == 0) return uint32_t(8); 
-    else if(uintptr_t(p) % uint32_t(4) == 0) return uint32_t(4); 
-    else if(uintptr_t(p) % uint32_t(2) == 0) return uint32_t(2); 
-    else return sizeof(T);
+  template <typename T>
+  uint32_t find_alignment(T *p) {
+    if (uintptr_t(p) % uint32_t(256) == 0)
+      return uint32_t(256);
+    else if (uintptr_t(p) % uint32_t(64) == 0)
+      return uint32_t(64);
+    else if (uintptr_t(p) % uint32_t(32) == 0)
+      return uint32_t(32);
+    else if (uintptr_t(p) % uint32_t(16) == 0)
+      return uint32_t(16);
+    else if (uintptr_t(p) % uint32_t(8) == 0)
+      return uint32_t(8);
+    else if (uintptr_t(p) % uint32_t(4) == 0)
+      return uint32_t(4);
+    else if (uintptr_t(p) % uint32_t(2) == 0)
+      return uint32_t(2);
+    else
+      return sizeof(T);
   }
 
-  template<typename T>
-  void check_alignment(T const* p, uint32_t const align_, std::string m = "") {
-    if(uintptr_t(p) % align_ != 0) { 
+  template <typename T>
+  void check_alignment(T const *p, uint32_t const align_, std::string m = "") {
+    if (uintptr_t(p) % align_ != 0) {
       // add stacktrace?
       NDA_RUNTIME_ERROR << " tensor::cutensor::check_alignment: Alignment mismatch: " + m;
     }
@@ -150,13 +154,12 @@ namespace nda::tensor::cutensor {
 
     // MAM: out of safety, since I don't know how cutensor operates
     std::array<long, rank> lens_, strides_;
-    uint32_t alignment_              = sizeof(ValueType); 
+    uint32_t alignment_              = sizeof(ValueType);
     cutensorTensorDescriptor_t desc_ = {};
 
     cutensor_desc() = delete;
     template <::nda::MemoryArrayOfRank<Rank> Arr>
-      requires(Rank > 0)
-    cutensor_desc(Arr const &a) : lens_(a.shape()), strides_(a.strides()), alignment_(find_alignment(a.data())) {
+    requires(Rank > 0) cutensor_desc(Arr const &a) : lens_(a.shape()), strides_(a.strides()), alignment_(find_alignment(a.data())) {
       CUTENSOR_CHECK(cutensorCreateTensorDescriptor, get_handle_ptr(), &desc_, uint32_t(Rank), lens_.data(), strides_.data(), data_type<ValueType>,
                      alignment_);
     }
@@ -164,9 +167,7 @@ namespace nda::tensor::cutensor {
       static_assert(Rank == 0, "Rank mismatch.");
       CUTENSOR_CHECK(cutensorCreateTensorDescriptor, get_handle_ptr(), &desc_, uint32_t(Rank), NULL, NULL, data_type<ValueType>, alignment_);
     }
-    ~cutensor_desc() { 
-      CUTENSOR_CHECK(cutensorDestroyTensorDescriptor, desc_); 
-    }
+    ~cutensor_desc() { CUTENSOR_CHECK(cutensorDestroyTensorDescriptor, desc_); }
 
     cutensor_desc(cutensor_desc const &) = delete;
     cutensor_desc(cutensor_desc &&other) = default;
@@ -175,9 +176,7 @@ namespace nda::tensor::cutensor {
     cutensorTensorDescriptor_t &desc() { return desc_; }
     cutensorTensorDescriptor_t const &desc() const { return desc_; }
 
-    void check_alignment(ValueType const* p, std::string m = "") const { 
-      nda::tensor::cutensor::check_alignment(p,alignment_,m); 
-    }
+    void check_alignment(ValueType const *p, std::string m = "") const { nda::tensor::cutensor::check_alignment(p, alignment_, m); }
   };
 
   struct cutensor_plan_t {
@@ -265,13 +264,13 @@ namespace nda::tensor::cutensor {
     CUTENSOR_CHECK(cutensorCreateContraction, get_handle_ptr(), &desc, descA.desc(), modeA.data(), cutensor_op(op_A), descB.desc(), modeB.data(),
                    cutensor_op(op_B), descC.desc(), modeC_data, cutensor_op(op_C), descC.desc(), modeC_data, compute_type<value_t>);
 
-    descA.check_alignment(A_d,"contract - A"); 
-    descB.check_alignment(B_d,"contract - B"); 
-    descC.check_alignment(C_d,"contract - C"); 
+    descA.check_alignment(A_d, "contract - A");
+    descB.check_alignment(B_d, "contract - B");
+    descC.check_alignment(C_d, "contract - C");
 
     cutensor_plan_t plan(desc, true);
-    CUTENSOR_CHECK(cutensorContract, get_handle_ptr(), plan.plan, (void *)&alpha, A_d, B_d, (void *)&beta, C_d, C_d,
-                          plan.get_workspace(), plan.get_workspace_size(), stream);
+    CUTENSOR_CHECK(cutensorContract, get_handle_ptr(), plan.plan, (void *)&alpha, A_d, B_d, (void *)&beta, C_d, C_d, plan.get_workspace(),
+                   plan.get_workspace_size(), stream);
     CUTENSOR_CHECK(cutensorDestroyOperationDescriptor, desc);
     CUTENSOR_SYNC_IF_SET_STREAM(stream)
   }
@@ -291,11 +290,12 @@ namespace nda::tensor::cutensor {
     cutensorTensorDescriptor_t Tdesc_;
     uint32_t alignment_ = find_alignment(C_d);
     std::array<long, rB> lens_(descB.lens_), strides_(descB.strides_);
-    CUTENSOR_CHECK(cutensorCreateTensorDescriptor, get_handle_ptr(), std::addressof(Tdesc_), uint32_t(rB), lens_.data(), strides_.data(), data_type<value_t>, alignment_);
+    CUTENSOR_CHECK(cutensorCreateTensorDescriptor, get_handle_ptr(), std::addressof(Tdesc_), uint32_t(rB), lens_.data(), strides_.data(),
+                   data_type<value_t>, alignment_);
 
-    descA.check_alignment(A_d,"elementwise_binary - A"); 
-    descB.check_alignment(B_d,"elementwise_binary - B"); 
-    nda::tensor::cutensor::check_alignment(C_d,alignment_,"elementwise_binary - C"); 
+    descA.check_alignment(A_d, "elementwise_binary - A");
+    descB.check_alignment(B_d, "elementwise_binary - B");
+    nda::tensor::cutensor::check_alignment(C_d, alignment_, "elementwise_binary - C");
 
     if constexpr (rA > 0) {
 
@@ -307,8 +307,7 @@ namespace nda::tensor::cutensor {
                      modeB.data(), cutensor_op(op_B), Tdesc_, modeB.data(), cutensor_op(oper), compute_type<value_t>);
 
       cutensor_plan_t plan(desc, false);
-      CUTENSOR_CHECK(cutensorElementwiseBinaryExecute, get_handle_ptr(), plan.plan, (const void *)&alpha, A_d, (void *)&gamma, B_d,
-                            C_d, stream);
+      CUTENSOR_CHECK(cutensorElementwiseBinaryExecute, get_handle_ptr(), plan.plan, (const void *)&alpha, A_d, (void *)&gamma, B_d, C_d, stream);
       CUTENSOR_CHECK(cutensorDestroyOperationDescriptor, desc);
 
     } else {
@@ -318,11 +317,10 @@ namespace nda::tensor::cutensor {
                      cutensor_op(op_B), Tdesc_, modeB.data(), cutensor_op(oper), compute_type<value_t>);
 
       cutensor_plan_t plan(desc, false);
-      CUTENSOR_CHECK(cutensorElementwiseBinaryExecute, get_handle_ptr(), plan.plan, (const void *)&alpha, A_d, (void *)&gamma, B_d,
-                            C_d, stream);
+      CUTENSOR_CHECK(cutensorElementwiseBinaryExecute, get_handle_ptr(), plan.plan, (const void *)&alpha, A_d, (void *)&gamma, B_d, C_d, stream);
       CUTENSOR_CHECK(cutensorDestroyOperationDescriptor, desc);
     }
-    CUTENSOR_CHECK(cutensorDestroyTensorDescriptor,Tdesc_);
+    CUTENSOR_CHECK(cutensorDestroyTensorDescriptor, Tdesc_);
     CUTENSOR_SYNC_IF_SET_STREAM(stream)
   }
 
@@ -340,8 +338,8 @@ namespace nda::tensor::cutensor {
     std::copy_n(idxA.begin(), rank, modeA.begin());
     std::copy_n(idxB.begin(), rank, modeB.begin());
 
-    descA.check_alignment(A_d,"permute - A"); 
-    descB.check_alignment(B_d,"permute - B"); 
+    descA.check_alignment(A_d, "permute - A");
+    descB.check_alignment(B_d, "permute - B");
 
     cutensorOperationDescriptor_t desc;
     CUTENSOR_CHECK(cutensorCreatePermutation, get_handle_ptr(), &desc, descA.desc(), modeA.data(), cutensor_op(op_A), descB.desc(), modeB.data(),
@@ -366,16 +364,16 @@ namespace nda::tensor::cutensor {
     std::copy_n(idxA.begin(), rA, modeA.begin());
     std::copy_n(idxB.begin(), rB, modeB.begin());
 
-    descA.check_alignment(A_d,"reduce - A");
-    descB.check_alignment(B_d,"reduce - B");
+    descA.check_alignment(A_d, "reduce - A");
+    descB.check_alignment(B_d, "reduce - B");
 
     cutensorOperationDescriptor_t desc;
     CUTENSOR_CHECK(cutensorCreateReduction, get_handle_ptr(), &desc, descA.desc(), modeA.data(), cutensor_op(op_A), descB.desc(), modeB.data(),
                    cutensor_op(op_B), descB.desc(), modeB.data(), cutensor_op(oper), compute_type<value_t>);
 
     cutensor_plan_t plan(desc, true);
-    CUTENSOR_CHECK(cutensorReduce, get_handle_ptr(), plan.plan, (const void *)&alpha, A_d, (const void *)&beta, B_d, C_d,
-                          plan.get_workspace(), plan.get_workspace_size(), stream);
+    CUTENSOR_CHECK(cutensorReduce, get_handle_ptr(), plan.plan, (const void *)&alpha, A_d, (const void *)&beta, B_d, C_d, plan.get_workspace(),
+                   plan.get_workspace_size(), stream);
     CUTENSOR_CHECK(cutensorDestroyOperationDescriptor, desc);
     CUTENSOR_SYNC_IF_SET_STREAM(stream)
   }
@@ -391,18 +389,18 @@ namespace nda::tensor::cutensor {
     cutensorTensorDescriptor_t Tdesc_;
     CUTENSOR_CHECK(cutensorCreateTensorDescriptor, get_handle_ptr(), std::addressof(Tdesc_), 0, NULL, NULL, data_type<value_t>, alignment_);
 
-    descA.check_alignment(A_d,"reduce - A");
-    nda::tensor::cutensor::check_alignment(C_d,alignment_,"elementwise_binary - C"); 
+    descA.check_alignment(A_d, "reduce - A");
+    nda::tensor::cutensor::check_alignment(C_d, alignment_, "elementwise_binary - C");
 
     cutensorOperationDescriptor_t desc;
     CUTENSOR_CHECK(cutensorCreateReduction, get_handle_ptr(), &desc, descA.desc(), modeA.data(), cutensor_op(op_A), Tdesc_, nullptr,
                    cutensor_op(op::ID), Tdesc_, nullptr, cutensor_op(oper), compute_type<value_t>);
 
     cutensor_plan_t plan(desc, true);
-    CUTENSOR_CHECK(cutensorReduce, get_handle_ptr(), plan.plan, (const void *)&alpha, A_d, (const void *)&beta, C_d, C_d,
-                          plan.get_workspace(), plan.get_workspace_size(), stream);
+    CUTENSOR_CHECK(cutensorReduce, get_handle_ptr(), plan.plan, (const void *)&alpha, A_d, (const void *)&beta, C_d, C_d, plan.get_workspace(),
+                   plan.get_workspace_size(), stream);
     CUTENSOR_CHECK(cutensorDestroyOperationDescriptor, desc);
-    CUTENSOR_CHECK(cutensorDestroyTensorDescriptor,Tdesc_);
+    CUTENSOR_CHECK(cutensorDestroyTensorDescriptor, Tdesc_);
     CUTENSOR_SYNC_IF_SET_STREAM(stream)
   }
 

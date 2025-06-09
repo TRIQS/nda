@@ -509,7 +509,7 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
       B_copy() = rhs();
       (*this)() = B_copy();
     } else {
-      auto rhs_copy = make_regular(rhs);  
+      auto rhs_copy = make_regular(rhs);
       if(this->is_contiguous()) {
         (*this)() = rhs_copy();
       } else {
