@@ -6,6 +6,7 @@
 #include "./test_common.hpp"
 
 #include <nda/gtest_tools.hpp>
+#undef NDA_HAVE_CUTENSOR
 #include <nda/nda.hpp>
 
 using value_t   = double;
@@ -86,6 +87,41 @@ TEST(NDA, CudaAssignFromArray) {
   B      = B_d;
 
   EXPECT_ARRAY_EQ(B, A);
+}
+
+TEST(NDA, CudaAssignFromStridedArray) {
+  using nda::range;
+  auto A = nda::rand<value_t>(2*N, 2*N, 2*N, 2*N);
+ 
+  {  // contiguous segment 
+    auto rng = range(N);
+    auto A_s = A(rng+1,rng+2,rng,rng+1);
+
+    // device <- host, contiguous on device
+    auto A_d = cuarray_t<4>(N, N, N, N);
+    A_d      = A_s;
+    EXPECT_ARRAY_EQ(nda::to_host(A_d), A_s);
+
+    // device <- host, strided view on device
+    auto A2_d = cuarray_t<4>(A.shape());
+    A_d = A2_d(rng+1,rng+2,rng,rng+1);
+//    A2_d(rng+1,rng+2,rng,rng+1)      = A_s;
+    {
+      // to avoid strided device -> host copy, since it is tested below 
+//      auto A2_h = nda::to_host(A2_d);
+//      EXPECT_ARRAY_EQ(A2_h(rng+1,rng+2,rng,rng+1), A_s);   
+    }
+
+    // device <- device
+//    auto B_d = cuarray_t<4>(N, N, N, N);
+//    B_d      = A_d;
+
+    // host <- device
+//    auto B = array_t<4>(N, N, N, N);
+//    B      = B_d;
+
+//    EXPECT_ARRAY_EQ(B, A);
+  }
 }
 
 TEST(NDA, CudaAssignFromView) {

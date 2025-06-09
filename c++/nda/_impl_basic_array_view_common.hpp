@@ -503,12 +503,13 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
     tensor::assign(rhs,*this);
   } else if constexpr (mem::on_device<self_t> or mem::on_device<RHS>) {
     // this is a dev/host copy, make copies and copy contigous arrays over bus
+    // this is a problem when RHS is an expression, fix!
     if(rhs.is_contiguous()) {
       auto B_copy = make_regular(*this);
       B_copy() = rhs();
       (*this)() = B_copy();
     } else {
-      auto rhs_copy = make_regular(rhs);  // this will not be contiguous
+      auto rhs_copy = make_regular(rhs);  
       if(this->is_contiguous()) {
         (*this)() = rhs_copy();
       } else {
