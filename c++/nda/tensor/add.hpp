@@ -42,9 +42,9 @@ namespace nda::tensor {
    *       * Tensor ranks must match the size of the provided index list (string_view object).  
    */
   template <Array X, MemoryArray B>
-    requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and have_same_value_type_v<X, B> and is_blas_lapack_v<get_value_t<X>>)
-  void add(get_value_t<X> alpha, X const &x, std::string_view const indxX, get_value_t<X> beta, B &&b, std::string_view const indxY,
-           devStream_t const stream = 0) {
+  requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>)and have_same_value_type_v<X, B> and is_blas_lapack_v<get_value_t<X>>) void add(
+     get_value_t<X> alpha, X const &x, std::string_view const indxX, get_value_t<X> beta, B &&b, std::string_view const indxY,
+     devStream_t const stream = 0) {
 
     using nda::blas::is_conj_array_expr;
     using value_t = get_value_t<X>;
@@ -147,16 +147,17 @@ namespace nda::tensor {
   }
 
   template <Array X, MemoryArray B>
-    requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and have_same_value_type_v<X, B> and is_blas_lapack_v<get_value_t<X>>)
-  void add(X const &x, std::string_view const indxX, B &&b, std::string_view const indxY, devStream_t const stream = 0) {
+  requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>)and have_same_value_type_v<X, B> and is_blas_lapack_v<get_value_t<X>>) void add(
+     X const &x, std::string_view const indxX, B &&b, std::string_view const indxY, devStream_t const stream = 0) {
     return add(get_value_t<X>{1.0}, x, indxX, get_value_t<X>{0.0}, std::forward<B>(b), indxY, stream);
   }
 
   template <Array X, Array Y, MemoryArray C>
-    requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and (MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>)
-             and have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>)
-  void add(X const &x, std::string_view const indxX, Y const &y, std::string_view const indxY, C &&c, std::string_view const indxC,
-           devStream_t const stream = 0) {
+  requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>)and(MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>)
+           and have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>) void add(X const &x, std::string_view const indxX, Y const &y,
+                                                                                              std::string_view const indxY, C &&c,
+                                                                                              std::string_view const indxC,
+                                                                                              devStream_t const stream = 0) {
     return add(get_value_t<X>{1.0}, x, indxX, get_value_t<Y>{0.0}, y, indxY, std::forward<C>(c), indxC, stream);
   }
 

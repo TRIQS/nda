@@ -45,10 +45,15 @@ namespace nda::tensor {
    *       * Tensor ranks must match the size of the provided index list (string_view object).
    */
   template <Array X, Array Y>
-    requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and (MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>)
-             and have_same_value_type_v<X, Y> and is_blas_lapack_v<get_value_t<X>> and is_blas_lapack_v<get_value_t<Y>>)
-  void elementwise(get_value_t<X> const alpha, X const &x, std::string_view const indxX, get_value_t<X> const beta, Y &&y,
-                   std::string_view const indxY, op::TENSOR_OP binary_oper, devStream_t const stream = 0) {
+  requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>)and(MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>)
+           and have_same_value_type_v<
+              X, Y> and is_blas_lapack_v<get_value_t<X>> and is_blas_lapack_v<get_value_t<Y>>) void elementwise(get_value_t<X> const alpha,
+                                                                                                                X const &x,
+                                                                                                                std::string_view const indxX,
+                                                                                                                get_value_t<X> const beta, Y &&y,
+                                                                                                                std::string_view const indxY,
+                                                                                                                op::TENSOR_OP binary_oper,
+                                                                                                                devStream_t const stream = 0) {
 
     using nda::blas::is_conj_array_expr;
     using value_t = get_value_t<X>;
@@ -95,28 +100,35 @@ namespace nda::tensor {
   }
 
   template <Array X, Array Y>
-    requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and (MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>)
-             and have_same_value_type_v<X, Y> and is_blas_lapack_v<get_value_t<X>> and is_blas_lapack_v<get_value_t<Y>>)
-  void elementwise(get_value_t<X> const alpha, X const &x, get_value_t<X> const beta, Y &&y, op::TENSOR_OP binary_oper,
-                   devStream_t const stream = 0) {
+  requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>)and(MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>)
+           and have_same_value_type_v<
+              X, Y> and is_blas_lapack_v<get_value_t<X>> and is_blas_lapack_v<get_value_t<Y>>) void elementwise(get_value_t<X> const alpha,
+                                                                                                                X const &x, get_value_t<X> const beta,
+                                                                                                                Y &&y, op::TENSOR_OP binary_oper,
+                                                                                                                devStream_t const stream = 0) {
     std::string indxX = default_index<uint8_t(get_rank<X>)>();
     std::string indxY = default_index<uint8_t(get_rank<Y>)>();
     elementwise(alpha, x, indxX, beta, y, indxY, binary_oper, stream);
   }
 
   template <Array X, Array Y>
-    requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and (MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>)
-             and have_same_value_type_v<X, Y> and is_blas_lapack_v<get_value_t<X>> and is_blas_lapack_v<get_value_t<Y>>)
-  void elementwise(X const &x, Y &&y, op::TENSOR_OP binary_oper, devStream_t const stream = 0) {
+  requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>)and(MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>)
+           and have_same_value_type_v<
+              X, Y> and is_blas_lapack_v<get_value_t<X>> and is_blas_lapack_v<get_value_t<Y>>) void elementwise(X const &x, Y &&y,
+                                                                                                                op::TENSOR_OP binary_oper,
+                                                                                                                devStream_t const stream = 0) {
     std::string indxX = default_index<uint8_t(get_rank<X>)>();
     std::string indxY = default_index<uint8_t(get_rank<Y>)>();
     elementwise(get_value_t<X>{1.0}, x, indxX, get_value_t<Y>{0.0}, y, indxY, binary_oper, stream);
   }
 
   template <Array X, Array Y>
-    requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and (MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>)
-             and have_same_value_type_v<X, Y> and is_blas_lapack_v<get_value_t<X>> and is_blas_lapack_v<get_value_t<Y>>)
-  void elementwise(X const &x, std::string indxX, Y &&y, std::string indxY, op::TENSOR_OP binary_oper, devStream_t const stream = 0) {
+  requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>)and(MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>)
+           and have_same_value_type_v<
+              X, Y> and is_blas_lapack_v<get_value_t<X>> and is_blas_lapack_v<get_value_t<Y>>) void elementwise(X const &x, std::string indxX, Y &&y,
+                                                                                                                std::string indxY,
+                                                                                                                op::TENSOR_OP binary_oper,
+                                                                                                                devStream_t const stream = 0) {
     elementwise(get_value_t<X>{1.0}, x, indxX, get_value_t<Y>{0.0}, y, indxY, binary_oper, stream);
   }
 

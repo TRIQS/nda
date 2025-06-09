@@ -247,10 +247,11 @@ namespace nda::tensor::cutensor {
    ************************************************************************/
 
   template <typename value_t, int rA, int rB, int rC>
-    requires(rA > 0 and rB > 0 and rC >= 0)
-  void contract(value_t alpha, cutensor_desc<value_t, rA> const &descA, op::TENSOR_OP op_A, value_t const *A_d, std::string_view idxA,
-                cutensor_desc<value_t, rB> const &descB, op::TENSOR_OP op_B, value_t const *B_d, std::string_view idxB, value_t beta,
-                cutensor_desc<value_t, rC> &descC, op::TENSOR_OP op_C, value_t *C_d, std::string_view idxC, cudaStream_t const stream = 0) {
+  requires(rA > 0 and rB > 0 and rC >= 0) void contract(value_t alpha, cutensor_desc<value_t, rA> const &descA, op::TENSOR_OP op_A,
+                                                        value_t const *A_d, std::string_view idxA, cutensor_desc<value_t, rB> const &descB,
+                                                        op::TENSOR_OP op_B, value_t const *B_d, std::string_view idxB, value_t beta,
+                                                        cutensor_desc<value_t, rC> &descC, op::TENSOR_OP op_C, value_t *C_d, std::string_view idxC,
+                                                        cudaStream_t const stream = 0) {
     std::array<int, rA> modeA;
     std::array<int, rB> modeB;
     std::array<int, rC> modeC;
@@ -280,10 +281,11 @@ namespace nda::tensor::cutensor {
    ************************************************************************/
 
   template <typename value_t, int rA, int rB>
-    requires(rA >= 0 and rB > 0 and rB >= rA)
-  void elementwise_binary(value_t const alpha, cutensor_desc<value_t, rA> const &descA, op::TENSOR_OP op_A, value_t const *A_d, std::string_view idxA,
-                          value_t const gamma, cutensor_desc<value_t, rB> const &descB, op::TENSOR_OP op_B, value_t const *B_d, std::string_view idxB,
-                          value_t *C_d, op::TENSOR_OP oper, cudaStream_t const stream = 0) {
+  requires(rA >= 0 and rB > 0 and rB >= rA) void elementwise_binary(value_t const alpha, cutensor_desc<value_t, rA> const &descA, op::TENSOR_OP op_A,
+                                                                    value_t const *A_d, std::string_view idxA, value_t const gamma,
+                                                                    cutensor_desc<value_t, rB> const &descB, op::TENSOR_OP op_B, value_t const *B_d,
+                                                                    std::string_view idxB, value_t *C_d, op::TENSOR_OP oper,
+                                                                    cudaStream_t const stream = 0) {
     std::array<int, rB> modeB;
     std::copy_n(idxB.begin(), rB, modeB.begin());
 
