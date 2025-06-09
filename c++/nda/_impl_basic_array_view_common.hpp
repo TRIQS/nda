@@ -447,6 +447,11 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
   // compile-time check if assignment is possible
   static_assert(std::is_assignable_v<value_type &, get_value_t<RHS>>, "Error in assign_from_ndarray: Incompatible value types");
 
+  // no expr_call on device yet
+  if constexpr (mem::on_device<self_t> or mem::on_device<RHS>) {
+    // compile time check for no expr_call objects on RHS
+  }
+
   // are both operands nda::MemoryArray types?
   static constexpr bool both_in_memory = MemoryArray<self_t> and MemoryArray<RHS>;
 
@@ -493,10 +498,28 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
     }
   }
   // otherwise fallback to elementwise assignment
-  if constexpr (mem::on_device<self_t> || mem::on_device<RHS>) {
-    NDA_RUNTIME_ERROR << "Error in assign_from_ndarray: Fallback to elementwise assignment not implemented for arrays/views on the GPU";
+  if constexpr (mem::have_device_compatible_addr_space<self_t, RHS>) {
+    tensor::assign(rhs, *this);
+  } else if constexpr (mem::on_device<self_t> or mem::on_device<RHS>) {
+    // this is a dev/host copy, make copies and copy contigous arrays over bus
+    // this is a problem when RHS is an expression, fix!
+    if (rhs.is_contiguous()) {
+      auto B_copy = make_regular(*this);
+      B_copy()    = rhs();
+      (*this)()   = B_copy();
+    } else {
+      auto rhs_copy = make_regular(rhs);
+      if (this->is_contiguous()) {
+        (*this)() = rhs_copy();
+      } else {
+        auto B_copy = make_regular(*this);
+        B_copy()    = rhs_copy();
+        (*this)()   = B_copy();
+      }
+    }
+  } else {
+    nda::for_each(shape(), [this, &rhs](auto const &...args) { (*this)(args...) = rhs(args...); });
   }
-  nda::for_each(shape(), [this, &rhs](auto const &...args) { (*this)(args...) = rhs(args...); });
 }
 
 // Implementation to fill a view/array with a constant scalar value.

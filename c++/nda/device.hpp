@@ -29,7 +29,7 @@ namespace nda {
 #ifdef NDA_HAVE_CUDA
   using devStream_t = cudaStream_t;
 #else
-  using devStream_t = int;
+  using devStream_t = int; 
 #endif
 
   /**

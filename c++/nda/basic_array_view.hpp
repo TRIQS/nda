@@ -29,6 +29,7 @@
 #include "./mem/policies.hpp"
 #include "./traits.hpp"
 #include "layout/slice_static.hpp"
+#include "./tensor/assign.hpp"
 // for tensor::set
 #if defined(NDA_HAVE_CUTENSOR)
 #include "tensor/set.hpp"

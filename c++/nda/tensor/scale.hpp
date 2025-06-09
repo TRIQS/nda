@@ -21,6 +21,9 @@
 #include "nda/traits.hpp"
 #include "nda/declarations.hpp"
 #include "nda/mem/address_space.hpp"
+#include "nda/map.hpp"
+#include "nda/mapped_functions.hpp"
+#include "nda/mapped_functions.hxx"
 
 #if defined(NDA_HAVE_TBLIS)
 #include "interface/tblis_interface.hpp"
