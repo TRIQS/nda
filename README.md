@@ -67,3 +67,13 @@ int main() {
 
 For further examples we refer the users to our [tests](https://github.com/TRIQS/nda/tree/unstable/test/c++).
 We outline some important design principles [here](https://github.com/TRIQS/nda/blob/unstable/doc/documentation/design.rst).
+
+## Support
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" width="20%" srcset="doc/_static/CCQ-dark.png">
+  <img alt="Flatiron Center for Computational Quantum Physics logo." width="20%" src="doc/_static/CCQ.png">
+</picture>
+
+TRIQS/nda is supported by the Flatiron Institute, a division of the Simons Foundation.
+
