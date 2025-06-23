@@ -39,7 +39,8 @@ namespace nda::tensor {
   */
   template <Array X, MemoryArray B>
   requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>)and get_rank<X> == get_rank<B> and have_same_value_type_v<X, B>) void assign(
-     get_value_t<X> alpha, X const &x, std::string indxA, B &&b, std::string indxB, devStream_t const stream = 0) {
+     get_value_t<X> alpha, X const &x, std::string indxA, B &&b, std::string indxB, 
+     [[maybe_unused]] devStream_t const stream = 0) {
 
     using nda::blas::is_conj_array_expr;
     using value_t      = get_value_t<X>;
@@ -54,8 +55,8 @@ namespace nda::tensor {
     using A = decltype(a);
 
     static constexpr bool conj_A = is_conj_array_expr<X>;
-    if constexpr (not is_blas_lapack_v<get_value_t<X>>) {
-      if (alpha != get_value_t<X>{1} or conj_A) NDA_RUNTIME_ERROR << "tensor::assign: Integer type require alpha=1 and no conjugation.";
+    if constexpr (not is_blas_lapack_v<value_t>) {
+      if (alpha != value_t{1} or conj_A) NDA_RUNTIME_ERROR << "tensor::assign: Integer type require alpha=1 and no conjugation.";
     }
 
     // prioritize device
@@ -74,7 +75,7 @@ namespace nda::tensor {
         rec_until_impl(A_, B_, rec_until_impl);
       };
 
-      if constexpr (is_blas_lapack_v<get_value_t<X>>) {
+      if constexpr (is_blas_lapack_v<value_t>) {
 #if defined(NDA_HAVE_CUTENSOR)
         cutensor::cutensor_desc<value_t, rank> a_t(a);
         cutensor::cutensor_desc<value_t, rank> b_t(b);
@@ -82,7 +83,7 @@ namespace nda::tensor {
         cutensor::permute(alpha, a_t, oper, a.data(), indxA, b_t, b.data(), indxB, stream);
 #else
         if (indxA != indxB) NDA_RUNTIME_ERROR << "tensor::assign: Index permutation not yet implemented in device memory without cutensor.";
-        if (alpha == get_value_t<X>{1} and not conj_A) {
+        if (alpha == value_t{1} and not conj_A) {
           rec_until(a, b);
         } else {
           using Array_t = typename std::decay_t<A>::regular_type;
@@ -106,12 +107,12 @@ namespace nda::tensor {
     } else {
       // fallback tp operator() with possible copy
       if (indxA != indxB) NDA_RUNTIME_ERROR << "tensor::assign: Index permutation not yet implemented with host/device case.";
-      if (alpha == get_value_t<X>{1} and not conj_A) {
+      if (alpha == value_t{1} and not conj_A) {
         b() = a();
       } else {
         using Array_t = typename std::decay_t<A>::regular_type;
         Array_t a_copy(a);
-        if constexpr (is_blas_lapack_v<get_value_t<X>>) scale(alpha, a_copy, (conj_A ? (op::CONJ) : (op::ID)));
+        if constexpr (is_blas_lapack_v<value_t>) scale(alpha, a_copy, (conj_A ? (op::CONJ) : (op::ID)));
         b() = a_copy();
       }
     }
