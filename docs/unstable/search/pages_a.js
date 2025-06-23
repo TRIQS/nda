@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['deprecated_20list_0',['Deprecated List',['../deprecated.html',1,'']]],
-  ['documentation_1',['API Documentation',['../documentation.html',1,'']]]
+  ['blas_0',['lapack/blas',['../changelog.html#autotoc_md14',1,'']]],
+  ['blas_20lapack_1',['blas/lapack',['../changelog.html#autotoc_md6',1,'']]],
+  ['blas_20lapack_20interface_2',['Using the BLAS/LAPACK interface',['../ex8.html#ex8_p8',1,'']]],
+  ['broadcasting_20an_20array_20view_3',['Broadcasting an array/view',['../ex6.html#ex6_p1',1,'']]]
 ];

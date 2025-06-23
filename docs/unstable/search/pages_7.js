@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['8_3a_20linear_20algebra_20support_0',['Example 8: Linear algebra support',['../ex8.html',1,'']]]
+  ['7_3a_20making_20use_20of_20symmetries_0',['Example 7: Making use of symmetries',['../ex7.html',1,'']]]
 ];

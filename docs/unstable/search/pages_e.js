@@ -1,5 +1,15 @@
 var searchData=
 [
-  ['linear_20algebra_20support_0',['Example 8: Linear algebra support',['../ex8.html',1,'']]],
-  ['list_1',['Deprecated List',['../deprecated.html',1,'']]]
+  ['factories_20and_20transformations_0',['Factories and transformations',['../ex2.html#ex2_p6',1,'Factories and transformations'],['../ex4.html#ex4_p9',1,'Factories and transformations']]],
+  ['fetchcontent_1',['FetchContent',['../integration.html#fetch',1,'']]],
+  ['find_5fpackage_2',['find_package',['../integration.html#find_package',1,'']]],
+  ['fixes_3',['Fixes',['../changelog.html#autotoc_md16',1,'']]],
+  ['for_20matrices_20and_20vectors_4',['HDF5, MPI and symmetry support for matrices and vectors',['../ex8.html#ex8_p5',1,'']]],
+  ['from_20an_20existing_20dataset_5',['Reading a slice from an existing dataset',['../ex5.html#ex5_p4',1,'']]],
+  ['from_20an_20nda_3a_3aarray_6',['Constructing an array from an nda::Array',['../ex2.html#ex2_p5',1,'']]],
+  ['from_20its_20data_7',['Constructing an array from its data',['../ex2.html#ex2_p4',1,'']]],
+  ['full_20view_20on_20an_20array_20view_8',['Creating a full view on an array/view',['../ex4.html#ex4_p1',1,'']]],
+  ['functions_9',['CLEF - Compile-time lazy expressions and functions',['../documentation.html#autotoc_md19',1,'']]],
+  ['functions_20and_20algorithms_10',['Applying mathematical functions and algorithms',['../ex1.html#ex1_p9',1,'']]],
+  ['further_20examples_11',['Further examples',['../ex1.html#ex1_p13',1,'']]]
 ];

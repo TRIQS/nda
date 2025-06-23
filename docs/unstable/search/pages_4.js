@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['5_3a_20hdf5_20support_0',['Example 5: HDF5 support',['../ex5.html',1,'']]]
+  ['4_3a_20views_20and_20slices_0',['Example 4: Views and slices',['../ex4.html',1,'']]]
 ];

@@ -1,0 +1,24 @@
+var searchData=
+[
+  ['s_20automatic_20assignment_0',['Initializing with CLEF&apos;s automatic assignment',['../ex1.html#ex1_p12',1,'']]],
+  ['scalar_20to_20an_20array_1',['Assigning a scalar to an array',['../ex3.html#ex3_p1',1,'']]],
+  ['scattering_20an_20array_20view_2',['Scattering an array/view',['../ex6.html#ex6_p3',1,'']]],
+  ['shape_3',['Constructing an array with a given shape',['../ex2.html#ex2_p2',1,'']]],
+  ['single_20elements_4',['Accessing single elements',['../ex1.html#ex1_p4',1,'']]],
+  ['slice_20from_20an_20existing_20dataset_5',['Reading a slice from an existing dataset',['../ex5.html#ex5_p4',1,'']]],
+  ['slice_20of_20an_20array_20view_6',['Creating a slice of an array/view',['../ex4.html#ex4_p3',1,'']]],
+  ['slice_20of_20an_20existing_20dataset_7',['Writing to a slice of an existing dataset',['../ex5.html#ex5_p3',1,'']]],
+  ['slices_8',['slices',['../ex4.html',1,'Example 4: Views and slices'],['../ex4.html#ex4_p6',1,'Operating on views/slices'],['../ex1.html#ex1_p7',1,'Working with slices']]],
+  ['start_9',['Where to start?',['../index.html#start',1,'']]],
+  ['steps_10',['Installation steps',['../installation.html#install_steps',1,'']]],
+  ['strings_11',['Writing/Reading 1-dimensional arrays/views of strings',['../ex5.html#ex5_p5',1,'']]],
+  ['support_12',['GPU Support',['../changelog.html#autotoc_md11',1,'']]],
+  ['support_13',['support',['../ex5.html',1,'Example 5: HDF5 support'],['../ex6.html',1,'Example 6: MPI support'],['../ex8.html',1,'Example 8: Linear algebra support']]],
+  ['support_20for_20matrices_20and_20vectors_14',['HDF5, MPI and symmetry support for matrices and vectors',['../ex8.html#ex8_p5',1,'']]],
+  ['symmetries_15',['Symmetries',['../changelog.html#autotoc_md12',1,'']]],
+  ['symmetries_16',['Example 7: Making use of symmetries',['../ex7.html',1,'']]],
+  ['symmetrizing_20an_20array_17',['Symmetrizing an array',['../ex7.html#ex7_p5',1,'']]],
+  ['symmetry_18',['Defining the symmetry',['../ex7.html#ex7_p1',1,'']]],
+  ['symmetry_20group_19',['Constructing the symmetry group',['../ex7.html#ex7_p2',1,'']]],
+  ['symmetry_20support_20for_20matrices_20and_20vectors_20',['HDF5, MPI and symmetry support for matrices and vectors',['../ex8.html#ex8_p5',1,'']]]
+];

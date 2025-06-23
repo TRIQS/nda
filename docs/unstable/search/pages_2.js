@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['3_3a_20initializing_20arrays_0',['Example 3: Initializing arrays',['../ex3.html',1,'']]]
+  ['2_200_0',['Version 1.2.0',['../changelog.html#autotoc_md7',1,'']]],
+  ['2_3a_20constructing_20arrays_1',['Example 2: Constructing arrays',['../ex2.html',1,'']]]
 ];
