@@ -36,11 +36,8 @@
 namespace nda::tensor {
 
   template <MemoryArray A>
-    requires(is_blas_lapack_v<get_value_t<A>>)
-  void scale(get_value_t<A> alpha, A &&a, op::TENSOR_OP oper = op::ID, devStream_t const stream = 0) {
-
-    using value_t      = get_value_t<A>;
-    constexpr int rank = get_rank<A>;
+  requires(is_blas_lapack_v<get_value_t<A>>) void scale(get_value_t<A> alpha, A &&a, op::TENSOR_OP oper = op::ID,
+                                                        [[maybe_unused]] devStream_t const stream = 0) {
 
     if constexpr (mem::on_host<A>) {
       switch (oper) {
@@ -53,8 +50,8 @@ namespace nda::tensor {
       };
     } else { // on device
 #if defined(NDA_HAVE_CUTENSOR)
-      cutensor::cutensor_desc<value_t, rank> a_t(a);
-      std::string indx = default_index<uint8_t(rank)>();
+      cutensor::cutensor_desc<get_value_t<A>, get_rank<A>> a_t(a);
+      std::string indx = default_index<uint8_t(get_rank<A>)>();
       cutensor::permute(alpha, a_t, oper, a.data(), indx, a_t, a.data(), indx, stream);
 #else
       static_assert(always_false<bool>, " scale on device requires gpu tensor operations backend. ");

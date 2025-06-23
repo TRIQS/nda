@@ -95,7 +95,7 @@ namespace nda::tensor {
       static_assert(always_false<bool>, " dot on host requires cpu tensor operations backend. ");
 #endif
     }
-    return get_value_t<X>{0};
+    return value_t{0};
   }
 
 } // namespace nda::tensor

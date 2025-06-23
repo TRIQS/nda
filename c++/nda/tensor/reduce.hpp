@@ -41,10 +41,10 @@ namespace nda::tensor {
     requires(is_blas_lapack_v<get_value_t<A>>)
   get_value_t<A> reduce(A &&a, op::TENSOR_OP oper = op::SUM) {
 
-    using value_t      = get_value_t<A>;
     constexpr int rank = get_rank<A>;
 
     if constexpr (mem::on_host<A>) {
+      using value_t = get_value_t<A>;
 #if defined(NDA_HAVE_TBLIS)
       nda_tblis::tensor<value_t, rank> a_t(a);
       std::string indx = default_index<uint8_t(rank)>();
@@ -85,6 +85,7 @@ namespace nda::tensor {
 #endif
     } else { // on device
 #if defined(NDA_HAVE_CUTENSOR)
+      using value_t = get_value_t<A>;
       value_t res;
       cutensor::cutensor_desc<value_t, rank> a_t(a);
       std::string indx = default_index<uint8_t(rank)>();

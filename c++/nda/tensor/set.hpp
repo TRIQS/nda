@@ -38,16 +38,13 @@ namespace nda::tensor {
    * Compute a(...) = alpha 
    */
   template <MemoryArray A>
-    requires(is_blas_lapack_v<get_value_t<A>>)
-  void set(get_value_t<A> alpha, A &&a) {
-
-    using value_t      = get_value_t<A>;
-    constexpr int rank = get_rank<A>;
-
+  requires(is_blas_lapack_v<get_value_t<A>>) void set(get_value_t<A> alpha, A &&a) {
     if constexpr (mem::on_host<A>) {
       a() = alpha; // is there a point in using tblis?
     } else {       // on device
 #if defined(NDA_HAVE_CUTENSOR)
+      using value_t      = get_value_t<A>;
+      constexpr int rank = get_rank<A>;
       std::string indx = default_index<uint8_t(rank)>();
       cutensor::cutensor_desc<value_t, rank> a_t(a);
       value_t *z = (value_t *)mem::malloc<mem::Device>(sizeof(value_t));

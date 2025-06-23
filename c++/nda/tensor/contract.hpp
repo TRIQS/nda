@@ -42,14 +42,14 @@ namespace nda::tensor {
    *       * Tensor ranks must match the size of the provided index list (string_view object).  
    */
   template <Array X, Array Y, MemoryArray C>
-    requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and              //
-             (MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>) and              //
-             have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>) //
-  void contract(get_value_t<X> alpha, X const &x, std::string_view const indxX, Y const &y, std::string_view const indxY, get_value_t<X> beta, C &&c,
-                std::string_view const indxC, devStream_t const stream = 0) {
+  requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>)and //
+           (MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>)
+           and                                                                   //
+           have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>) //
+     void contract(get_value_t<X> alpha, X const &x, std::string_view const indxX, Y const &y, std::string_view const indxY, get_value_t<X> beta,
+                   C &&c, std::string_view const indxC, [[maybe_unused]] devStream_t const stream = 0) {
 
     using nda::blas::is_conj_array_expr;
-    using value_t = get_value_t<X>;
     auto to_mat   = []<typename Z>(Z const &z) -> auto   &{
       if constexpr (is_conj_array_expr<Z>)
         return std::get<0>(z.a);
@@ -72,6 +72,7 @@ namespace nda::tensor {
 
     if constexpr (mem::have_device_compatible_addr_space<A, B, C>) {
 #if defined(NDA_HAVE_CUTENSOR)
+      using value_t = get_value_t<X>;
       // pull more generic operands!
       op::TENSOR_OP a_op = conj_A ? op::CONJ : op::ID;
       op::TENSOR_OP b_op = conj_B ? op::CONJ : op::ID;
@@ -86,6 +87,7 @@ namespace nda::tensor {
 #if defined(NDA_HAVE_TBLIS)
       // no conj in tblis yet!
       static_assert(not conj_A and not conj_B, "Error: No conj in tblis yet!");
+      using value_t = get_value_t<X>;
       nda_tblis::tensor<value_t, get_rank<A>> a_t(a, alpha);
       nda_tblis::tensor<value_t, get_rank<B>> b_t(b);
       nda_tblis::tensor<value_t, get_rank<C>> c_t(c, beta);
