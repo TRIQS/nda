@@ -47,14 +47,14 @@ namespace nda::tensor {
   template <Array X, Array Y>
   requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>)and(MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>)
            and have_same_value_type_v<
-              X, Y> and is_blas_lapack_v<get_value_t<X>> and is_blas_lapack_v<get_value_t<Y>>) 
-  void elementwise(get_value_t<X> const alpha,
-                   X const &x,
-                   std::string_view const indxX,
-                   get_value_t<X> const beta, Y &&y,
-                   std::string_view const indxY,
-                   op::TENSOR_OP binary_oper,
-                   [[maybe_unused]] devStream_t const stream = 0) {
+              X, Y> and is_blas_lapack_v<get_value_t<X>> and is_blas_lapack_v<get_value_t<Y>>) void elementwise(get_value_t<X> const alpha,
+                                                                                                                X const &x,
+                                                                                                                std::string_view const indxX,
+                                                                                                                get_value_t<X> const beta, Y &&y,
+                                                                                                                std::string_view const indxY,
+                                                                                                                op::TENSOR_OP binary_oper,
+                                                                                                                [[maybe_unused]] devStream_t const
+                                                                                                                   stream = 0) {
 
     using nda::blas::is_conj_array_expr;
     auto to_mat   = []<typename Z>(Z &z) -> auto   &{
@@ -75,7 +75,7 @@ namespace nda::tensor {
 
     if constexpr (mem::have_device_compatible_addr_space<A, B>) {
 #if defined(NDA_HAVE_CUTENSOR)
-      using value_t = get_value_t<X>;
+      using value_t                = get_value_t<X>;
       static constexpr bool conj_A = is_conj_array_expr<X>;
       static constexpr bool conj_B = is_conj_array_expr<Y>;
       op::TENSOR_OP a_op = conj_A ? op::CONJ : op::ID;

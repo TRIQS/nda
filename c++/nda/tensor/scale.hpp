@@ -36,8 +36,8 @@
 namespace nda::tensor {
 
   template <MemoryArray A>
-    requires(is_blas_lapack_v<get_value_t<A>>)
-  void scale(get_value_t<A> alpha, A &&a, op::TENSOR_OP oper = op::ID, [[maybe_unused]] devStream_t const stream = 0) {
+  requires(is_blas_lapack_v<get_value_t<A>>) void scale(get_value_t<A> alpha, A &&a, op::TENSOR_OP oper = op::ID,
+                                                        [[maybe_unused]] devStream_t const stream = 0) {
 
     if constexpr (mem::on_host<A>) {
       switch (oper) {
@@ -57,7 +57,6 @@ namespace nda::tensor {
       static_assert(always_false<bool>, " scale on device requires gpu tensor operations backend. ");
 #endif
     }
-
   }
 
 } // namespace nda::tensor

@@ -42,11 +42,12 @@ namespace nda::tensor {
    *       * Tensor ranks must match the size of the provided index list (string_view object).  
    */
   template <Array X, Array Y, MemoryArray C>
-    requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>) and              //
-             (MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>) and              //
-             have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>) //
-  void contract(get_value_t<X> alpha, X const &x, std::string_view const indxX, Y const &y, std::string_view const indxY, get_value_t<X> beta, C &&c,
-                std::string_view const indxC, [[maybe_unused]] devStream_t const stream = 0) {
+  requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>)and //
+           (MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>)
+           and                                                                   //
+           have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>) //
+     void contract(get_value_t<X> alpha, X const &x, std::string_view const indxX, Y const &y, std::string_view const indxY, get_value_t<X> beta,
+                   C &&c, std::string_view const indxC, [[maybe_unused]] devStream_t const stream = 0) {
 
     using nda::blas::is_conj_array_expr;
     auto to_mat   = []<typename Z>(Z const &z) -> auto   &{

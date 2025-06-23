@@ -38,8 +38,7 @@ namespace nda::tensor {
    * Compute a(...) = alpha 
    */
   template <MemoryArray A>
-    requires(is_blas_lapack_v<get_value_t<A>>)
-  void set(get_value_t<A> alpha, A &&a) {
+  requires(is_blas_lapack_v<get_value_t<A>>) void set(get_value_t<A> alpha, A &&a) {
     if constexpr (mem::on_host<A>) {
       a() = alpha; // is there a point in using tblis?
     } else {       // on device

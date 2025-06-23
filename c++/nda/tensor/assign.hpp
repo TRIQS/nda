@@ -39,8 +39,7 @@ namespace nda::tensor {
   */
   template <Array X, MemoryArray B>
   requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>)and get_rank<X> == get_rank<B> and have_same_value_type_v<X, B>) void assign(
-     get_value_t<X> alpha, X const &x, std::string indxA, B &&b, std::string indxB, 
-     [[maybe_unused]] devStream_t const stream = 0) {
+     get_value_t<X> alpha, X const &x, std::string indxA, B &&b, std::string indxB, [[maybe_unused]] devStream_t const stream = 0) {
 
     using nda::blas::is_conj_array_expr;
     using value_t      = get_value_t<X>;
