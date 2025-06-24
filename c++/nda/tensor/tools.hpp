@@ -58,4 +58,9 @@ namespace nda::tensor {
 
   } // namespace detail
 
+  template <bool flag = false>
+  void compile_error_no_tblis() {
+    static_assert(flag, "Using tblis functionality without TBLIS support! Configure project with -DTblisSupport=ON.");
+  }
+
 } // namespace nda::tensor

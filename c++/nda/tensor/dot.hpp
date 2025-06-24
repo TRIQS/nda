@@ -25,8 +25,14 @@
 #include "nda/mem/malloc.hpp"
 #include "nda/mem/memcpy.hpp"
 
+#ifndef NDA_HAVE_DEVICE
+#include "../device.hpp"
+#endif
+
 #if defined(NDA_HAVE_TBLIS)
 #include "interface/tblis_interface.hpp"
+#else
+#include "nda/tensor/tools.hpp"
 #endif
 
 #if defined(NDA_HAVE_CUTENSOR)
@@ -54,12 +60,6 @@ namespace nda::tensor {
     auto &a = to_mat(x);
     auto &b = to_mat(y);
 
-    static constexpr bool conj_A = is_conj_array_expr<X>;
-    static constexpr bool conj_B = is_conj_array_expr<Y>;
-
-    // no conj in tblis yet!
-    static_assert(not conj_A or not conj_B, "Error: No conj in tblis yet!");
-
     using A = decltype(a);
     using B = decltype(b);
     static_assert(mem::have_compatible_addr_space<A, B>, "Matrices must have compatible memory address space");
@@ -70,29 +70,37 @@ namespace nda::tensor {
 
     if constexpr (mem::have_device_compatible_addr_space<A, B>) {
 #if defined(NDA_HAVE_CUTENSOR)
+      static constexpr bool conj_A = is_conj_array_expr<X>;
+      static constexpr bool conj_B = is_conj_array_expr<Y>;
+      op::TENSOR_OP a_op = conj_A ? op::CONJ : op::ID;
+      op::TENSOR_OP b_op = conj_B ? op::CONJ : op::ID;
       value_t res;
       cutensor::cutensor_desc<value_t, get_rank<A>> a_t(a);
       cutensor::cutensor_desc<value_t, get_rank<B>> b_t(b);
       value_t *z = (value_t *)mem::malloc<mem::Device>(sizeof(value_t));
       mem::memset<mem::Device>(z, 0, sizeof(value_t));
       cutensor::cutensor_desc<value_t, 0> z_t(z);
-      cutensor::contract(value_t{1}, a_t, op::ID, a.data(), indxX, b_t, op::ID, b.data(), indxY, value_t{0}, z_t, op::ID, z, "");
+      cutensor::contract(value_t{1}, a_t, a_op, a.data(), indxX, b_t, b_op, b.data(), indxY, value_t{0}, z_t, op::ID, z, "");
       cudaDeviceSynchronize(); // for sync in case it is turned off
       mem::memcpy<mem::Host, mem::Device>(&res, z, sizeof(value_t));
       mem::free<mem::Device>(z);
       return res;
 #else
-      static_assert(always_false<bool>, " dot on device requires gpu tensor operations backend. ");
+      compile_error_no_gpu();
 #endif
     } else { // on host
 #if defined(NDA_HAVE_TBLIS)
+      // no conj in tblis yet!
+      static constexpr bool conj_A = is_conj_array_expr<X>;
+      static constexpr bool conj_B = is_conj_array_expr<Y>;
+      static_assert(not conj_A or not conj_B, "Error: No conj in tblis yet!");
       nda_tblis::tensor<value_t, get_rank<A>> a_t(a);
       nda_tblis::tensor<value_t, get_rank<B>> b_t(b);
       nda_tblis::scalar<value_t> res(0);
       ::tblis::tblis_tensor_dot(NULL, NULL, &a_t, indxX.data(), &b_t, indxY.data(), &res);
       return res.value();
 #else
-      static_assert(always_false<bool>, " dot on host requires cpu tensor operations backend. ");
+      compile_error_no_tblis();
 #endif
     }
     return value_t{0};

@@ -24,8 +24,8 @@
 #include "nda/tensor/tools.hpp"
 #include "nda/tensor/scale.hpp"
 
-#if defined(NDA_HAVE_TBLIS)
-#include "interface/tblis_interface.hpp"
+#ifndef NDA_HAVE_DEVICE
+#include "../device.hpp"
 #endif
 
 #if defined(NDA_HAVE_CUTENSOR)
@@ -111,7 +111,18 @@ namespace nda::tensor {
       } else {
         using Array_t = typename std::decay_t<A>::regular_type;
         Array_t a_copy(a);
-        if constexpr (is_blas_lapack_v<value_t>) scale(alpha, a_copy, (conj_A ? (op::CONJ) : (op::ID)));
+        if constexpr (is_blas_lapack_v<value_t>) {
+//          if constexpr (mem::have_device_compatible_addr_space<A>) {
+            scale(alpha, a_copy, (conj_A ? (op::CONJ) : (op::ID)));
+/*
+          } else if constexpr (mem::have_host_compatible_addr_space<A>) {
+            if(conj_A)
+              a_copy() = nda::conj(a_copy()) * a; 
+            else
+              a_copy() *= a; 
+          }
+*/
+        }
         b() = a_copy();
       }
     }

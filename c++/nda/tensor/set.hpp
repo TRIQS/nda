@@ -24,8 +24,8 @@
 #include "nda/mem/malloc.hpp"
 #include "nda/mem/memcpy.hpp"
 
-#if defined(NDA_HAVE_TBLIS)
-#include "interface/tblis_interface.hpp"
+#ifndef NDA_HAVE_DEVICE
+#include "../device.hpp"
 #endif
 
 #if defined(NDA_HAVE_CUTENSOR)
@@ -54,7 +54,7 @@ namespace nda::tensor {
       cudaDeviceSynchronize(); // for sync in case it is turned off
       mem::free<mem::Device>(z);
 #else
-      static_assert(always_false<bool>, " set on device requires gpu tensor operations backend. ");
+      compile_error_no_gpu();
 #endif
     }
   }

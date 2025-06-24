@@ -22,8 +22,8 @@
 #include "nda/declarations.hpp"
 #include "nda/mem/address_space.hpp"
 
-#if defined(NDA_HAVE_TBLIS)
-#include "interface/tblis_interface.hpp"
+#ifndef NDA_HAVE_DEVICE
+#include "../device.hpp"
 #endif
 
 #if defined(NDA_HAVE_CUTENSOR)
@@ -84,7 +84,7 @@ namespace nda::tensor {
       cutensor::cutensor_desc<value_t, get_rank<B>> b_t(b);
       cutensor::elementwise_binary(alpha, a_t, a_op, a.data(), indxX.data(), beta, b_t, b_op, b.data(), indxY.data(), b.data(), binary_oper, stream);
 #else
-      static_assert(always_false<bool>, " add on device requires gpu tensor operations backend. ");
+      compile_error_no_gpu();
 #endif
     } else {
       // write routine that creates permuted view

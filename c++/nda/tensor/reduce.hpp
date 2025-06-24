@@ -24,6 +24,10 @@
 #include "nda/mem/malloc.hpp"
 #include "nda/mem/memcpy.hpp"
 
+#ifndef NDA_HAVE_DEVICE
+#include "../device.hpp"
+#endif
+
 #if defined(NDA_HAVE_TBLIS)
 #include "interface/tblis_interface.hpp"
 #endif
@@ -41,11 +45,10 @@ namespace nda::tensor {
     requires(is_blas_lapack_v<get_value_t<A>>)
   get_value_t<A> reduce(A &&a, op::TENSOR_OP oper = op::SUM) {
 
-    constexpr int rank = get_rank<A>;
-
     if constexpr (mem::on_host<A>) {
       using value_t = get_value_t<A>;
 #if defined(NDA_HAVE_TBLIS)
+      constexpr int rank = get_rank<A>;
       nda_tblis::tensor<value_t, rank> a_t(a);
       std::string indx = default_index<uint8_t(rank)>();
       nda_tblis::scalar<value_t> res(0);
@@ -87,6 +90,7 @@ namespace nda::tensor {
 #if defined(NDA_HAVE_CUTENSOR)
       using value_t = get_value_t<A>;
       value_t res;
+      constexpr int rank = get_rank<A>;
       cutensor::cutensor_desc<value_t, rank> a_t(a);
       std::string indx = default_index<uint8_t(rank)>();
       value_t *z       = (value_t *)mem::malloc<mem::Device>(sizeof(value_t));
@@ -96,7 +100,8 @@ namespace nda::tensor {
       mem::free<mem::Device>(z);
       return res;
 #else
-      static_assert(always_false<bool>, " reduce on device requires gpu tensor operations backend. ");
+      (void) a; (void) oper;
+      compile_error_no_gpu();
 #endif
     }
   }

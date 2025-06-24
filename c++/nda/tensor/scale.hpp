@@ -25,8 +25,8 @@
 #include "nda/mapped_functions.hpp"
 #include "nda/mapped_functions.hxx"
 
-#if defined(NDA_HAVE_TBLIS)
-#include "interface/tblis_interface.hpp"
+#ifndef NDA_HAVE_DEVICE
+#include "../device.hpp"
 #endif
 
 #if defined(NDA_HAVE_CUTENSOR)
@@ -54,7 +54,7 @@ namespace nda::tensor {
       std::string indx = default_index<uint8_t(get_rank<A>)>();
       cutensor::permute(alpha, a_t, oper, a.data(), indx, a_t, a.data(), indx, stream);
 #else
-      static_assert(always_false<bool>, " scale on device requires gpu tensor operations backend. ");
+      compile_error_no_gpu();
 #endif
     }
   }

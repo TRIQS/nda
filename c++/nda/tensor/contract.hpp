@@ -22,8 +22,14 @@
 #include "nda/declarations.hpp"
 #include "nda/mem/address_space.hpp"
 
+#ifndef NDA_HAVE_DEVICE
+#include "../device.hpp"
+#endif
+
 #if defined(NDA_HAVE_TBLIS)
 #include "interface/tblis_interface.hpp"
+#else
+#include "nda/tensor/tools.hpp"
 #endif
 
 #if defined(NDA_HAVE_CUTENSOR)
@@ -46,8 +52,8 @@ namespace nda::tensor {
            (MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>)
            and                                                                   //
            have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>) //
-     void contract(get_value_t<X> alpha, X const &x, std::string_view const indxX, Y const &y, std::string_view const indxY, get_value_t<X> beta,
-                   C &&c, std::string_view const indxC, [[maybe_unused]] devStream_t const stream = 0) {
+     void contract([[maybe_unused]] get_value_t<X> alpha, X const &x, std::string_view const indxX, Y const &y, std::string_view const indxY, 
+                   [[maybe_unused]] get_value_t<X> beta, [[maybe_unused]] C &&c, std::string_view const indxC, [[maybe_unused]] devStream_t const stream = 0) {
 
     using nda::blas::is_conj_array_expr;
     auto to_mat   = []<typename Z>(Z const &z) -> auto   &{
@@ -58,9 +64,6 @@ namespace nda::tensor {
     };
     auto &a = to_mat(x);
     auto &b = to_mat(y);
-
-    static constexpr bool conj_A = is_conj_array_expr<X>;
-    static constexpr bool conj_B = is_conj_array_expr<Y>;
 
     using A = decltype(a);
     using B = decltype(b);
@@ -74,6 +77,8 @@ namespace nda::tensor {
 #if defined(NDA_HAVE_CUTENSOR)
       using value_t = get_value_t<X>;
       // pull more generic operands!
+      static constexpr bool conj_A = is_conj_array_expr<X>;
+      static constexpr bool conj_B = is_conj_array_expr<Y>;
       op::TENSOR_OP a_op = conj_A ? op::CONJ : op::ID;
       op::TENSOR_OP b_op = conj_B ? op::CONJ : op::ID;
       cutensor::cutensor_desc<value_t, get_rank<A>> a_t(a);
@@ -81,11 +86,13 @@ namespace nda::tensor {
       cutensor::cutensor_desc<value_t, get_rank<C>> c_t(c);
       cutensor::contract(alpha, a_t, a_op, a.data(), indxX, b_t, b_op, b.data(), indxY, beta, c_t, op::ID, c.data(), indxC, stream);
 #else
-      static_assert(always_false<bool>, " contract on device requires gpu tensor contraction backend. ");
+      compile_error_no_gpu();
 #endif
     } else if constexpr (mem::have_host_compatible_addr_space<A, B, C>) {
 #if defined(NDA_HAVE_TBLIS)
       // no conj in tblis yet!
+      static constexpr bool conj_A = is_conj_array_expr<X>;
+      static constexpr bool conj_B = is_conj_array_expr<Y>;
       static_assert(not conj_A and not conj_B, "Error: No conj in tblis yet!");
       using value_t = get_value_t<X>;
       nda_tblis::tensor<value_t, get_rank<A>> a_t(a, alpha);
@@ -93,7 +100,7 @@ namespace nda::tensor {
       nda_tblis::tensor<value_t, get_rank<C>> c_t(c, beta);
       ::tblis::tblis_tensor_mult(NULL, NULL, &a_t, indxX.data(), &b_t, indxY.data(), &c_t, indxC.data());
 #else
-      static_assert(always_false<bool>, " contract on host requires cpu tensor contraction backend. ");
+      compile_error_no_tblis();
 #endif
     } else { // incompatible address spaces, should not be here!
       //static_assert(always_false<bool>, "Matrices must have compatible memory address space");

@@ -22,6 +22,10 @@
 #include "nda/declarations.hpp"
 #include "nda/mem/address_space.hpp"
 
+#ifndef NDA_HAVE_DEVICE
+#include "../device.hpp"
+#endif
+
 #if defined(NDA_HAVE_TBLIS)
 #include "interface/tblis_interface.hpp"
 #endif
@@ -43,7 +47,7 @@ namespace nda::tensor {
    */
   template <Array X, MemoryArray B>
   requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>)and have_same_value_type_v<X, B> and is_blas_lapack_v<get_value_t<X>>) void add(
-     get_value_t<X> alpha, X const &x, std::string_view const indxX, get_value_t<X> beta, B &&b, std::string_view const indxY,
+     [[maybe_unused]] get_value_t<X> alpha, X const &x, std::string_view const indxX, [[maybe_unused]] get_value_t<X> beta, [[maybe_unused]] B &&b, std::string_view const indxY,
      [[maybe_unused]] devStream_t const stream = 0) {
 
     using nda::blas::is_conj_array_expr;
@@ -55,8 +59,6 @@ namespace nda::tensor {
     };
     auto &a = to_mat(x);
 
-    static constexpr bool conj_A = is_conj_array_expr<X>;
-
     using A = decltype(a);
     static_assert(mem::have_compatible_addr_space<A, B>, "Matrices must have compatible memory address space");
 
@@ -67,16 +69,18 @@ namespace nda::tensor {
     if constexpr (mem::have_device_compatible_addr_space<A, B>) {
 #if defined(NDA_HAVE_CUTENSOR)
       using value_t      = get_value_t<X>;
+      static constexpr bool conj_A = is_conj_array_expr<X>;
       op::TENSOR_OP a_op = conj_A ? op::CONJ : op::ID;
       cutensor::cutensor_desc<value_t, get_rank<A>> a_t(a);
       cutensor::cutensor_desc<value_t, get_rank<B>> b_t(b);
       cutensor::elementwise_binary(alpha, a_t, a_op, a.data(), indxX.data(), beta, b_t, op::ID, b.data(), indxY.data(), b.data(), op::SUM, stream);
 #else
-      static_assert(always_false<bool>, " add on device requires gpu tensor operations backend. ");
+      compile_error_no_gpu();
 #endif
     } else {
 #if defined(NDA_HAVE_TBLIS)
       // no conj in tblis yet!
+      static constexpr bool conj_A = is_conj_array_expr<X>;
       static_assert(not conj_A, "Error: No conj in tblis yet!");
       using value_t = get_value_t<X>;
       nda_tblis::tensor<value_t, get_rank<A>> a_t(a, alpha);
@@ -91,9 +95,9 @@ namespace nda::tensor {
 
   template <Array X, Array Y, MemoryArray C>
   requires((MemoryArray<X> or nda::blas::is_conj_array_expr<X>)and(MemoryArray<Y> or nda::blas::is_conj_array_expr<Y>)
-           and have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>) void add(get_value_t<X> alpha, X const &x,
-                                                                                              std::string_view const indxX, get_value_t<Y> beta,
-                                                                                              Y const &y, std::string_view const indxY, C &&c,
+           and have_same_value_type_v<X, Y, C> and is_blas_lapack_v<get_value_t<X>>) void add([[maybe_unused]] get_value_t<X> alpha, X const &x,
+                                                                                              std::string_view const indxX, [[maybe_unused]] get_value_t<Y> beta,
+                                                                                              Y const &y, std::string_view const indxY, [[maybe_unused]] C &&c,
                                                                                               std::string_view const indxC,
                                                                                               [[maybe_unused]] devStream_t const stream = 0) {
     using nda::blas::is_conj_array_expr;
@@ -105,9 +109,6 @@ namespace nda::tensor {
     };
     auto &a = to_mat(x);
     auto &b = to_mat(y);
-
-    static constexpr bool conj_A = is_conj_array_expr<X>;
-    static constexpr bool conj_B = is_conj_array_expr<Y>;
 
     using A = decltype(a);
     using B = decltype(b);
@@ -125,17 +126,21 @@ namespace nda::tensor {
     if constexpr (mem::have_device_compatible_addr_space<A, B>) {
 #if defined(NDA_HAVE_CUTENSOR)
       using value_t      = get_value_t<X>;
+      static constexpr bool conj_A = is_conj_array_expr<X>;
+      static constexpr bool conj_B = is_conj_array_expr<Y>;
       op::TENSOR_OP a_op = conj_A ? op::CONJ : op::ID;
       op::TENSOR_OP b_op = conj_B ? op::CONJ : op::ID;
       cutensor::cutensor_desc<value_t, get_rank<A>> a_t(a);
       cutensor::cutensor_desc<value_t, get_rank<B>> b_t(b);
       cutensor::elementwise_binary(alpha, a_t, a_op, a.data(), indxX, beta, b_t, b_op, b.data(), indxY, c.data(), op::SUM, stream);
 #else
-      static_assert(always_false<bool>, " add on device requires gpu tensor operations backend. ");
+      compile_error_no_gpu();
 #endif
     } else { // on host
 #if defined(NDA_HAVE_TBLIS)
       // no conj in tblis yet!
+      static constexpr bool conj_A = is_conj_array_expr<X>;
+      static constexpr bool conj_B = is_conj_array_expr<Y>;
       static_assert(not conj_A and not conj_B, "Error: No conj in tblis yet!");
       using value_t = get_value_t<X>;
       nda_tblis::tensor<value_t, get_rank<A>> a_t(a, alpha);
