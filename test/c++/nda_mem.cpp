@@ -14,6 +14,7 @@
 #include <iostream>
 #include <utility>
 #include <vector>
+#include <nda/declarations.hpp>
 
 using namespace nda;
 
@@ -225,6 +226,19 @@ TEST(NDA, MemoryMallocator) {
     allo1.deallocate(mb3);
   }
 #endif
+}
+
+TEST(NDA, MemoryMallocatorAligned) {
+  const size_t alignment = 8;
+  const size_t size      = 100;
+  const size_t capacity  = mem::next_multiple(100, alignment);
+  EXPECT_GE(capacity, size);
+  EXPECT_EQ(capacity % alignment, 0);
+  auto alloc = mem::mallocator_aligned<mem::Host>();
+  auto blk   = alloc.allocate_zero(capacity, alignment);
+  EXPECT_EQ(blk.s, capacity);
+  for (int i = 0; i < capacity; ++i) EXPECT_EQ(blk.ptr[i], 0);
+  alloc.deallocate(blk);
 }
 
 TEST(NDA, MemoryBucketAllocator) {
@@ -462,4 +476,44 @@ TEST(NDA, MemoryHandleShared) {
   mem::handle_shared<int> s2{h};
   s = s2;
   EXPECT_EQ(s.refcount(), 3);
+}
+
+TEST(NDA, TypeAlignmentInfoAlignment) {
+  auto x = mem::type_alignment_info<int>::required_alignment;
+  EXPECT_EQ(x, native_simd<int>::arch_type::alignment());
+
+  x = mem::type_alignment_info<int *>::required_alignment;
+  EXPECT_EQ(x, 0);
+
+  x = mem::type_alignment_info<void>::required_alignment;
+  EXPECT_EQ(x, 0);
+
+  x = mem::type_alignment_info<std::complex<float>>::required_alignment;
+  EXPECT_EQ(x, native_simd<std::complex<float>>::arch_type::alignment());
+
+  x = mem::type_alignment_info<std::complex<double>>::required_alignment;
+  EXPECT_EQ(x, native_simd<std::complex<double>>::arch_type::alignment());
+
+  x = mem::type_alignment_info<array<int, 4>>::required_alignment;
+  EXPECT_EQ(x, 0);
+}
+
+TEST(NDA, TypeAlignmentInfoRequiredPadding) {
+  auto x = mem::type_alignment_info<int>::required_padding;
+  EXPECT_EQ(x, native_simd<int>::size);
+
+  x = mem::type_alignment_info<long>::required_padding;
+  EXPECT_EQ(x, native_simd<long>::size);
+
+  x = mem::type_alignment_info<void>::required_padding;
+  EXPECT_EQ(x, 0);
+
+  x = mem::type_alignment_info<std::complex<float>>::required_padding;
+  EXPECT_EQ(x, native_simd<std::complex<float>>::size);
+
+  x = mem::type_alignment_info<std::complex<double>>::required_padding;
+  EXPECT_EQ(x, native_simd<std::complex<double>>::size);
+
+  x = mem::type_alignment_info<array<int, 4>>::required_padding;
+  EXPECT_EQ(x, 0);
 }

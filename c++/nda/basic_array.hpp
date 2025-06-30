@@ -391,7 +391,6 @@ namespace nda {
     {
       return basic_array{stdutil::make_std_array<long>(shape), mem::init_zero};
     }
-
     /**
      * @brief Make a zero-initialized array with the given dimensions.
      *

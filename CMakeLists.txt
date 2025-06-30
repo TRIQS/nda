@@ -102,6 +102,7 @@ target_compile_options(${PROJECT_NAME}_warnings
     -Wfloat-conversion
     -Wpedantic
     -Wno-sign-compare
+    -march=native
     $<$<CXX_COMPILER_ID:GNU>:-Wno-comma-subscript>
     $<$<CXX_COMPILER_ID:GNU>:-Wno-psabi> # Disable notes about ABI changes
     $<$<CXX_COMPILER_ID:GNU>:-Wshadow=local>

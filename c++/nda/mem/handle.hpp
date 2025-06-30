@@ -15,6 +15,7 @@
 #include "./memcpy.hpp"
 #include "../concepts.hpp"
 #include "../macros.hpp"
+#include "./alignment.hpp"
 
 #include <array>
 #include <memory>
@@ -247,7 +248,7 @@ namespace nda::mem {
      */
     handle_heap(long size, do_not_initialize_t) {
       if (size == 0) return;
-      auto b = allocator.allocate(size * sizeof(T));
+      auto b = allocator.allocate(size * sizeof(T), type_alignment_info<T>::required_alignment);
       if (not b.ptr) throw std::bad_alloc{};
       _data = (T *)b.ptr;
       _size = size;
@@ -259,7 +260,7 @@ namespace nda::mem {
      */
     handle_heap(long size, init_zero_t) {
       if (size == 0) return;
-      auto b = allocator.allocate_zero(size * sizeof(T));
+      auto b = allocator.allocate_zero(size * sizeof(T), type_alignment_info<T>::required_alignment);
       if (not b.ptr) throw std::bad_alloc{};
       _data = (T *)b.ptr;
       _size = size;
@@ -280,9 +281,9 @@ namespace nda::mem {
       if (size == 0) return;
       blk_t b;
       if constexpr (is_complex_v<T> && init_dcmplx)
-        b = allocator.allocate_zero(size * sizeof(T));
+        b = allocator.allocate_zero(size * sizeof(T), type_alignment_info<T>::required_alignment);
       else
-        b = allocator.allocate(size * sizeof(T));
+        b = allocator.allocate(size * sizeof(T), type_alignment_info<T>::required_alignment);
       if (not b.ptr) throw std::bad_alloc{};
       _data = (T *)b.ptr;
       _size = size;
@@ -588,7 +589,7 @@ namespace nda::mem {
       _size = h._size;
       if (_size == 0) return *this;
       if (on_heap()) {
-        auto b = mallocator<>::allocate(_size * sizeof(T));
+        auto b = mallocator<>::allocate(_size * sizeof(T), type_alignment_info<T>::required_alignment);
         if (not b.ptr) throw std::bad_alloc{};
         _data = (T *)b.ptr;
       } else {
@@ -626,7 +627,7 @@ namespace nda::mem {
       if (not on_heap()) {
         _data = (T *)buffer.data();
       } else {
-        auto b = mallocator<>::allocate(size * sizeof(T));
+        auto b = mallocator<>::allocate(size * sizeof(T), type_alignment_info<T>::required_alignment);
         if (not b.ptr) throw std::bad_alloc{};
         _data = (T *)b.ptr;
       }
@@ -648,7 +649,7 @@ namespace nda::mem {
         _data = (T *)buffer.data();
         for (size_t i = 0; i < _size; ++i) data()[i] = 0;
       } else {
-        auto b = mallocator<>::allocate_zero(size * sizeof(T)); //, alignof(T));
+        auto b = mallocator<>::allocate_zero(size * sizeof(T), type_alignment_info<T>::required_alignment); //, alignof(T));
         if (not b.ptr) throw std::bad_alloc{};
         _data = (T *)b.ptr;
       }
@@ -672,9 +673,9 @@ namespace nda::mem {
       } else {
         blk_t b;
         if constexpr (is_complex_v<T> && init_dcmplx)
-          b = mallocator<>::allocate_zero(size * sizeof(T));
+          b = mallocator<>::allocate_zero(size * sizeof(T), type_alignment_info<T>::required_alignment);
         else
-          b = mallocator<>::allocate(size * sizeof(T));
+          b = mallocator<>::allocate(size * sizeof(T), type_alignment_info<T>::required_alignment);
         if (not b.ptr) throw std::bad_alloc{};
         _data = (T *)b.ptr;
       }
@@ -841,14 +842,14 @@ namespace nda::mem {
    * @tparam T Value type of the data.
    * @tparam AdrSp nda::mem::AddressSpace in which the memory is allocated.
    */
-  template <typename T, AddressSpace AdrSp = Host>
+  template <typename T, AddressSpace AdrSp = Host, Allocator A = mallocator<>>
   struct handle_borrowed {
     private:
     // Value type of the data with const removed.
     using T0 = std::remove_const_t<T>;
 
     // Parent handle (required for regular -> shared promotion in Python Converter).
-    handle_heap<T0> const *_parent = nullptr;
+    handle_heap<T0, A> const *_parent = nullptr;
 
     // Pointer to the start of the actual data.
     T *_data = nullptr;
@@ -889,7 +890,7 @@ namespace nda::mem {
       requires(address_space == H::address_space and (std::is_const_v<value_type> or !std::is_const_v<typename H::value_type>)
                and std::is_same_v<const value_type, const typename H::value_type>)
     handle_borrowed(H const &h, long offset = 0) noexcept : _data(h.data() + offset) {
-      if constexpr (std::is_same_v<H, handle_heap<T0>>) _parent = &h;
+      if constexpr (std::is_same_v<H, handle_heap<T0, A>>) _parent = &h;
     }
 
     /**
@@ -918,7 +919,7 @@ namespace nda::mem {
      * @brief Get a pointer to the parent handle.
      * @return Pointer to the parent handle.
      */
-    [[nodiscard]] handle_heap<T0> const *parent() const { return _parent; }
+    [[nodiscard]] handle_heap<T0, A> const *parent() const { return _parent; }
 
     /**
      * @brief Get a pointer to the stored data.

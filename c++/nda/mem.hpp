@@ -12,6 +12,7 @@
 
 #include "./device.hpp"
 #include "./mem/address_space.hpp"
+#include "./mem/alignment.hpp"
 #include "./mem/allocators.hpp"
 #include "./mem/handle.hpp"
 #include "./mem/malloc.hpp"

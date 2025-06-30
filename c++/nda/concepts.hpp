@@ -12,6 +12,7 @@
 
 #include "./stdutil/concepts.hpp"
 #include "./traits.hpp"
+#include "simd/simd.hpp"
 
 #include <array>
 #include <concepts>
@@ -108,6 +109,12 @@ namespace nda {
   concept Scalar = nda::is_scalar_v<S>;
 
   /**
+   * @brief Check if a given type is supported by simd class or complex type.
+   * @tparam S Type to check.
+   */
+  template <typename S>
+  concept Vectorizable = xsimd::has_simd_register<S>::value;
+  /**
    * @brief Check if a given type is either a double or complex type.
    * @tparam S Type to check.
    */
@@ -124,6 +131,21 @@ namespace nda {
    */
   template <typename T, template <typename...> class TMPLT>
   concept InstantiationOf = nda::is_instantiation_of_v<TMPLT, T>;
+
+  namespace simd {
+    template <typename Derived, Vectorizable T>
+    struct mock_simd;
+  }
+
+  template <typename F, typename T, size_t R>
+  concept LoadWithNativeSimd = requires(F const &f) {
+    requires Vectorizable<T>;
+    {
+      []<auto... Is>(std::index_sequence<Is...>, auto const &aa) -> decltype(aa.load(native_simd<T>((static_cast<T>(Is)))...)) {
+        return (aa.load(native_simd<T>((static_cast<T>(Is)))...));
+      }(std::make_index_sequence<R>{}, f)
+    } -> std::same_as<native_simd<T>>;
+  } or std::is_base_of_v<simd::mock_simd<F, T>, F>;
 
   /**
    * @brief True iif T is same_as any of the Us
@@ -164,8 +186,8 @@ namespace nda {
      */
     template <typename A>
     concept Allocator = requires(A &a) {
-      { a.allocate(size_t{}) } noexcept -> std::same_as<blk_t>;
-      { a.allocate_zero(size_t{}) } noexcept -> std::same_as<blk_t>;
+      { a.allocate(size_t{}, size_t{}) } noexcept -> std::same_as<blk_t>;
+      { a.allocate_zero(size_t{}, size_t{}) } noexcept -> std::same_as<blk_t>;
       { a.deallocate(std::declval<blk_t>()) } noexcept;
       { A::address_space } -> std::same_as<AddressSpace const &>;
     };

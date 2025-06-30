@@ -226,7 +226,7 @@ TEST(NDA, IdxMapTranspose) {
 
 TEST(NDA, IdxMapSlicesFrom1DIdxMap) {
   // take slices of a 1D index map
-  idx_map<1, 0, C_stride_order<1>, layout_prop_e::contiguous> idxm{{100}};
+  idx_map<1, 0, C_stride_order<1>, layout_prop_e::contiguous> idxm{std::array{100}};
 
   // take a trivial full slice
   auto [offset1, slice1] = idxm.slice(range::all);

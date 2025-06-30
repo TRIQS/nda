@@ -42,6 +42,11 @@ target_link_libraries(${PROJECT_NAME}_c PUBLIC mpi::mpi_c)
 find_package(OpenMP REQUIRED COMPONENTS CXX)
 target_link_libraries(${PROJECT_NAME}_c PUBLIC OpenMP::OpenMP_CXX)
 
+#XSIMD
+target_include_directories(${PROJECT_NAME}_c
+        PUBLIC
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/deps/xsimd_src/include>
+)
 # ========= Blas / Lapack ==========
 
 message(STATUS "-------- Lapack detection -------------")

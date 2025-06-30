@@ -11,6 +11,7 @@
 #pragma once
 
 #include "./address_space.hpp"
+#include "./aligned_alloc.hpp"
 #include "./malloc.hpp"
 #include "./memset.hpp"
 #include "./memcpy.hpp"
@@ -46,7 +47,7 @@ namespace nda::mem {
   /// Memory block consisting of a pointer and its size.
   struct blk_t {
     /// Pointer to the memory block.
-    char *ptr = nullptr;
+    char *__restrict ptr = nullptr;
 
     /// Size of the memory block in bytes.
     size_t s = 0;
@@ -83,7 +84,7 @@ namespace nda::mem {
      * @param s Size in bytes of the memory to allocate.
      * @return nda::mem::blk_t memory block.
      */
-    static blk_t allocate(size_t s) noexcept { return {(char *)malloc<AdrSp>(s), s}; }
+    static blk_t allocate(size_t s, [[maybe_unused]] size_t a = 0) noexcept { return {.ptr = static_cast<char *>(malloc<AdrSp>(s)), .s = s}; }
 
     /**
      * @brief Allocate memory and set it to zero.
@@ -95,13 +96,13 @@ namespace nda::mem {
      * @param s Size in bytes of the memory to allocate.
      * @return nda::mem::blk_t memory block.
      */
-    static blk_t allocate_zero(size_t s) noexcept {
+    static blk_t allocate_zero(size_t s, [[maybe_unused]] size_t a = 0) noexcept {
       if constexpr (AdrSp == mem::Host) {
         return {(char *)std::calloc(s, 1 /* byte */), s}; // NOLINT (C-style cast is fine here)
       } else {
         char *ptr = (char *)malloc<AdrSp>(s);
         memset<AdrSp>(ptr, 0, s);
-        return {ptr, s};
+        return {.ptr = ptr, .s = s};
       }
     }
 
@@ -110,6 +111,56 @@ namespace nda::mem {
      * @param b nda::mem::blk_t memory block to deallocate.
      */
     static void deallocate(blk_t b) noexcept { free<AdrSp>((void *)b.ptr); }
+  };
+
+  /**
+ * @brief Custom allocator that uses nda::mem::aligned_alloc to allocate memory.
+ * @tparam AdrSp nda::mem::AddressSpace in which the memory is allocated.
+ */
+  template <AddressSpace AdrSp = Host>
+  class mallocator_aligned {
+    public:
+    /// Default constructor.
+    mallocator_aligned() = default;
+    /// Deleted copy constructor.
+    mallocator_aligned(mallocator_aligned const &) = delete;
+    /// Default move constructor.
+    mallocator_aligned(mallocator_aligned &&) = default;
+    /// Deleted copy assignment operator.
+    mallocator_aligned &operator=(mallocator_aligned const &) = delete;
+    /// Default move assignment operator.
+    mallocator_aligned &operator=(mallocator_aligned &&) = default;
+    /// nda::mem::AddressSpace in which the memory is allocated.
+    static constexpr auto address_space = AdrSp;
+
+    /**
+     * @brief Allocate memory using nda::mem::malloc.
+     *
+     * @param s Size in bytes of the memory to allocate.
+     * @param alignment Alignment in bytes.
+     * @return nda::mem::blk_t memory block.
+     */
+    static blk_t allocate(size_t s, size_t alignment) noexcept { return {.ptr = static_cast<char *>(aligned_alloc<AdrSp>(alignment, s)), .s = s}; }
+    /**
+     * @brief Allocate memory and set it to zero.
+     *
+     * @details The behavior depends on the address space:
+     * - Otherwise it uses nda::mem::aligned_alloc and nda::mem::memset.
+     *
+     * @param s Size in bytes of the memory to allocate.
+     * @param alignment Alignment in bytes.
+     * @return nda::mem::blk_t memory block.
+     */
+    static blk_t allocate_zero(size_t s, size_t alignment) noexcept {
+      auto blk = allocate(s, alignment);
+      memset<AdrSp>(blk.ptr, 0, s);
+      return {.ptr = blk.ptr, .s = s};
+    }
+    /**
+     * @brief Deallocate memory using nda::mem::aligned_free.
+     * @param b nda::mem::blk_t memory block to deallocate.
+     */
+    static void deallocate(blk_t b) noexcept { aligned_free<AdrSp>((void *)b.ptr); }
   };
 
   /**
@@ -165,7 +216,7 @@ namespace nda::mem {
      * @param s Size in bytes of the returned memory block (has to be < `ChunkSize`).
      * @return nda::mem::blk_t memory block.
      */
-    blk_t allocate(size_t s) noexcept {
+    blk_t allocate(size_t s, [[maybe_unused]] size_t a = 0) noexcept {
       // check the size and if there is a free chunk, otherwise abort
       if (s > ChunkSize) std::abort();
       if (flags == 0) std::abort();
@@ -188,8 +239,8 @@ namespace nda::mem {
      * @param s Size in bytes of the returned memory block (has to be < `ChunkSize`).
      * @return nda::mem::blk_t memory block.
      */
-    blk_t allocate_zero(size_t s) noexcept {
-      auto blk = allocate(s);
+    blk_t allocate_zero(size_t s, [[maybe_unused]] size_t a = 0) noexcept {
+      auto blk = allocate(s, a);
       std::memset(blk.ptr, 0, s);
       return blk;
     }
@@ -294,9 +345,9 @@ namespace nda::mem {
      * @param s Size in bytes of the returned memory block (has to be < `ChunkSize`).
      * @return nda::mem::blk_t memory block.
      */
-    blk_t allocate(size_t s) noexcept {
+    blk_t allocate(size_t s, [[maybe_unused]] size_t a = 0) noexcept {
       if ((bu == bu_vec.end()) or (bu->is_full())) find_non_full_bucket();
-      return bu->allocate(s);
+      return bu->allocate(s, a);
     }
 
     /**
@@ -306,8 +357,8 @@ namespace nda::mem {
      * @param s Size in bytes of the returned memory block (has to be < `ChunkSize`).
      * @return nda::mem::blk_t memory block.
      */
-    blk_t allocate_zero(size_t s) noexcept {
-      auto blk = allocate(s);
+    blk_t allocate_zero(size_t s, [[maybe_unused]]size_t a = 0) noexcept {
+      auto blk = allocate(s, a);
       std::memset(blk.ptr, 0, s);
       return blk;
     }
@@ -412,7 +463,7 @@ namespace nda::mem {
      * @param s Size in bytes of the memory to allocate.
      * @return nda::mem::blk_t memory block.
      */
-    blk_t allocate(size_t s) noexcept { return s <= Threshold ? small.allocate(s) : big.allocate(s); }
+    blk_t allocate(size_t s, [[maybe_unused]] size_t a = 0) noexcept { return s <= Threshold ? small.allocate(s, a) : big.allocate(s, a); }
 
     /**
      * @brief Allocate memory and set the memory to zero using the small allocator if the size is less than or equal to
@@ -421,7 +472,7 @@ namespace nda::mem {
      * @param s Size in bytes of the memory to allocate.
      * @return nda::mem::blk_t memory block.
      */
-    blk_t allocate_zero(size_t s) noexcept { return s <= Threshold ? small.allocate_zero(s) : big.allocate_zero(s); }
+    blk_t allocate_zero(size_t s, [[maybe_unused]] size_t a = 0) noexcept { return s <= Threshold ? small.allocate_zero(s, a) : big.allocate_zero(s, a); }
 
     /**
      * @brief Deallocate memory using the small allocator if the size is less than or equal to the `Threshold`,
@@ -485,16 +536,15 @@ namespace nda::mem {
 #endif
       }
     }
-
     /**
      * @brief Allocate memory and update the total memory used.
      *
      * @param s Size in bytes of the memory to allocate.
      * @return nda::mem::blk_t memory block.
      */
-    blk_t allocate(size_t s) {
-      blk_t b = A::allocate(s);
-      memory_used += b.s;
+    blk_t allocate(size_t s, [[maybe_unused]] size_t a = 0) {
+      blk_t b = A::allocate(s, a);
+      memory_used += s;
       return b;
     }
 
@@ -504,9 +554,9 @@ namespace nda::mem {
      * @param s Size in bytes of the memory to allocate.
      * @return nda::mem::blk_t memory block.
      */
-    blk_t allocate_zero(size_t s) {
-      blk_t b = A::allocate_zero(s);
-      memory_used += b.s;
+    blk_t allocate_zero(size_t s, [[maybe_unused]] size_t a = 0) {
+      blk_t b = A::allocate_zero(s, a);
+      memory_used += s;
       return b;
     }
 
@@ -593,10 +643,10 @@ namespace nda::mem {
      * @param s Size in bytes of the memory to allocate.
      * @return nda::mem::blk_t memory block.
      */
-    blk_t allocate(uint64_t s) {
+    blk_t allocate(uint64_t s, uint64_t a = 0) {
       // __builtin_clzl returns the number of leading zeros
       ++hist[__builtin_clzl(s)];
-      return A::allocate(s);
+      return A::allocate(s, a);
     }
 
     /**
@@ -605,10 +655,10 @@ namespace nda::mem {
      * @param s Size in bytes of the memory to allocate.
      * @return nda::mem::blk_t memory block.
      */
-    blk_t allocate_zero(uint64_t s) {
+    blk_t allocate_zero(uint64_t s, uint64_t a = 0) {
       // __builtin_clzl returns the number of leading zeros
       ++hist[__builtin_clzl(s)];
-      return A::allocate_zero(s);
+      return A::allocate_zero(s, a);
     }
 
     /**

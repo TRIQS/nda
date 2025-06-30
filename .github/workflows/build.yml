@@ -106,12 +106,6 @@ jobs:
       run: |
         echo 'LDFLAGS="-L$(brew --prefix llvm)/lib/c++ -L$(brew --prefix llvm)/lib -lunwind"' >> $GITHUB_ENV
 
-    - name: Set up test coverage
-      if: matrix.cov == 'ON'
-      run: |
-        pip install gcovr
-        echo "CXXFLAGS=--coverage" >> $GITHUB_ENV
-
     - name: Prepare source files for doxygen
       if: matrix.doc == 'ON'
       working-directory: ./c++/nda
@@ -126,7 +120,7 @@ jobs:
         CC: ${{ matrix.cc }}
         CXX: ${{ matrix.cxx }}
       run: |
-        mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/install -DPythonSupport=ON -DBuild_Documentation=${{ matrix.doc }} -DCMAKE_BUILD_TYPE=${{ matrix.cov == 'ON' && 'Debug' || 'Release' }}
+        mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/install -DPythonSupport=ON -DBuild_Documentation=${{ matrix.doc }}
         make -j2 || make -j1 VERBOSE=1
 
     - name: Test nda
@@ -135,13 +129,6 @@ jobs:
       run: |
         cd build
         ctest -j2 --output-on-failure
-
-    - name: Generate test coverage HTML output
-      if: matrix.cov == 'ON'
-      run: |
-        cd build
-        mkdir coverage
-        gcovr --gcov-executable "gcov" --root ../c++ --html-details -o coverage/coverage.html .
 
     - name: ccache statistics
       if: always()
@@ -154,17 +141,9 @@ jobs:
         key: ccache-${{ matrix.os }}-${{ matrix.cc }}-${{ github.run_id }}
 
     - name: Deploy documentation
-      if: matrix.doc == 'ON' && github.ref == 'refs/heads/unstable'
+      if: matrix.doc == 'ON' && github.ref == 'refs/heads/1.3.x'
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         folder: build/doc/html
         branch: github.io
-        target-folder: docs/unstable
-
-    - name: Deploy test coverage
-      if: matrix.cov == 'ON' && github.ref == 'refs/heads/unstable'
-      uses: JamesIves/github-pages-deploy-action@v4
-      with:
-        folder: build/coverage
-        branch: github.io
-        target-folder: docs/coverage
+        target-folder: docs/1.3.x

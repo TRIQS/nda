@@ -15,6 +15,7 @@
 #include "./slice_static.hpp"
 #include "../macros.hpp"
 #include "../traits.hpp"
+#include "../mem/alignment.hpp"
 
 #include <algorithm>
 #include <array>
@@ -57,7 +58,7 @@ namespace nda {
    * @details It stores the shape of the array, i.e. the length of each dimension, and the strides of each dimension.
    * The stride of dimension `i` is the number of elements to skip in memory when the index of dimension `i` is
    * incremented by one. For example:
-   * - To iterate over every element of a 5x5x5 array in C-order use the strides `(25, 5, 1)`.
+   * - To iterate over every element of a 5x5x5 array in C-order use the strides `(25, 5, 1)`. a[i][j][k] = 25 * i + 8  * j + k
    * - To iterate over every 2nd element of a 1D array use the stride `(2)`.
    * - To iterate over every 2nd column of a 10x10 array in Fortran-order use the strides `(1, 20)`.
    * - To iterate over every 2nd row of a 10x10 array in Fortran-order use the strides `(2, 10)`.
@@ -82,7 +83,7 @@ namespace nda {
    * in memory (see nda::layout_prop_e).
    *
    * @tparam Rank Number of dimensions.
-   * @tparam StaticExtent Compile-time known shape (zero if fully dynamic).
+   * @tparam StaticExtents Compile-time known shape (zero if fully dynamic).
    * @tparam StrideOrder Order in which the dimensions are stored in memory.
    * @tparam LayoutProp Compile-time guarantees about the layout of the data in memory.
    */
@@ -290,7 +291,6 @@ namespace nda {
       for (int u = 0, v = 0; u < Rank; ++u) extents[u] = (static_extents[u] == 0 ? dynamic_extents[v++] : static_extents[u]);
       return extents;
     }
-
     // FIXME ADD A CHECK layout_prop_e ... compare to stride and
 
     public:
@@ -316,7 +316,8 @@ namespace nda {
      * @param idxm Other nda::idx_map object.
      */
     template <layout_prop_e LP>
-    idx_map(idx_map<Rank, StaticExtents, StrideOrder, LP> const &idxm) noexcept : len(idxm.lengths()), str(idxm.strides()) {
+    idx_map(idx_map<Rank, StaticExtents, StrideOrder, LP> const &idxm) noexcept
+       : len(idxm.lengths()), str(idxm.strides()) {
       // check strides and stride order of the constructed map
       EXPECTS(is_stride_order_valid());
 
@@ -397,6 +398,7 @@ namespace nda {
       requires((n_dynamic_extents != Rank) and (n_dynamic_extents != 0))
        : idx_map(merge_static_and_dynamic_extents(shape)) {}
 
+
     /**
      * @brief Construct a new map from an existing map with a different stride order.
      *
@@ -453,7 +455,7 @@ namespace nda {
         return arg;
       } else {
         // otherwise multiply the argument by the stride of the current dimension
-        return arg * std::get<I>(str);
+        return arg * std::get<I>(strides());
       }
     }
 
@@ -638,7 +640,6 @@ namespace nda {
       static constexpr std::array<int, Rank> permu              = decode<Rank>(Permutation);
       static constexpr std::array<int, Rank> new_stride_order   = permutations::compose(permu, stride_order);
       static constexpr std::array<int, Rank> new_static_extents = permutations::apply_inverse(permu, static_extents);
-
       return idx_map<Rank, encode(new_static_extents), encode(new_stride_order), LayoutProp>{permutations::apply_inverse(permu, lengths()),
                                                                                              permutations::apply_inverse(permu, strides())};
     }
