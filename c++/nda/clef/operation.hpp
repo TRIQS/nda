@@ -97,9 +97,7 @@ namespace nda::clef {
      * @return Result of the function call.
      */
     template <typename F, typename... Args>
-    FORCEINLINE auto operator()(F &&f, Args &&...args)
-       -> decltype(detail::fget(std::forward<F>(f))(detail::fget(std::forward<Args>(args))...)) const {
-      // trailing decltype is necessary for requires later in operation<Tag>
+    FORCEINLINE decltype(auto) operator()(F &&f, Args &&...args) const {
       return detail::fget(std::forward<F>(f))(detail::fget(std::forward<Args>(args))...);
     }
   };
@@ -117,9 +115,7 @@ namespace nda::clef {
      * @return Result of the subscript operation.
      */
     template <typename F, typename... Args>
-    FORCEINLINE auto operator()(F &&f, Args &&...args)
-       -> decltype(detail::fget(std::forward<F>(f)).operator[](detail::fget(std::forward<Args>(args))...)) const {
-      // directly calling [args...] breaks clang
+    FORCEINLINE decltype(auto) operator()(F &&f, Args &&...args) const {
       return detail::fget(std::forward<F>(f)).operator[](detail::fget(std::forward<Args>(args))...);
     }
   };
@@ -247,14 +243,12 @@ namespace nda::clef {
   template <typename Tag, typename... Args>
   FORCEINLINE auto op_dispatch(std::true_type, Args &&...args) {
     using Arg0 = std::decay_t<std::tuple_element_t<0, std::tuple<Args...>>>;
-    if constexpr (not(std::is_same_v<Tag, tags::function> and not supports_partial_eval_of_calls<Arg0>) and  //
-                  not(std::is_same_v<Tag, tags::subscript> and not supports_partial_eval_of_subscript<Arg0>) //and //
-                  //requires { operation<Tag>()(std::forward<Args>(args)...); }
-    ) {
-      return operation<Tag>()(std::forward<Args>(args)...);
-    } else {
+    if constexpr ((std::is_same_v<Tag, tags::function> and not supports_partial_eval_of_calls<Arg0>) or  //
+                  (std::is_same_v<Tag, tags::subscript> and not supports_partial_eval_of_subscript<Arg0>) //
+    )
       return expr<Tag, expr_storage_t<Args>...>{Tag(), std::forward<Args>(args)...};
-    }
+     else
+      return operation<Tag>()(std::forward<Args>(args)...);
   }
 
   /**
