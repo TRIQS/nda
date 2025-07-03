@@ -127,23 +127,23 @@ jobs:
               for mpi in ON OFF; do
                 echo "::group::[Config] HDF5=$hdf5 OMP=$openmp MPI=$mpi"
                 rm -rf build && mkdir build && cd build
+          
                 cmake .. \
                   -DCMAKE_INSTALL_PREFIX=$HOME/install \
                   -DPythonSupport=ON \
-                  -DBuild_Documentation=${{ matrix.doc }} \
-                  -DCMAKE_BUILD_TYPE=${{ matrix.cov == 'ON' && 'Debug' || 'Release' }} \
+                  -DBuild_Documentation=${DOC:-OFF} \
+                  -DCMAKE_BUILD_TYPE=$( [ "${COV:-OFF}" == "ON" ] && echo "Debug" || echo "Release" ) \
                   -DHDF5Support=$hdf5 \
                   -DOpenMPSupport=$openmp \
-                  -DMPISupport=$mpi 
+                  -DMPISupport=$mpi
+          
                 make -j2 || make -j1 VERBOSE=1
                 ctest -j2 --output-on-failure
                 cd ..
                 echo "::endgroup::"
-                done
               done
             done
           done
-
       - name: Generate test coverage HTML output
         if: matrix.cov == 'ON'
         run: |
