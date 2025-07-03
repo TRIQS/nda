@@ -198,11 +198,10 @@ namespace nda {
       requires(NdaInitFunc<H, A>)
     void init(A &a, H const &init_func) const {
       if constexpr (P == Parallel::HYBRID) {
-        static_assert(MPI_SUPPORT, "Parallel::HYBRID requires MPI support.");
+#if defined(MPI_SUPPORT) && defined(_OPENMP)
         static_assert(_OPENMP, "Parallel::HYBRID requires OpenMP support.");
-
         a() = 0.0;
-#pragma omp parallel for
+#pragma omp parallel
         for (auto const &sym_class : itertools::omp_chunk(mpi::chunk(sym_classes))) {
           auto idx           = a.indexmap().to_idx(sym_class[0].first);
           auto ref_val       = init_func(idx);
@@ -210,10 +209,12 @@ namespace nda {
           for (auto const &[lin_idx, op] : sym_class) { std::apply(a, a.indexmap().to_idx(lin_idx)) = op(ref_val); }
         }
         a = mpi::all_reduce(a);
-
+#else
+        static_assert(false, "Parallel::HYBRID requires MPI support.");
+#endif
       } else if constexpr (P == Parallel::MPI) {
+#if defined(MPI_SUPPORT)
         static_assert(MPI_SUPPORT, "Parallel::MPI requires MPI support.");
-
         a() = 0.0;
         for (auto const &sym_class : mpi::chunk(sym_classes)) {
           auto idx           = a.indexmap().to_idx(sym_class[0].first);
@@ -222,19 +223,23 @@ namespace nda {
           for (auto const &[lin_idx, op] : sym_class) { std::apply(a, a.indexmap().to_idx(lin_idx)) = op(ref_val); }
         }
         a = mpi::all_reduce(a);
-
+#else
+        static_assert(false, "Parallel::MPI requires MPI support.");
+#endif
       } else if constexpr (P == Parallel::OMP) {
+#if defined(_OPENMP)
         static_assert(_OPENMP, "Parallel::OMP requires OpenMP support.");
-
         a() = 0.0;
-#pragma omp parallel for
+#pragma omp parallel
         for (auto const &sym_class : itertools::omp_chunk(sym_classes)) {
           auto idx           = a.indexmap().to_idx(sym_class[0].first);
           auto ref_val       = init_func(idx);
           std::apply(a, idx) = ref_val;
           for (auto const &[lin_idx, op] : sym_class) { std::apply(a, a.indexmap().to_idx(lin_idx)) = op(ref_val); }
         }
-
+#else
+        static_assert(false, "Parallel::OMP requires OpenMP support.");
+#endif
       } else {
         // Sequential fallback
         a() = 0.0;
