@@ -71,7 +71,7 @@ namespace nda {
   }
 
   template <Array A, typename F_SIMD, typename F_SCALAR, Vectorizable R>
-    requires(vectorizable_array<A> and std::is_same_v<R, get_value_t<A>>)
+    requires(is_simd_enabled_v<A> and std::is_same_v<R, get_value_t<A>>)
   auto fold(F_SIMD f_simd, F_SCALAR f_scalar, A const &a, native_simd<R> r_simd, R r_scalar) {
    nda::for_each_static<0, get_layout_info<A>.stride_order, native_simd<R>::size>(
        a.shape(), [&a, &r_simd, &f_simd](auto &&...args) { r_simd = f_simd(r_simd, native_simd<R>(a.load(args...))); },
@@ -140,7 +140,7 @@ namespace nda {
    */
   template <Array A>
   auto max_element(A const &a) {
-    if constexpr (vectorizable_array<A>) {
+    if constexpr (is_simd_enabled_v<A>) {
       using value_t = get_value_t<A>;
       using simd_t  = native_simd<value_t>;
       simd_t max_simd(get_first_element(a));
@@ -170,7 +170,7 @@ namespace nda {
   template <Array A>
   auto min_element(A const &a) {
 
-    if constexpr (vectorizable_array<A>) {
+    if constexpr (is_simd_enabled_v<A>) {
       using value_t = get_value_t<A>;
       using simd_t  = native_simd<value_t>;
       simd_t min_simd(get_first_element(a));
@@ -198,7 +198,7 @@ namespace nda {
    */
   template <ArrayOfRank<2> A>
   double frobenius_norm(A const &a) {
-    if constexpr (vectorizable_array<A> and not is_complex_v<get_value_t<A>>) {
+    if constexpr (is_simd_enabled_v<A> and not is_complex_v<get_value_t<A>>) {
       using value_t = get_value_t<A>;
       using simd_t  = native_simd<value_t>;
       simd_t r_simd(value_t(0));
@@ -239,7 +239,7 @@ namespace nda {
     requires(nda::Scalar<Value> or nda::Array<Value>)
   {
     if constexpr (nda::Scalar<Value>) {
-      if constexpr (vectorizable_array<A>) {
+      if constexpr (is_simd_enabled_v<A>) {
         using value_t = get_value_t<A>;
         using simd_t  = native_simd<value_t>;
         simd_t sum_simd(value_t{0});
@@ -267,7 +267,7 @@ namespace nda {
     requires(nda::Scalar<Value> or nda::Array<Value>)
   {
     if constexpr (nda::Scalar<Value>) {
-      if constexpr (vectorizable_array<A>) {
+      if constexpr (is_simd_enabled_v<A>) {
         using value_t = get_value_t<A>;
         using simd_t  = native_simd<value_t>;
         simd_t product_simd(value_t{1});
@@ -300,7 +300,7 @@ namespace nda {
   template <Array A, Array B>
     requires(nda::get_rank<A> == nda::get_rank<B>)
   [[nodiscard]] constexpr auto hadamard(A &&a, B &&b) {
-    if constexpr (vectorizable_array<A> and vectorizable_array<B> and std::is_same_v<get_value_t<A>, get_value_t<B>>) {
+    if constexpr (is_simd_enabled_v<A> and is_simd_enabled_v<B> and std::is_same_v<get_value_t<A>, get_value_t<B>>) {
       using value_t = get_value_t<A>;
       using simd_t  = native_simd<value_t>;
       struct mul {

@@ -436,54 +436,60 @@ namespace nda {
   template <typename F, Array... As>
   inline constexpr layout_info_t get_layout_info<expr_call<F, As...>> = (get_layout_info<As> & ...);
 
-  template <typename T, typename U>
+  template <typename A, typename T = get_value_t<A>>
   struct is_simd_enabled {
     static constexpr bool value = false;
   };
 
-  template <typename T, typename U>
-    requires(!std::is_same_v<U, std::remove_cvref_t<U>>)
-  struct is_simd_enabled<T, U> {
-    static constexpr bool value = is_simd_enabled<T, std::remove_cvref_t<U>>::value;
+  // Redirect if A is a reference or cv-qualified
+  template <typename A, typename T>
+    requires(!std::is_same_v<A, std::remove_cvref_t<A>>)
+  struct is_simd_enabled<A, T> {
+    static constexpr bool value = is_simd_enabled<std::remove_cvref_t<A>, T>::value;
   };
 
   // Specialization for basic_array
-  template <typename T, typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename ContainerPolicy>
-  struct is_simd_enabled<T, basic_array<ValueType, Rank, LayoutPolicy, Algebra, ContainerPolicy>> {
-    static constexpr bool value = Vectorizable<ValueType> and std::is_same_v<T, ValueType>;
+  template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename ContainerPolicy, typename T>
+  struct is_simd_enabled<basic_array<ValueType, Rank, LayoutPolicy, Algebra, ContainerPolicy>, T> {
+    static constexpr bool value = Vectorizable<ValueType> and std::is_same_v<T, ValueType>
+       and get_layout_info<basic_array<ValueType, Rank, LayoutPolicy, Algebra, ContainerPolicy>>.prop == layout_prop_e::contiguous;
   };
+
   // Specialization for basic_array_view
-  template <typename T, typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename AccessorPolicy, typename OwningPolicy>
-  struct is_simd_enabled<T, basic_array_view<ValueType, Rank, LayoutPolicy, Algebra, AccessorPolicy, OwningPolicy>> {
-    static constexpr bool value = Vectorizable<ValueType> and std::is_same_v<T, ValueType>;
+  template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename AccessorPolicy, typename OwningPolicy, typename T>
+  struct is_simd_enabled<basic_array_view<ValueType, Rank, LayoutPolicy, Algebra, AccessorPolicy, OwningPolicy>, T> {
+    static constexpr bool value = Vectorizable<ValueType> and std::is_same_v<T, ValueType>
+       and get_layout_info<basic_array_view<ValueType, Rank, LayoutPolicy, Algebra, AccessorPolicy, OwningPolicy>>.prop == layout_prop_e::contiguous;
   };
 
-  //Specialization for expr_call
-  template <typename T, typename F, Array... As>
-  struct is_simd_enabled<T, expr_call<F, As...>> {
-    static constexpr bool value = LoadWithNativeSimd<F, T, sizeof...(As)> and (is_simd_enabled<T, As>::value and ...);
+  // Specialization for expr_call
+  template <typename F, Array... As, typename T>
+  struct is_simd_enabled<expr_call<F, As...>, T> {
+    static constexpr bool value = LoadWithNativeSimd<F, T, sizeof...(As)> and (is_simd_enabled<As, T>::value and ...)
+       and get_layout_info<expr_call<F, As...>>.stride_order != static_cast<uint64_t>(-1)
+       and get_layout_info<expr_call<F, As...>>.prop == layout_prop_e::contiguous;
   };
 
-  //Specialization for expr_unary
-  template <typename T, char OP, Array A>
-  struct is_simd_enabled<T, expr_unary<OP, A>> {
-    static constexpr bool value = is_simd_enabled<T, A>::value;
+  // Specialization for expr_unary
+  template <char OP, Array A, typename T>
+  struct is_simd_enabled<expr_unary<OP, A>, T> {
+    static constexpr bool value = is_simd_enabled<A, T>::value and get_layout_info<expr_unary<OP, A>>.stride_order != static_cast<uint64_t>(-1)
+       and get_layout_info<expr_unary<OP, A>>.prop == layout_prop_e::contiguous;
   };
 
-  //Specialization for expr
-  template <typename T, char OP, typename L, typename R>
-  struct is_simd_enabled<T, expr<OP, L, R>> {
-    static constexpr bool value = is_scalar_v<L> ? (is_simd_enabled<T, R>::value and std::is_same_v<T, std::remove_cvref_t<L>>) :
-       is_scalar_v<R>                            ? (is_simd_enabled<T, L>::value and std::is_same_v<T, std::remove_cvref_t<R>>) :
-                                                   (is_simd_enabled<T, L>::value and is_simd_enabled<T, R>::value);
+  // Specialization for expr binary
+  template <char OP, typename L, typename R, typename T>
+  struct is_simd_enabled<expr<OP, L, R>, T> {
+    static constexpr bool value = (is_scalar_v<L>    ? (is_simd_enabled<R, T>::value and std::is_same_v<T, std::remove_cvref_t<L>>) :
+                                      is_scalar_v<R> ? (is_simd_enabled<L, T>::value and std::is_same_v<T, std::remove_cvref_t<R>>) :
+                                                       (is_simd_enabled<L, T>::value and is_simd_enabled<R, T>::value))
+       and get_layout_info<expr<OP, L, R>>.stride_order != static_cast<uint64_t>(-1)
+       and get_layout_info<expr<OP, L, R>>.prop == layout_prop_e::contiguous;
   };
 
-  template <typename T, typename U>
-  inline static constexpr bool is_simd_enabled_v = is_simd_enabled<T, U>::value;
-
-  template <Array A>
-  inline static constexpr bool vectorizable_array = is_simd_enabled_v<get_value_t<A>, A>
-     and get_layout_info<A>.stride_order != static_cast<uint64_t>(-1) and get_layout_info<A>.prop == layout_prop_e::contiguous;
+  // Convenience variable template
+  template <typename A, typename T = get_value_t<A>>
+  inline constexpr bool is_simd_enabled_v = is_simd_enabled<A, T>::value;
 
   /** @} */
 

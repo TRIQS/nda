@@ -952,15 +952,6 @@ TEST_F(NDAArrayAndView, StrideOrderOfArrays) {
   EXPECT_TRUE(v_c.indexmap().is_stride_order_C());
   EXPECT_TRUE(v_f.indexmap().is_stride_order_C());
 }
-/*
- * [1, 2]
- * [3, 4]
- * [5, 6]
- *
- */
-TEST_F(NDAArrayAndView, ArrayAligned) {
-  nda::array_aligned<int,2,nda::C_layout> M = {{1, 2}, {3, 4}, {5, 6}};
-}
 
 #if defined(__has_feature)
 #if !__has_feature(address_sanitizer) && !__has_feature(memory_sanitizer)
