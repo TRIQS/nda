@@ -114,13 +114,13 @@ $(function(){initNavTree('group__av__hdf5.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> **argv) {</div>
 <div class="line">  <span class="comment">// create a 4x2 array with random values</span></div>
-<div class="line">  <span class="keyword">auto</span> A = <a class="code hl_function" href="group__av__factories.html#ga1ae039252f35748e691cba9fa4c9ae15">nda::rand</a>(4, 2);</div>
+<div class="line">  <span class="keyword">auto</span> A = <a class="code hl_function" href="group__av__factories.html#gae67b2d9014b1ad841fb50b8dbd265788">nda::rand</a>(4, 2);</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// write the array to an HDF5 file</span></div>
 <div class="line">  h5::file file(<span class="stringliteral">&quot;A.h5&quot;</span>, <span class="charliteral">&#39;w&#39;</span>);</div>
 <div class="line">  h5::write(file, <span class="stringliteral">&quot;A&quot;</span>, A);</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__av__factories_html_ga1ae039252f35748e691cba9fa4c9ae15"><div class="ttname"><a href="group__av__factories.html#ga1ae039252f35748e691cba9fa4c9ae15">nda::rand</a></div><div class="ttdeci">auto rand(std::array&lt; Int, Rank &gt; const &amp;shape)</div><div class="ttdoc">Make an array of the given shape and initialize it with random values from the uniform distribution o...</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00154">basic_functions.hpp:154</a></div></div>
+<div class="ttc" id="agroup__av__factories_html_gae67b2d9014b1ad841fb50b8dbd265788"><div class="ttname"><a href="group__av__factories.html#gae67b2d9014b1ad841fb50b8dbd265788">nda::rand</a></div><div class="ttdeci">auto rand(std::array&lt; Int, Rank &gt; const &amp;shape)</div><div class="ttdoc">Make an array of the given shape and initialize it with random values from the uniform distribution o...</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00154">basic_functions.hpp:154</a></div></div>
 <div class="ttc" id="ah5_8hpp_html"><div class="ttname"><a href="h5_8hpp.html">h5.hpp</a></div><div class="ttdoc">Provides HDF5 support for the nda library.</div></div>
 <div class="ttc" id="anda_8hpp_html"><div class="ttname"><a href="nda_8hpp.html">nda.hpp</a></div><div class="ttdoc">Includes all relevant headers for the core nda library.</div></div>
 </div><!-- fragment --><p>Dumping the content of "A.h5":</p>

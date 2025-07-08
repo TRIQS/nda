@@ -107,7 +107,7 @@ $(function(){initNavTree('group__av__factories.html','',''); });
 <p>Various functions to create new array/view objects and to transform existing ones. </p>
 <p>We can group the different functions into</p>
 <ul>
-<li>Factories and transformations for arrays: <a class="el" href="#ga70374c703d319cfb117e948ead56fb3d" title="Make a 1-dimensional integer array and initialize it with values of a given nda::range.">nda::arange</a>, <a class="el" href="#gaf93e0a19277d0f2ed937e6d7339ee652" title="Join a sequence of nda::Array types along an existing axis.">nda::concatenate</a>, <a class="el" href="#ga3c1d2dbd1fdb0e666829b532fcc46da4" title="Get a new nda::matrix with the given values on the diagonal.">nda::diag</a>, <a class="el" href="#ga102fecb589bb00838a901efae065ce56" title="Create an identity nda::matrix with ones on the diagonal.">nda::eye</a>, <a class="el" href="#ga1ef017428f20125233751e5e985fdc90" title="Make a given object regular.">nda::make_regular</a>, <a class="el" href="#gae219356600666990aed1a80bc164eab9" title="Make an array of the given shape and one-initialize it.">nda::ones</a>, <a class="el" href="#ga1ae039252f35748e691cba9fa4c9ae15" title="Make an array of the given shape and initialize it with random values from the uniform distribution o...">nda::rand</a>, <a class="el" href="#ga21ed59f95217d512e116f5558676f8e7" title="Resize a given regular array to the given shape or check if a given view as the correct shape.">nda::resize_or_check_if_view</a>, <a class="el" href="#gab3fd89e0758c7e679209e4f7ed914ea7" title="Convert an nda::MemoryArray to its regular type on device memory.">nda::to_device</a>, <a class="el" href="#ga8764fbd90ade51ac8616beb50b6b8a62" title="Convert an nda::MemoryArray to its regular type on host memory.">nda::to_host</a>, <a class="el" href="#ga29f120fb45f999b35c26f7f73930a424" title="Convert an nda::MemoryArray to its regular type on unified memory.">nda::to_unified</a>, <a class="el" href="#gafac25d084c3001cee0f7d16e18cfb782" title="Stack two 2-dimensional arrays/views vertically.">nda::vstack</a>, <a class="el" href="#ga5e6f0a917ed3068ffa15842ee50f6e50" title="Make an array of the given shape on the given address space and zero-initialize it.">nda::zeros</a>.</li>
+<li>Factories and transformations for arrays: <a class="el" href="#ga70374c703d319cfb117e948ead56fb3d" title="Make a 1-dimensional integer array and initialize it with values of a given nda::range.">nda::arange</a>, <a class="el" href="#gaf93e0a19277d0f2ed937e6d7339ee652" title="Join a sequence of nda::Array types along an existing axis.">nda::concatenate</a>, <a class="el" href="#ga3c1d2dbd1fdb0e666829b532fcc46da4" title="Get a new nda::matrix with the given values on the diagonal.">nda::diag</a>, <a class="el" href="#ga102fecb589bb00838a901efae065ce56" title="Create an identity nda::matrix with ones on the diagonal.">nda::eye</a>, <a class="el" href="#ga1ef017428f20125233751e5e985fdc90" title="Make a given object regular.">nda::make_regular</a>, <a class="el" href="#gae219356600666990aed1a80bc164eab9" title="Make an array of the given shape and one-initialize it.">nda::ones</a>, <a class="el" href="#gae67b2d9014b1ad841fb50b8dbd265788" title="Make an array of the given shape and initialize it with random values from the uniform distribution o...">nda::rand</a>, <a class="el" href="#ga21ed59f95217d512e116f5558676f8e7" title="Resize a given regular array to the given shape or check if a given view as the correct shape.">nda::resize_or_check_if_view</a>, <a class="el" href="#gab3fd89e0758c7e679209e4f7ed914ea7" title="Convert an nda::MemoryArray to its regular type on device memory.">nda::to_device</a>, <a class="el" href="#ga8764fbd90ade51ac8616beb50b6b8a62" title="Convert an nda::MemoryArray to its regular type on host memory.">nda::to_host</a>, <a class="el" href="#ga29f120fb45f999b35c26f7f73930a424" title="Convert an nda::MemoryArray to its regular type on unified memory.">nda::to_unified</a>, <a class="el" href="#gafac25d084c3001cee0f7d16e18cfb782" title="Stack two 2-dimensional arrays/views vertically.">nda::vstack</a>, <a class="el" href="#ga5e6f0a917ed3068ffa15842ee50f6e50" title="Make an array of the given shape on the given address space and zero-initialize it.">nda::zeros</a>.</li>
 <li>Factories and transformations for views: <a class="el" href="#gad73d17b3c916c0a15e6d1b1e9d4ee017" title="Get a view of the diagonal of a 2-dimensional array/view.">nda::diagonal</a>, <a class="el" href="#gaa01d35a8419bc78798737c4fa94ee042" title="Flatten an nda::basic_array or nda::basic_array_view to a 1-dimensional array/view by reshaping it.">nda::flatten</a>, <a class="el" href="#gafc054e71fc39165fa411582663367e6e" title="Create a new nda::basic_array or nda::basic_array_view by grouping indices together of a given array/...">nda::group_indices_view</a>, <a class="el" href="#gabb272870e7c590ca06b94664db2946a3" title="Make an nda::array_view of a given nda::basic_array.">nda::make_array_view</a>, <a class="el" href="#gae0239415c475ff03fd0f98a8a9178087" title="Make an nda::array_const_view of a given nda::basic_array.">nda::make_array_const_view</a>, <a class="el" href="#ga57cc79af21f48abcdd340523029c7c48" title="Make an nda::basic_array_view with a const value type from a given nda::basic_array.">nda::make_const_view</a>, <a class="el" href="#gaa47d1e8768b732e2fb4712e61822839a" title="Make an nda::matrix_view of a given nda::basic_array.">nda::make_matrix_view</a>, <a class="el" href="#ga587a5b691704422771dcaa5fcbbf32b4" title="Permute the indices/dimensions of an nda::basic_array or nda::basic_array_view.">nda::permuted_indices_view</a>, <a class="el" href="#ga45f52137a4bfd2926583530f73c29c1c" title="Add N fast varying dimensions of size 1 to a given nda::basic_array or nda::basic_array_view.">nda::reinterpret_add_fast_dims_of_size_one</a>, <a class="el" href="#gaf06f490766f84271bb66553168570e2b" title="Reshape an nda::basic_array or nda::basic_array_view.">nda::reshape</a>, <a class="el" href="#gab1366c1c79f31877f2d0a1596f323cee" title="Transpose the memory layout of an nda::MemoryArray or an nda::expr_call.">nda::transpose</a>, <a class="el" href="#ga193578b15703e8a6c5fd337235b6ab63" title="Transpose two indices/dimensions of an nda::basic_array or nda::basic_array_view.">nda::transposed_view</a>.</li>
 </ul>
 <p>Note that some of the functions might return an array, a view, a scalar or a lazy expression depending on the input arguments.</p>
@@ -182,10 +182,10 @@ requires (<a class="el" href="group__utils__type__traits.html#gadb69652fdcf2bc30
 <tr class="memitem:ga6888305d7dafa3d8ae91eba441c8700c" id="r_ga6888305d7dafa3d8ae91eba441c8700c"><td class="memTemplParams" colspan="2">template&lt;typename RealType = double, std::integral... Ints&gt; </td></tr>
 <tr class="memitem:ga6888305d7dafa3d8ae91eba441c8700c template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6888305d7dafa3d8ae91eba441c8700c">nda::rand</a> (Ints... is)</td></tr>
 <tr class="memdesc:ga6888305d7dafa3d8ae91eba441c8700c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make an array of the given dimensions and initialize it with random values from the uniform distribution over [0, 1).  <br /></td></tr>
-<tr class="memitem:ga1ae039252f35748e691cba9fa4c9ae15" id="r_ga1ae039252f35748e691cba9fa4c9ae15"><td class="memTemplParams" colspan="2">template&lt;typename RealType = double, std::integral Int, auto Rank&gt; <br />
-requires (std::is_floating_point_v&lt;RealType&gt;)</td></tr>
-<tr class="memitem:ga1ae039252f35748e691cba9fa4c9ae15 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1ae039252f35748e691cba9fa4c9ae15">nda::rand</a> (std::array&lt; Int, Rank &gt; const &amp;shape)</td></tr>
-<tr class="memdesc:ga1ae039252f35748e691cba9fa4c9ae15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make an array of the given shape and initialize it with random values from the uniform distribution over [0, 1).  <br /></td></tr>
+<tr class="memitem:gae67b2d9014b1ad841fb50b8dbd265788" id="r_gae67b2d9014b1ad841fb50b8dbd265788"><td class="memTemplParams" colspan="2">template&lt;typename ValueType = double, std::integral Int, auto Rank&gt; <br />
+requires (std::is_floating_point_v&lt;ValueType&gt; or <a class="el" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">nda::is_complex_v</a>&lt;ValueType&gt;)</td></tr>
+<tr class="memitem:gae67b2d9014b1ad841fb50b8dbd265788 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae67b2d9014b1ad841fb50b8dbd265788">nda::rand</a> (std::array&lt; Int, Rank &gt; const &amp;shape)</td></tr>
+<tr class="memdesc:gae67b2d9014b1ad841fb50b8dbd265788"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make an array of the given shape and initialize it with random values from the uniform distribution over [0, 1).  <br /></td></tr>
 <tr class="memitem:ga45f52137a4bfd2926583530f73c29c1c" id="r_ga45f52137a4bfd2926583530f73c29c1c"><td class="memTemplParams" colspan="2">template&lt;int N, typename A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">nda::is_regular_or_view_v</a>&lt;A&gt;)</td></tr>
 <tr class="memitem:ga45f52137a4bfd2926583530f73c29c1c template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga45f52137a4bfd2926583530f73c29c1c">nda::reinterpret_add_fast_dims_of_size_one</a> (A &amp;&amp;a)</td></tr>
@@ -360,7 +360,7 @@ template&lt;size_t Axis = 0, Array A0, Array... As&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>New <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> with the concatenated data. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00592">592</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00590">590</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -546,9 +546,9 @@ template&lt;MemoryArray A, typename... IdxGrps&gt; </div>
 <p>The resulting array/view has the same number of dimensions as given index groups.</p>
 <p>It first calls <a class="el" href="group__layout__utils.html#gadf5843a7df68a72189225c765ce39511" title="Given an nda::idx_map and a partition of its indices, return a new nda::idx_map with the grouped indi...">nda::group_indices_layout</a> to create a new <a class="el" href="classnda_1_1idx__map.html" title="Layout that specifies how to map multi-dimensional indices to a linear/flat index.">nda::idx_map</a> with the grouped indices and then calls <a class="el" href="#ga5a0364362d7aac69cbab623215e7efa6" title="Transform the memory layout of an nda::basic_array or nda::basic_array_view.">nda::map_layout_transform</a> with the new layout.</p>
 <p>It can be used as follows:</p>
-<div class="fragment"><div class="line"><span class="keyword">auto</span> arr = <a class="code hl_function" href="#ga1ae039252f35748e691cba9fa4c9ae15">nda::rand&lt;double&gt;</a>(3, 4, 5, 6);</div>
+<div class="fragment"><div class="line"><span class="keyword">auto</span> arr = <a class="code hl_function" href="#gae67b2d9014b1ad841fb50b8dbd265788">nda::rand&lt;double&gt;</a>(3, 4, 5, 6);</div>
 <div class="line"><span class="keyword">auto</span> view = <a class="code hl_function" href="#gafc054e71fc39165fa411582663367e6e">nda::group_indices_view</a>(arr, <a class="code hl_variable" href="group__layout__utils.html#ga60630b13c2765d776f2790ea549d586e">idx_group&lt;0, 1&gt;</a>, <a class="code hl_variable" href="group__layout__utils.html#ga60630b13c2765d776f2790ea549d586e">idx_group&lt;2, 3&gt;</a>);</div>
-<div class="ttc" id="agroup__av__factories_html_ga1ae039252f35748e691cba9fa4c9ae15"><div class="ttname"><a href="#ga1ae039252f35748e691cba9fa4c9ae15">nda::rand</a></div><div class="ttdeci">auto rand(std::array&lt; Int, Rank &gt; const &amp;shape)</div><div class="ttdoc">Make an array of the given shape and initialize it with random values from the uniform distribution o...</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00154">basic_functions.hpp:154</a></div></div>
+<div class="ttc" id="agroup__av__factories_html_gae67b2d9014b1ad841fb50b8dbd265788"><div class="ttname"><a href="#gae67b2d9014b1ad841fb50b8dbd265788">nda::rand</a></div><div class="ttdeci">auto rand(std::array&lt; Int, Rank &gt; const &amp;shape)</div><div class="ttdoc">Make an array of the given shape and initialize it with random values from the uniform distribution o...</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00154">basic_functions.hpp:154</a></div></div>
 <div class="ttc" id="agroup__av__factories_html_gafc054e71fc39165fa411582663367e6e"><div class="ttname"><a href="#gafc054e71fc39165fa411582663367e6e">nda::group_indices_view</a></div><div class="ttdeci">auto group_indices_view(A &amp;&amp;a, IdxGrps...)</div><div class="ttdoc">Create a new nda::basic_array or nda::basic_array_view by grouping indices together of a given array/...</div><div class="ttdef"><b>Definition</b> <a href="layout__transforms_8hpp_source.html#l00235">layout_transforms.hpp:235</a></div></div>
 <div class="ttc" id="agroup__layout__utils_html_ga60630b13c2765d776f2790ea549d586e"><div class="ttname"><a href="group__layout__utils.html#ga60630b13c2765d776f2790ea549d586e">nda::idx_group</a></div><div class="ttdeci">idx_group_t&lt; Is... &gt; idx_group</div><div class="ttdoc">Variable template for an nda::idx_group_t.</div><div class="ttdef"><b>Definition</b> <a href="group__indices_8hpp_source.html#l00113">group_indices.hpp:113</a></div></div>
 </div><!-- fragment --><p>In this examples a 4-dimensional array <span class="tt">arr</span> is transformed into a 2-dimensional view by grouping the first and the last two indices together.</p>
@@ -609,7 +609,7 @@ template&lt;typename T, int R, typename LP, char A, typename CP&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__av__types.html#ga70e5d7cb42b86d11b8a5077fe36eafa3" title="Same as nda::array_view except for const value types.">nda::array_const_view</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00401">401</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00399">399</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -652,7 +652,7 @@ template&lt;typename T, int R, typename LP, char A, typename AP, typename OP&gt;
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__av__types.html#ga70e5d7cb42b86d11b8a5077fe36eafa3" title="Same as nda::array_view except for const value types.">nda::array_const_view</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00419">419</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00417">417</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -694,7 +694,7 @@ template&lt;typename T, int R, typename LP, char A, typename CP&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__av__types.html#ga1c94319bb2a4d552dac28117b1788934" title="Alias template of an nda::basic_array_view with an &#39;A&#39; algebra, nda::default_accessor and nda::borrow...">nda::array_view</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00366">366</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00364">364</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -737,7 +737,7 @@ template&lt;typename T, int R, typename LP, char A, typename AP, typename OP&gt;
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__av__types.html#ga1c94319bb2a4d552dac28117b1788934" title="Alias template of an nda::basic_array_view with an &#39;A&#39; algebra, nda::default_accessor and nda::borrow...">nda::array_view</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00384">384</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00382">382</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -779,7 +779,7 @@ template&lt;typename T, int R, typename LP, char A, typename CP&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> object with a const value type. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00331">331</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00329">329</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -822,7 +822,7 @@ template&lt;typename T, int R, typename LP, char A, typename AP, typename OP&gt;
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> object with a const value type. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00349">349</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00347">347</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -864,7 +864,7 @@ template&lt;typename T, int R, typename LP, char A, typename CP&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__av__types.html#ga58a262cfedf67b57f0dc1347150bdce6" title="Alias template of an nda::basic_array_view with rank 2, an &#39;M&#39; algebra, nda::default_accessor and nda...">nda::matrix_view</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00436">436</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00434">434</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -907,7 +907,7 @@ template&lt;typename T, int R, typename LP, char A, typename AP, typename OP&gt;
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__av__types.html#ga58a262cfedf67b57f0dc1347150bdce6" title="Alias template of an nda::basic_array_view with rank 2, an &#39;M&#39; algebra, nda::default_accessor and nda...">nda::matrix_view</a> object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00454">454</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00452">452</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -951,7 +951,7 @@ template&lt;typename A, typename A_t = std::decay_t&lt;A&gt;&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Regular object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00227">227</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00225">225</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -1166,18 +1166,18 @@ template&lt;typename RealType = double, std::integral... Ints&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Random-initialized <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> or scalar if no arguments are given. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00178">178</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00176">176</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga1ae039252f35748e691cba9fa4c9ae15" name="ga1ae039252f35748e691cba9fa4c9ae15"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1ae039252f35748e691cba9fa4c9ae15">&#9670;&#160;</a></span>rand() <span class="overload">[2/2]</span></h2>
+<a id="gae67b2d9014b1ad841fb50b8dbd265788" name="gae67b2d9014b1ad841fb50b8dbd265788"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae67b2d9014b1ad841fb50b8dbd265788">&#9670;&#160;</a></span>rand() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename RealType = double, std::integral Int, auto Rank&gt; <br />
-requires (std::is_floating_point_v&lt;RealType&gt;)</div>
+template&lt;typename ValueType = double, std::integral Int, auto Rank&gt; <br />
+requires (std::is_floating_point_v&lt;ValueType&gt; or <a class="el" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">nda::is_complex_v</a>&lt;ValueType&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">auto nda::rand </td>
@@ -1194,7 +1194,7 @@ requires (std::is_floating_point_v&lt;RealType&gt;)</div>
 <p>For a more specific array type consider using <a class="el" href="classnda_1_1basic__array.html#afee46ba48f00ff7d4c9ddb9890e0c451" title="Make a random-initialized array with the given shape.">nda::basic_array::rand</a>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">RealType</td><td>Value type of the array. </td></tr>
+    <tr><td class="paramname">ValueType</td><td>Value type of the array. Either a floating point or complex type. </td></tr>
     <tr><td class="paramname">Int</td><td>Integer type. </td></tr>
     <tr><td class="paramname">Rank</td><td>Rank of the array. </td></tr>
   </table>
@@ -1413,7 +1413,7 @@ requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00307">307</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00305">305</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -1452,7 +1452,7 @@ template&lt;MemoryArray A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>(Regular) object on device memory. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00268">268</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00266">266</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -1491,7 +1491,7 @@ template&lt;MemoryArray A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>(Regular) object on host memory. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00250">250</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00248">248</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -1530,7 +1530,7 @@ template&lt;MemoryArray A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>(Regular) object on unified memory. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00286">286</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic__functions_8hpp_source.html#l00284">284</a> of file <a class="el" href="basic__functions_8hpp_source.html">basic_functions.hpp</a>.</p>
 
 </div>
 </div>

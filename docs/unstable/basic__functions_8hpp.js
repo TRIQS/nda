@@ -21,7 +21,7 @@ var basic__functions_8hpp =
     [ "nda::operator==", "group__av__utils.html#gadbcb9ec37c03e3b29a13dccde60032d6", null ],
     [ "nda::operator==", "group__av__utils.html#ga43d03fef9db7a4bf9a9ae005e102d996", null ],
     [ "nda::rand", "group__av__factories.html#ga6888305d7dafa3d8ae91eba441c8700c", null ],
-    [ "nda::rand", "group__av__factories.html#ga1ae039252f35748e691cba9fa4c9ae15", null ],
+    [ "nda::rand", "group__av__factories.html#gae67b2d9014b1ad841fb50b8dbd265788", null ],
     [ "nda::resize_or_check_if_view", "group__av__factories.html#ga21ed59f95217d512e116f5558676f8e7", null ],
     [ "nda::second_dim", "group__av__utils.html#gaf22f633d755806bb8fa3c0635705ceb9", null ],
     [ "nda::to_device", "group__av__factories.html#gab3fd89e0758c7e679209e4f7ed914ea7", null ],
