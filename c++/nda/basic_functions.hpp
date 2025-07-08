@@ -144,22 +144,20 @@ namespace nda {
    *
    * @details For a more specific array type consider using nda::basic_array::rand.
    *
-   * @tparam RealType Value type of the array.
+   * @tparam ValueType Value type of the array. Either a floating point or complex type.
    * @tparam Int Integer type.
    * @tparam Rank Rank of the array.
    * @param shape Shape of the array.
    * @return Random-initialized nda::array or scalar if `Rank == 0`.
    */
-  template <typename RealType = double, std::integral Int, auto Rank>
+  template <typename ValueType = double, std::integral Int, auto Rank>
   auto rand(std::array<Int, Rank> const &shape)
-    requires(std::is_floating_point_v<RealType>)
+    requires(std::is_floating_point_v<ValueType> or nda::is_complex_v<ValueType>)
   {
     if constexpr (Rank == 0) {
-      auto static gen  = std::mt19937{};
-      auto static dist = std::uniform_real_distribution<>{0.0, 1.0};
-      return dist(gen);
+      return stack_array<ValueType, 1>::rand(1)[0];
     } else {
-      return array<RealType, Rank>::rand(shape);
+      return array<ValueType, Rank>::rand(shape);
     }
   }
 

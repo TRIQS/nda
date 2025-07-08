@@ -66,7 +66,7 @@ TEST(NDA, STLSortAnArray) {
 
 TEST(NDA, STLShuffleAndSortAnArray) {
   nda::array<int, 1> V = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-  std::mt19937 rng(std::random_device{}());
+  std::mt19937_64 rng{};
   std::shuffle(V.begin(), V.end(), rng);
   std::sort(V.begin(), V.end());
   for (unsigned int i = 0; i < 10; ++i) EXPECT_EQ(V[i], 1 + i);
@@ -77,8 +77,7 @@ TEST(NDA, STLShuffleAndSortAView) {
   auto A_v = A(nda::range(0, 20, 2));
   for (int i = 0; i < 10; ++i) A_v[i] = 1 + i;
 
-  std::random_device rd;
-  std::mt19937 g(rd());
+  std::mt19937_64 g{};
   std::shuffle(A_v.begin(), A_v.end(), g);
   std::sort(A_v.begin(), A_v.end());
 
