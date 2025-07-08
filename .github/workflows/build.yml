@@ -51,10 +51,10 @@ jobs:
         sudo apt-get install
         ccache
         clang
+        cmake
         g++
         gfortran
         hdf5-tools
-        libblas-dev
         libclang-dev
         libc++-dev
         libc++abi-dev
@@ -63,7 +63,7 @@ jobs:
         libgfortran5
         libgmp-dev
         libhdf5-dev
-        liblapack-dev
+        libopenblas-dev
         libopenmpi-dev
         openmpi-bin
         openmpi-common
@@ -100,11 +100,6 @@ jobs:
       if: ${{ contains(matrix.cxx, 'clang') }}
       run: |
         echo "CXXFLAGS=-stdlib=libc++" >> $GITHUB_ENV
-
-    - name: Add clang LDFLAGS for macos to link against brew's libc++
-      if: ${{ contains(matrix.os, 'macos') && contains(matrix.cxx, 'clang') }}
-      run: |
-        echo 'LDFLAGS="-L$(brew --prefix llvm)/lib/c++ -L$(brew --prefix llvm)/lib -lunwind"' >> $GITHUB_ENV
 
     - name: Set up test coverage
       if: matrix.cov == 'ON'
