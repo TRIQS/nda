@@ -31,7 +31,7 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
       checkout scm
       /* construct a Dockerfile for this base */
       sh """
-        ( cat packaging/Dockerfile.${env.STAGE_NAME} ; sed '0,/^FROM /d' Dockerfile.build ) > Dockerfile
+        ( cat packaging/Dockerfile.${env.STAGE_NAME} ; sed '0,/^FROM /d' Dockerfile ) > Dockerfile
       """
       /* build and tag */
       def args = ''
