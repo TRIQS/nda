@@ -9,7 +9,7 @@ add_library(${PROJECT_NAME}::${PROJECT_NAME}_c ALIAS ${PROJECT_NAME}_c)
 target_link_libraries(${PROJECT_NAME}_c PRIVATE $<BUILD_INTERFACE:${PROJECT_NAME}_warnings>)
 
 # Configure target and compilation
-target_compile_features(${PROJECT_NAME}_c PUBLIC cxx_std_23)
+target_compile_features(${PROJECT_NAME}_c PUBLIC cxx_std_20)
 set_target_properties(${PROJECT_NAME}_c PROPERTIES
   POSITION_INDEPENDENT_CODE ON
   VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
