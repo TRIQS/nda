@@ -87,9 +87,10 @@ namespace nda {
   template <typename T>
   inline constexpr bool is_double_or_complex_v = is_complex_v<T> or std::is_same_v<double, std::remove_cvref_t<T>>;
 
-  /// Alias for nda::is_double_or_complex_v.
+  /// Constexpr variable that is true if type `T` is a real (float64/float32) or complex type
   template <typename T>
-  inline constexpr bool is_blas_lapack_v = is_double_or_complex_v<T>;
+  inline constexpr bool is_blas_lapack_v =
+     is_complex_v<T> or std::is_same_v<double, std::remove_cvref_t<T>> or std::is_same_v<float, std::remove_cvref_t<T>>;
 
   /** @} */
 

@@ -60,23 +60,23 @@ void test_gemm() {
   }
 }
 
+template <typename T>
+constexpr auto test_gemm_layouts = []() {
+  test_gemm<T, nda::C_layout, nda::C_layout, nda::C_layout>();
+  test_gemm<T, nda::C_layout, nda::C_layout, nda::F_layout>();
+  test_gemm<T, nda::C_layout, nda::F_layout, nda::C_layout>();
+  test_gemm<T, nda::C_layout, nda::F_layout, nda::F_layout>();
+  test_gemm<T, nda::F_layout, nda::C_layout, nda::C_layout>();
+  test_gemm<T, nda::F_layout, nda::C_layout, nda::F_layout>();
+  test_gemm<T, nda::F_layout, nda::F_layout, nda::C_layout>();
+  test_gemm<T, nda::F_layout, nda::F_layout, nda::F_layout>();
+};
+
 TEST(NDA, BLASGemm) {
-  test_gemm<double, nda::C_layout, nda::C_layout, nda::C_layout>();
-  test_gemm<double, nda::C_layout, nda::C_layout, nda::F_layout>();
-  test_gemm<double, nda::C_layout, nda::F_layout, nda::C_layout>();
-  test_gemm<double, nda::C_layout, nda::F_layout, nda::F_layout>();
-  test_gemm<double, nda::F_layout, nda::C_layout, nda::C_layout>();
-  test_gemm<double, nda::F_layout, nda::C_layout, nda::F_layout>();
-  test_gemm<double, nda::F_layout, nda::F_layout, nda::C_layout>();
-  test_gemm<double, nda::F_layout, nda::F_layout, nda::F_layout>();
-  test_gemm<std::complex<double>, nda::C_layout, nda::C_layout, nda::C_layout>();
-  test_gemm<std::complex<double>, nda::C_layout, nda::C_layout, nda::F_layout>();
-  test_gemm<std::complex<double>, nda::C_layout, nda::F_layout, nda::C_layout>();
-  test_gemm<std::complex<double>, nda::C_layout, nda::F_layout, nda::F_layout>();
-  test_gemm<std::complex<double>, nda::F_layout, nda::C_layout, nda::C_layout>();
-  test_gemm<std::complex<double>, nda::F_layout, nda::C_layout, nda::F_layout>();
-  test_gemm<std::complex<double>, nda::F_layout, nda::F_layout, nda::C_layout>();
-  test_gemm<std::complex<double>, nda::F_layout, nda::F_layout, nda::F_layout>();
+  test_gemm_layouts<float>();
+  test_gemm_layouts<std::complex<float>>();
+  test_gemm_layouts<double>();
+  test_gemm_layouts<std::complex<double>>();
 }
 
 // Test the BLAS gemm_batch, gemm_vbatch and gemm_batch_strided functions.
@@ -183,7 +183,7 @@ void test_gemv() {
   if constexpr (std::same_as<Layout, nda::F_layout>) {
     // y_h = A^H * x_t
     auto exp_y_h = exp_y_t;
-    if constexpr (nda::is_complex_v<T>) exp_y_h = nda::vector<T>{210 + 70i, 240 + 80i, 270 + 90i};
+    if constexpr (nda::is_complex_v<T>) exp_y_h = nda::vector<T>{T{210 + 70i}, T{240 + 80i}, T{270 + 90i}};
     auto y_h = nda::vector<T>(3);
     nda::blas::gemv(1.0, nda::dagger(A), x_t, 0.0, y_h);
     EXPECT_ARRAY_NEAR(y_h, exp_y_h);
@@ -198,6 +198,10 @@ void test_gemv() {
 }
 
 TEST(NDA, BLASGemv) {
+  test_gemv<float, nda::C_layout>();
+  test_gemv<float, nda::F_layout>();
+  test_gemv<std::complex<float>, nda::C_layout>();
+  test_gemv<std::complex<float>, nda::F_layout>();
   test_gemv<double, nda::C_layout>();
   test_gemv<double, nda::F_layout>();
   test_gemv<std::complex<double>, nda::C_layout>();
@@ -302,12 +306,16 @@ void test_dot(auto dot) {
 
 TEST(NDA, BLASDot) {
   auto dot = []<typename A, typename B>(A &&a, B &&b) { return nda::blas::dot(std::forward<A>(a), std::forward<B>(b)); };
+  test_dot<float, false>(dot);
+  test_dot<std::complex<float>, false>(dot);
   test_dot<double, false>(dot);
   test_dot<std::complex<double>, false>(dot);
 }
 
 TEST(NDA, BLASDotc) {
   auto dotc = []<typename A, typename B>(A &&a, B &&b) { return nda::blas::dotc(std::forward<A>(a), std::forward<B>(b)); };
+  test_dot<float, true>(dotc);
+  test_dot<std::complex<float>, true>(dotc);
   test_dot<double, true>(dotc);
   test_dot<std::complex<double>, true>(dotc);
 }

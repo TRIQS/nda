@@ -35,8 +35,13 @@ namespace nda::blas {
 #endif
 
 namespace {
+  // single-precision complex struct which is returned by BLAS functions
+  struct nda_complex_float {
+    float real;
+    float imag;
+  };
 
-  // complex struct which is returned by BLAS functions
+  // double-precision complex struct which is returned by BLAS functions
   struct nda_complex_double {
     double real;
     double imag;
@@ -45,17 +50,27 @@ namespace {
 } // namespace
 
 // manually define dot routines since cblas_f77.h uses "_sub" to wrap the Fortran routines
+#define F77_sdot F77_GLOBAL(sdot, SDOT)
+#define F77_cdotu F77_GLOBAL(cdotu, SDOTU)
+#define F77_cdotc F77_GLOBAL(cdotc, SDOTC)
 #define F77_ddot F77_GLOBAL(ddot, DDOT)
 #define F77_zdotu F77_GLOBAL(zdotu, ZDOTU)
 #define F77_zdotc F77_GLOBAL(zdotc, ZDOTC)
 extern "C" {
+float F77_sdot(FINT, const float *, FINT, const float *, FINT);
+nda_complex_float F77_cdotu(FINT, const float *, FINT, const float *, FINT);
+nda_complex_float F77_cdotc(FINT, const float *, FINT, const float *, FINT);
+
 double F77_ddot(FINT, const double *, FINT, const double *, FINT);
 nda_complex_double F77_zdotu(FINT, const double *, FINT, const double *, FINT);
 nda_complex_double F77_zdotc(FINT, const double *, FINT, const double *, FINT);
 }
 
 namespace nda::blas::f77 {
-
+  inline auto *blacplx(scomplex *c) { return reinterpret_cast<float *>(c); }                 // NOLINT
+  inline auto *blacplx(scomplex const *c) { return reinterpret_cast<const float *>(c); }     // NOLINT
+  inline auto **blacplx(scomplex **c) { return reinterpret_cast<float **>(c); }              // NOLINT
+  inline auto **blacplx(scomplex const **c) { return reinterpret_cast<const float **>(c); }  // NOLINT
   inline auto *blacplx(dcomplex *c) { return reinterpret_cast<double *>(c); }                // NOLINT
   inline auto *blacplx(dcomplex const *c) { return reinterpret_cast<const double *>(c); }    // NOLINT
   inline auto **blacplx(dcomplex **c) { return reinterpret_cast<double **>(c); }             // NOLINT
@@ -70,6 +85,25 @@ namespace nda::blas::f77 {
   void copy(int N, const double *x, int incx, double *Y, int incy) { F77_dcopy(&N, x, &incx, Y, &incy); }
   void copy(int N, const dcomplex *x, int incx, dcomplex *Y, int incy) { F77_zcopy(&N, blacplx(x), &incx, blacplx(Y), &incy); }
 
+  float dot(int M, const float *x, int incx, const float *Y, int incy) { return F77_sdot(&M, x, &incx, Y, &incy); }
+  scomplex dot(int M, const scomplex *x, int incx, const scomplex *Y, int incy) {
+#ifdef NDA_USE_MKL
+    MKL_Complex16 result;
+    cblas_zdotu_sub(M, mklcplx(x), incx, mklcplx(Y), incy, &result);
+#else
+    auto result = F77_cdotu(&M, blacplx(x), &incx, blacplx(Y), &incy);
+#endif
+    return scomplex{result.real, result.imag};
+  }
+  scomplex dotc(int M, const scomplex *x, int incx, const scomplex *Y, int incy) {
+#ifdef NDA_USE_MKL
+    MKL_Complex16 result;
+    cblas_zdotc_sub(M, mklcplx(x), incx, mklcplx(Y), incy, &result);
+#else
+    auto result = F77_cdotc(&M, blacplx(x), &incx, blacplx(Y), &incy);
+#endif
+    return scomplex{result.real, result.imag};
+  }
   double dot(int M, const double *x, int incx, const double *Y, int incy) { return F77_ddot(&M, x, &incx, Y, &incy); }
   dcomplex dot(int M, const dcomplex *x, int incx, const dcomplex *Y, int incy) {
 #ifdef NDA_USE_MKL
@@ -90,6 +124,14 @@ namespace nda::blas::f77 {
     return dcomplex{result.real, result.imag};
   }
 
+  void gemm(char op_a, char op_b, int M, int N, int K, float alpha, const float *A, int LDA, const float *B, int LDB, float beta, float *C,
+            int LDC) {
+    F77_sgemm(&op_a, &op_b, &M, &N, &K, &alpha, A, &LDA, B, &LDB, &beta, C, &LDC);
+  }
+  void gemm(char op_a, char op_b, int M, int N, int K, scomplex alpha, const scomplex *A, int LDA, const scomplex *B, int LDB, scomplex beta,
+            scomplex *C, int LDC) {
+    F77_cgemm(&op_a, &op_b, &M, &N, &K, blacplx(&alpha), blacplx(A), &LDA, blacplx(B), &LDB, blacplx(&beta), blacplx(C), &LDC);
+  }
   void gemm(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, const double *B, int LDB, double beta, double *C,
             int LDC) {
     F77_dgemm(&op_a, &op_b, &M, &N, &K, &alpha, A, &LDA, B, &LDB, &beta, C, &LDC);
@@ -165,6 +207,12 @@ namespace nda::blas::f77 {
 #endif
   }
 
+  void gemv(char op, int M, int N, float alpha, const float *A, int LDA, const float *x, int incx, float beta, float *Y, int incy) {
+    F77_sgemv(&op, &M, &N, &alpha, A, &LDA, x, &incx, &beta, Y, &incy);
+  }
+  void gemv(char op, int M, int N, scomplex alpha, const scomplex *A, int LDA, const scomplex *x, int incx, scomplex beta, scomplex *Y, int incy) {
+    F77_cgemv(&op, &M, &N, blacplx(&alpha), blacplx(A), &LDA, blacplx(x), &incx, blacplx(&beta), blacplx(Y), &incy);
+  }
   void gemv(char op, int M, int N, double alpha, const double *A, int LDA, const double *x, int incx, double beta, double *Y, int incy) {
     F77_dgemv(&op, &M, &N, &alpha, A, &LDA, x, &incx, &beta, Y, &incy);
   }

@@ -98,29 +98,34 @@ void test_matvecmul() {
 
   // y_h = A^H * x_t
   auto exp_y_h = exp_y_t;
-  if constexpr (nda::is_complex_v<T>) exp_y_h = nda::vector<T>{210 + 70i, 240 + 80i, 270 + 90i};
+  if constexpr (nda::is_complex_v<T>) exp_y_h = nda::vector<T>{T{210 + 70i}, T{240 + 80i}, T{270 + 90i}};
   auto y_h = nda::linalg::matvecmul(nda::conj(nda::transpose(A)), x_t);
   EXPECT_ARRAY_NEAR(y_h, exp_y_h);
 
   // strided matrix and vector views
   auto y_v = nda::linalg::matvecmul(A(nda::range(0, 4, 2), nda::range(0, 3, 2)), x(nda::range(0, 3, 2)));
   if constexpr (nda::is_complex_v<T>) {
-    EXPECT_ARRAY_EQ(y_v, (nda::vector<T>{10 - 30i, 34 - 102i}));
+    EXPECT_ARRAY_EQ(y_v, (nda::vector<T>{T{10 - 30i}, T{34 - 102i}}));
   } else {
     EXPECT_ARRAY_EQ(y_v, (nda::vector<T>{10, 34}));
   }
 }
 
+template <typename T>
+constexpr auto test_matvecmul_layouts = []() {
+  test_matvecmul<T, nda::C_layout>();
+  test_matvecmul<T, nda::F_layout>();
+};
+
 TEST(NDA, LinearAlgebraMatvecmulGenericGemvBranch) {
-  test_matvecmul<long, nda::C_layout>();
-  test_matvecmul<long, nda::F_layout>();
+  test_matvecmul_layouts<long>();
 }
 
 TEST(NDA, LinearAlgebraMatvecmulBLASBranch) {
-  test_matvecmul<double, nda::C_layout>();
-  test_matvecmul<double, nda::F_layout>();
-  test_matvecmul<std::complex<double>, nda::C_layout>();
-  test_matvecmul<std::complex<double>, nda::F_layout>();
+  test_matvecmul_layouts<float>();
+  test_matvecmul_layouts<std::complex<float>>();
+  test_matvecmul_layouts<double>();
+  test_matvecmul_layouts<std::complex<double>>();
 }
 
 TEST(NDA, LinearAlgebraMatvecmulPromotion) {
@@ -183,22 +188,21 @@ void test_matmul() {
   EXPECT_ARRAY_NEAR(C_v(nda::range(0, 4, 2), nda::range(0, 4, 2)), exp_C_v);
 }
 
-TEST(NDA, LinearAlgebraMatmulGenericGemmBranch) {
-  test_matmul<long, nda::C_layout, nda::C_layout>();
-  test_matmul<long, nda::C_layout, nda::F_layout>();
-  test_matmul<long, nda::F_layout, nda::F_layout>();
-  test_matmul<long, nda::F_layout, nda::C_layout>();
-}
+template <typename T>
+constexpr auto test_matmul_layouts = []() {
+  test_matmul<T, nda::C_layout, nda::C_layout>();
+  test_matmul<T, nda::C_layout, nda::F_layout>();
+  test_matmul<T, nda::F_layout, nda::F_layout>();
+  test_matmul<T, nda::F_layout, nda::C_layout>();
+};
+
+TEST(NDA, LinearAlgebraMatmulGenericGemmBranch) { test_matmul_layouts<long>(); }
 
 TEST(NDA, LinearAlgebraMatmulBLASBranch) {
-  test_matmul<double, nda::C_layout, nda::C_layout>();
-  test_matmul<double, nda::C_layout, nda::F_layout>();
-  test_matmul<double, nda::F_layout, nda::F_layout>();
-  test_matmul<double, nda::F_layout, nda::C_layout>();
-  test_matmul<std::complex<double>, nda::C_layout, nda::C_layout>();
-  test_matmul<std::complex<double>, nda::C_layout, nda::F_layout>();
-  test_matmul<std::complex<double>, nda::F_layout, nda::F_layout>();
-  test_matmul<std::complex<double>, nda::F_layout, nda::C_layout>();
+  test_matmul_layouts<float>();
+  test_matmul_layouts<std::complex<float>>();
+  test_matmul_layouts<double>();
+  test_matmul_layouts<std::complex<double>>();
 }
 
 TEST(NDA, LinearAlgebraMatumulPromoteValueType) {

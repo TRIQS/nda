@@ -24,10 +24,17 @@ namespace nda::blas::f77 {
   void copy(int N, const double *x, int incx, double *Y, int incy);
   void copy(int N, const dcomplex *x, int incx, dcomplex *Y, int incy);
 
+  float dot(int M, const float *x, int incx, const float *Y, int incy);
+  scomplex dot(int M, const scomplex *x, int incx, const scomplex *Y, int incy);
+  scomplex dotc(int M, const scomplex *x, int incx, const scomplex *Y, int incy);
   double dot(int M, const double *x, int incx, const double *Y, int incy);
   dcomplex dot(int M, const dcomplex *x, int incx, const dcomplex *Y, int incy);
   dcomplex dotc(int M, const dcomplex *x, int incx, const dcomplex *Y, int incy);
 
+  void gemm(char op_a, char op_b, int M, int N, int K, float alpha, const float *A, int LDA, const float *B, int LDB, float beta, float *C,
+            int LDC);
+  void gemm(char op_a, char op_b, int M, int N, int K, scomplex alpha, const scomplex *A, int LDA, const scomplex *B, int LDB, scomplex beta,
+            scomplex *C, int LDC);
   void gemm(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, const double *B, int LDB, double beta, double *C,
             int LDC);
   void gemm(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex *A, int LDA, const dcomplex *B, int LDB, dcomplex beta,
@@ -48,6 +55,8 @@ namespace nda::blas::f77 {
   void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex *A, int LDA, int strideA, const dcomplex *B,
                           int LDB, int srideB, dcomplex beta, dcomplex *C, int LDC, int strideC, int batch_count);
 
+  void gemv(char op, int M, int N, float alpha, const float *A, int LDA, const float *x, int incx, float beta, float *Y, int incy);
+  void gemv(char op, int M, int N, scomplex alpha, const scomplex *A, int LDA, const scomplex *x, int incx, scomplex beta, scomplex *Y, int incy);
   void gemv(char op, int M, int N, double alpha, const double *A, int LDA, const double *x, int incx, double beta, double *Y, int incy);
   void gemv(char op, int M, int N, dcomplex alpha, const dcomplex *A, int LDA, const dcomplex *x, int incx, dcomplex beta, dcomplex *Y, int incy);
 
