@@ -248,6 +248,7 @@ TEST(NDA, LinearAlgebraMatmulWithLazyExpressions) {
 template <typename T, typename Layout>
 void test_inv_and_det() {
   using matrix_t = nda::matrix<T, Layout>;
+  using fp_t     = nda::get_fp_t<T>;
   T fac          = 1.0;
   if constexpr (nda::is_complex_v<T>) fac = 1.0i;
   // FIXME: eps_close is heuristically selected to pass without any proper error analysis
@@ -258,12 +259,12 @@ void test_inv_and_det() {
   A *= fac;
   auto Ainv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
   Ainv /= fac;
-  T detA = std::pow(fac, 3);
+  T detA = std::pow(fac, fp_t{3});
   auto B = matrix_t{{1, 2}, {0, 1}};
   B *= fac;
   auto Binv = matrix_t{{1, -2}, {0, 1}};
   Binv /= fac;
-  T detB = std::pow(fac, 2);
+  T detB = std::pow(fac, fp_t{2});
   auto C = matrix_t{{3}};
   C *= fac;
   auto Cinv = matrix_t{{1.0 / 3.0}};
@@ -301,15 +302,15 @@ void test_inv_and_det() {
   check_small_mat(C, Cinv, detC, [](auto &M) { return nda::linalg::inv_in_place_1d(M); }, [](auto &M) { return nda::linalg::det_1d(M); });
 
   // matrix view
-  EXPECT_ARRAY_NEAR(nda::linalg::inv(A(nda::range(0, 2), nda::range(0, 2))), Binv);
-  EXPECT_COMPLEX_NEAR(nda::linalg::det(A(nda::range(0, 2), nda::range(0, 2))), detB);
+  EXPECT_ARRAY_NEAR(nda::linalg::inv(A(nda::range(0, 2), nda::range(0, 2))), Binv, eps_close);
+  EXPECT_COMPLEX_NEAR(nda::linalg::det(A(nda::range(0, 2), nda::range(0, 2))), detB, eps_close);
 
   // 4x4 matrix
   auto D = matrix_t{{2, 2, 2, 2}, {2, 4, 6, 8}, {2, 6, 12, 20}, {2, 8, 20, 40}};
   D *= fac;
   auto Dinv = matrix_t{{2, -3, 2, -0.5}, {-3, 7, -5.5, 1.5}, {2, -5.5, 5, -1.5}, {-0.5, 1.5, -1.5, 0.5}};
   Dinv /= fac;
-  T detD = 16 * std::pow(fac, 4);
+  T detD = 16 * std::pow(fac, fp_t{4});
 
   auto Dinv2 = nda::linalg::inv(D);
   EXPECT_ARRAY_NEAR(Dinv, Dinv2, eps_close);
@@ -540,7 +541,7 @@ TEST(NDA, LinearAlgebraNormExample) {
   auto v = nda::array<double, 1>{-0.5, 0.0, 1.0, 2.5};
   run_checks(v);
   run_checks(1i * v);
-  run_checks((1 + 1i) / std::numbers::sqrt2 * v);
+  run_checks((1 + 1i) / std::sqrt(2) * v);
   EXPECT_EQ(nda::linalg::norm(v, std::numeric_limits<double>::infinity()), 2.5);
   EXPECT_EQ(nda::linalg::norm(v, -std::numeric_limits<double>::infinity()), 0.0);
 }
