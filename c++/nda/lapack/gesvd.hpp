@@ -63,7 +63,7 @@ namespace nda::lapack {
    */
   template <MemoryMatrix A, MemoryVector S, MemoryMatrix U, MemoryMatrix VT>
     requires(have_same_value_type_v<A, U, VT> and mem::have_compatible_addr_space<A, S, U, VT> and is_blas_lapack_v<get_value_t<A>>
-             and std::same_as<double, get_value_t<S>>)
+             and have_same_value_type_v<get_fp_t<A>, S>)
   int gesvd(A &&a, S &&s, U &&u, VT &&vt) { // NOLINT (temporary views are allowed here)
     static_assert(has_C_layout<A> == has_C_layout<U> and has_C_layout<A> == has_C_layout<VT>,
                   "Error in nda::lapack::gesvd: Matrix layouts have to be the same");
@@ -106,7 +106,7 @@ namespace nda::lapack {
     // first call to get the optimal buffer size
     using value_type = get_value_t<A>;
     value_type tmp_lwork{};
-    auto rwork = array<double, 1, C_layout, heap<mem::get_addr_space<A>>>(5 * k);
+    auto rwork = array<get_fp_t<A>, 1, C_layout, heap<mem::get_addr_space<A>>>(5 * k);
     int info   = 0;
     if constexpr (has_C_layout<A>) {
       gesvd_call('A', 'A', n, m, a.data(), get_ld(a), s.data(), vt.data(), get_ld(vt), u.data(), get_ld(u), &tmp_lwork, -1, rwork.data(), info);

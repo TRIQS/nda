@@ -4,6 +4,7 @@
 // See LICENSE in the root of this distribution for details.
 
 #include "./test_common.hpp"
+#include "nda/traits.hpp"
 
 #include <nda/gtest_tools.hpp>
 #include <nda/lapack/gelss_worker.hpp>
@@ -83,7 +84,9 @@ TEST(NDA, LAPACKGtsvComplex) {
 // Test LAPACK gesvd function.
 template <typename T, typename Layout>
 void test_gesvd() {
-  using matrix_t = matrix<T, Layout>;
+  using matrix_t             = matrix<T, Layout>;
+  using fp_type              = nda::get_fp_t<T>;
+  constexpr double eps_close = std::is_same_v<fp_type, float> ? 5e-6 : 1e-14;
 
   auto A      = matrix_t{{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}}};
   auto [m, n] = A.shape();
@@ -91,16 +94,20 @@ void test_gesvd() {
   auto U  = matrix_t(m, m);
   auto VT = matrix_t(n, n);
 
-  auto S     = vector<double>(std::min(m, n));
+  auto S     = vector<fp_type>(std::min(m, n));
   auto Acopy = matrix_t{A};
   lapack::gesvd(Acopy, S, U, VT);
 
   auto Sigma = matrix_t::zeros(A.shape());
   for (auto i : range(std::min(m, n))) Sigma(i, i) = S(i);
-  EXPECT_ARRAY_NEAR(A, U * Sigma * VT, 1e-14);
+  EXPECT_ARRAY_NEAR(A, U * Sigma * VT, eps_close);
 }
 
 TEST(NDA, LAPACKGesvd) {
+  test_gesvd<float, C_layout>();
+  test_gesvd<float, F_layout>();
+  test_gesvd<std::complex<float>, C_layout>();
+  test_gesvd<std::complex<float>, F_layout>();
   test_gesvd<double, C_layout>();
   test_gesvd<double, F_layout>();
   test_gesvd<std::complex<double>, C_layout>();
@@ -110,7 +117,9 @@ TEST(NDA, LAPACKGesvd) {
 // Test LAPACK geqp3, orgqr and ungqr functions.
 template <typename T, bool wide_matrix = false>
 void test_geqp3_orgqr_ungqr() {
-  using matrix_t = matrix<T, F_layout>;
+  using matrix_t             = matrix<T, F_layout>;
+  using fp_type              = nda::get_fp_t<T>;
+  constexpr double eps_close = std::is_same_v<fp_type, float> ? 2e-6 : 1e-14;
 
   auto A = matrix_t{{{1, 1, 1}, {3, 2, 4}, {5, 3, 2}, {2, 4, 5}, {4, 5, 3}}};
   if constexpr (wide_matrix) A = matrix_t{transpose(A)};
@@ -134,21 +143,25 @@ void test_geqp3_orgqr_ungqr() {
   }
 
   // extract matrix Q with orthonormal columns
-  if constexpr (std::is_same_v<T, double>) {
+  if constexpr (std::is_same_v<T, double> or std::is_same_v<T, float>) {
     lapack::orgqr(Q, tau);
   } else {
     lapack::ungqr(Q, tau);
   }
 
-  EXPECT_ARRAY_NEAR(AP, Q(range::all, range(std::min(m, n))) * R, 1e-14);
+  EXPECT_ARRAY_NEAR(AP, Q(range::all, range(std::min(m, n))) * R, eps_close);
 }
 
 TEST(NDA, LAPACKGeqp3UngqrAndOrgqr) {
   // tall matrix, i.e. n_rows > n_cols
+  test_geqp3_orgqr_ungqr<float>();
+  test_geqp3_orgqr_ungqr<std::complex<float>>();
   test_geqp3_orgqr_ungqr<double>();
   test_geqp3_orgqr_ungqr<std::complex<double>>();
 
   // wide matrix, i.e. n_rows < n_cols
+  test_geqp3_orgqr_ungqr<float, true>();
+  test_geqp3_orgqr_ungqr<std::complex<float>, true>();
   test_geqp3_orgqr_ungqr<double, true>();
   test_geqp3_orgqr_ungqr<std::complex<double>, true>();
 }
@@ -156,6 +169,9 @@ TEST(NDA, LAPACKGeqp3UngqrAndOrgqr) {
 // Test LAPACK gelss function and the gelss_worker class.
 template <typename value_t>
 void test_gelss() {
+  using fp_type              = nda::get_fp_t<value_t>;
+  constexpr double eps_close = std::is_same_v<fp_type, float> ? 1e-5 : 1e-10;
+
   // Cf. https://www.netlib.org/lapack/lapack-3.9.0/LAPACKE/example/example_DGELS_colmajor.c
   auto A = matrix<value_t>{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}};
   auto B = matrix<value_t>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
@@ -163,28 +179,30 @@ void test_gelss() {
 
   auto [m, n]  = A.shape();
   auto x_exact = matrix<value_t>{{2, 1}, {1, 1}, {1, 2}};
-  auto s       = vector<double>(std::min(m, n));
+  auto s       = vector<fp_type>(std::min(m, n));
 
   // using the gelss_worker class
   auto worker       = lapack::gelss_worker<value_t>{A};
   auto [x_1, eps_1] = worker(B);
-  EXPECT_ARRAY_NEAR(x_exact, x_1, 1e-14);
+  EXPECT_ARRAY_NEAR(x_exact, x_1, eps_close);
 
   auto [x_2, eps_2] = worker(b);
-  EXPECT_ARRAY_NEAR(x_exact(range::all, 0), x_2, 1e-14);
+  EXPECT_ARRAY_NEAR(x_exact(range::all, 0), x_2, eps_close);
 
   // call the gelss function directly
   int rank{};
   matrix<value_t, F_layout> A_f{A}, B_f{B};
   lapack::gelss(A_f, B_f, s, 1e-18, rank);
-  EXPECT_ARRAY_NEAR(x_exact, B_f(range(n), range::all), 1e-14);
+  EXPECT_ARRAY_NEAR(x_exact, B_f(range(n), range::all), eps_close);
 
   A_f = A;
   lapack::gelss(A_f, b, s, 1e-18, rank);
-  EXPECT_ARRAY_NEAR(x_exact(range::all, 0), b(range(n)), 1e-14);
+  EXPECT_ARRAY_NEAR(x_exact(range::all, 0), b(range(n)), eps_close);
 }
 
 TEST(NDA, LAPACKGelss) {
+  test_gelss<float>();
+  test_gelss<std::complex<float>>();
   test_gelss<double>();
   test_gelss<std::complex<double>>();
 }
@@ -304,17 +322,23 @@ TEST(NDA, LAPACKGetrfWithRectangularMatrix) {
 
 // Check that the eigenvectors/values are correct.
 void check_eigen(auto const &A, auto const &V, auto const &l) {
-  for (auto i : nda::range(0, A.extent(0))) { EXPECT_ARRAY_NEAR(A * V(nda::range::all, i), l(i) * V(nda::range::all, i)); }
+  using fp_type              = nda::get_fp_t<decltype(A)>;
+  constexpr double eps_close = std::is_same_v<fp_type, float> ? 1e-5 : 1e-10;
+
+  for (auto i : nda::range(0, A.extent(0))) { EXPECT_ARRAY_NEAR(A * V(nda::range::all, i), l(i) * V(nda::range::all, i), eps_close); }
 }
 
 void check_eigen(auto const &A, auto const &B, auto const &V, auto const &l, int itype = 1) {
+  using fp_type              = nda::get_fp_t<decltype(A)>;
+  constexpr double eps_close = std::is_same_v<fp_type, float> ? 5e-4 : 1e-10;
+
   for (auto i : nda::range(0, A.extent(0))) {
     if (itype == 1) {
-      EXPECT_ARRAY_NEAR(A * V(nda::range::all, i), l(i) * B * V(nda::range::all, i));
+      EXPECT_ARRAY_NEAR(A * V(nda::range::all, i), l(i) * B * V(nda::range::all, i), eps_close);
     } else if (itype == 2) {
-      EXPECT_ARRAY_NEAR(A * B * V(nda::range::all, i), l(i) * V(nda::range::all, i));
+      EXPECT_ARRAY_NEAR(A * B * V(nda::range::all, i), l(i) * V(nda::range::all, i), eps_close);
     } else {
-      EXPECT_ARRAY_NEAR(B * A * V(nda::range::all, i), l(i) * V(nda::range::all, i));
+      EXPECT_ARRAY_NEAR(B * A * V(nda::range::all, i), l(i) * V(nda::range::all, i), eps_close);
     }
   }
 }
@@ -345,37 +369,39 @@ auto syhe_matrix(int n, double a = 1e-6, double b = 1.0) {
 // Test LAPACK syev and heev functions.
 template <typename T>
 void test_syev_heev(auto xxev) {
+  using fp_type              = nda::get_fp_t<T>;
+  constexpr double eps_close = std::is_same_v<fp_type, float> ? 2e-6 : 1e-10;
   for (auto i : nda::range(1, 6)) {
     auto A = syhe_matrix<T>(i, -1, 1);
 
     // compute eigenvalues and eigenvectors
     auto A1 = A;
-    auto w1 = nda::vector<double>(i);
+    auto w1 = nda::vector<fp_type>(i);
     xxev(A1, w1);
     check_eigen(A, A1, w1);
 
     // compute eigenvalues only
     auto A2 = A;
-    auto w2 = nda::vector<double>{};
+    auto w2 = nda::vector<fp_type>{};
     xxev(A2, w2, 'N');
-    EXPECT_ARRAY_NEAR(w2, w1);
+    EXPECT_ARRAY_NEAR(w2, w1, eps_close);
 
     // compute eigenvalues and eigenvectors of the transpose
     auto A3 = nda::matrix<T, nda::C_layout>{A};
-    auto w3 = nda::vector<double>(i);
+    auto w3 = nda::vector<fp_type>(i);
     xxev(nda::transpose(A3), w3);
-    EXPECT_ARRAY_NEAR(w3, w1);
+    EXPECT_ARRAY_NEAR(w3, w1, eps_close);
     if constexpr (nda::is_complex_v<T>) {
       check_eigen(nda::transpose(A), nda::transpose(A3), w3);
     } else {
       check_eigen(A, nda::transpose(A3), w3);
-      EXPECT_ARRAY_NEAR(nda::transpose(A3), A1);
+      EXPECT_ARRAY_NEAR(nda::transpose(A3), A1, eps_close);
     }
 
     // compute eigenvalues and eigenvectors of a view
     if (i > 3) {
       auto A4 = A;
-      auto w4 = nda::vector<double>{};
+      auto w4 = nda::vector<fp_type>{};
       xxev(A4(nda::range(3), nda::range(3)), w4);
       check_eigen(A(nda::range(3), nda::range(3)), A4(nda::range(3), nda::range(3)), w4);
     }
@@ -383,13 +409,19 @@ void test_syev_heev(auto xxev) {
 }
 
 TEST(NDA, LAPACKSyevAndHeev) {
-  test_syev_heev<double>([](auto &&...ts) { return lapack::syev(ts...); });
-  test_syev_heev<std::complex<double>>([](auto &&...ts) { return lapack::heev(ts...); });
+  constexpr auto syev = [](auto &&...ts) { return lapack::syev(ts...); };
+  constexpr auto heev = [](auto &&...ts) { return lapack::heev(ts...); };
+  test_syev_heev<float>(syev);
+  test_syev_heev<std::complex<float>>(heev);
+  test_syev_heev<double>(syev);
+  test_syev_heev<std::complex<double>>(heev);
 }
 
 // Test LAPACK sygv and hegv functions.
 template <typename T>
 void test_sygv_hegv(int itype, auto xxgv) {
+  using fp_type              = nda::get_fp_t<T>;
+  constexpr double eps_close = std::is_same_v<fp_type, float> ? 1e-5 : 1e-10;
   for (auto i : nda::range(1, 6)) {
     auto A = syhe_matrix<T>(i, -1, 1);
     auto B = syhe_matrix<T>(i, 1e-6, 1);
@@ -397,22 +429,22 @@ void test_sygv_hegv(int itype, auto xxgv) {
     // compute eigenvalues and eigenvectors
     auto A1 = A;
     auto B1 = B;
-    auto w1 = nda::vector<double>(i);
+    auto w1 = nda::vector<fp_type>(i);
     xxgv(A1, B1, w1, 'V', itype);
     check_eigen(A, B, A1, w1, itype);
 
     // compute eigenvalues only
     auto A2 = A;
     auto B2 = B;
-    auto w2 = nda::vector<double>{};
+    auto w2 = nda::vector<fp_type>{};
     xxgv(A2, B2, w2, 'N', itype);
-    EXPECT_ARRAY_NEAR(w2, w1);
+    EXPECT_ARRAY_NEAR(w2, w1, eps_close);
 
     // compute eigenvalues and eigenvectors of a view
     if (i > 3) {
       auto A3 = A;
       auto B3 = B;
-      auto w3 = nda::vector<double>{};
+      auto w3 = nda::vector<fp_type>{};
       auto rg = nda::range(3);
       xxgv(A3(rg, rg), B3(rg, rg), w3, 'V', itype);
       check_eigen(A(rg, rg), B(rg, rg), A3(rg, rg), w3, itype);
@@ -423,6 +455,12 @@ void test_sygv_hegv(int itype, auto xxgv) {
 TEST(NDA, LAPACKSyegvAndHegv) {
   auto sygv = [](auto &&...ts) { return lapack::sygv(ts...); };
   auto hegv = [](auto &&...ts) { return lapack::hegv(ts...); };
+  test_sygv_hegv<float>(1, sygv);
+  test_sygv_hegv<float>(2, sygv);
+  test_sygv_hegv<float>(3, sygv);
+  test_sygv_hegv<std::complex<float>>(1, hegv);
+  test_sygv_hegv<std::complex<float>>(2, hegv);
+  test_sygv_hegv<std::complex<float>>(3, hegv);
   test_sygv_hegv<double>(1, sygv);
   test_sygv_hegv<double>(2, sygv);
   test_sygv_hegv<double>(3, sygv);

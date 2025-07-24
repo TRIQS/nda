@@ -64,8 +64,9 @@ namespace nda::lapack {
    */
   template <MemoryMatrix A, MemoryArray B, MemoryVector S>
     requires(have_same_value_type_v<A, B> and mem::have_host_compatible_addr_space<A, B, S> and is_blas_lapack_v<get_value_t<A>>)
-  int gelss(A &&a, B &&b, S &&s, double rcond, int &rank) { // NOLINT (temporary views are allowed here)
-    static_assert(std::is_same_v<get_value_t<S>, double>, "Error in nda::lapack::gelss: Singular value array must have elements of type double");
+  int gelss(A &&a, B &&b, S &&s, get_fp_t<A> rcond, int &rank) { // NOLINT (temporary views are allowed here)
+    static_assert(std::is_same_v<get_value_t<S>, float> || std::is_same_v<get_value_t<S>, double>,
+                  "Error in nda::lapack::gelss: Singular value array must have elements of type float or double");
     static_assert(has_F_layout<A> and has_F_layout<B>, "Error in nda::lapack::gelss: Matrices/arrays must have Fortran layout");
     static_assert(get_rank<B> == 1 || get_rank<B> == 2, "Error in nda::lapack::gelss: Right hand side must have rank 1 or 2");
 
@@ -82,8 +83,9 @@ namespace nda::lapack {
 
     // first call to get the optimal buffer size
     using value_type = get_value_t<A>;
+    using fp_type    = get_fp_t<A>;
     value_type tmp_lwork{};
-    auto rwork = array<double, 1>(5 * k);
+    auto rwork = array<fp_type, 1>(5 * k);
     int info   = 0;
     int nrhs   = (get_rank<B> == 2 ? b.extent(1) : 1);
     f77::gelss(m, n, nrhs, a.data(), get_ld(a), b.data(), get_ld(b), s.data(), rcond, rank, &tmp_lwork, -1, rwork.data(), info);

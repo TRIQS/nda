@@ -54,8 +54,8 @@ namespace nda::lapack {
    * @return Integer return code from the LAPACK call.
    */
   template <MemoryMatrix A, MemoryMatrix B, MemoryVector W>
-    requires(mem::have_host_compatible_addr_space<A, B> and std::same_as<std::complex<double>, get_value_t<A>> and have_same_value_type_v<A, B>
-             and std::same_as<double, get_value_t<W>>)
+    requires(mem::have_host_compatible_addr_space<A, B> and is_complex_v<get_value_t<A>> and have_same_value_type_v<A, B>
+             and std::same_as<get_fp_t<A>, get_value_t<W>>)
   int hegv(A &&a, B &&b, W &&w, char jobz = 'V', int itype = 1) { // NOLINT (temporary views are allowed here)
     static_assert(has_F_layout<A> and has_F_layout<B>, "Error in nda::lapack::hegv: A and B must have Fortran layout");
 
@@ -76,14 +76,15 @@ namespace nda::lapack {
     EXPECTS(jobz == 'V' or jobz == 'N');
 
     // first call to get the optimal buffer size
-    array<double, 1> rwork(std::max(1l, 3 * n - 2));
-    std::complex<double> tmp_lwork{};
+    using fp_type = get_fp_t<A>;
+    array<fp_type, 1> rwork(std::max(1l, 3 * n - 2));
+    std::complex<fp_type> tmp_lwork{};
     int info = 0;
     lapack::f77::hegv(itype, jobz, 'U', n, a.data(), get_ld(a), b.data(), get_ld(b), w.data(), &tmp_lwork, -1, rwork.data(), info);
     int lwork = static_cast<int>(std::ceil(std::real(tmp_lwork)));
 
     // allocate work buffer and perform actual library call
-    array<std::complex<double>, 1> work(lwork);
+    array<std::complex<fp_type>, 1> work(lwork);
     lapack::f77::hegv(itype, jobz, 'U', n, a.data(), get_ld(a), b.data(), get_ld(b), w.data(), work.data(), lwork, rwork.data(), info);
 
     return info;

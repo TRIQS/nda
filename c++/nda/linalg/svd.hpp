@@ -76,7 +76,7 @@ namespace nda::linalg {
 
     // vector s and matrices U and V^H
     auto const [m, n] = a.shape();
-    auto s            = vector<double, heap<addr_space>>(std::min(m, n));
+    auto s            = vector<get_fp_t<A>, heap<addr_space>>(std::min(m, n));
     auto U            = matrix<get_value_t<A>, layout_policy, heap<addr_space>>(m, m);
     auto VH           = matrix<get_value_t<A>, layout_policy, heap<addr_space>>(n, n);
 

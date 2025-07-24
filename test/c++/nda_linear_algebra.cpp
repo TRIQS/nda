@@ -4,6 +4,7 @@
 // See LICENSE in the root of this distribution for details.
 
 #include "./test_common.hpp"
+#include "nda/traits.hpp"
 
 #include <nda/gtest_tools.hpp>
 #include <nda/nda.hpp>
@@ -347,7 +348,7 @@ void check_eigen(auto const &A, auto const &V, auto const &l) {
 }
 
 void check_eigen(auto const &A, auto const &B, auto const &V, auto const &l, int itype = 1) {
-  constexpr double eps_close = (std::is_same_v<nda::get_fp_t<decltype(A)>, float>) ? 1e-6 : 1e-10;
+  constexpr double eps_close = (std::is_same_v<nda::get_fp_t<decltype(A)>, float>) ? 1e-4 : 1e-10;
   for (auto i : nda::range(0, A.extent(0))) {
     if (itype == 1) {
       EXPECT_ARRAY_NEAR(A * V(nda::range::all, i), l(i) * B * V(nda::range::all, i), eps_close);
@@ -434,6 +435,7 @@ TEST(NDA, LinearAlgebraEighAndEigvalsh) {
 // Test the eigh and eigvalsh functions for generalized eigenvalue problems.
 template <typename T>
 void test_generalized_eigh_eigvalsh(int itype) {
+  constexpr double eps_close = (std::is_same_v<T, float> || std::is_same_v<T, std::complex<float>>) ? 1.5e-5 : 1e-10;
   for (auto i : nda::range(1, 6)) {
     auto A = syhe_matrix<T>(i, -1, 1);
     auto B = syhe_matrix<T>(i, 1e-6, 1);
@@ -447,34 +449,40 @@ void test_generalized_eigh_eigvalsh(int itype) {
     auto B2 = B;
     auto w2 = nda::linalg::eigh_in_place(V2, B2, itype);
     check_eigen(A, B, V2, w2, itype);
-    EXPECT_ARRAY_NEAR(V1, V2);
-    EXPECT_ARRAY_NEAR(w1, w2);
+    EXPECT_ARRAY_NEAR(V1, V2, eps_close);
+    EXPECT_ARRAY_NEAR(w1, w2, eps_close);
 
     // use eigvalsh to compute eigenvalues only
     auto w3 = nda::linalg::eigvalsh(A, B, itype);
-    EXPECT_ARRAY_NEAR(w1, w3);
+    EXPECT_ARRAY_NEAR(w1, w3, eps_close);
 
     // use eigvalsh_in_place to compute eigenvalues only
     auto A4 = A;
     auto B4 = B;
     auto w4 = nda::linalg::eigvalsh_in_place(A4, B4, itype);
-    EXPECT_ARRAY_NEAR(w1, w4);
+    EXPECT_ARRAY_NEAR(w1, w4, eps_close);
 
     // use eigh with a C-layout matrices
     auto A5       = nda::matrix<T, nda::C_layout>{A};
     auto B5       = nda::matrix<T, nda::C_layout>{B};
     auto [w5, V5] = nda::linalg::eigh(A5, B5, itype);
     check_eigen(A, B, V5, w5, itype);
-    EXPECT_ARRAY_NEAR(V1, V5);
-    EXPECT_ARRAY_NEAR(w1, w5);
+    EXPECT_ARRAY_NEAR(V1, V5, eps_close);
+    EXPECT_ARRAY_NEAR(w1, w5, eps_close);
 
     // use eigvalsh with a C-layout matrices
     auto w6 = nda::linalg::eigvalsh(A5, B5, itype);
-    EXPECT_ARRAY_NEAR(w1, w6);
+    EXPECT_ARRAY_NEAR(w1, w6, eps_close);
   }
 }
 
 TEST(NDA, LinearAlgebraGeneralizedEighAndEigvalsh) {
+  test_generalized_eigh_eigvalsh<float>(1);
+  test_generalized_eigh_eigvalsh<float>(2);
+  test_generalized_eigh_eigvalsh<float>(3);
+  test_generalized_eigh_eigvalsh<std::complex<float>>(1);
+  test_generalized_eigh_eigvalsh<std::complex<float>>(2);
+  test_generalized_eigh_eigvalsh<std::complex<float>>(3);
   test_generalized_eigh_eigvalsh<double>(1);
   test_generalized_eigh_eigvalsh<double>(2);
   test_generalized_eigh_eigvalsh<double>(3);
@@ -578,8 +586,9 @@ TEST(NDA, LinearAlgebraOuterProduct) {
 // Test the generic solve and solve_in_place functions.
 template <typename value_t, typename Layout>
 void test_solve() {
-  using matrix_t = nda::matrix<value_t, Layout>;
-  using vector_t = nda::vector<value_t>;
+  using matrix_t   = nda::matrix<value_t, Layout>;
+  using vector_t   = nda::vector<value_t>;
+  double eps_close = std::is_same_v<nda::get_fp_t<value_t>, float> ? 1e-4 : 1e-10;
 
   auto A = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
   auto B = matrix_t{{1, 5}, {4, 5}, {3, 6}};
@@ -587,36 +596,40 @@ void test_solve() {
   // solve A * X = B using the exact matrix inverse
   auto Ainv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
   auto X    = matrix_t{Ainv * B};
-  EXPECT_ARRAY_NEAR(matrix_t{A * X}, B);
+  EXPECT_ARRAY_NEAR(matrix_t{A * X}, B, eps_close);
 
   // solve A * X = B using solve_in_place
   if constexpr (nda::blas::has_F_layout<matrix_t>) {
     auto Acopy = matrix_t{A};
     auto Bcopy = matrix_t{B};
     nda::linalg::solve_in_place(Acopy, Bcopy);
-    EXPECT_ARRAY_NEAR(matrix_t{A * Bcopy}, B);
-    EXPECT_ARRAY_NEAR(X, Bcopy);
+    EXPECT_ARRAY_NEAR(matrix_t{A * Bcopy}, B, eps_close);
+    EXPECT_ARRAY_NEAR(X, Bcopy, eps_close);
 
     // solve A * x = b using solve_in_place
     Acopy  = A;
     auto b = vector_t{B(nda::range::all, 0)};
     nda::linalg::solve_in_place(Acopy, b);
-    EXPECT_ARRAY_NEAR(A * b, B(nda::range::all, 0));
-    EXPECT_ARRAY_NEAR(X(nda::range::all, 0), b);
+    EXPECT_ARRAY_NEAR(A * b, B(nda::range::all, 0), eps_close);
+    EXPECT_ARRAY_NEAR(X(nda::range::all, 0), b, eps_close);
   }
 
   // solve A * X = B using solve
   auto X2 = nda::linalg::solve(A, B);
-  EXPECT_ARRAY_NEAR(matrix_t{A * X2}, B);
-  EXPECT_ARRAY_NEAR(X, X2);
+  EXPECT_ARRAY_NEAR(matrix_t{A * X2}, B, eps_close);
+  EXPECT_ARRAY_NEAR(X, X2, eps_close);
 
   // solve A * x = b using solve
   auto x = nda::linalg::solve(A, B(nda::range::all, 0));
-  EXPECT_ARRAY_NEAR(A * x, B(nda::range::all, 0));
-  EXPECT_ARRAY_NEAR(X(nda::range::all, 0), x);
+  EXPECT_ARRAY_NEAR(A * x, B(nda::range::all, 0), eps_close);
+  EXPECT_ARRAY_NEAR(X(nda::range::all, 0), x, eps_close);
 }
 
 TEST(NDA, LinearAlgebraSolve) {
+  test_solve<float, nda::C_layout>();
+  test_solve<float, nda::F_layout>();
+  test_solve<std::complex<float>, nda::C_layout>();
+  test_solve<std::complex<float>, nda::F_layout>();
   test_solve<double, nda::C_layout>();
   test_solve<double, nda::F_layout>();
   test_solve<std::complex<double>, nda::C_layout>();
@@ -626,7 +639,8 @@ TEST(NDA, LinearAlgebraSolve) {
 // Test the svd and svd_in_place functions.
 template <typename T, typename Layout>
 void test_svd() {
-  using matrix_t = nda::matrix<T, Layout>;
+  using matrix_t             = nda::matrix<T, Layout>;
+  constexpr double eps_close = (std::is_same_v<nda::get_fp_t<T>, float>) ? 1e-6 : 1e-14;
 
   auto A = matrix_t{{2, -2, 1}, {-4, -8, -8}};
   auto s = nda::vector<double>{12, 3};
@@ -635,19 +649,21 @@ void test_svd() {
   auto [U_1, s_1, VH_1] = nda::linalg::svd(A);
   auto S_1              = matrix_t::zeros(A.shape());
   diagonal(S_1)         = s_1;
-  EXPECT_ARRAY_NEAR(s_1, s, 1e-14);
-  EXPECT_ARRAY_NEAR(A, U_1 * S_1 * VH_1, 1e-14);
+  EXPECT_ARRAY_NEAR(s_1, s, eps_close);
+  EXPECT_ARRAY_NEAR(A, U_1 * S_1 * VH_1, eps_close);
 
   // compute the SVD of A in place
   auto A_copy           = A;
   auto [U_2, s_2, VH_2] = nda::linalg::svd_in_place(A_copy);
   auto S_2              = matrix_t::zeros(A.shape());
   diagonal(S_2)         = s_2;
-  EXPECT_ARRAY_NEAR(s, s_2, 1e-14);
-  EXPECT_ARRAY_NEAR(A, U_2 * S_2 * VH_2, 1e-14);
+  EXPECT_ARRAY_NEAR(s, s_2, eps_close);
+  EXPECT_ARRAY_NEAR(A, U_2 * S_2 * VH_2, eps_close);
 }
 
 TEST(NDA, LinearAlgebraSVD) {
+  test_svd<float, nda::C_layout>();
+  test_svd<float, nda::F_layout>();
   test_svd<double, nda::C_layout>();
   test_svd<double, nda::F_layout>();
   test_svd<std::complex<double>, nda::C_layout>();

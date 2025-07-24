@@ -37,8 +37,8 @@ namespace nda::lapack {
    * Here \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ are assumed to be symmetric and \f$ \mathbf{B} \f$ is also positive 
    * definite.
    *
-   * @tparam A nda::MemoryMatrix with double value type.
-   * @tparam B nda::MemoryMatrix with double value type.
+   * @tparam A nda::MemoryMatrix with float or double value type.
+   * @tparam B nda::MemoryMatrix with float or double value type.
    * @param a Input/output matrix. On entry, the symmetric matrix \f$ \mathbf{A} \f$. On exit, if `jobz = V`, \f$ 
    * \mathbf{A} \f$ contains the matrix \f$ \mathbf{V} \f$ of normalized eigenvectors such that \f$ \mathbf{V}^T 
    * \mathbf{B} \mathbf{V} = \mathbf{I} \f$ (if `itype = 1` or `itype = 2`) or \f$ \mathbf{V}^T \mathbf{B}^{-1} 
@@ -52,7 +52,8 @@ namespace nda::lapack {
    * @return Integer return code from the LAPACK call.
    */
   template <MemoryMatrix A, MemoryMatrix B, MemoryVector W>
-    requires(mem::have_host_compatible_addr_space<A, B> and std::same_as<double, get_value_t<A>> and have_same_value_type_v<A, B, W>)
+    requires(mem::have_host_compatible_addr_space<A, B> and (std::same_as<float, get_value_t<A>> or std::same_as<double, get_value_t<A>>)
+             and have_same_value_type_v<A, B, W>)
   int sygv(A &&a, B &&b, W &&w, char jobz = 'V', int itype = 1) { // NOLINT (temporary views are allowed here)
     static_assert(has_F_layout<A> and has_F_layout<B>, "Error in nda::lapack::sygv: A and B must have Fortran layout");
 
@@ -73,13 +74,14 @@ namespace nda::lapack {
     EXPECTS(jobz == 'V' or jobz == 'N');
 
     // first call to get the optimal buffer size
-    double tmp_lwork{};
+    using value_type = get_value_t<A>;
+    value_type tmp_lwork{};
     int info = 0;
     lapack::f77::sygv(itype, jobz, 'U', n, a.data(), get_ld(a), b.data(), get_ld(b), w.data(), &tmp_lwork, -1, info);
     int lwork = static_cast<int>(std::ceil(tmp_lwork));
 
     // allocate work buffer and perform actual library call
-    array<double, 1> work(lwork);
+    array<value_type, 1> work(lwork);
     lapack::f77::sygv(itype, jobz, 'U', n, a.data(), get_ld(a), b.data(), get_ld(b), w.data(), work.data(), lwork, info);
 
     return info;

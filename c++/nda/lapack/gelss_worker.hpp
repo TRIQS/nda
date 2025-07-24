@@ -21,6 +21,7 @@
 #include "../linalg.hpp"
 #include "../mapped_functions.hpp"
 #include "../matrix_functions.hpp"
+#include "nda/traits.hpp"
 
 #include <itertools/itertools.hpp>
 
@@ -115,7 +116,7 @@ namespace nda::lapack {
       gesvd(A_work, s_, U, V_H);
 
       // calculate the pseudo inverse A^{+} = V * \Sigma^{+} * U^H
-      matrix<double, F_layout> S_plus(N_, M_);
+      matrix<get_fp_t<T>, F_layout> S_plus(N_, M_);
       S_plus = 0.;
       for (long i : range(s_.size())) S_plus(i, i) = 1.0 / s_(i);
       A_plus_ = dagger(V_H) * S_plus * dagger(U);
@@ -177,7 +178,7 @@ namespace nda::lapack {
     matrix<T> U_N_H_;
 
     // Array containing the singular values.
-    array<double, 1> s_;
+    array<get_fp_t<T>, 1> s_;
   };
 
   /**
