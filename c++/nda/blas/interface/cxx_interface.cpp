@@ -76,12 +76,18 @@ namespace nda::blas::f77 {
   inline auto **blacplx(dcomplex **c) { return reinterpret_cast<double **>(c); }             // NOLINT
   inline auto **blacplx(dcomplex const **c) { return reinterpret_cast<const double **>(c); } // NOLINT
 
+  void axpy(int N, float alpha, const float *x, int incx, float *Y, int incy) { F77_saxpy(&N, &alpha, x, &incx, Y, &incy); }
+  void axpy(int N, scomplex alpha, const scomplex *x, int incx, scomplex *Y, int incy) {
+    F77_caxpy(&N, blacplx(&alpha), blacplx(x), &incx, blacplx(Y), &incy);
+  }
   void axpy(int N, double alpha, const double *x, int incx, double *Y, int incy) { F77_daxpy(&N, &alpha, x, &incx, Y, &incy); }
   void axpy(int N, dcomplex alpha, const dcomplex *x, int incx, dcomplex *Y, int incy) {
     F77_zaxpy(&N, blacplx(&alpha), blacplx(x), &incx, blacplx(Y), &incy);
   }
 
   // No Const In Wrapping!
+  void copy(int N, const float *x, int incx, float *Y, int incy) { F77_scopy(&N, x, &incx, Y, &incy); }
+  void copy(int N, const scomplex *x, int incx, scomplex *Y, int incy) { F77_ccopy(&N, blacplx(x), &incx, blacplx(Y), &incy); }
   void copy(int N, const double *x, int incx, double *Y, int incy) { F77_dcopy(&N, x, &incx, Y, &incy); }
   void copy(int N, const dcomplex *x, int incx, dcomplex *Y, int incy) { F77_zcopy(&N, blacplx(x), &incx, blacplx(Y), &incy); }
 
@@ -124,8 +130,7 @@ namespace nda::blas::f77 {
     return dcomplex{result.real, result.imag};
   }
 
-  void gemm(char op_a, char op_b, int M, int N, int K, float alpha, const float *A, int LDA, const float *B, int LDB, float beta, float *C,
-            int LDC) {
+  void gemm(char op_a, char op_b, int M, int N, int K, float alpha, const float *A, int LDA, const float *B, int LDB, float beta, float *C, int LDC) {
     F77_sgemm(&op_a, &op_b, &M, &N, &K, &alpha, A, &LDA, B, &LDB, &beta, C, &LDC);
   }
   void gemm(char op_a, char op_b, int M, int N, int K, scomplex alpha, const scomplex *A, int LDA, const scomplex *B, int LDB, scomplex beta,
@@ -220,6 +225,15 @@ namespace nda::blas::f77 {
     F77_zgemv(&op, &M, &N, blacplx(&alpha), blacplx(A), &LDA, blacplx(x), &incx, blacplx(&beta), blacplx(Y), &incy);
   }
 
+  void ger(int M, int N, float alpha, const float *x, int incx, const float *Y, int incy, float *A, int LDA) {
+    F77_sger(&M, &N, &alpha, x, &incx, Y, &incy, A, &LDA);
+  }
+  void ger(int M, int N, scomplex alpha, const scomplex *x, int incx, const scomplex *Y, int incy, scomplex *A, int LDA) {
+    F77_cgeru(&M, &N, blacplx(&alpha), blacplx(x), &incx, blacplx(Y), &incy, blacplx(A), &LDA);
+  }
+  void gerc(int M, int N, scomplex alpha, const scomplex *x, int incx, const scomplex *Y, int incy, scomplex *A, int LDA) {
+    F77_cgerc(&M, &N, blacplx(&alpha), blacplx(x), &incx, blacplx(Y), &incy, blacplx(A), &LDA);
+  }
   void ger(int M, int N, double alpha, const double *x, int incx, const double *Y, int incy, double *A, int LDA) {
     F77_dger(&M, &N, &alpha, x, &incx, Y, &incy, A, &LDA);
   }
@@ -230,9 +244,15 @@ namespace nda::blas::f77 {
     F77_zgerc(&M, &N, blacplx(&alpha), blacplx(x), &incx, blacplx(Y), &incy, blacplx(A), &LDA);
   }
 
+  void scal(int M, float alpha, float *x, int incx) { F77_sscal(&M, &alpha, x, &incx); }
+  void scal(int M, scomplex alpha, scomplex *x, int incx) { F77_cscal(&M, blacplx(&alpha), blacplx(x), &incx); }
   void scal(int M, double alpha, double *x, int incx) { F77_dscal(&M, &alpha, x, &incx); }
   void scal(int M, dcomplex alpha, dcomplex *x, int incx) { F77_zscal(&M, blacplx(&alpha), blacplx(x), &incx); }
 
+  void swap(int N, float *x, int incx, float *Y, int incy) { F77_cswap(&N, x, &incx, Y, &incy); } // NOLINT (this is a BLAS swap)
+  void swap(int N, scomplex *x, int incx, scomplex *Y, int incy) {                                // NOLINT (this is a BLAS swap)
+    F77_cswap(&N, blacplx(x), &incx, blacplx(Y), &incy);
+  }
   void swap(int N, double *x, int incx, double *Y, int incy) { F77_dswap(&N, x, &incx, Y, &incy); } // NOLINT (this is a BLAS swap)
   void swap(int N, dcomplex *x, int incx, dcomplex *Y, int incy) {                                  // NOLINT (this is a BLAS swap)
     F77_zswap(&N, blacplx(x), &incx, blacplx(Y), &incy);

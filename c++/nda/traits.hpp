@@ -182,6 +182,18 @@ namespace nda {
   template <typename A>
   using get_value_t = std::decay_t<decltype(get_first_element(std::declval<A const>()))>;
 
+  template <typename A>
+  decltype(auto) get_fp_type() {
+    if constexpr (is_complex_v<get_value_t<A>>) {
+      return std::remove_cvref_t<typename get_value_t<A>::value_type>{};
+    } else {
+      return std::remove_cvref_t<get_value_t<A>>{};
+    }
+  }
+
+  template <typename A>
+  using get_fp_t = std::decay_t<decltype(get_fp_type<A>())>;
+
   /// Constexpr variable that is true if all types in `As` have the same value type as `A0`.
   template <typename A0, typename... As>
   inline constexpr bool have_same_value_type_v = (std::is_same_v<get_value_t<A0>, get_value_t<As>> and ... and true);

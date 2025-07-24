@@ -30,17 +30,26 @@ namespace nda::lapack::f77 {
   void gesvd(char JOBU, char JOBVT, int M, int N, std::complex<double> *A, int LDA, double *S, std::complex<double> *U, int LDU,
              std::complex<double> *VT, int LDVT, std::complex<double> *WORK, int LWORK, double *RWORK, int &INFO);
 
+  void geqp3(int M, int N, float *A, int LDA, int *JPVT, float *TAU, float *WORK, int LWORK, float *RWORK, int &INFO);
+  void geqp3(int M, int N, std::complex<float> *A, int LDA, int *JPVT, std::complex<float> *TAU, std::complex<float> *WORK, int LWORK, float *RWORK,
+             int &INFO);
   void geqp3(int M, int N, double *A, int LDA, int *JPVT, double *TAU, double *WORK, int LWORK, double *RWORK, int &INFO);
   void geqp3(int M, int N, std::complex<double> *A, int LDA, int *JPVT, std::complex<double> *TAU, std::complex<double> *WORK, int LWORK,
              double *RWORK, int &INFO);
 
+  void orgqr(int M, int N, int K, float *A, int LDA, float *TAU, float *WORK, int LWORK, int &INFO);
   void orgqr(int M, int N, int K, double *A, int LDA, double *TAU, double *WORK, int LWORK, int &INFO);
 
+  void ungqr(int M, int N, int K, std::complex<float> *A, int LDA, std::complex<float> *TAU, std::complex<float> *WORK, int LWORK, int &INFO);
   void ungqr(int M, int N, int K, std::complex<double> *A, int LDA, std::complex<double> *TAU, std::complex<double> *WORK, int LWORK, int &INFO);
 
+  void getrf(int M, int N, float *A, int LDA, int *ipiv, int &info);
+  void getrf(int M, int N, std::complex<float> *A, int LDA, int *ipiv, int &info);
   void getrf(int M, int N, double *A, int LDA, int *ipiv, int &info);
   void getrf(int M, int N, std::complex<double> *A, int LDA, int *ipiv, int &info);
 
+  void getri(int N, float *A, int LDA, int const *ipiv, float *work, int lwork, int &info);
+  void getri(int N, std::complex<float> *A, int LDA, int const *ipiv, std::complex<float> *work, int lwork, int &info);
   void getri(int N, double *A, int LDA, int const *ipiv, double *work, int lwork, int &info);
   void getri(int N, std::complex<double> *A, int LDA, int const *ipiv, std::complex<double> *work, int lwork, int &info);
 
@@ -50,8 +59,10 @@ namespace nda::lapack::f77 {
 
   void stev(char J, int N, double *D, double *E, double *Z, int ldz, double *work, int &info);
 
+  void syev(char JOBZ, char UPLO, int N, float *A, int LDA, float *W, float *work, int lwork, int &info);
   void syev(char JOBZ, char UPLO, int N, double *A, int LDA, double *W, double *work, int lwork, int &info);
 
+  void heev(char JOBZ, char UPLO, int N, std::complex<float> *A, int LDA, float *W, std::complex<float> *work, int lwork, float *rwork, int &info);
   void heev(char JOBZ, char UPLO, int N, std::complex<double> *A, int LDA, double *W, std::complex<double> *work, int lwork, double *rwork,
             int &info);
 

@@ -42,10 +42,11 @@ namespace nda::linalg {
     template <typename A>
     auto eigh_impl(A &&a, char jobz) { // NOLINT (temporary views are allowed here)
       // early return if the matrix is empty
-      if (a.empty()) return array<double, 1>{};
+      using fp_t = get_fp_t<A>;
+      if (a.empty()) return array<fp_t, 1>{};
 
       // make the call to syev/heev
-      auto lambda = array<double, 1>(a.extent(0));
+      auto lambda = array<fp_t, 1>(a.extent(0));
       int info    = 0;
       if constexpr (is_complex_v<get_value_t<A>>) {
         info = nda::lapack::heev(a, lambda, jobz);
@@ -61,10 +62,11 @@ namespace nda::linalg {
     template <typename A, typename B>
     auto eigh_impl(A &&a, B &&b, char jobz, int itype) { // NOLINT (temporary views are allowed here)
       // early return if the matrix is empty
-      if (a.empty()) return array<double, 1>{};
+      using fp_t = get_fp_t<A>;
+      if (a.empty()) return array<fp_t, 1>{};
 
       // make the call to sygv/hegv
-      auto lambda = array<double, 1>(a.extent(0));
+      auto lambda = array<fp_t, 1>(a.extent(0));
       int info    = 0;
       if constexpr (is_complex_v<get_value_t<A>>) {
         info = nda::lapack::hegv(a, b, lambda, jobz, itype);
@@ -160,7 +162,7 @@ namespace nda::linalg {
   template <Matrix A>
     requires(Scalar<get_value_t<A>>)
   auto eigh(A const &a) {
-    using value_t = std::conditional_t<is_complex_v<get_value_t<A>>, std::complex<double>, double>;
+    using value_t = get_value_t<A>;
     auto a_copy   = matrix<value_t, F_layout>{a};
     auto lambda   = eigh_in_place(a_copy);
     return std::make_pair(lambda, a_copy);
@@ -187,9 +189,9 @@ namespace nda::linalg {
    * nda::matrix in nda::F_layout containing the eigenvectors \f$ \mathbf{v}_i \f$ in its columns.
    */
   template <Matrix A, Matrix B>
-    requires(Scalar<get_value_t<A>> and Scalar<get_value_t<B>>)
+    requires(Scalar<get_value_t<A>> and Scalar<get_value_t<B>> and std::is_same_v<get_fp_t<A>, get_fp_t<B>>)
   auto eigh(A const &a, B const &b, int itype = 1) {
-    using value_t = std::conditional_t<is_complex_v<get_value_t<A>> or is_complex_v<get_value_t<B>>, std::complex<double>, double>;
+    using value_t = std::conditional_t<is_complex_v<get_value_t<A>> or is_complex_v<get_value_t<B>>, std::complex<get_fp_t<A>>, get_fp_t<A>>;
     auto a_copy   = matrix<value_t, F_layout>{a};
     auto b_copy   = matrix<value_t, F_layout>{b};
     auto lambda   = eigh_in_place(a_copy, b_copy, itype);
@@ -274,7 +276,7 @@ namespace nda::linalg {
   template <Matrix A>
     requires(Scalar<get_value_t<A>>)
   auto eigvalsh(A const &a) {
-    using value_t = std::conditional_t<is_complex_v<get_value_t<A>>, std::complex<double>, double>;
+    using value_t = get_value_t<A>;
     auto a_copy   = matrix<value_t, F_layout>{a};
     return eigvalsh_in_place(a_copy);
   }
@@ -299,9 +301,9 @@ namespace nda::linalg {
    * @return An nda::array containing the real eigenvalues in ascending order.
    */
   template <Matrix A, Matrix B>
-    requires(Scalar<get_value_t<A>> and Scalar<get_value_t<B>>)
+    requires(Scalar<get_value_t<A>> and Scalar<get_value_t<B>> and std::is_same_v<get_fp_t<A>, get_fp_t<B>>)
   auto eigvalsh(A const &a, B const &b, int itype = 1) {
-    using value_t = std::conditional_t<is_complex_v<get_value_t<A>> or is_complex_v<get_value_t<B>>, std::complex<double>, double>;
+    using value_t = std::conditional_t<is_complex_v<get_value_t<A>> or is_complex_v<get_value_t<B>>, std::complex<get_fp_t<A>>, get_fp_t<A>>;
     auto a_copy   = matrix<value_t, F_layout>{a};
     auto b_copy   = matrix<value_t, F_layout>{b};
     return eigvalsh_in_place(a_copy, b_copy, itype);

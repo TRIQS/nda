@@ -45,8 +45,8 @@ namespace nda::lapack {
    * - elements \f$ i + 1 \f$ to \f$ m \f$ stored in the elements \f$ i + 1 \f$ to \f$ m \f$ in column \f$ i \f$ of
    * matrix \f$ \mathbf{A} \f$.
    *
-   * @tparam A nda::MemoryMatrix with double value type.
-   * @tparam TAU nda::MemoryVector with double value type.
+   * @tparam A nda::MemoryMatrix with float or double value type.
+   * @tparam TAU nda::MemoryVector with float or double value type.
    * @param a Input/output matrix. On entry, the i<sup>th</sup> column must contain the vector which defines the
    * elementary reflector \f$ H(i) \; , i = 1,2,...,k \f$, as returned by nda::lapack::geqp3 in the first \f$ k \f$
    * columns. On exit, the \f$ m \times \min(m,n) = k \f$ matrix \f$ \mathbf{Q} \f$.
@@ -55,7 +55,8 @@ namespace nda::lapack {
    * @return Integer return code from the LAPACK call.
    */
   template <MemoryMatrix A, MemoryVector TAU>
-    requires(mem::have_host_compatible_addr_space<A> and std::is_same_v<double, get_value_t<A>> and have_same_value_type_v<A, TAU>)
+    requires(mem::have_host_compatible_addr_space<A> and (std::is_same_v<float, get_value_t<A>> or std::is_same_v<double, get_value_t<A>>) //
+             and have_same_value_type_v<A, TAU>)
   int orgqr(A &&a, TAU &&tau) { // NOLINT (temporary views are allowed here)
     static_assert(has_F_layout<A>, "Error in nda::lapack::orgqr: A must have Fortran layout");
 
@@ -69,13 +70,14 @@ namespace nda::lapack {
     EXPECTS(tau.indexmap().min_stride() == 1);
 
     // first call to get the optimal buffer size
-    double tmp_lwork{};
+    using value_type = get_value_t<A>;
+    value_type tmp_lwork{};
     int info = 0;
     lapack::f77::orgqr(m, k, k, a.data(), get_ld(a), tau.data(), &tmp_lwork, -1, info);
     int lwork = static_cast<int>(std::ceil(tmp_lwork));
 
     // allocate work buffer and perform actual library call
-    array<double, 1> work(lwork);
+    array<value_type, 1> work(lwork);
     lapack::f77::orgqr(m, k, k, a.data(), get_ld(a), tau.data(), work.data(), lwork, info);
 
     return info;

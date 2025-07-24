@@ -56,7 +56,7 @@ namespace nda::lapack {
    * @return Integer return code from the LAPACK call.
    */
   template <MemoryMatrix A, MemoryVector TAU>
-    requires(mem::have_host_compatible_addr_space<A> and std::is_same_v<std::complex<double>, get_value_t<A>> and have_same_value_type_v<A, TAU>)
+    requires(mem::have_host_compatible_addr_space<A> and is_complex_v<get_value_t<A>> and have_same_value_type_v<A, TAU>)
   int ungqr(A &&a, TAU &&tau) { // NOLINT (temporary views are allowed here)
     static_assert(has_F_layout<A>, "Error in nda::lapack::ungqr: A must have Fortran layout");
 
@@ -70,13 +70,14 @@ namespace nda::lapack {
     EXPECTS(tau.indexmap().min_stride() == 1);
 
     // first call to get the optimal buffer size
-    std::complex<double> tmp_lwork{};
+    using value_type = get_value_t<A>;
+    value_type tmp_lwork{};
     int info = 0;
     lapack::f77::ungqr(m, k, k, a.data(), get_ld(a), tau.data(), &tmp_lwork, -1, info);
     int lwork = static_cast<int>(std::ceil(std::real(tmp_lwork)));
 
     // allocate work buffer and perform actual library call
-    nda::array<std::complex<double>, 1> work(lwork);
+    nda::array<value_type, 1> work(lwork);
     lapack::f77::ungqr(m, k, k, a.data(), get_ld(a), tau.data(), work.data(), lwork, info);
 
     return info;

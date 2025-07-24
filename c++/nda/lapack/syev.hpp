@@ -35,7 +35,7 @@ namespace nda::lapack {
    * \f]
    * for a given real symmetric matrix \f$ \mathbf{A} \f$.
    *
-   * @tparam A nda::MemoryMatrix with double value type.
+   * @tparam A nda::MemoryMatrix with float or double value type.
    * @param a Input/output matrix. On entry, the symmetric matrix \f$ \mathbf{A} \f$. On exit, if `jobz = V`, \f$ 
    * \mathbf{A} \f$ contains the orthonormal eigenvectors of the matrix \f$ \mathbf{A} \f$. If `jobz = N`, then on 
    * exit \f$ \mathbf{A} \f$ is destroyed.
@@ -44,7 +44,8 @@ namespace nda::lapack {
    * @return Integer return code from the LAPACK call.
    */
   template <MemoryMatrix A, MemoryVector W>
-    requires(mem::have_host_compatible_addr_space<A> and std::same_as<double, get_value_t<A>> and have_same_value_type_v<A, W>)
+    requires(mem::have_host_compatible_addr_space<A> and (std::is_same_v<float, get_value_t<A>> or std::is_same_v<double, get_value_t<A>>)
+             and have_same_value_type_v<A, W>)
   int syev(A &&a, W &&w, char jobz = 'V') { // NOLINT (temporary views are allowed here)
     static_assert(has_F_layout<A>, "Error in nda::lapack::syev: A must have Fortran layout");
 
@@ -56,18 +57,19 @@ namespace nda::lapack {
     // arrays/views must be LAPACK compatible
     EXPECTS(a.indexmap().min_stride() == 1);
     EXPECTS(w.indexmap().min_stride() == 1);
-    
+
     // check other input parameters for consistency
     EXPECTS(jobz == 'V' or jobz == 'N');
 
     // first call to get the optimal buffer size
-    double tmp_lwork{};
+    using value_type = get_value_t<A>;
+    value_type tmp_lwork{};
     int info = 0;
     lapack::f77::syev(jobz, 'U', n, a.data(), get_ld(a), w.data(), &tmp_lwork, -1, info);
     int lwork = static_cast<int>(std::ceil(tmp_lwork));
 
     // allocate work buffer and perform actual library call
-    array<double, 1> work(lwork);
+    array<value_type, 1> work(lwork);
     lapack::f77::syev(jobz, 'U', n, a.data(), get_ld(a), w.data(), work.data(), lwork, info);
 
     return info;

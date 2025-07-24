@@ -34,6 +34,13 @@ namespace nda::lapack::f77 {
     LAPACK_zgesvd(&JOBU, &JOBVT, &M, &N, A, &LDA, S, U, &LDU, VT, &LDVT, WORK, &LWORK, RWORK, &INFO);
   }
 
+  void geqp3(int M, int N, float *A, int LDA, int *JPVT, float *TAU, float *WORK, int LWORK, [[maybe_unused]] float *RWORK, int &INFO) {
+    LAPACK_sgeqp3(&M, &N, A, &LDA, JPVT, TAU, WORK, &LWORK, &INFO);
+  }
+  void geqp3(int M, int N, std::complex<float> *A, int LDA, int *JPVT, std::complex<float> *TAU, std::complex<float> *WORK, int LWORK, float *RWORK,
+             int &INFO) {
+    LAPACK_cgeqp3(&M, &N, A, &LDA, JPVT, TAU, WORK, &LWORK, RWORK, &INFO);
+  }
   void geqp3(int M, int N, double *A, int LDA, int *JPVT, double *TAU, double *WORK, int LWORK, [[maybe_unused]] double *RWORK, int &INFO) {
     LAPACK_dgeqp3(&M, &N, A, &LDA, JPVT, TAU, WORK, &LWORK, &INFO);
   }
@@ -42,17 +49,29 @@ namespace nda::lapack::f77 {
     LAPACK_zgeqp3(&M, &N, A, &LDA, JPVT, TAU, WORK, &LWORK, RWORK, &INFO);
   }
 
+  void orgqr(int M, int N, int K, float *A, int LDA, float *TAU, float *WORK, int LWORK, int &INFO) {
+    LAPACK_sorgqr(&M, &N, &K, A, &LDA, TAU, WORK, &LWORK, &INFO);
+  }
   void orgqr(int M, int N, int K, double *A, int LDA, double *TAU, double *WORK, int LWORK, int &INFO) {
     LAPACK_dorgqr(&M, &N, &K, A, &LDA, TAU, WORK, &LWORK, &INFO);
   }
 
+  void ungqr(int M, int N, int K, std::complex<float> *A, int LDA, std::complex<float> *TAU, std::complex<float> *WORK, int LWORK, int &INFO) {
+    LAPACK_cungqr(&M, &N, &K, A, &LDA, TAU, WORK, &LWORK, &INFO);
+  }
   void ungqr(int M, int N, int K, std::complex<double> *A, int LDA, std::complex<double> *TAU, std::complex<double> *WORK, int LWORK, int &INFO) {
     LAPACK_zungqr(&M, &N, &K, A, &LDA, TAU, WORK, &LWORK, &INFO);
   }
 
+  void getrf(int M, int N, float *A, int LDA, int *ipiv, int &info) { LAPACK_sgetrf(&M, &N, A, &LDA, ipiv, &info); }
+  void getrf(int M, int N, std::complex<float> *A, int LDA, int *ipiv, int &info) { LAPACK_cgetrf(&M, &N, A, &LDA, ipiv, &info); }
   void getrf(int M, int N, double *A, int LDA, int *ipiv, int &info) { LAPACK_dgetrf(&M, &N, A, &LDA, ipiv, &info); }
   void getrf(int M, int N, std::complex<double> *A, int LDA, int *ipiv, int &info) { LAPACK_zgetrf(&M, &N, A, &LDA, ipiv, &info); }
 
+  void getri(int N, float *A, int LDA, int const *ipiv, float *work, int lwork, int &info) { LAPACK_sgetri(&N, A, &LDA, ipiv, work, &lwork, &info); }
+  void getri(int N, std::complex<float> *A, int LDA, int const *ipiv, std::complex<float> *work, int lwork, int &info) {
+    LAPACK_cgetri(&N, A, &LDA, ipiv, work, &lwork, &info);
+  }
   void getri(int N, double *A, int LDA, int const *ipiv, double *work, int lwork, int &info) {
     LAPACK_dgetri(&N, A, &LDA, ipiv, work, &lwork, &info);
   }
@@ -68,10 +87,16 @@ namespace nda::lapack::f77 {
 
   void stev(char J, int N, double *D, double *E, double *Z, int ldz, double *work, int &info) { LAPACK_dstev(&J, &N, D, E, Z, &ldz, work, &info); }
 
+  void syev(char JOBZ, char UPLO, int N, float *A, int LDA, float *W, float *work, int lwork, int &info) {
+    LAPACK_ssyev(&JOBZ, &UPLO, &N, A, &LDA, W, work, &lwork, &info);
+  }
   void syev(char JOBZ, char UPLO, int N, double *A, int LDA, double *W, double *work, int lwork, int &info) {
     LAPACK_dsyev(&JOBZ, &UPLO, &N, A, &LDA, W, work, &lwork, &info);
   }
 
+  void heev(char JOBZ, char UPLO, int N, std::complex<float> *A, int LDA, float *W, std::complex<float> *work, int lwork, float *rwork, int &info) {
+    LAPACK_cheev(&JOBZ, &UPLO, &N, A, &LDA, W, work, &lwork, rwork, &info);
+  }
   void heev(char JOBZ, char UPLO, int N, std::complex<double> *A, int LDA, double *W, std::complex<double> *work, int lwork, double *rwork,
             int &info) {
     LAPACK_zheev(&JOBZ, &UPLO, &N, A, &LDA, W, work, &lwork, rwork, &info);

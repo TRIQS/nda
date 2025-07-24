@@ -87,7 +87,7 @@ namespace nda::lapack {
     using value_type = get_value_t<A>;
     value_type tmp_lwork{};
     int info = 0;
-    array<double, 1> rwork(2 * n);
+    array<get_fp_t<value_type>, 1> rwork(2 * n);
     lapack::f77::geqp3(m, n, a.data(), get_ld(a), jpvt.data(), tau.data(), &tmp_lwork, -1, rwork.data(), info);
     int lwork = static_cast<int>(std::ceil(std::real(tmp_lwork)));
 

@@ -28,25 +28,26 @@ auto exp_dotc(auto const &a, auto const &b) {
   return res;
 }
 
-TEST(NDA, LinearAlgebraDotProduct) {
+template <typename T>
+void test_dotproduct() {
   // scalars
-  std::complex<double> u{1, 2};
-  std::complex<double> v{3, -4};
+  std::complex<T> u{1, 2};
+  std::complex<T> v{3, -4};
   EXPECT_EQ(nda::linalg::dot(1, 2), 2);
   EXPECT_EQ(nda::linalg::dotc(1, 2), 2);
-  EXPECT_DOUBLE_EQ(nda::linalg::dot(2, -5.0), -10.0);
-  EXPECT_DOUBLE_EQ(nda::linalg::dotc(2, -5.0), -10.0);
+  EXPECT_EQ(nda::linalg::dot(2, -5.0), -10.0);
+  EXPECT_EQ(nda::linalg::dotc(2, -5.0), -10.0);
   EXPECT_COMPLEX_NEAR(nda::linalg::dot(u, v), u * v);
   EXPECT_COMPLEX_NEAR(nda::linalg::dotc(u, v), std::conj(u) * v);
 
   // BLAS compatible vectors
-  nda::vector<double> a{1, 2, 3, 4, 5};
-  nda::vector<double> b{10, 20, 30, 40, 50};
-  EXPECT_DOUBLE_EQ(nda::linalg::dot(a, b), nda::blas::dot(a, b));
+  nda::vector<T> a{1, 2, 3, 4, 5};
+  nda::vector<T> b{10, 20, 30, 40, 50};
+  EXPECT_EQ(nda::linalg::dot(a, b), nda::blas::dot(a, b));
   EXPECT_COMPLEX_NEAR(nda::linalg::dotc(a, b), nda::blas::dotc(a, b));
 
-  nda::vector<std::complex<double>> c = a * (1.1 - 2.1i);
-  nda::vector<std::complex<double>> d = b * (3 + 4i);
+  nda::vector<std::complex<T>> c = a * (1.1 - 2.1i);
+  nda::vector<std::complex<T>> d = b * (3 + 4i);
   EXPECT_COMPLEX_NEAR(nda::linalg::dot(c, d), exp_dot(c, d));
   EXPECT_COMPLEX_NEAR(nda::linalg::dotc(c, d), exp_dotc(c, d));
 
@@ -56,12 +57,12 @@ TEST(NDA, LinearAlgebraDotProduct) {
 
   nda::vector<int> e{1, 2, 3, 4, 5};
   EXPECT_EQ(nda::linalg::dot(e, e), exp_dot(e, e));
-  EXPECT_DOUBLE_EQ(nda::linalg::dot(e, b), exp_dot(e, b));
+  EXPECT_EQ(nda::linalg::dot(e, b), exp_dot(e, b));
   EXPECT_COMPLEX_NEAR(nda::linalg::dotc(e, b), exp_dotc(e, b));
 
   // lazy expressions
   auto sin_a = nda::make_regular(nda::sin(a));
-  EXPECT_DOUBLE_EQ(nda::linalg::dot(nda::sin(a), b), exp_dot(sin_a, b));
+  EXPECT_EQ(nda::linalg::dot(nda::sin(a), b), exp_dot(sin_a, b));
   EXPECT_COMPLEX_NEAR(nda::linalg::dotc(nda::sin(a), b), exp_dotc(sin_a, b));
 
   // (strided) vector views
@@ -69,6 +70,11 @@ TEST(NDA, LinearAlgebraDotProduct) {
   auto d_v = d(nda::range(1, 4));
   EXPECT_COMPLEX_NEAR(nda::linalg::dot(c_v, d_v), exp_dot(c_v, d_v));
   EXPECT_COMPLEX_NEAR(nda::linalg::dotc(c_v, d_v), exp_dotc(c_v, d_v));
+}
+
+TEST(NDA, LinearAlgebraDotProduct) {
+  test_dotproduct<float>();
+  test_dotproduct<double>();
 }
 
 // Test the generic matvecmul function.
@@ -117,9 +123,7 @@ constexpr auto test_matvecmul_layouts = []() {
   test_matvecmul<T, nda::F_layout>();
 };
 
-TEST(NDA, LinearAlgebraMatvecmulGenericGemvBranch) {
-  test_matvecmul_layouts<long>();
-}
+TEST(NDA, LinearAlgebraMatvecmulGenericGemvBranch) { test_matvecmul_layouts<long>(); }
 
 TEST(NDA, LinearAlgebraMatvecmulBLASBranch) {
   test_matvecmul_layouts<float>();
@@ -128,23 +132,29 @@ TEST(NDA, LinearAlgebraMatvecmulBLASBranch) {
   test_matvecmul_layouts<std::complex<double>>();
 }
 
-TEST(NDA, LinearAlgebraMatvecmulPromotion) {
+template <typename T>
+void test_matvecmul_promotion() {
   auto A_i = nda::matrix<int>{{1, 2}, {3, 4}};
-  auto A_d = nda::matrix<double>{{1, 2}, {3, 4}};
+  auto A_d = nda::matrix<T>{{1, 2}, {3, 4}};
   auto w_i = nda::vector<int>{1, 1};
-  auto w_d = nda::vector<double>{1, 1};
+  auto w_d = nda::vector<T>{1, 1};
 
   auto v_d1 = nda::linalg::matvecmul(A_d, w_i);
-  static_assert(std::same_as<nda::get_value_t<decltype(v_d1)>, double>);
-  EXPECT_ARRAY_NEAR(v_d1, (nda::vector<double>{3, 7}), 1.e-13);
+  static_assert(std::same_as<nda::get_value_t<decltype(v_d1)>, T>);
+  EXPECT_ARRAY_NEAR(v_d1, (nda::vector<T>{3, 7}), std::numeric_limits<T>::epsilon());
 
   auto v_d2 = nda::linalg::matvecmul(A_i, w_d);
-  static_assert(std::same_as<nda::get_value_t<decltype(v_d2)>, double>);
-  EXPECT_ARRAY_NEAR(v_d2, (nda::vector<double>{3, 7}), 1.e-13);
+  static_assert(std::same_as<nda::get_value_t<decltype(v_d2)>, T>);
+  EXPECT_ARRAY_NEAR(v_d2, (nda::vector<T>{3, 7}), std::numeric_limits<T>::epsilon());
 
   auto v_i = nda::linalg::matvecmul(A_i, w_i);
   static_assert(std::same_as<nda::get_value_t<decltype(v_i)>, int>);
   EXPECT_ARRAY_EQ(v_i, (nda::vector<int>{3, 7}));
+}
+
+TEST(NDA, LinearAlgebraMatvecmulPromotion) {
+  test_matvecmul_promotion<float>();
+  test_matvecmul_promotion<double>();
 }
 
 TEST(NDA, LinearAlgebraMatvecmulWithLazyExpressions) {
@@ -205,21 +215,27 @@ TEST(NDA, LinearAlgebraMatmulBLASBranch) {
   test_matmul_layouts<std::complex<double>>();
 }
 
-TEST(NDA, LinearAlgebraMatumulPromoteValueType) {
+template <typename T>
+void test_matmul_promotion() {
   auto A_i = nda::matrix<int>{{1, 2}, {3, 4}};
-  auto A_d = nda::matrix<double>{{1, 2}, {3, 4}};
+  auto A_d = nda::matrix<T>{{1, 2}, {3, 4}};
 
   auto B_d1 = nda::linalg::matmul(A_d, A_i);
-  static_assert(std::same_as<nda::get_value_t<decltype(B_d1)>, double>);
-  EXPECT_ARRAY_NEAR(B_d1, (nda::matrix<double>{{7, 10}, {15, 22}}), 1.e-13);
+  static_assert(std::same_as<nda::get_value_t<decltype(B_d1)>, T>);
+  EXPECT_ARRAY_NEAR(B_d1, (nda::matrix<T>{{7, 10}, {15, 22}}), std::numeric_limits<T>::epsilon());
 
   auto B_d2 = nda::linalg::matmul(A_d, A_d);
-  static_assert(std::same_as<nda::get_value_t<decltype(B_d2)>, double>);
-  EXPECT_ARRAY_NEAR(B_d2, (nda::matrix<double>{{7, 10}, {15, 22}}), 1.e-13);
+  static_assert(std::same_as<nda::get_value_t<decltype(B_d2)>, T>);
+  EXPECT_ARRAY_NEAR(B_d2, (nda::matrix<T>{{7, 10}, {15, 22}}), std::numeric_limits<T>::epsilon());
 
   auto B_i = nda::linalg::matmul(A_i, A_i);
   static_assert(std::same_as<nda::get_value_t<decltype(B_i)>, int>);
-  EXPECT_ARRAY_NEAR(B_i, (nda::matrix<int>{{7, 10}, {15, 22}}), 1.e-13);
+  EXPECT_ARRAY_NEAR(B_i, (nda::matrix<int>{{7, 10}, {15, 22}}), std::numeric_limits<T>::epsilon());
+}
+
+TEST(NDA, LinearAlgebraMatmulPromoteValueType) {
+  test_matmul_promotion<float>();
+  test_matmul_promotion<double>();
 }
 
 TEST(NDA, LinearAlgebraMatmulWithLazyExpressions) {
@@ -234,6 +250,8 @@ void test_inv_and_det() {
   using matrix_t = nda::matrix<T, Layout>;
   T fac          = 1.0;
   if constexpr (nda::is_complex_v<T>) fac = 1.0i;
+  // FIXME: eps_close is heuristically selected to pass without any proper error analysis
+  constexpr double eps_close = (std::is_same_v<T, float> || std::is_same_v<T, std::complex<float>>) ? 1.5e-4 : 1e-10;
 
   // A is 3x3, B is 2x2, C is 1x1
   auto A = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
@@ -255,27 +273,27 @@ void test_inv_and_det() {
   // lambda that checks inverse functions for small matrices
   auto check_small_mat = [](auto const &M, auto const &Minv, auto detM, auto opt_inv, auto opt_det) {
     auto Minv2 = nda::linalg::inv(M);
-    EXPECT_ARRAY_NEAR(Minv, Minv2);
-    EXPECT_COMPLEX_NEAR(nda::linalg::det(Minv2), 1.0 / detM);
+    EXPECT_ARRAY_NEAR(Minv, Minv2, eps_close);
+    EXPECT_COMPLEX_NEAR(nda::linalg::det(Minv2), 1.0 / detM, eps_close);
     Minv2 = nda::linalg::inv(Minv2);
-    EXPECT_ARRAY_NEAR(M, Minv2);
-    EXPECT_COMPLEX_NEAR(nda::linalg::det(Minv2), detM);
+    EXPECT_ARRAY_NEAR(M, Minv2, eps_close);
+    EXPECT_COMPLEX_NEAR(nda::linalg::det(Minv2), detM, eps_close);
 
     auto Minv3 = M;
     nda::linalg::inv_in_place(Minv3);
-    EXPECT_ARRAY_NEAR(Minv, Minv3);
-    EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Minv3), 1.0 / detM);
+    EXPECT_ARRAY_NEAR(Minv, Minv3, eps_close);
+    EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Minv3), 1.0 / detM, eps_close);
     nda::linalg::inv_in_place(Minv3);
-    EXPECT_ARRAY_NEAR(M, Minv3);
-    EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Minv3), detM);
+    EXPECT_ARRAY_NEAR(M, Minv3, eps_close);
+    EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Minv3), detM, eps_close);
 
     auto Minv4 = M;
     opt_inv(Minv4);
-    EXPECT_ARRAY_NEAR(Minv, Minv4);
-    EXPECT_COMPLEX_NEAR(opt_det(Minv4), 1.0 / detM);
+    EXPECT_ARRAY_NEAR(Minv, Minv4, eps_close);
+    EXPECT_COMPLEX_NEAR(opt_det(Minv4), 1.0 / detM, eps_close);
     opt_inv(Minv4);
-    EXPECT_ARRAY_NEAR(M, Minv4);
-    EXPECT_COMPLEX_NEAR(opt_det(Minv4), detM);
+    EXPECT_ARRAY_NEAR(M, Minv4, eps_close);
+    EXPECT_COMPLEX_NEAR(opt_det(Minv4), detM, eps_close);
   };
 
   check_small_mat(A, Ainv, detA, [](auto &M) { return nda::linalg::inv_in_place_3d(M); }, [](auto &M) { return nda::linalg::det_3d(M); });
@@ -294,21 +312,25 @@ void test_inv_and_det() {
   T detD = 16 * std::pow(fac, 4);
 
   auto Dinv2 = nda::linalg::inv(D);
-  EXPECT_ARRAY_NEAR(Dinv, Dinv2);
-  EXPECT_COMPLEX_NEAR(nda::linalg::det(Dinv2), 1.0 / detD);
+  EXPECT_ARRAY_NEAR(Dinv, Dinv2, eps_close);
+  EXPECT_COMPLEX_NEAR(nda::linalg::det(Dinv2), 1.0 / detD, eps_close);
   Dinv2 = nda::linalg::inv(Dinv2);
-  EXPECT_ARRAY_NEAR(D, Dinv2);
-  EXPECT_COMPLEX_NEAR(nda::linalg::det(Dinv2), detD);
+  EXPECT_ARRAY_NEAR(D, Dinv2, eps_close);
+  EXPECT_COMPLEX_NEAR(nda::linalg::det(Dinv2), detD, eps_close);
 
   auto Dinv3 = D;
   nda::linalg::inv_in_place(Dinv3);
-  EXPECT_ARRAY_NEAR(Dinv, Dinv3);
+  EXPECT_ARRAY_NEAR(Dinv, Dinv3, eps_close);
   nda::linalg::inv_in_place(Dinv3);
-  EXPECT_ARRAY_NEAR(D, Dinv3);
-  EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Dinv3), detD);
+  EXPECT_ARRAY_NEAR(D, Dinv3, eps_close);
+  EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Dinv3), detD, eps_close);
 }
 
 TEST(NDA, LinearAlgebraInvAndDet) {
+  test_inv_and_det<float, nda::C_layout>();
+  test_inv_and_det<float, nda::F_layout>();
+  test_inv_and_det<std::complex<float>, nda::C_layout>();
+  test_inv_and_det<std::complex<float>, nda::F_layout>();
   test_inv_and_det<double, nda::C_layout>();
   test_inv_and_det<double, nda::F_layout>();
   test_inv_and_det<std::complex<double>, nda::C_layout>();
@@ -317,17 +339,19 @@ TEST(NDA, LinearAlgebraInvAndDet) {
 
 // Check that the eigenvectors/values are correct.
 void check_eigen(auto const &A, auto const &V, auto const &l) {
-  for (auto i : nda::range(0, A.extent(0))) { EXPECT_ARRAY_NEAR(A * V(nda::range::all, i), l(i) * V(nda::range::all, i)); }
+  constexpr double eps_close = (std::is_same_v<nda::get_fp_t<decltype(A)>, float>) ? 1e-6 : 1e-10;
+  for (auto i : nda::range(0, A.extent(0))) { EXPECT_ARRAY_NEAR(A * V(nda::range::all, i), l(i) * V(nda::range::all, i), eps_close); }
 }
 
 void check_eigen(auto const &A, auto const &B, auto const &V, auto const &l, int itype = 1) {
+  constexpr double eps_close = (std::is_same_v<nda::get_fp_t<decltype(A)>, float>) ? 1e-6 : 1e-10;
   for (auto i : nda::range(0, A.extent(0))) {
     if (itype == 1) {
-      EXPECT_ARRAY_NEAR(A * V(nda::range::all, i), l(i) * B * V(nda::range::all, i));
+      EXPECT_ARRAY_NEAR(A * V(nda::range::all, i), l(i) * B * V(nda::range::all, i), eps_close);
     } else if (itype == 2) {
-      EXPECT_ARRAY_NEAR(A * B * V(nda::range::all, i), l(i) * V(nda::range::all, i));
+      EXPECT_ARRAY_NEAR(A * B * V(nda::range::all, i), l(i) * V(nda::range::all, i), eps_close);
     } else {
-      EXPECT_ARRAY_NEAR(B * A * V(nda::range::all, i), l(i) * V(nda::range::all, i));
+      EXPECT_ARRAY_NEAR(B * A * V(nda::range::all, i), l(i) * V(nda::range::all, i), eps_close);
     }
   }
 }
@@ -358,6 +382,7 @@ auto syhe_matrix(int n, double a = 1e-6, double b = 1.0) {
 // Test the eigh and eigvalsh functions.
 template <typename T>
 void test_eigh_eigvalsh() {
+  constexpr double eps_close = (std::is_same_v<T, float> || std::is_same_v<T, std::complex<float>>) ? 1.5e-5 : 1e-10;
   for (auto i : nda::range(1, 6)) {
     auto A = syhe_matrix<T>(i, -1, 1);
 
@@ -369,32 +394,36 @@ void test_eigh_eigvalsh() {
     auto V2 = A;
     auto w2 = nda::linalg::eigh_in_place(V2);
     check_eigen(A, V2, w2);
-    EXPECT_ARRAY_NEAR(V1, V2);
-    EXPECT_ARRAY_NEAR(w1, w2);
+    // Eigenvectors are only the same up to a sign, so some columns in V1 are minus that in V2
+    // checking the absolute values should be sufficient in any non-trivial case
+    EXPECT_ARRAY_NEAR(nda::abs(V1), nda::abs(V2), eps_close);
+    EXPECT_ARRAY_NEAR(w1, w2, eps_close);
 
     // use eigvalsh to compute eigenvalues only
     auto w3 = nda::linalg::eigvalsh(A);
-    EXPECT_ARRAY_NEAR(w1, w3);
+    EXPECT_ARRAY_NEAR(w1, w3, eps_close);
 
     // use eigvalsh_in_place to compute eigenvalues only
     auto A4 = A;
     auto w4 = nda::linalg::eigvalsh_in_place(A4);
-    EXPECT_ARRAY_NEAR(w1, w4);
+    EXPECT_ARRAY_NEAR(w1, w4, eps_close);
 
     // use eigh with a C-layout matrix
     auto A5       = nda::matrix<T, nda::C_layout>{A};
     auto [w5, V5] = nda::linalg::eigh(A5);
     check_eigen(A5, V5, w5);
-    EXPECT_ARRAY_NEAR(V1, V5);
-    EXPECT_ARRAY_NEAR(w1, w5);
+    EXPECT_ARRAY_NEAR(V1, V5, eps_close);
+    EXPECT_ARRAY_NEAR(w1, w5, eps_close);
 
     // use eigvalsh with a C-layout matrix
     auto w6 = nda::linalg::eigvalsh(A5);
-    EXPECT_ARRAY_NEAR(w1, w6);
+    EXPECT_ARRAY_NEAR(w1, w6, eps_close);
   }
 }
 
 TEST(NDA, LinearAlgebraEighAndEigvalsh) {
+  test_eigh_eigvalsh<float>();
+  test_eigh_eigvalsh<std::complex<float>>();
   test_eigh_eigvalsh<double>();
   test_eigh_eigvalsh<std::complex<double>>();
 }
@@ -511,7 +540,7 @@ TEST(NDA, LinearAlgebraNormExample) {
   auto v = nda::array<double, 1>{-0.5, 0.0, 1.0, 2.5};
   run_checks(v);
   run_checks(1i * v);
-  run_checks((1 + 1i) / sqrt(2) * v);
+  run_checks((1 + 1i) / std::numbers::sqrt2 * v);
   EXPECT_EQ(nda::linalg::norm(v, std::numeric_limits<double>::infinity()), 2.5);
   EXPECT_EQ(nda::linalg::norm(v, -std::numeric_limits<double>::infinity()), 0.0);
 }

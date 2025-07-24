@@ -47,7 +47,7 @@ namespace nda::linalg {
     requires(get_algebra<M> == 'M' and nda::mem::have_host_compatible_addr_space<M> and is_blas_lapack_v<get_value_t<M>>)
   void inv_in_place_1d(M &&m) { // NOLINT (temporary views are allowed here)
     EXPECTS(is_matrix_square(m) and m.extent(0) == 1);
-    if (m(0, 0) == 0.0) NDA_RUNTIME_ERROR << "Error in nda::linalg::inv_in_place_1d: Matrix is not invertible";
+    if (m(0, 0) == get_value_t<M>{0.0}) NDA_RUNTIME_ERROR << "Error in nda::linalg::inv_in_place_1d: Matrix is not invertible";
     m(0, 0) = 1.0 / m(0, 0);
   }
 
@@ -68,7 +68,7 @@ namespace nda::linalg {
 
     // calculate the determinant of the matrix
     auto const det = (m(0, 0) * m(1, 1) - m(0, 1) * m(1, 0));
-    if (det == 0.0) NDA_RUNTIME_ERROR << "Error in nda::linalg::inv_in_place_2d: Matrix is not invertible";
+    if (det == get_value_t<M>{0.0}) NDA_RUNTIME_ERROR << "Error in nda::linalg::inv_in_place_2d: Matrix is not invertible";
     auto const detinv = 1.0 / det;
 
     // multiply the adjoint by the inverse determinant
@@ -107,7 +107,7 @@ namespace nda::linalg {
 
     // calculate the determinant of the matrix
     auto const det = m(0, 0) * b00 + m(0, 1) * b10 + m(0, 2) * b20;
-    if (det == 0.0) NDA_RUNTIME_ERROR << "Error in nda::linalg::inv_in_place_3d: Matrix is not invertible";
+    if (det == get_value_t<M>{0.0}) NDA_RUNTIME_ERROR << "Error in nda::linalg::inv_in_place_3d: Matrix is not invertible";
     auto const detinv = 1.0 / det;
 
     // multiply the cofactors by the inverse determinant

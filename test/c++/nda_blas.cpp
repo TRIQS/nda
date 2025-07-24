@@ -259,6 +259,10 @@ void test_ger(auto ger) {
 
 TEST(NDA, BLASGer) {
   auto ger = [](auto alpha, auto &&x, auto &&y, auto &&m) { return nda::blas::ger(alpha, x, y, m); };
+  test_ger<float, nda::C_layout, false>(ger);
+  test_ger<float, nda::F_layout, false>(ger);
+  test_ger<std::complex<float>, nda::C_layout, false>(ger);
+  test_ger<std::complex<float>, nda::F_layout, false>(ger);
   test_ger<double, nda::C_layout, false>(ger);
   test_ger<double, nda::F_layout, false>(ger);
   test_ger<std::complex<double>, nda::C_layout, false>(ger);
@@ -267,6 +271,8 @@ TEST(NDA, BLASGer) {
 
 TEST(NDA, BLASGerc) {
   auto gerc = [](auto alpha, auto &&x, auto &&y, auto &&m) { return nda::blas::gerc(alpha, x, y, m); };
+  test_ger<float, nda::F_layout, true>(gerc);
+  test_ger<std::complex<float>, nda::F_layout, true>(gerc);
   test_ger<double, nda::F_layout, true>(gerc);
   test_ger<std::complex<double>, nda::F_layout, true>(gerc);
 }
@@ -327,6 +333,40 @@ TEST(NDA, BLASScalEmptyVector) {
   EXPECT_TRUE(v.empty());
 }
 
+TEST(NDA, BLASScalFloat) {
+  nda::vector<float> v{1, 2, 3, 4, 5};
+
+  // scale by a float
+  auto v1 = v;
+  auto xd = 3.0f;
+  nda::blas::scal(xd, v1);
+  EXPECT_ARRAY_NEAR(v1, xd * v);
+
+  // scale by an integer
+  auto v2 = v;
+  // int32/auto is fine, but int16 avoids type narrowing
+  int16_t xi = 3;
+  nda::blas::scal(xi, v2);
+  EXPECT_ARRAY_NEAR(v2, xi * v);
+}
+
+TEST(NDA, BLASScalSComplex) {
+  nda::vector<std::complex<float>> v{1, 2, 3, 4, 5};
+  v *= 1 - 1i;
+
+  // scale by a float
+  auto v1 = v;
+  auto xd = 3.0f;
+  nda::blas::scal(xd, v1);
+  EXPECT_ARRAY_NEAR(v1, xd * v);
+
+  // scale by a complex float
+  auto v2 = v;
+  auto xc = 3.0f + 2.0if;
+  nda::blas::scal(xc, v2);
+  EXPECT_ARRAY_NEAR(v2, xc * v);
+}
+
 TEST(NDA, BLASScalDouble) {
   nda::vector<double> v{1, 2, 3, 4, 5};
 
@@ -343,7 +383,7 @@ TEST(NDA, BLASScalDouble) {
   EXPECT_ARRAY_NEAR(v2, xi * v);
 }
 
-TEST(NDA, BLASScalComplex) {
+TEST(NDA, BLASScalDComplex) {
   nda::vector<std::complex<double>> v{1, 2, 3, 4, 5};
   v *= 1 - 1i;
 

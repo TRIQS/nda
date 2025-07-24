@@ -46,7 +46,7 @@ namespace nda::lapack {
    * @return Integer return code from the LAPACK call.
    */
   template <MemoryMatrix A, MemoryVector W>
-    requires(mem::have_host_compatible_addr_space<A> and std::same_as<std::complex<double>, get_value_t<A>> and std::same_as<double, get_value_t<W>>)
+    requires(mem::have_host_compatible_addr_space<A> and is_complex_v<get_value_t<A>> and std::same_as<get_fp_t<A>, get_value_t<W>>)
   int heev(A &&a, W &&w, char jobz = 'V') { // NOLINT (temporary views are allowed here)
     static_assert(has_F_layout<A>, "Error in nda::lapack::heev: A must have Fortran layout");
 
@@ -63,14 +63,15 @@ namespace nda::lapack {
     EXPECTS(jobz == 'V' or jobz == 'N');
 
     // first call to get the optimal buffer size
-    array<double, 1> rwork(std::max(1l, 3 * n - 2));
-    std::complex<double> tmp_lwork{};
+    using fp_type = get_value_t<W>;
+    array<fp_type, 1> rwork(std::max(1l, 3 * n - 2));
+    std::complex<fp_type> tmp_lwork{};
     int info = 0;
     lapack::f77::heev(jobz, 'U', n, a.data(), get_ld(a), w.data(), &tmp_lwork, -1, rwork.data(), info);
     int lwork = static_cast<int>(std::ceil(std::real(tmp_lwork)));
 
     // allocate work buffer and perform actual library call
-    array<std::complex<double>, 1> work(lwork);
+    array<std::complex<fp_type>, 1> work(lwork);
     lapack::f77::heev(jobz, 'U', n, a.data(), get_ld(a), w.data(), work.data(), lwork, rwork.data(), info);
 
     return info;
