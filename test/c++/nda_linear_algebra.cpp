@@ -317,14 +317,16 @@ void test_inv_and_det() {
   EXPECT_COMPLEX_NEAR(nda::linalg::det(Dinv2), 1.0 / detD, eps_close);
   Dinv2 = nda::linalg::inv(Dinv2);
   EXPECT_ARRAY_NEAR(D, Dinv2, eps_close);
-  EXPECT_COMPLEX_NEAR(nda::linalg::det(Dinv2), detD, eps_close);
+  // This checks absolute error, but 16 is fairly 'large' in fp32, so scale down to relative error
+  EXPECT_COMPLEX_NEAR(nda::linalg::det(Dinv2) / fp_t(16), detD / fp_t(16), eps_close);
 
   auto Dinv3 = D;
   nda::linalg::inv_in_place(Dinv3);
   EXPECT_ARRAY_NEAR(Dinv, Dinv3, eps_close);
   nda::linalg::inv_in_place(Dinv3);
   EXPECT_ARRAY_NEAR(D, Dinv3, eps_close);
-  EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Dinv3), detD, eps_close);
+  // This checks absolute error, but 16 is fairly 'large' in fp32, so scale down to relative error
+  EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Dinv3) / fp_t{16}, detD / fp_t{16}, eps_close);
 }
 
 TEST(NDA, LinearAlgebraInvAndDet) {
