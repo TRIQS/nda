@@ -43,16 +43,28 @@ namespace nda::blas::f77 {
   void gemm(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex *A, int LDA, const dcomplex *B, int LDB, dcomplex beta,
             dcomplex *C, int LDC);
 
+  void gemm_batch(char op_a, char op_b, int M, int N, int K, float alpha, const float **A, int LDA, const float **B, int LDB, float beta, float **C,
+                  int LDC, int batch_count);
+  void gemm_batch(char op_a, char op_b, int M, int N, int K, scomplex alpha, const scomplex **A, int LDA, const scomplex **B, int LDB, scomplex beta,
+                  scomplex **C, int LDC, int batch_count);
   void gemm_batch(char op_a, char op_b, int M, int N, int K, double alpha, const double **A, int LDA, const double **B, int LDB, double beta,
                   double **C, int LDC, int batch_count);
   void gemm_batch(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex **A, int LDA, const dcomplex **B, int LDB, dcomplex beta,
                   dcomplex **C, int LDC, int batch_count);
 
+  void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, float alpha, const float **A, int *LDA, const float **B, int *LDB, float beta,
+                   float **C, int *LDC, int batch_count);
+  void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, scomplex alpha, const scomplex **A, int *LDA, const scomplex **B, int *LDB,
+                   scomplex beta, scomplex **C, int *LDC, int batch_count);
   void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, double alpha, const double **A, int *LDA, const double **B, int *LDB, double beta,
                    double **C, int *LDC, int batch_count);
   void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, dcomplex alpha, const dcomplex **A, int *LDA, const dcomplex **B, int *LDB,
                    dcomplex beta, dcomplex **C, int *LDC, int batch_count);
 
+  void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, float alpha, const float *A, int LDA, int strideA, const float *B, int LDB,
+                          int strideB, float beta, float *C, int LDC, int strideC, int batch_count);
+  void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, scomplex alpha, const scomplex *A, int LDA, int strideA, const scomplex *B,
+                          int LDB, int srideB, scomplex beta, scomplex *C, int LDC, int strideC, int batch_count);
   void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, int strideA, const double *B, int LDB,
                           int strideB, double beta, double *C, int LDC, int strideC, int batch_count);
   void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex *A, int LDA, int strideA, const dcomplex *B,

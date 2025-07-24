@@ -26,6 +26,10 @@ namespace nda::blas {
 #ifdef NDA_USE_MKL_RT
   static int const mkl_interface_layer = mkl_set_interface_layer(MKL_INTERFACE_LP64 + MKL_INTERFACE_GNU);
 #endif
+  inline auto *mklcplx(nda::scomplex *c) { return reinterpret_cast<MKL_Complex8 *>(c); }                // NOLINT
+  inline auto *mklcplx(nda::scomplex const *c) { return reinterpret_cast<const MKL_Complex8 *>(c); }    // NOLINT
+  inline auto *mklcplx(nda::scomplex **c) { return reinterpret_cast<MKL_Complex8 **>(c); }              // NOLINT
+  inline auto *mklcplx(nda::scomplex const **c) { return reinterpret_cast<const MKL_Complex8 **>(c); }  // NOLINT
   inline auto *mklcplx(nda::dcomplex *c) { return reinterpret_cast<MKL_Complex16 *>(c); }               // NOLINT
   inline auto *mklcplx(nda::dcomplex const *c) { return reinterpret_cast<const MKL_Complex16 *>(c); }   // NOLINT
   inline auto *mklcplx(nda::dcomplex **c) { return reinterpret_cast<MKL_Complex16 **>(c); }             // NOLINT
@@ -94,8 +98,8 @@ namespace nda::blas::f77 {
   float dot(int M, const float *x, int incx, const float *Y, int incy) { return F77_sdot(&M, x, &incx, Y, &incy); }
   scomplex dot(int M, const scomplex *x, int incx, const scomplex *Y, int incy) {
 #ifdef NDA_USE_MKL
-    MKL_Complex16 result;
-    cblas_zdotu_sub(M, mklcplx(x), incx, mklcplx(Y), incy, &result);
+    MKL_Complex8 result;
+    cblas_cdotu_sub(M, mklcplx(x), incx, mklcplx(Y), incy, &result);
 #else
     auto result = F77_cdotu(&M, blacplx(x), &incx, blacplx(Y), &incy);
 #endif
@@ -103,8 +107,8 @@ namespace nda::blas::f77 {
   }
   scomplex dotc(int M, const scomplex *x, int incx, const scomplex *Y, int incy) {
 #ifdef NDA_USE_MKL
-    MKL_Complex16 result;
-    cblas_zdotc_sub(M, mklcplx(x), incx, mklcplx(Y), incy, &result);
+    MKL_Complex8 result;
+    cblas_cdotc_sub(M, mklcplx(x), incx, mklcplx(Y), incy, &result);
 #else
     auto result = F77_cdotc(&M, blacplx(x), &incx, blacplx(Y), &incy);
 #endif
@@ -146,6 +150,25 @@ namespace nda::blas::f77 {
     F77_zgemm(&op_a, &op_b, &M, &N, &K, blacplx(&alpha), blacplx(A), &LDA, blacplx(B), &LDB, blacplx(&beta), blacplx(C), &LDC);
   }
 
+  void gemm_batch(char op_a, char op_b, int M, int N, int K, float alpha, const float **A, int LDA, const float **B, int LDB, float beta, float **C,
+                  int LDC, int batch_count) {
+#ifdef NDA_USE_MKL
+    const int group_count = 1;
+    sgemm_batch(&op_a, &op_b, &M, &N, &K, &alpha, A, &LDA, B, &LDB, &beta, C, &LDC, &group_count, &batch_count);
+#else // Fallback to loop
+    for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, M, N, K, alpha, A[i], LDA, B[i], LDB, beta, C[i], LDC);
+#endif
+  }
+  void gemm_batch(char op_a, char op_b, int M, int N, int K, scomplex alpha, const scomplex **A, int LDA, const scomplex **B, int LDB, scomplex beta,
+                  scomplex **C, int LDC, int batch_count) {
+#ifdef NDA_USE_MKL
+    const int group_count = 1;
+    cgemm_batch(&op_a, &op_b, &M, &N, &K, mklcplx(&alpha), mklcplx(A), &LDA, mklcplx(B), &LDB, mklcplx(&beta), mklcplx(C), &LDC, &group_count,
+                &batch_count);
+#else
+    for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, M, N, K, alpha, A[i], LDA, B[i], LDB, beta, C[i], LDC);
+#endif
+  }
   void gemm_batch(char op_a, char op_b, int M, int N, int K, double alpha, const double **A, int LDA, const double **B, int LDB, double beta,
                   double **C, int LDC, int batch_count) {
 #ifdef NDA_USE_MKL
@@ -166,6 +189,29 @@ namespace nda::blas::f77 {
 #endif
   }
 
+  void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, float alpha, const float **A, int *LDA, const float **B, int *LDB, float beta,
+                   float **C, int *LDC, int batch_count) {
+#ifdef NDA_USE_MKL
+    nda::vector<int> group_size(batch_count, 1);
+    nda::vector<char> ops_a(batch_count, op_a), ops_b(batch_count, op_b);
+    nda::vector<float> alphas(batch_count, alpha), betas(batch_count, beta);
+    sgemm_batch(ops_a.data(), ops_b.data(), M, N, K, alphas.data(), A, LDA, B, LDB, betas.data(), C, LDC, &batch_count, group_size.data());
+#else
+    for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, M[i], N[i], K[i], alpha, A[i], LDA[i], B[i], LDB[i], beta, C[i], LDC[i]);
+#endif
+  }
+  void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, scomplex alpha, const scomplex **A, int *LDA, const scomplex **B, int *LDB,
+                   scomplex beta, scomplex **C, int *LDC, int batch_count) {
+#ifdef NDA_USE_MKL
+    nda::vector<int> group_size(batch_count, 1);
+    nda::vector<char> ops_a(batch_count, op_a), ops_b(batch_count, op_b);
+    nda::vector<scomplex> alphas(batch_count, alpha), betas(batch_count, beta);
+    cgemm_batch(ops_a.data(), ops_b.data(), M, N, K, mklcplx(alphas.data()), mklcplx(A), LDA, mklcplx(B), LDB, mklcplx(betas.data()), mklcplx(C), LDC,
+                &batch_count, group_size.data());
+#else
+    for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, M[i], N[i], K[i], alpha, A[i], LDA[i], B[i], LDB[i], beta, C[i], LDC[i]);
+#endif
+  }
   void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, double alpha, const double **A, int *LDA, const double **B, int *LDB, double beta,
                    double **C, int *LDC, int batch_count) {
 #ifdef NDA_USE_MKL
@@ -190,6 +236,27 @@ namespace nda::blas::f77 {
 #endif
   }
 
+  void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, float alpha, const float *A, int LDA, int strideA, const float *B, int LDB,
+                          int strideB, float beta, float *C, int LDC, int strideC, int batch_count) {
+#if defined(NDA_USE_MKL) && INTEL_MKL_VERSION >= 20200002
+    sgemm_batch_strided(&op_a, &op_b, &M, &N, &K, &alpha, A, &LDA, &strideA, B, &LDB, &strideB, &beta, C, &LDC, &strideC, &batch_count);
+#else
+    for (int i = 0; i < batch_count; ++i)
+      gemm(op_a, op_b, M, N, K, alpha, A + static_cast<ptrdiff_t>(i * strideA), LDA, B + static_cast<ptrdiff_t>(i * strideB), LDB, beta,
+           C + static_cast<ptrdiff_t>(i * strideC), LDC);
+#endif
+  }
+  void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, scomplex alpha, const scomplex *A, int LDA, int strideA, const scomplex *B,
+                          int LDB, int strideB, scomplex beta, scomplex *C, int LDC, int strideC, int batch_count) {
+#if defined(NDA_USE_MKL) && INTEL_MKL_VERSION >= 20200002
+    cgemm_batch_strided(&op_a, &op_b, &M, &N, &K, mklcplx(&alpha), mklcplx(A), &LDA, &strideA, mklcplx(B), &LDB, &strideB, mklcplx(&beta), mklcplx(C),
+                        &LDC, &strideC, &batch_count);
+#else
+    for (int i = 0; i < batch_count; ++i)
+      gemm(op_a, op_b, M, N, K, alpha, A + static_cast<ptrdiff_t>(i * strideA), LDA, B + static_cast<ptrdiff_t>(i * strideB), LDB, beta,
+           C + static_cast<ptrdiff_t>(i * strideC), LDC);
+#endif
+  }
   void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, int strideA, const double *B, int LDB,
                           int strideB, double beta, double *C, int LDC, int strideC, int batch_count) {
 #if defined(NDA_USE_MKL) && INTEL_MKL_VERSION >= 20200002
