@@ -14,5 +14,7 @@ var operation_8hpp =
     [ "nda::clef::operator<=", "group__clef__expr.html#ga5af378cfd5d3f34411101a83b668f0c8", null ],
     [ "nda::clef::operator==", "group__clef__expr.html#ga07313b520a15a86f38ebabae92e7c411", null ],
     [ "nda::clef::operator>", "group__clef__expr.html#gaced317a8a945e05c284a6df8942b885f", null ],
-    [ "nda::clef::operator>=", "group__clef__expr.html#gad3b83d9a4f0444dc5d21eaca7325f652", null ]
+    [ "nda::clef::operator>=", "group__clef__expr.html#gad3b83d9a4f0444dc5d21eaca7325f652", null ],
+    [ "nda::clef::supports_partial_eval_of_calls", "group__clef__expr.html#ga54cff013308c52ef248c8273d57398d0", null ],
+    [ "nda::clef::supports_partial_eval_of_subscript", "group__clef__expr.html#gaa370356f4235ec12375274b96851637f", null ]
 ];

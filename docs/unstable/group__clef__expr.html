@@ -369,6 +369,15 @@ template&lt;typename... A&gt; <br />
 requires (<a class="el" href="group__clef__utils.html#gaf4a34ec80a1f0d50945e918807a6f318">nda::clef::is_any_lazy</a>&lt;A...&gt;)</td></tr>
 <tr class="memitem:gac3b1f4196f2f191626a620ba86e48ce4 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><b>nda::clef::tanh</b> (A &amp;&amp;...__a)</td></tr>
 <tr class="memdesc:gac3b1f4196f2f191626a620ba86e48ce4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lazy version of std::tanh. <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga54cff013308c52ef248c8273d57398d0" id="r_ga54cff013308c52ef248c8273d57398d0"><td class="memTemplParams" colspan="2">template&lt;typename F&gt; </td></tr>
+<tr class="memitem:ga54cff013308c52ef248c8273d57398d0 template"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga54cff013308c52ef248c8273d57398d0">nda::clef::supports_partial_eval_of_calls</a> = false</td></tr>
+<tr class="memdesc:ga54cff013308c52ef248c8273d57398d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Controls evaluation behavior of function nodes during partial expression evaluation.  <br /></td></tr>
+<tr class="memitem:gaa370356f4235ec12375274b96851637f" id="r_gaa370356f4235ec12375274b96851637f"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:gaa370356f4235ec12375274b96851637f template"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa370356f4235ec12375274b96851637f">nda::clef::supports_partial_eval_of_subscript</a> = false</td></tr>
+<tr class="memdesc:gaa370356f4235ec12375274b96851637f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Controls evaluation behavior of subscript operations during partial expression evaluation.  <br /></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
 <a id="ga28254ab9e301737f9547ca8d792bb2af" name="ga28254ab9e301737f9547ca8d792bb2af"></a>
@@ -418,7 +427,7 @@ template&lt;typename C, typename A, typename B&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="structnda_1_1clef_1_1expr.html" title="Single node of the expression tree.">nda::clef::expr</a> object with the nda::clef::tags::ternary tag and the given operands forwarded as its child nodes. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="operation_8hpp_source.html#l00211">211</a> of file <a class="el" href="operation_8hpp_source.html">operation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="operation_8hpp_source.html#l00237">237</a> of file <a class="el" href="operation_8hpp_source.html">operation.hpp</a>.</p>
 
 </div>
 </div>
@@ -684,7 +693,7 @@ template&lt;typename Tag, typename... Args&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Result of actually performing the operation on the operands. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="operation_8hpp_source.html#l00244">244</a> of file <a class="el" href="operation_8hpp_source.html">operation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="operation_8hpp_source.html#l00277">277</a> of file <a class="el" href="operation_8hpp_source.html">operation.hpp</a>.</p>
 
 </div>
 </div>
@@ -728,7 +737,7 @@ template&lt;typename Tag, typename... Args&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="structnda_1_1clef_1_1expr.html" title="Single node of the expression tree.">nda::clef::expr</a> for the given operation and operands. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="operation_8hpp_source.html#l00228">228</a> of file <a class="el" href="operation_8hpp_source.html">operation.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="operation_8hpp_source.html#l00255">255</a> of file <a class="el" href="operation_8hpp_source.html">operation.hpp</a>.</p>
 
 </div>
 </div>
@@ -845,6 +854,84 @@ template&lt;typename Expr, typename D0, typename D1, typename... Ds&gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>Either the result of the summation or a new lazy expression. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="sum_8hpp_source.html#l00098">98</a> of file <a class="el" href="sum_8hpp_source.html">sum.hpp</a>.</p>
+
+</div>
+</div>
+<a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
+<a id="ga54cff013308c52ef248c8273d57398d0" name="ga54cff013308c52ef248c8273d57398d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga54cff013308c52ef248c8273d57398d0">&#9670;&#160;</a></span>supports_partial_eval_of_calls</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename F&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool nda::clef::supports_partial_eval_of_calls = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="operation_8hpp.html">nda/clef/operation.hpp</a>&gt;</code></p>
+
+<p>Controls evaluation behavior of function nodes during partial expression evaluation. </p>
+<p>When partially evaluating an expression tree, function nodes have two evaluation modes:</p><ul>
+<li>false (default): Function is evaluated only if all arguments are non-lazy values. If any argument is lazy, the node is preserved with evaluated children but the function itself is NOT called.</li>
+<li>true: Function is ALWAYS called with all arguments (lazy or non-lazy). This requires the function to properly handle non-lazy arguments by moving them into new expression nodes using make_expr_call.</li>
+</ul>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">F</td><td>Function type to specialize for </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="operation_8hpp_source.html#l00042">42</a> of file <a class="el" href="operation_8hpp_source.html">operation.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gaa370356f4235ec12375274b96851637f" name="gaa370356f4235ec12375274b96851637f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa370356f4235ec12375274b96851637f">&#9670;&#160;</a></span>supports_partial_eval_of_subscript</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool nda::clef::supports_partial_eval_of_subscript = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="operation_8hpp.html">nda/clef/operation.hpp</a>&gt;</code></p>
+
+<p>Controls evaluation behavior of subscript operations during partial expression evaluation. </p>
+<p>Similar to supports_partial_eval_of_calls but specifically for the subscript operator[]. When true, the subscript operation will be called even with lazy arguments.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type to specialize subscript evaluation for </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="operation_8hpp_source.html#l00053">53</a> of file <a class="el" href="operation_8hpp_source.html">operation.hpp</a>.</p>
 
 </div>
 </div>
