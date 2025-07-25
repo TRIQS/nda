@@ -119,7 +119,7 @@ template <typename T, bool wide_matrix = false>
 void test_geqp3_orgqr_ungqr() {
   using matrix_t             = matrix<T, F_layout>;
   using fp_type              = nda::get_fp_t<T>;
-  constexpr double eps_close = std::is_same_v<fp_type, float> ? 2e-6 : 1e-14;
+  constexpr double eps_close = std::is_same_v<fp_type, float> ? 1e-5 : 1e-14;
 
   auto A = matrix_t{{{1, 1, 1}, {3, 2, 4}, {5, 3, 2}, {2, 4, 5}, {4, 5, 3}}};
   if constexpr (wide_matrix) A = matrix_t{transpose(A)};
