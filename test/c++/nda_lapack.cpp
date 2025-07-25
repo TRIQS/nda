@@ -12,7 +12,6 @@
 
 #include <algorithm>
 #include <complex>
-#include <numbers>
 #include <tuple>
 #include <type_traits>
 

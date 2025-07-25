@@ -200,20 +200,20 @@ void test_matmul() {
 }
 
 template <typename T>
-constexpr auto test_matmul_layouts = []() {
+constexpr auto test_matmul_all_layouts = []() {
   test_matmul<T, nda::C_layout, nda::C_layout>();
   test_matmul<T, nda::C_layout, nda::F_layout>();
   test_matmul<T, nda::F_layout, nda::F_layout>();
   test_matmul<T, nda::F_layout, nda::C_layout>();
 };
 
-TEST(NDA, LinearAlgebraMatmulGenericGemmBranch) { test_matmul_layouts<long>(); }
+TEST(NDA, LinearAlgebraMatmulGenericGemmBranch) { test_matmul_all_layouts<long>(); }
 
 TEST(NDA, LinearAlgebraMatmulBLASBranch) {
-  test_matmul_layouts<float>();
-  test_matmul_layouts<std::complex<float>>();
-  test_matmul_layouts<double>();
-  test_matmul_layouts<std::complex<double>>();
+  test_matmul_all_layouts<float>();
+  test_matmul_all_layouts<std::complex<float>>();
+  test_matmul_all_layouts<double>();
+  test_matmul_all_layouts<std::complex<double>>();
 }
 
 template <typename T>
@@ -278,6 +278,7 @@ void test_inv_and_det() {
     EXPECT_ARRAY_NEAR(Minv, Minv2, eps_close);
     EXPECT_COMPLEX_NEAR(nda::linalg::det(Minv2), 1.0 / detM, eps_close);
     Minv2 = nda::linalg::inv(Minv2);
+    static_assert(std::is_same_v<nda::get_value_t<decltype(Minv2)>, T>);
     EXPECT_ARRAY_NEAR(M, Minv2, eps_close);
     EXPECT_COMPLEX_NEAR(nda::linalg::det(Minv2), detM, eps_close);
 
@@ -314,6 +315,7 @@ void test_inv_and_det() {
   T detD = 16 * std::pow(fac, fp_t{4});
 
   auto Dinv2 = nda::linalg::inv(D);
+  static_assert(std::is_same_v<nda::get_value_t<decltype(Dinv2)>, T>);
   EXPECT_ARRAY_NEAR(Dinv, Dinv2, eps_close);
   EXPECT_COMPLEX_NEAR(nda::linalg::det(Dinv2), 1.0 / detD, eps_close);
   Dinv2 = nda::linalg::inv(Dinv2);
@@ -377,7 +379,8 @@ auto syhe_matrix(int n, double a = 1e-6, double b = 1.0) {
   }
 
   // diagonal matrix containing the eigenvalues
-  auto D = nda::eye<double>(n) * a + nda::diag(nda::vector<double>::rand(n)) * (b - a);
+  using fp_type = nda::get_fp_t<T>;
+  auto D        = nda::eye<fp_type>(n) * a + nda::diag(nda::vector<fp_type>::rand(n)) * (b - a);
 
   // return Q * D * Q^H (hermitian/symmetric)
   return matrix_t{Q * D * nda::dagger(Q)};
@@ -435,7 +438,7 @@ TEST(NDA, LinearAlgebraEighAndEigvalsh) {
 // Test the eigh and eigvalsh functions for generalized eigenvalue problems.
 template <typename T>
 void test_generalized_eigh_eigvalsh(int itype) {
-  constexpr double eps_close = (std::is_same_v<T, float> || std::is_same_v<T, std::complex<float>>) ? 1.5e-5 : 1e-10;
+  constexpr double eps_close = (std::is_same_v<T, float> || std::is_same_v<T, std::complex<float>>) ? 1e-4 : 1e-10;
   for (auto i : nda::range(1, 6)) {
     auto A = syhe_matrix<T>(i, -1, 1);
     auto B = syhe_matrix<T>(i, 1e-6, 1);
