@@ -20,26 +20,37 @@
 
 namespace nda::clef {
 
-  /// During a partial evaluation of an expression, the
-  // function nodes can be evaluated in 2 ways :
-  // - default : the function is evaluated iif all the arguments are non lazy
-  //             otherwise the node is kept, with its children replaced by evaluation
-  //             i.e. the function is NOT called.
-  // - if true : the function is CALLED with all the arguments, lazy of not.
-  //             It is not the default, as the function/object must be properly
-  //             implemented, by MOVING the argument in a new function node
-  //             with make_expr_call
-  template <typename F>
-  constexpr bool supports_partial_eval_of_calls = false;
-
-  /// Same as supports_partial_eval_of_calls but for the subscript operator
-  template <typename F>
-  constexpr bool supports_partial_eval_of_subscript = false;
-
   /**
    * @addtogroup clef_expr
    * @{
    */
+
+  /**
+   * @brief Controls evaluation behavior of function nodes during partial expression evaluation.
+   *
+   * When partially evaluating an expression tree, function nodes have two evaluation modes:
+   * - false (default): Function is evaluated only if all arguments are non-lazy values.
+   *   If any argument is lazy, the node is preserved with evaluated children but the
+   *   function itself is NOT called.
+   * - true: Function is ALWAYS called with all arguments (lazy or non-lazy).
+   *   This requires the function to properly handle non-lazy arguments by moving them
+   *   into new expression nodes using make_expr_call.
+   *
+   * @tparam F Function type to specialize for
+   */
+  template <typename F>
+  constexpr bool supports_partial_eval_of_calls = false;
+
+  /**
+   * @brief Controls evaluation behavior of subscript operations during partial expression evaluation.
+   *
+   * Similar to supports_partial_eval_of_calls but specifically for the subscript operator[].
+   * When true, the subscript operation will be called even with lazy arguments.
+   *
+   * @tparam T Type to specialize subscript evaluation for
+   */
+  template <typename T>
+  constexpr bool supports_partial_eval_of_subscript = false;
 
   namespace detail {
 
