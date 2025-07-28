@@ -6,6 +6,7 @@
 #include "./test_common.hpp"
 #include "nda/traits.hpp"
 
+#include <limits>
 #include <nda/gtest_tools.hpp>
 #include <nda/lapack/gelss_worker.hpp>
 #include <nda/nda.hpp>
@@ -83,9 +84,10 @@ TEST(NDA, LAPACKGtsvComplex) {
 // Test LAPACK gesvd function.
 template <typename T, typename Layout>
 void test_gesvd() {
-  using matrix_t             = matrix<T, Layout>;
-  using fp_type              = nda::get_fp_t<T>;
-  constexpr double eps_close = std::is_same_v<fp_type, float> ? 5e-6 : 1e-14;
+  using matrix_t = matrix<T, Layout>;
+  using fp_type  = nda::get_fp_t<T>;
+  // condition number is ~7, and magnitude 5 with absolute error checking
+  constexpr double eps_close = 7 * 5 * std::numeric_limits<fp_type>::epsilon();
 
   auto A      = matrix_t{{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}}};
   auto [m, n] = A.shape();
@@ -116,9 +118,10 @@ TEST(NDA, LAPACKGesvd) {
 // Test LAPACK geqp3, orgqr and ungqr functions.
 template <typename T, bool wide_matrix = false>
 void test_geqp3_orgqr_ungqr() {
-  using matrix_t             = matrix<T, F_layout>;
-  using fp_type              = nda::get_fp_t<T>;
-  constexpr double eps_close = std::is_same_v<fp_type, float> ? 1e-5 : 1e-14;
+  using matrix_t = matrix<T, F_layout>;
+  using fp_type  = nda::get_fp_t<T>;
+  // condition number is ~7, and magnitude 5 with absolute error checking
+  constexpr double eps_close = 7 * 5 * std::numeric_limits<fp_type>::epsilon();
 
   auto A = matrix_t{{{1, 1, 1}, {3, 2, 4}, {5, 3, 2}, {2, 4, 5}, {4, 5, 3}}};
   if constexpr (wide_matrix) A = matrix_t{transpose(A)};
@@ -168,8 +171,9 @@ TEST(NDA, LAPACKGeqp3UngqrAndOrgqr) {
 // Test LAPACK gelss function and the gelss_worker class.
 template <typename value_t>
 void test_gelss() {
-  using fp_type              = nda::get_fp_t<value_t>;
-  constexpr double eps_close = std::is_same_v<fp_type, float> ? 1e-5 : 1e-10;
+  using fp_type = nda::get_fp_t<value_t>;
+  // condition number of B is ~8, and magnitude ~10 with absolute error checking
+  constexpr double eps_close = 8 * 10 * std::numeric_limits<fp_type>::epsilon();
 
   // Cf. https://www.netlib.org/lapack/lapack-3.9.0/LAPACKE/example/example_DGELS_colmajor.c
   auto A = matrix<value_t>{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}};
@@ -320,17 +324,11 @@ TEST(NDA, LAPACKGetrfWithRectangularMatrix) {
 }
 
 // Check that the eigenvectors/values are correct.
-void check_eigen(auto const &A, auto const &V, auto const &l) {
-  using fp_type              = nda::get_fp_t<decltype(A)>;
-  constexpr double eps_close = std::is_same_v<fp_type, float> ? 1e-5 : 1e-10;
-
+void check_eigen(auto const &A, auto const &V, auto const &l, double eps_close) {
   for (auto i : nda::range(0, A.extent(0))) { EXPECT_ARRAY_NEAR(A * V(nda::range::all, i), l(i) * V(nda::range::all, i), eps_close); }
 }
 
-void check_eigen(auto const &A, auto const &B, auto const &V, auto const &l, int itype = 1) {
-  using fp_type              = nda::get_fp_t<decltype(A)>;
-  constexpr double eps_close = std::is_same_v<fp_type, float> ? 5e-4 : 1e-10;
-
+void check_eigen(auto const &A, auto const &B, auto const &V, auto const &l, int itype, double eps_close) {
   for (auto i : nda::range(0, A.extent(0))) {
     if (itype == 1) {
       EXPECT_ARRAY_NEAR(A * V(nda::range::all, i), l(i) * B * V(nda::range::all, i), eps_close);
@@ -368,8 +366,11 @@ auto syhe_matrix(int n, double a = 1e-6, double b = 1.0) {
 // Test LAPACK syev and heev functions.
 template <typename T>
 void test_syev_heev(auto xxev) {
-  using fp_type              = nda::get_fp_t<T>;
-  constexpr double eps_close = std::is_same_v<fp_type, float> ? 2e-6 : 1e-10;
+  using fp_type = nda::get_fp_t<T>;
+  // 100*epsilon is heuristic, since we're not actually applying the eigenvectors, we don't
+  // need the condition number
+  constexpr double eps_close = 100 * std::numeric_limits<fp_type>::epsilon();
+
   for (auto i : nda::range(1, 6)) {
     auto A = syhe_matrix<T>(i, -1, 1);
 
@@ -377,7 +378,7 @@ void test_syev_heev(auto xxev) {
     auto A1 = A;
     auto w1 = nda::vector<fp_type>(i);
     xxev(A1, w1);
-    check_eigen(A, A1, w1);
+    check_eigen(A, A1, w1, eps_close);
 
     // compute eigenvalues only
     auto A2 = A;
@@ -391,9 +392,9 @@ void test_syev_heev(auto xxev) {
     xxev(nda::transpose(A3), w3);
     EXPECT_ARRAY_NEAR(w3, w1, eps_close);
     if constexpr (nda::is_complex_v<T>) {
-      check_eigen(nda::transpose(A), nda::transpose(A3), w3);
+      check_eigen(nda::transpose(A), nda::transpose(A3), w3, eps_close);
     } else {
-      check_eigen(A, nda::transpose(A3), w3);
+      check_eigen(A, nda::transpose(A3), w3, eps_close);
       EXPECT_ARRAY_NEAR(nda::transpose(A3), A1, eps_close);
     }
 
@@ -402,7 +403,7 @@ void test_syev_heev(auto xxev) {
       auto A4 = A;
       auto w4 = nda::vector<fp_type>{};
       xxev(A4(nda::range(3), nda::range(3)), w4);
-      check_eigen(A(nda::range(3), nda::range(3)), A4(nda::range(3), nda::range(3)), w4);
+      check_eigen(A(nda::range(3), nda::range(3)), A4(nda::range(3), nda::range(3)), w4, eps_close);
     }
   }
 }
@@ -419,8 +420,11 @@ TEST(NDA, LAPACKSyevAndHeev) {
 // Test LAPACK sygv and hegv functions.
 template <typename T>
 void test_sygv_hegv(int itype, auto xxgv) {
-  using fp_type              = nda::get_fp_t<T>;
-  constexpr double eps_close = std::is_same_v<fp_type, float> ? 1e-5 : 1e-10;
+  using fp_type = nda::get_fp_t<T>;
+  // 100*epsilon is heuristic, since we're not actually applying the eigenvectors, we don't
+  // need the condition number
+  constexpr double eps_close = 100 * std::numeric_limits<fp_type>::epsilon();
+
   for (auto i : nda::range(1, 6)) {
     auto A = syhe_matrix<T>(i, -1, 1);
     auto B = syhe_matrix<T>(i, 1e-6, 1);
@@ -430,7 +434,7 @@ void test_sygv_hegv(int itype, auto xxgv) {
     auto B1 = B;
     auto w1 = nda::vector<fp_type>(i);
     xxgv(A1, B1, w1, 'V', itype);
-    check_eigen(A, B, A1, w1, itype);
+    check_eigen(A, B, A1, w1, itype, eps_close);
 
     // compute eigenvalues only
     auto A2 = A;
@@ -446,7 +450,7 @@ void test_sygv_hegv(int itype, auto xxgv) {
       auto w3 = nda::vector<fp_type>{};
       auto rg = nda::range(3);
       xxgv(A3(rg, rg), B3(rg, rg), w3, 'V', itype);
-      check_eigen(A(rg, rg), B(rg, rg), A3(rg, rg), w3, itype);
+      check_eigen(A(rg, rg), B(rg, rg), A3(rg, rg), w3, itype, eps_close);
     }
   }
 }

@@ -252,8 +252,8 @@ void test_inv_and_det() {
   using fp_t     = nda::get_fp_t<T>;
   T fac          = 1.0;
   if constexpr (nda::is_complex_v<T>) fac = 1.0i;
-  // FIXME: eps_close is heuristically selected to pass without any proper error analysis
-  constexpr double eps_close = (std::is_same_v<T, float> || std::is_same_v<T, std::complex<float>>) ? 1.5e-4 : 1e-10;
+  // condition number for matrix is ~275, but magnitudes are ~5 and we use absolute error
+  constexpr double eps_close = 5 * 275 * std::numeric_limits<nda::get_fp_t<T>>::epsilon();
 
   // A is 3x3, B is 2x2, C is 1x1
   auto A = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
@@ -344,13 +344,11 @@ TEST(NDA, LinearAlgebraInvAndDet) {
 }
 
 // Check that the eigenvectors/values are correct.
-void check_eigen(auto const &A, auto const &V, auto const &l) {
-  constexpr double eps_close = (std::is_same_v<nda::get_fp_t<decltype(A)>, float>) ? 1e-6 : 1e-10;
+void check_eigen(auto const &A, auto const &V, auto const &l, double eps_close) {
   for (auto i : nda::range(0, A.extent(0))) { EXPECT_ARRAY_NEAR(A * V(nda::range::all, i), l(i) * V(nda::range::all, i), eps_close); }
 }
 
-void check_eigen(auto const &A, auto const &B, auto const &V, auto const &l, int itype = 1) {
-  constexpr double eps_close = (std::is_same_v<nda::get_fp_t<decltype(A)>, float>) ? 1e-4 : 1e-10;
+void check_eigen(auto const &A, auto const &B, auto const &V, auto const &l, int itype, double eps_close) {
   for (auto i : nda::range(0, A.extent(0))) {
     if (itype == 1) {
       EXPECT_ARRAY_NEAR(A * V(nda::range::all, i), l(i) * B * V(nda::range::all, i), eps_close);
@@ -389,18 +387,20 @@ auto syhe_matrix(int n, double a = 1e-6, double b = 1.0) {
 // Test the eigh and eigvalsh functions.
 template <typename T>
 void test_eigh_eigvalsh() {
-  constexpr double eps_close = (std::is_same_v<T, float> || std::is_same_v<T, std::complex<float>>) ? 1.5e-5 : 1e-10;
+  // Max condition number I got for the syhe_matrix is ~300, matrix vals are ~1
+  constexpr double eps_close = 300 * std::numeric_limits<nda::get_fp_t<T>>::epsilon();
+
   for (auto i : nda::range(1, 6)) {
     auto A = syhe_matrix<T>(i, -1, 1);
 
     // use eigh to compute eigenvalues and eigenvectors
     auto [w1, V1] = nda::linalg::eigh(A);
-    check_eigen(A, V1, w1);
+    check_eigen(A, V1, w1, eps_close);
 
     // use eigh_in_place to compute eigenvalues and eigenvectors
     auto V2 = A;
     auto w2 = nda::linalg::eigh_in_place(V2);
-    check_eigen(A, V2, w2);
+    check_eigen(A, V2, w2, eps_close);
     // Eigenvectors are only the same up to a sign, so some columns in V1 are minus that in V2
     // checking the absolute values should be sufficient in any non-trivial case
     EXPECT_ARRAY_NEAR(nda::abs(V1), nda::abs(V2), eps_close);
@@ -418,7 +418,7 @@ void test_eigh_eigvalsh() {
     // use eigh with a C-layout matrix
     auto A5       = nda::matrix<T, nda::C_layout>{A};
     auto [w5, V5] = nda::linalg::eigh(A5);
-    check_eigen(A5, V5, w5);
+    check_eigen(A5, V5, w5, eps_close);
     EXPECT_ARRAY_NEAR(V1, V5, eps_close);
     EXPECT_ARRAY_NEAR(w1, w5, eps_close);
 
@@ -438,20 +438,21 @@ TEST(NDA, LinearAlgebraEighAndEigvalsh) {
 // Test the eigh and eigvalsh functions for generalized eigenvalue problems.
 template <typename T>
 void test_generalized_eigh_eigvalsh(int itype) {
-  constexpr double eps_close = (std::is_same_v<T, float> || std::is_same_v<T, std::complex<float>>) ? 1e-4 : 1e-10;
+  constexpr double eps_close = 100 * std::numeric_limits<nda::get_fp_t<T>>::epsilon();
+
   for (auto i : nda::range(1, 6)) {
     auto A = syhe_matrix<T>(i, -1, 1);
     auto B = syhe_matrix<T>(i, 1e-6, 1);
 
     // use eigh to compute eigenvalues and eigenvectors
     auto [w1, V1] = nda::linalg::eigh(A, B, itype);
-    check_eigen(A, B, V1, w1, itype);
+    check_eigen(A, B, V1, w1, itype, eps_close);
 
     // use eigh_in_place to compute eigenvalues and eigenvectors
     auto V2 = A;
     auto B2 = B;
     auto w2 = nda::linalg::eigh_in_place(V2, B2, itype);
-    check_eigen(A, B, V2, w2, itype);
+    check_eigen(A, B, V2, w2, itype, eps_close);
     EXPECT_ARRAY_NEAR(V1, V2, eps_close);
     EXPECT_ARRAY_NEAR(w1, w2, eps_close);
 
@@ -469,7 +470,7 @@ void test_generalized_eigh_eigvalsh(int itype) {
     auto A5       = nda::matrix<T, nda::C_layout>{A};
     auto B5       = nda::matrix<T, nda::C_layout>{B};
     auto [w5, V5] = nda::linalg::eigh(A5, B5, itype);
-    check_eigen(A, B, V5, w5, itype);
+    check_eigen(A, B, V5, w5, itype, eps_close);
     EXPECT_ARRAY_NEAR(V1, V5, eps_close);
     EXPECT_ARRAY_NEAR(w1, w5, eps_close);
 
@@ -589,9 +590,10 @@ TEST(NDA, LinearAlgebraOuterProduct) {
 // Test the generic solve and solve_in_place functions.
 template <typename value_t, typename Layout>
 void test_solve() {
-  using matrix_t   = nda::matrix<value_t, Layout>;
-  using vector_t   = nda::vector<value_t>;
-  double eps_close = std::is_same_v<nda::get_fp_t<value_t>, float> ? 1e-4 : 1e-10;
+  using matrix_t = nda::matrix<value_t, Layout>;
+  using vector_t = nda::vector<value_t>;
+  // condition number for matrix is ~275, but magnitudes are ~5 and we use absolute error
+  constexpr double eps_close = 5 * 275 * std::numeric_limits<nda::get_fp_t<value_t>>::epsilon();
 
   auto A = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
   auto B = matrix_t{{1, 5}, {4, 5}, {3, 6}};
@@ -642,8 +644,9 @@ TEST(NDA, LinearAlgebraSolve) {
 // Test the svd and svd_in_place functions.
 template <typename T, typename Layout>
 void test_svd() {
-  using matrix_t             = nda::matrix<T, Layout>;
-  constexpr double eps_close = (std::is_same_v<nda::get_fp_t<T>, float>) ? 1e-6 : 1e-14;
+  using matrix_t = nda::matrix<T, Layout>;
+  // condition number for matrix is 4, but max magnitude is 8 and we use absolute error
+  constexpr double eps_close = 4 * 8 * std::numeric_limits<nda::get_fp_t<T>>::epsilon();
 
   auto A = matrix_t{{2, -2, 1}, {-4, -8, -8}};
   auto s = nda::vector<double>{12, 3};
