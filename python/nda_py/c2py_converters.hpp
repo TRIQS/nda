@@ -28,6 +28,14 @@ namespace c2py {
     static_assert(not std::is_same_v<U, pyref>, "Not implemented"); // would require to take care of the incref...
     // However, it works for PyObject *
 
+    // ------------ tp_name ---------------
+
+    static std::string tp_name() {
+      std::ostringstream out;
+      out << "ndarray[" << python_typename<T>() << ", "<< R<< "]";
+      return out.str();
+    }
+
     // --------- C -> PY --------
 
     static PyObject *c2py(nda::array_view<T, R> v) {
@@ -101,6 +109,14 @@ namespace c2py {
     using converter_T             = py_converter<std::decay_t<T>>;
     using converter_view_T        = py_converter<nda::array_view<T, R>>;
     using converter_view_pyobject = py_converter<nda::array_view<PyObject *, R>>;
+
+    // ------------ tp_name ---------------
+
+    static std::string tp_name() {
+      std::ostringstream out;
+      out << "ndarray[" << python_typename<T>() << ", "<< R<< "]";
+      return out.str();
+    }
 
     // --------- C -> PY --------
 
