@@ -42,13 +42,14 @@ target_link_libraries(${PROJECT_NAME}_c PUBLIC itertools::itertools_c)
 if(HDF5Support)
   message(STATUS "-------- HDF5 detection -------------")
   target_link_libraries(${PROJECT_NAME}_c PUBLIC h5::h5_c)
+  target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_H5)
 endif()
 
 # Link against MPI C++ Interface
 if (MPISupport)
   message(STATUS "-------- MPI detection -------------")
   target_link_libraries(${PROJECT_NAME}_c PUBLIC mpi::mpi_c)
-  target_compile_definitions(${PROJECT_NAME}_c PUBLIC MPI_SUPPORT)
+  target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_MPI)
 endif()
 
 # OpenMP
@@ -56,6 +57,7 @@ if (OpenMPSupport)
   message(STATUS "-------- OpenMP detection -------------")
   find_package(OpenMP REQUIRED COMPONENTS CXX)
   target_link_libraries(${PROJECT_NAME}_c PUBLIC OpenMP::OpenMP_CXX)
+  target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_OPENMP)
 endif ()
 
 # ========= Blas / Lapack ==========

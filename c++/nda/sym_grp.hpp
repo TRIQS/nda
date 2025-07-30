@@ -11,7 +11,7 @@
 #pragma once
 
 #include "./nda.hpp"
-#ifdef MPI_SUPPORT
+#ifdef NDA_HAVE_MPI
 #include "mpi.hpp"
 #endif
 
@@ -182,11 +182,11 @@ namespace nda {
      */
     private:
     static constexpr Parallel compute_parallel_default() noexcept {
-#if defined(MPI_SUPPORT) && defined(_OPENMP)
+#if defined(NDA_HAVE_MPI) && defined(NDA_HAVE_OPENMP)
       return Parallel::HYBRID;
-#elif defined(MPI_SUPPORT)
+#elif defined(NDA_HAVE_MPI)
       return Parallel::MPI;
-#elif defined(_OPENMP)
+#elif defined(NDA_HAVE_OPENMP)
       return Parallel::OMP;
 #else
       return Parallel::NONE;
@@ -198,8 +198,8 @@ namespace nda {
       requires(NdaInitFunc<H, A>)
     void init(A &a, H const &init_func) const {
       if constexpr (P == Parallel::HYBRID) {
-#if defined(MPI_SUPPORT) && defined(_OPENMP)
-        static_assert(_OPENMP, "Parallel::HYBRID requires OpenMP support.");
+#if defined(NDA_HAVE_MPI) && defined(NDA_HAVE_OPENMP)
+        static_assert(NDA_HAVE_OPENMP, "Parallel::HYBRID requires OpenMP support.");
         a() = 0.0;
 #pragma omp parallel
         for (auto const &sym_class : itertools::omp_chunk(mpi::chunk(sym_classes))) {
@@ -213,8 +213,8 @@ namespace nda {
         static_assert(false, "Parallel::HYBRID requires MPI support.");
 #endif
       } else if constexpr (P == Parallel::MPI) {
-#if defined(MPI_SUPPORT)
-        static_assert(MPI_SUPPORT, "Parallel::MPI requires MPI support.");
+#if defined(NDA_HAVE_MPI)
+        static_assert(NDA_HAVE_MPI, "Parallel::MPI requires MPI support.");
         a() = 0.0;
         for (auto const &sym_class : mpi::chunk(sym_classes)) {
           auto idx           = a.indexmap().to_idx(sym_class[0].first);
@@ -227,8 +227,8 @@ namespace nda {
         static_assert(false, "Parallel::MPI requires MPI support.");
 #endif
       } else if constexpr (P == Parallel::OMP) {
-#if defined(_OPENMP)
-        static_assert(_OPENMP, "Parallel::OMP requires OpenMP support.");
+#if defined(NDA_HAVE_OPENMP)
+        static_assert(NDA_HAVE_OPENMP, "Parallel::OMP requires OpenMP support.");
         a() = 0.0;
 #pragma omp parallel
         for (auto const &sym_class : itertools::omp_chunk(sym_classes)) {
