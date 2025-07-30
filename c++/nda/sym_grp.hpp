@@ -12,10 +12,9 @@
 
 #include "./nda.hpp"
 #ifdef NDA_HAVE_MPI
-#include "mpi.hpp"
+#include "./mpi.hpp"
 #endif
 
-#include <itertools/itertools.hpp>
 #include <itertools/omp_chunk.hpp>
 
 #include <array>
@@ -167,8 +166,6 @@ namespace nda {
      */
     [[nodiscard]] long num_classes() const { return sym_classes.size(); }
 
-    enum class Parallel { HYBRID, MPI, OMP, NONE };
-
     /**
      * @brief Initialize an nda::Array using an nda::NdaInitFunc.
      *
@@ -178,79 +175,33 @@ namespace nda {
      * @tparam H Callable type of nda::NdaInitFunc.
      * @param a nda::Array object to be initialized.
      * @param init_func Callable that is used to initialize the array.
-     * @param parallel Parallelize using openmp and mpi.
+     * @param parallel Parallelize using OpenMP, MPI, or both.
      */
-    private:
-    static constexpr Parallel compute_parallel_default() noexcept {
-#if defined(NDA_HAVE_MPI) && defined(NDA_HAVE_OPENMP)
-      return Parallel::HYBRID;
-#elif defined(NDA_HAVE_MPI)
-      return Parallel::MPI;
-#elif defined(NDA_HAVE_OPENMP)
-      return Parallel::OMP;
-#else
-      return Parallel::NONE;
-#endif
-    }
-
-    public:
-    template <typename H, Parallel P = sym_grp::compute_parallel_default()>
+    template <typename H>
       requires(NdaInitFunc<H, A>)
-    void init(A &a, H const &init_func) const {
-      if constexpr (P == Parallel::HYBRID) {
-#if defined(NDA_HAVE_MPI) && defined(NDA_HAVE_OPENMP)
-        static_assert(NDA_HAVE_OPENMP, "Parallel::HYBRID requires OpenMP support.");
-        a() = 0.0;
-#pragma omp parallel
-        for (auto const &sym_class : itertools::omp_chunk(mpi::chunk(sym_classes))) {
-          auto idx           = a.indexmap().to_idx(sym_class[0].first);
-          auto ref_val       = init_func(idx);
-          std::apply(a, idx) = ref_val;
-          for (auto const &[lin_idx, op] : sym_class) { std::apply(a, a.indexmap().to_idx(lin_idx)) = op(ref_val); }
-        }
+    void init(A &a, H const &init_func, bool parallel = false) const {
+      auto init_with_sym = [&](sym_class_t const &sym_class) {
+        auto idx           = a.indexmap().to_idx(sym_class[0].first);
+        auto ref_val       = init_func(idx);
+        std::apply(a, idx) = ref_val;
+        for (auto const &[lin_idx, op] : sym_class) { std::apply(a, a.indexmap().to_idx(lin_idx)) = op(ref_val); }
+      };
+
+      if (parallel) {
+#ifdef NDA_HAVE_OPENMP
+#pragma omp parallel for
+#endif // NDA_HAVE_OPENMP
+#ifdef NDA_HAVE_MPI
+        for (auto const &sym_class : mpi::chunk(sym_classes)) init_with_sym(sym_class);
         a = mpi::all_reduce(a);
 #else
-        static_assert(false, "Parallel::HYBRID requires MPI support.");
-#endif
-      } else if constexpr (P == Parallel::MPI) {
-#if defined(NDA_HAVE_MPI)
-        static_assert(NDA_HAVE_MPI, "Parallel::MPI requires MPI support.");
-        a() = 0.0;
-        for (auto const &sym_class : mpi::chunk(sym_classes)) {
-          auto idx           = a.indexmap().to_idx(sym_class[0].first);
-          auto ref_val       = init_func(idx);
-          std::apply(a, idx) = ref_val;
-          for (auto const &[lin_idx, op] : sym_class) { std::apply(a, a.indexmap().to_idx(lin_idx)) = op(ref_val); }
-        }
-        a = mpi::all_reduce(a);
-#else
-        static_assert(false, "Parallel::MPI requires MPI support.");
-#endif
-      } else if constexpr (P == Parallel::OMP) {
-#if defined(NDA_HAVE_OPENMP)
-        static_assert(NDA_HAVE_OPENMP, "Parallel::OMP requires OpenMP support.");
-        a() = 0.0;
-#pragma omp parallel
-        for (auto const &sym_class : itertools::omp_chunk(sym_classes)) {
-          auto idx           = a.indexmap().to_idx(sym_class[0].first);
-          auto ref_val       = init_func(idx);
-          std::apply(a, idx) = ref_val;
-          for (auto const &[lin_idx, op] : sym_class) { std::apply(a, a.indexmap().to_idx(lin_idx)) = op(ref_val); }
-        }
-#else
-        static_assert(false, "Parallel::OMP requires OpenMP support.");
-#endif
+        for (auto const &sym_class : sym_classes) init_with_sym(sym_class);
+#endif // NDA_HAVE_MPI
       } else {
-        // Sequential fallback
-        a() = 0.0;
-        for (auto const &sym_class : sym_classes) {
-          auto idx           = a.indexmap().to_idx(sym_class[0].first);
-          auto ref_val       = init_func(idx);
-          std::apply(a, idx) = ref_val;
-          for (auto const &[lin_idx, op] : sym_class) { std::apply(a, a.indexmap().to_idx(lin_idx)) = op(ref_val); }
-        }
+        for (auto const &sym_class : sym_classes) init_with_sym(sym_class);
       }
     }
+
     /**
      * @brief Symmetrize an array and return the maximum symmetry violation and its corresponding array index.
      *
