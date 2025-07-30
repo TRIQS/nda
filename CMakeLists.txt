@@ -58,11 +58,11 @@ endif()
 # Python Support
 option(PythonSupport "Build with Python support" OFF)
 # H5 support
-option(HDF5Support "Build with HDF5 support" OFF)
+option(HDF5Support "Build with HDF5 support" ON)
 # MPI support
-option(MPISupport "Build with MPI support" OFF)
+option(MPISupport "Build with MPI support" ON)
 # OpenMP support
-option(OpenMPSupport "Build with OpenMP support" OFF)
+option(OpenMPSupport "Build with OpenMP support" ON)
 
 # Documentation
 option(Build_Documentation "Build documentation" OFF)
