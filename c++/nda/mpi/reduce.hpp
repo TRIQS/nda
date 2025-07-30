@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include "./utils.hpp"
 #include "../basic_functions.hpp"
 #include "../declarations.hpp"
 #include "../macros.hpp"

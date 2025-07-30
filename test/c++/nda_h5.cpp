@@ -13,7 +13,6 @@
 #include <h5/h5.hpp>
 #include <hdf5_hl.h>
 
-
 using namespace nda::clef::literals;
 using nda::ellipsis;
 using nda::range;
