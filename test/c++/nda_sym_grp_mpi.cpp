@@ -7,17 +7,19 @@
 
 #include <nda/gtest_tools.hpp>
 
-TEST(NDA, SymGrpMatrixPermutation) {
+TEST(NDAMpi, SymGrpMatrixPermutation) {
   test_sym_grp_matrix_permutation(false);
   test_sym_grp_matrix_permutation(true);
 }
 
-TEST(NDA, SymGrpMatrixFlipShift) {
+TEST(NDAMpi, SymGrpMatrixFlipShift) {
   test_sym_grp_matrix_flip_shift(false);
   test_sym_grp_matrix_flip_shift(true);
 }
 
-TEST(NDA, SymGrpTensorCylicTriplet) {
+TEST(NDAMpi, SymGrpTensorCylicTriplet) {
   test_sym_grp_tensor_cyclic_triplet(false);
   test_sym_grp_tensor_cyclic_triplet(true);
 }
+
+MPI_TEST_MAIN
