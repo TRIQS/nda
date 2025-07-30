@@ -5,6 +5,7 @@ if(HDF5Support)
     configure_file(${file} ${file} COPYONLY)
   endforeach()
 endif()
+
 # List of all tests
 file(GLOB_RECURSE all_tests RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 if(NOT CudaSupport)

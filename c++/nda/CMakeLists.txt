@@ -48,19 +48,14 @@ endif()
 if (MPISupport)
   message(STATUS "-------- MPI detection -------------")
   target_link_libraries(${PROJECT_NAME}_c PUBLIC mpi::mpi_c)
-
-  target_compile_definitions(${PROJECT_NAME}_c PUBLIC
-          $<BUILD_INTERFACE:MPI_SUPPORT>
-          $<INSTALL_INTERFACE:MPI_SUPPORT>
-  )
-
+  target_compile_definitions(${PROJECT_NAME}_c PUBLIC MPI_SUPPORT)
 endif()
 
 # OpenMP
 if (OpenMPSupport)
-    message(STATUS "-------- OpenMP detection -------------")
-    find_package(OpenMP REQUIRED COMPONENTS CXX)
-    target_link_libraries(${PROJECT_NAME}_c PUBLIC OpenMP::OpenMP_CXX)
+  message(STATUS "-------- OpenMP detection -------------")
+  find_package(OpenMP REQUIRED COMPONENTS CXX)
+  target_link_libraries(${PROJECT_NAME}_c PUBLIC OpenMP::OpenMP_CXX)
 endif ()
 
 # ========= Blas / Lapack ==========
@@ -104,10 +99,7 @@ if(CudaSupport)
   message(STATUS "-------- CUDAToolkit detection -------------")
   find_package(CUDAToolkit REQUIRED)
   target_link_libraries(${PROJECT_NAME}_c PUBLIC CUDA::cudart CUDA::cublas CUDA::cusolver)
-  target_compile_definitions(${PROJECT_NAME}_c PUBLIC
-          $<BUILD_INTERFACE:NDA_HAVE_CUDA NDA_HAVE_DEVICE>
-          $<INSTALL_INTERFACE:NDA_HAVE_CUDA NDA_HAVE_DEVICE>
-  )
+  target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_CUDA NDA_HAVE_DEVICE)
 endif()
 
 # ========= Magma ==========
