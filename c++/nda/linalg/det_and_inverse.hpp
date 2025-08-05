@@ -304,4 +304,10 @@ namespace nda::clef {
    */
   CLEF_MAKE_FNT_LAZY(determinant)
 
+  /**
+   * @ingroup linalg_tools
+   * @brief Lazy version of nda::inverse.
+   */
+  CLEF_MAKE_FNT_LAZY(inverse)
+
 } // namespace nda::clef
