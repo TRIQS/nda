@@ -63,7 +63,7 @@ jobs:
         libgfortran5
         libgmp-dev
         libhdf5-dev
-        liblapack-dev
+        libopenblas-dev
         libopenmpi-dev
         openmpi-bin
         openmpi-common
@@ -75,8 +75,7 @@ jobs:
         python3-numpy
         python3-pip
         python3-scipy
-        python3-sphinx
-        python3-nbsphinx
+        python3-ipython
 
     - name: Set up virtualenv
       run: |
