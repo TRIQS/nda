@@ -237,3 +237,7 @@ TEST(NDA, SymGrpTensorCylicTriplet) {
   grp.init_from_representative_data(B, vec);
   EXPECT_EQ_ARRAY(A, B);
 }
+
+#ifdef NDA_HAVE_MPI
+MPI_TEST_MAIN
+#endif
