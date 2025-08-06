@@ -32,30 +32,28 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING
 configure_file(version.hpp.in version.hpp @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/version.hpp DESTINATION include/${PROJECT_NAME})
 
-
-# ========= Itertools ==========
-target_link_libraries(${PROJECT_NAME}_c PUBLIC itertools::itertools_c)
-
 # ========= Additional Depdencies ==========
+
+# Link against Itertools
+target_link_libraries(${PROJECT_NAME}_c PUBLIC itertools::itertools_c)
 
 # Link against HDF5 C++ Interface
 if(HDF5Support)
-  message(STATUS "-------- HDF5 detection -------------")
   target_link_libraries(${PROJECT_NAME}_c PUBLIC h5::h5_c)
   target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_H5)
 endif()
 
 # Link against MPI C++ Interface
-if (MPISupport)
-  message(STATUS "-------- MPI detection -------------")
+if(MPISupport)
   target_link_libraries(${PROJECT_NAME}_c PUBLIC mpi::mpi_c)
   target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_MPI)
 endif()
 
 # OpenMP
-if (OpenMPSupport)
+if(OpenMPSupport)
   message(STATUS "-------- OpenMP detection -------------")
   find_package(OpenMP REQUIRED COMPONENTS CXX)
+  message(STATUS "Detected OpenMP Version: ${OpenMP_CXX_VERSION}")
   target_link_libraries(${PROJECT_NAME}_c PUBLIC OpenMP::OpenMP_CXX)
   target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_OPENMP)
 endif ()

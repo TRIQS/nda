@@ -114,9 +114,12 @@ The following options are available:
 | Build in Debugging Mode                 | ``-DCMAKE_BUILD_TYPE=Debug``                      |
 | Disable testing (not recommended)       | ``-DBuild_Tests=OFF``                             |
 | Build the documentation                 | ``-DBuild_Documentation=ON``                      |
-| Disable Python support                  | ``-DPythonSupport=OFF``                           |
 | Build shared libraries                  | ``-DBUILD_SHARED_LIBS=ON``                        |
 | Build benchmarks                        | ``-DBuild_Benchs=ON``                             |
 | Test SSO memory optimizations           | ``-DBuild_SSO_Tests=ON``                          |
+| Enable Python support                   | ``-DPythonSupport=ON``                            |
 | Enable CUDA support                     | ``-DCudaSupport=ON``                              |
+| Disable HDF5 support                    | ``-DHDF5Support=OFF``                             |
+| Disable MPI support                     | ``-DMPISupport=OFF``                              |
+| Disable OpenMP support                  | ``-DOpenMPSupport=OFF``                           |
 | Enable MAGMA support                    | ``-DUse_Magma=ON``                                |

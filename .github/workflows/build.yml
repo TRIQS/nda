@@ -25,11 +25,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-24.04, macos-15]
+        cxx: [g++, clang++]
+        doc: [OFF]
+        cov: [OFF]
+        python_hdf5: [ON, OFF]
+        openmp_mpi: [ON, OFF]
         include:
-          - {os: ubuntu-24.04, cc: gcc, cxx: g++, doc: OFF, cov: ON}
-          - {os: ubuntu-24.04, cc: clang, cxx: clang++, doc: OFF, cov: OFF}
-          - {os: macos-14, cc: gcc-14, cxx: g++-14, doc: OFF, cov: OFF}
-          - {os: macos-14, cc: clang, cxx: clang++, doc: ON, cov: OFF}
+          # Full build with coverage
+          - {os: ubuntu-24.04, cxx: g++, doc: OFF, cov: ON, python_hdf5: ON, openmp_mpi: ON }
+          # Full build with Documentation
+          - {os: macos-15, cxx: clang++, doc: ON, cov: OFF, python_hdf5: ON, openmp_mpi: ON }
 
     runs-on: ${{ matrix.os }}
 
@@ -39,9 +45,17 @@ jobs:
     - uses: actions/cache/restore@v4
       with:
         path: ${{ env.CCACHE_DIR }}
-        key: ccache-${{ matrix.os }}-${{ matrix.cc }}-${{ github.run_id }}
+        key: ccache-${{ matrix.os }}-${{ matrix.cxx }}-${{ github.run_id }}
         restore-keys:
-          ccache-${{ matrix.os }}-${{ matrix.cc }}-
+          ccache-${{ matrix.os }}-${{ matrix.cxx }}-
+
+    - name: Set cxx variables
+      run: |
+        if [[ ${{ matrix.os }} == 'macos-15' && ${{ matrix.cxx }} == 'g++' ]]; then
+          echo "CXX=g++-15" >> $GITHUB_ENV
+        else
+          echo "CXX=${{ matrix.cxx }}" >> $GITHUB_ENV
+        fi
 
     - name: Install ubuntu dependencies
       if: ${{ contains(matrix.os, 'ubuntu') }}
@@ -96,7 +110,7 @@ jobs:
         echo "PYTHONPATH=$(brew --prefix llvm)/lib/python3.13/site-packages" >> $GITHUB_ENV
 
     - name: Add clang CXXFLAGS
-      if: ${{ contains(matrix.cxx, 'clang') }}
+      if: ${{ matrix.cxx == 'clang++' }}
       run: |
         echo "CXXFLAGS=-stdlib=libc++" >> $GITHUB_ENV
 
@@ -115,35 +129,25 @@ jobs:
         mv tmp_basic_array.hpp basic_array.hpp
         mv tmp_basic_array_view.hpp basic_array_view.hpp
 
-    - name: Test flag combinations
+    - name: Build nda
+      run: |
+        mkdir build && cd build
+        cmake .. \
+          -DCMAKE_INSTALL_PREFIX=$HOME/install \
+          -DBuild_Documentation=${{ matrix.doc }} \
+          -DCMAKE_BUILD_TYPE=${{ matrix.cov == 'ON' && 'Debug' || 'Release' }} \
+          -DPythonSupport=${{ matrix.python_hdf5 }} \
+          -DHDF5Support=${{ matrix.python_hdf5 }} \
+          -DOpenMPSupport=${{ matrix.openmp_mpi }} \
+          -DMPISupport=${{ matrix.openmp_mpi }}
+        make -j2 || make -j1 VERBOSE=1
+
+    - name: Test nda
       env:
-        CC: ${{ matrix.cc }}
-        CXX: ${{ matrix.cxx }}
         OPENBLAS_NUM_THREADS: "1"
       run: |
-        set -e
-        for hdf5 in ON OFF; do
-          for openmp in ON OFF; do
-            for mpi in ON OFF; do
-              echo "::group::[Config] HDF5=$hdf5 OMP=$openmp MPI=$mpi"
-              rm -rf build && mkdir build && cd build
-        
-              cmake .. \
-                -DCMAKE_INSTALL_PREFIX=$HOME/install \
-                -DPythonSupport=ON \
-                -DBuild_Documentation=${DOC:-OFF} \
-                -DCMAKE_BUILD_TYPE=$( [ "${COV:-OFF}" == "ON" ] && echo "Debug" || echo "Release" ) \
-                -DHDF5Support=$hdf5 \
-                -DOpenMPSupport=$openmp \
-                -DMPISupport=$mpi
-        
-              make -j2 || make -j1 VERBOSE=1
-              ctest -j2 --output-on-failure
-              cd ..
-              echo "::endgroup::"
-            done
-          done
-        done
+        cd build
+        ctest -j2 --output-on-failure
 
     - name: Generate test coverage HTML output
       if: matrix.cov == 'ON'
@@ -160,7 +164,7 @@ jobs:
       if: always()
       with:
         path: ${{ env.CCACHE_DIR }}
-        key: ccache-${{ matrix.os }}-${{ matrix.cc }}-${{ github.run_id }}
+        key: ccache-${{ matrix.os }}-${{ matrix.cxx }}-${{ github.run_id }}
 
     - name: Deploy documentation
       if: matrix.doc == 'ON' && github.ref == 'refs/heads/unstable'

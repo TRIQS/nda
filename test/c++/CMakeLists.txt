@@ -1,10 +1,8 @@
 # Copy h5 files to binary dir
-if(HDF5Support)
-  file(GLOB_RECURSE all_h5_ref_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.ref.h5)
-  foreach(file ${all_h5_ref_files})
-    configure_file(${file} ${file} COPYONLY)
-  endforeach()
-endif()
+file(GLOB_RECURSE all_h5_ref_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.ref.h5)
+foreach(file ${all_h5_ref_files})
+  configure_file(${file} ${file} COPYONLY)
+endforeach()
 
 # List of all tests
 file(GLOB_RECURSE all_tests RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
@@ -28,7 +26,7 @@ foreach(test ${all_tests})
   get_filename_component(test_dir ${test} DIRECTORY)
   add_executable(${test_name} ${test})
   target_link_libraries(${test_name} ${PROJECT_NAME}_c gtest_main ${PROJECT_NAME}_warnings)
-  if (HDF5Support)
+  if(HDF5Support)
     target_link_libraries(${test_name} hdf5::hdf5)
   endif()
   target_compile_options(${test_name}  PRIVATE "${ARGV1}")
@@ -65,7 +63,7 @@ endmacro()
 # Regular tests
 SetUpAllTestWithMacroDef("" "")
 
-if (Build_SSO_Tests)
+if(Build_SSO_Tests)
   # Rerun all C++ tests with others allocs, using the SS0 with 2 size for handle of the basic_array
   SetUpAllTestWithMacroDef("_SSO_10" "-DNDA_TEST_SSO=10")
   SetUpAllTestWithMacroDef("_SSO_100" "-DNDA_TEST_SSO=100")

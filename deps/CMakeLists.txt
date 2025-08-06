@@ -84,7 +84,7 @@ external_dependency(itertools
 )
 
 # -- h5 --
-if (HDF5Support)
+if(HDF5Support)
   external_dependency(h5
     GIT_REPO https://github.com/TRIQS/h5
     VERSION 1.3
@@ -93,13 +93,13 @@ if (HDF5Support)
 endif()
 
 # -- MPI --
-if (MPISupport)
+if(MPISupport)
   external_dependency(mpi
     GIT_REPO https://github.com/TRIQS/mpi
     VERSION 1.3
     GIT_TAG unstable
   )
-endif ()
+endif()
 
 ## Pybind 11
 #find_package(Python)

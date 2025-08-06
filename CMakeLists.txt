@@ -55,38 +55,11 @@ if(NOT IS_SUBPROJECT)
   message(STATUS "-------- BUILD-TYPE: ${CMAKE_BUILD_TYPE} --------")
 endif()
 
-# Python Support
+# Optional Library Features
 option(PythonSupport "Build with Python support" OFF)
-
-# HDF5 support
-find_package(HDF5 COMPONENTS C HL)
-if (HDF5_FOUND)
-  set(HDF5Support ON CACHE BOOL "Build with HDF5 support" FORCE)
-  message(STATUS "HDF5 found. HDF5 support is enabled.")
-else ()
-  set(HDF5Support OFF CACHE BOOL "Build with HDF5 support" FORCE)
-  message(STATUS "HDF5 not found. HDF5 support is disabled. It can be enabled with -DHDF5Support=ON after installing HDF5.")
-endif ()
-
-# MPI support
-find_package(MPI COMPONENTS CXX)
-if (MPI_FOUND)
-  set(MPISupport ON CACHE BOOL "Build with MPI support" FORCE)
-  message(STATUS "MPI found. MPI support is enabled.")
-else ()
-  set(MPISupport OFF CACHE BOOL "Build with MPI support" FORCE)
-  message(STATUS "MPI not found. MPI support is disabled. It can be enabled with -DMPISupport=ON after installing MPI.")
-endif ()
-
-# OpenMP support
-find_package(OpenMP COMPONENTS CXX)
-if (OpenMP_FOUND)
-  set(OpenMPSupport ON CACHE BOOL "Build with OpenMP support" FORCE)
-  message(STATUS "OpenMP found. OpenMP support is enabled.")
-else ()
-  set(OpenMPSupport OFF CACHE BOOL "Build with OpenMP support" FORCE)
-  message(STATUS "OpenMP not found. OpenMP support is disabled. It can be enabled with -DOpenMPSupport=ON after installing OpenMP.")
-endif ()
+option(HDF5Support "Build with HDF5 support" ON)
+option(MPISupport "Build with MPI support" ON)
+option(OpenMPSupport "Build with OpenMP support" ON)
 
 # Documentation
 option(Build_Documentation "Build documentation" OFF)
