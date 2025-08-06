@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2025-08-06 20:17:59</td>
+      <td>2025-08-06 21:29:27</td>
     </tr>
   </table>
 </div>
@@ -70,8 +70,8 @@
       <th>Call count</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l64">void nda::mem::free&lt;(nda::mem::AddressSpace)1&gt;(void*) (line 64)</a></td><td>called 3979263 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l38">void* nda::mem::malloc&lt;(nda::mem::AddressSpace)1&gt;(unsigned long) (line 38)</a></td><td>called 3978488 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l64">void nda::mem::free&lt;(nda::mem::AddressSpace)1&gt;(void*) (line 64)</a></td><td>called 3979328 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l38">void* nda::mem::malloc&lt;(nda::mem::AddressSpace)1&gt;(unsigned long) (line 38)</a></td><td>called 3978530 times</td><td>100.0%</td></tr>
   </table>
 </details>
 
@@ -348,14 +348,14 @@
       <td class="lineno"><a id="l38" href="#l38">38</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">3978488</td>
+      <td class="linecount coveredLine">3978530</td>
       <td class="src coveredLine"><span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">malloc</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">size</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l39" href="#l39">39</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">3978488</td>
+      <td class="linecount coveredLine">3978530</td>
       <td class="src coveredLine"><span class="w">    </span><span class="n">check_adr_sp_valid</span><span class="o">&lt;</span><span class="n">AdrSp</span><span class="o">&gt;</span><span class="p">();</span></td>
     </tr>
     <tr class="source-line">
@@ -376,7 +376,7 @@
       <td class="lineno"><a id="l42" href="#l42">42</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">3978488</td>
+      <td class="linecount coveredLine">3978530</td>
       <td class="src coveredLine"><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -390,7 +390,7 @@
       <td class="lineno"><a id="l44" href="#l44">44</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">3978488</td>
+      <td class="linecount coveredLine">3978530</td>
       <td class="src coveredLine"><span class="w">      </span><span class="n">ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">malloc</span><span class="p">(</span><span class="n">size</span><span class="p">);</span><span class="w"> </span><span class="c1">// NOLINT (we want to return a void*)</span></td>
     </tr>
     <tr class="source-line">
@@ -432,7 +432,7 @@
       <td class="lineno"><a id="l50" href="#l50">50</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">3978488</td>
+      <td class="linecount coveredLine">3978530</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ptr</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -530,14 +530,14 @@
       <td class="lineno"><a id="l64" href="#l64">64</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">3979263</td>
+      <td class="linecount coveredLine">3979328</td>
       <td class="src coveredLine"><span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">free</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l65" href="#l65">65</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">3979263</td>
+      <td class="linecount coveredLine">3979328</td>
       <td class="src coveredLine"><span class="w">    </span><span class="n">check_adr_sp_valid</span><span class="o">&lt;</span><span class="n">AdrSp</span><span class="o">&gt;</span><span class="p">();</span></td>
     </tr>
     <tr class="source-line">
@@ -565,7 +565,7 @@
       <td class="lineno"><a id="l69" href="#l69">69</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">3979263</td>
+      <td class="linecount coveredLine">3979328</td>
       <td class="src coveredLine"><span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">free</span><span class="p">(</span><span class="n">p</span><span class="p">);</span><span class="w"> </span><span class="c1">// NOLINT (we want to call free with a void*)</span></td>
     </tr>
     <tr class="source-line">
@@ -593,7 +593,7 @@
       <td class="lineno"><a id="l73" href="#l73">73</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">3979263</td>
+      <td class="linecount coveredLine">3979328</td>
       <td class="src coveredLine"><span class="w">  </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
