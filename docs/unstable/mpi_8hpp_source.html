@@ -111,11 +111,15 @@ $(function(){initNavTree('mpi_8hpp_source.html','',''); });
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="broadcast_8hpp.html">./mpi/broadcast.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="gather_8hpp.html">./mpi/gather.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="reduce_8hpp.html">./mpi/reduce.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;<a class="code" href="scatter_8hpp.html">./mpi/scatter.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;<a class="code" href="mpi_2utils_8hpp.html">./mpi/utils.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#ifndef NDA_HAVE_MPI</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#error &quot;MPI support is not enabled in this build of nda. Please configure and install nda with -DMPISupport=ON&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;<a class="code" href="broadcast_8hpp.html">./mpi/broadcast.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &quot;<a class="code" href="gather_8hpp.html">./mpi/gather.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &quot;<a class="code" href="reduce_8hpp.html">./mpi/reduce.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;<a class="code" href="scatter_8hpp.html">./mpi/scatter.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;<a class="code" href="mpi_2utils_8hpp.html">./mpi/utils.hpp</a>&quot;</span></div>
 <div class="ttc" id="abroadcast_8hpp_html"><div class="ttname"><a href="broadcast_8hpp.html">broadcast.hpp</a></div><div class="ttdoc">Provides an MPI broadcast function for nda::basic_array or nda::basic_array_view types.</div></div>
 <div class="ttc" id="agather_8hpp_html"><div class="ttname"><a href="gather_8hpp.html">gather.hpp</a></div><div class="ttdoc">Provides an MPI gather function for nda::basic_array or nda::basic_array_view types.</div></div>
 <div class="ttc" id="ampi_2utils_8hpp_html"><div class="ttname"><a href="mpi_2utils_8hpp.html">utils.hpp</a></div><div class="ttdoc">Provides various utility functions used by the MPI interface of nda.</div></div>

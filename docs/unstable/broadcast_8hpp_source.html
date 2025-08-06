@@ -111,45 +111,43 @@ $(function(){initNavTree('broadcast_8hpp_source.html','',''); });
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="mpi_2utils_8hpp.html">./utils.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="basic__functions_8hpp.html">../basic_functions.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="traits_8hpp.html">../traits.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;mpi/mpi.hpp&gt;</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;cstddef&gt;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;span&gt;</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">namespace </span>nda {</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> A&gt;</div>
-<div class="foldopen" id="foldopen00046" data-start="{" data-end="}">
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="group__av__mpi.html#ga6df12000d826688a8203af93d6b6838e">   46</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="group__av__mpi.html#ga6df12000d826688a8203af93d6b6838e">mpi_broadcast</a>(A &amp;&amp;a, mpi::communicator comm = {}, <span class="keywordtype">int</span> root = 0) <span class="comment">// NOLINT (temporary views are allowed here)</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">requires</span>(<a class="code hl_variable" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v&lt;A&gt;</a>)</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  {</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="comment">// broadcast the shape of the input array/view on the root process</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">auto</span> dims = a.shape();</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    mpi::broadcast(dims, comm, root);</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="comment">// resize or check the output array/view on non-root processes</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordflow">if</span> (comm.rank() != root) <a class="code hl_function" href="group__av__factories.html#ga21ed59f95217d512e116f5558676f8e7">resize_or_check_if_view</a>(a, dims);</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="comment">// call mpi::broadcast_range with a span if the array/view is contiguous with positive strides</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordflow">if</span> (a.is_contiguous() and a.has_positive_strides()) {</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>      <span class="keyword">auto</span> a_span = std::span{a.data(), <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(a.size())};</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>      mpi::broadcast_range(a_span, comm, root);</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>      mpi::broadcast_range(a, comm, root);</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    }</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  }</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="basic__functions_8hpp.html">../basic_functions.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="traits_8hpp.html">../traits.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;mpi/mpi.hpp&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;cstddef&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;span&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">namespace </span>nda {</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> A&gt;</div>
+<div class="foldopen" id="foldopen00045" data-start="{" data-end="}">
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="group__av__mpi.html#ga6df12000d826688a8203af93d6b6838e">   45</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="group__av__mpi.html#ga6df12000d826688a8203af93d6b6838e">mpi_broadcast</a>(A &amp;&amp;a, mpi::communicator comm = {}, <span class="keywordtype">int</span> root = 0) <span class="comment">// NOLINT (temporary views are allowed here)</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">requires</span>(<a class="code hl_variable" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v&lt;A&gt;</a>)</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  {</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="comment">// broadcast the shape of the input array/view on the root process</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">auto</span> dims = a.shape();</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    mpi::broadcast(dims, comm, root);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="comment">// resize or check the output array/view on non-root processes</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordflow">if</span> (comm.rank() != root) <a class="code hl_function" href="group__av__factories.html#ga21ed59f95217d512e116f5558676f8e7">resize_or_check_if_view</a>(a, dims);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="comment">// call mpi::broadcast_range with a span if the array/view is contiguous with positive strides</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordflow">if</span> (a.is_contiguous() and a.has_positive_strides()) {</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      <span class="keyword">auto</span> a_span = std::span{a.data(), <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(a.size())};</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>      mpi::broadcast_range(a_span, comm, root);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>      mpi::broadcast_range(a, comm, root);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    }</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  }</div>
 </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>} <span class="comment">// namespace nda</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>} <span class="comment">// namespace nda</span></div>
 <div class="ttc" id="abasic__functions_8hpp_html"><div class="ttname"><a href="basic__functions_8hpp.html">basic_functions.hpp</a></div><div class="ttdoc">Provides basic functions to create and manipulate arrays and views.</div></div>
 <div class="ttc" id="agroup__av__factories_html_ga21ed59f95217d512e116f5558676f8e7"><div class="ttname"><a href="group__av__factories.html#ga21ed59f95217d512e116f5558676f8e7">nda::resize_or_check_if_view</a></div><div class="ttdeci">void resize_or_check_if_view(A &amp;a, std::array&lt; long, A::rank &gt; const &amp;sha)</div><div class="ttdoc">Resize a given regular array to the given shape or check if a given view as the correct shape.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00305">basic_functions.hpp:305</a></div></div>
-<div class="ttc" id="agroup__av__mpi_html_ga6df12000d826688a8203af93d6b6838e"><div class="ttname"><a href="group__av__mpi.html#ga6df12000d826688a8203af93d6b6838e">nda::mpi_broadcast</a></div><div class="ttdeci">void mpi_broadcast(A &amp;&amp;a, mpi::communicator comm={}, int root=0)</div><div class="ttdoc">Implementation of an MPI broadcast for nda::basic_array or nda::basic_array_view types.</div><div class="ttdef"><b>Definition</b> <a href="#l00046">broadcast.hpp:46</a></div></div>
+<div class="ttc" id="agroup__av__mpi_html_ga6df12000d826688a8203af93d6b6838e"><div class="ttname"><a href="group__av__mpi.html#ga6df12000d826688a8203af93d6b6838e">nda::mpi_broadcast</a></div><div class="ttdeci">void mpi_broadcast(A &amp;&amp;a, mpi::communicator comm={}, int root=0)</div><div class="ttdoc">Implementation of an MPI broadcast for nda::basic_array or nda::basic_array_view types.</div><div class="ttdef"><b>Definition</b> <a href="#l00045">broadcast.hpp:45</a></div></div>
 <div class="ttc" id="agroup__av__utils_html_gad19aaebe79b6d698a818828217032489"><div class="ttname"><a href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">nda::is_regular_or_view_v</a></div><div class="ttdeci">constexpr bool is_regular_or_view_v</div><div class="ttdoc">Constexpr variable that is true if type A is either a regular array or a view.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00153">traits.hpp:153</a></div></div>
-<div class="ttc" id="ampi_2utils_8hpp_html"><div class="ttname"><a href="mpi_2utils_8hpp.html">utils.hpp</a></div><div class="ttdoc">Provides various utility functions used by the MPI interface of nda.</div></div>
 <div class="ttc" id="atraits_8hpp_html"><div class="ttname"><a href="traits_8hpp.html">traits.hpp</a></div><div class="ttdoc">Provides type traits for the nda library.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
