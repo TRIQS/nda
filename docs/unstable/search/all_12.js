@@ -35,7 +35,7 @@ var searchData=
   ['integration_20in_20c_20projects_32',['Integration in C++ projects',['../integration.html',1,'']]],
   ['interface_33',['interface',['../group__linalg__blas.html',1,'BLAS interface'],['../group__linalg__lapack.html',1,'LAPACK interface'],['../ex8.html#ex8_p8',1,'Using the BLAS/LAPACK interface']]],
   ['into_20an_20array_20view_34',['Reading into an array/view',['../ex5.html#ex5_p2',1,'']]],
-  ['inverse_35',['inverse',['../group__utils__perms.html#ga1783a6dd2aef24f2d8a3d7eab0c44c86',1,'nda::permutations::inverse()'],['../group__linalg__tools.html#ga99906b99820be65d1bfb07d90aea841c',1,'nda::inverse(M const &amp;m)']]],
+  ['inverse_35',['inverse',['../group__utils__perms.html#ga1783a6dd2aef24f2d8a3d7eab0c44c86',1,'nda::permutations::inverse()'],['../group__linalg__tools.html#ga99906b99820be65d1bfb07d90aea841c',1,'nda::inverse()'],['../group__linalg__tools.html#gaac7cec8926f7349c34c34b75373131c3',1,'nda::clef::inverse()']]],
   ['inverse1_5fin_5fplace_36',['inverse1_in_place',['../group__linalg__tools.html#ga52392364db364e5bbb05d4287bbfd7ee',1,'nda']]],
   ['inverse2_5fin_5fplace_37',['inverse2_in_place',['../group__linalg__tools.html#ga6d7a0ac0080632972b5854123550ce37',1,'nda']]],
   ['inverse3_5fin_5fplace_38',['inverse3_in_place',['../group__linalg__tools.html#ga23f56fb167a83085bfb6768672c986d6',1,'nda']]],

@@ -8,7 +8,7 @@ var searchData=
   ['indices_5',['indices',['../classnda_1_1basic__array.html#a924e493158e79352de92cf94f9681850',1,'nda::basic_array::indices()'],['../classnda_1_1basic__array__view.html#a750ff9a5f0aa624a425624769d72adb7',1,'nda::basic_array_view::indices()'],['../classnda_1_1array__iterator.html#ae6d6159cf785d4eb148f44d83c6051ad',1,'nda::array_iterator::indices()'],['../classnda_1_1array__iterator_3_011_00_01_t_00_01_pointer_01_4.html#afc3b5a601fdf96fc0502726066aec07d',1,'nda::array_iterator&lt; 1, T, Pointer &gt;::indices()']]],
   ['init_6',['init',['../classnda_1_1sym__grp.html#a4872cdb313957a3645a701c844d98869',1,'nda::sym_grp']]],
   ['init_5ffrom_5frepresentative_5fdata_7',['init_from_representative_data',['../classnda_1_1sym__grp.html#a7ed37c22f2a4009de69445e758d90cd9',1,'nda::sym_grp']]],
-  ['inverse_8',['inverse',['../group__utils__perms.html#ga1783a6dd2aef24f2d8a3d7eab0c44c86',1,'nda::permutations::inverse()'],['../group__linalg__tools.html#ga99906b99820be65d1bfb07d90aea841c',1,'nda::inverse(M const &amp;m)']]],
+  ['inverse_8',['inverse',['../group__utils__perms.html#ga1783a6dd2aef24f2d8a3d7eab0c44c86',1,'nda::permutations::inverse()'],['../group__linalg__tools.html#ga99906b99820be65d1bfb07d90aea841c',1,'nda::inverse()'],['../group__linalg__tools.html#gaac7cec8926f7349c34c34b75373131c3',1,'nda::clef::inverse()']]],
   ['inverse1_5fin_5fplace_9',['inverse1_in_place',['../group__linalg__tools.html#ga52392364db364e5bbb05d4287bbfd7ee',1,'nda']]],
   ['inverse2_5fin_5fplace_10',['inverse2_in_place',['../group__linalg__tools.html#ga6d7a0ac0080632972b5854123550ce37',1,'nda']]],
   ['inverse3_5fin_5fplace_11',['inverse3_in_place',['../group__linalg__tools.html#ga23f56fb167a83085bfb6768672c986d6',1,'nda']]],
