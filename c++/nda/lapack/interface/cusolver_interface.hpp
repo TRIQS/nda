@@ -10,6 +10,10 @@
 
 #pragma once
 
+#ifndef NDA_HAVE_CUDA
+#error "CUDA support is not enabled in this build of nda. Please configure and install nda with -DCUDASupport=ON"
+#endif
+
 #include "../../blas/tools.hpp"
 
 namespace nda::lapack::device {

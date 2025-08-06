@@ -55,8 +55,11 @@ if(NOT IS_SUBPROJECT)
   message(STATUS "-------- BUILD-TYPE: ${CMAKE_BUILD_TYPE} --------")
 endif()
 
-# Python Support
+# Optional Library Features
 option(PythonSupport "Build with Python support" OFF)
+option(HDF5Support "Build with HDF5 support" ON)
+option(MPISupport "Build with MPI support" ON)
+option(OpenMPSupport "Build with OpenMP support" ON)
 
 # Documentation
 option(Build_Documentation "Build documentation" OFF)

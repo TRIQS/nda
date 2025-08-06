@@ -29,6 +29,10 @@
 #include <utility>
 #include <vector>
 
+#ifndef NDA_HAVE_H5
+#error "HDF5 support is not enabled in this build of nda. Please configure and install nda with -DHDF5Support=ON"
+#endif
+
 namespace nda {
 
   /**

@@ -61,4 +61,13 @@ endif()
 # Was the Project built with CudaSupport?
 set(@PROJECT_NAME@_WITH_CUDA_SUPPORT @CudaSupport@ CACHE BOOL "Was @PROJECT_NAME@ build with Cuda support?")
 
+# Was the Project built with HDF5Support?
+set(@PROJECT_NAME@_WITH_HDF5_SUPPORT @HDF5Support@ CACHE BOOL "Was @PROJECT_NAME@ build with HDF5 support?")
+
+# Was the Project built with MPISupport?
+set(@PROJECT_NAME@_WITH_MPI_SUPPORT @MPISupport@ CACHE BOOL "Was @PROJECT_NAME@ build with MPI support?")
+
+# Was the Project built with OpenMPSupport?
+set(@PROJECT_NAME@_WITH_OPENMP_SUPPORT @OpenMPSupport@ CACHE BOOL "Was @PROJECT_NAME@ build with OpenMP support?")
+
 endif()
