@@ -10,6 +10,10 @@
 
 #pragma once
 
+#ifndef NDA_HAVE_MPI
+#error "MPI support is not enabled in this build of nda. Please configure and install nda with -DMPISupport=ON"
+#endif
+
 #include "./mpi/broadcast.hpp"
 #include "./mpi/gather.hpp"
 #include "./mpi/reduce.hpp"

@@ -11,12 +11,10 @@
 #pragma once
 
 #include "./utils.hpp"
-#include "../concepts.hpp"
 #include "../declarations.hpp"
 #include "../macros.hpp"
 #include "../traits.hpp"
 
-#include <mpi.h>
 #include <mpi/mpi.hpp>
 
 #include <cstddef>
@@ -25,7 +23,6 @@
 #include <span>
 #include <tuple>
 #include <type_traits>
-#include <utility>
 
 namespace nda::detail {
 

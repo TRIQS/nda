@@ -15,6 +15,12 @@
 #include <tuple>
 #include <vector>
 
+#if defined(NDA_HAVE_MPI) || defined(NDA_HAVE_OPENMP)
+static bool parallel = true;
+#else
+static bool parallel = false;
+#endif
+
 // Consider the permutations:
 // 1) {0, 1, 2, 3} -> {2, 1, 0, 3} and
 // 2) {0, 1, 2, 3} -> {3, 2, 1, 0}.
@@ -87,7 +93,7 @@ TEST(NDA, SymGrpMatrixPermutation) {
   // init a second array from the symmetry group and test if it matches the input array
   nda::array<std::complex<double>, 2> B(4, 4);
   auto init_func = [&A](idx_t const &x) { return std::apply(A, x); };
-  grp.init(B, init_func);
+  grp.init(B, init_func, parallel);
   EXPECT_EQ_ARRAY(A, B);
 
   // test symmetrization without breaking the symmetry
@@ -147,7 +153,7 @@ TEST(NDA, SymGrpMatrixFlipShift) {
   // init a second array from the symmetry group and test if it matches the input array
   nda::array<std::complex<double>, 2> B(4, 4);
   auto init_func = [&A](idx_t const &x) { return std::apply(A, x); };
-  grp.init(B, init_func);
+  grp.init(B, init_func, parallel);
   EXPECT_EQ_ARRAY(A, B);
 
   // test symmetrization without breaking the symmetry
@@ -211,7 +217,7 @@ TEST(NDA, SymGrpTensorCylicTriplet) {
   // init a second array from the symmetry group and test if it matches the input array
   nda::array<std::complex<double>, 6> B(n, n, n, n, n, n);
   auto init_func = [&A](idx_t const &x) { return std::apply(A, x); };
-  grp.init(B, init_func);
+  grp.init(B, init_func, parallel);
   EXPECT_EQ_ARRAY(A, B);
 
   // test symmetrization without breaking the symmetry
@@ -231,3 +237,7 @@ TEST(NDA, SymGrpTensorCylicTriplet) {
   grp.init_from_representative_data(B, vec);
   EXPECT_EQ_ARRAY(A, B);
 }
+
+#ifdef NDA_HAVE_MPI
+MPI_TEST_MAIN
+#endif

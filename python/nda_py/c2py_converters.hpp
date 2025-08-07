@@ -23,14 +23,23 @@ namespace c2py {
   template <typename T, int R, typename Layout, char Algebra>
   struct py_converter<nda::basic_array_view<T, R, Layout, Algebra>> {
 
-    using U = std::decay_t<T>;
+    using view_t = nda::basic_array_view<T, R, Layout, Algebra>;
+    using U      = std::decay_t<T>;
     static_assert(has_npy_type<U>, "Logical Error");
     static_assert(not std::is_same_v<U, pyref>, "Not implemented"); // would require to take care of the incref...
     // However, it works for PyObject *
 
+    // ------------ tp_name ---------------
+
+    static std::string tp_name() {
+      std::ostringstream out;
+      out << "ndarray[" << python_typename<T>() << ", " << R << "]";
+      return out.str();
+    }
+
     // --------- C -> PY --------
 
-    static PyObject *c2py(nda::array_view<T, R> v) {
+    static PyObject *c2py(view_t v) {
       auto p = nda::python::make_numpy_proxy_from_array_or_view(v);
       return p.to_python();
     }
@@ -73,7 +82,7 @@ namespace c2py {
 
     // --------- PY -> C --------
 
-    static nda::array_view<T, R> py2c(PyObject *obj) {
+    static view_t py2c(PyObject *obj) {
       auto p = make_numpy_proxy(obj);
       EXPECTS(p.extents.size() >= R);
       EXPECTS(p.element_type == npy_type<T> or p.extents.size() > R);
@@ -84,7 +93,7 @@ namespace c2py {
         extents[u] = p.extents[u];
         strides[u] = p.strides[u] / sizeof(T);
       }
-      return nda::array_view<T, R>{{extents, strides}, static_cast<T *>(p.data)};
+      return view_t{{extents, strides}, static_cast<T *>(p.data)};
     }
   };
 
@@ -98,9 +107,19 @@ namespace c2py {
     static_assert(not std::is_same_v<T, pyref>, "Not implemented");
     static_assert(not std::is_same_v<T, PyObject *>, "Not implemented");
 
+    using array_t                 = nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap<>>;
+    using view_t                  = nda::basic_array_view<T, R, nda::C_layout, Algebra>;
     using converter_T             = py_converter<std::decay_t<T>>;
-    using converter_view_T        = py_converter<nda::array_view<T, R>>;
-    using converter_view_pyobject = py_converter<nda::array_view<PyObject *, R>>;
+    using converter_view_T        = py_converter<view_t>;
+    using converter_view_pyobject = py_converter<nda::basic_array_view<PyObject *, R, nda::C_layout, Algebra>>;
+
+    // ------------ tp_name ---------------
+
+    static std::string tp_name() {
+      std::ostringstream out;
+      out << "ndarray[" << python_typename<T>() << ", " << R << "]";
+      return out.str();
+    }
 
     // --------- C -> PY --------
 
@@ -159,7 +178,7 @@ namespace c2py {
 
     // --------- PY -> C --------
 
-    static nda::array<T, R> py2c(PyObject *obj) {
+    static array_t py2c(PyObject *obj) {
 
       // if obj is not an numpy, we make a numpy and rerun
       if (not PyArray_Check(obj) or (PyArray_Check(obj) and has_npy_type<T> and (PyArray_TYPE((PyArrayObject *)(obj)) != npy_type<T>))) {
@@ -172,7 +191,7 @@ namespace c2py {
       if constexpr (has_npy_type<T>) {
         if (not numpy_check_layout<R, nda::C_layout>(obj)) {
           cpp2py::pyref obj_c_order = make_numpy(obj);
-          return nda::array<T, R>{converter_view_T::py2c(obj_c_order)};
+          return array_t{converter_view_T::py2c(obj_c_order)};
         }
         return converter_view_T::py2c(obj);
       } else {
@@ -183,7 +202,7 @@ namespace c2py {
           pyref subobj = PyObject_GetItem(obj, pyref::make_tuple(PyLong_FromLong(i)...));
           return converter_T::py2c(subobj);
         };
-        nda::array<T, R> res = nda::array_adapter{shape, l};
+        array_t res = nda::array_adapter{shape, l};
         if (PyErr_Occurred()) PyErr_Print();
         return res;
       }

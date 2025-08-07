@@ -11,10 +11,11 @@
 #pragma once
 
 #include "./nda.hpp"
+#ifdef NDA_HAVE_MPI
 #include "./mpi.hpp"
+#endif
 
 #include <itertools/omp_chunk.hpp>
-#include <mpi/mpi.hpp>
 
 #include <array>
 #include <concepts>
@@ -174,32 +175,30 @@ namespace nda {
      * @tparam H Callable type of nda::NdaInitFunc.
      * @param a nda::Array object to be initialized.
      * @param init_func Callable that is used to initialize the array.
-     * @param parallel Parallelize using openmp and mpi.
+     * @param parallel Parallelize using OpenMP, MPI, or both.
      */
     template <typename H>
       requires(NdaInitFunc<H, A>)
     void init(A &a, H const &init_func, bool parallel = false) const {
+      auto init_with_sym = [&](sym_class_t const &sym_class) {
+        auto idx           = a.indexmap().to_idx(sym_class[0].first);
+        auto ref_val       = init_func(idx);
+        std::apply(a, idx) = ref_val;
+        for (auto const &[lin_idx, op] : sym_class) { std::apply(a, a.indexmap().to_idx(lin_idx)) = op(ref_val); }
+      };
+
       if (parallel) {
-        // reset input array to allow for mpi reduction
-        a() = 0.0;
-
-#pragma omp parallel
-        for (auto const &sym_class : itertools::omp_chunk(mpi::chunk(sym_classes))) {
-          auto idx           = a.indexmap().to_idx(sym_class[0].first);
-          auto ref_val       = init_func(idx);
-          std::apply(a, idx) = ref_val;
-          for (auto const &[lin_idx, op] : sym_class) { std::apply(a, a.indexmap().to_idx(lin_idx)) = op(ref_val); }
-        }
-
-        // distribute data among all ranks
+#ifdef NDA_HAVE_OPENMP
+#pragma omp parallel for
+#endif // NDA_HAVE_OPENMP
+#ifdef NDA_HAVE_MPI
+        for (auto const &sym_class : mpi::chunk(sym_classes)) init_with_sym(sym_class);
         a = mpi::all_reduce(a);
+#else
+        for (auto const &sym_class : sym_classes) init_with_sym(sym_class);
+#endif // NDA_HAVE_MPI
       } else {
-        for (auto const &sym_class : sym_classes) {
-          auto idx           = a.indexmap().to_idx(sym_class[0].first);
-          auto ref_val       = init_func(idx);
-          std::apply(a, idx) = ref_val;
-          for (auto const &[lin_idx, op] : sym_class) { std::apply(a, a.indexmap().to_idx(lin_idx)) = op(ref_val); }
-        }
+        for (auto const &sym_class : sym_classes) init_with_sym(sym_class);
       }
     }
 

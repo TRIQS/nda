@@ -25,6 +25,33 @@ namespace nda::clef {
    * @{
    */
 
+  /**
+   * @brief Controls evaluation behavior of function nodes during partial expression evaluation.
+   *
+   * When partially evaluating an expression tree, function nodes have two evaluation modes:
+   * - false (default): Function is evaluated only if all arguments are non-lazy values.
+   *   If any argument is lazy, the node is preserved with evaluated children but the
+   *   function itself is NOT called.
+   * - true: Function is ALWAYS called with all arguments (lazy or non-lazy).
+   *   This requires the function to properly handle non-lazy arguments by moving them
+   *   into new expression nodes using make_expr_call.
+   *
+   * @tparam F Function type to specialize for
+   */
+  template <typename F>
+  constexpr bool supports_partial_eval_of_calls = false;
+
+  /**
+   * @brief Controls evaluation behavior of subscript operations during partial expression evaluation.
+   *
+   * Similar to supports_partial_eval_of_calls but specifically for the subscript operator[].
+   * When true, the subscript operation will be called even with lazy arguments.
+   *
+   * @tparam T Type to specialize subscript evaluation for
+   */
+  template <typename T>
+  constexpr bool supports_partial_eval_of_subscript = false;
+
   namespace detail {
 
     // Get the value from a std::reference_wrapper or simply forward the argument of any other type.
@@ -100,7 +127,6 @@ namespace nda::clef {
      */
     template <typename F, typename... Args>
     FORCEINLINE decltype(auto) operator()(F &&f, Args &&...args) const {
-      // directly calling [args...] breaks clang
       return detail::fget(std::forward<F>(f)).operator[](detail::fget(std::forward<Args>(args))...);
     }
   };
@@ -224,9 +250,16 @@ namespace nda::clef {
    * @param args Operands.
    * @return An nda::clef::expr for the given operation and operands.
    */
+
   template <typename Tag, typename... Args>
   FORCEINLINE auto op_dispatch(std::true_type, Args &&...args) {
-    return expr<Tag, expr_storage_t<Args>...>{Tag(), std::forward<Args>(args)...};
+    using Arg0 = std::decay_t<std::tuple_element_t<0, std::tuple<Args...>>>;
+    if constexpr ((std::is_same_v<Tag, tags::function> and not supports_partial_eval_of_calls<Arg0>) or  //
+                  (std::is_same_v<Tag, tags::subscript> and not supports_partial_eval_of_subscript<Arg0>) //
+    )
+      return expr<Tag, expr_storage_t<Args>...>{Tag(), std::forward<Args>(args)...};
+     else
+      return operation<Tag>()(std::forward<Args>(args)...);
   }
 
   /**

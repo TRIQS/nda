@@ -25,11 +25,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-24.04, macos-15]
+        cxx: [g++, clang++]
+        doc: [OFF]
+        cov: [OFF]
+        python_hdf5: [ON, OFF]
+        openmp_mpi: [ON, OFF]
         include:
-          - {os: ubuntu-24.04, cc: gcc, cxx: g++, doc: OFF, cov: ON}
-          - {os: ubuntu-24.04, cc: clang, cxx: clang++, doc: OFF, cov: OFF}
-          - {os: macos-14, cc: gcc-15, cxx: g++-15, doc: OFF, cov: OFF}
-          - {os: macos-14, cc: clang, cxx: clang++, doc: ON, cov: OFF}
+          # Full build with coverage
+          - {os: ubuntu-24.04, cxx: g++, doc: OFF, cov: ON, python_hdf5: ON, openmp_mpi: ON }
+          # Full build with Documentation
+          - {os: macos-15, cxx: clang++, doc: ON, cov: OFF, python_hdf5: ON, openmp_mpi: ON }
 
     runs-on: ${{ matrix.os }}
 
@@ -39,9 +45,17 @@ jobs:
     - uses: actions/cache/restore@v4
       with:
         path: ${{ env.CCACHE_DIR }}
-        key: ccache-${{ matrix.os }}-${{ matrix.cc }}-${{ github.run_id }}
+        key: ccache-${{ matrix.os }}-${{ matrix.cxx }}-${{ github.run_id }}
         restore-keys:
-          ccache-${{ matrix.os }}-${{ matrix.cc }}-
+          ccache-${{ matrix.os }}-${{ matrix.cxx }}-
+
+    - name: Set cxx variables
+      run: |
+        if [[ ${{ matrix.os }} == 'macos-15' && ${{ matrix.cxx }} == 'g++' ]]; then
+          echo "CXX=g++-15" >> $GITHUB_ENV
+        else
+          echo "CXX=${{ matrix.cxx }}" >> $GITHUB_ENV
+        fi
 
     - name: Install ubuntu dependencies
       if: ${{ contains(matrix.os, 'ubuntu') }}
@@ -94,9 +108,10 @@ jobs:
         pip install -r requirements.txt
         echo "PATH=$(brew --prefix llvm)/bin:$(brew --prefix gcc)/bin:$PATH" >> $GITHUB_ENV
         echo "PYTHONPATH=$(brew --prefix llvm)/lib/python3.13/site-packages" >> $GITHUB_ENV
+        echo "SDKROOT=$(xcrun --show-sdk-path)" >> $GITHUB_ENV
 
     - name: Add clang CXXFLAGS
-      if: ${{ contains(matrix.cxx, 'clang') }}
+      if: ${{ matrix.cxx == 'clang++' }}
       run: |
         echo "CXXFLAGS=-stdlib=libc++" >> $GITHUB_ENV
 
@@ -116,11 +131,16 @@ jobs:
         mv tmp_basic_array_view.hpp basic_array_view.hpp
 
     - name: Build nda
-      env:
-        CC: ${{ matrix.cc }}
-        CXX: ${{ matrix.cxx }}
       run: |
-        mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/install -DPythonSupport=ON -DBuild_Documentation=${{ matrix.doc }} -DCMAKE_BUILD_TYPE=${{ matrix.cov == 'ON' && 'Debug' || 'Release' }}
+        mkdir build && cd build
+        cmake .. \
+          -DCMAKE_INSTALL_PREFIX=$HOME/install \
+          -DBuild_Documentation=${{ matrix.doc }} \
+          -DCMAKE_BUILD_TYPE=${{ matrix.cov == 'ON' && 'Debug' || 'Release' }} \
+          -DPythonSupport=${{ matrix.python_hdf5 }} \
+          -DHDF5Support=${{ matrix.python_hdf5 }} \
+          -DOpenMPSupport=${{ matrix.openmp_mpi }} \
+          -DMPISupport=${{ matrix.openmp_mpi }}
         make -j2 || make -j1 VERBOSE=1
 
     - name: Test nda
@@ -145,7 +165,7 @@ jobs:
       if: always()
       with:
         path: ${{ env.CCACHE_DIR }}
-        key: ccache-${{ matrix.os }}-${{ matrix.cc }}-${{ github.run_id }}
+        key: ccache-${{ matrix.os }}-${{ matrix.cxx }}-${{ github.run_id }}
 
     - name: Deploy documentation
       if: matrix.doc == 'ON' && github.ref == 'refs/heads/unstable'
