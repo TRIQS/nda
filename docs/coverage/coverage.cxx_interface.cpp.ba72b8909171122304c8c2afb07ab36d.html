@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2025-08-07 21:42:55</td>
+      <td>2025-08-07 21:43:01</td>
     </tr>
   </table>
 </div>
@@ -72,13 +72,13 @@
     </tr>
     <tr><td><a href="#l64">nda::blas::f77::axpy(int, double, double const*, int, double*, int) (line 64)</a></td><td>not called</td><td>0.0%</td></tr>
     <tr><td><a href="#l65">nda::blas::f77::axpy(int, std::complex&lt;double&gt;, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt;*, int) (line 65)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l60">nda::blas::f77::blacplx(std::complex&lt;double&gt; const*) (line 60)</a></td><td>called 336 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l60">nda::blas::f77::blacplx(std::complex&lt;double&gt; const*) (line 60)</a></td><td>called 340 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l59">nda::blas::f77::blacplx(std::complex&lt;double&gt;*) (line 59)</a></td><td>called 439 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l70">nda::blas::f77::copy(int, double const*, int, double*, int) (line 70)</a></td><td>not called</td><td>0.0%</td></tr>
     <tr><td><a href="#l71">nda::blas::f77::copy(int, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt;*, int) (line 71)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l73">nda::blas::f77::dot(int, double const*, int, double const*, int) (line 73)</a></td><td>called 24 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l74">nda::blas::f77::dot(int, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt; const*, int) (line 74)</a></td><td>called 5 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l83">nda::blas::f77::dotc(int, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt; const*, int) (line 83)</a></td><td>called 12 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l73">nda::blas::f77::dot(int, double const*, int, double const*, int) (line 73)</a></td><td>called 26 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l74">nda::blas::f77::dot(int, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt; const*, int) (line 74)</a></td><td>called 6 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l83">nda::blas::f77::dotc(int, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt; const*, int) (line 83)</a></td><td>called 13 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l93">nda::blas::f77::gemm(char, char, int, int, int, double, double const*, int, double const*, int, double, double*, int) (line 93)</a></td><td>called 133 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l97">nda::blas::f77::gemm(char, char, int, int, int, std::complex&lt;double&gt;, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt; const*, int, std::complex&lt;double&gt;, std::complex&lt;double&gt;*, int) (line 97)</a></td><td>called 120 times</td><td>100.0%</td></tr>
     <tr><td><a href="#l102">nda::blas::f77::gemm_batch(char, char, int, int, int, double, double const**, int, double const**, int, double, double**, int, int) (line 102)</a></td><td>called 2 times</td><td>100.0%</td></tr>
@@ -525,7 +525,7 @@
       <td class="lineno"><a id="l60" href="#l60">60</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">336</td>
+      <td class="linecount coveredLine">340</td>
       <td class="src coveredLine"><span class="w">  </span><span class="kr">inline</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="o">*</span><span class="n">blacplx</span><span class="p">(</span><span class="n">dcomplex</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*&gt;</span><span class="p">(</span><span class="n">c</span><span class="p">);</span><span class="w"> </span><span class="p">}</span><span class="w">    </span><span class="c1">// NOLINT</span></td>
     </tr>
     <tr class="source-line">
@@ -616,14 +616,14 @@
       <td class="lineno"><a id="l73" href="#l73">73</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">24</td>
+      <td class="linecount coveredLine">26</td>
       <td class="src coveredLine"><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">dot</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">M</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">incx</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">incy</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">F77_ddot</span><span class="p">(</span><span class="o">&amp;</span><span class="n">M</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">incx</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">incy</span><span class="p">);</span><span class="w"> </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l74" href="#l74">74</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">5</td>
+      <td class="linecount coveredLine">6</td>
       <td class="src coveredLine"><span class="w">  </span><span class="n">dcomplex</span><span class="w"> </span><span class="n">dot</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">M</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">dcomplex</span><span class="w"> </span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">incx</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">dcomplex</span><span class="w"> </span><span class="o">*</span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">incy</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
@@ -660,12 +660,12 @@
         <details class="linebranchDetails">
           <summary class="linebranchSummary">1/2</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 3 taken 5 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 6 times.</div>
             <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">5</td>
+      <td class="linecount partialCoveredLine">6</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">F77_zdotu</span><span class="p">(</span><span class="o">&amp;</span><span class="n">M</span><span class="p">,</span><span class="w"> </span><span class="n">blacplx</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span><span class="n">incx</span><span class="p">,</span><span class="w"> </span><span class="n">blacplx</span><span class="p">(</span><span class="n">Y</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span><span class="n">incy</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
@@ -679,7 +679,7 @@
       <td class="lineno"><a id="l81" href="#l81">81</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">5</td>
+      <td class="linecount coveredLine">6</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">dcomplex</span><span class="p">{</span><span class="n">result</span><span class="p">.</span><span class="n">real</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">imag</span><span class="p">};</span></td>
     </tr>
     <tr class="source-line">
@@ -693,7 +693,7 @@
       <td class="lineno"><a id="l83" href="#l83">83</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">12</td>
+      <td class="linecount coveredLine">13</td>
       <td class="src coveredLine"><span class="w">  </span><span class="n">dcomplex</span><span class="w"> </span><span class="n">dotc</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">M</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">dcomplex</span><span class="w"> </span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">incx</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">dcomplex</span><span class="w"> </span><span class="o">*</span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">incy</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
@@ -730,12 +730,12 @@
         <details class="linebranchDetails">
           <summary class="linebranchSummary">1/2</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 3 taken 12 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 13 times.</div>
             <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">12</td>
+      <td class="linecount partialCoveredLine">13</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">F77_zdotc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">M</span><span class="p">,</span><span class="w"> </span><span class="n">blacplx</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span><span class="n">incx</span><span class="p">,</span><span class="w"> </span><span class="n">blacplx</span><span class="p">(</span><span class="n">Y</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span><span class="n">incy</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
@@ -749,7 +749,7 @@
       <td class="lineno"><a id="l90" href="#l90">90</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">12</td>
+      <td class="linecount coveredLine">13</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">dcomplex</span><span class="p">{</span><span class="n">result</span><span class="p">.</span><span class="n">real</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">imag</span><span class="p">};</span></td>
     </tr>
     <tr class="source-line">
