@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.14.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TRIQS/nda: nda/linalg/dot.hpp</title>
+<title>TRIQS/nda: nda/linalg/outer_product.hpp</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -74,7 +74,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('linalg_2dot_8hpp.html','',''); });
+$(function(){initNavTree('outer__product_8hpp.html','',''); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -100,33 +100,30 @@ $(function(){initNavTree('linalg_2dot_8hpp.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">dot.hpp</div></div>
+  <div class="headertitle"><div class="title">outer_product.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="blas_2dot_8hpp_source.html">../blas/dot.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="ger_8hpp_source.html">../blas/ger.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="tools_8hpp_source.html">../blas/tools.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="declarations_8hpp_source.html">../declarations.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="macros_8hpp_source.html">../macros.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="address__space_8hpp_source.html">../mem/address_space.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="mem_2policies_8hpp_source.html">../mem/policies.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="traits_8hpp_source.html">../traits.hpp</a>&quot;</code><br />
-<code>#include &lt;complex&gt;</code><br />
-<code>#include &lt;cstddef&gt;</code><br />
 </div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Provides a generic dot product. </p>
+<div class="textblock"><p>Provides a generic outer product function. </p>
 
-<p class="definition">Definition in file <a class="el" href="linalg_2dot_8hpp_source.html">dot.hpp</a>.</p>
+<p class="definition">Definition in file <a class="el" href="outer__product_8hpp_source.html">outer_product.hpp</a>.</p>
 </div>
-<p><a href="linalg_2dot_8hpp_source.html">Go to the source code of this file.</a></p>
+<p><a href="outer__product_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga33985db52d69c767905c98ae2f7e42e7" id="r_ga33985db52d69c767905c98ae2f7e42e7"><td class="memTemplParams" colspan="2">template&lt;typename X, typename Y&gt; <br />
-requires ((Scalar&lt;X&gt; and Scalar&lt;Y&gt;) or (Vector&lt;X&gt; and Vector&lt;Y&gt;))</td></tr>
-<tr class="memitem:ga33985db52d69c767905c98ae2f7e42e7 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#ga33985db52d69c767905c98ae2f7e42e7">nda::linalg::dot</a> (X const &amp;x, Y const &amp;y)</td></tr>
-<tr class="memdesc:ga33985db52d69c767905c98ae2f7e42e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the dot product of two <a class="el" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68" title="Alias template of an nda::basic_array with rank 1 and a &#39;V&#39; algebra.">nda::vector</a> objects or the product of two scalars.  <br /></td></tr>
-<tr class="memitem:ga1e4da250fc11060a5bc97da2ee467a9a" id="r_ga1e4da250fc11060a5bc97da2ee467a9a"><td class="memTemplParams" colspan="2">template&lt;typename X, typename Y&gt; <br />
-requires ((Scalar&lt;X&gt; and Scalar&lt;Y&gt;) or (Vector&lt;X&gt; and Vector&lt;Y&gt;))</td></tr>
-<tr class="memitem:ga1e4da250fc11060a5bc97da2ee467a9a template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#ga1e4da250fc11060a5bc97da2ee467a9a">nda::linalg::dotc</a> (X const &amp;x, Y const &amp;y)</td></tr>
-<tr class="memdesc:ga1e4da250fc11060a5bc97da2ee467a9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the dotc (LHS operand is conjugated) product of two <a class="el" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68" title="Alias template of an nda::basic_array with rank 1 and a &#39;V&#39; algebra.">nda::vector</a> objects or the product of two scalars.  <br /></td></tr>
+<tr class="memitem:gaa2e13a1dfcbbacc5c2279f98230b5eb2" id="r_gaa2e13a1dfcbbacc5c2279f98230b5eb2"><td class="memTemplParams" colspan="2">template&lt;MemoryArray A, MemoryArray B&gt; <br />
+requires ((<a class="el" href="group__linalg__blas.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;A&gt; or <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;) and <a class="el" href="group__linalg__blas.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;A&gt; == <a class="el" href="group__linalg__blas.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;B&gt;)</td></tr>
+<tr class="memitem:gaa2e13a1dfcbbacc5c2279f98230b5eb2 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#gaa2e13a1dfcbbacc5c2279f98230b5eb2">nda::linalg::outer_product</a> (A const &amp;a, B const &amp;b)</td></tr>
+<tr class="memdesc:gaa2e13a1dfcbbacc5c2279f98230b5eb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Outer product of two arrays/views.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -141,7 +138,7 @@ requires ((Scalar&lt;X&gt; and Scalar&lt;Y&gt;) or (Vector&lt;X&gt; and Vector&l
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="dir_913b60804e0ca3d36b328b721e405789.html">nda</a></li><li class="navelem"><a href="dir_6ac268accbf4e19c7c99f7c0bc41765a.html">linalg</a></li><li class="navelem"><a href="linalg_2dot_8hpp.html">dot.hpp</a></li>
+    <li class="navelem"><a href="dir_913b60804e0ca3d36b328b721e405789.html">nda</a></li><li class="navelem"><a href="dir_6ac268accbf4e19c7c99f7c0bc41765a.html">linalg</a></li><li class="navelem"><a href="outer__product_8hpp.html">outer_product.hpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.14.0 </li>
   </ul>
 </div>

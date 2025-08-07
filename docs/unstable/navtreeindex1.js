@@ -37,6 +37,8 @@ var NAVTREEINDEX1 =
 "operation_8hpp_source.html":[4,7,0,1,10],
 "orgqr_8hpp.html":[4,7,0,2,9],
 "orgqr_8hpp_source.html":[4,7,0,2,9],
+"outer__product_8hpp.html":[4,7,0,4,6],
+"outer__product_8hpp_source.html":[4,7,0,4,6],
 "pages.html":[],
 "permutation_8hpp.html":[4,7,0,3,3],
 "permutation_8hpp_source.html":[4,7,0,3,3],

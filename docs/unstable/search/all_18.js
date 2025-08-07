@@ -67,10 +67,11 @@ var searchData=
   ['options_64',['Custom CMake options',['../installation.html#cmake_options',1,'']]],
   ['orgqr_65',['orgqr',['../group__linalg__lapack.html#gad90cc968c1566e14de62b316caaee04c',1,'nda::lapack']]],
   ['orgqr_2ehpp_66',['orgqr.hpp',['../orgqr_8hpp.html',1,'']]],
-  ['outer_5fproduct_67',['outer_product',['../group__linalg__blas.html#gaa1abfb609f2aca8484d0aec40d3f1805',1,'nda::blas']]],
-  ['overview_68',['Overview',['../index.html',1,'']]],
-  ['overview_69',['Example 1: A quick overview',['../ex1.html',1,'']]],
-  ['owning_5fpolicy_5ft_70',['owning_policy_t',['../classnda_1_1basic__array__view.html#ab423e762298ce23a629ddef107550295',1,'nda::basic_array_view']]],
-  ['owninghandle_71',['OwningHandle',['../conceptnda_1_1mem_1_1_owning_handle.html',1,'nda::mem']]],
-  ['owns_72',['owns',['../classnda_1_1mem_1_1bucket.html#a2829d8d15156e9a9e788b82701ba96c3',1,'nda::mem::bucket::owns()'],['../classnda_1_1mem_1_1multi__bucket.html#a0570ff91d531f9a514e97da4e9f7a58c',1,'nda::mem::multi_bucket::owns()'],['../classnda_1_1mem_1_1segregator.html#a444e878b28cfee486930ead6725122cd',1,'nda::mem::segregator::owns()'],['../classnda_1_1mem_1_1leak__check.html#a57123fb674baf07d52ef5071c250f01b',1,'nda::mem::leak_check::owns()'],['../classnda_1_1mem_1_1stats.html#a8cf7a572bf7f11227eae8df785e400e6',1,'nda::mem::stats::owns()']]]
+  ['outer_5fproduct_67',['outer_product',['../group__linalg__tools.html#gaa2e13a1dfcbbacc5c2279f98230b5eb2',1,'nda::linalg']]],
+  ['outer_5fproduct_2ehpp_68',['outer_product.hpp',['../outer__product_8hpp.html',1,'']]],
+  ['overview_69',['Overview',['../index.html',1,'']]],
+  ['overview_70',['Example 1: A quick overview',['../ex1.html',1,'']]],
+  ['owning_5fpolicy_5ft_71',['owning_policy_t',['../classnda_1_1basic__array__view.html#ab423e762298ce23a629ddef107550295',1,'nda::basic_array_view']]],
+  ['owninghandle_72',['OwningHandle',['../conceptnda_1_1mem_1_1_owning_handle.html',1,'nda::mem']]],
+  ['owns_73',['owns',['../classnda_1_1mem_1_1bucket.html#a2829d8d15156e9a9e788b82701ba96c3',1,'nda::mem::bucket::owns()'],['../classnda_1_1mem_1_1multi__bucket.html#a0570ff91d531f9a514e97da4e9f7a58c',1,'nda::mem::multi_bucket::owns()'],['../classnda_1_1mem_1_1segregator.html#a444e878b28cfee486930ead6725122cd',1,'nda::mem::segregator::owns()'],['../classnda_1_1mem_1_1leak__check.html#a57123fb674baf07d52ef5071c250f01b',1,'nda::mem::leak_check::owns()'],['../classnda_1_1mem_1_1stats.html#a8cf7a572bf7f11227eae8df785e400e6',1,'nda::mem::stats::owns()']]]
 ];

@@ -1,5 +1,5 @@
 var linalg_2dot_8hpp =
 [
-    [ "nda::dot", "group__linalg__tools.html#ga432349969f2f13802bed8f1b06bc1b59", null ],
-    [ "nda::dotc", "group__linalg__tools.html#ga0d3bdc2a0527996e49ca1181091e396b", null ]
+    [ "nda::linalg::dot", "group__linalg__tools.html#ga33985db52d69c767905c98ae2f7e42e7", null ],
+    [ "nda::linalg::dotc", "group__linalg__tools.html#ga1e4da250fc11060a5bc97da2ee467a9a", null ]
 ];

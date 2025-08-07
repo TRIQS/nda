@@ -114,12 +114,14 @@ $(function(){initNavTree('lapack_2interface_2cxx__interface_8hpp.html','',''); }
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a0976f7f2d8ffd611a32ff2b4f44453cc" id="r_a0976f7f2d8ffd611a32ff2b4f44453cc"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A&gt; </td></tr>
-<tr class="memitem:a0976f7f2d8ffd611a32ff2b4f44453cc template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0976f7f2d8ffd611a32ff2b4f44453cc">nda::lapack::get_ld</a> (A const &amp;a)</td></tr>
-<tr class="memdesc:a0976f7f2d8ffd611a32ff2b4f44453cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the leading dimension in LAPACK jargon of an <a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a>.  <br /></td></tr>
-<tr class="memitem:a5894e5c9661cc8fdbfa37693de22f254" id="r_a5894e5c9661cc8fdbfa37693de22f254"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A&gt; </td></tr>
-<tr class="memitem:a5894e5c9661cc8fdbfa37693de22f254 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5894e5c9661cc8fdbfa37693de22f254">nda::lapack::get_ncols</a> (A const &amp;a)</td></tr>
-<tr class="memdesc:a5894e5c9661cc8fdbfa37693de22f254"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of columns in LAPACK jargon of an <a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a>.  <br /></td></tr>
+<tr class="memitem:a3d3e17b98e215606a2db727249b12e38" id="r_a3d3e17b98e215606a2db727249b12e38"><td class="memTemplParams" colspan="2">template&lt;MemoryArray A&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 1 or <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 2)</td></tr>
+<tr class="memitem:a3d3e17b98e215606a2db727249b12e38 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3d3e17b98e215606a2db727249b12e38">nda::lapack::get_ld</a> (A const &amp;a)</td></tr>
+<tr class="memdesc:a3d3e17b98e215606a2db727249b12e38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the leading dimension of an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> with rank 1 or 2 for LAPACK calls.  <br /></td></tr>
+<tr class="memitem:a389b87f1aeda1e9d133273550271719a" id="r_a389b87f1aeda1e9d133273550271719a"><td class="memTemplParams" colspan="2">template&lt;MemoryArray A&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 1 or <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 2)</td></tr>
+<tr class="memitem:a389b87f1aeda1e9d133273550271719a template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a389b87f1aeda1e9d133273550271719a">nda::lapack::get_ncols</a> (A const &amp;a)</td></tr>
+<tr class="memdesc:a389b87f1aeda1e9d133273550271719a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of columns of an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> with rank 1 or 2 for BLAS/LAPACK calls.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -140,13 +142,14 @@ template&lt;typename A&gt; </td></tr>
 <tr class="memdesc:a4e762fd4595b433d898daa5528192e49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constexpr variable that is true if the given type is a conjugate lazy expression. <br /></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
-<a id="a0976f7f2d8ffd611a32ff2b4f44453cc" name="a0976f7f2d8ffd611a32ff2b4f44453cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0976f7f2d8ffd611a32ff2b4f44453cc">&#9670;&#160;</a></span>get_ld()</h2>
+<a id="a3d3e17b98e215606a2db727249b12e38" name="a3d3e17b98e215606a2db727249b12e38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d3e17b98e215606a2db727249b12e38">&#9670;&#160;</a></span>get_ld()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;MemoryMatrix A&gt; </div>
+template&lt;MemoryArray A&gt; <br />
+requires (get_rank&lt;A&gt; == 1 or get_rank&lt;A&gt; == 2)</div>
       <table class="memname">
         <tr>
           <td class="memname">int nda::blas::get_ld </td>
@@ -157,32 +160,34 @@ template&lt;MemoryMatrix A&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Get the leading dimension in LAPACK jargon of an <a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a>. </p>
+<p>Get the leading dimension of an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> with rank 1 or 2 for LAPACK calls. </p>
+<p>The leading dimension is the stride between two consecutive columns (rows) of a matrix in Fortran (C) layout. For 1-dimensional arrays, we simply return the size of the array.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Leading dimension. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Leading dimension for BLAS/LAPACK calls. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tools_8hpp_source.html#l00098">98</a> of file <a class="el" href="tools_8hpp_source.html">tools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tools_8hpp_source.html#l00102">102</a> of file <a class="el" href="tools_8hpp_source.html">tools.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a5894e5c9661cc8fdbfa37693de22f254" name="a5894e5c9661cc8fdbfa37693de22f254"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5894e5c9661cc8fdbfa37693de22f254">&#9670;&#160;</a></span>get_ncols()</h2>
+<a id="a389b87f1aeda1e9d133273550271719a" name="a389b87f1aeda1e9d133273550271719a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a389b87f1aeda1e9d133273550271719a">&#9670;&#160;</a></span>get_ncols()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;MemoryMatrix A&gt; </div>
+template&lt;MemoryArray A&gt; <br />
+requires (get_rank&lt;A&gt; == 1 or get_rank&lt;A&gt; == 2)</div>
       <table class="memname">
         <tr>
           <td class="memname">int nda::blas::get_ncols </td>
@@ -193,22 +198,23 @@ template&lt;MemoryMatrix A&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Get the number of columns in LAPACK jargon of an <a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a>. </p>
+<p>Get the number of columns of an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> with rank 1 or 2 for BLAS/LAPACK calls. </p>
+<p>The number of columns corresponds to the extent of the second (first) dimension of a matrix in Fortran (C) layout. For 1-dimensional arrays, we return 1.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Number of columns. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Number of columns for BLAS/LAPACK calls. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tools_8hpp_source.html#l00110">110</a> of file <a class="el" href="tools_8hpp_source.html">tools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tools_8hpp_source.html#l00122">122</a> of file <a class="el" href="tools_8hpp_source.html">tools.hpp</a>.</p>
 
 </div>
 </div>

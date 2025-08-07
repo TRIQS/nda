@@ -5,5 +5,6 @@ var dir_6ac268accbf4e19c7c99f7c0bc41765a =
     [ "dot.hpp", "linalg_2dot_8hpp.html", "linalg_2dot_8hpp" ],
     [ "eigenelements.hpp", "eigenelements_8hpp.html", "eigenelements_8hpp" ],
     [ "matmul.hpp", "matmul_8hpp.html", "matmul_8hpp" ],
-    [ "norm.hpp", "norm_8hpp.html", null ]
+    [ "norm.hpp", "norm_8hpp.html", null ],
+    [ "outer_product.hpp", "outer__product_8hpp.html", "outer__product_8hpp" ]
 ];

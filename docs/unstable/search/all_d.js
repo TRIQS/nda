@@ -32,11 +32,9 @@ var searchData=
   ['doc_29',['doc',['../changelog.html#autotoc_md2',1,'']]],
   ['documentation_30',['API Documentation',['../documentation.html',1,'']]],
   ['doing_20linear_20algebra_20with_20arrays_31',['Doing linear algebra with arrays',['../ex1.html#ex1_p11',1,'']]],
-  ['dot_32',['dot',['../group__linalg__blas.html#gabec70205c2c9842f78ceb40c618bdafb',1,'nda::blas::dot()'],['../group__linalg__tools.html#ga432349969f2f13802bed8f1b06bc1b59',1,'nda::dot()']]],
+  ['dot_32',['dot',['../group__linalg__blas.html#ga55cfbb17e5b542513d1df9ff9da3b8a7',1,'nda::blas::dot()'],['../group__linalg__tools.html#ga33985db52d69c767905c98ae2f7e42e7',1,'nda::linalg::dot()']]],
   ['dot_2ehpp_33',['dot.hpp',['../blas_2dot_8hpp.html',1,'(Global Namespace)'],['../linalg_2dot_8hpp.html',1,'(Global Namespace)']]],
-  ['dot_5fgeneric_34',['dot_generic',['../group__linalg__blas.html#ga08f16c1e39202bdd2a820e94a651283a',1,'nda::blas']]],
-  ['dot_5fproduct_35',['dot_product',['../group__utils__std.html#gaeb9739b92ba5275cb829402f2c290374',1,'nda::stdutil']]],
-  ['dotc_36',['dotc',['../group__linalg__blas.html#ga4a0c527485f297fb962d0574552d98f1',1,'nda::blas::dotc()'],['../group__linalg__tools.html#ga0d3bdc2a0527996e49ca1181091e396b',1,'nda::dotc()']]],
-  ['dotc_5fgeneric_37',['dotc_generic',['../group__linalg__blas.html#ga7e95e8ebf1b6a4af268e5174089d78d3',1,'nda::blas']]],
-  ['doubleorcomplex_38',['DoubleOrComplex',['../conceptnda_1_1_double_or_complex.html',1,'nda']]]
+  ['dot_5fproduct_34',['dot_product',['../group__utils__std.html#gaeb9739b92ba5275cb829402f2c290374',1,'nda::stdutil']]],
+  ['dotc_35',['dotc',['../group__linalg__blas.html#gaf4cdca559485607982e6db62a3cb8a97',1,'nda::blas::dotc()'],['../group__linalg__tools.html#ga1e4da250fc11060a5bc97da2ee467a9a',1,'nda::linalg::dotc()']]],
+  ['doubleorcomplex_36',['DoubleOrComplex',['../conceptnda_1_1_double_or_complex.html',1,'nda']]]
 ];

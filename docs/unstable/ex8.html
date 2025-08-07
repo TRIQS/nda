@@ -256,9 +256,8 @@ Using linear algebra tools</h2>
 </div><!-- fragment --><p>Here, we first create two 3-dimensional vectors and then take their cross product.</p>
 <p>To check that the cross product is perpendicular to <span class="tt">v1</span> and <span class="tt">v2</span>, we can use the dot product:</p>
 <div class="fragment"><div class="line"><span class="comment">// check the cross product using the dot product</span></div>
-<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;v1 . v3 = &quot;</span> &lt;&lt; <a class="code hl_function" href="group__linalg__tools.html#ga432349969f2f13802bed8f1b06bc1b59">nda::dot</a>(v1, v3) &lt;&lt; std::endl;</div>
-<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;v2 . v3 = &quot;</span> &lt;&lt; <a class="code hl_function" href="group__linalg__tools.html#ga432349969f2f13802bed8f1b06bc1b59">nda::dot</a>(v2, v3) &lt;&lt; std::endl;</div>
-<div class="ttc" id="agroup__linalg__tools_html_ga432349969f2f13802bed8f1b06bc1b59"><div class="ttname"><a href="group__linalg__tools.html#ga432349969f2f13802bed8f1b06bc1b59">nda::dot</a></div><div class="ttdeci">auto dot(X &amp;&amp;x, Y &amp;&amp;y)</div><div class="ttdoc">Compute the dot product of two real arrays/views.</div><div class="ttdef"><b>Definition</b> <a href="linalg_2dot_8hpp_source.html#l00043">dot.hpp:43</a></div></div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;v1 . v3 = &quot;</span> &lt;&lt; nda::dot(v1, v3) &lt;&lt; std::endl;</div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;v2 . v3 = &quot;</span> &lt;&lt; nda::dot(v2, v3) &lt;&lt; std::endl;</div>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">v1 . v3 = 0</div>
 <div class="line">v2 . v3 = 0</div>

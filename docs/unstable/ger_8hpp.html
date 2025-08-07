@@ -105,18 +105,15 @@ $(function(){initNavTree('ger_8hpp.html','',''); });
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="blas_2interface_2cxx__interface_8hpp_source.html">./interface/cxx_interface.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="tools_8hpp_source.html">./tools.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="basic__functions_8hpp_source.html">../basic_functions.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="exceptions_8hpp_source.html">../exceptions.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="layout__transforms_8hpp_source.html">../layout_transforms.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="layout_2policies_8hpp_source.html">../layout/policies.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="macros_8hpp_source.html">../macros.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="address__space_8hpp_source.html">../mem/address_space.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="array_8hpp_source.html">../stdutil/array.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="traits_8hpp_source.html">../traits.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="device_8hpp_source.html">../device.hpp</a>&quot;</code><br />
-<code>#include &lt;array&gt;</code><br />
 </div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Provides a generic interface to the BLAS <span class="tt">ger</span> routine and an outer product routine. </p>
+<div class="textblock"><p>Provides a generic interface to the BLAS <span class="tt">ger</span> and <span class="tt">geru</span> routine. </p>
 
 <p class="definition">Definition in file <a class="el" href="ger_8hpp_source.html">ger.hpp</a>.</p>
 </div>
@@ -127,10 +124,7 @@ Functions</h2></td></tr>
 <tr class="memitem:gace11f1ec7ce3c54afb76b392d9c98db1" id="r_gace11f1ec7ce3c54afb76b392d9c98db1"><td class="memTemplParams" colspan="2">template&lt;MemoryVector X, MemoryVector Y, MemoryMatrix M&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;X, Y, M&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;X, Y, M&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;X&gt;&gt;)</td></tr>
 <tr class="memitem:gace11f1ec7ce3c54afb76b392d9c98db1 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__blas.html#gace11f1ec7ce3c54afb76b392d9c98db1">nda::blas::ger</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; X &gt; alpha, X const &amp;x, Y const &amp;y, M &amp;&amp;m)</td></tr>
-<tr class="memdesc:gace11f1ec7ce3c54afb76b392d9c98db1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS <span class="tt">ger</span> routine.  <br /></td></tr>
-<tr class="memitem:gaa1abfb609f2aca8484d0aec40d3f1805" id="r_gaa1abfb609f2aca8484d0aec40d3f1805"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A, ArrayOrScalar B&gt; </td></tr>
-<tr class="memitem:gaa1abfb609f2aca8484d0aec40d3f1805 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__blas.html#gaa1abfb609f2aca8484d0aec40d3f1805">nda::blas::outer_product</a> (A const &amp;a, B const &amp;b)</td></tr>
-<tr class="memdesc:gaa1abfb609f2aca8484d0aec40d3f1805"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the outer product of two contiguous arrays/views/scalars.  <br /></td></tr>
+<tr class="memdesc:gace11f1ec7ce3c54afb76b392d9c98db1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS <span class="tt">ger</span> and <span class="tt">geru</span> routine.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

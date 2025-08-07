@@ -3,7 +3,7 @@ var searchData=
   ['s_0',['s',['../structnda_1_1mem_1_1blk__t.html#ab5a81d8e5ad22748b1b7832a5384b761',1,'nda::mem::blk_t']]],
   ['s_20automatic_20assignment_1',['Initializing with CLEF&apos;s automatic assignment',['../ex1.html#ex1_p12',1,'']]],
   ['s_5fvec_2',['S_vec',['../classnda_1_1lapack_1_1gelss__worker.html#a529b79e08584dba85b27cffa294e4656',1,'nda::lapack::gelss_worker::S_vec()'],['../structnda_1_1lapack_1_1gelss__worker__hermitian.html#a9e5248885f7eb73526e3f91e52d660e4',1,'nda::lapack::gelss_worker_hermitian::S_vec()']]],
-  ['scal_3',['scal',['../group__linalg__blas.html#ga5d5fdc9f0d2f9b96c37a223867c60f2b',1,'nda::blas']]],
+  ['scal_3',['scal',['../group__linalg__blas.html#ga500d4e7e91208effd1ecf29185e5e377',1,'nda::blas']]],
   ['scal_2ehpp_4',['scal.hpp',['../scal_8hpp.html',1,'']]],
   ['scalar_5',['Scalar',['../conceptnda_1_1_scalar.html',1,'nda']]],
   ['scalar_20to_20an_20array_6',['Assigning a scalar to an array',['../ex3.html#ex3_p1',1,'']]],

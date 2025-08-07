@@ -114,20 +114,14 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>nda::dcomplex</b> = 
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gabec70205c2c9842f78ceb40c618bdafb" id="r_gabec70205c2c9842f78ceb40c618bdafb"><td class="memTemplParams" colspan="2">template&lt;typename X, typename Y&gt; <br />
-requires ((Scalar&lt;X&gt; or MemoryVector&lt;X&gt;) and (Scalar&lt;Y&gt; or MemoryVector&lt;X&gt;))</td></tr>
-<tr class="memitem:gabec70205c2c9842f78ceb40c618bdafb template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gabec70205c2c9842f78ceb40c618bdafb">nda::blas::dot</a> (X const &amp;x, Y const &amp;y)</td></tr>
-<tr class="memdesc:gabec70205c2c9842f78ceb40c618bdafb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS <span class="tt">dot</span> routine.  <br /></td></tr>
-<tr class="memitem:ga08f16c1e39202bdd2a820e94a651283a" id="r_ga08f16c1e39202bdd2a820e94a651283a"><td class="memTemplParams" colspan="2">template&lt;typename X, typename Y&gt; </td></tr>
-<tr class="memitem:ga08f16c1e39202bdd2a820e94a651283a template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga08f16c1e39202bdd2a820e94a651283a">nda::blas::dot_generic</a> (X const &amp;x, Y const &amp;y)</td></tr>
-<tr class="memdesc:ga08f16c1e39202bdd2a820e94a651283a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic implementation of <a class="el" href="#gabec70205c2c9842f78ceb40c618bdafb" title="Interface to the BLAS dot routine.">nda::blas::dot</a> for types not supported by BLAS/LAPACK.  <br /></td></tr>
-<tr class="memitem:ga4a0c527485f297fb962d0574552d98f1" id="r_ga4a0c527485f297fb962d0574552d98f1"><td class="memTemplParams" colspan="2">template&lt;typename X, typename Y&gt; <br />
-requires ((Scalar&lt;X&gt; or MemoryVector&lt;X&gt;) and (Scalar&lt;Y&gt; or MemoryVector&lt;X&gt;))</td></tr>
-<tr class="memitem:ga4a0c527485f297fb962d0574552d98f1 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4a0c527485f297fb962d0574552d98f1">nda::blas::dotc</a> (X const &amp;x, Y const &amp;y)</td></tr>
-<tr class="memdesc:ga4a0c527485f297fb962d0574552d98f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS <span class="tt">dotc</span> routine.  <br /></td></tr>
-<tr class="memitem:ga7e95e8ebf1b6a4af268e5174089d78d3" id="r_ga7e95e8ebf1b6a4af268e5174089d78d3"><td class="memTemplParams" colspan="2">template&lt;typename X, typename Y&gt; </td></tr>
-<tr class="memitem:ga7e95e8ebf1b6a4af268e5174089d78d3 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7e95e8ebf1b6a4af268e5174089d78d3">nda::blas::dotc_generic</a> (X const &amp;x, Y const &amp;y)</td></tr>
-<tr class="memdesc:ga7e95e8ebf1b6a4af268e5174089d78d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic implementation of <a class="el" href="#ga4a0c527485f297fb962d0574552d98f1" title="Interface to the BLAS dotc routine.">nda::blas::dotc</a> for types not supported by BLAS/LAPACK.  <br /></td></tr>
+<tr class="memitem:ga55cfbb17e5b542513d1df9ff9da3b8a7" id="r_ga55cfbb17e5b542513d1df9ff9da3b8a7"><td class="memTemplParams" colspan="2">template&lt;MemoryVector X, MemoryVector Y&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;X, Y&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;X, Y&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;X&gt;&gt;)</td></tr>
+<tr class="memitem:ga55cfbb17e5b542513d1df9ff9da3b8a7 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga55cfbb17e5b542513d1df9ff9da3b8a7">nda::blas::dot</a> (X const &amp;x, Y const &amp;y)</td></tr>
+<tr class="memdesc:ga55cfbb17e5b542513d1df9ff9da3b8a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS <span class="tt">dot</span> and <span class="tt">dotu</span> routine.  <br /></td></tr>
+<tr class="memitem:gaf4cdca559485607982e6db62a3cb8a97" id="r_gaf4cdca559485607982e6db62a3cb8a97"><td class="memTemplParams" colspan="2">template&lt;MemoryVector X, MemoryVector Y&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;X, Y&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;X, Y&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;X&gt;&gt;)</td></tr>
+<tr class="memitem:gaf4cdca559485607982e6db62a3cb8a97 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf4cdca559485607982e6db62a3cb8a97">nda::blas::dotc</a> (X const &amp;x, Y const &amp;y)</td></tr>
+<tr class="memdesc:gaf4cdca559485607982e6db62a3cb8a97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS <span class="tt">dotc</span> routine.  <br /></td></tr>
 <tr class="memitem:gac86e76a5d23dc7fea5bc982fee45cf2c" id="r_gac86e76a5d23dc7fea5bc982fee45cf2c"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Matrix B, MemoryMatrix C&gt; <br />
 requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;) and (MemoryMatrix&lt;B&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;B&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
 <tr class="memitem:gac86e76a5d23dc7fea5bc982fee45cf2c template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac86e76a5d23dc7fea5bc982fee45cf2c">nda::blas::gemm</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; alpha, A const &amp;a, B const &amp;b, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; beta, C &amp;&amp;c)</td></tr>
@@ -156,20 +150,19 @@ requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898da
 <tr class="memitem:gace11f1ec7ce3c54afb76b392d9c98db1" id="r_gace11f1ec7ce3c54afb76b392d9c98db1"><td class="memTemplParams" colspan="2">template&lt;MemoryVector X, MemoryVector Y, MemoryMatrix M&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;X, Y, M&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;X, Y, M&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;X&gt;&gt;)</td></tr>
 <tr class="memitem:gace11f1ec7ce3c54afb76b392d9c98db1 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gace11f1ec7ce3c54afb76b392d9c98db1">nda::blas::ger</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; X &gt; alpha, X const &amp;x, Y const &amp;y, M &amp;&amp;m)</td></tr>
-<tr class="memdesc:gace11f1ec7ce3c54afb76b392d9c98db1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS <span class="tt">ger</span> routine.  <br /></td></tr>
-<tr class="memitem:ga0976f7f2d8ffd611a32ff2b4f44453cc" id="r_ga0976f7f2d8ffd611a32ff2b4f44453cc"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A&gt; </td></tr>
-<tr class="memitem:ga0976f7f2d8ffd611a32ff2b4f44453cc template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0976f7f2d8ffd611a32ff2b4f44453cc">nda::blas::get_ld</a> (A const &amp;a)</td></tr>
-<tr class="memdesc:ga0976f7f2d8ffd611a32ff2b4f44453cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the leading dimension in LAPACK jargon of an <a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a>.  <br /></td></tr>
-<tr class="memitem:ga5894e5c9661cc8fdbfa37693de22f254" id="r_ga5894e5c9661cc8fdbfa37693de22f254"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A&gt; </td></tr>
-<tr class="memitem:ga5894e5c9661cc8fdbfa37693de22f254 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5894e5c9661cc8fdbfa37693de22f254">nda::blas::get_ncols</a> (A const &amp;a)</td></tr>
-<tr class="memdesc:ga5894e5c9661cc8fdbfa37693de22f254"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of columns in LAPACK jargon of an <a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a>.  <br /></td></tr>
-<tr class="memitem:gaa1abfb609f2aca8484d0aec40d3f1805" id="r_gaa1abfb609f2aca8484d0aec40d3f1805"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A, ArrayOrScalar B&gt; </td></tr>
-<tr class="memitem:gaa1abfb609f2aca8484d0aec40d3f1805 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa1abfb609f2aca8484d0aec40d3f1805">nda::blas::outer_product</a> (A const &amp;a, B const &amp;b)</td></tr>
-<tr class="memdesc:gaa1abfb609f2aca8484d0aec40d3f1805"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the outer product of two contiguous arrays/views/scalars.  <br /></td></tr>
-<tr class="memitem:ga5d5fdc9f0d2f9b96c37a223867c60f2b" id="r_ga5d5fdc9f0d2f9b96c37a223867c60f2b"><td class="memTemplParams" colspan="2">template&lt;typename X&gt; <br />
-requires (MemoryVector&lt;X&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;X&gt;)</td></tr>
-<tr class="memitem:ga5d5fdc9f0d2f9b96c37a223867c60f2b template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5d5fdc9f0d2f9b96c37a223867c60f2b">nda::blas::scal</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; X &gt; alpha, X &amp;&amp;x)</td></tr>
-<tr class="memdesc:ga5d5fdc9f0d2f9b96c37a223867c60f2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS <span class="tt">scal</span> routine.  <br /></td></tr>
+<tr class="memdesc:gace11f1ec7ce3c54afb76b392d9c98db1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS <span class="tt">ger</span> and <span class="tt">geru</span> routine.  <br /></td></tr>
+<tr class="memitem:ga3d3e17b98e215606a2db727249b12e38" id="r_ga3d3e17b98e215606a2db727249b12e38"><td class="memTemplParams" colspan="2">template&lt;MemoryArray A&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 1 or <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 2)</td></tr>
+<tr class="memitem:ga3d3e17b98e215606a2db727249b12e38 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3d3e17b98e215606a2db727249b12e38">nda::blas::get_ld</a> (A const &amp;a)</td></tr>
+<tr class="memdesc:ga3d3e17b98e215606a2db727249b12e38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the leading dimension of an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> with rank 1 or 2 for LAPACK calls.  <br /></td></tr>
+<tr class="memitem:ga389b87f1aeda1e9d133273550271719a" id="r_ga389b87f1aeda1e9d133273550271719a"><td class="memTemplParams" colspan="2">template&lt;MemoryArray A&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 1 or <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 2)</td></tr>
+<tr class="memitem:ga389b87f1aeda1e9d133273550271719a template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga389b87f1aeda1e9d133273550271719a">nda::blas::get_ncols</a> (A const &amp;a)</td></tr>
+<tr class="memdesc:ga389b87f1aeda1e9d133273550271719a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of columns of an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> with rank 1 or 2 for BLAS/LAPACK calls.  <br /></td></tr>
+<tr class="memitem:ga500d4e7e91208effd1ecf29185e5e377" id="r_ga500d4e7e91208effd1ecf29185e5e377"><td class="memTemplParams" colspan="2">template&lt;MemoryVector X&gt; <br />
+requires (<a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;X&gt;&gt;)</td></tr>
+<tr class="memitem:ga500d4e7e91208effd1ecf29185e5e377 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga500d4e7e91208effd1ecf29185e5e377">nda::blas::scal</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; X &gt; alpha, X &amp;&amp;x)</td></tr>
+<tr class="memdesc:ga500d4e7e91208effd1ecf29185e5e377"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS <span class="tt">scal</span> routine.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -194,14 +187,14 @@ template&lt;MemoryArray A&gt; </td></tr>
 <tr class="memdesc:ga8e4646285a5b667be2da73b9950a384a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <a class="el" href="#ga4e762fd4595b433d898daa5528192e49" title="Constexpr variable that is true if the given type is a conjugate lazy expression.">nda::blas::is_conj_array_expr</a> for the conjugate lazy expressions. <br /></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
-<a id="gabec70205c2c9842f78ceb40c618bdafb" name="gabec70205c2c9842f78ceb40c618bdafb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gabec70205c2c9842f78ceb40c618bdafb">&#9670;&#160;</a></span>dot()</h2>
+<a id="ga55cfbb17e5b542513d1df9ff9da3b8a7" name="ga55cfbb17e5b542513d1df9ff9da3b8a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga55cfbb17e5b542513d1df9ff9da3b8a7">&#9670;&#160;</a></span>dot()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename X, typename Y&gt; <br />
-requires ((Scalar&lt;X&gt; or MemoryVector&lt;X&gt;) and (Scalar&lt;Y&gt; or MemoryVector&lt;X&gt;))</div>
+template&lt;MemoryVector X, MemoryVector Y&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;X, Y&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;X, Y&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;X&gt;&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">auto nda::blas::dot </td>
@@ -218,85 +211,40 @@ requires ((Scalar&lt;X&gt; or MemoryVector&lt;X&gt;) and (Scalar&lt;Y&gt; or Mem
 
 <p><code>#include &lt;<a class="el" href="blas_2dot_8hpp.html">nda/blas/dot.hpp</a>&gt;</code></p>
 
-<p>Interface to the BLAS <span class="tt">dot</span> routine. </p>
-<p>This function forms the dot product of two vectors. It calculates</p><ul>
-<li>\( \mathbf{x}^T \mathbf{y} \) in case that both \( \mathbf{x} \) and \( \mathbf{y} \) are vectors,</li>
-<li>\( x \mathbf{y} \) in case that \( x \) is a scalar and \( \mathbf{y} \) is a vector,</li>
-<li>\( \mathbf{x} y \) in case that \( \mathbf{x} \) is a vector and \( y \) is a scalar or</li>
-<li>\( x y \) in case that both \( x \) and \( y \) are scalars.</li>
-</ul>
+<p>Interface to the BLAS <span class="tt">dot</span> and <span class="tt">dotu</span> routine. </p>
+<p>This function forms the dot product of two vectors. It calculates   </p><p class="formulaDsp">
+\[  \mathbf{x}^T \mathbf{y} \; .
+\]
+</p>
+<dl class="section note"><dt>Note</dt><dd>The first argument is never conjugated. Even for complex types. Use <a class="el" href="#gaf4cdca559485607982e6db62a3cb8a97" title="Interface to the BLAS dotc routine.">nda::blas::dotc</a> for that.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">X</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> or <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> type. </td></tr>
-    <tr><td class="paramname">Y</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> or <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> type. </td></tr>
+    <tr><td class="paramname">X</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> type. </td></tr>
+    <tr><td class="paramname">Y</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">x</td><td>Input vector/scalar. </td></tr>
-    <tr><td class="paramname">y</td><td>Input vector/scalar. </td></tr>
+    <tr><td class="paramname">x</td><td>Input vector \( \mathbf{x} \). </td></tr>
+    <tr><td class="paramname">y</td><td>Input vector \( \mathbf{y} \). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Vector/scalar result of the dot product. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Result of \( \mathbf{x}^T \mathbf{y} \). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="blas_2dot_8hpp_source.html#l00050">50</a> of file <a class="el" href="blas_2dot_8hpp_source.html">dot.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="blas_2dot_8hpp_source.html#l00048">48</a> of file <a class="el" href="blas_2dot_8hpp_source.html">dot.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga08f16c1e39202bdd2a820e94a651283a" name="ga08f16c1e39202bdd2a820e94a651283a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga08f16c1e39202bdd2a820e94a651283a">&#9670;&#160;</a></span>dot_generic()</h2>
+<a id="gaf4cdca559485607982e6db62a3cb8a97" name="gaf4cdca559485607982e6db62a3cb8a97"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf4cdca559485607982e6db62a3cb8a97">&#9670;&#160;</a></span>dotc()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename X, typename Y&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto nda::blas::dot_generic </td>
-          <td>(</td>
-          <td class="paramtype">X const &amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Y const &amp;</td>          <td class="paramname"><span class="paramname"><em>y</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="blas_2dot_8hpp.html">nda/blas/dot.hpp</a>&gt;</code></p>
-
-<p>Generic implementation of <a class="el" href="#gabec70205c2c9842f78ceb40c618bdafb" title="Interface to the BLAS dot routine.">nda::blas::dot</a> for types not supported by BLAS/LAPACK. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">X</td><td>Vector/Scalar type. </td></tr>
-    <tr><td class="paramname">Y</td><td>Vector/Scalar type. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">x</td><td>Input vector/scalar. </td></tr>
-    <tr><td class="paramname">y</td><td>Input vector/scalar. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Vector/scalar result of the dot product. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="blas_2dot_8hpp_source.html#l00165">165</a> of file <a class="el" href="blas_2dot_8hpp_source.html">dot.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ga4a0c527485f297fb962d0574552d98f1" name="ga4a0c527485f297fb962d0574552d98f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4a0c527485f297fb962d0574552d98f1">&#9670;&#160;</a></span>dotc()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename X, typename Y&gt; <br />
-requires ((Scalar&lt;X&gt; or MemoryVector&lt;X&gt;) and (Scalar&lt;Y&gt; or MemoryVector&lt;X&gt;))</div>
+template&lt;MemoryVector X, MemoryVector Y&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;X, Y&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;X, Y&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;X&gt;&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">auto nda::blas::dotc </td>
@@ -314,73 +262,28 @@ requires ((Scalar&lt;X&gt; or MemoryVector&lt;X&gt;) and (Scalar&lt;Y&gt; or Mem
 <p><code>#include &lt;<a class="el" href="blas_2dot_8hpp.html">nda/blas/dot.hpp</a>&gt;</code></p>
 
 <p>Interface to the BLAS <span class="tt">dotc</span> routine. </p>
-<p>This function forms the dot product of two vectors. It calculates</p><ul>
-<li>\( \mathbf{x}^H \mathbf{y} \) in case that both \( \mathbf{x} \) and \( \mathbf{y} \) are vectors,</li>
-<li>\( \bar{x} \mathbf{y} \) in case that \( x \) is a scalar and \( \mathbf{y} \) is a vector,</li>
-<li>\( \mathbf{x}^H y \) in case that \( \mathbf{x} \) is a vector and \( y \) is a scalar or</li>
-<li>\( \bar{x} y \) in case that both \( x \) and \( y \) are scalars.</li>
-</ul>
+<p>This function forms the dot product of two vectors. It calculates   </p><p class="formulaDsp">
+\[  \mathbf{x}^H \mathbf{y} \; .
+\]
+</p>
+<p>If the value type of the input vectors is real, it calls <a class="el" href="#ga55cfbb17e5b542513d1df9ff9da3b8a7" title="Interface to the BLAS dot and dotu routine.">nda::blas::dot</a> and returns a real result.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">X</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> or <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> type. </td></tr>
-    <tr><td class="paramname">Y</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> or <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> type. </td></tr>
+    <tr><td class="paramname">X</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> type. </td></tr>
+    <tr><td class="paramname">Y</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">x</td><td>Input vector/scalar. </td></tr>
-    <tr><td class="paramname">y</td><td>Input vector/scalar. </td></tr>
+    <tr><td class="paramname">x</td><td>Input vector \( \mathbf{x} \). </td></tr>
+    <tr><td class="paramname">y</td><td>Input vector \( \mathbf{y} \). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Vector/scalar result of the dot product. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Result of \( \mathbf{x}^H \mathbf{y} \). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="blas_2dot_8hpp_source.html#l00092">92</a> of file <a class="el" href="blas_2dot_8hpp_source.html">dot.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ga7e95e8ebf1b6a4af268e5174089d78d3" name="ga7e95e8ebf1b6a4af268e5174089d78d3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7e95e8ebf1b6a4af268e5174089d78d3">&#9670;&#160;</a></span>dotc_generic()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename X, typename Y&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto nda::blas::dotc_generic </td>
-          <td>(</td>
-          <td class="paramtype">X const &amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Y const &amp;</td>          <td class="paramname"><span class="paramname"><em>y</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="blas_2dot_8hpp.html">nda/blas/dot.hpp</a>&gt;</code></p>
-
-<p>Generic implementation of <a class="el" href="#ga4a0c527485f297fb962d0574552d98f1" title="Interface to the BLAS dotc routine.">nda::blas::dotc</a> for types not supported by BLAS/LAPACK. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">X</td><td>Vector/Scalar type. </td></tr>
-    <tr><td class="paramname">Y</td><td>Vector/Scalar type. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">x</td><td>Input vector/scalar. </td></tr>
-    <tr><td class="paramname">y</td><td>Input vector/scalar. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Vector/scalar result of the dot product. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="blas_2dot_8hpp_source.html#l00183">183</a> of file <a class="el" href="blas_2dot_8hpp_source.html">dot.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="blas_2dot_8hpp_source.html#l00083">83</a> of file <a class="el" href="blas_2dot_8hpp_source.html">dot.hpp</a>.</p>
 
 </div>
 </div>
@@ -877,12 +780,14 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
 
 <p><code>#include &lt;<a class="el" href="ger_8hpp.html">nda/blas/ger.hpp</a>&gt;</code></p>
 
-<p>Interface to the BLAS <span class="tt">ger</span> routine. </p>
+<p>Interface to the BLAS <span class="tt">ger</span> and <span class="tt">geru</span> routine. </p>
 <p>This function performs the rank 1 operation   </p><p class="formulaDsp">
-\[  \mathbf{M} \leftarrow \alpha \mathbf{x} \mathbf{y}^H + \mathbf{M} ;,
+\[  \mathbf{M} \leftarrow \alpha \mathbf{x} \mathbf{y}^T + \mathbf{M} \; ,
 \]
 </p>
-<p> where \( \alpha \) is a scalar, \( \mathbf{x} \) is an m element vector, \( \mathbf{y} \) is an n element vector and \( \mathbf{M} \) is an m-by-n matrix.</p>
+<p> where \( \alpha \) is a scalar, \( \mathbf{x} \) is an \( m \) element vector, \( \mathbf{y} \) is an  \( n
+\) element vector and \( \mathbf{M} \) is an \( m \times n \) matrix.</p>
+<dl class="section note"><dt>Note</dt><dd>The vector \( \mathbf{y} \) is never conjugated. Even for complex types. Use nda::blas::gerc for that.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">X</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> type. </td></tr>
@@ -893,25 +798,26 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">alpha</td><td>Input scalar. </td></tr>
-    <tr><td class="paramname">x</td><td>Input left vector (column vector) of size m. </td></tr>
-    <tr><td class="paramname">y</td><td>Input right vector (row vector) of size n. </td></tr>
-    <tr><td class="paramname">m</td><td>Input/Output matrix of size m-by-n to which the outer product is added. </td></tr>
+    <tr><td class="paramname">alpha</td><td>Input scalar \( \alpha \). </td></tr>
+    <tr><td class="paramname">x</td><td>Input vector \( \mathbf{x} \) of size \( m \). </td></tr>
+    <tr><td class="paramname">y</td><td>Input vector \( \mathbf{y} \) of size \( n \). </td></tr>
+    <tr><td class="paramname">m</td><td>Input/Output matrix \( \mathbf{M} \) of size \( m \times n \) to which the outer product is added. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ger_8hpp_source.html#l00057">57</a> of file <a class="el" href="ger_8hpp_source.html">ger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ger_8hpp_source.html#l00055">55</a> of file <a class="el" href="ger_8hpp_source.html">ger.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga0976f7f2d8ffd611a32ff2b4f44453cc" name="ga0976f7f2d8ffd611a32ff2b4f44453cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0976f7f2d8ffd611a32ff2b4f44453cc">&#9670;&#160;</a></span>get_ld()</h2>
+<a id="ga3d3e17b98e215606a2db727249b12e38" name="ga3d3e17b98e215606a2db727249b12e38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3d3e17b98e215606a2db727249b12e38">&#9670;&#160;</a></span>get_ld()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;MemoryMatrix A&gt; </div>
+template&lt;MemoryArray A&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 1 or <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 2)</div>
       <table class="memname">
         <tr>
           <td class="memname">int nda::blas::get_ld </td>
@@ -924,32 +830,34 @@ template&lt;MemoryMatrix A&gt; </div>
 
 <p><code>#include &lt;<a class="el" href="tools_8hpp.html">nda/blas/tools.hpp</a>&gt;</code></p>
 
-<p>Get the leading dimension in LAPACK jargon of an <a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a>. </p>
+<p>Get the leading dimension of an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> with rank 1 or 2 for LAPACK calls. </p>
+<p>The leading dimension is the stride between two consecutive columns (rows) of a matrix in Fortran (C) layout. For 1-dimensional arrays, we simply return the size of the array.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Leading dimension. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Leading dimension for BLAS/LAPACK calls. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tools_8hpp_source.html#l00098">98</a> of file <a class="el" href="tools_8hpp_source.html">tools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tools_8hpp_source.html#l00102">102</a> of file <a class="el" href="tools_8hpp_source.html">tools.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga5894e5c9661cc8fdbfa37693de22f254" name="ga5894e5c9661cc8fdbfa37693de22f254"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5894e5c9661cc8fdbfa37693de22f254">&#9670;&#160;</a></span>get_ncols()</h2>
+<a id="ga389b87f1aeda1e9d133273550271719a" name="ga389b87f1aeda1e9d133273550271719a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga389b87f1aeda1e9d133273550271719a">&#9670;&#160;</a></span>get_ncols()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;MemoryMatrix A&gt; </div>
+template&lt;MemoryArray A&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 1 or <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 2)</div>
       <table class="memname">
         <tr>
           <td class="memname">int nda::blas::get_ncols </td>
@@ -962,80 +870,34 @@ template&lt;MemoryMatrix A&gt; </div>
 
 <p><code>#include &lt;<a class="el" href="tools_8hpp.html">nda/blas/tools.hpp</a>&gt;</code></p>
 
-<p>Get the number of columns in LAPACK jargon of an <a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a>. </p>
+<p>Get the number of columns of an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> with rank 1 or 2 for BLAS/LAPACK calls. </p>
+<p>The number of columns corresponds to the extent of the second (first) dimension of a matrix in Fortran (C) layout. For 1-dimensional arrays, we return 1.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> object. </td></tr>
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Number of columns. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Number of columns for BLAS/LAPACK calls. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tools_8hpp_source.html#l00110">110</a> of file <a class="el" href="tools_8hpp_source.html">tools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tools_8hpp_source.html#l00122">122</a> of file <a class="el" href="tools_8hpp_source.html">tools.hpp</a>.</p>
 
 </div>
 </div>
-<a id="gaa1abfb609f2aca8484d0aec40d3f1805" name="gaa1abfb609f2aca8484d0aec40d3f1805"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa1abfb609f2aca8484d0aec40d3f1805">&#9670;&#160;</a></span>outer_product()</h2>
+<a id="ga500d4e7e91208effd1ecf29185e5e377" name="ga500d4e7e91208effd1ecf29185e5e377"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga500d4e7e91208effd1ecf29185e5e377">&#9670;&#160;</a></span>scal()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;ArrayOrScalar A, ArrayOrScalar B&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto nda::blas::outer_product </td>
-          <td>(</td>
-          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">B const &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="ger_8hpp.html">nda/blas/ger.hpp</a>&gt;</code></p>
-
-<p>Calculate the outer product of two contiguous arrays/views/scalars. </p>
-<p>For general multidimensional arrays/views, it calculates their tensor outer product, i.e. </p><div class="fragment"><div class="line">c(i,j,k,...,u,v,w,...) = a(i,j,k,...) * b(u,v,w,...)</div>
-</div><!-- fragment --><p> If one of the arguments is a scalar, it multiplies each element of the other argument by the scalar which returns a lazy <a class="el" href="structnda_1_1expr.html" title="Lazy binary expression for nda::ArrayOrScalar types.">nda::expr</a> object.</p>
-<p>If both arguments are scalars, it returns their products.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
-    <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">a</td><td>Input array/scalar. </td></tr>
-    <tr><td class="paramname">b</td><td>Input array/scalar. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>(Lazy) Outer product. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="ger_8hpp_source.html#l00100">100</a> of file <a class="el" href="ger_8hpp_source.html">ger.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ga5d5fdc9f0d2f9b96c37a223867c60f2b" name="ga5d5fdc9f0d2f9b96c37a223867c60f2b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5d5fdc9f0d2f9b96c37a223867c60f2b">&#9670;&#160;</a></span>scal()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename X&gt; <br />
-requires (MemoryVector&lt;X&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;X&gt;)</div>
+template&lt;MemoryVector X&gt; <br />
+requires (<a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;X&gt;&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">void nda::blas::scal </td>
@@ -1053,21 +915,17 @@ requires (MemoryVector&lt;X&gt; or <a class="el" href="#ga4e762fd4595b433d898daa
 <p><code>#include &lt;<a class="el" href="scal_8hpp.html">nda/blas/scal.hpp</a>&gt;</code></p>
 
 <p>Interface to the BLAS <span class="tt">scal</span> routine. </p>
-<p>Scales a vector by a constant. This function calculates   </p><p class="formulaDsp">
-\[  \mathbf{x} \leftarrow \alpha \mathbf{x} ;,
-\]
-</p>
-<p> where \( \alpha \) is a scalar constant and \( \mathbf{x} \) is a vector.</p>
+<p>Scales a vector by a constant. This function calculates \( \mathbf{x} \leftarrow \alpha \mathbf{x} \), where \( \alpha \) is a scalar constant and \( \mathbf{x} \) is a vector.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">X</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> or a conjugate array expression. </td></tr>
+    <tr><td class="paramname">X</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">alpha</td><td>Input scalar. </td></tr>
-    <tr><td class="paramname">x</td><td>Input/Output vector to be scaled. </td></tr>
+    <tr><td class="paramname">alpha</td><td>Input scalar \( \alpha \). </td></tr>
+    <tr><td class="paramname">x</td><td>Input/Output vector \( \mathbf{x} \) to be scaled. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1093,7 +951,7 @@ template&lt;bool conj, bool transpose&gt; </div>
 
 <p><code>#include &lt;<a class="el" href="tools_8hpp.html">nda/blas/tools.hpp</a>&gt;</code></p>
 <b>Initial value:</b><div class="fragment"><div class="line">= []() {</div>
-<div class="line">    <span class="keyword">static_assert</span>(!(<a class="code hl_function" href="group__av__math.html#gaed558141a1f01cb2974b0cc4fc4d04ff">conj</a> and not <a class="code hl_function" href="group__av__factories.html#gab1366c1c79f31877f2d0a1596f323cee">transpose</a>), <span class="stringliteral">&quot;Error in nda::blas::get_op: Cannot use conjugate operation alone in blas operations&quot;</span>);</div>
+<div class="line">    <span class="keyword">static_assert</span>(!(<a class="code hl_function" href="group__av__math.html#gaed558141a1f01cb2974b0cc4fc4d04ff">conj</a> and not <a class="code hl_function" href="group__av__factories.html#gab1366c1c79f31877f2d0a1596f323cee">transpose</a>), <span class="stringliteral">&quot;Error in nda::blas::get_op: Cannot use conjugate operation alone in BLAS operations&quot;</span>);</div>
 <div class="line">    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_function" href="group__av__math.html#gaed558141a1f01cb2974b0cc4fc4d04ff">conj</a> and <a class="code hl_function" href="group__av__factories.html#gab1366c1c79f31877f2d0a1596f323cee">transpose</a>)</div>
 <div class="line">      <span class="keywordflow">return</span> <span class="charliteral">&#39;C&#39;</span>;</div>
 <div class="line">    <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_function" href="group__av__factories.html#gab1366c1c79f31877f2d0a1596f323cee">transpose</a>)</div>
