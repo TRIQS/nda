@@ -188,12 +188,15 @@ namespace nda {
       };
 
       if (parallel) {
+#ifdef NDA_HAVE_MPI
+        a() = 0.0; // Required for MPI reduce below
+#endif
 #ifdef NDA_HAVE_OPENMP
 #pragma omp parallel for
 #endif // NDA_HAVE_OPENMP
 #ifdef NDA_HAVE_MPI
-        for (a() = 0.0; auto const &sym_class : mpi::chunk(sym_classes)) init_with_sym(sym_class);
-        a = mpi::all_reduce(a);
+        for (auto const &sym_class : mpi::chunk(sym_classes)) init_with_sym(sym_class);
+        mpi::all_reduce_in_place(a);
 #else
         for (auto const &sym_class : sym_classes) init_with_sym(sym_class);
 #endif // NDA_HAVE_MPI
