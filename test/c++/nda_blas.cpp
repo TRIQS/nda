@@ -161,7 +161,14 @@ TEST(NDA, BLASGer) {
 
 // Test the BLAS dot/dotc function.
 template <typename T, bool star>
-void test_dot(auto dot) {
+void test_dot() {
+  auto dot = [](auto &&a, auto &&b) {
+    if constexpr (star) {
+      return nda::blas::dotc(a, b);
+    } else {
+      return nda::blas::dot(a, b);
+    }
+  };
   auto exp_dot = [](auto const &a, auto const &b) {
     T res = 0.0;
     for (size_t i = 0; i < a.size(); ++i) {
@@ -193,15 +200,13 @@ void test_dot(auto dot) {
 }
 
 TEST(NDA, BLASDot) {
-  auto dot = []<typename A, typename B>(A &&a, B &&b) { return nda::blas::dot(std::forward<A>(a), std::forward<B>(b)); };
-  test_dot<double, false>(dot);
-  test_dot<std::complex<double>, false>(dot);
+  test_dot<double, false>();
+  test_dot<std::complex<double>, false>();
 }
 
 TEST(NDA, BLASDotc) {
-  auto dotc = []<typename A, typename B>(A &&a, B &&b) { return nda::blas::dotc(std::forward<A>(a), std::forward<B>(b)); };
-  test_dot<double, true>(dotc);
-  test_dot<std::complex<double>, true>(dotc);
+  test_dot<double, true>();
+  test_dot<std::complex<double>, true>();
 }
 
 // Test the BLAS scal function.

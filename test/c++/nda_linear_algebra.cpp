@@ -44,8 +44,8 @@ TEST(NDA, LinearAlgebraDotProduct) {
 
   nda::vector<std::complex<double>> c = a * (1.1 - 2.1i);
   nda::vector<std::complex<double>> d = b * (3 + 4i);
-  EXPECT_COMPLEX_NEAR(nda::linalg::dot(c, d), exp_dot(c, d));
-  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(c, d), exp_dotc(c, d));
+  EXPECT_COMPLEX_NEAR(nda::linalg::dot(c, d), nda::blas::dot(c, d));
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(c, d), nda::blas::dotc(c, d));
 
   // vectors with different value types
   EXPECT_COMPLEX_NEAR(nda::linalg::dot(a, c), exp_dot(a, c));
@@ -58,8 +58,8 @@ TEST(NDA, LinearAlgebraDotProduct) {
 
   // lazy expressions
   auto sin_a = nda::make_regular(nda::sin(a));
-  EXPECT_DOUBLE_EQ(nda::linalg::dot(nda::sin(a), b), exp_dot(sin_a, b));
-  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(nda::sin(a), b), exp_dotc(sin_a, b));
+  EXPECT_DOUBLE_EQ(nda::linalg::dot(nda::sin(a), b), nda::blas::dot(sin_a, b));
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(nda::sin(a), b), nda::blas::dotc(sin_a, b));
 
   // (strided) vector views
   auto c_v = c(nda::range(0, 5, 2));
