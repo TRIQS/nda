@@ -26,49 +26,58 @@ namespace nda::linalg {
    * @{
    */
 
-  namespace detail {
+  /**
+   * @brief Generic loop-based dot product implementation for vectors.
+   *
+   * @details Computes the dot product of two vector objects with optional conjugation:
+   * - For `star = false`: result = sum(x[i] * y[i])
+   * - For `star = true`: result = sum(conj(x[i]) * y[i]) for complex types
+   *
+   * @tparam star If true, conjugate the first operand (for complex types only).
+   * @tparam X Vector type.
+   * @tparam Y Vector type.
+   * @param x First input vector.
+   * @param y Second input vector.
+   * @return The computed dot product.
+   */
+  template <bool star = false, Vector X, Vector Y>
+    requires(Scalar<get_value_t<X>> and Scalar<get_value_t<Y>> and mem::have_host_compatible_addr_space<X, Y>)
+  auto dot_generic(X const &x, Y const &y) {
+    // check the dimensions of the input arrays/views
+    EXPECTS(x.size() == y.size());
 
-    // Implementation of a generic dot/dotc product.
-    template <bool star, typename X, typename Y>
-      requires(Scalar<get_value_t<X>> and Scalar<get_value_t<Y>> and mem::have_host_compatible_addr_space<X, Y>)
-    auto dot_generic(X const &x, Y const &y) {
-      // check the dimensions of the input arrays/views
-      EXPECTS(x.size() == y.size());
-
-      // conditional conjugation
-      auto cond_conj = [](auto z) __attribute__((always_inline)) {
-        if constexpr (star and is_complex_v<decltype(z)>) {
-          return std::conj(z);
-        } else {
-          return z;
-        }
-      };
-
-      // early return for zero-sized vectors
-      long const N = x.size();
-      if (N == 0) return decltype(cond_conj(x(0)) * y(0)){0};
-
-      // loop over vectors and sum up element-wise products
-      if constexpr (has_layout_smallest_stride_is_one<X> and has_layout_smallest_stride_is_one<Y>) {
-        if constexpr (is_regular_or_view_v<X> and is_regular_or_view_v<Y>) {
-          auto *__restrict px = x.data();
-          auto *__restrict py = y.data();
-          auto res            = cond_conj(px[0]) * py[0];
-          for (size_t i = 1; i < N; ++i) res += cond_conj(px[i]) * py[i];
-          return res;
-        } else {
-          auto res = cond_conj(x(_linear_index_t{0})) * y(_linear_index_t{0});
-          for (long i = 1; i < N; ++i) res += cond_conj(x(_linear_index_t{i})) * y(_linear_index_t{i});
-          return res;
-        }
+    // conditional conjugation
+    auto cond_conj = [](auto z) __attribute__((always_inline)) {
+      if constexpr (star and is_complex_v<decltype(z)>) {
+        return std::conj(z);
       } else {
-        auto res = cond_conj(x(0)) * y(0);
-        for (long i = 1; i < N; ++i) res += cond_conj(x(i)) * y(i);
+        return z;
+      }
+    };
+
+    // early return for zero-sized vectors
+    long const N = x.size();
+    if (N == 0) return decltype(cond_conj(x(0)) * y(0)){0};
+
+    // loop over vectors and sum up element-wise products
+    if constexpr (has_layout_smallest_stride_is_one<X> and has_layout_smallest_stride_is_one<Y>) {
+      if constexpr (is_regular_or_view_v<X> and is_regular_or_view_v<Y>) {
+        auto *__restrict px = x.data();
+        auto *__restrict py = y.data();
+        auto res            = cond_conj(px[0]) * py[0];
+        for (size_t i = 1; i < N; ++i) res += cond_conj(px[i]) * py[i];
+        return res;
+      } else {
+        auto res = cond_conj(x(_linear_index_t{0})) * y(_linear_index_t{0});
+        for (long i = 1; i < N; ++i) res += cond_conj(x(_linear_index_t{i})) * y(_linear_index_t{i});
         return res;
       }
+    } else {
+      auto res = cond_conj(x(0)) * y(0);
+      for (long i = 1; i < N; ++i) res += cond_conj(x(i)) * y(i);
+      return res;
     }
-
-  } // namespace detail
+  }
 
   /**
    * @brief Compute the dot product of two nda::vector objects or the product of two scalars.
@@ -98,7 +107,7 @@ namespace nda::linalg {
     } else if constexpr (requires { nda::blas::dot(x, y); }) {
       return nda::blas::dot(x, y);
     } else {
-      return detail::dot_generic<false>(x, y);
+      return dot_generic<false>(x, y);
     }
   }
 
@@ -130,7 +139,7 @@ namespace nda::linalg {
     } else if constexpr (requires { nda::blas::dotc(x, y); }) {
       return nda::blas::dotc(x, y);
     } else {
-      return detail::dot_generic<true>(x, y);
+      return dot_generic<true>(x, y);
     }
   }
 

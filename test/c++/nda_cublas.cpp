@@ -162,7 +162,7 @@ void test_dot() {
   }
 
   nda::cuvector<value_t> a_d{a}, b_d{b};
-  EXPECT_COMPLEX_NEAR((nda::blas::dot(a_d, b_d)), (nda::blas::dot_generic(a, b)), 1.e-14);
+  EXPECT_COMPLEX_NEAR((nda::blas::dot(a_d, b_d)), (nda::linalg::dot_generic(a, b)), 1.e-14);
 }
 
 TEST(NDA, CUBLASDot) {
@@ -181,7 +181,7 @@ void test_dotc() {
   }
 
   nda::cuvector<value_t> a_d{a}, b_d{b};
-  EXPECT_COMPLEX_NEAR((nda::blas::dotc(a_d, b_d)), (nda::blas::dotc_generic(a, b)), 1.e-14);
+  EXPECT_COMPLEX_NEAR((nda::blas::dotc(a_d, b_d)), (nda::linalg::dotc_generic(a, b)), 1.e-14);
 }
 
 TEST(NDA, CUBLASDotc) {
