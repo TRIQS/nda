@@ -127,6 +127,10 @@ requires (<a class="el" href="group__av__utils.html#ga399faffc1372096b0df09d6516
 requires ((Scalar&lt;X&gt; and Scalar&lt;Y&gt;) or (Vector&lt;X&gt; and Vector&lt;Y&gt;))</td></tr>
 <tr class="memitem:ga33985db52d69c767905c98ae2f7e42e7 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga33985db52d69c767905c98ae2f7e42e7">nda::linalg::dot</a> (X const &amp;x, Y const &amp;y)</td></tr>
 <tr class="memdesc:ga33985db52d69c767905c98ae2f7e42e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the dot product of two <a class="el" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68" title="Alias template of an nda::basic_array with rank 1 and a &#39;V&#39; algebra.">nda::vector</a> objects or the product of two scalars.  <br /></td></tr>
+<tr class="memitem:gac5585fbce44e8117008bddbb5a91b649" id="r_gac5585fbce44e8117008bddbb5a91b649"><td class="memTemplParams" colspan="2">template&lt;bool star = false, Vector X, Vector Y&gt; <br />
+requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;X&gt;&gt; and Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;Y&gt;&gt; and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;X, Y&gt;)</td></tr>
+<tr class="memitem:gac5585fbce44e8117008bddbb5a91b649 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac5585fbce44e8117008bddbb5a91b649">nda::linalg::dot_generic</a> (X const &amp;x, Y const &amp;y)</td></tr>
+<tr class="memdesc:gac5585fbce44e8117008bddbb5a91b649"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic loop-based dot product implementation for vectors.  <br /></td></tr>
 <tr class="memitem:ga1e4da250fc11060a5bc97da2ee467a9a" id="r_ga1e4da250fc11060a5bc97da2ee467a9a"><td class="memTemplParams" colspan="2">template&lt;typename X, typename Y&gt; <br />
 requires ((Scalar&lt;X&gt; and Scalar&lt;Y&gt;) or (Vector&lt;X&gt; and Vector&lt;Y&gt;))</td></tr>
 <tr class="memitem:ga1e4da250fc11060a5bc97da2ee467a9a template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1e4da250fc11060a5bc97da2ee467a9a">nda::linalg::dotc</a> (X const &amp;x, Y const &amp;y)</td></tr>
@@ -355,7 +359,57 @@ requires ((Scalar&lt;X&gt; and Scalar&lt;Y&gt;) or (Vector&lt;X&gt; and Vector&l
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Result of the dot product. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="linalg_2dot_8hpp_source.html#l00095">95</a> of file <a class="el" href="linalg_2dot_8hpp_source.html">dot.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="linalg_2dot_8hpp_source.html#l00104">104</a> of file <a class="el" href="linalg_2dot_8hpp_source.html">dot.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gac5585fbce44e8117008bddbb5a91b649" name="gac5585fbce44e8117008bddbb5a91b649"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac5585fbce44e8117008bddbb5a91b649">&#9670;&#160;</a></span>dot_generic()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;bool star = false, Vector X, Vector Y&gt; <br />
+requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;X&gt;&gt; and Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;Y&gt;&gt; and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;X, Y&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::dot_generic </td>
+          <td>(</td>
+          <td class="paramtype">X const &amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Y const &amp;</td>          <td class="paramname"><span class="paramname"><em>y</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="linalg_2dot_8hpp.html">nda/linalg/dot.hpp</a>&gt;</code></p>
+
+<p>Generic loop-based dot product implementation for vectors. </p>
+<p>Computes the dot product of two vector objects with optional conjugation:</p><ul>
+<li>For <span class="tt">star = false</span>: result = sum(x[i] * y[i])</li>
+<li>For <span class="tt">star = true</span>: result = sum(conj(x[i]) * y[i]) for complex types</li>
+</ul>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">star</td><td>If true, conjugate the first operand (for complex types only). </td></tr>
+    <tr><td class="paramname">X</td><td><a class="el" href="conceptnda_1_1_vector.html" title="Check if a given type is a vector, i.e. an nda::ArrayOfRank&lt;1&gt;.">Vector</a> type. </td></tr>
+    <tr><td class="paramname">Y</td><td><a class="el" href="conceptnda_1_1_vector.html" title="Check if a given type is a vector, i.e. an nda::ArrayOfRank&lt;1&gt;.">Vector</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>First input vector. </td></tr>
+    <tr><td class="paramname">y</td><td>Second input vector. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The computed dot product. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="linalg_2dot_8hpp_source.html#l00045">45</a> of file <a class="el" href="linalg_2dot_8hpp_source.html">dot.hpp</a>.</p>
 
 </div>
 </div>
@@ -407,7 +461,7 @@ requires ((Scalar&lt;X&gt; and Scalar&lt;Y&gt;) or (Vector&lt;X&gt; and Vector&l
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Result of the dotc product. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="linalg_2dot_8hpp_source.html#l00126">126</a> of file <a class="el" href="linalg_2dot_8hpp_source.html">dot.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="linalg_2dot_8hpp_source.html#l00135">135</a> of file <a class="el" href="linalg_2dot_8hpp_source.html">dot.hpp</a>.</p>
 
 </div>
 </div>
