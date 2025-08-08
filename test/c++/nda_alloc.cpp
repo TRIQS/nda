@@ -21,7 +21,12 @@
 #if !__has_feature(address_sanitizer)
 
 TEST(Array, BadAlloc) { //NOLINT
-  EXPECT_THROW(nda::vector<int>(long(1e16)), std::bad_alloc);
+  EXPECT_THROW(
+     []() {
+       auto v = nda::vector<int>(long(1e16));
+       std::cout << v[0] + v[v.size() - 1];
+     }(),
+     std::bad_alloc);
 }
 
 #else
