@@ -46,7 +46,7 @@ namespace nda::mem {
    * - `Device`: Address on GPU memory.
    * - `Unified`: CUDA Unified memory address.
    */
-  enum class AddressSpace { None, Host, Device, Unified }; // Do not change order!
+  enum class AddressSpace { None, Host, Device, Unified };
 
   /// Using declaration for the `Device` address space (see nda::mem::AddressSpace).
   using AddressSpace::Device;
@@ -89,13 +89,37 @@ namespace nda::mem {
    * @tparam A2 Second address space.
    * @tparam As Remaining address spaces.
    */
-  template <AddressSpace A1, AddressSpace A2 = None, AddressSpace... As>
-  constexpr AddressSpace combine = []() {
-    static_assert(!(A1 == Host && A2 == Device) && !(A1 == Device && A2 == Host),
-                  "Error in nda::mem::combine: Cannot combine Host and Device address spaces");
-    if constexpr (sizeof...(As) > 0) { return combine<std::max(A1, A2), As...>; }
-    return std::max(A1, A2);
-  }();
+  template <AddressSpace... As>
+  constexpr AddressSpace combine = default_combine_is_deleted<As...>(); // see P2041
+
+  template <AddressSpace A1, AddressSpace A2, AddressSpace... As>
+  constexpr AddressSpace combine<A1, A2, As...> = combine<combine<A1, A2>, As...>;
+
+  template <AddressSpace A1>
+  constexpr AddressSpace combine<A1> = A1;
+
+  template <AddressSpace A1>
+  constexpr AddressSpace combine<A1, None> = A1;
+
+  template <AddressSpace A1>
+  constexpr AddressSpace combine<None, A1> = A1;
+
+  template <>
+  constexpr AddressSpace combine<None, None> = None;
+
+  template <>
+  constexpr AddressSpace combine<Host, Host> = Host;
+  template <>
+  constexpr AddressSpace combine<Host, Unified> = Unified;
+  template <>
+  constexpr AddressSpace combine<Unified, Host> = Unified;
+
+  template <>
+  constexpr AddressSpace combine<Device, Device> = Device;
+  template <>
+  constexpr AddressSpace combine<Device, Unified> = Unified;
+  template <>
+  constexpr AddressSpace combine<Unified, Device> = Unified;
 
   /**
    * @brief Get common address space for a number of given nda::MemoryArray types.
@@ -139,8 +163,8 @@ namespace nda::mem {
   template <AddressSpace... AdrSpcs>
   static const auto check_adr_sp_valid = []() {
     static_assert(((AdrSpcs != None) & ...), "Error in nda::mem::check_adr_sp_valid: Cannot use None address space");
-    static_assert(nda::have_device or ((AdrSpcs == Host) & ...),
-                  "Error in nda::mem::check_adr_sp_valid: Device address space requires compiling with GPU support.");
+    static_assert((!((AdrSpcs == Device) || ...)) || (((AdrSpcs == Device || AdrSpcs == Unified) & ...)),
+                  "Error in nda::mem::check_adr_sp_valid: All address spaces should be device compatible if one of them is Device.");
   };
 
   /// Constexpr variable that is true if all given types have a `Host` address space.
