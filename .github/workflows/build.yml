@@ -37,6 +37,9 @@ jobs:
           # Full build with Documentation
           - {os: macos-15, cxx: clang++, doc: ON, cov: OFF, python_hdf5: ON, openmp_mpi: ON }
 
+    env:
+      BUILD_CONFIG: ${{ matrix.os }}-${{ matrix.cxx }}-${{ matrix.doc }}-${{ matrix.cov }}-${{ matrix.python_hdf5 }}-${{ matrix.openmp_mpi }}
+
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -45,9 +48,9 @@ jobs:
     - uses: actions/cache/restore@v4
       with:
         path: ${{ env.CCACHE_DIR }}
-        key: ccache-${{ matrix.os }}-${{ matrix.cxx }}-${{ github.run_id }}-${{ github.run_attempt }}
+        key: ccache-${{ env.BUILD_CONFIG }}-${{ github.run_id }}-${{ github.run_attempt }}
         restore-keys: |
-          ccache-${{ matrix.os }}-${{ matrix.cxx }}-
+          ccache-${{ env.BUILD_CONFIG }}-
 
     - name: Set cxx variables
       run: |
@@ -166,7 +169,7 @@ jobs:
       if: always()
       with:
         path: ${{ env.CCACHE_DIR }}
-        key: ccache-${{ matrix.os }}-${{ matrix.cxx }}-${{ github.run_id }}-${{ github.run_attempt }}
+        key: ccache-${{ env.BUILD_CONFIG }}-${{ github.run_id }}-${{ github.run_attempt }}
 
     - name: Deploy documentation
       if: matrix.doc == 'ON' && github.ref == 'refs/heads/unstable'
