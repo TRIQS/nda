@@ -25,7 +25,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, macos-15]
+        os:  [ubuntu-24.04, macos-15]
         cxx: [g++, clang++]
         doc: [OFF]
         cov: [OFF]
@@ -45,8 +45,8 @@ jobs:
     - uses: actions/cache/restore@v4
       with:
         path: ${{ env.CCACHE_DIR }}
-        key: ccache-${{ matrix.os }}-${{ matrix.cxx }}-${{ github.run_id }}
-        restore-keys:
+        key: ccache-${{ matrix.os }}-${{ matrix.cxx }}-${{ github.run_id }}-${{ github.run_attempt }}
+        restore-keys: |
           ccache-${{ matrix.os }}-${{ matrix.cxx }}-
 
     - name: Set cxx variables
@@ -64,8 +64,10 @@ jobs:
         sudo apt-get install lsb-release wget software-properties-common &&
         sudo apt-get install
         ccache
-        clang
         cmake
+        ninja-build
+        clang
+        clang-tools
         g++
         gfortran
         hdf5-tools
@@ -93,7 +95,7 @@ jobs:
 
     - name: Set up virtualenv
       run: |
-        mkdir $HOME/.venv
+        mkdir -p $HOME/.venv
         python3 -m venv --system-site-packages $HOME/.venv/my_python
         source $HOME/.venv/my_python/bin/activate
         echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
@@ -103,7 +105,7 @@ jobs:
       if: ${{ contains(matrix.os, 'macos') }}
       run: |
         brew update
-        brew install ccache gcc llvm hdf5 open-mpi openblas doxygen
+        brew install ccache ninja gcc llvm hdf5 open-mpi openblas doxygen
         pip install mako numpy scipy mpi4py
         pip install -r requirements.txt
         echo "PATH=$(brew --prefix llvm)/bin:$(brew --prefix gcc)/bin:$PATH" >> $GITHUB_ENV
@@ -132,8 +134,7 @@ jobs:
 
     - name: Build nda
       run: |
-        mkdir build && cd build
-        cmake .. \
+        cmake -S . -B build -G Ninja \
           -DCMAKE_INSTALL_PREFIX=$HOME/install \
           -DBuild_Documentation=${{ matrix.doc }} \
           -DCMAKE_BUILD_TYPE=${{ matrix.cov == 'ON' && 'Debug' || 'Release' }} \
@@ -141,7 +142,7 @@ jobs:
           -DHDF5Support=${{ matrix.python_hdf5 }} \
           -DOpenMPSupport=${{ matrix.openmp_mpi }} \
           -DMPISupport=${{ matrix.openmp_mpi }}
-        make -j2 || make -j1 VERBOSE=1
+        cmake --build build --verbose
 
     - name: Test nda
       env:
@@ -165,7 +166,7 @@ jobs:
       if: always()
       with:
         path: ${{ env.CCACHE_DIR }}
-        key: ccache-${{ matrix.os }}-${{ matrix.cxx }}-${{ github.run_id }}
+        key: ccache-${{ matrix.os }}-${{ matrix.cxx }}-${{ github.run_id }}-${{ github.run_attempt }}
 
     - name: Deploy documentation
       if: matrix.doc == 'ON' && github.ref == 'refs/heads/unstable'
