@@ -8,9 +8,9 @@ foreach(file ${python_sources})
 endforeach()
 
 # Install python files to proper location
-set(PYTHON_LIB_DEST ${TRIQS_PYTHON_LIB_DEST_ROOT}/${PROJECT_NAME})
+set(PYTHON_LIB_DEST ${PYTHON_LIB_DEST_ROOT}/${PROJECT_NAME})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/version.py DESTINATION ${PYTHON_LIB_DEST})
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION ${TRIQS_PYTHON_LIB_DEST_ROOT} FILES_MATCHING PATTERN "*.py")
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION ${PYTHON_LIB_DEST_ROOT} FILES_MATCHING PATTERN "*.py")
 
 # Add an interface target for all Python modules
 add_library(${PROJECT_NAME}_python_modules INTERFACE)
@@ -23,7 +23,7 @@ foreach(module_src ${module_sources})
 
   c2py_add_module(${module_name}
     DIR ${module_dir}
-    LINK_LIBRARIES ${PROJECT_NAME}_c ${PROJECT_NAME}_warnings triqs_py)
+    LINK_LIBRARIES ${PROJECT_NAME}_c ${PROJECT_NAME}_warnings)
   add_library(${PROJECT_NAME}::${module_name} ALIAS ${module_name})
   add_dependencies(${PROJECT_NAME}_python_modules ${module_name})
   install(TARGETS ${module_name} DESTINATION ${PYTHON_LIB_DEST}/${module_dir})

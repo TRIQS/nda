@@ -1,6 +1,6 @@
 easyblock = 'CMakeMake'
 
-name = 'TRIQS-app4triqs'
+name = 'app4triqs'
 version = '@PROJECT_VERSION@'
 
 homepage = 'https://triqs.github.io/app4triqs/'
@@ -9,7 +9,7 @@ description = """
 """
 
 docurls = ['https://triqs.github.io/app4triqs/%(version_major_minor)s.x/']
-software_license = 'LicenseGPLv3'
+software_license = 'LicenseApache2'
 
 toolchain = {'name': 'foss', 'version': '2021b'}
 toolchainopts = {'pic': True, 'usempi': True}
@@ -27,7 +27,6 @@ dependencies = [
     ('GMP', '6.2.1'),
     ('HDF5', '1.10.7'),
     ('Mako', '1.1.4'),
-    ('TRIQS', '4.0.0'),
     ('NFFT', '3.5.2')
 ]
 

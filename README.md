@@ -1,4 +1,4 @@
-[![build](https://github.com/TRIQS/app4triqs/workflows/build/badge.svg)](https://github.com/TRIQS/app4triqs/actions?query=workflow%3Abuild)
+[![build](https://github.com/TRIQS/app4triqs/workflows/build/badge.svg?branch=notriqs)](https://github.com/TRIQS/app4triqs/actions?query=workflow%3Abuild)
 
 # app4triqs - A skeleton for a TRIQS application
 

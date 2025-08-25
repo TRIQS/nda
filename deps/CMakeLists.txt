@@ -48,7 +48,9 @@ else()
 endif()
 
 # -- c2py --
-if(PythonSupport OR (NOT IS_SUBPROJECT AND Build_Documentation))
+# h5 also pulls in c2py (via FetchContent); the NOT TARGET guard makes resolution
+# order-independent so that whichever project configures c2py first wins.
+if((PythonSupport OR (NOT IS_SUBPROJECT AND Build_Documentation)) AND NOT TARGET c2py)
   external_dependency(c2py
     GIT_REPO https://github.com/flatironinstitute/c2py
     GIT_TAG unstable
@@ -63,4 +65,11 @@ external_dependency(GTest
   GIT_TAG main
   BUILD_ALWAYS
   EXCLUDE_FROM_ALL
+)
+
+# -- h5 --
+external_dependency(h5
+  GIT_REPO https://github.com/TRIQS/h5
+  GIT_TAG unstable
+  BUILD_ALWAYS
 )

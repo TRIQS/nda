@@ -1,0 +1,50 @@
+FROM ubuntu:26.04
+ENV LLVM=21
+
+# This platform includes dependencies for building docs
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+      clang-${LLVM} \
+      cmake \
+      g++ \
+      gfortran \
+      git \
+      vim \
+      lldb-${LLVM} \
+      clang-format-${LLVM} \
+      hdf5-tools \
+      libboost-dev \
+      libclang-${LLVM}-dev \
+      libc++-${LLVM}-dev \
+      libc++abi-${LLVM}-dev \
+      libomp-${LLVM}-dev \
+      libzstd-dev \
+      libfftw3-dev \
+      libgfortran5 \
+      libgmp-dev \
+      libhdf5-dev \
+      libopenblas-dev \
+      libopenmpi-dev \
+      openmpi-bin \
+      openmpi-common \
+      openmpi-doc \
+      doxygen \
+      pandoc \
+      python3-clang-${LLVM} \
+      python3-dev \
+      python3-mako \
+      python3-matplotlib \
+      python3-mpi4py \
+      python3-numpy \
+      python3-numpydoc \
+      python3-pip \
+      python3-scipy \
+      python3-ipython \
+      python3-sphinx \
+      python3-sphinx-rtd-theme \
+      python3-nbsphinx \
+      python3-myst-parser \
+      python3-linkify-it
+
+ENV PYTHON_VERSION=3.14 \
+    CC=clang-${LLVM} CXX=clang++-${LLVM} CXXFLAGS="-stdlib=libc++"
+RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM} 60 --slave /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM} --slave /usr/bin/clang-cpp clang-cpp /usr/bin/clang-cpp-${LLVM}

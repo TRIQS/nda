@@ -14,14 +14,15 @@ set(@PROJECT_NAME@_GIT_HASH @PROJECT_GIT_HASH@ CACHE STRING "@PROJECT_NAME@ git 
 # Root of the installation
 set(@PROJECT_NAME@_ROOT @CMAKE_INSTALL_PREFIX@ CACHE STRING "@PROJECT_NAME@ root directory")
 
-## Find the target dependencies
-#function(find_dep)
-#  get_property(${ARGV0}_FOUND GLOBAL PROPERTY ${ARGV0}_FOUND)
-#  if(NOT ${ARGV0}_FOUND)
-#    find_package(${ARGN} REQUIRED HINTS @CMAKE_INSTALL_PREFIX@)
-#  endif()
-#endfunction()
-#find_dep(depname 1.0)
+# Find the target dependencies
+function(find_dep)
+  get_property(${ARGV0}_FOUND GLOBAL PROPERTY ${ARGV0}_FOUND)
+  if(NOT ${ARGV0}_FOUND)
+    find_package(${ARGN} REQUIRED HINTS @CMAKE_INSTALL_PREFIX@)
+  endif()
+endfunction()
+# app4triqs_c publicly links h5::h5_c, so downstream consumers need the h5 targets
+find_dep(h5)
 
 # Include the exported targets of this project
 include(@CMAKE_INSTALL_FULL_LIBDIR@/cmake/@PROJECT_NAME@/@PROJECT_NAME@-targets.cmake)
@@ -34,7 +35,7 @@ set(@PROJECT_NAME@_WITH_DOCUMENTATION @Build_Documentation@ CACHE BOOL "Was @PRO
 # Was the Project built with PythonSupport?
 set(@PROJECT_NAME@_WITH_PYTHON_SUPPORT @PythonSupport@ CACHE BOOL "Was @PROJECT_NAME@ build with python support?")
 if(@PythonSupport@)
-  set(@PROJECT_NAME@_MODULE_DIR @CMAKE_INSTALL_PREFIX@/@TRIQS_PYTHON_LIB_DEST_ROOT@ CACHE BOOL "The @PROJECT_NAME@ python module directory")
+  set(@PROJECT_NAME@_MODULE_DIR @CMAKE_INSTALL_PREFIX@/@PYTHON_LIB_DEST_ROOT@ CACHE BOOL "The @PROJECT_NAME@ python module directory")
 endif()
 
 endif()

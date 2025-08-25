@@ -2,9 +2,9 @@ name: build
 
 on:
   push:
-    branches: [ unstable, '[0-9]+.[0-9]+.x' ]
+    branches: [ notriqs, '[0-9]+.[0-9]+.x' ]
   pull_request:
-    branches: [ unstable, '[0-9]+.[0-9]+.x' ]
+    branches: [ notriqs, '[0-9]+.[0-9]+.x' ]
   workflow_call:
   workflow_dispatch:
 
@@ -57,7 +57,6 @@ jobs:
         g++
         gfortran
         hdf5-tools
-        libboost-dev
         llvm-20-dev
         libclang-20-dev
         libomp-20-dev
@@ -74,7 +73,6 @@ jobs:
         openmpi-doc
         python3-dev
         python3-mako
-        python3-matplotlib
         python3-mpi4py
         python3-numpy
         python3-pip
@@ -93,7 +91,7 @@ jobs:
       if: ${{ contains(matrix.os, 'macos') }}
       run: |
         brew update
-        brew install ccache gcc llvm libomp boost fftw hdf5 open-mpi openblas
+        brew install ccache gcc llvm libomp hdf5 open-mpi openblas
         # Set CXX from the matrix; for gcc, resolve unversioned 'g++' to whatever g++-NN Homebrew installed
         CXX=${{ matrix.cxx }}
         if [[ $CXX == g++ ]]; then
@@ -125,29 +123,15 @@ jobs:
           -DCMAKE_INSTALL_PREFIX=$HOME/install
         cmake --build clair/build --target install --verbose
 
-    - name: Build & Install TRIQS
-      env:
-        TRIQS_BRANCH: ${{ github.event_name == 'pull_request' && github.base_ref || github.ref_name }}
-      run: |
-        git ls-remote --exit-code --heads https://github.com/TRIQS/triqs "$TRIQS_BRANCH" > /dev/null 2>&1 || TRIQS_BRANCH=unstable
-        git clone https://github.com/TRIQS/triqs --branch "$TRIQS_BRANCH"
-        cmake -S triqs -B triqs/build -G Ninja \
-          -DPython_EXECUTABLE=$VIRTUAL_ENV/bin/python \
-          -DBuild_Tests=OFF \
-          -DCMAKE_INSTALL_PREFIX=$HOME/install
-        cmake --build triqs/build --target install --verbose
-
     - name: Build app4triqs
       run: |
-        source $HOME/install/share/triqs/triqsvars.sh
-        cmake -S . -B build -G Ninja
+        cmake -S . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$HOME/install
         cmake --build build --verbose
 
     - name: Test app4triqs
       env:
         OPENBLAS_NUM_THREADS: "1"
       run: |
-        source $HOME/install/share/triqs/triqsvars.sh
         cd build
         ctest -j2 --output-on-failure
 
