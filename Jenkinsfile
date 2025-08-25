@@ -21,7 +21,7 @@ properties([
 def platforms = [:]
 
 /****************** linux builds (in docker) */
-/* Each platform must have a corresponding Dockerfile.PLATFORM in triqs/packaging */
+/* Each platform must have a corresponding Dockerfile.PLATFORM in packaging */
 def dockerPlatforms = ["ubuntu-clang", "ubuntu-gcc", "ubuntu-intel", "sanitize"]
 /* .each is currently broken in jenkins */
 for (int i = 0; i < dockerPlatforms.size(); i++) {
@@ -31,8 +31,8 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
       checkout scm
       /* construct a Dockerfile for this base */
       sh """
-      ( cat packaging/Dockerfile.${env.STAGE_NAME} ; sed '0,/^FROM /d' Dockerfile ) > Dockerfile.jenkins
-        mv -f Dockerfile.jenkins Dockerfile
+      ( cat packaging/Dockerfile.${env.STAGE_NAME} ; sed '0,/^FROM /d' Dockerfile ) > Dockerfile.${env.STAGE_NAME}
+        cp -f Dockerfile.${env.STAGE_NAME} Dockerfile
       """
       archiveArtifacts(artifacts: "Dockerfile.${env.STAGE_NAME}")
       /* build and tag */
@@ -42,7 +42,7 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
       else if (platform == "sanitize")
         args = '-DASAN=ON -DUBSAN=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo'
       def uid = sh(returnStdout: true, script: "id -u").trim()
-      def img = docker.build("flatironinstitute/${dockerName}:${env.BRANCH_NAME}-${env.STAGE_NAME}", "--build-arg APPNAME=${projectName} --build-arg BUILD_ID=${env.BUILD_TAG} --build-arg CMAKE_ARGS='${args}' --build-arg BUILDUID=${uid} .")
+      def img = docker.build("flatironjenkins/${dockerName}:${env.BRANCH_NAME}-${env.STAGE_NAME}", "--build-arg APPNAME=${projectName} --build-arg BUILD_ID=${env.BUILD_TAG} --build-arg CMAKE_ARGS='${args}' --build-arg BUILDUID=${uid} .")
       catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
         img.inside("--shm-size=4gb") {
           sh "make -C \$BUILD/${projectName} test CTEST_OUTPUT_ON_FAILURE=1"
