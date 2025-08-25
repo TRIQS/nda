@@ -1,0 +1,32 @@
+FROM ubuntu:26.04
+
+# This platform does not regenerate Python bindings, so no clang / libclang
+# toolchain is needed (clair is only built on the regen platforms).
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+      cmake \
+      g++ \
+      gfortran \
+      git \
+      vim \
+      lldb \
+      hdf5-tools \
+      libboost-dev \
+      libfftw3-dev \
+      libgfortran5 \
+      libgmp-dev \
+      libhdf5-dev \
+      libopenblas-dev \
+      libopenmpi-dev \
+      openmpi-bin \
+      openmpi-common \
+      openmpi-doc \
+      python3-dev \
+      python3-mako \
+      python3-matplotlib \
+      python3-mpi4py \
+      python3-numpy \
+      python3-pip \
+      python3-scipy
+
+ENV PYTHON_VERSION=3.14 \
+    CC=gcc CXX=g++

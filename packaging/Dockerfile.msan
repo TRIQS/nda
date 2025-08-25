@@ -1,0 +1,132 @@
+FROM --platform=linux/amd64 ubuntu:24.04
+ARG APPNAME=app4triqs
+ARG LLVM=20
+ARG NTHREAD=10
+
+RUN apt-get update && apt-get install -y lsb-release wget software-properties-common && \
+      wget -O /tmp/llvm.sh https://apt.llvm.org/llvm.sh && chmod +x /tmp/llvm.sh && /tmp/llvm.sh ${LLVM} && \
+      DEBIAN_FRONTEND=noninteractive apt-get install -y \
+      clang-${LLVM} \
+      libunwind-${LLVM} \
+      cmake \
+      g++ \
+      gfortran \
+      git \
+      vim \
+      lldb-${LLVM} \
+      hdf5-tools \
+      libclang-${LLVM}-dev \
+      libomp-${LLVM}-dev \
+      libfftw3-dev \
+      libgfortran5 \
+      libgmp-dev \
+      libssl-dev \
+      ninja-build \
+      pkg-config \
+      python3-clang-${LLVM} \
+      python3-dev \
+      python3-mako \
+      python3-matplotlib \
+      python3-numpy \
+      python3-pip \
+      python3-scipy
+
+ENV PYTHON_VERSION=3.12 \
+    CC=clang-${LLVM} CXX=clang++-${LLVM} \
+    LLVM_ROOT=/usr/lib/llvm-${LLVM}
+
+# Build libcxx and libcxxabi with MSAN
+# c.f. https://github.com/google/sanitizers/wiki/MemorySanitizerLibcxxHowTo
+RUN git clone https://github.com/llvm/llvm-project --branch release/${LLVM}.x --depth 1 -c advice.detachedHead=false /tmp/llvm_src && \
+      mkdir /tmp/llvm_build && cd /tmp/llvm_build && \
+      cmake /tmp/llvm_src/runtimes -G Ninja \
+      -DLLVM_USE_SANITIZER=MemoryWithOrigins \
+      -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+      -DCMAKE_INSTALL_PREFIX=${LLVM_ROOT} \
+      -DLIBCXXABI_USE_LLVM_UNWINDER=OFF \
+      -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi" && \
+      ninja -j${NTHREAD} install-cxx install-cxxabi
+
+# Build Environment using MSAN
+# c.f. https://libcxx.llvm.org/UsingLibcxx.html#using-a-custom-built-libc
+ENV MSAN_FLAGS="-fsanitize=memory -fsanitize-recover=all -fsanitize-memory-track-origins -fno-omit-frame-pointer -fno-inline-functions -g -O1 -fno-common -fPIC" \
+    CUSTOM_LIBCXX_FLAGS="-nostdinc++ -nostdlib++ -isystem${LLVM_ROOT}/include/c++/v1 -L${LLVM_ROOT}/lib -Wl,-rpath,${LLVM_ROOT}/lib -lc++ -lc++abi"
+ENV CXXFLAGS="$MSAN_FLAGS -Wno-unused-command-line-argument $CUSTOM_LIBCXX_FLAGS" \
+    CFLAGS="$MSAN_FLAGS" \
+    MSAN_OPTIONS=symbolize=1:halt_on_error=1:abort_on_error=1 \
+    MSAN_SYMBOLIZER_PATH=${LLVM_ROOT}/bin/llvm-symbolizer \
+    PATH=${LLVM_ROOT}/bin:$PATH
+
+# Static zlib using fPIC to be linked into hdf5
+ADD https://www.zlib.net/zlib-1.3.1.tar.gz /tmp/
+RUN cd /tmp && tar xf /tmp/zlib-1.3.1.tar.gz && cd zlib-1.3.1 && \
+      ./configure --prefix=/opt/zlib && \
+      make -j${NTHREAD} && make install && cd /tmp
+
+# HDF5
+ADD https://github.com/HDFGroup/hdf5/archive/refs/tags/hdf5_1.14.6.tar.gz /tmp/
+RUN cd /tmp && tar xf /tmp/hdf5_1.14.6.tar.gz && chmod 1777 . && \
+      mkdir build && cd build && \
+      cmake /tmp/hdf5-hdf5_1.14.6 \
+      -DCMAKE_BUILD_TYPE=Debug \
+      -DCMAKE_INSTALL_PREFIX=/opt/hdf5 \
+      -DHDF5_ENABLE_Z_LIB_SUPPORT=ON \
+      -DZLIB_LIBRARY=/opt/zlib/lib/libz.a \
+      -DZLIB_INCLUDE_DIR:PATH=/opt/zlib/include && \
+      make -j${NTHREAD} && make install && cd /tmp && rm -rf /tmp/build
+ENV HDF5_ROOT=/opt/hdf5
+
+# libevent
+ADD https://github.com/libevent/libevent/releases/download/release-2.1.12-stable/libevent-2.1.12-stable.tar.gz /tmp/
+RUN cd /tmp && tar xf /tmp/libevent-2.1.12-stable.tar.gz && cd libevent-2.1.12-stable && \
+      ./configure --prefix=/opt/openmpi && \
+      make -j${NTHREAD} && make install && cd /tmp
+
+# hwloc
+ADD https://download.open-mpi.org/release/hwloc/v2.12/hwloc-2.12.0.tar.bz2 /tmp/
+COPY packaging/hwloc.patch /tmp/
+RUN cd /tmp && tar xf /tmp/hwloc-2.12.0.tar.bz2 && cd hwloc-2.12.0 && patch -p0 -i /tmp/hwloc.patch && \
+      ./configure --prefix=/opt/openmpi --enable-debug && \
+      make -j${NTHREAD} && make install && cd /tmp
+
+# OpenMPI
+ADD https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-5.0.7.tar.bz2 /tmp/
+RUN cd /tmp && tar xf /tmp/openmpi-5.0.7.tar.bz2 && cd openmpi-5.0.7 && \
+      ./configure --prefix=/opt/openmpi \
+      --enable-debug \
+      --disable-mpi-fortran \
+      --disable-pty-support \
+      --with-hwloc=/opt/openmpi \
+      --with-libevent=/opt/openmpi && \
+      make -j${NTHREAD} && make install && cd /tmp
+ENV MPI_HOME=/opt/openmpi \
+    MPICC=/opt/openmpi/bin/mpicc
+
+# Use libflame to provide blas / lapack
+RUN git clone https://github.com/Wentzell/libflame /tmp/libflame && cd /tmp/libflame && \
+      ./configure --prefix=/opt/libflame \
+      --enable-debug \
+      --enable-builtin-blas \
+      --enable-lapack2flame \
+      --enable-legacy-lapack \
+      --build=x86_64-unknown-linux-gnu && \
+      make -j${NTHREAD} VERBOSE=1 && make install && cd /tmp
+
+RUN useradd -m build
+
+ENV SRC=/src \
+    BUILD=/home/build \
+    INSTALL=/usr/local \
+    PYTHONPATH=/usr/local/lib/python${PYTHON_VERSION}/site-packages \
+    CMAKE_PREFIX_PATH=/usr/lib/cmake/$APPNAME \
+    OPENBLAS_NUM_THREADS=1 \
+    MKL_NUM_THREADS=1
+
+COPY . ${SRC}/$APPNAME
+WORKDIR ${BUILD}/$APPNAME
+RUN chown -R build . ${SRC}/$APPNAME
+USER build
+RUN cmake $SRC/$APPNAME -DCMAKE_INSTALL_PREFIX=$INSTALL -DCMAKE_BUILD_TYPE=Debug -DPythonSupport=OFF -DMSAN=ON \
+    -DLAPACK_LIBRARIES="/opt/libflame/lib/libflame.a;gfortran" -DBLAS_LIBRARIES=/opt/libflame/lib/libflame.a && \
+    make -j${NTHREAD}
+RUN cd test/c++ && make test CTEST_OUTPUT_ON_FAILURE=1 || true

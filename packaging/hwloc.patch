@@ -1,0 +1,13 @@
+diff -ru include/private/cpuid-x86.h.orig include/private/cpuid-x86.h
+index 2758afe04..8f7acd894 100644
+--- include/private/cpuid-x86.h.orig
++++ include/private/cpuid-x86.h
+@@ -62,6 +62,8 @@ static __hwloc_inline void hwloc_x86_cpuid(unsigned *eax, unsigned *ebx, unsigne
+ #else /* HWLOC_HAVE_MSVC_CPUIDEX */
+   /* Note: gcc might want to use bx or the stack for %1 addressing, so we can't
+    * use them :/ */
++  /* MSAN FIX */
++  *ebx = *edx = 0;
+ #ifdef HWLOC_X86_64_ARCH
+   hwloc_uint64_t sav_rbx;
+   __asm__(

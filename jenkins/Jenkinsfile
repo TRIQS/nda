@@ -5,9 +5,6 @@ def documentationPlatform = "ubuntu-clang"
 /* Platforms that regenerate the Python bindings via clair-c2py.
    All others use the default (OFF) from c2py. */
 def regenPlatforms = ["ubuntu-clang"]
-/* depend on triqs upstream branch/project */
-def triqsBranch = env.BRANCH_NAME == "jenkins" ? "jenkins" : "unstable"
-def triqsProject = '/CCQ/TRIQS/triqs/' + triqsBranch.replaceAll('/', '%2F')
 /* whether to keep and publish the results */
 def keepInstall = false // disabled on jenkins-new: !env.BRANCH_NAME.startsWith("PR-")
 
@@ -17,13 +14,12 @@ properties([
   pipelineTriggers(keepInstall ? [
     upstream(
       threshold: 'SUCCESS',
-      upstreamProjects: triqsProject
+      upstreamProjects: '/CCQ/TRIQS/cpp2py/master,/CCQ/TRIQS/h5/unstable'
     ), githubPush()
   ] : [githubPush()])
 ])
 
-def installBase = "/mnt/triqs"
-def mounts = ["triqs": installBase]
+def mounts = [:]
 
 def runBuild = { String platform, String prefix, List<String> envs ->
   def macos = platform.startsWith("macos-")
@@ -31,15 +27,9 @@ def runBuild = { String platform, String prefix, List<String> envs ->
   def buildDir = "$WORKSPACE_TMP/build"
   /* install real branches in a fixed predictable place so apps can find them */
   def installDir = keepInstall ? "$prefix/install/$JOB_NAME/$platform" : "$WORKSPACE_TMP/install"
-  def triqsDir = "$prefix/install$triqsProject/${platform}"
   envs += [
     "OPENBLAS_NUM_THREADS=1",
     "MKL_NUM_THREADS=1"]
-  /* the triqs venv on macOS is built from the brew python, which may differ from the system python3 */
-  def python3 = macos ? "${env.BREW}/bin/python3" : "python3"
-  def pythonVer = sh(returnStdout: true, script: """$python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")'""").trim()
-  def triqsPy = "$triqsDir/lib/python$pythonVer"
-  envs << "PYTHONPATH=$triqsPy/dist-packages:$triqsPy/site-packages"
   if (macos) {
     dir(installDir) {
       deleteDir()
@@ -50,27 +40,47 @@ def runBuild = { String platform, String prefix, List<String> envs ->
     }
     def brew = env.BREW
     def hdf5 = "$brew/opt/hdf5"
-    def venv = triqsDir
+    /* build a fresh venv from the brew python (which may differ from the system python3)
+       so that cmake picks up the matching interpreter and the python dependencies */
+    def venv = installDir
     envs += [
       "PATH=$venv/bin:$brew/bin:/usr/bin:/bin:/usr/sbin",
       "HDF5_ROOT=$hdf5",
+      "LAPACK_ROOT=$brew/opt/openblas",
       "C_INCLUDE_PATH=$hdf5/include:$brew/include",
       "CPLUS_INCLUDE_PATH=$venv/include:$hdf5/include:$brew/include",
       "LIBRARY_PATH=$venv/lib:$hdf5/lib:$brew/lib",
       "DYLD_LIBRARY_PATH=$venv/lib:$hdf5/lib:$brew/lib",
-      "CMAKE_PREFIX_PATH=$venv/lib/cmake/triqs",
+      "CMAKE_PREFIX_PATH=$venv",
       "VIRTUAL_ENV=$venv",
       "OMP_NUM_THREADS=${env.PARALLEL}"]
-    /* note: this is installing into the parent (triqs) venv (install dir), which is thus shared among apps and so not be completely safe */
     sh """#!/bin/sh -ex
+      ${brew}/bin/python3 -m venv $venv
       source $venv/bin/activate
       pip3 install -U -r $WORKSPACE/requirements.txt
     """
-  } else {
-    def path = sh(returnStdout: true, script: 'echo $PATH').trim()
-    envs << "PATH=$triqsDir/bin:$path"
   }
+  /* on linux the docker image (packaging/Dockerfile.PLATFORM) provides the system
+     python3 and build dependencies; c2py and h5 are built from source as subprojects */
   withEnv(envs) {
+    if (regen) {
+      dir("clair") {
+        /* Build and install clair so that clair-c2py is available for Python binding regeneration.
+         * Unset CPLUS_INCLUDE_PATH / CXXFLAGS below so that platform settings (e.g. -stdlib=libc++)
+         * do not leak into the clair build and mix libc++ headers with libstdc++ linkage. */
+        checkout scmGit(userRemoteConfigs: [[url: 'https://github.com/flatironinstitute/clair']],
+          branches: [[name: 'refs/heads/unstable']])
+      }
+      dir("$WORKSPACE_TMP/clair") {
+        sh """#!/bin/sh -ex
+          unset CPLUS_INCLUDE_PATH
+          unset CXXFLAGS
+          CXX="clang++-\$LLVM" cmake -S $WORKSPACE/clair -DBuild_Tests=OFF -DCMAKE_INSTALL_PREFIX=$installDir
+          cmake --build . -j\$PARALLEL
+          cmake --install .
+        """
+      }
+    }
     def args = regen ? '-DUpdate_Python_Bindings=ON' : ''
     if (platform == documentationPlatform)
       args += ' -DBuild_Documentation=ON'
@@ -78,7 +88,7 @@ def runBuild = { String platform, String prefix, List<String> envs ->
       args += ' -DASAN=ON -DUBSAN=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo'
     dir(buildDir) {
       sh """#!/bin/sh -ex
-        cmake $WORKSPACE -DCMAKE_INSTALL_PREFIX=$installDir -DTRIQS_ROOT=$triqsDir $args
+        cmake $WORKSPACE -DCMAKE_INSTALL_PREFIX=$installDir $args
         make -j\$PARALLEL || make -j1 VERBOSE=1
       """
       catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
@@ -98,7 +108,7 @@ def runBuild = { String platform, String prefix, List<String> envs ->
 def platforms = [:]
 
 /****************** linux builds (in docker) */
-/* Each platform must have a corresponding Dockerfile.PLATFORM in triqs/packaging */
+/* Each platform must have a corresponding Dockerfile.PLATFORM in jenkins/ */
 def dockerPlatforms = ["ubuntu-clang", "ubuntu-gcc", "ubuntu-intel", "sanitize"]
 for (int i = 0; i < dockerPlatforms.size(); i++) {
   def platform = dockerPlatforms[i]
@@ -109,14 +119,8 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
           context: 'jenkins',
           dockerfile: "Dockerfile.$platform",
           devShm: true,
-          mounts: mounts,
-          prep: {
-            /* construct a Dockerfile for this base */
-            sh """
-              ( echo "FROM $REGISTRY_PREFIX${triqsProject.toLowerCase()}:$platform" ; sed '0,/^FROM /d' jenkins/Dockerfile ) > jenkins/Dockerfile.$platform
-            """
-          }) {
-          runBuild(platform, installBase, [])
+          mounts: mounts) {
+          runBuild(platform, env.WORKSPACE_TMP, [])
         }
       }
     }
@@ -158,7 +162,7 @@ catchError {
                 userRemoteConfigs: [[credentialsId: 'github-jenkins', url: 'https://github.com/TRIQS/TRIQS.github.io.git']])
               checkout scm: ghp, changelog: false
               sh "rm -rf ${subdir}"
-              def installDir = "$installBase/install/$JOB_NAME/$documentationPlatform"
+              def installDir = "$WORKSPACE_TMP/install/$JOB_NAME/$documentationPlatform"
               sh """#!/bin/bash -ex
                 base=$installDir/share/doc
                 dir="$projectName"

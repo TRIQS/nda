@@ -1,4 +1,4 @@
-#include <triqs/test_tools/gfs.hpp>
+#include <gtest/gtest.h>
 #include <app4triqs/app4triqs.hpp>
 
 using namespace app4triqs;
