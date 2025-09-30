@@ -114,6 +114,7 @@ jobs:
         echo "PATH=$(brew --prefix llvm)/bin:$(brew --prefix gcc)/bin:$PATH" >> $GITHUB_ENV
         echo "PYTHONPATH=$(brew --prefix llvm)/lib/python3.13/site-packages" >> $GITHUB_ENV
         echo "SDKROOT=$(xcrun --show-sdk-path)" >> $GITHUB_ENV
+        echo "LDFLAGS=-L$(brew --prefix llvm)/lib/c++ -L/opt/homebrew/opt/llvm/lib/unwind -lunwind" >> $GITHUB_ENV
 
     - name: Add clang CXXFLAGS
       if: ${{ matrix.cxx == 'clang++' }}
