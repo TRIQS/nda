@@ -3,7 +3,7 @@
 
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>GCC Code Coverage Report</title>
+    <title>lapack/gelss.hpp - GCC Code Coverage Report</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="coverage.css"/>
   </head>
@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2025-08-25 15:31:29</td>
+      <td>2025-10-03 19:27:55</td>
     </tr>
   </table>
 </div>
@@ -34,27 +34,31 @@
   <table class="coverage">
     <tr>
       <th></th>
-      <th scope="col">Exec</th>
-      <th scope="col">Total</th>
       <th scope="col">Coverage</th>
+      <th scope="col">Exec</th>
+      <th scope="col">Excl</th>
+      <th scope="col">Total</th>
     </tr>
     <tr>
       <th scope="row">Lines:</th>
-      <td>19</td>
-      <td>19</td>
       <td class="coverage-high">100.0%</td>
+      <td class="coverage-high">72</td>
+      <td class="coverage-high">0</td>
+      <td class="coverage-high">72</td>
     </tr>
     <tr>
       <th scope="row">Functions:</th>
-      <td>4</td>
-      <td>4</td>
       <td class="coverage-high">100.0%</td>
+      <td class="coverage-high">4</td>
+      <td class="coverage-high">0</td>
+      <td class="coverage-high">4</td>
     </tr>
     <tr>
       <th scope="row">Branches:</th>
-      <td>9</td>
-      <td>76</td>
       <td class="coverage-low">11.8%</td>
+      <td class="coverage-low">36</td>
+      <td class="coverage-low">0</td>
+      <td class="coverage-low">304</td>
     </tr>
   </table>
 </div>
@@ -68,12 +72,14 @@
     <tr>
       <th>Function (Line)</th>
       <th>Call count</th>
+      <th>Line coverage</th>
+      <th>Branch coverage</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l65">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;) (line 65)</a></td><td>called 1 time</td><td>47.0%</td></tr>
-    <tr><td><a href="#l65">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;) (line 65)</a></td><td>called 1 time</td><td>48.0%</td></tr>
-    <tr><td><a href="#l65">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;) (line 65)</a></td><td>called 1 time</td><td>47.0%</td></tr>
-    <tr><td><a href="#l65">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;) (line 65)</a></td><td>called 1 time</td><td>48.0%</td></tr>
+    <tr><td><a href="#l65">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;) (line 65)</a></td><td>called 1 time</td><td>100.0%</td><td>11.8%</td><td>47.0%</td></tr>
+    <tr><td><a href="#l65">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;) (line 65)</a></td><td>called 1 time</td><td>100.0%</td><td>11.8%</td><td>48.0%</td></tr>
+    <tr><td><a href="#l65">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;) (line 65)</a></td><td>called 1 time</td><td>100.0%</td><td>11.8%</td><td>47.0%</td></tr>
+    <tr><td><a href="#l65">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;) (line 65)</a></td><td>called 1 time</td><td>100.0%</td><td>11.8%</td><td>48.0%</td></tr>
   </table>
 </details>
 
@@ -539,7 +545,7 @@
       <td class="lineno"><a id="l65" href="#l65">65</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">8</td>
+      <td class="linecount coveredLine">4</td>
       <td class="src coveredLine"><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">gelss</span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">S</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">rcond</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rank</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// NOLINT (temporary views are allowed here)</span></td>
     </tr>
     <tr class="source-line">
@@ -567,23 +573,39 @@
       <td class="lineno"><a id="l69" href="#l69">69</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">8</td>
+      <td class="linecount coveredLine">4</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">dm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">extent</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">extent</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l70" href="#l70">70</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/4</summary>
+          <summary class="linebranchSummary">4/16</summary>
           <div class="linebranchContents">
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
             <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
-            <div class="takenBranch">&check; Branch 2 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">8</td>
+      <td class="linecount partialCoveredLine">4</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">dm</span><span class="p">)</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">dm</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
@@ -604,10 +626,62 @@
       <td class="lineno"><a id="l73" href="#l73">73</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/16</summary>
+          <summary class="linebranchSummary">4/64</summary>
           <div class="linebranchContents">
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-            <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
@@ -625,17 +699,69 @@
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">8</td>
+      <td class="linecount partialCoveredLine">4</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="n">EXPECTS</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">indexmap</span><span class="p">().</span><span class="n">min_stride</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l74" href="#l74">74</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/16</summary>
+          <summary class="linebranchSummary">4/64</summary>
           <div class="linebranchContents">
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-            <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
@@ -653,17 +779,69 @@
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">8</td>
+      <td class="linecount partialCoveredLine">4</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="n">EXPECTS</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">indexmap</span><span class="p">().</span><span class="n">min_stride</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l75" href="#l75">75</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/16</summary>
+          <summary class="linebranchSummary">4/64</summary>
           <div class="linebranchContents">
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-            <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
@@ -681,7 +859,7 @@
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">8</td>
+      <td class="linecount partialCoveredLine">4</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="n">EXPECTS</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">indexmap</span><span class="p">().</span><span class="n">min_stride</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
@@ -709,35 +887,45 @@
       <td class="lineno"><a id="l79" href="#l79">79</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">8</td>
+      <td class="linecount coveredLine">4</td>
       <td class="src coveredLine"><span class="w">    </span><span class="n">value_type</span><span class="w"> </span><span class="n">bufferSize_T</span><span class="p">{};</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l80" href="#l80">80</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">4/8</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 4 times.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">8</td>
+      <td class="linecount partialCoveredLine">4</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">rwork</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dm</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l81" href="#l81">81</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">8</td>
+      <td class="linecount coveredLine">4</td>
       <td class="src coveredLine"><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">info</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l82" href="#l82">82</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">8</td>
+      <td class="linecount coveredLine">4</td>
       <td class="src coveredLine"><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">nrhs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">ldb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="c1">// defaults for B MemoryVector</span></td>
     </tr>
     <tr class="source-line">
@@ -751,14 +939,14 @@
       <td class="lineno"><a id="l84" href="#l84">84</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">      </span><span class="n">nrhs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">extent</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l85" href="#l85">85</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">      </span><span class="n">ldb</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">get_ld</span><span class="p">(</span><span class="n">b</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
@@ -772,21 +960,31 @@
       <td class="lineno"><a id="l87" href="#l87">87</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">4/8</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 8 taken 4 times.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="takenBranch">&check; Branch 8 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="takenBranch">&check; Branch 8 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="takenBranch">&check; Branch 8 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="takenBranch">&check; Branch 8 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">8</td>
+      <td class="linecount partialCoveredLine">4</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="n">f77</span><span class="o">::</span><span class="n">gelss</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">extent</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">extent</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">nrhs</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">get_ld</span><span class="p">(</span><span class="n">a</span><span class="p">),</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">ldb</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">rcond</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">bufferSize_T</span><span class="p">,</span><span class="w"> </span><span class="mi">-1</span><span class="p">,</span><span class="w"> </span><span class="n">rwork</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">info</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l88" href="#l88">88</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">8</td>
+      <td class="linecount coveredLine">4</td>
       <td class="src coveredLine"><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">bufferSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ceil</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">real</span><span class="p">(</span><span class="n">bufferSize_T</span><span class="p">)));</span></td>
     </tr>
     <tr class="source-line">
@@ -807,28 +1005,48 @@
       <td class="lineno"><a id="l91" href="#l91">91</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">4/8</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 4 times.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">8</td>
+      <td class="linecount partialCoveredLine">4</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="n">array</span><span class="o">&lt;</span><span class="n">value_type</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="o">&gt;</span><span class="w"> </span><span class="n">work</span><span class="p">(</span><span class="n">bufferSize</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l92" href="#l92">92</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">4/8</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 9 taken 4 times.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="takenBranch">&check; Branch 9 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="takenBranch">&check; Branch 9 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="takenBranch">&check; Branch 9 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="takenBranch">&check; Branch 9 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">8</td>
+      <td class="linecount partialCoveredLine">4</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="n">f77</span><span class="o">::</span><span class="n">gelss</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">extent</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">extent</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">nrhs</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">get_ld</span><span class="p">(</span><span class="n">a</span><span class="p">),</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">ldb</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">rcond</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="n">work</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">bufferSize</span><span class="p">,</span><span class="w"> </span><span class="n">rwork</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span></td>
     </tr>
     <tr class="source-line">
@@ -849,10 +1067,62 @@
       <td class="lineno"><a id="l95" href="#l95">95</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/16</summary>
+          <summary class="linebranchSummary">4/64</summary>
           <div class="linebranchContents">
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
             <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
-            <div class="takenBranch">&check; Branch 1 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
+            <div class="functionName">int nda::lapack::gelss&lt;nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;&gt;(nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 2, nda::F_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, double, int&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
@@ -870,21 +1140,21 @@
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">8</td>
+      <td class="linecount partialCoveredLine">4</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">info</span><span class="p">)</span><span class="w"> </span><span class="n">NDA_RUNTIME_ERROR</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Error in nda::lapack::gelss: info = &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">info</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l96" href="#l96">96</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">8</td>
+      <td class="linecount coveredLine">4</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">info</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l97" href="#l97">97</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">8</td>
+      <td class="linecount coveredLine">4</td>
       <td class="src coveredLine"><span class="w">  </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
@@ -913,7 +1183,7 @@
       <hr/>
     </main>
     <footer>
-      Generated by: <a href="http://gcovr.com/en/8.3">GCOVR (Version 8.3)</a>
+      Generated by: <a href="http://gcovr.com/en/8.4">GCOVR (Version 8.4)</a>
     </footer>
   </body>
 </html>

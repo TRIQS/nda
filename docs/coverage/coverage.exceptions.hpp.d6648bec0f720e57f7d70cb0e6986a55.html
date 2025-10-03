@@ -3,7 +3,7 @@
 
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>GCC Code Coverage Report</title>
+    <title>exceptions.hpp - GCC Code Coverage Report</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="coverage.css"/>
   </head>
@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2025-08-25 15:31:29</td>
+      <td>2025-10-03 19:27:55</td>
     </tr>
   </table>
 </div>
@@ -34,27 +34,31 @@
   <table class="coverage">
     <tr>
       <th></th>
-      <th scope="col">Exec</th>
-      <th scope="col">Total</th>
       <th scope="col">Coverage</th>
+      <th scope="col">Exec</th>
+      <th scope="col">Excl</th>
+      <th scope="col">Total</th>
     </tr>
     <tr>
       <th scope="row">Lines:</th>
-      <td>12</td>
-      <td>12</td>
-      <td class="coverage-high">100.0%</td>
+      <td class="coverage-low">46.2%</td>
+      <td class="coverage-low">18</td>
+      <td class="coverage-low">0</td>
+      <td class="coverage-low">39</td>
     </tr>
     <tr>
       <th scope="row">Functions:</th>
-      <td>8</td>
-      <td>15</td>
       <td class="coverage-low">53.3%</td>
+      <td class="coverage-low">8</td>
+      <td class="coverage-low">0</td>
+      <td class="coverage-low">15</td>
     </tr>
     <tr>
       <th scope="row">Branches:</th>
-      <td>2</td>
-      <td>4</td>
       <td class="coverage-low">50.0%</td>
+      <td class="coverage-low">2</td>
+      <td class="coverage-low">0</td>
+      <td class="coverage-low">4</td>
     </tr>
   </table>
 </div>
@@ -68,23 +72,25 @@
     <tr>
       <th>Function (Line)</th>
       <th>Call count</th>
+      <th>Line coverage</th>
+      <th>Branch coverage</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l63">nda::runtime_error&amp; nda::runtime_error::operator&lt;&lt; &lt;int&gt;(int const&amp;) (line 63)</a></td><td>called 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l63">nda::runtime_error&amp; nda::runtime_error::operator&lt;&lt; &lt;long&gt;(long const&amp;) (line 63)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l63">nda::runtime_error&amp; nda::runtime_error::operator&lt;&lt; &lt;std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; &gt;(std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 63)</a></td><td>called 12 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l63">nda::runtime_error&amp; nda::runtime_error::operator&lt;&lt; &lt;std::array&lt;long, 1ul&gt; &gt;(std::array&lt;long, 1ul&gt; const&amp;) (line 63)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l63">nda::runtime_error&amp; nda::runtime_error::operator&lt;&lt; &lt;std::array&lt;long, 2ul&gt; &gt;(std::array&lt;long, 2ul&gt; const&amp;) (line 63)</a></td><td>called 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l63">nda::runtime_error&amp; nda::runtime_error::operator&lt;&lt; &lt;std::array&lt;long, 3ul&gt; &gt;(std::array&lt;long, 3ul&gt; const&amp;) (line 63)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l63">nda::runtime_error&amp; nda::runtime_error::operator&lt;&lt; &lt;std::array&lt;long, 4ul&gt; &gt;(std::array&lt;long, 4ul&gt; const&amp;) (line 63)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l63">nda::runtime_error&amp; nda::runtime_error::operator&lt;&lt; &lt;std::array&lt;long, 5ul&gt; &gt;(std::array&lt;long, 5ul&gt; const&amp;) (line 63)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l63">nda::runtime_error&amp; nda::runtime_error::operator&lt;&lt; &lt;std::array&lt;long, 6ul&gt; &gt;(std::array&lt;long, 6ul&gt; const&amp;) (line 63)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l63">nda::runtime_error&amp; nda::runtime_error::operator&lt;&lt; &lt;unsigned long&gt;(unsigned long const&amp;) (line 63)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l74">nda::runtime_error::operator&lt;&lt;(char const*) (line 74)</a></td><td>called 11 times</td><td>64.0%</td></tr>
-    <tr><td><a href="#l44">nda::runtime_error::runtime_error() (line 44)</a></td><td>called 3 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l50">nda::runtime_error::runtime_error(nda::runtime_error const&amp;) (line 50)</a></td><td>called 3 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l83">nda::runtime_error::what() const (line 83)</a></td><td>called 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l53">nda::runtime_error::~runtime_error() (line 53)</a></td><td>called 6 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l63">nda::runtime_error&amp; nda::runtime_error::operator&lt;&lt; &lt;int&gt;(int const&amp;) (line 63)</a></td><td>called 2 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l63">nda::runtime_error&amp; nda::runtime_error::operator&lt;&lt; &lt;long&gt;(long const&amp;) (line 63)</a></td><td>not called</td><td>0.0%</td><td>-%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l63">nda::runtime_error&amp; nda::runtime_error::operator&lt;&lt; &lt;std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; &gt;(std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 63)</a></td><td>called 12 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l63">nda::runtime_error&amp; nda::runtime_error::operator&lt;&lt; &lt;std::array&lt;long, 1ul&gt; &gt;(std::array&lt;long, 1ul&gt; const&amp;) (line 63)</a></td><td>not called</td><td>0.0%</td><td>-%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l63">nda::runtime_error&amp; nda::runtime_error::operator&lt;&lt; &lt;std::array&lt;long, 2ul&gt; &gt;(std::array&lt;long, 2ul&gt; const&amp;) (line 63)</a></td><td>called 2 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l63">nda::runtime_error&amp; nda::runtime_error::operator&lt;&lt; &lt;std::array&lt;long, 3ul&gt; &gt;(std::array&lt;long, 3ul&gt; const&amp;) (line 63)</a></td><td>not called</td><td>0.0%</td><td>-%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l63">nda::runtime_error&amp; nda::runtime_error::operator&lt;&lt; &lt;std::array&lt;long, 4ul&gt; &gt;(std::array&lt;long, 4ul&gt; const&amp;) (line 63)</a></td><td>not called</td><td>0.0%</td><td>-%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l63">nda::runtime_error&amp; nda::runtime_error::operator&lt;&lt; &lt;std::array&lt;long, 5ul&gt; &gt;(std::array&lt;long, 5ul&gt; const&amp;) (line 63)</a></td><td>not called</td><td>0.0%</td><td>-%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l63">nda::runtime_error&amp; nda::runtime_error::operator&lt;&lt; &lt;std::array&lt;long, 6ul&gt; &gt;(std::array&lt;long, 6ul&gt; const&amp;) (line 63)</a></td><td>not called</td><td>0.0%</td><td>-%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l63">nda::runtime_error&amp; nda::runtime_error::operator&lt;&lt; &lt;unsigned long&gt;(unsigned long const&amp;) (line 63)</a></td><td>not called</td><td>0.0%</td><td>-%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l74">nda::runtime_error::operator&lt;&lt;(char const*) (line 74)</a></td><td>called 11 times</td><td>100.0%</td><td>50.0%</td><td>64.0%</td></tr>
+    <tr><td><a href="#l44">nda::runtime_error::runtime_error() (line 44)</a></td><td>called 3 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l50">nda::runtime_error::runtime_error(nda::runtime_error const&amp;) (line 50)</a></td><td>called 3 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l83">nda::runtime_error::what() const (line 83)</a></td><td>called 2 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l53">nda::runtime_error::~runtime_error() (line 53)</a></td><td>called 6 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
   </table>
 </details>
 
@@ -466,7 +472,7 @@
       <td class="lineno"><a id="l53" href="#l53">53</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">12</td>
+      <td class="linecount coveredLine">6</td>
       <td class="src coveredLine"><span class="w">    </span><span class="o">~</span><span class="n">runtime_error</span><span class="p">()</span><span class="w"> </span><span class="k">noexcept</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -536,21 +542,21 @@
       <td class="lineno"><a id="l63" href="#l63">63</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">32</td>
+      <td class="linecount coveredLine">16</td>
       <td class="src coveredLine"><span class="w">    </span><span class="n">runtime_error</span><span class="w"> </span><span class="o">&amp;</span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l64" href="#l64">64</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">32</td>
+      <td class="linecount coveredLine">16</td>
       <td class="src coveredLine"><span class="w">      </span><span class="n">acc</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">x</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l65" href="#l65">65</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">32</td>
+      <td class="linecount coveredLine">16</td>
       <td class="src coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="o">*</span><span class="k">this</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -742,7 +748,7 @@
       <hr/>
     </main>
     <footer>
-      Generated by: <a href="http://gcovr.com/en/8.3">GCOVR (Version 8.3)</a>
+      Generated by: <a href="http://gcovr.com/en/8.4">GCOVR (Version 8.4)</a>
     </footer>
   </body>
 </html>

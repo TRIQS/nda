@@ -3,7 +3,7 @@
 
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>GCC Code Coverage Report</title>
+    <title>stdutil/array.hpp - GCC Code Coverage Report</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="coverage.css"/>
   </head>
@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2025-08-25 15:31:29</td>
+      <td>2025-10-03 19:27:55</td>
     </tr>
   </table>
 </div>
@@ -34,27 +34,31 @@
   <table class="coverage">
     <tr>
       <th></th>
-      <th scope="col">Exec</th>
-      <th scope="col">Total</th>
       <th scope="col">Coverage</th>
+      <th scope="col">Exec</th>
+      <th scope="col">Excl</th>
+      <th scope="col">Total</th>
     </tr>
     <tr>
       <th scope="row">Lines:</th>
-      <td>70</td>
-      <td>70</td>
-      <td class="coverage-high">100.0%</td>
+      <td class="coverage-medium">86.5%</td>
+      <td class="coverage-medium">231</td>
+      <td class="coverage-medium">0</td>
+      <td class="coverage-medium">267</td>
     </tr>
     <tr>
       <th scope="row">Functions:</th>
-      <td>66</td>
-      <td>74</td>
       <td class="coverage-medium">89.2%</td>
+      <td class="coverage-medium">66</td>
+      <td class="coverage-medium">0</td>
+      <td class="coverage-medium">74</td>
     </tr>
     <tr>
       <th scope="row">Branches:</th>
-      <td>45</td>
-      <td>54</td>
-      <td class="coverage-medium">83.3%</td>
+      <td class="coverage-low">50.5%</td>
+      <td class="coverage-low">108</td>
+      <td class="coverage-low">0</td>
+      <td class="coverage-low">214</td>
     </tr>
   </table>
 </div>
@@ -68,82 +72,84 @@
     <tr>
       <th>Function (Line)</th>
       <th>Call count</th>
+      <th>Line coverage</th>
+      <th>Branch coverage</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l356">auto nda::stdutil::dot_product&lt;int, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;, std::array&lt;int, 4ul&gt; const&amp;) (line 356)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l156">auto nda::stdutil::make_initialized_array&lt;2ul, long&gt;(long)::{lambda&lt;unsigned long... $N0&gt;(std::integer_sequence&lt;unsigned long, ($N0)...&gt;)#1}::operator()&lt;0ul, 1ul&gt;(std::integer_sequence&lt;unsigned long, 0ul, 1ul&gt;) const (line 156)</a></td><td>called 11 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l156">auto nda::stdutil::make_initialized_array&lt;3ul, int&gt;(int)::{lambda&lt;unsigned long... $N0&gt;(std::integer_sequence&lt;unsigned long, ($N0)...&gt;)#1}::operator()&lt;0ul, 1ul, 2ul&gt;(std::integer_sequence&lt;unsigned long, 0ul, 1ul, 2ul&gt;) const (line 156)</a></td><td>called 3 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l156">auto nda::stdutil::make_initialized_array&lt;3ul, long&gt;(long)::{lambda&lt;unsigned long... $N0&gt;(std::integer_sequence&lt;unsigned long, ($N0)...&gt;)#1}::operator()&lt;0ul, 1ul, 2ul&gt;(std::integer_sequence&lt;unsigned long, 0ul, 1ul, 2ul&gt;) const (line 156)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l335">auto nda::stdutil::product&lt;int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;) (line 335)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l335">auto nda::stdutil::product&lt;long, 3ul&gt;(std::array&lt;long, 3ul&gt; const&amp;) (line 335)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l316">auto nda::stdutil::sum&lt;int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;) (line 316)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l316">auto nda::stdutil::sum&lt;long, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;) (line 316)</a></td><td>called 145 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l103">auto std::operator*&lt;int, int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;int, 3ul&gt; const&amp;) (line 103)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l103">auto std::operator*&lt;int, long, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;long, 3ul&gt; const&amp;) (line 103)</a></td><td>called 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l52">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;) (line 52)</a></td><td>called 1 time</td><td>90.0%</td></tr>
-    <tr><td><a href="#l52">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 1ul&gt;(std::array&lt;long, 1ul&gt; const&amp;) (line 52)</a></td><td>called 1 time</td><td>85.0%</td></tr>
-    <tr><td><a href="#l52">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;) (line 52)</a></td><td>called 3 times</td><td>90.0%</td></tr>
-    <tr><td><a href="#l52">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 3ul&gt;(std::array&lt;long, 3ul&gt; const&amp;) (line 52)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l52">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 4ul&gt;(std::array&lt;long, 4ul&gt; const&amp;) (line 52)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l52">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 5ul&gt;(std::array&lt;long, 5ul&gt; const&amp;) (line 52)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l52">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 6ul&gt;(std::array&lt;long, 6ul&gt; const&amp;) (line 52)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;char, 5ul&gt; nda::stdutil::make_initialized_array&lt;5ul, char&gt;(char) (line 155)</a></td><td>called 4 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l204">std::array&lt;int, (4ul)+(1)&gt; nda::stdutil::append&lt;int, 4ul, long&gt;(std::array&lt;int, 4ul&gt; const&amp;, long const&amp;) (line 204)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l222">std::array&lt;int, (4ul)+(1)&gt; nda::stdutil::front_append&lt;int, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;, int const&amp;) (line 222)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l299">std::array&lt;int, (4ul)+(2ul)&gt; nda::stdutil::join&lt;int, 4ul, 2ul&gt;(std::array&lt;int, 4ul&gt; const&amp;, std::array&lt;int, 2ul&gt; const&amp;) (line 299)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l268">std::array&lt;int, (4ul)-(1)&gt; nda::stdutil::front_mpop&lt;1, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;) (line 268)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l283">std::array&lt;int, (4ul)-(1)&gt; nda::stdutil::front_pop&lt;int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;) (line 283)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l239">std::array&lt;int, (4ul)-(1)&gt; nda::stdutil::mpop&lt;1, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;) (line 239)</a></td><td>called 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l254">std::array&lt;int, (4ul)-(1)&gt; nda::stdutil::pop&lt;int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;) (line 254)</a></td><td>called 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l268">std::array&lt;int, (4ul)-(2)&gt; nda::stdutil::front_mpop&lt;2, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;) (line 268)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l239">std::array&lt;int, (4ul)-(2)&gt; nda::stdutil::mpop&lt;2, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;) (line 239)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l204">std::array&lt;int, (5ul)+(1)&gt; nda::stdutil::append&lt;int, 5ul, int&gt;(std::array&lt;int, 5ul&gt; const&amp;, int const&amp;) (line 204)</a></td><td>called 3 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;int, 0ul&gt; nda::stdutil::make_initialized_array&lt;0ul, int&gt;(int) (line 155)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;int, 10ul&gt; nda::stdutil::make_initialized_array&lt;10ul, int&gt;(int) (line 155)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;int, 11ul&gt; nda::stdutil::make_initialized_array&lt;11ul, int&gt;(int) (line 155)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;int, 12ul&gt; nda::stdutil::make_initialized_array&lt;12ul, int&gt;(int) (line 155)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;int, 13ul&gt; nda::stdutil::make_initialized_array&lt;13ul, int&gt;(int) (line 155)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;int, 14ul&gt; nda::stdutil::make_initialized_array&lt;14ul, int&gt;(int) (line 155)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;int, 15ul&gt; nda::stdutil::make_initialized_array&lt;15ul, int&gt;(int) (line 155)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;int, 1ul&gt; nda::stdutil::make_initialized_array&lt;1ul, int&gt;(int) (line 155)</a></td><td>called 616 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;int, 2ul&gt; nda::stdutil::make_initialized_array&lt;2ul, int&gt;(int) (line 155)</a></td><td>called 2694 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;int, 3ul&gt; nda::stdutil::make_initialized_array&lt;3ul, int&gt;(int) (line 155)</a></td><td>called 46475 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l136">std::array&lt;int, 3ul&gt; std::operator*&lt;int, 3ul&gt;(int, std::array&lt;int, 3ul&gt; const&amp;) (line 136)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l70">std::array&lt;int, 3ul&gt; std::operator+&lt;int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;int, 3ul&gt; const&amp;) (line 70)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l120">std::array&lt;int, 3ul&gt; std::operator-&lt;int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;) (line 120)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l86">std::array&lt;int, 3ul&gt; std::operator-&lt;int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;int, 3ul&gt; const&amp;) (line 86)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;int, 4ul&gt; nda::stdutil::make_initialized_array&lt;4ul, int&gt;(int) (line 155)</a></td><td>called 258 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;int, 5ul&gt; nda::stdutil::make_initialized_array&lt;5ul, int&gt;(int) (line 155)</a></td><td>called 51 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;int, 6ul&gt; nda::stdutil::make_initialized_array&lt;6ul, int&gt;(int) (line 155)</a></td><td>called 1556 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;int, 7ul&gt; nda::stdutil::make_initialized_array&lt;7ul, int&gt;(int) (line 155)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;int, 8ul&gt; nda::stdutil::make_initialized_array&lt;8ul, int&gt;(int) (line 155)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;int, 9ul&gt; nda::stdutil::make_initialized_array&lt;9ul, int&gt;(int) (line 155)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l222">std::array&lt;long, (1ul)+(1)&gt; nda::stdutil::front_append&lt;long, long, 1ul&gt;(std::array&lt;long, 1ul&gt; const&amp;, long const&amp;) (line 222)</a></td><td>called 183 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l299">std::array&lt;long, (1ul)+(1ul)&gt; nda::stdutil::join&lt;long, 1ul, 1ul&gt;(std::array&lt;long, 1ul&gt; const&amp;, std::array&lt;long, 1ul&gt; const&amp;) (line 299)</a></td><td>called 4 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l222">std::array&lt;long, (2ul)+(1)&gt; nda::stdutil::front_append&lt;long, long, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;, long const&amp;) (line 222)</a></td><td>called 15 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l299">std::array&lt;long, (2ul)+(2ul)&gt; nda::stdutil::join&lt;long, 2ul, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;, std::array&lt;long, 2ul&gt; const&amp;) (line 299)</a></td><td>called 4 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l299">std::array&lt;long, (2ul)+(3ul)&gt; nda::stdutil::join&lt;long, 2ul, 3ul&gt;(std::array&lt;long, 2ul&gt; const&amp;, std::array&lt;long, 3ul&gt; const&amp;) (line 299)</a></td><td>called 4 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;long, 1ul&gt; nda::stdutil::make_initialized_array&lt;1ul, long&gt;(long) (line 155)</a></td><td>called 7961753 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l171">std::array&lt;long, 1ul&gt; nda::stdutil::make_std_array&lt;long, long, 1ul&gt;(std::array&lt;long, 1ul&gt; const&amp;) (line 171)</a></td><td>called 7961085 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;long, 2ul&gt; nda::stdutil::make_initialized_array&lt;2ul, long&gt;(long) (line 155)</a></td><td>called 5085 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l171">std::array&lt;long, 2ul&gt; nda::stdutil::make_std_array&lt;long, int, 2ul&gt;(std::array&lt;int, 2ul&gt; const&amp;) (line 171)</a></td><td>called 5 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l171">std::array&lt;long, 2ul&gt; nda::stdutil::make_std_array&lt;long, long, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;) (line 171)</a></td><td>called 2452 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;long, 3ul&gt; nda::stdutil::make_initialized_array&lt;3ul, long&gt;(long) (line 155)</a></td><td>called 24589 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l171">std::array&lt;long, 3ul&gt; nda::stdutil::make_std_array&lt;long, int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;) (line 171)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l171">std::array&lt;long, 3ul&gt; nda::stdutil::make_std_array&lt;long, long, 3ul&gt;(std::array&lt;long, 3ul&gt; const&amp;) (line 171)</a></td><td>called 23539 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;long, 4ul&gt; nda::stdutil::make_initialized_array&lt;4ul, long&gt;(long) (line 155)</a></td><td>called 301 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l171">std::array&lt;long, 4ul&gt; nda::stdutil::make_std_array&lt;long, long, 4ul&gt;(std::array&lt;long, 4ul&gt; const&amp;) (line 171)</a></td><td>called 35 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;long, 5ul&gt; nda::stdutil::make_initialized_array&lt;5ul, long&gt;(long) (line 155)</a></td><td>called 50 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l171">std::array&lt;long, 5ul&gt; nda::stdutil::make_std_array&lt;long, long, 5ul&gt;(std::array&lt;long, 5ul&gt; const&amp;) (line 171)</a></td><td>called 24 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l155">std::array&lt;long, 6ul&gt; nda::stdutil::make_initialized_array&lt;6ul, long&gt;(long) (line 155)</a></td><td>called 1582 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l39">std::ostream&amp; std::operator&lt;&lt; &lt;int, 5ul&gt;(std::ostream&amp;, std::array&lt;int, 5ul&gt; const&amp;) (line 39)</a></td><td>called 1 time</td><td>78.0%</td></tr>
-    <tr><td><a href="#l39">std::ostream&amp; std::operator&lt;&lt; &lt;long, 1ul&gt;(std::ostream&amp;, std::array&lt;long, 1ul&gt; const&amp;) (line 39)</a></td><td>called 1 time</td><td>78.0%</td></tr>
-    <tr><td><a href="#l39">std::ostream&amp; std::operator&lt;&lt; &lt;long, 2ul&gt;(std::ostream&amp;, std::array&lt;long, 2ul&gt; const&amp;) (line 39)</a></td><td>called 3 times</td><td>78.0%</td></tr>
-    <tr><td><a href="#l39">std::ostream&amp; std::operator&lt;&lt; &lt;long, 3ul&gt;(std::ostream&amp;, std::array&lt;long, 3ul&gt; const&amp;) (line 39)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l39">std::ostream&amp; std::operator&lt;&lt; &lt;long, 4ul&gt;(std::ostream&amp;, std::array&lt;long, 4ul&gt; const&amp;) (line 39)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l39">std::ostream&amp; std::operator&lt;&lt; &lt;long, 5ul&gt;(std::ostream&amp;, std::array&lt;long, 5ul&gt; const&amp;) (line 39)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l39">std::ostream&amp; std::operator&lt;&lt; &lt;long, 6ul&gt;(std::ostream&amp;, std::array&lt;long, 6ul&gt; const&amp;) (line 39)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l187">std::vector&lt;int, std::allocator&lt;int&gt; &gt; nda::stdutil::to_vector&lt;int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;) (line 187)</a></td><td>called 1 time</td><td>86.0%</td></tr>
+    <tr><td><a href="#l356">auto nda::stdutil::dot_product&lt;int, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;, std::array&lt;int, 4ul&gt; const&amp;) (line 356)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l156">auto nda::stdutil::make_initialized_array&lt;2ul, long&gt;(long)::{lambda&lt;unsigned long... $N0&gt;(std::integer_sequence&lt;unsigned long, ($N0)...&gt;)#1}::operator()&lt;0ul, 1ul&gt;(std::integer_sequence&lt;unsigned long, 0ul, 1ul&gt;) const (line 156)</a></td><td>called 11 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l156">auto nda::stdutil::make_initialized_array&lt;3ul, int&gt;(int)::{lambda&lt;unsigned long... $N0&gt;(std::integer_sequence&lt;unsigned long, ($N0)...&gt;)#1}::operator()&lt;0ul, 1ul, 2ul&gt;(std::integer_sequence&lt;unsigned long, 0ul, 1ul, 2ul&gt;) const (line 156)</a></td><td>called 3 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l156">auto nda::stdutil::make_initialized_array&lt;3ul, long&gt;(long)::{lambda&lt;unsigned long... $N0&gt;(std::integer_sequence&lt;unsigned long, ($N0)...&gt;)#1}::operator()&lt;0ul, 1ul, 2ul&gt;(std::integer_sequence&lt;unsigned long, 0ul, 1ul, 2ul&gt;) const (line 156)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l335">auto nda::stdutil::product&lt;int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;) (line 335)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l335">auto nda::stdutil::product&lt;long, 3ul&gt;(std::array&lt;long, 3ul&gt; const&amp;) (line 335)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l316">auto nda::stdutil::sum&lt;int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;) (line 316)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l316">auto nda::stdutil::sum&lt;long, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;) (line 316)</a></td><td>called 145 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l103">auto std::operator*&lt;int, int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;int, 3ul&gt; const&amp;) (line 103)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l103">auto std::operator*&lt;int, long, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;long, 3ul&gt; const&amp;) (line 103)</a></td><td>called 2 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l52">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;) (line 52)</a></td><td>called 1 time</td><td>100.0%</td><td>62.5%</td><td>90.0%</td></tr>
+    <tr><td><a href="#l52">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 1ul&gt;(std::array&lt;long, 1ul&gt; const&amp;) (line 52)</a></td><td>called 1 time</td><td>100.0%</td><td>56.2%</td><td>85.0%</td></tr>
+    <tr><td><a href="#l52">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;) (line 52)</a></td><td>called 3 times</td><td>100.0%</td><td>62.5%</td><td>90.0%</td></tr>
+    <tr><td><a href="#l52">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 3ul&gt;(std::array&lt;long, 3ul&gt; const&amp;) (line 52)</a></td><td>not called</td><td>0.0%</td><td>0.0%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l52">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 4ul&gt;(std::array&lt;long, 4ul&gt; const&amp;) (line 52)</a></td><td>not called</td><td>0.0%</td><td>0.0%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l52">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 5ul&gt;(std::array&lt;long, 5ul&gt; const&amp;) (line 52)</a></td><td>not called</td><td>0.0%</td><td>0.0%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l52">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 6ul&gt;(std::array&lt;long, 6ul&gt; const&amp;) (line 52)</a></td><td>not called</td><td>0.0%</td><td>0.0%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;char, 5ul&gt; nda::stdutil::make_initialized_array&lt;5ul, char&gt;(char) (line 155)</a></td><td>called 4 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l204">std::array&lt;int, (4ul)+(1)&gt; nda::stdutil::append&lt;int, 4ul, long&gt;(std::array&lt;int, 4ul&gt; const&amp;, long const&amp;) (line 204)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l222">std::array&lt;int, (4ul)+(1)&gt; nda::stdutil::front_append&lt;int, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;, int const&amp;) (line 222)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l299">std::array&lt;int, (4ul)+(2ul)&gt; nda::stdutil::join&lt;int, 4ul, 2ul&gt;(std::array&lt;int, 4ul&gt; const&amp;, std::array&lt;int, 2ul&gt; const&amp;) (line 299)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l268">std::array&lt;int, (4ul)-(1)&gt; nda::stdutil::front_mpop&lt;1, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;) (line 268)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l283">std::array&lt;int, (4ul)-(1)&gt; nda::stdutil::front_pop&lt;int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;) (line 283)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l239">std::array&lt;int, (4ul)-(1)&gt; nda::stdutil::mpop&lt;1, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;) (line 239)</a></td><td>called 2 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l254">std::array&lt;int, (4ul)-(1)&gt; nda::stdutil::pop&lt;int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;) (line 254)</a></td><td>called 2 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l268">std::array&lt;int, (4ul)-(2)&gt; nda::stdutil::front_mpop&lt;2, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;) (line 268)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l239">std::array&lt;int, (4ul)-(2)&gt; nda::stdutil::mpop&lt;2, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;) (line 239)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l204">std::array&lt;int, (5ul)+(1)&gt; nda::stdutil::append&lt;int, 5ul, int&gt;(std::array&lt;int, 5ul&gt; const&amp;, int const&amp;) (line 204)</a></td><td>called 3 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;int, 0ul&gt; nda::stdutil::make_initialized_array&lt;0ul, int&gt;(int) (line 155)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;int, 10ul&gt; nda::stdutil::make_initialized_array&lt;10ul, int&gt;(int) (line 155)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;int, 11ul&gt; nda::stdutil::make_initialized_array&lt;11ul, int&gt;(int) (line 155)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;int, 12ul&gt; nda::stdutil::make_initialized_array&lt;12ul, int&gt;(int) (line 155)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;int, 13ul&gt; nda::stdutil::make_initialized_array&lt;13ul, int&gt;(int) (line 155)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;int, 14ul&gt; nda::stdutil::make_initialized_array&lt;14ul, int&gt;(int) (line 155)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;int, 15ul&gt; nda::stdutil::make_initialized_array&lt;15ul, int&gt;(int) (line 155)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;int, 1ul&gt; nda::stdutil::make_initialized_array&lt;1ul, int&gt;(int) (line 155)</a></td><td>called 616 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;int, 2ul&gt; nda::stdutil::make_initialized_array&lt;2ul, int&gt;(int) (line 155)</a></td><td>called 2694 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;int, 3ul&gt; nda::stdutil::make_initialized_array&lt;3ul, int&gt;(int) (line 155)</a></td><td>called 46475 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l136">std::array&lt;int, 3ul&gt; std::operator*&lt;int, 3ul&gt;(int, std::array&lt;int, 3ul&gt; const&amp;) (line 136)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l70">std::array&lt;int, 3ul&gt; std::operator+&lt;int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;int, 3ul&gt; const&amp;) (line 70)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l120">std::array&lt;int, 3ul&gt; std::operator-&lt;int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;) (line 120)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l86">std::array&lt;int, 3ul&gt; std::operator-&lt;int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;int, 3ul&gt; const&amp;) (line 86)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;int, 4ul&gt; nda::stdutil::make_initialized_array&lt;4ul, int&gt;(int) (line 155)</a></td><td>called 258 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;int, 5ul&gt; nda::stdutil::make_initialized_array&lt;5ul, int&gt;(int) (line 155)</a></td><td>called 51 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;int, 6ul&gt; nda::stdutil::make_initialized_array&lt;6ul, int&gt;(int) (line 155)</a></td><td>called 1556 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;int, 7ul&gt; nda::stdutil::make_initialized_array&lt;7ul, int&gt;(int) (line 155)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;int, 8ul&gt; nda::stdutil::make_initialized_array&lt;8ul, int&gt;(int) (line 155)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;int, 9ul&gt; nda::stdutil::make_initialized_array&lt;9ul, int&gt;(int) (line 155)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l222">std::array&lt;long, (1ul)+(1)&gt; nda::stdutil::front_append&lt;long, long, 1ul&gt;(std::array&lt;long, 1ul&gt; const&amp;, long const&amp;) (line 222)</a></td><td>called 183 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l299">std::array&lt;long, (1ul)+(1ul)&gt; nda::stdutil::join&lt;long, 1ul, 1ul&gt;(std::array&lt;long, 1ul&gt; const&amp;, std::array&lt;long, 1ul&gt; const&amp;) (line 299)</a></td><td>called 4 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l222">std::array&lt;long, (2ul)+(1)&gt; nda::stdutil::front_append&lt;long, long, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;, long const&amp;) (line 222)</a></td><td>called 15 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l299">std::array&lt;long, (2ul)+(2ul)&gt; nda::stdutil::join&lt;long, 2ul, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;, std::array&lt;long, 2ul&gt; const&amp;) (line 299)</a></td><td>called 4 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l299">std::array&lt;long, (2ul)+(3ul)&gt; nda::stdutil::join&lt;long, 2ul, 3ul&gt;(std::array&lt;long, 2ul&gt; const&amp;, std::array&lt;long, 3ul&gt; const&amp;) (line 299)</a></td><td>called 4 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;long, 1ul&gt; nda::stdutil::make_initialized_array&lt;1ul, long&gt;(long) (line 155)</a></td><td>called 7961753 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l171">std::array&lt;long, 1ul&gt; nda::stdutil::make_std_array&lt;long, long, 1ul&gt;(std::array&lt;long, 1ul&gt; const&amp;) (line 171)</a></td><td>called 7961085 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;long, 2ul&gt; nda::stdutil::make_initialized_array&lt;2ul, long&gt;(long) (line 155)</a></td><td>called 5085 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l171">std::array&lt;long, 2ul&gt; nda::stdutil::make_std_array&lt;long, int, 2ul&gt;(std::array&lt;int, 2ul&gt; const&amp;) (line 171)</a></td><td>called 5 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l171">std::array&lt;long, 2ul&gt; nda::stdutil::make_std_array&lt;long, long, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;) (line 171)</a></td><td>called 2452 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;long, 3ul&gt; nda::stdutil::make_initialized_array&lt;3ul, long&gt;(long) (line 155)</a></td><td>called 24589 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l171">std::array&lt;long, 3ul&gt; nda::stdutil::make_std_array&lt;long, int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;) (line 171)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l171">std::array&lt;long, 3ul&gt; nda::stdutil::make_std_array&lt;long, long, 3ul&gt;(std::array&lt;long, 3ul&gt; const&amp;) (line 171)</a></td><td>called 23539 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;long, 4ul&gt; nda::stdutil::make_initialized_array&lt;4ul, long&gt;(long) (line 155)</a></td><td>called 301 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l171">std::array&lt;long, 4ul&gt; nda::stdutil::make_std_array&lt;long, long, 4ul&gt;(std::array&lt;long, 4ul&gt; const&amp;) (line 171)</a></td><td>called 35 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;long, 5ul&gt; nda::stdutil::make_initialized_array&lt;5ul, long&gt;(long) (line 155)</a></td><td>called 50 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l171">std::array&lt;long, 5ul&gt; nda::stdutil::make_std_array&lt;long, long, 5ul&gt;(std::array&lt;long, 5ul&gt; const&amp;) (line 171)</a></td><td>called 24 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l155">std::array&lt;long, 6ul&gt; nda::stdutil::make_initialized_array&lt;6ul, long&gt;(long) (line 155)</a></td><td>called 1582 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l39">std::ostream&amp; std::operator&lt;&lt; &lt;int, 5ul&gt;(std::ostream&amp;, std::array&lt;int, 5ul&gt; const&amp;) (line 39)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>78.0%</td></tr>
+    <tr><td><a href="#l39">std::ostream&amp; std::operator&lt;&lt; &lt;long, 1ul&gt;(std::ostream&amp;, std::array&lt;long, 1ul&gt; const&amp;) (line 39)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>78.0%</td></tr>
+    <tr><td><a href="#l39">std::ostream&amp; std::operator&lt;&lt; &lt;long, 2ul&gt;(std::ostream&amp;, std::array&lt;long, 2ul&gt; const&amp;) (line 39)</a></td><td>called 3 times</td><td>100.0%</td><td>50.0%</td><td>78.0%</td></tr>
+    <tr><td><a href="#l39">std::ostream&amp; std::operator&lt;&lt; &lt;long, 3ul&gt;(std::ostream&amp;, std::array&lt;long, 3ul&gt; const&amp;) (line 39)</a></td><td>not called</td><td>0.0%</td><td>0.0%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l39">std::ostream&amp; std::operator&lt;&lt; &lt;long, 4ul&gt;(std::ostream&amp;, std::array&lt;long, 4ul&gt; const&amp;) (line 39)</a></td><td>not called</td><td>0.0%</td><td>0.0%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l39">std::ostream&amp; std::operator&lt;&lt; &lt;long, 5ul&gt;(std::ostream&amp;, std::array&lt;long, 5ul&gt; const&amp;) (line 39)</a></td><td>not called</td><td>0.0%</td><td>0.0%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l39">std::ostream&amp; std::operator&lt;&lt; &lt;long, 6ul&gt;(std::ostream&amp;, std::array&lt;long, 6ul&gt; const&amp;) (line 39)</a></td><td>not called</td><td>0.0%</td><td>0.0%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l187">std::vector&lt;int, std::allocator&lt;int&gt; &gt; nda::stdutil::to_vector&lt;int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;) (line 187)</a></td><td>called 1 time</td><td>100.0%</td><td>75.0%</td><td>86.0%</td></tr>
   </table>
 </details>
 
@@ -427,23 +433,54 @@
       <td class="lineno"><a id="l39" href="#l39">39</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">7</td>
+      <td class="linecount coveredLine">5</td>
       <td class="src coveredLine"><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">out</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">R</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l40" href="#l40">40</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/4</summary>
+          <summary class="linebranchSummary">6/28</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 5 times.</div>
+            <div class="functionName">std::ostream&amp; std::operator&lt;&lt; &lt;long, 4ul&gt;(std::ostream&amp;, std::array&lt;long, 4ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-            <div class="takenBranch">&check; Branch 4 taken 5 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="functionName">std::ostream&amp; std::operator&lt;&lt; &lt;long, 3ul&gt;(std::ostream&amp;, std::array&lt;long, 3ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="functionName">std::ostream&amp; std::operator&lt;&lt; &lt;long, 1ul&gt;(std::ostream&amp;, std::array&lt;long, 1ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 4 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="functionName">std::ostream&amp; std::operator&lt;&lt; &lt;long, 2ul&gt;(std::ostream&amp;, std::array&lt;long, 2ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 4 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="functionName">std::ostream&amp; std::operator&lt;&lt; &lt;long, 5ul&gt;(std::ostream&amp;, std::array&lt;long, 5ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="functionName">std::ostream&amp; std::operator&lt;&lt; &lt;int, 5ul&gt;(std::ostream&amp;, std::array&lt;int, 5ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 4 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="functionName">std::ostream&amp; std::operator&lt;&lt; &lt;long, 6ul&gt;(std::ostream&amp;, std::array&lt;long, 6ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">7</td>
+      <td class="linecount partialCoveredLine">5</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">out</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">to_string</span><span class="p">(</span><span class="n">a</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
@@ -527,90 +564,221 @@
       <td class="lineno"><a id="l52" href="#l52">52</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">7</td>
+      <td class="linecount coveredLine">5</td>
       <td class="src coveredLine"><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">to_string</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">R</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l53" href="#l53">53</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">3/14</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 5 times.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 4ul&gt;(std::array&lt;long, 4ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 3ul&gt;(std::array&lt;long, 3ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 1ul&gt;(std::array&lt;long, 1ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 5ul&gt;(std::array&lt;long, 5ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 6ul&gt;(std::array&lt;long, 6ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">7</td>
+      <td class="linecount partialCoveredLine">5</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">stringstream</span><span class="w"> </span><span class="n">fs</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l54" href="#l54">54</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">3/14</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 5 times.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 4ul&gt;(std::array&lt;long, 4ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 3ul&gt;(std::array&lt;long, 3ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 1ul&gt;(std::array&lt;long, 1ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 5ul&gt;(std::array&lt;long, 5ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 6ul&gt;(std::array&lt;long, 6ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">7</td>
+      <td class="linecount partialCoveredLine">5</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="n">fs</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;(&quot;</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l55" href="#l55">55</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">6/8</summary>
+          <summary class="linebranchSummary">17/56</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 0 taken 5 times.</div>
-            <div class="takenBranch">&check; Branch 1 taken 7 times.</div>
-            <div class="takenBranch">&check; Branch 3 taken 12 times.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 4ul&gt;(std::array&lt;long, 4ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-            <div class="takenBranch">&check; Branch 7 taken 12 times.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-            <div class="takenBranch">&check; Branch 9 taken 12 times.</div>
-            <div class="takenBranch">&check; Branch 10 taken 5 times.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 3ul&gt;(std::array&lt;long, 3ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 1ul&gt;(std::array&lt;long, 1ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="takenBranch">&check; Branch 9 taken 1 time.</div>
+            <div class="takenBranch">&check; Branch 10 taken 1 time.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 3 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 6 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 6 times.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="takenBranch">&check; Branch 9 taken 6 times.</div>
+            <div class="takenBranch">&check; Branch 10 taken 3 times.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 5ul&gt;(std::array&lt;long, 5ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 1 time.</div>
+            <div class="takenBranch">&check; Branch 1 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 5 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 5 times.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="takenBranch">&check; Branch 9 taken 5 times.</div>
+            <div class="takenBranch">&check; Branch 10 taken 1 time.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 6ul&gt;(std::array&lt;long, 6ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">23</td>
+      <td class="linecount partialCoveredLine">17</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">R</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">fs</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">];</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l56" href="#l56">56</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">3/14</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 5 times.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 4ul&gt;(std::array&lt;long, 4ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 3ul&gt;(std::array&lt;long, 3ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 1ul&gt;(std::array&lt;long, 1ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 5ul&gt;(std::array&lt;long, 5ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 6ul&gt;(std::array&lt;long, 6ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">7</td>
+      <td class="linecount partialCoveredLine">5</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="n">fs</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;)&quot;</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l57" href="#l57">57</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">3/14</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 5 times.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 4ul&gt;(std::array&lt;long, 4ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 3ul&gt;(std::array&lt;long, 3ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 1ul&gt;(std::array&lt;long, 1ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 5ul&gt;(std::array&lt;long, 5ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; std::to_string&lt;long, 6ul&gt;(std::array&lt;long, 6ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">14</td>
+      <td class="linecount partialCoveredLine">10</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">fs</span><span class="p">.</span><span class="n">str</span><span class="p">();</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l58" href="#l58">58</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">7</td>
+      <td class="linecount coveredLine">5</td>
       <td class="src coveredLine"><span class="w">  </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
@@ -711,7 +879,7 @@
           <summary class="linebranchSummary">2/2</summary>
           <div class="linebranchContents">
             <div class="takenBranch">&check; Branch 3 taken 3 times.</div>
-            <div class="takenBranch">&check; Branch 4 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 1 time.</div>
           </div>
         </details>
       </td>
@@ -830,7 +998,7 @@
           <summary class="linebranchSummary">2/2</summary>
           <div class="linebranchContents">
             <div class="takenBranch">&check; Branch 3 taken 3 times.</div>
-            <div class="takenBranch">&check; Branch 4 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 1 time.</div>
           </div>
         </details>
       </td>
@@ -967,10 +1135,14 @@
       <td class="lineno"><a id="l107" href="#l107">107</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">4/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 3 taken 9 times.</div>
-            <div class="takenBranch">&check; Branch 4 taken 3 times.</div>
+            <div class="functionName">auto std::operator*&lt;int, int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;int, 3ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 3 taken 3 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 1 time.</div>
+            <div class="functionName">auto std::operator*&lt;int, long, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;long, 3ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 3 taken 6 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 2 times.</div>
           </div>
         </details>
       </td>
@@ -1082,7 +1254,7 @@
           <summary class="linebranchSummary">2/2</summary>
           <div class="linebranchContents">
             <div class="takenBranch">&check; Branch 2 taken 3 times.</div>
-            <div class="takenBranch">&check; Branch 3 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
           </div>
         </details>
       </td>
@@ -1201,7 +1373,7 @@
           <summary class="linebranchSummary">2/2</summary>
           <div class="linebranchContents">
             <div class="takenBranch">&check; Branch 2 taken 3 times.</div>
-            <div class="takenBranch">&check; Branch 3 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
           </div>
         </details>
       </td>
@@ -1324,28 +1496,28 @@
       <td class="lineno"><a id="l155" href="#l155">155</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">16090033</td>
+      <td class="linecount coveredLine">8045024</td>
       <td class="src coveredLine"><span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">R</span><span class="o">&gt;</span><span class="w"> </span><span class="n">make_initialized_array</span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l156" href="#l156">156</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">24135042</td>
+      <td class="linecount coveredLine">8045024</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="n">v</span><span class="p">]</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">...</span><span class="w"> </span><span class="n">Is</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">index_sequence</span><span class="o">&lt;</span><span class="n">Is</span><span class="p">...</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l157" href="#l157">157</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">8045024</td>
+      <td class="linecount coveredLine">15</td>
       <td class="src coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">R</span><span class="o">&gt;</span><span class="p">{((</span><span class="kt">void</span><span class="p">)</span><span class="n">Is</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">)...};</span><span class="w"> </span><span class="c1">// NOLINT (always v, just a trick to have the pack)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l158" href="#l158">158</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">16090033</td>
+      <td class="linecount coveredLine">8045024</td>
       <td class="src coveredLine"><span class="w">    </span><span class="p">}(</span><span class="n">std</span><span class="o">::</span><span class="n">make_index_sequence</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span><span class="p">{});</span></td>
     </tr>
     <tr class="source-line">
@@ -1436,7 +1608,7 @@
       <td class="lineno"><a id="l171" href="#l171">171</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">15974598</td>
+      <td class="linecount coveredLine">7987141</td>
       <td class="src coveredLine"><span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">R</span><span class="o">&gt;</span><span class="w"> </span><span class="n">make_std_array</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">U</span><span class="p">,</span><span class="w"> </span><span class="n">R</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
@@ -1450,28 +1622,47 @@
       <td class="lineno"><a id="l173" href="#l173">173</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">15974598</td>
+      <td class="linecount coveredLine">7987141</td>
       <td class="src coveredLine"><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">R</span><span class="o">&gt;</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">make_initialized_array</span><span class="o">&lt;</span><span class="n">R</span><span class="o">&gt;</span><span class="p">(</span><span class="n">T</span><span class="p">{});</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l174" href="#l174">174</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">14/14</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 8036879 times.</div>
-            <div class="takenBranch">&check; Branch 3 taken 7987141 times.</div>
+            <div class="functionName">std::array&lt;long, 2ul&gt; nda::stdutil::make_std_array&lt;long, int, 2ul&gt;(std::array&lt;int, 2ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 10 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 5 times.</div>
+            <div class="functionName">std::array&lt;long, 4ul&gt; nda::stdutil::make_std_array&lt;long, long, 4ul&gt;(std::array&lt;long, 4ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 140 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 35 times.</div>
+            <div class="functionName">std::array&lt;long, 3ul&gt; nda::stdutil::make_std_array&lt;long, long, 3ul&gt;(std::array&lt;long, 3ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 70617 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 23539 times.</div>
+            <div class="functionName">std::array&lt;long, 2ul&gt; nda::stdutil::make_std_array&lt;long, long, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 4904 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 2452 times.</div>
+            <div class="functionName">std::array&lt;long, 1ul&gt; nda::stdutil::make_std_array&lt;long, long, 1ul&gt;(std::array&lt;long, 1ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 7961085 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 7961085 times.</div>
+            <div class="functionName">std::array&lt;long, 5ul&gt; nda::stdutil::make_std_array&lt;long, long, 5ul&gt;(std::array&lt;long, 5ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 120 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 24 times.</div>
+            <div class="functionName">std::array&lt;long, 3ul&gt; nda::stdutil::make_std_array&lt;long, int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 3 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">32049140</td>
+      <td class="linecount coveredLine">16024020</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">R</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">u</span><span class="p">)</span><span class="w"> </span><span class="n">result</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">u</span><span class="p">];</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l175" href="#l175">175</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">15974598</td>
+      <td class="linecount coveredLine">7987141</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -1564,7 +1755,7 @@
         <details class="linebranchDetails">
           <summary class="linebranchSummary">1/2</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
@@ -1579,7 +1770,7 @@
           <summary class="linebranchSummary">2/2</summary>
           <div class="linebranchContents">
             <div class="takenBranch">&check; Branch 2 taken 3 times.</div>
-            <div class="takenBranch">&check; Branch 3 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
           </div>
         </details>
       </td>
@@ -1702,10 +1893,14 @@
       <td class="lineno"><a id="l206" href="#l206">206</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">4/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 19 times.</div>
-            <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
+            <div class="functionName">std::array&lt;int, (4ul)+(1)&gt; nda::stdutil::append&lt;int, 4ul, long&gt;(std::array&lt;int, 4ul&gt; const&amp;, long const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
+            <div class="functionName">std::array&lt;int, (5ul)+(1)&gt; nda::stdutil::append&lt;int, 5ul, int&gt;(std::array&lt;int, 5ul&gt; const&amp;, int const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 15 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 3 times.</div>
           </div>
         </details>
       </td>
@@ -1821,7 +2016,7 @@
       <td class="lineno"><a id="l222" href="#l222">222</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">239</td>
+      <td class="linecount coveredLine">199</td>
       <td class="src coveredLine"><span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">R</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="o">&gt;</span><span class="w"> </span><span class="n">front_append</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">R</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">U</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
@@ -1835,28 +2030,35 @@
       <td class="lineno"><a id="l224" href="#l224">224</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">239</td>
+      <td class="linecount coveredLine">199</td>
       <td class="src coveredLine"><span class="w">    </span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l225" href="#l225">225</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">6/6</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 217 times.</div>
-            <div class="takenBranch">&check; Branch 3 taken 199 times.</div>
+            <div class="functionName">std::array&lt;long, (2ul)+(1)&gt; nda::stdutil::front_append&lt;long, long, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;, long const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 30 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 15 times.</div>
+            <div class="functionName">std::array&lt;long, (1ul)+(1)&gt; nda::stdutil::front_append&lt;long, long, 1ul&gt;(std::array&lt;long, 1ul&gt; const&amp;, long const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 183 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 183 times.</div>
+            <div class="functionName">std::array&lt;int, (4ul)+(1)&gt; nda::stdutil::front_append&lt;int, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;, int const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">511</td>
+      <td class="linecount coveredLine">416</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">R</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">];</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l226" href="#l226">226</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">239</td>
+      <td class="linecount coveredLine">199</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -1947,7 +2149,7 @@
       <td class="lineno"><a id="l239" href="#l239">239</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">6</td>
+      <td class="linecount coveredLine">3</td>
       <td class="src coveredLine"><span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">R</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mpop</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">R</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
@@ -1961,21 +2163,25 @@
       <td class="lineno"><a id="l241" href="#l241">241</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">4/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 8 times.</div>
-            <div class="takenBranch">&check; Branch 3 taken 3 times.</div>
+            <div class="functionName">std::array&lt;int, (4ul)-(1)&gt; nda::stdutil::mpop&lt;1, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 6 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
+            <div class="functionName">std::array&lt;int, (4ul)-(2)&gt; nda::stdutil::mpop&lt;2, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">22</td>
+      <td class="linecount coveredLine">11</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">R</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">];</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l242" href="#l242">242</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">6</td>
+      <td class="linecount coveredLine">3</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -2157,7 +2363,7 @@
       <td class="lineno"><a id="l268" href="#l268">268</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">R</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;</span><span class="w"> </span><span class="n">front_mpop</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">R</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
@@ -2171,21 +2377,25 @@
       <td class="lineno"><a id="l270" href="#l270">270</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">4/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 5 times.</div>
-            <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
+            <div class="functionName">std::array&lt;int, (4ul)-(1)&gt; nda::stdutil::front_mpop&lt;1, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 3 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
+            <div class="functionName">std::array&lt;int, (4ul)-(2)&gt; nda::stdutil::front_mpop&lt;2, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">14</td>
+      <td class="linecount coveredLine">7</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">R</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">N</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">];</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l271" href="#l271">271</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -2381,7 +2591,7 @@
       <td class="lineno"><a id="l299" href="#l299">299</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">21</td>
+      <td class="linecount coveredLine">13</td>
       <td class="src coveredLine"><span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">R1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">R2</span><span class="o">&gt;</span><span class="w"> </span><span class="n">join</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">R1</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a1</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">R2</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
@@ -2395,35 +2605,55 @@
       <td class="lineno"><a id="l301" href="#l301">301</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">8/8</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 24 times.</div>
-            <div class="takenBranch">&check; Branch 3 taken 13 times.</div>
+            <div class="functionName">std::array&lt;long, (1ul)+(1ul)&gt; nda::stdutil::join&lt;long, 1ul, 1ul&gt;(std::array&lt;long, 1ul&gt; const&amp;, std::array&lt;long, 1ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
+            <div class="functionName">std::array&lt;long, (2ul)+(3ul)&gt; nda::stdutil::join&lt;long, 2ul, 3ul&gt;(std::array&lt;long, 2ul&gt; const&amp;, std::array&lt;long, 3ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 8 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
+            <div class="functionName">std::array&lt;long, (2ul)+(2ul)&gt; nda::stdutil::join&lt;long, 2ul, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;, std::array&lt;long, 2ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 8 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
+            <div class="functionName">std::array&lt;int, (4ul)+(2ul)&gt; nda::stdutil::join&lt;int, 4ul, 2ul&gt;(std::array&lt;int, 4ul&gt; const&amp;, std::array&lt;int, 2ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">57</td>
+      <td class="linecount coveredLine">37</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">R1</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">res</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a1</span><span class="p">[</span><span class="n">i</span><span class="p">];</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l302" href="#l302">302</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">8/8</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 26 times.</div>
-            <div class="takenBranch">&check; Branch 3 taken 13 times.</div>
+            <div class="functionName">std::array&lt;long, (1ul)+(1ul)&gt; nda::stdutil::join&lt;long, 1ul, 1ul&gt;(std::array&lt;long, 1ul&gt; const&amp;, std::array&lt;long, 1ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
+            <div class="functionName">std::array&lt;long, (2ul)+(3ul)&gt; nda::stdutil::join&lt;long, 2ul, 3ul&gt;(std::array&lt;long, 2ul&gt; const&amp;, std::array&lt;long, 3ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 12 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
+            <div class="functionName">std::array&lt;long, (2ul)+(2ul)&gt; nda::stdutil::join&lt;long, 2ul, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;, std::array&lt;long, 2ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 8 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
+            <div class="functionName">std::array&lt;int, (4ul)+(2ul)&gt; nda::stdutil::join&lt;int, 4ul, 2ul&gt;(std::array&lt;int, 4ul&gt; const&amp;, std::array&lt;int, 2ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">63</td>
+      <td class="linecount coveredLine">39</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">R2</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">res</span><span class="p">[</span><span class="n">R1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a2</span><span class="p">[</span><span class="n">i</span><span class="p">];</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l303" href="#l303">303</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">21</td>
+      <td class="linecount coveredLine">13</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -2549,10 +2779,14 @@
       <td class="lineno"><a id="l321" href="#l321">321</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">4/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 148 times.</div>
-            <div class="takenBranch">&check; Branch 2 taken 146 times.</div>
+            <div class="functionName">auto nda::stdutil::sum&lt;int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="functionName">auto nda::stdutil::sum&lt;long, 2ul&gt;(std::array&lt;long, 2ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 145 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 145 times.</div>
           </div>
         </details>
       </td>
@@ -2675,10 +2909,14 @@
       <td class="lineno"><a id="l338" href="#l338">338</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">4/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 5 times.</div>
-            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
+            <div class="functionName">auto nda::stdutil::product&lt;long, 3ul&gt;(std::array&lt;long, 3ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="functionName">auto nda::stdutil::product&lt;int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
           </div>
         </details>
       </td>
@@ -2846,7 +3084,7 @@
           <summary class="linebranchSummary">2/2</summary>
           <div class="linebranchContents">
             <div class="takenBranch">&check; Branch 2 taken 3 times.</div>
-            <div class="takenBranch">&check; Branch 3 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
           </div>
         </details>
       </td>
@@ -2928,7 +3166,7 @@
       <hr/>
     </main>
     <footer>
-      Generated by: <a href="http://gcovr.com/en/8.3">GCOVR (Version 8.3)</a>
+      Generated by: <a href="http://gcovr.com/en/8.4">GCOVR (Version 8.4)</a>
     </footer>
   </body>
 </html>

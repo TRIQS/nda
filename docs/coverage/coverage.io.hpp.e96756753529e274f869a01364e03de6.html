@@ -3,7 +3,7 @@
 
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>GCC Code Coverage Report</title>
+    <title>clef/io.hpp - GCC Code Coverage Report</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="coverage.css"/>
   </head>
@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2025-08-25 15:31:29</td>
+      <td>2025-10-03 19:27:55</td>
     </tr>
   </table>
 </div>
@@ -34,27 +34,31 @@
   <table class="coverage">
     <tr>
       <th></th>
-      <th scope="col">Exec</th>
-      <th scope="col">Total</th>
       <th scope="col">Coverage</th>
+      <th scope="col">Exec</th>
+      <th scope="col">Excl</th>
+      <th scope="col">Total</th>
     </tr>
     <tr>
       <th scope="row">Lines:</th>
-      <td>33</td>
-      <td>33</td>
       <td class="coverage-high">100.0%</td>
+      <td class="coverage-high">63</td>
+      <td class="coverage-high">0</td>
+      <td class="coverage-high">63</td>
     </tr>
     <tr>
       <th scope="row">Functions:</th>
-      <td>25</td>
-      <td>25</td>
       <td class="coverage-high">100.0%</td>
+      <td class="coverage-high">25</td>
+      <td class="coverage-high">0</td>
+      <td class="coverage-high">25</td>
     </tr>
     <tr>
       <th scope="row">Branches:</th>
-      <td>2</td>
-      <td>4</td>
       <td class="coverage-low">50.0%</td>
+      <td class="coverage-low">3</td>
+      <td class="coverage-low">0</td>
+      <td class="coverage-low">6</td>
     </tr>
   </table>
 </div>
@@ -68,33 +72,35 @@
     <tr>
       <th>Function (Line)</th>
       <th>Call count</th>
+      <th>Line coverage</th>
+      <th>Branch coverage</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l54">nda::clef::variadic_print(std::ostream&amp;) (line 54)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l36">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;0&gt;(std::ostream&amp;, nda::clef::placeholder&lt;0&gt;) (line 36)</a></td><td>called 6 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l36">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;1&gt;(std::ostream&amp;, nda::clef::placeholder&lt;1&gt;) (line 36)</a></td><td>called 4 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l36">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;2&gt;(std::ostream&amp;, nda::clef::placeholder&lt;2&gt;) (line 36)</a></td><td>called 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l36">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;3&gt;(std::ostream&amp;, nda::clef::placeholder&lt;3&gt;) (line 36)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l36">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;4&gt;(std::ostream&amp;, nda::clef::placeholder&lt;4&gt;) (line 36)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l49">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;int const&gt;(std::ostream&amp;, std::reference_wrapper&lt;int const&gt; const&amp;) (line 49)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l150">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;nda::clef::expr&lt;nda::clef::tags::minus, nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;3&gt; &gt;, nda::clef::placeholder&lt;4&gt; &gt;, nda::clef::placeholder&lt;1&gt;, nda::clef::placeholder&lt;2&gt; &gt;(std::ostream&amp;, nda::clef::expr&lt;nda::clef::tags::if_else, nda::clef::expr&lt;nda::clef::tags::minus, nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;3&gt; &gt;, nda::clef::placeholder&lt;4&gt; &gt;, nda::clef::placeholder&lt;1&gt;, nda::clef::placeholder&lt;2&gt; &gt; const&amp;) (line 150)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l235">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;nda::clef::expr&lt;nda::clef::tags::minus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0, 1&gt;(std::ostream&amp;, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::minus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0, 1&gt; const&amp;) (line 235)</a></td><td>called 1 time</td><td>88.0%</td></tr>
-    <tr><td><a href="#l163">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;nda::clef::placeholder&lt;0&gt;, int&gt;(std::ostream&amp;, nda::clef::expr&lt;nda::clef::tags::function, nda::clef::placeholder&lt;0&gt;, int&gt; const&amp;) (line 163)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l179">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt;(std::ostream&amp;, nda::clef::expr&lt;nda::clef::tags::subscript, nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt; const&amp;) (line 179)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l135">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;nda::clef::tags::geq, nda::clef::placeholder&lt;0&gt;, nda::clef::expr&lt;nda::clef::tags::minus, nda::clef::placeholder&lt;1&gt;, nda::clef::placeholder&lt;2&gt; &gt; &gt;(std::ostream&amp;, nda::clef::expr&lt;nda::clef::tags::geq, nda::clef::placeholder&lt;0&gt;, nda::clef::expr&lt;nda::clef::tags::minus, nda::clef::placeholder&lt;1&gt;, nda::clef::placeholder&lt;2&gt; &gt; &gt; const&amp;) (line 135)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l135">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;nda::clef::tags::minus, nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;3&gt; &gt;, nda::clef::placeholder&lt;4&gt; &gt;(std::ostream&amp;, nda::clef::expr&lt;nda::clef::tags::minus, nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;3&gt; &gt;, nda::clef::placeholder&lt;4&gt; &gt; const&amp;) (line 135)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l135">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;nda::clef::tags::minus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;(std::ostream&amp;, nda::clef::expr&lt;nda::clef::tags::minus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt; const&amp;) (line 135)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l135">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;nda::clef::tags::minus, nda::clef::placeholder&lt;1&gt;, nda::clef::placeholder&lt;2&gt; &gt;(std::ostream&amp;, nda::clef::expr&lt;nda::clef::tags::minus, nda::clef::placeholder&lt;1&gt;, nda::clef::placeholder&lt;2&gt; &gt; const&amp;) (line 135)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l135">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;3&gt; &gt;(std::ostream&amp;, nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;3&gt; &gt; const&amp;) (line 135)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l135">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, int&gt;(std::ostream&amp;, nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, int&gt; const&amp;) (line 135)</a></td><td>called 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l103">std::ostream&amp; nda::clef::print_tuple&lt;std::tuple&lt;nda::clef::placeholder&lt;0&gt;, int&gt; &gt;(std::ostream&amp;, std::tuple&lt;nda::clef::placeholder&lt;0&gt;, int&gt; const&amp;) (line 103)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l103">std::ostream&amp; nda::clef::print_tuple&lt;std::tuple&lt;nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt; &gt;(std::ostream&amp;, std::tuple&lt;nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt; const&amp;) (line 103)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l67">std::ostream&amp; nda::clef::variadic_print&lt;nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;(std::ostream&amp;, nda::clef::placeholder&lt;0&gt;&amp;&amp;, nda::clef::placeholder&lt;1&gt;&amp;&amp;) (line 67)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l67">std::ostream&amp; nda::clef::variadic_print&lt;nda::clef::placeholder&lt;1&gt;&gt;(std::ostream&amp;, nda::clef::placeholder&lt;1&gt;&amp;&amp;) (line 67)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l79">void nda::clef::detail::print_tuple_impl&lt;1, 2&gt;::operator()&lt;std::tuple&lt;nda::clef::placeholder&lt;0&gt;, int&gt; &gt;(std::ostream&amp;, std::tuple&lt;nda::clef::placeholder&lt;0&gt;, int&gt; const&amp;) (line 79)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l79">void nda::clef::detail::print_tuple_impl&lt;1, 2&gt;::operator()&lt;std::tuple&lt;nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt; &gt;(std::ostream&amp;, std::tuple&lt;nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt; const&amp;) (line 79)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l89">void nda::clef::detail::print_tuple_impl&lt;2, 2&gt;::operator()&lt;std::tuple&lt;nda::clef::placeholder&lt;0&gt;, int&gt; &gt;(std::ostream&amp;, std::tuple&lt;nda::clef::placeholder&lt;0&gt;, int&gt; const&amp;) (line 89)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l89">void nda::clef::detail::print_tuple_impl&lt;2, 2&gt;::operator()&lt;std::tuple&lt;nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt; &gt;(std::ostream&amp;, std::tuple&lt;nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt; const&amp;) (line 89)</a></td><td>called 1 time</td><td>100.0%</td></tr>
+    <tr><td><a href="#l54">nda::clef::variadic_print(std::ostream&amp;) (line 54)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l36">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;0&gt;(std::ostream&amp;, nda::clef::placeholder&lt;0&gt;) (line 36)</a></td><td>called 6 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l36">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;1&gt;(std::ostream&amp;, nda::clef::placeholder&lt;1&gt;) (line 36)</a></td><td>called 4 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l36">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;2&gt;(std::ostream&amp;, nda::clef::placeholder&lt;2&gt;) (line 36)</a></td><td>called 2 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l36">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;3&gt;(std::ostream&amp;, nda::clef::placeholder&lt;3&gt;) (line 36)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l36">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;4&gt;(std::ostream&amp;, nda::clef::placeholder&lt;4&gt;) (line 36)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l49">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;int const&gt;(std::ostream&amp;, std::reference_wrapper&lt;int const&gt; const&amp;) (line 49)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l150">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;nda::clef::expr&lt;nda::clef::tags::minus, nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;3&gt; &gt;, nda::clef::placeholder&lt;4&gt; &gt;, nda::clef::placeholder&lt;1&gt;, nda::clef::placeholder&lt;2&gt; &gt;(std::ostream&amp;, nda::clef::expr&lt;nda::clef::tags::if_else, nda::clef::expr&lt;nda::clef::tags::minus, nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;3&gt; &gt;, nda::clef::placeholder&lt;4&gt; &gt;, nda::clef::placeholder&lt;1&gt;, nda::clef::placeholder&lt;2&gt; &gt; const&amp;) (line 150)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l235">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;nda::clef::expr&lt;nda::clef::tags::minus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0, 1&gt;(std::ostream&amp;, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::minus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0, 1&gt; const&amp;) (line 235)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>88.0%</td></tr>
+    <tr><td><a href="#l163">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;nda::clef::placeholder&lt;0&gt;, int&gt;(std::ostream&amp;, nda::clef::expr&lt;nda::clef::tags::function, nda::clef::placeholder&lt;0&gt;, int&gt; const&amp;) (line 163)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l179">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt;(std::ostream&amp;, nda::clef::expr&lt;nda::clef::tags::subscript, nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt; const&amp;) (line 179)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l135">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;nda::clef::tags::geq, nda::clef::placeholder&lt;0&gt;, nda::clef::expr&lt;nda::clef::tags::minus, nda::clef::placeholder&lt;1&gt;, nda::clef::placeholder&lt;2&gt; &gt; &gt;(std::ostream&amp;, nda::clef::expr&lt;nda::clef::tags::geq, nda::clef::placeholder&lt;0&gt;, nda::clef::expr&lt;nda::clef::tags::minus, nda::clef::placeholder&lt;1&gt;, nda::clef::placeholder&lt;2&gt; &gt; &gt; const&amp;) (line 135)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l135">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;nda::clef::tags::minus, nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;3&gt; &gt;, nda::clef::placeholder&lt;4&gt; &gt;(std::ostream&amp;, nda::clef::expr&lt;nda::clef::tags::minus, nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;3&gt; &gt;, nda::clef::placeholder&lt;4&gt; &gt; const&amp;) (line 135)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l135">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;nda::clef::tags::minus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;(std::ostream&amp;, nda::clef::expr&lt;nda::clef::tags::minus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt; const&amp;) (line 135)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l135">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;nda::clef::tags::minus, nda::clef::placeholder&lt;1&gt;, nda::clef::placeholder&lt;2&gt; &gt;(std::ostream&amp;, nda::clef::expr&lt;nda::clef::tags::minus, nda::clef::placeholder&lt;1&gt;, nda::clef::placeholder&lt;2&gt; &gt; const&amp;) (line 135)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l135">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;3&gt; &gt;(std::ostream&amp;, nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;3&gt; &gt; const&amp;) (line 135)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l135">std::ostream&amp; nda::clef::operator&lt;&lt; &lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, int&gt;(std::ostream&amp;, nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, int&gt; const&amp;) (line 135)</a></td><td>called 2 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l103">std::ostream&amp; nda::clef::print_tuple&lt;std::tuple&lt;nda::clef::placeholder&lt;0&gt;, int&gt; &gt;(std::ostream&amp;, std::tuple&lt;nda::clef::placeholder&lt;0&gt;, int&gt; const&amp;) (line 103)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l103">std::ostream&amp; nda::clef::print_tuple&lt;std::tuple&lt;nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt; &gt;(std::ostream&amp;, std::tuple&lt;nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt; const&amp;) (line 103)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l67">std::ostream&amp; nda::clef::variadic_print&lt;nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;(std::ostream&amp;, nda::clef::placeholder&lt;0&gt;&amp;&amp;, nda::clef::placeholder&lt;1&gt;&amp;&amp;) (line 67)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l67">std::ostream&amp; nda::clef::variadic_print&lt;nda::clef::placeholder&lt;1&gt;&gt;(std::ostream&amp;, nda::clef::placeholder&lt;1&gt;&amp;&amp;) (line 67)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l79">void nda::clef::detail::print_tuple_impl&lt;1, 2&gt;::operator()&lt;std::tuple&lt;nda::clef::placeholder&lt;0&gt;, int&gt; &gt;(std::ostream&amp;, std::tuple&lt;nda::clef::placeholder&lt;0&gt;, int&gt; const&amp;) (line 79)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l79">void nda::clef::detail::print_tuple_impl&lt;1, 2&gt;::operator()&lt;std::tuple&lt;nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt; &gt;(std::ostream&amp;, std::tuple&lt;nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt; const&amp;) (line 79)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l89">void nda::clef::detail::print_tuple_impl&lt;2, 2&gt;::operator()&lt;std::tuple&lt;nda::clef::placeholder&lt;0&gt;, int&gt; &gt;(std::ostream&amp;, std::tuple&lt;nda::clef::placeholder&lt;0&gt;, int&gt; const&amp;) (line 89)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l89">void nda::clef::detail::print_tuple_impl&lt;2, 2&gt;::operator()&lt;std::tuple&lt;nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt; &gt;(std::ostream&amp;, std::tuple&lt;nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt; const&amp;) (line 89)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
   </table>
 </details>
 
@@ -357,14 +363,14 @@
       <td class="lineno"><a id="l36" href="#l36">36</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">28</td>
+      <td class="linecount coveredLine">14</td>
       <td class="src coveredLine"><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sout</span><span class="p">,</span><span class="w"> </span><span class="n">placeholder</span><span class="o">&lt;</span><span class="n">N</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l37" href="#l37">37</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">28</td>
+      <td class="linecount coveredLine">14</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">sout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;_&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -574,28 +580,28 @@
       <td class="lineno"><a id="l67" href="#l67">67</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">variadic_print</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sout</span><span class="p">,</span><span class="w"> </span><span class="n">T0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="n">t0</span><span class="p">,</span><span class="w"> </span><span class="n">Ts</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="p">...</span><span class="n">ts</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l68" href="#l68">68</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">    </span><span class="n">sout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">T0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">t0</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="p">(</span><span class="k">sizeof</span><span class="p">...(</span><span class="n">Ts</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;, &quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l69" href="#l69">69</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">    </span><span class="n">variadic_print</span><span class="p">(</span><span class="n">sout</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">Ts</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ts</span><span class="p">)...);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l70" href="#l70">70</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">sout</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -658,28 +664,28 @@
       <td class="lineno"><a id="l79" href="#l79">79</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="k">operator</span><span class="p">()(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sout</span><span class="p">,</span><span class="w"> </span><span class="n">Tuple</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l80" href="#l80">80</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">        </span><span class="n">sout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="n">C</span><span class="o">&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="p">(</span><span class="n">C</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;, &quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l81" href="#l81">81</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">        </span><span class="n">print_tuple_impl</span><span class="o">&lt;</span><span class="n">C</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;</span><span class="p">()(</span><span class="n">sout</span><span class="p">,</span><span class="w"> </span><span class="n">t</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l82" href="#l82">82</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">      </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
@@ -728,7 +734,7 @@
       <td class="lineno"><a id="l89" href="#l89">89</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="k">operator</span><span class="p">()(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="p">,</span><span class="w"> </span><span class="n">Tuple</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span></td>
     </tr>
     <tr class="source-line">
@@ -826,28 +832,32 @@
       <td class="lineno"><a id="l103" href="#l103">103</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">print_tuple</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sout</span><span class="p">,</span><span class="w"> </span><span class="n">Tuple</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l104" href="#l104">104</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="functionName">std::ostream&amp; nda::clef::print_tuple&lt;std::tuple&lt;nda::clef::placeholder&lt;0&gt;, int&gt; &gt;(std::ostream&amp;, std::tuple&lt;nda::clef::placeholder&lt;0&gt;, int&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">std::ostream&amp; nda::clef::print_tuple&lt;std::tuple&lt;nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt; &gt;(std::ostream&amp;, std::tuple&lt;nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">4</td>
+      <td class="linecount partialCoveredLine">2</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="n">detail</span><span class="o">::</span><span class="n">print_tuple_impl</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">tuple_size_v</span><span class="o">&lt;</span><span class="n">Tuple</span><span class="o">&gt;&gt;</span><span class="p">()(</span><span class="n">sout</span><span class="p">,</span><span class="w"> </span><span class="n">t</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l105" href="#l105">105</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">sout</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -1057,14 +1067,14 @@
       <td class="lineno"><a id="l135" href="#l135">135</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">14</td>
+      <td class="linecount coveredLine">7</td>
       <td class="src coveredLine"><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sout</span><span class="p">,</span><span class="w"> </span><span class="n">expr</span><span class="o">&lt;</span><span class="n">Tag</span><span class="p">,</span><span class="w"> </span><span class="n">L</span><span class="p">,</span><span class="w"> </span><span class="n">R</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ex</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l136" href="#l136">136</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">14</td>
+      <td class="linecount coveredLine">7</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">sout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;(&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ex</span><span class="p">.</span><span class="n">childs</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">Tag</span><span class="o">::</span><span class="n">name</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ex</span><span class="p">.</span><span class="n">childs</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;)&quot;</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -1773,7 +1783,7 @@
         <details class="linebranchDetails">
           <summary class="linebranchSummary">1/2</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
@@ -1835,7 +1845,7 @@
       <hr/>
     </main>
     <footer>
-      Generated by: <a href="http://gcovr.com/en/8.3">GCOVR (Version 8.3)</a>
+      Generated by: <a href="http://gcovr.com/en/8.4">GCOVR (Version 8.4)</a>
     </footer>
   </body>
 </html>

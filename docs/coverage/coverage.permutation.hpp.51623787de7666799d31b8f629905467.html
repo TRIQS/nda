@@ -3,7 +3,7 @@
 
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>GCC Code Coverage Report</title>
+    <title>layout/permutation.hpp - GCC Code Coverage Report</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="coverage.css"/>
   </head>
@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2025-08-25 15:31:29</td>
+      <td>2025-10-03 19:27:55</td>
     </tr>
   </table>
 </div>
@@ -34,27 +34,31 @@
   <table class="coverage">
     <tr>
       <th></th>
-      <th scope="col">Exec</th>
-      <th scope="col">Total</th>
       <th scope="col">Coverage</th>
+      <th scope="col">Exec</th>
+      <th scope="col">Excl</th>
+      <th scope="col">Total</th>
     </tr>
     <tr>
       <th scope="row">Lines:</th>
-      <td>50</td>
-      <td>50</td>
       <td class="coverage-high">100.0%</td>
+      <td class="coverage-high">262</td>
+      <td class="coverage-high">0</td>
+      <td class="coverage-high">262</td>
     </tr>
     <tr>
       <th scope="row">Functions:</th>
-      <td>52</td>
-      <td>52</td>
       <td class="coverage-high">100.0%</td>
+      <td class="coverage-high">52</td>
+      <td class="coverage-high">0</td>
+      <td class="coverage-high">52</td>
     </tr>
     <tr>
       <th scope="row">Branches:</th>
-      <td>41</td>
-      <td>92</td>
-      <td class="coverage-low">44.6%</td>
+      <td class="coverage-low">56.8%</td>
+      <td class="coverage-low">193</td>
+      <td class="coverage-low">0</td>
+      <td class="coverage-low">340</td>
     </tr>
   </table>
 </div>
@@ -68,60 +72,62 @@
     <tr>
       <th>Function (Line)</th>
       <th>Call count</th>
+      <th>Line coverage</th>
+      <th>Branch coverage</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l92">bool nda::permutations::is_valid&lt;int, 1ul&gt;(std::array&lt;int, 1ul&gt; const&amp;) (line 92)</a></td><td>called 556 times</td><td>88.0%</td></tr>
-    <tr><td><a href="#l92">bool nda::permutations::is_valid&lt;int, 2ul&gt;(std::array&lt;int, 2ul&gt; const&amp;) (line 92)</a></td><td>called 2482 times</td><td>88.0%</td></tr>
-    <tr><td><a href="#l92">bool nda::permutations::is_valid&lt;int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;) (line 92)</a></td><td>called 1015 times</td><td>88.0%</td></tr>
-    <tr><td><a href="#l92">bool nda::permutations::is_valid&lt;int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;) (line 92)</a></td><td>called 219 times</td><td>88.0%</td></tr>
-    <tr><td><a href="#l92">bool nda::permutations::is_valid&lt;int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;) (line 92)</a></td><td>called 41 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l92">bool nda::permutations::is_valid&lt;int, 6ul&gt;(std::array&lt;int, 6ul&gt; const&amp;) (line 92)</a></td><td>called 1555 times</td><td>94.0%</td></tr>
-    <tr><td><a href="#l175">std::array&lt;char, 5ul&gt; nda::permutations::apply&lt;char, int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;, std::array&lt;char, 5ul&gt; const&amp;) (line 175)</a></td><td>called 2 times</td><td>60.0%</td></tr>
-    <tr><td><a href="#l154">std::array&lt;char, 5ul&gt; nda::permutations::apply_inverse&lt;char, int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;, std::array&lt;char, 5ul&gt; const&amp;) (line 154)</a></td><td>called 2 times</td><td>60.0%</td></tr>
-    <tr><td><a href="#l43">std::array&lt;int, 0ul&gt; nda::decode&lt;0ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l43">std::array&lt;int, 10ul&gt; nda::decode&lt;10ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l43">std::array&lt;int, 11ul&gt; nda::decode&lt;11ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l43">std::array&lt;int, 12ul&gt; nda::decode&lt;12ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l43">std::array&lt;int, 13ul&gt; nda::decode&lt;13ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l43">std::array&lt;int, 14ul&gt; nda::decode&lt;14ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l43">std::array&lt;int, 15ul&gt; nda::decode&lt;15ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l43">std::array&lt;int, 1ul&gt; nda::decode&lt;1ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l189">std::array&lt;int, 1ul&gt; nda::permutations::identity&lt;1ul&gt;() (line 189)</a></td><td>called 5 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l43">std::array&lt;int, 2ul&gt; nda::decode&lt;2ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l189">std::array&lt;int, 2ul&gt; nda::permutations::identity&lt;2ul&gt;() (line 189)</a></td><td>called 3 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l43">std::array&lt;int, 3ul&gt; nda::decode&lt;3ul&gt;(unsigned long) (line 43)</a></td><td>called 4 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l175">std::array&lt;int, 3ul&gt; nda::permutations::apply&lt;int, int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;int, 3ul&gt; const&amp;) (line 175)</a></td><td>called 27 times</td><td>60.0%</td></tr>
-    <tr><td><a href="#l189">std::array&lt;int, 3ul&gt; nda::permutations::identity&lt;3ul&gt;() (line 189)</a></td><td>called 5 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l43">std::array&lt;int, 4ul&gt; nda::decode&lt;4ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l175">std::array&lt;int, 4ul&gt; nda::permutations::apply&lt;int, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;, std::array&lt;int, 4ul&gt; const&amp;) (line 175)</a></td><td>called 3 times</td><td>60.0%</td></tr>
-    <tr><td><a href="#l238">std::array&lt;int, 4ul&gt; nda::permutations::cycle&lt;4ul&gt;(int, int) (line 238)</a></td><td>called 24 times</td><td>86.0%</td></tr>
-    <tr><td><a href="#l189">std::array&lt;int, 4ul&gt; nda::permutations::identity&lt;4ul&gt;() (line 189)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l43">std::array&lt;int, 5ul&gt; nda::decode&lt;5ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l114">std::array&lt;int, 5ul&gt; nda::permutations::compose&lt;int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;, std::array&lt;int, 5ul&gt; const&amp;) (line 114)</a></td><td>called 6 times</td><td>45.0%</td></tr>
-    <tr><td><a href="#l134">std::array&lt;int, 5ul&gt; nda::permutations::inverse&lt;int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;) (line 134)</a></td><td>called 3 times</td><td>56.0%</td></tr>
-    <tr><td><a href="#l43">std::array&lt;int, 6ul&gt; nda::decode&lt;6ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l43">std::array&lt;int, 7ul&gt; nda::decode&lt;7ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l43">std::array&lt;int, 8ul&gt; nda::decode&lt;8ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l43">std::array&lt;int, 9ul&gt; nda::decode&lt;9ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l154">std::array&lt;long, 2ul&gt; nda::permutations::apply_inverse&lt;long, int, 2ul&gt;(std::array&lt;int, 2ul&gt; const&amp;, std::array&lt;long, 2ul&gt; const&amp;) (line 154)</a></td><td>called 1055 times</td><td>60.0%</td></tr>
-    <tr><td><a href="#l175">std::array&lt;long, 3ul&gt; nda::permutations::apply&lt;long, int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;long, 3ul&gt; const&amp;) (line 175)</a></td><td>called 24 times</td><td>58.0%</td></tr>
-    <tr><td><a href="#l154">std::array&lt;long, 3ul&gt; nda::permutations::apply_inverse&lt;long, int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;long, 3ul&gt; const&amp;) (line 154)</a></td><td>called 352 times</td><td>58.0%</td></tr>
-    <tr><td><a href="#l154">std::array&lt;long, 4ul&gt; nda::permutations::apply_inverse&lt;long, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;, std::array&lt;long, 4ul&gt; const&amp;) (line 154)</a></td><td>called 18 times</td><td>58.0%</td></tr>
-    <tr><td><a href="#l60">unsigned long nda::encode&lt;10ul&gt;(std::array&lt;int, 10ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>57.0%</td></tr>
-    <tr><td><a href="#l60">unsigned long nda::encode&lt;11ul&gt;(std::array&lt;int, 11ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>57.0%</td></tr>
-    <tr><td><a href="#l60">unsigned long nda::encode&lt;12ul&gt;(std::array&lt;int, 12ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>57.0%</td></tr>
-    <tr><td><a href="#l60">unsigned long nda::encode&lt;13ul&gt;(std::array&lt;int, 13ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>57.0%</td></tr>
-    <tr><td><a href="#l60">unsigned long nda::encode&lt;14ul&gt;(std::array&lt;int, 14ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>57.0%</td></tr>
-    <tr><td><a href="#l60">unsigned long nda::encode&lt;15ul&gt;(std::array&lt;int, 15ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>57.0%</td></tr>
-    <tr><td><a href="#l60">unsigned long nda::encode&lt;1ul&gt;(std::array&lt;int, 1ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>57.0%</td></tr>
-    <tr><td><a href="#l60">unsigned long nda::encode&lt;2ul&gt;(std::array&lt;int, 2ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>57.0%</td></tr>
-    <tr><td><a href="#l60">unsigned long nda::encode&lt;3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>57.0%</td></tr>
-    <tr><td><a href="#l60">unsigned long nda::encode&lt;4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>57.0%</td></tr>
-    <tr><td><a href="#l60">unsigned long nda::encode&lt;5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>57.0%</td></tr>
-    <tr><td><a href="#l60">unsigned long nda::encode&lt;6ul&gt;(std::array&lt;int, 6ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>57.0%</td></tr>
-    <tr><td><a href="#l60">unsigned long nda::encode&lt;7ul&gt;(std::array&lt;int, 7ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>57.0%</td></tr>
-    <tr><td><a href="#l60">unsigned long nda::encode&lt;8ul&gt;(std::array&lt;int, 8ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>57.0%</td></tr>
-    <tr><td><a href="#l60">unsigned long nda::encode&lt;9ul&gt;(std::array&lt;int, 9ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>57.0%</td></tr>
+    <tr><td><a href="#l92">bool nda::permutations::is_valid&lt;int, 1ul&gt;(std::array&lt;int, 1ul&gt; const&amp;) (line 92)</a></td><td>called 556 times</td><td>100.0%</td><td>60.0%</td><td>88.0%</td></tr>
+    <tr><td><a href="#l92">bool nda::permutations::is_valid&lt;int, 2ul&gt;(std::array&lt;int, 2ul&gt; const&amp;) (line 92)</a></td><td>called 2482 times</td><td>100.0%</td><td>60.0%</td><td>88.0%</td></tr>
+    <tr><td><a href="#l92">bool nda::permutations::is_valid&lt;int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;) (line 92)</a></td><td>called 1015 times</td><td>100.0%</td><td>60.0%</td><td>88.0%</td></tr>
+    <tr><td><a href="#l92">bool nda::permutations::is_valid&lt;int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;) (line 92)</a></td><td>called 219 times</td><td>100.0%</td><td>60.0%</td><td>88.0%</td></tr>
+    <tr><td><a href="#l92">bool nda::permutations::is_valid&lt;int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;) (line 92)</a></td><td>called 41 times</td><td>100.0%</td><td>80.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l92">bool nda::permutations::is_valid&lt;int, 6ul&gt;(std::array&lt;int, 6ul&gt; const&amp;) (line 92)</a></td><td>called 1555 times</td><td>100.0%</td><td>100.0%</td><td>94.0%</td></tr>
+    <tr><td><a href="#l175">std::array&lt;char, 5ul&gt; nda::permutations::apply&lt;char, int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;, std::array&lt;char, 5ul&gt; const&amp;) (line 175)</a></td><td>called 2 times</td><td>100.0%</td><td>20.0%</td><td>60.0%</td></tr>
+    <tr><td><a href="#l154">std::array&lt;char, 5ul&gt; nda::permutations::apply_inverse&lt;char, int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;, std::array&lt;char, 5ul&gt; const&amp;) (line 154)</a></td><td>called 2 times</td><td>100.0%</td><td>20.0%</td><td>60.0%</td></tr>
+    <tr><td><a href="#l43">std::array&lt;int, 0ul&gt; nda::decode&lt;0ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l43">std::array&lt;int, 10ul&gt; nda::decode&lt;10ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l43">std::array&lt;int, 11ul&gt; nda::decode&lt;11ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l43">std::array&lt;int, 12ul&gt; nda::decode&lt;12ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l43">std::array&lt;int, 13ul&gt; nda::decode&lt;13ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l43">std::array&lt;int, 14ul&gt; nda::decode&lt;14ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l43">std::array&lt;int, 15ul&gt; nda::decode&lt;15ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l43">std::array&lt;int, 1ul&gt; nda::decode&lt;1ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l189">std::array&lt;int, 1ul&gt; nda::permutations::identity&lt;1ul&gt;() (line 189)</a></td><td>called 5 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l43">std::array&lt;int, 2ul&gt; nda::decode&lt;2ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l189">std::array&lt;int, 2ul&gt; nda::permutations::identity&lt;2ul&gt;() (line 189)</a></td><td>called 3 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l43">std::array&lt;int, 3ul&gt; nda::decode&lt;3ul&gt;(unsigned long) (line 43)</a></td><td>called 4 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l175">std::array&lt;int, 3ul&gt; nda::permutations::apply&lt;int, int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;int, 3ul&gt; const&amp;) (line 175)</a></td><td>called 27 times</td><td>100.0%</td><td>16.7%</td><td>60.0%</td></tr>
+    <tr><td><a href="#l189">std::array&lt;int, 3ul&gt; nda::permutations::identity&lt;3ul&gt;() (line 189)</a></td><td>called 5 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l43">std::array&lt;int, 4ul&gt; nda::decode&lt;4ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l175">std::array&lt;int, 4ul&gt; nda::permutations::apply&lt;int, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;, std::array&lt;int, 4ul&gt; const&amp;) (line 175)</a></td><td>called 3 times</td><td>100.0%</td><td>16.7%</td><td>60.0%</td></tr>
+    <tr><td><a href="#l238">std::array&lt;int, 4ul&gt; nda::permutations::cycle&lt;4ul&gt;(int, int) (line 238)</a></td><td>called 24 times</td><td>100.0%</td><td>83.3%</td><td>86.0%</td></tr>
+    <tr><td><a href="#l189">std::array&lt;int, 4ul&gt; nda::permutations::identity&lt;4ul&gt;() (line 189)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l43">std::array&lt;int, 5ul&gt; nda::decode&lt;5ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l114">std::array&lt;int, 5ul&gt; nda::permutations::compose&lt;int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;, std::array&lt;int, 5ul&gt; const&amp;) (line 114)</a></td><td>called 6 times</td><td>100.0%</td><td>66.7%</td><td>45.0%</td></tr>
+    <tr><td><a href="#l134">std::array&lt;int, 5ul&gt; nda::permutations::inverse&lt;int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;) (line 134)</a></td><td>called 3 times</td><td>100.0%</td><td>75.0%</td><td>56.0%</td></tr>
+    <tr><td><a href="#l43">std::array&lt;int, 6ul&gt; nda::decode&lt;6ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l43">std::array&lt;int, 7ul&gt; nda::decode&lt;7ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l43">std::array&lt;int, 8ul&gt; nda::decode&lt;8ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l43">std::array&lt;int, 9ul&gt; nda::decode&lt;9ul&gt;(unsigned long) (line 43)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l154">std::array&lt;long, 2ul&gt; nda::permutations::apply_inverse&lt;long, int, 2ul&gt;(std::array&lt;int, 2ul&gt; const&amp;, std::array&lt;long, 2ul&gt; const&amp;) (line 154)</a></td><td>called 1055 times</td><td>100.0%</td><td>16.7%</td><td>60.0%</td></tr>
+    <tr><td><a href="#l175">std::array&lt;long, 3ul&gt; nda::permutations::apply&lt;long, int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;long, 3ul&gt; const&amp;) (line 175)</a></td><td>called 24 times</td><td>100.0%</td><td>75.0%</td><td>58.0%</td></tr>
+    <tr><td><a href="#l154">std::array&lt;long, 3ul&gt; nda::permutations::apply_inverse&lt;long, int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;long, 3ul&gt; const&amp;) (line 154)</a></td><td>called 352 times</td><td>100.0%</td><td>75.0%</td><td>58.0%</td></tr>
+    <tr><td><a href="#l154">std::array&lt;long, 4ul&gt; nda::permutations::apply_inverse&lt;long, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;, std::array&lt;long, 4ul&gt; const&amp;) (line 154)</a></td><td>called 18 times</td><td>100.0%</td><td>75.0%</td><td>58.0%</td></tr>
+    <tr><td><a href="#l60">unsigned long nda::encode&lt;10ul&gt;(std::array&lt;int, 10ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>100.0%</td><td>62.5%</td><td>57.0%</td></tr>
+    <tr><td><a href="#l60">unsigned long nda::encode&lt;11ul&gt;(std::array&lt;int, 11ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>100.0%</td><td>62.5%</td><td>57.0%</td></tr>
+    <tr><td><a href="#l60">unsigned long nda::encode&lt;12ul&gt;(std::array&lt;int, 12ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>100.0%</td><td>62.5%</td><td>57.0%</td></tr>
+    <tr><td><a href="#l60">unsigned long nda::encode&lt;13ul&gt;(std::array&lt;int, 13ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>100.0%</td><td>62.5%</td><td>57.0%</td></tr>
+    <tr><td><a href="#l60">unsigned long nda::encode&lt;14ul&gt;(std::array&lt;int, 14ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>100.0%</td><td>62.5%</td><td>57.0%</td></tr>
+    <tr><td><a href="#l60">unsigned long nda::encode&lt;15ul&gt;(std::array&lt;int, 15ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>100.0%</td><td>62.5%</td><td>57.0%</td></tr>
+    <tr><td><a href="#l60">unsigned long nda::encode&lt;1ul&gt;(std::array&lt;int, 1ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>100.0%</td><td>62.5%</td><td>57.0%</td></tr>
+    <tr><td><a href="#l60">unsigned long nda::encode&lt;2ul&gt;(std::array&lt;int, 2ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>100.0%</td><td>62.5%</td><td>57.0%</td></tr>
+    <tr><td><a href="#l60">unsigned long nda::encode&lt;3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>100.0%</td><td>62.5%</td><td>57.0%</td></tr>
+    <tr><td><a href="#l60">unsigned long nda::encode&lt;4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>100.0%</td><td>62.5%</td><td>57.0%</td></tr>
+    <tr><td><a href="#l60">unsigned long nda::encode&lt;5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>100.0%</td><td>62.5%</td><td>57.0%</td></tr>
+    <tr><td><a href="#l60">unsigned long nda::encode&lt;6ul&gt;(std::array&lt;int, 6ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>100.0%</td><td>62.5%</td><td>57.0%</td></tr>
+    <tr><td><a href="#l60">unsigned long nda::encode&lt;7ul&gt;(std::array&lt;int, 7ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>100.0%</td><td>62.5%</td><td>57.0%</td></tr>
+    <tr><td><a href="#l60">unsigned long nda::encode&lt;8ul&gt;(std::array&lt;int, 8ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>100.0%</td><td>62.5%</td><td>57.0%</td></tr>
+    <tr><td><a href="#l60">unsigned long nda::encode&lt;9ul&gt;(std::array&lt;int, 9ul&gt; const&amp;) (line 60)</a></td><td>called 1 time</td><td>100.0%</td><td>62.5%</td><td>57.0%</td></tr>
   </table>
 </details>
 
@@ -433,35 +439,78 @@
       <td class="lineno"><a id="l43" href="#l43">43</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">35</td>
+      <td class="linecount coveredLine">19</td>
       <td class="src coveredLine"><span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;</span><span class="w"> </span><span class="n">decode</span><span class="p">(</span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">binary_representation</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l44" href="#l44">44</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">35</td>
+      <td class="linecount coveredLine">19</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stdutil</span><span class="o">::</span><span class="n">make_initialized_array</span><span class="o">&lt;</span><span class="n">N</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l45" href="#l45">45</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">30/30</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 129 times.</div>
-            <div class="takenBranch">&check; Branch 2 taken 18 times.</div>
+            <div class="functionName">std::array&lt;int, 15ul&gt; nda::decode&lt;15ul&gt;(unsigned long):</div>
+            <div class="takenBranch">&check; Branch 1 taken 15 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="functionName">std::array&lt;int, 14ul&gt; nda::decode&lt;14ul&gt;(unsigned long):</div>
+            <div class="takenBranch">&check; Branch 1 taken 14 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="functionName">std::array&lt;int, 13ul&gt; nda::decode&lt;13ul&gt;(unsigned long):</div>
+            <div class="takenBranch">&check; Branch 1 taken 13 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="functionName">std::array&lt;int, 12ul&gt; nda::decode&lt;12ul&gt;(unsigned long):</div>
+            <div class="takenBranch">&check; Branch 1 taken 12 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="functionName">std::array&lt;int, 11ul&gt; nda::decode&lt;11ul&gt;(unsigned long):</div>
+            <div class="takenBranch">&check; Branch 1 taken 11 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="functionName">std::array&lt;int, 10ul&gt; nda::decode&lt;10ul&gt;(unsigned long):</div>
+            <div class="takenBranch">&check; Branch 1 taken 10 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="functionName">std::array&lt;int, 9ul&gt; nda::decode&lt;9ul&gt;(unsigned long):</div>
+            <div class="takenBranch">&check; Branch 1 taken 9 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="functionName">std::array&lt;int, 8ul&gt; nda::decode&lt;8ul&gt;(unsigned long):</div>
+            <div class="takenBranch">&check; Branch 1 taken 8 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="functionName">std::array&lt;int, 7ul&gt; nda::decode&lt;7ul&gt;(unsigned long):</div>
+            <div class="takenBranch">&check; Branch 1 taken 7 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="functionName">std::array&lt;int, 6ul&gt; nda::decode&lt;6ul&gt;(unsigned long):</div>
+            <div class="takenBranch">&check; Branch 1 taken 6 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="functionName">std::array&lt;int, 5ul&gt; nda::decode&lt;5ul&gt;(unsigned long):</div>
+            <div class="takenBranch">&check; Branch 1 taken 5 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="functionName">std::array&lt;int, 4ul&gt; nda::decode&lt;4ul&gt;(unsigned long):</div>
+            <div class="takenBranch">&check; Branch 1 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="functionName">std::array&lt;int, 3ul&gt; nda::decode&lt;3ul&gt;(unsigned long):</div>
+            <div class="takenBranch">&check; Branch 1 taken 12 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 4 times.</div>
+            <div class="functionName">std::array&lt;int, 2ul&gt; nda::decode&lt;2ul&gt;(unsigned long):</div>
+            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="functionName">std::array&lt;int, 1ul&gt; nda::decode&lt;1ul&gt;(unsigned long):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">284</td>
+      <td class="linecount coveredLine">148</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">binary_representation</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">(</span><span class="mi">4</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i</span><span class="p">))</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mb">0b1111ull</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l46" href="#l46">46</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">35</td>
+      <td class="linecount coveredLine">19</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -559,53 +608,195 @@
       <td class="lineno"><a id="l60" href="#l60">60</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">30</td>
+      <td class="linecount coveredLine">15</td>
       <td class="src coveredLine"><span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l61" href="#l61">61</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">30</td>
+      <td class="linecount coveredLine">15</td>
       <td class="src coveredLine"><span class="w">    </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l62" href="#l62">62</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">30/30</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 0 taken 120 times.</div>
-            <div class="takenBranch">&check; Branch 1 taken 15 times.</div>
+            <div class="functionName">unsigned long nda::encode&lt;15ul&gt;(std::array&lt;int, 15ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 15 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="functionName">unsigned long nda::encode&lt;14ul&gt;(std::array&lt;int, 14ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 14 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="functionName">unsigned long nda::encode&lt;13ul&gt;(std::array&lt;int, 13ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 13 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="functionName">unsigned long nda::encode&lt;12ul&gt;(std::array&lt;int, 12ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 12 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="functionName">unsigned long nda::encode&lt;11ul&gt;(std::array&lt;int, 11ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 11 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="functionName">unsigned long nda::encode&lt;10ul&gt;(std::array&lt;int, 10ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 10 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="functionName">unsigned long nda::encode&lt;9ul&gt;(std::array&lt;int, 9ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 9 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="functionName">unsigned long nda::encode&lt;8ul&gt;(std::array&lt;int, 8ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 8 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="functionName">unsigned long nda::encode&lt;7ul&gt;(std::array&lt;int, 7ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 7 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="functionName">unsigned long nda::encode&lt;6ul&gt;(std::array&lt;int, 6ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 6 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="functionName">unsigned long nda::encode&lt;5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 5 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="functionName">unsigned long nda::encode&lt;4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="functionName">unsigned long nda::encode&lt;3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 3 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="functionName">unsigned long nda::encode&lt;2ul&gt;(std::array&lt;int, 2ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 2 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="functionName">unsigned long nda::encode&lt;1ul&gt;(std::array&lt;int, 1ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 1 time.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">270</td>
+      <td class="linecount coveredLine">135</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l63" href="#l63">63</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">3/6</summary>
+          <summary class="linebranchSummary">45/90</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 120 times.</div>
+            <div class="functionName">unsigned long nda::encode&lt;15ul&gt;(std::array&lt;int, 15ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 15 times.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-            <div class="takenBranch">&check; Branch 5 taken 120 times.</div>
+            <div class="takenBranch">&check; Branch 5 taken 15 times.</div>
             <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-            <div class="takenBranch">&check; Branch 7 taken 120 times.</div>
+            <div class="takenBranch">&check; Branch 7 taken 15 times.</div>
+            <div class="functionName">unsigned long nda::encode&lt;14ul&gt;(std::array&lt;int, 14ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 14 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 14 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 14 times.</div>
+            <div class="functionName">unsigned long nda::encode&lt;13ul&gt;(std::array&lt;int, 13ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 13 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 13 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 13 times.</div>
+            <div class="functionName">unsigned long nda::encode&lt;12ul&gt;(std::array&lt;int, 12ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 12 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 12 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 12 times.</div>
+            <div class="functionName">unsigned long nda::encode&lt;11ul&gt;(std::array&lt;int, 11ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 11 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 11 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 11 times.</div>
+            <div class="functionName">unsigned long nda::encode&lt;10ul&gt;(std::array&lt;int, 10ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 10 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 10 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 10 times.</div>
+            <div class="functionName">unsigned long nda::encode&lt;9ul&gt;(std::array&lt;int, 9ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 9 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 9 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 9 times.</div>
+            <div class="functionName">unsigned long nda::encode&lt;8ul&gt;(std::array&lt;int, 8ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 8 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 8 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 8 times.</div>
+            <div class="functionName">unsigned long nda::encode&lt;7ul&gt;(std::array&lt;int, 7ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 7 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 7 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 7 times.</div>
+            <div class="functionName">unsigned long nda::encode&lt;6ul&gt;(std::array&lt;int, 6ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 6 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 6 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 6 times.</div>
+            <div class="functionName">unsigned long nda::encode&lt;5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 5 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 5 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 5 times.</div>
+            <div class="functionName">unsigned long nda::encode&lt;4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 4 times.</div>
+            <div class="functionName">unsigned long nda::encode&lt;3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 3 times.</div>
+            <div class="functionName">unsigned long nda::encode&lt;2ul&gt;(std::array&lt;int, 2ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 2 times.</div>
+            <div class="functionName">unsigned long nda::encode&lt;1ul&gt;(std::array&lt;int, 1ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 1 time.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">240</td>
+      <td class="linecount partialCoveredLine">120</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="n">EXPECTS</span><span class="p">(</span><span class="mi">0</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">15</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l64" href="#l64">64</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">240</td>
+      <td class="linecount coveredLine">120</td>
       <td class="src coveredLine"><span class="w">      </span><span class="n">result</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">uint64_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="p">(</span><span class="mi">4</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i</span><span class="p">));</span></td>
     </tr>
     <tr class="source-line">
@@ -619,7 +810,7 @@
       <td class="lineno"><a id="l66" href="#l66">66</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">30</td>
+      <td class="linecount coveredLine">15</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -801,55 +992,117 @@
       <td class="lineno"><a id="l92" href="#l92">92</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">10743</td>
+      <td class="linecount coveredLine">5868</td>
       <td class="src coveredLine"><span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_valid</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">Int</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l93" href="#l93">93</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">10743</td>
+      <td class="linecount coveredLine">5868</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">idx_counts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stdutil</span><span class="o">::</span><span class="n">make_initialized_array</span><span class="o">&lt;</span><span class="n">N</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l94" href="#l94">94</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">12/12</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 18972 times.</div>
-            <div class="takenBranch">&check; Branch 3 taken 5864 times.</div>
+            <div class="functionName">bool nda::permutations::is_valid&lt;int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 3045 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1015 times.</div>
+            <div class="functionName">bool nda::permutations::is_valid&lt;int, 6ul&gt;(std::array&lt;int, 6ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 9330 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1552 times.</div>
+            <div class="functionName">bool nda::permutations::is_valid&lt;int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 201 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 40 times.</div>
+            <div class="functionName">bool nda::permutations::is_valid&lt;int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 876 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 219 times.</div>
+            <div class="functionName">bool nda::permutations::is_valid&lt;int, 2ul&gt;(std::array&lt;int, 2ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 4964 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 2482 times.</div>
+            <div class="functionName">bool nda::permutations::is_valid&lt;int, 1ul&gt;(std::array&lt;int, 1ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 556 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 556 times.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">46651</td>
+      <td class="linecount coveredLine">24836</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l95" href="#l95">95</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">8/8</summary>
+          <summary class="linebranchSummary">30/48</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 0 taken 18971 times.</div>
-            <div class="takenBranch">&check; Branch 1 taken 1 times.</div>
-            <div class="takenBranch">&check; Branch 2 taken 18969 times.</div>
-            <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
-            <div class="takenBranch">&check; Branch 5 taken 1 times.</div>
-            <div class="takenBranch">&check; Branch 6 taken 18968 times.</div>
-            <div class="takenBranch">&check; Branch 7 taken 4 times.</div>
-            <div class="takenBranch">&check; Branch 8 taken 18968 times.</div>
+            <div class="functionName">bool nda::permutations::is_valid&lt;int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 3045 times.</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 3045 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="takenBranch">&check; Branch 6 taken 3045 times.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="takenBranch">&check; Branch 8 taken 3045 times.</div>
+            <div class="functionName">bool nda::permutations::is_valid&lt;int, 6ul&gt;(std::array&lt;int, 6ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 9329 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="takenBranch">&check; Branch 2 taken 9328 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
+            <div class="takenBranch">&check; Branch 5 taken 1 time.</div>
+            <div class="takenBranch">&check; Branch 6 taken 9327 times.</div>
+            <div class="takenBranch">&check; Branch 7 taken 3 times.</div>
+            <div class="takenBranch">&check; Branch 8 taken 9327 times.</div>
+            <div class="functionName">bool nda::permutations::is_valid&lt;int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 201 times.</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 200 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="takenBranch">&check; Branch 6 taken 200 times.</div>
+            <div class="takenBranch">&check; Branch 7 taken 1 time.</div>
+            <div class="takenBranch">&check; Branch 8 taken 200 times.</div>
+            <div class="functionName">bool nda::permutations::is_valid&lt;int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 876 times.</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 876 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="takenBranch">&check; Branch 6 taken 876 times.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="takenBranch">&check; Branch 8 taken 876 times.</div>
+            <div class="functionName">bool nda::permutations::is_valid&lt;int, 2ul&gt;(std::array&lt;int, 2ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 4964 times.</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 4964 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="takenBranch">&check; Branch 6 taken 4964 times.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="takenBranch">&check; Branch 8 taken 4964 times.</div>
+            <div class="functionName">bool nda::permutations::is_valid&lt;int, 1ul&gt;(std::array&lt;int, 1ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 556 times.</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 556 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="takenBranch">&check; Branch 6 taken 556 times.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="takenBranch">&check; Branch 8 taken 556 times.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">35916</td>
-      <td class="src coveredLine"><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">idx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">idx_counts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span></td>
+      <td class="linecount partialCoveredLine">18972</td>
+      <td class="src partialCoveredLine"><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">idx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">idx_counts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l96" href="#l96">96</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">35908</td>
+      <td class="linecount coveredLine">18968</td>
       <td class="src coveredLine"><span class="w">      </span><span class="n">idx_counts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -863,7 +1116,7 @@
       <td class="lineno"><a id="l98" href="#l98">98</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">10735</td>
+      <td class="linecount coveredLine">5864</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -1290,17 +1543,41 @@
       <td class="lineno"><a id="l154" href="#l154">154</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">3999</td>
+      <td class="linecount coveredLine">1427</td>
       <td class="src coveredLine"><span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;</span><span class="w"> </span><span class="n">apply_inverse</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">Int</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l155" href="#l155">155</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">3/25</summary>
+          <summary class="linebranchSummary">5/38</summary>
           <div class="linebranchContents">
+            <div class="functionName">std::array&lt;long, 4ul&gt; nda::permutations::apply_inverse&lt;long, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;, std::array&lt;long, 4ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 18 times.</div>
+            <div class="functionName">std::array&lt;long, 2ul&gt; nda::permutations::apply_inverse&lt;long, int, 2ul&gt;(std::array&lt;int, 2ul&gt; const&amp;, std::array&lt;long, 2ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1055 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 19 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 22 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="functionName">std::array&lt;long, 3ul&gt; nda::permutations::apply_inverse&lt;long, int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;long, 3ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 352 times.</div>
+            <div class="functionName">std::array&lt;char, 5ul&gt; nda::permutations::apply_inverse&lt;char, int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;, std::array&lt;char, 5ul&gt; const&amp;):</div>
             <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
-            <div class="takenBranch">&check; Branch 2 taken 1425 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
             <div class="takenBranch">&check; Branch 4 taken 2 times.</div>
             <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
@@ -1317,45 +1594,48 @@
             <div class="notTakenBranch">&cross; Branch 22 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 25 not taken.</div>
-            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
-            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">3999</td>
+      <td class="linecount partialCoveredLine">1427</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="n">EXPECTS</span><span class="p">(</span><span class="n">is_valid</span><span class="p">(</span><span class="n">p</span><span class="p">));</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l156" href="#l156">156</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">3999</td>
+      <td class="linecount coveredLine">1427</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stdutil</span><span class="o">::</span><span class="n">make_initialized_array</span><span class="o">&lt;</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l157" href="#l157">157</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">8/8</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 3 taken 3248 times.</div>
-            <div class="takenBranch">&check; Branch 4 taken 1427 times.</div>
+            <div class="functionName">std::array&lt;long, 4ul&gt; nda::permutations::apply_inverse&lt;long, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;, std::array&lt;long, 4ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 3 taken 72 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 18 times.</div>
+            <div class="functionName">std::array&lt;long, 2ul&gt; nda::permutations::apply_inverse&lt;long, int, 2ul&gt;(std::array&lt;int, 2ul&gt; const&amp;, std::array&lt;long, 2ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 3 taken 2110 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 1055 times.</div>
+            <div class="functionName">std::array&lt;long, 3ul&gt; nda::permutations::apply_inverse&lt;long, int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;long, 3ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 3 taken 1056 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 352 times.</div>
+            <div class="functionName">std::array&lt;char, 5ul&gt; nda::permutations::apply_inverse&lt;char, int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;, std::array&lt;char, 5ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 3 taken 10 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 2 times.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">18959</td>
+      <td class="linecount coveredLine">4675</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">u</span><span class="p">)</span><span class="w"> </span><span class="n">result</span><span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="n">u</span><span class="p">]]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">u</span><span class="p">];</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l158" href="#l158">158</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">3999</td>
+      <td class="linecount coveredLine">1427</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -1474,18 +1754,22 @@
       <td class="lineno"><a id="l175" href="#l175">175</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">2337</td>
+      <td class="linecount coveredLine">56</td>
       <td class="src coveredLine"><span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;</span><span class="w"> </span><span class="n">apply</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">Int</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l176" href="#l176">176</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">3/25</summary>
+          <summary class="linebranchSummary">5/52</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
-            <div class="takenBranch">&check; Branch 2 taken 54 times.</div>
-            <div class="takenBranch">&check; Branch 4 taken 2 times.</div>
+            <div class="functionName">std::array&lt;long, 3ul&gt; nda::permutations::apply&lt;long, int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;long, 3ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 24 times.</div>
+            <div class="functionName">std::array&lt;int, 3ul&gt; nda::permutations::apply&lt;int, int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;int, 3ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 27 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
@@ -1499,47 +1783,84 @@
             <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 22 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="functionName">std::array&lt;int, 4ul&gt; nda::permutations::apply&lt;int, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;, std::array&lt;int, 4ul&gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 19 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 22 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 23 not taken.</div>
+            <div class="functionName">std::array&lt;char, 5ul&gt; nda::permutations::apply&lt;char, int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;, std::array&lt;char, 5ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="takenBranch">&check; Branch 4 taken 2 times.</div>
             <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 19 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 22 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 24 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 25 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">2337</td>
+      <td class="linecount partialCoveredLine">56</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="n">EXPECTS</span><span class="p">(</span><span class="n">is_valid</span><span class="p">(</span><span class="n">p</span><span class="p">));</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l177" href="#l177">177</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">2337</td>
+      <td class="linecount coveredLine">56</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stdutil</span><span class="o">::</span><span class="n">make_initialized_array</span><span class="o">&lt;</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l178" href="#l178">178</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">8/8</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 3 taken 175 times.</div>
-            <div class="takenBranch">&check; Branch 4 taken 56 times.</div>
+            <div class="functionName">std::array&lt;long, 3ul&gt; nda::permutations::apply&lt;long, int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;long, 3ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 3 taken 72 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 24 times.</div>
+            <div class="functionName">std::array&lt;int, 3ul&gt; nda::permutations::apply&lt;int, int, 3ul&gt;(std::array&lt;int, 3ul&gt; const&amp;, std::array&lt;int, 3ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 3 taken 81 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 27 times.</div>
+            <div class="functionName">std::array&lt;int, 4ul&gt; nda::permutations::apply&lt;int, int, 4ul&gt;(std::array&lt;int, 4ul&gt; const&amp;, std::array&lt;int, 4ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 3 taken 12 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 3 times.</div>
+            <div class="functionName">std::array&lt;char, 5ul&gt; nda::permutations::apply&lt;char, int, 5ul&gt;(std::array&lt;int, 5ul&gt; const&amp;, std::array&lt;char, 5ul&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 3 taken 10 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 2 times.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">7635</td>
+      <td class="linecount coveredLine">231</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">u</span><span class="p">)</span><span class="w"> </span><span class="n">result</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="n">u</span><span class="p">]];</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l179" href="#l179">179</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">2337</td>
+      <td class="linecount coveredLine">56</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -1609,35 +1930,45 @@
       <td class="lineno"><a id="l189" href="#l189">189</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">45700</td>
+      <td class="linecount coveredLine">14</td>
       <td class="src coveredLine"><span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;</span><span class="w"> </span><span class="n">identity</span><span class="p">()</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l190" href="#l190">190</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">45700</td>
+      <td class="linecount coveredLine">14</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stdutil</span><span class="o">::</span><span class="n">make_initialized_array</span><span class="o">&lt;</span><span class="n">N</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l191" href="#l191">191</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">8/8</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 30 times.</div>
-            <div class="takenBranch">&check; Branch 2 taken 14 times.</div>
+            <div class="functionName">std::array&lt;int, 1ul&gt; nda::permutations::identity&lt;1ul&gt;():</div>
+            <div class="takenBranch">&check; Branch 1 taken 5 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 5 times.</div>
+            <div class="functionName">std::array&lt;int, 2ul&gt; nda::permutations::identity&lt;2ul&gt;():</div>
+            <div class="takenBranch">&check; Branch 1 taken 6 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 3 times.</div>
+            <div class="functionName">std::array&lt;int, 4ul&gt; nda::permutations::identity&lt;4ul&gt;():</div>
+            <div class="takenBranch">&check; Branch 1 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="functionName">std::array&lt;int, 3ul&gt; nda::permutations::identity&lt;3ul&gt;():</div>
+            <div class="takenBranch">&check; Branch 1 taken 15 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 5 times.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">182473</td>
+      <td class="linecount coveredLine">44</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l192" href="#l192">192</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">45700</td>
+      <td class="linecount coveredLine">14</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -1707,29 +2038,29 @@
       <td class="lineno"><a id="l202" href="#l202">202</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">10</td>
-      <td class="src coveredLine"><span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;</span><span class="w"> </span><span class="n">reverse_identity</span><span class="p">()</span><span class="w"> </span><span class="p">{</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;</span><span class="w"> </span><span class="n">reverse_identity</span><span class="p">()</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l203" href="#l203">203</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">10</td>
-      <td class="src coveredLine"><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stdutil</span><span class="o">::</span><span class="n">make_initialized_array</span><span class="o">&lt;</span><span class="n">N</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stdutil</span><span class="o">::</span><span class="n">make_initialized_array</span><span class="o">&lt;</span><span class="n">N</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l204" href="#l204">204</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">32</td>
-      <td class="src coveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span><span class="p">;</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l205" href="#l205">205</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">10</td>
-      <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l206" href="#l206">206</a></td>
@@ -2053,7 +2384,7 @@
       <hr/>
     </main>
     <footer>
-      Generated by: <a href="http://gcovr.com/en/8.3">GCOVR (Version 8.3)</a>
+      Generated by: <a href="http://gcovr.com/en/8.4">GCOVR (Version 8.4)</a>
     </footer>
   </body>
 </html>

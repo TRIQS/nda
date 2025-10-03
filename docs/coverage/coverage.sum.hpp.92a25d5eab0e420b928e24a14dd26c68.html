@@ -3,7 +3,7 @@
 
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>GCC Code Coverage Report</title>
+    <title>clef/sum.hpp - GCC Code Coverage Report</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="coverage.css"/>
   </head>
@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2025-08-25 15:31:29</td>
+      <td>2025-10-03 19:27:55</td>
     </tr>
   </table>
 </div>
@@ -34,27 +34,31 @@
   <table class="coverage">
     <tr>
       <th></th>
-      <th scope="col">Exec</th>
-      <th scope="col">Total</th>
       <th scope="col">Coverage</th>
+      <th scope="col">Exec</th>
+      <th scope="col">Excl</th>
+      <th scope="col">Total</th>
     </tr>
     <tr>
       <th scope="row">Lines:</th>
-      <td>14</td>
-      <td>14</td>
       <td class="coverage-high">100.0%</td>
+      <td class="coverage-high">48</td>
+      <td class="coverage-high">0</td>
+      <td class="coverage-high">48</td>
     </tr>
     <tr>
       <th scope="row">Functions:</th>
-      <td>14</td>
-      <td>14</td>
       <td class="coverage-high">100.0%</td>
+      <td class="coverage-high">14</td>
+      <td class="coverage-high">0</td>
+      <td class="coverage-high">14</td>
     </tr>
     <tr>
       <th scope="row">Branches:</th>
-      <td>6</td>
-      <td>22</td>
-      <td class="coverage-low">27.3%</td>
+      <td class="coverage-low">25.0%</td>
+      <td class="coverage-low">20</td>
+      <td class="coverage-low">0</td>
+      <td class="coverage-low">80</td>
     </tr>
   </table>
 </div>
@@ -68,22 +72,24 @@
     <tr>
       <th>Function (Line)</th>
       <th>Call count</th>
+      <th>Line coverage</th>
+      <th>Branch coverage</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l28">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;, 1&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;, 1&gt; const&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;) (line 28)</a></td><td>called 2 times</td><td>88.0%</td></tr>
-    <tr><td><a href="#l28">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::reference_wrapper&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt;, 1&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::reference_wrapper&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt;, 1&gt; const&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;) (line 28)</a></td><td>called 2 times</td><td>89.0%</td></tr>
-    <tr><td><a href="#l28">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt;, 0&gt; const&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;) (line 28)</a></td><td>called 2 times</td><td>85.0%</td></tr>
-    <tr><td><a href="#l41">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;) (line 41)</a></td><td>called 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l41">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;) (line 41)</a></td><td>called 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l28">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt;, 0&gt; const&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;) (line 28)</a></td><td>called 12 times</td><td>86.0%</td></tr>
-    <tr><td><a href="#l41">decltype(auto) nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}::operator()&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;) const (line 41)</a></td><td>called 6 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l41">decltype(auto) nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}::operator()&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;) const (line 41)</a></td><td>called 6 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l65">decltype(auto) nda::clef::sum&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;, 1, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; const&amp;, nda::clef::pair&lt;1, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;) (line 65)</a></td><td>called 2 times</td><td>83.0%</td></tr>
-    <tr><td><a href="#l65">decltype(auto) nda::clef::sum&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::reference_wrapper&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt;, 1, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::reference_wrapper&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt; const&amp;, nda::clef::pair&lt;1, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;) (line 65)</a></td><td>called 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l65">decltype(auto) nda::clef::sum&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt;, 0, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt; const&amp;, nda::clef::pair&lt;0, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;) (line 65)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l65">decltype(auto) nda::clef::sum&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt;, 0, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt; const&amp;, nda::clef::pair&lt;0, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;) (line 65)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l65">decltype(auto) nda::clef::sum&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt; const&amp;, nda::clef::pair&lt;0, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;) (line 65)</a></td><td>called 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l65">decltype(auto) nda::clef::sum&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt; const&amp;, nda::clef::pair&lt;0, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;) (line 65)</a></td><td>called 2 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l28">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;, 1&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;, 1&gt; const&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;) (line 28)</a></td><td>called 2 times</td><td>100.0%</td><td>18.8%</td><td>88.0%</td></tr>
+    <tr><td><a href="#l28">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::reference_wrapper&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt;, 1&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::reference_wrapper&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt;, 1&gt; const&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;) (line 28)</a></td><td>called 2 times</td><td>100.0%</td><td>18.8%</td><td>89.0%</td></tr>
+    <tr><td><a href="#l28">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt;, 0&gt; const&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;) (line 28)</a></td><td>called 2 times</td><td>100.0%</td><td>18.8%</td><td>85.0%</td></tr>
+    <tr><td><a href="#l41">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;) (line 41)</a></td><td>called 2 times</td><td>100.0%</td><td>50.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l41">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;) (line 41)</a></td><td>called 2 times</td><td>100.0%</td><td>50.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l28">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt;, 0&gt; const&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;) (line 28)</a></td><td>called 12 times</td><td>100.0%</td><td>18.8%</td><td>86.0%</td></tr>
+    <tr><td><a href="#l41">decltype(auto) nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}::operator()&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;) const (line 41)</a></td><td>called 6 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l41">decltype(auto) nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}::operator()&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;) const (line 41)</a></td><td>called 6 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l65">decltype(auto) nda::clef::sum&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;, 1, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; const&amp;, nda::clef::pair&lt;1, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;) (line 65)</a></td><td>called 2 times</td><td>100.0%</td><td>50.0%</td><td>83.0%</td></tr>
+    <tr><td><a href="#l65">decltype(auto) nda::clef::sum&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::reference_wrapper&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt;, 1, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::reference_wrapper&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt; const&amp;, nda::clef::pair&lt;1, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;) (line 65)</a></td><td>called 2 times</td><td>100.0%</td><td>50.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l65">decltype(auto) nda::clef::sum&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt;, 0, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt; const&amp;, nda::clef::pair&lt;0, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;) (line 65)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l65">decltype(auto) nda::clef::sum&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt;, 0, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt; const&amp;, nda::clef::pair&lt;0, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;) (line 65)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l65">decltype(auto) nda::clef::sum&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt; const&amp;, nda::clef::pair&lt;0, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;) (line 65)</a></td><td>called 2 times</td><td>100.0%</td><td>50.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l65">decltype(auto) nda::clef::sum&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt; const&amp;, nda::clef::pair&lt;0, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;) (line 65)</a></td><td>called 2 times</td><td>100.0%</td><td>50.0%</td><td>100.0%</td></tr>
   </table>
 </details>
 
@@ -290,7 +296,7 @@
       <td class="lineno"><a id="l28" href="#l28">28</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">36</td>
+      <td class="linecount coveredLine">18</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">sum_f_domain_impl</span><span class="p">(</span><span class="n">F</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="n">D</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">d</span><span class="p">)</span></td>
     </tr>
     <tr class="source-line">
@@ -311,24 +317,70 @@
       <td class="lineno"><a id="l31" href="#l31">31</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">36</td>
+      <td class="linecount coveredLine">18</td>
       <td class="src coveredLine"><span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l32" href="#l32">32</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">36</td>
+      <td class="linecount coveredLine">18</td>
       <td class="src coveredLine"><span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">ite</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">end</span><span class="p">();</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l33" href="#l33">33</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/14</summary>
+          <summary class="linebranchSummary">4/56</summary>
           <div class="linebranchContents">
+            <div class="functionName">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;, 1&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;, 1&gt; const&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;):</div>
             <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
-            <div class="takenBranch">&check; Branch 2 taken 18 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 19 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 22 not taken.</div>
+            <div class="functionName">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::reference_wrapper&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt;, 1&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::reference_wrapper&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt;, 1&gt; const&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 19 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 22 not taken.</div>
+            <div class="functionName">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt;, 0&gt; const&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 12 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 10 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 19 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 22 not taken.</div>
+            <div class="functionName">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt;, 0&gt; const&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;):</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
             <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
@@ -344,42 +396,52 @@
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">36</td>
+      <td class="linecount partialCoveredLine">18</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">ite</span><span class="p">)</span><span class="w"> </span><span class="n">NDA_RUNTIME_ERROR</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Error in nda::clef::sum_f_domain_impl: Sum over an empty domain&quot;</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l34" href="#l34">34</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">72</td>
+      <td class="linecount coveredLine">36</td>
       <td class="src coveredLine"><span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">make_regular</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">it</span><span class="p">));</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l35" href="#l35">35</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">36</td>
+      <td class="linecount coveredLine">18</td>
       <td class="src coveredLine"><span class="w">      </span><span class="o">++</span><span class="n">it</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l36" href="#l36">36</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">8/8</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 3 taken 36 times.</div>
-            <div class="takenBranch">&check; Branch 4 taken 18 times.</div>
+            <div class="functionName">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;, 1&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;, 1&gt; const&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 2 times.</div>
+            <div class="functionName">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::reference_wrapper&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt;, 1&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::reference_wrapper&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt;, 1&gt; const&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 2 times.</div>
+            <div class="functionName">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, std::reference_wrapper&lt;int const&gt; &gt;, 0&gt; const&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 3 taken 24 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 12 times.</div>
+            <div class="functionName">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt;, 0&gt; const&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 2 times.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">108</td>
+      <td class="linecount coveredLine">54</td>
       <td class="src coveredLine"><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(;</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">ite</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">it</span><span class="p">)</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">it</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l37" href="#l37">37</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">36</td>
+      <td class="linecount coveredLine">18</td>
       <td class="src coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -407,14 +469,18 @@
       <td class="lineno"><a id="l41" href="#l41">41</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 3 taken 4 times.</div>
+            <div class="functionName">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;):</div>
+            <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="functionName">auto nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;):</div>
+            <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
             <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">40</td>
+      <td class="linecount partialCoveredLine">20</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="n">CLEF_MAKE_FNT_LAZY</span><span class="p">(</span><span class="n">sum_f_domain_impl</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
@@ -582,7 +648,7 @@
       <td class="lineno"><a id="l65" href="#l65">65</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">20</td>
+      <td class="linecount coveredLine">10</td>
       <td class="src coveredLine"><span class="w">  </span><span class="k">decltype</span><span class="p">(</span><span class="k">auto</span><span class="p">)</span><span class="w"> </span><span class="n">sum</span><span class="p">(</span><span class="n">Expr</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ex</span><span class="p">,</span><span class="w"> </span><span class="n">clef</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">D</span><span class="o">&gt;</span><span class="w"> </span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
@@ -596,14 +662,21 @@
       <td class="lineno"><a id="l67" href="#l67">67</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">3/6</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 5 times.</div>
+            <div class="functionName">decltype(auto) nda::clef::sum&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::reference_wrapper&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt;, 1, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::reference_wrapper&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt; const&amp;, nda::clef::pair&lt;1, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="functionName">decltype(auto) nda::clef::sum&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt; const&amp;, nda::clef::pair&lt;0, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="functionName">decltype(auto) nda::clef::sum&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt;, 0, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;(nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt; const&amp;, nda::clef::pair&lt;0, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&gt;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">20</td>
+      <td class="linecount partialCoveredLine">10</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">detail</span><span class="o">::</span><span class="n">sum_f_domain_impl</span><span class="p">(</span><span class="n">make_function</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span><span class="w"> </span><span class="n">clef</span><span class="o">::</span><span class="n">placeholder</span><span class="o">&lt;</span><span class="n">N</span><span class="o">&gt;</span><span class="p">()),</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">rhs</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
@@ -617,14 +690,21 @@
       <td class="lineno"><a id="l69" href="#l69">69</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">3/6</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 5 times.</div>
+            <div class="functionName">decltype(auto) nda::clef::sum&lt;nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;, 1, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::expr&lt;nda::clef::tags::function, nda::clef::detail::sum_f_domain_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;&amp;&amp;, std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0&gt;, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; const&amp;, nda::clef::pair&lt;1, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="functionName">decltype(auto) nda::clef::sum&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 0, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;1&gt; &gt; const&amp;, nda::clef::pair&lt;0, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="functionName">decltype(auto) nda::clef::sum&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt;, 0, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt; const&amp;, nda::clef::pair&lt;0, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">20</td>
+      <td class="linecount partialCoveredLine">10</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">detail</span><span class="o">::</span><span class="n">sum_f_domain_impl</span><span class="p">(</span><span class="n">make_function</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span><span class="w"> </span><span class="n">clef</span><span class="o">::</span><span class="n">placeholder</span><span class="o">&lt;</span><span class="n">N</span><span class="o">&gt;</span><span class="p">()),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">rhs</span><span class="p">));</span></td>
     </tr>
     <tr class="source-line">
@@ -827,15 +907,15 @@
       <td class="lineno"><a id="l98" href="#l98">98</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
-      <td class="src coveredLine"><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">sum</span><span class="p">(</span><span class="n">Expr</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ex</span><span class="p">,</span><span class="w"> </span><span class="n">D0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="n">d0</span><span class="p">,</span><span class="w"> </span><span class="n">D1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="n">d1</span><span class="p">,</span><span class="w"> </span><span class="n">Ds</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="p">...</span><span class="n">ds</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">sum</span><span class="p">(</span><span class="n">Expr</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ex</span><span class="p">,</span><span class="w"> </span><span class="n">D0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="n">d0</span><span class="p">,</span><span class="w"> </span><span class="n">D1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="n">d1</span><span class="p">,</span><span class="w"> </span><span class="n">Ds</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="p">...</span><span class="n">ds</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l99" href="#l99">99</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
-      <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">sum</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">D0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d0</span><span class="p">)),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">D1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d1</span><span class="p">),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">Ds</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ds</span><span class="p">)...);</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">sum</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">D0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d0</span><span class="p">)),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">D1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d1</span><span class="p">),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">Ds</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ds</span><span class="p">)...);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l100" href="#l100">100</a></td>
@@ -884,7 +964,7 @@
       <hr/>
     </main>
     <footer>
-      Generated by: <a href="http://gcovr.com/en/8.3">GCOVR (Version 8.3)</a>
+      Generated by: <a href="http://gcovr.com/en/8.4">GCOVR (Version 8.4)</a>
     </footer>
   </body>
 </html>

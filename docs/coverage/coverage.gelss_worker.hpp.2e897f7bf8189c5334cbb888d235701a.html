@@ -3,7 +3,7 @@
 
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>GCC Code Coverage Report</title>
+    <title>lapack/gelss_worker.hpp - GCC Code Coverage Report</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="coverage.css"/>
   </head>
@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2025-08-25 15:31:29</td>
+      <td>2025-10-03 19:27:55</td>
     </tr>
   </table>
 </div>
@@ -34,27 +34,31 @@
   <table class="coverage">
     <tr>
       <th></th>
-      <th scope="col">Exec</th>
-      <th scope="col">Total</th>
       <th scope="col">Coverage</th>
+      <th scope="col">Exec</th>
+      <th scope="col">Excl</th>
+      <th scope="col">Total</th>
     </tr>
     <tr>
       <th scope="row">Lines:</th>
-      <td>24</td>
-      <td>24</td>
       <td class="coverage-high">100.0%</td>
+      <td class="coverage-high">40</td>
+      <td class="coverage-high">0</td>
+      <td class="coverage-high">40</td>
     </tr>
     <tr>
       <th scope="row">Functions:</th>
-      <td>4</td>
-      <td>4</td>
       <td class="coverage-high">100.0%</td>
+      <td class="coverage-high">4</td>
+      <td class="coverage-high">0</td>
+      <td class="coverage-high">4</td>
     </tr>
     <tr>
       <th scope="row">Branches:</th>
-      <td>30</td>
-      <td>68</td>
-      <td class="coverage-low">44.1%</td>
+      <td class="coverage-low">43.8%</td>
+      <td class="coverage-low">56</td>
+      <td class="coverage-low">0</td>
+      <td class="coverage-low">128</td>
     </tr>
   </table>
 </div>
@@ -68,12 +72,14 @@
     <tr>
       <th>Function (Line)</th>
       <th>Call count</th>
+      <th>Line coverage</th>
+      <th>Branch coverage</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l112">nda::lapack::gelss_worker&lt;double&gt;::gelss_worker(nda::basic_array_view&lt;double const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;) (line 112)</a></td><td>called 1 time</td><td>60.0%</td></tr>
-    <tr><td><a href="#l147">nda::lapack::gelss_worker&lt;double&gt;::operator()(nda::basic_array_view&lt;double const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::optional&lt;long&gt;) const (line 147)</a></td><td>called 1 time</td><td>75.0%</td></tr>
-    <tr><td><a href="#l112">nda::lapack::gelss_worker&lt;std::complex&lt;double&gt; &gt;::gelss_worker(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;) (line 112)</a></td><td>called 1 time</td><td>57.0%</td></tr>
-    <tr><td><a href="#l147">nda::lapack::gelss_worker&lt;std::complex&lt;double&gt; &gt;::operator()(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::optional&lt;long&gt;) const (line 147)</a></td><td>called 1 time</td><td>75.0%</td></tr>
+    <tr><td><a href="#l112">nda::lapack::gelss_worker&lt;double&gt;::gelss_worker(nda::basic_array_view&lt;double const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;) (line 112)</a></td><td>called 1 time</td><td>100.0%</td><td>39.1%</td><td>60.0%</td></tr>
+    <tr><td><a href="#l147">nda::lapack::gelss_worker&lt;double&gt;::operator()(nda::basic_array_view&lt;double const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::optional&lt;long&gt;) const (line 147)</a></td><td>called 1 time</td><td>100.0%</td><td>56.2%</td><td>75.0%</td></tr>
+    <tr><td><a href="#l112">nda::lapack::gelss_worker&lt;std::complex&lt;double&gt; &gt;::gelss_worker(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;) (line 112)</a></td><td>called 1 time</td><td>100.0%</td><td>40.0%</td><td>57.0%</td></tr>
+    <tr><td><a href="#l147">nda::lapack::gelss_worker&lt;std::complex&lt;double&gt; &gt;::operator()(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::optional&lt;long&gt;) const (line 147)</a></td><td>called 1 time</td><td>100.0%</td><td>56.2%</td><td>75.0%</td></tr>
   </table>
 </details>
 
@@ -870,26 +876,44 @@
         <details class="linebranchDetails">
           <summary class="linebranchSummary">3/6</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 6 taken 1 times.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;double&gt;::gelss_worker(nda::basic_array_view&lt;double const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 6 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
-            <div class="takenBranch">&check; Branch 4 taken 1 times.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;std::complex&lt;double&gt; &gt;::gelss_worker(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 4 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-            <div class="takenBranch">&check; Branch 8 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 8 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">4</td>
+      <td class="linecount partialCoveredLine">2</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="n">gelss_worker</span><span class="p">(</span><span class="n">matrix_const_view</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">M_</span><span class="p">(</span><span class="n">A</span><span class="p">.</span><span class="n">extent</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span><span class="w"> </span><span class="n">N_</span><span class="p">(</span><span class="n">A</span><span class="p">.</span><span class="n">extent</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span><span class="w"> </span><span class="n">s_</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">M_</span><span class="p">,</span><span class="w"> </span><span class="n">N_</span><span class="p">))</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l113" href="#l113">113</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/14</summary>
+          <summary class="linebranchSummary">2/28</summary>
           <div class="linebranchContents">
+            <div class="functionName">nda::lapack::gelss_worker&lt;double&gt;::gelss_worker(nda::basic_array_view&lt;double const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;):</div>
             <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
-            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 12 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 15 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 17 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 18 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 21 not taken.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;std::complex&lt;double&gt; &gt;::gelss_worker(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;):</div>
+            <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
@@ -905,7 +929,7 @@
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">4</td>
+      <td class="linecount partialCoveredLine">2</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">N_</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">M_</span><span class="p">)</span><span class="w"> </span><span class="n">NDA_RUNTIME_ERROR</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Error in nda::lapack::gelss_worker: Matrix A cannot have more columns than rows&quot;</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -926,42 +950,54 @@
       <td class="lineno"><a id="l116" href="#l116">116</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;double&gt;::gelss_worker(nda::basic_array_view&lt;double const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;std::complex&lt;double&gt; &gt;::gelss_worker(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">4</td>
+      <td class="linecount partialCoveredLine">2</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="n">matrix</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">F_layout</span><span class="o">&gt;</span><span class="w"> </span><span class="n">A_work</span><span class="p">{</span><span class="n">A</span><span class="p">};</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l117" href="#l117">117</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;double&gt;::gelss_worker(nda::basic_array_view&lt;double const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;std::complex&lt;double&gt; &gt;::gelss_worker(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">4</td>
+      <td class="linecount partialCoveredLine">2</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="n">matrix</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">F_layout</span><span class="o">&gt;</span><span class="w"> </span><span class="n">U</span><span class="p">(</span><span class="n">M_</span><span class="p">,</span><span class="w"> </span><span class="n">M_</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l118" href="#l118">118</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;double&gt;::gelss_worker(nda::basic_array_view&lt;double const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;std::complex&lt;double&gt; &gt;::gelss_worker(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">4</td>
+      <td class="linecount partialCoveredLine">2</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="n">matrix</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">F_layout</span><span class="o">&gt;</span><span class="w"> </span><span class="n">V_H</span><span class="p">(</span><span class="n">N_</span><span class="p">,</span><span class="w"> </span><span class="n">N_</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
@@ -982,14 +1018,18 @@
       <td class="lineno"><a id="l121" href="#l121">121</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;double&gt;::gelss_worker(nda::basic_array_view&lt;double const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;std::complex&lt;double&gt; &gt;::gelss_worker(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">4</td>
+      <td class="linecount partialCoveredLine">2</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="n">gesvd</span><span class="p">(</span><span class="n">A_work</span><span class="p">,</span><span class="w"> </span><span class="n">s_</span><span class="p">,</span><span class="w"> </span><span class="n">U</span><span class="p">,</span><span class="w"> </span><span class="n">V_H</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
@@ -1010,57 +1050,77 @@
       <td class="lineno"><a id="l124" href="#l124">124</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;double&gt;::gelss_worker(nda::basic_array_view&lt;double const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;std::complex&lt;double&gt; &gt;::gelss_worker(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">4</td>
+      <td class="linecount partialCoveredLine">2</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="n">matrix</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="w"> </span><span class="n">F_layout</span><span class="o">&gt;</span><span class="w"> </span><span class="n">S_plus</span><span class="p">(</span><span class="n">N_</span><span class="p">,</span><span class="w"> </span><span class="n">M_</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l125" href="#l125">125</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">      </span><span class="n">S_plus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l126" href="#l126">126</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">3/4</summary>
+          <summary class="linebranchSummary">6/8</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;double&gt;::gelss_worker(nda::basic_array_view&lt;double const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-            <div class="takenBranch">&check; Branch 11 taken 6 times.</div>
-            <div class="takenBranch">&check; Branch 12 taken 2 times.</div>
+            <div class="takenBranch">&check; Branch 11 taken 3 times.</div>
+            <div class="takenBranch">&check; Branch 12 taken 1 time.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;std::complex&lt;double&gt; &gt;::gelss_worker(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="takenBranch">&check; Branch 11 taken 3 times.</div>
+            <div class="takenBranch">&check; Branch 12 taken 1 time.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">28</td>
+      <td class="linecount partialCoveredLine">14</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">range</span><span class="p">(</span><span class="n">s_</span><span class="p">.</span><span class="n">size</span><span class="p">()))</span><span class="w"> </span><span class="n">S_plus</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">s_</span><span class="p">(</span><span class="n">i</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l127" href="#l127">127</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">4/8</summary>
+          <summary class="linebranchSummary">8/16</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;double&gt;::gelss_worker(nda::basic_array_view&lt;double const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-            <div class="takenBranch">&check; Branch 4 taken 2 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-            <div class="takenBranch">&check; Branch 7 taken 2 times.</div>
+            <div class="takenBranch">&check; Branch 7 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-            <div class="takenBranch">&check; Branch 10 taken 2 times.</div>
+            <div class="takenBranch">&check; Branch 10 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;std::complex&lt;double&gt; &gt;::gelss_worker(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 4 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="takenBranch">&check; Branch 10 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">4</td>
+      <td class="linecount partialCoveredLine">2</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="n">A_plus_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dagger</span><span class="p">(</span><span class="n">V_H</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">S_plus</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dagger</span><span class="p">(</span><span class="n">U</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
@@ -1081,29 +1141,39 @@
       <td class="lineno"><a id="l130" href="#l130">130</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">5/10</summary>
+          <summary class="linebranchSummary">9/18</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 0 taken 2 times.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;double&gt;::gelss_worker(nda::basic_array_view&lt;double const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
-            <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-            <div class="takenBranch">&check; Branch 6 taken 2 times.</div>
+            <div class="takenBranch">&check; Branch 6 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
-            <div class="takenBranch">&check; Branch 10 taken 2 times.</div>
+            <div class="takenBranch">&check; Branch 10 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-            <div class="takenBranch">&check; Branch 13 taken 1 times.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;std::complex&lt;double&gt; &gt;::gelss_worker(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 6 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="takenBranch">&check; Branch 10 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="takenBranch">&check; Branch 13 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">6</td>
+      <td class="linecount partialCoveredLine">3</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">N_</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">M_</span><span class="p">)</span><span class="w"> </span><span class="n">U_N_H_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dagger</span><span class="p">(</span><span class="n">U</span><span class="p">)(</span><span class="n">range</span><span class="p">(</span><span class="n">N_</span><span class="p">,</span><span class="w"> </span><span class="n">M_</span><span class="p">),</span><span class="w"> </span><span class="n">range</span><span class="p">(</span><span class="n">M_</span><span class="p">));</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l131" href="#l131">131</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">    </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
@@ -1215,7 +1285,7 @@
       <td class="lineno"><a id="l147" href="#l147">147</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="k">operator</span><span class="p">()(</span><span class="n">matrix_const_view</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">long</span><span class="o">&gt;</span><span class="w"> </span><span class="cm">/* inner_matrix_dim */</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{})</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
@@ -1229,85 +1299,109 @@
       <td class="lineno"><a id="l149" href="#l149">149</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l150" href="#l150">150</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 0 taken 2 times.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;double&gt;::operator()(nda::basic_array_view&lt;double const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::optional&lt;long&gt;) const:</div>
+            <div class="takenBranch">&check; Branch 0 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;std::complex&lt;double&gt; &gt;::operator()(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::optional&lt;long&gt;) const:</div>
+            <div class="takenBranch">&check; Branch 0 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">4</td>
+      <td class="linecount partialCoveredLine">2</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">M_</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">N_</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l151" href="#l151">151</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">err_vec</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l152" href="#l152">152</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">6/10</summary>
+          <summary class="linebranchSummary">12/20</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;double&gt;::operator()(nda::basic_array_view&lt;double const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::optional&lt;long&gt;) const:</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-            <div class="takenBranch">&check; Branch 10 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 10 taken 2 times.</div>
             <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-            <div class="takenBranch">&check; Branch 13 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 13 taken 2 times.</div>
             <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-            <div class="takenBranch">&check; Branch 19 taken 4 times.</div>
+            <div class="takenBranch">&check; Branch 19 taken 2 times.</div>
             <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
-            <div class="takenBranch">&check; Branch 24 taken 4 times.</div>
-            <div class="takenBranch">&check; Branch 25 taken 2 times.</div>
+            <div class="takenBranch">&check; Branch 24 taken 2 times.</div>
+            <div class="takenBranch">&check; Branch 25 taken 1 time.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;std::complex&lt;double&gt; &gt;::operator()(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::optional&lt;long&gt;) const:</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 10 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="takenBranch">&check; Branch 13 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="takenBranch">&check; Branch 19 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 20 not taken.</div>
+            <div class="takenBranch">&check; Branch 24 taken 2 times.</div>
+            <div class="takenBranch">&check; Branch 25 taken 1 time.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">12</td>
+      <td class="linecount partialCoveredLine">6</td>
       <td class="src partialCoveredLine"><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">range</span><span class="p">(</span><span class="n">B</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">]))</span><span class="w"> </span><span class="n">err_vec</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">frobenius_norm</span><span class="p">(</span><span class="n">U_N_H_</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">(</span><span class="n">range</span><span class="o">::</span><span class="n">all</span><span class="p">,</span><span class="w"> </span><span class="n">range</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">sqrt</span><span class="p">(</span><span class="n">B</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">]));</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l153" href="#l153">153</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;double&gt;::operator()(nda::basic_array_view&lt;double const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::optional&lt;long&gt;) const:</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;std::complex&lt;double&gt; &gt;::operator()(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::optional&lt;long&gt;) const:</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">4</td>
+      <td class="linecount partialCoveredLine">2</td>
       <td class="src partialCoveredLine"><span class="w">        </span><span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">std</span><span class="o">::</span><span class="n">ranges</span><span class="o">::</span><span class="n">max_element</span><span class="p">(</span><span class="n">err_vec</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l154" href="#l154">154</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">4</td>
+      <td class="linecount coveredLine">2</td>
       <td class="src coveredLine"><span class="w">      </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l155" href="#l155">155</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;double&gt;::operator()(nda::basic_array_view&lt;double const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::optional&lt;long&gt;) const:</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">nda::lapack::gelss_worker&lt;std::complex&lt;double&gt; &gt;::operator()(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt;, std::optional&lt;long&gt;) const:</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">4</td>
+      <td class="linecount partialCoveredLine">2</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">matrix</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;</span><span class="p">{</span><span class="n">A_plus_</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">};</span></td>
     </tr>
     <tr class="source-line">
@@ -1398,8 +1492,8 @@
       <td class="lineno"><a id="l168" href="#l168">168</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">2</td>
-      <td class="src coveredLine"><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="k">operator</span><span class="p">()(</span><span class="n">vector_const_view</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">long</span><span class="o">&gt;</span><span class="w"> </span><span class="cm">/*inner_matrix_dim*/</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{})</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="k">operator</span><span class="p">()(</span><span class="n">vector_const_view</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">long</span><span class="o">&gt;</span><span class="w"> </span><span class="cm">/*inner_matrix_dim*/</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{})</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l169" href="#l169">169</a></td>
@@ -1412,22 +1506,22 @@
       <td class="lineno"><a id="l170" href="#l170">170</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">2</td>
-      <td class="src coveredLine"><span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l171" href="#l171">171</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">2</td>
-      <td class="src coveredLine"><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">M_</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">N_</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">norm</span><span class="p">(</span><span class="n">U_N_H_</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">size</span><span class="p">());</span><span class="w"> </span><span class="p">}</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">M_</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">N_</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">norm</span><span class="p">(</span><span class="n">U_N_H_</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">size</span><span class="p">());</span><span class="w"> </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l172" href="#l172">172</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">2</td>
-      <td class="src coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;</span><span class="p">{</span><span class="n">A_plus_</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">};</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;</span><span class="p">{</span><span class="n">A_plus_</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">};</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l173" href="#l173">173</a></td>
@@ -2141,7 +2235,7 @@
       <hr/>
     </main>
     <footer>
-      Generated by: <a href="http://gcovr.com/en/8.3">GCOVR (Version 8.3)</a>
+      Generated by: <a href="http://gcovr.com/en/8.4">GCOVR (Version 8.4)</a>
     </footer>
   </body>
 </html>

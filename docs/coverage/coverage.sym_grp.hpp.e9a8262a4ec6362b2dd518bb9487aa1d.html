@@ -3,7 +3,7 @@
 
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>GCC Code Coverage Report</title>
+    <title>sym_grp.hpp - GCC Code Coverage Report</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="coverage.css"/>
   </head>
@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2025-08-25 15:31:29</td>
+      <td>2025-10-03 19:27:55</td>
     </tr>
   </table>
 </div>
@@ -34,27 +34,31 @@
   <table class="coverage">
     <tr>
       <th></th>
-      <th scope="col">Exec</th>
-      <th scope="col">Total</th>
       <th scope="col">Coverage</th>
+      <th scope="col">Exec</th>
+      <th scope="col">Excl</th>
+      <th scope="col">Total</th>
     </tr>
     <tr>
       <th scope="row">Lines:</th>
-      <td>72</td>
-      <td>75</td>
-      <td class="coverage-high">96.0%</td>
+      <td class="coverage-high">95.2%</td>
+      <td class="coverage-high">99</td>
+      <td class="coverage-high">0</td>
+      <td class="coverage-high">104</td>
     </tr>
     <tr>
       <th scope="row">Functions:</th>
-      <td>17</td>
-      <td>17</td>
       <td class="coverage-high">100.0%</td>
+      <td class="coverage-high">17</td>
+      <td class="coverage-high">0</td>
+      <td class="coverage-high">17</td>
     </tr>
     <tr>
       <th scope="row">Branches:</th>
-      <td>76</td>
-      <td>128</td>
-      <td class="coverage-low">59.4%</td>
+      <td class="coverage-low">58.3%</td>
+      <td class="coverage-low">109</td>
+      <td class="coverage-low">0</td>
+      <td class="coverage-low">187</td>
     </tr>
   </table>
 </div>
@@ -68,25 +72,27 @@
     <tr>
       <th>Function (Line)</th>
       <th>Call count</th>
+      <th>Line coverage</th>
+      <th>Branch coverage</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l78">bool nda::is_valid&lt;nda::basic_array&lt;bool, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;bool, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::array&lt;long, static_cast&lt;unsigned long&gt;(get_rank&lt;nda::basic_array&lt;bool, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;)&gt; const&amp;) (line 78)</a></td><td>called 192 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l78">bool nda::is_valid&lt;nda::basic_array&lt;bool, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;bool, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::array&lt;long, static_cast&lt;unsigned long&gt;(get_rank&lt;nda::basic_array&lt;bool, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;)&gt; const&amp;) (line 78)</a></td><td>called 384 times</td><td>87.0%</td></tr>
-    <tr><td><a href="#l53">nda::operation::operator*(nda::operation const&amp;) (line 53)</a></td><td>called 576 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l252">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::get_representative_data(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) const (line 252)</a></td><td>called 6 times</td><td>78.0%</td></tr>
-    <tr><td><a href="#l161">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::get_sym_classes() const (line 161)</a></td><td>called 6 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l286">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::sym_grp(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::vector&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, std::allocator&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt; &gt; &gt; const&amp;, long) (line 286)</a></td><td>called 6 times</td><td>81.0%</td></tr>
-    <tr><td><a href="#l217">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const (line 217)</a></td><td>called 12 times</td><td>84.0%</td></tr>
-    <tr><td><a href="#l252">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::get_representative_data(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) const (line 252)</a></td><td>called 3 times</td><td>78.0%</td></tr>
-    <tr><td><a href="#l161">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::get_sym_classes() const (line 161)</a></td><td>called 3 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l286">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::sym_grp(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::vector&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, std::allocator&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt; &gt; &gt; const&amp;, long) (line 286)</a></td><td>called 3 times</td><td>89.0%</td></tr>
-    <tr><td><a href="#l217">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const (line 217)</a></td><td>called 9 times</td><td>84.0%</td></tr>
-    <tr><td><a href="#l63">std::complex&lt;double&gt; nda::operation::operator()&lt;std::complex&lt;double&gt; &gt;(std::complex&lt;double&gt; const&amp;) const (line 63)</a></td><td>called 2016 times</td><td>42.0%</td></tr>
-    <tr><td><a href="#l182">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init&lt;NDA_SymGrpMatrixFlipShift_Test::TestBody()::{lambda(std::array&lt;long, 2ul&gt; const&amp;)#3}&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, NDA_SymGrpMatrixFlipShift_Test::TestBody()::{lambda(std::array&lt;long, 2ul&gt; const&amp;)#3} const&amp;, bool) const (line 182)</a></td><td>called 3 times</td><td>60.0%</td></tr>
-    <tr><td><a href="#l182">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init&lt;NDA_SymGrpMatrixPermutation_Test::TestBody()::{lambda(std::array&lt;long, 2ul&gt; const&amp;)#3}&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, NDA_SymGrpMatrixPermutation_Test::TestBody()::{lambda(std::array&lt;long, 2ul&gt; const&amp;)#3} const&amp;, bool) const (line 182)</a></td><td>called 3 times</td><td>60.0%</td></tr>
-    <tr><td><a href="#l266">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init_from_representative_data&lt;std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; const&amp;) const (line 266)</a></td><td>called 6 times</td><td>92.0%</td></tr>
-    <tr><td><a href="#l182">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init&lt;NDA_SymGrpTensorCylicTriplet_Test::TestBody()::{lambda(std::array&lt;long, 6ul&gt; const&amp;)#3}&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, NDA_SymGrpTensorCylicTriplet_Test::TestBody()::{lambda(std::array&lt;long, 6ul&gt; const&amp;)#3} const&amp;, bool) const (line 182)</a></td><td>called 3 times</td><td>60.0%</td></tr>
-    <tr><td><a href="#l266">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init_from_representative_data&lt;std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; const&amp;) const (line 266)</a></td><td>called 3 times</td><td>92.0%</td></tr>
+    <tr><td><a href="#l78">bool nda::is_valid&lt;nda::basic_array&lt;bool, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;bool, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::array&lt;long, static_cast&lt;unsigned long&gt;(get_rank&lt;nda::basic_array&lt;bool, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;)&gt; const&amp;) (line 78)</a></td><td>called 192 times</td><td>100.0%</td><td>87.5%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l78">bool nda::is_valid&lt;nda::basic_array&lt;bool, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;bool, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::array&lt;long, static_cast&lt;unsigned long&gt;(get_rank&lt;nda::basic_array&lt;bool, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;)&gt; const&amp;) (line 78)</a></td><td>called 384 times</td><td>100.0%</td><td>62.5%</td><td>87.0%</td></tr>
+    <tr><td><a href="#l53">nda::operation::operator*(nda::operation const&amp;) (line 53)</a></td><td>called 576 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l252">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::get_representative_data(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) const (line 252)</a></td><td>called 6 times</td><td>83.3%</td><td>60.0%</td><td>78.0%</td></tr>
+    <tr><td><a href="#l161">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::get_sym_classes() const (line 161)</a></td><td>called 6 times</td><td>100.0%</td><td>58.3%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l286">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::sym_grp(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::vector&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, std::allocator&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt; &gt; &gt; const&amp;, long) (line 286)</a></td><td>called 6 times</td><td>100.0%</td><td>50.0%</td><td>81.0%</td></tr>
+    <tr><td><a href="#l217">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const (line 217)</a></td><td>called 12 times</td><td>100.0%</td><td>66.7%</td><td>84.0%</td></tr>
+    <tr><td><a href="#l252">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::get_representative_data(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) const (line 252)</a></td><td>called 3 times</td><td>83.3%</td><td>60.0%</td><td>78.0%</td></tr>
+    <tr><td><a href="#l161">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::get_sym_classes() const (line 161)</a></td><td>called 3 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l286">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::sym_grp(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::vector&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, std::allocator&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt; &gt; &gt; const&amp;, long) (line 286)</a></td><td>called 3 times</td><td>100.0%</td><td>50.0%</td><td>89.0%</td></tr>
+    <tr><td><a href="#l217">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const (line 217)</a></td><td>called 9 times</td><td>100.0%</td><td>66.7%</td><td>84.0%</td></tr>
+    <tr><td><a href="#l63">std::complex&lt;double&gt; nda::operation::operator()&lt;std::complex&lt;double&gt; &gt;(std::complex&lt;double&gt; const&amp;) const (line 63)</a></td><td>called 2016 times</td><td>100.0%</td><td>33.3%</td><td>42.0%</td></tr>
+    <tr><td><a href="#l182">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init&lt;NDA_SymGrpMatrixFlipShift_Test::TestBody()::{lambda(std::array&lt;long, 2ul&gt; const&amp;)#3}&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, NDA_SymGrpMatrixFlipShift_Test::TestBody()::{lambda(std::array&lt;long, 2ul&gt; const&amp;)#3} const&amp;, bool) const (line 182)</a></td><td>called 3 times</td><td>87.5%</td><td>16.7%</td><td>60.0%</td></tr>
+    <tr><td><a href="#l182">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init&lt;NDA_SymGrpMatrixPermutation_Test::TestBody()::{lambda(std::array&lt;long, 2ul&gt; const&amp;)#3}&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, NDA_SymGrpMatrixPermutation_Test::TestBody()::{lambda(std::array&lt;long, 2ul&gt; const&amp;)#3} const&amp;, bool) const (line 182)</a></td><td>called 3 times</td><td>87.5%</td><td>16.7%</td><td>60.0%</td></tr>
+    <tr><td><a href="#l266">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init_from_representative_data&lt;std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; const&amp;) const (line 266)</a></td><td>called 6 times</td><td>100.0%</td><td>65.2%</td><td>92.0%</td></tr>
+    <tr><td><a href="#l182">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init&lt;NDA_SymGrpTensorCylicTriplet_Test::TestBody()::{lambda(std::array&lt;long, 6ul&gt; const&amp;)#3}&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, NDA_SymGrpTensorCylicTriplet_Test::TestBody()::{lambda(std::array&lt;long, 6ul&gt; const&amp;)#3} const&amp;, bool) const (line 182)</a></td><td>called 3 times</td><td>87.5%</td><td>16.7%</td><td>60.0%</td></tr>
+    <tr><td><a href="#l266">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init_from_representative_data&lt;std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; const&amp;) const (line 266)</a></td><td>called 3 times</td><td>100.0%</td><td>66.7%</td><td>92.0%</td></tr>
   </table>
 </details>
 
@@ -659,39 +665,51 @@
       <td class="lineno"><a id="l78" href="#l78">78</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">1152</td>
+      <td class="linecount coveredLine">576</td>
       <td class="src coveredLine"><span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_valid</span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">long</span><span class="p">,</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">get_rank</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span><span class="p">)</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">idx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l79" href="#l79">79</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">4/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 0 taken 2676 times.</div>
-            <div class="takenBranch">&check; Branch 1 taken 564 times.</div>
+            <div class="functionName">bool nda::is_valid&lt;nda::basic_array&lt;bool, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;bool, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::array&lt;long, static_cast&lt;unsigned long&gt;(get_rank&lt;nda::basic_array&lt;bool, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;)&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 2304 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 384 times.</div>
+            <div class="functionName">bool nda::is_valid&lt;nda::basic_array&lt;bool, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;bool, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::array&lt;long, static_cast&lt;unsigned long&gt;(get_rank&lt;nda::basic_array&lt;bool, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;)&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 0 taken 372 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 180 times.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">6480</td>
+      <td class="linecount coveredLine">3240</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">get_rank</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l80" href="#l80">80</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">5/6</summary>
+          <summary class="linebranchSummary">8/12</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 2676 times.</div>
+            <div class="functionName">bool nda::is_valid&lt;nda::basic_array&lt;bool, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;bool, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::array&lt;long, static_cast&lt;unsigned long&gt;(get_rank&lt;nda::basic_array&lt;bool, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;)&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 2304 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 2304 times.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="takenBranch">&check; Branch 9 taken 2304 times.</div>
+            <div class="functionName">bool nda::is_valid&lt;nda::basic_array&lt;bool, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;bool, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::array&lt;long, static_cast&lt;unsigned long&gt;(get_rank&lt;nda::basic_array&lt;bool, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;)&gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 372 times.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
             <div class="takenBranch">&check; Branch 6 taken 12 times.</div>
-            <div class="takenBranch">&check; Branch 7 taken 2664 times.</div>
+            <div class="takenBranch">&check; Branch 7 taken 360 times.</div>
             <div class="takenBranch">&check; Branch 8 taken 12 times.</div>
-            <div class="takenBranch">&check; Branch 9 taken 2664 times.</div>
+            <div class="takenBranch">&check; Branch 9 taken 360 times.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">5352</td>
+      <td class="linecount partialCoveredLine">2676</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">not</span><span class="p">(</span><span class="mi">0</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">idx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">idx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="n">i</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"> </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
@@ -705,7 +723,7 @@
       <td class="lineno"><a id="l82" href="#l82">82</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">1128</td>
+      <td class="linecount coveredLine">564</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -1257,9 +1275,50 @@
     <tr class="source-line">
       <td class="lineno"><a id="l161" href="#l161">161</a></td>
       <td class="linebranch">
+        <details class="linebranchDetails">
+          <summary class="linebranchSummary">21/36</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 64 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 3 taken 32 times.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 4 taken 4 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="takenBranch">&check; Branch 6 taken 128 times.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 24 times.</div>
+            <div class="takenBranch">&check; Branch 8 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="takenBranch">&check; Branch 10 taken 128 times.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="takenBranch">&check; Branch 13 taken 12 times.</div>
+            <div class="takenBranch">&check; Branch 13 taken 128 times.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="takenBranch">&check; Branch 17 taken 128 times.</div>
+            <div class="takenBranch">&check; Branch 18 taken 32 times.</div>
+            <div class="takenBranch">&check; Branch 25 taken 32 times.</div>
+            <div class="notTakenBranch">&cross; Branch 26 not taken.</div>
+            <div class="takenBranch">&check; Branch 29 taken 32 times.</div>
+            <div class="notTakenBranch">&cross; Branch 30 not taken.</div>
+            <div class="takenBranch">&check; Branch 32 taken 32 times.</div>
+            <div class="notTakenBranch">&cross; Branch 33 not taken.</div>
+            <div class="takenBranch">&check; Branch 36 taken 32 times.</div>
+            <div class="takenBranch">&check; Branch 37 taken 2 times.</div>
+            <div class="takenBranch">&check; Branch 44 taken 32 times.</div>
+            <div class="notTakenBranch">&cross; Branch 45 not taken.</div>
+            <div class="takenBranch">&check; Branch 48 taken 32 times.</div>
+            <div class="notTakenBranch">&cross; Branch 49 not taken.</div>
+            <div class="takenBranch">&check; Branch 51 taken 32 times.</div>
+            <div class="notTakenBranch">&cross; Branch 52 not taken.</div>
+            <div class="takenBranch">&check; Branch 55 taken 32 times.</div>
+            <div class="takenBranch">&check; Branch 56 taken 12 times.</div>
+          </div>
+        </details>
       </td>
-      <td class="linecount coveredLine">18</td>
-      <td class="src coveredLine"><span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sym_class_t</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">get_sym_classes</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">sym_classes</span><span class="p">;</span><span class="w"> </span><span class="p">}</span></td>
+      <td class="linecount partialCoveredLine">9</td>
+      <td class="src partialCoveredLine"><span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">sym_class_t</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">get_sym_classes</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">sym_classes</span><span class="p">;</span><span class="w"> </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l162" href="#l162">162</a></td>
@@ -1405,105 +1464,43 @@
       <td class="lineno"><a id="l182" href="#l182">182</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">18</td>
+      <td class="linecount coveredLine">9</td>
       <td class="src coveredLine"><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">init</span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">init_func</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">parallel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l183" href="#l183">183</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">64</td>
+      <td class="linecount coveredLine">9</td>
       <td class="src coveredLine"><span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">init_with_sym</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">sym_class_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sym_class</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l184" href="#l184">184</a></td>
       <td class="linebranch">
-        <details class="linebranchDetails">
-          <summary class="linebranchSummary">3/6</summary>
-          <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 3 taken 32 times.</div>
-            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-            <div class="takenBranch">&check; Branch 8 taken 2 times.</div>
-            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-            <div class="takenBranch">&check; Branch 13 taken 12 times.</div>
-            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-          </div>
-        </details>
       </td>
-      <td class="linecount partialCoveredLine">46</td>
-      <td class="src partialCoveredLine"><span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">idx</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">indexmap</span><span class="p">().</span><span class="n">to_idx</span><span class="p">(</span><span class="n">sym_class</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">first</span><span class="p">);</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">idx</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">indexmap</span><span class="p">().</span><span class="n">to_idx</span><span class="p">(</span><span class="n">sym_class</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">first</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l185" href="#l185">185</a></td>
       <td class="linebranch">
-        <details class="linebranchDetails">
-          <summary class="linebranchSummary">3/6</summary>
-          <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 32 times.</div>
-            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-            <div class="takenBranch">&check; Branch 4 taken 2 times.</div>
-            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-            <div class="takenBranch">&check; Branch 7 taken 12 times.</div>
-            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          </div>
-        </details>
       </td>
-      <td class="linecount partialCoveredLine">46</td>
-      <td class="src partialCoveredLine"><span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">ref_val</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">init_func</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">ref_val</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">init_func</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l186" href="#l186">186</a></td>
       <td class="linebranch">
-        <details class="linebranchDetails">
-          <summary class="linebranchSummary">3/6</summary>
-          <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 32 times.</div>
-            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-            <div class="takenBranch">&check; Branch 4 taken 2 times.</div>
-            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-            <div class="takenBranch">&check; Branch 7 taken 12 times.</div>
-            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-          </div>
-        </details>
       </td>
-      <td class="linecount partialCoveredLine">46</td>
-      <td class="src partialCoveredLine"><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">apply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">idx</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ref_val</span><span class="p">;</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">apply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">idx</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ref_val</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l187" href="#l187">187</a></td>
       <td class="linebranch">
-        <details class="linebranchDetails">
-          <summary class="linebranchSummary">15/24</summary>
-          <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 6 taken 128 times.</div>
-            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
-            <div class="takenBranch">&check; Branch 10 taken 128 times.</div>
-            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-            <div class="takenBranch">&check; Branch 13 taken 128 times.</div>
-            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-            <div class="takenBranch">&check; Branch 17 taken 128 times.</div>
-            <div class="takenBranch">&check; Branch 18 taken 32 times.</div>
-            <div class="takenBranch">&check; Branch 25 taken 32 times.</div>
-            <div class="notTakenBranch">&cross; Branch 26 not taken.</div>
-            <div class="takenBranch">&check; Branch 29 taken 32 times.</div>
-            <div class="notTakenBranch">&cross; Branch 30 not taken.</div>
-            <div class="takenBranch">&check; Branch 32 taken 32 times.</div>
-            <div class="notTakenBranch">&cross; Branch 33 not taken.</div>
-            <div class="takenBranch">&check; Branch 36 taken 32 times.</div>
-            <div class="takenBranch">&check; Branch 37 taken 2 times.</div>
-            <div class="takenBranch">&check; Branch 44 taken 32 times.</div>
-            <div class="notTakenBranch">&cross; Branch 45 not taken.</div>
-            <div class="takenBranch">&check; Branch 48 taken 32 times.</div>
-            <div class="notTakenBranch">&cross; Branch 49 not taken.</div>
-            <div class="takenBranch">&check; Branch 51 taken 32 times.</div>
-            <div class="notTakenBranch">&cross; Branch 52 not taken.</div>
-            <div class="takenBranch">&check; Branch 55 taken 32 times.</div>
-            <div class="takenBranch">&check; Branch 56 taken 12 times.</div>
-          </div>
-        </details>
       </td>
-      <td class="linecount partialCoveredLine">238</td>
-      <td class="src partialCoveredLine"><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="p">[</span><span class="n">lin_idx</span><span class="p">,</span><span class="w"> </span><span class="n">op</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">sym_class</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">apply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">indexmap</span><span class="p">().</span><span class="n">to_idx</span><span class="p">(</span><span class="n">lin_idx</span><span class="p">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">(</span><span class="n">ref_val</span><span class="p">);</span><span class="w"> </span><span class="p">}</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="p">[</span><span class="n">lin_idx</span><span class="p">,</span><span class="w"> </span><span class="n">op</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">sym_class</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">apply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">indexmap</span><span class="p">().</span><span class="n">to_idx</span><span class="p">(</span><span class="n">lin_idx</span><span class="p">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">(</span><span class="n">ref_val</span><span class="p">);</span><span class="w"> </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l188" href="#l188">188</a></td>
@@ -1523,14 +1520,21 @@
       <td class="lineno"><a id="l190" href="#l190">190</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">3/6</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 0 taken 9 times.</div>
+            <div class="functionName">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init&lt;NDA_SymGrpTensorCylicTriplet_Test::TestBody()::{lambda(std::array&lt;long, 6ul&gt; const&amp;)#3}&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, NDA_SymGrpTensorCylicTriplet_Test::TestBody()::{lambda(std::array&lt;long, 6ul&gt; const&amp;)#3} const&amp;, bool) const:</div>
+            <div class="takenBranch">&check; Branch 0 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="functionName">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init&lt;NDA_SymGrpMatrixFlipShift_Test::TestBody()::{lambda(std::array&lt;long, 2ul&gt; const&amp;)#3}&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, NDA_SymGrpMatrixFlipShift_Test::TestBody()::{lambda(std::array&lt;long, 2ul&gt; const&amp;)#3} const&amp;, bool) const:</div>
+            <div class="takenBranch">&check; Branch 0 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="functionName">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init&lt;NDA_SymGrpMatrixPermutation_Test::TestBody()::{lambda(std::array&lt;long, 2ul&gt; const&amp;)#3}&gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, NDA_SymGrpMatrixPermutation_Test::TestBody()::{lambda(std::array&lt;long, 2ul&gt; const&amp;)#3} const&amp;, bool) const:</div>
+            <div class="takenBranch">&check; Branch 0 taken 3 times.</div>
             <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">18</td>
+      <td class="linecount partialCoveredLine">9</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">parallel</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
@@ -1544,7 +1548,7 @@
       <td class="lineno"><a id="l192" href="#l192">192</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">36</td>
+      <td class="linecount coveredLine">18</td>
       <td class="src coveredLine"><span class="w">        </span><span class="n">a</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span><span class="w"> </span><span class="c1">// Required for MPI reduce below</span></td>
     </tr>
     <tr class="source-line">
@@ -1565,7 +1569,7 @@
       <td class="lineno"><a id="l195" href="#l195">195</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">18</td>
+      <td class="linecount coveredLine">9</td>
       <td class="src coveredLine"><span class="cp">#pragma omp parallel for</span></td>
     </tr>
     <tr class="source-line">
@@ -1593,7 +1597,7 @@
       <td class="lineno"><a id="l199" href="#l199">199</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">36</td>
+      <td class="linecount coveredLine">18</td>
       <td class="src coveredLine"><span class="w">        </span><span class="n">mpi</span><span class="o">::</span><span class="n">all_reduce_in_place</span><span class="p">(</span><span class="n">a</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
@@ -1642,7 +1646,7 @@
       <td class="lineno"><a id="l206" href="#l206">206</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">18</td>
+      <td class="linecount coveredLine">9</td>
       <td class="src coveredLine"><span class="w">    </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
@@ -1719,7 +1723,7 @@
       <td class="lineno"><a id="l217" href="#l217">217</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">42</td>
+      <td class="linecount coveredLine">21</td>
       <td class="src coveredLine"><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="w"> </span><span class="n">arr_idx_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symmetrize</span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
@@ -1733,28 +1737,32 @@
       <td class="lineno"><a id="l219" href="#l219">219</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">42</td>
+      <td class="linecount coveredLine">21</td>
       <td class="src coveredLine"><span class="w">      </span><span class="kt">double</span><span class="w"> </span><span class="n">max_diff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l220" href="#l220">220</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">42</td>
+      <td class="linecount coveredLine">21</td>
       <td class="src coveredLine"><span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">max_idx</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">arr_idx_t</span><span class="p">{};</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l221" href="#l221">221</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">4/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 5 taken 186 times.</div>
-            <div class="takenBranch">&check; Branch 6 taken 21 times.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 5 taken 144 times.</div>
+            <div class="takenBranch">&check; Branch 6 taken 9 times.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 5 taken 42 times.</div>
+            <div class="takenBranch">&check; Branch 6 taken 12 times.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">414</td>
+      <td class="linecount coveredLine">207</td>
       <td class="src coveredLine"><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sym_class</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">sym_classes</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
@@ -1768,34 +1776,44 @@
       <td class="lineno"><a id="l223" href="#l223">223</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">372</td>
+      <td class="linecount coveredLine">186</td>
       <td class="src coveredLine"><span class="w">        </span><span class="n">get_value_t</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ref_val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l224" href="#l224">224</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">5/8</summary>
+          <summary class="linebranchSummary">10/16</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 7 taken 768 times.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 7 taken 576 times.</div>
             <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
-            <div class="takenBranch">&check; Branch 10 taken 768 times.</div>
+            <div class="takenBranch">&check; Branch 10 taken 576 times.</div>
             <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-            <div class="takenBranch">&check; Branch 13 taken 768 times.</div>
+            <div class="takenBranch">&check; Branch 13 taken 576 times.</div>
             <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-            <div class="takenBranch">&check; Branch 18 taken 768 times.</div>
-            <div class="takenBranch">&check; Branch 19 taken 186 times.</div>
+            <div class="takenBranch">&check; Branch 18 taken 576 times.</div>
+            <div class="takenBranch">&check; Branch 19 taken 144 times.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 7 taken 192 times.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="takenBranch">&check; Branch 10 taken 192 times.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="takenBranch">&check; Branch 13 taken 192 times.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="takenBranch">&check; Branch 18 taken 192 times.</div>
+            <div class="takenBranch">&check; Branch 19 taken 42 times.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">1908</td>
+      <td class="linecount partialCoveredLine">954</td>
       <td class="src partialCoveredLine"><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="p">[</span><span class="n">lin_idx</span><span class="p">,</span><span class="w"> </span><span class="n">op</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">sym_class</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">ref_val</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">op</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">apply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">indexmap</span><span class="p">().</span><span class="n">to_idx</span><span class="p">(</span><span class="n">lin_idx</span><span class="p">)));</span><span class="w"> </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l225" href="#l225">225</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">372</td>
+      <td class="linecount coveredLine">186</td>
       <td class="src coveredLine"><span class="w">        </span><span class="n">ref_val</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="n">sym_class</span><span class="p">.</span><span class="n">size</span><span class="p">();</span></td>
     </tr>
     <tr class="source-line">
@@ -1816,70 +1834,90 @@
       <td class="lineno"><a id="l228" href="#l228">228</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">4/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 6 taken 768 times.</div>
-            <div class="takenBranch">&check; Branch 7 taken 186 times.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 6 taken 576 times.</div>
+            <div class="takenBranch">&check; Branch 7 taken 144 times.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 6 taken 192 times.</div>
+            <div class="takenBranch">&check; Branch 7 taken 42 times.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">1908</td>
+      <td class="linecount coveredLine">954</td>
       <td class="src coveredLine"><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="p">[</span><span class="n">lin_idx</span><span class="p">,</span><span class="w"> </span><span class="n">op</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">sym_class</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l229" href="#l229">229</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 768 times.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 1 taken 576 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 1 taken 192 times.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">1536</td>
+      <td class="linecount partialCoveredLine">768</td>
       <td class="src partialCoveredLine"><span class="w">          </span><span class="k">auto</span><span class="w"> </span><span class="n">mapped_val</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">(</span><span class="n">ref_val</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l230" href="#l230">230</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 768 times.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 2 taken 576 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 2 taken 192 times.</div>
             <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">1536</td>
+      <td class="linecount partialCoveredLine">768</td>
       <td class="src partialCoveredLine"><span class="w">          </span><span class="k">auto</span><span class="w"> </span><span class="n">mapped_idx</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">indexmap</span><span class="p">().</span><span class="n">to_idx</span><span class="p">(</span><span class="n">lin_idx</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l231" href="#l231">231</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 768 times.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 1 taken 576 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 1 taken 192 times.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">1536</td>
+      <td class="linecount partialCoveredLine">768</td>
       <td class="src partialCoveredLine"><span class="w">          </span><span class="k">auto</span><span class="w"> </span><span class="n">current_val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">apply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">mapped_idx</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l232" href="#l232">232</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 768 times.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 1 taken 576 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 1 taken 192 times.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">1536</td>
+      <td class="linecount partialCoveredLine">768</td>
       <td class="src partialCoveredLine"><span class="w">          </span><span class="k">auto</span><span class="w"> </span><span class="n">diff</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">mapped_val</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">current_val</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
@@ -1893,28 +1931,32 @@
       <td class="lineno"><a id="l234" href="#l234">234</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">4/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 0 taken 36 times.</div>
-            <div class="takenBranch">&check; Branch 1 taken 732 times.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 0 taken 27 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 549 times.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 0 taken 9 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 183 times.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">1536</td>
+      <td class="linecount coveredLine">768</td>
       <td class="src coveredLine"><span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">diff</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">max_diff</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l235" href="#l235">235</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">72</td>
+      <td class="linecount coveredLine">36</td>
       <td class="src coveredLine"><span class="w">            </span><span class="n">max_diff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diff</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l236" href="#l236">236</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">72</td>
+      <td class="linecount coveredLine">36</td>
       <td class="src coveredLine"><span class="w">            </span><span class="n">max_idx</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">mapped_idx</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -1935,14 +1977,18 @@
       <td class="lineno"><a id="l239" href="#l239">239</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 768 times.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 1 taken 576 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::symmetrize(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 1 taken 192 times.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">1536</td>
+      <td class="linecount partialCoveredLine">768</td>
       <td class="src partialCoveredLine"><span class="w">          </span><span class="n">std</span><span class="o">::</span><span class="n">apply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">mapped_idx</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mapped_val</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -1970,7 +2016,7 @@
       <td class="lineno"><a id="l243" href="#l243">243</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">84</td>
+      <td class="linecount coveredLine">42</td>
       <td class="src coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="p">{</span><span class="n">max_diff</span><span class="p">,</span><span class="w"> </span><span class="n">max_idx</span><span class="p">};</span></td>
     </tr>
     <tr class="source-line">
@@ -2033,55 +2079,69 @@
       <td class="lineno"><a id="l252" href="#l252">252</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">18</td>
+      <td class="linecount coveredLine">9</td>
       <td class="src coveredLine"><span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">get_value_t</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">get_representative_data</span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l253" href="#l253">253</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">18</td>
+      <td class="linecount coveredLine">9</td>
       <td class="src coveredLine"><span class="w">      </span><span class="kt">long</span><span class="w"> </span><span class="n">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sym_classes</span><span class="p">.</span><span class="n">size</span><span class="p">();</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l254" href="#l254">254</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 9 times.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::get_representative_data(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::get_representative_data(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 1 taken 6 times.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">18</td>
+      <td class="linecount partialCoveredLine">9</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">vec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">get_value_t</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">len</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l255" href="#l255">255</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">5/8</summary>
+          <summary class="linebranchSummary">10/16</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 9 times.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::get_representative_data(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-            <div class="takenBranch">&check; Branch 10 taken 69 times.</div>
+            <div class="takenBranch">&check; Branch 10 taken 48 times.</div>
             <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
-            <div class="takenBranch">&check; Branch 13 taken 69 times.</div>
+            <div class="takenBranch">&check; Branch 13 taken 48 times.</div>
             <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
-            <div class="takenBranch">&check; Branch 18 taken 69 times.</div>
-            <div class="takenBranch">&check; Branch 19 taken 9 times.</div>
+            <div class="takenBranch">&check; Branch 18 taken 48 times.</div>
+            <div class="takenBranch">&check; Branch 19 taken 3 times.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::get_representative_data(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 1 taken 6 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 10 taken 21 times.</div>
+            <div class="notTakenBranch">&cross; Branch 11 not taken.</div>
+            <div class="takenBranch">&check; Branch 13 taken 21 times.</div>
+            <div class="notTakenBranch">&cross; Branch 14 not taken.</div>
+            <div class="takenBranch">&check; Branch 18 taken 21 times.</div>
+            <div class="takenBranch">&check; Branch 19 taken 6 times.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">156</td>
+      <td class="linecount partialCoveredLine">78</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">range</span><span class="p">(</span><span class="n">len</span><span class="p">))</span><span class="w"> </span><span class="n">vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">apply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">indexmap</span><span class="p">().</span><span class="n">to_idx</span><span class="p">(</span><span class="n">sym_classes</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">].</span><span class="n">first</span><span class="p">));</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l256" href="#l256">256</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">18</td>
+      <td class="linecount coveredLine">9</td>
       <td class="src coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">vec</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -2151,7 +2211,7 @@
       <td class="lineno"><a id="l266" href="#l266">266</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">18</td>
+      <td class="linecount coveredLine">9</td>
       <td class="src coveredLine"><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">init_from_representative_data</span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">V</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">vec</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
@@ -2165,36 +2225,52 @@
       <td class="lineno"><a id="l268" href="#l268">268</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">3/4</summary>
+          <summary class="linebranchSummary">6/8</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 9 times.</div>
+            <div class="functionName">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init_from_representative_data&lt;std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; const&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 2 taken 3 times.</div>
             <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-            <div class="takenBranch">&check; Branch 9 taken 69 times.</div>
-            <div class="takenBranch">&check; Branch 10 taken 9 times.</div>
+            <div class="takenBranch">&check; Branch 9 taken 48 times.</div>
+            <div class="takenBranch">&check; Branch 10 taken 3 times.</div>
+            <div class="functionName">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init_from_representative_data&lt;std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; const&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 2 taken 6 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="takenBranch">&check; Branch 9 taken 21 times.</div>
+            <div class="takenBranch">&check; Branch 10 taken 6 times.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">156</td>
+      <td class="linecount partialCoveredLine">78</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">range</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">size</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l269" href="#l269">269</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">5/8</summary>
+          <summary class="linebranchSummary">10/16</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 8 taken 288 times.</div>
+            <div class="functionName">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init_from_representative_data&lt;std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; const&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 8 taken 192 times.</div>
             <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
-            <div class="takenBranch">&check; Branch 12 taken 288 times.</div>
+            <div class="takenBranch">&check; Branch 12 taken 192 times.</div>
             <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
-            <div class="takenBranch">&check; Branch 15 taken 288 times.</div>
+            <div class="takenBranch">&check; Branch 15 taken 192 times.</div>
             <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
-            <div class="takenBranch">&check; Branch 19 taken 288 times.</div>
-            <div class="takenBranch">&check; Branch 20 taken 69 times.</div>
+            <div class="takenBranch">&check; Branch 19 taken 192 times.</div>
+            <div class="takenBranch">&check; Branch 20 taken 48 times.</div>
+            <div class="functionName">void nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::init_from_representative_data&lt;std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;&amp;, std::vector&lt;std::complex&lt;double&gt;, std::allocator&lt;std::complex&lt;double&gt; &gt; &gt; const&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 8 taken 96 times.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
+            <div class="takenBranch">&check; Branch 12 taken 96 times.</div>
+            <div class="notTakenBranch">&cross; Branch 13 not taken.</div>
+            <div class="takenBranch">&check; Branch 15 taken 96 times.</div>
+            <div class="notTakenBranch">&cross; Branch 16 not taken.</div>
+            <div class="takenBranch">&check; Branch 19 taken 96 times.</div>
+            <div class="takenBranch">&check; Branch 20 taken 21 times.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">714</td>
+      <td class="linecount partialCoveredLine">357</td>
       <td class="src partialCoveredLine"><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="p">[</span><span class="n">lin_idx</span><span class="p">,</span><span class="w"> </span><span class="n">op</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">sym_classes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">apply</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">indexmap</span><span class="p">().</span><span class="n">to_idx</span><span class="p">(</span><span class="n">lin_idx</span><span class="p">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span><span class="w"> </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
@@ -2207,9 +2283,25 @@
     <tr class="source-line">
       <td class="lineno"><a id="l271" href="#l271">271</a></td>
       <td class="linebranch">
+        <details class="linebranchDetails">
+          <summary class="linebranchSummary">7/11</summary>
+          <div class="linebranchContents">
+            <div class="takenBranch">&check; Branch 1 taken 96 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 48 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 192 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="takenBranch">&check; Branch 4 taken 42 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 21 times.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 75 times.</div>
+            <div class="takenBranch">&check; Branch 6 taken 21 times.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+          </div>
+        </details>
       </td>
-      <td class="linecount coveredLine">18</td>
-      <td class="src coveredLine"><span class="w">    </span><span class="p">}</span></td>
+      <td class="linecount partialCoveredLine">9</td>
+      <td class="src partialCoveredLine"><span class="w">    </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l272" href="#l272">272</a></td>
@@ -2313,7 +2405,7 @@
       <td class="lineno"><a id="l286" href="#l286">286</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">18</td>
+      <td class="linecount coveredLine">9</td>
       <td class="src coveredLine"><span class="w">    </span><span class="n">sym_grp</span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">F</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sym_list</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">max_length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
@@ -2327,21 +2419,25 @@
       <td class="lineno"><a id="l288" href="#l288">288</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 9 times.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::sym_grp(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::vector&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, std::allocator&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt; &gt; &gt; const&amp;, long):</div>
+            <div class="takenBranch">&check; Branch 2 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::sym_grp(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::vector&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, std::allocator&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt; &gt; &gt; const&amp;, long):</div>
+            <div class="takenBranch">&check; Branch 2 taken 6 times.</div>
             <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">18</td>
+      <td class="linecount partialCoveredLine">9</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="n">array</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="n">ndims</span><span class="o">&gt;</span><span class="w"> </span><span class="n">checked</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">shape</span><span class="p">());</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l289" href="#l289">289</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">36</td>
+      <td class="linecount coveredLine">18</td>
       <td class="src coveredLine"><span class="w">      </span><span class="n">checked</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -2362,14 +2458,18 @@
       <td class="lineno"><a id="l292" href="#l292">292</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 9 times.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::sym_grp(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::vector&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt;, std::allocator&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 6ul&gt;, nda::operation&gt; (std::array&lt;long, 6ul&gt; const&amp;)&gt; &gt; &gt; const&amp;, long):</div>
+            <div class="takenBranch">&check; Branch 2 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="functionName">nda::sym_grp&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;::sym_grp(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::vector&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt;, std::allocator&lt;std::function&lt;std::tuple&lt;std::array&lt;long, 2ul&gt;, nda::operation&gt; (std::array&lt;long, 2ul&gt; const&amp;)&gt; &gt; &gt; const&amp;, long):</div>
+            <div class="takenBranch">&check; Branch 2 taken 6 times.</div>
             <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">18</td>
+      <td class="linecount partialCoveredLine">9</td>
       <td class="src partialCoveredLine"><span class="w">      </span><span class="n">data</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">());</span></td>
     </tr>
     <tr class="source-line">
@@ -2390,24 +2490,15 @@
       <td class="lineno"><a id="l295" href="#l295">295</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">306</td>
+      <td class="linecount coveredLine">9</td>
       <td class="src coveredLine"><span class="w">      </span><span class="n">for_each</span><span class="p">(</span><span class="n">checked</span><span class="p">.</span><span class="n">shape</span><span class="p">(),</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="n">checked</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sym_list</span><span class="p">,</span><span class="w"> </span><span class="n">max_length</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">](</span><span class="k">auto</span><span class="p">...</span><span class="w"> </span><span class="n">is</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l296" href="#l296">296</a></td>
       <td class="linebranch">
-        <details class="linebranchDetails">
-          <summary class="linebranchSummary">4/4</summary>
-          <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 48 times.</div>
-            <div class="takenBranch">&check; Branch 2 taken 144 times.</div>
-            <div class="takenBranch">&check; Branch 4 taken 21 times.</div>
-            <div class="takenBranch">&check; Branch 5 taken 75 times.</div>
-          </div>
-        </details>
       </td>
-      <td class="linecount coveredLine">576</td>
-      <td class="src coveredLine"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">not</span><span class="w"> </span><span class="n">checked</span><span class="p">(</span><span class="n">is</span><span class="p">...))</span><span class="w"> </span><span class="p">{</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">not</span><span class="w"> </span><span class="n">checked</span><span class="p">(</span><span class="n">is</span><span class="p">...))</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l297" href="#l297">297</a></td>
@@ -2420,8 +2511,8 @@
       <td class="lineno"><a id="l298" href="#l298">298</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">69</td>
-      <td class="src coveredLine"><span class="w">          </span><span class="k">auto</span><span class="w"> </span><span class="n">class_start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">end</span><span class="p">();</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">          </span><span class="k">auto</span><span class="w"> </span><span class="n">class_start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">end</span><span class="p">();</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l299" href="#l299">299</a></td>
@@ -2441,8 +2532,8 @@
       <td class="lineno"><a id="l301" href="#l301">301</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">69</td>
-      <td class="src coveredLine"><span class="w">          </span><span class="n">checked</span><span class="p">(</span><span class="n">is</span><span class="p">...)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">          </span><span class="n">checked</span><span class="p">(</span><span class="n">is</span><span class="p">...)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l302" href="#l302">302</a></td>
@@ -2462,24 +2553,15 @@
       <td class="lineno"><a id="l304" href="#l304">304</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">69</td>
-      <td class="src coveredLine"><span class="w">          </span><span class="n">operation</span><span class="w"> </span><span class="n">op</span><span class="p">;</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">          </span><span class="n">operation</span><span class="w"> </span><span class="n">op</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l305" href="#l305">305</a></td>
       <td class="linebranch">
-        <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/4</summary>
-          <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 48 times.</div>
-            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-            <div class="takenBranch">&check; Branch 6 taken 21 times.</div>
-            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
-          </div>
-        </details>
       </td>
-      <td class="linecount partialCoveredLine">138</td>
-      <td class="src partialCoveredLine"><span class="w">          </span><span class="n">data</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">checked</span><span class="p">.</span><span class="n">indexmap</span><span class="p">()(</span><span class="n">is</span><span class="p">...),</span><span class="w"> </span><span class="n">op</span><span class="p">);</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">          </span><span class="n">data</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">checked</span><span class="p">.</span><span class="n">indexmap</span><span class="p">()(</span><span class="n">is</span><span class="p">...),</span><span class="w"> </span><span class="n">op</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l306" href="#l306">306</a></td>
@@ -2499,24 +2581,15 @@
       <td class="lineno"><a id="l308" href="#l308">308</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">69</td>
-      <td class="src coveredLine"><span class="w">          </span><span class="k">auto</span><span class="w"> </span><span class="n">idx</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="p">{</span><span class="n">is</span><span class="p">...};</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">          </span><span class="k">auto</span><span class="w"> </span><span class="n">idx</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="p">{</span><span class="n">is</span><span class="p">...};</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l309" href="#l309">309</a></td>
       <td class="linebranch">
-        <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/4</summary>
-          <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 48 times.</div>
-            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-            <div class="takenBranch">&check; Branch 4 taken 21 times.</div>
-            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          </div>
-        </details>
       </td>
-      <td class="linecount partialCoveredLine">69</td>
-      <td class="src partialCoveredLine"><span class="w">          </span><span class="k">auto</span><span class="w"> </span><span class="n">class_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iterate</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">checked</span><span class="p">,</span><span class="w"> </span><span class="n">sym_list</span><span class="p">,</span><span class="w"> </span><span class="n">max_length</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">          </span><span class="k">auto</span><span class="w"> </span><span class="n">class_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iterate</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">checked</span><span class="p">,</span><span class="w"> </span><span class="n">sym_list</span><span class="p">,</span><span class="w"> </span><span class="n">max_length</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l310" href="#l310">310</a></td>
@@ -2535,18 +2608,9 @@
     <tr class="source-line">
       <td class="lineno"><a id="l312" href="#l312">312</a></td>
       <td class="linebranch">
-        <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/4</summary>
-          <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 48 times.</div>
-            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-            <div class="takenBranch">&check; Branch 4 taken 21 times.</div>
-            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
-          </div>
-        </details>
       </td>
-      <td class="linecount partialCoveredLine">69</td>
-      <td class="src partialCoveredLine"><span class="w">          </span><span class="n">sym_classes</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">class_start</span><span class="p">,</span><span class="w"> </span><span class="n">class_size</span><span class="p">);</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">          </span><span class="n">sym_classes</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">class_start</span><span class="p">,</span><span class="w"> </span><span class="n">class_size</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l313" href="#l313">313</a></td>
@@ -2566,7 +2630,7 @@
       <td class="lineno"><a id="l315" href="#l315">315</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">18</td>
+      <td class="linecount coveredLine">9</td>
       <td class="src coveredLine"><span class="w">    </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
@@ -2594,8 +2658,8 @@
       <td class="lineno"><a id="l319" href="#l319">319</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">288</td>
-      <td class="src coveredLine"><span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">iterate</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">long</span><span class="p">,</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">get_rank</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span><span class="p">)</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">idx</span><span class="p">,</span><span class="w"> </span><span class="n">operation</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">array</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="n">ndims</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">checked</span><span class="p">,</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">iterate</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">long</span><span class="p">,</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">get_rank</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span><span class="p">)</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">idx</span><span class="p">,</span><span class="w"> </span><span class="n">operation</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">array</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="n">ndims</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">checked</span><span class="p">,</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l320" href="#l320">320</a></td>
@@ -2622,8 +2686,8 @@
       <td class="lineno"><a id="l323" href="#l323">323</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">288</td>
-      <td class="src coveredLine"><span class="w">      </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">segment_length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">      </span><span class="kt">long</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">segment_length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l324" href="#l324">324</a></td>
@@ -2643,8 +2707,8 @@
       <td class="lineno"><a id="l326" href="#l326">326</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">864</td>
-      <td class="src coveredLine"><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sym</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">sym_list</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sym</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">sym_list</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l327" href="#l327">327</a></td>
@@ -2657,15 +2721,15 @@
       <td class="lineno"><a id="l328" href="#l328">328</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">576</td>
-      <td class="src coveredLine"><span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">idxp</span><span class="p">,</span><span class="w"> </span><span class="n">opp</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sym</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">idxp</span><span class="p">,</span><span class="w"> </span><span class="n">opp</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sym</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l329" href="#l329">329</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">576</td>
-      <td class="src coveredLine"><span class="w">        </span><span class="n">opp</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="n">opp</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">;</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">        </span><span class="n">opp</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="n">opp</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l330" href="#l330">330</a></td>
@@ -2685,8 +2749,8 @@
       <td class="lineno"><a id="l332" href="#l332">332</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">576</td>
-      <td class="src coveredLine"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">is_valid</span><span class="p">(</span><span class="n">checked</span><span class="p">,</span><span class="w"> </span><span class="n">idxp</span><span class="p">))</span><span class="w"> </span><span class="p">{</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">is_valid</span><span class="p">(</span><span class="n">checked</span><span class="p">,</span><span class="w"> </span><span class="n">idxp</span><span class="p">))</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l333" href="#l333">333</a></td>
@@ -2699,8 +2763,8 @@
       <td class="lineno"><a id="l334" href="#l334">334</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">564</td>
-      <td class="src coveredLine"><span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">not</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">apply</span><span class="p">(</span><span class="n">checked</span><span class="p">,</span><span class="w"> </span><span class="n">idxp</span><span class="p">))</span><span class="w"> </span><span class="p">{</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">not</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">apply</span><span class="p">(</span><span class="n">checked</span><span class="p">,</span><span class="w"> </span><span class="n">idxp</span><span class="p">))</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l335" href="#l335">335</a></td>
@@ -2713,8 +2777,8 @@
       <td class="lineno"><a id="l336" href="#l336">336</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">219</td>
-      <td class="src coveredLine"><span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">apply</span><span class="p">(</span><span class="n">checked</span><span class="p">,</span><span class="w"> </span><span class="n">idxp</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">apply</span><span class="p">(</span><span class="n">checked</span><span class="p">,</span><span class="w"> </span><span class="n">idxp</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l337" href="#l337">337</a></td>
@@ -2734,8 +2798,8 @@
       <td class="lineno"><a id="l339" href="#l339">339</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">219</td>
-      <td class="src coveredLine"><span class="w">            </span><span class="n">data</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">apply</span><span class="p">(</span><span class="n">checked</span><span class="p">.</span><span class="n">indexmap</span><span class="p">(),</span><span class="w"> </span><span class="n">idxp</span><span class="p">),</span><span class="w"> </span><span class="n">opp</span><span class="p">);</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">            </span><span class="n">data</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">apply</span><span class="p">(</span><span class="n">checked</span><span class="p">.</span><span class="n">indexmap</span><span class="p">(),</span><span class="w"> </span><span class="n">idxp</span><span class="p">),</span><span class="w"> </span><span class="n">opp</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l340" href="#l340">340</a></td>
@@ -2762,8 +2826,8 @@
       <td class="lineno"><a id="l343" href="#l343">343</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">219</td>
-      <td class="src coveredLine"><span class="w">            </span><span class="n">segment_length</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">iterate</span><span class="p">(</span><span class="n">idxp</span><span class="p">,</span><span class="w"> </span><span class="n">opp</span><span class="p">,</span><span class="w"> </span><span class="n">checked</span><span class="p">,</span><span class="w"> </span><span class="n">sym_list</span><span class="p">,</span><span class="w"> </span><span class="n">max_length</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">            </span><span class="n">segment_length</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">iterate</span><span class="p">(</span><span class="n">idxp</span><span class="p">,</span><span class="w"> </span><span class="n">opp</span><span class="p">,</span><span class="w"> </span><span class="n">checked</span><span class="p">,</span><span class="w"> </span><span class="n">sym_list</span><span class="p">,</span><span class="w"> </span><span class="n">max_length</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l344" href="#l344">344</a></td>
@@ -2776,8 +2840,8 @@
       <td class="lineno"><a id="l345" href="#l345">345</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">12</td>
-      <td class="src coveredLine"><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">excursion_length</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">max_length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">excursion_length</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">max_length</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l346" href="#l346">346</a></td>
@@ -2797,8 +2861,8 @@
       <td class="lineno"><a id="l348" href="#l348">348</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount uncoveredLine">&cross;</td>
-      <td class="src uncoveredLine"><span class="w">          </span><span class="n">segment_length</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">iterate</span><span class="p">(</span><span class="n">idxp</span><span class="p">,</span><span class="w"> </span><span class="n">opp</span><span class="p">,</span><span class="w"> </span><span class="n">checked</span><span class="p">,</span><span class="w"> </span><span class="n">sym_list</span><span class="p">,</span><span class="w"> </span><span class="n">max_length</span><span class="p">,</span><span class="w"> </span><span class="o">++</span><span class="n">excursion_length</span><span class="p">);</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">          </span><span class="n">segment_length</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">iterate</span><span class="p">(</span><span class="n">idxp</span><span class="p">,</span><span class="w"> </span><span class="n">opp</span><span class="p">,</span><span class="w"> </span><span class="n">checked</span><span class="p">,</span><span class="w"> </span><span class="n">sym_list</span><span class="p">,</span><span class="w"> </span><span class="n">max_length</span><span class="p">,</span><span class="w"> </span><span class="o">++</span><span class="n">excursion_length</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l349" href="#l349">349</a></td>
@@ -2839,8 +2903,8 @@
       <td class="lineno"><a id="l354" href="#l354">354</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">288</td>
-      <td class="src coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">segment_length</span><span class="p">;</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">segment_length</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l355" href="#l355">355</a></td>
@@ -2896,7 +2960,7 @@
       <hr/>
     </main>
     <footer>
-      Generated by: <a href="http://gcovr.com/en/8.3">GCOVR (Version 8.3)</a>
+      Generated by: <a href="http://gcovr.com/en/8.4">GCOVR (Version 8.4)</a>
     </footer>
   </body>
 </html>

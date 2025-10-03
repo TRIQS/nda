@@ -3,7 +3,7 @@
 
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>GCC Code Coverage Report</title>
+    <title>mem/allocators.hpp - GCC Code Coverage Report</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="coverage.css"/>
   </head>
@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2025-08-25 15:31:29</td>
+      <td>2025-10-03 19:27:55</td>
     </tr>
   </table>
 </div>
@@ -34,27 +34,31 @@
   <table class="coverage">
     <tr>
       <th></th>
-      <th scope="col">Exec</th>
-      <th scope="col">Total</th>
       <th scope="col">Coverage</th>
+      <th scope="col">Exec</th>
+      <th scope="col">Excl</th>
+      <th scope="col">Total</th>
     </tr>
     <tr>
       <th scope="row">Lines:</th>
-      <td>93</td>
-      <td>98</td>
-      <td class="coverage-high">94.9%</td>
+      <td class="coverage-medium">80.7%</td>
+      <td class="coverage-medium">113</td>
+      <td class="coverage-medium">0</td>
+      <td class="coverage-medium">140</td>
     </tr>
     <tr>
       <th scope="row">Functions:</th>
-      <td>47</td>
-      <td>56</td>
       <td class="coverage-medium">83.9%</td>
+      <td class="coverage-medium">47</td>
+      <td class="coverage-medium">0</td>
+      <td class="coverage-medium">56</td>
     </tr>
     <tr>
       <th scope="row">Branches:</th>
-      <td>42</td>
-      <td>62</td>
-      <td class="coverage-low">67.7%</td>
+      <td class="coverage-low">50.0%</td>
+      <td class="coverage-low">51</td>
+      <td class="coverage-low">0</td>
+      <td class="coverage-low">102</td>
     </tr>
   </table>
 </div>
@@ -68,64 +72,66 @@
     <tr>
       <th>Function (Line)</th>
       <th>Call count</th>
+      <th>Line coverage</th>
+      <th>Branch coverage</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l331">auto nda::mem::multi_bucket&lt;800&gt;::deallocate(nda::mem::blk_t)::{lambda(auto:1 const&amp;, auto:2)#1}::operator()&lt;nda::mem::bucket&lt;800&gt;, char*&gt;(nda::mem::bucket&lt;800&gt; const&amp;, char*) const (line 331)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l265">auto nda::mem::multi_bucket&lt;800&gt;::find_non_full_bucket()::{lambda(auto:1 const&amp;)#1}::operator()&lt;nda::mem::bucket&lt;800&gt; &gt;(nda::mem::bucket&lt;800&gt; const&amp;) const (line 265)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l268">auto nda::mem::multi_bucket&lt;800&gt;::find_non_full_bucket()::{lambda(auto:1 const&amp;, auto:2 const&amp;)#1}::operator()&lt;nda::mem::bucket&lt;800&gt;, nda::mem::bucket&lt;800&gt; &gt;(nda::mem::bucket&lt;800&gt; const&amp;, nda::mem::bucket&lt;800&gt; const&amp;) const (line 268)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l331">auto nda::mem::multi_bucket&lt;8&gt;::deallocate(nda::mem::blk_t)::{lambda(auto:1 const&amp;, auto:2)#1}::operator()&lt;nda::mem::bucket&lt;8&gt;, char*&gt;(nda::mem::bucket&lt;8&gt; const&amp;, char*) const (line 331)</a></td><td>called 3 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l265">auto nda::mem::multi_bucket&lt;8&gt;::find_non_full_bucket()::{lambda(auto:1 const&amp;)#1}::operator()&lt;nda::mem::bucket&lt;8&gt; &gt;(nda::mem::bucket&lt;8&gt; const&amp;) const (line 265)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l268">auto nda::mem::multi_bucket&lt;8&gt;::find_non_full_bucket()::{lambda(auto:1 const&amp;, auto:2 const&amp;)#1}::operator()&lt;nda::mem::bucket&lt;8&gt;, nda::mem::bucket&lt;8&gt; &gt;(nda::mem::bucket&lt;8&gt; const&amp;, nda::mem::bucket&lt;8&gt; const&amp;) const (line 268)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l168">nda::mem::bucket&lt;800&gt;::allocate(unsigned long) (line 168)</a></td><td>called 1 time</td><td>67.0%</td></tr>
-    <tr><td><a href="#l148">nda::mem::bucket&lt;800&gt;::bucket() (line 148)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l154">nda::mem::bucket&lt;800&gt;::bucket(nda::mem::bucket&lt;800&gt;&amp;&amp;) (line 154)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l225">nda::mem::bucket&lt;800&gt;::data() const (line 225)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l201">nda::mem::bucket&lt;800&gt;::deallocate(nda::mem::blk_t) (line 201)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l219">nda::mem::bucket&lt;800&gt;::empty() const (line 219)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l213">nda::mem::bucket&lt;800&gt;::is_full() const (line 213)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l160">nda::mem::bucket&lt;800&gt;::operator=(nda::mem::bucket&lt;800&gt;&amp;&amp;) (line 160)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l239">nda::mem::bucket&lt;800&gt;::owns(nda::mem::blk_t) const (line 239)</a></td><td>called 1 time</td><td>83.0%</td></tr>
-    <tr><td><a href="#l168">nda::mem::bucket&lt;8&gt;::allocate(unsigned long) (line 168)</a></td><td>called 131 times</td><td>67.0%</td></tr>
-    <tr><td><a href="#l191">nda::mem::bucket&lt;8&gt;::allocate_zero(unsigned long) (line 191)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l148">nda::mem::bucket&lt;8&gt;::bucket() (line 148)</a></td><td>called 3 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l154">nda::mem::bucket&lt;8&gt;::bucket(nda::mem::bucket&lt;8&gt;&amp;&amp;) (line 154)</a></td><td>called 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l225">nda::mem::bucket&lt;8&gt;::data() const (line 225)</a></td><td>called 5 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l201">nda::mem::bucket&lt;8&gt;::deallocate(nda::mem::blk_t) (line 201)</a></td><td>called 3 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l219">nda::mem::bucket&lt;8&gt;::empty() const (line 219)</a></td><td>called 5 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l213">nda::mem::bucket&lt;8&gt;::is_full() const (line 213)</a></td><td>called 73 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l231">nda::mem::bucket&lt;8&gt;::mask() const (line 231)</a></td><td>called 4 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l160">nda::mem::bucket&lt;8&gt;::operator=(nda::mem::bucket&lt;8&gt;&amp;&amp;) (line 160)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l239">nda::mem::bucket&lt;8&gt;::owns(nda::mem::blk_t) const (line 239)</a></td><td>called 77 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l495">nda::mem::leak_check&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::allocate(unsigned long) (line 495)</a></td><td>called 13 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l518">nda::mem::leak_check&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::deallocate(nda::mem::blk_t) (line 518)</a></td><td>called 13 times</td><td>33.0%</td></tr>
-    <tr><td><a href="#l533">nda::mem::leak_check&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::empty() const (line 533)</a></td><td>called 7 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l547">nda::mem::leak_check&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::get_memory_used() const (line 547)</a></td><td>called 5 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l462">nda::mem::leak_check&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::leak_check() (line 462)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l480">nda::mem::leak_check&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::~leak_check() (line 480)</a></td><td>called 4 times</td><td>43.0%</td></tr>
-    <tr><td><a href="#l86">nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt;::allocate(unsigned long) (line 86)</a></td><td>called 3978672 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l98">nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt;::allocate_zero(unsigned long) (line 98)</a></td><td>called 811 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l112">nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt;::deallocate(nda::mem::blk_t) (line 112)</a></td><td>called 3979483 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l297">nda::mem::multi_bucket&lt;800&gt;::allocate(unsigned long) (line 297)</a></td><td>called 1 time</td><td>85.0%</td></tr>
-    <tr><td><a href="#l323">nda::mem::multi_bucket&lt;800&gt;::deallocate(nda::mem::blk_t) (line 323)</a></td><td>called 1 time</td><td>21.0%</td></tr>
-    <tr><td><a href="#l264">nda::mem::multi_bucket&lt;800&gt;::find_non_full_bucket() (line 264)</a></td><td>not called</td><td>0.0%</td></tr>
-    <tr><td><a href="#l277">nda::mem::multi_bucket&lt;800&gt;::multi_bucket() (line 277)</a></td><td>called 1 time</td><td>78.0%</td></tr>
-    <tr><td><a href="#l297">nda::mem::multi_bucket&lt;8&gt;::allocate(unsigned long) (line 297)</a></td><td>called 66 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l309">nda::mem::multi_bucket&lt;8&gt;::allocate_zero(unsigned long) (line 309)</a></td><td>called 66 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l354">nda::mem::multi_bucket&lt;8&gt;::buckets() const (line 354)</a></td><td>called 13 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l323">nda::mem::multi_bucket&lt;8&gt;::deallocate(nda::mem::blk_t) (line 323)</a></td><td>called 2 times</td><td>53.0%</td></tr>
-    <tr><td><a href="#l348">nda::mem::multi_bucket&lt;8&gt;::empty() const (line 348)</a></td><td>called 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l264">nda::mem::multi_bucket&lt;8&gt;::find_non_full_bucket() (line 264)</a></td><td>called 1 time</td><td>77.0%</td></tr>
-    <tr><td><a href="#l277">nda::mem::multi_bucket&lt;8&gt;::multi_bucket() (line 277)</a></td><td>called 1 time</td><td>78.0%</td></tr>
-    <tr><td><a href="#l362">nda::mem::multi_bucket&lt;8&gt;::owns(nda::mem::blk_t) const (line 362)</a></td><td>called 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l415">nda::mem::segregator&lt;800ul, nda::mem::multi_bucket&lt;800&gt;, nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::allocate(unsigned long) (line 415)</a></td><td>called 1 time</td><td>80.0%</td></tr>
-    <tr><td><a href="#l432">nda::mem::segregator&lt;800ul, nda::mem::multi_bucket&lt;800&gt;, nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::deallocate(nda::mem::blk_t) (line 432)</a></td><td>called 1 time</td><td>80.0%</td></tr>
-    <tr><td><a href="#l394">nda::mem::segregator&lt;800ul, nda::mem::multi_bucket&lt;800&gt;, nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::segregator() (line 394)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l596">nda::mem::stats&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::allocate(unsigned long) (line 596)</a></td><td>called 20 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l618">nda::mem::stats&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::deallocate(nda::mem::blk_t) (line 618)</a></td><td>called 20 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l632">nda::mem::stats&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::histogram() const (line 632)</a></td><td>called 20 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l638">nda::mem::stats&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::print_histogram(std::ostream&amp;) const (line 638)</a></td><td>called 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l569">nda::mem::stats&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::stats() (line 569)</a></td><td>called 1 time</td><td>75.0%</td></tr>
-    <tr><td><a href="#l584">nda::mem::stats&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::~stats() (line 584)</a></td><td>called 1 time</td><td>100.0%</td></tr>
+    <tr><td><a href="#l331">auto nda::mem::multi_bucket&lt;800&gt;::deallocate(nda::mem::blk_t)::{lambda(auto:1 const&amp;, auto:2)#1}::operator()&lt;nda::mem::bucket&lt;800&gt;, char*&gt;(nda::mem::bucket&lt;800&gt; const&amp;, char*) const (line 331)</a></td><td>not called</td><td>0.0%</td><td>0.0%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l265">auto nda::mem::multi_bucket&lt;800&gt;::find_non_full_bucket()::{lambda(auto:1 const&amp;)#1}::operator()&lt;nda::mem::bucket&lt;800&gt; &gt;(nda::mem::bucket&lt;800&gt; const&amp;) const (line 265)</a></td><td>not called</td><td>0.0%</td><td>0.0%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l268">auto nda::mem::multi_bucket&lt;800&gt;::find_non_full_bucket()::{lambda(auto:1 const&amp;, auto:2 const&amp;)#1}::operator()&lt;nda::mem::bucket&lt;800&gt;, nda::mem::bucket&lt;800&gt; &gt;(nda::mem::bucket&lt;800&gt; const&amp;, nda::mem::bucket&lt;800&gt; const&amp;) const (line 268)</a></td><td>not called</td><td>0.0%</td><td>0.0%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l331">auto nda::mem::multi_bucket&lt;8&gt;::deallocate(nda::mem::blk_t)::{lambda(auto:1 const&amp;, auto:2)#1}::operator()&lt;nda::mem::bucket&lt;8&gt;, char*&gt;(nda::mem::bucket&lt;8&gt; const&amp;, char*) const (line 331)</a></td><td>called 3 times</td><td>100.0%</td><td>62.5%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l265">auto nda::mem::multi_bucket&lt;8&gt;::find_non_full_bucket()::{lambda(auto:1 const&amp;)#1}::operator()&lt;nda::mem::bucket&lt;8&gt; &gt;(nda::mem::bucket&lt;8&gt; const&amp;) const (line 265)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l268">auto nda::mem::multi_bucket&lt;8&gt;::find_non_full_bucket()::{lambda(auto:1 const&amp;, auto:2 const&amp;)#1}::operator()&lt;nda::mem::bucket&lt;8&gt;, nda::mem::bucket&lt;8&gt; &gt;(nda::mem::bucket&lt;8&gt; const&amp;, nda::mem::bucket&lt;8&gt; const&amp;) const (line 268)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l168">nda::mem::bucket&lt;800&gt;::allocate(unsigned long) (line 168)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>67.0%</td></tr>
+    <tr><td><a href="#l148">nda::mem::bucket&lt;800&gt;::bucket() (line 148)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l154">nda::mem::bucket&lt;800&gt;::bucket(nda::mem::bucket&lt;800&gt;&amp;&amp;) (line 154)</a></td><td>not called</td><td>0.0%</td><td>-%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l225">nda::mem::bucket&lt;800&gt;::data() const (line 225)</a></td><td>not called</td><td>0.0%</td><td>-%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l201">nda::mem::bucket&lt;800&gt;::deallocate(nda::mem::blk_t) (line 201)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l219">nda::mem::bucket&lt;800&gt;::empty() const (line 219)</a></td><td>not called</td><td>0.0%</td><td>-%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l213">nda::mem::bucket&lt;800&gt;::is_full() const (line 213)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l160">nda::mem::bucket&lt;800&gt;::operator=(nda::mem::bucket&lt;800&gt;&amp;&amp;) (line 160)</a></td><td>not called</td><td>0.0%</td><td>-%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l239">nda::mem::bucket&lt;800&gt;::owns(nda::mem::blk_t) const (line 239)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>83.0%</td></tr>
+    <tr><td><a href="#l168">nda::mem::bucket&lt;8&gt;::allocate(unsigned long) (line 168)</a></td><td>called 131 times</td><td>100.0%</td><td>50.0%</td><td>67.0%</td></tr>
+    <tr><td><a href="#l191">nda::mem::bucket&lt;8&gt;::allocate_zero(unsigned long) (line 191)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l148">nda::mem::bucket&lt;8&gt;::bucket() (line 148)</a></td><td>called 3 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l154">nda::mem::bucket&lt;8&gt;::bucket(nda::mem::bucket&lt;8&gt;&amp;&amp;) (line 154)</a></td><td>called 2 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l225">nda::mem::bucket&lt;8&gt;::data() const (line 225)</a></td><td>called 5 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l201">nda::mem::bucket&lt;8&gt;::deallocate(nda::mem::blk_t) (line 201)</a></td><td>called 3 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l219">nda::mem::bucket&lt;8&gt;::empty() const (line 219)</a></td><td>called 5 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l213">nda::mem::bucket&lt;8&gt;::is_full() const (line 213)</a></td><td>called 73 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l231">nda::mem::bucket&lt;8&gt;::mask() const (line 231)</a></td><td>called 4 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l160">nda::mem::bucket&lt;8&gt;::operator=(nda::mem::bucket&lt;8&gt;&amp;&amp;) (line 160)</a></td><td>not called</td><td>0.0%</td><td>-%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l239">nda::mem::bucket&lt;8&gt;::owns(nda::mem::blk_t) const (line 239)</a></td><td>called 77 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l495">nda::mem::leak_check&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::allocate(unsigned long) (line 495)</a></td><td>called 13 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l518">nda::mem::leak_check&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::deallocate(nda::mem::blk_t) (line 518)</a></td><td>called 13 times</td><td>71.4%</td><td>50.0%</td><td>33.0%</td></tr>
+    <tr><td><a href="#l533">nda::mem::leak_check&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::empty() const (line 533)</a></td><td>called 7 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l547">nda::mem::leak_check&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::get_memory_used() const (line 547)</a></td><td>called 5 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l462">nda::mem::leak_check&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::leak_check() (line 462)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l480">nda::mem::leak_check&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::~leak_check() (line 480)</a></td><td>called 4 times</td><td>60.0%</td><td>50.0%</td><td>43.0%</td></tr>
+    <tr><td><a href="#l86">nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt;::allocate(unsigned long) (line 86)</a></td><td>called 3978672 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l98">nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt;::allocate_zero(unsigned long) (line 98)</a></td><td>called 811 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l112">nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt;::deallocate(nda::mem::blk_t) (line 112)</a></td><td>called 3979483 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l297">nda::mem::multi_bucket&lt;800&gt;::allocate(unsigned long) (line 297)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>85.0%</td></tr>
+    <tr><td><a href="#l323">nda::mem::multi_bucket&lt;800&gt;::deallocate(nda::mem::blk_t) (line 323)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>21.0%</td></tr>
+    <tr><td><a href="#l264">nda::mem::multi_bucket&lt;800&gt;::find_non_full_bucket() (line 264)</a></td><td>not called</td><td>0.0%</td><td>-%</td><td>0.0%</td></tr>
+    <tr><td><a href="#l277">nda::mem::multi_bucket&lt;800&gt;::multi_bucket() (line 277)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>78.0%</td></tr>
+    <tr><td><a href="#l297">nda::mem::multi_bucket&lt;8&gt;::allocate(unsigned long) (line 297)</a></td><td>called 66 times</td><td>100.0%</td><td>83.3%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l309">nda::mem::multi_bucket&lt;8&gt;::allocate_zero(unsigned long) (line 309)</a></td><td>called 66 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l354">nda::mem::multi_bucket&lt;8&gt;::buckets() const (line 354)</a></td><td>called 13 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l323">nda::mem::multi_bucket&lt;8&gt;::deallocate(nda::mem::blk_t) (line 323)</a></td><td>called 2 times</td><td>50.0%</td><td>50.0%</td><td>53.0%</td></tr>
+    <tr><td><a href="#l348">nda::mem::multi_bucket&lt;8&gt;::empty() const (line 348)</a></td><td>called 2 times</td><td>100.0%</td><td>75.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l264">nda::mem::multi_bucket&lt;8&gt;::find_non_full_bucket() (line 264)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>77.0%</td></tr>
+    <tr><td><a href="#l277">nda::mem::multi_bucket&lt;8&gt;::multi_bucket() (line 277)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>78.0%</td></tr>
+    <tr><td><a href="#l362">nda::mem::multi_bucket&lt;8&gt;::owns(nda::mem::blk_t) const (line 362)</a></td><td>called 2 times</td><td>100.0%</td><td>83.3%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l415">nda::mem::segregator&lt;800ul, nda::mem::multi_bucket&lt;800&gt;, nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::allocate(unsigned long) (line 415)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>80.0%</td></tr>
+    <tr><td><a href="#l432">nda::mem::segregator&lt;800ul, nda::mem::multi_bucket&lt;800&gt;, nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::deallocate(nda::mem::blk_t) (line 432)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>80.0%</td></tr>
+    <tr><td><a href="#l394">nda::mem::segregator&lt;800ul, nda::mem::multi_bucket&lt;800&gt;, nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::segregator() (line 394)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l596">nda::mem::stats&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::allocate(unsigned long) (line 596)</a></td><td>called 20 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l618">nda::mem::stats&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::deallocate(nda::mem::blk_t) (line 618)</a></td><td>called 20 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l632">nda::mem::stats&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::histogram() const (line 632)</a></td><td>called 20 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l638">nda::mem::stats&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::print_histogram(std::ostream&amp;) const (line 638)</a></td><td>called 2 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l569">nda::mem::stats&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::stats() (line 569)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>75.0%</td></tr>
+    <tr><td><a href="#l584">nda::mem::stats&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt;::~stats() (line 584)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
   </table>
 </details>
 
@@ -1326,10 +1332,14 @@
       <td class="lineno"><a id="l170" href="#l170">170</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
+            <div class="functionName">nda::mem::bucket&lt;8&gt;::allocate(unsigned long):</div>
             <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
-            <div class="takenBranch">&check; Branch 1 taken 132 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 131 times.</div>
+            <div class="functionName">nda::mem::bucket&lt;800&gt;::allocate(unsigned long):</div>
+            <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
           </div>
         </details>
       </td>
@@ -1340,10 +1350,14 @@
       <td class="lineno"><a id="l171" href="#l171">171</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
+            <div class="functionName">nda::mem::bucket&lt;8&gt;::allocate(unsigned long):</div>
             <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
-            <div class="takenBranch">&check; Branch 1 taken 132 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 131 times.</div>
+            <div class="functionName">nda::mem::bucket&lt;800&gt;::allocate(unsigned long):</div>
+            <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
           </div>
         </details>
       </td>
@@ -1823,17 +1837,23 @@
       <td class="lineno"><a id="l239" href="#l239">239</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">4/4</summary>
+          <summary class="linebranchSummary">6/8</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 0 taken 76 times.</div>
+            <div class="functionName">nda::mem::bucket&lt;8&gt;::owns(nda::mem::blk_t) const:</div>
+            <div class="takenBranch">&check; Branch 0 taken 75 times.</div>
             <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
-            <div class="takenBranch">&check; Branch 2 taken 71 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 70 times.</div>
             <div class="takenBranch">&check; Branch 3 taken 5 times.</div>
+            <div class="functionName">nda::mem::bucket&lt;800&gt;::owns(nda::mem::blk_t) const:</div>
+            <div class="takenBranch">&check; Branch 0 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">78</td>
-      <td class="src coveredLine"><span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">owns</span><span class="p">(</span><span class="n">blk_t</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">noexcept</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ptr</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ptr</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">TotalChunkSize</span><span class="p">;</span><span class="w"> </span><span class="p">}</span></td>
+      <td class="linecount partialCoveredLine">78</td>
+      <td class="src partialCoveredLine"><span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">owns</span><span class="p">(</span><span class="n">blk_t</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">noexcept</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ptr</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">ptr</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">TotalChunkSize</span><span class="p">;</span><span class="w"> </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l240" href="#l240">240</a></td>
@@ -2014,9 +2034,13 @@
       <td class="lineno"><a id="l265" href="#l265">265</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">1/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 4 taken 1 times.</div>
+            <div class="functionName">auto nda::mem::multi_bucket&lt;8&gt;::find_non_full_bucket()::{lambda(auto:1 const&amp;)#1}::operator()&lt;nda::mem::bucket&lt;8&gt; &gt;(nda::mem::bucket&lt;8&gt; const&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 4 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
+            <div class="functionName">auto nda::mem::multi_bucket&lt;800&gt;::find_non_full_bucket()::{lambda(auto:1 const&amp;)#1}::operator()&lt;nda::mem::bucket&lt;800&gt; &gt;(nda::mem::bucket&lt;800&gt; const&amp;) const:</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
           </div>
         </details>
@@ -2028,10 +2052,14 @@
       <td class="lineno"><a id="l266" href="#l266">266</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">1/4</summary>
           <div class="linebranchContents">
+            <div class="functionName">auto nda::mem::multi_bucket&lt;8&gt;::find_non_full_bucket()::{lambda(auto:1 const&amp;)#1}::operator()&lt;nda::mem::bucket&lt;8&gt; &gt;(nda::mem::bucket&lt;8&gt; const&amp;) const:</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-            <div class="takenBranch">&check; Branch 3 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
+            <div class="functionName">auto nda::mem::multi_bucket&lt;800&gt;::find_non_full_bucket()::{lambda(auto:1 const&amp;)#1}::operator()&lt;nda::mem::bucket&lt;800&gt; &gt;(nda::mem::bucket&lt;800&gt; const&amp;) const:</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
           </div>
         </details>
       </td>
@@ -2042,9 +2070,13 @@
       <td class="lineno"><a id="l267" href="#l267">267</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">1/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 1 times.</div>
+            <div class="functionName">auto nda::mem::multi_bucket&lt;8&gt;::find_non_full_bucket()::{lambda(auto:1 const&amp;)#1}::operator()&lt;nda::mem::bucket&lt;8&gt; &gt;(nda::mem::bucket&lt;8&gt; const&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">auto nda::mem::multi_bucket&lt;800&gt;::find_non_full_bucket()::{lambda(auto:1 const&amp;)#1}::operator()&lt;nda::mem::bucket&lt;800&gt; &gt;(nda::mem::bucket&lt;800&gt; const&amp;) const:</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
@@ -2056,9 +2088,13 @@
       <td class="lineno"><a id="l268" href="#l268">268</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">1/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 5 taken 1 times.</div>
+            <div class="functionName">auto nda::mem::multi_bucket&lt;8&gt;::find_non_full_bucket()::{lambda(auto:1 const&amp;, auto:2 const&amp;)#1}::operator()&lt;nda::mem::bucket&lt;8&gt;, nda::mem::bucket&lt;8&gt; &gt;(nda::mem::bucket&lt;8&gt; const&amp;, nda::mem::bucket&lt;8&gt; const&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 5 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="functionName">auto nda::mem::multi_bucket&lt;800&gt;::find_non_full_bucket()::{lambda(auto:1 const&amp;, auto:2 const&amp;)#1}::operator()&lt;nda::mem::bucket&lt;800&gt;, nda::mem::bucket&lt;800&gt; &gt;(nda::mem::bucket&lt;800&gt; const&amp;, nda::mem::bucket&lt;800&gt; const&amp;) const:</div>
+            <div class="notTakenBranch">&cross; Branch 5 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
           </div>
         </details>
@@ -2070,9 +2106,13 @@
       <td class="lineno"><a id="l269" href="#l269">269</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">1/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 3 taken 1 times.</div>
+            <div class="functionName">auto nda::mem::multi_bucket&lt;8&gt;::find_non_full_bucket()::{lambda(auto:1 const&amp;, auto:2 const&amp;)#1}::operator()&lt;nda::mem::bucket&lt;8&gt;, nda::mem::bucket&lt;8&gt; &gt;(nda::mem::bucket&lt;8&gt; const&amp;, nda::mem::bucket&lt;8&gt; const&amp;) const:</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="functionName">auto nda::mem::multi_bucket&lt;800&gt;::find_non_full_bucket()::{lambda(auto:1 const&amp;, auto:2 const&amp;)#1}::operator()&lt;nda::mem::bucket&lt;800&gt;, nda::mem::bucket&lt;800&gt; &gt;(nda::mem::bucket&lt;800&gt; const&amp;, nda::mem::bucket&lt;800&gt; const&amp;) const:</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
           </div>
         </details>
@@ -2133,9 +2173,13 @@
       <td class="lineno"><a id="l277" href="#l277">277</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="functionName">nda::mem::multi_bucket&lt;8&gt;::multi_bucket():</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="functionName">nda::mem::multi_bucket&lt;800&gt;::multi_bucket():</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
@@ -2287,14 +2331,22 @@
       <td class="lineno"><a id="l298" href="#l298">298</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">5/6</summary>
+          <summary class="linebranchSummary">8/12</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 67 times.</div>
+            <div class="functionName">nda::mem::multi_bucket&lt;8&gt;::allocate(unsigned long):</div>
+            <div class="takenBranch">&check; Branch 2 taken 66 times.</div>
             <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-            <div class="takenBranch">&check; Branch 6 taken 1 times.</div>
-            <div class="takenBranch">&check; Branch 7 taken 66 times.</div>
-            <div class="takenBranch">&check; Branch 8 taken 1 times.</div>
-            <div class="takenBranch">&check; Branch 9 taken 66 times.</div>
+            <div class="takenBranch">&check; Branch 6 taken 1 time.</div>
+            <div class="takenBranch">&check; Branch 7 taken 65 times.</div>
+            <div class="takenBranch">&check; Branch 8 taken 1 time.</div>
+            <div class="takenBranch">&check; Branch 9 taken 65 times.</div>
+            <div class="functionName">nda::mem::multi_bucket&lt;800&gt;::allocate(unsigned long):</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
+            <div class="takenBranch">&check; Branch 9 taken 1 time.</div>
           </div>
         </details>
       </td>
@@ -2487,14 +2539,22 @@
       <td class="lineno"><a id="l325" href="#l325">325</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">5/6</summary>
+          <summary class="linebranchSummary">6/12</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 3 times.</div>
+            <div class="functionName">nda::mem::multi_bucket&lt;8&gt;::deallocate(nda::mem::blk_t):</div>
+            <div class="takenBranch">&check; Branch 2 taken 2 times.</div>
             <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
-            <div class="takenBranch">&check; Branch 6 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
             <div class="takenBranch">&check; Branch 7 taken 2 times.</div>
-            <div class="takenBranch">&check; Branch 8 taken 1 times.</div>
+            <div class="notTakenBranch">&cross; Branch 8 not taken.</div>
             <div class="takenBranch">&check; Branch 9 taken 2 times.</div>
+            <div class="functionName">nda::mem::multi_bucket&lt;800&gt;::deallocate(nda::mem::blk_t):</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
+            <div class="takenBranch">&check; Branch 6 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 7 not taken.</div>
+            <div class="takenBranch">&check; Branch 8 taken 1 time.</div>
+            <div class="notTakenBranch">&cross; Branch 9 not taken.</div>
           </div>
         </details>
       </td>
@@ -2554,10 +2614,14 @@
       <td class="lineno"><a id="l333" href="#l333">333</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">1/4</summary>
           <div class="linebranchContents">
+            <div class="functionName">auto nda::mem::multi_bucket&lt;8&gt;::deallocate(nda::mem::blk_t)::{lambda(auto:1 const&amp;, auto:2)#1}::operator()&lt;nda::mem::bucket&lt;8&gt;, char*&gt;(nda::mem::bucket&lt;8&gt; const&amp;, char*) const:</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
             <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
+            <div class="functionName">auto nda::mem::multi_bucket&lt;800&gt;::deallocate(nda::mem::blk_t)::{lambda(auto:1 const&amp;, auto:2)#1}::operator()&lt;nda::mem::bucket&lt;800&gt;, char*&gt;(nda::mem::bucket&lt;800&gt; const&amp;, char*) const:</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
           </div>
         </details>
       </td>
@@ -2568,10 +2632,14 @@
       <td class="lineno"><a id="l334" href="#l334">334</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">1/4</summary>
           <div class="linebranchContents">
+            <div class="functionName">auto nda::mem::multi_bucket&lt;8&gt;::deallocate(nda::mem::blk_t)::{lambda(auto:1 const&amp;, auto:2)#1}::operator()&lt;nda::mem::bucket&lt;8&gt;, char*&gt;(nda::mem::bucket&lt;8&gt; const&amp;, char*) const:</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
             <div class="takenBranch">&check; Branch 3 taken 2 times.</div>
+            <div class="functionName">auto nda::mem::multi_bucket&lt;800&gt;::deallocate(nda::mem::blk_t)::{lambda(auto:1 const&amp;, auto:2)#1}::operator()&lt;nda::mem::bucket&lt;800&gt;, char*&gt;(nda::mem::bucket&lt;800&gt; const&amp;, char*) const:</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
           </div>
         </details>
       </td>
@@ -2603,24 +2671,32 @@
       <td class="lineno"><a id="l338" href="#l338">338</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">2/2</summary>
+          <summary class="linebranchSummary">2/4</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 1 times.</div>
-            <div class="takenBranch">&check; Branch 3 taken 1 times.</div>
+            <div class="functionName">auto nda::mem::multi_bucket&lt;8&gt;::deallocate(nda::mem::blk_t)::{lambda(auto:1 const&amp;, auto:2)#1}::operator()&lt;nda::mem::bucket&lt;8&gt;, char*&gt;(nda::mem::bucket&lt;8&gt; const&amp;, char*) const:</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="takenBranch">&check; Branch 3 taken 1 time.</div>
+            <div class="functionName">auto nda::mem::multi_bucket&lt;800&gt;::deallocate(nda::mem::blk_t)::{lambda(auto:1 const&amp;, auto:2)#1}::operator()&lt;nda::mem::bucket&lt;800&gt;, char*&gt;(nda::mem::bucket&lt;800&gt; const&amp;, char*) const:</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">2</td>
-      <td class="src coveredLine"><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">bu</span><span class="o">-&gt;</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="p">;</span></td>
+      <td class="linecount partialCoveredLine">2</td>
+      <td class="src partialCoveredLine"><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">bu</span><span class="o">-&gt;</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l339" href="#l339">339</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">1/2</summary>
+          <summary class="linebranchSummary">1/4</summary>
           <div class="linebranchContents">
+            <div class="functionName">auto nda::mem::multi_bucket&lt;8&gt;::deallocate(nda::mem::blk_t)::{lambda(auto:1 const&amp;, auto:2)#1}::operator()&lt;nda::mem::bucket&lt;8&gt;, char*&gt;(nda::mem::bucket&lt;8&gt; const&amp;, char*) const:</div>
             <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
-            <div class="takenBranch">&check; Branch 2 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
+            <div class="functionName">auto nda::mem::multi_bucket&lt;800&gt;::deallocate(nda::mem::blk_t)::{lambda(auto:1 const&amp;, auto:2)#1}::operator()&lt;nda::mem::bucket&lt;800&gt;, char*&gt;(nda::mem::bucket&lt;800&gt; const&amp;, char*) const:</div>
+            <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
       </td>
@@ -2691,8 +2767,8 @@
           <div class="linebranchContents">
             <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
-            <div class="takenBranch">&check; Branch 5 taken 1 times.</div>
-            <div class="takenBranch">&check; Branch 6 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 5 taken 1 time.</div>
+            <div class="takenBranch">&check; Branch 6 taken 1 time.</div>
           </div>
         </details>
       </td>
@@ -2812,7 +2888,7 @@
           <div class="linebranchContents">
             <div class="takenBranch">&check; Branch 3 taken 3 times.</div>
             <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-            <div class="takenBranch">&check; Branch 6 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 6 taken 1 time.</div>
             <div class="takenBranch">&check; Branch 7 taken 2 times.</div>
             <div class="takenBranch">&check; Branch 10 taken 3 times.</div>
             <div class="takenBranch">&check; Branch 11 taken 2 times.</div>
@@ -3178,7 +3254,7 @@
         <details class="linebranchDetails">
           <summary class="linebranchSummary">1/2</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 0 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 0 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
           </div>
         </details>
@@ -3304,7 +3380,7 @@
         <details class="linebranchDetails">
           <summary class="linebranchSummary">1/2</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 0 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 0 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
           </div>
         </details>
@@ -4284,7 +4360,7 @@
         <details class="linebranchDetails">
           <summary class="linebranchSummary">1/2</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 1 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
           </div>
         </details>
@@ -4857,7 +4933,7 @@
       <hr/>
     </main>
     <footer>
-      Generated by: <a href="http://gcovr.com/en/8.3">GCOVR (Version 8.3)</a>
+      Generated by: <a href="http://gcovr.com/en/8.4">GCOVR (Version 8.4)</a>
     </footer>
   </body>
 </html>

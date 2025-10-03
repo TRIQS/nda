@@ -3,7 +3,7 @@
 
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>GCC Code Coverage Report</title>
+    <title>mpi/utils.hpp - GCC Code Coverage Report</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="coverage.css"/>
   </head>
@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2025-08-25 15:31:29</td>
+      <td>2025-10-03 19:27:55</td>
     </tr>
   </table>
 </div>
@@ -34,27 +34,31 @@
   <table class="coverage">
     <tr>
       <th></th>
-      <th scope="col">Exec</th>
-      <th scope="col">Total</th>
       <th scope="col">Coverage</th>
+      <th scope="col">Exec</th>
+      <th scope="col">Excl</th>
+      <th scope="col">Total</th>
     </tr>
     <tr>
       <th scope="row">Lines:</th>
-      <td>7</td>
-      <td>8</td>
-      <td class="coverage-medium">87.5%</td>
+      <td class="coverage-medium">85.9%</td>
+      <td class="coverage-medium">79</td>
+      <td class="coverage-medium">0</td>
+      <td class="coverage-medium">92</td>
     </tr>
     <tr>
       <th scope="row">Functions:</th>
-      <td>33</td>
-      <td>33</td>
       <td class="coverage-high">100.0%</td>
+      <td class="coverage-high">33</td>
+      <td class="coverage-high">0</td>
+      <td class="coverage-high">33</td>
     </tr>
     <tr>
       <th scope="row">Branches:</th>
-      <td>3</td>
-      <td>22</td>
       <td class="coverage-low">13.6%</td>
+      <td class="coverage-low">39</td>
+      <td class="coverage-low">0</td>
+      <td class="coverage-low">286</td>
     </tr>
   </table>
 </div>
@@ -68,41 +72,43 @@
     <tr>
       <th>Function (Line)</th>
       <th>Call count</th>
+      <th>Line coverage</th>
+      <th>Branch coverage</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 84 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array&lt;int, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;int, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 6 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array&lt;long, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;long, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array&lt;long, 3, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;long, 3, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 34 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array&lt;long, 3, nda::basic_layout&lt;0ul, 33ul, (nda::layout_prop_e)3&gt;, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;long, 3, nda::basic_layout&lt;0ul, 33ul, (nda::layout_prop_e)3&gt;, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 24 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 12 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 18 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 3 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 3 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;int const, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;int const, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 6 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;int const, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;int const, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 3 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;int const, 2, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;int const, 2, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 3 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;long const, 3, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;long const, 3, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 6 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;long, 1, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;long, 1, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 48 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;long, 2, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;long, 2, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 3 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;long, 3, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;long, 3, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 3 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;long, 3, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;long, 3, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 4 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 6 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 3 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 18 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;int, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;int, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 7 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;int, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;int, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 13 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;int, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;int, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 3 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;long, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;long, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 3 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;long, 3, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;long, 3, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 17 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 21 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 2 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array_view&lt;int, 1, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;int, 1, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 3 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array_view&lt;int, 1, nda::C_layout, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;int, 1, nda::C_layout, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 3 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array_view&lt;int, 2, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;int, 2, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 3 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array_view&lt;long, 2, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;long, 2, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 2 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array_view&lt;long, 3, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;long, 3, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 5 times</td><td>30.0%</td></tr>
-    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 3 times</td><td>30.0%</td></tr>
+    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 84 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array&lt;int, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;int, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 6 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array&lt;long, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;long, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array&lt;long, 3, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;long, 3, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 34 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array&lt;long, 3, nda::basic_layout&lt;0ul, 33ul, (nda::layout_prop_e)3&gt;, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;long, 3, nda::basic_layout&lt;0ul, 33ul, (nda::layout_prop_e)3&gt;, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 24 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;nda::basic_array&lt;double, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 12 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 18 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 3 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 6, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 3 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;int const, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;int const, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 6 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;int const, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;int const, 1, nda::basic_layout&lt;0ul, 0ul, (nda::layout_prop_e)1&gt;, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 3 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;int const, 2, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;int const, 2, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 3 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;long const, 3, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;long const, 3, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 6 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;long, 1, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;long, 1, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 48 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;long, 2, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;long, 2, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 3 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;long, 3, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;long, 3, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 3 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;long, 3, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;long, 3, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 4 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 6 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;std::complex&lt;double&gt; const, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 3 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">bool nda::detail::have_mpi_equal_ranks&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, mpi::communicator const&amp;) (line 31)</a></td><td>called 18 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;int, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;int, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 7 times</td><td>75.0%</td><td>13.6%</td><td>30.0%</td></tr>
+    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;int, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;int, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 13 times</td><td>75.0%</td><td>13.6%</td><td>30.0%</td></tr>
+    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;int, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;int, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 3 times</td><td>75.0%</td><td>13.6%</td><td>30.0%</td></tr>
+    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;long, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;long, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 3 times</td><td>75.0%</td><td>13.6%</td><td>30.0%</td></tr>
+    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;long, 3, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;long, 3, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 17 times</td><td>75.0%</td><td>13.6%</td><td>30.0%</td></tr>
+    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 21 times</td><td>75.0%</td><td>13.6%</td><td>30.0%</td></tr>
+    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 2 times</td><td>75.0%</td><td>13.6%</td><td>30.0%</td></tr>
+    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array_view&lt;int, 1, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;int, 1, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 3 times</td><td>75.0%</td><td>13.6%</td><td>30.0%</td></tr>
+    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array_view&lt;int, 1, nda::C_layout, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;int, 1, nda::C_layout, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 3 times</td><td>75.0%</td><td>13.6%</td><td>30.0%</td></tr>
+    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array_view&lt;int, 2, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;int, 2, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 3 times</td><td>75.0%</td><td>13.6%</td><td>30.0%</td></tr>
+    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array_view&lt;long, 2, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;long, 2, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 2 times</td><td>75.0%</td><td>13.6%</td><td>30.0%</td></tr>
+    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array_view&lt;long, 3, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;long, 3, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 5 times</td><td>75.0%</td><td>13.6%</td><td>30.0%</td></tr>
+    <tr><td><a href="#l24">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) (line 24)</a></td><td>called 3 times</td><td>75.0%</td><td>13.6%</td><td>30.0%</td></tr>
   </table>
 </details>
 
@@ -281,25 +287,110 @@
       <td class="lineno"><a id="l24" href="#l24">24</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">170</td>
+      <td class="linecount coveredLine">85</td>
       <td class="src coveredLine"><span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">check_layout_mpi_compatible</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">func</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l25" href="#l25">25</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">3/6</summary>
+          <summary class="linebranchSummary">39/78</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 1 taken 85 times.</div>
+            <div class="functionName">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;int, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;int, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
             <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
             <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
-            <div class="takenBranch">&check; Branch 5 taken 85 times.</div>
+            <div class="takenBranch">&check; Branch 5 taken 3 times.</div>
             <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
-            <div class="takenBranch">&check; Branch 7 taken 85 times.</div>
+            <div class="takenBranch">&check; Branch 7 taken 3 times.</div>
+            <div class="functionName">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array_view&lt;int, 2, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;int, 2, nda::C_stride_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 3 times.</div>
+            <div class="functionName">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array_view&lt;int, 1, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;int, 1, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 3 times.</div>
+            <div class="functionName">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;int, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;int, 1, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 7 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 7 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 7 times.</div>
+            <div class="functionName">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 21 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 21 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 21 times.</div>
+            <div class="functionName">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;long, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;long, 2, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 3 times.</div>
+            <div class="functionName">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array_view&lt;long, 2, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;long, 2, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 2 times.</div>
+            <div class="functionName">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array_view&lt;int, 1, nda::C_layout, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;int, 1, nda::C_layout, (char)86, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 3 times.</div>
+            <div class="functionName">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array_view&lt;long, 3, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;long, 3, nda::C_layout, (char)65, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 5 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 5 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 5 times.</div>
+            <div class="functionName">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;std::complex&lt;double&gt;, 2, nda::C_layout, (char)77, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 2 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 2 times.</div>
+            <div class="functionName">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;(nda::basic_array_view&lt;std::complex&lt;double&gt;, 2, nda::C_stride_layout, (char)77, nda::default_accessor, nda::borrowed&lt;(nda::mem::AddressSpace)1&gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 3 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 3 times.</div>
+            <div class="functionName">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;long, 3, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;long, 3, nda::C_layout, (char)65, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 17 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 17 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 17 times.</div>
+            <div class="functionName">void nda::detail::check_layout_mpi_compatible&lt;nda::basic_array&lt;int, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;int, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;):</div>
+            <div class="takenBranch">&check; Branch 1 taken 13 times.</div>
+            <div class="notTakenBranch">&cross; Branch 2 not taken.</div>
+            <div class="notTakenBranch">&cross; Branch 4 not taken.</div>
+            <div class="takenBranch">&check; Branch 5 taken 13 times.</div>
+            <div class="notTakenBranch">&cross; Branch 6 not taken.</div>
+            <div class="takenBranch">&check; Branch 7 taken 13 times.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">170</td>
+      <td class="linecount partialCoveredLine">85</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">not</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">is_contiguous</span><span class="p">()</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">has_positive_strides</span><span class="p">())</span></td>
     </tr>
     <tr class="source-line">
@@ -313,7 +404,7 @@
       <td class="lineno"><a id="l27" href="#l27">27</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">170</td>
+      <td class="linecount coveredLine">85</td>
       <td class="src coveredLine"><span class="w">  </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
@@ -341,14 +432,14 @@
       <td class="lineno"><a id="l31" href="#l31">31</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">576</td>
+      <td class="linecount coveredLine">288</td>
       <td class="src coveredLine"><span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">have_mpi_equal_ranks</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">mpi</span><span class="o">::</span><span class="n">communicator</span><span class="w"> </span><span class="o">&amp;</span><span class="n">comm</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l32" href="#l32">32</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">576</td>
+      <td class="linecount coveredLine">288</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">mpi</span><span class="o">::</span><span class="n">all_equal</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
@@ -383,15 +474,15 @@
       <td class="lineno"><a id="l37" href="#l37">37</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">263</td>
-      <td class="src coveredLine"><span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">have_mpi_equal_shapes</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">mpi</span><span class="o">::</span><span class="n">communicator</span><span class="w"> </span><span class="o">&amp;</span><span class="n">comm</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">have_mpi_equal_shapes</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">mpi</span><span class="o">::</span><span class="n">communicator</span><span class="w"> </span><span class="o">&amp;</span><span class="n">comm</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l38" href="#l38">38</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">263</td>
-      <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">have_mpi_equal_ranks</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">mpi</span><span class="o">::</span><span class="n">all_equal</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">shape</span><span class="p">(),</span><span class="w"> </span><span class="n">comm</span><span class="p">);</span></td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">have_mpi_equal_ranks</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">mpi</span><span class="o">::</span><span class="n">all_equal</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">shape</span><span class="p">(),</span><span class="w"> </span><span class="n">comm</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l39" href="#l39">39</a></td>
@@ -426,7 +517,7 @@
       <hr/>
     </main>
     <footer>
-      Generated by: <a href="http://gcovr.com/en/8.3">GCOVR (Version 8.3)</a>
+      Generated by: <a href="http://gcovr.com/en/8.4">GCOVR (Version 8.4)</a>
     </footer>
   </body>
 </html>

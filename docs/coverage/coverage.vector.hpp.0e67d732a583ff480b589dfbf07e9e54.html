@@ -3,7 +3,7 @@
 
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>GCC Code Coverage Report</title>
+    <title>clef/adapters/vector.hpp - GCC Code Coverage Report</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="coverage.css"/>
   </head>
@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2025-08-25 15:31:29</td>
+      <td>2025-10-03 19:27:55</td>
     </tr>
   </table>
 </div>
@@ -34,27 +34,31 @@
   <table class="coverage">
     <tr>
       <th></th>
-      <th scope="col">Exec</th>
-      <th scope="col">Total</th>
       <th scope="col">Coverage</th>
+      <th scope="col">Exec</th>
+      <th scope="col">Excl</th>
+      <th scope="col">Total</th>
     </tr>
     <tr>
       <th scope="row">Lines:</th>
-      <td>9</td>
-      <td>9</td>
       <td class="coverage-high">100.0%</td>
+      <td class="coverage-high">18</td>
+      <td class="coverage-high">0</td>
+      <td class="coverage-high">18</td>
     </tr>
     <tr>
       <th scope="row">Functions:</th>
-      <td>6</td>
-      <td>6</td>
       <td class="coverage-high">100.0%</td>
+      <td class="coverage-high">6</td>
+      <td class="coverage-high">0</td>
+      <td class="coverage-high">6</td>
     </tr>
     <tr>
       <th scope="row">Branches:</th>
-      <td>6</td>
-      <td>7</td>
-      <td class="coverage-medium">85.7%</td>
+      <td class="coverage-medium">83.3%</td>
+      <td class="coverage-medium">10</td>
+      <td class="coverage-medium">0</td>
+      <td class="coverage-medium">12</td>
     </tr>
   </table>
 </div>
@@ -68,14 +72,16 @@
     <tr>
       <th>Function (Line)</th>
       <th>Call count</th>
+      <th>Line coverage</th>
+      <th>Branch coverage</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l50">void nda::clef::clef_auto_assign_subscript&lt;int, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt;, 0&gt; &gt;(std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt;, 0&gt;) (line 50)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l50">void nda::clef::clef_auto_assign_subscript&lt;int, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::expr&lt;nda::clef::tags::subscript, nda::clef::expr&lt;nda::clef::tags::terminal, std::reference_wrapper&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt;, nda::clef::placeholder&lt;0&gt; &gt; &gt;, 0&gt; &gt;(std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::expr&lt;nda::clef::tags::subscript, nda::clef::expr&lt;nda::clef::tags::terminal, std::reference_wrapper&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt;, nda::clef::placeholder&lt;0&gt; &gt; &gt;, 0&gt;) (line 50)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l50">void nda::clef::clef_auto_assign_subscript&lt;int, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, unsigned long, nda::clef::placeholder&lt;1&gt; &gt;, 1&gt; &gt;(std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, unsigned long, nda::clef::placeholder&lt;1&gt; &gt;, 1&gt;) (line 50)</a></td><td>called 5 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l50">void nda::clef::clef_auto_assign_subscript&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt;, nda::clef::make_fun_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, unsigned long&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 1&gt;, 0&gt; &gt;(std::vector&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt;, std::allocator&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt;&amp;, nda::clef::make_fun_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, unsigned long&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 1&gt;, 0&gt;) (line 50)</a></td><td>called 1 time</td><td>91.0%</td></tr>
-    <tr><td><a href="#l29">void nda::clef::detail::clef_auto_assign_std_vector_impl&lt;int, unsigned long&gt;(int&amp;, unsigned long&amp;&amp;) (line 29)</a></td><td>called 33 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l35">void nda::clef::detail::clef_auto_assign_std_vector_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, unsigned long, nda::clef::placeholder&lt;1&gt; &gt;, 1, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, unsigned long, nda::clef::placeholder&lt;1&gt; &gt;, 1&gt;&amp;&amp;) (line 35)</a></td><td>called 5 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l50">void nda::clef::clef_auto_assign_subscript&lt;int, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt;, 0&gt; &gt;(std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt;, 0&gt;) (line 50)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l50">void nda::clef::clef_auto_assign_subscript&lt;int, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::expr&lt;nda::clef::tags::subscript, nda::clef::expr&lt;nda::clef::tags::terminal, std::reference_wrapper&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt;, nda::clef::placeholder&lt;0&gt; &gt; &gt;, 0&gt; &gt;(std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::expr&lt;nda::clef::tags::subscript, nda::clef::expr&lt;nda::clef::tags::terminal, std::reference_wrapper&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt;, nda::clef::placeholder&lt;0&gt; &gt; &gt;, 0&gt;) (line 50)</a></td><td>called 1 time</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l50">void nda::clef::clef_auto_assign_subscript&lt;int, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, unsigned long, nda::clef::placeholder&lt;1&gt; &gt;, 1&gt; &gt;(std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, unsigned long, nda::clef::placeholder&lt;1&gt; &gt;, 1&gt;) (line 50)</a></td><td>called 5 times</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l50">void nda::clef::clef_auto_assign_subscript&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt;, nda::clef::make_fun_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, unsigned long&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 1&gt;, 0&gt; &gt;(std::vector&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt;, std::allocator&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt;&amp;, nda::clef::make_fun_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, unsigned long&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 1&gt;, 0&gt;) (line 50)</a></td><td>called 1 time</td><td>100.0%</td><td>75.0%</td><td>91.0%</td></tr>
+    <tr><td><a href="#l29">void nda::clef::detail::clef_auto_assign_std_vector_impl&lt;int, unsigned long&gt;(int&amp;, unsigned long&amp;&amp;) (line 29)</a></td><td>called 33 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l35">void nda::clef::detail::clef_auto_assign_std_vector_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, unsigned long, nda::clef::placeholder&lt;1&gt; &gt;, 1, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, unsigned long, nda::clef::placeholder&lt;1&gt; &gt;, 1&gt;&amp;&amp;) (line 35)</a></td><td>called 5 times</td><td>100.0%</td><td>50.0%</td><td>100.0%</td></tr>
   </table>
 </details>
 
@@ -443,31 +449,40 @@
       <td class="lineno"><a id="l50" href="#l50">50</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">16</td>
+      <td class="linecount coveredLine">8</td>
       <td class="src coveredLine"><span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">clef_auto_assign_subscript</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">F</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l51" href="#l51">51</a></td>
       <td class="linebranch">
         <details class="linebranchDetails">
-          <summary class="linebranchSummary">5/5</summary>
+          <summary class="linebranchSummary">9/10</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 3 taken 33 times.</div>
-            <div class="takenBranch">&check; Branch 4 taken 7 times.</div>
+            <div class="functionName">void nda::clef::clef_auto_assign_subscript&lt;int, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, unsigned long, nda::clef::placeholder&lt;1&gt; &gt;, 1&gt; &gt;(std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, unsigned long, nda::clef::placeholder&lt;1&gt; &gt;, 1&gt;):</div>
+            <div class="takenBranch">&check; Branch 3 taken 25 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 5 times.</div>
+            <div class="functionName">void nda::clef::clef_auto_assign_subscript&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt;, nda::clef::make_fun_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, unsigned long&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 1&gt;, 0&gt; &gt;(std::vector&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt;, std::allocator&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt;&amp;, nda::clef::make_fun_impl&lt;nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, unsigned long&gt;, nda::clef::placeholder&lt;1&gt; &gt;, 1&gt;, 0&gt;):</div>
             <div class="takenBranch">&check; Branch 2 taken 5 times.</div>
+            <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
             <div class="takenBranch">&check; Branch 5 taken 5 times.</div>
-            <div class="takenBranch">&check; Branch 6 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 6 taken 1 time.</div>
+            <div class="functionName">void nda::clef::clef_auto_assign_subscript&lt;int, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::expr&lt;nda::clef::tags::subscript, nda::clef::expr&lt;nda::clef::tags::terminal, std::reference_wrapper&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt;, nda::clef::placeholder&lt;0&gt; &gt; &gt;, 0&gt; &gt;(std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::plus, nda::clef::placeholder&lt;0&gt;, nda::clef::expr&lt;nda::clef::tags::subscript, nda::clef::expr&lt;nda::clef::tags::terminal, std::reference_wrapper&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; &gt;, nda::clef::placeholder&lt;0&gt; &gt; &gt;, 0&gt;):</div>
+            <div class="takenBranch">&check; Branch 3 taken 3 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 1 time.</div>
+            <div class="functionName">void nda::clef::clef_auto_assign_subscript&lt;int, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt;, 0&gt; &gt;(std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;, nda::clef::make_fun_impl&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::placeholder&lt;0&gt; &gt;, 0&gt;):</div>
+            <div class="takenBranch">&check; Branch 3 taken 5 times.</div>
+            <div class="takenBranch">&check; Branch 4 taken 1 time.</div>
           </div>
         </details>
       </td>
-      <td class="linecount coveredLine">92</td>
-      <td class="src coveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">detail</span><span class="o">::</span><span class="n">clef_auto_assign_std_vector_impl</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="n">i</span><span class="p">));</span></td>
+      <td class="linecount partialCoveredLine">46</td>
+      <td class="src partialCoveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">detail</span><span class="o">::</span><span class="n">clef_auto_assign_std_vector_impl</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="n">i</span><span class="p">));</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l52" href="#l52">52</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">16</td>
+      <td class="linecount coveredLine">8</td>
       <td class="src coveredLine"><span class="w">  </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
@@ -510,7 +525,7 @@
       <hr/>
     </main>
     <footer>
-      Generated by: <a href="http://gcovr.com/en/8.3">GCOVR (Version 8.3)</a>
+      Generated by: <a href="http://gcovr.com/en/8.4">GCOVR (Version 8.4)</a>
     </footer>
   </body>
 </html>

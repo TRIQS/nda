@@ -3,7 +3,7 @@
 
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>GCC Code Coverage Report</title>
+    <title>clef/adapters/math.hpp - GCC Code Coverage Report</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="coverage.css"/>
   </head>
@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2025-08-25 15:31:29</td>
+      <td>2025-10-03 19:27:55</td>
     </tr>
   </table>
 </div>
@@ -34,27 +34,31 @@
   <table class="coverage">
     <tr>
       <th></th>
-      <th scope="col">Exec</th>
-      <th scope="col">Total</th>
       <th scope="col">Coverage</th>
+      <th scope="col">Exec</th>
+      <th scope="col">Excl</th>
+      <th scope="col">Total</th>
     </tr>
     <tr>
       <th scope="row">Lines:</th>
-      <td>7</td>
-      <td>7</td>
       <td class="coverage-high">100.0%</td>
+      <td class="coverage-high">14</td>
+      <td class="coverage-high">0</td>
+      <td class="coverage-high">14</td>
     </tr>
     <tr>
       <th scope="row">Functions:</th>
-      <td>14</td>
-      <td>14</td>
       <td class="coverage-high">100.0%</td>
+      <td class="coverage-high">14</td>
+      <td class="coverage-high">0</td>
+      <td class="coverage-high">14</td>
     </tr>
     <tr>
       <th scope="row">Branches:</th>
-      <td>7</td>
-      <td>14</td>
       <td class="coverage-low">50.0%</td>
+      <td class="coverage-low">7</td>
+      <td class="coverage-low">0</td>
+      <td class="coverage-low">14</td>
     </tr>
   </table>
 </div>
@@ -68,22 +72,24 @@
     <tr>
       <th>Function (Line)</th>
       <th>Call count</th>
+      <th>Line coverage</th>
+      <th>Branch coverage</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l43">auto nda::clef::abs&lt;nda::clef::placeholder&lt;0&gt;&amp;&gt;(nda::clef::placeholder&lt;0&gt;&amp;) (line 43)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l46">auto nda::clef::conj&lt;nda::clef::placeholder&lt;0&gt;&amp;&gt;(nda::clef::placeholder&lt;0&gt;&amp;) (line 46)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">auto nda::clef::cos&lt;nda::clef::placeholder&lt;0&gt;&amp;&gt;(nda::clef::placeholder&lt;0&gt;&amp;) (line 31)</a></td><td>called 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l34">auto nda::clef::cosh&lt;nda::clef::placeholder&lt;0&gt;&amp;&gt;(nda::clef::placeholder&lt;0&gt;&amp;) (line 34)</a></td><td>called 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l32">auto nda::clef::sin&lt;nda::clef::placeholder&lt;1&gt;&amp;&gt;(nda::clef::placeholder&lt;1&gt;&amp;) (line 32)</a></td><td>called 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l35">auto nda::clef::sinh&lt;nda::clef::placeholder&lt;1&gt;&amp;&gt;(nda::clef::placeholder&lt;1&gt;&amp;) (line 35)</a></td><td>called 2 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l42">auto nda::clef::sqrt&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::expr&lt;nda::clef::tags::function, nda::clef::conj&lt;nda::clef::placeholder&lt;0&gt;&amp;&gt;(nda::clef::placeholder&lt;0&gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::placeholder&lt;0&gt; &gt; &gt; &gt;(nda::clef::placeholder&lt;0&gt;&amp;) (line 42)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l43">decltype(auto) nda::clef::abs&lt;nda::clef::placeholder&lt;0&gt;&amp;&gt;(nda::clef::placeholder&lt;0&gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}::operator()&lt;std::complex&lt;double&gt; &gt;(nda::clef::placeholder&lt;0&gt;&amp;) const (line 43)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l46">decltype(auto) nda::clef::conj&lt;nda::clef::placeholder&lt;0&gt;&amp;&gt;(nda::clef::placeholder&lt;0&gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}::operator()&lt;std::complex&lt;double&gt; &gt;(nda::clef::placeholder&lt;0&gt;&amp;) const (line 46)</a></td><td>called 1 time</td><td>100.0%</td></tr>
-    <tr><td><a href="#l31">decltype(auto) nda::clef::cos&lt;nda::clef::placeholder&lt;0&gt;&amp;&gt;(nda::clef::placeholder&lt;0&gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}::operator()&lt;double&gt;(nda::clef::placeholder&lt;0&gt;&amp;) const (line 31)</a></td><td>called 4 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l34">decltype(auto) nda::clef::cosh&lt;nda::clef::placeholder&lt;0&gt;&amp;&gt;(nda::clef::placeholder&lt;0&gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}::operator()&lt;double&gt;(nda::clef::placeholder&lt;0&gt;&amp;) const (line 34)</a></td><td>called 4 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l32">decltype(auto) nda::clef::sin&lt;nda::clef::placeholder&lt;1&gt;&amp;&gt;(nda::clef::placeholder&lt;1&gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}::operator()&lt;double&gt;(nda::clef::placeholder&lt;1&gt;&amp;) const (line 32)</a></td><td>called 4 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l35">decltype(auto) nda::clef::sinh&lt;nda::clef::placeholder&lt;1&gt;&amp;&gt;(nda::clef::placeholder&lt;1&gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}::operator()&lt;double&gt;(nda::clef::placeholder&lt;1&gt;&amp;) const (line 35)</a></td><td>called 4 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l42">decltype(auto) nda::clef::sqrt&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::expr&lt;nda::clef::tags::function, nda::clef::conj&lt;nda::clef::placeholder&lt;0&gt;&amp;&gt;(nda::clef::placeholder&lt;0&gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::placeholder&lt;0&gt; &gt; &gt; &gt;(nda::clef::placeholder&lt;0&gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}::operator()&lt;std::complex&lt;double&gt; &gt;(nda::clef::placeholder&lt;0&gt;&amp;) const (line 42)</a></td><td>called 1 time</td><td>100.0%</td></tr>
+    <tr><td><a href="#l43">auto nda::clef::abs&lt;nda::clef::placeholder&lt;0&gt;&amp;&gt;(nda::clef::placeholder&lt;0&gt;&amp;) (line 43)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l46">auto nda::clef::conj&lt;nda::clef::placeholder&lt;0&gt;&amp;&gt;(nda::clef::placeholder&lt;0&gt;&amp;) (line 46)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">auto nda::clef::cos&lt;nda::clef::placeholder&lt;0&gt;&amp;&gt;(nda::clef::placeholder&lt;0&gt;&amp;) (line 31)</a></td><td>called 2 times</td><td>100.0%</td><td>50.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l34">auto nda::clef::cosh&lt;nda::clef::placeholder&lt;0&gt;&amp;&gt;(nda::clef::placeholder&lt;0&gt;&amp;) (line 34)</a></td><td>called 2 times</td><td>100.0%</td><td>50.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l32">auto nda::clef::sin&lt;nda::clef::placeholder&lt;1&gt;&amp;&gt;(nda::clef::placeholder&lt;1&gt;&amp;) (line 32)</a></td><td>called 2 times</td><td>100.0%</td><td>50.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l35">auto nda::clef::sinh&lt;nda::clef::placeholder&lt;1&gt;&amp;&gt;(nda::clef::placeholder&lt;1&gt;&amp;) (line 35)</a></td><td>called 2 times</td><td>100.0%</td><td>50.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l42">auto nda::clef::sqrt&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::expr&lt;nda::clef::tags::function, nda::clef::conj&lt;nda::clef::placeholder&lt;0&gt;&amp;&gt;(nda::clef::placeholder&lt;0&gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::placeholder&lt;0&gt; &gt; &gt; &gt;(nda::clef::placeholder&lt;0&gt;&amp;) (line 42)</a></td><td>called 1 time</td><td>100.0%</td><td>50.0%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l43">decltype(auto) nda::clef::abs&lt;nda::clef::placeholder&lt;0&gt;&amp;&gt;(nda::clef::placeholder&lt;0&gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}::operator()&lt;std::complex&lt;double&gt; &gt;(nda::clef::placeholder&lt;0&gt;&amp;) const (line 43)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l46">decltype(auto) nda::clef::conj&lt;nda::clef::placeholder&lt;0&gt;&amp;&gt;(nda::clef::placeholder&lt;0&gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}::operator()&lt;std::complex&lt;double&gt; &gt;(nda::clef::placeholder&lt;0&gt;&amp;) const (line 46)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l31">decltype(auto) nda::clef::cos&lt;nda::clef::placeholder&lt;0&gt;&amp;&gt;(nda::clef::placeholder&lt;0&gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}::operator()&lt;double&gt;(nda::clef::placeholder&lt;0&gt;&amp;) const (line 31)</a></td><td>called 4 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l34">decltype(auto) nda::clef::cosh&lt;nda::clef::placeholder&lt;0&gt;&amp;&gt;(nda::clef::placeholder&lt;0&gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}::operator()&lt;double&gt;(nda::clef::placeholder&lt;0&gt;&amp;) const (line 34)</a></td><td>called 4 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l32">decltype(auto) nda::clef::sin&lt;nda::clef::placeholder&lt;1&gt;&amp;&gt;(nda::clef::placeholder&lt;1&gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}::operator()&lt;double&gt;(nda::clef::placeholder&lt;1&gt;&amp;) const (line 32)</a></td><td>called 4 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l35">decltype(auto) nda::clef::sinh&lt;nda::clef::placeholder&lt;1&gt;&amp;&gt;(nda::clef::placeholder&lt;1&gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}::operator()&lt;double&gt;(nda::clef::placeholder&lt;1&gt;&amp;) const (line 35)</a></td><td>called 4 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l42">decltype(auto) nda::clef::sqrt&lt;nda::clef::expr&lt;nda::clef::tags::multiplies, nda::clef::placeholder&lt;0&gt;, nda::clef::expr&lt;nda::clef::tags::function, nda::clef::conj&lt;nda::clef::placeholder&lt;0&gt;&amp;&gt;(nda::clef::placeholder&lt;0&gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}, nda::clef::placeholder&lt;0&gt; &gt; &gt; &gt;(nda::clef::placeholder&lt;0&gt;&amp;)::{lambda((auto:1&amp;&amp;)...)#1}::operator()&lt;std::complex&lt;double&gt; &gt;(nda::clef::placeholder&lt;0&gt;&amp;) const (line 42)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
   </table>
 </details>
 
@@ -318,7 +324,7 @@
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">16</td>
+      <td class="linecount partialCoveredLine">8</td>
       <td class="src partialCoveredLine"><span class="w">  </span><span class="n">CLEF_MAKE_STD_FNT_LAZY</span><span class="p">(</span><span class="n">cos</span><span class="p">)</span></td>
     </tr>
     <tr class="source-line">
@@ -332,7 +338,7 @@
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">16</td>
+      <td class="linecount partialCoveredLine">8</td>
       <td class="src partialCoveredLine"><span class="w">  </span><span class="n">CLEF_MAKE_STD_FNT_LAZY</span><span class="p">(</span><span class="n">sin</span><span class="p">)</span></td>
     </tr>
     <tr class="source-line">
@@ -353,7 +359,7 @@
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">16</td>
+      <td class="linecount partialCoveredLine">8</td>
       <td class="src partialCoveredLine"><span class="w">  </span><span class="n">CLEF_MAKE_STD_FNT_LAZY</span><span class="p">(</span><span class="n">cosh</span><span class="p">)</span></td>
     </tr>
     <tr class="source-line">
@@ -367,7 +373,7 @@
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">16</td>
+      <td class="linecount partialCoveredLine">8</td>
       <td class="src partialCoveredLine"><span class="w">  </span><span class="n">CLEF_MAKE_STD_FNT_LAZY</span><span class="p">(</span><span class="n">sinh</span><span class="p">)</span></td>
     </tr>
     <tr class="source-line">
@@ -418,12 +424,12 @@
         <details class="linebranchDetails">
           <summary class="linebranchSummary">1/2</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">6</td>
+      <td class="linecount partialCoveredLine">3</td>
       <td class="src partialCoveredLine"><span class="w">  </span><span class="n">CLEF_MAKE_STD_FNT_LAZY</span><span class="p">(</span><span class="n">sqrt</span><span class="p">)</span></td>
     </tr>
     <tr class="source-line">
@@ -432,12 +438,12 @@
         <details class="linebranchDetails">
           <summary class="linebranchSummary">1/2</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">6</td>
+      <td class="linecount partialCoveredLine">3</td>
       <td class="src partialCoveredLine"><span class="w">  </span><span class="n">CLEF_MAKE_STD_FNT_LAZY</span><span class="p">(</span><span class="n">abs</span><span class="p">)</span></td>
     </tr>
     <tr class="source-line">
@@ -460,12 +466,12 @@
         <details class="linebranchDetails">
           <summary class="linebranchSummary">1/2</summary>
           <div class="linebranchContents">
-            <div class="takenBranch">&check; Branch 2 taken 1 times.</div>
+            <div class="takenBranch">&check; Branch 2 taken 1 time.</div>
             <div class="notTakenBranch">&cross; Branch 3 not taken.</div>
           </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">6</td>
+      <td class="linecount partialCoveredLine">3</td>
       <td class="src partialCoveredLine"><span class="w">  </span><span class="n">CLEF_MAKE_STD_FNT_LAZY</span><span class="p">(</span><span class="n">conj</span><span class="p">)</span></td>
     </tr>
     <tr class="source-line">
@@ -508,7 +514,7 @@
       <hr/>
     </main>
     <footer>
-      Generated by: <a href="http://gcovr.com/en/8.3">GCOVR (Version 8.3)</a>
+      Generated by: <a href="http://gcovr.com/en/8.4">GCOVR (Version 8.4)</a>
     </footer>
   </body>
 </html>

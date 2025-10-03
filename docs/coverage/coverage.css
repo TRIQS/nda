@@ -386,12 +386,17 @@ span.excludedLine
     text-align: left;
     white-space: nowrap;
     position: absolute;
-    width: 18em;
     padding: 1em;
     background: white;
     border: solid gray 1px;
     box-shadow: 5px 5px 10px gray;
     z-index: 1; /* show in front of the table entries */
+}
+
+.functionName
+{
+    font-style: italic !important;
+    font-weight: bolder !important;
 }
 
 .excludedBranch
@@ -407,6 +412,11 @@ span.excludedLine
 .notTakenBranch
 {
     color: var(--notTakenBranch_color) !important;
+}
+
+.excludedCondition
+{
+    color: var(--takenCondition_color) !important;
 }
 
 .takenCondition
@@ -432,6 +442,11 @@ span.excludedLine
 .uncheckedDecision
 {
     color: var(--uncheckedDecision_color) !important;
+}
+
+.excludedCall
+{
+    color: var(--invokedCall_color) !important;
 }
 
 .invokedCall
@@ -571,7 +586,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .cp { color: #9C6500 } /* Comment.Preproc */
 .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
 .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.cs { color: #3D7B7B; font-weight: bold; font-style: italic } /* Comment.Special */
 .gd { color: #A00000 } /* Generic.Deleted */
 .ge { font-style: italic } /* Generic.Emph */
 .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
