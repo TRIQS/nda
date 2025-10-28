@@ -25,29 +25,6 @@ namespace nda {
    * @{
    */
 
-  // clang has full support for "lambdas in unevaluated context" only for versions >= 17.
-#ifndef __clang__
-
-  // clang-format off
-  /**
-   * @brief Check if a given type can be called with a certain number of long arguments.
-   *
-   * @details An example of a type satisfying this concept is e.g. nda::basic_array or nda::basic_array_view. More
-   * generally, every type modelling the nda::Array concept has to be nda::CallableWithLongs as well.
-   *
-   * @tparam A Type to check.
-   * @tparam R Number of long arguments.
-   */
-  template <typename A, int R>
-  concept CallableWithLongs = requires(A const &a) {
-    // if decltype is not present, the concept will fail to compile for an A for which the a(Is...) is not well formed
-    []<auto... Is>(std::index_sequence<Is...>, auto const &aa) -> decltype(aa(long(Is)...)) {return aa(long(Is)...);}
-    (std::make_index_sequence<R>{}, a);
-  };
-  // clang-format on
-
-#else
-
   namespace detail {
 
     // Helper function declaration to check if A can be called with R long arguments.
@@ -69,8 +46,6 @@ namespace nda {
   concept CallableWithLongs = requires(A const &a) {
     { detail::call_on_R_longs(std::make_index_sequence<R>{}, a) };
   };
-
-#endif // __clang__
 
   namespace detail {
 
