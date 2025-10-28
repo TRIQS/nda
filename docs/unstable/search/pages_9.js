@@ -60,6 +60,6 @@ var searchData=
   ['assigning_20to_20an_20array_57',['Assigning to an array',['../ex1.html#ex1_p5',1,'']]],
   ['assigning_20to_20matrices_20and_20vectors_58',['Initializing and assigning to matrices and vectors',['../ex8.html#ex8_p3',1,'']]],
   ['assigning_20to_20views_59',['Assigning to views',['../ex4.html#ex4_p4',1,'']]],
-  ['assignment_60',['assignment',['../ex3.html#ex3_p2',1,'Copy/Move assignment'],['../ex3.html#ex3_p6',1,'Initializing an array using automatic assignment'],['../ex1.html#ex1_p12',1,'Initializing with CLEF's automatic assignment']]],
-  ['automatic_20assignment_61',['automatic assignment',['../ex3.html#ex3_p6',1,'Initializing an array using automatic assignment'],['../ex1.html#ex1_p12',1,'Initializing with CLEF's automatic assignment']]]
+  ['assignment_60',['assignment',['../ex3.html#ex3_p2',1,'Copy/Move assignment'],['../ex3.html#ex3_p6',1,'Initializing an array using automatic assignment'],['../ex1.html#ex1_p12',1,'Initializing with CLEF&apos;s automatic assignment']]],
+  ['automatic_20assignment_61',['automatic assignment',['../ex3.html#ex3_p6',1,'Initializing an array using automatic assignment'],['../ex1.html#ex1_p12',1,'Initializing with CLEF&apos;s automatic assignment']]]
 ];

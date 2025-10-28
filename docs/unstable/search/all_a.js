@@ -119,10 +119,10 @@ var searchData=
   ['assigning_20to_20an_20array_116',['Assigning to an array',['../ex1.html#ex1_p5',1,'']]],
   ['assigning_20to_20matrices_20and_20vectors_117',['Initializing and assigning to matrices and vectors',['../ex8.html#ex8_p3',1,'']]],
   ['assigning_20to_20views_118',['Assigning to views',['../ex4.html#ex4_p4',1,'']]],
-  ['assignment_119',['assignment',['../group__clef__autoassign.html',1,'Automatic assignment'],['../ex3.html#ex3_p2',1,'Copy/Move assignment'],['../ex3.html#ex3_p6',1,'Initializing an array using automatic assignment'],['../ex1.html#ex1_p12',1,'Initializing with CLEF's automatic assignment']]],
+  ['assignment_119',['assignment',['../group__clef__autoassign.html',1,'Automatic assignment'],['../ex3.html#ex3_p2',1,'Copy/Move assignment'],['../ex3.html#ex3_p6',1,'Initializing an array using automatic assignment'],['../ex1.html#ex1_p12',1,'Initializing with CLEF&apos;s automatic assignment']]],
   ['atan_120',['atan',['../group__clef__expr.html#ga80538b5d17f2c9388dbcb927bae1d855',1,'nda::clef::atan()'],['../group__av__math.html#ga6b89fa038521f09812a17a8ab22b5708',1,'nda::atan()']]],
   ['auto_5fassign_2ehpp_121',['auto_assign.hpp',['../auto__assign_8hpp.html',1,'']]],
   ['auto_5fassign_5fsubscript_2ehpp_122',['auto_assign_subscript.hpp',['../auto__assign__subscript_8hpp.html',1,'']]],
   ['automatic_20assignment_123',['Automatic assignment',['../group__clef__autoassign.html',1,'']]],
-  ['automatic_20assignment_124',['automatic assignment',['../ex3.html#ex3_p6',1,'Initializing an array using automatic assignment'],['../ex1.html#ex1_p12',1,'Initializing with CLEF's automatic assignment']]]
+  ['automatic_20assignment_124',['automatic assignment',['../ex3.html#ex3_p6',1,'Initializing an array using automatic assignment'],['../ex1.html#ex1_p12',1,'Initializing with CLEF&apos;s automatic assignment']]]
 ];
