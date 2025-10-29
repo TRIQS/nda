@@ -107,12 +107,6 @@ namespace nda::blas {
       auto b_ptrs = get_ptrs(vb);
       auto c_ptrs = get_ptrs(vc);
 
-      // gather parameters for gemm call
-      static constexpr bool conj_A = is_conj_array_expr<A>;
-      static constexpr bool conj_B = is_conj_array_expr<B>;
-      char op_a                    = get_op<conj_A, /* transpose = */ has_C_layout<mat_a_type>>;
-      char op_b                    = get_op<conj_B, /* transpose = */ has_C_layout<mat_b_type>>;
-
       // matrices have different sizes
       if constexpr (VBATCH) {
         // create vectors of size 'batch_count + 1' as required by Magma
@@ -139,13 +133,13 @@ namespace nda::blas {
 
         if constexpr (mem::have_device_compatible_addr_space<mat_a_type, mat_b_type, C>) {
 #if defined(NDA_HAVE_DEVICE)
-          device::gemm_vbatch(op_a, op_b, vm.data(), vn.data(), vk.data(), alpha, a_ptrs.data(), vlda.data(), b_ptrs.data(), vldb.data(), beta,
-                              c_ptrs.data(), vldc.data(), batch_count);
+          device::gemm_vbatch(get_op<A>, get_op<B>, vm.data(), vn.data(), vk.data(), alpha, a_ptrs.data(), vlda.data(), b_ptrs.data(), vldb.data(),
+                              beta, c_ptrs.data(), vldc.data(), batch_count);
 #else
           compile_error_no_gpu();
 #endif
         } else {
-          f77::gemm_vbatch(op_a, op_b, vm.data(), vn.data(), vk.data(), alpha, a_ptrs.data(), vlda.data(), b_ptrs.data(), vldb.data(), beta,
+          f77::gemm_vbatch(get_op<A>, get_op<B>, vm.data(), vn.data(), vk.data(), alpha, a_ptrs.data(), vlda.data(), b_ptrs.data(), vldb.data(), beta,
                            c_ptrs.data(), vldc.data(), batch_count);
         }
       } else {
@@ -159,13 +153,13 @@ namespace nda::blas {
 
         if constexpr (mem::have_device_compatible_addr_space<mat_a_type, mat_b_type, C>) {
 #if defined(NDA_HAVE_DEVICE)
-          device::gemm_batch(op_a, op_b, m, n, k, alpha, a_ptrs.data(), get_ld(a0), b_ptrs.data(), get_ld(b0), beta, c_ptrs.data(), get_ld(c0),
-                             batch_count);
+          device::gemm_batch(get_op<A>, get_op<B>, m, n, k, alpha, a_ptrs.data(), get_ld(a0), b_ptrs.data(), get_ld(b0), beta, c_ptrs.data(),
+                             get_ld(c0), batch_count);
 #else
           compile_error_no_gpu();
 #endif
         } else {
-          f77::gemm_batch(op_a, op_b, m, n, k, alpha, a_ptrs.data(), get_ld(a0), b_ptrs.data(), get_ld(b0), beta, c_ptrs.data(), get_ld(c0),
+          f77::gemm_batch(get_op<A>, get_op<B>, m, n, k, alpha, a_ptrs.data(), get_ld(a0), b_ptrs.data(), get_ld(b0), beta, c_ptrs.data(), get_ld(c0),
                           batch_count);
         }
       }
@@ -244,22 +238,18 @@ namespace nda::blas {
       gemm_batch_strided(alpha, transposed_view<1, 2>(b), transposed_view<1, 2>(a), beta, transposed_view<1, 2>(std::forward<C>(c)));
       return;
     } else { // c is in Fortran order
-      static constexpr bool conj_A = is_conj_array_expr<A>;
-      static constexpr bool conj_B = is_conj_array_expr<B>;
-      char op_a                    = get_op<conj_A, /* transpose = */ has_C_layout<arr_a_type>>;
-      char op_b                    = get_op<conj_B, /* transpose = */ has_C_layout<arr_b_type>>;
-      auto [m, k]                  = a0.shape();
-      auto n                       = b0.extent(1);
+      auto [m, k] = a0.shape();
+      auto n      = b0.extent(1);
 
       if constexpr (mem::have_device_compatible_addr_space<arr_a_type, arr_b_type, C>) {
 #if defined(NDA_HAVE_DEVICE)
-        device::gemm_batch_strided(op_a, op_b, m, n, k, alpha, arr_a.data(), get_ld(a0), arr_a.strides()[0], arr_b.data(), get_ld(b0),
+        device::gemm_batch_strided(get_op<A>, get_op<B>, m, n, k, alpha, arr_a.data(), get_ld(a0), arr_a.strides()[0], arr_b.data(), get_ld(b0),
                                    arr_b.strides()[0], beta, c.data(), get_ld(c0), c.strides()[0], arr_a.extent(0));
 #else
         compile_error_no_gpu();
 #endif
       } else {
-        f77::gemm_batch_strided(op_a, op_b, m, n, k, alpha, arr_a.data(), get_ld(a0), arr_a.strides()[0], arr_b.data(), get_ld(b0),
+        f77::gemm_batch_strided(get_op<A>, get_op<B>, m, n, k, alpha, arr_a.data(), get_ld(a0), arr_a.strides()[0], arr_b.data(), get_ld(b0),
                                 arr_b.strides()[0], beta, c.data(), get_ld(c0), c.strides()[0], arr_a.extent(0));
       }
     }

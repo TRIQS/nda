@@ -22,7 +22,6 @@
 #include "../device.hpp"
 #endif // NDA_HAVE_DEVICE
 
-#include <tuple>
 #include <utility>
 
 namespace nda::blas {
@@ -82,19 +81,15 @@ namespace nda::blas {
       EXPECTS(mat_b.indexmap().min_stride() == 1);
       EXPECTS(c.indexmap().min_stride() == 1);
 
-      // check for conjugate lazy expressions and C-layouts
-      char op_a = get_op<is_conj_array_expr<A>, has_C_layout<A>>;
-      char op_b = get_op<is_conj_array_expr<B>, has_C_layout<B>>;
-
       // perform the actual library call
       if constexpr (mem::have_device_compatible_addr_space<A, B, C>) {
 #if defined(NDA_HAVE_DEVICE)
-        device::gemm(op_a, op_b, m, n, k, alpha, mat_a.data(), get_ld(mat_a), mat_b.data(), get_ld(mat_b), beta, c.data(), get_ld(c));
+        device::gemm(get_op<A>, get_op<B>, m, n, k, alpha, mat_a.data(), get_ld(mat_a), mat_b.data(), get_ld(mat_b), beta, c.data(), get_ld(c));
 #else
         compile_error_no_gpu();
 #endif
       } else {
-        f77::gemm(op_a, op_b, m, n, k, alpha, mat_a.data(), get_ld(mat_a), mat_b.data(), get_ld(mat_b), beta, c.data(), get_ld(c));
+        f77::gemm(get_op<A>, get_op<B>, m, n, k, alpha, mat_a.data(), get_ld(mat_a), mat_b.data(), get_ld(mat_b), beta, c.data(), get_ld(c));
       }
     }
   }

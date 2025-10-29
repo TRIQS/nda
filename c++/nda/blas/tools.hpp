@@ -94,8 +94,10 @@ namespace nda::blas {
    * @tparam conj Boolean flag for conjugation.
    * @tparam transpose Boolean flag for transposition.
    */
-  template <bool conj, bool transpose>
-  const char get_op = []() {
+  template <Array A>
+  static constexpr char get_op = []() {
+    auto constexpr conj      = is_conj_array_expr<A>;
+    auto constexpr transpose = has_C_layout<A>;
     static_assert(!(conj and not transpose), "Error in nda::blas::get_op: Cannot use conjugate operation alone in BLAS operations");
     if constexpr (conj and transpose)
       return 'C';

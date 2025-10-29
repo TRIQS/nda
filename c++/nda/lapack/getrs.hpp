@@ -59,20 +59,16 @@ namespace nda::lapack {
     EXPECTS(b.indexmap().min_stride() == 1);
     EXPECTS(ipiv.indexmap().min_stride() == 1);
 
-    // check for lazy expressions
-    static constexpr bool conj_A = is_conj_array_expr<A>;
-    char op_a                    = get_op<conj_A, /* transpose = */ has_C_layout<A>>;
-
     // perform actual library call
     int info = 0;
     if constexpr (mem::have_device_compatible_addr_space<A, B, IPIV>) {
 #if defined(NDA_HAVE_DEVICE)
-      device::getrs(op_a, get_ncols(a), get_ncols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
+      device::getrs(get_op<A>, get_ncols(a), get_ncols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
 #else
       compile_error_no_gpu();
 #endif
     } else {
-      f77::getrs(op_a, get_ncols(a), get_ncols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
+      f77::getrs(get_op<A>, get_ncols(a), get_ncols(b), a.data(), get_ld(a), ipiv.data(), b.data(), get_ld(b), info);
     }
     return info;
   }

@@ -21,7 +21,6 @@
 #include "../device.hpp"
 #endif // NDA_HAVE_DEVICE
 
-#include <tuple>
 #include <utility>
 
 namespace nda::blas {
@@ -67,19 +66,18 @@ namespace nda::blas {
     // arrays/views must be BLAS compatible
     EXPECTS(mat.indexmap().min_stride() == 1);
 
-    // check for conjugate lazy expressions and C-layouts
-    char op_a = get_op<is_conj_array_expr<A>, has_C_layout<A>>;
+    // We need to swap axis for the transpose case
     if constexpr (has_C_layout<A>) std::swap(m, n);
 
     // perform actual library call
     if constexpr (mem::have_device_compatible_addr_space<A, X, Y>) {
 #if defined(NDA_HAVE_DEVICE)
-      device::gemv(op_a, m, n, alpha, mat.data(), get_ld(mat), x.data(), x.indexmap().strides()[0], beta, y.data(), y.indexmap().strides()[0]);
+      device::gemv(get_op<A>, m, n, alpha, mat.data(), get_ld(mat), x.data(), x.indexmap().strides()[0], beta, y.data(), y.indexmap().strides()[0]);
 #else
       compile_error_no_gpu();
 #endif
     } else {
-      f77::gemv(op_a, m, n, alpha, mat.data(), get_ld(mat), x.data(), x.indexmap().strides()[0], beta, y.data(), y.indexmap().strides()[0]);
+      f77::gemv(get_op<A>, m, n, alpha, mat.data(), get_ld(mat), x.data(), x.indexmap().strides()[0], beta, y.data(), y.indexmap().strides()[0]);
     }
   }
 

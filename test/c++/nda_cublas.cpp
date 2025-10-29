@@ -146,7 +146,7 @@ TEST(NDA, CUBLASOuterProduct) {
     for (auto [k, l] : M.indices()) P(i, j, k, l) = N(i, j) * M(k, l);
 
   nda::cumatrix<double> M_d{M}, N_d{N};
-  auto Res_d = nda::blas::outer_product(N_d, M_d);
+  auto Res_d = nda::linalg::outer_product(N_d, M_d);
   auto Res   = nda::array<double, 4>{Res_d};
   EXPECT_ARRAY_NEAR(P, Res);
 }
@@ -181,7 +181,7 @@ void test_dotc() {
   }
 
   nda::cuvector<value_t> a_d{a}, b_d{b};
-  EXPECT_COMPLEX_NEAR((nda::blas::dotc(a_d, b_d)), (nda::linalg::dotc_generic(a, b)), 1.e-14);
+  EXPECT_COMPLEX_NEAR((nda::blas::dotc(a_d, b_d)), (nda::linalg::dot_generic</* star = */ true>(a, b)), 1.e-14);
 }
 
 TEST(NDA, CUBLASDotc) {

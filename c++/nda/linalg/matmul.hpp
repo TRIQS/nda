@@ -16,7 +16,6 @@
 #include "../blas/tools.hpp"
 #include "../concepts.hpp"
 #include "../declarations.hpp"
-#include "../exceptions.hpp"
 #include "../layout/policies.hpp"
 #include "../mem/address_space.hpp"
 #include "../mem/policies.hpp"
@@ -74,24 +73,17 @@ namespace nda::linalg {
     // Make the call to nda::blas::gemm (with copies of the matrices if they are not contiguous).
     template <Matrix A, Matrix B, MemoryMatrix C>
     void make_gemm_call(A const &a, B const &b, C &c) {
-      auto try_gemm = []<typename A2, typename B2, typename C2>(A2 &&a2, B2 &&b2, C2 &&c2) {
-        if constexpr (requires { blas::gemm(1, std::forward<A2>(a2), std::forward<B2>(b2), 0, std::forward<C2>(c2)); }) {
-          blas::gemm(1, std::forward<A2>(a2), std::forward<B2>(b2), 0, std::forward<C2>(c2));
-        } else {
-          NDA_RUNTIME_ERROR << "Error in nda::linalg::matmul: Cannot call blas::gemm with the given input arrys/views.";
-        }
-      };
       if (blas::get_array(a).is_contiguous()) {
         if (blas::get_array(b).is_contiguous()) {
-          try_gemm(a, b, c);
+          blas::gemm(1, a, b, 0, c);
         } else {
-          try_gemm(a, nda::make_regular(b), c);
+          blas::gemm(1, a, nda::make_regular(b), 0, c);
         }
       } else {
         if (blas::get_array(b).is_contiguous()) {
-          try_gemm(nda::make_regular(a), b, c);
+          blas::gemm(1, nda::make_regular(a), b, 0, c);
         } else {
-          try_gemm(nda::make_regular(a), nda::make_regular(b), c);
+          blas::gemm(1, nda::make_regular(a), nda::make_regular(b), 0, c);
         }
       }
     }
@@ -125,15 +117,15 @@ namespace nda::linalg {
    * @tparam A nda::Matrix type.
    * @tparam B nda::Matrix type.
    * @param a Input matrix \f$ \mathbf{A} \f$ of size \f$ m \times k \f$.
-   * @param a Input matrix \f$ \mathbf{B} \f$ of size \f$ k \times n \f$.
+   * @param b Input matrix \f$ \mathbf{B} \f$ of size \f$ k \times n \f$.
    * @return Resulting matrix of the matrix-matrix multiplication of size \f$ m \times n \f$.
    */
   template <Matrix A, Matrix B>
   auto matmul(A &&a, B &&b) { // NOLINT (temporary views are allowed here)
     // get the return type
     using value_t    = decltype(a(0, 0) * b(0, 0));
-    using cont_pol   = heap<mem::common_addr_space<A, B>>;
     using layout_pol = std::conditional_t<get_layout_info<A>.stride_order == get_layout_info<B>.stride_order, detail::get_layout_policy<A>, C_layout>;
+    using cont_pol   = heap<mem::common_addr_space<A, B>>;
     using return_t   = matrix<value_t, layout_pol, cont_pol>;
 
     // result matrix (MSAN complains if it is not initialized)
@@ -144,7 +136,7 @@ namespace nda::linalg {
 #endif
 #endif
 
-    // perform matrix-matrix multiplication (if possible we try to call blas::gemv even if this requires making copies)
+    // perform matrix-matrix multiplication (if possible we try to call blas::gemm even if this requires making copies)
     if constexpr (is_blas_lapack_v<value_t>) {
       // check at compile time if we need to make a copy of the input matrices
       auto &&a_mat = detail::get_gemm_matrix<value_t, layout_pol, cont_pol, return_t>(a);

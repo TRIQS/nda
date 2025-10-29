@@ -79,17 +79,10 @@ namespace nda::linalg {
     // Make the call to nda::blas::gemv with a copy of the matrix if it is not contiguous.
     template <Matrix A, Vector X, MemoryVector Y>
     void make_gemv_call(A const &a, X const &x, Y &y) {
-      auto try_gemv = []<typename A2, typename X2, typename Y2>(A2 &&a2, X2 &&x2, Y2 &&y2) {
-        if constexpr (requires { blas::gemv(1, std::forward<A2>(a2), std::forward<X2>(x2), 0, std::forward<Y2>(y2)); }) {
-          blas::gemv(1, std::forward<A2>(a2), std::forward<X2>(x2), 0, std::forward<Y2>(y2));
-        } else {
-          NDA_RUNTIME_ERROR << "Error in nda::linalg::matvecmul: Cannot call blas::gemv with the given input arrys/views.";
-        }
-      };
       if (blas::get_array(a).is_contiguous()) {
-        try_gemv(a, x, y);
+        blas::gemv(1, a, x, 0, y);
       } else {
-        try_gemv(nda::make_regular(a), x, y);
+        blas::gemv(1, nda::make_regular(a), x, 0, y);
       }
     }
 
