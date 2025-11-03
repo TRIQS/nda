@@ -2,7 +2,7 @@ var traits_8hpp =
 [
     [ "nda::get_value_t", "group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc", null ],
     [ "nda::layout_prop_e", "group__layout__utils.html#gade21b85df14c406b56717fd7703937b3", null ],
-    [ "nda::get_first_element", "group__av__utils.html#gaeae11f47a84e9ef3bfc3d58528d1fc38", null ],
+    [ "nda::get_first_element", "group__av__utils.html#ga598ceeb61dfdb15253cfd90df853df0a", null ],
     [ "nda::has_contiguous", "group__layout__utils.html#ga1d7ef293822e5f68be5fbd4e0c369937", null ],
     [ "nda::has_smallest_stride_is_one", "group__layout__utils.html#gab24716de53fb29177b58627cc30f34b3", null ],
     [ "nda::has_strided_1d", "group__layout__utils.html#ga2446a9e6ebbe07bc8733e92af41d93e1", null ],

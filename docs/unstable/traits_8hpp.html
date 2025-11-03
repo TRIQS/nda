@@ -128,7 +128,7 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:ga93d8308788c934c0eb863bd8cb8ff5dc" id="r_ga93d8308788c934c0eb863bd8cb8ff5dc"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; </td></tr>
-<tr class="memitem:ga93d8308788c934c0eb863bd8cb8ff5dc template"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">nda::get_value_t</a> = std::decay_t&lt;decltype(<a class="el" href="group__av__utils.html#gaeae11f47a84e9ef3bfc3d58528d1fc38">get_first_element</a>(std::declval&lt;A const&gt;()))&gt;</td></tr>
+<tr class="memitem:ga93d8308788c934c0eb863bd8cb8ff5dc template"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">nda::get_value_t</a> = std::decay_t&lt;decltype(<a class="el" href="group__av__utils.html#ga598ceeb61dfdb15253cfd90df853df0a">get_first_element</a>(std::declval&lt;A const&gt;()))&gt;</td></tr>
 <tr class="memdesc:ga93d8308788c934c0eb863bd8cb8ff5dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the value type of an array/view or a scalar type.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
@@ -138,9 +138,9 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gaeae11f47a84e9ef3bfc3d58528d1fc38" id="r_gaeae11f47a84e9ef3bfc3d58528d1fc38"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; </td></tr>
-<tr class="memitem:gaeae11f47a84e9ef3bfc3d58528d1fc38 template"><td class="memItemLeft" align="right" valign="top">decltype(auto)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__av__utils.html#gaeae11f47a84e9ef3bfc3d58528d1fc38">nda::get_first_element</a> (A const &amp;a)</td></tr>
-<tr class="memdesc:gaeae11f47a84e9ef3bfc3d58528d1fc38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the first element of an array/view or simply return the scalar if a scalar is given.  <br /></td></tr>
+<tr class="memitem:ga598ceeb61dfdb15253cfd90df853df0a" id="r_ga598ceeb61dfdb15253cfd90df853df0a"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; </td></tr>
+<tr class="memitem:ga598ceeb61dfdb15253cfd90df853df0a template"><td class="memItemLeft" align="right" valign="top">decltype(auto)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__av__utils.html#ga598ceeb61dfdb15253cfd90df853df0a">nda::get_first_element</a> (A &amp;&amp;a)</td></tr>
+<tr class="memdesc:ga598ceeb61dfdb15253cfd90df853df0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the first element of an array/view or simply return the scalar if a scalar is given.  <br /></td></tr>
 <tr class="memitem:ga1d7ef293822e5f68be5fbd4e0c369937" id="r_ga1d7ef293822e5f68be5fbd4e0c369937"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__layout__utils.html#ga1d7ef293822e5f68be5fbd4e0c369937">nda::has_contiguous</a> (<a class="el" href="group__layout__utils.html#gade21b85df14c406b56717fd7703937b3">layout_prop_e</a> lp)</td></tr>
 <tr class="memdesc:ga1d7ef293822e5f68be5fbd4e0c369937"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a layout property has the <span class="tt">contiguous</span> property.  <br /></td></tr>
 <tr class="memitem:gab24716de53fb29177b58627cc30f34b3" id="r_gab24716de53fb29177b58627cc30f34b3"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__layout__utils.html#gab24716de53fb29177b58627cc30f34b3">nda::has_smallest_stride_is_one</a> (<a class="el" href="group__layout__utils.html#gade21b85df14c406b56717fd7703937b3">layout_prop_e</a> lp)</td></tr>

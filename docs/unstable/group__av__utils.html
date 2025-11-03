@@ -163,7 +163,7 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ga0f1cec42d939589d4da2f2c6cb7b7895 template"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0f1cec42d939589d4da2f2c6cb7b7895">nda::get_regular_unified_t</a></td></tr>
 <tr class="memdesc:ga0f1cec42d939589d4da2f2c6cb7b7895"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the type of the <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> that would be obtained by constructing an array on unified memory from a given type.  <br /></td></tr>
 <tr class="memitem:ga93d8308788c934c0eb863bd8cb8ff5dc" id="r_ga93d8308788c934c0eb863bd8cb8ff5dc"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; </td></tr>
-<tr class="memitem:ga93d8308788c934c0eb863bd8cb8ff5dc template"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga93d8308788c934c0eb863bd8cb8ff5dc">nda::get_value_t</a> = std::decay_t&lt;decltype(<a class="el" href="#gaeae11f47a84e9ef3bfc3d58528d1fc38">get_first_element</a>(std::declval&lt;A const&gt;()))&gt;</td></tr>
+<tr class="memitem:ga93d8308788c934c0eb863bd8cb8ff5dc template"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga93d8308788c934c0eb863bd8cb8ff5dc">nda::get_value_t</a> = std::decay_t&lt;decltype(<a class="el" href="#ga598ceeb61dfdb15253cfd90df853df0a">get_first_element</a>(std::declval&lt;A const&gt;()))&gt;</td></tr>
 <tr class="memdesc:ga93d8308788c934c0eb863bd8cb8ff5dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the value type of an array/view or a scalar type.  <br /></td></tr>
 <tr class="memitem:ga88421cbcafa4ce63f798df8145e822e4" id="r_ga88421cbcafa4ce63f798df8145e822e4"><td class="memTemplParams" colspan="2">template&lt;typename T, typename T2 = std::remove_reference_t&lt;T&gt;&gt; </td></tr>
 <tr class="memitem:ga88421cbcafa4ce63f798df8145e822e4 template"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga88421cbcafa4ce63f798df8145e822e4">nda::get_view_t</a> = std::remove_reference_t&lt;decltype(<a class="el" href="classnda_1_1basic__array__view.html">basic_array_view</a>{std::declval&lt;T&gt;()})&gt;</td></tr>
@@ -174,9 +174,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga17cb07f54c5452e23ad6a71a09e560d9" id="r_ga17cb07f54c5452e23ad6a71a09e560d9"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; </td></tr>
 <tr class="memitem:ga17cb07f54c5452e23ad6a71a09e560d9 template"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga17cb07f54c5452e23ad6a71a09e560d9">nda::first_dim</a> (A const &amp;a)</td></tr>
 <tr class="memdesc:ga17cb07f54c5452e23ad6a71a09e560d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the extent of the first dimension of the array.  <br /></td></tr>
-<tr class="memitem:gaeae11f47a84e9ef3bfc3d58528d1fc38" id="r_gaeae11f47a84e9ef3bfc3d58528d1fc38"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; </td></tr>
-<tr class="memitem:gaeae11f47a84e9ef3bfc3d58528d1fc38 template"><td class="memItemLeft" align="right" valign="top">decltype(auto)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaeae11f47a84e9ef3bfc3d58528d1fc38">nda::get_first_element</a> (A const &amp;a)</td></tr>
-<tr class="memdesc:gaeae11f47a84e9ef3bfc3d58528d1fc38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the first element of an array/view or simply return the scalar if a scalar is given.  <br /></td></tr>
+<tr class="memitem:ga598ceeb61dfdb15253cfd90df853df0a" id="r_ga598ceeb61dfdb15253cfd90df853df0a"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; </td></tr>
+<tr class="memitem:ga598ceeb61dfdb15253cfd90df853df0a template"><td class="memItemLeft" align="right" valign="top">decltype(auto)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga598ceeb61dfdb15253cfd90df853df0a">nda::get_first_element</a> (A &amp;&amp;a)</td></tr>
+<tr class="memdesc:ga598ceeb61dfdb15253cfd90df853df0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the first element of an array/view or simply return the scalar if a scalar is given.  <br /></td></tr>
 <tr class="memitem:gac7287b38e291e501eb1002574e1cb71d" id="r_gac7287b38e291e501eb1002574e1cb71d"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; <br />
 requires (<a class="el" href="#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt;)</td></tr>
 <tr class="memitem:gac7287b38e291e501eb1002574e1cb71d template"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac7287b38e291e501eb1002574e1cb71d">nda::operator&lt;&lt;</a> (std::ostream &amp;sout, A const &amp;a)</td></tr>
@@ -426,7 +426,7 @@ template&lt;typename T, typename RT = get_regular_t&lt;T&gt;&gt; </div>
 template&lt;typename A&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="#ga93d8308788c934c0eb863bd8cb8ff5dc">nda::get_value_t</a> = std::decay_t&lt;decltype(<a class="el" href="#gaeae11f47a84e9ef3bfc3d58528d1fc38">get_first_element</a>(std::declval&lt;A const&gt;()))&gt;</td>
+          <td class="memname">using <a class="el" href="#ga93d8308788c934c0eb863bd8cb8ff5dc">nda::get_value_t</a> = std::decay_t&lt;decltype(<a class="el" href="#ga598ceeb61dfdb15253cfd90df853df0a">get_first_element</a>(std::declval&lt;A const&gt;()))&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -513,8 +513,8 @@ template&lt;Array A&gt; </div>
 
 </div>
 </div>
-<a id="gaeae11f47a84e9ef3bfc3d58528d1fc38" name="gaeae11f47a84e9ef3bfc3d58528d1fc38"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaeae11f47a84e9ef3bfc3d58528d1fc38">&#9670;&#160;</a></span>get_first_element()</h2>
+<a id="ga598ceeb61dfdb15253cfd90df853df0a" name="ga598ceeb61dfdb15253cfd90df853df0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga598ceeb61dfdb15253cfd90df853df0a">&#9670;&#160;</a></span>get_first_element()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -524,7 +524,7 @@ template&lt;typename A&gt; </div>
         <tr>
           <td class="memname">decltype(auto) nda::get_first_element </td>
           <td>(</td>
-          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>

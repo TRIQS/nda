@@ -126,17 +126,17 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
 requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;) and (MemoryMatrix&lt;B&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;B&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
 <tr class="memitem:gab64974333f3f10efdbee734c088e6239 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab64974333f3f10efdbee734c088e6239">nda::blas::gemm</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; alpha, A const &amp;a, B const &amp;b, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; beta, C &amp;&amp;c)</td></tr>
 <tr class="memdesc:gab64974333f3f10efdbee734c088e6239"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS <span class="tt"><a class="el" href="#gab64974333f3f10efdbee734c088e6239" title="Interface to the BLAS gemm routine.">gemm</a></span> routine.  <br /></td></tr>
-<tr class="memitem:gaf5df976ecdf5813d9a0fb760ac155a5e" id="r_gaf5df976ecdf5813d9a0fb760ac155a5e"><td class="memTemplParams" colspan="2">template&lt;bool VBATCH = false, Matrix A, Matrix B, MemoryMatrix C&gt; <br />
-requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;) and (MemoryMatrix&lt;B&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;B&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
-<tr class="memitem:gaf5df976ecdf5813d9a0fb760ac155a5e template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf5df976ecdf5813d9a0fb760ac155a5e">nda::blas::gemm_batch</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; alpha, std::vector&lt; A &gt; const &amp;va, std::vector&lt; B &gt; const &amp;vb, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; beta, std::vector&lt; C &gt; &amp;vc)</td></tr>
-<tr class="memdesc:gaf5df976ecdf5813d9a0fb760ac155a5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements a batched version of <a class="el" href="#gab64974333f3f10efdbee734c088e6239" title="Interface to the BLAS gemm routine.">nda::blas::gemm</a> taking vectors of matrices as arguments.  <br /></td></tr>
-<tr class="memitem:ga0ab133463a49dcbd043eefd1ea2222c2" id="r_ga0ab133463a49dcbd043eefd1ea2222c2"><td class="memTemplParams" colspan="2">template&lt;ArrayOfRank&lt; 3 &gt; A, ArrayOfRank&lt; 3 &gt; B, MemoryArrayOfRank&lt; 3 &gt; C&gt; <br />
-requires ((MemoryArrayOfRank&lt;A, 3&gt; or (<a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;)) and (MemoryArrayOfRank&lt;B, 3&gt; or (<a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;B&gt;)) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
-<tr class="memitem:ga0ab133463a49dcbd043eefd1ea2222c2 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0ab133463a49dcbd043eefd1ea2222c2">nda::blas::gemm_batch_strided</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; alpha, A const &amp;a, B const &amp;b, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; beta, C &amp;&amp;c)</td></tr>
-<tr class="memdesc:ga0ab133463a49dcbd043eefd1ea2222c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements a strided batched version of <a class="el" href="#gab64974333f3f10efdbee734c088e6239" title="Interface to the BLAS gemm routine.">nda::blas::gemm</a> taking 3-dimensional arrays as arguments.  <br /></td></tr>
+<tr class="memitem:gace7d586a807533525f094641f6338cae" id="r_gace7d586a807533525f094641f6338cae"><td class="memTemplParams" colspan="2">template&lt;bool is_vbatch = false, Matrix A, Matrix B, MemoryMatrix C&gt; <br />
+requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;) and (MemoryMatrix&lt;B&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;B&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:gace7d586a807533525f094641f6338cae template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gace7d586a807533525f094641f6338cae">nda::blas::gemm_batch</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; alpha, std::vector&lt; A &gt; const &amp;va, std::vector&lt; B &gt; const &amp;vb, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; beta, std::vector&lt; C &gt; &amp;vc)</td></tr>
+<tr class="memdesc:gace7d586a807533525f094641f6338cae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to MKL's <span class="tt"><a class="el" href="#gace7d586a807533525f094641f6338cae" title="Interface to MKL&#39;s gemm_batch and gemm_vbatch routines.">gemm_batch</a></span> and <span class="tt"><a class="el" href="#ga2eeb65c38d5f3d350f2724d3b2405ff6" title="Interface to MKL&#39;s gemm_vbatch routine.">gemm_vbatch</a></span> routines.  <br /></td></tr>
+<tr class="memitem:ga0da5dca0ebd96f8fde668f17d6ad227a" id="r_ga0da5dca0ebd96f8fde668f17d6ad227a"><td class="memTemplParams" colspan="2">template&lt;ArrayOfRank&lt; 3 &gt; A, ArrayOfRank&lt; 3 &gt; B, MemoryArrayOfRank&lt; 3 &gt; C&gt; <br />
+requires ((MemoryArrayOfRank&lt;A, 3&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;) and (MemoryArrayOfRank&lt;B, 3&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;B&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:ga0da5dca0ebd96f8fde668f17d6ad227a template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0da5dca0ebd96f8fde668f17d6ad227a">nda::blas::gemm_batch_strided</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; alpha, A const &amp;a, B const &amp;b, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; beta, C &amp;&amp;c)</td></tr>
+<tr class="memdesc:ga0da5dca0ebd96f8fde668f17d6ad227a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements a strided batched version of <a class="el" href="#gab64974333f3f10efdbee734c088e6239" title="Interface to the BLAS gemm routine.">nda::blas::gemm</a> taking 3-dimensional arrays as arguments.  <br /></td></tr>
 <tr class="memitem:ga2eeb65c38d5f3d350f2724d3b2405ff6" id="r_ga2eeb65c38d5f3d350f2724d3b2405ff6"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Matrix B, MemoryMatrix C&gt; </td></tr>
 <tr class="memitem:ga2eeb65c38d5f3d350f2724d3b2405ff6 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2eeb65c38d5f3d350f2724d3b2405ff6">nda::blas::gemm_vbatch</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; alpha, std::vector&lt; A &gt; const &amp;va, std::vector&lt; B &gt; const &amp;vb, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; beta, std::vector&lt; C &gt; &amp;vc)</td></tr>
-<tr class="memdesc:ga2eeb65c38d5f3d350f2724d3b2405ff6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrapper of <a class="el" href="#gaf5df976ecdf5813d9a0fb760ac155a5e" title="Implements a batched version of nda::blas::gemm taking vectors of matrices as arguments.">nda::blas::gemm_batch</a> that allows variable sized matrices.  <br /></td></tr>
+<tr class="memdesc:ga2eeb65c38d5f3d350f2724d3b2405ff6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to MKL's <span class="tt"><a class="el" href="#ga2eeb65c38d5f3d350f2724d3b2405ff6" title="Interface to MKL&#39;s gemm_vbatch routine.">gemm_vbatch</a></span> routine.  <br /></td></tr>
 <tr class="memitem:gacdfbdd0ccb51e375ddc0b037cb9e68a6" id="r_gacdfbdd0ccb51e375ddc0b037cb9e68a6"><td class="memTemplParams" colspan="2">template&lt;Matrix A, MemoryVector X, MemoryVector Y&gt; <br />
 requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, X, Y&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, X, Y&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
 <tr class="memitem:gacdfbdd0ccb51e375ddc0b037cb9e68a6 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacdfbdd0ccb51e375ddc0b037cb9e68a6">nda::blas::gemv</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; alpha, A const &amp;a, X const &amp;x, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; beta, Y &amp;&amp;y)</td></tr>
@@ -359,14 +359,14 @@ requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898da
 
 </div>
 </div>
-<a id="gaf5df976ecdf5813d9a0fb760ac155a5e" name="gaf5df976ecdf5813d9a0fb760ac155a5e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaf5df976ecdf5813d9a0fb760ac155a5e">&#9670;&#160;</a></span>gemm_batch()</h2>
+<a id="gace7d586a807533525f094641f6338cae" name="gace7d586a807533525f094641f6338cae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gace7d586a807533525f094641f6338cae">&#9670;&#160;</a></span>gemm_batch()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;bool VBATCH = false, Matrix A, Matrix B, MemoryMatrix C&gt; <br />
-requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;) and (MemoryMatrix&lt;B&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;B&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+template&lt;bool is_vbatch = false, Matrix A, Matrix B, MemoryMatrix C&gt; <br />
+requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;) and (MemoryMatrix&lt;B&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;B&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">void nda::blas::gemm_batch </td>
@@ -398,11 +398,13 @@ requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898da
 
 <p><code>#include &lt;<a class="el" href="gemm__batch_8hpp.html">nda/blas/gemm_batch.hpp</a>&gt;</code></p>
 
-<p>Implements a batched version of <a class="el" href="#gab64974333f3f10efdbee734c088e6239" title="Interface to the BLAS gemm routine.">nda::blas::gemm</a> taking vectors of matrices as arguments. </p>
-<p>This routine is a batched version of <a class="el" href="#gab64974333f3f10efdbee734c088e6239" title="Interface to the BLAS gemm routine.">nda::blas::gemm</a>, performing multiple <span class="tt"><a class="el" href="#gab64974333f3f10efdbee734c088e6239" title="Interface to the BLAS gemm routine.">gemm</a></span> operations in a single call. Each <span class="tt"><a class="el" href="#gab64974333f3f10efdbee734c088e6239" title="Interface to the BLAS gemm routine.">gemm</a></span> operation performs a matrix-matrix product with general matrices.</p>
+<p>Interface to MKL's <span class="tt"><a class="el" href="#gace7d586a807533525f094641f6338cae" title="Interface to MKL&#39;s gemm_batch and gemm_vbatch routines.">gemm_batch</a></span> and <span class="tt"><a class="el" href="#ga2eeb65c38d5f3d350f2724d3b2405ff6" title="Interface to MKL&#39;s gemm_vbatch routine.">gemm_vbatch</a></span> routines. </p>
+<p>This routine is a batched version of <a class="el" href="#gab64974333f3f10efdbee734c088e6239" title="Interface to the BLAS gemm routine.">nda::blas::gemm</a>, performing multiple <span class="tt"><a class="el" href="#gab64974333f3f10efdbee734c088e6239" title="Interface to the BLAS gemm routine.">gemm</a></span> operations in a single call. Each <span class="tt"><a class="el" href="#gab64974333f3f10efdbee734c088e6239" title="Interface to the BLAS gemm routine.">gemm</a></span> operation performs a matrix-matrix product.</p>
+<p>If <span class="tt">is_vbatch</span> is true, the matrices are allowed to have different sizes. Otherwise, they are required to have the same size.</p>
+<p>See also <a class="el" href="#gab64974333f3f10efdbee734c088e6239" title="Interface to the BLAS gemm routine.">nda::blas::gemm</a> for more details.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">VBATCH</td><td>Allow for variable sized matrices. </td></tr>
+    <tr><td class="paramname">is_vbatch</td><td>Allow variable sized matrices. </td></tr>
     <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
     <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
     <tr><td class="paramname">C</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
@@ -412,26 +414,26 @@ requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898da
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">alpha</td><td>Input scalar. </td></tr>
-    <tr><td class="paramname">va</td><td>std::vector of input matrices. </td></tr>
-    <tr><td class="paramname">vb</td><td>std::vector of input matrices. </td></tr>
+    <tr><td class="paramname">va</td><td><span class="tt">std::vector</span> of input matrices. </td></tr>
+    <tr><td class="paramname">vb</td><td><span class="tt">std::vector</span> of input matrices. </td></tr>
     <tr><td class="paramname">beta</td><td>Input scalar. </td></tr>
-    <tr><td class="paramname">vc</td><td>std::vector of input/output matrices. </td></tr>
+    <tr><td class="paramname">vc</td><td><span class="tt">std::vector</span> of input/output matrices. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="gemm__batch_8hpp_source.html#l00058">58</a> of file <a class="el" href="gemm__batch_8hpp_source.html">gemm_batch.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="gemm__batch_8hpp_source.html#l00086">86</a> of file <a class="el" href="gemm__batch_8hpp_source.html">gemm_batch.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga0ab133463a49dcbd043eefd1ea2222c2" name="ga0ab133463a49dcbd043eefd1ea2222c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0ab133463a49dcbd043eefd1ea2222c2">&#9670;&#160;</a></span>gemm_batch_strided()</h2>
+<a id="ga0da5dca0ebd96f8fde668f17d6ad227a" name="ga0da5dca0ebd96f8fde668f17d6ad227a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0da5dca0ebd96f8fde668f17d6ad227a">&#9670;&#160;</a></span>gemm_batch_strided()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;ArrayOfRank&lt; 3 &gt; A, ArrayOfRank&lt; 3 &gt; B, MemoryArrayOfRank&lt; 3 &gt; C&gt; <br />
-requires ((MemoryArrayOfRank&lt;A, 3&gt; or (<a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;)) and (MemoryArrayOfRank&lt;B, 3&gt; or (<a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;B&gt;)) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+requires ((MemoryArrayOfRank&lt;A, 3&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;) and (MemoryArrayOfRank&lt;B, 3&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;B&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, C&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">void nda::blas::gemm_batch_strided </td>
@@ -464,7 +466,7 @@ requires ((MemoryArrayOfRank&lt;A, 3&gt; or (<a class="el" href="#ga4e762fd4595b
 <p><code>#include &lt;<a class="el" href="gemm__batch_8hpp.html">nda/blas/gemm_batch.hpp</a>&gt;</code></p>
 
 <p>Implements a strided batched version of <a class="el" href="#gab64974333f3f10efdbee734c088e6239" title="Interface to the BLAS gemm routine.">nda::blas::gemm</a> taking 3-dimensional arrays as arguments. </p>
-<p>This function is similar to <a class="el" href="#gaf5df976ecdf5813d9a0fb760ac155a5e" title="Implements a batched version of nda::blas::gemm taking vectors of matrices as arguments.">nda::blas::gemm_batch</a> except that it takes 3-dimensional arrays as arguments instead of vectors of matrices. The first dimension of the arrays indexes the matrices to be multiplied.</p>
+<p>This function is similar to <a class="el" href="#gace7d586a807533525f094641f6338cae" title="Interface to MKL&#39;s gemm_batch and gemm_vbatch routines.">nda::blas::gemm_batch</a> except that it takes 3-dimensional arrays as arguments instead of vectors of matrices. The first dimension of the arrays indexes the matrices to be multiplied.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_of_rank.html" title="Check if a given type is an nda::Array of a certain rank.">nda::ArrayOfRank&lt;3&gt;</a> type. </td></tr>
@@ -484,7 +486,7 @@ requires ((MemoryArrayOfRank&lt;A, 3&gt; or (<a class="el" href="#ga4e762fd4595b
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="gemm__batch_8hpp_source.html#l00204">204</a> of file <a class="el" href="gemm__batch_8hpp_source.html">gemm_batch.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="gemm__batch_8hpp_source.html#l00209">209</a> of file <a class="el" href="gemm__batch_8hpp_source.html">gemm_batch.hpp</a>.</p>
 
 </div>
 </div>
@@ -526,7 +528,8 @@ template&lt;Matrix A, Matrix B, MemoryMatrix C&gt; </div>
 
 <p><code>#include &lt;<a class="el" href="gemm__batch_8hpp.html">nda/blas/gemm_batch.hpp</a>&gt;</code></p>
 
-<p>Wrapper of <a class="el" href="#gaf5df976ecdf5813d9a0fb760ac155a5e" title="Implements a batched version of nda::blas::gemm taking vectors of matrices as arguments.">nda::blas::gemm_batch</a> that allows variable sized matrices. </p>
+<p>Interface to MKL's <span class="tt"><a class="el" href="#ga2eeb65c38d5f3d350f2724d3b2405ff6" title="Interface to MKL&#39;s gemm_vbatch routine.">gemm_vbatch</a></span> routine. </p>
+<p>It simply calls <a class="el" href="#gace7d586a807533525f094641f6338cae" title="Interface to MKL&#39;s gemm_batch and gemm_vbatch routines.">nda::blas::gemm_batch</a> with <span class="tt">is_vbatch</span> set to true.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
@@ -538,15 +541,15 @@ template&lt;Matrix A, Matrix B, MemoryMatrix C&gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">alpha</td><td>Input scalar. </td></tr>
-    <tr><td class="paramname">va</td><td>std::vector of input matrices. </td></tr>
-    <tr><td class="paramname">vb</td><td>std::vector of input matrices. </td></tr>
+    <tr><td class="paramname">va</td><td><span class="tt">std::vector</span> of input matrices. </td></tr>
+    <tr><td class="paramname">vb</td><td><span class="tt">std::vector</span> of input matrices. </td></tr>
     <tr><td class="paramname">beta</td><td>Input scalar. </td></tr>
-    <tr><td class="paramname">vc</td><td>std::vector of input/output matrices. </td></tr>
+    <tr><td class="paramname">vc</td><td><span class="tt">std::vector</span> of input/output matrices. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="gemm__batch_8hpp_source.html#l00182">182</a> of file <a class="el" href="gemm__batch_8hpp_source.html">gemm_batch.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="gemm__batch_8hpp_source.html#l00187">187</a> of file <a class="el" href="gemm__batch_8hpp_source.html">gemm_batch.hpp</a>.</p>
 
 </div>
 </div>
