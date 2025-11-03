@@ -147,18 +147,16 @@ $(function(){initNavTree('getri_8hpp_source.html','',''); });
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>      <span class="comment">// allocate work buffer and perform actual library call</span></div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>      <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">array&lt;value_type, 1&gt;</a> work(bufferSize);</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="preprocessor">#if defined(__has_feature)</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="preprocessor">#if __has_feature(memory_sanitizer)</span></div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>      work = 0;</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>      f77::getri(a.extent(0), a.data(), <a class="code hl_function" href="lapack_2interface_2cxx__interface_8hpp.html#a3d3e17b98e215606a2db727249b12e38">get_ld</a>(a), ipiv.data(), work.<a class="code hl_function" href="classnda_1_1basic__array.html#a22480a3170ce227094e42be7c9913256">data</a>(), bufferSize, info);</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    }</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keywordflow">return</span> info;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  }</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="preprocessor">#if defined(__has_feature) &amp;&amp; __has_feature(memory_sanitizer)</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>      work = 0;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>      f77::getri(a.extent(0), a.data(), <a class="code hl_function" href="lapack_2interface_2cxx__interface_8hpp.html#a3d3e17b98e215606a2db727249b12e38">get_ld</a>(a), ipiv.data(), work.<a class="code hl_function" href="classnda_1_1basic__array.html#a22480a3170ce227094e42be7c9913256">data</a>(), bufferSize, info);</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    }</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keywordflow">return</span> info;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  }</div>
 </div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>} <span class="comment">// namespace nda::lapack</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>} <span class="comment">// namespace nda::lapack</span></div>
 <div class="ttc" id="aaddress__space_8hpp_html"><div class="ttname"><a href="address__space_8hpp.html">address_space.hpp</a></div><div class="ttdoc">Provides definitions and type traits involving the different memory address spaces supported by nda.</div></div>
 <div class="ttc" id="aclassnda_1_1basic__array_html_a22480a3170ce227094e42be7c9913256"><div class="ttname"><a href="classnda_1_1basic__array.html#a22480a3170ce227094e42be7c9913256">nda::basic_array::data</a></div><div class="ttdeci">ValueType const * data() const noexcept</div><div class="ttdoc">Get a pointer to the actual data (in general this is not the beginning of the memory block for a view...</div><div class="ttdef"><b>Definition</b> <a href="basic__array_8hpp_source.html#l00628">basic_array.hpp:628</a></div></div>
 <div class="ttc" id="aconcepts_8hpp_html"><div class="ttname"><a href="concepts_8hpp.html">concepts.hpp</a></div><div class="ttdoc">Provides concepts for the nda library.</div></div>
@@ -172,7 +170,7 @@ $(function(){initNavTree('getri_8hpp_source.html','',''); });
 <div class="ttc" id="agroup__mem__utils_html_ga3cb1540052805a4b852cc39bc48799cd"><div class="ttname"><a href="group__mem__utils.html#ga3cb1540052805a4b852cc39bc48799cd">nda::compile_error_no_gpu</a></div><div class="ttdeci">void compile_error_no_gpu()</div><div class="ttdoc">Trigger a compilation error in case GPU specific functionality is used without configuring the projec...</div><div class="ttdef"><b>Definition</b> <a href="device_8hpp_source.html#l00036">device.hpp:36</a></div></div>
 <div class="ttc" id="agroup__utils__type__traits_html_ga30a65f6fd37a3801c89552edcd6f7bda"><div class="ttname"><a href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">nda::is_blas_lapack_v</a></div><div class="ttdeci">constexpr bool is_blas_lapack_v</div><div class="ttdoc">Alias for nda::is_double_or_complex_v.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00092">traits.hpp:92</a></div></div>
 <div class="ttc" id="alapack_2interface_2cxx__interface_8hpp_html"><div class="ttname"><a href="lapack_2interface_2cxx__interface_8hpp.html">cxx_interface.hpp</a></div><div class="ttdoc">Provides a C++ interface for various LAPACK routines.</div></div>
-<div class="ttc" id="alapack_2interface_2cxx__interface_8hpp_html_a3d3e17b98e215606a2db727249b12e38"><div class="ttname"><a href="lapack_2interface_2cxx__interface_8hpp.html#a3d3e17b98e215606a2db727249b12e38">nda::lapack::get_ld</a></div><div class="ttdeci">int get_ld(A const &amp;a)</div><div class="ttdoc">Get the leading dimension of an nda::MemoryArray with rank 1 or 2 for LAPACK calls.</div><div class="ttdef"><b>Definition</b> <a href="tools_8hpp_source.html#l00102">tools.hpp:102</a></div></div>
+<div class="ttc" id="alapack_2interface_2cxx__interface_8hpp_html_a3d3e17b98e215606a2db727249b12e38"><div class="ttname"><a href="lapack_2interface_2cxx__interface_8hpp.html#a3d3e17b98e215606a2db727249b12e38">nda::lapack::get_ld</a></div><div class="ttdeci">int get_ld(A const &amp;a)</div><div class="ttdoc">Get the leading dimension of an nda::MemoryArray with rank 1 or 2 for LAPACK calls.</div><div class="ttdef"><b>Definition</b> <a href="tools_8hpp_source.html#l00122">tools.hpp:122</a></div></div>
 <div class="ttc" id="amacros_8hpp_html"><div class="ttname"><a href="macros_8hpp.html">macros.hpp</a></div><div class="ttdoc">Macros used in the nda library.</div></div>
 <div class="ttc" id="atraits_8hpp_html"><div class="ttname"><a href="traits_8hpp.html">traits.hpp</a></div><div class="ttdoc">Provides type traits for the nda library.</div></div>
 </div><!-- fragment --></div><!-- contents -->

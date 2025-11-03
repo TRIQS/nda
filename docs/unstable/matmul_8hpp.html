@@ -103,9 +103,9 @@ $(function(){initNavTree('matmul_8hpp.html','',''); });
   <div class="headertitle"><div class="title">matmul.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="basic__functions_8hpp_source.html">../basic_functions.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="basic__array_8hpp_source.html">../basic_array.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="basic__functions_8hpp_source.html">../basic_functions.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="gemm_8hpp_source.html">../blas/gemm.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gemv_8hpp_source.html">../blas/gemv.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="tools_8hpp_source.html">../blas/tools.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="declarations_8hpp_source.html">../declarations.hpp</a>&quot;</code><br />
@@ -116,7 +116,7 @@ $(function(){initNavTree('matmul_8hpp.html','',''); });
 <code>#include &lt;type_traits&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
 </div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Provides matrix-matrix an matrix-vector multiplication. </p>
+<div class="textblock"><p>Provides a generic matrix-matrix multiplication. </p>
 
 <p class="definition">Definition in file <a class="el" href="matmul_8hpp_source.html">matmul.hpp</a>.</p>
 </div>
@@ -124,12 +124,14 @@ $(function(){initNavTree('matmul_8hpp.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga4a4eb56e6c29f4c20d7f1891e6b252b1" id="r_ga4a4eb56e6c29f4c20d7f1891e6b252b1"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Matrix B&gt; </td></tr>
-<tr class="memitem:ga4a4eb56e6c29f4c20d7f1891e6b252b1 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#ga4a4eb56e6c29f4c20d7f1891e6b252b1">nda::matmul</a> (A &amp;&amp;a, B &amp;&amp;b)</td></tr>
-<tr class="memdesc:ga4a4eb56e6c29f4c20d7f1891e6b252b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a matrix-matrix multiplication.  <br /></td></tr>
-<tr class="memitem:ga008bf3440545c0529d142d2971d9ea5d" id="r_ga008bf3440545c0529d142d2971d9ea5d"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Vector X&gt; </td></tr>
-<tr class="memitem:ga008bf3440545c0529d142d2971d9ea5d template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#ga008bf3440545c0529d142d2971d9ea5d">nda::matvecmul</a> (A &amp;&amp;a, X &amp;&amp;x)</td></tr>
-<tr class="memdesc:ga008bf3440545c0529d142d2971d9ea5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a matrix-vector multiplication.  <br /></td></tr>
+<tr class="memitem:a1ac277ce99aa9c220d7fcacd2fa6bf6b" id="r_a1ac277ce99aa9c220d7fcacd2fa6bf6b"><td class="memTemplParams" colspan="2"><a id="a1ac277ce99aa9c220d7fcacd2fa6bf6b" name="a1ac277ce99aa9c220d7fcacd2fa6bf6b"></a>
+template&lt;Matrix A, Matrix B, MemoryMatrix C&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A, B, C&gt;)</td></tr>
+<tr class="memitem:a1ac277ce99aa9c220d7fcacd2fa6bf6b template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><b>nda::linalg::detail::gemm_generic</b> (auto alpha, A const &amp;a, B const &amp;b, auto beta, C &amp;&amp;c)</td></tr>
+<tr class="memdesc:a1ac277ce99aa9c220d7fcacd2fa6bf6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic matrix-matrix multiplication for types not supported by BLAS. <br /></td></tr>
+<tr class="memitem:ga33c980b3e0b7fb89dad92b92562c851f" id="r_ga33c980b3e0b7fb89dad92b92562c851f"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Matrix B&gt; </td></tr>
+<tr class="memitem:ga33c980b3e0b7fb89dad92b92562c851f template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#ga33c980b3e0b7fb89dad92b92562c851f">nda::linalg::matmul</a> (A &amp;&amp;a, B &amp;&amp;b)</td></tr>
+<tr class="memdesc:ga33c980b3e0b7fb89dad92b92562c851f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the matrix-matrix product of two <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> objects.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

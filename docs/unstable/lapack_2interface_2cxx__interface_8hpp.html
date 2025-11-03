@@ -125,9 +125,9 @@ requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da94
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:af9028eaeb96ef5867bb66664aa831cb7" id="r_af9028eaeb96ef5867bb66664aa831cb7"><td class="memTemplParams" colspan="2">template&lt;bool conj, bool transpose&gt; </td></tr>
-<tr class="memitem:af9028eaeb96ef5867bb66664aa831cb7 template"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af9028eaeb96ef5867bb66664aa831cb7">nda::lapack::get_op</a></td></tr>
-<tr class="memdesc:af9028eaeb96ef5867bb66664aa831cb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Variable template that determines the BLAS matrix operation tag ('N','T','C') based on the given boolean flags for conjugation and transposition.  <br /></td></tr>
+<tr class="memitem:a834a04ad301f988bd361fc1946422607" id="r_a834a04ad301f988bd361fc1946422607"><td class="memTemplParams" colspan="2">template&lt;Matrix M&gt; </td></tr>
+<tr class="memitem:a834a04ad301f988bd361fc1946422607 template"><td class="memItemLeft" align="right" valign="top">static constexpr char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a834a04ad301f988bd361fc1946422607">nda::lapack::get_op</a></td></tr>
+<tr class="memdesc:a834a04ad301f988bd361fc1946422607"><td class="mdescLeft">&#160;</td><td class="mdescRight">Variable template that determines the BLAS matrix operation tag ('N','T','C') based on the given boolean flags for conjugation and transposition.  <br /></td></tr>
 <tr class="memitem:a24228d6ce4cd37cb84f967a933287d95" id="r_a24228d6ce4cd37cb84f967a933287d95"><td class="memTemplParams" colspan="2"><a id="a24228d6ce4cd37cb84f967a933287d95" name="a24228d6ce4cd37cb84f967a933287d95"></a>
 template&lt;Array A&gt; </td></tr>
 <tr class="memitem:a24228d6ce4cd37cb84f967a933287d95 template"><td class="memItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>nda::lapack::has_C_layout</b></td></tr>
@@ -176,7 +176,7 @@ requires (get_rank&lt;A&gt; == 1 or get_rank&lt;A&gt; == 2)</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Leading dimension for BLAS/LAPACK calls. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tools_8hpp_source.html#l00102">102</a> of file <a class="el" href="tools_8hpp_source.html">tools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tools_8hpp_source.html#l00122">122</a> of file <a class="el" href="tools_8hpp_source.html">tools.hpp</a>.</p>
 
 </div>
 </div>
@@ -214,23 +214,31 @@ requires (get_rank&lt;A&gt; == 1 or get_rank&lt;A&gt; == 2)</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Number of columns for BLAS/LAPACK calls. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tools_8hpp_source.html#l00122">122</a> of file <a class="el" href="tools_8hpp_source.html">tools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tools_8hpp_source.html#l00142">142</a> of file <a class="el" href="tools_8hpp_source.html">tools.hpp</a>.</p>
 
 </div>
 </div>
 <a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
-<a id="af9028eaeb96ef5867bb66664aa831cb7" name="af9028eaeb96ef5867bb66664aa831cb7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af9028eaeb96ef5867bb66664aa831cb7">&#9670;&#160;</a></span>get_op</h2>
+<a id="a834a04ad301f988bd361fc1946422607" name="a834a04ad301f988bd361fc1946422607"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a834a04ad301f988bd361fc1946422607">&#9670;&#160;</a></span>get_op</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;bool conj, bool transpose&gt; </div>
+template&lt;Matrix M&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const char <a class="el" href="group__linalg__blas.html#gaf9028eaeb96ef5867bb66664aa831cb7">nda::blas::get_op</a></td>
+          <td class="memname">char <a class="el" href="group__linalg__blas.html#ga834a04ad301f988bd361fc1946422607">nda::blas::get_op</a></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Variable template that determines the BLAS matrix operation tag ('N','T','C') based on the given boolean flags for conjugation and transposition. </p>
@@ -242,7 +250,7 @@ template&lt;bool conj, bool transpose&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="tools_8hpp_source.html#l00080">80</a> of file <a class="el" href="tools_8hpp_source.html">tools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tools_8hpp_source.html#l00098">98</a> of file <a class="el" href="tools_8hpp_source.html">tools.hpp</a>.</p>
 
 </div>
 </div>

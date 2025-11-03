@@ -9,8 +9,9 @@ var searchData=
   ['math_2ehpp_6',['math.hpp',['../math_8hpp.html',1,'']]],
   ['matmul_2ehpp_7',['matmul.hpp',['../matmul_8hpp.html',1,'']]],
   ['matrix_5ffunctions_2ehpp_8',['matrix_functions.hpp',['../matrix__functions_8hpp.html',1,'']]],
-  ['mem_2ehpp_9',['mem.hpp',['../mem_8hpp.html',1,'']]],
-  ['memcpy_2ehpp_10',['memcpy.hpp',['../memcpy_8hpp.html',1,'']]],
-  ['memset_2ehpp_11',['memset.hpp',['../memset_8hpp.html',1,'']]],
-  ['mpi_2ehpp_12',['mpi.hpp',['../mpi_8hpp.html',1,'']]]
+  ['matvecmul_2ehpp_9',['matvecmul.hpp',['../matvecmul_8hpp.html',1,'']]],
+  ['mem_2ehpp_10',['mem.hpp',['../mem_8hpp.html',1,'']]],
+  ['memcpy_2ehpp_11',['memcpy.hpp',['../memcpy_8hpp.html',1,'']]],
+  ['memset_2ehpp_12',['memset.hpp',['../memset_8hpp.html',1,'']]],
+  ['mpi_2ehpp_13',['mpi.hpp',['../mpi_8hpp.html',1,'']]]
 ];

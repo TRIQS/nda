@@ -125,6 +125,10 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>nda::dcomplex</b> = 
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:gaf613a25151f341e5100b089f38a91bc0" id="r_gaf613a25151f341e5100b089f38a91bc0"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; <br />
+requires (MemoryArray&lt;A&gt; or <a class="el" href="group__linalg__blas.html#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;)</td></tr>
+<tr class="memitem:gaf613a25151f341e5100b089f38a91bc0 template"><td class="memItemLeft" align="right" valign="top">MemoryArray decltype(auto)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__blas.html#gaf613a25151f341e5100b089f38a91bc0">nda::blas::get_array</a> (A &amp;&amp;a)</td></tr>
+<tr class="memdesc:gaf613a25151f341e5100b089f38a91bc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the underlying array of a conjugate lazy expression or return the array itself in case it is an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a>.  <br /></td></tr>
 <tr class="memitem:ga3d3e17b98e215606a2db727249b12e38" id="r_ga3d3e17b98e215606a2db727249b12e38"><td class="memTemplParams" colspan="2">template&lt;MemoryArray A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 1 or <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 2)</td></tr>
 <tr class="memitem:ga3d3e17b98e215606a2db727249b12e38 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__blas.html#ga3d3e17b98e215606a2db727249b12e38">nda::blas::get_ld</a> (A const &amp;a)</td></tr>
@@ -136,9 +140,9 @@ requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da94
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:gaf9028eaeb96ef5867bb66664aa831cb7" id="r_gaf9028eaeb96ef5867bb66664aa831cb7"><td class="memTemplParams" colspan="2">template&lt;bool conj, bool transpose&gt; </td></tr>
-<tr class="memitem:gaf9028eaeb96ef5867bb66664aa831cb7 template"><td class="memItemLeft" align="right" valign="top">const char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__blas.html#gaf9028eaeb96ef5867bb66664aa831cb7">nda::blas::get_op</a></td></tr>
-<tr class="memdesc:gaf9028eaeb96ef5867bb66664aa831cb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Variable template that determines the BLAS matrix operation tag ('N','T','C') based on the given boolean flags for conjugation and transposition.  <br /></td></tr>
+<tr class="memitem:ga834a04ad301f988bd361fc1946422607" id="r_ga834a04ad301f988bd361fc1946422607"><td class="memTemplParams" colspan="2">template&lt;Matrix M&gt; </td></tr>
+<tr class="memitem:ga834a04ad301f988bd361fc1946422607 template"><td class="memItemLeft" align="right" valign="top">static constexpr char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__blas.html#ga834a04ad301f988bd361fc1946422607">nda::blas::get_op</a></td></tr>
+<tr class="memdesc:ga834a04ad301f988bd361fc1946422607"><td class="mdescLeft">&#160;</td><td class="mdescRight">Variable template that determines the BLAS matrix operation tag ('N','T','C') based on the given boolean flags for conjugation and transposition.  <br /></td></tr>
 <tr class="memitem:ga24228d6ce4cd37cb84f967a933287d95" id="r_ga24228d6ce4cd37cb84f967a933287d95"><td class="memTemplParams" colspan="2">
 template&lt;Array A&gt; </td></tr>
 <tr class="memitem:ga24228d6ce4cd37cb84f967a933287d95 template"><td class="memItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>nda::blas::has_C_layout</b></td></tr>

@@ -222,8 +222,8 @@ Arithmetic operations with matrices and vectors</h2>
 </li>
 <li><b>Multiplication</b><ul>
 <li><span class="tt">A1 * A2</span>: element-wise multiplication, shapes of <span class="tt">A1</span> and <span class="tt">A2</span> have to be the same, result has the same shape</li>
-<li><span class="tt">M1 * M2</span>: non-lazy matrix-matrix multiplication, shapes have the expected requirements for matrix multiplication, calls <a class="el" href="group__linalg__tools.html#ga4a4eb56e6c29f4c20d7f1891e6b252b1" title="Perform a matrix-matrix multiplication.">nda::matmul</a></li>
-<li><span class="tt">M1 * v1</span>: non-lazy matrix-vector multiplication, shapes have the expected requirements for matrix multiplication, calls <a class="el" href="group__linalg__tools.html#ga008bf3440545c0529d142d2971d9ea5d" title="Perform a matrix-vector multiplication.">nda::matvecmul</a></li>
+<li><span class="tt">M1 * M2</span>: non-lazy matrix-matrix multiplication, shapes have the expected requirements for matrix multiplication, calls nda::matmul</li>
+<li><span class="tt">M1 * v1</span>: non-lazy matrix-vector multiplication, shapes have the expected requirements for matrix multiplication, calls nda::matvecmul</li>
 <li><span class="tt">s1 * O1</span>/<span class="tt">O1 * s1</span>: element-wise multiplication, result has the same shape as <span class="tt">O1</span></li>
 </ul>
 </li>
@@ -302,7 +302,7 @@ Using linear algebra tools</h2>
 <div class="line"><span class="keyword">auto</span> [s, Q] = <a class="code hl_function" href="group__linalg__tools.html#gabc013a1a51e4f8bc006f8326ad5a3974">nda::linalg::eigenelements</a>(M1);</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Eigenvalues of M1: s = &quot;</span> &lt;&lt; s &lt;&lt; std::endl;</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Eigenvectors of M1: Q = &quot;</span> &lt;&lt; Q &lt;&lt; std::endl;</div>
-<div class="ttc" id="agroup__linalg__tools_html_gabc013a1a51e4f8bc006f8326ad5a3974"><div class="ttname"><a href="group__linalg__tools.html#gabc013a1a51e4f8bc006f8326ad5a3974">nda::linalg::eigenelements</a></div><div class="ttdeci">auto eigenelements(M const &amp;m)</div><div class="ttdoc">Find the eigenvalues and eigenvectors of a symmetric (real) or hermitian (complex) matrix/view.</div><div class="ttdef"><b>Definition</b> <a href="eigenelements_8hpp_source.html#l00087">eigenelements.hpp:87</a></div></div>
+<div class="ttc" id="agroup__linalg__tools_html_gabc013a1a51e4f8bc006f8326ad5a3974"><div class="ttname"><a href="group__linalg__tools.html#gabc013a1a51e4f8bc006f8326ad5a3974">nda::linalg::eigenelements</a></div><div class="ttdeci">auto eigenelements(M const &amp;m)</div><div class="ttdoc">Find the eigenvalues and eigenvectors of a symmetric (real) or hermitian (complex) matrix/view.</div><div class="ttdef"><b>Definition</b> <a href="eigenelements_8hpp_source.html#l00085">eigenelements.hpp:85</a></div></div>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">Eigenvalues of M1: s = [-9.64366,-6.89203,31.5357]</div>
 <div class="line">Eigenvectors of M1: Q =</div>

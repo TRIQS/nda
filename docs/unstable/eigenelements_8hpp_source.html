@@ -136,64 +136,62 @@ $(function(){initNavTree('eigenelements_8hpp_source.html','',''); });
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>      <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">array&lt;value_type, 1&gt;</a> work(lwork);</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>      <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">array&lt;double, 1&gt;</a> work2(<a class="code hl_variable" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v&lt;value_type&gt;</a> ? lwork : 0);</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#if defined(__has_feature)</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">#if __has_feature(memory_sanitizer)</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>      work2 = 0;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>      work  = 0;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>      ev    = 0;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>      <span class="comment">// call the correct LAPACK routine</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>      <span class="keywordtype">int</span> info = 0;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (not <a class="code hl_variable" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v&lt;value_type&gt;</a>) {</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        lapack::f77::syev(compz, <span class="charliteral">&#39;U&#39;</span>, dim, m.data(), dim, ev.data(), work.data(), lwork, info);</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        lapack::f77::heev(compz, <span class="charliteral">&#39;U&#39;</span>, dim, m.data(), dim, ev.data(), work.data(), lwork, work2.data(), info);</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>      }</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>      <span class="keywordflow">if</span> (info) NDA_RUNTIME_ERROR &lt;&lt; <span class="stringliteral">&quot;Error in nda::linalg::detail::_eigen_element_impl: Diagonalization error&quot;</span>;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>      <span class="keywordflow">return</span> ev;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    }</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  } <span class="comment">// namespace detail</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span></div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> M&gt;</div>
-<div class="foldopen" id="foldopen00087" data-start="{" data-end="}">
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="group__linalg__tools.html#gabc013a1a51e4f8bc006f8326ad5a3974">   87</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__linalg__tools.html#gabc013a1a51e4f8bc006f8326ad5a3974">eigenelements</a>(M <span class="keyword">const</span> &amp;m) {</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keyword">auto</span> m_copy = <a class="code hl_typedef" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1">matrix&lt;typename M::value_type, F_layout&gt;</a>(m);</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keyword">auto</span> ev     = detail::_eigen_element_impl(m_copy, <span class="charliteral">&#39;V&#39;</span>);</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keywordflow">return</span> std::pair&lt;array&lt;double, 1&gt;, <span class="keyword">typename</span> M::regular_type&gt;{ev, m_copy};</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  }</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#if defined(__has_feature) &amp;&amp; __has_feature(memory_sanitizer)</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>      work2 = 0;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>      work  = 0;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>      ev    = 0;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>      <span class="comment">// call the correct LAPACK routine</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>      <span class="keywordtype">int</span> info = 0;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (not <a class="code hl_variable" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v&lt;value_type&gt;</a>) {</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        lapack::f77::syev(compz, <span class="charliteral">&#39;U&#39;</span>, dim, m.data(), dim, ev.data(), work.data(), lwork, info);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        lapack::f77::heev(compz, <span class="charliteral">&#39;U&#39;</span>, dim, m.data(), dim, ev.data(), work.data(), lwork, work2.data(), info);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>      }</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>      <span class="keywordflow">if</span> (info) NDA_RUNTIME_ERROR &lt;&lt; <span class="stringliteral">&quot;Error in nda::linalg::detail::_eigen_element_impl: Diagonalization error&quot;</span>;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>      <span class="keywordflow">return</span> ev;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    }</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  } <span class="comment">// namespace detail</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> M&gt;</div>
+<div class="foldopen" id="foldopen00085" data-start="{" data-end="}">
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="group__linalg__tools.html#gabc013a1a51e4f8bc006f8326ad5a3974">   85</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__linalg__tools.html#gabc013a1a51e4f8bc006f8326ad5a3974">eigenelements</a>(M <span class="keyword">const</span> &amp;m) {</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keyword">auto</span> m_copy = <a class="code hl_typedef" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1">matrix&lt;typename M::value_type, F_layout&gt;</a>(m);</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keyword">auto</span> ev     = detail::_eigen_element_impl(m_copy, <span class="charliteral">&#39;V&#39;</span>);</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keywordflow">return</span> std::pair&lt;array&lt;double, 1&gt;, <span class="keyword">typename</span> M::regular_type&gt;{ev, m_copy};</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  }</div>
 </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span></div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> M&gt;</div>
-<div class="foldopen" id="foldopen00106" data-start="{" data-end="}">
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="group__linalg__tools.html#ga3cb88b67c9f89ebf87e9c6e539165ed8">  106</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__linalg__tools.html#ga3cb88b67c9f89ebf87e9c6e539165ed8">eigenvalues</a>(M <span class="keyword">const</span> &amp;m) {</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keyword">auto</span> m_copy = <a class="code hl_typedef" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1">matrix&lt;typename M::value_type, F_layout&gt;</a>(m);</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <span class="keywordflow">return</span> detail::_eigen_element_impl(m_copy, <span class="charliteral">&#39;N&#39;</span>);</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  }</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> M&gt;</div>
+<div class="foldopen" id="foldopen00104" data-start="{" data-end="}">
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="group__linalg__tools.html#ga3cb88b67c9f89ebf87e9c6e539165ed8">  104</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__linalg__tools.html#ga3cb88b67c9f89ebf87e9c6e539165ed8">eigenvalues</a>(M <span class="keyword">const</span> &amp;m) {</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keyword">auto</span> m_copy = <a class="code hl_typedef" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1">matrix&lt;typename M::value_type, F_layout&gt;</a>(m);</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="keywordflow">return</span> detail::_eigen_element_impl(m_copy, <span class="charliteral">&#39;N&#39;</span>);</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  }</div>
 </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span></div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> M&gt;</div>
-<div class="foldopen" id="foldopen00124" data-start="{" data-end="}">
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno"><a class="line" href="group__linalg__tools.html#gafede9394121a6e2098c4e04c9af5f568">  124</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__linalg__tools.html#gafede9394121a6e2098c4e04c9af5f568">eigenvalues_in_place</a>(M &amp;m) {</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="keywordflow">return</span> detail::_eigen_element_impl(m, <span class="charliteral">&#39;N&#39;</span>);</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  }</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> M&gt;</div>
+<div class="foldopen" id="foldopen00122" data-start="{" data-end="}">
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno"><a class="line" href="group__linalg__tools.html#gafede9394121a6e2098c4e04c9af5f568">  122</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__linalg__tools.html#gafede9394121a6e2098c4e04c9af5f568">eigenvalues_in_place</a>(M &amp;m) {</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keywordflow">return</span> detail::_eigen_element_impl(m, <span class="charliteral">&#39;N&#39;</span>);</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  }</div>
 </div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span></div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>} <span class="comment">// namespace nda::linalg</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>} <span class="comment">// namespace nda::linalg</span></div>
 <div class="ttc" id="abasic__array_8hpp_html"><div class="ttname"><a href="basic__array_8hpp.html">basic_array.hpp</a></div><div class="ttdoc">Provides the generic class for arrays.</div></div>
 <div class="ttc" id="adeclarations_8hpp_html"><div class="ttname"><a href="declarations_8hpp.html">declarations.hpp</a></div><div class="ttdoc">Provides various convenient aliases and helper functions for nda::basic_array and nda::basic_array_vi...</div></div>
 <div class="ttc" id="adet__and__inverse_8hpp_html"><div class="ttname"><a href="det__and__inverse_8hpp.html">det_and_inverse.hpp</a></div><div class="ttdoc">Provides functions to compute the determinant and inverse of a matrix.</div></div>
 <div class="ttc" id="aexceptions_8hpp_html"><div class="ttname"><a href="exceptions_8hpp.html">exceptions.hpp</a></div><div class="ttdoc">Provides a custom runtime error class and macros to assert conditions and throw exceptions.</div></div>
 <div class="ttc" id="agroup__av__types_html_ga72f3fdf9760fa22c35442cdf2eb6768d"><div class="ttname"><a href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array</a></div><div class="ttdeci">basic_array&lt; ValueType, Rank, Layout, &#39;A&#39;, ContainerPolicy &gt; array</div><div class="ttdoc">Alias template of an nda::basic_array with an &#39;A&#39; algebra.</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00064">declarations.hpp:64</a></div></div>
 <div class="ttc" id="agroup__av__types_html_gacf63083a75025ccec1ee927d1bade8d1"><div class="ttname"><a href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1">nda::matrix</a></div><div class="ttdeci">basic_array&lt; ValueType, 2, Layout, &#39;M&#39;, ContainerPolicy &gt; matrix</div><div class="ttdoc">Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00117">declarations.hpp:117</a></div></div>
-<div class="ttc" id="agroup__linalg__tools_html_ga3cb88b67c9f89ebf87e9c6e539165ed8"><div class="ttname"><a href="group__linalg__tools.html#ga3cb88b67c9f89ebf87e9c6e539165ed8">nda::linalg::eigenvalues</a></div><div class="ttdeci">auto eigenvalues(M const &amp;m)</div><div class="ttdoc">Find the eigenvalues of a symmetric (real) or hermitian (complex) matrix/view.</div><div class="ttdef"><b>Definition</b> <a href="#l00106">eigenelements.hpp:106</a></div></div>
-<div class="ttc" id="agroup__linalg__tools_html_gabc013a1a51e4f8bc006f8326ad5a3974"><div class="ttname"><a href="group__linalg__tools.html#gabc013a1a51e4f8bc006f8326ad5a3974">nda::linalg::eigenelements</a></div><div class="ttdeci">auto eigenelements(M const &amp;m)</div><div class="ttdoc">Find the eigenvalues and eigenvectors of a symmetric (real) or hermitian (complex) matrix/view.</div><div class="ttdef"><b>Definition</b> <a href="#l00087">eigenelements.hpp:87</a></div></div>
+<div class="ttc" id="agroup__linalg__tools_html_ga3cb88b67c9f89ebf87e9c6e539165ed8"><div class="ttname"><a href="group__linalg__tools.html#ga3cb88b67c9f89ebf87e9c6e539165ed8">nda::linalg::eigenvalues</a></div><div class="ttdeci">auto eigenvalues(M const &amp;m)</div><div class="ttdoc">Find the eigenvalues of a symmetric (real) or hermitian (complex) matrix/view.</div><div class="ttdef"><b>Definition</b> <a href="#l00104">eigenelements.hpp:104</a></div></div>
+<div class="ttc" id="agroup__linalg__tools_html_gabc013a1a51e4f8bc006f8326ad5a3974"><div class="ttname"><a href="group__linalg__tools.html#gabc013a1a51e4f8bc006f8326ad5a3974">nda::linalg::eigenelements</a></div><div class="ttdeci">auto eigenelements(M const &amp;m)</div><div class="ttdoc">Find the eigenvalues and eigenvectors of a symmetric (real) or hermitian (complex) matrix/view.</div><div class="ttdef"><b>Definition</b> <a href="#l00085">eigenelements.hpp:85</a></div></div>
 <div class="ttc" id="agroup__linalg__tools_html_gaf16a960b18684822d700cb8bf10f470a"><div class="ttname"><a href="group__linalg__tools.html#gaf16a960b18684822d700cb8bf10f470a">nda::is_matrix_square</a></div><div class="ttdeci">bool is_matrix_square(A const &amp;a, bool print_error=false)</div><div class="ttdoc">Check if a given array/view is square, i.e. if the first dimension has the same extent as the second ...</div><div class="ttdef"><b>Definition</b> <a href="det__and__inverse_8hpp_source.html#l00050">det_and_inverse.hpp:50</a></div></div>
-<div class="ttc" id="agroup__linalg__tools_html_gafede9394121a6e2098c4e04c9af5f568"><div class="ttname"><a href="group__linalg__tools.html#gafede9394121a6e2098c4e04c9af5f568">nda::linalg::eigenvalues_in_place</a></div><div class="ttdeci">auto eigenvalues_in_place(M &amp;m)</div><div class="ttdoc">Find the eigenvalues of a symmetric (real) or hermitian (complex) matrix/view.</div><div class="ttdef"><b>Definition</b> <a href="#l00124">eigenelements.hpp:124</a></div></div>
+<div class="ttc" id="agroup__linalg__tools_html_gafede9394121a6e2098c4e04c9af5f568"><div class="ttname"><a href="group__linalg__tools.html#gafede9394121a6e2098c4e04c9af5f568">nda::linalg::eigenvalues_in_place</a></div><div class="ttdeci">auto eigenvalues_in_place(M &amp;m)</div><div class="ttdoc">Find the eigenvalues of a symmetric (real) or hermitian (complex) matrix/view.</div><div class="ttdef"><b>Definition</b> <a href="#l00122">eigenelements.hpp:122</a></div></div>
 <div class="ttc" id="agroup__utils__type__traits_html_ga1a3e755a22503182b586c887561a2517"><div class="ttname"><a href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">nda::is_complex_v</a></div><div class="ttdeci">constexpr bool is_complex_v</div><div class="ttdoc">Constexpr variable that is true if type T is a std::complex type.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00065">traits.hpp:65</a></div></div>
 <div class="ttc" id="alapack_2interface_2cxx__interface_8hpp_html"><div class="ttname"><a href="lapack_2interface_2cxx__interface_8hpp.html">cxx_interface.hpp</a></div><div class="ttdoc">Provides a C++ interface for various LAPACK routines.</div></div>
 <div class="ttc" id="alayout_2policies_8hpp_html"><div class="ttname"><a href="layout_2policies_8hpp.html">policies.hpp</a></div><div class="ttdoc">Provides definitions of various layout policies.</div></div>

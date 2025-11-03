@@ -236,7 +236,7 @@ template&lt;Array A, Scalar S&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Lazy binary expression for the multiplication operation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00442">442</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00443">443</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
 
 </div>
 </div>
@@ -266,8 +266,8 @@ template&lt;Array L, Array R&gt; </div>
 <p>Multiplication operator for two <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types. </p>
 <p>The input arrays must have one of the following algebras:</p><ul>
 <li>'A' * 'A': Elementwise multiplication of two arrays returns a lazy <a class="el" href="structnda_1_1expr.html" title="Lazy binary expression for nda::ArrayOrScalar types.">nda::expr</a> object.</li>
-<li>'M' * 'M': Matrix-matrix multiplication calls <a class="el" href="group__linalg__tools.html#ga4a4eb56e6c29f4c20d7f1891e6b252b1" title="Perform a matrix-matrix multiplication.">nda::matmul</a> and returns the result.</li>
-<li>'M' * 'V': Matrix-vector multiplication calls <a class="el" href="group__linalg__tools.html#ga008bf3440545c0529d142d2971d9ea5d" title="Perform a matrix-vector multiplication.">nda::matvecmul</a> and returns the result.</li>
+<li>'M' * 'M': Matrix-matrix multiplication calls nda::matmul and returns the result.</li>
+<li>'M' * 'V': Matrix-vector multiplication calls nda::matvecmul and returns the result.</li>
 </ul>
 <p>Obvious restrictions on the ranks and shapes of the input arrays apply.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
@@ -286,7 +286,7 @@ template&lt;Array L, Array R&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Either a lazy binary expression for the multiplication operation ('A' * 'A') or the result of the matrix-matrix or matrix-vector multiplication. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00402">402</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00403">403</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
 
 </div>
 </div>
@@ -331,7 +331,7 @@ template&lt;Scalar S, Array A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Lazy binary expression for the multiplication operation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00458">458</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00459">459</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
 
 </div>
 </div>
@@ -379,7 +379,7 @@ template&lt;Array A, Scalar S&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Lazy binary expression for the addition operation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00309">309</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00310">310</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
 
 </div>
 </div>
@@ -424,7 +424,7 @@ template&lt;Array L, Array R&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Lazy binary expression for the addition operation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00290">290</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00291">291</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
 
 </div>
 </div>
@@ -472,7 +472,7 @@ template&lt;Scalar S, Array A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Lazy binary expression for the addition operation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00327">327</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00328">328</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
 
 </div>
 </div>
@@ -511,7 +511,7 @@ template&lt;Array A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Lazy unary expression for the negation operation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00274">274</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00275">275</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
 
 </div>
 </div>
@@ -559,7 +559,7 @@ template&lt;Array A, Scalar S&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Lazy binary expression for the subtraction operation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00362">362</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00363">363</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
 
 </div>
 </div>
@@ -604,7 +604,7 @@ template&lt;Array L, Array R&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Lazy binary expression for the subtraction operation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00343">343</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00344">344</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
 
 </div>
 </div>
@@ -652,7 +652,7 @@ template&lt;Scalar S, Array A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Lazy binary expression for the subtraction operation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00380">380</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00381">381</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
 
 </div>
 </div>
@@ -697,7 +697,7 @@ template&lt;Array A, Scalar S&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Lazy binary expression for the division operation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00514">514</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00515">515</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
 
 </div>
 </div>
@@ -746,7 +746,7 @@ template&lt;Array L, Array R&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Either a lazy binary expression for the division operation ('A' * 'A') or the result of the matrix-inverse matrix multiplication. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00479">479</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00480">480</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
 
 </div>
 </div>
@@ -794,7 +794,7 @@ template&lt;Scalar S, Array A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Lazy binary expression for the division operation (multiplication in case of a matrix). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00532">532</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="arithmetic_8hpp_source.html#l00533">533</a> of file <a class="el" href="arithmetic_8hpp_source.html">arithmetic.hpp</a>.</p>
 
 </div>
 </div>

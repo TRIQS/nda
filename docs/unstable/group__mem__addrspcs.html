@@ -120,9 +120,9 @@ Variables</h2></td></tr>
 <tr class="memitem:ga6127fb9e77d6a679dc1203c887bb58c2" id="r_ga6127fb9e77d6a679dc1203c887bb58c2"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="#ga03c36f393776e30005ebfc907bde9e0d">AddressSpace</a> A1, <a class="el" href="#ga03c36f393776e30005ebfc907bde9e0d">AddressSpace</a> A2 = None, AddressSpace... As&gt; </td></tr>
 <tr class="memitem:ga6127fb9e77d6a679dc1203c887bb58c2 template"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="#ga03c36f393776e30005ebfc907bde9e0d">AddressSpace</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6127fb9e77d6a679dc1203c887bb58c2">nda::mem::combine</a></td></tr>
 <tr class="memdesc:ga6127fb9e77d6a679dc1203c887bb58c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Promotion rules for <a class="el" href="#ga03c36f393776e30005ebfc907bde9e0d" title="Enum providing identifiers for the different memory address spaces.">nda::mem::AddressSpace</a> values.  <br /></td></tr>
-<tr class="memitem:ga9521566804e5f93c4daaba77dbaae4c3" id="r_ga9521566804e5f93c4daaba77dbaae4c3"><td class="memTemplParams" colspan="2">template&lt;MemoryArray A1, MemoryArray... As&gt; </td></tr>
+<tr class="memitem:ga9521566804e5f93c4daaba77dbaae4c3" id="r_ga9521566804e5f93c4daaba77dbaae4c3"><td class="memTemplParams" colspan="2">template&lt;Array A1, Array... As&gt; </td></tr>
 <tr class="memitem:ga9521566804e5f93c4daaba77dbaae4c3 template"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="#ga03c36f393776e30005ebfc907bde9e0d">AddressSpace</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9521566804e5f93c4daaba77dbaae4c3">nda::mem::common_addr_space</a> = <a class="el" href="#ga6127fb9e77d6a679dc1203c887bb58c2">combine</a>&lt;<a class="el" href="#ga8055e10307486aacf11f746f7d718ad7">get_addr_space</a>&lt;A1&gt;, <a class="el" href="#ga8055e10307486aacf11f746f7d718ad7">get_addr_space</a>&lt;As&gt;...&gt;</td></tr>
-<tr class="memdesc:ga9521566804e5f93c4daaba77dbaae4c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get common address space for a number of given <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> types.  <br /></td></tr>
+<tr class="memdesc:ga9521566804e5f93c4daaba77dbaae4c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get common address space for a number of given <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types.  <br /></td></tr>
 <tr class="memitem:ga8055e10307486aacf11f746f7d718ad7" id="r_ga8055e10307486aacf11f746f7d718ad7"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:ga8055e10307486aacf11f746f7d718ad7 template"><td class="memItemLeft" align="right" valign="top">static constexpr <a class="el" href="#ga03c36f393776e30005ebfc907bde9e0d">AddressSpace</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8055e10307486aacf11f746f7d718ad7">nda::mem::get_addr_space</a> = mem::None</td></tr>
 <tr class="memdesc:ga8055e10307486aacf11f746f7d718ad7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Variable template providing the address space for different types.  <br /></td></tr>
@@ -313,7 +313,7 @@ template&lt;<a class="el" href="#ga03c36f393776e30005ebfc907bde9e0d">AddressSpac
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;MemoryArray A1, MemoryArray... As&gt; </div>
+template&lt;Array A1, Array... As&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -331,12 +331,12 @@ template&lt;MemoryArray A1, MemoryArray... As&gt; </div>
 
 <p><code>#include &lt;<a class="el" href="address__space_8hpp.html">nda/mem/address_space.hpp</a>&gt;</code></p>
 
-<p>Get common address space for a number of given <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> types. </p>
+<p>Get common address space for a number of given <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types. </p>
 <p>See <a class="el" href="#ga6127fb9e77d6a679dc1203c887bb58c2" title="Promotion rules for nda::mem::AddressSpace values.">nda::mem::combine</a> for how the address spaces are combined.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A1</td><td><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> type. </td></tr>
-    <tr><td class="paramname">As</td><td><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> types. </td></tr>
+    <tr><td class="paramname">A1</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
+    <tr><td class="paramname">As</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types. </td></tr>
   </table>
   </dd>
 </dl>

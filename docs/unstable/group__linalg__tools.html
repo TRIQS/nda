@@ -175,12 +175,13 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 <tr class="memitem:gaf16a960b18684822d700cb8bf10f470a" id="r_gaf16a960b18684822d700cb8bf10f470a"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; </td></tr>
 <tr class="memitem:gaf16a960b18684822d700cb8bf10f470a template"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf16a960b18684822d700cb8bf10f470a">nda::is_matrix_square</a> (A const &amp;a, bool print_error=false)</td></tr>
 <tr class="memdesc:gaf16a960b18684822d700cb8bf10f470a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a given array/view is square, i.e. if the first dimension has the same extent as the second dimension.  <br /></td></tr>
-<tr class="memitem:ga4a4eb56e6c29f4c20d7f1891e6b252b1" id="r_ga4a4eb56e6c29f4c20d7f1891e6b252b1"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Matrix B&gt; </td></tr>
-<tr class="memitem:ga4a4eb56e6c29f4c20d7f1891e6b252b1 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4a4eb56e6c29f4c20d7f1891e6b252b1">nda::matmul</a> (A &amp;&amp;a, B &amp;&amp;b)</td></tr>
-<tr class="memdesc:ga4a4eb56e6c29f4c20d7f1891e6b252b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a matrix-matrix multiplication.  <br /></td></tr>
-<tr class="memitem:ga008bf3440545c0529d142d2971d9ea5d" id="r_ga008bf3440545c0529d142d2971d9ea5d"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Vector X&gt; </td></tr>
-<tr class="memitem:ga008bf3440545c0529d142d2971d9ea5d template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga008bf3440545c0529d142d2971d9ea5d">nda::matvecmul</a> (A &amp;&amp;a, X &amp;&amp;x)</td></tr>
-<tr class="memdesc:ga008bf3440545c0529d142d2971d9ea5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a matrix-vector multiplication.  <br /></td></tr>
+<tr class="memitem:ga33c980b3e0b7fb89dad92b92562c851f" id="r_ga33c980b3e0b7fb89dad92b92562c851f"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Matrix B&gt; </td></tr>
+<tr class="memitem:ga33c980b3e0b7fb89dad92b92562c851f template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga33c980b3e0b7fb89dad92b92562c851f">nda::linalg::matmul</a> (A &amp;&amp;a, B &amp;&amp;b)</td></tr>
+<tr class="memdesc:ga33c980b3e0b7fb89dad92b92562c851f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the matrix-matrix product of two <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> objects.  <br /></td></tr>
+<tr class="memitem:gad007be96ad87a5bf327e2e19374c3a6f" id="r_gad007be96ad87a5bf327e2e19374c3a6f"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Vector X&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, X&gt;)</td></tr>
+<tr class="memitem:gad007be96ad87a5bf327e2e19374c3a6f template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad007be96ad87a5bf327e2e19374c3a6f">nda::linalg::matvecmul</a> (A const &amp;a, X const &amp;x)</td></tr>
+<tr class="memdesc:gad007be96ad87a5bf327e2e19374c3a6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the matrix-vector product of an <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> and an <a class="el" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68" title="Alias template of an nda::basic_array with rank 1 and a &#39;V&#39; algebra.">nda::vector</a> object.  <br /></td></tr>
 <tr class="memitem:gaa2e13a1dfcbbacc5c2279f98230b5eb2" id="r_gaa2e13a1dfcbbacc5c2279f98230b5eb2"><td class="memTemplParams" colspan="2">template&lt;MemoryArray A, MemoryArray B&gt; <br />
 requires ((<a class="el" href="group__linalg__blas.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;A&gt; or <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;) and <a class="el" href="group__linalg__blas.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;A&gt; == <a class="el" href="group__linalg__blas.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;B&gt;)</td></tr>
 <tr class="memitem:gaa2e13a1dfcbbacc5c2279f98230b5eb2 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa2e13a1dfcbbacc5c2279f98230b5eb2">nda::linalg::outer_product</a> (A const &amp;a, B const &amp;b)</td></tr>
@@ -501,7 +502,7 @@ template&lt;typename M&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>std::pair consisting of the array of eigenvalues in ascending order and the matrix containing the eigenvectors in its columns. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="eigenelements_8hpp_source.html#l00087">87</a> of file <a class="el" href="eigenelements_8hpp_source.html">eigenelements.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="eigenelements_8hpp_source.html#l00085">85</a> of file <a class="el" href="eigenelements_8hpp_source.html">eigenelements.hpp</a>.</p>
 
 </div>
 </div>
@@ -541,7 +542,7 @@ template&lt;typename M&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> of rank 1 containing the eigenvalues in ascending order. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="eigenelements_8hpp_source.html#l00106">106</a> of file <a class="el" href="eigenelements_8hpp_source.html">eigenelements.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="eigenelements_8hpp_source.html#l00104">104</a> of file <a class="el" href="eigenelements_8hpp_source.html">eigenelements.hpp</a>.</p>
 
 </div>
 </div>
@@ -581,7 +582,7 @@ template&lt;typename M&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> of rank 1 containing the eigenvalues in ascending order. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="eigenelements_8hpp_source.html#l00124">124</a> of file <a class="el" href="eigenelements_8hpp_source.html">eigenelements.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="eigenelements_8hpp_source.html#l00122">122</a> of file <a class="el" href="eigenelements_8hpp_source.html">eigenelements.hpp</a>.</p>
 
 </div>
 </div>
@@ -871,8 +872,8 @@ template&lt;typename A&gt; </div>
 
 </div>
 </div>
-<a id="ga4a4eb56e6c29f4c20d7f1891e6b252b1" name="ga4a4eb56e6c29f4c20d7f1891e6b252b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4a4eb56e6c29f4c20d7f1891e6b252b1">&#9670;&#160;</a></span>matmul()</h2>
+<a id="ga33c980b3e0b7fb89dad92b92562c851f" name="ga33c980b3e0b7fb89dad92b92562c851f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga33c980b3e0b7fb89dad92b92562c851f">&#9670;&#160;</a></span>matmul()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -880,7 +881,7 @@ template&lt;typename A&gt; </div>
 template&lt;Matrix A, Matrix B&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">auto nda::matmul </td>
+          <td class="memname">auto nda::linalg::matmul </td>
           <td>(</td>
           <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
         </tr>
@@ -894,72 +895,80 @@ template&lt;Matrix A, Matrix B&gt; </div>
 
 <p><code>#include &lt;<a class="el" href="matmul_8hpp.html">nda/linalg/matmul.hpp</a>&gt;</code></p>
 
-<p>Perform a matrix-matrix multiplication. </p>
-<p>It is generic in the sense that it allows the input matrices to belong to a different <a class="el" href="group__mem__addrspcs.html#ga03c36f393776e30005ebfc907bde9e0d" title="Enum providing identifiers for the different memory address spaces.">nda::mem::AddressSpace</a> (as long as they are compatible).</p>
-<p>If possible, it uses <a class="el" href="group__linalg__blas.html#gac86e76a5d23dc7fea5bc982fee45cf2c" title="Interface to the BLAS gemm routine.">nda::blas::gemm</a>, otherwise it calls <a class="el" href="group__linalg__blas.html#ga2562f6a7e04e7e37359007e4e17e1b06" title="Generic nda::blas::gemm implementation for types not supported by BLAS/LAPACK.">nda::blas::gemm_generic</a>.</p>
+<p>Compute the matrix-matrix product of two <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> objects. </p>
+<p>This function computes the matrix-matrix product  \( \mathrm{op}_1(\mathbf{A}) \mathrm{op}_2(\mathbf{B})
+\), where \( \mathbf{A} \) and \( \mathbf{B} \) are \( m \times k \) and \( k \times n \) matrices respectively, \( \mathrm{op}_i \) can be some lazy operation, e.g. <a class="el" href="group__av__math.html#gaed558141a1f01cb2974b0cc4fc4d04ff" title="Function conj for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types with a com...">nda::conj</a>, <a class="el" href="group__av__math.html#ga2d09be1cbff6c0061abb54763bf92bd1" title="Function sin for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types)...">nda::sin</a>, etc.</p>
+<p>We try to call <a class="el" href="group__linalg__blas.html#gab64974333f3f10efdbee734c088e6239" title="Interface to the BLAS gemm routine.">nda::blas::gemm</a> whenever possible, i.e. when the value type of the result is compatible with <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda" title="Alias for nda::is_double_or_complex_v.">nda::is_blas_lapack_v</a>, even if this requires to make copies of the input arrays/views. Otherwise, we perform a very naive and inefficient matrix-matrix multiplication manually.</p>
+<p>Therefore, if performance is important, users should make sure to pass input arrays/views which are compatible with <a class="el" href="group__linalg__blas.html#gab64974333f3f10efdbee734c088e6239" title="Interface to the BLAS gemm routine.">nda::blas::gemm</a>.</p>
+<dl class="section note"><dt>Note</dt><dd>The layout of the returned matrix depends on the layout of the input matrices. If both input matrices are in Fortran-layout, the returned matrix is also in Fortran layout. Otherwise, it is in C-layout.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>This function might make copies of the input arrays/views. When working on the device memory space, this may lead to runtime errors if the copying fails.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type of lhs operand. </td></tr>
-    <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type of rhs operand. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
+    <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td>Left hand side matrix operand. </td></tr>
-    <tr><td class="paramname">b</td><td>Right hand side matrix operand. </td></tr>
+    <tr><td class="paramname">a</td><td>Input matrix \( \mathbf{A} \) of size \( m \times k \). </td></tr>
+    <tr><td class="paramname">b</td><td>Input matrix \( \mathbf{B} \) of size \( k \times n \). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Result of the matrix-matrix multiplication. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Resulting matrix of the matrix-matrix multiplication of size \( m \times n \). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="matmul_8hpp_source.html#l00076">76</a> of file <a class="el" href="matmul_8hpp_source.html">matmul.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matmul_8hpp_source.html#l00124">124</a> of file <a class="el" href="matmul_8hpp_source.html">matmul.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga008bf3440545c0529d142d2971d9ea5d" name="ga008bf3440545c0529d142d2971d9ea5d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga008bf3440545c0529d142d2971d9ea5d">&#9670;&#160;</a></span>matvecmul()</h2>
+<a id="gad007be96ad87a5bf327e2e19374c3a6f" name="gad007be96ad87a5bf327e2e19374c3a6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad007be96ad87a5bf327e2e19374c3a6f">&#9670;&#160;</a></span>matvecmul()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;Matrix A, Vector X&gt; </div>
+template&lt;Matrix A, Vector X&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, X&gt;)</div>
       <table class="memname">
         <tr>
-          <td class="memname">auto nda::matvecmul </td>
+          <td class="memname">auto nda::linalg::matvecmul </td>
           <td>(</td>
-          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">X &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span>&#160;)</td>
+          <td class="paramtype">X const &amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;<a class="el" href="matmul_8hpp.html">nda/linalg/matmul.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="matvecmul_8hpp.html">nda/linalg/matvecmul.hpp</a>&gt;</code></p>
 
-<p>Perform a matrix-vector multiplication. </p>
-<p>It is generic in the sense that it allows the input matrix and vector to belong to a different <a class="el" href="group__mem__addrspcs.html#ga03c36f393776e30005ebfc907bde9e0d" title="Enum providing identifiers for the different memory address spaces.">nda::mem::AddressSpace</a> (as long as they are compatible).</p>
-<p>If possible, it uses <a class="el" href="group__linalg__blas.html#ga84a5774ad61465032707b75116bf4111" title="Interface to the BLAS gemv routine.">nda::blas::gemv</a>, otherwise it calls <a class="el" href="group__linalg__blas.html#ga374da04a6465448b30aa27930812d1b8" title="Generic nda::blas::gemv implementation for types not supported by BLAS/LAPACK.">nda::blas::gemv_generic</a>.</p>
+<p>Compute the matrix-vector product of an <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> and an <a class="el" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68" title="Alias template of an nda::basic_array with rank 1 and a &#39;V&#39; algebra.">nda::vector</a> object. </p>
+<p>This function computes the matrix-vector product  \( \mathrm{op}_1(\mathbf{A}) \mathrm{op}_2(\mathbf{x})
+\), where \( \mathbf{A} \) is an \( m \times n \) matrix, \( \mathbf{x} \) is a vector of size \( n \), and \( \mathrm{op}_i \) can be some lazy operation, e.g. <a class="el" href="group__av__math.html#gaed558141a1f01cb2974b0cc4fc4d04ff" title="Function conj for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types with a com...">nda::conj</a>, <a class="el" href="group__av__math.html#ga2d09be1cbff6c0061abb54763bf92bd1" title="Function sin for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types)...">nda::sin</a>, etc.</p>
+<p>We try to call <a class="el" href="group__linalg__blas.html#gacdfbdd0ccb51e375ddc0b037cb9e68a6" title="Interface to the BLAS gemv routine.">nda::blas::gemv</a> whenever possible, i.e. when the value type of the result is compatible with <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda" title="Alias for nda::is_double_or_complex_v.">nda::is_blas_lapack_v</a>, even if this requires to make copies of the input arrays/views. Otherwise, we perform a very naive and inefficient matrix-vector multiplication manually.</p>
+<p>Therefore, if performance is important, users should make sure to pass input arrays/views which are compatible with <a class="el" href="group__linalg__blas.html#gacdfbdd0ccb51e375ddc0b037cb9e68a6" title="Interface to the BLAS gemv routine.">nda::blas::gemv</a>.</p>
+<dl class="section warning"><dt>Warning</dt><dd>This function might make copies of the input arrays/views. When working on the device memory space, this may lead to runtime errors if the copying fails.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type of lhs operand. </td></tr>
-    <tr><td class="paramname">X</td><td><a class="el" href="conceptnda_1_1_vector.html" title="Check if a given type is a vector, i.e. an nda::ArrayOfRank&lt;1&gt;.">nda::Vector</a> type of rhs operand. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
+    <tr><td class="paramname">X</td><td><a class="el" href="conceptnda_1_1_vector.html" title="Check if a given type is a vector, i.e. an nda::ArrayOfRank&lt;1&gt;.">nda::Vector</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td>Left hand side matrix operand. </td></tr>
-    <tr><td class="paramname">x</td><td>Right hand side vector operand. </td></tr>
+    <tr><td class="paramname">a</td><td>Input matrix \( \mathbf{A} \) of size \( m \times n \). </td></tr>
+    <tr><td class="paramname">x</td><td>Input vector \( \mathbf{x} \) of size \( n \). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Result of the matrix-vector multiplication. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Resulting vector of the matrix-vector multiplication of size \( m \). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="matmul_8hpp_source.html#l00141">141</a> of file <a class="el" href="matmul_8hpp_source.html">matmul.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matvecmul_8hpp_source.html#l00116">116</a> of file <a class="el" href="matvecmul_8hpp_source.html">matvecmul.hpp</a>.</p>
 
 </div>
 </div>
