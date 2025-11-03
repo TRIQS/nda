@@ -126,25 +126,27 @@ $(function(){initNavTree('getrf_8hpp_source.html','',''); });
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    EXPECTS(a.indexmap().min_stride() == 1);</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    EXPECTS(ipiv.indexmap().min_stride() == 1);</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">#if defined(__has_feature) &amp;&amp; __has_feature(memory_sanitizer)</span></div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    ipiv = 0;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keywordtype">int</span> info = 0;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_variable" href="group__mem__addrspcs.html#ga741fdd851fbcccbcd1a66c0016b6d0bd">mem::have_device_compatible_addr_space&lt;A, IPIV&gt;</a>) {</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="preprocessor">#if defined(NDA_HAVE_DEVICE)</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>      device::getrf(a.extent(0), a.extent(1), a.data(), <a class="code hl_function" href="lapack_2interface_2cxx__interface_8hpp.html#a3d3e17b98e215606a2db727249b12e38">get_ld</a>(a), ipiv.data(), info);</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>      <a class="code hl_function" href="group__mem__utils.html#ga3cb1540052805a4b852cc39bc48799cd">compile_error_no_gpu</a>();</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>      f77::getrf(a.extent(0), a.extent(1), a.data(), <a class="code hl_function" href="lapack_2interface_2cxx__interface_8hpp.html#a3d3e17b98e215606a2db727249b12e38">get_ld</a>(a), ipiv.data(), info);</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    }</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordflow">return</span> info;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  }</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">#if defined(__has_feature)</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="preprocessor">#if __has_feature(memory_sanitizer)</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    ipiv = 0;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordtype">int</span> info = 0;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_variable" href="group__mem__addrspcs.html#ga741fdd851fbcccbcd1a66c0016b6d0bd">mem::have_device_compatible_addr_space&lt;A, IPIV&gt;</a>) {</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="preprocessor">#if defined(NDA_HAVE_DEVICE)</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>      device::getrf(a.extent(0), a.extent(1), a.data(), <a class="code hl_function" href="lapack_2interface_2cxx__interface_8hpp.html#a3d3e17b98e215606a2db727249b12e38">get_ld</a>(a), ipiv.data(), info);</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>      <a class="code hl_function" href="group__mem__utils.html#ga3cb1540052805a4b852cc39bc48799cd">compile_error_no_gpu</a>();</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>      f77::getrf(a.extent(0), a.extent(1), a.data(), <a class="code hl_function" href="lapack_2interface_2cxx__interface_8hpp.html#a3d3e17b98e215606a2db727249b12e38">get_ld</a>(a), ipiv.data(), info);</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    }</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keywordflow">return</span> info;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  }</div>
 </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>} <span class="comment">// namespace nda::lapack</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>} <span class="comment">// namespace nda::lapack</span></div>
 <div class="ttc" id="aaddress__space_8hpp_html"><div class="ttname"><a href="address__space_8hpp.html">address_space.hpp</a></div><div class="ttdoc">Provides definitions and type traits involving the different memory address spaces supported by nda.</div></div>
 <div class="ttc" id="aconcepts_8hpp_html"><div class="ttname"><a href="concepts_8hpp.html">concepts.hpp</a></div><div class="ttdoc">Provides concepts for the nda library.</div></div>
 <div class="ttc" id="agroup__linalg__lapack_html_gad2fcbbe9516f85da7d1fa2ae1c3df79b"><div class="ttname"><a href="group__linalg__lapack.html#gad2fcbbe9516f85da7d1fa2ae1c3df79b">nda::lapack::getrf</a></div><div class="ttdeci">int getrf(A &amp;&amp;a, IPIV &amp;&amp;ipiv)</div><div class="ttdoc">Interface to the LAPACK getrf routine.</div><div class="ttdef"><b>Definition</b> <a href="#l00051">getrf.hpp:51</a></div></div>
