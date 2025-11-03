@@ -164,12 +164,12 @@ namespace nda {
    * @return If an array/view is given, return its first element. Otherwise, return the given scalar.
    */
   template <typename A>
-  decltype(auto) get_first_element(A const &a) {
+  decltype(auto) get_first_element(A &&a) {
     if constexpr (is_scalar_v<A>) {
-      return a;
+      return std::forward<A>(a);
     } else {
       return [&a]<auto... Is>(std::index_sequence<Is...>) -> decltype(auto) {
-        return a((0 * Is)...); // repeat 0 sizeof...(Is) times
+        return std::forward<A>(a)((0 * Is)...); // repeat 0 sizeof...(Is) times
       }(std::make_index_sequence<get_rank<A>>{});
     }
   }
