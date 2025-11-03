@@ -47,11 +47,12 @@ namespace nda::blas {
     }
 
     // Get a vector of pointers to the memory of matrices from a given vector of matrices.
-    template <typename T, bool is_vbatch, nda::mem::AddressSpace vec_addr_spc>
+    template <bool is_vbatch, nda::mem::AddressSpace vec_addr_spc>
     auto get_ptr_vector(auto &&v) {
       EXPECTS(std::ranges::all_of(v, [&v](auto &A) { return is_vbatch or A.shape() == v[0].shape(); }));
       EXPECTS(std::ranges::all_of(v, [](auto &A) { return get_array(A).indexmap().min_stride() == 1; }));
-      auto v_ptrs = nda::vector<T, heap<vec_addr_spc>>(v.size());
+      using ptr_t = std::remove_reference_t<decltype(get_first_element(v[0]))> *;
+      auto v_ptrs = nda::vector<ptr_t, heap<vec_addr_spc>>(v.size());
       std::transform(v.begin(), v.end(), v_ptrs.begin(), [](auto &z) { return get_array(z).data(); });
       return v_ptrs;
     }
@@ -62,7 +63,7 @@ namespace nda::blas {
    * @brief Interface to MKL's `gemm_batch` and `gemm_vbatch` routines.
    *
    * @details This routine is a batched version of nda::blas::gemm, performing multiple `gemm` operations in a single
-   * call. Each `gemm` operation performs a matrix-matrix produc.
+   * call. Each `gemm` operation performs a matrix-matrix product.
    *
    * If `is_vbatch` is true, the matrices are allowed to have different sizes. Otherwise, they are required to have the
    * same size.
@@ -90,16 +91,16 @@ namespace nda::blas {
 
     // if C is in C-layout, compute the transpose of the product in Fortran order
     if constexpr (has_C_layout<C>) {
-      auto vc_t = detail::get_transpose_vector(vc);
-      return gemm_batch<is_vbatch>(alpha, detail::get_transpose_vector(vb), detail::get_transpose_vector(va), beta, vc_t);
+      auto vcT = detail::get_transpose_vector(vc);
+      return gemm_batch<is_vbatch>(alpha, detail::get_transpose_vector(vb), detail::get_transpose_vector(va), beta, vcT);
     } else {
       // for operations on the device, use unified memory for vector of ints or ptrs
       auto constexpr vec_addr_spc = []() { return mem::on_host<C> ? mem::Host : mem::Unified; }();
 
       // convert the vector of matrices to the corresponding vector of pointers
-      auto a_ptrs = detail::get_ptr_vector<get_value_t<decltype(va[0])> const *, is_vbatch, vec_addr_spc>(va);
-      auto b_ptrs = detail::get_ptr_vector<get_value_t<decltype(vb[0])> const *, is_vbatch, vec_addr_spc>(vb);
-      auto c_ptrs = detail::get_ptr_vector<get_value_t<decltype(vc[0])> *, is_vbatch, vec_addr_spc>(vc);
+      auto a_ptrs = detail::get_ptr_vector<is_vbatch, vec_addr_spc>(va);
+      auto b_ptrs = detail::get_ptr_vector<is_vbatch, vec_addr_spc>(vb);
+      auto c_ptrs = detail::get_ptr_vector<is_vbatch, vec_addr_spc>(vc);
 
       // either call gemm_vbatch or gemm_batch
       if constexpr (is_vbatch) {
