@@ -58,6 +58,12 @@ if(OpenMPSupport)
   target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_OPENMP)
 endif ()
 
+#XSIMD
+target_include_directories(${PROJECT_NAME}_c
+        PUBLIC
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/deps/xsimd_src/include>
+)
+
 # ========= Blas / Lapack ==========
 
 message(STATUS "-------- Lapack detection -------------")
