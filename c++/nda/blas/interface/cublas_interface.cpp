@@ -157,7 +157,8 @@ namespace nda::blas::device {
 
   void axpy(int N, double alpha, const double *x, int incx, double *Y, int incy) { cublasDaxpy(get_handle(), N, &alpha, x, incx, Y, incy); }
   void axpy(int N, dcomplex alpha, const dcomplex *x, int incx, dcomplex *Y, int incy) {
-    CUBLAS_CHECK(cublasZaxpy, N, cucplx(&alpha), cucplx(x), incx, cucplx(Y), incy);
+    auto alpha_cu = cucplx(alpha);
+    CUBLAS_CHECK(cublasZaxpy, N, &alpha_cu, cucplx(x), incx, cucplx(Y), incy);
   }
 
   void copy(int N, const double *x, int incx, double *Y, int incy) { cublasDcopy(get_handle(), N, x, incx, Y, incy); }
@@ -183,25 +184,32 @@ namespace nda::blas::device {
     CUBLAS_CHECK(cublasDgemv, get_cublas_op(op), M, N, &alpha, A, LDA, x, incx, &beta, Y, incy);
   }
   void gemv(char op, int M, int N, dcomplex alpha, const dcomplex *A, int LDA, const dcomplex *x, int incx, dcomplex beta, dcomplex *Y, int incy) {
-    CUBLAS_CHECK(cublasZgemv, get_cublas_op(op), M, N, cucplx(&alpha), cucplx(A), LDA, cucplx(x), incx, cucplx(&beta), cucplx(Y), incy);
+    auto alpha_cu = cucplx(alpha);
+    auto beta_cu = cucplx(beta);
+    CUBLAS_CHECK(cublasZgemv, get_cublas_op(op), M, N, &alpha_cu, cucplx(A), LDA, cucplx(x), incx, &beta_cu, cucplx(Y), incy);
   }
 
   void ger(int M, int N, double alpha, const double *x, int incx, const double *Y, int incy, double *A, int LDA) {
     CUBLAS_CHECK(cublasDger, M, N, &alpha, x, incx, Y, incy, A, LDA);
   }
   void ger(int M, int N, dcomplex alpha, const dcomplex *x, int incx, const dcomplex *Y, int incy, dcomplex *A, int LDA) {
-    CUBLAS_CHECK(cublasZgeru, M, N, cucplx(&alpha), cucplx(x), incx, cucplx(Y), incy, cucplx(A), LDA);
+    auto alpha_cu = cucplx(alpha);
+    CUBLAS_CHECK(cublasZgeru, M, N, &alpha_cu, cucplx(x), incx, cucplx(Y), incy, cucplx(A), LDA);
   }
   void gerc(int M, int N, double alpha, const double *x, int incx, const double *Y, int incy, double *A, int LDA) {
     CUBLAS_CHECK(cublasDger, M, N, &alpha, x, incx, Y, incy, A, LDA);
   }
   void gerc(int M, int N, std::complex<double> alpha, const std::complex<double> *x, int incx, const std::complex<double> *Y, int incy,
             std::complex<double> *A, int LDA) {
-    CUBLAS_CHECK(cublasZgerc, M, N, cucplx(&alpha), cucplx(x), incx, cucplx(Y), incy, cucplx(A), LDA);
+    auto alpha_cu = cucplx(alpha);
+    CUBLAS_CHECK(cublasZgerc, M, N, &alpha_cu, cucplx(x), incx, cucplx(Y), incy, cucplx(A), LDA);
   }
 
   void scal(int M, double alpha, double *x, int incx) { CUBLAS_CHECK(cublasDscal, M, &alpha, x, incx); }
-  void scal(int M, dcomplex alpha, dcomplex *x, int incx) { CUBLAS_CHECK(cublasZscal, M, cucplx(&alpha), cucplx(x), incx); }
+  void scal(int M, dcomplex alpha, dcomplex *x, int incx) {
+    auto alpha_cu = cucplx(alpha);
+    CUBLAS_CHECK(cublasZscal, M, &alpha_cu, cucplx(x), incx);
+  }
 
   void swap(int N, double *x, int incx, double *Y, int incy) { CUBLAS_CHECK(cublasDswap, N, x, incx, Y, incy); } // NOLINT (this is a BLAS swap)
   void swap(int N, dcomplex *x, int incx, dcomplex *Y, int incy) {                                               // NOLINT (this is a BLAS swap)
