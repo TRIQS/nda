@@ -262,6 +262,21 @@ FORCEINLINE decltype(auto) operator()(Ts const &...idxs) && noexcept(has_no_boun
   return call<Algebra, true>(*this, idxs...);
 }
 
+template <typename... Args>
+FORCEINLINE native_simd<ValueType> load(Args... idx) const {
+  static_assert(Vectorizable<ValueType>, "Load function is called with a type that is not a vectorizable type");
+  const long offset = lay(idx...);
+  return native_simd<ValueType>::load_unaligned(data()+offset);
+}
+
+template <typename... Args>
+FORCEINLINE void store(const native_simd<ValueType> &value, Args... idx) {
+  static_assert(Vectorizable<ValueType>, "Store function is called with a type that is not a vectorizable type");
+  const long offset = lay(idx...);
+  value.store_unaligned(data()+offset);
+}
+
+
 /**
  * @brief Subscript operator to access the 1-dimensional view/array.
  *

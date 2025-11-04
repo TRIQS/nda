@@ -12,6 +12,7 @@
 
 #include "./stdutil/concepts.hpp"
 #include "./traits.hpp"
+#include "./simd/simd.hpp"
 
 #include <array>
 #include <concepts>
@@ -81,6 +82,13 @@ namespace nda {
    */
   template <typename S>
   concept Scalar = nda::is_scalar_v<S>;
+
+  /**
+  * @brief Check if a given type is supported by simd class or complex type.
+  * @tparam S Type to check.
+  */
+  template <typename S>
+  concept Vectorizable = xsimd::has_simd_register<S>::value;
 
   /**
    * @brief Check if a given type is either a double or complex type.
