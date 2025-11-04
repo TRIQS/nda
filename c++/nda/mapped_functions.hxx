@@ -94,11 +94,14 @@ namespace nda {
   /// \return A lazy nda::expr_call object (nda::Array) or the result of `std::abs` applied to the object (nda::Scalar).
   template <ArrayOrScalar A>
   auto abs(A &&a)  {
-    return nda::map(
-       [](auto const &x) {
-         using std::abs;
-         return abs(x);
-       })(std::forward<A>(a));
+    if constexpr (std::is_unsigned_v<get_value_t<A>>) {
+      return a;
+    } else {
+      return nda::map([](auto const &x) {
+        using std::abs;
+        return abs(x);
+      })(std::forward<A>(a));
+    }
   }
 
   /// \brief Function imag for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
