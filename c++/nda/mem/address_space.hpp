@@ -26,6 +26,8 @@ namespace nda {
   struct expr_call;
   template <char OP, Array A>
   struct expr_unary;
+  template <int R, typename F>
+  class array_adapter;
   /// @endcond
 
 } // namespace nda
@@ -127,6 +129,10 @@ namespace nda::mem {
   /// Specialization of nda::mem::get_addr_space for unary expressions involving an nda::Array type.
   template <char OP, Array A>
   static constexpr AddressSpace get_addr_space<expr_unary<OP, A>> = get_addr_space<A>;
+
+  /// Specialization of nda::mem::get_addr_space for nda::array_adapter types.
+  template <int R, typename F>
+  static constexpr AddressSpace get_addr_space<array_adapter<R, F>> = Host;
 
   /**
    * @brief Check validity of a set of nda::mem::AddressSpace values.
