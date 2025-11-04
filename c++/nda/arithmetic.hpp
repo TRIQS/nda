@@ -18,6 +18,7 @@
 #include "./macros.hpp"
 #include "./stdutil/complex.hpp"
 #include "./traits.hpp"
+#include "./simd.hpp"
 
 #include <functional>
 #include <type_traits>
@@ -65,6 +66,11 @@ namespace nda {
     template <typename... Args>
     auto operator()(Args &&...args) const {
       return -a(std::forward<Args>(args)...);
+    }
+
+    template <typename... Args>
+    auto load(Args &&...args) const {
+      return -(a.load(std::forward<Args>(args)...));
     }
 
     /**
@@ -259,6 +265,117 @@ namespace nda {
     auto operator[](Arg &&arg) const {
       static_assert(get_rank<expr> == 1, "Error in nda::expr: Subscript operator only available for expressions of rank 1");
       return operator()(std::forward<Arg>(arg));
+    }
+
+    template <typename... Args>
+    auto load(Args const &...args) const {
+      auto diagonal_simd = [this](long i, long j) {
+        // This lambda function can only be used when we have a matrix. This constexpr is needed because otherwise we might get compile errors.
+        if constexpr (sizeof...(Args) == 2 and (Vectorizable<L_t> or Vectorizable<R_t>)) {
+          long diff = i - j;
+          if constexpr ((l_is_scalar and get_layout_info<R>.stride_order == Fortran_stride_order<2>)
+                        or (r_is_scalar and get_layout_info<L>.stride_order == Fortran_stride_order<2>)) {
+            diff = -diff;
+          }
+          if constexpr (l_is_scalar) {
+            using simd_t = native_simd<L_t>;
+            if (diff < 0 or diff > simd_t::size - 1) return r.load(i, j);
+            alignas(simd_t::arch_type::alignment()) std::array<L_t, simd_t::size> tmp{};
+            tmp[diff] = l;
+            if constexpr (OP == '+') {
+              return r.load(i, j) + simd_t::load_aligned(tmp.data());
+            } else {
+              return r.load(i, j) - simd_t::load_aligned(tmp.data());
+            }
+          } else if constexpr (r_is_scalar) {
+            using simd_t = native_simd<R_t>;
+            if (diff < 0 or diff > simd_t::size - 1) return l.load(i, j);
+            alignas(simd_t::arch_type::alignment()) std::array<R_t, simd_t::size> tmp{};
+            tmp[diff] = r;
+            if constexpr (OP == '+') {
+              return l.load(i, j) + simd_t::load_aligned(tmp.data());
+            } else {
+              return l.load(i, j) - simd_t::load_aligned(tmp.data());
+            }
+          }
+        }
+      };
+      // addition
+      if constexpr (OP == '+') {
+        if constexpr (l_is_scalar) {
+          // lhs is a scalar
+          if constexpr (algebra == 'M')
+            // rhs is a matrix
+            return diagonal_simd(args...);
+          else
+            // rhs is an array
+            return native_simd<L_t>(l) + r.load(args...);
+        } else if constexpr (r_is_scalar) {
+          // rhs is a scalar
+          if constexpr (algebra == 'M') {
+            // lhs is a matrix
+            return diagonal_simd(args...);
+          } else
+            // lhs is an array
+            return l.load(args...) + native_simd<R_t>(r);
+        } else
+          // both are arrays or matrices
+          return l.load(args...) + r.load(args...);
+      }
+
+      // subtraction
+      if constexpr (OP == '-') {
+        if constexpr (l_is_scalar) {
+          // lhs is a scalar
+          if constexpr (algebra == 'M')
+            // rhs is a matrix
+            return diagonal_simd(args...);
+          else
+            // rhs is an array
+            return native_simd<L_t>(l) - r.load(args...);
+        } else if constexpr (r_is_scalar) {
+          // rhs is a scalar
+          if constexpr (algebra == 'M')
+            // lhs is a matrix
+            return diagonal_simd(args...);
+          else
+            // lhs is an array
+            return l.load(args...) - native_simd<R_t>(r);
+        } else
+          // both are arrays or matrices
+          return l.load(args...) - r.load(args...);
+      }
+
+      // multiplication
+      if constexpr (OP == '*') {
+        if constexpr (l_is_scalar)
+          // lhs is a scalar
+          return native_simd<L_t>(l) * r.load(args...);
+        else if constexpr (r_is_scalar)
+          // rhs is a scalar
+          return l.load(args...) * native_simd<R_t>(r);
+        else {
+          // both are arrays (matrix product is not supported here)
+          static_assert(algebra != 'M', "Error in nda::expr: Matrix algebra not supported");
+          return l.load(args...) * r.load(args...);
+        }
+      }
+
+      // division
+      if constexpr (OP == '/') {
+        if constexpr (l_is_scalar) {
+          // lhs is a scalar
+          static_assert(algebra != 'M', "Error in nda::expr: Matrix algebra not supported");
+          return native_simd<L_t>(l) / r.load(args...);
+        } else if constexpr (r_is_scalar)
+          // rhs is a scalar
+          return l.load(args...) / native_simd<R_t>(r);
+        else {
+          // both are arrays (matrix division is not supported here)
+          static_assert(algebra != 'M', "Error in nda::expr: Matrix algebra not supported");
+          return l.load(args...) / r.load(args...);
+        }
+      }
     }
   };
 

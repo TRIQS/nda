@@ -101,6 +101,12 @@ namespace nda {
       return f(std::get<Is>(a)[arg]...);
     }
 
+    // Implementation of load operator.
+    template <size_t... Is, typename... Args>
+    [[gnu::always_inline]] auto _call_load(std::index_sequence<Is...>, Args const &...args) const {
+      return f.load(std::get<Is>(a).load(args...)...);
+    }
+
     public:
     /**
      * @brief Function call operator.
@@ -117,6 +123,11 @@ namespace nda {
     template <typename... Args>
     auto operator()(Args const &...args) const {
       return _call(std::make_index_sequence<sizeof...(As)>{}, args...);
+    }
+
+    template <typename... Args>
+    auto load(Args const &...args) const {
+      return _call_load(std::make_index_sequence<sizeof...(As)>{}, args...);
     }
 
     /**
