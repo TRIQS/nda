@@ -119,6 +119,11 @@ namespace nda {
   template <typename T, typename... Us>
   concept AnyOf = is_any_of<T, Us...>;
 
+  namespace simd {
+    template <typename Derived, Vectorizable T>
+    struct mock_simd;
+  }
+
   template <typename F, typename T, size_t R>
   concept LoadWithNativeSimd = requires(F const &f) {
     requires Vectorizable<T>;
@@ -127,7 +132,7 @@ namespace nda {
         return (aa.load(native_simd<T>((static_cast<T>(Is)))...));
       }(std::make_index_sequence<R>{}, f)
     } -> std::same_as<native_simd<T>>;
-  };
+  } or std::is_base_of_v<simd::mock_simd<F, T>, F>;
 
   /** @} */
 
