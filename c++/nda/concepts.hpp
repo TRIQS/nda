@@ -119,6 +119,16 @@ namespace nda {
   template <typename T, typename... Us>
   concept AnyOf = is_any_of<T, Us...>;
 
+  template <typename F, typename T, size_t R>
+  concept LoadWithNativeSimd = requires(F const &f) {
+    requires Vectorizable<T>;
+    {
+      []<auto... Is>(std::index_sequence<Is...>, auto const &aa) -> decltype(aa.load(native_simd<T>((static_cast<T>(Is)))...)) {
+        return (aa.load(native_simd<T>((static_cast<T>(Is)))...));
+      }(std::make_index_sequence<R>{}, f)
+    } -> std::same_as<native_simd<T>>;
+  };
+
   /** @} */
 
   namespace mem {
