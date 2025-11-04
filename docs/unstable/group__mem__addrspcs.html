@@ -130,6 +130,10 @@ Variables</h2></td></tr>
 template&lt;MemoryArray A&gt; </td></tr>
 <tr class="memitem:ga8308180d9f61b480984f2e563d14c721 template"><td class="memItemLeft" align="right" valign="top">static constexpr <a class="el" href="#ga03c36f393776e30005ebfc907bde9e0d">AddressSpace</a>&#160;</td><td class="memItemRight" valign="bottom"><b>nda::mem::get_addr_space&lt; A &gt;</b> = A::storage_t::address_space</td></tr>
 <tr class="memdesc:ga8308180d9f61b480984f2e563d14c721"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <a class="el" href="#ga8055e10307486aacf11f746f7d718ad7" title="Variable template providing the address space for different types.">nda::mem::get_addr_space</a> for nda::Memory <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">Array</a> types. <br /></td></tr>
+<tr class="memitem:ga6ef01f05a18560df2e13ed570082f6de" id="r_ga6ef01f05a18560df2e13ed570082f6de"><td class="memTemplParams" colspan="2"><a id="ga6ef01f05a18560df2e13ed570082f6de" name="ga6ef01f05a18560df2e13ed570082f6de"></a>
+template&lt;int R, typename F&gt; </td></tr>
+<tr class="memitem:ga6ef01f05a18560df2e13ed570082f6de template"><td class="memItemLeft" align="right" valign="top">static constexpr <a class="el" href="#ga03c36f393776e30005ebfc907bde9e0d">AddressSpace</a>&#160;</td><td class="memItemRight" valign="bottom"><b>nda::mem::get_addr_space&lt; array_adapter&lt; R, F &gt; &gt;</b> = <a class="el" href="address__space_8hpp.html#ac2ca16d048ec66e04bca283eab048ec2">Host</a></td></tr>
+<tr class="memdesc:ga6ef01f05a18560df2e13ed570082f6de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <a class="el" href="#ga8055e10307486aacf11f746f7d718ad7" title="Variable template providing the address space for different types.">nda::mem::get_addr_space</a> for <a class="el" href="classnda_1_1array__adapter.html" title="Adapter that consists of a shape and a callable object, which takes R integers as arguments (just lik...">nda::array_adapter</a> types. <br /></td></tr>
 <tr class="memitem:ga69bfecc3c871dfe7c6c397ee852db0f8" id="r_ga69bfecc3c871dfe7c6c397ee852db0f8"><td class="memTemplParams" colspan="2"><a id="ga69bfecc3c871dfe7c6c397ee852db0f8" name="ga69bfecc3c871dfe7c6c397ee852db0f8"></a>
 template&lt;char OP, ArrayOrScalar L, ArrayOrScalar R&gt; </td></tr>
 <tr class="memitem:ga69bfecc3c871dfe7c6c397ee852db0f8 template"><td class="memItemLeft" align="right" valign="top">static constexpr <a class="el" href="#ga03c36f393776e30005ebfc907bde9e0d">AddressSpace</a>&#160;</td><td class="memItemRight" valign="bottom"><b>nda::mem::get_addr_space&lt; expr&lt; OP, L, R &gt; &gt;</b> = <a class="el" href="#ga6127fb9e77d6a679dc1203c887bb58c2">combine</a>&lt;<a class="el" href="#ga8055e10307486aacf11f746f7d718ad7">get_addr_space</a>&lt;L&gt;, <a class="el" href="#ga8055e10307486aacf11f746f7d718ad7">get_addr_space</a>&lt;R&gt;&gt;</td></tr>
@@ -206,7 +210,7 @@ template&lt;typename... Ts&gt; </td></tr>
 <li><span class="tt"><a class="el" href="address__space_8hpp.html#a1dbd464eef96e9cc4151734185a50c7a" title="Using declaration for the Unified address space (see nda::mem::AddressSpace).">Unified</a></span>: CUDA Unified memory address. </li>
 </ul>
 
-<p class="definition">Definition at line <a class="el" href="address__space_8hpp_source.html#l00049">49</a> of file <a class="el" href="address__space_8hpp_source.html">address_space.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="address__space_8hpp_source.html#l00051">51</a> of file <a class="el" href="address__space_8hpp_source.html">address_space.hpp</a>.</p>
 
 </div>
 </div>
@@ -239,8 +243,8 @@ template&lt;AddressSpace... AdrSpcs&gt; </div>
 <div class="line">    <span class="keyword">static_assert</span>(<a class="code hl_variable" href="group__mem__utils.html#ga332eb62504ae4f22585e078bc2e40568">nda::have_device</a> or ((AdrSpcs == <a class="code hl_enumvalue" href="address__space_8hpp.html#ac2ca16d048ec66e04bca283eab048ec2">Host</a>) &amp; ...),</div>
 <div class="line">                  <span class="stringliteral">&quot;Error in nda::mem::check_adr_sp_valid: Device address space requires compiling with GPU support.&quot;</span>);</div>
 <div class="line">  }</div>
-<div class="ttc" id="aaddress__space_8hpp_html_a6adf97f83acf6453d4a6a4b1070f3754"><div class="ttname"><a href="address__space_8hpp.html#a6adf97f83acf6453d4a6a4b1070f3754">nda::mem::None</a></div><div class="ttdeci">@ None</div><div class="ttdoc">Using declaration for the None address space (see nda::mem::AddressSpace).</div><div class="ttdef"><b>Definition</b> <a href="address__space_8hpp_source.html#l00049">address_space.hpp:49</a></div></div>
-<div class="ttc" id="aaddress__space_8hpp_html_ac2ca16d048ec66e04bca283eab048ec2"><div class="ttname"><a href="address__space_8hpp.html#ac2ca16d048ec66e04bca283eab048ec2">nda::mem::Host</a></div><div class="ttdeci">@ Host</div><div class="ttdoc">Using declaration for the Host address space (see nda::mem::AddressSpace).</div><div class="ttdef"><b>Definition</b> <a href="address__space_8hpp_source.html#l00049">address_space.hpp:49</a></div></div>
+<div class="ttc" id="aaddress__space_8hpp_html_a6adf97f83acf6453d4a6a4b1070f3754"><div class="ttname"><a href="address__space_8hpp.html#a6adf97f83acf6453d4a6a4b1070f3754">nda::mem::None</a></div><div class="ttdeci">@ None</div><div class="ttdoc">Using declaration for the None address space (see nda::mem::AddressSpace).</div><div class="ttdef"><b>Definition</b> <a href="address__space_8hpp_source.html#l00051">address_space.hpp:51</a></div></div>
+<div class="ttc" id="aaddress__space_8hpp_html_ac2ca16d048ec66e04bca283eab048ec2"><div class="ttname"><a href="address__space_8hpp.html#ac2ca16d048ec66e04bca283eab048ec2">nda::mem::Host</a></div><div class="ttdeci">@ Host</div><div class="ttdoc">Using declaration for the Host address space (see nda::mem::AddressSpace).</div><div class="ttdef"><b>Definition</b> <a href="address__space_8hpp_source.html#l00051">address_space.hpp:51</a></div></div>
 <div class="ttc" id="agroup__mem__utils_html_ga332eb62504ae4f22585e078bc2e40568"><div class="ttname"><a href="group__mem__utils.html#ga332eb62504ae4f22585e078bc2e40568">nda::have_device</a></div><div class="ttdeci">static constexpr bool have_device</div><div class="ttdoc">Constexpr variable that is true if the project is configured with GPU support.</div><div class="ttdef"><b>Definition</b> <a href="device_8hpp_source.html#l00132">device.hpp:132</a></div></div>
 </div><!-- fragment -->
 <p>Check validity of a set of <a class="el" href="#ga03c36f393776e30005ebfc907bde9e0d" title="Enum providing identifiers for the different memory address spaces.">nda::mem::AddressSpace</a> values. </p>
@@ -252,7 +256,7 @@ template&lt;AddressSpace... AdrSpcs&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="address__space_8hpp_source.html#l00140">140</a> of file <a class="el" href="address__space_8hpp_source.html">address_space.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="address__space_8hpp_source.html#l00146">146</a> of file <a class="el" href="address__space_8hpp_source.html">address_space.hpp</a>.</p>
 
 </div>
 </div>
@@ -285,8 +289,8 @@ template&lt;<a class="el" href="#ga03c36f393776e30005ebfc907bde9e0d">AddressSpac
 <div class="line">    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">sizeof</span>...(As) &gt; 0) { <span class="keywordflow">return</span> <a class="code hl_variable" href="#ga6127fb9e77d6a679dc1203c887bb58c2">combine</a>&lt;std::max(A1, A2), As...&gt;; }</div>
 <div class="line">    <span class="keywordflow">return</span> std::max(A1, A2);</div>
 <div class="line">  }()</div>
-<div class="ttc" id="aaddress__space_8hpp_html_ae0ac20adce6ffee48c7151b070aa5737"><div class="ttname"><a href="address__space_8hpp.html#ae0ac20adce6ffee48c7151b070aa5737">nda::mem::Device</a></div><div class="ttdeci">@ Device</div><div class="ttdoc">Using declaration for the Device address space (see nda::mem::AddressSpace).</div><div class="ttdef"><b>Definition</b> <a href="address__space_8hpp_source.html#l00049">address_space.hpp:49</a></div></div>
-<div class="ttc" id="agroup__mem__addrspcs_html_ga6127fb9e77d6a679dc1203c887bb58c2"><div class="ttname"><a href="#ga6127fb9e77d6a679dc1203c887bb58c2">nda::mem::combine</a></div><div class="ttdeci">constexpr AddressSpace combine</div><div class="ttdoc">Promotion rules for nda::mem::AddressSpace values.</div><div class="ttdef"><b>Definition</b> <a href="address__space_8hpp_source.html#l00093">address_space.hpp:93</a></div></div>
+<div class="ttc" id="aaddress__space_8hpp_html_ae0ac20adce6ffee48c7151b070aa5737"><div class="ttname"><a href="address__space_8hpp.html#ae0ac20adce6ffee48c7151b070aa5737">nda::mem::Device</a></div><div class="ttdeci">@ Device</div><div class="ttdoc">Using declaration for the Device address space (see nda::mem::AddressSpace).</div><div class="ttdef"><b>Definition</b> <a href="address__space_8hpp_source.html#l00051">address_space.hpp:51</a></div></div>
+<div class="ttc" id="agroup__mem__addrspcs_html_ga6127fb9e77d6a679dc1203c887bb58c2"><div class="ttname"><a href="#ga6127fb9e77d6a679dc1203c887bb58c2">nda::mem::combine</a></div><div class="ttdeci">constexpr AddressSpace combine</div><div class="ttdoc">Promotion rules for nda::mem::AddressSpace values.</div><div class="ttdef"><b>Definition</b> <a href="address__space_8hpp_source.html#l00095">address_space.hpp:95</a></div></div>
 </div><!-- fragment -->
 <p>Promotion rules for <a class="el" href="#ga03c36f393776e30005ebfc907bde9e0d" title="Enum providing identifiers for the different memory address spaces.">nda::mem::AddressSpace</a> values. </p>
 <p><span class="tt"><a class="el" href="address__space_8hpp.html#ac2ca16d048ec66e04bca283eab048ec2" title="Using declaration for the Host address space (see nda::mem::AddressSpace).">Host</a></span> and <span class="tt"><a class="el" href="address__space_8hpp.html#ae0ac20adce6ffee48c7151b070aa5737" title="Using declaration for the Device address space (see nda::mem::AddressSpace).">Device</a></span> address spaces are not compatible and will result in a compilation error.</p>
@@ -303,7 +307,7 @@ template&lt;<a class="el" href="#ga03c36f393776e30005ebfc907bde9e0d">AddressSpac
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="address__space_8hpp_source.html#l00093">93</a> of file <a class="el" href="address__space_8hpp_source.html">address_space.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="address__space_8hpp_source.html#l00095">95</a> of file <a class="el" href="address__space_8hpp_source.html">address_space.hpp</a>.</p>
 
 </div>
 </div>
@@ -341,7 +345,7 @@ template&lt;Array A1, Array... As&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="address__space_8hpp_source.html#l00109">109</a> of file <a class="el" href="address__space_8hpp_source.html">address_space.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="address__space_8hpp_source.html#l00111">111</a> of file <a class="el" href="address__space_8hpp_source.html">address_space.hpp</a>.</p>
 
 </div>
 </div>
@@ -377,7 +381,7 @@ template&lt;typename T&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="address__space_8hpp_source.html#l00069">69</a> of file <a class="el" href="address__space_8hpp_source.html">address_space.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="address__space_8hpp_source.html#l00071">71</a> of file <a class="el" href="address__space_8hpp_source.html">address_space.hpp</a>.</p>
 
 </div>
 </div>

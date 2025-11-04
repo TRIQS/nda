@@ -6,6 +6,7 @@ var address__space_8hpp =
     [ "nda::mem::common_addr_space", "group__mem__addrspcs.html#ga9521566804e5f93c4daaba77dbaae4c3", null ],
     [ "nda::mem::get_addr_space", "group__mem__addrspcs.html#ga8055e10307486aacf11f746f7d718ad7", null ],
     [ "nda::mem::get_addr_space< A >", "group__mem__addrspcs.html#ga8308180d9f61b480984f2e563d14c721", null ],
+    [ "nda::mem::get_addr_space< array_adapter< R, F > >", "group__mem__addrspcs.html#ga6ef01f05a18560df2e13ed570082f6de", null ],
     [ "nda::mem::get_addr_space< expr< OP, L, R > >", "group__mem__addrspcs.html#ga69bfecc3c871dfe7c6c397ee852db0f8", null ],
     [ "nda::mem::get_addr_space< expr_call< F, As... > >", "group__mem__addrspcs.html#gae3a2fec6497934a19c9df839708ca85f", null ],
     [ "nda::mem::get_addr_space< expr_unary< OP, A > >", "group__mem__addrspcs.html#gad9a020c989db915478b03fd0586d6f80", null ],
