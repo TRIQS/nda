@@ -593,6 +593,6 @@ namespace nda {
                                     get_algebra<A>, heap<mem::get_addr_space<A>>>;
 
   template <Array A>
-  basic_array(A &&a) -> basic_array<get_value_t<A>, get_rank<A>, C_layout, get_algebra<A>, heap<>>;
+  basic_array(A &&a) -> basic_array<get_value_t<A>, get_rank<A>, C_layout, get_algebra<A>, heap<mem::get_addr_space<A>>>;
 
 } // namespace nda
