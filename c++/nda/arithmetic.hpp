@@ -127,9 +127,11 @@ namespace nda {
      * @return nda::layout_info_t object.
      */
     static constexpr layout_info_t compute_layout_info() {
-      if (l_is_scalar) return (algebra == 'A' ? get_layout_info<R> : layout_info_t{}); // 1 as an array has all flags, it is just 1
-      if (r_is_scalar) return (algebra == 'A' ? get_layout_info<L> : layout_info_t{}); // 1 as a matrix does not, as it is diagonal only.
-      return get_layout_info<R> & get_layout_info<L>;                                  // default case. Take the logical and of all flags
+      if (l_is_scalar)
+        return get_layout_info<R>; //(algebra == 'A' ? get_layout_info<R> : layout_info_t{}); // 1 as an array has all flags, it is just 1
+      if (r_is_scalar)
+        return get_layout_info<L>; //(algebra == 'A' ? get_layout_info<L> : layout_info_t{}); // 1 as a matrix does not, as it is diagonal only.
+      return get_layout_info<R> & get_layout_info<L>; // default case. Take the logical and of all flags
     }
 
     /**
