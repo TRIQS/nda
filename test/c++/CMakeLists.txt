@@ -53,6 +53,7 @@ foreach(test ${all_tests})
       --verbose
       --force
       --quiet
+      -march=native
       ${CMAKE_CURRENT_SOURCE_DIR}/${test}
     )
   endif()
