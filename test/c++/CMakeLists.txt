@@ -29,6 +29,7 @@ foreach(test ${all_tests})
     target_link_libraries(${test_name} hdf5::hdf5)
   endif()
   target_compile_options(${test_name}  PRIVATE "${ARGV1}")
+  target_compile_options(${test_name} PRIVATE -march=native)
   set_property(TARGET ${test_name} PROPERTY RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test_dir})
   add_test(NAME ${test_name} COMMAND ${test_name} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test_dir})
   if(MPISupport AND test_name MATCHES "(mpi|nda_sym_grp)" AND NOT MSAN)
@@ -53,7 +54,6 @@ foreach(test ${all_tests})
       --verbose
       --force
       --quiet
-      -march=native
       ${CMAKE_CURRENT_SOURCE_DIR}/${test}
     )
   endif()
