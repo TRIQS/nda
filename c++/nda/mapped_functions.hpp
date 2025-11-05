@@ -60,8 +60,30 @@ namespace nda {
     // Functor for nda::detail::conj.
     struct conj_f {
       auto operator()(auto const &x) const { return conj(x); };
+
+      auto load(auto const &x) const {
+        if constexpr (xsimd::is_batch_complex<std::remove_cvref_t<decltype(x)>>::value) {
+          return xsimd::conj(x);
+        } else {
+          return x;
+        }
+      }
     };
 
+    struct pow_f {
+      double exponent;
+      auto operator()(auto const &x) const { return std::pow(x, exponent); }
+      auto load(auto const &x) const {
+        using simd_t = std::remove_cvref_t<decltype(x)>;
+        return xsimd::pow(x, simd_t(exponent));
+      }
+    };
+
+    template <typename F_SCALAR, typename F_SIMD>
+    struct unary_functor {
+      auto operator()(auto const &x) const { return F_SCALAR{}(x); }
+      auto load(auto const &x) const { return F_SIMD{}(x); }
+    };
   } // namespace detail
 
   /**
@@ -74,10 +96,7 @@ namespace nda {
    */
   template <ArrayOrScalar A>
   auto pow(A &&a, double p) {
-    return nda::map([p](auto const &x) {
-      using std::pow;
-      return pow(x, p);
-    })(std::forward<A>(a));
+    return nda::map(detail::pow_f{p})(std::forward<A>(a));
   }
 
   /**
@@ -91,10 +110,11 @@ namespace nda {
    */
   template <ArrayOrScalar A>
   decltype(auto) conj(A &&a) {
-    if constexpr (is_complex_v<get_value_t<A>>)
+    if constexpr (is_complex_v<get_value_t<A>>) {
       return nda::map(detail::conj_f{})(std::forward<A>(a));
-    else
+    } else {
       return std::forward<A>(a);
+    }
   }
 
   /** @} */
