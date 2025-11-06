@@ -122,8 +122,11 @@ namespace nda::clef {
   }                                                                                                                                                  \
                                                                                                                                                      \
   template <typename... Args>                                                                                                                        \
-     auto operator()(Args &&...args)                                                                                                                 \
-     && requires(nda::clef::is_any_lazy<Args...>) { return make_expr_call(std::move(*this), std::forward<Args>(args)...); }
+  auto operator()(Args &&...args) &&                                                                                                                 \
+    requires(nda::clef::is_any_lazy<Args...>)                                                                                                        \
+  {                                                                                                                                                  \
+    return make_expr_call(std::move(*this), std::forward<Args>(args)...);                                                                            \
+  }
 
   /** @} */
 

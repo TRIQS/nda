@@ -490,10 +490,10 @@ struct _f3 {
         return make_expr_call(*this, x, y);
       } else {
         // std::cerr << "Eval f3 ONE LAZY " << x << " " << y << std::endl;
-	auto yy = y;
+        auto yy = y;
         return f1(x) + std::move(yy);
         //c++23 only
-	//return f1(x) + auto{y};
+        //return f1(x) + auto{y};
       }
     } else {
       // std::cerr << "Eval f3 " << x << " " << y << std::endl;

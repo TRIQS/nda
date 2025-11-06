@@ -162,8 +162,8 @@ namespace nda::blas {
           compile_error_no_gpu();
 #endif
         } else {
-          f77::gemm_batch(get_op<A>, get_op<B>, m, n, k, alpha, a_ptrs.data(), get_ld(mat_a), b_ptrs.data(), get_ld(mat_b), beta, c_ptrs.data(), get_ld(mat_c),
-                          batch_count);
+          f77::gemm_batch(get_op<A>, get_op<B>, m, n, k, alpha, a_ptrs.data(), get_ld(mat_a), b_ptrs.data(), get_ld(mat_b), beta, c_ptrs.data(),
+                          get_ld(mat_c), batch_count);
         }
       }
     }

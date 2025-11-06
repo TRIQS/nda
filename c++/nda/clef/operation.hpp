@@ -254,11 +254,11 @@ namespace nda::clef {
   template <typename Tag, typename... Args>
   FORCEINLINE auto op_dispatch(std::true_type, Args &&...args) {
     using Arg0 = std::decay_t<std::tuple_element_t<0, std::tuple<Args...>>>;
-    if constexpr ((std::is_same_v<Tag, tags::function> and not supports_partial_eval_of_calls<Arg0>) or  //
+    if constexpr ((std::is_same_v<Tag, tags::function> and not supports_partial_eval_of_calls<Arg0>) or   //
                   (std::is_same_v<Tag, tags::subscript> and not supports_partial_eval_of_subscript<Arg0>) //
     )
       return expr<Tag, expr_storage_t<Args>...>{Tag(), std::forward<Args>(args)...};
-     else
+    else
       return operation<Tag>()(std::forward<Args>(args)...);
   }
 
