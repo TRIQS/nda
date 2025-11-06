@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2025-11-04 19:34:32</td>
+      <td>2025-11-06 22:48:36</td>
     </tr>
   </table>
 </div>
@@ -997,45 +997,66 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">     auto operator()(Args &amp;&amp;...args)                                                                                                                 \</span></td>
+      <td class="src "><span class="cp">  auto operator()(Args &amp;&amp;...args) &amp;&amp;                                                                                                                 \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l126" href="#l126">126</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">     &amp;&amp; requires(nda::clef::is_any_lazy&lt;Args...&gt;) { return make_expr_call(std::move(*this), std::forward&lt;Args&gt;(args)...); }</span></td>
+      <td class="src "><span class="cp">    requires(nda::clef::is_any_lazy&lt;Args...&gt;)                                                                                                        \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l127" href="#l127">127</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cp">  {                                                                                                                                                  \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l128" href="#l128">128</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="w">  </span><span class="cm">/** @} */</span></td>
+      <td class="src "><span class="cp">    return make_expr_call(std::move(*this), std::forward&lt;Args&gt;(args)...);                                                                            \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l129" href="#l129">129</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cp">  }</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l130" href="#l130">130</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="p">}</span><span class="w"> </span><span class="c1">// namespace nda::clef</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l131" href="#l131">131</a></td>
+      <td class="linebranch">
+      </td>
+      <td class="linecount "></td>
+      <td class="src "><span class="w">  </span><span class="cm">/** @} */</span></td>
+    </tr>
+    <tr class="source-line">
+      <td class="lineno"><a id="l132" href="#l132">132</a></td>
+      <td class="linebranch">
+      </td>
+      <td class="linecount "></td>
+      <td class="src "></td>
+    </tr>
+    <tr class="source-line">
+      <td class="lineno"><a id="l133" href="#l133">133</a></td>
+      <td class="linebranch">
+      </td>
+      <td class="linecount "></td>
+      <td class="src "><span class="p">}</span><span class="w"> </span><span class="c1">// namespace nda::clef</span></td>
+    </tr>
+    <tr class="source-line">
+      <td class="lineno"><a id="l134" href="#l134">134</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>

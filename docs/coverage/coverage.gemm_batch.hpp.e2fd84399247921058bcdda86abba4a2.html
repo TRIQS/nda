@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2025-11-04 19:34:32</td>
+      <td>2025-11-06 22:48:36</td>
     </tr>
   </table>
 </div>
@@ -2387,14 +2387,14 @@
         </details>
       </td>
       <td class="linecount partialCoveredLine">4</td>
-      <td class="src partialCoveredLine"><span class="w">          </span><span class="n">f77</span><span class="o">::</span><span class="n">gemm_batch</span><span class="p">(</span><span class="n">get_op</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">get_op</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="n">a_ptrs</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">get_ld</span><span class="p">(</span><span class="n">mat_a</span><span class="p">),</span><span class="w"> </span><span class="n">b_ptrs</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">get_ld</span><span class="p">(</span><span class="n">mat_b</span><span class="p">),</span><span class="w"> </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="n">c_ptrs</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">get_ld</span><span class="p">(</span><span class="n">mat_c</span><span class="p">),</span></td>
+      <td class="src partialCoveredLine"><span class="w">          </span><span class="n">f77</span><span class="o">::</span><span class="n">gemm_batch</span><span class="p">(</span><span class="n">get_op</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">get_op</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="n">a_ptrs</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">get_ld</span><span class="p">(</span><span class="n">mat_a</span><span class="p">),</span><span class="w"> </span><span class="n">b_ptrs</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">get_ld</span><span class="p">(</span><span class="n">mat_b</span><span class="p">),</span><span class="w"> </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="n">c_ptrs</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l166" href="#l166">166</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="w">                          </span><span class="n">batch_count</span><span class="p">);</span></td>
+      <td class="src "><span class="w">                          </span><span class="n">get_ld</span><span class="p">(</span><span class="n">mat_c</span><span class="p">),</span><span class="w"> </span><span class="n">batch_count</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l167" href="#l167">167</a></td>
