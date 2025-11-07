@@ -248,3 +248,56 @@ TEST(NDA, MOCK_SIMD) {
 #undef TEST_ALL_RANKS
 #undef TEST_LAYOUTS
 }
+
+TEST(NDA, EXPR_COST) {
+  using namespace nda::simd;
+  std::array<size_t, 2> shape;
+  shape.fill(32);
+  using array_t = array<float, 2>;
+
+  array_t A = rand(shape);
+  array_t B = rand(shape);
+  array_t C = rand(shape);
+
+  static_assert(expr_cost_v<float> == 0);
+  static_assert(expr_cost_v<array_t> == 1);
+
+  auto e1 = A + B + C;
+  static_assert(expr_cost_v<decltype(e1)> == 5);
+
+  auto e2 = e1 + A;
+  static_assert(expr_cost_v<decltype(e2)> == 7);
+
+  auto e3 = nda::map([](auto const &x) { return x * x; })(e2);
+  static_assert(expr_cost_v<decltype(e3)> == 8);
+
+  auto e4 = -e3;
+  static_assert(expr_cost_v<decltype(e4)> == 9);
+
+  auto e5 = e4 + 5.0f;
+  static_assert(expr_cost_v<decltype(e5)> == 10);
+
+  auto e6 = 5.0f * e5;
+  static_assert(expr_cost_v<decltype(e6)> == 11);
+
+  auto e7 = e6 + e6;
+  static_assert(expr_cost_v<decltype(e7)> == 23);
+
+  auto e8 = nda::map([](auto const &x, auto const &y) { return x - y; })(e7, e3);
+  static_assert(expr_cost_v<decltype(e8)> == 32);
+
+  auto e9 = log(e8);
+  static_assert(expr_cost_v<decltype(e9)> == 33);
+
+  static_assert(std::is_same_v<dispatch_policy_t<float>, scalar_t>);
+  static_assert(std::is_same_v<dispatch_policy_t<array_t>, vectorize_t>);
+  static_assert(std::is_same_v<dispatch_policy_t<decltype(e1)>, vectorize_t>);
+  static_assert(std::is_same_v<dispatch_policy_t<decltype(e2)>, vectorize_t>);
+  static_assert(std::is_same_v<dispatch_policy_t<decltype(e3)>, std::conditional_t<simd_cost_model<decltype(e3)>::emulate(), emulate_t, scalar_t>>);
+  static_assert(std::is_same_v<dispatch_policy_t<decltype(e4)>, std::conditional_t<simd_cost_model<decltype(e4)>::emulate(), emulate_t, scalar_t>>);
+  static_assert(std::is_same_v<dispatch_policy_t<decltype(e5)>, std::conditional_t<simd_cost_model<decltype(e5)>::emulate(), emulate_t, scalar_t>>);
+  static_assert(std::is_same_v<dispatch_policy_t<decltype(e6)>, std::conditional_t<simd_cost_model<decltype(e6)>::emulate(), emulate_t, scalar_t>>);
+  static_assert(std::is_same_v<dispatch_policy_t<decltype(e7)>, std::conditional_t<simd_cost_model<decltype(e7)>::emulate(), emulate_t, scalar_t>>);
+  static_assert(std::is_same_v<dispatch_policy_t<decltype(e8)>, std::conditional_t<simd_cost_model<decltype(e8)>::emulate(), emulate_t, scalar_t>>);
+  static_assert(std::is_same_v<dispatch_policy_t<decltype(e9)>, std::conditional_t<simd_cost_model<decltype(e9)>::emulate(), emulate_t, scalar_t>>);
+}
