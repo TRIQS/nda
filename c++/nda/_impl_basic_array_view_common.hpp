@@ -263,7 +263,14 @@ FORCEINLINE decltype(auto) operator()(Ts const &...idxs) && noexcept(has_no_boun
 }
 
 template <typename... Args>
-FORCEINLINE native_simd<ValueType> load(Args... idx) const {
+FORCEINLINE native_simd<ValueType> load(simd::vectorize_t, Args... idx) const {
+  static_assert(Vectorizable<ValueType>, "Store function is called with a type that is not a vectorizable type");
+  const long offset = lay(idx...);
+  return native_simd<ValueType>::load_unaligned(data() + offset);
+}
+
+template <typename... Args>
+FORCEINLINE native_simd<ValueType> load(simd::emulate_t, Args... idx) const {
   static_assert(Vectorizable<ValueType>, "Load function is called with a type that is not a vectorizable type");
   const long offset = lay(idx...);
   return native_simd<ValueType>::load_unaligned(data()+offset);
@@ -511,8 +518,12 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
   if constexpr (mem::on_device<self_t> || mem::on_device<RHS>) {
     NDA_RUNTIME_ERROR << "Error in assign_from_ndarray: Fallback to elementwise assignment not implemented for arrays/views on the GPU";
   }
-  if constexpr (same_stride_order and is_simd_enabled_v<RHS, ValueType> and is_simd_enabled_v<self_t>) {
-    nda::for_each_static<0, get_layout_info<self_t>.stride_order, native_simd<ValueType>::size>(shape(),[this, &rhs](auto const &...args) {(*this).store(rhs.load(args...), args...); }, [this, &rhs](auto const &...args) { (*this)(args...) = rhs(args...); });
+  using dispatch_t = simd::dispatch_policy_t<RHS, ValueType>;
+  if constexpr (same_stride_order
+                and is_simd_enabled_v<self_t> and (std::is_same_v<dispatch_t, simd::vectorize_t> or std::is_same_v<dispatch_t, simd::emulate_t>)) {
+    nda::for_each_static<0, get_layout_info<self_t>.stride_order, native_simd<ValueType>::size>(
+       shape(), [this, &rhs](auto const &...args) { (*this).store(rhs.load(dispatch_t{}, args...), args...); },
+       [this, &rhs](auto const &...args) { (*this)(args...) = rhs(args...); });
   }
   else {
     nda::for_each(shape(), [this, &rhs](auto const &...args) { (*this)(args...) = rhs(args...); });
