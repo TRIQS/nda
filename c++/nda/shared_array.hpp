@@ -198,15 +198,8 @@ namespace nda {
    */
 
   /**
-   * @brief Get the type of the nda::shared_array that would be obtained by constructing an array from a given type.
-   * @tparam T Type to construct an array from.
-   */
-  template <typename T, typename T2 = std::remove_reference_t<T> /* Keep this: Fix for gcc11 bug */>
-  using get_regular_t = decltype(basic_array{std::declval<T>()});
-
-  /**
-    * @brief Get the type of the nda::basic_array that would be obtained by constructing an array on host memory from a
-    * given type.
+    * @brief Get the type of the nda::basic_array that would be obtained by
+    * constructing an array on MPI shared memory from a given type.
     *
     * @tparam T Type to construct an array from.
     */

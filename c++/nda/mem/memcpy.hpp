@@ -45,7 +45,7 @@ namespace nda::mem {
       std::memcpy(dest, src, count);
     } else if constexpr (DestAdrSp == nda::mem::MPISharedMemory && SrcAdrSp == nda::mem::MPISharedMemory) {
       std::memcpy(dest, src, count); //  FIXME
-    } else if constexpr (have_device_compatible_addr_space<SrcAdrSp, DestAdrSp>) {
+    } else if constexpr ((SrcAdrSp == Device || SrcAdrSp == Unified) && (DestAdrSp == Device || DestAdrSp == Unified)) {
       device_error_check(cudaMemcpy(dest, src, count, cudaMemcpyDefault), "cudaMemcpy");
     } else {
       static_assert(false, "Not implemented!");
@@ -87,7 +87,7 @@ namespace nda::mem {
       auto *desti = static_cast<unsigned char *>(dest);
       auto *srci  = static_cast<const unsigned char *>(src); // FIXME
       for (size_t i = 0; i < height; ++i, desti += dpitch, srci += spitch) std::memcpy(desti, srci, width);
-    } else if constexpr (have_device_compatible_addr_space<SrcAdrSp, DestAdrSp>) {
+    } else if constexpr ((SrcAdrSp == Device || SrcAdrSp == Unified) && (DestAdrSp == Device || DestAdrSp == Unified)) {
       device_error_check(cudaMemcpy2D(dest, dpitch, src, spitch, width, height, cudaMemcpyDefault), "cudaMemcpy2D");
     } else {
       static_assert(false, "Not implemented!");

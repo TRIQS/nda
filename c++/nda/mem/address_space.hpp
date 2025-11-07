@@ -95,7 +95,8 @@ enum class AddressSpace { None, Host, Device, Unified, MPISharedMemory }; // Do 
    * @tparam As Remaining address spaces.
    */
   template <AddressSpace... As>
-  constexpr AddressSpace combine;
+  // https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p2041r0.html#attempt-to-do-this-today-always-invalid-expression
+  constexpr AddressSpace combine = not defined(combine<As...>);
 
   template <AddressSpace A1, AddressSpace A2, AddressSpace... As>
   constexpr AddressSpace combine<A1, A2, As...> = combine<combine<A1, A2>, As...>;
