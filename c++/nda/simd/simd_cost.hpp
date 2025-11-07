@@ -69,7 +69,7 @@ namespace nda {
     template <typename A>
     struct simd_cost_model {
       static constexpr size_t MAX_COST = 16; // TODO: tune it
-      static constexpr size_t cost() { return expr_cost<A>::value; }
+      static constexpr size_t cost() { return expr_cost_v<A>; }
       static constexpr bool emulate() { return cost() >= MAX_COST; }
     };
 
@@ -166,12 +166,12 @@ namespace nda {
 
       template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename ContainerPolicy, typename T>
       struct has_load_function<basic_array<ValueType, Rank, LayoutPolicy, Algebra, ContainerPolicy>, T> {
-        static constexpr bool value = std::is_same_v<std::remove_cvref_t<ValueType>, T>;
+        static constexpr bool value = Vectorizable<ValueType> and std::is_same_v<ValueType, T>;
       };
 
       template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename AccessorPolicy, typename OwningPolicy, typename T>
       struct has_load_function<basic_array_view<ValueType, Rank, LayoutPolicy, Algebra, AccessorPolicy, OwningPolicy>, T> {
-        static constexpr bool value = std::is_same_v<ValueType, T>;
+        static constexpr bool value = Vectorizable<ValueType> and std::is_same_v<ValueType, T>;
       };
 
       template <typename F, Array... As, typename T>
@@ -207,7 +207,7 @@ namespace nda {
     struct dispatch_policy {
       static constexpr bool same_layout         = detail::has_same_layout_v<A>;
       static constexpr bool contiguous_layout_v = has_contiguous_layout<A>;
-      static constexpr bool vectorizable_types  = detail::has_vectorizable_type_v<A>;
+      static constexpr bool vectorizable_types  = detail::has_vectorizable_type_v<A, T>;
       static constexpr bool load_available      = detail::has_load_function_v<A, T>;
 
       static constexpr bool emulate =
