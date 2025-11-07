@@ -69,8 +69,13 @@ namespace nda {
     }
 
     template <typename... Args>
-    auto load(Args &&...args) const {
-      return -(a.load(std::forward<Args>(args)...));
+    auto load(simd::vectorize_t, Args &&...args) const {
+      return -(a.load(simd::vectorize, std::forward<Args>(args)...));
+    }
+
+    template <typename... Args>
+    auto load(simd::emulate_t, Args &&...args) const {
+      return -(a.load(simd::emulate, std::forward<Args>(args)...));
     }
 
     /**
@@ -269,8 +274,10 @@ namespace nda {
       return operator()(std::forward<Arg>(arg));
     }
 
-    template <typename... Args>
-    auto load(Args const &...args) const {
+    private:
+    template <typename Tag, typename... Args>
+    auto _call_load(Args const &...args) const {
+      using dispatch_t   = Tag;
       auto diagonal_simd = [this](long i, long j) {
         // This lambda function can only be used when we have a matrix. This constexpr is needed because otherwise we might get compile errors.
         if constexpr (sizeof...(Args) == 2 and (Vectorizable<L_t> or Vectorizable<R_t>)) {
@@ -281,23 +288,23 @@ namespace nda {
           }
           if constexpr (l_is_scalar) {
             using simd_t = native_simd<L_t>;
-            if (diff < 0 or diff > simd_t::size - 1) return r.load(i, j);
+            if (diff < 0 or diff > simd_t::size - 1) return r.load(dispatch_t{}, i, j);
             alignas(simd_t::arch_type::alignment()) std::array<L_t, simd_t::size> tmp{};
             tmp[diff] = l;
             if constexpr (OP == '+') {
-              return r.load(i, j) + simd_t::load_aligned(tmp.data());
+              return r.load(dispatch_t{}, i, j) + simd_t::load_aligned(tmp.data());
             } else {
-              return r.load(i, j) - simd_t::load_aligned(tmp.data());
+              return r.load(dispatch_t{}, i, j) - simd_t::load_aligned(tmp.data());
             }
           } else if constexpr (r_is_scalar) {
             using simd_t = native_simd<R_t>;
-            if (diff < 0 or diff > simd_t::size - 1) return l.load(i, j);
+            if (diff < 0 or diff > simd_t::size - 1) return l.load(dispatch_t{}, i, j);
             alignas(simd_t::arch_type::alignment()) std::array<R_t, simd_t::size> tmp{};
             tmp[diff] = r;
             if constexpr (OP == '+') {
-              return l.load(i, j) + simd_t::load_aligned(tmp.data());
+              return l.load(dispatch_t{}, i, j) + simd_t::load_aligned(tmp.data());
             } else {
-              return l.load(i, j) - simd_t::load_aligned(tmp.data());
+              return l.load(dispatch_t{}, i, j) - simd_t::load_aligned(tmp.data());
             }
           }
         }
@@ -311,7 +318,7 @@ namespace nda {
             return diagonal_simd(args...);
           else
             // rhs is an array
-            return native_simd<L_t>(l) + r.load(args...);
+            return native_simd<L_t>(l) + r.load(dispatch_t{}, args...);
         } else if constexpr (r_is_scalar) {
           // rhs is a scalar
           if constexpr (algebra == 'M') {
@@ -319,10 +326,10 @@ namespace nda {
             return diagonal_simd(args...);
           } else
             // lhs is an array
-            return l.load(args...) + native_simd<R_t>(r);
+            return l.load(dispatch_t{}, args...) + native_simd<R_t>(r);
         } else
           // both are arrays or matrices
-          return l.load(args...) + r.load(args...);
+          return l.load(dispatch_t{}, args...) + r.load(dispatch_t{}, args...);
       }
 
       // subtraction
@@ -334,7 +341,7 @@ namespace nda {
             return diagonal_simd(args...);
           else
             // rhs is an array
-            return native_simd<L_t>(l) - r.load(args...);
+            return native_simd<L_t>(l) - r.load(dispatch_t{}, args...);
         } else if constexpr (r_is_scalar) {
           // rhs is a scalar
           if constexpr (algebra == 'M')
@@ -342,24 +349,24 @@ namespace nda {
             return diagonal_simd(args...);
           else
             // lhs is an array
-            return l.load(args...) - native_simd<R_t>(r);
+            return l.load(dispatch_t{}, args...) - native_simd<R_t>(r);
         } else
           // both are arrays or matrices
-          return l.load(args...) - r.load(args...);
+          return l.load(dispatch_t{}, args...) - r.load(dispatch_t{}, args...);
       }
 
       // multiplication
       if constexpr (OP == '*') {
         if constexpr (l_is_scalar)
           // lhs is a scalar
-          return native_simd<L_t>(l) * r.load(args...);
+          return native_simd<L_t>(l) * r.load(dispatch_t{}, args...);
         else if constexpr (r_is_scalar)
           // rhs is a scalar
-          return l.load(args...) * native_simd<R_t>(r);
+          return l.load(dispatch_t{}, args...) * native_simd<R_t>(r);
         else {
           // both are arrays (matrix product is not supported here)
           static_assert(algebra != 'M', "Error in nda::expr: Matrix algebra not supported");
-          return l.load(args...) * r.load(args...);
+          return l.load(dispatch_t{}, args...) * r.load(dispatch_t{}, args...);
         }
       }
 
@@ -368,16 +375,27 @@ namespace nda {
         if constexpr (l_is_scalar) {
           // lhs is a scalar
           static_assert(algebra != 'M', "Error in nda::expr: Matrix algebra not supported");
-          return native_simd<L_t>(l) / r.load(args...);
+          return native_simd<L_t>(l) / r.load(dispatch_t{}, args...);
         } else if constexpr (r_is_scalar)
           // rhs is a scalar
-          return l.load(args...) / native_simd<R_t>(r);
+          return l.load(dispatch_t{}, args...) / native_simd<R_t>(r);
         else {
           // both are arrays (matrix division is not supported here)
           static_assert(algebra != 'M', "Error in nda::expr: Matrix algebra not supported");
-          return l.load(args...) / r.load(args...);
+          return l.load(dispatch_t{}, args...) / r.load(dispatch_t{}, args...);
         }
       }
+    }
+
+    public:
+    template <typename... Args>
+    auto load(simd::vectorize_t, Args const &...args) const {
+      return _call_load<simd::vectorize_t>(args...);
+    }
+
+    template <typename... Args>
+    auto load(simd::emulate_t, Args const &...args) const {
+      return _call_load<simd::emulate_t>(args...);
     }
   };
 

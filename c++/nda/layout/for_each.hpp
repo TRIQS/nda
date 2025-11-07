@@ -80,7 +80,8 @@ namespace nda {
         static constexpr int J = index_from_stride_order<R>(StrideOrder, I);
         const long imax        = get_extent<J, R, StaticExtents>(shape);
         size_t i               = 0;
-        for (; i + SIMD_SIZE <= imax; i += SIMD_SIZE) {
+        const size_t ilim      = imax & -static_cast<int64_t>(SIMD_SIZE);
+        for (; i < ilim; i += SIMD_SIZE) {
           std::apply(f_simd, idxs);
           idxs[J] += SIMD_SIZE;
         }

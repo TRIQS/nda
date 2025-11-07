@@ -14,6 +14,7 @@
 #include "./layout/range.hpp"
 #include "./macros.hpp"
 #include "./traits.hpp"
+#include "./simd/simd_cost.hpp"
 
 #include <cstddef>
 #include <utility>
@@ -52,6 +53,19 @@ namespace nda {
   template <typename F, Array... As>
   constexpr char get_algebra<expr_call<F, As...>> = detail::_impl_find_common_algebra(get_algebra<As>...);
 
+  namespace detail {
+    template <typename F, typename ValueType>
+    struct emulator : simd::mock_simd<emulator<F, ValueType>, ValueType> {
+      F functor;
+
+      emulator(const F functor) : functor(functor) {}
+
+      template <typename... ValueTypeArgs>
+      auto operator()(ValueTypeArgs const &...values) const {
+        return functor(values...);
+      }
+    };
+  } // namespace detail
   /**
    * @addtogroup av_math
    * @{
@@ -103,8 +117,20 @@ namespace nda {
 
     // Implementation of load operator.
     template <size_t... Is, typename... Args>
-    [[gnu::always_inline]] auto _call_load(std::index_sequence<Is...>, Args const &...args) const {
-      return f.load(std::get<Is>(a).load(args...)...);
+    [[gnu::always_inline]] auto _call_load(simd::vectorize_t, std::index_sequence<Is...>, Args const &...args) const {
+      return f.load(std::get<Is>(a).load(simd::vectorize, args...)...);
+    }
+
+    template <size_t... Is, typename... Args>
+    [[gnu::always_inline]] auto _call_load(simd::emulate_t, std::index_sequence<Is...>, Args const &...args) const {
+      static_assert(sizeof...(As) > 0);
+      using FirstElementType = std::tuple_element_t<0, decltype(a)>;
+      using ValueType        = get_value_t<FirstElementType>;
+      if constexpr (LoadWithNativeSimd<F, ValueType, sizeof...(As)>) {
+        return f.load(std::get<Is>(a).load(simd::emulate, args...)...);
+      } else {
+        return detail::emulator<F, ValueType>{f}.load(std::get<Is>(a).load(simd::emulate, args...)...);
+      }
     }
 
     public:
@@ -126,8 +152,13 @@ namespace nda {
     }
 
     template <typename... Args>
-    auto load(Args const &...args) const {
-      return _call_load(std::make_index_sequence<sizeof...(As)>{}, args...);
+    auto load(simd::vectorize_t, Args const &...args) const {
+      return _call_load(simd::vectorize, std::make_index_sequence<sizeof...(As)>{}, args...);
+    }
+
+    template <typename... Args>
+    auto load(simd::emulate_t, Args const &...args) const {
+      return _call_load(simd::emulate, std::make_index_sequence<sizeof...(As)>{}, args...);
     }
 
     /**

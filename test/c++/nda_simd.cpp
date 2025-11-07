@@ -40,7 +40,7 @@ void load_and_store() {
 
   // --- A.load/store tests ---
   idx_t idx1{};
-  auto a              = std::apply([&](auto... args) { return A.load(args...); }, idx1);
+  auto a              = std::apply([&](auto... args) { return A.load(simd::vectorize, args...); }, idx1);
   constexpr auto size = decltype(a)::size;
 
   for (size_t i = 0; i < size; ++i) {
@@ -50,7 +50,7 @@ void load_and_store() {
 
   idx_t idx2{};
   idx2[A.stride_order()[R - 1]] += size;
-  auto b = std::apply([&](auto... args) { return A.load(args...); }, idx2);
+  auto b = std::apply([&](auto... args) { return A.load(simd::vectorize, args...); }, idx2);
   for (size_t i = 0; i < size; ++i) {
     std::apply([&](auto... args) { expect_eq(b.get(i), A(args...)); }, idx2);
     ++idx2[A.stride_order()[R - 1]];
@@ -80,7 +80,7 @@ void load_and_store() {
   auto e1 = B + C;
   {
     idx_t idx{};
-    auto v = std::apply([&](auto... args) { return e1.load(args...); }, idx);
+    auto v = std::apply([&](auto... args) { return e1.load(simd::vectorize, args...); }, idx);
     for (size_t i = 0; i < size; ++i) {
       std::apply([&](auto... args) { expect_eq(v.get(i), e1(args...)); }, idx);
       ++idx[B.stride_order()[R - 1]];
@@ -91,7 +91,7 @@ void load_and_store() {
   auto e2 = B - C;
   {
     idx_t idx{};
-    auto v = std::apply([&](auto... args) { return e2.load(args...); }, idx);
+    auto v = std::apply([&](auto... args) { return e2.load(simd::vectorize, args...); }, idx);
     for (size_t i = 0; i < size; ++i) {
       std::apply([&](auto... args) { expect_eq(v.get(i), e2(args...)); }, idx);
       ++idx[B.stride_order()[R - 1]];
@@ -103,7 +103,7 @@ void load_and_store() {
     auto e3 = B * C;
     {
       idx_t idx{};
-      auto v = std::apply([&](auto... args) { return e3.load(args...); }, idx);
+      auto v = std::apply([&](auto... args) { return e3.load(simd::vectorize, args...); }, idx);
       for (size_t i = 0; i < size; ++i) {
         std::apply([&](auto... args) { expect_eq(v.get(i), e3(args...)); }, idx);
         ++idx[B.stride_order()[R - 1]];
@@ -113,7 +113,7 @@ void load_and_store() {
     auto e4 = B / C;
     {
       idx_t idx{};
-      auto v = std::apply([&](auto... args) { return e4.load(args...); }, idx);
+      auto v = std::apply([&](auto... args) { return e4.load(simd::vectorize, args...); }, idx);
       for (size_t i = 0; i < size; ++i) {
         std::apply([&](auto... args) { expect_eq(v.get(i), e4(args...)); }, idx);
         ++idx[B.stride_order()[R - 1]];
@@ -124,7 +124,7 @@ void load_and_store() {
     auto e5 = B + 5;
     {
       idx_t idx{};
-      auto v = std::apply([&](auto... args) { return e1.load(args...); }, idx);
+      auto v = std::apply([&](auto... args) { return e1.load(simd::vectorize, args...); }, idx);
       for (size_t i = 0; i < size; ++i) {
         std::apply([&](auto... args) { expect_eq(v.get(i), e1(args...)); }, idx);
         ++idx[B.stride_order()[R - 1]];
@@ -172,7 +172,7 @@ void mock_simd_test() {
 
   auto check = [&](const auto &r, const auto &s) {
     idx_t idx{};
-    auto v              = std::apply([&](auto... args) { return r.load(args...); }, idx);
+    auto v              = std::apply([&](auto... args) { return r.load(simd::vectorize, args...); }, idx);
     constexpr auto size = decltype(v)::size;
 
     for (size_t i = 0; i < size; ++i) {
