@@ -139,10 +139,10 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a
 requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, B, IPIV&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
 <tr class="memitem:gaaeb82496116119df161e38599e66e1a3 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaaeb82496116119df161e38599e66e1a3">nda::lapack::getrs</a> (A const &amp;a, B &amp;&amp;b, IPIV const &amp;ipiv)</td></tr>
 <tr class="memdesc:gaaeb82496116119df161e38599e66e1a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#gaaeb82496116119df161e38599e66e1a3" title="Interface to the LAPACK getrs routine.">getrs</a></span> routine.  <br /></td></tr>
-<tr class="memitem:ga114f8a73dbb612c779c6d8dc2170f301" id="r_ga114f8a73dbb612c779c6d8dc2170f301"><td class="memTemplParams" colspan="2">template&lt;MemoryVector DL, MemoryVector D, MemoryVector DU, MemoryArray B&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;DL, D, DU, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c785135d7916b">mem::on_host</a>&lt;DL, D, DU, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;DL&gt;&gt;)</td></tr>
-<tr class="memitem:ga114f8a73dbb612c779c6d8dc2170f301 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga114f8a73dbb612c779c6d8dc2170f301">nda::lapack::gtsv</a> (DL &amp;&amp;dl, D &amp;&amp;d, DU &amp;&amp;du, B &amp;&amp;b)</td></tr>
-<tr class="memdesc:ga114f8a73dbb612c779c6d8dc2170f301"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#ga114f8a73dbb612c779c6d8dc2170f301" title="Interface to the LAPACK gtsv routine.">gtsv</a></span> routine.  <br /></td></tr>
+<tr class="memitem:ga0b9b46f1987c9367177f7e3118a42947" id="r_ga0b9b46f1987c9367177f7e3118a42947"><td class="memTemplParams" colspan="2">template&lt;MemoryVector DL, MemoryVector D, MemoryVector DU, MemoryArray B&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;DL, D, DU, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;DL, D, DU, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;DL&gt;&gt;)</td></tr>
+<tr class="memitem:ga0b9b46f1987c9367177f7e3118a42947 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0b9b46f1987c9367177f7e3118a42947">nda::lapack::gtsv</a> (DL &amp;&amp;dl, D &amp;&amp;d, DU &amp;&amp;du, B &amp;&amp;b)</td></tr>
+<tr class="memdesc:ga0b9b46f1987c9367177f7e3118a42947"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#ga0b9b46f1987c9367177f7e3118a42947" title="Interface to the LAPACK gtsv routine.">gtsv</a></span> routine.  <br /></td></tr>
 <tr class="memitem:gad90cc968c1566e14de62b316caaee04c" id="r_gad90cc968c1566e14de62b316caaee04c"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector TAU&gt; <br />
 requires (<a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c785135d7916b">mem::on_host</a>&lt;A&gt; and std::is_same_v&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, TAU&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, TAU&gt;)</td></tr>
 <tr class="memitem:gad90cc968c1566e14de62b316caaee04c template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad90cc968c1566e14de62b316caaee04c">nda::lapack::orgqr</a> (A &amp;&amp;a, TAU &amp;&amp;tau)</td></tr>
@@ -507,14 +507,14 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
 
 </div>
 </div>
-<a id="ga114f8a73dbb612c779c6d8dc2170f301" name="ga114f8a73dbb612c779c6d8dc2170f301"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga114f8a73dbb612c779c6d8dc2170f301">&#9670;&#160;</a></span>gtsv()</h2>
+<a id="ga0b9b46f1987c9367177f7e3118a42947" name="ga0b9b46f1987c9367177f7e3118a42947"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0b9b46f1987c9367177f7e3118a42947">&#9670;&#160;</a></span>gtsv()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;MemoryVector DL, MemoryVector D, MemoryVector DU, MemoryArray B&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;DL, D, DU, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c785135d7916b">mem::on_host</a>&lt;DL, D, DU, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;DL&gt;&gt;)</div>
+requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;DL, D, DU, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;DL, D, DU, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;DL&gt;&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">int nda::lapack::gtsv </td>
@@ -541,13 +541,13 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
 
 <p><code>#include &lt;<a class="el" href="gtsv_8hpp.html">nda/lapack/gtsv.hpp</a>&gt;</code></p>
 
-<p>Interface to the LAPACK <span class="tt"><a class="el" href="#ga114f8a73dbb612c779c6d8dc2170f301" title="Interface to the LAPACK gtsv routine.">gtsv</a></span> routine. </p>
+<p>Interface to the LAPACK <span class="tt"><a class="el" href="#ga0b9b46f1987c9367177f7e3118a42947" title="Interface to the LAPACK gtsv routine.">gtsv</a></span> routine. </p>
 <p>Solves the equation   </p><p class="formulaDsp">
 \[  \mathbf{A} \mathbf{X} = \mathbf{B},
 \]
 </p>
-<p> where \( \mathbf{A} \) is an n-by-n tridiagonal matrix, by Gaussian elimination with partial pivoting.</p>
-<p>Note that the equation \( \mathbf{A}^T \mathbf{X} = \mathbf{B} \) may be solved by interchanging the order of the arguments containing the subdiagonal elements.</p>
+<p> where \( \mathbf{A} \) is an \( n \times n \) tridiagonal matrix, by Gaussian elimination with partial pivoting.</p>
+<p>Note that the equation \( \mathbf{A}^H \mathbf{X} = \mathbf{B} \) may be solved by interchanging the order of the arguments containing the subdiagonal elements.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">DL</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> type. </td></tr>
@@ -559,16 +559,19 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">dl</td><td>Input/Output vector. On entry, it must contain the (n-1) subdiagonal elements of \( \mathbf{A} \). On exit, it is overwritten by the (n-2) elements of the second superdiagonal of the upper triangular matrix \( \mathbf{U} \) from the LU factorization of \( \mathbf{A} \). </td></tr>
-    <tr><td class="paramname">d</td><td>Input/Output vector. On entry, it must contain the diagonal elements of \( \mathbf{A} \). On exit, it is overwritten by the n diagonal elements of \( \mathbf{U} \). </td></tr>
-    <tr><td class="paramname">du</td><td>Input/Output vector. On entry, it must contain the (n-1) superdiagonal elements of \( \mathbf{A} \). On exit, it is overwritten by the (n-1) elements of the first superdiagonal of \( \mathbf{U} \) . </td></tr>
-    <tr><td class="paramname">b</td><td>Input/Output array. On entry, the n-by-nrhs right hand side matrix \( \mathbf{B} \). On exit, if <span class="tt">INFO == 0</span>, the n-by-nrhs solution matrix \( \mathbf{X} \). </td></tr>
+    <tr><td class="paramname">dl</td><td>Input/Output vector. On entry, it must contain the \( n - 1 \) subdiagonal elements of  \( \mathbf{A}
+\). On exit, it is overwritten by the \( n - 2 \) elements of the second superdiagonal of the upper triangular matrix \( \mathbf{U} \) from the LU factorization of \( \mathbf{A} \). </td></tr>
+    <tr><td class="paramname">d</td><td>Input/Output vector. On entry, it must contain the diagonal elements of \( \mathbf{A} \). On exit, it is overwritten by the \( n \) diagonal elements of \( \mathbf{U} \). </td></tr>
+    <tr><td class="paramname">du</td><td>Input/Output vector. On entry, it must contain the \( n - 1 \) superdiagonal elements of  \( \mathbf{A}
+\). On exit, it is overwritten by the \( n - 1 \) elements of the first superdiagonal of \( \mathbf{U} \) . </td></tr>
+    <tr><td class="paramname">b</td><td>Input/Output array. On entry, the \( n \times n_{\mathrm{rhs}} \) right hand side matrix  \( \mathbf{B}
+\). On exit, if <span class="tt">INFO == 0</span>, the \( n \times n_{\mathrm{rhs}} \) solution matrix \( \mathbf{X} \). </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Integer return code from the LAPACK call. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="gtsv_8hpp_source.html#l00051">51</a> of file <a class="el" href="gtsv_8hpp_source.html">gtsv.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="gtsv_8hpp_source.html#l00053">53</a> of file <a class="el" href="gtsv_8hpp_source.html">gtsv.hpp</a>.</p>
 
 </div>
 </div>

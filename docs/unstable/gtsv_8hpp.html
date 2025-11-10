@@ -105,6 +105,7 @@ $(function(){initNavTree('gtsv_8hpp.html','',''); });
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="lapack_2interface_2cxx__interface_8hpp_source.html">./interface/cxx_interface.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="declarations_8hpp_source.html">../declarations.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="macros_8hpp_source.html">../macros.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="address__space_8hpp_source.html">../mem/address_space.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="traits_8hpp_source.html">../traits.hpp</a>&quot;</code><br />
@@ -117,10 +118,10 @@ $(function(){initNavTree('gtsv_8hpp.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga114f8a73dbb612c779c6d8dc2170f301" id="r_ga114f8a73dbb612c779c6d8dc2170f301"><td class="memTemplParams" colspan="2">template&lt;MemoryVector DL, MemoryVector D, MemoryVector DU, MemoryArray B&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;DL, D, DU, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c785135d7916b">mem::on_host</a>&lt;DL, D, DU, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;DL&gt;&gt;)</td></tr>
-<tr class="memitem:ga114f8a73dbb612c779c6d8dc2170f301 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__lapack.html#ga114f8a73dbb612c779c6d8dc2170f301">nda::lapack::gtsv</a> (DL &amp;&amp;dl, D &amp;&amp;d, DU &amp;&amp;du, B &amp;&amp;b)</td></tr>
-<tr class="memdesc:ga114f8a73dbb612c779c6d8dc2170f301"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="group__linalg__lapack.html#ga114f8a73dbb612c779c6d8dc2170f301" title="Interface to the LAPACK gtsv routine.">gtsv</a></span> routine.  <br /></td></tr>
+<tr class="memitem:ga0b9b46f1987c9367177f7e3118a42947" id="r_ga0b9b46f1987c9367177f7e3118a42947"><td class="memTemplParams" colspan="2">template&lt;MemoryVector DL, MemoryVector D, MemoryVector DU, MemoryArray B&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;DL, D, DU, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;DL, D, DU, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;DL&gt;&gt;)</td></tr>
+<tr class="memitem:ga0b9b46f1987c9367177f7e3118a42947 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__lapack.html#ga0b9b46f1987c9367177f7e3118a42947">nda::lapack::gtsv</a> (DL &amp;&amp;dl, D &amp;&amp;d, DU &amp;&amp;du, B &amp;&amp;b)</td></tr>
+<tr class="memdesc:ga0b9b46f1987c9367177f7e3118a42947"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="group__linalg__lapack.html#ga0b9b46f1987c9367177f7e3118a42947" title="Interface to the LAPACK gtsv routine.">gtsv</a></span> routine.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

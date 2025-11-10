@@ -81,6 +81,6 @@ var searchData=
   ['group_5findices_5flayout_78',['group_indices_layout',['../group__layout__utils.html#gadf5843a7df68a72189225c765ce39511',1,'nda']]],
   ['group_5findices_5fview_79',['group_indices_view',['../group__av__factories.html#gafc054e71fc39165fa411582663367e6e',1,'nda']]],
   ['gtest_5ftools_2ehpp_80',['gtest_tools.hpp',['../gtest__tools_8hpp.html',1,'']]],
-  ['gtsv_81',['gtsv',['../group__linalg__lapack.html#ga114f8a73dbb612c779c6d8dc2170f301',1,'nda::lapack']]],
+  ['gtsv_81',['gtsv',['../group__linalg__lapack.html#ga0b9b46f1987c9367177f7e3118a42947',1,'nda::lapack']]],
   ['gtsv_2ehpp_82',['gtsv.hpp',['../gtsv_8hpp.html',1,'']]]
 ];
