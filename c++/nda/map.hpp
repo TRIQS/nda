@@ -100,7 +100,7 @@ namespace nda {
     private:
     // Implementation of the function call operator.
     template <size_t... Is, typename... Args>
-    [[gnu::always_inline]] [[nodiscard]] auto _call(std::index_sequence<Is...>, Args const &...args) const {
+    [[nodiscard]] FORCEINLINE auto _call(std::index_sequence<Is...>, Args const &...args) const {
       // if args contains a range, we need to return an expr_call on the resulting slice
       if constexpr ((is_range_or_ellipsis<Args> or ... or false)) {
         return mapped<F>{f}(std::get<Is>(a)(args...)...);
@@ -111,18 +111,18 @@ namespace nda {
 
     // Implementation of the subscript operator.
     template <size_t... Is, typename Arg>
-    [[gnu::always_inline]] auto _call_bra(std::index_sequence<Is...>, Arg const &arg) const {
+    FORCEINLINE auto _call_bra(std::index_sequence<Is...>, Arg const &arg) const {
       return f(std::get<Is>(a)[arg]...);
     }
 
     // Implementation of load operator.
     template <size_t... Is, typename... Args>
-    [[gnu::always_inline]] auto _call_load(simd::vectorize_t, std::index_sequence<Is...>, Args const &...args) const {
+    FORCEINLINE auto _call_load(simd::vectorize_t, std::index_sequence<Is...>, Args const &...args) const {
       return f.load(std::get<Is>(a).load(simd::vectorize, args...)...);
     }
 
     template <size_t... Is, typename... Args>
-    [[gnu::always_inline]] auto _call_load(simd::emulate_t, std::index_sequence<Is...>, Args const &...args) const {
+    FORCEINLINE auto _call_load(simd::emulate_t, std::index_sequence<Is...>, Args const &...args) const {
       static_assert(sizeof...(As) > 0);
       using FirstElementType = std::tuple_element_t<0, decltype(a)>;
       using ValueType        = get_value_t<FirstElementType>;
