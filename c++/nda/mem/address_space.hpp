@@ -95,40 +95,39 @@ enum class AddressSpace { None, Host, Device, Unified, MPISharedMemory }; // Do 
    * @tparam As Remaining address spaces.
    */
   template <AddressSpace... As>
-  // https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p2041r0.html#attempt-to-do-this-today-always-invalid-expression
-  constexpr AddressSpace combine = not defined(combine<As...>);
+  inline constexpr AddressSpace combine = not defined(combine<As...>);
 
   template <AddressSpace A1, AddressSpace A2, AddressSpace... As>
-  constexpr AddressSpace combine<A1, A2, As...> = combine<combine<A1, A2>, As...>;
+  inline constexpr AddressSpace combine<A1, A2, As...> = combine<combine<A1, A2>, As...>;
 
   template <AddressSpace A1>
-  constexpr AddressSpace combine<A1> = A1;
+  inline constexpr AddressSpace combine<A1> = A1;
 
   template <AddressSpace A1>
-  constexpr AddressSpace combine<A1, None> = A1;
+  inline constexpr AddressSpace combine<A1, None> = A1;
 
   template <AddressSpace A1>
-  constexpr AddressSpace combine<None, A1> = A1;
+  inline constexpr AddressSpace combine<None, A1> = A1;
 
   template <>
-  constexpr AddressSpace combine<None, None> = None;
+  inline constexpr AddressSpace combine<None, None> = None;
 
   template <>
-  constexpr AddressSpace combine<Host, Host> = Host;
+  inline constexpr AddressSpace combine<Host, Host> = Host;
   template <>
-  constexpr AddressSpace combine<Host, Unified> = Unified;
+  inline constexpr AddressSpace combine<Host, Unified> = Unified;
   template <>
-  constexpr AddressSpace combine<Unified, Host> = Unified;
+  inline constexpr AddressSpace combine<Unified, Host> = Unified;
 
   template <>
-  constexpr AddressSpace combine<Device, Device> = Device;
+  inline constexpr AddressSpace combine<Device, Device> = Device;
   template <>
-  constexpr AddressSpace combine<Device, Unified> = Unified;
+  inline constexpr AddressSpace combine<Device, Unified> = Unified;
   template <>
-  constexpr AddressSpace combine<Unified, Device> = Unified;
+  inline constexpr AddressSpace combine<Unified, Device> = Unified;
 
   template <>
-  constexpr AddressSpace combine<MPISharedMemory, MPISharedMemory> = MPISharedMemory;
+  inline constexpr AddressSpace combine<MPISharedMemory, MPISharedMemory> = MPISharedMemory;
 
   /**
    * @brief Get common address space for a number of given nda::Array types.
