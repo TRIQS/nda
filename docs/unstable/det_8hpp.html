@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.15.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TRIQS/nda: nda/linalg/eigenelements.hpp</title>
+<title>TRIQS/nda: nda/linalg/det.hpp</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -74,7 +74,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('eigenelements_8hpp.html','',''); });
+$(function(){initNavTree('det_8hpp.html','',''); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -100,37 +100,46 @@ $(function(){initNavTree('eigenelements_8hpp.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">eigenelements.hpp</div></div>
+  <div class="headertitle"><div class="title">det.hpp</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="basic__array_8hpp_source.html">../basic_array.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="declarations_8hpp_source.html">../declarations.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="basic__functions_8hpp_source.html">../basic_functions.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="make__lazy_8hpp_source.html">../clef/make_lazy.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="exceptions_8hpp_source.html">../exceptions.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="lapack_2interface_2cxx__interface_8hpp_source.html">../lapack/interface/cxx_interface.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="getrf_8hpp_source.html">../lapack/getrf.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="getri_8hpp_source.html">../lapack/getri.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="layout_2policies_8hpp_source.html">../layout/policies.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="macros_8hpp_source.html">../macros.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="matrix__functions_8hpp_source.html">../matrix_functions.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="address__space_8hpp_source.html">../mem/address_space.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="mem_2policies_8hpp_source.html">../mem/policies.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="print_8hpp_source.html">../print.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="traits_8hpp_source.html">../traits.hpp</a>&quot;</code><br />
+<code>#include &lt;iostream&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
 </div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Provides eigenvalues and eigenvectors of a symmetric or hermitian matrix. </p>
+<div class="textblock"><p>Provides functions to compute the determinant of a matrix. </p>
 
-<p class="definition">Definition in file <a class="el" href="eigenelements_8hpp_source.html">eigenelements.hpp</a>.</p>
+<p class="definition">Definition in file <a class="el" href="det_8hpp_source.html">det.hpp</a>.</p>
 </div>
-<p><a href="eigenelements_8hpp_source.html">Go to the source code of this file.</a></p>
+<p><a href="det_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gabc013a1a51e4f8bc006f8326ad5a3974" id="r_gabc013a1a51e4f8bc006f8326ad5a3974"><td class="memTemplParams" colspan="2">template&lt;typename M&gt; </td></tr>
-<tr class="memitem:gabc013a1a51e4f8bc006f8326ad5a3974 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#gabc013a1a51e4f8bc006f8326ad5a3974">nda::linalg::eigenelements</a> (M const &amp;m)</td></tr>
-<tr class="memdesc:gabc013a1a51e4f8bc006f8326ad5a3974"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the eigenvalues and eigenvectors of a symmetric (real) or hermitian (complex) matrix/view.  <br /></td></tr>
-<tr class="memitem:ga3cb88b67c9f89ebf87e9c6e539165ed8" id="r_ga3cb88b67c9f89ebf87e9c6e539165ed8"><td class="memTemplParams" colspan="2">template&lt;typename M&gt; </td></tr>
-<tr class="memitem:ga3cb88b67c9f89ebf87e9c6e539165ed8 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#ga3cb88b67c9f89ebf87e9c6e539165ed8">nda::linalg::eigenvalues</a> (M const &amp;m)</td></tr>
-<tr class="memdesc:ga3cb88b67c9f89ebf87e9c6e539165ed8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the eigenvalues of a symmetric (real) or hermitian (complex) matrix/view.  <br /></td></tr>
-<tr class="memitem:gafede9394121a6e2098c4e04c9af5f568" id="r_gafede9394121a6e2098c4e04c9af5f568"><td class="memTemplParams" colspan="2">template&lt;typename M&gt; </td></tr>
-<tr class="memitem:gafede9394121a6e2098c4e04c9af5f568 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#gafede9394121a6e2098c4e04c9af5f568">nda::linalg::eigenvalues_in_place</a> (M &amp;m)</td></tr>
-<tr class="memdesc:gafede9394121a6e2098c4e04c9af5f568"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the eigenvalues of a symmetric (real) or hermitian (complex) matrix/view.  <br /></td></tr>
+<tr class="memitem:a3565866878e69b212b1bb03757000b7d" id="r_a3565866878e69b212b1bb03757000b7d"><td class="memTemplParams" colspan="2"><a id="a3565866878e69b212b1bb03757000b7d" name="a3565866878e69b212b1bb03757000b7d"></a>
+template&lt;typename... A&gt; <br />
+requires (<a class="el" href="group__clef__utils.html#gaf4a34ec80a1f0d50945e918807a6f318">nda::clef::is_any_lazy</a>&lt;A...&gt;)</td></tr>
+<tr class="memitem:a3565866878e69b212b1bb03757000b7d template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><b>nda::clef::determinant</b> (A &amp;&amp;...__a)</td></tr>
+<tr class="memdesc:a3565866878e69b212b1bb03757000b7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lazy version of <a class="el" href="group__linalg__tools.html#ga88d96daa5c131cf8058f36e82bffb6d3" title="Compute the determinant of a square matrix/view.">nda::determinant</a>. <br /></td></tr>
+<tr class="memitem:ga88d96daa5c131cf8058f36e82bffb6d3" id="r_ga88d96daa5c131cf8058f36e82bffb6d3"><td class="memTemplParams" colspan="2">template&lt;typename M&gt; </td></tr>
+<tr class="memitem:ga88d96daa5c131cf8058f36e82bffb6d3 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#ga88d96daa5c131cf8058f36e82bffb6d3">nda::determinant</a> (M const &amp;m)</td></tr>
+<tr class="memdesc:ga88d96daa5c131cf8058f36e82bffb6d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the determinant of a square matrix/view.  <br /></td></tr>
+<tr class="memitem:ga16e095b23aa9e6d1afe299607776f893" id="r_ga16e095b23aa9e6d1afe299607776f893"><td class="memTemplParams" colspan="2">template&lt;typename M&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga399faffc1372096b0df09d6516ef33d5">is_matrix_or_view_v</a>&lt;M&gt;)</td></tr>
+<tr class="memitem:ga16e095b23aa9e6d1afe299607776f893 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#ga16e095b23aa9e6d1afe299607776f893">nda::determinant_in_place</a> (M &amp;m)</td></tr>
+<tr class="memdesc:ga16e095b23aa9e6d1afe299607776f893"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the determinant of a square matrix/view.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -145,7 +154,7 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>nda</b></li><li class="navelem"><b>linalg</b></li><li class="navelem"><a href="eigenelements_8hpp.html">eigenelements.hpp</a></li>
+    <li class="navelem"><b>nda</b></li><li class="navelem"><b>linalg</b></li><li class="navelem"><a href="det_8hpp.html">det.hpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

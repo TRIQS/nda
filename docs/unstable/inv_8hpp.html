@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.15.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TRIQS/nda: nda/linalg/det_and_inverse.hpp</title>
+<title>TRIQS/nda: nda/linalg/inv.hpp</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -74,7 +74,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('det__and__inverse_8hpp.html','',''); });
+$(function(){initNavTree('inv_8hpp.html','',''); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -100,7 +100,7 @@ $(function(){initNavTree('det__and__inverse_8hpp.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">det_and_inverse.hpp</div></div>
+  <div class="headertitle"><div class="title">inv.hpp</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="basic__array_8hpp_source.html">../basic_array.hpp</a>&quot;</code><br />
@@ -120,31 +120,19 @@ $(function(){initNavTree('det__and__inverse_8hpp.html','',''); });
 <code>#include &lt;type_traits&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
 </div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Provides functions to compute the determinant and inverse of a matrix. </p>
+<div class="textblock"><p>Provides functions to compute the inverse of a matrix. </p>
 
-<p class="definition">Definition in file <a class="el" href="det__and__inverse_8hpp_source.html">det_and_inverse.hpp</a>.</p>
+<p class="definition">Definition in file <a class="el" href="inv_8hpp_source.html">inv.hpp</a>.</p>
 </div>
-<p><a href="det__and__inverse_8hpp_source.html">Go to the source code of this file.</a></p>
+<p><a href="inv_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga3565866878e69b212b1bb03757000b7d" id="r_ga3565866878e69b212b1bb03757000b7d"><td class="memTemplParams" colspan="2">
+<tr class="memitem:aac7cec8926f7349c34c34b75373131c3" id="r_aac7cec8926f7349c34c34b75373131c3"><td class="memTemplParams" colspan="2"><a id="aac7cec8926f7349c34c34b75373131c3" name="aac7cec8926f7349c34c34b75373131c3"></a>
 template&lt;typename... A&gt; <br />
 requires (<a class="el" href="group__clef__utils.html#gaf4a34ec80a1f0d50945e918807a6f318">nda::clef::is_any_lazy</a>&lt;A...&gt;)</td></tr>
-<tr class="memitem:ga3565866878e69b212b1bb03757000b7d template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><b>nda::clef::determinant</b> (A &amp;&amp;...__a)</td></tr>
-<tr class="memdesc:ga3565866878e69b212b1bb03757000b7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lazy version of <a class="el" href="group__linalg__tools.html#ga88d96daa5c131cf8058f36e82bffb6d3" title="Compute the determinant of a square matrix/view.">nda::determinant</a>. <br /></td></tr>
-<tr class="memitem:ga88d96daa5c131cf8058f36e82bffb6d3" id="r_ga88d96daa5c131cf8058f36e82bffb6d3"><td class="memTemplParams" colspan="2">template&lt;typename M&gt; </td></tr>
-<tr class="memitem:ga88d96daa5c131cf8058f36e82bffb6d3 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#ga88d96daa5c131cf8058f36e82bffb6d3">nda::determinant</a> (M const &amp;m)</td></tr>
-<tr class="memdesc:ga88d96daa5c131cf8058f36e82bffb6d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the determinant of a square matrix/view.  <br /></td></tr>
-<tr class="memitem:ga16e095b23aa9e6d1afe299607776f893" id="r_ga16e095b23aa9e6d1afe299607776f893"><td class="memTemplParams" colspan="2">template&lt;typename M&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga399faffc1372096b0df09d6516ef33d5">is_matrix_or_view_v</a>&lt;M&gt;)</td></tr>
-<tr class="memitem:ga16e095b23aa9e6d1afe299607776f893 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#ga16e095b23aa9e6d1afe299607776f893">nda::determinant_in_place</a> (M &amp;m)</td></tr>
-<tr class="memdesc:ga16e095b23aa9e6d1afe299607776f893"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the determinant of a square matrix/view.  <br /></td></tr>
-<tr class="memitem:gaac7cec8926f7349c34c34b75373131c3" id="r_gaac7cec8926f7349c34c34b75373131c3"><td class="memTemplParams" colspan="2">
-template&lt;typename... A&gt; <br />
-requires (<a class="el" href="group__clef__utils.html#gaf4a34ec80a1f0d50945e918807a6f318">nda::clef::is_any_lazy</a>&lt;A...&gt;)</td></tr>
-<tr class="memitem:gaac7cec8926f7349c34c34b75373131c3 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><b>nda::clef::inverse</b> (A &amp;&amp;...__a)</td></tr>
-<tr class="memdesc:gaac7cec8926f7349c34c34b75373131c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lazy version of <a class="el" href="group__linalg__tools.html#ga99906b99820be65d1bfb07d90aea841c" title="Compute the inverse of an n-by-n matrix.">nda::inverse</a>. <br /></td></tr>
+<tr class="memitem:aac7cec8926f7349c34c34b75373131c3 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><b>nda::clef::inverse</b> (A &amp;&amp;...__a)</td></tr>
+<tr class="memdesc:aac7cec8926f7349c34c34b75373131c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lazy version of <a class="el" href="group__linalg__tools.html#ga99906b99820be65d1bfb07d90aea841c" title="Compute the inverse of an n-by-n matrix.">nda::inverse</a>. <br /></td></tr>
 <tr class="memitem:ga99906b99820be65d1bfb07d90aea841c" id="r_ga99906b99820be65d1bfb07d90aea841c"><td class="memTemplParams" colspan="2">template&lt;Matrix M&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M')</td></tr>
 <tr class="memitem:ga99906b99820be65d1bfb07d90aea841c template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#ga99906b99820be65d1bfb07d90aea841c">nda::inverse</a> (M const &amp;m)</td></tr>
@@ -165,12 +153,6 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M')</td></tr>
 <tr class="memitem:gab84970093e3fde0f5905f895120c7d60 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#gab84970093e3fde0f5905f895120c7d60">nda::inverse_in_place</a> (M &amp;&amp;m)</td></tr>
 <tr class="memdesc:gab84970093e3fde0f5905f895120c7d60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the inverse of an n-by-n matrix.  <br /></td></tr>
-<tr class="memitem:gac8d9fcbe9e0ffbcc2847ad339156676f" id="r_gac8d9fcbe9e0ffbcc2847ad339156676f"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; </td></tr>
-<tr class="memitem:gac8d9fcbe9e0ffbcc2847ad339156676f template"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#gac8d9fcbe9e0ffbcc2847ad339156676f">nda::is_matrix_diagonal</a> (A const &amp;a, bool print_error=false)</td></tr>
-<tr class="memdesc:gac8d9fcbe9e0ffbcc2847ad339156676f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a given array/view is diagonal, i.e. if it is square (see <a class="el" href="group__linalg__tools.html#gaf16a960b18684822d700cb8bf10f470a" title="Check if a given array/view is square, i.e. if the first dimension has the same extent as the second ...">nda::is_matrix_square</a>) and all the the off-diagonal elements are zero.  <br /></td></tr>
-<tr class="memitem:gaf16a960b18684822d700cb8bf10f470a" id="r_gaf16a960b18684822d700cb8bf10f470a"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; </td></tr>
-<tr class="memitem:gaf16a960b18684822d700cb8bf10f470a template"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#gaf16a960b18684822d700cb8bf10f470a">nda::is_matrix_square</a> (A const &amp;a, bool print_error=false)</td></tr>
-<tr class="memdesc:gaf16a960b18684822d700cb8bf10f470a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a given array/view is square, i.e. if the first dimension has the same extent as the second dimension.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -185,7 +167,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>nda</b></li><li class="navelem"><b>linalg</b></li><li class="navelem"><a href="det__and__inverse_8hpp.html">det_and_inverse.hpp</a></li>
+    <li class="navelem"><b>nda</b></li><li class="navelem"><b>linalg</b></li><li class="navelem"><a href="inv_8hpp.html">inv.hpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

@@ -139,6 +139,12 @@ requires (std::ranges::contiguous_range&lt;V&gt; or ArrayOfRank&lt;V, 1&gt;)</td
 <tr class="memitem:gafc054e71fc39165fa411582663367e6e" id="r_gafc054e71fc39165fa411582663367e6e"><td class="memTemplParams" colspan="2">template&lt;MemoryArray A, typename... IdxGrps&gt; </td></tr>
 <tr class="memitem:gafc054e71fc39165fa411582663367e6e template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafc054e71fc39165fa411582663367e6e">nda::group_indices_view</a> (A &amp;&amp;a, IdxGrps...)</td></tr>
 <tr class="memdesc:gafc054e71fc39165fa411582663367e6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> by grouping indices together of a given array/view.  <br /></td></tr>
+<tr class="memitem:gac8d9fcbe9e0ffbcc2847ad339156676f" id="r_gac8d9fcbe9e0ffbcc2847ad339156676f"><td class="memTemplParams" colspan="2">template&lt;Matrix A&gt; </td></tr>
+<tr class="memitem:gac8d9fcbe9e0ffbcc2847ad339156676f template"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac8d9fcbe9e0ffbcc2847ad339156676f">nda::is_matrix_diagonal</a> (A const &amp;a, bool print_error=false)</td></tr>
+<tr class="memdesc:gac8d9fcbe9e0ffbcc2847ad339156676f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a given matrix is diagonal, i.e. if it is square (see <a class="el" href="#gaf16a960b18684822d700cb8bf10f470a" title="Check if a given matrix is square, i.e. if the first dimension has the same extent as the second dime...">nda::is_matrix_square</a>) and all the the off-diagonal elements are zero.  <br /></td></tr>
+<tr class="memitem:gaf16a960b18684822d700cb8bf10f470a" id="r_gaf16a960b18684822d700cb8bf10f470a"><td class="memTemplParams" colspan="2">template&lt;Matrix A&gt; </td></tr>
+<tr class="memitem:gaf16a960b18684822d700cb8bf10f470a template"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf16a960b18684822d700cb8bf10f470a">nda::is_matrix_square</a> (A const &amp;a, bool print_error=false)</td></tr>
+<tr class="memdesc:gaf16a960b18684822d700cb8bf10f470a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a given matrix is square, i.e. if the first dimension has the same extent as the second dimension.  <br /></td></tr>
 <tr class="memitem:gae0239415c475ff03fd0f98a8a9178087" id="r_gae0239415c475ff03fd0f98a8a9178087"><td class="memTemplParams" colspan="2">template&lt;typename T, int R, typename LP, char A, typename CP&gt; </td></tr>
 <tr class="memitem:gae0239415c475ff03fd0f98a8a9178087 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae0239415c475ff03fd0f98a8a9178087">nda::make_array_const_view</a> (<a class="el" href="classnda_1_1basic__array.html">basic_array</a>&lt; T, R, LP, A, CP &gt; const &amp;a)</td></tr>
 <tr class="memdesc:gae0239415c475ff03fd0f98a8a9178087"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make an <a class="el" href="group__av__types.html#ga70e5d7cb42b86d11b8a5077fe36eafa3" title="Same as nda::array_view except for const value types.">nda::array_const_view</a> of a given <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a>.  <br /></td></tr>
@@ -399,7 +405,7 @@ requires (std::ranges::contiguous_range&lt;V&gt; or ArrayOfRank&lt;V, 1&gt;)</di
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> with the given values on the diagonal. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="matrix__functions_8hpp_source.html#l00112">112</a> of file <a class="el" href="matrix__functions_8hpp_source.html">matrix_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix__functions_8hpp_source.html#l00113">113</a> of file <a class="el" href="matrix__functions_8hpp_source.html">matrix_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -437,7 +443,7 @@ template&lt;MemoryArrayOfRank&lt; 2 &gt; M&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A view with the 'V' algebra of the diagonal of the array/view. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="matrix__functions_8hpp_source.html#l00095">95</a> of file <a class="el" href="matrix__functions_8hpp_source.html">matrix_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix__functions_8hpp_source.html#l00096">96</a> of file <a class="el" href="matrix__functions_8hpp_source.html">matrix_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -476,7 +482,7 @@ template&lt;Scalar S, std::integral Int = long&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Identity <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> of size <span class="tt">dim x dim</span>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="matrix__functions_8hpp_source.html#l00044">44</a> of file <a class="el" href="matrix__functions_8hpp_source.html">matrix_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix__functions_8hpp_source.html#l00045">45</a> of file <a class="el" href="matrix__functions_8hpp_source.html">matrix_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -568,6 +574,92 @@ template&lt;MemoryArray A, typename... IdxGrps&gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>An array/view with grouped indices. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="layout__transforms_8hpp_source.html#l00235">235</a> of file <a class="el" href="layout__transforms_8hpp_source.html">layout_transforms.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gac8d9fcbe9e0ffbcc2847ad339156676f" name="gac8d9fcbe9e0ffbcc2847ad339156676f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac8d9fcbe9e0ffbcc2847ad339156676f">&#9670;&#160;</a></span>is_matrix_diagonal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;Matrix A&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool nda::is_matrix_diagonal </td>
+          <td>(</td>
+          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>print_error</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="matrix__functions_8hpp.html">nda/matrix_functions.hpp</a>&gt;</code></p>
+
+<p>Check if a given matrix is diagonal, i.e. if it is square (see <a class="el" href="#gaf16a960b18684822d700cb8bf10f470a" title="Check if a given matrix is square, i.e. if the first dimension has the same extent as the second dime...">nda::is_matrix_square</a>) and all the the off-diagonal elements are zero. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">Matrix</a> to be checked. </td></tr>
+    <tr><td class="paramname">print_error</td><td>If true, print an error message if the matrix is not diagonal. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the matrix is diagonal, false otherwise. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="matrix__functions_8hpp_source.html#l00178">178</a> of file <a class="el" href="matrix__functions_8hpp_source.html">matrix_functions.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gaf16a960b18684822d700cb8bf10f470a" name="gaf16a960b18684822d700cb8bf10f470a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf16a960b18684822d700cb8bf10f470a">&#9670;&#160;</a></span>is_matrix_square()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;Matrix A&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool nda::is_matrix_square </td>
+          <td>(</td>
+          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>print_error</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="matrix__functions_8hpp.html">nda/matrix_functions.hpp</a>&gt;</code></p>
+
+<p>Check if a given matrix is square, i.e. if the first dimension has the same extent as the second dimension. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">Matrix</a> to be checked. </td></tr>
+    <tr><td class="paramname">print_error</td><td>If true, print an error message if the matrix is not square. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the matrix is square, false otherwise. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="matrix__functions_8hpp_source.html#l00162">162</a> of file <a class="el" href="matrix__functions_8hpp_source.html">matrix_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -1659,7 +1751,7 @@ requires (std::same_as&lt;<a class="el" href="group__av__utils.html#ga93d8308788
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A new 2-dimensional array/view with the two arrays stacked vertically. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="matrix__functions_8hpp_source.html#l00138">138</a> of file <a class="el" href="matrix__functions_8hpp_source.html">matrix_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix__functions_8hpp_source.html#l00139">139</a> of file <a class="el" href="matrix__functions_8hpp_source.html">matrix_functions.hpp</a>.</p>
 
 </div>
 </div>

@@ -111,11 +111,6 @@ Functions</h2></td></tr>
 <tr class="memitem:ga25ac6b5f84880602b6c042d7b08fdafa" id="r_ga25ac6b5f84880602b6c042d7b08fdafa"><td class="memTemplParams" colspan="2">template&lt;typename V&gt; </td></tr>
 <tr class="memitem:ga25ac6b5f84880602b6c042d7b08fdafa template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga25ac6b5f84880602b6c042d7b08fdafa">nda::linalg::cross_product</a> (V const &amp;x, V const &amp;y)</td></tr>
 <tr class="memdesc:ga25ac6b5f84880602b6c042d7b08fdafa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the cross product of two 3-dimensional vectors.  <br /></td></tr>
-<tr class="memitem:ga3565866878e69b212b1bb03757000b7d" id="r_ga3565866878e69b212b1bb03757000b7d"><td class="memTemplParams" colspan="2"><a id="ga3565866878e69b212b1bb03757000b7d" name="ga3565866878e69b212b1bb03757000b7d"></a>
-template&lt;typename... A&gt; <br />
-requires (<a class="el" href="group__clef__utils.html#gaf4a34ec80a1f0d50945e918807a6f318">nda::clef::is_any_lazy</a>&lt;A...&gt;)</td></tr>
-<tr class="memitem:ga3565866878e69b212b1bb03757000b7d template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><b>nda::clef::determinant</b> (A &amp;&amp;...__a)</td></tr>
-<tr class="memdesc:ga3565866878e69b212b1bb03757000b7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lazy version of <a class="el" href="#ga88d96daa5c131cf8058f36e82bffb6d3" title="Compute the determinant of a square matrix/view.">nda::determinant</a>. <br /></td></tr>
 <tr class="memitem:ga88d96daa5c131cf8058f36e82bffb6d3" id="r_ga88d96daa5c131cf8058f36e82bffb6d3"><td class="memTemplParams" colspan="2">template&lt;typename M&gt; </td></tr>
 <tr class="memitem:ga88d96daa5c131cf8058f36e82bffb6d3 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga88d96daa5c131cf8058f36e82bffb6d3">nda::determinant</a> (M const &amp;m)</td></tr>
 <tr class="memdesc:ga88d96daa5c131cf8058f36e82bffb6d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the determinant of a square matrix/view.  <br /></td></tr>
@@ -144,11 +139,6 @@ requires ((Scalar&lt;X&gt; and Scalar&lt;Y&gt;) or (Vector&lt;X&gt; and Vector&l
 <tr class="memitem:gafede9394121a6e2098c4e04c9af5f568" id="r_gafede9394121a6e2098c4e04c9af5f568"><td class="memTemplParams" colspan="2">template&lt;typename M&gt; </td></tr>
 <tr class="memitem:gafede9394121a6e2098c4e04c9af5f568 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafede9394121a6e2098c4e04c9af5f568">nda::linalg::eigenvalues_in_place</a> (M &amp;m)</td></tr>
 <tr class="memdesc:gafede9394121a6e2098c4e04c9af5f568"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the eigenvalues of a symmetric (real) or hermitian (complex) matrix/view.  <br /></td></tr>
-<tr class="memitem:gaac7cec8926f7349c34c34b75373131c3" id="r_gaac7cec8926f7349c34c34b75373131c3"><td class="memTemplParams" colspan="2"><a id="gaac7cec8926f7349c34c34b75373131c3" name="gaac7cec8926f7349c34c34b75373131c3"></a>
-template&lt;typename... A&gt; <br />
-requires (<a class="el" href="group__clef__utils.html#gaf4a34ec80a1f0d50945e918807a6f318">nda::clef::is_any_lazy</a>&lt;A...&gt;)</td></tr>
-<tr class="memitem:gaac7cec8926f7349c34c34b75373131c3 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><b>nda::clef::inverse</b> (A &amp;&amp;...__a)</td></tr>
-<tr class="memdesc:gaac7cec8926f7349c34c34b75373131c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lazy version of <a class="el" href="#ga99906b99820be65d1bfb07d90aea841c" title="Compute the inverse of an n-by-n matrix.">nda::inverse</a>. <br /></td></tr>
 <tr class="memitem:ga99906b99820be65d1bfb07d90aea841c" id="r_ga99906b99820be65d1bfb07d90aea841c"><td class="memTemplParams" colspan="2">template&lt;Matrix M&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M')</td></tr>
 <tr class="memitem:ga99906b99820be65d1bfb07d90aea841c template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga99906b99820be65d1bfb07d90aea841c">nda::inverse</a> (M const &amp;m)</td></tr>
@@ -169,12 +159,6 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M')</td></tr>
 <tr class="memitem:gab84970093e3fde0f5905f895120c7d60 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab84970093e3fde0f5905f895120c7d60">nda::inverse_in_place</a> (M &amp;&amp;m)</td></tr>
 <tr class="memdesc:gab84970093e3fde0f5905f895120c7d60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the inverse of an n-by-n matrix.  <br /></td></tr>
-<tr class="memitem:gac8d9fcbe9e0ffbcc2847ad339156676f" id="r_gac8d9fcbe9e0ffbcc2847ad339156676f"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; </td></tr>
-<tr class="memitem:gac8d9fcbe9e0ffbcc2847ad339156676f template"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac8d9fcbe9e0ffbcc2847ad339156676f">nda::is_matrix_diagonal</a> (A const &amp;a, bool print_error=false)</td></tr>
-<tr class="memdesc:gac8d9fcbe9e0ffbcc2847ad339156676f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a given array/view is diagonal, i.e. if it is square (see <a class="el" href="#gaf16a960b18684822d700cb8bf10f470a" title="Check if a given array/view is square, i.e. if the first dimension has the same extent as the second ...">nda::is_matrix_square</a>) and all the the off-diagonal elements are zero.  <br /></td></tr>
-<tr class="memitem:gaf16a960b18684822d700cb8bf10f470a" id="r_gaf16a960b18684822d700cb8bf10f470a"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; </td></tr>
-<tr class="memitem:gaf16a960b18684822d700cb8bf10f470a template"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf16a960b18684822d700cb8bf10f470a">nda::is_matrix_square</a> (A const &amp;a, bool print_error=false)</td></tr>
-<tr class="memdesc:gaf16a960b18684822d700cb8bf10f470a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a given array/view is square, i.e. if the first dimension has the same extent as the second dimension.  <br /></td></tr>
 <tr class="memitem:ga33c980b3e0b7fb89dad92b92562c851f" id="r_ga33c980b3e0b7fb89dad92b92562c851f"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Matrix B&gt; </td></tr>
 <tr class="memitem:ga33c980b3e0b7fb89dad92b92562c851f template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga33c980b3e0b7fb89dad92b92562c851f">nda::linalg::matmul</a> (A &amp;&amp;a, B &amp;&amp;b)</td></tr>
 <tr class="memdesc:ga33c980b3e0b7fb89dad92b92562c851f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the matrix-matrix product of two <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> objects.  <br /></td></tr>
@@ -248,7 +232,7 @@ template&lt;typename M&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;<a class="el" href="det__and__inverse_8hpp.html">nda/linalg/det_and_inverse.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="det_8hpp.html">nda/linalg/det.hpp</a>&gt;</code></p>
 
 <p>Compute the determinant of a square matrix/view. </p>
 <p>The given matrix/view is not modified. It first makes a copy of the given matrix/view and then calls <a class="el" href="#ga16e095b23aa9e6d1afe299607776f893" title="Compute the determinant of a square matrix/view.">nda::determinant_in_place</a> with the copy.</p>
@@ -266,7 +250,7 @@ template&lt;typename M&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Determinant of the matrix/view. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="det__and__inverse_8hpp_source.html#l00132">132</a> of file <a class="el" href="det__and__inverse_8hpp_source.html">det_and_inverse.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="det_8hpp_source.html#l00095">95</a> of file <a class="el" href="det_8hpp_source.html">det.hpp</a>.</p>
 
 </div>
 </div>
@@ -288,7 +272,7 @@ requires (<a class="el" href="group__av__utils.html#ga399faffc1372096b0df09d6516
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;<a class="el" href="det__and__inverse_8hpp.html">nda/linalg/det_and_inverse.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="det_8hpp.html">nda/linalg/det.hpp</a>&gt;</code></p>
 
 <p>Compute the determinant of a square matrix/view. </p>
 <p>It uses <a class="el" href="group__linalg__lapack.html#gad2fcbbe9516f85da7d1fa2ae1c3df79b" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> to compute the LU decomposition of the matrix and then calculates the determinant by multiplying the diagonal elements of the \( \mathbf{U} \) matrix and taking into account that <span class="tt">getrf</span> may change the ordering of the rows/columns of the matrix.</p>
@@ -307,7 +291,7 @@ requires (<a class="el" href="group__av__utils.html#ga399faffc1372096b0df09d6516
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Determinant of the matrix/view. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="det__and__inverse_8hpp_source.html#l00089">89</a> of file <a class="el" href="det__and__inverse_8hpp_source.html">det_and_inverse.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="det_8hpp_source.html#l00052">52</a> of file <a class="el" href="det_8hpp_source.html">det.hpp</a>.</p>
 
 </div>
 </div>
@@ -604,7 +588,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;<a class="el" href="det__and__inverse_8hpp.html">nda/linalg/det_and_inverse.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="inv_8hpp.html">nda/linalg/inv.hpp</a>&gt;</code></p>
 
 <p>Compute the inverse of an n-by-n matrix. </p>
 <p>The given matrix/view is not modified. It first makes copy of the given matrix/view and then calls <a class="el" href="#gab84970093e3fde0f5905f895120c7d60" title="Compute the inverse of an n-by-n matrix.">nda::inverse_in_place</a> with the copy.</p>
@@ -622,7 +606,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Inverse of the matrix. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="det__and__inverse_8hpp_source.html#l00286">286</a> of file <a class="el" href="det__and__inverse_8hpp_source.html">det_and_inverse.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="inv_8hpp_source.html#l00187">187</a> of file <a class="el" href="inv_8hpp_source.html">inv.hpp</a>.</p>
 
 </div>
 </div>
@@ -644,7 +628,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;<a class="el" href="det__and__inverse_8hpp.html">nda/linalg/det_and_inverse.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="inv_8hpp.html">nda/linalg/inv.hpp</a>&gt;</code></p>
 
 <p>Compute the inverse of a 1-by-1 matrix. </p>
 <p>The inversion is performed in place.</p>
@@ -661,7 +645,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="det__and__inverse_8hpp_source.html#l00158">158</a> of file <a class="el" href="det__and__inverse_8hpp_source.html">det_and_inverse.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="inv_8hpp_source.html#l00059">59</a> of file <a class="el" href="inv_8hpp_source.html">inv.hpp</a>.</p>
 
 </div>
 </div>
@@ -683,7 +667,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;<a class="el" href="det__and__inverse_8hpp.html">nda/linalg/det_and_inverse.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="inv_8hpp.html">nda/linalg/inv.hpp</a>&gt;</code></p>
 
 <p>Compute the inverse of a 2-by-2 matrix. </p>
 <p>The inversion is performed in place.</p>
@@ -700,7 +684,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="det__and__inverse_8hpp_source.html#l00173">173</a> of file <a class="el" href="det__and__inverse_8hpp_source.html">det_and_inverse.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="inv_8hpp_source.html#l00074">74</a> of file <a class="el" href="inv_8hpp_source.html">inv.hpp</a>.</p>
 
 </div>
 </div>
@@ -722,7 +706,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;<a class="el" href="det__and__inverse_8hpp.html">nda/linalg/det_and_inverse.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="inv_8hpp.html">nda/linalg/inv.hpp</a>&gt;</code></p>
 
 <p>Compute the inverse of a 3-by-3 matrix. </p>
 <p>The inversion is performed in place.</p>
@@ -739,7 +723,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="det__and__inverse_8hpp_source.html#l00199">199</a> of file <a class="el" href="det__and__inverse_8hpp_source.html">det_and_inverse.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="inv_8hpp_source.html#l00100">100</a> of file <a class="el" href="inv_8hpp_source.html">inv.hpp</a>.</p>
 
 </div>
 </div>
@@ -761,7 +745,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;<a class="el" href="det__and__inverse_8hpp.html">nda/linalg/det_and_inverse.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="inv_8hpp.html">nda/linalg/inv.hpp</a>&gt;</code></p>
 
 <p>Compute the inverse of an n-by-n matrix. </p>
 <p>The inversion is performed in place.</p>
@@ -780,95 +764,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="det__and__inverse_8hpp_source.html#l00243">243</a> of file <a class="el" href="det__and__inverse_8hpp_source.html">det_and_inverse.hpp</a>.</p>
-
-</div>
-</div>
-<a id="gac8d9fcbe9e0ffbcc2847ad339156676f" name="gac8d9fcbe9e0ffbcc2847ad339156676f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac8d9fcbe9e0ffbcc2847ad339156676f">&#9670;&#160;</a></span>is_matrix_diagonal()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename A&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">bool nda::is_matrix_diagonal </td>
-          <td>(</td>
-          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>print_error</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="det__and__inverse_8hpp.html">nda/linalg/det_and_inverse.hpp</a>&gt;</code></p>
-
-<p>Check if a given array/view is diagonal, i.e. if it is square (see <a class="el" href="#gaf16a960b18684822d700cb8bf10f470a" title="Check if a given array/view is square, i.e. if the first dimension has the same extent as the second ...">nda::is_matrix_square</a>) and all the the off-diagonal elements are zero. </p>
-<dl class="section note"><dt>Note</dt><dd>It does not check if the array/view has rank 2.</dd></dl>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">A</td><td>Array/View type. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">a</td><td>Array/View object. </td></tr>
-    <tr><td class="paramname">print_error</td><td>If true, print an error message if the matrix is not diagonal. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>True if the array/view is diagonal, false otherwise. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="det__and__inverse_8hpp_source.html#l00069">69</a> of file <a class="el" href="det__and__inverse_8hpp_source.html">det_and_inverse.hpp</a>.</p>
-
-</div>
-</div>
-<a id="gaf16a960b18684822d700cb8bf10f470a" name="gaf16a960b18684822d700cb8bf10f470a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaf16a960b18684822d700cb8bf10f470a">&#9670;&#160;</a></span>is_matrix_square()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename A&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">bool nda::is_matrix_square </td>
-          <td>(</td>
-          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>print_error</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="det__and__inverse_8hpp.html">nda/linalg/det_and_inverse.hpp</a>&gt;</code></p>
-
-<p>Check if a given array/view is square, i.e. if the first dimension has the same extent as the second dimension. </p>
-<dl class="section note"><dt>Note</dt><dd>It does not check if the array/view has rank 2.</dd></dl>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">A</td><td>Array/View type. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">a</td><td>Array/View object. </td></tr>
-    <tr><td class="paramname">print_error</td><td>If true, print an error message if the matrix is not square. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>True if the array/view is square, false otherwise. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="det__and__inverse_8hpp_source.html#l00050">50</a> of file <a class="el" href="det__and__inverse_8hpp_source.html">det_and_inverse.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="inv_8hpp_source.html#l00144">144</a> of file <a class="el" href="inv_8hpp_source.html">inv.hpp</a>.</p>
 
 </div>
 </div>

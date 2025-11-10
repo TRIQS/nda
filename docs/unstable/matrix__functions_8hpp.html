@@ -114,6 +114,7 @@ $(function(){initNavTree('matrix__functions_8hpp.html','',''); });
 <code>#include &quot;<a class="el" href="array_8hpp_source.html">./stdutil/array.hpp</a>&quot;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;concepts&gt;</code><br />
+<code>#include &lt;iostream&gt;</code><br />
 <code>#include &lt;ranges&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
 </div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
@@ -138,6 +139,12 @@ requires (std::ranges::contiguous_range&lt;V&gt; or ArrayOfRank&lt;V, 1&gt;)</td
 <tr class="memitem:ga102fecb589bb00838a901efae065ce56" id="r_ga102fecb589bb00838a901efae065ce56"><td class="memTemplParams" colspan="2">template&lt;Scalar S, std::integral Int = long&gt; </td></tr>
 <tr class="memitem:ga102fecb589bb00838a901efae065ce56 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__av__factories.html#ga102fecb589bb00838a901efae065ce56">nda::eye</a> (Int dim)</td></tr>
 <tr class="memdesc:ga102fecb589bb00838a901efae065ce56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an identity <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> with ones on the diagonal.  <br /></td></tr>
+<tr class="memitem:gac8d9fcbe9e0ffbcc2847ad339156676f" id="r_gac8d9fcbe9e0ffbcc2847ad339156676f"><td class="memTemplParams" colspan="2">template&lt;Matrix A&gt; </td></tr>
+<tr class="memitem:gac8d9fcbe9e0ffbcc2847ad339156676f template"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__av__factories.html#gac8d9fcbe9e0ffbcc2847ad339156676f">nda::is_matrix_diagonal</a> (A const &amp;a, bool print_error=false)</td></tr>
+<tr class="memdesc:gac8d9fcbe9e0ffbcc2847ad339156676f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a given matrix is diagonal, i.e. if it is square (see <a class="el" href="group__av__factories.html#gaf16a960b18684822d700cb8bf10f470a" title="Check if a given matrix is square, i.e. if the first dimension has the same extent as the second dime...">nda::is_matrix_square</a>) and all the the off-diagonal elements are zero.  <br /></td></tr>
+<tr class="memitem:gaf16a960b18684822d700cb8bf10f470a" id="r_gaf16a960b18684822d700cb8bf10f470a"><td class="memTemplParams" colspan="2">template&lt;Matrix A&gt; </td></tr>
+<tr class="memitem:gaf16a960b18684822d700cb8bf10f470a template"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__av__factories.html#gaf16a960b18684822d700cb8bf10f470a">nda::is_matrix_square</a> (A const &amp;a, bool print_error=false)</td></tr>
+<tr class="memdesc:gaf16a960b18684822d700cb8bf10f470a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a given matrix is square, i.e. if the first dimension has the same extent as the second dimension.  <br /></td></tr>
 <tr class="memitem:ga02d439ad1a5a02cedfe5face4cb66a1b" id="r_ga02d439ad1a5a02cedfe5face4cb66a1b"><td class="memTemplParams" colspan="2">template&lt;ArrayOfRank&lt; 2 &gt; M&gt; </td></tr>
 <tr class="memitem:ga02d439ad1a5a02cedfe5face4cb66a1b template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__av__math.html#ga02d439ad1a5a02cedfe5face4cb66a1b">nda::trace</a> (M const &amp;m)</td></tr>
 <tr class="memdesc:ga02d439ad1a5a02cedfe5face4cb66a1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the trace of a 2-dimensional square array/view.  <br /></td></tr>

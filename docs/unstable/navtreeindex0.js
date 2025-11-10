@@ -99,8 +99,8 @@ var NAVTREEINDEX0 =
 "cusolver__interface_8hpp_source.html":[4,7,0,2,0,1],
 "declarations_8hpp.html":[4,7,0,19],
 "declarations_8hpp_source.html":[4,7,0,19],
-"det__and__inverse_8hpp.html":[4,7,0,4,1],
-"det__and__inverse_8hpp_source.html":[4,7,0,4,1],
+"det_8hpp.html":[4,7,0,4,1],
+"det_8hpp_source.html":[4,7,0,4,1],
 "device_8hpp.html":[4,7,0,20],
 "device_8hpp_source.html":[4,7,0,20],
 "dir_064e4b4af870ca0f71794f16c050428b.html":[4,7,0,6],
@@ -225,6 +225,8 @@ var NAVTREEINDEX0 =
 "integration.html#cmake":[2,0],
 "integration.html#fetch":[2,0,0],
 "integration.html#find_package":[2,0,1],
+"inv_8hpp.html":[4,7,0,4,4],
+"inv_8hpp_source.html":[4,7,0,4,4],
 "io_8hpp.html":[4,7,0,1,7],
 "io_8hpp_source.html":[4,7,0,1,7],
 "issues.html":[6],
@@ -247,7 +249,5 @@ var NAVTREEINDEX0 =
 "layout__transforms_8hpp_source.html":[4,7,0,28],
 "linalg_2dot_8hpp.html":[4,7,0,4,2],
 "linalg_2dot_8hpp_source.html":[4,7,0,4,2],
-"linalg_8hpp.html":[4,7,0,29],
-"linalg_8hpp_source.html":[4,7,0,29],
-"literals_8hpp.html":[4,7,0,1,8]
+"linalg_8hpp.html":[4,7,0,29]
 };
