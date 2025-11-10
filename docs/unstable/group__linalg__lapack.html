@@ -123,10 +123,10 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
 requires (<a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c785135d7916b">mem::on_host</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, TAU&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, JPVT, TAU&gt;)</td></tr>
 <tr class="memitem:gaf2b932738bc5fc95a6c43d83b5544686 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf2b932738bc5fc95a6c43d83b5544686">nda::lapack::geqp3</a> (A &amp;&amp;a, JPVT &amp;&amp;jpvt, TAU &amp;&amp;tau)</td></tr>
 <tr class="memdesc:gaf2b932738bc5fc95a6c43d83b5544686"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#gaf2b932738bc5fc95a6c43d83b5544686" title="Interface to the LAPACK geqp3 routine.">geqp3</a></span> routine.  <br /></td></tr>
-<tr class="memitem:ga2b0c2c03ef0e537a994244d89e21a1a9" id="r_ga2b0c2c03ef0e537a994244d89e21a1a9"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector S, MemoryMatrix U, MemoryMatrix VT&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, U, VT&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, S, U, VT&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
-<tr class="memitem:ga2b0c2c03ef0e537a994244d89e21a1a9 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2b0c2c03ef0e537a994244d89e21a1a9">nda::lapack::gesvd</a> (A &amp;&amp;a, S &amp;&amp;s, U &amp;&amp;u, VT &amp;&amp;vt)</td></tr>
-<tr class="memdesc:ga2b0c2c03ef0e537a994244d89e21a1a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#ga2b0c2c03ef0e537a994244d89e21a1a9" title="Interface to the LAPACK gesvd routine.">gesvd</a></span> routine.  <br /></td></tr>
+<tr class="memitem:ga2ad7420a95eeebf775f912cfd9770bf5" id="r_ga2ad7420a95eeebf775f912cfd9770bf5"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector S, MemoryMatrix U, MemoryMatrix VT&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, U, VT&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, S, U, VT&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and std::same_as&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;S&gt;&gt;)</td></tr>
+<tr class="memitem:ga2ad7420a95eeebf775f912cfd9770bf5 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2ad7420a95eeebf775f912cfd9770bf5">nda::lapack::gesvd</a> (A &amp;&amp;a, S &amp;&amp;s, U &amp;&amp;u, VT &amp;&amp;vt)</td></tr>
+<tr class="memdesc:ga2ad7420a95eeebf775f912cfd9770bf5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#ga2ad7420a95eeebf775f912cfd9770bf5" title="Interface to the LAPACK gesvd routine.">gesvd</a></span> routine.  <br /></td></tr>
 <tr class="memitem:gad2fcbbe9516f85da7d1fa2ae1c3df79b" id="r_gad2fcbbe9516f85da7d1fa2ae1c3df79b"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector IPIV&gt; <br />
 requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, IPIV&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
 <tr class="memitem:gad2fcbbe9516f85da7d1fa2ae1c3df79b template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad2fcbbe9516f85da7d1fa2ae1c3df79b">nda::lapack::getrf</a> (A &amp;&amp;a, IPIV &amp;&amp;ipiv)</td></tr>
@@ -282,14 +282,14 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c78
 
 </div>
 </div>
-<a id="ga2b0c2c03ef0e537a994244d89e21a1a9" name="ga2b0c2c03ef0e537a994244d89e21a1a9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2b0c2c03ef0e537a994244d89e21a1a9">&#9670;&#160;</a></span>gesvd()</h2>
+<a id="ga2ad7420a95eeebf775f912cfd9770bf5" name="ga2ad7420a95eeebf775f912cfd9770bf5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2ad7420a95eeebf775f912cfd9770bf5">&#9670;&#160;</a></span>gesvd()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;MemoryMatrix A, MemoryVector S, MemoryMatrix U, MemoryMatrix VT&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, U, VT&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, S, U, VT&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, U, VT&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, S, U, VT&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and std::same_as&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;S&gt;&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">int nda::lapack::gesvd </td>
@@ -316,12 +316,13 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
 
 <p><code>#include &lt;<a class="el" href="gesvd_8hpp.html">nda/lapack/gesvd.hpp</a>&gt;</code></p>
 
-<p>Interface to the LAPACK <span class="tt"><a class="el" href="#ga2b0c2c03ef0e537a994244d89e21a1a9" title="Interface to the LAPACK gesvd routine.">gesvd</a></span> routine. </p>
-<p>Computes the singular value decomposition (SVD) of a complex m-by-n matrix \( \mathbf{A} \), optionally computing the left and/or right singular vectors. The SVD is written   </p><p class="formulaDsp">
-\[  \mathbf{A} = \mathbf{U} \mathbf{S} \mathbf{V}^H
+<p>Interface to the LAPACK <span class="tt"><a class="el" href="#ga2ad7420a95eeebf775f912cfd9770bf5" title="Interface to the LAPACK gesvd routine.">gesvd</a></span> routine. </p>
+<p>Computes the singular value decomposition (SVD) of an \( m \times n \) matrix \( \mathbf{A} \). The SVD is written as   </p><p class="formulaDsp">
+\[  \mathbf{A} = \mathbf{U} \mathbf{S} \mathbf{V}^H \; ,
 \]
 </p>
-<p> where \( \mathbf{S} \) is an m-by-n matrix which is zero except for its <span class="tt">min(m,n)</span> diagonal elements, \( \mathbf{U} \) is an m-by-m unitary matrix, and \( \mathbf{V} \) is an n-by-n unitary matrix. The diagonal elements of \( \mathbf{S} \) are the singular values of \( \mathbf{A} \); they are real and non-negative, and are returned in descending order. The first <span class="tt">min(m,n)</span> columns of \( \mathbf{U} \) and \( \mathbf{V} \) are the left and right singular vectors of \( \mathbf{A} \).</p>
+<p> where \( \mathbf{S} \) is an \( m \times n \) matrix which is zero except for its \( \min(m,n) \) diagonal elements, \( \mathbf{U} \) is an \( m \times m \) unitary matrix, and \( \mathbf{V} \) is an  \( n \times n
+\) unitary matrix. The diagonal elements of \( \mathbf{S} \) are the singular values of \( \mathbf{A} \); they are real and non-negative, and are returned in descending order. The first \( min(m,n) \) columns of  \(\mathbf{U} \) and \( \mathbf{V} \) are the left and right singular vectors of \( \mathbf{A} \).</p>
 <p>Note that the routine returns \( \mathbf{V}^H \), not \( \mathbf{V} \).</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -334,16 +335,16 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the m-by-n matrix \( \mathbf{A} \). On exit, the contents of \( \mathbf{A} \) are destroyed. </td></tr>
-    <tr><td class="paramname">s</td><td>Output vector. The singular values of \( \mathbf{A} \), sorted so that <span class="tt">s(i) &gt;= s(i+1)</span>. </td></tr>
-    <tr><td class="paramname">u</td><td>Output matrix. It contains the m-by-m unitary matrix \( \mathbf{U} \). </td></tr>
-    <tr><td class="paramname">vt</td><td>Output matrix. It contains contains the n-by-n unitary matrix \( \mathbf{V}^H \). </td></tr>
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the \( m \times n \) matrix \( \mathbf{A} \). On exit, the contents of \( \mathbf{A} \) are destroyed. </td></tr>
+    <tr><td class="paramname">s</td><td>Output vector. The singular values of \( \mathbf{A} \), sorted so that \( s_i \geq s_{i+1} \). </td></tr>
+    <tr><td class="paramname">u</td><td>Output matrix. It contains the \( m \times m \) unitary matrix \( \mathbf{U} \). </td></tr>
+    <tr><td class="paramname">vt</td><td>Output matrix. It contains the \( n \times n \) unitary matrix \( \mathbf{V}^H \). </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Integer return code from the LAPACK call. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="gesvd_8hpp_source.html#l00064">64</a> of file <a class="el" href="gesvd_8hpp_source.html">gesvd.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="gesvd_8hpp_source.html#l00067">67</a> of file <a class="el" href="gesvd_8hpp_source.html">gesvd.hpp</a>.</p>
 
 </div>
 </div>

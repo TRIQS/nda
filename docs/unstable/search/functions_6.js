@@ -13,7 +13,7 @@ var searchData=
   ['geqp3_10',['geqp3',['../group__linalg__lapack.html#gaf2b932738bc5fc95a6c43d83b5544686',1,'nda::lapack']]],
   ['ger_11',['ger',['../group__linalg__blas.html#gace11f1ec7ce3c54afb76b392d9c98db1',1,'nda::blas']]],
   ['gerc_12',['gerc',['../group__linalg__blas.html#ga3e171555b79dd3631823d0fb8ebe7ae8',1,'nda::blas']]],
-  ['gesvd_13',['gesvd',['../group__linalg__lapack.html#ga2b0c2c03ef0e537a994244d89e21a1a9',1,'nda::lapack']]],
+  ['gesvd_13',['gesvd',['../group__linalg__lapack.html#ga2ad7420a95eeebf775f912cfd9770bf5',1,'nda::lapack']]],
   ['get_14',['get',['../structnda_1_1mem_1_1aligner.html#a4e6385955efd24f06994799bad1cfd7d',1,'nda::mem::aligner::get() noexcept'],['../structnda_1_1mem_1_1aligner.html#a520584a8886e84080b4fed2dddbfe024',1,'nda::mem::aligner::get() const noexcept']]],
   ['get_5farray_15',['get_array',['../group__linalg__blas.html#gaf613a25151f341e5100b089f38a91bc0',1,'nda::blas']]],
   ['get_5fblock_5flayout_16',['get_block_layout',['../group__layout__utils.html#ga70741e2c6bbb28e16b7f9ad5b8497610',1,'nda']]],

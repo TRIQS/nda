@@ -26,7 +26,7 @@ var searchData=
   ['ger_23',['ger',['../group__linalg__blas.html#gace11f1ec7ce3c54afb76b392d9c98db1',1,'nda::blas']]],
   ['ger_2ehpp_24',['ger.hpp',['../ger_8hpp.html',1,'']]],
   ['gerc_25',['gerc',['../group__linalg__blas.html#ga3e171555b79dd3631823d0fb8ebe7ae8',1,'nda::blas']]],
-  ['gesvd_26',['gesvd',['../group__linalg__lapack.html#ga2b0c2c03ef0e537a994244d89e21a1a9',1,'nda::lapack']]],
+  ['gesvd_26',['gesvd',['../group__linalg__lapack.html#ga2ad7420a95eeebf775f912cfd9770bf5',1,'nda::lapack']]],
   ['gesvd_2ehpp_27',['gesvd.hpp',['../gesvd_8hpp.html',1,'']]],
   ['get_28',['get',['../structnda_1_1mem_1_1aligner.html#a4e6385955efd24f06994799bad1cfd7d',1,'nda::mem::aligner::get() noexcept'],['../structnda_1_1mem_1_1aligner.html#a520584a8886e84080b4fed2dddbfe024',1,'nda::mem::aligner::get() const noexcept']]],
   ['get_5faddr_5fspace_29',['get_addr_space',['../group__mem__addrspcs.html#ga8055e10307486aacf11f746f7d718ad7',1,'nda::mem']]],
