@@ -28,6 +28,26 @@
 // ==============================================================
 using mpi_shm_allocator = nda::mem::mallocator<nda::mem::MPISharedMemory>;
 
+TEST(SHM, MPIWrongCommunicator) {
+  using handle_mpi_shm = nda::mem::handle_heap<int, mpi_shm_allocator>;
+
+  auto shm_old = nda::mem::mpi_shm::get_communicator();
+  handle_mpi_shm original(16);
+
+  // New handle to essentially the same communicator as the default.  The MPI
+  // runtime considers these “congruent”, but not “identical”. We allow copies
+  // only within indentical communicators.
+  auto shm_new = mpi::communicator{}.split_shared();
+  nda::mem::mpi_shm::set_communicator(shm_new);
+
+#ifndef NDEBUG
+  EXPECT_THROW(handle_mpi_shm copy(original), nda::runtime_error);
+#endif
+
+  // Restore original communicator
+  nda::mem::mpi_shm::set_communicator(shm_old);
+}
+
 TEST(SHM, MoveSemantic) {
   nda::shared_array<double, 2> A;
   A.resize({4, 4});

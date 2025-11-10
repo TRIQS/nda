@@ -14,6 +14,7 @@
 #include "./allocators.hpp"
 #include "./memcpy.hpp"
 #include "../concepts.hpp"
+#include "../exceptions.hpp"
 #include "../macros.hpp"
 
 #include <array>
@@ -188,9 +189,18 @@ namespace nda::mem {
 
       if constexpr (A::address_space == nda::mem::MPISharedMemory) {
 #ifdef NDA_HAVE_MPI
-        mpi::shared_window<char> *win = userdata();
-        mpi::shared_communicator shm  = win->get_communicator();
-        // TODO: compare communicators
+        auto win = static_cast<mpi::shared_window<char> *>(userdata());
+        auto shm = win->get_communicator();
+
+#ifndef NDEBUG
+        {
+          auto other_win = static_cast<mpi::shared_window<char> *>(h.userdata());
+          auto other_shm = other_win->get_communicator();
+          int r;
+          mpi::check_mpi_call(MPI_Comm_compare(shm.get(), other_shm.get(), &r), "MPI_Comm_compare");
+          if (r != MPI_IDENT) NDA_RUNTIME_ERROR << "Error in nda::mem::handle_heap: Cannot copy MPI shared memory handle to a different communicator";
+        }
+#endif
 
         const int rank = shm.rank();
         const int size = shm.size();
@@ -241,9 +251,18 @@ namespace nda::mem {
       if (is_null()) return;
       if constexpr (A::address_space == nda::mem::MPISharedMemory) {
 #ifdef NDA_HAVE_MPI
-        mpi::shared_window<char> *win = userdata();
-        mpi::shared_communicator shm  = win->get_communicator();
-        // TODO: compare communicators
+        auto win = static_cast<mpi::shared_window<char> *>(userdata());
+        auto shm = win->get_communicator();
+
+#ifndef NDEBUG
+        {
+          auto other_win = static_cast<mpi::shared_window<char> *>(h.userdata());
+          auto other_shm = other_win->get_communicator();
+          int r;
+          mpi::check_mpi_call(MPI_Comm_compare(shm.get(), other_shm.get(), &r), "MPI_Comm_compare");
+          if (r != MPI_IDENT) NDA_RUNTIME_ERROR << "Error in nda::mem::handle_heap: Cannot copy MPI shared memory handle to a different communicator";
+        }
+#endif
 
         const int rank = shm.rank();
         const int size = shm.size();
