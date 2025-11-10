@@ -145,6 +145,10 @@ requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898da
 requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;X, Y, M&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;X, Y, M&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;X&gt;&gt;)</td></tr>
 <tr class="memitem:gace11f1ec7ce3c54afb76b392d9c98db1 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gace11f1ec7ce3c54afb76b392d9c98db1">nda::blas::ger</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; X &gt; alpha, X const &amp;x, Y const &amp;y, M &amp;&amp;m)</td></tr>
 <tr class="memdesc:gace11f1ec7ce3c54afb76b392d9c98db1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS <span class="tt"><a class="el" href="#gace11f1ec7ce3c54afb76b392d9c98db1" title="Interface to the BLAS ger and geru routine.">ger</a></span> and <span class="tt">geru</span> routine.  <br /></td></tr>
+<tr class="memitem:ga3e171555b79dd3631823d0fb8ebe7ae8" id="r_ga3e171555b79dd3631823d0fb8ebe7ae8"><td class="memTemplParams" colspan="2">template&lt;MemoryVector X, MemoryVector Y, MemoryMatrix M&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;X, Y, M&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;X, Y, M&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;X&gt;&gt;)</td></tr>
+<tr class="memitem:ga3e171555b79dd3631823d0fb8ebe7ae8 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3e171555b79dd3631823d0fb8ebe7ae8">nda::blas::gerc</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; X &gt; alpha, X const &amp;x, Y const &amp;y, M &amp;&amp;m)</td></tr>
+<tr class="memdesc:ga3e171555b79dd3631823d0fb8ebe7ae8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS <span class="tt"><a class="el" href="#ga3e171555b79dd3631823d0fb8ebe7ae8" title="Interface to the BLAS gerc routine.">gerc</a></span> routine.  <br /></td></tr>
 <tr class="memitem:gaf613a25151f341e5100b089f38a91bc0" id="r_gaf613a25151f341e5100b089f38a91bc0"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; <br />
 requires (MemoryArray&lt;A&gt; or <a class="el" href="#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;)</td></tr>
 <tr class="memitem:gaf613a25151f341e5100b089f38a91bc0 template"><td class="memItemLeft" align="right" valign="top">MemoryArray decltype(auto)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf613a25151f341e5100b089f38a91bc0">nda::blas::get_array</a> (A &amp;&amp;a)</td></tr>
@@ -663,7 +667,7 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
 </p>
 <p> where \( \alpha \) is a scalar, \( \mathbf{x} \) is an \( m \) element vector, \( \mathbf{y} \) is an  \( n
 \) element vector and \( \mathbf{M} \) is an \( m \times n \) matrix.</p>
-<dl class="section note"><dt>Note</dt><dd>The vector \( \mathbf{y} \) is never conjugated. Even for complex types. Use nda::blas::gerc for that.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The vector \( \mathbf{y} \) is never conjugated. Even for complex types. Use <a class="el" href="#ga3e171555b79dd3631823d0fb8ebe7ae8" title="Interface to the BLAS gerc routine.">nda::blas::gerc</a> for that.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">X</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> type. </td></tr>
@@ -683,6 +687,71 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="ger_8hpp_source.html#l00055">55</a> of file <a class="el" href="ger_8hpp_source.html">ger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga3e171555b79dd3631823d0fb8ebe7ae8" name="ga3e171555b79dd3631823d0fb8ebe7ae8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3e171555b79dd3631823d0fb8ebe7ae8">&#9670;&#160;</a></span>gerc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;MemoryVector X, MemoryVector Y, MemoryMatrix M&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;X, Y, M&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;X, Y, M&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;X&gt;&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void nda::blas::gerc </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; X &gt;</td>          <td class="paramname"><span class="paramname"><em>alpha</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">X const &amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Y const &amp;</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">M &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>m</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="ger_8hpp.html">nda/blas/ger.hpp</a>&gt;</code></p>
+
+<p>Interface to the BLAS <span class="tt"><a class="el" href="#ga3e171555b79dd3631823d0fb8ebe7ae8" title="Interface to the BLAS gerc routine.">gerc</a></span> routine. </p>
+<p>This function performs the rank 1 operation   </p><p class="formulaDsp">
+\[  \mathbf{M} \leftarrow \alpha \mathbf{x} \mathbf{y}^H + \mathbf{M} \; ,
+\]
+</p>
+<p> where \( \alpha \) is a scalar, \( \mathbf{x} \) is an \( m \) element vector, \( \mathbf{y} \) is an  \( n
+\) element vector and \( \mathbf{M} \) is an \( m \times n \) matrix.</p>
+<p>If the value type of the input vectors/matrix is real, it calls <a class="el" href="#gace11f1ec7ce3c54afb76b392d9c98db1" title="Interface to the BLAS ger and geru routine.">nda::blas::ger</a>.</p>
+<dl class="section note"><dt>Note</dt><dd><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">Matrix</a> \( \mathbf{M} \) has to be in Fortran layout.</dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">X</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> type. </td></tr>
+    <tr><td class="paramname">Y</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> type. </td></tr>
+    <tr><td class="paramname">M</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">alpha</td><td>Input scalar \( \alpha \). </td></tr>
+    <tr><td class="paramname">x</td><td>Input vector \( \mathbf{x} \) of size \( m \). </td></tr>
+    <tr><td class="paramname">y</td><td>Input vector \( \mathbf{y} \) of size \( n \). </td></tr>
+    <tr><td class="paramname">m</td><td>Input/Output matrix \( \mathbf{M} \) of size \( m \times n \) to which the outer product is added. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="ger_8hpp_source.html#l00105">105</a> of file <a class="el" href="ger_8hpp_source.html">ger.hpp</a>.</p>
 
 </div>
 </div>
