@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['s_5fvec_0',['S_vec',['../classnda_1_1lapack_1_1gelss__worker.html#a529b79e08584dba85b27cffa294e4656',1,'nda::lapack::gelss_worker::S_vec()'],['../structnda_1_1lapack_1_1gelss__worker__hermitian.html#a9e5248885f7eb73526e3f91e52d660e4',1,'nda::lapack::gelss_worker_hermitian::S_vec()']]],
+  ['s_5fvec_0',['S_vec',['../classnda_1_1lapack_1_1gelss__worker.html#a529b79e08584dba85b27cffa294e4656',1,'nda::lapack::gelss_worker::S_vec()'],['../classnda_1_1lapack_1_1gelss__worker__hermitian.html#a9e5248885f7eb73526e3f91e52d660e4',1,'nda::lapack::gelss_worker_hermitian::S_vec()']]],
   ['scal_1',['scal',['../group__linalg__blas.html#ga500d4e7e91208effd1ecf29185e5e377',1,'nda::blas']]],
   ['second_5fdim_2',['second_dim',['../group__av__utils.html#gaf22f633d755806bb8fa3c0635705ceb9',1,'nda']]],
   ['segregator_3',['segregator',['../classnda_1_1mem_1_1segregator.html#a22cf3e072c8b0f584b814fffb7085fb2',1,'nda::mem::segregator::segregator()=default'],['../classnda_1_1mem_1_1segregator.html#a3824abd0507931007918ac7a7d4dec06',1,'nda::mem::segregator::segregator(segregator const &amp;)=delete'],['../classnda_1_1mem_1_1segregator.html#a99ea5a44fcfe7efc56fe3cd01e2d95bd',1,'nda::mem::segregator::segregator(segregator &amp;&amp;)=default']]],

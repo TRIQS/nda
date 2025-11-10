@@ -136,7 +136,7 @@ var menudata={children:[
 {text:"BLAS interface",url:"group__linalg__blas.html"},
 {text:"LAPACK interface",url:"group__linalg__lapack.html",children:[
 {text:"lapack::gelss_worker",url:"classnda_1_1lapack_1_1gelss__worker.html"},
-{text:"lapack::gelss_worker_hermitian",url:"structnda_1_1lapack_1_1gelss__worker__hermitian.html"}]},
+{text:"lapack::gelss_worker_hermitian",url:"classnda_1_1lapack_1_1gelss__worker__hermitian.html"}]},
 {text:"Linear algebra tools",url:"group__linalg__tools.html"}]},
 {text:"Memory layout",url:"group__layout.html",children:[
 {text:"Layout policies",url:"group__layout__pols.html",children:[

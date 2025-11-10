@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['gelss_0',['gelss',['../group__linalg__lapack.html#gacdce702f396e0fa3906584024451ffa8',1,'nda::lapack']]],
+  ['gelss_0',['gelss',['../group__linalg__lapack.html#ga3f3adcfbac6e628cc82f6ecb43741071',1,'nda::lapack']]],
   ['gelss_5fworker_1',['gelss_worker',['../classnda_1_1lapack_1_1gelss__worker.html#a65b9395c0fb4b0a10d1ce98e1a7ec68e',1,'nda::lapack::gelss_worker']]],
-  ['gelss_5fworker_5fhermitian_2',['gelss_worker_hermitian',['../structnda_1_1lapack_1_1gelss__worker__hermitian.html#a9c4dbc5ef78006712f5b05e3296daf25',1,'nda::lapack::gelss_worker_hermitian']]],
+  ['gelss_5fworker_5fhermitian_2',['gelss_worker_hermitian',['../classnda_1_1lapack_1_1gelss__worker__hermitian.html#ac1b1df60de6137011662a91e37fc8a25',1,'nda::lapack::gelss_worker_hermitian']]],
   ['gemm_3',['gemm',['../group__linalg__blas.html#gab64974333f3f10efdbee734c088e6239',1,'nda::blas']]],
   ['gemm_5fbatch_4',['gemm_batch',['../group__linalg__blas.html#gace7d586a807533525f094641f6338cae',1,'nda::blas']]],
   ['gemm_5fbatch_5fstrided_5',['gemm_batch_strided',['../group__linalg__blas.html#ga0da5dca0ebd96f8fde668f17d6ad227a',1,'nda::blas']]],

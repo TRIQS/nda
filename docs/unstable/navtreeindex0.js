@@ -47,6 +47,7 @@ var NAVTREEINDEX0 =
 "classnda_1_1basic__array__view.html":[4,0,1],
 "classnda_1_1idx__map.html":[4,3,2,0],
 "classnda_1_1lapack_1_1gelss__worker.html":[4,2,1,0],
+"classnda_1_1lapack_1_1gelss__worker__hermitian.html":[4,2,1,1],
 "classnda_1_1mem_1_1bucket.html":[4,4,1,1],
 "classnda_1_1mem_1_1leak__check.html":[4,4,1,2],
 "classnda_1_1mem_1_1mallocator.html":[4,4,1,3],
@@ -142,6 +143,7 @@ var NAVTREEINDEX0 =
 "gather_8hpp_source.html":[4,7,0,6,1],
 "gelss_8hpp.html":[4,7,0,2,1],
 "gelss_8hpp_source.html":[4,7,0,2,1],
+"gelss__worker_8hpp.html":[4,7,0,2,2],
 "gelss__worker_8hpp_source.html":[4,7,0,2,2],
 "gemm_8hpp.html":[4,7,0,0,2],
 "gemm_8hpp_source.html":[4,7,0,0,2],
@@ -247,7 +249,5 @@ var NAVTREEINDEX0 =
 "linalg_2dot_8hpp_source.html":[4,7,0,4,2],
 "linalg_8hpp.html":[4,7,0,29],
 "linalg_8hpp_source.html":[4,7,0,29],
-"literals_8hpp.html":[4,7,0,1,8],
-"literals_8hpp_source.html":[4,7,0,1,8],
-"macros_8hpp.html":[4,7,0,30]
+"literals_8hpp.html":[4,7,0,1,8]
 };

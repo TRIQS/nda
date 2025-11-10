@@ -1,5 +1,7 @@
 var NAVTREEINDEX1 =
 {
+"literals_8hpp_source.html":[4,7,0,1,8],
+"macros_8hpp.html":[4,7,0,30],
 "macros_8hpp_source.html":[4,7,0,30],
 "make__lazy_8hpp.html":[4,7,0,1,9],
 "make__lazy_8hpp_source.html":[4,7,0,1,9],
@@ -122,7 +124,6 @@ var NAVTREEINDEX1 =
 "structnda_1_1heap__basic.html":[4,4,3,1],
 "structnda_1_1idx__group__t.html":[4,3,1,2],
 "structnda_1_1is__instantiation__of.html":[4,6,3,0],
-"structnda_1_1lapack_1_1gelss__worker__hermitian.html":[4,2,1,1],
 "structnda_1_1layout__info__t.html":[4,3,1,3],
 "structnda_1_1mapped.html":[4,0,8,1],
 "structnda_1_1mem_1_1aligner.html":[4,4,4,3],
