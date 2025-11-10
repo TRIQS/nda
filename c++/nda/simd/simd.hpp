@@ -1,5 +1,5 @@
 #pragma once
-
+#include "./nda_complex.hpp"
 #include <xsimd/xsimd.hpp>
 
 #include <type_traits>
