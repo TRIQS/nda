@@ -41,7 +41,9 @@ TEST(SHM, MPIWrongCommunicator) {
   nda::mem::mpi_shm::set_communicator(shm_new);
 
 #ifndef NDEBUG
-  EXPECT_THROW(handle_mpi_shm copy(original), nda::runtime_error);
+  if (mpi::has_env) {
+    EXPECT_THROW(handle_mpi_shm copy(original), nda::runtime_error);
+  }
 #endif
 
   // Restore original communicator

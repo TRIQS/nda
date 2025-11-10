@@ -193,10 +193,10 @@ namespace nda::mem {
         auto shm = win->get_communicator();
 
 #ifndef NDEBUG
-        {
+        if (mpi::has_env) {
           auto other_win = static_cast<mpi::shared_window<char> *>(h.userdata());
           auto other_shm = other_win->get_communicator();
-          int r;
+          int r = MPI_IDENT;
           mpi::check_mpi_call(MPI_Comm_compare(shm.get(), other_shm.get(), &r), "MPI_Comm_compare");
           if (r != MPI_IDENT) NDA_RUNTIME_ERROR << "Error in nda::mem::handle_heap: Cannot copy MPI shared memory handle to a different communicator";
         }
@@ -255,10 +255,10 @@ namespace nda::mem {
         auto shm = win->get_communicator();
 
 #ifndef NDEBUG
-        {
+        if (mpi::has_env) {
           auto other_win = static_cast<mpi::shared_window<char> *>(h.userdata());
           auto other_shm = other_win->get_communicator();
-          int r;
+          int r = MPI_IDENT;
           mpi::check_mpi_call(MPI_Comm_compare(shm.get(), other_shm.get(), &r), "MPI_Comm_compare");
           if (r != MPI_IDENT) NDA_RUNTIME_ERROR << "Error in nda::mem::handle_heap: Cannot copy MPI shared memory handle to a different communicator";
         }
