@@ -296,7 +296,7 @@ TEST(SHM, ForEachChunked) {
 
   nda::shared_array<int, 2> A(shape);
 
-  for (auto &i : mpi::chunk(A)) {
+  for (auto &i : mpi::chunk(A, shm)) {
     i = shm.rank();
   }
 
