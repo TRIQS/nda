@@ -62,6 +62,7 @@ namespace nda {
       auto operator()(auto const &x) const { return conj(x); };
 
       auto load(auto const &x) const {
+        //TODO: We need to change this check after custom complex class.
         if constexpr (xsimd::is_batch_complex<std::remove_cvref_t<decltype(x)>>::value) {
           return xsimd::conj(x);
         } else {
@@ -72,17 +73,21 @@ namespace nda {
 
     struct pow_f {
       double exponent;
-      auto operator()(auto const &x) const { return std::pow(x, exponent); }
+      auto operator()(auto const &x) const {
+        using std::pow;
+        return pow(x, exponent);
+      }
       auto load(auto const &x) const {
+        using xsimd::pow;
         using simd_t = std::remove_cvref_t<decltype(x)>;
-        return xsimd::pow(x, simd_t(exponent));
+        return pow(x, simd_t(exponent));
       }
     };
 
-    template <typename F_SCALAR, typename F_SIMD>
+    template <typename F>
     struct unary_functor {
-      auto operator()(auto const &x) const { return F_SCALAR{}(x); }
-      auto load(auto const &x) const { return F_SIMD{}(x); }
+      auto operator()(auto const &x) const { return F{}(x); }
+      auto load(auto const &x) const { return F{}(x); }
     };
   } // namespace detail
 
