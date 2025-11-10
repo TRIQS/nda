@@ -1,0 +1,88 @@
+name: build_multi_node
+
+on:
+  push:
+    branches: [ unstable, '[0-9]+.[0-9]+.x' ]
+  pull_request:
+    branches: [ unstable, '[0-9]+.[0-9]+.x' ]
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  CMAKE_C_COMPILER_LAUNCHER: ccache
+  CMAKE_CXX_COMPILER_LAUNCHER: ccache
+  CCACHE_COMPILERCHECK: content
+  CCACHE_BASEDIR: ${{ github.workspace }}
+  CCACHE_DIR: ${{ github.workspace }}/.ccache
+  CCACHE_MAXSIZE: 500M
+  CCACHE_SLOPPINESS: pch_defines,time_macros,include_file_mtime,include_file_ctime
+  CCACHE_COMPRESS: "1"
+  CCACHE_COMPRESSLEVEL: "1"
+
+jobs:
+  build_multi_node:
+
+    strategy:
+      fail-fast: false
+
+    runs-on: ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/cache/restore@v4
+      with:
+        path: ${{ env.CCACHE_DIR }}
+        key: ccache-${{ matrix.os }}-${{ matrix.cc }}-${{ github.run_id }}-${{ github.run_attempt }}
+        restore-keys: |
+          ccache-${{ matrix.os }}-${{ matrix.cc }}-
+
+    - name: Install ubuntu dependencies
+      run: >
+        sudo apt-get update && sudo apt-get install ccache
+
+    - name: Build and start Docker Compose
+      run: |
+        docker compose build
+        docker compose up -d
+      working-directory: .github/workflows/docker
+
+    - name: Compile MPI inside the container
+      run: |
+        docker exec -t -u runner -w ${{ github.workspace }} docker-vm-1 /bin/bash -euxc '
+        cmake -S . -B build -DCMAKE_INSTALL_PREFIX=$HOME/install -DBuild_Documentation=Off
+        cmake --build build/ -j2
+        '
+
+    - name: Run tests inside the container
+      run: |
+        docker exec -t -u runner -w ${{ github.workspace }} docker-vm-1 /bin/bash -euxc '
+        export CTEST_OUTPUT_ON_FAILURE=1
+        cmake --build build/ --target test
+        '
+
+    - name: Run multi-node window tests
+      run: |
+        docker exec -t -u runner -w ${{ github.workspace }} docker-vm-1 /bin/bash -euxc '
+        cat <<EOF | tee hostfile
+        docker-vm-1 slots=3
+        docker-vm-2 slots=1
+        docker-vm-3 slots=2
+        EOF
+
+        # Test the communication
+        mpirun -hostfile ./hostfile /bin/bash -c "env | grep \"^OMPI_COMM_.*_RANK\""
+
+        # Run the actual test
+        mpirun -hostfile ./hostfile build/test/c++/nda_mpi_shared
+        '
+
+    - name: ccache statistics
+      if: always()
+      run: ccache -sv
+
+    - uses: actions/cache/save@v4
+      if: always()
+      with:
+        path: ${{ env.CCACHE_DIR }}
+        key: ccache-${{ matrix.os }}-${{ matrix.cc }}-${{ github.run_id }}-${{ github.run_attempt }}

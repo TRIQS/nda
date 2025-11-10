@@ -21,7 +21,9 @@
 #include <nda/basic_array.hpp>
 #include <nda/shared_array.hpp>
 #include <nda/mem.hpp>
+
 #include <atomic>
+#include <version>
 
 // ==============================================================
 using mpi_shm_allocator = nda::mem::mallocator<nda::mem::MPISharedMemory>;
@@ -109,6 +111,7 @@ TEST(SHM, Fences) {
 }
 
 TEST(SHM, FencesAtomic) {
+#if __cpp_lib_atomic_ref
   auto shm         = nda::mem::mpi_shm::get_communicator();
   int my_rank      = shm.rank();
   int size         = shm.size();
@@ -138,6 +141,9 @@ TEST(SHM, FencesAtomic) {
   for (int i = 0; i < 3; ++i) {
     for (int j = 0; j < 3; ++j) { EXPECT_EQ(A(i, j), expected_sum); }
   }
+#else
+  GTEST_SKIP() << "std::atomic_ref is not supported by this standard library";
+#endif
 }
 
 TEST(SHM, RowSum) {
@@ -284,20 +290,21 @@ TEST(SHM, SubArray) {
 
 TEST(SHM, ForEachChunked) {
   auto shm         = nda::mem::mpi_shm::get_communicator();
-  int my_chunk     = shm.rank();
-  int n_chunk      = shm.size();
+  int size         = shm.size();
   shape_t<2> shape = {5, 5};
   int total        = shape[0] * shape[1];
 
   nda::shared_array<int, 2> A(shape);
 
-  nda::for_each_chunked([&shm](int &i) { i = shm.rank(); }, A, n_chunk, my_chunk);
+  for (auto &i : mpi::chunk(A)) {
+    i = shm.rank();
+  }
 
   nda::fence(A);
 
   std::vector<int> expected(total, -1);
-  for (int r = 0; r < n_chunk; r++) {
-    auto chunk = itertools::chunk_range(0, total, n_chunk, r);
+  for (int r = 0; r < size; r++) {
+    auto chunk = itertools::chunk_range(0, total, size, r);
     for (int idx = chunk.first; idx < chunk.second; ++idx) { expected[idx] = r; }
   }
 

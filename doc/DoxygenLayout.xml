@@ -153,7 +153,8 @@
       <tab type="usergroup" url="@ref memory" title="Memory management">
         <tab type="user" url="@ref mem_addrspcs" title="Address spaces"/>
         <tab type="usergroup" url="@ref mem_allocators" title="Allocators">
-          <tab type="user" url="@ref nda::mem::blk_t" title="mem::blk_t"/>
+          <tab type="user" url="@ref nda::mem::blk_slim_t" title="mem::blk_slim_t"/>
+          <tab type="user" url="@ref nda::mem::blk_fat_t" title="mem::blk_fat_t"/>
           <tab type="user" url="@ref nda::mem::bucket" title="mem::bucket"/>
           <tab type="user" url="@ref nda::mem::leak_check" title="mem::leak_check"/>
           <tab type="user" url="@ref nda::mem::mallocator" title="mem::mallocator"/>

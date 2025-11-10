@@ -187,24 +187,29 @@ namespace nda::mem {
       if (is_null()) return;
 
       if constexpr (A::address_space == nda::mem::MPISharedMemory) {
-        mpi::shared_window<char> *win = h.userdata();
+#ifdef NDA_HAVE_MPI
+        mpi::shared_window<char> *win = userdata();
         mpi::shared_communicator shm  = win->get_communicator();
+        // TODO: compare communicators
 
-        int rank = shm.rank();
-        int size = shm.size();
+        const int rank = shm.rank();
+        const int size = shm.size();
 
         auto chunk = itertools::chunk_range(0, h.size(), size, rank);
         if constexpr (std::is_trivially_copyable_v<T>) {
-          int start_byte = chunk.first * sizeof(T);
-          int end_byte   = chunk.second * sizeof(T);
-          int num_bytes  = end_byte - start_byte;
+          const int start_byte = chunk.first * sizeof(T);
+          const int end_byte   = chunk.second * sizeof(T);
+          const int num_bytes  = end_byte - start_byte;
 
-          memcpy<address_space, address_space>(_blk.ptr + start_byte, h._blk.ptr + start_byte, num_bytes);
+          memcpy<nda::mem::Host, nda::mem::Host>(_blk.ptr + start_byte, h._blk.ptr + start_byte, num_bytes);
         } else {
           for (size_t i = chunk.first; i < chunk.second; ++i) new (data() + i) T(h[i]);
         }
 
         win->fence();
+#else
+        static_assert(false, "MPI support is not enabled in this build of nda. Please configure and install nda with -DMPISupport=ON");
+#endif
       } else {
         if constexpr (std::is_trivially_copyable_v<T>) {
           memcpy<address_space, address_space>(_blk.ptr, h.data(), h.size() * sizeof(T));
@@ -221,9 +226,7 @@ namespace nda::mem {
      * @param h Source handle.
      */
     handle_heap &operator=(handle_heap const &h) {
-      if (this != std::addressof(h)) {
-        *this = handle_heap{h};
-      }
+      if (this != std::addressof(h)) { *this = handle_heap{h}; }
       return *this;
     }
 
@@ -237,19 +240,21 @@ namespace nda::mem {
     explicit handle_heap(H const &h) : handle_heap(h.size(), do_not_initialize) {
       if (is_null()) return;
       if constexpr (A::address_space == nda::mem::MPISharedMemory) {
-        mpi::shared_window<char> *win = h.userdata();
+#ifdef NDA_HAVE_MPI
+        mpi::shared_window<char> *win = userdata();
         mpi::shared_communicator shm  = win->get_communicator();
+        // TODO: compare communicators
 
-        int rank = shm.rank();
-        int size = shm.size();
+        const int rank = shm.rank();
+        const int size = shm.size();
 
         auto chunk = itertools::chunk_range(0, h.size(), size, rank);
         if constexpr (std::is_trivially_copyable_v<T>) {
-          int start_byte = chunk.first * sizeof(T);
-          int end_byte   = chunk.second * sizeof(T);
-          int num_bytes  = end_byte - start_byte;
+          const int start_byte = chunk.first * sizeof(T);
+          const int end_byte   = chunk.second * sizeof(T);
+          const int num_bytes  = end_byte - start_byte;
 
-          memcpy<address_space, address_space>(_blk.ptr + start_byte, h._blk.ptr + start_byte, num_bytes);
+          memcpy<nda::mem::Host, nda::mem::Host>(_blk.ptr + start_byte, h._blk.ptr + start_byte, num_bytes);
         } else {
           static_assert(address_space == H::address_space,
                         "Constructing an nda::mem::handle_heap from a handle of a different address space requires a trivially copyable value_type");
@@ -257,6 +262,9 @@ namespace nda::mem {
         }
 
         win->fence();
+#else
+        static_assert(false, "MPI support is not enabled in this build of nda. Please configure and install nda with -DMPISupport=ON");
+#endif
       } else {
         if constexpr (std::is_trivially_copyable_v<T>) {
           memcpy<address_space, address_space>(_blk.ptr, h.data(), h.size() * sizeof(T));
@@ -375,10 +383,10 @@ namespace nda::mem {
      * @return Pointer to the userdata.
      */
 
-    [[nodiscard]] mpi::shared_window<char> *userdata() const noexcept
+    [[nodiscard]] void *userdata() const noexcept
       requires(requires { _blk.userdata; })
     {
-      return static_cast<mpi::shared_window<char> *>(_blk.userdata);
+      return _blk.userdata;
     }
   };
 
@@ -988,11 +996,11 @@ namespace nda::mem {
      * @return Pointer to the userdata if the parent handle exists.
      */
 
-    [[nodiscard]] mpi::shared_window<char> *userdata() const noexcept
+    [[nodiscard]] void *userdata() const noexcept
       requires(requires { _parent->userdata(); })
     {
       if (_parent) { return _parent->userdata(); }
-      return static_cast<mpi::shared_window<char> *>(nullptr);
+      return nullptr;
     }
   };
   /** @} */

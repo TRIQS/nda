@@ -13,6 +13,10 @@
 #include "./address_space.hpp"
 #include "../device.hpp"
 
+#ifdef NDA_HAVE_MPI
+#include <mpi/communicator.hpp>
+#endif
+
 #include <cstdlib>
 
 namespace nda::mem {
@@ -22,6 +26,7 @@ namespace nda::mem {
    * @{
    */
 
+#ifdef NDA_HAVE_MPI
   /**
    * @class mpi_shm
    * @brief Manages the global MPI shared communicator for shared memory allocation.
@@ -58,6 +63,7 @@ namespace nda::mem {
       */
     inline static void set_communicator(mpi::shared_communicator const &shm) { _impl_communicator() = shm; }
   };
+#endif
 
   /**
    * @brief Call the correct `malloc` function based on the given address space.

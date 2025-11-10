@@ -13,8 +13,6 @@
 #include "./stdutil/concepts.hpp"
 #include "./traits.hpp"
 
-#include <mpi/communicator.hpp>
-
 #include <array>
 #include <concepts>
 #include <type_traits>

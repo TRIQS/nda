@@ -327,8 +327,7 @@ namespace nda {
    */
   template <typename T, int R, typename LP, char A, typename CP>
   auto make_const_view(basic_array<T, R, LP, A, CP> const &a) {
-    using storage_t = typename CP::template handle<T>;
-    return basic_array_view<T const, R, C_stride_layout, A, default_accessor, nda::borrowed<storage_t::address_space>>{a};
+    return basic_array_view<T const, R, LP, A>{a};
   }
 
   /**

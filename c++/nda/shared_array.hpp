@@ -36,7 +36,7 @@ namespace nda {
   /// storage array has userdata in addition
   template <typename Array>
   concept SharedArray = requires(Array a) {
-    { a.storage().userdata() } -> std::convertible_to<mpi::shared_window<char> *>;
+    { a.storage().userdata() } -> std::same_as<void *>;
   } && Array::storage_t::address_space == mem::MPISharedMemory;
 
   /**
@@ -225,7 +225,7 @@ namespace nda {
   //requires SharedArray<basic_array<ValueType, Rank, LayoutPolicy, Algebra, ContainerPolicy>>
   mpi::shared_window<char> *get_window(basic_array<ValueType, Rank, LayoutPolicy, Algebra, ContainerPolicy> const &array) {
     auto const &sto = array.storage();
-    if constexpr (requires { sto.userdata(); }) { return sto.userdata(); }
+    if constexpr (requires { sto.userdata(); }) { return static_cast<mpi::shared_window<char> *>(sto.userdata()); }
     return nullptr;
   }
 
@@ -238,14 +238,14 @@ namespace nda {
    * @tparam Algebra The algebra identifier (should be 'A' for shared_array).
    * @tparam AccessorPolicy Policy determining how the data pointer is accessed.
    * @tparam OwningPolicy Policy determining the ownership of the data.
-   * @param array A const reference to the basic_array_view.
+   * @param array_view A const reference to the basic_array_view.
    * @return Pointer to an mpi::shared_window<char> if available; nullptr otherwise.
    */
   template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   //requires SharedArray<basic_array_view<ValueType, Rank, LayoutPolicy, Algebra, OwningPolicy>>
   mpi::shared_window<char> *get_window(basic_array_view<ValueType, Rank, LayoutPolicy, Algebra, AccessorPolicy, OwningPolicy> const &array_view) {
     auto const &sto = array_view.storage();
-    if constexpr (requires { sto.userdata(); }) { return sto.userdata(); }
+    if constexpr (requires { sto.userdata(); }) { return static_cast<mpi::shared_window<char> *>(sto.userdata()); }
     return nullptr;
   }
 
@@ -276,37 +276,13 @@ namespace nda {
    * @tparam Algebra The algebra identifier (should be 'A' for shared_array).
    * @tparam AccessorPolicy Policy determining how the data pointer is accessed.
    * @tparam OwningPolicy Policy determining the ownership of the data.
-   * @param array A const reference to the basic_array.
+   * @param array_view A const reference to the basic_array.
    */
   template <typename ValueType, int Rank, typename LayoutPolicy, char Algebra, typename AccessorPolicy, typename OwningPolicy>
   void fence(basic_array_view<ValueType, Rank, LayoutPolicy, Algebra, AccessorPolicy, OwningPolicy> const &array_view) {
     mpi::shared_window<char> *win = get_window(array_view);
     ASSERT(win != nullptr);
     win->fence();
-  }
-
-  /**
-   * @brief Applies a functor to each chunk of a shared array.
-   *
-   * This function divides the array (via its index map) into a number of chunks and
-   * applies the provided functor to each element in the specified chunk. This is useful
-   * for distributed processing over MPI shared memory.
-   *
-   * @tparam Functor The type of the function or callable object.
-   * @tparam ValueType The type of the array elements.
-   * @tparam Rank The number of dimensions.
-   * @tparam AccessorPolicy Policy determining how the data pointer is accessed.
-   * @tparam OwningPolicy Policy determining the ownership of the data.
-   * @param f The functor to apply to each array element.
-   * @param array The shared_array on which to operate.
-   * @param n_chunks The total number of chunks to divide the array into.
-   * @param rank The rank (chunk index) to process.
-   */
-  template <typename Functor, typename ValueType, int Rank, typename LayoutPolicy>
-  void for_each_chunked(Functor &&f, shared_array<ValueType, Rank, LayoutPolicy> &array, long n_chunks, long rank) {
-    auto &lay  = array.indexmap();
-    auto slice = itertools::chunk_range(0, lay.size(), n_chunks, rank);
-    for (int i = slice.first; i < slice.second; ++i) { f(array(nda::_linear_index_t{i})); }
   }
 
 } // namespace nda
