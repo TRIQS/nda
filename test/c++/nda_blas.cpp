@@ -204,65 +204,89 @@ TEST(NDA, BLASGemv) {
 
 // Test the BLAS ger/gerc function.
 template <typename T, typename Layout, bool star>
-void test_ger(auto ger) {
-  T fac = 1.0;
-  if constexpr (nda::is_complex_v<T>) fac = 1.0i;
+void test_ger() {
 
-  // resulting 2 x 2 matrix
-  auto exp_M1 = nda::matrix<T>{{1, 2}, {2, 4}};
-  if constexpr (nda::is_complex_v<T> and not star) exp_M1 *= -1;
-  auto M1 = nda::matrix<T, Layout>::zeros(2, 2);
-  nda::vector<T> v{1, 2};
-  v *= fac;
-  ger(1.0, v, v, M1);
+  // Helper wrapper to call ger or gerc
+  auto call_ger = [](auto alpha, auto const &x, auto const &y, auto &&m) {
+    if constexpr (star) {
+      nda::blas::gerc(alpha, x, y, m);
+    } else {
+      nda::blas::ger(alpha, x, y, m);
+    }
+  };
+
+  // Helper to compute outer product with optional conjugation
+  auto outer_product = [](auto const &x, auto const &y, bool conj_y) {
+    auto m = nda::matrix<T, Layout>(x.size(), y.size());
+    for (int i = 0; i < x.size(); ++i)
+      for (int j = 0; j < y.size(); ++j) m(i, j) = x(i) * (conj_y ? nda::conj(y(j)) : y(j));
+    return m;
+  };
+
+  // Initialize vectors: complex or real depending on T
+  nda::vector<T> v(2);
+  if constexpr (nda::is_complex_v<T>) {
+    v = {1.0i, 2.0i};
+  } else {
+    v = {1, 2};
+  }
+
+  // Test 1: v ⊗ v starting from zero matrix
+  auto exp_M1 = outer_product(v, v, star);
+  auto M1     = nda::matrix<T, Layout>::zeros(2, 2);
+  call_ger(1.0, v, v, M1);
   EXPECT_ARRAY_NEAR(M1, exp_M1);
-  ger(1.0, v, v, M1);
-  EXPECT_ARRAY_NEAR(M1, exp_M1 * 2);
 
-  // resulting 2 x 3 matrix
-  auto exp_M2 = nda::matrix<T>{{3, 4, 5}, {6, 8, 10}};
-  if constexpr (nda::is_complex_v<T>) exp_M2 *= fac;
-  auto M2 = nda::matrix<T, Layout>::zeros(2, 3);
+  // Test 2: v ⊗ v starting from non-zero matrix (test accumulation)
+  auto M1_init = nda::matrix<T, Layout>{{10, 20}, {30, 40}};
+  auto M1b     = M1_init;
+  call_ger(1.0, v, v, M1b);
+  EXPECT_ARRAY_NEAR(M1b, M1_init + exp_M1);
+
+  // Test 3: v ⊗ w (mixed: v complex/real, w real)
   nda::vector<T> w{3, 4, 5};
-  ger(1.0, v, w, M2);
+  auto exp_M2 = outer_product(v, w, star);
+  auto M2     = nda::matrix<T, Layout>::zeros(2, 3);
+  call_ger(1.0, v, w, M2);
   EXPECT_ARRAY_NEAR(M2, exp_M2);
-  ger(1.0, v, w, M2);
-  EXPECT_ARRAY_NEAR(M2, exp_M2 * 2);
+  call_ger(1.0, v, w, M2);
+  EXPECT_ARRAY_NEAR(M2, exp_M2 * 2.0);
 
-  // resulting 3 x 2 matrix
-  auto exp_M3 = nda::matrix<T>{{3, 6}, {4, 8}, {5, 10}};
-  if constexpr (nda::is_complex_v<T> and not star) exp_M3 *= fac;
-  if constexpr (nda::is_complex_v<T> and star) exp_M3 *= -fac;
-  auto M3 = nda::matrix<T, Layout>::zeros(3, 2);
-  ger(1.0, w, v, M3);
+  // Test 4: w ⊗ v (swapped)
+  auto exp_M3 = outer_product(w, v, star);
+  auto M3     = nda::matrix<T, Layout>::zeros(3, 2);
+  call_ger(1.0, w, v, M3);
   EXPECT_ARRAY_NEAR(M3, exp_M3);
-  ger(1.0, w, v, M3);
-  EXPECT_ARRAY_NEAR(M3, exp_M3 * 2);
+  call_ger(1.0, w, v, M3);
+  EXPECT_ARRAY_NEAR(M3, exp_M3 * 2.0);
 
-  // outer product of strided views
-  auto exp_M4 = nda::matrix<T>{{6, 8, 10}, {12, 16, 20}};
-  if constexpr (nda::is_complex_v<T> and not star) exp_M4 *= -1.0;
+  // Test 5: strided views
+  nda::vector<T> v_full(5), w_full(7);
+  if constexpr (nda::is_complex_v<T>) {
+    v_full = {0, 1.0i, 0, 2.0i, 0};
+    w_full = {3.0i, 0, 0, 4.0i, 0, 0, 5.0i};
+  } else {
+    v_full = {0, 1, 0, 2, 0};
+    w_full = {3, 0, 0, 4, 0, 0, 5};
+  }
+  auto v_strided = v_full(nda::range(1, 5, 2));
+  auto w_strided = w_full(nda::range(0, 7, 3));
+  auto exp_M4    = outer_product(v_strided, w_strided, star) * 2.0;
   auto M4        = nda::matrix<T, Layout>::zeros(2, 3);
-  auto v_strided = nda::vector<T>{0, 1, 0, 2, 0};
-  v_strided *= fac;
-  auto w_strided = nda::vector<T>{3, 0, 0, 4, 0, 0, 5};
-  w_strided *= fac;
-  ger(2.0, v_strided(nda::range(1, 5, 2)), w_strided(nda::range(0, 7, 3)), M4);
+  call_ger(2.0, v_strided, w_strided, M4);
   EXPECT_ARRAY_NEAR(M4, exp_M4);
 }
 
 TEST(NDA, BLASGer) {
-  auto ger = [](auto alpha, auto &&x, auto &&y, auto &&m) { return nda::blas::ger(alpha, x, y, m); };
-  test_ger<double, nda::C_layout, false>(ger);
-  test_ger<double, nda::F_layout, false>(ger);
-  test_ger<std::complex<double>, nda::C_layout, false>(ger);
-  test_ger<std::complex<double>, nda::F_layout, false>(ger);
+  test_ger<double, nda::C_layout, false>();
+  test_ger<double, nda::F_layout, false>();
+  test_ger<std::complex<double>, nda::C_layout, false>();
+  test_ger<std::complex<double>, nda::F_layout, false>();
 }
 
 TEST(NDA, BLASGerc) {
-  auto gerc = [](auto alpha, auto &&x, auto &&y, auto &&m) { return nda::blas::gerc(alpha, x, y, m); };
-  test_ger<double, nda::F_layout, true>(gerc);
-  test_ger<std::complex<double>, nda::F_layout, true>(gerc);
+  test_ger<double, nda::F_layout, true>();
+  test_ger<std::complex<double>, nda::F_layout, true>();
 }
 
 // Test the BLAS dot/dotc function.
