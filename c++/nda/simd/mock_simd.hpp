@@ -27,9 +27,15 @@ namespace nda::simd {
 
     template <size_t... Is, typename... Args>
     FORCEINLINE auto apply_function(std::index_sequence<Is...>, const std::tuple<Args...> &array_tuple) const {
-      alignas(simd_t::arch_type::alignment()) std::array<T, simd_t::size> result_array;
-      for (int i = 0; i < simd_t::size; ++i) { result_array[i] = static_cast<const Derived *>(this)->operator()(std::get<Is>(array_tuple)[i]...); }
-      return result_array;
+      auto build = [&]<size_t... Js>(std::index_sequence<Js...>) {
+        auto compute_one_element = [&](size_t i) -> T { return static_cast<const Derived *>(this)->operator()(std::get<Is>(array_tuple)[i]...); };
+
+        alignas(simd_t::arch_type::alignment()) std::array<T, simd_t::size> result_array = {compute_one_element(Js)...};
+
+        return result_array;
+      };
+
+      return build(std::make_index_sequence<simd_t::size>{});
     }
 
     public:
