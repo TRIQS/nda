@@ -115,8 +115,8 @@ $(function(){initNavTree('ex1.html','',''); });
 <div class="line">}</div>
 <div class="ttc" id="ah5_8hpp_html"><div class="ttname"><a href="h5_8hpp.html">h5.hpp</a></div><div class="ttdoc">Provides HDF5 support for the nda library.</div></div>
 <div class="ttc" id="anda_8hpp_html"><div class="ttname"><a href="nda_8hpp.html">nda.hpp</a></div><div class="ttdoc">Includes all relevant headers for the core nda library.</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="ex1_p1"></a>
-Creating and initializing an array</h2>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="ex1_p1"></a>
+Creating and initializing an array</h1>
 <p>In its simplest form, an <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> has 2 template parameters</p>
 <ul>
 <li>its value type and</li>
@@ -132,16 +132,16 @@ Creating and initializing an array</h2>
 <p>We could have achieved the same using the constructor which takes <span class="tt">std::initializer_list</span> objects:</p>
 <div class="fragment"><div class="line"><span class="comment">// create a 3x2 integer array using initializer lists</span></div>
 <div class="line"><span class="keyword">auto</span> A2 = <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;int, 2&gt;</a>{{0, 1}, {2, 3}, {4, 5}};</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="ex1_p2"></a>
-Choosing a memory layout</h2>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="ex1_p2"></a>
+Choosing a memory layout</h1>
 <p>By default, <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> stores its elements in C-order. To create an array in Fortran-order, we can specify a third template parameter:</p>
 <div class="fragment"><div class="line"><span class="comment">// create a 3x2 integer array in Fortran order and initialize it</span></div>
 <div class="line"><span class="keyword">auto</span> B = <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;int, 2, nda::F_layout&gt;</a>(3, 2);</div>
 <div class="line"><span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; <span class="keyword">auto</span> &amp;x : B) x = i++;</div>
 </div><!-- fragment --><p>Here, <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a> is one of the <a class="el" href="group__layout__pols.html">Layout policies</a>.</p>
 <p>While in 2-dimensions, the only possibilities are C-order or Fortran-order, in higher dimensions one can also specify other stride orders (see <a class="el" href="structnda_1_1basic__layout.html" title="Generic layout policy with arbitrary order.">nda::basic_layout</a> and nda::basic_layout_str).</p>
-<h2 class="doxsection"><a class="anchor" id="ex1_p3"></a>
-Printing an array</h2>
+<h1 class="doxsection"><a class="anchor" id="ex1_p3"></a>
+Printing an array</h1>
 <p>Let's check the contents, sizes and shapes of the arrays using the overloaded streaming operators:</p>
 <div class="fragment"><div class="line"><span class="comment">// print the formatted arrays, its sizes and its shapes</span></div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;A = &quot;</span> &lt;&lt; A &lt;&lt; std::endl;</div>
@@ -181,8 +181,8 @@ Printing an array</h2>
 <div class="line"> [2,3]</div>
 <div class="line"> [4,5]]</div>
 </div><!-- fragment --> </blockquote>
-<h2 class="doxsection"><a class="anchor" id="ex1_p4"></a>
-Accessing single elements</h2>
+<h1 class="doxsection"><a class="anchor" id="ex1_p4"></a>
+Accessing single elements</h1>
 <p>We can access single elements of the array using the function call operator of the array object. For a 2-dimensional array, we have to pass exactly two indices, otherwise it won't compile:</p>
 <div class="fragment"><div class="line"><span class="comment">// access and assign to a single element</span></div>
 <div class="line">A(2, 1) = 100;</div>
@@ -204,8 +204,8 @@ Accessing single elements</h2>
 <p><b>Note</b>: Out-of-bounds checks are only enabled in debug mode. The following code will compile and result in undefined behavior: </p><div class="fragment"><div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;A(3, 2) = &quot;</span> &lt;&lt; A(3, 2) &lt;&lt; std::endl;</div>
 </div><!-- fragment --><p> Output (might be different on other machines): </p><div class="fragment"><div class="line">A(3, 2) = 9</div>
 </div><!-- fragment --> </blockquote>
-<h2 class="doxsection"><a class="anchor" id="ex1_p5"></a>
-Assigning to an array</h2>
+<h1 class="doxsection"><a class="anchor" id="ex1_p5"></a>
+Assigning to an array</h1>
 <p>It is straightforward to assign a scalar or another array to an existing array:</p>
 <div class="fragment"><div class="line"><span class="comment">// assigning a scalar to an array</span></div>
 <div class="line">A = 42;</div>
@@ -223,8 +223,8 @@ Assigning to an array</h2>
 <div class="line">[[0,3]</div>
 <div class="line"> [1,4]</div>
 <div class="line"> [2,100]]</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="ex1_p6"></a>
-Working with views</h2>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="ex1_p6"></a>
+Working with views</h1>
 <p>Views offer a lightweight and efficient way to manipulate and operate on existing arrays since they do not own their data, i.e. there is no memory allocation or copying involved when creating a view (see <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a>).</p>
 <p>Taking a view on an existing array can be done with an empty function call:</p>
 <div class="fragment"><div class="line"><span class="comment">// create a view on A</span></div>
@@ -249,8 +249,8 @@ Working with views</h2>
 <div class="line"> [1,4]</div>
 <div class="line"> [2,100]]</div>
 </div><!-- fragment --><p>In most cases, views will just behave like arrays and the majority of functions and operations that can be performed with arrays, also work with views.</p>
-<h2 class="doxsection"><a class="anchor" id="ex1_p7"></a>
-Working with slices</h2>
+<h1 class="doxsection"><a class="anchor" id="ex1_p7"></a>
+Working with slices</h1>
 <p>A slice is a view on only some parts of an existing array.</p>
 <p>To take a slice of an array, one uses again the function call operator but this time with one or more <span class="tt">nda::range</span>, <span class="tt">nda::range::all</span> or <a class="el" href="structnda_1_1ellipsis.html" title="Mimics Python&#39;s ... syntax.">nda::ellipsis</a> objects:</p>
 <ul>
@@ -280,8 +280,8 @@ Working with slices</h2>
 <div class="line">[[0,-12]</div>
 <div class="line"> [-1,-4]</div>
 <div class="line"> [2,100]]</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="ex1_p8"></a>
-Performing arithmetic operations</h2>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="ex1_p8"></a>
+Performing arithmetic operations</h1>
 <p>We can perform various <a class="el" href="group__av__ops.html">Arithmetic operations</a> with arrays and views. Arithmetic operations are (mostly) implemented as lazy expressions. That means the operations are not performed right away but only when needed at a later time.</p>
 <p>For example, the following tries to add two 2-dimensional arrays element-wise:</p>
 <div class="fragment"><div class="line"><span class="comment">// add two arrays element-wise</span></div>
@@ -335,8 +335,8 @@ Performing arithmetic operations</h2>
 <div class="line">[[19,22]</div>
 <div class="line"> [43,50]]</div>
 </div><!-- fragment --><p>Here, an <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> is the same as an <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> of rank 2, except that it belongs to the <span class="tt">'M'</span> algebra instead of the <span class="tt">'A'</span> algebra.</p>
-<h2 class="doxsection"><a class="anchor" id="ex1_p9"></a>
-Applying mathematical functions and algorithms</h2>
+<h1 class="doxsection"><a class="anchor" id="ex1_p9"></a>
+Applying mathematical functions and algorithms</h1>
 <p>Similar to arithmetic operations, most of the <a class="el" href="group__av__math.html">Mathematical functions</a> that can operate on arrays and views return a lazy function call expression (<a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a>) and are sensitive to their algebras:</p>
 <div class="fragment"><div class="line"><span class="comment">// element-wise square</span></div>
 <div class="line"><a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;double, 2&gt;</a> C_sq = <a class="code hl_function" href="group__av__math.html#ga6900d4319e73e27201a65f96d082289f">nda::pow</a>(C, 2);</div>
@@ -387,8 +387,8 @@ Applying mathematical functions and algorithms</h2>
 <div class="line">sum(C) = 10</div>
 <div class="line">product(C) = 24</div>
 </div><!-- fragment --><p>Most of the algorithms in the above example are self-explanatory, except for the <a class="el" href="group__av__algs.html#ga70f4415b815978d94a661d7483567e57" title="Does any of the elements of the array evaluate to true?">nda::any</a> and <a class="el" href="group__av__algs.html#gace1353ca15a2382bf8d466fd69283a91" title="Do all elements of the array evaluate to true?">nda::all</a> calls. They expect the given array elements to have a <span class="tt">bool</span> value type which is not the case for the <span class="tt">C</span> array. We therefore use <a class="el" href="group__av__math.html#gaf8151ad99c4fe345cf168a5d01529a6a" title="Create a lazy function call expression on arrays/views.">nda::map</a> to create a lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> that returns a <span class="tt">bool</span> upon calling it. Since <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> fulfills the <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> concept, it can be passed to the algorithms.</p>
-<h2 class="doxsection"><a class="anchor" id="ex1_p10"></a>
-Writing/Reading HDF5</h2>
+<h1 class="doxsection"><a class="anchor" id="ex1_p10"></a>
+Writing/Reading HDF5</h1>
 <p>Writing arrays and views to HDF5 files using <b>nda's</b> <a class="el" href="group__av__hdf5.html">HDF5 support</a> is as easy as</p>
 <div class="fragment"><div class="line"><span class="comment">// write an array to an HDF5 file</span></div>
 <div class="line">h5::file out_file(<span class="stringliteral">&quot;ex1.h5&quot;</span>, <span class="charliteral">&#39;w&#39;</span>);</div>
@@ -416,8 +416,8 @@ Writing/Reading HDF5</h2>
 <div class="fragment"><div class="line">C_copy =</div>
 <div class="line">[[1,2]</div>
 <div class="line"> [3,4]]</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="ex1_p11"></a>
-Doing linear algebra with arrays</h2>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="ex1_p11"></a>
+Doing linear algebra with arrays</h1>
 <p><b>nda</b> has a <a class="el" href="group__linalg__blas.html">BLAS interface</a> and an <a class="el" href="group__linalg__lapack.html">LAPACK interface</a> and provides the <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> and <a class="el" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68" title="Alias template of an nda::basic_array with rank 1 and a &#39;V&#39; algebra.">nda::vector</a> types. While <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> is a 2-dimensional array belonging to the <span class="tt">'M'</span> algebra, <a class="el" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68" title="Alias template of an nda::basic_array with rank 1 and a &#39;V&#39; algebra.">nda::vector</a> is a 1-dimensional array belonging to the <span class="tt">'V'</span> algebra. Under the hood, both of them are just type aliases of the general <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> class. Everything mentioned above for <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> objects is therefore also true for matrices and vectors, e.g. writing/reading to HDF5, accessing single elements, taking slices, etc.</p>
 <p>Let us demonstrate some of the supported <a class="el" href="group__linalg.html">Linear algebra</a> features:</p>
 <div class="fragment"><div class="line"><span class="comment">// create a 2x2 matrix</span></div>
@@ -461,8 +461,8 @@ Doing linear algebra with arrays</h2>
 </div><!-- fragment --><blockquote class="doxtable">
 <p><b>Note</b>: Matrix-matrix and matrix-vector multiplication do not return lazy expressions, since they call the corresponding BLAS routines directly, while element-wise array-array multiplication does return a lazy expression. </p>
 </blockquote>
-<h2 class="doxsection"><a class="anchor" id="ex1_p12"></a>
-Initializing with CLEF's automatic assignment</h2>
+<h1 class="doxsection"><a class="anchor" id="ex1_p12"></a>
+Initializing with CLEF's automatic assignment</h1>
 <p><b>nda</b> contains the <a class="el" href="group__clef.html">Compile-time lazy expressions and functions</a> (CLEF) library which is a more or less standalone implementation of general lazy expressions.</p>
 <p>One of the most useful tools of CLEF is its <a class="el" href="group__clef__autoassign.html">Automatic assignment</a> feature:</p>
 <div class="fragment"><div class="line"><span class="comment">// initialize a 4x7 array using CLEF automatic assignment</span></div>
@@ -480,8 +480,8 @@ Initializing with CLEF's automatic assignment</h2>
 <div class="line"> [21,22,23,24,25,26,27]]</div>
 </div><!-- fragment --><p>Here, we first construct an uninitialized 4-by-7 array before we use automatic assignment to initialize the array. This is done with the overloaded <span class="tt">operator&lt;&lt;</span> and <a class="el" href="structnda_1_1clef_1_1placeholder.html" title="A placeholder is an empty struct, labelled by an int.">nda::clef::placeholder</a> objects (<span class="tt">i_</span> and <span class="tt">j_</span> in the above example). It will simply loop over all possible multidimensional indices of the array, substitute them for the placeholders and assign the result to the corresponding array element, e.g. <span class="tt">F(3, 4) = 3 * 7 + 4 = 25</span>.</p>
 <p>This is especially helpful for high-dimensional arrays where the element at <span class="tt">(i, j, ..., k)</span> can be written as some function \( g \) of its indices, i.e. \( F_{ij \dots k} = g(i, j, \dots, k) \).</p>
-<h2 class="doxsection"><a class="anchor" id="ex1_p13"></a>
-Further examples</h2>
+<h1 class="doxsection"><a class="anchor" id="ex1_p13"></a>
+Further examples</h1>
 <p>The above features constitute only a fraction of what you can do with <b>nda</b>.</p>
 <p>For more details, please look at the other <a class="el" href="examples.html">Examples</a> and the <a class="el" href="documentation.html">API Documentation</a>. </p>
 </div></div><!-- contents -->

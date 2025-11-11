@@ -131,8 +131,8 @@ $(function(){initNavTree('ex7.html','',''); });
 <li><span class="tt">sym_func_t</span> is a callable type that takes a multi-dimensional index and returns a <span class="tt">sym_t</span> object. The index in the <span class="tt">sym_t</span> object refers to an element which is related to the element at the original index by the <a class="el" href="structnda_1_1operation.html" title="A structure to capture combinations of complex conjugation and sign flip operations.">nda::operation</a>.</li>
 </ul>
 <p>Let's take a look at a simple example.</p>
-<h2 class="doxsection"><a class="anchor" id="ex7_p1"></a>
-Defining the symmetry</h2>
+<h1 class="doxsection"><a class="anchor" id="ex7_p1"></a>
+Defining the symmetry</h1>
 <p>We start by defining a hermitian symmetry for our matrix. A symmetry is simply an object of type <span class="tt">sym_func_t</span> that specifies how elements in an array are related to one another.</p>
 <div class="fragment"><div class="line"><span class="comment">// define a hermitian symmetry (satisfies nda::NdaSymmetry)</span></div>
 <div class="line"><span class="keyword">auto</span> h_symmetry = [](idx_t <span class="keyword">const</span> &amp;x) {</div>
@@ -144,8 +144,8 @@ Defining the symmetry</h2>
 <li>Diagonal elements are not related to any other elements (except to themselves by the identity operation).</li>
 <li>Off-diagonal elements with an index <span class="tt">(i,j)</span> are related to the element <span class="tt">(j,i)</span> by a complex conjugation.</li>
 </ol>
-<h2 class="doxsection"><a class="anchor" id="ex7_p2"></a>
-Constructing the symmetry group</h2>
+<h1 class="doxsection"><a class="anchor" id="ex7_p2"></a>
+Constructing the symmetry group</h1>
 <p>Once all of the desired symmetries have been defined, we can construct an <a class="el" href="classnda_1_1sym__grp.html" title="Class representing a symmetry group.">nda::sym_grp</a> object:</p>
 <div class="fragment"><div class="line"><span class="comment">// construct the symmetry group</span></div>
 <div class="line"><a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;std::complex&lt;double&gt;</a>, 2&gt; A(N, N);</div>
@@ -193,8 +193,8 @@ Constructing the symmetry group</h2>
 <div class="line"> [3,4,5]</div>
 <div class="line"> [6,7,8]]</div>
 </div><!-- fragment --><p>Now we can see why the elements 0, 4 and 8 are in their own symmetry class and elements 1 and 3, 2 and 6 and elements 5 and 7 are related to each other via a complex conjugation.</p>
-<h2 class="doxsection"><a class="anchor" id="ex7_p3"></a>
-Initializing an array</h2>
+<h1 class="doxsection"><a class="anchor" id="ex7_p3"></a>
+Initializing an array</h1>
 <p>One of the features of symmetry groups is that they can be used to initialize or assign to an existing array with an initializer function satisfying the <a class="el" href="conceptnda_1_1_nda_init_func.html" title="Concept defining an initializer function.">nda::NdaInitFunc</a> concept:</p>
 <div class="fragment"><div class="line"><span class="comment">// define an initializer function</span></div>
 <div class="line"><span class="keywordtype">int</span> count_eval = 0;</div>
@@ -222,8 +222,8 @@ Initializing an array</h2>
 <div class="fragment"><div class="line">Number of evaluations: 6</div>
 </div><!-- fragment --><p>It has been called exactly once for each symmetry class.</p>
 <p>In our simple example, this does not really make a difference but for large arrays where the number of symmetry classes is much smaller than the size of the array and where evaluating <span class="tt">init_func</span> is expensive, this can give a considerable speedup.</p>
-<h2 class="doxsection"><a class="anchor" id="ex7_p4"></a>
-Representative data</h2>
+<h1 class="doxsection"><a class="anchor" id="ex7_p4"></a>
+Representative data</h1>
 <p>We have already learned above about representative elements of symmetry classes. The symmetry group object gives us access to those elements:</p>
 <div class="fragment"><div class="line"><span class="comment">// get representative elements</span></div>
 <div class="line"><span class="keyword">auto</span> reps = grp.get_representative_data(A);</div>
@@ -245,8 +245,8 @@ Representative data</h2>
 <div class="line"> [(2,-2),(8,8),(10,10)]</div>
 <div class="line"> [(4,-4),(10,-10),(16,16)]]</div>
 </div><!-- fragment --><p>Here, we first multiplied the original representative data by 2 and then initialized a new array with it.</p>
-<h2 class="doxsection"><a class="anchor" id="ex7_p5"></a>
-Symmetrizing an array</h2>
+<h1 class="doxsection"><a class="anchor" id="ex7_p5"></a>
+Symmetrizing an array</h1>
 <p>The <a class="el" href="classnda_1_1sym__grp.html" title="Class representing a symmetry group.">nda::sym_grp</a> class provides a method that let's us symmetrize an existing array and simultaneously obtain the maximum symmetry violation.</p>
 <p>For each symmetry class, it first calculates the representative element by looping over all elements of the class, applying the stored <a class="el" href="structnda_1_1operation.html" title="A structure to capture combinations of complex conjugation and sign flip operations.">nda::operation</a> to each element (for a sign flip and a complex conjugation this is equal to applying the inverse operation) and summing the resulting values. The sum divided by the number of elements in the symmetry class gives us the representative element.</p>
 <p>It then compares each element in the class to the representative element, notes their absolute difference to obtain the maximum symmetry violation and sets the element to the value of the representative element (modulo the <a class="el" href="structnda_1_1operation.html" title="A structure to capture combinations of complex conjugation and sign flip operations.">nda::operation</a>).</p>

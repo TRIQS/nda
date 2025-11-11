@@ -114,16 +114,16 @@ $(function(){initNavTree('ex8.html','',''); });
 <div class="line">}</div>
 <div class="ttc" id="anda_8hpp_html"><div class="ttname"><a href="nda_8hpp.html">nda.hpp</a></div><div class="ttdoc">Includes all relevant headers for the core nda library.</div></div>
 </div><!-- fragment --><p>Before showing some linear algebra related operations, let us first introduce the <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> and <a class="el" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68" title="Alias template of an nda::basic_array with rank 1 and a &#39;V&#39; algebra.">nda::vector</a> types and highlight their similarities and differences with respect to <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a>.</p>
-<h2 class="doxsection"><a class="anchor" id="ex8_p1"></a>
-Matrix and vector types</h2>
+<h1 class="doxsection"><a class="anchor" id="ex8_p1"></a>
+Matrix and vector types</h1>
 <p>As already mentioned in the quick introduction <a class="el" href="ex1.html#ex1_p11">Doing linear algebra with arrays</a>, <b>nda</b> provides an <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> and an <a class="el" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68" title="Alias template of an nda::basic_array with rank 1 and a &#39;V&#39; algebra.">nda::vector</a> type. Both are specializations of the general <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> with the following features:</p><ul>
 <li><a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> is a 2-dimensional array that belongs to the <span class="tt">'M'</span> algebra.</li>
 <li><a class="el" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68" title="Alias template of an nda::basic_array with rank 1 and a &#39;V&#39; algebra.">nda::vector</a> is a 1-dimensional array that belongs to the <span class="tt">'V'</span> algebra.</li>
 </ul>
 <p>Their algebras determine how matrices and vectors behave in certain operations and expressions.</p>
 <p>Otherwise, everything that is true for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> objects is also true for <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> and <a class="el" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68" title="Alias template of an nda::basic_array with rank 1 and a &#39;V&#39; algebra.">nda::vector</a> objects.</p>
-<h2 class="doxsection"><a class="anchor" id="ex8_p2"></a>
-Constructing matrices and vectors</h2>
+<h1 class="doxsection"><a class="anchor" id="ex8_p2"></a>
+Constructing matrices and vectors</h1>
 <p>To construct a matrix or a vector, we can use the same methods as for <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> objects. We refer the user to <a class="el" href="ex2.html">Example 2: Constructing arrays</a> for more information.</p>
 <p>For example, to construct a matrix and a vector of a certain shape, we can do</p>
 <div class="fragment"><div class="line"><span class="comment">// construct a 4x3 matrix and a vector of size 3</span></div>
@@ -152,8 +152,8 @@ Constructing matrices and vectors</h2>
 <div class="line">[[1,0]</div>
 <div class="line"> [0,2]]</div>
 </div><!-- fragment --><p><a class="el" href="group__av__factories.html#ga102fecb589bb00838a901efae065ce56" title="Create an identity nda::matrix with ones on the diagonal.">nda::eye</a> constructs an identity matrix of a certain size and <a class="el" href="group__av__factories.html#ga3c1d2dbd1fdb0e666829b532fcc46da4" title="Get a new nda::matrix with the given values on the diagonal.">nda::diag</a> takes a 1-dimensional array and constructs a square diagonal matrix containing the values of the given array.</p>
-<h2 class="doxsection"><a class="anchor" id="ex8_p3"></a>
-Initializing and assigning to matrices and vectors</h2>
+<h1 class="doxsection"><a class="anchor" id="ex8_p3"></a>
+Initializing and assigning to matrices and vectors</h1>
 <p>Again, initializing and assigning to matrices and vectors works (almost) exactly in the same way as it does for arrays (see <a class="el" href="ex3.html">Example 3: Initializing arrays</a>)</p>
 <p>The main difference occurs, when we are assigning a scalar. While for arrays and vectors the assignment is done element-wise, for matrices the scalar is assigned only to the elements on the shorter diagonal and the rest is zeroed out:</p>
 <div class="fragment"><div class="line"><span class="comment">// assigning a scalar to a matrix and vector</span></div>
@@ -168,8 +168,8 @@ Initializing and assigning to matrices and vectors</h2>
 <div class="line"> [0,0,3.1415]</div>
 <div class="line"> [0,0,0]]</div>
 <div class="line">v = [2.7182,2.7182,2.7182]</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="ex8_p4"></a>
-Views on matrices and vectors</h2>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="ex8_p4"></a>
+Views on matrices and vectors</h1>
 <p>There are some <a class="el" href="group__av__factories.html">Factories and transformations</a> for views that are specific to matrices and vectors, otherwise everything mentioned in <a class="el" href="ex4.html">Example 4: Views and slices</a> still applies:</p>
 <div class="fragment"><div class="line"><span class="comment">// get a vector view of the diagonal of a matrix</span></div>
 <div class="line"><span class="keyword">auto</span> d = <a class="code hl_function" href="group__av__factories.html#gad73d17b3c916c0a15e6d1b1e9d4ee017">nda::diagonal</a>(D);</div>
@@ -193,16 +193,16 @@ Views on matrices and vectors</h2>
 <div class="line"> [3,4]]</div>
 <div class="line">Algebra of A: A</div>
 <div class="line">Algebra of A_mv: M</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="ex8_p5"></a>
-HDF5, MPI and symmetry support for matrices and vectors</h2>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="ex8_p5"></a>
+HDF5, MPI and symmetry support for matrices and vectors</h1>
 <p>We refer the user to the examples</p><ul>
 <li><a class="el" href="ex5.html">Example 5: HDF5 support</a>,</li>
 <li><a class="el" href="ex6.html">Example 6: MPI support</a> and</li>
 <li><a class="el" href="ex7.html">Example 7: Making use of symmetries</a>.</li>
 </ul>
 <p>There are no mentionable differences between arrays, matrices and vectors regarding those features.</p>
-<h2 class="doxsection"><a class="anchor" id="ex8_p6"></a>
-Arithmetic operations with matrices and vectors</h2>
+<h1 class="doxsection"><a class="anchor" id="ex8_p6"></a>
+Arithmetic operations with matrices and vectors</h1>
 <p>Here the algebra of the involved types becomes important. In section <a class="el" href="ex1.html#ex1_p8">Performing arithmetic operations</a>, we have shortly introduced how arithmetic operations are implemented in <b>nda</b> in terms of lazy expressions and how the algebra of the operands influences the results.</p>
 <p>Let us be more complete in this section. Suppose we have the following objects:</p><ul>
 <li><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> (any type that satisfies this concept): <span class="tt">O1</span>, <span class="tt">O2</span>, ...</li>
@@ -237,8 +237,8 @@ Arithmetic operations with matrices and vectors</h2>
 </ul>
 </li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="ex8_p7"></a>
-Using linear algebra tools</h2>
+<h1 class="doxsection"><a class="anchor" id="ex8_p7"></a>
+Using linear algebra tools</h1>
 <p>In addition to the basic matrix-matrix and matrix-vector multiplications described above, <b>nda</b> provides some useful <a class="el" href="group__linalg__tools.html">Linear algebra tools</a>. While some of them have a custom implementation, e.g. <a class="el" href="group__linalg__tools.html#ga25ac6b5f84880602b6c042d7b08fdafa" title="Compute the cross product of two 3-dimensional vectors.">nda::linalg::cross_product</a>, most make use of the <a class="el" href="group__linalg__blas.html">BLAS interface</a> and <a class="el" href="group__linalg__lapack.html">LAPACK interface</a> to call more optimized routines.</p>
 <p>Let us demonstrate some of its features:</p>
 <div class="fragment"><div class="line"><span class="comment">// take the cross product of two vectors</span></div>
@@ -323,8 +323,8 @@ Using linear algebra tools</h2>
 <div class="line">[[4,-14,-12]</div>
 <div class="line"> [-14,10,13]</div>
 <div class="line"> [-12,13,1]]</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="ex8_p8"></a>
-Using the BLAS/LAPACK interface</h2>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="ex8_p8"></a>
+Using the BLAS/LAPACK interface</h1>
 <p>While the functions in <a class="el" href="group__linalg__tools.html">Linear algebra tools</a> offer a very user-friendly experience, <a class="el" href="group__linalg__blas.html">BLAS interface</a> and <a class="el" href="group__linalg__lapack.html">LAPACK interface</a> are more low-level and usually require more input from the users.</p>
 <p>Let us show how to use the <a class="el" href="group__linalg__lapack.html">LAPACK interface</a> to solve a system of linear equations. The system we want to solve is \( \mathbf{A}_1 \mathbf{x}_1 = \mathbf{b}_1 \) with</p>
 <div class="fragment"><div class="line"><span class="comment">// define the linear system of equations and the right hand side matrix</span></div>

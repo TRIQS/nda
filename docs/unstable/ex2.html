@@ -113,8 +113,8 @@ $(function(){initNavTree('ex2.html','',''); });
 <div class="line">  <span class="comment">// code snippets go here ...</span></div>
 <div class="line">}</div>
 <div class="ttc" id="anda_8hpp_html"><div class="ttname"><a href="nda_8hpp.html">nda.hpp</a></div><div class="ttdoc">Includes all relevant headers for the core nda library.</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="ex2_p1"></a>
-Default constructor</h2>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="ex2_p1"></a>
+Default constructor</h1>
 <p>The default constructor creates an empty array of size 0:</p>
 <div class="fragment"><div class="line"><span class="comment">// default constructor</span></div>
 <div class="line"><span class="keyword">auto</span> A1 = <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;double, 2&gt;</a>();</div>
@@ -146,8 +146,8 @@ Default constructor</h2>
 <div class="line">A.shape() = (3 2)</div>
 <div class="line">A.size() = 100</div>
 <div class="line">A.shape() = (10 10)</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="ex2_p2"></a>
-Constructing an array with a given shape</h2>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="ex2_p2"></a>
+Constructing an array with a given shape</h1>
 <p>The usual way to create an array is by specifying its shape. While the shape is a runtime parameter, the rank of the array still has to be known at compile-time (it is a template parameter):</p>
 <div class="fragment"><div class="line"><span class="comment">// create a 100x100 complex matrix</span></div>
 <div class="line"><span class="keyword">auto</span> M1 = <a class="code hl_typedef" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1">nda::matrix&lt;std::complex&lt;double&gt;</a>&gt;(100, 100);</div>
@@ -170,8 +170,8 @@ Constructing an array with a given shape</h2>
 <div class="fragment"><div class="line">v1 = [(10,1),(10,1),(10,1),(10,1),(10,1)]</div>
 <div class="line">v1.size() = 5</div>
 <div class="line">v1.shape() = (5)</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="ex2_p3"></a>
-Copy/Move constructors</h2>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="ex2_p3"></a>
+Copy/Move constructors</h1>
 <p>The copy and move constructors behave as expected:</p>
 <ul>
 <li>the copy constructor simply copies the memory handle and layout of an array and</li>
@@ -201,8 +201,8 @@ Copy/Move constructors</h2>
 </div><!-- fragment --><blockquote class="doxtable">
 <p><b>Note</b>: After moving, the vector <span class="tt">v2</span> is empty, i.e. its memory handle does not manage any memory at the moment. To use it, one should again resize it, so that new memory is allocated. </p>
 </blockquote>
-<h2 class="doxsection"><a class="anchor" id="ex2_p4"></a>
-Constructing an array from its data</h2>
+<h1 class="doxsection"><a class="anchor" id="ex2_p4"></a>
+Constructing an array from its data</h1>
 <p>1-, 2- and 3-dimensional arrays can be constructed directly from their data using <span class="tt">std::initializer_list</span> objects:</p><ul>
 <li>a 1-dimensional array is constructed from a single list,</li>
 <li>a 2-dimensional array is constructed from a nested list (a list of lists) and</li>
@@ -238,8 +238,8 @@ Constructing an array from its data</h2>
 <div class="line">A3 = [1,2,3,4,5,6,7,8,9,10,11,12]</div>
 <div class="line">A3.size() = 12</div>
 <div class="line">A3.shape() = (2 3 2)</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="ex2_p5"></a>
-Constructing an array from an nda::Array</h2>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="ex2_p5"></a>
+Constructing an array from an nda::Array</h1>
 <p>We can also construct an array from any object that satisfies the <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> concept, has a compatible value type and the same rank.</p>
 <p>For example, this could be a lazy expression or another array/view with a possibly different</p><ul>
 <li>value type,</li>
@@ -268,8 +268,8 @@ Constructing an array from an nda::Array</h2>
 <div class="line"> [5,6]]</div>
 <div class="line">A2_f.size() = 6</div>
 <div class="line">A2_f.shape() = (3 2)</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="ex2_p6"></a>
-Factories and transformations</h2>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="ex2_p6"></a>
+Factories and transformations</h1>
 <p><b>nda</b> provides various factory functions and transformations that allow us to construct special arrays very easily either from scratch or from some other input arrays.</p>
 <p>Here, we only give a few examples and refer the interested reader to the <a class="el" href="group__av__factories.html">Factories and transformations</a> documentation.</p>
 <div class="fragment"><div class="line"><span class="comment">// 1-dimensional array with only even integers from 2 to 20</span></div>

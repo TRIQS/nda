@@ -113,8 +113,8 @@ $(function(){initNavTree('ex3.html','',''); });
 <div class="line">  <span class="comment">// code snippets go here ...</span></div>
 <div class="line">}</div>
 <div class="ttc" id="anda_8hpp_html"><div class="ttname"><a href="nda_8hpp.html">nda.hpp</a></div><div class="ttdoc">Includes all relevant headers for the core nda library.</div></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="ex3_p1"></a>
-Assigning a scalar to an array</h2>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="ex3_p1"></a>
+Assigning a scalar to an array</h1>
 <p>The simplest way to initialize an array is to assign a scalar to it:</p>
 <div class="fragment"><div class="line"><span class="comment">// assign a scalar to an array</span></div>
 <div class="line"><span class="keyword">auto</span> A = <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;std::complex&lt;double&gt;</a>, 2&gt;(3, 2);</div>
@@ -145,8 +145,8 @@ Assigning a scalar to an array</h2>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;A_arr = &quot;</span> &lt;&lt; A_arr &lt;&lt; std::endl;</div>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">A_arr = [[1,2,3],[1,2,3],[1,2,3],[1,2,3]]</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="ex3_p2"></a>
-Copy/Move assignment</h2>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="ex3_p2"></a>
+Copy/Move assignment</h1>
 <p>The copy and move assignment operations behave as expected:</p>
 <ul>
 <li>copy assignment simply copies the memory handle and layout of an array and</li>
@@ -176,8 +176,8 @@ Copy/Move assignment</h2>
 </div><!-- fragment --><blockquote class="doxtable">
 <p><b>Note</b>: Be careful when reusing an object after it has been moved (see the note at <a class="el" href="ex2.html#ex2_p3">Copy/Move constructors</a>)! </p>
 </blockquote>
-<h2 class="doxsection"><a class="anchor" id="ex3_p3"></a>
-Assigning an nda::Array to an array</h2>
+<h1 class="doxsection"><a class="anchor" id="ex3_p3"></a>
+Assigning an nda::Array to an array</h1>
 <p>To assign an object that satisfies the <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> concept to an array is similar to <a class="el" href="ex2.html#ex2_p5">Constructing an array from an nda::Array</a>.</p>
 <div class="fragment"><div class="line"><span class="comment">// assign a lazy expression</span></div>
 <div class="line"><a class="code hl_typedef" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1">nda::matrix&lt;std::complex&lt;double&gt;</a>, <a class="code hl_struct" href="structnda_1_1_f__layout.html">nda::F_layout</a>&gt; M_f(3, 2);</div>
@@ -201,8 +201,8 @@ Assigning an nda::Array to an array</h2>
 </div><!-- fragment --><p>Many assignment operations resize the left hand side array if necessary.</p>
 <p>In the above example, the first assignment does not need to do a resize because the left hand side array already has the correct shape.</p>
 <p>This is not true for the second assignment. <span class="tt">A2</span> has been default constructed and therefore has a size of 0.</p>
-<h2 class="doxsection"><a class="anchor" id="ex3_p4"></a>
-Assigning a contiguous range</h2>
+<h1 class="doxsection"><a class="anchor" id="ex3_p4"></a>
+Assigning a contiguous range</h1>
 <p>It is possible to assign an object that satisfies the <span class="tt">std::ranges::contiguous_range</span> concept to an 1-dimensional array:</p>
 <div class="fragment"><div class="line"><span class="comment">// assign a contiguous range to an 1-dimensional array</span></div>
 <div class="line">std::vector&lt;long&gt; vec{1, 2, 3, 4, 5};</div>
@@ -212,8 +212,8 @@ Assigning a contiguous range</h2>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">A_vec = [1,2,3,4,5]</div>
 </div><!-- fragment --><p>As expected, the elements of the range are simply copied into the array.</p>
-<h2 class="doxsection"><a class="anchor" id="ex3_p5"></a>
-Initializing an array manually</h2>
+<h1 class="doxsection"><a class="anchor" id="ex3_p5"></a>
+Initializing an array manually</h1>
 <p>We can also initialize an array by assigning to each element manually. This can be done in different ways.</p>
 <p>For example,</p>
 <ul>
@@ -254,8 +254,8 @@ Initializing an array manually</h2>
 </div><!-- fragment --></li>
 </ul>
 <p>While the traditional for-loops are perhaps the most flexible option, it becomes tedious quite fast with increasing dimensionality.</p>
-<h2 class="doxsection"><a class="anchor" id="ex3_p6"></a>
-Initializing an array using automatic assignment</h2>
+<h1 class="doxsection"><a class="anchor" id="ex3_p6"></a>
+Initializing an array using automatic assignment</h1>
 <p>This has already been explained in <a class="el" href="ex1.html#ex1_p12">Initializing with CLEF's automatic assignment</a>.</p>
 <p>Let us give another example:</p>
 <div class="fragment"><div class="line"><span class="comment">// initialize an array using CLEF&#39;s automatic assignment</span></div>

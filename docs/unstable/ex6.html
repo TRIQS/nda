@@ -130,8 +130,8 @@ $(function(){initNavTree('ex6.html','',''); });
 <blockquote class="doxtable">
 <p><b>Note</b>: Only regular arrays and views are allowed in the <b>nda</b> MPI routines, no lazy expressions. You can use <a class="el" href="group__av__factories.html#ga1ef017428f20125233751e5e985fdc90" title="Make a given object regular.">nda::make_regular</a> to turn your lazy expressions into regular arrays. </p>
 </blockquote>
-<h2 class="doxsection"><a class="anchor" id="ex6_p1"></a>
-Broadcasting an array/view</h2>
+<h1 class="doxsection"><a class="anchor" id="ex6_p1"></a>
+Broadcasting an array/view</h1>
 <p>Let us first default construct an array on all MPI ranks and then resize and initialize it on rank 0, the root rank:</p>
 <div class="fragment"><div class="line"><span class="comment">// create an array and initialize it on root</span></div>
 <div class="line"><span class="keyword">auto</span> A = <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;int, 2, nda::F_layout&gt;</a>();</div>
@@ -220,8 +220,8 @@ Broadcasting an array/view</h2>
 <blockquote class="doxtable">
 <p><b>Note</b>: All MPI routines have certain requirements for the arrays/views involved in the operation. Please check out the documentation of the individual function, e.g. in this case <a class="el" href="group__av__mpi.html#ga6df12000d826688a8203af93d6b6838e" title="Implementation of an MPI broadcast for nda::basic_array or nda::basic_array_view types.">nda::mpi_broadcast</a>, if you have doubts. </p>
 </blockquote>
-<h2 class="doxsection"><a class="anchor" id="ex6_p2"></a>
-Gathering an array/view</h2>
+<h1 class="doxsection"><a class="anchor" id="ex6_p2"></a>
+Gathering an array/view</h1>
 <p>Suppose we have a 1-dimensional array with rank specific elements and sizes:</p>
 <div class="fragment"><div class="line"><span class="comment">// prepare the array to be gathered</span></div>
 <div class="line"><span class="keyword">auto</span> B = <a class="code hl_typedef" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array&lt;int, 1&gt;</a>(comm.rank() + 1);</div>
@@ -312,8 +312,8 @@ Gathering an array/view</h2>
 <div class="line">[]</div>
 <div class="line">Rank 3:</div>
 <div class="line">[]</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="ex6_p3"></a>
-Scattering an array/view</h2>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="ex6_p3"></a>
+Scattering an array/view</h1>
 <p>Scattering of an array/view is basically the inverse operation of gathering. It takes an array/view and splits it along the first dimensions as evenly as possible among the processes.</p>
 <p>For example, to scatter the same array that we just gathered, we can do</p>
 <div class="fragment"><div class="line"><span class="comment">// scatter an array from root to all other ranks</span></div>
@@ -349,8 +349,8 @@ Scattering an array/view</h2>
 <div class="line">Rank 1:</div>
 <div class="line">[[2,2]]</div>
 </div><!-- fragment --><p>Here, a 2-by-2 array is scattered from rank 2 to all other processes. It is split along the first dimension and the resulting 1-by-2 subarrays are sent to the ranks 0 and 1 while the ranks 2 and 3 do not receive any data.</p>
-<h2 class="doxsection"><a class="anchor" id="ex6_p4"></a>
-Reducing an array/view</h2>
+<h1 class="doxsection"><a class="anchor" id="ex6_p4"></a>
+Reducing an array/view</h1>
 <p>Let us reduce the same 2-by-2 arrays from above. Be default, <span class="tt">mpi::reduce</span> performs an element-wise summation among the ranks in the communicator and makes the result available only on the root process:</p>
 <div class="fragment"><div class="line"><span class="comment">// reduce an array on root using MPI_SUM</span></div>
 <div class="line"><span class="keyword">auto</span> D = mpi::reduce(C, comm, root);</div>
@@ -389,8 +389,8 @@ Reducing an array/view</h2>
 <div class="line">[[6,6]</div>
 <div class="line"> [6,6]]</div>
 </div><!-- fragment --><p>In contrast to the standard <span class="tt">mpi::all_reduce</span> function, the in-place operation does not create and return a new array. Instead the result is directly written into the input array.</p>
-<h2 class="doxsection"><a class="anchor" id="ex6_p5"></a>
-Using existing arrays/views</h2>
+<h1 class="doxsection"><a class="anchor" id="ex6_p5"></a>
+Using existing arrays/views</h1>
 <p>Note that the functions <a class="el" href="group__av__mpi.html#ga3edd8f70f2213d38b391743ddab967b3" title="Implementation of an MPI reduce for nda::basic_array or nda::basic_array_view types.">nda::mpi_reduce</a>, <a class="el" href="group__av__mpi.html#ga62aacd4df1ae34a7690e68d93c7429be" title="Implementation of an MPI gather for nda::basic_array or nda::basic_array_view types.">nda::mpi_gather</a> and <a class="el" href="group__av__mpi.html#ga3c70e635ce6fd776980edc3b44f5823b" title="Implementation of an MPI scatter for nda::basic_array or nda::basic_array_view types.">nda::mpi_scatter</a> all return a newly constructed array which contains the result of the respective MPI operation. In case of large amounts of data, constructing a new obejct can be expensive and use a lot of additional memory.</p>
 <p>If there already exists an array/view that can be used as a receive (output) buffer, we can avoid this additional overhead by calling <a class="el" href="group__av__mpi.html#ga663e553746cc0923df57b83c2c742eba" title="Implementation of an MPI reduce for nda::basic_array or nda::basic_array_view types that reduces dire...">nda::mpi_reduce_into</a>, <a class="el" href="group__av__mpi.html#gabb73c0a539d4cd1edcad9c431ca716a4" title="Implementation of an MPI gather for nda::basic_array or nda::basic_array_view types that gathers dire...">nda::mpi_gather_into</a> or <a class="el" href="group__av__mpi.html#gae423dc9b0c850f1650fa2803b7123f80" title="Implementation of an MPI scatter for nda::basic_array or nda::basic_array_view types that scatters di...">nda::mpi_scatter_into</a> instead. The <span class="tt">mpi_xxx_into</span> functions work exactly as their <span class="tt">mpi_xxx</span> counterparts except that they take an additional array/view as an argument into which the results are written, e.g.</p>
 <div class="fragment"><div class="line"><span class="comment">// scatter a view into an existing array</span></div>
