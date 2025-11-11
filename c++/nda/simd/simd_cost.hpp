@@ -90,7 +90,7 @@ namespace nda {
      */
     template <typename A_in, typename T_in = get_value_t<A_in>>
     static consteval size_t emulation_cost() {
-      [[maybe_unused]] gconstexpr size_t MISSING_LOAD_PENALTY = 16;
+      [[maybe_unused]] constexpr size_t MISSING_LOAD_PENALTY = 16;
       // Use std::remove_cvref_t to handle reference types passed in (e.g., Array&)
       using A = std::remove_cvref_t<A_in>;
       using T = std::remove_cvref_t<T_in>;

@@ -200,8 +200,8 @@ namespace nda {
     if constexpr (std::is_same_v<dispatch_t, simd::scalar_t> or is_complex_v<get_value_t<A>>) {
       return std::sqrt(fold(
          [](double r, auto const &x) -> double {
-           auto ab = std::abs(x);
-           return r + ab * ab;
+           auto abs = std::abs(x);
+           return xsimd::fma(abs, abs, r);
          },
          a, double(0)));
     } else {
@@ -211,16 +211,12 @@ namespace nda {
       auto f_simd = [&a, &r_simd](auto &&...args) {
         simd_t x   = a.load(dispatch_t{}, args...);
         simd_t abs = xsimd::abs(x);
-        if constexpr (std::is_integral_v<value_t>) {
-          r_simd = abs * abs + r_simd;
-        } else {
-          r_simd = xsimd::fma(abs, abs, r_simd);
-        }
+        r_simd     = xsimd::fma(abs, abs, r_simd);
       };
       double r      = 0;
       auto f_scalar = [&a, &r](auto &&...args) {
         auto abs = std::abs(a(args...));
-        r        = abs * abs + r;
+        r        = xsimd::fma(abs, abs, r);
       };
       nda::for_each_static<0, get_layout_info<A>.stride_order, simd_t::size>(a.shape(), std::move(f_simd), std::move(f_scalar));
       return std::sqrt((static_cast<double>(xsimd::reduce_add(r_simd)) + r));
