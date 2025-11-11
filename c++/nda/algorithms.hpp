@@ -69,18 +69,19 @@ namespace nda {
     return fold(std::move(f), a, get_value_t<A>{});
   }
 
-  template <Array A, typename F_SIMD, typename F_SCALAR, Vectorizable R>
-    requires(std::is_same_v<simd::dispatch_policy_t<A, R>, simd::vectorize_t> or std::is_same_v<simd::dispatch_policy_t<A, R>, simd::emulate_t>)
-  auto fold(F_SIMD f_simd, F_SCALAR f_scalar, A const &a, native_simd<R> r_simd, R r_scalar) {
-    nda::for_each_static<0, get_layout_info<A>.stride_order, native_simd<R>::size>(
-       a.shape(),
-       [&a, &r_simd, &f_simd](auto &&...args) { r_simd = f_simd(r_simd, native_simd<R>(a.load(simd::dispatch_policy_t<A, R>{}, args...))); },
-       [&a, &r_scalar, &f_scalar](auto &&...args) { r_scalar = f_scalar(r_scalar, a(args...)); });
-    alignas(native_simd<R>::arch_type::alignment()) std::array<R, r_simd.size()> res;
-    r_simd.store(res.data());
-    for (int i = 0; i < r_simd.size(); i++) { r_scalar = f_scalar(r_scalar, res[i]); }
-    return r_scalar;
-  }
+  //TODO: Maybe add another fold function that can interact with SIMD types.
+//  template <Array A, typename F_SIMD, typename F_SCALAR, Vectorizable R>
+//    requires(std::is_same_v<simd::dispatch_policy_t<A, R>, simd::vectorize_t> or std::is_same_v<simd::dispatch_policy_t<A, R>, simd::emulate_t>)
+//  auto fold(F_SIMD f_simd, F_SCALAR f_scalar, A const &a, native_simd<R> r_simd, R r_scalar) {
+//    nda::for_each_static<0, get_layout_info<A>.stride_order, native_simd<R>::size>(
+//       a.shape(),
+//       [&a, &r_simd, &f_simd](auto &&...args) { r_simd = f_simd(r_simd, native_simd<R>(a.load(simd::dispatch_policy_t<A, R>{}, args...))); },
+//       [&a, &r_scalar, &f_scalar](auto &&...args) { r_scalar = f_scalar(r_scalar, a(args...)); });
+//    alignas(native_simd<R>::arch_type::alignment()) std::array<R, r_simd.size()> res;
+//    r_simd.store(res.data());
+//    for (int i = 0; i < r_simd.size(); i++) { r_scalar = f_scalar(r_scalar, res[i]); }
+//    return r_scalar;
+//  }
 
   /**
    * @brief Does any of the elements of the array evaluate to true?
