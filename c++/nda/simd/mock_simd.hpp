@@ -44,4 +44,4 @@ namespace nda::simd {
       return simd_t::load_aligned(result_array.data());
     }
   };
-}
+} // namespace nda::simd

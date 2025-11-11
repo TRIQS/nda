@@ -28,42 +28,47 @@ namespace nda {
 
   namespace simd {
     /**
-     * @brief Computes the compile-time "cost" of evaluating an expression template.
+     * @brief Computes the expected performance gain of vectorizing an expression template.
      *
      * This function recursively traverses the expression tree defined by the
-     * template type `E` and calculates a cost based on the following rules:
+     * template type `A_in` and calculates a score indicating how advantageous
+     * vectorization would be.
      *
-     * - **Cost 0:** Any non-array/expression type (e.g., scalars) has zero cost.
-     * - **Cost 1:** Terminal nodes (basic_array or basic_array_view) have a cost of 1,
-     * as they represent one leaf variable.
-     * - **Cost 1 + children:** Unary, binary, and function-call expressions have a
-     * cost of 1 (for the operation itself) plus the sum of the costs of all
+     * The gain is calculated based on the following rules:
+     * Any non-array/expression type (e.g., scalars) has 0 gains.
+     * Terminal nodes (basic_array or basic_array_view) have a gain of GAIN_FACTOR_OPERAND.
+     * Unary, binary, and function-call expressions have a
+     * gain of GAIN_FACTOR_OPERATION (for the operation itself) plus the sum of the gains of all
      * their child expressions.
      *
-     * This `consteval` function replaces the C++17 struct-based template
-     * metaprogramming. It uses `if constexpr` to branch at compile time and
-     * template lambdas to "pattern match" and extract sub-expression types.
      */
     template <typename A_in>
-    static consteval size_t expr_cost() {
-      using A = std::remove_cvref_t<A_in>;
+    static consteval size_t simd_gain() {
+      [[maybe_unused]] constexpr size_t GAIN_FACTOR_OPERAND   = 1;
+      [[maybe_unused]] constexpr size_t GAIN_FACTOR_OPERATION = 1;
+      // Use std::remove_cvref_t to handle reference types passed in (e.g., Array&)
+      using T = std::remove_cvref_t<A_in>;
+
       // Case 1 & 2: basic_array and basic_array_view (Terminals)
-      if constexpr (IsBasicArray<A> or IsBasicArrayView<A>) {
-        return 1;
+      if constexpr (IsBasicArray<T> or IsBasicArrayView<T>) {
+        return GAIN_FACTOR_OPERAND;
       }
       // Case 3: expr_unary
-      else if constexpr (IsExprUnary<A>) {
-        return []<char OP, Array E>(std::type_identity<expr_unary<OP, E>>) { return 1 + expr_cost<E>(); }(std::type_identity<A>{});
+      else if constexpr (IsExprUnary<T>) {
+        return
+           []<char OP, Array E>(std::type_identity<expr_unary<OP, E>>) { return GAIN_FACTOR_OPERATION + simd_gain<E>(); }(std::type_identity<T>{});
       }
       // Case 4: expr_call
-      else if constexpr (IsExprCall<A>) {
-        return []<typename F, Array... As>(std::type_identity<expr_call<F, As...>>) { return 1 + (expr_cost<As>() + ...); }(std::type_identity<A>{});
+      else if constexpr (IsExprCall<T>) {
+        return []<typename F, Array... As>(std::type_identity<expr_call<F, As...>>) {
+          return GAIN_FACTOR_OPERATION + (simd_gain<As>() + ...);
+        }(std::type_identity<T>{});
       }
       // Case 5: expr (binary)
-      else if constexpr (IsExpr<A>) {
+      else if constexpr (IsExpr<T>) {
         return []<char OP, typename L, typename R>(std::type_identity<expr<OP, L, R>>) {
-          return 1 + expr_cost<L>() + expr_cost<R>();
-        }(std::type_identity<A>{});
+          return GAIN_FACTOR_OPERATION + simd_gain<L>() + simd_gain<R>();
+        }(std::type_identity<T>{});
       }
       // Case 0: Base case for any other type (like int, double, etc.)
       else {
@@ -72,31 +77,71 @@ namespace nda {
     }
 
     /**
+     * @brief Computes the compile-time "emulation cost" of an expression template.
+     *
+     * This function recursively traverses the expression tree defined by `A_in`
+     * and calculates a cost associated with evaluating it using an "emulated"
+     * SIMD strategy
+     *
+     * This cost model helps decide if an expression is so complex that, even
+     * if it doesn't support a full native SIMD kernel, it's still more
+     * efficient to evaluate it using an emulated SIMD load/store than to
+     * perform a standard scalar evaluation.
+     */
+    template <typename A_in, typename T_in = get_value_t<A_in>>
+    static consteval size_t emulation_cost() {
+      [[maybe_unused]] gconstexpr size_t MISSING_LOAD_PENALTY = 16;
+      // Use std::remove_cvref_t to handle reference types passed in (e.g., Array&)
+      using A = std::remove_cvref_t<A_in>;
+      using T = std::remove_cvref_t<T_in>;
+
+      // Case 1 & 2: basic_array and basic_array_view (Terminals)
+      if constexpr (IsBasicArray<A> or IsBasicArrayView<A>) { return 0; }
+      // Case 3: expr_unary
+      if constexpr (IsExprUnary<A>) {
+        return []<char OP, Array E>(std::type_identity<expr_unary<OP, E>>) { return emulation_cost<E>(); }(std::type_identity<A>{});
+      }
+      // Case 4: expr_call
+      if constexpr (IsExprCall<A>) {
+        return []<typename F, Array... As>(std::type_identity<expr_call<F, As...>>) {
+          if constexpr (!LoadWithNativeSimd<F, T, sizeof...(As)>) { return MISSING_LOAD_PENALTY + (emulation_cost<As>() + ...); }
+          return (emulation_cost<As>() + ...);
+        }(std::type_identity<A>{});
+      }
+      // Case 5: expr (binary)
+      if constexpr (IsExpr<A>) {
+        return []<char OP, typename L, typename R>(std::type_identity<expr<OP, L, R>>) {
+          return emulation_cost<L>() + emulation_cost<R>();
+        }(std::type_identity<A>{});
+      }
+      // Case 0: Base case for any other type (like int, double, etc.)
+      return 0;
+    }
+
+    /**
      * @brief Decides the evaluation strategy for an expression based on its cost.
      *
-     * This class models the cost of evaluating an expression tree. It uses
-     * `expression_cost<A>()` to calculate the actual cost of the tree.
+     * This class models the cost of evaluating an expression tree and provides
+     * a heuristic to decide whether an "emulated" vectorized evaluation
+     * is worthwhile.
      *
-     * A `MAX_COST` threshold is defined. If the expression's cost is too high
-     * (>= MAX_COST), the `emulate()` function will return true.
+     * The `cost()` is defined as the `emulation_cost<A>()`, which represents
+     * the overhead of evaluating the expression into a temporary.
      *
-     * This signals in the case where vectorized evaluation is not possible,
-     * that a simple scalar evaluation is too costly according to expression cost model.
-     * In such cases, we might opt for an "emulated" vectorized evaluation
-     * for the entire expression.
+     * The `emulate()` function implements the decision logic. It returns true if
+     * the `simd_gain<A>()` (representing the total complexity/fusion benefit)
+     * is significantly larger than the `emulation_cost<A>()`.
      *
+     * This check (`simd_gain<A>() >= emulation_cost<A>()`) is used to decide if
+     * an expression is complex enough that an emulated vectorization is
+     * preferable to a (potentially slow) scalar evaluation, especially when
+     * a full native SIMD kernel is not available.
      */
-    template <typename A>
+    //TODO: The functions emulation_cost and simd_gains need to be tuned with different benchmarks and different algorithms, values to determine optimal model.
+    template <typename A, typename T = get_value_t<A>>
     struct simd_cost_model {
-      /*
-       *TODO: This Threshold needs to be tuned in the future by running benchmarks on different expression trees with different Threshold costs
-       * and see which threshold number gives the best performance. This threshold number is also dependent on how the cost of the expression tree
-       * is calculated therefore when the model changes we have to rerun the benchmarks to decide the threshold cost.
-       */
-
-      static constexpr size_t MAX_COST = 16;
-      static constexpr size_t cost() { return expr_cost<A>(); }
-      static constexpr bool emulate() { return cost() >= MAX_COST; }
+      static constexpr size_t cost() { return emulation_cost<A, T>(); }
+      static constexpr bool emulate() { return simd_gain<A>() >= emulation_cost<A, T>(); }
     };
 
     /**
@@ -119,29 +164,25 @@ namespace nda {
     static consteval bool has_same_layout() {
       using A = std::remove_cvref_t<A_in>;
       // Case 1 & 2: basic_array and basic_array_view (Terminals)
-      if constexpr (IsBasicArray<A> or IsBasicArrayView<A>) {
-        return true;
-      }
+      if constexpr (IsBasicArray<A> or IsBasicArrayView<A>) { return true; }
       // Case 3: expr_unary
-      else if constexpr (IsExprUnary<A>) {
+      if constexpr (IsExprUnary<A>) {
         return []<char OP, Array E>(std::type_identity<expr_unary<OP, E>>) { return has_same_layout<E>(); }(std::type_identity<A>{});
       }
       // Case 4: expr_call
-      else if constexpr (IsExprCall<A>) {
+      if constexpr (IsExprCall<A>) {
         return []<typename F, Array... As>(std::type_identity<expr_call<F, As...>>) {
           return get_layout_info<expr_call<F, As...>>.stride_order != static_cast<uint64_t>(-1);
         }(std::type_identity<A>{});
       }
       // Case 5: expr (binary)
-      else if constexpr (IsExpr<A>) {
+      if constexpr (IsExpr<A>) {
         return []<char OP, typename L, typename R>(std::type_identity<expr<OP, L, R>>) {
           return get_layout_info<expr<OP, L, R>>.stride_order != static_cast<uint64_t>(-1);
         }(std::type_identity<A>{});
       }
       // Case 0: Base case for any other type (like int, double, etc.)
-      else {
-        return false;
-      }
+      return false;
     }
     /**
      * @brief A compile-time function to check if an expression tree is vectorizable.
@@ -175,21 +216,19 @@ namespace nda {
       using T         = std::remove_cvref_t<T_in>;
       using ValueType = get_value_t<A>;
       // Case 1 & 2: basic_array and basic_array_view (Terminals)
-      if constexpr (IsBasicArray<A> or IsBasicArrayView<A>) {
-        return Vectorizable<ValueType> and std::is_same_v<ValueType, T>;
-      }
+      if constexpr (IsBasicArray<A> or IsBasicArrayView<A>) { return Vectorizable<ValueType> and std::is_same_v<ValueType, T>; }
       // Case 3: expr_unary
-      else if constexpr (IsExprUnary<A>) {
+      if constexpr (IsExprUnary<A>) {
         return []<char OP, Array E>(std::type_identity<expr_unary<OP, E>>) { return has_vectorizable_type<E>(); }(std::type_identity<A>{});
       }
       // Case 4: expr_call
-      else if constexpr (IsExprCall<A>) {
+      if constexpr (IsExprCall<A>) {
         return []<typename F, Array... As>(std::type_identity<expr_call<F, As...>>) {
           return (has_vectorizable_type<As, T>() and ...);
         }(std::type_identity<A>{});
       }
       // Case 5: expr (binary)
-      else if constexpr (IsExpr<A>) {
+      if constexpr (IsExpr<A>) {
         return []<char OP, typename L, typename R>(std::type_identity<expr<OP, L, R>>) {
           if constexpr (is_scalar_v<L>) {
             return has_vectorizable_type<R, T>() and std::is_same_v<T, std::remove_cvref_t<L>>;
@@ -201,9 +240,7 @@ namespace nda {
         }(std::type_identity<A>{});
       }
       // Case 0: Base case for any other type (like int, double, etc.)
-      else {
-        return false;
-      }
+      return false;
     }
 
     /**
@@ -236,35 +273,27 @@ namespace nda {
       using T         = std::remove_cvref_t<T_in>;
       using ValueType = get_value_t<A>;
       // Case 1 & 2: basic_array and basic_array_view (Terminals)
-      if constexpr (IsBasicArray<A> or IsBasicArrayView<A>) {
-        return Vectorizable<ValueType> and std::is_same_v<ValueType, T>;
-      }
+      if constexpr (IsBasicArray<A> or IsBasicArrayView<A>) { return Vectorizable<ValueType> and std::is_same_v<ValueType, T>; }
       // Case 3: expr_unary
-      else if constexpr (IsExprUnary<A>) {
+      if constexpr (IsExprUnary<A>) {
         return []<char OP, Array E>(std::type_identity<expr_unary<OP, E>>) { return has_load_function<E, T>(); }(std::type_identity<A>{});
       }
       // Case 4: expr_call
-      else if constexpr (IsExprCall<A>) {
+      if constexpr (IsExprCall<A>) {
         return []<typename F, Array... As>(std::type_identity<expr_call<F, As...>>) {
           return LoadWithNativeSimd<F, T, sizeof...(As)> and (has_load_function<As, T>() and ...);
         }(std::type_identity<A>{});
       }
       // Case 5: expr (binary)
-      else if constexpr (IsExpr<A>) {
+      if constexpr (IsExpr<A>) {
         return []<char OP, typename L, typename R>(std::type_identity<expr<OP, L, R>>) {
-          if constexpr (is_scalar_v<L>) {
-            return has_load_function<R, T>();
-          } else if constexpr (is_scalar_v<R>) {
-            return has_load_function<L, T>();
-          } else {
-            return has_load_function<L, T>() and has_load_function<R, T>();
-          }
+          if constexpr (is_scalar_v<L>) { return has_load_function<R, T>(); }
+          if constexpr (is_scalar_v<R>) { return has_load_function<L, T>(); }
+          return has_load_function<L, T>() and has_load_function<R, T>();
         }(std::type_identity<A>{});
       }
       // Case 0: Base case for any other type (like int, double, etc.)
-      else {
-        return false;
-      }
+      return false;
     }
 
     struct vectorize_t {};
