@@ -259,35 +259,35 @@ TEST(NDA, EXPR_COST) {
   array_t B = rand(shape);
   array_t C = rand(shape);
 
-  static_assert(expr_cost_v<float> == 0);
-  static_assert(expr_cost_v<array_t> == 1);
+  static_assert(expr_cost<float>() == 0);
+  static_assert(expr_cost<array_t>() == 1);
 
   auto e1 = A + B + C;
-  static_assert(expr_cost_v<decltype(e1)> == 5);
+  static_assert(expr_cost<decltype(e1)>() == 5);
 
   auto e2 = e1 + A;
-  static_assert(expr_cost_v<decltype(e2)> == 7);
+  static_assert(expr_cost<decltype(e2)>() == 7);
 
   auto e3 = nda::map([](auto const &x) { return x * x; })(e2);
-  static_assert(expr_cost_v<decltype(e3)> == 8);
+  static_assert(expr_cost<decltype(e3)>() == 8);
 
   auto e4 = -e3;
-  static_assert(expr_cost_v<decltype(e4)> == 9);
+  static_assert(expr_cost<decltype(e4)>() == 9);
 
   auto e5 = e4 + 5.0f;
-  static_assert(expr_cost_v<decltype(e5)> == 10);
+  static_assert(expr_cost<decltype(e5)>() == 10);
 
   auto e6 = 5.0f * e5;
-  static_assert(expr_cost_v<decltype(e6)> == 11);
+  static_assert(expr_cost<decltype(e6)>() == 11);
 
   auto e7 = e6 + e6;
-  static_assert(expr_cost_v<decltype(e7)> == 23);
+  static_assert(expr_cost<decltype(e7)>() == 23);
 
   auto e8 = nda::map([](auto const &x, auto const &y) { return x - y; })(e7, e3);
-  static_assert(expr_cost_v<decltype(e8)> == 32);
+  static_assert(expr_cost<decltype(e8)>() == 32);
 
   auto e9 = log(e8);
-  static_assert(expr_cost_v<decltype(e9)> == 33);
+  static_assert(expr_cost<decltype(e9)>() == 33);
 
   static_assert(std::is_same_v<dispatch_policy_t<float>, scalar_t>);
   static_assert(std::is_same_v<dispatch_policy_t<array_t>, vectorize_t>);
