@@ -47,28 +47,28 @@ namespace nda {
       [[maybe_unused]] constexpr size_t GAIN_FACTOR_OPERAND   = 1;
       [[maybe_unused]] constexpr size_t GAIN_FACTOR_OPERATION = 1;
       // Use std::remove_cvref_t to handle reference types passed in (e.g., Array&)
-      using T = std::remove_cvref_t<A_in>;
+      using A = std::remove_cvref_t<A_in>;
 
       // Case 1 & 2: basic_array and basic_array_view (Terminals)
-      if constexpr (IsBasicArray<T> or IsBasicArrayView<T>) {
+      if constexpr (IsBasicArray<A> or IsBasicArrayView<A>) {
         return GAIN_FACTOR_OPERAND;
       }
       // Case 3: expr_unary
-      else if constexpr (IsExprUnary<T>) {
+      else if constexpr (IsExprUnary<A>) {
         return
-           []<char OP, Array E>(std::type_identity<expr_unary<OP, E>>) { return GAIN_FACTOR_OPERATION + simd_gain<E>(); }(std::type_identity<T>{});
+           []<char OP, Array E>(std::type_identity<expr_unary<OP, E>>) { return GAIN_FACTOR_OPERATION + simd_gain<E>(); }(std::type_identity<A>{});
       }
       // Case 4: expr_call
-      else if constexpr (IsExprCall<T>) {
+      else if constexpr (IsExprCall<A>) {
         return []<typename F, Array... As>(std::type_identity<expr_call<F, As...>>) {
           return GAIN_FACTOR_OPERATION + (simd_gain<As>() + ...);
-        }(std::type_identity<T>{});
+        }(std::type_identity<A>{});
       }
       // Case 5: expr (binary)
-      else if constexpr (IsExpr<T>) {
+      else if constexpr (IsExpr<A>) {
         return []<char OP, typename L, typename R>(std::type_identity<expr<OP, L, R>>) {
           return GAIN_FACTOR_OPERATION + simd_gain<L>() + simd_gain<R>();
-        }(std::type_identity<T>{});
+        }(std::type_identity<A>{});
       }
       // Case 0: Base case for any other type (like int, double, etc.)
       else {
