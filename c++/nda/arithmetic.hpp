@@ -277,19 +277,54 @@ namespace nda {
     private:
     template <typename Tag, typename... Args>
     auto _call_load(Args const &...args) const {
-      using dispatch_t   = Tag;
+      using dispatch_t = Tag;
+      /**
+     * This lambda implements a critical optimization for matrix/scalar
+     * binary operations (e.g., `M + s` or `s - M`) where `OP` is '+' or '-'.
+     *
+     * In an expression like `matrix + scalar`, the scalar value is only
+     * added to the diagonal elements of the matrix.
+     *
+     * This lambda is called by the expression's `load` function, which loads
+     * data one SIMD block at a time. The parameters `(i, j)` are the
+     * row/column indices of the *start* of the SIMD block being loaded.
+     *
+     * This function's job is to:
+     * 1. Detect if the current SIMD block contains a diagonal element.
+     * 2. If it does, create a temporary SIMD vector that has the scalar
+     * value *only* at that diagonal element's position (e.g., `[0, 0, s, 0]`).
+     * 3. Add or subtract this temporary vector from the matrix data.
+     * 4. If the block contains no diagonal element, just return the matrix data.
+     */
       auto diagonal_simd = [this](long i, long j) {
-        // This lambda function can only be used when we have a matrix. This constexpr is needed because otherwise we might get compile errors.
+        // This lambda is only valid for Matrix + Scalar operations. This if constexpr is needed so that we dont have compile errors for other cases.
         if constexpr (sizeof...(Args) == 2 and (Vectorizable<L_t> or Vectorizable<R_t>)) {
+
+          // Calculate the 'diagonal index'.
+          // For a C-layout (row-major) load starting at `(i, j)`, the vector
+          // loads elements `(i, j), (i, j+1), (i, j+2), ...`.
+          // A diagonal element `(i, i)` would be at index `k = i - j`
+          // (i.e., we are at element `(i, j+k)` and we need `j+k == i`).
           long diff = i - j;
+
+          // Handle F-layout (column-major).
+          // For an F-layout load starting at `(i, j)`, the vector loads
+          // `(i, j), (i+1, j), (i+2, j), ...`.
+          // A diagonal element `(j, j)` would be at index `k = j - i`
+          // (i.e., we are at element `(i+k, j)` and we need `i+k == j`).
+          // This flips the sign of our 'diff', so we correct for it here.
           if constexpr ((l_is_scalar and get_layout_info<R>.stride_order == Fortran_stride_order<2>)
                         or (r_is_scalar and get_layout_info<L>.stride_order == Fortran_stride_order<2>)) {
             diff = -diff;
           }
           if constexpr (l_is_scalar) {
             using simd_t = native_simd<L_t>;
+            // Check if the diagonal element's index `diff` is outside the bounds of our SIMD chunk
             if (diff < 0 or diff > simd_t::size - 1) return r.load(dispatch_t{}, i, j);
+            // A diagonal element is in this block at index `diff`.
+            // Create a temporary, zero-initialized array on the stack.
             alignas(simd_t::arch_type::alignment()) std::array<L_t, simd_t::size> tmp{};
+            // Place the scalar value `l` only at the diagonal position.
             tmp[diff] = l;
             if constexpr (OP == '+') {
               return r.load(dispatch_t{}, i, j) + simd_t::load_aligned(tmp.data());
@@ -298,8 +333,12 @@ namespace nda {
             }
           } else if constexpr (r_is_scalar) {
             using simd_t = native_simd<R_t>;
+            // Check if the diagonal element's index `diff` is outside the bounds of our SIMD chunk
             if (diff < 0 or diff > simd_t::size - 1) return l.load(dispatch_t{}, i, j);
+            // A diagonal element is in this block at index `diff`.
+            // Create a temporary, zero-initialized array on the stack.
             alignas(simd_t::arch_type::alignment()) std::array<R_t, simd_t::size> tmp{};
+            // Place the scalar value `r` only at the diagonal position.
             tmp[diff] = r;
             if constexpr (OP == '+') {
               return l.load(dispatch_t{}, i, j) + simd_t::load_aligned(tmp.data());
@@ -394,7 +433,6 @@ namespace nda {
                     "Load tag can only be vectorize or emulate");
       return _call_load<decltype(simd_tag)>(args...);
     }
-
   };
 
   /**
