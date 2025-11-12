@@ -58,10 +58,10 @@ namespace nda {
     struct emulator : simd::mock_simd<emulator<F, ValueType>, ValueType> {
       F functor;
 
-      emulator(const F functor) : functor(functor) {}
+      FORCEINLINE emulator(const F functor) : functor(functor) {}
 
       template <typename... ValueTypeArgs>
-      auto operator()(ValueTypeArgs const &...values) const {
+      FORCEINLINE auto operator()(ValueTypeArgs const &...values) const {
         return functor(values...);
       }
     };
@@ -152,12 +152,12 @@ namespace nda {
     }
 
     template <typename... Args>
-    auto load(simd::vectorize_t, Args const &...args) const {
+    FORCEINLINE auto load(simd::vectorize_t, Args const &...args) const {
       return _call_load(simd::vectorize, std::make_index_sequence<sizeof...(As)>{}, args...);
     }
 
     template <typename... Args>
-    auto load(simd::emulate_t, Args const &...args) const {
+    FORCEINLINE auto load(simd::emulate_t, Args const &...args) const {
       return _call_load(simd::emulate, std::make_index_sequence<sizeof...(As)>{}, args...);
     }
 

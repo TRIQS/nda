@@ -73,11 +73,11 @@ namespace nda {
 
     struct pow_f {
       double exponent;
-      auto operator()(auto const &x) const {
+      FORCEINLINE auto operator()(auto const &x) const {
         using std::pow;
         return pow(x, exponent);
       }
-      auto load(auto const &x) const {
+      FORCEINLINE auto load(auto const &x) const {
         using xsimd::pow;
         using simd_t = std::remove_cvref_t<decltype(x)>;
         return pow(x, simd_t(exponent));
@@ -86,8 +86,8 @@ namespace nda {
 
     template <typename F>
     struct unary_functor {
-      auto operator()(auto const &x) const { return F{}(x); }
-      auto load(auto const &x) const { return F{}(x); }
+      FORCEINLINE auto operator()(auto const &x) const { return F{}(x); }
+      FORCEINLINE auto load(auto const &x) const { return F{}(x); }
     };
   } // namespace detail
 
