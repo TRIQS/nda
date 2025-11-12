@@ -262,27 +262,40 @@ FORCEINLINE decltype(auto) operator()(Ts const &...idxs) && noexcept(has_no_boun
   return call<Algebra, true>(*this, idxs...);
 }
 
+private:
+// Right now we are only doing SIMD access in contiguous layouts. If this rule is relaxed we need to change this function as well.
+void assert_simd_access_bounds(const long offset) const noexcept(has_no_boundcheck) {
+  static_assert(
+     has_contiguous_layout<self_t>,
+     "This functions should only be called when we have a contiguous layout. This can fail only when the rules of vectorization is relaxed therefore this function needs to be updated");
+  if constexpr (!has_no_boundcheck) { assert(offset + native_simd<ValueType>::size <= this->size() && "NDA: SIMD access out of bounds"); }
+}
+
+public:
+
 template <typename... Args>
-FORCEINLINE native_simd<ValueType> load(simd::vectorize_t, Args... idx) const {
+FORCEINLINE native_simd<ValueType> load(simd::vectorize_t, Args... idx) const noexcept(has_no_boundcheck) {
   static_assert(Vectorizable<ValueType>, "Load function is called with a type that is not a vectorizable type");
   const long offset = lay(idx...);
+  assert_simd_access_bounds(offset);
   return native_simd<ValueType>::load_unaligned(data() + offset);
 }
 
 template <typename... Args>
-FORCEINLINE native_simd<ValueType> load(simd::emulate_t, Args... idx) const {
+FORCEINLINE native_simd<ValueType> load(simd::emulate_t, Args... idx) const noexcept(has_no_boundcheck) {
   static_assert(Vectorizable<ValueType>, "Load function is called with a type that is not a vectorizable type");
   const long offset = lay(idx...);
-  return native_simd<ValueType>::load_unaligned(data()+offset);
+  assert_simd_access_bounds(offset);
+  return native_simd<ValueType>::load_unaligned(data() + offset);
 }
 
 template <typename... Args>
-FORCEINLINE void store(const native_simd<ValueType> &value, Args... idx) {
+FORCEINLINE void store(const native_simd<ValueType> &value, Args... idx) noexcept(has_no_boundcheck) {
   static_assert(Vectorizable<ValueType>, "Store function is called with a type that is not a vectorizable type");
   const long offset = lay(idx...);
-  value.store_unaligned(data()+offset);
+  assert_simd_access_bounds(offset);
+  value.store_unaligned(data() + offset);
 }
-
 
 /**
  * @brief Subscript operator to access the 1-dimensional view/array.
@@ -524,8 +537,7 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
     nda::for_each_static<0, get_layout_info<self_t>.stride_order, native_simd<ValueType>::size>(
        shape(), [this, &rhs](auto const &...args) { (*this).store(rhs.load(dispatch_t{}, args...), args...); },
        [this, &rhs](auto const &...args) { (*this)(args...) = rhs(args...); });
-  }
-  else {
+  } else {
     nda::for_each(shape(), [this, &rhs](auto const &...args) { (*this)(args...) = rhs(args...); });
   }
 }
