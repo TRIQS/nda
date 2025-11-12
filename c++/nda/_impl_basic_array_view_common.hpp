@@ -264,7 +264,7 @@ FORCEINLINE decltype(auto) operator()(Ts const &...idxs) && noexcept(has_no_boun
 
 template <typename... Args>
 FORCEINLINE native_simd<ValueType> load(simd::vectorize_t, Args... idx) const {
-  static_assert(Vectorizable<ValueType>, "Store function is called with a type that is not a vectorizable type");
+  static_assert(Vectorizable<ValueType>, "Load function is called with a type that is not a vectorizable type");
   const long offset = lay(idx...);
   return native_simd<ValueType>::load_unaligned(data() + offset);
 }
