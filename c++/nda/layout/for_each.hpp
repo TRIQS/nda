@@ -75,10 +75,11 @@ namespace nda {
     template <int I, uint64_t StaticExtents, uint64_t StrideOrder, size_t SIMD_SIZE, typename F_SIMD, typename F_SCALAR, size_t R,
               std::integral Int = long>
     FORCEINLINE void for_each_static_impl(std::array<Int, R> const &shape, std::array<long, R> &idxs, F_SIMD &f_simd, F_SCALAR &f_scalar) {
+      // get the dimension over which to iterate and its extent
+      static constexpr int J = index_from_stride_order<R>(StrideOrder, I);
+      const long imax        = get_extent<J, R, StaticExtents>(shape);
       // Only difference from scalar implementation is that in the last dimension we call f_simd whenever we can.
       if constexpr (I == R - 1) {
-        static constexpr int J = index_from_stride_order<R>(StrideOrder, I);
-        const long imax        = get_extent<J, R, StaticExtents>(shape);
         size_t i               = 0;
         const size_t ilim      = imax & -static_cast<int64_t>(SIMD_SIZE);
         for (; i < ilim; i += SIMD_SIZE) {
@@ -91,10 +92,6 @@ namespace nda {
         }
         idxs[J] = 0;
       } else {
-        // get the dimension over which to iterate and its extent
-        static constexpr int J = index_from_stride_order<R>(StrideOrder, I);
-        const long imax        = get_extent<J, R, StaticExtents>(shape);
-
         // loop over all indices of the current dimension
         for (long i = 0; i < imax; ++i) {
           // recursive call for the next dimension
