@@ -268,7 +268,11 @@ void assert_simd_access_bounds(const long offset) const noexcept(has_no_boundche
   static_assert(
      has_contiguous_layout<self_t>,
      "This functions should only be called when we have a contiguous layout. This can fail only when the rules of vectorization is relaxed therefore this function needs to be updated");
-  if constexpr (!has_no_boundcheck) { assert(offset + native_simd<ValueType>::size <= this->size() && "NDA: SIMD access out of bounds"); }
+  if constexpr (!has_no_boundcheck) {
+    if (offset + native_simd<ValueType>::size > this->size()) {
+      throw std::runtime_error("Index out of bounds for SIMD access.\n");
+    }
+  }
 }
 
 public:
