@@ -278,15 +278,9 @@ void assert_simd_access_bounds(const long offset) const noexcept(has_no_boundche
 public:
 
 template <typename... Args>
-FORCEINLINE native_simd<ValueType> load(simd::vectorize_t, Args... idx) const noexcept(has_no_boundcheck) {
-  static_assert(Vectorizable<ValueType>, "Load function is called with a type that is not a vectorizable type");
-  const long offset = lay(idx...);
-  assert_simd_access_bounds(offset);
-  return native_simd<ValueType>::load_unaligned(data() + offset);
-}
-
-template <typename... Args>
-FORCEINLINE native_simd<ValueType> load(simd::emulate_t, Args... idx) const noexcept(has_no_boundcheck) {
+FORCEINLINE native_simd<ValueType> load(auto simd_tag, Args... idx) const noexcept(has_no_boundcheck) {
+  static_assert(std::is_same_v<decltype(simd_tag), simd::vectorize_t> or std::is_same_v<decltype(simd_tag), simd::emulate_t>,
+                "Load tag can only be vectorize or emulate");
   static_assert(Vectorizable<ValueType>, "Load function is called with a type that is not a vectorizable type");
   const long offset = lay(idx...);
   assert_simd_access_bounds(offset);

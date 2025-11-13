@@ -69,13 +69,10 @@ namespace nda {
     }
 
     template <typename... Args>
-    auto load(simd::vectorize_t, Args &&...args) const {
-      return -(a.load(simd::vectorize, std::forward<Args>(args)...));
-    }
-
-    template <typename... Args>
-    auto load(simd::emulate_t, Args &&...args) const {
-      return -(a.load(simd::emulate, std::forward<Args>(args)...));
+    auto load(auto simd_tag, Args &&...args) const {
+      static_assert(std::is_same_v<decltype(simd_tag), simd::vectorize_t> or std::is_same_v<decltype(simd_tag), simd::emulate_t>,
+                    "Load tag can only be vectorize or emulate");
+      return -(a.load(simd_tag, std::forward<Args>(args)...));
     }
 
     /**
