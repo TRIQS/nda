@@ -59,10 +59,7 @@ if(OpenMPSupport)
 endif ()
 
 #XSIMD
-target_include_directories(${PROJECT_NAME}_c
-        PUBLIC
-        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/deps/xsimd_src/include>
-)
+target_link_libraries(${PROJECT_NAME}_c PUBLIC xsimd)
 
 # ========= Blas / Lapack ==========
 
