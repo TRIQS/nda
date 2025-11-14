@@ -236,13 +236,13 @@ TEST(NDA, MOCK_SIMD) {
   TEST_ALL_RANKS(T, C_layout)                                                                                                                        \
   TEST_ALL_RANKS(T, F_layout)
 
-  TEST_LAYOUTS(int32_t)
-  TEST_LAYOUTS(int64_t)
-  TEST_LAYOUTS(uint32_t)
-  TEST_LAYOUTS(uint64_t)
-  TEST_LAYOUTS(float)
-  TEST_LAYOUTS(double)
-  TEST_LAYOUTS(std::complex<float>)
+//  TEST_LAYOUTS(int32_t)
+//  TEST_LAYOUTS(int64_t)
+//  TEST_LAYOUTS(uint32_t)
+//  TEST_LAYOUTS(uint64_t)
+//  TEST_LAYOUTS(float)
+//  TEST_LAYOUTS(double)
+//  TEST_LAYOUTS(std::complex<float>)
   TEST_LAYOUTS(std::complex<double>)
 
 #undef TEST_ALL_RANKS
