@@ -104,10 +104,13 @@ $(function(){initNavTree('getrf_8hpp.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="lapack_2interface_2cxx__interface_8hpp_source.html">./interface/cxx_interface.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="basic__functions_8hpp_source.html">../basic_functions.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="layout__transforms_8hpp_source.html">../layout_transforms.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="macros_8hpp_source.html">../macros.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="address__space_8hpp_source.html">../mem/address_space.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="traits_8hpp_source.html">../traits.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="device_8hpp_source.html">../device.hpp</a>&quot;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
 </div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
@@ -119,10 +122,10 @@ $(function(){initNavTree('getrf_8hpp.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gad2fcbbe9516f85da7d1fa2ae1c3df79b" id="r_gad2fcbbe9516f85da7d1fa2ae1c3df79b"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector IPIV&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, IPIV&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
-<tr class="memitem:gad2fcbbe9516f85da7d1fa2ae1c3df79b template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__lapack.html#gad2fcbbe9516f85da7d1fa2ae1c3df79b">nda::lapack::getrf</a> (A &amp;&amp;a, IPIV &amp;&amp;ipiv)</td></tr>
-<tr class="memdesc:gad2fcbbe9516f85da7d1fa2ae1c3df79b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="group__linalg__lapack.html#gad2fcbbe9516f85da7d1fa2ae1c3df79b" title="Interface to the LAPACK getrf routine.">getrf</a></span> routine.  <br /></td></tr>
+<tr class="memitem:gacd83a4791d1bcbb0f2b7af425af1e836" id="r_gacd83a4791d1bcbb0f2b7af425af1e836"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector IPIV&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, IPIV&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and std::is_same_v&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;IPIV&gt;, int&gt;)</td></tr>
+<tr class="memitem:gacd83a4791d1bcbb0f2b7af425af1e836 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836">nda::lapack::getrf</a> (A &amp;&amp;a, IPIV &amp;&amp;ipiv)</td></tr>
+<tr class="memdesc:gacd83a4791d1bcbb0f2b7af425af1e836"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">getrf</a></span> routine.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

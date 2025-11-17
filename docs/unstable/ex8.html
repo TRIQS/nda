@@ -338,31 +338,31 @@ Using the BLAS/LAPACK interface</h1>
 <div class="line"> [2,-2,4]</div>
 <div class="line"> [-1,0.5,-1]]</div>
 <div class="line">b1 = [1,-2,0]</div>
-</div><!-- fragment --><p>First, we perform an LU factorization using <a class="el" href="group__linalg__lapack.html#gad2fcbbe9516f85da7d1fa2ae1c3df79b" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a>:</p>
+</div><!-- fragment --><p>First, we perform an LU factorization using <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a>:</p>
 <div class="fragment"><div class="line"><span class="comment">// LU factorization using the LAPACK interface</span></div>
 <div class="line"><span class="keyword">auto</span> ipiv = <a class="code hl_typedef" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68">nda::vector&lt;int&gt;</a>(3);</div>
 <div class="line"><span class="keyword">auto</span> LU = A1;</div>
-<div class="line"><span class="keyword">auto</span> info = <a class="code hl_function" href="group__linalg__lapack.html#gad2fcbbe9516f85da7d1fa2ae1c3df79b">nda::lapack::getrf</a>(LU, ipiv);</div>
+<div class="line"><span class="keyword">auto</span> info = <a class="code hl_function" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836">nda::lapack::getrf</a>(LU, ipiv);</div>
 <div class="line"><span class="keywordflow">if</span> (info != 0) {</div>
 <div class="line">  std::cerr &lt;&lt; <span class="stringliteral">&quot;Error: nda::lapack::getrf failed with error code &quot;</span> &lt;&lt; info &lt;&lt; std::endl;</div>
 <div class="line">  <span class="keywordflow">return</span> 1;</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__linalg__lapack_html_gad2fcbbe9516f85da7d1fa2ae1c3df79b"><div class="ttname"><a href="group__linalg__lapack.html#gad2fcbbe9516f85da7d1fa2ae1c3df79b">nda::lapack::getrf</a></div><div class="ttdeci">int getrf(A &amp;&amp;a, IPIV &amp;&amp;ipiv)</div><div class="ttdoc">Interface to the LAPACK getrf routine.</div><div class="ttdef"><b>Definition</b> <a href="getrf_8hpp_source.html#l00051">getrf.hpp:51</a></div></div>
-</div><!-- fragment --><p>Here, <span class="tt">ipiv</span> is a pivot vector that is used internally by the LAPACK routine. Because <a class="el" href="group__linalg__lapack.html#gad2fcbbe9516f85da7d1fa2ae1c3df79b" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> overwrites the input matrix with the result, we first copy the original matrix <span class="tt">A1</span> into a new one <span class="tt">LU</span>.</p>
-<p>Then we solve the system by calling <a class="el" href="group__linalg__lapack.html#gaaeb82496116119df161e38599e66e1a3" title="Interface to the LAPACK getrs routine.">nda::lapack::getrs</a> with the LU factorization, the right hand side vector and the pivot vector:</p>
+<div class="ttc" id="agroup__linalg__lapack_html_gacd83a4791d1bcbb0f2b7af425af1e836"><div class="ttname"><a href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836">nda::lapack::getrf</a></div><div class="ttdeci">int getrf(A &amp;&amp;a, IPIV &amp;&amp;ipiv)</div><div class="ttdoc">Interface to the LAPACK getrf routine.</div><div class="ttdef"><b>Definition</b> <a href="getrf_8hpp_source.html#l00058">getrf.hpp:58</a></div></div>
+</div><!-- fragment --><p>Here, <span class="tt">ipiv</span> is a pivot vector that is used internally by the LAPACK routine. Because <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> overwrites the input matrix with the result, we first copy the original matrix <span class="tt">A1</span> into a new one <span class="tt">LU</span>.</p>
+<p>Then we solve the system by calling <a class="el" href="group__linalg__lapack.html#gae81206b2d5fff66e29fa0fb25de61183" title="Interface to the LAPACK getrs routine.">nda::lapack::getrs</a> with the LU factorization, the right hand side vector and the pivot vector:</p>
 <div class="fragment"><div class="line"><span class="comment">// solve the linear system of equations using the LU factorization</span></div>
 <div class="line"><a class="code hl_typedef" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1">nda::matrix&lt;double, nda::F_layout&gt;</a> x1(3, 1);</div>
 <div class="line">x1(nda::range::all, 0) = b1;</div>
-<div class="line">info = <a class="code hl_function" href="group__linalg__lapack.html#gaaeb82496116119df161e38599e66e1a3">nda::lapack::getrs</a>(LU, x1, ipiv);</div>
+<div class="line">info = <a class="code hl_function" href="group__linalg__lapack.html#gae81206b2d5fff66e29fa0fb25de61183">nda::lapack::getrs</a>(LU, x1, ipiv);</div>
 <div class="line"><span class="keywordflow">if</span> (info != 0) {</div>
 <div class="line">  std::cerr &lt;&lt; <span class="stringliteral">&quot;Error: nda::lapack::getrs failed with error code &quot;</span> &lt;&lt; info &lt;&lt; std::endl;</div>
 <div class="line">  <span class="keywordflow">return</span> 1;</div>
 <div class="line">}</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;x1 = &quot;</span> &lt;&lt; x1(nda::range::all, 0) &lt;&lt; std::endl;</div>
-<div class="ttc" id="agroup__linalg__lapack_html_gaaeb82496116119df161e38599e66e1a3"><div class="ttname"><a href="group__linalg__lapack.html#gaaeb82496116119df161e38599e66e1a3">nda::lapack::getrs</a></div><div class="ttdeci">int getrs(A const &amp;a, B &amp;&amp;b, IPIV const &amp;ipiv)</div><div class="ttdoc">Interface to the LAPACK getrs routine.</div><div class="ttdef"><b>Definition</b> <a href="getrs_8hpp_source.html#l00053">getrs.hpp:53</a></div></div>
+<div class="ttc" id="agroup__linalg__lapack_html_gae81206b2d5fff66e29fa0fb25de61183"><div class="ttname"><a href="group__linalg__lapack.html#gae81206b2d5fff66e29fa0fb25de61183">nda::lapack::getrs</a></div><div class="ttdeci">int getrs(A const &amp;a, B &amp;&amp;b, IPIV const &amp;ipiv)</div><div class="ttdoc">Interface to the LAPACK getrs routine.</div><div class="ttdef"><b>Definition</b> <a href="getrs_8hpp_source.html#l00053">getrs.hpp:53</a></div></div>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">x1 = [1,-2,-2]</div>
-</div><!-- fragment --><p>Since <span class="tt">b1</span> is a vector but <a class="el" href="group__linalg__lapack.html#gaaeb82496116119df161e38599e66e1a3" title="Interface to the LAPACK getrs routine.">nda::lapack::getrs</a> expects a matrix, we first copy it into the matrix <span class="tt">x1</span>. After the LAPACK call return, <span class="tt">x1</span> contains the result in its first column.</p>
+</div><!-- fragment --><p>Since <span class="tt">b1</span> is a vector but <a class="el" href="group__linalg__lapack.html#gae81206b2d5fff66e29fa0fb25de61183" title="Interface to the LAPACK getrs routine.">nda::lapack::getrs</a> expects a matrix, we first copy it into the matrix <span class="tt">x1</span>. After the LAPACK call return, <span class="tt">x1</span> contains the result in its first column.</p>
 <p>Let's check that this is actually the solution to our original system of equations:</p>
 <div class="fragment"><div class="line"><span class="comment">// check the solution</span></div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;A1 * x1 = &quot;</span> &lt;&lt; A1 * x1(nda::range::all, 0) &lt;&lt; std::endl;</div>

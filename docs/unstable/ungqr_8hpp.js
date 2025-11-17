@@ -1,4 +1,4 @@
 var ungqr_8hpp =
 [
-    [ "nda::lapack::ungqr", "group__linalg__lapack.html#ga59f102523a092fc5de99718a7821cf7e", null ]
+    [ "nda::lapack::ungqr", "group__linalg__lapack.html#ga56ec70f6ac54d52db55f30a993690d38", null ]
 ];

@@ -119,38 +119,38 @@ Functions</h2></td></tr>
 requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A, B, S&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
 <tr class="memitem:ga3f3adcfbac6e628cc82f6ecb43741071 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3f3adcfbac6e628cc82f6ecb43741071">nda::lapack::gelss</a> (A &amp;&amp;a, B &amp;&amp;b, S &amp;&amp;s, double rcond, int &amp;rank)</td></tr>
 <tr class="memdesc:ga3f3adcfbac6e628cc82f6ecb43741071"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#ga3f3adcfbac6e628cc82f6ecb43741071" title="Interface to the LAPACK gelss routine.">gelss</a></span> routine.  <br /></td></tr>
-<tr class="memitem:gaf2b932738bc5fc95a6c43d83b5544686" id="r_gaf2b932738bc5fc95a6c43d83b5544686"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector JPVT, MemoryVector TAU&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c785135d7916b">mem::on_host</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, TAU&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, JPVT, TAU&gt;)</td></tr>
-<tr class="memitem:gaf2b932738bc5fc95a6c43d83b5544686 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf2b932738bc5fc95a6c43d83b5544686">nda::lapack::geqp3</a> (A &amp;&amp;a, JPVT &amp;&amp;jpvt, TAU &amp;&amp;tau)</td></tr>
-<tr class="memdesc:gaf2b932738bc5fc95a6c43d83b5544686"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#gaf2b932738bc5fc95a6c43d83b5544686" title="Interface to the LAPACK geqp3 routine.">geqp3</a></span> routine.  <br /></td></tr>
+<tr class="memitem:gab1b17ce137d948f3561494bf6953b7e4" id="r_gab1b17ce137d948f3561494bf6953b7e4"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector JPVT, MemoryVector TAU&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A, JPVT, TAU&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, TAU&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:gab1b17ce137d948f3561494bf6953b7e4 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab1b17ce137d948f3561494bf6953b7e4">nda::lapack::geqp3</a> (A &amp;&amp;a, JPVT &amp;&amp;jpvt, TAU &amp;&amp;tau)</td></tr>
+<tr class="memdesc:gab1b17ce137d948f3561494bf6953b7e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#gab1b17ce137d948f3561494bf6953b7e4" title="Interface to the LAPACK geqp3 routine.">geqp3</a></span> routine.  <br /></td></tr>
 <tr class="memitem:ga2ad7420a95eeebf775f912cfd9770bf5" id="r_ga2ad7420a95eeebf775f912cfd9770bf5"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector S, MemoryMatrix U, MemoryMatrix VT&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, U, VT&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, S, U, VT&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and std::same_as&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;S&gt;&gt;)</td></tr>
 <tr class="memitem:ga2ad7420a95eeebf775f912cfd9770bf5 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2ad7420a95eeebf775f912cfd9770bf5">nda::lapack::gesvd</a> (A &amp;&amp;a, S &amp;&amp;s, U &amp;&amp;u, VT &amp;&amp;vt)</td></tr>
 <tr class="memdesc:ga2ad7420a95eeebf775f912cfd9770bf5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#ga2ad7420a95eeebf775f912cfd9770bf5" title="Interface to the LAPACK gesvd routine.">gesvd</a></span> routine.  <br /></td></tr>
-<tr class="memitem:gad2fcbbe9516f85da7d1fa2ae1c3df79b" id="r_gad2fcbbe9516f85da7d1fa2ae1c3df79b"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector IPIV&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, IPIV&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
-<tr class="memitem:gad2fcbbe9516f85da7d1fa2ae1c3df79b template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad2fcbbe9516f85da7d1fa2ae1c3df79b">nda::lapack::getrf</a> (A &amp;&amp;a, IPIV &amp;&amp;ipiv)</td></tr>
-<tr class="memdesc:gad2fcbbe9516f85da7d1fa2ae1c3df79b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#gad2fcbbe9516f85da7d1fa2ae1c3df79b" title="Interface to the LAPACK getrf routine.">getrf</a></span> routine.  <br /></td></tr>
-<tr class="memitem:ga1b5ce50ac684f54e278746819c419ca1" id="r_ga1b5ce50ac684f54e278746819c419ca1"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector IPIV&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, IPIV&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
-<tr class="memitem:ga1b5ce50ac684f54e278746819c419ca1 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1b5ce50ac684f54e278746819c419ca1">nda::lapack::getri</a> (A &amp;&amp;a, IPIV const &amp;ipiv)</td></tr>
-<tr class="memdesc:ga1b5ce50ac684f54e278746819c419ca1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#ga1b5ce50ac684f54e278746819c419ca1" title="Interface to the LAPACK getri routine.">getri</a></span> routine.  <br /></td></tr>
-<tr class="memitem:gaaeb82496116119df161e38599e66e1a3" id="r_gaaeb82496116119df161e38599e66e1a3"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryMatrix B, MemoryVector IPIV&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, B, IPIV&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
-<tr class="memitem:gaaeb82496116119df161e38599e66e1a3 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaaeb82496116119df161e38599e66e1a3">nda::lapack::getrs</a> (A const &amp;a, B &amp;&amp;b, IPIV const &amp;ipiv)</td></tr>
-<tr class="memdesc:gaaeb82496116119df161e38599e66e1a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#gaaeb82496116119df161e38599e66e1a3" title="Interface to the LAPACK getrs routine.">getrs</a></span> routine.  <br /></td></tr>
+<tr class="memitem:gacd83a4791d1bcbb0f2b7af425af1e836" id="r_gacd83a4791d1bcbb0f2b7af425af1e836"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector IPIV&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, IPIV&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and std::is_same_v&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;IPIV&gt;, int&gt;)</td></tr>
+<tr class="memitem:gacd83a4791d1bcbb0f2b7af425af1e836 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacd83a4791d1bcbb0f2b7af425af1e836">nda::lapack::getrf</a> (A &amp;&amp;a, IPIV &amp;&amp;ipiv)</td></tr>
+<tr class="memdesc:gacd83a4791d1bcbb0f2b7af425af1e836"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">getrf</a></span> routine.  <br /></td></tr>
+<tr class="memitem:ga41597808b4e45ffeaebd3645b55354e7" id="r_ga41597808b4e45ffeaebd3645b55354e7"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector IPIV&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A, IPIV&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and std::is_same_v&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;IPIV&gt;, int&gt;)</td></tr>
+<tr class="memitem:ga41597808b4e45ffeaebd3645b55354e7 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga41597808b4e45ffeaebd3645b55354e7">nda::lapack::getri</a> (A &amp;&amp;a, IPIV const &amp;ipiv)</td></tr>
+<tr class="memdesc:ga41597808b4e45ffeaebd3645b55354e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#ga41597808b4e45ffeaebd3645b55354e7" title="Interface to the LAPACK getri routine.">getri</a></span> routine.  <br /></td></tr>
+<tr class="memitem:gae81206b2d5fff66e29fa0fb25de61183" id="r_gae81206b2d5fff66e29fa0fb25de61183"><td class="memTemplParams" colspan="2">template&lt;Matrix A, MemoryArray B, MemoryVector IPIV&gt; <br />
+requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="lapack_2interface_2cxx__interface_8hpp.html#a4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, B, IPIV&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:gae81206b2d5fff66e29fa0fb25de61183 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae81206b2d5fff66e29fa0fb25de61183">nda::lapack::getrs</a> (A const &amp;a, B &amp;&amp;b, IPIV const &amp;ipiv)</td></tr>
+<tr class="memdesc:gae81206b2d5fff66e29fa0fb25de61183"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#gae81206b2d5fff66e29fa0fb25de61183" title="Interface to the LAPACK getrs routine.">getrs</a></span> routine.  <br /></td></tr>
 <tr class="memitem:ga0b9b46f1987c9367177f7e3118a42947" id="r_ga0b9b46f1987c9367177f7e3118a42947"><td class="memTemplParams" colspan="2">template&lt;MemoryVector DL, MemoryVector D, MemoryVector DU, MemoryArray B&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;DL, D, DU, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;DL, D, DU, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;DL&gt;&gt;)</td></tr>
 <tr class="memitem:ga0b9b46f1987c9367177f7e3118a42947 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0b9b46f1987c9367177f7e3118a42947">nda::lapack::gtsv</a> (DL &amp;&amp;dl, D &amp;&amp;d, DU &amp;&amp;du, B &amp;&amp;b)</td></tr>
 <tr class="memdesc:ga0b9b46f1987c9367177f7e3118a42947"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#ga0b9b46f1987c9367177f7e3118a42947" title="Interface to the LAPACK gtsv routine.">gtsv</a></span> routine.  <br /></td></tr>
-<tr class="memitem:gad90cc968c1566e14de62b316caaee04c" id="r_gad90cc968c1566e14de62b316caaee04c"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector TAU&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c785135d7916b">mem::on_host</a>&lt;A&gt; and std::is_same_v&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, TAU&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, TAU&gt;)</td></tr>
-<tr class="memitem:gad90cc968c1566e14de62b316caaee04c template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad90cc968c1566e14de62b316caaee04c">nda::lapack::orgqr</a> (A &amp;&amp;a, TAU &amp;&amp;tau)</td></tr>
-<tr class="memdesc:gad90cc968c1566e14de62b316caaee04c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#gad90cc968c1566e14de62b316caaee04c" title="Interface to the LAPACK orgqr routine.">orgqr</a></span> routine.  <br /></td></tr>
-<tr class="memitem:ga59f102523a092fc5de99718a7821cf7e" id="r_ga59f102523a092fc5de99718a7821cf7e"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector TAU&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c785135d7916b">mem::on_host</a>&lt;A&gt; and std::is_same_v&lt;std::complex&lt;double&gt;, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, TAU&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, TAU&gt;)</td></tr>
-<tr class="memitem:ga59f102523a092fc5de99718a7821cf7e template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga59f102523a092fc5de99718a7821cf7e">nda::lapack::ungqr</a> (A &amp;&amp;a, TAU &amp;&amp;tau)</td></tr>
-<tr class="memdesc:ga59f102523a092fc5de99718a7821cf7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#ga59f102523a092fc5de99718a7821cf7e" title="Interface to the LAPACK ungqr routine.">ungqr</a></span> routine.  <br /></td></tr>
+<tr class="memitem:ga63d63cd2112e0e9f106ef617333d44dc" id="r_ga63d63cd2112e0e9f106ef617333d44dc"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector TAU&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A&gt; and std::is_same_v&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, TAU&gt;)</td></tr>
+<tr class="memitem:ga63d63cd2112e0e9f106ef617333d44dc template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga63d63cd2112e0e9f106ef617333d44dc">nda::lapack::orgqr</a> (A &amp;&amp;a, TAU &amp;&amp;tau)</td></tr>
+<tr class="memdesc:ga63d63cd2112e0e9f106ef617333d44dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#ga63d63cd2112e0e9f106ef617333d44dc" title="Interface to the LAPACK orgqr routine.">orgqr</a></span> routine.  <br /></td></tr>
+<tr class="memitem:ga56ec70f6ac54d52db55f30a993690d38" id="r_ga56ec70f6ac54d52db55f30a993690d38"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector TAU&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A&gt; and std::is_same_v&lt;std::complex&lt;double&gt;, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, TAU&gt;)</td></tr>
+<tr class="memitem:ga56ec70f6ac54d52db55f30a993690d38 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga56ec70f6ac54d52db55f30a993690d38">nda::lapack::ungqr</a> (A &amp;&amp;a, TAU &amp;&amp;tau)</td></tr>
+<tr class="memdesc:ga56ec70f6ac54d52db55f30a993690d38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#ga56ec70f6ac54d52db55f30a993690d38" title="Interface to the LAPACK ungqr routine.">ungqr</a></span> routine.  <br /></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
 <a id="ga3f3adcfbac6e628cc82f6ecb43741071" name="ga3f3adcfbac6e628cc82f6ecb43741071"></a>
@@ -226,14 +226,14 @@ r_{\mathrm{cond}} s_1 \) are treated as zero. If \( r_{\mathrm{cond}} &lt; 0 \),
 
 </div>
 </div>
-<a id="gaf2b932738bc5fc95a6c43d83b5544686" name="gaf2b932738bc5fc95a6c43d83b5544686"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaf2b932738bc5fc95a6c43d83b5544686">&#9670;&#160;</a></span>geqp3()</h2>
+<a id="gab1b17ce137d948f3561494bf6953b7e4" name="gab1b17ce137d948f3561494bf6953b7e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab1b17ce137d948f3561494bf6953b7e4">&#9670;&#160;</a></span>geqp3()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;MemoryMatrix A, MemoryVector JPVT, MemoryVector TAU&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c785135d7916b">mem::on_host</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, TAU&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, JPVT, TAU&gt;)</div>
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A, JPVT, TAU&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, TAU&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">int nda::lapack::geqp3 </td>
@@ -255,12 +255,27 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c78
 
 <p><code>#include &lt;<a class="el" href="geqp3_8hpp.html">nda/lapack/geqp3.hpp</a>&gt;</code></p>
 
-<p>Interface to the LAPACK <span class="tt"><a class="el" href="#gaf2b932738bc5fc95a6c43d83b5544686" title="Interface to the LAPACK geqp3 routine.">geqp3</a></span> routine. </p>
+<p>Interface to the LAPACK <span class="tt"><a class="el" href="#gab1b17ce137d948f3561494bf6953b7e4" title="Interface to the LAPACK geqp3 routine.">geqp3</a></span> routine. </p>
 <p>Computes a QR factorization with column pivoting of a matrix \( \mathbf{A} \):   </p><p class="formulaDsp">
 \[  \mathbf{A P} = \mathbf{Q R}
 \]
 </p>
 <p> using Level 3 BLAS.</p>
+<p>The matrix \( \mathbf{Q} \) is represented as a product of elementary reflectors   </p><p class="formulaDsp">
+\[  \mathbf{Q} = \mathbf{H}(1) \mathbf{H}(2) \ldots \mathbf{H}(k) \; ,
+\]
+</p>
+<p> where \( k = \min(m,n) \).</p>
+<p>Each \( \mathbf{H}(i) \) has the form   </p><p class="formulaDsp">
+\[  \mathbf{H}(i) = \mathbf{I} - \tau_i * \mathbf{v}_i \mathbf{v}_i^H
+\]
+</p>
+<p> where \( \tau_i \) is a real/complex scalar, and \( \mathbf{v}_i \) is a real/complex vector with</p><ul>
+<li>elements \( 1 \) to \( i - 1 \) equal to 0,</li>
+<li>element \( i \) equal to 1 and</li>
+<li>elements \( i + 1 \) to \( m \) stored on exit in the elements \( i + 1 \) to \( m \) in the column  \( i
+\) of \( \mathbf{A} \).</li>
+</ul>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
@@ -271,15 +286,15 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c78
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the m-by-n matrix \( \mathbf{A} \). On exit, the upper triangle of the array contains the <span class="tt">min(m,n)</span>-by-n upper trapezoidal matrix \( \mathbf{R} \); the elements below the diagonal, together with the array <span class="tt">tau</span>, represent the unitary matrix \( \mathbf{Q} \) as a product of <span class="tt">min(m,n)</span> elementary reflectors. </td></tr>
-    <tr><td class="paramname">jpvt</td><td>Input/output vector. On entry, if <span class="tt">jpvt(j) != 0</span>, the j-th column of \( \mathbf{A} \) is permuted to the front of \( \mathbf{A P} \) (a leading column); if <span class="tt">jpvt(j) == 0</span>, the j-th column of \( \mathbf{A} \) is a free column. On exit, if <span class="tt">jpvt(j) == k</span>, then the j-th column of \( \mathbf{A P} \) was the the k-th column of \( \mathbf{A} \). </td></tr>
-    <tr><td class="paramname">tau</td><td>Output vector. The scalar factors of the elementary reflectors. </td></tr>
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the \( m \times n \) matrix \( \mathbf{A} \). On exit, the upper triangle of the array contains the \( \min(m,n) \times n \) upper trapezoidal matrix \( \mathbf{R} \); the elements below the diagonal, together with the array \( \mathbf{\tau} \), represent the unitary matrix  \(\mathbf{Q} \) as a product of \( \min(m,n) \) elementary reflectors. </td></tr>
+    <tr><td class="paramname">jpvt</td><td>Input/output vector. On entry, if the j<sup>th</sup> element is \( \neq 0 \), the j<sup>th</sup> column of \( \mathbf{A} \) is permuted to the front of \( \mathbf{A P} \) (a leading column); if the j<sup>th </sup> element is equal 0, the j<sup>th</sup> column of \( \mathbf{A} \) is a free column. On exit, if the j<sup>th</sup> element is equal \( k \), then the j<sup>th</sup> column of \( \mathbf{A P} \) was the the k<sup>th</sup> column of \( \mathbf{A} \). </td></tr>
+    <tr><td class="paramname">tau</td><td>Output vector. The scalar factors \( \tau_i \) of the elementary reflectors \( \mathbf{H}(i) \). </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Integer return code from the LAPACK call. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="geqp3_8hpp_source.html#l00056">56</a> of file <a class="el" href="geqp3_8hpp_source.html">geqp3.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="geqp3_8hpp_source.html#l00072">72</a> of file <a class="el" href="geqp3_8hpp_source.html">geqp3.hpp</a>.</p>
 
 </div>
 </div>
@@ -349,14 +364,14 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
 
 </div>
 </div>
-<a id="gad2fcbbe9516f85da7d1fa2ae1c3df79b" name="gad2fcbbe9516f85da7d1fa2ae1c3df79b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad2fcbbe9516f85da7d1fa2ae1c3df79b">&#9670;&#160;</a></span>getrf()</h2>
+<a id="gacd83a4791d1bcbb0f2b7af425af1e836" name="gacd83a4791d1bcbb0f2b7af425af1e836"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gacd83a4791d1bcbb0f2b7af425af1e836">&#9670;&#160;</a></span>getrf()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;MemoryMatrix A, MemoryVector IPIV&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, IPIV&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, IPIV&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and std::is_same_v&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;IPIV&gt;, int&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">int nda::lapack::getrf </td>
@@ -373,13 +388,13 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a
 
 <p><code>#include &lt;<a class="el" href="getrf_8hpp.html">nda/lapack/getrf.hpp</a>&gt;</code></p>
 
-<p>Interface to the LAPACK <span class="tt"><a class="el" href="#gad2fcbbe9516f85da7d1fa2ae1c3df79b" title="Interface to the LAPACK getrf routine.">getrf</a></span> routine. </p>
-<p>Computes an LU factorization of a general m-by-n matrix \( \mathbf{A} \) using partial pivoting with row interchanges.</p>
+<p>Interface to the LAPACK <span class="tt"><a class="el" href="#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">getrf</a></span> routine. </p>
+<p>Computes an LU factorization of a general \( m \times n \) matrix \( \mathbf{A} \) using partial pivoting with row interchanges.</p>
 <p>The factorization has the form   </p><p class="formulaDsp">
 \[  \mathbf{A} = \mathbf{P L U}
 \]
 </p>
-<p> where \( \mathbf{P} \) is a permutation matrix, \( \mathbf{L} \) is lower triangular with unit diagonal elements (lower trapezoidal if <span class="tt">m &gt; n</span>), and \( \mathbf{U} \) is upper triangular (upper trapezoidal if <span class="tt">m &lt; n</span>).</p>
+<p> where \( \mathbf{P} \) is a permutation matrix, \( \mathbf{L} \) is lower triangular with unit diagonal elements (lower trapezoidal if \( m &gt; n \)), and \( \mathbf{U} \) is upper triangular (upper trapezoidal if  \(m &lt; n \)).</p>
 <p>This is the right-looking Level 3 BLAS version of the algorithm.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -390,25 +405,25 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the m-by-n matrix to be factored. On exit, the factors \( \mathbf{L} \) and \( \mathbf{U} \) from the factorization \( \mathbf{A} = \mathbf{P L U} \); the unit diagonal elements of \( \mathbf{L} \) are not stored. </td></tr>
-    <tr><td class="paramname">ipiv</td><td>Output vector. The pivot indices from <span class="tt"><a class="el" href="#gad2fcbbe9516f85da7d1fa2ae1c3df79b" title="Interface to the LAPACK getrf routine.">getrf</a></span>, i.e. for <span class="tt">1 &lt;= i &lt;= n</span>, row i of the matrix was interchanged with row <span class="tt">ipiv(i)</span>. </td></tr>
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the \( m \times n \) matrix to be factored. On exit, the factors  \(\mathbf{L} \) and \( \mathbf{U} \) from the factorization \( \mathbf{A} = \mathbf{P L U} \); the unit diagonal elements of \( \mathbf{L} \) are not stored. </td></tr>
+    <tr><td class="paramname">ipiv</td><td>Output vector. The pivot indices, i.e. for \( 1 \leq i \leq \min(m,n) \), row \( i \) of the matrix was interchanged with row <span class="tt">ipiv(i-1)</span>. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Integer return code from the LAPACK call. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="getrf_8hpp_source.html#l00051">51</a> of file <a class="el" href="getrf_8hpp_source.html">getrf.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="getrf_8hpp_source.html#l00058">58</a> of file <a class="el" href="getrf_8hpp_source.html">getrf.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga1b5ce50ac684f54e278746819c419ca1" name="ga1b5ce50ac684f54e278746819c419ca1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1b5ce50ac684f54e278746819c419ca1">&#9670;&#160;</a></span>getri()</h2>
+<a id="ga41597808b4e45ffeaebd3645b55354e7" name="ga41597808b4e45ffeaebd3645b55354e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga41597808b4e45ffeaebd3645b55354e7">&#9670;&#160;</a></span>getri()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;MemoryMatrix A, MemoryVector IPIV&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, IPIV&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A, IPIV&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and std::is_same_v&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;IPIV&gt;, int&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">int nda::lapack::getri </td>
@@ -425,8 +440,8 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a
 
 <p><code>#include &lt;<a class="el" href="getri_8hpp.html">nda/lapack/getri.hpp</a>&gt;</code></p>
 
-<p>Interface to the LAPACK <span class="tt"><a class="el" href="#ga1b5ce50ac684f54e278746819c419ca1" title="Interface to the LAPACK getri routine.">getri</a></span> routine. </p>
-<p>Computes the inverse of a matrix using the LU factorization computed by <span class="tt"><a class="el" href="#gad2fcbbe9516f85da7d1fa2ae1c3df79b" title="Interface to the LAPACK getrf routine.">getrf</a></span>.</p>
+<p>Interface to the LAPACK <span class="tt"><a class="el" href="#ga41597808b4e45ffeaebd3645b55354e7" title="Interface to the LAPACK getri routine.">getri</a></span> routine. </p>
+<p>Computes the inverse of an \( n \times n \) matrix \( \mathbf{A} \) matrix using the LU factorization computed by <a class="el" href="#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a>.</p>
 <p>This method inverts \( \mathbf{U} \) and then computes \( \mathrm{inv}(\mathbf{A}) \) by solving the system \( \mathrm{inv}(\mathbf{A}) L = \mathrm{inv}(\mathbf{U}) \) for \( \mathrm{inv}(\mathbf{A}) \).</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -437,8 +452,8 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the factors \( \mathbf{L} \) and \( \mathbf{U} \) from the factorization \( \mathbf{A} = \mathbf{P L U} \) as computed by <span class="tt"><a class="el" href="#gad2fcbbe9516f85da7d1fa2ae1c3df79b" title="Interface to the LAPACK getrf routine.">getrf</a></span>. On exit, if <span class="tt">INFO == 0</span>, the inverse of the original matrix \( \mathbf{A} \). </td></tr>
-    <tr><td class="paramname">ipiv</td><td>Input vector. The pivot indices from <span class="tt"><a class="el" href="#gad2fcbbe9516f85da7d1fa2ae1c3df79b" title="Interface to the LAPACK getrf routine.">getrf</a></span>, i.e. for <span class="tt">1 &lt;= i &lt;= N</span>, row i of the matrix was interchanged with row <span class="tt">ipiv(i)</span>. </td></tr>
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the factors \( \mathbf{L} \) and \( \mathbf{U} \) from the factorization \( \mathbf{A} = \mathbf{P L U} \) as computed by <a class="el" href="#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a>. On exit, if <span class="tt">INFO == 0</span>, the inverse of the original matrix \( \mathbf{A} \). </td></tr>
+    <tr><td class="paramname">ipiv</td><td>Input vector. The pivot indices from <a class="el" href="#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a>, i.e. for \( 1 \leq i \leq n \), row i of the matrix was interchanged with row <span class="tt">ipiv(i)</span>. </td></tr>
   </table>
   </dd>
 </dl>
@@ -448,14 +463,14 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a
 
 </div>
 </div>
-<a id="gaaeb82496116119df161e38599e66e1a3" name="gaaeb82496116119df161e38599e66e1a3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaaeb82496116119df161e38599e66e1a3">&#9670;&#160;</a></span>getrs()</h2>
+<a id="gae81206b2d5fff66e29fa0fb25de61183" name="gae81206b2d5fff66e29fa0fb25de61183"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae81206b2d5fff66e29fa0fb25de61183">&#9670;&#160;</a></span>getrs()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;MemoryMatrix A, MemoryMatrix B, MemoryVector IPIV&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, B, IPIV&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+template&lt;Matrix A, MemoryArray B, MemoryVector IPIV&gt; <br />
+requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="lapack_2interface_2cxx__interface_8hpp.html#a4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, B, IPIV&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">int nda::lapack::getrs </td>
@@ -477,18 +492,16 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
 
 <p><code>#include &lt;<a class="el" href="getrs_8hpp.html">nda/lapack/getrs.hpp</a>&gt;</code></p>
 
-<p>Interface to the LAPACK <span class="tt"><a class="el" href="#gaaeb82496116119df161e38599e66e1a3" title="Interface to the LAPACK getrs routine.">getrs</a></span> routine. </p>
-<p>Solves a system of linear equations</p>
-<ul>
-<li>\( \mathbf{A X} = \mathbf{B} \),</li>
-<li>\( \mathbf{A}^T \mathbf{X} = \mathbf{B} \) or</li>
-<li>\( \mathbf{A}^H \mathbf{X} = \mathbf{B} \)</li>
+<p>Interface to the LAPACK <span class="tt"><a class="el" href="#gae81206b2d5fff66e29fa0fb25de61183" title="Interface to the LAPACK getrs routine.">getrs</a></span> routine. </p>
+<p>Solves a system of linear equations</p><ul>
+<li>\( \mathbf{A X} = \mathbf{B} \) or</li>
+<li>\( \mathbf{A}^* \mathbf{X} = \mathbf{B} \).</li>
 </ul>
-<p>with a general n-by-n matrix \( \mathbf{A} \) using the LU factorization computed by <span class="tt"><a class="el" href="#gad2fcbbe9516f85da7d1fa2ae1c3df79b" title="Interface to the LAPACK getrf routine.">getrf</a></span>.</p>
+<p>with a general \( n \times n \) matrix \( \mathbf{A} \) using the LU factorization computed by <a class="el" href="#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
-    <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
+    <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> type. </td></tr>
     <tr><td class="paramname">IPIV</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> type. </td></tr>
   </table>
   </dd>
@@ -496,9 +509,9 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a</td><td>Input matrix. The factors \( \mathbf{L} \) and \( \mathbf{U} \) from the factorization  \( \mathbf{A}
-= \mathbf{P L U} \) as computed by <span class="tt"><a class="el" href="#gad2fcbbe9516f85da7d1fa2ae1c3df79b" title="Interface to the LAPACK getrf routine.">getrf</a></span>. </td></tr>
+= \mathbf{P L U} \) as computed by <a class="el" href="#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a>. </td></tr>
     <tr><td class="paramname">b</td><td>Input/output matrix. On entry, the right hand side matrix \( \mathbf{B} \). On exit, the solution matrix \( \mathbf{X} \). </td></tr>
-    <tr><td class="paramname">ipiv</td><td>Input vector. The pivot indices from <span class="tt"><a class="el" href="#gad2fcbbe9516f85da7d1fa2ae1c3df79b" title="Interface to the LAPACK getrf routine.">getrf</a></span>, i.e. for <span class="tt">1 &lt;= i &lt;= n</span>, row i of the matrix was interchanged with row <span class="tt">ipiv(i)</span>. </td></tr>
+    <tr><td class="paramname">ipiv</td><td>Input vector. The pivot indices from <a class="el" href="#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a>, i.e. for \( 1 \leq i \leq n \), row i of the matrix was interchanged with row <span class="tt">ipiv(i)</span>. </td></tr>
   </table>
   </dd>
 </dl>
@@ -576,14 +589,14 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
 
 </div>
 </div>
-<a id="gad90cc968c1566e14de62b316caaee04c" name="gad90cc968c1566e14de62b316caaee04c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad90cc968c1566e14de62b316caaee04c">&#9670;&#160;</a></span>orgqr()</h2>
+<a id="ga63d63cd2112e0e9f106ef617333d44dc" name="ga63d63cd2112e0e9f106ef617333d44dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga63d63cd2112e0e9f106ef617333d44dc">&#9670;&#160;</a></span>orgqr()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;MemoryMatrix A, MemoryVector TAU&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c785135d7916b">mem::on_host</a>&lt;A&gt; and std::is_same_v&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, TAU&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, TAU&gt;)</div>
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A&gt; and std::is_same_v&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, TAU&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">int nda::lapack::orgqr </td>
@@ -600,12 +613,21 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c78
 
 <p><code>#include &lt;<a class="el" href="orgqr_8hpp.html">nda/lapack/orgqr.hpp</a>&gt;</code></p>
 
-<p>Interface to the LAPACK <span class="tt"><a class="el" href="#gad90cc968c1566e14de62b316caaee04c" title="Interface to the LAPACK orgqr routine.">orgqr</a></span> routine. </p>
-<p>Generates an m-by-n real matrix \( \mathbf{Q} \) with orthonormal columns, which is defined as the first n columns of a product of k elementary reflectors of order m:   </p><p class="formulaDsp">
+<p>Interface to the LAPACK <span class="tt"><a class="el" href="#ga63d63cd2112e0e9f106ef617333d44dc" title="Interface to the LAPACK orgqr routine.">orgqr</a></span> routine. </p>
+<p>Generates an \( m \times n \) real matrix \( \mathbf{Q} \) with orthonormal columns, which is defined as the first \( n \) columns of a product of \( k \) elementary reflectors of order \( m \)   </p><p class="formulaDsp">
 \[  \mathbf{Q} = \mathbf{H}(1) \mathbf{H}(2) \ldots \mathbf{H}(k) \; ,
 \]
 </p>
-<p> as returned by <span class="tt">geqrf</span>.</p>
+<p> as returned by <a class="el" href="#gab1b17ce137d948f3561494bf6953b7e4" title="Interface to the LAPACK geqp3 routine.">nda::lapack::geqp3</a>.</p>
+<p>Each \( \mathbf{H}(i) \) has the form   </p><p class="formulaDsp">
+\[  \mathbf{H}(i) = \mathbf{I} - \tau_i * \mathbf{v}_i \mathbf{v}_i^T
+\]
+</p>
+<p> where \( \tau_i \) is a real scalar, and \( \mathbf{v}_i \) is a real vector with</p><ul>
+<li>elements \( 1 \) to \( i - 1 \) equal to 0,</li>
+<li>element \( i \) equal to 1 and</li>
+<li>elements \( i + 1 \) to \( m \) stored in the elements \( i + 1 \) to \( m \) in column \( i \) of matrix \( \mathbf{A} \).</li>
+</ul>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> with double value type. </td></tr>
@@ -615,25 +637,25 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c78
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the i-th column must contain the vector which defines the elementary reflector \( H(i) \; , i = 1,2,...,k \), as returned by <span class="tt">geqrf</span> in the first k columns. On exit, the m-by-n matrix \( \mathbf{Q} \). </td></tr>
-    <tr><td class="paramname">tau</td><td>Input vector. <span class="tt">tau(i)</span> must contain the scalar factor of the elementary reflector \( \mathbf{H}(i) \), as returned by <span class="tt">geqrf</span>. </td></tr>
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the i<sup>th</sup> column must contain the vector which defines the elementary reflector \( H(i) \; , i = 1,2,...,k \), as returned by <a class="el" href="#gab1b17ce137d948f3561494bf6953b7e4" title="Interface to the LAPACK geqp3 routine.">nda::lapack::geqp3</a> in the first \( k \) columns. On exit, the \( m \times n \) matrix \( \mathbf{Q} \). </td></tr>
+    <tr><td class="paramname">tau</td><td>Input vector. \( \tau_i \) must contain the scalar factor of the elementary reflector  \(\mathbf{H}(i) \), as returned by <a class="el" href="#gab1b17ce137d948f3561494bf6953b7e4" title="Interface to the LAPACK geqp3 routine.">nda::lapack::geqp3</a>. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Integer return code from the LAPACK call. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="orgqr_8hpp_source.html#l00052">52</a> of file <a class="el" href="orgqr_8hpp_source.html">orgqr.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="orgqr_8hpp_source.html#l00059">59</a> of file <a class="el" href="orgqr_8hpp_source.html">orgqr.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga59f102523a092fc5de99718a7821cf7e" name="ga59f102523a092fc5de99718a7821cf7e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga59f102523a092fc5de99718a7821cf7e">&#9670;&#160;</a></span>ungqr()</h2>
+<a id="ga56ec70f6ac54d52db55f30a993690d38" name="ga56ec70f6ac54d52db55f30a993690d38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga56ec70f6ac54d52db55f30a993690d38">&#9670;&#160;</a></span>ungqr()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;MemoryMatrix A, MemoryVector TAU&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c785135d7916b">mem::on_host</a>&lt;A&gt; and std::is_same_v&lt;std::complex&lt;double&gt;, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, TAU&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, TAU&gt;)</div>
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A&gt; and std::is_same_v&lt;std::complex&lt;double&gt;, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, TAU&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">int nda::lapack::ungqr </td>
@@ -650,12 +672,21 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c78
 
 <p><code>#include &lt;<a class="el" href="ungqr_8hpp.html">nda/lapack/ungqr.hpp</a>&gt;</code></p>
 
-<p>Interface to the LAPACK <span class="tt"><a class="el" href="#ga59f102523a092fc5de99718a7821cf7e" title="Interface to the LAPACK ungqr routine.">ungqr</a></span> routine. </p>
-<p>Generates an m-by-n complex matrix \( \mathbf{Q} \) with orthonormal columns, which is defined as the first n columns of a product of k elementary reflectors of order m   </p><p class="formulaDsp">
+<p>Interface to the LAPACK <span class="tt"><a class="el" href="#ga56ec70f6ac54d52db55f30a993690d38" title="Interface to the LAPACK ungqr routine.">ungqr</a></span> routine. </p>
+<p>Generates an \( m \times n \) complex matrix \( \mathbf{Q} \) with orthonormal columns, which is defined as the first \( n \) columns of a product of \( k \) elementary reflectors of order \( m \)   </p><p class="formulaDsp">
 \[  \mathbf{Q} = \mathbf{H}(1) \mathbf{H}(2) \ldots \mathbf{H}(k) \; ,
 \]
 </p>
-<p> as returned by <span class="tt">geqrf</span>.</p>
+<p> as returned by <a class="el" href="#gab1b17ce137d948f3561494bf6953b7e4" title="Interface to the LAPACK geqp3 routine.">nda::lapack::geqp3</a>.</p>
+<p>Each \( \mathbf{H}(i) \) has the form   </p><p class="formulaDsp">
+\[  \mathbf{H}(i) = \mathbf{I} - \tau_i * \mathbf{v}_i \mathbf{v}_i^H
+\]
+</p>
+<p> where \( \tau_i \) is a complex scalar, and \( \mathbf{v}_i \) is a complex vector with</p><ul>
+<li>elements \( 1 \) to \( i - 1 \) equal to 0,</li>
+<li>element \( i \) equal to 1 and</li>
+<li>elements \( i + 1 \) to \( m \) stored in the elements \( i + 1 \) to \( m \) in column \( i \) of matrix \( \mathbf{A} \).</li>
+</ul>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> with complex value type. </td></tr>
@@ -665,14 +696,14 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c78
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the i-th column must contain the vector which defines the elementary reflector \( H(i) \; , i = 1,2,...,K \), as returned by <span class="tt">geqrf</span> in the first k columns. On exit, the m-by-n matrix \( \mathbf{Q} \). </td></tr>
-    <tr><td class="paramname">tau</td><td>Input vector. <span class="tt">tau(i)</span> must contain the scalar factor of the elementary reflector \( \mathbf{H}(i) \), as returned by <span class="tt">geqrf</span>. </td></tr>
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the i<sup>th</sup> column must contain the vector which defines the elementary reflector \( H(i) \; , i = 1,2,...,k \), as returned by <a class="el" href="#gab1b17ce137d948f3561494bf6953b7e4" title="Interface to the LAPACK geqp3 routine.">nda::lapack::geqp3</a> in the first \( k \) columns. On exit, the \( m \times n \) matrix \( \mathbf{Q} \). </td></tr>
+    <tr><td class="paramname">tau</td><td>Input vector. \( \tau_i \) must contain the scalar factor of the elementary reflector  \(\mathbf{H}(i) \), as returned by <a class="el" href="#gab1b17ce137d948f3561494bf6953b7e4" title="Interface to the LAPACK geqp3 routine.">nda::lapack::geqp3</a>. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Integer return code from the LAPACK call. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ungqr_8hpp_source.html#l00052">52</a> of file <a class="el" href="ungqr_8hpp_source.html">ungqr.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ungqr_8hpp_source.html#l00060">60</a> of file <a class="el" href="ungqr_8hpp_source.html">ungqr.hpp</a>.</p>
 
 </div>
 </div>

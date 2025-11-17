@@ -275,7 +275,7 @@ requires (<a class="el" href="group__av__utils.html#ga399faffc1372096b0df09d6516
 <p><code>#include &lt;<a class="el" href="det_8hpp.html">nda/linalg/det.hpp</a>&gt;</code></p>
 
 <p>Compute the determinant of a square matrix/view. </p>
-<p>It uses <a class="el" href="group__linalg__lapack.html#gad2fcbbe9516f85da7d1fa2ae1c3df79b" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> to compute the LU decomposition of the matrix and then calculates the determinant by multiplying the diagonal elements of the \( \mathbf{U} \) matrix and taking into account that <span class="tt">getrf</span> may change the ordering of the rows/columns of the matrix.</p>
+<p>It uses <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> to compute the LU decomposition of the matrix and then calculates the determinant by multiplying the diagonal elements of the \( \mathbf{U} \) matrix and taking into account that <span class="tt">getrf</span> may change the ordering of the rows/columns of the matrix.</p>
 <p>The given matrix/view is modified in place.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -750,7 +750,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 <p>Compute the inverse of an n-by-n matrix. </p>
 <p>The inversion is performed in place.</p>
 <p>For small matrices (1-by-1, 2-by-2, 3-by-3), we directly compute the matrix inversion using the optimized routines: <a class="el" href="#ga52392364db364e5bbb05d4287bbfd7ee" title="Compute the inverse of a 1-by-1 matrix.">nda::inverse1_in_place</a>, <a class="el" href="#ga6d7a0ac0080632972b5854123550ce37" title="Compute the inverse of a 2-by-2 matrix.">nda::inverse2_in_place</a>, <a class="el" href="#ga23f56fb167a83085bfb6768672c986d6" title="Compute the inverse of a 3-by-3 matrix.">nda::inverse3_in_place</a>.</p>
-<p>For larger matrices, it uses <a class="el" href="group__linalg__lapack.html#gad2fcbbe9516f85da7d1fa2ae1c3df79b" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> and <a class="el" href="group__linalg__lapack.html#ga1b5ce50ac684f54e278746819c419ca1" title="Interface to the LAPACK getri routine.">nda::lapack::getri</a>.</p>
+<p>For larger matrices, it uses <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> and <a class="el" href="group__linalg__lapack.html#ga41597808b4e45ffeaebd3645b55354e7" title="Interface to the LAPACK getri routine.">nda::lapack::getri</a>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">M</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>

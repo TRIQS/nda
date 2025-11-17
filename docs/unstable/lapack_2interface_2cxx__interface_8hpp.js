@@ -1,5 +1,6 @@
 var lapack_2interface_2cxx__interface_8hpp =
 [
+    [ "nda::lapack::get_array", "lapack_2interface_2cxx__interface_8hpp.html#af613a25151f341e5100b089f38a91bc0", null ],
     [ "nda::lapack::get_ld", "lapack_2interface_2cxx__interface_8hpp.html#a3d3e17b98e215606a2db727249b12e38", null ],
     [ "nda::lapack::get_ncols", "lapack_2interface_2cxx__interface_8hpp.html#a389b87f1aeda1e9d133273550271719a", null ],
     [ "nda::lapack::get_op", "lapack_2interface_2cxx__interface_8hpp.html#a834a04ad301f988bd361fc1946422607", null ],

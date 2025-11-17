@@ -114,6 +114,10 @@ $(function(){initNavTree('lapack_2interface_2cxx__interface_8hpp.html','',''); }
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:af613a25151f341e5100b089f38a91bc0" id="r_af613a25151f341e5100b089f38a91bc0"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; <br />
+requires (MemoryArray&lt;A&gt; or <a class="el" href="#a4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;)</td></tr>
+<tr class="memitem:af613a25151f341e5100b089f38a91bc0 template"><td class="memItemLeft" align="right" valign="top">MemoryArray decltype(auto)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af613a25151f341e5100b089f38a91bc0">nda::lapack::get_array</a> (A &amp;&amp;a)</td></tr>
+<tr class="memdesc:af613a25151f341e5100b089f38a91bc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the underlying array of a conjugate lazy expression or return the array itself in case it is an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a>.  <br /></td></tr>
 <tr class="memitem:a3d3e17b98e215606a2db727249b12e38" id="r_a3d3e17b98e215606a2db727249b12e38"><td class="memTemplParams" colspan="2">template&lt;MemoryArray A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 1 or <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 2)</td></tr>
 <tr class="memitem:a3d3e17b98e215606a2db727249b12e38 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3d3e17b98e215606a2db727249b12e38">nda::lapack::get_ld</a> (A const &amp;a)</td></tr>
@@ -142,6 +146,43 @@ template&lt;typename A&gt; </td></tr>
 <tr class="memdesc:a4e762fd4595b433d898daa5528192e49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constexpr variable that is true if the given type is a conjugate lazy expression. <br /></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="af613a25151f341e5100b089f38a91bc0" name="af613a25151f341e5100b089f38a91bc0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af613a25151f341e5100b089f38a91bc0">&#9670;&#160;</a></span>get_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;Array A&gt; <br />
+requires (MemoryArray&lt;A&gt; or is_conj_array_expr&lt;A&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">MemoryArray decltype(auto) <a class="el" href="group__linalg__blas.html#gaf613a25151f341e5100b089f38a91bc0">nda::blas::get_array</a> </td>
+          <td>(</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the underlying array of a conjugate lazy expression or return the array itself in case it is an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a>. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Conjugate expression or array/view. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> object. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="tools_8hpp_source.html#l00062">62</a> of file <a class="el" href="tools_8hpp_source.html">tools.hpp</a>.</p>
+
+</div>
+</div>
 <a id="a3d3e17b98e215606a2db727249b12e38" name="a3d3e17b98e215606a2db727249b12e38"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3d3e17b98e215606a2db727249b12e38">&#9670;&#160;</a></span>get_ld()</h2>
 
