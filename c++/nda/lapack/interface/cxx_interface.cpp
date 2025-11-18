@@ -42,11 +42,12 @@ namespace nda::lapack::f77 {
     LAPACK_zgeqp3(&M, &N, A, &LDA, JPVT, TAU, WORK, &LWORK, RWORK, &INFO);
   }
 
-  void orgqr(int M, int N, int K, double *A, int LDA, double *TAU, double *WORK, int LWORK, int &INFO) {
+  void orgqr(int M, int N, int K, double *A, int LDA, double const *TAU, double *WORK, int LWORK, int &INFO) {
     LAPACK_dorgqr(&M, &N, &K, A, &LDA, TAU, WORK, &LWORK, &INFO);
   }
 
-  void ungqr(int M, int N, int K, std::complex<double> *A, int LDA, std::complex<double> *TAU, std::complex<double> *WORK, int LWORK, int &INFO) {
+  void ungqr(int M, int N, int K, std::complex<double> *A, int LDA, std::complex<double> const *TAU, std::complex<double> *WORK, int LWORK,
+             int &INFO) {
     LAPACK_zungqr(&M, &N, &K, A, &LDA, TAU, WORK, &LWORK, &INFO);
   }
 
