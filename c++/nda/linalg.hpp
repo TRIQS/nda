@@ -23,6 +23,7 @@
 #include "./linalg/matvecmul.hpp"
 #include "./linalg/norm.hpp"
 #include "./linalg/outer_product.hpp"
+#include "./linalg/qr.hpp"
 #include "./linalg/solve.hpp"
 #include "./linalg/svd.hpp"
 #include "./linalg/utils.hpp"
