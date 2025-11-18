@@ -94,32 +94,25 @@ namespace nda::linalg {
   void inv_in_place_3d(M &&m) { // NOLINT (temporary views are allowed here)
     EXPECTS(is_matrix_square(m) and m.extent(0) == 3);
 
-    // calculate the cofactors of the matrix
-    auto const b00 = +m(1, 1) * m(2, 2) - m(1, 2) * m(2, 1);
-    auto const b10 = -m(1, 0) * m(2, 2) + m(1, 2) * m(2, 0);
-    auto const b20 = +m(1, 0) * m(2, 1) - m(1, 1) * m(2, 0);
-    auto const b01 = -m(0, 1) * m(2, 2) + m(0, 2) * m(2, 1);
-    auto const b11 = +m(0, 0) * m(2, 2) - m(0, 2) * m(2, 0);
-    auto const b21 = -m(0, 0) * m(2, 1) + m(0, 1) * m(2, 0);
-    auto const b02 = +m(0, 1) * m(1, 2) - m(0, 2) * m(1, 1);
-    auto const b12 = -m(0, 0) * m(1, 2) + m(0, 2) * m(1, 0);
-    auto const b22 = +m(0, 0) * m(1, 1) - m(0, 1) * m(1, 0);
+    // calculate the adjoint of the matrix
+    auto adj = stack_array<get_value_t<M>, 3, 3>();
+    adj(0, 0) = +m(1, 1) * m(2, 2) - m(1, 2) * m(2, 1);
+    adj(1, 0) = -m(1, 0) * m(2, 2) + m(1, 2) * m(2, 0);
+    adj(2, 0) = +m(1, 0) * m(2, 1) - m(1, 1) * m(2, 0);
+    adj(0, 1) = -m(0, 1) * m(2, 2) + m(0, 2) * m(2, 1);
+    adj(1, 1) = +m(0, 0) * m(2, 2) - m(0, 2) * m(2, 0);
+    adj(2, 1) = -m(0, 0) * m(2, 1) + m(0, 1) * m(2, 0);
+    adj(0, 2) = +m(0, 1) * m(1, 2) - m(0, 2) * m(1, 1);
+    adj(1, 2) = -m(0, 0) * m(1, 2) + m(0, 2) * m(1, 0);
+    adj(2, 2) = +m(0, 0) * m(1, 1) - m(0, 1) * m(1, 0);
 
     // calculate the determinant of the matrix
-    auto const det = m(0, 0) * b00 + m(0, 1) * b10 + m(0, 2) * b20;
+    auto const det = m(0, 0) * adj(0, 0) + m(0, 1) * adj(1, 0) + m(0, 2) * adj(2, 0);
     if (det == 0.0) NDA_RUNTIME_ERROR << "Error in nda::linalg::inv_in_place_3d: Matrix is not invertible";
     auto const detinv = 1.0 / det;
 
-    // multiply the cofactors by the inverse determinant
-    m(0, 0) = detinv * b00;
-    m(0, 1) = detinv * b01;
-    m(0, 2) = detinv * b02;
-    m(1, 0) = detinv * b10;
-    m(1, 1) = detinv * b11;
-    m(1, 2) = detinv * b12;
-    m(2, 0) = detinv * b20;
-    m(2, 1) = detinv * b21;
-    m(2, 2) = detinv * b22;
+    // multiply the adjoint by the inverse determinant
+    m = detinv * adj;
   }
 
   /**
