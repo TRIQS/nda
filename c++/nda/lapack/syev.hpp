@@ -31,7 +31,7 @@ namespace nda::lapack {
    * @details Computes all eigenvalues \f$ \lambda_i \f$ and, optionally, eigenvectors \f$ \mathbf{v}_i \f$ of a real 
    * symmetric eigenvalue problem of the form
    * \f[
-   *   \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ \; ,
+   *   \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \; ,
    * \f]
    * for a given real symmetric matrix \f$ \mathbf{A} \f$.
    *
@@ -56,7 +56,7 @@ namespace nda::lapack {
     // arrays/views must be LAPACK compatible
     EXPECTS(a.indexmap().min_stride() == 1);
     EXPECTS(w.indexmap().min_stride() == 1);
-    
+
     // check other input parameters for consistency
     EXPECTS(jobz == 'V' or jobz == 'N');
 

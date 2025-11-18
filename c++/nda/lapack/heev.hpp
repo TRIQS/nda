@@ -33,7 +33,7 @@ namespace nda::lapack {
    * @details Computes all eigenvalues \f$ \lambda_i \f$ and, optionally, eigenvectors \f$ \mathbf{v}_i \f$ of a complex 
    * hermitian matrix eigenvalue problem of the form
    * \f[
-   *   \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ \; ,
+   *   \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \; ,
    * \f]
    * for a given complex hermitian matrix \f$ \mathbf{A} \f$.
    *
