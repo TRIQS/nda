@@ -8,5 +8,7 @@ var dir_6ac268accbf4e19c7c99f7c0bc41765a =
     [ "matmul.hpp", "matmul_8hpp.html", "matmul_8hpp" ],
     [ "matvecmul.hpp", "matvecmul_8hpp.html", "matvecmul_8hpp" ],
     [ "norm.hpp", "norm_8hpp.html", null ],
-    [ "outer_product.hpp", "outer__product_8hpp.html", "outer__product_8hpp" ]
+    [ "outer_product.hpp", "outer__product_8hpp.html", "outer__product_8hpp" ],
+    [ "solve.hpp", "solve_8hpp.html", "solve_8hpp" ],
+    [ "svd.hpp", "svd_8hpp.html", "svd_8hpp" ]
 ];

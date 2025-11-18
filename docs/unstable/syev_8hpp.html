@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.15.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TRIQS/nda: nda/lapack.hpp</title>
+<title>TRIQS/nda: nda/lapack/syev.hpp</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -74,7 +74,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('lapack_8hpp.html','',''); });
+$(function(){initNavTree('syev_8hpp.html','',''); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -100,29 +100,33 @@ $(function(){initNavTree('lapack_8hpp.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">lapack.hpp</div></div>
+  <div class="headertitle"><div class="title">syev.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="lapack_2interface_2cxx__interface_8hpp_source.html">./lapack/interface/cxx_interface.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gelss_8hpp_source.html">./lapack/gelss.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="geqp3_8hpp_source.html">./lapack/geqp3.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gesvd_8hpp_source.html">./lapack/gesvd.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="getrf_8hpp_source.html">./lapack/getrf.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="getri_8hpp_source.html">./lapack/getri.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="getrs_8hpp_source.html">./lapack/getrs.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gtsv_8hpp_source.html">./lapack/gtsv.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="heev_8hpp_source.html">./lapack/heev.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="hegv_8hpp_source.html">./lapack/hegv.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="orgqr_8hpp_source.html">./lapack/orgqr.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="syev_8hpp_source.html">./lapack/syev.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="sygv_8hpp_source.html">./lapack/sygv.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="ungqr_8hpp_source.html">./lapack/ungqr.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="lapack_2interface_2cxx__interface_8hpp_source.html">./interface/cxx_interface.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="basic__array_8hpp_source.html">../basic_array.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="basic__functions_8hpp_source.html">../basic_functions.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="declarations_8hpp_source.html">../declarations.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="macros_8hpp_source.html">../macros.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="address__space_8hpp_source.html">../mem/address_space.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="traits_8hpp_source.html">../traits.hpp</a>&quot;</code><br />
+<code>#include &lt;cmath&gt;</code><br />
+<code>#include &lt;concepts&gt;</code><br />
 </div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Includes all LAPACK relevant headers. </p>
+<div class="textblock"><p>Provides a generic interface to the LAPACK <span class="tt">syev</span> routine. </p>
 
-<p class="definition">Definition in file <a class="el" href="lapack_8hpp_source.html">lapack.hpp</a>.</p>
+<p class="definition">Definition in file <a class="el" href="syev_8hpp_source.html">syev.hpp</a>.</p>
 </div>
-<p><a href="lapack_8hpp_source.html">Go to the source code of this file.</a></p>
+<p><a href="syev_8hpp_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:gab32938d5127d4b2ecf0780b47dbbebe8" id="r_gab32938d5127d4b2ecf0780b47dbbebe8"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector W&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A&gt; and std::same_as&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, W&gt;)</td></tr>
+<tr class="memitem:gab32938d5127d4b2ecf0780b47dbbebe8 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__lapack.html#gab32938d5127d4b2ecf0780b47dbbebe8">nda::lapack::syev</a> (A &amp;&amp;a, W &amp;&amp;w, char jobz='V')</td></tr>
+<tr class="memdesc:gab32938d5127d4b2ecf0780b47dbbebe8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="group__linalg__lapack.html#gab32938d5127d4b2ecf0780b47dbbebe8" title="Interface to the LAPACK syev routine.">syev</a></span> routine.  <br /></td></tr>
+</table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
@@ -136,7 +140,7 @@ $(function(){initNavTree('lapack_8hpp.html','',''); });
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>nda</b></li><li class="navelem"><a href="lapack_8hpp.html">lapack.hpp</a></li>
+    <li class="navelem"><b>nda</b></li><li class="navelem"><b>lapack</b></li><li class="navelem"><a href="syev_8hpp.html">syev.hpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

@@ -170,6 +170,22 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a
 requires ((<a class="el" href="group__linalg__blas.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;A&gt; or <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;) and <a class="el" href="group__linalg__blas.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;A&gt; == <a class="el" href="group__linalg__blas.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;B&gt;)</td></tr>
 <tr class="memitem:gaa2e13a1dfcbbacc5c2279f98230b5eb2 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa2e13a1dfcbbacc5c2279f98230b5eb2">nda::linalg::outer_product</a> (A const &amp;a, B const &amp;b)</td></tr>
 <tr class="memdesc:gaa2e13a1dfcbbacc5c2279f98230b5eb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Outer product of two arrays/views.  <br /></td></tr>
+<tr class="memitem:ga1bef8ddf7eb254c502c10ef2a17c376d" id="r_ga1bef8ddf7eb254c502c10ef2a17c376d"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Array B&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">nda::mem::have_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:ga1bef8ddf7eb254c502c10ef2a17c376d template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1bef8ddf7eb254c502c10ef2a17c376d">nda::linalg::solve</a> (A const &amp;a, B const &amp;b)</td></tr>
+<tr class="memdesc:ga1bef8ddf7eb254c502c10ef2a17c376d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve a system of linear equations.  <br /></td></tr>
+<tr class="memitem:ga6c962c0300af07dd1dc18f1b0f97d9a7" id="r_ga6c962c0300af07dd1dc18f1b0f97d9a7"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryArray B&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">nda::mem::have_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:ga6c962c0300af07dd1dc18f1b0f97d9a7 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6c962c0300af07dd1dc18f1b0f97d9a7">nda::linalg::solve_in_place</a> (A &amp;&amp;a, B &amp;&amp;b)</td></tr>
+<tr class="memdesc:ga6c962c0300af07dd1dc18f1b0f97d9a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve a system of linear equations in-place.  <br /></td></tr>
+<tr class="memitem:ga4197582b8a25dc01bc9127a0b04e4ce0" id="r_ga4197582b8a25dc01bc9127a0b04e4ce0"><td class="memTemplParams" colspan="2">template&lt;Matrix A&gt; <br />
+requires (<a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:ga4197582b8a25dc01bc9127a0b04e4ce0 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4197582b8a25dc01bc9127a0b04e4ce0">nda::linalg::svd</a> (A const &amp;a)</td></tr>
+<tr class="memdesc:ga4197582b8a25dc01bc9127a0b04e4ce0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the singular value decomposition (SVD) of a matrix.  <br /></td></tr>
+<tr class="memitem:ga4ef359605199b874634e1712b1aa55d4" id="r_ga4ef359605199b874634e1712b1aa55d4"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:ga4ef359605199b874634e1712b1aa55d4 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4ef359605199b874634e1712b1aa55d4">nda::linalg::svd_in_place</a> (A &amp;&amp;a)</td></tr>
+<tr class="memdesc:ga4ef359605199b874634e1712b1aa55d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the singular value decomposition (SVD) of a matrix in place.  <br /></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
 <a id="ga25ac6b5f84880602b6c042d7b08fdafa" name="ga25ac6b5f84880602b6c042d7b08fdafa"></a>
@@ -922,6 +938,215 @@ requires ((<a class="el" href="group__linalg__blas.html#ga24228d6ce4cd37cb84f967
 <dl class="section return"><dt>Returns</dt><dd>Outer product \( \mathbf{A} \otimes \mathbf{B} \). </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="outer__product_8hpp_source.html#l00052">52</a> of file <a class="el" href="outer__product_8hpp_source.html">outer_product.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga1bef8ddf7eb254c502c10ef2a17c376d" name="ga1bef8ddf7eb254c502c10ef2a17c376d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1bef8ddf7eb254c502c10ef2a17c376d">&#9670;&#160;</a></span>solve()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;Matrix A, Array B&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">nda::mem::have_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::solve </td>
+          <td>(</td>
+          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">B const &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="solve_8hpp.html">nda/linalg/solve.hpp</a>&gt;</code></p>
+
+<p>Solve a system of linear equations. </p>
+<p>The function solves a system of linear equations</p>
+<ul>
+<li>\( \mathbf{A X} = \mathbf{B} \) or</li>
+<li>\( \mathbf{A x} = \mathbf{b} \),</li>
+</ul>
+<p>with a general \( n \times n \) matrix \( \mathbf{A} \) and either</p>
+<ul>
+<li>\( n \times m \) matrices \( \mathbf{X} \) and \( \mathbf{B} \) or</li>
+<li>vectors \( \mathbf{x} \) and \( \mathbf{b} \) of size \( n \).</li>
+</ul>
+<p>It calls <a class="el" href="#ga6c962c0300af07dd1dc18f1b0f97d9a7" title="Solve a system of linear equations in-place.">nda::linalg::solve_in_place</a> with a copy of the input matrix \( \mathbf{A} \) and the right hand side matrix \( \mathbf{B} \) or vector \( \mathbf{b} \).</p>
+<dl class="section note"><dt>Note</dt><dd>The solution matrix \( \mathbf{X} \) is always in Fortran layout.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>This function makes copies of the input arrays/views. When working on the device memory space, this may lead to runtime errors if the copying fails.</dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
+    <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type of rank 1 or 2. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>The \( n \times n \) matrix \( \mathbf{A} \) determining the linear system. </td></tr>
+    <tr><td class="paramname">b</td><td>Right hand side matrix \( \mathbf{B} \) or vector \( \mathbf{b} \). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Solution matrix \( \mathbf{X} \) or vector \( \mathbf{x} \). </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="solve_8hpp_source.html#l00126">126</a> of file <a class="el" href="solve_8hpp_source.html">solve.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga6c962c0300af07dd1dc18f1b0f97d9a7" name="ga6c962c0300af07dd1dc18f1b0f97d9a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6c962c0300af07dd1dc18f1b0f97d9a7">&#9670;&#160;</a></span>solve_in_place()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;MemoryMatrix A, MemoryArray B&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">nda::mem::have_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void nda::linalg::solve_in_place </td>
+          <td>(</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">B &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="solve_8hpp.html">nda/linalg/solve.hpp</a>&gt;</code></p>
+
+<p>Solve a system of linear equations in-place. </p>
+<p>The function solves a system of linear equations</p>
+<ul>
+<li>\( \mathbf{A X} = \mathbf{B} \) or</li>
+<li>\( \mathbf{A x} = \mathbf{b} \),</li>
+</ul>
+<p>with a general \( n \times n \) matrix \( \mathbf{A} \) and either</p>
+<ul>
+<li>\( n \times m \) matrices \( \mathbf{X} \) and \( \mathbf{B} \) or</li>
+<li>vectors \( \mathbf{x} \) and \( \mathbf{b} \) of size \( n \).</li>
+</ul>
+<p>It uses <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> to compute the LU factorization of the matrix \( \mathbf{A} \) and then <a class="el" href="group__linalg__lapack.html#gae81206b2d5fff66e29fa0fb25de61183" title="Interface to the LAPACK getrs routine.">nda::lapack::getrs</a> to solve the system of linear equations.</p>
+<p>An exception is thrown, if the LAPACK calls return a non-zero value.</p>
+<dl class="section note"><dt>Note</dt><dd>For a right hand side matrix \( \mathbf{B} \) Fortran layout is required.</dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+    <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> type of rank 1 or 2. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input/Output matrix. On entry, the \( n \times n \) matrix \( \mathbf{A} \) determining the linear system. On exit, contains the LU factorization as calculated by <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a>. </td></tr>
+    <tr><td class="paramname">b</td><td>Input/Output array. On entry, the right hand side matrix \( \mathbf{B} \) or vector \( \mathbf{b} \). On exit, contains the solution matrix \( \mathbf{X} \) or vector \( \mathbf{x} \). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="solve_8hpp_source.html#l00075">75</a> of file <a class="el" href="solve_8hpp_source.html">solve.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga4197582b8a25dc01bc9127a0b04e4ce0" name="ga4197582b8a25dc01bc9127a0b04e4ce0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4197582b8a25dc01bc9127a0b04e4ce0">&#9670;&#160;</a></span>svd()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;Matrix A&gt; <br />
+requires (<a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::svd </td>
+          <td>(</td>
+          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="svd_8hpp.html">nda/linalg/svd.hpp</a>&gt;</code></p>
+
+<p>Compute the singular value decomposition (SVD) of a matrix. </p>
+<p>The function computes the SVD of a given \( m \times n \) matrix \( \mathbf{A} \):   </p><p class="formulaDsp">
+\[  \mathbf{A} = \mathbf{U} \mathbf{S} \mathbf{V}^H \; ,
+\]
+</p>
+<p> where \( \mathbf{U} \) is a unitary \( m \times m \) matrix, \( \mathbf{V} \) is a unitary \( n \times n \) matrix and \( \mathbf{S} \) is an \( m \times n \) matrix with non-negative real numbers on the diagonal.</p>
+<p>It calls <a class="el" href="#ga4ef359605199b874634e1712b1aa55d4" title="Compute the singular value decomposition (SVD) of a matrix in place.">nda::linalg::svd_in_place</a> with a copy of the input matrix \( \mathbf{A} \).</p>
+<dl class="section note"><dt>Note</dt><dd>If the input matrix \( \mathbf{A} \) is in Fortran layout, the output matrices \( \mathbf{U} \) and \( \mathbf{V}^H \) are also in Fortran layout. Otherwise, they are in C layout.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>This function makes copies of the input arrays/views. When working on the device memory space, this may lead to runtime errors if the copying fails.</dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input matrix \( \mathbf{A} \). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><span class="tt">std::tuple</span> containing \( \mathbf{U} \), \( \mathbf{s} \) and \( \mathbf{V}^H \). </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="svd_8hpp_source.html#l00114">114</a> of file <a class="el" href="svd_8hpp_source.html">svd.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga4ef359605199b874634e1712b1aa55d4" name="ga4ef359605199b874634e1712b1aa55d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4ef359605199b874634e1712b1aa55d4">&#9670;&#160;</a></span>svd_in_place()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::svd_in_place </td>
+          <td>(</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="svd_8hpp.html">nda/linalg/svd.hpp</a>&gt;</code></p>
+
+<p>Compute the singular value decomposition (SVD) of a matrix in place. </p>
+<p>The function computes the SVD of a given \( m \times n \) matrix \( \mathbf{A} \):   </p><p class="formulaDsp">
+\[  \mathbf{A} = \mathbf{U} \mathbf{S} \mathbf{V}^H \; ,
+\]
+</p>
+<p> where \( \mathbf{U} \) is a unitary \( m \times m \) matrix, \( \mathbf{V} \) is a unitary \( n \times n \) matrix and \( \mathbf{S} \) is an \( m \times n \) matrix with non-negative real numbers on the diagonal.</p>
+<p>It first constructs the output vector \( \mathbf{s} \), which contains the singular values, and the output matrices \( \mathbf{U} \) and \( \mathbf{V}^H \). It then calls <a class="el" href="group__linalg__lapack.html#ga2ad7420a95eeebf775f912cfd9770bf5" title="Interface to the LAPACK gesvd routine.">nda::lapack::gesvd</a> to compute the SVD.</p>
+<p>An exception is thrown, if the LAPACK call returns a non-zero value.</p>
+<dl class="section note"><dt>Note</dt><dd>If the input matrix \( \mathbf{A} \) is in Fortran layout, the output matrices \( \mathbf{U} \) and \( \mathbf{V}^H \) are also in Fortran layout. Otherwise, they are in C layout.</dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the \( m \times n \) matrix \( \mathbf{A} \). On exit, the contents of \( \mathbf{A} \) are destroyed. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><span class="tt">std::tuple</span> containing \( \mathbf{U} \), \( \mathbf{s} \) and \( \mathbf{V}^H \). </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="svd_8hpp_source.html#l00073">73</a> of file <a class="el" href="svd_8hpp_source.html">svd.hpp</a>.</p>
 
 </div>
 </div>

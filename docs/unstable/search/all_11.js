@@ -41,7 +41,11 @@ var searchData=
   ['heap_38',['heap',['../group__mem__pols.html#ga4c4f5b0a09f480782bf1353ca308e640',1,'nda']]],
   ['heap_5fbasic_39',['heap_basic',['../structnda_1_1heap__basic.html',1,'nda']]],
   ['heap_5fbasic_3c_20mem_3a_3amallocator_3c_20adrsp_20_3e_20_3e_40',['heap_basic&lt; mem::mallocator&lt; AdrSp &gt; &gt;',['../structnda_1_1heap__basic.html',1,'nda']]],
-  ['histogram_41',['histogram',['../classnda_1_1mem_1_1stats.html#a2d8868aaf2e00f6bc7ded214870be5fc',1,'nda::mem::stats']]],
-  ['host_42',['Host',['../address__space_8hpp.html#ac2ca16d048ec66e04bca283eab048ec2',1,'nda::mem']]],
-  ['hyperslab_5fand_5fshape_5ffrom_5fslice_43',['hyperslab_and_shape_from_slice',['../group__av__hdf5.html#gab6fea3ef30e10b8ab043fe8fcfe26138',1,'nda']]]
+  ['heev_41',['heev',['../group__linalg__lapack.html#ga866f35e5b8cb5938a7bb1182f3b43acf',1,'nda::lapack']]],
+  ['heev_2ehpp_42',['heev.hpp',['../heev_8hpp.html',1,'']]],
+  ['hegv_43',['hegv',['../group__linalg__lapack.html#gaab16b1d57cf493f88b7be848e1482692',1,'nda::lapack']]],
+  ['hegv_2ehpp_44',['hegv.hpp',['../hegv_8hpp.html',1,'']]],
+  ['histogram_45',['histogram',['../classnda_1_1mem_1_1stats.html#a2d8868aaf2e00f6bc7ded214870be5fc',1,'nda::mem::stats']]],
+  ['host_46',['Host',['../address__space_8hpp.html#ac2ca16d048ec66e04bca283eab048ec2',1,'nda::mem']]],
+  ['hyperslab_5fand_5fshape_5ffrom_5fslice_47',['hyperslab_and_shape_from_slice',['../group__av__hdf5.html#gab6fea3ef30e10b8ab043fe8fcfe26138',1,'nda']]]
 ];

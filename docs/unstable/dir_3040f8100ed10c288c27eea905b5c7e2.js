@@ -9,6 +9,10 @@ var dir_3040f8100ed10c288c27eea905b5c7e2 =
     [ "getri.hpp", "getri_8hpp.html", "getri_8hpp" ],
     [ "getrs.hpp", "getrs_8hpp.html", "getrs_8hpp" ],
     [ "gtsv.hpp", "gtsv_8hpp.html", "gtsv_8hpp" ],
+    [ "heev.hpp", "heev_8hpp.html", "heev_8hpp" ],
+    [ "hegv.hpp", "hegv_8hpp.html", "hegv_8hpp" ],
     [ "orgqr.hpp", "orgqr_8hpp.html", "orgqr_8hpp" ],
+    [ "syev.hpp", "syev_8hpp.html", "syev_8hpp" ],
+    [ "sygv.hpp", "sygv_8hpp.html", "sygv_8hpp" ],
     [ "ungqr.hpp", "ungqr_8hpp.html", "ungqr_8hpp" ]
 ];

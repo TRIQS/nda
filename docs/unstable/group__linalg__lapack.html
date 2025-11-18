@@ -143,10 +143,26 @@ requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="lapack_2interface_2cxx__
 requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;DL, D, DU, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;DL, D, DU, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;DL&gt;&gt;)</td></tr>
 <tr class="memitem:ga0b9b46f1987c9367177f7e3118a42947 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0b9b46f1987c9367177f7e3118a42947">nda::lapack::gtsv</a> (DL &amp;&amp;dl, D &amp;&amp;d, DU &amp;&amp;du, B &amp;&amp;b)</td></tr>
 <tr class="memdesc:ga0b9b46f1987c9367177f7e3118a42947"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#ga0b9b46f1987c9367177f7e3118a42947" title="Interface to the LAPACK gtsv routine.">gtsv</a></span> routine.  <br /></td></tr>
+<tr class="memitem:ga866f35e5b8cb5938a7bb1182f3b43acf" id="r_ga866f35e5b8cb5938a7bb1182f3b43acf"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector W&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A&gt; and std::same_as&lt;std::complex&lt;double&gt;, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and std::same_as&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;W&gt;&gt;)</td></tr>
+<tr class="memitem:ga866f35e5b8cb5938a7bb1182f3b43acf template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga866f35e5b8cb5938a7bb1182f3b43acf">nda::lapack::heev</a> (A &amp;&amp;a, W &amp;&amp;w, char jobz='V')</td></tr>
+<tr class="memdesc:ga866f35e5b8cb5938a7bb1182f3b43acf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#ga866f35e5b8cb5938a7bb1182f3b43acf" title="Interface to the LAPACK heev routine.">heev</a></span> routine.  <br /></td></tr>
+<tr class="memitem:gaab16b1d57cf493f88b7be848e1482692" id="r_gaab16b1d57cf493f88b7be848e1482692"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryMatrix B, MemoryVector W&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A, B&gt; and std::same_as&lt;std::complex&lt;double&gt;, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and std::same_as&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;W&gt;&gt;)</td></tr>
+<tr class="memitem:gaab16b1d57cf493f88b7be848e1482692 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaab16b1d57cf493f88b7be848e1482692">nda::lapack::hegv</a> (A &amp;&amp;a, B &amp;&amp;b, W &amp;&amp;w, char jobz='V', int itype=1)</td></tr>
+<tr class="memdesc:gaab16b1d57cf493f88b7be848e1482692"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#gaab16b1d57cf493f88b7be848e1482692" title="Interface to the LAPACK hegv routine.">hegv</a></span> routine.  <br /></td></tr>
 <tr class="memitem:ga63d63cd2112e0e9f106ef617333d44dc" id="r_ga63d63cd2112e0e9f106ef617333d44dc"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector TAU&gt; <br />
 requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A&gt; and std::is_same_v&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, TAU&gt;)</td></tr>
 <tr class="memitem:ga63d63cd2112e0e9f106ef617333d44dc template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga63d63cd2112e0e9f106ef617333d44dc">nda::lapack::orgqr</a> (A &amp;&amp;a, TAU &amp;&amp;tau)</td></tr>
 <tr class="memdesc:ga63d63cd2112e0e9f106ef617333d44dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#ga63d63cd2112e0e9f106ef617333d44dc" title="Interface to the LAPACK orgqr routine.">orgqr</a></span> routine.  <br /></td></tr>
+<tr class="memitem:gab32938d5127d4b2ecf0780b47dbbebe8" id="r_gab32938d5127d4b2ecf0780b47dbbebe8"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector W&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A&gt; and std::same_as&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, W&gt;)</td></tr>
+<tr class="memitem:gab32938d5127d4b2ecf0780b47dbbebe8 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab32938d5127d4b2ecf0780b47dbbebe8">nda::lapack::syev</a> (A &amp;&amp;a, W &amp;&amp;w, char jobz='V')</td></tr>
+<tr class="memdesc:gab32938d5127d4b2ecf0780b47dbbebe8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#gab32938d5127d4b2ecf0780b47dbbebe8" title="Interface to the LAPACK syev routine.">syev</a></span> routine.  <br /></td></tr>
+<tr class="memitem:ga1691e2441e439a2959476f7801611ca5" id="r_ga1691e2441e439a2959476f7801611ca5"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryMatrix B, MemoryVector W&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A, B&gt; and std::same_as&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, W&gt;)</td></tr>
+<tr class="memitem:ga1691e2441e439a2959476f7801611ca5 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1691e2441e439a2959476f7801611ca5">nda::lapack::sygv</a> (A &amp;&amp;a, B &amp;&amp;b, W &amp;&amp;w, char jobz='V', int itype=1)</td></tr>
+<tr class="memdesc:ga1691e2441e439a2959476f7801611ca5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#ga1691e2441e439a2959476f7801611ca5" title="Interface to the LAPACK sygv routine.">sygv</a></span> routine.  <br /></td></tr>
 <tr class="memitem:ga56ec70f6ac54d52db55f30a993690d38" id="r_ga56ec70f6ac54d52db55f30a993690d38"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector TAU&gt; <br />
 requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A&gt; and std::is_same_v&lt;std::complex&lt;double&gt;, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, TAU&gt;)</td></tr>
 <tr class="memitem:ga56ec70f6ac54d52db55f30a993690d38 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga56ec70f6ac54d52db55f30a993690d38">nda::lapack::ungqr</a> (A &amp;&amp;a, TAU &amp;&amp;tau)</td></tr>
@@ -589,6 +605,132 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
 
 </div>
 </div>
+<a id="ga866f35e5b8cb5938a7bb1182f3b43acf" name="ga866f35e5b8cb5938a7bb1182f3b43acf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga866f35e5b8cb5938a7bb1182f3b43acf">&#9670;&#160;</a></span>heev()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;MemoryMatrix A, MemoryVector W&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A&gt; and std::same_as&lt;std::complex&lt;double&gt;, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and std::same_as&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;W&gt;&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">int nda::lapack::heev </td>
+          <td>(</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">W &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>w</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char</td>          <td class="paramname"><span class="paramname"><em>jobz</em></span><span class="paramdefsep"> = </span><span class="paramdefval">'V'</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="heev_8hpp.html">nda/lapack/heev.hpp</a>&gt;</code></p>
+
+<p>Interface to the LAPACK <span class="tt"><a class="el" href="#ga866f35e5b8cb5938a7bb1182f3b43acf" title="Interface to the LAPACK heev routine.">heev</a></span> routine. </p>
+<p>Computes all eigenvalues \( \lambda_i \) and, optionally, eigenvectors \( \mathbf{v}_i \) of a complex hermitian matrix eigenvalue problem of the form   </p><p class="formulaDsp">
+\[  \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \; ,
+\]
+</p>
+<p> for a given complex hermitian matrix \( \mathbf{A} \).</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> with complex value type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the hermitian matrix \( \mathbf{A} \). On exit, if <span class="tt">jobz = 'V'</span>,  \(\mathbf{A} \) contains the orthonormal eigenvectors of the matrix \( \mathbf{A} \). If <span class="tt">jobz = 'N'</span>, then on exit \( \mathbf{A} \) is destroyed. </td></tr>
+    <tr><td class="paramname">w</td><td>Output vector. The eigenvalues in ascending order. </td></tr>
+    <tr><td class="paramname">jobz</td><td>Character indicating whether to compute eigenvectors and eigenvalues ('V') or eigenvalues only ('N'). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Integer return code from the LAPACK call. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="heev_8hpp_source.html#l00050">50</a> of file <a class="el" href="heev_8hpp_source.html">heev.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gaab16b1d57cf493f88b7be848e1482692" name="gaab16b1d57cf493f88b7be848e1482692"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaab16b1d57cf493f88b7be848e1482692">&#9670;&#160;</a></span>hegv()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;MemoryMatrix A, MemoryMatrix B, MemoryVector W&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A, B&gt; and std::same_as&lt;std::complex&lt;double&gt;, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and std::same_as&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;W&gt;&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">int nda::lapack::hegv </td>
+          <td>(</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">B &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">W &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>w</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char</td>          <td class="paramname"><span class="paramname"><em>jobz</em></span><span class="paramdefsep"> = </span><span class="paramdefval">'V'</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>itype</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="hegv_8hpp.html">nda/lapack/hegv.hpp</a>&gt;</code></p>
+
+<p>Interface to the LAPACK <span class="tt"><a class="el" href="#gaab16b1d57cf493f88b7be848e1482692" title="Interface to the LAPACK hegv routine.">hegv</a></span> routine. </p>
+<p>Computes all eigenvalues \( \lambda_i \) and, optionally, eigenvectors \( \mathbf{v}_i \) of a complex generalized Hermitian-definite eigenvalue problem of the form</p><ul>
+<li>\( \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{B} \mathbf{v}_i \) (<span class="tt">itype = 1</span>),</li>
+<li>\( \mathbf{A} \mathbf{B} \mathbf{v}_i = \lambda_i \mathbf{v}_i \) (<span class="tt">itype = 2</span>) or</li>
+<li>\( \mathbf{B} \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \) (<span class="tt">itype = 3</span>).</li>
+</ul>
+<p>Here \( \mathbf{A} \) and \( \mathbf{B} \) are assumed to be Hermitian and \( \mathbf{B} \) is also positive definite.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> with complex value type. </td></tr>
+    <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> with complex value type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the Hermitian matrix \( \mathbf{A} \). On exit, if <span class="tt">jobz = 'V'</span>,  \(\mathbf{A} \) contains the matrix \( \mathbf{V} \) of normalized eigenvectors such that  \( \mathbf{V}^H 
+\mathbf{B} \mathbf{V} = \mathbf{I} \) (if <span class="tt">itype = 1</span> or <span class="tt">itype = 2</span>) or  \( \mathbf{V}^H \mathbf{B}^{-1} 
+\mathbf{V} = \mathbf{I} \) (if <span class="tt">itype = 3</span>). If <span class="tt">jobz = 'N'</span>, then on exit \( \mathbf{A} \) is destroyed. </td></tr>
+    <tr><td class="paramname">b</td><td>Input/output matrix. On entry, the symmetric positive definite matrix \( \mathbf{B} \). On exit, the part of \( \mathbf{B} \) containing the matrix is overwritten by the triangular factor \( \mathbf{U} \) or \( \mathbf{L} \) from a Cholesky factorization. </td></tr>
+    <tr><td class="paramname">w</td><td>Output vector. The eigenvalues in ascending order. </td></tr>
+    <tr><td class="paramname">jobz</td><td>Character indicating whether to compute eigenvectors and eigenvalues ('V') or eigenvalues only ('N'). </td></tr>
+    <tr><td class="paramname">itype</td><td>Specifies the problem to be solved. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Integer return code from the LAPACK call. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="hegv_8hpp_source.html#l00059">59</a> of file <a class="el" href="hegv_8hpp_source.html">hegv.hpp</a>.</p>
+
+</div>
+</div>
 <a id="ga63d63cd2112e0e9f106ef617333d44dc" name="ga63d63cd2112e0e9f106ef617333d44dc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga63d63cd2112e0e9f106ef617333d44dc">&#9670;&#160;</a></span>orgqr()</h2>
 
@@ -645,6 +787,132 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 <dl class="section return"><dt>Returns</dt><dd>Integer return code from the LAPACK call. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="orgqr_8hpp_source.html#l00059">59</a> of file <a class="el" href="orgqr_8hpp_source.html">orgqr.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gab32938d5127d4b2ecf0780b47dbbebe8" name="gab32938d5127d4b2ecf0780b47dbbebe8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab32938d5127d4b2ecf0780b47dbbebe8">&#9670;&#160;</a></span>syev()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;MemoryMatrix A, MemoryVector W&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A&gt; and std::same_as&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, W&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">int nda::lapack::syev </td>
+          <td>(</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">W &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>w</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char</td>          <td class="paramname"><span class="paramname"><em>jobz</em></span><span class="paramdefsep"> = </span><span class="paramdefval">'V'</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="syev_8hpp.html">nda/lapack/syev.hpp</a>&gt;</code></p>
+
+<p>Interface to the LAPACK <span class="tt"><a class="el" href="#gab32938d5127d4b2ecf0780b47dbbebe8" title="Interface to the LAPACK syev routine.">syev</a></span> routine. </p>
+<p>Computes all eigenvalues \( \lambda_i \) and, optionally, eigenvectors \( \mathbf{v}_i \) of a real symmetric eigenvalue problem of the form   </p><p class="formulaDsp">
+\[  \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \; ,
+\]
+</p>
+<p> for a given real symmetric matrix \( \mathbf{A} \).</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> with double value type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the symmetric matrix \( \mathbf{A} \). On exit, if <span class="tt">jobz = 'V'</span>,  \(\mathbf{A} \) contains the orthonormal eigenvectors of the matrix \( \mathbf{A} \). If <span class="tt">jobz = 'N'</span>, then on exit \( \mathbf{A} \) is destroyed. </td></tr>
+    <tr><td class="paramname">w</td><td>Output vector. The eigenvalues in ascending order. </td></tr>
+    <tr><td class="paramname">jobz</td><td>Character indicating whether to compute eigenvectors and eigenvalues ('V') or eigenvalues only ('N'). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Integer return code from the LAPACK call. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="syev_8hpp_source.html#l00048">48</a> of file <a class="el" href="syev_8hpp_source.html">syev.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga1691e2441e439a2959476f7801611ca5" name="ga1691e2441e439a2959476f7801611ca5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1691e2441e439a2959476f7801611ca5">&#9670;&#160;</a></span>sygv()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;MemoryMatrix A, MemoryMatrix B, MemoryVector W&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A, B&gt; and std::same_as&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, W&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">int nda::lapack::sygv </td>
+          <td>(</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">B &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">W &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>w</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char</td>          <td class="paramname"><span class="paramname"><em>jobz</em></span><span class="paramdefsep"> = </span><span class="paramdefval">'V'</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>itype</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="sygv_8hpp.html">nda/lapack/sygv.hpp</a>&gt;</code></p>
+
+<p>Interface to the LAPACK <span class="tt"><a class="el" href="#ga1691e2441e439a2959476f7801611ca5" title="Interface to the LAPACK sygv routine.">sygv</a></span> routine. </p>
+<p>Computes all eigenvalues \( \lambda_i \) and, optionally, eigenvectors \( \mathbf{v}_i \) of a real generalized symmetric-definite eigenvalue problem of the form</p><ul>
+<li>\( \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{B} \mathbf{v}_i \) (<span class="tt">itype = 1</span>),</li>
+<li>\( \mathbf{A} \mathbf{B} \mathbf{v}_i = \lambda_i \mathbf{v}_i \) (<span class="tt">itype = 2</span>) or</li>
+<li>\( \mathbf{B} \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \) (<span class="tt">itype = 3</span>).</li>
+</ul>
+<p>Here \( \mathbf{A} \) and \( \mathbf{B} \) are assumed to be symmetric and \( \mathbf{B} \) is also positive definite.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> with double value type. </td></tr>
+    <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> with double value type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the symmetric matrix \( \mathbf{A} \). On exit, if <span class="tt">jobz = 'V'</span>,  \(\mathbf{A} \) contains the matrix \( \mathbf{V} \) of normalized eigenvectors such that  \( \mathbf{V}^T 
+\mathbf{B} \mathbf{V} = \mathbf{I} \) (if <span class="tt">itype = 1</span> or <span class="tt">itype = 2</span>) or  \( \mathbf{V}^T \mathbf{B}^{-1} 
+\mathbf{V} = \mathbf{I} \) (if <span class="tt">itype = 3</span>). If <span class="tt">jobz = 'N'</span>, then on exit \( \mathbf{A} \) is destroyed. </td></tr>
+    <tr><td class="paramname">b</td><td>Input/output matrix. On entry, the symmetric positive definite matrix \( \mathbf{B} \). On exit, the part of \( \mathbf{B} \) containing the matrix is overwritten by the triangular factor \( \mathbf{U} \) or \( \mathbf{L} \) from a Cholesky factorization. </td></tr>
+    <tr><td class="paramname">w</td><td>Output vector. The eigenvalues in ascending order. </td></tr>
+    <tr><td class="paramname">jobz</td><td>Character indicating whether to compute eigenvectors and eigenvalues ('V') or eigenvalues only ('N'). </td></tr>
+    <tr><td class="paramname">itype</td><td>Specifies the problem to be solved. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Integer return code from the LAPACK call. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="sygv_8hpp_source.html#l00056">56</a> of file <a class="el" href="sygv_8hpp_source.html">sygv.hpp</a>.</p>
 
 </div>
 </div>
