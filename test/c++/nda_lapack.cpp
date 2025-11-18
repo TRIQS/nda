@@ -192,13 +192,13 @@ template <typename T, typename Layout>
 void test_getrs_getrf_getri() {
   using matrix_t   = matrix<T, Layout>;
   using f_matrix_t = matrix<T, F_layout>;
-  T fac            = 1.0;
-  if constexpr (nda::is_complex_v<T>) fac = 1.0i;
 
-  auto A = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
-  A *= fac;
+  auto A    = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
   auto Ainv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
-  Ainv /= fac;
+  if constexpr (nda::is_complex_v<T>) {
+    A *= 1i;
+    Ainv /= 1i;
+  }
   auto B = matrix_t{{1, 5}, {4, 5}, {3, 6}};
 
   // solve A * X = B using getrf and getrs

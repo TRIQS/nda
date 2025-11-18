@@ -81,12 +81,7 @@ TEST(NDA, BLASGemm) {
 template <typename T, typename Layout, bool is_vbatch>
 void test_gemm_batch() {
   int const batch_count = 4;
-  long size             = 2;
-  long fac              = 2;
-  if constexpr (!is_vbatch) {
-    size = 16;
-    fac  = 1;
-  }
+  long size             = is_vbatch ? 2 : 16;
 
   // create vector of matrices
   std::vector<nda::matrix<T, Layout>> vec_A, vec_B, vec_C, exp_C;
@@ -97,7 +92,7 @@ void test_gemm_batch() {
     auto tmp = nda::matrix<T, Layout>::zeros({size, size});
     nda::blas::gemm(1.0, vec_A.back(), vec_B.back(), 0.0, tmp);
     exp_C.push_back(std::move(tmp));
-    size *= fac;
+    if (is_vbatch) size *= 2;
   }
 
   // test batched gemm routines
