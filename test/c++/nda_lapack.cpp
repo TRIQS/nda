@@ -375,8 +375,9 @@ void test_syev_heev(auto xxev) {
     if (i > 3) {
       auto A4 = A;
       auto w4 = nda::vector<double>{};
-      xxev(A4(nda::range(3), nda::range(3)), w4);
-      check_eigen(A(nda::range(3), nda::range(3)), A4(nda::range(3), nda::range(3)), w4);
+      auto rg = nda::range(3);
+      xxev(A4(rg, rg), w4);
+      check_eigen(A(rg, rg), A4(rg, rg), w4);
     }
   }
 }
@@ -419,7 +420,7 @@ void test_sygv_hegv(int itype, auto xxgv) {
   }
 }
 
-TEST(NDA, LAPACKSyegvAndHegv) {
+TEST(NDA, LAPACKSygvAndHegv) {
   auto sygv = [](auto &&...ts) { return lapack::sygv(ts...); };
   auto hegv = [](auto &&...ts) { return lapack::hegv(ts...); };
   test_sygv_hegv<double>(1, sygv);
