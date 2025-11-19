@@ -239,16 +239,16 @@ Arithmetic operations with matrices and vectors</h1>
 </ul>
 <h1 class="doxsection"><a class="anchor" id="ex8_p7"></a>
 Using linear algebra tools</h1>
-<p>In addition to the basic matrix-matrix and matrix-vector multiplications described above, <b>nda</b> provides some useful <a class="el" href="group__linalg__tools.html">Linear algebra tools</a>. While some of them have a custom implementation, e.g. <a class="el" href="group__linalg__tools.html#ga25ac6b5f84880602b6c042d7b08fdafa" title="Compute the cross product of two 3-dimensional vectors.">nda::linalg::cross_product</a>, most make use of the <a class="el" href="group__linalg__blas.html">BLAS interface</a> and <a class="el" href="group__linalg__lapack.html">LAPACK interface</a> to call more optimized routines.</p>
+<p>In addition to the basic matrix-matrix and matrix-vector multiplications described above, <b>nda</b> provides some useful <a class="el" href="group__linalg__tools.html">Linear algebra tools</a>. While some of them have a custom implementation, e.g. <a class="el" href="group__linalg__tools.html#ga3a8f49f7769a5d63a0a088cfbd7da2da" title="Compute the cross product  of two 3-dimensional vectors   and .">nda::linalg::cross_product</a>, most make use of the <a class="el" href="group__linalg__blas.html">BLAS interface</a> and <a class="el" href="group__linalg__lapack.html">LAPACK interface</a> to call more optimized routines.</p>
 <p>Let us demonstrate some of its features:</p>
 <div class="fragment"><div class="line"><span class="comment">// take the cross product of two vectors</span></div>
 <div class="line"><span class="keyword">auto</span> v1 = <a class="code hl_typedef" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68">nda::vector&lt;double&gt;</a>{1.0, 2.0, 3.0};</div>
 <div class="line"><span class="keyword">auto</span> v2 = <a class="code hl_typedef" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68">nda::vector&lt;double&gt;</a>{4.0, 5.0, 6.0};</div>
-<div class="line"><span class="keyword">auto</span> v3 = <a class="code hl_function" href="group__linalg__tools.html#ga25ac6b5f84880602b6c042d7b08fdafa">nda::linalg::cross_product</a>(v1, v2);</div>
+<div class="line"><span class="keyword">auto</span> v3 = <a class="code hl_function" href="group__linalg__tools.html#ga3a8f49f7769a5d63a0a088cfbd7da2da">nda::linalg::cross_product</a>(v1, v2);</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;v1 = &quot;</span> &lt;&lt; v1 &lt;&lt; std::endl;</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;v2 = &quot;</span> &lt;&lt; v2 &lt;&lt; std::endl;</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;v3 = v1 x v2 = &quot;</span> &lt;&lt; v3 &lt;&lt; std::endl;</div>
-<div class="ttc" id="agroup__linalg__tools_html_ga25ac6b5f84880602b6c042d7b08fdafa"><div class="ttname"><a href="group__linalg__tools.html#ga25ac6b5f84880602b6c042d7b08fdafa">nda::linalg::cross_product</a></div><div class="ttdeci">auto cross_product(V const &amp;x, V const &amp;y)</div><div class="ttdoc">Compute the cross product of two 3-dimensional vectors.</div><div class="ttdef"><b>Definition</b> <a href="cross__product_8hpp_source.html#l00029">cross_product.hpp:29</a></div></div>
+<div class="ttc" id="agroup__linalg__tools_html_ga3a8f49f7769a5d63a0a088cfbd7da2da"><div class="ttname"><a href="group__linalg__tools.html#ga3a8f49f7769a5d63a0a088cfbd7da2da">nda::linalg::cross_product</a></div><div class="ttdeci">auto cross_product(X const &amp;x, Y const &amp;y)</div><div class="ttdoc">Compute the cross product  of two 3-dimensional vectors   and .</div><div class="ttdef"><b>Definition</b> <a href="cross__product_8hpp_source.html#l00035">cross_product.hpp:35</a></div></div>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">v1 = [1,2,3]</div>
 <div class="line">v2 = [4,5,6]</div>
@@ -287,7 +287,7 @@ Using linear algebra tools</h1>
 <div class="line"> [-2,1,0]]</div>
 <div class="line">v3_mv = [-3,6,-3]</div>
 </div><!-- fragment --><p>Comparing this result to <span class="tt">v3</span> above, we see that this is indeed correct.</p>
-<p>Let us now turn to an eigenvalue problem. <b>nda</b> offers the convenience functions <a class="el" href="group__linalg__tools.html#gabc013a1a51e4f8bc006f8326ad5a3974" title="Find the eigenvalues and eigenvectors of a symmetric (real) or hermitian (complex) matrix/view.">nda::linalg::eigenelements</a> and <a class="el" href="group__linalg__tools.html#ga3cb88b67c9f89ebf87e9c6e539165ed8" title="Find the eigenvalues of a symmetric (real) or hermitian (complex) matrix/view.">nda::linalg::eigenvalues</a> to obtain the eigenvalues and eigenvectors of a symmetric or hermitian matrix.</p>
+<p>Let us now turn to an eigenvalue problem. <b>nda</b> offers the convenience functions nda::linalg::eigenelements and nda::linalg::eigenvalues to obtain the eigenvalues and eigenvectors of a symmetric or hermitian matrix.</p>
 <p>We start from the following symmetric matrix:</p>
 <div class="fragment"><div class="line"><span class="comment">// define a symmetric matrix</span></div>
 <div class="line"><span class="keyword">auto</span> M1 = <a class="code hl_typedef" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1">nda::matrix&lt;double&gt;</a>{{4, -14, -12}, {-14, 10, 13}, {-12, 13, 1}};</div>
@@ -299,10 +299,9 @@ Using linear algebra tools</h1>
 <div class="line"> [-12,13,1]]</div>
 </div><!-- fragment --><p>Getting the eigenvalues and eigenvectors is quite easy:</p>
 <div class="fragment"><div class="line"><span class="comment">// calculate the eigenvalues and eigenvectors of a symmetric matrix</span></div>
-<div class="line"><span class="keyword">auto</span> [s, Q] = <a class="code hl_function" href="group__linalg__tools.html#gabc013a1a51e4f8bc006f8326ad5a3974">nda::linalg::eigenelements</a>(M1);</div>
+<div class="line"><span class="keyword">auto</span> [s, Q] = nda::linalg::eigenelements(M1);</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Eigenvalues of M1: s = &quot;</span> &lt;&lt; s &lt;&lt; std::endl;</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Eigenvectors of M1: Q = &quot;</span> &lt;&lt; Q &lt;&lt; std::endl;</div>
-<div class="ttc" id="agroup__linalg__tools_html_gabc013a1a51e4f8bc006f8326ad5a3974"><div class="ttname"><a href="group__linalg__tools.html#gabc013a1a51e4f8bc006f8326ad5a3974">nda::linalg::eigenelements</a></div><div class="ttdeci">auto eigenelements(M const &amp;m)</div><div class="ttdoc">Find the eigenvalues and eigenvectors of a symmetric (real) or hermitian (complex) matrix/view.</div><div class="ttdef"><b>Definition</b> <a href="eigenelements_8hpp_source.html#l00087">eigenelements.hpp:87</a></div></div>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">Eigenvalues of M1: s = [-9.64366,-6.89203,31.5357]</div>
 <div class="line">Eigenvectors of M1: Q =</div>

@@ -14,6 +14,6 @@ var searchData=
   ['conj_11',['conj',['../group__clef__expr.html#ga3722c49f541e904dd5e0a4023fc76bf6',1,'nda::clef::conj()'],['../group__av__math.html#gaed558141a1f01cb2974b0cc4fc4d04ff',1,'nda::conj()']]],
   ['cos_12',['cos',['../group__clef__expr.html#gab946ee50a54292cbc311e1a11c03450c',1,'nda::clef::cos()'],['../group__av__math.html#ga08b3f5539d4426554f981cd417363323',1,'nda::cos()']]],
   ['cosh_13',['cosh',['../group__clef__expr.html#gae89991f61d52d54d30371839d1125fba',1,'nda::clef::cosh()'],['../group__av__math.html#gabd5f49e42bad17d37bb531e7775db371',1,'nda::cosh()']]],
-  ['cross_5fproduct_14',['cross_product',['../group__linalg__tools.html#ga25ac6b5f84880602b6c042d7b08fdafa',1,'nda::linalg']]],
+  ['cross_5fproduct_14',['cross_product',['../group__linalg__tools.html#ga3a8f49f7769a5d63a0a088cfbd7da2da',1,'nda::linalg']]],
   ['cycle_15',['cycle',['../group__utils__perms.html#gae74d3369ecd51f87082ac8d339ee0ffe',1,'nda::permutations']]]
 ];

@@ -103,11 +103,14 @@ $(function(){initNavTree('cross__product_8hpp.html','',''); });
   <div class="headertitle"><div class="title">cross_product.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="declarations_8hpp_source.html">../declarations.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="basic__array_8hpp_source.html">../basic_array.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="declarations_8hpp_source.html">../declarations.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="macros_8hpp_source.html">../macros.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="traits_8hpp_source.html">../traits.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="address__space_8hpp_source.html">../mem/address_space.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="mem_2policies_8hpp_source.html">../mem/policies.hpp</a>&quot;</code><br />
 </div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Provides a cross product for 3-dimensional vectors or other arrays/views of rank 1. </p>
+<div class="textblock"><p>Provides a cross product for 3-dimensional vectors. </p>
 
 <p class="definition">Definition in file <a class="el" href="cross__product_8hpp_source.html">cross_product.hpp</a>.</p>
 </div>
@@ -115,9 +118,11 @@ $(function(){initNavTree('cross__product_8hpp.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga25ac6b5f84880602b6c042d7b08fdafa" id="r_ga25ac6b5f84880602b6c042d7b08fdafa"><td class="memTemplParams" colspan="2">template&lt;typename V&gt; </td></tr>
-<tr class="memitem:ga25ac6b5f84880602b6c042d7b08fdafa template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#ga25ac6b5f84880602b6c042d7b08fdafa">nda::linalg::cross_product</a> (V const &amp;x, V const &amp;y)</td></tr>
-<tr class="memdesc:ga25ac6b5f84880602b6c042d7b08fdafa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the cross product of two 3-dimensional vectors.  <br /></td></tr>
+<tr class="memitem:ga3a8f49f7769a5d63a0a088cfbd7da2da" id="r_ga3a8f49f7769a5d63a0a088cfbd7da2da"><td class="memTemplParams" colspan="2">template&lt;Vector X, Vector Y&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;X, Y&gt;)</td></tr>
+<tr class="memitem:ga3a8f49f7769a5d63a0a088cfbd7da2da template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#ga3a8f49f7769a5d63a0a088cfbd7da2da">nda::linalg::cross_product</a> (X const &amp;x, Y const &amp;y)</td></tr>
+<tr class="memdesc:ga3a8f49f7769a5d63a0a088cfbd7da2da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the cross product \( \mathbf{x} \times \mathbf{y} \) of two 3-dimensional vectors  \( \mathbf{x} 
+\) and \( \mathbf{y} \).  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

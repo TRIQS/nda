@@ -1,9 +1,6 @@
 var inv_8hpp =
 [
-    [ "nda::clef::inverse", "inv_8hpp.html#aac7cec8926f7349c34c34b75373131c3", null ],
-    [ "nda::inverse", "group__linalg__tools.html#ga99906b99820be65d1bfb07d90aea841c", null ],
-    [ "nda::inverse1_in_place", "group__linalg__tools.html#ga52392364db364e5bbb05d4287bbfd7ee", null ],
-    [ "nda::inverse2_in_place", "group__linalg__tools.html#ga6d7a0ac0080632972b5854123550ce37", null ],
-    [ "nda::inverse3_in_place", "group__linalg__tools.html#ga23f56fb167a83085bfb6768672c986d6", null ],
-    [ "nda::inverse_in_place", "group__linalg__tools.html#gab84970093e3fde0f5905f895120c7d60", null ]
+    [ "nda::linalg::clef::inv", "inv_8hpp.html#acc55b9c05f31f3fb9f6eeb4150973797", null ],
+    [ "nda::linalg::inv", "group__linalg__tools.html#gabd0ff5c6c8add0fd6641db2cc5f73a79", null ],
+    [ "nda::linalg::inv_in_place", "group__linalg__tools.html#ga5ae8205418692fdc14fc3ee0c5bf322b", null ]
 ];

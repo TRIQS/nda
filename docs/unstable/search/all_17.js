@@ -12,6 +12,7 @@ var searchData=
   ['negate_9',['negate',['../structnda_1_1clef_1_1tags_1_1negate.html',1,'nda::clef::tags']]],
   ['no_5falias_5faccessor_10',['no_alias_accessor',['../structnda_1_1no__alias__accessor.html',1,'nda']]],
   ['none_11',['None',['../address__space_8hpp.html#a6adf97f83acf6453d4a6a4b1070f3754',1,'nda::mem']]],
-  ['norm_2ehpp_12',['norm.hpp',['../norm_8hpp.html',1,'']]],
-  ['num_5fclasses_13',['num_classes',['../classnda_1_1sym__grp.html#a2f0f65bcc46beced34af1335acc344cf',1,'nda::sym_grp']]]
+  ['norm_12',['norm',['../group__linalg__tools.html#gabe6892821225c13803643ffb5739b5c9',1,'nda::linalg']]],
+  ['norm_2ehpp_13',['norm.hpp',['../norm_8hpp.html',1,'']]],
+  ['num_5fclasses_14',['num_classes',['../classnda_1_1sym__grp.html#a2f0f65bcc46beced34af1335acc344cf',1,'nda::sym_grp']]]
 ];

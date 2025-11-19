@@ -103,12 +103,29 @@ $(function(){initNavTree('norm_8hpp.html','',''); });
   <div class="headertitle"><div class="title">norm.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><code>#include &quot;<a class="el" href="algorithms_8hpp_source.html">../algorithms.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="basic__functions_8hpp_source.html">../basic_functions.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="blas_2dot_8hpp_source.html">../blas/dot.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="mapped__functions_8hxx_source.html">../mapped_functions.hxx</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="traits_8hpp_source.html">../traits.hpp</a>&quot;</code><br />
+<code>#include &lt;cmath&gt;</code><br />
+<code>#include &lt;complex&gt;</code><br />
+<code>#include &lt;limits&gt;</code><br />
+</div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Provides the p-norm for general arrays/views of rank 1 and with scalar elements. </p>
 
 <p class="definition">Definition in file <a class="el" href="norm_8hpp_source.html">norm.hpp</a>.</p>
 </div>
 <p><a href="norm_8hpp_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:gabe6892821225c13803643ffb5739b5c9" id="r_gabe6892821225c13803643ffb5739b5c9"><td class="memTemplParams" colspan="2">template&lt;ArrayOfRank&lt; 1 &gt; A&gt; <br />
+requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:gabe6892821225c13803643ffb5739b5c9 template"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#gabe6892821225c13803643ffb5739b5c9">nda::linalg::norm</a> (A const &amp;a, double p=2.0)</td></tr>
+<tr class="memdesc:gabe6892821225c13803643ffb5739b5c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the p-norm of an <a class="el" href="conceptnda_1_1_array_of_rank.html" title="Check if a given type is an nda::Array of a certain rank.">nda::ArrayOfRank&lt;1&gt;</a> object \( \mathbf{x} \) with scalar values. The p-norm is defined as.  <br /></td></tr>
+</table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

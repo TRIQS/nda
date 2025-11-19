@@ -108,16 +108,19 @@ $(function(){initNavTree('group__linalg__tools.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga25ac6b5f84880602b6c042d7b08fdafa" id="r_ga25ac6b5f84880602b6c042d7b08fdafa"><td class="memTemplParams" colspan="2">template&lt;typename V&gt; </td></tr>
-<tr class="memitem:ga25ac6b5f84880602b6c042d7b08fdafa template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga25ac6b5f84880602b6c042d7b08fdafa">nda::linalg::cross_product</a> (V const &amp;x, V const &amp;y)</td></tr>
-<tr class="memdesc:ga25ac6b5f84880602b6c042d7b08fdafa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the cross product of two 3-dimensional vectors.  <br /></td></tr>
-<tr class="memitem:ga88d96daa5c131cf8058f36e82bffb6d3" id="r_ga88d96daa5c131cf8058f36e82bffb6d3"><td class="memTemplParams" colspan="2">template&lt;typename M&gt; </td></tr>
-<tr class="memitem:ga88d96daa5c131cf8058f36e82bffb6d3 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga88d96daa5c131cf8058f36e82bffb6d3">nda::determinant</a> (M const &amp;m)</td></tr>
-<tr class="memdesc:ga88d96daa5c131cf8058f36e82bffb6d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the determinant of a square matrix/view.  <br /></td></tr>
-<tr class="memitem:ga16e095b23aa9e6d1afe299607776f893" id="r_ga16e095b23aa9e6d1afe299607776f893"><td class="memTemplParams" colspan="2">template&lt;typename M&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga399faffc1372096b0df09d6516ef33d5">is_matrix_or_view_v</a>&lt;M&gt;)</td></tr>
-<tr class="memitem:ga16e095b23aa9e6d1afe299607776f893 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga16e095b23aa9e6d1afe299607776f893">nda::determinant_in_place</a> (M &amp;m)</td></tr>
-<tr class="memdesc:ga16e095b23aa9e6d1afe299607776f893"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the determinant of a square matrix/view.  <br /></td></tr>
+<tr class="memitem:ga3a8f49f7769a5d63a0a088cfbd7da2da" id="r_ga3a8f49f7769a5d63a0a088cfbd7da2da"><td class="memTemplParams" colspan="2">template&lt;Vector X, Vector Y&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;X, Y&gt;)</td></tr>
+<tr class="memitem:ga3a8f49f7769a5d63a0a088cfbd7da2da template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3a8f49f7769a5d63a0a088cfbd7da2da">nda::linalg::cross_product</a> (X const &amp;x, Y const &amp;y)</td></tr>
+<tr class="memdesc:ga3a8f49f7769a5d63a0a088cfbd7da2da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the cross product \( \mathbf{x} \times \mathbf{y} \) of two 3-dimensional vectors  \( \mathbf{x} 
+\) and \( \mathbf{y} \).  <br /></td></tr>
+<tr class="memitem:ga3c413c86b4dd95772be5b3d34dcdd960" id="r_ga3c413c86b4dd95772be5b3d34dcdd960"><td class="memTemplParams" colspan="2">template&lt;Matrix M&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;M&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;M&gt;&gt;)</td></tr>
+<tr class="memitem:ga3c413c86b4dd95772be5b3d34dcdd960 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3c413c86b4dd95772be5b3d34dcdd960">nda::linalg::det</a> (M const &amp;m)</td></tr>
+<tr class="memdesc:ga3c413c86b4dd95772be5b3d34dcdd960"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the determinant of an \( n \times n \) matrix \( \mathbf{M} \).  <br /></td></tr>
+<tr class="memitem:gaaa18b3b53eaf33a1bffdf759055ec332" id="r_gaaa18b3b53eaf33a1bffdf759055ec332"><td class="memTemplParams" colspan="2">template&lt;Matrix M&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;M&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;M&gt;&gt;)</td></tr>
+<tr class="memitem:gaaa18b3b53eaf33a1bffdf759055ec332 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaaa18b3b53eaf33a1bffdf759055ec332">nda::linalg::det_in_place</a> (M &amp;&amp;m)</td></tr>
+<tr class="memdesc:gaaa18b3b53eaf33a1bffdf759055ec332"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the determinant of an \( n \times n \) matrix \( \mathbf{M} \).  <br /></td></tr>
 <tr class="memitem:ga33985db52d69c767905c98ae2f7e42e7" id="r_ga33985db52d69c767905c98ae2f7e42e7"><td class="memTemplParams" colspan="2">template&lt;typename X, typename Y&gt; <br />
 requires ((Scalar&lt;X&gt; and Scalar&lt;Y&gt;) or (Vector&lt;X&gt; and Vector&lt;Y&gt;))</td></tr>
 <tr class="memitem:ga33985db52d69c767905c98ae2f7e42e7 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga33985db52d69c767905c98ae2f7e42e7">nda::linalg::dot</a> (X const &amp;x, Y const &amp;y)</td></tr>
@@ -130,35 +133,46 @@ requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0
 requires ((Scalar&lt;X&gt; and Scalar&lt;Y&gt;) or (Vector&lt;X&gt; and Vector&lt;Y&gt;))</td></tr>
 <tr class="memitem:ga1e4da250fc11060a5bc97da2ee467a9a template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1e4da250fc11060a5bc97da2ee467a9a">nda::linalg::dotc</a> (X const &amp;x, Y const &amp;y)</td></tr>
 <tr class="memdesc:ga1e4da250fc11060a5bc97da2ee467a9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the dotc (LHS operand is conjugated) product of two <a class="el" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68" title="Alias template of an nda::basic_array with rank 1 and a &#39;V&#39; algebra.">nda::vector</a> objects or the product of two scalars.  <br /></td></tr>
-<tr class="memitem:gabc013a1a51e4f8bc006f8326ad5a3974" id="r_gabc013a1a51e4f8bc006f8326ad5a3974"><td class="memTemplParams" colspan="2">template&lt;typename M&gt; </td></tr>
-<tr class="memitem:gabc013a1a51e4f8bc006f8326ad5a3974 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gabc013a1a51e4f8bc006f8326ad5a3974">nda::linalg::eigenelements</a> (M const &amp;m)</td></tr>
-<tr class="memdesc:gabc013a1a51e4f8bc006f8326ad5a3974"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the eigenvalues and eigenvectors of a symmetric (real) or hermitian (complex) matrix/view.  <br /></td></tr>
-<tr class="memitem:ga3cb88b67c9f89ebf87e9c6e539165ed8" id="r_ga3cb88b67c9f89ebf87e9c6e539165ed8"><td class="memTemplParams" colspan="2">template&lt;typename M&gt; </td></tr>
-<tr class="memitem:ga3cb88b67c9f89ebf87e9c6e539165ed8 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3cb88b67c9f89ebf87e9c6e539165ed8">nda::linalg::eigenvalues</a> (M const &amp;m)</td></tr>
-<tr class="memdesc:ga3cb88b67c9f89ebf87e9c6e539165ed8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the eigenvalues of a symmetric (real) or hermitian (complex) matrix/view.  <br /></td></tr>
-<tr class="memitem:gafede9394121a6e2098c4e04c9af5f568" id="r_gafede9394121a6e2098c4e04c9af5f568"><td class="memTemplParams" colspan="2">template&lt;typename M&gt; </td></tr>
-<tr class="memitem:gafede9394121a6e2098c4e04c9af5f568 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafede9394121a6e2098c4e04c9af5f568">nda::linalg::eigenvalues_in_place</a> (M &amp;m)</td></tr>
-<tr class="memdesc:gafede9394121a6e2098c4e04c9af5f568"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the eigenvalues of a symmetric (real) or hermitian (complex) matrix/view.  <br /></td></tr>
-<tr class="memitem:ga99906b99820be65d1bfb07d90aea841c" id="r_ga99906b99820be65d1bfb07d90aea841c"><td class="memTemplParams" colspan="2">template&lt;Matrix M&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M')</td></tr>
-<tr class="memitem:ga99906b99820be65d1bfb07d90aea841c template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga99906b99820be65d1bfb07d90aea841c">nda::inverse</a> (M const &amp;m)</td></tr>
-<tr class="memdesc:ga99906b99820be65d1bfb07d90aea841c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the inverse of an n-by-n matrix.  <br /></td></tr>
-<tr class="memitem:ga52392364db364e5bbb05d4287bbfd7ee" id="r_ga52392364db364e5bbb05d4287bbfd7ee"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix M&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c785135d7916b">mem::on_host</a>&lt;M&gt;)</td></tr>
-<tr class="memitem:ga52392364db364e5bbb05d4287bbfd7ee template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga52392364db364e5bbb05d4287bbfd7ee">nda::inverse1_in_place</a> (M &amp;&amp;m)</td></tr>
-<tr class="memdesc:ga52392364db364e5bbb05d4287bbfd7ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the inverse of a 1-by-1 matrix.  <br /></td></tr>
-<tr class="memitem:ga6d7a0ac0080632972b5854123550ce37" id="r_ga6d7a0ac0080632972b5854123550ce37"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix M&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c785135d7916b">mem::on_host</a>&lt;M&gt;)</td></tr>
-<tr class="memitem:ga6d7a0ac0080632972b5854123550ce37 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga6d7a0ac0080632972b5854123550ce37">nda::inverse2_in_place</a> (M &amp;&amp;m)</td></tr>
-<tr class="memdesc:ga6d7a0ac0080632972b5854123550ce37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the inverse of a 2-by-2 matrix.  <br /></td></tr>
-<tr class="memitem:ga23f56fb167a83085bfb6768672c986d6" id="r_ga23f56fb167a83085bfb6768672c986d6"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix M&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c785135d7916b">mem::on_host</a>&lt;M&gt;)</td></tr>
-<tr class="memitem:ga23f56fb167a83085bfb6768672c986d6 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga23f56fb167a83085bfb6768672c986d6">nda::inverse3_in_place</a> (M &amp;&amp;m)</td></tr>
-<tr class="memdesc:ga23f56fb167a83085bfb6768672c986d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the inverse of a 3-by-3 matrix.  <br /></td></tr>
-<tr class="memitem:gab84970093e3fde0f5905f895120c7d60" id="r_gab84970093e3fde0f5905f895120c7d60"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix M&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M')</td></tr>
-<tr class="memitem:gab84970093e3fde0f5905f895120c7d60 template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab84970093e3fde0f5905f895120c7d60">nda::inverse_in_place</a> (M &amp;&amp;m)</td></tr>
-<tr class="memdesc:gab84970093e3fde0f5905f895120c7d60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the inverse of an n-by-n matrix.  <br /></td></tr>
+<tr class="memitem:ga2d0ce3ce27387948261195b0c1f28376" id="r_ga2d0ce3ce27387948261195b0c1f28376"><td class="memTemplParams" colspan="2">template&lt;Matrix A&gt; <br />
+requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:ga2d0ce3ce27387948261195b0c1f28376 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2d0ce3ce27387948261195b0c1f28376">nda::linalg::eigh</a> (A const &amp;a)</td></tr>
+<tr class="memdesc:ga2d0ce3ce27387948261195b0c1f28376"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues and eigenvectors of a real symmetric or complex hermitian matrix.  <br /></td></tr>
+<tr class="memitem:gaa2c7bcf737ecddca8b163b1086282907" id="r_gaa2c7bcf737ecddca8b163b1086282907"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Matrix B&gt; <br />
+requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;B&gt;&gt;)</td></tr>
+<tr class="memitem:gaa2c7bcf737ecddca8b163b1086282907 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa2c7bcf737ecddca8b163b1086282907">nda::linalg::eigh</a> (A const &amp;a, B const &amp;b, int itype=1)</td></tr>
+<tr class="memdesc:gaa2c7bcf737ecddca8b163b1086282907"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues and eigenvectors of a generalized real symmetric-definite or complex hermitian-definite eigenvalue problem.  <br /></td></tr>
+<tr class="memitem:ga0681d15a9633c4920c19fcfa1bccd219" id="r_ga0681d15a9633c4920c19fcfa1bccd219"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;)</td></tr>
+<tr class="memitem:ga0681d15a9633c4920c19fcfa1bccd219 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0681d15a9633c4920c19fcfa1bccd219">nda::linalg::eigh_in_place</a> (A &amp;&amp;a)</td></tr>
+<tr class="memdesc:ga0681d15a9633c4920c19fcfa1bccd219"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues and eigenvectors of a real symmetric or complex hermitian matrix.  <br /></td></tr>
+<tr class="memitem:ga1416f4c96f511fb7bad93f32ef4d8642" id="r_ga1416f4c96f511fb7bad93f32ef4d8642"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryMatrix B&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;B&gt;)</td></tr>
+<tr class="memitem:ga1416f4c96f511fb7bad93f32ef4d8642 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1416f4c96f511fb7bad93f32ef4d8642">nda::linalg::eigh_in_place</a> (A &amp;&amp;a, B &amp;&amp;b, int itype=1)</td></tr>
+<tr class="memdesc:ga1416f4c96f511fb7bad93f32ef4d8642"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues and eigenvectors of a generalized real symmetric-definite or complex hermitian-definite eigenvalue problem.  <br /></td></tr>
+<tr class="memitem:ga843c22ecfbd336fc0e924ace02aa60b1" id="r_ga843c22ecfbd336fc0e924ace02aa60b1"><td class="memTemplParams" colspan="2">template&lt;Matrix A&gt; <br />
+requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:ga843c22ecfbd336fc0e924ace02aa60b1 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga843c22ecfbd336fc0e924ace02aa60b1">nda::linalg::eigvalsh</a> (A const &amp;a)</td></tr>
+<tr class="memdesc:ga843c22ecfbd336fc0e924ace02aa60b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues of a real symmetric or complex hermitian matrix.  <br /></td></tr>
+<tr class="memitem:gae3c06db4752cc125959b0a8dd2a155d8" id="r_gae3c06db4752cc125959b0a8dd2a155d8"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Matrix B&gt; <br />
+requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;B&gt;&gt;)</td></tr>
+<tr class="memitem:gae3c06db4752cc125959b0a8dd2a155d8 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae3c06db4752cc125959b0a8dd2a155d8">nda::linalg::eigvalsh</a> (A const &amp;a, B const &amp;b, int itype=1)</td></tr>
+<tr class="memdesc:gae3c06db4752cc125959b0a8dd2a155d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues of a generalized real symmetric-definite or complex hermitian-definite eigenvalue problem.  <br /></td></tr>
+<tr class="memitem:ga1306414bdfb59828c1d678fb202d531c" id="r_ga1306414bdfb59828c1d678fb202d531c"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;)</td></tr>
+<tr class="memitem:ga1306414bdfb59828c1d678fb202d531c template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1306414bdfb59828c1d678fb202d531c">nda::linalg::eigvalsh_in_place</a> (A &amp;&amp;a)</td></tr>
+<tr class="memdesc:ga1306414bdfb59828c1d678fb202d531c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues of a real symmetric or complex hermitian matrix.  <br /></td></tr>
+<tr class="memitem:gae9bb9220ce836b1b3752673080ef007f" id="r_gae9bb9220ce836b1b3752673080ef007f"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryMatrix B&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;B&gt;)</td></tr>
+<tr class="memitem:gae9bb9220ce836b1b3752673080ef007f template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae9bb9220ce836b1b3752673080ef007f">nda::linalg::eigvalsh_in_place</a> (A &amp;&amp;a, B &amp;&amp;b, int itype=1)</td></tr>
+<tr class="memdesc:gae9bb9220ce836b1b3752673080ef007f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues of a generalized real symmetric-definite or complex hermitian-definite eigenvalue problem.  <br /></td></tr>
+<tr class="memitem:gabd0ff5c6c8add0fd6641db2cc5f73a79" id="r_gabd0ff5c6c8add0fd6641db2cc5f73a79"><td class="memTemplParams" colspan="2">template&lt;Matrix M&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;M&gt;&gt;)</td></tr>
+<tr class="memitem:gabd0ff5c6c8add0fd6641db2cc5f73a79 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gabd0ff5c6c8add0fd6641db2cc5f73a79">nda::linalg::inv</a> (M const &amp;m)</td></tr>
+<tr class="memdesc:gabd0ff5c6c8add0fd6641db2cc5f73a79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the inverse of an \( n \times n \) matrix \( \mathbf{M} \).  <br /></td></tr>
+<tr class="memitem:ga5ae8205418692fdc14fc3ee0c5bf322b" id="r_ga5ae8205418692fdc14fc3ee0c5bf322b"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix M&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;M&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;M&gt;&gt;)</td></tr>
+<tr class="memitem:ga5ae8205418692fdc14fc3ee0c5bf322b template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5ae8205418692fdc14fc3ee0c5bf322b">nda::linalg::inv_in_place</a> (M &amp;&amp;m)</td></tr>
+<tr class="memdesc:ga5ae8205418692fdc14fc3ee0c5bf322b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the inverse of an \( n \times n \) matrix \( \mathbf{M} \).  <br /></td></tr>
 <tr class="memitem:ga33c980b3e0b7fb89dad92b92562c851f" id="r_ga33c980b3e0b7fb89dad92b92562c851f"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Matrix B&gt; </td></tr>
 <tr class="memitem:ga33c980b3e0b7fb89dad92b92562c851f template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga33c980b3e0b7fb89dad92b92562c851f">nda::linalg::matmul</a> (A &amp;&amp;a, B &amp;&amp;b)</td></tr>
 <tr class="memdesc:ga33c980b3e0b7fb89dad92b92562c851f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the matrix-matrix product of two <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> objects.  <br /></td></tr>
@@ -166,6 +180,10 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, X&gt;)</td></tr>
 <tr class="memitem:gad007be96ad87a5bf327e2e19374c3a6f template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad007be96ad87a5bf327e2e19374c3a6f">nda::linalg::matvecmul</a> (A const &amp;a, X const &amp;x)</td></tr>
 <tr class="memdesc:gad007be96ad87a5bf327e2e19374c3a6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the matrix-vector product of an <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> and an <a class="el" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68" title="Alias template of an nda::basic_array with rank 1 and a &#39;V&#39; algebra.">nda::vector</a> object.  <br /></td></tr>
+<tr class="memitem:gabe6892821225c13803643ffb5739b5c9" id="r_gabe6892821225c13803643ffb5739b5c9"><td class="memTemplParams" colspan="2">template&lt;ArrayOfRank&lt; 1 &gt; A&gt; <br />
+requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:gabe6892821225c13803643ffb5739b5c9 template"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gabe6892821225c13803643ffb5739b5c9">nda::linalg::norm</a> (A const &amp;a, double p=2.0)</td></tr>
+<tr class="memdesc:gabe6892821225c13803643ffb5739b5c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the p-norm of an <a class="el" href="conceptnda_1_1_array_of_rank.html" title="Check if a given type is an nda::Array of a certain rank.">nda::ArrayOfRank&lt;1&gt;</a> object \( \mathbf{x} \) with scalar values. The p-norm is defined as.  <br /></td></tr>
 <tr class="memitem:gaa2e13a1dfcbbacc5c2279f98230b5eb2" id="r_gaa2e13a1dfcbbacc5c2279f98230b5eb2"><td class="memTemplParams" colspan="2">template&lt;MemoryArray A, MemoryArray B&gt; <br />
 requires ((<a class="el" href="group__linalg__blas.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;A&gt; or <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;) and <a class="el" href="group__linalg__blas.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;A&gt; == <a class="el" href="group__linalg__blas.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;B&gt;)</td></tr>
 <tr class="memitem:gaa2e13a1dfcbbacc5c2279f98230b5eb2 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa2e13a1dfcbbacc5c2279f98230b5eb2">nda::linalg::outer_product</a> (A const &amp;a, B const &amp;b)</td></tr>
@@ -188,59 +206,63 @@ requires (<a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801
 <tr class="memdesc:ga4ef359605199b874634e1712b1aa55d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the singular value decomposition (SVD) of a matrix in place.  <br /></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
-<a id="ga25ac6b5f84880602b6c042d7b08fdafa" name="ga25ac6b5f84880602b6c042d7b08fdafa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga25ac6b5f84880602b6c042d7b08fdafa">&#9670;&#160;</a></span>cross_product()</h2>
+<a id="ga3a8f49f7769a5d63a0a088cfbd7da2da" name="ga3a8f49f7769a5d63a0a088cfbd7da2da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3a8f49f7769a5d63a0a088cfbd7da2da">&#9670;&#160;</a></span>cross_product()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename V&gt; </div>
+template&lt;Vector X, Vector Y&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;X, Y&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">auto nda::linalg::cross_product </td>
           <td>(</td>
-          <td class="paramtype">V const &amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+          <td class="paramtype">X const &amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">V const &amp;</td>          <td class="paramname"><span class="paramname"><em>y</em></span>&#160;)</td>
+          <td class="paramtype">Y const &amp;</td>          <td class="paramname"><span class="paramname"><em>y</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;<a class="el" href="cross__product_8hpp.html">nda/linalg/cross_product.hpp</a>&gt;</code></p>
 
-<p>Compute the cross product of two 3-dimensional vectors. </p>
+<p>Compute the cross product \( \mathbf{x} \times \mathbf{y} \) of two 3-dimensional vectors  \( \mathbf{x} 
+\) and \( \mathbf{y} \). </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">V</td><td><a class="el" href="conceptnda_1_1_vector.html" title="Check if a given type is a vector, i.e. an nda::ArrayOfRank&lt;1&gt;.">Vector</a> type. </td></tr>
+    <tr><td class="paramname">X</td><td><a class="el" href="conceptnda_1_1_vector.html" title="Check if a given type is a vector, i.e. an nda::ArrayOfRank&lt;1&gt;.">nda::Vector</a> type. </td></tr>
+    <tr><td class="paramname">Y</td><td><a class="el" href="conceptnda_1_1_vector.html" title="Check if a given type is a vector, i.e. an nda::ArrayOfRank&lt;1&gt;.">nda::Vector</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">x</td><td>Left hand side vector. </td></tr>
-    <tr><td class="paramname">y</td><td>Right hand side vector. </td></tr>
+    <tr><td class="paramname">x</td><td>Input vector \( \mathbf{x} \). </td></tr>
+    <tr><td class="paramname">y</td><td>Input vector \( \mathbf{y} \). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> of rank 1 containing the cross product of the two vectors. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68" title="Alias template of an nda::basic_array with rank 1 and a &#39;V&#39; algebra.">nda::vector</a> containing the cross product of the two vectors. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="cross__product_8hpp_source.html#l00029">29</a> of file <a class="el" href="cross__product_8hpp_source.html">cross_product.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cross__product_8hpp_source.html#l00035">35</a> of file <a class="el" href="cross__product_8hpp_source.html">cross_product.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga88d96daa5c131cf8058f36e82bffb6d3" name="ga88d96daa5c131cf8058f36e82bffb6d3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga88d96daa5c131cf8058f36e82bffb6d3">&#9670;&#160;</a></span>determinant()</h2>
+<a id="ga3c413c86b4dd95772be5b3d34dcdd960" name="ga3c413c86b4dd95772be5b3d34dcdd960"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3c413c86b4dd95772be5b3d34dcdd960">&#9670;&#160;</a></span>det()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename M&gt; </div>
+template&lt;Matrix M&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;M&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;M&gt;&gt;)</div>
       <table class="memname">
         <tr>
-          <td class="memname">auto nda::determinant </td>
+          <td class="memname">auto nda::linalg::det </td>
           <td>(</td>
           <td class="paramtype">M const &amp;</td>          <td class="paramname"><span class="paramname"><em>m</em></span></td><td>)</td>
           <td></td>
@@ -250,39 +272,39 @@ template&lt;typename M&gt; </div>
 
 <p><code>#include &lt;<a class="el" href="det_8hpp.html">nda/linalg/det.hpp</a>&gt;</code></p>
 
-<p>Compute the determinant of a square matrix/view. </p>
-<p>The given matrix/view is not modified. It first makes a copy of the given matrix/view and then calls <a class="el" href="#ga16e095b23aa9e6d1afe299607776f893" title="Compute the determinant of a square matrix/view.">nda::determinant_in_place</a> with the copy.</p>
+<p>Compute the determinant of an \( n \times n \) matrix \( \mathbf{M} \). </p>
+<p>The given matrix/view is not modified. It first makes a copy of the matrix/view and then calls <a class="el" href="#gaaa18b3b53eaf33a1bffdf759055ec332" title="Compute the determinant of an  matrix .">nda::linalg::det_in_place</a>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">M</td><td>Type of the matrix/view. </td></tr>
+    <tr><td class="paramname">M</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">m</td><td>Matrix/view object. </td></tr>
+    <tr><td class="paramname">m</td><td>Input matrix. The matrix \( \mathbf{M} \). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Determinant of the matrix/view. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The inverse matrix \( \mathbf{M}^{-1} \). </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="det_8hpp_source.html#l00095">95</a> of file <a class="el" href="det_8hpp_source.html">det.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga16e095b23aa9e6d1afe299607776f893" name="ga16e095b23aa9e6d1afe299607776f893"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga16e095b23aa9e6d1afe299607776f893">&#9670;&#160;</a></span>determinant_in_place()</h2>
+<a id="gaaa18b3b53eaf33a1bffdf759055ec332" name="gaaa18b3b53eaf33a1bffdf759055ec332"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaaa18b3b53eaf33a1bffdf759055ec332">&#9670;&#160;</a></span>det_in_place()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename M&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga399faffc1372096b0df09d6516ef33d5">is_matrix_or_view_v</a>&lt;M&gt;)</div>
+template&lt;Matrix M&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;M&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;M&gt;&gt;)</div>
       <table class="memname">
         <tr>
-          <td class="memname">auto nda::determinant_in_place </td>
+          <td class="memname">auto nda::linalg::det_in_place </td>
           <td>(</td>
-          <td class="paramtype">M &amp;</td>          <td class="paramname"><span class="paramname"><em>m</em></span></td><td>)</td>
+          <td class="paramtype">M &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>m</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -290,24 +312,26 @@ requires (<a class="el" href="group__av__utils.html#ga399faffc1372096b0df09d6516
 
 <p><code>#include &lt;<a class="el" href="det_8hpp.html">nda/linalg/det.hpp</a>&gt;</code></p>
 
-<p>Compute the determinant of a square matrix/view. </p>
-<p>It uses <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> to compute the LU decomposition of the matrix and then calculates the determinant by multiplying the diagonal elements of the \( \mathbf{U} \) matrix and taking into account that <span class="tt">getrf</span> may change the ordering of the rows/columns of the matrix.</p>
-<p>The given matrix/view is modified in place.</p>
+<p>Compute the determinant of an \( n \times n \) matrix \( \mathbf{M} \). </p>
+<p>For small matrices ( \( n &lt; 4 \)), it uses optimized inline implementations.</p>
+<p>For larger matrices, it calls <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> and calculates the determinant from its LU decomposition.</p>
+<p>It throws an exception if the call to <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> fails.</p>
+<dl class="section note"><dt>Note</dt><dd>The matrix \( \mathbf{M} \) is modified if its number of rows/columns is greater than 3.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">M</td><td>Type of the matrix/view. </td></tr>
+    <tr><td class="paramname">M</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">m</td><td>Matrix/view object. </td></tr>
+    <tr><td class="paramname">m</td><td>Input/output matrix. On entry, the matrix \( \mathbf{M} \). On exit, the matrix \( \mathbf{M} \) or the LU decomposition of \( \mathbf{M} \) from <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a>. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Determinant of the matrix/view. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>\( \det(\mathbf{M}) \). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="det_8hpp_source.html#l00052">52</a> of file <a class="el" href="det_8hpp_source.html">det.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="det_8hpp_source.html#l00048">48</a> of file <a class="el" href="det_8hpp_source.html">det.hpp</a>.</p>
 
 </div>
 </div>
@@ -466,137 +490,431 @@ requires ((Scalar&lt;X&gt; and Scalar&lt;Y&gt;) or (Vector&lt;X&gt; and Vector&l
 
 </div>
 </div>
-<a id="gabc013a1a51e4f8bc006f8326ad5a3974" name="gabc013a1a51e4f8bc006f8326ad5a3974"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gabc013a1a51e4f8bc006f8326ad5a3974">&#9670;&#160;</a></span>eigenelements()</h2>
+<a id="ga2d0ce3ce27387948261195b0c1f28376" name="ga2d0ce3ce27387948261195b0c1f28376"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2d0ce3ce27387948261195b0c1f28376">&#9670;&#160;</a></span>eigh() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename M&gt; </div>
+template&lt;Matrix A&gt; <br />
+requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
       <table class="memname">
         <tr>
-          <td class="memname">auto nda::linalg::eigenelements </td>
+          <td class="memname">auto nda::linalg::eigh </td>
           <td>(</td>
-          <td class="paramtype">M const &amp;</td>          <td class="paramname"><span class="paramname"><em>m</em></span></td><td>)</td>
+          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;<a class="el" href="eigenelements_8hpp.html">nda/linalg/eigenelements.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="eigh_8hpp.html">nda/linalg/eigh.hpp</a>&gt;</code></p>
 
-<p>Find the eigenvalues and eigenvectors of a symmetric (real) or hermitian (complex) matrix/view. </p>
-<p>For a real symmetric matrix/view, it calls the LAPACK routine <span class="tt">syev</span>. For a complex hermitian matrix/view, it calls the LAPACK routine <span class="tt">heev</span>.</p>
-<p>The given matrix/view is copied and the original is not modified.</p>
+<p>Compute the eigenvalues and eigenvectors of a real symmetric or complex hermitian matrix. </p>
+<p>It computes the eigenvectors \( \mathbf{v}_i \) and eigenvalues \( \lambda_i \) of the matrix  \(\mathbf{A} \) such that   </p><p class="formulaDsp">
+\[ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ \; .
+\]
+</p>
+<p>It makes a copy of the given matrix/view and calls <a class="el" href="#ga0681d15a9633c4920c19fcfa1bccd219" title="Compute the eigenvalues and eigenvectors of a real symmetric or complex hermitian matrix.">nda::linalg::eigh_in_place</a> with the copy.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">M</td><td>Type of the matrix/view. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">m</td><td>Matrix/View to diagonalize. </td></tr>
+    <tr><td class="paramname">a</td><td>Input matrix. The matrix \( \mathbf{A} \). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>std::pair consisting of the array of eigenvalues in ascending order and the matrix containing the eigenvectors in its columns. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><span class="tt">std::pair</span> containing an <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> with the real eigenvalues \( \lambda_i \) in ascending order and an <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> in Fortran layout containing the eigenvectors \( \mathbf{v}_i \) in its columns. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="eigenelements_8hpp_source.html#l00087">87</a> of file <a class="el" href="eigenelements_8hpp_source.html">eigenelements.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="eigh_8hpp_source.html#l00162">162</a> of file <a class="el" href="eigh_8hpp_source.html">eigh.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga3cb88b67c9f89ebf87e9c6e539165ed8" name="ga3cb88b67c9f89ebf87e9c6e539165ed8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3cb88b67c9f89ebf87e9c6e539165ed8">&#9670;&#160;</a></span>eigenvalues()</h2>
+<a id="gaa2c7bcf737ecddca8b163b1086282907" name="gaa2c7bcf737ecddca8b163b1086282907"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa2c7bcf737ecddca8b163b1086282907">&#9670;&#160;</a></span>eigh() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename M&gt; </div>
+template&lt;Matrix A, Matrix B&gt; <br />
+requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;B&gt;&gt;)</div>
       <table class="memname">
         <tr>
-          <td class="memname">auto nda::linalg::eigenvalues </td>
+          <td class="memname">auto nda::linalg::eigh </td>
           <td>(</td>
-          <td class="paramtype">M const &amp;</td>          <td class="paramname"><span class="paramname"><em>m</em></span></td><td>)</td>
+          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">B const &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>itype</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="eigh_8hpp.html">nda/linalg/eigh.hpp</a>&gt;</code></p>
+
+<p>Compute the eigenvalues and eigenvectors of a generalized real symmetric-definite or complex hermitian-definite eigenvalue problem. </p>
+<p>It computes the eigenvectors \( \mathbf{v}_i \) and eigenvalues \( \lambda_i \) of one of the following eigenvalue problems:</p><ul>
+<li>\( \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{B} \mathbf{v}_i \) (<span class="tt">itype = 1</span>),</li>
+<li>\( \mathbf{A} \mathbf{B} \mathbf{v}_i = \lambda_i \mathbf{v}_i \) (<span class="tt">itype = 2</span>) or</li>
+<li>\( \mathbf{B} \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \) (<span class="tt">itype = 3</span>).</li>
+</ul>
+<p>It makes a copy of the given matrices/views and calls <a class="el" href="#ga1416f4c96f511fb7bad93f32ef4d8642" title="Compute the eigenvalues and eigenvectors of a generalized real symmetric-definite or complex hermitia...">nda::linalg::eigh_in_place(A &amp;&amp;, B&amp;&amp;, int)</a> with the copies.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
+    <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input matrix. The matrix \( \mathbf{A} \). </td></tr>
+    <tr><td class="paramname">b</td><td>Input matrix. The matrix \( \mathbf{B} \). </td></tr>
+    <tr><td class="paramname">itype</td><td>Specifies the problem to be solved. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><span class="tt">std::pair</span> containing an <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> with the real eigenvalues \( \lambda_i \) in ascending order and an <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> in Fortran layout containing the eigenvectors \( \mathbf{v}_i \) in its columns. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="eigh_8hpp_source.html#l00191">191</a> of file <a class="el" href="eigh_8hpp_source.html">eigh.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga0681d15a9633c4920c19fcfa1bccd219" name="ga0681d15a9633c4920c19fcfa1bccd219"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0681d15a9633c4920c19fcfa1bccd219">&#9670;&#160;</a></span>eigh_in_place() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::eigh_in_place </td>
+          <td>(</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;<a class="el" href="eigenelements_8hpp.html">nda/linalg/eigenelements.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="eigh_8hpp.html">nda/linalg/eigh.hpp</a>&gt;</code></p>
 
-<p>Find the eigenvalues of a symmetric (real) or hermitian (complex) matrix/view. </p>
-<p>For a real symmetric matrix/view, it calls the LAPACK routine <span class="tt">syev</span>. For a complex hermitian matrix/view, it calls the LAPACK routine <span class="tt">heev</span>.</p>
-<p>The given matrix/view is copied and the original is not modified.</p>
+<p>Compute the eigenvalues and eigenvectors of a real symmetric or complex hermitian matrix. </p>
+<p>It computes the eigenvectors \( \mathbf{v}_i \) and eigenvalues \( \lambda_i \) of the matrix  \(\mathbf{A} \) such that   </p><p class="formulaDsp">
+\[ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ \; .
+\]
+</p>
+<p>If the elements of \( \mathbf{A} \) are real, it calls <a class="el" href="group__linalg__lapack.html#gab32938d5127d4b2ecf0780b47dbbebe8" title="Interface to the LAPACK syev routine.">nda::lapack::syev</a>. If the elements of \( \mathbf{A} \) are complex, it calls <a class="el" href="group__linalg__lapack.html#ga866f35e5b8cb5938a7bb1182f3b43acf" title="Interface to the LAPACK heev routine.">nda::lapack::heev</a>.</p>
+<p>It throws an exception if the call to LAPACK fails.</p>
+<dl class="section note"><dt>Note</dt><dd>The given matrix/view must have Fortran layout, is modified and contains the eigenvectors in its columns after the call.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">M</td><td>Type of the matrix/view. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">m</td><td>Matrix/View to diagonalize. </td></tr>
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the matrix \( \mathbf{A} \). On exit, it contains the orthonormal eigenvectors \( \mathbf{v}_i \) in its columns. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> of rank 1 containing the eigenvalues in ascending order. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> containing the real eigenvalues \( \lambda_i \) in ascending order. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="eigenelements_8hpp_source.html#l00106">106</a> of file <a class="el" href="eigenelements_8hpp_source.html">eigenelements.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="eigh_8hpp_source.html#l00104">104</a> of file <a class="el" href="eigh_8hpp_source.html">eigh.hpp</a>.</p>
 
 </div>
 </div>
-<a id="gafede9394121a6e2098c4e04c9af5f568" name="gafede9394121a6e2098c4e04c9af5f568"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gafede9394121a6e2098c4e04c9af5f568">&#9670;&#160;</a></span>eigenvalues_in_place()</h2>
+<a id="ga1416f4c96f511fb7bad93f32ef4d8642" name="ga1416f4c96f511fb7bad93f32ef4d8642"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1416f4c96f511fb7bad93f32ef4d8642">&#9670;&#160;</a></span>eigh_in_place() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename M&gt; </div>
+template&lt;MemoryMatrix A, MemoryMatrix B&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;B&gt;)</div>
       <table class="memname">
         <tr>
-          <td class="memname">auto nda::linalg::eigenvalues_in_place </td>
+          <td class="memname">auto nda::linalg::eigh_in_place </td>
           <td>(</td>
-          <td class="paramtype">M &amp;</td>          <td class="paramname"><span class="paramname"><em>m</em></span></td><td>)</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">B &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>itype</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="eigh_8hpp.html">nda/linalg/eigh.hpp</a>&gt;</code></p>
+
+<p>Compute the eigenvalues and eigenvectors of a generalized real symmetric-definite or complex hermitian-definite eigenvalue problem. </p>
+<p>It computes the eigenvectors \( \mathbf{v}_i \) and eigenvalues \( \lambda_i \) of one of the following eigenvalue problems:</p><ul>
+<li>\( \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{B} \mathbf{v}_i \) (<span class="tt">itype = 1</span>),</li>
+<li>\( \mathbf{A} \mathbf{B} \mathbf{v}_i = \lambda_i \mathbf{v}_i \) (<span class="tt">itype = 2</span>) or</li>
+<li>\( \mathbf{B} \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \) (<span class="tt">itype = 3</span>).</li>
+</ul>
+<p>Here \( \mathbf{A} \) and \( \mathbf{B} \) are assumed to be real symmetric or complex hermitian. In addition, \( \mathbf{B} \) is assumed to be positive definite.</p>
+<p>If \( \mathbf{A} \) and \( \mathbf{B} \) are real, it calls <a class="el" href="group__linalg__lapack.html#ga1691e2441e439a2959476f7801611ca5" title="Interface to the LAPACK sygv routine.">nda::lapack::sygv</a>. Otherwise, it calls <a class="el" href="group__linalg__lapack.html#gaab16b1d57cf493f88b7be848e1482692" title="Interface to the LAPACK hegv routine.">nda::lapack::hegv</a>.</p>
+<p>It throws an exception if the call to LAPACK fails.</p>
+<dl class="section note"><dt>Note</dt><dd>The given matrices/views must have Fortran layout and are modified.</dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+    <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the matrix \( \mathbf{A} \). On exit, it contains the normalized eigenvectors \( \mathbf{v}_i \) in its columns (see <a class="el" href="group__linalg__lapack.html#ga1691e2441e439a2959476f7801611ca5" title="Interface to the LAPACK sygv routine.">nda::lapack::sygv</a> or <a class="el" href="group__linalg__lapack.html#gaab16b1d57cf493f88b7be848e1482692" title="Interface to the LAPACK hegv routine.">nda::lapack::hegv</a> for details). </td></tr>
+    <tr><td class="paramname">b</td><td>Input/output matrix. On entry, the matrix \( \mathbf{B} \). On exit, it is overwritten (see <a class="el" href="group__linalg__lapack.html#ga1691e2441e439a2959476f7801611ca5" title="Interface to the LAPACK sygv routine.">nda::lapack::sygv</a> or <a class="el" href="group__linalg__lapack.html#gaab16b1d57cf493f88b7be848e1482692" title="Interface to the LAPACK hegv routine.">nda::lapack::hegv</a> for details). </td></tr>
+    <tr><td class="paramname">itype</td><td>Specifies the problem to be solved. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> containing the real eigenvalues \( \lambda_i \) in ascending order. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="eigh_8hpp_source.html#l00140">140</a> of file <a class="el" href="eigh_8hpp_source.html">eigh.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga843c22ecfbd336fc0e924ace02aa60b1" name="ga843c22ecfbd336fc0e924ace02aa60b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga843c22ecfbd336fc0e924ace02aa60b1">&#9670;&#160;</a></span>eigvalsh() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;Matrix A&gt; <br />
+requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::eigvalsh </td>
+          <td>(</td>
+          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p><code>#include &lt;<a class="el" href="eigenelements_8hpp.html">nda/linalg/eigenelements.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="eigh_8hpp.html">nda/linalg/eigh.hpp</a>&gt;</code></p>
 
-<p>Find the eigenvalues of a symmetric (real) or hermitian (complex) matrix/view. </p>
-<p>For a real symmetric matrix/view, it calls the LAPACK routine <span class="tt">syev</span>. For a complex hermitian matrix/view, it calls the LAPACK routine <span class="tt">heev</span>.</p>
-<p>The given matrix/view will be modified by the diagonalization process.</p>
+<p>Compute the eigenvalues of a real symmetric or complex hermitian matrix. </p>
+<p>It computes the eigenvalues \( \lambda_i \) of the matrix \( \mathbf{A} \) such that   </p><p class="formulaDsp">
+\[ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ \; .
+\]
+</p>
+<p>It makes a copy of the given matrix/view and calls <a class="el" href="#ga1306414bdfb59828c1d678fb202d531c" title="Compute the eigenvalues of a real symmetric or complex hermitian matrix.">nda::linalg::eigvalsh_in_place</a> with the copy.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">M</td><td>Type of the matrix/view. </td></tr>
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">m</td><td>Matrix/View to diagonalize. </td></tr>
+    <tr><td class="paramname">a</td><td>Input matrix. The matrix \( \mathbf{A} \). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> of rank 1 containing the eigenvalues in ascending order. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> containing the real eigenvalues in ascending order. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="eigenelements_8hpp_source.html#l00124">124</a> of file <a class="el" href="eigenelements_8hpp_source.html">eigenelements.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="eigh_8hpp_source.html#l00276">276</a> of file <a class="el" href="eigh_8hpp_source.html">eigh.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga99906b99820be65d1bfb07d90aea841c" name="ga99906b99820be65d1bfb07d90aea841c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga99906b99820be65d1bfb07d90aea841c">&#9670;&#160;</a></span>inverse()</h2>
+<a id="gae3c06db4752cc125959b0a8dd2a155d8" name="gae3c06db4752cc125959b0a8dd2a155d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae3c06db4752cc125959b0a8dd2a155d8">&#9670;&#160;</a></span>eigvalsh() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;Matrix A, Matrix B&gt; <br />
+requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;B&gt;&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::eigvalsh </td>
+          <td>(</td>
+          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">B const &amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>itype</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="eigh_8hpp.html">nda/linalg/eigh.hpp</a>&gt;</code></p>
+
+<p>Compute the eigenvalues of a generalized real symmetric-definite or complex hermitian-definite eigenvalue problem. </p>
+<p>It computes the eigenvalues \( \lambda_i \) of one of the following eigenvalue problems:</p><ul>
+<li>\( \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{B} \mathbf{v}_i \) (<span class="tt">itype = 1</span>),</li>
+<li>\( \mathbf{A} \mathbf{B} \mathbf{v}_i = \lambda_i \mathbf{v}_i \) (<span class="tt">itype = 2</span>) or</li>
+<li>\( \mathbf{B} \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \) (<span class="tt">itype = 3</span>).</li>
+</ul>
+<p>It makes a copy of the given matrices/views and calls <a class="el" href="#gae9bb9220ce836b1b3752673080ef007f" title="Compute the eigenvalues of a generalized real symmetric-definite or complex hermitian-definite eigenv...">nda::linalg::eigvalsh_in_place(A &amp;&amp;, B&amp;&amp;, int)</a> with the copies.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
+    <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input matrix. The matrix \( \mathbf{A} \). </td></tr>
+    <tr><td class="paramname">b</td><td>Input matrix. The matrix \( \mathbf{B} \). </td></tr>
+    <tr><td class="paramname">itype</td><td>Specifies the problem to be solved. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> containing the real eigenvalues in ascending order. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="eigh_8hpp_source.html#l00303">303</a> of file <a class="el" href="eigh_8hpp_source.html">eigh.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga1306414bdfb59828c1d678fb202d531c" name="ga1306414bdfb59828c1d678fb202d531c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1306414bdfb59828c1d678fb202d531c">&#9670;&#160;</a></span>eigvalsh_in_place() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::eigvalsh_in_place </td>
+          <td>(</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="eigh_8hpp.html">nda/linalg/eigh.hpp</a>&gt;</code></p>
+
+<p>Compute the eigenvalues of a real symmetric or complex hermitian matrix. </p>
+<p>It computes the eigenvalues \( \lambda_i \) of the matrix \( \mathbf{A} \) such that   </p><p class="formulaDsp">
+\[ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ \; .
+\]
+</p>
+<p>If the elements of \( \mathbf{A} \) are real, it calls <a class="el" href="group__linalg__lapack.html#gab32938d5127d4b2ecf0780b47dbbebe8" title="Interface to the LAPACK syev routine.">nda::lapack::syev</a>. If the elements of \( \mathbf{A} \) are complex, it calls <a class="el" href="group__linalg__lapack.html#ga866f35e5b8cb5938a7bb1182f3b43acf" title="Interface to the LAPACK heev routine.">nda::lapack::heev</a>.</p>
+<p>It throws an exception if the call to LAPACK fails.</p>
+<dl class="section note"><dt>Note</dt><dd>The given matrix/view must have Fortran layout and is modified.</dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the matrix \( \mathbf{A} \). On exit, the contents of \( \mathbf{A} \) are destroyed. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> containing the real eigenvalues in ascending order. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="eigh_8hpp_source.html#l00221">221</a> of file <a class="el" href="eigh_8hpp_source.html">eigh.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gae9bb9220ce836b1b3752673080ef007f" name="gae9bb9220ce836b1b3752673080ef007f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae9bb9220ce836b1b3752673080ef007f">&#9670;&#160;</a></span>eigvalsh_in_place() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;MemoryMatrix A, MemoryMatrix B&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;B&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::eigvalsh_in_place </td>
+          <td>(</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">B &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>itype</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="eigh_8hpp.html">nda/linalg/eigh.hpp</a>&gt;</code></p>
+
+<p>Compute the eigenvalues of a generalized real symmetric-definite or complex hermitian-definite eigenvalue problem. </p>
+<p>It computes the eigenvalues \( \lambda_i \) of one of the following eigenvalue problems:</p><ul>
+<li>\( \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{B} \mathbf{v}_i \) (<span class="tt">itype = 1</span>),</li>
+<li>\( \mathbf{A} \mathbf{B} \mathbf{v}_i = \lambda_i \mathbf{v}_i \) (<span class="tt">itype = 2</span>) or</li>
+<li>\( \mathbf{B} \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \) (<span class="tt">itype = 3</span>).</li>
+</ul>
+<p>Here \( \mathbf{A} \) and \( \mathbf{B} \) are assumed to be real symmetric or complex hermitian. In addition, \( \mathbf{B} \) is assumed to be positive definite.</p>
+<p>If \( \mathbf{A} \) and \( \mathbf{B} \) are real, it calls <a class="el" href="group__linalg__lapack.html#ga1691e2441e439a2959476f7801611ca5" title="Interface to the LAPACK sygv routine.">nda::lapack::sygv</a>. Otherwise, it calls <a class="el" href="group__linalg__lapack.html#gaab16b1d57cf493f88b7be848e1482692" title="Interface to the LAPACK hegv routine.">nda::lapack::hegv</a>.</p>
+<p>It throws an exception if the call to LAPACK fails.</p>
+<dl class="section note"><dt>Note</dt><dd>The given matrices/views must have Fortran layout and are modified.</dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+    <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the matrix \( \mathbf{A} \). On exit, the contents of \( \mathbf{A} \) are destroyed. </td></tr>
+    <tr><td class="paramname">b</td><td>Input/output matrix. On entry, the matrix \( \mathbf{B} \). On exit, it is overwritten (see <a class="el" href="group__linalg__lapack.html#ga1691e2441e439a2959476f7801611ca5" title="Interface to the LAPACK sygv routine.">nda::lapack::sygv</a> or <a class="el" href="group__linalg__lapack.html#gaab16b1d57cf493f88b7be848e1482692" title="Interface to the LAPACK hegv routine.">nda::lapack::hegv</a> for details). </td></tr>
+    <tr><td class="paramname">itype</td><td>Specifies the problem to be solved. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> containing the real eigenvalues \( \lambda_i \) in ascending order. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="eigh_8hpp_source.html#l00256">256</a> of file <a class="el" href="eigh_8hpp_source.html">eigh.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gabd0ff5c6c8add0fd6641db2cc5f73a79" name="gabd0ff5c6c8add0fd6641db2cc5f73a79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabd0ff5c6c8add0fd6641db2cc5f73a79">&#9670;&#160;</a></span>inv()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;Matrix M&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M')</div>
+requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;M&gt;&gt;)</div>
       <table class="memname">
         <tr>
-          <td class="memname">auto nda::inverse </td>
+          <td class="memname">auto nda::linalg::inv </td>
           <td>(</td>
           <td class="paramtype">M const &amp;</td>          <td class="paramname"><span class="paramname"><em>m</em></span></td><td>)</td>
           <td></td>
@@ -606,8 +924,13 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 
 <p><code>#include &lt;<a class="el" href="inv_8hpp.html">nda/linalg/inv.hpp</a>&gt;</code></p>
 
-<p>Compute the inverse of an n-by-n matrix. </p>
-<p>The given matrix/view is not modified. It first makes copy of the given matrix/view and then calls <a class="el" href="#gab84970093e3fde0f5905f895120c7d60" title="Compute the inverse of an n-by-n matrix.">nda::inverse_in_place</a> with the copy.</p>
+<p>Compute the inverse of an \( n \times n \) matrix \( \mathbf{M} \). </p>
+<p>The given matrix/view is not modified. It first makes a copy of the matrix/view and then</p>
+<ul>
+<li>uses <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> and <a class="el" href="group__linalg__lapack.html#gae81206b2d5fff66e29fa0fb25de61183" title="Interface to the LAPACK getrs routine.">nda::lapack::getrs</a> to compute the inverse in case the matrix's memory space is compatible with the device memory space. The resulting inverse matrix is always in Fortran layout.</li>
+<li>calls <a class="el" href="#ga5ae8205418692fdc14fc3ee0c5bf322b" title="Compute the inverse of an  matrix .">nda::linalg::inv_in_place</a> if the matrix is stored on the host memory space.</li>
+</ul>
+<dl class="section warning"><dt>Warning</dt><dd>This function makes copies of the input arrays/views. When working on the device memory space, this may lead to runtime errors if the copying fails.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">M</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
@@ -616,27 +939,27 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">m</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> object to be inverted. </td></tr>
+    <tr><td class="paramname">m</td><td>Input matrix. The matrix \( \mathbf{M} \). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Inverse of the matrix. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The inverse matrix \( \mathbf{M}^{-1} \). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="inv_8hpp_source.html#l00187">187</a> of file <a class="el" href="inv_8hpp_source.html">inv.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="inv_8hpp_source.html#l00141">141</a> of file <a class="el" href="inv_8hpp_source.html">inv.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga52392364db364e5bbb05d4287bbfd7ee" name="ga52392364db364e5bbb05d4287bbfd7ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga52392364db364e5bbb05d4287bbfd7ee">&#9670;&#160;</a></span>inverse1_in_place()</h2>
+<a id="ga5ae8205418692fdc14fc3ee0c5bf322b" name="ga5ae8205418692fdc14fc3ee0c5bf322b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5ae8205418692fdc14fc3ee0c5bf322b">&#9670;&#160;</a></span>inv_in_place()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;MemoryMatrix M&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c785135d7916b">mem::on_host</a>&lt;M&gt;)</div>
+requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;M&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;M&gt;&gt;)</div>
       <table class="memname">
         <tr>
-          <td class="memname">void nda::inverse1_in_place </td>
+          <td class="memname">void nda::linalg::inv_in_place </td>
           <td>(</td>
           <td class="paramtype">M &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>m</em></span></td><td>)</td>
           <td></td>
@@ -646,8 +969,11 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 
 <p><code>#include &lt;<a class="el" href="inv_8hpp.html">nda/linalg/inv.hpp</a>&gt;</code></p>
 
-<p>Compute the inverse of a 1-by-1 matrix. </p>
-<p>The inversion is performed in place.</p>
+<p>Compute the inverse of an \( n \times n \) matrix \( \mathbf{M} \). </p>
+<p>For small matrices ( \( 1 \times 1 \), \( 2 \times 2 \) or \( 3 \times 3 \)), it uses optimized direct inversion formulas.</p>
+<p>For larger matrices, it calls <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> and <a class="el" href="group__linalg__lapack.html#ga41597808b4e45ffeaebd3645b55354e7" title="Interface to the LAPACK getri routine.">nda::lapack::getri</a>.</p>
+<p>It throws an exception if the matrix is not invertible, i.e. if \( \det(\mathbf{M}) = 0 \), or if a call to LAPACK fails.</p>
+<dl class="section note"><dt>Note</dt><dd>The inversion is performed in place.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">M</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
@@ -656,131 +982,12 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">m</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> object to be inverted. </td></tr>
+    <tr><td class="paramname">m</td><td>Input/output matrix. On entry, the matrix \( \mathbf{M} \). On exit, the matrix \( \mathbf{M}^{-1} \). </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="inv_8hpp_source.html#l00059">59</a> of file <a class="el" href="inv_8hpp_source.html">inv.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ga6d7a0ac0080632972b5854123550ce37" name="ga6d7a0ac0080632972b5854123550ce37"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga6d7a0ac0080632972b5854123550ce37">&#9670;&#160;</a></span>inverse2_in_place()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;MemoryMatrix M&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c785135d7916b">mem::on_host</a>&lt;M&gt;)</div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void nda::inverse2_in_place </td>
-          <td>(</td>
-          <td class="paramtype">M &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>m</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="inv_8hpp.html">nda/linalg/inv.hpp</a>&gt;</code></p>
-
-<p>Compute the inverse of a 2-by-2 matrix. </p>
-<p>The inversion is performed in place.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">M</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">m</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> object to be inverted. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="inv_8hpp_source.html#l00074">74</a> of file <a class="el" href="inv_8hpp_source.html">inv.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ga23f56fb167a83085bfb6768672c986d6" name="ga23f56fb167a83085bfb6768672c986d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga23f56fb167a83085bfb6768672c986d6">&#9670;&#160;</a></span>inverse3_in_place()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;MemoryMatrix M&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__mem__addrspcs.html#ga8aaa632e292a69266e4c785135d7916b">mem::on_host</a>&lt;M&gt;)</div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void nda::inverse3_in_place </td>
-          <td>(</td>
-          <td class="paramtype">M &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>m</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="inv_8hpp.html">nda/linalg/inv.hpp</a>&gt;</code></p>
-
-<p>Compute the inverse of a 3-by-3 matrix. </p>
-<p>The inversion is performed in place.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">M</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">m</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> object to be inverted. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="inv_8hpp_source.html#l00100">100</a> of file <a class="el" href="inv_8hpp_source.html">inv.hpp</a>.</p>
-
-</div>
-</div>
-<a id="gab84970093e3fde0f5905f895120c7d60" name="gab84970093e3fde0f5905f895120c7d60"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab84970093e3fde0f5905f895120c7d60">&#9670;&#160;</a></span>inverse_in_place()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;MemoryMatrix M&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M')</div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void nda::inverse_in_place </td>
-          <td>(</td>
-          <td class="paramtype">M &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>m</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="inv_8hpp.html">nda/linalg/inv.hpp</a>&gt;</code></p>
-
-<p>Compute the inverse of an n-by-n matrix. </p>
-<p>The inversion is performed in place.</p>
-<p>For small matrices (1-by-1, 2-by-2, 3-by-3), we directly compute the matrix inversion using the optimized routines: <a class="el" href="#ga52392364db364e5bbb05d4287bbfd7ee" title="Compute the inverse of a 1-by-1 matrix.">nda::inverse1_in_place</a>, <a class="el" href="#ga6d7a0ac0080632972b5854123550ce37" title="Compute the inverse of a 2-by-2 matrix.">nda::inverse2_in_place</a>, <a class="el" href="#ga23f56fb167a83085bfb6768672c986d6" title="Compute the inverse of a 3-by-3 matrix.">nda::inverse3_in_place</a>.</p>
-<p>For larger matrices, it uses <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> and <a class="el" href="group__linalg__lapack.html#ga41597808b4e45ffeaebd3645b55354e7" title="Interface to the LAPACK getri routine.">nda::lapack::getri</a>.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">M</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">m</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> object to be inverted. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="inv_8hpp_source.html#l00144">144</a> of file <a class="el" href="inv_8hpp_source.html">inv.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="inv_8hpp_source.html#l00099">99</a> of file <a class="el" href="inv_8hpp_source.html">inv.hpp</a>.</p>
 
 </div>
 </div>
@@ -881,6 +1088,60 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a
 <dl class="section return"><dt>Returns</dt><dd>Resulting vector of the matrix-vector multiplication of size \( m \). </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="matvecmul_8hpp_source.html#l00116">116</a> of file <a class="el" href="matvecmul_8hpp_source.html">matvecmul.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gabe6892821225c13803643ffb5739b5c9" name="gabe6892821225c13803643ffb5739b5c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabe6892821225c13803643ffb5739b5c9">&#9670;&#160;</a></span>norm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;ArrayOfRank&lt; 1 &gt; A&gt; <br />
+requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">double nda::linalg::norm </td>
+          <td>(</td>
+          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>p</em></span><span class="paramdefsep"> = </span><span class="paramdefval">2.0</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="norm_8hpp.html">nda/linalg/norm.hpp</a>&gt;</code></p>
+
+<p>Calculate the p-norm of an <a class="el" href="conceptnda_1_1_array_of_rank.html" title="Check if a given type is an nda::Array of a certain rank.">nda::ArrayOfRank&lt;1&gt;</a> object \( \mathbf{x} \) with scalar values. The p-norm is defined as. </p>
+<p class="formulaDsp">
+\[  || \mathbf{x} ||_p = \left( \sum_{i=0}^{N-1} |x_i|^p \right)^{1/p}
+\]
+</p>
+<p> with the special cases (following <span class="tt">numpy.linalg.norm</span> convention)</p>
+<ul>
+<li>\( || \mathbf{x} ||_0 = \text{number of non-zero elements} \),</li>
+<li>\( || \mathbf{x} ||_{\infty} = \max \{ |x_i| : i = 0, \dots, N - 1 \} \),</li>
+<li>\( || \mathbf{x} ||_{-\infty} = \min \{ |x_i| : i = 0, \dots, N - 1 \} \).</li>
+</ul>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_of_rank.html" title="Check if a given type is an nda::Array of a certain rank.">nda::ArrayOfRank&lt;1&gt;</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_array_of_rank.html" title="Check if a given type is an nda::Array of a certain rank.">nda::ArrayOfRank&lt;1&gt;</a> object \( \mathbf{x} \). </td></tr>
+    <tr><td class="paramname">p</td><td>Order of the norm. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>p-norm of the array/view. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="norm_8hpp_source.html#l00046">46</a> of file <a class="el" href="norm_8hpp_source.html">norm.hpp</a>.</p>
 
 </div>
 </div>

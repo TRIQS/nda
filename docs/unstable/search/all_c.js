@@ -61,7 +61,7 @@ var searchData=
   ['creating_20a_20full_20view_20on_20an_20array_20view_58',['Creating a full view on an array/view',['../ex4.html#ex4_p1',1,'']]],
   ['creating_20a_20slice_20of_20an_20array_20view_59',['Creating a slice of an array/view',['../ex4.html#ex4_p3',1,'']]],
   ['creating_20and_20initializing_20an_20array_60',['Creating and initializing an array',['../ex1.html#ex1_p1',1,'']]],
-  ['cross_5fproduct_61',['cross_product',['../group__linalg__tools.html#ga25ac6b5f84880602b6c042d7b08fdafa',1,'nda::linalg']]],
+  ['cross_5fproduct_61',['cross_product',['../group__linalg__tools.html#ga3a8f49f7769a5d63a0a088cfbd7da2da',1,'nda::linalg']]],
   ['cross_5fproduct_2ehpp_62',['cross_product.hpp',['../cross__product_8hpp.html',1,'']]],
   ['cuarray_63',['cuarray',['../group__av__types.html#ga7aa3578838cd6d7e18144a2f15dfdeb4',1,'nda']]],
   ['cuarray_5fconst_5fview_64',['cuarray_const_view',['../group__av__types.html#ga95c90f2edacee154e02bdae3fd85e9ee',1,'nda']]],
