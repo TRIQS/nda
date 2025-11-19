@@ -121,11 +121,15 @@ $(function(){initNavTree('det_8hpp.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a905f25b56234f145ca519f5faf51433f" id="r_a905f25b56234f145ca519f5faf51433f"><td class="memTemplParams" colspan="2"><a id="a905f25b56234f145ca519f5faf51433f" name="a905f25b56234f145ca519f5faf51433f"></a>
+<tr class="memitem:ga905f25b56234f145ca519f5faf51433f" id="r_ga905f25b56234f145ca519f5faf51433f"><td class="memTemplParams" colspan="2">
 template&lt;typename... A&gt; <br />
 requires (<a class="el" href="group__clef__utils.html#gaf4a34ec80a1f0d50945e918807a6f318">nda::clef::is_any_lazy</a>&lt;A...&gt;)</td></tr>
-<tr class="memitem:a905f25b56234f145ca519f5faf51433f template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><b>nda::clef::det</b> (A &amp;&amp;...__a)</td></tr>
-<tr class="memdesc:a905f25b56234f145ca519f5faf51433f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lazy version of <a class="el" href="group__linalg__tools.html#ga3c413c86b4dd95772be5b3d34dcdd960" title="Compute the determinant of an  matrix .">nda::linalg::det</a>. <br /></td></tr>
+<tr class="memitem:ga905f25b56234f145ca519f5faf51433f template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><b>nda::clef::det</b> (A &amp;&amp;...__a)</td></tr>
+<tr class="memdesc:ga905f25b56234f145ca519f5faf51433f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lazy version of <a class="el" href="group__linalg__tools.html#ga3c413c86b4dd95772be5b3d34dcdd960" title="Compute the determinant of an  matrix .">nda::linalg::det</a>. <br /></td></tr>
+<tr class="memitem:a3c413c86b4dd95772be5b3d34dcdd960" id="r_a3c413c86b4dd95772be5b3d34dcdd960"><td class="memTemplParams" colspan="2">template&lt;Matrix M&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;M&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;M&gt;&gt;)</td></tr>
+<tr class="memitem:a3c413c86b4dd95772be5b3d34dcdd960 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3c413c86b4dd95772be5b3d34dcdd960">nda::clef::det</a> (M const &amp;m)</td></tr>
+<tr class="memdesc:a3c413c86b4dd95772be5b3d34dcdd960"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the determinant of an \( n \times n \) matrix \( \mathbf{M} \).  <br /></td></tr>
 <tr class="memitem:ga3c413c86b4dd95772be5b3d34dcdd960" id="r_ga3c413c86b4dd95772be5b3d34dcdd960"><td class="memTemplParams" colspan="2">template&lt;Matrix M&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;M&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;M&gt;&gt;)</td></tr>
 <tr class="memitem:ga3c413c86b4dd95772be5b3d34dcdd960 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#ga3c413c86b4dd95772be5b3d34dcdd960">nda::linalg::det</a> (M const &amp;m)</td></tr>
@@ -135,6 +139,45 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 <tr class="memitem:gaaa18b3b53eaf33a1bffdf759055ec332 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#gaaa18b3b53eaf33a1bffdf759055ec332">nda::linalg::det_in_place</a> (M &amp;&amp;m)</td></tr>
 <tr class="memdesc:gaaa18b3b53eaf33a1bffdf759055ec332"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the determinant of an \( n \times n \) matrix \( \mathbf{M} \).  <br /></td></tr>
 </table>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="a3c413c86b4dd95772be5b3d34dcdd960" name="a3c413c86b4dd95772be5b3d34dcdd960"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c413c86b4dd95772be5b3d34dcdd960">&#9670;&#160;</a></span>det()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;Matrix M&gt; <br />
+requires (get_algebra&lt;M&gt; == 'M' and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;M&gt; and is_blas_lapack_v&lt;get_value_t&lt;M&gt;&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="group__linalg__tools.html#ga3c413c86b4dd95772be5b3d34dcdd960">nda::linalg::det</a> </td>
+          <td>(</td>
+          <td class="paramtype">M const &amp;</td>          <td class="paramname"><span class="paramname"><em>m</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Compute the determinant of an \( n \times n \) matrix \( \mathbf{M} \). </p>
+<p>The given matrix/view is not modified. It first makes a copy of the matrix/view and then calls <a class="el" href="group__linalg__tools.html#gaaa18b3b53eaf33a1bffdf759055ec332" title="Compute the determinant of an  matrix .">nda::linalg::det_in_place</a>.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">M</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m</td><td>Input matrix. The matrix \( \mathbf{M} \). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The inverse matrix \( \mathbf{M}^{-1} \). </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="det_8hpp_source.html#l00095">95</a> of file <a class="el" href="det_8hpp_source.html">det.hpp</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

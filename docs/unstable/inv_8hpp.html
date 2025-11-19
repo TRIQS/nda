@@ -126,11 +126,15 @@ $(function(){initNavTree('inv_8hpp.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a63de7927bdaa8b66b7d68f3e0a42950e" id="r_a63de7927bdaa8b66b7d68f3e0a42950e"><td class="memTemplParams" colspan="2"><a id="a63de7927bdaa8b66b7d68f3e0a42950e" name="a63de7927bdaa8b66b7d68f3e0a42950e"></a>
+<tr class="memitem:ga63de7927bdaa8b66b7d68f3e0a42950e" id="r_ga63de7927bdaa8b66b7d68f3e0a42950e"><td class="memTemplParams" colspan="2">
 template&lt;typename... A&gt; <br />
 requires (<a class="el" href="group__clef__utils.html#gaf4a34ec80a1f0d50945e918807a6f318">nda::clef::is_any_lazy</a>&lt;A...&gt;)</td></tr>
-<tr class="memitem:a63de7927bdaa8b66b7d68f3e0a42950e template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><b>nda::clef::inv</b> (A &amp;&amp;...__a)</td></tr>
-<tr class="memdesc:a63de7927bdaa8b66b7d68f3e0a42950e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lazy version of <a class="el" href="group__linalg__tools.html#gabd0ff5c6c8add0fd6641db2cc5f73a79" title="Compute the inverse of an  matrix .">nda::linalg::inv</a>. <br /></td></tr>
+<tr class="memitem:ga63de7927bdaa8b66b7d68f3e0a42950e template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><b>nda::clef::inv</b> (A &amp;&amp;...__a)</td></tr>
+<tr class="memdesc:ga63de7927bdaa8b66b7d68f3e0a42950e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lazy version of <a class="el" href="group__linalg__tools.html#gabd0ff5c6c8add0fd6641db2cc5f73a79" title="Compute the inverse of an  matrix .">nda::linalg::inv</a>. <br /></td></tr>
+<tr class="memitem:abd0ff5c6c8add0fd6641db2cc5f73a79" id="r_abd0ff5c6c8add0fd6641db2cc5f73a79"><td class="memTemplParams" colspan="2">template&lt;Matrix M&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;M&gt;&gt;)</td></tr>
+<tr class="memitem:abd0ff5c6c8add0fd6641db2cc5f73a79 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abd0ff5c6c8add0fd6641db2cc5f73a79">nda::clef::inv</a> (M const &amp;m)</td></tr>
+<tr class="memdesc:abd0ff5c6c8add0fd6641db2cc5f73a79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the inverse of an \( n \times n \) matrix \( \mathbf{M} \).  <br /></td></tr>
 <tr class="memitem:gabd0ff5c6c8add0fd6641db2cc5f73a79" id="r_gabd0ff5c6c8add0fd6641db2cc5f73a79"><td class="memTemplParams" colspan="2">template&lt;Matrix M&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;M&gt;&gt;)</td></tr>
 <tr class="memitem:gabd0ff5c6c8add0fd6641db2cc5f73a79 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#gabd0ff5c6c8add0fd6641db2cc5f73a79">nda::linalg::inv</a> (M const &amp;m)</td></tr>
@@ -140,6 +144,50 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 <tr class="memitem:ga5ae8205418692fdc14fc3ee0c5bf322b template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#ga5ae8205418692fdc14fc3ee0c5bf322b">nda::linalg::inv_in_place</a> (M &amp;&amp;m)</td></tr>
 <tr class="memdesc:ga5ae8205418692fdc14fc3ee0c5bf322b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the inverse of an \( n \times n \) matrix \( \mathbf{M} \).  <br /></td></tr>
 </table>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="abd0ff5c6c8add0fd6641db2cc5f73a79" name="abd0ff5c6c8add0fd6641db2cc5f73a79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd0ff5c6c8add0fd6641db2cc5f73a79">&#9670;&#160;</a></span>inv()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;Matrix M&gt; <br />
+requires (get_algebra&lt;M&gt; == 'M' and is_blas_lapack_v&lt;get_value_t&lt;M&gt;&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="group__linalg__tools.html#gabd0ff5c6c8add0fd6641db2cc5f73a79">nda::linalg::inv</a> </td>
+          <td>(</td>
+          <td class="paramtype">M const &amp;</td>          <td class="paramname"><span class="paramname"><em>m</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Compute the inverse of an \( n \times n \) matrix \( \mathbf{M} \). </p>
+<p>The given matrix/view is not modified. It first makes a copy of the matrix/view and then</p>
+<ul>
+<li>uses <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> and <a class="el" href="group__linalg__lapack.html#gae81206b2d5fff66e29fa0fb25de61183" title="Interface to the LAPACK getrs routine.">nda::lapack::getrs</a> to compute the inverse in case the matrix's memory space is compatible with the device memory space. The resulting inverse matrix is always in Fortran layout.</li>
+<li>calls <a class="el" href="group__linalg__tools.html#ga5ae8205418692fdc14fc3ee0c5bf322b" title="Compute the inverse of an  matrix .">nda::linalg::inv_in_place</a> if the matrix is stored on the host memory space.</li>
+</ul>
+<dl class="section warning"><dt>Warning</dt><dd>This function makes copies of the input arrays/views. When working on the device memory space, this may lead to runtime errors if the copying fails.</dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">M</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m</td><td>Input matrix. The matrix \( \mathbf{M} \). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The inverse matrix \( \mathbf{M}^{-1} \). </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="inv_8hpp_source.html#l00141">141</a> of file <a class="el" href="inv_8hpp_source.html">inv.hpp</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
