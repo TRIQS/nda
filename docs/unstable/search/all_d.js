@@ -13,7 +13,7 @@ var searchData=
   ['defining_20the_20symmetry_10',['Defining the symmetry',['../ex7.html#ex7_p1',1,'']]],
   ['dependencies_11',['Dependencies',['../installation.html#dependencies',1,'']]],
   ['deprecated_20list_12',['Deprecated List',['../deprecated.html',1,'']]],
-  ['det_13',['det',['../group__linalg__tools.html#ga3c413c86b4dd95772be5b3d34dcdd960',1,'nda::linalg::det()'],['../det_8hpp.html#aa5cc733fe8c790de2c7f8d0ff6476301',1,'nda::linalg::clef::det()']]],
+  ['det_13',['det',['../group__linalg__tools.html#ga3c413c86b4dd95772be5b3d34dcdd960',1,'nda::linalg::det()'],['../det_8hpp.html#a905f25b56234f145ca519f5faf51433f',1,'nda::clef::det()']]],
   ['det_2ehpp_14',['det.hpp',['../det_8hpp.html',1,'']]],
   ['det_5fin_5fplace_15',['det_in_place',['../group__linalg__tools.html#gaaa18b3b53eaf33a1bffdf759055ec332',1,'nda::linalg']]],
   ['device_16',['Device',['../address__space_8hpp.html#ae0ac20adce6ffee48c7151b070aa5737',1,'nda::mem']]],
