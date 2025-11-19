@@ -12,53 +12,59 @@
 #include <complex>
 #include <concepts>
 #include <tuple>
-#include <type_traits>
+
+using nda::C_layout, nda::F_layout;
+using nda::mem::Host, nda::mem::Device, nda::mem::Unified;
 
 // Test the CULAPACK gesvd function.
 template <typename T, typename Layout, nda::mem::AddressSpace AS>
 void test_gesvd() {
-  auto A = nda::matrix<T, Layout>{{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}}};
-  if constexpr (std::same_as<Layout, nda::C_layout>) {
+  using matrix_t = nda::matrix<T, Layout>;
+
+  auto A = matrix_t{{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}}};
+  if constexpr (std::same_as<Layout, C_layout>) {
     // CUDA cannot handle when m < n
-    A = nda::matrix<T, Layout>(nda::transpose(A));
+    A = matrix_t(nda::transpose(A));
   }
   auto [m, n] = A.shape();
 
   auto A_d  = to_addr_space<AS>(A);
-  auto U_d  = to_addr_space<AS>(nda::matrix<T, Layout>(m, m));
-  auto VT_d = to_addr_space<AS>(nda::matrix<T, Layout>(n, n));
+  auto U_d  = to_addr_space<AS>(matrix_t(m, m));
+  auto VT_d = to_addr_space<AS>(matrix_t(n, n));
   auto S_d  = to_addr_space<AS>(nda::vector<double>(std::min(m, n)));
   nda::lapack::gesvd(A_d, S_d, U_d, VT_d);
 
   auto S     = nda::to_host(S_d);
-  auto Sigma = nda::matrix<double, Layout>::zeros(A.shape());
+  auto Sigma = matrix_t::zeros(A.shape());
   for (auto i : nda::range(std::min(m, n))) Sigma(i, i) = S(i);
   EXPECT_ARRAY_NEAR(A, nda::to_host(U_d) * Sigma * nda::to_host(VT_d), 1e-14);
 }
 
 TEST(NDA, CULAPACKGesvd) {
-  test_gesvd<double, nda::C_layout, nda::mem::Device>();
-  test_gesvd<double, nda::F_layout, nda::mem::Device>();
-  test_gesvd<std::complex<double>, nda::C_layout, nda::mem::Device>();
-  test_gesvd<std::complex<double>, nda::F_layout, nda::mem::Device>();
+  test_gesvd<double, C_layout, Device>();
+  test_gesvd<double, F_layout, Device>();
+  test_gesvd<std::complex<double>, C_layout, Device>();
+  test_gesvd<std::complex<double>, F_layout, Device>();
 
-  test_gesvd<double, nda::C_layout, nda::mem::Unified>();
-  test_gesvd<double, nda::F_layout, nda::mem::Unified>();
-  test_gesvd<std::complex<double>, nda::C_layout, nda::mem::Unified>();
-  test_gesvd<std::complex<double>, nda::F_layout, nda::mem::Unified>();
+  test_gesvd<double, C_layout, Unified>();
+  test_gesvd<double, F_layout, Unified>();
+  test_gesvd<std::complex<double>, C_layout, Unified>();
+  test_gesvd<std::complex<double>, F_layout, Unified>();
 }
 
 // Test the CULAPACK getrs and getrf functions.
 template <typename T, typename Layout, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
 void test_getrs_getrf() {
-  T fac = 1.0;
-  if constexpr (nda::is_complex_v<T>) fac = 1.0i;
+  using matrix_t   = nda::matrix<T, Layout>;
+  using f_matrix_t = nda::matrix<T, F_layout>;
 
-  auto A = nda::matrix<T, Layout>{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
-  A *= fac;
-  auto Ainv = nda::matrix<T, Layout>{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
-  Ainv /= fac;
-  auto B = nda::matrix<T, nda::F_layout>{{1, 5}, {4, 5}, {3, 6}};
+  auto A    = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
+  auto Ainv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
+  if constexpr (nda::is_complex_v<T>) {
+    A *= 1i;
+    Ainv /= 1i;
+  }
+  auto B = f_matrix_t{{1, 5}, {4, 5}, {3, 6}};
 
   // solve A * X = B using getrf and getrs
   auto A_d    = to_addr_space<AS1>(A);
@@ -78,7 +84,7 @@ void test_getrs_getrf() {
   EXPECT_ARRAY_NEAR(nda::transpose(Ainv) * B, nda::to_host(B_d));
 
   // solve A^H * X = B using getrf and getrs
-  if constexpr (std::same_as<Layout, nda::F_layout>) {
+  if constexpr (std::same_as<Layout, F_layout>) {
     A_d = A;
     B_d = B;
     nda::lapack::getrf(A_d, ipiv_d);
@@ -97,27 +103,27 @@ void test_getrs_getrf() {
 }
 
 TEST(NDA, CULAPACKGetrsAndGetrf) {
-  test_getrs_getrf<double, nda::C_layout, nda::mem::Device, nda::mem::Device>();
-  test_getrs_getrf<double, nda::F_layout, nda::mem::Device, nda::mem::Unified>();
-  test_getrs_getrf<std::complex<double>, nda::C_layout, nda::mem::Unified, nda::mem::Device>();
-  test_getrs_getrf<std::complex<double>, nda::F_layout, nda::mem::Unified, nda::mem::Unified>();
+  test_getrs_getrf<double, C_layout, Device, Device>();
+  test_getrs_getrf<double, F_layout, Device, Unified>();
+  test_getrs_getrf<std::complex<double>, C_layout, Unified, Device>();
+  test_getrs_getrf<std::complex<double>, F_layout, Unified, Unified>();
 
-  test_getrs_getrf<double, nda::C_layout, nda::mem::Unified, nda::mem::Unified>();
-  test_getrs_getrf<double, nda::F_layout, nda::mem::Host, nda::mem::Unified>();
-  test_getrs_getrf<std::complex<double>, nda::C_layout, nda::mem::Unified, nda::mem::Host>();
-  test_getrs_getrf<std::complex<double>, nda::F_layout, nda::mem::Device, nda::mem::Device>();
+  test_getrs_getrf<double, C_layout, Unified, Unified>();
+  test_getrs_getrf<double, F_layout, Host, Unified>();
+  test_getrs_getrf<std::complex<double>, C_layout, Unified, Host>();
+  test_getrs_getrf<std::complex<double>, F_layout, Device, Device>();
 }
 
 TEST(NDA, CULAPACKGetrfWithRectangularMatrix) {
-  auto A      = nda::matrix<double, nda::F_layout>{{1, 5}, {4, 5}, {3, 6}};
-  auto AT     = nda::matrix<double, nda::F_layout>(nda::transpose(A));
-  auto A_c    = nda::matrix<double, nda::C_layout>{A};
-  auto AT_c   = nda::matrix<double, nda::C_layout>{AT};
+  auto A      = nda::matrix<double, F_layout>{{1, 5}, {4, 5}, {3, 6}};
+  auto AT     = nda::matrix<double, F_layout>(nda::transpose(A));
+  auto A_c    = nda::matrix<double, C_layout>{A};
+  auto AT_c   = nda::matrix<double, C_layout>{AT};
   auto ipiv_d = nda::cuarray<int, 1>(2);
 
   // get the matrices P, L, U from getrf output
   auto get_plu = [](auto const &M, auto const &ipiv, int m, int n) {
-    using layout_t   = std::conditional_t<nda::blas::has_C_layout<decltype(M)>, nda::C_layout, nda::F_layout>;
+    using layout_t   = std::conditional_t<nda::blas::has_C_layout<decltype(M)>, C_layout, F_layout>;
     auto P           = nda::matrix<double, layout_t>::zeros(m, m);
     auto L           = nda::matrix<double, layout_t>::zeros(m, m);
     auto U           = nda::matrix<double, layout_t>::zeros(m, n);

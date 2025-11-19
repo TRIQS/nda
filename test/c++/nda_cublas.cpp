@@ -11,15 +11,17 @@
 #include <complex>
 #include <concepts>
 #include <utility>
-#include <vector>
+
+using nda::C_layout, nda::F_layout;
+using nda::mem::Host, nda::mem::Device, nda::mem::Unified;
 
 // Test the CUBLAS gemm function.
 template <typename T, typename Layout1, typename Layout2, typename Layout3, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2,
           nda::mem::AddressSpace AS3>
 void test_gemm() {
-  constexpr auto a_is_f_layout = std::same_as<Layout1, nda::F_layout>;
-  constexpr auto b_is_f_layout = std::same_as<Layout2, nda::F_layout>;
-  constexpr auto c_is_f_layout = std::same_as<Layout3, nda::F_layout>;
+  constexpr auto a_is_f_layout = std::same_as<Layout1, F_layout>;
+  constexpr auto b_is_f_layout = std::same_as<Layout2, F_layout>;
+  constexpr auto c_is_f_layout = std::same_as<Layout3, F_layout>;
   auto A                       = nda::matrix<T, Layout1>{{1, 2, 3}, {4, 5, 6}};
   auto B                       = nda::matrix<T, Layout2>{{1, 2}, {3, 4}, {5, 6}};
   auto exp_C                   = nda::matrix<T, Layout3>{{22, 28}, {49, 64}};
@@ -65,40 +67,40 @@ void test_gemm() {
 
 TEST(NDA, CUBLASGemm) {
   // double, C-layout
-  test_gemm<double, nda::C_layout, nda::C_layout, nda::C_layout, nda::mem::Device, nda::mem::Device, nda::mem::Device>();
-  test_gemm<double, nda::C_layout, nda::C_layout, nda::C_layout, nda::mem::Device, nda::mem::Unified, nda::mem::Device>();
-  test_gemm<double, nda::C_layout, nda::C_layout, nda::C_layout, nda::mem::Unified, nda::mem::Unified, nda::mem::Unified>();
-  test_gemm<double, nda::C_layout, nda::C_layout, nda::C_layout, nda::mem::Host, nda::mem::Unified, nda::mem::Unified>();
+  test_gemm<double, C_layout, C_layout, C_layout, Device, Device, Device>();
+  test_gemm<double, C_layout, C_layout, C_layout, Device, Unified, Device>();
+  test_gemm<double, C_layout, C_layout, C_layout, Unified, Unified, Unified>();
+  test_gemm<double, C_layout, C_layout, C_layout, Host, Unified, Unified>();
 
   // double, F-layout
-  test_gemm<double, nda::F_layout, nda::F_layout, nda::F_layout, nda::mem::Device, nda::mem::Device, nda::mem::Device>();
-  test_gemm<double, nda::F_layout, nda::F_layout, nda::F_layout, nda::mem::Device, nda::mem::Device, nda::mem::Unified>();
-  test_gemm<double, nda::F_layout, nda::F_layout, nda::F_layout, nda::mem::Unified, nda::mem::Unified, nda::mem::Unified>();
-  test_gemm<double, nda::F_layout, nda::F_layout, nda::F_layout, nda::mem::Unified, nda::mem::Host, nda::mem::Unified>();
+  test_gemm<double, F_layout, F_layout, F_layout, Device, Device, Device>();
+  test_gemm<double, F_layout, F_layout, F_layout, Device, Device, Unified>();
+  test_gemm<double, F_layout, F_layout, F_layout, Unified, Unified, Unified>();
+  test_gemm<double, F_layout, F_layout, F_layout, Unified, Host, Unified>();
 
   // double, mixed layout
-  test_gemm<double, nda::C_layout, nda::F_layout, nda::C_layout, nda::mem::Device, nda::mem::Device, nda::mem::Device>();
-  test_gemm<double, nda::F_layout, nda::C_layout, nda::F_layout, nda::mem::Unified, nda::mem::Unified, nda::mem::Unified>();
-  test_gemm<double, nda::C_layout, nda::F_layout, nda::F_layout, nda::mem::Host, nda::mem::Unified, nda::mem::Unified>();
-  test_gemm<double, nda::F_layout, nda::C_layout, nda::C_layout, nda::mem::Unified, nda::mem::Host, nda::mem::Unified>();
+  test_gemm<double, C_layout, F_layout, C_layout, Device, Device, Device>();
+  test_gemm<double, F_layout, C_layout, F_layout, Unified, Unified, Unified>();
+  test_gemm<double, C_layout, F_layout, F_layout, Host, Unified, Unified>();
+  test_gemm<double, F_layout, C_layout, C_layout, Unified, Host, Unified>();
 
   // complex, C-layout
-  test_gemm<std::complex<double>, nda::C_layout, nda::C_layout, nda::C_layout, nda::mem::Device, nda::mem::Device, nda::mem::Device>();
-  test_gemm<std::complex<double>, nda::C_layout, nda::C_layout, nda::C_layout, nda::mem::Device, nda::mem::Unified, nda::mem::Device>();
-  test_gemm<std::complex<double>, nda::C_layout, nda::C_layout, nda::C_layout, nda::mem::Unified, nda::mem::Unified, nda::mem::Unified>();
-  test_gemm<std::complex<double>, nda::C_layout, nda::C_layout, nda::C_layout, nda::mem::Host, nda::mem::Unified, nda::mem::Unified>();
+  test_gemm<std::complex<double>, C_layout, C_layout, C_layout, Device, Device, Device>();
+  test_gemm<std::complex<double>, C_layout, C_layout, C_layout, Device, Unified, Device>();
+  test_gemm<std::complex<double>, C_layout, C_layout, C_layout, Unified, Unified, Unified>();
+  test_gemm<std::complex<double>, C_layout, C_layout, C_layout, Host, Unified, Unified>();
 
   // complex, F-layout
-  test_gemm<std::complex<double>, nda::F_layout, nda::F_layout, nda::F_layout, nda::mem::Device, nda::mem::Device, nda::mem::Device>();
-  test_gemm<std::complex<double>, nda::F_layout, nda::F_layout, nda::F_layout, nda::mem::Device, nda::mem::Device, nda::mem::Unified>();
-  test_gemm<std::complex<double>, nda::F_layout, nda::F_layout, nda::F_layout, nda::mem::Unified, nda::mem::Unified, nda::mem::Unified>();
-  test_gemm<std::complex<double>, nda::F_layout, nda::F_layout, nda::F_layout, nda::mem::Unified, nda::mem::Host, nda::mem::Unified>();
+  test_gemm<std::complex<double>, F_layout, F_layout, F_layout, Device, Device, Device>();
+  test_gemm<std::complex<double>, F_layout, F_layout, F_layout, Device, Device, Unified>();
+  test_gemm<std::complex<double>, F_layout, F_layout, F_layout, Unified, Unified, Unified>();
+  test_gemm<std::complex<double>, F_layout, F_layout, F_layout, Unified, Host, Unified>();
 
   // complex, mixed layout
-  test_gemm<std::complex<double>, nda::C_layout, nda::F_layout, nda::C_layout, nda::mem::Device, nda::mem::Device, nda::mem::Device>();
-  test_gemm<std::complex<double>, nda::F_layout, nda::C_layout, nda::F_layout, nda::mem::Unified, nda::mem::Unified, nda::mem::Unified>();
-  test_gemm<std::complex<double>, nda::C_layout, nda::F_layout, nda::F_layout, nda::mem::Host, nda::mem::Unified, nda::mem::Unified>();
-  test_gemm<std::complex<double>, nda::F_layout, nda::C_layout, nda::C_layout, nda::mem::Unified, nda::mem::Host, nda::mem::Unified>();
+  test_gemm<std::complex<double>, C_layout, F_layout, C_layout, Device, Device, Device>();
+  test_gemm<std::complex<double>, F_layout, C_layout, F_layout, Unified, Unified, Unified>();
+  test_gemm<std::complex<double>, C_layout, F_layout, F_layout, Host, Unified, Unified>();
+  test_gemm<std::complex<double>, F_layout, C_layout, C_layout, Unified, Host, Unified>();
 }
 
 // Test the CUBLAS/Magma gemm_batch, gemm_vbatch and gemm_batch_strided functions.
@@ -137,28 +139,28 @@ void test_gemm_batch() {
 }
 
 TEST(NDA, CUBLASGemmBatch) {
-  test_gemm_batch<double, nda::C_layout, nda::mem::Device, false>();
-  test_gemm_batch<double, nda::F_layout, nda::mem::Device, false>();
-  test_gemm_batch<std::complex<double>, nda::C_layout, nda::mem::Device, false>();
-  test_gemm_batch<std::complex<double>, nda::F_layout, nda::mem::Device, false>();
+  test_gemm_batch<double, C_layout, Device, false>();
+  test_gemm_batch<double, F_layout, Device, false>();
+  test_gemm_batch<std::complex<double>, C_layout, Device, false>();
+  test_gemm_batch<std::complex<double>, F_layout, Device, false>();
 
-  test_gemm_batch<double, nda::C_layout, nda::mem::Unified, false>();
-  test_gemm_batch<double, nda::F_layout, nda::mem::Unified, false>();
-  test_gemm_batch<std::complex<double>, nda::C_layout, nda::mem::Unified, false>();
-  test_gemm_batch<std::complex<double>, nda::F_layout, nda::mem::Unified, false>();
+  test_gemm_batch<double, C_layout, Unified, false>();
+  test_gemm_batch<double, F_layout, Unified, false>();
+  test_gemm_batch<std::complex<double>, C_layout, Unified, false>();
+  test_gemm_batch<std::complex<double>, F_layout, Unified, false>();
 }
 
 #ifdef NDA_HAVE_MAGMA
 TEST(NDA, MAGMAGemmVbatch) {
-  test_gemm_batch<double, nda::C_layout, nda::mem::Device, true>();
-  test_gemm_batch<double, nda::F_layout, nda::mem::Device, true>();
-  test_gemm_batch<std::complex<double>, nda::C_layout, nda::mem::Device, true>();
-  test_gemm_batch<std::complex<double>, nda::F_layout, nda::mem::Device, true>();
+  test_gemm_batch<double, C_layout, Device, true>();
+  test_gemm_batch<double, F_layout, Device, true>();
+  test_gemm_batch<std::complex<double>, C_layout, Device, true>();
+  test_gemm_batch<std::complex<double>, F_layout, Device, true>();
 
-  test_gemm_batch<double, nda::C_layout, nda::mem::Unified, true>();
-  test_gemm_batch<double, nda::F_layout, nda::mem::Unified, true>();
-  test_gemm_batch<std::complex<double>, nda::C_layout, nda::mem::Unified, true>();
-  test_gemm_batch<std::complex<double>, nda::F_layout, nda::mem::Unified, true>();
+  test_gemm_batch<double, C_layout, Unified, true>();
+  test_gemm_batch<double, F_layout, Unified, true>();
+  test_gemm_batch<std::complex<double>, C_layout, Unified, true>();
+  test_gemm_batch<std::complex<double>, F_layout, Unified, true>();
 }
 #endif // NDA_HAVE_MAGMA
 
@@ -184,10 +186,10 @@ void test_gemm_batch_strided() {
 }
 
 TEST(NDA, BLASGemmBatchStrided) {
-  test_gemm_batch_strided<double, nda::C_layout, nda::mem::Device>();
-  test_gemm_batch_strided<double, nda::C_layout, nda::mem::Unified>();
-  test_gemm_batch_strided<std::complex<double>, nda::C_layout, nda::mem::Device>();
-  test_gemm_batch_strided<std::complex<double>, nda::C_layout, nda::mem::Unified>();
+  test_gemm_batch_strided<double, C_layout, Device>();
+  test_gemm_batch_strided<double, C_layout, Unified>();
+  test_gemm_batch_strided<std::complex<double>, C_layout, Device>();
+  test_gemm_batch_strided<std::complex<double>, C_layout, Unified>();
 }
 
 // Test the CUBLAS gemv function.
@@ -224,7 +226,7 @@ void test_gemv() {
   nda::blas::gemv(1.0, nda::transpose(A_d), x_t_d, 0.0, y_t_d);
   EXPECT_ARRAY_NEAR(nda::to_host(y_t_d), exp_y_t);
 
-  if constexpr (std::same_as<Layout, nda::F_layout>) {
+  if constexpr (std::same_as<Layout, F_layout>) {
     // y_h = A^H * x_t
     auto exp_y_h = exp_y_t;
     if constexpr (nda::is_complex_v<T>) exp_y_h = nda::vector<T>{210 + 70i, 240 + 80i, 270 + 90i};
@@ -243,25 +245,25 @@ void test_gemv() {
 }
 
 TEST(NDA, CUBLASGemv) {
-  test_gemv<double, nda::C_layout, nda::mem::Device, nda::mem::Device, nda::mem::Device>();
-  test_gemv<double, nda::C_layout, nda::mem::Device, nda::mem::Unified, nda::mem::Device>();
-  test_gemv<double, nda::C_layout, nda::mem::Unified, nda::mem::Unified, nda::mem::Unified>();
-  test_gemv<double, nda::C_layout, nda::mem::Host, nda::mem::Unified, nda::mem::Unified>();
+  test_gemv<double, C_layout, Device, Device, Device>();
+  test_gemv<double, C_layout, Device, Unified, Device>();
+  test_gemv<double, C_layout, Unified, Unified, Unified>();
+  test_gemv<double, C_layout, Host, Unified, Unified>();
 
-  test_gemv<double, nda::F_layout, nda::mem::Device, nda::mem::Device, nda::mem::Device>();
-  test_gemv<double, nda::F_layout, nda::mem::Device, nda::mem::Device, nda::mem::Unified>();
-  test_gemv<double, nda::F_layout, nda::mem::Unified, nda::mem::Unified, nda::mem::Unified>();
-  test_gemv<double, nda::F_layout, nda::mem::Unified, nda::mem::Host, nda::mem::Unified>();
+  test_gemv<double, F_layout, Device, Device, Device>();
+  test_gemv<double, F_layout, Device, Device, Unified>();
+  test_gemv<double, F_layout, Unified, Unified, Unified>();
+  test_gemv<double, F_layout, Unified, Host, Unified>();
 
-  test_gemv<std::complex<double>, nda::C_layout, nda::mem::Device, nda::mem::Device, nda::mem::Device>();
-  test_gemv<std::complex<double>, nda::C_layout, nda::mem::Unified, nda::mem::Unified, nda::mem::Device>();
-  test_gemv<std::complex<double>, nda::C_layout, nda::mem::Unified, nda::mem::Unified, nda::mem::Unified>();
-  test_gemv<std::complex<double>, nda::C_layout, nda::mem::Host, nda::mem::Host, nda::mem::Unified>();
+  test_gemv<std::complex<double>, C_layout, Device, Device, Device>();
+  test_gemv<std::complex<double>, C_layout, Unified, Unified, Device>();
+  test_gemv<std::complex<double>, C_layout, Unified, Unified, Unified>();
+  test_gemv<std::complex<double>, C_layout, Host, Host, Unified>();
 
-  test_gemv<std::complex<double>, nda::F_layout, nda::mem::Device, nda::mem::Device, nda::mem::Device>();
-  test_gemv<std::complex<double>, nda::F_layout, nda::mem::Unified, nda::mem::Unified, nda::mem::Device>();
-  test_gemv<std::complex<double>, nda::F_layout, nda::mem::Unified, nda::mem::Unified, nda::mem::Unified>();
-  test_gemv<std::complex<double>, nda::F_layout, nda::mem::Unified, nda::mem::Host, nda::mem::Host>();
+  test_gemv<std::complex<double>, F_layout, Device, Device, Device>();
+  test_gemv<std::complex<double>, F_layout, Unified, Unified, Device>();
+  test_gemv<std::complex<double>, F_layout, Unified, Unified, Unified>();
+  test_gemv<std::complex<double>, F_layout, Unified, Host, Host>();
 }
 
 // Test the CUBLAS ger/gerc function.
@@ -319,38 +321,38 @@ void test_ger(auto ger) {
 
 TEST(NDA, CUBLASGer) {
   auto ger = [](auto alpha, auto &&x, auto &&y, auto &&m) { return nda::blas::ger(alpha, x, y, m); };
-  test_ger<double, nda::C_layout, nda::mem::Device, nda::mem::Device, nda::mem::Device, false>(ger);
-  test_ger<double, nda::C_layout, nda::mem::Device, nda::mem::Unified, nda::mem::Unified, false>(ger);
-  test_ger<double, nda::C_layout, nda::mem::Unified, nda::mem::Unified, nda::mem::Unified, false>(ger);
-  test_ger<double, nda::C_layout, nda::mem::Host, nda::mem::Host, nda::mem::Unified, false>(ger);
+  test_ger<double, C_layout, Device, Device, Device, false>(ger);
+  test_ger<double, C_layout, Device, Unified, Unified, false>(ger);
+  test_ger<double, C_layout, Unified, Unified, Unified, false>(ger);
+  test_ger<double, C_layout, Host, Host, Unified, false>(ger);
 
-  test_ger<double, nda::F_layout, nda::mem::Device, nda::mem::Device, nda::mem::Device, false>(ger);
-  test_ger<double, nda::F_layout, nda::mem::Device, nda::mem::Device, nda::mem::Unified, false>(ger);
-  test_ger<double, nda::F_layout, nda::mem::Unified, nda::mem::Unified, nda::mem::Unified, false>(ger);
-  test_ger<double, nda::F_layout, nda::mem::Unified, nda::mem::Host, nda::mem::Unified, false>(ger);
+  test_ger<double, F_layout, Device, Device, Device, false>(ger);
+  test_ger<double, F_layout, Device, Device, Unified, false>(ger);
+  test_ger<double, F_layout, Unified, Unified, Unified, false>(ger);
+  test_ger<double, F_layout, Unified, Host, Unified, false>(ger);
 
-  test_ger<std::complex<double>, nda::C_layout, nda::mem::Device, nda::mem::Device, nda::mem::Device, false>(ger);
-  test_ger<std::complex<double>, nda::C_layout, nda::mem::Unified, nda::mem::Unified, nda::mem::Device, false>(ger);
-  test_ger<std::complex<double>, nda::C_layout, nda::mem::Unified, nda::mem::Unified, nda::mem::Unified, false>(ger);
-  test_ger<std::complex<double>, nda::C_layout, nda::mem::Host, nda::mem::Unified, nda::mem::Unified, false>(ger);
+  test_ger<std::complex<double>, C_layout, Device, Device, Device, false>(ger);
+  test_ger<std::complex<double>, C_layout, Unified, Unified, Device, false>(ger);
+  test_ger<std::complex<double>, C_layout, Unified, Unified, Unified, false>(ger);
+  test_ger<std::complex<double>, C_layout, Host, Unified, Unified, false>(ger);
 
-  test_ger<std::complex<double>, nda::F_layout, nda::mem::Device, nda::mem::Device, nda::mem::Device, false>(ger);
-  test_ger<std::complex<double>, nda::F_layout, nda::mem::Unified, nda::mem::Device, nda::mem::Device, false>(ger);
-  test_ger<std::complex<double>, nda::F_layout, nda::mem::Unified, nda::mem::Unified, nda::mem::Unified, false>(ger);
-  test_ger<std::complex<double>, nda::F_layout, nda::mem::Unified, nda::mem::Host, nda::mem::Host, false>(ger);
+  test_ger<std::complex<double>, F_layout, Device, Device, Device, false>(ger);
+  test_ger<std::complex<double>, F_layout, Unified, Device, Device, false>(ger);
+  test_ger<std::complex<double>, F_layout, Unified, Unified, Unified, false>(ger);
+  test_ger<std::complex<double>, F_layout, Unified, Host, Host, false>(ger);
 }
 
 TEST(NDA, CUBLASGerc) {
   auto gerc = [](auto alpha, auto &&x, auto &&y, auto &&m) { return nda::blas::gerc(alpha, x, y, m); };
-  test_ger<double, nda::F_layout, nda::mem::Device, nda::mem::Device, nda::mem::Device, true>(gerc);
-  test_ger<double, nda::F_layout, nda::mem::Device, nda::mem::Unified, nda::mem::Device, true>(gerc);
-  test_ger<double, nda::F_layout, nda::mem::Unified, nda::mem::Unified, nda::mem::Unified, true>(gerc);
-  test_ger<double, nda::F_layout, nda::mem::Host, nda::mem::Host, nda::mem::Unified, true>(gerc);
+  test_ger<double, F_layout, Device, Device, Device, true>(gerc);
+  test_ger<double, F_layout, Device, Unified, Device, true>(gerc);
+  test_ger<double, F_layout, Unified, Unified, Unified, true>(gerc);
+  test_ger<double, F_layout, Host, Host, Unified, true>(gerc);
 
-  test_ger<std::complex<double>, nda::F_layout, nda::mem::Device, nda::mem::Device, nda::mem::Device, true>(gerc);
-  test_ger<std::complex<double>, nda::F_layout, nda::mem::Unified, nda::mem::Device, nda::mem::Unified, true>(gerc);
-  test_ger<std::complex<double>, nda::F_layout, nda::mem::Unified, nda::mem::Unified, nda::mem::Unified, true>(gerc);
-  test_ger<std::complex<double>, nda::F_layout, nda::mem::Host, nda::mem::Unified, nda::mem::Unified, true>(gerc);
+  test_ger<std::complex<double>, F_layout, Device, Device, Device, true>(gerc);
+  test_ger<std::complex<double>, F_layout, Unified, Device, Unified, true>(gerc);
+  test_ger<std::complex<double>, F_layout, Unified, Unified, Unified, true>(gerc);
+  test_ger<std::complex<double>, F_layout, Host, Unified, Unified, true>(gerc);
 }
 
 // Test the CUBLAS dot/dotc function.
@@ -388,26 +390,26 @@ void test_dot(auto dot) {
 
 TEST(NDA, CUBLASDot) {
   auto dot = []<typename A, typename B>(A &&a, B &&b) { return nda::blas::dot(std::forward<A>(a), std::forward<B>(b)); };
-  test_dot<double, nda::mem::Device, nda::mem::Device, false>(dot);
-  test_dot<double, nda::mem::Device, nda::mem::Unified, false>(dot);
-  test_dot<double, nda::mem::Unified, nda::mem::Unified, false>(dot);
-  test_dot<double, nda::mem::Unified, nda::mem::Host, false>(dot);
-  test_dot<std::complex<double>, nda::mem::Device, nda::mem::Device, false>(dot);
-  test_dot<std::complex<double>, nda::mem::Unified, nda::mem::Device, false>(dot);
-  test_dot<std::complex<double>, nda::mem::Unified, nda::mem::Unified, false>(dot);
-  test_dot<std::complex<double>, nda::mem::Host, nda::mem::Unified, false>(dot);
+  test_dot<double, Device, Device, false>(dot);
+  test_dot<double, Device, Unified, false>(dot);
+  test_dot<double, Unified, Unified, false>(dot);
+  test_dot<double, Unified, Host, false>(dot);
+  test_dot<std::complex<double>, Device, Device, false>(dot);
+  test_dot<std::complex<double>, Unified, Device, false>(dot);
+  test_dot<std::complex<double>, Unified, Unified, false>(dot);
+  test_dot<std::complex<double>, Host, Unified, false>(dot);
 }
 
 TEST(NDA, CUBLASDotc) {
   auto dotc = []<typename A, typename B>(A &&a, B &&b) { return nda::blas::dotc(std::forward<A>(a), std::forward<B>(b)); };
-  test_dot<double, nda::mem::Device, nda::mem::Device, true>(dotc);
-  test_dot<double, nda::mem::Device, nda::mem::Unified, true>(dotc);
-  test_dot<double, nda::mem::Unified, nda::mem::Unified, true>(dotc);
-  test_dot<double, nda::mem::Unified, nda::mem::Host, true>(dotc);
-  test_dot<std::complex<double>, nda::mem::Device, nda::mem::Device, true>(dotc);
-  test_dot<std::complex<double>, nda::mem::Unified, nda::mem::Device, true>(dotc);
-  test_dot<std::complex<double>, nda::mem::Unified, nda::mem::Unified, true>(dotc);
-  test_dot<std::complex<double>, nda::mem::Host, nda::mem::Unified, true>(dotc);
+  test_dot<double, Device, Device, true>(dotc);
+  test_dot<double, Device, Unified, true>(dotc);
+  test_dot<double, Unified, Unified, true>(dotc);
+  test_dot<double, Unified, Host, true>(dotc);
+  test_dot<std::complex<double>, Device, Device, true>(dotc);
+  test_dot<std::complex<double>, Unified, Device, true>(dotc);
+  test_dot<std::complex<double>, Unified, Unified, true>(dotc);
+  test_dot<std::complex<double>, Host, Unified, true>(dotc);
 }
 
 // Test the CUBLAS scal function.
@@ -444,6 +446,6 @@ void test_scal() {
 }
 
 TEST(NDA, CUBLASScal) {
-  test_scal<nda::mem::Device>();
-  test_scal<nda::mem::Unified>();
+  test_scal<Device>();
+  test_scal<Unified>();
 }

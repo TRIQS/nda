@@ -13,13 +13,14 @@
 #include <utility>
 
 using namespace std::complex_literals;
+using nda::C_layout, nda::F_layout;
 
 // Test the BLAS gemm function.
 template <typename T, typename Layout1, typename Layout2, typename Layout3>
 void test_gemm() {
-  constexpr auto a_is_f_layout = std::same_as<Layout1, nda::F_layout>;
-  constexpr auto b_is_f_layout = std::same_as<Layout2, nda::F_layout>;
-  constexpr auto c_is_f_layout = std::same_as<Layout3, nda::F_layout>;
+  constexpr auto a_is_f_layout = std::same_as<Layout1, F_layout>;
+  constexpr auto b_is_f_layout = std::same_as<Layout2, F_layout>;
+  constexpr auto c_is_f_layout = std::same_as<Layout3, F_layout>;
   auto A                       = nda::matrix<T, Layout1>{{1, 2, 3}, {4, 5, 6}};
   auto B                       = nda::matrix<T, Layout2>{{1, 2}, {3, 4}, {5, 6}};
   auto exp_C                   = nda::matrix<T, Layout3>{{22, 28}, {49, 64}};
@@ -61,22 +62,22 @@ void test_gemm() {
 }
 
 TEST(NDA, BLASGemm) {
-  test_gemm<double, nda::C_layout, nda::C_layout, nda::C_layout>();
-  test_gemm<double, nda::C_layout, nda::C_layout, nda::F_layout>();
-  test_gemm<double, nda::C_layout, nda::F_layout, nda::C_layout>();
-  test_gemm<double, nda::C_layout, nda::F_layout, nda::F_layout>();
-  test_gemm<double, nda::F_layout, nda::C_layout, nda::C_layout>();
-  test_gemm<double, nda::F_layout, nda::C_layout, nda::F_layout>();
-  test_gemm<double, nda::F_layout, nda::F_layout, nda::C_layout>();
-  test_gemm<double, nda::F_layout, nda::F_layout, nda::F_layout>();
-  test_gemm<std::complex<double>, nda::C_layout, nda::C_layout, nda::C_layout>();
-  test_gemm<std::complex<double>, nda::C_layout, nda::C_layout, nda::F_layout>();
-  test_gemm<std::complex<double>, nda::C_layout, nda::F_layout, nda::C_layout>();
-  test_gemm<std::complex<double>, nda::C_layout, nda::F_layout, nda::F_layout>();
-  test_gemm<std::complex<double>, nda::F_layout, nda::C_layout, nda::C_layout>();
-  test_gemm<std::complex<double>, nda::F_layout, nda::C_layout, nda::F_layout>();
-  test_gemm<std::complex<double>, nda::F_layout, nda::F_layout, nda::C_layout>();
-  test_gemm<std::complex<double>, nda::F_layout, nda::F_layout, nda::F_layout>();
+  test_gemm<double, C_layout, C_layout, C_layout>();
+  test_gemm<double, C_layout, C_layout, F_layout>();
+  test_gemm<double, C_layout, F_layout, C_layout>();
+  test_gemm<double, C_layout, F_layout, F_layout>();
+  test_gemm<double, F_layout, C_layout, C_layout>();
+  test_gemm<double, F_layout, C_layout, F_layout>();
+  test_gemm<double, F_layout, F_layout, C_layout>();
+  test_gemm<double, F_layout, F_layout, F_layout>();
+  test_gemm<std::complex<double>, C_layout, C_layout, C_layout>();
+  test_gemm<std::complex<double>, C_layout, C_layout, F_layout>();
+  test_gemm<std::complex<double>, C_layout, F_layout, C_layout>();
+  test_gemm<std::complex<double>, C_layout, F_layout, F_layout>();
+  test_gemm<std::complex<double>, F_layout, C_layout, C_layout>();
+  test_gemm<std::complex<double>, F_layout, C_layout, F_layout>();
+  test_gemm<std::complex<double>, F_layout, F_layout, C_layout>();
+  test_gemm<std::complex<double>, F_layout, F_layout, F_layout>();
 }
 
 // Test the BLAS gemm_batch, gemm_vbatch and gemm_batch_strided functions.
@@ -107,17 +108,17 @@ void test_gemm_batch() {
 }
 
 TEST(NDA, BLASGemmBatch) {
-  test_gemm_batch<double, nda::C_layout, false>();
-  test_gemm_batch<double, nda::F_layout, false>();
-  test_gemm_batch<std::complex<double>, nda::C_layout, false>();
-  test_gemm_batch<std::complex<double>, nda::F_layout, false>();
+  test_gemm_batch<double, C_layout, false>();
+  test_gemm_batch<double, F_layout, false>();
+  test_gemm_batch<std::complex<double>, C_layout, false>();
+  test_gemm_batch<std::complex<double>, F_layout, false>();
 }
 
 TEST(NDA, BLASGemmVbatch) {
-  test_gemm_batch<double, nda::C_layout, true>();
-  test_gemm_batch<double, nda::F_layout, true>();
-  test_gemm_batch<std::complex<double>, nda::C_layout, true>();
-  test_gemm_batch<std::complex<double>, nda::F_layout, true>();
+  test_gemm_batch<double, C_layout, true>();
+  test_gemm_batch<double, F_layout, true>();
+  test_gemm_batch<std::complex<double>, C_layout, true>();
+  test_gemm_batch<std::complex<double>, F_layout, true>();
 }
 
 template <typename T, typename Layout>
@@ -140,8 +141,8 @@ void test_gemm_batch_strided() {
 }
 
 TEST(NDA, BLASGemmBatchStrided) {
-  test_gemm_batch_strided<double, nda::C_layout>();
-  test_gemm_batch_strided<std::complex<double>, nda::C_layout>();
+  test_gemm_batch_strided<double, C_layout>();
+  test_gemm_batch_strided<std::complex<double>, C_layout>();
 }
 
 // Test the BLAS gemv function.
@@ -175,7 +176,7 @@ void test_gemv() {
   nda::blas::gemv(1.0, nda::transpose(A), x_t, 0.0, y_t);
   EXPECT_ARRAY_NEAR(y_t, exp_y_t);
 
-  if constexpr (std::same_as<Layout, nda::F_layout>) {
+  if constexpr (std::same_as<Layout, F_layout>) {
     // y_h = A^H * x_t
     auto exp_y_h = exp_y_t;
     if constexpr (nda::is_complex_v<T>) exp_y_h = nda::vector<T>{210 + 70i, 240 + 80i, 270 + 90i};
@@ -193,10 +194,10 @@ void test_gemv() {
 }
 
 TEST(NDA, BLASGemv) {
-  test_gemv<double, nda::C_layout>();
-  test_gemv<double, nda::F_layout>();
-  test_gemv<std::complex<double>, nda::C_layout>();
-  test_gemv<std::complex<double>, nda::F_layout>();
+  test_gemv<double, C_layout>();
+  test_gemv<double, F_layout>();
+  test_gemv<std::complex<double>, C_layout>();
+  test_gemv<std::complex<double>, F_layout>();
 }
 
 // Test the BLAS ger/gerc function.
@@ -275,15 +276,15 @@ void test_ger() {
 }
 
 TEST(NDA, BLASGer) {
-  test_ger<double, nda::C_layout, false>();
-  test_ger<double, nda::F_layout, false>();
-  test_ger<std::complex<double>, nda::C_layout, false>();
-  test_ger<std::complex<double>, nda::F_layout, false>();
+  test_ger<double, C_layout, false>();
+  test_ger<double, F_layout, false>();
+  test_ger<std::complex<double>, C_layout, false>();
+  test_ger<std::complex<double>, F_layout, false>();
 }
 
 TEST(NDA, BLASGerc) {
-  test_ger<double, nda::F_layout, true>();
-  test_ger<std::complex<double>, nda::F_layout, true>();
+  test_ger<double, F_layout, true>();
+  test_ger<std::complex<double>, F_layout, true>();
 }
 
 // Test the BLAS dot/dotc function.

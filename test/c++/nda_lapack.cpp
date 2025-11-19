@@ -210,8 +210,8 @@ void test_getrs_getrf_getri() {
   lapack::getrf(Acopy, ipiv);
   lapack::getrs(Acopy, Bcopy, ipiv);
   auto X = matrix_t{Bcopy};
-  EXPECT_ARRAY_NEAR(matrix_t{A * X}, B);
-  EXPECT_ARRAY_NEAR(matrix_t{Ainv * B}, X);
+  EXPECT_ARRAY_NEAR(A * X, B);
+  EXPECT_ARRAY_NEAR(Ainv * B, X);
 
   // solve A^T * X = B using getrf and getrs
   Acopy = A;
@@ -219,8 +219,8 @@ void test_getrs_getrf_getri() {
   lapack::getrf(Acopy, ipiv);
   lapack::getrs(nda::transpose(Acopy), Bcopy, ipiv);
   X = matrix_t{Bcopy};
-  EXPECT_ARRAY_NEAR(matrix_t{nda::transpose(A) * X}, B);
-  EXPECT_ARRAY_NEAR(matrix_t{nda::transpose(Ainv) * B}, X);
+  EXPECT_ARRAY_NEAR(nda::transpose(A) * X, B);
+  EXPECT_ARRAY_NEAR(nda::transpose(Ainv) * B, X);
 
   // solve A^H * X = B using getrf and getrs
   if constexpr (blas::has_F_layout<matrix_t>) {
@@ -229,8 +229,8 @@ void test_getrs_getrf_getri() {
     lapack::getrf(Acopy, ipiv);
     lapack::getrs(nda::conj(nda::transpose(Acopy)), Bcopy, ipiv);
     X = matrix_t{Bcopy};
-    EXPECT_ARRAY_NEAR(matrix_t{nda::conj(nda::transpose(A)) * X}, B);
-    EXPECT_ARRAY_NEAR(matrix_t{nda::conj(nda::transpose(Ainv)) * B}, X);
+    EXPECT_ARRAY_NEAR(nda::conj(nda::transpose(A)) * X, B);
+    EXPECT_ARRAY_NEAR(nda::conj(nda::transpose(Ainv)) * B, X);
   }
 
   // solve A * x = b using getrf and getrs
