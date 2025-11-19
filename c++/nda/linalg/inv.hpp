@@ -37,7 +37,7 @@ namespace nda::linalg {
 
     // Compute the inverse of a 2x2 matrix in place.
     void inv_in_place_2d(MemoryMatrix auto &&m) { // NOLINT (temporary views are allowed here)
-      
+
       // calculate the determinant of the matrix
       auto const det = (m(0, 0) * m(1, 1) - m(0, 1) * m(1, 0));
       if (det == 0.0) NDA_RUNTIME_ERROR << "Error in nda::linalg::inv_in_place: Matrix is not invertible";
@@ -56,7 +56,7 @@ namespace nda::linalg {
       EXPECTS(is_matrix_square(m) and m.extent(0) == 3);
 
       // calculate the adjoint of the matrix
-      auto adj = stack_array<get_value_t<decltype(m)>, 3, 3>();
+      auto adj  = stack_array<get_value_t<decltype(m)>, 3, 3>();
       adj(0, 0) = +m(1, 1) * m(2, 2) - m(1, 2) * m(2, 1);
       adj(1, 0) = -m(1, 0) * m(2, 2) + m(1, 2) * m(2, 0);
       adj(2, 0) = +m(1, 0) * m(2, 1) - m(1, 1) * m(2, 0);
@@ -160,13 +160,19 @@ namespace nda::linalg {
     }
   }
 
-  namespace clef {
-    /**
-     * @brief Lazy version of nda::linalg::inv.
-     */
-    CLEF_MAKE_FNT_LAZY(inv)
-  } // namespace clef
-
   /** @} */
 
 } // namespace nda::linalg
+
+namespace nda::clef {
+
+  // Make nda::linalg::inv visible for lazy function calls.
+  using nda::linalg::inv;
+
+  /**
+   * @ingroup clef_expr
+   * @brief Lazy version of nda::linalg::inv.
+   */
+  CLEF_MAKE_FNT_LAZY(inv)
+
+} // namespace nda::clef

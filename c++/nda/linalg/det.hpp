@@ -98,13 +98,19 @@ namespace nda::linalg {
     return det_in_place(m_copy);
   }
 
-  namespace clef {
-    /**
-     * @brief Lazy version of nda::linalg::det.
-     */
-    CLEF_MAKE_FNT_LAZY(det)
-  } // namespace clef
-
   /** @} */
 
 } // namespace nda::linalg
+
+namespace nda::clef {
+
+  // Make nda::linalg::det visible to lazy function calls.
+  using nda::linalg::det;
+
+  /**
+   * @ingroup clef_expr
+   * @brief Lazy version of nda::linalg::det.
+   */
+  CLEF_MAKE_FNT_LAZY(det)
+
+} // namespace nda::clef
