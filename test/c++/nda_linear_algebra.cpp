@@ -260,7 +260,7 @@ void test_inv_and_det() {
   T detC = 3 * fac;
 
   // lambda that checks inverse functions for small matrices
-  auto check_small_mat = [](auto const &M, auto const &Minv, auto detM, auto opt_inv) {
+  auto check_small_mat = [](auto const &M, auto const &Minv, auto detM) {
     auto Minv2 = nda::linalg::inv(M);
     EXPECT_ARRAY_NEAR(Minv, Minv2);
     EXPECT_COMPLEX_NEAR(nda::linalg::det(Minv2), 1.0 / detM);
@@ -275,19 +275,11 @@ void test_inv_and_det() {
     nda::linalg::inv_in_place(Minv3);
     EXPECT_ARRAY_NEAR(M, Minv3);
     EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Minv3), detM);
-
-    auto Minv4 = M;
-    opt_inv(Minv4);
-    EXPECT_ARRAY_NEAR(Minv, Minv4);
-    EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Minv4), 1.0 / detM);
-    opt_inv(Minv4);
-    EXPECT_ARRAY_NEAR(M, Minv4);
-    EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Minv4), detM);
   };
 
-  check_small_mat(A, Ainv, detA, [](auto &M) { return nda::linalg::inv_in_place_3d(M); });
-  check_small_mat(B, Binv, detB, [](auto &M) { return nda::linalg::inv_in_place_2d(M); });
-  check_small_mat(C, Cinv, detC, [](auto &M) { return nda::linalg::inv_in_place_1d(M); });
+  check_small_mat(A, Ainv, detA);
+  check_small_mat(B, Binv, detB);
+  check_small_mat(C, Cinv, detC);
 
   // matrix view
   EXPECT_ARRAY_NEAR(nda::linalg::inv(A(nda::range(0, 2), nda::range(0, 2))), Binv);

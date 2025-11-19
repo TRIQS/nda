@@ -33,97 +33,59 @@ namespace nda::linalg {
    * @{
    */
 
-  /**
-   * @brief Compute the inverse of a \f$ 1 \times 1 \f$ matrix \f$ \mathbf{M} \f$.
-   * 
-   * @details It throws an exception if the matrix is not invertible (i.e. if \f$ \det(\mathbf{M}) = 0 \f$).
-   *
-   * @note The inversion is performed in place.
-   *
-   * @tparam M nda::MemoryMatrix type.
-   * @param m Input/output matrix. On entry, the matrix \f$ \mathbf{M} \f$. On exit, the matrix \f$ \mathbf{M}^{-1} \f$.
-   */
-  template <MemoryMatrix M>
-    requires(get_algebra<M> == 'M' and nda::mem::have_host_compatible_addr_space<M> and is_blas_lapack_v<get_value_t<M>>)
-  void inv_in_place_1d(M &&m) { // NOLINT (temporary views are allowed here)
-    EXPECTS(is_matrix_square(m) and m.extent(0) == 1);
-    if (m(0, 0) == 0.0) NDA_RUNTIME_ERROR << "Error in nda::linalg::inv_in_place_1d: Matrix is not invertible";
-    m(0, 0) = 1.0 / m(0, 0);
-  }
+  namespace detail {
 
-  /**
-   * @brief Compute the inverse of a \f$ 2 \times 2 \f$ matrix \f$ \mathbf{M} \f$.
-   * 
-   * @details It throws an exception if the matrix is not invertible (i.e. if \f$ \det(\mathbf{M}) = 0 \f$).
-   *
-   * @note The inversion is performed in place.
-   *
-   * @tparam M nda::MemoryMatrix type.
-   * @param m Input/output matrix. On entry, the matrix \f$ \mathbf{M} \f$. On exit, the matrix \f$ \mathbf{M}^{-1} \f$.
-   */
-  template <MemoryMatrix M>
-    requires(get_algebra<M> == 'M' and nda::mem::have_host_compatible_addr_space<M> and is_blas_lapack_v<get_value_t<M>>)
-  void inv_in_place_2d(M &&m) { // NOLINT (temporary views are allowed here)
-    EXPECTS(is_matrix_square(m) and m.extent(0) == 2);
+    // Compute the inverse of a 2x2 matrix in place.
+    void inv_in_place_2d(MemoryMatrix auto &&m) { // NOLINT (temporary views are allowed here)
+      
+      // calculate the determinant of the matrix
+      auto const det = (m(0, 0) * m(1, 1) - m(0, 1) * m(1, 0));
+      if (det == 0.0) NDA_RUNTIME_ERROR << "Error in nda::linalg::inv_in_place: Matrix is not invertible";
+      auto const detinv = 1.0 / det;
 
-    // calculate the determinant of the matrix
-    auto const det = (m(0, 0) * m(1, 1) - m(0, 1) * m(1, 0));
-    if (det == 0.0) NDA_RUNTIME_ERROR << "Error in nda::linalg::inv_in_place_2d: Matrix is not invertible";
-    auto const detinv = 1.0 / det;
+      // multiply the adjoint by the inverse determinant
+      std::swap(m(0, 0), m(1, 1));
+      m(0, 0) *= +detinv;
+      m(1, 1) *= +detinv;
+      m(1, 0) *= -detinv;
+      m(0, 1) *= -detinv;
+    }
 
-    // multiply the adjoint by the inverse determinant
-    std::swap(m(0, 0), m(1, 1));
-    m(0, 0) *= +detinv;
-    m(1, 1) *= +detinv;
-    m(1, 0) *= -detinv;
-    m(0, 1) *= -detinv;
-  }
+    // Compute the inverse of a 3x3 matrix in place.
+    void inv_in_place_3d(MemoryMatrix auto &&m) { // NOLINT (temporary views are allowed here)
+      EXPECTS(is_matrix_square(m) and m.extent(0) == 3);
 
-  /**
-   * @brief Compute the inverse of a \f$ 3 \times 3 \f$ matrix \f$ \mathbf{M} \f$.
-   * 
-   * @details It throws an exception if the matrix is not invertible (i.e. if \f$ \det(\mathbf{M}) = 0 \f$).
-   *
-   * @note The inversion is performed in place.
-   *
-   * @tparam M nda::MemoryMatrix type.
-   * @param m Input/output matrix. On entry, the matrix \f$ \mathbf{M} \f$. On exit, the matrix \f$ \mathbf{M}^{-1} \f$.
-   */
-  template <MemoryMatrix M>
-    requires(get_algebra<M> == 'M' and nda::mem::have_host_compatible_addr_space<M> and is_blas_lapack_v<get_value_t<M>>)
-  void inv_in_place_3d(M &&m) { // NOLINT (temporary views are allowed here)
-    EXPECTS(is_matrix_square(m) and m.extent(0) == 3);
+      // calculate the adjoint of the matrix
+      auto adj = stack_array<get_value_t<decltype(m)>, 3, 3>();
+      adj(0, 0) = +m(1, 1) * m(2, 2) - m(1, 2) * m(2, 1);
+      adj(1, 0) = -m(1, 0) * m(2, 2) + m(1, 2) * m(2, 0);
+      adj(2, 0) = +m(1, 0) * m(2, 1) - m(1, 1) * m(2, 0);
+      adj(0, 1) = -m(0, 1) * m(2, 2) + m(0, 2) * m(2, 1);
+      adj(1, 1) = +m(0, 0) * m(2, 2) - m(0, 2) * m(2, 0);
+      adj(2, 1) = -m(0, 0) * m(2, 1) + m(0, 1) * m(2, 0);
+      adj(0, 2) = +m(0, 1) * m(1, 2) - m(0, 2) * m(1, 1);
+      adj(1, 2) = -m(0, 0) * m(1, 2) + m(0, 2) * m(1, 0);
+      adj(2, 2) = +m(0, 0) * m(1, 1) - m(0, 1) * m(1, 0);
 
-    // calculate the adjoint of the matrix
-    auto adj = stack_array<get_value_t<M>, 3, 3>();
-    adj(0, 0) = +m(1, 1) * m(2, 2) - m(1, 2) * m(2, 1);
-    adj(1, 0) = -m(1, 0) * m(2, 2) + m(1, 2) * m(2, 0);
-    adj(2, 0) = +m(1, 0) * m(2, 1) - m(1, 1) * m(2, 0);
-    adj(0, 1) = -m(0, 1) * m(2, 2) + m(0, 2) * m(2, 1);
-    adj(1, 1) = +m(0, 0) * m(2, 2) - m(0, 2) * m(2, 0);
-    adj(2, 1) = -m(0, 0) * m(2, 1) + m(0, 1) * m(2, 0);
-    adj(0, 2) = +m(0, 1) * m(1, 2) - m(0, 2) * m(1, 1);
-    adj(1, 2) = -m(0, 0) * m(1, 2) + m(0, 2) * m(1, 0);
-    adj(2, 2) = +m(0, 0) * m(1, 1) - m(0, 1) * m(1, 0);
+      // calculate the determinant of the matrix
+      auto const det = m(0, 0) * adj(0, 0) + m(0, 1) * adj(1, 0) + m(0, 2) * adj(2, 0);
+      if (det == 0.0) NDA_RUNTIME_ERROR << "Error in nda::linalg::inv_in_place: Matrix is not invertible";
+      auto const detinv = 1.0 / det;
 
-    // calculate the determinant of the matrix
-    auto const det = m(0, 0) * adj(0, 0) + m(0, 1) * adj(1, 0) + m(0, 2) * adj(2, 0);
-    if (det == 0.0) NDA_RUNTIME_ERROR << "Error in nda::linalg::inv_in_place_3d: Matrix is not invertible";
-    auto const detinv = 1.0 / det;
+      // multiply the adjoint by the inverse determinant
+      m = detinv * adj;
+    }
 
-    // multiply the adjoint by the inverse determinant
-    m = detinv * adj;
-  }
+  } // namespace detail
 
   /**
    * @brief Compute the inverse of an \f$ n \times n \f$ matrix \f$ \mathbf{M} \f$.
-   * 
-   * @details For small matrices (\f$ 1 \times 1 \f$, \f$ 2 \times 2 \f$ or \f$ 3 \times 3 \f$), it directly computes
-   * the matrix inversion using one of the optimized routines nda::linalg::inv_in_place_1d, nda::linalg::inv_in_place_2d
-   * or nda::linalg::inv_in_place_3d.
+   *
+   * @details For small matrices (\f$ 1 \times 1 \f$, \f$ 2 \times 2 \f$ or \f$ 3 \times 3 \f$), it uses
+   * optimized direct inversion formulas.
    *
    * For larger matrices, it calls nda::lapack::getrf and nda::lapack::getri.
-   * 
+   *
    * It throws an exception if the matrix is not invertible, i.e. if \f$ \det(\mathbf{M}) = 0 \f$, or if a call to
    * LAPACK fails.
    *
@@ -140,11 +102,12 @@ namespace nda::linalg {
     // use optimized routines for small matrices, otherwise use LAPACK routines
     auto const dim = m.shape()[0];
     if (dim == 1) {
-      inv_in_place_1d(m);
+      if (m(0, 0) == 0.0) NDA_RUNTIME_ERROR << "Error in nda::linalg::inv_in_place: Matrix is not invertible";
+      m(0, 0) = 1.0 / m(0, 0);
     } else if (dim == 2) {
-      inv_in_place_2d(m);
+      detail::inv_in_place_2d(m);
     } else if (dim == 3) {
-      inv_in_place_3d(m);
+      detail::inv_in_place_3d(m);
     } else if (dim > 3) {
       // LU factorization with getrf
       auto ipiv = vector<int, nda::heap<nda::mem::get_addr_space<M>>>(dim);
@@ -199,9 +162,9 @@ namespace nda::linalg {
 
   namespace clef {
     /**
-     * @brief Lazy version of nda::inverse.
+     * @brief Lazy version of nda::linalg::inv.
      */
-    CLEF_MAKE_FNT_LAZY(inverse)
+    CLEF_MAKE_FNT_LAZY(inv)
   } // namespace clef
 
   /** @} */
