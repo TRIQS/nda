@@ -142,11 +142,11 @@ requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0
 <tr class="memitem:gaa2c7bcf737ecddca8b163b1086282907 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa2c7bcf737ecddca8b163b1086282907">nda::linalg::eigh</a> (A const &amp;a, B const &amp;b, int itype=1)</td></tr>
 <tr class="memdesc:gaa2c7bcf737ecddca8b163b1086282907"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues and eigenvectors of a generalized real symmetric-definite or complex hermitian-definite eigenvalue problem.  <br /></td></tr>
 <tr class="memitem:ga0681d15a9633c4920c19fcfa1bccd219" id="r_ga0681d15a9633c4920c19fcfa1bccd219"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;)</td></tr>
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;)</td></tr>
 <tr class="memitem:ga0681d15a9633c4920c19fcfa1bccd219 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0681d15a9633c4920c19fcfa1bccd219">nda::linalg::eigh_in_place</a> (A &amp;&amp;a)</td></tr>
 <tr class="memdesc:ga0681d15a9633c4920c19fcfa1bccd219"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues and eigenvectors of a real symmetric or complex hermitian matrix.  <br /></td></tr>
 <tr class="memitem:ga1416f4c96f511fb7bad93f32ef4d8642" id="r_ga1416f4c96f511fb7bad93f32ef4d8642"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryMatrix B&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;B&gt;)</td></tr>
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;B&gt;)</td></tr>
 <tr class="memitem:ga1416f4c96f511fb7bad93f32ef4d8642 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1416f4c96f511fb7bad93f32ef4d8642">nda::linalg::eigh_in_place</a> (A &amp;&amp;a, B &amp;&amp;b, int itype=1)</td></tr>
 <tr class="memdesc:ga1416f4c96f511fb7bad93f32ef4d8642"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues and eigenvectors of a generalized real symmetric-definite or complex hermitian-definite eigenvalue problem.  <br /></td></tr>
 <tr class="memitem:ga843c22ecfbd336fc0e924ace02aa60b1" id="r_ga843c22ecfbd336fc0e924ace02aa60b1"><td class="memTemplParams" colspan="2">template&lt;Matrix A&gt; <br />
@@ -158,11 +158,11 @@ requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0
 <tr class="memitem:gae3c06db4752cc125959b0a8dd2a155d8 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae3c06db4752cc125959b0a8dd2a155d8">nda::linalg::eigvalsh</a> (A const &amp;a, B const &amp;b, int itype=1)</td></tr>
 <tr class="memdesc:gae3c06db4752cc125959b0a8dd2a155d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues of a generalized real symmetric-definite or complex hermitian-definite eigenvalue problem.  <br /></td></tr>
 <tr class="memitem:ga1306414bdfb59828c1d678fb202d531c" id="r_ga1306414bdfb59828c1d678fb202d531c"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;)</td></tr>
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;)</td></tr>
 <tr class="memitem:ga1306414bdfb59828c1d678fb202d531c template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1306414bdfb59828c1d678fb202d531c">nda::linalg::eigvalsh_in_place</a> (A &amp;&amp;a)</td></tr>
 <tr class="memdesc:ga1306414bdfb59828c1d678fb202d531c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues of a real symmetric or complex hermitian matrix.  <br /></td></tr>
 <tr class="memitem:gae9bb9220ce836b1b3752673080ef007f" id="r_gae9bb9220ce836b1b3752673080ef007f"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryMatrix B&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;B&gt;)</td></tr>
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;B&gt;)</td></tr>
 <tr class="memitem:gae9bb9220ce836b1b3752673080ef007f template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae9bb9220ce836b1b3752673080ef007f">nda::linalg::eigvalsh_in_place</a> (A &amp;&amp;a, B &amp;&amp;b, int itype=1)</td></tr>
 <tr class="memdesc:gae9bb9220ce836b1b3752673080ef007f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues of a generalized real symmetric-definite or complex hermitian-definite eigenvalue problem.  <br /></td></tr>
 <tr class="memitem:gabd0ff5c6c8add0fd6641db2cc5f73a79" id="r_gabd0ff5c6c8add0fd6641db2cc5f73a79"><td class="memTemplParams" colspan="2">template&lt;Matrix M&gt; <br />
@@ -185,7 +185,7 @@ requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0
 <tr class="memitem:gabe6892821225c13803643ffb5739b5c9 template"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gabe6892821225c13803643ffb5739b5c9">nda::linalg::norm</a> (A const &amp;a, double p=2.0)</td></tr>
 <tr class="memdesc:gabe6892821225c13803643ffb5739b5c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the p-norm of an <a class="el" href="conceptnda_1_1_array_of_rank.html" title="Check if a given type is an nda::Array of a certain rank.">nda::ArrayOfRank&lt;1&gt;</a> object \( \mathbf{x} \) with scalar values. The p-norm is defined as.  <br /></td></tr>
 <tr class="memitem:gaa2e13a1dfcbbacc5c2279f98230b5eb2" id="r_gaa2e13a1dfcbbacc5c2279f98230b5eb2"><td class="memTemplParams" colspan="2">template&lt;MemoryArray A, MemoryArray B&gt; <br />
-requires ((<a class="el" href="group__linalg__blas.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;A&gt; or <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;) and <a class="el" href="group__linalg__blas.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;A&gt; == <a class="el" href="group__linalg__blas.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;B&gt;)</td></tr>
+requires ((<a class="el" href="group__linalg__blas__utils.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;A&gt; or <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;) and <a class="el" href="group__linalg__blas__utils.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;A&gt; == <a class="el" href="group__linalg__blas__utils.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;B&gt;)</td></tr>
 <tr class="memitem:gaa2e13a1dfcbbacc5c2279f98230b5eb2 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa2e13a1dfcbbacc5c2279f98230b5eb2">nda::linalg::outer_product</a> (A const &amp;a, B const &amp;b)</td></tr>
 <tr class="memdesc:gaa2e13a1dfcbbacc5c2279f98230b5eb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Outer product of two arrays/views.  <br /></td></tr>
 <tr class="memitem:ga1bef8ddf7eb254c502c10ef2a17c376d" id="r_ga1bef8ddf7eb254c502c10ef2a17c376d"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Array B&gt; <br />
@@ -286,7 +286,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The inverse matrix \( \mathbf{M}^{-1} \). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The determinant \( \det(\mathbf{M}) \). </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="det_8hpp_source.html#l00095">95</a> of file <a class="el" href="det_8hpp_source.html">det.hpp</a>.</p>
 
@@ -329,7 +329,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>\( \det(\mathbf{M}) \). </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The determinant \( \det(\mathbf{M}) \). </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="det_8hpp_source.html#l00048">48</a> of file <a class="el" href="det_8hpp_source.html">det.hpp</a>.</p>
 
@@ -512,7 +512,7 @@ requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0
 
 <p>Compute the eigenvalues and eigenvectors of a real symmetric or complex hermitian matrix. </p>
 <p>It computes the eigenvectors \( \mathbf{v}_i \) and eigenvalues \( \lambda_i \) of the matrix  \(\mathbf{A} \) such that   </p><p class="formulaDsp">
-\[ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ \; .
+\[ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \; .
 \]
 </p>
 <p>It makes a copy of the given matrix/view and calls <a class="el" href="#ga0681d15a9633c4920c19fcfa1bccd219" title="Compute the eigenvalues and eigenvectors of a real symmetric or complex hermitian matrix.">nda::linalg::eigh_in_place</a> with the copy.</p>
@@ -528,7 +528,7 @@ requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><span class="tt">std::pair</span> containing an <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> with the real eigenvalues \( \lambda_i \) in ascending order and an <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> in Fortran layout containing the eigenvectors \( \mathbf{v}_i \) in its columns. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><span class="tt">std::pair</span> containing an <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> with the real eigenvalues \( \lambda_i \) in ascending order and an <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> in <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a> containing the eigenvectors \( \mathbf{v}_i \) in its columns. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="eigh_8hpp_source.html#l00162">162</a> of file <a class="el" href="eigh_8hpp_source.html">eigh.hpp</a>.</p>
 
@@ -585,7 +585,7 @@ requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><span class="tt">std::pair</span> containing an <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> with the real eigenvalues \( \lambda_i \) in ascending order and an <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> in Fortran layout containing the eigenvectors \( \mathbf{v}_i \) in its columns. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><span class="tt">std::pair</span> containing an <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> with the real eigenvalues \( \lambda_i \) in ascending order and an <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> in <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a> containing the eigenvectors \( \mathbf{v}_i \) in its columns. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="eigh_8hpp_source.html#l00191">191</a> of file <a class="el" href="eigh_8hpp_source.html">eigh.hpp</a>.</p>
 
@@ -598,7 +598,7 @@ requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0
 <div class="memproto">
 <div class="memtemplate">
 template&lt;MemoryMatrix A&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;)</div>
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">auto nda::linalg::eigh_in_place </td>
@@ -613,7 +613,7 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 
 <p>Compute the eigenvalues and eigenvectors of a real symmetric or complex hermitian matrix. </p>
 <p>It computes the eigenvectors \( \mathbf{v}_i \) and eigenvalues \( \lambda_i \) of the matrix  \(\mathbf{A} \) such that   </p><p class="formulaDsp">
-\[ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ \; .
+\[ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \; .
 \]
 </p>
 <p>If the elements of \( \mathbf{A} \) are real, it calls <a class="el" href="group__linalg__lapack.html#gab32938d5127d4b2ecf0780b47dbbebe8" title="Interface to the LAPACK syev routine.">nda::lapack::syev</a>. If the elements of \( \mathbf{A} \) are complex, it calls <a class="el" href="group__linalg__lapack.html#ga866f35e5b8cb5938a7bb1182f3b43acf" title="Interface to the LAPACK heev routine.">nda::lapack::heev</a>.</p>
@@ -644,7 +644,7 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 <div class="memproto">
 <div class="memtemplate">
 template&lt;MemoryMatrix A, MemoryMatrix B&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;B&gt;)</div>
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;B&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">auto nda::linalg::eigh_in_place </td>
@@ -719,7 +719,7 @@ requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0
 
 <p>Compute the eigenvalues of a real symmetric or complex hermitian matrix. </p>
 <p>It computes the eigenvalues \( \lambda_i \) of the matrix \( \mathbf{A} \) such that   </p><p class="formulaDsp">
-\[ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ \; .
+\[ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \; .
 \]
 </p>
 <p>It makes a copy of the given matrix/view and calls <a class="el" href="#ga1306414bdfb59828c1d678fb202d531c" title="Compute the eigenvalues of a real symmetric or complex hermitian matrix.">nda::linalg::eigvalsh_in_place</a> with the copy.</p>
@@ -805,7 +805,7 @@ requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0
 <div class="memproto">
 <div class="memtemplate">
 template&lt;MemoryMatrix A&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;)</div>
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">auto nda::linalg::eigvalsh_in_place </td>
@@ -820,7 +820,7 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 
 <p>Compute the eigenvalues of a real symmetric or complex hermitian matrix. </p>
 <p>It computes the eigenvalues \( \lambda_i \) of the matrix \( \mathbf{A} \) such that   </p><p class="formulaDsp">
-\[ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ \; .
+\[ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \; .
 \]
 </p>
 <p>If the elements of \( \mathbf{A} \) are real, it calls <a class="el" href="group__linalg__lapack.html#gab32938d5127d4b2ecf0780b47dbbebe8" title="Interface to the LAPACK syev routine.">nda::lapack::syev</a>. If the elements of \( \mathbf{A} \) are complex, it calls <a class="el" href="group__linalg__lapack.html#ga866f35e5b8cb5938a7bb1182f3b43acf" title="Interface to the LAPACK heev routine.">nda::lapack::heev</a>.</p>
@@ -851,7 +851,7 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 <div class="memproto">
 <div class="memtemplate">
 template&lt;MemoryMatrix A, MemoryMatrix B&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;B&gt;)</div>
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;B&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">auto nda::linalg::eigvalsh_in_place </td>
@@ -927,7 +927,7 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 <p>Compute the inverse of an \( n \times n \) matrix \( \mathbf{M} \). </p>
 <p>The given matrix/view is not modified. It first makes a copy of the matrix/view and then</p>
 <ul>
-<li>uses <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> and <a class="el" href="group__linalg__lapack.html#gae81206b2d5fff66e29fa0fb25de61183" title="Interface to the LAPACK getrs routine.">nda::lapack::getrs</a> to compute the inverse in case the matrix's memory space is compatible with the device memory space. The resulting inverse matrix is always in Fortran layout.</li>
+<li>uses <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> and <a class="el" href="group__linalg__lapack.html#gae81206b2d5fff66e29fa0fb25de61183" title="Interface to the LAPACK getrs routine.">nda::lapack::getrs</a> to compute the inverse in case the matrix's memory space is compatible with the device memory space. The resulting inverse matrix is always in <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a>.</li>
 <li>calls <a class="el" href="#ga5ae8205418692fdc14fc3ee0c5bf322b" title="Compute the inverse of an  matrix .">nda::linalg::inv_in_place</a> if the matrix is stored on the host memory space.</li>
 </ul>
 <dl class="section warning"><dt>Warning</dt><dd>This function makes copies of the input arrays/views. When working on the device memory space, this may lead to runtime errors if the copying fails.</dd></dl>
@@ -1015,11 +1015,15 @@ template&lt;Matrix A, Matrix B&gt; </div>
 <p><code>#include &lt;<a class="el" href="matmul_8hpp.html">nda/linalg/matmul.hpp</a>&gt;</code></p>
 
 <p>Compute the matrix-matrix product of two <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> objects. </p>
-<p>This function computes the matrix-matrix product  \( \mathrm{op}_1(\mathbf{A}) \mathrm{op}_2(\mathbf{B})
-\), where \( \mathbf{A} \) and \( \mathbf{B} \) are \( m \times k \) and \( k \times n \) matrices respectively, \( \mathrm{op}_i \) can be some lazy operation, e.g. <a class="el" href="group__av__math.html#gaed558141a1f01cb2974b0cc4fc4d04ff" title="Function conj for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types with a com...">nda::conj</a>, <a class="el" href="group__av__math.html#ga2d09be1cbff6c0061abb54763bf92bd1" title="Function sin for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types)...">nda::sin</a>, etc.</p>
+<p>This function computes the matrix-matrix product   </p><p class="formulaDsp">
+\[  \mathrm{op}_A(\mathbf{A}) \mathrm{op}_B(\mathbf{B}) \; ,
+\]
+</p>
+<p> where \( \mathrm{op}_A(\mathbf{A}) \) and \( \mathrm{op}_B(\mathbf{B}) \) are \( m \times k \) and  \( k 
+\times n \) matrices, respectively. \( \mathrm{op}_i \) can be some lazy operation, e.g. <a class="el" href="group__av__math.html#gaed558141a1f01cb2974b0cc4fc4d04ff" title="Function conj for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types with a com...">nda::conj</a>, <a class="el" href="group__av__math.html#ga2d09be1cbff6c0061abb54763bf92bd1" title="Function sin for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types)...">nda::sin</a>, etc.</p>
 <p>We try to call <a class="el" href="group__linalg__blas.html#gab64974333f3f10efdbee734c088e6239" title="Interface to the BLAS gemm routine.">nda::blas::gemm</a> whenever possible, i.e. when the value type of the result is compatible with <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda" title="Alias for nda::is_double_or_complex_v.">nda::is_blas_lapack_v</a>, even if this requires to make copies of the input arrays/views. Otherwise, we perform a very naive and inefficient matrix-matrix multiplication manually.</p>
 <p>Therefore, if performance is important, users should make sure to pass input arrays/views which are compatible with <a class="el" href="group__linalg__blas.html#gab64974333f3f10efdbee734c088e6239" title="Interface to the BLAS gemm routine.">nda::blas::gemm</a>.</p>
-<dl class="section note"><dt>Note</dt><dd>The layout of the returned matrix depends on the layout of the input matrices. If both input matrices are in Fortran-layout, the returned matrix is also in Fortran layout. Otherwise, it is in C-layout.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The layout of the returned matrix depends on the layout of the input matrices. If both input matrices are in <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a>, the returned matrix is also in <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a>. Otherwise, it is in <a class="el" href="structnda_1_1_c__layout.html" title="Contiguous layout policy with C-order (row-major order).">nda::C_layout</a>.</dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>This function might make copies of the input arrays/views. When working on the device memory space, this may lead to runtime errors if the copying fails.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -1030,14 +1034,14 @@ template&lt;Matrix A, Matrix B&gt; </div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td>Input matrix \( \mathbf{A} \) of size \( m \times k \). </td></tr>
-    <tr><td class="paramname">b</td><td>Input matrix \( \mathbf{B} \) of size \( k \times n \). </td></tr>
+    <tr><td class="paramname">a</td><td>Input matrix \( \mathrm{op}_A(\mathbf{A}) \) of size \( m \times k \). </td></tr>
+    <tr><td class="paramname">b</td><td>Input matrix \( \mathrm{op}_B(\mathbf{B}) \) of size \( k \times n \). </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting matrix of the matrix-matrix multiplication of size \( m \times n \). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="matmul_8hpp_source.html#l00124">124</a> of file <a class="el" href="matmul_8hpp_source.html">matmul.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matmul_8hpp_source.html#l00128">128</a> of file <a class="el" href="matmul_8hpp_source.html">matmul.hpp</a>.</p>
 
 </div>
 </div>
@@ -1066,8 +1070,11 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a
 <p><code>#include &lt;<a class="el" href="matvecmul_8hpp.html">nda/linalg/matvecmul.hpp</a>&gt;</code></p>
 
 <p>Compute the matrix-vector product of an <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> and an <a class="el" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68" title="Alias template of an nda::basic_array with rank 1 and a &#39;V&#39; algebra.">nda::vector</a> object. </p>
-<p>This function computes the matrix-vector product  \( \mathrm{op}_1(\mathbf{A}) \mathrm{op}_2(\mathbf{x})
-\), where \( \mathbf{A} \) is an \( m \times n \) matrix, \( \mathbf{x} \) is a vector of size \( n \), and \( \mathrm{op}_i \) can be some lazy operation, e.g. <a class="el" href="group__av__math.html#gaed558141a1f01cb2974b0cc4fc4d04ff" title="Function conj for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types with a com...">nda::conj</a>, <a class="el" href="group__av__math.html#ga2d09be1cbff6c0061abb54763bf92bd1" title="Function sin for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types)...">nda::sin</a>, etc.</p>
+<p>This function computes the matrix-vector product   </p><p class="formulaDsp">
+\[  \mathrm{op}_A(\mathbf{A}) \mathrm{op}_x(\mathbf{x}) \; ,
+\]
+</p>
+<p> where \( \mathrm{op}_A(\mathbf{A}) \) is an \( m \times n \) matrix and \( \mathrm{op}_x(\mathbf{x}) \) is a vector of size \( n \). \( \mathrm{op}_i \) can be some lazy operation, e.g. <a class="el" href="group__av__math.html#gaed558141a1f01cb2974b0cc4fc4d04ff" title="Function conj for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types with a com...">nda::conj</a>, <a class="el" href="group__av__math.html#ga2d09be1cbff6c0061abb54763bf92bd1" title="Function sin for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types)...">nda::sin</a>, etc.</p>
 <p>We try to call <a class="el" href="group__linalg__blas.html#gacdfbdd0ccb51e375ddc0b037cb9e68a6" title="Interface to the BLAS gemv routine.">nda::blas::gemv</a> whenever possible, i.e. when the value type of the result is compatible with <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda" title="Alias for nda::is_double_or_complex_v.">nda::is_blas_lapack_v</a>, even if this requires to make copies of the input arrays/views. Otherwise, we perform a very naive and inefficient matrix-vector multiplication manually.</p>
 <p>Therefore, if performance is important, users should make sure to pass input arrays/views which are compatible with <a class="el" href="group__linalg__blas.html#gacdfbdd0ccb51e375ddc0b037cb9e68a6" title="Interface to the BLAS gemv routine.">nda::blas::gemv</a>.</p>
 <dl class="section warning"><dt>Warning</dt><dd>This function might make copies of the input arrays/views. When working on the device memory space, this may lead to runtime errors if the copying fails.</dd></dl>
@@ -1080,14 +1087,14 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td>Input matrix \( \mathbf{A} \) of size \( m \times n \). </td></tr>
-    <tr><td class="paramname">x</td><td>Input vector \( \mathbf{x} \) of size \( n \). </td></tr>
+    <tr><td class="paramname">a</td><td>Input matrix \( \mathrm{op}_A(\mathbf{A}) \) of size \( m \times n \). </td></tr>
+    <tr><td class="paramname">x</td><td>Input vector \( \mathrm{op}_x(\mathbf{x}) \) of size \( n \). </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Resulting vector of the matrix-vector multiplication of size \( m \). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="matvecmul_8hpp_source.html#l00116">116</a> of file <a class="el" href="matvecmul_8hpp_source.html">matvecmul.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matvecmul_8hpp_source.html#l00119">119</a> of file <a class="el" href="matvecmul_8hpp_source.html">matvecmul.hpp</a>.</p>
 
 </div>
 </div>
@@ -1152,7 +1159,7 @@ requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0
 <div class="memproto">
 <div class="memtemplate">
 template&lt;MemoryArray A, MemoryArray B&gt; <br />
-requires ((<a class="el" href="group__linalg__blas.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;A&gt; or <a class="el" href="group__linalg__blas.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;) and <a class="el" href="group__linalg__blas.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;A&gt; == <a class="el" href="group__linalg__blas.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;B&gt;)</div>
+requires ((<a class="el" href="group__linalg__blas__utils.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;A&gt; or <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;) and <a class="el" href="group__linalg__blas__utils.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;A&gt; == <a class="el" href="group__linalg__blas__utils.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;B&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">auto nda::linalg::outer_product </td>
@@ -1177,7 +1184,7 @@ requires ((<a class="el" href="group__linalg__blas.html#ga24228d6ce4cd37cb84f967
 <p> Here, \( \mathbf{A} \) and \( \mathbf{B} \) are the input arrays with shape \( (m_1, \ldots, m_k) \) and  \((n_1, \ldots, n_l) \), respectively. The resulting array \( \mathbf{C} \) has shape  \( (m_1, \ldots, m_k, n_1,
 \ldots, n_l) \).</p>
 <p>The outer product is performed by calling <a class="el" href="group__linalg__blas.html#gace11f1ec7ce3c54afb76b392d9c98db1" title="Interface to the BLAS ger and geru routine.">nda::blas::ger</a>, which imposes various constraints on the supported input arrays/views, e.g.</p><ul>
-<li>their memory layouts have to be the same and either C- or Fortran,</li>
+<li>their memory layouts have to be the same and either <a class="el" href="structnda_1_1_c__layout.html" title="Contiguous layout policy with C-order (row-major order).">nda::C_layout</a> or <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a>,</li>
 <li>they have to be contiguous in memory,</li>
 <li>etc.</li>
 </ul>
@@ -1238,7 +1245,7 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
 <li>vectors \( \mathbf{x} \) and \( \mathbf{b} \) of size \( n \).</li>
 </ul>
 <p>It calls <a class="el" href="#ga6c962c0300af07dd1dc18f1b0f97d9a7" title="Solve a system of linear equations in-place.">nda::linalg::solve_in_place</a> with a copy of the input matrix \( \mathbf{A} \) and the right hand side matrix \( \mathbf{B} \) or vector \( \mathbf{b} \).</p>
-<dl class="section note"><dt>Note</dt><dd>The solution matrix \( \mathbf{X} \) is always in Fortran layout.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The solution matrix \( \mathbf{X} \) is always in <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a>.</dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>This function makes copies of the input arrays/views. When working on the device memory space, this may lead to runtime errors if the copying fails.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -1297,7 +1304,7 @@ requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b
 </ul>
 <p>It uses <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> to compute the LU factorization of the matrix \( \mathbf{A} \) and then <a class="el" href="group__linalg__lapack.html#gae81206b2d5fff66e29fa0fb25de61183" title="Interface to the LAPACK getrs routine.">nda::lapack::getrs</a> to solve the system of linear equations.</p>
 <p>An exception is thrown, if the LAPACK calls return a non-zero value.</p>
-<dl class="section note"><dt>Note</dt><dd>For a right hand side matrix \( \mathbf{B} \) Fortran layout is required.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Right hand side matrix \( \mathbf{B} \) must have <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a>.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
@@ -1344,7 +1351,7 @@ requires (<a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801
 </p>
 <p> where \( \mathbf{U} \) is a unitary \( m \times m \) matrix, \( \mathbf{V} \) is a unitary \( n \times n \) matrix and \( \mathbf{S} \) is an \( m \times n \) matrix with non-negative real numbers on the diagonal.</p>
 <p>It calls <a class="el" href="#ga4ef359605199b874634e1712b1aa55d4" title="Compute the singular value decomposition (SVD) of a matrix in place.">nda::linalg::svd_in_place</a> with a copy of the input matrix \( \mathbf{A} \).</p>
-<dl class="section note"><dt>Note</dt><dd>If the input matrix \( \mathbf{A} \) is in Fortran layout, the output matrices \( \mathbf{U} \) and \( \mathbf{V}^H \) are also in Fortran layout. Otherwise, they are in C layout.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>If the input matrix \( \mathbf{A} \) is in <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a>, the output matrices \( \mathbf{U} \) and \( \mathbf{V}^H \) are also in <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a>. Otherwise, they are in <a class="el" href="structnda_1_1_c__layout.html" title="Contiguous layout policy with C-order (row-major order).">nda::C_layout</a>.</dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>This function makes copies of the input arrays/views. When working on the device memory space, this may lead to runtime errors if the copying fails.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -1392,7 +1399,7 @@ requires (<a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801
 <p> where \( \mathbf{U} \) is a unitary \( m \times m \) matrix, \( \mathbf{V} \) is a unitary \( n \times n \) matrix and \( \mathbf{S} \) is an \( m \times n \) matrix with non-negative real numbers on the diagonal.</p>
 <p>It first constructs the output vector \( \mathbf{s} \), which contains the singular values, and the output matrices \( \mathbf{U} \) and \( \mathbf{V}^H \). It then calls <a class="el" href="group__linalg__lapack.html#ga2ad7420a95eeebf775f912cfd9770bf5" title="Interface to the LAPACK gesvd routine.">nda::lapack::gesvd</a> to compute the SVD.</p>
 <p>An exception is thrown, if the LAPACK call returns a non-zero value.</p>
-<dl class="section note"><dt>Note</dt><dd>If the input matrix \( \mathbf{A} \) is in Fortran layout, the output matrices \( \mathbf{U} \) and \( \mathbf{V}^H \) are also in Fortran layout. Otherwise, they are in C layout.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>If the input matrix \( \mathbf{A} \) is in <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a>, the output matrices \( \mathbf{U} \) and \( \mathbf{V}^H \) are also in <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a>. Otherwise, they are in <a class="el" href="structnda_1_1_c__layout.html" title="Contiguous layout policy with C-order (row-major order).">nda::C_layout</a>.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>

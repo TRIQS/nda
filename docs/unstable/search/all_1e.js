@@ -11,6 +11,6 @@ var searchData=
   ['using_20linear_20algebra_20tools_8',['Using linear algebra tools',['../ex8.html#ex8_p7',1,'']]],
   ['using_20the_20blas_20lapack_20interface_9',['Using the BLAS/LAPACK interface',['../ex8.html#ex8_p8',1,'']]],
   ['utilities_10',['Utilities',['../group__utilities.html',1,'Utilities'],['../documentation.html#autotoc_md24',1,'Utilities']]],
-  ['utilities_11',['utilities',['../group__av__utils.html',1,'Array/View utilities'],['../group__clef__utils.html',1,'CLEF utilities'],['../group__layout__utils.html',1,'Layout utilities'],['../group__mem__utils.html',1,'Memory utilities']]],
+  ['utilities_11',['utilities',['../group__av__utils.html',1,'Array/View utilities'],['../group__linalg__blas__utils.html',1,'BLAS utilities'],['../group__clef__utils.html',1,'CLEF utilities'],['../group__layout__utils.html',1,'Layout utilities'],['../group__mem__utils.html',1,'Memory utilities']]],
   ['utils_2ehpp_12',['utils.hpp',['../clef_2utils_8hpp.html',1,'(Global Namespace)'],['../mpi_2utils_8hpp.html',1,'(Global Namespace)']]]
 ];

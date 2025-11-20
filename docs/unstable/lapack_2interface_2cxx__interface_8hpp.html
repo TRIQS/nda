@@ -121,7 +121,7 @@ requires (MemoryArray&lt;A&gt; or <a class="el" href="#a4e762fd4595b433d898daa55
 <tr class="memitem:a3d3e17b98e215606a2db727249b12e38" id="r_a3d3e17b98e215606a2db727249b12e38"><td class="memTemplParams" colspan="2">template&lt;MemoryArray A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 1 or <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 2)</td></tr>
 <tr class="memitem:a3d3e17b98e215606a2db727249b12e38 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3d3e17b98e215606a2db727249b12e38">nda::lapack::get_ld</a> (A const &amp;a)</td></tr>
-<tr class="memdesc:a3d3e17b98e215606a2db727249b12e38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the leading dimension of an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> with rank 1 or 2 for LAPACK calls.  <br /></td></tr>
+<tr class="memdesc:a3d3e17b98e215606a2db727249b12e38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the leading dimension of an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> with rank 1 or 2 for BLAS/LAPACK calls.  <br /></td></tr>
 <tr class="memitem:a389b87f1aeda1e9d133273550271719a" id="r_a389b87f1aeda1e9d133273550271719a"><td class="memTemplParams" colspan="2">template&lt;MemoryArray A&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 1 or <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 2)</td></tr>
 <tr class="memitem:a389b87f1aeda1e9d133273550271719a template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a389b87f1aeda1e9d133273550271719a">nda::lapack::get_ncols</a> (A const &amp;a)</td></tr>
@@ -135,11 +135,11 @@ Variables</h2></td></tr>
 <tr class="memitem:a24228d6ce4cd37cb84f967a933287d95" id="r_a24228d6ce4cd37cb84f967a933287d95"><td class="memTemplParams" colspan="2"><a id="a24228d6ce4cd37cb84f967a933287d95" name="a24228d6ce4cd37cb84f967a933287d95"></a>
 template&lt;Array A&gt; </td></tr>
 <tr class="memitem:a24228d6ce4cd37cb84f967a933287d95 template"><td class="memItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>nda::lapack::has_C_layout</b></td></tr>
-<tr class="memdesc:a24228d6ce4cd37cb84f967a933287d95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constexpr variable that is true if the given <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type has a C memory layout. <br /></td></tr>
+<tr class="memdesc:a24228d6ce4cd37cb84f967a933287d95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constexpr variable that is true if the given <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type has <a class="el" href="structnda_1_1_c__layout.html" title="Contiguous layout policy with C-order (row-major order).">nda::C_layout</a>. <br /></td></tr>
 <tr class="memitem:aa270d9c3e10b12ca1406623ac3f93471" id="r_aa270d9c3e10b12ca1406623ac3f93471"><td class="memTemplParams" colspan="2"><a id="aa270d9c3e10b12ca1406623ac3f93471" name="aa270d9c3e10b12ca1406623ac3f93471"></a>
 template&lt;Array A&gt; </td></tr>
 <tr class="memitem:aa270d9c3e10b12ca1406623ac3f93471 template"><td class="memItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>nda::lapack::has_F_layout</b></td></tr>
-<tr class="memdesc:aa270d9c3e10b12ca1406623ac3f93471"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constexpr variable that is true if the given <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type has a Fortran memory layout. <br /></td></tr>
+<tr class="memdesc:aa270d9c3e10b12ca1406623ac3f93471"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constexpr variable that is true if the given <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type has <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a>. <br /></td></tr>
 <tr class="memitem:a4e762fd4595b433d898daa5528192e49" id="r_a4e762fd4595b433d898daa5528192e49"><td class="memTemplParams" colspan="2"><a id="a4e762fd4595b433d898daa5528192e49" name="a4e762fd4595b433d898daa5528192e49"></a>
 template&lt;typename A&gt; </td></tr>
 <tr class="memitem:a4e762fd4595b433d898daa5528192e49 template"><td class="memItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>nda::lapack::is_conj_array_expr</b></td></tr>
@@ -156,7 +156,7 @@ template&lt;Array A&gt; <br />
 requires (MemoryArray&lt;A&gt; or is_conj_array_expr&lt;A&gt;)</div>
       <table class="memname">
         <tr>
-          <td class="memname">MemoryArray decltype(auto) <a class="el" href="group__linalg__blas.html#gaf613a25151f341e5100b089f38a91bc0">nda::blas::get_array</a> </td>
+          <td class="memname">MemoryArray decltype(auto) <a class="el" href="group__linalg__blas__utils.html#gaf613a25151f341e5100b089f38a91bc0">nda::blas::get_array</a> </td>
           <td>(</td>
           <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
           <td></td>
@@ -193,7 +193,7 @@ template&lt;MemoryArray A&gt; <br />
 requires (get_rank&lt;A&gt; == 1 or get_rank&lt;A&gt; == 2)</div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="group__linalg__blas.html#ga3d3e17b98e215606a2db727249b12e38">nda::blas::get_ld</a> </td>
+          <td class="memname">int <a class="el" href="group__linalg__blas__utils.html#ga3d3e17b98e215606a2db727249b12e38">nda::blas::get_ld</a> </td>
           <td>(</td>
           <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
           <td></td>
@@ -201,7 +201,7 @@ requires (get_rank&lt;A&gt; == 1 or get_rank&lt;A&gt; == 2)</div>
       </table>
 </div><div class="memdoc">
 
-<p>Get the leading dimension of an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> with rank 1 or 2 for LAPACK calls. </p>
+<p>Get the leading dimension of an <a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> with rank 1 or 2 for BLAS/LAPACK calls. </p>
 <p>The leading dimension is the stride between two consecutive columns (rows) of a matrix in Fortran (C) layout. For 1-dimensional arrays, we simply return the size of the array.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -231,7 +231,7 @@ template&lt;MemoryArray A&gt; <br />
 requires (get_rank&lt;A&gt; == 1 or get_rank&lt;A&gt; == 2)</div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="group__linalg__blas.html#ga389b87f1aeda1e9d133273550271719a">nda::blas::get_ncols</a> </td>
+          <td class="memname">int <a class="el" href="group__linalg__blas__utils.html#ga389b87f1aeda1e9d133273550271719a">nda::blas::get_ncols</a> </td>
           <td>(</td>
           <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
           <td></td>
@@ -272,7 +272,7 @@ template&lt;Array A&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">char <a class="el" href="group__linalg__blas.html#ga834a04ad301f988bd361fc1946422607">nda::blas::get_op</a></td>
+          <td class="memname">char <a class="el" href="group__linalg__blas__utils.html#ga834a04ad301f988bd361fc1946422607">nda::blas::get_op</a></td>
         </tr>
       </table>
   </td>

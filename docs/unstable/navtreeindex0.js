@@ -46,8 +46,8 @@ var NAVTREEINDEX0 =
 "classnda_1_1basic__array.html":[4,0,0],
 "classnda_1_1basic__array__view.html":[4,0,1],
 "classnda_1_1idx__map.html":[4,3,2,0],
-"classnda_1_1lapack_1_1gelss__worker.html":[4,2,1,0],
-"classnda_1_1lapack_1_1gelss__worker__hermitian.html":[4,2,1,1],
+"classnda_1_1lapack_1_1gelss__worker.html":[4,2,2,0],
+"classnda_1_1lapack_1_1gelss__worker__hermitian.html":[4,2,2,1],
 "classnda_1_1mem_1_1bucket.html":[4,4,1,1],
 "classnda_1_1mem_1_1leak__check.html":[4,4,1,2],
 "classnda_1_1mem_1_1mallocator.html":[4,4,1,3],
@@ -187,8 +187,9 @@ var NAVTREEINDEX0 =
 "group__layout__utils.html":[4,3,1],
 "group__linalg.html":[4,2],
 "group__linalg__blas.html":[4,2,0],
-"group__linalg__lapack.html":[4,2,1],
-"group__linalg__tools.html":[4,2,2],
+"group__linalg__blas__utils.html":[4,2,1],
+"group__linalg__lapack.html":[4,2,2],
+"group__linalg__tools.html":[4,2,3],
 "group__mem__addrspcs.html":[4,4,0],
 "group__mem__allocators.html":[4,4,1],
 "group__mem__handles.html":[4,4,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "layout_2policies_8hpp.html":[4,7,0,3,4],
 "layout_2policies_8hpp_source.html":[4,7,0,3,4],
 "layout_8hpp.html":[4,7,0,27],
-"layout_8hpp_source.html":[4,7,0,27],
-"layout__transforms_8hpp.html":[4,7,0,28]
+"layout_8hpp_source.html":[4,7,0,27]
 };

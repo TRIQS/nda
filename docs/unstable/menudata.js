@@ -134,6 +134,7 @@ var menudata={children:[
 {text:"clef::placeholder",url:"structnda_1_1clef_1_1placeholder.html"}]}]},
 {text:"Linear algebra",url:"group__linalg.html",children:[
 {text:"BLAS interface",url:"group__linalg__blas.html"},
+{text:"BLAS utilities",url:"group__linalg__blas__utils.html"},
 {text:"LAPACK interface",url:"group__linalg__lapack.html",children:[
 {text:"lapack::gelss_worker",url:"classnda_1_1lapack_1_1gelss__worker.html"},
 {text:"lapack::gelss_worker_hermitian",url:"classnda_1_1lapack_1_1gelss__worker__hermitian.html"}]},

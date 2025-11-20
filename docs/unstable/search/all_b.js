@@ -40,13 +40,14 @@ var searchData=
   ['blas_20interface_37',['BLAS interface',['../group__linalg__blas.html',1,'']]],
   ['blas_20lapack_38',['blas/lapack',['../changelog.html#autotoc_md6',1,'']]],
   ['blas_20lapack_20interface_39',['Using the BLAS/LAPACK interface',['../ex8.html#ex8_p8',1,'']]],
-  ['blas_2ehpp_40',['blas.hpp',['../blas_8hpp.html',1,'']]],
-  ['blk_5ft_41',['blk_t',['../structnda_1_1mem_1_1blk__t.html',1,'nda::mem']]],
-  ['borrowed_42',['borrowed',['../structnda_1_1borrowed.html',1,'nda']]],
-  ['borrowed_3c_20storage_5ft_3a_3aaddress_5fspace_20_3e_43',['borrowed&lt; storage_t::address_space &gt;',['../structnda_1_1borrowed.html',1,'nda']]],
-  ['bound_5fcheck_5fworker_2ehpp_44',['bound_check_worker.hpp',['../bound__check__worker_8hpp.html',1,'']]],
-  ['broadcast_2ehpp_45',['broadcast.hpp',['../broadcast_8hpp.html',1,'']]],
-  ['broadcasting_20an_20array_20view_46',['Broadcasting an array/view',['../ex6.html#ex6_p1',1,'']]],
-  ['bucket_47',['bucket',['../classnda_1_1mem_1_1bucket.html',1,'nda::mem::bucket&lt; ChunkSize &gt;'],['../classnda_1_1mem_1_1bucket.html#a1d83cf0caf34383315aa754cc3058d84',1,'nda::mem::bucket::bucket()=default'],['../classnda_1_1mem_1_1bucket.html#ab27b69290934ddf71abbb807a73abd8d',1,'nda::mem::bucket::bucket(bucket const &amp;)=delete'],['../classnda_1_1mem_1_1bucket.html#a13ab638506389a82261ee17c5347f6c6',1,'nda::mem::bucket::bucket(bucket &amp;&amp;)=default']]],
-  ['buckets_48',['buckets',['../classnda_1_1mem_1_1multi__bucket.html#abae7733bf84299a00375e6f47aa444b4',1,'nda::mem::multi_bucket']]]
+  ['blas_20utilities_40',['BLAS utilities',['../group__linalg__blas__utils.html',1,'']]],
+  ['blas_2ehpp_41',['blas.hpp',['../blas_8hpp.html',1,'']]],
+  ['blk_5ft_42',['blk_t',['../structnda_1_1mem_1_1blk__t.html',1,'nda::mem']]],
+  ['borrowed_43',['borrowed',['../structnda_1_1borrowed.html',1,'nda']]],
+  ['borrowed_3c_20storage_5ft_3a_3aaddress_5fspace_20_3e_44',['borrowed&lt; storage_t::address_space &gt;',['../structnda_1_1borrowed.html',1,'nda']]],
+  ['bound_5fcheck_5fworker_2ehpp_45',['bound_check_worker.hpp',['../bound__check__worker_8hpp.html',1,'']]],
+  ['broadcast_2ehpp_46',['broadcast.hpp',['../broadcast_8hpp.html',1,'']]],
+  ['broadcasting_20an_20array_20view_47',['Broadcasting an array/view',['../ex6.html#ex6_p1',1,'']]],
+  ['bucket_48',['bucket',['../classnda_1_1mem_1_1bucket.html',1,'nda::mem::bucket&lt; ChunkSize &gt;'],['../classnda_1_1mem_1_1bucket.html#a1d83cf0caf34383315aa754cc3058d84',1,'nda::mem::bucket::bucket()=default'],['../classnda_1_1mem_1_1bucket.html#ab27b69290934ddf71abbb807a73abd8d',1,'nda::mem::bucket::bucket(bucket const &amp;)=delete'],['../classnda_1_1mem_1_1bucket.html#a13ab638506389a82261ee17c5347f6c6',1,'nda::mem::bucket::bucket(bucket &amp;&amp;)=default']]],
+  ['buckets_49',['buckets',['../classnda_1_1mem_1_1multi__bucket.html#abae7733bf84299a00375e6f47aa444b4',1,'nda::mem::multi_bucket']]]
 ];

@@ -648,7 +648,7 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the hermitian matrix \( \mathbf{A} \). On exit, if <span class="tt">jobz = 'V'</span>,  \(\mathbf{A} \) contains the orthonormal eigenvectors of the matrix \( \mathbf{A} \). If <span class="tt">jobz = 'N'</span>, then on exit \( \mathbf{A} \) is destroyed. </td></tr>
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the hermitian matrix \( \mathbf{A} \). On exit, if <span class="tt">jobz = V</span>,  \(\mathbf{A} \) contains the orthonormal eigenvectors of the matrix \( \mathbf{A} \). If <span class="tt">jobz = N</span>, then on exit \( \mathbf{A} \) is destroyed. </td></tr>
     <tr><td class="paramname">w</td><td>Output vector. The eigenvalues in ascending order. </td></tr>
     <tr><td class="paramname">jobz</td><td>Character indicating whether to compute eigenvectors and eigenvalues ('V') or eigenvalues only ('N'). </td></tr>
   </table>
@@ -715,9 +715,9 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the Hermitian matrix \( \mathbf{A} \). On exit, if <span class="tt">jobz = 'V'</span>,  \(\mathbf{A} \) contains the matrix \( \mathbf{V} \) of normalized eigenvectors such that  \( \mathbf{V}^H 
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the Hermitian matrix \( \mathbf{A} \). On exit, if <span class="tt">jobz = V</span>,  \(\mathbf{A} \) contains the matrix \( \mathbf{V} \) of normalized eigenvectors such that  \( \mathbf{V}^H 
 \mathbf{B} \mathbf{V} = \mathbf{I} \) (if <span class="tt">itype = 1</span> or <span class="tt">itype = 2</span>) or  \( \mathbf{V}^H \mathbf{B}^{-1} 
-\mathbf{V} = \mathbf{I} \) (if <span class="tt">itype = 3</span>). If <span class="tt">jobz = 'N'</span>, then on exit \( \mathbf{A} \) is destroyed. </td></tr>
+\mathbf{V} = \mathbf{I} \) (if <span class="tt">itype = 3</span>). If <span class="tt">jobz = N</span>, then on exit \( \mathbf{A} \) is destroyed. </td></tr>
     <tr><td class="paramname">b</td><td>Input/output matrix. On entry, the symmetric positive definite matrix \( \mathbf{B} \). On exit, the part of \( \mathbf{B} \) containing the matrix is overwritten by the triangular factor \( \mathbf{U} \) or \( \mathbf{L} \) from a Cholesky factorization. </td></tr>
     <tr><td class="paramname">w</td><td>Output vector. The eigenvalues in ascending order. </td></tr>
     <tr><td class="paramname">jobz</td><td>Character indicating whether to compute eigenvectors and eigenvalues ('V') or eigenvalues only ('N'). </td></tr>
@@ -833,7 +833,7 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the symmetric matrix \( \mathbf{A} \). On exit, if <span class="tt">jobz = 'V'</span>,  \(\mathbf{A} \) contains the orthonormal eigenvectors of the matrix \( \mathbf{A} \). If <span class="tt">jobz = 'N'</span>, then on exit \( \mathbf{A} \) is destroyed. </td></tr>
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the symmetric matrix \( \mathbf{A} \). On exit, if <span class="tt">jobz = V</span>,  \(\mathbf{A} \) contains the orthonormal eigenvectors of the matrix \( \mathbf{A} \). If <span class="tt">jobz = N</span>, then on exit \( \mathbf{A} \) is destroyed. </td></tr>
     <tr><td class="paramname">w</td><td>Output vector. The eigenvalues in ascending order. </td></tr>
     <tr><td class="paramname">jobz</td><td>Character indicating whether to compute eigenvectors and eigenvalues ('V') or eigenvalues only ('N'). </td></tr>
   </table>
@@ -900,9 +900,9 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the symmetric matrix \( \mathbf{A} \). On exit, if <span class="tt">jobz = 'V'</span>,  \(\mathbf{A} \) contains the matrix \( \mathbf{V} \) of normalized eigenvectors such that  \( \mathbf{V}^T 
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the symmetric matrix \( \mathbf{A} \). On exit, if <span class="tt">jobz = V</span>,  \(\mathbf{A} \) contains the matrix \( \mathbf{V} \) of normalized eigenvectors such that  \( \mathbf{V}^T 
 \mathbf{B} \mathbf{V} = \mathbf{I} \) (if <span class="tt">itype = 1</span> or <span class="tt">itype = 2</span>) or  \( \mathbf{V}^T \mathbf{B}^{-1} 
-\mathbf{V} = \mathbf{I} \) (if <span class="tt">itype = 3</span>). If <span class="tt">jobz = 'N'</span>, then on exit \( \mathbf{A} \) is destroyed. </td></tr>
+\mathbf{V} = \mathbf{I} \) (if <span class="tt">itype = 3</span>). If <span class="tt">jobz = N</span>, then on exit \( \mathbf{A} \) is destroyed. </td></tr>
     <tr><td class="paramname">b</td><td>Input/output matrix. On entry, the symmetric positive definite matrix \( \mathbf{B} \). On exit, the part of \( \mathbf{B} \) containing the matrix is overwritten by the triangular factor \( \mathbf{U} \) or \( \mathbf{L} \) from a Cholesky factorization. </td></tr>
     <tr><td class="paramname">w</td><td>Output vector. The eigenvalues in ascending order. </td></tr>
     <tr><td class="paramname">jobz</td><td>Character indicating whether to compute eigenvectors and eigenvalues ('V') or eigenvalues only ('N'). </td></tr>

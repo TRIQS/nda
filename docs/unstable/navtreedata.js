@@ -149,6 +149,7 @@ var NAVTREE =
       ] ],
       [ "Linear algebra", "group__linalg.html", [
         [ "BLAS interface", "group__linalg__blas.html", null ],
+        [ "BLAS utilities", "group__linalg__blas__utils.html", null ],
         [ "LAPACK interface", "group__linalg__lapack.html", [
           [ "lapack::gelss_worker", "classnda_1_1lapack_1_1gelss__worker.html", null ],
           [ "lapack::gelss_worker_hermitian", "classnda_1_1lapack_1_1gelss__worker__hermitian.html", null ]
@@ -234,7 +235,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "__impl__basic__array__view__common_8hpp_source.html",
-"layout__transforms_8hpp_source.html"
+"layout__transforms_8hpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';
