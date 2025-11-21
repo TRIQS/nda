@@ -62,7 +62,7 @@ namespace nda::linalg {
       // LU factorization with getrf
       auto ipiv = vector<int, sso<100>>(dim);
       int info  = nda::lapack::getrf(m, ipiv);
-      if (info != 0) NDA_RUNTIME_ERROR << "Error in nda::linalg::det_in_place: getrf routine failed: info = " << info;
+      if (info < 0) NDA_RUNTIME_ERROR << "Error in nda::linalg::det_in_place: getrf routine failed: info = " << info;
 
       // calculate the determinant from the LU decomposition
       auto det    = get_value_t<M>{1};
