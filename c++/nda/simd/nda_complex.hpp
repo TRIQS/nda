@@ -63,8 +63,9 @@ namespace nda {
 
     // memory operators
     template <class U>
+      requires(std::is_same_v<U, T> or std::is_same_v<U, scalar_t>)
     void store_aligned(U *mem) const noexcept {
-      value.store_aligned(mem);
+      value.store_aligned(reinterpret_cast<scalar_t *>(mem));
     }
 
     template <class U>
