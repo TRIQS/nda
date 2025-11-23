@@ -2,8 +2,20 @@
 
 #include <xsimd/xsimd.hpp>
 
+//Forward Declaration
 namespace nda {
   template <typename T, typename A = xsimd::default_arch>
+    requires(std::is_same_v<T, std::complex<float>> or std::is_same_v<T, std::complex<double>>)
+
+  struct complex_batch;
+}
+namespace xsimd {
+  template <class T, class A>
+  XSIMD_INLINE nda::complex_batch<T, A> conj(nda::complex_batch<T, A> const &x) noexcept;
+}
+
+namespace nda {
+  template <typename T, typename A>
     requires(std::is_same_v<T, std::complex<float>> or std::is_same_v<T, std::complex<double>>)
   struct complex_batch : public xsimd::types::simd_register<T, A>, public xsimd::types::integral_only_operators<T, A> {
 
@@ -51,6 +63,13 @@ namespace nda {
     }
 
     complex_batch(register_type reg) noexcept : value(reg) {}
+
+    complex_batch(batch_t const &b) noexcept : value(b) {}
+
+    complex_batch &operator=(batch_t const &b) noexcept {
+      value = b;
+      return *this;
+    }
 
     template <class U>
     static complex_batch broadcast(U val) noexcept {
@@ -188,19 +207,7 @@ namespace nda {
 
       const batch_t denom = (other_real * other_real) + (other_img * other_img);
 
-      static auto get_val = [&](const std::size_t I) -> xsimd::as_unsigned_integer_t<scalar_t> {
-        if constexpr (sizeof(xsimd::as_unsigned_integer_t<scalar_t>) == 8)
-          return (I % 2 == 0) ? 0x0000000000000000 : 0x8000000000000000;
-        else
-          return (I % 2 == 0) ? 0x00000000 : 0x80000000;
-      };
-
-      static const batch_t mask = [&]<std::size_t... I>(std::index_sequence<I...>) {
-        return xsimd::bitwise_cast<batch_t, xsimd::batch<xsimd::as_unsigned_integer_t<scalar_t>>>(
-           xsimd::kernel::set(xsimd::bitwise_cast<xsimd::batch<xsimd::as_unsigned_integer_t<scalar_t>>, batch_t>(value), A{}, get_val(I)...));
-      }(std::make_index_sequence<batch_t::size>{});
-
-      const batch_t other_conj = other.value ^ mask;
+      const batch_t other_conj = xsimd::conj(other);
 
       const complex_batch numerator = (*this) * complex_batch(other_conj);
 
@@ -240,7 +247,11 @@ namespace nda {
     friend complex_batch operator|(complex_batch const &self, complex_batch const &other) noexcept { return complex_batch(self) |= other; }
 
     friend complex_batch operator^(complex_batch const &self, complex_batch const &other) noexcept { return complex_batch(self) ^= other; }
+
+    // Conversion operator to xsimd::batch<scalar_t, A>
+    operator batch_t() const { return value; }
   };
+
 } // namespace nda
 
 namespace xsimd {
@@ -294,7 +305,20 @@ namespace xsimd {
 
   template <class T, class A>
   XSIMD_INLINE nda::complex_batch<T, A> conj(nda::complex_batch<T, A> const &x) noexcept {
-    return detail::scalar_op(x, [](T val) { return std::conj(val); });
+    using batch_t       = typename nda::complex_batch<T, A>::batch_t;
+    using scalar_t      = typename nda::complex_batch<T, A>::scalar_t;
+    static auto get_val = [&](const std::size_t I) -> xsimd::as_unsigned_integer_t<scalar_t> {
+      if constexpr (sizeof(xsimd::as_unsigned_integer_t<scalar_t>) == 8)
+        return (I % 2 == 0) ? 0x0000000000000000 : 0x8000000000000000;
+      else
+        return (I % 2 == 0) ? 0x00000000 : 0x80000000;
+    };
+    static const batch_t mask = [&]<std::size_t... I>(std::index_sequence<I...>) {
+      return xsimd::bitwise_cast<batch_t, xsimd::batch<xsimd::as_unsigned_integer_t<scalar_t>>>(
+         xsimd::kernel::set(xsimd::bitwise_cast<xsimd::batch<xsimd::as_unsigned_integer_t<scalar_t>>, batch_t>(x), A{}, get_val(I)...));
+    }(std::make_index_sequence<batch_t::size>{});
+
+    return x.value ^ mask;
   }
 
   template <class T, class A>
