@@ -393,4 +393,8 @@ namespace xsimd {
     return acc;
   }
 
+  //Traits:
+  template <class T, class A>
+  struct is_batch_complex<nda::complex_batch<T, A>> : std::true_type {};
+
 } // namespace xsimd
