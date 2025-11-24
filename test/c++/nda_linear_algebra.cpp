@@ -665,13 +665,13 @@ TEST(NDA, LinearAlgebraPermutationMatrixAndVector) {
   EXPECT_ARRAY_NEAR(P_large_from_ipiv, P_large_from_sigma);
 
   // verify permutation properties: P^T * P = I
-  EXPECT_ARRAY_NEAR(nda::transpose(P_from_sigma) * P_from_sigma, nda::eye<double>(3));
-  EXPECT_ARRAY_NEAR(nda::transpose(P_large_from_sigma) * P_large_from_sigma, nda::eye<double>(4));
+  EXPECT_ARRAY_NEAR(nda::transpose(P_from_sigma) * P_from_sigma, nda::eye(3));
+  EXPECT_ARRAY_NEAR(nda::transpose(P_large_from_sigma) * P_large_from_sigma, nda::eye(4));
 
   // test identity permutation
   nda::vector<int> sigma_id{0, 1, 2, 3};
   auto P_id = nda::linalg::get_permutation_matrix<double>(sigma_id);
-  EXPECT_ARRAY_NEAR(P_id, nda::eye<double>(4));
+  EXPECT_ARRAY_NEAR(P_id, nda::eye(4));
 }
 
 // Verify that L and U have the correct structure after LU decomposition.

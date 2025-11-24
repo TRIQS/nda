@@ -46,7 +46,7 @@ namespace nda {
    * @param shape Shape of the array.
    * @return Zero-initialized nda::array or nda::cuarray or scalar if `Rank == 0`.
    */
-  template <typename T, mem::AddressSpace AdrSp = mem::Host, std::integral Int, auto Rank>
+  template <typename T = double, mem::AddressSpace AdrSp = mem::Host, std::integral Int, auto Rank>
   auto zeros(std::array<Int, Rank> const &shape) {
     static_assert(AdrSp != mem::None);
     if constexpr (Rank == 0)
@@ -68,7 +68,7 @@ namespace nda {
    * @param is Extent (number of elements) along each dimension.
    * @return Zero-initialized nda::array or nda::cuarray or scalar if no arguments are given.
    */
-  template <typename T, mem::AddressSpace AdrSp = mem::Host, std::integral... Ints>
+  template <typename T = double, mem::AddressSpace AdrSp = mem::Host, std::integral... Ints>
   auto zeros(Ints... is) {
     return zeros<T, AdrSp>(std::array<long, sizeof...(Ints)>{static_cast<long>(is)...});
   }
@@ -84,7 +84,7 @@ namespace nda {
    * @param shape Shape of the array.
    * @return One-initialized nda::array or scalar if `Rank == 0`.
    */
-  template <typename T, std::integral Int, auto Rank>
+  template <typename T = double, std::integral Int, auto Rank>
   auto ones(std::array<Int, Rank> const &shape)
     requires(nda::is_scalar_v<T>)
   {
@@ -103,7 +103,7 @@ namespace nda {
    * @param is Extent (number of elements) along each dimension.
    * @return One-initialized nda::array or scalar if no arguments are given.
    */
-  template <typename T, std::integral... Ints>
+  template <typename T = double, std::integral... Ints>
   auto ones(Ints... is) {
     return ones<T>(std::array<long, sizeof...(Ints)>{is...});
   }

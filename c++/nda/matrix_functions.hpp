@@ -41,7 +41,7 @@ namespace nda {
    * @param dim Dimension of the square matrix.
    * @return Identity nda::matrix of size `dim x dim`.
    */
-  template <Scalar S, std::integral Int = long>
+  template <Scalar S = double, std::integral Int = long>
   auto eye(Int dim) {
     auto r = matrix<S>(dim, dim);
     r      = S{1};
