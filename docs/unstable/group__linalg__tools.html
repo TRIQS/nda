@@ -165,6 +165,18 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;B&gt;)</td></tr>
 <tr class="memitem:gae9bb9220ce836b1b3752673080ef007f template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae9bb9220ce836b1b3752673080ef007f">nda::linalg::eigvalsh_in_place</a> (A &amp;&amp;a, B &amp;&amp;b, int itype=1)</td></tr>
 <tr class="memdesc:gae9bb9220ce836b1b3752673080ef007f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues of a generalized real symmetric-definite or complex hermitian-definite eigenvalue problem.  <br /></td></tr>
+<tr class="memitem:gac9bcad3fd136f1fc251b3d5d48d51a49" id="r_gac9bcad3fd136f1fc251b3d5d48d51a49"><td class="memTemplParams" colspan="2">template&lt;typename LP = F_layout, MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;)</td></tr>
+<tr class="memitem:gac9bcad3fd136f1fc251b3d5d48d51a49 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac9bcad3fd136f1fc251b3d5d48d51a49">nda::linalg::get_lu_matrices</a> (A const &amp;a)</td></tr>
+<tr class="memdesc:gac9bcad3fd136f1fc251b3d5d48d51a49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the \( \mathbf{L} \) and \( \mathbf{U} \) matrices from the output of <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a>.  <br /></td></tr>
+<tr class="memitem:ga3162e7399686be5286b98559584d67fb" id="r_ga3162e7399686be5286b98559584d67fb"><td class="memTemplParams" colspan="2">template&lt;Scalar T, typename LP = F_layout&gt; </td></tr>
+<tr class="memitem:ga3162e7399686be5286b98559584d67fb template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3162e7399686be5286b98559584d67fb">nda::linalg::get_permutation_matrix</a> (Vector auto const &amp;ipiv, int m)</td></tr>
+<tr class="memdesc:ga3162e7399686be5286b98559584d67fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the permutation matrix \( \mathbf{P} \) from the pivot indices returned by <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> or other LAPACK routines.  <br /></td></tr>
+<tr class="memitem:ga0fe4c0d6a7dc6adf83f580a9891a777c" id="r_ga0fe4c0d6a7dc6adf83f580a9891a777c"><td class="memTemplParams" colspan="2">template&lt;Scalar T, typename LP = F_layout&gt; </td></tr>
+<tr class="memitem:ga0fe4c0d6a7dc6adf83f580a9891a777c template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0fe4c0d6a7dc6adf83f580a9891a777c">nda::linalg::get_permutation_matrix</a> (Vector auto const &amp;sigma, bool column_permutations=false)</td></tr>
+<tr class="memdesc:ga0fe4c0d6a7dc6adf83f580a9891a777c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the permutation matrix \( \mathbf{P} \) from a permutation vector \( \mathbf{\sigma} \).  <br /></td></tr>
+<tr class="memitem:ga8ded871ae9ac3bf5a16fbd8d5af7faca" id="r_ga8ded871ae9ac3bf5a16fbd8d5af7faca"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8ded871ae9ac3bf5a16fbd8d5af7faca">nda::linalg::get_permutation_vector</a> (Vector auto const &amp;ipiv, int m)</td></tr>
+<tr class="memdesc:ga8ded871ae9ac3bf5a16fbd8d5af7faca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the permutation vector \( \mathbf{\sigma} \) from the pivot indices returned by <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> or other LAPACK routines.  <br /></td></tr>
 <tr class="memitem:gabd0ff5c6c8add0fd6641db2cc5f73a79" id="r_gabd0ff5c6c8add0fd6641db2cc5f73a79"><td class="memTemplParams" colspan="2">template&lt;Matrix M&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;M&gt;&gt;)</td></tr>
 <tr class="memitem:gabd0ff5c6c8add0fd6641db2cc5f73a79 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gabd0ff5c6c8add0fd6641db2cc5f73a79">nda::linalg::inv</a> (M const &amp;m)</td></tr>
@@ -173,6 +185,14 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;M&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;M&gt;&gt;)</td></tr>
 <tr class="memitem:ga5ae8205418692fdc14fc3ee0c5bf322b template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5ae8205418692fdc14fc3ee0c5bf322b">nda::linalg::inv_in_place</a> (M &amp;&amp;m)</td></tr>
 <tr class="memdesc:ga5ae8205418692fdc14fc3ee0c5bf322b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the inverse of an \( n \times n \) matrix \( \mathbf{M} \).  <br /></td></tr>
+<tr class="memitem:ga4d2c3587bab445229187b091d62c969b" id="r_ga4d2c3587bab445229187b091d62c969b"><td class="memTemplParams" colspan="2">template&lt;Matrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:ga4d2c3587bab445229187b091d62c969b template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4d2c3587bab445229187b091d62c969b">nda::linalg::lu</a> (A const &amp;a)</td></tr>
+<tr class="memdesc:ga4d2c3587bab445229187b091d62c969b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the LU factorization of a matrix.  <br /></td></tr>
+<tr class="memitem:gaf46b511467d685345522fd90c81794e7" id="r_gaf46b511467d685345522fd90c81794e7"><td class="memTemplParams" colspan="2">template&lt;typename LP = F_layout, MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:gaf46b511467d685345522fd90c81794e7 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf46b511467d685345522fd90c81794e7">nda::linalg::lu_in_place</a> (A &amp;&amp;a)</td></tr>
+<tr class="memdesc:gaf46b511467d685345522fd90c81794e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the LU factorization of a matrix in place.  <br /></td></tr>
 <tr class="memitem:ga33c980b3e0b7fb89dad92b92562c851f" id="r_ga33c980b3e0b7fb89dad92b92562c851f"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Matrix B&gt; </td></tr>
 <tr class="memitem:ga33c980b3e0b7fb89dad92b92562c851f template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga33c980b3e0b7fb89dad92b92562c851f">nda::linalg::matmul</a> (A &amp;&amp;a, B &amp;&amp;b)</td></tr>
 <tr class="memdesc:ga33c980b3e0b7fb89dad92b92562c851f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the matrix-matrix product of two <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> objects.  <br /></td></tr>
@@ -904,6 +924,181 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 
 </div>
 </div>
+<a id="gac9bcad3fd136f1fc251b3d5d48d51a49" name="gac9bcad3fd136f1fc251b3d5d48d51a49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac9bcad3fd136f1fc251b3d5d48d51a49">&#9670;&#160;</a></span>get_lu_matrices()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename LP = F_layout, MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::get_lu_matrices </td>
+          <td>(</td>
+          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="lu_8hpp.html">nda/linalg/lu.hpp</a>&gt;</code></p>
+
+<p>Get the \( \mathbf{L} \) and \( \mathbf{U} \) matrices from the output of <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a>. </p>
+<p>If the original matrix \( \mathbf{A} \) is of size \( m \times n \), then the returned  \( \mathbf{L}
+\) matrix is of size \( m \times k \) and \( \mathbf{U} \) is of size \( k \times n \), where  \( k =
+\min(m, n) \).</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">LP</td><td>Policy determining the memory layout of the \( \mathbf{L} \) and \( \mathbf{U} \) matrices. </td></tr>
+    <tr><td class="paramname">M</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> containing the output of <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A tuple containing the \( \mathbf{L} \) and \( \mathbf{U} \) matrices. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="lu_8hpp_source.html#l00063">63</a> of file <a class="el" href="lu_8hpp_source.html">lu.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga3162e7399686be5286b98559584d67fb" name="ga3162e7399686be5286b98559584d67fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3162e7399686be5286b98559584d67fb">&#9670;&#160;</a></span>get_permutation_matrix() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;Scalar T, typename LP = F_layout&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::get_permutation_matrix </td>
+          <td>(</td>
+          <td class="paramtype">Vector auto const &amp;</td>          <td class="paramname"><span class="paramname"><em>ipiv</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>m</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="linalg_2utils_8hpp.html">nda/linalg/utils.hpp</a>&gt;</code></p>
+
+<p>Get the permutation matrix \( \mathbf{P} \) from the pivot indices returned by <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> or other LAPACK routines. </p>
+<p>It simply calls <a class="el" href="#ga8ded871ae9ac3bf5a16fbd8d5af7faca" title="Get the permutation vector  from the pivot indices returned by nda::lapack::getrf or other LAPACK rou...">nda::linalg::get_permutation_vector</a> to get the permutation vector from the pivot indices, and then calls <a class="el" href="#ga0fe4c0d6a7dc6adf83f580a9891a777c" title="Get the permutation matrix  from a permutation vector .">nda::linalg::get_permutation_matrix</a> to get the permutation matrix.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td><a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> value type of the permutation matrix. </td></tr>
+    <tr><td class="paramname">LP</td><td>Policy determining the memory layout of the permutation matrix. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ipiv</td><td><a class="el" href="conceptnda_1_1_vector.html" title="Check if a given type is a vector, i.e. an nda::ArrayOfRank&lt;1&gt;.">nda::Vector</a> containing the pivot indices returned by <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a>. </td></tr>
+    <tr><td class="paramname">m</td><td>Number of rows/columns of the square permutation matrix \( \mathbf{P} \). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Permutation matrix \( \mathbf{P} \) as an <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a>. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="linalg_2utils_8hpp_source.html#l00103">103</a> of file <a class="el" href="linalg_2utils_8hpp_source.html">utils.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga0fe4c0d6a7dc6adf83f580a9891a777c" name="ga0fe4c0d6a7dc6adf83f580a9891a777c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0fe4c0d6a7dc6adf83f580a9891a777c">&#9670;&#160;</a></span>get_permutation_matrix() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;Scalar T, typename LP = F_layout&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::get_permutation_matrix </td>
+          <td>(</td>
+          <td class="paramtype">Vector auto const &amp;</td>          <td class="paramname"><span class="paramname"><em>sigma</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>column_permutations</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="linalg_2utils_8hpp.html">nda/linalg/utils.hpp</a>&gt;</code></p>
+
+<p>Get the permutation matrix \( \mathbf{P} \) from a permutation vector \( \mathbf{\sigma} \). </p>
+<p>The function constructs the permutation matrix \( \mathbf{P} \) of size \( m \times m \) from the permutation vector \( \sigma \) of size \( m \).</p>
+<p>The permutation matrix only has the following non-zero elements (for all \( i = 0, 1, \ldots, m - 1 \)):</p><ul>
+<li>\( \mathbf{P}_{i, \sigma_i} = 1 \) for row permutations,</li>
+<li>\( \mathbf{P}_{\sigma_i, i} = 1 \) for column permutations.</li>
+</ul>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td><a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a> value type of the permutation matrix. </td></tr>
+    <tr><td class="paramname">LP</td><td>Policy determining the memory layout of the permutation matrix. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sigma</td><td><a class="el" href="conceptnda_1_1_vector.html" title="Check if a given type is a vector, i.e. an nda::ArrayOfRank&lt;1&gt;.">nda::Vector</a> containing the permutation vector with values \( \in \{0, 1, \ldots, m - 1 \} \). </td></tr>
+    <tr><td class="paramname">column_permutations</td><td>If true, constructs the permutation matrix for column permutations. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Permutation matrix \( \mathbf{P} \) as an <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a>. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="linalg_2utils_8hpp_source.html#l00081">81</a> of file <a class="el" href="linalg_2utils_8hpp_source.html">utils.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga8ded871ae9ac3bf5a16fbd8d5af7faca" name="ga8ded871ae9ac3bf5a16fbd8d5af7faca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8ded871ae9ac3bf5a16fbd8d5af7faca">&#9670;&#160;</a></span>get_permutation_vector()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::get_permutation_vector </td>
+          <td>(</td>
+          <td class="paramtype">Vector auto const &amp;</td>          <td class="paramname"><span class="paramname"><em>ipiv</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>m</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="linalg_2utils_8hpp.html">nda/linalg/utils.hpp</a>&gt;</code></p>
+
+<p>Get the permutation vector \( \mathbf{\sigma} \) from the pivot indices returned by <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> or other LAPACK routines. </p>
+<p>The function constructs the permutation vector \( \mathbf{\sigma} \) of size \( m \) from the pivot index vector <span class="tt">ipiv</span> of size \( l \). Starting from an identity permutation, i.e.  \( \mathbf{\sigma} = (0, 1,
+\ldots, m - 1) \), it interchanges \( \sigma_i \) with \( \sigma_{\mathrm{ipiv}_i - 1} \) for all  \( i = 0,
+1, \dots, l - 1 \).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ipiv</td><td><a class="el" href="conceptnda_1_1_vector.html" title="Check if a given type is a vector, i.e. an nda::ArrayOfRank&lt;1&gt;.">nda::Vector</a> containing the pivot indices returned by <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a>. </td></tr>
+    <tr><td class="paramname">m</td><td>Number of elements of the permutation vector \( \mathbf{\sigma} \). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Permutation vector \( \mathbf{\sigma} \) as an <a class="el" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68" title="Alias template of an nda::basic_array with rank 1 and a &#39;V&#39; algebra.">nda::vector</a>. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="linalg_2utils_8hpp_source.html#l00056">56</a> of file <a class="el" href="linalg_2utils_8hpp_source.html">utils.hpp</a>.</p>
+
+</div>
+</div>
 <a id="gabd0ff5c6c8add0fd6641db2cc5f73a79" name="gabd0ff5c6c8add0fd6641db2cc5f73a79"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gabd0ff5c6c8add0fd6641db2cc5f73a79">&#9670;&#160;</a></span>inv()</h2>
 
@@ -988,6 +1183,94 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="inv_8hpp_source.html#l00099">99</a> of file <a class="el" href="inv_8hpp_source.html">inv.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga4d2c3587bab445229187b091d62c969b" name="ga4d2c3587bab445229187b091d62c969b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4d2c3587bab445229187b091d62c969b">&#9670;&#160;</a></span>lu()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;Matrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::lu </td>
+          <td>(</td>
+          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="lu_8hpp.html">nda/linalg/lu.hpp</a>&gt;</code></p>
+
+<p>Compute the LU factorization of a matrix. </p>
+<p>It makes a copy of the input matrix \( \mathbf{A} \) and calls <a class="el" href="#gaf46b511467d685345522fd90c81794e7" title="Compute the LU factorization of a matrix in place.">nda::linalg::lu_in_place</a>.</p>
+<dl class="section note"><dt>Note</dt><dd>\( \mathbf{L} \) and \( \mathbf{U} \) have the same layout as the input matrix \( \mathbf{A} \).</dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input matrix. The \( m \times n \) matrix \( \mathbf{A} \) to be factorized. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A tuple containing \( \mathbf{\sigma} \), \( \mathbf{L} \), \( \mathbf{U} \) and the info value returned by <span class="tt">getrf</span>. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="lu_8hpp_source.html#l00141">141</a> of file <a class="el" href="lu_8hpp_source.html">lu.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gaf46b511467d685345522fd90c81794e7" name="gaf46b511467d685345522fd90c81794e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf46b511467d685345522fd90c81794e7">&#9670;&#160;</a></span>lu_in_place()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename LP = F_layout, MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::lu_in_place </td>
+          <td>(</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="lu_8hpp.html">nda/linalg/lu.hpp</a>&gt;</code></p>
+
+<p>Compute the LU factorization of a matrix in place. </p>
+<p>The function computes the LU factorization of a general \( m \times n \) matrix \( \mathbf{A} \) using <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a>. The factorization has the form   </p><p class="formulaDsp">
+\[  \mathbf{P A} = \mathbf{L U}
+\]
+</p>
+<p> where \( \mathbf{P} \) is an \( m \times m \) permutation matrix, \( \mathbf{L} \) is an \( m \times k \) lower triangular (trapezoidal if \( m &gt; n \)) matrix with unit diagonal elements, and \( \mathbf{U} \) is a  \(k \times n \) upper triangular (trapezoidal if \( m &lt; n \)) matrix. Here, \( k = \min(m, n) \).</p>
+<p>\( \mathbf{P} \) is returned as a permutation vector \( \mathbf{\sigma} \) of size \( m \). See <a class="el" href="#ga8ded871ae9ac3bf5a16fbd8d5af7faca" title="Get the permutation vector  from the pivot indices returned by nda::lapack::getrf or other LAPACK rou...">nda::linalg::get_permutation_vector</a> for more information.</p>
+<dl class="section note"><dt>Note</dt><dd>\( \mathbf{A} \) must be in <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a>. See <a class="el" href="#ga4d2c3587bab445229187b091d62c969b" title="Compute the LU factorization of a matrix.">nda::linalg::lu</a> for a version that handles C-layout input. \( \mathbf{L} \) and \( \mathbf{U} \) can be returned in a different layout by specifying the <span class="tt">LP</span> template parameter.</dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">LP</td><td>Policy determining the memory layout of the \( \mathbf{L} \) and \( \mathbf{U} \) matrices. </td></tr>
+    <tr><td class="paramname">M</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input/Output <a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a>. On entry, the \( m \times n \) matrix \( \mathbf{A} \). On exit, the result of the <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> call. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A tuple containing \( \mathbf{\sigma} \), \( \mathbf{L} \), \( \mathbf{U} \) and the info value returned by <span class="tt">getrf</span>. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="lu_8hpp_source.html#l00111">111</a> of file <a class="el" href="lu_8hpp_source.html">lu.hpp</a>.</p>
 
 </div>
 </div>

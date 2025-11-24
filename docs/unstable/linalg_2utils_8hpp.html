@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.15.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TRIQS/nda: nda/linalg.hpp</title>
+<title>TRIQS/nda: nda/linalg/utils.hpp</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -74,7 +74,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('linalg_8hpp.html','',''); });
+$(function(){initNavTree('linalg_2utils_8hpp.html','',''); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -100,30 +100,37 @@ $(function(){initNavTree('linalg_8hpp.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">linalg.hpp</div></div>
+  <div class="headertitle"><div class="title">utils.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="blas_8hpp_source.html">./blas.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="lapack_8hpp_source.html">./lapack.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="cross__product_8hpp_source.html">./linalg/cross_product.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="det_8hpp_source.html">./linalg/det.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="linalg_2dot_8hpp_source.html">./linalg/dot.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="eigh_8hpp_source.html">./linalg/eigh.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="inv_8hpp_source.html">./linalg/inv.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="lu_8hpp_source.html">./linalg/lu.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="matmul_8hpp_source.html">./linalg/matmul.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="matvecmul_8hpp_source.html">./linalg/matvecmul.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="norm_8hpp_source.html">./linalg/norm.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="outer__product_8hpp_source.html">./linalg/outer_product.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="solve_8hpp_source.html">./linalg/solve.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="svd_8hpp_source.html">./linalg/svd.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="linalg_2utils_8hpp_source.html">./linalg/utils.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="basic__array_8hpp_source.html">../basic_array.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="basic__functions_8hpp_source.html">../basic_functions.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="declarations_8hpp_source.html">../declarations.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="exceptions_8hpp_source.html">../exceptions.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="layout_2policies_8hpp_source.html">../layout/policies.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="macros_8hpp_source.html">../macros.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="address__space_8hpp_source.html">../mem/address_space.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="traits_8hpp_source.html">../traits.hpp</a>&quot;</code><br />
+<code>#include &lt;utility&gt;</code><br />
 </div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Includes all relevant headers for the linear algebra functionality. </p>
+<div class="textblock"><p>Provides utility functions for the nda::linalg namespace. </p>
 
-<p class="definition">Definition in file <a class="el" href="linalg_8hpp_source.html">linalg.hpp</a>.</p>
+<p class="definition">Definition in file <a class="el" href="linalg_2utils_8hpp_source.html">utils.hpp</a>.</p>
 </div>
-<p><a href="linalg_8hpp_source.html">Go to the source code of this file.</a></p>
+<p><a href="linalg_2utils_8hpp_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga3162e7399686be5286b98559584d67fb" id="r_ga3162e7399686be5286b98559584d67fb"><td class="memTemplParams" colspan="2">template&lt;Scalar T, typename LP = F_layout&gt; </td></tr>
+<tr class="memitem:ga3162e7399686be5286b98559584d67fb template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#ga3162e7399686be5286b98559584d67fb">nda::linalg::get_permutation_matrix</a> (Vector auto const &amp;ipiv, int m)</td></tr>
+<tr class="memdesc:ga3162e7399686be5286b98559584d67fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the permutation matrix \( \mathbf{P} \) from the pivot indices returned by <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> or other LAPACK routines.  <br /></td></tr>
+<tr class="memitem:ga0fe4c0d6a7dc6adf83f580a9891a777c" id="r_ga0fe4c0d6a7dc6adf83f580a9891a777c"><td class="memTemplParams" colspan="2">template&lt;Scalar T, typename LP = F_layout&gt; </td></tr>
+<tr class="memitem:ga0fe4c0d6a7dc6adf83f580a9891a777c template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#ga0fe4c0d6a7dc6adf83f580a9891a777c">nda::linalg::get_permutation_matrix</a> (Vector auto const &amp;sigma, bool column_permutations=false)</td></tr>
+<tr class="memdesc:ga0fe4c0d6a7dc6adf83f580a9891a777c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the permutation matrix \( \mathbf{P} \) from a permutation vector \( \mathbf{\sigma} \).  <br /></td></tr>
+<tr class="memitem:ga8ded871ae9ac3bf5a16fbd8d5af7faca" id="r_ga8ded871ae9ac3bf5a16fbd8d5af7faca"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__linalg__tools.html#ga8ded871ae9ac3bf5a16fbd8d5af7faca">nda::linalg::get_permutation_vector</a> (Vector auto const &amp;ipiv, int m)</td></tr>
+<tr class="memdesc:ga8ded871ae9ac3bf5a16fbd8d5af7faca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the permutation vector \( \mathbf{\sigma} \) from the pivot indices returned by <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> or other LAPACK routines.  <br /></td></tr>
+</table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
@@ -137,7 +144,7 @@ $(function(){initNavTree('linalg_8hpp.html','',''); });
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>nda</b></li><li class="navelem"><a href="linalg_8hpp.html">linalg.hpp</a></li>
+    <li class="navelem"><b>nda</b></li><li class="navelem"><b>linalg</b></li><li class="navelem"><a href="linalg_2utils_8hpp.html">utils.hpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>
