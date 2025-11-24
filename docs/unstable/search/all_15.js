@@ -38,7 +38,7 @@ var searchData=
   ['literals_2ehpp_35',['literals.hpp',['../literals_8hpp.html',1,'']]],
   ['log_36',['log',['../group__clef__expr.html#ga42cef35bdcbbc38ae0a5cf0fbe546200',1,'nda::clef::log()'],['../group__av__math.html#ga2e2be1e44930b308c3b366ae5a3a5e38',1,'nda::log()']]],
   ['loginot_37',['loginot',['../structnda_1_1clef_1_1tags_1_1loginot.html',1,'nda::clef::tags']]],
-  ['lu_38',['lu',['../group__linalg__tools.html#ga4d2c3587bab445229187b091d62c969b',1,'nda::linalg']]],
+  ['lu_38',['lu',['../group__linalg__tools.html#gaa800eb90c313a23c1e8b9a2d91d33faf',1,'nda::linalg']]],
   ['lu_2ehpp_39',['lu.hpp',['../lu_8hpp.html',1,'']]],
-  ['lu_5fin_5fplace_40',['lu_in_place',['../group__linalg__tools.html#gaf46b511467d685345522fd90c81794e7',1,'nda::linalg']]]
+  ['lu_5fin_5fplace_40',['lu_in_place',['../group__linalg__tools.html#ga1452ca0ef3d3854e5555415c1cd39bbf',1,'nda::linalg']]]
 ];

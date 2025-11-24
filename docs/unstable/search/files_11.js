@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['ungqr_2ehpp_0',['ungqr.hpp',['../ungqr_8hpp.html',1,'']]],
-  ['utils_2ehpp_1',['utils.hpp',['../clef_2utils_8hpp.html',1,'(Global Namespace)'],['../linalg_2utils_8hpp.html',1,'(Global Namespace)'],['../mpi_2utils_8hpp.html',1,'(Global Namespace)']]]
+  ['tools_2ehpp_0',['tools.hpp',['../tools_8hpp.html',1,'']]],
+  ['traits_2ehpp_1',['traits.hpp',['../traits_8hpp.html',1,'']]]
 ];

@@ -1,15 +1,5 @@
 var searchData=
 [
-  ['rand_0',['rand',['../classnda_1_1basic__array.html#afee46ba48f00ff7d4c9ddb9890e0c451',1,'nda::basic_array::rand(std::array&lt; Int, Rank &gt; const &amp;shape)'],['../classnda_1_1basic__array.html#ac25e1eebcc4bfc145a7d887ed3587ef2',1,'nda::basic_array::rand(Ints... is)'],['../group__av__factories.html#gae67b2d9014b1ad841fb50b8dbd265788',1,'nda::rand(std::array&lt; Int, Rank &gt; const &amp;shape)'],['../group__av__factories.html#ga6888305d7dafa3d8ae91eba441c8700c',1,'nda::rand(Ints... is)']]],
-  ['rank_1',['rank',['../classnda_1_1idx__map.html#a63b5b07ceed17e90dc61d3b78d7c8487',1,'nda::idx_map']]],
-  ['real_2',['real',['../group__av__math.html#ga801930e88ab85629067870e91ab9f97f',1,'nda']]],
-  ['rebind_3',['rebind',['../classnda_1_1basic__array__view.html#addeb6bc8ab5bcec5771d47330ccdb768',1,'nda::basic_array_view']]],
-  ['refcount_4',['refcount',['../structnda_1_1mem_1_1handle__shared.html#a5f42b47c1e3f62ac685085bd7d8e2894',1,'nda::mem::handle_shared']]],
-  ['reinterpret_5fadd_5ffast_5fdims_5fof_5fsize_5fone_5',['reinterpret_add_fast_dims_of_size_one',['../group__av__factories.html#ga45f52137a4bfd2926583530f73c29c1c',1,'nda']]],
-  ['reshape_6',['reshape',['../group__av__factories.html#gaf06f490766f84271bb66553168570e2b',1,'nda::reshape(A &amp;&amp;a, std::array&lt; Int, R &gt; const &amp;new_shape)'],['../group__av__factories.html#ga1353ccff5582f8468ae9411b312b242c',1,'nda::reshape(A &amp;&amp;a, Ints... is)']]],
-  ['reshaped_5fview_7',['reshaped_view',['../group__av__factories.html#gafe83d79fc85f5a2534d8be62d730dccf',1,'nda']]],
-  ['resize_8',['resize',['../classnda_1_1basic__array.html#a968fc6a67e82e304751a536a1f08d1e4',1,'nda::basic_array::resize(Ints const &amp;...is)'],['../classnda_1_1basic__array.html#a6e367966c494c177aa452eaa614ed5d3',1,'nda::basic_array::resize(std::array&lt; long, Rank &gt; const &amp;shape)']]],
-  ['resize_5for_5fcheck_5fif_5fview_9',['resize_or_check_if_view',['../group__av__factories.html#ga21ed59f95217d512e116f5558676f8e7',1,'nda']]],
-  ['reverse_5fidentity_10',['reverse_identity',['../group__utils__perms.html#gadec5ac7b69fe0a07eee46b06be6e961d',1,'nda::permutations']]],
-  ['runtime_5ferror_11',['runtime_error',['../classnda_1_1runtime__error.html#a39c0ea33070b3b0ca0f6cfeb4603b3e2',1,'nda::runtime_error::runtime_error() noexcept'],['../classnda_1_1runtime__error.html#ae283b39d00e24ae970269ed732025965',1,'nda::runtime_error::runtime_error(runtime_error const &amp;err) noexcept']]]
+  ['qr_0',['qr',['../group__linalg__tools.html#ga67328cde310a3f7d5dfc1c7454d0cad3',1,'nda::linalg']]],
+  ['qr_5fin_5fplace_1',['qr_in_place',['../group__linalg__tools.html#ga839dbb942c59f16211ea68717c9980c1',1,'nda::linalg']]]
 ];

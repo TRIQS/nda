@@ -24,13 +24,14 @@ var searchData=
   ['get_5fncols_21',['get_ncols',['../group__linalg__blas__utils.html#ga389b87f1aeda1e9d133273550271719a',1,'nda::blas::get_ncols()'],['../lapack_2interface_2cxx__interface_8hpp.html#a389b87f1aeda1e9d133273550271719a',1,'nda::lapack::get_ncols()']]],
   ['get_5fpermutation_5fmatrix_22',['get_permutation_matrix',['../group__linalg__tools.html#ga0fe4c0d6a7dc6adf83f580a9891a777c',1,'nda::linalg::get_permutation_matrix(Vector auto const &amp;sigma, bool column_permutations=false)'],['../group__linalg__tools.html#ga3162e7399686be5286b98559584d67fb',1,'nda::linalg::get_permutation_matrix(Vector auto const &amp;ipiv, int m)']]],
   ['get_5fpermutation_5fvector_23',['get_permutation_vector',['../group__linalg__tools.html#ga8ded871ae9ac3bf5a16fbd8d5af7faca',1,'nda::linalg']]],
-  ['get_5frepresentative_5fdata_24',['get_representative_data',['../classnda_1_1sym__grp.html#a7f3b8d72cdf6cba1bfa3b9fd161d29bf',1,'nda::sym_grp']]],
-  ['get_5fsptr_25',['get_sptr',['../structnda_1_1mem_1_1handle__heap.html#ae946896e70e99eeb7577c53b6147dfe0',1,'nda::mem::handle_heap']]],
-  ['get_5fsym_5fclasses_26',['get_sym_classes',['../classnda_1_1sym__grp.html#a6506404d7429cd0155d5df05b8e82fa3',1,'nda::sym_grp']]],
-  ['getrf_27',['getrf',['../group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836',1,'nda::lapack']]],
-  ['getri_28',['getri',['../group__linalg__lapack.html#ga41597808b4e45ffeaebd3645b55354e7',1,'nda::lapack']]],
-  ['getrs_29',['getrs',['../group__linalg__lapack.html#gae81206b2d5fff66e29fa0fb25de61183',1,'nda::lapack']]],
-  ['group_5findices_5flayout_30',['group_indices_layout',['../group__layout__utils.html#gadf5843a7df68a72189225c765ce39511',1,'nda']]],
-  ['group_5findices_5fview_31',['group_indices_view',['../group__av__factories.html#gafc054e71fc39165fa411582663367e6e',1,'nda']]],
-  ['gtsv_32',['gtsv',['../group__linalg__lapack.html#ga0b9b46f1987c9367177f7e3118a42947',1,'nda::lapack']]]
+  ['get_5fqr_5fmatrices_24',['get_qr_matrices',['../group__linalg__tools.html#gac25721901add8aedd982920d0d0b566a',1,'nda::linalg']]],
+  ['get_5frepresentative_5fdata_25',['get_representative_data',['../classnda_1_1sym__grp.html#a7f3b8d72cdf6cba1bfa3b9fd161d29bf',1,'nda::sym_grp']]],
+  ['get_5fsptr_26',['get_sptr',['../structnda_1_1mem_1_1handle__heap.html#ae946896e70e99eeb7577c53b6147dfe0',1,'nda::mem::handle_heap']]],
+  ['get_5fsym_5fclasses_27',['get_sym_classes',['../classnda_1_1sym__grp.html#a6506404d7429cd0155d5df05b8e82fa3',1,'nda::sym_grp']]],
+  ['getrf_28',['getrf',['../group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836',1,'nda::lapack']]],
+  ['getri_29',['getri',['../group__linalg__lapack.html#ga41597808b4e45ffeaebd3645b55354e7',1,'nda::lapack']]],
+  ['getrs_30',['getrs',['../group__linalg__lapack.html#gae81206b2d5fff66e29fa0fb25de61183',1,'nda::lapack']]],
+  ['group_5findices_5flayout_31',['group_indices_layout',['../group__layout__utils.html#gadf5843a7df68a72189225c765ce39511',1,'nda']]],
+  ['group_5findices_5fview_32',['group_indices_view',['../group__av__factories.html#gafc054e71fc39165fa411582663367e6e',1,'nda']]],
+  ['gtsv_33',['gtsv',['../group__linalg__lapack.html#ga0b9b46f1987c9367177f7e3118a42947',1,'nda::lapack']]]
 ];

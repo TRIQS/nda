@@ -177,6 +177,10 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 <tr class="memdesc:ga0fe4c0d6a7dc6adf83f580a9891a777c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the permutation matrix \( \mathbf{P} \) from a permutation vector \( \mathbf{\sigma} \).  <br /></td></tr>
 <tr class="memitem:ga8ded871ae9ac3bf5a16fbd8d5af7faca" id="r_ga8ded871ae9ac3bf5a16fbd8d5af7faca"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8ded871ae9ac3bf5a16fbd8d5af7faca">nda::linalg::get_permutation_vector</a> (Vector auto const &amp;ipiv, int m)</td></tr>
 <tr class="memdesc:ga8ded871ae9ac3bf5a16fbd8d5af7faca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the permutation vector \( \mathbf{\sigma} \) from the pivot indices returned by <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> or other LAPACK routines.  <br /></td></tr>
+<tr class="memitem:gac25721901add8aedd982920d0d0b566a" id="r_gac25721901add8aedd982920d0d0b566a"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector TAU&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A, TAU&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, TAU&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:gac25721901add8aedd982920d0d0b566a template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac25721901add8aedd982920d0d0b566a">nda::linalg::get_qr_matrices</a> (A const &amp;a, TAU const &amp;tau, bool complete=false)</td></tr>
+<tr class="memdesc:gac25721901add8aedd982920d0d0b566a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the \( \mathbf{Q} \) and \( \mathbf{R} \) matrices from the output of <a class="el" href="group__linalg__lapack.html#gab1b17ce137d948f3561494bf6953b7e4" title="Interface to the LAPACK geqp3 routine.">nda::lapack::geqp3</a>.  <br /></td></tr>
 <tr class="memitem:gabd0ff5c6c8add0fd6641db2cc5f73a79" id="r_gabd0ff5c6c8add0fd6641db2cc5f73a79"><td class="memTemplParams" colspan="2">template&lt;Matrix M&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;M&gt;&gt;)</td></tr>
 <tr class="memitem:gabd0ff5c6c8add0fd6641db2cc5f73a79 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gabd0ff5c6c8add0fd6641db2cc5f73a79">nda::linalg::inv</a> (M const &amp;m)</td></tr>
@@ -185,14 +189,14 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;M&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;M&gt;&gt;)</td></tr>
 <tr class="memitem:ga5ae8205418692fdc14fc3ee0c5bf322b template"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5ae8205418692fdc14fc3ee0c5bf322b">nda::linalg::inv_in_place</a> (M &amp;&amp;m)</td></tr>
 <tr class="memdesc:ga5ae8205418692fdc14fc3ee0c5bf322b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the inverse of an \( n \times n \) matrix \( \mathbf{M} \).  <br /></td></tr>
-<tr class="memitem:ga4d2c3587bab445229187b091d62c969b" id="r_ga4d2c3587bab445229187b091d62c969b"><td class="memTemplParams" colspan="2">template&lt;Matrix A&gt; <br />
+<tr class="memitem:gaa800eb90c313a23c1e8b9a2d91d33faf" id="r_gaa800eb90c313a23c1e8b9a2d91d33faf"><td class="memTemplParams" colspan="2">template&lt;Matrix A&gt; <br />
 requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
-<tr class="memitem:ga4d2c3587bab445229187b091d62c969b template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4d2c3587bab445229187b091d62c969b">nda::linalg::lu</a> (A const &amp;a)</td></tr>
-<tr class="memdesc:ga4d2c3587bab445229187b091d62c969b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the LU factorization of a matrix.  <br /></td></tr>
-<tr class="memitem:gaf46b511467d685345522fd90c81794e7" id="r_gaf46b511467d685345522fd90c81794e7"><td class="memTemplParams" colspan="2">template&lt;typename LP = F_layout, MemoryMatrix A&gt; <br />
+<tr class="memitem:gaa800eb90c313a23c1e8b9a2d91d33faf template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa800eb90c313a23c1e8b9a2d91d33faf">nda::linalg::lu</a> (A const &amp;a, bool allow_singular=false)</td></tr>
+<tr class="memdesc:gaa800eb90c313a23c1e8b9a2d91d33faf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the LU factorization of a matrix.  <br /></td></tr>
+<tr class="memitem:ga1452ca0ef3d3854e5555415c1cd39bbf" id="r_ga1452ca0ef3d3854e5555415c1cd39bbf"><td class="memTemplParams" colspan="2">template&lt;typename LP = F_layout, MemoryMatrix A&gt; <br />
 requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
-<tr class="memitem:gaf46b511467d685345522fd90c81794e7 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf46b511467d685345522fd90c81794e7">nda::linalg::lu_in_place</a> (A &amp;&amp;a)</td></tr>
-<tr class="memdesc:gaf46b511467d685345522fd90c81794e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the LU factorization of a matrix in place.  <br /></td></tr>
+<tr class="memitem:ga1452ca0ef3d3854e5555415c1cd39bbf template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1452ca0ef3d3854e5555415c1cd39bbf">nda::linalg::lu_in_place</a> (A &amp;&amp;a, bool allow_singular=false)</td></tr>
+<tr class="memdesc:ga1452ca0ef3d3854e5555415c1cd39bbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the LU factorization of a matrix in place.  <br /></td></tr>
 <tr class="memitem:ga33c980b3e0b7fb89dad92b92562c851f" id="r_ga33c980b3e0b7fb89dad92b92562c851f"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Matrix B&gt; </td></tr>
 <tr class="memitem:ga33c980b3e0b7fb89dad92b92562c851f template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga33c980b3e0b7fb89dad92b92562c851f">nda::linalg::matmul</a> (A &amp;&amp;a, B &amp;&amp;b)</td></tr>
 <tr class="memdesc:ga33c980b3e0b7fb89dad92b92562c851f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the matrix-matrix product of two <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> objects.  <br /></td></tr>
@@ -208,6 +212,14 @@ requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0
 requires ((<a class="el" href="group__linalg__blas__utils.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;A&gt; or <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;) and <a class="el" href="group__linalg__blas__utils.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;A&gt; == <a class="el" href="group__linalg__blas__utils.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;B&gt;)</td></tr>
 <tr class="memitem:gaa2e13a1dfcbbacc5c2279f98230b5eb2 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa2e13a1dfcbbacc5c2279f98230b5eb2">nda::linalg::outer_product</a> (A const &amp;a, B const &amp;b)</td></tr>
 <tr class="memdesc:gaa2e13a1dfcbbacc5c2279f98230b5eb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Outer product of two arrays/views.  <br /></td></tr>
+<tr class="memitem:ga67328cde310a3f7d5dfc1c7454d0cad3" id="r_ga67328cde310a3f7d5dfc1c7454d0cad3"><td class="memTemplParams" colspan="2">template&lt;Matrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:ga67328cde310a3f7d5dfc1c7454d0cad3 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga67328cde310a3f7d5dfc1c7454d0cad3">nda::linalg::qr</a> (A const &amp;a, bool complete=false)</td></tr>
+<tr class="memdesc:ga67328cde310a3f7d5dfc1c7454d0cad3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the QR factorization of a matrix.  <br /></td></tr>
+<tr class="memitem:ga839dbb942c59f16211ea68717c9980c1" id="r_ga839dbb942c59f16211ea68717c9980c1"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:ga839dbb942c59f16211ea68717c9980c1 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga839dbb942c59f16211ea68717c9980c1">nda::linalg::qr_in_place</a> (A &amp;&amp;a, bool complete=false)</td></tr>
+<tr class="memdesc:ga839dbb942c59f16211ea68717c9980c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the QR factorization of a matrix in place.  <br /></td></tr>
 <tr class="memitem:ga1bef8ddf7eb254c502c10ef2a17c376d" id="r_ga1bef8ddf7eb254c502c10ef2a17c376d"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Array B&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">nda::mem::have_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
 <tr class="memitem:ga1bef8ddf7eb254c502c10ef2a17c376d template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1bef8ddf7eb254c502c10ef2a17c376d">nda::linalg::solve</a> (A const &amp;a, B const &amp;b)</td></tr>
@@ -1099,6 +1111,64 @@ template&lt;Scalar T, typename LP = F_layout&gt; </div>
 
 </div>
 </div>
+<a id="gac25721901add8aedd982920d0d0b566a" name="gac25721901add8aedd982920d0d0b566a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac25721901add8aedd982920d0d0b566a">&#9670;&#160;</a></span>get_qr_matrices()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;MemoryMatrix A, MemoryVector TAU&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A, TAU&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, TAU&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::get_qr_matrices </td>
+          <td>(</td>
+          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TAU const &amp;</td>          <td class="paramname"><span class="paramname"><em>tau</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>complete</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="qr_8hpp.html">nda/linalg/qr.hpp</a>&gt;</code></p>
+
+<p>Get the \( \mathbf{Q} \) and \( \mathbf{R} \) matrices from the output of <a class="el" href="group__linalg__lapack.html#gab1b17ce137d948f3561494bf6953b7e4" title="Interface to the LAPACK geqp3 routine.">nda::lapack::geqp3</a>. </p>
+<p>\( \mathbf{R} \) is simply the upper triangular (trapezoidal) part of the \( m \times n \) matrix  \(\mathbf{A} \) returned by <a class="el" href="group__linalg__lapack.html#gab1b17ce137d948f3561494bf6953b7e4" title="Interface to the LAPACK geqp3 routine.">nda::lapack::geqp3</a>.</p>
+<p>\( \mathbf{Q} \) is computed from the elementary reflectors stored in the lower part of \( \mathbf{A} \) and the vector of scalar factors \( \mathbf{\tau} \) using <a class="el" href="group__linalg__lapack.html#ga63d63cd2112e0e9f106ef617333d44dc" title="Interface to the LAPACK orgqr routine.">nda::lapack::orgqr</a> or <a class="el" href="group__linalg__lapack.html#ga56ec70f6ac54d52db55f30a993690d38" title="Interface to the LAPACK ungqr routine.">nda::lapack::ungqr</a>.</p>
+<p>\( \mathbf{Q} \) has dimensions \( m \times k \) and \( \mathbf{R} \) has dimensions \( k \times n \), where \( k \) depends on the mode of the factorization:</p><ul>
+<li><b>reduced mode</b> (default): \( k = \min(m, n) \).</li>
+<li><b>complete mode</b>: \( k = m \).</li>
+</ul>
+<dl class="section note"><dt>Note</dt><dd>\( \mathbf{Q} \) and \( \mathbf{R} \) are always in <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a>.</dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+    <tr><td class="paramname">TAU</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input matrix containing the output of <a class="el" href="group__linalg__lapack.html#gab1b17ce137d948f3561494bf6953b7e4" title="Interface to the LAPACK geqp3 routine.">nda::lapack::geqp3</a>. </td></tr>
+    <tr><td class="paramname">tau</td><td>Input vector containing the scalar factors of the elementary reflectors as returned by <a class="el" href="group__linalg__lapack.html#gab1b17ce137d948f3561494bf6953b7e4" title="Interface to the LAPACK geqp3 routine.">nda::lapack::geqp3</a>. </td></tr>
+    <tr><td class="paramname">complete</td><td>If <span class="tt">true</span>, retrieves the matrices for the complete QR factorization. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A tuple containing the \( \mathbf{Q} \) and \( \mathbf{R} \) matrices. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="qr_8hpp_source.html#l00077">77</a> of file <a class="el" href="qr_8hpp_source.html">qr.hpp</a>.</p>
+
+</div>
+</div>
 <a id="gabd0ff5c6c8add0fd6641db2cc5f73a79" name="gabd0ff5c6c8add0fd6641db2cc5f73a79"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gabd0ff5c6c8add0fd6641db2cc5f73a79">&#9670;&#160;</a></span>inv()</h2>
 
@@ -1186,8 +1256,8 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 
 </div>
 </div>
-<a id="ga4d2c3587bab445229187b091d62c969b" name="ga4d2c3587bab445229187b091d62c969b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4d2c3587bab445229187b091d62c969b">&#9670;&#160;</a></span>lu()</h2>
+<a id="gaa800eb90c313a23c1e8b9a2d91d33faf" name="gaa800eb90c313a23c1e8b9a2d91d33faf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa800eb90c313a23c1e8b9a2d91d33faf">&#9670;&#160;</a></span>lu()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1198,8 +1268,12 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
         <tr>
           <td class="memname">auto nda::linalg::lu </td>
           <td>(</td>
-          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
+          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>allow_singular</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1207,7 +1281,7 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 <p><code>#include &lt;<a class="el" href="lu_8hpp.html">nda/linalg/lu.hpp</a>&gt;</code></p>
 
 <p>Compute the LU factorization of a matrix. </p>
-<p>It makes a copy of the input matrix \( \mathbf{A} \) and calls <a class="el" href="#gaf46b511467d685345522fd90c81794e7" title="Compute the LU factorization of a matrix in place.">nda::linalg::lu_in_place</a>.</p>
+<p>It makes a copy of the input matrix \( \mathbf{A} \) and calls <a class="el" href="#ga1452ca0ef3d3854e5555415c1cd39bbf" title="Compute the LU factorization of a matrix in place.">nda::linalg::lu_in_place</a>.</p>
 <dl class="section note"><dt>Note</dt><dd>\( \mathbf{L} \) and \( \mathbf{U} \) have the same layout as the input matrix \( \mathbf{A} \).</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -1218,17 +1292,18 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a</td><td>Input matrix. The \( m \times n \) matrix \( \mathbf{A} \) to be factorized. </td></tr>
+    <tr><td class="paramname">allow_singular</td><td>If <span class="tt">true</span>, allows factorization of singular matrices. If <span class="tt">false</span> (default), throws an error when the matrix is detected to be singular. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A tuple containing \( \mathbf{\sigma} \), \( \mathbf{L} \), \( \mathbf{U} \) and the info value returned by <span class="tt">getrf</span>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A tuple containing \( \mathbf{\sigma} \), \( \mathbf{L} \) and \( \mathbf{U} \). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="lu_8hpp_source.html#l00141">141</a> of file <a class="el" href="lu_8hpp_source.html">lu.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="lu_8hpp_source.html#l00148">148</a> of file <a class="el" href="lu_8hpp_source.html">lu.hpp</a>.</p>
 
 </div>
 </div>
-<a id="gaf46b511467d685345522fd90c81794e7" name="gaf46b511467d685345522fd90c81794e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaf46b511467d685345522fd90c81794e7">&#9670;&#160;</a></span>lu_in_place()</h2>
+<a id="ga1452ca0ef3d3854e5555415c1cd39bbf" name="ga1452ca0ef3d3854e5555415c1cd39bbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1452ca0ef3d3854e5555415c1cd39bbf">&#9670;&#160;</a></span>lu_in_place()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1239,8 +1314,12 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
         <tr>
           <td class="memname">auto nda::linalg::lu_in_place </td>
           <td>(</td>
-          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>allow_singular</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1254,7 +1333,7 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 </p>
 <p> where \( \mathbf{P} \) is an \( m \times m \) permutation matrix, \( \mathbf{L} \) is an \( m \times k \) lower triangular (trapezoidal if \( m &gt; n \)) matrix with unit diagonal elements, and \( \mathbf{U} \) is a  \(k \times n \) upper triangular (trapezoidal if \( m &lt; n \)) matrix. Here, \( k = \min(m, n) \).</p>
 <p>\( \mathbf{P} \) is returned as a permutation vector \( \mathbf{\sigma} \) of size \( m \). See <a class="el" href="#ga8ded871ae9ac3bf5a16fbd8d5af7faca" title="Get the permutation vector  from the pivot indices returned by nda::lapack::getrf or other LAPACK rou...">nda::linalg::get_permutation_vector</a> for more information.</p>
-<dl class="section note"><dt>Note</dt><dd>\( \mathbf{A} \) must be in <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a>. See <a class="el" href="#ga4d2c3587bab445229187b091d62c969b" title="Compute the LU factorization of a matrix.">nda::linalg::lu</a> for a version that handles C-layout input. \( \mathbf{L} \) and \( \mathbf{U} \) can be returned in a different layout by specifying the <span class="tt">LP</span> template parameter.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>\( \mathbf{A} \) must be in <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a>. See <a class="el" href="#gaa800eb90c313a23c1e8b9a2d91d33faf" title="Compute the LU factorization of a matrix.">nda::linalg::lu</a> for a version that handles C-layout input. \( \mathbf{L} \) and \( \mathbf{U} \) can be returned in a different layout by specifying the <span class="tt">LP</span> template parameter.</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">LP</td><td>Policy determining the memory layout of the \( \mathbf{L} \) and \( \mathbf{U} \) matrices. </td></tr>
@@ -1265,12 +1344,13 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a</td><td>Input/Output <a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a>. On entry, the \( m \times n \) matrix \( \mathbf{A} \). On exit, the result of the <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> call. </td></tr>
+    <tr><td class="paramname">allow_singular</td><td>If <span class="tt">true</span>, allows factorization of singular matrices. If <span class="tt">false</span> (default), throws an error when the matrix is detected to be singular. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A tuple containing \( \mathbf{\sigma} \), \( \mathbf{L} \), \( \mathbf{U} \) and the info value returned by <span class="tt">getrf</span>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A tuple containing \( \mathbf{\sigma} \), \( \mathbf{L} \) and \( \mathbf{U} \). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="lu_8hpp_source.html#l00111">111</a> of file <a class="el" href="lu_8hpp_source.html">lu.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="lu_8hpp_source.html#l00112">112</a> of file <a class="el" href="lu_8hpp_source.html">lu.hpp</a>.</p>
 
 </div>
 </div>
@@ -1489,6 +1569,108 @@ requires ((<a class="el" href="group__linalg__blas__utils.html#ga24228d6ce4cd37c
 <dl class="section return"><dt>Returns</dt><dd>Outer product \( \mathbf{A} \otimes \mathbf{B} \). </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="outer__product_8hpp_source.html#l00052">52</a> of file <a class="el" href="outer__product_8hpp_source.html">outer_product.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga67328cde310a3f7d5dfc1c7454d0cad3" name="ga67328cde310a3f7d5dfc1c7454d0cad3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga67328cde310a3f7d5dfc1c7454d0cad3">&#9670;&#160;</a></span>qr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;Matrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::qr </td>
+          <td>(</td>
+          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>complete</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="qr_8hpp.html">nda/linalg/qr.hpp</a>&gt;</code></p>
+
+<p>Compute the QR factorization of a matrix. </p>
+<p>It makes a copy of the input matrix \( \mathbf{A} \) and calls <a class="el" href="#ga839dbb942c59f16211ea68717c9980c1" title="Compute the QR factorization of a matrix in place.">nda::linalg::qr_in_place</a>.</p>
+<dl class="section note"><dt>Note</dt><dd>\( \mathbf{Q} \) and \( \mathbf{R} \) have the same layout as the input matrix \( \mathbf{A} \).</dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input matrix. The \( m \times n \) matrix \( \mathbf{A} \) to be factorized. </td></tr>
+    <tr><td class="paramname">complete</td><td>If <span class="tt">true</span>, computes the complete QR factorization. See <a class="el" href="#ga839dbb942c59f16211ea68717c9980c1" title="Compute the QR factorization of a matrix in place.">nda::linalg::qr_in_place</a> for details. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A tuple containing \( \mathbf{\sigma} \), \( \mathbf{Q} \) and \( \mathbf{R} \). </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="qr_8hpp_source.html#l00165">165</a> of file <a class="el" href="qr_8hpp_source.html">qr.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga839dbb942c59f16211ea68717c9980c1" name="ga839dbb942c59f16211ea68717c9980c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga839dbb942c59f16211ea68717c9980c1">&#9670;&#160;</a></span>qr_in_place()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::qr_in_place </td>
+          <td>(</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>complete</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="qr_8hpp.html">nda/linalg/qr.hpp</a>&gt;</code></p>
+
+<p>Compute the QR factorization of a matrix in place. </p>
+<p>The function computes the QR factorization of a general \( m \times n \) matrix \( \mathbf{A} \) using <a class="el" href="group__linalg__lapack.html#gab1b17ce137d948f3561494bf6953b7e4" title="Interface to the LAPACK geqp3 routine.">nda::lapack::geqp3</a> and <a class="el" href="group__linalg__lapack.html#ga63d63cd2112e0e9f106ef617333d44dc" title="Interface to the LAPACK orgqr routine.">nda::lapack::orgqr</a> or <a class="el" href="group__linalg__lapack.html#ga56ec70f6ac54d52db55f30a993690d38" title="Interface to the LAPACK ungqr routine.">nda::lapack::ungqr</a>. The factorization has the form   </p><p class="formulaDsp">
+\[  \mathbf{A P} = \mathbf{Q R}
+\]
+</p>
+<p> where \( \mathbf{P} \) is a \( k \times k \) permutation matrix, \( \mathbf{Q} \) is an \( m \times k \) (orthogonal/unitary if \( k = m \)) matrix, and \( \mathbf{R} \) is a \( k \times n \) upper triangular (trapezoidal if \( k &lt; n \)) matrix.</p>
+<p>The dimension \( k \) depends on the mode of the factorization:</p><ul>
+<li><b>reduced mode</b> (default): \( k = \min(m, n) \).</li>
+<li><p class="startli"><b>complete mode</b>: \( k = m \).</p>
+<p class="startli">\( \mathbf{P} \) is returned as a permutation vector \( \mathbf{\sigma} \) of size \( n \). See <a class="el" href="#ga8ded871ae9ac3bf5a16fbd8d5af7faca" title="Get the permutation vector  from the pivot indices returned by nda::lapack::getrf or other LAPACK rou...">nda::linalg::get_permutation_vector</a> for more information.</p>
+</li>
+</ul>
+<dl class="section note"><dt>Note</dt><dd>\( \mathbf{A} \), \( \mathbf{Q} \) and \( \mathbf{R} \) are always in <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a>. See <a class="el" href="#ga67328cde310a3f7d5dfc1c7454d0cad3" title="Compute the QR factorization of a matrix.">nda::linalg::qr</a> for a version that accepts and returns matrices in <a class="el" href="structnda_1_1_c__layout.html" title="Contiguous layout policy with C-order (row-major order).">nda::C_layout</a> as well.</dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input/Output matrix. On entry, the \( m \times n \) matrix \( \mathbf{A} \). On exit, the result of the <a class="el" href="group__linalg__lapack.html#gab1b17ce137d948f3561494bf6953b7e4" title="Interface to the LAPACK geqp3 routine.">nda::lapack::geqp3</a> call. </td></tr>
+    <tr><td class="paramname">complete</td><td>If <span class="tt">true</span>, computes the complete QR factorization. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A tuple containing \( \mathbf{\sigma} \), \( \mathbf{Q} \) and \( \mathbf{R} \). </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="qr_8hpp_source.html#l00131">131</a> of file <a class="el" href="qr_8hpp_source.html">qr.hpp</a>.</p>
 
 </div>
 </div>
