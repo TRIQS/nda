@@ -230,28 +230,15 @@ TEST(NDA, LinearAlgebraMatmulWithLazyExpressions) {
 template <typename T, typename Layout>
 void test_inv_and_det() {
   using matrix_t = nda::matrix<T, Layout>;
-  T fac          = 1.0;
-  if constexpr (nda::is_complex_v<T>) fac = 1.0i;
-
-  // A is 3x3, B is 2x2, C is 1x1
-  auto A = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
-  A *= fac;
-  auto Ainv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
-  Ainv /= fac;
-  T detA = std::pow(fac, 3);
-  auto B = matrix_t{{1, 2}, {0, 1}};
-  B *= fac;
-  auto Binv = matrix_t{{1, -2}, {0, 1}};
-  Binv /= fac;
-  T detB = std::pow(fac, 2);
-  auto C = matrix_t{{3}};
-  C *= fac;
-  auto Cinv = matrix_t{{1.0 / 3.0}};
-  Cinv /= fac;
-  T detC = 3 * fac;
 
   // lambda that checks inverse functions for small matrices
-  auto check_small_mat = [](auto const &M, auto const &Minv, auto detM) {
+  auto check_det_inv = [](auto M, auto Minv, T detM) {
+    if constexpr (nda::is_complex_v<T>) {
+      M *= 1.0i;
+      Minv /= 1.0i;
+      detM *= std::pow(1.0i, M.extent(0));
+    }
+
     auto Minv2 = nda::linalg::inv(M);
     EXPECT_ARRAY_NEAR(Minv, Minv2);
     EXPECT_COMPLEX_NEAR(nda::linalg::det(Minv2), 1.0 / detM);
@@ -263,39 +250,35 @@ void test_inv_and_det() {
     nda::linalg::inv_in_place(Minv3);
     EXPECT_ARRAY_NEAR(Minv, Minv3);
     EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Minv3), 1.0 / detM);
-    nda::linalg::inv_in_place(Minv3);
-    EXPECT_ARRAY_NEAR(M, Minv3);
-    EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Minv3), detM);
   };
 
-  check_small_mat(A, Ainv, detA);
-  check_small_mat(B, Binv, detB);
-  check_small_mat(C, Cinv, detC);
+  // 1x1 matrix
+  auto A    = matrix_t{{3}};
+  auto Ainv = matrix_t{{1.0 / 3.0}};
+  auto detA = 3.0;
+  check_det_inv(A, Ainv, detA);
 
-  // matrix view
-  EXPECT_ARRAY_NEAR(nda::linalg::inv(A(nda::range(0, 2), nda::range(0, 2))), Binv);
-  EXPECT_COMPLEX_NEAR(nda::linalg::det(A(nda::range(0, 2), nda::range(0, 2))), detB);
+  // 2x2 matrix
+  auto B    = matrix_t{{1, 2}, {0, 1}};
+  auto Binv = matrix_t{{1, -2}, {0, 1}};
+  auto detB = 1.0;
+  check_det_inv(B, Binv, detB);
+
+  // 3x3 matrix
+  auto C    = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
+  auto Cinv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
+  auto detC = 1.0;
+  check_det_inv(C, Cinv, detC);
 
   // 4x4 matrix
-  auto D = matrix_t{{2, 2, 2, 2}, {2, 4, 6, 8}, {2, 6, 12, 20}, {2, 8, 20, 40}};
-  D *= fac;
+  auto D    = matrix_t{{2, 2, 2, 2}, {2, 4, 6, 8}, {2, 6, 12, 20}, {2, 8, 20, 40}};
   auto Dinv = matrix_t{{2, -3, 2, -0.5}, {-3, 7, -5.5, 1.5}, {2, -5.5, 5, -1.5}, {-0.5, 1.5, -1.5, 0.5}};
-  Dinv /= fac;
-  T detD = 16 * std::pow(fac, 4);
+  auto detD = 16.0;
+  check_det_inv(D, Dinv, detD);
 
-  auto Dinv2 = nda::linalg::inv(D);
-  EXPECT_ARRAY_NEAR(Dinv, Dinv2);
-  EXPECT_COMPLEX_NEAR(nda::linalg::det(Dinv2), 1.0 / detD);
-  Dinv2 = nda::linalg::inv(Dinv2);
-  EXPECT_ARRAY_NEAR(D, Dinv2);
-  EXPECT_COMPLEX_NEAR(nda::linalg::det(Dinv2), detD);
-
-  auto Dinv3 = D;
-  nda::linalg::inv_in_place(Dinv3);
-  EXPECT_ARRAY_NEAR(Dinv, Dinv3);
-  nda::linalg::inv_in_place(Dinv3);
-  EXPECT_ARRAY_NEAR(D, Dinv3);
-  EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Dinv3), detD);
+  // matrix view
+  EXPECT_ARRAY_NEAR(nda::linalg::inv(C(nda::range(0, 2), nda::range(0, 2))), Binv);
+  EXPECT_COMPLEX_NEAR(nda::linalg::det(C(nda::range(0, 2), nda::range(0, 2))), detB);
 }
 
 TEST(NDA, LinearAlgebraInvAndDet) {

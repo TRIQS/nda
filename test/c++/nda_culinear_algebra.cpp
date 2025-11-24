@@ -219,11 +219,14 @@ TEST(NDA, CULinearAlgebraMatmulBLASBranch) {
 template <typename T, typename Layout, nda::mem::AddressSpace AS>
 void test_inv() {
   using matrix_t = nda::matrix<T, Layout>;
-  T fac          = 1.0;
-  if constexpr (nda::is_complex_v<T>) fac = 1.0i;
 
   // lambda that checks inverse function
-  auto check_inv = [](auto const &M, auto const &Minv) {
+  auto check_inv = [](auto M, auto Minv) {
+    if constexpr (nda::is_complex_v<T>) {
+      M *= 1.0i;
+      Minv /= 1.0i;
+    }
+
     auto M_d    = to_addr_space<AS>(M);
     auto Minv_d = nda::linalg::inv(M_d);
     EXPECT_ARRAY_NEAR(Minv, nda::to_host(Minv_d));
@@ -232,31 +235,23 @@ void test_inv() {
   };
 
   // 1x1 matrix
-  auto C = matrix_t{{3}};
-  C *= fac;
+  auto C    = matrix_t{{3}};
   auto Cinv = matrix_t{{1.0 / 3.0}};
-  Cinv /= fac;
   check_inv(C, Cinv);
 
   // 2x2 matrix
-  auto B = matrix_t{{1, 2}, {0, 1}};
-  B *= fac;
+  auto B    = matrix_t{{1, 2}, {0, 1}};
   auto Binv = matrix_t{{1, -2}, {0, 1}};
-  Binv /= fac;
   check_inv(B, Binv);
 
   // 3x3 matrix
-  auto A = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
-  A *= fac;
+  auto A    = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
   auto Ainv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
-  Ainv /= fac;
   check_inv(A, Ainv);
 
   // 4x4 matrix
-  auto D = matrix_t{{2, 2, 2, 2}, {2, 4, 6, 8}, {2, 6, 12, 20}, {2, 8, 20, 40}};
-  D *= fac;
+  auto D    = matrix_t{{2, 2, 2, 2}, {2, 4, 6, 8}, {2, 6, 12, 20}, {2, 8, 20, 40}};
   auto Dinv = matrix_t{{2, -3, 2, -0.5}, {-3, 7, -5.5, 1.5}, {2, -5.5, 5, -1.5}, {-0.5, 1.5, -1.5, 0.5}};
-  Dinv /= fac;
   check_inv(D, Dinv);
 }
 
