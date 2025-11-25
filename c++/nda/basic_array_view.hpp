@@ -14,18 +14,18 @@
 #include "./clef.hpp"
 #include "./concepts.hpp"
 #include "./declarations.hpp"
-#include "./exceptions.hpp"
 #include "./iterators.hpp"
-#include "layout/slice_static.hpp"
 #include "./layout/for_each.hpp"
 #include "./layout/idx_map.hpp"
 #include "./layout/permutation.hpp"
 #include "./layout/range.hpp"
+#include "./layout/slice_static.hpp"
 #include "./macros.hpp"
+#include "./matrix_functions.hpp"
 #include "./mem/address_space.hpp"
+#include "./mem/fill.hpp"
 #include "./mem/memcpy.hpp"
 #include "./mem/memset.hpp"
-#include "./mem/fill.hpp"
 #include "./mem/policies.hpp"
 #include "./traits.hpp"
 
@@ -34,15 +34,12 @@
 #include <algorithm>
 #include <array>
 #include <cstring>
+#include <exception>
+#include <iostream>
 #include <memory>
 #include <ranges>
 #include <type_traits>
 #include <utility>
-
-#ifdef NDA_ENFORCE_BOUNDCHECK
-#include <exception>
-#include <iostream>
-#endif // NDA_ENFORCE_BOUNDCHECK
 
 namespace std {
 
