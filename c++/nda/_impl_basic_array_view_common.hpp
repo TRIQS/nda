@@ -438,11 +438,12 @@ auto &operator=(R const &rhs) noexcept
 private:
 // Implementation of the assignment from an n-dimensional array type.
 template <typename RHS>
-void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
+void assign_from_ndarray(RHS const &rhs) {
 #ifdef NDA_ENFORCE_BOUNDCHECK
-  if (this->shape() != rhs.shape())
+  if (this->shape() != rhs.shape()) {
     NDA_RUNTIME_ERROR << "Error in assign_from_ndarray: Size mismatch:"
                       << "\n LHS.shape() = " << this->shape() << "\n RHS.shape() = " << rhs.shape();
+  }
 #endif
   // compile-time check if assignment is possible
   static_assert(std::is_assignable_v<value_type &, get_value_t<RHS>>, "Error in assign_from_ndarray: Incompatible value types");
@@ -452,6 +453,10 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
 
   // do both operands have the same stride order?
   static constexpr bool same_stride_order = get_layout_info<self_t>.stride_order == get_layout_info<RHS>.stride_order;
+
+  // compile-time check for device arrays to avoid runtime errors
+  static_assert(!(mem::on_device<self_t> or mem::on_device<RHS>) or (both_in_memory and same_stride_order and have_same_value_type_v<self_t, RHS>),
+                "Error in assign_from_ndarray: Assignment to/from device arrays is not supported for the given types.");
 
   // prefer optimized options if possible
   if constexpr (both_in_memory and same_stride_order) {
@@ -501,8 +506,7 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
 
 // Implementation to fill a view/array with a constant scalar value.
 template <typename Scalar>
-void fill_with_scalar(Scalar const &scalar) noexcept {
-  // we make a special implementation if the array is strided in 1d or contiguous
+void fill_with_scalar(Scalar const &scalar) {
   if constexpr (mem::on_host<self_t>) {
     if constexpr (has_layout_strided_1d<self_t>) {
       const long L             = size();
@@ -517,8 +521,8 @@ void fill_with_scalar(Scalar const &scalar) noexcept {
     } else {
       for (auto &x : *this) x = scalar;
     }
-  } else if constexpr (mem::on_device<self_t> or mem::on_unified<self_t>) { // on device
-    if constexpr (has_layout_strided_1d<self_t>) {                          // possibly contiguous
+  } else if constexpr (mem::on_device<self_t> or mem::on_unified<self_t>) {
+    if constexpr (has_layout_strided_1d<self_t>) {
       if constexpr (has_contiguous_layout<self_t>) {
         mem::fill_n<mem::get_addr_space<self_t>>(data(), size(), value_type(scalar));
       } else {
@@ -526,14 +530,13 @@ void fill_with_scalar(Scalar const &scalar) noexcept {
         mem::fill2D_n<mem::get_addr_space<self_t>>(data(), stri, 1, size(), value_type(scalar));
       }
     } else {
-      // check for 2D layout
       auto bl_layout = get_block_layout(*this);
       if (bl_layout) {
         auto [n_bl, bl_size, bl_str] = *bl_layout;
         mem::fill2D_n<mem::get_addr_space<self_t>>(data(), bl_str, bl_size, n_bl, value_type(scalar));
       } else {
         // MAM: implement recursive call to fill_with_scalar on (i,nda::ellipsis{})
-        NDA_RUNTIME_ERROR << "fill_with_scalar: Not implemented yet for general layout. ";
+        NDA_RUNTIME_ERROR << "fill_with_scalar: Not implemented on device for generic (non-blocked) layout.";
       }
     }
   }
