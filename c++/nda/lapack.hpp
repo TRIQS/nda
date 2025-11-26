@@ -11,6 +11,7 @@
 #pragma once
 
 #include "./lapack/interface/cxx_interface.hpp"
+#include "./lapack/geev.hpp"
 #include "./lapack/gelss.hpp"
 #include "./lapack/geqp3.hpp"
 #include "./lapack/gesvd.hpp"
