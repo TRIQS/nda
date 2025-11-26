@@ -16,91 +16,91 @@
 
 namespace nda::lapack::f77 {
 
-  void gelss(int M, int N, int NRHS, double *A, int LDA, double *B, int LDB, double *S, double RCOND, int &RANK, double *WORK, int LWORK,
-             [[maybe_unused]] double *RWORK, int &INFO) {
-    LAPACK_dgelss(&M, &N, &NRHS, A, &LDA, B, &LDB, S, &RCOND, &RANK, WORK, &LWORK, &INFO);
+  void gelss(int m, int n, int nrhs, double *a, int lda, double *b, int ldb, double *s, double rcond, int &rank, double *work, int lwork,
+             [[maybe_unused]] double *rwork, int &info) {
+    LAPACK_dgelss(&m, &n, &nrhs, a, &lda, b, &ldb, s, &rcond, &rank, work, &lwork, &info);
   }
-  void gelss(int M, int N, int NRHS, std::complex<double> *A, int LDA, std::complex<double> *B, int LDB, double *S, double RCOND, int &RANK,
-             std::complex<double> *WORK, int LWORK, double *RWORK, int &INFO) {
-    LAPACK_zgelss(&M, &N, &NRHS, A, &LDA, B, &LDB, S, &RCOND, &RANK, WORK, &LWORK, RWORK, &INFO);
-  }
-
-  void gesvd(char JOBU, char JOBVT, int M, int N, double *A, int LDA, double *S, double *U, int LDU, double *VT, int LDVT, double *WORK, int LWORK,
-             [[maybe_unused]] double *RWORK, int &INFO) {
-    LAPACK_dgesvd(&JOBU, &JOBVT, &M, &N, A, &LDA, S, U, &LDU, VT, &LDVT, WORK, &LWORK, &INFO);
-  }
-  void gesvd(char JOBU, char JOBVT, int M, int N, std::complex<double> *A, int LDA, double *S, std::complex<double> *U, int LDU,
-             std::complex<double> *VT, int LDVT, std::complex<double> *WORK, int LWORK, double *RWORK, int &INFO) {
-    LAPACK_zgesvd(&JOBU, &JOBVT, &M, &N, A, &LDA, S, U, &LDU, VT, &LDVT, WORK, &LWORK, RWORK, &INFO);
+  void gelss(int m, int n, int nrhs, std::complex<double> *a, int lda, std::complex<double> *b, int ldb, double *s, double rcond, int &rank,
+             std::complex<double> *work, int lwork, double *rwork, int &info) {
+    LAPACK_zgelss(&m, &n, &nrhs, a, &lda, b, &ldb, s, &rcond, &rank, work, &lwork, rwork, &info);
   }
 
-  void geqp3(int M, int N, double *A, int LDA, int *JPVT, double *TAU, double *WORK, int LWORK, [[maybe_unused]] double *RWORK, int &INFO) {
-    LAPACK_dgeqp3(&M, &N, A, &LDA, JPVT, TAU, WORK, &LWORK, &INFO);
+  void gesvd(char jobu, char jobvt, int m, int n, double *a, int lda, double *s, double *u, int ldu, double *vt, int ldvt, double *work, int lwork,
+             [[maybe_unused]] double *rwork, int &info) {
+    LAPACK_dgesvd(&jobu, &jobvt, &m, &n, a, &lda, s, u, &ldu, vt, &ldvt, work, &lwork, &info);
   }
-  void geqp3(int M, int N, std::complex<double> *A, int LDA, int *JPVT, std::complex<double> *TAU, std::complex<double> *WORK, int LWORK,
-             double *RWORK, int &INFO) {
-    LAPACK_zgeqp3(&M, &N, A, &LDA, JPVT, TAU, WORK, &LWORK, RWORK, &INFO);
-  }
-
-  void orgqr(int M, int N, int K, double *A, int LDA, double const *TAU, double *WORK, int LWORK, int &INFO) {
-    LAPACK_dorgqr(&M, &N, &K, A, &LDA, TAU, WORK, &LWORK, &INFO);
+  void gesvd(char jobu, char jobvt, int m, int n, std::complex<double> *a, int lda, double *s, std::complex<double> *u, int ldu,
+             std::complex<double> *vt, int ldvt, std::complex<double> *work, int lwork, double *rwork, int &info) {
+    LAPACK_zgesvd(&jobu, &jobvt, &m, &n, a, &lda, s, u, &ldu, vt, &ldvt, work, &lwork, rwork, &info);
   }
 
-  void ungqr(int M, int N, int K, std::complex<double> *A, int LDA, std::complex<double> const *TAU, std::complex<double> *WORK, int LWORK,
-             int &INFO) {
-    LAPACK_zungqr(&M, &N, &K, A, &LDA, TAU, WORK, &LWORK, &INFO);
+  void geqp3(int m, int n, double *a, int lda, int *jpvt, double *tau, double *work, int lwork, [[maybe_unused]] double *rwork, int &info) {
+    LAPACK_dgeqp3(&m, &n, a, &lda, jpvt, tau, work, &lwork, &info);
+  }
+  void geqp3(int m, int n, std::complex<double> *a, int lda, int *jpvt, std::complex<double> *tau, std::complex<double> *work, int lwork,
+             double *rwork, int &info) {
+    LAPACK_zgeqp3(&m, &n, a, &lda, jpvt, tau, work, &lwork, rwork, &info);
   }
 
-  void getrf(int M, int N, double *A, int LDA, int *ipiv, int &info) { LAPACK_dgetrf(&M, &N, A, &LDA, ipiv, &info); }
-  void getrf(int M, int N, std::complex<double> *A, int LDA, int *ipiv, int &info) { LAPACK_zgetrf(&M, &N, A, &LDA, ipiv, &info); }
-
-  void getri(int N, double *A, int LDA, int const *ipiv, double *work, int lwork, int &info) {
-    LAPACK_dgetri(&N, A, &LDA, ipiv, work, &lwork, &info);
-  }
-  void getri(int N, std::complex<double> *A, int LDA, int const *ipiv, std::complex<double> *work, int lwork, int &info) {
-    LAPACK_zgetri(&N, A, &LDA, ipiv, work, &lwork, &info);
+  void orgqr(int m, int n, int k, double *a, int lda, double const *tau, double *work, int lwork, int &info) {
+    LAPACK_dorgqr(&m, &n, &k, a, &lda, tau, work, &lwork, &info);
   }
 
-  void gtsv(int N, int NRHS, double *DL, double *D, double *DU, double *B, int LDB, int &info) { LAPACK_dgtsv(&N, &NRHS, DL, D, DU, B, &LDB, &info); }
-  void gtsv(int N, int NRHS, std::complex<double> *DL, std::complex<double> *D, std::complex<double> *DU, std::complex<double> *B, int LDB,
+  void ungqr(int m, int n, int k, std::complex<double> *a, int lda, std::complex<double> const *tau, std::complex<double> *work, int lwork,
+             int &info) {
+    LAPACK_zungqr(&m, &n, &k, a, &lda, tau, work, &lwork, &info);
+  }
+
+  void getrf(int m, int n, double *a, int lda, int *ipiv, int &info) { LAPACK_dgetrf(&m, &n, a, &lda, ipiv, &info); }
+  void getrf(int m, int n, std::complex<double> *a, int lda, int *ipiv, int &info) { LAPACK_zgetrf(&m, &n, a, &lda, ipiv, &info); }
+
+  void getri(int n, double *a, int lda, int const *ipiv, double *work, int lwork, int &info) {
+    LAPACK_dgetri(&n, a, &lda, ipiv, work, &lwork, &info);
+  }
+  void getri(int n, std::complex<double> *a, int lda, int const *ipiv, std::complex<double> *work, int lwork, int &info) {
+    LAPACK_zgetri(&n, a, &lda, ipiv, work, &lwork, &info);
+  }
+
+  void gtsv(int n, int nrhs, double *dl, double *d, double *du, double *b, int ldb, int &info) { LAPACK_dgtsv(&n, &nrhs, dl, d, du, b, &ldb, &info); }
+  void gtsv(int n, int nrhs, std::complex<double> *dl, std::complex<double> *d, std::complex<double> *du, std::complex<double> *b, int ldb,
             int &info) {
-    LAPACK_zgtsv(&N, &NRHS, DL, D, DU, B, &LDB, &info);
+    LAPACK_zgtsv(&n, &nrhs, dl, d, du, b, &ldb, &info);
   }
 
-  void stev(char J, int N, double *D, double *E, double *Z, int ldz, double *work, int &info) { LAPACK_dstev(&J, &N, D, E, Z, &ldz, work, &info); }
+  void stev(char j, int n, double *d, double *e, double *z, int ldz, double *work, int &info) { LAPACK_dstev(&j, &n, d, e, z, &ldz, work, &info); }
 
-  void syev(char JOBZ, char UPLO, int N, double *A, int LDA, double *W, double *work, int lwork, int &info) {
-    LAPACK_dsyev(&JOBZ, &UPLO, &N, A, &LDA, W, work, &lwork, &info);
+  void syev(char jobz, char uplo, int n, double *a, int lda, double *w, double *work, int lwork, int &info) {
+    LAPACK_dsyev(&jobz, &uplo, &n, a, &lda, w, work, &lwork, &info);
   }
 
-  void heev(char JOBZ, char UPLO, int N, std::complex<double> *A, int LDA, double *W, std::complex<double> *work, int lwork, double *rwork,
+  void heev(char jobz, char uplo, int n, std::complex<double> *a, int lda, double *w, std::complex<double> *work, int lwork, double *rwork,
             int &info) {
-    LAPACK_zheev(&JOBZ, &UPLO, &N, A, &LDA, W, work, &lwork, rwork, &info);
+    LAPACK_zheev(&jobz, &uplo, &n, a, &lda, w, work, &lwork, rwork, &info);
   }
 
-  void sygv(int ITYPE, char JOBZ, char UPLO, int N, double *A, int LDA, double *B, int LDB, double *W, double *work, int lwork, int &info) {
-    LAPACK_dsygv(&ITYPE, &JOBZ, &UPLO, &N, A, &LDA, B, &LDB, W, work, &lwork, &info);
+  void sygv(int itype, char jobz, char uplo, int n, double *a, int lda, double *b, int ldb, double *w, double *work, int lwork, int &info) {
+    LAPACK_dsygv(&itype, &jobz, &uplo, &n, a, &lda, b, &ldb, w, work, &lwork, &info);
   }
 
-  void hegv(int ITYPE, char JOBZ, char UPLO, int N, std::complex<double> *A, int LDA, std::complex<double> *B, int LDB, double *W,
+  void hegv(int itype, char jobz, char uplo, int n, std::complex<double> *a, int lda, std::complex<double> *b, int ldb, double *w,
             std::complex<double> *work, int lwork, double *rwork, int &info) {
-    LAPACK_zhegv(&ITYPE, &JOBZ, &UPLO, &N, A, &LDA, B, &LDB, W, work, &lwork, rwork, &info);
+    LAPACK_zhegv(&itype, &jobz, &uplo, &n, a, &lda, b, &ldb, w, work, &lwork, rwork, &info);
   }
 
-  void getrs(char op, int N, int NRHS, double const *A, int LDA, int const *ipiv, double *B, int LDB, int &info) {
-    LAPACK_dgetrs(&op, &N, &NRHS, A, &LDA, ipiv, B, &LDB, &info);
+  void getrs(char op, int n, int nrhs, double const *a, int lda, int const *ipiv, double *b, int ldb, int &info) {
+    LAPACK_dgetrs(&op, &n, &nrhs, a, &lda, ipiv, b, &ldb, &info);
   }
-  void getrs(char op, int N, int NRHS, std::complex<double> const *A, int LDA, int const *ipiv, std::complex<double> *B, int LDB, int &info) {
-    LAPACK_zgetrs(&op, &N, &NRHS, A, &LDA, ipiv, B, &LDB, &info);
+  void getrs(char op, int n, int nrhs, std::complex<double> const *a, int lda, int const *ipiv, std::complex<double> *b, int ldb, int &info) {
+    LAPACK_zgetrs(&op, &n, &nrhs, a, &lda, ipiv, b, &ldb, &info);
   }
 
-  void geev(char JOBVL, char JOBVR, int N, double *A, int LDA, double *WR, double *WI, double *VL, int LDVL, double *VR, int LDVR, double *work,
+  void geev(char jobvl, char jobvr, int n, double *a, int lda, double *wr, double *wi, double *vl, int ldvl, double *vr, int ldvr, double *work,
             int lwork, int &info) {
-    LAPACK_dgeev(&JOBVL, &JOBVR, &N, A, &LDA, WR, WI, VL, &LDVL, VR, &LDVR, work, &lwork, &info);
+    LAPACK_dgeev(&jobvl, &jobvr, &n, a, &lda, wr, wi, vl, &ldvl, vr, &ldvr, work, &lwork, &info);
   }
-  void geev(char JOBVL, char JOBVR, int N, std::complex<double> *A, int LDA, std::complex<double> *W, std::complex<double> *VL, int LDVL,
-            std::complex<double> *VR, int LDVR, std::complex<double> *work, int lwork, double *rwork, int &info) {
-    LAPACK_zgeev(&JOBVL, &JOBVR, &N, A, &LDA, W, VL, &LDVL, VR, &LDVR, work, &lwork, rwork, &info);
+  void geev(char jobvl, char jobvr, int n, std::complex<double> *a, int lda, std::complex<double> *w, std::complex<double> *vl, int ldvl,
+            std::complex<double> *vr, int ldvr, std::complex<double> *work, int lwork, double *rwork, int &info) {
+    LAPACK_zgeev(&jobvl, &jobvr, &n, a, &lda, w, vl, &ldvl, vr, &ldvr, work, &lwork, rwork, &info);
   }
 
 } // namespace nda::lapack::f77
