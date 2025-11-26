@@ -18,15 +18,15 @@
 
 namespace nda::lapack::device {
 
-  void gesvd(char JOBU, char JOBVT, int M, int N, double *A, int LDA, double *S, double *U, int LDU, double *VT, int LDVT, double *WORK, int LWORK,
-             double *RWORK, int &INFO);
-  void gesvd(char JOBU, char JOBVT, int M, int N, dcomplex *A, int LDA, double *S, dcomplex *U, int LDU, dcomplex *VT, int LDVT, dcomplex *WORK,
-             int LWORK, double *RWORK, int &INFO);
+  void gesvd(char jobu, char jobvt, int m, int n, double *a, int lda, double *s, double *u, int ldu, double *vt, int ldvt, double *work, int lwork,
+             double *rwork, int &info);
+  void gesvd(char jobu, char jobvt, int m, int n, dcomplex *a, int lda, double *s, dcomplex *u, int ldu, dcomplex *vt, int ldvt, dcomplex *work,
+             int lwork, double *rwork, int &info);
 
-  void getrf(int M, int N, double *A, int LDA, int *ipiv, int &info);
-  void getrf(int M, int N, dcomplex *A, int LDA, int *ipiv, int &info);
+  void getrf(int m, int n, double *a, int lda, int *ipiv, int &info);
+  void getrf(int m, int n, dcomplex *a, int lda, int *ipiv, int &info);
 
-  void getrs(char op, int N, int NRHS, double const *A, int LDA, int const *ipiv, double *B, int LDB, int &info);
-  void getrs(char op, int N, int NRHS, dcomplex const *A, int LDA, int const *ipiv, dcomplex *B, int LDB, int &info);
+  void getrs(char op, int n, int nrhs, double const *a, int lda, int const *ipiv, double *b, int ldb, int &info);
+  void getrs(char op, int n, int nrhs, dcomplex const *a, int lda, int const *ipiv, dcomplex *b, int ldb, int &info);
 
 } // namespace nda::lapack::device
