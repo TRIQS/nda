@@ -94,4 +94,13 @@ namespace nda::lapack::f77 {
     LAPACK_zgetrs(&op, &N, &NRHS, A, &LDA, ipiv, B, &LDB, &info);
   }
 
+  void geev(char JOBVL, char JOBVR, int N, double *A, int LDA, double *WR, double *WI, double *VL, int LDVL, double *VR, int LDVR, double *work,
+            int lwork, int &info) {
+    LAPACK_dgeev(&JOBVL, &JOBVR, &N, A, &LDA, WR, WI, VL, &LDVL, VR, &LDVR, work, &lwork, &info);
+  }
+  void geev(char JOBVL, char JOBVR, int N, std::complex<double> *A, int LDA, std::complex<double> *W, std::complex<double> *VL, int LDVL,
+            std::complex<double> *VR, int LDVR, std::complex<double> *work, int lwork, double *rwork, int &info) {
+    LAPACK_zgeev(&JOBVL, &JOBVR, &N, A, &LDA, W, VL, &LDVL, VR, &LDVR, work, &lwork, rwork, &info);
+  }
+
 } // namespace nda::lapack::f77

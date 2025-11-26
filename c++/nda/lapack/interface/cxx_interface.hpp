@@ -64,6 +64,11 @@ namespace nda::lapack::f77 {
   void getrs(char op, int N, int NRHS, double const *A, int LDA, int const *ipiv, double *B, int LDB, int &info);
   void getrs(char op, int N, int NRHS, std::complex<double> const *A, int LDA, int const *ipiv, std::complex<double> *B, int LDB, int &info);
 
+  void geev(char JOBVL, char JOBVR, int N, double *A, int LDA, double *WR, double *WI, double *VL, int LDVL, double *VR, int LDVR, double *work,
+            int lwork, int &info);
+  void geev(char JOBVL, char JOBVR, int N, std::complex<double> *A, int LDA, std::complex<double> *W, std::complex<double> *VL, int LDVL,
+            std::complex<double> *VR, int LDVR, std::complex<double> *work, int lwork, double *rwork, int &info);
+
 } // namespace nda::lapack::f77
 
 // Useful routines from the BLAS interface
