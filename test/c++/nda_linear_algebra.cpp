@@ -289,19 +289,21 @@ TEST(NDA, LinearAlgebraInvAndDet) {
 }
 
 // Check that the eigenvectors/values are correct.
-void check_eigen(auto const &A, auto const &V, auto const &l) {
-  for (auto i : nda::range(0, A.extent(0))) { EXPECT_ARRAY_NEAR(A * V(nda::range::all, i), l(i) * V(nda::range::all, i)); }
+void check_eigen(auto const &A, auto const &V, auto const &l, bool is_left = false) {
+  if (not is_left) {
+    EXPECT_ARRAY_NEAR(A * V, V * nda::diag(l));
+  } else {
+    EXPECT_ARRAY_NEAR(nda::dagger(V) * A, nda::diag(l) * nda::dagger(V));
+  }
 }
 
 void check_eigen(auto const &A, auto const &B, auto const &V, auto const &l, int itype = 1) {
-  for (auto i : nda::range(0, A.extent(0))) {
-    if (itype == 1) {
-      EXPECT_ARRAY_NEAR(A * V(nda::range::all, i), l(i) * B * V(nda::range::all, i));
-    } else if (itype == 2) {
-      EXPECT_ARRAY_NEAR(A * B * V(nda::range::all, i), l(i) * V(nda::range::all, i));
-    } else {
-      EXPECT_ARRAY_NEAR(B * A * V(nda::range::all, i), l(i) * V(nda::range::all, i));
-    }
+  if (itype == 1) {
+    EXPECT_ARRAY_NEAR(A * V, B * V * nda::diag(l));
+  } else if (itype == 2) {
+    EXPECT_ARRAY_NEAR(A * B * V, V * nda::diag(l));
+  } else {
+    EXPECT_ARRAY_NEAR(B * A * V, V * nda::diag(l));
   }
 }
 
@@ -422,6 +424,80 @@ TEST(NDA, LinearAlgebraGeneralizedEighAndEigvalsh) {
   test_generalized_eigh_eigvalsh<std::complex<double>>(1);
   test_generalized_eigh_eigvalsh<std::complex<double>>(2);
   test_generalized_eigh_eigvalsh<std::complex<double>>(3);
+}
+
+// Helper to compare complex eigenvalues (they may be in different order).
+void expect_eigenvalues_near(auto const &lambda1, auto const &lambda2) {
+  ASSERT_EQ(lambda1.size(), lambda2.size());
+  std::vector<std::complex<double>> lambda1_sorted(lambda1.begin(), lambda1.end());
+  std::vector<std::complex<double>> lambda2_sorted(lambda2.begin(), lambda2.end());
+  auto cmp = [](auto a, auto b) {
+    if (std::abs(std::real(a) - std::real(b)) > 1e-10) return std::real(a) < std::real(b);
+    return std::imag(a) < std::imag(b);
+  };
+  std::sort(lambda1_sorted.begin(), lambda1_sorted.end(), cmp);
+  std::sort(lambda2_sorted.begin(), lambda2_sorted.end(), cmp);
+  for (size_t j = 0; j < lambda1_sorted.size(); ++j) { EXPECT_COMPLEX_NEAR(lambda1_sorted[j], lambda2_sorted[j]); }
+}
+
+// Test the eig and eigvals functions for general matrices.
+template <typename T>
+void test_eig_eigvals() {
+  for (auto i : nda::range(1, 6)) {
+    auto A    = nda::matrix<T, nda::F_layout>::rand(i, i);
+    auto Acpx = nda::matrix<std::complex<double>, nda::F_layout>(A);
+
+    // use eig to compute eigenvalues and eigenvectors
+    auto [lambda1, V1] = nda::linalg::eig(A);
+    check_eigen(Acpx, V1, lambda1);
+
+    // use eig_in_place to compute eigenvalues and eigenvectors
+    auto A2            = nda::matrix<T, nda::F_layout>(A);
+    auto [lambda2, V2] = nda::linalg::eig_in_place(A2);
+    check_eigen(Acpx, V2, lambda2);
+    expect_eigenvalues_near(lambda1, lambda2);
+
+    // use eigvals to compute eigenvalues only
+    auto lambda3 = nda::linalg::eigvals(A);
+    expect_eigenvalues_near(lambda1, lambda3);
+
+    // use eigvals_in_place to compute eigenvalues only
+    auto A4      = nda::matrix<T, nda::F_layout>(A);
+    auto lambda4 = nda::linalg::eigvals_in_place(A4);
+    expect_eigenvalues_near(lambda1, lambda4);
+
+    // use eig with a C-layout matrix
+    auto A5            = nda::matrix<T, nda::C_layout>{A};
+    auto A5cpx         = nda::matrix<std::complex<double>, nda::C_layout>(A5);
+    auto [lambda5, V5] = nda::linalg::eig(A5);
+    check_eigen(A5cpx, V5, lambda5);
+    expect_eigenvalues_near(lambda1, lambda5);
+
+    // use eigvals with a C-layout matrix
+    auto lambda6 = nda::linalg::eigvals(A5);
+    expect_eigenvalues_near(lambda1, lambda6);
+  }
+}
+
+// Test eig with a matrix that has known complex eigenvalues.
+TEST(NDA, LinearAlgebraEigComplexEigenvalues) {
+  // 2x2 rotation matrix: eigenvalues are i and -i
+  auto A        = nda::matrix<double, nda::F_layout>{{0.0, -1.0}, {1.0, 0.0}};
+  auto Acpx     = nda::matrix<std::complex<double>, nda::F_layout>(A);
+  auto [w, V]   = nda::linalg::eig(A);
+  auto expected = std::array{std::complex<double>{0.0, 1.0}, std::complex<double>{0.0, -1.0}};
+
+  // check eigenvalues (order may vary)
+  EXPECT_TRUE((std::abs(w(0) - expected[0]) < 1e-10) || (std::abs(w(0) - expected[1]) < 1e-10));
+  EXPECT_TRUE((std::abs(w(1) - expected[0]) < 1e-10) || (std::abs(w(1) - expected[1]) < 1e-10));
+
+  // check eigenvector equation
+  check_eigen(Acpx, V, w);
+}
+
+TEST(NDA, LinearAlgebraEigAndEigvals) {
+  test_eig_eigvals<double>();
+  test_eig_eigvals<std::complex<double>>();
 }
 
 // Test the norm function.
@@ -785,7 +861,7 @@ void verify_qr(auto const &A, auto const &sigma, auto const &Q, auto const &R, b
 template <typename T, typename Layout>
 void test_qr(int m, int n) {
   using matrix_t = nda::matrix<T, Layout>;
-  auto A = matrix_t::rand(m, n);
+  auto A         = matrix_t::rand(m, n);
 
   // QR decomposition
   for (auto complete : {true, false}) {
