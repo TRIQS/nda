@@ -61,133 +61,133 @@ namespace nda::blas::f77 {
   inline auto **blacplx(dcomplex **c) { return reinterpret_cast<double **>(c); }             // NOLINT
   inline auto **blacplx(dcomplex const **c) { return reinterpret_cast<const double **>(c); } // NOLINT
 
-  void axpy(int N, double alpha, const double *x, int incx, double *Y, int incy) { F77_daxpy(&N, &alpha, x, &incx, Y, &incy); }
-  void axpy(int N, dcomplex alpha, const dcomplex *x, int incx, dcomplex *Y, int incy) {
-    F77_zaxpy(&N, blacplx(&alpha), blacplx(x), &incx, blacplx(Y), &incy);
+  void axpy(int n, double alpha, const double *x, int incx, double *y, int incy) { F77_daxpy(&n, &alpha, x, &incx, y, &incy); }
+  void axpy(int n, dcomplex alpha, const dcomplex *x, int incx, dcomplex *y, int incy) {
+    F77_zaxpy(&n, blacplx(&alpha), blacplx(x), &incx, blacplx(y), &incy);
   }
 
   // No Const In Wrapping!
-  void copy(int N, const double *x, int incx, double *Y, int incy) { F77_dcopy(&N, x, &incx, Y, &incy); }
-  void copy(int N, const dcomplex *x, int incx, dcomplex *Y, int incy) { F77_zcopy(&N, blacplx(x), &incx, blacplx(Y), &incy); }
+  void copy(int n, const double *x, int incx, double *y, int incy) { F77_dcopy(&n, x, &incx, y, &incy); }
+  void copy(int n, const dcomplex *x, int incx, dcomplex *y, int incy) { F77_zcopy(&n, blacplx(x), &incx, blacplx(y), &incy); }
 
-  double dot(int M, const double *x, int incx, const double *Y, int incy) { return F77_ddot(&M, x, &incx, Y, &incy); }
-  dcomplex dot(int M, const dcomplex *x, int incx, const dcomplex *Y, int incy) {
+  double dot(int m, const double *x, int incx, const double *y, int incy) { return F77_ddot(&m, x, &incx, y, &incy); }
+  dcomplex dot(int m, const dcomplex *x, int incx, const dcomplex *y, int incy) {
 #ifdef NDA_USE_MKL
     MKL_Complex16 result;
-    cblas_zdotu_sub(M, mklcplx(x), incx, mklcplx(Y), incy, &result);
+    cblas_zdotu_sub(m, mklcplx(x), incx, mklcplx(y), incy, &result);
 #else
-    auto result = F77_zdotu(&M, blacplx(x), &incx, blacplx(Y), &incy);
+    auto result = F77_zdotu(&m, blacplx(x), &incx, blacplx(y), &incy);
 #endif
     return dcomplex{result.real, result.imag};
   }
-  dcomplex dotc(int M, const dcomplex *x, int incx, const dcomplex *Y, int incy) {
+  dcomplex dotc(int m, const dcomplex *x, int incx, const dcomplex *y, int incy) {
 #ifdef NDA_USE_MKL
     MKL_Complex16 result;
-    cblas_zdotc_sub(M, mklcplx(x), incx, mklcplx(Y), incy, &result);
+    cblas_zdotc_sub(m, mklcplx(x), incx, mklcplx(y), incy, &result);
 #else
-    auto result = F77_zdotc(&M, blacplx(x), &incx, blacplx(Y), &incy);
+    auto result = F77_zdotc(&m, blacplx(x), &incx, blacplx(y), &incy);
 #endif
     return dcomplex{result.real, result.imag};
   }
 
-  void gemm(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, const double *B, int LDB, double beta, double *C,
-            int LDC) {
-    F77_dgemm(&op_a, &op_b, &M, &N, &K, &alpha, A, &LDA, B, &LDB, &beta, C, &LDC);
+  void gemm(char op_a, char op_b, int m, int n, int k, double alpha, const double *a, int lda, const double *b, int ldb, double beta, double *c,
+            int ldc) {
+    F77_dgemm(&op_a, &op_b, &m, &n, &k, &alpha, a, &lda, b, &ldb, &beta, c, &ldc);
   }
-  void gemm(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex *A, int LDA, const dcomplex *B, int LDB, dcomplex beta,
-            dcomplex *C, int LDC) {
-    F77_zgemm(&op_a, &op_b, &M, &N, &K, blacplx(&alpha), blacplx(A), &LDA, blacplx(B), &LDB, blacplx(&beta), blacplx(C), &LDC);
+  void gemm(char op_a, char op_b, int m, int n, int k, dcomplex alpha, const dcomplex *a, int lda, const dcomplex *b, int ldb, dcomplex beta,
+            dcomplex *c, int ldc) {
+    F77_zgemm(&op_a, &op_b, &m, &n, &k, blacplx(&alpha), blacplx(a), &lda, blacplx(b), &ldb, blacplx(&beta), blacplx(c), &ldc);
   }
 
-  void gemm_batch(char op_a, char op_b, int M, int N, int K, double alpha, const double **A, int LDA, const double **B, int LDB, double beta,
-                  double **C, int LDC, int batch_count) {
+  void gemm_batch(char op_a, char op_b, int m, int n, int k, double alpha, const double **a, int lda, const double **b, int ldb, double beta,
+                  double **c, int ldc, int batch_count) {
 #ifdef NDA_USE_MKL
     const int group_count = 1;
-    dgemm_batch(&op_a, &op_b, &M, &N, &K, &alpha, A, &LDA, B, &LDB, &beta, C, &LDC, &group_count, &batch_count);
+    dgemm_batch(&op_a, &op_b, &m, &n, &k, &alpha, a, &lda, b, &ldb, &beta, c, &ldc, &group_count, &batch_count);
 #else // Fallback to loop
-    for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, M, N, K, alpha, A[i], LDA, B[i], LDB, beta, C[i], LDC);
+    for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, m, n, k, alpha, a[i], lda, b[i], ldb, beta, c[i], ldc);
 #endif
   }
-  void gemm_batch(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex **A, int LDA, const dcomplex **B, int LDB, dcomplex beta,
-                  dcomplex **C, int LDC, int batch_count) {
+  void gemm_batch(char op_a, char op_b, int m, int n, int k, dcomplex alpha, const dcomplex **a, int lda, const dcomplex **b, int ldb, dcomplex beta,
+                  dcomplex **c, int ldc, int batch_count) {
 #ifdef NDA_USE_MKL
     const int group_count = 1;
-    zgemm_batch(&op_a, &op_b, &M, &N, &K, mklcplx(&alpha), mklcplx(A), &LDA, mklcplx(B), &LDB, mklcplx(&beta), mklcplx(C), &LDC, &group_count,
+    zgemm_batch(&op_a, &op_b, &m, &n, &k, mklcplx(&alpha), mklcplx(a), &lda, mklcplx(b), &ldb, mklcplx(&beta), mklcplx(c), &ldc, &group_count,
                 &batch_count);
 #else
-    for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, M, N, K, alpha, A[i], LDA, B[i], LDB, beta, C[i], LDC);
+    for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, m, n, k, alpha, a[i], lda, b[i], ldb, beta, c[i], ldc);
 #endif
   }
 
-  void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, double alpha, const double **A, int *LDA, const double **B, int *LDB, double beta,
-                   double **C, int *LDC, int batch_count) {
+  void gemm_vbatch(char op_a, char op_b, int *m, int *n, int *k, double alpha, const double **a, int *lda, const double **b, int *ldb, double beta,
+                   double **c, int *ldc, int batch_count) {
 #ifdef NDA_USE_MKL
     nda::vector<int> group_size(batch_count, 1);
     nda::vector<char> ops_a(batch_count, op_a), ops_b(batch_count, op_b);
     nda::vector<double> alphas(batch_count, alpha), betas(batch_count, beta);
-    dgemm_batch(ops_a.data(), ops_b.data(), M, N, K, alphas.data(), A, LDA, B, LDB, betas.data(), C, LDC, &batch_count, group_size.data());
+    dgemm_batch(ops_a.data(), ops_b.data(), m, n, k, alphas.data(), a, lda, b, ldb, betas.data(), c, ldc, &batch_count, group_size.data());
 #else
-    for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, M[i], N[i], K[i], alpha, A[i], LDA[i], B[i], LDB[i], beta, C[i], LDC[i]);
+    for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, m[i], n[i], k[i], alpha, a[i], lda[i], b[i], ldb[i], beta, c[i], ldc[i]);
 #endif
   }
-  void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, dcomplex alpha, const dcomplex **A, int *LDA, const dcomplex **B, int *LDB,
-                   dcomplex beta, dcomplex **C, int *LDC, int batch_count) {
+  void gemm_vbatch(char op_a, char op_b, int *m, int *n, int *k, dcomplex alpha, const dcomplex **a, int *lda, const dcomplex **b, int *ldb,
+                   dcomplex beta, dcomplex **c, int *ldc, int batch_count) {
 #ifdef NDA_USE_MKL
     nda::vector<int> group_size(batch_count, 1);
     nda::vector<char> ops_a(batch_count, op_a), ops_b(batch_count, op_b);
     nda::vector<dcomplex> alphas(batch_count, alpha), betas(batch_count, beta);
-    zgemm_batch(ops_a.data(), ops_b.data(), M, N, K, mklcplx(alphas.data()), mklcplx(A), LDA, mklcplx(B), LDB, mklcplx(betas.data()), mklcplx(C), LDC,
+    zgemm_batch(ops_a.data(), ops_b.data(), m, n, k, mklcplx(alphas.data()), mklcplx(a), lda, mklcplx(b), ldb, mklcplx(betas.data()), mklcplx(c), ldc,
                 &batch_count, group_size.data());
 #else
-    for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, M[i], N[i], K[i], alpha, A[i], LDA[i], B[i], LDB[i], beta, C[i], LDC[i]);
+    for (int i = 0; i < batch_count; ++i) gemm(op_a, op_b, m[i], n[i], k[i], alpha, a[i], lda[i], b[i], ldb[i], beta, c[i], ldc[i]);
 #endif
   }
 
-  void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, int strideA, const double *B, int LDB,
-                          int strideB, double beta, double *C, int LDC, int strideC, int batch_count) {
+  void gemm_batch_strided(char op_a, char op_b, int m, int n, int k, double alpha, const double *a, int lda, int stride_a, const double *b, int ldb,
+                          int stride_b, double beta, double *c, int ldc, int stride_c, int batch_count) {
 #if defined(NDA_USE_MKL) && INTEL_MKL_VERSION >= 20200002
-    dgemm_batch_strided(&op_a, &op_b, &M, &N, &K, &alpha, A, &LDA, &strideA, B, &LDB, &strideB, &beta, C, &LDC, &strideC, &batch_count);
+    dgemm_batch_strided(&op_a, &op_b, &m, &n, &k, &alpha, a, &lda, &stride_a, b, &ldb, &stride_b, &beta, c, &ldc, &stride_c, &batch_count);
 #else
     for (int i = 0; i < batch_count; ++i)
-      gemm(op_a, op_b, M, N, K, alpha, A + static_cast<ptrdiff_t>(i * strideA), LDA, B + static_cast<ptrdiff_t>(i * strideB), LDB, beta,
-           C + static_cast<ptrdiff_t>(i * strideC), LDC);
+      gemm(op_a, op_b, m, n, k, alpha, a + static_cast<ptrdiff_t>(i * stride_a), lda, b + static_cast<ptrdiff_t>(i * stride_b), ldb, beta,
+           c + static_cast<ptrdiff_t>(i * stride_c), ldc);
 #endif
   }
-  void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex *A, int LDA, int strideA, const dcomplex *B,
-                          int LDB, int strideB, dcomplex beta, dcomplex *C, int LDC, int strideC, int batch_count) {
+  void gemm_batch_strided(char op_a, char op_b, int m, int n, int k, dcomplex alpha, const dcomplex *a, int lda, int stride_a, const dcomplex *b,
+                          int ldb, int stride_b, dcomplex beta, dcomplex *c, int ldc, int stride_c, int batch_count) {
 #if defined(NDA_USE_MKL) && INTEL_MKL_VERSION >= 20200002
-    zgemm_batch_strided(&op_a, &op_b, &M, &N, &K, mklcplx(&alpha), mklcplx(A), &LDA, &strideA, mklcplx(B), &LDB, &strideB, mklcplx(&beta), mklcplx(C),
-                        &LDC, &strideC, &batch_count);
+    zgemm_batch_strided(&op_a, &op_b, &m, &n, &k, mklcplx(&alpha), mklcplx(a), &lda, &stride_a, mklcplx(b), &ldb, &stride_b, mklcplx(&beta), mklcplx(c),
+                        &ldc, &stride_c, &batch_count);
 #else
     for (int i = 0; i < batch_count; ++i)
-      gemm(op_a, op_b, M, N, K, alpha, A + static_cast<ptrdiff_t>(i * strideA), LDA, B + static_cast<ptrdiff_t>(i * strideB), LDB, beta,
-           C + static_cast<ptrdiff_t>(i * strideC), LDC);
+      gemm(op_a, op_b, m, n, k, alpha, a + static_cast<ptrdiff_t>(i * stride_a), lda, b + static_cast<ptrdiff_t>(i * stride_b), ldb, beta,
+           c + static_cast<ptrdiff_t>(i * stride_c), ldc);
 #endif
   }
 
-  void gemv(char op, int M, int N, double alpha, const double *A, int LDA, const double *x, int incx, double beta, double *Y, int incy) {
-    F77_dgemv(&op, &M, &N, &alpha, A, &LDA, x, &incx, &beta, Y, &incy);
+  void gemv(char op, int m, int n, double alpha, const double *a, int lda, const double *x, int incx, double beta, double *y, int incy) {
+    F77_dgemv(&op, &m, &n, &alpha, a, &lda, x, &incx, &beta, y, &incy);
   }
-  void gemv(char op, int M, int N, dcomplex alpha, const dcomplex *A, int LDA, const dcomplex *x, int incx, dcomplex beta, dcomplex *Y, int incy) {
-    F77_zgemv(&op, &M, &N, blacplx(&alpha), blacplx(A), &LDA, blacplx(x), &incx, blacplx(&beta), blacplx(Y), &incy);
-  }
-
-  void ger(int M, int N, double alpha, const double *x, int incx, const double *Y, int incy, double *A, int LDA) {
-    F77_dger(&M, &N, &alpha, x, &incx, Y, &incy, A, &LDA);
-  }
-  void ger(int M, int N, dcomplex alpha, const dcomplex *x, int incx, const dcomplex *Y, int incy, dcomplex *A, int LDA) {
-    F77_zgeru(&M, &N, blacplx(&alpha), blacplx(x), &incx, blacplx(Y), &incy, blacplx(A), &LDA);
-  }
-  void gerc(int M, int N, dcomplex alpha, const dcomplex *x, int incx, const dcomplex *Y, int incy, dcomplex *A, int LDA) {
-    F77_zgerc(&M, &N, blacplx(&alpha), blacplx(x), &incx, blacplx(Y), &incy, blacplx(A), &LDA);
+  void gemv(char op, int m, int n, dcomplex alpha, const dcomplex *a, int lda, const dcomplex *x, int incx, dcomplex beta, dcomplex *y, int incy) {
+    F77_zgemv(&op, &m, &n, blacplx(&alpha), blacplx(a), &lda, blacplx(x), &incx, blacplx(&beta), blacplx(y), &incy);
   }
 
-  void scal(int M, double alpha, double *x, int incx) { F77_dscal(&M, &alpha, x, &incx); }
-  void scal(int M, dcomplex alpha, dcomplex *x, int incx) { F77_zscal(&M, blacplx(&alpha), blacplx(x), &incx); }
+  void ger(int m, int n, double alpha, const double *x, int incx, const double *y, int incy, double *a, int lda) {
+    F77_dger(&m, &n, &alpha, x, &incx, y, &incy, a, &lda);
+  }
+  void ger(int m, int n, dcomplex alpha, const dcomplex *x, int incx, const dcomplex *y, int incy, dcomplex *a, int lda) {
+    F77_zgeru(&m, &n, blacplx(&alpha), blacplx(x), &incx, blacplx(y), &incy, blacplx(a), &lda);
+  }
+  void gerc(int m, int n, dcomplex alpha, const dcomplex *x, int incx, const dcomplex *y, int incy, dcomplex *a, int lda) {
+    F77_zgerc(&m, &n, blacplx(&alpha), blacplx(x), &incx, blacplx(y), &incy, blacplx(a), &lda);
+  }
 
-  void swap(int N, double *x, int incx, double *Y, int incy) { F77_dswap(&N, x, &incx, Y, &incy); } // NOLINT (this is a BLAS swap)
-  void swap(int N, dcomplex *x, int incx, dcomplex *Y, int incy) {                                  // NOLINT (this is a BLAS swap)
-    F77_zswap(&N, blacplx(x), &incx, blacplx(Y), &incy);
+  void scal(int m, double alpha, double *x, int incx) { F77_dscal(&m, &alpha, x, &incx); }
+  void scal(int m, dcomplex alpha, dcomplex *x, int incx) { F77_zscal(&m, blacplx(&alpha), blacplx(x), &incx); }
+
+  void swap(int n, double *x, int incx, double *y, int incy) { F77_dswap(&n, x, &incx, y, &incy); } // NOLINT (this is a BLAS swap)
+  void swap(int n, dcomplex *x, int incx, dcomplex *y, int incy) {                                  // NOLINT (this is a BLAS swap)
+    F77_zswap(&n, blacplx(x), &incx, blacplx(y), &incy);
   }
 
 } // namespace nda::blas::f77
