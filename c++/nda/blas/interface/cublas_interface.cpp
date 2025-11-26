@@ -82,115 +82,115 @@ namespace nda::blas::device {
     }                                                                                                                                                \
   }
 
-  void gemm(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, const double *B, int LDB, double beta, double *C,
-            int LDC) {
-    CUBLAS_CHECK(cublasDgemm, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha, A, LDA, B, LDB, &beta, C, LDC);
+  void gemm(char op_a, char op_b, int m, int n, int k, double alpha, const double *a, int lda, const double *b, int ldb, double beta, double *c,
+            int ldc) {
+    CUBLAS_CHECK(cublasDgemm, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, &alpha, a, lda, b, ldb, &beta, c, ldc);
   }
-  void gemm(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex *A, int LDA, const dcomplex *B, int LDB, dcomplex beta,
-            dcomplex *C, int LDC) {
+  void gemm(char op_a, char op_b, int m, int n, int k, dcomplex alpha, const dcomplex *a, int lda, const dcomplex *b, int ldb, dcomplex beta,
+            dcomplex *c, int ldc) {
     auto alpha_cu = cucplx(alpha);
     auto beta_cu  = cucplx(beta);
-    CUBLAS_CHECK(cublasZgemm, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha_cu, cucplx(A), LDA, cucplx(B), LDB, &beta_cu, cucplx(C), LDC);
+    CUBLAS_CHECK(cublasZgemm, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, &alpha_cu, cucplx(a), lda, cucplx(b), ldb, &beta_cu, cucplx(c), ldc);
   }
 
-  void gemm_batch(char op_a, char op_b, int M, int N, int K, double alpha, const double **A, int LDA, const double **B, int LDB, double beta,
-                  double **C, int LDC, int batch_count) {
-    CUBLAS_CHECK(cublasDgemmBatched, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha, A, LDA, B, LDB, &beta, C, LDC, batch_count);
+  void gemm_batch(char op_a, char op_b, int m, int n, int k, double alpha, const double **a, int lda, const double **b, int ldb, double beta,
+                  double **c, int ldc, int batch_count) {
+    CUBLAS_CHECK(cublasDgemmBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, &alpha, a, lda, b, ldb, &beta, c, ldc, batch_count);
   }
-  void gemm_batch(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex **A, int LDA, const dcomplex **B, int LDB, dcomplex beta,
-                  dcomplex **C, int LDC, int batch_count) {
+  void gemm_batch(char op_a, char op_b, int m, int n, int k, dcomplex alpha, const dcomplex **a, int lda, const dcomplex **b, int ldb, dcomplex beta,
+                  dcomplex **c, int ldc, int batch_count) {
     auto alpha_cu = cucplx(alpha);
     auto beta_cu  = cucplx(beta);
-    CUBLAS_CHECK(cublasZgemmBatched, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha_cu, cucplx(A), LDA, cucplx(B), LDB, &beta_cu,
-                 cucplx(C), LDC, batch_count);
+    CUBLAS_CHECK(cublasZgemmBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, &alpha_cu, cucplx(a), lda, cucplx(b), ldb, &beta_cu,
+                 cucplx(c), ldc, batch_count);
   }
 
 #ifdef NDA_HAVE_MAGMA
-  void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, double alpha, const double **A, int *LDA, const double **B, int *LDB, double beta,
-                   double **C, int *LDC, int batch_count) {
-    magmablas_dgemm_vbatched(get_magma_op(op_a), get_magma_op(op_b), M, N, K, alpha, A, LDA, B, LDB, beta, C, LDC, batch_count, get_magma_queue());
+  void gemm_vbatch(char op_a, char op_b, int *m, int *n, int *k, double alpha, const double **a, int *lda, const double **b, int *ldb, double beta,
+                   double **c, int *ldc, int batch_count) {
+    magmablas_dgemm_vbatched(get_magma_op(op_a), get_magma_op(op_b), m, n, k, alpha, a, lda, b, ldb, beta, c, ldc, batch_count, get_magma_queue());
     if (synchronize) magma_queue_sync(get_magma_queue());
     if (synchronize) cudaDeviceSynchronize();
   }
-  void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, dcomplex alpha, const dcomplex **A, int *LDA, const dcomplex **B, int *LDB,
-                   dcomplex beta, dcomplex **C, int *LDC, int batch_count) {
+  void gemm_vbatch(char op_a, char op_b, int *m, int *n, int *k, dcomplex alpha, const dcomplex **a, int *lda, const dcomplex **b, int *ldb,
+                   dcomplex beta, dcomplex **c, int *ldc, int batch_count) {
     auto alpha_cu = cucplx(alpha);
     auto beta_cu  = cucplx(beta);
-    magmablas_zgemm_vbatched(get_magma_op(op_a), get_magma_op(op_b), M, N, K, alpha_cu, cucplx(A), LDA, cucplx(B), LDB, beta_cu, cucplx(C), LDC,
+    magmablas_zgemm_vbatched(get_magma_op(op_a), get_magma_op(op_b), m, n, k, alpha_cu, cucplx(a), lda, cucplx(b), ldb, beta_cu, cucplx(c), ldc,
                              batch_count, get_magma_queue());
     if (synchronize) magma_queue_sync(get_magma_queue());
     if (synchronize) cudaDeviceSynchronize();
   }
 #endif
 
-  void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, int strideA, const double *B, int LDB,
-                          int strideB, double beta, double *C, int LDC, int strideC, int batch_count) {
-    CUBLAS_CHECK(cublasDgemmStridedBatched, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha, A, LDA, strideA, B, LDB, strideB, &beta, C,
-                 LDC, strideC, batch_count);
+  void gemm_batch_strided(char op_a, char op_b, int m, int n, int k, double alpha, const double *a, int lda, int stride_a, const double *b, int ldb,
+                          int stride_b, double beta, double *c, int ldc, int stride_c, int batch_count) {
+    CUBLAS_CHECK(cublasDgemmStridedBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, &alpha, a, lda, stride_a, b, ldb, stride_b, &beta, c,
+                 ldc, stride_c, batch_count);
   }
-  void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex *A, int LDA, int strideA, const dcomplex *B,
-                          int LDB, int strideB, dcomplex beta, dcomplex *C, int LDC, int strideC, int batch_count) {
+  void gemm_batch_strided(char op_a, char op_b, int m, int n, int k, dcomplex alpha, const dcomplex *a, int lda, int stride_a, const dcomplex *b,
+                          int ldb, int stride_b, dcomplex beta, dcomplex *c, int ldc, int stride_c, int batch_count) {
     auto alpha_cu = cucplx(alpha);
     auto beta_cu  = cucplx(beta);
-    CUBLAS_CHECK(cublasZgemmStridedBatched, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha_cu, cucplx(A), LDA, strideA, cucplx(B), LDB,
-                 strideB, &beta_cu, cucplx(C), LDC, strideC, batch_count);
+    CUBLAS_CHECK(cublasZgemmStridedBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, &alpha_cu, cucplx(a), lda, stride_a, cucplx(b), ldb,
+                 stride_b, &beta_cu, cucplx(c), ldc, stride_c, batch_count);
   }
 
-  void axpy(int N, double alpha, const double *x, int incx, double *Y, int incy) { cublasDaxpy(get_handle(), N, &alpha, x, incx, Y, incy); }
-  void axpy(int N, dcomplex alpha, const dcomplex *x, int incx, dcomplex *Y, int incy) {
+  void axpy(int n, double alpha, const double *x, int incx, double *y, int incy) { cublasDaxpy(get_handle(), n, &alpha, x, incx, y, incy); }
+  void axpy(int n, dcomplex alpha, const dcomplex *x, int incx, dcomplex *y, int incy) {
     auto alpha_cu = cucplx(alpha);
-    CUBLAS_CHECK(cublasZaxpy, N, &alpha_cu, cucplx(x), incx, cucplx(Y), incy);
+    CUBLAS_CHECK(cublasZaxpy, n, &alpha_cu, cucplx(x), incx, cucplx(y), incy);
   }
 
-  void copy(int N, const double *x, int incx, double *Y, int incy) { cublasDcopy(get_handle(), N, x, incx, Y, incy); }
-  void copy(int N, const dcomplex *x, int incx, dcomplex *Y, int incy) { CUBLAS_CHECK(cublasZcopy, N, cucplx(x), incx, cucplx(Y), incy); }
+  void copy(int n, const double *x, int incx, double *y, int incy) { cublasDcopy(get_handle(), n, x, incx, y, incy); }
+  void copy(int n, const dcomplex *x, int incx, dcomplex *y, int incy) { CUBLAS_CHECK(cublasZcopy, n, cucplx(x), incx, cucplx(y), incy); }
 
-  double dot(int M, const double *x, int incx, const double *Y, int incy) {
+  double dot(int m, const double *x, int incx, const double *y, int incy) {
     double res{};
-    CUBLAS_CHECK(cublasDdot, M, x, incx, Y, incy, &res);
+    CUBLAS_CHECK(cublasDdot, m, x, incx, y, incy, &res);
     return res;
   }
-  dcomplex dot(int M, const dcomplex *x, int incx, const dcomplex *Y, int incy) {
+  dcomplex dot(int m, const dcomplex *x, int incx, const dcomplex *y, int incy) {
     cuDoubleComplex res;
-    CUBLAS_CHECK(cublasZdotu, M, cucplx(x), incx, cucplx(Y), incy, &res);
+    CUBLAS_CHECK(cublasZdotu, m, cucplx(x), incx, cucplx(y), incy, &res);
     return {res.x, res.y};
   }
-  dcomplex dotc(int M, const dcomplex *x, int incx, const dcomplex *Y, int incy) {
+  dcomplex dotc(int m, const dcomplex *x, int incx, const dcomplex *y, int incy) {
     cuDoubleComplex res;
-    CUBLAS_CHECK(cublasZdotc, M, cucplx(x), incx, cucplx(Y), incy, &res);
+    CUBLAS_CHECK(cublasZdotc, m, cucplx(x), incx, cucplx(y), incy, &res);
     return {res.x, res.y};
   }
 
-  void gemv(char op, int M, int N, double alpha, const double *A, int LDA, const double *x, int incx, double beta, double *Y, int incy) {
-    CUBLAS_CHECK(cublasDgemv, get_cublas_op(op), M, N, &alpha, A, LDA, x, incx, &beta, Y, incy);
+  void gemv(char op, int m, int n, double alpha, const double *a, int lda, const double *x, int incx, double beta, double *y, int incy) {
+    CUBLAS_CHECK(cublasDgemv, get_cublas_op(op), m, n, &alpha, a, lda, x, incx, &beta, y, incy);
   }
-  void gemv(char op, int M, int N, dcomplex alpha, const dcomplex *A, int LDA, const dcomplex *x, int incx, dcomplex beta, dcomplex *Y, int incy) {
+  void gemv(char op, int m, int n, dcomplex alpha, const dcomplex *a, int lda, const dcomplex *x, int incx, dcomplex beta, dcomplex *y, int incy) {
     auto alpha_cu = cucplx(alpha);
     auto beta_cu  = cucplx(beta);
-    CUBLAS_CHECK(cublasZgemv, get_cublas_op(op), M, N, &alpha_cu, cucplx(A), LDA, cucplx(x), incx, &beta_cu, cucplx(Y), incy);
+    CUBLAS_CHECK(cublasZgemv, get_cublas_op(op), m, n, &alpha_cu, cucplx(a), lda, cucplx(x), incx, &beta_cu, cucplx(y), incy);
   }
 
-  void ger(int M, int N, double alpha, const double *x, int incx, const double *Y, int incy, double *A, int LDA) {
-    CUBLAS_CHECK(cublasDger, M, N, &alpha, x, incx, Y, incy, A, LDA);
+  void ger(int m, int n, double alpha, const double *x, int incx, const double *y, int incy, double *a, int lda) {
+    CUBLAS_CHECK(cublasDger, m, n, &alpha, x, incx, y, incy, a, lda);
   }
-  void ger(int M, int N, dcomplex alpha, const dcomplex *x, int incx, const dcomplex *Y, int incy, dcomplex *A, int LDA) {
+  void ger(int m, int n, dcomplex alpha, const dcomplex *x, int incx, const dcomplex *y, int incy, dcomplex *a, int lda) {
     auto alpha_cu = cucplx(alpha);
-    CUBLAS_CHECK(cublasZgeru, M, N, &alpha_cu, cucplx(x), incx, cucplx(Y), incy, cucplx(A), LDA);
+    CUBLAS_CHECK(cublasZgeru, m, n, &alpha_cu, cucplx(x), incx, cucplx(y), incy, cucplx(a), lda);
   }
-  void gerc(int M, int N, dcomplex alpha, const dcomplex *x, int incx, const dcomplex *Y, int incy, dcomplex *A, int LDA) {
+  void gerc(int m, int n, dcomplex alpha, const dcomplex *x, int incx, const dcomplex *y, int incy, dcomplex *a, int lda) {
     auto alpha_cu = cucplx(alpha);
-    CUBLAS_CHECK(cublasZgerc, M, N, &alpha_cu, cucplx(x), incx, cucplx(Y), incy, cucplx(A), LDA);
+    CUBLAS_CHECK(cublasZgerc, m, n, &alpha_cu, cucplx(x), incx, cucplx(y), incy, cucplx(a), lda);
   }
 
-  void scal(int M, double alpha, double *x, int incx) { CUBLAS_CHECK(cublasDscal, M, &alpha, x, incx); }
-  void scal(int M, dcomplex alpha, dcomplex *x, int incx) {
+  void scal(int m, double alpha, double *x, int incx) { CUBLAS_CHECK(cublasDscal, m, &alpha, x, incx); }
+  void scal(int m, dcomplex alpha, dcomplex *x, int incx) {
     auto alpha_cu = cucplx(alpha);
-    CUBLAS_CHECK(cublasZscal, M, &alpha_cu, cucplx(x), incx);
+    CUBLAS_CHECK(cublasZscal, m, &alpha_cu, cucplx(x), incx);
   }
 
-  void swap(int N, double *x, int incx, double *Y, int incy) { CUBLAS_CHECK(cublasDswap, N, x, incx, Y, incy); } // NOLINT (this is a BLAS swap)
-  void swap(int N, dcomplex *x, int incx, dcomplex *Y, int incy) {                                               // NOLINT (this is a BLAS swap)
-    CUBLAS_CHECK(cublasZswap, N, cucplx(x), incx, cucplx(Y), incy);
+  void swap(int n, double *x, int incx, double *y, int incy) { CUBLAS_CHECK(cublasDswap, n, x, incx, y, incy); } // NOLINT (this is a BLAS swap)
+  void swap(int n, dcomplex *x, int incx, dcomplex *y, int incy) {                                               // NOLINT (this is a BLAS swap)
+    CUBLAS_CHECK(cublasZswap, n, cucplx(x), incx, cucplx(y), incy);
   }
 
 } // namespace nda::blas::device
