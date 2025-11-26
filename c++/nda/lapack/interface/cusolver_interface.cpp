@@ -58,48 +58,48 @@ namespace nda::lapack::device {
   }                                                                                                                                                  \
   info = *get_info_ptr();
 
-  void gesvd(char JOBU, char JOBVT, int M, int N, double *A, int LDA, double *S, double *U, int LDU, double *VT, int LDVT, double *WORK, int LWORK,
-             double *RWORK, int &INFO) {
+  void gesvd(char jobu, char jobvt, int m, int n, double *a, int lda, double *s, double *u, int ldu, double *vt, int ldvt, double *work, int lwork,
+             double *rwork, int &info) {
     // Replicate behavior of Netlib gesvd
-    if (LWORK == -1) {
+    if (lwork == -1) {
       int bufferSize = 0;
-      cusolverDnDgesvd_bufferSize(get_handle(), M, N, &bufferSize);
-      *WORK = bufferSize;
+      cusolverDnDgesvd_bufferSize(get_handle(), m, n, &bufferSize);
+      *work = bufferSize;
     } else {
-      CUSOLVER_CHECK(cusolverDnDgesvd, INFO, JOBU, JOBVT, M, N, A, LDA, S, U, LDU, VT, LDVT, WORK, LWORK, RWORK);
+      CUSOLVER_CHECK(cusolverDnDgesvd, info, jobu, jobvt, m, n, a, lda, s, u, ldu, vt, ldvt, work, lwork, rwork);
     }
   }
-  void gesvd(char JOBU, char JOBVT, int M, int N, dcomplex *A, int LDA, double *S, dcomplex *U, int LDU, dcomplex *VT, int LDVT, dcomplex *WORK,
-             int LWORK, double *RWORK, int &INFO) {
+  void gesvd(char jobu, char jobvt, int m, int n, dcomplex *a, int lda, double *s, dcomplex *u, int ldu, dcomplex *vt, int ldvt, dcomplex *work,
+             int lwork, double *rwork, int &info) {
     // Replicate behavior of Netlib gesvd
-    if (LWORK == -1) {
+    if (lwork == -1) {
       int bufferSize = 0;
-      cusolverDnZgesvd_bufferSize(get_handle(), M, N, &bufferSize);
-      *WORK = bufferSize;
+      cusolverDnZgesvd_bufferSize(get_handle(), m, n, &bufferSize);
+      *work = bufferSize;
     } else {
-      CUSOLVER_CHECK(cusolverDnZgesvd, INFO, JOBU, JOBVT, M, N, cucplx(A), LDA, S, cucplx(U), LDU, cucplx(VT), LDVT, cucplx(WORK), LWORK,
-                     RWORK); // NOLINT
+      CUSOLVER_CHECK(cusolverDnZgesvd, info, jobu, jobvt, m, n, cucplx(a), lda, s, cucplx(u), ldu, cucplx(vt), ldvt, cucplx(work), lwork,
+                     rwork); // NOLINT
     }
   }
 
-  void getrf(int M, int N, double *A, int LDA, int *ipiv, int &info) {
+  void getrf(int m, int n, double *a, int lda, int *ipiv, int &info) {
     int bufferSize = 0;
-    cusolverDnDgetrf_bufferSize(get_handle(), M, N, A, LDA, &bufferSize);
+    cusolverDnDgetrf_bufferSize(get_handle(), m, n, a, lda, &bufferSize);
     auto Workspace = nda::cuvector<double>(bufferSize);
-    CUSOLVER_CHECK(cusolverDnDgetrf, info, M, N, A, LDA, Workspace.data(), ipiv);
+    CUSOLVER_CHECK(cusolverDnDgetrf, info, m, n, a, lda, Workspace.data(), ipiv);
   }
-  void getrf(int M, int N, dcomplex *A, int LDA, int *ipiv, int &info) {
+  void getrf(int m, int n, dcomplex *a, int lda, int *ipiv, int &info) {
     int bufferSize = 0;
-    cusolverDnZgetrf_bufferSize(get_handle(), M, N, cucplx(A), LDA, &bufferSize);
+    cusolverDnZgetrf_bufferSize(get_handle(), m, n, cucplx(a), lda, &bufferSize);
     auto Workspace = nda::cuvector<dcomplex>(bufferSize);
-    CUSOLVER_CHECK(cusolverDnZgetrf, info, M, N, cucplx(A), LDA, cucplx(Workspace.data()), ipiv);
+    CUSOLVER_CHECK(cusolverDnZgetrf, info, m, n, cucplx(a), lda, cucplx(Workspace.data()), ipiv);
   }
 
-  void getrs(char op, int N, int NRHS, double const *A, int LDA, int const *ipiv, double *B, int LDB, int &info) {
-    CUSOLVER_CHECK(cusolverDnDgetrs, info, get_cublas_op(op), N, NRHS, A, LDA, ipiv, B, LDB);
+  void getrs(char op, int n, int nrhs, double const *a, int lda, int const *ipiv, double *b, int ldb, int &info) {
+    CUSOLVER_CHECK(cusolverDnDgetrs, info, get_cublas_op(op), n, nrhs, a, lda, ipiv, b, ldb);
   }
-  void getrs(char op, int N, int NRHS, dcomplex const *A, int LDA, int const *ipiv, dcomplex *B, int LDB, int &info) {
-    CUSOLVER_CHECK(cusolverDnZgetrs, info, get_cublas_op(op), N, NRHS, cucplx(A), LDA, ipiv, cucplx(B), LDB);
+  void getrs(char op, int n, int nrhs, dcomplex const *a, int lda, int const *ipiv, dcomplex *b, int ldb, int &info) {
+    CUSOLVER_CHECK(cusolverDnZgetrs, info, get_cublas_op(op), n, nrhs, cucplx(a), lda, ipiv, cucplx(b), ldb);
   }
 
 } // namespace nda::lapack::device
