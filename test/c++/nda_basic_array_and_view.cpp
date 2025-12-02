@@ -843,6 +843,122 @@ TEST_F(NDAArrayAndView, AccessViaSubscriptOperator) {
   EXPECT_EQ(B, (nda::array<int, 1>{42, 1, 42, 3, 42}));
 }
 
+TEST_F(NDAArrayAndView, MultiDimensionalSubscriptOperator) {
+  using namespace nda::clef::literals;
+
+  // multi-dimensional single element access via operator[]
+  for (long i = 0; i < shape_3d[0]; ++i) {
+    for (long j = 0; j < shape_3d[1]; ++j) {
+      for (long k = 0; k < shape_3d[2]; ++k) {
+        EXPECT_EQ((A_3d[i, j, k]), A_3d(i, j, k));
+        EXPECT_EQ((A_3d_v[i, j, k]), A_3d_v(i, j, k));
+        EXPECT_EQ((A_3d_cv[i, j, k]), A_3d_cv(i, j, k));
+      }
+    }
+  }
+
+  // verify return types
+  static_assert(std::is_reference_v<decltype(A_3d[0, 0, 0])>);
+  static_assert(std::is_reference_v<decltype(A_3d_v[0, 0, 0])>);
+  static_assert(!std::is_reference_v<decltype(std::move(A_3d)[0, 0, 0])>);
+
+  // modify via operator[]
+  auto C = A_3d;
+  C[0, 1, 2] = 42;
+  EXPECT_EQ((C[0, 1, 2]), 42);
+  EXPECT_NE(C, A_3d);
+
+  // multi-dimensional lazy access
+  auto A_3d_lazy = A_3d[i_, j_, k_];
+  static_assert(nda::clef::is_lazy<decltype(A_3d_lazy)>);
+  EXPECT_EQ(nda::clef::eval(A_3d_lazy, i_ = 0, j_ = 1, k_ = 2), A_3d(0, 1, 2));
+
+  // CLEF auto-assign with operator[] (the << operator)
+  nda::array<double, 2> E(3, 4);
+  E[i_, j_] << i_ + 0.1 * j_;
+  for (int ii = 0; ii < 3; ++ii) {
+    for (int jj = 0; jj < 4; ++jj) { EXPECT_DOUBLE_EQ((E[ii, jj]), ii + 0.1 * jj); }
+  }
+
+  // CLEF auto-assign with operator[] for 3D array
+  nda::array<int, 3> F(2, 3, 4);
+  F[i_, j_, k_] << 100 * i_ + 10 * j_ + k_;
+  for (int ii = 0; ii < 2; ++ii) {
+    for (int jj = 0; jj < 3; ++jj) {
+      for (int kk = 0; kk < 4; ++kk) { EXPECT_EQ((F[ii, jj, kk]), 100 * ii + 10 * jj + kk); }
+    }
+  }
+
+  // 2D slice via operator[] (fix first index)
+  auto D       = A_3d;
+  auto D_slice = D[0, nda::range::all, nda::range::all];
+  EXPECT_EQ(D_slice.shape(), (std::array<long, 2>{3, 4}));
+  for (long j = 0; j < shape_3d[1]; ++j) {
+    for (long k = 0; k < shape_3d[2]; ++k) { EXPECT_EQ((D_slice[j, k]), A_3d(0, j, k)); }
+  }
+
+  // 1D slice via operator[] (fix first two indices)
+  auto D_1d = D[1, 2, nda::range::all];
+  EXPECT_EQ(D_1d.size(), shape_3d[2]);
+  for (long k = 0; k < shape_3d[2]; ++k) { EXPECT_EQ(D_1d[k], A_3d(1, 2, k)); }
+
+  // slicing with ellipsis via operator[]
+  auto D_ellipsis = D[0, nda::ellipsis{}];
+  EXPECT_EQ(D_ellipsis.shape(), (std::array<long, 2>{3, 4}));
+  for (long j = 0; j < shape_3d[1]; ++j) {
+    for (long k = 0; k < shape_3d[2]; ++k) { EXPECT_EQ((D_ellipsis[j, k]), A_3d(0, j, k)); }
+  }
+
+  // assign to slice via operator[]
+  D[0, nda::range::all, 0] = 99;
+  for (long j = 0; j < shape_3d[1]; ++j) { EXPECT_EQ((D[0, j, 0]), 99); }
+
+  // full view via operator[] with no arguments
+  auto D_full = D[];
+  EXPECT_EQ(D_full.shape(), D.shape());
+  EXPECT_EQ(D_full, D);
+
+  // matrix tests
+  nda::matrix<double> M(3, 4);
+  for (int i = 0; i < 3; ++i)
+    for (int j = 0; j < 4; ++j) M(i, j) = i * 4 + j;
+
+  EXPECT_EQ((M[1, 2]), M(1, 2));
+
+  // matrix row slice
+  auto M_row  = M[1, nda::range::all];
+  auto M_row2 = M(1, nda::range::all);
+  EXPECT_EQ(M_row, M_row2);
+
+  // matrix column slice
+  auto M_col  = M[nda::range::all, 2];
+  auto M_col2 = M(nda::range::all, 2);
+  EXPECT_EQ(M_col, M_col2);
+
+  // expression templates with operator[]
+  nda::array<double, 2> G(3, 4), H(3, 4);
+  G[i_, j_] << i_ + j_;
+  H[i_, j_] << 2.0 * i_ - j_;
+
+  // binary expression with operator[]
+  auto expr_add = G + H;
+  for (int ii = 0; ii < 3; ++ii) {
+    for (int jj = 0; jj < 4; ++jj) { EXPECT_DOUBLE_EQ((expr_add[ii, jj]), (G[ii, jj] + H[ii, jj])); }
+  }
+
+  // unary expression with operator[]
+  auto expr_neg = -G;
+  for (int ii = 0; ii < 3; ++ii) {
+    for (int jj = 0; jj < 4; ++jj) { EXPECT_DOUBLE_EQ((expr_neg[ii, jj]), -(G[ii, jj])); }
+  }
+
+  // scalar-array expression with operator[]
+  auto expr_scale = 3.0 * G;
+  for (int ii = 0; ii < 3; ++ii) {
+    for (int jj = 0; jj < 4; ++jj) { EXPECT_DOUBLE_EQ((expr_scale[ii, jj]), 3.0 * (G[ii, jj])); }
+  }
+}
+
 TEST_F(NDAArrayAndView, Indices) {
   auto indices = A_3d_v.indices();
   auto it      = indices.begin();

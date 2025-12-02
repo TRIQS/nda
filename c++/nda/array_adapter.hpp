@@ -64,7 +64,20 @@ namespace nda {
     [[nodiscard]] long size() const { return stdutil::product(myshape); }
 
     /**
-     * @brief Function call operator simply forwards the arguments to the callable object.
+     * @brief Subscript operator simply forwards the arguments to the callable object.
+     *
+     * @tparam Ints Integer types (convertible to long).
+     * @param i0 First argument.
+     * @param is Rest of the arguments.
+     */
+    template <typename... Ints>
+    auto operator[](long i0, Ints... is) const {
+      static_assert((std::is_convertible_v<Ints, long> and ...), "Error in nda::array_adapter: Arguments must be convertible to long");
+      return f(i0, is...);
+    }
+
+    /**
+     * @brief Function call operator simply forwards the arguments to the subscript operator.
      *
      * @tparam Ints Integer types (convertible to long).
      * @param i0 First argument.
@@ -72,8 +85,7 @@ namespace nda {
      */
     template <typename... Ints>
     auto operator()(long i0, Ints... is) const {
-      static_assert((std::is_convertible_v<Ints, long> and ...), "Error in nda::array_adapter: Arguments must be convertible to long");
-      return f(i0, is...);
+      return (*this)[i0, is...];
     }
   };
 
