@@ -96,7 +96,6 @@ namespace nda::linalg {
     requires(mem::have_host_compatible_addr_space<WI, VA> and std::same_as<double, get_value_t<WI>> and have_same_value_type_v<WI, VA>)
   auto get_geev_eigenvectors(const WI &wi, const VA &va) {
     using namespace std::complex_literals;
-    static_assert(nda::blas::has_F_layout<VA>, "Error in nda::linalg::get_geev_eigenvectors: VA must have Fortran layout");
 
     // check the dimensions of the input arrays/views
     auto const n = wi.size();
@@ -138,8 +137,8 @@ namespace nda::linalg {
 
       // allocate outputs
       auto lambda = arr_t(n);
-      auto U      = mat_t(jobvl == 'V' ? n : 0, jobvl == 'V' ? n : 0);
-      auto V      = mat_t(jobvr == 'V' ? n : 0, jobvr == 'V' ? n : 0);
+      auto U      = (jobvl == 'V') ? mat_t(n, n) : mat_t();
+      auto V      = (jobvr == 'V') ? mat_t(n, n) : mat_t();
 
       // make the call to geev
       int info = nda::lapack::geev(a, lambda, U, V, jobvl, jobvr);
@@ -162,8 +161,8 @@ namespace nda::linalg {
       // allocate outputs
       auto wr = array<double, 1>(n);
       auto wi = array<double, 1>(n);
-      auto vl = matrix<double, F_layout>(jobvl == 'V' ? n : 0, jobvl == 'V' ? n : 0);
-      auto vr = matrix<double, F_layout>(jobvr == 'V' ? n : 0, jobvr == 'V' ? n : 0);
+      auto vl = (jobvl = 'V') ? matrix<double, F_layout>(n, n) : matrix<double, F_layout>{};
+      auto vr = (jobvr = 'V') ? matrix<double, F_layout>(n, n) : matrix<double, F_layout>{};
 
       // make the call to geev
       int info = nda::lapack::geev(a, wr, wi, vl, vr, jobvl, jobvr);
@@ -243,7 +242,7 @@ namespace nda::linalg {
    * @return `std::pair` containing an nda::array with the complex eigenvalues \f$ \lambda_j \f$ and an nda::matrix with
    * the complex right eigenvectors \f$ \mathbf{v}_j \f$ as columns.
    */
-  template <MemoryMatrix A>
+  template <Matrix A>
     requires(nda::mem::have_host_compatible_addr_space<A> and is_blas_lapack_v<get_value_t<A>>)
   auto eig(A const &a) {
     auto m_copy = matrix<get_value_t<A>, F_layout>(a);

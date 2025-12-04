@@ -42,7 +42,7 @@ namespace nda::lapack {
    * \f[
    *   \mathbf{u}_j^T \mathbf{A} = \lambda_j \mathbf{u}_j^T
    * \f]
-   * where \f$ \mathbf{u}_j^T \f$ denotes the conjugate-transpose of \f$ \mathbf{u}_j \f$.
+   * where \f$ \mathbf{u}_j^T \f$ denotes the transpose of \f$ \mathbf{u}_j \f$.
    *
    * The computed eigenvectors are normalized to have Euclidean norm equal to 1 and largest component real.
    *
