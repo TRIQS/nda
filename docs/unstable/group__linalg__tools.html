@@ -133,7 +133,7 @@ requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0
 requires ((Scalar&lt;X&gt; and Scalar&lt;Y&gt;) or (Vector&lt;X&gt; and Vector&lt;Y&gt;))</td></tr>
 <tr class="memitem:ga1e4da250fc11060a5bc97da2ee467a9a template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1e4da250fc11060a5bc97da2ee467a9a">nda::linalg::dotc</a> (X const &amp;x, Y const &amp;y)</td></tr>
 <tr class="memdesc:ga1e4da250fc11060a5bc97da2ee467a9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the dotc (LHS operand is conjugated) product of two <a class="el" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68" title="Alias template of an nda::basic_array with rank 1 and a &#39;V&#39; algebra.">nda::vector</a> objects or the product of two scalars.  <br /></td></tr>
-<tr class="memitem:gaa5e1700d95b6703e4ff2fc9d6a3f095e" id="r_gaa5e1700d95b6703e4ff2fc9d6a3f095e"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A&gt; <br />
+<tr class="memitem:gaa5e1700d95b6703e4ff2fc9d6a3f095e" id="r_gaa5e1700d95b6703e4ff2fc9d6a3f095e"><td class="memTemplParams" colspan="2">template&lt;Matrix A&gt; <br />
 requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
 <tr class="memitem:gaa5e1700d95b6703e4ff2fc9d6a3f095e template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa5e1700d95b6703e4ff2fc9d6a3f095e">nda::linalg::eig</a> (A const &amp;a)</td></tr>
 <tr class="memdesc:gaa5e1700d95b6703e4ff2fc9d6a3f095e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues and right eigenvectors of a general matrix.  <br /></td></tr>
@@ -552,7 +552,7 @@ requires ((Scalar&lt;X&gt; and Scalar&lt;Y&gt;) or (Vector&lt;X&gt; and Vector&l
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;MemoryMatrix A&gt; <br />
+template&lt;Matrix A&gt; <br />
 requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
       <table class="memname">
         <tr>
@@ -582,7 +582,7 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><span class="tt">std::pair</span> containing an <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> with the complex eigenvalues \( \lambda_j \) and an <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> with the complex right eigenvectors \( \mathbf{v}_j \) as columns. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="eig_8hpp_source.html#l00248">248</a> of file <a class="el" href="eig_8hpp_source.html">eig.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="eig_8hpp_source.html#l00247">247</a> of file <a class="el" href="eig_8hpp_source.html">eig.hpp</a>.</p>
 
 </div>
 </div>
@@ -628,7 +628,7 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><span class="tt">std::pair</span> containing an <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> with the complex eigenvalues \( \lambda_j \) and a <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> with the complex right eigenvectors \( \mathbf{v}_j \) as columns. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="eig_8hpp_source.html#l00205">205</a> of file <a class="el" href="eig_8hpp_source.html">eig.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="eig_8hpp_source.html#l00204">204</a> of file <a class="el" href="eig_8hpp_source.html">eig.hpp</a>.</p>
 
 </div>
 </div>
@@ -875,7 +875,7 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> with the complex eigenvalues \( \lambda_j \). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="eig_8hpp_source.html#l00265">265</a> of file <a class="el" href="eig_8hpp_source.html">eig.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="eig_8hpp_source.html#l00264">264</a> of file <a class="el" href="eig_8hpp_source.html">eig.hpp</a>.</p>
 
 </div>
 </div>
@@ -921,7 +921,7 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> with the complex eigenvalues \( \lambda_j \). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="eig_8hpp_source.html#l00231">231</a> of file <a class="el" href="eig_8hpp_source.html">eig.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="eig_8hpp_source.html#l00230">230</a> of file <a class="el" href="eig_8hpp_source.html">eig.hpp</a>.</p>
 
 </div>
 </div>
