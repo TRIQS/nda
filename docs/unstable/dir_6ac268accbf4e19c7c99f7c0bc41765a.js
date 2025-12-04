@@ -3,6 +3,7 @@ var dir_6ac268accbf4e19c7c99f7c0bc41765a =
     [ "cross_product.hpp", "cross__product_8hpp.html", "cross__product_8hpp" ],
     [ "det.hpp", "det_8hpp.html", "det_8hpp" ],
     [ "dot.hpp", "linalg_2dot_8hpp.html", "linalg_2dot_8hpp" ],
+    [ "eig.hpp", "eig_8hpp.html", "eig_8hpp" ],
     [ "eigh.hpp", "eigh_8hpp.html", "eigh_8hpp" ],
     [ "inv.hpp", "inv_8hpp.html", "inv_8hpp" ],
     [ "lu.hpp", "lu_8hpp.html", "lu_8hpp" ],

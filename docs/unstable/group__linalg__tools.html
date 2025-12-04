@@ -133,6 +133,14 @@ requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0
 requires ((Scalar&lt;X&gt; and Scalar&lt;Y&gt;) or (Vector&lt;X&gt; and Vector&lt;Y&gt;))</td></tr>
 <tr class="memitem:ga1e4da250fc11060a5bc97da2ee467a9a template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1e4da250fc11060a5bc97da2ee467a9a">nda::linalg::dotc</a> (X const &amp;x, Y const &amp;y)</td></tr>
 <tr class="memdesc:ga1e4da250fc11060a5bc97da2ee467a9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the dotc (LHS operand is conjugated) product of two <a class="el" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68" title="Alias template of an nda::basic_array with rank 1 and a &#39;V&#39; algebra.">nda::vector</a> objects or the product of two scalars.  <br /></td></tr>
+<tr class="memitem:gaa5e1700d95b6703e4ff2fc9d6a3f095e" id="r_gaa5e1700d95b6703e4ff2fc9d6a3f095e"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:gaa5e1700d95b6703e4ff2fc9d6a3f095e template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa5e1700d95b6703e4ff2fc9d6a3f095e">nda::linalg::eig</a> (A const &amp;a)</td></tr>
+<tr class="memdesc:gaa5e1700d95b6703e4ff2fc9d6a3f095e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues and right eigenvectors of a general matrix.  <br /></td></tr>
+<tr class="memitem:ga1d1b4e9015c22e6a58584b7e5f31e698" id="r_ga1d1b4e9015c22e6a58584b7e5f31e698"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;)</td></tr>
+<tr class="memitem:ga1d1b4e9015c22e6a58584b7e5f31e698 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1d1b4e9015c22e6a58584b7e5f31e698">nda::linalg::eig_in_place</a> (A &amp;&amp;a)</td></tr>
+<tr class="memdesc:ga1d1b4e9015c22e6a58584b7e5f31e698"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues and right eigenvectors of a general matrix.  <br /></td></tr>
 <tr class="memitem:ga2d0ce3ce27387948261195b0c1f28376" id="r_ga2d0ce3ce27387948261195b0c1f28376"><td class="memTemplParams" colspan="2">template&lt;Matrix A&gt; <br />
 requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
 <tr class="memitem:ga2d0ce3ce27387948261195b0c1f28376 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2d0ce3ce27387948261195b0c1f28376">nda::linalg::eigh</a> (A const &amp;a)</td></tr>
@@ -149,6 +157,14 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;B&gt;)</td></tr>
 <tr class="memitem:ga1416f4c96f511fb7bad93f32ef4d8642 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1416f4c96f511fb7bad93f32ef4d8642">nda::linalg::eigh_in_place</a> (A &amp;&amp;a, B &amp;&amp;b, int itype=1)</td></tr>
 <tr class="memdesc:ga1416f4c96f511fb7bad93f32ef4d8642"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues and eigenvectors of a generalized real symmetric-definite or complex hermitian-definite eigenvalue problem.  <br /></td></tr>
+<tr class="memitem:ga8f3e079f9f38fb1b5f872237e14486b6" id="r_ga8f3e079f9f38fb1b5f872237e14486b6"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:ga8f3e079f9f38fb1b5f872237e14486b6 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8f3e079f9f38fb1b5f872237e14486b6">nda::linalg::eigvals</a> (A const &amp;a)</td></tr>
+<tr class="memdesc:ga8f3e079f9f38fb1b5f872237e14486b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues of a general matrix.  <br /></td></tr>
+<tr class="memitem:gafcdd88a4caba1d7f4df4b7ddf20f9221" id="r_gafcdd88a4caba1d7f4df4b7ddf20f9221"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;)</td></tr>
+<tr class="memitem:gafcdd88a4caba1d7f4df4b7ddf20f9221 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafcdd88a4caba1d7f4df4b7ddf20f9221">nda::linalg::eigvals_in_place</a> (A &amp;&amp;a)</td></tr>
+<tr class="memdesc:gafcdd88a4caba1d7f4df4b7ddf20f9221"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues of a general matrix.  <br /></td></tr>
 <tr class="memitem:ga843c22ecfbd336fc0e924ace02aa60b1" id="r_ga843c22ecfbd336fc0e924ace02aa60b1"><td class="memTemplParams" colspan="2">template&lt;Matrix A&gt; <br />
 requires (Scalar&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
 <tr class="memitem:ga843c22ecfbd336fc0e924ace02aa60b1 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga843c22ecfbd336fc0e924ace02aa60b1">nda::linalg::eigvalsh</a> (A const &amp;a)</td></tr>
@@ -165,6 +181,14 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;B&gt;)</td></tr>
 <tr class="memitem:gae9bb9220ce836b1b3752673080ef007f template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae9bb9220ce836b1b3752673080ef007f">nda::linalg::eigvalsh_in_place</a> (A &amp;&amp;a, B &amp;&amp;b, int itype=1)</td></tr>
 <tr class="memdesc:gae9bb9220ce836b1b3752673080ef007f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the eigenvalues of a generalized real symmetric-definite or complex hermitian-definite eigenvalue problem.  <br /></td></tr>
+<tr class="memitem:gab8a04307f2389625f08d3c5c5e2a5f98" id="r_gab8a04307f2389625f08d3c5c5e2a5f98"><td class="memTemplParams" colspan="2">template&lt;Vector WR, Vector WI&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;WR, WI&gt; and std::same_as&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;WR&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;WR, WI&gt;)</td></tr>
+<tr class="memitem:gab8a04307f2389625f08d3c5c5e2a5f98 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab8a04307f2389625f08d3c5c5e2a5f98">nda::linalg::get_geev_eigenvalues</a> (const WR &amp;wr, const WI &amp;wi)</td></tr>
+<tr class="memdesc:gab8a04307f2389625f08d3c5c5e2a5f98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the complex eigenvalues from <a class="el" href="group__linalg__lapack.html#ga178dcfa14094a8200dbe2c3432f6081a" title="Interface to the LAPACK geev routine for real matrices.">nda::lapack::geev</a> output for real matrices.  <br /></td></tr>
+<tr class="memitem:ga220d388b1a584c1272603e83941bf51f" id="r_ga220d388b1a584c1272603e83941bf51f"><td class="memTemplParams" colspan="2">template&lt;Vector WI, Matrix VA&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;WI, VA&gt; and std::same_as&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;WI&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;WI, VA&gt;)</td></tr>
+<tr class="memitem:ga220d388b1a584c1272603e83941bf51f template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga220d388b1a584c1272603e83941bf51f">nda::linalg::get_geev_eigenvectors</a> (const WI &amp;wi, const VA &amp;va)</td></tr>
+<tr class="memdesc:ga220d388b1a584c1272603e83941bf51f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the complex left/right eigenvectors from <a class="el" href="group__linalg__lapack.html#ga178dcfa14094a8200dbe2c3432f6081a" title="Interface to the LAPACK geev routine for real matrices.">nda::lapack::geev</a> output for real matrices.  <br /></td></tr>
 <tr class="memitem:gac9bcad3fd136f1fc251b3d5d48d51a49" id="r_gac9bcad3fd136f1fc251b3d5d48d51a49"><td class="memTemplParams" colspan="2">template&lt;typename LP = F_layout, MemoryMatrix A&gt; <br />
 requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;)</td></tr>
 <tr class="memitem:gac9bcad3fd136f1fc251b3d5d48d51a49 template"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac9bcad3fd136f1fc251b3d5d48d51a49">nda::linalg::get_lu_matrices</a> (A const &amp;a)</td></tr>
@@ -522,6 +546,92 @@ requires ((Scalar&lt;X&gt; and Scalar&lt;Y&gt;) or (Vector&lt;X&gt; and Vector&l
 
 </div>
 </div>
+<a id="gaa5e1700d95b6703e4ff2fc9d6a3f095e" name="gaa5e1700d95b6703e4ff2fc9d6a3f095e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa5e1700d95b6703e4ff2fc9d6a3f095e">&#9670;&#160;</a></span>eig()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::eig </td>
+          <td>(</td>
+          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="eig_8hpp.html">nda/linalg/eig.hpp</a>&gt;</code></p>
+
+<p>Compute the eigenvalues and right eigenvectors of a general matrix. </p>
+<p>Same as <a class="el" href="#ga1d1b4e9015c22e6a58584b7e5f31e698" title="Compute the eigenvalues and right eigenvectors of a general matrix.">nda::linalg::eig_in_place</a> but makes a copy of the input matrix, leaving the original unchanged.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input matrix. The matrix \( \mathbf{A} \). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><span class="tt">std::pair</span> containing an <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> with the complex eigenvalues \( \lambda_j \) and an <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> with the complex right eigenvectors \( \mathbf{v}_j \) as columns. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="eig_8hpp_source.html#l00248">248</a> of file <a class="el" href="eig_8hpp_source.html">eig.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga1d1b4e9015c22e6a58584b7e5f31e698" name="ga1d1b4e9015c22e6a58584b7e5f31e698"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1d1b4e9015c22e6a58584b7e5f31e698">&#9670;&#160;</a></span>eig_in_place()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::eig_in_place </td>
+          <td>(</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="eig_8hpp.html">nda/linalg/eig.hpp</a>&gt;</code></p>
+
+<p>Compute the eigenvalues and right eigenvectors of a general matrix. </p>
+<p>It computes the right eigenvectors \( \mathbf{v}_j \) and eigenvalues \( \lambda_j \) of the matrix \( \mathbf{A} \) such that   </p><p class="formulaDsp">
+\[ \mathbf{A} \mathbf{v}_j = \lambda_j \mathbf{v}_j \; .
+\]
+</p>
+<p>It calls <a class="el" href="group__linalg__lapack.html#ga178dcfa14094a8200dbe2c3432f6081a" title="Interface to the LAPACK geev routine for real matrices.">nda::lapack::geev</a> and, for real matrices, retrieves the complex eigenvalues and eigenvectors using <a class="el" href="#gab8a04307f2389625f08d3c5c5e2a5f98" title="Get the complex eigenvalues from nda::lapack::geev output for real matrices.">nda::linalg::get_geev_eigenvalues</a> and <a class="el" href="#ga220d388b1a584c1272603e83941bf51f" title="Get the complex left/right eigenvectors from nda::lapack::geev output for real matrices.">nda::linalg::get_geev_eigenvectors</a>.</p>
+<p>It throws an exception if the LAPACK call fails.</p>
+<dl class="section note"><dt>Note</dt><dd>The given matrix/view must have Fortran layout and is modified during the computation.</dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the matrix \( \mathbf{A} \). On exit, it is overwritten. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><span class="tt">std::pair</span> containing an <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> with the complex eigenvalues \( \lambda_j \) and a <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> with the complex right eigenvectors \( \mathbf{v}_j \) as columns. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="eig_8hpp_source.html#l00205">205</a> of file <a class="el" href="eig_8hpp_source.html">eig.hpp</a>.</p>
+
+</div>
+</div>
 <a id="ga2d0ce3ce27387948261195b0c1f28376" name="ga2d0ce3ce27387948261195b0c1f28376"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga2d0ce3ce27387948261195b0c1f28376">&#9670;&#160;</a></span>eigh() <span class="overload">[1/2]</span></h2>
 
@@ -729,6 +839,92 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 
 </div>
 </div>
+<a id="ga8f3e079f9f38fb1b5f872237e14486b6" name="ga8f3e079f9f38fb1b5f872237e14486b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8f3e079f9f38fb1b5f872237e14486b6">&#9670;&#160;</a></span>eigvals()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::eigvals </td>
+          <td>(</td>
+          <td class="paramtype">A const &amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="eig_8hpp.html">nda/linalg/eig.hpp</a>&gt;</code></p>
+
+<p>Compute the eigenvalues of a general matrix. </p>
+<p>Same as <a class="el" href="#gafcdd88a4caba1d7f4df4b7ddf20f9221" title="Compute the eigenvalues of a general matrix.">nda::linalg::eigvals_in_place</a> but makes a copy of the input matrix, leaving the original unchanged.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input matrix. The matrix \( \mathbf{A} \). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> with the complex eigenvalues \( \lambda_j \). </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="eig_8hpp_source.html#l00265">265</a> of file <a class="el" href="eig_8hpp_source.html">eig.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gafcdd88a4caba1d7f4df4b7ddf20f9221" name="gafcdd88a4caba1d7f4df4b7ddf20f9221"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafcdd88a4caba1d7f4df4b7ddf20f9221">&#9670;&#160;</a></span>eigvals_in_place()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::eigvals_in_place </td>
+          <td>(</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="eig_8hpp.html">nda/linalg/eig.hpp</a>&gt;</code></p>
+
+<p>Compute the eigenvalues of a general matrix. </p>
+<p>It computes the eigenvalues \( \lambda_j \) of the matrix \( \mathbf{A} \), where   </p><p class="formulaDsp">
+\[  \mathbf{A} \mathbf{v}_j = \lambda_j \mathbf{v}_j \; .
+\]
+</p>
+<p>It calls <a class="el" href="group__linalg__lapack.html#ga178dcfa14094a8200dbe2c3432f6081a" title="Interface to the LAPACK geev routine for real matrices.">nda::lapack::geev</a> and, for real matrices, retrieves the complex eigenvalues using <a class="el" href="#gab8a04307f2389625f08d3c5c5e2a5f98" title="Get the complex eigenvalues from nda::lapack::geev output for real matrices.">nda::linalg::get_geev_eigenvalues</a>.</p>
+<p>It throws an exception if the LAPACK call fails.</p>
+<dl class="section note"><dt>Note</dt><dd>The given matrix/view must have Fortran layout and is modified during the computation.</dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the matrix \( \mathbf{A} \). On exit, it is overwritten. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> with the complex eigenvalues \( \lambda_j \). </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="eig_8hpp_source.html#l00231">231</a> of file <a class="el" href="eig_8hpp_source.html">eig.hpp</a>.</p>
+
+</div>
+</div>
 <a id="ga843c22ecfbd336fc0e924ace02aa60b1" name="ga843c22ecfbd336fc0e924ace02aa60b1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga843c22ecfbd336fc0e924ace02aa60b1">&#9670;&#160;</a></span>eigvalsh() <span class="overload">[1/2]</span></h2>
 
@@ -933,6 +1129,108 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 <dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> containing the real eigenvalues \( \lambda_i \) in ascending order. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="eigh_8hpp_source.html#l00256">256</a> of file <a class="el" href="eigh_8hpp_source.html">eigh.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gab8a04307f2389625f08d3c5c5e2a5f98" name="gab8a04307f2389625f08d3c5c5e2a5f98"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab8a04307f2389625f08d3c5c5e2a5f98">&#9670;&#160;</a></span>get_geev_eigenvalues()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;Vector WR, Vector WI&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;WR, WI&gt; and std::same_as&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;WR&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;WR, WI&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::get_geev_eigenvalues </td>
+          <td>(</td>
+          <td class="paramtype">const WR &amp;</td>          <td class="paramname"><span class="paramname"><em>wr</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const WI &amp;</td>          <td class="paramname"><span class="paramname"><em>wi</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="eig_8hpp.html">nda/linalg/eig.hpp</a>&gt;</code></p>
+
+<p>Get the complex eigenvalues from <a class="el" href="group__linalg__lapack.html#ga178dcfa14094a8200dbe2c3432f6081a" title="Interface to the LAPACK geev routine for real matrices.">nda::lapack::geev</a> output for real matrices. </p>
+<p>For real matrices, <a class="el" href="group__linalg__lapack.html#ga178dcfa14094a8200dbe2c3432f6081a" title="Interface to the LAPACK geev routine for real matrices.">nda::lapack::geev</a> stores the computed eigenvalues in two real vectors,  \(\mathbf{w}^{(r)} \) and \( \mathbf{w}^{(i)} \).</p>
+<p>The actual (complex) eigenvalues \( \lambda_j \) are given by \( \lambda_j = w^{(r)}_j + i w^{(i)}_j \).</p>
+<p>Use <a class="el" href="#ga220d388b1a584c1272603e83941bf51f" title="Get the complex left/right eigenvectors from nda::lapack::geev output for real matrices.">nda::linalg::get_geev_eigenvectors</a> to get eigenvectors.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">WR</td><td><a class="el" href="conceptnda_1_1_vector.html" title="Check if a given type is a vector, i.e. an nda::ArrayOfRank&lt;1&gt;.">nda::Vector</a> with double value type. </td></tr>
+    <tr><td class="paramname">WI</td><td><a class="el" href="conceptnda_1_1_vector.html" title="Check if a given type is a vector, i.e. an nda::ArrayOfRank&lt;1&gt;.">nda::Vector</a> with double value type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">wr</td><td>The real parts of the computed eigenvalues. </td></tr>
+    <tr><td class="paramname">wi</td><td>The imaginary parts of the computed eigenvalues. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> containing the complex eigenvalues. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="eig_8hpp_source.html#l00059">59</a> of file <a class="el" href="eig_8hpp_source.html">eig.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga220d388b1a584c1272603e83941bf51f" name="ga220d388b1a584c1272603e83941bf51f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga220d388b1a584c1272603e83941bf51f">&#9670;&#160;</a></span>get_geev_eigenvectors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;Vector WI, Matrix VA&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;WI, VA&gt; and std::same_as&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;WI&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;WI, VA&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::linalg::get_geev_eigenvectors </td>
+          <td>(</td>
+          <td class="paramtype">const WI &amp;</td>          <td class="paramname"><span class="paramname"><em>wi</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const VA &amp;</td>          <td class="paramname"><span class="paramname"><em>va</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="eig_8hpp.html">nda/linalg/eig.hpp</a>&gt;</code></p>
+
+<p>Get the complex left/right eigenvectors from <a class="el" href="group__linalg__lapack.html#ga178dcfa14094a8200dbe2c3432f6081a" title="Interface to the LAPACK geev routine for real matrices.">nda::lapack::geev</a> output for real matrices. </p>
+<p>For real matrices, <a class="el" href="group__linalg__lapack.html#ga178dcfa14094a8200dbe2c3432f6081a" title="Interface to the LAPACK geev routine for real matrices.">nda::lapack::geev</a> stores the computed complex eigenvalues in two real vectors,  \(\mathbf{w}^{(r)} \) and \( \mathbf{w}^{(i)} \), and the left/right eigenvectors in packed format in the columns \( \mathbf{v}^{(l)}_j \)/ \( \mathbf{v}^{(r)}_j \) of a real matrix.</p>
+<p>The complex eigenvalues \( \lambda_j \) are given by \( \lambda_j = w^{(r)}_j + i w^{(i)}_j \).</p>
+<p>The left/right eigenvectors \( \mathbf{x}_j \) are unpacked as follows:</p><ul>
+<li>If the eigenvalue \( \lambda_j \) is real, i.e. if \( w^{(i)}_j = 0 \), then the corresponding left/right eigenvector is given by \( \mathbf{x}_j = \mathbf{v}^{(\alpha)}_j \).</li>
+<li>If the eigenvalues \( \lambda_j \) and \( \lambda_{j + 1} \) form a complex conjugate pair, i.e. if  \(w^{(i)}_j &gt; 0 \), then the two corresponding left/right eigenvectors are given by  \( \mathbf{x}_j =
+\mathbf{v}^{(\alpha)}_j + i \mathbf{v}^{(\alpha)}_{j+1} \) and  \( \mathbf{x}_{j+1} = \mathbf{v}^{(\alpha)}_j - i
+\mathbf{v}^{(\alpha)}_{j+1} \).</li>
+</ul>
+<p>Use <a class="el" href="#gab8a04307f2389625f08d3c5c5e2a5f98" title="Get the complex eigenvalues from nda::lapack::geev output for real matrices.">nda::linalg::get_geev_eigenvalues</a> to get eigenvalues.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">WI</td><td><a class="el" href="conceptnda_1_1_vector.html" title="Check if a given type is a vector, i.e. an nda::ArrayOfRank&lt;1&gt;.">nda::Vector</a> with double value type. </td></tr>
+    <tr><td class="paramname">VA</td><td><a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> with double value type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">wi</td><td>The imaginary parts of the computed eigenvalues. </td></tr>
+    <tr><td class="paramname">va</td><td>The left/right eigenvectors in packed format. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> containing the complex left/right eigenvectors. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="eig_8hpp_source.html#l00097">97</a> of file <a class="el" href="eig_8hpp_source.html">eig.hpp</a>.</p>
 
 </div>
 </div>

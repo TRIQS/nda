@@ -115,6 +115,14 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:gaabb3a5f10ffaf3c6cbd598e33f530d5f" id="r_gaabb3a5f10ffaf3c6cbd598e33f530d5f"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector W, MemoryMatrix VL, MemoryMatrix VR&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A, W, VL, VR&gt; and std::same_as&lt;std::complex&lt;double&gt;, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, W, VL, VR&gt;)</td></tr>
+<tr class="memitem:gaabb3a5f10ffaf3c6cbd598e33f530d5f template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaabb3a5f10ffaf3c6cbd598e33f530d5f">nda::lapack::geev</a> (A &amp;&amp;a, W &amp;&amp;w, VL &amp;&amp;vl, VR &amp;&amp;vr, char jobvl='N', char jobvr='V')</td></tr>
+<tr class="memdesc:gaabb3a5f10ffaf3c6cbd598e33f530d5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#ga178dcfa14094a8200dbe2c3432f6081a" title="Interface to the LAPACK geev routine for real matrices.">geev</a></span> routine for complex matrices.  <br /></td></tr>
+<tr class="memitem:ga178dcfa14094a8200dbe2c3432f6081a" id="r_ga178dcfa14094a8200dbe2c3432f6081a"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector WR, MemoryVector WI, MemoryMatrix VL, MemoryMatrix VR&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A, WR, WI, VL, VR&gt; and std::same_as&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, WR, WI, VL, VR&gt;)</td></tr>
+<tr class="memitem:ga178dcfa14094a8200dbe2c3432f6081a template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga178dcfa14094a8200dbe2c3432f6081a">nda::lapack::geev</a> (A &amp;&amp;a, WR &amp;&amp;wr, WI &amp;&amp;wi, VL &amp;&amp;vl, VR &amp;&amp;vr, char jobvl='N', char jobvr='V')</td></tr>
+<tr class="memdesc:ga178dcfa14094a8200dbe2c3432f6081a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#ga178dcfa14094a8200dbe2c3432f6081a" title="Interface to the LAPACK geev routine for real matrices.">geev</a></span> routine for real matrices.  <br /></td></tr>
 <tr class="memitem:ga3f3adcfbac6e628cc82f6ecb43741071" id="r_ga3f3adcfbac6e628cc82f6ecb43741071"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryArray B, MemoryVector S&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A, B, S&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
 <tr class="memitem:ga3f3adcfbac6e628cc82f6ecb43741071 template"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3f3adcfbac6e628cc82f6ecb43741071">nda::lapack::gelss</a> (A &amp;&amp;a, B &amp;&amp;b, S &amp;&amp;s, double rcond, int &amp;rank)</td></tr>
@@ -169,6 +177,180 @@ requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f1
 <tr class="memdesc:ga56ec70f6ac54d52db55f30a993690d38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="#ga56ec70f6ac54d52db55f30a993690d38" title="Interface to the LAPACK ungqr routine.">ungqr</a></span> routine.  <br /></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="gaabb3a5f10ffaf3c6cbd598e33f530d5f" name="gaabb3a5f10ffaf3c6cbd598e33f530d5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaabb3a5f10ffaf3c6cbd598e33f530d5f">&#9670;&#160;</a></span>geev() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;MemoryMatrix A, MemoryVector W, MemoryMatrix VL, MemoryMatrix VR&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A, W, VL, VR&gt; and std::same_as&lt;std::complex&lt;double&gt;, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, W, VL, VR&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">int nda::lapack::geev </td>
+          <td>(</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">W &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>w</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">VL &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>vl</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">VR &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>vr</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char</td>          <td class="paramname"><span class="paramname"><em>jobvl</em></span><span class="paramdefsep"> = </span><span class="paramdefval">'N'</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char</td>          <td class="paramname"><span class="paramname"><em>jobvr</em></span><span class="paramdefsep"> = </span><span class="paramdefval">'V'</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="geev_8hpp.html">nda/lapack/geev.hpp</a>&gt;</code></p>
+
+<p>Interface to the LAPACK <span class="tt"><a class="el" href="#ga178dcfa14094a8200dbe2c3432f6081a" title="Interface to the LAPACK geev routine for real matrices.">geev</a></span> routine for complex matrices. </p>
+<p>Computes for an \( n \times n \) complex nonsymmetric matrix \( \mathbf{A} \), the eigenvalues and, optionally, the left and/or right eigenvectors.</p>
+<p>The right eigenvector \( \mathbf{v}_j \) of \( \mathbf{A} \) satisfies   </p><p class="formulaDsp">
+\[  \mathbf{A} \mathbf{v}_j = \lambda_j \mathbf{v}_j
+\]
+</p>
+<p> where \( \lambda_j \) is its eigenvalue.</p>
+<p>The left eigenvector \( \mathbf{u}_j \) of \( \mathbf{A} \) satisfies   </p><p class="formulaDsp">
+\[  \mathbf{u}_j^H \mathbf{A} = \lambda_j \mathbf{u}_j^H
+\]
+</p>
+<p> where \( \mathbf{u}_j^H \) denotes the conjugate-transpose of \( \mathbf{u}_j \).</p>
+<p>The computed eigenvectors are normalized to have Euclidean norm equal to 1 and largest component real.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> with complex value type. </td></tr>
+    <tr><td class="paramname">W</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> with complex value type. </td></tr>
+    <tr><td class="paramname">VL</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> with complex value type. </td></tr>
+    <tr><td class="paramname">VR</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> with complex value type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the matrix \( \mathbf{A} \). On exit, \( \mathbf{A} \) is overwritten. </td></tr>
+    <tr><td class="paramname">w</td><td>Output vector. The computed eigenvalues. </td></tr>
+    <tr><td class="paramname">vl</td><td>Output matrix. If <span class="tt">jobvl = V</span>, the left eigenvectors. If <span class="tt">jobvl = N</span>, <span class="tt">vl</span> is not referenced. </td></tr>
+    <tr><td class="paramname">vr</td><td>Output matrix. If <span class="tt">jobvr = V</span>, the right eigenvectors. If <span class="tt">jobvl = N</span>, <span class="tt">vl</span> is not referenced. </td></tr>
+    <tr><td class="paramname">jobvl</td><td>Character indicating whether to compute left eigenvectors ('V') or not ('N'). </td></tr>
+    <tr><td class="paramname">jobvr</td><td>Character indicating whether to compute right eigenvectors ('V') or not ('N'). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Integer return code from the LAPACK call. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="geev_8hpp_source.html#l00154">154</a> of file <a class="el" href="geev_8hpp_source.html">geev.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga178dcfa14094a8200dbe2c3432f6081a" name="ga178dcfa14094a8200dbe2c3432f6081a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga178dcfa14094a8200dbe2c3432f6081a">&#9670;&#160;</a></span>geev() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;MemoryMatrix A, MemoryVector WR, MemoryVector WI, MemoryMatrix VL, MemoryMatrix VR&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A, WR, WI, VL, VR&gt; and std::same_as&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, WR, WI, VL, VR&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">int nda::lapack::geev </td>
+          <td>(</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">WR &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>wr</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">WI &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>wi</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">VL &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>vl</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">VR &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>vr</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char</td>          <td class="paramname"><span class="paramname"><em>jobvl</em></span><span class="paramdefsep"> = </span><span class="paramdefval">'N'</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char</td>          <td class="paramname"><span class="paramname"><em>jobvr</em></span><span class="paramdefsep"> = </span><span class="paramdefval">'V'</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="geev_8hpp.html">nda/lapack/geev.hpp</a>&gt;</code></p>
+
+<p>Interface to the LAPACK <span class="tt"><a class="el" href="#ga178dcfa14094a8200dbe2c3432f6081a" title="Interface to the LAPACK geev routine for real matrices.">geev</a></span> routine for real matrices. </p>
+<p>Computes for an \( n \times n \) real nonsymmetric matrix \( \mathbf{A} \), the eigenvalues and, optionally, the left and/or right eigenvectors.</p>
+<p>The right eigenvector \( \mathbf{v}_j \) of \( \mathbf{A} \) satisfies   </p><p class="formulaDsp">
+\[  \mathbf{A} \mathbf{v}_j = \lambda_j \mathbf{v}_j
+\]
+</p>
+<p> where \( \lambda_j \) is its eigenvalue.</p>
+<p>The left eigenvector \( \mathbf{u}_j \) of \( \mathbf{A} \) satisfies   </p><p class="formulaDsp">
+\[  \mathbf{u}_j^T \mathbf{A} = \lambda_j \mathbf{u}_j^T
+\]
+</p>
+<p> where \( \mathbf{u}_j^T \) denotes the conjugate-transpose of \( \mathbf{u}_j \).</p>
+<p>The computed eigenvectors are normalized to have Euclidean norm equal to 1 and largest component real.</p>
+<dl class="section note"><dt>Note</dt><dd>For real matrices, complex eigenvalues always occur in complex conjugate pairs and the corresponding eigenvectors are stored in a special packed format (see <a class="el" href="group__linalg__tools.html#ga220d388b1a584c1272603e83941bf51f" title="Get the complex left/right eigenvectors from nda::lapack::geev output for real matrices.">nda::linalg::get_geev_eigenvectors</a>).</dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> with double value type. </td></tr>
+    <tr><td class="paramname">WR</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> with double value type. </td></tr>
+    <tr><td class="paramname">WI</td><td><a class="el" href="conceptnda_1_1_memory_vector.html" title="Check if a given type is a memory vector, i.e. an nda::MemoryArrayOfRank&lt;1&gt;.">nda::MemoryVector</a> with double value type. </td></tr>
+    <tr><td class="paramname">VL</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> with double value type. </td></tr>
+    <tr><td class="paramname">VR</td><td><a class="el" href="conceptnda_1_1_memory_matrix.html" title="Check if a given type is a memory matrix, i.e. an nda::MemoryArrayOfRank&lt;2&gt;.">nda::MemoryMatrix</a> with double value type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input/output matrix. On entry, the matrix \( \mathbf{A} \). On exit, \( \mathbf{A} \) is overwritten. </td></tr>
+    <tr><td class="paramname">wr</td><td>Output vector. The real parts of the computed eigenvalues. </td></tr>
+    <tr><td class="paramname">wi</td><td>Output vector. The imaginary parts of the computed eigenvalues. </td></tr>
+    <tr><td class="paramname">vl</td><td>Output matrix. If <span class="tt">jobvl = V</span>, the left eigenvectors (in packed format for complex pairs). If <span class="tt">jobvl = N</span>, <span class="tt">vl</span> is not referenced. </td></tr>
+    <tr><td class="paramname">vr</td><td>Output matrix. If <span class="tt">jobvr = V</span>, the right eigenvectors (in packed format for complex pairs). If <span class="tt">jobvr = N</span>, <span class="tt">vr</span> is not referenced. </td></tr>
+    <tr><td class="paramname">jobvl</td><td>Character indicating whether to compute left eigenvectors ('V') or not ('N'). </td></tr>
+    <tr><td class="paramname">jobvr</td><td>Character indicating whether to compute right eigenvectors ('V') or not ('N'). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Integer return code from the LAPACK call. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="geev_8hpp_source.html#l00071">71</a> of file <a class="el" href="geev_8hpp_source.html">geev.hpp</a>.</p>
+
+</div>
+</div>
 <a id="ga3f3adcfbac6e628cc82f6ecb43741071" name="ga3f3adcfbac6e628cc82f6ecb43741071"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga3f3adcfbac6e628cc82f6ecb43741071">&#9670;&#160;</a></span>gelss()</h2>
 
