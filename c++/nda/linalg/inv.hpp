@@ -160,19 +160,12 @@ namespace nda::linalg {
     }
   }
 
-  /** @} */
-
-} // namespace nda::linalg
-
-namespace nda::clef {
-
-  // Make nda::linalg::inv visible for lazy function calls.
-  using nda::linalg::inv;
-
   /**
    * @ingroup clef_expr
    * @brief Lazy version of nda::linalg::inv.
    */
   CLEF_MAKE_FNT_LAZY(inv)
 
-} // namespace nda::clef
+  /** @} */
+
+} // namespace nda::linalg

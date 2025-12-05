@@ -911,3 +911,28 @@ TEST(NDA, LinearAlgebraQRRectangularWide) {
     test_qr<std::complex<double>, nda::C_layout>(m, n);
   }
 }
+
+// Test linear algebra functions with CLEF placeholders.
+TEST(NDA, LinearAlgebraWithClefPlaceholders) {
+  using namespace nda::clef::literals;
+
+  auto M = nda::matrix<double>{{1, 2}, {0, 1}};
+
+  // test celf::eval for lazy expression evaluation
+  auto I        = nda::eye<double>(2);
+  auto lazy_inv = nda::linalg::inv(2.0 * i_ * I - M);
+  for (int i = 0; i < 4; ++i) {
+    auto result   = nda::clef::eval(lazy_inv, i_ = i);
+    auto expected = nda::linalg::inv(2.0 * i * I - M);
+    EXPECT_ARRAY_NEAR(result, expected);
+  }
+
+  // use clef placeholder to fill nda::vector of matrices: B(i) = inv((i+2) * I - M)
+  auto B = nda::vector<nda::matrix<double>>(4);
+  for (auto &b : B) b.resize(2, 2);
+  B(i_) << nda::linalg::inv(2.0 * i_ * I - M);
+  for (int i = 0; i < 4; ++i) {
+    auto expected = nda::linalg::inv((i + 2.0) * I - M);
+    EXPECT_ARRAY_NEAR(B(i), expected);
+  }
+}
