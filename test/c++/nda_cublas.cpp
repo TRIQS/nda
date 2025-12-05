@@ -54,7 +54,6 @@ void test_gemm_batch() {
 
 TEST(NDA, CUBLASGemmBatch) { _run_tests_(test_gemm_batch) }
 
-#ifdef NDA_HAVE_MAGMA
 template <typename value_t, typename Layout>
 void test_gemm_vbatch() {
   int batch_count = 10;
@@ -69,8 +68,20 @@ void test_gemm_vbatch() {
     EXPECT_ARRAY_NEAR(nda::make_regular(nda::to_host(vec_A_d[i]) * nda::to_host(vec_B_d[i])), nda::to_host(vec_C_d[i]));
 }
 
-TEST(NDA, CUBLASGemmVbatch) { _run_tests_(test_gemm_vbatch) }
+//TEST(NDA, CUBLASGemmVbatch) { _run_tests_(test_gemm_vbatch) }
+TEST(NDA, CUBLASGemmVbatch) {
+  test_gemm_vbatch<float, nda::C_layout>();
+  test_gemm_vbatch<float, nda::F_layout>();
+  test_gemm_vbatch<double, nda::C_layout>();
+  test_gemm_vbatch<double, nda::F_layout>();
+#ifdef NDA_HAVE_MAGMA
+// complex vbatch only with magma
+  test_gemm_vbatch<std::complex<float>, nda::C_layout>();
+  test_gemm_vbatch<std::complex<float>, nda::F_layout>();
+  test_gemm_vbatch<std::complex<double>, nda::C_layout>();
+  test_gemm_vbatch<std::complex<double>, nda::F_layout>();   
 #endif
+}
 
 // Test the CUBLAS gemv function.
 template <typename value_t, typename Layout>

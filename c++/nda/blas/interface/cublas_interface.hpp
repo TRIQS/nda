@@ -52,24 +52,18 @@ namespace nda::blas::device {
   void gemm_batch(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex **A, int LDA, const dcomplex **B, int LDB, dcomplex beta,
                   dcomplex **C, int LDC, int batch_count);
 
-#ifdef NDA_HAVE_MAGMA
   void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, float alpha, const float **A, int *LDA, const float **B, int *LDB, float beta,
                    float **C, int *LDC, int batch_count);
-  void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, fcomplex alpha, const fcomplex **A, int *LDA, const fcomplex **B, int *LDB,
-                   fcomplex beta, fcomplex **C, int *LDC, int batch_count);
   void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, double alpha, const double **A, int *LDA, const double **B, int *LDB, double beta,
                    double **C, int *LDC, int batch_count);
+#ifdef NDA_HAVE_MAGMA
+  void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, fcomplex alpha, const fcomplex **A, int *LDA, const fcomplex **B, int *LDB,
+                   fcomplex beta, fcomplex **C, int *LDC, int batch_count);
   void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, dcomplex alpha, const dcomplex **A, int *LDA, const dcomplex **B, int *LDB,
                    dcomplex beta, dcomplex **C, int *LDC, int batch_count);
 #else
-  inline void gemm_vbatch(char, char, int *, int *, int *, float, const float **, int *, const float **, int *, float, float **, int *, int) {
-    NDA_RUNTIME_ERROR << "nda::blas::device::gemmv_batch requires Magma [https://icl.cs.utk.edu/magma/]. Configure nda with -DUse_Magma=ON";
-  }
   inline void gemm_vbatch(char, char, int *, int *, int *, fcomplex, const fcomplex **, int *, const fcomplex **, int *, fcomplex, fcomplex **, int *,
                           int) {
-    NDA_RUNTIME_ERROR << "nda::blas::device::gemmv_batch requires Magma [https://icl.cs.utk.edu/magma/]. Configure nda with -DUse_Magma=ON";
-  }
-  inline void gemm_vbatch(char, char, int *, int *, int *, double, const double **, int *, const double **, int *, double, double **, int *, int) {
     NDA_RUNTIME_ERROR << "nda::blas::device::gemmv_batch requires Magma [https://icl.cs.utk.edu/magma/]. Configure nda with -DUse_Magma=ON";
   }
   inline void gemm_vbatch(char, char, int *, int *, int *, dcomplex, const dcomplex **, int *, const dcomplex **, int *, dcomplex, dcomplex **, int *,

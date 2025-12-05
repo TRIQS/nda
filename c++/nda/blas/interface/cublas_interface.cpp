@@ -38,6 +38,30 @@ namespace nda::blas::device {
     return "<unknown>";
   }
 
+  //cudaDataType_t
+  template <typename T>
+  auto data_type = std::enable_if_t<sizeof(T *) == 0>{};
+  template <>
+  inline auto data_type<float> = CUDA_R_32F;
+  template <>
+  inline auto data_type<double> = CUDA_R_64F;
+  template <>
+  inline auto data_type<std::complex<float>> = CUDA_C_32F;
+  template <>
+  inline auto data_type<std::complex<double>> = CUDA_C_64F;
+
+  // Note: Consider allowing CUBLAS_COMPUTE_64F_EMULATED_FIXEDPOINT and CUBLAS_COMPUTE_32F_EMULATED_16BFX9, maybe through compiler directives or template parameters???
+  template <typename T>
+  auto compute_type = std::enable_if_t<sizeof(T *) == 0>{};
+  template <>
+  inline auto compute_type<float> = CUBLAS_COMPUTE_32F; 
+  template <>
+  inline auto compute_type<double> = CUBLAS_COMPUTE_64F; 
+  template <>
+  inline auto compute_type<std::complex<float>> = CUBLAS_COMPUTE_32F; 
+  template <>
+  inline auto compute_type<std::complex<double>> = CUBLAS_COMPUTE_64F;
+
   // Local function to get unique CuBlas handle.
   inline cublasHandle_t &get_handle() {
     struct handle_storage_t { // RAII for the handle
@@ -121,19 +145,38 @@ namespace nda::blas::device {
      _gemm_batch_(cublasSgemmBatched, float) _gemm_batch_(cublasDgemmBatched, double) _gemm_batch_(cublasCgemmBatched, fcomplex)
         _gemm_batch_(cublasZgemmBatched, dcomplex)
 
-#ifdef NDA_HAVE_MAGMA
 #define _gemm_vbatch_(FUN, TYPE)                                                                                                                     \
   void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, TYPE alpha, const TYPE **A, int *LDA, const TYPE **B, int *LDB, TYPE beta,          \
                    TYPE **C, int *LDC, int batch_count) {                                                                                            \
     auto alpha_cu = to_cublas(alpha);                                                                                                                \
     auto beta_cu  = to_cublas(beta);                                                                                                                 \
-    magmablas_zgemm_vbatched(get_magma_op(op_a), get_magma_op(op_b), M, N, K, alpha_cu, to_cublas(A), LDA, to_cublas(B), LDB, beta_cu, to_cublas(C), \
-                             LDC, batch_count, get_magma_queue());                                                                                   \
-    if (synchronize) magma_queue_sync(get_magma_queue());                                                                                            \
-    if (synchronize) cudaDeviceSynchronize();                                                                                                        \
+    nda::vector<cublasOperation_t> vec_op_a(batch_count,get_cublas_op(op_a));                                                                        \
+    nda::vector<cublasOperation_t> vec_op_b(batch_count,get_cublas_op(op_b));                                                                        \
+    nda::vector<decltype(alpha_cu)> alpha_v(batch_count, alpha_cu);                                                                                  \
+    nda::vector<decltype(beta_cu)> beta_v(batch_count, beta_cu);                                                                                     \
+    nda::vector<int> group_size(batch_count, 1);                                                                                                     \
+    CUBLAS_CHECK(FUN, vec_op_a.data(), vec_op_b.data(), M, N, K, alpha_v.data(), (const void**)A, data_type<TYPE>, LDA, (const void **)B,            \
+                 data_type<TYPE>, LDB, beta_v.data(), (void **)C, data_type<TYPE>, LDC, batch_count, group_size.data(), compute_type<TYPE>);         \
   }
-           _gemm_vbatch_(magmablas_sgemm_vbatched, float) _gemm_vbatch_(magmablas_dgemm_vbatched, double)
-              _gemm_vbatch_(magmablas_cgemm_vbatched, fcomplex) _gemm_vbatch_(magmablas_zgemm_vbatched, dcomplex)
+  _gemm_vbatch_(cublasGemmGroupedBatchedEx, float) 
+  _gemm_vbatch_(cublasGemmGroupedBatchedEx, double)
+// Note: No complex with cublasGemmGroupedBatchedEx yet!!! 
+//  _gemm_vbatch_(cublasGemmGroupedBatchedEx, fcomplex)
+//  _gemm_vbatch_(cublasGemmGroupedBatchedEx, dcomplex)
+
+#ifdef NDA_HAVE_MAGMA
+#define _magma_gemm_vbatch_(FUN,TYPE) \
+  void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, TYPE alpha, const TYPE **A, int *LDA, const TYPE **B, int *LDB,    \
+                   TYPE beta, TYPE **C, int *LDC, int batch_count) {   \
+    auto alpha_cu = to_cublas(alpha);                                   \
+    auto beta_cu  = to_cublas(beta);                                    \
+    magmablas_zgemm_vbatched(get_magma_op(op_a), get_magma_op(op_b), M, N, K, alpha_cu, to_cublas(A), LDA, to_cublas(B), LDB, beta_cu, to_cublas(C), LDC,                          \
+                             batch_count, get_magma_queue());           \
+    if (synchronize) magma_queue_sync(get_magma_queue());               \
+    if (synchronize) cudaDeviceSynchronize();                           \
+  }   
+_magma_gemm_vbatch_(magmablas_cgemm_vbatched,fcomplex)
+_magma_gemm_vbatch_(magmablas_zgemm_vbatched,dcomplex)
 #endif
 
 #define _gemm_batch_strided_(FUN, TYPE)                                                                                                              \
