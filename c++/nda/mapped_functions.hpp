@@ -67,7 +67,7 @@ namespace nda {
   /**
    * @brief Function pow for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
    *
-   * @tparam A nda::ArrayOrScalar type..
+   * @tparam A nda::ArrayOrScalar type.
    * @param a nda::ArrayOrScalar object.
    * @param p Exponent value.
    * @return A lazy nda::expr_call object (nda::Array) or the result of `std::pow` applied to the object (nda::Scalar).
@@ -84,7 +84,7 @@ namespace nda {
    * @brief Function conj for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types with a complex
    * value type).
    *
-   * @tparam A nda::ArrayOrScalar type..
+   * @tparam A nda::ArrayOrScalar type.
    * @param a nda::ArrayOrScalar object.
    * @return A lazy nda::expr_call object (nda::Array and complex valued), the forwarded input object (nda::Array and
    * not complex valued) or the complex conjugate of the scalar input.
@@ -95,6 +95,25 @@ namespace nda {
       return nda::map(detail::conj_f{})(std::forward<A>(a));
     else
       return std::forward<A>(a);
+  }
+
+  /**
+   * @brief Reciprocal function for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
+   * 
+   * @tparam A nda::ArrayOrScalar type.
+   * @param a nda::ArrayOrScalar object.
+   * @return A lazy nda::expr_call object (nda::Array) or the result of \f$ 1.0 / x \f$ applied to the object 
+   * (nda::Scalar).
+   */
+  template <ArrayOrScalar A>
+  auto reciprocal(A &&a) {
+    return nda::map([](auto const &x) {
+      if constexpr (Scalar<decltype(x)>) {
+        return 1.0 / x;
+      } else {
+        return reciprocal(x);
+      }
+    })(std::forward<A>(a));
   }
 
   /** @} */
