@@ -228,6 +228,28 @@ TEST_F(NDAMathFunction, Real) {
   EXPECT_EQ(nda::real(cplx_c), std::real(cplx_c));
 }
 
+TEST_F(NDAMathFunction, Reciprocal) {
+  auto B_d = nda::reciprocal(A_d);
+  auto B_c = nda::reciprocal(A_c);
+  nda::for_each(shape, [&](auto... idxs) {
+    EXPECT_DOUBLE_EQ(B_d(idxs...), 1.0 / A_d(idxs...));
+    EXPECT_COMPLEX_NEAR(B_c(idxs...), 1.0 / A_c(idxs...), 1e-14);
+  });
+  EXPECT_DOUBLE_EQ(nda::reciprocal(dbl_c), 1.0 / dbl_c);
+  EXPECT_COMPLEX_NEAR(nda::reciprocal(cplx_c), 1.0 / cplx_c);
+  auto nested_vec = nda::vector<nda::matrix<double>>{{{1.0, 2.0}, {3.0, 4.0}}, {{1.0, 2.0}, {3.0, 4.0}}};
+  auto nested_rec = nda::reciprocal(nested_vec);
+  nda::for_each(nested_rec.shape(), [&](auto i) {
+    nda::for_each(nested_rec[i].shape(), [&](auto j, auto k) { EXPECT_DOUBLE_EQ(nested_rec[i](j, k), 1.0 / nested_vec[i](j, k)); });
+  });
+
+  // Test with integer arrays to ensure no integer division issues
+  nda::array<int, 1> A_i{2, 3, 4, 5};
+  auto B_i = nda::reciprocal(A_i);
+  for (int i = 0; i < 4; ++i) { EXPECT_DOUBLE_EQ(B_i(i), 1.0 / A_i(i)); }
+  EXPECT_DOUBLE_EQ(nda::reciprocal(4), 0.25);
+}
+
 TEST_F(NDAMathFunction, Sin) {
   auto B_d = nda::sin(A_d);
   auto B_c = nda::sin(A_c);
@@ -295,10 +317,12 @@ TEST_F(NDAMathFunction, Combinations) {
   auto B_d = nda::pow(nda::pow(nda::abs(A_d), 1.5), 2.0 / 3.0);
   auto C_d = nda::sqrt(nda::pow(A_d, 2));
   auto D_d = nda::log(nda::exp(A_d));
+  auto B_c = nda::reciprocal(nda::reciprocal(A_c));
   nda::for_each(shape, [&](auto... idxs) {
     EXPECT_NEAR(B_d(idxs...), std::abs(A_d(idxs...)), 1e-10);
     EXPECT_NEAR(C_d(idxs...), std::abs(A_d(idxs...)), 1e-10);
     EXPECT_NEAR(D_d(idxs...), A_d(idxs...), 1e-10);
+    EXPECT_COMPLEX_NEAR(B_c(idxs...), A_c(idxs...), 1e-10);
   });
 }
 
