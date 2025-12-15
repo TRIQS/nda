@@ -23,6 +23,12 @@ namespace nda {
 
   /**
    * @ingroup linalg_blas
+   * @brief Alias for `std::complex<float>` type.
+   */
+  using fcomplex = std::complex<float>;
+
+  /**
+   * @ingroup linalg_blas
    * @brief Alias for `std::complex<double>` type.
    */
   using dcomplex = std::complex<double>;

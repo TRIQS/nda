@@ -11,6 +11,16 @@
 #include <complex>
 #include <vector>
 
+#define _run_tests_(FUN)                                                                                                                             \
+  FUN<float, nda::C_layout>();                                                                                                                       \
+  FUN<float, nda::F_layout>();                                                                                                                       \
+  FUN<double, nda::C_layout>();                                                                                                                      \
+  FUN<double, nda::F_layout>();                                                                                                                      \
+  FUN<std::complex<float>, nda::C_layout>();                                                                                                         \
+  FUN<std::complex<float>, nda::F_layout>();                                                                                                         \
+  FUN<std::complex<double>, nda::C_layout>();                                                                                                        \
+  FUN<std::complex<double>, nda::F_layout>();
+
 // Test the BLAS gemm function and its generic implementation.
 template <typename value_t, typename Layout>
 void test_gemm() {
@@ -28,12 +38,7 @@ void test_gemm() {
   EXPECT_ARRAY_NEAR(M3_gen, nda::matrix<value_t>{{2, 1}, {3, 4}});
 }
 
-TEST(NDA, BLASGemm) {
-  test_gemm<double, nda::C_layout>();
-  test_gemm<double, nda::F_layout>();
-  test_gemm<std::complex<double>, nda::C_layout>();
-  test_gemm<std::complex<double>, nda::F_layout>();
-}
+TEST(NDA, BLASGemm) { _run_tests_(test_gemm) }
 
 // Test the BLAS gemm_batch function.
 template <typename value_t, typename Layout>
@@ -49,12 +54,7 @@ void test_gemm_batch() {
   for (auto i : nda::range(batch_count)) EXPECT_ARRAY_NEAR(make_regular(vec_A[i] * vec_B[i]), vec_C[i]);
 }
 
-TEST(NDA, BLASGemmBatch) {
-  test_gemm_batch<double, nda::C_layout>();
-  test_gemm_batch<double, nda::F_layout>();
-  test_gemm_batch<std::complex<double>, nda::C_layout>();
-  test_gemm_batch<std::complex<double>, nda::F_layout>();
-}
+TEST(NDA, BLASGemmBatch) { _run_tests_(test_gemm_batch) }
 
 // Test the BLAS gemm_vbatch function.
 template <typename value_t, typename Layout>
@@ -70,12 +70,7 @@ void test_gemm_vbatch() {
   for (auto i : nda::range(batch_count)) EXPECT_ARRAY_NEAR(make_regular(vec_A[i] * vec_B[i]), vec_C[i]);
 }
 
-TEST(NDA, BLASGemmVbatch) {
-  test_gemm_vbatch<double, nda::C_layout>();
-  test_gemm_vbatch<double, nda::F_layout>();
-  test_gemm_vbatch<std::complex<double>, nda::C_layout>();
-  test_gemm_vbatch<std::complex<double>, nda::F_layout>();
-}
+TEST(NDA, BLASGemmVbatch) { _run_tests_(test_gemm_vbatch) }
 
 // Test the BLAS gemv function and its generic implementation.
 template <typename value_t, typename Layout>
@@ -111,12 +106,7 @@ void test_gemv() {
   EXPECT_ARRAY_NEAR(w, nda::vector<value_t>{-8, 9, 13, -8, -8});
 }
 
-TEST(NDA, BLASGemv) {
-  test_gemv<double, nda::C_layout>();
-  test_gemv<double, nda::F_layout>();
-  test_gemv<std::complex<double>, nda::C_layout>();
-  test_gemv<std::complex<double>, nda::F_layout>();
-}
+TEST(NDA, BLASGemv) { _run_tests_(test_gemv) }
 
 // Test the BLAS ger function.
 template <typename value_t, typename Layout>
@@ -129,12 +119,7 @@ void test_ger() {
   EXPECT_ARRAY_NEAR(M, nda::matrix<value_t>{{1, 2}, {2, 4}});
 }
 
-TEST(NDA, BLASGer) {
-  test_ger<double, nda::C_layout>();
-  test_ger<double, nda::F_layout>();
-  test_ger<std::complex<double>, nda::C_layout>();
-  test_ger<std::complex<double>, nda::C_layout>();
-}
+TEST(NDA, BLASGer){_run_tests_(test_ger)}
 
 TEST(NDA, BLASOuterProduct) {
   auto N = nda::rand<double>(2, 3);
@@ -161,7 +146,9 @@ void test_dot() {
 }
 
 TEST(NDA, BLASDot) {
+  test_dot<float>();
   test_dot<double>();
+  test_dot<std::complex<float>>();
   test_dot<std::complex<double>>();
 }
 
@@ -179,7 +166,9 @@ void test_dotc() {
 }
 
 TEST(NDA, BLASDotc) {
+  test_dotc<float>();
   test_dotc<double>();
+  test_dotc<std::complex<float>>();
   test_dotc<std::complex<double>>();
 }
 
@@ -199,6 +188,8 @@ void test_scal() {
 }
 
 TEST(NDA, BLASScal) {
+  test_scal<float>();
   test_scal<double>();
+  test_scal<std::complex<float>>();
   test_scal<std::complex<double>>();
 }

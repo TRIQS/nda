@@ -101,19 +101,16 @@ namespace nda::blas::device {
     }                                                                                                                                                \
   }
 
-  void gemm(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, const double *B, int LDB, double beta, double *C,
-            int LDC) {
-    CUBLAS_CHECK(cublasDgemm, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha, A, LDA, B, LDB, &beta, C, LDC);
+#define _gemm_(FUN, TYPE)                                                                                                                            \
+  void gemm(char op_a, char op_b, int M, int N, int K, TYPE alpha, const TYPE *A, int LDA, const TYPE *B, int LDB, TYPE beta, TYPE *C, int LDC) {    \
+    auto alpha_cu = to_cublas(alpha);                                                                                                                \
+    auto beta_cu  = to_cublas(beta);                                                                                                                 \
+    CUBLAS_CHECK(FUN, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha_cu, to_cublas(A), LDA, to_cublas(B), LDB, &beta_cu, C, LDC);         \
   }
-  void gemm(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex *A, int LDA, const dcomplex *B, int LDB, dcomplex beta,
-            dcomplex *C, int LDC) {
-    auto alpha_cu = cucplx(alpha);
-    auto beta_cu  = cucplx(beta);
-    CUBLAS_CHECK(cublasZgemm, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha_cu, cucplx(A), LDA, cucplx(B), LDB, &beta_cu, cucplx(C), LDC);
-  }
+  _gemm_(cublasSgemm, float) _gemm_(cublasDgemm, double) _gemm_(cublasCgemm, fcomplex) _gemm_(cublasZgemm, dcomplex)
 
-  void gemm_batch(char op_a, char op_b, int M, int N, int K, double alpha, const double **A, int LDA, const double **B, int LDB, double beta,
-                  double **C, int LDC, int batch_count) {
+     void gemm_batch(char op_a, char op_b, int M, int N, int K, double alpha, const double **A, int LDA, const double **B, int LDB, double beta,
+                     double **C, int LDC, int batch_count) {
     CUBLAS_CHECK(cublasDgemmBatched, get_cublas_op(op_a), get_cublas_op(op_b), M, N, K, &alpha, A, LDA, B, LDB, &beta, C, LDC, batch_count);
   }
   void gemm_batch(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex **A, int LDA, const dcomplex **B, int LDB, dcomplex beta,

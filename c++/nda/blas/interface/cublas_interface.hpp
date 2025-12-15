@@ -18,32 +18,57 @@
 
 namespace nda::blas::device {
 
+  void axpy(int N, float alpha, const float *x, int incx, float *Y, int incy);
+  void axpy(int N, fcomplex alpha, const fcomplex *x, int incx, fcomplex *Y, int incy);
   void axpy(int N, double alpha, const double *x, int incx, double *Y, int incy);
   void axpy(int N, dcomplex alpha, const dcomplex *x, int incx, dcomplex *Y, int incy);
 
+  void copy(int N, const float *x, int incx, float *Y, int incy);
+  void copy(int N, const fcomplex *x, int incx, fcomplex *Y, int incy);
   void copy(int N, const double *x, int incx, double *Y, int incy);
   void copy(int N, const dcomplex *x, int incx, dcomplex *Y, int incy);
 
+  float dot(int M, const float *x, int incx, const float *Y, int incy);
+  fcomplex dot(int M, const fcomplex *x, int incx, const fcomplex *Y, int incy);
+  fcomplex dotc(int M, const fcomplex *x, int incx, const fcomplex *Y, int incy);
   double dot(int M, const double *x, int incx, const double *Y, int incy);
   dcomplex dot(int M, const dcomplex *x, int incx, const dcomplex *Y, int incy);
   dcomplex dotc(int M, const dcomplex *x, int incx, const dcomplex *Y, int incy);
 
+  void gemm(char op_a, char op_b, int M, int N, int K, float alpha, const float *A, int LDA, const float *B, int LDB, float beta, float *C, int LDC);
+  void gemm(char op_a, char op_b, int M, int N, int K, fcomplex alpha, const fcomplex *A, int LDA, const fcomplex *B, int LDB, fcomplex beta,
+            fcomplex *C, int LDC);
   void gemm(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, const double *B, int LDB, double beta, double *C,
             int LDC);
   void gemm(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex *A, int LDA, const dcomplex *B, int LDB, dcomplex beta,
             dcomplex *C, int LDC);
 
+  void gemm_batch(char op_a, char op_b, int M, int N, int K, float alpha, const float **A, int LDA, const float **B, int LDB, float beta, float **C,
+                  int LDC, int batch_count);
+  void gemm_batch(char op_a, char op_b, int M, int N, int K, fcomplex alpha, const fcomplex **A, int LDA, const fcomplex **B, int LDB, fcomplex beta,
+                  fcomplex **C, int LDC, int batch_count);
   void gemm_batch(char op_a, char op_b, int M, int N, int K, double alpha, const double **A, int LDA, const double **B, int LDB, double beta,
                   double **C, int LDC, int batch_count);
   void gemm_batch(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex **A, int LDA, const dcomplex **B, int LDB, dcomplex beta,
                   dcomplex **C, int LDC, int batch_count);
 
 #ifdef NDA_HAVE_MAGMA
+  void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, float alpha, const float **A, int *LDA, const float **B, int *LDB, float beta,
+                   float **C, int *LDC, int batch_count);
+  void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, fcomplex alpha, const fcomplex **A, int *LDA, const fcomplex **B, int *LDB,
+                   fcomplex beta, fcomplex **C, int *LDC, int batch_count);
   void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, double alpha, const double **A, int *LDA, const double **B, int *LDB, double beta,
                    double **C, int *LDC, int batch_count);
   void gemm_vbatch(char op_a, char op_b, int *M, int *N, int *K, dcomplex alpha, const dcomplex **A, int *LDA, const dcomplex **B, int *LDB,
                    dcomplex beta, dcomplex **C, int *LDC, int batch_count);
 #else
+  inline void gemm_vbatch(char, char, int *, int *, int *, float, const float **, int *, const float **, int *, float, float **, int *, int) {
+    NDA_RUNTIME_ERROR << "nda::blas::device::gemmv_batch requires Magma [https://icl.cs.utk.edu/magma/]. Configure nda with -DUse_Magma=ON";
+  }
+  inline void gemm_vbatch(char, char, int *, int *, int *, fcomplex, const fcomplex **, int *, const fcomplex **, int *, fcomplex, fcomplex **, int *,
+                          int) {
+    NDA_RUNTIME_ERROR << "nda::blas::device::gemmv_batch requires Magma [https://icl.cs.utk.edu/magma/]. Configure nda with -DUse_Magma=ON";
+  }
   inline void gemm_vbatch(char, char, int *, int *, int *, double, const double **, int *, const double **, int *, double, double **, int *, int) {
     NDA_RUNTIME_ERROR << "nda::blas::device::gemmv_batch requires Magma [https://icl.cs.utk.edu/magma/]. Configure nda with -DUse_Magma=ON";
   }
@@ -53,22 +78,36 @@ namespace nda::blas::device {
   }
 #endif
 
+  void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, float alpha, const float *A, int LDA, int strideA, const float *B, int LDB,
+                          int strideB, float beta, float *C, int LDC, int strideC, int batch_count);
+  void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, fcomplex alpha, const fcomplex *A, int LDA, int strideA, const fcomplex *B,
+                          int LDB, int srideB, fcomplex beta, fcomplex *C, int LDC, int strideC, int batch_count);
   void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, double alpha, const double *A, int LDA, int strideA, const double *B, int LDB,
                           int strideB, double beta, double *C, int LDC, int strideC, int batch_count);
   void gemm_batch_strided(char op_a, char op_b, int M, int N, int K, dcomplex alpha, const dcomplex *A, int LDA, int strideA, const dcomplex *B,
                           int LDB, int srideB, dcomplex beta, dcomplex *C, int LDC, int strideC, int batch_count);
 
+  void gemv(char op, int M, int N, float alpha, const float *A, int LDA, const float *x, int incx, float beta, float *Y, int incy);
+  void gemv(char op, int M, int N, fcomplex alpha, const fcomplex *A, int LDA, const fcomplex *x, int incx, fcomplex beta, fcomplex *Y, int incy);
   void gemv(char op, int M, int N, double alpha, const double *A, int LDA, const double *x, int incx, double beta, double *Y, int incy);
   void gemv(char op, int M, int N, dcomplex alpha, const dcomplex *A, int LDA, const dcomplex *x, int incx, dcomplex beta, dcomplex *Y, int incy);
 
+  void ger(int M, int N, float alpha, const float *x, int incx, const float *Y, int incy, float *A, int LDA);
+  void ger(int M, int N, fcomplex alpha, const fcomplex *x, int incx, const fcomplex *Y, int incy, fcomplex *A, int LDA);
+  void gerc(int M, int N, float alpha, const float *x, int incx, const float *Y, int incy, float *A, int LDA);
+  void gerc(int M, int N, fcomplex alpha, const fcomplex *x, int incx, const fcomplex *Y, int incy, fcomplex *A, int LDA);
   void ger(int M, int N, double alpha, const double *x, int incx, const double *Y, int incy, double *A, int LDA);
   void ger(int M, int N, dcomplex alpha, const dcomplex *x, int incx, const dcomplex *Y, int incy, dcomplex *A, int LDA);
   void gerc(int M, int N, double alpha, const double *x, int incx, const double *Y, int incy, double *A, int LDA);
   void gerc(int M, int N, dcomplex alpha, const dcomplex *x, int incx, const dcomplex *Y, int incy, dcomplex *A, int LDA);
 
+  void scal(int M, float alpha, float *x, int incx);
+  void scal(int M, fcomplex alpha, fcomplex *x, int incx);
   void scal(int M, double alpha, double *x, int incx);
   void scal(int M, dcomplex alpha, dcomplex *x, int incx);
 
+  void swap(int N, float *x, int incx, float *Y, int incy);       // NOLINT (this is a BLAS swap)
+  void swap(int N, fcomplex *x, int incx, fcomplex *Y, int incy); // NOLINT (this is a BLAS swap)
   void swap(int N, double *x, int incx, double *Y, int incy);     // NOLINT (this is a BLAS swap)
   void swap(int N, dcomplex *x, int incx, dcomplex *Y, int incy); // NOLINT (this is a BLAS swap)
 

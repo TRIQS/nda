@@ -47,7 +47,7 @@ namespace nda::blas {
     EXPECTS(a.extent(1) == x.extent(0));
     EXPECTS(a.extent(0) == y.extent(0));
 
-    if (beta == 0.0) {
+    if (beta == get_value_t<A>(0.0)) {
       y = 0 * alpha;
     } else {
       y *= beta;

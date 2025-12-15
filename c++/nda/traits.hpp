@@ -87,9 +87,14 @@ namespace nda {
   template <typename T>
   inline constexpr bool is_double_or_complex_v = is_complex_v<T> or std::is_same_v<double, std::remove_cvref_t<T>>;
 
-  /// Alias for nda::is_double_or_complex_v.
+  /// Constexpr variable that is true if type `T` is a std::complex type, float type or a double type.
   template <typename T>
-  inline constexpr bool is_blas_lapack_v = is_double_or_complex_v<T>;
+  inline constexpr bool is_double_float_or_complex_v =
+     is_complex_v<T> or std::is_same_v<double, std::remove_cvref_t<T>> or std::is_same_v<float, std::remove_cvref_t<T>>;
+
+  /// Alias for nda::is_double_float_or_complex_v.
+  template <typename T>
+  inline constexpr bool is_blas_lapack_v = is_double_float_or_complex_v<T>;
 
   /** @} */
 
@@ -334,6 +339,28 @@ namespace nda {
     /// Linear index.
     long value;
   };
+
+  /// template utility to obtain the type of a complex number
+  template <typename T>
+  struct remove_complex {
+    using type = T; // Default: if not std::complex, keep T as is
+  };
+
+  // Specialization for std::complex<T>
+  template <typename T>
+  struct remove_complex<std::complex<T>> {
+    using type = T; // If it's std::complex<T>, extract T
+  };
+
+  // Specialization for const std::complex<T>
+  template <typename T>
+  struct remove_complex<const std::complex<T>> {
+    using type = T const; // If it's const std::complex<T>, extract T const
+  };
+
+  // Alias template for convenience
+  template <typename T>
+  using remove_complex_t = typename remove_complex<T>::type;
 
   /** @} */
 
