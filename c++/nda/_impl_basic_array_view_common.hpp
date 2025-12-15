@@ -465,7 +465,7 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
     static constexpr bool both_1d_strided = has_layout_strided_1d<self_t> and has_layout_strided_1d<RHS>;
     if constexpr (mem::on_host<self_t, RHS> and both_1d_strided) {
       // vectorizable copy on host
-      for (long i = 0; i < size(); ++i) (*this)(_linear_index_t{i}) = rhs(_linear_index_t{i});
+      for (long i = 0; i < size(); ++i) (*this)(_linear_index_t{i}) = value_type(rhs(_linear_index_t{i}));
       return;
     } else if constexpr (!mem::on_host<self_t, RHS> and have_same_value_type_v<self_t, RHS>) {
       // check for block-layout and use mem::memcpy2D if possible
@@ -518,7 +518,7 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
       }
     }
   } else {
-    nda::for_each(shape(), [this, &rhs](auto const &...args) { (*this)(args...) = rhs(args...); });
+    nda::for_each(shape(), [this, &rhs](auto const &...args) { (*this)(args...) = value_type(rhs(args...)); });
   }
 }
 
@@ -579,7 +579,7 @@ void assign_from_scalar(Scalar const &scalar) noexcept {
     // FIXME : A priori faster to put 0 everywhere and then change the diag to avoid the if.
     // FIXME : Benchmark and confirm.
     if constexpr (is_scalar_or_convertible_v<Scalar>)
-      fill_with_scalar(0);
+      fill_with_scalar(Scalar{0});
     else
       fill_with_scalar(Scalar{0 * scalar}); // FIXME : improve this
     diagonal(*this).fill_with_scalar(scalar);

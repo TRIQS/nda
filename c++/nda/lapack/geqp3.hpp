@@ -50,10 +50,10 @@ namespace nda::lapack {
    * @param tau Output vector. The scalar factors of the elementary reflectors.
    * @return Integer return code from the LAPACK call.
    */
-  template <MemoryMatrix A, MemoryVector JPVT, MemoryVector TAU>
-    requires(mem::on_host<A> and is_blas_lapack_v<get_value_t<A>> and have_same_value_type_v<A, TAU>
-             and mem::have_compatible_addr_space<A, JPVT, TAU>)
-  int geqp3(A &&a, JPVT &&jpvt, TAU &&tau) { // NOLINT (temporary views are allowed here)
+  template <MemoryMatrix A, MemoryVector JPVT, MemoryVector TAU, MemoryVector W>
+    requires(mem::on_host<A> and is_blas_lapack_v<get_value_t<A>> and have_same_value_type_v<A, TAU, W>
+             and mem::have_compatible_addr_space<A, JPVT, TAU, W>)
+  int geqp3(A &&a, JPVT &&jpvt, TAU &&tau, W &&work) { // NOLINT (temporary views are allowed here)
     static_assert(has_F_layout<A>, "Error in nda::lapack::geqp3: C order not supported");
     static_assert(std::is_same_v<get_value_t<JPVT>, int>, "Error in nda::lapack::geqp3: Pivoting array must have elements of type int");
     static_assert(mem::have_host_compatible_addr_space<A, JPVT, TAU>, "Error in nda::lapack::geqp3: Only CPU is supported");
@@ -70,17 +70,27 @@ namespace nda::lapack {
     using value_type = get_value_t<A>;
     value_type bufferSize_T{};
     int info = 0;
-    array<double, 1> rwork(2 * n);
+    array<remove_complex_t<value_type>, 1> rwork(2 * n);
     lapack::f77::geqp3(m, n, a.data(), get_ld(a), jpvt.data(), tau.data(), &bufferSize_T, -1, rwork.data(), info);
     int bufferSize = static_cast<int>(std::ceil(std::real(bufferSize_T)));
 
     // allocate work buffer and perform actual library call
-    nda::array<value_type, 1> work(bufferSize);
+    if (work.size() < bufferSize) work.resize(bufferSize);
+    EXPECTS(work.indexmap().min_stride() == 1);
     lapack::f77::geqp3(m, n, a.data(), get_ld(a), jpvt.data(), tau.data(), work.data(), bufferSize, rwork.data(), info);
     jpvt -= 1; // Shift to 0-based indexing
 
     if (info) NDA_RUNTIME_ERROR << "Error in nda::lapack::geqp3: info = " << info;
     return info;
+  }
+
+  template <MemoryMatrix A, MemoryVector JPVT, MemoryVector TAU>
+    requires(mem::on_host<A> and is_blas_lapack_v<get_value_t<A>> and have_same_value_type_v<A, TAU>
+             and mem::have_compatible_addr_space<A, JPVT, TAU>)
+  int geqp3(A &&a, JPVT &&jpvt, TAU &&tau) { // NOLINT (temporary views are allowed here)
+    using value_type = get_value_t<A>;
+    nda::array<value_type, 1, C_layout, heap<mem::get_addr_space<A>>> work;
+    return geqp3(std::forward<A>(a), std::forward<JPVT>(jpvt), std::forward<TAU>(tau), work);
   }
 
 } // namespace nda::lapack

@@ -91,13 +91,25 @@ namespace nda {
     }
   }
 
+  template <typename T>
+  inline auto to_cublas(T x) {
+    return x;
+  }
+
   /**
    * @brief Cast a `std::complex<double>` to a `cuDoubleComplex`.
    *
    * @param c `std::complex<double>` object.
    * @return Equivalent `cuDoubleComplex` object.
    */
-  inline auto cucplx(std::complex<double> c) { return cuDoubleComplex{c.real(), c.imag()}; }
+  template <typename T>
+  inline auto to_cublas(std::complex<T> c) {
+    static_assert(std::is_same_v<float, std::remove_cvref_t<T>> or std::is_same_v<double, std::remove_cvref_t<T>>, "Error: Type mismatch.");
+    if constexpr (std::is_same_v<double, std::remove_cvref_t<T>>)
+      return cuDoubleComplex{c.real(), c.imag()};
+    else if constexpr (std::is_same_v<float, std::remove_cvref_t<T>>)
+      return cuComplex{c.real(), c.imag()};
+  }
 
   /**
    * @brief Reinterpret a pointer to a `std::complex<double>` as a pointer to a `cuDoubleComplex`.
@@ -105,7 +117,14 @@ namespace nda {
    * @param c Pointer to a `std::complex<double>`.
    * @return Pointer to a `cuDoubleComplex` at the same address.
    */
-  inline auto *cucplx(std::complex<double> *c) { return reinterpret_cast<cuDoubleComplex *>(c); } // NOLINT
+  template <typename T>
+  inline auto *to_cublas(std::complex<T> *c) {
+    static_assert(std::is_same_v<float, std::remove_cvref_t<T>> or std::is_same_v<double, std::remove_cvref_t<T>>, "Error: Type mismatch.");
+    if constexpr (std::is_same_v<double, std::remove_cvref_t<T>>)
+      return reinterpret_cast<cuDoubleComplex *>(c); // NOLINT
+    else if constexpr (std::is_same_v<float, std::remove_cvref_t<T>>)
+      return reinterpret_cast<cuComplex *>(c); // NOLINT
+  }
 
   /**
    * @brief Reinterpret a pointer to a `const std::complex<double>` as a pointer to a `const cuDoubleComplex`.
@@ -113,7 +132,14 @@ namespace nda {
    * @param c Pointer to a `const std::complex<double>`.
    * @return Pointer to a `const cuDoubleComplex` at the same address.
    */
-  inline auto *cucplx(std::complex<double> const *c) { return reinterpret_cast<const cuDoubleComplex *>(c); } // NOLINT
+  template <typename T>
+  inline auto *to_cublas(std::complex<T> const *c) {
+    static_assert(std::is_same_v<float, std::remove_cvref_t<T>> or std::is_same_v<double, std::remove_cvref_t<T>>, "Error: Type mismatch.");
+    if constexpr (std::is_same_v<double, std::remove_cvref_t<T>>)
+      return reinterpret_cast<const cuDoubleComplex *>(c); // NOLINT
+    else if constexpr (std::is_same_v<float, std::remove_cvref_t<T>>)
+      return reinterpret_cast<const cuComplex *>(c); // NOLINT
+  }
 
   /**
    * @brief Reinterpret a pointer to a pointer to a `std::complex<double>` as a pointer to a pointer to a
@@ -122,7 +148,14 @@ namespace nda {
    * @param c Pointer to a pointer to a `std::complex<double>`.
    * @return Pointer to a pointer to a `cuDoubleComplex` at the same address.
    */
-  inline auto **cucplx(std::complex<double> **c) { return reinterpret_cast<cuDoubleComplex **>(c); } // NOLINT
+  template <typename T>
+  inline auto **to_cublas(std::complex<T> **c) {
+    static_assert(std::is_same_v<float, std::remove_cvref_t<T>> or std::is_same_v<double, std::remove_cvref_t<T>>, "Error: Type mismatch.");
+    if constexpr (std::is_same_v<double, std::remove_cvref_t<T>>)
+      return reinterpret_cast<cuDoubleComplex **>(c); // NOLINT
+    else if constexpr (std::is_same_v<float, std::remove_cvref_t<T>>)
+      return reinterpret_cast<cuComplex **>(c); // NOLINT
+  }
 
   /**
    * @brief Reinterpret a pointer to a pointer to a `const std::complex<double>` as a pointer to a pointer to a
@@ -131,7 +164,14 @@ namespace nda {
    * @param c Pointer to a pointer to a `const std::complex<double>`.
    * @return Pointer to a pointer to a `const cuDoubleComplex` at the same address.
    */
-  inline auto **cucplx(std::complex<double> const **c) { return reinterpret_cast<const cuDoubleComplex **>(c); } // NOLINT
+  template <typename T>
+  inline auto **to_cublas(std::complex<T> const **c) {
+    static_assert(std::is_same_v<float, std::remove_cvref_t<T>> or std::is_same_v<double, std::remove_cvref_t<T>>, "Error: Type mismatch.");
+    if constexpr (std::is_same_v<double, std::remove_cvref_t<T>>)
+      return reinterpret_cast<const cuDoubleComplex **>(c); // NOLINT
+    else if constexpr (std::is_same_v<float, std::remove_cvref_t<T>>)
+      return reinterpret_cast<const cuComplex **>(c); // NOLINT
+  }
 
 #else
 

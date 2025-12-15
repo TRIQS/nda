@@ -112,7 +112,7 @@ TEST(NDA, LAPACKGtsv) {
 
 // Test LAPACK gesvd function.
 template <typename value_t>
-void test_gesvd() {
+void test_gesvd(double tol = 1e-14) {
   using matrix_t = matrix<value_t, F_layout>;
 
   auto A      = matrix_t{{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}}};
@@ -121,26 +121,27 @@ void test_gesvd() {
   auto U  = matrix_t(m, m);
   auto VT = matrix_t(n, n);
 
-  auto S     = vector<double>(std::min(m, n));
+  auto S     = vector<remove_complex_t<value_t>>(std::min(m, n));
   auto Acopy = matrix_t{A};
   lapack::gesvd(Acopy, S, U, VT);
 
   auto Sigma = matrix_t::zeros(A.shape());
   for (auto i : range(std::min(m, n))) Sigma(i, i) = S(i);
-  EXPECT_ARRAY_NEAR(A, U * Sigma * VT, 1e-14);
+  EXPECT_ARRAY_NEAR(A, U * Sigma * VT, tol);
 }
 
 TEST(NDA, LAPACKGesvd) {
+  test_gesvd<float>(1e-5);
   test_gesvd<double>();
+  test_gesvd<std::complex<float>>(1e-5);
   test_gesvd<std::complex<double>>();
 }
 
 // Test LAPACK geqp3, orgqr and ungqr functions.
 template <typename value_t, bool wide_matrix = false>
-void test_geqp3_orgqr_ungqr() {
+void test_geqp3_orgqr_ungqr(double tol = 1e-14) {
   using matrix_t = matrix<value_t, F_layout>;
-
-  auto A = matrix_t{{{1, 1, 1}, {3, 2, 4}, {5, 3, 2}, {2, 4, 5}, {4, 5, 3}}};
+  auto A         = matrix_t{{{1, 1, 1}, {3, 2, 4}, {5, 3, 2}, {2, 4, 5}, {4, 5, 3}}};
   if (wide_matrix) A = matrix_t{transpose(A)};
   auto [m, n] = A.shape();
 
@@ -161,22 +162,93 @@ void test_geqp3_orgqr_ungqr() {
   }
 
   // extract matrix Q with orthonormal columns
-  if constexpr (std::is_same_v<value_t, double>) {
-    lapack::orgqr(Q, tau);
-  } else {
-    lapack::ungqr(Q, tau);
-  }
-
-  EXPECT_ARRAY_NEAR(AP, Q(range::all, range(std::min(m, n))) * R, 1e-14);
+  lapack::gqr(Q, tau);
+  EXPECT_ARRAY_NEAR(AP, Q(range::all, range(std::min(m, n))) * R, tol);
 }
 TEST(NDA, LAPACKGeqp3UngqrAndOrgqr) {
   // tall matrix, i.e. n_rows > n_cols
+  test_geqp3_orgqr_ungqr<float>(1e-5);
   test_geqp3_orgqr_ungqr<double>();
+  test_geqp3_orgqr_ungqr<std::complex<float>>(1e-5);
   test_geqp3_orgqr_ungqr<std::complex<double>>();
 
   // wide matrix, i.e. n_rows < n_cols
+  test_geqp3_orgqr_ungqr<float, true>(1e-5);
   test_geqp3_orgqr_ungqr<double, true>();
+  test_geqp3_orgqr_ungqr<std::complex<float>, true>(1e-5);
   test_geqp3_orgqr_ungqr<std::complex<double>, true>();
+}
+
+// Test LAPACK geqrf, orgqr and ungqr functions.
+template <typename value_t, bool wide_matrix = false>
+void test_geqrf_gqr(double tol = 1e-14) {
+  using matrix_t = matrix<value_t, F_layout>;
+  auto A         = matrix_t{{{1, 1, 1}, {3, 2, 4}, {5, 3, 2}, {2, 4, 5}, {4, 5, 3}}};
+  if (wide_matrix) A = matrix_t{transpose(A)};
+  auto [m, n] = A.shape();
+
+  // compute QR factorization, i.e. A = Q * R
+  auto tau = nda::vector<value_t>(std::min(m, n));
+  auto Q   = matrix_t{A};
+  lapack::geqrf(Q, tau);
+
+  // extract upper triangular matrix R
+  auto R = nda::matrix<value_t, F_layout>::zeros(std::min(m, n), n);
+  for (int i = 0; i < std::min(m, n); ++i) {
+    for (int j = i; j < n; ++j) { R(i, j) = Q(i, j); }
+  }
+
+  // extract matrix Q with orthonormal columns
+  lapack::gqr(Q, tau);
+  EXPECT_ARRAY_NEAR(A, Q(range::all, range(std::min(m, n))) * R, tol);
+}
+TEST(NDA, LAPACKGeqrfGqr) {
+  // tall matrix, i.e. n_rows > n_cols
+  test_geqrf_gqr<float>(1e-5);
+  test_geqrf_gqr<double>();
+  test_geqrf_gqr<std::complex<float>>(1e-5);
+  test_geqrf_gqr<std::complex<double>>();
+
+  // wide matrix, i.e. n_rows < n_cols
+  test_geqrf_gqr<float, true>(1e-5);
+  test_geqrf_gqr<double, true>();
+  test_geqrf_gqr<std::complex<float>, true>(1e-5);
+  test_geqrf_gqr<std::complex<double>, true>();
+}
+
+template <typename value_t, bool wide_matrix = false>
+void test_geqrf_gqr_batched() {
+  array<value_t, 3, F_layout> A(5, 3, 4);
+  A() = rand<remove_complex_t<value_t>, int, 3>({5, 3, 4});
+  if constexpr (is_complex_v<value_t>) A() += value_t(0.0, 1.0) * rand<remove_complex_t<value_t>, int, 3>({5, 3, 4});
+
+  auto tau_ref = nda::array<value_t, 2, F_layout>(3, 4);
+  auto Qref(A);
+  for (int i = 0; i < Qref.extent(2); ++i) lapack::geqrf(Qref(range::all, range::all, i), tau_ref(range::all, i));
+
+  array<value_t, 3, F_layout> Q(A);
+  array<value_t, 2, F_layout> tau(3, 4);
+
+  lapack::geqrf(Q, tau);
+  EXPECT_ARRAY_NEAR(Qref, Q);
+
+  for (int i = 0; i < Qref.extent(2); ++i) lapack::gqr(Qref(range::all, range::all, i), tau_ref(range::all, i));
+
+  lapack::gqr(Q, tau);
+  EXPECT_ARRAY_NEAR(Qref, Q);
+}
+TEST(NDA, LAPACKGeqrfGqrBatched) {
+  // tall matrix, i.e. n_rows > n_cols
+  test_geqrf_gqr_batched<float>();
+  test_geqrf_gqr_batched<double>();
+  test_geqrf_gqr_batched<std::complex<float>>();
+  test_geqrf_gqr_batched<std::complex<double>>();
+
+  // wide matrix, i.e. n_rows < n_cols
+  test_geqrf_gqr_batched<float, true>();
+  test_geqrf_gqr_batched<double, true>();
+  test_geqrf_gqr_batched<std::complex<float>, true>();
+  test_geqrf_gqr_batched<std::complex<double>, true>();
 }
 
 // Test LAPACK gelss function and the gelss_worker class.
@@ -217,7 +289,7 @@ TEST(NDA, LAPACKGelss) {
 
 // Test LAPACK getrs, getrf and getri functions.
 template <typename value_t>
-void test_getrs_getrf_getri() {
+void test_getrs_getrf_getri(double tol = 1e-12) {
   using matrix_t = matrix<value_t, F_layout>;
 
   auto A = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
@@ -235,16 +307,68 @@ void test_getrs_getrf_getri() {
   lapack::getrf(Acopy, ipiv);
   lapack::getrs(Acopy, Bcopy, ipiv);
   auto X2 = matrix_t{Bcopy};
-  EXPECT_ARRAY_NEAR(matrix_t{A * X2}, B);
-  EXPECT_ARRAY_NEAR(X1, X2);
+  EXPECT_ARRAY_NEAR(matrix_t{A * X2}, B, tol);
+  EXPECT_ARRAY_NEAR(X1, X2, tol);
 
   // compute the inverse of A using getrf and getri
   auto Ainv2 = Acopy;
   lapack::getri(Ainv2, ipiv);
-  EXPECT_ARRAY_NEAR(Ainv, Ainv2);
+  EXPECT_ARRAY_NEAR(Ainv, Ainv2, tol);
 }
 
 TEST(NDA, LAPAKCGetrsGetrfAndGetri) {
+  test_getrs_getrf_getri<float>(1e-4);
   test_getrs_getrf_getri<double>();
+  test_getrs_getrf_getri<std::complex<float>>(1e-4);
   test_getrs_getrf_getri<std::complex<double>>();
+}
+
+// Test batched LAPACK getrf and getri functions.
+template <typename value_t>
+void test_batched_getrf_getri() {
+  using matrix_t = matrix<value_t, F_layout>;
+  auto all       = nda::range::all;
+
+  auto A0 = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
+  auto B0 = matrix_t{{1, 5}, {4, 5}, {3, 6}};
+
+  // solve A0 * x = B0 using the exact matrix inverse
+  auto A0inv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
+  auto X1    = matrix_t{A0inv * B0};
+  EXPECT_ARRAY_NEAR(matrix_t{A0 * X1}, B0);
+
+  array<value_t, 3, F_layout> A(3, 3, 5);
+  for (int b = 0; b < A.extent(2); ++b) A(all, all, b) = A0;
+
+  auto Aref(A);
+  auto Ainv(A);
+  array<int, 1> ipiv_ref(3);
+  for (int i = 0; i < Aref.extent(2); ++i) {
+    auto info                       = lapack::getrf(Aref(range::all, range::all, i), ipiv_ref);
+    Ainv(range::all, range::all, i) = Aref(range::all, range::all, i);
+    info                            = lapack::getri(Ainv(range::all, range::all, i), ipiv_ref);
+    EXPECT_TRUE(info == 0);
+  }
+
+  array<value_t, 3, F_layout> X(A);
+  array<int, 2, F_layout> ipiv(3, 5);
+
+  {
+    auto info = lapack::getrf(X, ipiv);
+    EXPECT_TRUE(std::all_of(info.begin(), info.end(), [](auto &&a) { return a == 0; }));
+    EXPECT_ARRAY_NEAR(Aref, X);
+  }
+
+  {
+    auto info = lapack::getri(X, ipiv);
+    EXPECT_TRUE(std::all_of(info.begin(), info.end(), [](auto &&a) { return a == 0; }));
+    EXPECT_ARRAY_NEAR(Ainv, X);
+  }
+}
+
+TEST(NDA, LAPACKBatchedGetrsGetrfAndGetri) {
+  test_batched_getrf_getri<float>();
+  test_batched_getrf_getri<double>();
+  test_batched_getrf_getri<std::complex<float>>();
+  test_batched_getrf_getri<std::complex<double>>();
 }

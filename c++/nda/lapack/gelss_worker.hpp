@@ -85,7 +85,7 @@ namespace nda::lapack {
     matrix<T> U_N_H_;
 
     // Array containing the singular values.
-    array<double, 1> s_;
+    array<remove_complex_t<T>, 1> s_;
 
     public:
     /**
@@ -98,7 +98,7 @@ namespace nda::lapack {
      * @brief Get the singular values, i.e. the diagonal elements of the matrix \f$ \mathbf{S} \f$.
      * @return 1-dimensional nda::array containing the singular values.
      */
-    [[nodiscard]] array<double, 1> const &S_vec() const { return s_; }
+    [[nodiscard]] array<remove_complex_t<T>, 1> const &S_vec() const { return s_; }
 
     /**
      * @brief Construct a new worker object for a given matrix \f$ \mathbf{A} \f$ .
@@ -121,7 +121,7 @@ namespace nda::lapack {
       gesvd(A_work, s_, U, V_H);
 
       // calculate the pseudo inverse A^{+} = V * \Sigma^{+} * U^H
-      matrix<double, F_layout> S_plus(N_, M_);
+      matrix<remove_complex_t<T>, F_layout> S_plus(N_, M_);
       S_plus = 0.;
       for (long i : range(s_.size())) S_plus(i, i) = 1.0 / s_(i);
       A_plus_ = dagger(V_H) * S_plus * dagger(U);

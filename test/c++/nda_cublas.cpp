@@ -11,6 +11,16 @@
 #include <complex>
 #include <vector>
 
+#define _run_tests_(FUN)                                                                                                                             \
+  FUN<float, nda::C_layout>();                                                                                                                       \
+  FUN<float, nda::F_layout>();                                                                                                                       \
+  FUN<double, nda::C_layout>();                                                                                                                      \
+  FUN<double, nda::F_layout>();                                                                                                                      \
+  FUN<std::complex<float>, nda::C_layout>();                                                                                                         \
+  FUN<std::complex<float>, nda::F_layout>();                                                                                                         \
+  FUN<std::complex<double>, nda::C_layout>();                                                                                                        \
+  FUN<std::complex<double>, nda::F_layout>();
+
 // Test the CUBLAS gemm function.
 template <typename value_t, typename Layout>
 void test_gemm() {
@@ -23,12 +33,7 @@ void test_gemm() {
   EXPECT_ARRAY_NEAR(M3, nda::matrix<value_t>{{2, 1}, {3, 4}});
 }
 
-TEST(NDA, CUBLASGemm) {
-  test_gemm<double, nda::C_layout>();
-  test_gemm<double, nda::F_layout>();
-  test_gemm<std::complex<double>, nda::C_layout>();
-  test_gemm<std::complex<double>, nda::F_layout>();
-}
+TEST(NDA, CUBLASGemm) { _run_tests_(test_gemm) }
 
 // Test the CUBLAS gemm_batch function.
 template <typename value_t, typename Layout>
@@ -41,16 +46,13 @@ void test_gemm_batch() {
   auto vec_C_d = std::vector(batch_count, nda::to_device(nda::matrix<value_t, Layout>::zeros({size, size})));
   nda::blas::gemm_batch(1.0, vec_A_d, vec_B_d, 0.0, vec_C_d);
 
+  // Note: Investigate! There are round-off differences with complex<float>, keeping comparison loose for now
+  double tol = (std::is_same_v<std::complex<float>, value_t> ? 1e-4 : 1e-10);
   for (auto i : nda::range(batch_count))
-    EXPECT_ARRAY_NEAR(nda::make_regular(nda::to_host(vec_A_d[i]) * nda::to_host(vec_B_d[i])), nda::to_host(vec_C_d[i]));
+    EXPECT_ARRAY_NEAR(nda::make_regular(nda::to_host(vec_A_d[i]) * nda::to_host(vec_B_d[i])), nda::to_host(vec_C_d[i]), tol);
 }
 
-TEST(NDA, CUBLASGemmBatch) {
-  test_gemm_batch<double, nda::C_layout>();
-  test_gemm_batch<double, nda::F_layout>();
-  test_gemm_batch<std::complex<double>, nda::C_layout>();
-  test_gemm_batch<std::complex<double>, nda::F_layout>();
-}
+TEST(NDA, CUBLASGemmBatch) { _run_tests_(test_gemm_batch) }
 
 #ifdef NDA_HAVE_MAGMA
 template <typename value_t, typename Layout>
@@ -67,12 +69,7 @@ void test_gemm_vbatch() {
     EXPECT_ARRAY_NEAR(nda::make_regular(nda::to_host(vec_A_d[i]) * nda::to_host(vec_B_d[i])), nda::to_host(vec_C_d[i]));
 }
 
-TEST(NDA, CUBLASGemmVbatch) {
-  test_gemm_vbatch<double, nda::C_layout>();
-  test_gemm_vbatch<double, nda::F_layout>();
-  test_gemm_vbatch<std::complex<double>, nda::C_layout>();
-  test_gemm_vbatch<std::complex<double>, nda::F_layout>();
-}
+TEST(NDA, CUBLASGemmVbatch) { _run_tests_(test_gemm_vbatch) }
 #endif
 
 // Test the CUBLAS gemv function.
@@ -107,12 +104,7 @@ void test_gemv() {
   EXPECT_ARRAY_NEAR(w, nda::vector<value_t>{-8, 9, 13, -8, -8});
 }
 
-TEST(NDA, CUBLASGemv) {
-  test_gemv<double, nda::C_layout>();
-  test_gemv<double, nda::F_layout>();
-  test_gemv<std::complex<double>, nda::C_layout>();
-  test_gemv<std::complex<double>, nda::F_layout>();
-}
+TEST(NDA, CUBLASGemv) { _run_tests_(test_gemv) }
 
 // Test the CUBLAS ger function.
 template <typename value_t, typename Layout>
@@ -130,25 +122,36 @@ void test_ger() {
   EXPECT_ARRAY_NEAR(M, nda::matrix<value_t>{{1, 2}, {2, 4}});
 }
 
-TEST(NDA, CUBLASGer) {
-  test_ger<double, nda::C_layout>();
-  test_ger<double, nda::F_layout>();
-  test_ger<std::complex<double>, nda::C_layout>();
-  test_ger<std::complex<double>, nda::C_layout>();
-}
+TEST(NDA, CUBLASGer){_run_tests_(test_ger)}
 
 TEST(NDA, CUBLASOuterProduct) {
-  auto N = nda::rand<double>(2, 3);
-  auto M = nda::rand<double>(4, 5);
+  {
+    auto N = nda::rand<float>(2, 3);
+    auto M = nda::rand<float>(4, 5);
 
-  nda::array<double, 4> P(2, 3, 4, 5);
-  for (auto [i, j] : N.indices())
-    for (auto [k, l] : M.indices()) P(i, j, k, l) = N(i, j) * M(k, l);
+    nda::array<float, 4> P(2, 3, 4, 5);
+    for (auto [i, j] : N.indices())
+      for (auto [k, l] : M.indices()) P(i, j, k, l) = N(i, j) * M(k, l);
 
-  nda::cumatrix<double> M_d{M}, N_d{N};
-  auto Res_d = nda::blas::outer_product(N_d, M_d);
-  auto Res   = nda::array<double, 4>{Res_d};
-  EXPECT_ARRAY_NEAR(P, Res);
+    nda::cumatrix<float> M_d{M}, N_d{N};
+    auto Res_d = nda::blas::outer_product(N_d, M_d);
+    auto Res   = nda::array<float, 4>{Res_d};
+    EXPECT_ARRAY_NEAR(P, Res);
+  }
+
+  {
+    auto N = nda::rand<double>(2, 3);
+    auto M = nda::rand<double>(4, 5);
+
+    nda::array<double, 4> P(2, 3, 4, 5);
+    for (auto [i, j] : N.indices())
+      for (auto [k, l] : M.indices()) P(i, j, k, l) = N(i, j) * M(k, l);
+
+    nda::cumatrix<double> M_d{M}, N_d{N};
+    auto Res_d = nda::blas::outer_product(N_d, M_d);
+    auto Res   = nda::array<double, 4>{Res_d};
+    EXPECT_ARRAY_NEAR(P, Res);
+  }
 }
 
 // Test the CUBLAS dot function.
@@ -166,7 +169,9 @@ void test_dot() {
 }
 
 TEST(NDA, CUBLASDot) {
+  test_dot<float>();
   test_dot<double>();
+  test_dot<std::complex<float>>();
   test_dot<std::complex<double>>();
 }
 
@@ -185,6 +190,8 @@ void test_dotc() {
 }
 
 TEST(NDA, CUBLASDotc) {
+  test_dotc<float>();
   test_dotc<double>();
+  test_dotc<std::complex<float>>();
   test_dotc<std::complex<double>>();
 }

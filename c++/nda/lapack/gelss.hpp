@@ -62,7 +62,7 @@ namespace nda::lapack {
    */
   template <MemoryMatrix A, MemoryArray B, MemoryVector S>
     requires(have_same_value_type_v<A, B> and mem::on_host<A, B, S> and is_blas_lapack_v<get_value_t<A>>)
-  int gelss(A &&a, B &&b, S &&s, double rcond, int &rank) { // NOLINT (temporary views are allowed here)
+  int gelss(A &&a, B &&b, S &&s, remove_complex_t<get_value_t<A>> rcond, int &rank) { // NOLINT (temporary views are allowed here)
     static_assert(has_F_layout<A> and has_F_layout<B>, "Error in nda::lapack::gelss: C order not supported");
     static_assert(MemoryVector<B> or MemoryMatrix<B>, "Error in nda::lapack::gelss: B must be a vector or a matrix");
 
@@ -77,7 +77,7 @@ namespace nda::lapack {
     // first call to get the optimal bufferSize
     using value_type = get_value_t<A>;
     value_type bufferSize_T{};
-    auto rwork = array<double, 1>(5 * dm);
+    auto rwork = array<remove_complex_t<value_type>, 1>(5 * dm);
     int info   = 0;
     int nrhs = 1, ldb = b.size(); // defaults for B MemoryVector
     if constexpr (MemoryMatrix<B>) {

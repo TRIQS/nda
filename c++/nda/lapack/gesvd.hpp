@@ -59,9 +59,9 @@ namespace nda::lapack {
    * @param vt Output matrix. It contains contains the n-by-n unitary matrix \f$ \mathbf{V}^H \f$.
    * @return Integer return code from the LAPACK call.
    */
-  template <MemoryMatrix A, MemoryVector S, MemoryMatrix U, MemoryMatrix VT>
-    requires(have_same_value_type_v<A, U, VT> and mem::have_compatible_addr_space<A, S, U, VT> and is_blas_lapack_v<get_value_t<A>>)
-  int gesvd(A &&a, S &&s, U &&u, VT &&vt) { // NOLINT (temporary views are allowed here)
+  template <MemoryMatrix A, MemoryVector S, MemoryMatrix U, MemoryMatrix VT, MemoryVector W>
+    requires(have_same_value_type_v<A, U, VT, W> and mem::have_compatible_addr_space<A, S, U, VT, W> and is_blas_lapack_v<get_value_t<A>>)
+  int gesvd(A &&a, S &&s, U &&u, VT &&vt, W &&work) { // NOLINT (temporary views are allowed here)
     static_assert(has_F_layout<A> and has_F_layout<U> and has_F_layout<VT>, "Error in nda::lapack::gesvd: C order not supported");
 
     auto dm = std::min(a.extent(0), a.extent(1));
@@ -89,19 +89,28 @@ namespace nda::lapack {
     // first call to get the optimal buffersize
     using value_type = get_value_t<A>;
     value_type bufferSize_T{};
-    auto rwork = array<double, 1, C_layout, heap<mem::get_addr_space<A>>>(5 * dm);
+    auto rwork = array<remove_complex_t<value_type>, 1, C_layout, heap<mem::get_addr_space<A>>>(5 * dm);
     int info   = 0;
     gesvd_call('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), s.data(), u.data(), get_ld(u), vt.data(), get_ld(vt), &bufferSize_T, -1,
                rwork.data(), info);
     int bufferSize = static_cast<int>(std::ceil(std::real(bufferSize_T)));
 
     // allocate work buffer and perform actual library call
-    nda::array<value_type, 1, C_layout, heap<mem::get_addr_space<A>>> work(bufferSize);
+    if (work.size() < bufferSize) work.resize(bufferSize);
+    EXPECTS(work.indexmap().min_stride() == 1);
     gesvd_call('A', 'A', a.extent(0), a.extent(1), a.data(), get_ld(a), s.data(), u.data(), get_ld(u), vt.data(), get_ld(vt), work.data(), bufferSize,
                rwork.data(), info);
 
     if (info) NDA_RUNTIME_ERROR << "Error in nda::lapack::gesvd: info = " << info;
     return info;
+  }
+
+  template <MemoryMatrix A, MemoryVector S, MemoryMatrix U, MemoryMatrix VT>
+    requires(have_same_value_type_v<A, U, VT> and mem::have_compatible_addr_space<A, S, U, VT> and is_blas_lapack_v<get_value_t<A>>)
+  int gesvd(A &&a, S &&s, U &&u, VT &&vt) { // NOLINT (temporary views are allowed here)
+    using value_type = get_value_t<A>;
+    nda::array<value_type, 1, C_layout, heap<mem::get_addr_space<A>>> work;
+    return gesvd(std::forward<A>(a), std::forward<S>(s), std::forward<U>(u), std::forward<VT>(vt), work);
   }
 
 } // namespace nda::lapack

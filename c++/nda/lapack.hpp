@@ -13,6 +13,7 @@
 #include "./lapack/interface/cxx_interface.hpp"
 #include "./lapack/gelss.hpp"
 #include "./lapack/geqp3.hpp"
+#include "./lapack/geqrf.hpp"
 #include "./lapack/gesvd.hpp"
 #include "./lapack/getrf.hpp"
 #include "./lapack/getri.hpp"
@@ -20,3 +21,4 @@
 #include "./lapack/gtsv.hpp"
 #include "./lapack/orgqr.hpp"
 #include "./lapack/ungqr.hpp"
+#include "./lapack/gqr.hpp"
