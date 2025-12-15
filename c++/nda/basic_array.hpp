@@ -26,6 +26,7 @@
 #include "./mem/policies.hpp"
 #include "./stdutil/array.hpp"
 #include "./traits.hpp"
+#include "./tensor/assign.hpp"
 
 #include <algorithm>
 #include <array>

@@ -1,0 +1,66 @@
+// Copyright (c) 2019-2022 Simons Foundation
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0.txt
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// Authors: Olivier Parcollet, Nils Wentzell
+
+#pragma once
+
+#include <array>
+#include <cstdint>
+
+#if defined(NDA_HAVE_CUDA)
+#include <cuda_runtime.h>
+#endif
+
+/// Tensor operations Interface
+namespace nda::tensor {
+  enum backend { __TBLIS__, __CUTENSOR__, __NONE__ };
+
+  namespace op {
+    enum TENSOR_OP { ID, CONJ, SQRT, EXP, LOG, RCP, ABS, NEG, CEIL, FLOOR, SIN, COS, SUM, MUL, MAX, MIN };
+  }
+
+  // can I make this constexpr???
+  template <uint8_t N>
+  std::string default_index() {
+    std::string indx(N, '0');
+    for (uint8_t i = 0; i < N; i++) indx[i] = '0' + i;
+    return indx;
+  }
+
+  // this can be done for arbitrary layout based on
+  template <std::size_t N>
+  std::string default_index(std::array<int, N> const &order) {
+    // MAM: use characters if N>=10!
+    static_assert(N > 0 and N < 10, "Index out of bounds.");
+    std::string indx(N, '0');
+    for (uint8_t i = 0; i < N; i++) indx[i] = '0' + order[i];
+    return indx;
+  }
+
+  namespace detail {
+
+    template <typename T>
+    concept LessThanComparable = requires(T a, T b) {
+      { a < b } -> std::convertible_to<bool>;
+    };
+
+  } // namespace detail
+
+  template <bool flag = false>
+  void compile_error_no_tblis() {
+    static_assert(flag, "Using tblis functionality without TBLIS support! Configure project with -DTblisSupport=ON.");
+  }
+
+} // namespace nda::tensor

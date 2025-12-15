@@ -17,13 +17,15 @@
 #pragma once
 #include <complex>
 #include <string_view>
-#include "../exceptions.hpp"
-#include "../traits.hpp"
-#include "../declarations.hpp"
-#include "../mem/address_space.hpp"
+#include "nda/exceptions.hpp"
+#include "nda/traits.hpp"
+#include "nda/declarations.hpp"
+#include "nda/mem/address_space.hpp"
+#include "nda/mem/malloc.hpp"
+#include "nda/mem/memcpy.hpp"
 
-#if defined(NDA_HAVE_TBLIS)
-#include "interface/tblis_interface.hpp"
+#ifndef NDA_HAVE_DEVICE
+#include "../device.hpp"
 #endif
 
 #if defined(NDA_HAVE_CUTENSOR)
@@ -38,17 +40,22 @@ namespace nda::tensor {
   template <MemoryArray A>
     requires(is_blas_lapack_v<get_value_t<A>>)
   void set(get_value_t<A> alpha, A &&a) {
-
-    using value_t = get_value_t<A>;
-
     if constexpr (mem::on_host<A>) {
       a() = alpha; // is there a point in using tblis?
     } else {       // on device
 #if defined(NDA_HAVE_CUTENSOR)
-      //      cutensor::termbyterm();
-      static_assert(always_false<bool>, " set on device cuTensor!!!. ");
+      using value_t      = get_value_t<A>;
+      constexpr int rank = get_rank<A>;
+      std::string indx   = default_index<uint8_t(rank)>();
+      cutensor::cutensor_desc<value_t, rank> a_t(a);
+      value_t *z = (value_t *)mem::malloc<mem::Device>(sizeof(value_t));
+      mem::memcpy<mem::Device, mem::Host>(z, &alpha, sizeof(value_t));
+      cutensor::cutensor_desc<value_t, 0> z_t(z);
+      cutensor::elementwise_binary(value_t{1}, z_t, op::ID, z, "", value_t{0}, a_t, op::ID, a.data(), indx, a.data(), op::SUM);
+      cudaDeviceSynchronize(); // for sync in case it is turned off
+      mem::free<mem::Device>(z);
 #else
-      static_assert(always_false<bool>, " set on device requires gpu tensor operations backend. ");
+      compile_error_no_gpu();
 #endif
     }
   }

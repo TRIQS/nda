@@ -17,10 +17,16 @@
 #pragma once
 #include <complex>
 #include <string_view>
-#include "../exceptions.hpp"
-#include "../traits.hpp"
-#include "../declarations.hpp"
-#include "../mem/address_space.hpp"
+#include "nda/exceptions.hpp"
+#include "nda/traits.hpp"
+#include "nda/declarations.hpp"
+#include "nda/mem/address_space.hpp"
+#include "nda/mem/malloc.hpp"
+#include "nda/mem/memcpy.hpp"
+
+#ifndef NDA_HAVE_DEVICE
+#include "../device.hpp"
+#endif
 
 #if defined(NDA_HAVE_TBLIS)
 #include "interface/tblis_interface.hpp"
@@ -37,23 +43,22 @@ namespace nda::tensor {
    */
   template <MemoryArray A>
     requires(is_blas_lapack_v<get_value_t<A>>)
-  get_value_t<A> reduce(A &&a, REDUCE_OP op = REDUCE_SUM) {
-
-    using value_t      = get_value_t<A>;
-    constexpr int rank = get_rank<A>;
+  get_value_t<A> reduce(A &&a, op::TENSOR_OP oper = op::SUM) {
 
     if constexpr (mem::on_host<A>) {
+      using value_t = get_value_t<A>;
 #if defined(NDA_HAVE_TBLIS)
+      constexpr int rank = get_rank<A>;
       nda_tblis::tensor<value_t, rank> a_t(a);
-      std::string indx = nda_tblis::default_index<uint8_t(rank)>();
+      std::string indx = default_index<uint8_t(rank)>();
       nda_tblis::scalar<value_t> res(0);
       std::array<::tblis::len_type, rank> idx;
       // MAM: do this in a cleaner way!
-      if (op == REDUCE_SUM) {
+      if (oper == op::SUM) {
         ::tblis::tblis_tensor_reduce(NULL, NULL, ::tblis::REDUCE_SUM, &a_t, indx.data(), &res, idx.data());
-      } else if (op == REDUCE_MAX) {
+      } else if (oper == op::MAX) {
         ::tblis::tblis_tensor_reduce(NULL, NULL, ::tblis::REDUCE_MAX, &a_t, indx.data(), &res, idx.data());
-      } else if (op == REDUCE_MIN) {
+      } else if (oper == op::MIN) {
         ::tblis::tblis_tensor_reduce(NULL, NULL, ::tblis::REDUCE_MIN, &a_t, indx.data(), &res, idx.data());
       } else {
         NDA_RUNTIME_ERROR << "tensor::reduce: Unknown reduction operation.";
@@ -83,10 +88,21 @@ namespace nda::tensor {
 #endif
     } else { // on device
 #if defined(NDA_HAVE_CUTENSOR)
-      //      cutensor::termbyterm();
-      static_assert(always_false<bool>, " reduce on device cuTensor!!!. ");
+      using value_t = get_value_t<A>;
+      value_t res;
+      constexpr int rank = get_rank<A>;
+      cutensor::cutensor_desc<value_t, rank> a_t(a);
+      std::string indx = default_index<uint8_t(rank)>();
+      value_t *z       = (value_t *)mem::malloc<mem::Device>(sizeof(value_t));
+      cutensor::reduce(value_t{1.0}, a_t, op::ID, a.data(), indx, z, oper);
+      cudaDeviceSynchronize(); // for sync in case it is turned off
+      mem::memcpy<mem::Host, mem::Device>(&res, z, sizeof(value_t));
+      mem::free<mem::Device>(z);
+      return res;
 #else
-      static_assert(always_false<bool>, " reduce on device requires gpu tensor operations backend. ");
+      (void)a;
+      (void)oper;
+      compile_error_no_gpu();
 #endif
     }
   }
