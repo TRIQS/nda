@@ -38,6 +38,15 @@
 
 namespace nda::mem {
 
+  namespace detail {
+    // returns the next address aligned to "align"
+    inline char *align_up(char *ptr, std::size_t align = alignof(std::max_align_t)) {
+      std::uintptr_t align_(align);
+      uintptr_t ptr_i = reinterpret_cast<uintptr_t>(ptr);
+      return reinterpret_cast<char *>(align_ * ((ptr_i + (align_ - 1)) / align_));
+    };
+  } // namespace detail
+
   /**
    * @addtogroup mem_allocators
    * @{
@@ -110,6 +119,8 @@ namespace nda::mem {
      * @param b nda::mem::blk_t memory block to deallocate.
      */
     static void deallocate(blk_t b) noexcept { free<AdrSp>((void *)b.ptr); }
+
+    static bool owns(blk_t) noexcept { return true; }
   };
 
   /**
@@ -438,6 +449,396 @@ namespace nda::mem {
      * @return True if one of the two allocators owns the memory block.
      */
     [[nodiscard]] bool owns(blk_t b) const noexcept { return small.owns(b) or big.owns(b); }
+  };
+
+  /**
+   * @brief Allocates memory from a pool of memory. 
+   *        The size of the pool is provided at runtime and can be dynamically adjusted.
+   *        If the allocator does not have enough contiguous memory to allocate a requested amount,
+   *        the call throws an exception. 
+   * @tparam AdrSp nda::mem::AddressSpace in which the memory is allocated.
+   */
+  template <AddressSpace AdrSp = Host, size_t _alignment = alignof(std::max_align_t)>
+  class dynamic_bucket {
+
+    private:
+    // auxiliary allocator
+    using Auxiliary = mallocator<AdrSp>;
+
+    /// alignment
+    constexpr static size_t _align = std::max(size_t(1), _alignment);
+
+    // size of the pool
+    size_t _size = 0;
+
+    /// maximum amount of memory needed
+    size_t _maximum_needed = 0;
+
+    /// total amount of memory requested
+    size_t _total_requested = 0;
+
+    /// total amount of memory released
+    size_t _total_released = 0;
+
+    // pool of memory
+    blk_t _pool;
+
+    // aligned start of _pool
+    char *p0 = nullptr;
+
+    // list of available memory segments
+    std::vector<blk_t> _avail;
+
+    // list of allocated memory segments
+    std::vector<blk_t> _segments;
+
+    public:
+    /// Default constructor.
+    dynamic_bucket(size_t s = 8000) : _size(s + _align), _pool{Auxiliary::allocate(_size)} {
+      // first alligned memory location
+      p0 = detail::align_up(_pool.ptr, _align);
+      _avail.reserve(10);
+      _segments.reserve(10);
+      // initialize _avail
+      _avail.emplace_back(blk_t{p0, size_t(std::distance(p0, _pool.ptr + _pool.s))});
+    }
+
+    /// Destructor
+    //~dynamic_bucket() { };
+    ~dynamic_bucket() {
+      if (_pool.s > 0 and _pool.ptr != nullptr) Auxiliary::deallocate(_pool);
+    }
+
+    /// Deleted copy constructor.
+    dynamic_bucket(dynamic_bucket const &) = delete;
+
+    /// Default move constructor.
+    dynamic_bucket(dynamic_bucket &&) = default;
+
+    /// Deleted copy assignment operator.
+    dynamic_bucket &operator=(dynamic_bucket const &) = delete;
+
+    /// Default move assignment operator.
+    dynamic_bucket &operator=(dynamic_bucket &&) = default;
+
+    /// nda::mem::AddressSpace in which the memory is allocated.
+    static constexpr auto address_space = AdrSp;
+
+    /**
+     * @ brief Changes the size of the memory pool in the allocator.
+     *         Only allowed if no memory is currently allocated. 
+     */
+    void resize(size_t s) {
+      if (_segments.size() > 0) throw std::bad_alloc{};
+      _size = s + _align;
+      Auxiliary::deallocate(_pool);
+      _pool = Auxiliary::allocate(_size);
+      p0    = detail::align_up(_pool.ptr, _align);
+      _avail.clear();
+      _avail.emplace_back(blk_t{p0, size_t(std::distance(p0, _pool.ptr + _pool.s))});
+    }
+
+    /**
+     *  Returns the capacity of the allocator.
+     */
+    auto size() const {
+      return std::distance(p0, _pool.ptr + _pool.s);
+    }
+
+    /**
+     * @ brief Returns the maximum amount of memory requested
+     */
+    auto maximum_memory() const { return _maximum_needed; }
+
+    /**
+     * @brief Allocate memory from the pool. Returns nullptr if allocation fails. 
+     *
+     * @param s Size in bytes of the memory to allocate.
+     * @return nda::mem::blk_t memory block.
+     */
+    blk_t allocate(size_t s) noexcept {
+      // round up to closest multiple of align
+      size_t aligned_s = ((s + (_align - 1)) / _align) * _align;
+      _total_requested += aligned_s;
+      _maximum_needed = std::max(_maximum_needed, _total_requested - _total_released);
+      // find available block with enough space
+      auto b = std::find_if(_avail.begin(), _avail.end(), [&](auto const &a) { return a.s >= aligned_s; });
+      if (b != _avail.end()) {
+        auto p_s = b->ptr;
+        // add segment to list, keeping list unsorted
+        _segments.push_back({p_s, aligned_s});
+        // remove segment from _avail
+        if (aligned_s == b->s)
+          _avail.erase(b);
+        else {
+          b->ptr += aligned_s;
+          b->s -= aligned_s;
+        }
+        return {p_s, s};
+      }
+      return {nullptr, 0};
+    }
+
+    /**
+     * @brief Allocate memory and set it to zero.
+     *
+     * @param s Size in bytes of the memory to allocate.
+     * @return nda::mem::blk_t memory block.
+     */
+    blk_t allocate_zero(size_t s) noexcept {
+      blk_t b = allocate(s);
+      if (b.ptr and b.s > 0) memset<address_space>(b.ptr, 0, b.s);
+      return b;
+    }
+
+    /**
+     * @ brief Deallocate memory.
+     * @param b nda::mem::blk_t memory block to deallocate.
+     */
+    void deallocate(blk_t b) noexcept {
+      if (_segments.size() == 0 or _size == 0) {
+        _total_released += b.s;
+        return;
+      }
+      // 1. find blk in _segments
+      auto it = std::find_if(_segments.begin(), _segments.end(), [&](auto const &a) { return std::distance(a.ptr, b.ptr) == 0; });
+      if (it != _segments.end()) {
+        _total_released += it->s;
+        move_blk_to_avail(*it);
+        _segments.erase(it);
+        return;
+      }
+      // 2. Deallocates owned memory.
+      EXPECTS_WITH_MESSAGE(
+         (std::distance(b.ptr, p0) > 0) or (std::distance(_pool.ptr + _pool.s, b.ptr) > 0),
+         "Error in nda::mem::dynamic_bucket::deallocate: Deallocating memory within the pool of the allocator, yet not registered as a segment.")
+      // signal that memory is not owned by this allocator
+      _total_released += b.s;
+    }
+
+    /**
+     * @ brief Returns true if the memory block resides within the memory owned by this allocator.
+     *         Otherwise returns false. 
+     * @param b nda::mem::blk_t memory block.
+     */
+    bool owns(blk_t b) const noexcept {
+      if (_segments.size() == 0 or _size == 0) return false;
+      return (std::distance(p0, b.ptr) >= 0) and (std::distance(b.ptr, _pool.ptr + _pool.s) > 0);
+    }
+
+    private:
+    /**
+     *  Adds a block of memory to _avail.
+     *  _avail is kep sorted based on memory location.
+     */
+    void move_blk_to_avail(blk_t b) {
+      if (_avail.size() == 0) {
+        _avail.emplace_back(b);
+        return;
+      }
+      // 0. find location of b.ptr in list
+      auto it = std::lower_bound(_avail.begin(), _avail.end(), b, [&](auto &&i, auto &&j) { return std::distance(i.ptr, j.ptr) > 0; });
+      // add in front
+      if (it == _avail.begin()) {
+        auto it_beg = _avail.begin();
+        if (std::distance(b.ptr + b.s, it_beg->ptr) == 0) {
+          //merge
+          it_beg->ptr = b.ptr;
+          it_beg->s += b.s;
+        } else {
+          // add
+          _avail.insert(it_beg, b);
+        }
+        return;
+      }
+      // add in back
+      if (it == _avail.end()) {
+        auto it_last = _avail.end() - 1;
+        if (std::distance(it_last->ptr + it_last->s, b.ptr) == 0) {
+          //merge
+          it_last->s += b.s;
+        } else {
+          // add
+          _avail.emplace_back(b);
+        }
+        return;
+      }
+      // General scenario: 4 cases to consider
+      auto prev   = it - 1;
+      auto d_prev = std::distance(prev->ptr + prev->s, b.ptr);
+      auto d_next = std::distance(b.ptr + b.s, it->ptr);
+      if ((d_prev == 0) and (d_next == 0)) {
+        // a. b is contiguous with previous and next element in _avail: merge into a single segment
+        prev->s += b.s + it->s;
+        _avail.erase(it);
+      } else if (d_prev == 0) {
+        // b. b is contiguous with previous element, not with next: merge with previous
+        prev->s += b.s;
+      } else if (d_next == 0) {
+        // c. b is contiguous with next element, not with previous: merge with next
+        it->ptr = b.ptr;
+        it->s += b.s;
+      } else {
+        // d. b is completely isolated: add new segment
+        _avail.insert(it, b);
+      }
+    }
+  };
+
+  /**
+   * @brief Attempts to allocate from a primary allocator. Falls back to mallocator 
+   *        if the primary one fails. 
+   * @tparam AdrSp nda::mem::AddressSpace in which the memory is allocated.
+   */
+  template <Allocator Primary>
+    requires requires(Primary Alloc) {
+      { Alloc.owns(std::declval<blk_t>()) } noexcept -> std::same_as<bool>;
+    }
+  class fallback {
+
+    private:
+    /// Primary allocator
+    Primary alloc;
+
+    /// "fallback" allocator
+    using Secondary = mallocator<Primary::address_space>;
+
+    public:
+    /// Default constructor.
+    fallback() = default;
+
+    /// Deleted copy constructor.
+    fallback(fallback const &) = delete;
+
+    /// Default move constructor.
+    fallback(fallback &&) = default;
+
+    /// Deleted copy assignment operator.
+    fallback &operator=(fallback const &) = delete;
+
+    /// Default move assignment operator.
+    fallback &operator=(fallback &&) = default;
+
+    /// nda::mem::AddressSpace in which the memory is allocated.
+    static constexpr auto address_space = Primary::address_space;
+
+    /// Return pointer to primary allocator
+    auto get_primary() { return std::addressof(alloc); }
+    auto get_primary() const { return std::addressof(alloc); }
+
+    /**
+     * @brief Allocate memory from the pool. Throws exception is available memory is not sufficient. 
+     *
+     * @param s Size in bytes of the memory to allocate.
+     * @return nda::mem::blk_t memory block.
+     */
+    blk_t allocate(size_t s) noexcept {
+      blk_t b = alloc.allocate(s);
+      if (b.ptr) return b;
+      return Secondary::allocate(s);
+    }
+
+    /**
+     * @brief Allocate memory and set it to zero.
+     *
+     * @param s Size in bytes of the memory to allocate.
+     * @return nda::mem::blk_t memory block.
+     */
+    blk_t allocate_zero(size_t s) noexcept {
+      blk_t b = this->allocate(s);
+      if (b.ptr and b.s > 0) memset<address_space>(b.ptr, 0, b.s);
+      return b;
+    }
+
+    /**
+     * @brief Deallocate memory using nda::mem::free.
+     * @param b nda::mem::blk_t memory block to deallocate.
+     */
+    void deallocate(blk_t b) noexcept {
+      if (alloc.owns(b))
+        alloc.deallocate(b);
+      else
+        Secondary::deallocate(b);
+    }
+  };
+
+  /**
+   * @brief Attempts to allocate from a primary allocator. 
+   *        If this fails, uses a mallocator as fallback.
+   * @tparam Primary nda::mem::Allocator used as a primary allocator. This allocator must implement 
+   *         an owns function, which returns true if the memory block is within the memory owned 
+   *         by the allocator.
+   */
+  template <Allocator Primary>
+    requires requires(Primary Alloc) {
+      { Alloc.owns(std::declval<blk_t>()) } noexcept -> std::same_as<bool>;
+    }
+  class static_fallback {
+
+    private:
+    inline static Primary alloc = {};
+
+    /// "fallback" allocator
+    using Secondary = mallocator<Primary::address_space>;
+
+    public:
+    /// nda::mem::AddressSpace in which the memory is allocated.
+    static constexpr auto address_space = Primary::address_space;
+    //static constexpr auto address_space = AdrSp;
+
+    /// Default constructor.
+    static_fallback() = default;
+
+    /// Deleted copy constructor.
+    static_fallback(static_fallback const &) = delete;
+
+    /// Default move constructor.
+    static_fallback(static_fallback &&) = default;
+
+    /// Deleted copy assignment operator.
+    static_fallback &operator=(static_fallback const &) = delete;
+
+    /// Default move assignment operator.
+    static_fallback &operator=(static_fallback &&) = default;
+
+    /// Return pointer to primary allocator
+    auto get_primary() { return std::addressof(alloc); }
+    auto get_primary() const { return std::addressof(alloc); }
+
+    /**
+     * @brief Allocate memory from the pool. Throws exception is available memory is not sufficient. 
+     *
+     * @param s Size in bytes of the memory to allocate.
+     * @return nda::mem::blk_t memory block.
+     */
+    blk_t allocate(size_t s) noexcept {
+      blk_t b = alloc.allocate(s);
+      if (b.ptr) return b;
+      return Secondary::allocate(s);
+    }
+
+    /**
+     * @brief Allocate memory and set it to zero.
+     *
+     * @param s Size in bytes of the memory to allocate.
+     * @return nda::mem::blk_t memory block.
+     */
+    blk_t allocate_zero(size_t s) noexcept {
+      blk_t b = this->allocate(s);
+      if (b.ptr and b.s > 0) memset<address_space>(b.ptr, 0, b.s);
+      return b;
+    }
+
+    /**
+     * @brief Deallocate memory using nda::mem::free.
+     * @param b nda::mem::blk_t memory block to deallocate.
+     */
+    void deallocate(blk_t b) noexcept {
+      if (alloc.owns(b))
+        alloc.deallocate(b);
+      else
+        Secondary::deallocate(b);
+    }
   };
 
   /**

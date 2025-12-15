@@ -154,6 +154,7 @@ if(TblisSupport)
   set_target_properties(tblis PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES  "${TBLIS_ROOT}/include"
         INTERFACE_LINK_LIBRARIES "-L${TBLIS_ROOT}/lib;-ltblis;-ltci;-Wl,-rpath=${TBLIS_ROOT}/lib")
+  target_include_directories(${PROJECT_NAME}_c SYSTEM PUBLIC "${TBLIS_ROOT}/include")
   target_link_libraries(${PROJECT_NAME}_c PUBLIC tblis)
   target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_TBLIS)
 endif()
