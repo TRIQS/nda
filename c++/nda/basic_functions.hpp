@@ -605,7 +605,7 @@ namespace nda {
     // slicing helper function
     auto slice_Axis = [](Array auto &a, range r) {
       auto all_or_range = std::make_tuple(range::all, r);
-      return [&]<auto... Is>(std::index_sequence<Is...>) { return a(std::get < Is == Axis > (all_or_range)...); }(std::make_index_sequence<rank>{});
+      return [&]<auto... Is>(std::index_sequence<Is...>) { return a(std::get<Is == Axis>(all_or_range)...); }(std::make_index_sequence<rank>{});
     };
 
     // initialize concatenated array
