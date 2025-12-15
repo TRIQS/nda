@@ -113,8 +113,19 @@ void test_contract() {
     nda::tensor::contract(1.0, M1, "ijk", M2, "kij", 0.0, M5, "i");
     EXPECT_ARRAY_NEAR(M5, nda::array<value_t, 1>{42, 210});
   }
+
+  if constexpr (nda::is_complex_v<value_t>) {
+    nda::matrix<value_t, Layout> M1{{0, 1}, {1, 2}}, M2{{1, 1}, {1, 1}}, M3{{1, 0}, {0, 1}};
+    M1 += value_t{0,1}*M2;
+    nda::tensor::contract(1.0, nda::conj(M1), "ik", M2, "kj", 1.0, M3, "ij");
+
+    using namespace std::literals::complex_literals;
+    EXPECT_ARRAY_NEAR(M3, nda::matrix<value_t>{{2-2i, 1-2i}, {3-2i, 4-2i}});
+  } 
 }
 
+TEST(TENSOR, fcontract) { test_contract<float, C_layout>(); }     //NOLINT
+TEST(TENSOR, fcontractF) { test_contract<float, F_layout>(); }     //NOLINT
 TEST(TENSOR, contract) { test_contract<double, C_layout>(); }     //NOLINT
 TEST(TENSOR, contractF) { test_contract<double, F_layout>(); }    //NOLINT
 TEST(TENSOR, zcontract) { test_contract<dcomplex, C_layout>(); }  //NOLINT

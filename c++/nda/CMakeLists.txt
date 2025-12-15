@@ -140,22 +140,28 @@ endif()
 
 option(TblisSupport "Use TBLIS library" OFF)
 if(TblisSupport)
-  message(STATUS "-------- TBLIS detection -------------")
-  # no find package, :-(, doing it by hand
-  if(NOT DEFINED TBLIS_ROOT AND DEFINED ENV{TBLIS_ROOT})
-    set(TBLIS_ROOT $ENV{TBLIS_ROOT})
+  message(STATUS "-------- TBLIS configuration -------------")
+  include(FetchContent)
+  FetchContent_Declare(tblis_project
+    GIT_REPOSITORY https://github.com/MatthewsResearchGroup/tblis.git
+    GIT_TAG master 
+    GIT_SUBMODULES_RECURSE TRUE
+    CMAKE_ARGS
+      -DENABLE_TESTS=OFF
+      -DENABLE_SHARED=OFF
+      -DENABLE_STATIC=ON
+  )
+  FetchContent_MakeAvailable(tblis_project)
+  if(TARGET tblis-static)
+    set(_nda_tblis_target tblis-static)
+  elseif(TARGET tblis)
+    set(_nda_tblis_target tblis)
+  else()
+    message(FATAL_ERROR "Unable to locate tblis target after FetchContent")
   endif()
-  if(NOT DEFINED TBLIS_ROOT)
-    message(FATAL_ERROR "Error: Please set TBLIS_ROOT when TblisSupport is set to ON")
-  endif()
-  message(STATUS "TBLIS_ROOT: ${TBLIS_ROOT}")
-  # MAM: improve this, need to check if library is in TBLIS_ROOT/include, TBLIS_ROOT/lib
-  add_library(tblis INTERFACE IMPORTED)
-  set_target_properties(tblis PROPERTIES
-        INTERFACE_INCLUDE_DIRECTORIES  "${TBLIS_ROOT}/include"
-        INTERFACE_LINK_LIBRARIES "-L${TBLIS_ROOT}/lib;-ltblis;-ltci;-Wl,-rpath=${TBLIS_ROOT}/lib")
-  target_include_directories(${PROJECT_NAME}_c SYSTEM PUBLIC "${TBLIS_ROOT}/include")
-  target_link_libraries(${PROJECT_NAME}_c PUBLIC tblis)
+  get_target_property(_tblis_include_dirs ${_nda_tblis_target} INTERFACE_INCLUDE_DIRECTORIES)
+  target_include_directories(${PROJECT_NAME}_c SYSTEM PUBLIC ${_tblis_include_dirs})
+  target_link_libraries(${PROJECT_NAME}_c PUBLIC ${_nda_tblis_target})
   target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_TBLIS)
 endif()
 

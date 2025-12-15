@@ -93,11 +93,10 @@ namespace nda::tensor {
       // no conj in tblis yet!
       static constexpr bool conj_A = is_conj_array_expr<X>;
       static constexpr bool conj_B = is_conj_array_expr<Y>;
-      static_assert(not conj_A and not conj_B, "Error: No conj in tblis yet!");
       using value_t = get_value_t<X>;
-      nda_tblis::tensor<value_t, get_rank<A>> a_t(a, alpha);
-      nda_tblis::tensor<value_t, get_rank<B>> b_t(b);
-      nda_tblis::tensor<value_t, get_rank<C>> c_t(c, beta);
+      nda_tblis::tensor<value_t, get_rank<A>> a_t(a, alpha, conj_A);
+      nda_tblis::tensor<value_t, get_rank<B>> b_t(b, value_t{1.0}, conj_B);
+      nda_tblis::tensor<value_t, get_rank<C>> c_t(c, beta, false);
       ::tblis::tblis_tensor_mult(NULL, NULL, &a_t, indxX.data(), &b_t, indxY.data(), &c_t, indxC.data());
 #else
       compile_error_no_tblis();

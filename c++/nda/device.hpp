@@ -10,11 +10,14 @@
 
 #pragma once
 
+#ifdef NDA_HAVE_MPI
 #include <mpi/mpi.hpp>
+#endif
 
 #ifdef NDA_HAVE_CUDA
 #include "./exceptions.hpp"
 
+#include <cstdlib>
 #include <cuda_runtime.h>
 #include <cublas_v2.h>
 
@@ -66,7 +69,11 @@ namespace nda {
                 << " message: " << message << "\n"
                 << " cudaGetErrorName: " << std::string(cudaGetErrorName(success)) << "\n"
                 << " cudaGetErrorString: " << std::string(cudaGetErrorString(success)) << "\n";
+#ifdef NDA_HAVE_MPI
       mpi::communicator{}.abort(31);
+#else
+      std::abort();
+#endif
     }
   }
 

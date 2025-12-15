@@ -19,53 +19,21 @@
 #include "nda/concepts.hpp"
 #include "tblis/tblis.h"
 
+#include <array>
 #include <string>
 #include <vector>
 
 namespace nda::tensor::nda_tblis {
 
-  // Following design choices of correaa@boost::multi
-  template <class T>
-  auto init_scalar = std::enable_if_t<sizeof(T *) == 0>{};
-  template <>
-  auto inline init_scalar<float> = ::tblis::tblis_init_scalar_s;
-  template <>
-  auto inline init_scalar<double> = ::tblis::tblis_init_scalar_d;
-  template <>
-  auto inline init_scalar<std::complex<float>> = ::tblis::tblis_init_scalar_c;
-  template <>
-  auto inline init_scalar<std::complex<double>> = ::tblis::tblis_init_scalar_z;
-
-  template <class T>
-  auto init_tensor = std::enable_if_t<sizeof(T *) == 0>{};
-  template <>
-  auto inline init_tensor<float> = ::tblis::tblis_init_tensor_s;
-  template <>
-  auto inline init_tensor<double> = ::tblis::tblis_init_tensor_d;
-  template <>
-  auto inline init_tensor<std::complex<float>> = ::tblis::tblis_init_tensor_c;
-  template <>
-  auto inline init_tensor<std::complex<double>> = ::tblis::tblis_init_tensor_z;
-
-  template <class T>
-  auto init_tensor_scaled = std::enable_if_t<sizeof(T *) == 0>{};
-  template <>
-  auto inline init_tensor_scaled<float> = ::tblis::tblis_init_tensor_scaled_s;
-  template <>
-  auto inline init_tensor_scaled<double> = ::tblis::tblis_init_tensor_scaled_d;
-  template <>
-  auto inline init_tensor_scaled<std::complex<float>> = ::tblis::tblis_init_tensor_scaled_c;
-  template <>
-  auto inline init_tensor_scaled<std::complex<double>> = ::tblis::tblis_init_tensor_scaled_z;
-
   template <class ValueType>
   struct scalar : ::tblis::tblis_scalar {
     using value_type = ValueType;
-    scalar() { init_scalar<std::decay_t<ValueType>>(this, 0); }
-    scalar(ValueType v) { init_scalar<std::decay_t<ValueType>>(this, v); }
+
+    scalar() : ::tblis::tblis_scalar(ValueType{}) {}
+    explicit scalar(ValueType v) : ::tblis::tblis_scalar(v) {}
     scalar(scalar const &) = delete;
-    scalar(scalar &&other) { init_scalar<std::decay_t<ValueType>>(this, ValueType(other.value())); }
-    ValueType value() const { return ::tblis::tblis_scalar::get<ValueType>(); }
+    scalar(scalar &&other) : ::tblis::tblis_scalar(other.template as<ValueType>()) {}
+    ValueType value() const { return this->template as<ValueType>(); }
   };
 
   template <class ValueType, int Rank>
@@ -78,19 +46,49 @@ namespace nda::tensor::nda_tblis {
     std::array<::tblis::len_type, rank> lens_;
     std::array<::tblis::stride_type, rank> strides_;
 
-    explicit tensor(nda::MemoryArrayOfRank<Rank> auto &&a) : lens_(a.shape()), strides_(a.strides()) {
-      init_tensor<std::decay_t<ValueType>>(this, rank, lens_.data(), const_cast<std::decay_t<ValueType> *>(a.data()), strides_.data());
+    explicit tensor(nda::MemoryArrayOfRank<Rank> auto &&a, ValueType val = ValueType{1}, bool conj = false)
+       : ::tblis::tblis_tensor(), lens_(to_lens(a.shape())), strides_(to_strides(a.strides())) {
+      configure_tensor(const_cast<std::decay_t<ValueType> *>(a.data()), val, conj);
     }
-    explicit tensor(nda::MemoryArrayOfRank<Rank> auto &&a, ValueType val) : lens_(a.shape()), strides_(a.strides()) {
-      init_tensor_scaled<std::decay_t<ValueType>>(this, val, rank, lens_.data(), const_cast<std::decay_t<ValueType> *>(a.data()), strides_.data());
-    }
+
     tensor(tensor const &) = delete;
-    tensor(tensor &&other) : lens_{other.lens_}, strides_{other.strides_} {
-      init_tensor_scaled<std::decay_t<ValueType>>(this, ValueType(other.scalar()), rank, lens_.data(),
-                                                  const_cast<std::decay_t<ValueType> *>(other.data()), strides_.data());
+    tensor(tensor &&other) : ::tblis::tblis_tensor(), lens_{other.lens_}, strides_{other.strides_} {
+      this->type = other.type;
+      this->conj = other.conj;
+      this->scalar.reset(other.scalar);
+      this->::tblis::tblis_tensor::data = other.data;
+      this->ndim                        = other.ndim;
+      this->len                         = lens_.data();
+      this->stride                      = strides_.data();
     }
+
     ValueType *data() const { return static_cast<ValueType *>(::tblis::tblis_tensor::data); }
     //  ValueType scalar() const{return ::tblis::tblis_tensor::scalar.get<ValueType>();}
+
+    private:
+    template <typename Shape>
+    static std::array<::tblis::len_type, rank> to_lens(Shape const &shape) {
+      std::array<::tblis::len_type, rank> result{};
+      for (int i = 0; i < rank; ++i) result[i] = static_cast<::tblis::len_type>(shape[i]);
+      return result;
+    }
+
+    template <typename Strides>
+    static std::array<::tblis::stride_type, rank> to_strides(Strides const &strides) {
+      std::array<::tblis::stride_type, rank> result{};
+      for (int i = 0; i < rank; ++i) result[i] = static_cast<::tblis::stride_type>(strides[i]);
+      return result;
+    }
+
+    void configure_tensor(std::decay_t<ValueType> *ptr, ValueType alpha, bool conjugate) {
+      this->type = ::tblis::type_tag<std::decay_t<ValueType>>::value;
+      this->conj = (conjugate ? 1 : 0 );
+      this->scalar.reset(alpha);
+      this->::tblis::tblis_tensor::data = ptr;
+      this->ndim                        = rank;
+      this->len                         = lens_.data();
+      this->stride                      = strides_.data();
+    }
   };
 
 } // namespace nda::tensor::nda_tblis

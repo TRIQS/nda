@@ -90,12 +90,10 @@ namespace nda::tensor {
 #endif
     } else { // on host
 #if defined(NDA_HAVE_TBLIS)
-      // no conj in tblis yet!
       static constexpr bool conj_A = is_conj_array_expr<X>;
       static constexpr bool conj_B = is_conj_array_expr<Y>;
-      static_assert(not conj_A or not conj_B, "Error: No conj in tblis yet!");
-      nda_tblis::tensor<value_t, get_rank<A>> a_t(a);
-      nda_tblis::tensor<value_t, get_rank<B>> b_t(b);
+      nda_tblis::tensor<value_t, get_rank<A>> a_t(a,value_t(1.0),conj_A);
+      nda_tblis::tensor<value_t, get_rank<B>> b_t(b,value_t(1.0),conj_B);
       nda_tblis::scalar<value_t> res(0);
       ::tblis::tblis_tensor_dot(NULL, NULL, &a_t, indxX.data(), &b_t, indxY.data(), &res);
       return res.value();

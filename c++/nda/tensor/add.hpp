@@ -79,11 +79,9 @@ namespace nda::tensor {
 #endif
     } else {
 #if defined(NDA_HAVE_TBLIS)
-      // no conj in tblis yet!
       static constexpr bool conj_A = is_conj_array_expr<X>;
-      static_assert(not conj_A, "Error: No conj in tblis yet!");
       using value_t = get_value_t<X>;
-      nda_tblis::tensor<value_t, get_rank<A>> a_t(a, alpha);
+      nda_tblis::tensor<value_t, get_rank<A>> a_t(a, alpha, conj_A);
       nda_tblis::tensor<value_t, get_rank<B>> b_t(b, beta);
       ::tblis::tblis_tensor_add(NULL, NULL, &a_t, indxX.data(), &b_t, indxY.data());
 #else
@@ -136,15 +134,13 @@ namespace nda::tensor {
 #endif
     } else { // on host
 #if defined(NDA_HAVE_TBLIS)
-      // no conj in tblis yet!
       static constexpr bool conj_A = is_conj_array_expr<X>;
       static constexpr bool conj_B = is_conj_array_expr<Y>;
-      static_assert(not conj_A and not conj_B, "Error: No conj in tblis yet!");
       using value_t = get_value_t<X>;
-      nda_tblis::tensor<value_t, get_rank<A>> a_t(a, alpha);
+      nda_tblis::tensor<value_t, get_rank<A>> a_t(a, alpha,conj_A);
       nda_tblis::tensor<value_t, get_rank<C>> c_t(c, value_t{1.0});
       // if conditions on B/C being compatible are relaxed, this needs to change!
-      c() = beta * b();
+      c() = beta * y();
       ::tblis::tblis_tensor_add(NULL, NULL, &a_t, indxX.data(), &c_t, indxC.data());
 #else
       if (indxX != indxY or indxY != indxC) NDA_RUNTIME_ERROR << "tensor::add: custom indx not implemented without tblis.";
