@@ -932,7 +932,7 @@ TEST(NDA, LinearAlgebraWithClefPlaceholders) {
   for (auto &b : B) b.resize(2, 2);
   B(i_) << nda::linalg::inv(2.0 * i_ * I - M);
   for (int i = 0; i < 4; ++i) {
-    auto expected = nda::linalg::inv((i + 2.0) * I - M);
+    auto expected = nda::linalg::inv(2.0 * i * I - M);
     EXPECT_ARRAY_NEAR(B(i), expected);
   }
 }
