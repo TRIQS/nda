@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2025-12-16 15:33:54</td>
+      <td>2025-12-16 16:22:34</td>
     </tr>
   </table>
 </div>
@@ -42,16 +42,16 @@
     <tr>
       <th scope="row">Lines:</th>
       <td class="coverage-high">100.0%</td>
-      <td class="coverage-high">66</td>
+      <td class="coverage-high">68</td>
       <td class="coverage-high">0</td>
-      <td class="coverage-high">66</td>
+      <td class="coverage-high">68</td>
     </tr>
     <tr>
       <th scope="row">Functions:</th>
       <td class="coverage-high">100.0%</td>
-      <td class="coverage-high">33</td>
+      <td class="coverage-high">34</td>
       <td class="coverage-high">0</td>
-      <td class="coverage-high">33</td>
+      <td class="coverage-high">34</td>
     </tr>
     <tr>
       <th scope="row">Branches:</th>
@@ -108,6 +108,7 @@
     <tr><td><a href="#l64">nda::clef::pair&lt;60, int&gt; nda::clef::placeholder&lt;60&gt;::operator=&lt;int&gt;(int&amp;&amp;) const (line 64)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
     <tr><td><a href="#l64">nda::clef::pair&lt;61, foo&gt; nda::clef::placeholder&lt;61&gt;::operator=&lt;foo&gt;(foo&amp;&amp;) const (line 64)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
     <tr><td><a href="#l64">nda::clef::pair&lt;62, int&gt; nda::clef::placeholder&lt;62&gt;::operator=&lt;int&gt;(int&amp;&amp;) const (line 64)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
+    <tr><td><a href="#l64">nda::clef::pair&lt;63, int&amp;&gt; nda::clef::placeholder&lt;63&gt;::operator=&lt;int&amp;&gt;(int&amp;) const (line 64)</a></td><td>called 4 times</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
     <tr><td><a href="#l64">nda::clef::pair&lt;63, std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt; nda::clef::placeholder&lt;63&gt;::operator=&lt;std::vector&lt;int, std::allocator&lt;int&gt; &gt; &gt;(std::vector&lt;int, std::allocator&lt;int&gt; &gt;&amp;&amp;) const (line 64)</a></td><td>called 1 time</td><td>100.0%</td><td>-%</td><td>100.0%</td></tr>
   </table>
 </details>
@@ -567,14 +568,14 @@
       <td class="lineno"><a id="l64" href="#l64">64</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">186</td>
+      <td class="linecount coveredLine">190</td>
       <td class="src coveredLine"><span class="w">    </span><span class="n">pair</span><span class="o">&lt;</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">RHS</span><span class="o">&gt;</span><span class="w"> </span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">RHS</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="n">rhs</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// NOLINT (we want to return a pair)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l65" href="#l65">65</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">186</td>
+      <td class="linecount coveredLine">190</td>
       <td class="src coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">RHS</span><span class="o">&gt;</span><span class="p">(</span><span class="n">rhs</span><span class="p">)};</span></td>
     </tr>
     <tr class="source-line">
