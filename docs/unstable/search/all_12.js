@@ -35,7 +35,7 @@ var searchData=
   ['integration_20in_20c_20projects_32',['Integration in C++ projects',['../integration.html',1,'']]],
   ['interface_33',['interface',['../group__linalg__blas.html',1,'BLAS interface'],['../group__linalg__lapack.html',1,'LAPACK interface'],['../ex8.html#ex8_p8',1,'Using the BLAS/LAPACK interface']]],
   ['into_20an_20array_20view_34',['Reading into an array/view',['../ex5.html#ex5_p2',1,'']]],
-  ['inv_35',['inv',['../group__linalg__tools.html#gabd0ff5c6c8add0fd6641db2cc5f73a79',1,'nda::linalg::inv()'],['../group__clef__expr.html#ga63de7927bdaa8b66b7d68f3e0a42950e',1,'nda::clef::inv(A &amp;&amp;...__a)'],['../inv_8hpp.html#abd0ff5c6c8add0fd6641db2cc5f73a79',1,'nda::clef::inv(M const &amp;m)']]],
+  ['inv_35',['inv',['../group__linalg__tools.html#gabd0ff5c6c8add0fd6641db2cc5f73a79',1,'nda::linalg::inv(M const &amp;m)'],['../group__clef__expr.html#ga55cb72ad90bfbbd4bc215672d5421552',1,'nda::linalg::inv(A &amp;&amp;...__a)']]],
   ['inv_2ehpp_36',['inv.hpp',['../inv_8hpp.html',1,'']]],
   ['inv_5fin_5fplace_37',['inv_in_place',['../group__linalg__tools.html#ga5ae8205418692fdc14fc3ee0c5bf322b',1,'nda::linalg']]],
   ['inverse_38',['inverse',['../group__utils__perms.html#ga1783a6dd2aef24f2d8a3d7eab0c44c86',1,'nda::permutations']]],
