@@ -118,8 +118,6 @@ Concepts</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if if a given type is either an <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> or an <a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>. <br /></td></tr>
 <tr class="memitem:nda_3A_3AHasValueTypeConstructibleFrom" id="r_nda_3A_3AHasValueTypeConstructibleFrom"><td class="memItemLeft">concept &#160;</td><td class="memItemRight"><a class="el" href="conceptnda_1_1_has_value_type_constructible_from.html">nda::HasValueTypeConstructibleFrom</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a given type is constructible from the value type of a given <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> type. <br /></td></tr>
-<tr class="memitem:nda_3A_3AIndexContainer" id="r_nda_3A_3AIndexContainer"><td class="memItemLeft">concept &#160;</td><td class="memItemRight"><a class="el" href="conceptnda_1_1_index_container.html">nda::IndexContainer</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a given type is an index container for advanced array indexing. <br /></td></tr>
 <tr class="memitem:nda_3A_3AMatrix" id="r_nda_3A_3AMatrix"><td class="memItemLeft">concept &#160;</td><td class="memItemRight"><a class="el" href="conceptnda_1_1_matrix.html">nda::Matrix</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a given type is a matrix, i.e. an <a class="el" href="conceptnda_1_1_array_of_rank.html" title="Check if a given type is an nda::Array of a certain rank.">nda::ArrayOfRank&lt;2&gt;</a>. <br /></td></tr>
 <tr class="memitem:nda_3A_3AMemoryArray" id="r_nda_3A_3AMemoryArray"><td class="memItemLeft">concept &#160;</td><td class="memItemRight"><a class="el" href="conceptnda_1_1_memory_array.html">nda::MemoryArray</a></td></tr>
@@ -145,8 +143,6 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default accessor for various array and view types.  <a href="structnda_1_1default__accessor.html#details">More...</a><br /></td></tr>
 <tr class="memitem:nda_3A_3Adefault_5Faccessor_3A_3Aaccessor_3C_20T_20_3E" id="r_nda_3A_3Adefault_5Faccessor_3A_3Aaccessor_3C_20T_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structnda_1_1default__accessor_1_1accessor.html">nda::default_accessor::accessor&lt; T &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accessor type of the <a class="el" href="structnda_1_1default__accessor.html" title="Default accessor for various array and view types.">nda::default_accessor</a>.  <a href="structnda_1_1default__accessor_1_1accessor.html#details">More...</a><br /></td></tr>
-<tr class="memitem:nda_3A_3Aexpr_5Findexed_3C_20View_2C_20IndexContainers_20_3E" id="r_nda_3A_3Aexpr_5Findexed_3C_20View_2C_20IndexContainers_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structnda_1_1expr__indexed.html">nda::expr_indexed&lt; View, IndexContainers &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lazy expression for advanced array indexing with arbitrary index containers.  <a href="structnda_1_1expr__indexed.html#details">More...</a><br /></td></tr>
 <tr class="memitem:nda_3A_3Ano_5Falias_5Faccessor" id="r_nda_3A_3Ano_5Falias_5Faccessor"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structnda_1_1no__alias__accessor.html">nda::no_alias_accessor</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accessor for array and view types with no aliasing.  <a href="structnda_1_1no__alias__accessor.html#details">More...</a><br /></td></tr>
 <tr class="memitem:nda_3A_3Ano_5Falias_5Faccessor_3A_3Aaccessor_3C_20T_20_3E" id="r_nda_3A_3Ano_5Falias_5Faccessor_3A_3Aaccessor_3C_20T_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structnda_1_1no__alias__accessor_1_1accessor.html">nda::no_alias_accessor::accessor&lt; T &gt;</a></td></tr>
@@ -233,9 +229,6 @@ template&lt;char OP, typename L, typename R&gt; </td></tr>
 <tr class="memitem:gaddcc4394f44b1068df481038f7f9098a" id="r_gaddcc4394f44b1068df481038f7f9098a"><td class="memTemplParams" colspan="2">template&lt;typename F, Array... As&gt; </td></tr>
 <tr class="memitem:gaddcc4394f44b1068df481038f7f9098a template"><td class="memItemLeft">constexpr char&#160;</td><td class="memItemRight"><a class="el" href="#gaddcc4394f44b1068df481038f7f9098a">nda::get_algebra&lt; expr_call&lt; F, As... &gt; &gt;</a> = detail::_impl_find_common_algebra(<a class="el" href="#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;As&gt;...)</td></tr>
 <tr class="memdesc:gaddcc4394f44b1068df481038f7f9098a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the resulting algebra of a function call expression involving arrays/views.  <br /></td></tr>
-<tr class="memitem:gafe5e2f1591b5a814b8a2dad697ccb4a0" id="r_gafe5e2f1591b5a814b8a2dad697ccb4a0"><td class="memTemplParams" colspan="2">template&lt;typename View, typename... IndexContainers&gt; </td></tr>
-<tr class="memitem:gafe5e2f1591b5a814b8a2dad697ccb4a0 template"><td class="memItemLeft">constexpr char&#160;</td><td class="memItemRight"><a class="el" href="#gafe5e2f1591b5a814b8a2dad697ccb4a0">nda::get_algebra&lt; expr_indexed&lt; View, IndexContainers... &gt; &gt;</a> = <a class="el" href="#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;View&gt;</td></tr>
-<tr class="memdesc:gafe5e2f1591b5a814b8a2dad697ccb4a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the algebra of an <a class="el" href="structnda_1_1expr__indexed.html" title="Lazy expression for advanced array indexing with arbitrary index containers.">expr_indexed</a> (inherits from the view).  <br /></td></tr>
 <tr class="memitem:ga882518feb021aca8d31a05d35ef28f2c" id="r_ga882518feb021aca8d31a05d35ef28f2c"><td class="memTemplParams" colspan="2"><a id="ga882518feb021aca8d31a05d35ef28f2c" name="ga882518feb021aca8d31a05d35ef28f2c"></a>
 template&lt;char OP, Array A&gt; </td></tr>
 <tr class="memitem:ga882518feb021aca8d31a05d35ef28f2c template"><td class="memItemLeft">constexpr char&#160;</td><td class="memItemRight"><b>nda::get_algebra&lt; expr_unary&lt; OP, A &gt; &gt;</b> = <a class="el" href="#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt;</td></tr>
@@ -260,9 +253,6 @@ template&lt;char OP, Array A&gt; </td></tr>
 template&lt;typename A&gt; </td></tr>
 <tr class="memitem:ga7277dc5070c1ad04d29465da947e444e template"><td class="memItemLeft">constexpr int&#160;</td><td class="memItemRight"><b>nda::get_rank</b></td></tr>
 <tr class="memdesc:ga7277dc5070c1ad04d29465da947e444e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constexpr variable that specifies the rank of an <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> or of a contiguous 1-dimensional range. <br /></td></tr>
-<tr class="memitem:ga81f8bce5ba14793663ef2bdd454d82bd" id="r_ga81f8bce5ba14793663ef2bdd454d82bd"><td class="memTemplParams" colspan="2">template&lt;typename View, typename... IndexContainers&gt; </td></tr>
-<tr class="memitem:ga81f8bce5ba14793663ef2bdd454d82bd template"><td class="memItemLeft">constexpr int&#160;</td><td class="memItemRight"><a class="el" href="#ga81f8bce5ba14793663ef2bdd454d82bd">nda::get_rank&lt; expr_indexed&lt; View, IndexContainers... &gt; &gt;</a> = <a class="el" href="#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;View&gt;</td></tr>
-<tr class="memdesc:ga81f8bce5ba14793663ef2bdd454d82bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the rank of an <a class="el" href="structnda_1_1expr__indexed.html" title="Lazy expression for advanced array indexing with arbitrary index containers.">expr_indexed</a>.  <br /></td></tr>
 <tr class="memitem:gaaa352089001205a56c1f801fdcb5e218" id="r_gaaa352089001205a56c1f801fdcb5e218"><td class="memTemplParams" colspan="2"><a id="gaaa352089001205a56c1f801fdcb5e218" name="gaaa352089001205a56c1f801fdcb5e218"></a>
 template&lt;typename A0, typename... As&gt; </td></tr>
 <tr class="memitem:gaaa352089001205a56c1f801fdcb5e218 template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><b>nda::have_same_rank_v</b> = ((<a class="el" href="#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A0&gt; == <a class="el" href="#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;As&gt;) and ... and true)</td></tr>
@@ -1082,80 +1072,6 @@ template&lt;typename F, Array... As&gt; </div>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="map_8hpp_source.html#l00053">53</a> of file <a class="el" href="map_8hpp_source.html">map.hpp</a>.</p>
-
-</div>
-</div>
-<a id="gafe5e2f1591b5a814b8a2dad697ccb4a0" name="gafe5e2f1591b5a814b8a2dad697ccb4a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gafe5e2f1591b5a814b8a2dad697ccb4a0">&#9670;&#160;</a></span>get_algebra&lt; expr_indexed&lt; View, IndexContainers... &gt; &gt;</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename View, typename... IndexContainers&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">char <a class="el" href="#ga060aafc7ad640e675fce38b5eaf95aab">nda::get_algebra</a>&lt; <a class="el" href="structnda_1_1expr__indexed.html">expr_indexed</a>&lt; View, IndexContainers... &gt; &gt; = <a class="el" href="#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;View&gt;</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel constexpr">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="expr__indexed_8hpp.html">nda/expr_indexed.hpp</a>&gt;</code></p>
-
-<p>Get the algebra of an <a class="el" href="structnda_1_1expr__indexed.html" title="Lazy expression for advanced array indexing with arbitrary index containers.">expr_indexed</a> (inherits from the view). </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">View</td><td>View type. </td></tr>
-    <tr><td class="paramname">IndexContainers</td><td>Index container types. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="expr__indexed_8hpp_source.html#l00340">340</a> of file <a class="el" href="expr__indexed_8hpp_source.html">expr_indexed.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ga81f8bce5ba14793663ef2bdd454d82bd" name="ga81f8bce5ba14793663ef2bdd454d82bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga81f8bce5ba14793663ef2bdd454d82bd">&#9670;&#160;</a></span>get_rank&lt; expr_indexed&lt; View, IndexContainers... &gt; &gt;</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename View, typename... IndexContainers&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="#ga7277dc5070c1ad04d29465da947e444e">nda::get_rank</a>&lt; <a class="el" href="structnda_1_1expr__indexed.html">expr_indexed</a>&lt; View, IndexContainers... &gt; &gt; = <a class="el" href="#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;View&gt;</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel constexpr">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;<a class="el" href="expr__indexed_8hpp.html">nda/expr_indexed.hpp</a>&gt;</code></p>
-
-<p>Get the rank of an <a class="el" href="structnda_1_1expr__indexed.html" title="Lazy expression for advanced array indexing with arbitrary index containers.">expr_indexed</a>. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">View</td><td>View type. </td></tr>
-    <tr><td class="paramname">IndexContainers</td><td>Index container types. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="expr__indexed_8hpp_source.html#l00348">348</a> of file <a class="el" href="expr__indexed_8hpp_source.html">expr_indexed.hpp</a>.</p>
 
 </div>
 </div>

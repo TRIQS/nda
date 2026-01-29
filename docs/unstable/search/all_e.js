@@ -51,14 +51,12 @@ var searchData=
   ['expect_5feq_5farray_48',['EXPECT_EQ_ARRAY',['../group__testing.html#ga78a1c2442b993ad22255b44f39506503',1,'gtest_tools.hpp']]],
   ['expr_49',['expr',['../structnda_1_1clef_1_1expr.html',1,'nda::clef::expr&lt; Tag, Ts &gt;'],['../structnda_1_1expr.html',1,'nda::expr&lt; OP, L, R &gt;'],['../structnda_1_1clef_1_1expr.html#aa439950379cefea487a21daf032e8828',1,'nda::clef::expr::expr(expr const &amp;)=default'],['../structnda_1_1clef_1_1expr.html#a568d5fe0aa2712df868cd89db1259bbf',1,'nda::clef::expr::expr(expr &amp;&amp;ex) noexcept'],['../structnda_1_1clef_1_1expr.html#abc20d7c7e6820fb874814ec9e179b1f0',1,'nda::clef::expr::expr(Tag, Us &amp;&amp;...us)']]],
   ['expr_5fcall_50',['expr_call',['../structnda_1_1expr__call.html',1,'nda']]],
-  ['expr_5findexed_51',['expr_indexed',['../structnda_1_1expr__indexed.html',1,'nda']]],
-  ['expr_5findexed_2ehpp_52',['expr_indexed.hpp',['../expr__indexed_8hpp.html',1,'']]],
-  ['expr_5fstorage_5ft_53',['expr_storage_t',['../group__clef__utils.html#gab97aba3ab3b1739e38fb509d522b0294',1,'nda::clef']]],
-  ['expr_5funary_54',['expr_unary',['../structnda_1_1expr__unary.html',1,'nda']]],
-  ['expression_2ehpp_55',['expression.hpp',['../expression_8hpp.html',1,'']]],
-  ['expressions_20and_20functions_56',['expressions and functions',['../documentation.html#autotoc_md19',1,'CLEF - Compile-time lazy expressions and functions'],['../group__clef.html',1,'Compile-time lazy expressions and functions']]],
-  ['expressions_20functions_20and_20operations_57',['Lazy expressions, functions and operations',['../group__clef__expr.html',1,'']]],
-  ['extensions_20to_20the_20standard_20library_58',['Extensions to the standard library',['../group__utils__std.html',1,'']]],
-  ['extent_59',['extent',['../classnda_1_1basic__array.html#a5b925cbd5e9aa0a664e13a9a2d824ee3',1,'nda::basic_array::extent()'],['../classnda_1_1basic__array__view.html#af1a86836a6e03c776093821ca2be53ea',1,'nda::basic_array_view::extent()']]],
-  ['eye_60',['eye',['../group__av__factories.html#ga102fecb589bb00838a901efae065ce56',1,'nda']]]
+  ['expr_5fstorage_5ft_51',['expr_storage_t',['../group__clef__utils.html#gab97aba3ab3b1739e38fb509d522b0294',1,'nda::clef']]],
+  ['expr_5funary_52',['expr_unary',['../structnda_1_1expr__unary.html',1,'nda']]],
+  ['expression_2ehpp_53',['expression.hpp',['../expression_8hpp.html',1,'']]],
+  ['expressions_20and_20functions_54',['expressions and functions',['../documentation.html#autotoc_md19',1,'CLEF - Compile-time lazy expressions and functions'],['../group__clef.html',1,'Compile-time lazy expressions and functions']]],
+  ['expressions_20functions_20and_20operations_55',['Lazy expressions, functions and operations',['../group__clef__expr.html',1,'']]],
+  ['extensions_20to_20the_20standard_20library_56',['Extensions to the standard library',['../group__utils__std.html',1,'']]],
+  ['extent_57',['extent',['../classnda_1_1basic__array.html#a5b925cbd5e9aa0a664e13a9a2d824ee3',1,'nda::basic_array::extent()'],['../classnda_1_1basic__array__view.html#af1a86836a6e03c776093821ca2be53ea',1,'nda::basic_array_view::extent()']]],
+  ['eye_58',['eye',['../group__av__factories.html#ga102fecb589bb00838a901efae065ce56',1,'nda']]]
 ];

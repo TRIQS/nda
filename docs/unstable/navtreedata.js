@@ -235,7 +235,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "__impl__basic__array__view__common_8hpp_source.html",
-"lapacke__config_8h_source.html"
+"layout_2policies_8hpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';
