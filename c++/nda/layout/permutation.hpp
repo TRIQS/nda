@@ -31,26 +31,26 @@ namespace nda {
   /**
    * @brief Decode a `uint64_t` into a `std::array<int, N>`.
    *
-   * @details The 64-bit code is split into 4-bit chunks, and each chunk is then decoded into a value in the range
-   * [0, 15]. The 4 least significant bits are decoded into the first element, the next 4-bits into second element, and
+   * @details The 64-bit code is split into 8-bit chunks, and each chunk is then decoded into a value in the range
+   * [0, 255]. The 8 least significant bits are decoded into the first element, the next 8-bits into second element, and
    * so on.
    *
    * @tparam N Size of the array.
    * @param binary_representation 64-bit code.
-   * @return `std::array<int, N>` containing values in the range [0, 15].
+   * @return `std::array<int, N>` containing values in the range [0, 255].
    */
   template <size_t N>
   constexpr std::array<int, N> decode(uint64_t binary_representation) {
     auto result = stdutil::make_initialized_array<N>(0);
-    for (int i = 0; i < N; ++i) result[i] = (binary_representation >> (4 * i)) & 0b1111ull;
+    for (int i = 0; i < N; ++i) result[i] = (binary_representation >> (8 * i)) & 0xFFull;
     return result;
   }
 
   /**
    * @brief Encode a `std::array<int, N>` in a `uint64_t`.
    *
-   * @details The values in the array are assumed to be in the range [0, 15]. Then each value is encoded in 4 bits, i.e.
-   * the first element is encoded in the 4 least significant bits, the second element in the next 4 bits, and so on.
+   * @details The values in the array are assumed to be in the range [0, 255]. Then each value is encoded in 8 bits, i.e.
+   * the first element is encoded in the 8 least significant bits, the second element in the next 8 bits, and so on.
    *
    * @tparam N Size of the array.
    * @param a `std::array<int, N>` to encode.
@@ -60,8 +60,8 @@ namespace nda {
   constexpr uint64_t encode(std::array<int, N> const &a) {
     uint64_t result = 0;
     for (int i = 0; i < N; ++i) {
-      EXPECTS(0 <= a[i] and a[i] <= 15);
-      result += (static_cast<uint64_t>(a[i]) << (4 * i));
+      EXPECTS(0 <= a[i] and a[i] <= 255);
+      result += (static_cast<uint64_t>(a[i]) << (8 * i));
     }
     return result;
   }

@@ -41,13 +41,6 @@ TEST(NDA, LayoutEncodeDecode) {
   check_encode_decode<6>();
   check_encode_decode<7>();
   check_encode_decode<8>();
-  check_encode_decode<9>();
-  check_encode_decode<10>();
-  check_encode_decode<11>();
-  check_encode_decode<12>();
-  check_encode_decode<13>();
-  check_encode_decode<14>();
-  check_encode_decode<15>();
 }
 
 TEST(NDA, PermutationIsValid) {

@@ -64,10 +64,10 @@ namespace nda {
    *
    * The template parameters `StaticExtents` and `StrideOrder` are encoded as `uint64_t`. They can be decoded to a
    * `std::array<int, Rank>` using the nda::decode function. The encoding limits the number of dimensions, i.e. the
-   * rank, to 16.
+   * rank, to 8.
    *
    * The static extent array specifies the length of each dimension at compile-time. A zero value means that the length
-   * in this dimension is dynamic and will be specified at runtime. Note that static lengths cannot exceed 16 (due to
+   * in this dimension is dynamic and will be specified at runtime. Note that static lengths cannot exceed 255 (due to
    * the encoding). For example:
    * - `StaticExtents = nda::encode(std::array<int, Rank>{0, 10, 0, 5})` corresponds to a 4D array with dynamic extents
    * in dimension 0 and 2, and static extents of length 10 and 5 in dimension 1 and 3, respectively.
@@ -88,7 +88,7 @@ namespace nda {
    */
   template <int Rank, uint64_t StaticExtents, uint64_t StrideOrder, layout_prop_e LayoutProp>
   class idx_map {
-    static_assert(Rank < 16, "Error in nda::idx_map: Rank must be < 16");
+    static_assert(Rank <= 8, "Error in nda::idx_map: Rank must be <= 8");
     static_assert((StrideOrder != 0) or (Rank == 1), "Error in nda::idx_map: StrideOrder can only be zero for 1D arrays");
 
     // Extents of all dimensions (the shape of the map).
