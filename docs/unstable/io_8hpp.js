@@ -1,7 +1,7 @@
 var io_8hpp =
 [
-    [ "nda::clef::operator<<", "group__clef__utils.html#ga323f896f8b42f86185a2fbe3fdde67fe", null ],
-    [ "nda::clef::operator<<", "group__clef__utils.html#ga0c28762b97869024db090c5c09f377bb", null ],
+    [ "nda::clef::operator<<", "group__clef__utils.html#ga2a4d5a47d9a95d80771358f54f76eedd", null ],
+    [ "nda::clef::operator<<", "group__clef__utils.html#gae8d2c27395b2b8d81b0f50e17e5eb4a0", null ],
     [ "nda::clef::operator<<", "group__clef__utils.html#ga86a676abecc42b6c00623c39b59f2613", null ],
     [ "nda::clef::operator<<", "group__clef__utils.html#ga5ba7b914d452aee6ea65d0a50630d874", null ],
     [ "nda::clef::operator<<", "group__clef__utils.html#gae32abd16f763a8e65a3c395a528c987d", null ],

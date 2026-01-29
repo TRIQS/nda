@@ -7,7 +7,7 @@ var searchData=
   ['range_4',['Assigning a contiguous range',['../ex3.html#ex3_p4',1,'']]],
   ['range_2ehpp_5',['range.hpp',['../range_8hpp.html',1,'']]],
   ['ranges_6',['Viewing generic 1-dimensional ranges',['../ex4.html#ex4_p8',1,'']]],
-  ['rank_7',['rank',['../classnda_1_1basic__array.html#a2edc4ce929c6f0f12d9cf873ecd2c91b',1,'nda::basic_array::rank'],['../classnda_1_1basic__array__view.html#a2fb22cdf52eb965f95782f12420952e4',1,'nda::basic_array_view::rank'],['../classnda_1_1idx__map.html#a63b5b07ceed17e90dc61d3b78d7c8487',1,'nda::idx_map::rank()']]],
+  ['rank_7',['rank',['../classnda_1_1basic__array.html#a2edc4ce929c6f0f12d9cf873ecd2c91b',1,'nda::basic_array::rank'],['../classnda_1_1basic__array__view.html#a2fb22cdf52eb965f95782f12420952e4',1,'nda::basic_array_view::rank'],['../structnda_1_1expr__indexed.html#aa2086e0dc2ce02b27e01d09d93cf58c8',1,'nda::expr_indexed::rank'],['../classnda_1_1idx__map.html#a63b5b07ceed17e90dc61d3b78d7c8487',1,'nda::idx_map::rank()']]],
   ['reading_201_20dimensional_20arrays_20views_20of_20strings_8',['Writing/Reading 1-dimensional arrays/views of strings',['../ex5.html#ex5_p5',1,'']]],
   ['reading_20a_20slice_20from_20an_20existing_20dataset_9',['Reading a slice from an existing dataset',['../ex5.html#ex5_p4',1,'']]],
   ['reading_20arrays_20views_20of_20generic_20types_10',['Writing/Reading arrays/views of generic types',['../ex5.html#ex5_p6',1,'']]],

@@ -10,5 +10,6 @@ var searchData=
   ['evaluator_3c_20t_2c_20pairs_2e_2e_2e_20_3e_7',['evaluator&lt; T, Pairs... &gt;',['../structnda_1_1clef_1_1evaluator.html',1,'nda::clef']]],
   ['expr_8',['expr',['../structnda_1_1clef_1_1expr.html',1,'nda::clef::expr&lt; Tag, Ts &gt;'],['../structnda_1_1expr.html',1,'nda::expr&lt; OP, L, R &gt;']]],
   ['expr_5fcall_9',['expr_call',['../structnda_1_1expr__call.html',1,'nda']]],
-  ['expr_5funary_10',['expr_unary',['../structnda_1_1expr__unary.html',1,'nda']]]
+  ['expr_5findexed_10',['expr_indexed',['../structnda_1_1expr__indexed.html',1,'nda']]],
+  ['expr_5funary_11',['expr_unary',['../structnda_1_1expr__unary.html',1,'nda']]]
 ];

@@ -22,6 +22,7 @@ var dir_913b60804e0ca3d36b328b721e405789 =
     [ "declarations.hpp", "declarations_8hpp.html", "declarations_8hpp" ],
     [ "device.hpp", "device_8hpp.html", "device_8hpp" ],
     [ "exceptions.hpp", "exceptions_8hpp.html", null ],
+    [ "expr_indexed.hpp", "expr__indexed_8hpp.html", "expr__indexed_8hpp" ],
     [ "group_indices.hpp", "group__indices_8hpp.html", "group__indices_8hpp" ],
     [ "gtest_tools.hpp", "gtest__tools_8hpp.html", "gtest__tools_8hpp" ],
     [ "h5.hpp", "h5_8hpp.html", "h5_8hpp" ],

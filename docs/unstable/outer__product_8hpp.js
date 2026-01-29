@@ -1,4 +1,4 @@
 var outer__product_8hpp =
 [
-    [ "nda::linalg::outer_product", "group__linalg__tools.html#gaa2e13a1dfcbbacc5c2279f98230b5eb2", null ]
+    [ "nda::linalg::outer_product", "group__linalg__tools.html#ga929da221e9bcbe46c428cdae734602d0", null ]
 ];

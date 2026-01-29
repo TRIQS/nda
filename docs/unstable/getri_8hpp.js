@@ -1,4 +1,4 @@
 var getri_8hpp =
 [
-    [ "nda::lapack::getri", "group__linalg__lapack.html#ga41597808b4e45ffeaebd3645b55354e7", null ]
+    [ "nda::lapack::getri", "group__linalg__lapack.html#ga18ff83fbdcc49b6506fe3ac7a39bbdfa", null ]
 ];
