@@ -76,6 +76,54 @@ TEST_F(NDAAlgorithm, Sum) {
   EXPECT_ARRAY_EQ(nda::sum(A_arr), A_d + A_d);
 }
 
+TEST_F(NDAAlgorithm, SumOverAxis) {
+  // sum over all axis
+  EXPECT_DOUBLE_EQ(nda::sum(A_d, std::array{0, 1, 2}), nda::sum(A_d));
+  EXPECT_COMPLEX_NEAR(nda::sum(A_c, std::array{2, 1, 0}), nda::sum(A_c));
+
+  // sum over axis 0
+  auto check_axis0 = [&](auto const &A) {
+    auto exp_2d = nda::array<nda::get_value_t<decltype(A)>, 2>::zeros({shape[1], shape[2]});
+    for (int i = 0; i < shape[0]; ++i) exp_2d += A(i, nda::ellipsis{});
+    EXPECT_ARRAY_NEAR(nda::sum(A, 0), exp_2d);
+    EXPECT_ARRAY_NEAR(nda::sum(A, std::array{0}), exp_2d);
+  };
+  check_axis0(A_d);
+  check_axis0(A_c);
+
+  // sum over axis 1
+  auto check_axis1 = [&](auto const &A) {
+    auto exp_2d = nda::array<nda::get_value_t<decltype(A)>, 2>::zeros({shape[0], shape[2]});
+    for (int j = 0; j < shape[1]; ++j) exp_2d += A(nda::range::all, j, nda::range::all);
+    EXPECT_ARRAY_NEAR(nda::sum(A, 1), exp_2d);
+    EXPECT_ARRAY_NEAR(nda::sum(A, std::array{1}), exp_2d);
+  };
+  check_axis1(A_d);
+  check_axis1(A_c);
+
+  // sum over axis 1 and 2
+  auto check_axis12 = [&](auto const &A) {
+    auto exp_1d = nda::array<nda::get_value_t<decltype(A)>, 1>::zeros({shape[0]});
+    for (int j = 0; j < shape[1]; ++j)
+      for (int k = 0; k < shape[2]; ++k) exp_1d += A(nda::range::all, j, k);
+    EXPECT_ARRAY_NEAR(nda::sum(A, std::array{1, 2}), exp_1d);
+    EXPECT_ARRAY_NEAR(nda::sum(A, std::array{2, 1}), exp_1d);
+  };
+  check_axis12(A_d);
+  check_axis12(A_c);
+
+  // sum over axis 0 and 2
+  auto check_axis02 = [&](auto const &A) {
+    auto exp_1d = nda::array<nda::get_value_t<decltype(A)>, 1>::zeros({shape[1]});
+    for (int i = 0; i < shape[0]; ++i)
+      for (int k = 0; k < shape[2]; ++k) exp_1d += A(i, nda::range::all, k);
+    EXPECT_ARRAY_NEAR(nda::sum(A, std::array{0, 2}), exp_1d);
+    EXPECT_ARRAY_NEAR(nda::sum(A, std::array{2, 0}), exp_1d);
+  };
+  check_axis02(A_d);
+  check_axis02(A_c);
+}
+
 TEST_F(NDAAlgorithm, Product) {
   EXPECT_DOUBLE_EQ(nda::product(A_d), std::accumulate(A_d.begin(), A_d.end(), 1.0, std::multiplies<>{}));
   EXPECT_COMPLEX_NEAR(nda::product(A_c), std::accumulate(A_c.begin(), A_c.end(), std::complex<double>{1.0, 0.0}, std::multiplies<>{}));

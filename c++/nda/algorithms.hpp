@@ -21,6 +21,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <concepts>
 #include <cstdlib>
 #include <functional>
 #include <type_traits>
@@ -183,6 +184,76 @@ namespace nda {
     } else { // Array<Value>
       return fold(std::plus<>{}, a, Value::zeros(get_first_element(a).shape()));
     }
+  }
+
+  /**
+   * @brief Sum elements of an nda::Array along specified axes.
+   *
+   * @details This function behaves similar to `numpy.sum`. The result is an array with rank reduced by the number of 
+   * axes summed over, i.e. if the original array has rank \f$ R \f$ and we sum over \f$ N \f$ axes, the resulting 
+   * array has rank \f$ R - N \f$.
+   * 
+   * If all axes are summed over, \f$ R = N \f$, the call is dispatched to nda::sum.
+   *
+   * The given axes are expected to be unique and in the range \f$ [0, R-1] \f$.
+   *
+   * @tparam A nda::Array type.
+   * @tparam N Number of axes to sum over.
+   * @param a nda::Array object.
+   * @param axes Array of axis indices to sum over.
+   * @return An nda::basic_array with rank reduced by \f$ N \f$, or a scalar if all axes are summed.
+   */
+  template <Array A, std::integral I, size_t N>
+    requires(get_rank<A> >= N and nda::Scalar<get_value_t<A>>)
+  auto sum(A const &a, std::array<I, N> axes) {
+    // sort axes and check validity
+    std::ranges::sort(axes);
+    EXPECTS(std::ranges::adjacent_find(axes) == axes.end());
+    EXPECTS(axes.front() >= 0 and axes.back() < get_rank<A>);
+
+    // if the resulting rank is zero, dispatch to the sum over all elements
+    constexpr int res_rank = get_rank<A> - static_cast<int>(N);
+    if constexpr (res_rank == 0) {
+      return sum(a);
+    } else {
+      // get the result shape and the axes that we keep (are not summed over)
+      std::array<long, res_rank> keep_axes, res_shape;
+      for (int i = 0; auto ax : nda::range(get_rank<A>)) {
+        if (auto it = std::ranges::lower_bound(axes, ax); it == axes.end() or *it != ax) {
+          keep_axes[i]   = ax;
+          res_shape[i++] = a.shape()[ax];
+        }
+      }
+
+      // create the result array initialized to zero
+      auto res = array<get_value_t<A>, res_rank>::zeros(res_shape);
+
+      // loop over all indices of the input array and sum over the specified axes
+      nda::for_each(a.shape(), [&](auto... idxs) {
+        std::array<long, get_rank<A>> idx_arr{static_cast<long>(idxs)...};
+        std::array<long, res_rank> res_idx_arr;
+        for (int i = 0; i < res_rank; ++i) res_idx_arr[i] = idx_arr[keep_axes[i]];
+        std::apply([&](auto... res_idxs) { res(res_idxs...) += a(idxs...); }, res_idx_arr);
+      });
+
+      return res;
+    }
+  }
+
+  /**
+   * @brief Sum elements of an nda::Array along a specified axis.
+   *
+   * @details It simply calls nda::sum(A const &, std::array<I, N>).
+   *
+   * @tparam A nda::Array type.
+   * @param a nda::Array object.
+   * @param axis The axis along which to sum.
+   * @return An nda::array with rank reduced by 1 or a scalar if the original array has rank 1.
+   */
+  template <Array A>
+    requires(get_rank<A> >= 1 and nda::Scalar<get_value_t<A>>)
+  auto sum(A const &a, int axis) {
+    return sum(a, std::array{axis});
   }
 
   /**
