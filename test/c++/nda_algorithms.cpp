@@ -77,7 +77,11 @@ TEST_F(NDAAlgorithm, Sum) {
 }
 
 TEST_F(NDAAlgorithm, SumOverAxis) {
-  // sum over all axis
+  // sum over no axes (N=0), returns a copy
+  EXPECT_ARRAY_EQ(nda::sum(A_d, std::array<int, 0>{}), A_d);
+  EXPECT_ARRAY_NEAR(nda::sum(A_c, std::array<int, 0>{}), A_c);
+
+  // sum over all axes
   EXPECT_DOUBLE_EQ(nda::sum(A_d, std::array{0, 1, 2}), nda::sum(A_d));
   EXPECT_COMPLEX_NEAR(nda::sum(A_c, std::array{2, 1, 0}), nda::sum(A_c));
 

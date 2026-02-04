@@ -195,6 +195,8 @@ namespace nda {
    * 
    * If all axes are summed over, \f$ R = N \f$, the call is dispatched to nda::sum.
    *
+   * If no axes are specified, \f$ N = 0 \f$, a copy of the input array is returned.
+   *
    * The given axes are expected to be unique and in the range \f$ [0, R-1] \f$.
    *
    * @tparam A nda::Array type.
@@ -206,37 +208,40 @@ namespace nda {
   template <Array A, std::integral I, size_t N>
     requires(get_rank<A> >= N and nda::Scalar<get_value_t<A>>)
   auto sum(A const &a, std::array<I, N> axes) {
-    // sort axes and check validity
-    std::ranges::sort(axes);
-    EXPECTS(std::ranges::adjacent_find(axes) == axes.end());
-    EXPECTS(axes.front() >= 0 and axes.back() < get_rank<A>);
-
-    // if the resulting rank is zero, dispatch to the sum over all elements
-    constexpr int res_rank = get_rank<A> - static_cast<int>(N);
-    if constexpr (res_rank == 0) {
-      return sum(a);
+    // if no axes are specified, return a copy of the input
+    if constexpr (N == 0) {
+      return make_regular(a);
     } else {
-      // get the result shape and the axes that we keep (are not summed over)
-      std::array<long, res_rank> keep_axes, res_shape;
-      for (int i = 0; auto ax : nda::range(get_rank<A>)) {
-        if (auto it = std::ranges::lower_bound(axes, ax); it == axes.end() or *it != ax) {
-          keep_axes[i]   = ax;
-          res_shape[i++] = a.shape()[ax];
+      // sort axes and check validity
+      std::ranges::sort(axes);
+      EXPECTS(std::ranges::adjacent_find(axes) == axes.end());
+      EXPECTS(axes.front() >= 0 and axes.back() < get_rank<A>);
+
+      constexpr int res_rank = get_rank<A> - static_cast<int>(N);
+
+      if constexpr (res_rank == 0) {
+        return sum(a);
+      } else {
+        // get the result shape and the axes that we keep (are not summed over)
+        std::array<long, res_rank> keep_axes, res_shape;
+        for (int i = 0; auto ax : nda::range(get_rank<A>)) {
+          if (!std::ranges::binary_search(axes, ax)) {
+            keep_axes[i]   = ax;
+            res_shape[i++] = a.shape()[ax];
+          }
         }
+
+        // create the result array initialized to zero
+        auto res = array<get_value_t<A>, res_rank>::zeros(res_shape);
+
+        // loop over all indices of the input array and sum over the specified axes
+        nda::for_each(a.shape(), [&](auto... idxs) {
+          auto idx_arr = std::array{idxs...};
+          std::apply([&](auto... keep) { res(idx_arr[keep]...) += a(idxs...); }, keep_axes);
+        });
+
+        return res;
       }
-
-      // create the result array initialized to zero
-      auto res = array<get_value_t<A>, res_rank>::zeros(res_shape);
-
-      // loop over all indices of the input array and sum over the specified axes
-      nda::for_each(a.shape(), [&](auto... idxs) {
-        std::array<long, get_rank<A>> idx_arr{static_cast<long>(idxs)...};
-        std::array<long, res_rank> res_idx_arr;
-        for (int i = 0; i < res_rank; ++i) res_idx_arr[i] = idx_arr[keep_axes[i]];
-        std::apply([&](auto... res_idxs) { res(res_idxs...) += a(idxs...); }, res_idx_arr);
-      });
-
-      return res;
     }
   }
 
