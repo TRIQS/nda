@@ -12,8 +12,64 @@
 #include <concepts>
 #include <utility>
 
+using namespace std::complex_literals;
 using nda::C_layout, nda::F_layout;
 using nda::mem::Host, nda::mem::Device, nda::mem::Unified;
+
+template <typename A, typename B>
+void test_blas_array_concepts() {
+  using namespace nda::blas_lapack;
+  if constexpr (nda::mem::have_compatible_addr_space<A, B>) {
+    static_assert(BlasArrayFor<A, B>);
+    static_assert(BlasArrayOrConjFor<A, B>);
+    static_assert(BlasArrayRealFor<A, B>);
+  } else {
+    static_assert(not BlasArrayFor<A, B>);
+    static_assert(not BlasArrayOrConjFor<A, B>);
+    static_assert(not BlasArrayRealFor<A, B>);
+  }
+}
+
+template <typename A, typename B>
+void test_pivot_array_concept() {
+  using namespace nda::blas_lapack;
+  if constexpr (nda::mem::have_compatible_addr_space<A, B>) {
+    static_assert(PivotArrayFor<A, B>);
+  } else {
+    static_assert(not PivotArrayFor<A, B>);
+  }
+}
+
+// Test BLAS/LAPACK helper concepts with different address spaces.
+TEST(NDA, CUBLASandCULAPACKToolsConcepts) {
+  using namespace nda::blas_lapack;
+  using mat_host_t      = nda::matrix<double, F_layout, nda::heap<Host>>;
+  using mat_device_t    = nda::matrix<double, F_layout, nda::heap<Device>>;
+  using mat_unified_t   = nda::matrix<double, F_layout, nda::heap<Unified>>;
+  using pivot_host_t    = nda::vector<int, nda::heap<Host>>;
+  using pivot_device_t  = nda::vector<int, nda::heap<Device>>;
+  using pivot_unified_t = nda::vector<int, nda::heap<Unified>>;
+
+  test_blas_array_concepts<mat_device_t, mat_device_t>();
+  test_blas_array_concepts<mat_unified_t, mat_device_t>();
+  test_blas_array_concepts<mat_host_t, mat_device_t>();
+  test_blas_array_concepts<mat_device_t, mat_unified_t>();
+  test_blas_array_concepts<mat_unified_t, mat_unified_t>();
+  test_blas_array_concepts<mat_host_t, mat_unified_t>();
+  test_blas_array_concepts<mat_device_t, mat_host_t>();
+  test_blas_array_concepts<mat_unified_t, mat_host_t>();
+  test_blas_array_concepts<mat_host_t, mat_host_t>();
+
+  test_pivot_array_concept<pivot_device_t, mat_device_t>();
+  test_pivot_array_concept<pivot_unified_t, mat_device_t>();
+  test_pivot_array_concept<pivot_host_t, mat_device_t>();
+  test_pivot_array_concept<pivot_device_t, mat_unified_t>();
+  test_pivot_array_concept<pivot_unified_t, mat_unified_t>();
+  test_pivot_array_concept<pivot_host_t, mat_unified_t>();
+  test_pivot_array_concept<pivot_device_t, mat_host_t>();
+  test_pivot_array_concept<pivot_unified_t, mat_host_t>();
+  test_pivot_array_concept<pivot_host_t, mat_host_t>();
+}
 
 // Test the CUBLAS gemm function.
 template <typename T, typename Layout1, typename Layout2, typename Layout3, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2,

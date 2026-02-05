@@ -15,6 +15,126 @@
 using namespace std::complex_literals;
 using nda::C_layout, nda::F_layout;
 
+// Test BLAS/LAPACK helper traits.
+TEST(NDA, BLASandLAPACKToolsTraits) {
+  using namespace nda::blas_lapack;
+  using mat_c_type = nda::matrix<std::complex<double>, C_layout>;
+  using mat_f_type = nda::matrix<std::complex<double>, F_layout>;
+  using arr_c_type = nda::array<double, 3, C_layout>;
+  using arr_f_type = nda::array<double, 3, F_layout>;
+  using vec_type   = nda::vector<float>;
+
+  auto m_c = mat_c_type::rand({2, 3});
+  auto m_f = mat_f_type::rand({2, 3});
+  auto v   = vec_type{1.0, 2.0};
+  auto a_c = arr_c_type::rand({2, 3, 4});
+  auto a_f = arr_f_type::rand({2, 3, 4});
+
+  static_assert(not is_conj_array_expr<mat_c_type>);
+  static_assert(not is_conj_array_expr<arr_f_type>);
+  static_assert(not is_conj_array_expr<vec_type>);
+  static_assert(is_conj_array_expr<decltype(nda::conj(m_c))>);
+  static_assert(is_conj_array_expr<decltype(nda::conj(m_f)) const &>);
+  static_assert(is_conj_array_expr<decltype(nda::conj(m_c)) &&>);
+  static_assert(not is_conj_array_expr<decltype(nda::conj(a_c))>);
+  static_assert(not is_conj_array_expr<decltype(nda::conj(v))>);
+  static_assert(is_conj_array_expr<decltype(nda::dagger(m_c))>);
+
+  static_assert(has_C_layout<mat_c_type, arr_c_type, vec_type>);
+  static_assert(has_F_layout<mat_f_type, arr_f_type, vec_type>);
+  static_assert(not has_C_layout<mat_c_type, arr_f_type, vec_type>);
+  static_assert(not has_F_layout<mat_c_type, arr_f_type, vec_type>);
+  static_assert(has_C_layout<decltype(nda::dagger(m_f))>);
+  static_assert(has_F_layout<decltype(nda::transpose(a_c))>);
+
+  static_assert(get_op<mat_f_type> == 'N');
+  static_assert(get_op<arr_f_type> == 'N');
+  static_assert(get_op<mat_c_type> == 'T');
+  static_assert(get_op<arr_c_type> == 'T');
+  static_assert(get_op<decltype(nda::conj(m_c))> == 'C');
+  static_assert(get_op<decltype(nda::dagger(m_f))> == 'C');
+}
+
+// Test BLAS/LAPACK helper functions.
+TEST(NDA, BLASandLAPACKToolsFunctions) {
+  using namespace nda::blas_lapack;
+
+  auto v      = nda::vector<double>(10);
+  auto m_c    = nda::matrix<double>::rand(3, 4);
+  auto m_f    = nda::matrix<double, F_layout>::rand(3, 4);
+  auto m_cplx = nda::matrix<std::complex<double>>{{1.0 + 1i, 2.0}, {3.0, 4.0 - 1i}};
+
+  // get_array
+  auto &m_ref = get_array(m_c);
+  EXPECT_EQ(&m_ref(0, 0), &m_c(0, 0));
+
+  auto conj_expr   = nda::conj(m_cplx);
+  auto &m_cplx_ref = get_array(conj_expr);
+  EXPECT_EQ(&m_cplx_ref(0, 0), &m_cplx(0, 0));
+
+  // get_ld
+  EXPECT_EQ(get_ld(v), 10);
+  EXPECT_EQ(get_ld(nda::vector<double>()), 0);
+  EXPECT_EQ(get_ld(m_f), 3);
+  EXPECT_EQ(get_ld(m_c), 4);
+  EXPECT_EQ(get_ld(m_f(nda::range(2), nda::range(3))), 3);
+  EXPECT_EQ(get_ld(m_c(nda::range(2), nda::range(2))), 4);
+
+  // get_ncols
+  EXPECT_EQ(get_ncols(v), 1);
+  EXPECT_EQ(get_ncols(m_f), 4);
+  EXPECT_EQ(get_ncols(m_c), 3);
+  EXPECT_EQ(get_ncols(m_f(nda::range(2), nda::range(3))), 3);
+  EXPECT_EQ(get_ncols(m_c(nda::range(2), nda::range(2))), 2);
+}
+
+// Test BLAS/LAPACK helper concepts.
+TEST(NDA, BLASandLAPACKToolsConcepts) {
+  using namespace nda::blas_lapack;
+  using conj_expr_t = decltype(nda::conj(nda::matrix<std::complex<double>>{}));
+
+  static_assert(BlasArray<nda::matrix<double>>);
+  static_assert(BlasArray<nda::array<std::complex<float>, 3, F_layout>, 3>);
+  static_assert(not BlasArray<nda::matrix<int>>);
+  static_assert(not BlasArray<nda::array<std::complex<float>, 3, F_layout>, 2>);
+  static_assert(not BlasArray<conj_expr_t>);
+
+  static_assert(BlasArrayReal<nda::matrix_view<double>>);
+  static_assert(BlasArrayReal<nda::vector<float>, 1>);
+  static_assert(not BlasArrayReal<nda::matrix_view<std::complex<double>>>);
+  static_assert(not BlasArrayReal<nda::vector<float>, 2>);
+
+  static_assert(BlasArrayCplx<nda::matrix_view<std::complex<double>>>);
+  static_assert(BlasArrayCplx<nda::array<std::complex<float>, 3>, 3>);
+  static_assert(not BlasArrayCplx<nda::matrix_view<double>>);
+  static_assert(not BlasArrayCplx<nda::array<std::complex<float>, 3>, 1>);
+
+  static_assert(BlasArrayOrConj<nda::matrix<double>>);
+  static_assert(BlasArrayOrConj<conj_expr_t, 2>);
+  static_assert(not BlasArrayOrConj<nda::matrix<int>>);
+  static_assert(not BlasArrayOrConj<conj_expr_t, 3>);
+
+  static_assert(BlasArrayFor<nda::matrix<double>, nda::matrix<double>>);
+  static_assert(BlasArrayFor<nda::vector<std::complex<float>>, nda::matrix_view<std::complex<float>>, 1>);
+  static_assert(not BlasArrayFor<nda::matrix<float>, nda::matrix<double>>);
+  static_assert(not BlasArrayFor<nda::vector<std::complex<float>>, nda::matrix_view<std::complex<float>>, 2>);
+
+  static_assert(BlasArrayOrConjFor<conj_expr_t, nda::vector<std::complex<double>>>);
+  static_assert(BlasArrayOrConjFor<nda::vector_view<double>, nda::matrix<double>, 1>);
+  static_assert(not BlasArrayOrConjFor<conj_expr_t, nda::vector<std::complex<float>>>);
+  static_assert(not BlasArrayOrConjFor<nda::vector_view<double>, nda::matrix<double>, 3>);
+
+  static_assert(PivotArrayFor<nda::vector<int>, nda::matrix_view<double>>);
+  static_assert(PivotArrayFor<nda::array<int, 3>, nda::matrix<float>, 3>);
+  static_assert(not PivotArrayFor<nda::vector<long>, nda::matrix_view<double>>);
+  static_assert(not PivotArrayFor<nda::array<int, 3>, nda::matrix<float>, 2>);
+
+  static_assert(BlasArrayRealFor<nda::vector_view<double>, nda::matrix<double>>);
+  static_assert(BlasArrayRealFor<nda::vector<float>, nda::matrix<std::complex<float>>, 1>);
+  static_assert(not BlasArrayRealFor<nda::vector_view<double>, nda::matrix<float>>);
+  static_assert(not BlasArrayRealFor<nda::vector<float>, nda::matrix<std::complex<float>>, 3>);
+}
+
 // Test the BLAS gemm function.
 template <typename T, typename Layout1, typename Layout2, typename Layout3>
 void test_gemm() {
