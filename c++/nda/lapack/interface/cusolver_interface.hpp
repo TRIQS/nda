@@ -20,13 +20,13 @@ namespace nda::lapack::device {
 
   void gesvd(char jobu, char jobvt, int m, int n, double *a, int lda, double *s, double *u, int ldu, double *vt, int ldvt, double *work, int lwork,
              double *rwork, int &info);
-  void gesvd(char jobu, char jobvt, int m, int n, dcomplex *a, int lda, double *s, dcomplex *u, int ldu, dcomplex *vt, int ldvt, dcomplex *work,
-             int lwork, double *rwork, int &info);
+  void gesvd(char jobu, char jobvt, int m, int n, std::complex<double> *a, int lda, double *s, std::complex<double> *u, int ldu,
+             std::complex<double> *vt, int ldvt, std::complex<double> *work, int lwork, double *rwork, int &info);
 
   void getrf(int m, int n, double *a, int lda, int *ipiv, int &info);
-  void getrf(int m, int n, dcomplex *a, int lda, int *ipiv, int &info);
+  void getrf(int m, int n, std::complex<double> *a, int lda, int *ipiv, int &info);
 
   void getrs(char op, int n, int nrhs, double const *a, int lda, int const *ipiv, double *b, int ldb, int &info);
-  void getrs(char op, int n, int nrhs, dcomplex const *a, int lda, int const *ipiv, dcomplex *b, int ldb, int &info);
+  void getrs(char op, int n, int nrhs, std::complex<double> const *a, int lda, int const *ipiv, std::complex<double> *b, int ldb, int &info);
 
 } // namespace nda::lapack::device

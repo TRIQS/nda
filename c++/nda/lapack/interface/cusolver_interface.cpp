@@ -69,8 +69,8 @@ namespace nda::lapack::device {
       CUSOLVER_CHECK(cusolverDnDgesvd, info, jobu, jobvt, m, n, a, lda, s, u, ldu, vt, ldvt, work, lwork, rwork);
     }
   }
-  void gesvd(char jobu, char jobvt, int m, int n, dcomplex *a, int lda, double *s, dcomplex *u, int ldu, dcomplex *vt, int ldvt, dcomplex *work,
-             int lwork, double *rwork, int &info) {
+  void gesvd(char jobu, char jobvt, int m, int n, std::complex<double> *a, int lda, double *s, std::complex<double> *u, int ldu,
+             std::complex<double> *vt, int ldvt, std::complex<double> *work, int lwork, double *rwork, int &info) {
     // Replicate behavior of Netlib gesvd
     if (lwork == -1) {
       int bufferSize = 0;
@@ -88,17 +88,17 @@ namespace nda::lapack::device {
     auto Workspace = nda::cuvector<double>(bufferSize);
     CUSOLVER_CHECK(cusolverDnDgetrf, info, m, n, a, lda, Workspace.data(), ipiv);
   }
-  void getrf(int m, int n, dcomplex *a, int lda, int *ipiv, int &info) {
+  void getrf(int m, int n, std::complex<double> *a, int lda, int *ipiv, int &info) {
     int bufferSize = 0;
     cusolverDnZgetrf_bufferSize(get_handle(), m, n, cucplx(a), lda, &bufferSize);
-    auto Workspace = nda::cuvector<dcomplex>(bufferSize);
+    auto Workspace = nda::cuvector<std::complex<double>>(bufferSize);
     CUSOLVER_CHECK(cusolverDnZgetrf, info, m, n, cucplx(a), lda, cucplx(Workspace.data()), ipiv);
   }
 
   void getrs(char op, int n, int nrhs, double const *a, int lda, int const *ipiv, double *b, int ldb, int &info) {
     CUSOLVER_CHECK(cusolverDnDgetrs, info, get_cublas_op(op), n, nrhs, a, lda, ipiv, b, ldb);
   }
-  void getrs(char op, int n, int nrhs, dcomplex const *a, int lda, int const *ipiv, dcomplex *b, int ldb, int &info) {
+  void getrs(char op, int n, int nrhs, std::complex<double> const *a, int lda, int const *ipiv, std::complex<double> *b, int ldb, int &info) {
     CUSOLVER_CHECK(cusolverDnZgetrs, info, get_cublas_op(op), n, nrhs, cucplx(a), lda, ipiv, cucplx(b), ldb);
   }
 
