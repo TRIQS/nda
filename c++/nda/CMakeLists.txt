@@ -104,7 +104,7 @@ endif()
 
 # ========= Magma ==========
 
-if(Use_Magma)
+if(MagmaSupport)
   message(STATUS "-------- Magma detection -------------")
   find_package(Magma REQUIRED)
   target_link_libraries(${PROJECT_NAME}_c PUBLIC magma)
