@@ -79,7 +79,7 @@ namespace nda::mem {
       auto *desti = static_cast<unsigned char *>(dest);
       auto *srci  = static_cast<const unsigned char *>(src);
       for (size_t i = 0; i < height; ++i, desti += dpitch, srci += spitch) std::memcpy(desti, srci, width);
-    } else if (nda::have_device) {
+    } else {
       device_error_check(cudaMemcpy2D(dest, dpitch, src, spitch, width, height, cudaMemcpyDefault), "cudaMemcpy2D");
     }
   }
