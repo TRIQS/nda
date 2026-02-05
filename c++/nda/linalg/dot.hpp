@@ -29,16 +29,17 @@ namespace nda::linalg {
   /**
    * @brief Generic loop-based dot product implementation for vectors.
    *
-   * @details Computes the dot product of two vector objects with optional conjugation:
-   * - For `star = false`: result = sum(x[i] * y[i])
-   * - For `star = true`: result = sum(conj(x[i]) * y[i]) for complex types
+   * @details Computes the dot product of two vector objects, \f$ \mathbf{x} \f$ and \f$ \mathbf{y} \f$, with optional 
+   * conjugation:
+   * - For `star = false`, it returns \f$ \mathbf{x}^T \mathbf{y} \f$.
+   * - For `star = true`, it returns \f$ \mathbf{x}^H \mathbf{y} \f$.
    *
    * @tparam star If true, conjugate the first operand (for complex types only).
-   * @tparam X Vector type.
-   * @tparam Y Vector type.
-   * @param x First input vector.
-   * @param y Second input vector.
-   * @return The computed dot product.
+   * @tparam X nda::Vector type.
+   * @tparam Y nda::Vector type.
+   * @param x Input vector \f$ \mathbf{x} \f$.
+   * @param y Input vector \f$ \mathbf{y} \f$.
+   * @return Result of the dot product.
    */
   template <bool star = false, Vector X, Vector Y>
     requires(Scalar<get_value_t<X>> and Scalar<get_value_t<Y>> and mem::have_host_compatible_addr_space<X, Y>)
@@ -86,18 +87,18 @@ namespace nda::linalg {
    * - the two input objects to be scalars,
    * - lazy expressions as input vectors,
    * - the value types of the input vectors to be different from each other and
-   * - the value types of the input vectors to be different from nda::is_double_or_complex_v.
+   * - the value types of the input vectors to be different from nda::is_blas_lapack_v.
    *
-   * For vectors, it calls nda::blas::dot if possible, otherwise it simply loops over the input arrays/views and sums up
-   * the element-wise products.
+   * For scalars, it performs simple scalar multiplication. For vectors, it calls nda::blas::dot if possible, otherwise 
+   * it falls back to nda::linalg::dot_generic.
    *
-   * @note The first argument is never conjugated. Even for complex types. Use nda::linalg::dotc for that.
+   * @note The first argument is never conjugated. Use nda::linalg::dotc for that.
    *
    * @tparam X nda::Vector or nda::Scalar type.
    * @tparam Y nda::Vector or nda::Scalar type.
    * @param x Input vector/scalar.
    * @param y Input vector/scalar.
-   * @return Result of the dot product.
+   * @return Result of the dot product/scalar multiplication.
    */
   template <typename X, typename Y>
     requires((Scalar<X> and Scalar<Y>) or (Vector<X> and Vector<Y>))
@@ -119,16 +120,16 @@ namespace nda::linalg {
    * - the two input objects to be scalars,
    * - lazy expressions as input vectors,
    * - the value types of the input vectors to be different from each other and
-   * - the value types of the input vectors to be different from nda::is_double_or_complex_v.
+   * - the value types of the input vectors to be different from nda::is_blas_lapack_v.
    *
-   * For vectors, it calls nda::blas::dotc if possible, otherwise it simply loops over the input arrays/views and sums
-   * up the element-wise products with the LHS operand conjugated.
+   * For scalars, it performs simple scalar multiplication (with the first operand conjugated if it is complex). For 
+   * vectors, it calls nda::blas::dotc if possible, otherwise it falls back to nda::linalg::dot_generic.
    *
    * @tparam X nda::Vector or nda::Scalar type.
    * @tparam Y nda::Vector or nda::Scalar type.
    * @param x Input vector/scalar.
    * @param y Input vector/scalar.
-   * @return Result of the dotc product.
+   * @return Result of the dotc product/scalar multiplication.
    */
   template <typename X, typename Y>
     requires((Scalar<X> and Scalar<Y>) or (Vector<X> and Vector<Y>))

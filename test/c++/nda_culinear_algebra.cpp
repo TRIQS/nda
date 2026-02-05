@@ -12,6 +12,8 @@
 #include <concepts>
 
 using namespace std::complex_literals;
+using nda::C_layout, nda::F_layout;
+using nda::mem::Host, nda::mem::Device, nda::mem::Unified;
 
 // Test the generic dot/dotc function.
 auto exp_dot(auto const &a, auto const &b) {
@@ -26,54 +28,65 @@ auto exp_dotc(auto const &a, auto const &b) {
   return res;
 }
 
-template <nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
+template <typename T, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
 void test_dot() {
+  using cplx_t = std::complex<T>;
+
+  // error tolerance need to be increased compared to non-CUDA version (see nda_linear_algebra.cpp)
+  constexpr auto tol = fp_tol<T> * 20;
+
   // BLAS compatible vectors
-  auto a   = nda::vector<double>{1, 2, 3, 4, 5};
-  auto b   = nda::vector<double>{10, 20, 30, 40, 50};
+  auto a   = nda::vector<T>{1, 2, 3, 4, 5};
+  auto b   = nda::vector<T>{10, 20, 30, 40, 50};
   auto a_d = to_addr_space<AS1>(a);
   auto b_d = to_addr_space<AS2>(b);
-  EXPECT_DOUBLE_EQ(nda::linalg::dot(a_d, b_d), nda::blas::dot(a, b));
-  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(a_d, b_d), nda::blas::dotc(a, b));
+  EXPECT_NEAR(nda::linalg::dot(a_d, b_d), nda::blas::dot(a, b), tol);
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(a_d, b_d), nda::blas::dotc(a, b), tol);
 
-  auto c   = nda::vector<std::complex<double>>{a * (1.1 - 2.1i)};
-  auto d   = nda::vector<std::complex<double>>{b * (3 + 4i)};
+  auto c   = nda::vector<cplx_t>{a * cplx_t{1.1 - 2.1i}};
+  auto d   = nda::vector<cplx_t>{b * cplx_t{3 + 4i}};
   auto c_d = to_addr_space<AS1>(c);
   auto d_d = to_addr_space<AS2>(d);
-  EXPECT_COMPLEX_NEAR(nda::linalg::dot(c_d, d_d), exp_dot(c, d));
-  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(c_d, d_d), exp_dotc(c, d));
+  EXPECT_COMPLEX_NEAR(nda::linalg::dot(c_d, d_d), exp_dot(c, d), tol);
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(c_d, d_d), exp_dotc(c, d), tol);
 
   // vectors with different value types
   if constexpr (nda::mem::have_host_compatible_addr_space<decltype(a_d), decltype(b_d)>) {
-    EXPECT_COMPLEX_NEAR(nda::linalg::dot(a_d, c_d), exp_dot(a, c));
-    EXPECT_COMPLEX_NEAR(nda::linalg::dotc(a_d, c_d), exp_dotc(a, c));
+    EXPECT_COMPLEX_NEAR(nda::linalg::dot(a_d, c_d), exp_dot(a, c), tol);
+    EXPECT_COMPLEX_NEAR(nda::linalg::dotc(a_d, c_d), exp_dotc(a, c), tol);
 
     auto e   = nda::vector<int>{1, 2, 3, 4, 5};
     auto e_d = to_addr_space<AS1>(e);
     EXPECT_EQ(nda::linalg::dot(e_d, e_d), exp_dot(e, e));
-    EXPECT_DOUBLE_EQ(nda::linalg::dot(e_d, b_d), exp_dot(e, b));
-    EXPECT_COMPLEX_NEAR(nda::linalg::dotc(e_d, b_d), exp_dotc(e, b));
+    EXPECT_NEAR(nda::linalg::dot(e_d, b_d), exp_dot(e, b), tol);
+    EXPECT_COMPLEX_NEAR(nda::linalg::dotc(e_d, b_d), exp_dotc(e, b), tol);
 
     // lazy expressions
     auto sin_a = nda::make_regular(nda::sin(a));
-    EXPECT_DOUBLE_EQ(nda::linalg::dot(nda::sin(a_d), b), exp_dot(sin_a, b));
-    EXPECT_COMPLEX_NEAR(nda::linalg::dotc(nda::sin(a_d), b), exp_dotc(sin_a, b));
+    EXPECT_NEAR(nda::linalg::dot(nda::sin(a_d), b), exp_dot(sin_a, b), tol);
+    EXPECT_COMPLEX_NEAR(nda::linalg::dotc(nda::sin(a_d), b), exp_dotc(sin_a, b), tol);
   }
 
   // (strided) vector views
   auto rg1 = nda::range(0, 5, 2);
   auto rg2 = nda::range(1, 4);
-  EXPECT_COMPLEX_NEAR(nda::linalg::dot(c_d(rg1), d_d(rg2)), exp_dot(c(rg1), d(rg2)));
-  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(c_d(rg1), d_d(rg2)), exp_dotc(c(rg1), d(rg2)));
+  EXPECT_COMPLEX_NEAR(nda::linalg::dot(c_d(rg1), d_d(rg2)), exp_dot(c(rg1), d(rg2)), tol);
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(c_d(rg1), d_d(rg2)), exp_dotc(c(rg1), d(rg2)), tol);
+}
+
+template <typename T>
+void test_dot_address_spaces() {
+  test_dot<T, Device, Device>();
+  test_dot<T, Device, Unified>();
+  test_dot<T, Unified, Device>();
+  test_dot<T, Unified, Unified>();
+  test_dot<T, Unified, Host>();
+  test_dot<T, Host, Unified>();
 }
 
 TEST(NDA, CULinearAlgebraDotProduct) {
-  test_dot<nda::mem::Device, nda::mem::Device>();
-  test_dot<nda::mem::Device, nda::mem::Unified>();
-  test_dot<nda::mem::Unified, nda::mem::Device>();
-  test_dot<nda::mem::Unified, nda::mem::Unified>();
-  test_dot<nda::mem::Unified, nda::mem::Host>();
-  test_dot<nda::mem::Host, nda::mem::Unified>();
+  test_dot_address_spaces<float>();
+  test_dot_address_spaces<double>();
 }
 
 // Test the generic matvecmul function.
