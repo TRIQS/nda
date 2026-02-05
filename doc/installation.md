@@ -120,7 +120,7 @@ The following options are available:
 | `OpenMPSupport=ON/OFF`       | Build with OpenMP support                            | `ON`    |
 | `PythonSupport=ON/OFF`       | Build Python bindings                                | `OFF`   |
 | `CudaSupport=ON/OFF`         | Build with CUDA (GPU) support                        | `OFF`   |
-| `Use_Magma=ON/OFF`           | Enable batched GEMM via MAGMA                        | `OFF`   |
+| `MagmaSupport=ON/OFF`        | Enable batched GEMM via MAGMA                        | `OFF`   |
 
 **Tests, benchmarks and documentation**
 
