@@ -11,6 +11,7 @@
 #pragma once
 
 #ifdef NDA_HAVE_CUDA
+#include "./concepts.hpp"
 #include "./exceptions.hpp"
 
 #include <cuda_runtime.h>
@@ -19,6 +20,7 @@
 #include <complex>
 #include <exception>
 #include <string>
+#include <type_traits>
 #endif // NDA_HAVE_CUDA
 
 namespace nda {
@@ -82,46 +84,93 @@ namespace nda {
   }
 
   /**
-   * @brief Cast a `std::complex<double>` to a `cuDoubleComplex`.
-   *
-   * @param c `std::complex<double>` object.
-   * @return Equivalent `cuDoubleComplex` object.
+   * @brief Type alias to map nda::FloatOrDouble types to their equivalent CUDA complex types.
+   * @details Maps `float` to `cuComplex` and `double` to `cuDoubleComplex`.
+   * @tparam T nda::FloatOrDouble type.
    */
-  inline auto cucplx(std::complex<double> c) { return cuDoubleComplex{c.real(), c.imag()}; }
+  template <FloatOrDouble T>
+  using cuda_complex_t = std::conditional_t<std::is_same_v<T, float>, cuComplex, cuDoubleComplex>;
 
   /**
-   * @brief Reinterpret a pointer to a `std::complex<double>` as a pointer to a `cuDoubleComplex`.
+   * @brief Cast a `std::complex<T>` to the equivalent CUDA type.
+   * 
+   * @details It casts 
+   * - `std::complex<float>` to `cuComplex` and 
+   * - `std::complex<double>` to `cuDoubleComplex`.
    *
-   * @param c Pointer to a `std::complex<double>`.
-   * @return Pointer to a `cuDoubleComplex` at the same address.
+   * @tparam T nda::FloatOrDouble type.
+   * @param c `std::complex<T>` object.
+   * @return Equivalent CUDA object.
    */
-  inline auto *cucplx(std::complex<double> *c) { return reinterpret_cast<cuDoubleComplex *>(c); } // NOLINT
+  template <FloatOrDouble T>
+  cuda_complex_t<T> cucplx(std::complex<T> c) {
+    return {c.real(), c.imag()};
+  }
 
   /**
-   * @brief Reinterpret a pointer to a `const std::complex<double>` as a pointer to a `const cuDoubleComplex`.
+   * @brief Cast a pointer to a `std::complex<T>` to a pointer to the equivalent CUDA type.
+   * 
+   * @details It casts 
+   * - `std::complex<float>*` to `cuComplex*` and 
+   * - `std::complex<double>*` to `cuDoubleComplex*`.
    *
-   * @param c Pointer to a `const std::complex<double>`.
-   * @return Pointer to a `const cuDoubleComplex` at the same address.
+   * @tparam T nda::FloatOrDouble type.
+   * @param c Pointer to a `std::complex<T>`.
+   * @return Pointer to the equivalent CUDA type at the same address.
    */
-  inline auto *cucplx(std::complex<double> const *c) { return reinterpret_cast<const cuDoubleComplex *>(c); } // NOLINT
+  template <FloatOrDouble T>
+  cuda_complex_t<T> *cucplx(std::complex<T> *c) {
+    return reinterpret_cast<cuda_complex_t<T> *>(c); // NOLINT
+  }
 
   /**
-   * @brief Reinterpret a pointer to a pointer to a `std::complex<double>` as a pointer to a pointer to a
-   * `cuDoubleComplex`.
+   * @brief Cast a pointer to a `const std::complex<T>` to a pointer to the equivalent CUDA type.
+   * 
+   * @details It casts 
+   * - `const std::complex<float>*` to `const cuComplex*` and 
+   * - `const std::complex<double>*` to `const cuDoubleComplex*`.
    *
-   * @param c Pointer to a pointer to a `std::complex<double>`.
-   * @return Pointer to a pointer to a `cuDoubleComplex` at the same address.
+   * @tparam T nda::FloatOrDouble type.
+   * @param c Pointer to a `const std::complex<T>`.
+   * @return Pointer to the equivalent CUDA type at the same address.
    */
-  inline auto **cucplx(std::complex<double> **c) { return reinterpret_cast<cuDoubleComplex **>(c); } // NOLINT
+  template <FloatOrDouble T>
+  cuda_complex_t<T> const *cucplx(std::complex<T> const *c) {
+    return reinterpret_cast<cuda_complex_t<T> const *>(c); // NOLINT
+  }
 
   /**
-   * @brief Reinterpret a pointer to a pointer to a `const std::complex<double>` as a pointer to a pointer to a
-   * `const cuDoubleComplex`.
+   * @brief Cast a pointer to a pointer to a `std::complex<T>` to a pointer to a pointer to the equivalent CUDA type.
+   * 
+   * @details It casts
+   * - `std::complex<float>**` to `cuComplex**` and
+   * - `std::complex<double>**` to `cuDoubleComplex**`.
    *
-   * @param c Pointer to a pointer to a `const std::complex<double>`.
-   * @return Pointer to a pointer to a `const cuDoubleComplex` at the same address.
+   * @tparam T nda::FloatOrDouble type.
+   * @param c Pointer to a pointer to a `std::complex<T>`.
+   * @return Pointer to a pointer to the equivalent CUDA type at the same address.
    */
-  inline auto **cucplx(std::complex<double> const **c) { return reinterpret_cast<const cuDoubleComplex **>(c); } // NOLINT
+  template <FloatOrDouble T>
+  cuda_complex_t<T> **cucplx(std::complex<T> **c) {
+    return reinterpret_cast<cuda_complex_t<T> **>(c); // NOLINT
+  }
+
+  /**
+   * @brief Cast a pointer to a pointer to a `const std::complex<double>` to a pointer to a pointer to the equivalent 
+   * CUDA type.
+   * 
+   * @details It casts
+   * - `const std::complex<float>**` to `const cuComplex**` and
+   * - `const std::complex<double>**` to `const cuDoubleComplex**`.
+   *
+   * @tparam T nda::FloatOrDouble type.
+   * @param c Pointer to a pointer to a `const std::complex<T>`.
+   * @return Pointer to a pointer to the equivalent CUDA type at the same address.
+   */
+  template <FloatOrDouble T>
+  cuda_complex_t<T> const **cucplx(std::complex<T> const **c) {
+    return reinterpret_cast<cuda_complex_t<T> const **>(c); // NOLINT
+  }
 
 #else
 
