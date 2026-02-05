@@ -12,10 +12,6 @@
 
 #include "../tools.hpp"
 
-#ifndef NDA_HAVE_CUDA
-#error "CUDA support is not enabled in this build of nda. Please configure and install nda with -DCUDASupport=ON"
-#endif
-
 #ifndef NDA_HAVE_MAGMA
 #include "../../exceptions.hpp"
 #endif // NDA_HAVE_MAGMA

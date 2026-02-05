@@ -10,11 +10,8 @@
 
 #pragma once
 
-#include "../tools.hpp"
-
-#if defined(NDA_HAVE_CUDA)
 #include "./cublas_interface.hpp"
-#endif // NDA_HAVE_CUDA
+#include "../tools.hpp"
 
 namespace nda::blas::f77 {
 
