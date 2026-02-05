@@ -10,13 +10,10 @@
 
 #pragma once
 
+#include "./cusolver_interface.hpp"
 #include "../../blas/tools.hpp"
 
 #include <complex>
-
-#if defined(NDA_HAVE_CUDA)
-#include "./cusolver_interface.hpp"
-#endif
 
 namespace nda::lapack::f77 {
 
