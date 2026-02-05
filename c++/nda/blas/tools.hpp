@@ -29,7 +29,7 @@ namespace nda {
 
 } // namespace nda
 
-namespace nda::blas {
+namespace nda::blas_lapack {
 
   /**
    * @addtogroup linalg_blas_utils
@@ -40,11 +40,11 @@ namespace nda::blas {
   template <typename A>
   static constexpr bool is_conj_array_expr = false;
 
-  /// Specialization of nda::blas::is_conj_array_expr for the conjugate lazy expressions.
+  /// Specialization of nda::blas_lapack::is_conj_array_expr for the conjugate lazy expressions.
   template <MemoryArray A>
   static constexpr bool is_conj_array_expr<expr_call<detail::conj_f, A>> = true;
 
-  // Specialization of nda::blas::is_conj_array_expr for cvref types.
+  // Specialization of nda::blas_lapack::is_conj_array_expr for cvref types.
   template <typename A>
     requires(!std::is_same_v<A, std::remove_cvref_t<A>>)
   static constexpr bool is_conj_array_expr<A> = is_conj_array_expr<std::remove_cvref_t<A>>;
@@ -98,7 +98,7 @@ namespace nda::blas {
   static constexpr char get_op = []() {
     auto constexpr conj      = is_conj_array_expr<A>;
     auto constexpr transpose = has_C_layout<A>;
-    static_assert(!(conj and not transpose), "Error in nda::blas::get_op: Cannot use conjugate operation alone in BLAS operations");
+    static_assert(!(conj and not transpose), "Error in nda::blas_lapack::get_op: Cannot use conjugate operation alone in BLAS operations");
     if constexpr (conj and transpose)
       return 'C';
     else if constexpr (transpose)
@@ -149,4 +149,4 @@ namespace nda::blas {
 
   /** @} */
 
-} // namespace nda::blas
+} // namespace nda::blas_lapack

@@ -62,3 +62,10 @@ namespace nda::blas::f77 {
   void swap(int n, dcomplex *x, int incx, dcomplex *y, int incy); // NOLINT (this is a BLAS swap)
 
 } // namespace nda::blas::f77
+
+namespace nda::blas {
+
+  // Import tools from the blas_lapack namespace.
+  using namespace nda::blas_lapack;
+
+} // namespace nda::blas

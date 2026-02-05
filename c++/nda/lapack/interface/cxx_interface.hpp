@@ -71,28 +71,9 @@ namespace nda::lapack::f77 {
 
 } // namespace nda::lapack::f77
 
-// Useful routines from the BLAS interface
 namespace nda::lapack {
 
-  // See nda::blas::get_ld.
-  using blas::get_ld;
-
-  // See nda::blas::get_ncols.
-  using blas::get_ncols;
-
-  // See nda::blas::get_op.
-  using blas::get_op;
-
-  // See nda::blas::has_C_layout.
-  using blas::has_C_layout;
-
-  // See nda::blas::has_F_layout.
-  using blas::has_F_layout;
-
-  // See nda::blas::is_conj_array_expr.
-  using blas::is_conj_array_expr;
-
-  // See nda::blas::get_array.
-  using blas::get_array;
+  // Import tools from the blas_lapack namespace.
+  using namespace nda::blas_lapack;
 
 } // namespace nda::lapack
