@@ -431,12 +431,12 @@ void test_dot() {
   nda::vector<T> a{1, 2, 3, 4, 5};
   nda::vector<T> b{10, 20, 30, 40, 50};
   if constexpr (nda::is_complex_v<T>) {
-    a *= 1 + 1i;
-    b *= 1 + 2i;
+    a *= T{1 + 1i};
+    b *= T{1 + 2i};
   }
 
   // vector dot vector
-  EXPECT_COMPLEX_NEAR(dot(a, b), exp_dot(a, b), 1.e-14);
+  EXPECT_COMPLEX_NEAR(dot(a, b), exp_dot(a, b), fp_tol<T>);
 
   // size 0 vectors
   EXPECT_EQ(dot(nda::vector<T>{}, nda::vector<T>{}), T(0));
@@ -444,15 +444,19 @@ void test_dot() {
   // strided vector dot strided vector
   auto a_v = a(nda::range(0, 5, 2));
   auto b_v = b(nda::range(0, 5, 2));
-  EXPECT_COMPLEX_NEAR(dot(a_v, b_v), exp_dot(a_v, b_v), 1.e-14);
+  EXPECT_COMPLEX_NEAR(dot(a_v, b_v), exp_dot(a_v, b_v), fp_tol<T>);
 }
 
 TEST(NDA, BLASDot) {
+  test_dot<float, false>();
+  test_dot<std::complex<float>, false>();
   test_dot<double, false>();
   test_dot<std::complex<double>, false>();
 }
 
 TEST(NDA, BLASDotc) {
+  test_dot<float, true>();
+  test_dot<std::complex<float>, true>();
   test_dot<double, true>();
   test_dot<std::complex<double>, true>();
 }

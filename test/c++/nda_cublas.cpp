@@ -413,7 +413,14 @@ TEST(NDA, CUBLASGerc) {
 
 // Test the CUBLAS dot/dotc function.
 template <typename T, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2, bool star>
-void test_dot(auto dot) {
+void test_dot() {
+  auto dot = [](auto &&a, auto &&b) {
+    if constexpr (star) {
+      return nda::blas::dotc(a, b);
+    } else {
+      return nda::blas::dot(a, b);
+    }
+  };
   auto exp_dot = [](auto const &a, auto const &b) {
     T res = 0.0;
     for (size_t i = 0; i < a.size(); ++i) {
@@ -435,37 +442,37 @@ void test_dot(auto dot) {
   auto b_d = to_addr_space<AS2>(b);
 
   // vector dot vector
-  EXPECT_COMPLEX_NEAR(dot(a_d, b_d), exp_dot(a, b), 1.e-14);
+  EXPECT_COMPLEX_NEAR(dot(a_d, b_d), exp_dot(a, b), fp_tol<T>);
 
   // size 0 vectors
   EXPECT_EQ(dot(to_addr_space<AS1>(nda::vector<T>{}), to_addr_space<AS2>(nda::vector<T>{})), T(0));
 
   // strided vector dot strided vector
-  EXPECT_COMPLEX_NEAR(dot(a_d(nda::range(0, 5, 2)), b_d(nda::range(0, 5, 2))), exp_dot(a(nda::range(0, 5, 2)), b(nda::range(0, 5, 2))), 1.e-14);
+  EXPECT_COMPLEX_NEAR(dot(a_d(nda::range(0, 5, 2)), b_d(nda::range(0, 5, 2))), exp_dot(a(nda::range(0, 5, 2)), b(nda::range(0, 5, 2))), fp_tol<T>);
+}
+
+template <typename T, bool star>
+void test_dot_address_spaces() {
+  test_dot<T, Device, Device, star>();
+  test_dot<T, Device, Unified, star>();
+  test_dot<T, Unified, Device, star>();
+  test_dot<T, Unified, Unified, star>();
+  test_dot<T, Unified, Host, star>();
+  test_dot<T, Host, Unified, star>();
 }
 
 TEST(NDA, CUBLASDot) {
-  auto dot = []<typename A, typename B>(A &&a, B &&b) { return nda::blas::dot(std::forward<A>(a), std::forward<B>(b)); };
-  test_dot<double, Device, Device, false>(dot);
-  test_dot<double, Device, Unified, false>(dot);
-  test_dot<double, Unified, Unified, false>(dot);
-  test_dot<double, Unified, Host, false>(dot);
-  test_dot<std::complex<double>, Device, Device, false>(dot);
-  test_dot<std::complex<double>, Unified, Device, false>(dot);
-  test_dot<std::complex<double>, Unified, Unified, false>(dot);
-  test_dot<std::complex<double>, Host, Unified, false>(dot);
+  test_dot_address_spaces<float, false>();
+  test_dot_address_spaces<std::complex<float>, false>();
+  test_dot_address_spaces<double, false>();
+  test_dot_address_spaces<std::complex<double>, false>();
 }
 
 TEST(NDA, CUBLASDotc) {
-  auto dotc = []<typename A, typename B>(A &&a, B &&b) { return nda::blas::dotc(std::forward<A>(a), std::forward<B>(b)); };
-  test_dot<double, Device, Device, true>(dotc);
-  test_dot<double, Device, Unified, true>(dotc);
-  test_dot<double, Unified, Unified, true>(dotc);
-  test_dot<double, Unified, Host, true>(dotc);
-  test_dot<std::complex<double>, Device, Device, true>(dotc);
-  test_dot<std::complex<double>, Unified, Device, true>(dotc);
-  test_dot<std::complex<double>, Unified, Unified, true>(dotc);
-  test_dot<std::complex<double>, Host, Unified, true>(dotc);
+  test_dot_address_spaces<float, true>();
+  test_dot_address_spaces<std::complex<float>, true>();
+  test_dot_address_spaces<double, true>();
+  test_dot_address_spaces<std::complex<double>, true>();
 }
 
 // Test the CUBLAS scal function.
