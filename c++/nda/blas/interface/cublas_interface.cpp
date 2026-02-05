@@ -148,6 +148,22 @@ namespace nda::blas::device {
     CUBLAS_CHECK(cublasZcopy, n, cucplx(x), incx, cucplx(y), incy);
   }
 
+  // dot and dotc
+  float dot(int m, const float *x, int incx, const float *y, int incy) {
+    float res{};
+    CUBLAS_CHECK(cublasSdot, m, x, incx, y, incy, &res);
+    return res;
+  }
+  std::complex<float> dot(int m, const std::complex<float> *x, int incx, const std::complex<float> *y, int incy) {
+    cuComplex res;
+    CUBLAS_CHECK(cublasCdotu, m, cucplx(x), incx, cucplx(y), incy, &res);
+    return {res.x, res.y};
+  }
+  std::complex<float> dotc(int m, const std::complex<float> *x, int incx, const std::complex<float> *y, int incy) {
+    cuComplex res;
+    CUBLAS_CHECK(cublasCdotc, m, cucplx(x), incx, cucplx(y), incy, &res);
+    return {res.x, res.y};
+  }
   double dot(int m, const double *x, int incx, const double *y, int incy) {
     double res{};
     CUBLAS_CHECK(cublasDdot, m, x, incx, y, incy, &res);

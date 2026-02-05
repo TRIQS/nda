@@ -21,6 +21,9 @@ namespace nda::blas::f77 {
   void copy(int n, const double *x, int incx, double *y, int incy);
   void copy(int n, const std::complex<double> *x, int incx, std::complex<double> *y, int incy);
 
+  float dot(int m, const float *x, int incx, const float *y, int incy);
+  std::complex<float> dot(int m, const std::complex<float> *x, int incx, const std::complex<float> *y, int incy);
+  std::complex<float> dotc(int m, const std::complex<float> *x, int incx, const std::complex<float> *y, int incy);
   double dot(int m, const double *x, int incx, const double *y, int incy);
   std::complex<double> dot(int m, const std::complex<double> *x, int incx, const std::complex<double> *y, int incy);
   std::complex<double> dotc(int m, const std::complex<double> *x, int incx, const std::complex<double> *y, int incy);

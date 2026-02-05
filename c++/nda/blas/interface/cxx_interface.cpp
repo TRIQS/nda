@@ -41,7 +41,13 @@ namespace nda::blas {
 
 namespace {
 
-  // complex struct which is returned by BLAS functions
+  // single-precision complex struct which is returned by BLAS functions
+  struct nda_complex_float {
+    float real;
+    float imag;
+  };
+
+  // double-precision complex struct which is returned by BLAS functions
   struct nda_complex_double {
     double real;
     double imag;
@@ -50,10 +56,18 @@ namespace {
 } // namespace
 
 // manually define dot routines since cblas_f77.h uses "_sub" to wrap the Fortran routines
+#define F77_sdot F77_GLOBAL(sdot, SDOT)
+#define F77_cdotu F77_GLOBAL(cdotu, CDOTU)
+#define F77_cdotc F77_GLOBAL(cdotc, CDOTC)
 #define F77_ddot F77_GLOBAL(ddot, DDOT)
 #define F77_zdotu F77_GLOBAL(zdotu, ZDOTU)
 #define F77_zdotc F77_GLOBAL(zdotc, ZDOTC)
+
 extern "C" {
+float F77_sdot(FINT, const float *, FINT, const float *, FINT);
+nda_complex_float F77_cdotu(FINT, const float *, FINT, const float *, FINT);
+nda_complex_float F77_cdotc(FINT, const float *, FINT, const float *, FINT);
+
 double F77_ddot(FINT, const double *, FINT, const double *, FINT);
 nda_complex_double F77_zdotu(FINT, const double *, FINT, const double *, FINT);
 nda_complex_double F77_zdotc(FINT, const double *, FINT, const double *, FINT);
@@ -82,6 +96,26 @@ namespace nda::blas::f77 {
     F77_zcopy(&n, blacplx(x), &incx, blacplx(y), &incy);
   }
 
+  // dot and dotc
+  float dot(int m, const float *x, int incx, const float *y, int incy) { return F77_sdot(&m, x, &incx, y, &incy); }
+  std::complex<float> dot(int m, const std::complex<float> *x, int incx, const std::complex<float> *y, int incy) {
+#ifdef NDA_USE_MKL
+    MKL_Complex8 result;
+    cblas_cdotu_sub(m, mklcplx(x), incx, mklcplx(y), incy, &result);
+#else
+    auto result = F77_cdotu(&m, blacplx(x), &incx, blacplx(y), &incy);
+#endif
+    return std::complex<float>{result.real, result.imag};
+  }
+  std::complex<float> dotc(int m, const std::complex<float> *x, int incx, const std::complex<float> *y, int incy) {
+#ifdef NDA_USE_MKL
+    MKL_Complex8 result;
+    cblas_cdotc_sub(m, mklcplx(x), incx, mklcplx(y), incy, &result);
+#else
+    auto result = F77_cdotc(&m, blacplx(x), &incx, blacplx(y), &incy);
+#endif
+    return std::complex<float>{result.real, result.imag};
+  }
   double dot(int m, const double *x, int incx, const double *y, int incy) { return F77_ddot(&m, x, &incx, y, &incy); }
   std::complex<double> dot(int m, const std::complex<double> *x, int incx, const std::complex<double> *y, int incy) {
 #ifdef NDA_USE_MKL
