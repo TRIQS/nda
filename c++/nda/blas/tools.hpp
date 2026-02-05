@@ -11,8 +11,12 @@
 #pragma once
 
 #include "../concepts.hpp"
+#include "../declarations.hpp"
 #include "../map.hpp"
 #include "../mapped_functions.hpp"
+#include "../mem/address_space.hpp"
+#include "../mem/policies.hpp"
+#include "../traits.hpp"
 
 #include <complex>
 #include <tuple>
@@ -67,25 +71,25 @@ namespace nda::blas_lapack {
     }
   }
 
-  /// Constexpr variable that is true if the given nda::Array type has nda::F_layout.
-  template <Array A>
-    requires(MemoryArray<A> or is_conj_array_expr<A>)
-  static constexpr bool has_F_layout = []() {
+  /// Constexpr variable that is true if all given nda::Array types have nda::F_layout.
+  template <Array... As>
+    requires((MemoryArray<As> or is_conj_array_expr<As>) and ...)
+  static constexpr bool has_F_layout = ([]<typename A>() constexpr {
     if constexpr (is_conj_array_expr<A>)
       return has_F_layout<decltype(std::get<0>(std::declval<A>().a))>;
     else
       return std::remove_cvref_t<A>::is_stride_order_Fortran();
-  }();
+  }.template operator()<As>() and ...);
 
-  /// Constexpr variable that is true if the given nda::Array type has nda::C_layout.
-  template <Array A>
-    requires(MemoryArray<A> or is_conj_array_expr<A>)
-  static constexpr bool has_C_layout = []() {
+  /// Constexpr variable that is true if all given nda::Array types have nda::C_layout.
+  template <Array... As>
+    requires((MemoryArray<As> or is_conj_array_expr<As>) and ...)
+  static constexpr bool has_C_layout = ([]<typename A>() constexpr {
     if constexpr (is_conj_array_expr<A>)
       return has_C_layout<decltype(std::get<0>(std::declval<A>().a))>;
     else
       return std::remove_cvref_t<A>::is_stride_order_C();
-  }();
+  }.template operator()<As>() and ...);
 
   /**
    * @brief Variable template that determines the BLAS matrix operation tag ('N','T','C') based on the given boolean
@@ -146,6 +150,105 @@ namespace nda::blas_lapack {
       return a.shape()[has_F_layout<A> ? 1 : 0];
     }
   }
+
+  /**
+   * @brief Alias for an nda::vector with the same value type and address space as the given type.
+   * @tparam A nda::MemoryArray type.
+   */
+  template <MemoryArray A>
+  using vector_value_t = vector<get_value_t<A>, heap<mem::get_addr_space<A>>>;
+
+  /**
+   * @brief Alias for an nda::vector with the same address space as the given type and its value type determined by
+   * `nda::get_fp_t<A>`.
+   *
+   * @tparam A nda::MemoryArray type.
+   */
+  template <MemoryArray A>
+  using vector_fp_t = vector<get_fp_t<A>, heap<mem::get_addr_space<A>>>;
+
+  /**
+   * @brief BLAS/LAPACK compatible array type.
+   * 
+   * @tparam A Array type.
+   * @tparam R Optional required rank.
+   */
+  template <typename A, int R = -1>
+  concept BlasArray = (R == -1 ? MemoryArray<A> : MemoryArrayOfRank<A, R>) and is_blas_lapack_v<get_value_t<A>>;
+
+  /**
+   * @brief BLAS/LAPACK compatible array type with real value type.
+   * 
+   * @tparam A Array type.
+   * @tparam R Optional required rank.
+   */
+  template <typename A, int R = -1>
+  concept BlasArrayReal = BlasArray<A, R> and AnyOf<get_value_t<A>, float, double>;
+
+  /**
+   * @brief BLAS/LAPACK compatible array type with complex value type.
+   * 
+   * @tparam A Array type.
+   * @tparam R Optional required rank.
+   */
+  template <typename A, int R = -1>
+  concept BlasArrayCplx = BlasArray<A, R> and AnyOf<get_value_t<A>, std::complex<float>, std::complex<double>>;
+
+  /**
+   * @brief BLAS/LAPACK compatible array or conjugate lazy expression type.
+   * 
+   * @tparam A Array type.
+   * @tparam R Optional required rank.
+   */
+  template <typename A, int R = -1>
+  concept BlasArrayOrConj =
+     BlasArray<A, R> or ((R == -1 ? Array<A> : ArrayOfRank<A, R>) and is_conj_array_expr<A> and is_blas_lapack_v<get_value_t<A>>);
+
+  /**
+   * @brief BLAS/LAPACK compatible array type that has the same value type as the reference array type and a compatible
+   * address space.
+   *
+   * @tparam A Array type.
+   * @tparam B Reference array type.
+   * @tparam R Optional required rank.
+   */
+  template <typename A, typename B, int R = -1>
+  concept BlasArrayFor = BlasArrayOrConj<B> and BlasArray<A, R> and have_same_value_type_v<A, B> and mem::have_compatible_addr_space<A, B>;
+
+  /**
+   * @brief BLAS/LAPACK compatible array or conjugate lazy expression type that has the same value type as the reference 
+   * array type and a compatible address space.
+   *
+   * @tparam A Array type.
+   * @tparam B Reference array type.
+   * @tparam R Optional required rank.
+   */
+  template <typename A, typename B, int R = -1>
+  concept BlasArrayOrConjFor =
+     BlasArrayOrConj<B> and BlasArrayOrConj<A, R> and have_same_value_type_v<A, B> and mem::have_compatible_addr_space<A, B>;
+
+  /**
+   * @brief BLAS/LAPACK compatible pivot array type that has a compatible address space with the reference array type.
+   *
+   * @tparam A Array type.
+   * @tparam B Reference array type.
+   * @tparam R Optional required rank.
+   */
+  template <typename A, typename B, int R = -1>
+  concept PivotArrayFor = BlasArrayOrConj<B> and (R == -1 ? MemoryArray<A> : MemoryArrayOfRank<A, R>)
+     and std::is_same_v<get_value_t<A>, int> and mem::have_compatible_addr_space<A, B>;
+
+  /**
+   * @brief BLAS/LAPACK compatible array type that has a compatible floating-point value type and address space with the 
+   * reference array type.
+   *
+   * @tparam A Array type.
+   * @tparam B Reference array type.
+   * @tparam R Optional required rank.
+   */
+  template <typename A, typename B, int R = -1>
+  concept BlasArrayRealFor =
+     BlasArrayOrConj<B> and BlasArray<A, R> and std::is_same_v<get_value_t<A>, get_fp_t<B>> and mem::have_compatible_addr_space<A, B>;
 
   /** @} */
 
