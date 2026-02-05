@@ -26,6 +26,11 @@ namespace nda::blas {
 #ifdef NDA_USE_MKL_RT
   static int const mkl_interface_layer = mkl_set_interface_layer(MKL_INTERFACE_LP64 + MKL_INTERFACE_GNU);
 #endif
+  inline auto *mklcplx(std::complex<float> *c) { return reinterpret_cast<MKL_Complex8 *>(c); }               // NOLINT
+  inline auto *mklcplx(std::complex<float> const *c) { return reinterpret_cast<const MKL_Complex8 *>(c); }   // NOLINT
+  inline auto *mklcplx(std::complex<float> **c) { return reinterpret_cast<MKL_Complex8 **>(c); }             // NOLINT
+  inline auto *mklcplx(std::complex<float> const **c) { return reinterpret_cast<const MKL_Complex8 **>(c); } // NOLINT
+
   inline auto *mklcplx(std::complex<double> *c) { return reinterpret_cast<MKL_Complex16 *>(c); }               // NOLINT
   inline auto *mklcplx(std::complex<double> const *c) { return reinterpret_cast<const MKL_Complex16 *>(c); }   // NOLINT
   inline auto *mklcplx(std::complex<double> **c) { return reinterpret_cast<MKL_Complex16 **>(c); }             // NOLINT
@@ -55,6 +60,11 @@ nda_complex_double F77_zdotc(FINT, const double *, FINT, const double *, FINT);
 }
 
 namespace nda::blas::f77 {
+
+  inline auto *blacplx(std::complex<float> *c) { return reinterpret_cast<float *>(c); }                // NOLINT
+  inline auto *blacplx(std::complex<float> const *c) { return reinterpret_cast<const float *>(c); }    // NOLINT
+  inline auto **blacplx(std::complex<float> **c) { return reinterpret_cast<float **>(c); }             // NOLINT
+  inline auto **blacplx(std::complex<float> const **c) { return reinterpret_cast<const float **>(c); } // NOLINT
 
   inline auto *blacplx(std::complex<double> *c) { return reinterpret_cast<double *>(c); }                // NOLINT
   inline auto *blacplx(std::complex<double> const *c) { return reinterpret_cast<const double *>(c); }    // NOLINT
@@ -188,6 +198,9 @@ namespace nda::blas::f77 {
     F77_zgerc(&m, &n, blacplx(&alpha), blacplx(x), &incx, blacplx(y), &incy, blacplx(a), &lda);
   }
 
+  // scal
+  void scal(int m, float alpha, float *x, int incx) { F77_sscal(&m, &alpha, x, &incx); }
+  void scal(int m, std::complex<float> alpha, std::complex<float> *x, int incx) { F77_cscal(&m, blacplx(&alpha), blacplx(x), &incx); }
   void scal(int m, double alpha, double *x, int incx) { F77_dscal(&m, &alpha, x, &incx); }
   void scal(int m, std::complex<double> alpha, std::complex<double> *x, int incx) { F77_zscal(&m, blacplx(&alpha), blacplx(x), &incx); }
 

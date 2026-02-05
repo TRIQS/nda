@@ -469,39 +469,50 @@ TEST(NDA, CUBLASDotc) {
 }
 
 // Test the CUBLAS scal function.
-template <nda::mem::AddressSpace AS>
+template <typename T, nda::mem::AddressSpace AS>
 void test_scal() {
-  // empty vector
-  nda::vector<double> v;
-  auto v_d = to_addr_space<AS>(v);
-  nda::blas::scal(3.0, v_d);
-  EXPECT_TRUE(v_d.empty());
+  using fp_t = nda::get_fp_t<T>;
 
-  // scale a double vector by a double
-  v   = {1, 2, 3, 4, 5};
-  v_d = to_addr_space<AS>(v);
-  nda::blas::scal(3.0, v_d);
-  EXPECT_ARRAY_NEAR(nda::to_host(v_d), 3.0 * v);
+  // scale an empty vector
+  nda::vector<T> v_empty;
+  auto v_empty_d = to_addr_space<AS>(v_empty);
+  nda::blas::scal(3.0, v_empty_d);
+  EXPECT_TRUE(v_empty_d.empty());
 
-  // scale a double vector by an integer
-  v_d = to_addr_space<AS>(v);
-  nda::blas::scal(3, v_d);
-  EXPECT_ARRAY_NEAR(nda::to_host(v_d), 3 * v);
+  // prepare an input vector
+  nda::vector<T> v{1, 2, 3, 4, 5};
+  if constexpr (nda::is_complex_v<T>) { v *= T{1 - 1i}; }
 
-  // scale a complex double vector by a double
-  auto vc = nda::vector<std::complex<double>>{1, 2, 3, 4, 5};
-  vc *= 1 - 1i;
-  auto vc_d = to_addr_space<AS>(vc);
-  nda::blas::scal(3.0, vc_d);
-  EXPECT_ARRAY_NEAR(nda::to_host(vc_d), 3.0 * vc);
+  // scale by a scalar float
+  auto v1_d = to_addr_space<AS>(v);
+  fp_t xfp  = 3.0;
+  nda::blas::scal(xfp, v1_d);
+  EXPECT_ARRAY_NEAR(nda::to_host(v1_d), xfp * v, fp_tol<T>);
 
-  // scale by a complex double
-  vc_d = to_addr_space<AS>(vc);
-  nda::blas::scal(3.0 + 2.0i, vc_d);
-  EXPECT_ARRAY_NEAR(nda::to_host(vc_d), (3.0 + 2.0i) * vc);
+  // scale by an integer
+  auto v2_d = to_addr_space<AS>(v);
+  int xi    = 3;
+  nda::blas::scal(xi, v2_d);
+  EXPECT_ARRAY_NEAR(nda::to_host(v2_d), xi * v, fp_tol<T>);
+
+  // scale by a complex scalar if T is complex
+  if constexpr (nda::is_complex_v<T>) {
+    auto v3_d = to_addr_space<AS>(v);
+    auto xcp  = T{3.0 + 2.0i};
+    nda::blas::scal(xcp, v3_d);
+    EXPECT_ARRAY_NEAR(nda::to_host(v3_d), xcp * v, fp_tol<T>);
+  }
+}
+
+template <typename T>
+void test_scal_address_spaces() {
+  test_scal<T, Device>();
+  test_scal<T, Unified>();
 }
 
 TEST(NDA, CUBLASScal) {
-  test_scal<Device>();
-  test_scal<Unified>();
+  test_scal_address_spaces<float>();
+  test_scal_address_spaces<std::complex<float>>();
+  test_scal_address_spaces<double>();
+  test_scal_address_spaces<std::complex<double>>();
 }

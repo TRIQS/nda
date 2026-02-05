@@ -458,41 +458,43 @@ TEST(NDA, BLASDotc) {
 }
 
 // Test the BLAS scal function.
-TEST(NDA, BLASScalEmptyVector) {
-  nda::vector<double> v;
-  nda::blas::scal(3.0, v);
-  EXPECT_TRUE(v.empty());
-}
+template <typename T>
+void test_scal() {
+  using fp_t = nda::get_fp_t<T>;
 
-TEST(NDA, BLASScalDouble) {
-  nda::vector<double> v{1, 2, 3, 4, 5};
+  // scale an empty vector
+  nda::vector<T> v_empty;
+  nda::blas::scal(3.0, v_empty);
+  EXPECT_TRUE(v_empty.empty());
 
-  // scale by a double
-  auto v1 = v;
-  auto xd = 3.0;
-  nda::blas::scal(xd, v1);
-  EXPECT_ARRAY_NEAR(v1, xd * v);
+  // prepare an input vector
+  nda::vector<T> v{1, 2, 3, 4, 5};
+  if constexpr (nda::is_complex_v<T>) { v *= T{1 - 1i}; }
+
+  // scale by a scalar float
+  auto v1  = v;
+  fp_t xfp = 3.0;
+  nda::blas::scal(xfp, v1);
+  EXPECT_ARRAY_NEAR(v1, xfp * v, fp_tol<T>);
 
   // scale by an integer
   auto v2 = v;
-  auto xi = 3;
+  int xi  = 3;
   nda::blas::scal(xi, v2);
-  EXPECT_ARRAY_NEAR(v2, xi * v);
+  EXPECT_ARRAY_NEAR(v2, xi * v, fp_tol<T>);
+
+  // scale by a complex scalar if T is complex
+  if constexpr (nda::is_complex_v<T>) {
+    auto v3  = v;
+    auto xcp = T{3.0 + 2.0i};
+    nda::blas::scal(xcp, v3);
+    EXPECT_ARRAY_NEAR(v3, xcp * v, fp_tol<T>);
+  }
 }
 
-TEST(NDA, BLASScalComplex) {
-  nda::vector<std::complex<double>> v{1, 2, 3, 4, 5};
-  v *= 1 - 1i;
-
-  // scale by a double
-  auto v1 = v;
-  auto xd = 3.0;
-  nda::blas::scal(xd, v1);
-  EXPECT_ARRAY_NEAR(v1, xd * v);
-
-  // scale by a complex double
-  auto v2 = v;
-  auto xc = 3.0 + 2.0i;
-  nda::blas::scal(xc, v2);
-  EXPECT_ARRAY_NEAR(v2, xc * v);
+TEST(NDA, BLASScal) {
+  test_scal<float>();
+  test_scal<std::complex<float>>();
+  test_scal<double>();
+  test_scal<std::complex<double>>();
 }
