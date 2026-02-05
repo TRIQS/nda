@@ -47,6 +47,14 @@ TEST(NDA, TraitsGeneral) {
 
   static_assert(nda::is_double_or_complex_v<double const>);
   static_assert(not nda::is_double_or_complex_v<float>);
+  static_assert(nda::is_double_or_complex_v<std::complex<double>>);
+  static_assert(nda::is_double_or_complex_v<std::complex<float>>);
+
+  static_assert(nda::is_blas_lapack_v<double>);
+  static_assert(nda::is_blas_lapack_v<std::complex<double>>);
+  static_assert(nda::is_blas_lapack_v<float>);
+  static_assert(nda::is_blas_lapack_v<std::complex<float>>);
+  static_assert(not nda::is_blas_lapack_v<long>);
 }
 
 TEST(NDA, TraitsNDASpecific) {
@@ -85,6 +93,13 @@ TEST(NDA, TraitsNDASpecific) {
 
   static_assert(std::is_same_v<nda::get_value_t<int>, int>);
   static_assert(std::is_same_v<nda::get_value_t<nda::vector<double>>, double>);
+
+  static_assert(std::is_same_v<nda::get_fp_t<float>, float>);
+  static_assert(std::is_same_v<nda::get_fp_t<double>, double>);
+  static_assert(std::is_same_v<nda::get_fp_t<std::complex<float>>, float>);
+  static_assert(std::is_same_v<nda::get_fp_t<std::complex<double>>, double>);
+  static_assert(std::is_same_v<nda::get_fp_t<const nda::array<std::complex<double>, 3>>, double>);
+  static_assert(std::is_same_v<nda::get_fp_t<nda::vector<float> &>, float>);
 
   static_assert(nda::have_same_value_type_v<int, nda::vector<int>, nda::array_view<int, 2>>);
   static_assert(not nda::have_same_value_type_v<int, nda::vector<double>, nda::array_view<int, 2>>);

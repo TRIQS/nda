@@ -90,6 +90,13 @@ namespace nda {
   concept DoubleOrComplex = nda::is_double_or_complex_v<S>;
 
   /**
+   * @brief Check if a given type is either a float or double type.
+   * @tparam S Type to check.
+   */
+  template <typename S>
+  concept FloatOrDouble = std::same_as<float, std::remove_cvref_t<S>> or std::same_as<double, std::remove_cvref_t<S>>;
+
+  /**
    * @brief Check if a given type is an instantiation of some other template type.
    *
    * @details See nda::is_instantiation_of for more information.

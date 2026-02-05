@@ -87,9 +87,30 @@ namespace nda {
   template <typename T>
   inline constexpr bool is_double_or_complex_v = is_complex_v<T> or std::is_same_v<double, std::remove_cvref_t<T>>;
 
-  /// Alias for nda::is_double_or_complex_v.
+  /**
+   * @brief Constexpr variable that is true if type `T` is either of type 'float', `double`, std::complex<float>' or 
+   * `std::complex<double>`.
+   */
   template <typename T>
-  inline constexpr bool is_blas_lapack_v = is_double_or_complex_v<T>;
+  inline constexpr bool is_blas_lapack_v =
+     std::is_same_v<double, std::remove_cvref_t<T>> or std::is_same_v<std::complex<double>, std::remove_cvref_t<T>>
+     or std::is_same_v<float, std::remove_cvref_t<T>> or std::is_same_v<std::complex<float>, std::remove_cvref_t<T>>;
+
+  /**
+   * @brief Trait that removes `std::complex` from a type and exposes its underlying value type.
+   * @details In case the given type is not a `std::complex`, the type itself is exposed.
+   * @tparam T Type to remove `std::complex` from.
+   */
+  template <typename T>
+  struct remove_complex {
+    using type = T;
+  };
+
+  // Specialization of nda::remove_complex for std::complex types.
+  template <typename T>
+  struct remove_complex<std::complex<T>> {
+    using type = T;
+  };
 
   /** @} */
 
@@ -189,6 +210,15 @@ namespace nda {
    */
   template <typename A>
   using get_value_t = std::decay_t<decltype(get_first_element(std::declval<A const>()))>;
+
+  /**
+   * @brief Get the floating-point type associated with the value type of an array/view/scalar type.
+   * @details It uses nda::remove_complex to strip the complex type of the nda::get_value_t.
+   * @tparam A Array/View/Scalar type.
+   */
+  template <typename A>
+    requires(is_complex_v<get_value_t<A>> or std::is_floating_point_v<get_value_t<A>>)
+  using get_fp_t = typename remove_complex<get_value_t<A>>::type;
 
   /// Constexpr variable that is true if all types in `As` have the same value type as `A0`.
   template <typename A0, typename... As>

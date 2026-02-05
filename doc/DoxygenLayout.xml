@@ -191,6 +191,7 @@
           <tab type="user" url="@ref nda::AnyOf" title="AnyOf"/>
           <tab type="user" url="@ref nda::CallableWithLongs" title="CallableWithLongs"/>
           <tab type="user" url="@ref nda::DoubleOrComplex" title="DoubleOrComplex"/>
+          <tab type="user" url="@ref nda::FloatOrDouble" title="FloatOrDouble"/>
           <tab type="user" url="@ref nda::InstantiationOf" title="InstantiationOf"/>
           <tab type="user" url="@ref nda::Scalar" title="Scalar"/>
           <tab type="user" url="@ref nda::StdArrayOfLong" title="StdArrayOfLong"/>
@@ -201,6 +202,7 @@
         <tab type="user" url="@ref utils_perms" title="Permutations"/>
         <tab type="usergroup" url="@ref utils_type_traits" title="Type traits">
           <tab type="user" url="@ref nda::is_instantiation_of" title="is_instantiation_of"/>
+          <tab type="user" url="@ref nda::remove_complex" title="remove_complex"/>
         </tab>
       </tab>
       <tab type="filelist" visible="yes" title="" intro=""/>

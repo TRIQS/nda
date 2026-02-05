@@ -20,14 +20,37 @@ struct callable {
 struct not_callable {};
 
 TEST(NDA, ConceptsGeneral) {
+  static_assert(nda::AnyOf<int, int, double>);
+  static_assert(not nda::AnyOf<float, int, double>);
+  static_assert(not nda::AnyOf<int>);
+
   static_assert(nda::CallableWithLongs<callable, 3>);
   static_assert(not nda::CallableWithLongs<callable, 2>);
   static_assert(not nda::CallableWithLongs<not_callable, 0>);
   static_assert(nda::CallableWithLongs<nda::array<double, 5>, 5>);
 
+  static_assert(nda::DoubleOrComplex<double>);
+  static_assert(nda::DoubleOrComplex<std::complex<double>>);
+  static_assert(nda::DoubleOrComplex<std::complex<float>>);
+  static_assert(not nda::DoubleOrComplex<float>);
+
+  static_assert(nda::InstantiationOf<std::complex<double>, std::complex>);
+  static_assert(nda::InstantiationOf<std::vector<int>, std::vector>);
+  static_assert(not nda::InstantiationOf<int, std::vector>);
+
+  static_assert(nda::Scalar<long>);
+  static_assert(nda::Scalar<double>);
+  static_assert(nda::Scalar<std::complex<float>>);
+  static_assert(not nda::Scalar<std::array<int, 3>>);
+
   static_assert(nda::StdArrayOfLong<std::array<long, 2>>);
   static_assert(not nda::StdArrayOfLong<std::array<int, 4>>);
   static_assert(not nda::StdArrayOfLong<std::vector<long>>);
+
+  static_assert(nda::FloatOrDouble<float>);
+  static_assert(nda::FloatOrDouble<double>);
+  static_assert(not nda::FloatOrDouble<int>);
+  static_assert(not nda::FloatOrDouble<std::complex<double>>);
 }
 
 TEST(NDA, ConceptsNDASpecific) {
