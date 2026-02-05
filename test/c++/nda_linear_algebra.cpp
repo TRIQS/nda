@@ -579,28 +579,54 @@ TEST(NDA, LinearAlgebraNormExample) {
 // Test the outer product function.
 template <typename T, typename Layout>
 void test_outer_product() {
+  using namespace nda::blas_lapack;
+
   // outer product of two arrays
   auto A = nda::array<T, 2, Layout>::rand(2, 3);
   auto B = nda::array<T, 3, Layout>::rand(4, 5, 6);
   auto C = nda::array<T, 5, Layout>(2, 3, 4, 5, 6);
   for (auto [i, j] : A.indices())
     for (auto [k, l, m] : B.indices()) C(i, j, k, l, m) = A(i, j) * B(k, l, m);
-  EXPECT_ARRAY_NEAR(C, nda::linalg::outer_product(A, B));
+  EXPECT_ARRAY_NEAR(C, nda::linalg::outer_product(A, B), fp_tol<T>);
 
   // outer product of two vectors
   nda::vector<T> v{1, 2};
   nda::vector<T> w{3, 4, 5};
   auto M = nda::linalg::outer_product(v, w);
   static_assert(nda::get_algebra<decltype(M)> == 'M');
-  static_assert(nda::blas::has_C_layout<decltype(M)>);
-  EXPECT_ARRAY_NEAR(nda::matrix<T>{{3, 4, 5}, {6, 8, 10}}, M);
+  static_assert(has_C_layout<decltype(M)>);
+  EXPECT_ARRAY_NEAR(nda::matrix<T>{{3, 4, 5}, {6, 8, 10}}, M, fp_tol<T>);
+
+  // outer product of a vector and an array
+  auto D = nda::linalg::outer_product(v, A);
+  static_assert(nda::get_algebra<decltype(D)> == 'A');
+  static_assert(has_C_layout<decltype(D)> == has_C_layout<decltype(A)>);
+  auto D_exp = nda::array<T, 3, Layout>(2, 2, 3);
+  for (auto i : nda::range(2))
+    for (auto [j, k] : A.indices()) D_exp(i, j, k) = v(i) * A(j, k);
+  EXPECT_ARRAY_NEAR(D, D_exp, fp_tol<T>);
+
+  // outer product of an array and a vector
+  auto E = nda::linalg::outer_product(A, v);
+  static_assert(nda::get_algebra<decltype(E)> == 'A');
+  static_assert(has_C_layout<decltype(E)> == has_C_layout<decltype(A)>);
+  auto E_exp = nda::array<T, 3, Layout>(2, 3, 2);
+  for (auto [i, j] : A.indices())
+    for (auto k : nda::range(2)) E_exp(i, j, k) = A(i, j) * v(k);
+  EXPECT_ARRAY_NEAR(E, E_exp, fp_tol<T>);
+}
+
+template <typename T>
+void test_outer_product_layouts() {
+  test_outer_product<T, C_layout>();
+  test_outer_product<T, F_layout>();
 }
 
 TEST(NDA, LinearAlgebraOuterProduct) {
-  test_outer_product<double, nda::C_layout>();
-  test_outer_product<double, nda::F_layout>();
-  test_outer_product<std::complex<double>, nda::C_layout>();
-  test_outer_product<std::complex<double>, nda::F_layout>();
+  test_outer_product_layouts<float>();
+  test_outer_product_layouts<std::complex<float>>();
+  test_outer_product_layouts<double>();
+  test_outer_product_layouts<std::complex<double>>();
 }
 
 // Test the generic solve and solve_in_place functions.

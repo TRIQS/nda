@@ -283,6 +283,8 @@ TEST(NDA, CULinearAlgebraInv) {
 // Test the outer product function.
 template <typename T, typename Layout, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
 void test_outer_product() {
+  using namespace nda::blas_lapack;
+
   // outer product of two arrays
   auto A = nda::array<T, 2, Layout>::rand(2, 3);
   auto B = nda::array<T, 3, Layout>::rand(4, 5, 6);
@@ -291,7 +293,7 @@ void test_outer_product() {
     for (auto [k, l, m] : B.indices()) C(i, j, k, l, m) = A(i, j) * B(k, l, m);
   auto A_d = to_addr_space<AS1>(A);
   auto B_d = to_addr_space<AS2>(B);
-  EXPECT_ARRAY_NEAR(C, nda::to_host(nda::linalg::outer_product(A_d, B_d)));
+  EXPECT_ARRAY_NEAR(C, nda::to_host(nda::linalg::outer_product(A_d, B_d)), fp_tol<T>);
 
   // outer product of two vectors
   nda::vector<T> v{1, 2};
@@ -300,17 +302,49 @@ void test_outer_product() {
   auto w_d = to_addr_space<AS2>(w);
   auto M_d = nda::linalg::outer_product(v_d, w_d);
   static_assert(nda::get_algebra<decltype(M_d)> == 'M');
-  static_assert(nda::blas::has_C_layout<decltype(M_d)>);
-  EXPECT_ARRAY_NEAR(nda::matrix<T>{{3, 4, 5}, {6, 8, 10}}, nda::to_host(M_d));
+  static_assert(nda::blas_lapack::has_C_layout<decltype(M_d)>);
+  EXPECT_ARRAY_NEAR(nda::matrix<T>{{3, 4, 5}, {6, 8, 10}}, nda::to_host(M_d), fp_tol<T>);
+
+  // outer product of a vector and an array
+  auto D_d = nda::linalg::outer_product(v_d, A_d);
+  static_assert(nda::get_algebra<decltype(D_d)> == 'A');
+  static_assert(has_C_layout<decltype(D_d)> == has_C_layout<decltype(A_d)>);
+  auto D_exp = nda::array<T, 3, Layout>(2, 2, 3);
+  for (auto i : nda::range(2))
+    for (auto [j, k] : A.indices()) D_exp(i, j, k) = v(i) * A(j, k);
+  EXPECT_ARRAY_NEAR(nda::to_host(D_d), D_exp, fp_tol<T>);
+
+  // outer product of an array and a vector
+  auto E_d = nda::linalg::outer_product(A_d, v_d);
+  static_assert(nda::get_algebra<decltype(E_d)> == 'A');
+  static_assert(has_C_layout<decltype(E_d)> == has_C_layout<decltype(A_d)>);
+  auto E_exp = nda::array<T, 3, Layout>(2, 3, 2);
+  for (auto [i, j] : A.indices())
+    for (auto k : nda::range(2)) E_exp(i, j, k) = A(i, j) * v(k);
+  EXPECT_ARRAY_NEAR(nda::to_host(E_d), E_exp, fp_tol<T>);
+}
+
+template <typename T, typename Layout>
+void test_outer_product_address_spaces() {
+  test_outer_product<T, Layout, Device, Device>();
+  test_outer_product<T, Layout, Device, Unified>();
+  test_outer_product<T, Layout, Unified, Device>();
+  test_outer_product<T, Layout, Unified, Unified>();
+  test_outer_product<T, Layout, Unified, Host>();
+  test_outer_product<T, Layout, Host, Unified>();
+}
+
+template <typename T>
+void test_outer_product_layouts() {
+  test_outer_product_address_spaces<T, C_layout>();
+  test_outer_product_address_spaces<T, F_layout>();
 }
 
 TEST(NDA, CULinearAlgebraOuterProduct) {
-  test_outer_product<double, nda::C_layout, nda::mem::Device, nda::mem::Device>();
-  test_outer_product<double, nda::F_layout, nda::mem::Device, nda::mem::Unified>();
-  test_outer_product<std::complex<double>, nda::C_layout, nda::mem::Unified, nda::mem::Device>();
-  test_outer_product<std::complex<double>, nda::F_layout, nda::mem::Unified, nda::mem::Unified>();
-  test_outer_product<double, nda::C_layout, nda::mem::Unified, nda::mem::Host>();
-  test_outer_product<std::complex<double>, nda::F_layout, nda::mem::Host, nda::mem::Unified>();
+  test_outer_product_layouts<float>();
+  test_outer_product_layouts<std::complex<float>>();
+  test_outer_product_layouts<double>();
+  test_outer_product_layouts<std::complex<double>>();
 }
 
 // Test the generic solve and solve_in_place functions.
