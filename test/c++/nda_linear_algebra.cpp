@@ -16,6 +16,7 @@
 #include <vector>
 
 using namespace std::complex_literals;
+using nda::C_layout, nda::F_layout;
 
 // Test the generic dot/dotc function.
 auto exp_dot(auto const &a, auto const &b) {
@@ -38,39 +39,49 @@ TEST(NDA, LinearAlgebraDotProduct) {
   EXPECT_EQ(nda::linalg::dotc(1, 2), 2);
   EXPECT_DOUBLE_EQ(nda::linalg::dot(2, -5.0), -10.0);
   EXPECT_DOUBLE_EQ(nda::linalg::dotc(2, -5.0), -10.0);
-  EXPECT_COMPLEX_NEAR(nda::linalg::dot(u, v), u * v);
-  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(u, v), std::conj(u) * v);
+  EXPECT_COMPLEX_NEAR(nda::linalg::dot(u, v), u * v, fp_tol<double>);
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(u, v), std::conj(u) * v, fp_tol<double>);
 
   // BLAS compatible vectors
   nda::vector<double> a{1, 2, 3, 4, 5};
   nda::vector<double> b{10, 20, 30, 40, 50};
   EXPECT_DOUBLE_EQ(nda::linalg::dot(a, b), nda::blas::dot(a, b));
-  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(a, b), nda::blas::dotc(a, b));
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(a, b), nda::blas::dotc(a, b), fp_tol<double>);
+
+  nda::vector<float> af{1, 2, 3, 4, 5};
+  nda::vector<float> bf{10, 20, 30, 40, 50};
+  EXPECT_FLOAT_EQ(nda::linalg::dot(af, bf), nda::blas::dot(af, bf));
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(af, bf), nda::blas::dotc(af, bf), fp_tol<float>);
 
   nda::vector<std::complex<double>> c = a * (1.1 - 2.1i);
   nda::vector<std::complex<double>> d = b * (3 + 4i);
-  EXPECT_COMPLEX_NEAR(nda::linalg::dot(c, d), nda::blas::dot(c, d));
-  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(c, d), nda::blas::dotc(c, d));
+  EXPECT_COMPLEX_NEAR(nda::linalg::dot(c, d), nda::blas::dot(c, d), fp_tol<double>);
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(c, d), nda::blas::dotc(c, d), fp_tol<double>);
+
+  nda::vector<std::complex<float>> cf = a * (1.1f - 2.1if);
+  nda::vector<std::complex<float>> df = b * (3.0f + 4if);
+  EXPECT_COMPLEX_NEAR(nda::linalg::dot(cf, df), nda::blas::dot(cf, df), fp_tol<float>);
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(cf, df), nda::blas::dotc(cf, df), fp_tol<float>);
 
   // vectors with different value types
-  EXPECT_COMPLEX_NEAR(nda::linalg::dot(a, c), exp_dot(a, c));
-  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(a, c), exp_dotc(a, c));
+  EXPECT_COMPLEX_NEAR(nda::linalg::dot(a, c), exp_dot(a, c), fp_tol<double>);
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(a, c), exp_dotc(a, c), fp_tol<double>);
 
   nda::vector<int> e{1, 2, 3, 4, 5};
   EXPECT_EQ(nda::linalg::dot(e, e), exp_dot(e, e));
   EXPECT_DOUBLE_EQ(nda::linalg::dot(e, b), exp_dot(e, b));
-  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(e, b), exp_dotc(e, b));
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(e, b), exp_dotc(e, b), fp_tol<double>);
 
   // lazy expressions
   auto sin_a = nda::make_regular(nda::sin(a));
   EXPECT_DOUBLE_EQ(nda::linalg::dot(nda::sin(a), b), nda::blas::dot(sin_a, b));
-  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(nda::sin(a), b), nda::blas::dotc(sin_a, b));
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(nda::sin(a), b), nda::blas::dotc(sin_a, b), fp_tol<double>);
 
   // (strided) vector views
   auto c_v = c(nda::range(0, 5, 2));
   auto d_v = d(nda::range(1, 4));
-  EXPECT_COMPLEX_NEAR(nda::linalg::dot(c_v, d_v), exp_dot(c_v, d_v));
-  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(c_v, d_v), exp_dotc(c_v, d_v));
+  EXPECT_COMPLEX_NEAR(nda::linalg::dot(c_v, d_v), exp_dot(c_v, d_v), fp_tol<double> * 10); // x10 needed for MKL
+  EXPECT_COMPLEX_NEAR(nda::linalg::dotc(c_v, d_v), exp_dotc(c_v, d_v), fp_tol<double>);
 }
 
 // Test the generic matvecmul function.
