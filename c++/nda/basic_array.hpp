@@ -14,6 +14,7 @@
 #include "./basic_array_view.hpp"
 #include "./basic_functions.hpp"
 #include "./concepts.hpp"
+#include "./device.hpp"
 #include "./iterators.hpp"
 #include "./layout/for_each.hpp"
 #include "./layout/permutation.hpp"
@@ -119,6 +120,8 @@ namespace nda {
 
     // Compile-time check.
     static_assert(has_contiguous(layout_t::layout_prop), "Error in nda::basic_array: Memory layout has to be contiguous");
+    static_assert(not mem::have_device_compatible_addr_space<storage_t> or nda::have_device,
+                  "Error in nda::basic_array: Device compatible address space requires compiling with device support.");
 
     private:
     // Type of the array itself.
