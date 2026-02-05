@@ -14,6 +14,7 @@
 #include "./clef.hpp"
 #include "./concepts.hpp"
 #include "./declarations.hpp"
+#include "./device.hpp"
 #include "./iterators.hpp"
 #include "./layout/for_each.hpp"
 #include "./layout/idx_map.hpp"
@@ -135,6 +136,10 @@ namespace nda {
 
     /// Number of dimensions of the view.
     static constexpr int rank = Rank;
+
+    // Compile-time check.
+    static_assert(not mem::have_device_compatible_addr_space<storage_t> or nda::have_device,
+                  "Error in nda::basic_array_view: Device compatible address space requires compiling with device support.");
 
     private:
     // Type of the view itself.
