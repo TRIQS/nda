@@ -324,91 +324,108 @@ TEST(NDA, CUBLASGemv) {
 
 // Test the CUBLAS ger/gerc function.
 template <typename T, typename Layout, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2, nda::mem::AddressSpace AS3, bool star>
-void test_ger(auto ger) {
-  using matrix_t = nda::matrix<T, Layout>;
-  T fac          = 1.0;
-  if constexpr (nda::is_complex_v<T>) fac = 1.0i;
+void test_ger() {
+  // helper wrapper to call ger or gerc
+  auto call_ger = [](auto alpha, auto const &x, auto const &y, auto &&m) {
+    if constexpr (star) {
+      nda::blas::gerc(alpha, x, y, m);
+    } else {
+      nda::blas::ger(alpha, x, y, m);
+    }
+  };
 
-  // resulting 2 x 2 matrix
-  auto exp_M1 = nda::matrix<T>{{1, 2}, {2, 4}};
-  if constexpr (nda::is_complex_v<T> and not star) exp_M1 *= -1;
-  auto M1_d = to_addr_space<AS1>(matrix_t::zeros(2, 2));
-  nda::vector<T> v{1, 2};
-  v *= fac;
+  // helper to compute outer product with optional conjugation
+  auto outer_product = [](auto const &x, auto const &y, bool conj_y) {
+    auto m = nda::matrix<T, Layout>(x.size(), y.size());
+    for (int i = 0; i < x.size(); ++i)
+      for (int j = 0; j < y.size(); ++j) m(i, j) = x(i) * (conj_y ? nda::conj(y(j)) : y(j));
+    return m;
+  };
+
+  // initialize vectors: complex or real depending on T
+  nda::vector<T> v(2);
+  if constexpr (nda::is_complex_v<T>) {
+    v = {T{1.0i}, T{2.0i}};
+  } else {
+    v = {1, 2};
+  }
   auto v_d = to_addr_space<AS2>(v);
-  ger(1.0, v_d, v_d, M1_d);
-  EXPECT_ARRAY_NEAR(nda::to_host(M1_d), exp_M1);
-  ger(1.0, v_d, v_d, M1_d);
-  EXPECT_ARRAY_NEAR(nda::to_host(M1_d), exp_M1 * 2);
 
-  // resulting 2 x 3 matrix
-  auto exp_M2 = nda::matrix<T>{{3, 4, 5}, {6, 8, 10}};
-  if constexpr (nda::is_complex_v<T>) exp_M2 *= fac;
-  auto M2_d = to_addr_space<AS1>(matrix_t::zeros(2, 3));
-  auto w_d  = to_addr_space<AS3>(nda::vector<T>{3, 4, 5});
-  ger(1.0, v_d, w_d, M2_d);
-  EXPECT_ARRAY_NEAR(nda::to_host(M2_d), exp_M2);
-  ger(1.0, v_d, w_d, M2_d);
-  EXPECT_ARRAY_NEAR(nda::to_host(M2_d), exp_M2 * 2);
+  // test 1: v ⊗ v starting from zero matrix
+  auto exp_M1 = outer_product(v, v, star);
+  auto M1_d   = to_addr_space<AS1>(nda::matrix<T, Layout>::zeros(2, 2));
+  call_ger(1.0, v_d, v_d, M1_d);
+  EXPECT_ARRAY_NEAR(nda::to_host(M1_d), exp_M1, fp_tol<T>);
 
-  // resulting 3 x 2 matrix
-  auto exp_M3 = nda::matrix<T>{{3, 6}, {4, 8}, {5, 10}};
-  if constexpr (nda::is_complex_v<T> and not star) exp_M3 *= fac;
-  if constexpr (nda::is_complex_v<T> and star) exp_M3 *= -fac;
-  auto M3_d = to_addr_space<AS1>(matrix_t::zeros(3, 2));
-  ger(1.0, w_d, v_d, M3_d);
-  EXPECT_ARRAY_NEAR(nda::to_host(M3_d), exp_M3);
-  ger(1.0, w_d, v_d, M3_d);
-  EXPECT_ARRAY_NEAR(nda::to_host(M3_d), exp_M3 * 2);
+  // test 2: v ⊗ v starting from non-zero matrix (test accumulation)
+  auto M1_init = nda::matrix<T, Layout>{{10, 20}, {30, 40}};
+  auto M1b_d   = to_addr_space<AS1>(M1_init);
+  call_ger(1.0, v_d, v_d, M1b_d);
+  EXPECT_ARRAY_NEAR(nda::to_host(M1b_d), M1_init + exp_M1, fp_tol<T>);
 
-  // outer product of strided views
-  auto exp_M4 = nda::matrix<T>{{6, 8, 10}, {12, 16, 20}};
-  if constexpr (nda::is_complex_v<T> and not star) exp_M4 *= -1.0;
-  auto M4_d      = to_addr_space<AS1>(matrix_t::zeros(2, 3));
-  auto v_strided = nda::vector<T>{0, 1, 0, 2, 0};
-  v_strided *= fac;
-  auto v_strided_d = to_addr_space<AS2>(v_strided);
-  auto w_strided   = nda::vector<T>{3, 0, 0, 4, 0, 0, 5};
-  w_strided *= fac;
-  auto w_strided_d = to_addr_space<AS3>(w_strided);
-  ger(2.0, v_strided_d(nda::range(1, 5, 2)), w_strided_d(nda::range(0, 7, 3)), M4_d);
-  EXPECT_ARRAY_NEAR(nda::to_host(M4_d), exp_M4);
+  // test 3: v ⊗ w (mixed: v complex/real, w real)
+  nda::vector<T> w{3, 4, 5};
+  auto exp_M2 = outer_product(v, w, star);
+  auto w_d    = to_addr_space<AS3>(w);
+  auto M2_d   = to_addr_space<AS1>(nda::matrix<T, Layout>::zeros(2, 3));
+  call_ger(1.0, v_d, w_d, M2_d);
+  EXPECT_ARRAY_NEAR(nda::to_host(M2_d), exp_M2, fp_tol<T>);
+  call_ger(1.0, v_d, w_d, M2_d);
+  EXPECT_ARRAY_NEAR(nda::to_host(M2_d), exp_M2 * 2.0, fp_tol<T>);
+
+  // test 4: w ⊗ v (swapped)
+  auto exp_M3 = outer_product(w, v, star);
+  auto M3_d   = to_addr_space<AS1>(nda::matrix<T, Layout>::zeros(3, 2));
+  call_ger(1.0, w_d, v_d, M3_d);
+  EXPECT_ARRAY_NEAR(nda::to_host(M3_d), exp_M3, fp_tol<T>);
+  call_ger(1.0, w_d, v_d, M3_d);
+  EXPECT_ARRAY_NEAR(nda::to_host(M3_d), exp_M3 * 2.0, fp_tol<T>);
+
+  // test 5: strided views
+  nda::vector<T> v_full(5), w_full(7);
+  if constexpr (nda::is_complex_v<T>) {
+    v_full = {0, T{1.0i}, 0, T{2.0i}, 0};
+    w_full = {T{3.0i}, 0, 0, T{4.0i}, 0, 0, T{5.0i}};
+  } else {
+    v_full = {0, 1, 0, 2, 0};
+    w_full = {3, 0, 0, 4, 0, 0, 5};
+  }
+  auto v_strided = v_full(nda::range(1, 5, 2));
+  auto w_strided = w_full(nda::range(0, 7, 3));
+  auto exp_M4    = outer_product(v_strided, w_strided, star) * 2.0;
+  auto v_full_d  = to_addr_space<AS2>(v_full);
+  auto w_full_d  = to_addr_space<AS3>(w_full);
+  auto M4_d      = to_addr_space<AS1>(nda::matrix<T, Layout>::zeros(2, 3));
+  call_ger(2.0, v_full_d(nda::range(1, 5, 2)), w_full_d(nda::range(0, 7, 3)), M4_d);
+  EXPECT_ARRAY_NEAR(nda::to_host(M4_d), exp_M4, fp_tol<T>);
+}
+
+template <typename T, typename Layout, bool star>
+void test_ger_address_spaces() {
+  test_ger<T, Layout, Device, Device, Device, star>();
+  test_ger<T, Layout, Device, Unified, Device, star>();
+  test_ger<T, Layout, Unified, Unified, Unified, star>();
+  test_ger<T, Layout, Unified, Host, Unified, star>();
+}
+
+template <typename T, bool star>
+void test_ger_layouts() {
+  test_ger_address_spaces<T, C_layout, star>();
+  test_ger_address_spaces<T, F_layout, star>();
 }
 
 TEST(NDA, CUBLASGer) {
-  auto ger = [](auto alpha, auto &&x, auto &&y, auto &&m) { return nda::blas::ger(alpha, x, y, m); };
-  test_ger<double, C_layout, Device, Device, Device, false>(ger);
-  test_ger<double, C_layout, Device, Unified, Unified, false>(ger);
-  test_ger<double, C_layout, Unified, Unified, Unified, false>(ger);
-  test_ger<double, C_layout, Host, Host, Unified, false>(ger);
-
-  test_ger<double, F_layout, Device, Device, Device, false>(ger);
-  test_ger<double, F_layout, Device, Device, Unified, false>(ger);
-  test_ger<double, F_layout, Unified, Unified, Unified, false>(ger);
-  test_ger<double, F_layout, Unified, Host, Unified, false>(ger);
-
-  test_ger<std::complex<double>, C_layout, Device, Device, Device, false>(ger);
-  test_ger<std::complex<double>, C_layout, Unified, Unified, Device, false>(ger);
-  test_ger<std::complex<double>, C_layout, Unified, Unified, Unified, false>(ger);
-  test_ger<std::complex<double>, C_layout, Host, Unified, Unified, false>(ger);
-
-  test_ger<std::complex<double>, F_layout, Device, Device, Device, false>(ger);
-  test_ger<std::complex<double>, F_layout, Unified, Device, Device, false>(ger);
-  test_ger<std::complex<double>, F_layout, Unified, Unified, Unified, false>(ger);
-  test_ger<std::complex<double>, F_layout, Unified, Host, Host, false>(ger);
+  test_ger_layouts<float, false>();
+  test_ger_layouts<std::complex<float>, false>();
+  test_ger_layouts<double, false>();
+  test_ger_layouts<std::complex<double>, false>();
 }
 
 TEST(NDA, CUBLASGerc) {
-  auto gerc = [](auto alpha, auto &&x, auto &&y, auto &&m) { return nda::blas::gerc(alpha, x, y, m); };
-  test_ger<double, F_layout, Device, Device, Device, true>(gerc);
-  test_ger<double, F_layout, Device, Unified, Device, true>(gerc);
-  test_ger<double, F_layout, Unified, Unified, Unified, true>(gerc);
-  test_ger<double, F_layout, Host, Host, Unified, true>(gerc);
-
-  test_ger<std::complex<double>, F_layout, Device, Device, Device, true>(gerc);
-  test_ger<std::complex<double>, F_layout, Unified, Device, Unified, true>(gerc);
-  test_ger<std::complex<double>, F_layout, Unified, Unified, Unified, true>(gerc);
-  test_ger<std::complex<double>, F_layout, Host, Unified, Unified, true>(gerc);
+  test_ger_address_spaces<float, F_layout, true>();
+  test_ger_address_spaces<std::complex<float>, F_layout, true>();
+  test_ger_address_spaces<double, F_layout, true>();
+  test_ger_address_spaces<std::complex<double>, F_layout, true>();
 }
 
 // Test the CUBLAS dot/dotc function.

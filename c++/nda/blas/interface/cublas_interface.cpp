@@ -190,18 +190,28 @@ namespace nda::blas::device {
     CUBLAS_CHECK(cublasZgemv, get_cublas_op(op), m, n, &alpha_cu, cucplx(a), lda, cucplx(x), incx, &beta_cu, cucplx(y), incy);
   }
 
+  // ger and gerc
+  void ger(int m, int n, float alpha, const float *x, int incx, const float *y, int incy, float *a, int lda) {
+    CUBLAS_CHECK(cublasSger, m, n, &alpha, x, incx, y, incy, a, lda);
+  }
+  void ger(int m, int n, std::complex<float> alpha, const std::complex<float> *x, int incx, const std::complex<float> *y, int incy,
+           std::complex<float> *a, int lda) {
+    CUBLAS_CHECK(cublasCgeru, m, n, cucplx(&alpha), cucplx(x), incx, cucplx(y), incy, cucplx(a), lda);
+  }
+  void gerc(int m, int n, std::complex<float> alpha, const std::complex<float> *x, int incx, const std::complex<float> *y, int incy,
+            std::complex<float> *a, int lda) {
+    CUBLAS_CHECK(cublasCgerc, m, n, cucplx(&alpha), cucplx(x), incx, cucplx(y), incy, cucplx(a), lda);
+  }
   void ger(int m, int n, double alpha, const double *x, int incx, const double *y, int incy, double *a, int lda) {
     CUBLAS_CHECK(cublasDger, m, n, &alpha, x, incx, y, incy, a, lda);
   }
   void ger(int m, int n, std::complex<double> alpha, const std::complex<double> *x, int incx, const std::complex<double> *y, int incy,
            std::complex<double> *a, int lda) {
-    auto alpha_cu = cucplx(alpha);
-    CUBLAS_CHECK(cublasZgeru, m, n, &alpha_cu, cucplx(x), incx, cucplx(y), incy, cucplx(a), lda);
+    CUBLAS_CHECK(cublasZgeru, m, n, cucplx(&alpha), cucplx(x), incx, cucplx(y), incy, cucplx(a), lda);
   }
   void gerc(int m, int n, std::complex<double> alpha, const std::complex<double> *x, int incx, const std::complex<double> *y, int incy,
             std::complex<double> *a, int lda) {
-    auto alpha_cu = cucplx(alpha);
-    CUBLAS_CHECK(cublasZgerc, m, n, &alpha_cu, cucplx(x), incx, cucplx(y), incy, cucplx(a), lda);
+    CUBLAS_CHECK(cublasZgerc, m, n, cucplx(&alpha), cucplx(x), incx, cucplx(y), incy, cucplx(a), lda);
   }
 
   // scal
