@@ -188,11 +188,11 @@ namespace nda::blas::device {
     CUBLAS_CHECK(cublasZgerc, m, n, &alpha_cu, cucplx(x), incx, cucplx(y), incy, cucplx(a), lda);
   }
 
+  // scal
+  void scal(int m, float alpha, float *x, int incx) { CUBLAS_CHECK(cublasSscal, m, &alpha, x, incx); }
+  void scal(int m, std::complex<float> alpha, std::complex<float> *x, int incx) { CUBLAS_CHECK(cublasCscal, m, cucplx(&alpha), cucplx(x), incx); }
   void scal(int m, double alpha, double *x, int incx) { CUBLAS_CHECK(cublasDscal, m, &alpha, x, incx); }
-  void scal(int m, std::complex<double> alpha, std::complex<double> *x, int incx) {
-    auto alpha_cu = cucplx(alpha);
-    CUBLAS_CHECK(cublasZscal, m, &alpha_cu, cucplx(x), incx);
-  }
+  void scal(int m, std::complex<double> alpha, std::complex<double> *x, int incx) { CUBLAS_CHECK(cublasZscal, m, cucplx(&alpha), cucplx(x), incx); }
 
   void swap(int n, double *x, int incx, double *y, int incy) { CUBLAS_CHECK(cublasDswap, n, x, incx, y, incy); } // NOLINT (this is a BLAS swap)
   void swap(int n, std::complex<double> *x, int incx, std::complex<double> *y, int incy) {                       // NOLINT (this is a BLAS swap)

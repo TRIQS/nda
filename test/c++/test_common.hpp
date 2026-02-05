@@ -17,7 +17,10 @@
 #include <nda/nda.hpp>
 
 #include <array>
+#include <concepts>
+#include <limits>
 #include <numeric>
+#include <type_traits>
 
 // Check if function arguments are equal.
 template <typename T, typename... Ts>
@@ -112,3 +115,7 @@ decltype(auto) to_addr_space(A &&a) {
     return nda::get_regular_unified_t<A>{std::forward<A>(a)};
   }
 }
+
+// Default tolerance for floating point comparisons.
+template <typename T, typename U = typename nda::remove_complex<T>::type>
+constexpr auto fp_tol = std::numeric_limits<std::conditional_t<std::floating_point<U>, U, double>>::epsilon() * 100;

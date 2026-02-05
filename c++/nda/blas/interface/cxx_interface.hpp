@@ -56,6 +56,8 @@ namespace nda::blas::f77 {
   void gerc(int m, int n, std::complex<double> alpha, const std::complex<double> *x, int incx, const std::complex<double> *y, int incy,
             std::complex<double> *a, int lda);
 
+  void scal(int m, float alpha, float *x, int incx);
+  void scal(int m, std::complex<float> alpha, std::complex<float> *x, int incx);
   void scal(int m, double alpha, double *x, int incx);
   void scal(int m, std::complex<double> alpha, std::complex<double> *x, int incx);
 
