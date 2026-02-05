@@ -5,7 +5,7 @@
 
 /**
  * @file
- * @brief Provides a generic interface to the BLAS/cuBLAS `dot`, `dotu` and `dotc` routine.
+ * @brief Provides a generic interface to the BLAS/cuBLAS `dot`, `dotu` and `dotc` routines.
  */
 
 #pragma once
