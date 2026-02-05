@@ -220,6 +220,18 @@ namespace nda::blas::f77 {
     F77_zgemv(&op, &m, &n, blacplx(&alpha), blacplx(a), &lda, blacplx(x), &incx, blacplx(&beta), blacplx(y), &incy);
   }
 
+  // ger and gerc
+  void ger(int m, int n, float alpha, const float *x, int incx, const float *y, int incy, float *a, int lda) {
+    F77_sger(&m, &n, &alpha, x, &incx, y, &incy, a, &lda);
+  }
+  void ger(int m, int n, std::complex<float> alpha, const std::complex<float> *x, int incx, const std::complex<float> *y, int incy,
+           std::complex<float> *a, int lda) {
+    F77_cgeru(&m, &n, blacplx(&alpha), blacplx(x), &incx, blacplx(y), &incy, blacplx(a), &lda);
+  }
+  void gerc(int m, int n, std::complex<float> alpha, const std::complex<float> *x, int incx, const std::complex<float> *y, int incy,
+            std::complex<float> *a, int lda) {
+    F77_cgerc(&m, &n, blacplx(&alpha), blacplx(x), &incx, blacplx(y), &incy, blacplx(a), &lda);
+  }
   void ger(int m, int n, double alpha, const double *x, int incx, const double *y, int incy, double *a, int lda) {
     F77_dger(&m, &n, &alpha, x, &incx, y, &incy, a, &lda);
   }

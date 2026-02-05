@@ -5,7 +5,7 @@
 
 /**
  * @file
- * @brief Provides a generic interface to the BLAS `ger`, `geru` and `gerc` routine.
+ * @brief Provides a generic interface to the BLAS/cuBLAS `ger`, `geru` and `gerc` routines.
  */
 
 #pragma once
@@ -13,15 +13,12 @@
 #include "./interface/cxx_interface.hpp"
 #include "./tools.hpp"
 #include "../concepts.hpp"
+#include "../device.hpp"
 #include "../layout_transforms.hpp"
 #include "../layout/policies.hpp"
 #include "../macros.hpp"
 #include "../mem/address_space.hpp"
 #include "../traits.hpp"
-
-#ifndef NDA_HAVE_DEVICE
-#include "../device.hpp"
-#endif // NDA_HAVE_DEVICE
 
 namespace nda::blas {
 
@@ -31,98 +28,92 @@ namespace nda::blas {
    */
 
   /**
-   * @brief Interface to the BLAS `ger` and `geru` routine.
+   * @brief Interface to the BLAS/cuBLAS `ger` and `geru` routine.
    *
    * @details This function performs the rank 1 operation
    * \f[
-   *   \mathbf{M} \leftarrow \alpha \mathbf{x} \mathbf{y}^T + \mathbf{M} \; ,
+   *   \mathbf{A} \leftarrow \alpha \mathbf{x} \mathbf{y}^T + \mathbf{A} \; ,
    * \f]
    * where \f$ \alpha \f$ is a scalar, \f$ \mathbf{x} \f$ is an \f$ m \f$ element vector, \f$ \mathbf{y} \f$ is an \f$ n
-   * \f$ element vector and \f$ \mathbf{M} \f$ is an \f$ m \times n \f$ matrix.
+   * \f$ element vector and \f$ \mathbf{A} \f$ is an \f$ m \times n \f$ matrix.
    * 
-   * @note The vector \f$ \mathbf{y} \f$ is never conjugated. Even for complex types. Use nda::blas::gerc for that.
+   * The vector \f$ \mathbf{y} \f$ is never conjugated. For complex vectors, it calls `geru`. Use nda::blas::gerc to 
+   * conjugate \f$ \mathbf{y} \f$.
+   * 
+   * If the input arrays satisfy nda::mem::have_device_compatible_addr_space, the cuBLAS implementation is used.
    *
-   * @tparam X nda::MemoryVector type.
-   * @tparam Y nda::MemoryVector type.
-   * @tparam M nda::MemoryMatrix type.
+   * @tparam X nda::blas_lapack::BlasArray<1> type.
+   * @tparam Y nda::blas_lapack::BlasArrayFor<X, 1> type.
+   * @tparam A nda::blas_lapack::BlasArrayFor<X, 2> type.
    * @param alpha Input scalar \f$ \alpha \f$.
    * @param x Input vector \f$ \mathbf{x} \f$ of size \f$ m \f$.
    * @param y Input vector \f$ \mathbf{y} \f$  of size \f$ n \f$.
-   * @param m Input/Output matrix \f$ \mathbf{M} \f$  of size \f$ m \times n \f$ to which the outer product is added.
+   * @param a Input/Output matrix \f$ \mathbf{A} \f$  of size \f$ m \times n \f$ to which the outer product is added.
    */
-  template <MemoryVector X, MemoryVector Y, MemoryMatrix M>
-    requires(have_same_value_type_v<X, Y, M> and mem::have_compatible_addr_space<X, Y, M> and is_blas_lapack_v<get_value_t<X>>)
-  void ger(get_value_t<X> alpha, X const &x, Y const &y, M &&m) { // NOLINT (temporary views are allowed here)
+  template <BlasArray<1> X, BlasArrayFor<X, 1> Y, BlasArrayFor<X, 2> A>
+  void ger(get_value_t<X> alpha, X const &x, Y const &y, A &&a) { // NOLINT (temporary views are allowed here)
     // for C-layout arrays/views, call ger with the transpose and swap x and y
-    if constexpr (has_C_layout<M>) {
-      ger(alpha, y, x, transpose(m));
+    if constexpr (has_C_layout<A>) {
+      ger(alpha, y, x, transpose(a));
       return;
     }
 
     // check the dimensions of the input/output arrays/views
-    EXPECTS(m.extent(0) == x.size());
-    EXPECTS(m.extent(1) == y.size());
+    auto const [m, n] = a.shape();
+    EXPECTS(m == x.size());
+    EXPECTS(n == y.size());
 
     // arrays/views must be BLAS compatible
-    EXPECTS(m.indexmap().min_stride() == 1);
+    EXPECTS(a.indexmap().min_stride() == 1);
 
     // perform actual library call
-    if constexpr (mem::have_device_compatible_addr_space<X, Y, M>) {
-#if defined(NDA_HAVE_DEVICE)
-      device::ger(m.extent(0), m.extent(1), alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], m.data(), get_ld(m));
-#else
-      compile_error_no_gpu();
-#endif
+    if constexpr (mem::have_device_compatible_addr_space<X, Y, A>) {
+      device::ger(m, n, alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], a.data(), get_ld(a));
     } else {
-      f77::ger(m.extent(0), m.extent(1), alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], m.data(), get_ld(m));
+      f77::ger(m, n, alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], a.data(), get_ld(a));
     }
   }
 
   /**
-   * @brief Interface to the BLAS `gerc` routine.
-   * 
+   * @brief Interface to the BLAS/cuBLAS `gerc` routine.
+   *
    * @details This function performs the rank 1 operation
    * \f[
-   *   \mathbf{M} \leftarrow \alpha \mathbf{x} \mathbf{y}^H + \mathbf{M} \; ,
+   *   \mathbf{A} \leftarrow \alpha \mathbf{x} \mathbf{y}^H + \mathbf{A} \; ,
    * \f]
    * where \f$ \alpha \f$ is a scalar, \f$ \mathbf{x} \f$ is an \f$ m \f$ element vector, \f$ \mathbf{y} \f$ is an \f$ n
-   * \f$ element vector and \f$ \mathbf{M} \f$ is an \f$ m \times n \f$ matrix.
-   * 
-   * If the value type of the input vectors/matrix is real, it calls nda::blas::ger.
-   * 
-   * @note \f$ \mathbf{M} \f$ has to be in nda::F_layout.
+   * \f$ element vector and \f$ \mathbf{A} \f$ is an \f$ m \times n \f$ matrix.
    *
-   * @tparam X nda::MemoryVector type.
-   * @tparam Y nda::MemoryVector type.
-   * @tparam M nda::MemoryMatrix type.
+   * For real vectors/matrices, it calls nda::blas::ger.
+   * 
+   * If the input arrays satisfy nda::mem::have_device_compatible_addr_space, the cuBLAS implementation is used.
+   *
+   * @tparam X nda::blas_lapack::BlasArray<1> type.
+   * @tparam Y nda::blas_lapack::BlasArrayFor<X, 1> type.
+   * @tparam A nda::blas_lapack::BlasArrayFor<X, 2> type with nda::F_layout.
    * @param alpha Input scalar \f$ \alpha \f$.
    * @param x Input vector \f$ \mathbf{x} \f$ of size \f$ m \f$.
    * @param y Input vector \f$ \mathbf{y} \f$  of size \f$ n \f$.
-   * @param m Input/Output matrix \f$ \mathbf{M} \f$  of size \f$ m \times n \f$ to which the outer product is added.
+   * @param a Input/Output matrix \f$ \mathbf{A} \f$  of size \f$ m \times n \f$ to which the outer product is added.
    */
-  template <MemoryVector X, MemoryVector Y, MemoryMatrix M>
-    requires(have_same_value_type_v<X, Y, M> and mem::have_compatible_addr_space<X, Y, M> and is_blas_lapack_v<get_value_t<X>>)
-  void gerc(get_value_t<X> alpha, X const &x, Y const &y, M &&m) { // NOLINT (temporary views are allowed here)
-    static_assert(has_F_layout<M>, "Error in nda::blas::gerc: M must be in Fortran layout");
-
+  template <BlasArray<1> X, BlasArrayFor<X, 1> Y, BlasArrayFor<X, 2> A>
+    requires(has_F_layout<A>)
+  void gerc(get_value_t<X> alpha, X const &x, Y const &y, A &&a) { // NOLINT (temporary views are allowed here)
     // check the dimensions of the input/output arrays/views
-    EXPECTS(m.extent(0) == x.size());
-    EXPECTS(m.extent(1) == y.size());
+    auto const [m, n] = a.shape();
+    EXPECTS(m == x.size());
+    EXPECTS(n == y.size());
 
     // arrays/views must be BLAS compatible
-    EXPECTS(m.indexmap().min_stride() == 1);
+    EXPECTS(a.indexmap().min_stride() == 1);
 
     // perform actual library call
     if constexpr (!is_complex_v<get_value_t<X>>) {
-      return ger(alpha, x, y, m);
-    } else if constexpr (mem::have_device_compatible_addr_space<X, Y, M>) {
-#if defined(NDA_HAVE_DEVICE)
-      device::gerc(m.extent(0), m.extent(1), alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], m.data(), get_ld(m));
-#else
-      compile_error_no_gpu();
-#endif
+      return ger(alpha, x, y, a);
+    } else if constexpr (mem::have_device_compatible_addr_space<X, Y, A>) {
+      device::gerc(m, n, alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], a.data(), get_ld(a));
     } else {
-      f77::gerc(m.extent(0), m.extent(1), alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], m.data(), get_ld(m));
+      f77::gerc(m, n, alpha, x.data(), x.indexmap().strides()[0], y.data(), y.indexmap().strides()[0], a.data(), get_ld(a));
     }
   }
 

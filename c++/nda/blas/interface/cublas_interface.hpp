@@ -66,6 +66,11 @@ namespace nda::blas::device {
   void gemv(char op, int m, int n, std::complex<double> alpha, const std::complex<double> *a, int lda, const std::complex<double> *x, int incx,
             std::complex<double> beta, std::complex<double> *y, int incy);
 
+  void ger(int m, int n, float alpha, const float *x, int incx, const float *y, int incy, float *a, int lda);
+  void ger(int m, int n, std::complex<float> alpha, const std::complex<float> *x, int incx, const std::complex<float> *y, int incy,
+           std::complex<float> *a, int lda);
+  void gerc(int m, int n, std::complex<float> alpha, const std::complex<float> *x, int incx, const std::complex<float> *y, int incy,
+            std::complex<float> *a, int lda);
   void ger(int m, int n, double alpha, const double *x, int incx, const double *y, int incy, double *a, int lda);
   void ger(int m, int n, std::complex<double> alpha, const std::complex<double> *x, int incx, const std::complex<double> *y, int incy,
            std::complex<double> *a, int lda);
