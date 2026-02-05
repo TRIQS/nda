@@ -93,13 +93,22 @@ endif()
 target_link_libraries(${PROJECT_NAME}_c PRIVATE blas_lapack)
 install(TARGETS blas_lapack EXPORT ${PROJECT_NAME}-targets)
 
-# ========= CudaRT & CuBLAS ==========
+# ========= CudaRT, CuBLAS & CuSolver ==========
 
 if(CudaSupport)
-  message(STATUS "-------- CUDAToolkit detection -------------")
-  find_package(CUDAToolkit REQUIRED)
-  target_link_libraries(${PROJECT_NAME}_c PUBLIC CUDA::cudart CUDA::cublas CUDA::cusolver)
-  target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_CUDA NDA_HAVE_DEVICE)
+  message(STATUS "-------- CUDA Library detection -------------")
+  find_package(NVHPC QUIET COMPONENTS CUDA MATH CONFIG)
+  if(NVHPC_FOUND)
+    cmake_path(ABSOLUTE_PATH NVHPC_ROOT_DIR NORMALIZE OUTPUT_VARIABLE NVHPC_ROOT_DIR)
+    message(STATUS "NVHPC Version ${NVHPC_VERSION} found at ${NVHPC_ROOT_DIR} (Cuda Version ${NVHPC_CUDA_VERSION})")
+    target_link_libraries(${PROJECT_NAME}_c PUBLIC NVHPC::CUDART NVHPC::CUBLAS NVHPC::CUSOLVER NVHPC::CUSPARSE)
+    target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_CUDA NDA_HAVE_DEVICE)
+  else()
+    message(STATUS "NVHPC Config not found, falling back to CUDAToolkit")
+    find_package(CUDAToolkit 12 REQUIRED)
+    target_link_libraries(${PROJECT_NAME}_c PUBLIC CUDA::cudart CUDA::cublas CUDA::cusolver CUDA::cusparse)
+    target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_CUDA NDA_HAVE_DEVICE)
+  endif()
 endif()
 
 # ========= Magma ==========
