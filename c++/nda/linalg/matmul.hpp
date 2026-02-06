@@ -33,7 +33,7 @@ namespace nda::linalg {
 
   namespace detail {
 
-    /// Generic matrix-matrix multiplication for types not supported by BLAS.
+    // Generic matrix-matrix multiplication for types not supported by BLAS.
     template <Matrix A, Matrix B, MemoryMatrix C>
       requires(mem::have_host_compatible_addr_space<A, B, C>)
     void gemm_generic(auto alpha, A const &a, B const &b, auto beta, C &&c) { // NOLINT (temporary views are allowed here)
@@ -57,10 +57,10 @@ namespace nda::linalg {
     // Otherwise, return a copy with the given value type T, layout policy LP and container policy CP.
     template <typename T, typename LP, typename CP, MemoryMatrix C, Matrix A>
     decltype(auto) get_gemm_matrix(A &&a) {
-      if constexpr (requires { blas::get_array(a); } and std::is_same_v<get_value_t<A>, T>) {
+      using namespace blas_lapack;
+      if constexpr (requires { get_array(a); } and std::is_same_v<get_value_t<A>, T>) {
         if constexpr (MemoryMatrix<A>
-                      or (blas::is_conj_array_expr<A>
-                          and ((blas::has_F_layout<C> and blas::has_C_layout<A>) or (blas::has_C_layout<C> and blas::has_F_layout<A>)))) {
+                      or (is_conj_array_expr<A> and ((has_F_layout<C> and has_C_layout<A>) or (has_C_layout<C> and has_F_layout<A>)))) {
           return std::forward<A>(a);
         } else {
           return matrix<T, LP, CP>{a};
@@ -73,17 +73,17 @@ namespace nda::linalg {
     // Make the call to nda::blas::gemm (with copies of the matrices if they are not contiguous).
     template <Matrix A, Matrix B, MemoryMatrix C>
     void make_gemm_call(A const &a, B const &b, C &c) {
-      if (blas::get_array(a).is_contiguous()) {
-        if (blas::get_array(b).is_contiguous()) {
+      if (blas_lapack::get_array(a).is_contiguous()) {
+        if (blas_lapack::get_array(b).is_contiguous()) {
           blas::gemm(1, a, b, 0, c);
         } else {
-          blas::gemm(1, a, nda::make_regular(b), 0, c);
+          blas::gemm(1, a, make_regular(b), 0, c);
         }
       } else {
-        if (blas::get_array(b).is_contiguous()) {
-          blas::gemm(1, nda::make_regular(a), b, 0, c);
+        if (blas_lapack::get_array(b).is_contiguous()) {
+          blas::gemm(1, make_regular(a), b, 0, c);
         } else {
-          blas::gemm(1, nda::make_regular(a), nda::make_regular(b), 0, c);
+          blas::gemm(1, make_regular(a), make_regular(b), 0, c);
         }
       }
     }
@@ -99,11 +99,15 @@ namespace nda::linalg {
    *
    * @details This function computes the matrix-matrix product 
    * \f[
-   *   \mathrm{op}_A(\mathbf{A}) \mathrm{op}_B(\mathbf{B}) \; ,
+   *   \mathbf{C} = \mathbf{A} \mathbf{B} \; ,
    * \f]
-   * where \f$ \mathrm{op}_A(\mathbf{A}) \f$ and \f$ \mathrm{op}_B(\mathbf{B}) \f$ are \f$ m \times k \f$ and \f$ k 
-   * \times n \f$ matrices, respectively. \f$ \mathrm{op}_i \f$ can be some lazy operation, e.g. nda::conj, nda::sin, 
-   * etc.
+   * where \f$ \mathbf{A} \f$, \f$ \mathbf{B} \f$ and \f$ \mathbf{C} \f$ are \f$ m \times k \f$, \f$ k \times n \f$ and
+   * \f$ m \times n \f$ matrices, respectively.
+   * 
+   * The behaviour of this function is similar to nda::blas::gemm, except that it allows
+   * - lazy expressions as input,
+   * - the value types of the input matrices to be different from each other and
+   * - the value types of the input matrices to be different from nda::is_blas_lapack_v.
    *
    * We try to call nda::blas::gemm whenever possible, i.e. when the value type of the result is compatible with
    * nda::is_blas_lapack_v, even if this requires to make copies of the input arrays/views. Otherwise, we perform a very
@@ -111,20 +115,23 @@ namespace nda::linalg {
    *
    * Therefore, if performance is important, users should make sure to pass input arrays/views which are compatible with
    * nda::blas::gemm.
-   *
-   * @note The layout of the returned matrix depends on the layout of the input matrices. If both input matrices are in
-   * nda::F_layout, the returned matrix is also in nda::F_layout. Otherwise, it is in nda::C_layout.
    * 
-   * @warning This function might make copies of the input arrays/views. When working on the device memory space, this 
-   * may lead to runtime errors if the copying fails.
+   * The resulting nda::matrix has
+   * - its value type deduced from the multiplication of the value types of the input matrices,
+   * - nda::F_layout if both inputs are in F-layout and nda::C_layout otherwise and
+   * - its address space set to the nda::mem::common_addr_space of the input matrices.
+   * 
+   * @note This function might make copies of the input arrays/views. When working on the device memory space, this may 
+   * lead to runtime errors if the copying fails.
    *
    * @tparam A nda::Matrix type.
    * @tparam B nda::Matrix type.
-   * @param a Input matrix \f$ \mathrm{op}_A(\mathbf{A}) \f$ of size \f$ m \times k \f$.
-   * @param b Input matrix \f$ \mathrm{op}_B(\mathbf{B}) \f$ of size \f$ k \times n \f$.
+   * @param a Input matrix \f$ \mathbf{A} \f$ of size \f$ m \times k \f$.
+   * @param b Input matrix \f$ \mathbf{B} \f$ of size \f$ k \times n \f$.
    * @return Resulting matrix of the matrix-matrix multiplication of size \f$ m \times n \f$.
    */
   template <Matrix A, Matrix B>
+    requires(mem::have_compatible_addr_space<A, B>)
   auto matmul(A &&a, B &&b) { // NOLINT (temporary views are allowed here)
     // get the return type
     using value_t    = decltype(a(0, 0) * b(0, 0));
