@@ -11,8 +11,11 @@
 #include <algorithm>
 #include <complex>
 #include <concepts>
+#include <limits>
 #include <tuple>
+#include <type_traits>
 
+using namespace std::complex_literals;
 using nda::C_layout, nda::F_layout;
 using nda::mem::Host, nda::mem::Device, nda::mem::Unified;
 
@@ -20,6 +23,7 @@ using nda::mem::Host, nda::mem::Device, nda::mem::Unified;
 template <typename T, typename Layout, nda::mem::AddressSpace AS>
 void test_gesvd() {
   using matrix_t = nda::matrix<T, Layout>;
+  using fp_t     = nda::get_fp_t<T>;
 
   auto A = matrix_t{{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}}};
   if constexpr (std::same_as<Layout, C_layout>) {
@@ -28,28 +32,47 @@ void test_gesvd() {
   }
   auto [m, n] = A.shape();
 
+  // expected condition number and spectral norm of A from numpy
+  constexpr fp_t cond_A = 6.784414066333698;
+  constexpr fp_t norm_A = 12.316822252443167;
+
+  // compute SVD
   auto A_d  = to_addr_space<AS>(A);
   auto U_d  = to_addr_space<AS>(matrix_t(m, m));
-  auto VT_d = to_addr_space<AS>(matrix_t(n, n));
-  auto S_d  = to_addr_space<AS>(nda::vector<double>(std::min(m, n)));
-  nda::lapack::gesvd(A_d, S_d, U_d, VT_d);
+  auto VH_d = to_addr_space<AS>(matrix_t(n, n));
+  auto s_d  = to_addr_space<AS>(nda::vector<fp_t>(std::min(m, n)));
+  nda::lapack::gesvd(A_d, s_d, U_d, VH_d);
 
-  auto S     = nda::to_host(S_d);
+  // construct diagonal singular value matrix
+  auto s     = nda::to_host(s_d);
   auto Sigma = matrix_t::zeros(A.shape());
-  for (auto i : nda::range(std::min(m, n))) Sigma(i, i) = S(i);
-  EXPECT_ARRAY_NEAR(A, nda::to_host(U_d) * Sigma * nda::to_host(VT_d), 1e-14);
+  for (auto i : nda::range(std::min(m, n))) Sigma(i, i) = s(i);
+
+  // check condition number and spectral norm
+  EXPECT_NEAR(s(0) / s(s.size() - 1), cond_A, fp_tol<T>);
+  EXPECT_NEAR(s(0), norm_A, fp_tol<T>);
+
+  // check backward error
+  EXPECT_ARRAY_NEAR(A, nda::to_host(U_d) * Sigma * nda::to_host(VH_d), fp_tol<T>);
+}
+
+template <typename T, typename Layout>
+void test_gesvd_address_spaces() {
+  test_gesvd<T, Layout, Device>();
+  test_gesvd<T, Layout, Unified>();
+}
+
+template <typename T>
+void test_gesvd_layouts() {
+  test_gesvd_address_spaces<T, C_layout>();
+  test_gesvd_address_spaces<T, F_layout>();
 }
 
 TEST(NDA, CULAPACKGesvd) {
-  test_gesvd<double, C_layout, Device>();
-  test_gesvd<double, F_layout, Device>();
-  test_gesvd<std::complex<double>, C_layout, Device>();
-  test_gesvd<std::complex<double>, F_layout, Device>();
-
-  test_gesvd<double, C_layout, Unified>();
-  test_gesvd<double, F_layout, Unified>();
-  test_gesvd<std::complex<double>, C_layout, Unified>();
-  test_gesvd<std::complex<double>, F_layout, Unified>();
+  test_gesvd_layouts<float>();
+  test_gesvd_layouts<std::complex<float>>();
+  test_gesvd_layouts<double>();
+  test_gesvd_layouts<std::complex<double>>();
 }
 
 // Test the CULAPACK getrs and getrf functions.

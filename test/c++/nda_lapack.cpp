@@ -18,6 +18,7 @@
 
 using namespace nda;
 using namespace std::complex_literals;
+using nda::C_layout, nda::F_layout;
 
 // Test LAPACK gtsv function.
 void test_gtsv(auto dl, auto d, auto du, auto B, auto exp) {
@@ -84,28 +85,46 @@ TEST(NDA, LAPACKGtsvComplex) {
 // Test LAPACK gesvd function.
 template <typename T, typename Layout>
 void test_gesvd() {
-  using matrix_t = matrix<T, Layout>;
+  using matrix_t = nda::matrix<T, Layout>;
+  using fp_t     = nda::get_fp_t<T>;
 
   auto A      = matrix_t{{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}}};
   auto [m, n] = A.shape();
 
-  auto U  = matrix_t(m, m);
-  auto VT = matrix_t(n, n);
+  // expected condition number and spectral norm of A from numpy
+  constexpr fp_t cond_A = 6.784414066333698;
+  constexpr fp_t norm_A = 12.316822252443167;
 
-  auto S     = vector<double>(std::min(m, n));
+  // compute SVD
+  auto U     = matrix_t(m, m);
+  auto VH    = matrix_t(n, n);
+  auto s     = nda::vector<fp_t>(std::min(m, n));
   auto Acopy = matrix_t{A};
-  lapack::gesvd(Acopy, S, U, VT);
+  nda::lapack::gesvd(Acopy, s, U, VH);
 
+  // construct diagonal singular value matrix
   auto Sigma = matrix_t::zeros(A.shape());
-  for (auto i : range(std::min(m, n))) Sigma(i, i) = S(i);
-  EXPECT_ARRAY_NEAR(A, U * Sigma * VT, 1e-14);
+  for (auto i : nda::range(std::min(m, n))) Sigma(i, i) = s(i);
+
+  // check condition number and spectral norm
+  EXPECT_NEAR(s(0) / s(s.size() - 1), cond_A, fp_tol<T>);
+  EXPECT_NEAR(s(0), norm_A, fp_tol<T>);
+
+  // check backward error
+  EXPECT_ARRAY_NEAR(A, U * Sigma * VH, fp_tol<T>);
+}
+
+template <typename T>
+void test_gesvd_layouts() {
+  test_gesvd<T, C_layout>();
+  test_gesvd<T, F_layout>();
 }
 
 TEST(NDA, LAPACKGesvd) {
-  test_gesvd<double, C_layout>();
-  test_gesvd<double, F_layout>();
-  test_gesvd<std::complex<double>, C_layout>();
-  test_gesvd<std::complex<double>, F_layout>();
+  test_gesvd_layouts<float>();
+  test_gesvd_layouts<std::complex<float>>();
+  test_gesvd_layouts<double>();
+  test_gesvd_layouts<std::complex<double>>();
 }
 
 // Test LAPACK geqp3, orgqr and ungqr functions.

@@ -17,10 +17,12 @@
 #include "../../macros.hpp"
 #include "../../mem/allocators.hpp"
 #include "../../mem/handle.hpp"
+#include "../../traits.hpp"
 
 #include <cusolverDn.h>
 
 #include <string>
+#include <type_traits>
 
 namespace nda::lapack::device {
 
@@ -58,28 +60,49 @@ namespace nda::lapack::device {
   }                                                                                                                                                  \
   info = *get_info_ptr();
 
+  // Anonymous namespace for some file local helper functions.
+  namespace {
+
+    // Get the buffer size for gesvd.
+    template <typename T>
+    int gesvd_buffer_size_impl(int m, int n) {
+      int bufferSize = 0;
+      if constexpr (std::is_same_v<T, float>) {
+        cusolverDnSgesvd_bufferSize(get_handle(), m, n, &bufferSize);
+      } else if constexpr (std::is_same_v<T, double>) {
+        cusolverDnDgesvd_bufferSize(get_handle(), m, n, &bufferSize);
+      } else if constexpr (std::is_same_v<T, std::complex<float>>) {
+        cusolverDnCgesvd_bufferSize(get_handle(), m, n, &bufferSize);
+      } else if constexpr (std::is_same_v<T, std::complex<double>>) {
+        cusolverDnZgesvd_bufferSize(get_handle(), m, n, &bufferSize);
+      }
+      return bufferSize;
+    }
+
+  } // namespace
+
+  // gesvd buffer size
+  int gesvd_buffer_size(int m, int n, float *) { return gesvd_buffer_size_impl<float>(m, n); }
+  int gesvd_buffer_size(int m, int n, std::complex<float> *) { return gesvd_buffer_size_impl<std::complex<float>>(m, n); }
+  int gesvd_buffer_size(int m, int n, double *) { return gesvd_buffer_size_impl<double>(m, n); }
+  int gesvd_buffer_size(int m, int n, std::complex<double> *) { return gesvd_buffer_size_impl<std::complex<double>>(m, n); }
+
+  // gesvd
+  void gesvd(char jobu, char jobvt, int m, int n, float *a, int lda, float *s, float *u, int ldu, float *vt, int ldvt, float *work, int lwork,
+             float *rwork, int &info) {
+    CUSOLVER_CHECK(cusolverDnSgesvd, info, jobu, jobvt, m, n, a, lda, s, u, ldu, vt, ldvt, work, lwork, rwork);
+  }
+  void gesvd(char jobu, char jobvt, int m, int n, std::complex<float> *a, int lda, float *s, std::complex<float> *u, int ldu, std::complex<float> *vt,
+             int ldvt, std::complex<float> *work, int lwork, float *rwork, int &info) {
+    CUSOLVER_CHECK(cusolverDnCgesvd, info, jobu, jobvt, m, n, cucplx(a), lda, s, cucplx(u), ldu, cucplx(vt), ldvt, cucplx(work), lwork, rwork);
+  }
   void gesvd(char jobu, char jobvt, int m, int n, double *a, int lda, double *s, double *u, int ldu, double *vt, int ldvt, double *work, int lwork,
              double *rwork, int &info) {
-    // Replicate behavior of Netlib gesvd
-    if (lwork == -1) {
-      int bufferSize = 0;
-      cusolverDnDgesvd_bufferSize(get_handle(), m, n, &bufferSize);
-      *work = bufferSize;
-    } else {
-      CUSOLVER_CHECK(cusolverDnDgesvd, info, jobu, jobvt, m, n, a, lda, s, u, ldu, vt, ldvt, work, lwork, rwork);
-    }
+    CUSOLVER_CHECK(cusolverDnDgesvd, info, jobu, jobvt, m, n, a, lda, s, u, ldu, vt, ldvt, work, lwork, rwork);
   }
   void gesvd(char jobu, char jobvt, int m, int n, std::complex<double> *a, int lda, double *s, std::complex<double> *u, int ldu,
              std::complex<double> *vt, int ldvt, std::complex<double> *work, int lwork, double *rwork, int &info) {
-    // Replicate behavior of Netlib gesvd
-    if (lwork == -1) {
-      int bufferSize = 0;
-      cusolverDnZgesvd_bufferSize(get_handle(), m, n, &bufferSize);
-      *work = bufferSize;
-    } else {
-      CUSOLVER_CHECK(cusolverDnZgesvd, info, jobu, jobvt, m, n, cucplx(a), lda, s, cucplx(u), ldu, cucplx(vt), ldvt, cucplx(work), lwork,
-                     rwork); // NOLINT
-    }
+    CUSOLVER_CHECK(cusolverDnZgesvd, info, jobu, jobvt, m, n, cucplx(a), lda, s, cucplx(u), ldu, cucplx(vt), ldvt, cucplx(work), lwork, rwork);
   }
 
   void getrf(int m, int n, double *a, int lda, int *ipiv, int &info) {

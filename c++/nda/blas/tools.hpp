@@ -12,6 +12,8 @@
 
 #include "../concepts.hpp"
 #include "../declarations.hpp"
+#include "../exceptions.hpp"
+#include "../macros.hpp"
 #include "../map.hpp"
 #include "../mapped_functions.hpp"
 #include "../mem/address_space.hpp"
@@ -166,6 +168,32 @@ namespace nda::blas_lapack {
    */
   template <MemoryArray A>
   using vector_fp_t = vector<get_fp_t<A>, heap<mem::get_addr_space<A>>>;
+
+  /**
+   * @brief Resize or check the size of a 1D array/view.
+   *
+   * @details This function is similar to nda::resize_or_check except that
+   * - it only works for 1D arrays/views,
+   * - it does not resize or throw an error if the size is too big and
+   * - it expects that the memory is contiguous.
+   *
+   * @tparam A Type of the object.
+   * @param a Object to resize or check.
+   * @param min_size Minimum size.
+   */
+  template <typename A>
+    requires(is_regular_or_view_v<A> and get_rank<A> == 1)
+  void resize_or_check_work_buffer(A &a, long min_size) {
+    if (a.size() >= min_size) {
+      EXPECTS(a.indexmap().min_stride() == 1);
+      return;
+    }
+    if constexpr (is_regular_v<A>) {
+      a.resize(min_size);
+    } else {
+      NDA_RUNTIME_ERROR << "Error in nda::blas_lapack::resize_or_check_work_buffer: Size mismatch: " << a.size() << " < " << min_size;
+    }
+  }
 
   /**
    * @brief BLAS/LAPACK compatible array type.
