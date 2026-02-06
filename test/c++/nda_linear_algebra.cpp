@@ -94,73 +94,92 @@ void test_matvecmul() {
   auto A       = nda::matrix<T, Layout>(4, 3);
   nda::for_each(A.shape(), [&A](auto i, auto j) { A(i, j) = i * 3 + j + 1; });
   if constexpr (nda::is_complex_v<T>) {
-    A *= 1 - 1i;
-    x *= 2 - 1i;
-    x_t *= 2 - 1i;
-    exp_y *= (1 - 1i) * (2 - 1i);
-    exp_y_t *= (1 - 1i) * (2 - 1i);
+    A *= T{1 - 1i};
+    x *= T{2 - 1i};
+    x_t *= T{2 - 1i};
+    exp_y *= T{(1 - 1i) * (2 - 1i)};
+    exp_y_t *= T{(1 - 1i) * (2 - 1i)};
   }
 
   // y = A * x
   auto y = nda::linalg::matvecmul(A, x);
-  EXPECT_ARRAY_NEAR(y, exp_y);
+  EXPECT_ARRAY_NEAR(y, exp_y, fp_tol<T>);
 
   // y_t = A^T * x_t
   auto y_t = nda::linalg::matvecmul(nda::transpose(A), x_t);
-  EXPECT_ARRAY_NEAR(y_t, exp_y_t);
+  EXPECT_ARRAY_NEAR(y_t, exp_y_t, fp_tol<T>);
 
   // y_h = A^H * x_t
   auto exp_y_h = exp_y_t;
-  if constexpr (nda::is_complex_v<T>) exp_y_h = nda::vector<T>{210 + 70i, 240 + 80i, 270 + 90i};
-  auto y_h = nda::linalg::matvecmul(nda::conj(nda::transpose(A)), x_t);
-  EXPECT_ARRAY_NEAR(y_h, exp_y_h);
+  if constexpr (nda::is_complex_v<T>) exp_y_h = nda::vector<T>{T{210 + 70i}, T{240 + 80i}, T{270 + 90i}};
+  auto y_h = nda::linalg::matvecmul(nda::dagger(A), x_t);
+  EXPECT_ARRAY_NEAR(y_h, exp_y_h, fp_tol<T>);
 
   // strided matrix and vector views
   auto y_v = nda::linalg::matvecmul(A(nda::range(0, 4, 2), nda::range(0, 3, 2)), x(nda::range(0, 3, 2)));
   if constexpr (nda::is_complex_v<T>) {
-    EXPECT_ARRAY_EQ(y_v, (nda::vector<T>{10 - 30i, 34 - 102i}));
+    EXPECT_ARRAY_NEAR(y_v, (nda::vector<T>{T{10 - 30i}, T{34 - 102i}}), fp_tol<T>);
   } else {
-    EXPECT_ARRAY_EQ(y_v, (nda::vector<T>{10, 34}));
+    EXPECT_ARRAY_NEAR(y_v, (nda::vector<T>{10, 34}), fp_tol<T>);
   }
 }
 
-TEST(NDA, LinearAlgebraMatvecmulGenericGemvBranch) {
-  test_matvecmul<long, nda::C_layout>();
-  test_matvecmul<long, nda::F_layout>();
+template <typename T>
+void test_matvecmul_layouts() {
+  test_matvecmul<T, C_layout>();
+  test_matvecmul<T, F_layout>();
 }
+
+TEST(NDA, LinearAlgebraMatvecmulGenericGemvBranch) { test_matvecmul_layouts<long>(); }
 
 TEST(NDA, LinearAlgebraMatvecmulBLASBranch) {
-  test_matvecmul<double, nda::C_layout>();
-  test_matvecmul<double, nda::F_layout>();
-  test_matvecmul<std::complex<double>, nda::C_layout>();
-  test_matvecmul<std::complex<double>, nda::F_layout>();
+  test_matvecmul_layouts<float>();
+  test_matvecmul_layouts<std::complex<float>>();
+  test_matvecmul_layouts<double>();
+  test_matvecmul_layouts<std::complex<double>>();
 }
 
-TEST(NDA, LinearAlgebraMatvecmulPromotion) {
-  auto A_i = nda::matrix<int>{{1, 2}, {3, 4}};
-  auto A_d = nda::matrix<double>{{1, 2}, {3, 4}};
-  auto w_i = nda::vector<int>{1, 1};
-  auto w_d = nda::vector<double>{1, 1};
+template <typename T>
+void test_matvecmul_promotion() {
+  auto A_i  = nda::matrix<int>{{1, 2}, {3, 4}};
+  auto A_fp = nda::matrix<T>{{1, 2}, {3, 4}};
+  auto w_i  = nda::vector<int>{1, 1};
+  auto w_fp = nda::vector<T>{1, 1};
 
-  auto v_d1 = nda::linalg::matvecmul(A_d, w_i);
-  static_assert(std::same_as<nda::get_value_t<decltype(v_d1)>, double>);
-  EXPECT_ARRAY_NEAR(v_d1, (nda::vector<double>{3, 7}), 1.e-13);
+  auto v_fp1 = nda::linalg::matvecmul(A_fp, w_i);
+  static_assert(std::same_as<nda::get_value_t<decltype(v_fp1)>, T>);
+  EXPECT_ARRAY_NEAR(v_fp1, (nda::vector<T>{3, 7}), fp_tol<T>);
 
-  auto v_d2 = nda::linalg::matvecmul(A_i, w_d);
-  static_assert(std::same_as<nda::get_value_t<decltype(v_d2)>, double>);
-  EXPECT_ARRAY_NEAR(v_d2, (nda::vector<double>{3, 7}), 1.e-13);
+  auto v_fp2 = nda::linalg::matvecmul(A_i, w_fp);
+  static_assert(std::same_as<nda::get_value_t<decltype(v_fp2)>, T>);
+  EXPECT_ARRAY_NEAR(v_fp2, (nda::vector<T>{3, 7}), fp_tol<T>);
 
   auto v_i = nda::linalg::matvecmul(A_i, w_i);
   static_assert(std::same_as<nda::get_value_t<decltype(v_i)>, int>);
   EXPECT_ARRAY_EQ(v_i, (nda::vector<int>{3, 7}));
 }
 
+TEST(NDA, LinearAlgebraMatvecmulPromotion) {
+  test_matvecmul_promotion<float>();
+  test_matvecmul_promotion<std::complex<float>>();
+  test_matvecmul_promotion<double>();
+  test_matvecmul_promotion<std::complex<double>>();
+}
+
+template <typename T>
+void test_matvecmul_lazy_expressions() {
+  auto A     = nda::array<T, 2>{{1, 2}, {3, 4}};
+  auto A_sin = nda::array<T, 2>{nda::sin(A)};
+  auto w     = nda::vector<T>{1, 1};
+  auto w_sin = nda::vector<T>{nda::sin(w)};
+  EXPECT_ARRAY_NEAR(nda::linalg::matvecmul(nda::sin(A), nda::sin(w)), nda::linalg::matvecmul(A_sin, w_sin), fp_tol<T>);
+}
+
 TEST(NDA, LinearAlgebraMatvecmulWithLazyExpressions) {
-  auto A     = nda::array<double, 2>{{1, 2}, {3, 4}};
-  auto A_sin = nda::array<double, 2>{nda::sin(A)};
-  auto w     = nda::vector<double>{1, 1};
-  auto w_sin = nda::vector<double>{nda::sin(w)};
-  EXPECT_ARRAY_NEAR(nda::linalg::matvecmul(nda::sin(A), nda::sin(w)), nda::linalg::matvecmul(A_sin, w_sin), 1.e-13);
+  test_matvecmul_lazy_expressions<float>();
+  test_matvecmul_lazy_expressions<std::complex<float>>();
+  test_matvecmul_lazy_expressions<double>();
+  test_matvecmul_lazy_expressions<std::complex<double>>();
 }
 
 // Test the generic matmul function.

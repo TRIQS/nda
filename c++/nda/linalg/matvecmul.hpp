@@ -36,7 +36,7 @@ namespace nda::linalg {
 
     // Generic matrix-vector multiplication for types not supported by BLAS.
     template <Matrix A, Vector X, MemoryVector Y>
-      requires(nda::mem::have_host_compatible_addr_space<A, X, Y>)
+      requires(mem::have_host_compatible_addr_space<A, X, Y>)
     void gemv_generic(auto alpha, A const &a, X const &x, auto beta, Y &&y) { // NOLINT (temporary views are allowed here)
       // check the dimensions of the input/output arrays/views
       auto const [m, n] = a.shape();
@@ -65,8 +65,9 @@ namespace nda::linalg {
     // Otherwise, return a copy with the given value type T and container policy CP.
     template <typename T, typename CP, Matrix A>
     decltype(auto) get_gemv_matrix(A &&a) {
-      if constexpr (requires { blas::get_array(a); } and std::is_same_v<get_value_t<A>, T>) {
-        if constexpr (MemoryMatrix<A> or (blas::is_conj_array_expr<A> and blas::has_C_layout<A>)) {
+      using namespace blas_lapack;
+      if constexpr (requires { get_array(a); } and std::is_same_v<get_value_t<A>, T>) {
+        if constexpr (MemoryMatrix<A> or (is_conj_array_expr<A> and has_C_layout<A>)) {
           return std::forward<A>(a);
         } else {
           return matrix<T, C_layout, CP>{a};
@@ -79,10 +80,10 @@ namespace nda::linalg {
     // Make the call to nda::blas::gemv with a copy of the matrix if it is not contiguous.
     template <Matrix A, Vector X, MemoryVector Y>
     void make_gemv_call(A const &a, X const &x, Y &y) {
-      if (blas::get_array(a).is_contiguous()) {
+      if (blas_lapack::get_array(a).is_contiguous()) {
         blas::gemv(1, a, x, 0, y);
       } else {
-        blas::gemv(1, nda::make_regular(a), x, 0, y);
+        blas::gemv(1, make_regular(a), x, 0, y);
       }
     }
 
@@ -93,10 +94,15 @@ namespace nda::linalg {
    *
    * @details This function computes the matrix-vector product 
    * \f[ 
-   *   \mathrm{op}_A(\mathbf{A}) \mathrm{op}_x(\mathbf{x}) \; ,
+   *   \mathbf{y} = \mathbf{A} \mathbf{x} \; ,
    * \f]
-   * where \f$ \mathrm{op}_A(\mathbf{A}) \f$ is an \f$ m \times n \f$ matrix and \f$ \mathrm{op}_x(\mathbf{x}) \f$ is a 
-   * vector of size \f$ n \f$. \f$ \mathrm{op}_i \f$ can be some lazy operation, e.g. nda::conj, nda::sin, etc.
+   * where \f$ \mathbf{A} \f$ is an \f$ m \times n \f$ matrix and \f$ \mathbf{x} \f$ and \f$ \mathbf{y} \f$ are vectors 
+   * of size \f$ n \f$ and \f$ m \f$, respectively.
+   * 
+   * The behaviour of this function is similar to nda::blas::gemv, except that it allows
+   * - lazy expressions as input,
+   * - the value types of the input matrix and vector to be different from each other and
+   * - the value types of the input matrix and vector to be different from nda::is_blas_lapack_v.
    *
    * We try to call nda::blas::gemv whenever possible, i.e. when the value type of the result is compatible with
    * nda::is_blas_lapack_v, even if this requires to make copies of the input arrays/views. Otherwise, we perform a very
@@ -105,14 +111,17 @@ namespace nda::linalg {
    * Therefore, if performance is important, users should make sure to pass input arrays/views which are compatible with
    * nda::blas::gemv.
    * 
-   * @warning This function might make copies of the input arrays/views. When working on the device memory space, this 
-   * may lead to runtime errors if the copying fails.
+   * The value type of the resulting nda::vector is deduced from the multiplication of the value types of the input 
+   * arguments and its address space is their nda::mem::common_addr_space.
+   * 
+   * @note This function might make copies of the input arrays/views. When working on the device memory space, this may 
+   * lead to runtime errors if the copying fails.
    *
    * @tparam A nda::Matrix type.
    * @tparam X nda::Vector type.
-   * @param a Input matrix \f$ \mathrm{op}_A(\mathbf{A}) \f$ of size \f$ m \times n \f$.
-   * @param x Input vector \f$ \mathrm{op}_x(\mathbf{x}) \f$ of size \f$ n \f$.
-   * @return Resulting vector of the matrix-vector multiplication of size \f$ m \f$.
+   * @param a Input matrix \f$ \mathbf{A} \f$ of size \f$ m \times n \f$.
+   * @param x Input vector \f$ \mathbf{x} \f$ of size \f$ n \f$.
+   * @return Resulting vector \f$ \mathbf{y} \f$ of size \f$ m \f$.
    */
   template <Matrix A, Vector X>
     requires(mem::have_compatible_addr_space<A, X>)

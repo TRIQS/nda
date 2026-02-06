@@ -99,11 +99,11 @@ void test_matvecmul() {
   auto A       = nda::matrix<T, Layout>(4, 3);
   nda::for_each(A.shape(), [&A](auto i, auto j) { A(i, j) = i * 3 + j + 1; });
   if constexpr (nda::is_complex_v<T>) {
-    A *= 1 - 1i;
-    x *= 2 - 1i;
-    x_t *= 2 - 1i;
-    exp_y *= (1 - 1i) * (2 - 1i);
-    exp_y_t *= (1 - 1i) * (2 - 1i);
+    A *= T{1 - 1i};
+    x *= T{2 - 1i};
+    x_t *= T{2 - 1i};
+    exp_y *= T{(1 - 1i) * (2 - 1i)};
+    exp_y_t *= T{(1 - 1i) * (2 - 1i)};
   }
   auto A_d   = to_addr_space<AS1>(A);
   auto x_d   = to_addr_space<AS2>(x);
@@ -111,55 +111,100 @@ void test_matvecmul() {
 
   // y = A * x
   auto y_d = nda::linalg::matvecmul(A_d, x_d);
-  EXPECT_ARRAY_NEAR(nda::to_host(y_d), exp_y);
+  EXPECT_ARRAY_NEAR(nda::to_host(y_d), exp_y, fp_tol<T>);
 
   // y_t = A^T * x_t
   auto y_t_d = nda::linalg::matvecmul(nda::transpose(A_d), x_t_d);
-  EXPECT_ARRAY_NEAR(nda::to_host(y_t_d), exp_y_t);
+  EXPECT_ARRAY_NEAR(nda::to_host(y_t_d), exp_y_t, fp_tol<T>);
 
   // y_h = A^H * x_t
-  if constexpr (nda::blas::has_F_layout<decltype(A_d)>) {
+  if constexpr (nda::blas::has_F_layout<decltype(A_d)> and not nda::mem::on_device<decltype(A_d)>) {
     auto exp_y_h = exp_y_t;
-    if constexpr (nda::is_complex_v<T>) exp_y_h = nda::vector<T>{210 + 70i, 240 + 80i, 270 + 90i};
+    if constexpr (nda::is_complex_v<T>) exp_y_h = nda::vector<T>{T{210 + 70i}, T{240 + 80i}, T{270 + 90i}};
     auto y_h_d = nda::linalg::matvecmul(nda::conj(nda::transpose(A_d)), x_t_d);
-    EXPECT_ARRAY_NEAR(nda::to_host(y_h_d), exp_y_h);
+    EXPECT_ARRAY_NEAR(nda::to_host(y_h_d), exp_y_h, fp_tol<T>);
   }
 
   // strided matrix and vector views
   if constexpr (nda::mem::have_host_compatible_addr_space<decltype(A_d), decltype(x_d)>) {
     auto y_v_d = nda::linalg::matvecmul(A_d(nda::range(0, 4, 2), nda::range(0, 3, 2)), x_d(nda::range(0, 3, 2)));
     if constexpr (nda::is_complex_v<T>) {
-      EXPECT_ARRAY_EQ(nda::to_host(y_v_d), (nda::vector<T>{10 - 30i, 34 - 102i}));
+      EXPECT_ARRAY_NEAR(nda::to_host(y_v_d), (nda::vector<T>{T{10 - 30i}, T{34 - 102i}}), fp_tol<T>);
     } else {
-      EXPECT_ARRAY_EQ(nda::to_host(y_v_d), (nda::vector<T>{10, 34}));
+      EXPECT_ARRAY_NEAR(nda::to_host(y_v_d), (nda::vector<T>{10, 34}), fp_tol<T>);
     }
   }
 }
 
-TEST(NDA, CULinearAlgebraMatvecmulGenericGemvBranch) {
-  test_matvecmul<long, nda::C_layout, nda::mem::Unified, nda::mem::Unified>();
-  test_matvecmul<long, nda::C_layout, nda::mem::Unified, nda::mem::Host>();
-  test_matvecmul<long, nda::C_layout, nda::mem::Host, nda::mem::Unified>();
+template <typename T, typename Layout>
+void test_matvecmul_address_spaces() {
+  test_matvecmul<T, Layout, Device, Device>();
+  test_matvecmul<T, Layout, Device, Unified>();
+  test_matvecmul<T, Layout, Unified, Device>();
+  test_matvecmul<T, Layout, Unified, Unified>();
+  test_matvecmul<T, Layout, Unified, Host>();
+  test_matvecmul<T, Layout, Host, Unified>();
+}
 
-  test_matvecmul<long, nda::F_layout, nda::mem::Unified, nda::mem::Unified>();
-  test_matvecmul<long, nda::F_layout, nda::mem::Unified, nda::mem::Host>();
-  test_matvecmul<long, nda::F_layout, nda::mem::Host, nda::mem::Unified>();
+template <typename T>
+void test_matvecmul_layouts() {
+  test_matvecmul_address_spaces<T, C_layout>();
+  test_matvecmul_address_spaces<T, F_layout>();
+}
+
+TEST(NDA, CULinearAlgebraMatvecmulGenericGemvBranch) {
+  test_matvecmul<long, C_layout, Unified, Unified>();
+  test_matvecmul<long, C_layout, Unified, Host>();
+  test_matvecmul<long, C_layout, Host, Unified>();
+
+  test_matvecmul<long, F_layout, Unified, Unified>();
+  test_matvecmul<long, F_layout, Unified, Host>();
+  test_matvecmul<long, F_layout, Host, Unified>();
 }
 
 TEST(NDA, CULinearAlgebraMatvecmulBLASBranch) {
-  test_matvecmul<double, nda::C_layout, nda::mem::Device, nda::mem::Device>();
-  test_matvecmul<double, nda::F_layout, nda::mem::Unified, nda::mem::Device>();
-  test_matvecmul<double, nda::C_layout, nda::mem::Device, nda::mem::Unified>();
-  test_matvecmul<std::complex<double>, nda::C_layout, nda::mem::Device, nda::mem::Device>();
-  test_matvecmul<std::complex<double>, nda::F_layout, nda::mem::Unified, nda::mem::Device>();
-  test_matvecmul<std::complex<double>, nda::C_layout, nda::mem::Device, nda::mem::Unified>();
+  test_matvecmul_layouts<float>();
+  test_matvecmul_layouts<std::complex<float>>();
+  test_matvecmul_layouts<double>();
+  test_matvecmul_layouts<std::complex<double>>();
+}
 
-  test_matvecmul<double, nda::C_layout, nda::mem::Unified, nda::mem::Unified>();
-  test_matvecmul<double, nda::F_layout, nda::mem::Unified, nda::mem::Host>();
-  test_matvecmul<double, nda::C_layout, nda::mem::Host, nda::mem::Unified>();
-  test_matvecmul<std::complex<double>, nda::C_layout, nda::mem::Unified, nda::mem::Unified>();
-  test_matvecmul<std::complex<double>, nda::F_layout, nda::mem::Unified, nda::mem::Host>();
-  test_matvecmul<std::complex<double>, nda::C_layout, nda::mem::Host, nda::mem::Unified>();
+template <typename T, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
+void test_matvecmul_promotion() {
+  auto A_i    = nda::matrix<int>{{1, 2}, {3, 4}};
+  auto A_fp   = nda::matrix<T>{{1, 2}, {3, 4}};
+  auto w_i    = nda::vector<int>{1, 1};
+  auto w_fp   = nda::vector<T>{1, 1};
+  auto A_i_d  = to_addr_space<AS1>(A_i);
+  auto A_fp_d = to_addr_space<AS1>(A_fp);
+  auto w_i_d  = to_addr_space<AS2>(w_i);
+  auto w_fp_d = to_addr_space<AS2>(w_fp);
+
+  auto v_fp1_d = nda::linalg::matvecmul(A_fp_d, w_i_d);
+  static_assert(std::same_as<nda::get_value_t<decltype(v_fp1_d)>, T>);
+  EXPECT_ARRAY_NEAR(nda::to_host(v_fp1_d), (nda::vector<T>{3, 7}), fp_tol<T>);
+
+  auto v_fp2_d = nda::linalg::matvecmul(A_i_d, w_fp_d);
+  static_assert(std::same_as<nda::get_value_t<decltype(v_fp2_d)>, T>);
+  EXPECT_ARRAY_NEAR(nda::to_host(v_fp2_d), (nda::vector<T>{3, 7}), fp_tol<T>);
+
+  auto v_i_d = nda::linalg::matvecmul(A_i_d, w_i_d);
+  static_assert(std::same_as<nda::get_value_t<decltype(v_i_d)>, int>);
+  EXPECT_ARRAY_EQ(nda::to_host(v_i_d), (nda::vector<int>{3, 7}));
+}
+
+template <typename T>
+void test_matvecmul_promotion_address_spaces() {
+  test_matvecmul_promotion<T, Unified, Unified>();
+  test_matvecmul_promotion<T, Unified, Host>();
+  test_matvecmul_promotion<T, Host, Unified>();
+}
+
+TEST(NDA, CULinearAlgebraMatvecmulPromotion) {
+  test_matvecmul_promotion_address_spaces<float>();
+  test_matvecmul_promotion_address_spaces<std::complex<float>>();
+  test_matvecmul_promotion_address_spaces<double>();
+  test_matvecmul_promotion_address_spaces<std::complex<double>>();
 }
 
 // Test the generic matmul function.
