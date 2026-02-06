@@ -715,31 +715,44 @@ TEST(NDA, LinearAlgebraSolve) {
 template <typename T, typename Layout>
 void test_svd() {
   using matrix_t = nda::matrix<T, Layout>;
+  using fp_t     = nda::get_fp_t<T>;
 
-  auto A = matrix_t{{2, -2, 1}, {-4, -8, -8}};
-  auto s = nda::vector<double>{12, 3};
+  auto A = matrix_t{{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}}};
+
+  // expected condition number and spectral norm of A from numpy
+  constexpr fp_t cond_A = 6.784414066333698;
+  constexpr fp_t norm_A = 12.316822252443167;
+
+  // check backward error of SVD and expected condition number and spectral norm from numpy
+  auto check_svd = [cond_A, norm_A](auto const &A, auto const &U, auto const &s, auto const &VH) {
+    auto S      = matrix_t::zeros(A.shape());
+    diagonal(S) = s;
+    EXPECT_ARRAY_NEAR(A, U * S * VH, fp_tol<T>);
+    EXPECT_NEAR(s(0) / s(s.size() - 1), cond_A, fp_tol<T>);
+    EXPECT_NEAR(s(0), norm_A, fp_tol<T>);
+  };
 
   // compute the SVD of A
-  auto [U_1, s_1, VH_1] = nda::linalg::svd(A);
-  auto S_1              = matrix_t::zeros(A.shape());
-  diagonal(S_1)         = s_1;
-  EXPECT_ARRAY_NEAR(s_1, s, 1e-14);
-  EXPECT_ARRAY_NEAR(A, U_1 * S_1 * VH_1, 1e-14);
+  auto [U1, s1, VH1] = nda::linalg::svd(A);
+  check_svd(A, U1, s1, VH1);
 
   // compute the SVD of A in place
-  auto A_copy           = A;
-  auto [U_2, s_2, VH_2] = nda::linalg::svd_in_place(A_copy);
-  auto S_2              = matrix_t::zeros(A.shape());
-  diagonal(S_2)         = s_2;
-  EXPECT_ARRAY_NEAR(s, s_2, 1e-14);
-  EXPECT_ARRAY_NEAR(A, U_2 * S_2 * VH_2, 1e-14);
+  auto A_copy        = A;
+  auto [U2, s2, VH2] = nda::linalg::svd_in_place(A_copy);
+  check_svd(A, U2, s2, VH2);
+}
+
+template <typename T>
+void test_svd_layouts() {
+  test_svd<T, C_layout>();
+  test_svd<T, F_layout>();
 }
 
 TEST(NDA, LinearAlgebraSVD) {
-  test_svd<double, nda::C_layout>();
-  test_svd<double, nda::F_layout>();
-  test_svd<std::complex<double>, nda::C_layout>();
-  test_svd<std::complex<double>, nda::F_layout>();
+  test_svd_layouts<float>();
+  test_svd_layouts<std::complex<float>>();
+  test_svd_layouts<double>();
+  test_svd_layouts<std::complex<double>>();
 }
 
 // Test the cross product function.

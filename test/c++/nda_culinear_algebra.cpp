@@ -482,37 +482,53 @@ TEST(NDA, CULinearAlgebraSolve) {
 // Test the svd and svd_in_place functions.
 template <typename T, typename Layout, nda::mem::AddressSpace AS>
 void test_svd() {
-  auto A = nda::matrix<T, Layout>{{2, -2, 1}, {-4, -8, -8}};
-  if constexpr (std::same_as<Layout, nda::F_layout>) {
-    // CUDA cannot handle when m < n
-    A = nda::matrix<T, Layout>(nda::transpose(A));
+  using matrix_t = nda::matrix<T, Layout>;
+  using fp_t     = nda::get_fp_t<T>;
+
+  auto A = matrix_t{{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}}};
+  if constexpr (std::same_as<Layout, C_layout>) {
+    // cuSOLVER cannot handle when m < n
+    A = matrix_t(nda::transpose(A));
   }
-  auto s = nda::vector<double>{12, 3};
+
+  // expected condition number and spectral norm of A from numpy
+  constexpr fp_t cond_A = 6.784414066333698;
+  constexpr fp_t norm_A = 12.316822252443167;
+
+  // check backward error of SVD and expected condition number and spectral norm from numpy
+  auto check_svd = [cond_A, norm_A](auto const &A, auto const &U, auto const &s, auto const &VH) {
+    auto S      = matrix_t::zeros(A.shape());
+    diagonal(S) = s;
+    EXPECT_ARRAY_NEAR(A, U * S * VH, fp_tol<T>);
+    EXPECT_NEAR(s(0) / s(s.size() - 1), cond_A, fp_tol<T>);
+    EXPECT_NEAR(s(0), norm_A, fp_tol<T>);
+  };
 
   // compute the SVD of A
-  auto A_d              = to_addr_space<AS>(A);
-  auto [U_d, s_d, VH_d] = nda::linalg::svd(A_d);
-  auto S                = nda::matrix<T, Layout>::zeros(A.shape());
-  nda::diagonal(S)      = nda::to_host(s_d);
-  EXPECT_ARRAY_NEAR(s, nda::to_host(s_d), 1e-14);
-  EXPECT_ARRAY_NEAR(A, nda::to_host(U_d) * S * nda::to_host(VH_d), 1e-14);
+  auto [U1_d, s1_d, VH1_d] = nda::linalg::svd(to_addr_space<AS>(A));
+  check_svd(A, nda::to_host(U1_d), nda::to_host(s1_d), nda::to_host(VH1_d));
 
   // compute the SVD of A in place
-  auto [U_d2, s_d2, VH_d2] = nda::linalg::svd_in_place(A_d);
-  auto S2                  = nda::matrix<T, Layout>::zeros(A.shape());
-  nda::diagonal(S2)        = nda::to_host(s_d2);
-  EXPECT_ARRAY_NEAR(s, nda::to_host(s_d2), 1e-14);
-  EXPECT_ARRAY_NEAR(A, nda::to_host(U_d2) * S2 * nda::to_host(VH_d2), 1e-14);
+  auto A_d                 = to_addr_space<AS>(A);
+  auto [U2_d, s2_d, VH2_d] = nda::linalg::svd_in_place(A_d);
+  check_svd(A, nda::to_host(U2_d), nda::to_host(s2_d), nda::to_host(VH2_d));
+}
+
+template <typename T, typename Layout>
+void test_svd_address_spaces() {
+  test_svd<T, Layout, Device>();
+  test_svd<T, Layout, Unified>();
+}
+
+template <typename T>
+void test_svd_layouts() {
+  test_svd_address_spaces<T, C_layout>();
+  test_svd_address_spaces<T, F_layout>();
 }
 
 TEST(NDA, CULinearAlgebraSVD) {
-  test_svd<double, nda::C_layout, nda::mem::Device>();
-  test_svd<double, nda::F_layout, nda::mem::Device>();
-  test_svd<std::complex<double>, nda::C_layout, nda::mem::Device>();
-  test_svd<std::complex<double>, nda::F_layout, nda::mem::Device>();
-
-  test_svd<double, nda::C_layout, nda::mem::Unified>();
-  test_svd<double, nda::F_layout, nda::mem::Unified>();
-  test_svd<std::complex<double>, nda::C_layout, nda::mem::Unified>();
-  test_svd<std::complex<double>, nda::F_layout, nda::mem::Unified>();
+  test_svd_layouts<float>();
+  test_svd_layouts<std::complex<float>>();
+  test_svd_layouts<double>();
+  test_svd_layouts<std::complex<double>>();
 }
