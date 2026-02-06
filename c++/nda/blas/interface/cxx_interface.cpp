@@ -212,6 +212,14 @@ namespace nda::blas::f77 {
 #endif
   }
 
+  // gemv
+  void gemv(char op, int m, int n, float alpha, const float *a, int lda, const float *x, int incx, float beta, float *y, int incy) {
+    F77_sgemv(&op, &m, &n, &alpha, a, &lda, x, &incx, &beta, y, &incy);
+  }
+  void gemv(char op, int m, int n, std::complex<float> alpha, const std::complex<float> *a, int lda, const std::complex<float> *x, int incx,
+            std::complex<float> beta, std::complex<float> *y, int incy) {
+    F77_cgemv(&op, &m, &n, blacplx(&alpha), blacplx(a), &lda, blacplx(x), &incx, blacplx(&beta), blacplx(y), &incy);
+  }
   void gemv(char op, int m, int n, double alpha, const double *a, int lda, const double *x, int incx, double beta, double *y, int incy) {
     F77_dgemv(&op, &m, &n, &alpha, a, &lda, x, &incx, &beta, y, &incy);
   }

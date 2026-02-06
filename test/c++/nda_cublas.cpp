@@ -258,11 +258,11 @@ void test_gemv() {
   auto A       = nda::matrix<T, Layout>(4, 3);
   nda::for_each(A.shape(), [&A](auto i, auto j) { A(i, j) = i * 3 + j + 1; });
   if constexpr (nda::is_complex_v<T>) {
-    A *= 1 - 1i;
-    x *= 2 - 1i;
-    x_t *= 2 - 1i;
-    exp_y *= (1 - 1i) * (2 - 1i);
-    exp_y_t *= (1 - 1i) * (2 - 1i);
+    A *= T{1 - 1i};
+    x *= T{2 - 1i};
+    x_t *= T{2 - 1i};
+    exp_y *= T{(1 - 1i) * (2 - 1i)};
+    exp_y_t *= T{(1 - 1i) * (2 - 1i)};
   }
   auto A_d   = to_addr_space<AS1>(A);
   auto x_d   = to_addr_space<AS2>(x);
@@ -271,24 +271,24 @@ void test_gemv() {
   // y = A * x
   auto y_d = to_addr_space<AS3>(nda::vector<T>(4));
   nda::blas::gemv(1.0, A_d, x_d, 0.0, y_d);
-  EXPECT_ARRAY_NEAR(nda::to_host(y_d), exp_y);
+  EXPECT_ARRAY_NEAR(nda::to_host(y_d), exp_y, fp_tol<T>);
 
   // y = 3 * A * x + 2y
   nda::blas::gemv(3, A_d, x_d, 2, y_d);
-  EXPECT_ARRAY_NEAR(nda::to_host(y_d), 5 * exp_y);
+  EXPECT_ARRAY_NEAR(nda::to_host(y_d), 5 * exp_y, fp_tol<T>);
 
   // y_t = A^T * x_t
   auto y_t_d = to_addr_space<AS3>(nda::vector<T>(3));
   nda::blas::gemv(1.0, nda::transpose(A_d), x_t_d, 0.0, y_t_d);
-  EXPECT_ARRAY_NEAR(nda::to_host(y_t_d), exp_y_t);
+  EXPECT_ARRAY_NEAR(nda::to_host(y_t_d), exp_y_t, fp_tol<T>);
 
   if constexpr (std::same_as<Layout, F_layout>) {
     // y_h = A^H * x_t
     auto exp_y_h = exp_y_t;
-    if constexpr (nda::is_complex_v<T>) exp_y_h = nda::vector<T>{210 + 70i, 240 + 80i, 270 + 90i};
+    if constexpr (nda::is_complex_v<T>) exp_y_h = nda::vector<T>{T{210 + 70i}, T{240 + 80i}, T{270 + 90i}};
     auto y_h_d = to_addr_space<AS3>(nda::vector<T>(3));
     nda::blas::gemv(1.0, nda::dagger(A_d), x_t_d, 0.0, y_h_d);
-    EXPECT_ARRAY_NEAR(nda::to_host(y_h_d), exp_y_h);
+    EXPECT_ARRAY_NEAR(nda::to_host(y_h_d), exp_y_h, fp_tol<T>);
   } else {
     // contiguous matrix view * strided vector view
     auto x_v                 = nda::vector<T>(6);
@@ -296,30 +296,29 @@ void test_gemv() {
     auto x_v_d               = to_addr_space<AS2>(x_v);
     auto y_v_d               = to_addr_space<AS3>(nda::vector<T>(4));
     nda::blas::gemv(1, A_d(nda::range(2), nda::range::all), x_v_d(nda::range(0, 6, 2)), 0, y_v_d(nda::range(0, 4, 2)));
-    EXPECT_ARRAY_NEAR(nda::to_host(y_v_d)(nda::range(0, 4, 2)), exp_y(nda::range(2)));
+    EXPECT_ARRAY_NEAR(nda::to_host(y_v_d)(nda::range(0, 4, 2)), exp_y(nda::range(2)), fp_tol<T>);
   }
 }
 
+template <typename T, typename Layout>
+void test_gemv_address_spaces() {
+  test_gemv<T, Layout, Device, Device, Device>();
+  test_gemv<T, Layout, Device, Unified, Device>();
+  test_gemv<T, Layout, Unified, Unified, Unified>();
+  test_gemv<T, Layout, Host, Host, Unified>();
+}
+
+template <typename T>
+void test_gemv_layouts() {
+  test_gemv_address_spaces<T, C_layout>();
+  test_gemv_address_spaces<T, F_layout>();
+}
+
 TEST(NDA, CUBLASGemv) {
-  test_gemv<double, C_layout, Device, Device, Device>();
-  test_gemv<double, C_layout, Device, Unified, Device>();
-  test_gemv<double, C_layout, Unified, Unified, Unified>();
-  test_gemv<double, C_layout, Host, Unified, Unified>();
-
-  test_gemv<double, F_layout, Device, Device, Device>();
-  test_gemv<double, F_layout, Device, Device, Unified>();
-  test_gemv<double, F_layout, Unified, Unified, Unified>();
-  test_gemv<double, F_layout, Unified, Host, Unified>();
-
-  test_gemv<std::complex<double>, C_layout, Device, Device, Device>();
-  test_gemv<std::complex<double>, C_layout, Unified, Unified, Device>();
-  test_gemv<std::complex<double>, C_layout, Unified, Unified, Unified>();
-  test_gemv<std::complex<double>, C_layout, Host, Host, Unified>();
-
-  test_gemv<std::complex<double>, F_layout, Device, Device, Device>();
-  test_gemv<std::complex<double>, F_layout, Unified, Unified, Device>();
-  test_gemv<std::complex<double>, F_layout, Unified, Unified, Unified>();
-  test_gemv<std::complex<double>, F_layout, Unified, Host, Host>();
+  test_gemv_layouts<float>();
+  test_gemv_layouts<std::complex<float>>();
+  test_gemv_layouts<double>();
+  test_gemv_layouts<std::complex<double>>();
 }
 
 // Test the CUBLAS ger/gerc function.
