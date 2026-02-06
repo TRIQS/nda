@@ -5,7 +5,7 @@
 
 /**
  * @file
- * @brief Provides a generic interface to the BLAS `gemm` routine.
+ * @brief Provides a generic interface to the BLAS/cuBLAS `gemm` routine.
  */
 
 #pragma once
@@ -13,14 +13,11 @@
 #include "./interface/cxx_interface.hpp"
 #include "./tools.hpp"
 #include "../concepts.hpp"
+#include "../device.hpp"
 #include "../layout_transforms.hpp"
 #include "../macros.hpp"
 #include "../mem/address_space.hpp"
 #include "../traits.hpp"
-
-#ifndef NDA_HAVE_DEVICE
-#include "../device.hpp"
-#endif // NDA_HAVE_DEVICE
 
 #include <utility>
 
@@ -32,36 +29,33 @@ namespace nda::blas {
    */
 
   /**
-   * @brief Interface to the BLAS `gemm` routine.
+   * @brief Interface to the BLAS/cuBLAS `gemm` routine.
    *
-   * @details This function performs one of the matrix-matrix operations
+   * @details This function performs the matrix-matrix operation
    * \f[
-   *   \mathbf{C} \leftarrow \alpha \mathrm{op}_A(\mathbf{A}) \mathrm{op}_B(\mathbf{B}) + \beta \mathbf{C} \;,
+   *   \mathbf{C} \leftarrow \alpha \mathbf{A} \mathbf{B} + \beta \mathbf{C} \;,
    * \f]
-   * where \f$ \mathrm{op}(\mathbf{X}) \f$ is one of
-   * - \f$ \mathrm{op}(\mathbf{X}) = \mathbf{X} \f$ or,
-   * - \f$ \mathrm{op}(\mathbf{X}) = \mathbf{X}^* \f$ (only if \f$ \mathbf{X} \f$ is in nda::C_layout).
-   *
-   * Here, \f$ \alpha \f$ and \f$ \beta \f$ are scalars, and \f$ \mathbf{A} \f$, \f$ \mathbf{B} \f$ and \f$ \mathbf{C}
+   * where \f$ \alpha \f$ and \f$ \beta \f$ are scalars, and \f$ \mathbf{A} \f$, \f$ \mathbf{B} \f$ and \f$ \mathbf{C}
    * \f$ are matrices of size \f$ m \times k \f$, \f$ k \times n \f$ and \f$ m \times n \f$, respectively.
    *
-   * @note If matrix \f$ \mathbf{C} \f$ is in nda::C_layout, we transpose both \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ 
-   * and swap their order.
+   * If the input arrays satisfy nda::mem::have_device_compatible_addr_space, the cuBLAS implementation is used.
+   * 
+   * @note \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ are allowed to be lazy conjugate expressions (see 
+   * nda::blas_lapack::is_conj_array_expr). In this case, they are required to have the opposite memory layout of \f$ 
+   * \mathbf{C} \f$ (see nda::C_layout vs nda::F_layout).
    *
-   * @tparam A nda::Matrix type.
-   * @tparam B nda::Matrix type.
-   * @tparam C nda::MemoryMatrix type.
+   * @tparam A nda::blas_lapack::BlasArrayOrConj<2> type.
+   * @tparam B nda::blas_lapack::BlasArrayOrConjFor<A, 2> type.
+   * @tparam C nda::blas_lapack::BlasArrayFor<A, 2> type.
    * @param alpha Input scalar \f$ \alpha \f$.
-   * @param a Input matrix \f$ \mathrm{op}_A(\mathbf{A}) \f$ of size \f$ m \times k \f$.
-   * @param b Input matrix \f$ \mathrm{op}_B(\mathbf{B}) \f$ of size \f$ k \times n \f$.
+   * @param a Input matrix \f$ \mathbf{A} \f$ of size \f$ m \times k \f$.
+   * @param b Input matrix \f$ \mathbf{B})\f$ of size \f$ k \times n \f$.
    * @param beta Input scalar \f$ \beta \f$.
    * @param c Input/Output matrix \f$ \mathbf{C} \f$ of size \f$ m \times n \f$.
    */
-  template <Matrix A, Matrix B, MemoryMatrix C>
-    requires((MemoryMatrix<A> or is_conj_array_expr<A>) and (MemoryMatrix<B> or is_conj_array_expr<B>)
-             and have_same_value_type_v<A, B, C> and mem::have_compatible_addr_space<A, B, C> and is_blas_lapack_v<get_value_t<A>>)
+  template <BlasArrayOrConj<2> A, BlasArrayOrConjFor<A, 2> B, BlasArrayFor<A, 2> C>
   void gemm(get_value_t<A> alpha, A const &a, B const &b, get_value_t<A> beta, C &&c) {
-    // if C is in C-layout, compute the transpose of the product in Fortran order
+    // if C is in C-layout, compute the transpose of the product
     if constexpr (has_C_layout<C>) {
       gemm(alpha, transpose(b), transpose(a), beta, transpose(std::forward<C>(c)));
     } else {
@@ -83,11 +77,7 @@ namespace nda::blas {
 
       // perform the actual library call
       if constexpr (mem::have_device_compatible_addr_space<A, B, C>) {
-#if defined(NDA_HAVE_DEVICE)
         device::gemm(get_op<A>, get_op<B>, m, n, k, alpha, mat_a.data(), get_ld(mat_a), mat_b.data(), get_ld(mat_b), beta, c.data(), get_ld(c));
-#else
-        compile_error_no_gpu();
-#endif
       } else {
         f77::gemm(get_op<A>, get_op<B>, m, n, k, alpha, mat_a.data(), get_ld(mat_a), mat_b.data(), get_ld(mat_b), beta, c.data(), get_ld(c));
       }

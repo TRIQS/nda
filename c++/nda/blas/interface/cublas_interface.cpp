@@ -82,17 +82,6 @@ namespace nda::blas::device {
     }                                                                                                                                                \
   }
 
-  void gemm(char op_a, char op_b, int m, int n, int k, double alpha, const double *a, int lda, const double *b, int ldb, double beta, double *c,
-            int ldc) {
-    CUBLAS_CHECK(cublasDgemm, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, &alpha, a, lda, b, ldb, &beta, c, ldc);
-  }
-  void gemm(char op_a, char op_b, int m, int n, int k, std::complex<double> alpha, const std::complex<double> *a, int lda,
-            const std::complex<double> *b, int ldb, std::complex<double> beta, std::complex<double> *c, int ldc) {
-    auto alpha_cu = cucplx(alpha);
-    auto beta_cu  = cucplx(beta);
-    CUBLAS_CHECK(cublasZgemm, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, &alpha_cu, cucplx(a), lda, cucplx(b), ldb, &beta_cu, cucplx(c), ldc);
-  }
-
   void gemm_batch(char op_a, char op_b, int m, int n, int k, double alpha, const double **a, int lda, const double **b, int ldb, double beta,
                   double **c, int ldc, int batch_count) {
     CUBLAS_CHECK(cublasDgemmBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, &alpha, a, lda, b, ldb, &beta, c, ldc, batch_count);
@@ -178,6 +167,25 @@ namespace nda::blas::device {
     cuDoubleComplex res;
     CUBLAS_CHECK(cublasZdotc, m, cucplx(x), incx, cucplx(y), incy, &res);
     return {res.x, res.y};
+  }
+
+  // gemm
+  void gemm(char op_a, char op_b, int m, int n, int k, float alpha, const float *a, int lda, const float *b, int ldb, float beta, float *c, int ldc) {
+    CUBLAS_CHECK(cublasSgemm, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, &alpha, a, lda, b, ldb, &beta, c, ldc);
+  }
+  void gemm(char op_a, char op_b, int m, int n, int k, std::complex<float> alpha, const std::complex<float> *a, int lda, const std::complex<float> *b,
+            int ldb, std::complex<float> beta, std::complex<float> *c, int ldc) {
+    CUBLAS_CHECK(cublasCgemm, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, cucplx(&alpha), cucplx(a), lda, cucplx(b), ldb, cucplx(&beta),
+                 cucplx(c), ldc);
+  }
+  void gemm(char op_a, char op_b, int m, int n, int k, double alpha, const double *a, int lda, const double *b, int ldb, double beta, double *c,
+            int ldc) {
+    CUBLAS_CHECK(cublasDgemm, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, &alpha, a, lda, b, ldb, &beta, c, ldc);
+  }
+  void gemm(char op_a, char op_b, int m, int n, int k, std::complex<double> alpha, const std::complex<double> *a, int lda,
+            const std::complex<double> *b, int ldb, std::complex<double> beta, std::complex<double> *c, int ldc) {
+    CUBLAS_CHECK(cublasZgemm, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, cucplx(&alpha), cucplx(a), lda, cucplx(b), ldb, cucplx(&beta),
+                 cucplx(c), ldc);
   }
 
   // gemv
