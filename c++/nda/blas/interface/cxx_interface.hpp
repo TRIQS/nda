@@ -15,9 +15,13 @@
 
 namespace nda::blas::f77 {
 
+  void axpy(int n, float alpha, const float *x, int incx, float *y, int incy);
+  void axpy(int n, std::complex<float> alpha, const std::complex<float> *x, int incx, std::complex<float> *y, int incy);
   void axpy(int n, double alpha, const double *x, int incx, double *y, int incy);
   void axpy(int n, std::complex<double> alpha, const std::complex<double> *x, int incx, std::complex<double> *y, int incy);
 
+  void copy(int n, const float *x, int incx, float *y, int incy);
+  void copy(int n, const std::complex<float> *x, int incx, std::complex<float> *y, int incy);
   void copy(int n, const double *x, int incx, double *y, int incy);
   void copy(int n, const std::complex<double> *x, int incx, std::complex<double> *y, int incy);
 
@@ -88,6 +92,8 @@ namespace nda::blas::f77 {
   void scal(int m, double alpha, double *x, int incx);
   void scal(int m, std::complex<double> alpha, std::complex<double> *x, int incx);
 
+  void swap(int n, float *x, int incx, float *y, int incy);                               // NOLINT (this is a BLAS swap)
+  void swap(int n, std::complex<float> *x, int incx, std::complex<float> *y, int incy);   // NOLINT (this is a BLAS swap)
   void swap(int n, double *x, int incx, double *y, int incy);                             // NOLINT (this is a BLAS swap)
   void swap(int n, std::complex<double> *x, int incx, std::complex<double> *y, int incy); // NOLINT (this is a BLAS swap)
 

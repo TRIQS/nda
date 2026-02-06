@@ -157,12 +157,19 @@ namespace nda::blas::f77 {
 
   } // namespace
 
+  // axpy
+  void axpy(int n, float alpha, const float *x, int incx, float *y, int incy) { F77_saxpy(&n, &alpha, x, &incx, y, &incy); }
+  void axpy(int n, std::complex<float> alpha, const std::complex<float> *x, int incx, std::complex<float> *y, int incy) {
+    F77_caxpy(&n, blacplx(&alpha), blacplx(x), &incx, blacplx(y), &incy);
+  }
   void axpy(int n, double alpha, const double *x, int incx, double *y, int incy) { F77_daxpy(&n, &alpha, x, &incx, y, &incy); }
   void axpy(int n, std::complex<double> alpha, const std::complex<double> *x, int incx, std::complex<double> *y, int incy) {
     F77_zaxpy(&n, blacplx(&alpha), blacplx(x), &incx, blacplx(y), &incy);
   }
 
-  // No Const In Wrapping!
+  // copy
+  void copy(int n, const float *x, int incx, float *y, int incy) { F77_scopy(&n, x, &incx, y, &incy); }
+  void copy(int n, const std::complex<float> *x, int incx, std::complex<float> *y, int incy) { F77_ccopy(&n, blacplx(x), &incx, blacplx(y), &incy); }
   void copy(int n, const double *x, int incx, double *y, int incy) { F77_dcopy(&n, x, &incx, y, &incy); }
   void copy(int n, const std::complex<double> *x, int incx, std::complex<double> *y, int incy) {
     F77_zcopy(&n, blacplx(x), &incx, blacplx(y), &incy);
@@ -327,6 +334,11 @@ namespace nda::blas::f77 {
   void scal(int m, double alpha, double *x, int incx) { F77_dscal(&m, &alpha, x, &incx); }
   void scal(int m, std::complex<double> alpha, std::complex<double> *x, int incx) { F77_zscal(&m, blacplx(&alpha), blacplx(x), &incx); }
 
+  // swap
+  void swap(int n, float *x, int incx, float *y, int incy) { F77_sswap(&n, x, &incx, y, &incy); } // NOLINT (this is a BLAS swap)
+  void swap(int n, std::complex<float> *x, int incx, std::complex<float> *y, int incy) {          // NOLINT (this is a BLAS swap)
+    F77_cswap(&n, blacplx(x), &incx, blacplx(y), &incy);
+  }
   void swap(int n, double *x, int incx, double *y, int incy) { F77_dswap(&n, x, &incx, y, &incy); } // NOLINT (this is a BLAS swap)
   void swap(int n, std::complex<double> *x, int incx, std::complex<double> *y, int incy) {          // NOLINT (this is a BLAS swap)
     F77_zswap(&n, blacplx(x), &incx, blacplx(y), &incy);
