@@ -180,14 +180,20 @@ namespace nda::blas::device {
     return {res.x, res.y};
   }
 
+  // gemv
+  void gemv(char op, int m, int n, float alpha, const float *a, int lda, const float *x, int incx, float beta, float *y, int incy) {
+    CUBLAS_CHECK(cublasSgemv, get_cublas_op(op), m, n, &alpha, a, lda, x, incx, &beta, y, incy);
+  }
+  void gemv(char op, int m, int n, std::complex<float> alpha, const std::complex<float> *a, int lda, const std::complex<float> *x, int incx,
+            std::complex<float> beta, std::complex<float> *y, int incy) {
+    CUBLAS_CHECK(cublasCgemv, get_cublas_op(op), m, n, cucplx(&alpha), cucplx(a), lda, cucplx(x), incx, cucplx(&beta), cucplx(y), incy);
+  }
   void gemv(char op, int m, int n, double alpha, const double *a, int lda, const double *x, int incx, double beta, double *y, int incy) {
     CUBLAS_CHECK(cublasDgemv, get_cublas_op(op), m, n, &alpha, a, lda, x, incx, &beta, y, incy);
   }
   void gemv(char op, int m, int n, std::complex<double> alpha, const std::complex<double> *a, int lda, const std::complex<double> *x, int incx,
             std::complex<double> beta, std::complex<double> *y, int incy) {
-    auto alpha_cu = cucplx(alpha);
-    auto beta_cu  = cucplx(beta);
-    CUBLAS_CHECK(cublasZgemv, get_cublas_op(op), m, n, &alpha_cu, cucplx(a), lda, cucplx(x), incx, &beta_cu, cucplx(y), incy);
+    CUBLAS_CHECK(cublasZgemv, get_cublas_op(op), m, n, cucplx(&alpha), cucplx(a), lda, cucplx(x), incx, cucplx(&beta), cucplx(y), incy);
   }
 
   // ger and gerc

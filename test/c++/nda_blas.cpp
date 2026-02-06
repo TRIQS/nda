@@ -275,49 +275,55 @@ void test_gemv() {
   auto A       = nda::matrix<T, Layout>(4, 3);
   nda::for_each(A.shape(), [&A](auto i, auto j) { A(i, j) = i * 3 + j + 1; });
   if constexpr (nda::is_complex_v<T>) {
-    A *= 1 - 1i;
-    x *= 2 - 1i;
-    x_t *= 2 - 1i;
-    exp_y *= (1 - 1i) * (2 - 1i);
-    exp_y_t *= (1 - 1i) * (2 - 1i);
+    A *= T{1 - 1i};
+    x *= T{2 - 1i};
+    x_t *= T{2 - 1i};
+    exp_y *= T{(1 - 1i) * (2 - 1i)};
+    exp_y_t *= T{(1 - 1i) * (2 - 1i)};
   }
 
   // y = A * x
   auto y = nda::vector<T>(4);
   nda::blas::gemv(1.0, A, x, 0.0, y);
-  EXPECT_ARRAY_NEAR(y, exp_y);
+  EXPECT_ARRAY_NEAR(y, exp_y, fp_tol<T>);
 
   // y = 3 * A * x + 2y
   nda::blas::gemv(3, A, x, 2, y);
-  EXPECT_ARRAY_NEAR(y, 5 * exp_y);
+  EXPECT_ARRAY_NEAR(y, 5 * exp_y, fp_tol<T>);
 
   // y_t = A^T * x_t
   auto y_t = nda::vector<T>(3);
   nda::blas::gemv(1.0, nda::transpose(A), x_t, 0.0, y_t);
-  EXPECT_ARRAY_NEAR(y_t, exp_y_t);
+  EXPECT_ARRAY_NEAR(y_t, exp_y_t, fp_tol<T>);
 
   if constexpr (std::same_as<Layout, F_layout>) {
     // y_h = A^H * x_t
     auto exp_y_h = exp_y_t;
-    if constexpr (nda::is_complex_v<T>) exp_y_h = nda::vector<T>{210 + 70i, 240 + 80i, 270 + 90i};
+    if constexpr (nda::is_complex_v<T>) exp_y_h = nda::vector<T>{T{210 + 70i}, T{240 + 80i}, T{270 + 90i}};
     auto y_h = nda::vector<T>(3);
     nda::blas::gemv(1.0, nda::dagger(A), x_t, 0.0, y_h);
-    EXPECT_ARRAY_NEAR(y_h, exp_y_h);
+    EXPECT_ARRAY_NEAR(y_h, exp_y_h, fp_tol<T>);
   } else {
     // contiguous matrix view * strided vector view
     auto x_v                 = nda::vector<T>(6);
     x_v(nda::range(0, 6, 2)) = x;
     auto y_v                 = nda::vector<T>(4);
     nda::blas::gemv(1, A(nda::range(2), nda::range::all), x_v(nda::range(0, 6, 2)), 0, y(nda::range(0, 4, 2)));
-    EXPECT_ARRAY_NEAR(y(nda::range(0, 4, 2)), exp_y(nda::range(2)));
+    EXPECT_ARRAY_NEAR(y(nda::range(0, 4, 2)), exp_y(nda::range(2)), fp_tol<T>);
   }
 }
 
+template <typename T>
+void test_gemv_layouts() {
+  test_gemv<T, C_layout>();
+  test_gemv<T, F_layout>();
+}
+
 TEST(NDA, BLASGemv) {
-  test_gemv<double, C_layout>();
-  test_gemv<double, F_layout>();
-  test_gemv<std::complex<double>, C_layout>();
-  test_gemv<std::complex<double>, F_layout>();
+  test_gemv_layouts<float>();
+  test_gemv_layouts<std::complex<float>>();
+  test_gemv_layouts<double>();
+  test_gemv_layouts<std::complex<double>>();
 }
 
 // Test the BLAS ger/gerc function.
