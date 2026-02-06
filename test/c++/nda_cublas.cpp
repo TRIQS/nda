@@ -145,29 +145,33 @@ TEST(NDA, CUBLASGemm) {
 }
 
 // Test the CUBLAS/Magma gemm_batch, gemm_vbatch and gemm_batch_strided functions.
-template <typename T, typename Layout, nda::mem::AddressSpace AS, bool is_vbatch>
+template <typename T, typename Layout1, typename Layout2, typename Layout3, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2,
+          nda::mem::AddressSpace AS3, bool is_vbatch>
 void test_gemm_batch() {
   int const batch_count = 4;
-  long size             = 2;
-  long fac              = 2;
-  if constexpr (!is_vbatch) {
-    size = 16;
-    fac  = 1;
-  }
+  long m                = is_vbatch ? 2 : 16;
+  long k                = is_vbatch ? 3 : 12;
+  long n                = is_vbatch ? 4 : 8;
 
   // create vector of matrices
-  std::vector<nda::matrix<T, Layout, nda::heap<AS>>> vec_A, vec_B, vec_C;
-  std::vector<nda::matrix<T, Layout>> exp_C;
+  std::vector<nda::matrix<T, Layout1, nda::heap<AS1>>> vec_A;
+  std::vector<nda::matrix<T, Layout2, nda::heap<AS2>>> vec_B;
+  std::vector<nda::matrix<T, Layout3, nda::heap<AS3>>> vec_C;
+  std::vector<nda::matrix<T, Layout3>> exp_C;
   for ([[maybe_unused]] auto i : nda::range(batch_count)) {
-    auto A = nda::matrix<T, Layout>::rand({size, size});
-    auto B = nda::matrix<T, Layout>::rand({size, size});
-    auto C = nda::matrix<T, Layout>::zeros({size, size});
+    auto A = nda::matrix<T, Layout1>::rand({m, k});
+    auto B = nda::matrix<T, Layout2>::rand({k, n});
+    auto C = nda::matrix<T, Layout3>::zeros({m, n});
     vec_A.push_back(A);
     vec_B.push_back(B);
     vec_C.push_back(C);
     nda::blas::gemm(1.0, A, B, 0.0, C);
     exp_C.push_back(std::move(C));
-    size *= fac;
+    if (is_vbatch) {
+      m *= 2;
+      k *= 2;
+      n *= 2;
+    }
   }
 
   // test batched gemm routines
@@ -176,61 +180,147 @@ void test_gemm_batch() {
   } else {
     nda::blas::gemm_batch(1.0, vec_A, vec_B, 0.0, vec_C);
   }
-  for (auto i : nda::range(batch_count)) EXPECT_ARRAY_NEAR(nda::to_host(vec_C[i]), exp_C[i]);
+  for (auto i : nda::range(batch_count)) EXPECT_ARRAY_NEAR(nda::to_host(vec_C[i]), exp_C[i], fp_tol<T>);
+}
+
+template <typename T, typename Layout1, typename Layout2, typename Layout3, bool is_vbatch>
+void test_gemm_batch_address_spaces() {
+  test_gemm_batch<T, Layout1, Layout2, Layout3, Device, Device, Device, is_vbatch>();
+  test_gemm_batch<T, Layout1, Layout2, Layout3, Device, Unified, Device, is_vbatch>();
+  test_gemm_batch<T, Layout1, Layout2, Layout3, Unified, Unified, Unified, is_vbatch>();
+  test_gemm_batch<T, Layout1, Layout2, Layout3, Host, Unified, Unified, is_vbatch>();
+}
+
+template <typename T, bool is_vbatch>
+void test_gemm_batch_layouts() {
+  test_gemm_batch_address_spaces<T, C_layout, C_layout, C_layout, is_vbatch>();
+  test_gemm_batch_address_spaces<T, C_layout, F_layout, C_layout, is_vbatch>();
+  test_gemm_batch_address_spaces<T, F_layout, C_layout, F_layout, is_vbatch>();
+  test_gemm_batch_address_spaces<T, F_layout, F_layout, F_layout, is_vbatch>();
 }
 
 TEST(NDA, CUBLASGemmBatch) {
-  test_gemm_batch<double, C_layout, Device, false>();
-  test_gemm_batch<double, F_layout, Device, false>();
-  test_gemm_batch<std::complex<double>, C_layout, Device, false>();
-  test_gemm_batch<std::complex<double>, F_layout, Device, false>();
+  test_gemm_batch_layouts<float, false>();
+  test_gemm_batch_layouts<std::complex<float>, false>();
+  test_gemm_batch_layouts<double, false>();
+  test_gemm_batch_layouts<std::complex<double>, false>();
+}
 
-  test_gemm_batch<double, C_layout, Unified, false>();
-  test_gemm_batch<double, F_layout, Unified, false>();
-  test_gemm_batch<std::complex<double>, C_layout, Unified, false>();
-  test_gemm_batch<std::complex<double>, F_layout, Unified, false>();
+TEST(NDA, CUBLASGemmVBatch) {
+  test_gemm_batch_layouts<float, true>();
+  test_gemm_batch_layouts<double, true>();
 }
 
 #ifdef NDA_HAVE_MAGMA
 TEST(NDA, MAGMAGemmVbatch) {
-  test_gemm_batch<double, C_layout, Device, true>();
-  test_gemm_batch<double, F_layout, Device, true>();
-  test_gemm_batch<std::complex<double>, C_layout, Device, true>();
-  test_gemm_batch<std::complex<double>, F_layout, Device, true>();
-
-  test_gemm_batch<double, C_layout, Unified, true>();
-  test_gemm_batch<double, F_layout, Unified, true>();
-  test_gemm_batch<std::complex<double>, C_layout, Unified, true>();
-  test_gemm_batch<std::complex<double>, F_layout, Unified, true>();
+  test_gemm_batch_layouts<std::complex<float>, true>();
+  test_gemm_batch_layouts<std::complex<double>, true>();
 }
 #endif // NDA_HAVE_MAGMA
 
-template <typename T, typename Layout, nda::mem::AddressSpace AS>
-void test_gemm_batch_strided() {
-  int const batch_count = 10;
-  long const size       = 16;
-
-  // create arrays
-  auto arr_A   = nda::array<T, 3, Layout>::rand({batch_count, size, size});
-  auto arr_B   = nda::array<T, 3, Layout>::rand({batch_count, size, size});
-  auto arr_C   = nda::array<T, 3, Layout>::zeros({batch_count, size, size});
-  auto arr_A_d = nda::array<T, 3, Layout, nda::heap<AS>>{arr_A};
-  auto arr_B_d = nda::array<T, 3, Layout, nda::heap<AS>>{arr_B};
-  auto arr_C_d = nda::array<T, 3, Layout, nda::heap<AS>>{arr_C};
-
-  // test strided, batched gemm routine
-  nda::blas::gemm_batch_strided(1.0, arr_A_d, arr_B_d, 0.0, arr_C_d);
-  nda::blas::gemm_batch_strided(1.0, arr_A, arr_B, 0.0, arr_C);
-  for (auto i : nda::range(batch_count)) {
-    EXPECT_ARRAY_NEAR(nda::to_host(arr_C_d(i, nda::range::all, nda::range::all)), arr_C(i, nda::range::all, nda::range::all));
+template <typename T, typename Layout>
+auto make_batch(int bc, long d1, long d2, bool zeros) {
+  using arr_t = nda::array<T, 3, Layout>;
+  if constexpr (std::same_as<Layout, C_layout>) {
+    return (zeros ? arr_t::zeros({bc, d1, d2}) : arr_t::rand({bc, d1, d2}));
+  } else {
+    return (zeros ? arr_t::zeros({d1, d2, bc}) : arr_t::rand({d1, d2, bc}));
   }
 }
 
+template <typename T, typename Layout1, typename Layout2, typename Layout3, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2,
+          nda::mem::AddressSpace AS3>
+void test_gemm_batch_strided() {
+  int const batch_count = 10;
+  long const m          = 16;
+  long const k          = 12;
+  long const n          = 8;
+  T const alpha         = 2;
+  T const beta          = 0.5;
+
+  // get a view to the i-th matrix in the batch
+  auto get_mat = [](auto &arr, auto i) {
+    if constexpr (nda::blas_lapack::has_C_layout<decltype(arr)>) {
+      return arr(i, nda::ellipsis{});
+    } else {
+      return arr(nda::ellipsis{}, i);
+    }
+  };
+
+  auto arr_A   = make_batch<T, Layout1>(batch_count, m, k, false);
+  auto arr_B   = make_batch<T, Layout2>(batch_count, k, n, false);
+  auto arr_C   = make_batch<T, Layout3>(batch_count, m, n, true);
+  auto arr_A_d = nda::to_device(arr_A);
+  auto arr_B_d = nda::to_device(arr_B);
+  auto arr_C_d = nda::to_device(arr_C);
+
+  // C_i = A_i * B_i
+  nda::blas::gemm_batch_strided(1.0, arr_A_d, arr_B_d, 0.0, arr_C_d);
+  arr_C = nda::to_host(arr_C_d);
+  for (auto i : nda::range(batch_count)) {
+    auto exp = nda::matrix<T, F_layout>::zeros({m, n});
+    nda::blas::gemm(1.0, get_mat(arr_A, i), get_mat(arr_B, i), 0.0, exp);
+    EXPECT_ARRAY_NEAR(get_mat(arr_C, i), exp, fp_tol<T>);
+  }
+
+  // C_i = alpha * A_i * B_i + beta * C_i
+  nda::blas::gemm_batch_strided(alpha, arr_A_d, arr_B_d, beta, arr_C_d);
+  arr_C = nda::to_host(arr_C_d);
+  for (auto i : nda::range(batch_count)) {
+    auto exp = nda::matrix<T, F_layout>::zeros({m, n});
+    nda::blas::gemm(1.0, get_mat(arr_A, i), get_mat(arr_B, i), 0.0, exp);
+    nda::blas::gemm(alpha, get_mat(arr_A, i), get_mat(arr_B, i), beta, exp);
+    EXPECT_ARRAY_NEAR(get_mat(arr_C, i), exp, fp_tol<T>);
+  }
+
+  // C_i = A_i^T * B_i
+  arr_A   = make_batch<T, Layout1>(batch_count, k, m, false);
+  arr_A_d = nda::to_device(arr_A);
+  nda::blas::gemm_batch_strided(1.0, nda::transpose(arr_A_d), arr_B_d, 0.0, arr_C_d);
+  arr_C = nda::to_host(arr_C_d);
+  for (auto i : nda::range(batch_count)) {
+    auto exp = nda::matrix<T, F_layout>::zeros({m, n});
+    nda::blas::gemm(1.0, nda::transpose(get_mat(arr_A, i)), get_mat(arr_B, i), 0.0, exp);
+    EXPECT_ARRAY_NEAR(get_mat(arr_C, i), exp, fp_tol<T>);
+  }
+
+  // C_i = A_i * B_i^H
+  if constexpr (std::same_as<Layout2, F_layout> and std::same_as<Layout3, F_layout>) {
+    arr_A   = make_batch<T, Layout1>(batch_count, m, k, false);
+    arr_B   = make_batch<T, Layout2>(batch_count, n, k, false);
+    arr_A_d = nda::to_device(arr_A);
+    arr_B_d = nda::to_device(arr_B);
+    nda::blas::gemm_batch_strided(1.0, arr_A_d, nda::conj(nda::transpose(arr_B_d)), 0.0, arr_C_d);
+    arr_C = nda::to_host(arr_C_d);
+    for (auto i : nda::range(batch_count)) {
+      auto exp = nda::matrix<T, F_layout>::zeros({m, n});
+      nda::blas::gemm(1.0, get_mat(arr_A, i), nda::dagger(get_mat(arr_B, i)), 0.0, exp);
+      EXPECT_ARRAY_NEAR(get_mat(arr_C, i), exp, fp_tol<T>);
+    }
+  }
+}
+
+template <typename T, typename Layout1, typename Layout2, typename Layout3>
+void test_gemm_batch_strided_address_spaces() {
+  test_gemm_batch_strided<T, Layout1, Layout2, Layout3, Device, Device, Device>();
+  test_gemm_batch_strided<T, Layout1, Layout2, Layout3, Device, Unified, Device>();
+  test_gemm_batch_strided<T, Layout1, Layout2, Layout3, Unified, Unified, Unified>();
+  test_gemm_batch_strided<T, Layout1, Layout2, Layout3, Host, Unified, Unified>();
+}
+
+template <typename T>
+void test_gemm_batch_strided_layouts() {
+  test_gemm_batch_strided_address_spaces<T, C_layout, C_layout, C_layout>();
+  test_gemm_batch_strided_address_spaces<T, C_layout, F_layout, C_layout>();
+  test_gemm_batch_strided_address_spaces<T, F_layout, C_layout, F_layout>();
+  test_gemm_batch_strided_address_spaces<T, F_layout, F_layout, F_layout>();
+}
+
 TEST(NDA, BLASGemmBatchStrided) {
-  test_gemm_batch_strided<double, C_layout, Device>();
-  test_gemm_batch_strided<double, C_layout, Unified>();
-  test_gemm_batch_strided<std::complex<double>, C_layout, Device>();
-  test_gemm_batch_strided<std::complex<double>, C_layout, Unified>();
+  test_gemm_batch_strided_layouts<float>();
+  test_gemm_batch_strided_layouts<std::complex<float>>();
+  test_gemm_batch_strided_layouts<double>();
+  test_gemm_batch_strided_layouts<std::complex<double>>();
 }
 
 // Test the CUBLAS gemv function.

@@ -12,10 +12,16 @@
 #include "../tools.hpp"
 #include "../../device.hpp"
 #include "../../exceptions.hpp"
+#include "../../traits.hpp"
 
 #ifdef NDA_HAVE_MAGMA
 #include "magma_v2.h"
+
+#include <exception>
 #endif
+
+#include <vector>
+#include <type_traits>
 
 namespace nda::blas::device {
 
@@ -82,49 +88,71 @@ namespace nda::blas::device {
     }                                                                                                                                                \
   }
 
-  void gemm_batch(char op_a, char op_b, int m, int n, int k, double alpha, const double **a, int lda, const double **b, int ldb, double beta,
-                  double **c, int ldc, int batch_count) {
-    CUBLAS_CHECK(cublasDgemmBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, &alpha, a, lda, b, ldb, &beta, c, ldc, batch_count);
-  }
-  void gemm_batch(char op_a, char op_b, int m, int n, int k, std::complex<double> alpha, const std::complex<double> **a, int lda,
-                  const std::complex<double> **b, int ldb, std::complex<double> beta, std::complex<double> **c, int ldc, int batch_count) {
-    auto alpha_cu = cucplx(alpha);
-    auto beta_cu  = cucplx(beta);
-    CUBLAS_CHECK(cublasZgemmBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, &alpha_cu, cucplx(a), lda, cucplx(b), ldb, &beta_cu,
-                 cucplx(c), ldc, batch_count);
-  }
+  // Anonymous namespace for some file local helper functions.
+  namespace {
 
+    // Cuda data type conversion.
+    template <typename T>
+    constexpr auto cuda_data_type() {
+      if constexpr (std::is_same_v<T, float>) {
+        return CUDA_R_32F;
+      } else if constexpr (std::is_same_v<T, double>) {
+        return CUDA_R_64F;
+      } else if constexpr (std::is_same_v<T, std::complex<float>>) {
+        return CUDA_C_32F;
+      } else if constexpr (std::is_same_v<T, std::complex<double>>) {
+        return CUDA_C_64F;
+      }
+    }
+
+    // Cuda compute type conversion.
+    template <typename T>
+    constexpr auto cuda_compute_type() {
+      if constexpr (std::is_same_v<T, float> or std::is_same_v<T, std::complex<float>>) {
+        return CUBLAS_COMPUTE_32F;
+      } else if constexpr (std::is_same_v<T, double> or std::is_same_v<T, std::complex<double>>) {
+        return CUBLAS_COMPUTE_64F;
+      }
+    }
+
+    // Helper function to call CUDA's cublasGemmGroupedBatchedEx routine.
+    template <typename T>
+    void cuda_gemm_vbatch(char op_a, char op_b, int *m, int *n, int *k, T alpha, const T **a, int *lda, const T **b, int *ldb, T beta, T **c,
+                          int *ldc, int batch_count) {
+      auto data_t    = cuda_data_type<T>();
+      auto compute_t = cuda_compute_type<T>();
+      auto vec_op_a  = std::vector<cublasOperation_t>(batch_count, get_cublas_op(op_a));
+      auto vec_op_b  = std::vector<cublasOperation_t>(batch_count, get_cublas_op(op_b));
+      auto vec_alpha = std::vector<T>(batch_count, alpha);
+      auto vec_beta  = std::vector<T>(batch_count, beta);
+      auto vec_sizes = std::vector<int>(batch_count, 1);
+      CUBLAS_CHECK(cublasGemmGroupedBatchedEx, vec_op_a.data(), vec_op_b.data(), m, n, k, vec_alpha.data(), (const void **)a, data_t, lda,
+                   (const void **)b, data_t, ldb, vec_beta.data(), (void **)c, data_t, ldc, batch_count, vec_sizes.data(), compute_t);
+    }
+
+    // Helper function to call Magma's magma_gemm_vbatched routine.
 #ifdef NDA_HAVE_MAGMA
-  void gemm_vbatch(char op_a, char op_b, int *m, int *n, int *k, double alpha, const double **a, int *lda, const double **b, int *ldb, double beta,
-                   double **c, int *ldc, int batch_count) {
-    magmablas_dgemm_vbatched(get_magma_op(op_a), get_magma_op(op_b), m, n, k, alpha, a, lda, b, ldb, beta, c, ldc, batch_count, get_magma_queue());
-    if (synchronize) magma_queue_sync(get_magma_queue());
-    if (synchronize) cudaDeviceSynchronize();
-  }
-  void gemm_vbatch(char op_a, char op_b, int *m, int *n, int *k, std::complex<double> alpha, const std::complex<double> **a, int *lda,
-                   const std::complex<double> **b, int *ldb, std::complex<double> beta, std::complex<double> **c, int *ldc, int batch_count) {
-    auto alpha_cu = cucplx(alpha);
-    auto beta_cu  = cucplx(beta);
-    magmablas_zgemm_vbatched(get_magma_op(op_a), get_magma_op(op_b), m, n, k, alpha_cu, cucplx(a), lda, cucplx(b), ldb, beta_cu, cucplx(c), ldc,
-                             batch_count, get_magma_queue());
-    if (synchronize) magma_queue_sync(get_magma_queue());
-    if (synchronize) cudaDeviceSynchronize();
-  }
+    template <typename T>
+    void magma_gemm_vbatch(char op_a, char op_b, int *m, int *n, int *k, T alpha, const T **a, int *lda, const T **b, int *ldb, T beta, T **c,
+                           int *ldc, int batch_count) {
+      if constexpr (std::is_same_v<T, std::complex<float>>) {
+        magmablas_cgemm_vbatched(get_magma_op(op_a), get_magma_op(op_b), m, n, k, cucplx(alpha), cucplx(a), lda, cucplx(b), ldb, cucplx(beta),
+                                 cucplx(c), ldc, batch_count, get_magma_queue());
+      } else {
+        magmablas_zgemm_vbatched(get_magma_op(op_a), get_magma_op(op_b), m, n, k, cucplx(alpha), cucplx(a), lda, cucplx(b), ldb, cucplx(beta),
+                                 cucplx(c), ldc, batch_count, get_magma_queue());
+      }
+      if (synchronize) magma_queue_sync(get_magma_queue());
+      if (synchronize) cudaDeviceSynchronize();
+    }
+#else
+    template <typename T>
+    void magma_gemm_vbatch(char, char, int *, int *, int *, T, const T **, int *, const T **, int *, T, T **, int *, int) {
+      NDA_RUNTIME_ERROR << "nda::blas::device::gemmv_batch with complex types requires Magma. Configure nda with -DMagmaSupport=ON";
+    }
 #endif
 
-  void gemm_batch_strided(char op_a, char op_b, int m, int n, int k, double alpha, const double *a, int lda, int stride_a, const double *b, int ldb,
-                          int stride_b, double beta, double *c, int ldc, int stride_c, int batch_count) {
-    CUBLAS_CHECK(cublasDgemmStridedBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, &alpha, a, lda, stride_a, b, ldb, stride_b, &beta, c,
-                 ldc, stride_c, batch_count);
-  }
-  void gemm_batch_strided(char op_a, char op_b, int m, int n, int k, std::complex<double> alpha, const std::complex<double> *a, int lda, int stride_a,
-                          const std::complex<double> *b, int ldb, int stride_b, std::complex<double> beta, std::complex<double> *c, int ldc,
-                          int stride_c, int batch_count) {
-    auto alpha_cu = cucplx(alpha);
-    auto beta_cu  = cucplx(beta);
-    CUBLAS_CHECK(cublasZgemmStridedBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, &alpha_cu, cucplx(a), lda, stride_a, cucplx(b), ldb,
-                 stride_b, &beta_cu, cucplx(c), ldc, stride_c, batch_count);
-  }
+  } // namespace
 
   void axpy(int n, double alpha, const double *x, int incx, double *y, int incy) { cublasDaxpy(get_handle(), n, &alpha, x, incx, y, incy); }
   void axpy(int n, std::complex<double> alpha, const std::complex<double> *x, int incx, std::complex<double> *y, int incy) {
@@ -186,6 +214,68 @@ namespace nda::blas::device {
             const std::complex<double> *b, int ldb, std::complex<double> beta, std::complex<double> *c, int ldc) {
     CUBLAS_CHECK(cublasZgemm, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, cucplx(&alpha), cucplx(a), lda, cucplx(b), ldb, cucplx(&beta),
                  cucplx(c), ldc);
+  }
+
+  // gemm_batch
+  void gemm_batch(char op_a, char op_b, int m, int n, int k, float alpha, const float **a, int lda, const float **b, int ldb, float beta, float **c,
+                  int ldc, int batch_count) {
+    CUBLAS_CHECK(cublasSgemmBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, &alpha, a, lda, b, ldb, &beta, c, ldc, batch_count);
+  }
+  void gemm_batch(char op_a, char op_b, int m, int n, int k, std::complex<float> alpha, const std::complex<float> **a, int lda,
+                  const std::complex<float> **b, int ldb, std::complex<float> beta, std::complex<float> **c, int ldc, int batch_count) {
+    CUBLAS_CHECK(cublasCgemmBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, cucplx(&alpha), cucplx(a), lda, cucplx(b), ldb, cucplx(&beta),
+                 cucplx(c), ldc, batch_count);
+  }
+  void gemm_batch(char op_a, char op_b, int m, int n, int k, double alpha, const double **a, int lda, const double **b, int ldb, double beta,
+                  double **c, int ldc, int batch_count) {
+    CUBLAS_CHECK(cublasDgemmBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, &alpha, a, lda, b, ldb, &beta, c, ldc, batch_count);
+  }
+  void gemm_batch(char op_a, char op_b, int m, int n, int k, std::complex<double> alpha, const std::complex<double> **a, int lda,
+                  const std::complex<double> **b, int ldb, std::complex<double> beta, std::complex<double> **c, int ldc, int batch_count) {
+    CUBLAS_CHECK(cublasZgemmBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, cucplx(&alpha), cucplx(a), lda, cucplx(b), ldb, cucplx(&beta),
+                 cucplx(c), ldc, batch_count);
+  }
+
+  // gemm_vbatch
+  void gemm_vbatch(char op_a, char op_b, int *m, int *n, int *k, float alpha, const float **a, int *lda, const float **b, int *ldb, float beta,
+                   float **c, int *ldc, int batch_count) {
+    cuda_gemm_vbatch(op_a, op_b, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc, batch_count);
+  }
+  void gemm_vbatch(char op_a, char op_b, int *m, int *n, int *k, std::complex<float> alpha, const std::complex<float> **a, int *lda,
+                   const std::complex<float> **b, int *ldb, std::complex<float> beta, std::complex<float> **c, int *ldc, int batch_count) {
+    magma_gemm_vbatch(op_a, op_b, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc, batch_count);
+  }
+  void gemm_vbatch(char op_a, char op_b, int *m, int *n, int *k, double alpha, const double **a, int *lda, const double **b, int *ldb, double beta,
+                   double **c, int *ldc, int batch_count) {
+    cuda_gemm_vbatch(op_a, op_b, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc, batch_count);
+  }
+  void gemm_vbatch(char op_a, char op_b, int *m, int *n, int *k, std::complex<double> alpha, const std::complex<double> **a, int *lda,
+                   const std::complex<double> **b, int *ldb, std::complex<double> beta, std::complex<double> **c, int *ldc, int batch_count) {
+    magma_gemm_vbatch(op_a, op_b, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc, batch_count);
+  }
+
+  // gemm_batch_strided
+  void gemm_batch_strided(char op_a, char op_b, int m, int n, int k, float alpha, const float *a, int lda, int stride_a, const float *b, int ldb,
+                          int stride_b, float beta, float *c, int ldc, int stride_c, int batch_count) {
+    CUBLAS_CHECK(cublasSgemmStridedBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, &alpha, a, lda, stride_a, b, ldb, stride_b, &beta, c,
+                 ldc, stride_c, batch_count);
+  }
+  void gemm_batch_strided(char op_a, char op_b, int m, int n, int k, std::complex<float> alpha, const std::complex<float> *a, int lda, int stride_a,
+                          const std::complex<float> *b, int ldb, int stride_b, std::complex<float> beta, std::complex<float> *c, int ldc,
+                          int stride_c, int batch_count) {
+    CUBLAS_CHECK(cublasCgemmStridedBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, cucplx(&alpha), cucplx(a), lda, stride_a, cucplx(b),
+                 ldb, stride_b, cucplx(&beta), cucplx(c), ldc, stride_c, batch_count);
+  }
+  void gemm_batch_strided(char op_a, char op_b, int m, int n, int k, double alpha, const double *a, int lda, int stride_a, const double *b, int ldb,
+                          int stride_b, double beta, double *c, int ldc, int stride_c, int batch_count) {
+    CUBLAS_CHECK(cublasDgemmStridedBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, &alpha, a, lda, stride_a, b, ldb, stride_b, &beta, c,
+                 ldc, stride_c, batch_count);
+  }
+  void gemm_batch_strided(char op_a, char op_b, int m, int n, int k, std::complex<double> alpha, const std::complex<double> *a, int lda, int stride_a,
+                          const std::complex<double> *b, int ldb, int stride_b, std::complex<double> beta, std::complex<double> *c, int ldc,
+                          int stride_c, int batch_count) {
+    CUBLAS_CHECK(cublasZgemmStridedBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, cucplx(&alpha), cucplx(a), lda, stride_a, cucplx(b),
+                 ldb, stride_b, cucplx(&beta), cucplx(c), ldc, stride_c, batch_count);
   }
 
   // gemv
