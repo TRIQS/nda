@@ -92,71 +92,56 @@ void test_gemm() {
   // C = A * B
   auto C_d = to_addr_space<AS3>(nda::matrix<T, Layout3>(2, 2));
   nda::blas::gemm(1.0, A_d, B_d, 0.0, C_d);
-  EXPECT_ARRAY_NEAR(nda::to_host(C_d), exp_C);
+  EXPECT_ARRAY_NEAR(nda::to_host(C_d), exp_C, fp_tol<T>);
 
   // C = 3 * A * B + 2 * C
   nda::blas::gemm(3, A_d, B_d, 2, C_d);
-  EXPECT_ARRAY_NEAR(nda::to_host(C_d), 5 * exp_C);
+  EXPECT_ARRAY_NEAR(nda::to_host(C_d), 5 * exp_C, fp_tol<T>);
 
   // C_t = B^T * A^T
   auto C_t_d = to_addr_space<AS3>(nda::matrix<T, Layout3>(2, 2));
   nda::blas::gemm(1.0, nda::transpose(B_d), nda::transpose(A_d), 0.0, C_t_d);
-  EXPECT_ARRAY_NEAR(nda::to_host(C_t_d), nda::transpose(exp_C));
+  EXPECT_ARRAY_NEAR(nda::to_host(C_t_d), nda::transpose(exp_C), fp_tol<T>);
 
   // C_h = B^H * A^H
   if constexpr ((a_is_f_layout and b_is_f_layout and c_is_f_layout) or (!a_is_f_layout and !b_is_f_layout and !c_is_f_layout)) {
     auto C_h_d = to_addr_space<AS3>(nda::matrix<T, Layout3>(2, 2));
     nda::blas::gemm(1.0, nda::dagger(B_d), nda::dagger(A_d), 0.0, C_h_d);
-    EXPECT_ARRAY_NEAR(nda::to_host(C_h_d), nda::dagger(exp_C));
+    EXPECT_ARRAY_NEAR(nda::to_host(C_h_d), nda::dagger(exp_C), fp_tol<T>);
   }
 
   // contiguous matrix views
   if constexpr (a_is_f_layout and !b_is_f_layout and !c_is_f_layout) {
+    using nda::range;
     auto exp_C_v = nda::matrix<T, Layout3>{{13, 16}, {37, 46}};
     if constexpr (nda::is_complex_v<T>) exp_C_v *= (1 - 1i) * (2 - 1i);
     auto C_v_d = to_addr_space<AS3>(nda::matrix<T, Layout3>(5, 2));
-    nda::blas::gemm(1.0, A_d(nda::range::all, nda::range(0, 2)), B_d(nda::range(1, 3), nda::range::all), 0.0,
-                    C_v_d(nda::range(2, 4), nda::range::all));
-    EXPECT_ARRAY_NEAR(nda::to_host(C_v_d)(nda::range(2, 4), nda::range::all), exp_C_v);
+    nda::blas::gemm(1.0, A_d(range::all, range(0, 2)), B_d(range(1, 3), range::all), 0.0, C_v_d(range(2, 4), range::all));
+    EXPECT_ARRAY_NEAR(nda::to_host(C_v_d)(range(2, 4), range::all), exp_C_v, fp_tol<T>);
   }
 }
 
+template <typename T, typename Layout1, typename Layout2, typename Layout3>
+void test_gemm_address_spaces() {
+  test_gemm<T, Layout1, Layout2, Layout3, Device, Device, Device>();
+  test_gemm<T, Layout1, Layout2, Layout3, Device, Unified, Device>();
+  test_gemm<T, Layout1, Layout2, Layout3, Unified, Unified, Unified>();
+  test_gemm<T, Layout1, Layout2, Layout3, Host, Unified, Unified>();
+}
+
+template <typename T>
+void test_gemm_layouts() {
+  test_gemm_address_spaces<T, C_layout, C_layout, C_layout>();
+  test_gemm_address_spaces<T, C_layout, F_layout, C_layout>();
+  test_gemm_address_spaces<T, F_layout, C_layout, F_layout>();
+  test_gemm_address_spaces<T, F_layout, F_layout, F_layout>();
+}
+
 TEST(NDA, CUBLASGemm) {
-  // double, C-layout
-  test_gemm<double, C_layout, C_layout, C_layout, Device, Device, Device>();
-  test_gemm<double, C_layout, C_layout, C_layout, Device, Unified, Device>();
-  test_gemm<double, C_layout, C_layout, C_layout, Unified, Unified, Unified>();
-  test_gemm<double, C_layout, C_layout, C_layout, Host, Unified, Unified>();
-
-  // double, F-layout
-  test_gemm<double, F_layout, F_layout, F_layout, Device, Device, Device>();
-  test_gemm<double, F_layout, F_layout, F_layout, Device, Device, Unified>();
-  test_gemm<double, F_layout, F_layout, F_layout, Unified, Unified, Unified>();
-  test_gemm<double, F_layout, F_layout, F_layout, Unified, Host, Unified>();
-
-  // double, mixed layout
-  test_gemm<double, C_layout, F_layout, C_layout, Device, Device, Device>();
-  test_gemm<double, F_layout, C_layout, F_layout, Unified, Unified, Unified>();
-  test_gemm<double, C_layout, F_layout, F_layout, Host, Unified, Unified>();
-  test_gemm<double, F_layout, C_layout, C_layout, Unified, Host, Unified>();
-
-  // complex, C-layout
-  test_gemm<std::complex<double>, C_layout, C_layout, C_layout, Device, Device, Device>();
-  test_gemm<std::complex<double>, C_layout, C_layout, C_layout, Device, Unified, Device>();
-  test_gemm<std::complex<double>, C_layout, C_layout, C_layout, Unified, Unified, Unified>();
-  test_gemm<std::complex<double>, C_layout, C_layout, C_layout, Host, Unified, Unified>();
-
-  // complex, F-layout
-  test_gemm<std::complex<double>, F_layout, F_layout, F_layout, Device, Device, Device>();
-  test_gemm<std::complex<double>, F_layout, F_layout, F_layout, Device, Device, Unified>();
-  test_gemm<std::complex<double>, F_layout, F_layout, F_layout, Unified, Unified, Unified>();
-  test_gemm<std::complex<double>, F_layout, F_layout, F_layout, Unified, Host, Unified>();
-
-  // complex, mixed layout
-  test_gemm<std::complex<double>, C_layout, F_layout, C_layout, Device, Device, Device>();
-  test_gemm<std::complex<double>, F_layout, C_layout, F_layout, Unified, Unified, Unified>();
-  test_gemm<std::complex<double>, C_layout, F_layout, F_layout, Host, Unified, Unified>();
-  test_gemm<std::complex<double>, F_layout, C_layout, C_layout, Unified, Host, Unified>();
+  test_gemm_layouts<float>();
+  test_gemm_layouts<std::complex<float>>();
+  test_gemm_layouts<double>();
+  test_gemm_layouts<std::complex<double>>();
 }
 
 // Test the CUBLAS/Magma gemm_batch, gemm_vbatch and gemm_batch_strided functions.

@@ -145,59 +145,60 @@ void test_gemm() {
   auto B                       = nda::matrix<T, Layout2>{{1, 2}, {3, 4}, {5, 6}};
   auto exp_C                   = nda::matrix<T, Layout3>{{22, 28}, {49, 64}};
   if constexpr (nda::is_complex_v<T>) {
-    A *= 1 - 1i;
-    B *= 2 - 1i;
-    exp_C *= (1 - 1i) * (2 - 1i);
+    A *= T{1 - 1i};
+    B *= T{2 - 1i};
+    exp_C *= T{(1 - 1i) * (2 - 1i)};
   }
 
   // C = A * B
   auto C = nda::matrix<T, Layout3>(2, 2);
   nda::blas::gemm(1.0, A, B, 0.0, C);
-  EXPECT_ARRAY_NEAR(C, exp_C);
+  EXPECT_ARRAY_NEAR(C, exp_C, fp_tol<T>);
 
   // C = 3 * A * B + 2 * C
   nda::blas::gemm(3, A, B, 2, C);
-  EXPECT_ARRAY_NEAR(C, 5 * exp_C);
+  EXPECT_ARRAY_NEAR(C, 5 * exp_C, fp_tol<T>);
 
   // C_t = B^T * A^T
   auto C_t = nda::matrix<T, Layout3>(2, 2);
   nda::blas::gemm(1.0, nda::transpose(B), nda::transpose(A), 0.0, C_t);
-  EXPECT_ARRAY_NEAR(C_t, nda::transpose(exp_C));
+  EXPECT_ARRAY_NEAR(C_t, nda::transpose(exp_C), fp_tol<T>);
 
   // C_h = B^H * A^H
   if constexpr ((a_is_f_layout and b_is_f_layout and c_is_f_layout) or (!a_is_f_layout and !b_is_f_layout and !c_is_f_layout)) {
     auto C_h = nda::matrix<T, Layout3>(2, 2);
     nda::blas::gemm(1.0, nda::dagger(B), nda::dagger(A), 0.0, C_h);
-    EXPECT_ARRAY_NEAR(C_h, nda::dagger(exp_C));
+    EXPECT_ARRAY_NEAR(C_h, nda::dagger(exp_C), fp_tol<T>);
   }
 
   // contiguous matrix views
   if constexpr (a_is_f_layout and !b_is_f_layout and !c_is_f_layout) {
+    using nda::range;
     auto exp_C_v = nda::matrix<T, Layout3>{{13, 16}, {37, 46}};
-    if constexpr (nda::is_complex_v<T>) exp_C_v *= (1 - 1i) * (2 - 1i);
+    if constexpr (nda::is_complex_v<T>) exp_C_v *= T{(1 - 1i) * (2 - 1i)};
     auto C_v = nda::matrix<T, Layout3>(5, 2);
-    nda::blas::gemm(1.0, A(nda::range::all, nda::range(0, 2)), B(nda::range(1, 3), nda::range::all), 0.0, C_v(nda::range(2, 4), nda::range::all));
-    EXPECT_ARRAY_NEAR(C_v(nda::range(2, 4), nda::range::all), exp_C_v);
+    nda::blas::gemm(1.0, A(range::all, range(0, 2)), B(range(1, 3), range::all), 0.0, C_v(range(2, 4), range::all));
+    EXPECT_ARRAY_NEAR(C_v(range(2, 4), range::all), exp_C_v, fp_tol<T>);
   }
 }
 
+template <typename T>
+void test_gemm_layouts() {
+  test_gemm<T, C_layout, C_layout, C_layout>();
+  test_gemm<T, C_layout, C_layout, F_layout>();
+  test_gemm<T, C_layout, F_layout, C_layout>();
+  test_gemm<T, C_layout, F_layout, F_layout>();
+  test_gemm<T, F_layout, C_layout, C_layout>();
+  test_gemm<T, F_layout, C_layout, F_layout>();
+  test_gemm<T, F_layout, F_layout, C_layout>();
+  test_gemm<T, F_layout, F_layout, F_layout>();
+};
+
 TEST(NDA, BLASGemm) {
-  test_gemm<double, C_layout, C_layout, C_layout>();
-  test_gemm<double, C_layout, C_layout, F_layout>();
-  test_gemm<double, C_layout, F_layout, C_layout>();
-  test_gemm<double, C_layout, F_layout, F_layout>();
-  test_gemm<double, F_layout, C_layout, C_layout>();
-  test_gemm<double, F_layout, C_layout, F_layout>();
-  test_gemm<double, F_layout, F_layout, C_layout>();
-  test_gemm<double, F_layout, F_layout, F_layout>();
-  test_gemm<std::complex<double>, C_layout, C_layout, C_layout>();
-  test_gemm<std::complex<double>, C_layout, C_layout, F_layout>();
-  test_gemm<std::complex<double>, C_layout, F_layout, C_layout>();
-  test_gemm<std::complex<double>, C_layout, F_layout, F_layout>();
-  test_gemm<std::complex<double>, F_layout, C_layout, C_layout>();
-  test_gemm<std::complex<double>, F_layout, C_layout, F_layout>();
-  test_gemm<std::complex<double>, F_layout, F_layout, C_layout>();
-  test_gemm<std::complex<double>, F_layout, F_layout, F_layout>();
+  test_gemm_layouts<float>();
+  test_gemm_layouts<std::complex<float>>();
+  test_gemm_layouts<double>();
+  test_gemm_layouts<std::complex<double>>();
 }
 
 // Test the BLAS gemm_batch, gemm_vbatch and gemm_batch_strided functions.

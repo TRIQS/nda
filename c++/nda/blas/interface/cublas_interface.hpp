@@ -31,6 +31,9 @@ namespace nda::blas::device {
   std::complex<double> dot(int m, const std::complex<double> *x, int incx, const std::complex<double> *y, int incy);
   std::complex<double> dotc(int m, const std::complex<double> *x, int incx, const std::complex<double> *y, int incy);
 
+  void gemm(char op_a, char op_b, int m, int n, int k, float alpha, const float *a, int lda, const float *b, int ldb, float beta, float *c, int ldc);
+  void gemm(char op_a, char op_b, int m, int n, int k, std::complex<float> alpha, const std::complex<float> *a, int lda, const std::complex<float> *b,
+            int ldb, std::complex<float> beta, std::complex<float> *c, int ldc);
   void gemm(char op_a, char op_b, int m, int n, int k, double alpha, const double *a, int lda, const double *b, int ldb, double beta, double *c,
             int ldc);
   void gemm(char op_a, char op_b, int m, int n, int k, std::complex<double> alpha, const std::complex<double> *a, int lda,
