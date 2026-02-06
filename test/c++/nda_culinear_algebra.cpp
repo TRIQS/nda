@@ -214,20 +214,20 @@ void test_matmul() {
   auto B     = nda::matrix<T, Layout2>{{1, 2}, {3, 4}, {5, 6}};
   auto exp_C = nda::matrix<T>{{22, 28}, {49, 64}};
   if constexpr (nda::is_complex_v<T>) {
-    A *= 1 - 1i;
-    B *= 2 - 1i;
-    exp_C *= (1 - 1i) * (2 - 1i);
+    A *= T{1 - 1i};
+    B *= T{2 - 1i};
+    exp_C *= T{(1 - 1i) * (2 - 1i)};
   }
   auto A_d = to_addr_space<AS1>(A);
   auto B_d = to_addr_space<AS2>(B);
 
   // C = A * B
   auto C_d = nda::linalg::matmul(A_d, B_d);
-  EXPECT_ARRAY_NEAR(nda::to_host(C_d), exp_C);
+  EXPECT_ARRAY_NEAR(nda::to_host(C_d), exp_C, fp_tol<T>);
 
   // C_t = B^T * A^T
   auto C_t_d = nda::linalg::matmul(nda::transpose(B_d), nda::transpose(A_d));
-  EXPECT_ARRAY_NEAR(nda::to_host(C_t_d), nda::transpose(exp_C));
+  EXPECT_ARRAY_NEAR(nda::to_host(C_t_d), nda::transpose(exp_C), fp_tol<T>);
 
   // C_h = B^H * A^H --> not working right now because of how we determine the layout of C
   // if constexpr (std::same_as<Layout1, Layout2>) {
@@ -237,40 +237,79 @@ void test_matmul() {
 
   // strided matrix views
   if constexpr (nda::mem::have_host_compatible_addr_space<decltype(A_d), decltype(B_d)>) {
+    using nda::range;
     auto exp_C_v = nda::matrix<T>{{16, 20}, {34, 44}};
-    if constexpr (nda::is_complex_v<T>) exp_C_v *= (1 - 1i) * (2 - 1i);
-    auto C_v_d = nda::matrix<T>(4, 4);
-    C_v_d(nda::range(0, 4, 2), nda::range(0, 4, 2)) =
-       nda::linalg::matmul(A_d(nda::range::all, nda::range(0, 3, 2)), B_d(nda::range(0, 3, 2), nda::range::all));
-    EXPECT_ARRAY_NEAR(C_v_d(nda::range(0, 4, 2), nda::range(0, 4, 2)), exp_C_v);
+    if constexpr (nda::is_complex_v<T>) exp_C_v *= T{(1 - 1i) * (2 - 1i)};
+    auto C_v_d                            = nda::matrix<T>(4, 4);
+    C_v_d(range(0, 4, 2), range(0, 4, 2)) = nda::linalg::matmul(A_d(range::all, range(0, 3, 2)), B_d(range(0, 3, 2), range::all));
+    EXPECT_ARRAY_NEAR(C_v_d(range(0, 4, 2), range(0, 4, 2)), exp_C_v, fp_tol<T>);
   }
 }
 
+template <typename T, typename Layout1, typename Layout2>
+void test_matmul_address_spaces() {
+  test_matmul<T, Layout1, Layout2, Device, Device>();
+  test_matmul<T, Layout1, Layout2, Device, Unified>();
+  test_matmul<T, Layout1, Layout2, Unified, Device>();
+  test_matmul<T, Layout1, Layout2, Unified, Unified>();
+  test_matmul<T, Layout1, Layout2, Unified, Host>();
+  test_matmul<T, Layout1, Layout2, Host, Unified>();
+}
+
+template <typename T>
+void test_matmul_layouts() {
+  test_matmul_address_spaces<T, C_layout, C_layout>();
+  test_matmul_address_spaces<T, C_layout, F_layout>();
+  test_matmul_address_spaces<T, F_layout, C_layout>();
+  test_matmul_address_spaces<T, F_layout, F_layout>();
+}
+
 TEST(NDA, CULinearAlgebraMatmulGenericGemmBranch) {
-  test_matmul<long, nda::C_layout, nda::C_layout, nda::mem::Unified, nda::mem::Unified>();
-  test_matmul<long, nda::C_layout, nda::F_layout, nda::mem::Host, nda::mem::Unified>();
-  test_matmul<long, nda::F_layout, nda::F_layout, nda::mem::Unified, nda::mem::Host>();
-  test_matmul<long, nda::F_layout, nda::C_layout, nda::mem::Host, nda::mem::Unified>();
+  test_matmul<long, C_layout, C_layout, Unified, Unified>();
+  test_matmul<long, C_layout, F_layout, Host, Unified>();
+  test_matmul<long, F_layout, F_layout, Unified, Host>();
+  test_matmul<long, F_layout, C_layout, Host, Unified>();
 }
 
 TEST(NDA, CULinearAlgebraMatmulBLASBranch) {
-  test_matmul<double, nda::C_layout, nda::C_layout, nda::mem::Device, nda::mem::Device>();
-  test_matmul<double, nda::C_layout, nda::F_layout, nda::mem::Unified, nda::mem::Device>();
-  test_matmul<double, nda::F_layout, nda::F_layout, nda::mem::Device, nda::mem::Unified>();
-  test_matmul<double, nda::F_layout, nda::C_layout, nda::mem::Device, nda::mem::Device>();
-  test_matmul<std::complex<double>, nda::C_layout, nda::C_layout, nda::mem::Device, nda::mem::Device>();
-  test_matmul<std::complex<double>, nda::C_layout, nda::F_layout, nda::mem::Unified, nda::mem::Device>();
-  test_matmul<std::complex<double>, nda::F_layout, nda::F_layout, nda::mem::Device, nda::mem::Unified>();
-  test_matmul<std::complex<double>, nda::F_layout, nda::C_layout, nda::mem::Device, nda::mem::Device>();
+  test_matmul_layouts<float>();
+  test_matmul_layouts<std::complex<float>>();
+  test_matmul_layouts<double>();
+  test_matmul_layouts<std::complex<double>>();
+}
 
-  test_matmul<double, nda::C_layout, nda::C_layout, nda::mem::Unified, nda::mem::Unified>();
-  test_matmul<double, nda::C_layout, nda::F_layout, nda::mem::Host, nda::mem::Unified>();
-  test_matmul<double, nda::F_layout, nda::F_layout, nda::mem::Unified, nda::mem::Host>();
-  test_matmul<double, nda::F_layout, nda::C_layout, nda::mem::Unified, nda::mem::Unified>();
-  test_matmul<std::complex<double>, nda::C_layout, nda::C_layout, nda::mem::Unified, nda::mem::Unified>();
-  test_matmul<std::complex<double>, nda::C_layout, nda::F_layout, nda::mem::Host, nda::mem::Unified>();
-  test_matmul<std::complex<double>, nda::F_layout, nda::F_layout, nda::mem::Unified, nda::mem::Host>();
-  test_matmul<std::complex<double>, nda::F_layout, nda::C_layout, nda::mem::Unified, nda::mem::Unified>();
+template <typename T, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
+void test_matmul_promotion() {
+  auto A_i    = nda::matrix<int>{{1, 2}, {3, 4}};
+  auto A_fp   = nda::matrix<T>{{1, 2}, {3, 4}};
+  auto A_i_d  = to_addr_space<AS1>(A_i);
+  auto A_fp_d = to_addr_space<AS2>(A_fp);
+
+  auto B_fp1_d = nda::linalg::matmul(A_fp_d, A_i_d);
+  static_assert(std::same_as<nda::get_value_t<decltype(B_fp1_d)>, T>);
+  EXPECT_ARRAY_NEAR(nda::to_host(B_fp1_d), (nda::matrix<T>{{7, 10}, {15, 22}}), fp_tol<T>);
+
+  auto B_fp2_d = nda::linalg::matmul(A_i_d, A_fp_d);
+  static_assert(std::same_as<nda::get_value_t<decltype(B_fp2_d)>, T>);
+  EXPECT_ARRAY_NEAR(nda::to_host(B_fp2_d), (nda::matrix<T>{{7, 10}, {15, 22}}), fp_tol<T>);
+
+  auto B_i_d = nda::linalg::matmul(A_i_d, A_i_d);
+  static_assert(std::same_as<nda::get_value_t<decltype(B_i_d)>, int>);
+  EXPECT_ARRAY_EQ(nda::to_host(B_i_d), (nda::matrix<int>{{7, 10}, {15, 22}}));
+}
+
+template <typename T>
+void test_matmul_promotion_address_spaces() {
+  test_matmul_promotion<T, Unified, Unified>();
+  test_matmul_promotion<T, Unified, Host>();
+  test_matmul_promotion<T, Host, Unified>();
+}
+
+TEST(NDA, CULinearAlgebraMatmulPromotion) {
+  test_matmul_promotion_address_spaces<float>();
+  test_matmul_promotion_address_spaces<std::complex<float>>();
+  test_matmul_promotion_address_spaces<double>();
+  test_matmul_promotion_address_spaces<std::complex<double>>();
 }
 
 // Test general inverse functions.
