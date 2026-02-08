@@ -40,9 +40,13 @@ namespace nda::lapack::f77 {
   void ungqr(int m, int n, int k, std::complex<double> *a, int lda, std::complex<double> const *tau, std::complex<double> *work, int lwork,
              int &info);
 
+  void getrf(int m, int n, float *a, int lda, int *ipiv, int &info);
+  void getrf(int m, int n, std::complex<float> *a, int lda, int *ipiv, int &info);
   void getrf(int m, int n, double *a, int lda, int *ipiv, int &info);
   void getrf(int m, int n, std::complex<double> *a, int lda, int *ipiv, int &info);
 
+  void getri(int n, float *a, int lda, int const *ipiv, float *work, int lwork, int &info);
+  void getri(int n, std::complex<float> *a, int lda, int const *ipiv, std::complex<float> *work, int lwork, int &info);
   void getri(int n, double *a, int lda, int const *ipiv, double *work, int lwork, int &info);
   void getri(int n, std::complex<double> *a, int lda, int const *ipiv, std::complex<double> *work, int lwork, int &info);
 
@@ -62,6 +66,8 @@ namespace nda::lapack::f77 {
   void hegv(int itype, char jobz, char uplo, int n, std::complex<double> *a, int lda, std::complex<double> *b, int ldb, double *w,
             std::complex<double> *work, int lwork, double *rwork, int &info);
 
+  void getrs(char op, int n, int nrhs, float const *a, int lda, int const *ipiv, float *b, int ldb, int &info);
+  void getrs(char op, int n, int nrhs, std::complex<float> const *a, int lda, int const *ipiv, std::complex<float> *b, int ldb, int &info);
   void getrs(char op, int n, int nrhs, double const *a, int lda, int const *ipiv, double *b, int ldb, int &info);
   void getrs(char op, int n, int nrhs, std::complex<double> const *a, int lda, int const *ipiv, std::complex<double> *b, int ldb, int &info);
 

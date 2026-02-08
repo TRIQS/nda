@@ -212,114 +212,134 @@ TEST(NDA, LAPACKGelss) {
 // Test LAPACK getrs, getrf and getri functions.
 template <typename T, typename Layout>
 void test_getrs_getrf_getri() {
-  using matrix_t   = matrix<T, Layout>;
-  using f_matrix_t = matrix<T, F_layout>;
+  using matrix_t   = nda::matrix<T, Layout>;
+  using f_matrix_t = nda::matrix<T, F_layout>;
+  using fp_t       = nda::get_fp_t<T>;
 
   auto A    = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
   auto Ainv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
   if constexpr (nda::is_complex_v<T>) {
-    A *= 1i;
-    Ainv /= 1i;
+    A *= T{1i};
+    Ainv /= T{1i};
   }
   auto B = matrix_t{{1, 5}, {4, 5}, {3, 6}};
+
+  // tolerance based on condition number: cond(A) ~ 332, ||Ainv||_max = 24
+  // error ~ cond(A) * ||Ainv||_max * eps => use eps * 10000 as tolerance
+  constexpr auto tol = std::numeric_limits<fp_t>::epsilon() * 10000;
 
   // solve A * X = B using getrf and getrs
   auto Acopy = matrix_t{A};
   auto Bcopy = f_matrix_t{B};
-  array<int, 1> ipiv(3);
-  lapack::getrf(Acopy, ipiv);
-  lapack::getrs(Acopy, Bcopy, ipiv);
+  nda::array<int, 1> ipiv(3);
+  nda::lapack::getrf(Acopy, ipiv);
+  nda::lapack::getrs(Acopy, Bcopy, ipiv);
   auto X = matrix_t{Bcopy};
-  EXPECT_ARRAY_NEAR(A * X, B);
-  EXPECT_ARRAY_NEAR(Ainv * B, X);
+  EXPECT_ARRAY_NEAR(A * X, B, tol);
+  EXPECT_ARRAY_NEAR(Ainv * B, X, tol);
 
   // solve A^T * X = B using getrf and getrs
   Acopy = A;
   Bcopy = B;
-  lapack::getrf(Acopy, ipiv);
-  lapack::getrs(nda::transpose(Acopy), Bcopy, ipiv);
+  nda::lapack::getrf(Acopy, ipiv);
+  nda::lapack::getrs(nda::transpose(Acopy), Bcopy, ipiv);
   X = matrix_t{Bcopy};
-  EXPECT_ARRAY_NEAR(nda::transpose(A) * X, B);
-  EXPECT_ARRAY_NEAR(nda::transpose(Ainv) * B, X);
+  EXPECT_ARRAY_NEAR(nda::transpose(A) * X, B, tol);
+  EXPECT_ARRAY_NEAR(nda::transpose(Ainv) * B, X, tol);
 
   // solve A^H * X = B using getrf and getrs
-  if constexpr (blas::has_F_layout<matrix_t>) {
+  if constexpr (nda::blas_lapack::has_F_layout<matrix_t>) {
     Acopy = A;
     Bcopy = B;
-    lapack::getrf(Acopy, ipiv);
-    lapack::getrs(nda::conj(nda::transpose(Acopy)), Bcopy, ipiv);
+    nda::lapack::getrf(Acopy, ipiv);
+    nda::lapack::getrs(nda::dagger(Acopy), Bcopy, ipiv);
     X = matrix_t{Bcopy};
-    EXPECT_ARRAY_NEAR(nda::conj(nda::transpose(A)) * X, B);
-    EXPECT_ARRAY_NEAR(nda::conj(nda::transpose(Ainv)) * B, X);
+    EXPECT_ARRAY_NEAR(nda::dagger(A) * X, B, tol);
+    EXPECT_ARRAY_NEAR(nda::dagger(Ainv) * B, X, tol);
   }
 
   // solve A * x = b using getrf and getrs
   Acopy  = A;
-  auto b = vector<T>{B(range::all, 0)};
-  lapack::getrf(Acopy, ipiv);
-  lapack::getrs(Acopy, b, ipiv);
-  EXPECT_ARRAY_NEAR(A * b, B(range::all, 0));
-  EXPECT_ARRAY_NEAR((Ainv * B)(range::all, 0), b);
+  auto b = nda::vector<T>{B(nda::range::all, 0)};
+  nda::lapack::getrf(Acopy, ipiv);
+  nda::lapack::getrs(Acopy, b, ipiv);
+  EXPECT_ARRAY_NEAR(A * b, B(nda::range::all, 0), tol);
+  EXPECT_ARRAY_NEAR((Ainv * B)(nda::range::all, 0), b, tol);
 
   // compute the inverse of A using getrf and getri
   auto Ainv2 = Acopy;
-  lapack::getri(Ainv2, ipiv);
-  EXPECT_ARRAY_NEAR(Ainv, Ainv2);
+  nda::lapack::getri(Ainv2, ipiv);
+  EXPECT_ARRAY_NEAR(Ainv, Ainv2, tol);
+}
+
+template <typename T>
+void test_getrs_getrf_getri_layouts() {
+  test_getrs_getrf_getri<T, C_layout>();
+  test_getrs_getrf_getri<T, F_layout>();
 }
 
 TEST(NDA, LAPACKGetrsGetrfAndGetri) {
-  test_getrs_getrf_getri<double, C_layout>();
-  test_getrs_getrf_getri<double, F_layout>();
-  test_getrs_getrf_getri<std::complex<double>, C_layout>();
-  test_getrs_getrf_getri<std::complex<double>, F_layout>();
+  test_getrs_getrf_getri_layouts<float>();
+  test_getrs_getrf_getri_layouts<std::complex<float>>();
+  test_getrs_getrf_getri_layouts<double>();
+  test_getrs_getrf_getri_layouts<std::complex<double>>();
 }
 
-TEST(NDA, LAPACKGetrfWithRectangularMatrix) {
-  auto A    = matrix<double, F_layout>{{1, 5}, {4, 5}, {3, 6}};
-  auto AT   = matrix<double, F_layout>(nda::transpose(A));
-  auto A_c  = matrix<double, C_layout>{A};
-  auto AT_c = matrix<double, C_layout>{AT};
-  auto ipiv = array<int, 1>(2);
+template <typename T>
+void test_rectangular_getrf() {
+  using namespace nda::blas_lapack;
+  auto A    = nda::matrix<T, F_layout>{{1, 5}, {4, 5}, {3, 6}};
+  auto AT   = nda::matrix<T, F_layout>(nda::transpose(A));
+  auto A_c  = nda::matrix<T, C_layout>{A};
+  auto AT_c = nda::matrix<T, C_layout>{AT};
+  auto ipiv = nda::array<int, 1>(2);
 
   // get the matrices P, L, U from getrf output
   auto get_plu = [](auto const &M, auto const &ip, int m, int n) {
-    using layout_t   = std::conditional_t<blas::has_C_layout<decltype(M)>, C_layout, F_layout>;
-    auto P           = matrix<double, layout_t>::zeros(m, m);
-    auto L           = matrix<double, layout_t>::zeros(m, m);
-    auto U           = matrix<double, layout_t>::zeros(m, n);
+    using layout_t   = std::conditional_t<has_C_layout<decltype(M)>, C_layout, F_layout>;
+    auto P           = nda::matrix<T, layout_t>::zeros(m, m);
+    auto L           = nda::matrix<T, layout_t>::zeros(m, m);
+    auto U           = nda::matrix<T, layout_t>::zeros(m, n);
     nda::diagonal(P) = 1;
     nda::diagonal(L) = 1;
     for (int i = 0; i < ip.size(); ++i) deep_swap(P(i, nda::range::all), P(ip(i) - 1, nda::range::all));
     for (int i = 0; i < m; ++i) {
-      L(i, nda::range(i))    = (blas::has_C_layout<decltype(M)> ? M(nda::range(i), i) : M(i, nda::range(i)));
-      U(i, nda::range(i, n)) = (blas::has_C_layout<decltype(M)> ? M(nda::range(i, n), i) : M(i, nda::range(i, n)));
+      L(i, nda::range(i))    = (has_C_layout<decltype(M)> ? M(nda::range(i), i) : M(i, nda::range(i)));
+      U(i, nda::range(i, n)) = (has_C_layout<decltype(M)> ? M(nda::range(i, n), i) : M(i, nda::range(i, n)));
     }
     return std::make_tuple(P, L, U);
   };
 
   // LU decomposition for 3x2 Fortran layout matrix
   auto LU_f_32 = A;
-  lapack::getrf(LU_f_32, ipiv);
+  nda::lapack::getrf(LU_f_32, ipiv);
   auto [P_f_32, L_f_32, U_f_32] = get_plu(LU_f_32, ipiv, 3, 2);
-  EXPECT_ARRAY_NEAR(P_f_32 * A, L_f_32 * U_f_32);
+  EXPECT_ARRAY_NEAR(P_f_32 * A, L_f_32 * U_f_32, fp_tol<T>);
 
   // LU decomposition for 2x3 Fortran layout matrix
   auto LU_f_23 = AT;
-  lapack::getrf(LU_f_23, ipiv);
+  nda::lapack::getrf(LU_f_23, ipiv);
   auto [P_f_23, L_f_23, U_f_23] = get_plu(LU_f_23, ipiv, 2, 3);
-  EXPECT_ARRAY_NEAR(P_f_23 * AT, L_f_23 * U_f_23);
+  EXPECT_ARRAY_NEAR(P_f_23 * AT, L_f_23 * U_f_23, fp_tol<T>);
 
   // LU decomposition for 3x2 C layout matrix
   auto LU_c_32 = A_c;
-  lapack::getrf(LU_c_32, ipiv);
+  nda::lapack::getrf(LU_c_32, ipiv);
   auto [P_c_32, L_c_32, U_c_32] = get_plu(LU_c_32, ipiv, 2, 3);
-  EXPECT_ARRAY_NEAR(P_c_32 * nda::transpose(A_c), L_c_32 * U_c_32);
+  EXPECT_ARRAY_NEAR(P_c_32 * nda::transpose(A_c), L_c_32 * U_c_32, fp_tol<T>);
 
   // LU decomposition for 2x3 C layout matrix
   auto LU_c_23 = AT_c;
-  lapack::getrf(LU_c_23, ipiv);
+  nda::lapack::getrf(LU_c_23, ipiv);
   auto [P_c_23, L_c_23, U_c_23] = get_plu(LU_c_23, ipiv, 3, 2);
-  EXPECT_ARRAY_NEAR(P_c_23 * nda::transpose(AT_c), L_c_23 * U_c_23);
+  EXPECT_ARRAY_NEAR(P_c_23 * nda::transpose(AT_c), L_c_23 * U_c_23, fp_tol<T>);
+}
+
+TEST(NDA, LAPACKGetrfWithRectangularMatrix) {
+  test_rectangular_getrf<float>();
+  test_rectangular_getrf<std::complex<float>>();
+  test_rectangular_getrf<double>();
+  test_rectangular_getrf<std::complex<double>>();
 }
 
 // Check that the eigenvectors/values are correct.

@@ -28,9 +28,18 @@ namespace nda::lapack::device {
   void gesvd(char jobu, char jobvt, int m, int n, std::complex<double> *a, int lda, double *s, std::complex<double> *u, int ldu,
              std::complex<double> *vt, int ldvt, std::complex<double> *work, int lwork, double *rwork, int &info);
 
-  void getrf(int m, int n, double *a, int lda, int *ipiv, int &info);
-  void getrf(int m, int n, std::complex<double> *a, int lda, int *ipiv, int &info);
+  int getrf_buffer_size(int m, int n, float *a, int lda);
+  int getrf_buffer_size(int m, int n, std::complex<float> *a, int lda);
+  int getrf_buffer_size(int m, int n, double *a, int lda);
+  int getrf_buffer_size(int m, int n, std::complex<double> *a, int lda);
 
+  void getrf(int m, int n, float *a, int lda, float *work, int *ipiv, int &info);
+  void getrf(int m, int n, std::complex<float> *a, int lda, std::complex<float> *work, int *ipiv, int &info);
+  void getrf(int m, int n, double *a, int lda, double *work, int *ipiv, int &info);
+  void getrf(int m, int n, std::complex<double> *a, int lda, std::complex<double> *work, int *ipiv, int &info);
+
+  void getrs(char op, int n, int nrhs, float const *a, int lda, int const *ipiv, float *b, int ldb, int &info);
+  void getrs(char op, int n, int nrhs, std::complex<float> const *a, int lda, int const *ipiv, std::complex<float> *b, int ldb, int &info);
   void getrs(char op, int n, int nrhs, double const *a, int lda, int const *ipiv, double *b, int ldb, int &info);
   void getrs(char op, int n, int nrhs, std::complex<double> const *a, int lda, int const *ipiv, std::complex<double> *b, int ldb, int &info);
 
