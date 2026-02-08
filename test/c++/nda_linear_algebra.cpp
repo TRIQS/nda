@@ -777,7 +777,7 @@ TEST(NDA, LinearAlgebraPermutationMatrixAndVector) {
   // (ii) swap row 1 with row 1 (ipiv[1]=2 -> swap with row 1)
   // (iii) swap row 2 with row 2 (ipiv[2]=3 -> swap with row 2)
   auto P_expected = nda::matrix<double>{{0, 1, 0}, {1, 0, 0}, {0, 0, 1}};
-  EXPECT_ARRAY_NEAR(P_from_ipiv, P_expected);
+  EXPECT_ARRAY_NEAR(P_from_ipiv, P_expected, fp_tol<double>);
 
   // test get_permutation_vector from pivot indices
   auto sigma = nda::linalg::get_permutation_vector(ipiv, 3);
@@ -785,40 +785,43 @@ TEST(NDA, LinearAlgebraPermutationMatrixAndVector) {
 
   // test get_permutation_matrix from permutation vector
   auto P_from_sigma = nda::linalg::get_permutation_matrix<double>(sigma);
-  EXPECT_ARRAY_NEAR(P_from_sigma, P_expected);
+  EXPECT_ARRAY_NEAR(P_from_sigma, P_expected, fp_tol<double>);
 
   // verify that P * sigma gives identity permutation applied in order
   auto test_vec = nda::vector<double>{10, 20, 30};
   auto permuted = nda::vector<double>{test_vec(sigma(0)), test_vec(sigma(1)), test_vec(sigma(2))};
-  EXPECT_ARRAY_NEAR(P_from_sigma * test_vec, permuted);
+  EXPECT_ARRAY_NEAR(P_from_sigma * test_vec, permuted, fp_tol<double>);
 
   // test with different layout
-  auto P_C_layout = nda::linalg::get_permutation_matrix<double, nda::C_layout>(sigma);
-  EXPECT_ARRAY_NEAR(P_C_layout, P_expected);
+  auto P_C_layout = nda::linalg::get_permutation_matrix<double, C_layout>(sigma);
+  EXPECT_ARRAY_NEAR(P_C_layout, P_expected, fp_tol<double>);
 
   // test with complex type
   auto P_complex = nda::linalg::get_permutation_matrix<std::complex<double>>(sigma);
-  EXPECT_ARRAY_NEAR(P_complex, nda::matrix<std::complex<double>>(P_expected));
+  EXPECT_ARRAY_NEAR(P_complex, nda::matrix<std::complex<double>>(P_expected), fp_tol<double>);
 
   // test larger permutation
   nda::vector<int> ipiv_large{3, 3, 4, 4};
   auto sigma_large        = nda::linalg::get_permutation_vector(ipiv_large, 4);
   auto P_large_from_ipiv  = nda::linalg::get_permutation_matrix<double>(ipiv_large, 4);
   auto P_large_from_sigma = nda::linalg::get_permutation_matrix<double>(sigma_large);
-  EXPECT_ARRAY_NEAR(P_large_from_ipiv, P_large_from_sigma);
+  EXPECT_ARRAY_NEAR(P_large_from_ipiv, P_large_from_sigma, fp_tol<double>);
 
   // verify permutation properties: P^T * P = I
-  EXPECT_ARRAY_NEAR(nda::transpose(P_from_sigma) * P_from_sigma, nda::eye(3));
-  EXPECT_ARRAY_NEAR(nda::transpose(P_large_from_sigma) * P_large_from_sigma, nda::eye(4));
+  EXPECT_ARRAY_NEAR(nda::transpose(P_from_sigma) * P_from_sigma, nda::eye(3), fp_tol<double>);
+  EXPECT_ARRAY_NEAR(nda::transpose(P_large_from_sigma) * P_large_from_sigma, nda::eye(4), fp_tol<double>);
 
   // test identity permutation
   nda::vector<int> sigma_id{0, 1, 2, 3};
   auto P_id = nda::linalg::get_permutation_matrix<double>(sigma_id);
-  EXPECT_ARRAY_NEAR(P_id, nda::eye(4));
+  EXPECT_ARRAY_NEAR(P_id, nda::eye(4), fp_tol<double>);
 }
 
 // Verify that L and U have the correct structure after LU decomposition.
 void verify_lu_structure(auto const &A, auto const &sigma, auto const &L, auto const &U, bool rank_deficient) {
+  using fp_t = nda::get_fp_t<decltype(A)>;
+
+  // verify dimensions
   auto const [m, n] = A.shape();
   auto const k      = std::min(m, n);
   EXPECT_EQ(L.extent(0), m);
@@ -828,21 +831,21 @@ void verify_lu_structure(auto const &A, auto const &sigma, auto const &L, auto c
 
   // verify that P * A = L * U
   auto P = nda::linalg::get_permutation_matrix<nda::get_value_t<decltype(A)>>(sigma);
-  EXPECT_ARRAY_NEAR(P * A, L * U);
+  EXPECT_ARRAY_NEAR(P * A, L * U, fp_tol<fp_t>);
 
   // verify L is lower triangular/trapezoidal with unit diagonal
   for (int i = 0; i < m; ++i) {
-    if (i < k) { EXPECT_COMPLEX_NEAR(L(i, i), 1.0); }
-    for (int j = i + 1; j < k; ++j) EXPECT_COMPLEX_NEAR(L(i, j), 0.0);
+    if (i < k) { EXPECT_COMPLEX_NEAR(L(i, i), 1.0, fp_tol<fp_t>); }
+    for (int j = i + 1; j < k; ++j) EXPECT_COMPLEX_NEAR(L(i, j), 0.0, fp_tol<fp_t>);
   }
 
   // verify U is upper triangular/trapezoidal
   for (int i = 0; i < k; ++i) {
-    for (int j = 0; j < i; ++j) EXPECT_COMPLEX_NEAR(U(i, j), 0.0);
+    for (int j = 0; j < i; ++j) EXPECT_COMPLEX_NEAR(U(i, j), 0.0, fp_tol<fp_t>);
   }
 
   // in case of rank deficiency, check that at least one diagonal element of U is close to zero
-  if (rank_deficient and m >= 2 and n >= 2) { EXPECT_NEAR(nda::min_element(nda::abs(nda::diagonal(U))), 0.0, 1e-14); }
+  if (rank_deficient and m >= 2 and n >= 2) { EXPECT_NEAR(nda::min_element(nda::abs(nda::diagonal(U))), 0.0, fp_tol<fp_t>); }
 }
 
 // Test LU decompositions.
@@ -858,60 +861,53 @@ void test_lu(int m, int n, bool rank_deficient = false) {
     A(1, nda::range::all) = A(0, nda::range::all);
   }
 
-  // LU decomposition returning new matrices
+  // LU decomposition
   auto [sigma_1, L_1, U_1] = nda::linalg::lu(A, rank_deficient);
   verify_lu_structure(A, sigma_1, L_1, U_1, rank_deficient);
 
-  // in-place LU decomposition
-  if constexpr (nda::blas::has_F_layout<matrix_t>) {
+  // LU decomposition in-place
+  if constexpr (nda::blas_lapack::has_F_layout<matrix_t>) {
     auto A_copy              = A;
     auto [sigma_2, L_2, U_2] = nda::linalg::lu_in_place(A_copy, rank_deficient);
     verify_lu_structure(A, sigma_2, L_2, U_2, rank_deficient);
   }
 }
 
+template <typename T>
+void test_lu_layouts(int m, int n) {
+  test_lu<T, F_layout>(m, n);
+  test_lu<T, F_layout>(m, n, true);
+  test_lu<T, C_layout>(m, n);
+  test_lu<T, C_layout>(m, n, true);
+}
+
 TEST(NDA, LinearAlgebraLUSquare) {
   auto sizes = std::vector<int>{1, 2, 3, 5, 10, 20};
   for (auto n : sizes) {
-    test_lu<double, nda::F_layout>(n, n);
-    test_lu<double, nda::F_layout>(n, n, true);
-    test_lu<std::complex<double>, nda::F_layout>(n, n);
-    test_lu<std::complex<double>, nda::F_layout>(n, n, true);
-
-    test_lu<double, nda::C_layout>(n, n);
-    test_lu<double, nda::C_layout>(n, n, true);
-    test_lu<std::complex<double>, nda::C_layout>(n, n);
-    test_lu<std::complex<double>, nda::C_layout>(n, n, true);
+    test_lu_layouts<float>(n, n);
+    test_lu_layouts<std::complex<float>>(n, n);
+    test_lu_layouts<double>(n, n);
+    test_lu_layouts<std::complex<double>>(n, n);
   }
 }
 
 TEST(NDA, LinearAlgebraLURectangularNarrow) {
   auto shapes = std::vector<std::array<int, 2>>{{2, 1}, {5, 1}, {10, 3}, {20, 7}};
   for (auto [m, n] : shapes) {
-    test_lu<double, nda::F_layout>(m, n);
-    test_lu<double, nda::F_layout>(m, n, true);
-    test_lu<std::complex<double>, nda::F_layout>(m, n);
-    test_lu<std::complex<double>, nda::F_layout>(m, n, true);
-
-    test_lu<double, nda::C_layout>(m, n);
-    test_lu<double, nda::C_layout>(m, n, true);
-    test_lu<std::complex<double>, nda::C_layout>(m, n);
-    test_lu<std::complex<double>, nda::C_layout>(m, n, true);
+    test_lu_layouts<float>(m, n);
+    test_lu_layouts<std::complex<float>>(m, n);
+    test_lu_layouts<double>(m, n);
+    test_lu_layouts<std::complex<double>>(m, n);
   }
 }
 
 TEST(NDA, LinearAlgebraLURectangularWide) {
   auto shapes = std::vector<std::array<int, 2>>{{1, 2}, {1, 5}, {3, 10}, {7, 20}};
   for (auto [m, n] : shapes) {
-    test_lu<double, nda::F_layout>(m, n);
-    test_lu<double, nda::F_layout>(m, n, true);
-    test_lu<std::complex<double>, nda::F_layout>(m, n);
-    test_lu<std::complex<double>, nda::F_layout>(m, n, true);
-
-    test_lu<double, nda::C_layout>(m, n);
-    test_lu<double, nda::C_layout>(m, n, true);
-    test_lu<std::complex<double>, nda::C_layout>(m, n);
-    test_lu<std::complex<double>, nda::C_layout>(m, n, true);
+    test_lu_layouts<float>(m, n);
+    test_lu_layouts<std::complex<float>>(m, n);
+    test_lu_layouts<double>(m, n);
+    test_lu_layouts<std::complex<double>>(m, n);
   }
 }
 
