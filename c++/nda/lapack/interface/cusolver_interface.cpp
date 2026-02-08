@@ -79,6 +79,22 @@ namespace nda::lapack::device {
       return bufferSize;
     }
 
+    // Get the buffer size for getrf.
+    template <typename T>
+    int getrf_buffer_size_impl(int m, int n, T *a, int lda) {
+      int bufferSize = 0;
+      if constexpr (std::is_same_v<T, float>) {
+        cusolverDnSgetrf_bufferSize(get_handle(), m, n, a, lda, &bufferSize);
+      } else if constexpr (std::is_same_v<T, double>) {
+        cusolverDnDgetrf_bufferSize(get_handle(), m, n, a, lda, &bufferSize);
+      } else if constexpr (std::is_same_v<T, std::complex<float>>) {
+        cusolverDnCgetrf_bufferSize(get_handle(), m, n, cucplx(a), lda, &bufferSize);
+      } else if constexpr (std::is_same_v<T, std::complex<double>>) {
+        cusolverDnZgetrf_bufferSize(get_handle(), m, n, cucplx(a), lda, &bufferSize);
+      }
+      return bufferSize;
+    }
+
   } // namespace
 
   // gesvd buffer size
@@ -105,19 +121,31 @@ namespace nda::lapack::device {
     CUSOLVER_CHECK(cusolverDnZgesvd, info, jobu, jobvt, m, n, cucplx(a), lda, s, cucplx(u), ldu, cucplx(vt), ldvt, cucplx(work), lwork, rwork);
   }
 
-  void getrf(int m, int n, double *a, int lda, int *ipiv, int &info) {
-    int bufferSize = 0;
-    cusolverDnDgetrf_bufferSize(get_handle(), m, n, a, lda, &bufferSize);
-    auto Workspace = nda::cuvector<double>(bufferSize);
-    CUSOLVER_CHECK(cusolverDnDgetrf, info, m, n, a, lda, Workspace.data(), ipiv);
+  // getrf buffer size
+  int getrf_buffer_size(int m, int n, float *a, int lda) { return getrf_buffer_size_impl<float>(m, n, a, lda); }
+  int getrf_buffer_size(int m, int n, std::complex<float> *a, int lda) { return getrf_buffer_size_impl<std::complex<float>>(m, n, a, lda); }
+  int getrf_buffer_size(int m, int n, double *a, int lda) { return getrf_buffer_size_impl<double>(m, n, a, lda); }
+  int getrf_buffer_size(int m, int n, std::complex<double> *a, int lda) { return getrf_buffer_size_impl<std::complex<double>>(m, n, a, lda); }
+
+  // getrf
+  void getrf(int m, int n, float *a, int lda, float *work, int *ipiv, int &info) { CUSOLVER_CHECK(cusolverDnSgetrf, info, m, n, a, lda, work, ipiv); }
+  void getrf(int m, int n, std::complex<float> *a, int lda, std::complex<float> *work, int *ipiv, int &info) {
+    CUSOLVER_CHECK(cusolverDnCgetrf, info, m, n, cucplx(a), lda, cucplx(work), ipiv);
   }
-  void getrf(int m, int n, std::complex<double> *a, int lda, int *ipiv, int &info) {
-    int bufferSize = 0;
-    cusolverDnZgetrf_bufferSize(get_handle(), m, n, cucplx(a), lda, &bufferSize);
-    auto Workspace = nda::cuvector<std::complex<double>>(bufferSize);
-    CUSOLVER_CHECK(cusolverDnZgetrf, info, m, n, cucplx(a), lda, cucplx(Workspace.data()), ipiv);
+  void getrf(int m, int n, double *a, int lda, double *work, int *ipiv, int &info) {
+    CUSOLVER_CHECK(cusolverDnDgetrf, info, m, n, a, lda, work, ipiv);
+  }
+  void getrf(int m, int n, std::complex<double> *a, int lda, std::complex<double> *work, int *ipiv, int &info) {
+    CUSOLVER_CHECK(cusolverDnZgetrf, info, m, n, cucplx(a), lda, cucplx(work), ipiv);
   }
 
+  // getrs
+  void getrs(char op, int n, int nrhs, float const *a, int lda, int const *ipiv, float *b, int ldb, int &info) {
+    CUSOLVER_CHECK(cusolverDnSgetrs, info, get_cublas_op(op), n, nrhs, a, lda, ipiv, b, ldb);
+  }
+  void getrs(char op, int n, int nrhs, std::complex<float> const *a, int lda, int const *ipiv, std::complex<float> *b, int ldb, int &info) {
+    CUSOLVER_CHECK(cusolverDnCgetrs, info, get_cublas_op(op), n, nrhs, cucplx(a), lda, ipiv, cucplx(b), ldb);
+  }
   void getrs(char op, int n, int nrhs, double const *a, int lda, int const *ipiv, double *b, int ldb, int &info) {
     CUSOLVER_CHECK(cusolverDnDgetrs, info, get_cublas_op(op), n, nrhs, a, lda, ipiv, b, ldb);
   }

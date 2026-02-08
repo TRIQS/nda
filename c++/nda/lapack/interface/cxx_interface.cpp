@@ -59,9 +59,15 @@ namespace nda::lapack::f77 {
     LAPACK_zungqr(&m, &n, &k, a, &lda, tau, work, &lwork, &info);
   }
 
+  void getrf(int m, int n, float *a, int lda, int *ipiv, int &info) { LAPACK_sgetrf(&m, &n, a, &lda, ipiv, &info); }
+  void getrf(int m, int n, std::complex<float> *a, int lda, int *ipiv, int &info) { LAPACK_cgetrf(&m, &n, a, &lda, ipiv, &info); }
   void getrf(int m, int n, double *a, int lda, int *ipiv, int &info) { LAPACK_dgetrf(&m, &n, a, &lda, ipiv, &info); }
   void getrf(int m, int n, std::complex<double> *a, int lda, int *ipiv, int &info) { LAPACK_zgetrf(&m, &n, a, &lda, ipiv, &info); }
 
+  void getri(int n, float *a, int lda, int const *ipiv, float *work, int lwork, int &info) { LAPACK_sgetri(&n, a, &lda, ipiv, work, &lwork, &info); }
+  void getri(int n, std::complex<float> *a, int lda, int const *ipiv, std::complex<float> *work, int lwork, int &info) {
+    LAPACK_cgetri(&n, a, &lda, ipiv, work, &lwork, &info);
+  }
   void getri(int n, double *a, int lda, int const *ipiv, double *work, int lwork, int &info) {
     LAPACK_dgetri(&n, a, &lda, ipiv, work, &lwork, &info);
   }
@@ -95,6 +101,12 @@ namespace nda::lapack::f77 {
     LAPACK_zhegv(&itype, &jobz, &uplo, &n, a, &lda, b, &ldb, w, work, &lwork, rwork, &info);
   }
 
+  void getrs(char op, int n, int nrhs, float const *a, int lda, int const *ipiv, float *b, int ldb, int &info) {
+    LAPACK_sgetrs(&op, &n, &nrhs, a, &lda, ipiv, b, &ldb, &info);
+  }
+  void getrs(char op, int n, int nrhs, std::complex<float> const *a, int lda, int const *ipiv, std::complex<float> *b, int ldb, int &info) {
+    LAPACK_cgetrs(&op, &n, &nrhs, a, &lda, ipiv, b, &ldb, &info);
+  }
   void getrs(char op, int n, int nrhs, double const *a, int lda, int const *ipiv, double *b, int ldb, int &info) {
     LAPACK_dgetrs(&op, &n, &nrhs, a, &lda, ipiv, b, &ldb, &info);
   }

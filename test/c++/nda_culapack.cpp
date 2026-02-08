@@ -80,14 +80,19 @@ template <typename T, typename Layout, nda::mem::AddressSpace AS1, nda::mem::Add
 void test_getrs_getrf() {
   using matrix_t   = nda::matrix<T, Layout>;
   using f_matrix_t = nda::matrix<T, F_layout>;
+  using fp_t       = nda::get_fp_t<T>;
 
   auto A    = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
   auto Ainv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
   if constexpr (nda::is_complex_v<T>) {
-    A *= 1i;
-    Ainv /= 1i;
+    A *= T{1i};
+    Ainv /= T{1i};
   }
   auto B = f_matrix_t{{1, 5}, {4, 5}, {3, 6}};
+
+  // tolerance based on condition number: cond(A) ~ 332, ||Ainv||_max = 24
+  // error ~ cond(A) * ||Ainv||_max * eps => use eps * 10000 as tolerance
+  constexpr auto tol = std::numeric_limits<fp_t>::epsilon() * 10000;
 
   // solve A * X = B using getrf and getrs
   auto A_d    = to_addr_space<AS1>(A);
@@ -95,92 +100,123 @@ void test_getrs_getrf() {
   auto ipiv_d = to_addr_space<AS1>(nda::array<int, 1>(3));
   nda::lapack::getrf(A_d, ipiv_d);
   nda::lapack::getrs(A_d, B_d, ipiv_d);
-  EXPECT_ARRAY_NEAR(A * nda::to_host(B_d), B);
-  EXPECT_ARRAY_NEAR(Ainv * B, nda::to_host(B_d));
+  auto X = matrix_t{nda::to_host(B_d)};
+  EXPECT_ARRAY_NEAR(A * X, B, tol);
+  EXPECT_ARRAY_NEAR(Ainv * B, X, tol);
 
   // solve A^T * X = B using getrf and getrs
   A_d = A;
   B_d = B;
   nda::lapack::getrf(A_d, ipiv_d);
   nda::lapack::getrs(nda::transpose(A_d), B_d, ipiv_d);
-  EXPECT_ARRAY_NEAR(nda::transpose(A) * nda::to_host(B_d), B);
-  EXPECT_ARRAY_NEAR(nda::transpose(Ainv) * B, nda::to_host(B_d));
+  X = matrix_t{nda::to_host(B_d)};
+  EXPECT_ARRAY_NEAR(nda::transpose(A) * X, B, tol);
+  EXPECT_ARRAY_NEAR(nda::transpose(Ainv) * B, X, tol);
 
   // solve A^H * X = B using getrf and getrs
-  if constexpr (std::same_as<Layout, F_layout>) {
+  if constexpr (nda::blas_lapack::has_F_layout<matrix_t>) {
     A_d = A;
     B_d = B;
     nda::lapack::getrf(A_d, ipiv_d);
-    nda::lapack::getrs(nda::conj(nda::transpose(A_d)), B_d, ipiv_d);
-    EXPECT_ARRAY_NEAR(nda::conj(nda::transpose(A)) * nda::to_host(B_d), B);
-    EXPECT_ARRAY_NEAR(nda::conj(nda::transpose(Ainv)) * B, nda::to_host(B_d));
+    nda::lapack::getrs(nda::dagger(A_d), B_d, ipiv_d);
+    X = matrix_t{nda::to_host(B_d)};
+    EXPECT_ARRAY_NEAR(nda::dagger(A) * X, B, tol);
+    EXPECT_ARRAY_NEAR(nda::dagger(Ainv) * B, X, tol);
   }
 
   // solve A * x = b using getrf and getrs
   A_d      = A;
-  auto b_d = to_addr_space<AS2>(nda::vector<T>{B(nda::range::all, 0)});
+  auto b   = B(nda::range::all, 0);
+  auto b_d = to_addr_space<AS2>(nda::vector<T>{b});
   nda::lapack::getrf(A_d, ipiv_d);
   nda::lapack::getrs(A_d, b_d, ipiv_d);
-  EXPECT_ARRAY_NEAR(A * nda::to_host(b_d), B(nda::range::all, 0));
-  EXPECT_ARRAY_NEAR((Ainv * B)(nda::range::all, 0), nda::to_host(b_d));
+  auto x = nda::to_host(b_d);
+  EXPECT_ARRAY_NEAR(A * x, b, tol);
+  EXPECT_ARRAY_NEAR(Ainv * b, x, tol);
+}
+
+template <typename T, typename Layout>
+void test_getrs_getrf_address_spaces() {
+  test_getrs_getrf<T, Layout, Device, Device>();
+  test_getrs_getrf<T, Layout, Device, Unified>();
+  test_getrs_getrf<T, Layout, Unified, Device>();
+  test_getrs_getrf<T, Layout, Unified, Unified>();
+  test_getrs_getrf<T, Layout, Unified, Host>();
+  test_getrs_getrf<T, Layout, Host, Unified>();
+}
+
+template <typename T>
+void test_getrs_getrf_layouts() {
+  test_getrs_getrf_address_spaces<T, C_layout>();
+  test_getrs_getrf_address_spaces<T, F_layout>();
 }
 
 TEST(NDA, CULAPACKGetrsAndGetrf) {
-  test_getrs_getrf<double, C_layout, Device, Device>();
-  test_getrs_getrf<double, F_layout, Device, Unified>();
-  test_getrs_getrf<std::complex<double>, C_layout, Unified, Device>();
-  test_getrs_getrf<std::complex<double>, F_layout, Unified, Unified>();
-
-  test_getrs_getrf<double, C_layout, Unified, Unified>();
-  test_getrs_getrf<double, F_layout, Host, Unified>();
-  test_getrs_getrf<std::complex<double>, C_layout, Unified, Host>();
-  test_getrs_getrf<std::complex<double>, F_layout, Device, Device>();
+  test_getrs_getrf_layouts<float>();
+  test_getrs_getrf_layouts<std::complex<float>>();
+  test_getrs_getrf_layouts<double>();
+  test_getrs_getrf_layouts<std::complex<double>>();
 }
 
-TEST(NDA, CULAPACKGetrfWithRectangularMatrix) {
-  auto A      = nda::matrix<double, F_layout>{{1, 5}, {4, 5}, {3, 6}};
-  auto AT     = nda::matrix<double, F_layout>(nda::transpose(A));
-  auto A_c    = nda::matrix<double, C_layout>{A};
-  auto AT_c   = nda::matrix<double, C_layout>{AT};
-  auto ipiv_d = nda::cuarray<int, 1>(2);
+template <typename T, nda::mem::AddressSpace AS>
+void test_rectangular_getrf() {
+  using namespace nda::blas_lapack;
+  auto A      = nda::matrix<T, F_layout>{{1, 5}, {4, 5}, {3, 6}};
+  auto AT     = nda::matrix<T, F_layout>(nda::transpose(A));
+  auto A_c    = nda::matrix<T, C_layout>{A};
+  auto AT_c   = nda::matrix<T, C_layout>{AT};
+  auto ipiv_d = nda::array<int, 1, C_layout, nda::heap<AS>>(2);
 
   // get the matrices P, L, U from getrf output
   auto get_plu = [](auto const &M, auto const &ipiv, int m, int n) {
-    using layout_t   = std::conditional_t<nda::blas::has_C_layout<decltype(M)>, C_layout, F_layout>;
-    auto P           = nda::matrix<double, layout_t>::zeros(m, m);
-    auto L           = nda::matrix<double, layout_t>::zeros(m, m);
-    auto U           = nda::matrix<double, layout_t>::zeros(m, n);
+    using layout_t   = std::conditional_t<has_C_layout<decltype(M)>, C_layout, F_layout>;
+    auto P           = nda::matrix<T, layout_t>::zeros(m, m);
+    auto L           = nda::matrix<T, layout_t>::zeros(m, m);
+    auto U           = nda::matrix<T, layout_t>::zeros(m, n);
     nda::diagonal(P) = 1;
     nda::diagonal(L) = 1;
     for (int i = 0; i < ipiv.size(); ++i) deep_swap(P(i, nda::range::all), P(ipiv(i) - 1, nda::range::all));
     for (int i = 0; i < m; ++i) {
-      L(i, nda::range(i))    = (nda::blas::has_C_layout<decltype(M)> ? M(nda::range(i), i) : M(i, nda::range(i)));
-      U(i, nda::range(i, n)) = (nda::blas::has_C_layout<decltype(M)> ? M(nda::range(i, n), i) : M(i, nda::range(i, n)));
+      L(i, nda::range(i))    = (has_C_layout<decltype(M)> ? M(nda::range(i), i) : M(i, nda::range(i)));
+      U(i, nda::range(i, n)) = (has_C_layout<decltype(M)> ? M(nda::range(i, n), i) : M(i, nda::range(i, n)));
     }
     return std::make_tuple(P, L, U);
   };
 
   // LU decomposition for 3x2 Fortran layout matrix
-  auto LU_f_32 = nda::to_device(A);
+  auto LU_f_32 = to_addr_space<AS>(A);
   nda::lapack::getrf(LU_f_32, ipiv_d);
   auto [P_f_32, L_f_32, U_f_32] = get_plu(nda::to_host(LU_f_32), nda::to_host(ipiv_d), 3, 2);
-  EXPECT_ARRAY_NEAR(P_f_32 * A, L_f_32 * U_f_32);
+  EXPECT_ARRAY_NEAR(P_f_32 * A, L_f_32 * U_f_32, fp_tol<T>);
 
   // LU decomposition for 2x3 Fortran layout matrix
-  auto LU_f_23 = nda::to_device(AT);
+  auto LU_f_23 = to_addr_space<AS>(AT);
   nda::lapack::getrf(LU_f_23, ipiv_d);
   auto [P_f_23, L_f_23, U_f_23] = get_plu(nda::to_host(LU_f_23), nda::to_host(ipiv_d), 2, 3);
-  EXPECT_ARRAY_NEAR(P_f_23 * AT, L_f_23 * U_f_23);
+  EXPECT_ARRAY_NEAR(P_f_23 * AT, L_f_23 * U_f_23, fp_tol<T>);
 
   // LU decomposition for 3x2 C layout matrix
-  auto LU_c_32 = nda::to_device(A_c);
+  auto LU_c_32 = to_addr_space<AS>(A_c);
   nda::lapack::getrf(LU_c_32, ipiv_d);
   auto [P_c_32, L_c_32, U_c_32] = get_plu(nda::to_host(LU_c_32), nda::to_host(ipiv_d), 2, 3);
-  EXPECT_ARRAY_NEAR(P_c_32 * nda::transpose(A_c), L_c_32 * U_c_32);
+  EXPECT_ARRAY_NEAR(P_c_32 * nda::transpose(A_c), L_c_32 * U_c_32, fp_tol<T>);
 
   // LU decomposition for 2x3 C layout matrix
-  auto LU_c_23 = nda::to_device(AT_c);
+  auto LU_c_23 = to_addr_space<AS>(AT_c);
   nda::lapack::getrf(LU_c_23, ipiv_d);
   auto [P_c_23, L_c_23, U_c_23] = get_plu(nda::to_host(LU_c_23), nda::to_host(ipiv_d), 3, 2);
-  EXPECT_ARRAY_NEAR(P_c_23 * nda::transpose(AT_c), L_c_23 * U_c_23);
+  EXPECT_ARRAY_NEAR(P_c_23 * nda::transpose(AT_c), L_c_23 * U_c_23, fp_tol<T>);
+}
+
+template <typename T>
+void test_rectangular_getrf_address_spaces() {
+  test_rectangular_getrf<T, Device>();
+  test_rectangular_getrf<T, Unified>();
+}
+
+TEST(NDA, CULAPACKGetrfWithRectangularMatrix) {
+  test_rectangular_getrf_address_spaces<float>();
+  test_rectangular_getrf_address_spaces<std::complex<float>>();
+  test_rectangular_getrf_address_spaces<double>();
+  test_rectangular_getrf_address_spaces<std::complex<double>>();
 }
