@@ -109,6 +109,10 @@ namespace nda::lapack::f77 {
     LAPACK_zgetri(&n, a, &lda, ipiv, work, &lwork, &info);
   }
 
+  void gtsv(int n, int nrhs, float *dl, float *d, float *du, float *b, int ldb, int &info) { LAPACK_sgtsv(&n, &nrhs, dl, d, du, b, &ldb, &info); }
+  void gtsv(int n, int nrhs, std::complex<float> *dl, std::complex<float> *d, std::complex<float> *du, std::complex<float> *b, int ldb, int &info) {
+    LAPACK_cgtsv(&n, &nrhs, dl, d, du, b, &ldb, &info);
+  }
   void gtsv(int n, int nrhs, double *dl, double *d, double *du, double *b, int ldb, int &info) { LAPACK_dgtsv(&n, &nrhs, dl, d, du, b, &ldb, &info); }
   void gtsv(int n, int nrhs, std::complex<double> *dl, std::complex<double> *d, std::complex<double> *du, std::complex<double> *b, int ldb,
             int &info) {
