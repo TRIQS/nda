@@ -21,65 +21,40 @@ using namespace std::complex_literals;
 using nda::C_layout, nda::F_layout;
 
 // Test LAPACK gtsv function.
-void test_gtsv(auto dl, auto d, auto du, auto B, auto exp) {
-  int info = lapack::gtsv(dl, d, du, B);
-  EXPECT_EQ(info, 0);
-  EXPECT_ARRAY_NEAR(B, exp);
-}
+template <typename T>
+void test_gtsv() {
+  auto du    = nda::vector<T>{4, 3, 2, 1};
+  auto d     = nda::vector<T>{1, 2, 3, 4, 5};
+  auto dl    = nda::vector<T>{1, 2, 3, 4};
+  auto B     = nda::matrix<T, F_layout>{{9, 34}, {14, 44}, {21, 56}, {30, 70}, {41, 86}};
+  auto exp_X = nda::matrix<T>{{1, 6}, {2, 7}, {3, 8}, {4, 9}, {5, 10}};
+  if constexpr (nda::is_complex_v<T>) {
+    dl *= T{1i};
+    d *= T{1i};
+    du *= T{1i};
+    B *= T{-1};
+    exp_X *= T{1i};
+  }
 
-TEST(NDA, LAPACKGtsvDouble) {
-  auto check = []<typename T>() {
-    // sub-diagonal, diagonal, and super-diagonal elements
-    auto dl = vector<T>{4, 3, 2, 1};
-    auto d  = vector<T>{1, 2, 3, 4, 5};
-    auto du = vector<T>{1, 2, 3, 4};
-
-    // right hand sides
-    auto b1          = vector<T>{6, 2, 7, 4, 5};
-    auto b2          = vector<T>{1, 3, 8, 9, 10};
-    auto B           = matrix<T, F_layout>(5, 2);
-    B(range::all, 0) = b1;
-    B(range::all, 1) = b2;
-
-    // expected solutions
-    auto exp_x1          = vector<double>{43.0 / 33.0, 155.0 / 33.0, -208.0 / 33.0, 130.0 / 33.0, 7.0 / 33.0};
-    auto exp_x2          = vector<double>{-28.0 / 33.0, 61.0 / 33.0, 89.0 / 66.0, -35.0 / 66.0, 139.0 / 66.0};
-    auto exp_X           = matrix<double, F_layout>(5, 2);
-    exp_X(range::all, 0) = exp_x1;
-    exp_X(range::all, 1) = exp_x2;
-
-    test_gtsv(dl, d, du, b1, exp_x1);
-    test_gtsv(dl, d, du, b2, exp_x2);
-    test_gtsv(dl, d, du, B, exp_X);
+  // verify the result
+  auto verify_gtsv = [](auto dl, auto d, auto du, auto b, auto exp) {
+    nda::lapack::gtsv(dl, d, du, b);
+    EXPECT_ARRAY_NEAR(b, exp, fp_tol<T>);
   };
 
-  check.operator()<double>();
-  check.operator()<std::complex<double>>();
+  // solve A * X = B
+  verify_gtsv(dl, d, du, B, exp_X);
+
+  // solve A * x = b
+  verify_gtsv(dl, d, du, make_regular(B(nda::range::all, 0)), make_regular(exp_X(nda::range::all, 0)));
+  verify_gtsv(dl, d, du, make_regular(B(nda::range::all, 1)), make_regular(exp_X(nda::range::all, 1)));
 }
 
-TEST(NDA, LAPACKGtsvComplex) {
-  // sub-diagonal, diagonal, and super-diagonal elements
-  auto dl = vector<std::complex<double>>{-4i, -3i, -2i, -1i};
-  auto d  = vector<std::complex<double>>{1, 2, 3, 4, 5};
-  auto du = vector<std::complex<double>>{1i, 2i, 3i, 4i};
-
-  // right hand sides
-  auto b1          = vector<std::complex<double>>{6 + 0i, 2i, 7 + 0i, 4i, 5 + 0i};
-  auto b2          = vector<std::complex<double>>{1i, 3 + 0i, 8i, 9 + 0i, 10i};
-  auto B           = matrix<std::complex<double>, F_layout>(5, 2);
-  B(range::all, 0) = b1;
-  B(range::all, 1) = b2;
-
-  // expected solutions
-  auto exp_x1          = vector<std::complex<double>>{137.0 / 33.0 + 0i, -61i / 33.0, 368.0 / 33.0 + 0i, 230i / 33.0, -13.0 / 33.0 + 0i};
-  auto exp_x2          = vector<std::complex<double>>{-35i / 33.0, 68.0 / 33.0 + 0i, -103i / 66.0, 415.0 / 66.0 + 0i, 215i / 66.0};
-  auto exp_X           = matrix<std::complex<double>, F_layout>(5, 2);
-  exp_X(range::all, 0) = exp_x1;
-  exp_X(range::all, 1) = exp_x2;
-
-  test_gtsv(dl, d, du, b1, exp_x1);
-  test_gtsv(dl, d, du, b2, exp_x2);
-  test_gtsv(dl, d, du, B, exp_X);
+TEST(NDA, LAPACKGtsv) {
+  test_gtsv<float>();
+  test_gtsv<std::complex<float>>();
+  test_gtsv<double>();
+  test_gtsv<std::complex<double>>();
 }
 
 // Test LAPACK gesvd function.

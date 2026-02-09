@@ -11,6 +11,7 @@
 #pragma once
 
 #include "./interface/cxx_interface.hpp"
+#include "../blas/tools.hpp"
 #include "../concepts.hpp"
 #include "../declarations.hpp"
 #include "../macros.hpp"
@@ -23,20 +24,22 @@ namespace nda::lapack {
    * @ingroup linalg_lapack
    * @brief Interface to the LAPACK `gtsv` routine.
    *
-   * @details Solves the equation
-   * \f[
-   *   \mathbf{A} \mathbf{X} = \mathbf{B},
-   * \f]
-   * where \f$ \mathbf{A} \f$ is an \f$ n \times n \f$ tridiagonal matrix, by Gaussian elimination with partial
-   * pivoting.
+   * @details Solves a system of linear equations
    *
-   * Note that the equation \f$ \mathbf{A}^H \mathbf{X} = \mathbf{B} \f$ may be solved by interchanging the order of the
-   * arguments containing the subdiagonal elements.
+   * - \f$ \mathbf{A} \mathbf{X} = \mathbf{B} \f$ or
+   * - \f$ \mathbf{A} \mathbf{x} = \mathbf{b} \f$,
    *
-   * @tparam DL nda::MemoryVector type.
-   * @tparam D nda::MemoryVector type.
-   * @tparam DU nda::MemoryVector type.
-   * @tparam B nda::MemoryArray type.
+   * with a tridiagonal \f$ n \times n \f$ matrix \f$ \mathbf{A} \f$ and either \f$ n \times n_{\mathrm{rhs}} \f$
+   * matrices \f$ \mathbf{X} \f$ and \f$ \mathbf{B} \f$ or vectors \f$ \mathbf{x} \f$ and \f$ \mathbf{b} \f$ of size
+   * \f$ n \f$. It uses Gaussian elimination with partial pivoting.
+   *
+   * @note The input arrays/views are required to satisfy nda::mem::have_host_compatible_addr_space and \f$ \mathbf{B}
+   * \f$ has to be in nda::F_layout.
+   *
+   * @tparam DL nda::blas_lapack::BlasArray<1> type.
+   * @tparam D nda::blas_lapack::BlasArrayFor\<DL, 1\> type.
+   * @tparam DU nda::blas_lapack::BlasArrayFor\<DL, 1\> type.
+   * @tparam B nda::blas_lapack::BlasArrayFor\<DL\> type.
    * @param dl Input/Output vector. On entry, it must contain the \f$ n - 1 \f$ subdiagonal elements of \f$ \mathbf{A}
    * \f$. On exit, it is overwritten by the \f$ n - 2 \f$ elements of the second superdiagonal of the upper triangular
    * matrix \f$ \mathbf{U} \f$ from the LU factorization of \f$ \mathbf{A} \f$.
@@ -45,15 +48,13 @@ namespace nda::lapack {
    * @param du Input/Output vector. On entry, it must contain the \f$ n - 1 \f$ superdiagonal elements of \f$ \mathbf{A}
    * \f$. On exit, it is overwritten by the \f$ n - 1 \f$ elements of the first superdiagonal of \f$ \mathbf{U} \f$ .
    * @param b Input/Output array. On entry, the \f$ n \times n_{\mathrm{rhs}} \f$ right hand side matrix \f$ \mathbf{B}
-   * \f$. On exit, if `INFO == 0`, the \f$ n \times n_{\mathrm{rhs}} \f$ solution matrix \f$ \mathbf{X} \f$.
+   * \f$ or the vector \f$ \mathbf{b} \f$. On exit, the \f$ n \times n_{\mathrm{rhs}} \f$ solution matrix \f$ \mathbf{X}
+   * \f$ or the vector \f$ \mathbf{x} \f$.
    * @return Integer return code from the LAPACK call.
    */
-  template <MemoryVector DL, MemoryVector D, MemoryVector DU, MemoryArray B>
-    requires(have_same_value_type_v<DL, D, DU, B> and mem::have_host_compatible_addr_space<DL, D, DU, B> and is_blas_lapack_v<get_value_t<DL>>)
+  template <BlasArray<1> DL, BlasArrayFor<DL, 1> D, BlasArrayFor<DL, 1> DU, BlasArrayFor<DL> B>
+    requires(mem::have_host_compatible_addr_space<DL> and (get_rank<B> == 1 or get_rank<B> == 2) and has_F_layout<B>)
   int gtsv(DL &&dl, D &&d, DU &&du, B &&b) { // NOLINT (temporary views are allowed here)
-    static_assert((get_rank<B> == 1 or get_rank<B> == 2), "Error in nda::lapack::gtsv: B must be a matrix/array/view of rank 1 or 2");
-    static_assert(has_F_layout<B>, "Error in nda::lapack::gtsv: B must have Fortran layout");
-
     // check the dimensions of the input/output arrays/views
     auto const n = d.size();
     EXPECTS(dl.size() == n - 1);
