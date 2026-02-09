@@ -935,6 +935,8 @@ TEST(NDA, LinearAlgebraLURectangularWide) {
 
 // Verify the QR decomposition.
 void verify_qr(auto const &A, auto const &sigma, auto const &Q, auto const &R, bool complete) {
+  using fp_t = nda::get_fp_t<decltype(A)>;
+
   // verify dimensions
   auto const [m, n] = A.shape();
   auto const k      = (complete ? m : std::min(m, n));
@@ -945,17 +947,18 @@ void verify_qr(auto const &A, auto const &sigma, auto const &Q, auto const &R, b
 
   // verify factorization A * P = Q * R
   auto P = nda::linalg::get_permutation_matrix<nda::get_value_t<decltype(A)>>(sigma, true);
-  EXPECT_ARRAY_NEAR(A * P, Q * R);
+  EXPECT_ARRAY_NEAR(A * P, Q * R, fp_tol<fp_t>);
 
   // verify columns of Q are orthogonal
+  using nda::range;
   for (int i = 0; i < k; ++i) {
-    EXPECT_COMPLEX_NEAR(nda::linalg::dotc(Q(nda::range::all, i), Q(nda::range::all, i)), 1.0);
-    for (int j = i + 1; j < k; ++j) { EXPECT_COMPLEX_NEAR(nda::linalg::dotc(Q(nda::range::all, i), Q(nda::range::all, j)), 0.0); }
+    EXPECT_COMPLEX_NEAR(nda::linalg::dotc(Q(range::all, i), Q(range::all, i)), 1.0, fp_tol<fp_t>);
+    for (int j = i + 1; j < k; ++j) { EXPECT_COMPLEX_NEAR(nda::linalg::dotc(Q(range::all, i), Q(range::all, j)), 0.0, fp_tol<fp_t>); }
   }
 
   // verify R is upper triangular/trapezoidal
   for (int i = 1; i < k; ++i) {
-    for (int j = 0; j < std::min(i, static_cast<int>(n)); ++j) EXPECT_COMPLEX_NEAR(R(i, j), 0.0);
+    for (int j = 0; j < std::min(i, static_cast<int>(n)); ++j) EXPECT_COMPLEX_NEAR(R(i, j), 0.0, fp_tol<fp_t>);
   }
 }
 
@@ -972,7 +975,7 @@ void test_qr(int m, int n) {
   }
 
   // in-place QR decompositions
-  if constexpr (nda::blas::has_F_layout<matrix_t>) {
+  if constexpr (nda::blas_lapack::has_F_layout<matrix_t>) {
     for (auto complete : {true, false}) {
       auto A_copy              = A;
       auto [sigma_2, Q_2, R_2] = nda::linalg::qr_in_place(A_copy, complete);
@@ -981,36 +984,39 @@ void test_qr(int m, int n) {
   }
 }
 
+template <typename T>
+void test_qr_layouts(int m, int n) {
+  test_qr<T, F_layout>(m, n);
+  test_qr<T, C_layout>(m, n);
+}
+
 TEST(NDA, LinearAlgebraQRSquare) {
   auto sizes = std::vector<int>{1, 2, 3, 5, 10, 20};
   for (auto n : sizes) {
-    test_qr<double, nda::F_layout>(n, n);
-    test_qr<std::complex<double>, nda::F_layout>(n, n);
-
-    test_qr<double, nda::C_layout>(n, n);
-    test_qr<std::complex<double>, nda::C_layout>(n, n);
+    test_qr_layouts<float>(n, n);
+    test_qr_layouts<std::complex<float>>(n, n);
+    test_qr_layouts<double>(n, n);
+    test_qr_layouts<std::complex<double>>(n, n);
   }
 }
 
 TEST(NDA, LinearAlgebraQRRectangularNarrow) {
   auto shapes = std::vector<std::array<int, 2>>{{2, 1}, {5, 1}, {10, 3}, {20, 7}};
   for (auto [m, n] : shapes) {
-    test_qr<double, nda::F_layout>(m, n);
-    test_qr<std::complex<double>, nda::F_layout>(m, n);
-
-    test_qr<double, nda::C_layout>(m, n);
-    test_qr<std::complex<double>, nda::C_layout>(m, n);
+    test_qr_layouts<float>(m, n);
+    test_qr_layouts<std::complex<float>>(m, n);
+    test_qr_layouts<double>(m, n);
+    test_qr_layouts<std::complex<double>>(m, n);
   }
 }
 
 TEST(NDA, LinearAlgebraQRRectangularWide) {
   auto shapes = std::vector<std::array<int, 2>>{{1, 2}, {1, 5}, {3, 10}, {7, 20}};
   for (auto [m, n] : shapes) {
-    test_qr<double, nda::F_layout>(m, n);
-    test_qr<std::complex<double>, nda::F_layout>(m, n);
-
-    test_qr<double, nda::C_layout>(m, n);
-    test_qr<std::complex<double>, nda::C_layout>(m, n);
+    test_qr_layouts<float>(m, n);
+    test_qr_layouts<std::complex<float>>(m, n);
+    test_qr_layouts<double>(m, n);
+    test_qr_layouts<std::complex<double>>(m, n);
   }
 }
 

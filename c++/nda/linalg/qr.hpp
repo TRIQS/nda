@@ -49,10 +49,11 @@ namespace nda::linalg {
    */
 
   /**
-   * @brief Get the \f$ \mathbf{Q} \f$ and \f$ \mathbf{R} \f$ matrices from the output of nda::lapack::geqp3.
+   * @brief Get the \f$ \mathbf{Q} \f$ and \f$ \mathbf{R} \f$ matrices from the output of nda::lapack::geqp3 or 
+   * nda::lapack::geqrf.
    *
    * @details \f$ \mathbf{R} \f$ is simply the upper triangular (trapezoidal) part of the \f$ m \times n \f$ matrix \f$
-   * \mathbf{A} \f$ returned by nda::lapack::geqp3.
+   * \mathbf{A} \f$ returned by nda::lapack::geqp3 or nda::lapack::geqrf.
    *
    * \f$ \mathbf{Q} \f$ is computed from the elementary reflectors stored in the lower part of \f$ \mathbf{A} \f$ and
    * the vector of scalar factors \f$ \mathbf{\tau} \f$ using nda::lapack::orgqr or nda::lapack::ungqr.
@@ -61,19 +62,23 @@ namespace nda::linalg {
    * where \f$ k \f$ depends on the mode of the factorization:
    * - **reduced mode** (default): \f$ k = \min(m, n) \f$.
    * - **complete mode**: \f$ k = m \f$.
+   * 
+   * The resulting matrices \f$ \mathbf{Q} \f$ and \f$ \mathbf{R} \f$ are always returned in nda::F_layout.
+   * 
+   * An exception is thrown, if the LAPACK call fails.
    *
-   * @note \f$ \mathbf{Q} \f$ and \f$ \mathbf{R} \f$ are always in nda::F_layout.
+   * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space.
    *
-   * @tparam A nda::MemoryMatrix type.
-   * @tparam TAU nda::MemoryVector type.
-   * @param a Input matrix containing the output of nda::lapack::geqp3.
+   * @tparam A nda::blas_lapack::BlasArray<2>type.
+   * @tparam TAU nda::blas_lapack::BlasArrayFor<A, 1> type.
+   * @param a Input matrix \f$ \mathbf{A} \f$ containing the output of nda::lapack::geqp3.
    * @param tau Input vector containing the scalar factors of the elementary reflectors as returned by
    * nda::lapack::geqp3.
    * @param complete If `true`, retrieves the matrices for the complete QR factorization.
    * @return A tuple containing the \f$ \mathbf{Q} \f$ and \f$ \mathbf{R} \f$ matrices.
    */
-  template <MemoryMatrix A, MemoryVector TAU>
-    requires(nda::mem::have_host_compatible_addr_space<A, TAU> and have_same_value_type_v<A, TAU> and is_blas_lapack_v<get_value_t<A>>)
+  template <blas_lapack::BlasArray<2> A, blas_lapack::BlasArrayFor<A, 1> TAU>
+    requires(mem::have_host_compatible_addr_space<A, TAU>)
   auto get_qr_matrices(A const &a, TAU const &tau, bool complete = false) {
     auto const [m, n] = a.shape();
     auto const min_mn = std::min(m, n);
@@ -89,7 +94,7 @@ namespace nda::linalg {
     } else {
       info = lapack::orgqr(Q, tau);
     }
-    if (info != 0) NDA_RUNTIME_ERROR << "Error in nda::qr_in_place: orgqr/ungqr returned a non-zero value: info = " << info;
+    if (info != 0) NDA_RUNTIME_ERROR << "Error in nda::linalg::get_qr_matrices: orgqr/ungqr returned a non-zero value: info = " << info;
 
     // extract R matrix
     for (int i = 0; i < min_mn; ++i) R(range(i + 1), i) = a(range(i + 1), i);
@@ -116,28 +121,32 @@ namespace nda::linalg {
    *
    * \f$ \mathbf{P} \f$ is returned as a permutation vector \f$ \mathbf{\sigma} \f$ of size \f$ n \f$. See
    * nda::linalg::get_permutation_vector for more information.
+   * 
+   * The resulting matrices \f$ \mathbf{Q} \f$ and \f$ \mathbf{R} \f$ are always returned in nda::F_layout.
+   * 
+   * An exception is thrown, if one of the LAPACK calls fails.
    *
-   * @note \f$ \mathbf{A} \f$, \f$ \mathbf{Q} \f$ and \f$ \mathbf{R} \f$ are always in nda::F_layout. See
-   * nda::linalg::qr for a version that accepts and returns matrices in nda::C_layout as well.
+   * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to be stored in 
+   * nda::F_layout. See nda::linalg::qr for a version that handles nda::C_layout.
    *
-   * @tparam A nda::MemoryMatrix type.
+   * @tparam A nda::blas_lapack::BlasArray<2> type.
    * @param a Input/Output matrix. On entry, the \f$ m \times n \f$ matrix \f$ \mathbf{A} \f$. On exit, the result of
    * the nda::lapack::geqp3 call.
    * @param complete If `true`, computes the complete QR factorization.
    * @returns A tuple containing \f$ \mathbf{\sigma} \f$, \f$ \mathbf{Q} \f$ and \f$ \mathbf{R} \f$.
    */
-  template <MemoryMatrix A>
-    requires(nda::mem::have_host_compatible_addr_space<A> and nda::blas::has_F_layout<A> and is_blas_lapack_v<get_value_t<A>>)
+  template <blas_lapack::BlasArray<2> A>
+    requires(mem::have_host_compatible_addr_space<A> and blas_lapack::has_F_layout<A>)
   auto qr_in_place(A &&a, bool complete = false) { // NOLINT (temporary views are allowed here)
     auto const [m, n] = a.shape();
 
     // permutation and tau vector
-    auto jpvt = nda::vector<int>::zeros(n);
-    auto tau  = nda::vector<get_value_t<A>>(std::min(m, n));
+    auto jpvt = vector<int>::zeros(n);
+    auto tau  = vector<get_value_t<A>>(std::min(m, n));
 
     // call lapack geqp3
-    int info  = lapack::geqp3(a, jpvt, tau);
-    if (info != 0) NDA_RUNTIME_ERROR << "Error in nda::qr_in_place: geqp3 returned a non-zero value: info = " << info;
+    int info = lapack::geqp3(a, jpvt, tau);
+    if (info != 0) NDA_RUNTIME_ERROR << "Error in nda::linalg::qr_in_place: geqp3 returned a non-zero value: info = " << info;
 
     // extract Q and R from the output
     auto [Q, R] = get_qr_matrices(a, tau, complete);
@@ -153,7 +162,11 @@ namespace nda::linalg {
    *
    * @details It makes a copy of the input matrix \f$ \mathbf{A} \f$ and calls nda::linalg::qr_in_place.
    *
-   * @note \f$ \mathbf{Q} \f$ and \f$ \mathbf{R} \f$ have the same layout as the input matrix \f$ \mathbf{A} \f$.
+   * The resulting matrices \f$ \mathbf{Q} \f$ and \f$ \mathbf{R} \f$ have the same layout as the input matrix \f$ 
+   * \mathbf{A} \f$.
+   * 
+   * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have a value type
+   * that satisfies nda::is_blas_lapack_v.
    *
    * @tparam A nda::Matrix type.
    * @param a Input matrix. The \f$ m \times n \f$ matrix \f$ \mathbf{A} \f$ to be factorized.
@@ -161,10 +174,10 @@ namespace nda::linalg {
    * @returns A tuple containing \f$ \mathbf{\sigma} \f$, \f$ \mathbf{Q} \f$ and \f$ \mathbf{R} \f$.
    */
   template <Matrix A>
-    requires(nda::mem::have_host_compatible_addr_space<A> and is_blas_lapack_v<get_value_t<A>>)
+    requires(mem::have_host_compatible_addr_space<A> and is_blas_lapack_v<get_value_t<A>>)
   auto qr(A const &a, bool complete = false) {
     auto a_copy = matrix<get_value_t<A>, F_layout>(a);
-    if constexpr (nda::blas::has_F_layout<A>) {
+    if constexpr (blas_lapack::has_F_layout<A>) {
       return qr_in_place(a_copy, complete);
     } else {
       auto [sigma, Q, R] = qr_in_place(a_copy, complete);
