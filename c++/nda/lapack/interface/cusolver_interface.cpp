@@ -95,6 +95,38 @@ namespace nda::lapack::device {
       return bufferSize;
     }
 
+    // Get the buffer size for geqrf.
+    template <typename T>
+    int geqrf_buffer_size_impl(int m, int n, T *a, int lda) {
+      int bufferSize = 0;
+      if constexpr (std::is_same_v<T, float>) {
+        cusolverDnSgeqrf_bufferSize(get_handle(), m, n, a, lda, &bufferSize);
+      } else if constexpr (std::is_same_v<T, double>) {
+        cusolverDnDgeqrf_bufferSize(get_handle(), m, n, a, lda, &bufferSize);
+      } else if constexpr (std::is_same_v<T, std::complex<float>>) {
+        cusolverDnCgeqrf_bufferSize(get_handle(), m, n, cucplx(a), lda, &bufferSize);
+      } else if constexpr (std::is_same_v<T, std::complex<double>>) {
+        cusolverDnZgeqrf_bufferSize(get_handle(), m, n, cucplx(a), lda, &bufferSize);
+      }
+      return bufferSize;
+    }
+
+    // Get the buffer size for orgqr/ungqr.
+    template <typename T>
+    int xxgqr_buffer_size_impl(int m, int n, int k, T const *a, int lda, T const *tau) {
+      int bufferSize = 0;
+      if constexpr (std::is_same_v<T, float>) {
+        cusolverDnSorgqr_bufferSize(get_handle(), m, n, k, a, lda, tau, &bufferSize);
+      } else if constexpr (std::is_same_v<T, double>) {
+        cusolverDnDorgqr_bufferSize(get_handle(), m, n, k, a, lda, tau, &bufferSize);
+      } else if constexpr (std::is_same_v<T, std::complex<float>>) {
+        cusolverDnCungqr_bufferSize(get_handle(), m, n, k, cucplx(a), lda, cucplx(tau), &bufferSize);
+      } else if constexpr (std::is_same_v<T, std::complex<double>>) {
+        cusolverDnZungqr_bufferSize(get_handle(), m, n, k, cucplx(a), lda, cucplx(tau), &bufferSize);
+      }
+      return bufferSize;
+    }
+
   } // namespace
 
   // gesvd buffer size
@@ -151,6 +183,55 @@ namespace nda::lapack::device {
   }
   void getrs(char op, int n, int nrhs, std::complex<double> const *a, int lda, int const *ipiv, std::complex<double> *b, int ldb, int &info) {
     CUSOLVER_CHECK(cusolverDnZgetrs, info, get_cublas_op(op), n, nrhs, cucplx(a), lda, ipiv, cucplx(b), ldb);
+  }
+
+  // geqrf buffer size
+  int geqrf_buffer_size(int m, int n, float *a, int lda) { return geqrf_buffer_size_impl<float>(m, n, a, lda); }
+  int geqrf_buffer_size(int m, int n, std::complex<float> *a, int lda) { return geqrf_buffer_size_impl<std::complex<float>>(m, n, a, lda); }
+  int geqrf_buffer_size(int m, int n, double *a, int lda) { return geqrf_buffer_size_impl<double>(m, n, a, lda); }
+  int geqrf_buffer_size(int m, int n, std::complex<double> *a, int lda) { return geqrf_buffer_size_impl<std::complex<double>>(m, n, a, lda); }
+
+  // geqrf
+  void geqrf(int m, int n, float *a, int lda, float *tau, float *work, int lwork, int &info) {
+    CUSOLVER_CHECK(cusolverDnSgeqrf, info, m, n, a, lda, tau, work, lwork);
+  }
+  void geqrf(int m, int n, std::complex<float> *a, int lda, std::complex<float> *tau, std::complex<float> *work, int lwork, int &info) {
+    CUSOLVER_CHECK(cusolverDnCgeqrf, info, m, n, cucplx(a), lda, cucplx(tau), cucplx(work), lwork);
+  }
+  void geqrf(int m, int n, double *a, int lda, double *tau, double *work, int lwork, int &info) {
+    CUSOLVER_CHECK(cusolverDnDgeqrf, info, m, n, a, lda, tau, work, lwork);
+  }
+  void geqrf(int m, int n, std::complex<double> *a, int lda, std::complex<double> *tau, std::complex<double> *work, int lwork, int &info) {
+    CUSOLVER_CHECK(cusolverDnZgeqrf, info, m, n, cucplx(a), lda, cucplx(tau), cucplx(work), lwork);
+  }
+
+  // orgqr buffer size
+  int orgqr_buffer_size(int m, int n, int k, float const *a, int lda, float const *tau) { return xxgqr_buffer_size_impl(m, n, k, a, lda, tau); }
+  int orgqr_buffer_size(int m, int n, int k, double const *a, int lda, double const *tau) { return xxgqr_buffer_size_impl(m, n, k, a, lda, tau); }
+
+  // orgqr
+  void orgqr(int m, int n, int k, float *a, int lda, float const *tau, float *work, int lwork, int &info) {
+    CUSOLVER_CHECK(cusolverDnSorgqr, info, m, n, k, a, lda, tau, work, lwork);
+  }
+  void orgqr(int m, int n, int k, double *a, int lda, double const *tau, double *work, int lwork, int &info) {
+    CUSOLVER_CHECK(cusolverDnDorgqr, info, m, n, k, a, lda, tau, work, lwork);
+  }
+
+  // ungqr buffer size
+  int ungqr_buffer_size(int m, int n, int k, std::complex<float> const *a, int lda, std::complex<float> const *tau) {
+    return xxgqr_buffer_size_impl(m, n, k, a, lda, tau);
+  }
+  int ungqr_buffer_size(int m, int n, int k, std::complex<double> const *a, int lda, std::complex<double> const *tau) {
+    return xxgqr_buffer_size_impl(m, n, k, a, lda, tau);
+  }
+
+  // ungqr
+  void ungqr(int m, int n, int k, std::complex<float> *a, int lda, std::complex<float> const *tau, std::complex<float> *work, int lwork, int &info) {
+    CUSOLVER_CHECK(cusolverDnCungqr, info, m, n, k, cucplx(a), lda, cucplx(tau), cucplx(work), lwork);
+  }
+  void ungqr(int m, int n, int k, std::complex<double> *a, int lda, std::complex<double> const *tau, std::complex<double> *work, int lwork,
+             int &info) {
+    CUSOLVER_CHECK(cusolverDnZungqr, info, m, n, k, cucplx(a), lda, cucplx(tau), cucplx(work), lwork);
   }
 
 } // namespace nda::lapack::device

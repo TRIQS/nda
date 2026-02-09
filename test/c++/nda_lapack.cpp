@@ -127,25 +127,30 @@ TEST(NDA, LAPACKGesvd) {
   test_gesvd_layouts<std::complex<double>>();
 }
 
-// Test LAPACK geqp3, orgqr and ungqr functions.
+// Test LAPACK geqp3/geqrf, orgqr and ungqr functions.
 template <typename T, bool wide_matrix = false>
-void test_geqp3_orgqr_ungqr() {
-  using matrix_t = matrix<T, F_layout>;
+void test_geqxx_orgqr_ungqr(bool with_pivoting = true) {
+  using matrix_t = nda::matrix<T, F_layout>;
 
   auto A = matrix_t{{{1, 1, 1}, {3, 2, 4}, {5, 3, 2}, {2, 4, 5}, {4, 5, 3}}};
   if constexpr (wide_matrix) A = matrix_t{transpose(A)};
   auto [m, n] = A.shape();
 
-  // compute QR factorization with column pivoting, i.e. A * P = Q * R
+  // compute QR factorization (with column pivoting), i.e. A * P = Q * R
   auto jpvt = nda::zeros<int>(n);
   auto tau  = nda::vector<T>(std::min(m, n));
   auto Q    = matrix_t{A};
-  lapack::geqp3(Q, jpvt, tau);
+  if (with_pivoting) {
+    nda::lapack::geqp3(Q, jpvt, tau);
+  } else {
+    nda::lapack::geqrf(Q, tau);
+    jpvt = nda::arange<int>(1, n + 1);
+  }
 
   // compute A * P by permuting columns of A
   jpvt -= 1;
   auto AP = matrix_t{A};
-  for (int j = 0; j < n; ++j) { AP(range::all, j) = A(range::all, jpvt(j)); }
+  for (int j = 0; j < n; ++j) { AP(nda::range::all, j) = A(nda::range::all, jpvt(j)); }
 
   // extract upper triangular matrix R
   auto R = nda::matrix<T, F_layout>::zeros(std::min(m, n), n);
@@ -154,23 +159,41 @@ void test_geqp3_orgqr_ungqr() {
   }
 
   // extract matrix Q with orthonormal columns
-  if constexpr (std::is_same_v<T, double>) {
-    lapack::orgqr(Q(range::all, range(std::min(m, n))), tau);
+  if constexpr (std::floating_point<T>) {
+    nda::lapack::orgqr(Q(nda::range::all, nda::range(std::min(m, n))), tau);
   } else {
-    lapack::ungqr(Q(range::all, range(std::min(m, n))), tau);
+    nda::lapack::ungqr(Q(nda::range::all, nda::range(std::min(m, n))), tau);
   }
 
-  EXPECT_ARRAY_NEAR(AP, Q(range::all, range(std::min(m, n))) * R, 1e-14);
+  EXPECT_ARRAY_NEAR(AP, Q(nda::range::all, nda::range(std::min(m, n))) * R, fp_tol<T>);
 }
 
 TEST(NDA, LAPACKGeqp3UngqrAndOrgqr) {
   // tall matrix, i.e. n_rows > n_cols
-  test_geqp3_orgqr_ungqr<double>();
-  test_geqp3_orgqr_ungqr<std::complex<double>>();
+  test_geqxx_orgqr_ungqr<float>();
+  test_geqxx_orgqr_ungqr<std::complex<float>>();
+  test_geqxx_orgqr_ungqr<double>();
+  test_geqxx_orgqr_ungqr<std::complex<double>>();
 
   // wide matrix, i.e. n_rows < n_cols
-  test_geqp3_orgqr_ungqr<double, true>();
-  test_geqp3_orgqr_ungqr<std::complex<double>, true>();
+  test_geqxx_orgqr_ungqr<float, true>();
+  test_geqxx_orgqr_ungqr<std::complex<float>, true>();
+  test_geqxx_orgqr_ungqr<double, true>();
+  test_geqxx_orgqr_ungqr<std::complex<double>, true>();
+}
+
+TEST(NDA, LAPACKGeqrfUngqrAndOrgqr) {
+  // tall matrix, i.e. n_rows > n_cols
+  test_geqxx_orgqr_ungqr<float>(false);
+  test_geqxx_orgqr_ungqr<std::complex<float>>(false);
+  test_geqxx_orgqr_ungqr<double>(false);
+  test_geqxx_orgqr_ungqr<std::complex<double>>(false);
+
+  // wide matrix, i.e. n_rows < n_cols
+  test_geqxx_orgqr_ungqr<float, true>(false);
+  test_geqxx_orgqr_ungqr<std::complex<float>, true>(false);
+  test_geqxx_orgqr_ungqr<double, true>(false);
+  test_geqxx_orgqr_ungqr<std::complex<double>, true>(false);
 }
 
 // Test LAPACK gelss function and the gelss_worker class.
