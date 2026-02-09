@@ -17,6 +17,10 @@
 
 namespace nda::lapack::f77 {
 
+  void gelss(int m, int n, int nrhs, float *a, int lda, float *b, int ldb, float *s, float rcond, int &rank, float *work, int lwork, float *rwork,
+             int &info);
+  void gelss(int m, int n, int nrhs, std::complex<float> *a, int lda, std::complex<float> *b, int ldb, float *s, float rcond, int &rank,
+             std::complex<float> *work, int lwork, float *rwork, int &info);
   void gelss(int m, int n, int nrhs, double *a, int lda, double *b, int ldb, double *s, double rcond, int &rank, double *work, int lwork,
              double *rwork, int &info);
   void gelss(int m, int n, int nrhs, std::complex<double> *a, int lda, std::complex<double> *b, int ldb, double *s, double rcond, int &rank,

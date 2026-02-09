@@ -197,39 +197,82 @@ TEST(NDA, LAPACKGeqrfUngqrAndOrgqr) {
 }
 
 // Test LAPACK gelss function and the gelss_worker class.
-template <typename value_t>
+template <typename T>
 void test_gelss() {
+  using fp_t = nda::get_fp_t<T>;
+
   // Cf. https://www.netlib.org/lapack/lapack-3.9.0/LAPACKE/example/example_DGELS_colmajor.c
-  auto A = matrix<value_t>{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}};
-  auto B = matrix<value_t>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
-  auto b = vector<value_t>{-10, 12, 14, 16, 18};
+  auto A = nda::matrix<T>{{1, 1, 1}, {2, 3, 4}, {3, 5, 2}, {4, 2, 5}, {5, 4, 3}};
+  auto B = nda::matrix<T>{{-10, -3}, {12, 14}, {14, 12}, {16, 16}, {18, 16}};
+  auto b = nda::vector<T>{-10, 12, 14, 16, 18};
 
   auto [m, n]  = A.shape();
-  auto x_exact = matrix<value_t>{{2, 1}, {1, 1}, {1, 2}};
-  auto s       = vector<double>(std::min(m, n));
+  auto X_exact = nda::matrix<T>{{2, 1}, {1, 1}, {1, 2}};
 
-  // using the gelss_worker class
-  auto worker       = lapack::gelss_worker<value_t>{A};
+  // using the gelss_worker class for matrix RHS
+  auto worker       = nda::lapack::gelss_worker<T>{A};
   auto [x_1, eps_1] = worker(B);
-  EXPECT_ARRAY_NEAR(x_exact, x_1, 1e-14);
+  EXPECT_ARRAY_NEAR(X_exact, x_1, fp_tol<T>);
 
+  // using the gelss_worker class for vector RHS
   auto [x_2, eps_2] = worker(b);
-  EXPECT_ARRAY_NEAR(x_exact(range::all, 0), x_2, 1e-14);
+  EXPECT_ARRAY_NEAR(X_exact(nda::range::all, 0), x_2, fp_tol<T>);
 
-  // call the gelss function directly
+  // call the gelss function directly for matrix RHS
   int rank{};
-  matrix<value_t, F_layout> A_f{A}, B_f{B};
-  lapack::gelss(A_f, B_f, s, 1e-18, rank);
-  EXPECT_ARRAY_NEAR(x_exact, B_f(range(n), range::all), 1e-14);
+  nda::matrix<T, F_layout> A_f{A}, B_f{B};
+  auto s = nda::vector<fp_t>(std::min(m, n));
+  nda::lapack::gelss(A_f, B_f, s, 1e-18, rank);
+  EXPECT_ARRAY_NEAR(X_exact, B_f(nda::range(n), nda::range::all), fp_tol<T>);
 
+  // call the gelss function directly for vector RHS
   A_f = A;
-  lapack::gelss(A_f, b, s, 1e-18, rank);
-  EXPECT_ARRAY_NEAR(x_exact(range::all, 0), b(range(n)), 1e-14);
+  nda::lapack::gelss(A_f, b, s, 1e-18, rank);
+  EXPECT_ARRAY_NEAR(X_exact(nda::range::all, 0), b(nda::range(n)), fp_tol<T>);
 }
 
 TEST(NDA, LAPACKGelss) {
+  test_gelss<float>();
+  test_gelss<std::complex<float>>();
   test_gelss<double>();
   test_gelss<std::complex<double>>();
+}
+
+// Test LAPACK gelss function for underdetermined systems (m < n).
+template <typename T>
+void test_gelss_underdetermined() {
+  using fp_t = nda::get_fp_t<T>;
+
+  // underdetermined system: A is 2x3
+  // A = [[1, 0, 1], [0, 1, 1]], b = [1, 1]
+  // minimum norm solution: X = [[1/3, 1], [1/3, 0], [2/3, 1]]
+  auto A = nda::matrix<T>{{1, 0, 1}, {0, 1, 1}};
+  auto B = nda::matrix<T>{{1, 2}, {1, 1}};
+
+  auto [m, n]  = A.shape();
+  auto X_exact = nda::matrix<T>{{1.0 / 3.0, 1}, {1.0 / 3.0, 0}, {2.0 / 3.0, 1}};
+
+  // call the gelss function for matrix RHS
+  int rank{};
+  nda::matrix<T, F_layout> A_f{A}, B_f(std::max(m, n), 2);
+  B_f(nda::range(m), nda::range::all) = B;
+  auto s                              = nda::vector<fp_t>(std::min(m, n));
+  nda::lapack::gelss(A_f, B_f, s, 1e-18, rank);
+  EXPECT_ARRAY_NEAR(X_exact, B_f, fp_tol<T>);
+
+  // call the gelss function for vector RHS
+  A_f              = A;
+  auto b           = nda::vector<T>(std::max(m, n));
+  b(nda::range(m)) = B(nda::range::all, 0);
+  nda::lapack::gelss(A_f, b, s, 1e-18, rank);
+  EXPECT_ARRAY_NEAR(X_exact(nda::range::all, 0), b, fp_tol<T>);
+}
+
+TEST(NDA, LAPACKGelssUnderdetermined) {
+  test_gelss_underdetermined<float>();
+  test_gelss_underdetermined<std::complex<float>>();
+  test_gelss_underdetermined<double>();
+  test_gelss_underdetermined<std::complex<double>>();
 }
 
 // Test LAPACK getrs, getrf and getri functions.
