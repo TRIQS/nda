@@ -170,6 +170,27 @@ namespace nda::blas_lapack {
   using vector_fp_t = vector<get_fp_t<A>, heap<mem::get_addr_space<A>>>;
 
   /**
+   * @brief Given a 2- or 3-dimensional array get an array of pointers to each of the submatrices/subvectors indexed by
+   * the slowest varying dimension.
+   *
+   * @tparam A nda::MemoryArray of rank 2 or 3.
+   * @param a Input array.
+   * @return nda::vector of pointers to each submatrix/subvector.
+   */
+  template <Array A>
+    requires(MemoryArrayOfRank<A, 3> or MemoryArrayOfRank<A, 2>)
+  auto batch_ptrs(A &&a) { // NOLINT (temporary views are allowed here)
+    using ptr_t           = decltype(a.data());
+    auto const idx        = (has_C_layout<A> ? 0 : (get_rank<A> == 3 ? 2 : 1));
+    auto const batch_size = a.shape()[idx];
+    auto const stride     = a.indexmap().strides()[idx];
+
+    auto ptrs = vector<ptr_t>(batch_size);
+    for (int i = 0; auto &ptr : ptrs) ptr = a.data() + i++ * stride;
+    return ptrs;
+  }
+
+  /**
    * @brief Resize or check the size of a 1D array/view.
    *
    * @details This function is similar to nda::resize_or_check except that

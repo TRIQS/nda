@@ -343,4 +343,66 @@ namespace nda::blas::device {
     CUBLAS_CHECK(cublasZswap, n, cucplx(x), incx, cucplx(y), incy);
   }
 
+  // getrf_batch
+  void getrf_batch(int n, float **a_array, int lda, int *ipiv_array, int *info_array, int batch_size) {
+    CUBLAS_CHECK(cublasSgetrfBatched, n, a_array, lda, ipiv_array, info_array, batch_size);
+  }
+  void getrf_batch(int n, std::complex<float> **a_array, int lda, int *ipiv_array, int *info_array, int batch_size) {
+    CUBLAS_CHECK(cublasCgetrfBatched, n, cucplx(a_array), lda, ipiv_array, info_array, batch_size);
+  }
+  void getrf_batch(int n, double **a_array, int lda, int *ipiv_array, int *info_array, int batch_size) {
+    CUBLAS_CHECK(cublasDgetrfBatched, n, a_array, lda, ipiv_array, info_array, batch_size);
+  }
+  void getrf_batch(int n, std::complex<double> **a_array, int lda, int *ipiv_array, int *info_array, int batch_size) {
+    CUBLAS_CHECK(cublasZgetrfBatched, n, cucplx(a_array), lda, ipiv_array, info_array, batch_size);
+  }
+
+  // getri_batch
+  void getri_batch(int n, float **a_array, int lda, int const *ipiv_array, float **c_array, int ldc, int *info_array, int batch_size) {
+    CUBLAS_CHECK(cublasSgetriBatched, n, a_array, lda, ipiv_array, c_array, ldc, info_array, batch_size);
+  }
+  void getri_batch(int n, std::complex<float> **a_array, int lda, int const *ipiv_array, std::complex<float> **c_array, int ldc, int *info_array,
+                   int batch_size) {
+    CUBLAS_CHECK(cublasCgetriBatched, n, cucplx(a_array), lda, ipiv_array, cucplx(c_array), ldc, info_array, batch_size);
+  }
+  void getri_batch(int n, double **a_array, int lda, int const *ipiv_array, double **c_array, int ldc, int *info_array, int batch_size) {
+    CUBLAS_CHECK(cublasDgetriBatched, n, a_array, lda, ipiv_array, c_array, ldc, info_array, batch_size);
+  }
+  void getri_batch(int n, std::complex<double> **a_array, int lda, int const *ipiv_array, std::complex<double> **c_array, int ldc, int *info_array,
+                   int batch_size) {
+    CUBLAS_CHECK(cublasZgetriBatched, n, cucplx(a_array), lda, ipiv_array, cucplx(c_array), ldc, info_array, batch_size);
+  }
+
+  // getrs_batch
+  void getrs_batch(char op, int n, int nrhs, const float **a_array, int lda, int const *ipiv_array, float **b_array, int ldb, int &info,
+                   int batch_size) {
+    CUBLAS_CHECK(cublasSgetrsBatched, get_cublas_op(op), n, nrhs, a_array, lda, ipiv_array, b_array, ldb, &info, batch_size);
+  }
+  void getrs_batch(char op, int n, int nrhs, const std::complex<float> **a_array, int lda, int const *ipiv_array, std::complex<float> **b_array,
+                   int ldb, int &info, int batch_size) {
+    CUBLAS_CHECK(cublasCgetrsBatched, get_cublas_op(op), n, nrhs, cucplx(a_array), lda, ipiv_array, cucplx(b_array), ldb, &info, batch_size);
+  }
+  void getrs_batch(char op, int n, int nrhs, const double **a_array, int lda, int const *ipiv_array, double **b_array, int ldb, int &info,
+                   int batch_size) {
+    CUBLAS_CHECK(cublasDgetrsBatched, get_cublas_op(op), n, nrhs, a_array, lda, ipiv_array, b_array, ldb, &info, batch_size);
+  }
+  void getrs_batch(char op, int n, int nrhs, const std::complex<double> **a_array, int lda, int const *ipiv_array, std::complex<double> **b_array,
+                   int ldb, int &info, int batch_size) {
+    CUBLAS_CHECK(cublasZgetrsBatched, get_cublas_op(op), n, nrhs, cucplx(a_array), lda, ipiv_array, cucplx(b_array), ldb, &info, batch_size);
+  }
+
+  // geqrf_batch
+  void geqrf_batch(int n, int m, float **a_array, int lda, float **tau_array, int &info, int batch_size) {
+    CUBLAS_CHECK(cublasSgeqrfBatched, n, m, a_array, lda, tau_array, &info, batch_size);
+  }
+  void geqrf_batch(int n, int m, std::complex<float> **a_array, int lda, std::complex<float> **tau_array, int &info, int batch_size) {
+    CUBLAS_CHECK(cublasCgeqrfBatched, n, m, cucplx(a_array), lda, cucplx(tau_array), &info, batch_size);
+  }
+  void geqrf_batch(int n, int m, double **a_array, int lda, double **tau_array, int &info, int batch_size) {
+    CUBLAS_CHECK(cublasDgeqrfBatched, n, m, a_array, lda, tau_array, &info, batch_size);
+  }
+  void geqrf_batch(int n, int m, std::complex<double> **a_array, int lda, std::complex<double> **tau_array, int &info, int batch_size) {
+    CUBLAS_CHECK(cublasZgeqrfBatched, n, m, cucplx(a_array), lda, cucplx(tau_array), &info, batch_size);
+  }
+
 } // namespace nda::blas::device
