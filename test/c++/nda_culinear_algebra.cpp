@@ -316,25 +316,30 @@ TEST(NDA, CULinearAlgebraMatmulPromotion) {
 template <typename T, typename Layout, nda::mem::AddressSpace AS>
 void test_inv() {
   using matrix_t = nda::matrix<T, Layout>;
+  using fp_t     = nda::get_fp_t<T>;
+
+  // tolerance based on condition number of worst-case matrix C: cond(C) ~ 332, max(|Cinv|) = 24
+  // error ~ cond(C) * max_element * eps => use eps * 10000 as tolerance
+  constexpr auto tol = std::numeric_limits<fp_t>::epsilon() * 10000;
 
   // lambda that checks inverse function
-  auto check_inv = [](auto M, auto Minv) {
+  auto check_inv = [tol](auto M, auto Minv) {
     if constexpr (nda::is_complex_v<T>) {
-      M *= 1.0i;
-      Minv /= 1.0i;
+      M *= T{1.0i};
+      Minv /= T{1.0i};
     }
 
     auto M_d    = to_addr_space<AS>(M);
     auto Minv_d = nda::linalg::inv(M_d);
-    EXPECT_ARRAY_NEAR(Minv, nda::to_host(Minv_d));
+    EXPECT_ARRAY_NEAR(Minv, nda::to_host(Minv_d), tol);
     auto M2_d = nda::linalg::inv(Minv_d);
-    EXPECT_ARRAY_NEAR(M, nda::to_host(M2_d));
+    EXPECT_ARRAY_NEAR(M, nda::to_host(M2_d), tol);
   };
 
   // 1x1 matrix
-  auto C    = matrix_t{{3}};
-  auto Cinv = matrix_t{{1.0 / 3.0}};
-  check_inv(C, Cinv);
+  auto A    = matrix_t{{3}};
+  auto Ainv = matrix_t{{1.0 / 3.0}};
+  check_inv(A, Ainv);
 
   // 2x2 matrix
   auto B    = matrix_t{{1, 2}, {0, 1}};
@@ -342,9 +347,9 @@ void test_inv() {
   check_inv(B, Binv);
 
   // 3x3 matrix
-  auto A    = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
-  auto Ainv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
-  check_inv(A, Ainv);
+  auto C    = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
+  auto Cinv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
+  check_inv(C, Cinv);
 
   // 4x4 matrix
   auto D    = matrix_t{{2, 2, 2, 2}, {2, 4, 6, 8}, {2, 6, 12, 20}, {2, 8, 20, 40}};
@@ -352,16 +357,23 @@ void test_inv() {
   check_inv(D, Dinv);
 }
 
-TEST(NDA, CULinearAlgebraInv) {
-  test_inv<double, nda::C_layout, nda::mem::Device>();
-  test_inv<double, nda::F_layout, nda::mem::Device>();
-  test_inv<std::complex<double>, nda::C_layout, nda::mem::Device>();
-  test_inv<std::complex<double>, nda::F_layout, nda::mem::Device>();
+template <typename T, typename Layout>
+void test_inv_address_spaces() {
+  test_inv<T, Layout, Device>();
+  test_inv<T, Layout, Unified>();
+}
 
-  test_inv<double, nda::C_layout, nda::mem::Unified>();
-  test_inv<double, nda::F_layout, nda::mem::Unified>();
-  test_inv<std::complex<double>, nda::C_layout, nda::mem::Unified>();
-  test_inv<std::complex<double>, nda::F_layout, nda::mem::Unified>();
+template <typename T>
+void test_inv_layouts() {
+  test_inv_address_spaces<T, C_layout>();
+  test_inv_address_spaces<T, F_layout>();
+}
+
+TEST(NDA, CULinearAlgebraInv) {
+  test_inv_layouts<float>();
+  test_inv_layouts<std::complex<float>>();
+  test_inv_layouts<double>();
+  test_inv_layouts<std::complex<double>>();
 }
 
 // Test the outer product function.

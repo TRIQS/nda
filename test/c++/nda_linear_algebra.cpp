@@ -275,26 +275,31 @@ TEST(NDA, LinearAlgebraMatmulWithLazyExpressions) {
 template <typename T, typename Layout>
 void test_inv_and_det() {
   using matrix_t = nda::matrix<T, Layout>;
+  using fp_t     = nda::get_fp_t<T>;
+
+  // tolerance based on condition number of worst-case matrix C: cond(C) ~ 332, max(|Cinv|) = 24
+  // error ~ cond(C) * max_element * eps => use eps * 10000 as tolerance
+  constexpr auto tol = std::numeric_limits<fp_t>::epsilon() * 10000;
 
   // lambda that checks inverse functions for small matrices
-  auto check_det_inv = [](auto M, auto Minv, T detM) {
+  auto check_det_inv = [tol](auto M, auto Minv, T detM) {
     if constexpr (nda::is_complex_v<T>) {
-      M *= 1.0i;
-      Minv /= 1.0i;
-      detM *= std::pow(1.0i, M.extent(0));
+      M *= T{1.0i};
+      Minv /= T{1.0i};
+      detM *= std::pow(T{1.0i}, M.extent(0));
     }
 
     auto Minv2 = nda::linalg::inv(M);
-    EXPECT_ARRAY_NEAR(Minv, Minv2);
-    EXPECT_COMPLEX_NEAR(nda::linalg::det(Minv2), 1.0 / detM);
-    Minv2 = nda::linalg::inv(Minv2);
-    EXPECT_ARRAY_NEAR(M, Minv2);
-    EXPECT_COMPLEX_NEAR(nda::linalg::det(Minv2), detM);
+    EXPECT_ARRAY_NEAR(Minv, Minv2, tol);
+    EXPECT_COMPLEX_NEAR(nda::linalg::det(Minv2), 1.0 / detM, tol);
+    auto M2 = nda::linalg::inv(Minv2);
+    EXPECT_ARRAY_NEAR(M, M2, tol);
+    EXPECT_COMPLEX_NEAR(nda::linalg::det(M2), detM, tol);
 
     auto Minv3 = M;
     nda::linalg::inv_in_place(Minv3);
-    EXPECT_ARRAY_NEAR(Minv, Minv3);
-    EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Minv3), 1.0 / detM);
+    EXPECT_ARRAY_NEAR(Minv, Minv3, tol);
+    EXPECT_COMPLEX_NEAR(nda::linalg::det_in_place(Minv3), 1.0 / detM, tol);
   };
 
   // 1x1 matrix
@@ -322,15 +327,21 @@ void test_inv_and_det() {
   check_det_inv(D, Dinv, detD);
 
   // matrix view
-  EXPECT_ARRAY_NEAR(nda::linalg::inv(C(nda::range(0, 2), nda::range(0, 2))), Binv);
-  EXPECT_COMPLEX_NEAR(nda::linalg::det(C(nda::range(0, 2), nda::range(0, 2))), detB);
+  EXPECT_ARRAY_NEAR(nda::linalg::inv(C(nda::range(0, 2), nda::range(0, 2))), Binv, tol);
+  EXPECT_COMPLEX_NEAR(nda::linalg::det(C(nda::range(0, 2), nda::range(0, 2))), detB, tol);
+}
+
+template <typename T>
+void test_inv_and_det_layouts() {
+  test_inv_and_det<T, C_layout>();
+  test_inv_and_det<T, F_layout>();
 }
 
 TEST(NDA, LinearAlgebraInvAndDet) {
-  test_inv_and_det<double, nda::C_layout>();
-  test_inv_and_det<double, nda::F_layout>();
-  test_inv_and_det<std::complex<double>, nda::C_layout>();
-  test_inv_and_det<std::complex<double>, nda::F_layout>();
+  test_inv_and_det_layouts<float>();
+  test_inv_and_det_layouts<std::complex<float>>();
+  test_inv_and_det_layouts<double>();
+  test_inv_and_det_layouts<std::complex<double>>();
 }
 
 // Check that the eigenvectors/values are correct.
