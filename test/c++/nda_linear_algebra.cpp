@@ -664,10 +664,15 @@ TEST(NDA, LinearAlgebraOuterProduct) {
 }
 
 // Test the generic solve and solve_in_place functions.
-template <typename value_t, typename Layout>
+template <typename T, typename Layout>
 void test_solve() {
-  using matrix_t = nda::matrix<value_t, Layout>;
-  using vector_t = nda::vector<value_t>;
+  using matrix_t = nda::matrix<T, Layout>;
+  using vector_t = nda::vector<T>;
+  using fp_t     = nda::get_fp_t<T>;
+
+  /// tolerance based on condition number: cond(A) ~ 332, ||Ainv||_max = 24
+  // error ~ cond(A) * ||Ainv||_max * eps => use eps * 10000 as tolerance
+  constexpr auto tol = std::numeric_limits<fp_t>::epsilon() * 10000;
 
   auto A = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
   auto B = matrix_t{{1, 5}, {4, 5}, {3, 6}};
@@ -675,40 +680,46 @@ void test_solve() {
   // solve A * X = B using the exact matrix inverse
   auto Ainv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
   auto X    = matrix_t{Ainv * B};
-  EXPECT_ARRAY_NEAR(matrix_t{A * X}, B);
+  EXPECT_ARRAY_NEAR(matrix_t{A * X}, B, tol);
 
   // solve A * X = B using solve_in_place
-  if constexpr (nda::blas::has_F_layout<matrix_t>) {
+  if constexpr (nda::blas_lapack::has_F_layout<matrix_t>) {
     auto Acopy = matrix_t{A};
     auto Bcopy = matrix_t{B};
     nda::linalg::solve_in_place(Acopy, Bcopy);
-    EXPECT_ARRAY_NEAR(matrix_t{A * Bcopy}, B);
-    EXPECT_ARRAY_NEAR(X, Bcopy);
+    EXPECT_ARRAY_NEAR(matrix_t{A * Bcopy}, B, tol);
+    EXPECT_ARRAY_NEAR(X, Bcopy, tol);
 
     // solve A * x = b using solve_in_place
     Acopy  = A;
     auto b = vector_t{B(nda::range::all, 0)};
     nda::linalg::solve_in_place(Acopy, b);
-    EXPECT_ARRAY_NEAR(A * b, B(nda::range::all, 0));
-    EXPECT_ARRAY_NEAR(X(nda::range::all, 0), b);
+    EXPECT_ARRAY_NEAR(A * b, B(nda::range::all, 0), tol);
+    EXPECT_ARRAY_NEAR(X(nda::range::all, 0), b, tol);
   }
 
   // solve A * X = B using solve
   auto X2 = nda::linalg::solve(A, B);
-  EXPECT_ARRAY_NEAR(matrix_t{A * X2}, B);
-  EXPECT_ARRAY_NEAR(X, X2);
+  EXPECT_ARRAY_NEAR(matrix_t{A * X2}, B, tol);
+  EXPECT_ARRAY_NEAR(X, X2, tol);
 
   // solve A * x = b using solve
   auto x = nda::linalg::solve(A, B(nda::range::all, 0));
-  EXPECT_ARRAY_NEAR(A * x, B(nda::range::all, 0));
-  EXPECT_ARRAY_NEAR(X(nda::range::all, 0), x);
+  EXPECT_ARRAY_NEAR(A * x, B(nda::range::all, 0), tol);
+  EXPECT_ARRAY_NEAR(X(nda::range::all, 0), x, tol);
+}
+
+template <typename T>
+void test_solve_layouts() {
+  test_solve<T, C_layout>();
+  test_solve<T, F_layout>();
 }
 
 TEST(NDA, LinearAlgebraSolve) {
-  test_solve<double, nda::C_layout>();
-  test_solve<double, nda::F_layout>();
-  test_solve<std::complex<double>, nda::C_layout>();
-  test_solve<std::complex<double>, nda::F_layout>();
+  test_solve_layouts<float>();
+  test_solve_layouts<std::complex<float>>();
+  test_solve_layouts<double>();
+  test_solve_layouts<std::complex<double>>();
 }
 
 // Test the svd and svd_in_place functions.

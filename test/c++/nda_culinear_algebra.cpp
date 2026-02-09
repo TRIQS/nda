@@ -434,49 +434,72 @@ TEST(NDA, CULinearAlgebraOuterProduct) {
 // Test the generic solve and solve_in_place functions.
 template <typename T, typename Layout, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
 void test_solve() {
-  auto A   = nda::matrix<T, Layout>{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
-  auto B   = nda::matrix<T, nda::F_layout>{{1, 5}, {4, 5}, {3, 6}};
-  auto A_d = to_addr_space<AS1>(A);
-  auto B_d = to_addr_space<AS2>(B);
-  auto b_d = to_addr_space<AS2>(nda::make_regular(B(nda::range::all, 0)));
+  using matrix_t = nda::matrix<T, Layout>;
+  using vector_t = nda::vector<T>;
+  using fp_t     = nda::get_fp_t<T>;
+
+  /// tolerance based on condition number: cond(A) ~ 332, ||Ainv||_max = 24
+  // error ~ cond(A) * ||Ainv||_max * eps => use eps * 10000 as tolerance
+  constexpr auto tol = std::numeric_limits<fp_t>::epsilon() * 10000;
+
+  auto A = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
+  auto B = nda::matrix<T, F_layout>{{1, 5}, {4, 5}, {3, 6}};
+  auto b = vector_t{B(nda::range::all, 0)};
 
   // solve A * X = B using the exact matrix inverse
   auto Ainv = nda::matrix<T, Layout>{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
   auto X    = nda::matrix<T, Layout>{Ainv * B};
-  EXPECT_ARRAY_NEAR(A * X, B);
+  EXPECT_ARRAY_NEAR(A * X, B, tol);
 
   // solve A * X = B using solve_in_place
-  auto A2_d = A_d;
-  auto B2_d = B_d;
-  nda::linalg::solve_in_place(A2_d, B2_d);
-  EXPECT_ARRAY_NEAR(A * nda::to_host(B2_d), B);
-  EXPECT_ARRAY_NEAR(X, nda::to_host(B2_d));
+  auto A_d = to_addr_space<AS1>(A);
+  auto B_d = to_addr_space<AS2>(B);
+  nda::linalg::solve_in_place(A_d, B_d);
+  EXPECT_ARRAY_NEAR(A * nda::to_host(B_d), B, tol);
+  EXPECT_ARRAY_NEAR(X, nda::to_host(B_d), tol);
 
   // solve A * x = b using solve_in_place
-  A2_d      = A;
-  auto b2_d = b_d;
-  nda::linalg::solve_in_place(A2_d, b2_d);
-  EXPECT_ARRAY_NEAR(A * nda::to_host(b2_d), B(nda::range::all, 0));
-  EXPECT_ARRAY_NEAR(X(nda::range::all, 0), nda::to_host(b2_d));
+  A_d      = A;
+  auto b_d = to_addr_space<AS2>(b);
+  nda::linalg::solve_in_place(A_d, b_d);
+  EXPECT_ARRAY_NEAR(A * nda::to_host(b_d), b, tol);
+  EXPECT_ARRAY_NEAR(X(nda::range::all, 0), nda::to_host(b_d), tol);
 
   // solve A * X = B using solve
+  A_d      = to_addr_space<AS1>(A);
+  B_d      = to_addr_space<AS2>(B);
   auto X_d = nda::linalg::solve(A_d, B_d);
-  EXPECT_ARRAY_NEAR(A * nda::to_host(X_d), B);
-  EXPECT_ARRAY_NEAR(X, nda::to_host(X_d));
+  EXPECT_ARRAY_NEAR(A * nda::to_host(X_d), B, tol);
+  EXPECT_ARRAY_NEAR(X, nda::to_host(X_d), tol);
 
   // solve A * x = b using solve
+  b_d      = to_addr_space<AS2>(b);
   auto x_d = nda::linalg::solve(A_d, b_d);
-  EXPECT_ARRAY_NEAR(A * nda::to_host(x_d), B(nda::range::all, 0));
-  EXPECT_ARRAY_NEAR(X(nda::range::all, 0), nda::to_host(x_d));
+  EXPECT_ARRAY_NEAR(A * nda::to_host(x_d), b, tol);
+  EXPECT_ARRAY_NEAR(X(nda::range::all, 0), nda::to_host(x_d), tol);
+}
+
+template <typename T, typename Layout>
+void test_solve_address_spaces() {
+  test_solve<T, Layout, Device, Device>();
+  test_solve<T, Layout, Device, Unified>();
+  test_solve<T, Layout, Unified, Device>();
+  test_solve<T, Layout, Unified, Unified>();
+  test_solve<T, Layout, Unified, Host>();
+  test_solve<T, Layout, Host, Unified>();
+}
+
+template <typename T>
+void test_solve_layouts() {
+  test_solve_address_spaces<T, C_layout>();
+  test_solve_address_spaces<T, F_layout>();
 }
 
 TEST(NDA, CULinearAlgebraSolve) {
-  test_solve<double, nda::C_layout, nda::mem::Device, nda::mem::Device>();
-  test_solve<double, nda::F_layout, nda::mem::Device, nda::mem::Unified>();
-  test_solve<std::complex<double>, nda::C_layout, nda::mem::Unified, nda::mem::Device>();
-  test_solve<std::complex<double>, nda::F_layout, nda::mem::Unified, nda::mem::Unified>();
-  test_solve<double, nda::F_layout, nda::mem::Host, nda::mem::Unified>();
-  test_solve<std::complex<double>, nda::C_layout, nda::mem::Unified, nda::mem::Host>();
+  test_solve_layouts<float>();
+  test_solve_layouts<std::complex<float>>();
+  test_solve_layouts<double>();
+  test_solve_layouts<std::complex<double>>();
 }
 
 // Test the svd and svd_in_place functions.
