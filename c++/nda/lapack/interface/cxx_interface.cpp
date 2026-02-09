@@ -42,6 +42,13 @@ namespace nda::lapack::f77 {
     LAPACK_zgesvd(&jobu, &jobvt, &m, &n, a, &lda, s, u, &ldu, vt, &ldvt, work, &lwork, rwork, &info);
   }
 
+  void geqp3(int m, int n, float *a, int lda, int *jpvt, float *tau, float *work, int lwork, [[maybe_unused]] float *rwork, int &info) {
+    LAPACK_sgeqp3(&m, &n, a, &lda, jpvt, tau, work, &lwork, &info);
+  }
+  void geqp3(int m, int n, std::complex<float> *a, int lda, int *jpvt, std::complex<float> *tau, std::complex<float> *work, int lwork, float *rwork,
+             int &info) {
+    LAPACK_cgeqp3(&m, &n, a, &lda, jpvt, tau, work, &lwork, rwork, &info);
+  }
   void geqp3(int m, int n, double *a, int lda, int *jpvt, double *tau, double *work, int lwork, [[maybe_unused]] double *rwork, int &info) {
     LAPACK_dgeqp3(&m, &n, a, &lda, jpvt, tau, work, &lwork, &info);
   }
@@ -50,10 +57,29 @@ namespace nda::lapack::f77 {
     LAPACK_zgeqp3(&m, &n, a, &lda, jpvt, tau, work, &lwork, rwork, &info);
   }
 
+  void geqrf(int m, int n, float *a, int lda, float *tau, float *work, int lwork, int &info) {
+    LAPACK_sgeqrf(&m, &n, a, &lda, tau, work, &lwork, &info);
+  }
+  void geqrf(int m, int n, std::complex<float> *a, int lda, std::complex<float> *tau, std::complex<float> *work, int lwork, int &info) {
+    LAPACK_cgeqrf(&m, &n, a, &lda, tau, work, &lwork, &info);
+  }
+  void geqrf(int m, int n, double *a, int lda, double *tau, double *work, int lwork, int &info) {
+    LAPACK_dgeqrf(&m, &n, a, &lda, tau, work, &lwork, &info);
+  }
+  void geqrf(int m, int n, std::complex<double> *a, int lda, std::complex<double> *tau, std::complex<double> *work, int lwork, int &info) {
+    LAPACK_zgeqrf(&m, &n, a, &lda, tau, work, &lwork, &info);
+  }
+
+  void orgqr(int m, int n, int k, float *a, int lda, float const *tau, float *work, int lwork, int &info) {
+    LAPACK_sorgqr(&m, &n, &k, a, &lda, tau, work, &lwork, &info);
+  }
   void orgqr(int m, int n, int k, double *a, int lda, double const *tau, double *work, int lwork, int &info) {
     LAPACK_dorgqr(&m, &n, &k, a, &lda, tau, work, &lwork, &info);
   }
 
+  void ungqr(int m, int n, int k, std::complex<float> *a, int lda, std::complex<float> const *tau, std::complex<float> *work, int lwork, int &info) {
+    LAPACK_cungqr(&m, &n, &k, a, &lda, tau, work, &lwork, &info);
+  }
   void ungqr(int m, int n, int k, std::complex<double> *a, int lda, std::complex<double> const *tau, std::complex<double> *work, int lwork,
              int &info) {
     LAPACK_zungqr(&m, &n, &k, a, &lda, tau, work, &lwork, &info);

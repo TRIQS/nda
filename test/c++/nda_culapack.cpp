@@ -75,6 +75,58 @@ TEST(NDA, CULAPACKGesvd) {
   test_gesvd_layouts<std::complex<double>>();
 }
 
+// Test CULAPACK geqrf, orgqr and ungqr functions.
+template <typename T, nda::mem::AddressSpace AS, bool wide_matrix = false>
+void test_geqrf_orgqr_ungqr() {
+  using matrix_t = nda::matrix<T, F_layout>;
+
+  auto A = matrix_t{{{1, 1, 1}, {3, 2, 4}, {5, 3, 2}, {2, 4, 5}, {4, 5, 3}}};
+  if constexpr (wide_matrix) A = matrix_t{transpose(A)};
+  auto [m, n] = A.shape();
+
+  // compute QR factorization , i.e. A = Q * R
+  auto Q_d   = to_addr_space<AS>(A);
+  auto tau_d = to_addr_space<AS>(nda::vector<T>(std::min(m, n)));
+  nda::lapack::geqrf(Q_d, tau_d);
+
+  // extract upper triangular matrix R
+  auto Q = nda::to_host(Q_d);
+  auto R = nda::matrix<T, F_layout>::zeros(std::min(m, n), n);
+  for (int i = 0; i < std::min(m, n); ++i) {
+    for (int j = i; j < n; ++j) { R(i, j) = Q(i, j); }
+  }
+
+  // extract matrix Q with orthonormal columns
+  if constexpr (std::floating_point<T>) {
+    nda::lapack::orgqr(Q_d(nda::range::all, nda::range(std::min(m, n))), tau_d);
+  } else {
+    nda::lapack::ungqr(Q_d(nda::range::all, nda::range(std::min(m, n))), tau_d);
+  }
+  Q = nda::to_host(Q_d);
+
+  EXPECT_ARRAY_NEAR(A, Q(nda::range::all, nda::range(std::min(m, n))) * R, fp_tol<T>);
+}
+
+template <typename T, bool wide_matrix = false>
+void test_geqrf_orgqr_ungqr_address_spaces() {
+  test_geqrf_orgqr_ungqr<T, Device, wide_matrix>();
+  test_geqrf_orgqr_ungqr<T, Unified, wide_matrix>();
+}
+
+TEST(NDA, CULAPACKGeqrfUngqrAndOrgqr) {
+  // tall matrix, i.e. n_rows > n_cols
+  test_geqrf_orgqr_ungqr_address_spaces<float>();
+  test_geqrf_orgqr_ungqr_address_spaces<std::complex<float>>();
+  test_geqrf_orgqr_ungqr_address_spaces<double>();
+  test_geqrf_orgqr_ungqr_address_spaces<std::complex<double>>();
+
+  // wide matrix, i.e. n_rows < n_cols
+  test_geqrf_orgqr_ungqr_address_spaces<float, true>();
+  test_geqrf_orgqr_ungqr_address_spaces<std::complex<float>, true>();
+  test_geqrf_orgqr_ungqr_address_spaces<double, true>();
+  test_geqrf_orgqr_ungqr_address_spaces<std::complex<double>, true>();
+}
+
 // Test the CULAPACK getrs and getrf functions.
 template <typename T, typename Layout, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
 void test_getrs_getrf() {

@@ -14,6 +14,7 @@
 #include "./lapack/geev.hpp"
 #include "./lapack/gelss.hpp"
 #include "./lapack/geqp3.hpp"
+#include "./lapack/geqrf.hpp"
 #include "./lapack/gesvd.hpp"
 #include "./lapack/getrf.hpp"
 #include "./lapack/getri.hpp"
