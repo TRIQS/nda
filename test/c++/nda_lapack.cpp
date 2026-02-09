@@ -11,12 +11,13 @@
 
 #include <algorithm>
 #include <complex>
+#include <concepts>
+#include <limits>
 #include <numbers>
 #include <tuple>
 #include <type_traits>
 #include <vector>
 
-using namespace nda;
 using namespace std::complex_literals;
 using nda::C_layout, nda::F_layout;
 
@@ -169,6 +170,60 @@ TEST(NDA, LAPACKGeqrfUngqrAndOrgqr) {
   test_geqxx_orgqr_ungqr<std::complex<float>, true>(false);
   test_geqxx_orgqr_ungqr<double, true>(false);
   test_geqxx_orgqr_ungqr<std::complex<double>, true>(false);
+}
+
+// Test LAPACK geqrf_batch function.
+template <typename T, bool wide_matrix = false>
+void test_geqrf_batch() {
+  using matrix_t = nda::matrix<T, F_layout>;
+
+  auto A = matrix_t{{{1, 1, 1}, {3, 2, 4}, {5, 3, 2}, {2, 4, 5}, {4, 5, 3}}};
+  if constexpr (wide_matrix) A = matrix_t{transpose(A)};
+  auto [m, n] = A.shape();
+
+  // create batched arrays by stacking copies of A
+  constexpr int batch_size = 3;
+  auto A_batch             = nda::array<T, 3, F_layout>(m, n, batch_size);
+  for (int i = 0; i < batch_size; ++i) A_batch(nda::range::all, nda::range::all, i) = A;
+
+  // compute batched QR factorization
+  auto tau = nda::matrix<T, F_layout>(std::min(m, n), batch_size);
+  nda::lapack::geqrf_batch(A_batch, tau);
+
+  // verify each matrix in the batch
+  for (int i = 0; i < batch_size; ++i) {
+    auto Q_i   = matrix_t{A_batch(nda::range::all, nda::range::all, i)};
+    auto tau_i = nda::vector<T>{tau(nda::range::all, i)};
+
+    // extract upper triangular matrix R
+    auto R_i = matrix_t::zeros(std::min(m, n), n);
+    for (int k = 0; k < std::min(m, n); ++k) {
+      for (int l = k; l < n; ++l) R_i(k, l) = Q_i(k, l);
+    }
+
+    // extract matrix Q with orthonormal columns
+    if constexpr (std::floating_point<T>) {
+      nda::lapack::orgqr(Q_i(nda::range::all, nda::range(std::min(m, n))), tau_i);
+    } else {
+      nda::lapack::ungqr(Q_i(nda::range::all, nda::range(std::min(m, n))), tau_i);
+    }
+
+    EXPECT_ARRAY_NEAR(A, Q_i(nda::range::all, nda::range(std::min(m, n))) * R_i, fp_tol<T>);
+  }
+}
+
+TEST(NDA, LAPACKGeqrfBatch) {
+  // tall matrix, i.e. n_rows > n_cols
+  test_geqrf_batch<float>();
+  test_geqrf_batch<std::complex<float>>();
+  test_geqrf_batch<double>();
+  test_geqrf_batch<std::complex<double>>();
+
+  // wide matrix, i.e. n_rows < n_cols
+  test_geqrf_batch<float, true>();
+  test_geqrf_batch<std::complex<float>, true>();
+  test_geqrf_batch<double, true>();
+  test_geqrf_batch<std::complex<double>, true>();
 }
 
 // Test LAPACK gelss function and the gelss_worker class.
@@ -381,6 +436,106 @@ TEST(NDA, LAPACKGetrfWithRectangularMatrix) {
   test_rectangular_getrf<std::complex<float>>();
   test_rectangular_getrf<double>();
   test_rectangular_getrf<std::complex<double>>();
+}
+
+// Test LAPACK getrf_batch, getrs_batch and getri_batch functions.
+template <typename T, typename Layout>
+void test_getrs_getrf_getri_batch() {
+  using matrix_t = nda::matrix<T, F_layout>;
+  using fp_t     = nda::get_fp_t<T>;
+
+  auto A    = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
+  auto Ainv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
+  if constexpr (nda::is_complex_v<T>) {
+    A *= T{1i};
+    Ainv /= T{1i};
+  }
+  auto B = matrix_t{{1, 5}, {4, 5}, {3, 6}};
+
+  // tolerance based on condition number: cond(A) ~ 332, ||Ainv||_max = 24
+  // error ~ cond(A) * ||Ainv||_max * eps => use eps * 10000 as tolerance
+  constexpr auto tol = std::numeric_limits<fp_t>::epsilon() * 10000;
+
+  // helper to get the i-th matrix view depending on layout
+  auto get_mat = [](auto &arr, int i) {
+    if constexpr (nda::blas_lapack::has_F_layout<decltype(arr)>) {
+      return nda::matrix_view<T, F_layout>(arr(nda::range::all, nda::range::all, i));
+    } else {
+      return nda::matrix_view<T, C_layout>(arr(i, nda::range::all, nda::range::all));
+    }
+  };
+
+  // create batched arrays by stacking copies of the matrices
+  constexpr int batch_size = 3;
+  auto const [m, n]        = A.shape();
+  auto const [k, nrhs]     = B.shape();
+  auto a_shape             = std::array<long, 3>{m, n, batch_size};
+  auto ipiv_shape          = std::array<long, 2>{m, batch_size};
+  if constexpr (std::is_same_v<Layout, C_layout>) {
+    a_shape    = {batch_size, m, n};
+    ipiv_shape = {batch_size, m};
+  }
+  auto A_batch = nda::array<T, 3, Layout>(a_shape);
+  auto B_batch = nda::array<T, 3, F_layout>(m, nrhs, batch_size);
+  for (int i = 0; i < batch_size; ++i) {
+    get_mat(A_batch, i) = A;
+    get_mat(B_batch, i) = B;
+  }
+
+  // solve A * X = B using getrf_batch and getrs_batch
+  auto Acopy = A_batch;
+  auto Bcopy = B_batch;
+  auto ipiv  = nda::matrix<int, Layout>(ipiv_shape);
+  nda::lapack::getrf_batch(Acopy, ipiv);
+  nda::lapack::getrs_batch(Acopy, Bcopy, ipiv);
+  for (int i = 0; i < batch_size; ++i) {
+    auto X = get_mat(Bcopy, i);
+    EXPECT_ARRAY_NEAR(A * X, B, tol);
+    EXPECT_ARRAY_NEAR(Ainv * B, X, tol);
+  }
+
+  // solve A^T * X = B using getrf_batch and getrs_batch
+  Acopy = A_batch;
+  Bcopy = B_batch;
+  nda::lapack::getrf_batch(Acopy, ipiv);
+  nda::lapack::getrs_batch(nda::transpose(Acopy), Bcopy, ipiv);
+  for (int i = 0; i < batch_size; ++i) {
+    auto X = get_mat(Bcopy, i);
+    EXPECT_ARRAY_NEAR(nda::transpose(A) * X, B, tol);
+    EXPECT_ARRAY_NEAR(nda::transpose(Ainv) * B, X, tol);
+  }
+
+  // solve A^H * X = B using getrf_batch and getrs_batch (F-layout only)
+  if constexpr (std::is_same_v<Layout, F_layout>) {
+    Acopy = A_batch;
+    Bcopy = B_batch;
+    nda::lapack::getrf_batch(Acopy, ipiv);
+    nda::lapack::getrs_batch(nda::conj(nda::transpose(Acopy)), Bcopy, ipiv);
+    for (int i = 0; i < batch_size; ++i) {
+      auto X = get_mat(Bcopy, i);
+      EXPECT_ARRAY_NEAR(nda::conj(nda::transpose(A)) * X, B, tol);
+      EXPECT_ARRAY_NEAR(nda::conj(nda::transpose(Ainv)) * B, X, tol);
+    }
+  }
+
+  // compute the inverse of A using getrf_batch and getri_batch
+  Acopy = A_batch;
+  nda::lapack::getrf_batch(Acopy, ipiv);
+  nda::lapack::getri_batch(Acopy, ipiv);
+  for (int i = 0; i < batch_size; ++i) EXPECT_ARRAY_NEAR(Ainv, get_mat(Acopy, i), tol);
+}
+
+template <typename T>
+void test_getrs_getrf_getri_batch_layouts() {
+  test_getrs_getrf_getri_batch<T, C_layout>();
+  test_getrs_getrf_getri_batch<T, F_layout>();
+}
+
+TEST(NDA, LAPACKGetrfGetrsGetriBatch) {
+  test_getrs_getrf_getri_batch_layouts<float>();
+  test_getrs_getrf_getri_batch_layouts<std::complex<float>>();
+  test_getrs_getrf_getri_batch_layouts<double>();
+  test_getrs_getrf_getri_batch_layouts<std::complex<double>>();
 }
 
 // Check that the eigenvectors/values are correct.

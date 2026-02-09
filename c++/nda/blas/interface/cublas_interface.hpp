@@ -96,4 +96,30 @@ namespace nda::blas::device {
   void swap(int n, double *x, int incx, double *y, int incy);                             // NOLINT (this is a BLAS swap)
   void swap(int n, std::complex<double> *x, int incx, std::complex<double> *y, int incy); // NOLINT (this is a BLAS swap)
 
+  void getrf_batch(int n, float **a_array, int lda, int *ipiv_array, int *info_array, int batch_size);
+  void getrf_batch(int n, std::complex<float> **a_array, int lda, int *ipiv_array, int *info_array, int batch_size);
+  void getrf_batch(int n, double **a_array, int lda, int *ipiv_array, int *info_array, int batch_size);
+  void getrf_batch(int n, std::complex<double> **a_array, int lda, int *ipiv_array, int *info_array, int batch_size);
+
+  void getri_batch(int n, float **a_array, int lda, int const *ipiv_array, float **c_array, int ldc, int *info_array, int batch_size);
+  void getri_batch(int n, std::complex<float> **a_array, int lda, int const *ipiv_array, std::complex<float> **c_array, int ldc, int *info_array,
+                   int batch_size);
+  void getri_batch(int n, double **a_array, int lda, int const *ipiv_array, double **c_array, int ldc, int *info_array, int batch_size);
+  void getri_batch(int n, std::complex<double> **a_array, int lda, int const *ipiv_array, std::complex<double> **c_array, int ldc, int *info_array,
+                   int batch_size);
+
+  void getrs_batch(char op, int n, int nrhs, const float **a_array, int lda, int const *ipiv_array, float **b_array, int ldb, int &info,
+                   int batch_size);
+  void getrs_batch(char op, int n, int nrhs, const std::complex<float> **a_array, int lda, int const *ipiv_array, std::complex<float> **b_array,
+                   int ldb, int &info, int batch_size);
+  void getrs_batch(char op, int n, int nrhs, const double **a_array, int lda, int const *ipiv_array, double **b_array, int ldb, int &info,
+                   int batch_size);
+  void getrs_batch(char op, int n, int nrhs, const std::complex<double> **a_array, int lda, int const *ipiv_array, std::complex<double> **b_array,
+                   int ldb, int &info, int batch_size);
+
+  void geqrf_batch(int n, int m, float **a_array, int lda, float **tau_array, int &info, int batch_size);
+  void geqrf_batch(int n, int m, std::complex<float> **a_array, int lda, std::complex<float> **tau_array, int &info, int batch_size);
+  void geqrf_batch(int n, int m, double **a_array, int lda, double **tau_array, int &info, int batch_size);
+  void geqrf_batch(int n, int m, std::complex<double> **a_array, int lda, std::complex<double> **tau_array, int &info, int batch_size);
+
 } // namespace nda::blas::device

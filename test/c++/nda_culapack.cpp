@@ -127,6 +127,71 @@ TEST(NDA, CULAPACKGeqrfUngqrAndOrgqr) {
   test_geqrf_orgqr_ungqr_address_spaces<std::complex<double>, true>();
 }
 
+// Test CULAPACK geqrf_batch function.
+template <typename T, nda::mem::AddressSpace AS, bool wide_matrix = false>
+void test_geqrf_batch() {
+  using matrix_t = nda::matrix<T, F_layout>;
+
+  auto A = matrix_t{{{1, 1, 1}, {3, 2, 4}, {5, 3, 2}, {2, 4, 5}, {4, 5, 3}}};
+  if constexpr (wide_matrix) A = matrix_t{transpose(A)};
+  auto [m, n] = A.shape();
+
+  // create batched arrays by stacking copies of A
+  constexpr int batch_size = 3;
+  auto A_batch             = nda::array<T, 3, F_layout>(m, n, batch_size);
+  for (int i = 0; i < batch_size; ++i) A_batch(nda::range::all, nda::range::all, i) = A;
+
+  // compute batched QR factorization on device
+  auto A_batch_d = to_addr_space<AS>(A_batch);
+  auto tau_d     = to_addr_space<AS>(nda::matrix<T, F_layout>(std::min(m, n), batch_size));
+  nda::lapack::geqrf_batch(A_batch_d, tau_d);
+
+  // bring results back to host for verification
+  auto A_batch_h = nda::to_host(A_batch_d);
+  auto tau_h     = nda::to_host(tau_d);
+
+  // verify each matrix in the batch
+  for (int i = 0; i < batch_size; ++i) {
+    auto Q_i   = matrix_t{A_batch_h(nda::range::all, nda::range::all, i)};
+    auto tau_i = nda::vector<T>{tau_h(nda::range::all, i)};
+
+    // extract upper triangular matrix R
+    auto R_i = matrix_t::zeros(std::min(m, n), n);
+    for (int k = 0; k < std::min(m, n); ++k) {
+      for (int l = k; l < n; ++l) R_i(k, l) = Q_i(k, l);
+    }
+
+    // extract matrix Q with orthonormal columns (use CPU lapack for orgqr/ungqr)
+    if constexpr (std::floating_point<T>) {
+      nda::lapack::orgqr(Q_i(nda::range::all, nda::range(std::min(m, n))), tau_i);
+    } else {
+      nda::lapack::ungqr(Q_i(nda::range::all, nda::range(std::min(m, n))), tau_i);
+    }
+
+    EXPECT_ARRAY_NEAR(A, Q_i(nda::range::all, nda::range(std::min(m, n))) * R_i, fp_tol<T>);
+  }
+}
+
+template <typename T, bool wide_matrix = false>
+void test_geqrf_batch_address_spaces() {
+  test_geqrf_batch<T, Device, wide_matrix>();
+  test_geqrf_batch<T, Unified, wide_matrix>();
+}
+
+TEST(NDA, CULAPACKGeqrfBatch) {
+  // tall matrix, i.e. n_rows > n_cols
+  test_geqrf_batch_address_spaces<float>();
+  test_geqrf_batch_address_spaces<std::complex<float>>();
+  test_geqrf_batch_address_spaces<double>();
+  test_geqrf_batch_address_spaces<std::complex<double>>();
+
+  // wide matrix, i.e. n_rows < n_cols
+  test_geqrf_batch_address_spaces<float, true>();
+  test_geqrf_batch_address_spaces<std::complex<float>, true>();
+  test_geqrf_batch_address_spaces<double, true>();
+  test_geqrf_batch_address_spaces<std::complex<double>, true>();
+}
+
 // Test the CULAPACK getrs and getrf functions.
 template <typename T, typename Layout, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
 void test_getrs_getrf() {
@@ -271,4 +336,214 @@ TEST(NDA, CULAPACKGetrfWithRectangularMatrix) {
   test_rectangular_getrf_address_spaces<std::complex<float>>();
   test_rectangular_getrf_address_spaces<double>();
   test_rectangular_getrf_address_spaces<std::complex<double>>();
+}
+
+// Test CULAPACK getrf_batch, getrs_batch and getri_batch functions.
+template <typename T, typename Layout, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
+void test_getrs_getrf_getri_batch() {
+  using matrix_t = nda::matrix<T, F_layout>;
+  using fp_t     = nda::get_fp_t<T>;
+
+  auto A    = matrix_t{{1, 2, 3}, {0, 1, 4}, {5, 6, 0}};
+  auto Ainv = matrix_t{{-24, 18, 5}, {20, -15, -4}, {-5, 4, 1}};
+  if constexpr (nda::is_complex_v<T>) {
+    A *= T{1i};
+    Ainv /= T{1i};
+  }
+  auto B = matrix_t{{1, 5}, {4, 5}, {3, 6}};
+
+  // tolerance based on condition number: cond(A) ~ 332, ||Ainv||_max = 24
+  // error ~ cond(A) * ||Ainv||_max * eps => use eps * 10000 as tolerance
+  constexpr auto tol = std::numeric_limits<fp_t>::epsilon() * 10000;
+
+  // helper to get the i-th matrix view depending on layout
+  auto get_mat = [](auto &arr, int i) {
+    if constexpr (nda::blas_lapack::has_F_layout<decltype(arr)>) {
+      return nda::matrix_view<T, F_layout>(arr(nda::range::all, nda::range::all, i));
+    } else {
+      return nda::matrix_view<T, C_layout>(arr(i, nda::range::all, nda::range::all));
+    }
+  };
+
+  // create batched arrays by stacking copies of the matrices
+  constexpr int batch_size = 3;
+  auto const [m, n]        = A.shape();
+  auto const [k, nrhs]     = B.shape();
+  auto a_shape             = std::array<long, 3>{m, n, batch_size};
+  auto ipiv_shape          = std::array<long, 2>{m, batch_size};
+  if constexpr (std::is_same_v<Layout, C_layout>) {
+    a_shape    = {batch_size, m, n};
+    ipiv_shape = {batch_size, m};
+  }
+  auto A_batch = nda::array<T, 3, Layout>(a_shape);
+  auto B_batch = nda::array<T, 3, F_layout>(m, nrhs, batch_size);
+  for (int i = 0; i < batch_size; ++i) {
+    get_mat(A_batch, i) = A;
+    get_mat(B_batch, i) = B;
+  }
+
+  // solve A * X = B using getrf_batch and getrs_batch
+  auto Acopy_d = to_addr_space<AS1>(A_batch);
+  auto Bcopy_d = to_addr_space<AS2>(B_batch);
+  auto ipiv_d  = to_addr_space<AS1>(nda::matrix<int, Layout>(ipiv_shape));
+  nda::lapack::getrf_batch(Acopy_d, ipiv_d);
+  nda::lapack::getrs_batch(Acopy_d, Bcopy_d, ipiv_d);
+  auto Bcopy = nda::to_host(Bcopy_d);
+  for (int i = 0; i < batch_size; ++i) {
+    auto X = get_mat(Bcopy, i);
+    EXPECT_ARRAY_NEAR(A * X, B, tol);
+    EXPECT_ARRAY_NEAR(Ainv * B, X, tol);
+  }
+
+  // solve A^T * X = B using getrf_batch and getrs_batch
+  Acopy_d = A_batch;
+  Bcopy_d = B_batch;
+  nda::lapack::getrf_batch(Acopy_d, ipiv_d);
+  nda::lapack::getrs_batch(nda::transpose(Acopy_d), Bcopy_d, ipiv_d);
+  Bcopy = nda::to_host(Bcopy_d);
+  for (int i = 0; i < batch_size; ++i) {
+    auto X = get_mat(Bcopy, i);
+    EXPECT_ARRAY_NEAR(nda::transpose(A) * X, B, tol);
+    EXPECT_ARRAY_NEAR(nda::transpose(Ainv) * B, X, tol);
+  }
+
+  // solve A^H * X = B using getrf_batch and getrs_batch (F-layout only)
+  if constexpr (std::is_same_v<Layout, F_layout>) {
+    Acopy_d = A_batch;
+    Bcopy_d = B_batch;
+    nda::lapack::getrf_batch(Acopy_d, ipiv_d);
+    nda::lapack::getrs_batch(nda::conj(nda::transpose(Acopy_d)), Bcopy_d, ipiv_d);
+    Bcopy = nda::to_host(Bcopy_d);
+    for (int i = 0; i < batch_size; ++i) {
+      auto X = get_mat(Bcopy, i);
+      EXPECT_ARRAY_NEAR(nda::conj(nda::transpose(A)) * X, B, tol);
+      EXPECT_ARRAY_NEAR(nda::conj(nda::transpose(Ainv)) * B, X, tol);
+    }
+  }
+
+  // compute the inverse of A using getrf_batch and getri_batch
+  Acopy_d = A_batch;
+  nda::lapack::getrf_batch(Acopy_d, ipiv_d);
+  nda::lapack::getri_batch(Acopy_d, ipiv_d);
+  auto Acopy = nda::to_host(Acopy_d);
+  for (int i = 0; i < batch_size; ++i) EXPECT_ARRAY_NEAR(Ainv, get_mat(Acopy, i), tol);
+}
+
+template <typename T, typename Layout>
+void test_getrs_getrf_getri_batch_address_spaces() {
+  test_getrs_getrf_getri_batch<T, Layout, Device, Device>();
+  test_getrs_getrf_getri_batch<T, Layout, Device, Unified>();
+  test_getrs_getrf_getri_batch<T, Layout, Unified, Device>();
+  test_getrs_getrf_getri_batch<T, Layout, Unified, Unified>();
+  test_getrs_getrf_getri_batch<T, Layout, Unified, Host>();
+  test_getrs_getrf_getri_batch<T, Layout, Host, Unified>();
+}
+
+template <typename T>
+void test_getrs_getrf_getri_batch_layouts() {
+  test_getrs_getrf_getri_batch_address_spaces<T, C_layout>();
+  test_getrs_getrf_getri_batch_address_spaces<T, F_layout>();
+}
+
+TEST(NDA, CULAPACKGetrfGetrsGetriBatch) {
+  test_getrs_getrf_getri_batch_layouts<float>();
+  test_getrs_getrf_getri_batch_layouts<std::complex<float>>();
+  test_getrs_getrf_getri_batch_layouts<double>();
+  test_getrs_getrf_getri_batch_layouts<std::complex<double>>();
+}
+
+// Test CULAPACK getrf_batch function with rectangular matrices.
+// This exercises the fallback loop path in getrf_batch_impl when m != n.
+template <typename T, typename Layout, nda::mem::AddressSpace AS, bool wide_matrix = false>
+void test_rectangular_getrf_batch() {
+  auto A = nda::matrix<T, F_layout>{{1, 5}, {4, 5}, {3, 6}};
+  if constexpr (wide_matrix) A = nda::matrix<T, F_layout>(nda::transpose(A));
+  auto [m, n] = A.shape();
+
+  // get the matrices P, L, U from getrf output
+  auto get_plu = [](auto const &M, auto const &ipiv, int rows, int cols) {
+    auto P           = nda::matrix<T, F_layout>::zeros(rows, rows);
+    auto L           = nda::matrix<T, F_layout>::zeros(rows, rows);
+    auto U           = nda::matrix<T, F_layout>::zeros(rows, cols);
+    nda::diagonal(P) = 1;
+    nda::diagonal(L) = 1;
+    for (int i = 0; i < static_cast<int>(ipiv.size()); ++i) deep_swap(P(i, nda::range::all), P(ipiv(i) - 1, nda::range::all));
+    for (int i = 0; i < rows; ++i) {
+      L(i, nda::range(i))       = M(i, nda::range(i));
+      U(i, nda::range(i, cols)) = M(i, nda::range(i, cols));
+    }
+    return std::make_tuple(P, L, U);
+  };
+
+  // create batched arrays by stacking copies of A
+  constexpr int batch_size = 3;
+  auto a_shape             = std::array<long, 3>{m, n, batch_size};
+  auto ipiv_shape          = std::array<long, 2>{std::min(m, n), batch_size};
+  if constexpr (std::is_same_v<Layout, C_layout>) {
+    a_shape    = {batch_size, m, n};
+    ipiv_shape = {batch_size, std::min(m, n)};
+  }
+  auto A_batch = nda::array<T, 3, Layout>(a_shape);
+  for (int i = 0; i < batch_size; ++i) {
+    if constexpr (std::is_same_v<Layout, F_layout>) {
+      A_batch(nda::range::all, nda::range::all, i) = A;
+    } else {
+      A_batch(i, nda::range::all, nda::range::all) = nda::matrix<T, C_layout>{A};
+    }
+  }
+
+  // compute batched LU factorization on device
+  auto A_batch_d = to_addr_space<AS>(A_batch);
+  auto ipiv_d    = to_addr_space<AS>(nda::matrix<int, Layout>(ipiv_shape));
+  nda::lapack::getrf_batch(A_batch_d, ipiv_d);
+
+  // bring results back to host for verification
+  auto A_batch_h = nda::to_host(A_batch_d);
+  auto ipiv_h    = nda::to_host(ipiv_d);
+
+  // verify each matrix in the batch
+  for (int i = 0; i < batch_size; ++i) {
+    nda::matrix<T, F_layout> LU_i;
+    nda::vector<int> ipiv_i;
+    if constexpr (std::is_same_v<Layout, F_layout>) {
+      LU_i   = A_batch_h(nda::range::all, nda::range::all, i);
+      ipiv_i = ipiv_h(nda::range::all, i);
+    } else {
+      LU_i   = nda::matrix<T, F_layout>{nda::transpose(nda::matrix<T, C_layout>{A_batch_h(i, nda::range::all, nda::range::all)})};
+      ipiv_i = ipiv_h(i, nda::range::all);
+    }
+
+    // for C-layout, the factorization is done on the transposed matrix
+    auto A_ref          = A;
+    auto [m_ref, n_ref] = A_ref.shape();
+    if constexpr (std::is_same_v<Layout, C_layout>) {
+      A_ref                  = nda::matrix<T, F_layout>(nda::transpose(A));
+      std::tie(m_ref, n_ref) = A_ref.shape();
+    }
+
+    auto [P_i, L_i, U_i] = get_plu(LU_i, ipiv_i, m_ref, n_ref);
+    EXPECT_ARRAY_NEAR(P_i * A_ref, L_i * U_i, fp_tol<T>);
+  }
+}
+
+template <typename T, typename Layout, bool wide_matrix = false>
+void test_rectangular_getrf_batch_address_spaces() {
+  test_rectangular_getrf_batch<T, Layout, Device, wide_matrix>();
+  test_rectangular_getrf_batch<T, Layout, Unified, wide_matrix>();
+}
+
+template <typename T, bool wide_matrix = false>
+void test_rectangular_getrf_batch_layouts() {
+  test_rectangular_getrf_batch_address_spaces<T, C_layout, wide_matrix>();
+  test_rectangular_getrf_batch_address_spaces<T, F_layout, wide_matrix>();
+}
+
+TEST(NDA, CULAPACKGetrfBatchWithRectangularMatrix) {
+  // tall matrix, i.e. n_rows > n_cols
+  test_rectangular_getrf_batch_layouts<float>();
+  test_rectangular_getrf_batch_layouts<double>();
+
+  // wide matrix, i.e. n_rows < n_cols
+  test_rectangular_getrf_batch_layouts<float, true>();
+  test_rectangular_getrf_batch_layouts<double, true>();
 }
