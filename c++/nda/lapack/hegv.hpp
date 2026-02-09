@@ -13,6 +13,7 @@
 #include "./interface/cxx_interface.hpp"
 #include "../basic_array.hpp"
 #include "../basic_functions.hpp"
+#include "../blas/tools.hpp"
 #include "../concepts.hpp"
 #include "../declarations.hpp"
 #include "../macros.hpp"
@@ -32,39 +33,47 @@ namespace nda::lapack {
    *
    * @details Computes all eigenvalues \f$ \lambda_i \f$ and, optionally, eigenvectors \f$ \mathbf{v}_i \f$ of a complex
    * generalized Hermitian-definite eigenvalue problem of the form
+   * 
    * - \f$ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{B} \mathbf{v}_i \f$ (`itype = 1`),
    * - \f$ \mathbf{A} \mathbf{B} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ (`itype = 2`) or
    * - \f$ \mathbf{B} \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ (`itype = 3`).
    *
-   * Here \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ are assumed to be Hermitian and \f$ \mathbf{B} \f$ is also positive 
+   * Here \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ are assumed to be Hermitian and \f$ \mathbf{B} \f$ is also positive
    * definite.
+   * 
+   * @note \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ are required to satisfy nda::mem::have_host_compatible_addr_space 
+   * and to have nda::F_layout.
    *
-   * @tparam A nda::MemoryMatrix with complex value type.
-   * @tparam B nda::MemoryMatrix with complex value type.
-   * @param a Input/output matrix. On entry, the Hermitian matrix \f$ \mathbf{A} \f$. On exit, if `jobz = V`, \f$ 
-   * \mathbf{A} \f$ contains the matrix \f$ \mathbf{V} \f$ of normalized eigenvectors such that \f$ \mathbf{V}^H 
-   * \mathbf{B} \mathbf{V} = \mathbf{I} \f$ (if `itype = 1` or `itype = 2`) or \f$ \mathbf{V}^H \mathbf{B}^{-1} 
+   * @tparam A nda::blas_lapack::BlasArrayCplx<2> type.
+   * @tparam B nda::blas_lapack::BlasArrayFor<A, 2> type.
+   * @tparam W nda::blas_lapack::BlasArrayRealFor<A, 1> type.
+   * @tparam W1 nda::blas_lapack::BlasArrayFor<A, 1> type.
+   * @tparam W2 nda::blas_lapack::BlasArrayRealFor<A, 1> type.
+   * @param a Input/output matrix. On entry, the Hermitian matrix \f$ \mathbf{A} \f$. On exit, if `jobz = V`, \f$
+   * \mathbf{A} \f$ contains the matrix \f$ \mathbf{V} \f$ of normalized eigenvectors such that \f$ \mathbf{V}^H
+   * \mathbf{B} \mathbf{V} = \mathbf{I} \f$ (if `itype = 1` or `itype = 2`) or \f$ \mathbf{V}^H \mathbf{B}^{-1}
    * \mathbf{V} = \mathbf{I} \f$ (if `itype = 3`). If `jobz = N`, then on exit \f$ \mathbf{A} \f$ is destroyed.
-   * @param b Input/output matrix. On entry, the symmetric positive definite matrix \f$ \mathbf{B} \f$. On exit, the 
-   * part of \f$ \mathbf{B} \f$ containing the matrix is overwritten by the triangular factor \f$ \mathbf{U} \f$ or 
+   * @param b Input/output matrix. On entry, the symmetric positive definite matrix \f$ \mathbf{B} \f$. On exit, the
+   * part of \f$ \mathbf{B} \f$ containing the matrix is overwritten by the triangular factor \f$ \mathbf{U} \f$ or
    * \f$ \mathbf{L} \f$ from a Cholesky factorization.
-   * @param w Output vector. The eigenvalues in ascending order.
+   * @param w Output vector. The eigenvalues \f$ \lambda_i \f$ in ascending order.
    * @param jobz Character indicating whether to compute eigenvectors and eigenvalues ('V') or eigenvalues only ('N').
    * @param itype Specifies the problem to be solved.
+   * @param work Ouput vector. Workspace array used by the LAPACK routine.
+   * @param rwork Ouput vector. Workspace array used by the LAPACK routine.
    * @return Integer return code from the LAPACK call.
    */
-  template <MemoryMatrix A, MemoryMatrix B, MemoryVector W>
-    requires(mem::have_host_compatible_addr_space<A, B> and std::same_as<std::complex<double>, get_value_t<A>> and have_same_value_type_v<A, B>
-             and std::same_as<double, get_value_t<W>>)
-  int hegv(A &&a, B &&b, W &&w, char jobz = 'V', int itype = 1) { // NOLINT (temporary views are allowed here)
-    static_assert(has_F_layout<A> and has_F_layout<B>, "Error in nda::lapack::hegv: A and B must have Fortran layout");
-
+  template <BlasArrayCplx<2> A, BlasArrayFor<A, 2> B, BlasArrayRealFor<A, 1> W, BlasArrayFor<A, 1> W1 = vector_value_t<A>,
+            BlasArrayRealFor<A, 1> W2 = vector_fp_t<A>>
+    requires(mem::have_host_compatible_addr_space<A> and has_F_layout<A, B>)
+  int hegv(A &&a, B &&b, W &&w, char jobz = 'V', int itype = 1, W1 &&work = vector_value_t<A>{}, W2 &&rwork = vector_fp_t<A>{}) { // NOLINT
     // check the dimensions of the input/output arrays/views and resize if necessary
     auto const [m, n] = a.shape();
     EXPECTS(m == n);
     EXPECTS(m == b.shape()[0]);
     EXPECTS(n == b.shape()[1]);
     resize_or_check_if_view(w, {n});
+    resize_or_check_work_buffer(rwork, std::max(1l, 3 * n - 2));
 
     // arrays/views must be LAPACK compatible
     EXPECTS(a.indexmap().min_stride() == 1);
@@ -76,14 +85,15 @@ namespace nda::lapack {
     EXPECTS(jobz == 'V' or jobz == 'N');
 
     // first call to get the optimal buffer size
-    array<double, 1> rwork(std::max(1l, 3 * n - 2));
-    std::complex<double> tmp_lwork{};
-    int info = 0;
+    auto tmp_lwork = get_value_t<A>{};
+    int info       = 0;
     lapack::f77::hegv(itype, jobz, 'U', n, a.data(), get_ld(a), b.data(), get_ld(b), w.data(), &tmp_lwork, -1, rwork.data(), info);
     int lwork = static_cast<int>(std::ceil(std::real(tmp_lwork)));
 
-    // allocate work buffer and perform actual library call
-    array<std::complex<double>, 1> work(lwork);
+    // resize/check work buffer
+    resize_or_check_work_buffer(work, lwork);
+
+    // perform actual library call
     lapack::f77::hegv(itype, jobz, 'U', n, a.data(), get_ld(a), b.data(), get_ld(b), w.data(), work.data(), lwork, rwork.data(), info);
 
     return info;
