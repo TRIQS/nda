@@ -25,15 +25,15 @@ namespace nda::lapack {
 
   /**
    * @ingroup linalg_lapack
-   * @brief Interface to the LAPACK/cuSOLVER `getrs` routine.
+   * @brief Interface to the LAPACK/cuSOLVER `%getrs` routine.
    *
    * @details Solves a system of linear equations
    * 
    * - \f$ \mathbf{A} \mathbf{X} = \mathbf{B} \f$ or
    * - \f$ \mathbf{A} \mathbf{x} = \mathbf{b} \f$,
    * 
-   * with a general \f$ n \times n \f$ matrix \f$ \mathbf{A} \f$ and either \f$ n \times m \f$ matrices \f$ \mathbf{X} 
-   * \f$ and \f$ \mathbf{B} \f$ or vectors \f$ \mathbf{x} \f$ and \f$ \mathbf{b} \f$ of size \f$ n \f$.
+   * with a general \f$ n \times n \f$ matrix \f$ \mathbf{A} \f$ and either \f$ n \times n_{\mathrm{rhs}} \f$ matrices 
+   * \f$ \mathbf{X} \f$ and \f$ \mathbf{B} \f$ or vectors \f$ \mathbf{x} \f$ and \f$ \mathbf{b} \f$ of size \f$ n \f$.
    * 
    * If the input arrays satisfy nda::mem::have_device_compatible_addr_space, the cuSOLVER implementation is used.
    * 
@@ -47,8 +47,8 @@ namespace nda::lapack {
    * = \mathbf{P L U} \f$ as computed by nda::lapack::getrf.
    * @param b Input/output matrix/vector. On entry, the right hand side matrix \f$ \mathbf{B} \f$ or vector \f$ 
    * \mathbf{b} \f$. On exit, the solution matrix \f$ \mathbf{X} \f$ or vector \f$ \mathbf{x} \f$.
-   * @param ipiv Input vector. The pivot indices from nda::lapack::getrf, i.e. for \f$ 1 \leq i \leq n \f$, row i of the
-   * matrix was interchanged with row `ipiv(i)`.
+   * @param ipiv Input vector. The pivot indices from nda::lapack::getrf, i.e. for \f$ 1 \leq i \leq n \f$, row \f$ i 
+   * \f$ of the matrix was interchanged with row `ipiv(i-1)`.
    * @return Integer return code from the LAPACK call.
    */
   template <BlasArrayOrConj<2> A, BlasArrayFor<A> B, PivotArrayFor<A, 1> IPIV>

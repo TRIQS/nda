@@ -20,9 +20,13 @@
 namespace nda::linalg {
 
   /**
-   * @ingroup linalg_tools
-   * @brief Compute the cross product \f$ \mathbf{x} \times \mathbf{y} \f$ of two 3-dimensional vectors \f$ \mathbf{x} 
-   * \f$ and \f$ \mathbf{y} \f$.
+   * @ingroup linalg_matvec_products
+   * @brief Compute the vector cross product.
+   * 
+   * @details It computes \f$ \mathbf{x} \times \mathbf{y} \f$ of two 3-dimensional vectors \f$ \mathbf{x} \f$ and \f$ 
+   * \mathbf{y} \f$.
+   * 
+   * @note \f$ \mathbf{x} \f$ and \f$ \mathbf{y} \f$ are required to satisfy nda::mem::have_host_compatible_addr_space.
    *
    * @tparam X nda::Vector type.
    * @tparam Y nda::Vector type.

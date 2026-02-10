@@ -30,7 +30,7 @@
 namespace nda::linalg {
 
   /**
-   * @addtogroup linalg_tools
+   * @addtogroup linalg_solve
    * @{
    */
 
@@ -82,18 +82,16 @@ namespace nda::linalg {
   } // namespace detail
 
   /**
-   * @brief Compute the inverse of a matrix in place.
+   * @brief Compute the inverse \f$ \mathbf{M}^{-1} \f$ of an \f$ n \times n \f$ matrix \f$ \mathbf{M} \f$ in place.
    *
-   * @details The function computes the inverse of a given \f$ n \times n \f$ matrix \f$ \mathbf{M} \f$.
-   * 
-   * For small matrices (\f$ n < 4 \f$), it uses optimized direct inversion formulas.
+   * @details For small matrices (\f$ n < 4 \f$), it uses optimized direct inversion formulas.
    *
    * For larger matrices, it calls nda::lapack::getrf and nda::lapack::getri.
    *
-   * An exception is thrown, if the matrix is not invertible, i.e. if \f$ \det(\mathbf{M}) = 0 \f$, or if a 
-   * LAPACK/cuSOLVER call fails.
+   * An exception is thrown, if the matrix is not invertible, i.e. if \f$ \det(\mathbf{M}) = 0 \f$, or if a LAPACK call 
+   * fails.
    *
-   * @note \f$ \mathbf{M} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have algebra `M`.
+   * @note \f$ \mathbf{M} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have algebra 'M'.
    *
    * @tparam M nda::blas_lapack::BlasArray<2> type.
    * @param m Input/output matrix. On entry, the matrix \f$ \mathbf{M} \f$. On exit, the matrix \f$ \mathbf{M}^{-1} \f$.
@@ -126,12 +124,10 @@ namespace nda::linalg {
   }
 
   /**
-   * @brief Compute the inverse of a matrix.
+   * @brief Compute the inverse \f$ \mathbf{M}^{-1} \f$ of an \f$ n \times n \f$ matrix \f$ \mathbf{M} \f$.
    * 
-   * @details The function computes the inverse of a given \f$ n \times n \f$ matrix \f$ \mathbf{M} \f$.
-   * 
-   * The input matrix/view is not modified. Depending on the address space of the input matrix, the function does the 
-   * following:
+   * @details The given matrix/view is not modified. Depending on the address space of the input matrix, the function 
+   * does the following:
    * 
    * - If the input matrix satisfies nda::mem::have_device_compatible_addr_space, it makes a copy and uses 
    * nda::lapack::getrf and nda::lapack::getrs to compute the inverse. The resulting inverse matrix is always in 
@@ -139,14 +135,14 @@ namespace nda::linalg {
    * - Otherwise, it makes a copy and calls nda::linalg::inv_in_place to compute the inverse. The memory layout of the
    * input matrix is preserved.
    * 
+   * This function makes copies of the input arrays/views. When working on the device memory space, this may lead to 
+   * runtime errors if the copying fails.
+   * 
    * @note \f$ \mathbf{M} \f$ is required to have algebra `M` and to have a value type that satisfies 
    * nda::is_blas_lapack_v.
-   * 
-   * @note This function makes copies of the input arrays/views. When working on the device memory space, this may
-   * lead to runtime errors if the copying fails.
    *
    * @tparam M nda::Matrix type.
-   * @param m Input matrix. The matrix \f$ \mathbf{M} \f$. 
+   * @param m Input matrix \f$ \mathbf{M} \f$. 
    * @return The inverse matrix \f$ \mathbf{M}^{-1} \f$.
    */
   template <Matrix M>

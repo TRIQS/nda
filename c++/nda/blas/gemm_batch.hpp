@@ -57,7 +57,7 @@ namespace nda::blas {
   } // namespace detail
 
   /**
-   * @brief Interface to batched versions of the BLAS/cuBLAS `gemm` routine.
+   * @brief Interface to batched versions of the BLAS/cuBLAS `%gemm` routine.
    *
    * @details This function performs the matrix-matrix operations
    * \f[
@@ -176,7 +176,7 @@ namespace nda::blas {
   }
 
   /**
-   * @brief Interface to batched versions of the BLAS/cuBLAS `gemm` routine for variable sized matrices.
+   * @brief Interface to batched versions of the BLAS/cuBLAS `%gemm` routine for variable sized matrices.
    *
    * @details It simply calls nda::blas::gemm_batch with `is_vbatch` set to true.
    *
@@ -195,7 +195,7 @@ namespace nda::blas {
   }
 
   /**
-   * @brief Interface to batched-strided versions of the BLAS/cuBLAS `gemm` routine.
+   * @brief Interface to batched-strided versions of the BLAS/cuBLAS `%gemm` routine.
    *
    * @details This function performs the matrix-matrix operations
    * \f[
@@ -204,9 +204,9 @@ namespace nda::blas {
    * for batches of matrices indexed by \f$ i \in \{ 0, \ldots, N_b - 1 \} \f$. Here, \f$ N_b \f$ is the batch size and 
    * \f$ \alpha \f$ and \f$ \beta \f$ are scalars. See also nda::blas::gemm.
    * 
-   * A batch of matrices is just a 3-dimensional array in either nda::C_layout or nda::F_layout. For a Fortran (C) 
-   * layout array, the last (first) dimension indexes the individual matrices such that `M(:,:,i)` (`M(i,:,:)`) 
-   * corresponds to the \f$ i \f$-th matrix \f$ \mathbf{M}_i \f$ in the batch.
+   * A batch of matrices is just a 3-dimensional array in either nda::C_layout or nda::F_layout. For a Fortran/C layout 
+   * array, the last/first dimension indexes the individual matrices such that `A(:,:,i)`/`A(i,:,:)` corresponds to the 
+   * \f$ i \f$-th matrix \f$ \mathbf{A}_i \f$ in the batch.
    * 
    * Depending on the types of input arrays and the availability of the MKL library, the function does the following:
    * - If the input arrays satisfy nda::mem::have_device_compatible_addr_space, it calls cuBLAS's 

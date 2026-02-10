@@ -76,18 +76,18 @@ namespace nda::lapack {
 
   /**
    * @ingroup linalg_lapack
-   * @brief Interface to batched versions of the LAPACK/cuSOLVER `getrs` routine.
+   * @brief Interface to batched versions of the LAPACK/cuSOLVER `%getrs` routine.
    *
    * @details This function solves systems of linear equations
    * \f[
    *   \mathbf{A}_i \mathbf{X}_i = \mathbf{B}_i \; , 
    * \f]
-   * for batches of matrices indexed by \f$ i \in \{ 0, \ldots, N_b - 1 \} \f$. Here, \f$ N_b \f$ is the batch size. See
+   * for a batch of matrices indexed by \f$ i \in \{ 0, \ldots, N_b - 1 \} \f$. Here, \f$ N_b \f$ is the batch size. See
    * also nda::lapack::getrs.
    * 
-   * A batch of matrices is just a 3-dimensional array in either nda::C_layout or nda::F_layout. For a Fortran (C) 
-   * layout array, the last (first) dimension indexes the individual matrices such that `M(:,:,i)` (`M(i,:,:)`) 
-   * corresponds to the \f$ i \f$-th matrix \f$ \mathbf{M}_i \f$ in the batch.
+   * A batch of matrices is just a 3-dimensional array in either nda::C_layout or nda::F_layout. For a Fortran/C layout 
+   * array, the last/first dimension indexes the individual matrices such that `A(:,:,i)`/`A(i,:,:)` corresponds to the 
+   * \f$ i \f$-th matrix \f$ \mathbf{A}_i \f$ in the batch.
    * 
    * Depending on the input array types, the function does the following:
    * - If the input arrays satisfy nda::mem::have_device_compatible_addr_space, it calls cuBLAS's `cublasXgetrsBatched`.
@@ -100,12 +100,12 @@ namespace nda::lapack {
    * @tparam A nda::blas_lapack::BlasArrayOrConj<3> type.
    * @tparam B nda::blas_lapack::BlasArrayFor<A, 3> type.
    * @tparam IPIV nda::blas_lapack::PivotArrayFor<A, 2> type.
-   * @param a Input array. The 3-dimensional array containing \f$ N_b \f$ LU factorized matrices \f$ \mathbf{A}_i \f$ of 
-   * size \f$ n \times n \f$ as computed by nda::lapack::getrf_batch.
-   * @param b Input/output array. On entry, the 3-dimensional array containing \f$ N_b \f$ right hand side matrices \f$ 
-   * \mathbf{B}_i \f$. On exit, the corresponding solution matrices \f$ \mathbf{X}_i \f$.
-   * @param ipiv Input matrix. The pivot indices from nda::lapack::getrf_batch. If the matrix is in Fortran (C) layout,
-   * the \f$ i \f$-th column (row) contains the pivot indices from the factorization of the \f$ i \f$-th matrix.
+   * @param a Input array. The 3-dimensional array \f$ \mathbf{A} \f$ containing LU factorized matrices \f$ \mathbf{A}_i 
+   * \f$ as computed by nda::lapack::getrf_batch
+   * @param b Input/output array. On entry, the 3-dimensional array \f$ \mathbf{B} \f$ containing the right hand side 
+   * matrices \f$ \mathbf{B}_i \f$. On exit, it contains the corresponding solution matrices \f$ \mathbf{X}_i \f$.
+   * @param ipiv Input matrix. The pivot indices from nda::lapack::getrf_batch. If the matrix is in Fortran (C) layout, 
+   * the \f$ i \f$-th column (row) contains the pivot indices from the factorization of \f$ \mathbf{A}_i \f$. 
    * @return Integer return code from the batched LAPACK/cuBLAS call(s). If zero, all calls were successful.
    */
   template <BlasArrayOrConj<3> A, BlasArrayFor<A, 3> B, PivotArrayFor<A, 2> IPIV>

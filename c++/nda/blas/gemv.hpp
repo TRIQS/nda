@@ -28,7 +28,7 @@ namespace nda::blas {
    */
 
   /**
-   * @brief Interface to the BLAS/cuBLAS `gemv` routine.
+   * @brief Interface to the BLAS/cuBLAS `%gemv` routine.
    *
    * @details This function performs the matrix-vector operation
    * \f[

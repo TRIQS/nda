@@ -29,7 +29,7 @@ namespace nda::lapack {
 
   /**
    * @ingroup linalg_lapack
-   * @brief Interface to the LAPACK `heev` routine.
+   * @brief Interface to the LAPACK `%heev` routine.
    *
    * @details Computes all eigenvalues \f$ \lambda_i \f$ and, optionally, eigenvectors \f$ \mathbf{v}_i \f$ of a complex
    * hermitian matrix eigenvalue problem of the form
@@ -38,8 +38,8 @@ namespace nda::lapack {
    * \f]
    * for a given complex hermitian matrix \f$ \mathbf{A} \f$.
    * 
-   * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have 
-   * nda::F_layout.
+   * @note All input arrays are required to satisfy nda::mem::have_host_compatible_addr_space and \f$ \mathbf{A} \f$ is
+   * required to have nda::F_layout.
    *
    * @tparam A nda::blas_lapack::BlasArrayCplx<2> type.
    * @tparam W nda::blas_lapack::BlasArrayRealFor<A, 1> type.

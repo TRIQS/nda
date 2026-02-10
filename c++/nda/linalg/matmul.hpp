@@ -27,7 +27,7 @@
 namespace nda::linalg {
 
   /**
-   * @addtogroup linalg_tools
+   * @addtogroup linalg_matvec_products
    * @{
    */
 
@@ -95,15 +95,15 @@ namespace nda::linalg {
   } // namespace detail
 
   /**
-   * @brief Compute the matrix-matrix product of two nda::matrix objects.
+   * @brief Compute the matrix-matrix product of two nda::Matrix objects.
    *
-   * @details This function computes the matrix-matrix product 
+   * @details This function computes the matrix-matrix product
    * \f[
    *   \mathbf{C} = \mathbf{A} \mathbf{B} \; ,
    * \f]
    * where \f$ \mathbf{A} \f$, \f$ \mathbf{B} \f$ and \f$ \mathbf{C} \f$ are \f$ m \times k \f$, \f$ k \times n \f$ and
    * \f$ m \times n \f$ matrices, respectively.
-   * 
+   *
    * The behaviour of this function is similar to nda::blas::gemm, except that it allows
    * - lazy expressions as input,
    * - the value types of the input matrices to be different from each other and
@@ -115,20 +115,22 @@ namespace nda::linalg {
    *
    * Therefore, if performance is important, users should make sure to pass input arrays/views which are compatible with
    * nda::blas::gemm.
-   * 
+   *
    * The resulting nda::matrix has
    * - its value type deduced from the multiplication of the value types of the input matrices,
    * - nda::F_layout if both inputs are in F-layout and nda::C_layout otherwise and
    * - its address space set to the nda::mem::common_addr_space of the input matrices.
-   * 
-   * @note This function might make copies of the input arrays/views. When working on the device memory space, this may 
-   * lead to runtime errors if the copying fails.
+   *
+   * This function might make copies of the input arrays/views. When working on the device memory space, this may lead
+   * to runtime errors if the copying fails.
+   *
+   * @note \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ are required to satisfy nda::mem::have_compatible_addr_space.
    *
    * @tparam A nda::Matrix type.
    * @tparam B nda::Matrix type.
    * @param a Input matrix \f$ \mathbf{A} \f$ of size \f$ m \times k \f$.
    * @param b Input matrix \f$ \mathbf{B} \f$ of size \f$ k \times n \f$.
-   * @return Resulting matrix of the matrix-matrix multiplication of size \f$ m \times n \f$.
+   * @return Resulting nda::matrix \f$ \mathbf{C} \f$ of size \f$ m \times n \f$.
    */
   template <Matrix A, Matrix B>
     requires(mem::have_compatible_addr_space<A, B>)

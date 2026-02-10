@@ -1,18 +1,7 @@
-// Copyright (c) 2019-2024 Simons Foundation
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0.txt
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-// Authors: Thomas Hahn, Olivier Parcollet, Nils Wentzell
+// Copyright (c) 2019--present, The Simons Foundation
+// This file is part of TRIQS/nda and is licensed under the Apache License, Version 2.0.
+// SPDX-License-Identifier: Apache-2.0
+// See LICENSE in the root of this distribution for details.
 
 /**
  * @file
@@ -36,7 +25,7 @@
 namespace nda::linalg {
 
   /**
-   * @addtogroup linalg_tools
+   * @addtogroup linalg_other
    * @{
    */
 
@@ -48,7 +37,7 @@ namespace nda::linalg {
    * index vector `ipiv` of size \f$ l \f$. Starting from an identity permutation, i.e. \f$ \mathbf{\sigma} = (0, 1,
    * \ldots, m - 1) \f$, it interchanges \f$ \sigma_i \f$ with \f$ \sigma_{\mathrm{ipiv}_i - 1} \f$ for all \f$ i = 0,
    * 1, \dots, l - 1 \f$.
-   * 
+   *
    * @note The input vector is required to satisfy nda::mem::have_host_compatible_addr_space.
    *
    * @param ipiv nda::Vector containing the pivot indices returned by nda::lapack::getrf.
@@ -67,12 +56,12 @@ namespace nda::linalg {
    * @brief Get the permutation matrix \f$ \mathbf{P} \f$ from a permutation vector \f$ \mathbf{\sigma} \f$.
    *
    * @details The function constructs the permutation matrix \f$ \mathbf{P} \f$ of size \f$ m \times m \f$ from the
-   * permutation vector \f$ \sigma \f$ of size \f$ m \f$. 
-   * 
+   * permutation vector \f$ \sigma \f$ of size \f$ m \f$.
+   *
    * The permutation matrix only has the following non-zero elements (for all \f$ i = 0, 1, \ldots, m - 1 \f$):
    * - \f$ \mathbf{P}_{i, \sigma_i} = 1 \f$ for row permutations,
    * - \f$ \mathbf{P}_{\sigma_i, i} = 1 \f$ for column permutations.
-   * 
+   *
    * @note The input vector is required to satisfy nda::mem::have_host_compatible_addr_space.
    *
    * @tparam T nda::Scalar value type of the permutation matrix.
@@ -96,7 +85,7 @@ namespace nda::linalg {
    *
    * @details It simply calls nda::linalg::get_permutation_vector to get the permutation vector from the pivot indices,
    * and then calls nda::linalg::get_permutation_matrix to get the permutation matrix.
-   * 
+   *
    * @note The input vector is required to satisfy nda::mem::have_host_compatible_addr_space.
    *
    * @tparam T nda::Scalar value type of the permutation matrix.

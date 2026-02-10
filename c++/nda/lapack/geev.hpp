@@ -28,7 +28,7 @@ namespace nda::lapack {
 
   /**
    * @ingroup linalg_lapack
-   * @brief Interface to the LAPACK `geev` routine for real matrices.
+   * @brief Interface to the LAPACK `%geev` routine for real matrices.
    *
    * @details Computes all eigenvalues \f$ \lambda_j \f$ and, optionally, right/left eigenvectors \f$ \mathbf{v}_j \f$/
    * \f$ \mathbf{u}_j \f$ of a real eigenvalue problem.
@@ -50,8 +50,8 @@ namespace nda::lapack {
    * For real matrices, complex eigenvalues always occur in complex conjugate pairs and the corresponding eigenvectors 
    * are stored in a special packed format (see nda::linalg::get_geev_eigenvectors).
    * 
-   * @note \f$ \mathbf{A} \f$, \f$ \mathbf{V}_L \f$ and \f$ \mathbf{V}_R \f$ are required to satisfy 
-   * nda::mem::have_host_compatible_addr_space and to have nda::F_layout.
+   * @note All input arrays are required to satisfy nda::mem::have_host_compatible_addr_space and all input matrices
+   * are required to have nda::F_layout.
    *
    * @tparam A nda::blas_lapack::BlasArrayReal<2> type.
    * @tparam WR nda::blas_lapack::BlasArrayFor<A, 1> type.
@@ -64,7 +64,7 @@ namespace nda::lapack {
    * @param wi Output vector. The imaginary parts of the computed eigenvalues, i.e. \f$ \mathrm{Im}(\lambda_j) \f$.
    * @param vl Output matrix. If `jobvl = V`, matrix \f$ \mathbf{V}_L \f$ containing the left eigenvectors (in packed 
    * format for complex pairs). If `jobvl = N`, \f$ \mathbf{V}_L \f$ is not referenced.
-   * @param vr Output matrix. If `jobvr = V`, matrix \f$ \mathbf{V}_R \f$ containging the right eigenvectors (in packed 
+   * @param vr Output matrix. If `jobvr = V`, matrix \f$ \mathbf{V}_R \f$ containing the right eigenvectors (in packed 
    * format for complex pairs). If `jobvr = N`, \f$ \mathbf{V}_R \f$ is not referenced.
    * @param jobvl Character indicating whether to compute left eigenvectors ('V') or not ('N').
    * @param jobvr Character indicating whether to compute right eigenvectors ('V') or not ('N').
@@ -121,7 +121,7 @@ namespace nda::lapack {
 
   /**
    * @ingroup linalg_lapack
-   * @brief Interface to the LAPACK `geev` routine for complex matrices.
+   * @brief Interface to the LAPACK `%geev` routine for complex matrices.
    *
    * @details Computes all eigenvalues \f$ \lambda_j \f$ and, optionally, right/left eigenvectors \f$ \mathbf{v}_j \f$/
    * \f$ \mathbf{u}_j \f$ of a complex eigenvalue problem. 
@@ -140,8 +140,8 @@ namespace nda::lapack {
    *
    * The computed eigenvectors are normalized to have Euclidean norm equal to 1 and largest component real.
    * 
-   * @note \f$ \mathbf{A} \f$, \f$ \mathbf{V}_L \f$ and \f$ \mathbf{V}_R \f$ are required to satisfy 
-   * nda::mem::have_host_compatible_addr_space and to have nda::F_layout.
+   * @note All input arrays are required to satisfy nda::mem::have_host_compatible_addr_space and all input matrices
+   * are required to have nda::F_layout.
    *
    * @tparam A nda::blas_lapack::BlasArrayCplx<2> type.
    * @tparam W nda::blas_lapack::BlasArrayFor<A, 1> type.
@@ -153,7 +153,7 @@ namespace nda::lapack {
    * @param w Output vector. The computed eigenvalues \f$ \lambda_j \f$.
    * @param vl Output matrix. If `jobvl = V`, matrix \f$ \mathbf{V}_L \f$ containing the left eigenvectors. If 
    * `jobvl = N`, \f$ \mathbf{V}_L \f$ is not referenced. 
-   * @param vr Output matrix. If `jobvr = V`, matrix \f$ \mathbf{V}_R \f$ containging the right eigenvectors. If 
+   * @param vr Output matrix. If `jobvr = V`, matrix \f$ \mathbf{V}_R \f$ containing the right eigenvectors. If 
    * `jobvr = N`, \f$ \mathbf{V}_R \f$ is not referenced.
    * @param jobvl Character indicating whether to compute left eigenvectors ('V') or not ('N').
    * @param jobvr Character indicating whether to compute right eigenvectors ('V') or not ('N').

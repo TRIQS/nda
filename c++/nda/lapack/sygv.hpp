@@ -27,7 +27,7 @@ namespace nda::lapack {
 
   /**
    * @ingroup linalg_lapack
-   * @brief Interface to the LAPACK `sygv` routine.
+   * @brief Interface to the LAPACK `%sygv` routine.
    *
    * @details Computes all eigenvalues \f$ \lambda_i \f$ and, optionally, eigenvectors \f$ \mathbf{v}_i \f$ of a real
    * generalized symmetric-definite eigenvalue problem of the form
@@ -39,8 +39,8 @@ namespace nda::lapack {
    * Here \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ are assumed to be symmetric and \f$ \mathbf{B} \f$ is also positive
    * definite.
    * 
-   * @note \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ are required to satisfy nda::mem::have_host_compatible_addr_space 
-   * and to have nda::F_layout.
+   * @note All input arrays are required to satisfy nda::mem::have_host_compatible_addr_space and \f$ \mathbf{A} \f$ and 
+   * \f$ \mathbf{B} \f$ are required to have nda::F_layout.
    *
    * @tparam A nda::blas_lapack::BlasArrayReal<2> type.
    * @tparam B nda::blas_lapack::BlasArrayFor<A, 2> type.
@@ -50,7 +50,7 @@ namespace nda::lapack {
    * \mathbf{A} \f$ contains the matrix \f$ \mathbf{V} \f$ of normalized eigenvectors such that \f$ \mathbf{V}^T
    * \mathbf{B} \mathbf{V} = \mathbf{I} \f$ (if `itype = 1` or `itype = 2`) or \f$ \mathbf{V}^T \mathbf{B}^{-1}
    * \mathbf{V} = \mathbf{I} \f$ (if `itype = 3`). If `jobz = N`, then on exit \f$ \mathbf{A} \f$ is destroyed.
-   * @param b Input/output matrix. On entry, the symmetric positive definite matrix \f$ \mathbf{B} \f$. On exit, the
+   * @param b Input/output matrix. On entry, the symmetric, positive definite matrix \f$ \mathbf{B} \f$. On exit, the
    * part of \f$ \mathbf{B} \f$ containing the matrix is overwritten by the triangular factor \f$ \mathbf{U} \f$ or
    * \f$ \mathbf{L} \f$ from a Cholesky factorization.
    * @param w Output vector. The eigenvalues \f$ \lambda_i \f$ in ascending order.

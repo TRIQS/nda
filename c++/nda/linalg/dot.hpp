@@ -22,7 +22,7 @@
 namespace nda::linalg {
 
   /**
-   * @addtogroup linalg_tools
+   * @addtogroup linalg_matvec_products
    * @{
    */
 
@@ -33,6 +33,9 @@ namespace nda::linalg {
    * conjugation:
    * - For `star = false`, it returns \f$ \mathbf{x}^T \mathbf{y} \f$.
    * - For `star = true`, it returns \f$ \mathbf{x}^H \mathbf{y} \f$.
+   * 
+   * @note \f$ \mathbf{x} \f$ and \f$ \mathbf{y} \f$ are required to satisfy nda::mem::have_host_compatible_addr_space
+   * and to have nda::Scalar value types.
    *
    * @tparam star If true, conjugate the first operand (for complex types only).
    * @tparam X nda::Vector type.

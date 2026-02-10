@@ -21,7 +21,7 @@ namespace nda::blas {
 
   /**
    * @ingroup linalg_blas
-   * @brief Interface to the BLAS/cuBLAS `scal` routine.
+   * @brief Interface to the BLAS/cuBLAS `%scal` routine.
    *
    * @details Scales a vector by a constant. This function calculates \f$ \mathbf{x} \leftarrow \alpha \mathbf{x} \f$,
    * where \f$ \alpha \f$ is a scalar constant and \f$ \mathbf{x} \f$ is a vector.

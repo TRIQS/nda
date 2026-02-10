@@ -26,7 +26,7 @@
 namespace nda::linalg {
 
   /**
-   * @ingroup linalg_tools
+   * @ingroup linalg_matvec_products
    * @brief Outer product of two arrays/views.
    *
    * @details It calculates the outer product \f$ \mathbf{C} = \mathbf{A} \otimes \mathbf{B} \f$, such that

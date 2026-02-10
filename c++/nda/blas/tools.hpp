@@ -193,7 +193,7 @@ namespace nda::blas_lapack {
   /**
    * @brief Resize or check the size of a 1D array/view.
    *
-   * @details This function is similar to nda::resize_or_check except that
+   * @details This function is similar to nda::resize_or_check_if_view except that
    * - it only works for 1D arrays/views,
    * - it does not resize or throw an error if the size is too big and
    * - it expects that the memory is contiguous.

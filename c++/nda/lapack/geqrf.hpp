@@ -29,7 +29,7 @@ namespace nda::lapack {
 
   /**
    * @ingroup linalg_lapack
-   * @brief Interface to the LAPACK/cuSOLVER `geqrf` routine.
+   * @brief Interface to the LAPACK/cuSOLVER `%geqrf` routine.
    *
    * @details Computes a QR factorization of a matrix \f$ \mathbf{A} \f$:
    * \f[
@@ -54,7 +54,7 @@ namespace nda::lapack {
    * 
    * If the input arrays satisfy nda::mem::have_device_compatible_addr_space, the cuSOLVER implementation is used.
    * 
-   * @note \f$ \mathbf{A} \f$ is required to be stored in nda::F_layout.
+   * @note \f$ \mathbf{A} \f$ is required to have nda::F_layout.
    *
    * @tparam A nda::blas_lapack::BlasArray<2> type.
    * @tparam TAU nda::blas_lapack::BlasArrayFor<A, 1> type.

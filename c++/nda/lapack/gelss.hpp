@@ -29,14 +29,14 @@ namespace nda::lapack {
 
   /**
    * @ingroup linalg_lapack
-   * @brief Interface to the LAPACK `gelss` routine.
+   * @brief Interface to the LAPACK `%gelss` routine.
    *
    * @details Computes the minimum norm solution to a linear least squares problem:
    * \f[
    *   \min_{\mathbf{x}} | \mathbf{b} - \mathbf{A x} |_2
    * \f]
-   * using the singular value decomposition (SVD) of \f$ \mathbf{A} \f$. \f$ \mathbf{A} \f$ is an \f$ m \times n \f$
-   * matrix which may be rank-deficient.
+   * using the singular value decomposition (SVD) of \f$ \mathbf{A} \f$, an \f$ m \times n \f$ matrix which may be 
+   * rank-deficient.
    *
    * Several right hand side vectors \f$ \mathbf{b} \f$ and solution vectors \f$ \mathbf{x} \f$ can be handled in a
    * single call; they are stored as the columns of the \f$ m \times n_{\mathrm{rhs}} \f$ right hand side matrix \f$
@@ -45,8 +45,9 @@ namespace nda::lapack {
    * The effective rank of \f$ \mathbf{A} \f$ is determined by treating as zero those singular values which are less
    * than \f$ r_{\mathrm{cond}} \f$ times the largest singular value.
    * 
-   * @note \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ are required to satisfy nda::mem::have_host_compatible_addr_space 
-   * and to be in nda::F_layout.
+   * @note All input arrays are required to satisfy nda::mem::have_host_compatible_addr_space and all input matrices
+   * are required to have nda::F_layout. Since we do not resize the input array representing the right hand side, it is
+   * required to be large enough to hold the solution, i.e. it needs to have at least \f$ \max(m, n) \f$ rows.
    *
    * @tparam A nda::blas_lapack::BlasArray<2> type.
    * @tparam B nda::blas_lapack::BlasArrayFor<A> type.

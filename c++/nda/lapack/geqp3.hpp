@@ -29,7 +29,7 @@ namespace nda::lapack {
 
   /**
    * @ingroup linalg_lapack
-   * @brief Interface to the LAPACK `geqp3` routine.
+   * @brief Interface to the LAPACK `%geqp3` routine.
    *
    * @details Computes a QR factorization of a matrix \f$ \mathbf{A} \f$ with column pivoting:
    * \f[
@@ -53,8 +53,8 @@ namespace nda::lapack {
    * - elements \f$ i + 1 \f$ to \f$ m \f$ stored on exit in the elements \f$ i + 1 \f$ to \f$ m \f$ in the column \f$ i
    * \f$ of \f$ \mathbf{A} \f$.
    * 
-   * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to be stored in 
-   * nda::F_layout.
+   * @note All input arrays are required to satisfy nda::mem::have_host_compatible_addr_space and \f$ \mathbf{A} \f$ is 
+   * required to have nda::F_layout.
    *
    * @tparam A nda::blas_lapack::BlasArray<2> type.
    * @tparam JPVT nda::blas_lapack::PivotArrayFor<A, 1> type.
@@ -68,7 +68,7 @@ namespace nda::lapack {
    * @param jpvt Input/output vector. On entry, if the j<sup>th</sup> element is \f$ \neq 0 \f$, the j<sup>th</sup>
    * column of \f$ \mathbf{A} \f$ is permuted to the front of \f$ \mathbf{A P} \f$ (a leading column); if the j<sup>th
    * </sup> element is equal 0, the j<sup>th</sup> column of \f$ \mathbf{A} \f$ is a free column. On exit, if the
-   * j<sup>th</sup> element is equal \f$ k \f$, then the j<sup>th</sup>  column of \f$ \mathbf{A P} \f$ was the the
+   * j<sup>th</sup> element is equal \f$ k \f$, then the j<sup>th</sup>  column of \f$ \mathbf{A P} \f$ was the
    * k<sup>th</sup> column of \f$ \mathbf{A} \f$.
    * @param tau Output vector. The scalar factors \f$ \tau_i \f$ of the elementary reflectors \f$ \mathbf{H}(i) \f$.
    * @param work Ouput vector. Workspace array used by the LAPACK routine.
