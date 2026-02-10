@@ -27,24 +27,24 @@ namespace nda::lapack {
 
   /**
    * @ingroup linalg_lapack
-   * @brief Interface to the LAPACK `getri` routine.
+   * @brief Interface to the LAPACK `%getri` routine.
    *
    * @details Computes the inverse of an \f$ n \times n \f$ matrix \f$ \mathbf{A} \f$ using the LU factorization 
    * computed by nda::lapack::getrf.
    *
-   * This method inverts \f$ \mathbf{U} \f$ and then computes \f$ \mathrm{inv}(\mathbf{A}) \f$ by solving the system
-   * \f$ \mathrm{inv}(\mathbf{A}) L = \mathrm{inv}(\mathbf{U}) \f$ for \f$ \mathrm{inv}(\mathbf{A}) \f$.
+   * This method inverts \f$ \mathbf{U} \f$ and then computes \f$ \mathbf{A}^{-1} \f$ by solving the system \f$ 
+   * \mathbf{A}^{-1} L = \mathbf{U}^{-1} \f$ for \f$ \mathbf{A}^{-1} \f$.
    * 
-   * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space.
+   * @note All input arrays are required to satisfy nda::mem::have_host_compatible_addr_space.
    *
    * @tparam A nda::blas_lapack::BlasArray<2> type.
    * @tparam IPIV nda::blas_lapack::PivotArrayFor<A, 1> type.
    * @tparam W nda::blas_lapack::BlasArrayFor<A, 1> type.
    * @param a Input/output matrix. On entry, the factors \f$ \mathbf{L} \f$ and \f$ \mathbf{U} \f$ from the
-   * factorization \f$ \mathbf{A} = \mathbf{P L U} \f$ as computed by nda::lapack::getrf. On exit, the inverse of the 
-   * original matrix \f$ \mathbf{A} \f$.
-   * @param ipiv Input vector. The pivot indices from nda::lapack::getrf, i.e. for \f$ 1 \leq i \leq n \f$, row i of the
-   * matrix was interchanged with row `ipiv(i)`.
+   * factorization \f$ \mathbf{A} = \mathbf{P L U} \f$ as computed by nda::lapack::getrf. On exit \f$ \mathbf{A}^{-1} 
+   * \f$, the inverse of the original matrix \f$ \mathbf{A} \f$.
+   * @param ipiv Input vector. The pivot indices from nda::lapack::getrf, i.e. for \f$ 1 \leq i \leq n \f$, row \f$ i 
+   * \f$ of the matrix was interchanged with row `ipiv(i-1)`.
    * @param work Ouput vector. Workspace array used by the LAPACK routine.
    * @return Integer return code from the LAPACK call.
    */

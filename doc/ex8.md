@@ -167,9 +167,9 @@ Then the following operations are allowed (all operations are lazy unless mentio
 - **Multiplication**
   - `A1 * A2`: element-wise multiplication, shapes of `A1` and `A2` have to be the same, result has the same shape
   - `M1 * M2`: non-lazy matrix-matrix multiplication, shapes have the expected requirements for matrix multiplication,
-    calls nda::matmul
+    calls nda::linalg::matmul
   - `M1 * v1`: non-lazy matrix-vector multiplication, shapes have the expected requirements for matrix multiplication,
-    calls nda::matvecmul
+    calls nda::linalg::matvecmul
   - `s1 * O1`/`O1 * s1`: element-wise multiplication, result has the same shape as `O1`
 
 - **Division**
@@ -372,14 +372,13 @@ pivot vector:
 
 ```cpp
 // solve the linear system of equations using the LU factorization
-nda::matrix<double, nda::F_layout> x1(3, 1);
-x1(nda::range::all, 0) = b1;
+auto x1 = nda::vector<double>(b1);
 info = nda::lapack::getrs(LU, x1, ipiv);
 if (info != 0) {
   std::cerr << "Error: nda::lapack::getrs failed with error code " << info << std::endl;
   return 1;
 }
-std::cout << "x1 = " << x1(nda::range::all, 0) << std::endl;
+std::cout << "x1 = " << x1 << std::endl;
 ```
 
 Output:
@@ -395,7 +394,7 @@ Let's check that this is actually the solution to our original system of equatio
 
 ```cpp
 // check the solution
-std::cout << "A1 * x1 = " << A1 * x1(nda::range::all, 0) << std::endl;
+std::cout << "A1 * x1 = " << A1 * x1 << std::endl;
 ```
 
 Output:
@@ -405,6 +404,9 @@ A1 * x1 = [1,-2,2.22045e-16]
 ```
 
 Considering the finite precision of our calculations, this is indeed equal to the right hand side vector `b1`.
+
+> **Note**: For a higher level interface to solve linear systems of equations, **nda** provides the convenience function
+> nda::linalg::solve which handles the LU factorization and back-substitution automatically.
 
 > **Note**: BLAS and LAPACK assume Fortran-ordered arrays. We therefore recommend to work with matrices in the
 > nda::F_layout to avoid any confusion.

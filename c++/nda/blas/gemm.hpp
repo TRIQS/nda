@@ -29,7 +29,7 @@ namespace nda::blas {
    */
 
   /**
-   * @brief Interface to the BLAS/cuBLAS `gemm` routine.
+   * @brief Interface to the BLAS/cuBLAS `%gemm` routine.
    *
    * @details This function performs the matrix-matrix operation
    * \f[
@@ -49,7 +49,7 @@ namespace nda::blas {
    * @tparam C nda::blas_lapack::BlasArrayFor<A, 2> type.
    * @param alpha Input scalar \f$ \alpha \f$.
    * @param a Input matrix \f$ \mathbf{A} \f$ of size \f$ m \times k \f$.
-   * @param b Input matrix \f$ \mathbf{B})\f$ of size \f$ k \times n \f$.
+   * @param b Input matrix \f$ \mathbf{B} \f$ of size \f$ k \times n \f$.
    * @param beta Input scalar \f$ \beta \f$.
    * @param c Input/Output matrix \f$ \mathbf{C} \f$ of size \f$ m \times n \f$.
    */

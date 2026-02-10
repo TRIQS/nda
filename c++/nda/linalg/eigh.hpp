@@ -32,7 +32,7 @@
 namespace nda::linalg {
 
   /**
-   * @addtogroup linalg_tools
+   * @addtogroup linalg_eig
    * @{
    */
 
@@ -150,15 +150,15 @@ namespace nda::linalg {
   /**
    * @brief Compute the eigenvalues and eigenvectors of a real symmetric or complex hermitian matrix.
    *
-   * @details It makes a copy of the given matrix/view and calls nda::linalg::eigh_in_place with the copy.
+   * @details It makes a copy of the input matrix \f$ \mathbf{A} \f$ and calls nda::linalg::eigh_in_place with the copy.
    * 
    * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have a value type
    * that satisfies nda::is_blas_lapack_v.
    *
    * @tparam A nda::Matrix type.
-   * @param a Input matrix. The matrix \f$ \mathbf{A} \f$.
+   * @param a Input matrix \f$ \mathbf{A} \f$.
    * @return `std::pair` containing an nda::array with the real eigenvalues \f$ \lambda_i \f$ in ascending order and an 
-   * nda::matrix in nda::F_layout containing the eigenvectors \f$ \mathbf{v}_i \f$ in its columns.
+   * nda::matrix \f$ \mathbf{V} \f$ in nda::F_layout containing the eigenvectors \f$ \mathbf{v}_i \f$ in its columns.
    */
   template <Matrix A>
     requires(mem::have_host_compatible_addr_space<A> and is_blas_lapack_v<get_value_t<A>>)
@@ -172,19 +172,19 @@ namespace nda::linalg {
    * @brief Compute the eigenvalues and eigenvectors of a generalized real symmetric-definite or complex 
    * hermitian-definite eigenvalue problem.
    *
-   * @details It makes a copy of the given matrices/views and calls nda::linalg::eigh_in_place(A &&, B&&, int) with the 
-   * copies.
+   * @details It makes copies of the input matrices \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ and calls 
+   * nda::linalg::eigh_in_place(A &&, B&&, int) with the copies.
    * 
    * @note \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ are required to satisfy nda::mem::have_host_compatible_addr_space 
    * and to have the same value type that satisfies nda::is_blas_lapack_v.
    *
    * @tparam A nda::Matrix type.
    * @tparam B nda::Matrix type.
-   * @param a Input matrix. The matrix \f$ \mathbf{A} \f$.
-   * @param b Input matrix. The matrix \f$ \mathbf{B} \f$. 
+   * @param a Input matrix \f$ \mathbf{A} \f$.
+   * @param b Input matrix \f$ \mathbf{B} \f$. 
    * @param itype Specifies the problem to be solved.
    * @return `std::pair` containing an nda::array with the real eigenvalues \f$ \lambda_i \f$ in ascending order and an 
-   * nda::matrix in nda::F_layout containing the eigenvectors \f$ \mathbf{v}_i \f$ in its columns.
+   * nda::matrix \f$ \mathbf{V} \f$ in nda::F_layout containing the eigenvectors \f$ \mathbf{v}_i \f$ in its columns.
    */
   template <Matrix A, Matrix B>
     requires(mem::have_host_compatible_addr_space<A, B> and is_blas_lapack_v<get_value_t<A>> and have_same_value_type_v<A, B>)
@@ -209,7 +209,7 @@ namespace nda::linalg {
    * An exception is thrown, if the LAPACK call fails.
    *
    * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have 
-   * nda::F_layout. See nda::linalg::eigh for a version that handles nda::C_layout.
+   * nda::F_layout. See nda::linalg::eigvalsh for a version that handles nda::C_layout.
    *
    * @tparam A nda::blas_lapack::BlasArray<2> type.
    * @param a Input/output matrix. On entry, the matrix \f$ \mathbf{A} \f$. On exit, the contents of \f$ \mathbf{A} \f$ 
@@ -235,13 +235,13 @@ namespace nda::linalg {
    * Here \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ are assumed to be real symmetric or complex hermitian. In addition,
    * \f$ \mathbf{B} \f$ is assumed to be positive definite.
    * 
-   * f \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ are real, it calls nda::lapack::sygv. If \f$ \mathbf{A} \f$ and \f$ 
+   * If \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ are real, it calls nda::lapack::sygv. If \f$ \mathbf{A} \f$ and \f$ 
    * \mathbf{B} \f$ are complex, it calls nda::lapack::hegv.
    * 
    * An exception is thrown, if the LAPACK call fails.
    *
    * @note \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ are required to satisfy nda::mem::have_host_compatible_addr_space 
-   * and to have nda::F_layout. See nda::linalg::eigh for a version that handles nda::C_layout.
+   * and to have nda::F_layout. See nda::linalg::eigvalsh for a version that handles nda::C_layout.
    *
    * @tparam A nda::blas_lapack::BlasArray<2> type.
    * @tparam B nda::blas_lapack::BlasArrayFor<A, 2> type.
@@ -261,13 +261,14 @@ namespace nda::linalg {
   /**
    * @brief Compute the eigenvalues of a real symmetric or complex hermitian matrix.
    *
-   * @details It makes a copy of the given matrix/view and calls nda::linalg::eigvalsh_in_place with the copy.
+   * @details It makes a copy of the input matrix \f$ \mathbf{A} \f$ and calls nda::linalg::eigvalsh_in_place with the 
+   * copy.
    * 
    * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have a value type
    * that satisfies nda::is_blas_lapack_v.
    *
    * @tparam A nda::Matrix type.
-   * @param a Input matrix. The matrix \f$ \mathbf{A} \f$.
+   * @param a Input matrix \f$ \mathbf{A} \f$.
    * @return An nda::array containing the real eigenvalues \f$ \lambda_i \f$ in ascending order.
    */
   template <Matrix A>
@@ -281,16 +282,16 @@ namespace nda::linalg {
    * @brief Compute the eigenvalues of a generalized real symmetric-definite or complex hermitian-definite eigenvalue 
    * problem.
    *
-   * @details It makes a copy of the given matrices/views and calls nda::linalg::eigvalsh_in_place(A &&, B&&, int) with 
-   * the copies.
+   * @details It makes copies of the input matrices \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ and calls 
+   * nda::linalg::eigvalsh_in_place(A &&, B&&, int) with the copies.
    * 
    * @note \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ are required to satisfy nda::mem::have_host_compatible_addr_space 
    * and to have the same value type that satisfies nda::is_blas_lapack_v.
    *
    * @tparam A nda::Matrix type.
    * @tparam B nda::Matrix type.
-   * @param a Input matrix. The matrix \f$ \mathbf{A} \f$.
-   * @param b Input matrix. The matrix \f$ \mathbf{B} \f$. 
+   * @param a Input matrix \f$ \mathbf{A} \f$.
+   * @param b Input matrix \f$ \mathbf{B} \f$. 
    * @param itype Specifies the problem to be solved.
    * @return An nda::array containing the real eigenvalues \f$ \lambda_i \f$ in ascending order.
    */

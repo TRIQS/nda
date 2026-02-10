@@ -1,18 +1,7 @@
-// Copyright (c) 2019-2024 Simons Foundation
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0.txt
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-// Authors: Thomas Hahn, Olivier Parcollet, Nils Wentzell
+// Copyright (c) 2019--present, The Simons Foundation
+// This file is part of TRIQS/nda and is licensed under the Apache License, Version 2.0.
+// SPDX-License-Identifier: Apache-2.0
+// See LICENSE in the root of this distribution for details.
 
 /**
  * @file
@@ -44,12 +33,12 @@
 namespace nda::linalg {
 
   /**
-   * @addtogroup linalg_tools
+   * @addtogroup linalg_decompositions
    * @{
    */
 
   /**
-   * @brief Get the \f$ \mathbf{Q} \f$ and \f$ \mathbf{R} \f$ matrices from the output of nda::lapack::geqp3 or 
+   * @brief Get the \f$ \mathbf{Q} \f$ and \f$ \mathbf{R} \f$ matrices from the output of nda::lapack::geqp3 or
    * nda::lapack::geqrf.
    *
    * @details \f$ \mathbf{R} \f$ is simply the upper triangular (trapezoidal) part of the \f$ m \times n \f$ matrix \f$
@@ -62,18 +51,19 @@ namespace nda::linalg {
    * where \f$ k \f$ depends on the mode of the factorization:
    * - **reduced mode** (default): \f$ k = \min(m, n) \f$.
    * - **complete mode**: \f$ k = m \f$.
-   * 
+   *
    * The resulting matrices \f$ \mathbf{Q} \f$ and \f$ \mathbf{R} \f$ are always returned in nda::F_layout.
-   * 
+   *
    * An exception is thrown, if the LAPACK call fails.
    *
-   * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space.
+   * @note \f$ \mathbf{A} \f$ and \f$ \mathbf{\tau} \f$ are required to satisfy
+   * nda::mem::have_host_compatible_addr_space.
    *
-   * @tparam A nda::blas_lapack::BlasArray<2>type.
+   * @tparam A nda::blas_lapack::BlasArray<2> type.
    * @tparam TAU nda::blas_lapack::BlasArrayFor<A, 1> type.
-   * @param a Input matrix \f$ \mathbf{A} \f$ containing the output of nda::lapack::geqp3.
-   * @param tau Input vector containing the scalar factors of the elementary reflectors as returned by
-   * nda::lapack::geqp3.
+   * @param a Input matrix \f$ \mathbf{A} \f$ containing the output of nda::lapack::geqp3 or nda::lapack::geqrf.
+   * @param tau Input vector \f$ \mathbf{\tau} \f$ containing the scalar factors of the elementary reflectors as
+   * returned by nda::lapack::geqp3 or nda::lapack::geqrf.
    * @param complete If `true`, retrieves the matrices for the complete QR factorization.
    * @return A tuple containing the \f$ \mathbf{Q} \f$ and \f$ \mathbf{R} \f$ matrices.
    */
@@ -119,14 +109,14 @@ namespace nda::linalg {
    * - **reduced mode** (default): \f$ k = \min(m, n) \f$.
    * - **complete mode**: \f$ k = m \f$.
    *
-   * \f$ \mathbf{P} \f$ is returned as a permutation vector \f$ \mathbf{\sigma} \f$ of size \f$ n \f$. See
+   * The matrix \f$ \mathbf{P} \f$ is returned as a permutation vector \f$ \mathbf{\sigma} \f$ of size \f$ n \f$. See
    * nda::linalg::get_permutation_vector for more information.
-   * 
+   *
    * The resulting matrices \f$ \mathbf{Q} \f$ and \f$ \mathbf{R} \f$ are always returned in nda::F_layout.
-   * 
+   *
    * An exception is thrown, if one of the LAPACK calls fails.
    *
-   * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to be stored in 
+   * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have
    * nda::F_layout. See nda::linalg::qr for a version that handles nda::C_layout.
    *
    * @tparam A nda::blas_lapack::BlasArray<2> type.
@@ -162,9 +152,9 @@ namespace nda::linalg {
    *
    * @details It makes a copy of the input matrix \f$ \mathbf{A} \f$ and calls nda::linalg::qr_in_place.
    *
-   * The resulting matrices \f$ \mathbf{Q} \f$ and \f$ \mathbf{R} \f$ have the same layout as the input matrix \f$ 
+   * The resulting matrices \f$ \mathbf{Q} \f$ and \f$ \mathbf{R} \f$ have the same layout as the input matrix \f$
    * \mathbf{A} \f$.
-   * 
+   *
    * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have a value type
    * that satisfies nda::is_blas_lapack_v.
    *

@@ -22,7 +22,7 @@ namespace nda::lapack {
 
   /**
    * @ingroup linalg_lapack
-   * @brief Interface to the LAPACK `gtsv` routine.
+   * @brief Interface to the LAPACK `%gtsv` routine.
    *
    * @details Solves a system of linear equations
    *
@@ -33,8 +33,8 @@ namespace nda::lapack {
    * matrices \f$ \mathbf{X} \f$ and \f$ \mathbf{B} \f$ or vectors \f$ \mathbf{x} \f$ and \f$ \mathbf{b} \f$ of size
    * \f$ n \f$. It uses Gaussian elimination with partial pivoting.
    *
-   * @note The input arrays/views are required to satisfy nda::mem::have_host_compatible_addr_space and \f$ \mathbf{B}
-   * \f$ has to be in nda::F_layout.
+   * @note All input arrays are required to satisfy nda::mem::have_host_compatible_addr_space and \f$ \mathbf{B} \f$ is 
+   * required to have nda::F_layout.
    *
    * @tparam DL nda::blas_lapack::BlasArray<1> type.
    * @tparam D nda::blas_lapack::BlasArrayFor\<DL, 1\> type.

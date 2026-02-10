@@ -28,7 +28,7 @@ namespace nda::lapack {
 
   /**
    * @ingroup linalg_lapack
-   * @brief Interface to the LAPACK/cuSOLVER `ungqr` routine.
+   * @brief Interface to the LAPACK/cuSOLVER `%ungqr` routine.
    *
    * @details Generates an \f$ m \times n \f$ complex matrix \f$ \mathbf{Q} \f$ with orthonormal columns, which is
    * defined as the first \f$ n \f$ columns of a product of \f$ k \f$ elementary reflectors of order \f$ m \f$
@@ -49,7 +49,7 @@ namespace nda::lapack {
    * 
    * If the input arrays satisfy nda::mem::have_device_compatible_addr_space, the cuSOLVER implementation is used.
    * 
-   * @note \f$ \mathbf{A} \f$ is required to be stored in nda::F_layout.
+   * @note \f$ \mathbf{A} \f$ is required to have nda::F_layout.
    *
    * @tparam A nda::blas_lapack::BlasArrayCplx<2> type.
    * @tparam TAU nda::blas_lapack::BlasArrayFor<A, 1> type.

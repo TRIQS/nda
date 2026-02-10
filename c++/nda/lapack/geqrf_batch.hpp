@@ -31,34 +31,34 @@ namespace nda::lapack {
 
   /**
    * @ingroup linalg_lapack
-   * @brief Interface to batched versions of the LAPACK/cuSOLVER `geqrf` routine.
+   * @brief Interface to batched versions of the LAPACK/cuSOLVER `%geqrf` routine.
    *
    * @details This function computes a QR factorization
    * \f[
    *   \mathbf{A}_i = \mathbf{Q}_i \mathbf{R}_i \; ,
    * \f]
-   * for batches of matrices indexed by \f$ i \in \{ 0, \ldots, N_b - 1 \} \f$. Here, \f$ N_b \f$ is the batch size. See
+   * for a batch of matrices indexed by \f$ i \in \{ 0, \ldots, N_b - 1 \} \f$. Here, \f$ N_b \f$ is the batch size. See
    * also nda::lapack::geqrf.
-   * 
-   * A batch of matrices is just a 3-dimensional array in nda::F_layout where the last dimension indexes the individual 
+   *
+   * A batch of matrices is just a 3-dimensional array in nda::F_layout where the last dimension indexes the individual
    * matrices such that `A(:,:,i)` corresponds to the \f$ i \f$-th matrix \f$ \mathbf{A}_i \f$ in the batch.
-   * 
+   *
    * Depending on the input array types, the function does the following:
    * - If the input arrays satisfy nda::mem::have_device_compatible_addr_space, it calls cuBLAS's `cublasXgeqrfBatched`.
-   * - If the input arrays do not satisfy nda::mem::have_device_compatible_addr_space it simply loops over all matrices 
+   * - If the input arrays do not satisfy nda::mem::have_device_compatible_addr_space, it simply loops over all matrices
    * in the batch and calls nda::lapack::geqrf.
-   * 
-   * @note The input arrays are required to have nda::F_layout.
+   *
+   * @note \f$ \mathbf{A} \f$ and \f$ \mathbf{T} \f$ are required to have nda::F_layout.
    *
    * @tparam A nda::blas_lapack::BlasArray<3> type.
    * @tparam TAU nda::blas_lapack::BlasArrayFor<A, 2> type.
    * @tparam W nda::blas_lapack::BlasArrayFor<A, 1> type.
-   * @param a Input/output array. On entry, the 3-dimensional array containing \f$ N_b \f$ matrices of size \f$ m
-   * \times n \f$ to be factored. On exit, the corresponding upper trapezoidal matrices \f$ \mathbf{R} \f$ and the
-   * elementary reflectors representing \f$ \mathbf{Q} \f$.
-   * @param tau Output matrix. The \f$ i \f$-th column contains the scalar factors \f$ \tau \f$ of the elementary
-   * reflectors for the \f$ i \f$-th matrix.
-   * @param work Ouput vector. Workspace array only used by the LAPACK routine on the host.
+   * @param a Input/output array. On entry, the 3-dimensional array \f$ \mathbf{A} \f$ containing the matrices \f$
+   * \mathbf{A}_i \f$ to be factored. On exit, the corresponding upper trapezoidal matrices \f$ \mathbf{R}_i \f$ and the
+   * elementary reflectors representing \f$ \mathbf{Q}_i \f$.
+   * @param tau Output matrix \f$ \mathbf{T} \f$. The \f$ i \f$-th column contains the scalar factors of the elementary
+   * reflectors representing \f$ \mathbf{Q}_i \f$.
+   * @param work Ouput vector. Workspace array only used by the LAPACK routine.
    * @return Integer return code from the batched LAPACK/cuBLAS call(s). If zero, all calls were successful.
    */
   template <BlasArray<3> A, BlasArrayFor<A, 2> TAU, BlasArrayFor<A, 1> W = vector_value_t<A>>

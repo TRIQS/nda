@@ -1,18 +1,7 @@
-// Copyright (c) 2019-2024 Simons Foundation
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0.txt
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-// Authors: Thomas Hahn, Olivier Parcollet, Nils Wentzell
+// Copyright (c) 2019--present, The Simons Foundation
+// This file is part of TRIQS/nda and is licensed under the Apache License, Version 2.0.
+// SPDX-License-Identifier: Apache-2.0
+// See LICENSE in the root of this distribution for details.
 
 /**
  * @file
@@ -39,7 +28,7 @@
 namespace nda::linalg {
 
   /**
-   * @addtogroup linalg_tools
+   * @addtogroup linalg_solve
    * @{
    */
 
@@ -51,22 +40,22 @@ namespace nda::linalg {
    * - \f$ \mathbf{A X} = \mathbf{B} \f$ or
    * - \f$ \mathbf{A x} = \mathbf{b} \f$,
    *
-   * with a general \f$ n \times n \f$ matrix \f$ \mathbf{A} \f$ and either \f$ n \times m \f$  matrices \f$ \mathbf{X} 
-   * \f$ and \f$ \mathbf{B} \f$ or vectors \f$ \mathbf{x} \f$ and \f$ \mathbf{b} \f$ of size \f$ n \f$.
+   * with a general \f$ n \times n \f$ matrix \f$ \mathbf{A} \f$ and either \f$ n \times n_{\mathrm{rhs}} \f$ matrices
+   * \f$ \mathbf{X} \f$ and \f$ \mathbf{B} \f$ or vectors \f$ \mathbf{x} \f$ and \f$ \mathbf{b} \f$ of size \f$ n \f$.
    *
    * It uses nda::lapack::getrf to compute the LU factorization of the matrix \f$ \mathbf{A} \f$ and then
    * nda::lapack::getrs to solve the system of linear equations.
    *
-   * An exception is thrown, if the LAPACK/cuSOLVER calls return a non-zero value.
+   * An exception is thrown, if a LAPACK/cuSOLVER call fails.
    *
-   * @note \f$ \mathbf{B} \f$ is required to be stored in nda::F_layout.
+   * @note \f$ \mathbf{B} \f$ is required to have nda::F_layout.
    *
    * @tparam A nda::blas_lapack::BlasArray<2> type.
    * @tparam B nda::blas_lapack::BlasArrayFor<A> type of rank 1 or 2.
    * @param a Input/Output matrix. On entry, the \f$ n \times n \f$ matrix \f$ \mathbf{A} \f$ determining the linear
-   * system. On exit, contains the LU factorization as calculated by nda::lapack::getrf.
+   * system. On exit, its LU factorization as calculated by nda::lapack::getrf.
    * @param b Input/Output array. On entry, the right hand side matrix \f$ \mathbf{B} \f$ or vector \f$ \mathbf{b} \f$.
-   * On exit, contains the solution matrix \f$ \mathbf{X} \f$ or vector \f$ \mathbf{x} \f$.
+   * On exit, the solution matrix \f$ \mathbf{X} \f$ or vector \f$ \mathbf{x} \f$.
    */
   template <blas_lapack::BlasArray<2> A, blas_lapack::BlasArrayFor<A> B>
     requires((get_rank<B> == 1 || get_rank<B> == 2) and blas_lapack::has_F_layout<B>)
@@ -90,13 +79,16 @@ namespace nda::linalg {
   /**
    * @brief Solve a system of linear equations.
    *
-   * @details It calls nda::linalg::solve_in_place with a copy of the input matrix \f$ \mathbf{A} \f$ and the right hand 
-   * side matrix \f$ \mathbf{B} \f$ or vector \f$ \mathbf{b} \f$.
+   * @details It makes a copy of the input matrix \f$ \mathbf{A} \f$ and the right hand side matrix \f$ \mathbf{B} \f$
+   * or vector \f$ \mathbf{b} \f$ and calls nda::linalg::solve_in_place.
    *
    * The solution matrix \f$ \mathbf{X} \f$ is always in nda::F_layout.
-   * 
-   * @note This function makes copies of the input arrays/views. When working on the device memory space, this may lead 
-   * to runtime errors if the copying fails.
+   *
+   * This function makes copies of the input arrays/views. When working on the device memory space, this may lead to
+   * runtime errors if the copying fails.
+   *
+   * @note \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$/\f$ \mathbf{b} \f$ are required to satisfy
+   * nda::mem::have_compatible_addr_space and to have the same value type that satisfies nda::is_blas_lapack_v.
    *
    * @tparam A nda::Matrix type.
    * @tparam B nda::Array type of rank 1 or 2.

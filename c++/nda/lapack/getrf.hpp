@@ -27,7 +27,7 @@ namespace nda::lapack {
 
   /**
    * @ingroup linalg_lapack
-   * @brief Interface to the LAPACK/cuSOLVER `getrf` routine.
+   * @brief Interface to the LAPACK/cuSOLVER `%getrf` routine.
    *
    * @details Computes an LU factorization of a general \f$ m \times n \f$ matrix \f$ \mathbf{A} \f$ using partial
    * pivoting with row interchanges.
@@ -39,8 +39,6 @@ namespace nda::lapack {
    * where \f$ \mathbf{P} \f$ is a permutation matrix, \f$ \mathbf{L} \f$ is lower triangular with unit diagonal
    * elements (lower trapezoidal if \f$ m > n \f$), and \f$ \mathbf{U} \f$ is upper triangular (upper trapezoidal if \f$
    * m < n \f$).
-   *
-   * This is the right-looking Level 3 BLAS version of the algorithm.
    * 
    * If the input arrays satisfy nda::mem::have_device_compatible_addr_space, the cuSOLVER implementation is used.
    * 

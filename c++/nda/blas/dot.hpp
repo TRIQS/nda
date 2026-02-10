@@ -25,7 +25,7 @@ namespace nda::blas {
    */
 
   /**
-   * @brief Interface to the BLAS/cuBLAS `dot` and `dotu` routines.
+   * @brief Interface to the BLAS/cuBLAS `%dot` and `dotu` routines.
    *
    * @details This function forms the dot product of two vectors. It calculates \f$ \mathbf{x}^T \mathbf{y} \f$.
    * 
@@ -54,7 +54,7 @@ namespace nda::blas {
   }
 
   /**
-   * @brief Interface to the BLAS/cuBLAS `dotc` routine.
+   * @brief Interface to the BLAS/cuBLAS `%dotc` routine.
    *
    * @details This function forms the dot product of two vectors. It calculates \f$ \mathbf{x}^H \mathbf{y} \f$.
    * 

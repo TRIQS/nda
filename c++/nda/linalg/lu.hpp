@@ -1,18 +1,7 @@
-// Copyright (c) 2019-2024 Simons Foundation
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0.txt
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-// Authors: Thomas Hahn, Olivier Parcollet, Nils Wentzell
+// Copyright (c) 2019--present, The Simons Foundation
+// This file is part of TRIQS/nda and is licensed under the Apache License, Version 2.0.
+// SPDX-License-Identifier: Apache-2.0
+// See LICENSE in the root of this distribution for details.
 
 /**
  * @file
@@ -42,7 +31,7 @@
 namespace nda::linalg {
 
   /**
-   * @addtogroup linalg_tools
+   * @addtogroup linalg_decompositions
    * @{
    */
 
@@ -52,13 +41,13 @@ namespace nda::linalg {
    * @details Let the original matrix \f$ \mathbf{A} \f$ be of size \f$ m \times n \f$. Then the returned \f$ \mathbf{L}
    * \f$ matrix is of size \f$ m \times k \f$ and \f$ \mathbf{U} \f$ is of size \f$ k \times n \f$, where \f$ k =
    * \min(m, n) \f$.
-   * 
-   * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to be stored in 
+   *
+   * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have
    * nda::F_layout.
    *
    * @tparam LP Policy determining the memory layout of the \f$ \mathbf{L} \f$ and \f$ \mathbf{U} \f$ matrices.
-   * @tparam M nda::MemoryMatrix type.
-   * @param a Input matrix containing the output of nda::lapack::getrf.
+   * @tparam A nda::MemoryMatrix type.
+   * @param a Input matrix \f$ \mathbf{A} \f$ containing the output of nda::lapack::getrf.
    * @return A tuple containing the \f$ \mathbf{L} \f$ and \f$ \mathbf{U} \f$ matrices.
    */
   template <typename LP = F_layout, MemoryMatrix A>
@@ -97,17 +86,17 @@ namespace nda::linalg {
    *
    * \f$ \mathbf{P} \f$ is returned as a permutation vector \f$ \mathbf{\sigma} \f$ of size \f$ m \f$. See
    * nda::linalg::get_permutation_vector for more information.
-   * 
-   * An exception is thrown, if the LAPACK call returns 
+   *
+   * An exception is thrown, if the LAPACK call returns
    * - a non-zero value (`allow_singular == false`) or
    * - a value \f$ > 0 \f$ (`allow_singular == true`).
    *
-   * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to be stored in 
+   * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have
    * nda::F_layout. See nda::linalg::lu for a version that handles nda::C_layout.
    *
    * @tparam LP Policy determining the memory layout of the \f$ \mathbf{L} \f$ and \f$ \mathbf{U} \f$ matrices.
    * @tparam A nda::blas_lapack::BlasArray<2> type.
-   * @param a Input/Output matrix. On entry, the \f$ m \times n \f$ matrix \f$ \mathbf{A} \f$. On exit, the result of 
+   * @param a Input/Output matrix. On entry, the \f$ m \times n \f$ matrix \f$ \mathbf{A} \f$. On exit, the result of
    * the nda::lapack::getrf call.
    * @param allow_singular If `true`, allows factorization of singular matrices. If `false` (default), throws an error
    * when the matrix is detected to be singular.
@@ -139,9 +128,9 @@ namespace nda::linalg {
    *
    * @details It makes a copy of the input matrix \f$ \mathbf{A} \f$ and calls nda::linalg::lu_in_place.
    *
-   * The resulting \f$ \mathbf{L} \f$ and \f$ \mathbf{U} \f$ matrices have the same layout as the input matrix \f$ 
+   * The resulting \f$ \mathbf{L} \f$ and \f$ \mathbf{U} \f$ matrices have the same layout as the input matrix \f$
    * \mathbf{A} \f$.
-   * 
+   *
    * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have a value type
    * that satisfies nda::is_blas_lapack_v.
    *

@@ -28,7 +28,7 @@
 namespace nda::linalg {
 
   /**
-   * @addtogroup linalg_tools
+   * @addtogroup linalg_matvec_products
    * @{
    */
 
@@ -90,7 +90,7 @@ namespace nda::linalg {
   } // namespace detail
 
   /**
-   * @brief Compute the matrix-vector product of an nda::matrix and an nda::vector object.
+   * @brief Compute the matrix-vector product of an nda::Matrix and an nda::Vector object.
    *
    * @details This function computes the matrix-vector product 
    * \f[ 
@@ -112,16 +112,18 @@ namespace nda::linalg {
    * nda::blas::gemv.
    * 
    * The value type of the resulting nda::vector is deduced from the multiplication of the value types of the input 
-   * arguments and its address space is their nda::mem::common_addr_space.
+   * arguments and its address space is set to their nda::mem::common_addr_space. 
    * 
-   * @note This function might make copies of the input arrays/views. When working on the device memory space, this may 
-   * lead to runtime errors if the copying fails.
+   * This function might make copies of the input arrays/views. When working on the device memory space, this may lead 
+   * to runtime errors if the copying fails.
+   * 
+   * @note \f$ \mathbf{A} \f$ and \f$ \mathbf{x} \f$ are required to satisfy nda::mem::have_compatible_addr_space.
    *
    * @tparam A nda::Matrix type.
    * @tparam X nda::Vector type.
    * @param a Input matrix \f$ \mathbf{A} \f$ of size \f$ m \times n \f$.
    * @param x Input vector \f$ \mathbf{x} \f$ of size \f$ n \f$.
-   * @return Resulting vector \f$ \mathbf{y} \f$ of size \f$ m \f$.
+   * @return Resulting nda::vector \f$ \mathbf{y} \f$ of size \f$ m \f$.
    */
   template <Matrix A, Vector X>
     requires(mem::have_compatible_addr_space<A, X>)

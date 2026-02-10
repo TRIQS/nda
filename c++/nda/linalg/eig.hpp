@@ -34,7 +34,7 @@
 namespace nda::linalg {
 
   /**
-   * @addtogroup linalg_tools
+   * @addtogroup linalg_eig
    * @{
    */
 
@@ -47,15 +47,15 @@ namespace nda::linalg {
    * The actual (complex) eigenvalues \f$ \lambda_j \f$ are given by \f$ \lambda_j = w^{(r)}_j + i w^{(i)}_j \f$.
    *
    * Use nda::linalg::get_geev_eigenvectors to get corresponding eigenvectors.
-   * 
-   * @note \f$ \mathbf{w}^{(r)} \f$ and \f$ \mathbf{w}^{(i)} \f$ are required to satisfy 
+   *
+   * @note \f$ \mathbf{w}^{(r)} \f$ and \f$ \mathbf{w}^{(i)} \f$ are required to satisfy
    * nda::mem::have_host_compatible_addr_space and to have the same real value type.
    *
    * @tparam WR nda::Vector type.
    * @tparam WI nda::Vector type.
-   * @param wr Input vector. \f$ \mathbf{w}^{(r)} \f$ containing the real parts of the computed eigenvalues, i.e. \f$ 
+   * @param wr Input vector \f$ \mathbf{w}^{(r)} \f$ containing the real parts of the computed eigenvalues, i.e. \f$
    * \mathrm{Re}(\lambda_j) \f$.
-   * @param wi Input vector. \f$ \mathbf{w}^{(r)} \f$ containing the imaginary parts of the computed eigenvalues, i.e. 
+   * @param wi Input vector \f$ \mathbf{w}^{(i)} \f$ containing the imaginary parts of the computed eigenvalues, i.e.
    * \f$ \mathrm{Im}(\lambda_j) \f$.
    * @return An nda::array containing the complex eigenvalues.
    */
@@ -77,31 +77,36 @@ namespace nda::linalg {
    * @brief Get the complex left/right eigenvectors from nda::lapack::geev output for real matrices.
    *
    * @details For real matrices, nda::lapack::geev stores the computed complex eigenvalues in two real vectors, \f$
-   * \mathbf{w}^{(r)} \f$ and \f$ \mathbf{w}^{(i)} \f$, and the left/right eigenvectors in packed format in the columns
-   * \f$ \mathbf{v}^{(l)}_j \f$/\f$ \mathbf{v}^{(r)}_j \f$ of a real matrix.
+   * \mathbf{w}^{(r)} \f$ and \f$ \mathbf{w}^{(i)} \f$, and the left and right eigenvectors in packed format in the
+   * columns \f$ \mathbf{v}^{(L)}_j \f$ and \f$ \mathbf{v}^{(R)}_j \f$ of real matrices \f$ \mathbf{V}_L \f$ and
+   * \f$ \mathbf{V}_R \f$, respectively.
    *
    * The complex eigenvalues \f$ \lambda_j \f$ are given by \f$ \lambda_j = w^{(r)}_j + i w^{(i)}_j \f$.
    *
-   * The left/right eigenvectors \f$ \mathbf{x}_j \f$ are unpacked as follows (\f$ \alpha \in \{ l, r \} \f$):
-   * - If the eigenvalue \f$ \lambda_j \f$ is real, i.e. if \f$ w^{(i)}_j = 0 \f$, then the corresponding left/right
-   * eigenvector is given by \f$ \mathbf{x}_j = \mathbf{v}^{(\alpha)}_j \f$.
+   * The left and right eigenvectors, \f$ \mathbf{u}_j \f$ and \f$ \mathbf{v}_j \f$, are unpacked as follows:
+   * - If the eigenvalue \f$ \lambda_j \f$ is real, i.e. if \f$ w^{(i)}_j = 0 \f$, then the corresponding
+   *   - left eigenvector is given by \f$ \mathbf{u}_j = \mathbf{v}^{(L)}_j \f$.
+   *   - right eigenvector is given by \f$ \mathbf{v}_j = \mathbf{v}^{(R)}_j \f$.
    * - If the eigenvalues \f$ \lambda_j \f$ and \f$ \lambda_{j + 1} \f$ form a complex conjugate pair, i.e. if \f$
-   * w^{(i)}_j > 0 \f$, then the two corresponding left/right eigenvectors are given by \f$ \mathbf{x}_j =
-   * \mathbf{v}^{(\alpha)}_j + i \mathbf{v}^{(\alpha)}_{j+1} \f$ and \f$ \mathbf{x}_{j+1} = \mathbf{v}^{(\alpha)}_j - i
-   * \mathbf{v}^{(\alpha)}_{j+1} \f$.
+   * w^{(i)}_j > 0 \f$, then the two corresponding
+   *   - left eigenvectors are given by \f$ \mathbf{u}_j = \mathbf{v}^{(L)}_j + i \mathbf{v}^{(L)}_{j+1} \f$ and \f$
+   * \mathbf{u}_{j+1} = \mathbf{v}^{(L)}_j - i \mathbf{v}^{(L)}_{j+1} \f$.
+   *   - right eigenvectors are given by \f$ \mathbf{v}_j = \mathbf{v}^{(R)}_j + i \mathbf{v}^{(R)}_{j+1} \f$ and \f$
+   * \mathbf{v}_{j+1} = \mathbf{v}^{(R)}_j - i \mathbf{v}^{(R)}_{j+1} \f$.
    *
    * Use nda::linalg::get_geev_eigenvalues to get eigenvalues.
-   * 
+   *
    * The resulting matrix is always returned in nda::F_layout.
-   * 
-   * @note \f$ \mathbf{V}_{\alpha} \f$ and \f$ \mathbf{w}^{(i)} \f$ are required to satisfy 
+   *
+   * @note \f$ \mathbf{V}_{L} \f$/\f$ \mathbf{V}_{R} \f$ and \f$ \mathbf{w}^{(i)} \f$ are required to satisfy
    * nda::mem::have_host_compatible_addr_space and to have the same real value type.
    *
    * @tparam WI nda::Vector type.
    * @tparam VA nda::Matrix type.
-   * @param wi Input vector. \f$ \mathbf{w}^{(r)} \f$ containing the imaginary parts of the computed eigenvalues, i.e. 
+   * @param wi Input vector \f$ \mathbf{w}^{(i)} \f$ containing the imaginary parts of the computed eigenvalues, i.e.
    * \f$ \mathrm{Im}(\lambda_j) \f$.
-   * @param va Input matrix. \f$ \mathbf{V}_{\alpha} \f$ containing the left/right eigenvectors in packed format.
+   * @param va Input matrix \f$ \mathbf{V}_{L} \f$/\f$ \mathbf{V}_{R} \f$ containing the left/right eigenvectors in
+   * packed format.
    * @return An nda::matrix containing the complex left/right eigenvectors.
    */
   template <Vector WI, Matrix VA>
@@ -201,18 +206,18 @@ namespace nda::linalg {
    *
    * It calls nda::lapack::geev and, for real matrices, retrieves the complex eigenvalues and eigenvectors using
    * nda::linalg::get_geev_eigenvalues and nda::linalg::get_geev_eigenvectors.
-   * 
+   *
    * The resulting matrix \f$ \mathbf{V} \f$ containing the eigenvectors is always returned in nda::F_layout.
    *
    * An exception is thrown, if the LAPACK call fails.
    *
-   * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have 
+   * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have
    * nda::F_layout. See nda::linalg::eig for a version that handles nda::C_layout.
    *
    * @tparam A nda::blas_lapack::BlasArray<2> type.
    * @param a Input/output matrix. On entry, the matrix \f$ \mathbf{A} \f$. On exit, it is overwritten.
-   * @return `std::pair` containing an nda::array with the complex eigenvalues \f$ \lambda_j \f$ and an nda::matrix with
-   * the complex right eigenvectors \f$ \mathbf{v}_j \f$ in its columns.
+   * @return `std::pair` containing an nda::array with the complex eigenvalues \f$ \lambda_j \f$ and an nda::matrix \f$
+   * \mathbf{V} \f$ with the complex right eigenvectors \f$ \mathbf{v}_j \f$ in its columns.
    */
   template <blas_lapack::BlasArray<2> A>
     requires(mem::have_host_compatible_addr_space<A> and blas_lapack::has_F_layout<A>)
@@ -234,7 +239,7 @@ namespace nda::linalg {
    *
    * An exception is thrown, if the LAPACK call fails.
    *
-   * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have 
+   * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have
    * nda::F_layout. See nda::linalg::eigvals for a version that handles nda::C_layout.
    *
    * @tparam A nda::blas_lapack::BlasArray<2> type.
@@ -251,17 +256,18 @@ namespace nda::linalg {
   /**
    * @brief Compute the eigenvalues and right eigenvectors of a general matrix.
    *
-   * @details It makes a copy of the given matrix/view and calls nda::linalg::eig_in_place with the copy.
-   * 
+   * @details It makes a copy of the given input matrix \f$ \mathbf{A} \f$ and calls nda::linalg::eig_in_place with the
+   * copy.
+   *
    * The resulting matrix \f$ \mathbf{V} \f$ containing the eigenvectors is always returned in nda::F_layout.
-   * 
+   *
    * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have a value type
    * that satisfies nda::is_blas_lapack_v.
    *
    * @tparam A nda::Matrix type.
-   * @param a Input matrix. The matrix \f$ \mathbf{A} \f$.
-   * @return `std::pair` containing an nda::array with the complex eigenvalues \f$ \lambda_j \f$ and an nda::matrix with
-   * the complex right eigenvectors \f$ \mathbf{v}_j \f$ in its columns.
+   * @param a Input matrix \f$ \mathbf{A} \f$.
+   * @return `std::pair` containing an nda::array with the complex eigenvalues \f$ \lambda_j \f$ and an nda::matrix \f$
+   * \mathbf{V} \f$ with the complex right eigenvectors \f$ \mathbf{v}_j \f$ in its columns.
    */
   template <Matrix A>
     requires(mem::have_host_compatible_addr_space<A> and is_blas_lapack_v<get_value_t<A>>)
@@ -273,13 +279,14 @@ namespace nda::linalg {
   /**
    * @brief Compute the eigenvalues of a general matrix.
    *
-   * @details It makes a copy of the given matrix/view and calls nda::linalg::eigvals_in_place with the copy. 
-   * 
+   * @details It makes a copy of the given input matrix \f$ \mathbf{A} \f$ and calls nda::linalg::eigvals_in_place with
+   * the copy.
+   *
    * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have a value type
    * that satisfies nda::is_blas_lapack_v.
    *
    * @tparam A nda::Matrix type.
-   * @param a Input matrix. The matrix \f$ \mathbf{A} \f$.
+   * @param a Input matrix \f$ \mathbf{A} \f$.
    * @return An nda::array with the complex eigenvalues \f$ \lambda_j \f$.
    */
   template <Matrix A>

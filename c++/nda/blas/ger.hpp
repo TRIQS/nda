@@ -28,7 +28,7 @@ namespace nda::blas {
    */
 
   /**
-   * @brief Interface to the BLAS/cuBLAS `ger` and `geru` routine.
+   * @brief Interface to the BLAS/cuBLAS `%ger` and `geru` routine.
    *
    * @details This function performs the rank 1 operation
    * \f[
@@ -75,7 +75,7 @@ namespace nda::blas {
   }
 
   /**
-   * @brief Interface to the BLAS/cuBLAS `gerc` routine.
+   * @brief Interface to the BLAS/cuBLAS `%gerc` routine.
    *
    * @details This function performs the rank 1 operation
    * \f[

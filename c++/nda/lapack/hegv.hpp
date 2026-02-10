@@ -29,20 +29,20 @@ namespace nda::lapack {
 
   /**
    * @ingroup linalg_lapack
-   * @brief Interface to the LAPACK `hegv` routine.
+   * @brief Interface to the LAPACK `%hegv` routine.
    *
    * @details Computes all eigenvalues \f$ \lambda_i \f$ and, optionally, eigenvectors \f$ \mathbf{v}_i \f$ of a complex
    * generalized Hermitian-definite eigenvalue problem of the form
-   * 
+   *
    * - \f$ \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{B} \mathbf{v}_i \f$ (`itype = 1`),
    * - \f$ \mathbf{A} \mathbf{B} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ (`itype = 2`) or
    * - \f$ \mathbf{B} \mathbf{A} \mathbf{v}_i = \lambda_i \mathbf{v}_i \f$ (`itype = 3`).
    *
    * Here \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ are assumed to be Hermitian and \f$ \mathbf{B} \f$ is also positive
    * definite.
-   * 
-   * @note \f$ \mathbf{A} \f$ and \f$ \mathbf{B} \f$ are required to satisfy nda::mem::have_host_compatible_addr_space 
-   * and to have nda::F_layout.
+   *
+   * @note All input arrays are required to satisfy nda::mem::have_host_compatible_addr_space and \f$ \mathbf{A} \f$ and
+   * \f$ \mathbf{B} \f$ are required to have nda::F_layout.
    *
    * @tparam A nda::blas_lapack::BlasArrayCplx<2> type.
    * @tparam B nda::blas_lapack::BlasArrayFor<A, 2> type.
@@ -53,7 +53,7 @@ namespace nda::lapack {
    * \mathbf{A} \f$ contains the matrix \f$ \mathbf{V} \f$ of normalized eigenvectors such that \f$ \mathbf{V}^H
    * \mathbf{B} \mathbf{V} = \mathbf{I} \f$ (if `itype = 1` or `itype = 2`) or \f$ \mathbf{V}^H \mathbf{B}^{-1}
    * \mathbf{V} = \mathbf{I} \f$ (if `itype = 3`). If `jobz = N`, then on exit \f$ \mathbf{A} \f$ is destroyed.
-   * @param b Input/output matrix. On entry, the symmetric positive definite matrix \f$ \mathbf{B} \f$. On exit, the
+   * @param b Input/output matrix. On entry, the hermitian, positive definite matrix \f$ \mathbf{B} \f$. On exit, the
    * part of \f$ \mathbf{B} \f$ containing the matrix is overwritten by the triangular factor \f$ \mathbf{U} \f$ or
    * \f$ \mathbf{L} \f$ from a Cholesky factorization.
    * @param w Output vector. The eigenvalues \f$ \lambda_i \f$ in ascending order.

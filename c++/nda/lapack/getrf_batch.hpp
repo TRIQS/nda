@@ -82,18 +82,18 @@ namespace nda::lapack {
 
   /**
    * @ingroup linalg_lapack
-   * @brief Interface to batched versions of the LAPACK/cuSOLVER `getrf` routine.
+   * @brief Interface to batched versions of the LAPACK/cuSOLVER `%getrf` routine.
    *
-   * @details This function compute LU factorizations
+   * @details This function computes LU factorizations
    * \f[
    *   \mathbf{A}_i = \mathbf{P}_i \mathbf{L}_i \mathbf{U}_i \; ,
    * \f]
-   * for batches of matrices indexed by \f$ i \in \{ 0, \ldots, N_b - 1 \} \f$. Here, \f$ N_b \f$ is the batch size. See
+   * for a batch of matrices indexed by \f$ i \in \{ 0, \ldots, N_b - 1 \} \f$. Here, \f$ N_b \f$ is the batch size. See
    * also nda::lapack::getrf.
    * 
-   * A batch of matrices is just a 3-dimensional array in either nda::C_layout or nda::F_layout. For a Fortran (C) 
-   * layout array, the last (first) dimension indexes the individual matrices such that `A(:,:,i)` (`A(i,:,:)`) 
-   * corresponds to the \f$ i \f$-th matrix \f$ \mathbf{A}_i \f$ in the batch.
+   * A batch of matrices is just a 3-dimensional array in either nda::C_layout or nda::F_layout. For a Fortran/C layout 
+   * array, the last/first dimension indexes the individual matrices such that `A(:,:,i)`/`A(i,:,:)` corresponds to the 
+   * \f$ i \f$-th matrix \f$ \mathbf{A}_i \f$ in the batch.
    * 
    * Depending on the input array types, the function does the following:
    * - If the input arrays satisfy nda::mem::have_device_compatible_addr_space and if the individual matrices are 
@@ -107,13 +107,13 @@ namespace nda::lapack {
    * @tparam A nda::blas_lapack::BlasArray<3> type.
    * @tparam IPIV nda::blas_lapack::PivotArrayFor<A, 2> type.
    * @tparam W nda::blas_lapack::BlasArrayFor<A, 1> type.
-   * @param a Input/output array. On entry, the 3-dimensional array containing \f$ N_b \f$ matrices of size \f$ m
-   * \times n \f$ to be factored. On exit, the corresponding \f$ \mathbf{L} \f$ and \f$ \mathbf{U} \f$ matrices from the
-   * factorization.
+   * @param a Input/output array. On entry, the 3-dimensional array \f$ \mathbf{A} \f$ containing the matrices \f$
+   * \mathbf{A}_i \f$ to be factored. On exit, the corresponding \f$ \mathbf{L}_i \f$ and \f$ \mathbf{U}_i \f$ matrices 
+   * from the factorization.
    * @param ipiv Output matrix. If the matrix is in Fortran (C) layout, the \f$ i \f$-th column (row) contains the pivot
-   * indices from the factorization of the \f$ i \f$-th matrix.
+   * indices from the factorization of \f$ \mathbf{A}_i \f$.
    * @param work Ouput vector. Workspace array only used by the cuSOLVER routine.
-   * @return Array of integer return codes from the LAPACK/cuBLAS/cuSOLVER call(s).
+   * @return nda::array of integer return codes from the LAPACK/cuBLAS/cuSOLVER call(s).
    */
   template <BlasArray<3> A, PivotArrayFor<A, 2> IPIV, BlasArrayFor<A, 1> W = vector_value_t<A>>
     requires(has_F_layout<A> or has_C_layout<A>)

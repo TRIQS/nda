@@ -27,7 +27,7 @@ namespace nda::lapack {
 
   /**
    * @ingroup linalg_lapack
-   * @brief Interface to the LAPACK `syev` routine.
+   * @brief Interface to the LAPACK `%syev` routine.
    *
    * @details Computes all eigenvalues \f$ \lambda_i \f$ and, optionally, eigenvectors \f$ \mathbf{v}_i \f$ of a real
    * symmetric eigenvalue problem of the form
@@ -36,8 +36,8 @@ namespace nda::lapack {
    * \f]
    * for a given real symmetric matrix \f$ \mathbf{A} \f$.
    * 
-   * @note \f$ \mathbf{A} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have 
-   * nda::F_layout.
+   * @note All input arrays are required to satisfy nda::mem::have_host_compatible_addr_space and \f$ \mathbf{A} \f$ is
+   * required to have nda::F_layout.
    *
    * @tparam A nda::blas_lapack::BlasArrayReal<2> type.
    * @tparam W nda::blas_lapack::BlasArrayFor<A, 1> type.

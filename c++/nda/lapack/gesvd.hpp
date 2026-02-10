@@ -33,7 +33,7 @@ namespace nda::lapack {
 
   /**
    * @ingroup linalg_lapack
-   * @brief Interface to the LAPACK/cuSOLVER `gesvd` routine.
+   * @brief Interface to the LAPACK/cuSOLVER `%gesvd` routine.
    *
    * @details Computes the singular value decomposition (SVD) of an \f$ m \times n \f$ matrix \f$ \mathbf{A} \f$. The
    * SVD is written as

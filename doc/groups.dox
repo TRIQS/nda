@@ -283,31 +283,86 @@
 /**
  * @defgroup linalg Linear algebra
  * @brief Linear algebra related functionality.
+ * 
+ * @details **nda** provides low- and high-level interfaces to various linear algebra operations:
+ * - Low-level functions are thin wrappers around the corresponding BLAS/cuBLAS and LAPACK/cuSOLVER functions that live
+ * in the `nda::blas` and `nda::lapack` namespaces and that work directly on nda::Array types. They are supposed to have 
+ * minimal additional overhead (no unnecessary copies, no unnecessary allocations, etc.) but still improve usability 
+ * compared to bare BLAS and LAPACK operations.
+ * - High-level functions are built on top of the low-level routines and can be found in the `nda::linalg` namespace. 
+ * They mimic the behavior of <a href="https://numpy.org/doc/stable/reference/routines.linalg.html">numpy.linalg</a> as 
+ * much as possible. Here, performance is sometimes sacrificed for better usability and convenience, e.g. by making 
+ * copies of input arrays or by returning newly allocated arrays.
+ * 
+ * Both interfaces try to be as generic as possible in the sense that they
+ * - work for arrays, views or lazy expressions,
+ * - dispatch to the correct BLAS/cuBLAS/LAPACK/cuSOLVER function depending on the value type and address space of given 
+ * input arrays,
+ * - take care of memory layouts, i.e. nda::C_layout vs. nda::F_layout,
+ * - etc.
+ * 
+ * Please check the documentation of individual functions to see the details of the behavior and the supported input 
+ * types.
  */
 
 /**
- * @defgroup linalg_blas BLAS interface
+ * @defgroup linalg_blas_utils BLAS/LAPACK utilities
  * @ingroup linalg
- * @brief Interface to parts of the BLAS library.
+ * @brief Utilities for the BLAS/LAPACK (and cuBLAS/cuSOLVER) interface.
  */
 
 /**
- * @defgroup linalg_blas_utils BLAS utilities
+ * @defgroup linalg_blas BLAS/cuBLAS interface
  * @ingroup linalg
- * @brief Utilities for the BLAS/LAPACK interface.
+ * @brief Low-level interface to parts of the BLAS/cuBLAS library.
  */
 
 /**
- * @defgroup linalg_lapack LAPACK interface
+ * @defgroup linalg_lapack LAPACK/cuSOLVER interface
  * @ingroup linalg
- * @brief Interface to parts of the LAPACK library.
+ * @brief Low-level interface to parts of the LAPACK/cuSOLVER library.
  */
 
 /**
  * @defgroup linalg_tools Linear algebra tools
  * @ingroup linalg
- * @brief Generic functions that wrap the BLAS and LAPACK interfaces to provide a more user-friendly approach for the
- * most common linear algebra related tasks.
+ * @brief High-level interface to various linear algebra operations in the style of `numpy.linalg`.
+ */
+
+/**
+ * @defgroup linalg_decompositions Decompositions
+ * @ingroup linalg_tools
+ * @brief Various matrix decompositions like SVD, QR, etc.
+ */
+
+/**
+ * @defgroup linalg_eig Matrix eigenvalues
+ * @ingroup linalg_tools
+ * @brief Functions to compute eigenvalues and eigenvectors of matrices.
+ */
+
+/**
+ * @defgroup linalg_matvec_products Matrix, vector and other products
+ * @ingroup linalg_tools
+ * @brief Various products involving matrices, vectors and more general arrays and views.
+ */
+
+/**
+ * @defgroup linalg_norms Norms and other numbers
+ * @ingroup linalg_tools
+ * @brief Functions to compute various norms of arrays and views as well as other numbers like determinants.
+ */
+
+/**
+ * @defgroup linalg_other Other operations
+ * @ingroup linalg_tools
+ * @brief Various other linear algebra related operations.
+ */
+
+/**
+ * @defgroup linalg_solve Solving equations and inverting matrices
+ * @ingroup linalg_tools
+ * @brief Functions to solve linear systems of equations and to invert matrices.
  */
 
 /**

@@ -23,27 +23,25 @@
 namespace nda::linalg {
 
   /**
-   * @addtogroup linalg_tools
+   * @addtogroup linalg_norms
    * @{
    */
 
   /**
-   * @brief Compute the determinant of a matrix in place.
+   * @brief Compute the determinant of an \f$ n \times n \f$ matrix \f$ \mathbf{M} \f$ in place.
    *
-   * @details The function computes the determinant of a given \f$ n \times n \f$ matrix \f$ \mathbf{M} \f$.
-   * 
-   * For small matrices (\f$ n < 4 \f$), it uses optimized inline implementations.
+   * @details For small matrices (\f$ n < 4 \f$), it uses optimized inline implementations.
    *
    * For larger matrices, it calls nda::lapack::getrf and calculates the determinant from its LU decomposition.
    * 
    * An exception is thrown, if the call to nda::lapack::getrf fails.
    *
-   * @note \f$ \mathbf{M} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have algebra `M`. 
-   * It is modified if \f$ n > 3 \f$.
+   * @note \f$ \mathbf{M} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space and to have algebra 'M'. 
+   * It is modified if \f$ n \geq 4 \f$.
    *
    * @tparam M nda::blas_lapack::BlasArray<2> type.
-   * @param m Input/output matrix. On entry, the matrix \f$ \mathbf{M} \f$. On exit, the matrix \f$ \mathbf{M} \f$ or
-   * the LU decomposition of \f$ \mathbf{M} \f$ from nda::lapack::getrf.
+   * @param m Input/output matrix. On entry, the matrix \f$ \mathbf{M} \f$. On exit, the matrix \f$ \mathbf{M} \f$ (\f$ 
+   * n < 4 \f$) or the LU decomposition from nda::lapack::getrf (\f$ n \geq 4 \f$).
    * @return The determinant \f$ \det(\mathbf{M}) \f$.
    */
   template <blas_lapack::BlasArray<2> M>
@@ -84,18 +82,16 @@ namespace nda::linalg {
   }
 
   /**
-   * @brief Compute the determinant of a matrix.
+   * @brief Compute the determinant of an \f$ n \times n \f$ matrix \f$ \mathbf{M} \f$.
    * 
-   * @details The function computes the determinant of a given \f$ n \times n \f$ matrix \f$ \mathbf{M} \f$.
-   * 
-   * The given matrix/view is not modified. It first makes a copy of the matrix/view and then calls 
+   * @details The given matrix/view is not modified. It first makes a copy of the matrix/view and then calls 
    * nda::linalg::det_in_place.
    * 
-   * @note \f$ \mathbf{M} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space, to have algebra `M` and 
+   * @note \f$ \mathbf{M} \f$ is required to satisfy nda::mem::have_host_compatible_addr_space, to have algebra 'M' and 
    * to have a value type that satisfies nda::is_blas_lapack_v.
    *
    * @tparam M nda::Matrix type.
-   * @param m Input matrix. The matrix \f$ \mathbf{M} \f$. 
+   * @param m Input matrix \f$ \mathbf{M} \f$. 
    * @return The determinant \f$ \det(\mathbf{M}) \f$.
    */
   template <Matrix M>
