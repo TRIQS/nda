@@ -73,7 +73,7 @@ namespace nda::lapack {
     auto const [m, n] = a.shape();
     auto const k      = std::min(m, n);
     resize_or_check_if_view(s, {k});
-    EXPECTS(b.extent(0) == m);
+    EXPECTS(b.extent(0) >= std::max(m, n));
 
     // arrays/views must be LAPACK compatible
     EXPECTS(a.indexmap().min_stride() == 1);
