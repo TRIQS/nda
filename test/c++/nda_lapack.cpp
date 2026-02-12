@@ -685,45 +685,38 @@ void test_geev_real() {
     auto A = nda::matrix<T, nda::F_layout>::rand(n, n);
 
     // compute eigenvalues and eigenvectors
-    auto A1  = nda::matrix<T, nda::F_layout>{A};
-    auto wr  = nda::vector<T>(n);
-    auto wi  = nda::vector<T>(n);
-    auto vl  = nda::matrix<T, nda::F_layout>(n, n);
-    auto vr  = nda::matrix<T, nda::F_layout>(n, n);
+    nda::matrix<T, nda::F_layout> A1{A}, vl(n, n), vr(n, n);
+    nda::vector<T> wr(n), wi(n);
     int info = nda::lapack::geev(A1, wr, wi, vl, vr, 'V', 'V');
     EXPECT_EQ(info, 0);
 
     // convert to complex eigenvalues and eigenvectors and check eigenvector equation
     auto lambda = nda::linalg::get_geev_eigenvalues(wr, wi);
-    auto V      = nda::linalg::get_geev_eigenvectors(wi, vr);
-    auto U_H    = nda::linalg::get_geev_eigenvectors(wi, vl);
+    auto V      = nda::linalg::unpack_eigenvectors(wi, vr);
+    auto U      = nda::linalg::unpack_eigenvectors(wi, vl);
     auto Acpx   = nda::matrix<std::complex<T>, nda::F_layout>{A};
     check_eigen(Acpx, V, lambda);
-    check_eigen(Acpx, U_H, lambda, true);
+    check_eigen(Acpx, U, lambda, true);
 
     // compute eigenvalues only
-    auto A2  = nda::matrix<T, nda::F_layout>{A};
-    auto wr2 = nda::vector<T>(n);
-    auto wi2 = nda::vector<T>(n);
-    auto vl2 = nda::matrix<T, nda::F_layout>{};
-    auto vr2 = nda::matrix<T, nda::F_layout>{};
-    info     = nda::lapack::geev(A2, wr2, wi2, vl2, vr2, 'N', 'N');
+    nda::matrix<T, nda::F_layout> A2{A}, vl2{}, vr2{};
+    nda::vector<T> wr2(n), wi2(n);
+    info = nda::lapack::geev(A2, wr2, wi2, vl2, vr2, 'N', 'N');
     EXPECT_EQ(info, 0);
     EXPECT_ARRAY_NEAR(wr2, wr, fp_tol<T>);
     EXPECT_ARRAY_NEAR(wi2, wi, fp_tol<T>);
 
     // compute eigenvalues and eigenvectors of a view
     if (n > 3) {
-      auto A3  = nda::matrix<T, nda::F_layout>{A};
-      auto rg  = nda::range(3);
-      auto wr3 = nda::vector<T>(3);
-      auto wi3 = nda::vector<T>(3);
-      auto vl3 = nda::matrix<T, nda::F_layout>(3, 3);
-      auto vr3 = nda::matrix<T, nda::F_layout>(3, 3);
-      info     = nda::lapack::geev(A3(rg, rg), wr3, wi3, vl3, vr3, 'N', 'V');
+      nda::matrix<T, nda::F_layout> A3{A}, vl3(3, 3), vr3(3, 3);
+      nda::vector<T> wr3(3), wi3(3);
+      auto rg = nda::range(3);
+      info    = nda::lapack::geev(A3(rg, rg), wr3, wi3, vl3, vr3, 'N', 'V');
       EXPECT_EQ(info, 0);
+
+      // convert to complex eigenvalues and eigenvectors and check eigenvector equation
       auto lambda3 = nda::linalg::get_geev_eigenvalues(wr3, wi3);
-      auto V3      = nda::linalg::get_geev_eigenvectors(wi3, vr3);
+      auto V3      = nda::linalg::unpack_eigenvectors(wi3, vr3);
       auto Asub    = nda::matrix<std::complex<T>, nda::F_layout>{A(rg, rg)};
       check_eigen(Asub, V3, lambda3);
     }
@@ -737,36 +730,30 @@ void test_geev_complex() {
     auto A = nda::matrix<T, nda::F_layout>::rand(n, n);
 
     // compute eigenvalues and eigenvectors
-    auto A1     = nda::matrix<T, nda::F_layout>{A};
-    auto lambda = nda::vector<T>(n);
-    auto U_H    = nda::matrix<T, nda::F_layout>(n, n);
-    auto V      = nda::matrix<T, nda::F_layout>(n, n);
-    int info    = nda::lapack::geev(A1, lambda, U_H, V, 'V', 'V');
+    nda::matrix<T, nda::F_layout> A1{A}, U(n, n), V(n, n);
+    nda::vector<T> lambda(n);
+    int info = nda::lapack::geev(A1, lambda, U, V, 'V', 'V');
     EXPECT_EQ(info, 0);
 
     // check eigenvector equation
     check_eigen(A, V, lambda);
-    check_eigen(A, U_H, lambda, true);
+    check_eigen(A, U, lambda, true);
 
     // compute eigenvalues only
-    auto A2  = nda::matrix<T, nda::F_layout>{A};
-    auto w2  = nda::vector<T>(n);
-    auto vl2 = nda::matrix<T, nda::F_layout>{};
-    auto vr2 = nda::matrix<T, nda::F_layout>{};
-    info     = nda::lapack::geev(A2, w2, vl2, vr2, 'N', 'N');
+    nda::matrix<T, nda::F_layout> A2{A}, vl2{}, vr2{};
+    nda::vector<T> w2(n);
+    info = nda::lapack::geev(A2, w2, vl2, vr2, 'N', 'N');
     EXPECT_EQ(info, 0);
     EXPECT_ARRAY_NEAR(w2, lambda, fp_tol<T>);
 
     // compute eigenvalues and eigenvectors of a view
     if (n > 3) {
-      auto A3      = nda::matrix<T, nda::F_layout>{A};
-      auto rg      = nda::range(3);
-      auto lambda3 = nda::vector<T>(3);
-      auto U_H3    = nda::matrix<T, nda::F_layout>(3, 3);
-      auto V_3     = nda::matrix<T, nda::F_layout>(3, 3);
-      info         = nda::lapack::geev(A3(rg, rg), lambda3, U_H3, V_3, 'N', 'V');
+      nda::matrix<T, nda::F_layout> A3{A}, U3(3, 3), V3(3, 3);
+      nda::vector<T> lambda3(3);
+      auto rg = nda::range(3);
+      info    = nda::lapack::geev(A3(rg, rg), lambda3, U3, V3, 'N', 'V');
       EXPECT_EQ(info, 0);
-      check_eigen(A(rg, rg), V_3, lambda3);
+      check_eigen(A(rg, rg), V3, lambda3);
     }
   }
 }
@@ -776,4 +763,108 @@ TEST(NDA, LAPACKGeev) {
   test_geev_real<double>();
   test_geev_complex<std::complex<float>>();
   test_geev_complex<std::complex<double>>();
+}
+
+// Test LAPACK ggev function for real matrices.
+template <typename T>
+void test_ggev_real() {
+  // use a slightly larger tolerance for generalized eigenvalue problems
+  constexpr auto tol = fp_tol<T> * 10;
+
+  for (auto n : nda::range(1, 6)) {
+    auto A = nda::matrix<T, nda::F_layout>::rand(n, n);
+    auto B = nda::matrix<T, nda::F_layout>::rand(n, n);
+
+    // compute eigenvalues and eigenvectors
+    nda::matrix<T, nda::F_layout> A1{A}, B1{B}, vl(n, n), vr(n, n);
+    nda::vector<T> alphar(n), alphai(n), beta(n);
+    int info = nda::lapack::ggev(A1, B1, alphar, alphai, beta, vl, vr, 'V', 'V');
+    EXPECT_EQ(info, 0);
+
+    // convert to complex eigenvalues and eigenvectors
+    auto lambda = nda::linalg::get_ggev_eigenvalues(alphar, alphai, beta);
+    auto V      = nda::linalg::unpack_eigenvectors(alphai, vr);
+    auto U      = nda::linalg::unpack_eigenvectors(alphai, vl);
+
+    // check A * V = B * V * diag(lambda)
+    EXPECT_ARRAY_NEAR(A * V, B * V * nda::diag(lambda), tol);
+
+    // check U^H * A = diag(lambda) * U^H * B
+    EXPECT_ARRAY_NEAR(nda::dagger(U) * A, nda::diag(lambda) * nda::dagger(U) * B, tol);
+
+    // compute eigenvalues only
+    nda::matrix<T, nda::F_layout> A2{A}, B2{B}, vl2{}, vr2{};
+    nda::vector<T> alphar2(n), alphai2(n), beta2(n);
+    info = nda::lapack::ggev(A2, B2, alphar2, alphai2, beta2, vl2, vr2, 'N', 'N');
+    EXPECT_EQ(info, 0);
+    EXPECT_ARRAY_NEAR(nda::linalg::get_ggev_eigenvalues(alphar2, alphai2, beta2), lambda, tol);
+
+    // compute eigenvalues and eigenvectors of a view
+    if (n > 3) {
+      nda::matrix<T, nda::F_layout> A3{A}, B3{B}, vl3(3, 3), vr3(3, 3);
+      nda::vector<T> alphar3(3), alphai3(3), beta3(3);
+      auto rg = nda::range(3);
+      info    = nda::lapack::ggev(A3(rg, rg), B3(rg, rg), alphar3, alphai3, beta3, vl3, vr3, 'N', 'V');
+      EXPECT_EQ(info, 0);
+
+      // convert to complex eigenvalues and eigenvectors and check eigenvector equation
+      auto lambda3 = nda::linalg::get_ggev_eigenvalues(alphar3, alphai3, beta3);
+      auto V3      = nda::linalg::unpack_eigenvectors(alphai3, vr3);
+      EXPECT_ARRAY_NEAR(A(rg, rg) * V3, B(rg, rg) * V3 * nda::diag(lambda3), tol);
+    }
+  }
+}
+
+// Test LAPACK ggev function for complex matrices.
+template <typename T>
+void test_ggev_complex() {
+  // use a slightly larger tolerance for generalized eigenvalue problems
+  constexpr auto tol = fp_tol<T> * 10;
+
+  for (auto n : nda::range(1, 6)) {
+    auto A = nda::matrix<T, nda::F_layout>::rand(n, n);
+    auto B = nda::matrix<T, nda::F_layout>::rand(n, n);
+
+    // compute eigenvalues and eigenvectors
+    nda::matrix<T, nda::F_layout> A1{A}, B1{B}, U(n, n), V(n, n);
+    nda::vector<T> alpha(n), beta(n);
+    int info = nda::lapack::ggev(A1, B1, alpha, beta, U, V, 'V', 'V');
+    EXPECT_EQ(info, 0);
+
+    // convert to eigenvalues
+    auto lambda = nda::linalg::get_ggev_eigenvalues(alpha, beta);
+
+    // check A * V = B * V * diag(lambda)
+    EXPECT_ARRAY_NEAR(A * V, B * V * nda::diag(lambda), tol);
+
+    // check U^H * A = diag(lambda) * U^H * B
+    EXPECT_ARRAY_NEAR(nda::dagger(U) * A, nda::diag(lambda) * nda::dagger(U) * B, tol);
+
+    // compute eigenvalues only
+    nda::matrix<T, nda::F_layout> A2{A}, B2{B}, vl2{}, vr2{};
+    nda::vector<T> alpha2(n), beta2(n);
+    info = nda::lapack::ggev(A2, B2, alpha2, beta2, vl2, vr2, 'N', 'N');
+    EXPECT_EQ(info, 0);
+    EXPECT_ARRAY_NEAR(nda::linalg::get_ggev_eigenvalues(alpha2, beta2), lambda, tol);
+
+    // compute eigenvalues and eigenvectors of a view
+    if (n > 3) {
+      nda::matrix<T, nda::F_layout> A3{A}, B3{B}, U3(3, 3), V3(3, 3);
+      nda::vector<T> alpha3(3), beta3(3);
+      auto rg = nda::range(3);
+      info    = nda::lapack::ggev(A3(rg, rg), B3(rg, rg), alpha3, beta3, U3, V3, 'N', 'V');
+      EXPECT_EQ(info, 0);
+
+      // convert to eigenvalues and check eigenvector equation
+      auto lambda3 = nda::linalg::get_ggev_eigenvalues(alpha3, beta3);
+      EXPECT_ARRAY_NEAR(A(rg, rg) * V3, B(rg, rg) * V3 * nda::diag(lambda3), tol);
+    }
+  }
+}
+
+TEST(NDA, LAPACKGgev) {
+  test_ggev_real<float>();
+  test_ggev_complex<std::complex<float>>();
+  test_ggev_real<double>();
+  test_ggev_complex<std::complex<double>>();
 }

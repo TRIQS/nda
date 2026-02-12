@@ -183,4 +183,23 @@ namespace nda::lapack::f77 {
     LAPACK_zgeev(&jobvl, &jobvr, &n, a, &lda, w, vl, &ldvl, vr, &ldvr, work, &lwork, rwork, &info);
   }
 
+  void ggev(char jobvl, char jobvr, int n, float *a, int lda, float *b, int ldb, float *alphar, float *alphai, float *beta, float *vl, int ldvl,
+            float *vr, int ldvr, float *work, int lwork, int &info) {
+    LAPACK_sggev(&jobvl, &jobvr, &n, a, &lda, b, &ldb, alphar, alphai, beta, vl, &ldvl, vr, &ldvr, work, &lwork, &info);
+  }
+  void ggev(char jobvl, char jobvr, int n, std::complex<float> *a, int lda, std::complex<float> *b, int ldb, std::complex<float> *alpha,
+            std::complex<float> *beta, std::complex<float> *vl, int ldvl, std::complex<float> *vr, int ldvr, std::complex<float> *work, int lwork,
+            float *rwork, int &info) {
+    LAPACK_cggev(&jobvl, &jobvr, &n, a, &lda, b, &ldb, alpha, beta, vl, &ldvl, vr, &ldvr, work, &lwork, rwork, &info);
+  }
+  void ggev(char jobvl, char jobvr, int n, double *a, int lda, double *b, int ldb, double *alphar, double *alphai, double *beta, double *vl, int ldvl,
+            double *vr, int ldvr, double *work, int lwork, int &info) {
+    LAPACK_dggev(&jobvl, &jobvr, &n, a, &lda, b, &ldb, alphar, alphai, beta, vl, &ldvl, vr, &ldvr, work, &lwork, &info);
+  }
+  void ggev(char jobvl, char jobvr, int n, std::complex<double> *a, int lda, std::complex<double> *b, int ldb, std::complex<double> *alpha,
+            std::complex<double> *beta, std::complex<double> *vl, int ldvl, std::complex<double> *vr, int ldvr, std::complex<double> *work, int lwork,
+            double *rwork, int &info) {
+    LAPACK_zggev(&jobvl, &jobvr, &n, a, &lda, b, &ldb, alpha, beta, vl, &ldvl, vr, &ldvr, work, &lwork, rwork, &info);
+  }
+
 } // namespace nda::lapack::f77

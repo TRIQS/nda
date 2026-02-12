@@ -33,23 +33,21 @@ namespace nda::lapack {
    * @details Computes all eigenvalues \f$ \lambda_j \f$ and, optionally, right/left eigenvectors \f$ \mathbf{v}_j \f$/
    * \f$ \mathbf{u}_j \f$ of a real eigenvalue problem.
    *
-   * The right eigenvector \f$ \mathbf{v}_j \f$ of \f$ \mathbf{A} \f$ satisfies
+   * The right eigenvector \f$ \mathbf{v}_j \f$ satisfies
    * \f[
-   *   \mathbf{A} \mathbf{v}_j = \lambda_j \mathbf{v}_j
+   *   \mathbf{A} \mathbf{v}_j = \lambda_j \mathbf{v}_j \; ,
    * \f]
-   * where \f$ \lambda_j \f$ is its eigenvalue.
-   *
-   * The left eigenvector \f$ \mathbf{u}_j \f$ of \f$ \mathbf{A} \f$ satisfies
+   * whereas the left eigenvector \f$ \mathbf{u}_j \f$ satisfies
    * \f[
-   *   \mathbf{u}_j^T \mathbf{A} = \lambda_j \mathbf{u}_j^T
+   *   \mathbf{u}_j^T \mathbf{A} = \lambda_j \mathbf{u}_j^T \; .
    * \f]
-   * where \f$ \mathbf{u}_j^T \f$ denotes the transpose of \f$ \mathbf{u}_j \f$.
+   * Here, \f$ \mathbf{u}_j^T \f$ denotes the transpose of \f$ \mathbf{u}_j \f$.
    *
    * The computed eigenvectors are normalized to have Euclidean norm equal to 1 and largest component real.
    *
-   * For real matrices, complex eigenvalues always occur in complex conjugate pairs and the corresponding eigenvectors 
-   * are stored in a special packed format (see nda::linalg::get_geev_eigenvectors).
-   * 
+   * For real matrices, complex eigenvalues always occur in complex conjugate pairs and the corresponding eigenvectors
+   * are stored in a special packed format (see nda::linalg::unpack_eigenvectors).
+   *
    * @note All input arrays are required to satisfy nda::mem::have_host_compatible_addr_space and all input matrices
    * are required to have nda::F_layout.
    *
@@ -60,11 +58,13 @@ namespace nda::lapack {
    * @tparam VR nda::blas_lapack::BlasArrayFor<A, 2> type.
    * @tparam W1 nda::blas_lapack::BlasArrayFor<A, 1> type.
    * @param a Input/output matrix. On entry, the matrix \f$ \mathbf{A} \f$. On exit, \f$ \mathbf{A} \f$ is overwritten.
-   * @param wr Output vector. The real parts of the computed eigenvalues, i.e. \f$ \mathrm{Re}(\lambda_j) \f$.
-   * @param wi Output vector. The imaginary parts of the computed eigenvalues, i.e. \f$ \mathrm{Im}(\lambda_j) \f$.
-   * @param vl Output matrix. If `jobvl = V`, matrix \f$ \mathbf{V}_L \f$ containing the left eigenvectors (in packed 
+   * @param wr Output vector \f$ \mathbf{w}^{(r)} \f$. The real parts of the computed eigenvalues, i.e. \f$ w_j^{(r)} = 
+   * \mathrm{Re}(\lambda_j) \f$.
+   * @param wi Output vector \f$ \mathbf{w}^{(i)} \f$. The imaginary parts of the computed eigenvalues, i.e. \f$ 
+   * w_j^{(i)} = \mathrm{Im}(\lambda_j) \f$.
+   * @param vl Output matrix \f$ \mathbf{V}_L \f$. If `jobvl = V`, the matrix contains the left eigenvectors (in packed
    * format for complex pairs). If `jobvl = N`, \f$ \mathbf{V}_L \f$ is not referenced.
-   * @param vr Output matrix. If `jobvr = V`, matrix \f$ \mathbf{V}_R \f$ containing the right eigenvectors (in packed 
+   * @param vr Output matrix \f$ \mathbf{V}_R \f$. If `jobvr = V`, the matrix contains the right eigenvectors (in packed
    * format for complex pairs). If `jobvr = N`, \f$ \mathbf{V}_R \f$ is not referenced.
    * @param jobvl Character indicating whether to compute left eigenvectors ('V') or not ('N').
    * @param jobvr Character indicating whether to compute right eigenvectors ('V') or not ('N').
@@ -124,22 +124,20 @@ namespace nda::lapack {
    * @brief Interface to the LAPACK `%geev` routine for complex matrices.
    *
    * @details Computes all eigenvalues \f$ \lambda_j \f$ and, optionally, right/left eigenvectors \f$ \mathbf{v}_j \f$/
-   * \f$ \mathbf{u}_j \f$ of a complex eigenvalue problem. 
+   * \f$ \mathbf{u}_j \f$ of a complex eigenvalue problem.
    *
-   * The right eigenvector \f$ \mathbf{v}_j \f$ of \f$ \mathbf{A} \f$ satisfies
+   * The right eigenvector \f$ \mathbf{v}_j \f$ satisfies
    * \f[
-   *   \mathbf{A} \mathbf{v}_j = \lambda_j \mathbf{v}_j
+   *   \mathbf{A} \mathbf{v}_j = \lambda_j \mathbf{v}_j \; ,
    * \f]
-   * where \f$ \lambda_j \f$ is its eigenvalue.
-   *
-   * The left eigenvector \f$ \mathbf{u}_j \f$ of \f$ \mathbf{A} \f$ satisfies
+   * whereas the left eigenvector \f$ \mathbf{u}_j \f$ satisfies
    * \f[
-   *   \mathbf{u}_j^H \mathbf{A} = \lambda_j \mathbf{u}_j^H
+   *   \mathbf{u}_j^H \mathbf{A} = \lambda_j \mathbf{u}_j^H \; .
    * \f]
-   * where \f$ \mathbf{u}_j^H \f$ denotes the conjugate-transpose of \f$ \mathbf{u}_j \f$.
+   * Here, \f$ \mathbf{u}_j^H \f$ denotes the conjugate-transpose of \f$ \mathbf{u}_j \f$.
    *
    * The computed eigenvectors are normalized to have Euclidean norm equal to 1 and largest component real.
-   * 
+   *
    * @note All input arrays are required to satisfy nda::mem::have_host_compatible_addr_space and all input matrices
    * are required to have nda::F_layout.
    *
@@ -150,10 +148,10 @@ namespace nda::lapack {
    * @tparam W1 nda::blas_lapack::BlasArrayFor<A, 1> type.
    * @tparam W2 nda::blas_lapack::BlasArrayRealFor<A, 1> type.
    * @param a Input/output matrix. On entry, the matrix \f$ \mathbf{A} \f$. On exit, \f$ \mathbf{A} \f$ is overwritten.
-   * @param w Output vector. The computed eigenvalues \f$ \lambda_j \f$.
-   * @param vl Output matrix. If `jobvl = V`, matrix \f$ \mathbf{V}_L \f$ containing the left eigenvectors. If 
-   * `jobvl = N`, \f$ \mathbf{V}_L \f$ is not referenced. 
-   * @param vr Output matrix. If `jobvr = V`, matrix \f$ \mathbf{V}_R \f$ containing the right eigenvectors. If 
+   * @param w Output vector \f$ \mathbf{w} \f$. The computed eigenvalues, i.e. \f$ w_j = \lambda_j \f$.
+   * @param vl Output matrix \f$ \mathbf{V}_L \f$. If `jobvl = V`, the matrix contains the left eigenvectors. If
+   * `jobvl = N`, \f$ \mathbf{V}_L \f$ is not referenced.
+   * @param vr Output matrix \f$ \mathbf{V}_R \f$. If `jobvr = V`, the matrix contains the right eigenvectors. If 
    * `jobvr = N`, \f$ \mathbf{V}_R \f$ is not referenced.
    * @param jobvl Character indicating whether to compute left eigenvectors ('V') or not ('N').
    * @param jobvr Character indicating whether to compute right eigenvectors ('V') or not ('N').

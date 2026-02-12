@@ -46,7 +46,7 @@ namespace nda::linalg {
    *
    * The actual (complex) eigenvalues \f$ \lambda_j \f$ are given by \f$ \lambda_j = w^{(r)}_j + i w^{(i)}_j \f$.
    *
-   * Use nda::linalg::get_geev_eigenvectors to get corresponding eigenvectors.
+   * Use nda::linalg::unpack_eigenvectors to get corresponding eigenvectors.
    *
    * @note \f$ \mathbf{w}^{(r)} \f$ and \f$ \mathbf{w}^{(i)} \f$ are required to satisfy
    * nda::mem::have_host_compatible_addr_space and to have the same real value type.
@@ -74,44 +74,41 @@ namespace nda::linalg {
   }
 
   /**
-   * @brief Get the complex left/right eigenvectors from nda::lapack::geev output for real matrices.
+   * @brief Unpack eigenvectors of real matrices from nda::lapack::geev or nda::lapack::ggev output.
    *
-   * @details For real matrices, nda::lapack::geev stores the computed complex eigenvalues in two real vectors, \f$
-   * \mathbf{w}^{(r)} \f$ and \f$ \mathbf{w}^{(i)} \f$, and the left and right eigenvectors in packed format in the
-   * columns \f$ \mathbf{v}^{(L)}_j \f$ and \f$ \mathbf{v}^{(R)}_j \f$ of real matrices \f$ \mathbf{V}_L \f$ and
-   * \f$ \mathbf{V}_R \f$, respectively.
+   * @details For real matrices, nda::lapack::geev and nda::lapack::ggev store the left and right eigenvectors in
+   * packed format in the columns \f$ \mathbf{v}^{(L)}_j \f$ and \f$ \mathbf{v}^{(R)}_j \f$ of real matrices
+   * \f$ \mathbf{V}_L \f$ and \f$ \mathbf{V}_R \f$, respectively.
    *
-   * The complex eigenvalues \f$ \lambda_j \f$ are given by \f$ \lambda_j = w^{(r)}_j + i w^{(i)}_j \f$.
-   *
-   * The left and right eigenvectors, \f$ \mathbf{u}_j \f$ and \f$ \mathbf{v}_j \f$, are unpacked as follows:
-   * - If the eigenvalue \f$ \lambda_j \f$ is real, i.e. if \f$ w^{(i)}_j = 0 \f$, then the corresponding
+   * The unpacking uses the imaginary parts of the eigenvalues (\f$ \mathbf{w}^{(i)} \f$ for `geev` or \f$ 
+   * \boldsymbol{\alpha}^{(i)} \f$ for `ggev`) to determine whether eigenvalues are real or form complex conjugate 
+   * pairs:
+   * - If the eigenvalue \f$ \lambda_j \f$ is real, i.e. if the imaginary part is zero, then the corresponding
    *   - left eigenvector is given by \f$ \mathbf{u}_j = \mathbf{v}^{(L)}_j \f$.
    *   - right eigenvector is given by \f$ \mathbf{v}_j = \mathbf{v}^{(R)}_j \f$.
-   * - If the eigenvalues \f$ \lambda_j \f$ and \f$ \lambda_{j + 1} \f$ form a complex conjugate pair, i.e. if \f$
-   * w^{(i)}_j > 0 \f$, then the two corresponding
+   * - If the eigenvalues \f$ \lambda_j \f$ and \f$ \lambda_{j + 1} \f$ form a complex conjugate pair, i.e. if the
+   * imaginary part is positive, then the two corresponding
    *   - left eigenvectors are given by \f$ \mathbf{u}_j = \mathbf{v}^{(L)}_j + i \mathbf{v}^{(L)}_{j+1} \f$ and \f$
    * \mathbf{u}_{j+1} = \mathbf{v}^{(L)}_j - i \mathbf{v}^{(L)}_{j+1} \f$.
    *   - right eigenvectors are given by \f$ \mathbf{v}_j = \mathbf{v}^{(R)}_j + i \mathbf{v}^{(R)}_{j+1} \f$ and \f$
    * \mathbf{v}_{j+1} = \mathbf{v}^{(R)}_j - i \mathbf{v}^{(R)}_{j+1} \f$.
    *
-   * Use nda::linalg::get_geev_eigenvalues to get eigenvalues.
-   *
    * The resulting matrix is always returned in nda::F_layout.
    *
-   * @note \f$ \mathbf{V}_{L} \f$/\f$ \mathbf{V}_{R} \f$ and \f$ \mathbf{w}^{(i)} \f$ are required to satisfy
-   * nda::mem::have_host_compatible_addr_space and to have the same real value type.
+   * @note All input arrays are required to satisfy nda::mem::have_host_compatible_addr_space and to have the same real 
+   * value type.
    *
    * @tparam WI nda::Vector type.
    * @tparam VA nda::Matrix type.
-   * @param wi Input vector \f$ \mathbf{w}^{(i)} \f$ containing the imaginary parts of the computed eigenvalues, i.e.
-   * \f$ \mathrm{Im}(\lambda_j) \f$.
-   * @param va Input matrix \f$ \mathbf{V}_{L} \f$/\f$ \mathbf{V}_{R} \f$ containing the left/right eigenvectors in
+   * @param wi Input vector containing the imaginary parts of the eigenvalues (\f$ \mathbf{w}^{(i)} \f$ for 
+   * `geev` or \f$ \boldsymbol{\alpha}^{(i)} \f$ for `ggev`).
+   * @param va Input matrix \f$ \mathbf{V}_{L} \f$/\f$ \mathbf{V}_{R} \f$ containing the left/right eigenvectors in 
    * packed format.
    * @return An nda::matrix containing the complex left/right eigenvectors.
    */
   template <Vector WI, Matrix VA>
-    requires(mem::have_host_compatible_addr_space<WI, VA> and AnyOf<get_value_t<WI>, float, double> and have_same_value_type_v<WI, VA>)
-  auto get_geev_eigenvectors(const WI &wi, const VA &va) {
+    requires(mem::have_host_compatible_addr_space<WI, VA> and FloatOrDouble<get_value_t<WI>> and have_same_value_type_v<WI, VA>)
+  auto unpack_eigenvectors(const WI &wi, const VA &va) {
     using namespace std::complex_literals;
 
     // check the dimensions of the input arrays/views
@@ -138,6 +135,77 @@ namespace nda::linalg {
     }
 
     return X;
+  }
+
+  /**
+   * @brief Get the complex eigenvalues from nda::lapack::ggev output for real matrices.
+   *
+   * @details For real matrices, nda::lapack::ggev stores the computed generalized eigenvalues as three real vectors
+   * \f$ \boldsymbol{\alpha}^{(r)} \f$, \f$ \boldsymbol{\alpha}^{(i)} \f$, and \f$ \boldsymbol{\beta} \f$.
+   *
+   * The actual (complex) eigenvalues \f$ \lambda_j \f$ are given by \f$ \lambda_j = (\alpha^{(r)}_j + i
+   * \alpha^{(i)}_j) / \beta_j \f$. We do not perform any checks if \f$ \beta_j \f$ is zero or if the quotient may
+   * over- or underflow.
+   *
+   * Use nda::linalg::unpack_eigenvectors to get corresponding eigenvectors (same packed format as `geev`).
+   *
+   * @note All input vectors are required to satisfy nda::mem::have_host_compatible_addr_space and to have the same
+   * real value type.
+   *
+   * @tparam AR nda::Vector type.
+   * @tparam AI nda::Vector type.
+   * @tparam B nda::Vector type.
+   * @param alphar Input vector \f$ \boldsymbol{\alpha}^{(r)} \f$ containing the real parts of \f$ \alpha_j \f$.
+   * @param alphai Input vector \f$ \boldsymbol{\alpha}^{(i)} \f$ containing the imaginary parts of \f$ \alpha_j \f$.
+   * @param beta Input vector \f$ \boldsymbol{\beta} \f$ containing \f$ \beta_j \f$.
+   * @return An nda::array containing the complex eigenvalues.
+   */
+  template <Vector AR, Vector AI, Vector B>
+    requires(mem::have_host_compatible_addr_space<AR, AI, B> and FloatOrDouble<get_value_t<AR>> and have_same_value_type_v<AR, AI, B>)
+  auto get_ggev_eigenvalues(const AR &alphar, const AI &alphai, const B &beta) {
+    // check the dimensions of the input arrays/views
+    auto const n = alphar.size();
+    EXPECTS(n == alphai.size());
+    EXPECTS(n == beta.size());
+
+    // generate eigenvalues: lambda_j = (alphar_j + i * alphai_j) / beta_j
+    using fp_t  = get_fp_t<AR>;
+    auto lambda = array<std::complex<fp_t>, 1>(n);
+    for (long i = 0; i < n; ++i) lambda(i) = std::complex<fp_t>(alphar(i), alphai(i)) / std::complex<fp_t>(beta(i));
+    return lambda;
+  }
+
+  /**
+   * @brief Get the complex eigenvalues from nda::lapack::ggev output for complex matrices.
+   *
+   * @details For complex matrices, nda::lapack::ggev stores the computed generalized eigenvalues as two complex
+   * vectors \f$ \boldsymbol{\alpha} \f$ and \f$ \boldsymbol{\beta} \f$.
+   *
+   * The actual eigenvalues \f$ \lambda_j \f$ are given by \f$ \lambda_j = \alpha_j / \beta_j \f$. We do not perform any
+   * checks if \f$ \beta_j \f$ is zero or if the quotient may over- or underflow.
+   *
+   * @note All input vectors are required to satisfy nda::mem::have_host_compatible_addr_space and to have the same
+   * complex value type.
+   *
+   * @tparam A nda::Vector type.
+   * @tparam B nda::Vector type.
+   * @param alpha Input vector \f$ \boldsymbol{\alpha} \f$ containing \f$ \alpha_j \f$.
+   * @param beta Input vector \f$ \boldsymbol{\beta} \f$ containing \f$ \beta_j \f$.
+   * @return An nda::array containing the complex eigenvalues.
+   */
+  template <Vector A, Vector B>
+    requires(mem::have_host_compatible_addr_space<A, B> and AnyOf<get_value_t<A>, std::complex<float>, std::complex<double>>
+             and have_same_value_type_v<A, B>)
+  auto get_ggev_eigenvalues(const A &alpha, const B &beta) {
+    // check the dimensions of the input arrays/views
+    auto const n = alpha.size();
+    EXPECTS(n == beta.size());
+
+    // generate eigenvalues: lambda_j = alpha_j / beta_j
+    using val_t = get_value_t<A>;
+    auto lambda = array<val_t, 1>(n);
+    for (long i = 0; i < n; ++i) lambda(i) = alpha(i) / beta(i);
+    return lambda;
   }
 
   namespace detail {
@@ -187,8 +255,8 @@ namespace nda::linalg {
 
       // get eigenvalues and eigenvectors from geev output
       auto lambda = get_geev_eigenvalues(wr, wi);
-      auto U      = (jobvl == 'V') ? get_geev_eigenvectors(wi, vl) : mat_t{};
-      auto V      = (jobvr == 'V') ? get_geev_eigenvectors(wi, vr) : mat_t{};
+      auto U      = (jobvl == 'V') ? unpack_eigenvectors(wi, vl) : mat_t{};
+      auto V      = (jobvr == 'V') ? unpack_eigenvectors(wi, vr) : mat_t{};
 
       return std::make_tuple(std::move(lambda), std::move(U), std::move(V));
     }
@@ -205,7 +273,7 @@ namespace nda::linalg {
    * \f]
    *
    * It calls nda::lapack::geev and, for real matrices, retrieves the complex eigenvalues and eigenvectors using
-   * nda::linalg::get_geev_eigenvalues and nda::linalg::get_geev_eigenvectors.
+   * nda::linalg::get_geev_eigenvalues and nda::linalg::unpack_eigenvectors.
    *
    * The resulting matrix \f$ \mathbf{V} \f$ containing the eigenvectors is always returned in nda::F_layout.
    *
