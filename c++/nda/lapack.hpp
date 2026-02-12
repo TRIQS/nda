@@ -23,6 +23,7 @@
 #include "./lapack/getri.hpp"
 #include "./lapack/getrs_batch.hpp"
 #include "./lapack/getrs.hpp"
+#include "./lapack/ggev.hpp"
 #include "./lapack/gtsv.hpp"
 #include "./lapack/heev.hpp"
 #include "./lapack/hegv.hpp"
