@@ -72,6 +72,36 @@ namespace nda {
       }
     }
 
+    template <int I, uint64_t StaticExtents, uint64_t StrideOrder, size_t SIMD_SIZE, typename F_SIMD, typename F_SCALAR, size_t R,
+              std::integral Int = long>
+    FORCEINLINE void for_each_static_impl(std::array<Int, R> const &shape, std::array<long, R> &idxs, F_SIMD &f_simd, F_SCALAR &f_scalar) {
+      // get the dimension over which to iterate and its extent
+      static constexpr int J = index_from_stride_order<R>(StrideOrder, I);
+      const long imax        = get_extent<J, R, StaticExtents>(shape);
+      // Only difference from scalar implementation is that in the last dimension we call f_simd whenever we can.
+      if constexpr (I == R - 1) {
+        size_t i               = 0;
+        const size_t ilim      = imax & -static_cast<int64_t>(SIMD_SIZE);
+        for (; i < ilim; i += SIMD_SIZE) {
+          std::apply(f_simd, idxs);
+          idxs[J] += SIMD_SIZE;
+        }
+        for (; i < imax; ++i) {
+          std::apply(f_scalar, idxs);
+          ++idxs[J];
+        }
+        idxs[J] = 0;
+      } else {
+        // loop over all indices of the current dimension
+        for (long i = 0; i < imax; ++i) {
+          // recursive call for the next dimension
+          for_each_static_impl<I + 1, StaticExtents, StrideOrder, SIMD_SIZE>(shape, idxs, f_simd, f_scalar);
+          ++idxs[J];
+        }
+        idxs[J] = 0;
+      }
+    }
+
   } // namespace detail
 
   /**
@@ -97,6 +127,12 @@ namespace nda {
     detail::for_each_static_impl<0, StaticExtents, StrideOrder>(shape, idxs, f);
   }
 
+  template <uint64_t StaticExtents, uint64_t StrideOrder, size_t SIMD_SIZE, typename F_SIMD, typename F_SCALAR, auto R, std::integral Int = long>
+  FORCEINLINE void for_each_static(std::array<Int, R> const &shape, F_SIMD &&f_simd, F_SCALAR &&f_scalar) { // NOLINT (we do not want to forward here)
+    auto idxs = nda::stdutil::make_initialized_array<R>(0l);
+    detail::for_each_static_impl<0, StaticExtents, StrideOrder, SIMD_SIZE>(shape, idxs, f_simd, f_scalar);
+  }
+
   /**
    * @brief Loop over all possible index values of a given shape and apply a function to them.
    *
@@ -116,6 +152,12 @@ namespace nda {
   FORCEINLINE void for_each(std::array<Int, R> const &shape, F &&f) { // NOLINT (we do not want to forward here)
     auto idxs = nda::stdutil::make_initialized_array<R>(0l);
     detail::for_each_static_impl<0, 0, 0>(shape, idxs, f);
+  }
+
+  template <size_t SIMD_SIZE, typename F_SIMD, typename F_SCALAR, auto R, std::integral Int = long>
+  FORCEINLINE void for_each(std::array<Int, R> const &shape, F_SIMD &&f_simd, F_SCALAR &&f_scalar) { // NOLINT
+    auto idxs = nda::stdutil::make_initialized_array<R>(0l);
+    detail::for_each_static_impl<0, 0, 0, SIMD_SIZE, F_SIMD, F_SCALAR>(shape, idxs, f_simd, f_scalar);
   }
 
   /** @} */

@@ -101,6 +101,14 @@ if(MPISupport)
   )
 endif()
 
+# -- XSIMD --
+external_dependency(xsimd
+        GIT_REPO https://github.com/xtensor-stack/xsimd
+        GIT_TAG master
+        VERSION 13.2.0
+        BUILD_ALWAYS
+)
+
 ## Pybind 11
 #find_package(Python)
 #add_subdirectory(pybind11)

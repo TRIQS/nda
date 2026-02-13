@@ -58,6 +58,9 @@ if(OpenMPSupport)
   target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_OPENMP)
 endif ()
 
+#XSIMD
+target_link_libraries(${PROJECT_NAME}_c PUBLIC xsimd)
+
 # ========= Blas / Lapack ==========
 
 message(STATUS "-------- Lapack detection -------------")
