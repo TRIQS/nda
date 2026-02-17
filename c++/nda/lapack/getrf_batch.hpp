@@ -35,7 +35,9 @@ namespace nda::lapack {
     template <bool run_on_device>
     auto getrf_batch_impl(auto &&a, auto &&ipiv, [[maybe_unused]] auto &&work) {
       // check the dimensions of the input/output arrays/views and resize if necessary
-      auto const [m, n, n_b] = a.shape();
+      auto const m   = a.extent(0);
+      auto const n   = a.extent(1);
+      auto const n_b = a.extent(2);
       resize_or_check_if_view(ipiv, {std::min(m, n), n_b});
 
       // arrays/views must be LAPACK compatible

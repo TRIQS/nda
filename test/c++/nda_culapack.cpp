@@ -517,8 +517,9 @@ void test_rectangular_getrf_batch() {
     auto A_ref          = A;
     auto [m_ref, n_ref] = A_ref.shape();
     if constexpr (std::is_same_v<Layout, C_layout>) {
-      A_ref                  = nda::matrix<T, F_layout>(nda::transpose(A));
-      std::tie(m_ref, n_ref) = A_ref.shape();
+      A_ref = nda::matrix<T, F_layout>(nda::transpose(A));
+      m_ref = A_ref.extent(0);
+      n_ref = A_ref.extent(1);
     }
 
     auto [P_i, L_i, U_i] = get_plu(LU_i, ipiv_i, m_ref, n_ref);
