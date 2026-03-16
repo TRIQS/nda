@@ -8,7 +8,7 @@ It is an essential building-block of the TRIQS project. Some features include
 * expressions are implemented lazily for maximum performance
 * flexible and lightweight view-types
 * matrix and vector class with BLAS / LAPACK backend
-* easily store and retrieve arrays to and from hdf5 files using [h5](https://github.com/TRIQS/h5)
+* easily store and retrieve arrays to and from HDF5 files using [h5](https://github.com/TRIQS/h5)
 * common mpi functionality using [mpi](https://github.com/TRIQS/mpi)
 
 Install instructions are provided [here](https://github.com/TRIQS/nda/blob/unstable/doc/install.rst).
