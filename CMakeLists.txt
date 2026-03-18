@@ -63,9 +63,6 @@ option(OpenMPSupport "Build with OpenMP support" ON)
 
 # Documentation
 option(Build_Documentation "Build documentation" OFF)
-if(NOT IS_SUBPROJECT AND (Build_Documentation AND NOT PythonSupport))
-  message(FATAL_ERROR "Build_Documentation=ON requires PythonSupport to be enabled")
-endif()
 
 # Benchmarks
 option(Build_Benchs "Build Benchmarks" OFF)
