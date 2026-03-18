@@ -12,5 +12,7 @@ var algorithms_8hpp =
     [ "nda::max_element", "group__av__algs.html#ga0d54b733a7c15c15846de86a79d53025", null ],
     [ "nda::min_element", "group__av__algs.html#ga8dcf3b8eb2cf5460c47e825b4ec38534", null ],
     [ "nda::product", "group__av__algs.html#ga767f1ffe11006beb7dfe9318565ab789", null ],
-    [ "nda::sum", "group__av__algs.html#ga32b50e2bafb182294179bb1f2f0f5c9b", null ]
+    [ "nda::sum", "group__av__algs.html#ga32b50e2bafb182294179bb1f2f0f5c9b", null ],
+    [ "nda::sum", "group__av__algs.html#gaef5ec30c4b900e5bbe1986be5be9fb24", null ],
+    [ "nda::sum", "group__av__algs.html#ga46d51bdd5c80579113e77d5e5ee63d8b", null ]
 ];

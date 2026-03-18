@@ -113,6 +113,7 @@ $(function(){initNavTree('algorithms_8hpp.html','',''); });
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;array&gt;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
+<code>#include &lt;concepts&gt;</code><br />
 <code>#include &lt;cstdlib&gt;</code><br />
 <code>#include &lt;functional&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
@@ -168,6 +169,12 @@ requires (<a class="el" href="conceptnda_1_1_scalar.html">nda::Scalar</a>&lt;Val
 requires (<a class="el" href="conceptnda_1_1_scalar.html">nda::Scalar</a>&lt;Value&gt; or <a class="el" href="conceptnda_1_1_array.html">nda::Array</a>&lt;Value&gt;)</td></tr>
 <tr class="memitem:ga32b50e2bafb182294179bb1f2f0f5c9b template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__av__algs.html#ga32b50e2bafb182294179bb1f2f0f5c9b">nda::sum</a> (A const &amp;a)</td></tr>
 <tr class="memdesc:ga32b50e2bafb182294179bb1f2f0f5c9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sum all the elements of an <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object.  <br /></td></tr>
+<tr class="memitem:gaef5ec30c4b900e5bbe1986be5be9fb24" id="r_gaef5ec30c4b900e5bbe1986be5be9fb24"><td class="memTemplParams" colspan="2">template&lt;Array A&gt; </td></tr>
+<tr class="memitem:gaef5ec30c4b900e5bbe1986be5be9fb24 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__av__algs.html#gaef5ec30c4b900e5bbe1986be5be9fb24">nda::sum</a> (A const &amp;a, int axis)</td></tr>
+<tr class="memdesc:gaef5ec30c4b900e5bbe1986be5be9fb24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sum elements of an <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> along a specified axis.  <br /></td></tr>
+<tr class="memitem:ga46d51bdd5c80579113e77d5e5ee63d8b" id="r_ga46d51bdd5c80579113e77d5e5ee63d8b"><td class="memTemplParams" colspan="2">template&lt;Array A, std::integral I, size_t N&gt; </td></tr>
+<tr class="memitem:ga46d51bdd5c80579113e77d5e5ee63d8b template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__av__algs.html#ga46d51bdd5c80579113e77d5e5ee63d8b">nda::sum</a> (A const &amp;a, std::array&lt; I, N &gt; axes)</td></tr>
+<tr class="memdesc:ga46d51bdd5c80579113e77d5e5ee63d8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sum elements of an <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> along specified axes.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
