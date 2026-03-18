@@ -8,14 +8,6 @@ add_cpp2py_module(copy_move_stat)
 target_link_libraries(copy_move_stat nda_py)
 target_include_directories(copy_move_stat PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-## Build the pybind11 module
-#pybind11_add_module(pybind_a pybind_a.cpp)
-#target_link_libraries(pybind_a PRIVATE pybind11 nda_py python_and_numpy)
-
-## Build the pybind11 module
-#pybind11_add_module(pybind_test pybind_test.cpp)
-#target_link_libraries(pybind_test PRIVATE pybind11 nda_py python_and_numpy)
-
 # List of all tests
 set(all_tests wrap_basic_test copy_move_stat_test)
 
