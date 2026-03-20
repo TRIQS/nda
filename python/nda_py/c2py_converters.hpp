@@ -210,4 +210,23 @@ namespace c2py {
     }
   };
 
+  template <typename T, int R, char Algebra>
+  struct py_converter<nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap<>> const &> {
+    using array_t = nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap<>>;
+    static PyObject *c2py(array_t const &a) { return cxx2py(nda::make_const_view(a)); }
+  };
+
+  template <typename T, int R, char Algebra>
+  struct py_converter<nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap<>> &> {
+    using array_t = nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap<>>;
+    using view_t  = nda::basic_array_view<T, R, nda::C_layout, Algebra>;
+    static PyObject *c2py(array_t &a) { return cxx2py(view_t(a)); }
+  };
+
+  template <typename E>
+    requires(nda::is_expression<std::decay_t<E>>)
+  struct py_converter<E> {
+    static PyObject *c2py(E const &ex) { return cxx2py(nda::make_regular(ex)); }
+  };
+
 } // namespace c2py
