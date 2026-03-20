@@ -52,6 +52,10 @@ namespace nda {
   template <typename F, Array... As>
   constexpr char get_algebra<expr_call<F, As...>> = detail::_impl_find_common_algebra(get_algebra<As>...);
 
+  /// Specialization of nda::is_expression for nda::expr_call types.
+  template <typename F, Array... As>
+  inline constexpr bool is_expression<expr_call<F, As...>> = true;
+
   /**
    * @addtogroup av_math
    * @{
