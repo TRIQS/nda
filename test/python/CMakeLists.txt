@@ -1,1 +1,2 @@
 add_subdirectory(cpp2py)
+add_subdirectory(c2py_clair)
