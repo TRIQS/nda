@@ -5,13 +5,12 @@
 
 #pragma once
 #include <vector>
+#include <nda/c2py/make_py_capsule.hpp>
 #include <nda/nda.hpp>
 #include <nda/concepts.hpp>
 
 #include <cpp2py/py_converter.hpp>
 #include <cpp2py/numpy_proxy.hpp>
-
-#include "make_py_capsule.hpp"
 
 namespace nda::python {
 
