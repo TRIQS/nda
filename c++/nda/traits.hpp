@@ -130,6 +130,15 @@ namespace nda {
       return std::tuple_size_v<std::remove_cvref_t<decltype(std::declval<A const>().shape())>>;
   }();
 
+  /// Constexpr variable that is true if type `A` is a lazy expression type.
+  template <typename A>
+  inline constexpr bool is_expression = false;
+
+  // Specialization of nda::is_expression for cvref types.
+  template <typename A>
+    requires(!std::is_same_v<A, std::remove_cvref_t<A>>)
+  inline constexpr bool is_expression<A> = is_expression<std::remove_cvref_t<A>>;
+
   /// Constexpr variable that is true if type `A` is a regular array, i.e. an nda::basic_array.
   template <typename A>
   inline constexpr bool is_regular_v = false;

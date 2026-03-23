@@ -400,6 +400,14 @@ namespace nda {
   template <char OP, typename L, typename R>
   inline constexpr layout_info_t get_layout_info<expr<OP, L, R>> = expr<OP, L, R>::compute_layout_info();
 
+  /// Specialization of nda::is_expression for nda::expr_unary types.
+  template <char OP, Array A>
+  inline constexpr bool is_expression<expr_unary<OP, A>> = true;
+
+  /// Specialization of nda::is_expression for nda::expr types.
+  template <char OP, typename L, typename R>
+  inline constexpr bool is_expression<expr<OP, L, R>> = true;
+
   /** @} */
 
 } // namespace nda
