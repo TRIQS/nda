@@ -112,18 +112,6 @@ if(Use_Magma)
   install(TARGETS magma EXPORT ${PROJECT_NAME}-targets)
 endif()
 
-# ========= Compiler Wrapper ==========
-
-# Get the compiler and linktime flags of nda_c
-include(${PROJECT_SOURCE_DIR}/share/cmake/extract_flags.cmake)
-extract_flags(nda_c)
-
-# Generate and install python-based compiler wrapper
-if(PythonSupport)
-  configure_file(nda++.in nda++ @ONLY)
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/nda++ PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE DESTINATION bin)
-endif()
-
 # ========= Static Analyzer Checks ==========
 
 option(ANALYZE_SOURCES OFF "Run static analyzer checks if found (clang-tidy, cppcheck)")
