@@ -5,7 +5,8 @@
 
 #pragma once
 
-#include <nda_py/nda_py.hpp>
+#include <nda/nda.hpp>
+#include "./make_numpy_proxy_from_array.hpp"
 
 namespace c2py {
 
@@ -183,14 +184,14 @@ namespace c2py {
       // if obj is not an numpy, we make a numpy and rerun
       if (not PyArray_Check(obj) or (PyArray_Check(obj) and has_npy_type<T> and (PyArray_TYPE((PyArrayObject *)(obj)) != npy_type<T>))) {
 
-        cpp2py::pyref numpy_obj = make_numpy(obj);
+        c2py::pyref numpy_obj = make_numpy(obj);
         EXPECTS(not PyErr_Occurred());
         return py2c(numpy_obj);
       }
 
       if constexpr (has_npy_type<T>) {
         if (not numpy_check_layout<R, nda::C_layout>(obj)) {
-          cpp2py::pyref obj_c_order = make_numpy(obj);
+          c2py::pyref obj_c_order = make_numpy(obj);
           return array_t{converter_view_T::py2c(obj_c_order)};
         }
         return converter_view_T::py2c(obj);
@@ -207,6 +208,25 @@ namespace c2py {
         return res;
       }
     }
+  };
+
+  template <typename T, int R, char Algebra>
+  struct py_converter<nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap<>> const &> {
+    using array_t = nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap<>>;
+    static PyObject *c2py(array_t const &a) { return cxx2py(nda::make_const_view(a)); }
+  };
+
+  template <typename T, int R, char Algebra>
+  struct py_converter<nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap<>> &> {
+    using array_t = nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap<>>;
+    using view_t  = nda::basic_array_view<T, R, nda::C_layout, Algebra>;
+    static PyObject *c2py(array_t &a) { return cxx2py(view_t(a)); }
+  };
+
+  template <typename E>
+    requires(nda::is_expression<std::decay_t<E>>)
+  struct py_converter<E> {
+    static PyObject *c2py(E const &ex) { return cxx2py(nda::make_regular(ex)); }
   };
 
 } // namespace c2py
