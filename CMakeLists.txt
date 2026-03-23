@@ -70,6 +70,7 @@ option(Build_Benchs "Build Benchmarks" OFF)
 # Testing
 option(Build_Tests "Build tests" ON)
 option(Build_SSO_Tests "Build same tests with various SSO/Custom Allocators" OFF)
+option(Build_c2py_clair_Tests "Build tests for python converters using c2py and clair" OFF)
 if(Build_Tests)
   enable_testing()
 endif()
