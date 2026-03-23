@@ -37,6 +37,8 @@ var declarations_8hpp =
     [ "nda::get_layout_info< basic_array_view< ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy > >", "group__av__utils.html#gaac262f9913e9c1164b11e728e96f3b07", null ],
     [ "nda::get_layout_info< expr< OP, L, R > >", "group__av__utils.html#ga4199dbd8208aa91ca2efd2f0a91af3c6", null ],
     [ "nda::get_layout_info< expr_unary< OP, A > >", "group__av__utils.html#ga580ce1a693fb911d33331828bd954458", null ],
+    [ "nda::is_expression< expr< OP, L, R > >", "group__av__utils.html#ga30466cac9e6bc9f46f75890ec6559e74", null ],
+    [ "nda::is_expression< expr_unary< OP, A > >", "group__av__utils.html#ga29e857c8ad403124ddce2edf155402b6", null ],
     [ "nda::is_regular_v< basic_array< ValueType, Rank, Layout, Algebra, ContainerPolicy > >", "group__av__utils.html#ga2b4af8033b1f818bb76d07533189e8b8", null ],
     [ "nda::is_view_v< basic_array_view< ValueType, Rank, Layout, Algebra, AccessorPolicy, OwningPolicy > >", "group__av__utils.html#ga27520f63afb420a97a49eb9ec5cda61e", null ]
 ];

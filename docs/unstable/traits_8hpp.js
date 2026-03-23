@@ -24,6 +24,7 @@ var traits_8hpp =
     [ "nda::is_blas_lapack_v", "group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda", null ],
     [ "nda::is_complex_v", "group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517", null ],
     [ "nda::is_double_or_complex_v", "group__utils__type__traits.html#ga984847109b3f60b07bd8d899a7825e7f", null ],
+    [ "nda::is_expression", "group__av__utils.html#ga0b37583907a1856e96eac5f358136de2", null ],
     [ "nda::is_instantiation_of_v", "group__utils__type__traits.html#ga0a4e52840236a3c0e6d36b32781978e0", null ],
     [ "nda::is_matrix_or_view_v", "group__av__utils.html#ga399faffc1372096b0df09d6516ef33d5", null ],
     [ "nda::is_regular_or_view_v", "group__av__utils.html#gad19aaebe79b6d698a818828217032489", null ],

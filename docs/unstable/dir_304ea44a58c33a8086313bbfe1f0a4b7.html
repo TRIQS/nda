@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TRIQS/nda: nda::layout_info_t</title>
+<title>TRIQS/nda: nda/c2py</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -74,7 +74,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('structnda_1_1layout__info__t.html','','structnda_1_1layout__info__t-members'); });
+$(function(){initNavTree('dir_304ea44a58c33a8086313bbfe1f0a4b7.html','',''); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -100,30 +100,16 @@ $(function(){initNavTree('structnda_1_1layout__info__t.html','','structnda_1_1la
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">nda::layout_info_t<div class="ingroups"><a class="el" href="group__layout.html">Memory layout</a> &raquo; <a class="el" href="group__layout__utils.html">Layout utilities</a></div></div></div>
+  <div class="headertitle"><div class="title">c2py</div></div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="traits_8hpp_source.html">nda/traits.hpp</a>&gt;</code></p>
-<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Stores information about the memory layout and the stride order of an array/view. </p>
-<p>The stride order of an N-dimensional array/view is a specific permutation of the integers from 0 to N-1, i.e. <span class="tt">(i1, i2, ..., iN)</span>, which is encoded in a <span class="tt">uint64_t</span> (note that this limits the max. number of dimensions to 16). It specifies the order in which the dimensions are traversed with <span class="tt">i1</span> being the slowest and <span class="tt">iN</span> the fastest.</p>
-<p>For example, a 3D array/view with C-order has a stride order of <span class="tt">(0, 1, 2)</span>, while the Fortran-order would be <span class="tt">(2, 1, 0)</span>. </p>
-
-<p class="definition">Definition at line <a class="el" href="traits_8hpp_source.html#l00294">294</a> of file <a class="el" href="traits_8hpp_source.html">traits.hpp</a>.</p>
-</div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a351eb4acb2b4d8f3fd17fab9a7512adb" id="r_a351eb4acb2b4d8f3fd17fab9a7512adb"><td class="memItemLeft"><a id="a351eb4acb2b4d8f3fd17fab9a7512adb" name="a351eb4acb2b4d8f3fd17fab9a7512adb"></a>
-<a class="el" href="group__layout__utils.html#gade21b85df14c406b56717fd7703937b3">layout_prop_e</a>&#160;</td><td class="memItemRight"><b>prop</b> = layout_prop_e::none</td></tr>
-<tr class="memdesc:a351eb4acb2b4d8f3fd17fab9a7512adb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Memory layout properties of the array/view. <br /></td></tr>
-<tr class="memitem:a10416bcadd7ecab37903d2e3df48cd0c" id="r_a10416bcadd7ecab37903d2e3df48cd0c"><td class="memItemLeft"><a id="a10416bcadd7ecab37903d2e3df48cd0c" name="a10416bcadd7ecab37903d2e3df48cd0c"></a>
-uint64_t&#160;</td><td class="memItemRight"><b>stride_order</b> = 0</td></tr>
-<tr class="memdesc:a10416bcadd7ecab37903d2e3df48cd0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stride order of the array/view. <br /></td></tr>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-files" class="groupheader"><a id="files" name="files"></a>
+Files</h2></td></tr>
+<tr class="memitem:converters_2Ehpp" id="r_converters_2Ehpp"><td class="memItemLeft"><a href="converters_8hpp_source.html"><span class="icondoc"><div class="doc-icon"></div></span></a>&#160;</td><td class="memItemRight"><b>converters.hpp</b></td></tr>
+<tr class="memitem:make_5Fnumpy_5Fproxy_5Ffrom_5Farray_2Ehpp" id="r_make_5Fnumpy_5Fproxy_5Ffrom_5Farray_2Ehpp"><td class="memItemLeft"><a href="make__numpy__proxy__from__array_8hpp_source.html"><span class="icondoc"><div class="doc-icon"></div></span></a>&#160;</td><td class="memItemRight"><b>make_numpy_proxy_from_array.hpp</b></td></tr>
+<tr class="memitem:make_5Fpy_5Fcapsule_2Ehpp" id="r_make_5Fpy_5Fcapsule_2Ehpp"><td class="memItemLeft"><a href="make__py__capsule_8hpp_source.html"><span class="icondoc"><div class="doc-icon"></div></span></a>&#160;</td><td class="memItemRight"><b>make_py_capsule.hpp</b></td></tr>
 </table>
-<hr/>The documentation for this struct was generated from the following file:<ul>
-<li>nda/<a class="el" href="traits_8hpp_source.html">traits.hpp</a></li>
-</ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
@@ -137,7 +123,7 @@ uint64_t&#160;</td><td class="memItemRight"><b>stride_order</b> = 0</td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>nda</b></li><li class="navelem"><a href="structnda_1_1layout__info__t.html">layout_info_t</a></li>
+    <li class="navelem"><b>nda</b></li><li class="navelem"><b>c2py</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>

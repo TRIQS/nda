@@ -213,6 +213,10 @@ template&lt;typename T&gt; </td></tr>
 template&lt;typename T&gt; </td></tr>
 <tr class="memitem:ga984847109b3f60b07bd8d899a7825e7f template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><b>nda::is_double_or_complex_v</b> = <a class="el" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v</a>&lt;T&gt; or std::is_same_v&lt;double, std::remove_cvref_t&lt;T&gt;&gt;</td></tr>
 <tr class="memdesc:ga984847109b3f60b07bd8d899a7825e7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constexpr variable that is true if type <span class="tt">T</span> is a std::complex type or a double type. <br /></td></tr>
+<tr class="memitem:ga0b37583907a1856e96eac5f358136de2" id="r_ga0b37583907a1856e96eac5f358136de2"><td class="memTemplParams" colspan="2">
+template&lt;typename A&gt; </td></tr>
+<tr class="memitem:ga0b37583907a1856e96eac5f358136de2 template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><b>nda::is_expression</b> = false</td></tr>
+<tr class="memdesc:ga0b37583907a1856e96eac5f358136de2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constexpr variable that is true if type <span class="tt">A</span> is a lazy expression type. <br /></td></tr>
 <tr class="memitem:ga0a4e52840236a3c0e6d36b32781978e0" id="r_ga0a4e52840236a3c0e6d36b32781978e0"><td class="memTemplParams" colspan="2">
 template&lt;template&lt; typename... &gt; class TMPLT, typename T&gt; </td></tr>
 <tr class="memitem:ga0a4e52840236a3c0e6d36b32781978e0 template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><b>nda::is_instantiation_of_v</b> = <a class="el" href="structnda_1_1is__instantiation__of.html">is_instantiation_of</a>&lt;TMPLT, std::remove_cvref_t&lt;T&gt;&gt;::value</td></tr>

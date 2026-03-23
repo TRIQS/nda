@@ -261,6 +261,18 @@ template&lt;typename A0, typename... As&gt; </td></tr>
 template&lt;typename A0, typename... As&gt; </td></tr>
 <tr class="memitem:ga62eb26ca688c9730a4590c264b51c64b template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><b>nda::have_same_value_type_v</b> = (std::is_same_v&lt;<a class="el" href="#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A0&gt;, <a class="el" href="#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;As&gt;&gt; and ... and true)</td></tr>
 <tr class="memdesc:ga62eb26ca688c9730a4590c264b51c64b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constexpr variable that is true if all types in <span class="tt">As</span> have the same value type as <span class="tt">A0</span>. <br /></td></tr>
+<tr class="memitem:ga0b37583907a1856e96eac5f358136de2" id="r_ga0b37583907a1856e96eac5f358136de2"><td class="memTemplParams" colspan="2"><a id="ga0b37583907a1856e96eac5f358136de2" name="ga0b37583907a1856e96eac5f358136de2"></a>
+template&lt;typename A&gt; </td></tr>
+<tr class="memitem:ga0b37583907a1856e96eac5f358136de2 template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><b>nda::is_expression</b> = false</td></tr>
+<tr class="memdesc:ga0b37583907a1856e96eac5f358136de2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constexpr variable that is true if type <span class="tt">A</span> is a lazy expression type. <br /></td></tr>
+<tr class="memitem:ga30466cac9e6bc9f46f75890ec6559e74" id="r_ga30466cac9e6bc9f46f75890ec6559e74"><td class="memTemplParams" colspan="2"><a id="ga30466cac9e6bc9f46f75890ec6559e74" name="ga30466cac9e6bc9f46f75890ec6559e74"></a>
+template&lt;char OP, typename L, typename R&gt; </td></tr>
+<tr class="memitem:ga30466cac9e6bc9f46f75890ec6559e74 template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><b>nda::is_expression&lt; expr&lt; OP, L, R &gt; &gt;</b> = true</td></tr>
+<tr class="memdesc:ga30466cac9e6bc9f46f75890ec6559e74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <a class="el" href="#ga0b37583907a1856e96eac5f358136de2" title="Constexpr variable that is true if type A is a lazy expression type.">nda::is_expression</a> for <a class="el" href="structnda_1_1expr.html" title="Lazy binary expression for nda::ArrayOrScalar types.">nda::expr</a> types. <br /></td></tr>
+<tr class="memitem:ga29e857c8ad403124ddce2edf155402b6" id="r_ga29e857c8ad403124ddce2edf155402b6"><td class="memTemplParams" colspan="2"><a id="ga29e857c8ad403124ddce2edf155402b6" name="ga29e857c8ad403124ddce2edf155402b6"></a>
+template&lt;char OP, Array A&gt; </td></tr>
+<tr class="memitem:ga29e857c8ad403124ddce2edf155402b6 template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><b>nda::is_expression&lt; expr_unary&lt; OP, A &gt; &gt;</b> = true</td></tr>
+<tr class="memdesc:ga29e857c8ad403124ddce2edf155402b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization of <a class="el" href="#ga0b37583907a1856e96eac5f358136de2" title="Constexpr variable that is true if type A is a lazy expression type.">nda::is_expression</a> for <a class="el" href="structnda_1_1expr__unary.html" title="Lazy unary expression for nda::Array types.">nda::expr_unary</a> types. <br /></td></tr>
 <tr class="memitem:ga399faffc1372096b0df09d6516ef33d5" id="r_ga399faffc1372096b0df09d6516ef33d5"><td class="memTemplParams" colspan="2"><a id="ga399faffc1372096b0df09d6516ef33d5" name="ga399faffc1372096b0df09d6516ef33d5"></a>
 template&lt;typename A&gt; </td></tr>
 <tr class="memitem:ga399faffc1372096b0df09d6516ef33d5 template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><b>nda::is_matrix_or_view_v</b> = <a class="el" href="#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt; and (<a class="el" href="#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;A&gt; == 'M') and (<a class="el" href="#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == 2)</td></tr>
@@ -310,7 +322,7 @@ template&lt;typename T, typename RT = get_regular_t&lt;T&gt;&gt; </div>
 <div class="ttc" id="agroup__av__utils_html_ga060aafc7ad640e675fce38b5eaf95aab"><div class="ttname"><a href="#ga060aafc7ad640e675fce38b5eaf95aab">nda::get_algebra</a></div><div class="ttdeci">constexpr char get_algebra</div><div class="ttdoc">Constexpr variable that specifies the algebra of a type.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00116">traits.hpp:116</a></div></div>
 <div class="ttc" id="agroup__av__utils_html_ga7277dc5070c1ad04d29465da947e444e"><div class="ttname"><a href="#ga7277dc5070c1ad04d29465da947e444e">nda::get_rank</a></div><div class="ttdeci">constexpr int get_rank</div><div class="ttdoc">Constexpr variable that specifies the rank of an nda::Array or of a contiguous 1-dimensional range.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00126">traits.hpp:126</a></div></div>
 <div class="ttc" id="agroup__layout__pols_html_gad55a1d00d0a7bdfad9c8a9de4dcf2d0f"><div class="ttname"><a href="group__layout__pols.html#gad55a1d00d0a7bdfad9c8a9de4dcf2d0f">nda::get_contiguous_layout_policy</a></div><div class="ttdeci">std::conditional_t&lt; StrideOrder==C_stride_order&lt; Rank &gt;, C_layout, std::conditional_t&lt; StrideOrder==Fortran_stride_order&lt; Rank &gt;, F_layout, contiguous_layout_with_stride_order&lt; StrideOrder &gt; &gt; &gt; get_contiguous_layout_policy</div><div class="ttdoc">Get the contiguous layout policy for a given rank and stride order.</div><div class="ttdef"><b>Definition</b> <a href="layout_2policies_8hpp_source.html#l00130">policies.hpp:130</a></div></div>
-<div class="ttc" id="agroup__layout__utils_html_ga9bd94d15e6806a7637d8c45464561878"><div class="ttname"><a href="group__layout__utils.html#ga9bd94d15e6806a7637d8c45464561878">nda::get_layout_info</a></div><div class="ttdeci">constexpr layout_info_t get_layout_info</div><div class="ttdoc">Constexpr variable that specifies the nda::layout_info_t of type A.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00311">traits.hpp:311</a></div></div>
+<div class="ttc" id="agroup__layout__utils_html_ga9bd94d15e6806a7637d8c45464561878"><div class="ttname"><a href="group__layout__utils.html#ga9bd94d15e6806a7637d8c45464561878">nda::get_layout_info</a></div><div class="ttdeci">constexpr layout_info_t get_layout_info</div><div class="ttdoc">Constexpr variable that specifies the nda::layout_info_t of type A.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00320">traits.hpp:320</a></div></div>
 <div class="ttc" id="agroup__mem__pols_html_ga4c4f5b0a09f480782bf1353ca308e640"><div class="ttname"><a href="group__mem__pols.html#ga4c4f5b0a09f480782bf1353ca308e640">nda::heap</a></div><div class="ttdeci">heap_basic&lt; mem::mallocator&lt; AdrSp &gt; &gt; heap</div><div class="ttdoc">Alias template of the nda::heap_basic policy using an nda::mem::mallocator.</div><div class="ttdef"><b>Definition</b> <a href="mem_2policies_8hpp_source.html#l00052">policies.hpp:52</a></div></div>
 </div><!-- fragment -->
 <p>Get the type of the <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> that would be obtained by constructing an array on device memory from a given type. </p>
@@ -441,7 +453,7 @@ template&lt;typename A&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="traits_8hpp_source.html#l00182">182</a> of file <a class="el" href="traits_8hpp_source.html">traits.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="traits_8hpp_source.html#l00191">191</a> of file <a class="el" href="traits_8hpp_source.html">traits.hpp</a>.</p>
 
 </div>
 </div>
@@ -547,7 +559,7 @@ template&lt;typename A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>If an array/view is given, return its first element. Otherwise, return the given scalar. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="traits_8hpp_source.html#l00167">167</a> of file <a class="el" href="traits_8hpp_source.html">traits.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="traits_8hpp_source.html#l00176">176</a> of file <a class="el" href="traits_8hpp_source.html">traits.hpp</a>.</p>
 
 </div>
 </div>
