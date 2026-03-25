@@ -1,107 +1,122 @@
 #include <c2py/c2py.hpp>
 #include <nda/nda.hpp>
+
 #include <complex>
+#include <string>
+#include <vector>
 
-namespace nc {
+// -- arg: array<T, R> const & ----------------------------------------
 
-  // ============================================================
-  // Functions taking arrays/views as const reference
-  // ============================================================
+double sum_array(nda::array<double, 1> const &a) { return nda::sum(a); }
 
-  inline double sum_array(nda::array<double, 1> const &a) {
-    double s = 0;
-    for (long i = 0; i < a.size(); ++i) s += a(i);
-    return s;
+double sum_matrix(nda::array<double, 2> const &a) { return nda::sum(a); }
+
+// -- arg: array<T, R> by value ----------------------------------------
+
+nda::array<double, 1> double_array(nda::array<double, 1> a) {
+  a *= 2;
+  return a;
+}
+
+// -- arg: array_view<T, R> (mutable) ----------------------------------
+
+void fill_view_1d(nda::array_view<double, 1> v, double val) { v = val; }
+
+void fill_view_2d(nda::array_view<double, 2> m, double val) { m = val; }
+
+// -- arg: array_const_view<T, R> --------------------------------------
+
+double sum_const_view(nda::array_const_view<double, 1> v) { return nda::sum(v); }
+
+// -- return: array<T, R> by value -------------------------------------
+
+nda::array<double, 1> make_sequence(long n) {
+  nda::array<double, 1> a(n);
+  nda::for_each(a.shape(), [&](auto i) { a(i) = static_cast<double>(i); });
+  return a;
+}
+
+// -- return: array const & and array & (via class) --------------------
+
+class array_container {
+  nda::array<double, 2> data_;
+
+  public:
+  array_container(long rows, long cols) : data_(rows, cols) { data_ = 0; }
+
+  nda::array<double, 2> const &data_const() const { return data_; }
+  nda::array<double, 2> &data() { return data_; }
+  nda::array<double, 2> data_copy() const { return data_; }
+  void set_data(nda::array_view<double, 2> v) { data_ = v; }
+};
+
+// -- return: array of arrays (via class) ------------------------------
+
+class nested_container {
+  nda::array<nda::array<double, 1>, 1> data_;
+
+  public:
+  nested_container(long n, long inner_size) : data_(n) {
+    nda::for_each(data_.shape(), [&](auto i) {
+      data_(i) = nda::array<double, 1>(inner_size);
+      data_(i) = static_cast<double>(i);
+    });
   }
 
-  inline double sum_const_view(nda::array_const_view<double, 1> v) {
-    double s = 0;
-    for (long i = 0; i < v.size(); ++i) s += v(i);
-    return s;
-  }
+  nda::array<nda::array<double, 1>, 1> const &data_const() const { return data_; }
+  nda::array<nda::array<double, 1>, 1> &data() { return data_; }
+  nda::array<nda::array<double, 1>, 1> data_copy() const { return data_; }
+};
 
-  // ============================================================
-  // By value (copy in C++)
-  // ============================================================
+// -- return: expressions ----------------------------------------------
 
-  inline nda::array<double, 1> double_array(nda::array<double, 1> a) {
-    a *= 2;
-    return a;
-  }
+auto scale_array(nda::array<double, 1> const &a, double s) { return a * s; }
+auto negate_array(nda::array<double, 1> const &a) { return -a; }
+auto conj_array(nda::array<std::complex<double>, 1> const &a) { return conj(a); }
+auto add_arrays(nda::array<long, 2> const &a, nda::array<long, 2> const &b) { return a + b; }
 
-  // ============================================================
-  // Modifying views and array refs in-place
-  // ============================================================
+// -- matrix algebra (matrix_view operator= has different semantics) ---
 
-  inline void fill_matrix(nda::array_view<double, 2> m, double val) { m = val; }
+void fill_matrix_view(nda::matrix_view<double> m, double val) { m = val; }
 
-  // ============================================================
-  // Returning arrays by value
-  // ============================================================
+// -- scalar types: long, complex<double> ------------------------------
 
-  inline nda::matrix<double> make_identity(long n) { return nda::eye(n); }
+long sum_int_array(nda::array<long, 1> const &a) { return nda::sum(a); }
 
-  // ============================================================
-  // Returning expressions (py_converter<expr> handles these)
-  // ============================================================
+std::complex<double> sum_complex_array(nda::array<std::complex<double>, 1> const &a) { return nda::sum(a); }
 
-  inline auto scale_array(nda::array<double, 1> const &a, double s) { return a * s; }
+// -- higher rank (3D) -------------------------------------------------
 
-  inline auto negate_array(nda::array<double, 1> const &a) { return -a; }
+double sum_3d(nda::array<double, 3> const &a) { return nda::sum(a); }
 
-  inline auto conj_array(nda::array<std::complex<double>, 1> const &a) { return conj(a); }
+// -- non-npy element types (converter element-by-element path) --------
 
-  inline auto add_arrays(nda::array<long, 2> const &a, nda::array<long, 2> const &b) { return a + b; }
+nda::array<std::string, 1> reverse_strings(nda::array<std::string, 1> const &a) {
+  nda::array<std::string, 1> res(a.shape());
+  nda::for_each(a.shape(), [&](auto i) { res(i) = std::string(a(i).rbegin(), a(i).rend()); });
+  return res;
+}
 
-  // ============================================================
-  // Class holding an array with const& getter
-  // ============================================================
+nda::array<std::vector<double>, 1> make_ranges(long n) {
+  nda::array<std::vector<double>, 1> res(n);
+  nda::for_each(res.shape(), [&](auto i) {
+    auto &v = res(i);
+    v.resize(i + 1);
+    for (long j = 0; j <= i; ++j) v[j] = static_cast<double>(j);
+  });
+  return res;
+}
 
-  class array_container {
-    nda::array<double, 2> data_;
+std::vector<double> flatten_array_of_vectors(nda::array<std::vector<double>, 1> const &a) {
+  std::vector<double> res;
+  nda::for_each(a.shape(), [&](auto i) { res.insert(res.end(), a(i).begin(), a(i).end()); });
+  return res;
+}
 
-    public:
-    array_container(long rows, long cols) : data_(rows, cols) { data_ = 0; }
-
-    nda::array<double, 2> const &data_const() const { return data_; }
-
-    nda::array<double, 2> &data() { return data_; }
-
-    nda::array<double, 2> data_copy() const { return data_; }
-
-    void set_data(nda::array_view<double, 2> v) { data_ = v; }
-  };
-
-  // ============================================================
-  // Different scalar types
-  // ============================================================
-
-  inline long sum_int_array(nda::array<long, 1> const &a) {
-    long s = 0;
-    for (long i = 0; i < a.size(); ++i) s += a(i);
-    return s;
-  }
-
-  inline std::complex<double> sum_complex_array(nda::array<std::complex<double>, 1> const &a) {
-    std::complex<double> s = 0;
-    for (long i = 0; i < a.size(); ++i) s += a(i);
-    return s;
-  }
-
-  // ============================================================
-  // Higher-rank arrays (3D)
-  // ============================================================
-
-  inline double sum_3d(nda::array<double, 3> const &a) {
-    double s = 0;
-    for (long i = 0; i < a.shape()[0]; ++i)
-      for (long j = 0; j < a.shape()[1]; ++j)
-        for (long k = 0; k < a.shape()[2]; ++k) s += a(i, j, k);
-    return s;
-  }
-
-  inline void fill_3d(nda::array_view<double, 3> v, double val) { v = val; }
-
-} // namespace nc
+nda::array<std::vector<int>, 2> make_grid(long rows, long cols) {
+  nda::array<std::vector<int>, 2> res(rows, cols);
+  nda::for_each(res.shape(), [&](auto i, auto j) { res(i, j) = {static_cast<int>(i), static_cast<int>(j)}; });
+  return res;
+}
 
 #include "nda_converter.wrap.cxx"

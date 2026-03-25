@@ -22,11 +22,11 @@ namespace c2py {
   }
 
   template <typename T, int R, typename Layout, char Algebra>
+    requires(has_npy_type<std::decay_t<T>>)
   struct py_converter<nda::basic_array_view<T, R, Layout, Algebra>> {
 
     using view_t = nda::basic_array_view<T, R, Layout, Algebra>;
     using U      = std::decay_t<T>;
-    static_assert(has_npy_type<U>, "Logical Error");
     static_assert(not std::is_same_v<U, pyref>, "Not implemented"); // would require to take care of the incref...
     // However, it works for PyObject *
 
@@ -211,12 +211,14 @@ namespace c2py {
   };
 
   template <typename T, int R, char Algebra>
+    requires(has_npy_type<std::decay_t<T>>)
   struct py_converter<nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap<>> const &> {
     using array_t = nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap<>>;
     static PyObject *c2py(array_t const &a) { return cxx2py(nda::make_const_view(a)); }
   };
 
   template <typename T, int R, char Algebra>
+    requires(has_npy_type<std::decay_t<T>>)
   struct py_converter<nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap<>> &> {
     using array_t = nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap<>>;
     using view_t  = nda::basic_array_view<T, R, nda::C_layout, Algebra>;

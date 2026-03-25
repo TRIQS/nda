@@ -6,6 +6,7 @@
 #pragma once
 #include <vector>
 #include <nda/nda.hpp>
+#include <c2py/py_converter.hpp>
 #include <c2py/converters/numpy_proxy.hpp>
 #include "./make_py_capsule.hpp"
 
