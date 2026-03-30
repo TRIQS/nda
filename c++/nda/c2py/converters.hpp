@@ -109,10 +109,10 @@ namespace c2py {
     static_assert(not std::is_same_v<T, PyObject *>, "Not implemented");
 
     using array_t                 = nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap<>>;
-    using view_t                  = nda::basic_array_view<T, R, nda::C_layout, Algebra>;
+    using view_t                  = nda::basic_array_view<T, R, nda::C_stride_layout, Algebra>;
     using converter_T             = py_converter<std::decay_t<T>>;
     using converter_view_T        = py_converter<view_t>;
-    using converter_view_pyobject = py_converter<nda::basic_array_view<PyObject *, R, nda::C_layout, Algebra>>;
+    using converter_view_pyobject = py_converter<nda::basic_array_view<PyObject *, R, nda::C_stride_layout, Algebra>>;
 
     // ------------ tp_name ---------------
 
