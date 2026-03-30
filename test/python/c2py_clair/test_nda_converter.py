@@ -64,6 +64,12 @@ class TestArgArrayByValue(unittest.TestCase):
     def test_accepts_list(self):
         np.testing.assert_array_almost_equal(nc.double_array([1.0, 2.0]), [2.0, 4.0])
 
+    def test_double_non_contiguous_view(self):
+        """By-value array parameters can be passed non-contiguous views, since they are copied."""
+        m = np.array([[1.0, 2.0], [3.0, 4.0]])
+        result = nc.double_array(m[:, 0])
+        np.testing.assert_array_almost_equal(result, [2.0, 6.0])
+
 
 class TestArgMutableView(unittest.TestCase):
     """array_view<T, R>: zero-copy, requires exact dtype and C-compatible stride order."""
