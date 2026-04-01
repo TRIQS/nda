@@ -78,6 +78,13 @@ namespace c2py {
         return false;
       }
 
+      if constexpr (not std::is_const_v<T>) {
+        if (not PyArray_ISWRITEABLE(arr)) {
+          if (raise_python_exception) PyErr_SetString(PyExc_TypeError, "Cannot convert to mutable array_view : Numpy array is read-only");
+          return false;
+        }
+      }
+
       return true;
     }
 

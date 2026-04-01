@@ -69,6 +69,26 @@ class TestArgArrayByValue(unittest.TestCase):
         m = np.array([[1.0, 2.0], [3.0, 4.0]])
         result = nc.double_array(m[:, 0])
         np.testing.assert_array_almost_equal(result, [2.0, 6.0])
+    def test_complex_roundtrip(self):
+        a = np.array([1 + 2j, 3 - 4j], dtype=np.complex128)
+        np.testing.assert_array_almost_equal(nc.scale_complex_array(a, 2 + 0j), [2 + 4j, 6 - 8j])
+
+    def test_complex_original_unchanged(self):
+        a = np.array([1 + 0j, 2 + 0j], dtype=np.complex128)
+        nc.scale_complex_array(a, 3 + 0j)
+        np.testing.assert_array_almost_equal(a, [1 + 0j, 2 + 0j])
+
+    def test_int_roundtrip(self):
+        np.testing.assert_array_equal(nc.double_int_array(np.array([1, 2, 3], dtype=np.int64)), [2, 4, 6])
+
+    def test_int_original_unchanged(self):
+        a = np.array([1, 2, 3], dtype=np.int64)
+        nc.double_int_array(a)
+        np.testing.assert_array_equal(a, [1, 2, 3])
+
+    def test_int_converts_dtype(self):
+        """int32 auto-converted to int64 (long)."""
+        np.testing.assert_array_equal(nc.double_int_array(np.array([5, 10], dtype=np.int32)), [10, 20])
 
 
 class TestArgMutableView(unittest.TestCase):
@@ -88,9 +108,10 @@ class TestArgMutableView(unittest.TestCase):
         """C_stride_layout views accept non-contiguous C-ordered strides."""
         m = np.zeros((6, 4))
         nc.fill_view_2d(m[::2, :], 1.0)
-        np.testing.assert_array_almost_equal(m[0], [1, 1, 1, 1])
-        np.testing.assert_array_almost_equal(m[1], [0, 0, 0, 0])
-        np.testing.assert_array_almost_equal(m[2], [1, 1, 1, 1])
+        for row in [0, 2, 4]:
+            np.testing.assert_array_almost_equal(m[row], [1, 1, 1, 1])
+        for row in [1, 3, 5]:
+            np.testing.assert_array_almost_equal(m[row], [0, 0, 0, 0])
 
     def test_empty(self):
         v = np.array([], dtype=np.float64)
@@ -110,6 +131,31 @@ class TestArgMutableView(unittest.TestCase):
     def test_rejects_wrong_rank(self):
         with self.assertRaises(TypeError):
             nc.fill_view_2d(np.zeros(5), 1.0)
+
+    def test_rejects_readonly_numpy(self):
+        """Mutable view should reject read-only numpy arrays."""
+        a = np.zeros(5)
+        a.flags.writeable = False
+        with self.assertRaises(TypeError):
+            nc.fill_view_1d(a, 1.0)
+
+    def test_fills_long(self):
+        v = np.zeros(4, dtype=np.int64)
+        nc.fill_view_long(v, 7)
+        np.testing.assert_array_equal(v, [7, 7, 7, 7])
+
+    def test_fills_complex(self):
+        v = np.zeros(3, dtype=np.complex128)
+        nc.fill_view_complex(v, 1 + 2j)
+        np.testing.assert_array_almost_equal(v, [1 + 2j, 1 + 2j, 1 + 2j])
+
+    def test_rejects_wrong_dtype_long(self):
+        with self.assertRaises(TypeError):
+            nc.fill_view_long(np.zeros(4, dtype=np.float64), 1)
+
+    def test_rejects_wrong_dtype_complex(self):
+        with self.assertRaises(TypeError):
+            nc.fill_view_complex(np.zeros(3, dtype=np.float64), 1 + 0j)
 
 
 class TestArgConstView(unittest.TestCase):
@@ -290,9 +336,11 @@ class TestArrayOfStrings(unittest.TestCase):
         result = nc.reverse_strings(np.array(["abc", "de", "f"], dtype=object))
         self.assertEqual(list(result), ["cba", "ed", "f"])
 
-    def test_from_object_array(self):
-        result = nc.reverse_strings(np.array(["hello", "world"], dtype=object))
-        self.assertEqual(list(result), ["olleh", "dlrow"])
+    def test_rejects_plain_list(self):
+        """Plain Python list of strings cannot be auto-converted to array<string, 1>.
+        Non-npy element types require a numpy object array."""
+        with self.assertRaises(TypeError):
+            nc.reverse_strings(["abc", "de"])
 
 
 class TestArrayOfVectors(unittest.TestCase):
@@ -318,6 +366,70 @@ class TestArrayOfVectors(unittest.TestCase):
         ranges = nc.make_ranges(4)
         flat = nc.flatten_array_of_vectors(ranges)
         np.testing.assert_array_almost_equal(flat, [0.0, 0.0, 1.0, 0.0, 1.0, 2.0, 0.0, 1.0, 2.0, 3.0])
+
+    def test_2d_input(self):
+        """array<vector<int>, 2> as input: 2D non-npy element-by-element conversion."""
+        grid = nc.make_grid(2, 3)
+        self.assertEqual(nc.count_elements_2d(grid), 12)  # 6 cells, each with 2 elements
+
+
+# ==================================================================
+# matrix<T> and vector<T> aliases
+# ==================================================================
+
+class TestMatrixVectorAliases(unittest.TestCase):
+    """nda::matrix<T> and nda::vector<T> use the same converter as array."""
+
+    def test_vector_const_ref(self):
+        self.assertAlmostEqual(nc.sum_nda_vector(np.array([1.0, 2.0, 3.0])), 6.0)
+
+    def test_vector_from_list(self):
+        self.assertAlmostEqual(nc.sum_nda_vector([10.0, 20.0]), 30.0)
+
+    def test_vector_rejects_2d(self):
+        with self.assertRaises(TypeError):
+            nc.sum_nda_vector(np.ones((2, 3)))
+
+    def test_matrix_return(self):
+        m = nc.make_matrix(2, 3)
+        self.assertEqual(m.shape, (2, 3))
+        np.testing.assert_array_almost_equal(m, [[0, 1, 2], [3, 4, 5]])
+
+    def test_matrix_return_writeable(self):
+        m = nc.make_matrix(2, 2)
+        self.assertTrue(m.flags['WRITEABLE'])
+
+
+# ==================================================================
+# Bool arrays (NPY_BOOL has special 1-byte storage)
+# ==================================================================
+
+class TestBoolArrays(unittest.TestCase):
+    """array<bool, 1>: bool has npy_type NPY_BOOL."""
+
+    def test_count_true(self):
+        self.assertEqual(nc.count_true(np.array([True, False, True, True])), 3)
+
+    def test_count_true_empty(self):
+        self.assertEqual(nc.count_true(np.array([], dtype=bool)), 0)
+
+    def test_negate_roundtrip(self):
+        a = np.array([True, False, True], dtype=bool)
+        np.testing.assert_array_equal(nc.negate_bools(a), [False, True, False])
+
+    def test_negate_original_unchanged(self):
+        a = np.array([True, False], dtype=bool)
+        nc.negate_bools(a)
+        np.testing.assert_array_equal(a, [True, False])
+
+    def test_from_bool_dtype(self):
+        """Native bool array is accepted."""
+        self.assertEqual(nc.count_true(np.array([True, False, True, False], dtype=bool)), 2)
+
+    def test_rejects_int_dtype(self):
+        """int array cannot be safely cast to bool."""
+        with self.assertRaises(TypeError):
+            nc.count_true(np.array([1, 0, 1, 0], dtype=np.int64))
 
 
 if __name__ == "__main__":
