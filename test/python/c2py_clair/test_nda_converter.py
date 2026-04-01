@@ -336,6 +336,10 @@ class TestArrayOfStrings(unittest.TestCase):
         result = nc.reverse_strings(np.array(["abc", "de", "f"], dtype=object))
         self.assertEqual(list(result), ["cba", "ed", "f"])
 
+    def test_empty(self):
+        result = nc.reverse_strings(np.array([], dtype=object))
+        self.assertEqual(len(result), 0)
+
     def test_rejects_plain_list(self):
         """Plain Python list of strings cannot be auto-converted to array<string, 1>.
         Non-npy element types require a numpy object array."""
@@ -371,6 +375,15 @@ class TestArrayOfVectors(unittest.TestCase):
         """array<vector<int>, 2> as input: 2D non-npy element-by-element conversion."""
         grid = nc.make_grid(2, 3)
         self.assertEqual(nc.count_elements_2d(grid), 12)  # 6 cells, each with 2 elements
+
+    def test_empty_make_ranges(self):
+        result = nc.make_ranges(0)
+        self.assertEqual(len(result), 0)
+
+    def test_empty_flatten(self):
+        arr = np.array([], dtype=object)
+        result = nc.flatten_array_of_vectors(arr)
+        self.assertEqual(len(result), 0)
 
 
 # ==================================================================

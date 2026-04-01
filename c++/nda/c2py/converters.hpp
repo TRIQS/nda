@@ -177,10 +177,15 @@ namespace c2py {
           pyref subobj = PyObject_GetItem(obj, pyref::make_tuple(PyLong_FromLong(i)...));
           return converter_T::is_convertible(subobj, false);
         };
-        res = sum(nda::array_adapter{shape, l});
+        long n_elements = 1;
+        for (int i = 0; i < R; ++i) n_elements *= shape[i];
+        long n_convertible = sum(nda::array_adapter{shape, l});
 
-        if (!res and raise_python_exception) PyErr_SetString(PyExc_TypeError, "Cannot convert to array. One element can not be converted to C++.");
-        return res;
+        if (n_convertible != n_elements) {
+          if (raise_python_exception) PyErr_SetString(PyExc_TypeError, "Cannot convert to array. One element can not be converted to C++.");
+          return false;
+        }
+        return true;
       }
     }
 
