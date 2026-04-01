@@ -158,7 +158,9 @@ namespace c2py {
 
       if constexpr (has_npy_type<T>) {
         // in this case, we convert to a view and then copy to the array, so the condition is the same
-        return converter_view_T::is_convertible(obj, raise_python_exception, false /*allow_lower_rank*/, false /*require_c_order*/);
+        // use a const view converter to skip the writability check.
+        using const_view_t         = nda::basic_array_view<const T, R, nda::C_stride_layout, Algebra>;
+        return py_converter<const_view_t>::is_convertible(obj, raise_python_exception, false /*allow_lower_rank*/, false /*require_c_order*/);
       } else {
         // T is a type requiring conversion.
         // First I see whether I can convert it to a array of PyObject* ( i.e. it is an array of object and it has the proper rank...)
@@ -202,9 +204,9 @@ namespace c2py {
       }
 
       if constexpr (has_npy_type<T>) {
-        if (not numpy_check_layout<R, nda::C_layout>(obj)) {
-          c2py::pyref obj_c_order = make_numpy(obj);
-          return array_t{converter_view_T::py2c(obj_c_order)};
+        if (not numpy_check_layout<R, nda::C_layout>(obj) or not PyArray_ISWRITEABLE((PyArrayObject *)(obj))) {
+          c2py::pyref obj_copy = make_numpy(obj);
+          return array_t{converter_view_T::py2c(obj_copy)};
         }
         return converter_view_T::py2c(obj);
       } else {

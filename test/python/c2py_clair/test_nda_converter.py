@@ -27,6 +27,11 @@ class TestArgArrayConstRef(unittest.TestCase):
         self.assertAlmostEqual(nc.sum_matrix(m), 10.0)
         self.assertAlmostEqual(nc.sum_matrix(m.T), 10.0)
 
+    def test_non_writeable(self):
+        a = np.array([1.0, 2.0, 3.0])
+        a.flags.writeable = False
+        self.assertAlmostEqual(nc.sum_array(a), 6.0)
+
     def test_accepts_list_and_tuple(self):
         self.assertAlmostEqual(nc.sum_array([1.0, 2.0, 3.0]), 6.0)
         self.assertAlmostEqual(nc.sum_array((1.0, 2.0, 3.0)), 6.0)
@@ -76,6 +81,12 @@ class TestArgArrayByValue(unittest.TestCase):
         m = np.array([[1.0, 2.0], [3.0, 4.0]])
         result = nc.double_array(m[:, 0])
         np.testing.assert_array_almost_equal(result, [2.0, 6.0])
+
+    def test_non_writeable(self):
+        a = np.array([1.0, 2.0, 3.0])
+        a.flags.writeable = False
+        np.testing.assert_array_almost_equal(nc.double_array(a), [2.0, 4.0, 6.0])
+
     def test_complex_roundtrip(self):
         a = np.array([1 + 2j, 3 - 4j], dtype=np.complex128)
         np.testing.assert_array_almost_equal(nc.scale_complex_array(a, 2 + 0j), [2 + 4j, 6 - 8j])
