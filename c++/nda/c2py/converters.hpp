@@ -214,7 +214,9 @@ namespace c2py {
     requires(has_npy_type<std::decay_t<T>>)
   struct py_converter<nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap<>> const &> {
     using array_t = nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap<>>;
-    static PyObject *c2py(array_t const &a) { return cxx2py(nda::make_const_view(a)); }
+    static PyObject *c2py(array_t const &a, [[maybe_unused]] PyObject *guardian) {
+      return cxx2py(nda::make_const_view(a));
+    } // guardian is not used, as nda has its own shared handle which takes care of the ownership.
   };
 
   template <typename T, int R, char Algebra>
@@ -222,7 +224,10 @@ namespace c2py {
   struct py_converter<nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap<>> &> {
     using array_t = nda::basic_array<T, R, nda::C_layout, Algebra, nda::heap<>>;
     using view_t  = nda::basic_array_view<T, R, nda::C_layout, Algebra>;
-    static PyObject *c2py(array_t &a) { return cxx2py(view_t(a)); }
+    static PyObject *c2py(array_t &a, [[maybe_unused]] PyObject *guardian) {
+      return cxx2py(view_t(a));
+      // guardian is not used, as nda has its own shared handle which takes care of the ownership.return arr;
+    }
   };
 
   template <typename E>
