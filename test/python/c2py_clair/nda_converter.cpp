@@ -18,6 +18,10 @@ nda::array<double, 1> double_array(nda::array<double, 1> a) {
   return a;
 }
 
+// -- arg: array<T, 2> by value (for layout tests) ----------------------
+
+double get_01(nda::array<double, 2> a) { return a(0, 1); }
+
 // -- arg: array_view<T, R> (mutable) ----------------------------------
 
 void fill_view_1d(nda::array_view<double, 1> v, double val) { v = val; }
