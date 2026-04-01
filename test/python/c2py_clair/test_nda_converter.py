@@ -61,6 +61,13 @@ class TestArgArrayByValue(unittest.TestCase):
         np.testing.assert_array_almost_equal(nc.double_array(np.array([1, 2], dtype=np.float32)), [2.0, 4.0])
         np.testing.assert_array_almost_equal(nc.double_array(np.asfortranarray(np.array([1.0, 2.0]))), [2.0, 4.0])
 
+    def test_fortran_order_2d_preserves_data(self):
+        """Fortran-ordered 2D input is auto-converted to C order; check element (0,1) != (1,0)."""
+        m = np.array([[1.0, 2.0], [3.0, 4.0]])
+        mf = np.asfortranarray(m)
+        self.assertAlmostEqual(nc.get_01(mf), 2.0)   # m(0,1) == 2, not 3
+        self.assertAlmostEqual(nc.get_01(mf.T), 3.0)  # m^T(0,1) == 3
+
     def test_accepts_list(self):
         np.testing.assert_array_almost_equal(nc.double_array([1.0, 2.0]), [2.0, 4.0])
 
