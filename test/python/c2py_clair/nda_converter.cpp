@@ -119,4 +119,53 @@ nda::array<std::vector<int>, 2> make_grid(long rows, long cols) {
   return res;
 }
 
+long count_elements_2d(nda::array<std::vector<int>, 2> const &a) {
+  long count = 0;
+  nda::for_each(a.shape(), [&](auto i, auto j) { count += static_cast<long>(a(i, j).size()); });
+  return count;
+}
+
+// -- matrix<T> and vector<T> aliases -----------------------------------
+
+double sum_nda_vector(nda::vector<double> const &v) { return nda::sum(v); }
+
+nda::matrix<double> make_matrix(long rows, long cols) {
+  nda::matrix<double> m(rows, cols);
+  nda::for_each(m.shape(), [&](auto i, auto j) { m(i, j) = static_cast<double>(i * cols + j); });
+  return m;
+}
+
+// -- by-value round-trip for complex and long ----------------------------
+
+nda::array<std::complex<double>, 1> scale_complex_array(nda::array<std::complex<double>, 1> a, std::complex<double> s) {
+  a *= s;
+  return a;
+}
+
+nda::array<long, 1> double_int_array(nda::array<long, 1> a) {
+  a *= 2;
+  return a;
+}
+
+// -- views for long and complex types ------------------------------------
+
+void fill_view_long(nda::array_view<long, 1> v, long val) { v = val; }
+
+void fill_view_complex(nda::array_view<std::complex<double>, 1> v, std::complex<double> val) { v = val; }
+
+// -- bool arrays ---------------------------------------------------------
+
+long count_true(nda::array<bool, 1> const &a) {
+  long count = 0;
+  nda::for_each(a.shape(), [&](auto i) {
+    if (a(i)) ++count;
+  });
+  return count;
+}
+
+nda::array<bool, 1> negate_bools(nda::array<bool, 1> a) {
+  nda::for_each(a.shape(), [&](auto i) { a(i) = !a(i); });
+  return a;
+}
+
 #include "nda_converter.wrap.cxx"
