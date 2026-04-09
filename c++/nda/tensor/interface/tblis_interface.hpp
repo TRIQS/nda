@@ -56,7 +56,7 @@ namespace nda::tensor::nda_tblis {
       this->type = other.type;
       this->conj = other.conj;
       this->scalar.reset(other.scalar);
-      this->::tblis::tblis_tensor::data = other.data;
+      this->::tblis::tblis_tensor::data = other.data();
       this->ndim                        = other.ndim;
       this->len                         = lens_.data();
       this->stride                      = strides_.data();

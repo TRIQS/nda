@@ -94,10 +94,10 @@ namespace nda::tensor {
       if (indxX != indxY) NDA_RUNTIME_ERROR << "tensor::assign: Index permutation not yet implemented.";
       if (indxX != indxZ) NDA_RUNTIME_ERROR << "tensor::assign: Index permutation not yet implemented.";
       if constexpr ((get_rank<A> == get_rank<B>) and (get_rank<A> == get_rank<C>)) {
-        C tmp;
+        C tmp = a;
         switch (operAB) {
-          case op::SUM: tmp = alpha * a + beta * b; break;
-          case op::MUL: tmp = (alpha * a) * (beta * b); break;
+          case op::SUM: tmp = alpha * tmp + beta * b; break;
+          case op::MUL: tmp = (alpha * tmp) * (beta * b); break;
           default: NDA_RUNTIME_ERROR << "Unknown binary operation.";
         };
         switch (operABC) {

@@ -141,7 +141,7 @@ namespace nda::lapack {
         for (int i = 0; i < batchSize; ++i) {
           auto a_b = a(range::all, range::all, i);
           auto b_b = b(range::all, range::all, i);
-          f77::getrs(op_a, a.extent(0), b.extent(1), a_b.data(), get_ld(a_b), ipiv.data() + b * get_ld(ipiv), b_b.data(), get_ld(b_b), info(i));
+          f77::getrs(op_a, a.extent(0), b.extent(1), a_b.data(), get_ld(a_b), ipiv.data() + i * get_ld(ipiv), b_b.data(), get_ld(b_b), info(i));
         }
       }
       return info;

@@ -447,9 +447,14 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
   // compile-time check if assignment is possible
   static_assert(std::is_assignable_v<value_type &, get_value_t<RHS>>, "Error in assign_from_ndarray: Incompatible value types");
 
-  // no expr_call on device yet
-  if constexpr (mem::on_device<self_t> or mem::on_device<RHS>) {
-    // compile time check for no expr_call objects on RHS
+  // no expr_call on device 
+  static_assert((not mem::on_device<RHS>) or MemoryArray<RHS>, "No expressions with device arrays"); 
+
+  // if array on device and expr, convert expression to array
+  if constexpr (mem::on_device<self_t> and (not MemoryArray<RHS>) ) { 
+    auto rhs_h = make_regular(rhs);
+    this->assign_from_ndarray(rhs_h);
+    return;
   }
 
   // are both operands nda::MemoryArray types?
@@ -501,21 +506,25 @@ void assign_from_ndarray(RHS const &rhs) { // FIXME noexcept {
   if constexpr (mem::have_device_compatible_addr_space<self_t, RHS>) {
     tensor::assign(rhs, *this);
   } else if constexpr (mem::on_device<self_t> or mem::on_device<RHS>) {
-    // this is a dev/host copy, make copies and copy contigous arrays over bus
-    // this is a problem when RHS is an expression, fix!
-    if (rhs.is_contiguous()) {
-      auto B_copy = make_regular(*this);
-      B_copy()    = rhs();
-      (*this)()   = B_copy();
-    } else {
-      auto rhs_copy = make_regular(rhs);
-      if (this->is_contiguous()) {
-        (*this)() = rhs_copy();
-      } else {
+    if constexpr (nda::MemoryArray<RHS>) {
+      if (rhs.is_contiguous()) {
         auto B_copy = make_regular(*this);
-        B_copy()    = rhs_copy();
+        B_copy()    = rhs();
         (*this)()   = B_copy();
+      } else {
+        auto rhs_copy = make_regular(rhs);
+        if (this->is_contiguous()) {
+          (*this)() = rhs_copy();
+        } else {
+          auto B_copy = make_regular(*this);
+          B_copy()    = rhs_copy();
+          (*this)()   = B_copy();
+        }
       }
+    } else {
+      // It is possible to end here if RHS = expr_call<...> with combined memory times that include DEVICE and UNIFIED spaces, since their combination leads to unified. FIX! 
+      // should not be here
+      NDA_RUNTIME_ERROR << "Error in assign_from_ndarray: Contact developers!";
     }
   } else {
     nda::for_each(shape(), [this, &rhs](auto const &...args) { (*this)(args...) = value_type(rhs(args...)); });
