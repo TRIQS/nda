@@ -79,6 +79,13 @@ namespace nda {
   std::ostream &operator<<(std::ostream &sout, A const &a)
     requires(is_regular_or_view_v<A>)
   {
+    // copy to host if needed
+    if constexpr (mem::on_device<A>)
+    {
+      sout<<to_host(a);
+      return sout;
+    }
+
     // 1-dimensional array/view
     if constexpr (A::rank == 1) {
       sout << "[";
