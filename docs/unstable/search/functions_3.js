@@ -6,7 +6,7 @@ var searchData=
   ['decode_3',['decode',['../group__utils__perms.html#ga4cacfaf05a2e8db86e8ae76e79c8a404',1,'nda']]],
   ['det_4',['det',['../group__linalg__tools.html#gab73c6f0ca015db01c744982b9baff24a',1,'nda::linalg::det(M const &amp;m)'],['../group__clef__expr.html#ga10fd54ba6a85833cc60bb66c87d752eb',1,'nda::linalg::det(A &amp;&amp;...__a)']]],
   ['det_5fin_5fplace_5',['det_in_place',['../group__linalg__tools.html#gac4f85694e951e396bf3e9d3e0d344c4d',1,'nda::linalg']]],
-  ['diag_6',['diag',['../group__av__factories.html#gae1edc14be98fa42d8e1e971f3ed0ed7f',1,'nda']]],
+  ['diag_6',['diag',['../group__av__factories.html#gae1edc14be98fa42d8e1e971f3ed0ed7f',1,'nda::diag(V const &amp;v)'],['../group__av__factories.html#ga4040021694a5a0314ab83d5d5ea1d99a',1,'nda::diag(std::initializer_list&lt; T &gt; const &amp;v)']]],
   ['diagonal_7',['diagonal',['../group__av__factories.html#gad73d17b3c916c0a15e6d1b1e9d4ee017',1,'nda']]],
   ['dot_8',['dot',['../group__linalg__blas.html#gaaffaf0d8afcd81bbf55819e3dc10eb61',1,'nda::blas::dot()'],['../group__linalg__tools.html#gaa998481e577465ce1726c96e362be5ad',1,'nda::linalg::dot(X const &amp;x, Y const &amp;y)']]],
   ['dot_5fgeneric_9',['dot_generic',['../group__linalg__tools.html#ga97cbcc69ced04f2d079476d4b6372034',1,'nda::linalg']]],

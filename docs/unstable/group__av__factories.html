@@ -123,6 +123,9 @@ Functions</h2></td></tr>
 <tr class="memitem:gaf93e0a19277d0f2ed937e6d7339ee652" id="r_gaf93e0a19277d0f2ed937e6d7339ee652"><td class="memTemplParams" colspan="2">template&lt;size_t Axis = 0, Array A0, Array... As&gt; </td></tr>
 <tr class="memitem:gaf93e0a19277d0f2ed937e6d7339ee652 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#gaf93e0a19277d0f2ed937e6d7339ee652">nda::concatenate</a> (A0 const &amp;a0, As const &amp;...as)</td></tr>
 <tr class="memdesc:gaf93e0a19277d0f2ed937e6d7339ee652"><td class="mdescLeft">&#160;</td><td class="mdescRight">Join a sequence of <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types along an existing axis.  <br /></td></tr>
+<tr class="memitem:ga4040021694a5a0314ab83d5d5ea1d99a" id="r_ga4040021694a5a0314ab83d5d5ea1d99a"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:ga4040021694a5a0314ab83d5d5ea1d99a template"><td class="memItemLeft">ArrayOfRank&lt; 2 &gt; auto&#160;</td><td class="memItemRight"><a class="el" href="#ga4040021694a5a0314ab83d5d5ea1d99a">nda::diag</a> (std::initializer_list&lt; T &gt; const &amp;v)</td></tr>
+<tr class="memdesc:ga4040021694a5a0314ab83d5d5ea1d99a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a new <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> with the given values on the diagonal.  <br /></td></tr>
 <tr class="memitem:gae1edc14be98fa42d8e1e971f3ed0ed7f" id="r_gae1edc14be98fa42d8e1e971f3ed0ed7f"><td class="memTemplParams" colspan="2">template&lt;typename V&gt; </td></tr>
 <tr class="memitem:gae1edc14be98fa42d8e1e971f3ed0ed7f template"><td class="memItemLeft">ArrayOfRank&lt; 2 &gt; auto&#160;</td><td class="memItemRight"><a class="el" href="#gae1edc14be98fa42d8e1e971f3ed0ed7f">nda::diag</a> (V const &amp;v)</td></tr>
 <tr class="memdesc:gae1edc14be98fa42d8e1e971f3ed0ed7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a new <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> with the given values on the diagonal.  <br /></td></tr>
@@ -368,8 +371,47 @@ template&lt;size_t Axis = 0, Array A0, Array... As&gt; </div>
 
 </div>
 </div>
+<a id="ga4040021694a5a0314ab83d5d5ea1d99a" name="ga4040021694a5a0314ab83d5d5ea1d99a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4040021694a5a0314ab83d5d5ea1d99a">&#9670;&#160;</a></span>diag() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">ArrayOfRank&lt; 2 &gt; auto nda::diag </td>
+          <td>(</td>
+          <td class="paramtype">std::initializer_list&lt; T &gt; const &amp;</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="matrix__functions_8hpp.html">nda/matrix_functions.hpp</a>&gt;</code></p>
+
+<p>Get a new <a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> with the given values on the diagonal. </p>
+<p>Overload for <span class="tt">std::initializer_list</span> to allow calls like <span class="tt"><a class="el" href="#gae1edc14be98fa42d8e1e971f3ed0ed7f" title="Get a new nda::matrix with the given values on the diagonal.">nda::diag</a>({1.0, 2.0})</span>.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Value type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v</td><td>Initializer list containing the diagonal values. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">nda::matrix</a> with the given values on the diagonal. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="matrix__functions_8hpp_source.html#l00133">133</a> of file <a class="el" href="matrix__functions_8hpp_source.html">matrix_functions.hpp</a>.</p>
+
+</div>
+</div>
 <a id="gae1edc14be98fa42d8e1e971f3ed0ed7f" name="gae1edc14be98fa42d8e1e971f3ed0ed7f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae1edc14be98fa42d8e1e971f3ed0ed7f">&#9670;&#160;</a></span>diag()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#gae1edc14be98fa42d8e1e971f3ed0ed7f">&#9670;&#160;</a></span>diag() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -613,7 +655,7 @@ template&lt;Matrix A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if the matrix is diagonal, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="matrix__functions_8hpp_source.html#l00178">178</a> of file <a class="el" href="matrix__functions_8hpp_source.html">matrix_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix__functions_8hpp_source.html#l00192">192</a> of file <a class="el" href="matrix__functions_8hpp_source.html">matrix_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -656,7 +698,7 @@ template&lt;Matrix A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if the matrix is square, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="matrix__functions_8hpp_source.html#l00162">162</a> of file <a class="el" href="matrix__functions_8hpp_source.html">matrix_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix__functions_8hpp_source.html#l00176">176</a> of file <a class="el" href="matrix__functions_8hpp_source.html">matrix_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -1747,7 +1789,7 @@ template&lt;ArrayOfRank&lt; 2 &gt; A, ArrayOfRank&lt; 2 &gt; B&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A new 2-dimensional array/view with the two arrays stacked vertically. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="matrix__functions_8hpp_source.html#l00139">139</a> of file <a class="el" href="matrix__functions_8hpp_source.html">matrix_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix__functions_8hpp_source.html#l00153">153</a> of file <a class="el" href="matrix__functions_8hpp_source.html">matrix_functions.hpp</a>.</p>
 
 </div>
 </div>
