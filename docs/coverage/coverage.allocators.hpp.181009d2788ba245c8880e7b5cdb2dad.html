@@ -299,21 +299,21 @@
   </div>
   <div class="Box-row Box-row--focus-gray py-2 d-flex">
     <div role="gridcell" class="color-fg-muted flex-auto min-width-0 col-md-2"><a href="#l86">nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt;::allocate(unsigned long) (nda/mem/allocators.hpp:86)</a>    </div>
-    <div role="gridcell" class="color-fg-muted flex-auto min-width-0 d-flex flex-justify-end flex-wrap flex-items-baseline" data-sort="3988968">called 3988968 times</div>
+    <div role="gridcell" class="color-fg-muted flex-auto min-width-0 d-flex flex-justify-end flex-wrap flex-items-baseline" data-sort="3988970">called 3988970 times</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">100.0%</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">-%</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">100.0%</div>
   </div>
   <div class="Box-row Box-row--focus-gray py-2 d-flex">
     <div role="gridcell" class="color-fg-muted flex-auto min-width-0 col-md-2"><a href="#l98">nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt;::allocate_zero(unsigned long) (nda/mem/allocators.hpp:98)</a>    </div>
-    <div role="gridcell" class="color-fg-muted flex-auto min-width-0 d-flex flex-justify-end flex-wrap flex-items-baseline" data-sort="4573">called 4573 times</div>
+    <div role="gridcell" class="color-fg-muted flex-auto min-width-0 d-flex flex-justify-end flex-wrap flex-items-baseline" data-sort="4574">called 4574 times</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">100.0%</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">-%</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">100.0%</div>
   </div>
   <div class="Box-row Box-row--focus-gray py-2 d-flex">
     <div role="gridcell" class="color-fg-muted flex-auto min-width-0 col-md-2"><a href="#l112">nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt;::deallocate(nda::mem::blk_t) (nda/mem/allocators.hpp:112)</a>    </div>
-    <div role="gridcell" class="color-fg-muted flex-auto min-width-0 d-flex flex-justify-end flex-wrap flex-items-baseline" data-sort="3993541">called 3993541 times</div>
+    <div role="gridcell" class="color-fg-muted flex-auto min-width-0 d-flex flex-justify-end flex-wrap flex-items-baseline" data-sort="3993544">called 3993544 times</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">100.0%</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">-%</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">100.0%</div>
@@ -1092,7 +1092,7 @@
         <td class="lineno"><a id="l86" href="#l86">86</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">3988968</td>
+        <td class="linecount coveredLine show_coveredLine">3988970</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">blk_t</span><span class="w"> </span><span class="nf">allocate</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="k">noexcept</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="o">&lt;</span><span class="n">AdrSp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">s</span><span class="p">),</span><span class="w"> </span><span class="n">s</span><span class="p">};</span><span class="w"> </span><span class="p">}</span></td>
       </tr>
       <tr class="source-line">
@@ -1176,7 +1176,7 @@
         <td class="lineno"><a id="l98" href="#l98">98</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">4573</td>
+        <td class="linecount coveredLine show_coveredLine">4574</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">blk_t</span><span class="w"> </span><span class="nf">allocate_zero</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="k">noexcept</span><span class="w"> </span><span class="p">{</span></td>
       </tr>
       <tr class="source-line">
@@ -1190,7 +1190,7 @@
         <td class="lineno"><a id="l100" href="#l100">100</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">4573</td>
+        <td class="linecount coveredLine show_coveredLine">4574</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">{(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">std</span><span class="o">::</span><span class="n">calloc</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="cm">/* byte */</span><span class="p">),</span><span class="w"> </span><span class="n">s</span><span class="p">};</span><span class="w"> </span><span class="c1">// NOLINT (C-style cast is fine here)</span></td>
       </tr>
       <tr class="source-line">
@@ -1274,7 +1274,7 @@
         <td class="lineno"><a id="l112" href="#l112">112</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">3993541</td>
+        <td class="linecount coveredLine show_coveredLine">3993544</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">deallocate</span><span class="p">(</span><span class="n">blk_t</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="k">noexcept</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">free</span><span class="o">&lt;</span><span class="n">AdrSp</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">b</span><span class="p">.</span><span class="n">ptr</span><span class="p">);</span><span class="w"> </span><span class="p">}</span></td>
       </tr>
       <tr class="source-line">
@@ -5283,7 +5283,7 @@
         <hr class="block-separator"/>
         <footer class="text-center">
           Created using <a href="http://gcovr.com/en/8.6">GCOVR (Version 8.6)</a>
-          at 2026-03-30 15:55:51
+          at 2026-04-13 22:14:53
         </footer>
       </div>
     </div>
