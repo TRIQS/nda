@@ -113,6 +113,12 @@ TEST_F(NDAFactoriesTransformations, DiagDiagonalAndTrace) {
   auto d_c = nda::diagonal(M_c);
   nda::for_each(d_c.shape(), [&](auto idx) { EXPECT_EQ(d_c(idx), diag_c[idx]); });
   EXPECT_COMPLEX_NEAR(nda::trace(M_c), std::accumulate(diag_c.begin(), diag_c.end(), czero));
+
+  // initializer list
+  auto M_il = nda::diag({1.0, 2.0, 3.0});
+  EXPECT_EQ(M_il.shape(), (std::array<long, 2>{3, 3}));
+  EXPECT_EQ_ARRAY(nda::diagonal(M_il), (nda::array<double, 1>{1.0, 2.0, 3.0}));
+  EXPECT_DOUBLE_EQ(nda::trace(M_il), 6.0);
 }
 
 TEST_F(NDAFactoriesTransformations, Eye) {

@@ -121,6 +121,20 @@ namespace nda {
   }
 
   /**
+   * @brief Get a new nda::matrix with the given values on the diagonal.
+   *
+   * @details Overload for `std::initializer_list` to allow calls like `nda::diag({1.0, 2.0})`.
+   *
+   * @tparam T Value type.
+   * @param v Initializer list containing the diagonal values.
+   * @return nda::matrix with the given values on the diagonal.
+   */
+  template <typename T>
+  ArrayOfRank<2> auto diag(std::initializer_list<T> const &v) {
+    return diag(nda::vector<T>{v});
+  }
+
+  /**
    * @brief Stack two 2-dimensional arrays/views vertically.
    *
    * @details This is a more restricted implementation then nda::concatenate. It is only for 2D arrays/views.
