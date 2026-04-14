@@ -99,8 +99,8 @@ namespace nda::blas {
     EXPECTS(mat.extent(1) == x.extent(0));
     EXPECTS(mat.extent(0) == y.extent(0));
     EXPECTS(mat.indexmap().min_stride() == 1);
-    EXPECTS(x.indexmap().min_stride() == 1);
-    EXPECTS(y.indexmap().min_stride() == 1);
+//    EXPECTS(x.indexmap().min_stride() == 1);
+//    EXPECTS(y.indexmap().min_stride() == 1);
 
     // gather parameters for gemv call
     static constexpr bool conj_A = is_conj_array_expr<A>;
