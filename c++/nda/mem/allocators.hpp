@@ -17,10 +17,15 @@
 #include "./fill.hpp"
 #include "../macros.hpp"
 
+#ifdef NDA_HAVE_MPI
+#include <mpi/mpi.hpp>
+#endif
+
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
+#include <limits>
 #include <memory>
 #include <vector>
 #include <utility>
@@ -44,12 +49,24 @@ namespace nda::mem {
    */
 
   /// Memory block consisting of a pointer and its size.
-  struct blk_t {
+  struct blk_slim_t {
     /// Pointer to the memory block.
     char *ptr = nullptr;
 
     /// Size of the memory block in bytes.
     size_t s = 0;
+  };
+
+  /// Memory block consisting of a pointer, its size and a pointer to arbitrary userdata.
+  struct blk_fat_t {
+    /// Pointer to the memory block.
+    char *ptr = nullptr;
+
+    /// Size of the memory block in bytes.
+    size_t s = 0;
+
+    /// Pointer to required extra information about the allocation (e.g. the MPI shared memory window).
+    void *userdata = nullptr;
   };
 
   /**
@@ -77,19 +94,36 @@ namespace nda::mem {
     /// nda::mem::AddressSpace in which the memory is allocated.
     static constexpr auto address_space = AdrSp;
 
+    /// Type of allocated block.
+    using blk_t = std::conditional_t<AdrSp == mem::MPISharedMemory, blk_fat_t, blk_slim_t>;
+
     /**
-     * @brief Allocate memory using nda::mem::malloc.
+     * @brief Allocate memory based on the specified address space.
      *
      * @param s Size in bytes of the memory to allocate.
      * @return nda::mem::blk_t memory block.
      */
-    static blk_t allocate(size_t s) noexcept { return {(char *)malloc<AdrSp>(s), s}; }
+    static blk_t allocate(size_t s) noexcept {
+      if constexpr (AdrSp == mem::MPISharedMemory) {
+#ifdef NDA_HAVE_MPI
+        ASSERT(s <= std::numeric_limits<MPI_Aint>::max());
+        auto const &shm = mem::mpi_shm::get_communicator();
+        auto *win       = new mpi::shared_window<char>{shm, shm.rank() == 0 ? (MPI_Aint)s : 0};
+        return {(char *)win->base(0), (std::size_t)s, (void *)win};
+#else
+        static_assert(false, "MPI support is not enabled in this build of nda. Please configure and install nda with -DMPISupport=ON");
+#endif
+      } else {
+        return {(char *)malloc<AdrSp>(s), s};
+      }
+    }
 
     /**
      * @brief Allocate memory and set it to zero.
      *
      * @details The behavior depends on the address space:
      * - It uses std::calloc for `Host` nda::mem::AddressSpace.
+     * - Uses mpi::shared_window for `MPISharedMemory`.
      * - Otherwise it uses nda::mem::malloc and nda::mem::memset.
      *
      * @param s Size in bytes of the memory to allocate.
@@ -98,6 +132,19 @@ namespace nda::mem {
     static blk_t allocate_zero(size_t s) noexcept {
       if constexpr (AdrSp == mem::Host) {
         return {(char *)std::calloc(s, 1 /* byte */), s}; // NOLINT (C-style cast is fine here)
+      } else if constexpr (AdrSp == mem::MPISharedMemory) {
+#ifdef NDA_HAVE_MPI
+        ASSERT(s <= std::numeric_limits<MPI_Aint>::max());
+        auto const &shm = mem::mpi_shm::get_communicator();
+        auto *win       = new mpi::shared_window<char>{shm, shm.rank() == 0 ? (MPI_Aint)s : 0};
+        char *baseptr   = win->base(0);
+        win->fence();
+        if (shm.rank() == 0) { std::memset(baseptr, 0, s); }
+        win->fence();
+        return {baseptr, (std::size_t)s, (void *)win};
+#else
+        static_assert(false, "MPI support is not enabled in this build of nda. Please configure and install nda with -DMPISupport=ON");
+#endif
       } else {
         char *ptr = (char *)malloc<AdrSp>(s);
         memset<AdrSp>(ptr, 0, s);
@@ -106,10 +153,20 @@ namespace nda::mem {
     }
 
     /**
-     * @brief Deallocate memory using nda::mem::free.
+     * @brief Deallocate memory using nda::mem::free or by deleting the mpi::shared_window depending on the Address Space.
      * @param b nda::mem::blk_t memory block to deallocate.
      */
-    static void deallocate(blk_t b) noexcept { free<AdrSp>((void *)b.ptr); }
+    static void deallocate(blk_t b) noexcept {
+      if constexpr (AdrSp == mem::MPISharedMemory) {
+#ifdef NDA_HAVE_MPI
+        delete static_cast<mpi::shared_window<char> *>(b.userdata);
+#else
+        static_assert(false, "MPI support is not enabled in this build of nda. Please configure and install nda with -DMPISupport=ON");
+#endif
+      } else {
+        free<AdrSp>((void *)b.ptr);
+      }
+    }
   };
 
   /**
@@ -139,6 +196,9 @@ namespace nda::mem {
 
     /// Only `Host` nda::mem::AddressSpace is supported for this allocator.
     static constexpr auto address_space = Host;
+
+    /// Type of allocated block.
+    using blk_t = blk_slim_t;
 
 #ifdef NDA_USE_ASAN
     bucket() { __asan_poison_memory_region(p, TotalChunkSize); }
@@ -273,6 +333,9 @@ namespace nda::mem {
     /// Only `Host` nda::mem::AddressSpace is supported for this allocator.
     static constexpr auto address_space = Host;
 
+    /// Type of allocated block.
+    using blk_t = typename b_t::blk_t;
+
     /// Default constructor.
     multi_bucket() : bu_vec(1), bu(bu_vec.begin()) {}
 
@@ -386,9 +449,13 @@ namespace nda::mem {
 
     public:
     static_assert(A::address_space == B::address_space);
+    static_assert(std::is_same_v<typename A::blk_t, typename B::blk_t>);
 
     /// nda::mem::AddressSpace in which the memory is allocated.
     static constexpr auto address_space = A::address_space;
+
+    /// Type of allocated block.
+    using blk_t = typename A::blk_t;
 
     /// Default constructor.
     segregator() = default;
@@ -457,6 +524,9 @@ namespace nda::mem {
     public:
     /// nda::mem::AddressSpace in which the memory is allocated.
     static constexpr auto address_space = A::address_space;
+
+    /// Type of allocated block.
+    using blk_t = typename A::blk_t;
 
     /// Default constructor.
     leak_check() = default;
@@ -565,6 +635,9 @@ namespace nda::mem {
     /// nda::mem::AddressSpace in which the memory is allocated.
     static constexpr auto address_space = A::address_space;
 
+    /// Type of allocated block.
+    using blk_t = typename A::blk_t;
+
     /// Default constructor.
     stats() = default;
 
@@ -641,7 +714,6 @@ namespace nda::mem {
       for (int i = 0; i < 64; ++i) { os << "[2^" << i << ", 2^" << i + 1 << "): " << hist[63 - i] << "\n"; }
     }
   };
-
   /** @} */
 
 } // namespace nda::mem

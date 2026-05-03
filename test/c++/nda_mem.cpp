@@ -231,10 +231,12 @@ TEST(NDA, MemoryBucketAllocator) {
   // only on host
   constexpr auto chunksize = 8;
   constexpr auto size      = 6;
-  std::vector<mem::blk_t> mbs(64);
+  using allocator_t        = mem::bucket<chunksize>;
+  using blk_t              = typename allocator_t::blk_t;
+  std::vector<blk_t> mbs(64);
 
   // empty bucket allocator
-  auto allo = mem::bucket<chunksize>();
+  auto allo = allocator_t();
   EXPECT_TRUE(allo.empty());
   std::cout << "Empty bucket: " << std::bitset<64>(allo.mask()) << std::endl;
 
@@ -271,10 +273,12 @@ TEST(NDA, MemoryBucketAllocator) {
 TEST(NDA, MemoryMultiBucketAllocator) {
   // only on host
   constexpr auto chunksize = 8;
-  std::vector<mem::blk_t> bucket1(64), bucket2(64);
+  using allocator_t        = mem::multi_bucket<chunksize>;
+  using blk_t              = typename allocator_t::blk_t;
+  std::vector<blk_t> bucket1(64), bucket2(64);
 
   // empty multi-bucket allocator
-  auto allo = mem::multi_bucket<chunksize>();
+  auto allo = allocator_t();
   EXPECT_TRUE(allo.empty());
   EXPECT_EQ(allo.buckets().size(), 1);
 
@@ -336,8 +340,10 @@ TEST(NDA, MemoryLeakCheckAllocator) {
 
 TEST(NDA, MemoryStatsAllocator) {
   // test only on host
-  auto allo = mem::stats<mem::mallocator<mem::Host>>();
-  std::vector<mem::blk_t> mbs(20);
+  using allocator_t = mem::stats<mem::mallocator<mem::Host>>;
+  using blk_t       = typename allocator_t::blk_t;
+  auto allo         = allocator_t();
+  std::vector<blk_t> mbs(20);
 
   // allocate and check stats
   for (auto i = 0ull; i < mbs.size(); ++i) {
@@ -462,4 +468,31 @@ TEST(NDA, MemoryHandleShared) {
   mem::handle_shared<int> s2{h};
   s = s2;
   EXPECT_EQ(s.refcount(), 3);
+}
+
+TEST(NDA, DefaultAllocator) {
+  nda::mem::handle_heap<int, nda::mem::mallocator<>> h(10);
+
+  nda::mem::handle_borrowed<int> hb(h);
+
+  EXPECT_NE(hb.parent(), nullptr);
+  EXPECT_EQ(h.data(), hb.data());
+}
+
+TEST(NDA, BorrowFromPointer) {
+  int arr[5] = {1, 2, 3, 4, 5};
+
+  nda::mem::handle_borrowed<int> hb(arr);
+
+  EXPECT_EQ(hb.data(), arr);
+  EXPECT_EQ(hb.parent(), nullptr);
+}
+
+TEST(NDA, BorrowWithOffset) {
+  nda::mem::handle_heap<int, nda::mem::mallocator<>> h(10);
+
+  nda::mem::handle_borrowed<int> hb(h, 2);
+
+  EXPECT_EQ(hb.data(), h.data() + 2);
+  EXPECT_NE(hb.parent(), nullptr);
 }

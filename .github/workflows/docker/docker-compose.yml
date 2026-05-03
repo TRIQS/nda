@@ -1,0 +1,20 @@
+services:
+  vm:
+    build: .
+    deploy:
+      mode: replicated
+      replicas: 3
+    environment:
+      CMAKE_C_COMPILER_LAUNCHER: ${CMAKE_C_COMPILER_LAUNCHER:-ccache}
+      CMAKE_CXX_COMPILER_LAUNCHER: ${CMAKE_CXX_COMPILER_LAUNCHER:-ccache}
+      CCACHE_COMPILERCHECK: ${CCACHE_COMPILERCHECK:-content}
+      CCACHE_BASEDIR: ${CCACHE_BASEDIR}
+      CCACHE_DIR: ${CCACHE_DIR:-${CCACHE_BASEDIR}/.ccache}
+      CCACHE_MAXSIZE: ${CCACHE_MAXSIZE:-500M}
+      CCACHE_SLOPPINESS: ${CCACHE_SLOPPINESS:-pch_defines,time_macros,include_file_mtime,include_file_ctime}
+      CCACHE_COMPRESS: ${CCACHE_COMPRESS:-1}
+      CCACHE_COMPRESSLEVEL: ${CCACHE_COMPRESSLEVEL:-1}
+    stdin_open: true
+    tty: true
+    volumes:
+      - ${CCACHE_BASEDIR}:${CCACHE_BASEDIR}:z

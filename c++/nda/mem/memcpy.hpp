@@ -28,7 +28,7 @@ namespace nda::mem {
    *
    * @details It makes the following function calls depending on the address spaces:
    * - `std::memcpy` if both address spaces are `Host`.
-   * - `cudaMemcpy` for all other combinations.
+   * - `cudaMemcpy` for all other device compatible address spaces.
    *
    * @tparam DestAdrSp nda::mem::AddressSpace of the destination.
    * @tparam SrcAdrSp nda::mem::AddressSpace of the source.
@@ -43,8 +43,10 @@ namespace nda::mem {
 
     if constexpr (DestAdrSp == Host && SrcAdrSp == Host) {
       std::memcpy(dest, src, count);
-    } else {
+    } else if constexpr ((SrcAdrSp == Device || SrcAdrSp == Unified) && (DestAdrSp == Device || DestAdrSp == Unified)) {
       device_error_check(cudaMemcpy(dest, src, count, cudaMemcpyDefault), "cudaMemcpy");
+    } else {
+      static_assert(false, "Not implemented!");
     }
   }
 
@@ -79,8 +81,10 @@ namespace nda::mem {
       auto *desti = static_cast<unsigned char *>(dest);
       auto *srci  = static_cast<const unsigned char *>(src);
       for (size_t i = 0; i < height; ++i, desti += dpitch, srci += spitch) std::memcpy(desti, srci, width);
-    } else if (nda::have_device) {
+    } else if constexpr ((SrcAdrSp == Device || SrcAdrSp == Unified) && (DestAdrSp == Device || DestAdrSp == Unified)) {
       device_error_check(cudaMemcpy2D(dest, dpitch, src, spitch, width, height, cudaMemcpyDefault), "cudaMemcpy2D");
+    } else {
+      static_assert(false, "Not implemented!");
     }
   }
 
