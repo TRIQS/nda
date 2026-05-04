@@ -32,25 +32,27 @@ namespace nda::lapack {
    * @details Computes the inverse of an \f$ n \times n \f$ matrix \f$ \mathbf{A} \f$ using the LU factorization 
    * computed by nda::lapack::getrf.
    *
-   * This method inverts \f$ \mathbf{U} \f$ and then computes \f$ \mathbf{A}^{-1} \f$ by solving the system \f$ 
+   * This method inverts \f$ \mathbf{U} \f$ and then computes \f$ \mathbf{A}^{-1} \f$ by solving the system \f$
    * \mathbf{A}^{-1} L = \mathbf{U}^{-1} \f$ for \f$ \mathbf{A}^{-1} \f$.
    * 
-   * @note All input arrays are required to satisfy nda::mem::have_host_compatible_addr_space.
+   * If the input arrays satisfy nda::mem::have_device_compatible_addr_space, a custom implementation that builds an 
+   * \f$ N \times N \f$ identity matrix in the workspace and calls cuSOLVER `?getrs` is used.
    *
    * @tparam A nda::blas_lapack::BlasArray<2> type.
    * @tparam IPIV nda::blas_lapack::PivotArrayFor<A, 1> type.
    * @tparam W nda::blas_lapack::BlasArrayFor<A, 1> type.
    * @param a Input/output matrix. On entry, the factors \f$ \mathbf{L} \f$ and \f$ \mathbf{U} \f$ from the
-   * factorization \f$ \mathbf{A} = \mathbf{P L U} \f$ as computed by nda::lapack::getrf. On exit \f$ \mathbf{A}^{-1} 
+   * factorization \f$ \mathbf{A} = \mathbf{P L U} \f$ as computed by nda::lapack::getrf. On exit \f$ \mathbf{A}^{-1}
    * \f$, the inverse of the original matrix \f$ \mathbf{A} \f$.
-   * @param ipiv Input vector. The pivot indices from nda::lapack::getrf, i.e. for \f$ 1 \leq i \leq n \f$, row \f$ i 
+   * @param ipiv Input vector. The pivot indices from nda::lapack::getrf, i.e. for \f$ 1 \leq i \leq n \f$, row \f$ i
    * \f$ of the matrix was interchanged with row `ipiv(i-1)`.
    * @param work Ouput vector. Workspace array used by the LAPACK routine.
    * @return Integer return code from the LAPACK call.
    */
   template <BlasArray<2> A, PivotArrayFor<A, 1> IPIV, BlasArrayFor<A, 1> W = vector_value_t<A>>
-    requires(mem::have_host_compatible_addr_space<A>)
   int getri(A &&a, IPIV const &ipiv, W &&work = vector_value_t<A>{}) { // NOLINT (temporary views are allowed here)
+    constexpr bool run_on_device = mem::have_device_compatible_addr_space<A, IPIV, W>;
+
     // check the dimensions of the input/output arrays/views
     auto const [m, n] = a.shape();
     EXPECTS(m == n);
@@ -63,14 +65,22 @@ namespace nda::lapack {
     // first call to get the optimal buffer size
     auto tmp_lwork = get_value_t<A>{};
     int info       = 0;
-    f77::getri(n, a.data(), get_ld(a), ipiv.data(), &tmp_lwork, -1, info);
+    if constexpr (run_on_device) {
+      tmp_lwork = device::getri_buffer_size(n, a.data(), get_ld(a));
+    } else {
+      f77::getri(n, a.data(), get_ld(a), ipiv.data(), &tmp_lwork, -1, info);
+    }
     int lwork = static_cast<int>(std::ceil(std::real(tmp_lwork)));
 
     // resize/check work buffer
     resize_or_check_work_buffer(work, lwork);
 
     // perform actual library call
-    f77::getri(n, a.data(), get_ld(a), ipiv.data(), work.data(), lwork, info);
+    if constexpr (run_on_device) {
+      device::getri(n, a.data(), get_ld(a), ipiv.data(), work.data(), lwork, info);
+    } else {
+      f77::getri(n, a.data(), get_ld(a), ipiv.data(), work.data(), lwork, info);
+    }
 
     return info;
   }

@@ -16,7 +16,9 @@
 #include "../../exceptions.hpp"
 #include "../../macros.hpp"
 #include "../../mem/allocators.hpp"
+#include "../../mem/fill.hpp"
 #include "../../mem/handle.hpp"
+#include "../../mem/memcpy.hpp"
 #include "../../traits.hpp"
 
 #include <cusolverDn.h>
@@ -127,6 +129,25 @@ namespace nda::lapack::device {
       return bufferSize;
     }
 
+    // Custom getri implementation: build I in workspace (or a fallback buffer), call getrs to solve A * X = I, then
+    // copy the resulting inverse back over A.
+    template <typename T>
+    void getri_impl(int n, T *a, int lda, int const *ipiv, T *work, int lwork, int &info) {
+      auto solve_and_copy_back = [&](T *b_ptr) {
+        auto B = nda::cuarray_view<T, 2>{std::array<long, 2>{n, n}, b_ptr};
+        B()    = T(0);
+        mem::fill2D_n<mem::Device>(b_ptr, static_cast<size_t>(n) + 1, 1, n, T(1));
+        getrs('N', n, n, a, lda, ipiv, b_ptr, n, info);
+        mem::memcpy2D<mem::Device, mem::Device>(a, lda * sizeof(T), b_ptr, n * sizeof(T), n * sizeof(T), n);
+      };
+      if (lwork >= n * n) {
+        solve_and_copy_back(work);
+      } else {
+        auto tmp = nda::cuvector<T>(n * n);
+        solve_and_copy_back(tmp.data());
+      }
+    }
+
   } // namespace
 
   // gesvd buffer size
@@ -183,6 +204,18 @@ namespace nda::lapack::device {
   }
   void getrs(char op, int n, int nrhs, std::complex<double> const *a, int lda, int const *ipiv, std::complex<double> *b, int ldb, int &info) {
     CUSOLVER_CHECK(cusolverDnZgetrs, info, get_cublas_op(op), n, nrhs, cucplx(a), lda, ipiv, cucplx(b), ldb);
+  }
+
+  // getri
+  void getri(int n, float *a, int lda, int const *ipiv, float *work, int lwork, int &info) { getri_impl<float>(n, a, lda, ipiv, work, lwork, info); }
+  void getri(int n, std::complex<float> *a, int lda, int const *ipiv, std::complex<float> *work, int lwork, int &info) {
+    getri_impl<std::complex<float>>(n, a, lda, ipiv, work, lwork, info);
+  }
+  void getri(int n, double *a, int lda, int const *ipiv, double *work, int lwork, int &info) {
+    getri_impl<double>(n, a, lda, ipiv, work, lwork, info);
+  }
+  void getri(int n, std::complex<double> *a, int lda, int const *ipiv, std::complex<double> *work, int lwork, int &info) {
+    getri_impl<std::complex<double>>(n, a, lda, ipiv, work, lwork, info);
   }
 
   // geqrf buffer size

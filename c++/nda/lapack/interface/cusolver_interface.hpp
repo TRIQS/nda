@@ -43,6 +43,16 @@ namespace nda::lapack::device {
   void getrs(char op, int n, int nrhs, double const *a, int lda, int const *ipiv, double *b, int ldb, int &info);
   void getrs(char op, int n, int nrhs, std::complex<double> const *a, int lda, int const *ipiv, std::complex<double> *b, int ldb, int &info);
 
+  template <typename T>
+  int getri_buffer_size(int n, T * /*a*/, int /*lda*/) {
+    return n * n;
+  }
+
+  void getri(int n, float *a, int lda, int const *ipiv, float *work, int lwork, int &info);
+  void getri(int n, std::complex<float> *a, int lda, int const *ipiv, std::complex<float> *work, int lwork, int &info);
+  void getri(int n, double *a, int lda, int const *ipiv, double *work, int lwork, int &info);
+  void getri(int n, std::complex<double> *a, int lda, int const *ipiv, std::complex<double> *work, int lwork, int &info);
+
   int geqrf_buffer_size(int m, int n, float *a, int lda);
   int geqrf_buffer_size(int m, int n, std::complex<float> *a, int lda);
   int geqrf_buffer_size(int m, int n, double *a, int lda);
