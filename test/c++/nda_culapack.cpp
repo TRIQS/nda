@@ -192,9 +192,9 @@ TEST(NDA, CULAPACKGeqrfBatch) {
   test_geqrf_batch_address_spaces<std::complex<double>, true>();
 }
 
-// Test the CULAPACK getrs and getrf functions.
+// Test the CULAPACK getrs, getrf and getri functions.
 template <typename T, typename Layout, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
-void test_getrs_getrf() {
+void test_getrs_getrf_getri() {
   using matrix_t   = nda::matrix<T, Layout>;
   using f_matrix_t = nda::matrix<T, F_layout>;
   using fp_t       = nda::get_fp_t<T>;
@@ -250,29 +250,34 @@ void test_getrs_getrf() {
   auto x = nda::to_host(b_d);
   EXPECT_ARRAY_NEAR(A * x, b, tol);
   EXPECT_ARRAY_NEAR(Ainv * b, x, tol);
+
+  // compute the inverse of A using getrf and getri
+  auto Ainv_d = A_d;
+  nda::lapack::getri(Ainv_d, ipiv_d);
+  EXPECT_ARRAY_NEAR(Ainv, matrix_t{nda::to_host(Ainv_d)}, tol);
 }
 
 template <typename T, typename Layout>
-void test_getrs_getrf_address_spaces() {
-  test_getrs_getrf<T, Layout, Device, Device>();
-  test_getrs_getrf<T, Layout, Device, Unified>();
-  test_getrs_getrf<T, Layout, Unified, Device>();
-  test_getrs_getrf<T, Layout, Unified, Unified>();
-  test_getrs_getrf<T, Layout, Unified, Host>();
-  test_getrs_getrf<T, Layout, Host, Unified>();
+void test_getrs_getrf_getri_address_spaces() {
+  test_getrs_getrf_getri<T, Layout, Device, Device>();
+  test_getrs_getrf_getri<T, Layout, Device, Unified>();
+  test_getrs_getrf_getri<T, Layout, Unified, Device>();
+  test_getrs_getrf_getri<T, Layout, Unified, Unified>();
+  test_getrs_getrf_getri<T, Layout, Unified, Host>();
+  test_getrs_getrf_getri<T, Layout, Host, Unified>();
 }
 
 template <typename T>
-void test_getrs_getrf_layouts() {
-  test_getrs_getrf_address_spaces<T, C_layout>();
-  test_getrs_getrf_address_spaces<T, F_layout>();
+void test_getrs_getrf_getri_layouts() {
+  test_getrs_getrf_getri_address_spaces<T, C_layout>();
+  test_getrs_getrf_getri_address_spaces<T, F_layout>();
 }
 
-TEST(NDA, CULAPACKGetrsAndGetrf) {
-  test_getrs_getrf_layouts<float>();
-  test_getrs_getrf_layouts<std::complex<float>>();
-  test_getrs_getrf_layouts<double>();
-  test_getrs_getrf_layouts<std::complex<double>>();
+TEST(NDA, CULAPACKGetrsGetrfAndGetri) {
+  test_getrs_getrf_getri_layouts<float>();
+  test_getrs_getrf_getri_layouts<std::complex<float>>();
+  test_getrs_getrf_getri_layouts<double>();
+  test_getrs_getrf_getri_layouts<std::complex<double>>();
 }
 
 template <typename T, nda::mem::AddressSpace AS>
