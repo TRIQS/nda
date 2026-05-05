@@ -878,3 +878,29 @@ TEST(NDA, LAPACKGgev) {
   test_ggev_real<double>();
   test_ggev_complex<std::complex<double>>();
 }
+
+// Test the rank-3 overloads.
+TEST(NDA, LAPACKRank3Overloads) {
+  using nda::C_layout, nda::F_layout;
+  using value_t = double;
+
+  auto A            = nda::matrix<value_t, F_layout>{{{4, 3}, {6, 3}}};
+  constexpr int n_b = 2;
+  auto A3           = nda::array<value_t, 3, F_layout>(2, 2, n_b);
+  for (int i = 0; i < n_b; ++i) A3(nda::range::all, nda::range::all, i) = A;
+
+  // getrf via base name
+  auto ipiv = nda::matrix<int, F_layout>(2, n_b);
+  auto info = nda::lapack::getrf(A3, ipiv);
+  for (int i = 0; i < n_b; ++i) EXPECT_EQ(info(i), 0);
+
+  // getri via base name (host path: loops over batches)
+  auto info2 = nda::lapack::getri(A3, ipiv);
+  for (int i = 0; i < n_b; ++i) EXPECT_EQ(info2(i), 0);
+
+  // each slice should now be A^{-1}: det(A) = 4*3 - 3*6 = -6, so A^{-1} = -1/6 * {{3, -3}, {-6, 4}}
+  auto A_inv = nda::matrix<value_t, F_layout>{{{-0.5, 0.5}, {1.0, -2.0 / 3.0}}};
+  for (int i = 0; i < n_b; ++i) {
+    EXPECT_ARRAY_NEAR(nda::matrix<value_t, F_layout>{A3(nda::range::all, nda::range::all, i)}, A_inv, fp_tol<value_t>);
+  }
+}

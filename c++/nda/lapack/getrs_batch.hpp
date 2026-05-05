@@ -26,6 +26,7 @@
 #include <algorithm>
 #include <tuple>
 #include <type_traits>
+#include <utility>
 
 namespace nda::lapack {
 
@@ -123,6 +124,19 @@ namespace nda::lapack {
     } else {
       return detail::getrs_batch_impl<run_on_device>(a, std::forward<B>(b), ipiv, op);
     }
+  }
+
+  /**
+   * @ingroup linalg_lapack
+   * @brief Generic-friendly overload of nda::lapack::getrs for batches stored as 3-dimensional arrays.
+   *
+   * @details It simply calls nda::lapack::getrs_batch and lets generic code call `%getrs(...)` regardless of whether 
+   * the input is a single matrix (rank 2) or a batch (rank 3).
+   */
+  template <BlasArrayOrConj<3> A, BlasArrayFor<A, 3> B, PivotArrayFor<A, 2> IPIV>
+    requires((has_F_layout<A> or has_C_layout<A>) and has_F_layout<B> and (not is_conj_array_expr<A> or has_C_layout<A>))
+  int getrs(A const &a, B &&b, IPIV const &ipiv) { // NOLINT (temporary views are allowed here)
+    return getrs_batch(a, std::forward<B>(b), ipiv);
   }
 
 } // namespace nda::lapack

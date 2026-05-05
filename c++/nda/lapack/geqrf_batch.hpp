@@ -26,6 +26,7 @@
 
 #include <algorithm>
 #include <type_traits>
+#include <utility>
 
 namespace nda::lapack {
 
@@ -96,6 +97,19 @@ namespace nda::lapack {
       }
     }
     return info;
+  }
+
+  /**
+   * @ingroup linalg_lapack
+   * @brief Generic-friendly overload of nda::lapack::geqrf for batches stored as 3-dimensional arrays.
+   *
+   * @details It simply calls nda::lapack::geqrf_batch and lets generic code call `%geqrf(...)` regardless of whether 
+   * the input is a single matrix (rank 2) or a batch (rank 3).
+   */
+  template <BlasArray<3> A, BlasArrayFor<A, 2> TAU, BlasArrayFor<A, 1> W = vector_value_t<A>>
+    requires(has_F_layout<A, TAU>)
+  int geqrf(A &&a, TAU &&tau, W &&work = vector_value_t<A>{}) { // NOLINT (temporary views are allowed here)
+    return geqrf_batch(std::forward<A>(a), std::forward<TAU>(tau), std::forward<W>(work));
   }
 
 } // namespace nda::lapack

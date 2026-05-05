@@ -26,6 +26,7 @@
 
 #include <algorithm>
 #include <type_traits>
+#include <utility>
 
 namespace nda::lapack {
 
@@ -131,6 +132,19 @@ namespace nda::lapack {
     } else {
       return detail::getrf_batch_impl<run_on_device>(std::forward<A>(a), std::forward<IPIV>(ipiv), std::forward<W>(work));
     }
+  }
+
+  /**
+   * @ingroup linalg_lapack
+   * @brief Generic-friendly overload of nda::lapack::getrf for batches stored as 3-dimensional arrays.
+   *
+   * @details It simply calls nda::lapack::getrf_batch and lets generic code call `%getrf(...)` regardless of whether 
+   * the input is a single matrix (rank 2) or a batch (rank 3).
+   */
+  template <BlasArray<3> A, PivotArrayFor<A, 2> IPIV, BlasArrayFor<A, 1> W = vector_value_t<A>>
+    requires(has_F_layout<A> or has_C_layout<A>)
+  auto getrf(A &&a, IPIV &&ipiv, W &&work = vector_value_t<A>{}) { // NOLINT (temporary views are allowed here)
+    return getrf_batch(std::forward<A>(a), std::forward<IPIV>(ipiv), std::forward<W>(work));
   }
 
 } // namespace nda::lapack

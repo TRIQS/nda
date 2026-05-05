@@ -72,8 +72,8 @@ namespace nda::lapack {
    * @ingroup linalg_lapack
    * @brief Generic-friendly overload of nda::lapack::orgqr for batches stored as 3-dimensional arrays.
    *
-   * @details It simply calls nda::lapack::orgqr_batch and lets generic code call `orgqr(...)` regardless of whether the 
-   * input is a single matrix (rank 2) or a batch (rank 3).
+   * @details It simply calls nda::lapack::orgqr_batch and lets generic code call `%orgqr(...)` regardless of whether 
+   * the input is a single matrix (rank 2) or a batch (rank 3).
    */
   template <BlasArrayReal<3> A, BlasArrayFor<A, 2> TAU, BlasArrayFor<A, 1> W = vector_value_t<A>>
     requires(has_F_layout<A, TAU>)
