@@ -25,6 +25,7 @@
 
 #include <algorithm>
 #include <type_traits>
+#include <utility>
 
 namespace nda::lapack {
 
@@ -119,6 +120,19 @@ namespace nda::lapack {
     } else {
       return detail::getri_batch_impl<run_on_device>(std::forward<A>(a), ipiv, std::forward<W>(work));
     }
+  }
+
+  /**
+   * @ingroup linalg_lapack
+   * @brief Generic-friendly overload of nda::lapack::getri for batches stored as 3-dimensional arrays.
+   *
+   * @details It simply calls nda::lapack::getri_batch and lets generic code call `%getri(...)` regardless of whether 
+   * the input is a single matrix (rank 2) or a batch (rank 3).
+   */
+  template <BlasArray<3> A, PivotArrayFor<A, 2> IPIV, BlasArrayFor<A, 1> W = vector_value_t<A>>
+    requires(has_F_layout<A> or has_C_layout<A>)
+  auto getri(A &&a, IPIV const &ipiv, W &&work = vector_value_t<A>{}) { // NOLINT (temporary views are allowed here)
+    return getri_batch(std::forward<A>(a), ipiv, std::forward<W>(work));
   }
 
 } // namespace nda::lapack

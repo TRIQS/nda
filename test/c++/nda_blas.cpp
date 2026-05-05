@@ -602,3 +602,22 @@ TEST(NDA, BLASScal) {
   test_scal<double>();
   test_scal<std::complex<double>>();
 }
+
+// Test the rank-3 overloads for gemm.
+TEST(NDA, BLASGemmRank3Overload) {
+  using value_t         = double;
+  int const batch_count = 5;
+  long const m          = 6;
+  long const k          = 4;
+  long const n          = 3;
+
+  auto arr_A     = make_batch<value_t, F_layout>(batch_count, m, k, false);
+  auto arr_B     = make_batch<value_t, F_layout>(batch_count, k, n, false);
+  auto arr_C_old = make_batch<value_t, F_layout>(batch_count, m, n, true);
+  auto arr_C_new = nda::array<value_t, 3, F_layout>{arr_C_old};
+
+  nda::blas::gemm_batch_strided(2.0, arr_A, arr_B, 0.0, arr_C_old);
+  nda::blas::gemm(2.0, arr_A, arr_B, 0.0, arr_C_new);
+
+  for (auto i : nda::range(batch_count)) { EXPECT_ARRAY_NEAR(arr_C_new(nda::ellipsis{}, i), arr_C_old(nda::ellipsis{}, i), fp_tol<value_t>); }
+}

@@ -24,6 +24,7 @@
 #include <iterator>
 #include <tuple>
 #include <type_traits>
+#include <utility>
 #include <vector>
 
 namespace nda::blas {
@@ -273,6 +274,18 @@ namespace nda::blas {
                                 s_c, nb_c);
       }
     }
+  }
+
+  /**
+   * @brief Generic-friendly overload of nda::blas::gemm for batches stored as 3-dimensional arrays.
+   *
+   * @details It simply calls nda::lapack::gemm_batch_strided and lets generic code call `%gemm(...)` regardless of 
+   * whether the input is a single matrix (rank 2) or a batch (rank 3).
+   */
+  template <BlasArrayOrConj<3> A, BlasArrayOrConjFor<A, 3> B, BlasArrayFor<A, 3> C>
+    requires((has_C_layout<A> or has_F_layout<A>) and (has_C_layout<B> or has_F_layout<B>) and (has_C_layout<C> or has_F_layout<C>))
+  void gemm(get_value_t<A> alpha, A const &a, B const &b, get_value_t<A> beta, C &&c) {
+    gemm_batch_strided(alpha, a, b, beta, std::forward<C>(c));
   }
 
   /** @} */
