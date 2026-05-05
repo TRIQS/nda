@@ -172,9 +172,9 @@ TEST(NDA, LAPACKGeqrfUngqrAndOrgqr) {
   test_geqxx_orgqr_ungqr<std::complex<double>, true>(false);
 }
 
-// Test LAPACK geqrf_batch function.
+// Test LAPACK geqrf_batch, orgqr/ungqr (per-slice) and the batched gqr dispatcher.
 template <typename T, bool wide_matrix = false>
-void test_geqrf_batch() {
+void test_geqrf_orgqr_ungqr_batch() {
   using matrix_t = nda::matrix<T, F_layout>;
 
   auto A = matrix_t{{{1, 1, 1}, {3, 2, 4}, {5, 3, 2}, {2, 4, 5}, {4, 5, 3}}};
@@ -190,40 +190,50 @@ void test_geqrf_batch() {
   auto tau = nda::matrix<T, F_layout>(std::min(m, n), batch_size);
   nda::lapack::geqrf_batch(A_batch, tau);
 
-  // verify each matrix in the batch
+  // capture R from each slice before any Q reconstruction touches A_batch
+  auto R = nda::array<T, 3, F_layout>(std::min(m, n), n, batch_size);
+  R()    = T{0};
+  for (int i = 0; i < batch_size; ++i) {
+    for (int k = 0; k < std::min(m, n); ++k) {
+      for (int l = k; l < n; ++l) R(k, l, i) = A_batch(k, l, i);
+    }
+  }
+
+  // verify Q reconstruction via per-slice orgqr/ungqr (creates copies, leaves A_batch intact)
   for (int i = 0; i < batch_size; ++i) {
     auto Q_i   = matrix_t{A_batch(nda::range::all, nda::range::all, i)};
     auto tau_i = nda::vector<T>{tau(nda::range::all, i)};
-
-    // extract upper triangular matrix R
-    auto R_i = matrix_t::zeros(std::min(m, n), n);
-    for (int k = 0; k < std::min(m, n); ++k) {
-      for (int l = k; l < n; ++l) R_i(k, l) = Q_i(k, l);
-    }
-
-    // extract matrix Q with orthonormal columns
     if constexpr (std::floating_point<T>) {
       nda::lapack::orgqr(Q_i(nda::range::all, nda::range(std::min(m, n))), tau_i);
     } else {
       nda::lapack::ungqr(Q_i(nda::range::all, nda::range(std::min(m, n))), tau_i);
     }
-
+    auto R_i = matrix_t{R(nda::range::all, nda::range::all, i)};
     EXPECT_ARRAY_NEAR(A, Q_i(nda::range::all, nda::range(std::min(m, n))) * R_i, fp_tol<T>);
+  }
+
+  // verify Q reconstruction via the batched gqr() dispatcher (overwrites A_batch)
+  int info = nda::lapack::gqr(A_batch, tau);
+  EXPECT_EQ(info, 0);
+  for (int i = 0; i < batch_size; ++i) {
+    auto Q_i = matrix_t{A_batch(nda::range::all, nda::range(std::min(m, n)), i)};
+    auto R_i = matrix_t{R(nda::range::all, nda::range::all, i)};
+    EXPECT_ARRAY_NEAR(A, Q_i * R_i, fp_tol<T>);
   }
 }
 
-TEST(NDA, LAPACKGeqrfBatch) {
+TEST(NDA, LAPACKGeqrfOrgqrUngqrBatch) {
   // tall matrix, i.e. n_rows > n_cols
-  test_geqrf_batch<float>();
-  test_geqrf_batch<std::complex<float>>();
-  test_geqrf_batch<double>();
-  test_geqrf_batch<std::complex<double>>();
+  test_geqrf_orgqr_ungqr_batch<float>();
+  test_geqrf_orgqr_ungqr_batch<std::complex<float>>();
+  test_geqrf_orgqr_ungqr_batch<double>();
+  test_geqrf_orgqr_ungqr_batch<std::complex<double>>();
 
   // wide matrix, i.e. n_rows < n_cols
-  test_geqrf_batch<float, true>();
-  test_geqrf_batch<std::complex<float>, true>();
-  test_geqrf_batch<double, true>();
-  test_geqrf_batch<std::complex<double>, true>();
+  test_geqrf_orgqr_ungqr_batch<float, true>();
+  test_geqrf_orgqr_ungqr_batch<std::complex<float>, true>();
+  test_geqrf_orgqr_ungqr_batch<double, true>();
+  test_geqrf_orgqr_ungqr_batch<std::complex<double>, true>();
 }
 
 // Test LAPACK gelss function and the gelss_worker class.
