@@ -283,25 +283,25 @@
 /**
  * @defgroup linalg Linear algebra
  * @brief Linear algebra related functionality.
- * 
+ *
  * @details **nda** provides low- and high-level interfaces to various linear algebra operations:
  * - Low-level functions are thin wrappers around the corresponding BLAS/cuBLAS and LAPACK/cuSOLVER functions that live
- * in the `nda::blas` and `nda::lapack` namespaces and that work directly on nda::Array types. They are supposed to have 
- * minimal additional overhead (no unnecessary copies, no unnecessary allocations, etc.) but still improve usability 
+ * in the `nda::blas` and `nda::lapack` namespaces and that work directly on nda::Array types. They are supposed to have
+ * minimal additional overhead (no unnecessary copies, no unnecessary allocations, etc.) but still improve usability
  * compared to bare BLAS and LAPACK operations.
- * - High-level functions are built on top of the low-level routines and can be found in the `nda::linalg` namespace. 
- * They mimic the behavior of <a href="https://numpy.org/doc/stable/reference/routines.linalg.html">numpy.linalg</a> as 
- * much as possible. Here, performance is sometimes sacrificed for better usability and convenience, e.g. by making 
+ * - High-level functions are built on top of the low-level routines and can be found in the `nda::linalg` namespace.
+ * They mimic the behavior of <a href="https://numpy.org/doc/stable/reference/routines.linalg.html">numpy.linalg</a> as
+ * much as possible. Here, performance is sometimes sacrificed for better usability and convenience, e.g. by making
  * copies of input arrays or by returning newly allocated arrays.
- * 
+ *
  * Both interfaces try to be as generic as possible in the sense that they
  * - work for arrays, views or lazy expressions,
- * - dispatch to the correct BLAS/cuBLAS/LAPACK/cuSOLVER function depending on the value type and address space of given 
+ * - dispatch to the correct BLAS/cuBLAS/LAPACK/cuSOLVER function depending on the value type and address space of given
  * input arrays,
  * - take care of memory layouts, i.e. nda::C_layout vs. nda::F_layout,
  * - etc.
- * 
- * Please check the documentation of individual functions to see the details of the behavior and the supported input 
+ *
+ * Please check the documentation of individual functions to see the details of the behavior and the supported input
  * types.
  */
 
@@ -321,6 +321,77 @@
  * @defgroup linalg_lapack LAPACK/cuSOLVER interface
  * @ingroup linalg
  * @brief Low-level interface to parts of the LAPACK/cuSOLVER library.
+ */
+
+/**
+ * @defgroup tensor Tensor support
+ * @brief Multi-dimensional tensor operations on host (CPU) and device (CUDA).
+ *
+ * @details **nda** ships a thin C++ layer in the `nda::tensor` namespace that exposes general tensor operations
+ * (contractions, reductions, element-wise operations, permutations, ...) on top of two external backends:
+ * - <a href="https://github.com/MatthewsResearchGroup/tblis">TBLIS</a> for host (CPU) execution, and
+ * - <a href="https://docs.nvidia.com/cuda/cutensor/">cuTENSOR</a> for device (CUDA) execution.
+ *
+ * Most operations also provide a generic nda fallback that requires neither backend. nda::tensor::contract is the only
+ * operation without a fallback; it still requires TBLIS on the host. The fallback path is restricted to the simple
+ * same-rank, identical-index-string case — features like permutation, broadcasting and einsum-style reduction remain
+ * backend-specific. See the per-operation pages for the exact restrictions.
+ *
+ * **Einstein-notation index strings.** Every operation is parameterised by `std::string_view` index labels (e.g.
+ * `"ij"`, `"ijk"`) that name each axis of the tensors involved. Repeated labels between two tensors are summed
+ * (contracted) over, in the spirit of standard Einstein summation. The exact rules — for example, whether repeated
+ * labels are allowed *within* a single tensor — depend on the backend that ends up being called: cuTENSOR rejects such
+ * patterns, while TBLIS accepts them. Refer to the per-operation pages for the precise constraints.
+ *
+ * **Dispatch.** Selection of the backend is automatic and uses the address space of the input arrays:
+ * - if the address space is device-compatible (see nda::mem::have_device_compatible_addr_space), the call is forwarded
+ * to the cuTENSOR-backed implementation in the `nda::tensor::device` namespace;
+ * - otherwise, if TBLIS is available and supports the requested operation, the call goes to the TBLIS-backed
+ * implementation in the `nda::tensor::tblis` namespace;
+ * - otherwise, the built-in nda fallback is used (if one exists for the requested operation). Some operations also
+ * fall through from TBLIS to the nda fallback for ops TBLIS does not handle (e.g. nda::tensor::reduce with
+ * nda::tensor::binary_op::PROD).
+ *
+ * **Capability flags.** The booleans nda::tensor::have_cutensor and nda::tensor::have_tblis (in `tensor/tools.hpp`)
+ * report at compile time whether nda was built with the corresponding backend, and can be used to gate user code.
+ */
+
+/**
+ * @defgroup tensor_utils Tensor utilities
+ * @ingroup tensor
+ * @brief Supporting types and helpers used by the tensor operations.
+ */
+
+/**
+ * @defgroup tensor_ops Tensor operations
+ * @ingroup tensor
+ * @brief User-facing tensor operations dispatched to cuTENSOR, TBLIS, or the nda fallback.
+ *
+ * @details Every function in this group lives in the `nda::tensor` namespace and follows the same dispatch rules
+ * outlined in @ref tensor. The available operations are:
+ * - nda::tensor::contract — general contraction \f$ C \leftarrow \alpha\, A \cdot B + \beta\, C \f$ with Einstein
+ * notation. The workhorse: covers gemm, gemv, outer products, batched gemm and arbitrary tensor contractions.
+ * Requires cuTENSOR (device) or TBLIS (host); no nda fallback.
+ * - nda::tensor::dot — full dot product reducing two tensors to a scalar \f$ z = \sum A \cdot B \f$. The nda
+ * fallback computes `nda::sum(nda::hadamard(a, b))` for same-rank, identical-index inputs.
+ * - nda::tensor::add — \f$ B \leftarrow \alpha\, A + \beta\, B \f$ (and out-of-place \f$ C \leftarrow \alpha\, A +
+ * \beta\, B \f$). cuTENSOR/TBLIS additionally support axis permutation and different-rank broadcast/reduction.
+ * - nda::tensor::assign — \f$ B \leftarrow A \f$. cuTENSOR/TBLIS additionally support axis permutation and
+ * different-rank broadcast/reduction. Use nda::tensor::add to fuse a scalar factor or conjugation with the copy.
+ * - nda::tensor::scale — in-place \f$ A \leftarrow \alpha \cdot \mathrm{op}(A) \f$ with an optional
+ * nda::tensor::unary_op.
+ * - nda::tensor::set — fill a tensor with a scalar value.
+ * - nda::tensor::reduce — full reduction of a tensor to a scalar. Supported nda::tensor::binary_op values:
+ * `SUM`, `PROD`, `MAX`, `MIN`, `SUM_ABS`, `MAX_ABS`, `MIN_ABS`, `NORM_2` (backend coverage varies; `MAX`/`MIN` are
+ * undefined for complex value types).
+ * - nda::tensor::elementwise — in-place elementwise binary operation. Same nda::tensor::binary_op set as
+ * nda::tensor::reduce; backend coverage varies.
+ * - nda::tensor::elementwise_trinary — in-place elementwise ternary operation
+ * \f$ C \leftarrow \mathrm{op}_{ABC}(\mathrm{op}_{AB}(\alpha\, A,\, \beta\, B),\, \gamma\, C) \f$ with two
+ * nda::tensor::binary_op parameters.
+ *
+ * Backend coverage and the existence of an nda fallback differ between operations; the per-function page is
+ * authoritative on which dispatch paths and which nda::tensor::binary_op and nda::tensor::unary_op are supported.
  */
 
 /**

@@ -149,6 +149,12 @@
           <tab type="user" url="@ref linalg_solve" title="Solving equations and inverting matrices"/>
         </tab>
       </tab>
+      <tab type="usergroup" url="@ref tensor" title="Tensor support">
+        <tab type="usergroup" url="@ref tensor_utils" title="Tensor utilities">
+          <tab type="user" url="@ref nda::tensor::tensor_view" title="tensor::tensor_view"/>
+        </tab>
+        <tab type="user" url="@ref tensor_ops" title="Tensor operations"/>
+      </tab>
       <tab type="usergroup" url="@ref layout" title="Memory layout">
         <tab type="usergroup" url="@ref layout_pols" title="Layout policies">
           <tab type="user" url="@ref nda::basic_layout" title="basic_layout"/>

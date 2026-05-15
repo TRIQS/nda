@@ -73,6 +73,20 @@ one usually assigns a value to the placeholders which are then plugged into the 
 - Some generic @ref linalg_tools that wrap the BLAS and LAPACK interfaces to provide a more user-friendly approach for
 the most common tasks, like matrix-matrix multiplication, matrix-vector multiplication, eigen decompositions, etc.
 
+## Tensor support
+
+@ref tensor extends **nda** beyond matrix-level linear algebra by exposing general tensor operations on top of two
+external backends — [TBLIS](https://github.com/MatthewsResearchGroup/tblis) for host (CPU) execution and
+[cuTENSOR](https://docs.nvidia.com/cuda/cutensor/) for device (CUDA) execution. The backend is selected automatically
+based on the address space of the input arrays, and a generic nda fallback is available for a subset of the
+operations when neither backend is configured.
+
+Most operations are parameterised by Einstein-notation index strings (e.g. `"ij"`, `"ijk"`), so contractions, axis
+permutations and reductions are expressed in a uniform way independent of the rank of the tensors involved.
+
+- @ref tensor_utils provide supporting types and functions used by various tensor operations.
+- @ref tensor_ops collect the user-facing operations.
+
 ## Memory layout
 
 @ref layout contains tools that allow us to specify how the data of a multi-dimensional array (nda::basic_array) or view

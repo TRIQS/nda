@@ -14,6 +14,8 @@ Some features include
 * expressions are implemented lazily for maximum performance
 * flexible and lightweight view types
 * matrix and vector class with BLAS/LAPACK backend
+* general tensor operations (contractions, reductions, ...) backed by 
+[TBLIS](https://github.com/MatthewsResearchGroup/tblis) and [cuTENSOR](https://docs.nvidia.com/cuda/cutensor/)
 * easily store and retrieve arrays to and from HDF5 files using [TRIQS/h5](https://github.com/TRIQS/h5)
 * common MPI functionality using [TRIQS/mpi](https://github.com/TRIQS/mpi)
 * Python bindings
