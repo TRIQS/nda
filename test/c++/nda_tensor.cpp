@@ -361,3 +361,156 @@ TEST(NDA, TensorAssignCrossMemoryPermutationThrows) {
   EXPECT_THROW(nda::tensor::assign(A_h, "ij", B_d, "ji"), nda::runtime_error);
 }
 #endif // NDA_HAVE_CUDA
+
+// Test the generic tensor contract function.
+template <typename T, typename Layout1, typename Layout2, typename Layout3, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2,
+          nda::mem::AddressSpace AS3>
+void test_contract() {
+  auto const _ = nda::range::all;
+
+  T alpha = T{3};
+  T beta  = T{2};
+  if constexpr (nda::is_complex_v<T>) {
+    alpha *= 2 + 1i;
+    beta *= 1 - 1i;
+  }
+
+  // matrix-matrix multiplication: C_ik = alpha * A_ij * B_jk + beta * C_ik
+  auto A1   = nda::matrix<T, Layout1>::rand({3, 4});
+  auto B1   = nda::matrix<T, Layout2>::rand({4, 5});
+  auto C1   = nda::matrix<T, Layout3>::rand({3, 5});
+  auto exp1 = nda::make_regular(alpha * nda::linalg::matmul(A1, B1) + beta * C1);
+  auto C1_d = to_addr_space<AS3>(C1);
+  nda::tensor::contract(alpha, to_addr_space<AS1>(A1), "ij", to_addr_space<AS2>(B1), "jk", beta, C1_d, "ik");
+  EXPECT_ARRAY_NEAR(nda::to_host(C1_d), exp1, fp_tol<T>);
+
+  // matrix-vector multiplication: C_i = alpha * A_ij * B_j + beta * C_i
+  auto A2   = nda::matrix<T, Layout1>::rand({4, 5});
+  auto B2   = nda::vector<T>::rand({5});
+  auto C2   = nda::vector<T>::rand({4});
+  auto exp2 = nda::make_regular(alpha * nda::linalg::matvecmul(A2, B2) + beta * C2);
+  auto C2_d = to_addr_space<AS3>(C2);
+  nda::tensor::contract(alpha, to_addr_space<AS1>(A2), "ij", to_addr_space<AS2>(B2), "j", beta, C2_d, "i");
+  EXPECT_ARRAY_NEAR(nda::to_host(C2_d), exp2, fp_tol<T>);
+
+  // outer product: C_ij = alpha * A_i * B_j
+  auto A3   = nda::vector<T>::rand({3});
+  auto B3   = nda::vector<T>::rand({4});
+  auto C3   = nda::array<T, 2, Layout1>::zeros({3, 4});
+  auto exp3 = nda::make_regular(alpha * nda::linalg::outer_product(A3, B3));
+  auto C3_d = to_addr_space<AS3>(C3);
+  nda::tensor::contract(alpha, to_addr_space<AS1>(A3), "i", to_addr_space<AS2>(B3), "j", T{0}, C3_d, "ij");
+  EXPECT_ARRAY_NEAR(nda::to_host(C3_d), exp3, fp_tol<T>);
+
+  // tensor contraction: C_il = alpha * A_ijk * B_jkl + beta * C_il
+  auto A4   = nda::array<T, 3, Layout1>::rand({2, 3, 4});
+  auto B4   = nda::array<T, 3, Layout2>::rand({3, 4, 5});
+  auto C4   = nda::array<T, 2, Layout3>::rand({2, 5});
+  auto exp4 = nda::array<T, 2, Layout3>::zeros({2, 5});
+  nda::for_each(exp4.shape(), [&](auto i, auto l) {
+    T sum = 0;
+    for (auto j : nda::range(3))
+      for (auto k : nda::range(4)) sum += A4(i, j, k) * B4(j, k, l);
+    exp4(i, l) = alpha * sum + beta * C4(i, l);
+  });
+  auto C4_d = to_addr_space<AS3>(C4);
+  nda::tensor::contract(alpha, to_addr_space<AS1>(A4), "ijk", to_addr_space<AS2>(B4), "jkl", beta, C4_d, "il");
+  EXPECT_ARRAY_NEAR(nda::to_host(C4_d), exp4, fp_tol<T> * 10);
+
+  // matrix-matrix multiplication with views: C_ik = alpha * A_ij * B_jk + beta * C_ik
+  auto A5   = nda::array<T, 2, Layout1>::rand({5, 6});
+  auto B5   = nda::array<T, 2, Layout2>::rand({6, 7});
+  auto C5   = nda::array<T, 2, Layout3>::rand({3, 4});
+  auto exp5 = nda::make_regular(alpha * nda::linalg::matmul(A5(nda::range(1, 4), _), B5(_, nda::range(2, 6))) + beta * C5);
+  auto A5_d = to_addr_space<AS1>(A5);
+  auto B5_d = to_addr_space<AS2>(B5);
+  auto C5_d = to_addr_space<AS3>(C5);
+  nda::tensor::contract(alpha, to_addr_space<AS1>(A5_d(nda::range(1, 4), _)), "ij", B5_d(_, nda::range(2, 6)), "jk", beta, C5_d, "ik");
+  EXPECT_ARRAY_NEAR(nda::to_host(C5_d), exp5, fp_tol<T>);
+
+  // batched matmul: C_ikl = alpha * A_ijl * B_jkl + beta * C_ikl
+  auto A6   = nda::array<T, 3, Layout1>::rand({3, 4, 2});
+  auto B6   = nda::array<T, 3, Layout2>::rand({4, 5, 2});
+  auto C6   = nda::array<T, 3, Layout3>::rand({3, 5, 2});
+  auto exp6 = nda::array<T, 3, F_layout>{C6};
+  nda::blas::gemm_batch_strided(alpha, nda::array<T, 3, F_layout>{A6}, nda::array<T, 3, F_layout>{B6}, beta, exp6);
+  auto C6_d = to_addr_space<AS3>(C6);
+  nda::tensor::contract(alpha, to_addr_space<AS1>(A6), "ijl", to_addr_space<AS2>(B6), "jkl", beta, C6_d, "ikl");
+  EXPECT_ARRAY_NEAR(nda::to_host(C6_d), exp6, fp_tol<T>);
+
+  // contractions involving conjugate expressions (complex types only)
+  if constexpr (nda::is_complex_v<T>) {
+    // C_ik = alpha * conj(A_ij) * B_jk + beta * C_ik
+    auto A7   = nda::matrix<T, Layout1>::rand({3, 4});
+    auto B7   = nda::matrix<T, Layout2>::rand({4, 5});
+    auto C7   = nda::matrix<T, Layout3>::rand({3, 5});
+    auto exp7 = nda::make_regular(alpha * nda::linalg::matmul(nda::conj(A7), B7) + beta * C7);
+    auto C7_d = to_addr_space<AS3>(C7);
+    nda::tensor::contract(alpha, nda::conj(to_addr_space<AS1>(A7)), "ij", to_addr_space<AS2>(B7), "jk", beta, C7_d, "ik");
+    EXPECT_ARRAY_NEAR(nda::to_host(C7_d), exp7, fp_tol<T>);
+
+    // C_ik = alpha * conj(A_ij) * conj(B_jk) + beta * C_ik
+    auto A8   = nda::matrix<T, Layout1>::rand({3, 4});
+    auto B8   = nda::matrix<T, Layout2>::rand({4, 5});
+    auto C8   = nda::matrix<T, Layout3>::rand({3, 5});
+    auto exp8 = nda::make_regular(alpha * nda::linalg::matmul(nda::conj(A8), nda::conj(B8)) + beta * C8);
+    auto C8_d = to_addr_space<AS3>(C8);
+    nda::tensor::contract(alpha, nda::conj(to_addr_space<AS1>(A8)), "ij", nda::conj(to_addr_space<AS2>(B8)), "jk", beta, C8_d, "ik");
+    EXPECT_ARRAY_NEAR(nda::to_host(C8_d), exp8, fp_tol<T>);
+  }
+}
+
+template <typename T, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2, nda::mem::AddressSpace AS3>
+void test_contract_layouts() {
+  test_contract<T, C_layout, C_layout, C_layout, AS1, AS2, AS3>();
+  test_contract<T, C_layout, C_layout, F_layout, AS1, AS2, AS3>();
+  test_contract<T, C_layout, F_layout, C_layout, AS1, AS2, AS3>();
+  test_contract<T, C_layout, F_layout, F_layout, AS1, AS2, AS3>();
+  test_contract<T, F_layout, C_layout, C_layout, AS1, AS2, AS3>();
+  test_contract<T, F_layout, C_layout, F_layout, AS1, AS2, AS3>();
+  test_contract<T, F_layout, F_layout, C_layout, AS1, AS2, AS3>();
+  test_contract<T, F_layout, F_layout, F_layout, AS1, AS2, AS3>();
+}
+
+template <typename T>
+void test_contract_on_device() {
+  test_contract_layouts<T, Device, Device, Device>();
+  test_contract_layouts<T, Device, Device, Unified>();
+  test_contract_layouts<T, Device, Unified, Device>();
+  test_contract_layouts<T, Unified, Device, Device>();
+  test_contract_layouts<T, Device, Unified, Unified>();
+  test_contract_layouts<T, Unified, Device, Unified>();
+  test_contract_layouts<T, Unified, Unified, Device>();
+  test_contract_layouts<T, Unified, Unified, Unified>();
+}
+
+template <typename T>
+void test_contract_on_host() {
+  test_contract_layouts<T, Host, Host, Host>();
+#ifdef NDA_HAVE_CUDA
+  test_contract_layouts<T, Host, Host, Unified>();
+  test_contract_layouts<T, Host, Unified, Host>();
+  test_contract_layouts<T, Unified, Host, Host>();
+  test_contract_layouts<T, Host, Unified, Unified>();
+  test_contract_layouts<T, Unified, Host, Unified>();
+  test_contract_layouts<T, Unified, Unified, Host>();
+#endif // NDA_HAVE_CUDA
+}
+
+#ifdef NDA_HAVE_CUTENSOR
+TEST(NDA, TensorContractOnDevice) {
+  test_contract_on_device<float>();
+  test_contract_on_device<std::complex<float>>();
+  test_contract_on_device<double>();
+  test_contract_on_device<std::complex<double>>();
+}
+#endif // NDA_HAVE_CUTENSOR
+
+#ifdef NDA_HAVE_TBLIS
+TEST(NDA, TensorContractOnHost) {
+  test_contract_on_host<float>();
+  test_contract_on_host<std::complex<float>>();
+  test_contract_on_host<double>();
+  test_contract_on_host<std::complex<double>>();
+}
+#endif // NDA_HAVE_TBLIS
