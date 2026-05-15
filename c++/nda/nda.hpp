@@ -43,6 +43,7 @@
 #include "./mem.hpp"
 #include "./print.hpp"
 #include "./stdutil.hpp"
+#include "./tensor.hpp"
 #include "./traits.hpp"
 
 // If we are using c2py, include converters automatically
