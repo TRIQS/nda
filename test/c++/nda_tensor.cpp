@@ -594,3 +594,140 @@ TEST(NDA, TensorDotMismatchedIndicesOnHostFallbackThrows) {
   EXPECT_THROW((void)nda::tensor::dot(A, "ab", B, "ba"), nda::runtime_error);
 }
 #endif // NDA_HAVE_TBLIS
+
+// Test the generic tensor elementwise trinary function.
+template <typename T, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2, nda::mem::AddressSpace AS3>
+void test_elementwise_trinary() {
+  using nda::tensor::binary_op;
+  constexpr bool on_host = (AS1 == nda::mem::Host || AS2 == nda::mem::Host || AS3 == nda::mem::Host);
+
+  T alpha = T{2};
+  T beta  = T{3};
+  T gamma = T{4};
+  if constexpr (nda::is_complex_v<T>) {
+    alpha *= 1 + 1i;
+    beta *= 2 - 1i;
+    gamma *= 1 - 2i;
+  }
+
+  auto A = nda::array<T, 3>::rand({2, 3, 4});
+  auto B = nda::array<T, 3>::rand({2, 3, 4});
+  auto C = nda::array<T, 3>::rand({2, 3, 4});
+
+  auto check = [&](binary_op op_AB, binary_op op_ABC, auto const &expected) {
+    auto C_d = to_addr_space<AS3>(C);
+    nda::tensor::elementwise_trinary(alpha, to_addr_space<AS1>(A), "abc", beta, to_addr_space<AS2>(B), "abc", gamma, C_d, "abc", op_AB, op_ABC);
+    EXPECT_ARRAY_NEAR(nda::to_host(C_d), expected, fp_tol<T> * 10);
+  };
+
+  // SUM/SUM, PROD/SUM, SUM/PROD, PROD/PROD
+  check(binary_op::SUM, binary_op::SUM, (alpha * A + beta * B) + gamma * C);
+  check(binary_op::PROD, binary_op::SUM, (alpha * A) * (beta * B) + gamma * C);
+  check(binary_op::SUM, binary_op::PROD, (alpha * A + beta * B) * (gamma * C));
+  check(binary_op::PROD, binary_op::PROD, (alpha * A) * (beta * B) * (gamma * C));
+
+  // MAX/MIN-involved combos: real value types only
+  if constexpr (!nda::is_complex_v<T>) {
+    check(binary_op::SUM, binary_op::MAX, nda::max(alpha * A + beta * B, gamma * C));
+    check(binary_op::SUM, binary_op::MIN, nda::min(alpha * A + beta * B, gamma * C));
+    check(binary_op::MAX, binary_op::PROD, nda::max(alpha * A, beta * B) * (gamma * C));
+    check(binary_op::MIN, binary_op::PROD, nda::min(alpha * A, beta * B) * (gamma * C));
+  }
+
+  auto A_d = to_addr_space<AS1>(A);
+  auto B_d = to_addr_space<AS2>(B);
+  auto C_d = to_addr_space<AS3>(C);
+  if constexpr (on_host) {
+    // Abs-family + NORM_2 (cuTENSOR rejects these as op_AB or op_ABC)
+    nda::array<T, 3> exp(A.shape());
+
+    // abs-family as op_AB
+    exp = (nda::abs(alpha * A) + nda::abs(beta * B)) + gamma * C;
+    check(binary_op::SUM_ABS, binary_op::SUM, exp);
+
+    exp = nda::max(nda::abs(alpha * A), nda::abs(beta * B)) + gamma * C;
+    check(binary_op::MAX_ABS, binary_op::SUM, exp);
+
+    exp = nda::min(nda::abs(alpha * A), nda::abs(beta * B)) + gamma * C;
+    check(binary_op::MIN_ABS, binary_op::SUM, exp);
+
+    exp = nda::sqrt(nda::abs2(alpha * A) + nda::abs2(beta * B)) * (gamma * C);
+    check(binary_op::NORM_2, binary_op::PROD, exp);
+
+    // abs-family as op_ABC
+    exp = nda::abs(alpha * A + beta * B) + nda::abs(gamma * C);
+    check(binary_op::SUM, binary_op::SUM_ABS, exp);
+
+    exp = nda::max(nda::abs((alpha * A) * (beta * B)), nda::abs(gamma * C));
+    check(binary_op::PROD, binary_op::MAX_ABS, exp);
+
+    exp = nda::sqrt(nda::abs2(alpha * A + beta * B) + nda::abs2(gamma * C));
+    check(binary_op::SUM, binary_op::NORM_2, exp);
+
+    // MAX/MIN on complex T throw on the nda host fallback
+    if constexpr (nda::is_complex_v<T>) {
+      EXPECT_THROW(nda::tensor::elementwise_trinary(alpha, A_d, "abc", beta, B_d, "abc", gamma, C_d, "abc", binary_op::SUM, binary_op::MAX),
+                   nda::runtime_error);
+      EXPECT_THROW(nda::tensor::elementwise_trinary(alpha, A_d, "abc", beta, B_d, "abc", gamma, C_d, "abc", binary_op::MAX, binary_op::SUM),
+                   nda::runtime_error);
+    }
+
+    // mismatched indices throw on the nda fallback (both pairings: A/B and B/C)
+    EXPECT_THROW(nda::tensor::elementwise_trinary(alpha, A_d, "abc", beta, B_d, "acb", gamma, C_d, "abc"), nda::runtime_error);
+    EXPECT_THROW(nda::tensor::elementwise_trinary(alpha, A_d, "abc", beta, B_d, "abc", gamma, C_d, "acb"), nda::runtime_error);
+  } else {
+    // differing index strings work on cuTENSOR (idx_c is a permutation of idx_a/idx_b)
+    auto C_perm = nda::array<T, 3>::rand({3, 4, 2}); // indexed "bca"
+    auto exp    = nda::array<T, 3>::zeros({3, 4, 2});
+    nda::for_each(exp.shape(), [&](auto b, auto c, auto a) { exp(b, c, a) = (alpha * A(a, b, c) + beta * B(a, b, c)) + gamma * C_perm(b, c, a); });
+    auto C_perm_d = to_addr_space<AS3>(C_perm);
+    nda::tensor::elementwise_trinary(alpha, to_addr_space<AS1>(A), "abc", beta, to_addr_space<AS2>(B), "abc", gamma, C_perm_d, "bca", binary_op::SUM,
+                                     binary_op::SUM);
+    EXPECT_ARRAY_NEAR(nda::to_host(C_perm_d), exp, fp_tol<T> * 10);
+
+    // unsupported op on the device throws
+    EXPECT_THROW(nda::tensor::elementwise_trinary(alpha, A_d, "abc", beta, B_d, "abc", gamma, C_d, "abc", binary_op::SUM_ABS, binary_op::SUM),
+                 nda::runtime_error);
+  }
+}
+
+template <typename T>
+void test_elementwise_trinary_on_device() {
+  test_elementwise_trinary<T, Device, Device, Device>();
+  test_elementwise_trinary<T, Device, Device, Unified>();
+  test_elementwise_trinary<T, Device, Unified, Device>();
+  test_elementwise_trinary<T, Unified, Device, Device>();
+  test_elementwise_trinary<T, Device, Unified, Unified>();
+  test_elementwise_trinary<T, Unified, Device, Unified>();
+  test_elementwise_trinary<T, Unified, Unified, Device>();
+  test_elementwise_trinary<T, Unified, Unified, Unified>();
+}
+
+template <typename T>
+void test_elementwise_trinary_on_host() {
+  test_elementwise_trinary<T, Host, Host, Host>();
+#ifdef NDA_HAVE_CUDA
+  test_elementwise_trinary<T, Host, Host, Unified>();
+  test_elementwise_trinary<T, Host, Unified, Host>();
+  test_elementwise_trinary<T, Unified, Host, Host>();
+  test_elementwise_trinary<T, Host, Unified, Unified>();
+  test_elementwise_trinary<T, Unified, Host, Unified>();
+  test_elementwise_trinary<T, Unified, Unified, Host>();
+#endif // NDA_HAVE_CUDA
+}
+
+#ifdef NDA_HAVE_CUTENSOR
+TEST(NDA, TensorElementwiseTrinaryOnDevice) {
+  test_elementwise_trinary_on_device<float>();
+  test_elementwise_trinary_on_device<std::complex<float>>();
+  test_elementwise_trinary_on_device<double>();
+  test_elementwise_trinary_on_device<std::complex<double>>();
+}
+#endif // NDA_HAVE_CUTENSOR
+
+TEST(NDA, TensorElementwiseTrinaryOnHost) {
+  test_elementwise_trinary_on_host<float>();
+  test_elementwise_trinary_on_host<std::complex<float>>();
+  test_elementwise_trinary_on_host<double>();
+  test_elementwise_trinary_on_host<std::complex<double>>();
+}
