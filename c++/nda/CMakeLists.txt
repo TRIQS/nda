@@ -121,6 +121,25 @@ if(MagmaSupport)
   install(TARGETS magma EXPORT ${PROJECT_NAME}-targets)
 endif()
 
+# ========= TBLIS ==========
+
+if(TblisSupport)
+  message(STATUS "-------- TBLIS configuration -------------")
+  include(FetchContent)
+  FetchContent_Declare(tblis
+    GIT_REPOSITORY https://github.com/MatthewsResearchGroup/tblis.git
+    GIT_TAG eb719e7 # fix commit for applying the patch
+    GIT_SUBMODULES_RECURSE TRUE
+    PATCH_COMMAND ${CMAKE_COMMAND} -E env git apply ${PROJECT_SOURCE_DIR}/share/tblis.patch
+  )
+  set(LENGTH_TYPE "long" CACHE STRING "" FORCE)
+  set(STRIDE_TYPE "long" CACHE STRING "" FORCE)
+  set(ENABLE_TESTS OFF CACHE BOOL "" FORCE)
+  FetchContent_MakeAvailable(tblis)
+  target_link_libraries(${PROJECT_NAME}_c PUBLIC TBLIS::tblis)
+  target_compile_definitions(${PROJECT_NAME}_c PUBLIC NDA_HAVE_TBLIS)
+endif()
+
 # ========= Static Analyzer Checks ==========
 
 option(ANALYZE_SOURCES OFF "Run static analyzer checks if found (clang-tidy, cppcheck)")

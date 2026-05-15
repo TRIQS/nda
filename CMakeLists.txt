@@ -60,6 +60,7 @@ option(PythonSupport "Build with Python support" OFF)
 option(HDF5Support "Build with HDF5 support" ON)
 option(MPISupport "Build with MPI support" ON)
 option(OpenMPSupport "Build with OpenMP support" ON)
+option(TblisSupport "Build with TBLIS tensor library" OFF)
 
 # Documentation
 option(Build_Documentation "Build documentation" OFF)

@@ -18,6 +18,10 @@ if(NOT HDF5Support)
   list(FILTER all_tests EXCLUDE REGEX "h5")
 endif()
 
+if(NOT TblisSupport)
+  list(FILTER all_tests EXCLUDE REGEX "tblis")
+endif()
+
 macro(SetUpAllTestWithMacroDef extension macrodef)
 foreach(test ${all_tests})
   get_filename_component(test_name ${test} NAME_WE)

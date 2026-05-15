@@ -1,0 +1,95 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 73fd66e..9a56214 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -451,8 +451,9 @@ add_custom_command(
+     COMMAND ${BLIS_INSTALL_DIR}/share/blis/configure-plugin
+         CC=${CMAKE_C_COMPILER}
+         CXX=${CMAKE_CXX_COMPILER}
+-        CFLAGS="${PLUGIN_FLAGS} ${OMP_SIMD_FLAG}"
+-        CXXFLAGS="${PLUGIN_FLAGS} ${OMP_SIMD_FLAG} -std=c++20"
++        CFLAGS="${PLUGIN_FLAGS} ${OMP_SIMD_FLAG} ${CMAKE_C_FLAGS}"
++        CXXFLAGS="${PLUGIN_FLAGS} ${OMP_SIMD_FLAG} -std=c++20 ${CMAKE_CXX_FLAGS}"
++        LDFLAGS="${CMAKE_EXE_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS}"
+         ${BLIS_DEBUG_FLAG}
+         -f --build
+         --path=${CMAKE_CURRENT_SOURCE_DIR}/tblis/plugin
+diff --git a/tblis/frame/1t/dense/add.cxx b/tblis/frame/1t/dense/add.cxx
+index 40a8df6..cab255c 100644
+--- a/tblis/frame/1t/dense/add.cxx
++++ b/tblis/frame/1t/dense/add.cxx
+@@ -198,7 +198,7 @@ void add(type_t type, const communicator& comm, const cntx_t* cntx,
+     if (unit_A_AB == unit_B_AB)
+     {
+         auto add_ukr = reinterpret_cast<axpbyv_ker_ft>(bli_cntx_get_ukr_dt((num_t)type, BLIS_AXPBYV_KER, cntx));
+-        auto scal_ukr = reinterpret_cast<scalv_ker_ft>(bli_cntx_get_ukr_dt((num_t)type, BLIS_SCALV_KER, cntx));
++        auto scal_ukr = reinterpret_cast<scal2v_ker_ft>(bli_cntx_get_ukr_dt((num_t)type, BLIS_SCAL2V_KER, cntx));
+         auto one = bli_obj_buffer_for_const((num_t)type, &BLIS_ONE);
+ 
+         comm.distribute_over_threads(n0, mn1,
+@@ -217,7 +217,7 @@ void add(type_t type, const communicator& comm, const cntx_t* cntx,
+                 iter_AB.next(A1, B1);
+ 
+                 if (conj_B)
+-                    scal_ukr(BLIS_CONJUGATE, n0_max-n0_min, &one, B1, stride_B_m, cntx);
++                    scal_ukr(BLIS_CONJUGATE, n0_max-n0_min, one, B1, stride_B_m, B1, stride_B_m, cntx);
+ 
+                 add_ukr(conj_A ? BLIS_CONJUGATE : BLIS_NO_CONJUGATE,
+                         n0_max-n0_min,
+diff --git a/tblis/frame/base/basic_types.h b/tblis/frame/base/basic_types.h
+index 09d2ce6..8cdc06d 100644
+--- a/tblis/frame/base/basic_types.h
++++ b/tblis/frame/base/basic_types.h
+@@ -834,7 +834,7 @@ TBLIS_BEGIN_NAMESPACE
+             {
+                 tblis_scalar ret(other);
+                 ret.conj();
+-                return other;
++                return ret;
+             }
+ 
+             tblis_scalar& abs()
+@@ -855,7 +855,7 @@ TBLIS_BEGIN_NAMESPACE
+             {
+                 tblis_scalar ret(other);
+                 ret.abs();
+-                return other;
++                return ret;
+             }
+ 
+             tblis_scalar& sqrt()
+@@ -876,7 +876,7 @@ TBLIS_BEGIN_NAMESPACE
+             {
+                 tblis_scalar ret(other);
+                 ret.sqrt();
+-                return other;
++                return ret;
+             }
+ 
+             friend std::ostream& operator<<(std::ostream& os, const tblis_scalar& x)
+diff --git a/tblis/plugin/ref_kernels/trans_ref.cxx b/tblis/plugin/ref_kernels/trans_ref.cxx
+index beffdc7..58e109e 100644
+--- a/tblis/plugin/ref_kernels/trans_ref.cxx
++++ b/tblis/plugin/ref_kernels/trans_ref.cxx
+@@ -53,8 +53,8 @@ void TBLIS_REF_KERNEL(trans)
+         else
+         {
+             if (is_complex_v<T> && conj_A && conj_B) body( true,  true, false, MR, NR);
+-            if (is_complex_v<T> && conj_A          ) body( true, false, false, MR, NR);
+-            if (is_complex_v<T>           && conj_B) body(false,  true, false, MR, NR);
++            else if (is_complex_v<T> && conj_A          ) body( true, false, false, MR, NR);
++            else if (is_complex_v<T>           && conj_B) body(false,  true, false, MR, NR);
+             else                                     body(false, false, false, MR, NR);
+         }
+     }
+@@ -68,8 +68,8 @@ void TBLIS_REF_KERNEL(trans)
+         else
+         {
+             if (is_complex_v<T> && conj_A && conj_B) body( true,  true, false, m, n);
+-            if (is_complex_v<T> && conj_A          ) body( true, false, false, m, n);
+-            if (is_complex_v<T>           && conj_B) body(false,  true, false, m, n);
++            else if (is_complex_v<T> && conj_A          ) body( true, false, false, m, n);
++            else if (is_complex_v<T>           && conj_B) body(false,  true, false, m, n);
+             else                                     body(false, false, false, m, n);
+         }
+     }
