@@ -731,3 +731,104 @@ TEST(NDA, TensorElementwiseTrinaryOnHost) {
   test_elementwise_trinary_on_host<double>();
   test_elementwise_trinary_on_host<std::complex<double>>();
 }
+
+// Test the generic tensor elementwise binary function.
+template <typename T, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
+void test_elementwise() {
+  using nda::tensor::binary_op;
+  constexpr bool on_host = (AS1 == nda::mem::Host || AS2 == nda::mem::Host);
+
+  T alpha = T{2};
+  T beta  = T{3};
+  if constexpr (nda::is_complex_v<T>) {
+    alpha *= 1 + 1i;
+    beta *= 2 - 1i;
+  }
+
+  auto A = nda::array<T, 3>::rand({2, 3, 4});
+  auto B = nda::array<T, 3>::rand({2, 3, 4});
+
+  // exercise both the full-signature and the default-indices overload of elementwise
+  auto check = [&](binary_op op, auto const &expected) {
+    auto B_d1 = to_addr_space<AS2>(B);
+    nda::tensor::elementwise(alpha, to_addr_space<AS1>(A), "abc", beta, B_d1, "abc", op);
+    EXPECT_ARRAY_NEAR(nda::to_host(B_d1), expected, fp_tol<T>);
+
+    auto B_d2 = to_addr_space<AS2>(B);
+    nda::tensor::elementwise(alpha, to_addr_space<AS1>(A), beta, B_d2, op);
+    EXPECT_ARRAY_NEAR(nda::to_host(B_d2), expected, fp_tol<T>);
+  };
+
+  // SUM, PROD
+  check(binary_op::SUM, alpha * A + beta * B);
+  check(binary_op::PROD, (alpha * A) * (beta * B));
+
+  // MAX/MIN: real value types only
+  if constexpr (!nda::is_complex_v<T>) {
+    check(binary_op::MAX, nda::max(alpha * A, beta * B));
+    check(binary_op::MIN, nda::min(alpha * A, beta * B));
+  }
+
+  auto A_d = to_addr_space<AS1>(A);
+  auto B_d = to_addr_space<AS2>(B);
+  if constexpr (on_host) {
+    // Abs-family + NORM_2
+    check(binary_op::SUM_ABS, nda::abs(alpha * A) + nda::abs(beta * B));
+    check(binary_op::MAX_ABS, nda::max(nda::abs(alpha * A), nda::abs(beta * B)));
+    check(binary_op::MIN_ABS, nda::min(nda::abs(alpha * A), nda::abs(beta * B)));
+    check(binary_op::NORM_2, nda::sqrt(nda::abs2(alpha * A) + nda::abs2(beta * B)));
+
+    // MAX/MIN on complex T throw on the nda host fallback
+    if constexpr (nda::is_complex_v<T>) {
+      EXPECT_THROW(nda::tensor::elementwise(alpha, A_d, "abc", beta, B_d, "abc", binary_op::MAX), nda::runtime_error);
+      EXPECT_THROW(nda::tensor::elementwise(alpha, A_d, "abc", beta, B_d, "abc", binary_op::MIN), nda::runtime_error);
+    }
+
+    // mismatched indices throw on the nda fallback
+    EXPECT_THROW(nda::tensor::elementwise(alpha, A_d, "abc", beta, B_d, "acb", binary_op::PROD), nda::runtime_error);
+  } else {
+    // differing index strings work (idx_b is a permutation of idx_a)
+    auto B_perm = nda::array<T, 3>::rand({3, 4, 2}); // indexed "bca"
+    auto exp    = nda::array<T, 3>::zeros({3, 4, 2});
+    nda::for_each(exp.shape(), [&](auto b, auto c, auto a) { exp(b, c, a) = alpha * A(a, b, c) + beta * B_perm(b, c, a); });
+    auto B_perm_d = to_addr_space<AS2>(B_perm);
+    nda::tensor::elementwise(alpha, to_addr_space<AS1>(A), "abc", beta, B_perm_d, "bca", binary_op::SUM);
+    EXPECT_ARRAY_NEAR(nda::to_host(B_perm_d), exp, fp_tol<T>);
+
+    // unsupported op on the device throws
+    EXPECT_THROW(nda::tensor::elementwise(alpha, A_d, "abc", beta, B_d, "abc", binary_op::SUM_ABS), nda::runtime_error);
+  }
+}
+
+template <typename T>
+void test_elementwise_on_device() {
+  test_elementwise<T, Device, Device>();
+  test_elementwise<T, Device, Unified>();
+  test_elementwise<T, Unified, Device>();
+  test_elementwise<T, Unified, Unified>();
+}
+
+template <typename T>
+void test_elementwise_on_host() {
+  test_elementwise<T, Host, Host>();
+#ifdef NDA_HAVE_CUDA
+  test_elementwise<T, Host, Unified>();
+  test_elementwise<T, Unified, Host>();
+#endif // NDA_HAVE_CUDA
+}
+
+#ifdef NDA_HAVE_CUTENSOR
+TEST(NDA, TensorElementwiseOnDevice) {
+  test_elementwise_on_device<float>();
+  test_elementwise_on_device<std::complex<float>>();
+  test_elementwise_on_device<double>();
+  test_elementwise_on_device<std::complex<double>>();
+}
+#endif // NDA_HAVE_CUTENSOR
+
+TEST(NDA, TensorElementwiseOnHost) {
+  test_elementwise_on_host<float>();
+  test_elementwise_on_host<std::complex<float>>();
+  test_elementwise_on_host<double>();
+  test_elementwise_on_host<std::complex<double>>();
+}

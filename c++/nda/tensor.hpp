@@ -14,6 +14,7 @@
 #include "./tensor/assign.hpp"
 #include "./tensor/contract.hpp"
 #include "./tensor/dot.hpp"
+#include "./tensor/elementwise.hpp"
 #include "./tensor/elementwise_trinary.hpp"
 #include "./tensor/interface/cutensor_interface.hpp"
 #include "./tensor/interface/tblis_interface.hpp"
