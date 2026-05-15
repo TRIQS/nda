@@ -10,4 +10,5 @@
 
 #pragma once
 
+#include "./tensor/interface/tblis_interface.hpp"
 #include "./tensor/tools.hpp"

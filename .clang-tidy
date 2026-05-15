@@ -12,4 +12,5 @@ Checks:
     - -cppcoreguidelines-avoid-magic-numbers
     - -cppcoreguidelines-non-private-member-variables-in-classes
     - -bugprone-easily-swappable-parameters
+    - -bugprone-suspicious-stringview-data-usage
 HeaderFilterRegex: 'nda|-f77'
