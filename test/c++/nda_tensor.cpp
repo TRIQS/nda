@@ -212,3 +212,152 @@ TEST(NDA, TensorAddOnHostFallbackMismatchedIndicesThrows) {
   EXPECT_THROW(nda::tensor::add(1.0, A, "ij", 1.0, B, "ji"), nda::runtime_error);
 }
 #endif // NDA_HAVE_TBLIS
+
+// Test the generic tensor assign function.
+template <typename T, typename Layout1, typename Layout2, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
+void test_assign() {
+  // rank-2, default indices: B = A — supported by every backend
+  auto A1   = nda::matrix<T, Layout1>::rand({3, 4});
+  auto B1_d = to_addr_space<AS2>(nda::matrix<T, Layout2>::rand({3, 4}));
+  nda::tensor::assign(to_addr_space<AS1>(A1), B1_d);
+  EXPECT_ARRAY_EQ(nda::to_host(B1_d), A1);
+
+  // rank-3, default indices: B = A — also supported by every backend
+  auto A2   = nda::array<T, 3, Layout1>::rand({2, 3, 4});
+  auto B2_d = to_addr_space<AS2>(nda::array<T, 3, Layout2>::rand({2, 3, 4}));
+  nda::tensor::assign(to_addr_space<AS1>(A2), B2_d);
+  EXPECT_ARRAY_EQ(nda::to_host(B2_d), A2);
+
+  // permutation and different-rank cases require cuTENSOR or TBLIS
+  if constexpr (nda::tensor::have_tblis || nda::tensor::have_cutensor) {
+    // rank-2 permutation: B_ji = A_ij
+    auto A3   = nda::matrix<T, Layout1>::rand({3, 4});
+    auto exp3 = nda::make_regular(nda::transpose(A3));
+    auto B3_d = to_addr_space<AS2>(nda::matrix<T, Layout2>::zeros({4, 3}));
+    nda::tensor::assign(to_addr_space<AS1>(A3), "ij", B3_d, "ji");
+    EXPECT_ARRAY_EQ(nda::to_host(B3_d), exp3);
+
+    // rank-3 permutation: B_kij = A_ijk
+    auto A4   = nda::array<T, 3, Layout1>::rand({2, 3, 4});
+    auto exp4 = nda::array<T, 3, Layout2>::zeros({4, 2, 3});
+    nda::for_each(exp4.shape(), [&](auto k, auto i, auto j) { exp4(k, i, j) = A4(i, j, k); });
+    auto B4_d = to_addr_space<AS2>(nda::array<T, 3, Layout2>::zeros({4, 2, 3}));
+    nda::tensor::assign(to_addr_space<AS1>(A4), "ijk", B4_d, "kij");
+    EXPECT_ARRAY_EQ(nda::to_host(B4_d), exp4);
+
+    // different rank — broadcast rank-2 A along the third axis of B: B_ijk = A_ij
+    auto A5   = nda::matrix<T, Layout1>::rand({3, 4});
+    auto exp5 = nda::array<T, 3, Layout2>::zeros({3, 4, 5});
+    nda::for_each(exp5.shape(), [&](auto i, auto j, auto k) { exp5(i, j, k) = A5(i, j); });
+    auto B5_d = to_addr_space<AS2>(nda::array<T, 3, Layout2>::zeros({3, 4, 5}));
+    nda::tensor::assign(to_addr_space<AS1>(A5), "ij", B5_d, "ijk");
+    EXPECT_ARRAY_EQ(nda::to_host(B5_d), exp5);
+  }
+}
+
+template <typename T, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
+void test_assign_layouts() {
+  test_assign<T, C_layout, C_layout, AS1, AS2>();
+  test_assign<T, C_layout, F_layout, AS1, AS2>();
+  test_assign<T, F_layout, C_layout, AS1, AS2>();
+  test_assign<T, F_layout, F_layout, AS1, AS2>();
+}
+
+template <typename T>
+void test_assign_on_device() {
+  test_assign_layouts<T, Device, Device>();
+  test_assign_layouts<T, Device, Unified>();
+  test_assign_layouts<T, Unified, Device>();
+  test_assign_layouts<T, Unified, Unified>();
+}
+
+template <typename T>
+void test_assign_on_host() {
+  test_assign_layouts<T, Host, Host>();
+#ifdef NDA_HAVE_CUDA
+  test_assign_layouts<T, Host, Unified>();
+  test_assign_layouts<T, Unified, Host>();
+#endif // NDA_HAVE_CUDA
+}
+
+#ifdef NDA_HAVE_CUTENSOR
+TEST(NDA, TensorAssignOnDevice) {
+  test_assign_on_device<float>();
+  test_assign_on_device<std::complex<float>>();
+  test_assign_on_device<double>();
+  test_assign_on_device<std::complex<double>>();
+}
+#endif // NDA_HAVE_CUTENSOR
+
+TEST(NDA, TensorAssignOnHost) {
+  test_assign_on_host<float>();
+  test_assign_on_host<std::complex<float>>();
+  test_assign_on_host<double>();
+  test_assign_on_host<std::complex<double>>();
+}
+
+#ifdef NDA_HAVE_CUDA
+// Test the cross-memory recursive copy path of nda::tensor::assign.
+template <typename T, typename Layout1, typename Layout2, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
+void test_assign_cross_memory() {
+  // rank-1: always a leaf in rec_copy
+  auto A1 = nda::vector<T>::zeros({7});
+  for (long c = 0; auto &x : A1) x = static_cast<T>(c++);
+  auto A1_d = to_addr_space<AS1>(A1);
+  auto B1_d = to_addr_space<AS2>(nda::vector<T>::zeros({7}));
+  nda::tensor::assign(A1_d, B1_d);
+  EXPECT_ARRAY_EQ(nda::to_host(B1_d), A1);
+
+  // rank-3 contiguous: leaf-at-top when Layout1 == Layout2, else descent to rank-1
+  auto A2 = nda::array<T, 3, Layout1>::zeros({2, 3, 4});
+  for (long c = 0; auto &x : A2) x = static_cast<T>(c++);
+  auto A2_d = to_addr_space<AS1>(A2);
+  auto B2_d = to_addr_space<AS2>(nda::array<T, 3, Layout2>::zeros({2, 3, 4}));
+  nda::tensor::assign(A2_d, B2_d);
+  EXPECT_ARRAY_EQ(nda::to_host(B2_d), A2);
+
+  // rank-3 non-contiguous source view: forces recursive descent along the slowest-varying axis
+  auto A3 = nda::array<T, 3, Layout1>::zeros({4, 6, 8});
+  for (long c = 0; auto &x : A3) x = static_cast<T>(c++);
+  auto A3_d      = to_addr_space<AS1>(A3);
+  auto A3_view_d = A3_d(nda::range(0, 4, 2), nda::range(1, 5), nda::range(0, 8, 2));
+  auto B3_d      = to_addr_space<AS2>(nda::array<T, 3, Layout2>::zeros({2, 4, 4}));
+  nda::tensor::assign(A3_view_d, B3_d);
+  auto expected = nda::make_regular(A3(nda::range(0, 4, 2), nda::range(1, 5), nda::range(0, 8, 2)));
+  EXPECT_ARRAY_EQ(nda::to_host(B3_d), expected);
+}
+
+template <typename T, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
+void test_assign_cross_memory_layouts() {
+  test_assign_cross_memory<T, C_layout, C_layout, AS1, AS2>();
+  test_assign_cross_memory<T, C_layout, F_layout, AS1, AS2>();
+  test_assign_cross_memory<T, F_layout, C_layout, AS1, AS2>();
+  test_assign_cross_memory<T, F_layout, F_layout, AS1, AS2>();
+}
+
+template <typename T>
+void test_assign_cross_memory_address_spaces() {
+  test_assign_cross_memory_layouts<T, Host, Device>();
+  test_assign_cross_memory_layouts<T, Device, Host>();
+  test_assign_cross_memory_layouts<T, Host, Unified>();
+  test_assign_cross_memory_layouts<T, Unified, Host>();
+  test_assign_cross_memory_layouts<T, Device, Unified>();
+  test_assign_cross_memory_layouts<T, Unified, Device>();
+  test_assign_cross_memory_layouts<T, Device, Device>();
+}
+
+TEST(NDA, TensorAssignCrossMemory) {
+  test_assign_cross_memory_address_spaces<float>();
+  test_assign_cross_memory_address_spaces<double>();
+  test_assign_cross_memory_address_spaces<std::complex<float>>();
+  test_assign_cross_memory_address_spaces<std::complex<double>>();
+  test_assign_cross_memory_address_spaces<int>();
+}
+
+// Test that permutations in the cross-memory fallback path throw.
+TEST(NDA, TensorAssignCrossMemoryPermutationThrows) {
+  auto A_h = nda::array<double, 2>::rand({3, 4});
+  auto B_d = to_addr_space<Device>(nda::array<double, 2>::zeros({4, 3}));
+  EXPECT_THROW(nda::tensor::assign(A_h, "ij", B_d, "ji"), nda::runtime_error);
+}
+#endif // NDA_HAVE_CUDA
