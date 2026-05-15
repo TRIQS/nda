@@ -233,4 +233,45 @@ namespace nda::tensor {
   template <typename T>
   using const_tensor_view = tensor_view<const T>;
 
+  /**
+   * @brief Check if two index strings are equal and have a specified length.
+   *
+   * @details Used by nda fallback branches that cannot permute axes and therefore require identical index strings.
+   * Also enforces that the strings have length equal to the tensor rank.
+   *
+   * @param idx_a First index string.
+   * @param idx_b Second index string.
+   * @param rank Expected length of both index strings (the tensor rank).
+   * @param op_name Name of the calling tensor operation, for the error message (e.g. `"add"`).
+   */
+  inline void require_equal_indices(std::string_view idx_a, std::string_view idx_b, int rank, std::string_view op_name) {
+    if (static_cast<int>(idx_a.size()) != rank || idx_a != idx_b) {
+      NDA_RUNTIME_ERROR << "nda::tensor::" << op_name << ": fallback to nda operations requires identical index strings of length " << rank
+                        << ": idx_a = '" << idx_a << "', idx_b = '" << idx_b << "'";
+    }
+  }
+
+  /**
+   * @brief Generate a default index string ("abc...") of a given length.
+   *
+   * @details Used by tensor operations that don't require user-specified indices (e.g., scale, set, full reduce). The 
+   * maximum supported length is 26 (one character per letter).
+   *
+   * @tparam R Length of the index string (must be in [0, 26]).
+   * @return The default index string of length R.
+   */
+  template <int R>
+    requires(R >= 0 && R <= 26)
+  std::string_view default_index() {
+    static const auto arr = []() constexpr {
+      std::array<char, R> s{};
+      for (int i = 0; i < R; ++i) s[i] = static_cast<char>('a' + i);
+      return s;
+    }();
+
+    return {arr.data(), arr.size()};
+  }
+
+  /** @} */
+
 } // namespace nda::tensor
