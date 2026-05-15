@@ -832,3 +832,60 @@ TEST(NDA, TensorElementwiseOnHost) {
   test_elementwise_on_host<double>();
   test_elementwise_on_host<std::complex<double>>();
 }
+
+// Test the generic tensor reduce function.
+template <typename T, nda::mem::AddressSpace AS>
+void test_reduce() {
+  using nda::tensor::binary_op;
+  auto A   = nda::array<T, 3>::rand({2, 3, 4});
+  auto A_d = to_addr_space<AS>(A);
+
+  // SUM, PROD
+  EXPECT_COMPLEX_NEAR(nda::tensor::reduce(A_d), nda::sum(A), fp_tol<T>);
+  EXPECT_COMPLEX_NEAR(nda::tensor::reduce(A_d, binary_op::PROD), nda::product(A), fp_tol<T>);
+
+  if constexpr (!nda::is_complex_v<T>) {
+    // MAX/MIN: real value types only
+    EXPECT_NEAR(nda::tensor::reduce(A_d, binary_op::MAX), nda::max_element(A), fp_tol<T>);
+    EXPECT_NEAR(nda::tensor::reduce(A_d, binary_op::MIN), nda::min_element(A), fp_tol<T>);
+  } else {
+    // lazy conjugate expressions
+    EXPECT_COMPLEX_NEAR(nda::tensor::reduce(nda::conj(A_d)), nda::sum(nda::conj(A)), fp_tol<T>);
+    EXPECT_COMPLEX_NEAR(nda::tensor::reduce(nda::conj(A_d), binary_op::PROD), nda::product(nda::conj(A)), fp_tol<T>);
+  }
+
+  // Abs-family + NORM_2: host only
+  if constexpr (AS == nda::mem::Host) {
+    EXPECT_COMPLEX_NEAR(nda::tensor::reduce(A_d, binary_op::SUM_ABS), nda::sum(nda::abs(A)), fp_tol<T>);
+    EXPECT_COMPLEX_NEAR(nda::tensor::reduce(A_d, binary_op::MAX_ABS), nda::max_element(nda::abs(A)), fp_tol<T>);
+    EXPECT_COMPLEX_NEAR(nda::tensor::reduce(A_d, binary_op::MIN_ABS), nda::min_element(nda::abs(A)), fp_tol<T>);
+    EXPECT_COMPLEX_NEAR(nda::tensor::reduce(A_d, binary_op::NORM_2), std::sqrt(nda::sum(nda::abs2(A))), fp_tol<T>);
+  }
+}
+
+#ifdef NDA_HAVE_CUTENSOR
+TEST(NDA, TensorReduceOnDevice) {
+  test_reduce<float, Device>();
+  test_reduce<std::complex<float>, Device>();
+  test_reduce<double, Device>();
+  test_reduce<std::complex<double>, Device>();
+
+  test_reduce<float, Unified>();
+  test_reduce<std::complex<float>, Unified>();
+  test_reduce<double, Unified>();
+  test_reduce<std::complex<double>, Unified>();
+}
+
+// cuTENSOR's reduce does not handle the abs-family ops.
+TEST(NDA, TensorReduceUnsupportedOpOnDeviceThrows) {
+  auto A_d = to_addr_space<Device>(nda::array<double, 3>::rand({2, 3, 4}));
+  EXPECT_THROW((void)nda::tensor::reduce(A_d, nda::tensor::binary_op::SUM_ABS), nda::runtime_error);
+}
+#endif // NDA_HAVE_CUTENSOR
+
+TEST(NDA, TensorReduceOnHost) {
+  test_reduce<float, Host>();
+  test_reduce<std::complex<float>, Host>();
+  test_reduce<double, Host>();
+  test_reduce<std::complex<double>, Host>();
+}
