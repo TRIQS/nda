@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include "./tensor/add.hpp"
 #include "./tensor/interface/cutensor_interface.hpp"
 #include "./tensor/interface/tblis_interface.hpp"
 #include "./tensor/tools.hpp"

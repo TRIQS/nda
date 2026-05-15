@@ -22,3 +22,193 @@ TEST(NDA, TensorDefaultIndices) {
   EXPECT_EQ(nda::tensor::default_index<10>(), "abcdefghij");
   EXPECT_EQ(nda::tensor::default_index<26>(), "abcdefghijklmnopqrstuvwxyz");
 }
+
+// Test the generic tensor add function.
+template <typename T, typename Layout1, typename Layout2, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
+void test_add() {
+  constexpr bool can_permute = (AS1 != nda::mem::Host && AS2 != nda::mem::Host) || nda::tensor::have_tblis;
+  constexpr bool can_reduce  = nda::tensor::have_tblis && (AS1 == nda::mem::Host || AS2 == nda::mem::Host);
+
+  T alpha = T{3};
+  T beta  = T{2};
+  if constexpr (nda::is_complex_v<T>) {
+    alpha *= 2 + 1i;
+    beta *= 1 - 1i;
+  }
+
+  // vector addition: B_i = alpha * A_i + beta * B_i
+  auto A1   = nda::vector<T>::rand({5});
+  auto B1   = nda::vector<T>::rand({5});
+  auto exp1 = nda::make_regular(alpha * A1 + beta * B1);
+  auto B1_d = to_addr_space<AS2>(B1);
+  nda::tensor::add(alpha, to_addr_space<AS1>(A1), "i", beta, B1_d, "i");
+  EXPECT_ARRAY_NEAR(nda::to_host(B1_d), exp1, fp_tol<T>);
+
+  // matrix addition: B_ij = alpha * A_ij + beta * B_ij
+  auto A2   = nda::matrix<T, Layout1>::rand({3, 4});
+  auto B2   = nda::matrix<T, Layout2>::rand({3, 4});
+  auto exp2 = nda::make_regular(alpha * A2 + beta * B2);
+  auto B2_d = to_addr_space<AS2>(B2);
+  nda::tensor::add(alpha, to_addr_space<AS1>(A2), "ij", beta, B2_d, "ij");
+  EXPECT_ARRAY_NEAR(nda::to_host(B2_d), exp2, fp_tol<T>);
+
+  // rank-3 tensor addition: B_ijk = alpha * A_ijk + beta * B_ijk
+  auto A4   = nda::array<T, 3, Layout1>::rand({2, 3, 4});
+  auto B4   = nda::array<T, 3, Layout2>::rand({2, 3, 4});
+  auto exp4 = nda::make_regular(alpha * A4 + beta * B4);
+  auto B4_d = to_addr_space<AS2>(B4);
+  nda::tensor::add(alpha, to_addr_space<AS1>(A4), "ijk", beta, B4_d, "ijk");
+  EXPECT_ARRAY_NEAR(nda::to_host(B4_d), exp4, fp_tol<T>);
+
+  // matrix addition with views: B_ij = alpha * A_ij + beta * B_ij
+  auto A6   = nda::array<T, 2, Layout1>::rand({5, 5});
+  auto B6   = nda::array<T, 2, Layout2>::rand({5, 5});
+  auto exp6 = nda::make_regular(alpha * A6(nda::range(1, 4), nda::range(2, 5)) + beta * B6(nda::range(0, 5, 2), nda::range(1, 4)));
+  auto A6_d = to_addr_space<AS1>(A6);
+  auto B6_d = to_addr_space<AS2>(B6);
+  nda::tensor::add(alpha, A6_d(nda::range(1, 4), nda::range(2, 5)), "ij", beta, B6_d(nda::range(0, 5, 2), nda::range(1, 4)), "ij");
+  EXPECT_ARRAY_NEAR(nda::to_host(B6_d)(nda::range(0, 5, 2), nda::range(1, 4)), exp6, fp_tol<T>);
+
+  // matrix addition with default indices: B = alpha * A + beta * B
+  auto A8   = nda::matrix<T, Layout1>::rand({3, 4});
+  auto B8   = nda::matrix<T, Layout2>::rand({3, 4});
+  auto exp8 = nda::make_regular(alpha * A8 + beta * B8);
+  auto B8_d = to_addr_space<AS2>(B8);
+  nda::tensor::add(alpha, to_addr_space<AS1>(A8), beta, B8_d);
+  EXPECT_ARRAY_NEAR(nda::to_host(B8_d), exp8, fp_tol<T>);
+
+  // matrix addition with default indices and default factors: B = A
+  auto A9   = nda::matrix<T, Layout1>::rand({3, 4});
+  auto B9   = nda::matrix<T, Layout2>::rand({3, 4});
+  auto exp9 = nda::make_regular(A9);
+  auto B9_d = to_addr_space<AS2>(B9);
+  nda::tensor::add(to_addr_space<AS1>(A9), B9_d);
+  EXPECT_ARRAY_NEAR(nda::to_host(B9_d), exp9, fp_tol<T>);
+
+  // addition involving conjugate expressions (complex types only)
+  if constexpr (nda::is_complex_v<T>) {
+    // B_ij = alpha * conj(A_ij) + beta * B_ij
+    auto A7   = nda::matrix<T, Layout1>::rand({3, 4});
+    auto B7   = nda::matrix<T, Layout2>::rand({3, 4});
+    auto exp7 = nda::make_regular(alpha * nda::conj(A7) + beta * B7);
+    auto B7_d = to_addr_space<AS2>(B7);
+    nda::tensor::add(alpha, nda::conj(to_addr_space<AS1>(A7)), "ij", beta, B7_d, "ij");
+    EXPECT_ARRAY_NEAR(nda::to_host(B7_d), exp7, fp_tol<T>);
+  }
+
+  // out-of-place addition: C_ijk = alpha * A_ijk + beta * B_ijk
+  auto A10   = nda::array<T, 3, Layout1>::rand({2, 3, 4});
+  auto B10   = nda::array<T, 3, Layout2>::rand({2, 3, 4});
+  auto C10   = nda::array<T, 3, Layout2>::rand({2, 3, 4});
+  auto exp10 = nda::make_regular(alpha * A10 + beta * B10);
+  auto A10_d = to_addr_space<AS1>(A10);
+  auto B10_d = to_addr_space<AS2>(B10);
+  auto C10_d = to_addr_space<AS2>(C10);
+  nda::tensor::add(alpha, A10_d, "ijk", beta, B10_d, "ijk", C10_d, "ijk");
+  EXPECT_ARRAY_NEAR(nda::to_host(C10_d), exp10, fp_tol<T>);
+
+  // out-of-place addition with alpha = beta = 1 convenience overload
+  auto A11   = nda::array<T, 3, Layout1>::rand({2, 3, 4});
+  auto B11   = nda::array<T, 3, Layout2>::rand({2, 3, 4});
+  auto C11   = nda::array<T, 3, Layout2>::zeros({2, 3, 4});
+  auto exp11 = nda::make_regular(A11 + B11);
+  auto A11_d = to_addr_space<AS1>(A11);
+  auto B11_d = to_addr_space<AS2>(B11);
+  auto C11_d = to_addr_space<AS2>(C11);
+  nda::tensor::add(A11_d, "ijk", B11_d, "ijk", C11_d, "ijk");
+  EXPECT_ARRAY_NEAR(nda::to_host(C11_d), exp11, fp_tol<T>);
+
+  // permutation and different-rank cases require cuTENSOR or TBLIS
+  if constexpr (can_permute) {
+    // matrix + transpose matrix: B_ji = alpha * A_ij + beta * B_ji
+    auto A3   = nda::matrix<T, Layout1>::rand({3, 4});
+    auto B3   = nda::matrix<T, Layout2>::rand({4, 3});
+    auto exp3 = nda::make_regular(alpha * nda::transpose(A3) + beta * B3);
+    auto B3_d = to_addr_space<AS2>(B3);
+    nda::tensor::add(alpha, to_addr_space<AS1>(A3), "ij", beta, B3_d, "ji");
+    EXPECT_ARRAY_NEAR(nda::to_host(B3_d), exp3, fp_tol<T>);
+
+    // rank-3 tensor addition + permuted indices: B_kij = alpha * A_ijk + beta * B_kij
+    auto A5   = nda::array<T, 3, Layout1>::rand({2, 3, 4});
+    auto B5   = nda::array<T, 3, Layout2>::rand({4, 2, 3});
+    auto exp5 = nda::array<T, 3, Layout2>::zeros({4, 2, 3});
+    nda::for_each(exp5.shape(), [&](auto k, auto i, auto j) { exp5(k, i, j) = alpha * A5(i, j, k) + beta * B5(k, i, j); });
+    auto B5_d = to_addr_space<AS2>(B5);
+    nda::tensor::add(alpha, to_addr_space<AS1>(A5), "ijk", beta, B5_d, "kij");
+    EXPECT_ARRAY_NEAR(nda::to_host(B5_d), exp5, fp_tol<T>);
+
+    // different rank — reduction: B_i = beta * B_i + alpha * sum_j A_ij (only supported on the TBLIS host path)
+    if constexpr (can_reduce) {
+      auto A12   = nda::array<T, 2, Layout1>::rand({3, 4});
+      auto B12   = nda::array<T, 1>::rand({3});
+      auto exp12 = nda::array<T, 1>::zeros({3});
+      nda::for_each(exp12.shape(), [&](auto i) {
+        T s = 0;
+        for (long j = 0; j < 4; ++j) s += A12(i, j);
+        exp12(i) = beta * B12(i) + alpha * s;
+      });
+      auto B12_d = to_addr_space<AS2>(B12);
+      nda::tensor::add(alpha, to_addr_space<AS1>(A12), "ij", beta, B12_d, "i");
+      EXPECT_ARRAY_NEAR(nda::to_host(B12_d), exp12, fp_tol<T>);
+    }
+
+    // different rank — broadcast via default indices: B_ijk <- B_ijk + A_ij
+    auto A13   = nda::array<T, 2, Layout1>::rand({3, 4});
+    auto B13   = nda::array<T, 3, Layout2>::rand({3, 4, 5});
+    auto exp13 = nda::array<T, 3, Layout2>::zeros({3, 4, 5});
+    nda::for_each(exp13.shape(), [&](auto i, auto j, auto k) { exp13(i, j, k) = B13(i, j, k) + A13(i, j); });
+    auto B13_d = to_addr_space<AS2>(B13);
+    nda::tensor::add(T{1}, to_addr_space<AS1>(A13), T{1}, B13_d);
+    EXPECT_ARRAY_NEAR(nda::to_host(B13_d), exp13, fp_tol<T>);
+  }
+}
+
+template <typename T, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
+void test_add_layouts() {
+  test_add<T, C_layout, C_layout, AS1, AS2>();
+  test_add<T, C_layout, F_layout, AS1, AS2>();
+  test_add<T, F_layout, C_layout, AS1, AS2>();
+  test_add<T, F_layout, F_layout, AS1, AS2>();
+}
+
+template <typename T>
+void test_add_on_device() {
+  test_add_layouts<T, Device, Device>();
+  test_add_layouts<T, Device, Unified>();
+  test_add_layouts<T, Unified, Device>();
+  test_add_layouts<T, Unified, Unified>();
+}
+
+template <typename T>
+void test_add_on_host() {
+  test_add_layouts<T, Host, Host>();
+#ifdef NDA_HAVE_CUDA
+  test_add_layouts<T, Host, Unified>();
+  test_add_layouts<T, Unified, Host>();
+#endif // NDA_HAVE_CUDA
+}
+
+#ifdef NDA_HAVE_CUTENSOR
+TEST(NDA, TensorAddOnDevice) {
+  test_add_on_device<float>();
+  test_add_on_device<std::complex<float>>();
+  test_add_on_device<double>();
+  test_add_on_device<std::complex<double>>();
+}
+#endif // NDA_HAVE_CUTENSOR
+
+TEST(NDA, TensorAddOnHost) {
+  test_add_on_host<float>();
+  test_add_on_host<std::complex<float>>();
+  test_add_on_host<double>();
+  test_add_on_host<std::complex<double>>();
+}
+
+#ifndef NDA_HAVE_TBLIS
+// The nda fallback rejects mismatched index strings at runtime via require_equal_indices.
+TEST(NDA, TensorAddOnHostFallbackMismatchedIndicesThrows) {
+  auto A = nda::matrix<double>::rand({3, 3});
+  auto B = nda::matrix<double>::rand({3, 3});
+  EXPECT_THROW(nda::tensor::add(1.0, A, "ij", 1.0, B, "ji"), nda::runtime_error);
+}
+#endif // NDA_HAVE_TBLIS
