@@ -889,3 +889,119 @@ TEST(NDA, TensorReduceOnHost) {
   test_reduce<double, Host>();
   test_reduce<std::complex<double>, Host>();
 }
+
+// Test the generic tensor scale function.
+template <typename T, nda::mem::AddressSpace AS>
+void test_scale() {
+  T alpha = T{3};
+  if constexpr (nda::is_complex_v<T>) alpha *= 2 - 1i;
+
+  auto A = nda::array<T, 3>::rand({2, 3, 4});
+
+  // default overload (IDENTITY)
+  auto A1_d = to_addr_space<AS>(A);
+  nda::tensor::scale(alpha, A1_d);
+  EXPECT_ARRAY_NEAR(nda::to_host(A1_d), alpha * A, fp_tol<T>);
+
+  // NEG
+  auto A2_d = to_addr_space<AS>(A);
+  nda::tensor::scale(alpha, A2_d, nda::tensor::unary_op::NEG);
+  EXPECT_ARRAY_NEAR(nda::to_host(A2_d), -alpha * A, fp_tol<T>);
+
+  if constexpr (nda::is_complex_v<T>) {
+    // CONJ
+    auto A3_d = to_addr_space<AS>(A);
+    nda::tensor::scale(alpha, A3_d, nda::tensor::unary_op::CONJ);
+    EXPECT_ARRAY_NEAR(nda::to_host(A3_d), alpha * nda::conj(A), fp_tol<T>);
+  } else {
+    // SQRT
+    auto A4_d = to_addr_space<AS>(A);
+    nda::tensor::scale(alpha, A4_d, nda::tensor::unary_op::SQRT);
+    EXPECT_ARRAY_NEAR(nda::to_host(A4_d), alpha * nda::sqrt(A), fp_tol<T>);
+
+    // ABS
+    auto A5_d = to_addr_space<AS>(A);
+    nda::tensor::scale(alpha, A5_d, nda::tensor::unary_op::ABS);
+    EXPECT_ARRAY_NEAR(nda::to_host(A5_d), alpha * nda::abs(A), fp_tol<T>);
+
+    // EXP
+    auto A6_d = to_addr_space<AS>(A);
+    nda::tensor::scale(alpha, A6_d, nda::tensor::unary_op::EXP);
+    EXPECT_ARRAY_NEAR(nda::to_host(A6_d), alpha * nda::exp(A), fp_tol<T>);
+
+    // LOG (shift base away from 0 to avoid -infty)
+    auto Ap1  = nda::make_regular(A + T{1});
+    auto A7_d = to_addr_space<AS>(Ap1);
+    nda::tensor::scale(alpha, A7_d, nda::tensor::unary_op::LOG);
+    EXPECT_ARRAY_NEAR(nda::to_host(A7_d), alpha * nda::log(Ap1), fp_tol<T>);
+
+    // RCP (shift base away from 0 to avoid -infty)
+    auto A8_d = to_addr_space<AS>(Ap1);
+    nda::tensor::scale(alpha, A8_d, nda::tensor::unary_op::RCP);
+    EXPECT_ARRAY_NEAR(nda::to_host(A8_d), alpha / Ap1, fp_tol<T>);
+  }
+}
+
+// Test that scale works for matrix-algebra as well.
+template <typename T>
+void test_scale_host_matrix_algebra() {
+  T alpha = T{3};
+  if constexpr (nda::is_complex_v<T>) alpha *= 2 - 1i;
+
+  auto A = nda::array<T, 2>::zeros({3, 3});
+  for (long c = 0; auto &x : A) x = static_cast<T>(c++ + 1);
+
+  // SQRT
+  auto M_sqrt = nda::matrix<T>{A};
+  nda::tensor::scale(alpha, M_sqrt, nda::tensor::unary_op::SQRT);
+  EXPECT_ARRAY_NEAR(M_sqrt, alpha * nda::sqrt(A), fp_tol<T>);
+
+  // EXP
+  auto M_exp = nda::matrix<T>{A};
+  nda::tensor::scale(alpha, M_exp, nda::tensor::unary_op::EXP);
+  EXPECT_ARRAY_NEAR(M_exp, alpha * nda::exp(A), fp_tol<T>);
+
+  // LOG
+  auto M_log = nda::matrix<T>{A};
+  nda::tensor::scale(alpha, M_log, nda::tensor::unary_op::LOG);
+  EXPECT_ARRAY_NEAR(M_log, alpha * nda::log(A), fp_tol<T>);
+
+  // RCP
+  auto M_rcp = nda::matrix<T>{A};
+  nda::tensor::scale(alpha, M_rcp, nda::tensor::unary_op::RCP);
+  EXPECT_ARRAY_NEAR(M_rcp, alpha / A, fp_tol<T>);
+}
+
+#ifdef NDA_HAVE_CUTENSOR
+TEST(NDA, TensorScaleOnDevice) {
+  test_scale<float, Device>();
+  test_scale<std::complex<float>, Device>();
+  test_scale<double, Device>();
+  test_scale<std::complex<double>, Device>();
+
+  test_scale<float, Unified>();
+  test_scale<std::complex<float>, Unified>();
+  test_scale<double, Unified>();
+  test_scale<std::complex<double>, Unified>();
+}
+#endif // NDA_HAVE_CUTENSOR
+
+TEST(NDA, TensorScaleOnHost) {
+  test_scale<float, Host>();
+  test_scale<std::complex<float>, Host>();
+  test_scale<double, Host>();
+  test_scale<std::complex<double>, Host>();
+
+  test_scale_host_matrix_algebra<float>();
+  test_scale_host_matrix_algebra<double>();
+  test_scale_host_matrix_algebra<std::complex<float>>();
+  test_scale_host_matrix_algebra<std::complex<double>>();
+}
+
+// Unsupported unary op on host.
+TEST(NDA, TensorScaleUnsupportedOpDoesNotSilentlyNoOp) {
+  auto A   = nda::array<double, 3>::rand({2, 3, 4});
+  auto A_0 = nda::array<double, 3>{A};
+  EXPECT_THROW(nda::tensor::scale(2.0, A, nda::tensor::unary_op::RELU), nda::runtime_error);
+  EXPECT_EQ_ARRAY(A, A_0);
+}

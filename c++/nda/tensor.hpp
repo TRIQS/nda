@@ -19,4 +19,5 @@
 #include "./tensor/interface/cutensor_interface.hpp"
 #include "./tensor/interface/tblis_interface.hpp"
 #include "./tensor/reduce.hpp"
+#include "./tensor/scale.hpp"
 #include "./tensor/tools.hpp"
