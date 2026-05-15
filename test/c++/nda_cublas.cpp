@@ -614,3 +614,24 @@ TEST(NDA, CUBLASScal) {
   test_scal_address_spaces<double>();
   test_scal_address_spaces<std::complex<double>>();
 }
+
+// Test the cuBLAS synchronize toggle API.
+TEST(NDA, CUBLASSynchronizeToggle) {
+  EXPECT_TRUE(nda::blas::device::get_synchronization());
+  nda::blas::device::set_synchronization(false);
+  EXPECT_FALSE(nda::blas::device::get_synchronization());
+
+  // a small gemm should still succeed with sync disabled
+  auto a = nda::cumatrix<double, F_layout>{nda::matrix<double, F_layout>{{{1, 2}, {3, 4}}}};
+  auto b = nda::cumatrix<double, F_layout>{nda::matrix<double, F_layout>{{{5, 6}, {7, 8}}}};
+  auto c = nda::cumatrix<double, F_layout>{nda::matrix<double, F_layout>::zeros({2, 2})};
+  nda::blas::gemm(1.0, a, b, 0.0, c);
+
+  // synchronize manually and check result
+  nda::cuda_device_sync();
+  EXPECT_ARRAY_NEAR(nda::to_host(c), nda::matrix<double, F_layout>{{{19, 22}, {43, 50}}}, 1e-12);
+
+  // restore default
+  nda::blas::device::set_synchronization(true);
+  EXPECT_TRUE(nda::blas::device::get_synchronization());
+}

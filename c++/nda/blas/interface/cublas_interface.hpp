@@ -14,6 +14,9 @@
 
 namespace nda::blas::device {
 
+  void set_synchronization(bool do_sync) noexcept;
+  bool get_synchronization() noexcept;
+
   void axpy(int n, float alpha, const float *x, int incx, float *y, int incy);
   void axpy(int n, std::complex<float> alpha, const std::complex<float> *x, int incx, std::complex<float> *y, int incy);
   void axpy(int n, double alpha, const double *x, int incx, double *y, int incy);

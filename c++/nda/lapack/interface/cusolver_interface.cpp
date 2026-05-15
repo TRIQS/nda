@@ -45,21 +45,16 @@ namespace nda::lapack::device {
     return info_u_handle.data();
   }
 
-  // Global option to turn on/off the cudaDeviceSynchronize after cusolver library calls.
-  static bool synchronize = true; // NOLINT  (global option is on purpose)
+  // Per-thread option to turn on/off the cudaDeviceSynchronize after cusolver library calls.
+  thread_local bool synchronize = true; // NOLINT (per-thread option is on purpose)
+  void set_synchronization(bool do_sync) noexcept { synchronize = do_sync; }
+  bool get_synchronization() noexcept { return synchronize; }
 
 // Macro to check cusolver calls.
 #define CUSOLVER_CHECK(X, info, ...)                                                                                                                 \
   auto err = X(get_handle(), __VA_ARGS__, get_info_ptr());                                                                                           \
   if (err != CUSOLVER_STATUS_SUCCESS) { NDA_RUNTIME_ERROR << AS_STRING(X) << " failed with error code " << std::to_string(err); }                    \
-  if (synchronize) {                                                                                                                                 \
-    auto errsync = cudaDeviceSynchronize();                                                                                                          \
-    if (errsync != cudaSuccess) {                                                                                                                    \
-      NDA_RUNTIME_ERROR << " cudaDeviceSynchronize failed after call to: " << AS_STRING(X) " \n "                                                    \
-                        << " cudaGetErrorName: " << std::string(cudaGetErrorName(errsync)) << "\n"                                                   \
-                        << " cudaGetErrorString: " << std::string(cudaGetErrorString(errsync)) << "\n";                                              \
-    }                                                                                                                                                \
-  }                                                                                                                                                  \
+  cuda_device_sync(synchronize, AS_STRING(X));                                                                                                       \
   info = *get_info_ptr();
 
   // Anonymous namespace for some file local helper functions.

@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <string_view>
+
 #ifdef NDA_HAVE_CUDA
 #include "./concepts.hpp"
 #include "./exceptions.hpp"
@@ -60,6 +62,22 @@ namespace nda {
                         << " cudaGetErrorName: " << std::string(cudaGetErrorName(success)) << "\n"
                         << " cudaGetErrorString: " << std::string(cudaGetErrorString(success)) << "\n";
     }
+  }
+
+  /**
+   * @brief Synchronize the device.
+   * 
+   * @param do_sync If true, call `cudaDeviceSynchronize()` and check for errors. If false, do nothing.
+   * @param func Optional name of the calling function to include in the error message.
+   */
+  inline void cuda_device_sync(bool do_sync = true, std::string_view func = "") {
+    if (!do_sync) return;
+    std::string msg = "cudaDeviceSynchronize failed";
+    if (!func.empty()) {
+      msg += " after call to ";
+      msg.append(func);
+    }
+    device_error_check(cudaDeviceSynchronize(), std::move(msg));
   }
 
   /**
@@ -182,6 +200,9 @@ namespace nda {
 
   /// Constexpr variable that is true if the project is configured with CUDA support.
   static constexpr bool have_cuda = false;
+
+  /// Empty function if `CudaSupport` is not enabled.
+  inline void cuda_device_sync([[maybe_unused]] bool do_sync = true, [[maybe_unused]] std::string_view func = "") {}
 
 #endif // NDA_HAVE_CUDA
 
