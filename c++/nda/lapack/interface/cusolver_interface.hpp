@@ -14,6 +14,9 @@
 
 namespace nda::lapack::device {
 
+  void set_synchronization(bool do_sync) noexcept;
+  bool get_synchronization() noexcept;
+
   int gesvd_buffer_size(int m, int n, float *);
   int gesvd_buffer_size(int m, int n, std::complex<float> *);
   int gesvd_buffer_size(int m, int n, double *);

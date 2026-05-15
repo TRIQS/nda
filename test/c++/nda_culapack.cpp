@@ -553,3 +553,17 @@ TEST(NDA, CULAPACKGetrfBatchWithRectangularMatrix) {
   test_rectangular_getrf_batch_layouts<float, true>();
   test_rectangular_getrf_batch_layouts<double, true>();
 }
+
+// Test the cuSOLVER synchronize toggle API.
+TEST(NDA, CULAPACKSynchronizeToggle) {
+  EXPECT_TRUE(nda::lapack::device::get_synchronization());
+  nda::lapack::device::set_synchronization(false);
+  EXPECT_FALSE(nda::lapack::device::get_synchronization());
+  nda::lapack::device::set_synchronization(true);
+  EXPECT_TRUE(nda::lapack::device::get_synchronization());
+
+  // cuBLAS flag is independent
+  nda::lapack::device::set_synchronization(false);
+  EXPECT_TRUE(nda::blas::device::get_synchronization());
+  nda::lapack::device::set_synchronization(true);
+}

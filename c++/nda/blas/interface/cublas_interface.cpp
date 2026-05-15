@@ -66,8 +66,10 @@ namespace nda::blas::device {
   }
 #endif
 
-  // Global option to turn on/off the cudaDeviceSynchronize after cublas library calls.
-  static bool synchronize = true; // NOLINT  (global option is on purpose)
+  // Per-thread option to turn on/off the cudaDeviceSynchronize after cublas library calls.
+  thread_local bool synchronize = true; // NOLINT (per-thread option is on purpose)
+  void set_synchronization(bool do_sync) noexcept { synchronize = do_sync; }
+  bool get_synchronization() noexcept { return synchronize; }
 
 // Macro to check cublas calls.
 #define CUBLAS_CHECK(X, ...)                                                                                                                         \
@@ -78,14 +80,7 @@ namespace nda::blas::device {
                         << " cublasGetStatusName: " << cublasGetStatusName(err) << "\n"                                                              \
                         << " cublasGetStatusString: " << cublasGetStatusString(err) << "\n";                                                         \
     }                                                                                                                                                \
-    if (synchronize) {                                                                                                                               \
-      auto errsync = cudaDeviceSynchronize();                                                                                                        \
-      if (errsync != cudaSuccess) {                                                                                                                  \
-        NDA_RUNTIME_ERROR << " cudaDeviceSynchronize failed after call to: " << AS_STRING(X) << "\n"                                                 \
-                          << " cudaGetErrorName: " << cudaGetErrorName(errsync) << "\n"                                                              \
-                          << " cudaGetErrorString: " << cudaGetErrorString(errsync) << "\n";                                                         \
-      }                                                                                                                                              \
-    }                                                                                                                                                \
+    cuda_device_sync(synchronize, AS_STRING(X));                                                                                                     \
   }
 
   // Anonymous namespace for some file local helper functions.
@@ -143,7 +138,7 @@ namespace nda::blas::device {
                                  cucplx(c), ldc, batch_count, get_magma_queue());
       }
       if (synchronize) magma_queue_sync(get_magma_queue());
-      if (synchronize) cudaDeviceSynchronize();
+      cuda_device_sync(synchronize, "magma_gemm_vbatch");
     }
 #else
     template <typename T>
