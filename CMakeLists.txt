@@ -78,6 +78,7 @@ endif()
 
 # GPU support
 option(CudaSupport "Build with Cuda support" OFF)
+option(CutensorSupport "Build with cuTENSOR support" OFF)
 option(MagmaSupport "Build with Magma support" OFF)
 
 # ############

@@ -10,6 +10,10 @@ if(NOT CudaSupport)
   list(FILTER all_tests EXCLUDE REGEX "nda_cu")
 endif()
 
+if(NOT CutensorSupport)
+  list(FILTER all_tests EXCLUDE REGEX "cutensor")
+endif()
+
 if(NOT MPISupport)
   list(FILTER all_tests EXCLUDE REGEX "mpi")
 endif()
