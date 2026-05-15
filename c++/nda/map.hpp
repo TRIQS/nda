@@ -85,7 +85,7 @@ namespace nda {
     F f;
 
     /// Tuple containing the nda::Array arguments.
-    std::tuple<const As...> a;
+    std::tuple<As...> a;
 
     private:
     // Implementation of the function call operator.
