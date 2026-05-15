@@ -20,4 +20,5 @@
 #include "./tensor/interface/tblis_interface.hpp"
 #include "./tensor/reduce.hpp"
 #include "./tensor/scale.hpp"
+#include "./tensor/set.hpp"
 #include "./tensor/tools.hpp"

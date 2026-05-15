@@ -1005,3 +1005,49 @@ TEST(NDA, TensorScaleUnsupportedOpDoesNotSilentlyNoOp) {
   EXPECT_THROW(nda::tensor::scale(2.0, A, nda::tensor::unary_op::RELU), nda::runtime_error);
   EXPECT_EQ_ARRAY(A, A_0);
 }
+
+// Test the generic tensor set function.
+template <typename T, nda::mem::AddressSpace AS>
+void test_set() {
+  T alpha = T{2};
+  if constexpr (nda::is_complex_v<T>) alpha *= 1 + 2i;
+
+  auto exp = nda::array<T, 3>::zeros({2, 3, 4});
+  exp      = alpha;
+
+  // full array: all elements must be set to alpha
+  auto A   = nda::array<T, 3>::rand({2, 3, 4});
+  auto A_d = to_addr_space<AS>(A);
+  nda::tensor::set(alpha, A_d);
+  EXPECT_ARRAY_EQ(nda::to_host(A_d), exp);
+
+  // non-contiguous view: only the sliced elements must change
+  exp        = 0;
+  auto exp_v = exp(nda::range::all, nda::range(0, 3, 2), nda::range(0, 4, 2));
+  exp_v      = alpha;
+  auto B     = nda::array<T, 3>::zeros({2, 3, 4});
+  auto B_d   = to_addr_space<AS>(B);
+  nda::tensor::set(alpha, B_d(nda::range::all, nda::range(0, 3, 2), nda::range(0, 4, 2)));
+  EXPECT_ARRAY_EQ(nda::to_host(B_d), exp);
+}
+
+#ifdef NDA_HAVE_CUTENSOR
+TEST(NDA, TensorSetOnDevice) {
+  test_set<float, Device>();
+  test_set<std::complex<float>, Device>();
+  test_set<double, Device>();
+  test_set<std::complex<double>, Device>();
+
+  test_set<float, Unified>();
+  test_set<std::complex<float>, Unified>();
+  test_set<double, Unified>();
+  test_set<std::complex<double>, Unified>();
+}
+#endif // NDA_HAVE_CUTENSOR
+
+TEST(NDA, TensorSetOnHost) {
+  test_set<float, Host>();
+  test_set<std::complex<float>, Host>();
+  test_set<double, Host>();
+  test_set<std::complex<double>, Host>();
+}
