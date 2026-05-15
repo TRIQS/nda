@@ -15,6 +15,7 @@
 #include "./map.hpp"
 #include "./traits.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <complex>
 #include <utility>
@@ -114,6 +115,44 @@ namespace nda {
         return reciprocal(x);
       }
     })(std::forward<A>(a));
+  }
+
+  /**
+   * @brief Function max for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
+   *
+   * @tparam A nda::ArrayOrScalar type.
+   * @tparam B nda::ArrayOrScalar type.
+   * @param a First operand.
+   * @param b Second operand.
+   * @return A lazy nda::expr_call object (nda::Array) or the result of `std::max` applied to the inputs (nda::Scalar).
+   */
+  template <ArrayOrScalar A, ArrayOrScalar B>
+    requires(((Scalar<A> && Scalar<B>) || (Array<A> && Array<B> && get_rank<A> == get_rank<B>))
+             && !is_complex_v<get_value_t<A>> && !is_complex_v<get_value_t<B>>)
+  [[nodiscard]] auto max(A &&a, B &&b) {
+    return nda::map([](auto const &x, auto const &y) {
+      using std::max;
+      return max(x, y);
+    })(std::forward<A>(a), std::forward<B>(b));
+  }
+
+  /**
+   * @brief Function min for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
+   *
+   * @tparam A nda::ArrayOrScalar type.
+   * @tparam B nda::ArrayOrScalar type.
+   * @param a First operand.
+   * @param b Second operand.
+   * @return A lazy nda::expr_call object (nda::Array) or the result of `std::min` applied to the inputs (nda::Scalar).
+   */
+  template <ArrayOrScalar A, ArrayOrScalar B>
+    requires(((Scalar<A> && Scalar<B>) || (Array<A> && Array<B> && get_rank<A> == get_rank<B>))
+             && !is_complex_v<get_value_t<A>> && !is_complex_v<get_value_t<B>>)
+  [[nodiscard]] auto min(A &&a, B &&b) {
+    return nda::map([](auto const &x, auto const &y) {
+      using std::min;
+      return min(x, y);
+    })(std::forward<A>(a), std::forward<B>(b));
   }
 
   /** @} */
