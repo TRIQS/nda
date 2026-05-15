@@ -514,3 +514,83 @@ TEST(NDA, TensorContractOnHost) {
   test_contract_on_host<std::complex<double>>();
 }
 #endif // NDA_HAVE_TBLIS
+
+// Test the generic tensor dot function.
+template <typename T, typename Layout1, typename Layout2, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
+void test_dot() {
+  // A = [[1, 2], [3, 4]],  B = [[5, 6], [7, 8]]
+  auto A   = nda::matrix<T, Layout1>{{1, 2}, {3, 4}};
+  auto B   = nda::matrix<T, Layout2>{{5, 6}, {7, 8}};
+  auto A_d = to_addr_space<AS1>(A);
+  auto B_d = to_addr_space<AS2>(B);
+
+  // sum_{i,j} A(i,j) * B(i,j) = 1*5 + 2*6 + 3*7 + 4*8 = 70
+  EXPECT_COMPLEX_NEAR(nda::tensor::dot(A_d, "ab", B_d, "ab"), T{70});
+  // overload uses the rank-2 default indices ("ab"/"ab")
+  EXPECT_COMPLEX_NEAR(nda::tensor::dot(A_d, B_d), T{70});
+  // sum_{i,j} A(i,j) * B(j,i) = 1*5 + 2*7 + 3*6 + 4*8 = 69 — permuted indices require cuTENSOR or TBLIS
+  if constexpr (nda::tensor::have_tblis || nda::tensor::have_cutensor) { EXPECT_COMPLEX_NEAR(nda::tensor::dot(A_d, "ab", B_d, "ba"), T{69}); }
+
+  // complex types and conjugation
+  // C = [[1+i, 2], [3, 4-i]],  D = [[5, 6+2i], [7, 8]]
+  if constexpr (nda::is_complex_v<T>) {
+    auto C   = nda::matrix<T, Layout1>{{T(1, 1), T(2, 0)}, {T(3, 0), T(4, -1)}};
+    auto D   = nda::matrix<T, Layout2>{{T(5, 0), T(6, 2)}, {T(7, 0), T(8, 0)}};
+    auto C_d = to_addr_space<AS1>(C);
+    auto D_d = to_addr_space<AS2>(D);
+    EXPECT_COMPLEX_NEAR(nda::tensor::dot(C_d, "ab", D_d, "ab"), T(70, 1));
+    EXPECT_COMPLEX_NEAR(nda::tensor::dot(nda::conj(C_d), "ab", D_d, "ab"), T(70, 7));
+    EXPECT_COMPLEX_NEAR(nda::tensor::dot(C_d, "ab", nda::conj(D_d), "ab"), T(70, -7));
+    EXPECT_COMPLEX_NEAR(nda::tensor::dot(nda::conj(C_d), "ab", nda::conj(D_d), "ab"), T(70, -1));
+    if constexpr (nda::tensor::have_tblis || nda::tensor::have_cutensor) {
+      EXPECT_COMPLEX_NEAR(nda::tensor::dot(C_d, "ab", D_d, "ba"), T(69, 3));
+      EXPECT_COMPLEX_NEAR(nda::tensor::dot(nda::conj(C_d), "ab", D_d, "ba"), T(69, 9));
+      EXPECT_COMPLEX_NEAR(nda::tensor::dot(C_d, "ab", nda::conj(D_d), "ba"), T(69, -9));
+      EXPECT_COMPLEX_NEAR(nda::tensor::dot(nda::conj(C_d), "ab", nda::conj(D_d), "ba"), T(69, -3));
+    }
+  }
+}
+
+template <typename T, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
+void test_dot_layouts() {
+  test_dot<T, C_layout, C_layout, AS1, AS2>();
+  test_dot<T, C_layout, F_layout, AS1, AS2>();
+  test_dot<T, F_layout, C_layout, AS1, AS2>();
+  test_dot<T, F_layout, F_layout, AS1, AS2>();
+}
+
+#ifdef NDA_HAVE_CUTENSOR
+TEST(NDA, TensorDotOnDevice) {
+  test_dot_layouts<float, Device, Device>();
+  test_dot_layouts<std::complex<float>, Device, Device>();
+  test_dot_layouts<double, Device, Device>();
+  test_dot_layouts<std::complex<double>, Device, Device>();
+}
+#endif // NDA_HAVE_CUTENSOR
+
+TEST(NDA, TensorDotOnHost) {
+  test_dot_layouts<float, Host, Host>();
+  test_dot_layouts<std::complex<float>, Host, Host>();
+  test_dot_layouts<double, Host, Host>();
+  test_dot_layouts<std::complex<double>, Host, Host>();
+}
+
+#ifdef NDA_HAVE_TBLIS
+// Different-rank dot via TBLIS einsum with a repeated index in A: trace of diag(A) against v, i.e. sum_i A_ii * v_i.
+TEST(NDA, TensorDotDifferentRankOnHost) {
+  using T    = double;
+  auto A     = nda::array<T, 2>::rand({3, 3});
+  auto v     = nda::array<T, 1>::rand({3});
+  T expected = 0;
+  for (long i = 0; i < 3; ++i) expected += A(i, i) * v(i);
+  auto result = nda::tensor::dot(A, "ii", v, "i");
+  EXPECT_NEAR(result, expected, fp_tol<T>);
+}
+#else
+// The nda host fallback rejects mismatched index strings.
+TEST(NDA, TensorDotMismatchedIndicesOnHostFallbackThrows) {
+  auto A = nda::matrix<double>{{1, 2}, {3, 4}};
+  auto B = nda::matrix<double>{{5, 6}, {7, 8}};
+  EXPECT_THROW((void)nda::tensor::dot(A, "ab", B, "ba"), nda::runtime_error);
+}
+#endif // NDA_HAVE_TBLIS
