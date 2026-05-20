@@ -25,6 +25,9 @@ add_custom_target(doxygen ALL
   VERBATIM
 )
 
+# Compile example codes
+add_subdirectory(examples)
+
 # ############
 # Install
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html/ COMPONENT documentation DESTINATION share/doc/${PROJECT_NAME}

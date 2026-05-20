@@ -264,3 +264,9 @@ for (int i = 0; i < 2; ++i) {
   }
 }
 ```
+
+@section ex3_full Full source
+
+The complete, compilable source for this example:
+
+@include ex3.cpp

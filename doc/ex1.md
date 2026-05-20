@@ -572,3 +572,9 @@ function \f$ g \f$ of its indices, i.e. \f$ F_{ij \dots k} = g(i, j, \dots, k) \
 The above features constitute only a fraction of what you can do with **nda**.
 
 For more details, please look at the other @ref examples and the @ref documentation.
+
+@section ex1_full Full source
+
+The complete, compilable source for this example:
+
+@include ex1.cpp

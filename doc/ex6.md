@@ -477,3 +477,8 @@ Rank 1:
  [1,1]]
 ```
 
+@section ex6_full Full source
+
+The complete, compilable source for this example:
+
+@include ex6.cpp
