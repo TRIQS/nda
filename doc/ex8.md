@@ -409,3 +409,9 @@ Considering the finite precision of our calculations, this is indeed equal to th
 > **Note**: BLAS and LAPACK assume Fortran-ordered arrays. We therefore recommend to work with matrices in the
 > nda::F_layout to avoid any confusion.
 
+@section ex8_full Full source
+
+The complete, compilable source for this example:
+
+@include ex8.cpp
+

@@ -402,3 +402,9 @@ GROUP "/I" {
 Now, `I` is an HDF5 group and not a dataset and each object of the array, i.e. each integer array, is written to its
 own dataset with a name corresponding to its index in the array.
 In this case, "0", "1" and "2".
+
+@section ex5_full Full source
+
+The complete, compilable source for this example:
+
+@include ex5.cpp

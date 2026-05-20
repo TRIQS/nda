@@ -471,3 +471,9 @@ D_flat = [0,1,2,3,4,5,6,7,8,9,10,11]
 
 **nda** provides some more advanced transformations which are especially useful for higher-dimensional arrays/views.
 We refere the interested user to the @ref documentation.
+
+@section ex4_full Full source
+
+The complete, compilable source for this example:
+
+@include ex4.cpp

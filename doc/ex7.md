@@ -312,3 +312,9 @@ Max. violation at index (0 2) = 1.41421
 
 We can see that the symmetrized matrix is now different from the original and that the maximum symmetry violation is
 not equal to zero.
+
+@section ex7_full Full source
+
+The complete, compilable source for this example:
+
+@include ex7.cpp

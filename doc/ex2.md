@@ -266,3 +266,9 @@ Z =
  [0,0,0,0,0,0]
  [0,0,0,0,0,0]]
 ```
+
+@section ex2_full Full source
+
+The complete, compilable source for this example:
+
+@include ex2.cpp
