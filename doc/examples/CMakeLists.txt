@@ -2,11 +2,11 @@
 file(GLOB_RECURSE all_examples RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 
 if(NOT HDF5Support)
-  list(FILTER all_examples EXCLUDE REGEX "ex1\\.cpp|ex5\\.cpp")
+  list(FILTER all_examples EXCLUDE REGEX "ex1\\.cpp|ex5\\.cpp|doc_h5_|doc_overview\\.cpp")
 endif()
 
 if(NOT MPISupport)
-  list(FILTER all_examples EXCLUDE REGEX "ex6\\.cpp")
+  list(FILTER all_examples EXCLUDE REGEX "ex6\\.cpp|doc_mpi_")
 endif()
 
 foreach(ex_src ${all_examples})

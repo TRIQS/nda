@@ -63,19 +63,11 @@ namespace nda {
    *
    * In contrast to views (see nda::basic_array_view), regular arrays own the memory they use for data storage.
    *
-   * @code{.cpp}
-   * // create a regular 3x2 array of ones
-   * auto arr = nda::ones<int>(3, 2);
-   * std::cout << arr << std::endl;
-   *
-   * // assign the value 42 to the first row
-   * arr(0, nda::ellipsis{}) = 42;
-   * std::cout << arr << std::endl;
-   * @endcode
+   * @include doc_basic_array.cpp
    *
    * Output:
    *
-   * @code{bash}
+   * ```
    *
    * [[1,1]
    *  [1,1]
@@ -84,7 +76,7 @@ namespace nda {
    * [[42,42]
    *  [1,1]
    *  [1,1]]
-   * @endcode
+   * ```
    *
    * Arrays and views share a lot of the same operations and functionalities. To turn a view into a regular array, use
    * nda::make_regular.

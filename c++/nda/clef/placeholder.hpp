@@ -34,12 +34,13 @@ namespace nda::clef {
    *
    * @details It is used in lazy expressions. For example:
    *
-   * @code{.cpp}
-   * nda::clef::placeholder<0> i_;
-   * nda::clef::placeholder<1> j_;
-   * auto expr = i_ + j_;
-   * auto res = nda::clef::eval(expr, i_ = 1.0, j_ = 2.0); // double res = 3.0;
-   * @endcode
+   * @include doc_clef_placeholder.cpp
+   *
+   * Output:
+   *
+   * ```
+   * 3
+   * ```
    *
    * Here `expr` is a lazy binary nda::clef::expr with the nda::clef::tags::plus tag, which can be evaluated later on
    * with the nda::clef::eval function and by assigning values to the placeholders (see nda::clef::pair).
