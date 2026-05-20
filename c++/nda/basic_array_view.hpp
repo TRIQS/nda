@@ -78,19 +78,11 @@ namespace nda {
    * In contrast to regular arrays (see nda::basic_array), views do not own the data they point to. They are a fast and
    * efficient way to access and manipulate already existing data:
    *
-   * @code{.cpp}
-   * // create a regular 3x3 array of ones
-   * auto arr = nda::ones<int>(3, 3);
-   * std::cout << arr << std::endl;
-   *
-   * // zero out the first column
-   * arr(nda::range::all, 0) = 0;
-   * std::cout << arr << std::endl;
-   * @endcode
+   * @include doc_basic_array_view.cpp
    *
    * Output:
    *
-   * @code{bash}
+   * ```
    *
    * [[1,1,1]
    *  [1,1,1]
@@ -99,7 +91,7 @@ namespace nda {
    * [[0,1,1]
    *  [0,1,1]
    *  [0,1,1]]
-   * @endcode
+   * ```
    *
    * Views are usually created by taking a slice of a regular nda::basic_array or another view. In the example above,
    * `arr(nda::range::all, 0)` creates a view of the first column of the regular array `arr`, which is then set to zero.

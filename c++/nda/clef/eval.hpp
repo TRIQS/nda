@@ -166,12 +166,13 @@ namespace nda::clef {
    *
    * @details Calls the correct nda::clef::evaluator for the given expression/type.
    *
-   * @code{.cpp}
-   * nda::clef::placeholder<0> i_;
-   * nda::clef::placeholder<1> j_;
-   * auto ex = i_ + j_;
-   * auto res = nda::clef::eval(ex, i_ = 1, j_ = 2); // int res = 3;
-   * @endcode
+   * @include doc_clef_eval.cpp
+   *
+   * Output:
+   *
+   * ```
+   * 3
+   * ```
    *
    * Here, `ex` is a binary expression with the `+` tag and the placeholder `i_` and `j_` as its child nodes. The `eval`
    * function calls the correct evaluator for the given expression and the given pairs.

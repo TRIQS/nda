@@ -47,12 +47,13 @@ namespace nda::clef {
    *
    * @details The following example sums the squared elements of a vector:
    *
-   * @code{.cpp}
-   * nda::clef::placeholder<0> i_;
-   * auto domain = std::vector{1, 2, 3};
-   * auto ex = i_ * i_;
-   * auto res = nda::clef::sum(ex, i_ = domain); // int res = 14;
-   * @endcode
+   * @include doc_clef_sum_1d.cpp
+   *
+   * Output:
+   *
+   * ```
+   * 14
+   * ```
    *
    * @tparam Expr Type of the expression.
    * @tparam N Integer label of the placeholder to be replaced by the domain.
@@ -75,13 +76,12 @@ namespace nda::clef {
    *
    * @details The following example sums an expression over a 2-dimensional domain:
    *
-   * @code{.cpp}
-   * nda::clef::placeholder<0> i_;
-   * nda::clef::placeholder<0> j_;
-   * auto domain1 = std::vector{1, 2, 3};
-   * auto domain2 = std::vector{4, 5, 6};
-   * auto ex = i_ + j_;
-   * auto res = nda::clef::sum(ex, i_ = domain1, j_ = domain2); // int res = 63;
+   * @include doc_clef_sum_nd.cpp
+   *
+   * Output:
+   *
+   * @code{bash}
+   * 36
    * @endcode
    *
    * @tparam Expr Type of the expression.

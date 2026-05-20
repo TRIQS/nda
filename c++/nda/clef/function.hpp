@@ -69,14 +69,14 @@ namespace nda::clef {
    * The following example shows how to turn a binary lazy expression `ex` into a callable object `f` that takes two
    * arguments:
    *
-   * @code{.cpp}
-   * nda::clef::placeholder<0> i_;
-   * nda::clef::placeholder<1> j_;
-   * auto ex = i_ + j_;
-   * auto f = nda::clef::make_function(ex, i_, j_);
-   * auto res = f(1, 2);    // int res = 3;
-   * auto res2 = f(1.5, 2); // double res2 = 3.5;
-   * @endcode
+   * @include doc_clef_make_function.cpp
+   *
+   * Output:
+   *
+   * ```
+   * 3
+   * 3.5
+   * ```
    *
    * @note There is no check if the given placeholders actually match placeholders in the object to be evaluated.
    *

@@ -38,36 +38,22 @@
  * nda::basic_array and nda::basic_array_view objects. Another way to evaluate lazy expressions is with
  * nda::make_regular:
  *
- * @code{.cpp}
- * // create two arrays A and B
- * auto A = nda::array<int, 2>({{1, 2}, {3, 4}});
- * auto B = nda::array<int, 2>({{5, 6}, {7, 8}});
+ * @include doc_arith_expr.cpp
  *
- * // add them elementwise
- * auto ex = A + B; // C is an nda::expr object
+ * Output:
  *
- * // evaluate the lazy expression by constructing a new array
- * nda::array<int, 2> C = ex;
+ * ```
  *
- * // evaluate the lazy expression using nda::make_regular
- * auto D = nda::make_regular(ex);
- * @endcode
+ * [[6,8]
+ *  [10,12]]
+ *
+ * [[6,8]
+ *  [10,12]]
+ * ```
  *
  * Note that the behavior of the arithmetic operations depends on the algebra of the involved array or view types:
  *
- * @code{.cpp}
- * // multiply two arrays elementwise
- * auto A1 = nda::array<int, 2>({{1, 2}, {3, 4}});
- * auto A2 = nda::array<int, 2>({{5, 6}, {7, 8}});
- * nda::array<int, 2> A3 = A1 * A2;
- * std::cout << A3 << std::endl;
- *
- * // multiply two matrices
- * auto M1 = nda::matrix<int>({{1, 2}, {3, 4}});
- * auto M2 = nda::matrix<int>({{5, 6}, {7, 8}});
- * nda::matrix<int> M3 = M1 * M2;
- * std::cout << M3 << std::endl;
- * @endcode
+ * @include doc_arith_algebra.cpp
  *
  * Output:
  *
@@ -116,21 +102,7 @@
  *
  * The following example demonstrates some of these features:
  *
- * @code{.cpp}
- * #include <nda/h5.hpp>
- * #include <nda/nda.hpp>
- *
- * #include <h5/h5.hpp>
- *
- * int main(int argc, char **argv) {
- *   // create a 4x2 array with random values
- *   auto A = nda::rand(4, 2);
- *
- *   // write the array to an HDF5 file
- *   h5::file file("A.h5", 'w');
- *   h5::write(file, "A", A);
- * }
- * @endcode
+ * @include doc_h5_overview.cpp
  *
  * Dumping the content of "A.h5":
  *
@@ -162,29 +134,7 @@
  *
  * The following example demonstrates some of these features:
  *
- * @code{.cpp}
- * #include <mpi/mpi.hpp>
- * #include <nda/mpi.hpp>
- * #include <nda/nda.hpp>
- *
- * #include <iostream>
- *
- * int main(int argc, char **argv) {
- *   // initialize MPI environment
- *   mpi::environment env(argc, argv);
- *   mpi::communicator comm;
- *
- *   // create a 2x2 array on each process and fill it with its rank
- *   nda::array<int, 2> A(2, 2);
- *   A() = comm.rank();
- *
- *   // reduce the array over all processes
- *   auto A_sum = mpi::reduce(A);
- *
- *   // print the result
- *   if (comm.rank() == 0) std::cout << A_sum << std::endl;
- * }
- * @endcode
+ * @include doc_mpi_overview.cpp
  *
  * Running with 4 cores outputs:
  *
@@ -211,20 +161,7 @@
  * construct nda::basic_array and nda::basic_array_view objects. Another way to evaluate lazy expressions is with
  * nda::make_regular:
  *
- * @code{.cpp}
- * // create an array A
- * auto A = nda::array<int, 2>({{1, 2}, {3, 4}});
- *
- * // square the elements of A
- * auto ex = nda::pow(A, 2); // ex is a lazy expression
- *
- * // evaluate the lazy expression by constructing a new array
- * nda::array<int, 2> A_sq = ex;
- * std::cout << A_sq << std::endl;
- *
- * // evaluate the lazy expression using nda::make_regular
- * std::cout << nda::make_regular(ex) << std::endl;
- * @endcode
+ * @include doc_math_expr.cpp
  *
  * Output:
  *
@@ -244,73 +181,21 @@
  *
  * @details Here is a simple example of how symmetries can be used in **nda**:
  *
- * @code{.cpp}
- * #include <nda/nda.hpp>
- * #include <nda/sym_grp.hpp>
- *
- * #include <array>
- * #include <complex>
- * #include <functional>
- * #include <initializer_list>
- * #include <iostream>
- * #include <tuple>
- * #include <vector>
- *
- * int main() {
- *   constexpr int N = 3;
- *
- *   // typedefs for the symmetry group
- *   using idx_t      = std::array<long, 2>;
- *   using sym_t      = std::tuple<idx_t, nda::operation>;
- *   using sym_func_t = std::function<sym_t(idx_t const &)>;
- *
- *   // create an hermitian matrix
- *   auto A = nda::array<std::complex<double>, 2>::rand(N, N);
- *   for (int i = 0; i < N; ++i) {
- *     for (int j = i + 1; j < N; ++j) A(i, j) = std::conj(A(j, i));
- *   }
- *
- *   // hermitian symmetry (satisfies nda::NdaSymmetry)
- *   auto h_symmetry = [](idx_t const &x) {
- *     idx_t xp = {x[1], x[0]};
- *     return sym_t{xp, nda::operation{false, true}}; // sign flip = false, complex conjugate = true
- *   };
- *
- *   // construct the symmetry group
- *   auto grp = nda::sym_grp{A, std::vector<sym_func_t>{h_symmetry}};
- *
- *   // create an initializer function (satisfies nda::NdaInitFunc)
- *   auto init_func = [&A](idx_t const &x) { return std::apply(A, x); };
- *
- *   // initialize a second array using the symmetry group and array A
- *   nda::array<std::complex<double>, 2> B(N, N);
- *   grp.init(B, init_func);
- *
- *   // output A and B
- *   std::cout << A << std::endl;
- *   std::cout << B << std::endl;
- *
- *   // get representative data (should be a vector of size 6)
- *   auto vec = grp.get_representative_data(A);
- *   std::cout << "\n" << nda::array_view<std::complex<double>, 1>(vec) << std::endl;
- * }
- * @endcode
+ * @include doc_sym_overview.cpp
  *
  * Output:
  *
  * ```
- * A:
- * [[(0.79407,0.479187),(0.0316266,-0.885449),(0.620883,-0.589129)]
- *  [(0.0316266,0.885449),(0.431919,0.784867),(0.25658,-0.197428)]
- *  [(0.620883,0.589129),(0.25658,0.197428),(0.972195,0.354817)]]
  *
- * B:
- * [[(0.79407,0.479187),(0.0316266,-0.885449),(0.620883,-0.589129)]
- *  [(0.0316266,0.885449),(0.431919,0.784867),(0.25658,-0.197428)]
- *  [(0.620883,0.589129),(0.25658,0.197428),(0.972195,0.354817)]]
+ * [[(0.786821,0.25048),(0.251318,-0.0227124),(0.140039,-0.543856)]
+ *  [(0.251318,0.0227124),(0.520643,0.34467),(0.521916,-0.857077)]
+ *  [(0.140039,0.543856),(0.521916,0.857077),(0.499774,0.41937)]]
  *
- * Representative data:
- * [(0.79407,0.479187),(0.0316266,-0.885449),(0.620883,-0.589129),(0.431919,0.784867),(0.25658,-0.197428),(0.972195,0.354817)]
+ * [[(0.786821,0.25048),(0.251318,-0.0227124),(0.140039,-0.543856)]
+ *  [(0.251318,0.0227124),(0.520643,0.34467),(0.521916,-0.857077)]
+ *  [(0.140039,0.543856),(0.521916,0.857077),(0.499774,0.41937)]]
+ *
+ * [(0.786821,0.25048),(0.251318,-0.0227124),(0.140039,-0.543856),(0.520643,0.34467),(0.521916,-0.857077),(0.499774,0.41937)]
  * ```
  *
  * It first creates a hermitian matrix `A` and uses the symmetry `h_symmetry`, i.e. `A(i, j) = std::conj(A(j, i))`, to
@@ -342,22 +227,27 @@
  * @details The following example shows how to fill a 2-dimensional nda::array of size 3 with the values 0, 1, 2, 10, 11
  * and 12:
  *
- * @code{.cpp}
- * nda::clef::placeholder<0> i_;
- * nda::clef::placeholder<1> j_;
- * nda::array<int, 2> a(2, 3);
- * a(i_, j_) << 10 * i_ + j_;
- * @endcode
+ * @include doc_clef_autoassign_array.cpp
+ *
+ * Output:
+ *
+ * ```
+ *
+ * [[0,1,2]
+ *  [10,11,12]]
+ * ```
  *
  * @note The `operator<<` in line 3 calls the `clef_auto_assign` overload for nda::array objects.
  *
  * We can also use auto assignment to fill a std::vector of size 3 with the values 10, 20 and 30:
  *
- * @code{.cpp}
- * nda::clef::placeholder<0> i_;
- * std::vector<int> v(3);
- * nda::clef::make_expr(v)[i_] << 10 * (i_ + 1);
- * @endcode
+ * @include doc_clef_autoassign_vector.cpp
+ *
+ * Output:
+ *
+ * ```
+ * 10 20 30
+ * ```
  *
  * @note The `operator<<` in line 3 calls the `clef_auto_assign_subscript` overload for std::vector objects.
  */
