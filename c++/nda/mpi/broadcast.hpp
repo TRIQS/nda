@@ -32,8 +32,8 @@ namespace nda {
    *
    * See @ref ex6_p1 for an example.
    *
-   * @note If the array/view is contiguous with positive strides and if the value type is MPI compatible, the data is
-   * broadcasted using a single `MPI_Bcast` call. Otherwise, the data is broadcasted element-wise which can have
+   * @note If the array/view is contiguous with positive strides and if the value type is MPI-compatible, the data is
+   * broadcasted using a single `MPI_Bcast` call. Otherwise, the data is broadcasted element-wise, which can have
    * considerable performance implications. Consider copying the data into a contiguous array/view before broadcasting.
    *
    * @tparam A nda::basic_array or nda::basic_array_view type.

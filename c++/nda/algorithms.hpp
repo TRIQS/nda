@@ -248,7 +248,7 @@ namespace nda {
   /**
    * @brief Sum elements of an nda::Array along a specified axis.
    *
-   * @details It simply calls nda::sum(A const &, std::array<I, N>).
+   * @details It simply calls nda::sum(A const &, `std::array<I, N>`).
    *
    * @tparam A nda::Array type.
    * @param a nda::Array object.
@@ -295,14 +295,14 @@ namespace nda {
   }
 
   /**
-   * @brief Hadamard product of two std::array objects.
+   * @brief Hadamard product of two `std::array` objects.
    *
    * @tparam T Value type of the first array.
    * @tparam U Value type of the second array.
    * @tparam R Size of the arrays.
-   * @param a std::array object.
-   * @param b std::array object.
-   * @return std::array containing the elementwise product of the two input arrays.
+   * @param a `std::array` object.
+   * @param b `std::array` object.
+   * @return `std::array` containing the elementwise product of the two input arrays.
    */
   template <typename T, typename U, size_t R>
   [[nodiscard]] constexpr auto hadamard(std::array<T, R> const &a, std::array<U, R> const &b) {
@@ -310,13 +310,13 @@ namespace nda {
   }
 
   /**
-   * @brief Hadamard product of two std::vector objects.
+   * @brief Hadamard product of two `std::vector` objects.
    *
    * @tparam T Value type of the first input vector.
    * @tparam U Value type of the second input vector.
-   * @param a std::vector object.
-   * @param b std::vector object.
-   * @return std::vector containing the elementwise product of the two input vectors.
+   * @param a `std::vector` object.
+   * @param b `std::vector` object.
+   * @return `std::vector` containing the elementwise product of the two input vectors.
    */
   template <typename T, typename U>
   [[nodiscard]] constexpr auto hadamard(std::vector<T> const &a, std::vector<U> const &b) {

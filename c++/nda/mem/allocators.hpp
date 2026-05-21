@@ -89,7 +89,7 @@ namespace nda::mem {
      * @brief Allocate memory and set it to zero.
      *
      * @details The behavior depends on the address space:
-     * - It uses std::calloc for `Host` nda::mem::AddressSpace.
+     * - It uses `std::calloc` for `Host` nda::mem::AddressSpace.
      * - Otherwise it uses nda::mem::malloc and nda::mem::memset.
      *
      * @param s Size in bytes of the memory to allocate.
@@ -116,7 +116,7 @@ namespace nda::mem {
    * @brief Custom allocator that allocates a bucket of memory on the heap consisting of 64 chunks.
    *
    * @details The allocator keeps track of which chunks are free using a bitmask. Once all chunks have been allocated,
-   * it will call std::abort on any further allocation requests.
+   * it will call `std::abort` on any further allocation requests.
    *
    * @note Only works with `Host` nda::mem::AddressSpace.
    *
@@ -162,7 +162,7 @@ namespace nda::mem {
     /**
      * @brief Allocate a chunk of memory in the bucket and update the bitmask.
      *
-     * @param s Size in bytes of the returned memory block (has to be < `ChunkSize`).
+     * @param s Size in bytes of the returned memory block (must be less than `ChunkSize`).
      * @return nda::mem::blk_t memory block.
      */
     blk_t allocate(size_t s) noexcept {
@@ -185,7 +185,7 @@ namespace nda::mem {
     /**
      * @brief Allocate a chunk of memory in the bucket, set it to zero and update the bitmask.
      *
-     * @param s Size in bytes of the returned memory block (has to be < `ChunkSize`).
+     * @param s Size in bytes of the returned memory block (must be less than `ChunkSize`).
      * @return nda::mem::blk_t memory block.
      */
     blk_t allocate_zero(size_t s) noexcept {
@@ -242,8 +242,8 @@ namespace nda::mem {
   /**
    * @brief Custom allocator that uses multiple nda::mem::bucket allocators.
    *
-   * @details It uses a std::vector of bucket allocators. When all buckets in the vector are full, it simply adds a new
-   * one at the end.
+   * @details It uses a `std::vector` of bucket allocators. When all buckets in the vector are full, it simply adds a 
+   * new one at the end.
    *
    * @note Only works with `Host` nda::mem::AddressSpace.
    *
@@ -291,7 +291,7 @@ namespace nda::mem {
     /**
      * @brief Allocate a chunk of memory in the current bucket or find a new one if the current one is full.
      *
-     * @param s Size in bytes of the returned memory block (has to be < `ChunkSize`).
+     * @param s Size in bytes of the returned memory block (must be less than `ChunkSize`).
      * @return nda::mem::blk_t memory block.
      */
     blk_t allocate(size_t s) noexcept {
@@ -303,7 +303,7 @@ namespace nda::mem {
      * @brief Allocate a chunk of memory in the current bucket or find a new one if the current one is full and set it
      * to zero.
      *
-     * @param s Size in bytes of the returned memory block (has to be < `ChunkSize`).
+     * @param s Size in bytes of the returned memory block (must be less than `ChunkSize`).
      * @return nda::mem::blk_t memory block.
      */
     blk_t allocate_zero(size_t s) noexcept {
@@ -334,7 +334,7 @@ namespace nda::mem {
       EXPECTS_WITH_MESSAGE((bu->owns(b)), "Error in nda::mem::multi_bucket::deallocate: Owning bucket not found");
       bu->deallocate(b);
 
-      // remove bucket the current bucket if it is empty and not the only one
+      // remove the current bucket if it is empty and not the only one
       if (!bu->empty()) return;
       if (bu_vec.size() <= 1) return;
       bu_vec.erase(bu);
@@ -349,7 +349,7 @@ namespace nda::mem {
 
     /**
      * @brief Get the bucket vector.
-     * @return std::vector with all the bucket allocators currently in use.
+     * @return `std::vector` with all the bucket allocators currently in use.
      */
     [[nodiscard]] auto const &buckets() const noexcept { return bu_vec; }
 
@@ -512,7 +512,7 @@ namespace nda::mem {
 
     /**
      * @brief Deallocate memory and update the total memory used.
-     * @details In debug mode, it aborts the program if the total memory used is smaller than zero.
+     * @details In debug mode, it aborts the program if the total memory used becomes negative.
      * @param b nda::mem::blk_t memory block to deallocate.
      */
     void deallocate(blk_t b) noexcept {
@@ -550,8 +550,8 @@ namespace nda::mem {
   /**
    * @brief Wrap an allocator to gather statistics about memory allocation.
    *
-   * @details It gathers a histogram of the different allocation sizes. The histogram is a std::vector of size 65, where
-   * element \f$ i \in \{0,...,63\} \f$ contains the number of allocations with a size in the range
+   * @details It gathers a histogram of the different allocation sizes. The histogram is a `std::vector` of size 65, 
+   * where element \f$ i \in \{0,...,63\} \f$ contains the number of allocations with a size in the range
    * \f$ [2^{64-i-1}, 2^{64-i}) \f$ and the last element contains the number of allocations of size zero.
    *
    * @tparam A nda::mem::Allocator type to wrap.
@@ -627,13 +627,13 @@ namespace nda::mem {
 
     /**
      * @brief Get the histogram of the allocation sizes.
-     * @return std::vector of size 65 with the number of allocations in each size range.
+     * @return `std::vector` of size 65 with the number of allocations in each size range.
      */
     [[nodiscard]] auto const &histogram() const noexcept { return hist; }
 
     /**
-     * @brief Print the histogram to a std::ostream.
-     * @param os std::ostream object to print to.
+     * @brief Print the histogram to a `std::ostream`.
+     * @param os `std::ostream` object to print to.
      */
     void print_histogram(std::ostream &os) const {
       os << "Allocation size histogram :\n";

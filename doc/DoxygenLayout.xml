@@ -188,11 +188,12 @@
       <tab type="user" url="@ref testing" title="Testing tools"/>
       <tab type="usergroup" url="@ref utilities" title="Utilities">
         <tab type="usergroup" url="@ref utils_concepts" title="Concepts">
+          <tab type="user" url="@ref nda::AnyOf" title="AnyOf"/>
           <tab type="user" url="@ref nda::CallableWithLongs" title="CallableWithLongs"/>
-          <tab type="user" url="@ref nda::StdArrayOfLong" title="StdArrayOfLong"/>
-          <tab type="user" url="@ref nda::Scalar" title="Scalar"/>
           <tab type="user" url="@ref nda::DoubleOrComplex" title="DoubleOrComplex"/>
           <tab type="user" url="@ref nda::InstantiationOf" title="InstantiationOf"/>
+          <tab type="user" url="@ref nda::Scalar" title="Scalar"/>
+          <tab type="user" url="@ref nda::StdArrayOfLong" title="StdArrayOfLong"/>
         </tab>
         <tab type="usergroup" url="@ref utils_std" title="Extensions to the standard library">
           <tab type="user" url="@ref nda::runtime_error" title="runtime_error"/>

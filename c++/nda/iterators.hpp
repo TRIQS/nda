@@ -189,8 +189,8 @@ namespace nda {
    * for 1-dimensional and a <a href="https://en.cppreference.com/w/cpp/named_req/ForwardIterator">LegacyForwardIterator</a>
    * for multi-dimensional arrays/views.
    *
-   * Given the shape, strides and a pointer to the start of the data, the iterator uses an `nda::detail::grid_iterator`
-   * to traverse the element in the array/view.
+   * Given the shape, strides and a pointer to the start of the data, the iterator uses an nda::detail::grid_iterator
+   * to traverse the elements in the array/view.
    *
    * @note The memory layout is always assumed to be C-style. For other layouts, one has to permute the given shape and
    * the strides according to the stride order.

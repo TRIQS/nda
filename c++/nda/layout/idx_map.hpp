@@ -248,7 +248,7 @@ namespace nda {
 
     /**
      * @brief Check if the shape and strides of the current map are compatible with its stride order.
-     * @details See idx_map::is_stride_order_valid(Int *lenptr, Int *strptr)).
+     * @details See idx_map::is_stride_order_valid(Int *lenptr, Int *strptr).
      * @return True if the shape and strides are compatible with the stride order.
      */
     [[nodiscard]] bool is_stride_order_valid() const { return is_stride_order_valid(len.data(), str.data()); }
@@ -391,7 +391,7 @@ namespace nda {
      * @details The missing extents are taken from the static extents, i.e. if a static extent is zero, it is replaced
      * by the corresponding dynamic extent.
      *
-     * @param shape std::array with the dynamic extents only.
+     * @param shape `std::array` with the dynamic extents only.
      */
     idx_map(std::array<long, n_dynamic_extents> const &shape) noexcept
       requires((n_dynamic_extents != Rank) and (n_dynamic_extents != 0))
@@ -445,7 +445,7 @@ namespace nda {
       return 0;
     }
 
-    // Get the contribution to the linear index in case of a long argument.
+    // Get the contribution to the linear index in case of a `long` argument.
     template <bool skip_stride, auto I>
     [[nodiscard]] FORCEINLINE long myget(long arg) const noexcept {
       if constexpr (skip_stride and (I == stride_order[Rank - 1])) {
@@ -529,7 +529,7 @@ namespace nda {
      * \leq r_{p_0} = f \f$. We can use this property to first calculate the residues and then recover the
      * multi-dimensional index.
      *
-     * @param lin_idx Linear/Flat index.
+     * @param lin_idx Linear or flat index.
      * @return Multi-dimensional index.
      */
     std::array<long, Rank> to_idx(long lin_idx) const {
@@ -555,7 +555,7 @@ namespace nda {
      * @tparam Args Types of the arguments.
      * @param args Multi-dimensional index consisting of `long`, `nda::range`, `nda::range::all_t` or nda::ellipsis
      * objects.
-     * @return A std::pair containing the offset in memory, i.e. the flat index of the first element of the slice and
+     * @return A `std::pair` containing the offset in memory, i.e. the flat index of the first element of the slice and
      * the new nda::idx_map.
      */
     template <typename... Args>
@@ -570,7 +570,7 @@ namespace nda {
      * @tparam SE Static extents of the other nda::idx_map.
      * @tparam SO Stride order of the other nda::idx_map.
      * @tparam LP Layout properties of the other nda::idx_map.
-     * @param rhs Right hand side nda::idx_map operand.
+     * @param rhs Right-hand side nda::idx_map operand.
      * @return True if their ranks, shapes and strides are equal.
      */
     template <int R, uint64_t SE, uint64_t SO, layout_prop_e LP>
@@ -581,13 +581,13 @@ namespace nda {
     /**
      * @brief Create a new map by permuting the indices/dimensions of the current map with a given permutation.
      *
-     * @details Let `A` be the current and ``A'`` the new, permuted index map. `P` is the given permutation. We define
-     * the permuted nda::idx_map ``A'`` to be the one with the following properties:
-     * - ``A'(i_0,...,i_{n-1}) = A(i_{P[0]},...,i_{P[n-1]})``
-     * - ``A'.lengths()[k] == A.lengths()[P^{-1}[k]]``
-     * - ``A'.strides()[k] == A.strides()[P^{-1}[k]]``
-     * - The stride order of ``A'`` is the composition of `P` and the stride order of `A` (note that the stride order
-     * itself is a permutation).
+     * @details Let \f$ A \f$ be the current and \f$ A' \f$ the new, permuted index map. \f$ P \f$ is the given
+     * permutation. We define the permuted nda::idx_map \f$ A' \f$ to be the one with the following properties:
+     * - \f$ A'(i_0,\ldots,i_{n-1}) = A(i_{P[0]},\ldots,i_{P[n-1]}) \f$
+     * - \f$ A'.\text{lengths}()[k] = A.\text{lengths}()[P^{-1}[k]] \f$
+     * - \f$ A'.\text{strides}()[k] = A.\text{strides}()[P^{-1}[k]] \f$
+     * - The stride order of \f$ A' \f$ is the composition of \f$ P \f$ and the stride order of \f$ A \f$ (note that
+     * the stride order itself is a permutation).
      *
      * @tparam Permutation Permutation to apply.
      * @return New nda::idx_map with permuted indices.
@@ -599,7 +599,7 @@ namespace nda {
       // A'(i_k) = A(i_{P[k]})
       //
       // Note that this convention is the correct one to have a (left) action of the symmetric group on
-      // a array and it may not be completely obvious.
+      // an array and it may not be completely obvious.
       // Proof
       //  let's operate with P then Q, and denote A'' = Q A'. We want to show that A'' = (QP) A
       //   A'(i_k) = A(i_{P[k]})
@@ -614,9 +614,9 @@ namespace nda {
       // where S[k] denotes the strides.
       //
       // 1- S' : strides of A'
-      //    A'(i_k) = sum_k i_{P[k]} * S[k] = sum_k i_k * S[P{^-1}[k]]
+      //    A'(i_k) = sum_k i_{P[k]} * S[k] = sum_k i_k * S[P^{-1}[k]]
       //     so
-      //         S'[k] = S[P{^-1}[k]]  (2)
+      //         S'[k] = S[P^{-1}[k]]  (2)
       //    i.e. apply (inverse(P), S) or apply_inverse directly.
       //
       // 2- L' : lengths of A'
@@ -630,10 +630,10 @@ namespace nda {
       //    hence S[Q[k]] is a strictly decreasing sequence (as checked by strides_compatible_to_stride_order)
       //    we want therefore Q' the permutation that will sort the S', i.e.
       //    S'[Q'[k]] = S[Q[k]]
-      //    using (2), we have S[P{^-1}[Q'[k]]] = S[Q[k]]
-      //    so the permutation Q' is such that  P{^-1}Q' = Q  or Q' = PQ (as permutation product/composition).
+      //    using (2), we have S[P^{-1}[Q'[k]]] = S[Q[k]]
+      //    so the permutation Q' is such that P^{-1}Q' = Q or Q' = PQ (as permutation product/composition).
       //    NB : Q and P are permutations, so the operation must be a composition, not an apply (apply applies
-      //    a P to any set, like L, S, not only a permutation) even though they are all std::array in the code ...
+      //    P to any set, like L, S, not only a permutation) even though they are all `std::array` in the code ...
       //
       static constexpr std::array<int, Rank> permu              = decode<Rank>(Permutation);
       static constexpr std::array<int, Rank> new_stride_order   = permutations::compose(permu, stride_order);

@@ -30,13 +30,13 @@ namespace nda {
   /**
    * @brief Mimics Python's `...` syntax.
    *
-   * @details While itertools's `range::all_t` mimics Python's `:`, `ellipsis` mimics Python's `...`. It is repeated as
-   * much as necessary to match the number of dimensions of an array/view when used to access elements/slices.
+   * @details While itertools's `range::all_t` mimics Python's `:`, nda::ellipsis mimics Python's `...`. It is repeated
+   * as much as necessary to match the number of dimensions of an array/view when used to access elements/slices.
    */
   struct ellipsis : range::all_t {};
 
   /**
-   * @brief Write `nda::range::all_t` to a std::ostream as `_`.
+   * @brief Write `nda::range::all_t` to a `std::ostream` as `_`.
    *
    * @param os Output stream.
    * @return Reference to the output stream.
@@ -44,7 +44,7 @@ namespace nda {
   inline std::ostream &operator<<(std::ostream &os, range::all_t) noexcept { return os << "_"; }
 
   /**
-   * @brief Write nda::ellipsis to a std::ostream as `___`.
+   * @brief Write nda::ellipsis to a `std::ostream` as `___`.
    *
    * @param os Output stream.
    * @return Reference to the output stream.

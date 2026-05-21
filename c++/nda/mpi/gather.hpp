@@ -55,18 +55,17 @@ namespace nda {
    * It is expected that all input arrays/views have the same shape on all processes except for the first dimension. The
    * function throws an exception if
    * - an input array/view is not contiguous with positive strides,
-   * - an output array/view is not contiguous with positive strides on receiving ranks or
-   * - if an output view does not have the correct shape on receiving ranks.
+   * - an output array/view is not contiguous with positive strides on receiving ranks, or
+   * - an output view does not have the correct shape on receiving ranks.
    *
    * The actual gathering is done by calling `mpi::gather_range`. The input arrays/views are simply concatenated along
    * their first dimension. The content of the output array/view depends on the MPI rank and whether it receives the
    * data or not:
-   * - On receiving ranks, it contains the gathered data and has a shape that is the same as the shape of the input
-   * array/view except for the first dimension, which is the sum of the extents of all input arrays/views along the
-   * first dimension.
+   * - On receiving ranks, it contains the gathered data and has the same shape as the input array/view except along
+   * the first dimension, which is the sum of the extents of all input arrays/views along the first dimension.
    * - On non-receiving ranks, the output array/view is ignored and left unchanged.
    *
-   * @note Gathering is only supported for contiguous arrays/views with positive strides and with MPI compatible value
+   * @note Gathering is only supported for contiguous arrays/views with positive strides and with MPI-compatible value
    * types.
    *
    * @tparam A1 nda::basic_array or nda::basic_array_view type with C-layout.

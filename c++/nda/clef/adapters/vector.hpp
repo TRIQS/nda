@@ -5,7 +5,7 @@
 
 /**
  * @file
- * @brief Provides automatic assignment for std::vector.
+ * @brief Provides automatic assignment for `std::vector`.
  */
 
 #pragma once
@@ -24,13 +24,13 @@ namespace nda::clef {
 
   namespace detail {
 
-    // Helper function to auto assign to a std::vector object.
+    // Helper function to auto assign to a `std::vector` object.
     template <typename T, typename RHS>
     void clef_auto_assign_std_vector_impl(T &x, RHS &&rhs) {
       x = std::forward<RHS>(rhs);
     }
 
-    // Helper function to auto assign to a std::vector object.
+    // Helper function to auto assign to a `std::vector` object.
     template <typename Expr, int... Is, typename T>
     void clef_auto_assign_std_vector_impl(T &x, make_fun_impl<Expr, Is...> &&rhs) { // NOLINT (why rvalue reference?)
       clef_auto_assign_subscript(x, std::forward<make_fun_impl<Expr, Is...>>(rhs));
@@ -39,11 +39,11 @@ namespace nda::clef {
   } // namespace detail
 
   /**
-   * @brief Overload of `clef_auto_assign_subscript` function for std::vector.
+   * @brief Overload of `%clef_auto_assign_subscript` function for `std::vector`.
    *
-   * @tparam T Value type of the std::vector.
+   * @tparam T Value type of the `std::vector`.
    * @tparam F Callable type.
-   * @param v std::vector object.
+   * @param v `std::vector` object.
    * @param f Callable object.
    */
   template <typename T, typename F>

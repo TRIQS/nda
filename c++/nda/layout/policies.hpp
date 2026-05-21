@@ -96,7 +96,7 @@ namespace nda {
   /**
    * @brief Generic layout policy with arbitrary order.
    *
-   * @tparam StaticExtent Compile-time known shape.
+   * @tparam StaticExtents Compile-time known shape.
    * @tparam StrideOrder Order in which the dimensions are stored in memory.
    * @tparam LayoutProp Compile-time guarantees about the layout of the data in memory.
    */

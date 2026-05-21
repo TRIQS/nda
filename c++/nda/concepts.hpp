@@ -83,7 +83,7 @@ namespace nda {
   concept Scalar = nda::is_scalar_v<S>;
 
   /**
-   * @brief Check if a given type is either a double or complex type.
+   * @brief Check if a given type is either a `double` or `std::complex` type.
    * @tparam S Type to check.
    */
   template <typename S>
@@ -101,12 +101,12 @@ namespace nda {
   concept InstantiationOf = nda::is_instantiation_of_v<TMPLT, T>;
 
   /**
-   * @brief True iif T is same_as any of the Us
+   * @brief Check if `T` is the same as any of the types in `Us`.
    *
    * @details See nda::is_any_of for implementation.
    *
-   * @tparam T Type to check
-   * @tparam Us Types to check against
+   * @tparam T Type to check.
+   * @tparam Us Types to check against.
    */
   template <typename T, typename... Us>
   concept AnyOf = is_any_of<T, Us...>;
@@ -196,7 +196,7 @@ namespace nda {
    *
    * Examples of types satisfying this concept are e.g. nda::basic_array or nda::basic_array_view.
    *
-   * @note std::array does not satisfy this concept, as it does not have a shape or provides access via the function
+   * @note `std::array` does not satisfy this concept, as it does not have a shape or provide access via the function
    * call operator.
    *
    * @tparam A Type to check.

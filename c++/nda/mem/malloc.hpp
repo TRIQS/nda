@@ -25,7 +25,7 @@ namespace nda::mem {
   /**
    * @brief Call the correct `malloc` function based on the given address space.
    *
-   * @details It makes the following function calls depending on the address space:
+   * @details It calls one of the following functions depending on the address space:
    * - `std::malloc` for `Host`.
    * - `cudaMalloc` for `Device`.
    * - `cudaMallocManaged` for `Unified`.
@@ -53,7 +53,7 @@ namespace nda::mem {
   /**
    * @brief Call the correct `free` function based on the given address space.
    *
-   * @details It makes the following function calls depending on the address space:
+   * @details It calls one of the following functions depending on the address space:
    * - `std::free` for `Host`.
    * - `cudaFree` for `Device` and `Unified`.
    *

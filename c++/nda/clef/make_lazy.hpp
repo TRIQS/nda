@@ -50,7 +50,7 @@ namespace nda::clef {
   /**
    * @brief Create a function call expression from a callable object and a list of arguments.
    *
-   * @details Note that this is equivalent to `nda::clef::make_expr(t)(args...)`.
+   * @details Note that this is equivalent to nda::clef::make_expr(t)(args...).
    *
    * @tparam F Type of the callable object.
    * @tparam Args Types of the arguments.
@@ -69,7 +69,7 @@ namespace nda::clef {
   /**
    * @brief Create a subscript expression from an object and a list of arguments.
    *
-   * @details Note that this is equivalent to `nda::clef::make_expr(t)[args...]`.
+   * @details Note that this is equivalent to nda::clef::make_expr(t)[args...].
    *
    * @tparam T Type of the object to be subscripted.
    * @tparam Args Types of the arguments.

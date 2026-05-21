@@ -121,7 +121,7 @@ namespace nda {
    *
    * Preconditions:
    * - The given index groups correspond to a partition of the set `{0, 1, ..., R - 1}` where `R` is the rank.
-   * - In each group the indices are consecutive in memory .
+   * - In each group the indices are consecutive in memory.
    *
    * For example, let's look at the following strider order: `S = (2, 1, 0)`. That means that dimension 0 is the fastest
    * varying index, then dimension 1 and dimension 2 is slowest. We say that dimensions 0 and 1 are consecutive in
