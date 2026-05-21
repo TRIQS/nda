@@ -7,6 +7,9 @@ In this example, we show how to write/read **nda** arrays and views to/from HDF5
 **nda** uses the [h5](https://triqs.github.io/h5/unstable/index.html) library and especially the
 [h5::array_interface](https://triqs.github.io/h5/unstable/group__rw__arrayinterface.html) to provide HDF5 support.
 
+> **Note**: This example requires **nda** to be built with HDF5 support enabled, which is the default
+> (controlled via `-DHDF5Support=ON/OFF`, see @ref dependencies).
+
 All the following code snippets are part of the same `main` function:
 
 ```cpp
@@ -14,8 +17,10 @@ All the following code snippets are part of the same `main` function:
 #include <nda/h5.hpp>
 #include <h5/h5.hpp>
 #include <iostream>
+#include <string>
+#include <tuple>
 
-int main(int argc, char *argv[]) {
+int main() {
   // HDF5 file
   h5::file file("ex5.h5", 'w');
 
@@ -110,7 +115,7 @@ In this case, a 3-by-3 view.
 
 > **Note**: nda::h5_write takes a fourth parameter which determines if the data should be compressed before it is
 > written. By default, this is set to `true`. To turn the compression off, one can specify it in the `h5::write` call,
-> e.g
+> e.g.
 > ```cpp
 > h5::write(file, "A", A, /* compression off */ false);
 > ```
@@ -299,7 +304,7 @@ C =
 
 @section ex5_p5 Writing/Reading 1-dimensional arrays/views of strings
 
-For the user, writing and reading an 1-dimensional array/view of strings works exactly the same way as with an
+For the user, writing and reading a 1-dimensional array/view of strings works exactly the same way as with an
 array/view of arithmetic scalars:
 
 ```cpp
@@ -347,7 +352,7 @@ For example, an array of integer arrays can be written/read as
 
 ```cpp
 // write an array of integer arrays
-auto I = nda::array<nda::array<int, 1>, 1>{{0, 1, 2}, {3, 4, 5}, {6, 7, 8}};
+auto I = nda::array<nda::array<int, 1>, 1>{nda::array<int, 1>{0, 1, 2}, nda::array<int, 1>{3, 4, 5}, nda::array<int, 1>{6, 7, 8}};
 h5::write(file, "I", I);
 
 // read an array of integer arrays

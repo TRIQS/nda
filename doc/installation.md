@@ -7,44 +7,39 @@
 If you want to skip the installation step, you can go directly to @ref integration to see how you can integrate
 **nda** into your own C++ project by using CMake's @ref fetch.
 
-> **Note:** To guarantee reproducibility in scientific calculations, we strongly recommend the use of a stable
+> **Note**: To guarantee reproducibility in scientific calculations, we strongly recommend the use of a stable
 > [release version](https://github.com/TRIQS/nda/releases).
 
 
 @section dependencies Dependencies
 
-The dependencies of the C++ **nda** library are as follows:
+The required dependencies of the C++ **nda** library are:
 
-* gcc version 12 or later OR clang version 15 or later OR IntelLLVM (icx) 2023.1.0 or later
-* CMake version 3.20 or later (for installation or integration into an existing project via CMake)
-* HDF5 library version 1.8.2 or later
-* a working MPI implementation (openmpi and Intel MPI are tested)
-* [OpenMP](https://www.openmp.org/)
+* C++20 compatible compiler
+* CMake version 3.20
 * a BLAS/LAPACK implementation (e.g. [oneMKL](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html#gs.9vs16x) or
 [OpenBLAS](https://www.openblas.net/))
 
-For specific functionality, the following optional dependencies might be required:
+We do not provide explicit version requirements.
+Instead, we refer the user to the **nda** CI builds on
+[GitHub Actions](https://github.com/TRIQS/nda/actions), where recent OS and compiler versions are tested.
 
-* [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit) for GPU support
-* [MAGMA](https://icl.utk.edu/magma/) for some specific matrix operations on the GPU
+The following dependencies are **optional and enabled by default**. They can be turned off via the corresponding CMake
+option (see @ref cmake_options):
 
-**nda** fetches and builds the following libraries automatically (unless the user explicitly tells
-CMake not to and to use local installations instead):
+* HDF5 library version 1.8.2 or later — for reading/writing arrays to/from HDF5 files (disable with `-DHDF5Support=OFF`)
+* a working MPI implementation, e.g. openmpi or Intel MPI — for distributed-memory parallelism
+  (disable with `-DMPISupport=OFF`)
+* [OpenMP](https://www.openmp.org/) — for shared-memory parallelism (disable with `-DOpenMPSupport=OFF`)
+* [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit) — for GPU support (enable with `-DCudaSupport=ON`)
+* [MAGMA](https://icl.utk.edu/magma/) — for some specific matrix operations on the GPU (enable with `-DUse_Magma=ON`)
 
-* [TRIQS/cpp2py](https://github.com/TRIQS/cpp2py)
+**nda** also depends on the following TRIQS libraries, which are fetched and built automatically (unless the user
+explicitly tells CMake to use local installations instead):
+
 * [TRIQS/itertools](https://github.com/TRIQS/itertools)
-* [TRIQS/mpi](https://github.com/TRIQS/mpi)
-* [TRIQS/h5](https://github.com/TRIQS/h5)
-
-For the Python interface, additional dependencies are required:
-
-* Python version 3.6 or later
-* numpy version 1.11.0 or later
-* mako version 0.9.1 or later
-* scipy (version 1.11.3 is tested but older/newer versions should work as well)
-
-The Python interface is built with [TRIQS/cpp2py](https://github.com/TRIQS/cpp2py).
-Please refer to the [GitHub repository](https://github.com/TRIQS/cpp2py) for further information.
+* [TRIQS/h5](https://github.com/TRIQS/h5) (only when `HDF5Support=ON`)
+* [TRIQS/mpi](https://github.com/TRIQS/mpi) (only when `MPISupport=ON`)
 
 
 @section install_steps Installation steps
@@ -92,7 +87,7 @@ $ cd nda.src && git tag
 Checkout the version of the code that you want:
 
 ```console
-$ git checkout 1.2.0
+$ git checkout 1.3.0
 ```
 
 and follow steps 2 to 4 above to compile the code.
@@ -108,18 +103,41 @@ $ cmake ../nda.src -DCMAKE_INSTALL_PREFIX=path_to_install_dir -DOPTION1=value1 -
 
 The following options are available:
 
-| Options                                 | Syntax                                            |
-|-----------------------------------------|---------------------------------------------------|
-| Specify an installation path            | ``-DCMAKE_INSTALL_PREFIX=path_to_install_dir``    |
-| Build in Debugging Mode                 | ``-DCMAKE_BUILD_TYPE=Debug``                      |
-| Disable testing (not recommended)       | ``-DBuild_Tests=OFF``                             |
-| Build the documentation                 | ``-DBuild_Documentation=ON``                      |
-| Build shared libraries                  | ``-DBUILD_SHARED_LIBS=ON``                        |
-| Build benchmarks                        | ``-DBuild_Benchs=ON``                             |
-| Test SSO memory optimizations           | ``-DBuild_SSO_Tests=ON``                          |
-| Enable Python support                   | ``-DPythonSupport=ON``                            |
-| Enable CUDA support                     | ``-DCudaSupport=ON``                              |
-| Disable HDF5 support                    | ``-DHDF5Support=OFF``                             |
-| Disable MPI support                     | ``-DMPISupport=OFF``                              |
-| Disable OpenMP support                  | ``-DOpenMPSupport=OFF``                           |
-| Enable MAGMA support                    | ``-DUse_Magma=ON``                                |
+**Install and build basics**
+
+| Option                       | Description                                          | Default   |
+|------------------------------|------------------------------------------------------|-----------|
+| `CMAKE_INSTALL_PREFIX=path`  | Installation path (required)                         | —         |
+| `CMAKE_BUILD_TYPE=type`      | Build type (`Release`, `Debug`, `RelWithDebInfo`, …) | `Release` |
+| `BUILD_SHARED_LIBS=ON/OFF`   | Build shared libraries                               | `OFF`     |
+
+**Optional features**
+
+| Option                       | Description                                          | Default |
+|------------------------------|------------------------------------------------------|---------|
+| `HDF5Support=ON/OFF`         | Build with HDF5 support                              | `ON`    |
+| `MPISupport=ON/OFF`          | Build with MPI support                               | `ON`    |
+| `OpenMPSupport=ON/OFF`       | Build with OpenMP support                            | `ON`    |
+| `PythonSupport=ON/OFF`       | Build Python bindings                                | `OFF`   |
+| `CudaSupport=ON/OFF`         | Build with CUDA (GPU) support                        | `OFF`   |
+| `Use_Magma=ON/OFF`           | Enable batched GEMM via MAGMA                        | `OFF`   |
+
+**Tests, benchmarks and documentation**
+
+| Option                          | Description                                          | Default |
+|---------------------------------|------------------------------------------------------|---------|
+| `Build_Tests=ON/OFF`            | Build the unit tests (not recommended to disable)    | `ON`    |
+| `Build_SSO_Tests=ON/OFF`        | Build the SSO / custom-allocator test variants       | `OFF`   |
+| `Build_c2py_clair_Tests=ON/OFF` | Build cpp2py/clair converter tests                   | `OFF`   |
+| `Build_Benchs=ON/OFF`           | Build the benchmarks                                 | `OFF`   |
+| `Build_Documentation=ON/OFF`    | Build the Doxygen documentation                      | `OFF`   |
+
+**Static analysis and sanitizers** (developer use; require Clang/LLVM)
+
+| Option                    | Description                                              | Default |
+|---------------------------|----------------------------------------------------------|---------|
+| `ANALYZE_SOURCES=ON/OFF`  | Run static analyzers (clang-tidy, cppcheck) during build | `OFF`   |
+| `ASAN=ON/OFF`             | Build with LLVM Address Sanitizer                        | `OFF`   |
+| `UBSAN=ON/OFF`            | Build with LLVM Undefined Behavior Sanitizer             | `OFF`   |
+| `MSAN=ON/OFF`             | Build with LLVM Memory Sanitizer                         | `OFF`   |
+| `TSAN=ON/OFF`             | Build with LLVM Thread Sanitizer                         | `OFF`   |

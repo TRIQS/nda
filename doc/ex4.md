@@ -10,7 +10,7 @@ All the following code snippets are part of the same `main` function:
 #include <nda/nda.hpp>
 #include <iostream>
 
-int main(int argc, char *argv[]) {
+int main() {
   // code snippets go here ...
 }
 ```
@@ -287,7 +287,7 @@ std::cout << "B = " << B << std::endl;
 
 // move assign to a view
 auto C = nda::array<int, 2>(S_3.shape());
-auto C_v = C();
+nda::array_view<int, 2> C_v = C();
 C_v = std::move(S_3);
 std::cout << "C = " << C << std::endl;
 ```
@@ -333,7 +333,6 @@ C =
 min_element(S_3) = 0
 max_element(S_3) = 24
 sum(S_3) = 108
-product(S_3) = 0
 ```
 
 @section ex4_p7 Rebinding a view to another array/view
@@ -368,7 +367,9 @@ std::cout << "arr_v = " << arr_v << std::endl;
 
 // change the value of the vector through the view
 arr_v *= 2.0;
-std::cout << "arr = " << arr << std::endl;
+std::cout << "arr = (";
+for (auto x : arr) std::cout << " " << x;
+std::cout << " )" << std::endl;
 ```
 
 Output:
@@ -470,7 +471,7 @@ D_flat = [0,1,2,3,4,5,6,7,8,9,10,11]
 ```
 
 **nda** provides some more advanced transformations which are especially useful for higher-dimensional arrays/views.
-We refere the interested user to the @ref documentation.
+We refer the interested user to the @ref documentation.
 
 @section ex4_full Full source
 

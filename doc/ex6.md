@@ -6,6 +6,9 @@ In this example, we show how to scatter, gather, broadcast and reduce **nda** ar
 
 **nda** uses the [mpi](https://triqs.github.io/mpi/unstable/index.html) library to provide MPI support.
 
+> **Note**: This example requires **nda** to be built with MPI support enabled, which is the default
+> (controlled via `-DMPISupport=ON/OFF`, see @ref dependencies).
+
 All the following code snippets are part of the same `main` function:
 
 ```cpp
@@ -206,7 +209,8 @@ Rank 1: []
 ```
 
 Only the root process will have the gathered result available.
-If the other ranks need access to the result, we can do an all-gather instead:
+If the other ranks need access to the result, we can do an all-gather instead (the two snippets below are standalone
+alternatives, not added to the running `main`):
 
 ```cpp
 // all-gather the arrays
@@ -316,7 +320,7 @@ Rank 3:
 @section ex6_p3 Scattering an array/view
 
 Scattering of an array/view is basically the inverse operation of gathering.
-It takes an array/view and splits it along the first dimensions as evenly as possible among the processes.
+It takes an array/view and splits it along the first dimension as evenly as possible among the processes.
 
 For example, to scatter the same array that we just gathered, we can do
 
@@ -376,7 +380,7 @@ It is split along the first dimension and the resulting 1-by-2 subarrays are sen
 @section ex6_p4 Reducing an array/view
 
 Let us reduce the same 2-by-2 arrays from above.
-Be default, `mpi::reduce` performs an element-wise summation among the ranks in the communicator and makes the result
+By default, `mpi::reduce` performs an element-wise summation among the ranks in the communicator and makes the result
 available only on the root process:
 
 ```cpp
@@ -400,7 +404,8 @@ Rank 0:
  [6,6]]
 ```
 
-To use a different reduction operation or to send the result to all ranks, we can do
+To use a different reduction operation or to send the result to all ranks, we can do (the two snippets below are
+standalone alternatives, not added to the running `main`):
 
 ```cpp
 auto D = mpi::reduce(C, comm, root, /* all */ true, MPI_OP);
@@ -445,7 +450,7 @@ Instead the result is directly written into the input array.
 
 Note that the functions nda::mpi_reduce, nda::mpi_gather and nda::mpi_scatter all return a newly constructed array which
 contains the result of the respective MPI operation.
-In case of large amounts of data, constructing a new obejct can be expensive and use a lot of additional memory.
+In case of large amounts of data, constructing a new object can be expensive and use a lot of additional memory.
 
 If there already exists an array/view that can be used as a receive (output) buffer, we can avoid this additional
 overhead by calling nda::mpi_reduce_into, nda::mpi_gather_into or nda::mpi_scatter_into instead.

@@ -4,7 +4,7 @@
 #include <h5/h5.hpp>
 #include <iostream>
 
-int main(int argc, char *argv[]) {
+int main() {
   // create a 3x2 integer array and initialize it
   auto A = nda::array<int, 2>(3, 2);
   for (int i = 0; auto &x : A) x = i++;

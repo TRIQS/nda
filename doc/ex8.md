@@ -2,7 +2,7 @@
 
 [TOC]
 
-In this example, we show how do linear algebra with **nda** arrays.
+In this example, we show how to do linear algebra with **nda** arrays.
 
 All the following code snippets are part of the same `main` function:
 
@@ -11,7 +11,7 @@ All the following code snippets are part of the same `main` function:
 #include <complex>
 #include <iostream>
 
-int main(int argc, char *argv[]) {
+int main() {
   // code snippets go here ...
 }
 ```
@@ -75,9 +75,9 @@ square diagonal matrix containing the values of the given array.
 @section ex8_p3 Initializing and assigning to matrices and vectors
 
 Again, initializing and assigning to matrices and vectors works (almost) exactly in the same way as it does for arrays
-(see @ref ex3)
+(see @ref ex3).
 
-The main difference occurs, when we are assigning a scalar. While for arrays and vectors the assignment is done
+The main difference occurs when we are assigning a scalar. While for arrays and vectors the assignment is done
 element-wise, for matrices the scalar is assigned only to the elements on the shorter diagonal and the rest is zeroed
 out:
 
@@ -154,7 +154,7 @@ Suppose we have the following objects:
 - nda::vector: `v1`, `v2`, ...
 - scalar: `s1`, `s2`, ...
 
-Then the following operations are allowed  (all operations are lazy unless mentioned otherwise)
+Then the following operations are allowed (all operations are lazy unless mentioned otherwise):
 
 - **Addition** / **Subtraction**
   - `O1 +/- O2`: element-wise addition/subtraction, shapes of `O1` and `O2` have to be the same, result has the same
@@ -216,8 +216,8 @@ To check that the cross product is perpendicular to `v1` and `v2`, we can use th
 
 ```cpp
 // check the cross product using the dot product
-std::cout << "v1 . v3 = " << nda::dot(v1, v3) << std::endl;
-std::cout << "v2 . v3 = " << nda::dot(v2, v3) << std::endl;
+std::cout << "v1 . v3 = " << nda::linalg::dot(v1, v3) << std::endl;
+std::cout << "v2 . v3 = " << nda::linalg::dot(v2, v3) << std::endl;
 ```
 
 Output:
@@ -263,8 +263,8 @@ v3_mv = [-3,6,-3]
 Comparing this result to `v3` above, we see that this is indeed correct.
 
 Let us now turn to an eigenvalue problem.
-**nda** offers the convenience functions nda::linalg::eigenelements and nda::linalg::eigenvalues to obtain the
-eigenvalues and eigenvectors of a symmetric or hermitian matrix.
+**nda** offers the convenience functions nda::linalg::eigh and nda::linalg::eigvalsh to obtain the eigenvalues and
+eigenvectors (or just the eigenvalues) of a symmetric or hermitian matrix.
 
 We start from the following symmetric matrix:
 
@@ -287,7 +287,7 @@ Getting the eigenvalues and eigenvectors is quite easy:
 
 ```cpp
 // calculate the eigenvalues and eigenvectors of a symmetric matrix
-auto [s, Q] = nda::linalg::eigenelements(M1);
+auto [s, Q] = nda::linalg::eigh(M1);
 std::cout << "Eigenvalues of M1: s = " << s << std::endl;
 std::cout << "Eigenvectors of M1: Q = " << Q << std::endl;
 ```
@@ -302,7 +302,7 @@ Eigenvectors of M1: Q =
  [0.797197,0.337041,-0.500879]]
 ```
 
-To check the correctness of our calculation, we us the fact that the matrix \f$ \mathbf{M}_1 \f$ can be factorized as
+To check the correctness of our calculation, we use the fact that the matrix \f$ \mathbf{M}_1 \f$ can be factorized as
 \f[
   \mathbf{M}_1 = \mathbf{Q} \mathbf{\Sigma} \mathbf{Q}^{-1} \; ,
 \f]
@@ -389,7 +389,7 @@ x1 = [1,-2,-2]
 ```
 
 Since `b1` is a vector but nda::lapack::getrs expects a matrix, we first copy it into the matrix `x1`.
-After the LAPACK call return, `x1` contains the result in its first column.
+After the LAPACK call returns, `x1` contains the result in its first column.
 
 Let's check that this is actually the solution to our original system of equations:
 

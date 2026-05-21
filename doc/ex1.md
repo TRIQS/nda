@@ -12,7 +12,7 @@ All the following code snippets are part of the same `main` function:
 #include <h5/h5.hpp>
 #include <iostream>
 
-int main(int argc, char *argv[]) {
+int main() {
   // code snippets go here ...
 }
 ```
@@ -59,7 +59,7 @@ for (int i = 0; auto &x : B) x = i++;
 Here, nda::F_layout is one of the @ref layout_pols.
 
 While in 2-dimensions, the only possibilities are C-order or Fortran-order, in higher dimensions one can also specify
-other stride orders (see nda::basic_layout and nda::basic_layout_str).
+other stride orders (see nda::basic_layout).
 
 @section ex1_p3 Printing an array
 
@@ -494,12 +494,12 @@ Let us demonstrate some of the supported @ref linalg features:
 auto M3 = nda::matrix<double>{{1, 2}, {3, 4}};
 
 // get the inverse of the matrix (calls LAPACK routines)
-auto M3_inv = nda::inverse(M3);
+auto M3_inv = nda::linalg::inv(M3);
 std::cout << "M3_inv = " << M3_inv << std::endl;
 
 // get the inverse of a matrix manually using its adjugate and determinant
 auto M3_adj = nda::matrix<double>{{4, -2}, {-3, 1}};
-auto M3_det = nda::determinant(M3);
+auto M3_det = nda::linalg::det(M3);
 auto M3_inv2 = nda::matrix<double>(M3_adj / M3_det);
 std::cout << "M3_inv2 = " << M3_inv2 << std::endl;
 

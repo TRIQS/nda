@@ -7,7 +7,7 @@
 #include <tuple>
 #include <vector>
 
-int main(int argc, char *argv[]) {
+int main() {
   // size of the matrix
   constexpr int N = 3;
 
@@ -18,8 +18,8 @@ int main(int argc, char *argv[]) {
 
   // define a hermitian symmetry (satisfies nda::NdaSymmetry)
   auto h_symmetry = [](idx_t const &x) {
-    if (x[0] == x[1]) return sym_t{x, nda::operation{false, false}};
-    return sym_t{idx_t{x[1], x[0]}, nda::operation{false, true}};
+    if (x[0] == x[1]) return sym_t{x, nda::operation{false, false}}; // sign flip = false, complex conjugate = false
+    return sym_t{idx_t{x[1], x[0]}, nda::operation{false, true}};    // sign flip = false, complex conjugate = true
   };
 
   // construct the symmetry group

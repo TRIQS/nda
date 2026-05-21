@@ -11,7 +11,9 @@ All the following code snippets are part of the same `main` function:
 #include <complex>
 #include <iostream>
 
-int main(int argc, char *argv[]) {
+int main() {
+  using namespace std::complex_literals;
+
   // code snippets go here ...
 }
 ```
@@ -62,7 +64,8 @@ The scalar type can also be more complex, e.g. another nda::array:
 ```cpp
 // assign an array to an array
 auto A_arr = nda::array<nda::array<int, 1>, 1>(4);
-A_arr = nda::array<int, 1>{1, 2, 3};
+nda::array<int, 1> A_sub{1, 2, 3};
+for (auto &x : A_arr) x = A_sub;
 std::cout << "A_arr = " << A_arr << std::endl;
 ```
 
@@ -86,7 +89,7 @@ M_copy = M;
 std::cout << "M_copy = " << M_copy << std::endl;
 
 // move assignment
-auto M_copy = nda::matrix<std::complex<double>>();
+auto M_move = nda::matrix<std::complex<double>>();
 M_move = std::move(M_copy);
 std::cout << "M_move = " << M_move << std::endl;
 std::cout << "M_copy.empty() = " << M_copy.empty() << std::endl;
@@ -147,7 +150,7 @@ This is not true for the second assignment.
 
 @section ex3_p4 Assigning a contiguous range
 
-It is possible to assign an object that satisfies the `std::ranges::contiguous_range` concept to an 1-dimensional array:
+It is possible to assign an object that satisfies the `std::ranges::contiguous_range` concept to a 1-dimensional array:
 
 ```cpp
 // assign a contiguous range to an 1-dimensional array

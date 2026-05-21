@@ -6,7 +6,7 @@
  * **nda** library. They are used to store and access multi-dimensional data and provide a wide range of operations and
  * functions to manipulate them.
  *
- * Regular arrays own the memory they use for storing the data that means they are responsible for managing their
+ * Regular arrays own the memory they use for storing the data, which means they are responsible for managing their
  * memory storage. Views on the other hand do not own the memory they point to. They provide a lightweight alternative
  * to access the data of regular arrays or other views.
  */
@@ -144,7 +144,7 @@
  *  [6,6]]
  * ```
  *
- * Se @ref ex6 for a more in-depth example.
+ * See @ref ex6 for a more in-depth example.
  */
 
 /**

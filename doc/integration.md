@@ -25,7 +25,7 @@ For example:
 
 @subsection fetch FetchContent
 
-If you use [CMake](https://cmake.org/) to build your source code, you can fetch the **h5** directly from the
+If you use [CMake](https://cmake.org/) to build your source code, you can fetch **nda** directly from the
 [Github repository](https://github.com/TRIQS/nda) using CMake's [FetchContent](https://cmake.org/cmake/help/latest/module/FetchContent.html)
 module:
 
@@ -38,7 +38,7 @@ include (FetchContent)
 FetchContent_Declare(
   nda
   GIT_REPOSITORY https://github.com/TRIQS/nda.git
-  GIT_TAG        1.3.x
+  GIT_TAG        2.0.x
 )
 FetchContent_MakeAvailable(nda)
 
@@ -48,9 +48,10 @@ target_link_libraries(my_executable nda::nda_c)
 ```
 
 This will link automatically to all of **nda's** dependencies, except for the HDF5 C library.
-If you need to use some of the HDF5 C library features, you can simply link to it via `h5::hdf5`.
+If you need to use some of the HDF5 C library features, you can simply link to it via the `h5::hdf5` CMake target,
+which is exported by the bundled [TRIQS/h5](https://github.com/TRIQS/h5) dependency.
 
-Note that the above will also build [goolgetest](https://github.com/google/googletest) and the unit tests for **nda**.
+Note that the above will also build [googletest](https://github.com/google/googletest) and the unit tests for **nda**.
 To disable this, you can put `set(Build_Tests OFF CACHE BOOL "" FORCE)` before fetching the content or by specifying
 `-DBuild_Tests=OFF` on the command line.
 
