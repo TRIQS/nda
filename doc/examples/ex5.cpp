@@ -5,7 +5,7 @@
 #include <string>
 #include <tuple>
 
-int main(int argc, char *argv[]) {
+int main() {
   // HDF5 file
   h5::file file("ex5.h5", 'w');
 

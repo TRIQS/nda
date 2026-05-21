@@ -19,7 +19,7 @@ cmake_policy(VERSION ${CMAKE_VERSION})
 
 # ############
 # Define Project
-project(nda VERSION 1.3.0 LANGUAGES CXX)
+project(nda VERSION 2.0.0 LANGUAGES CXX)
 get_directory_property(IS_SUBPROJECT PARENT_DIRECTORY)
 
 message(STATUS "-------- nda version and git hash detection -------------")

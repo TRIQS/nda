@@ -2,7 +2,7 @@
 #include <complex>
 #include <iostream>
 
-int main(int argc, char *argv[]) {
+int main() {
   // default constructor
   auto A1 = nda::array<double, 2>();
   std::cout << "A1 = " << A1 << std::endl;

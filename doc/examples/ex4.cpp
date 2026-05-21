@@ -3,7 +3,7 @@
 #include <iostream>
 #include <utility>
 
-int main(int argc, char *argv[]) {
+int main() {
   // create a full view on an array
   auto A = nda::array<int, 2>(5, 5);
   for (int i = 0; auto &x : A) x = i++;

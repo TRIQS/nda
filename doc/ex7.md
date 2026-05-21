@@ -2,7 +2,7 @@
 
 [TOC]
 
-In this example, we show how use, spot and define symmetries in **nda** arrays.
+In this example, we show how to use, spot and define symmetries in **nda** arrays.
 
 All the following code snippets are part of the same `main` function:
 
@@ -13,7 +13,7 @@ All the following code snippets are part of the same `main` function:
 #include <functional>
 #include <iostream>
 
-int main(int argc, char *argv[]) {
+int main() {
   // size of the matrix
   constexpr int N = 3;
 
@@ -94,6 +94,7 @@ for (int i = 1; auto const &c : grp.get_sym_classes()) {
   for (auto const &x : c) {
     std::cout << "  Idx: " << x.first << ", Sign flip: " << x.second.sgn << ", Complex conjugation: " << x.second.cc << std::endl;
   }
+  ++i;
 }
 ```
 
@@ -102,18 +103,18 @@ Output:
 ```
 Symmetry class 1:
   Idx: 0, Sign flip: 0, Complex conjugation: 0
-Symmetry class 1:
+Symmetry class 2:
   Idx: 1, Sign flip: 0, Complex conjugation: 0
   Idx: 3, Sign flip: 0, Complex conjugation: 1
-Symmetry class 1:
+Symmetry class 3:
   Idx: 2, Sign flip: 0, Complex conjugation: 0
   Idx: 6, Sign flip: 0, Complex conjugation: 1
-Symmetry class 1:
+Symmetry class 4:
   Idx: 4, Sign flip: 0, Complex conjugation: 0
-Symmetry class 1:
+Symmetry class 5:
   Idx: 5, Sign flip: 0, Complex conjugation: 0
   Idx: 7, Sign flip: 0, Complex conjugation: 1
-Symmetry class 1:
+Symmetry class 6:
   Idx: 8, Sign flip: 0, Complex conjugation: 0
 ```
 
@@ -222,15 +223,15 @@ Let's try this out:
 ```cpp
 // use representative data to initialize a new array
 reps_view *= 2.0;
-nda::array<std::complex<double>, 2> B(N, N);
-grp.init_from_representative_data(B, reps);
-std::cout << "B = " << B << std::endl;
+nda::array<std::complex<double>, 2> B_sym(N, N);
+grp.init_from_representative_data(B_sym, reps);
+std::cout << "B_sym = " << B_sym << std::endl;
 ```
 
 Output:
 
 ```
-B =
+B_sym =
 [[(0,0),(2,2),(4,4)]
  [(2,-2),(8,8),(10,10)]
  [(4,-4),(10,-10),(16,16)]]
@@ -240,7 +241,7 @@ Here, we first multiplied the original representative data by 2 and then initial
 
 @section ex7_p5 Symmetrizing an array
 
-The nda::sym_grp class provides a method that let's us symmetrize an existing array and simultaneously obtain the
+The nda::sym_grp class provides a method that lets us symmetrize an existing array and simultaneously obtain the
 maximum symmetry violation.
 
 For each symmetry class, it first calculates the representative element by looping over all elements of the class,
@@ -259,7 +260,7 @@ be zero:
 // symmetrize an already symmetric array
 auto v1 = grp.symmetrize(A);
 std::cout << "Symmetrized A = " << A << std::endl;
-std::cout << "Max. violation at index " << v1.first << " = " << v1.second << std::endl;
+std::cout << "Max. violation at index " << v1.second << " = " << v1.first << std::endl;
 ```
 
 Output:

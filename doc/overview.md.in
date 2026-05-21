@@ -10,7 +10,7 @@
 It is an essential building-block of the [TRIQS](https://github.com/TRIQS/triqs) project.
 
 Some features include
-* coded in C++17/20 using concepts
+* coded in C++20 using concepts
 * expressions are implemented lazily for maximum performance
 * flexible and lightweight view types
 * matrix and vector class with BLAS/LAPACK backend

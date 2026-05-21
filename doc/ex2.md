@@ -11,7 +11,7 @@ All the following code snippets are part of the same `main` function:
 #include <complex>
 #include <iostream>
 
-int main(int argc, char *argv[]) {
+int main() {
   // code snippets go here ...
 }
 ```
@@ -31,10 +31,10 @@ std::cout << "A1.shape() = " << A1.shape() << std::endl;
 Output:
 
 ```
-A =
+A1 =
 []
-A.size() = 0
-A.shape() = (0 0)
+A1.size() = 0
+A1.shape() = (0 0)
 ```
 
 Since the size of the array is zero, no memory has been allocated.
@@ -46,23 +46,23 @@ This can be done either
 
 ```cpp
 // resize the array using the resize method
-A.resize(3, 2);
-std::cout << "A.size() = " << A.size() << std::endl;
-std::cout << "A.shape() = " << A.shape() << std::endl;
+A1.resize(3, 2);
+std::cout << "A1.size() = " << A1.size() << std::endl;
+std::cout << "A1.shape() = " << A1.shape() << std::endl;
 
 // resize using assignment
-A = nda::array<double, 2>(10, 10);
-std::cout << "A.size() = " << A.size() << std::endl;
-std::cout << "A.shape() = " << A.shape() << std::endl;
+A1 = nda::array<double, 2>(10, 10);
+std::cout << "A1.size() = " << A1.size() << std::endl;
+std::cout << "A1.shape() = " << A1.shape() << std::endl;
 ```
 
 Output:
 
 ```
-A.size() = 6
-A.shape() = (3 2)
-A.size() = 100
-A.shape() = (10 10)
+A1.size() = 6
+A1.shape() = (3 2)
+A1.size() = 100
+A1.shape() = (10 10)
 ```
 
 @section ex2_p2 Constructing an array with a given shape
@@ -85,7 +85,7 @@ M1.size() = 10000
 M1.shape() = (100 100)
 ```
 
-While for higher dimensional arrays the elements are in general left uninitialized, it is possible to construct an
+While for higher dimensional arrays the elements are in general left uninitialized, it is possible to construct a
 1-dimensional array with a given size and initialize its elements to a constant value:
 
 ```cpp
@@ -151,39 +151,39 @@ v2.empty() = 1
 
 ```cpp
 // 1-dimensional array from a std::initializer_list
-auto A1 = nda::array<int, 1>{1, 2, 3, 4, 5};
-std::cout << "A1 = " << A1 << std::endl;
-std::cout << "A1.size() = " << A1.size() << std::endl;
-std::cout << "A1.shape() = " << A1.shape() << std::endl;
+auto A1_il = nda::array<int, 1>{1, 2, 3, 4, 5};
+std::cout << "A1_il = " << A1_il << std::endl;
+std::cout << "A1_il.size() = " << A1_il.size() << std::endl;
+std::cout << "A1_il.shape() = " << A1_il.shape() << std::endl;
 
 // 2-dimensional array from a std::initializer_list
-auto A2 = nda::array<int, 2>{{1, 2}, {3, 4}, {5, 6}};
-std::cout << "A2 = " << A2 << std::endl;
-std::cout << "A2.size() = " << A2.size() << std::endl;
-std::cout << "A2.shape() = " << A2.shape() << std::endl;
+auto A2_il = nda::array<int, 2>{{1, 2}, {3, 4}, {5, 6}};
+std::cout << "A2_il = " << A2_il << std::endl;
+std::cout << "A2_il.size() = " << A2_il.size() << std::endl;
+std::cout << "A2_il.shape() = " << A2_il.shape() << std::endl;
 
 // 3-dimensional array from a std::initializer_list
-auto A3 = nda::array<int, 3>{{{1, 2}, {3, 4}, {5, 6}}, {{7, 8}, {9, 10}, {11, 12}}};
-std::cout << "A3 = " << A3 << std::endl;
-std::cout << "A3.size() = " << A3.size() << std::endl;
-std::cout << "A3.shape() = " << A3.shape() << std::endl;
+auto A3_il = nda::array<int, 3>{{{1, 2}, {3, 4}, {5, 6}}, {{7, 8}, {9, 10}, {11, 12}}};
+std::cout << "A3_il = " << A3_il << std::endl;
+std::cout << "A3_il.size() = " << A3_il.size() << std::endl;
+std::cout << "A3_il.shape() = " << A3_il.shape() << std::endl;
 ```
 
 Output:
 
 ```
-A1 = [1,2,3,4,5]
-A1.size() = 5
-A1.shape() = (5)
-A2 =
+A1_il = [1,2,3,4,5]
+A1_il.size() = 5
+A1_il.shape() = (5)
+A2_il =
 [[1,2]
  [3,4]
  [5,6]]
-A2.size() = 6
-A2.shape() = (3 2)
-A3 = [1,2,3,4,5,6,7,8,9,10,11,12]
-A3.size() = 12
-A3.shape() = (2 3 2)
+A2_il.size() = 6
+A2_il.shape() = (3 2)
+A3_il = [1,2,3,4,5,6,7,8,9,10,11,12]
+A3_il.size() = 12
+A3_il.shape() = (2 3 2)
 ```
 
 @section ex2_p5 Constructing an array from an nda::Array
@@ -199,13 +199,13 @@ For example, this could be a lazy expression or another array/view with a possib
 
 ```cpp
 // construct an array from a lazy expression
-nda::array<int, 1> A1_sum = A1 + A1;
+nda::array<int, 1> A1_sum = A1_il + A1_il;
 std::cout << "A1_sum = " << A1_sum << std::endl;
 std::cout << "A1_sum.size() = " << A1_sum.size() << std::endl;
 std::cout << "A1_sum.shape() = " << A1_sum.shape() << std::endl;
 
 // construct an array from another array with a different memory layout
-nda::array<double, 2, nda::F_layout> A2_f(A2);
+nda::array<double, 2, nda::F_layout> A2_f(A2_il);
 std::cout << "A2_f = " << A2_f << std::endl;
 std::cout << "A2_f.size() = " << A2_f.size() << std::endl;
 std::cout << "A2_f.shape() = " << A2_f.shape() << std::endl;

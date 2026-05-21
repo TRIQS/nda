@@ -2,7 +2,7 @@
 #include <complex>
 #include <iostream>
 
-int main(int argc, char *argv[]) {
+int main() {
   using namespace std::complex_literals;
 
   // assign a scalar to an array

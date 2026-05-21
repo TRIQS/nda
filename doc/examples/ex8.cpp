@@ -4,7 +4,7 @@
 #include <complex>
 #include <iostream>
 
-int main(int argc, char *argv[]) {
+int main() {
   // construct a 4x3 matrix and a vector of size 3
   nda::matrix<double> M(4, 3);
   nda::vector<double> v(3);
