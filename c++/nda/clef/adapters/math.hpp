@@ -24,10 +24,10 @@ namespace nda::clef {
 
 #define CLEF_MAKE_STD_FNT_LAZY(name)                                                                                                                 \
   using std::name;                                                                                                                                   \
-  /** @brief Lazy version of std::name. */                                                                                                           \
+  /** @brief Lazy version of `std::name`. */                                                                                                         \
   CLEF_MAKE_FNT_LAZY(name)
 
-  // FIXME use vim generation
+  // TODO: generate this list programmatically instead of hand-listing.
   CLEF_MAKE_STD_FNT_LAZY(cos)
   CLEF_MAKE_STD_FNT_LAZY(sin)
   CLEF_MAKE_STD_FNT_LAZY(tan)

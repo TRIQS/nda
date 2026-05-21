@@ -79,7 +79,7 @@ namespace nda {
    *
    * @details It traverses all possible indices in the order given by the encoded `StrideOrder` parameter. The shape is
    * either specified at runtime (`StaticExtents == 0`) or, partially or fully, at compile time (`StaticExtents != 0`).
-   * The given function `f` must be callable with as many long values as the number of dimensions in the shape array,
+   * The given function `f` must be callable with as many `long` values as the number of dimensions in the shape array,
    * e.g. for a 3-dimensional shape the function must be callable as `f(long, long, long)`.
    *
    * @tparam StaticExtents Encoded static extents.
@@ -101,7 +101,7 @@ namespace nda {
    * @brief Loop over all possible index values of a given shape and apply a function to them.
    *
    * @details It traverses all possible indices in C-order, i.e. the last index varies the fastest. The shape is
-   * specified at runtime and the given function `f` must be callable with as many long values as the number of
+   * specified at runtime and the given function `f` must be callable with as many `long` values as the number of
    * dimensions in the shape array, e.g. for a 3-dimensional shape the function must be callable as
    * `f(long, long, long)`.
    *

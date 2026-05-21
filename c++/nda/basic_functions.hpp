@@ -126,7 +126,7 @@ namespace nda {
   }
 
   /**
-   * @brief Make a 1-dimensional integer array and initialize it with values of a given `nda::range` with a step size
+   * @brief Make a 1-dimensional integer array and initialize it with values of a given `nda::range`s with a step size
    * of 1 and a starting value of 0.
    *
    * @tparam Int Integer type/Value type of the created array.
@@ -444,7 +444,6 @@ namespace nda {
    * @tparam A Algebra of the view.
    * @tparam AP Accessor policy of the view.
    * @tparam OP Owning policy of the view.
-   *P
    * @param a nda::basic_array_view object.
    * @return nda::matrix_view object.
    */
@@ -508,7 +507,7 @@ namespace nda {
 
   /**
    * @ingroup clef_autoassign
-   * @brief Overload of nda::clef::clef_auto_assign function for nda::Array objects.
+   * @brief Overload of `%clef_auto_assign` function for nda::Array objects.
    *
    * @tparam A nda::Array type.
    * @tparam F Callable type.

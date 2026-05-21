@@ -106,7 +106,7 @@ namespace nda {
    * @brief Concept defining an initializer function.
    *
    * @details An initializer function consists of a callable type that can be called with a multi-dimensional index with
-   * the same rank as a given array type and returns a an object of the same type as the value type of the array.
+   * the same rank as a given array type and returns an object of the same type as the value type of the array.
    *
    * @tparam F Callable type.
    * @tparam A nda::Array type.
@@ -156,7 +156,7 @@ namespace nda {
     public:
     /**
      * @brief Get the symmetry classes.
-     * @return std::vector containing the individual classes.
+     * @return `std::vector` containing the individual classes.
      */
     [[nodiscard]] std::vector<sym_class_t> const &get_sym_classes() const { return sym_classes; }
 
@@ -247,7 +247,7 @@ namespace nda {
      * @brief Reduce an nda::Array to its representative data using symmetries.
      *
      * @param a nda::Array object.
-     * @return std::vector of data values for the representative elements of each symmetry class.
+     * @return `std::vector` of data values for the representative elements of each symmetry class.
      */
     [[nodiscard]] std::vector<get_value_t<A>> get_representative_data(A const &a) const {
       long len = sym_classes.size();
@@ -260,7 +260,7 @@ namespace nda {
      * @brief Initialize a multi-dimensional array from its representative data using symmetries.
      *
      * @param a nda::Array object to be initialized.
-     * @param vec std::vector of data values for the representative elements of each symmetry class.
+     * @param vec `std::vector` of data values for the representative elements of each symmetry class.
     */
     template <typename V>
     void init_from_representative_data(A &a, V const &vec) const {

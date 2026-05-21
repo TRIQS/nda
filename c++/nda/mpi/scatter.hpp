@@ -63,10 +63,10 @@ namespace nda {
    *
    * The actual scattering is done by calling `mpi::scatter_range`. The input array/view on the root process is chunked
    * along the first dimension into equal (as much as possible) parts using `mpi::chunk_length`. If the extent of the
-   * input array along the first dimension is not divisible by the number of processes, processes with lower ranks will
-   * receive more data than processes with higher ranks.
+   * input array along the first dimension is not divisible by the number of processes, lower-ranked processes will
+   * receive more data than higher-ranked ones.
    *
-   * @note Scattering is only supported for contiguous arrays/views with positive strides and with MPI compatible value
+   * @note Scattering is only supported for contiguous arrays/views with positive strides and with MPI-compatible value
    * types.
    *
    * @tparam A1 nda::basic_array or nda::basic_array_view type with C-layout.

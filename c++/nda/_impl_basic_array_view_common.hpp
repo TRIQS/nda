@@ -42,7 +42,7 @@
 [[nodiscard]] ValueType const *data() const noexcept { return sto.data(); }
 
 /**
- * @brief Get a pointer to the actual data (in general this is not the beginning of thr memory block for a view).
+ * @brief Get a pointer to the actual data (in general this is not the beginning of the memory block for a view).
  * @return Pointer to the first element of the view/array.
  */
 [[nodiscard]] ValueType *data() noexcept { return sto.data(); }
@@ -161,7 +161,7 @@ public:
 /**
  * @brief Implementation of the function call operator.
  *
- * @details This function is an implementation detail an should be private. Since the Green's function library in
+ * @details This function is an implementation detail and should be private. Since the Green's function library in
  * TRIQS uses this function, it is kept public (for now).
  *
  * @tparam ResultAlgebra Algebra of the resulting view/array.

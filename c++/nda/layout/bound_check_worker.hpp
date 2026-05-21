@@ -82,7 +82,7 @@ namespace nda {
    * @brief Check if the given indices/arguments are within the bounds of an array/view.
    *
    * @details It uses the shape and rank of the array/view to check if the given arguments are within bounds. If an
-   * error is detected, it throws a std::runtime_error with the error message.
+   * error is detected, it throws a `std::runtime_error` with the error message.
    *
    * @tparam Args Types of the arguments to be checked.
    * @param rank Rank of the array/view.
@@ -94,7 +94,7 @@ namespace nda {
     // initialize the bounds checker
     detail::bound_check_worker w{lengths};
 
-    // number of dimensions that are covered by an nda::ellipsis
+    // number of dimensions covered by an nda::ellipsis
     w.ellipsis_loss = rank - sizeof...(Args);
 
     // check the bounds on each argument/index

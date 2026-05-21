@@ -80,9 +80,9 @@ namespace nda::clef {
    *
    * Output:
    *
-   * @code{bash}
+   * ```
    * 36
-   * @endcode
+   * ```
    *
    * @tparam Expr Type of the expression.
    * @tparam D0 nda::clef::pair type.

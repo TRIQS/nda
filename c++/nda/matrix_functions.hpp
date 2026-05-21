@@ -137,9 +137,9 @@ namespace nda {
   /**
    * @brief Stack two 2-dimensional arrays/views vertically.
    *
-   * @details This is a more restricted implementation then nda::concatenate. It is only for 2D arrays/views.
+   * @details This is a more restricted implementation than nda::concatenate. It is only for 2D arrays/views.
    *
-   * Given a an array A of size `n x q` and an array B of size `p x q`, the function returns a new array C of size
+   * Given an array A of size `n x q` and an array B of size `p x q`, the function returns a new array C of size
    * `(n + p) x q` such that `C(range(0, n), range::all) == A` and `C(range(n, n + p), range::all) == B` is true.
    *
    * @tparam A nda::ArrayOfRank<2> type.
@@ -180,7 +180,7 @@ namespace nda {
   }
 
   /**
-   * @brief Check if a given matrix is diagonal, i.e. if it is square (see nda::is_matrix_square) and all the the
+   * @brief Check if a given matrix is diagonal, i.e. if it is square (see nda::is_matrix_square) and all the
    * off-diagonal elements are zero.
    *
    * @tparam A nda::Matrix type.

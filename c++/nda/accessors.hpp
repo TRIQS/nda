@@ -5,7 +5,7 @@
 
 /**
  * @file
- * @brief Defines accessors for nda::array objects (cf. std::default_accessor).
+ * @brief Defines accessors for nda::array objects (cf. `std::default_accessor`).
  */
 
 #pragma once

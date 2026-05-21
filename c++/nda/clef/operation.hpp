@@ -54,13 +54,13 @@ namespace nda::clef {
 
   namespace detail {
 
-    // Get the value from a std::reference_wrapper or simply forward the argument of any other type.
+    // Get the value from a `std::reference_wrapper` or simply forward the argument of any other type.
     template <typename U>
     FORCEINLINE U &&fget(U &&x) {
       return std::forward<U>(x);
     }
 
-    // Specialization of fget for std::reference_wrapper.
+    // Specialization of fget for `std::reference_wrapper`.
     template <typename U>
     FORCEINLINE decltype(auto) fget(std::reference_wrapper<U> x) {
       return x.get();
@@ -210,7 +210,7 @@ namespace nda::clef {
      * @tparam C Type of the condition.
      * @tparam A Type of the return type when the condition is true.
      * @tparam B Type of the return type when the condition is false.
-     * @param c Condition convertible to bool.
+     * @param c Condition convertible to `bool`.
      * @param a Return value when the condition is true.
      * @param b Return value when the condition is false (needs to be convertible to A).
      * @return Result of the ternary operation.
@@ -230,7 +230,7 @@ namespace nda::clef {
    * @param c Conditional expression.
    * @param a Return expression when the condition is true.
    * @param b Return expression when the condition is false.
-   * @return An nda::clef::expr object with the nda::clef::tags::ternary tag and the given
+   * @return An nda::clef::expr object with the nda::clef::tags::if_else tag and the given
    * operands forwarded as its child nodes.
    */
   template <typename C, typename A, typename B>

@@ -83,14 +83,14 @@ namespace nda {
   /**
    * @brief Lazy binary expression for nda::ArrayOrScalar types.
    *
-   * @details A lazy binary expression contains a two operands and a binary operation. It fulfills the nda::Array
+   * @details A lazy binary expression contains two operands and a binary operation. It fulfills the nda::Array
    * concept and can therefore be used in any other expression or function that expects an nda::Array type.
    *
    * The supported binary operations are addition ('+'), subtraction ('-'), multiplication ('*') and division ('/').
    *
-   * @tparam OP Char representing the unary operation.
-   * @param L nda::ArrayOrScalar type of left hand side.
-   * @param R nda::ArrayOrScalar type of right hand side.
+   * @tparam OP Char representing the binary operation.
+   * @param L nda::ArrayOrScalar type of left-hand side.
+   * @param R nda::ArrayOrScalar type of right-hand side.
    */
   template <char OP, ArrayOrScalar L, ArrayOrScalar R>
   struct expr {
@@ -495,7 +495,7 @@ namespace nda {
 
     // two matrices: M / M
     if constexpr (l_algebra == 'M') {
-      static_assert(r_algebra == 'M', "Error in nda::operator*: Can not divide a matrix by an array/vector");
+      static_assert(r_algebra == 'M', "Error in nda::operator/: Can not divide a matrix by an array/vector");
       return std::forward<L>(l) * linalg::inv(matrix<get_value_t<R>>{std::forward<R>(r)});
     }
   }

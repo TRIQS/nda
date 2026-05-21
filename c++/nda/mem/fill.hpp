@@ -33,10 +33,10 @@ namespace nda::mem {
   /**
    * @brief Fill a range of memory with a specified value.
    *
-   * @details The behaviour of the function depends on the address spaces:
+   * @details The behavior of the function depends on the address space:
    * - For `Host`, it simply calls `std::fill_n`.
-   * - For `Device` and `Unified`, it calls `cudaMemset` or `cudaMemset2D` to transfer each byte of the value to the
-   * destination memory.
+   * - For `Device` and `Unified`, it calls `cudaMemset` or `cudaMemset2D` to set each byte of the destination memory
+   * to the specified value.
    *
    * @tparam AdrSp nda::mem::AddressSpace of the destination.
    * @tparam T Value type.
@@ -89,9 +89,9 @@ namespace nda::mem {
   /**
    * @brief Fill a 2D memory region with a specified value.
    *
-   * @details The behaviour of the function depends on the address spaces:
+   * @details The behavior of the function depends on the address space:
    * - For `Host`, the function is not implemented.
-   * - For `Device` and `Unified`, it calls `cudaMemset2D` or `cudaMemcpy2D` to fill the 2D memory region with the 
+   * - For `Device` and `Unified`, it calls `cudaMemset2D` or `cudaMemcpy2D` to fill the 2D memory region with the
    * specified value.
    *
    * @tparam AdrSp nda::mem::AddressSpace of the destination.

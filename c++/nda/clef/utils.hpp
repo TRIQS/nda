@@ -22,7 +22,7 @@ namespace nda::clef {
 
   namespace detail {
 
-    // Helper variable to determine if an objects of type `T` should be forced to be copied into an expression tree.
+    // Helper variable to determine if an object of type `T` should be forced to be copied into an expression tree.
     template <typename T>
     constexpr bool force_copy_in_expr_impl = false;
 
@@ -125,11 +125,10 @@ namespace nda::clef {
   constexpr bool force_copy_in_expr = detail::force_copy_in_expr_impl<T>;
 
   /**
-   * @brief Type trait to determine how a type should be stored in an expression tree, i.e. either by reference or by
-   * value?
+   * @brief Type trait to determine whether a type should be stored in an expression tree by reference or by value.
    *
    * @details Rvalue references are copied/moved into the expression tree. Lvalue references are stored as a
-   * std::reference_wrapper, unless the compile-time value of nda::clef::force_copy_in_expr is true.
+   * `std::reference_wrapper`, unless the compile-time value of nda::clef::force_copy_in_expr is true.
    *
    * @tparam T Type to be stored.
    */

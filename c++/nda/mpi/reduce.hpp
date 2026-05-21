@@ -48,10 +48,10 @@ namespace nda {
    * array/view.
    * - On non-receiving ranks, the output array/view is ignored and left unchanged.
    *
-   * @note If the input/output arrays/views are contiguous with positive strides and if the value type is MPI
-   * compatible, the data is reduced using a single `MPI_Reduce` or `MPI_Allreduce` call. Otherwise, the data is reduced
-   * element-wise, which can have considerable performance implications. Consider copying the data into a contiguous
-   * array/view before reducing.
+   * @note If the input/output arrays/views are contiguous with positive strides and if the value type is
+   * MPI-compatible, the data is reduced using a single `MPI_Reduce` or `MPI_Allreduce` call. Otherwise, the data is
+   * reduced element-wise, which can have considerable performance implications. Consider copying the data into a
+   * contiguous array/view before reducing.
    *
    * @tparam A1 nda::basic_array or nda::basic_array_view type.
    * @tparam A2 nda::basic_array or nda::basic_array_view type.
@@ -109,7 +109,7 @@ namespace nda {
    *
    * See @ref ex6_p4 for an example.
    *
-   * @note If the input arrays/views are contiguous with positive strides and if the value type is MPI compatible, the
+   * @note If the input arrays/views are contiguous with positive strides and if the value type is MPI-compatible, the
    * data is reduced using a single `MPI_Reduce` or `MPI_Allreduce` call. Otherwise, the data is reduced element-wise,
    * which can have considerable performance implications. Consider copying the data into a contiguous array/view before
    * reducing.

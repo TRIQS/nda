@@ -16,9 +16,9 @@
 namespace nda {
 
   /**
-  * @addtogroup mem_pols
-  * @{
-  */
+   * @addtogroup mem_pols
+   * @{
+   */
 
 #ifdef NDA_TEST_DEFAULT_ALLOC_MBUCKET // for testing only: use multi_bucket allocator
   template <typename Allocator =

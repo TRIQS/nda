@@ -44,8 +44,8 @@
 namespace std {
 
   /**
-   * @brief std::swap is deleted for nda::basic_array_view.
-   * @warning The std::swap is WRONG for an nda::basic_array_view because of its copy/move semantics. Use nda::swap
+   * @brief `std::swap` is deleted for nda::basic_array_view.
+   * @warning The `std::swap` is WRONG for an nda::basic_array_view because of its copy/move semantics. Use nda::swap
    * instead (the correct one, found by ADL).
    */
   template <typename V1, int R1, typename LP1, char A1, typename AP1, typename OP1, typename V2, int R2, typename LP2, char A2, typename AP2,
@@ -236,20 +236,20 @@ namespace nda {
     basic_array_view(layout_t const &idxm, ValueType *p) noexcept : lay(idxm), sto{p} {}
 
     /**
-     * @brief Construct a 1-dimensional view of a std::array.
+     * @brief Construct a 1-dimensional view of a `std::array`.
      *
-     * @tparam N Size of the std::array.
-     * @param a Reference to a std::array object.
+     * @tparam N Size of the `std::array`.
+     * @param a Reference to a `std::array` object.
      */
     template <size_t N>
       requires(Rank == 1)
     explicit basic_array_view(std::array<ValueType, N> &a) noexcept : basic_array_view{{long(N)}, a.data()} {}
 
     /**
-     * @brief Construct a 1-dimensional view of a std::array.
+     * @brief Construct a 1-dimensional view of a `std::array`.
      *
-     * @tparam N Size of the std::array.
-     * @param a Const reference to a std::array object.
+     * @tparam N Size of the `std::array`.
+     * @param a Const reference to a `std::array` object.
      */
     template <size_t N>
       requires(Rank == 1 and std::is_const_v<ValueType>)

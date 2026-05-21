@@ -270,7 +270,7 @@ namespace nda::mem {
      * value type.
      *
      * @details The data is initialized as follows:
-     * - If `T` is std::complex and nda::mem::init_dcmplx is true, the data is initialized to zero.
+     * - If `T` is `std::complex` and nda::mem::init_dcmplx is true, the data is initialized to zero.
      * - If `T` is not trivial and not complex, the data is default constructed by placement new operator calls.
      * - Otherwise, the data is not initialized.
      *
@@ -658,7 +658,7 @@ namespace nda::mem {
      * @brief Construct a handle for the data of a given size and initialize it depending on the value type.
      *
      * @details The data is initialized as follows:
-     * - If `T` is std::complex and nda::mem::init_dcmplx is true, the data is initialized to zero.
+     * - If `T` is `std::complex` and nda::mem::init_dcmplx is true, the data is initialized to zero.
      * - If `T` is not trivial and not complex, the data is default constructed by placement new operator calls.
      * - Otherwise, the data is not initialized.
      *
@@ -879,7 +879,7 @@ namespace nda::mem {
     handle_borrowed(T *ptr) noexcept : _data(ptr) {}
 
     /**
-     * @brief Construct a borrowed handle from a another handle.
+     * @brief Construct a borrowed handle from another handle.
      *
      * @tparam H nda::mem::Handle type.
      * @param h Other handle.

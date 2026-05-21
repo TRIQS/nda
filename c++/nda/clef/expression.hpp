@@ -55,8 +55,8 @@ namespace nda::clef {
    * @brief Single node of the expression tree.
    *
    * @details An expression node contains a tag that determines the type of expression and a tuple of child nodes which
-   * are usually either other expression nodes, nda::clef::placeholder objects or specific values/objects like an int or
-   * a double.
+   * are usually either other expression nodes, nda::clef::placeholder objects or specific values/objects like an `int`
+   * or a `double`.
    *
    * @tparam Tag Tag of the expression.
    * @tparam Ts Types of the child nodes.

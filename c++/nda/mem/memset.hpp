@@ -25,7 +25,7 @@ namespace nda::mem {
   /**
    * @brief Call the correct `memset` function based on the given address space.
    *
-   * @details It makes the following function calls depending on the address spaces:
+   * @details It calls one of the following functions depending on the address space:
    * - `std::memset` for `Host`.
    * - `cudaMemset` for `Device` and `Unified`.
    *
@@ -54,12 +54,12 @@ namespace nda::mem {
    * the end of each row.
    *
    * If the address space is `Host`, it simulates the behavior of CUDA's `cudaMemset2D` function by making multiple
-   * calls to std::memset.
+   * calls to `std::memset`.
    *
    * @tparam AdrSp nda::mem::AddressSpace.
    * @param ptr Pointer to the memory to be set.
    * @param pitch Pitch in bytes of the memory (unused if height is 1).
-   * @param value Value to set for each byte of specified memory
+   * @param value Value to set for each byte of specified memory.
    * @param width Width of matrix to set (columns in bytes).
    * @param height Height of matrix to set (rows).
    */

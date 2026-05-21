@@ -32,13 +32,13 @@ namespace nda::clef {
   FORCEINLINE void clef_auto_assign_subscript(T, RHS) = delete;
 
   /**
-   * @brief Overload of `clef_auto_assign_subscript` function for std::reference_wrapper objects.
+   * @brief Overload of `%clef_auto_assign_subscript` function for `std::reference_wrapper` objects.
    *
-   * @details Simply calls the `clef_auto_assign_subscript` for the object contained in the wrapper.
+   * @details Simply calls `%clef_auto_assign_subscript` on the object contained in the wrapper.
    *
-   * @tparam T Type of the object stored in the std::reference_wrapper.
+   * @tparam T Type of the object stored in the `std::reference_wrapper`.
    * @tparam RHS Type of the right-hand side.
-   * @param wrapper std::reference_wrapper object.
+   * @param wrapper `std::reference_wrapper` object.
    * @param rhs Right-hand side object.
    */
   template <typename T, typename RHS>
@@ -47,9 +47,9 @@ namespace nda::clef {
   }
 
   /**
-   * @brief Overload of `clef_auto_assign_subscript` function for terminal expressions.
+   * @brief Overload of `%clef_auto_assign_subscript` function for terminal expressions.
    *
-   * @details Simply calls the `clef_auto_assign_subscript` for the child node of the expression.
+   * @details Simply calls `%clef_auto_assign_subscript` on the child node of the expression.
    *
    * @tparam T Type of the expression's child node.
    * @tparam RHS Type of the right-hand side.
@@ -62,9 +62,9 @@ namespace nda::clef {
   }
 
   /**
-   * @brief Overload of `clef_auto_assign_subscript` function for generic expressions.
+   * @brief Overload of `%clef_auto_assign_subscript` function for generic expressions.
    *
-   * @details It calls the specialized `operator<<` function for the given expression and right-hand side.
+   * @details It calls the specialized `operator<<` for the given expression and right-hand side.
    *
    * @tparam Tag Tag of the expression.
    * @tparam Childs Types of the child nodes.
@@ -86,7 +86,7 @@ namespace nda::clef {
   /**
    * @brief Assign values to the underlying object of a lazy subscript expression.
    *
-   * @details This calls the `clef_auto_assign_subscript` overload for the underlying object of the given expression
+   * @details This calls the `%clef_auto_assign_subscript` overload for the underlying object of the given expression
    * using ADL. It has to be implemented for all supported types.
    *
    * @tparam T Type of the subscripted object in the subscript expression.

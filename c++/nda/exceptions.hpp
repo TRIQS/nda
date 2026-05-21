@@ -30,7 +30,7 @@ namespace nda {
    * @ingroup utils_std
    * @brief Runtime error class used throughout the nda library.
    *
-   * @details It inherits from std::exception and overloads the `operator<<` for easy error message accumulation.
+   * @details It inherits from `std::exception` and overloads the `operator<<` for easy error message accumulation.
    */
   class runtime_error : public std::exception {
     // Accumulator for the error message.
@@ -77,7 +77,7 @@ namespace nda {
     }
 
     /**
-     * @brief Override the virtual function `what` from std::exception to retrieve the accumulated error message.
+     * @brief Override the virtual function `what` from `std::exception` to retrieve the accumulated error message.
      * @return Error message.
      */
     const char *what() const noexcept override {

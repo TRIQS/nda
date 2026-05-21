@@ -30,7 +30,7 @@ namespace nda::clef {
   /// @endcond
 
   /**
-   * @brief A placeholder is an empty struct, labelled by an int.
+   * @brief A placeholder is an empty struct, labelled by an `int`.
    *
    * @details It is used in lazy expressions. For example:
    *
@@ -111,7 +111,7 @@ namespace nda::clef {
     /// Integer label of the placeholder.
     static constexpr int p = N;
 
-    /// Type of the value after applying std::decay.
+    /// Type of the value after applying `std::decay`.
     using value_type = std::decay_t<T>;
   };
 

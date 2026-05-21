@@ -5,8 +5,7 @@
 
 /**
  * @file
- * @brief Provides utilities to work with permutations and to compactly encode/decode
- * std::array objects.
+ * @brief Provides utilities to work with permutations and to compactly encode/decode `std::array` objects.
  */
 
 #pragma once
@@ -32,8 +31,8 @@ namespace nda {
    * @brief Decode a `uint64_t` into a `std::array<int, N>`.
    *
    * @details The 64-bit code is split into 8-bit chunks, and each chunk is then decoded into a value in the range
-   * [0, 255]. The 8 least significant bits are decoded into the first element, the next 8-bits into second element, and
-   * so on.
+   * [0, 255]. The 8 least significant bits are decoded into the first element, the next 8 bits into the second element,
+   * and so on.
    *
    * @tparam N Size of the array.
    * @param binary_representation 64-bit code.
@@ -85,7 +84,7 @@ namespace nda::permutations {
    *
    * @tparam Int Integral type.
    * @tparam N Degree of the permutation.
-   * @param p std:::array to check.
+   * @param p `std::array` to check.
    * @return True if the array is a valid permutation, false otherwise.
    */
   template <std::integral Int, size_t N>
@@ -139,7 +138,7 @@ namespace nda::permutations {
   }
 
   /**
-   * @brief Apply the inverse of a permutation to a std::array.
+   * @brief Apply the inverse of a permutation to a `std::array`.
    *
    * @details See also nda::permutations::apply and nda::permutations::inverse.
    *
@@ -147,7 +146,7 @@ namespace nda::permutations {
    * @tparam Int Integral type.
    * @tparam N Size/Degree of the array/permutation.
    * @param p Permutation to invert and apply.
-   * @param a std::array to apply the inverse permutation to.
+   * @param a `std::array` to apply the inverse permutation to.
    * @return Result of applying the inverse permutation to the array.
    */
   template <typename T, std::integral Int, size_t N>
@@ -159,7 +158,7 @@ namespace nda::permutations {
   }
 
   /**
-   * @brief Apply a permutation to a std::array.
+   * @brief Apply a permutation to a `std::array`.
    *
    * @details The application of a permutation `p` to an array `a` results in a new array `b` such that `b[i] =
    * a[p[i]]`.
@@ -168,7 +167,7 @@ namespace nda::permutations {
    * @tparam Int Integral type.
    * @tparam N Size/Degree of the array/permutation.
    * @param p Permutation to apply.
-   * @param a std::array to apply the permutation to.
+   * @param a `std::array` to apply the permutation to.
    * @return Result of applying the permutation to the array.
    */
   template <typename T, std::integral Int, size_t N>
@@ -227,7 +226,7 @@ namespace nda::permutations {
    * @brief Perform a forward (partial) cyclic permutation of the identity `p` times.
    *
    * @details The permutation is partial if `pos >= 0 && pos < N`. In this case, only the first `pos` elements are
-   * permuted, while the rest is left unchanged w.r.t the identity.
+   * permuted, while the rest is left unchanged w.r.t. the identity.
    *
    * @tparam N Degree of the permutation.
    * @param p Number of times to perform the cyclic permutation.

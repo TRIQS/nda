@@ -130,13 +130,13 @@
  * @brief MPI support for nda::basic_array and nda::basic_array_view objects.
  *
  * @details **nda** uses the <a href="https://github.com/TRIQS/mpi">TRIQS/mpi</a> library to provide functions to
- * broadcast, gather, reduce and scatter arrays and views over MPI processes.
+ * broadcast, gather, reduce, and scatter arrays and views over MPI processes.
  *
  * The following example demonstrates some of these features:
  *
  * @include doc_mpi_overview.cpp
  *
- * Running with 4 cores outputs:
+ * Running with 4 processes outputs:
  *
  * ```
  *
@@ -214,7 +214,7 @@
  * @brief Generic lazy expressions and tools to manipulate them.
  *
  * @details Lazy expressions are called lazy because they are not evaluated right away. Instead, they usually return
- * some proxy, i.e. lazy, object which can be used to create new lazy expressions and which can be evaluated whenever
+ * a proxy (i.e., lazy) object that can be used to create new lazy expressions and that can be evaluated whenever
  * the result is actually needed.
  */
 
@@ -222,10 +222,10 @@
  * @defgroup clef_autoassign Automatic assignment
  * @ingroup clef
  * @brief Automatic assignment uses lazy expressions and placeholders to simplify assigning values to multi-dimensional
- * arrays/views and other container like objects.
+ * arrays/views and other container-like objects.
  *
- * @details The following example shows how to fill a 2-dimensional nda::array of size 3 with the values 0, 1, 2, 10, 11
- * and 12:
+ * @details The following example shows how to fill a 2-dimensional nda::array of shape (2, 3) with the values 0, 1, 2,
+ * 10, 11 and 12:
  *
  * @include doc_clef_autoassign_array.cpp
  *
@@ -237,9 +237,9 @@
  *  [10,11,12]]
  * ```
  *
- * @note The `operator<<` in line 3 calls the `clef_auto_assign` overload for nda::array objects.
+ * @note The `operator<<` in line 8 calls the nda::clef_auto_assign(A &&, F &&) overload for nda::array objects.
  *
- * We can also use auto assignment to fill a std::vector of size 3 with the values 10, 20 and 30:
+ * We can also use auto assignment to fill a `std::vector` of size 3 with the values 10, 20 and 30:
  *
  * @include doc_clef_autoassign_vector.cpp
  *
@@ -249,20 +249,20 @@
  * 10 20 30
  * ```
  *
- * @note The `operator<<` in line 3 calls the `clef_auto_assign_subscript` overload for std::vector objects.
+ * @note The `operator<<` in line 8 calls the nda::clef::clef_auto_assign_subscript(std::vector<T> &, F) overload for `std::vector` objects.
  */
 
 /**
  * @defgroup clef_utils CLEF utilities
  * @ingroup clef
- * @brief Various internally used type traits and overloads of the `operator<<` to output lazy objects to a
- * std::ostream.
+ * @brief Various internally used type traits and overloads of the `operator<<` to output lazy objects to a 
+ * `std::ostream`.
  */
 
 /**
  * @defgroup clef_eval Evaluation of lazy objects
  * @ingroup clef
- * @brief A generic nda::clef::eval function which forwards the evaluation to specialized evaluators.
+ * @brief A generic nda::clef::eval function that forwards the evaluation to specialized evaluators.
  */
 
 /**
@@ -276,8 +276,8 @@
  * @ingroup clef
  * @brief Lazy objects that can be used in lazy expressions.
  *
- * @details When a lazy expression is evaluated, one usually assigns a value to the placeholders which are then plugged
- * into the expression.
+ * @details When a lazy expression is evaluated, one usually assigns a value to the placeholders, which are then
+ * substituted into the expression.
  */
 
 /**
@@ -315,10 +315,10 @@
  * @brief Different memory layouts and tools to access specific data in a block of memory.
  *
  * @details Under the hood, a multi-dimensional array (an nda::basic_array) or view (an nda::basic_array_view) is
- * just some "1-dimensional" block of (contiguous) memory. It only gets its multi-dimensional character because we
- * choose to interpret the memory in a certain way. By interpreting the same block of memory in another way, we get
- * a new but possibly quite different array/view. To be consistent, it is therefore important to specify exactly
- * how the elements of an array/view are laid out in memory.
+ * just a 1-dimensional block of contiguous memory. It only gets its multi-dimensional character because we choose to 
+ * interpret the memory in a certain way. By interpreting the same block of memory in another way, we get a new, 
+ * possibly very different array/view. To be consistent, it is therefore important to specify exactly how the elements 
+ * of an array/view are laid out in memory.
  *
  * Once the layout has been specified, we need tools that allow us to access single elements or more complicated
  * parts of an array/view (slices). That means we need to map multi-dimensional indices to a linear/flat index and
@@ -334,15 +334,15 @@
 /**
  * @defgroup layout_utils Layout utilities
  * @ingroup layout
- * @brief Enums, type traits, bounds checking, looping over multi-dimensional indices, structs that mimic Python's `:`
- * and `...` syntax and more.
+ * @brief Enums, type traits, bounds checking, multi-dimensional index iteration, and helpers that mimic Python's `:` 
+ * and `...` slicing syntax.
  */
 
 /**
  * @defgroup layout_idx Multi-dimensional indexing
  * @ingroup layout
- * @brief Map multi-dimensional indices to a linear/flat index and vice versa and calculate the resulting memory layout
- * when taking slices of already existing arrays/views.
+ * @brief Mapping between multi-dimensional and linear/flat indices, and calculation of the resulting memory layout
+ * when taking slices of existing arrays/views.
  */
 
 /**
@@ -368,20 +368,19 @@
 /**
  * @defgroup mem_handles Handles
  * @ingroup memory
- * @brief Memory handles that manage a specific block of memory.
+ * @brief Handle types that own or reference a block of memory.
  */
 
 /**
  * @defgroup mem_pols Memory policies
  * @ingroup memory
- * @brief Various memory managing policies that can be used with nda::basic_array and nda::basic_array_view.
+ * @brief Memory management policies that can be used with nda::basic_array and nda::basic_array_view.
  */
 
 /**
  * @defgroup mem_utils Memory utilities
  * @ingroup memory
- * @brief Generic versions (w.r.t. the different address spaces) of memory managing functions as well as other
- * tools related to memory management.
+ * @brief Generic memory-management functions that abstract over different address spaces, plus related utilities.
  */
 
 /**
@@ -412,11 +411,11 @@
  * @brief Some convenient extensions to the standard library.
  *
  * @details The following extensions are provided:
- * - Arithmetic operations for std::complex and other scalar types.
- * - Some convenient functions for std::array objects like element-wise arithmetic operations, writing to std::ostream
- * and adding or removing elements.
+ * - Arithmetic operations for `std::complex` and other scalar types.
+ * - Some convenient functions for `std::array` objects like element-wise arithmetic operations, writing to
+ * `std::ostream`, and adding or removing elements.
  * - Missing concepts for older compiler versions.
- * - A custom exception class (nda::runtime_error) which inherits from std::runtime_error.
+ * - A custom exception class (nda::runtime_error) that inherits from `std::runtime_error`.
  */
 
 /**

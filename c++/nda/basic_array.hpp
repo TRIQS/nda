@@ -51,7 +51,7 @@ namespace nda {
    * with the following parameters:
    *
    * - `ValueType`: This is the type of the elements stored in the array. Most of the time, this will be a scalar type
-   * like an int, double or std::complex<double>, but it can also be a more complex type like a custom class or a
+   * like an `int`, `double` or `std::complex<double>`, but it can also be a more complex type like a custom class or a
    * another nda::basic_array.
    * - `Rank`: Integer specifying the number of dimensions of the array. This is a compile-time constant.
    * - `LayoutPolicy`: The layout policy specifies how the array views the memory it uses and how it accesses its
@@ -229,7 +229,7 @@ namespace nda {
     /**
      * @brief Construct an array with the given shape.
      *
-     * @details It depends on the value type and the container policy whether the data is initialized with zeros or not.
+     * @details Whether the data is initialized with zeros depends on the value type and the container policy.
      *
      * @tparam Int Integer type.
      * @param shape Shape of the array.
@@ -242,7 +242,7 @@ namespace nda {
     /**
      * @brief Construct an array with the given memory layout.
      *
-     * @details It depends on the value type and the container policy whether the data is initialized with zeros or not.
+     * @details Whether the data is initialized with zeros depends on the value type and the container policy.
      *
      * @param layout Memory layout.
      */
@@ -430,7 +430,7 @@ namespace nda {
     /**
      * @brief Make a random-initialized array with the given shape.
      *
-     * @details The random values are take from a uniform distribution over [0, 1). For a complex array, both real and
+     * @details The random values are taken from a uniform distribution over [0, 1). For a complex array, both real and
      * imaginary parts are initialized with random values.
      *
      * @tparam Int Integer type.
@@ -457,7 +457,7 @@ namespace nda {
     /**
      * @brief Make a random-initialized array with the given dimensions.
      *
-     * @details The random values are take from a uniform distribution over [0, 1). For a complex array, both real and
+     * @details The random values are taken from a uniform distribution over [0, 1). For a complex array, both real and
      * imaginary parts are initialized with random values.
      *
      * @tparam Ints Integer types.

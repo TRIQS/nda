@@ -26,7 +26,7 @@ namespace nda::mem {
   /**
    * @brief Call the correct `memcpy` function based on the given address spaces.
    *
-   * @details It makes the following function calls depending on the address spaces:
+   * @details It calls one of the following functions depending on the address spaces:
    * - `std::memcpy` if both address spaces are `Host`.
    * - `cudaMemcpy` for all other combinations.
    *
@@ -58,7 +58,7 @@ namespace nda::mem {
    * `width` must not exceed either `dpitch` or `spitch`.
    *
    * If both address spaces are `Host`, it simulates the behavior of CUDA's `cudaMemcpy2D` function by making multiple
-   * calls to std::memcpy.
+   * calls to `std::memcpy`.
    *
    * @tparam DestAdrSp nda::mem::AddressSpace of the destination.
    * @tparam SrcAdrSp nda::mem::AddressSpace of the source.

@@ -57,7 +57,7 @@ needed.
 - @ref clef_autoassign uses lazy expressions and placeholders to simplify assigning values to multi-dimensional
 arrays/views and other container like objects.
 - @ref clef_utils contain various internally used type traits as well as overloads of the `operator<<` to output lazy
-objects to a std::ostream.
+objects to a `std::ostream`.
 - @ref clef_eval can be done by calling the generic nda::clef::eval function which forwards the evaluation to
 specialized evaluators.
 - @ref clef_expr provide the classes that represent these lazy objects and the tools to create them.

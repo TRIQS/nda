@@ -75,7 +75,7 @@ namespace nda::clef {
 
     public:
     /**
-     * @brief Constexpr variable that is true if the there is no nda::clef::pair containing an nda::clef::placeholder
+     * @brief Constexpr variable that is true if there is no nda::clef::pair containing an nda::clef::placeholder
      * with label `N`.
      */
     static constexpr bool is_lazy = (N_position == -1);
@@ -104,9 +104,9 @@ namespace nda::clef {
   };
 
   /**
-   * @brief Specialization of nda::clef::evaluator for std::reference_wrapper types.
+   * @brief Specialization of nda::clef::evaluator for `std::reference_wrapper` types.
    *
-   * @tparam T Value type of the std::reference_wrapper.
+   * @tparam T Value type of the `std::reference_wrapper`.
    * @tparam Pairs Types of the nda::clef::pair objects.
    */
   template <typename T, typename... Pairs>
@@ -115,9 +115,10 @@ namespace nda::clef {
     static constexpr bool is_lazy = false;
 
     /**
-     * @brief Evaluate the std::reference_wrapper by redirecting the evaluation to the object contained in the wrapper.
+     * @brief Evaluate the `std::reference_wrapper` by redirecting the evaluation to the object contained in the 
+     * wrapper.
      *
-     * @param wrapper std::reference_wrapper object.
+     * @param wrapper `std::reference_wrapper` object.
      * @param pairs Pack of nda::clef::pair objects.
      * @return The result of evaluating the object contained in the wrapper together with the given pairs.
      */
@@ -149,8 +150,8 @@ namespace nda::clef {
     /**
      * @brief Evaluate the given expression by applying the given nda::clef::pair objects.
      *
-     * @note Depending on the given expression as well as the the given pairs, the result of the evaluation might be
-     * again a lazy expression.
+     * @note Depending on the given expression and the given pairs, the result of the evaluation might be again a lazy 
+     * expression.
      *
      * @param ex Expression to be evaluated.
      * @param pairs nda::clef::pair objects to be applied to the expression.

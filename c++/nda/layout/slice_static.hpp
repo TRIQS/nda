@@ -219,7 +219,7 @@ namespace nda::slice_static {
     FORCEINLINE long get_stride(range const &rg, long original_str) { return original_str * rg.step(); }
 
     // Get the stride of the slice for a single dimension if the argument is a range::all_t or covered by an
-    // nda::ellipsis..
+    // nda::ellipsis.
     FORCEINLINE long get_stride(range::all_t, long original_str) { return original_str; }
 
     // Helper function to determine the resulting index map when taking a slice of a given index map.
