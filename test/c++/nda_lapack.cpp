@@ -263,14 +263,14 @@ TEST(NDA, LAPACKGetrfWithRectangularMatrix) {
   auto ipiv = array<int, 1>(2);
 
   // get the matrices P, L, U from getrf output
-  auto get_plu = [](auto const &M, auto const &ipiv, int m, int n) {
+  auto get_plu = [](auto const &M, auto const &ip, int m, int n) {
     using layout_t   = std::conditional_t<blas::has_C_layout<decltype(M)>, C_layout, F_layout>;
     auto P           = matrix<double, layout_t>::zeros(m, m);
     auto L           = matrix<double, layout_t>::zeros(m, m);
     auto U           = matrix<double, layout_t>::zeros(m, n);
     nda::diagonal(P) = 1;
     nda::diagonal(L) = 1;
-    for (int i = 0; i < ipiv.size(); ++i) deep_swap(P(i, nda::range::all), P(ipiv(i) - 1, nda::range::all));
+    for (int i = 0; i < ip.size(); ++i) deep_swap(P(i, nda::range::all), P(ip(i) - 1, nda::range::all));
     for (int i = 0; i < m; ++i) {
       L(i, nda::range(i))    = (blas::has_C_layout<decltype(M)> ? M(nda::range(i), i) : M(i, nda::range(i)));
       U(i, nda::range(i, n)) = (blas::has_C_layout<decltype(M)> ? M(nda::range(i, n), i) : M(i, nda::range(i, n)));

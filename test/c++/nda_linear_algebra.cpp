@@ -748,7 +748,7 @@ void verify_lu_structure(auto const &A, auto const &sigma, auto const &L, auto c
 
   // verify L is lower triangular/trapezoidal with unit diagonal
   for (int i = 0; i < m; ++i) {
-    if (i < k) EXPECT_COMPLEX_NEAR(L(i, i), 1.0);
+    if (i < k) { EXPECT_COMPLEX_NEAR(L(i, i), 1.0); }
     for (int j = i + 1; j < k; ++j) EXPECT_COMPLEX_NEAR(L(i, j), 0.0);
   }
 
@@ -758,7 +758,7 @@ void verify_lu_structure(auto const &A, auto const &sigma, auto const &L, auto c
   }
 
   // in case of rank deficiency, check that at least one diagonal element of U is close to zero
-  if (rank_deficient and m >= 2 and n >= 2) EXPECT_NEAR(nda::min_element(nda::abs(nda::diagonal(U))), 0.0, 1e-14);
+  if (rank_deficient and m >= 2 and n >= 2) { EXPECT_NEAR(nda::min_element(nda::abs(nda::diagonal(U))), 0.0, 1e-14); }
 }
 
 // Test LU decompositions.
