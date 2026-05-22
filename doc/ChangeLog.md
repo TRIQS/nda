@@ -1,5 +1,106 @@
 @page changelog Changelog
 
+## Version 2.0.0
+
+NDA Version 2.0.0 is a release that
+* Significantly expands the `nda::linalg` API with eigenvalue, QR, LU, SVD and linear-solve routines
+* Adds new LAPACK and BLAS wrappers (`geev`, `syev`/`heev`, `sygv`/`hegv`, `gerc`)
+* Makes HDF5, MPI and OpenMP optional build-time dependencies
+* Introduces deep partial evaluation for CLEF expressions
+* Adds a Hadamard product for arrays and `std::vector`
+* Migrates the documentation pipeline fully to Doxygen and ships extensive Doxygen-rendered C++ docs with worked, compiled examples
+* Moves the c2py converters into `nda/c2py` and fixes several Python ↔ nda conversion edge cases
+* Fixes several library issues
+
+We thank all contributors: Marco Barbone, Thomas Hahn, Alexander Hampel, Sergei Iskakov, Jason Kaye, Dominik Kiese, Harrison LaBollita, Henri Menke, Miguel Morales, Olivier Parcollet, Dylan Simon, Nils Wentzell
+
+Find below an itemized list of changes in this release.
+
+### General
+* Add std::initializer_list overload for nda::diag
+* Move c2py converters + additional files to nda/c2py
+* Add `is_expression` trait for `expr`, `expr_unary` and `expr_call` types
+* Remove nda++ compiler wrapper
+* Add a function to sum over axes of an nda::Array and treat the empty-axis edge case
+* Change `static_extents` encoding from 4-bit to 8-bit per extent
+* Add deep partial evaluation for CLEF expressions (#93)
+* Move CLEF lazy function evaluators for `det`/`inv` into the proper namespace
+* Default to `double` value type in factory functions nda::eye, nda::zeros, nda::ones
+* Fix CTAD deduction guide to preserve address space for array expressions
+* Add compile-time check for device array assignment compatibility
+* Change `get_first_element` to not add constness to its argument; in array cross-construction invoke explicit `ValueType` conversion
+* Add a Hadamard product implementation for arrays and `std::vector` (#79)
+* Generalize nda::sum and nda::product to allow arrays of arrays
+* Add nda::reciprocal for elementwise `1.0/x`
+* Add `std::initializer_list` overload for nda::diag and allow temporaries in nda::diagonal
+* Add nda::AnyOf concept to nda/concepts.hpp
+* Fix nda::CallableWithLongs concept for gcc13/14
+* Redefine `is_contiguous`/`is_strided_1d` and introduce `has_positive_strides` in nda::idx_map
+* Fix bug in assignment of a contiguous range to a view and disallow assignment to const arrays/views
+* Fix ambiguous-assignment-operator issue, fix issues with 1D strided views with negative strides, and add tests
+* Fix issue with nda::reshape/nda::flatten for arbitrary layouts and change the default shape/strides of nda::idx_map
+* Add device implementations for `fill`, `fill_n`, `fill2D`, `fill_with_scalar`, `assign_from_scalar` and make them C++20-compatible
+* Make mapped functions work with nda::Array as well as nda::Scalar objects
+* Add empty braces to the `EXPECTS`, `ASSERT` and `ENSURES` macros
+* Update the h5 interface to match changes in the h5 library and simplify nda/h5.hpp
+* Update the MPI routines, move C-style MPI routines into the public namespace, add mpi/utils.hpp and extensive tests
+* Make HDF5, MPI and OpenMP optional build-time dependencies (#94)
+* Bring back the `bad_alloc` test and fix UBSAN/MSAN positives in factories, `basic_array_and_view`, `gemm_generic`/`gemv_generic`
+* Remove unused `layout/rect_str.hpp` and clean up includes in basic_array.hpp and basic_array_view.hpp
+* Small improvements to random array generators
+* Update Apache copyright headers to a minimal form for all files; move copyright notice into a separate `COPYRIGHT` file; default copyright to the Simons Foundation
+* Fix issue in nda::sym_grp MPI parallelization after adding optional MPI support
+
+### blas/lapack
+* Add nda::linalg::eig, nda::linalg::eig_in_place, nda::linalg::eigvals, nda::linalg::eigvals_in_place backed by a new nda::lapack::geev wrapper
+* Add nda::linalg::eigh, nda::linalg::eigvalsh, including an overload for the generalized eigenvalue problem, backed by new nda::lapack::syev,nda::linalg::heev, nda::linalg::sygv and nda::linalg::hegv wrappers
+* Add nda::linalg::qr, nda::linalg::qr_in_place, nda::linalg::lu, nda::linalg::lu_in_place, nda::linalg::solve, nda::linalg::solve_in_place, nda::linalg::svd, and nda::linalg::svd_in_place
+* Add an outer-product function to `nda::linalg`; move `dot_generic` from `linalg::detail` into `nda::linalg` with a docstring
+* Add `blas/gerc.hpp` and improve nda::blas::ger and nda::blas::gerc test clarity and coverage
+* Split `linalg/det_and_inverse.hpp` into linalg/det.hpp and linalg/inv.hpp; move nda::is_matrix_square and nda::is_matrix_diagonal to matrix_functions.hpp; move small-size `inv_in_place` optimizations to the `detail` namespace
+* Relax the `getrf` check in `linalg::det_in_place` and fix the nda::lapack::gelss path for underdetermined systems
+* Fix segfaults in cuBLAS calls; add device-implementation check in lapack/gesvd.hpp; add a test for linalg routines on the device
+* Generalize `get_ld`/`get_ncols` in blas/tools.hpp, simplify `blas::get_op` to deduce flags from the nda::Matrix type, and add `blas::get_array`
+* Make function-argument names consistent (lowercase) across the BLAS, LAPACK, cuBLAS and cuSOLVER interfaces
+* Fix `gemm_vbatch` signature for fallback functions; fix lowercase/uppercase mismatch in FORTRAN prototypes; fix Intel vs GNU ABI when building against MKL
+
+### cmake
+* Downgrade required C++ standard from 23 to 20
+* Directly use the imported targets provided for HDF5
+* Remove `PythonSupport` requirement for building docs
+
+### jenkins
+* Synchronize Jenkinsfile with app4triqs
+* Fix file issue in Jenkins Dockerfile creation and fix the environment setting for osx builds
+
+### ghactions
+* Use Ninja for parallel builds; modernize and simplify `build.yml`
+* Synchronize with app4triqs/notriqs branch and always build against the respective TRIQS branch
+* Bump OSX and gcc to 15; update runner images and compiler version
+* Make sure `SDKROOT` is set in the OSX environment; link against brew's `libomp` and `libc++` for macos+clang
+* Use full `BUILD_CONFIG` for unique ccache keys and avoid cache-key collisions across retries
+* Update the Ubuntu package list to use OpenBLAS over liblapack
+* Remove the custom Doxygen build and build docs on macos
+* Generate and deploy test-coverage information
+
+### doc
+* Switch the documentation pipeline fully to Doxygen and update the Doxyfile to v1.16.1
+* Add worked code examples to the doc folder, ensure they compile in CI
+* Add an FI support notice to `README.md`
+* Remove clang-specific setting from `Doxyfile.in`
+
+### python support
+* Add c2py converters and additional files into `nda/c2py`
+* Remove PythonSupport requirement for building docs
+* Remove any pybind11 references
+
+### docker
+* Update the intel image in `Dockerfile.ubuntu-intel`
+* Update `Dockerfile.msan` to the latest llvm and library versions
+* Synchronize Dockerfiles with triqs
+* Rename `Dockerfile.build` to `Dockerfile` for consistency with triqs apps
+
+
 ## Version 1.3.0
 
 NDA Version 1.3.0 is a release that
