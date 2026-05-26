@@ -126,7 +126,7 @@ namespace nda {
   }
 
   /**
-   * @brief Make a 1-dimensional integer array and initialize it with values of a given `nda::range`s with a step size
+   * @brief Make a 1-dimensional integer array and initialize it with values of a given `nda::range` with a step size
    * of 1 and a starting value of 0.
    *
    * @tparam Int Integer type/Value type of the created array.

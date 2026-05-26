@@ -17,7 +17,6 @@ We thank all contributors: Marco Barbone, Thomas Hahn, Alexander Hampel, Sergei 
 Find below an itemized list of changes in this release.
 
 ### General
-* Add std::initializer_list overload for nda::diag
 * Move c2py converters + additional files to nda/c2py
 * Add `is_expression` trait for `expr`, `expr_unary` and `expr_call` types
 * Remove nda++ compiler wrapper
@@ -53,10 +52,10 @@ Find below an itemized list of changes in this release.
 
 ### blas/lapack
 * Add nda::linalg::eig, nda::linalg::eig_in_place, nda::linalg::eigvals, nda::linalg::eigvals_in_place backed by a new nda::lapack::geev wrapper
-* Add nda::linalg::eigh, nda::linalg::eigvalsh, including an overload for the generalized eigenvalue problem, backed by new nda::lapack::syev,nda::linalg::heev, nda::linalg::sygv and nda::linalg::hegv wrappers
+* Add nda::linalg::eigh, nda::linalg::eigvalsh, including an overload for the generalized eigenvalue problem, backed by new nda::lapack::syev, nda::lapack::heev, nda::lapack::sygv and nda::lapack::hegv wrappers
 * Add nda::linalg::qr, nda::linalg::qr_in_place, nda::linalg::lu, nda::linalg::lu_in_place, nda::linalg::solve, nda::linalg::solve_in_place, nda::linalg::svd, and nda::linalg::svd_in_place
 * Add an outer-product function to `nda::linalg`; move `dot_generic` from `linalg::detail` into `nda::linalg` with a docstring
-* Add `blas/gerc.hpp` and improve nda::blas::ger and nda::blas::gerc test clarity and coverage
+* Add nda::blas::gerc to `blas/ger.hpp` and improve nda::blas::ger and nda::blas::gerc test clarity and coverage
 * Split `linalg/det_and_inverse.hpp` into linalg/det.hpp and linalg/inv.hpp; move nda::is_matrix_square and nda::is_matrix_diagonal to matrix_functions.hpp; move small-size `inv_in_place` optimizations to the `detail` namespace
 * Relax the `getrf` check in `linalg::det_in_place` and fix the nda::lapack::gelss path for underdetermined systems
 * Fix segfaults in cuBLAS calls; add device-implementation check in lapack/gesvd.hpp; add a test for linalg routines on the device
@@ -91,7 +90,6 @@ Find below an itemized list of changes in this release.
 
 ### python support
 * Add c2py converters and additional files into `nda/c2py`
-* Remove PythonSupport requirement for building docs
 * Remove any pybind11 references
 
 ### docker
