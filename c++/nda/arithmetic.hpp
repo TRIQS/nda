@@ -43,7 +43,7 @@ namespace nda {
    * The only supported unary operation is the negation operation ('-').
    *
    * @tparam OP Char representing the unary operation.
-   * @param A nda::Array type.
+   * @tparam A nda::Array type.
    */
   template <char OP, Array A>
   struct expr_unary {
@@ -89,8 +89,8 @@ namespace nda {
    * The supported binary operations are addition ('+'), subtraction ('-'), multiplication ('*') and division ('/').
    *
    * @tparam OP Char representing the binary operation.
-   * @param L nda::ArrayOrScalar type of left-hand side.
-   * @param R nda::ArrayOrScalar type of right-hand side.
+   * @tparam L nda::ArrayOrScalar type of left-hand side.
+   * @tparam R nda::ArrayOrScalar type of right-hand side.
    */
   template <char OP, ArrayOrScalar L, ArrayOrScalar R>
   struct expr {
