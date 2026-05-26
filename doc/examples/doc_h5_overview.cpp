@@ -2,7 +2,7 @@
 #include <nda/nda.hpp>
 #include <h5/h5.hpp>
 
-int main(int argc, char **argv) {
+int main() {
   // create a 4x2 array with random values
   auto A = nda::rand(4, 2);
 
