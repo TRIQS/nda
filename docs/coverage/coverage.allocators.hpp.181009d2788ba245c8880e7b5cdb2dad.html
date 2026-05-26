@@ -1135,7 +1135,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * - It uses std::calloc for `Host` nda::mem::AddressSpace.</span></td>
+        <td class="src "><span class="cm">     * - It uses `std::calloc` for `Host` nda::mem::AddressSpace.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l93" href="#l93">93</a></td>
@@ -1324,7 +1324,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * it will call std::abort on any further allocation requests.</span></td>
+        <td class="src "><span class="cm">   * it will call `std::abort` on any further allocation requests.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l120" href="#l120">120</a></td>
@@ -1646,7 +1646,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @param s Size in bytes of the returned memory block (has to be &lt; `ChunkSize`).</span></td>
+        <td class="src "><span class="cm">     * @param s Size in bytes of the returned memory block (must be less than `ChunkSize`).</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l166" href="#l166">166</a></td>
@@ -1829,7 +1829,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @param s Size in bytes of the returned memory block (has to be &lt; `ChunkSize`).</span></td>
+        <td class="src "><span class="cm">     * @param s Size in bytes of the returned memory block (must be less than `ChunkSize`).</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l189" href="#l189">189</a></td>
@@ -2243,14 +2243,14 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @details It uses a std::vector of bucket allocators. When all buckets in the vector are full, it simply adds a new</span></td>
+        <td class="src "><span class="cm">   * @details It uses a `std::vector` of bucket allocators. When all buckets in the vector are full, it simply adds a </span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l246" href="#l246">246</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * one at the end.</span></td>
+        <td class="src "><span class="cm">   * new one at the end.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l247" href="#l247">247</a></td>
@@ -2652,7 +2652,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @param s Size in bytes of the returned memory block (has to be &lt; `ChunkSize`).</span></td>
+        <td class="src "><span class="cm">     * @param s Size in bytes of the returned memory block (must be less than `ChunkSize`).</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l295" href="#l295">295</a></td>
@@ -2755,7 +2755,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @param s Size in bytes of the returned memory block (has to be &lt; `ChunkSize`).</span></td>
+        <td class="src "><span class="cm">     * @param s Size in bytes of the returned memory block (must be less than `ChunkSize`).</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l307" href="#l307">307</a></td>
@@ -3013,7 +3013,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">      </span><span class="c1">// remove bucket the current bucket if it is empty and not the only one</span></td>
+        <td class="src "><span class="w">      </span><span class="c1">// remove the current bucket if it is empty and not the only one</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l338" href="#l338">338</a></td>
@@ -3149,7 +3149,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @return std::vector with all the bucket allocators currently in use.</span></td>
+        <td class="src "><span class="cm">     * @return `std::vector` with all the bucket allocators currently in use.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l353" href="#l353">353</a></td>
@@ -4322,7 +4322,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @details In debug mode, it aborts the program if the total memory used is smaller than zero.</span></td>
+        <td class="src "><span class="cm">     * @details In debug mode, it aborts the program if the total memory used becomes negative.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l516" href="#l516">516</a></td>
@@ -4595,14 +4595,14 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @details It gathers a histogram of the different allocation sizes. The histogram is a std::vector of size 65, where</span></td>
+        <td class="src "><span class="cm">   * @details It gathers a histogram of the different allocation sizes. The histogram is a `std::vector` of size 65, </span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l554" href="#l554">554</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * element \f$ i \in \{0,...,63\} \f$ contains the number of allocations with a size in the range</span></td>
+        <td class="src "><span class="cm">   * where element \f$ i \in \{0,...,63\} \f$ contains the number of allocations with a size in the range</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l555" href="#l555">555</a></td>
@@ -5141,7 +5141,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @return std::vector of size 65 with the number of allocations in each size range.</span></td>
+        <td class="src "><span class="cm">     * @return `std::vector` of size 65 with the number of allocations in each size range.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l631" href="#l631">631</a></td>
@@ -5176,14 +5176,14 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @brief Print the histogram to a std::ostream.</span></td>
+        <td class="src "><span class="cm">     * @brief Print the histogram to a `std::ostream`.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l636" href="#l636">636</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @param os std::ostream object to print to.</span></td>
+        <td class="src "><span class="cm">     * @param os `std::ostream` object to print to.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l637" href="#l637">637</a></td>
@@ -5283,7 +5283,7 @@
         <hr class="block-separator"/>
         <footer class="text-center">
           Created using <a href="http://gcovr.com/en/8.6">GCOVR (Version 8.6)</a>
-          at 2026-04-22 01:27:57
+          at 2026-05-26 18:00:00
         </footer>
       </div>
     </div>

@@ -11753,7 +11753,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @details See idx_map::is_stride_order_valid(Int *lenptr, Int *strptr)).</span></td>
+        <td class="src "><span class="cm">     * @details See idx_map::is_stride_order_valid(Int *lenptr, Int *strptr).</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l252" href="#l252">252</a></td>
@@ -13916,7 +13916,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @param shape std::array with the dynamic extents only.</span></td>
+        <td class="src "><span class="cm">     * @param shape `std::array` with the dynamic extents only.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l395" href="#l395">395</a></td>
@@ -14294,7 +14294,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="c1">// Get the contribution to the linear index in case of a long argument.</span></td>
+        <td class="src "><span class="w">    </span><span class="c1">// Get the contribution to the linear index in case of a `long` argument.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l449" href="#l449">449</a></td>
@@ -18595,7 +18595,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @param lin_idx Linear/Flat index.</span></td>
+        <td class="src "><span class="cm">     * @param lin_idx Linear or flat index.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l533" href="#l533">533</a></td>
@@ -18869,7 +18869,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @return A std::pair containing the offset in memory, i.e. the flat index of the first element of the slice and</span></td>
+        <td class="src "><span class="cm">     * @return A `std::pair` containing the offset in memory, i.e. the flat index of the first element of the slice and</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l559" href="#l559">559</a></td>
@@ -18974,7 +18974,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @param rhs Right hand side nda::idx_map operand.</span></td>
+        <td class="src "><span class="cm">     * @param rhs Right-hand side nda::idx_map operand.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l574" href="#l574">574</a></td>
@@ -19086,49 +19086,49 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @details Let `A` be the current and ``A&#39;`` the new, permuted index map. `P` is the given permutation. We define</span></td>
+        <td class="src "><span class="cm">     * @details Let \f$ A \f$ be the current and \f$ A&#39; \f$ the new, permuted index map. \f$ P \f$ is the given</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l585" href="#l585">585</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * the permuted nda::idx_map ``A&#39;`` to be the one with the following properties:</span></td>
+        <td class="src "><span class="cm">     * permutation. We define the permuted nda::idx_map \f$ A&#39; \f$ to be the one with the following properties:</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l586" href="#l586">586</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * - ``A&#39;(i_0,...,i_{n-1}) = A(i_{P[0]},...,i_{P[n-1]})``</span></td>
+        <td class="src "><span class="cm">     * - \f$ A&#39;(i_0,\ldots,i_{n-1}) = A(i_{P[0]},\ldots,i_{P[n-1]}) \f$</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l587" href="#l587">587</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * - ``A&#39;.lengths()[k] == A.lengths()[P^{-1}[k]]``</span></td>
+        <td class="src "><span class="cm">     * - \f$ A&#39;.\text{lengths}()[k] = A.\text{lengths}()[P^{-1}[k]] \f$</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l588" href="#l588">588</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * - ``A&#39;.strides()[k] == A.strides()[P^{-1}[k]]``</span></td>
+        <td class="src "><span class="cm">     * - \f$ A&#39;.\text{strides}()[k] = A.\text{strides}()[P^{-1}[k]] \f$</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l589" href="#l589">589</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * - The stride order of ``A&#39;`` is the composition of `P` and the stride order of `A` (note that the stride order</span></td>
+        <td class="src "><span class="cm">     * - The stride order of \f$ A&#39; \f$ is the composition of \f$ P \f$ and the stride order of \f$ A \f$ (note that</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l590" href="#l590">590</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * itself is a permutation).</span></td>
+        <td class="src "><span class="cm">     * the stride order itself is a permutation).</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l591" href="#l591">591</a></td>
@@ -19212,7 +19212,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">      </span><span class="c1">// a array and it may not be completely obvious.</span></td>
+        <td class="src "><span class="w">      </span><span class="c1">// an array and it may not be completely obvious.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l603" href="#l603">603</a></td>
@@ -19317,7 +19317,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">      </span><span class="c1">//    A&#39;(i_k) = sum_k i_{P[k]} * S[k] = sum_k i_k * S[P{^-1}[k]]</span></td>
+        <td class="src "><span class="w">      </span><span class="c1">//    A&#39;(i_k) = sum_k i_{P[k]} * S[k] = sum_k i_k * S[P^{-1}[k]]</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l618" href="#l618">618</a></td>
@@ -19331,7 +19331,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">      </span><span class="c1">//         S&#39;[k] = S[P{^-1}[k]]  (2)</span></td>
+        <td class="src "><span class="w">      </span><span class="c1">//         S&#39;[k] = S[P^{-1}[k]]  (2)</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l620" href="#l620">620</a></td>
@@ -19429,14 +19429,14 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">      </span><span class="c1">//    using (2), we have S[P{^-1}[Q&#39;[k]]] = S[Q[k]]</span></td>
+        <td class="src "><span class="w">      </span><span class="c1">//    using (2), we have S[P^{-1}[Q&#39;[k]]] = S[Q[k]]</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l634" href="#l634">634</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">      </span><span class="c1">//    so the permutation Q&#39; is such that  P{^-1}Q&#39; = Q  or Q&#39; = PQ (as permutation product/composition).</span></td>
+        <td class="src "><span class="w">      </span><span class="c1">//    so the permutation Q&#39; is such that P^{-1}Q&#39; = Q or Q&#39; = PQ (as permutation product/composition).</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l635" href="#l635">635</a></td>
@@ -19450,7 +19450,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">      </span><span class="c1">//    a P to any set, like L, S, not only a permutation) even though they are all std::array in the code ...</span></td>
+        <td class="src "><span class="w">      </span><span class="c1">//    P to any set, like L, S, not only a permutation) even though they are all `std::array` in the code ...</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l637" href="#l637">637</a></td>
@@ -19583,7 +19583,7 @@
         <hr class="block-separator"/>
         <footer class="text-center">
           Created using <a href="http://gcovr.com/en/8.6">GCOVR (Version 8.6)</a>
-          at 2026-04-22 01:27:57
+          at 2026-05-26 18:00:00
         </footer>
       </div>
     </div>

@@ -652,7 +652,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @brief Constexpr variable that is true if the there is no nda::clef::pair containing an nda::clef::placeholder</span></td>
+        <td class="src "><span class="cm">     * @brief Constexpr variable that is true if there is no nda::clef::pair containing an nda::clef::placeholder</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l79" href="#l79">79</a></td>
@@ -855,7 +855,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @brief Specialization of nda::clef::evaluator for std::reference_wrapper types.</span></td>
+        <td class="src "><span class="cm">   * @brief Specialization of nda::clef::evaluator for `std::reference_wrapper` types.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l108" href="#l108">108</a></td>
@@ -869,7 +869,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @tparam T Value type of the std::reference_wrapper.</span></td>
+        <td class="src "><span class="cm">   * @tparam T Value type of the `std::reference_wrapper`.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l110" href="#l110">110</a></td>
@@ -932,511 +932,511 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @brief Evaluate the std::reference_wrapper by redirecting the evaluation to the object contained in the wrapper.</span></td>
+        <td class="src "><span class="cm">     * @brief Evaluate the `std::reference_wrapper` by redirecting the evaluation to the object contained in the </span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l119" href="#l119">119</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     *</span></td>
+        <td class="src "><span class="cm">     * wrapper.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l120" href="#l120">120</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @param wrapper std::reference_wrapper object.</span></td>
+        <td class="src "><span class="cm">     *</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l121" href="#l121">121</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @param pairs Pack of nda::clef::pair objects.</span></td>
+        <td class="src "><span class="cm">     * @param wrapper `std::reference_wrapper` object.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l122" href="#l122">122</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @return The result of evaluating the object contained in the wrapper together with the given pairs.</span></td>
+        <td class="src "><span class="cm">     * @param pairs Pack of nda::clef::pair objects.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l123" href="#l123">123</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     */</span></td>
+        <td class="src "><span class="cm">     * @return The result of evaluating the object contained in the wrapper together with the given pairs.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l124" href="#l124">124</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="n">FORCEINLINE</span><span class="w"> </span><span class="nf">decltype</span><span class="p">(</span><span class="k">auto</span><span class="p">)</span><span class="w"> </span><span class="k">operator</span><span class="p">()(</span><span class="n">std</span><span class="o">::</span><span class="n">reference_wrapper</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">wrapper</span><span class="p">,</span><span class="w"> </span><span class="n">Pairs</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="p">...</span><span class="n">pairs</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span></td>
+        <td class="src "><span class="cm">     */</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l125" href="#l125">125</a></td>
+        <td class="linebranch">
+        </td>
+        <td class="linecount"></td>
+        <td class="src "><span class="w">    </span><span class="n">FORCEINLINE</span><span class="w"> </span><span class="nf">decltype</span><span class="p">(</span><span class="k">auto</span><span class="p">)</span><span class="w"> </span><span class="k">operator</span><span class="p">()(</span><span class="n">std</span><span class="o">::</span><span class="n">reference_wrapper</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">wrapper</span><span class="p">,</span><span class="w"> </span><span class="n">Pairs</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="p">...</span><span class="n">pairs</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span></td>
+      </tr>
+      <tr class="source-line">
+        <td class="lineno"><a id="l126" href="#l126">126</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount coveredLine show_coveredLine">1696</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">eval</span><span class="p">(</span><span class="n">wrapper</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="n">pairs</span><span class="p">...);</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l126" href="#l126">126</a></td>
-        <td class="linebranch">
-        </td>
-        <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="p">}</span></td>
-      </tr>
-      <tr class="source-line">
         <td class="lineno"><a id="l127" href="#l127">127</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">  </span><span class="p">};</span></td>
+        <td class="src "><span class="w">    </span><span class="p">}</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l128" href="#l128">128</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "></td>
+        <td class="src "><span class="w">  </span><span class="p">};</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l129" href="#l129">129</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">  </span><span class="cm">/**</span></td>
+        <td class="src "></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l130" href="#l130">130</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @brief Specialization of nda::clef::evaluator for nda::clef::expr types.</span></td>
+        <td class="src "><span class="w">  </span><span class="cm">/**</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l131" href="#l131">131</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   *</span></td>
+        <td class="src "><span class="cm">   * @brief Specialization of nda::clef::evaluator for nda::clef::expr types.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l132" href="#l132">132</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @tparam Tag Tag of the expression.</span></td>
+        <td class="src "><span class="cm">   *</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l133" href="#l133">133</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @tparam Childs Types of the child nodes.</span></td>
+        <td class="src "><span class="cm">   * @tparam Tag Tag of the expression.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l134" href="#l134">134</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @tparam Pairs Types of the nda::clef::pair objects.</span></td>
+        <td class="src "><span class="cm">   * @tparam Childs Types of the child nodes.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l135" href="#l135">135</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   */</span></td>
+        <td class="src "><span class="cm">   * @tparam Pairs Types of the nda::clef::pair objects.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l136" href="#l136">136</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Tag</span><span class="p">,</span><span class="w"> </span><span class="k">typename</span><span class="p">...</span><span class="w"> </span><span class="n">Childs</span><span class="p">,</span><span class="w"> </span><span class="k">typename</span><span class="p">...</span><span class="w"> </span><span class="n">Pairs</span><span class="o">&gt;</span></td>
+        <td class="src "><span class="cm">   */</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l137" href="#l137">137</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">evaluator</span><span class="o">&lt;</span><span class="n">expr</span><span class="o">&lt;</span><span class="n">Tag</span><span class="p">,</span><span class="w"> </span><span class="n">Childs</span><span class="p">...</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">Pairs</span><span class="p">...</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span></td>
+        <td class="src "><span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Tag</span><span class="p">,</span><span class="w"> </span><span class="k">typename</span><span class="p">...</span><span class="w"> </span><span class="n">Childs</span><span class="p">,</span><span class="w"> </span><span class="k">typename</span><span class="p">...</span><span class="w"> </span><span class="n">Pairs</span><span class="o">&gt;</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l138" href="#l138">138</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="c1">/// Constexpr variable that is true if any of the evaluators of the child nodes is lazy.</span></td>
+        <td class="src "><span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">evaluator</span><span class="o">&lt;</span><span class="n">expr</span><span class="o">&lt;</span><span class="n">Tag</span><span class="p">,</span><span class="w"> </span><span class="n">Childs</span><span class="p">...</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">Pairs</span><span class="p">...</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l139" href="#l139">139</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_lazy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">evaluator</span><span class="o">&lt;</span><span class="n">Childs</span><span class="p">,</span><span class="w"> </span><span class="n">Pairs</span><span class="p">...</span><span class="o">&gt;::</span><span class="n">is_lazy</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="p">...);</span></td>
+        <td class="src "><span class="w">    </span><span class="c1">/// Constexpr variable that is true if any of the evaluators of the child nodes is lazy.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l140" href="#l140">140</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "></td>
+        <td class="src "><span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_lazy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">evaluator</span><span class="o">&lt;</span><span class="n">Childs</span><span class="p">,</span><span class="w"> </span><span class="n">Pairs</span><span class="p">...</span><span class="o">&gt;::</span><span class="n">is_lazy</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="p">...);</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l141" href="#l141">141</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="k">private</span><span class="o">:</span></td>
+        <td class="src "></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l142" href="#l142">142</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="c1">// Helper function to evaluate the given expression.</span></td>
+        <td class="src "><span class="w">    </span><span class="k">private</span><span class="o">:</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l143" href="#l143">143</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">...</span><span class="w"> </span><span class="n">Is</span><span class="o">&gt;</span></td>
+        <td class="src "><span class="w">    </span><span class="c1">// Helper function to evaluate the given expression.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l144" href="#l144">144</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="n">FORCEINLINE</span><span class="w"> </span><span class="k">decltype</span><span class="p">(</span><span class="k">auto</span><span class="p">)</span><span class="w"> </span><span class="n">eval_impl</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">index_sequence</span><span class="o">&lt;</span><span class="n">Is</span><span class="p">...</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">expr</span><span class="o">&lt;</span><span class="n">Tag</span><span class="p">,</span><span class="w"> </span><span class="n">Childs</span><span class="p">...</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ex</span><span class="p">,</span><span class="w"> </span><span class="n">Pairs</span><span class="w"> </span><span class="o">&amp;</span><span class="p">...</span><span class="n">pairs</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span></td>
+        <td class="src "><span class="w">    </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">...</span><span class="w"> </span><span class="n">Is</span><span class="o">&gt;</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l145" href="#l145">145</a></td>
+        <td class="linebranch">
+        </td>
+        <td class="linecount"></td>
+        <td class="src "><span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="n">FORCEINLINE</span><span class="w"> </span><span class="k">decltype</span><span class="p">(</span><span class="k">auto</span><span class="p">)</span><span class="w"> </span><span class="n">eval_impl</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">index_sequence</span><span class="o">&lt;</span><span class="n">Is</span><span class="p">...</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">expr</span><span class="o">&lt;</span><span class="n">Tag</span><span class="p">,</span><span class="w"> </span><span class="n">Childs</span><span class="p">...</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ex</span><span class="p">,</span><span class="w"> </span><span class="n">Pairs</span><span class="w"> </span><span class="o">&amp;</span><span class="p">...</span><span class="n">pairs</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span></td>
+      </tr>
+      <tr class="source-line">
+        <td class="lineno"><a id="l146" href="#l146">146</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount coveredLine show_coveredLine">17242</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">op_dispatch</span><span class="o">&lt;</span><span class="n">Tag</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">integral_constant</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">,</span><span class="w"> </span><span class="n">is_lazy</span><span class="o">&gt;</span><span class="p">{},</span><span class="w"> </span><span class="n">eval</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="n">Is</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ex</span><span class="p">.</span><span class="n">childs</span><span class="p">),</span><span class="w"> </span><span class="n">pairs</span><span class="p">...)...);</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l146" href="#l146">146</a></td>
-        <td class="linebranch">
-        </td>
-        <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="p">}</span></td>
-      </tr>
-      <tr class="source-line">
         <td class="lineno"><a id="l147" href="#l147">147</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "></td>
+        <td class="src "><span class="w">    </span><span class="p">}</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l148" href="#l148">148</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="k">public</span><span class="o">:</span></td>
+        <td class="src "></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l149" href="#l149">149</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="cm">/**</span></td>
+        <td class="src "><span class="w">    </span><span class="k">public</span><span class="o">:</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l150" href="#l150">150</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @brief Evaluate the given expression by applying the given nda::clef::pair objects.</span></td>
+        <td class="src "><span class="w">    </span><span class="cm">/**</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l151" href="#l151">151</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     *</span></td>
+        <td class="src "><span class="cm">     * @brief Evaluate the given expression by applying the given nda::clef::pair objects.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l152" href="#l152">152</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @note Depending on the given expression as well as the the given pairs, the result of the evaluation might be</span></td>
+        <td class="src "><span class="cm">     *</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l153" href="#l153">153</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * again a lazy expression.</span></td>
+        <td class="src "><span class="cm">     * @note Depending on the given expression and the given pairs, the result of the evaluation might be again a lazy </span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l154" href="#l154">154</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     *</span></td>
+        <td class="src "><span class="cm">     * expression.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l155" href="#l155">155</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @param ex Expression to be evaluated.</span></td>
+        <td class="src "><span class="cm">     *</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l156" href="#l156">156</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @param pairs nda::clef::pair objects to be applied to the expression.</span></td>
+        <td class="src "><span class="cm">     * @param ex Expression to be evaluated.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l157" href="#l157">157</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     * @return The result of the evaluation (calls nda::clef::op_dispatch indirectly through a helper function).</span></td>
+        <td class="src "><span class="cm">     * @param pairs nda::clef::pair objects to be applied to the expression.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l158" href="#l158">158</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">     */</span></td>
+        <td class="src "><span class="cm">     * @return The result of the evaluation (calls nda::clef::op_dispatch indirectly through a helper function).</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l159" href="#l159">159</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="n">FORCEINLINE</span><span class="w"> </span><span class="k">decltype</span><span class="p">(</span><span class="k">auto</span><span class="p">)</span><span class="w"> </span><span class="k">operator</span><span class="p">()(</span><span class="n">expr</span><span class="o">&lt;</span><span class="n">Tag</span><span class="p">,</span><span class="w"> </span><span class="n">Childs</span><span class="p">...</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ex</span><span class="p">,</span><span class="w"> </span><span class="n">Pairs</span><span class="w"> </span><span class="o">&amp;</span><span class="p">...</span><span class="n">pairs</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span></td>
+        <td class="src "><span class="cm">     */</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l160" href="#l160">160</a></td>
+        <td class="linebranch">
+        </td>
+        <td class="linecount"></td>
+        <td class="src "><span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="n">FORCEINLINE</span><span class="w"> </span><span class="k">decltype</span><span class="p">(</span><span class="k">auto</span><span class="p">)</span><span class="w"> </span><span class="k">operator</span><span class="p">()(</span><span class="n">expr</span><span class="o">&lt;</span><span class="n">Tag</span><span class="p">,</span><span class="w"> </span><span class="n">Childs</span><span class="p">...</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ex</span><span class="p">,</span><span class="w"> </span><span class="n">Pairs</span><span class="w"> </span><span class="o">&amp;</span><span class="p">...</span><span class="n">pairs</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span></td>
+      </tr>
+      <tr class="source-line">
+        <td class="lineno"><a id="l161" href="#l161">161</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount coveredLine show_coveredLine">4804</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">eval_impl</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_index_sequence</span><span class="o">&lt;</span><span class="k">sizeof</span><span class="p">...(</span><span class="n">Childs</span><span class="p">)</span><span class="o">&gt;</span><span class="p">(),</span><span class="w"> </span><span class="n">ex</span><span class="p">,</span><span class="w"> </span><span class="n">pairs</span><span class="p">...);</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l161" href="#l161">161</a></td>
+        <td class="lineno"><a id="l162" href="#l162">162</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
         <td class="src "><span class="w">    </span><span class="p">}</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l162" href="#l162">162</a></td>
+        <td class="lineno"><a id="l163" href="#l163">163</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
         <td class="src "><span class="w">  </span><span class="p">};</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l163" href="#l163">163</a></td>
-        <td class="linebranch">
-        </td>
-        <td class="linecount"></td>
-        <td class="src "></td>
-      </tr>
-      <tr class="source-line">
         <td class="lineno"><a id="l164" href="#l164">164</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">  </span><span class="cm">/**</span></td>
+        <td class="src "></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l165" href="#l165">165</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @brief Generic function to evaluate expressions and other types.</span></td>
+        <td class="src "><span class="w">  </span><span class="cm">/**</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l166" href="#l166">166</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   *</span></td>
+        <td class="src "><span class="cm">   * @brief Generic function to evaluate expressions and other types.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l167" href="#l167">167</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @details Calls the correct nda::clef::evaluator for the given expression/type.</span></td>
+        <td class="src "><span class="cm">   *</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l168" href="#l168">168</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   *</span></td>
+        <td class="src "><span class="cm">   * @details Calls the correct nda::clef::evaluator for the given expression/type.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l169" href="#l169">169</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @code{.cpp}</span></td>
+        <td class="src "><span class="cm">   *</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l170" href="#l170">170</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * nda::clef::placeholder&lt;0&gt; i_;</span></td>
+        <td class="src "><span class="cm">   * @include doc_clef_eval.cpp</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l171" href="#l171">171</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * nda::clef::placeholder&lt;1&gt; j_;</span></td>
+        <td class="src "><span class="cm">   *</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l172" href="#l172">172</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * auto ex = i_ + j_;</span></td>
+        <td class="src "><span class="cm">   * Output:</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l173" href="#l173">173</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * auto res = nda::clef::eval(ex, i_ = 1, j_ = 2); // int res = 3;</span></td>
+        <td class="src "><span class="cm">   *</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l174" href="#l174">174</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @endcode</span></td>
+        <td class="src "><span class="cm">   * ```</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l175" href="#l175">175</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   *</span></td>
+        <td class="src "><span class="cm">   * 3</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l176" href="#l176">176</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * Here, `ex` is a binary expression with the `+` tag and the placeholder `i_` and `j_` as its child nodes. The `eval`</span></td>
+        <td class="src "><span class="cm">   * ```</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l177" href="#l177">177</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * function calls the correct evaluator for the given expression and the given pairs.</span></td>
+        <td class="src "><span class="cm">   *</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l178" href="#l178">178</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   *</span></td>
+        <td class="src "><span class="cm">   * Here, `ex` is a binary expression with the `+` tag and the placeholder `i_` and `j_` as its child nodes. The `eval`</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l179" href="#l179">179</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @tparam T Type of the expression/object.</span></td>
+        <td class="src "><span class="cm">   * function calls the correct evaluator for the given expression and the given pairs.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l180" href="#l180">180</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @tparam Pairs Types of the nda::clef::pair objects.</span></td>
+        <td class="src "><span class="cm">   *</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l181" href="#l181">181</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @param obj Expression/object to be evaluated.</span></td>
+        <td class="src "><span class="cm">   * @tparam T Type of the expression/object.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l182" href="#l182">182</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @param pairs nda::clef::pair objects to be applied to the expression.</span></td>
+        <td class="src "><span class="cm">   * @tparam Pairs Types of the nda::clef::pair objects.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l183" href="#l183">183</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @return The result of the evaluation depending on the type of the expression/object.</span></td>
+        <td class="src "><span class="cm">   * @param obj Expression/object to be evaluated.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l184" href="#l184">184</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   */</span></td>
+        <td class="src "><span class="cm">   * @param pairs nda::clef::pair objects to be applied to the expression.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l185" href="#l185">185</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span><span class="w"> </span><span class="k">typename</span><span class="p">...</span><span class="w"> </span><span class="n">Pairs</span><span class="o">&gt;</span></td>
+        <td class="src "><span class="cm">   * @return The result of the evaluation depending on the type of the expression/object.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l186" href="#l186">186</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">  </span><span class="n">FORCEINLINE</span><span class="w"> </span><span class="k">decltype</span><span class="p">(</span><span class="k">auto</span><span class="p">)</span><span class="w"> </span><span class="n">eval</span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">obj</span><span class="p">,</span><span class="w"> </span><span class="n">Pairs</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="p">...</span><span class="n">pairs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// NOLINT (we don&#39;t want to forward here)</span></td>
+        <td class="src "><span class="cm">   */</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l187" href="#l187">187</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">13301</td>
-        <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">evaluator</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">remove_reference_t</span><span class="o">&lt;</span><span class="n">Pairs</span><span class="o">&gt;</span><span class="p">...</span><span class="o">&gt;</span><span class="p">()(</span><span class="n">obj</span><span class="p">,</span><span class="w"> </span><span class="n">pairs</span><span class="p">...);</span></td>
+        <td class="linecount"></td>
+        <td class="src "><span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span><span class="w"> </span><span class="k">typename</span><span class="p">...</span><span class="w"> </span><span class="n">Pairs</span><span class="o">&gt;</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l188" href="#l188">188</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">  </span><span class="p">}</span></td>
+        <td class="src "><span class="w">  </span><span class="n">FORCEINLINE</span><span class="w"> </span><span class="k">decltype</span><span class="p">(</span><span class="k">auto</span><span class="p">)</span><span class="w"> </span><span class="n">eval</span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">obj</span><span class="p">,</span><span class="w"> </span><span class="n">Pairs</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="p">...</span><span class="n">pairs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// NOLINT (we don&#39;t want to forward here)</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l189" href="#l189">189</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount"></td>
-        <td class="src "></td>
+        <td class="linecount coveredLine show_coveredLine">13301</td>
+        <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">evaluator</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">remove_reference_t</span><span class="o">&lt;</span><span class="n">Pairs</span><span class="o">&gt;</span><span class="p">...</span><span class="o">&gt;</span><span class="p">()(</span><span class="n">obj</span><span class="p">,</span><span class="w"> </span><span class="n">pairs</span><span class="p">...);</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l190" href="#l190">190</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">  </span><span class="cm">/** @} */</span></td>
+        <td class="src "><span class="w">  </span><span class="p">}</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l191" href="#l191">191</a></td>
@@ -1450,10 +1450,24 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="p">}</span><span class="w"> </span><span class="c1">// namespace nda::clef</span></td>
+        <td class="src "><span class="w">  </span><span class="cm">/** @} */</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l193" href="#l193">193</a></td>
+        <td class="linebranch">
+        </td>
+        <td class="linecount"></td>
+        <td class="src "></td>
+      </tr>
+      <tr class="source-line">
+        <td class="lineno"><a id="l194" href="#l194">194</a></td>
+        <td class="linebranch">
+        </td>
+        <td class="linecount"></td>
+        <td class="src "><span class="p">}</span><span class="w"> </span><span class="c1">// namespace nda::clef</span></td>
+      </tr>
+      <tr class="source-line">
+        <td class="lineno"><a id="l195" href="#l195">195</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
@@ -1466,7 +1480,7 @@
         <hr class="block-separator"/>
         <footer class="text-center">
           Created using <a href="http://gcovr.com/en/8.6">GCOVR (Version 8.6)</a>
-          at 2026-04-22 01:27:57
+          at 2026-05-26 18:00:00
         </footer>
       </div>
     </div>
