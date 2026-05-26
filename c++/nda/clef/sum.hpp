@@ -81,7 +81,7 @@ namespace nda::clef {
    * Output:
    *
    * ```
-   * 36
+   * 63
    * ```
    *
    * @tparam Expr Type of the expression.

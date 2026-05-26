@@ -4,7 +4,7 @@
 
 int main() {
   nda::clef::placeholder<0> i_;
-  nda::clef::placeholder<0> j_;
+  nda::clef::placeholder<1> j_;
   auto domain1 = std::vector{1, 2, 3};
   auto domain2 = std::vector{4, 5, 6};
   auto ex      = i_ + j_;
