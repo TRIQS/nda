@@ -1,4 +1,4 @@
 var cross__product_8hpp =
 [
-    [ "nda::linalg::cross_product", "group__linalg__tools.html#ga35d419b58c8cd685cca39c4d485684da", null ]
+    [ "nda::linalg::cross_product", "group__linalg__tools.html#ga3a8f49f7769a5d63a0a088cfbd7da2da", null ]
 ];

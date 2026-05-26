@@ -1,0 +1,27 @@
+var dir_dd864439ca2197f45f3f406022c94550 =
+[
+    [ "doc_arith_algebra.dir", "dir_fcba2f143c47f78382ae2eaca2594eb9.html", "dir_fcba2f143c47f78382ae2eaca2594eb9" ],
+    [ "doc_arith_expr.dir", "dir_8a300f6ea6a368d79b65fa20659cbbae.html", "dir_8a300f6ea6a368d79b65fa20659cbbae" ],
+    [ "doc_basic_array.dir", "dir_611612b6d63126bf670af4b2b6ffdeed.html", "dir_611612b6d63126bf670af4b2b6ffdeed" ],
+    [ "doc_basic_array_view.dir", "dir_14301a5ea9efc45cfe1e0c52a0071656.html", "dir_14301a5ea9efc45cfe1e0c52a0071656" ],
+    [ "doc_clef_autoassign_array.dir", "dir_94d5f51650d1c52741de78df4205aa78.html", "dir_94d5f51650d1c52741de78df4205aa78" ],
+    [ "doc_clef_autoassign_vector.dir", "dir_32d5222d907521cdb6ab03c4d5f9a76a.html", "dir_32d5222d907521cdb6ab03c4d5f9a76a" ],
+    [ "doc_clef_eval.dir", "dir_eb1557a95e8f17332423a74d4329be3d.html", "dir_eb1557a95e8f17332423a74d4329be3d" ],
+    [ "doc_clef_make_function.dir", "dir_7357c57f7e22dc35a4090c971071d737.html", "dir_7357c57f7e22dc35a4090c971071d737" ],
+    [ "doc_clef_placeholder.dir", "dir_8b080a1b1170b4816e3c07fb9cef46eb.html", "dir_8b080a1b1170b4816e3c07fb9cef46eb" ],
+    [ "doc_clef_sum_1d.dir", "dir_ac9867c6c52b5ff186e56cfe989de3a1.html", "dir_ac9867c6c52b5ff186e56cfe989de3a1" ],
+    [ "doc_clef_sum_nd.dir", "dir_7276f2fc7125fbe8eb0d76c05f7787e6.html", "dir_7276f2fc7125fbe8eb0d76c05f7787e6" ],
+    [ "doc_h5_overview.dir", "dir_d68a81e8109e8b83c73dffac3d6415d2.html", "dir_d68a81e8109e8b83c73dffac3d6415d2" ],
+    [ "doc_math_expr.dir", "dir_d70fa538ec335193ee4da3bff494ac14.html", "dir_d70fa538ec335193ee4da3bff494ac14" ],
+    [ "doc_mpi_overview.dir", "dir_cf0496473dc57e0ca9e381c20e4b746b.html", "dir_cf0496473dc57e0ca9e381c20e4b746b" ],
+    [ "doc_overview.dir", "dir_367a8b2cb9b927f97ba92413041606cb.html", "dir_367a8b2cb9b927f97ba92413041606cb" ],
+    [ "doc_sym_overview.dir", "dir_26dd8594ec008cf290282b3818e29476.html", "dir_26dd8594ec008cf290282b3818e29476" ],
+    [ "ex1.dir", "dir_84fc857f1134450a4601dfbfa9ab5222.html", "dir_84fc857f1134450a4601dfbfa9ab5222" ],
+    [ "ex2.dir", "dir_ad94d6a8b0027cc2c3a790c3e35a05ad.html", "dir_ad94d6a8b0027cc2c3a790c3e35a05ad" ],
+    [ "ex3.dir", "dir_663e22d41500673b40e90d1ffc40ae30.html", "dir_663e22d41500673b40e90d1ffc40ae30" ],
+    [ "ex4.dir", "dir_72680e625d015eef11f5ea44541c5eb8.html", "dir_72680e625d015eef11f5ea44541c5eb8" ],
+    [ "ex5.dir", "dir_59b1c2fbce01326122e240f0cb09af54.html", "dir_59b1c2fbce01326122e240f0cb09af54" ],
+    [ "ex6.dir", "dir_1dfd7a283e928513047831abadd9ab98.html", "dir_1dfd7a283e928513047831abadd9ab98" ],
+    [ "ex7.dir", "dir_75b89113ed33bdc2b9786dd9b90c663f.html", "dir_75b89113ed33bdc2b9786dd9b90c663f" ],
+    [ "ex8.dir", "dir_82acd8df8848684b0a4526d0f88cbb2d.html", "dir_82acd8df8848684b0a4526d0f88cbb2d" ]
+];

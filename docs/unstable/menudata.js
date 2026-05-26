@@ -185,11 +185,12 @@ var menudata={children:[
 {text:"Testing tools",url:"group__testing.html"},
 {text:"Utilities",url:"group__utilities.html",children:[
 {text:"Concepts",url:"group__utils__concepts.html",children:[
+{text:"AnyOf",url:"conceptnda_1_1_any_of.html"},
 {text:"CallableWithLongs",url:"conceptnda_1_1_callable_with_longs.html"},
-{text:"StdArrayOfLong",url:"conceptnda_1_1_std_array_of_long.html"},
-{text:"Scalar",url:"conceptnda_1_1_scalar.html"},
 {text:"DoubleOrComplex",url:"conceptnda_1_1_double_or_complex.html"},
-{text:"InstantiationOf",url:"conceptnda_1_1_instantiation_of.html"}]},
+{text:"InstantiationOf",url:"conceptnda_1_1_instantiation_of.html"},
+{text:"Scalar",url:"conceptnda_1_1_scalar.html"},
+{text:"StdArrayOfLong",url:"conceptnda_1_1_std_array_of_long.html"}]},
 {text:"Extensions to the standard library",url:"group__utils__std.html",children:[
 {text:"runtime_error",url:"classnda_1_1runtime__error.html"}]},
 {text:"Permutations",url:"group__utils__perms.html"},

@@ -7,7 +7,7 @@ var searchData=
   ['fetchcontent_4',['FetchContent',['../integration.html#fetch',1,'']]],
   ['find_5fpackage_5',['find_package',['../integration.html#find_package',1,'']]],
   ['first_5fdim_6',['first_dim',['../group__av__utils.html#ga17cb07f54c5452e23ad6a71a09e560d9',1,'nda']]],
-  ['fixes_7',['Fixes',['../changelog.html#autotoc_md16',1,'']]],
+  ['fixes_7',['Fixes',['../changelog.html#autotoc_md25',1,'']]],
   ['flatten_8',['flatten',['../group__av__factories.html#gaa01d35a8419bc78798737c4fa94ee042',1,'nda']]],
   ['floor_9',['floor',['../group__clef__expr.html#ga0481af7c923b471e08dec84fd812e60f',1,'nda::clef::floor()'],['../group__av__math.html#ga49ef054fc157295d915b1651edb67848',1,'nda::floor(A &amp;&amp;a)']]],
   ['fold_10',['fold',['../group__av__algs.html#ga1ede47af1aafba0c08346ce98c767b7e',1,'nda::fold(F f, A const &amp;a, R r)'],['../group__av__algs.html#ga66519bf80315973770c266a4d10eb054',1,'nda::fold(F f, A const &amp;a)']]],
@@ -25,11 +25,12 @@ var searchData=
   ['front_5fappend_22',['front_append',['../group__utils__std.html#ga24a9f36c1abf3c7ee8af26e64cd2e5a2',1,'nda::stdutil']]],
   ['front_5fmpop_23',['front_mpop',['../group__utils__std.html#ga1713c401cce73d9b3a70256e867f16d0',1,'nda::stdutil']]],
   ['front_5fpop_24',['front_pop',['../group__utils__std.html#gade66f148c03d164b13c2cadf191d9715',1,'nda::stdutil']]],
-  ['full_20view_20on_20an_20array_20view_25',['Creating a full view on an array/view',['../ex4.html#ex4_p1',1,'']]],
-  ['function_26',['function',['../structnda_1_1clef_1_1tags_1_1function.html',1,'nda::clef::tags']]],
-  ['function_2ehpp_27',['function.hpp',['../function_8hpp.html',1,'']]],
-  ['functions_28',['functions',['../documentation.html#autotoc_md19',1,'CLEF - Compile-time lazy expressions and functions'],['../group__clef.html',1,'Compile-time lazy expressions and functions'],['../group__av__math.html',1,'Mathematical functions']]],
-  ['functions_20and_20algorithms_29',['Applying mathematical functions and algorithms',['../ex1.html#ex1_p9',1,'']]],
-  ['functions_20and_20operations_30',['Lazy expressions, functions and operations',['../group__clef__expr.html',1,'']]],
-  ['further_20examples_31',['Further examples',['../ex1.html#ex1_p13',1,'']]]
+  ['full_20source_25',['Full source',['../ex1.html#ex1_full',1,'Full source'],['../ex2.html#ex2_full',1,'Full source'],['../ex3.html#ex3_full',1,'Full source'],['../ex4.html#ex4_full',1,'Full source'],['../ex5.html#ex5_full',1,'Full source'],['../ex6.html#ex6_full',1,'Full source'],['../ex7.html#ex7_full',1,'Full source'],['../ex8.html#ex8_full',1,'Full source']]],
+  ['full_20view_20on_20an_20array_20view_26',['Creating a full view on an array/view',['../ex4.html#ex4_p1',1,'']]],
+  ['function_27',['function',['../structnda_1_1clef_1_1tags_1_1function.html',1,'nda::clef::tags']]],
+  ['function_2ehpp_28',['function.hpp',['../function_8hpp.html',1,'']]],
+  ['functions_29',['functions',['../documentation.html#autotoc_md28',1,'CLEF - Compile-time lazy expressions and functions'],['../group__clef.html',1,'Compile-time lazy expressions and functions'],['../group__av__math.html',1,'Mathematical functions']]],
+  ['functions_20and_20algorithms_30',['Applying mathematical functions and algorithms',['../ex1.html#ex1_p9',1,'']]],
+  ['functions_20and_20operations_31',['Lazy expressions, functions and operations',['../group__clef__expr.html',1,'']]],
+  ['further_20examples_32',['Further examples',['../ex1.html#ex1_p13',1,'']]]
 ];

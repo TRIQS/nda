@@ -14,5 +14,5 @@ var searchData=
   ['examples_11',['examples',['../examples.html#compiling',1,'Compiling the examples'],['../ex1.html#ex1_p13',1,'Further examples']]],
   ['existing_20arrays_20views_12',['Using existing arrays/views',['../ex6.html#ex6_p5',1,'']]],
   ['existing_20dataset_13',['existing dataset',['../ex5.html#ex5_p4',1,'Reading a slice from an existing dataset'],['../ex5.html#ex5_p3',1,'Writing to a slice of an existing dataset']]],
-  ['expressions_20and_20functions_14',['CLEF - Compile-time lazy expressions and functions',['../documentation.html#autotoc_md19',1,'']]]
+  ['expressions_20and_20functions_14',['CLEF - Compile-time lazy expressions and functions',['../documentation.html#autotoc_md28',1,'']]]
 ];

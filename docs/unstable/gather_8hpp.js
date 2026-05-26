@@ -1,5 +1,5 @@
 var gather_8hpp =
 [
-    [ "nda::mpi_gather", "group__av__mpi.html#gaf4a01a1d47ac8abf974ea2af954934fe", null ],
-    [ "nda::mpi_gather_into", "group__av__mpi.html#ga88c44e88565034bdb035db0674561d8a", null ]
+    [ "nda::mpi_gather", "group__av__mpi.html#ga62aacd4df1ae34a7690e68d93c7429be", null ],
+    [ "nda::mpi_gather_into", "group__av__mpi.html#gabb73c0a539d4cd1edcad9c431ca716a4", null ]
 ];

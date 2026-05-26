@@ -23,5 +23,6 @@ var searchData=
   ['product_20',['product',['../group__av__algs.html#ga767f1ffe11006beb7dfe9318565ab789',1,'nda::product()'],['../group__utils__std.html#gae4b418662bf69455beb672c5ef2d6301',1,'nda::stdutil::product()']]],
   ['projects_21',['Integration in C++ projects',['../integration.html',1,'']]],
   ['prop_22',['prop',['../structnda_1_1layout__info__t.html#a351eb4acb2b4d8f3fd17fab9a7512adb',1,'nda::layout_info_t']]],
-  ['ptr_23',['ptr',['../structnda_1_1mem_1_1blk__t.html#a96eb83f5e729b2c601dba97155cacee9',1,'nda::mem::blk_t']]]
+  ['ptr_23',['ptr',['../structnda_1_1mem_1_1blk__t.html#a96eb83f5e729b2c601dba97155cacee9',1,'nda::mem::blk_t']]],
+  ['python_20support_24',['python support',['../changelog.html#autotoc_md7',1,'']]]
 ];

@@ -211,11 +211,12 @@ var NAVTREE =
       [ "Testing tools", "group__testing.html", null ],
       [ "Utilities", "group__utilities.html", [
         [ "Concepts", "group__utils__concepts.html", [
+          [ "AnyOf", "conceptnda_1_1_any_of.html", null ],
           [ "CallableWithLongs", "conceptnda_1_1_callable_with_longs.html", null ],
-          [ "StdArrayOfLong", "conceptnda_1_1_std_array_of_long.html", null ],
-          [ "Scalar", "conceptnda_1_1_scalar.html", null ],
           [ "DoubleOrComplex", "conceptnda_1_1_double_or_complex.html", null ],
-          [ "InstantiationOf", "conceptnda_1_1_instantiation_of.html", null ]
+          [ "InstantiationOf", "conceptnda_1_1_instantiation_of.html", null ],
+          [ "Scalar", "conceptnda_1_1_scalar.html", null ],
+          [ "StdArrayOfLong", "conceptnda_1_1_std_array_of_long.html", null ]
         ] ],
         [ "Extensions to the standard library", "group__utils__std.html", [
           [ "runtime_error", "classnda_1_1runtime__error.html", null ]
@@ -235,9 +236,10 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "__impl__basic__array__view__common_8hpp_source.html",
-"lapacke__config_8h_source.html"
+"group__av__factories.html",
+"sygv_8hpp_source.html"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronization';
-var SYNCOFFMSG = 'click to enable panel synchronization';
-var LISTOFALLMEMBERS = 'List of all members';
+const SYNCONMSG = 'click to disable panel synchronization';
+const SYNCOFFMSG = 'click to enable panel synchronization';
+const LISTOFALLMEMBERS = 'List of all members';
