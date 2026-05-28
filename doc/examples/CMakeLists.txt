@@ -9,6 +9,10 @@ if(NOT MPISupport)
   list(FILTER all_examples EXCLUDE REGEX "ex6\\.cpp|doc_mpi_")
 endif()
 
+if(NOT TblisSupport)
+  list(FILTER all_examples EXCLUDE REGEX "ex9\\.cpp")
+endif()
+
 foreach(ex_src ${all_examples})
   get_filename_component(ex_name ${ex_src} NAME_WE)
   add_executable(${ex_name} ${ex_src})

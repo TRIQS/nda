@@ -12,6 +12,7 @@
 | @ref ex6 | How to broadcast, gather, scatter and reduce arrays and views |
 | @ref ex7 | How to use symmetries with **nda** arrays |
 | @ref ex8 | Doing linear algebra with **nda** arrays |
+| @ref ex9 | How to do tensor operations (einsum, contractions, reductions) with **nda** |
 
 @section compiling Compiling the examples
 

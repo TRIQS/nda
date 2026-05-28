@@ -25,6 +25,7 @@
       <tab type="user" url="@ref ex6" title="Example 6: MPI support"/>
       <tab type="user" url="@ref ex7" title="Example 7: Making use of symmetries"/>
       <tab type="user" url="@ref ex8" title="Example 8: Linear algebra support"/>
+      <tab type="user" url="@ref ex9" title="Example 9: Tensor support"/>
     </tab>
     <tab type="usergroup" url="@ref documentation" title="API Documentation">
       <tab type="usergroup" url="@ref arrays_views" title="Arrays and views">
