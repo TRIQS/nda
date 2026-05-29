@@ -16,19 +16,14 @@
 # Locates the cuTENSOR library.
 #
 # cuTENSOR ships as a tarball with libraries either in <root>/lib/<cuda-major>
-# (legacy) or <root>/lib (>=2.0), and headers in <root>/include.#
+# (legacy) or <root>/lib (modern), and headers in <root>/include.
 # 
-# Use -DCUTENSOR_ROOT=/path/to/cutensor (or the environment variable of the
+# Use -DCutensor_ROOT=/path/to/cutensor (or the environment variable of the
 # same name) to point at the unpacked archive. System paths are searched as
 # a fallback.
 #
 # Variables set:
 #   Cutensor_INCLUDE_DIR, Cutensor_LIBRARIES, Cutensor_FOUND
-#
-# Cache option:
-#   Cutensor_USE_STATIC (default OFF) -- prefer libcutensor_static.a over
-#   libcutensor.so. If only one variant is present on disk it is picked
-#   automatically regardless of this setting.
 #
 # Target:
 #   cutensor (INTERFACE) -- link this. When the resolved library is the
@@ -52,47 +47,26 @@ endif()
 
 find_path(Cutensor_INCLUDE_DIR
   NAMES cutensor.h
-  HINTS
-    ${Cutensor_ROOT}/include
-    $ENV{Cutensor_ROOT}/include
-    $ENV{CUTENSOR_ROOT}/include
-    ENV CPATH
-    ENV C_INCLUDE_PATH
-    ENV CPLUS_INCLUDE_PATH
-    /usr/include
-    /usr/local/include
-    /opt/local/include
+  PATH_SUFFIXES include
   DOC "Include directory for cuTENSOR"
 )
 
-# cuTENSOR archive layouts:
-#   <root>/lib/<cuda-major>/{libcutensor.so,libcutensor_static.a}  (legacy)
-#   <root>/lib/{libcutensor.so,libcutensor_static.a}               (>=2.0)
-set(_cutensor_libdir_hints
-  ${Cutensor_ROOT}/lib
-  $ENV{Cutensor_ROOT}/lib
-  $ENV{CUTENSOR_ROOT}/lib
-  ${Cutensor_INCLUDE_DIR}/../lib
-)
+# cuTENSOR library layouts:
+#   <root>/lib/<cuda-major>/{libcutensor.so,libcutensor_static.a}      (tarball, legacy)
+#   <root>/lib/{libcutensor.so,libcutensor_static.a}                   (tarball, modern)
+#   /usr/lib/<arch>/libcutensor/<cuda-major>/{libcutensor.so,...}      (Debian/Ubuntu apt)
+set(_cutensor_libdir_suffixes lib libcutensor)
 if(DEFINED CUDAToolkit_VERSION_MAJOR)
-  list(PREPEND _cutensor_libdir_hints
-    ${Cutensor_ROOT}/lib/${CUDAToolkit_VERSION_MAJOR}
-    $ENV{Cutensor_ROOT}/lib/${CUDAToolkit_VERSION_MAJOR}
-    $ENV{CUTENSOR_ROOT}/lib/${CUDAToolkit_VERSION_MAJOR}
-    ${Cutensor_INCLUDE_DIR}/../lib/${CUDAToolkit_VERSION_MAJOR}
+  list(PREPEND _cutensor_libdir_suffixes
+    lib/${CUDAToolkit_VERSION_MAJOR}
+    libcutensor/${CUDAToolkit_VERSION_MAJOR}
   )
 endif()
-list(APPEND _cutensor_libdir_hints
-  ENV LIBRARY_PATH
-  ENV LD_LIBRARY_PATH
-  /usr/lib
-  /usr/local/lib
-  /opt/local/lib
-)
 
 find_library(Cutensor_LIBRARIES
   NAMES ${_cutensor_names}
-  HINTS ${_cutensor_libdir_hints}
+  HINTS ${Cutensor_INCLUDE_DIR}/..
+  PATH_SUFFIXES ${_cutensor_libdir_suffixes}
   DOC "cuTENSOR library"
 )
 
