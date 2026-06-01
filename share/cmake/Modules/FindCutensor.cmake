@@ -85,6 +85,8 @@ if(Cutensor_FOUND AND NOT TARGET cutensor)
   if(Cutensor_LIBRARIES MATCHES "_static")
     find_package(Threads REQUIRED)
     target_link_libraries(cutensor INTERFACE
+      CUDA::cublasLt
+      CUDA::cublas
       CUDA::culibos
       Threads::Threads
       ${CMAKE_DL_LIBS}
