@@ -9,3 +9,4 @@ doc/html
 .claude
 test/python/c2py_clair/*.cxx
 test/python/c2py_clair/*.hxx
+.idea

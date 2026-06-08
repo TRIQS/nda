@@ -1,3 +1,8 @@
+// Copyright (c) 2023--present, The Simons Foundation
+// This file is part of TRIQS/nda and is licensed under the Apache License, Version 2.0.
+// SPDX-License-Identifier: Apache-2.0
+// See LICENSE in the root of this distribution for details.
+
 /**
  * @file
  * @brief Provides lazy, coefficient-wise array operations of standard mathematical functions together with overloads
@@ -94,11 +99,14 @@ namespace nda {
   /// \return A lazy nda::expr_call object (nda::Array) or the result of `std::abs` applied to the object (nda::Scalar).
   template <ArrayOrScalar A>
   auto abs(A &&a)  {
-    return nda::map(
-       [](auto const &x) {
-         using std::abs;
-         return abs(x);
-       })(std::forward<A>(a));
+    if constexpr (std::is_unsigned_v<get_value_t<A>>) {
+      return std::forward<A>(a);
+    } else {
+      return nda::map([](auto const &x) {
+        using std::abs;
+        return abs(x);
+      })(std::forward<A>(a));
+    }
   }
 
   /// \brief Function imag for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
@@ -122,11 +130,12 @@ namespace nda {
   /// \return A lazy nda::expr_call object (nda::Array) or the result of `std::floor` applied to the object (nda::Scalar).
   template <ArrayOrScalar A>
   auto floor(A &&a)  {
-    return nda::map(
-       [](auto const &x) {
-         using std::floor;
-         return floor(x);
-       })(std::forward<A>(a));
+    auto lambda = [](auto const &x) {
+      using xsimd::floor;
+      return floor(x);
+    };
+
+    return nda::map(detail::unary_functor<decltype(lambda)>{})(std::forward<A>(a));
   }
 
   /// \brief Function real for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
@@ -169,11 +178,12 @@ namespace nda {
   /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::exp` applied to the object (nda::Scalar).
   template <ArrayOrScalar A>
   auto exp(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         using std::exp;
-         return exp(x);
-       })(std::forward<A>(a));
+    auto lambda = [](auto const &x) {
+      using xsimd::exp;
+      return exp(x);
+    };
+
+    return nda::map(detail::unary_functor<decltype(lambda)>{})(std::forward<A>(a));
   }
 
   /// \brief Function cos for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
@@ -183,11 +193,12 @@ namespace nda {
   /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::cos` applied to the object (nda::Scalar).
   template <ArrayOrScalar A>
   auto cos(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         using std::cos;
-         return cos(x);
-       })(std::forward<A>(a));
+    auto lambda = [](auto const &x) {
+      using xsimd::cos;
+      return cos(x);
+    };
+
+    return nda::map(detail::unary_functor<decltype(lambda)>{})(std::forward<A>(a));
   }
 
   /// \brief Function sin for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
@@ -197,11 +208,12 @@ namespace nda {
   /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::sin` applied to the object (nda::Scalar).
   template <ArrayOrScalar A>
   auto sin(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         using std::sin;
-         return sin(x);
-       })(std::forward<A>(a));
+    auto lambda = [](auto const &x) {
+      using xsimd::sin;
+      return sin(x);
+    };
+
+    return nda::map(detail::unary_functor<decltype(lambda)>{})(std::forward<A>(a));
   }
 
   /// \brief Function tan for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
@@ -211,11 +223,12 @@ namespace nda {
   /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::tan` applied to the object (nda::Scalar).
   template <ArrayOrScalar A>
   auto tan(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         using std::tan;
-         return tan(x);
-       })(std::forward<A>(a));
+    auto lambda = [](auto const &x) {
+      using xsimd::tan;
+      return tan(x);
+    };
+
+    return nda::map(detail::unary_functor<decltype(lambda)>{})(std::forward<A>(a));
   }
 
   /// \brief Function cosh for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
@@ -225,11 +238,12 @@ namespace nda {
   /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::cosh` applied to the object (nda::Scalar).
   template <ArrayOrScalar A>
   auto cosh(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         using std::cosh;
-         return cosh(x);
-       })(std::forward<A>(a));
+    auto lambda = [](auto const &x) {
+      using xsimd::cosh;
+      return cosh(x);
+    };
+
+    return nda::map(detail::unary_functor<decltype(lambda)>{})(std::forward<A>(a));
   }
 
   /// \brief Function sinh for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
@@ -239,11 +253,12 @@ namespace nda {
   /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::sinh` applied to the object (nda::Scalar).
   template <ArrayOrScalar A>
   auto sinh(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         using std::sinh;
-         return sinh(x);
-       })(std::forward<A>(a));
+    auto lambda = [](auto const &x) {
+      using xsimd::sinh;
+      return sinh(x);
+    };
+
+    return nda::map(detail::unary_functor<decltype(lambda)>{})(std::forward<A>(a));
   }
 
   /// \brief Function tanh for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
@@ -253,11 +268,12 @@ namespace nda {
   /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::tanh` applied to the object (nda::Scalar).
   template <ArrayOrScalar A>
   auto tanh(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         using std::tanh;
-         return tanh(x);
-       })(std::forward<A>(a));
+    auto lambda = [](auto const &x) {
+      using xsimd::tanh;
+      return tanh(x);
+    };
+
+    return nda::map(detail::unary_functor<decltype(lambda)>{})(std::forward<A>(a));
   }
 
   /// \brief Function acos for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
@@ -267,11 +283,12 @@ namespace nda {
   /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::acos` applied to the object (nda::Scalar).
   template <ArrayOrScalar A>
   auto acos(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         using std::acos;
-         return acos(x);
-       })(std::forward<A>(a));
+    auto lambda = [](auto const &x) {
+      using xsimd::acos;
+      return acos(x);
+    };
+
+    return nda::map(detail::unary_functor<decltype(lambda)>{})(std::forward<A>(a));
   }
 
   /// \brief Function asin for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
@@ -281,11 +298,12 @@ namespace nda {
   /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::asin` applied to the object (nda::Scalar).
   template <ArrayOrScalar A>
   auto asin(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         using std::asin;
-         return asin(x);
-       })(std::forward<A>(a));
+    auto lambda = [](auto const &x) {
+      using xsimd::asin;
+      return asin(x);
+    };
+
+    return nda::map(detail::unary_functor<decltype(lambda)>{})(std::forward<A>(a));
   }
 
   /// \brief Function atan for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
@@ -295,11 +313,12 @@ namespace nda {
   /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::atan` applied to the object (nda::Scalar).
   template <ArrayOrScalar A>
   auto atan(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         using std::atan;
-         return atan(x);
-       })(std::forward<A>(a));
+    auto lambda = [](auto const &x) {
+      using xsimd::atan;
+      return atan(x);
+    };
+
+    return nda::map(detail::unary_functor<decltype(lambda)>{})(std::forward<A>(a));
   }
 
   /// \brief Function log for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
@@ -309,11 +328,12 @@ namespace nda {
   /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::log` applied to the object (nda::Scalar).
   template <ArrayOrScalar A>
   auto log(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         using std::log;
-         return log(x);
-       })(std::forward<A>(a));
+    auto lambda = [](auto const &x) {
+      using xsimd::log;
+      return log(x);
+    };
+
+    return nda::map(detail::unary_functor<decltype(lambda)>{})(std::forward<A>(a));
   }
 
   /// \brief Function sqrt for non-matrix nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
@@ -323,11 +343,12 @@ namespace nda {
   /// \return  A lazy nda::expr_call object (nda::Array) or the result of `std::sqrt` applied to the object (nda::Scalar).
   template <ArrayOrScalar A>
   auto sqrt(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         using std::sqrt;
-         return sqrt(x);
-       })(std::forward<A>(a));
+    auto lambda = [](auto const &x) {
+      using xsimd::sqrt;
+      return sqrt(x);
+    };
+
+    return nda::map(detail::unary_functor<decltype(lambda)>{})(std::forward<A>(a));
   }
 
   /** @} */
