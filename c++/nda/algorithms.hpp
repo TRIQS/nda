@@ -137,6 +137,7 @@ namespace nda {
    */
   template <Array A>
   auto max_element(A const &a) {
+#ifdef NDA_HAVE_XSIMD
     using dispatch_t = simd::dispatch_policy_t<A>;
     if constexpr (std::is_same_v<dispatch_t, simd::scalar_t>) {
       return fold(
@@ -155,6 +156,14 @@ namespace nda {
       nda::for_each_static<0, get_layout_info<A>.stride_order, simd_t::size>(a.shape(), std::move(f_simd), std::move(f_scalar));
       return std::max(max_scalar, xsimd::reduce_max(max_simd));
     }
+#else
+    return fold(
+       [](auto const &x, auto const &y) {
+         using std::max;
+         return max(x, y);
+       },
+       a, get_first_element(a));
+#endif
   }
 
   /**
@@ -168,6 +177,7 @@ namespace nda {
    */
   template <Array A>
   auto min_element(A const &a) {
+#ifdef NDA_HAVE_XSIMD
     using dispatch_t = simd::dispatch_policy_t<A>;
     if constexpr (std::is_same_v<dispatch_t, simd::scalar_t>) {
       return fold(
@@ -186,6 +196,14 @@ namespace nda {
       nda::for_each_static<0, get_layout_info<A>.stride_order, simd_t::size>(a.shape(), std::move(f_simd), std::move(f_scalar));
       return std::min(min_scalar, xsimd::reduce_min(min_simd));
     }
+#else
+    return fold(
+       [](auto const &x, auto const &y) {
+         using std::min;
+         return min(x, y);
+       },
+       a, get_first_element(a));
+#endif
   }
 
   /**
@@ -198,6 +216,7 @@ namespace nda {
    */
   template <ArrayOfRank<2> A>
   double frobenius_norm(A const &a) {
+#ifdef NDA_HAVE_XSIMD
     using dispatch_t = simd::dispatch_policy_t<A>;
     if constexpr (std::is_same_v<dispatch_t, simd::scalar_t> or is_complex_v<get_value_t<A>>) {
       return std::sqrt(fold(
@@ -223,6 +242,14 @@ namespace nda {
       nda::for_each_static<0, get_layout_info<A>.stride_order, simd_t::size>(a.shape(), std::move(f_simd), std::move(f_scalar));
       return std::sqrt((static_cast<double>(xsimd::reduce_add(r_simd)) + r));
     }
+#else
+    return std::sqrt(fold(
+       [](double r, auto const &x) -> double {
+         auto ab = std::abs(x);
+         return r + ab * ab;
+       },
+       a, double(0)));
+#endif
   }
 
   /**
@@ -237,6 +264,7 @@ namespace nda {
     requires(nda::Scalar<Value> or nda::Array<Value>)
   {
     if constexpr (nda::Scalar<Value>) {
+#ifdef NDA_HAVE_XSIMD
       using dispatch_t = simd::dispatch_policy_t<A>;
       if constexpr (std::is_same_v<dispatch_t, simd::scalar_t>) {
         return fold(std::plus<>{}, a);
@@ -250,6 +278,9 @@ namespace nda {
         nda::for_each_static<0, get_layout_info<A>.stride_order, simd_t::size>(a.shape(), std::move(f_simd), std::move(f_scalar));
         return sum_scalar + xsimd::reduce_add(sum_simd);
       }
+#else
+      return fold(std::plus<>{}, a);
+#endif
     } else {
       // Array<Value>
       return fold(std::plus<>{}, a, Value::zeros(get_first_element(a).shape()));
@@ -343,9 +374,10 @@ namespace nda {
     requires(nda::Scalar<Value> or nda::Array<Value>)
   {
     if constexpr (nda::Scalar<Value>) {
+#ifdef NDA_HAVE_XSIMD
       using dispatch_t = simd::dispatch_policy_t<A>;
       if constexpr (std::is_same_v<dispatch_t, simd::scalar_t>) {
-        return fold(std::multiplies<>{}, a);
+        return fold(std::multiplies<>{}, a, get_value_t<A>{1});
       } else {
         using value_t = get_value_t<A>;
         using simd_t  = native_simd<value_t>;
@@ -356,6 +388,9 @@ namespace nda {
         nda::for_each_static<0, get_layout_info<A>.stride_order, simd_t::size>(a.shape(), std::move(f_simd), std::move(f_scalar));
         return product_scalar * xsimd::reduce_mul(product_simd);
       }
+#else
+      return fold(std::multiplies<>{}, a, get_value_t<A>{1});
+#endif
     } else {
       // Array<Value>
       return fold(std::multiplies<>{}, a, Value::ones(get_first_element(a).shape()));
@@ -374,6 +409,7 @@ namespace nda {
   template <Array A, Array B>
     requires(nda::get_rank<A> == nda::get_rank<B>)
   [[nodiscard]] constexpr auto hadamard(A &&a, B &&b) {
+#ifdef NDA_HAVE_XSIMD
     if constexpr (is_simd_enabled_v<A> and is_simd_enabled_v<B> and std::is_same_v<get_value_t<A>, get_value_t<B>>) {
       using value_t = get_value_t<A>;
       using simd_t  = native_simd<value_t>;
@@ -385,6 +421,9 @@ namespace nda {
     } else {
       return nda::map([](auto const &x, auto const &y) { return x * y; })(std::forward<A>(a), std::forward<B>(b));
     }
+#else
+    return nda::map([](auto const &x, auto const &y) { return x * y; })(std::forward<A>(a), std::forward<B>(b));
+#endif
   }
 
   /**

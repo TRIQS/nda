@@ -18,6 +18,12 @@ if(NOT HDF5Support)
   list(FILTER all_tests EXCLUDE REGEX "h5")
 endif()
 
+if(NOT SIMDSupport)
+  # nda_simd is a pure SIMD test; nda_traits mixes general traits with SIMD-trait
+  # static_asserts that reference native_simd/mock_simd. Both still run in the ON build.
+  list(FILTER all_tests EXCLUDE REGEX "nda_simd|nda_traits")
+endif()
+
 macro(SetUpAllTestWithMacroDef extension macrodef)
 foreach(test ${all_tests})
   get_filename_component(test_name ${test} NAME_WE)

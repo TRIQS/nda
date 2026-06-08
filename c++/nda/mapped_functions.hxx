@@ -131,7 +131,11 @@ namespace nda {
   template <ArrayOrScalar A>
   auto floor(A &&a)  {
     auto lambda = [](auto const &x) {
+#ifdef NDA_HAVE_XSIMD
       using xsimd::floor;
+#else
+      using std::floor;
+#endif
       return floor(x);
     };
 
@@ -179,7 +183,11 @@ namespace nda {
   template <ArrayOrScalar A>
   auto exp(A &&a) requires(get_algebra<A> != 'M') {
     auto lambda = [](auto const &x) {
+#ifdef NDA_HAVE_XSIMD
       using xsimd::exp;
+#else
+      using std::exp;
+#endif
       return exp(x);
     };
 
@@ -194,7 +202,11 @@ namespace nda {
   template <ArrayOrScalar A>
   auto cos(A &&a) requires(get_algebra<A> != 'M') {
     auto lambda = [](auto const &x) {
+#ifdef NDA_HAVE_XSIMD
       using xsimd::cos;
+#else
+      using std::cos;
+#endif
       return cos(x);
     };
 
@@ -209,7 +221,11 @@ namespace nda {
   template <ArrayOrScalar A>
   auto sin(A &&a) requires(get_algebra<A> != 'M') {
     auto lambda = [](auto const &x) {
+#ifdef NDA_HAVE_XSIMD
       using xsimd::sin;
+#else
+      using std::sin;
+#endif
       return sin(x);
     };
 
@@ -224,7 +240,11 @@ namespace nda {
   template <ArrayOrScalar A>
   auto tan(A &&a) requires(get_algebra<A> != 'M') {
     auto lambda = [](auto const &x) {
+#ifdef NDA_HAVE_XSIMD
       using xsimd::tan;
+#else
+      using std::tan;
+#endif
       return tan(x);
     };
 
@@ -239,7 +259,11 @@ namespace nda {
   template <ArrayOrScalar A>
   auto cosh(A &&a) requires(get_algebra<A> != 'M') {
     auto lambda = [](auto const &x) {
+#ifdef NDA_HAVE_XSIMD
       using xsimd::cosh;
+#else
+      using std::cosh;
+#endif
       return cosh(x);
     };
 
@@ -254,7 +278,11 @@ namespace nda {
   template <ArrayOrScalar A>
   auto sinh(A &&a) requires(get_algebra<A> != 'M') {
     auto lambda = [](auto const &x) {
+#ifdef NDA_HAVE_XSIMD
       using xsimd::sinh;
+#else
+      using std::sinh;
+#endif
       return sinh(x);
     };
 
@@ -269,7 +297,11 @@ namespace nda {
   template <ArrayOrScalar A>
   auto tanh(A &&a) requires(get_algebra<A> != 'M') {
     auto lambda = [](auto const &x) {
+#ifdef NDA_HAVE_XSIMD
       using xsimd::tanh;
+#else
+      using std::tanh;
+#endif
       return tanh(x);
     };
 
@@ -284,7 +316,11 @@ namespace nda {
   template <ArrayOrScalar A>
   auto acos(A &&a) requires(get_algebra<A> != 'M') {
     auto lambda = [](auto const &x) {
+#ifdef NDA_HAVE_XSIMD
       using xsimd::acos;
+#else
+      using std::acos;
+#endif
       return acos(x);
     };
 
@@ -299,7 +335,11 @@ namespace nda {
   template <ArrayOrScalar A>
   auto asin(A &&a) requires(get_algebra<A> != 'M') {
     auto lambda = [](auto const &x) {
+#ifdef NDA_HAVE_XSIMD
       using xsimd::asin;
+#else
+      using std::asin;
+#endif
       return asin(x);
     };
 
@@ -314,7 +354,11 @@ namespace nda {
   template <ArrayOrScalar A>
   auto atan(A &&a) requires(get_algebra<A> != 'M') {
     auto lambda = [](auto const &x) {
+#ifdef NDA_HAVE_XSIMD
       using xsimd::atan;
+#else
+      using std::atan;
+#endif
       return atan(x);
     };
 
@@ -329,7 +373,11 @@ namespace nda {
   template <ArrayOrScalar A>
   auto log(A &&a) requires(get_algebra<A> != 'M') {
     auto lambda = [](auto const &x) {
+#ifdef NDA_HAVE_XSIMD
       using xsimd::log;
+#else
+      using std::log;
+#endif
       return log(x);
     };
 
@@ -344,7 +392,11 @@ namespace nda {
   template <ArrayOrScalar A>
   auto sqrt(A &&a) requires(get_algebra<A> != 'M') {
     auto lambda = [](auto const &x) {
+#ifdef NDA_HAVE_XSIMD
       using xsimd::sqrt;
+#else
+      using std::sqrt;
+#endif
       return sqrt(x);
     };
 

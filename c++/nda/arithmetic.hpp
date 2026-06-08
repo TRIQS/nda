@@ -271,6 +271,7 @@ namespace nda {
       return operator()(std::forward<Arg>(arg));
     }
 
+#ifdef NDA_HAVE_XSIMD
     private:
     template <typename Tag, typename... Args>
     auto _call_load(Args const &...args) const {
@@ -430,6 +431,7 @@ namespace nda {
                     "Load tag can only be vectorize or emulate");
       return _call_load<decltype(simd_tag)>(args...);
     }
+#endif // NDA_HAVE_XSIMD
   };
 
   /**

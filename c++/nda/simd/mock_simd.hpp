@@ -6,6 +6,8 @@
 #pragma once
 #include "../concepts.hpp"
 
+#ifdef NDA_HAVE_XSIMD
+
 namespace nda::simd {
   template <typename Derived, Vectorizable T>
   struct mock_simd {
@@ -56,3 +58,5 @@ namespace nda::simd {
     }
   };
 } // namespace nda::simd
+
+#endif // NDA_HAVE_XSIMD

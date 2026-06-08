@@ -87,8 +87,14 @@ namespace nda {
    * @brief Check if a given type is supported by the simd class or is a complex type.
    * @tparam S Type to check.
    */
+#ifdef NDA_HAVE_XSIMD
   template <typename S>
   concept Vectorizable = xsimd::has_simd_register<std::remove_cvref_t<S>>::value;
+#else
+  // Without xsimd no type is vectorizable, so all SIMD dispatch degrades to the scalar path.
+  template <typename S>
+  concept Vectorizable = false;
+#endif
   /**
    * @brief Check if a given type is either a `double` or `std::complex` type.
    * @tparam S Type to check.
@@ -118,6 +124,7 @@ namespace nda {
   template <typename T, typename... Us>
   concept AnyOf = is_any_of<T, Us...>;
 
+#ifdef NDA_HAVE_XSIMD
   namespace simd {
     template <typename Derived, Vectorizable T>
     struct mock_simd;
@@ -132,6 +139,10 @@ namespace nda {
       }(std::make_index_sequence<R>{}, f)
     } -> std::same_as<native_simd<T>>;
   } or std::is_base_of_v<simd::mock_simd<F, T>, F>;
+#else
+  template <typename F, typename T, size_t R>
+  concept LoadWithNativeSimd = false;
+#endif
 
   /** @} */
 

@@ -5,6 +5,8 @@
 
 #pragma once
 
+#ifdef NDA_HAVE_XSIMD
+
 #include <xsimd/xsimd.hpp>
 
 #include <type_traits>
@@ -18,3 +20,5 @@ namespace nda {
   using fixed_size_simd = xsimd::make_sized_batch_t<std::remove_cvref_t<T>, Width>;
 
 } // namespace nda
+
+#endif // NDA_HAVE_XSIMD

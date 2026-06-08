@@ -61,6 +61,7 @@ namespace nda {
     struct conj_f {
       auto operator()(auto const &x) const { return conj(x); };
 
+#ifdef NDA_HAVE_XSIMD
       auto load(auto const &x) const {
         //TODO: We need to change this check after custom complex class.
         if constexpr (xsimd::is_batch_complex<std::remove_cvref_t<decltype(x)>>::value) {
@@ -69,6 +70,7 @@ namespace nda {
           return x;
         }
       }
+#endif
     };
 
     struct pow_f {
@@ -77,11 +79,13 @@ namespace nda {
         using std::pow;
         return pow(x, exponent);
       }
+#ifdef NDA_HAVE_XSIMD
       FORCEINLINE auto load(auto const &x) const {
         using xsimd::pow;
         using simd_t = std::remove_cvref_t<decltype(x)>;
         return pow(x, simd_t(exponent));
       }
+#endif
     };
 
     template <typename F>
