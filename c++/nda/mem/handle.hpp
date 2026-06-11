@@ -123,7 +123,12 @@ namespace nda::mem {
     }
 
     // Deleter for the shared pointer.
-    static void deleter(void *p) noexcept { destruct(*((blk_T_t *)p)); }
+    // NB: with a custom deleter, shared_ptr does NOT delete the managed object itself,
+    // so we must free the blk_T_t node allocated by `new blk_T_t{...}` in get_sptr().
+    static void deleter(void *p) noexcept {
+      destruct(*((blk_T_t *)p));
+      delete (blk_T_t *)p;
+    }
 
     public:
     /// Value type of the data.
