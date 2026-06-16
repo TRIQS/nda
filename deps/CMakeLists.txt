@@ -100,3 +100,19 @@ if(MPISupport)
     GIT_TAG unstable
   )
 endif()
+
+# -- XSIMD --
+# Pinned to a specific xsimd master commit. external_dependency() clones with
+# `git clone --branch`, which cannot resolve a bare commit hash, so we use
+# FetchContent here (non-shallow by default) to pin the exact SHA.
+if(SIMDSupport)
+  set(NDA_XSIMD_GIT_TAG 0aa209057622721607f0ba8c76daeaee75fc9b00) # xsimd master, 2026-06-05
+  message(STATUS " =============== Configuring Dependency xsimd =============== ")
+  include(FetchContent)
+  FetchContent_Declare(xsimd
+    GIT_REPOSITORY https://github.com/xtensor-stack/xsimd
+    GIT_TAG ${NDA_XSIMD_GIT_TAG}
+  )
+  FetchContent_MakeAvailable(xsimd)
+  message(STATUS " =============== End xsimd Configuration =============== ")
+endif()

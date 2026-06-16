@@ -14,6 +14,7 @@
 #include "./layout/range.hpp"
 #include "./macros.hpp"
 #include "./traits.hpp"
+#include "./simd/simd_cost.hpp"
 
 #include <cstddef>
 #include <utility>
@@ -56,6 +57,21 @@ namespace nda {
   template <typename F, Array... As>
   inline constexpr bool is_expression<expr_call<F, As...>> = true;
 
+#ifdef NDA_HAVE_XSIMD
+  namespace detail {
+    template <typename F, typename ValueType>
+    struct emulator : simd::mock_simd<emulator<F, ValueType>, ValueType> {
+      F functor;
+
+      FORCEINLINE emulator(const F functor) : functor(functor) {}
+
+      template <typename... ValueTypeArgs>
+      FORCEINLINE auto operator()(ValueTypeArgs const &...values) const {
+        return functor(values...);
+      }
+    };
+  } // namespace detail
+#endif // NDA_HAVE_XSIMD
   /**
    * @addtogroup av_math
    * @{
@@ -90,7 +106,7 @@ namespace nda {
     private:
     // Implementation of the function call operator.
     template <size_t... Is, typename... Args>
-    [[gnu::always_inline]] [[nodiscard]] auto _call(std::index_sequence<Is...>, Args const &...args) const {
+    [[nodiscard]] FORCEINLINE auto _call(std::index_sequence<Is...>, Args const &...args) const {
       // if args contains a range, we need to return an expr_call on the resulting slice
       if constexpr ((is_range_or_ellipsis<Args> or ... or false)) {
         return mapped<F>{f}(std::get<Is>(a)(args...)...);
@@ -101,9 +117,29 @@ namespace nda {
 
     // Implementation of the subscript operator.
     template <size_t... Is, typename Arg>
-    [[gnu::always_inline]] auto _call_bra(std::index_sequence<Is...>, Arg const &arg) const {
+    FORCEINLINE auto _call_bra(std::index_sequence<Is...>, Arg const &arg) const {
       return f(std::get<Is>(a)[arg]...);
     }
+
+#ifdef NDA_HAVE_XSIMD
+    // Implementation of load operator.
+    template <size_t... Is, typename... Args>
+    FORCEINLINE auto _call_load(simd::vectorize_t, std::index_sequence<Is...>, Args const &...args) const {
+      return f.load(std::get<Is>(a).load(simd::vectorize, args...)...);
+    }
+
+    template <size_t... Is, typename... Args>
+    FORCEINLINE auto _call_load(simd::emulate_t, std::index_sequence<Is...>, Args const &...args) const {
+      static_assert(sizeof...(As) > 0);
+      using FirstElementType = std::tuple_element_t<0, decltype(a)>;
+      using ValueType        = get_value_t<FirstElementType>;
+      if constexpr (LoadWithNativeSimd<F, ValueType, sizeof...(As)>) {
+        return f.load(std::get<Is>(a).load(simd::emulate, args...)...);
+      } else {
+        return detail::emulator<F, ValueType>{f}.load(std::get<Is>(a).load(simd::emulate, args...)...);
+      }
+    }
+#endif // NDA_HAVE_XSIMD
 
     public:
     /**
@@ -122,6 +158,18 @@ namespace nda {
     auto operator()(Args const &...args) const {
       return _call(std::make_index_sequence<sizeof...(As)>{}, args...);
     }
+
+#ifdef NDA_HAVE_XSIMD
+    template <typename... Args>
+    FORCEINLINE auto load(simd::vectorize_t, Args const &...args) const {
+      return _call_load(simd::vectorize, std::make_index_sequence<sizeof...(As)>{}, args...);
+    }
+
+    template <typename... Args>
+    FORCEINLINE auto load(simd::emulate_t, Args const &...args) const {
+      return _call_load(simd::emulate, std::make_index_sequence<sizeof...(As)>{}, args...);
+    }
+#endif // NDA_HAVE_XSIMD
 
     /**
      * @brief Subscript operator.

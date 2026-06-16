@@ -262,6 +262,41 @@ FORCEINLINE decltype(auto) operator()(Ts const &...idxs) && noexcept(has_no_boun
   return call<Algebra, true>(*this, idxs...);
 }
 
+#ifdef NDA_HAVE_XSIMD
+private:
+// Right now we are only doing SIMD access in contiguous layouts. If this rule is relaxed we need to change this function as well.
+void assert_simd_access_bounds(const long offset) const noexcept(has_no_boundcheck) {
+  static_assert(
+     has_contiguous_layout<self_t>,
+     "This functions should only be called when we have a contiguous layout. This can fail only when the rules of vectorization is relaxed therefore this function needs to be updated");
+  if constexpr (!has_no_boundcheck) {
+    if (offset + native_simd<ValueType>::size > this->size()) {
+      NDA_RUNTIME_ERROR << "Index out of bounds for SIMD access.";
+    }
+  }
+}
+
+public:
+
+template <typename... Args>
+FORCEINLINE native_simd<ValueType> load(auto simd_tag, Args... idx) const noexcept(has_no_boundcheck) {
+  static_assert(std::is_same_v<decltype(simd_tag), simd::vectorize_t> or std::is_same_v<decltype(simd_tag), simd::emulate_t>,
+                "Load tag can only be vectorize or emulate");
+  static_assert(Vectorizable<ValueType>, "Load function is called with a type that is not a vectorizable type");
+  const long offset = lay(idx...);
+  assert_simd_access_bounds(offset);
+  return native_simd<ValueType>::load_unaligned(data() + offset);
+}
+
+template <typename... Args>
+FORCEINLINE void store(const native_simd<ValueType> &value, Args... idx) noexcept(has_no_boundcheck) {
+  static_assert(Vectorizable<ValueType>, "Store function is called with a type that is not a vectorizable type");
+  const long offset = lay(idx...);
+  assert_simd_access_bounds(offset);
+  value.store_unaligned(data() + offset);
+}
+#endif // NDA_HAVE_XSIMD
+
 /**
  * @brief Subscript operator to access the 1-dimensional view/array.
  *
@@ -501,7 +536,19 @@ void assign_from_ndarray(RHS const &rhs) {
   if constexpr (mem::on_device<self_t> || mem::on_device<RHS>) {
     NDA_RUNTIME_ERROR << "Error in assign_from_ndarray: Fallback to elementwise assignment not implemented for arrays/views on the GPU";
   }
+#ifdef NDA_HAVE_XSIMD
+  using dispatch_t = simd::dispatch_policy_t<RHS, ValueType>;
+  if constexpr (same_stride_order
+                and is_simd_enabled_v<self_t> and (std::is_same_v<dispatch_t, simd::vectorize_t> or std::is_same_v<dispatch_t, simd::emulate_t>)) {
+    nda::for_each_static<0, get_layout_info<self_t>.stride_order, native_simd<ValueType>::size>(
+       shape(), [this, &rhs](auto const &...args) { (*this).store(rhs.load(dispatch_t{}, args...), args...); },
+       [this, &rhs](auto const &...args) { (*this)(args...) = rhs(args...); });
+  } else {
+    nda::for_each(shape(), [this, &rhs](auto const &...args) { (*this)(args...) = rhs(args...); });
+  }
+#else
   nda::for_each(shape(), [this, &rhs](auto const &...args) { (*this)(args...) = rhs(args...); });
+#endif
 }
 
 // Implementation to fill a view/array with a constant scalar value.

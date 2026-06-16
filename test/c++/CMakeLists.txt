@@ -18,6 +18,12 @@ if(NOT HDF5Support)
   list(FILTER all_tests EXCLUDE REGEX "h5")
 endif()
 
+if(NOT SIMDSupport)
+  # nda_simd is a pure SIMD test; nda_traits mixes general traits with SIMD-trait
+  # static_asserts that reference native_simd/mock_simd. Both still run in the ON build.
+  list(FILTER all_tests EXCLUDE REGEX "nda_simd|nda_traits")
+endif()
+
 macro(SetUpAllTestWithMacroDef extension macrodef)
 foreach(test ${all_tests})
   get_filename_component(test_name ${test} NAME_WE)
@@ -29,6 +35,7 @@ foreach(test ${all_tests})
     target_link_libraries(${test_name} hdf5::hdf5)
   endif()
   target_compile_options(${test_name}  PRIVATE "${ARGV1}")
+  target_compile_options(${test_name} PRIVATE -march=native)
   set_property(TARGET ${test_name} PROPERTY RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test_dir})
   add_test(NAME ${test_name} COMMAND ${test_name} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${test_dir})
   if(MPISupport AND test_name MATCHES "(mpi|nda_sym_grp)" AND NOT MSAN)
