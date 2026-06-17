@@ -111,7 +111,7 @@ namespace nda {
   template <typename V>
     requires(std::ranges::contiguous_range<V> or ArrayOfRank<V, 1>)
   ArrayOfRank<2> auto diag(V const &v) {
-    if constexpr (std::ranges::contiguous_range<V>) {
+    if constexpr (std::ranges::contiguous_range<V> and not MemoryArray<V>) {
       return diag(nda::basic_array_view{v});
     } else {
       auto m      = matrix<std::remove_const_t<typename V::value_type>>::zeros({v.size(), v.size()});
