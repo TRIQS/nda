@@ -114,6 +114,50 @@ template <typename X, typename Y>
 #define EXPECT_ARRAY_NEAR(X, ...) EXPECT_TRUE(array_are_close(X, __VA_ARGS__))
 
 /**
+ * @brief Check that two arrays/views are close in a relative sense, i.e. that they have the same shape and that the
+ * largest elementwise relative difference is less than a given precision.
+ *
+ * @details The relative difference of two elements is defined as \f$ |x - y| / \max(|x|, |y|) \f$, with the convention
+ * that two vanishing elements have zero relative difference. Unlike ::array_are_close, this is meaningful when the
+ * elements span several orders of magnitude, where a single absolute tolerance would be dominated by the largest
+ * elements and blind to errors in the smallest ones.
+ *
+ * @tparam X nda::MemoryArray type of the first array/view.
+ * @tparam Y nda::MemoryArray type of the second array/view.
+ * @param x First array/view.
+ * @param y Second array/view.
+ * @param precision Required relative precision for the comparison to be considered successful.
+ * @return `::testing::AssertionSuccess()` if the arrays/view have the same shape and largest elementwise relative
+ * difference is less than the given precision. `::testing::AssertionFailure()` otherwise.
+ */
+template <nda::MemoryArray X, nda::MemoryArray Y>
+::testing::AssertionResult array_are_rel_close(X const &x, Y const &y, double precision = 1.e-10) {
+  // check their shapes
+  if (x.shape() != y.shape())
+    return ::testing::AssertionFailure() << "Comparing two arrays of different size "
+                                         << "\n X = " << x << "\n Y = " << y;
+
+  // empty arrays are considered equal
+  if (x.size() == 0) return ::testing::AssertionSuccess();
+
+  // find the largest elementwise relative difference |x - y| / max(|x|, |y|)
+  double maxreldiff = 0.0;
+  nda::for_each(x.shape(), [&](auto... idx) {
+    using std::abs, std::max;
+    auto const scale = max(abs(x(idx...)), abs(y(idx...)));
+    if (scale != 0) maxreldiff = max(maxreldiff, abs(x(idx...) - y(idx...)) / scale);
+  });
+
+  if (maxreldiff < precision)
+    return ::testing::AssertionSuccess();
+  else
+    return ::testing::AssertionFailure() << "max(abs(X - Y) / max(abs(X), abs(Y))) = " << maxreldiff << "\n X = " << x << "\n Y = " << y;
+}
+
+/// Macro that expects ::array_are_rel_close to return true.
+#define EXPECT_ARRAY_REL_NEAR(X, ...) EXPECT_TRUE(array_are_rel_close(X, __VA_ARGS__))
+
+/**
  * @brief Check that an array/view is close to zero, i.e. that its largest absolute element is less than 1e-10.
  *
  * @tparam X Type of the array/view.
