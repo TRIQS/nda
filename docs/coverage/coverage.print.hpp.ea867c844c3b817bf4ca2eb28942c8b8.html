@@ -43,8 +43,8 @@
       </tr>
       <tr>
         <th scope="row">Lines:</th>
-        <td class="coverage-low">13.9%</td>
-        <td class="coverage-low">48 / 0 / 346</td>
+        <td class="coverage-low">15.0%</td>
+        <td class="coverage-low">52 / 0 / 346</td>
       </tr>
       <tr>
         <th scope="row">Functions:</th>
@@ -76,7 +76,7 @@
   <div class="Box-row Box-row--focus-gray py-2 d-flex">
     <div role="gridcell" class="color-fg-muted flex-auto min-width-0 col-md-2"><a href="#l79">&lt;unknown function 79&gt; (nda/print.hpp:79)</a>    </div>
     <div role="gridcell" class="color-fg-muted flex-auto min-width-0 d-flex flex-justify-end flex-wrap flex-items-baseline" data-sort="-">excluded</div>
-    <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">40.9%</div>
+    <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">59.1%</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">-%</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">-%</div>
   </div>
@@ -418,7 +418,7 @@
   <div class="Box-header d-flex flex-space-between sticky">
     print.hpp
     <div class="toggle-buttons">
-      <button type="button" class="button_toggle_coveredLine show_coveredLine" value="coveredLine" title="Toggle covered lines">40 covered</button>
+      <button type="button" class="button_toggle_coveredLine show_coveredLine" value="coveredLine" title="Toggle covered lines">44 covered</button>
       <button type="button" class="button_toggle_uncoveredLine show_uncoveredLine" value="uncoveredLine" title="Toggle uncovered lines">9 uncovered</button>
       <button type="button" class="button_toggle_partialCoveredLine show_partialCoveredLine" value="partialCoveredLine" title="Toggle partial covered lines">8 partial covered</button>
       <button type="button" class="button_toggle_excludedLine show_excludedLine" value="excludedLine" title="Toggle excluded lines">0 excluded</button>
@@ -987,7 +987,7 @@
         <td class="lineno"><a id="l79" href="#l79">79</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">9</td>
+        <td class="linecount coveredLine show_coveredLine">15</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sout</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">)</span></td>
       </tr>
       <tr class="source-line">
@@ -1022,14 +1022,14 @@
         <td class="lineno"><a id="l84" href="#l84">84</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">4</td>
+        <td class="linecount coveredLine show_coveredLine">10</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="n">sout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;[&quot;</span><span class="p">;</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l85" href="#l85">85</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">4</td>
+        <td class="linecount coveredLine show_coveredLine">10</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">indexmap</span><span class="p">().</span><span class="n">lengths</span><span class="p">();</span></td>
       </tr>
       <tr class="source-line">
@@ -1167,14 +1167,14 @@
             </div>
           </details>
         </td>
-        <td class="linecount partialCoveredLine show_partialCoveredLine">12</td>
+        <td class="linecount partialCoveredLine show_partialCoveredLine">33</td>
         <td class="src  partialCoveredLine show_partialCoveredLine"><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">len</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">sout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;,&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">a</span><span class="p">(</span><span class="n">i</span><span class="p">);</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l87" href="#l87">87</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">4</td>
+        <td class="linecount coveredLine show_coveredLine">10</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="n">sout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;]&quot;</span><span class="p">;</span></td>
       </tr>
       <tr class="source-line">
@@ -1889,7 +1889,7 @@
         <td class="lineno"><a id="l113" href="#l113">113</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">9</td>
+        <td class="linecount coveredLine show_coveredLine">15</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">sout</span><span class="p">;</span></td>
       </tr>
       <tr class="source-line">
@@ -2396,7 +2396,7 @@
         <hr class="block-separator"/>
         <footer class="text-center">
           Created using <a href="http://gcovr.com/en/8.6">GCOVR (Version 8.6)</a>
-          at 2026-06-11 15:54:07
+          at 2026-06-18 14:49:59
         </footer>
       </div>
     </div>
