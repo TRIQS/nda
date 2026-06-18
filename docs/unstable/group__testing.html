@@ -141,6 +141,9 @@ Macros</h2></td></tr>
 <tr class="memitem:ga350f0bafc5dd3ec08c1628a2ac900929" id="r_ga350f0bafc5dd3ec08c1628a2ac900929"><td class="memItemLeft"><a id="ga350f0bafc5dd3ec08c1628a2ac900929" name="ga350f0bafc5dd3ec08c1628a2ac900929"></a>
 #define&#160;</td><td class="memItemRight"><b>EXPECT_ARRAY_NEAR</b>(X, ...)</td></tr>
 <tr class="memdesc:ga350f0bafc5dd3ec08c1628a2ac900929"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro that expects <a class="el" href="#gab20d7c4db596019779a8ec209a4db356" title="Check that two arrays/views are close, i.e. that they have the same shape and that the largest elemen...">array_are_close</a> to return true. <br /></td></tr>
+<tr class="memitem:ga737a9b0efc5dd3c377c6021f02cd8264" id="r_ga737a9b0efc5dd3c377c6021f02cd8264"><td class="memItemLeft"><a id="ga737a9b0efc5dd3c377c6021f02cd8264" name="ga737a9b0efc5dd3c377c6021f02cd8264"></a>
+#define&#160;</td><td class="memItemRight"><b>EXPECT_ARRAY_REL_NEAR</b>(X, ...)</td></tr>
+<tr class="memdesc:ga737a9b0efc5dd3c377c6021f02cd8264"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro that expects <a class="el" href="#gaa5deb66f4638758dfe5ec04ebd773bcc" title="Check that two arrays/views are close in a relative sense, i.e. that they have the same shape and tha...">array_are_rel_close</a> to return true. <br /></td></tr>
 <tr class="memitem:gac052fa769b0ec92070b93e813530e70d" id="r_gac052fa769b0ec92070b93e813530e70d"><td class="memItemLeft"><a id="gac052fa769b0ec92070b93e813530e70d" name="gac052fa769b0ec92070b93e813530e70d"></a>
 #define&#160;</td><td class="memItemRight"><b>EXPECT_ARRAY_ZERO</b>(X)</td></tr>
 <tr class="memdesc:gac052fa769b0ec92070b93e813530e70d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro that expects <a class="el" href="#ga7dc5f72bdbee77bbf861d96183d7d615" title="Check that an array/view is close to zero, i.e. that its largest absolute element is less than 1e-10.">array_almost_zero</a> to return true. <br /></td></tr>
@@ -165,6 +168,9 @@ Functions</h2></td></tr>
 <tr class="memitem:gaba482f6e79a73794bb4fa4b0bddcfdbd" id="r_gaba482f6e79a73794bb4fa4b0bddcfdbd"><td class="memTemplParams" colspan="2">template&lt;typename X, typename Y&gt; </td></tr>
 <tr class="memitem:gaba482f6e79a73794bb4fa4b0bddcfdbd template"><td class="memItemLeft">::testing::AssertionResult&#160;</td><td class="memItemRight"><a class="el" href="#gaba482f6e79a73794bb4fa4b0bddcfdbd">array_are_equal</a> (X const &amp;x, Y const &amp;y)</td></tr>
 <tr class="memdesc:gaba482f6e79a73794bb4fa4b0bddcfdbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check that two arrays/views are equal, i.e. that they have the same shape and the same elements.  <br /></td></tr>
+<tr class="memitem:gaa5deb66f4638758dfe5ec04ebd773bcc" id="r_gaa5deb66f4638758dfe5ec04ebd773bcc"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="conceptnda_1_1_memory_array.html">nda::MemoryArray</a> X, <a class="el" href="conceptnda_1_1_memory_array.html">nda::MemoryArray</a> Y&gt; </td></tr>
+<tr class="memitem:gaa5deb66f4638758dfe5ec04ebd773bcc template"><td class="memItemLeft">::testing::AssertionResult&#160;</td><td class="memItemRight"><a class="el" href="#gaa5deb66f4638758dfe5ec04ebd773bcc">array_are_rel_close</a> (X const &amp;x, Y const &amp;y, double precision=1.e-10)</td></tr>
+<tr class="memdesc:gaa5deb66f4638758dfe5ec04ebd773bcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check that two arrays/views are close in a relative sense, i.e. that they have the same shape and that the largest elementwise relative difference is less than a given precision.  <br /></td></tr>
 <tr class="memitem:gaf1255bd37fa39590eb7e02658944f498" id="r_gaf1255bd37fa39590eb7e02658944f498"><td class="memTemplParams" colspan="2">template&lt;typename X, typename Y&gt; </td></tr>
 <tr class="memitem:gaf1255bd37fa39590eb7e02658944f498 template"><td class="memItemLeft">::testing::AssertionResult&#160;</td><td class="memItemRight"><a class="el" href="#gaf1255bd37fa39590eb7e02658944f498">complex_are_close</a> (X const &amp;x, Y const &amp;y, double precision=1.e-10)</td></tr>
 <tr class="memdesc:gaf1255bd37fa39590eb7e02658944f498"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check the absolute difference of two (complex) numbers.  <br /></td></tr>
@@ -207,7 +213,7 @@ template&lt;typename X&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><span class="tt">::testing::AssertionSuccess()</span> if the absolute value of every element is less than 1e-10. <span class="tt">::testing::AssertionFailure()</span> otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="gtest__tools_8hpp_source.html#l00125">125</a> of file <a class="el" href="gtest__tools_8hpp_source.html">gtest_tools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="gtest__tools_8hpp_source.html#l00169">169</a> of file <a class="el" href="gtest__tools_8hpp_source.html">gtest_tools.hpp</a>.</p>
 
 </div>
 </div>
@@ -305,6 +311,57 @@ template&lt;typename X, typename Y&gt; </div>
 
 </div>
 </div>
+<a id="gaa5deb66f4638758dfe5ec04ebd773bcc" name="gaa5deb66f4638758dfe5ec04ebd773bcc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa5deb66f4638758dfe5ec04ebd773bcc">&#9670;&#160;</a></span>array_are_rel_close()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="conceptnda_1_1_memory_array.html">nda::MemoryArray</a> X, <a class="el" href="conceptnda_1_1_memory_array.html">nda::MemoryArray</a> Y&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">::testing::AssertionResult array_are_rel_close </td>
+          <td>(</td>
+          <td class="paramtype">X const &amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Y const &amp;</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>precision</em></span><span class="paramdefsep"> = </span><span class="paramdefval">1.e-10</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="gtest__tools_8hpp.html">nda/gtest_tools.hpp</a>&gt;</code></p>
+
+<p>Check that two arrays/views are close in a relative sense, i.e. that they have the same shape and that the largest elementwise relative difference is less than a given precision. </p>
+<p>The relative difference of two elements is defined as \( |x - y| / \max(|x|, |y|) \), with the convention that two vanishing elements have zero relative difference. Unlike <a class="el" href="#gab20d7c4db596019779a8ec209a4db356" title="Check that two arrays/views are close, i.e. that they have the same shape and that the largest elemen...">array_are_close</a>, this is meaningful when the elements span several orders of magnitude, where a single absolute tolerance would be dominated by the largest elements and blind to errors in the smallest ones.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">X</td><td><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> type of the first array/view. </td></tr>
+    <tr><td class="paramname">Y</td><td><a class="el" href="conceptnda_1_1_memory_array.html" title="Check if a given type satisfies the memory array concept.">nda::MemoryArray</a> type of the second array/view. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>First array/view. </td></tr>
+    <tr><td class="paramname">y</td><td>Second array/view. </td></tr>
+    <tr><td class="paramname">precision</td><td>Required relative precision for the comparison to be considered successful. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><span class="tt">::testing::AssertionSuccess()</span> if the arrays/view have the same shape and largest elementwise relative difference is less than the given precision. <span class="tt">::testing::AssertionFailure()</span> otherwise. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="gtest__tools_8hpp_source.html#l00134">134</a> of file <a class="el" href="gtest__tools_8hpp_source.html">gtest_tools.hpp</a>.</p>
+
+</div>
+</div>
 <a id="gaf1255bd37fa39590eb7e02658944f498" name="gaf1255bd37fa39590eb7e02658944f498"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gaf1255bd37fa39590eb7e02658944f498">&#9670;&#160;</a></span>complex_are_close()</h2>
 
@@ -395,7 +452,7 @@ template&lt;typename X, typename Y&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><span class="tt">::testing::AssertionSuccess()</span> if the absolute value of their difference is less than 1e-12. <span class="tt">::testing::AssertionFailure()</span> otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="gtest__tools_8hpp_source.html#l00150">150</a> of file <a class="el" href="gtest__tools_8hpp_source.html">gtest_tools.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="gtest__tools_8hpp_source.html#l00194">194</a> of file <a class="el" href="gtest__tools_8hpp_source.html">gtest_tools.hpp</a>.</p>
 
 </div>
 </div>
