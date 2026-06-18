@@ -39,6 +39,7 @@ jobs:
 
     env:
       BUILD_CONFIG: ${{ matrix.os }}-${{ matrix.cxx }}-${{ matrix.doc }}-${{ matrix.cov }}-${{ matrix.python_hdf5 }}-${{ matrix.openmp_mpi }}
+      CXX: ${{ matrix.cxx }}
 
     runs-on: ${{ matrix.os }}
 
@@ -51,14 +52,6 @@ jobs:
         key: ccache-${{ env.BUILD_CONFIG }}-${{ github.run_id }}-${{ github.run_attempt }}
         restore-keys: |
           ccache-${{ env.BUILD_CONFIG }}-
-
-    - name: Set cxx variables
-      run: |
-        if [[ ${{ matrix.os }} == 'macos-15' && ${{ matrix.cxx }} == 'g++' ]]; then
-          echo "CXX=g++-15" >> $GITHUB_ENV
-        else
-          echo "CXX=${{ matrix.cxx }}" >> $GITHUB_ENV
-        fi
 
     - name: Install ubuntu dependencies
       if: ${{ contains(matrix.os, 'ubuntu') }}
@@ -109,6 +102,10 @@ jobs:
       run: |
         brew update
         brew install ccache gcc llvm libomp hdf5 open-mpi openblas doxygen
+        if [[ ${{ matrix.cxx }} == 'g++' ]]; then
+          gcc_major=$(ls $(brew --prefix)/bin/g++-* | grep -oE 'g\+\+-[0-9]+' | sort -V | tail -1 | grep -oE '[0-9]+$')
+          echo "CXX=g++-$gcc_major" >> $GITHUB_ENV
+        fi
         pip install mako numpy scipy mpi4py
         pip install -r requirements.txt
         echo "PATH=$(brew --prefix llvm)/bin:$(brew --prefix gcc)/bin:$PATH" >> $GITHUB_ENV
