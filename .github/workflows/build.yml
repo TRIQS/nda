@@ -39,12 +39,11 @@ jobs:
 
     env:
       BUILD_CONFIG: ${{ matrix.os }}-${{ matrix.cxx }}-${{ matrix.doc }}-${{ matrix.cov }}-${{ matrix.python_hdf5 }}-${{ matrix.openmp_mpi }}
-      CXX: ${{ matrix.cxx }}
 
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - uses: actions/cache/restore@v4
       with:
@@ -53,7 +52,7 @@ jobs:
         restore-keys: |
           ccache-${{ env.BUILD_CONFIG }}-
 
-    - name: Install ubuntu dependencies
+    - name: Set up Linux environment
       if: ${{ contains(matrix.os, 'ubuntu') }}
       run: >
         sudo apt-get update &&
@@ -87,25 +86,27 @@ jobs:
         python3-numpy
         python3-pip
         python3-scipy
-        python3-ipython
+        python3-ipython &&
+        echo "CXX=${{ matrix.cxx }}" >> $GITHUB_ENV
 
-    - name: Set up virtualenv
+    - name: Set up Python venv
       run: |
-        mkdir -p $HOME/.venv
+        # --system-site-packages exposes apt- (Linux) / brew- (macOS) installed mpi4py/numpy/scipy
         python3 -m venv --system-site-packages $HOME/.venv/my_python
-        source $HOME/.venv/my_python/bin/activate
-        echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
-        echo "PATH=$PATH" >> $GITHUB_ENV
+        echo "VIRTUAL_ENV=$HOME/.venv/my_python" >> $GITHUB_ENV
+        echo "$HOME/.venv/my_python/bin"         >> $GITHUB_PATH
 
-    - name: Install homebrew dependencies
+    - name: Set up macOS environment
       if: ${{ contains(matrix.os, 'macos') }}
       run: |
         brew update
         brew install ccache gcc llvm libomp hdf5 open-mpi openblas doxygen
-        if [[ ${{ matrix.cxx }} == 'g++' ]]; then
-          gcc_major=$(ls $(brew --prefix)/bin/g++-* | grep -oE 'g\+\+-[0-9]+' | sort -V | tail -1 | grep -oE '[0-9]+$')
-          echo "CXX=g++-$gcc_major" >> $GITHUB_ENV
+        # Set CXX from the matrix; for gcc, resolve unversioned 'g++' to whatever g++-NN Homebrew installed
+        CXX=${{ matrix.cxx }}
+        if [[ $CXX == g++ ]]; then
+          CXX=$(basename "$(ls $(brew --prefix)/bin/g++-* | sort -V | tail -1)")
         fi
+        echo "CXX=$CXX" >> $GITHUB_ENV
         pip install mako numpy scipy mpi4py
         pip install -r requirements.txt
         echo "PATH=$(brew --prefix llvm)/bin:$(brew --prefix gcc)/bin:$PATH" >> $GITHUB_ENV
@@ -115,7 +116,7 @@ jobs:
         echo "LDFLAGS=-L$(brew --prefix libomp)/lib -L$(brew --prefix llvm)/lib/c++ -L/opt/homebrew/opt/llvm/lib/unwind -lunwind" >> $GITHUB_ENV
 
     - name: Add clang CXXFLAGS
-      if: ${{ matrix.cxx == 'clang++' }}
+      if: ${{ contains(matrix.cxx, 'clang') }}
       run: |
         echo "CXXFLAGS=-stdlib=libc++" >> $GITHUB_ENV
 
@@ -141,6 +142,7 @@ jobs:
           -DBuild_Documentation=${{ matrix.doc }} \
           -DCMAKE_BUILD_TYPE=${{ matrix.cov == 'ON' && 'Debug' || 'Release' }} \
           -DPythonSupport=${{ matrix.python_hdf5 }} \
+          -DPython_EXECUTABLE=$VIRTUAL_ENV/bin/python \
           -DHDF5Support=${{ matrix.python_hdf5 }} \
           -DOpenMPSupport=${{ matrix.openmp_mpi }} \
           -DMPISupport=${{ matrix.openmp_mpi }}
