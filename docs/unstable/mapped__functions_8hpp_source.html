@@ -133,93 +133,121 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('mapped__functi
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="map_8hpp.html">./map.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;<a class="code" href="traits_8hpp.html">./traits.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;cmath&gt;</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;complex&gt;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">namespace </span>nda {</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <span class="keyword">namespace </span>detail {</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="comment">// Get the real part of a scalar.</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keyword">template</span> &lt;nda::Scalar S&gt;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keyword">auto</span> real(S x) {</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_variable" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v&lt;S&gt;</a>) {</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keywordflow">return</span> std::real(x);</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="keywordflow">return</span> x;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>      }</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    }</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="comment">// Get the complex conjugate of a scalar.</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">template</span> &lt;nda::Scalar S&gt;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">auto</span> conj(S x) {</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_variable" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v&lt;S&gt;</a>) {</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keywordflow">return</span> std::conj(x);</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keywordflow">return</span> x;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>      }</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    }</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="comment">// Get the squared absolute value of a double.</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">inline</span> <span class="keywordtype">double</span> abs2(<span class="keywordtype">double</span> x) { <span class="keywordflow">return</span> x * x; }</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="comment">// Get the squared absolute value of a std::complex&lt;double&gt;.</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">inline</span> <span class="keywordtype">double</span> abs2(std::complex&lt;double&gt; z) { <span class="keywordflow">return</span> (conj(z) * z).real(); }</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="comment">// Check if a std::complex&lt;double&gt; is NaN.</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keyword">inline</span> <span class="keywordtype">bool</span> isnan(std::complex&lt;double&gt; <span class="keyword">const</span> &amp;z) { <span class="keywordflow">return</span> std::isnan(z.real()) or std::isnan(z.<a class="code hl_function" href="group__av__math.html#gaa337f00c9324d22f827b9759adb22f18">imag</a>()); }</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="comment">// Functor for nda::detail::conj.</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    struct conj_f {</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>      <span class="keyword">auto</span> operator()(<span class="keyword">auto</span> <span class="keyword">const</span> &amp;x)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> conj(x); };</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    };</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  } <span class="comment">// namespace detail</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  <span class="keyword">template</span> &lt;ArrayOrScalar A&gt;</div>
-<div class="foldopen" id="foldopen00076" data-start="{" data-end="}">
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="group__av__math.html#ga6900d4319e73e27201a65f96d082289f">   76</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__math.html#ga6900d4319e73e27201a65f96d082289f">pow</a>(A &amp;&amp;a, <span class="keywordtype">double</span> p) {</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="group__av__math.html#gaf8151ad99c4fe345cf168a5d01529a6a">nda::map</a>([p](<span class="keyword">auto</span> <span class="keyword">const</span> &amp;x) {</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>      <span class="keyword">using </span>std::pow;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>      <span class="keywordflow">return</span> <a class="code hl_function" href="group__av__math.html#ga6900d4319e73e27201a65f96d082289f">pow</a>(x, p);</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    })(std::forward&lt;A&gt;(a));</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  }</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;cmath&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;complex&gt;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">namespace </span>nda {</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keyword">namespace </span>detail {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="comment">// Get the real part of a scalar.</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keyword">template</span> &lt;nda::Scalar S&gt;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">auto</span> real(S x) {</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_variable" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v&lt;S&gt;</a>) {</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="keywordflow">return</span> std::real(x);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="keywordflow">return</span> x;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>      }</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    }</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="comment">// Get the complex conjugate of a scalar.</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">template</span> &lt;nda::Scalar S&gt;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keyword">auto</span> conj(S x) {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_variable" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v&lt;S&gt;</a>) {</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="keywordflow">return</span> std::conj(x);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <span class="keywordflow">return</span> x;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>      }</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    }</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="comment">// Get the squared absolute value of a double.</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">inline</span> <span class="keywordtype">double</span> abs2(<span class="keywordtype">double</span> x) { <span class="keywordflow">return</span> x * x; }</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="comment">// Get the squared absolute value of a std::complex&lt;double&gt;.</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keyword">inline</span> <span class="keywordtype">double</span> abs2(std::complex&lt;double&gt; z) { <span class="keywordflow">return</span> (conj(z) * z).real(); }</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="comment">// Check if a std::complex&lt;double&gt; is NaN.</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keyword">inline</span> <span class="keywordtype">bool</span> isnan(std::complex&lt;double&gt; <span class="keyword">const</span> &amp;z) { <span class="keywordflow">return</span> std::isnan(z.real()) or std::isnan(z.<a class="code hl_function" href="group__av__math.html#gaa337f00c9324d22f827b9759adb22f18">imag</a>()); }</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="comment">// Functor for nda::detail::conj.</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    struct conj_f {</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>      <span class="keyword">auto</span> operator()(<span class="keyword">auto</span> <span class="keyword">const</span> &amp;x)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> conj(x); };</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    };</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  } <span class="comment">// namespace detail</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <span class="keyword">template</span> &lt;ArrayOrScalar A&gt;</div>
+<div class="foldopen" id="foldopen00077" data-start="{" data-end="}">
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="group__av__math.html#ga6900d4319e73e27201a65f96d082289f">   77</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__math.html#ga6900d4319e73e27201a65f96d082289f">pow</a>(A &amp;&amp;a, <span class="keywordtype">double</span> p) {</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="group__av__math.html#gaf8151ad99c4fe345cf168a5d01529a6a">nda::map</a>([p](<span class="keyword">auto</span> <span class="keyword">const</span> &amp;x) {</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>      <span class="keyword">using </span>std::pow;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>      <span class="keywordflow">return</span> <a class="code hl_function" href="group__av__math.html#ga6900d4319e73e27201a65f96d082289f">pow</a>(x, p);</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    })(std::forward&lt;A&gt;(a));</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  }</div>
 </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span></div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  <span class="keyword">template</span> &lt;ArrayOrScalar A&gt;</div>
-<div class="foldopen" id="foldopen00093" data-start="{" data-end="}">
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno"><a class="line" href="group__av__math.html#gaed558141a1f01cb2974b0cc4fc4d04ff">   93</a></span>  <span class="keyword">decltype</span>(<span class="keyword">auto</span>) <a class="code hl_function" href="group__av__math.html#gaed558141a1f01cb2974b0cc4fc4d04ff">conj</a>(A &amp;&amp;a) {</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_variable" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v&lt;get_value_t&lt;A&gt;</a>&gt;)</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>      <span class="keywordflow">return</span> <a class="code hl_function" href="group__av__math.html#gaf8151ad99c4fe345cf168a5d01529a6a">nda::map</a>(detail::conj_f{})(std::forward&lt;A&gt;(a));</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>      <span class="keywordflow">return</span> std::forward&lt;A&gt;(a);</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  }</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  <span class="keyword">template</span> &lt;ArrayOrScalar A&gt;</div>
+<div class="foldopen" id="foldopen00094" data-start="{" data-end="}">
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno"><a class="line" href="group__av__math.html#gaed558141a1f01cb2974b0cc4fc4d04ff">   94</a></span>  <span class="keyword">decltype</span>(<span class="keyword">auto</span>) <a class="code hl_function" href="group__av__math.html#gaed558141a1f01cb2974b0cc4fc4d04ff">conj</a>(A &amp;&amp;a) {</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_variable" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v&lt;get_value_t&lt;A&gt;</a>&gt;)</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>      <span class="keywordflow">return</span> <a class="code hl_function" href="group__av__math.html#gaf8151ad99c4fe345cf168a5d01529a6a">nda::map</a>(detail::conj_f{})(std::forward&lt;A&gt;(a));</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>      <span class="keywordflow">return</span> std::forward&lt;A&gt;(a);</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  }</div>
 </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span></div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  <span class="keyword">template</span> &lt;ArrayOrScalar A&gt;</div>
-<div class="foldopen" id="foldopen00109" data-start="{" data-end="}">
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno"><a class="line" href="group__av__math.html#gac5e6cabd373fe6b872c6c0d7fa9803c1">  109</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__math.html#gac5e6cabd373fe6b872c6c0d7fa9803c1">reciprocal</a>(A &amp;&amp;a) {</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="group__av__math.html#gaf8151ad99c4fe345cf168a5d01529a6a">nda::map</a>([](<span class="keyword">auto</span> <span class="keyword">const</span> &amp;x) {</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_concept" href="conceptnda_1_1_scalar.html">Scalar</a>&lt;<span class="keyword">decltype</span>(x)&gt;) {</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        <span class="keywordflow">return</span> 1.0 / x;</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="group__av__math.html#gac5e6cabd373fe6b872c6c0d7fa9803c1">reciprocal</a>(x);</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>      }</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    })(std::forward&lt;A&gt;(a));</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  }</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  <span class="keyword">template</span> &lt;ArrayOrScalar A&gt;</div>
+<div class="foldopen" id="foldopen00110" data-start="{" data-end="}">
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno"><a class="line" href="group__av__math.html#gac5e6cabd373fe6b872c6c0d7fa9803c1">  110</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="group__av__math.html#gac5e6cabd373fe6b872c6c0d7fa9803c1">reciprocal</a>(A &amp;&amp;a) {</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="group__av__math.html#gaf8151ad99c4fe345cf168a5d01529a6a">nda::map</a>([](<span class="keyword">auto</span> <span class="keyword">const</span> &amp;x) {</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<a class="code hl_concept" href="conceptnda_1_1_scalar.html">Scalar</a>&lt;<span class="keyword">decltype</span>(x)&gt;) {</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        <span class="keywordflow">return</span> 1.0 / x;</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="group__av__math.html#gac5e6cabd373fe6b872c6c0d7fa9803c1">reciprocal</a>(x);</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>      }</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    })(std::forward&lt;A&gt;(a));</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  }</div>
 </div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span></div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>} <span class="comment">// namespace nda</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>  <span class="keyword">template</span> &lt;ArrayOrScalar A, ArrayOrScalar B&gt;</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    <span class="keyword">requires</span>(((Scalar&lt;A&gt; &amp;&amp; Scalar&lt;B&gt;) || (Array&lt;A&gt; &amp;&amp; Array&lt;B&gt; &amp;&amp; <a class="code hl_variable" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank&lt;A&gt;</a> == <a class="code hl_variable" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank&lt;B&gt;</a>))</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>             &amp;&amp; !<a class="code hl_variable" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v&lt;get_value_t&lt;A&gt;</a>&gt; &amp;&amp; !<a class="code hl_variable" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v&lt;get_value_t&lt;B&gt;</a>&gt;)</div>
+<div class="foldopen" id="foldopen00132" data-start="{" data-end="}">
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno"><a class="line" href="group__av__math.html#gad4adce242cbf197036123b5375cbc356">  132</a></span>  [[nodiscard]] <span class="keyword">auto</span> <a class="code hl_function" href="group__av__math.html#gad4adce242cbf197036123b5375cbc356">max</a>(A &amp;&amp;a, B &amp;&amp;b) {</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="group__av__math.html#gaf8151ad99c4fe345cf168a5d01529a6a">nda::map</a>([](<span class="keyword">auto</span> <span class="keyword">const</span> &amp;x, <span class="keyword">auto</span> <span class="keyword">const</span> &amp;y) {</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>      <span class="keyword">using </span>std::max;</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>      <span class="keywordflow">return</span> <a class="code hl_function" href="group__av__math.html#gad4adce242cbf197036123b5375cbc356">max</a>(x, y);</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    })(std::forward&lt;A&gt;(a), std::forward&lt;B&gt;(b));</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>  }</div>
+</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  <span class="keyword">template</span> &lt;ArrayOrScalar A, ArrayOrScalar B&gt;</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    <span class="keyword">requires</span>(((Scalar&lt;A&gt; &amp;&amp; Scalar&lt;B&gt;) || (Array&lt;A&gt; &amp;&amp; Array&lt;B&gt; &amp;&amp; <a class="code hl_variable" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank&lt;A&gt;</a> == <a class="code hl_variable" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank&lt;B&gt;</a>))</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>             &amp;&amp; !<a class="code hl_variable" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v&lt;get_value_t&lt;A&gt;</a>&gt; &amp;&amp; !<a class="code hl_variable" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v&lt;get_value_t&lt;B&gt;</a>&gt;)</div>
+<div class="foldopen" id="foldopen00151" data-start="{" data-end="}">
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno"><a class="line" href="group__av__math.html#ga9e96dcd41ecefd5f0a1f514bbfe6c792">  151</a></span>  [[nodiscard]] <span class="keyword">auto</span> <a class="code hl_function" href="group__av__math.html#ga9e96dcd41ecefd5f0a1f514bbfe6c792">min</a>(A &amp;&amp;a, B &amp;&amp;b) {</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="group__av__math.html#gaf8151ad99c4fe345cf168a5d01529a6a">nda::map</a>([](<span class="keyword">auto</span> <span class="keyword">const</span> &amp;x, <span class="keyword">auto</span> <span class="keyword">const</span> &amp;y) {</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>      <span class="keyword">using </span>std::min;</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>      <span class="keywordflow">return</span> <a class="code hl_function" href="group__av__math.html#ga9e96dcd41ecefd5f0a1f514bbfe6c792">min</a>(x, y);</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    })(std::forward&lt;A&gt;(a), std::forward&lt;B&gt;(b));</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>  }</div>
+</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span></div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>} <span class="comment">// namespace nda</span></div>
 <div class="ttc" id="aconceptnda_1_1_scalar_html"><div class="ttname"><a href="conceptnda_1_1_scalar.html">nda::Scalar</a></div><div class="ttdoc">Check if a given type is either an arithmetic or complex type.</div><div class="ttdef"><b>Definition</b> <a href="concepts_8hpp_source.html#l00083">concepts.hpp:83</a></div></div>
 <div class="ttc" id="aconcepts_8hpp_html"><div class="ttname"><a href="concepts_8hpp.html">concepts.hpp</a></div><div class="ttdoc">Provides concepts for the nda library.</div></div>
-<div class="ttc" id="agroup__av__math_html_ga6900d4319e73e27201a65f96d082289f"><div class="ttname"><a href="group__av__math.html#ga6900d4319e73e27201a65f96d082289f">nda::pow</a></div><div class="ttdeci">auto pow(A &amp;&amp;a, double p)</div><div class="ttdoc">Function pow for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).</div><div class="ttdef"><b>Definition</b> <a href="#l00076">mapped_functions.hpp:76</a></div></div>
+<div class="ttc" id="agroup__av__math_html_ga6900d4319e73e27201a65f96d082289f"><div class="ttname"><a href="group__av__math.html#ga6900d4319e73e27201a65f96d082289f">nda::pow</a></div><div class="ttdeci">auto pow(A &amp;&amp;a, double p)</div><div class="ttdoc">Function pow for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).</div><div class="ttdef"><b>Definition</b> <a href="#l00077">mapped_functions.hpp:77</a></div></div>
+<div class="ttc" id="agroup__av__math_html_ga9e96dcd41ecefd5f0a1f514bbfe6c792"><div class="ttname"><a href="group__av__math.html#ga9e96dcd41ecefd5f0a1f514bbfe6c792">nda::min</a></div><div class="ttdeci">auto min(A &amp;&amp;a, B &amp;&amp;b)</div><div class="ttdoc">Function min for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).</div><div class="ttdef"><b>Definition</b> <a href="#l00151">mapped_functions.hpp:151</a></div></div>
 <div class="ttc" id="agroup__av__math_html_gaa337f00c9324d22f827b9759adb22f18"><div class="ttname"><a href="group__av__math.html#gaa337f00c9324d22f827b9759adb22f18">nda::imag</a></div><div class="ttdeci">auto imag(A &amp;&amp;a)</div><div class="ttdoc">Function imag for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).</div><div class="ttdef"><b>Definition</b> <a href="mapped__functions_8hxx_source.html#l00110">mapped_functions.hxx:110</a></div></div>
-<div class="ttc" id="agroup__av__math_html_gac5e6cabd373fe6b872c6c0d7fa9803c1"><div class="ttname"><a href="group__av__math.html#gac5e6cabd373fe6b872c6c0d7fa9803c1">nda::reciprocal</a></div><div class="ttdeci">auto reciprocal(A &amp;&amp;a)</div><div class="ttdoc">Reciprocal function for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).</div><div class="ttdef"><b>Definition</b> <a href="#l00109">mapped_functions.hpp:109</a></div></div>
-<div class="ttc" id="agroup__av__math_html_gaed558141a1f01cb2974b0cc4fc4d04ff"><div class="ttname"><a href="group__av__math.html#gaed558141a1f01cb2974b0cc4fc4d04ff">nda::conj</a></div><div class="ttdeci">decltype(auto) conj(A &amp;&amp;a)</div><div class="ttdoc">Function conj for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types with a com...</div><div class="ttdef"><b>Definition</b> <a href="#l00093">mapped_functions.hpp:93</a></div></div>
+<div class="ttc" id="agroup__av__math_html_gac5e6cabd373fe6b872c6c0d7fa9803c1"><div class="ttname"><a href="group__av__math.html#gac5e6cabd373fe6b872c6c0d7fa9803c1">nda::reciprocal</a></div><div class="ttdeci">auto reciprocal(A &amp;&amp;a)</div><div class="ttdoc">Reciprocal function for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).</div><div class="ttdef"><b>Definition</b> <a href="#l00110">mapped_functions.hpp:110</a></div></div>
+<div class="ttc" id="agroup__av__math_html_gad4adce242cbf197036123b5375cbc356"><div class="ttname"><a href="group__av__math.html#gad4adce242cbf197036123b5375cbc356">nda::max</a></div><div class="ttdeci">auto max(A &amp;&amp;a, B &amp;&amp;b)</div><div class="ttdoc">Function max for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).</div><div class="ttdef"><b>Definition</b> <a href="#l00132">mapped_functions.hpp:132</a></div></div>
+<div class="ttc" id="agroup__av__math_html_gaed558141a1f01cb2974b0cc4fc4d04ff"><div class="ttname"><a href="group__av__math.html#gaed558141a1f01cb2974b0cc4fc4d04ff">nda::conj</a></div><div class="ttdeci">decltype(auto) conj(A &amp;&amp;a)</div><div class="ttdoc">Function conj for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types with a com...</div><div class="ttdef"><b>Definition</b> <a href="#l00094">mapped_functions.hpp:94</a></div></div>
 <div class="ttc" id="agroup__av__math_html_gaf8151ad99c4fe345cf168a5d01529a6a"><div class="ttname"><a href="group__av__math.html#gaf8151ad99c4fe345cf168a5d01529a6a">nda::map</a></div><div class="ttdeci">mapped&lt; F &gt; map(F f)</div><div class="ttdoc">Create a lazy function call expression on arrays/views.</div><div class="ttdef"><b>Definition</b> <a href="map_8hpp_source.html#l00206">map.hpp:206</a></div></div>
+<div class="ttc" id="agroup__av__utils_html_ga7277dc5070c1ad04d29465da947e444e"><div class="ttname"><a href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">nda::get_rank</a></div><div class="ttdeci">constexpr int get_rank</div><div class="ttdoc">Constexpr variable that specifies the rank of an nda::Array or of a contiguous 1-dimensional range.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00147">traits.hpp:147</a></div></div>
 <div class="ttc" id="agroup__utils__type__traits_html_ga1a3e755a22503182b586c887561a2517"><div class="ttname"><a href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">nda::is_complex_v</a></div><div class="ttdeci">constexpr bool is_complex_v</div><div class="ttdoc">Constexpr variable that is true if type T is a std::complex type.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00065">traits.hpp:65</a></div></div>
 <div class="ttc" id="amap_8hpp_html"><div class="ttname"><a href="map_8hpp.html">map.hpp</a></div><div class="ttdoc">Provides lazy function calls on arrays/views.</div></div>
 <div class="ttc" id="atraits_8hpp_html"><div class="ttname"><a href="traits_8hpp.html">traits.hpp</a></div><div class="ttdoc">Provides type traits for the nda library.</div></div>

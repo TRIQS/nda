@@ -130,7 +130,8 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('device_8hpp.ht
   <div class="headertitle"><div class="title">device.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><code>#include &lt;string_view&gt;</code><br />
+</div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Provides GPU and non-GPU specific functionality. </p>
 
 <p class="definition">Definition in file <a class="el" href="device_8hpp_source.html">device.hpp</a>.</p>
@@ -149,6 +150,9 @@ Functions</h2></td></tr>
 template&lt;bool flag = false&gt; </td></tr>
 <tr class="memitem:ga3cb1540052805a4b852cc39bc48799cd template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><b>nda::compile_error_no_gpu</b> ()</td></tr>
 <tr class="memdesc:ga3cb1540052805a4b852cc39bc48799cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trigger a compilation error in case GPU specific functionality is used without configuring the project with GPU support. <br /></td></tr>
+<tr class="memitem:gabf8159bb9622fe2ffff96b4d7d0f7358" id="r_gabf8159bb9622fe2ffff96b4d7d0f7358"><td class="memItemLeft">
+void&#160;</td><td class="memItemRight"><b>nda::cuda_device_sync</b> (bool do_sync=true, std::string_view func=&quot;&quot;)</td></tr>
+<tr class="memdesc:gabf8159bb9622fe2ffff96b4d7d0f7358"><td class="mdescLeft">&#160;</td><td class="mdescRight">Empty function if <span class="tt">CudaSupport</span> is not enabled. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>

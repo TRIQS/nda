@@ -1,5 +1,6 @@
 var traits_8hpp =
 [
+    [ "nda::get_fp_t", "group__av__utils.html#gaeec3099404e84afbac28197b0d35fa46", null ],
     [ "nda::get_value_t", "group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc", null ],
     [ "nda::layout_prop_e", "group__layout__utils.html#gade21b85df14c406b56717fd7703937b3", null ],
     [ "nda::get_first_element", "group__av__utils.html#ga598ceeb61dfdb15253cfd90df853df0a", null ],

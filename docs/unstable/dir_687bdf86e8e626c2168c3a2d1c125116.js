@@ -23,5 +23,6 @@ var dir_687bdf86e8e626c2168c3a2d1c125116 =
     [ "ex5.cpp", "ex5_8cpp_source.html", null ],
     [ "ex6.cpp", "ex6_8cpp_source.html", null ],
     [ "ex7.cpp", "ex7_8cpp_source.html", null ],
-    [ "ex8.cpp", "ex8_8cpp_source.html", null ]
+    [ "ex8.cpp", "ex8_8cpp_source.html", null ],
+    [ "ex9.cpp", "ex9_8cpp_source.html", null ]
 ];

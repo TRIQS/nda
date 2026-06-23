@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('group__av__mat
 <div class="line">  std::cout &lt;&lt; <a class="code hl_function" href="group__av__factories.html#ga1ef017428f20125233751e5e985fdc90">nda::make_regular</a>(ex) &lt;&lt; std::endl;</div>
 <div class="line">}</div>
 <div class="ttc" id="agroup__av__factories_html_ga1ef017428f20125233751e5e985fdc90"><div class="ttname"><a href="group__av__factories.html#ga1ef017428f20125233751e5e985fdc90">nda::make_regular</a></div><div class="ttdeci">decltype(auto) make_regular(A &amp;&amp;a)</div><div class="ttdoc">Make a given object regular.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00225">basic_functions.hpp:225</a></div></div>
-<div class="ttc" id="agroup__av__math_html_ga6900d4319e73e27201a65f96d082289f"><div class="ttname"><a href="#ga6900d4319e73e27201a65f96d082289f">nda::pow</a></div><div class="ttdeci">auto pow(A &amp;&amp;a, double p)</div><div class="ttdoc">Function pow for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).</div><div class="ttdef"><b>Definition</b> <a href="mapped__functions_8hpp_source.html#l00076">mapped_functions.hpp:76</a></div></div>
+<div class="ttc" id="agroup__av__math_html_ga6900d4319e73e27201a65f96d082289f"><div class="ttname"><a href="#ga6900d4319e73e27201a65f96d082289f">nda::pow</a></div><div class="ttdeci">auto pow(A &amp;&amp;a, double p)</div><div class="ttdoc">Function pow for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).</div><div class="ttdef"><b>Definition</b> <a href="mapped__functions_8hpp_source.html#l00077">mapped_functions.hpp:77</a></div></div>
 <div class="ttc" id="agroup__av__types_html_ga72f3fdf9760fa22c35442cdf2eb6768d"><div class="ttname"><a href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d">nda::array</a></div><div class="ttdeci">basic_array&lt; ValueType, Rank, Layout, &#39;A&#39;, ContainerPolicy &gt; array</div><div class="ttdoc">Alias template of an nda::basic_array with an &#39;A&#39; algebra.</div><div class="ttdef"><b>Definition</b> <a href="declarations_8hpp_source.html#l00064">declarations.hpp:64</a></div></div>
 <div class="ttc" id="anda_8hpp_html"><div class="ttname"><a href="nda_8hpp.html">nda.hpp</a></div><div class="ttdoc">Includes all relevant headers for the core nda library.</div></div>
 </div><!-- fragment --><p>Output:</p>
@@ -229,6 +229,16 @@ requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5ea
 <tr class="memitem:gaf8151ad99c4fe345cf168a5d01529a6a" id="r_gaf8151ad99c4fe345cf168a5d01529a6a"><td class="memTemplParams" colspan="2">template&lt;class F&gt; </td></tr>
 <tr class="memitem:gaf8151ad99c4fe345cf168a5d01529a6a template"><td class="memItemLeft"><a class="el" href="structnda_1_1mapped.html">mapped</a>&lt; F &gt;&#160;</td><td class="memItemRight"><a class="el" href="#gaf8151ad99c4fe345cf168a5d01529a6a">nda::map</a> (F f)</td></tr>
 <tr class="memdesc:gaf8151ad99c4fe345cf168a5d01529a6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a lazy function call expression on arrays/views.  <br /></td></tr>
+<tr class="memitem:gad4adce242cbf197036123b5375cbc356" id="r_gad4adce242cbf197036123b5375cbc356"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A, ArrayOrScalar B&gt; <br />
+requires (((Scalar&lt;A&gt; &amp;&amp; Scalar&lt;B&gt;) || (Array&lt;A&gt; &amp;&amp; Array&lt;B&gt; &amp;&amp; <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;B&gt;)) &amp;&amp; !<a class="el" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; &amp;&amp;<br class="typebreak" />
+ !<a class="el" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;B&gt;&gt;)</td></tr>
+<tr class="memitem:gad4adce242cbf197036123b5375cbc356 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#gad4adce242cbf197036123b5375cbc356">nda::max</a> (A &amp;&amp;a, B &amp;&amp;b)</td></tr>
+<tr class="memdesc:gad4adce242cbf197036123b5375cbc356"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function max for <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
+<tr class="memitem:ga9e96dcd41ecefd5f0a1f514bbfe6c792" id="r_ga9e96dcd41ecefd5f0a1f514bbfe6c792"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A, ArrayOrScalar B&gt; <br />
+requires (((Scalar&lt;A&gt; &amp;&amp; Scalar&lt;B&gt;) || (Array&lt;A&gt; &amp;&amp; Array&lt;B&gt; &amp;&amp; <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;B&gt;)) &amp;&amp; !<a class="el" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; &amp;&amp;<br class="typebreak" />
+ !<a class="el" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;B&gt;&gt;)</td></tr>
+<tr class="memitem:ga9e96dcd41ecefd5f0a1f514bbfe6c792 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#ga9e96dcd41ecefd5f0a1f514bbfe6c792">nda::min</a> (A &amp;&amp;a, B &amp;&amp;b)</td></tr>
+<tr class="memdesc:ga9e96dcd41ecefd5f0a1f514bbfe6c792"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function min for <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
 <tr class="memitem:ga6900d4319e73e27201a65f96d082289f" id="r_ga6900d4319e73e27201a65f96d082289f"><td class="memTemplParams" colspan="2">template&lt;ArrayOrScalar A&gt; </td></tr>
 <tr class="memitem:ga6900d4319e73e27201a65f96d082289f template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#ga6900d4319e73e27201a65f96d082289f">nda::pow</a> (A &amp;&amp;a, double p)</td></tr>
 <tr class="memdesc:ga6900d4319e73e27201a65f96d082289f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function pow for <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types).  <br /></td></tr>
@@ -490,7 +500,7 @@ template&lt;ArrayOrScalar A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> and complex valued), the forwarded input object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> and not complex valued) or the complex conjugate of the scalar input. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00093">93</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00094">94</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -880,6 +890,114 @@ template&lt;class F&gt; </div>
 
 </div>
 </div>
+<a id="gad4adce242cbf197036123b5375cbc356" name="gad4adce242cbf197036123b5375cbc356"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad4adce242cbf197036123b5375cbc356">&#9670;&#160;</a></span>max()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;ArrayOrScalar A, ArrayOrScalar B&gt; <br />
+requires (((Scalar&lt;A&gt; &amp;&amp; Scalar&lt;B&gt;) || (Array&lt;A&gt; &amp;&amp; Array&lt;B&gt; &amp;&amp; <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;B&gt;)) &amp;&amp; !<a class="el" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; &amp;&amp;<br class="typebreak" />
+ !<a class="el" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;B&gt;&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::max </td>
+          <td>(</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">B &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="mapped__functions_8hpp.html">nda/mapped_functions.hpp</a>&gt;</code></p>
+
+<p>Function max for <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types). </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
+    <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>First operand. </td></tr>
+    <tr><td class="paramname">b</td><td>Second operand. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::max</span> applied to the inputs (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00132">132</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga9e96dcd41ecefd5f0a1f514bbfe6c792" name="ga9e96dcd41ecefd5f0a1f514bbfe6c792"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9e96dcd41ecefd5f0a1f514bbfe6c792">&#9670;&#160;</a></span>min()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;ArrayOrScalar A, ArrayOrScalar B&gt; <br />
+requires (((Scalar&lt;A&gt; &amp;&amp; Scalar&lt;B&gt;) || (Array&lt;A&gt; &amp;&amp; Array&lt;B&gt; &amp;&amp; <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;A&gt; == <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;B&gt;)) &amp;&amp; !<a class="el" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; &amp;&amp;<br class="typebreak" />
+ !<a class="el" href="group__utils__type__traits.html#ga1a3e755a22503182b586c887561a2517">is_complex_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;B&gt;&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto nda::min </td>
+          <td>(</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">B &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="mapped__functions_8hpp.html">nda/mapped_functions.hpp</a>&gt;</code></p>
+
+<p>Function min for <a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> types (lazy and coefficient-wise for <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types). </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">A</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
+    <tr><td class="paramname">B</td><td><a class="el" href="conceptnda_1_1_array_or_scalar.html" title="Check if if a given type is either an nda::Array or an nda::Scalar.">nda::ArrayOrScalar</a> type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>First operand. </td></tr>
+    <tr><td class="paramname">b</td><td>Second operand. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::min</span> applied to the inputs (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00151">151</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+
+</div>
+</div>
 <a id="ga6900d4319e73e27201a65f96d082289f" name="ga6900d4319e73e27201a65f96d082289f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga6900d4319e73e27201a65f96d082289f">&#9670;&#160;</a></span>pow()</h2>
 
@@ -919,7 +1037,7 @@ template&lt;ArrayOrScalar A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of <span class="tt">std::pow</span> applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00076">76</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00077">77</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>
@@ -995,7 +1113,7 @@ template&lt;ArrayOrScalar A&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A lazy <a class="el" href="structnda_1_1expr__call.html" title="A lazy function call expression on arrays/views.">nda::expr_call</a> object (<a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a>) or the result of \( 1.0 / x \) applied to the object (<a class="el" href="conceptnda_1_1_scalar.html" title="Check if a given type is either an arithmetic or complex type.">nda::Scalar</a>). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00109">109</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mapped__functions_8hpp_source.html#l00110">110</a> of file <a class="el" href="mapped__functions_8hpp_source.html">mapped_functions.hpp</a>.</p>
 
 </div>
 </div>

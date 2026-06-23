@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.17.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TRIQS/nda: nda/mpi/reduce.hpp</title>
+<title>TRIQS/nda: nda/lapack/geqrf_batch.hpp</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="codefolding.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
   </div>
 </div>
 <script type="text/javascript">
-document.addEventListener('DOMContentLoaded',() => { initNavTree('reduce_8hpp.html','',''); });
+document.addEventListener('DOMContentLoaded',() => { initNavTree('geqrf__batch_8hpp.html','',''); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -127,39 +127,78 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('reduce_8hpp.ht
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">reduce.hpp</div></div>
+  <div class="headertitle"><div class="title">geqrf_batch.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="mpi_2utils_8hpp_source.html">./utils.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="geqrf_8hpp_source.html">./geqrf.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="lapack_2interface_2cxx__interface_8hpp_source.html">./interface/cxx_interface.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="basic__array_8hpp_source.html">../basic_array.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="basic__functions_8hpp_source.html">../basic_functions.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="blas_2interface_2cxx__interface_8hpp_source.html">../blas/interface/cxx_interface.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="blas_2tools_8hpp_source.html">../blas/tools.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="declarations_8hpp_source.html">../declarations.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="device_8hpp_source.html">../device.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="layout__transforms_8hpp_source.html">../layout_transforms.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="macros_8hpp_source.html">../macros.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="map_8hpp_source.html">../map.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="address__space_8hpp_source.html">../mem/address_space.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="traits_8hpp_source.html">../traits.hpp</a>&quot;</code><br />
-<code>#include &lt;mpi.h&gt;</code><br />
-<code>#include &lt;mpi/mpi.hpp&gt;</code><br />
-<code>#include &lt;cstddef&gt;</code><br />
-<code>#include &lt;span&gt;</code><br />
+<code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
 </div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Provides an MPI reduce function for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types. </p>
+<div class="textblock"><p>Provides a generic interface to batched versions of the LAPACK/cuSOLVER <span class="tt">geqrf</span> routine. </p>
 
-<p class="definition">Definition in file <a class="el" href="reduce_8hpp_source.html">reduce.hpp</a>.</p>
+<p class="definition">Definition in file <a class="el" href="geqrf__batch_8hpp_source.html">geqrf_batch.hpp</a>.</p>
 </div>
-<p><a href="reduce_8hpp_source.html">Go to the source code of this file.</a></p>
+<p><a href="geqrf__batch_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga3edd8f70f2213d38b391743ddab967b3" id="r_ga3edd8f70f2213d38b391743ddab967b3"><td class="memTemplParams" colspan="2">template&lt;typename A&gt; <br />
-requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A&gt;)</td></tr>
-<tr class="memitem:ga3edd8f70f2213d38b391743ddab967b3 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__av__mpi.html#ga3edd8f70f2213d38b391743ddab967b3">nda::mpi_reduce</a> (A const &amp;a, mpi::communicator comm={}, int root=0, bool all=false, MPI_Op op=MPI_SUM)</td></tr>
-<tr class="memdesc:ga3edd8f70f2213d38b391743ddab967b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI reduce for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types.  <br /></td></tr>
-<tr class="memitem:ga663e553746cc0923df57b83c2c742eba" id="r_ga663e553746cc0923df57b83c2c742eba"><td class="memTemplParams" colspan="2">template&lt;typename A1, typename A2&gt; <br />
-requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A1&gt; &amp;&amp; <a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">is_regular_or_view_v</a>&lt;A2&gt;)</td></tr>
-<tr class="memitem:ga663e553746cc0923df57b83c2c742eba template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__av__mpi.html#ga663e553746cc0923df57b83c2c742eba">nda::mpi_reduce_into</a> (A1 const &amp;a_in, A2 &amp;&amp;a_out, mpi::communicator comm={}, int root=0, bool all=false, MPI_Op op=MPI_SUM)</td></tr>
-<tr class="memdesc:ga663e553746cc0923df57b83c2c742eba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of an MPI reduce for <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> or <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> types that reduces directly into an existing array/view.  <br /></td></tr>
+<tr class="memitem:ga55453b140a3f62d6ea51ab35f5d75059" id="r_ga55453b140a3f62d6ea51ab35f5d75059"><td class="memTemplParams" colspan="2">template&lt;BlasArray&lt; 3 &gt; A, BlasArrayFor&lt; A, 2 &gt; TAU, BlasArrayFor&lt; A, 1 &gt; W = vector_value_t&lt;A&gt;&gt; <br />
+requires (<a class="el" href="group__linalg__blas__utils.html#gafbeb10df81b433b3bdd6c8ceb55d192a">has_F_layout</a>&lt;A, TAU&gt;)</td></tr>
+<tr class="memitem:ga55453b140a3f62d6ea51ab35f5d75059 template"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#ga55453b140a3f62d6ea51ab35f5d75059">nda::lapack::geqrf</a> (A &amp;&amp;a, TAU &amp;&amp;tau, W &amp;&amp;work=<a class="el" href="group__linalg__blas__utils.html#gad540698c2a4c4f47cacfe510c6bf2f6a">vector_value_t</a>&lt; A &gt;{})</td></tr>
+<tr class="memdesc:ga55453b140a3f62d6ea51ab35f5d75059"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic-friendly overload of <a class="el" href="group__linalg__lapack.html#ga55453b140a3f62d6ea51ab35f5d75059" title="Interface to the LAPACK/cuSOLVER geqrf routine.">nda::lapack::geqrf</a> for batches stored as 3-dimensional arrays.  <br /></td></tr>
+<tr class="memitem:gade173cf5dcaff29ce7e791fe0294da17" id="r_gade173cf5dcaff29ce7e791fe0294da17"><td class="memTemplParams" colspan="2">template&lt;BlasArray&lt; 3 &gt; A, BlasArrayFor&lt; A, 2 &gt; TAU, BlasArrayFor&lt; A, 1 &gt; W = vector_value_t&lt;A&gt;&gt; <br />
+requires (<a class="el" href="group__linalg__blas__utils.html#gafbeb10df81b433b3bdd6c8ceb55d192a">has_F_layout</a>&lt;A, TAU&gt;)</td></tr>
+<tr class="memitem:gade173cf5dcaff29ce7e791fe0294da17 template"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__lapack.html#gade173cf5dcaff29ce7e791fe0294da17">nda::lapack::geqrf_batch</a> (A &amp;&amp;a, TAU &amp;&amp;tau, W &amp;&amp;work=<a class="el" href="group__linalg__blas__utils.html#gad540698c2a4c4f47cacfe510c6bf2f6a">vector_value_t</a>&lt; A &gt;{})</td></tr>
+<tr class="memdesc:gade173cf5dcaff29ce7e791fe0294da17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to batched versions of the LAPACK/cuSOLVER <span class="tt">geqrf</span> routine.  <br /></td></tr>
 </table>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="ga55453b140a3f62d6ea51ab35f5d75059" name="ga55453b140a3f62d6ea51ab35f5d75059"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga55453b140a3f62d6ea51ab35f5d75059">&#9670;&#160;</a></span>geqrf()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;BlasArray&lt; 3 &gt; A, BlasArrayFor&lt; A, 2 &gt; TAU, BlasArrayFor&lt; A, 1 &gt; W = vector_value_t&lt;A&gt;&gt; <br />
+requires (has_F_layout&lt;A, TAU&gt;)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">int nda::lapack::geqrf </td>
+          <td>(</td>
+          <td class="paramtype">A &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TAU &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>tau</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">W &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>work</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="group__linalg__blas__utils.html#gad540698c2a4c4f47cacfe510c6bf2f6a">vector_value_t</a>&lt;A&gt;{}</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Generic-friendly overload of <a class="el" href="group__linalg__lapack.html#ga55453b140a3f62d6ea51ab35f5d75059" title="Interface to the LAPACK/cuSOLVER geqrf routine.">nda::lapack::geqrf</a> for batches stored as 3-dimensional arrays. </p>
+<p>It simply calls <a class="el" href="group__linalg__lapack.html#gade173cf5dcaff29ce7e791fe0294da17" title="Interface to batched versions of the LAPACK/cuSOLVER geqrf routine.">nda::lapack::geqrf_batch</a> and lets generic code call <span class="tt">geqrf(...)</span> regardless of whether the input is a single matrix (rank 2) or a batch (rank 3). </p>
+
+<p class="definition">Definition at line <a class="el" href="geqrf__batch_8hpp_source.html#l00111">111</a> of file <a class="el" href="geqrf__batch_8hpp_source.html">geqrf_batch.hpp</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
@@ -173,7 +212,7 @@ requires (<a class="el" href="group__av__utils.html#gad19aaebe79b6d698a818828217
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>nda</b></li><li class="navelem"><b>mpi</b></li><li class="navelem"><a href="reduce_8hpp.html">reduce.hpp</a></li>
+    <li class="navelem"><b>nda</b></li><li class="navelem"><b>lapack</b></li><li class="navelem"><a href="geqrf__batch_8hpp.html">geqrf_batch.hpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.17.0 </li>
   </ul>
 </div>

@@ -132,12 +132,12 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('blas_2dot_8hpp
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="blas_2interface_2cxx__interface_8hpp_source.html">./interface/cxx_interface.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="device_8hpp_source.html">../device.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="macros_8hpp_source.html">../macros.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="address__space_8hpp_source.html">../mem/address_space.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="traits_8hpp_source.html">../traits.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="device_8hpp_source.html">../device.hpp</a>&quot;</code><br />
 </div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Provides a generic interface to the BLAS <span class="tt">dot</span>, <span class="tt">dotu</span> and <span class="tt">dotc</span> routine. </p>
+<div class="textblock"><p>Provides a generic interface to the BLAS/cuBLAS <span class="tt">dot</span>, <span class="tt">dotu</span> and <span class="tt">dotc</span> routines. </p>
 
 <p class="definition">Definition in file <a class="el" href="blas_2dot_8hpp_source.html">dot.hpp</a>.</p>
 </div>
@@ -145,14 +145,12 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('blas_2dot_8hpp
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga55cfbb17e5b542513d1df9ff9da3b8a7" id="r_ga55cfbb17e5b542513d1df9ff9da3b8a7"><td class="memTemplParams" colspan="2">template&lt;MemoryVector X, MemoryVector Y&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;X, Y&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;X, Y&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;X&gt;&gt;)</td></tr>
-<tr class="memitem:ga55cfbb17e5b542513d1df9ff9da3b8a7 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__blas.html#ga55cfbb17e5b542513d1df9ff9da3b8a7">nda::blas::dot</a> (X const &amp;x, Y const &amp;y)</td></tr>
-<tr class="memdesc:ga55cfbb17e5b542513d1df9ff9da3b8a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS <span class="tt"><a class="el" href="group__linalg__blas.html#ga55cfbb17e5b542513d1df9ff9da3b8a7" title="Interface to the BLAS dot and dotu routine.">dot</a></span> and <span class="tt">dotu</span> routine.  <br /></td></tr>
-<tr class="memitem:gaf4cdca559485607982e6db62a3cb8a97" id="r_gaf4cdca559485607982e6db62a3cb8a97"><td class="memTemplParams" colspan="2">template&lt;MemoryVector X, MemoryVector Y&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;X, Y&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;X, Y&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;X&gt;&gt;)</td></tr>
-<tr class="memitem:gaf4cdca559485607982e6db62a3cb8a97 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__blas.html#gaf4cdca559485607982e6db62a3cb8a97">nda::blas::dotc</a> (X const &amp;x, Y const &amp;y)</td></tr>
-<tr class="memdesc:gaf4cdca559485607982e6db62a3cb8a97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS <span class="tt"><a class="el" href="group__linalg__blas.html#gaf4cdca559485607982e6db62a3cb8a97" title="Interface to the BLAS dotc routine.">dotc</a></span> routine.  <br /></td></tr>
+<tr class="memitem:gaaffaf0d8afcd81bbf55819e3dc10eb61" id="r_gaaffaf0d8afcd81bbf55819e3dc10eb61"><td class="memTemplParams" colspan="2">template&lt;BlasArray&lt; 1 &gt; X, BlasArrayFor&lt; X, 1 &gt; Y&gt; </td></tr>
+<tr class="memitem:gaaffaf0d8afcd81bbf55819e3dc10eb61 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__blas.html#gaaffaf0d8afcd81bbf55819e3dc10eb61">nda::blas::dot</a> (X const &amp;x, Y const &amp;y)</td></tr>
+<tr class="memdesc:gaaffaf0d8afcd81bbf55819e3dc10eb61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS/cuBLAS <span class="tt">dot</span> and <span class="tt">dotu</span> routines.  <br /></td></tr>
+<tr class="memitem:ga83cd4cf8f9c0fd4cc25d14b4d1e41926" id="r_ga83cd4cf8f9c0fd4cc25d14b4d1e41926"><td class="memTemplParams" colspan="2">template&lt;BlasArray&lt; 1 &gt; X, BlasArrayFor&lt; X, 1 &gt; Y&gt; </td></tr>
+<tr class="memitem:ga83cd4cf8f9c0fd4cc25d14b4d1e41926 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__blas.html#ga83cd4cf8f9c0fd4cc25d14b4d1e41926">nda::blas::dotc</a> (X const &amp;x, Y const &amp;y)</td></tr>
+<tr class="memdesc:ga83cd4cf8f9c0fd4cc25d14b4d1e41926"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS/cuBLAS <span class="tt">dotc</span> routine.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

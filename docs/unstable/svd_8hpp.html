@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('svd_8hpp.html'
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="basic__array_8hpp_source.html">../basic_array.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="tools_8hpp_source.html">../blas/tools.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="blas_2tools_8hpp_source.html">../blas/tools.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="declarations_8hpp_source.html">../declarations.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="exceptions_8hpp_source.html">../exceptions.hpp</a>&quot;</code><br />
@@ -156,12 +156,11 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('svd_8hpp.html'
 Functions</h2></td></tr>
 <tr class="memitem:ga4197582b8a25dc01bc9127a0b04e4ce0" id="r_ga4197582b8a25dc01bc9127a0b04e4ce0"><td class="memTemplParams" colspan="2">template&lt;Matrix A&gt; <br />
 requires (<a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
-<tr class="memitem:ga4197582b8a25dc01bc9127a0b04e4ce0 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__tools.html#ga4197582b8a25dc01bc9127a0b04e4ce0">nda::linalg::svd</a> (A const &amp;a)</td></tr>
+<tr class="memitem:ga4197582b8a25dc01bc9127a0b04e4ce0 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__decompositions.html#ga4197582b8a25dc01bc9127a0b04e4ce0">nda::linalg::svd</a> (A const &amp;a)</td></tr>
 <tr class="memdesc:ga4197582b8a25dc01bc9127a0b04e4ce0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the singular value decomposition (SVD) of a matrix.  <br /></td></tr>
-<tr class="memitem:ga4ef359605199b874634e1712b1aa55d4" id="r_ga4ef359605199b874634e1712b1aa55d4"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A&gt; <br />
-requires (<a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
-<tr class="memitem:ga4ef359605199b874634e1712b1aa55d4 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__tools.html#ga4ef359605199b874634e1712b1aa55d4">nda::linalg::svd_in_place</a> (A &amp;&amp;a)</td></tr>
-<tr class="memdesc:ga4ef359605199b874634e1712b1aa55d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the singular value decomposition (SVD) of a matrix in place.  <br /></td></tr>
+<tr class="memitem:gae6e44a6b9ba97e554453f13f3dc0d0a4" id="r_gae6e44a6b9ba97e554453f13f3dc0d0a4"><td class="memTemplParams" colspan="2">template&lt;blas_lapack::BlasArray&lt; 2 &gt; A&gt; </td></tr>
+<tr class="memitem:gae6e44a6b9ba97e554453f13f3dc0d0a4 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__decompositions.html#gae6e44a6b9ba97e554453f13f3dc0d0a4">nda::linalg::svd_in_place</a> (A &amp;&amp;a)</td></tr>
+<tr class="memdesc:gae6e44a6b9ba97e554453f13f3dc0d0a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the singular value decomposition (SVD) of a matrix in place.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

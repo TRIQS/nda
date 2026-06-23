@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('classnda_1_1la
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">nda::lapack::gelss_worker_hermitian<div class="ingroups"><a class="el" href="group__linalg.html">Linear algebra</a> &raquo; <a class="el" href="group__linalg__lapack.html">LAPACK interface</a></div></div></div>
+  <div class="headertitle"><div class="title">nda::lapack::gelss_worker_hermitian<div class="ingroups"><a class="el" href="group__linalg.html">Linear algebra</a> &raquo; <a class="el" href="group__linalg__lapack.html">LAPACK/cuSOLVER interface</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -137,16 +137,16 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('classnda_1_1la
 <p>This is a more specialized version of <a class="el" href="classnda_1_1lapack_1_1gelss__worker.html" title="Worker class for solving linear least squares problems.">nda::lapack::gelss_worker</a> that is tailored to perform tail fitting for scalar- or matrix-valued functions defined on a Matsubara frequency mesh satisfying the symmetry  \( \left[
 f(-i\omega_n) \right]_{ij} = \left[ f(i\omega_n) \right]_{ji}^* \).</p>
 <p>The least squares problem to be solved is given by    </p><p class="formulaDsp">
-\[  \mathbf{A}_E \mathbf{X} = \begin{bmatrix} \mathbf{A} \\ \mathbf{A}^* \end{bmatrix} \mathbf{X} =
+\[  \mathbf{A}_E \mathbf{X} = \begin{bmatrix} \mathbf{A} \\ \mathbf{A}^H \end{bmatrix} \mathbf{X} =
   \begin{bmatrix} \mathbf{B} \\ \tilde{\mathbf{B}} \end{bmatrix} = \mathbf{B}_E \; ,
 \]
 </p>
-<p> where the original problem \( \mathbf{A} \mathbf{X} = \mathbf{B} \) has been extended by  \( \mathbf{A}^*
+<p> where the original problem \( \mathbf{A} \mathbf{X} = \mathbf{B} \) has been extended by  \( \mathbf{A}^H
 \mathbf{X} = \tilde{\mathbf{B}} \) to account for the symmetry given above.</p>
 <p>The calculated solution \( \mathbf{X} \) is explictly symmetrized at the end to ensure that the symmetry is satisfied.</p>
 <p>See <span class="tt">triqs::mesh::tail_fitter</span> for more information. </p>
 
-<p class="definition">Definition at line <a class="el" href="gelss__worker_8hpp_source.html#l00204">204</a> of file <a class="el" href="gelss__worker_8hpp_source.html">gelss_worker.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="gelss__worker_8hpp_source.html#l00212">212</a> of file <a class="el" href="gelss__worker_8hpp_source.html">gelss_worker.hpp</a>.</p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -191,7 +191,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="gelss__worker_8hpp_source.html#l00222">222</a> of file <a class="el" href="gelss__worker_8hpp_source.html">gelss_worker.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="gelss__worker_8hpp_source.html#l00230">230</a> of file <a class="el" href="gelss__worker_8hpp_source.html">gelss_worker.hpp</a>.</p>
 
 </div>
 </div>
@@ -222,7 +222,7 @@ Public Member Functions</h2></td></tr>
 <p>Get the number of variables of the given problem. </p>
 <dl class="section return"><dt>Returns</dt><dd>Number of columns of the matrix \( \mathbf{A} \). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="gelss__worker_8hpp_source.html#l00210">210</a> of file <a class="el" href="gelss__worker_8hpp_source.html">gelss_worker.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="gelss__worker_8hpp_source.html#l00218">218</a> of file <a class="el" href="gelss__worker_8hpp_source.html">gelss_worker.hpp</a>.</p>
 
 </div>
 </div>
@@ -264,7 +264,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <span class="tt">std::pair&lt;<a class="el" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1" title="Alias template of an nda::basic_array with rank 2 and an &#39;M&#39; algebra.">matrix</a>&lt;std::complex&lt;double&gt;&gt;, double&gt;</span> containing the solution matrix \( \mathbf{X} \) and the error \( \epsilon \). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="gelss__worker_8hpp_source.html#l00235">235</a> of file <a class="el" href="gelss__worker_8hpp_source.html">gelss_worker.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="gelss__worker_8hpp_source.html#l00243">243</a> of file <a class="el" href="gelss__worker_8hpp_source.html">gelss_worker.hpp</a>.</p>
 
 </div>
 </div>
@@ -294,7 +294,7 @@ Public Member Functions</h2></td></tr>
 <p>Get the singular values of the original matrix \( A \). </p>
 <dl class="section return"><dt>Returns</dt><dd>1-dimensional <a class="el" href="group__av__types.html#ga72f3fdf9760fa22c35442cdf2eb6768d" title="Alias template of an nda::basic_array with an &#39;A&#39; algebra.">nda::array</a> containing the singular values. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="gelss__worker_8hpp_source.html#l00216">216</a> of file <a class="el" href="gelss__worker_8hpp_source.html">gelss_worker.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="gelss__worker_8hpp_source.html#l00224">224</a> of file <a class="el" href="gelss__worker_8hpp_source.html">gelss_worker.hpp</a>.</p>
 
 </div>
 </div>

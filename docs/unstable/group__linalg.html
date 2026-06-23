@@ -132,17 +132,28 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('group__linalg.
 <div class="contents">
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Linear algebra related functionality. </p>
+<p><b>nda</b> provides low- and high-level interfaces to various linear algebra operations:</p><ul>
+<li>Low-level functions are thin wrappers around the corresponding BLAS/cuBLAS and LAPACK/cuSOLVER functions that live in the <span class="tt">nda::blas</span> and <span class="tt">nda::lapack</span> namespaces and that work directly on <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> types. They are supposed to have minimal additional overhead (no unnecessary copies, no unnecessary allocations, etc.) but still improve usability compared to bare BLAS and LAPACK operations.</li>
+<li>High-level functions are built on top of the low-level routines and can be found in the <span class="tt">nda::linalg</span> namespace. They mimic the behavior of <a href="https://numpy.org/doc/stable/reference/routines.linalg.html">numpy.linalg</a> as much as possible. Here, performance is sometimes sacrificed for better usability and convenience, e.g. by making copies of input arrays or by returning newly allocated arrays.</li>
+</ul>
+<p>Both interfaces try to be as generic as possible in the sense that they</p><ul>
+<li>work for arrays, views or lazy expressions,</li>
+<li>dispatch to the correct BLAS/cuBLAS/LAPACK/cuSOLVER function depending on the value type and address space of given input arrays,</li>
+<li>take care of memory layouts, i.e. <a class="el" href="structnda_1_1_c__layout.html" title="Contiguous layout policy with C-order (row-major order).">nda::C_layout</a> vs. <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a>,</li>
+<li>etc.</li>
+</ul>
+<p>Please check the documentation of individual functions to see the details of the behavior and the supported input types. </p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-groups" class="groupheader"><a id="groups" name="groups"></a>
 Topics</h2></td></tr>
-<tr class="memitem:linalg_5Fblas" id="r_linalg_5Fblas"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__blas.html">BLAS interface</a></td></tr>
-<tr class="memdesc:group__linalg__blas"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to parts of the BLAS library. <br /></td></tr>
-<tr class="memitem:linalg_5Fblas_5Futils" id="r_linalg_5Fblas_5Futils"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__blas__utils.html">BLAS utilities</a></td></tr>
-<tr class="memdesc:group__linalg__blas__utils"><td class="mdescLeft">&#160;</td><td class="mdescRight">Utilities for the BLAS/LAPACK interface. <br /></td></tr>
-<tr class="memitem:linalg_5Flapack" id="r_linalg_5Flapack"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__lapack.html">LAPACK interface</a></td></tr>
-<tr class="memdesc:group__linalg__lapack"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to parts of the LAPACK library. <br /></td></tr>
+<tr class="memitem:linalg_5Fblas_5Futils" id="r_linalg_5Fblas_5Futils"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__blas__utils.html">BLAS/LAPACK utilities</a></td></tr>
+<tr class="memdesc:group__linalg__blas__utils"><td class="mdescLeft">&#160;</td><td class="mdescRight">Utilities for the BLAS/LAPACK (and cuBLAS/cuSOLVER) interface. <br /></td></tr>
+<tr class="memitem:linalg_5Fblas" id="r_linalg_5Fblas"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__blas.html">BLAS/cuBLAS interface</a></td></tr>
+<tr class="memdesc:group__linalg__blas"><td class="mdescLeft">&#160;</td><td class="mdescRight">Low-level interface to parts of the BLAS/cuBLAS library. <br /></td></tr>
+<tr class="memitem:linalg_5Flapack" id="r_linalg_5Flapack"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__lapack.html">LAPACK/cuSOLVER interface</a></td></tr>
+<tr class="memdesc:group__linalg__lapack"><td class="mdescLeft">&#160;</td><td class="mdescRight">Low-level interface to parts of the LAPACK/cuSOLVER library. <br /></td></tr>
 <tr class="memitem:linalg_5Ftools" id="r_linalg_5Ftools"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__tools.html">Linear algebra tools</a></td></tr>
-<tr class="memdesc:group__linalg__tools"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic functions that wrap the BLAS and LAPACK interfaces to provide a more user-friendly approach for the most common linear algebra related tasks. <br /></td></tr>
+<tr class="memdesc:group__linalg__tools"><td class="mdescLeft">&#160;</td><td class="mdescRight">High-level interface to various linear algebra operations in the style of <span class="tt">numpy.linalg</span>. <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

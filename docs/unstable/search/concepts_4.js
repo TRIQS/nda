@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['instantiationof_0',['InstantiationOf',['../conceptnda_1_1_instantiation_of.html',1,'nda']]]
+  ['floatordouble_0',['FloatOrDouble',['../conceptnda_1_1_float_or_double.html',1,'nda']]]
 ];

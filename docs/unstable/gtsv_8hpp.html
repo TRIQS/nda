@@ -131,6 +131,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('gtsv_8hpp.html
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="lapack_2interface_2cxx__interface_8hpp_source.html">./interface/cxx_interface.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="blas_2tools_8hpp_source.html">../blas/tools.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="declarations_8hpp_source.html">../declarations.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="macros_8hpp_source.html">../macros.hpp</a>&quot;</code><br />
@@ -145,11 +146,10 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('gtsv_8hpp.html
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga0b9b46f1987c9367177f7e3118a42947" id="r_ga0b9b46f1987c9367177f7e3118a42947"><td class="memTemplParams" colspan="2">template&lt;MemoryVector DL, MemoryVector D, MemoryVector DU, MemoryArray B&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;DL, D, DU, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;DL, D, DU, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a><br class="typebreak" />
-&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;DL&gt;&gt;)</td></tr>
-<tr class="memitem:ga0b9b46f1987c9367177f7e3118a42947 template"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__lapack.html#ga0b9b46f1987c9367177f7e3118a42947">nda::lapack::gtsv</a> (DL &amp;&amp;dl, D &amp;&amp;d, DU &amp;&amp;du, B &amp;&amp;b)</td></tr>
-<tr class="memdesc:ga0b9b46f1987c9367177f7e3118a42947"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="group__linalg__lapack.html#ga0b9b46f1987c9367177f7e3118a42947" title="Interface to the LAPACK gtsv routine.">gtsv</a></span> routine.  <br /></td></tr>
+<tr class="memitem:ga0f783265651cf5f479db65547b127343" id="r_ga0f783265651cf5f479db65547b127343"><td class="memTemplParams" colspan="2">template&lt;BlasArray&lt; 1 &gt; DL, BlasArrayFor&lt; DL, 1 &gt; D, BlasArrayFor&lt; DL, 1 &gt; DU, BlasArrayFor&lt; DL &gt; B&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;DL&gt; and (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;B&gt; == 1 or <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;B&gt; == 2) and <a class="el" href="group__linalg__blas__utils.html#gafbeb10df81b433b3bdd6c8ceb55d192a">has_F_layout</a>&lt;B&gt;)</td></tr>
+<tr class="memitem:ga0f783265651cf5f479db65547b127343 template"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__lapack.html#ga0f783265651cf5f479db65547b127343">nda::lapack::gtsv</a> (DL &amp;&amp;dl, D &amp;&amp;d, DU &amp;&amp;du, B &amp;&amp;b)</td></tr>
+<tr class="memdesc:ga0f783265651cf5f479db65547b127343"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt">gtsv</span> routine.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

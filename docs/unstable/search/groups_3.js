@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['dimensional_20indexing_0',['Multi-dimensional indexing',['../group__layout__idx.html',1,'']]]
+  ['decompositions_0',['Decompositions',['../group__linalg__decompositions.html',1,'']]],
+  ['dimensional_20indexing_1',['Multi-dimensional indexing',['../group__layout__idx.html',1,'']]]
 ];

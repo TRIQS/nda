@@ -163,6 +163,9 @@ Functions</h2></td></tr>
 template&lt;bool flag = false&gt; </td></tr>
 <tr class="memitem:ga3cb1540052805a4b852cc39bc48799cd template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><b>nda::compile_error_no_gpu</b> ()</td></tr>
 <tr class="memdesc:ga3cb1540052805a4b852cc39bc48799cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trigger a compilation error in case GPU specific functionality is used without configuring the project with GPU support. <br /></td></tr>
+<tr class="memitem:gabf8159bb9622fe2ffff96b4d7d0f7358" id="r_gabf8159bb9622fe2ffff96b4d7d0f7358"><td class="memItemLeft"><a id="gabf8159bb9622fe2ffff96b4d7d0f7358" name="gabf8159bb9622fe2ffff96b4d7d0f7358"></a>
+void&#160;</td><td class="memItemRight"><b>nda::cuda_device_sync</b> (bool do_sync=true, std::string_view func=&quot;&quot;)</td></tr>
+<tr class="memdesc:gabf8159bb9622fe2ffff96b4d7d0f7358"><td class="mdescLeft">&#160;</td><td class="mdescRight">Empty function if <span class="tt">CudaSupport</span> is not enabled. <br /></td></tr>
 <tr class="memitem:gaf1e86f1f528f277d3ed2c126566b27b3" id="r_gaf1e86f1f528f277d3ed2c126566b27b3"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__mem__addrspcs.html#ga03c36f393776e30005ebfc907bde9e0d">AddressSpace</a> AdrSp&gt; </td></tr>
 <tr class="memitem:gaf1e86f1f528f277d3ed2c126566b27b3 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#gaf1e86f1f528f277d3ed2c126566b27b3">nda::mem::free</a> (void *p)</td></tr>
 <tr class="memdesc:gaf1e86f1f528f277d3ed2c126566b27b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call the correct <span class="tt"><a class="el" href="#gaf1e86f1f528f277d3ed2c126566b27b3" title="Call the correct free function based on the given address space.">free</a></span> function based on the given address space.  <br /></td></tr>
@@ -181,6 +184,10 @@ template&lt;bool flag = false&gt; </td></tr>
 <tr class="memitem:ga1b98a8719ecb399711e33a626ed30bda" id="r_ga1b98a8719ecb399711e33a626ed30bda"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__mem__addrspcs.html#ga03c36f393776e30005ebfc907bde9e0d">AddressSpace</a> AdrSp&gt; </td></tr>
 <tr class="memitem:ga1b98a8719ecb399711e33a626ed30bda template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ga1b98a8719ecb399711e33a626ed30bda">nda::mem::memset2D</a> (void *ptr, size_t pitch, int value, size_t width, size_t height)</td></tr>
 <tr class="memdesc:ga1b98a8719ecb399711e33a626ed30bda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call CUDA's <span class="tt">cudaMemset2D</span> function or simulate its behavior on the <span class="tt"><a class="el" href="address__space_8hpp.html#ac2ca16d048ec66e04bca283eab048ec2" title="Using declaration for the Host address space (see nda::mem::AddressSpace).">Host</a></span> based on the given address space.  <br /></td></tr>
+<tr class="memitem:gab4ee83e0eb8fea2e817f15861f09519d" id="r_gab4ee83e0eb8fea2e817f15861f09519d"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__mem__addrspcs.html#ga03c36f393776e30005ebfc907bde9e0d">AddressSpace</a> AdrSp&gt; <br />
+requires ((AdrSp == <a class="el" href="address__space_8hpp.html#ac2ca16d048ec66e04bca283eab048ec2">Host</a> or AdrSp == <a class="el" href="address__space_8hpp.html#ae0ac20adce6ffee48c7151b070aa5737">Device</a>) and <a class="el" href="#ga09b33840a06e6a7bf8a8cfee8ec152d7">have_cuda</a>)</td></tr>
+<tr class="memitem:gab4ee83e0eb8fea2e817f15861f09519d template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#gab4ee83e0eb8fea2e817f15861f09519d">nda::mem::prefetch</a> (void *p, size_t count)</td></tr>
+<tr class="memdesc:gab4ee83e0eb8fea2e817f15861f09519d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prefetch memory to the specified destination location.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -518,6 +525,50 @@ template&lt;<a class="el" href="group__mem__addrspcs.html#ga03c36f393776e30005eb
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="memset_8hpp_source.html#l00067">67</a> of file <a class="el" href="memset_8hpp_source.html">memset.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gab4ee83e0eb8fea2e817f15861f09519d" name="gab4ee83e0eb8fea2e817f15861f09519d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab4ee83e0eb8fea2e817f15861f09519d">&#9670;&#160;</a></span>prefetch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="group__mem__addrspcs.html#ga03c36f393776e30005ebfc907bde9e0d">AddressSpace</a> AdrSp&gt; <br />
+requires ((AdrSp == <a class="el" href="address__space_8hpp.html#ac2ca16d048ec66e04bca283eab048ec2">Host</a> or AdrSp == <a class="el" href="address__space_8hpp.html#ae0ac20adce6ffee48c7151b070aa5737">Device</a>) and <a class="el" href="#ga09b33840a06e6a7bf8a8cfee8ec152d7">have_cuda</a>)</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void nda::mem::prefetch </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>p</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>count</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;<a class="el" href="prefetch_8hpp.html">nda/mem/prefetch.hpp</a>&gt;</code></p>
+
+<p>Prefetch memory to the specified destination location. </p>
+<p>It makes a call to <span class="tt">cudaMemPrefetchAsync</span> to prefetch memory to either the <span class="tt"><a class="el" href="address__space_8hpp.html#ac2ca16d048ec66e04bca283eab048ec2" title="Using declaration for the Host address space (see nda::mem::AddressSpace).">Host</a></span> or <span class="tt"><a class="el" href="address__space_8hpp.html#ae0ac20adce6ffee48c7151b070aa5737" title="Using declaration for the Device address space (see nda::mem::AddressSpace).">Device</a></span> address space.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">AdrSp</td><td><a class="el" href="group__mem__addrspcs.html#ga03c36f393776e30005ebfc907bde9e0d" title="Enum providing identifiers for the different memory address spaces.">nda::mem::AddressSpace</a> (either <span class="tt"><a class="el" href="address__space_8hpp.html#ac2ca16d048ec66e04bca283eab048ec2" title="Using declaration for the Host address space (see nda::mem::AddressSpace).">Host</a></span> or <span class="tt"><a class="el" href="address__space_8hpp.html#ae0ac20adce6ffee48c7151b070aa5737" title="Using declaration for the Device address space (see nda::mem::AddressSpace).">Device</a></span>). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">p</td><td>Pointer to the memory to prefetch. </td></tr>
+    <tr><td class="paramname">count</td><td>Number of bytes to prefetch. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="prefetch_8hpp_source.html#l00049">49</a> of file <a class="el" href="prefetch_8hpp_source.html">prefetch.hpp</a>.</p>
 
 </div>
 </div>

@@ -12,8 +12,10 @@ var searchData=
   ['compute_5flayout_5finfo_9',['compute_layout_info',['../structnda_1_1expr.html#aa7eacca332d6ccd6eac7307f31fc31f2',1,'nda::expr']]],
   ['concatenate_10',['concatenate',['../group__av__factories.html#gaf93e0a19277d0f2ed937e6d7339ee652',1,'nda']]],
   ['conj_11',['conj',['../group__clef__expr.html#ga3722c49f541e904dd5e0a4023fc76bf6',1,'nda::clef::conj()'],['../group__av__math.html#gaed558141a1f01cb2974b0cc4fc4d04ff',1,'nda::conj()']]],
-  ['cos_12',['cos',['../group__clef__expr.html#gab946ee50a54292cbc311e1a11c03450c',1,'nda::clef::cos()'],['../group__av__math.html#ga08b3f5539d4426554f981cd417363323',1,'nda::cos()']]],
-  ['cosh_13',['cosh',['../group__clef__expr.html#gae89991f61d52d54d30371839d1125fba',1,'nda::clef::cosh()'],['../group__av__math.html#gabd5f49e42bad17d37bb531e7775db371',1,'nda::cosh()']]],
-  ['cross_5fproduct_14',['cross_product',['../group__linalg__tools.html#ga3a8f49f7769a5d63a0a088cfbd7da2da',1,'nda::linalg']]],
-  ['cycle_15',['cycle',['../group__utils__perms.html#gae74d3369ecd51f87082ac8d339ee0ffe',1,'nda::permutations']]]
+  ['contract_12',['contract',['../group__tensor__ops.html#ga45410d736562bf69db06bba4abf06c74',1,'nda::tensor::contract(get_value_t&lt; A &gt; alpha, A const &amp;a, std::string_view idx_a, B const &amp;b, std::string_view idx_b, get_value_t&lt; A &gt; beta, C &amp;&amp;c, std::string_view idx_c)'],['../group__tensor__ops.html#gabadfd2d7d5fed2206d7df204a5dddc13',1,'nda::tensor::contract(A const &amp;a, std::string_view idx_a, B const &amp;b, std::string_view idx_b, C &amp;&amp;c, std::string_view idx_c)']]],
+  ['cos_13',['cos',['../group__clef__expr.html#gab946ee50a54292cbc311e1a11c03450c',1,'nda::clef::cos()'],['../group__av__math.html#ga08b3f5539d4426554f981cd417363323',1,'nda::cos()']]],
+  ['cosh_14',['cosh',['../group__clef__expr.html#gae89991f61d52d54d30371839d1125fba',1,'nda::clef::cosh()'],['../group__av__math.html#gabd5f49e42bad17d37bb531e7775db371',1,'nda::cosh()']]],
+  ['cross_5fproduct_15',['cross_product',['../group__linalg__matvec__products.html#ga3a8f49f7769a5d63a0a088cfbd7da2da',1,'nda::linalg']]],
+  ['cuda_5fdevice_5fsync_16',['cuda_device_sync',['../group__mem__utils.html#gabf8159bb9622fe2ffff96b4d7d0f7358',1,'nda']]],
+  ['cycle_17',['cycle',['../group__utils__perms.html#gae74d3369ecd51f87082ac8d339ee0ffe',1,'nda::permutations']]]
 ];

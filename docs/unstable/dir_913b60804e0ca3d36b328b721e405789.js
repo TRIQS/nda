@@ -9,6 +9,7 @@ var dir_913b60804e0ca3d36b328b721e405789 =
     [ "mem", "dir_728b0d99ce6be166c7b5ed2091e3f3fa.html", "dir_728b0d99ce6be166c7b5ed2091e3f3fa" ],
     [ "mpi", "dir_064e4b4af870ca0f71794f16c050428b.html", "dir_064e4b4af870ca0f71794f16c050428b" ],
     [ "stdutil", "dir_3ce0108121f0de9d553b49ae8833d511.html", "dir_3ce0108121f0de9d553b49ae8833d511" ],
+    [ "tensor", "dir_a32ae2639912be7c5d4d952bcc671896.html", "dir_a32ae2639912be7c5d4d952bcc671896" ],
     [ "_impl_basic_array_view_common.hpp", "__impl__basic__array__view__common_8hpp_source.html", null ],
     [ "accessors.hpp", "accessors_8hpp.html", null ],
     [ "algorithms.hpp", "algorithms_8hpp.html", "algorithms_8hpp" ],
@@ -42,5 +43,6 @@ var dir_913b60804e0ca3d36b328b721e405789 =
     [ "print.hpp", "print_8hpp.html", "print_8hpp" ],
     [ "stdutil.hpp", "stdutil_8hpp.html", null ],
     [ "sym_grp.hpp", "sym__grp_8hpp.html", "sym__grp_8hpp" ],
+    [ "tensor.hpp", "tensor_8hpp.html", null ],
     [ "traits.hpp", "traits_8hpp.html", "traits_8hpp" ]
 ];

@@ -132,6 +132,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('ungqr_8hpp.htm
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="lapack_2interface_2cxx__interface_8hpp_source.html">./interface/cxx_interface.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="basic__array_8hpp_source.html">../basic_array.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="blas_2tools_8hpp_source.html">../blas/tools.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="declarations_8hpp_source.html">../declarations.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="macros_8hpp_source.html">../macros.hpp</a>&quot;</code><br />
@@ -142,7 +143,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('ungqr_8hpp.htm
 <code>#include &lt;complex&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
 </div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Provides a generic interface to the LAPACK <span class="tt">ungqr</span> routine. </p>
+<div class="textblock"><p>Provides a generic interface to the LAPACK/cuSOLVER <span class="tt">ungqr</span> routine. </p>
 
 <p class="definition">Definition in file <a class="el" href="ungqr_8hpp_source.html">ungqr.hpp</a>.</p>
 </div>
@@ -150,11 +151,10 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('ungqr_8hpp.htm
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga56ec70f6ac54d52db55f30a993690d38" id="r_ga56ec70f6ac54d52db55f30a993690d38"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector TAU&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A&gt; and std::is_same_v&lt;std::complex&lt;double&gt;, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <br class="typebreak" />
-<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, TAU&gt;)</td></tr>
-<tr class="memitem:ga56ec70f6ac54d52db55f30a993690d38 template"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__lapack.html#ga56ec70f6ac54d52db55f30a993690d38">nda::lapack::ungqr</a> (A &amp;&amp;a, TAU &amp;&amp;tau)</td></tr>
-<tr class="memdesc:ga56ec70f6ac54d52db55f30a993690d38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="group__linalg__lapack.html#ga56ec70f6ac54d52db55f30a993690d38" title="Interface to the LAPACK ungqr routine.">ungqr</a></span> routine.  <br /></td></tr>
+<tr class="memitem:ga06db306e9ae216bd5b2b54e6974873fd" id="r_ga06db306e9ae216bd5b2b54e6974873fd"><td class="memTemplParams" colspan="2">template&lt;BlasArrayCplx&lt; 2 &gt; A, BlasArrayFor&lt; A, 1 &gt; TAU, BlasArrayFor&lt; A, 1 &gt; W = vector_value_t&lt;A&gt;&gt; <br />
+requires (<a class="el" href="group__linalg__blas__utils.html#gafbeb10df81b433b3bdd6c8ceb55d192a">has_F_layout</a>&lt;A&gt;)</td></tr>
+<tr class="memitem:ga06db306e9ae216bd5b2b54e6974873fd template"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__lapack.html#ga06db306e9ae216bd5b2b54e6974873fd">nda::lapack::ungqr</a> (A &amp;&amp;a, TAU &amp;&amp;tau, W &amp;&amp;work=<a class="el" href="group__linalg__blas__utils.html#gad540698c2a4c4f47cacfe510c6bf2f6a">vector_value_t</a>&lt; A &gt;{})</td></tr>
+<tr class="memdesc:ga06db306e9ae216bd5b2b54e6974873fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK/cuSOLVER <span class="tt">ungqr</span> routine.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -132,6 +132,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('inv_8hpp.html'
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="basic__array_8hpp_source.html">../basic_array.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="basic__functions_8hpp_source.html">../basic_functions.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="blas_2tools_8hpp_source.html">../blas/tools.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="exceptions_8hpp_source.html">../exceptions.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="getrf_8hpp_source.html">../lapack/getrf.hpp</a>&quot;</code><br />
@@ -157,15 +158,15 @@ Functions</h2></td></tr>
 template&lt;typename... A&gt; <br />
 requires (<a class="el" href="group__clef__utils.html#gaf4a34ec80a1f0d50945e918807a6f318">nda::clef::is_any_lazy</a>&lt;A...&gt;)</td></tr>
 <tr class="memitem:ga55cb72ad90bfbbd4bc215672d5421552 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>nda::linalg::inv</b> (A &amp;&amp;...__a)</td></tr>
-<tr class="memdesc:ga55cb72ad90bfbbd4bc215672d5421552"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lazy version of <a class="el" href="group__linalg__tools.html#gabd0ff5c6c8add0fd6641db2cc5f73a79" title="Compute the inverse of an  matrix .">nda::linalg::inv</a>. <br /></td></tr>
+<tr class="memdesc:ga55cb72ad90bfbbd4bc215672d5421552"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lazy version of <a class="el" href="group__linalg__solve.html#gabd0ff5c6c8add0fd6641db2cc5f73a79" title="Compute the inverse  of an  matrix .">nda::linalg::inv</a>. <br /></td></tr>
 <tr class="memitem:gabd0ff5c6c8add0fd6641db2cc5f73a79" id="r_gabd0ff5c6c8add0fd6641db2cc5f73a79"><td class="memTemplParams" colspan="2">template&lt;Matrix M&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;M&gt;&gt;)</td></tr>
-<tr class="memitem:gabd0ff5c6c8add0fd6641db2cc5f73a79 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__tools.html#gabd0ff5c6c8add0fd6641db2cc5f73a79">nda::linalg::inv</a> (M const &amp;m)</td></tr>
-<tr class="memdesc:gabd0ff5c6c8add0fd6641db2cc5f73a79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the inverse of an \( n \times n \) matrix \( \mathbf{M} \).  <br /></td></tr>
-<tr class="memitem:ga5ae8205418692fdc14fc3ee0c5bf322b" id="r_ga5ae8205418692fdc14fc3ee0c5bf322b"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix M&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;M&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;M&gt;&gt;)</td></tr>
-<tr class="memitem:ga5ae8205418692fdc14fc3ee0c5bf322b template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__tools.html#ga5ae8205418692fdc14fc3ee0c5bf322b">nda::linalg::inv_in_place</a> (M &amp;&amp;m)</td></tr>
-<tr class="memdesc:ga5ae8205418692fdc14fc3ee0c5bf322b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the inverse of an \( n \times n \) matrix \( \mathbf{M} \).  <br /></td></tr>
+<tr class="memitem:gabd0ff5c6c8add0fd6641db2cc5f73a79 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__solve.html#gabd0ff5c6c8add0fd6641db2cc5f73a79">nda::linalg::inv</a> (M const &amp;m)</td></tr>
+<tr class="memdesc:gabd0ff5c6c8add0fd6641db2cc5f73a79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the inverse \( \mathbf{M}^{-1} \) of an \( n \times n \) matrix \( \mathbf{M} \).  <br /></td></tr>
+<tr class="memitem:ga4a836bb4ecea9062ef9c1d8fade7885b" id="r_ga4a836bb4ecea9062ef9c1d8fade7885b"><td class="memTemplParams" colspan="2">template&lt;blas_lapack::BlasArray&lt; 2 &gt; M&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">get_algebra</a>&lt;M&gt; == 'M' and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;M&gt;)</td></tr>
+<tr class="memitem:ga4a836bb4ecea9062ef9c1d8fade7885b template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__solve.html#ga4a836bb4ecea9062ef9c1d8fade7885b">nda::linalg::inv_in_place</a> (M &amp;&amp;m)</td></tr>
+<tr class="memdesc:ga4a836bb4ecea9062ef9c1d8fade7885b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the inverse \( \mathbf{M}^{-1} \) of an \( n \times n \) matrix \( \mathbf{M} \) in place.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

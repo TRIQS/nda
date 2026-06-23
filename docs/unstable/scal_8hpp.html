@@ -131,13 +131,13 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('scal_8hpp.html
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="blas_2interface_2cxx__interface_8hpp_source.html">./interface/cxx_interface.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="tools_8hpp_source.html">./tools.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="blas_2tools_8hpp_source.html">./tools.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="device_8hpp_source.html">../device.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="address__space_8hpp_source.html">../mem/address_space.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="traits_8hpp_source.html">../traits.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="device_8hpp_source.html">../device.hpp</a>&quot;</code><br />
 </div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Provides a generic interface to the BLAS <span class="tt">scal</span> routine. </p>
+<div class="textblock"><p>Provides a generic interface to the BLAS/cuBLAS <span class="tt">scal</span> routine. </p>
 
 <p class="definition">Definition in file <a class="el" href="scal_8hpp_source.html">scal.hpp</a>.</p>
 </div>
@@ -145,10 +145,9 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('scal_8hpp.html
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga500d4e7e91208effd1ecf29185e5e377" id="r_ga500d4e7e91208effd1ecf29185e5e377"><td class="memTemplParams" colspan="2">template&lt;MemoryVector X&gt; <br />
-requires (<a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;X&gt;&gt;)</td></tr>
-<tr class="memitem:ga500d4e7e91208effd1ecf29185e5e377 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__blas.html#ga500d4e7e91208effd1ecf29185e5e377">nda::blas::scal</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; X &gt; alpha, X &amp;&amp;x)</td></tr>
-<tr class="memdesc:ga500d4e7e91208effd1ecf29185e5e377"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS <span class="tt"><a class="el" href="group__linalg__blas.html#ga500d4e7e91208effd1ecf29185e5e377" title="Interface to the BLAS scal routine.">scal</a></span> routine.  <br /></td></tr>
+<tr class="memitem:gacafdbc7be2f8b20d6a78cd870fce0d66" id="r_gacafdbc7be2f8b20d6a78cd870fce0d66"><td class="memTemplParams" colspan="2">template&lt;BlasArray&lt; 1 &gt; X&gt; </td></tr>
+<tr class="memitem:gacafdbc7be2f8b20d6a78cd870fce0d66 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__blas.html#gacafdbc7be2f8b20d6a78cd870fce0d66">nda::blas::scal</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; X &gt; alpha, X &amp;&amp;x)</td></tr>
+<tr class="memdesc:gacafdbc7be2f8b20d6a78cd870fce0d66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS/cuBLAS <span class="tt">scal</span> routine.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

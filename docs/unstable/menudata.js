@@ -42,7 +42,8 @@ var menudata={children:[
 {text:"Example 5: HDF5 support",url:"ex5.html"},
 {text:"Example 6: MPI support",url:"ex6.html"},
 {text:"Example 7: Making use of symmetries",url:"ex7.html"},
-{text:"Example 8: Linear algebra support",url:"ex8.html"}]},
+{text:"Example 8: Linear algebra support",url:"ex8.html"},
+{text:"Example 9: Tensor support",url:"ex9.html"}]},
 {text:"API Documentation",url:"documentation.html",children:[
 {text:"Arrays and views",url:"group__arrays__views.html",children:[
 {text:"basic_array",url:"classnda_1_1basic__array.html"},
@@ -133,12 +134,30 @@ var menudata={children:[
 {text:"clef::pair",url:"structnda_1_1clef_1_1pair.html"},
 {text:"clef::placeholder",url:"structnda_1_1clef_1_1placeholder.html"}]}]},
 {text:"Linear algebra",url:"group__linalg.html",children:[
-{text:"BLAS interface",url:"group__linalg__blas.html"},
-{text:"BLAS utilities",url:"group__linalg__blas__utils.html"},
-{text:"LAPACK interface",url:"group__linalg__lapack.html",children:[
+{text:"BLAS/LAPACK utilities",url:"group__linalg__blas__utils.html",children:[
+{text:"blas_lapack::BlasArray",url:"conceptnda_1_1blas__lapack_1_1_blas_array.html"},
+{text:"blas_lapack::BlasArrayCplx",url:"conceptnda_1_1blas__lapack_1_1_blas_array_cplx.html"},
+{text:"blas_lapack::BlasArrayFor",url:"conceptnda_1_1blas__lapack_1_1_blas_array_for.html"},
+{text:"blas_lapack::BlasArrayOrConj",url:"conceptnda_1_1blas__lapack_1_1_blas_array_or_conj.html"},
+{text:"blas_lapack::BlasArrayOrConjFor",url:"conceptnda_1_1blas__lapack_1_1_blas_array_or_conj_for.html"},
+{text:"blas_lapack::BlasArrayReal",url:"conceptnda_1_1blas__lapack_1_1_blas_array_real.html"},
+{text:"blas_lapack::BlasArrayRealFor",url:"conceptnda_1_1blas__lapack_1_1_blas_array_real_for.html"},
+{text:"blas_lapack::PivotArrayFor",url:"conceptnda_1_1blas__lapack_1_1_pivot_array_for.html"}]},
+{text:"BLAS/cuBLAS interface",url:"group__linalg__blas.html"},
+{text:"LAPACK/cuSOLVER interface",url:"group__linalg__lapack.html",children:[
 {text:"lapack::gelss_worker",url:"classnda_1_1lapack_1_1gelss__worker.html"},
 {text:"lapack::gelss_worker_hermitian",url:"classnda_1_1lapack_1_1gelss__worker__hermitian.html"}]},
-{text:"Linear algebra tools",url:"group__linalg__tools.html"}]},
+{text:"Linear algebra tools",url:"group__linalg__tools.html",children:[
+{text:"Decompositions",url:"group__linalg__decompositions.html"},
+{text:"Matrix eigenvalues",url:"group__linalg__eig.html"},
+{text:"Matrix, vector and other products",url:"group__linalg__matvec__products.html"},
+{text:"Norms and other numbers",url:"group__linalg__norms.html"},
+{text:"Other operations",url:"group__linalg__other.html"},
+{text:"Solving equations and inverting matrices",url:"group__linalg__solve.html"}]}]},
+{text:"Tensor support",url:"group__tensor.html",children:[
+{text:"Tensor utilities",url:"group__tensor__utils.html",children:[
+{text:"tensor::tensor_view",url:"structnda_1_1tensor_1_1tensor__view.html"}]},
+{text:"Tensor operations",url:"group__tensor__ops.html"}]},
 {text:"Memory layout",url:"group__layout.html",children:[
 {text:"Layout policies",url:"group__layout__pols.html",children:[
 {text:"basic_layout",url:"structnda_1_1basic__layout.html"},
@@ -188,6 +207,7 @@ var menudata={children:[
 {text:"AnyOf",url:"conceptnda_1_1_any_of.html"},
 {text:"CallableWithLongs",url:"conceptnda_1_1_callable_with_longs.html"},
 {text:"DoubleOrComplex",url:"conceptnda_1_1_double_or_complex.html"},
+{text:"FloatOrDouble",url:"conceptnda_1_1_float_or_double.html"},
 {text:"InstantiationOf",url:"conceptnda_1_1_instantiation_of.html"},
 {text:"Scalar",url:"conceptnda_1_1_scalar.html"},
 {text:"StdArrayOfLong",url:"conceptnda_1_1_std_array_of_long.html"}]},
@@ -195,7 +215,8 @@ var menudata={children:[
 {text:"runtime_error",url:"classnda_1_1runtime__error.html"}]},
 {text:"Permutations",url:"group__utils__perms.html"},
 {text:"Type traits",url:"group__utils__type__traits.html",children:[
-{text:"is_instantiation_of",url:"structnda_1_1is__instantiation__of.html"}]}]},
+{text:"is_instantiation_of",url:"structnda_1_1is__instantiation__of.html"},
+{text:"remove_complex",url:"structnda_1_1remove__complex.html"}]}]},
 {text:"File List",url:"files.html"}]},
 {text:"Changelog",url:"changelog.html"},
 {text:"Issues",url:"issues.html"}]}

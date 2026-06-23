@@ -1,6 +1,6 @@
 var qr_8hpp =
 [
-    [ "nda::linalg::get_qr_matrices", "group__linalg__tools.html#gac25721901add8aedd982920d0d0b566a", null ],
-    [ "nda::linalg::qr", "group__linalg__tools.html#ga67328cde310a3f7d5dfc1c7454d0cad3", null ],
-    [ "nda::linalg::qr_in_place", "group__linalg__tools.html#ga839dbb942c59f16211ea68717c9980c1", null ]
+    [ "nda::linalg::get_qr_matrices", "group__linalg__decompositions.html#ga5371d8e02c855ff9ebd0347b1a3c5029", null ],
+    [ "nda::linalg::qr", "group__linalg__decompositions.html#gaefd23f4698a5a925118dd45ac5f53973", null ],
+    [ "nda::linalg::qr_in_place", "group__linalg__decompositions.html#gaa7b55f2d39d16f6269c9450f297c7b0d", null ]
 ];

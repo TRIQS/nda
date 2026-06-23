@@ -133,21 +133,22 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('gesvd_8hpp.htm
 <div class="textblock"><code>#include &quot;<a class="el" href="lapack_2interface_2cxx__interface_8hpp_source.html">./interface/cxx_interface.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="basic__array_8hpp_source.html">../basic_array.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="basic__functions_8hpp_source.html">../basic_functions.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="blas_2tools_8hpp_source.html">../blas/tools.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="declarations_8hpp_source.html">../declarations.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="device_8hpp_source.html">../device.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="layout_2policies_8hpp_source.html">../layout/policies.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="macros_8hpp_source.html">../macros.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="address__space_8hpp_source.html">../mem/address_space.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="mem_2policies_8hpp_source.html">../mem/policies.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="traits_8hpp_source.html">../traits.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="device_8hpp_source.html">../device.hpp</a>&quot;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
 <code>#include &lt;complex&gt;</code><br />
 <code>#include &lt;concepts&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
 </div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Provides a generic interface to the LAPACK <span class="tt">gesvd</span> routine. </p>
+<div class="textblock"><p>Provides a generic interface to the LAPACK/cuSOLVER <span class="tt">gesvd</span> routine. </p>
 
 <p class="definition">Definition in file <a class="el" href="gesvd_8hpp_source.html">gesvd.hpp</a>.</p>
 </div>
@@ -155,11 +156,10 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('gesvd_8hpp.htm
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga2ad7420a95eeebf775f912cfd9770bf5" id="r_ga2ad7420a95eeebf775f912cfd9770bf5"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryVector S, MemoryMatrix U, MemoryMatrix VT&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, U, VT&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, S, U, VT&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;<br class="typebreak" />
- and std::same_as&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;S&gt;&gt;)</td></tr>
-<tr class="memitem:ga2ad7420a95eeebf775f912cfd9770bf5 template"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__lapack.html#ga2ad7420a95eeebf775f912cfd9770bf5">nda::lapack::gesvd</a> (A &amp;&amp;a, S &amp;&amp;s, U &amp;&amp;u, VT &amp;&amp;vt)</td></tr>
-<tr class="memdesc:ga2ad7420a95eeebf775f912cfd9770bf5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="group__linalg__lapack.html#ga2ad7420a95eeebf775f912cfd9770bf5" title="Interface to the LAPACK gesvd routine.">gesvd</a></span> routine.  <br /></td></tr>
+<tr class="memitem:gafa372afe3921281bfdaa03050e96442b" id="r_gafa372afe3921281bfdaa03050e96442b"><td class="memTemplParams" colspan="2">template&lt;BlasArray&lt; 2 &gt; A, BlasArrayRealFor&lt; A, 1 &gt; S, BlasArrayFor&lt; A, 2 &gt; U, BlasArrayFor&lt; A, 2 &gt; VH, BlasArrayFor&lt; A, 1 &gt; W1 = vector_value_t&lt;A&gt;, BlasArrayRealFor&lt; A, 1 &gt; W2 = vector_fp_t&lt;A&gt;&gt; <br />
+requires (<a class="el" href="group__linalg__blas__utils.html#gaa45357c452efd1f28add0fd77bc3152b">has_C_layout</a>&lt;A&gt; == <a class="el" href="group__linalg__blas__utils.html#gaa45357c452efd1f28add0fd77bc3152b">has_C_layout</a>&lt;U&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa45357c452efd1f28add0fd77bc3152b">has_C_layout</a>&lt;A&gt; == <a class="el" href="group__linalg__blas__utils.html#gaa45357c452efd1f28add0fd77bc3152b">has_C_layout</a>&lt;VH&gt;)</td></tr>
+<tr class="memitem:gafa372afe3921281bfdaa03050e96442b template"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__lapack.html#gafa372afe3921281bfdaa03050e96442b">nda::lapack::gesvd</a> (A &amp;&amp;a, S &amp;&amp;s, U &amp;&amp;u, VH &amp;&amp;vh, W1 &amp;&amp;work=<a class="el" href="group__linalg__blas__utils.html#gad540698c2a4c4f47cacfe510c6bf2f6a">vector_value_t</a>&lt; A &gt;{}, W2 &amp;&amp;rwork=<a class="el" href="group__linalg__blas__utils.html#gaec9fb8d5283f18ce490a4564574d6201">vector_fp_t</a>&lt; A &gt;{})</td></tr>
+<tr class="memdesc:gafa372afe3921281bfdaa03050e96442b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK/cuSOLVER <span class="tt">gesvd</span> routine.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

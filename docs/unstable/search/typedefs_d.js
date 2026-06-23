@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['value_5ftype_0',['value_type',['../classnda_1_1basic__array.html#afce26b7171c33a2212ee7041aaefaeb2',1,'nda::basic_array::value_type'],['../classnda_1_1basic__array__view.html#a99d85f68c8fcc77933256e7dff4d2861',1,'nda::basic_array_view::value_type'],['../structnda_1_1clef_1_1pair.html#aa0c202330c53744edb610b75387973dc',1,'nda::clef::pair::value_type'],['../classnda_1_1array__iterator.html#a4de0a31de63438d26d4f3e307c5de6e3',1,'nda::array_iterator::value_type'],['../classnda_1_1array__iterator_3_011_00_01_t_00_01_pointer_01_4.html#ade97094d0076c04f08664c3d6409b32f',1,'nda::array_iterator&lt; 1, T, Pointer &gt;::value_type'],['../structnda_1_1mem_1_1handle__heap.html#ab008b31c5c230c968fc0b798be5d0bdf',1,'nda::mem::handle_heap::value_type'],['../structnda_1_1mem_1_1handle__stack.html#af5a91da1722dcb2a45cd15158938dffa',1,'nda::mem::handle_stack::value_type'],['../structnda_1_1mem_1_1handle__sso.html#a78fe0a017b24ab86000338e50be5fc6e',1,'nda::mem::handle_sso::value_type'],['../structnda_1_1mem_1_1handle__shared.html#a8a3b5717c2a67d6b6fe9f3425c30d377',1,'nda::mem::handle_shared::value_type'],['../structnda_1_1mem_1_1handle__borrowed.html#abf84a5c3197f4d3d5319368e3ac39c98',1,'nda::mem::handle_borrowed::value_type']]],
-  ['vector_1',['vector',['../group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68',1,'nda']]],
-  ['vector_5fconst_5fview_2',['vector_const_view',['../group__av__types.html#gaa79ab442f2c6817ea1748d4208dccf21',1,'nda']]],
-  ['vector_5fview_3',['vector_view',['../group__av__types.html#ga032616a51fb8b6ed94dd01bfe7804258',1,'nda']]]
+  ['stack_5farray_0',['stack_array',['../group__av__types.html#gac547b7aca335e20c134c45232ab435b9',1,'nda']]],
+  ['stack_5fmatrix_1',['stack_matrix',['../group__av__types.html#gad37e50734eaf13f04a72ec68bf67507d',1,'nda']]],
+  ['stack_5fvector_2',['stack_vector',['../group__av__types.html#ga17272bbbd33c3548a78a54f2634249c4',1,'nda']]],
+  ['storage_5ft_3',['storage_t',['../classnda_1_1basic__array.html#a1e2b4a6878b84f6e4042904943756db1',1,'nda::basic_array::storage_t'],['../classnda_1_1basic__array__view.html#a273f22d238ac3de160f75f73bc9045aa',1,'nda::basic_array_view::storage_t']]],
+  ['sym_5fclass_5ft_4',['sym_class_t',['../classnda_1_1sym__grp.html#aa65f9f871873c74088acf48144acbf11',1,'nda::sym_grp']]],
+  ['sym_5fidx_5ft_5',['sym_idx_t',['../classnda_1_1sym__grp.html#a8d9ee8d5f2fa8ae2da1f39f09b4905d9',1,'nda::sym_grp']]]
 ];

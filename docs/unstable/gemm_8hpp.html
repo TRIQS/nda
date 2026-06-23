@@ -131,16 +131,16 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('gemm_8hpp.html
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="blas_2interface_2cxx__interface_8hpp_source.html">./interface/cxx_interface.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="tools_8hpp_source.html">./tools.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="blas_2tools_8hpp_source.html">./tools.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="device_8hpp_source.html">../device.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="layout__transforms_8hpp_source.html">../layout_transforms.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="macros_8hpp_source.html">../macros.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="address__space_8hpp_source.html">../mem/address_space.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="traits_8hpp_source.html">../traits.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="device_8hpp_source.html">../device.hpp</a>&quot;</code><br />
 <code>#include &lt;utility&gt;</code><br />
 </div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Provides a generic interface to the BLAS <span class="tt">gemm</span> routine. </p>
+<div class="textblock"><p>Provides a generic interface to the BLAS/cuBLAS <span class="tt">gemm</span> routine. </p>
 
 <p class="definition">Definition in file <a class="el" href="gemm_8hpp_source.html">gemm.hpp</a>.</p>
 </div>
@@ -148,11 +148,9 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('gemm_8hpp.html
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gab64974333f3f10efdbee734c088e6239" id="r_gab64974333f3f10efdbee734c088e6239"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Matrix B, MemoryMatrix C&gt; <br />
-requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="group__linalg__blas__utils.html#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;) and (MemoryMatrix&lt;B&gt; or <a class="el" href="group__linalg__blas__utils.html#ga4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;B&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A,<br class="typebreak" />
- B, C&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, B, C&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
-<tr class="memitem:gab64974333f3f10efdbee734c088e6239 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__blas.html#gab64974333f3f10efdbee734c088e6239">nda::blas::gemm</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; alpha, A const &amp;a, B const &amp;b, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; beta, C &amp;&amp;c)</td></tr>
-<tr class="memdesc:gab64974333f3f10efdbee734c088e6239"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS <span class="tt"><a class="el" href="group__linalg__blas.html#gab64974333f3f10efdbee734c088e6239" title="Interface to the BLAS gemm routine.">gemm</a></span> routine.  <br /></td></tr>
+<tr class="memitem:ga49f1d07dc40f9e87103ea1d0888f1b47" id="r_ga49f1d07dc40f9e87103ea1d0888f1b47"><td class="memTemplParams" colspan="2">template&lt;BlasArrayOrConj&lt; 2 &gt; A, BlasArrayOrConjFor&lt; A, 2 &gt; B, BlasArrayFor&lt; A, 2 &gt; C&gt; </td></tr>
+<tr class="memitem:ga49f1d07dc40f9e87103ea1d0888f1b47 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__blas.html#ga49f1d07dc40f9e87103ea1d0888f1b47">nda::blas::gemm</a> (<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; alpha, A const &amp;a, B const &amp;b, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt; A &gt; beta, C &amp;&amp;c)</td></tr>
+<tr class="memdesc:ga49f1d07dc40f9e87103ea1d0888f1b47"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the BLAS/cuBLAS <span class="tt">gemm</span> routine.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

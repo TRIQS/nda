@@ -1,16 +1,20 @@
 var searchData=
 [
-  ['factories_20and_20transformations_0',['Factories and transformations',['../ex2.html#ex2_p6',1,'Factories and transformations'],['../ex4.html#ex4_p9',1,'Factories and transformations']]],
-  ['fetchcontent_1',['FetchContent',['../integration.html#fetch',1,'']]],
-  ['find_5fpackage_2',['find_package',['../integration.html#find_package',1,'']]],
-  ['fixes_3',['Fixes',['../changelog.html#autotoc_md25',1,'']]],
-  ['for_20matrices_20and_20vectors_4',['HDF5, MPI and symmetry support for matrices and vectors',['../ex8.html#ex8_p5',1,'']]],
-  ['from_20an_20existing_20dataset_5',['Reading a slice from an existing dataset',['../ex5.html#ex5_p4',1,'']]],
-  ['from_20an_20nda_3a_3aarray_6',['Constructing an array from an nda::Array',['../ex2.html#ex2_p5',1,'']]],
-  ['from_20its_20data_7',['Constructing an array from its data',['../ex2.html#ex2_p4',1,'']]],
-  ['full_20source_8',['Full source',['../ex1.html#ex1_full',1,'Full source'],['../ex2.html#ex2_full',1,'Full source'],['../ex3.html#ex3_full',1,'Full source'],['../ex4.html#ex4_full',1,'Full source'],['../ex5.html#ex5_full',1,'Full source'],['../ex6.html#ex6_full',1,'Full source'],['../ex7.html#ex7_full',1,'Full source'],['../ex8.html#ex8_full',1,'Full source']]],
-  ['full_20view_20on_20an_20array_20view_9',['Creating a full view on an array/view',['../ex4.html#ex4_p1',1,'']]],
-  ['functions_10',['CLEF - Compile-time lazy expressions and functions',['../documentation.html#autotoc_md28',1,'']]],
-  ['functions_20and_20algorithms_11',['Applying mathematical functions and algorithms',['../ex1.html#ex1_p9',1,'']]],
-  ['further_20examples_12',['Further examples',['../ex1.html#ex1_p13',1,'']]]
+  ['element_20wise_20binary_20operations_0',['Element-wise binary operations',['../ex9.html#ex9_p9',1,'']]],
+  ['elements_1',['Accessing single elements',['../ex1.html#ex1_p4',1,'']]],
+  ['example_2',['Motivating example',['../index.html#motivation',1,'']]],
+  ['example_201_3a_20a_20quick_20overview_3',['Example 1: A quick overview',['../ex1.html',1,'']]],
+  ['example_202_3a_20constructing_20arrays_4',['Example 2: Constructing arrays',['../ex2.html',1,'']]],
+  ['example_203_3a_20initializing_20arrays_5',['Example 3: Initializing arrays',['../ex3.html',1,'']]],
+  ['example_204_3a_20views_20and_20slices_6',['Example 4: Views and slices',['../ex4.html',1,'']]],
+  ['example_205_3a_20hdf5_20support_7',['Example 5: HDF5 support',['../ex5.html',1,'']]],
+  ['example_206_3a_20mpi_20support_8',['Example 6: MPI support',['../ex6.html',1,'']]],
+  ['example_207_3a_20making_20use_20of_20symmetries_9',['Example 7: Making use of symmetries',['../ex7.html',1,'']]],
+  ['example_208_3a_20linear_20algebra_20support_10',['Example 8: Linear algebra support',['../ex8.html',1,'']]],
+  ['example_209_3a_20tensor_20support_11',['Example 9: Tensor support',['../ex9.html',1,'']]],
+  ['examples_12',['Examples',['../examples.html',1,'']]],
+  ['examples_13',['examples',['../examples.html#compiling',1,'Compiling the examples'],['../ex1.html#ex1_p13',1,'Further examples']]],
+  ['existing_20arrays_20views_14',['Using existing arrays/views',['../ex6.html#ex6_p5',1,'']]],
+  ['existing_20dataset_15',['existing dataset',['../ex5.html#ex5_p4',1,'Reading a slice from an existing dataset'],['../ex5.html#ex5_p3',1,'Writing to a slice of an existing dataset']]],
+  ['expressions_20and_20functions_16',['CLEF - Compile-time lazy expressions and functions',['../documentation.html#autotoc_md28',1,'']]]
 ];

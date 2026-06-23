@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('solve_8hpp.htm
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="basic__array_8hpp_source.html">../basic_array.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="tools_8hpp_source.html">../blas/tools.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="blas_2tools_8hpp_source.html">../blas/tools.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="declarations_8hpp_source.html">../declarations.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="exceptions_8hpp_source.html">../exceptions.hpp</a>&quot;</code><br />
@@ -152,14 +152,14 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('solve_8hpp.htm
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga1bef8ddf7eb254c502c10ef2a17c376d" id="r_ga1bef8ddf7eb254c502c10ef2a17c376d"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Array B&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">nda::mem::have_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
-<tr class="memitem:ga1bef8ddf7eb254c502c10ef2a17c376d template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__tools.html#ga1bef8ddf7eb254c502c10ef2a17c376d">nda::linalg::solve</a> (A const &amp;a, B const &amp;b)</td></tr>
-<tr class="memdesc:ga1bef8ddf7eb254c502c10ef2a17c376d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve a system of linear equations.  <br /></td></tr>
-<tr class="memitem:ga6c962c0300af07dd1dc18f1b0f97d9a7" id="r_ga6c962c0300af07dd1dc18f1b0f97d9a7"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryArray B&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">nda::mem::have_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
-<tr class="memitem:ga6c962c0300af07dd1dc18f1b0f97d9a7 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__tools.html#ga6c962c0300af07dd1dc18f1b0f97d9a7">nda::linalg::solve_in_place</a> (A &amp;&amp;a, B &amp;&amp;b)</td></tr>
-<tr class="memdesc:ga6c962c0300af07dd1dc18f1b0f97d9a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve a system of linear equations in-place.  <br /></td></tr>
+<tr class="memitem:gacf7793bb0192ceaabb0dc2b0e78b6e5b" id="r_gacf7793bb0192ceaabb0dc2b0e78b6e5b"><td class="memTemplParams" colspan="2">template&lt;Matrix A, Array B&gt; <br />
+requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, B&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:gacf7793bb0192ceaabb0dc2b0e78b6e5b template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__solve.html#gacf7793bb0192ceaabb0dc2b0e78b6e5b">nda::linalg::solve</a> (A const &amp;a, B const &amp;b)</td></tr>
+<tr class="memdesc:gacf7793bb0192ceaabb0dc2b0e78b6e5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve a system of linear equations.  <br /></td></tr>
+<tr class="memitem:ga903c04ab6661c671ee825a26b62b3e8c" id="r_ga903c04ab6661c671ee825a26b62b3e8c"><td class="memTemplParams" colspan="2">template&lt;blas_lapack::BlasArray&lt; 2 &gt; A, blas_lapack::BlasArrayFor&lt; A &gt; B&gt; <br />
+requires ((<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;B&gt; == 1 || <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;B&gt; == 2) and <a class="el" href="group__linalg__blas__utils.html#gafbeb10df81b433b3bdd6c8ceb55d192a">blas_lapack::has_F_layout</a>&lt;B&gt;)</td></tr>
+<tr class="memitem:ga903c04ab6661c671ee825a26b62b3e8c template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__solve.html#ga903c04ab6661c671ee825a26b62b3e8c">nda::linalg::solve_in_place</a> (A &amp;&amp;a, B &amp;&amp;b)</td></tr>
+<tr class="memdesc:ga903c04ab6661c671ee825a26b62b3e8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve a system of linear equations in place.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -1,4 +1,4 @@
 var norm_8hpp =
 [
-    [ "nda::linalg::norm", "group__linalg__tools.html#gabe6892821225c13803643ffb5739b5c9", null ]
+    [ "nda::linalg::norm", "group__linalg__norms.html#ga6339925d76b2e23516cf191efb857fc4", null ]
 ];

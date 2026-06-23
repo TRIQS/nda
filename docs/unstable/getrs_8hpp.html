@@ -131,15 +131,16 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('getrs_8hpp.htm
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="lapack_2interface_2cxx__interface_8hpp_source.html">./interface/cxx_interface.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="blas_2tools_8hpp_source.html">../blas/tools.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="declarations_8hpp_source.html">../declarations.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="device_8hpp_source.html">../device.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="macros_8hpp_source.html">../macros.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="address__space_8hpp_source.html">../mem/address_space.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="traits_8hpp_source.html">../traits.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="device_8hpp_source.html">../device.hpp</a>&quot;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
 </div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Provides a generic interface to the LAPACK <span class="tt">getrs</span> routine. </p>
+<div class="textblock"><p>Provides a generic interface to the LAPACK/cuSOLVER <span class="tt">getrs</span> routine. </p>
 
 <p class="definition">Definition in file <a class="el" href="getrs_8hpp_source.html">getrs.hpp</a>.</p>
 </div>
@@ -147,11 +148,10 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('getrs_8hpp.htm
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gae81206b2d5fff66e29fa0fb25de61183" id="r_gae81206b2d5fff66e29fa0fb25de61183"><td class="memTemplParams" colspan="2">template&lt;Matrix A, MemoryArray B, MemoryVector IPIV&gt; <br />
-requires ((MemoryMatrix&lt;A&gt; or <a class="el" href="lapack_2interface_2cxx__interface_8hpp.html#a4e762fd4595b433d898daa5528192e49">is_conj_array_expr</a>&lt;A&gt;) and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga52e76a3017612d7b7f185a7c68aab304">mem::have_compatible_addr_space</a>&lt;A, B,<br class="typebreak" />
- IPIV&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
-<tr class="memitem:gae81206b2d5fff66e29fa0fb25de61183 template"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__lapack.html#gae81206b2d5fff66e29fa0fb25de61183">nda::lapack::getrs</a> (A const &amp;a, B &amp;&amp;b, IPIV const &amp;ipiv)</td></tr>
-<tr class="memdesc:gae81206b2d5fff66e29fa0fb25de61183"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="group__linalg__lapack.html#gae81206b2d5fff66e29fa0fb25de61183" title="Interface to the LAPACK getrs routine.">getrs</a></span> routine.  <br /></td></tr>
+<tr class="memitem:gaec7ad0b94647e665a2e4b22b7723061a" id="r_gaec7ad0b94647e665a2e4b22b7723061a"><td class="memTemplParams" colspan="2">template&lt;BlasArrayOrConj&lt; 2 &gt; A, BlasArrayFor&lt; A &gt; B, PivotArrayFor&lt; A, 1 &gt; IPIV&gt; <br />
+requires ((<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;B&gt; == 1 or <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;B&gt; == 2) and <a class="el" href="group__linalg__blas__utils.html#gafbeb10df81b433b3bdd6c8ceb55d192a">has_F_layout</a>&lt;B&gt;)</td></tr>
+<tr class="memitem:gaec7ad0b94647e665a2e4b22b7723061a template"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__lapack.html#gaec7ad0b94647e665a2e4b22b7723061a">nda::lapack::getrs</a> (A const &amp;a, B &amp;&amp;b, IPIV const &amp;ipiv)</td></tr>
+<tr class="memdesc:gaec7ad0b94647e665a2e4b22b7723061a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK/cuSOLVER <span class="tt">getrs</span> routine.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

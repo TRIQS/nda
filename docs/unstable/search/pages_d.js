@@ -1,18 +1,17 @@
 var searchData=
 [
-  ['elements_0',['Accessing single elements',['../ex1.html#ex1_p4',1,'']]],
-  ['example_1',['Motivating example',['../index.html#motivation',1,'']]],
-  ['example_201_3a_20a_20quick_20overview_2',['Example 1: A quick overview',['../ex1.html',1,'']]],
-  ['example_202_3a_20constructing_20arrays_3',['Example 2: Constructing arrays',['../ex2.html',1,'']]],
-  ['example_203_3a_20initializing_20arrays_4',['Example 3: Initializing arrays',['../ex3.html',1,'']]],
-  ['example_204_3a_20views_20and_20slices_5',['Example 4: Views and slices',['../ex4.html',1,'']]],
-  ['example_205_3a_20hdf5_20support_6',['Example 5: HDF5 support',['../ex5.html',1,'']]],
-  ['example_206_3a_20mpi_20support_7',['Example 6: MPI support',['../ex6.html',1,'']]],
-  ['example_207_3a_20making_20use_20of_20symmetries_8',['Example 7: Making use of symmetries',['../ex7.html',1,'']]],
-  ['example_208_3a_20linear_20algebra_20support_9',['Example 8: Linear algebra support',['../ex8.html',1,'']]],
-  ['examples_10',['Examples',['../examples.html',1,'']]],
-  ['examples_11',['examples',['../examples.html#compiling',1,'Compiling the examples'],['../ex1.html#ex1_p13',1,'Further examples']]],
-  ['existing_20arrays_20views_12',['Using existing arrays/views',['../ex6.html#ex6_p5',1,'']]],
-  ['existing_20dataset_13',['existing dataset',['../ex5.html#ex5_p4',1,'Reading a slice from an existing dataset'],['../ex5.html#ex5_p3',1,'Writing to a slice of an existing dataset']]],
-  ['expressions_20and_20functions_14',['CLEF - Compile-time lazy expressions and functions',['../documentation.html#autotoc_md28',1,'']]]
+  ['data_0',['data',['../ex2.html#ex2_p4',1,'Constructing an array from its data'],['../ex7.html#ex7_p4',1,'Representative data']]],
+  ['dataset_1',['dataset',['../ex5.html#ex5_p4',1,'Reading a slice from an existing dataset'],['../ex5.html#ex5_p3',1,'Writing to a slice of an existing dataset']]],
+  ['default_20constructor_2',['Default constructor',['../ex2.html#ex2_p1',1,'']]],
+  ['defining_20the_20symmetry_3',['Defining the symmetry',['../ex7.html#ex7_p1',1,'']]],
+  ['dependencies_4',['Dependencies',['../installation.html#dependencies',1,'']]],
+  ['deprecated_20list_5',['Deprecated List',['../deprecated.html',1,'']]],
+  ['dimensional_20arrays_20views_20of_20strings_6',['Writing/Reading 1-dimensional arrays/views of strings',['../ex5.html#ex5_p5',1,'']]],
+  ['dimensional_20ranges_7',['Viewing generic 1-dimensional ranges',['../ex4.html#ex4_p8',1,'']]],
+  ['doc_8',['Doc',['../changelog.html#autotoc_md24',1,'']]],
+  ['doc_9',['doc',['../changelog.html#autotoc_md6',1,'doc'],['../changelog.html#autotoc_md11',1,'doc']]],
+  ['docker_10',['docker',['../changelog.html#autotoc_md8',1,'']]],
+  ['documentation_11',['API Documentation',['../documentation.html',1,'']]],
+  ['doing_20linear_20algebra_20with_20arrays_12',['Doing linear algebra with arrays',['../ex1.html#ex1_p11',1,'']]],
+  ['dot_20product_13',['Full tensor dot product',['../ex9.html#ex9_p6',1,'']]]
 ];

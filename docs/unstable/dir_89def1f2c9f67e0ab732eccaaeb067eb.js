@@ -7,5 +7,5 @@ var dir_89def1f2c9f67e0ab732eccaaeb067eb =
     [ "gemv.hpp", "gemv_8hpp.html", "gemv_8hpp" ],
     [ "ger.hpp", "ger_8hpp.html", "ger_8hpp" ],
     [ "scal.hpp", "scal_8hpp.html", "scal_8hpp" ],
-    [ "tools.hpp", "tools_8hpp.html", "tools_8hpp" ]
+    [ "tools.hpp", "blas_2tools_8hpp.html", "blas_2tools_8hpp" ]
 ];

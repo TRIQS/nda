@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
   </div>
 </div>
 <script type="text/javascript">
-document.addEventListener('DOMContentLoaded',() => { initNavTree('reduce_8hpp_source.html','',''); });
+document.addEventListener('DOMContentLoaded',() => { initNavTree('mpi_2reduce_8hpp_source.html','',''); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('reduce_8hpp_so
   <div class="headertitle"><div class="title">reduce.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="reduce_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright (c) 2020--present, The Simons Foundation</span></div>
+<a href="mpi_2reduce_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright (c) 2020--present, The Simons Foundation</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// This file is part of TRIQS/nda and is licensed under the Apache License, Version 2.0.</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// SPDX-License-Identifier: Apache-2.0</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// See LICENSE in the root of this distribution for details.</span></div>
@@ -199,8 +199,8 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('reduce_8hpp_so
 <div class="ttc" id="agroup__av__factories_html_ga21ed59f95217d512e116f5558676f8e7"><div class="ttname"><a href="group__av__factories.html#ga21ed59f95217d512e116f5558676f8e7">nda::resize_or_check_if_view</a></div><div class="ttdeci">void resize_or_check_if_view(A &amp;a, std::array&lt; long, A::rank &gt; const &amp;sha)</div><div class="ttdoc">Resize a given regular array to the given shape or check if a given view as the correct shape.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00305">basic_functions.hpp:305</a></div></div>
 <div class="ttc" id="agroup__av__mpi_html_ga3edd8f70f2213d38b391743ddab967b3"><div class="ttname"><a href="group__av__mpi.html#ga3edd8f70f2213d38b391743ddab967b3">nda::mpi_reduce</a></div><div class="ttdeci">auto mpi_reduce(A const &amp;a, mpi::communicator comm={}, int root=0, bool all=false, MPI_Op op=MPI_SUM)</div><div class="ttdoc">Implementation of an MPI reduce for nda::basic_array or nda::basic_array_view types.</div><div class="ttdef"><b>Definition</b> <a href="#l00127">reduce.hpp:127</a></div></div>
 <div class="ttc" id="agroup__av__mpi_html_ga663e553746cc0923df57b83c2c742eba"><div class="ttname"><a href="group__av__mpi.html#ga663e553746cc0923df57b83c2c742eba">nda::mpi_reduce_into</a></div><div class="ttdeci">void mpi_reduce_into(A1 const &amp;a_in, A2 &amp;&amp;a_out, mpi::communicator comm={}, int root=0, bool all=false, MPI_Op op=MPI_SUM)</div><div class="ttdoc">Implementation of an MPI reduce for nda::basic_array or nda::basic_array_view types that reduces dire...</div><div class="ttdef"><b>Definition</b> <a href="#l00067">reduce.hpp:67</a></div></div>
-<div class="ttc" id="agroup__av__utils_html_ga93d8308788c934c0eb863bd8cb8ff5dc"><div class="ttname"><a href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">nda::get_value_t</a></div><div class="ttdeci">std::decay_t&lt; decltype(get_first_element(std::declval&lt; A const  &gt;()))&gt; get_value_t</div><div class="ttdoc">Get the value type of an array/view or a scalar type.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00191">traits.hpp:191</a></div></div>
-<div class="ttc" id="agroup__av__utils_html_gad19aaebe79b6d698a818828217032489"><div class="ttname"><a href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">nda::is_regular_or_view_v</a></div><div class="ttdeci">constexpr bool is_regular_or_view_v</div><div class="ttdoc">Constexpr variable that is true if type A is either a regular array or a view.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00162">traits.hpp:162</a></div></div>
+<div class="ttc" id="agroup__av__utils_html_ga93d8308788c934c0eb863bd8cb8ff5dc"><div class="ttname"><a href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">nda::get_value_t</a></div><div class="ttdeci">std::decay_t&lt; decltype(get_first_element(std::declval&lt; A const  &gt;()))&gt; get_value_t</div><div class="ttdoc">Get the value type of an array/view or a scalar type.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00212">traits.hpp:212</a></div></div>
+<div class="ttc" id="agroup__av__utils_html_gad19aaebe79b6d698a818828217032489"><div class="ttname"><a href="group__av__utils.html#gad19aaebe79b6d698a818828217032489">nda::is_regular_or_view_v</a></div><div class="ttdeci">constexpr bool is_regular_or_view_v</div><div class="ttdoc">Constexpr variable that is true if type A is either a regular array or a view.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00183">traits.hpp:183</a></div></div>
 <div class="ttc" id="agroup__mem__pols_html_ga4c4f5b0a09f480782bf1353ca308e640"><div class="ttname"><a href="group__mem__pols.html#ga4c4f5b0a09f480782bf1353ca308e640">nda::heap</a></div><div class="ttdeci">heap_basic&lt; mem::mallocator&lt; AdrSp &gt; &gt; heap</div><div class="ttdoc">Alias template of the nda::heap_basic policy using an nda::mem::mallocator.</div><div class="ttdef"><b>Definition</b> <a href="mem_2policies_8hpp_source.html#l00052">policies.hpp:52</a></div></div>
 <div class="ttc" id="amacros_8hpp_html"><div class="ttname"><a href="macros_8hpp.html">macros.hpp</a></div><div class="ttdoc">Macros used in the nda library.</div></div>
 <div class="ttc" id="amap_8hpp_html"><div class="ttname"><a href="map_8hpp.html">map.hpp</a></div><div class="ttdoc">Provides lazy function calls on arrays/views.</div></div>
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('reduce_8hpp_so
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>nda</b></li><li class="navelem"><b>mpi</b></li><li class="navelem"><a href="reduce_8hpp.html">reduce.hpp</a></li>
+    <li class="navelem"><b>nda</b></li><li class="navelem"><b>mpi</b></li><li class="navelem"><a href="mpi_2reduce_8hpp.html">reduce.hpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.17.0 </li>
   </ul>
 </div>

@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['spaces_0',['Address spaces',['../group__mem__addrspcs.html',1,'']]],
-  ['standard_20library_1',['Extensions to the standard library',['../group__utils__std.html',1,'']]],
-  ['support_2',['support',['../group__av__hdf5.html',1,'HDF5 support'],['../group__av__mpi.html',1,'MPI support']]],
-  ['symmetries_3',['Symmetries',['../group__av__sym.html',1,'']]]
+  ['permutations_0',['Permutations',['../group__utils__perms.html',1,'']]],
+  ['placeholders_1',['Placeholders',['../group__clef__placeholders.html',1,'']]],
+  ['policies_2',['policies',['../group__layout__pols.html',1,'Layout policies'],['../group__mem__pols.html',1,'Memory policies']]],
+  ['products_3',['Matrix, vector and other products',['../group__linalg__matvec__products.html',1,'']]]
 ];

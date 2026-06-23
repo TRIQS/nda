@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('lu_8hpp.html',
 <div class="textblock"><code>#include &quot;<a class="el" href="linalg_2utils_8hpp_source.html">./utils.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="basic__array_8hpp_source.html">../basic_array.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="basic__functions_8hpp_source.html">../basic_functions.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="tools_8hpp_source.html">../blas/tools.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="blas_2tools_8hpp_source.html">../blas/tools.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="declarations_8hpp_source.html">../declarations.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="exceptions_8hpp_source.html">../exceptions.hpp</a>&quot;</code><br />
@@ -155,18 +155,18 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('lu_8hpp.html',
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gac9bcad3fd136f1fc251b3d5d48d51a49" id="r_gac9bcad3fd136f1fc251b3d5d48d51a49"><td class="memTemplParams" colspan="2">template&lt;typename LP = F_layout, MemoryMatrix A&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;)</td></tr>
-<tr class="memitem:gac9bcad3fd136f1fc251b3d5d48d51a49 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__tools.html#gac9bcad3fd136f1fc251b3d5d48d51a49">nda::linalg::get_lu_matrices</a> (A const &amp;a)</td></tr>
-<tr class="memdesc:gac9bcad3fd136f1fc251b3d5d48d51a49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the \( \mathbf{L} \) and \( \mathbf{U} \) matrices from the output of <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a>.  <br /></td></tr>
-<tr class="memitem:gaa800eb90c313a23c1e8b9a2d91d33faf" id="r_gaa800eb90c313a23c1e8b9a2d91d33faf"><td class="memTemplParams" colspan="2">template&lt;Matrix A&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
-<tr class="memitem:gaa800eb90c313a23c1e8b9a2d91d33faf template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__tools.html#gaa800eb90c313a23c1e8b9a2d91d33faf">nda::linalg::lu</a> (A const &amp;a, bool allow_singular=false)</td></tr>
-<tr class="memdesc:gaa800eb90c313a23c1e8b9a2d91d33faf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the LU factorization of a matrix.  <br /></td></tr>
-<tr class="memitem:ga1452ca0ef3d3854e5555415c1cd39bbf" id="r_ga1452ca0ef3d3854e5555415c1cd39bbf"><td class="memTemplParams" colspan="2">template&lt;typename LP = F_layout, MemoryMatrix A&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">nda::mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
-<tr class="memitem:ga1452ca0ef3d3854e5555415c1cd39bbf template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__tools.html#ga1452ca0ef3d3854e5555415c1cd39bbf">nda::linalg::lu_in_place</a> (A &amp;&amp;a, bool allow_singular=false)</td></tr>
-<tr class="memdesc:ga1452ca0ef3d3854e5555415c1cd39bbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the LU factorization of a matrix in place.  <br /></td></tr>
+<tr class="memitem:ga2599a580ec69c22859d478104e3cbe66" id="r_ga2599a580ec69c22859d478104e3cbe66"><td class="memTemplParams" colspan="2">template&lt;typename LP = F_layout, MemoryMatrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__linalg__blas__utils.html#gafbeb10df81b433b3bdd6c8ceb55d192a">blas_lapack::has_F_layout</a>&lt;A&gt;)</td></tr>
+<tr class="memitem:ga2599a580ec69c22859d478104e3cbe66 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__decompositions.html#ga2599a580ec69c22859d478104e3cbe66">nda::linalg::get_lu_matrices</a> (A const &amp;a)</td></tr>
+<tr class="memdesc:ga2599a580ec69c22859d478104e3cbe66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the \( \mathbf{L} \) and \( \mathbf{U} \) matrices from the output of <a class="el" href="group__linalg__lapack.html#gab7a1ffe8cc04412e26248718a2ebbca4" title="Interface to the LAPACK/cuSOLVER getrf routine.">nda::lapack::getrf</a>.  <br /></td></tr>
+<tr class="memitem:gaa8a1eabc2832c7f5a1076a66b906a5b2" id="r_gaa8a1eabc2832c7f5a1076a66b906a5b2"><td class="memTemplParams" colspan="2">template&lt;Matrix A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
+<tr class="memitem:gaa8a1eabc2832c7f5a1076a66b906a5b2 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__decompositions.html#gaa8a1eabc2832c7f5a1076a66b906a5b2">nda::linalg::lu</a> (A const &amp;a, bool allow_singular=false)</td></tr>
+<tr class="memdesc:gaa8a1eabc2832c7f5a1076a66b906a5b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the LU factorization of a matrix.  <br /></td></tr>
+<tr class="memitem:ga4e4921d4ad539273d7347353d2c4116a" id="r_ga4e4921d4ad539273d7347353d2c4116a"><td class="memTemplParams" colspan="2">template&lt;typename LP = F_layout, blas_lapack::BlasArray&lt; 2 &gt; A&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__linalg__blas__utils.html#gafbeb10df81b433b3bdd6c8ceb55d192a">blas_lapack::has_F_layout</a>&lt;A&gt;)</td></tr>
+<tr class="memitem:ga4e4921d4ad539273d7347353d2c4116a template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__decompositions.html#ga4e4921d4ad539273d7347353d2c4116a">nda::linalg::lu_in_place</a> (A &amp;&amp;a, bool allow_singular=false)</td></tr>
+<tr class="memdesc:ga4e4921d4ad539273d7347353d2c4116a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the LU factorization of a matrix in place.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

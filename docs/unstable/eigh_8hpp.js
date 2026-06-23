@@ -1,11 +1,11 @@
 var eigh_8hpp =
 [
-    [ "nda::linalg::eigh", "group__linalg__tools.html#ga2d0ce3ce27387948261195b0c1f28376", null ],
-    [ "nda::linalg::eigh", "group__linalg__tools.html#gaa2c7bcf737ecddca8b163b1086282907", null ],
-    [ "nda::linalg::eigh_in_place", "group__linalg__tools.html#ga0681d15a9633c4920c19fcfa1bccd219", null ],
-    [ "nda::linalg::eigh_in_place", "group__linalg__tools.html#ga1416f4c96f511fb7bad93f32ef4d8642", null ],
-    [ "nda::linalg::eigvalsh", "group__linalg__tools.html#ga843c22ecfbd336fc0e924ace02aa60b1", null ],
-    [ "nda::linalg::eigvalsh", "group__linalg__tools.html#gae3c06db4752cc125959b0a8dd2a155d8", null ],
-    [ "nda::linalg::eigvalsh_in_place", "group__linalg__tools.html#ga1306414bdfb59828c1d678fb202d531c", null ],
-    [ "nda::linalg::eigvalsh_in_place", "group__linalg__tools.html#gae9bb9220ce836b1b3752673080ef007f", null ]
+    [ "nda::linalg::eigh", "group__linalg__eig.html#ga868c2609701ff0e838fcf0b8e99ef5c0", null ],
+    [ "nda::linalg::eigh", "group__linalg__eig.html#ga0fea3ba0d6e37e5edaafafd72fbb51c1", null ],
+    [ "nda::linalg::eigh_in_place", "group__linalg__eig.html#ga8c9e97dbf83616e6455beee497cf5108", null ],
+    [ "nda::linalg::eigh_in_place", "group__linalg__eig.html#ga86f5c98ec236425f96670e9c963aecfc", null ],
+    [ "nda::linalg::eigvalsh", "group__linalg__eig.html#gae06b687e0ba9493387bd1c62a5fca36a", null ],
+    [ "nda::linalg::eigvalsh", "group__linalg__eig.html#gae5d018da8a439042e6fe246f45436a33", null ],
+    [ "nda::linalg::eigvalsh_in_place", "group__linalg__eig.html#gafcbce35e6ae2e304048222695efa0ada", null ],
+    [ "nda::linalg::eigvalsh_in_place", "group__linalg__eig.html#gac7caf384abd8ea3184c673657496ad34", null ]
 ];

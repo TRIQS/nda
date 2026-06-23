@@ -1,6 +1,6 @@
 var lu_8hpp =
 [
-    [ "nda::linalg::get_lu_matrices", "group__linalg__tools.html#gac9bcad3fd136f1fc251b3d5d48d51a49", null ],
-    [ "nda::linalg::lu", "group__linalg__tools.html#gaa800eb90c313a23c1e8b9a2d91d33faf", null ],
-    [ "nda::linalg::lu_in_place", "group__linalg__tools.html#ga1452ca0ef3d3854e5555415c1cd39bbf", null ]
+    [ "nda::linalg::get_lu_matrices", "group__linalg__decompositions.html#ga2599a580ec69c22859d478104e3cbe66", null ],
+    [ "nda::linalg::lu", "group__linalg__decompositions.html#gaa8a1eabc2832c7f5a1076a66b906a5b2", null ],
+    [ "nda::linalg::lu_in_place", "group__linalg__decompositions.html#ga4e4921d4ad539273d7347353d2c4116a", null ]
 ];

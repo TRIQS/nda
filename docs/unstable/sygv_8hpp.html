@@ -133,6 +133,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('sygv_8hpp.html
 <div class="textblock"><code>#include &quot;<a class="el" href="lapack_2interface_2cxx__interface_8hpp_source.html">./interface/cxx_interface.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="basic__array_8hpp_source.html">../basic_array.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="basic__functions_8hpp_source.html">../basic_functions.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="blas_2tools_8hpp_source.html">../blas/tools.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="declarations_8hpp_source.html">../declarations.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="macros_8hpp_source.html">../macros.hpp</a>&quot;</code><br />
@@ -149,10 +150,10 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('sygv_8hpp.html
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga1691e2441e439a2959476f7801611ca5" id="r_ga1691e2441e439a2959476f7801611ca5"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryMatrix B, MemoryVector W&gt; <br />
-requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A, B&gt; and std::same_as&lt;double, <a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt; and <a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B, W&gt;)</td></tr>
-<tr class="memitem:ga1691e2441e439a2959476f7801611ca5 template"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__lapack.html#ga1691e2441e439a2959476f7801611ca5">nda::lapack::sygv</a> (A &amp;&amp;a, B &amp;&amp;b, W &amp;&amp;w, char jobz='V', int itype=1)</td></tr>
-<tr class="memdesc:ga1691e2441e439a2959476f7801611ca5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="group__linalg__lapack.html#ga1691e2441e439a2959476f7801611ca5" title="Interface to the LAPACK sygv routine.">sygv</a></span> routine.  <br /></td></tr>
+<tr class="memitem:gacedbe03e4f82a5a8172e34649f0164e1" id="r_gacedbe03e4f82a5a8172e34649f0164e1"><td class="memTemplParams" colspan="2">template&lt;BlasArrayReal&lt; 2 &gt; A, BlasArrayFor&lt; A, 2 &gt; B, BlasArrayFor&lt; A, 1 &gt; W, BlasArrayFor&lt; A, 1 &gt; W1 = vector_value_t&lt;A&gt;&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A&gt; and <a class="el" href="group__linalg__blas__utils.html#gafbeb10df81b433b3bdd6c8ceb55d192a">has_F_layout</a>&lt;A, B&gt;)</td></tr>
+<tr class="memitem:gacedbe03e4f82a5a8172e34649f0164e1 template"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__lapack.html#gacedbe03e4f82a5a8172e34649f0164e1">nda::lapack::sygv</a> (A &amp;&amp;a, B &amp;&amp;b, W &amp;&amp;w, char jobz='V', int itype=1, W1 &amp;&amp;work=<a class="el" href="group__linalg__blas__utils.html#gad540698c2a4c4f47cacfe510c6bf2f6a">vector_value_t</a>&lt; A &gt;{})</td></tr>
+<tr class="memdesc:gacedbe03e4f82a5a8172e34649f0164e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt">sygv</span> routine.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

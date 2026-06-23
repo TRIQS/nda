@@ -131,13 +131,16 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('outer__product
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="ger_8hpp_source.html">../blas/ger.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="tools_8hpp_source.html">../blas/tools.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="blas_2tools_8hpp_source.html">../blas/tools.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="declarations_8hpp_source.html">../declarations.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="macros_8hpp_source.html">../macros.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="address__space_8hpp_source.html">../mem/address_space.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="mem_2policies_8hpp_source.html">../mem/policies.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="array_8hpp_source.html">../stdutil/array.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="traits_8hpp_source.html">../traits.hpp</a>&quot;</code><br />
+<code>#include &lt;array&gt;</code><br />
+<code>#include &lt;type_traits&gt;</code><br />
 </div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Provides a generic outer product function. </p>
 
@@ -147,10 +150,10 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('outer__product
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gaa2e13a1dfcbbacc5c2279f98230b5eb2" id="r_gaa2e13a1dfcbbacc5c2279f98230b5eb2"><td class="memTemplParams" colspan="2">template&lt;MemoryArray A, MemoryArray B&gt; <br />
-requires ((<a class="el" href="group__linalg__blas__utils.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;A&gt; or <a class="el" href="group__linalg__blas__utils.html#gaa270d9c3e10b12ca1406623ac3f93471">nda::blas::has_F_layout</a>&lt;A&gt;) and <a class="el" href="group__linalg__blas__utils.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;A&gt; == <a class="el" href="group__linalg__blas__utils.html#ga24228d6ce4cd37cb84f967a933287d95">nda::blas::has_C_layout</a>&lt;B&gt;)</td></tr>
-<tr class="memitem:gaa2e13a1dfcbbacc5c2279f98230b5eb2 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__tools.html#gaa2e13a1dfcbbacc5c2279f98230b5eb2">nda::linalg::outer_product</a> (A const &amp;a, B const &amp;b)</td></tr>
-<tr class="memdesc:gaa2e13a1dfcbbacc5c2279f98230b5eb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Outer product of two arrays/views.  <br /></td></tr>
+<tr class="memitem:ga23a2cb09b49f77675ba4daeb7065522f" id="r_ga23a2cb09b49f77675ba4daeb7065522f"><td class="memTemplParams" colspan="2">template&lt;blas_lapack::BlasArray A, blas_lapack::BlasArrayFor&lt; A &gt; B&gt; <br />
+requires (<a class="el" href="group__linalg__blas__utils.html#gaa45357c452efd1f28add0fd77bc3152b">blas_lapack::has_C_layout</a>&lt;A, B&gt; or <a class="el" href="group__linalg__blas__utils.html#gafbeb10df81b433b3bdd6c8ceb55d192a">blas_lapack::has_F_layout</a>&lt;A, B&gt;)</td></tr>
+<tr class="memitem:ga23a2cb09b49f77675ba4daeb7065522f template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__matvec__products.html#ga23a2cb09b49f77675ba4daeb7065522f">nda::linalg::outer_product</a> (A const &amp;a, B const &amp;b)</td></tr>
+<tr class="memdesc:ga23a2cb09b49f77675ba4daeb7065522f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Outer product of two arrays/views.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -211,7 +211,7 @@ Views on matrices and vectors</h1>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Algebra of A_mv: &quot;</span> &lt;&lt; <a class="code hl_variable" href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">nda::get_algebra</a>&lt;<span class="keyword">decltype</span>(A_mv)&gt; &lt;&lt; std::endl;</div>
 <div class="ttc" id="agroup__av__factories_html_gaa47d1e8768b732e2fb4712e61822839a"><div class="ttname"><a href="group__av__factories.html#gaa47d1e8768b732e2fb4712e61822839a">nda::make_matrix_view</a></div><div class="ttdeci">auto make_matrix_view(basic_array&lt; T, R, LP, A, CP &gt; const &amp;a)</div><div class="ttdoc">Make an nda::matrix_view of a given nda::basic_array.</div><div class="ttdef"><b>Definition</b> <a href="basic__functions_8hpp_source.html#l00434">basic_functions.hpp:434</a></div></div>
 <div class="ttc" id="agroup__av__factories_html_gad73d17b3c916c0a15e6d1b1e9d4ee017"><div class="ttname"><a href="group__av__factories.html#gad73d17b3c916c0a15e6d1b1e9d4ee017">nda::diagonal</a></div><div class="ttdeci">ArrayOfRank&lt; 1 &gt; auto diagonal(M &amp;&amp;m)</div><div class="ttdoc">Get a view of the diagonal of a 2-dimensional array/view.</div><div class="ttdef"><b>Definition</b> <a href="matrix__functions_8hpp_source.html#l00096">matrix_functions.hpp:96</a></div></div>
-<div class="ttc" id="agroup__av__utils_html_ga060aafc7ad640e675fce38b5eaf95aab"><div class="ttname"><a href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">nda::get_algebra</a></div><div class="ttdeci">constexpr char get_algebra</div><div class="ttdoc">Constexpr variable that specifies the algebra of a type.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00116">traits.hpp:116</a></div></div>
+<div class="ttc" id="agroup__av__utils_html_ga060aafc7ad640e675fce38b5eaf95aab"><div class="ttname"><a href="group__av__utils.html#ga060aafc7ad640e675fce38b5eaf95aab">nda::get_algebra</a></div><div class="ttdeci">constexpr char get_algebra</div><div class="ttdoc">Constexpr variable that specifies the algebra of a type.</div><div class="ttdef"><b>Definition</b> <a href="traits_8hpp_source.html#l00137">traits.hpp:137</a></div></div>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">d = [1,2]</div>
 <div class="line">Algebra of d: V</div>
@@ -249,8 +249,8 @@ Arithmetic operations with matrices and vectors</h1>
 </li>
 <li><b>Multiplication</b><ul>
 <li><span class="tt">A1 * A2</span>: element-wise multiplication, shapes of <span class="tt">A1</span> and <span class="tt">A2</span> have to be the same, result has the same shape</li>
-<li><span class="tt">M1 * M2</span>: non-lazy matrix-matrix multiplication, shapes have the expected requirements for matrix multiplication, calls nda::matmul</li>
-<li><span class="tt">M1 * v1</span>: non-lazy matrix-vector multiplication, shapes have the expected requirements for matrix multiplication, calls nda::matvecmul</li>
+<li><span class="tt">M1 * M2</span>: non-lazy matrix-matrix multiplication, shapes have the expected requirements for matrix multiplication, calls <a class="el" href="group__linalg__matvec__products.html#ga346b07f5b4e0134331298419dc99ef68" title="Compute the matrix-matrix product of two nda::Matrix objects.">nda::linalg::matmul</a></li>
+<li><span class="tt">M1 * v1</span>: non-lazy matrix-vector multiplication, shapes have the expected requirements for matrix multiplication, calls <a class="el" href="group__linalg__matvec__products.html#gad007be96ad87a5bf327e2e19374c3a6f" title="Compute the matrix-vector product of an nda::Matrix and an nda::Vector object.">nda::linalg::matvecmul</a></li>
 <li><span class="tt">s1 * O1</span>/<span class="tt">O1 * s1</span>: element-wise multiplication, result has the same shape as <span class="tt">O1</span></li>
 </ul>
 </li>
@@ -266,16 +266,16 @@ Arithmetic operations with matrices and vectors</h1>
 </ul>
 <h1 class="doxsection"><a class="anchor" id="ex8_p7"></a>
 Using linear algebra tools</h1>
-<p>In addition to the basic matrix-matrix and matrix-vector multiplications described above, <b>nda</b> provides some useful <a class="el" href="group__linalg__tools.html" title="Linear algebra tools">Linear algebra tools</a>. While some of them have a custom implementation, e.g. <a class="el" href="group__linalg__tools.html#ga3a8f49f7769a5d63a0a088cfbd7da2da" title="Compute the cross product  of two 3-dimensional vectors   and .">nda::linalg::cross_product</a>, most make use of the <a class="el" href="group__linalg__blas.html" title="BLAS interface">BLAS interface</a> and <a class="el" href="group__linalg__lapack.html" title="LAPACK interface">LAPACK interface</a> to call more optimized routines.</p>
+<p>In addition to the basic matrix-matrix and matrix-vector multiplications described above, <b>nda</b> provides some useful <a class="el" href="group__linalg__tools.html" title="Linear algebra tools">Linear algebra tools</a>. While some of them have a custom implementation, e.g. <a class="el" href="group__linalg__matvec__products.html#ga3a8f49f7769a5d63a0a088cfbd7da2da" title="Compute the vector cross product.">nda::linalg::cross_product</a>, most make use of the <a class="el" href="group__linalg__blas.html" title="BLAS/cuBLAS interface">BLAS/cuBLAS interface</a> and <a class="el" href="group__linalg__lapack.html" title="LAPACK/cuSOLVER interface">LAPACK/cuSOLVER interface</a> to call more optimized routines.</p>
 <p>Let us demonstrate some of its features:</p>
 <div class="fragment"><div class="line"><span class="comment">// take the cross product of two vectors</span></div>
 <div class="line"><span class="keyword">auto</span> v1 = <a class="code hl_typedef" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68">nda::vector&lt;double&gt;</a>{1.0, 2.0, 3.0};</div>
 <div class="line"><span class="keyword">auto</span> v2 = <a class="code hl_typedef" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68">nda::vector&lt;double&gt;</a>{4.0, 5.0, 6.0};</div>
-<div class="line"><span class="keyword">auto</span> v3 = <a class="code hl_function" href="group__linalg__tools.html#ga3a8f49f7769a5d63a0a088cfbd7da2da">nda::linalg::cross_product</a>(v1, v2);</div>
+<div class="line"><span class="keyword">auto</span> v3 = <a class="code hl_function" href="group__linalg__matvec__products.html#ga3a8f49f7769a5d63a0a088cfbd7da2da">nda::linalg::cross_product</a>(v1, v2);</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;v1 = &quot;</span> &lt;&lt; v1 &lt;&lt; std::endl;</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;v2 = &quot;</span> &lt;&lt; v2 &lt;&lt; std::endl;</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;v3 = v1 x v2 = &quot;</span> &lt;&lt; v3 &lt;&lt; std::endl;</div>
-<div class="ttc" id="agroup__linalg__tools_html_ga3a8f49f7769a5d63a0a088cfbd7da2da"><div class="ttname"><a href="group__linalg__tools.html#ga3a8f49f7769a5d63a0a088cfbd7da2da">nda::linalg::cross_product</a></div><div class="ttdeci">auto cross_product(X const &amp;x, Y const &amp;y)</div><div class="ttdoc">Compute the cross product  of two 3-dimensional vectors   and .</div><div class="ttdef"><b>Definition</b> <a href="cross__product_8hpp_source.html#l00035">cross_product.hpp:35</a></div></div>
+<div class="ttc" id="agroup__linalg__matvec__products_html_ga3a8f49f7769a5d63a0a088cfbd7da2da"><div class="ttname"><a href="group__linalg__matvec__products.html#ga3a8f49f7769a5d63a0a088cfbd7da2da">nda::linalg::cross_product</a></div><div class="ttdeci">auto cross_product(X const &amp;x, Y const &amp;y)</div><div class="ttdoc">Compute the vector cross product.</div><div class="ttdef"><b>Definition</b> <a href="cross__product_8hpp_source.html#l00039">cross_product.hpp:39</a></div></div>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">v1 = [1,2,3]</div>
 <div class="line">v2 = [4,5,6]</div>
@@ -283,9 +283,9 @@ Using linear algebra tools</h1>
 </div><!-- fragment --><p>Here, we first create two 3-dimensional vectors and then take their cross product.</p>
 <p>To check that the cross product is perpendicular to <span class="tt">v1</span> and <span class="tt">v2</span>, we can use the dot product:</p>
 <div class="fragment"><div class="line"><span class="comment">// check the cross product using the dot product</span></div>
-<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;v1 . v3 = &quot;</span> &lt;&lt; <a class="code hl_function" href="group__linalg__tools.html#ga33985db52d69c767905c98ae2f7e42e7">nda::linalg::dot</a>(v1, v3) &lt;&lt; std::endl;</div>
-<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;v2 . v3 = &quot;</span> &lt;&lt; <a class="code hl_function" href="group__linalg__tools.html#ga33985db52d69c767905c98ae2f7e42e7">nda::linalg::dot</a>(v2, v3) &lt;&lt; std::endl;</div>
-<div class="ttc" id="agroup__linalg__tools_html_ga33985db52d69c767905c98ae2f7e42e7"><div class="ttname"><a href="group__linalg__tools.html#ga33985db52d69c767905c98ae2f7e42e7">nda::linalg::dot</a></div><div class="ttdeci">auto dot(X const &amp;x, Y const &amp;y)</div><div class="ttdoc">Compute the dot product of two nda::vector objects or the product of two scalars.</div><div class="ttdef"><b>Definition</b> <a href="linalg_2dot_8hpp_source.html#l00104">dot.hpp:104</a></div></div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;v1 . v3 = &quot;</span> &lt;&lt; <a class="code hl_function" href="group__linalg__matvec__products.html#ga33985db52d69c767905c98ae2f7e42e7">nda::linalg::dot</a>(v1, v3) &lt;&lt; std::endl;</div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;v2 . v3 = &quot;</span> &lt;&lt; <a class="code hl_function" href="group__linalg__matvec__products.html#ga33985db52d69c767905c98ae2f7e42e7">nda::linalg::dot</a>(v2, v3) &lt;&lt; std::endl;</div>
+<div class="ttc" id="agroup__linalg__matvec__products_html_ga33985db52d69c767905c98ae2f7e42e7"><div class="ttname"><a href="group__linalg__matvec__products.html#ga33985db52d69c767905c98ae2f7e42e7">nda::linalg::dot</a></div><div class="ttdeci">auto dot(X const &amp;x, Y const &amp;y)</div><div class="ttdoc">Compute the dot product of two nda::vector objects or the product of two scalars.</div><div class="ttdef"><b>Definition</b> <a href="linalg_2dot_8hpp_source.html#l00108">dot.hpp:108</a></div></div>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">v1 . v3 = 0</div>
 <div class="line">v2 . v3 = 0</div>
@@ -315,7 +315,7 @@ Using linear algebra tools</h1>
 <div class="line"> [-2,1,0]]</div>
 <div class="line">v3_mv = [-3,6,-3]</div>
 </div><!-- fragment --><p>Comparing this result to <span class="tt">v3</span> above, we see that this is indeed correct.</p>
-<p>Let us now turn to an eigenvalue problem. <b>nda</b> offers the convenience functions <a class="el" href="group__linalg__tools.html#ga2d0ce3ce27387948261195b0c1f28376" title="Compute the eigenvalues and eigenvectors of a real symmetric or complex hermitian matrix.">nda::linalg::eigh</a> and <a class="el" href="group__linalg__tools.html#ga843c22ecfbd336fc0e924ace02aa60b1" title="Compute the eigenvalues of a real symmetric or complex hermitian matrix.">nda::linalg::eigvalsh</a> to obtain the eigenvalues and eigenvectors (or just the eigenvalues) of a symmetric or hermitian matrix.</p>
+<p>Let us now turn to an eigenvalue problem. <b>nda</b> offers the convenience functions <a class="el" href="group__linalg__eig.html#ga868c2609701ff0e838fcf0b8e99ef5c0" title="Compute the eigenvalues and eigenvectors of a real symmetric or complex hermitian matrix.">nda::linalg::eigh</a> and <a class="el" href="group__linalg__eig.html#gae06b687e0ba9493387bd1c62a5fca36a" title="Compute the eigenvalues of a real symmetric or complex hermitian matrix.">nda::linalg::eigvalsh</a> to obtain the eigenvalues and eigenvectors (or just the eigenvalues) of a symmetric or hermitian matrix.</p>
 <p>We start from the following symmetric matrix:</p>
 <div class="fragment"><div class="line"><span class="comment">// define a symmetric matrix</span></div>
 <div class="line"><span class="keyword">auto</span> M1 = <a class="code hl_typedef" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1">nda::matrix&lt;double&gt;</a>{{4, -14, -12}, {-14, 10, 13}, {-12, 13, 1}};</div>
@@ -327,10 +327,10 @@ Using linear algebra tools</h1>
 <div class="line"> [-12,13,1]]</div>
 </div><!-- fragment --><p>Getting the eigenvalues and eigenvectors is quite easy:</p>
 <div class="fragment"><div class="line"><span class="comment">// calculate the eigenvalues and eigenvectors of a symmetric matrix</span></div>
-<div class="line"><span class="keyword">auto</span> [s, Q] = <a class="code hl_function" href="group__linalg__tools.html#ga2d0ce3ce27387948261195b0c1f28376">nda::linalg::eigh</a>(M1);</div>
+<div class="line"><span class="keyword">auto</span> [s, Q] = <a class="code hl_function" href="group__linalg__eig.html#ga868c2609701ff0e838fcf0b8e99ef5c0">nda::linalg::eigh</a>(M1);</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Eigenvalues of M1: s = &quot;</span> &lt;&lt; s &lt;&lt; std::endl;</div>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Eigenvectors of M1: Q = &quot;</span> &lt;&lt; Q &lt;&lt; std::endl;</div>
-<div class="ttc" id="agroup__linalg__tools_html_ga2d0ce3ce27387948261195b0c1f28376"><div class="ttname"><a href="group__linalg__tools.html#ga2d0ce3ce27387948261195b0c1f28376">nda::linalg::eigh</a></div><div class="ttdeci">auto eigh(A const &amp;a)</div><div class="ttdoc">Compute the eigenvalues and eigenvectors of a real symmetric or complex hermitian matrix.</div><div class="ttdef"><b>Definition</b> <a href="eigh_8hpp_source.html#l00162">eigh.hpp:162</a></div></div>
+<div class="ttc" id="agroup__linalg__eig_html_ga868c2609701ff0e838fcf0b8e99ef5c0"><div class="ttname"><a href="group__linalg__eig.html#ga868c2609701ff0e838fcf0b8e99ef5c0">nda::linalg::eigh</a></div><div class="ttdeci">auto eigh(A const &amp;a)</div><div class="ttdoc">Compute the eigenvalues and eigenvectors of a real symmetric or complex hermitian matrix.</div><div class="ttdef"><b>Definition</b> <a href="eigh_8hpp_source.html#l00165">eigh.hpp:165</a></div></div>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">Eigenvalues of M1: s = [-9.64366,-6.89203,31.5357]</div>
 <div class="line">Eigenvectors of M1: Q =</div>
@@ -353,8 +353,8 @@ Using linear algebra tools</h1>
 <div class="line"> [-12,13,1]]</div>
 </div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="ex8_p8"></a>
 Using the BLAS/LAPACK interface</h1>
-<p>While the functions in <a class="el" href="group__linalg__tools.html" title="Linear algebra tools">Linear algebra tools</a> offer a very user-friendly experience, <a class="el" href="group__linalg__blas.html" title="BLAS interface">BLAS interface</a> and <a class="el" href="group__linalg__lapack.html" title="LAPACK interface">LAPACK interface</a> are more low-level and usually require more input from the users.</p>
-<p>Let us show how to use the <a class="el" href="group__linalg__lapack.html" title="LAPACK interface">LAPACK interface</a> to solve a system of linear equations. The system we want to solve is \( \mathbf{A}_1 \mathbf{x}_1 = \mathbf{b}_1 \) with</p>
+<p>While the functions in <a class="el" href="group__linalg__tools.html" title="Linear algebra tools">Linear algebra tools</a> offer a very user-friendly experience, <a class="el" href="group__linalg__blas.html" title="BLAS/cuBLAS interface">BLAS/cuBLAS interface</a> and <a class="el" href="group__linalg__lapack.html" title="LAPACK/cuSOLVER interface">LAPACK/cuSOLVER interface</a> are more low-level and usually require more input from the users.</p>
+<p>Let us show how to use the <a class="el" href="group__linalg__lapack.html" title="LAPACK/cuSOLVER interface">LAPACK/cuSOLVER interface</a> to solve a system of linear equations. The system we want to solve is \( \mathbf{A}_1 \mathbf{x}_1 = \mathbf{b}_1 \) with</p>
 <div class="fragment"><div class="line"><span class="comment">// define the linear system of equations and the right hand side matrix</span></div>
 <div class="line"><span class="keyword">auto</span> A1 = <a class="code hl_typedef" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1">nda::matrix&lt;double, nda::F_layout&gt;</a>{{3, 2, -1}, {2, -2, 4}, {-1, 0.5, -1}};</div>
 <div class="line"><span class="keyword">auto</span> b1 = <a class="code hl_typedef" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68">nda::vector&lt;double&gt;</a>{1, -2, 0};</div>
@@ -366,37 +366,39 @@ Using the BLAS/LAPACK interface</h1>
 <div class="line"> [2,-2,4]</div>
 <div class="line"> [-1,0.5,-1]]</div>
 <div class="line">b1 = [1,-2,0]</div>
-</div><!-- fragment --><p>First, we perform an LU factorization using <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a>:</p>
+</div><!-- fragment --><p>First, we perform an LU factorization using <a class="el" href="group__linalg__lapack.html#gab7a1ffe8cc04412e26248718a2ebbca4" title="Interface to the LAPACK/cuSOLVER getrf routine.">nda::lapack::getrf</a>:</p>
 <div class="fragment"><div class="line"><span class="comment">// LU factorization using the LAPACK interface</span></div>
 <div class="line"><span class="keyword">auto</span> ipiv = <a class="code hl_typedef" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68">nda::vector&lt;int&gt;</a>(3);</div>
 <div class="line"><span class="keyword">auto</span> LU = A1;</div>
-<div class="line"><span class="keyword">auto</span> info = <a class="code hl_function" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836">nda::lapack::getrf</a>(LU, ipiv);</div>
+<div class="line"><span class="keyword">auto</span> info = <a class="code hl_function" href="group__linalg__lapack.html#gab7a1ffe8cc04412e26248718a2ebbca4">nda::lapack::getrf</a>(LU, ipiv);</div>
 <div class="line"><span class="keywordflow">if</span> (info != 0) {</div>
 <div class="line">  std::cerr &lt;&lt; <span class="stringliteral">&quot;Error: nda::lapack::getrf failed with error code &quot;</span> &lt;&lt; info &lt;&lt; std::endl;</div>
 <div class="line">  <span class="keywordflow">return</span> 1;</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__linalg__lapack_html_gacd83a4791d1bcbb0f2b7af425af1e836"><div class="ttname"><a href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836">nda::lapack::getrf</a></div><div class="ttdeci">int getrf(A &amp;&amp;a, IPIV &amp;&amp;ipiv)</div><div class="ttdoc">Interface to the LAPACK getrf routine.</div><div class="ttdef"><b>Definition</b> <a href="getrf_8hpp_source.html#l00058">getrf.hpp:58</a></div></div>
-</div><!-- fragment --><p>Here, <span class="tt">ipiv</span> is a pivot vector that is used internally by the LAPACK routine. Because <a class="el" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836" title="Interface to the LAPACK getrf routine.">nda::lapack::getrf</a> overwrites the input matrix with the result, we first copy the original matrix <span class="tt">A1</span> into a new one <span class="tt">LU</span>.</p>
-<p>Then we solve the system by calling <a class="el" href="group__linalg__lapack.html#gae81206b2d5fff66e29fa0fb25de61183" title="Interface to the LAPACK getrs routine.">nda::lapack::getrs</a> with the LU factorization, the right hand side vector and the pivot vector:</p>
+<div class="ttc" id="agroup__linalg__lapack_html_gab7a1ffe8cc04412e26248718a2ebbca4"><div class="ttname"><a href="group__linalg__lapack.html#gab7a1ffe8cc04412e26248718a2ebbca4">nda::lapack::getrf</a></div><div class="ttdeci">int getrf(A &amp;&amp;a, IPIV &amp;&amp;ipiv, W &amp;&amp;work=vector_value_t&lt; A &gt;{})</div><div class="ttdoc">Interface to the LAPACK/cuSOLVER getrf routine.</div><div class="ttdef"><b>Definition</b> <a href="getrf_8hpp_source.html#l00061">getrf.hpp:61</a></div></div>
+</div><!-- fragment --><p>Here, <span class="tt">ipiv</span> is a pivot vector that is used internally by the LAPACK routine. Because <a class="el" href="group__linalg__lapack.html#gab7a1ffe8cc04412e26248718a2ebbca4" title="Interface to the LAPACK/cuSOLVER getrf routine.">nda::lapack::getrf</a> overwrites the input matrix with the result, we first copy the original matrix <span class="tt">A1</span> into a new one <span class="tt">LU</span>.</p>
+<p>Then we solve the system by calling <a class="el" href="group__linalg__lapack.html#gaec7ad0b94647e665a2e4b22b7723061a" title="Interface to the LAPACK/cuSOLVER getrs routine.">nda::lapack::getrs</a> with the LU factorization, the right hand side vector and the pivot vector:</p>
 <div class="fragment"><div class="line"><span class="comment">// solve the linear system of equations using the LU factorization</span></div>
-<div class="line"><a class="code hl_typedef" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1">nda::matrix&lt;double, nda::F_layout&gt;</a> x1(3, 1);</div>
-<div class="line">x1(nda::range::all, 0) = b1;</div>
-<div class="line">info = <a class="code hl_function" href="group__linalg__lapack.html#gae81206b2d5fff66e29fa0fb25de61183">nda::lapack::getrs</a>(LU, x1, ipiv);</div>
+<div class="line"><span class="keyword">auto</span> x1 = <a class="code hl_typedef" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68">nda::vector&lt;double&gt;</a>(b1);</div>
+<div class="line">info = <a class="code hl_function" href="group__linalg__lapack.html#gaec7ad0b94647e665a2e4b22b7723061a">nda::lapack::getrs</a>(LU, x1, ipiv);</div>
 <div class="line"><span class="keywordflow">if</span> (info != 0) {</div>
 <div class="line">  std::cerr &lt;&lt; <span class="stringliteral">&quot;Error: nda::lapack::getrs failed with error code &quot;</span> &lt;&lt; info &lt;&lt; std::endl;</div>
 <div class="line">  <span class="keywordflow">return</span> 1;</div>
 <div class="line">}</div>
-<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;x1 = &quot;</span> &lt;&lt; x1(nda::range::all, 0) &lt;&lt; std::endl;</div>
-<div class="ttc" id="agroup__linalg__lapack_html_gae81206b2d5fff66e29fa0fb25de61183"><div class="ttname"><a href="group__linalg__lapack.html#gae81206b2d5fff66e29fa0fb25de61183">nda::lapack::getrs</a></div><div class="ttdeci">int getrs(A const &amp;a, B &amp;&amp;b, IPIV const &amp;ipiv)</div><div class="ttdoc">Interface to the LAPACK getrs routine.</div><div class="ttdef"><b>Definition</b> <a href="getrs_8hpp_source.html#l00053">getrs.hpp:53</a></div></div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;x1 = &quot;</span> &lt;&lt; x1 &lt;&lt; std::endl;</div>
+<div class="ttc" id="agroup__linalg__lapack_html_gaec7ad0b94647e665a2e4b22b7723061a"><div class="ttname"><a href="group__linalg__lapack.html#gaec7ad0b94647e665a2e4b22b7723061a">nda::lapack::getrs</a></div><div class="ttdeci">int getrs(A const &amp;a, B &amp;&amp;b, IPIV const &amp;ipiv)</div><div class="ttdoc">Interface to the LAPACK/cuSOLVER getrs routine.</div><div class="ttdef"><b>Definition</b> <a href="getrs_8hpp_source.html#l00056">getrs.hpp:56</a></div></div>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">x1 = [1,-2,-2]</div>
-</div><!-- fragment --><p>Since <span class="tt">b1</span> is a vector but <a class="el" href="group__linalg__lapack.html#gae81206b2d5fff66e29fa0fb25de61183" title="Interface to the LAPACK getrs routine.">nda::lapack::getrs</a> expects a matrix, we first copy it into the matrix <span class="tt">x1</span>. After the LAPACK call returns, <span class="tt">x1</span> contains the result in its first column.</p>
+</div><!-- fragment --><p>Since <span class="tt">b1</span> is a vector but <a class="el" href="group__linalg__lapack.html#gaec7ad0b94647e665a2e4b22b7723061a" title="Interface to the LAPACK/cuSOLVER getrs routine.">nda::lapack::getrs</a> expects a matrix, we first copy it into the matrix <span class="tt">x1</span>. After the LAPACK call returns, <span class="tt">x1</span> contains the result in its first column.</p>
 <p>Let's check that this is actually the solution to our original system of equations:</p>
 <div class="fragment"><div class="line"><span class="comment">// check the solution</span></div>
-<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;A1 * x1 = &quot;</span> &lt;&lt; A1 * x1(nda::range::all, 0) &lt;&lt; std::endl;</div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;A1 * x1 = &quot;</span> &lt;&lt; A1 * x1 &lt;&lt; std::endl;</div>
 </div><!-- fragment --><p>Output:</p>
 <div class="fragment"><div class="line">A1 * x1 = [1,-2,2.22045e-16]</div>
 </div><!-- fragment --><p>Considering the finite precision of our calculations, this is indeed equal to the right hand side vector <span class="tt">b1</span>.</p>
+<blockquote class="doxtable">
+<p><b>Note</b>: For a higher level interface to solve linear systems of equations, <b>nda</b> provides the convenience function <a class="el" href="group__linalg__solve.html#gacf7793bb0192ceaabb0dc2b0e78b6e5b" title="Solve a system of linear equations.">nda::linalg::solve</a> which handles the LU factorization and back-substitution automatically. </p>
+</blockquote>
 <blockquote class="doxtable">
 <p><b>Note</b>: BLAS and LAPACK assume Fortran-ordered arrays. We therefore recommend to work with matrices in the <a class="el" href="structnda_1_1_f__layout.html" title="Contiguous layout policy with Fortran-order (column-major order).">nda::F_layout</a> to avoid any confusion. </p>
 </blockquote>
@@ -443,14 +445,14 @@ Full source</h1>
 <div class="line">  <span class="comment">// take the cross product of two vectors</span></div>
 <div class="line">  <span class="keyword">auto</span> v1 = <a class="code hl_typedef" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68">nda::vector&lt;double&gt;</a>{1.0, 2.0, 3.0};</div>
 <div class="line">  <span class="keyword">auto</span> v2 = <a class="code hl_typedef" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68">nda::vector&lt;double&gt;</a>{4.0, 5.0, 6.0};</div>
-<div class="line">  <span class="keyword">auto</span> v3 = <a class="code hl_function" href="group__linalg__tools.html#ga3a8f49f7769a5d63a0a088cfbd7da2da">nda::linalg::cross_product</a>(v1, v2);</div>
+<div class="line">  <span class="keyword">auto</span> v3 = <a class="code hl_function" href="group__linalg__matvec__products.html#ga3a8f49f7769a5d63a0a088cfbd7da2da">nda::linalg::cross_product</a>(v1, v2);</div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;v1 = &quot;</span> &lt;&lt; v1 &lt;&lt; std::endl;</div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;v2 = &quot;</span> &lt;&lt; v2 &lt;&lt; std::endl;</div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;v3 = v1 x v2 = &quot;</span> &lt;&lt; v3 &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// check the cross product using the dot product</span></div>
-<div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;v1 . v3 = &quot;</span> &lt;&lt; <a class="code hl_function" href="group__linalg__tools.html#ga33985db52d69c767905c98ae2f7e42e7">nda::linalg::dot</a>(v1, v3) &lt;&lt; std::endl;</div>
-<div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;v2 . v3 = &quot;</span> &lt;&lt; <a class="code hl_function" href="group__linalg__tools.html#ga33985db52d69c767905c98ae2f7e42e7">nda::linalg::dot</a>(v2, v3) &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;v1 . v3 = &quot;</span> &lt;&lt; <a class="code hl_function" href="group__linalg__matvec__products.html#ga33985db52d69c767905c98ae2f7e42e7">nda::linalg::dot</a>(v1, v3) &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;v2 . v3 = &quot;</span> &lt;&lt; <a class="code hl_function" href="group__linalg__matvec__products.html#ga33985db52d69c767905c98ae2f7e42e7">nda::linalg::dot</a>(v2, v3) &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// cross product via matrix-vector product</span></div>
 <div class="line">  <span class="keyword">auto</span> M_v1 = <a class="code hl_typedef" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1">nda::matrix&lt;double&gt;</a>{{0, -v1[2], v1[1]}, {v1[2], 0, -v1[0]}, {-v1[1], v1[0], 0}};</div>
@@ -463,7 +465,7 @@ Full source</h1>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;M1 = &quot;</span> &lt;&lt; M1 &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// calculate the eigenvalues and eigenvectors of a symmetric matrix</span></div>
-<div class="line">  <span class="keyword">auto</span> [s, Q] = <a class="code hl_function" href="group__linalg__tools.html#ga2d0ce3ce27387948261195b0c1f28376">nda::linalg::eigh</a>(M1);</div>
+<div class="line">  <span class="keyword">auto</span> [s, Q] = <a class="code hl_function" href="group__linalg__eig.html#ga868c2609701ff0e838fcf0b8e99ef5c0">nda::linalg::eigh</a>(M1);</div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;Eigenvalues of M1: s = &quot;</span> &lt;&lt; s &lt;&lt; std::endl;</div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;Eigenvectors of M1: Q = &quot;</span> &lt;&lt; Q &lt;&lt; std::endl;</div>
 <div class="line"> </div>
@@ -480,7 +482,7 @@ Full source</h1>
 <div class="line">  <span class="comment">// LU factorization using the LAPACK interface</span></div>
 <div class="line">  <span class="keyword">auto</span> ipiv = <a class="code hl_typedef" href="group__av__types.html#gaa8a5e1f016d2e5977c61ad2325b95c68">nda::vector&lt;int&gt;</a>(3);</div>
 <div class="line">  <span class="keyword">auto</span> LU = A1;</div>
-<div class="line">  <span class="keyword">auto</span> info = <a class="code hl_function" href="group__linalg__lapack.html#gacd83a4791d1bcbb0f2b7af425af1e836">nda::lapack::getrf</a>(LU, ipiv);</div>
+<div class="line">  <span class="keyword">auto</span> info = <a class="code hl_function" href="group__linalg__lapack.html#gab7a1ffe8cc04412e26248718a2ebbca4">nda::lapack::getrf</a>(LU, ipiv);</div>
 <div class="line">  <span class="keywordflow">if</span> (info != 0) {</div>
 <div class="line">    std::cerr &lt;&lt; <span class="stringliteral">&quot;Error: nda::lapack::getrf failed with error code &quot;</span> &lt;&lt; info &lt;&lt; std::endl;</div>
 <div class="line">    <span class="keywordflow">return</span> 1;</div>
@@ -489,7 +491,7 @@ Full source</h1>
 <div class="line">  <span class="comment">// solve the linear system of equations using the LU factorization</span></div>
 <div class="line">  <a class="code hl_typedef" href="group__av__types.html#gacf63083a75025ccec1ee927d1bade8d1">nda::matrix&lt;double, nda::F_layout&gt;</a> x1(3, 1);</div>
 <div class="line">  x1(nda::range::all, 0) = b1;</div>
-<div class="line">  info = <a class="code hl_function" href="group__linalg__lapack.html#gae81206b2d5fff66e29fa0fb25de61183">nda::lapack::getrs</a>(LU, x1, ipiv);</div>
+<div class="line">  info = <a class="code hl_function" href="group__linalg__lapack.html#gaec7ad0b94647e665a2e4b22b7723061a">nda::lapack::getrs</a>(LU, x1, ipiv);</div>
 <div class="line">  <span class="keywordflow">if</span> (info != 0) {</div>
 <div class="line">    std::cerr &lt;&lt; <span class="stringliteral">&quot;Error: nda::lapack::getrs failed with error code &quot;</span> &lt;&lt; info &lt;&lt; std::endl;</div>
 <div class="line">    <span class="keywordflow">return</span> 1;</div>

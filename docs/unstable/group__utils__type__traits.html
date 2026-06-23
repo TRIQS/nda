@@ -137,6 +137,8 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('group__utils__
 Classes</h2></td></tr>
 <tr class="memitem:nda_3A_3Ais_5Finstantiation_5Fof_3C_20TMPLT_2C_20T_20_3E" id="r_nda_3A_3Ais_5Finstantiation_5Fof_3C_20TMPLT_2C_20T_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structnda_1_1is__instantiation__of.html">nda::is_instantiation_of&lt; TMPLT, T &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if type <span class="tt">T</span> is of type <span class="tt">TMPLT&lt;...&gt;</span>.  <a href="structnda_1_1is__instantiation__of.html#details">More...</a><br /></td></tr>
+<tr class="memitem:nda_3A_3Aremove_5Fcomplex_3C_20T_20_3E" id="r_nda_3A_3Aremove_5Fcomplex_3C_20T_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structnda_1_1remove__complex.html">nda::remove_complex&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trait that removes <span class="tt">std::complex</span> from a type and exposes its underlying value type.  <a href="structnda_1_1remove__complex.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -158,8 +160,8 @@ template&lt;typename T, typename... Ts&gt; </td></tr>
 <tr class="memdesc:ga839a318188b3243b390ebfe7ecf5ba79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constexpr variable that is true if type <span class="tt">T</span> is contained in the parameter pack <span class="tt">Ts</span>. <br /></td></tr>
 <tr class="memitem:ga30a65f6fd37a3801c89552edcd6f7bda" id="r_ga30a65f6fd37a3801c89552edcd6f7bda"><td class="memTemplParams" colspan="2"><a id="ga30a65f6fd37a3801c89552edcd6f7bda" name="ga30a65f6fd37a3801c89552edcd6f7bda"></a>
 template&lt;typename T&gt; </td></tr>
-<tr class="memitem:ga30a65f6fd37a3801c89552edcd6f7bda template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><b>nda::is_blas_lapack_v</b> = <a class="el" href="#ga984847109b3f60b07bd8d899a7825e7f">is_double_or_complex_v</a>&lt;T&gt;</td></tr>
-<tr class="memdesc:ga30a65f6fd37a3801c89552edcd6f7bda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for <a class="el" href="#ga984847109b3f60b07bd8d899a7825e7f" title="Constexpr variable that is true if type T is a std::complex type or a double type.">nda::is_double_or_complex_v</a>. <br /></td></tr>
+<tr class="memitem:ga30a65f6fd37a3801c89552edcd6f7bda template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><b>nda::is_blas_lapack_v</b></td></tr>
+<tr class="memdesc:ga30a65f6fd37a3801c89552edcd6f7bda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constexpr variable that is true if type <span class="tt">T</span> is either of type 'float', <span class="tt">double</span>, std::complex&lt;float&gt;' or <span class="tt">std::complex&lt;double&gt;</span>. <br /></td></tr>
 <tr class="memitem:ga1a3e755a22503182b586c887561a2517" id="r_ga1a3e755a22503182b586c887561a2517"><td class="memTemplParams" colspan="2"><a id="ga1a3e755a22503182b586c887561a2517" name="ga1a3e755a22503182b586c887561a2517"></a>
 template&lt;typename T&gt; </td></tr>
 <tr class="memitem:ga1a3e755a22503182b586c887561a2517 template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><b>nda::is_complex_v</b> = <a class="el" href="#ga0a4e52840236a3c0e6d36b32781978e0">is_instantiation_of_v</a>&lt;std::complex, T&gt;</td></tr>

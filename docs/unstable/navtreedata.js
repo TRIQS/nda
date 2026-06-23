@@ -47,7 +47,8 @@ var NAVTREE =
       [ "Example 5: HDF5 support", "ex5.html", null ],
       [ "Example 6: MPI support", "ex6.html", null ],
       [ "Example 7: Making use of symmetries", "ex7.html", null ],
-      [ "Example 8: Linear algebra support", "ex8.html", null ]
+      [ "Example 8: Linear algebra support", "ex8.html", null ],
+      [ "Example 9: Tensor support", "ex9.html", null ]
     ] ],
     [ "API Documentation", "documentation.html", [
       [ "Arrays and views", "group__arrays__views.html", [
@@ -148,13 +149,35 @@ var NAVTREE =
         ] ]
       ] ],
       [ "Linear algebra", "group__linalg.html", [
-        [ "BLAS interface", "group__linalg__blas.html", null ],
-        [ "BLAS utilities", "group__linalg__blas__utils.html", null ],
-        [ "LAPACK interface", "group__linalg__lapack.html", [
+        [ "BLAS/LAPACK utilities", "group__linalg__blas__utils.html", [
+          [ "blas_lapack::BlasArray", "conceptnda_1_1blas__lapack_1_1_blas_array.html", null ],
+          [ "blas_lapack::BlasArrayCplx", "conceptnda_1_1blas__lapack_1_1_blas_array_cplx.html", null ],
+          [ "blas_lapack::BlasArrayFor", "conceptnda_1_1blas__lapack_1_1_blas_array_for.html", null ],
+          [ "blas_lapack::BlasArrayOrConj", "conceptnda_1_1blas__lapack_1_1_blas_array_or_conj.html", null ],
+          [ "blas_lapack::BlasArrayOrConjFor", "conceptnda_1_1blas__lapack_1_1_blas_array_or_conj_for.html", null ],
+          [ "blas_lapack::BlasArrayReal", "conceptnda_1_1blas__lapack_1_1_blas_array_real.html", null ],
+          [ "blas_lapack::BlasArrayRealFor", "conceptnda_1_1blas__lapack_1_1_blas_array_real_for.html", null ],
+          [ "blas_lapack::PivotArrayFor", "conceptnda_1_1blas__lapack_1_1_pivot_array_for.html", null ]
+        ] ],
+        [ "BLAS/cuBLAS interface", "group__linalg__blas.html", null ],
+        [ "LAPACK/cuSOLVER interface", "group__linalg__lapack.html", [
           [ "lapack::gelss_worker", "classnda_1_1lapack_1_1gelss__worker.html", null ],
           [ "lapack::gelss_worker_hermitian", "classnda_1_1lapack_1_1gelss__worker__hermitian.html", null ]
         ] ],
-        [ "Linear algebra tools", "group__linalg__tools.html", null ]
+        [ "Linear algebra tools", "group__linalg__tools.html", [
+          [ "Decompositions", "group__linalg__decompositions.html", null ],
+          [ "Matrix eigenvalues", "group__linalg__eig.html", null ],
+          [ "Matrix, vector and other products", "group__linalg__matvec__products.html", null ],
+          [ "Norms and other numbers", "group__linalg__norms.html", null ],
+          [ "Other operations", "group__linalg__other.html", null ],
+          [ "Solving equations and inverting matrices", "group__linalg__solve.html", null ]
+        ] ]
+      ] ],
+      [ "Tensor support", "group__tensor.html", [
+        [ "Tensor utilities", "group__tensor__utils.html", [
+          [ "tensor::tensor_view", "structnda_1_1tensor_1_1tensor__view.html", null ]
+        ] ],
+        [ "Tensor operations", "group__tensor__ops.html", null ]
       ] ],
       [ "Memory layout", "group__layout.html", [
         [ "Layout policies", "group__layout__pols.html", [
@@ -214,6 +237,7 @@ var NAVTREE =
           [ "AnyOf", "conceptnda_1_1_any_of.html", null ],
           [ "CallableWithLongs", "conceptnda_1_1_callable_with_longs.html", null ],
           [ "DoubleOrComplex", "conceptnda_1_1_double_or_complex.html", null ],
+          [ "FloatOrDouble", "conceptnda_1_1_float_or_double.html", null ],
           [ "InstantiationOf", "conceptnda_1_1_instantiation_of.html", null ],
           [ "Scalar", "conceptnda_1_1_scalar.html", null ],
           [ "StdArrayOfLong", "conceptnda_1_1_std_array_of_long.html", null ]
@@ -223,7 +247,8 @@ var NAVTREE =
         ] ],
         [ "Permutations", "group__utils__perms.html", null ],
         [ "Type traits", "group__utils__type__traits.html", [
-          [ "is_instantiation_of", "structnda_1_1is__instantiation__of.html", null ]
+          [ "is_instantiation_of", "structnda_1_1is__instantiation__of.html", null ],
+          [ "remove_complex", "structnda_1_1remove__complex.html", null ]
         ] ]
       ] ],
       [ "File List", "files.html", "files" ]
@@ -236,8 +261,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "__impl__basic__array__view__common_8hpp_source.html",
-"group__av__factories.html",
-"sygv_8hpp_source.html"
+"function_8hpp_source.html",
+"structnda_1_1clef_1_1operation_3_01tags_1_1minus_01_4.html"
 ];
 
 const SYNCONMSG = 'click to disable panel synchronization';

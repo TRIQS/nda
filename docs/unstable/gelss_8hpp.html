@@ -133,6 +133,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('gelss_8hpp.htm
 <div class="textblock"><code>#include &quot;<a class="el" href="lapack_2interface_2cxx__interface_8hpp_source.html">./interface/cxx_interface.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="basic__array_8hpp_source.html">../basic_array.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="basic__functions_8hpp_source.html">../basic_functions.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="blas_2tools_8hpp_source.html">../blas/tools.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="concepts_8hpp_source.html">../concepts.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="declarations_8hpp_source.html">../declarations.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="macros_8hpp_source.html">../macros.hpp</a>&quot;</code><br />
@@ -151,10 +152,10 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('gelss_8hpp.htm
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga3f3adcfbac6e628cc82f6ecb43741071" id="r_ga3f3adcfbac6e628cc82f6ecb43741071"><td class="memTemplParams" colspan="2">template&lt;MemoryMatrix A, MemoryArray B, MemoryVector S&gt; <br />
-requires (<a class="el" href="group__av__utils.html#ga62eb26ca688c9730a4590c264b51c64b">have_same_value_type_v</a>&lt;A, B&gt; and <a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A, B, S&gt; and <a class="el" href="group__utils__type__traits.html#ga30a65f6fd37a3801c89552edcd6f7bda">is_blas_lapack_v</a>&lt;<a class="el" href="group__av__utils.html#ga93d8308788c934c0eb863bd8cb8ff5dc">get_value_t</a>&lt;A&gt;&gt;)</td></tr>
-<tr class="memitem:ga3f3adcfbac6e628cc82f6ecb43741071 template"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__lapack.html#ga3f3adcfbac6e628cc82f6ecb43741071">nda::lapack::gelss</a> (A &amp;&amp;a, B &amp;&amp;b, S &amp;&amp;s, double rcond, int &amp;rank)</td></tr>
-<tr class="memdesc:ga3f3adcfbac6e628cc82f6ecb43741071"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt"><a class="el" href="group__linalg__lapack.html#ga3f3adcfbac6e628cc82f6ecb43741071" title="Interface to the LAPACK gelss routine.">gelss</a></span> routine.  <br /></td></tr>
+<tr class="memitem:ga16a125c3f13ea55e34078b0f162d01e5" id="r_ga16a125c3f13ea55e34078b0f162d01e5"><td class="memTemplParams" colspan="2">template&lt;BlasArray&lt; 2 &gt; A, BlasArrayFor&lt; A &gt; B, BlasArrayRealFor&lt; A, 1 &gt; S, BlasArrayFor&lt; A, 1 &gt; W1 = vector_value_t&lt;A&gt;, BlasArrayRealFor&lt; A, 1 &gt; W2 = vector_fp_t&lt;A&gt;&gt; <br />
+requires (<a class="el" href="group__mem__addrspcs.html#ga2b3d35f78473b4788004f10c135fe0df">mem::have_host_compatible_addr_space</a>&lt;A&gt; and (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;B&gt; == 1 or <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">get_rank</a>&lt;B&gt; == 2) and <a class="el" href="group__linalg__blas__utils.html#gafbeb10df81b433b3bdd6c8ceb55d192a">has_F_layout</a>&lt;A, B&gt;)</td></tr>
+<tr class="memitem:ga16a125c3f13ea55e34078b0f162d01e5 template"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="group__linalg__lapack.html#ga16a125c3f13ea55e34078b0f162d01e5">nda::lapack::gelss</a> (A &amp;&amp;a, B &amp;&amp;b, S &amp;&amp;s, <a class="el" href="group__av__utils.html#gaeec3099404e84afbac28197b0d35fa46">get_fp_t</a>&lt; A &gt; rcond, int &amp;rank, W1 &amp;&amp;work=<a class="el" href="group__linalg__blas__utils.html#gad540698c2a4c4f47cacfe510c6bf2f6a">vector_value_t</a>&lt; A &gt;{}, W2 &amp;&amp;rwork=<a class="el" href="group__linalg__blas__utils.html#gaec9fb8d5283f18ce490a4564574d6201">vector_fp_t</a>&lt; A &gt;{})</td></tr>
+<tr class="memdesc:ga16a125c3f13ea55e34078b0f162d01e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface to the LAPACK <span class="tt">gelss</span> routine.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
