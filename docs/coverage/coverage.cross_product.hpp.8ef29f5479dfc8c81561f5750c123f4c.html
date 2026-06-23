@@ -74,7 +74,7 @@
     <div role="rowheader" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">Blocks</div>
   </div>
   <div class="Box-row Box-row--focus-gray py-2 d-flex">
-    <div role="gridcell" class="color-fg-muted flex-auto min-width-0 col-md-2"><a href="#l35">auto nda::linalg::cross_product&lt;nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (nda/linalg/cross_product.hpp:35)</a>    </div>
+    <div role="gridcell" class="color-fg-muted flex-auto min-width-0 col-md-2"><a href="#l39">auto nda::linalg::cross_product&lt;nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; &gt;(nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;, nda::basic_array&lt;double, 1, nda::C_layout, (char)86, nda::heap_basic&lt;nda::mem::mallocator&lt;(nda::mem::AddressSpace)1&gt; &gt; &gt; const&amp;) (nda/linalg/cross_product.hpp:39)</a>    </div>
     <div role="gridcell" class="color-fg-muted flex-auto min-width-0 d-flex flex-justify-end flex-wrap flex-items-baseline" data-sort="3">called 3 times</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">87.5%</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">50.0%</div>
@@ -267,94 +267,122 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @ingroup linalg_tools</span></td>
+        <td class="src "><span class="cm">   * @ingroup linalg_matvec_products</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l24" href="#l24">24</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @brief Compute the cross product \f$ \mathbf{x} \times \mathbf{y} \f$ of two 3-dimensional vectors \f$ \mathbf{x} </span></td>
+        <td class="src "><span class="cm">   * @brief Compute the vector cross product.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l25" href="#l25">25</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * \f$ and \f$ \mathbf{y} \f$.</span></td>
+        <td class="src "><span class="cm">   * </span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l26" href="#l26">26</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   *</span></td>
+        <td class="src "><span class="cm">   * @details It computes \f$ \mathbf{x} \times \mathbf{y} \f$ of two 3-dimensional vectors \f$ \mathbf{x} \f$ and \f$ </span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l27" href="#l27">27</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @tparam X nda::Vector type.</span></td>
+        <td class="src "><span class="cm">   * \mathbf{y} \f$.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l28" href="#l28">28</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @tparam Y nda::Vector type.</span></td>
+        <td class="src "><span class="cm">   * </span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l29" href="#l29">29</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @param x Input vector \f$ \mathbf{x} \f$.</span></td>
+        <td class="src "><span class="cm">   * @note \f$ \mathbf{x} \f$ and \f$ \mathbf{y} \f$ are required to satisfy nda::mem::have_host_compatible_addr_space.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l30" href="#l30">30</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @param y Input vector \f$ \mathbf{y} \f$.</span></td>
+        <td class="src "><span class="cm">   *</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l31" href="#l31">31</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @return nda::vector containing the cross product of the two vectors.</span></td>
+        <td class="src "><span class="cm">   * @tparam X nda::Vector type.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l32" href="#l32">32</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   */</span></td>
+        <td class="src "><span class="cm">   * @tparam Y nda::Vector type.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l33" href="#l33">33</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="n">Vector</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Vector</span><span class="w"> </span><span class="n">Y</span><span class="o">&gt;</span></td>
+        <td class="src "><span class="cm">   * @param x Input vector \f$ \mathbf{x} \f$.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l34" href="#l34">34</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="k">requires</span><span class="p">(</span><span class="n">nda</span><span class="o">::</span><span class="n">mem</span><span class="o">::</span><span class="n">have_host_compatible_addr_space</span><span class="o">&lt;</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="o">&gt;</span><span class="p">)</span></td>
+        <td class="src "><span class="cm">   * @param y Input vector \f$ \mathbf{y} \f$.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l35" href="#l35">35</a></td>
+        <td class="linebranch">
+        </td>
+        <td class="linecount"></td>
+        <td class="src "><span class="cm">   * @return nda::vector containing the cross product of the two vectors.</span></td>
+      </tr>
+      <tr class="source-line">
+        <td class="lineno"><a id="l36" href="#l36">36</a></td>
+        <td class="linebranch">
+        </td>
+        <td class="linecount"></td>
+        <td class="src "><span class="cm">   */</span></td>
+      </tr>
+      <tr class="source-line">
+        <td class="lineno"><a id="l37" href="#l37">37</a></td>
+        <td class="linebranch">
+        </td>
+        <td class="linecount"></td>
+        <td class="src "><span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="n">Vector</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Vector</span><span class="w"> </span><span class="n">Y</span><span class="o">&gt;</span></td>
+      </tr>
+      <tr class="source-line">
+        <td class="lineno"><a id="l38" href="#l38">38</a></td>
+        <td class="linebranch">
+        </td>
+        <td class="linecount"></td>
+        <td class="src "><span class="w">    </span><span class="k">requires</span><span class="p">(</span><span class="n">nda</span><span class="o">::</span><span class="n">mem</span><span class="o">::</span><span class="n">have_host_compatible_addr_space</span><span class="o">&lt;</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="o">&gt;</span><span class="p">)</span></td>
+      </tr>
+      <tr class="source-line">
+        <td class="lineno"><a id="l39" href="#l39">39</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount coveredLine show_coveredLine">3</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">cross_product</span><span class="p">(</span><span class="n">X</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l36" href="#l36">36</a></td>
+        <td class="lineno"><a id="l40" href="#l40">40</a></td>
         <td class="linebranch">
           <details class="linebranchDetails">
             <summary class="linebranchSummary">3/6</summary>
@@ -372,63 +400,63 @@
         <td class="src  partialCoveredLine show_partialCoveredLine"><span class="w">    </span><span class="n">EXPECTS</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">y</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l37" href="#l37">37</a></td>
+        <td class="lineno"><a id="l41" href="#l41">41</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount coveredLine show_coveredLine">3</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">y</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span><span class="w"> </span><span class="n">nda</span><span class="o">::</span><span class="n">heap</span><span class="o">&lt;</span><span class="n">nda</span><span class="o">::</span><span class="n">mem</span><span class="o">::</span><span class="n">common_addr_space</span><span class="o">&lt;</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l38" href="#l38">38</a></td>
+        <td class="lineno"><a id="l42" href="#l42">42</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount coveredLine show_coveredLine">15</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="n">res</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">y</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">y</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l39" href="#l39">39</a></td>
+        <td class="lineno"><a id="l43" href="#l43">43</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount coveredLine show_coveredLine">15</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="n">res</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">y</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l40" href="#l40">40</a></td>
+        <td class="lineno"><a id="l44" href="#l44">44</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount coveredLine show_coveredLine">15</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="n">res</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">y</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">y</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l41" href="#l41">41</a></td>
+        <td class="lineno"><a id="l45" href="#l45">45</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount coveredLine show_coveredLine">3</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">res</span><span class="p">;</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l42" href="#l42">42</a></td>
+        <td class="lineno"><a id="l46" href="#l46">46</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount uncoveredLine show_uncoveredLine">&cross;</td>
         <td class="src  uncoveredLine show_uncoveredLine"><span class="w">  </span><span class="p">}</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l43" href="#l43">43</a></td>
+        <td class="lineno"><a id="l47" href="#l47">47</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
         <td class="src "></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l44" href="#l44">44</a></td>
+        <td class="lineno"><a id="l48" href="#l48">48</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
         <td class="src "><span class="p">}</span><span class="w"> </span><span class="c1">// namespace nda::linalg</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l45" href="#l45">45</a></td>
+        <td class="lineno"><a id="l49" href="#l49">49</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
@@ -441,7 +469,7 @@
         <hr class="block-separator"/>
         <footer class="text-center">
           Created using <a href="http://gcovr.com/en/8.6">GCOVR (Version 8.6)</a>
-          at 2026-06-22 14:33:08
+          at 2026-06-23 16:36:12
         </footer>
       </div>
     </div>

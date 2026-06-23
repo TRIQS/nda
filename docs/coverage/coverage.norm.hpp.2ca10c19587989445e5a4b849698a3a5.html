@@ -74,7 +74,7 @@
     <div role="rowheader" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">Blocks</div>
   </div>
   <div class="Box-row Box-row--focus-gray py-2 d-flex">
-    <div role="gridcell" class="color-fg-muted flex-auto min-width-0 col-md-2"><a href="#l46">&lt;unknown function 46&gt; (nda/linalg/norm.hpp:46)</a>    </div>
+    <div role="gridcell" class="color-fg-muted flex-auto min-width-0 col-md-2"><a href="#l49">&lt;unknown function 49&gt; (nda/linalg/norm.hpp:49)</a>    </div>
     <div role="gridcell" class="color-fg-muted flex-auto min-width-0 d-flex flex-justify-end flex-wrap flex-items-baseline" data-sort="-">excluded</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">100.0%</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">-%</div>
@@ -295,304 +295,325 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @ingroup linalg_tools</span></td>
+        <td class="src "><span class="cm">   * @ingroup linalg_norms</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l28" href="#l28">28</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @brief Calculate the p-norm of an nda::ArrayOfRank&lt;1&gt; object \f$ \mathbf{x} \f$ with scalar values. The p-norm is</span></td>
+        <td class="src "><span class="cm">   * @brief Calculate the \f$ p \f$-norm of a 1-dimensional array/view with scalar elements.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l29" href="#l29">29</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * defined as</span></td>
+        <td class="src "><span class="cm">   *</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l30" href="#l30">30</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * \f[</span></td>
+        <td class="src "><span class="cm">   * @details The \f$ p \f$-norm is defined as</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l31" href="#l31">31</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   *   || \mathbf{x} ||_p = \left( \sum_{i=0}^{N-1} |x_i|^p \right)^{1/p}</span></td>
+        <td class="src "><span class="cm">   * \f[</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l32" href="#l32">32</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * \f]</span></td>
+        <td class="src "><span class="cm">   *   || \mathbf{x} ||_p = \left( \sum_{i=0}^{N-1} |x_i|^p \right)^{1/p}</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l33" href="#l33">33</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * with the special cases (following `numpy.linalg.norm` convention)</span></td>
+        <td class="src "><span class="cm">   * \f]</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l34" href="#l34">34</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   *</span></td>
+        <td class="src "><span class="cm">   * with the special cases (following `numpy.linalg.norm` convention)</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l35" href="#l35">35</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * - \f$ || \mathbf{x} ||_0 = \text{number of non-zero elements} \f$,</span></td>
+        <td class="src "><span class="cm">   *</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l36" href="#l36">36</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * - \f$ || \mathbf{x} ||_{\infty} = \max \{ |x_i| : i = 0, \dots, N - 1 \} \f$,</span></td>
+        <td class="src "><span class="cm">   * - \f$ || \mathbf{x} ||_0 = \text{number of non-zero elements} \f$,</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l37" href="#l37">37</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * - \f$ || \mathbf{x} ||_{-\infty} = \min \{ |x_i| : i = 0, \dots, N - 1 \} \f$.</span></td>
+        <td class="src "><span class="cm">   * - \f$ || \mathbf{x} ||_{\infty} = \max \{ |x_i| : i = 0, \dots, N - 1 \} \f$,</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l38" href="#l38">38</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   *</span></td>
+        <td class="src "><span class="cm">   * - \f$ || \mathbf{x} ||_{-\infty} = \min \{ |x_i| : i = 0, \dots, N - 1 \} \f$.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l39" href="#l39">39</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @tparam A nda::ArrayOfRank&lt;1&gt; type.</span></td>
+        <td class="src "><span class="cm">   * </span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l40" href="#l40">40</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @param a nda::ArrayOfRank&lt;1&gt; object \f$ \mathbf{x} \f$.</span></td>
+        <td class="src "><span class="cm">   * @note \f$ \mathbf{x} \f$ is required to have a value type that satisfies nda::Scalar.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l41" href="#l41">41</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @param p Order of the norm.</span></td>
+        <td class="src "><span class="cm">   *</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l42" href="#l42">42</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @return p-norm of the array/view.</span></td>
+        <td class="src "><span class="cm">   * @tparam X nda::ArrayOfRank&lt;1&gt; type.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l43" href="#l43">43</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   */</span></td>
+        <td class="src "><span class="cm">   * @param x 1-dimensional array \f$ \mathbf{x} \f$.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l44" href="#l44">44</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="n">ArrayOfRank</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="w"> </span><span class="n">A</span><span class="o">&gt;</span></td>
+        <td class="src "><span class="cm">   * @param p Order of the norm.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l45" href="#l45">45</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="k">requires</span><span class="p">(</span><span class="n">Scalar</span><span class="o">&lt;</span><span class="n">get_value_t</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;&gt;</span><span class="p">)</span></td>
+        <td class="src "><span class="cm">   * @return \f$ p \f$-norm of the array/view.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l46" href="#l46">46</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">60</td>
-        <td class="src  coveredLine show_coveredLine"><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">norm</span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
+        <td class="linecount"></td>
+        <td class="src "><span class="cm">   */</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l47" href="#l47">47</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">60</td>
-        <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)</span><span class="w"> </span><span class="p">[[</span><span class="n">likely</span><span class="p">]]</span><span class="w"> </span><span class="p">{</span></td>
+        <td class="linecount"></td>
+        <td class="src "><span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="n">ArrayOfRank</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="w"> </span><span class="n">X</span><span class="o">&gt;</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l48" href="#l48">48</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="p">(</span><span class="n">MemoryArray</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span><span class="p">)</span></td>
+        <td class="src "><span class="w">    </span><span class="k">requires</span><span class="p">(</span><span class="n">Scalar</span><span class="o">&lt;</span><span class="n">get_value_t</span><span class="o">&lt;</span><span class="n">X</span><span class="o">&gt;&gt;</span><span class="p">)</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l49" href="#l49">49</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">20</td>
-        <td class="src  coveredLine show_coveredLine"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">real</span><span class="p">(</span><span class="n">nda</span><span class="o">::</span><span class="n">blas</span><span class="o">::</span><span class="n">dotc</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">)));</span></td>
+        <td class="linecount coveredLine show_coveredLine">62</td>
+        <td class="src  coveredLine show_coveredLine"><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">norm</span><span class="p">(</span><span class="n">X</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l50" href="#l50">50</a></td>
+        <td class="linebranch">
+        </td>
+        <td class="linecount coveredLine show_coveredLine">62</td>
+        <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)</span><span class="w"> </span><span class="p">[[</span><span class="n">likely</span><span class="p">]]</span><span class="w"> </span><span class="p">{</span></td>
+      </tr>
+      <tr class="source-line">
+        <td class="lineno"><a id="l51" href="#l51">51</a></td>
+        <td class="linebranch">
+        </td>
+        <td class="linecount"></td>
+        <td class="src "><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="p">(</span><span class="n">MemoryArray</span><span class="o">&lt;</span><span class="n">X</span><span class="o">&gt;</span><span class="p">)</span></td>
+      </tr>
+      <tr class="source-line">
+        <td class="lineno"><a id="l52" href="#l52">52</a></td>
+        <td class="linebranch">
+        </td>
+        <td class="linecount coveredLine show_coveredLine">22</td>
+        <td class="src  coveredLine show_coveredLine"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">real</span><span class="p">(</span><span class="n">nda</span><span class="o">::</span><span class="n">blas</span><span class="o">::</span><span class="n">dotc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">)));</span></td>
+      </tr>
+      <tr class="source-line">
+        <td class="lineno"><a id="l53" href="#l53">53</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
         <td class="src "><span class="w">      </span><span class="k">else</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l51" href="#l51">51</a></td>
+        <td class="lineno"><a id="l54" href="#l54">54</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount coveredLine show_coveredLine">6</td>
-        <td class="src  coveredLine show_coveredLine"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">norm</span><span class="p">(</span><span class="n">make_regular</span><span class="p">(</span><span class="n">a</span><span class="p">));</span></td>
+        <td class="src  coveredLine show_coveredLine"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">norm</span><span class="p">(</span><span class="n">make_regular</span><span class="p">(</span><span class="n">x</span><span class="p">));</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l52" href="#l52">52</a></td>
+        <td class="lineno"><a id="l55" href="#l55">55</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount coveredLine show_coveredLine">34</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mf">1.0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l53" href="#l53">53</a></td>
+        <td class="lineno"><a id="l56" href="#l56">56</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount coveredLine show_coveredLine">6</td>
-        <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">sum</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="p">));</span></td>
+        <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">sum</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">));</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l54" href="#l54">54</a></td>
+        <td class="lineno"><a id="l57" href="#l57">57</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount coveredLine show_coveredLine">28</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mf">0.0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l55" href="#l55">55</a></td>
+        <td class="lineno"><a id="l58" href="#l58">58</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount coveredLine show_coveredLine">6</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="kt">long</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l56" href="#l56">56</a></td>
+        <td class="lineno"><a id="l59" href="#l59">59</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount coveredLine show_coveredLine">318</td>
-        <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
+        <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l57" href="#l57">57</a></td>
+        <td class="lineno"><a id="l60" href="#l60">60</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount coveredLine show_coveredLine">312</td>
-        <td class="src  coveredLine show_coveredLine"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">get_value_t</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">0</span><span class="p">})</span><span class="w"> </span><span class="o">++</span><span class="n">count</span><span class="p">;</span></td>
+        <td class="src  coveredLine show_coveredLine"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">get_value_t</span><span class="o">&lt;</span><span class="n">X</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">0</span><span class="p">})</span><span class="w"> </span><span class="o">++</span><span class="n">count</span><span class="p">;</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l58" href="#l58">58</a></td>
+        <td class="lineno"><a id="l61" href="#l61">61</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
         <td class="src "><span class="w">      </span><span class="p">}</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l59" href="#l59">59</a></td>
+        <td class="lineno"><a id="l62" href="#l62">62</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount coveredLine show_coveredLine">6</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="kt">double</span><span class="p">(</span><span class="n">count</span><span class="p">);</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l60" href="#l60">60</a></td>
+        <td class="lineno"><a id="l63" href="#l63">63</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount coveredLine show_coveredLine">22</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">infinity</span><span class="p">())</span><span class="w"> </span><span class="p">{</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l61" href="#l61">61</a></td>
+        <td class="lineno"><a id="l64" href="#l64">64</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount coveredLine show_coveredLine">4</td>
-        <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">max_element</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="p">));</span></td>
+        <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">max_element</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">));</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l62" href="#l62">62</a></td>
+        <td class="lineno"><a id="l65" href="#l65">65</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount coveredLine show_coveredLine">18</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">-</span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;::</span><span class="n">infinity</span><span class="p">())</span><span class="w"> </span><span class="p">{</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l63" href="#l63">63</a></td>
-        <td class="linebranch">
-        </td>
-        <td class="linecount coveredLine show_coveredLine">4</td>
-        <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">min_element</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="p">));</span></td>
-      </tr>
-      <tr class="source-line">
-        <td class="lineno"><a id="l64" href="#l64">64</a></td>
-        <td class="linebranch">
-        </td>
-        <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span></td>
-      </tr>
-      <tr class="source-line">
-        <td class="lineno"><a id="l65" href="#l65">65</a></td>
-        <td class="linebranch">
-        </td>
-        <td class="linecount coveredLine show_coveredLine">14</td>
-        <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">pow</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">pow</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="p">),</span><span class="w"> </span><span class="n">p</span><span class="p">)),</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">p</span><span class="p">);</span></td>
-      </tr>
-      <tr class="source-line">
         <td class="lineno"><a id="l66" href="#l66">66</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="p">}</span></td>
+        <td class="linecount coveredLine show_coveredLine">4</td>
+        <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">min_element</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">));</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l67" href="#l67">67</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">  </span><span class="p">}</span></td>
+        <td class="src "><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l68" href="#l68">68</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount"></td>
-        <td class="src "></td>
+        <td class="linecount coveredLine show_coveredLine">14</td>
+        <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">pow</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">pow</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="n">p</span><span class="p">)),</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">p</span><span class="p">);</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l69" href="#l69">69</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="p">}</span><span class="w"> </span><span class="c1">// namespace nda::linalg</span></td>
+        <td class="src "><span class="w">    </span><span class="p">}</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l70" href="#l70">70</a></td>
+        <td class="linebranch">
+        </td>
+        <td class="linecount"></td>
+        <td class="src "><span class="w">  </span><span class="p">}</span></td>
+      </tr>
+      <tr class="source-line">
+        <td class="lineno"><a id="l71" href="#l71">71</a></td>
+        <td class="linebranch">
+        </td>
+        <td class="linecount"></td>
+        <td class="src "></td>
+      </tr>
+      <tr class="source-line">
+        <td class="lineno"><a id="l72" href="#l72">72</a></td>
+        <td class="linebranch">
+        </td>
+        <td class="linecount"></td>
+        <td class="src "><span class="p">}</span><span class="w"> </span><span class="c1">// namespace nda::linalg</span></td>
+      </tr>
+      <tr class="source-line">
+        <td class="lineno"><a id="l73" href="#l73">73</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
@@ -605,7 +626,7 @@
         <hr class="block-separator"/>
         <footer class="text-center">
           Created using <a href="http://gcovr.com/en/8.6">GCOVR (Version 8.6)</a>
-          at 2026-06-22 14:33:08
+          at 2026-06-23 16:36:12
         </footer>
       </div>
     </div>

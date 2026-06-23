@@ -74,7 +74,7 @@
     <div role="rowheader" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">Blocks</div>
   </div>
   <div class="Box-row Box-row--focus-gray py-2 d-flex">
-    <div role="gridcell" class="color-fg-muted flex-auto min-width-0 col-md-2"><a href="#l53">&lt;unknown function 53&gt; (nda/lapack/getrs.hpp:53)</a>    </div>
+    <div role="gridcell" class="color-fg-muted flex-auto min-width-0 col-md-2"><a href="#l56">&lt;unknown function 56&gt; (nda/lapack/getrs.hpp:56)</a>    </div>
     <div role="gridcell" class="color-fg-muted flex-auto min-width-0 d-flex flex-justify-end flex-wrap flex-items-baseline" data-sort="-">excluded</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">100.0%</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">-%</div>
@@ -95,9 +95,9 @@
       <button type="button" class="button_toggle_excludedLine show_excludedLine" value="excludedLine" title="Toggle excluded lines">0 excluded</button>
     </div>
     <div class="nav">
-      <a class="nav prev" href="coverage.getri.hpp.805a444a1a62c39e393f944bd60f702b.html"></a>
+      <a class="nav prev" href="coverage.getri_batch.hpp.667bf92d79c46ef8f25412253bc356ce.html"></a>
       <a class="nav index" href="coverage.html"></a>
-      <a class="nav next" href="coverage.gtsv.hpp.0a85431f9b843b9d986ba5d0b62bdffa.html"></a>
+      <a class="nav next" href="coverage.getrs_batch.hpp.3f3ef1ba813114b281c5ca145bdd91b6.html"></a>
     </div>
   </div>
   <div class="source-table-container">
@@ -162,7 +162,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm"> * @brief Provides a generic interface to the LAPACK `getrs` routine.</span></td>
+        <td class="src "><span class="cm"> * @brief Provides a generic interface to the LAPACK/cuSOLVER `getrs` routine.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l9" href="#l9">9</a></td>
@@ -204,63 +204,63 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;../concepts.hpp&quot;</span></td>
+        <td class="src "><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;../blas/tools.hpp&quot;</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l15" href="#l15">15</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;../declarations.hpp&quot;</span></td>
+        <td class="src "><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;../concepts.hpp&quot;</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l16" href="#l16">16</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;../macros.hpp&quot;</span></td>
+        <td class="src "><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;../declarations.hpp&quot;</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l17" href="#l17">17</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;../mem/address_space.hpp&quot;</span></td>
+        <td class="src "><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;../device.hpp&quot;</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l18" href="#l18">18</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;../traits.hpp&quot;</span></td>
+        <td class="src "><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;../macros.hpp&quot;</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l19" href="#l19">19</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "></td>
+        <td class="src "><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;../mem/address_space.hpp&quot;</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l20" href="#l20">20</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cp">#ifndef NDA_HAVE_DEVICE</span></td>
+        <td class="src "><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;../traits.hpp&quot;</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l21" href="#l21">21</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;../device.hpp&quot;</span></td>
+        <td class="src "></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l22" href="#l22">22</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cp">#endif </span><span class="c1">// NDA_HAVE_DEVICE</span></td>
+        <td class="src "><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;type_traits&gt;</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l23" href="#l23">23</a></td>
@@ -274,7 +274,7 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;type_traits&gt;</span></td>
+        <td class="src "><span class="k">namespace</span><span class="w"> </span><span class="nn">nda</span><span class="o">::</span><span class="nn">lapack</span><span class="w"> </span><span class="p">{</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l25" href="#l25">25</a></td>
@@ -288,430 +288,395 @@
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="k">namespace</span><span class="w"> </span><span class="nn">nda</span><span class="o">::</span><span class="nn">lapack</span><span class="w"> </span><span class="p">{</span></td>
+        <td class="src "><span class="w">  </span><span class="cm">/**</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l27" href="#l27">27</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "></td>
+        <td class="src "><span class="cm">   * @ingroup linalg_lapack</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l28" href="#l28">28</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">  </span><span class="cm">/**</span></td>
+        <td class="src "><span class="cm">   * @brief Interface to the LAPACK/cuSOLVER `%getrs` routine.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l29" href="#l29">29</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @ingroup linalg_lapack</span></td>
+        <td class="src "><span class="cm">   *</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l30" href="#l30">30</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @brief Interface to the LAPACK `getrs` routine.</span></td>
+        <td class="src "><span class="cm">   * @details Solves a system of linear equations</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l31" href="#l31">31</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   *</span></td>
+        <td class="src "><span class="cm">   * </span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l32" href="#l32">32</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @details Solves a system of linear equations</span></td>
+        <td class="src "><span class="cm">   * - \f$ \mathbf{A} \mathbf{X} = \mathbf{B} \f$ or</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l33" href="#l33">33</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * - \f$ \mathbf{A X} = \mathbf{B} \f$ or</span></td>
+        <td class="src "><span class="cm">   * - \f$ \mathbf{A} \mathbf{x} = \mathbf{b} \f$,</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l34" href="#l34">34</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * - \f$ \mathbf{A}^* \mathbf{X} = \mathbf{B} \f$.</span></td>
+        <td class="src "><span class="cm">   * </span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l35" href="#l35">35</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   *</span></td>
+        <td class="src "><span class="cm">   * with a general \f$ n \times n \f$ matrix \f$ \mathbf{A} \f$ and either \f$ n \times n_{\mathrm{rhs}} \f$ matrices </span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l36" href="#l36">36</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * with a general \f$ n \times n \f$ matrix \f$ \mathbf{A} \f$ using the LU factorization computed by</span></td>
+        <td class="src "><span class="cm">   * \f$ \mathbf{X} \f$ and \f$ \mathbf{B} \f$ or vectors \f$ \mathbf{x} \f$ and \f$ \mathbf{b} \f$ of size \f$ n \f$.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l37" href="#l37">37</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * nda::lapack::getrf.</span></td>
+        <td class="src "><span class="cm">   * </span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l38" href="#l38">38</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   *</span></td>
+        <td class="src "><span class="cm">   * If the input arrays satisfy nda::mem::have_device_compatible_addr_space, the cuSOLVER implementation is used.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l39" href="#l39">39</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @tparam A nda::Matrix type.</span></td>
+        <td class="src "><span class="cm">   * </span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l40" href="#l40">40</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @tparam B nda::MemoryArray type.</span></td>
+        <td class="src "><span class="cm">   * @note \f$ \mathbf{A} \f$ is allowed to be a lazy conjugate expression (see nda::blas_lapack::is_conj_array_expr), </span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l41" href="#l41">41</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @tparam IPIV nda::MemoryVector type.</span></td>
+        <td class="src "><span class="cm">   * in which case it is required to be in nda::C_layout. \f$ \mathbf{B} \f$ is required to be in nda::F_layout.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l42" href="#l42">42</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @param a Input matrix. The factors \f$ \mathbf{L} \f$ and \f$ \mathbf{U} \f$ from the factorization \f$ \mathbf{A}</span></td>
+        <td class="src "><span class="cm">   *</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l43" href="#l43">43</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * = \mathbf{P L U} \f$ as computed by nda::lapack::getrf.</span></td>
+        <td class="src "><span class="cm">   * @tparam A nda::blas_lapack::BlasArrayOrConj&lt;2&gt; type.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l44" href="#l44">44</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @param b Input/output matrix. On entry, the right hand side matrix \f$ \mathbf{B} \f$. On exit, the solution matrix</span></td>
+        <td class="src "><span class="cm">   * @tparam B nda::blas_lapack::BlasArrayFor&lt;A&gt; type.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l45" href="#l45">45</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * \f$ \mathbf{X} \f$.</span></td>
+        <td class="src "><span class="cm">   * @tparam IPIV nda::blas_lapack::PivotArrayFor&lt;A, 1&gt; type.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l46" href="#l46">46</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @param ipiv Input vector. The pivot indices from nda::lapack::getrf, i.e. for \f$ 1 \leq i \leq n \f$, row i of the</span></td>
+        <td class="src "><span class="cm">   * @param a Input matrix. The factors \f$ \mathbf{L} \f$ and \f$ \mathbf{U} \f$ from the factorization \f$ \mathbf{A}</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l47" href="#l47">47</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * matrix was interchanged with row `ipiv(i)`.</span></td>
+        <td class="src "><span class="cm">   * = \mathbf{P L U} \f$ as computed by nda::lapack::getrf.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l48" href="#l48">48</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   * @return Integer return code from the LAPACK call.</span></td>
+        <td class="src "><span class="cm">   * @param b Input/output matrix/vector. On entry, the right hand side matrix \f$ \mathbf{B} \f$ or vector \f$ </span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l49" href="#l49">49</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="cm">   */</span></td>
+        <td class="src "><span class="cm">   * \mathbf{b} \f$. On exit, the solution matrix \f$ \mathbf{X} \f$ or vector \f$ \mathbf{x} \f$.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l50" href="#l50">50</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="n">Matrix</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">MemoryArray</span><span class="w"> </span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="n">MemoryVector</span><span class="w"> </span><span class="n">IPIV</span><span class="o">&gt;</span></td>
+        <td class="src "><span class="cm">   * @param ipiv Input vector. The pivot indices from nda::lapack::getrf, i.e. for \f$ 1 \leq i \leq n \f$, row \f$ i </span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l51" href="#l51">51</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="k">requires</span><span class="p">((</span><span class="n">MemoryMatrix</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">is_conj_array_expr</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span><span class="p">)</span></td>
+        <td class="src "><span class="cm">   * \f$ of the matrix was interchanged with row `ipiv(i-1)`.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l52" href="#l52">52</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">             </span><span class="k">and</span><span class="w"> </span><span class="n">have_same_value_type_v</span><span class="o">&lt;</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="o">&gt;</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">mem</span><span class="o">::</span><span class="n">have_compatible_addr_space</span><span class="o">&lt;</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="n">IPIV</span><span class="o">&gt;</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">is_blas_lapack_v</span><span class="o">&lt;</span><span class="n">get_value_t</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;&gt;</span><span class="p">)</span></td>
+        <td class="src "><span class="cm">   * @return Integer return code from the LAPACK call.</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l53" href="#l53">53</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">26</td>
-        <td class="src  coveredLine show_coveredLine"><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">getrs</span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">IPIV</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ipiv</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// NOLINT (temporary views are allowed here)</span></td>
+        <td class="linecount"></td>
+        <td class="src "><span class="cm">   */</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l54" href="#l54">54</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="k">static_assert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_same_v</span><span class="o">&lt;</span><span class="n">get_value_t</span><span class="o">&lt;</span><span class="n">IPIV</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Error in nda::lapack::getrs: Pivoting array must have elements of type int&quot;</span><span class="p">);</span></td>
+        <td class="src "><span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="n">BlasArrayOrConj</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">BlasArrayFor</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span><span class="w"> </span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="n">PivotArrayFor</span><span class="o">&lt;</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="o">&gt;</span><span class="w"> </span><span class="n">IPIV</span><span class="o">&gt;</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l55" href="#l55">55</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="k">static_assert</span><span class="p">(</span><span class="n">get_rank</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">get_rank</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Error in nda::lapack::getrs: Right hand side must have rank 1 or 2&quot;</span><span class="p">);</span></td>
+        <td class="src "><span class="w">    </span><span class="k">requires</span><span class="p">((</span><span class="n">get_rank</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">get_rank</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">has_F_layout</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span><span class="p">)</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l56" href="#l56">56</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="k">static_assert</span><span class="p">(</span><span class="n">has_F_layout</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Error in nda::lapack::getrs: B must have Fortran layout&quot;</span><span class="p">);</span></td>
+        <td class="linecount coveredLine show_coveredLine">52</td>
+        <td class="src  coveredLine show_coveredLine"><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">getrs</span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">IPIV</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ipiv</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// NOLINT (temporary views are allowed here)</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l57" href="#l57">57</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "></td>
+        <td class="src "><span class="w">    </span><span class="c1">// get underlying matrix in case it is given as a lazy conjugate expression</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l58" href="#l58">58</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="c1">// get underlying matrix in case it is given as a lazy conjugate expression</span></td>
+        <td class="linecount coveredLine show_coveredLine">52</td>
+        <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a_mat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_array</span><span class="p">(</span><span class="n">a</span><span class="p">);</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l59" href="#l59">59</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">26</td>
-        <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a_mat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_array</span><span class="p">(</span><span class="n">a</span><span class="p">);</span></td>
+        <td class="linecount"></td>
+        <td class="src "></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l60" href="#l60">60</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "></td>
+        <td class="src "><span class="w">    </span><span class="c1">// check the dimensions of the input/output arrays/views</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l61" href="#l61">61</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="c1">// check the dimensions of the input/output arrays/views</span></td>
+        <td class="linecount coveredLine show_coveredLine">52</td>
+        <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="n">EXPECTS</span><span class="p">(</span><span class="n">a_mat</span><span class="p">.</span><span class="n">extent</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">a_mat</span><span class="p">.</span><span class="n">extent</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l62" href="#l62">62</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">26</td>
-        <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="n">EXPECTS</span><span class="p">(</span><span class="n">a_mat</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">a_mat</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">]);</span></td>
+        <td class="linecount coveredLine show_coveredLine">52</td>
+        <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="n">EXPECTS</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">extent</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">a_mat</span><span class="p">.</span><span class="n">extent</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l63" href="#l63">63</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">26</td>
-        <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="n">EXPECTS</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">extent</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">a_mat</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">]);</span></td>
+        <td class="linecount coveredLine show_coveredLine">52</td>
+        <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="n">EXPECTS</span><span class="p">(</span><span class="n">ipiv</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">a_mat</span><span class="p">.</span><span class="n">extent</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l64" href="#l64">64</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">26</td>
-        <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="n">EXPECTS</span><span class="p">(</span><span class="n">ipiv</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">a_mat</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">]);</span></td>
+        <td class="linecount"></td>
+        <td class="src "></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l65" href="#l65">65</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "></td>
+        <td class="src "><span class="w">    </span><span class="c1">// arrays/views must be LAPACK compatible</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l66" href="#l66">66</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="c1">// arrays/views must be LAPACK compatible</span></td>
+        <td class="linecount coveredLine show_coveredLine">52</td>
+        <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="n">EXPECTS</span><span class="p">(</span><span class="n">a_mat</span><span class="p">.</span><span class="n">indexmap</span><span class="p">().</span><span class="n">min_stride</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l67" href="#l67">67</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">26</td>
-        <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="n">EXPECTS</span><span class="p">(</span><span class="n">a_mat</span><span class="p">.</span><span class="n">indexmap</span><span class="p">().</span><span class="n">min_stride</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span></td>
+        <td class="linecount coveredLine show_coveredLine">52</td>
+        <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="n">EXPECTS</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">indexmap</span><span class="p">().</span><span class="n">min_stride</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l68" href="#l68">68</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">26</td>
-        <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="n">EXPECTS</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">indexmap</span><span class="p">().</span><span class="n">min_stride</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span></td>
+        <td class="linecount coveredLine show_coveredLine">52</td>
+        <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="n">EXPECTS</span><span class="p">(</span><span class="n">ipiv</span><span class="p">.</span><span class="n">indexmap</span><span class="p">().</span><span class="n">min_stride</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l69" href="#l69">69</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">26</td>
-        <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="n">EXPECTS</span><span class="p">(</span><span class="n">ipiv</span><span class="p">.</span><span class="n">indexmap</span><span class="p">().</span><span class="n">min_stride</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span></td>
+        <td class="linecount"></td>
+        <td class="src "></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l70" href="#l70">70</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
-        <td class="src "></td>
+        <td class="src "><span class="w">    </span><span class="c1">// perform actual library call</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l71" href="#l71">71</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount"></td>
-        <td class="src "><span class="w">    </span><span class="c1">// perform actual library call</span></td>
-      </tr>
-      <tr class="source-line">
-        <td class="lineno"><a id="l72" href="#l72">72</a></td>
-        <td class="linebranch">
-        </td>
-        <td class="linecount coveredLine show_coveredLine">26</td>
+        <td class="linecount coveredLine show_coveredLine">52</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l73" href="#l73">73</a></td>
+        <td class="lineno"><a id="l72" href="#l72">72</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
         <td class="src "><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="p">(</span><span class="n">mem</span><span class="o">::</span><span class="n">have_device_compatible_addr_space</span><span class="o">&lt;</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="n">IPIV</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l74" href="#l74">74</a></td>
-        <td class="linebranch">
-        </td>
-        <td class="linecount"></td>
-        <td class="src "><span class="cp">#if defined(NDA_HAVE_DEVICE)</span></td>
-      </tr>
-      <tr class="source-line">
-        <td class="lineno"><a id="l75" href="#l75">75</a></td>
+        <td class="lineno"><a id="l73" href="#l73">73</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
         <td class="src "><span class="w">      </span><span class="n">device</span><span class="o">::</span><span class="n">getrs</span><span class="p">(</span><span class="n">get_op</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">get_ncols</span><span class="p">(</span><span class="n">a_mat</span><span class="p">),</span><span class="w"> </span><span class="n">get_ncols</span><span class="p">(</span><span class="n">b</span><span class="p">),</span><span class="w"> </span><span class="n">a_mat</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">get_ld</span><span class="p">(</span><span class="n">a_mat</span><span class="p">),</span><span class="w"> </span><span class="n">ipiv</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">get_ld</span><span class="p">(</span><span class="n">b</span><span class="p">),</span><span class="w"> </span><span class="n">info</span><span class="p">);</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l76" href="#l76">76</a></td>
-        <td class="linebranch">
-        </td>
-        <td class="linecount"></td>
-        <td class="src "><span class="cp">#else</span></td>
-      </tr>
-      <tr class="source-line">
-        <td class="lineno"><a id="l77" href="#l77">77</a></td>
-        <td class="linebranch">
-        </td>
-        <td class="linecount"></td>
-        <td class="src "><span class="w">      </span><span class="n">compile_error_no_gpu</span><span class="p">();</span></td>
-      </tr>
-      <tr class="source-line">
-        <td class="lineno"><a id="l78" href="#l78">78</a></td>
-        <td class="linebranch">
-        </td>
-        <td class="linecount"></td>
-        <td class="src "><span class="cp">#endif</span></td>
-      </tr>
-      <tr class="source-line">
-        <td class="lineno"><a id="l79" href="#l79">79</a></td>
+        <td class="lineno"><a id="l74" href="#l74">74</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
         <td class="src "><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l80" href="#l80">80</a></td>
+        <td class="lineno"><a id="l75" href="#l75">75</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">26</td>
+        <td class="linecount coveredLine show_coveredLine">52</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="n">f77</span><span class="o">::</span><span class="n">getrs</span><span class="p">(</span><span class="n">get_op</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">get_ncols</span><span class="p">(</span><span class="n">a_mat</span><span class="p">),</span><span class="w"> </span><span class="n">get_ncols</span><span class="p">(</span><span class="n">b</span><span class="p">),</span><span class="w"> </span><span class="n">a_mat</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">get_ld</span><span class="p">(</span><span class="n">a_mat</span><span class="p">),</span><span class="w"> </span><span class="n">ipiv</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">get_ld</span><span class="p">(</span><span class="n">b</span><span class="p">),</span><span class="w"> </span><span class="n">info</span><span class="p">);</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l81" href="#l81">81</a></td>
+        <td class="lineno"><a id="l76" href="#l76">76</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
         <td class="src "><span class="w">    </span><span class="p">}</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l82" href="#l82">82</a></td>
+        <td class="lineno"><a id="l77" href="#l77">77</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
         <td class="src "></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l83" href="#l83">83</a></td>
+        <td class="lineno"><a id="l78" href="#l78">78</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">26</td>
+        <td class="linecount coveredLine show_coveredLine">52</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">info</span><span class="p">;</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l84" href="#l84">84</a></td>
+        <td class="lineno"><a id="l79" href="#l79">79</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
         <td class="src "><span class="w">  </span><span class="p">}</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l85" href="#l85">85</a></td>
+        <td class="lineno"><a id="l80" href="#l80">80</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
         <td class="src "></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l86" href="#l86">86</a></td>
+        <td class="lineno"><a id="l81" href="#l81">81</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
         <td class="src "><span class="p">}</span><span class="w"> </span><span class="c1">// namespace nda::lapack</span></td>
       </tr>
       <tr class="source-line">
-        <td class="lineno"><a id="l87" href="#l87">87</a></td>
+        <td class="lineno"><a id="l82" href="#l82">82</a></td>
         <td class="linebranch">
         </td>
         <td class="linecount"></td>
@@ -724,7 +689,7 @@
         <hr class="block-separator"/>
         <footer class="text-center">
           Created using <a href="http://gcovr.com/en/8.6">GCOVR (Version 8.6)</a>
-          at 2026-06-22 14:33:08
+          at 2026-06-23 16:36:12
         </footer>
       </div>
     </div>
