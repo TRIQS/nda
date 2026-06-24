@@ -9,7 +9,7 @@ description = """
 """
 
 docurls = ['https://triqs.github.io/nda/%(version_major_minor)s.x/']
-software_license = 'LicenseGPLv3'
+software_license = 'LicenseApache2'
 
 toolchain = {'name': 'foss', 'version': '2021b'}
 toolchainopts = {'pic': True, 'usempi': True}

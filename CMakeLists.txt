@@ -14,7 +14,7 @@
 #
 # Authors: Philipp Dumitrescu, Olivier Parcollet, Dylan Simon, Nils Wentzell
 
-cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
 cmake_policy(VERSION ${CMAKE_VERSION})
 
 # ############
@@ -93,6 +93,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Disable compiler extensions
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# No C++20 modules used. Disable module scanning (default ON for C++20+ with Ninja):
+# it injects transient @<obj>.modmap flags into compile_commands.json that break clair-c2py
+# binding generation when it replays those commands. No-op on CMake < 3.28.
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+
 # Provide additional debugging information for Debug builds
 add_compile_options($<$<CONFIG:Debug>:-ggdb3>)
 
@@ -114,8 +119,8 @@ target_compile_options(${PROJECT_NAME}_warnings
     $<$<CXX_COMPILER_ID:AppleClang,Clang,IntelLLVM>:-Wno-unknown-warning-option>
     $<$<CXX_COMPILER_ID:AppleClang,Clang,IntelLLVM>:-Wshadow>
     $<$<CXX_COMPILER_ID:AppleClang,Clang,IntelLLVM>:-Wno-gcc-compat>
-    $<$<CXX_COMPILER_ID:AppleClang,Clang,IntelLLVM>:-Wno-c++20-extensions>
-    $<$<CXX_COMPILER_ID:AppleClang,Clang,IntelLLVM>:-Wno-c++20-compat>
+    $<$<CXX_COMPILER_ID:AppleClang,Clang,IntelLLVM>:-Wno-c++26-extensions>
+    $<$<CXX_COMPILER_ID:AppleClang,Clang,IntelLLVM>:-Wno-c++26-compat>
     $<$<CXX_COMPILER_ID:AppleClang,Clang,IntelLLVM>:-Wno-c2y-extensions> # __COUNTER__ in SCOPE_EXIT
     $<$<CXX_COMPILER_ID:IntelLLVM>:-Wno-tautological-constant-compare>
 )
@@ -136,7 +141,7 @@ endif()
 # The clang linker however ignores LIBRARY_PATH.
 # We thus explicitly add the content of LIBRARY_PATH to the LDFLAGS
 # FIXME For future cmake versions we should populate the
-# INTERFACE_LINK_DIRECTORIES of the triqs target
+# INTERFACE_LINK_DIRECTORIES of the imported dependency targets
 # ---------------------------------
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND DEFINED ENV{LIBRARY_PATH})
   string(REPLACE ":" ";" LINK_DIRS $ENV{LIBRARY_PATH})
@@ -149,6 +154,14 @@ endif()
 
 # Provide GNU Installation directories
 include(GNUInstallDirs)
+
+# Find Python: provides Python_EXECUTABLE / Python_SITEARCH used below and by c2py.
+# (In triqs-based apps these came from the triqs/cpp2py packages instead.)
+if(PythonSupport)
+  find_package(Python REQUIRED COMPONENTS Interpreter Development.Module NumPy)
+  # Derive the python module install location from the interpreter, matching h5/c2py
+  string(REGEX REPLACE "/.*/lib" "lib" PYTHON_LIB_DEST_ROOT ${Python_SITEARCH})
+endif()
 
 # #############
 # Build Project
@@ -197,7 +210,7 @@ if(BUILD_DEBIAN_PACKAGE AND NOT IS_SUBPROJECT)
   set(CPACK_GENERATOR "DEB")
   set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
   set(CPACK_PACKAGE_CONTACT "https://github.com/TRIQS/${PROJECT_NAME}")
-  execute_process(COMMAND dpkg --print-architecture OUTPUT_VARIABLE CMAKE_DEBIAN_PACKAGE_ARCHITECTURE OUTPUT_STRIP_TRAILING_WHITESPACE)
+  execute_process(COMMAND dpkg --print-architecture OUTPUT_VARIABLE CPACK_DEBIAN_PACKAGE_ARCHITECTURE OUTPUT_STRIP_TRAILING_WHITESPACE)
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
   set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
   include(CPack)

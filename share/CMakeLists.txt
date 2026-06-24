@@ -6,8 +6,8 @@ if(NOT IS_SUBPROJECT
 )
 
   if(PythonSupport)
-    set(EXPORT_PYTHON_PATH "export PYTHONPATH=${CMAKE_INSTALL_PREFIX}/${CPP2PY_PYTHON_LIB_DEST_ROOT}:$PYTHONPATH")
-    set(MODFILE_PYTHON_PATH "prepend-path    PYTHONPATH          $root/${CPP2PY_PYTHON_LIB_DEST_ROOT}")
+    set(EXPORT_PYTHON_PATH "export PYTHONPATH=${CMAKE_INSTALL_PREFIX}/${PYTHON_LIB_DEST_ROOT}:$PYTHONPATH")
+    set(MODFILE_PYTHON_PATH "prepend-path    PYTHONPATH          $root/${PYTHON_LIB_DEST_ROOT}")
   endif()
 
   configure_file(${PROJECT_NAME}.modulefile.in ${PROJECT_NAME}.modulefile @ONLY)
