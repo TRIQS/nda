@@ -15,8 +15,8 @@ properties([
     upstream(
       threshold: 'SUCCESS',
       upstreamProjects: '/CCQ/TRIQS/cpp2py/master,/CCQ/TRIQS/h5/unstable'
-    )
-  ] : [])
+    ), githubPush()
+  ] : [githubPush()])
 ])
 
 def mounts = [:]
