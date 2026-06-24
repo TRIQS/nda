@@ -261,8 +261,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "__impl__basic__array__view__common_8hpp_source.html",
-"function_8hpp_source.html",
-"structnda_1_1clef_1_1operation_3_01tags_1_1minus_01_4.html"
+"group__clef__autoassign.html",
+"structnda_1_1sso.html"
 ];
 
 const SYNCONMSG = 'click to disable panel synchronization';
