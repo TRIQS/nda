@@ -109,7 +109,7 @@ def runBuild = { String platform, String prefix, List<String> envs ->
 def platforms = [:]
 
 /****************** linux builds (in docker) */
-/* Each platform must have a corresponding Dockerfile.PLATFORM in packaging */
+/* Each platform must have a corresponding Dockerfile.PLATFORM in jenkins/ */
 def dockerPlatforms = ["ubuntu-clang", "ubuntu-gcc", "ubuntu-intel", "sanitize"]
 for (int i = 0; i < dockerPlatforms.size(); i++) {
   def platform = dockerPlatforms[i]
@@ -120,13 +120,7 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
           context: 'jenkins',
           dockerfile: "Dockerfile.$platform",
           devShm: true,
-          mounts: mounts,
-          prep: {
-            /* construct a Dockerfile for this base */
-            sh """
-              ( cat packaging/Dockerfile.$platform ; sed '0,/^FROM /d' jenkins/Dockerfile ) > jenkins/Dockerfile.$platform
-            """
-          }) {
+          mounts: mounts) {
           runBuild(platform, env.WORKSPACE_TMP, [])
         }
       }
