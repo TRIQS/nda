@@ -7,7 +7,7 @@ var searchData=
   ['fetchcontent_4',['FetchContent',['../integration.html#fetch',1,'']]],
   ['find_5fpackage_5',['find_package',['../integration.html#find_package',1,'']]],
   ['first_5fdim_6',['first_dim',['../group__av__utils.html#ga17cb07f54c5452e23ad6a71a09e560d9',1,'nda']]],
-  ['fixes_7',['Fixes',['../changelog.html#autotoc_md25',1,'']]],
+  ['fixes_7',['Fixes',['../changelog.html#autotoc_md26',1,'']]],
   ['flatten_8',['flatten',['../group__av__factories.html#gaa01d35a8419bc78798737c4fa94ee042',1,'nda']]],
   ['floatordouble_9',['FloatOrDouble',['../conceptnda_1_1_float_or_double.html',1,'nda']]],
   ['floor_10',['floor',['../group__clef__expr.html#ga0481af7c923b471e08dec84fd812e60f',1,'nda::clef::floor()'],['../group__av__math.html#ga49ef054fc157295d915b1651edb67848',1,'nda::floor(A &amp;&amp;a)']]],
@@ -33,7 +33,7 @@ var searchData=
   ['full_20view_20on_20an_20array_20view_30',['Creating a full view on an array/view',['../ex4.html#ex4_p1',1,'']]],
   ['function_31',['function',['../structnda_1_1clef_1_1tags_1_1function.html',1,'nda::clef::tags']]],
   ['function_2ehpp_32',['function.hpp',['../function_8hpp.html',1,'']]],
-  ['functions_33',['functions',['../documentation.html#autotoc_md28',1,'CLEF - Compile-time lazy expressions and functions'],['../group__clef.html',1,'Compile-time lazy expressions and functions'],['../group__av__math.html',1,'Mathematical functions']]],
+  ['functions_33',['functions',['../documentation.html#autotoc_md29',1,'CLEF - Compile-time lazy expressions and functions'],['../group__clef.html',1,'Compile-time lazy expressions and functions'],['../group__av__math.html',1,'Mathematical functions']]],
   ['functions_20and_20algorithms_34',['Applying mathematical functions and algorithms',['../ex1.html#ex1_p9',1,'']]],
   ['functions_20and_20operations_35',['Lazy expressions, functions and operations',['../group__clef__expr.html',1,'']]],
   ['further_20examples_36',['Further examples',['../ex1.html#ex1_p13',1,'']]]

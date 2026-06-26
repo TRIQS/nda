@@ -133,8 +133,10 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('changelog.html
 <div class="textblock"><h2 class="doxsection"><a class="anchor" id="autotoc_md0"></a>
 Version 2.0.0</h2>
 <p>NDA Version 2.0.0 is a release that</p><ul>
+<li>Adds a new <span class="tt">nda::tensor</span> subsystem for generic tensor operations with a CPU backend (TBLIS) and a GPU backend (cuTENSOR)</li>
+<li>Overhauls the BLAS/LAPACK/cuBLAS/cuSOLVER interfaces and adds batched routines</li>
 <li>Significantly expands the <span class="tt">nda::linalg</span> API with eigenvalue, QR, LU, SVD and linear-solve routines</li>
-<li>Adds new LAPACK and BLAS wrappers (<span class="tt">geev</span>, <span class="tt">syev</span>/<span class="tt">heev</span>, <span class="tt">sygv</span>/<span class="tt">hegv</span>, <span class="tt">gerc</span>)</li>
+<li>Adds new LAPACK and BLAS wrappers (<span class="tt">geev</span>, <span class="tt">syev</span>/<span class="tt">heev</span>, <span class="tt">sygv</span>/<span class="tt">hegv</span>, <span class="tt">gerc</span>, <span class="tt">ggev</span>)</li>
 <li>Makes HDF5, MPI and OpenMP optional build-time dependencies</li>
 <li>Introduces deep partial evaluation for CLEF expressions</li>
 <li>Adds a Hadamard product for arrays and <span class="tt">std::vector</span></li>
@@ -142,7 +144,7 @@ Version 2.0.0</h2>
 <li>Moves the c2py converters into <span class="tt">nda/c2py</span> and fixes several Python ↔ nda conversion edge cases</li>
 <li>Fixes several library issues</li>
 </ul>
-<p>We thank all contributors: Marco Barbone, Thomas Hahn, Alexander Hampel, Sergei Iskakov, Jason Kaye, Dominik Kiese, Harrison LaBollita, Henri Menke, Miguel Morales, Olivier Parcollet, Dylan Simon, Nils Wentzell</p>
+<p>We thank all contributors: Marco Barbone, Jenny Coulter, Thomas Hahn, Alexander Hampel, Sergei Iskakov, Jason Kaye, Dominik Kiese, Harrison LaBollita, Henri Menke, Miguel Morales, Olivier Parcollet, Dylan Simon, Nils Wentzell</p>
 <p>Find below an itemized list of changes in this release.</p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md1"></a>
 General</h3>
@@ -179,8 +181,27 @@ General</h3>
 <li>Small improvements to random array generators</li>
 <li>Update Apache copyright headers to a minimal form for all files; move copyright notice into a separate <span class="tt">COPYRIGHT</span> file; default copyright to the Simons Foundation</li>
 <li>Fix issue in <a class="el" href="classnda_1_1sym__grp.html" title="Class representing a symmetry group.">nda::sym_grp</a> MPI parallelization after adding optional MPI support</li>
+<li>Add lazy binary maps <a class="el" href="group__av__math.html#gad4adce242cbf197036123b5375cbc356" title="Function max for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).">nda::max</a> and <a class="el" href="group__av__math.html#ga9e96dcd41ecefd5f0a1f514bbfe6c792" title="Function min for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).">nda::min</a></li>
+<li>Do not explicitly store const Arrays in lazy <span class="tt">expr_call</span></li>
+<li>Add a memory prefetch routine</li>
+<li>Constrain device-compatible address spaces in <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> and <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a></li>
+<li>Update and add traits and concepts</li>
+<li>Use <span class="tt">std::complex&lt;double&gt;</span> instead of <span class="tt">dcomplex</span></li>
+<li>Add <span class="tt"><a class="el" href="group__testing.html#ga737a9b0efc5dd3c377c6021f02cd8264" title="Macro that expects array_are_rel_close to return true.">EXPECT_ARRAY_REL_NEAR</a></span> for relative array comparison to <a class="el" href="gtest__tools_8hpp.html" title="Provides convenient tools for checking nda::basic_array and nda::basic_array_view objects with google...">nda/gtest_tools.hpp</a></li>
+<li>Free the <span class="tt">blk_T_t</span> node in the <a class="el" href="structnda_1_1mem_1_1handle__heap.html" title="A handle for a memory block on the heap.">nda::mem::handle_heap</a> shared_ptr deleter</li>
+<li>Add a <span class="tt">.gitattributes</span> file</li>
 </ul>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
+tensor</h3>
+<ul>
+<li>Add a new <span class="tt">nda::tensor</span> subsystem (<span class="tt">c++/nda/tensor/</span>) with generic tensor operations: assign, add, contract, dot, elementwise (binary), elementwise trinary, set, scale and reduce</li>
+<li>Add a CPU backend through a TBLIS interface (set, scale, reduce, dot, add, mult)</li>
+<li>Add a GPU backend through a cuTENSOR interface (permute, binary/trinary elementwise, reduce, contract)</li>
+<li>Add tensor tools and helper functions for tensor string indices</li>
+<li>Add <span class="tt">TblisSupport</span> and <span class="tt">CutensorSupport</span> CMake build options (off by default)</li>
+<li>Add basic documentation and a CPU tensor example</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
 blas/lapack</h3>
 <ul>
 <li>Add <a class="el" href="group__linalg__eig.html#ga0537b3f5442fdd6c35c74f54c3890345" title="Compute the eigenvalues and right eigenvectors of a general matrix.">nda::linalg::eig</a>, <a class="el" href="group__linalg__eig.html#ga9947118d57b3f3ea564c8216dc6f3009" title="Compute the eigenvalues and right eigenvectors of a general matrix in place.">nda::linalg::eig_in_place</a>, <a class="el" href="group__linalg__eig.html#ga43a4bc8839a83958b595d0d70e7aefa9" title="Compute the eigenvalues of a general matrix.">nda::linalg::eigvals</a>, <a class="el" href="group__linalg__eig.html#gab52099a5524542c760ff5f48c058b69d" title="Compute the eigenvalues of a general matrix in place.">nda::linalg::eigvals_in_place</a> backed by a new <a class="el" href="group__linalg__lapack.html#ga243a97732a5218af6e839ce51cb51cd7" title="Interface to the LAPACK geev routine for real matrices.">nda::lapack::geev</a> wrapper</li>
@@ -194,21 +215,41 @@ blas/lapack</h3>
 <li>Generalize <span class="tt">get_ld</span>/<span class="tt">get_ncols</span> in <a class="el" href="blas_2tools_8hpp.html" title="Provides various traits and utilities for the BLAS interface.">blas/tools.hpp</a>, simplify <span class="tt">blas::get_op</span> to deduce flags from the <a class="el" href="conceptnda_1_1_matrix.html" title="Check if a given type is a matrix, i.e. an nda::ArrayOfRank&lt;2&gt;.">nda::Matrix</a> type, and add <span class="tt">blas::get_array</span></li>
 <li>Make function-argument names consistent (lowercase) across the BLAS, LAPACK, cuBLAS and cuSOLVER interfaces</li>
 <li>Fix <span class="tt">gemm_vbatch</span> signature for fallback functions; fix lowercase/uppercase mismatch in FORTRAN prototypes; fix Intel vs GNU ABI when building against MKL</li>
+<li>Overhaul the BLAS/cuBLAS interface and the matching nda::linalg routines</li>
+<li>Overhaul the LAPACK/cuSOLVER interface and the matching nda::linalg routines</li>
+<li>Add a wrapper for LAPACK's <span class="tt">ggev</span> routine</li>
+<li>Add batched versions of the LAPACK/cuSOLVER <span class="tt">geqrf</span>, <span class="tt">getrf</span>, <span class="tt">getrs</span> and <span class="tt">getri</span> routines</li>
+<li>Provide overloads of batched BLAS/LAPACK routines for generic programming</li>
+<li>Add custom <span class="tt">orgqr_batch</span>/<span class="tt">unqr_batch</span> implementations</li>
+<li>Add a custom <span class="tt">getri</span> implementation for device arrays</li>
+<li>Unify device synchronization in the cuBLAS and cuSOLVER interfaces</li>
+<li>Add <span class="tt">float</span>/<span class="tt">std::complex&lt;float&gt;</span> support to <span class="tt">cucplx</span></li>
+<li>Remove the conditional include of the cuBLAS and cuSOLVER interfaces</li>
+<li>Rename the blas/lapack tools namespace to <span class="tt">nda::blas_lapack</span> and update the BLAS/LAPACK tools</li>
+<li>Fix compilation errors with llvm18 and gcc</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
 cmake</h3>
 <ul>
 <li>Downgrade required C++ standard from 23 to 20</li>
 <li>Directly use the imported targets provided for HDF5</li>
 <li>Remove <span class="tt">PythonSupport</span> requirement for building docs</li>
+<li>Find NVHPC by default and fall back to CudaToolkit</li>
+<li>Rename the <span class="tt">Use_Magma</span> option to <span class="tt">MagmaSupport</span></li>
+<li>Suppress <span class="tt">-Wc2y-extensions</span> and c++26-extension warnings for clang</li>
+<li>Disable C++20 module scanning for clair-c2py compatibility</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
 jenkins</h3>
 <ul>
 <li>Synchronize Jenkinsfile with app4triqs</li>
 <li>Fix file issue in Jenkins Dockerfile creation and fix the environment setting for osx builds</li>
+<li>Migrate to the new k8s-based system and add an explicit githubPush trigger for webhooks</li>
+<li>Add standalone per-platform Dockerfiles independent of triqs</li>
+<li>Make Python-binding regeneration independent of the cmake option default, only regenerate on ubuntu-clang</li>
+<li>Provide the clair install through the triqs Docker image</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
 ghactions</h3>
 <ul>
 <li>Use Ninja for parallel builds; modernize and simplify <span class="tt">build.yml</span></li>
@@ -219,22 +260,28 @@ ghactions</h3>
 <li>Update the Ubuntu package list to use OpenBLAS over liblapack</li>
 <li>Remove the custom Doxygen build and build docs on macos</li>
 <li>Generate and deploy test-coverage information</li>
+<li>Detect the Homebrew g++ version dynamically on macOS and link to brew's libomp</li>
+<li>Bump the ubuntu-24.04 gcc version from 13 to 14</li>
+<li>Fall back to the unstable branch when the TRIQS branch is not found</li>
+<li>Minor cleanup (drop python3-clang-20, remove the clair branch, build.yml consistency fixes)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
 doc</h3>
 <ul>
 <li>Switch the documentation pipeline fully to Doxygen and update the Doxyfile to v1.16.1</li>
 <li>Add worked code examples to the doc folder, ensure they compile in CI</li>
 <li>Add an FI support notice to <span class="tt">README.md</span></li>
 <li>Remove clang-specific setting from <span class="tt">Doxyfile.in</span></li>
+<li>Update the documentation for the Linear Algebra tools and the BLAS/LAPACK interfaces</li>
+<li>Added documentation for the new tensor subsystem and the TBLIS/cuTENSOR backends</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
 python support</h3>
 <ul>
 <li>Add c2py converters and additional files into <span class="tt">nda/c2py</span></li>
 <li>Remove any pybind11 references</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
 docker</h3>
 <ul>
 <li>Update the intel image in <span class="tt">Dockerfile.ubuntu-intel</span></li>
@@ -242,7 +289,7 @@ docker</h3>
 <li>Synchronize Dockerfiles with triqs</li>
 <li>Rename <span class="tt">Dockerfile.build</span> to <span class="tt">Dockerfile</span> for consistency with triqs apps</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
 Version 1.3.0</h2>
 <p>NDA Version 1.3.0 is a release that</p><ul>
 <li>Adds new functionality to the symmetry library</li>
@@ -255,7 +302,7 @@ Version 1.3.0</h2>
 </ul>
 <p>We thank all contributors: Thomas Hahn, Alexander Hampel, Sergei Iskakov, Jason Kaye, Dominik Kiese, Harrison LaBollita, Henri Menke, Miguel Morales, Olivier Parcollet, Dylan Simon, Nils Wentzell</p>
 <p>Find below an itemized list of changes in this release.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
 General</h3>
 <ul>
 <li>Allow <a class="el" href="group__av__factories.html#gaa01d35a8419bc78798737c4fa94ee042" title="Flatten an nda::basic_array or nda::basic_array_view to a 1-dimensional array/view by reshaping it.">nda::flatten</a> to be called for non-trivial memory layouts</li>
@@ -280,13 +327,13 @@ General</h3>
 <li>Regenerate Apache copyright headers</li>
 <li>Format .clang-tidy</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
 doc</h3>
 <ul>
 <li>Add extensive documentation of public API using Doxygen doc strings</li>
 <li>Use doxygen to automatically generate documentation</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
 cmake</h3>
 <ul>
 <li>Disable -ffast-math by default for intel compilers</li>
@@ -300,19 +347,19 @@ cmake</h3>
 <li>When using mkl enforce single dynamic lib and explicitly set mkl_interface_layer (#48)</li>
 <li>Disable BadAlloc test when ASAN is ON</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
 jenkins</h3>
 <ul>
 <li>Enable PythonSupport on all CIs</li>
 <li>Add ubuntu-intel build</li>
 <li>Fix ubuntu-intel gpg file in Dockerfile</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
 ghactions</h3>
 <ul>
 <li>Build and deploy documentation</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
 blas/lapack</h3>
 <ul>
 <li>Fix type error in magma interface</li>
@@ -321,7 +368,7 @@ blas/lapack</h3>
 <li>Allow temporary views in call to lapack::getrs</li>
 <li>Fix MKL version check when using BLAS gemm_batch_strided</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
 Version 1.2.0</h2>
 <p>NDA Version 1.2.0 is a release that</p><ul>
 <li>Introduces NVidia GPU support for array and view types</li>
@@ -333,7 +380,7 @@ Version 1.2.0</h2>
 </ul>
 <p>We thank all the people who have contributed to this release: Thomas Hahn, Alexander Hampel, Dominik Kiese, Sergei Iskakoff, Harrison LaBollita, Henri Menke, Miguel Morales, Olivier Parcollet, Dylan Simon, Nils Wentzell</p>
 <p>Find below an itemized list of changes in this release.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
 General</h3>
 <ul>
 <li>Add new test for matmul with permuted view</li>
@@ -401,7 +448,7 @@ General</h3>
 <li>Clang-format all source files</li>
 <li>General cleanup</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
 cmake</h3>
 <ul>
 <li>Find and Link against openmp</li>
@@ -425,14 +472,14 @@ cmake</h3>
 <li>Add missing find_dep(Cpp2Py 2.0) to nda-config.cmake.in</li>
 <li>General cleanup</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
 Concepts</h3>
 <ul>
 <li>Use C++20 concepts to constrain various generic functions and classes</li>
 <li>Introduce concepts: Array, MemoryArray, Matrix, Vector, Handle</li>
 <li>Various concept related simplifications and refactoring</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
 GPU Support</h3>
 <ul>
 <li>Introduce GPU support for arrays and views</li>
@@ -448,7 +495,7 @@ GPU Support</h3>
 <li>Allow multiple arguments to on_host, on_device traits. Add on_unified trait</li>
 <li>Add address space generic memory operations: malloc, free, memset, memcpy</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
 Symmetries</h3>
 <ul>
 <li>Add sym_grp class to perform symmetry operations on arrays</li>
@@ -457,7 +504,7 @@ Symmetries</h3>
 <li>'symmetrize' method to symmetrize an existing array</li>
 <li>'init' method to init an array with the minimum number of rhs evaluations</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
 jenkins</h3>
 <ul>
 <li>Specificy LAPACK_ROOT for osx builds</li>
@@ -465,7 +512,7 @@ jenkins</h3>
 <li>Don't keep / publish any nda install</li>
 <li>Synchronize Jenkinsfile with app4triqs</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
 lapack/blas</h3>
 <ul>
 <li>General cleanup and doc improvements in bindings</li>
@@ -474,7 +521,7 @@ lapack/blas</h3>
 <li>Simplify logic in gemm</li>
 <li>Rename 'trans' to 'op' in the blas bindings</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
 Doc</h3>
 <ul>
 <li>Add document on design principles for arrays, views and lazy expressions</li>
@@ -482,7 +529,7 @@ Doc</h3>
 <li>Provide a link to install instructions in README.md</li>
 <li>Add additional build options to doc/install.rst</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
 Fixes</h3>
 <ul>
 <li>Fix signature of expr::operator[]</li>
@@ -504,7 +551,7 @@ Fixes</h3>
 <li>Enable bound-checking for range-based array slicing FIX #22</li>
 <li>Fix out of bounds error in lapack::gtsv</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
 Version 1.1.0</h2>
 <p>nda is a C++ library providing an efficient and flexible multi-dimensional array class. It is an essential building-block of the TRIQS project. Some features include</p><ul>
 <li>coded in C++20 using concepts</li>

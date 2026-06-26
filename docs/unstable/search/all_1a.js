@@ -30,5 +30,5 @@ var searchData=
   ['projects_27',['Integration in C++ projects',['../integration.html',1,'']]],
   ['prop_28',['prop',['../structnda_1_1layout__info__t.html#a351eb4acb2b4d8f3fd17fab9a7512adb',1,'nda::layout_info_t']]],
   ['ptr_29',['ptr',['../structnda_1_1mem_1_1blk__t.html#a96eb83f5e729b2c601dba97155cacee9',1,'nda::mem::blk_t']]],
-  ['python_20support_30',['python support',['../changelog.html#autotoc_md7',1,'']]]
+  ['python_20support_30',['python support',['../changelog.html#autotoc_md8',1,'']]]
 ];

@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('documentation.
 </ul>
 <p>The following provides a detailed reference documentation grouped into logical units.</p>
 <p>If you are looking for a specific function, class, etc., try using the search bar in the top left corner.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
 Arrays and views</h2>
 <p><a class="el" href="group__arrays__views.html" title="Arrays and views">Arrays and views</a> form the backbone of the <b>nda</b> library. The generic array (<a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a>) and view (<a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a>) classes are used to store and access multi-dimensional data and they come with a wide range of operations and functions to manipulate them:</p>
 <ul>
@@ -165,7 +165,7 @@ Arrays and views</h2>
 <li><a class="el" href="group__av__sym.html" title="Symmetries">Symmetries</a> contain tools to use and detect symmetries in <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> objects.</li>
 <li><a class="el" href="group__av__types.html" title="Typedefs">Typedefs</a> provide convenient aliases for the most common array and view types.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
 CLEF - Compile-time lazy expressions and functions</h2>
 <p><a class="el" href="group__clef.html" title="Compile-time lazy expressions and functions">Compile-time lazy expressions and functions</a> are called lazy because they are not evaluated right away. Instead, they usually return some proxy, i.e. lazy, object which can be used to create new lazy expressions and which can be evaluated whenever the result is actually needed.</p>
 <ul>
@@ -175,7 +175,7 @@ CLEF - Compile-time lazy expressions and functions</h2>
 <li><a class="el" href="group__clef__expr.html" title="Lazy expressions, functions and operations">Lazy expressions, functions and operations</a> provide the classes that represent these lazy objects and the tools to create them.</li>
 <li><a class="el" href="group__clef__placeholders.html" title="Placeholders">Placeholders</a> are lazy objects that can be used in lazy expressions. When a lazy expression is evaluated, one usually assigns a value to the placeholders which are then plugged into the expression.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
 Linear algebra</h2>
 <p><b>nda</b> offers some <a class="el" href="group__linalg.html" title="Linear algebra">Linear algebra</a> related functionality:</p>
 <ul>
@@ -183,7 +183,7 @@ Linear algebra</h2>
 <li>An <a class="el" href="group__linalg__lapack.html" title="LAPACK/cuSOLVER interface">LAPACK/cuSOLVER interface</a> to parts of the LAPACK library to work with arrays and views.</li>
 <li>Some generic <a class="el" href="group__linalg__tools.html" title="Linear algebra tools">Linear algebra tools</a> that wrap the BLAS and LAPACK interfaces to provide a more user-friendly approach for the most common tasks, like matrix-matrix multiplication, matrix-vector multiplication, eigen decompositions, etc.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
 Tensor support</h2>
 <p><a class="el" href="group__tensor.html" title="Tensor support">Tensor support</a> extends <b>nda</b> beyond matrix-level linear algebra by exposing general tensor operations on top of two external backends — <a href="https://github.com/MatthewsResearchGroup/tblis">TBLIS</a> for host (CPU) execution and <a href="https://docs.nvidia.com/cuda/cutensor/">cuTENSOR</a> for device (CUDA) execution. The backend is selected automatically based on the address space of the input arrays, and a generic nda fallback is available for a subset of the operations when neither backend is configured.</p>
 <p>Most operations are parameterised by Einstein-notation index strings (e.g. <span class="tt">"ij"</span>, <span class="tt">"ijk"</span>), so contractions, axis permutations and reductions are expressed in a uniform way independent of the rank of the tensors involved.</p>
@@ -191,7 +191,7 @@ Tensor support</h2>
 <li><a class="el" href="group__tensor__utils.html" title="Tensor utilities">Tensor utilities</a> provide supporting types and functions used by various tensor operations.</li>
 <li><a class="el" href="group__tensor__ops.html" title="Tensor operations">Tensor operations</a> collect the user-facing operations.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
 Memory layout</h2>
 <p><a class="el" href="group__layout.html" title="Memory layout">Memory layout</a> contains tools that allow us to specify how the data of a multi-dimensional array (<a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a>) or view (<a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a>) is laid out in memory and how we can access it in a generic, i.e. independent of the actual memory layout, way.</p>
 <ul>
@@ -199,7 +199,7 @@ Memory layout</h2>
 <li><a class="el" href="group__layout__utils.html" title="Layout utilities">Layout utilities</a> provide bounds checking, <span class="tt">for_each</span> functions to loop over multi-dimensional indices, structs that mimic Python's <span class="tt">:</span> and <span class="tt">...</span> syntax and more.</li>
 <li><a class="el" href="group__layout__idx.html" title="Multi-dimensional indexing">Multi-dimensional indexing</a> is used to map multi-dimensional indices to a linear/flat index for a given memory layout and to calculate the resulting memory layout when taking slices of already existing arrays/views.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
 Memory management</h2>
 <p><a class="el" href="group__memory.html" title="Memory management">Memory management</a> tools are classes, functions and other definitions that help with the management of different kinds of memory.</p>
 <ul>
@@ -211,10 +211,10 @@ Memory management</h2>
 </ul>
 <p>In most cases, users shouldn't use any of the memory management tools directly. They are used internally by <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> and <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> to take care of their memory needs.</p>
 <p>However, some advanced users might be interested in the different <a class="el" href="group__mem__pols.html" title="Memory policies">Memory policies</a>.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
 Testing tools</h2>
 <p><a class="el" href="group__testing.html" title="Testing tools">Testing tools</a> for checking <a class="el" href="classnda_1_1basic__array.html" title="A generic multi-dimensional array.">nda::basic_array</a> and <a class="el" href="classnda_1_1basic__array__view.html" title="A generic view of a multi-dimensional array.">nda::basic_array_view</a> objects with googletest.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
 Utilities</h2>
 <p><a class="el" href="group__utilities.html" title="Utilities">Utilities</a> contain general <a class="el" href="group__utils__type__traits.html" title="Type traits">Type traits</a> and <a class="el" href="group__utils__concepts.html" title="Concepts">Concepts</a> as well as <a class="el" href="group__utils__std.html" title="Extensions to the standard library">Extensions to the standard library</a> and tools to work with <a class="el" href="group__utils__perms.html" title="Permutations">Permutations</a>. </p>
 </div></div><!-- contents -->

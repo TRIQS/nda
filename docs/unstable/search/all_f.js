@@ -63,7 +63,7 @@ var searchData=
   ['expr_5fstorage_5ft_60',['expr_storage_t',['../group__clef__utils.html#gab97aba3ab3b1739e38fb509d522b0294',1,'nda::clef']]],
   ['expr_5funary_61',['expr_unary',['../structnda_1_1expr__unary.html',1,'nda']]],
   ['expression_2ehpp_62',['expression.hpp',['../expression_8hpp.html',1,'']]],
-  ['expressions_20and_20functions_63',['expressions and functions',['../documentation.html#autotoc_md28',1,'CLEF - Compile-time lazy expressions and functions'],['../group__clef.html',1,'Compile-time lazy expressions and functions']]],
+  ['expressions_20and_20functions_63',['expressions and functions',['../documentation.html#autotoc_md29',1,'CLEF - Compile-time lazy expressions and functions'],['../group__clef.html',1,'Compile-time lazy expressions and functions']]],
   ['expressions_20functions_20and_20operations_64',['Lazy expressions, functions and operations',['../group__clef__expr.html',1,'']]],
   ['extensions_20to_20the_20standard_20library_65',['Extensions to the standard library',['../group__utils__std.html',1,'']]],
   ['extent_66',['extent',['../classnda_1_1basic__array.html#a5b925cbd5e9aa0a664e13a9a2d824ee3',1,'nda::basic_array::extent()'],['../classnda_1_1basic__array__view.html#af1a86836a6e03c776093821ca2be53ea',1,'nda::basic_array_view::extent()']]],

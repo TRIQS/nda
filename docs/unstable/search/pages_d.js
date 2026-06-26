@@ -8,9 +8,9 @@ var searchData=
   ['deprecated_20list_5',['Deprecated List',['../deprecated.html',1,'']]],
   ['dimensional_20arrays_20views_20of_20strings_6',['Writing/Reading 1-dimensional arrays/views of strings',['../ex5.html#ex5_p5',1,'']]],
   ['dimensional_20ranges_7',['Viewing generic 1-dimensional ranges',['../ex4.html#ex4_p8',1,'']]],
-  ['doc_8',['Doc',['../changelog.html#autotoc_md24',1,'']]],
-  ['doc_9',['doc',['../changelog.html#autotoc_md6',1,'doc'],['../changelog.html#autotoc_md11',1,'doc']]],
-  ['docker_10',['docker',['../changelog.html#autotoc_md8',1,'']]],
+  ['doc_8',['Doc',['../changelog.html#autotoc_md25',1,'']]],
+  ['doc_9',['doc',['../changelog.html#autotoc_md7',1,'doc'],['../changelog.html#autotoc_md12',1,'doc']]],
+  ['docker_10',['docker',['../changelog.html#autotoc_md9',1,'']]],
   ['documentation_11',['API Documentation',['../documentation.html',1,'']]],
   ['doing_20linear_20algebra_20with_20arrays_12',['Doing linear algebra with arrays',['../ex1.html#ex1_p11',1,'']]],
   ['dot_20product_13',['Full tensor dot product',['../ex9.html#ex9_p6',1,'']]]

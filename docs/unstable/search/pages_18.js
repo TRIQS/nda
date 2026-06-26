@@ -6,5 +6,5 @@ var searchData=
   ['printing_20an_20array_3',['Printing an array',['../ex1.html#ex1_p3',1,'']]],
   ['product_4',['Full tensor dot product',['../ex9.html#ex9_p6',1,'']]],
   ['projects_5',['Integration in C++ projects',['../integration.html',1,'']]],
-  ['python_20support_6',['python support',['../changelog.html#autotoc_md7',1,'']]]
+  ['python_20support_6',['python support',['../changelog.html#autotoc_md8',1,'']]]
 ];
