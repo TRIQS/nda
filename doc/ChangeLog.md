@@ -3,8 +3,10 @@
 ## Version 2.0.0
 
 NDA Version 2.0.0 is a release that
+* Adds a new `nda::tensor` subsystem for generic tensor operations with a CPU backend (TBLIS) and a GPU backend (cuTENSOR)
+* Overhauls the BLAS/LAPACK/cuBLAS/cuSOLVER interfaces and adds batched routines
 * Significantly expands the `nda::linalg` API with eigenvalue, QR, LU, SVD and linear-solve routines
-* Adds new LAPACK and BLAS wrappers (`geev`, `syev`/`heev`, `sygv`/`hegv`, `gerc`)
+* Adds new LAPACK and BLAS wrappers (`geev`, `syev`/`heev`, `sygv`/`hegv`, `gerc`, `ggev`)
 * Makes HDF5, MPI and OpenMP optional build-time dependencies
 * Introduces deep partial evaluation for CLEF expressions
 * Adds a Hadamard product for arrays and `std::vector`
@@ -12,7 +14,7 @@ NDA Version 2.0.0 is a release that
 * Moves the c2py converters into `nda/c2py` and fixes several Python ↔ nda conversion edge cases
 * Fixes several library issues
 
-We thank all contributors: Marco Barbone, Thomas Hahn, Alexander Hampel, Sergei Iskakov, Jason Kaye, Dominik Kiese, Harrison LaBollita, Henri Menke, Miguel Morales, Olivier Parcollet, Dylan Simon, Nils Wentzell
+We thank all contributors: Marco Barbone, Jenny Coulter, Thomas Hahn, Alexander Hampel, Sergei Iskakov, Jason Kaye, Dominik Kiese, Harrison LaBollita, Henri Menke, Miguel Morales, Olivier Parcollet, Dylan Simon, Nils Wentzell
 
 Find below an itemized list of changes in this release.
 
@@ -49,6 +51,23 @@ Find below an itemized list of changes in this release.
 * Small improvements to random array generators
 * Update Apache copyright headers to a minimal form for all files; move copyright notice into a separate `COPYRIGHT` file; default copyright to the Simons Foundation
 * Fix issue in nda::sym_grp MPI parallelization after adding optional MPI support
+* Add lazy binary maps nda::max and nda::min
+* Do not explicitly store const Arrays in lazy `expr_call`
+* Add a memory prefetch routine
+* Constrain device-compatible address spaces in nda::basic_array and nda::basic_array_view
+* Update and add traits and concepts
+* Use `std::complex<double>` instead of `dcomplex`
+* Add `EXPECT_ARRAY_REL_NEAR` for relative array comparison to nda/gtest_tools.hpp
+* Free the `blk_T_t` node in the nda::mem::handle_heap shared_ptr deleter
+* Add a `.gitattributes` file
+
+### tensor
+* Add a new `nda::tensor` subsystem (`c++/nda/tensor/`) with generic tensor operations: assign, add, contract, dot, elementwise (binary), elementwise trinary, set, scale and reduce
+* Add a CPU backend through a TBLIS interface (set, scale, reduce, dot, add, mult)
+* Add a GPU backend through a cuTENSOR interface (permute, binary/trinary elementwise, reduce, contract)
+* Add tensor tools and helper functions for tensor string indices
+* Add `TblisSupport` and `CutensorSupport` CMake build options (off by default)
+* Add basic documentation and a CPU tensor example
 
 ### blas/lapack
 * Add nda::linalg::eig, nda::linalg::eig_in_place, nda::linalg::eigvals, nda::linalg::eigvals_in_place backed by a new nda::lapack::geev wrapper
@@ -62,15 +81,35 @@ Find below an itemized list of changes in this release.
 * Generalize `get_ld`/`get_ncols` in blas/tools.hpp, simplify `blas::get_op` to deduce flags from the nda::Matrix type, and add `blas::get_array`
 * Make function-argument names consistent (lowercase) across the BLAS, LAPACK, cuBLAS and cuSOLVER interfaces
 * Fix `gemm_vbatch` signature for fallback functions; fix lowercase/uppercase mismatch in FORTRAN prototypes; fix Intel vs GNU ABI when building against MKL
+* Overhaul the BLAS/cuBLAS interface and the matching nda::linalg routines
+* Overhaul the LAPACK/cuSOLVER interface and the matching nda::linalg routines
+* Add a wrapper for LAPACK's `ggev` routine
+* Add batched versions of the LAPACK/cuSOLVER `geqrf`, `getrf`, `getrs` and `getri` routines
+* Provide overloads of batched BLAS/LAPACK routines for generic programming
+* Add custom `orgqr_batch`/`unqr_batch` implementations
+* Add a custom `getri` implementation for device arrays
+* Unify device synchronization in the cuBLAS and cuSOLVER interfaces
+* Add `float`/`std::complex<float>` support to `cucplx`
+* Remove the conditional include of the cuBLAS and cuSOLVER interfaces
+* Rename the blas/lapack tools namespace to `nda::blas_lapack` and update the BLAS/LAPACK tools
+* Fix compilation errors with llvm18 and gcc
 
 ### cmake
 * Downgrade required C++ standard from 23 to 20
 * Directly use the imported targets provided for HDF5
 * Remove `PythonSupport` requirement for building docs
+* Find NVHPC by default and fall back to CudaToolkit
+* Rename the `Use_Magma` option to `MagmaSupport`
+* Suppress `-Wc2y-extensions` and c++26-extension warnings for clang
+* Disable C++20 module scanning for clair-c2py compatibility
 
 ### jenkins
 * Synchronize Jenkinsfile with app4triqs
 * Fix file issue in Jenkins Dockerfile creation and fix the environment setting for osx builds
+* Migrate to the new k8s-based system and add an explicit githubPush trigger for webhooks
+* Add standalone per-platform Dockerfiles independent of triqs
+* Make Python-binding regeneration independent of the cmake option default, only regenerate on ubuntu-clang
+* Provide the clair install through the triqs Docker image
 
 ### ghactions
 * Use Ninja for parallel builds; modernize and simplify `build.yml`
@@ -81,12 +120,18 @@ Find below an itemized list of changes in this release.
 * Update the Ubuntu package list to use OpenBLAS over liblapack
 * Remove the custom Doxygen build and build docs on macos
 * Generate and deploy test-coverage information
+* Detect the Homebrew g++ version dynamically on macOS and link to brew's libomp
+* Bump the ubuntu-24.04 gcc version from 13 to 14
+* Fall back to the unstable branch when the TRIQS branch is not found
+* Minor cleanup (drop python3-clang-20, remove the clair branch, build.yml consistency fixes)
 
 ### doc
 * Switch the documentation pipeline fully to Doxygen and update the Doxyfile to v1.16.1
 * Add worked code examples to the doc folder, ensure they compile in CI
 * Add an FI support notice to `README.md`
 * Remove clang-specific setting from `Doxyfile.in`
+* Update the documentation for the Linear Algebra tools and the BLAS/LAPACK interfaces
+* Added documentation for the new tensor subsystem and the TBLIS/cuTENSOR backends
 
 ### python support
 * Add c2py converters and additional files into `nda/c2py`
