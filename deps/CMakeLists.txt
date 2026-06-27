@@ -80,7 +80,7 @@ endif()
 external_dependency(itertools
   GIT_REPO https://github.com/TRIQS/itertools
   VERSION 1.3
-  GIT_TAG unstable
+  GIT_TAG 2.0.x
 )
 
 # -- h5 --
@@ -88,7 +88,7 @@ if(HDF5Support)
   external_dependency(h5
     GIT_REPO https://github.com/TRIQS/h5
     VERSION 1.3
-    GIT_TAG unstable
+    GIT_TAG 2.0.x
   )
 endif()
 
@@ -97,6 +97,6 @@ if(MPISupport)
   external_dependency(mpi
     GIT_REPO https://github.com/TRIQS/mpi
     VERSION 1.3
-    GIT_TAG unstable
+    GIT_TAG 2.0.x
   )
 endif()
