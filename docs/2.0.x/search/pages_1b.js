@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['s_20automatic_20assignment_0',['Initializing with CLEF&apos;s automatic assignment',['../ex1.html#ex1_p12',1,'']]],
+  ['scalar_20to_20an_20array_1',['Assigning a scalar to an array',['../ex3.html#ex3_p1',1,'']]],
+  ['scaling_2',['In-place tensor scaling',['../ex9.html#ex9_p8',1,'']]],
+  ['scattering_20an_20array_20view_3',['Scattering an array/view',['../ex6.html#ex6_p3',1,'']]],
+  ['shape_4',['Constructing an array with a given shape',['../ex2.html#ex2_p2',1,'']]],
+  ['single_20elements_5',['Accessing single elements',['../ex1.html#ex1_p4',1,'']]],
+  ['slice_20from_20an_20existing_20dataset_6',['Reading a slice from an existing dataset',['../ex5.html#ex5_p4',1,'']]],
+  ['slice_20of_20an_20array_20view_7',['Creating a slice of an array/view',['../ex4.html#ex4_p3',1,'']]],
+  ['slice_20of_20an_20existing_20dataset_8',['Writing to a slice of an existing dataset',['../ex5.html#ex5_p3',1,'']]],
+  ['slices_9',['slices',['../ex4.html',1,'Example 4: Views and slices'],['../ex4.html#ex4_p6',1,'Operating on views/slices'],['../ex1.html#ex1_p7',1,'Working with slices']]],
+  ['source_10',['source',['../ex1.html#ex1_full',1,'Full source'],['../ex2.html#ex2_full',1,'Full source'],['../ex3.html#ex3_full',1,'Full source'],['../ex4.html#ex4_full',1,'Full source'],['../ex5.html#ex5_full',1,'Full source'],['../ex6.html#ex6_full',1,'Full source'],['../ex7.html#ex7_full',1,'Full source'],['../ex8.html#ex8_full',1,'Full source'],['../ex9.html#ex9_full',1,'Full source']]],
+  ['start_11',['Where to start?',['../index.html#start',1,'']]],
+  ['steps_12',['Installation steps',['../installation.html#install_steps',1,'']]],
+  ['strings_13',['strings',['../ex9.html#ex9_p3',1,'Constructing tensors and index strings'],['../ex5.html#ex5_p5',1,'Writing/Reading 1-dimensional arrays/views of strings']]],
+  ['support_14',['GPU Support',['../changelog.html#autotoc_md21',1,'']]],
+  ['support_15',['support',['../ex5.html',1,'Example 5: HDF5 support'],['../ex6.html',1,'Example 6: MPI support'],['../ex8.html',1,'Example 8: Linear algebra support'],['../ex9.html',1,'Example 9: Tensor support'],['../ex9.html#ex9_p2',1,'Prerequisite: building with TBLIS support'],['../changelog.html#autotoc_md8',1,'python support'],['../documentation.html#autotoc_md31',1,'Tensor support']]],
+  ['support_20for_20matrices_20and_20vectors_16',['HDF5, MPI and symmetry support for matrices and vectors',['../ex8.html#ex8_p5',1,'']]],
+  ['symmetries_17',['Symmetries',['../changelog.html#autotoc_md22',1,'']]],
+  ['symmetries_18',['Example 7: Making use of symmetries',['../ex7.html',1,'']]],
+  ['symmetrizing_20an_20array_19',['Symmetrizing an array',['../ex7.html#ex7_p5',1,'']]],
+  ['symmetry_20',['Defining the symmetry',['../ex7.html#ex7_p1',1,'']]],
+  ['symmetry_20group_21',['Constructing the symmetry group',['../ex7.html#ex7_p2',1,'']]],
+  ['symmetry_20support_20for_20matrices_20and_20vectors_22',['HDF5, MPI and symmetry support for matrices and vectors',['../ex8.html#ex8_p5',1,'']]]
+];
