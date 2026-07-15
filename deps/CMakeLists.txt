@@ -47,6 +47,22 @@ else()
   endif()
 endif()
 
+# -- c2py --
+# Resolve first: c2py runs find_package(Python) and exposes the interpreter and the
+# install-layout variables (Python_EXECUTABLE, PYTHON_LIB_DEST_ROOT, PYTHON_MODULE_EXT)
+# that share/ consumes. The NOT TARGET guard makes resolution order-independent when
+# nda is built as a sub-project (a parent project may already provide c2py).
+# NB: nda_py itself still uses the legacy cpp2py converters (see python/nda_py); that
+# coupling is handled separately by the cpp2py-converter migration.
+if(PythonSupport AND NOT TARGET c2py)
+  external_dependency(c2py
+    GIT_REPO https://github.com/flatironinstitute/c2py
+    GIT_TAG unstable
+    BUILD_ALWAYS
+    EXCLUDE_FROM_ALL
+  )
+endif()
+
 # -- Cpp2Py --
 if(PythonSupport)
   external_dependency(Cpp2Py

@@ -158,20 +158,6 @@ endif()
 # Provide GNU Installation directories
 include(GNUInstallDirs)
 
-# Find Python: provides Python_EXECUTABLE / Python_SITEARCH used by c2py.
-# (In triqs-based apps these came from the triqs/cpp2py packages instead.)
-if(PythonSupport)
-  find_package(Python REQUIRED COMPONENTS Interpreter Development.Module NumPy)
-  # Python module install location, consistent with the rest of the TRIQS stack
-  # (BUILD_DEBIAN_PACKAGE may be set by the parent project). Not derived from
-  # Python_SITEARCH, which points at dist-packages on Debian (see TRIQS/triqs#1022).
-  if(BUILD_DEBIAN_PACKAGE)
-    set(PYTHON_LIB_DEST_ROOT lib/python${Python_VERSION_MAJOR}/dist-packages)
-  else()
-    set(PYTHON_LIB_DEST_ROOT lib/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/site-packages)
-  endif()
-endif()
-
 # #############
 # Build Project
 
