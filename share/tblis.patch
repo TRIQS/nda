@@ -1,3 +1,11 @@
+diff --git a/blis-git-tag b/blis-git-tag
+index 02c5905..879b416 100644
+--- a/blis-git-tag
++++ b/blis-git-tag
+@@ -1 +1 @@
+-358e689cadd6757f564a2992cf46a2f7d6fa6bb0
+\ No newline at end of file
++2.1
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 73fd66e..9a56214 100644
 --- a/CMakeLists.txt
