@@ -137,31 +137,10 @@ namespace nda::tensor {
     }
   }
 
-  /// Convenience overload of nda::tensor::add with \f$ \alpha = 1 \f$ and \f$ \beta = 0 \f$.
-  template <BlasArrayOrConj A, BlasArrayFor<A> B>
-  void add(A const &a, std::string_view idx_a, B &&b, std::string_view idx_b) { // NOLINT
-    add(get_value_t<A>{1}, a, idx_a, get_value_t<A>{0}, std::forward<B>(b), idx_b);
-  }
-
-  /// Convenience overload of out-of-place nda::tensor::add with \f$ \alpha = 1 \f$ and \f$ \beta = 1 \f$.
-  template <BlasArrayOrConj A, BlasArrayOrConjFor<A> B, BlasArrayFor<A> C>
-  void add(A const &a, std::string_view idx_a, B const &b, std::string_view idx_b, C &&c, std::string_view idx_c) { // NOLINT
-    add(get_value_t<A>{1}, a, idx_a, get_value_t<A>{1}, b, idx_b, std::forward<C>(c), idx_c);
-  }
-
   /// Convenience overload of nda::tensor::add with nda::tensor::default_index strings.
   template <BlasArrayOrConj A, BlasArrayFor<A> B>
   void add(get_value_t<A> alpha, A const &a, get_value_t<A> beta, B &&b) { // NOLINT
     add(alpha, a, default_index<get_rank<A>>(), beta, std::forward<B>(b), default_index<get_rank<B>>());
-  }
-
-  /**
-   * @brief Convenience overload of nda::tensor::add with nda::tensor::default_index strings, \f$ \alpha = 1 \f$ and
-   * \f$ \beta = 0 \f$.
-   */
-  template <BlasArrayOrConj A, BlasArrayFor<A> B>
-  void add(A const &a, B &&b) { // NOLINT
-    add(get_value_t<A>{1}, a, default_index<get_rank<A>>(), get_value_t<A>{0}, std::forward<B>(b), default_index<get_rank<B>>());
   }
 
   /** @} */

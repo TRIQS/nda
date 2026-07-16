@@ -77,25 +77,10 @@ namespace nda::tensor {
     }
   }
 
-  /// Convenience overload of nda::tensor::elementwise with \f$ \alpha = 1 \f$ and \f$ \beta = 0 \f$.
-  template <BlasArrayOrConj A, BlasArrayFor<A> B>
-  void elementwise(A const &a, std::string_view idx_a, B &&b, std::string_view idx_b, binary_op op = binary_op::SUM) { // NOLINT
-    elementwise(get_value_t<A>{1}, a, idx_a, get_value_t<A>{0}, std::forward<B>(b), idx_b, op);
-  }
-
   /// Convenience overload of nda::tensor::elementwise with nda::tensor::default_index strings.
   template <BlasArrayOrConj A, BlasArrayFor<A> B>
   void elementwise(get_value_t<A> alpha, A const &a, get_value_t<A> beta, B &&b, binary_op op = binary_op::SUM) { // NOLINT
     elementwise(alpha, a, default_index<get_rank<A>>(), beta, std::forward<B>(b), default_index<get_rank<B>>(), op);
-  }
-
-  /**
-   * @brief Convenience overload of nda::tensor::elementwise with nda::tensor::default_index strings, \f$ \alpha = 1 \f$ 
-   * and \f$ \beta = 0 \f$.
-   */
-  template <BlasArrayOrConj A, BlasArrayFor<A> B>
-  void elementwise(A const &a, B &&b, binary_op op = binary_op::SUM) { // NOLINT
-    elementwise(get_value_t<A>{1}, a, default_index<get_rank<A>>(), get_value_t<A>{0}, std::forward<B>(b), default_index<get_rank<B>>(), op);
   }
 
   /** @} */

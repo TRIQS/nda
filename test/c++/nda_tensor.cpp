@@ -77,12 +77,12 @@ void test_add() {
   nda::tensor::add(alpha, to_addr_space<AS1>(A8), beta, B8_d);
   EXPECT_ARRAY_NEAR(nda::to_host(B8_d), exp8, fp_tol<T>);
 
-  // matrix addition with default indices and default factors: B = A
+  // matrix addition with default indices, alpha = 1 and beta = 0: B = A
   auto A9   = nda::matrix<T, Layout1>::rand({3, 4});
   auto B9   = nda::matrix<T, Layout2>::rand({3, 4});
   auto exp9 = nda::make_regular(A9);
   auto B9_d = to_addr_space<AS2>(B9);
-  nda::tensor::add(to_addr_space<AS1>(A9), B9_d);
+  nda::tensor::add(T{1}, to_addr_space<AS1>(A9), T{0}, B9_d);
   EXPECT_ARRAY_NEAR(nda::to_host(B9_d), exp9, fp_tol<T>);
 
   // addition involving conjugate expressions (complex types only)
@@ -107,7 +107,7 @@ void test_add() {
   nda::tensor::add(alpha, A10_d, "ijk", beta, B10_d, "ijk", C10_d, "ijk");
   EXPECT_ARRAY_NEAR(nda::to_host(C10_d), exp10, fp_tol<T>);
 
-  // out-of-place addition with alpha = beta = 1 convenience overload
+  // out-of-place addition with alpha = beta = 1: C = A + B
   auto A11   = nda::array<T, 3, Layout1>::rand({2, 3, 4});
   auto B11   = nda::array<T, 3, Layout2>::rand({2, 3, 4});
   auto C11   = nda::array<T, 3, Layout2>::zeros({2, 3, 4});
@@ -115,7 +115,7 @@ void test_add() {
   auto A11_d = to_addr_space<AS1>(A11);
   auto B11_d = to_addr_space<AS2>(B11);
   auto C11_d = to_addr_space<AS2>(C11);
-  nda::tensor::add(A11_d, "ijk", B11_d, "ijk", C11_d, "ijk");
+  nda::tensor::add(T{1}, A11_d, "ijk", T{1}, B11_d, "ijk", C11_d, "ijk");
   EXPECT_ARRAY_NEAR(nda::to_host(C11_d), exp11, fp_tol<T>);
 
   // permutation and different-rank cases require cuTENSOR or TBLIS
