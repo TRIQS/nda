@@ -1,4 +1,5 @@
 [![build](https://github.com/TRIQS/nda/workflows/build/badge.svg?branch=unstable)](https://github.com/TRIQS/nda/actions?query=workflow%3Abuild)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21691738.svg)](https://doi.org/10.5281/zenodo.21691738)
 
 # nda - A multi-dimensional array library in C++
 
