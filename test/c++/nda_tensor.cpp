@@ -216,6 +216,8 @@ TEST(NDA, TensorAddOnHostFallbackMismatchedIndicesThrows) {
 // Test the generic tensor assign function.
 template <typename T, typename Layout1, typename Layout2, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
 void test_assign() {
+  constexpr bool can_permute = (AS1 != nda::mem::Host && AS2 != nda::mem::Host) || nda::tensor::have_tblis;
+
   // rank-2, default indices: B = A — supported by every backend
   auto A1   = nda::matrix<T, Layout1>::rand({3, 4});
   auto B1_d = to_addr_space<AS2>(nda::matrix<T, Layout2>::rand({3, 4}));
@@ -229,7 +231,7 @@ void test_assign() {
   EXPECT_ARRAY_EQ(nda::to_host(B2_d), A2);
 
   // permutation and different-rank cases require cuTENSOR or TBLIS
-  if constexpr (nda::tensor::have_tblis || nda::tensor::have_cutensor) {
+  if constexpr (can_permute) {
     // rank-2 permutation: B_ji = A_ij
     auto A3   = nda::matrix<T, Layout1>::rand({3, 4});
     auto exp3 = nda::make_regular(nda::transpose(A3));
@@ -518,6 +520,8 @@ TEST(NDA, TensorContractOnHost) {
 // Test the generic tensor dot function.
 template <typename T, typename Layout1, typename Layout2, nda::mem::AddressSpace AS1, nda::mem::AddressSpace AS2>
 void test_dot() {
+  constexpr bool can_permute = (AS1 != nda::mem::Host && AS2 != nda::mem::Host) || nda::tensor::have_tblis;
+
   // A = [[1, 2], [3, 4]],  B = [[5, 6], [7, 8]]
   auto A   = nda::matrix<T, Layout1>{{1, 2}, {3, 4}};
   auto B   = nda::matrix<T, Layout2>{{5, 6}, {7, 8}};
@@ -529,7 +533,7 @@ void test_dot() {
   // overload uses the rank-2 default indices ("ab"/"ab")
   EXPECT_COMPLEX_NEAR(nda::tensor::dot(A_d, B_d), T{70});
   // sum_{i,j} A(i,j) * B(j,i) = 1*5 + 2*7 + 3*6 + 4*8 = 69 — permuted indices require cuTENSOR or TBLIS
-  if constexpr (nda::tensor::have_tblis || nda::tensor::have_cutensor) { EXPECT_COMPLEX_NEAR(nda::tensor::dot(A_d, "ab", B_d, "ba"), T{69}); }
+  if constexpr (can_permute) { EXPECT_COMPLEX_NEAR(nda::tensor::dot(A_d, "ab", B_d, "ba"), T{69}); }
 
   // complex types and conjugation
   // C = [[1+i, 2], [3, 4-i]],  D = [[5, 6+2i], [7, 8]]
@@ -542,7 +546,7 @@ void test_dot() {
     EXPECT_COMPLEX_NEAR(nda::tensor::dot(nda::conj(C_d), "ab", D_d, "ab"), T(70, 7));
     EXPECT_COMPLEX_NEAR(nda::tensor::dot(C_d, "ab", nda::conj(D_d), "ab"), T(70, -7));
     EXPECT_COMPLEX_NEAR(nda::tensor::dot(nda::conj(C_d), "ab", nda::conj(D_d), "ab"), T(70, -1));
-    if constexpr (nda::tensor::have_tblis || nda::tensor::have_cutensor) {
+    if constexpr (can_permute) {
       EXPECT_COMPLEX_NEAR(nda::tensor::dot(C_d, "ab", D_d, "ba"), T(69, 3));
       EXPECT_COMPLEX_NEAR(nda::tensor::dot(nda::conj(C_d), "ab", D_d, "ba"), T(69, 9));
       EXPECT_COMPLEX_NEAR(nda::tensor::dot(C_d, "ab", nda::conj(D_d), "ba"), T(69, -9));
