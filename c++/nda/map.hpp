@@ -88,26 +88,20 @@ namespace nda {
     std::tuple<As...> a;
 
     private:
-    // Implementation of the function call operator.
+    // Implementation of the subscript operator.
     template <size_t... Is, typename... Args>
-    [[gnu::always_inline]] [[nodiscard]] auto _call(std::index_sequence<Is...>, Args const &...args) const {
+    [[gnu::always_inline]] [[nodiscard]] auto _subscript(std::index_sequence<Is...>, Args const &...args) const {
       // if args contains a range, we need to return an expr_call on the resulting slice
       if constexpr ((is_range_or_ellipsis<Args> or ... or false)) {
-        return mapped<F>{f}(std::get<Is>(a)(args...)...);
+        return mapped<F>{f}(std::get<Is>(a)[args...]...);
       } else {
-        return f(std::get<Is>(a)(args...)...);
+        return f(std::get<Is>(a)[args...]...);
       }
-    }
-
-    // Implementation of the subscript operator.
-    template <size_t... Is, typename Arg>
-    [[gnu::always_inline]] auto _call_bra(std::index_sequence<Is...>, Arg const &arg) const {
-      return f(std::get<Is>(a)[arg]...);
     }
 
     public:
     /**
-     * @brief Function call operator.
+     * @brief Subscript operator.
      *
      * @details The arguments (usually multi-dimensional indices) are passed to all the nda::Array objects stored in the
      * tuple and the results are then passed to the callable object.
@@ -115,29 +109,26 @@ namespace nda {
      * If the arguments contain a range, a new lazy function call expression is returned.
      *
      * @tparam Args Argument types.
+     * @param args Subscript arguments.
+     * @return The result of the subscript operation (depends on the callable and the arguments).
+     */
+    template <typename... Args>
+    auto operator[](Args const &...args) const {
+      return _subscript(std::make_index_sequence<sizeof...(As)>{}, args...);
+    }
+
+    /**
+     * @brief Function call operator.
+     *
+     * @details Equivalent to the subscript operator. Provided for backwards compatibility.
+     *
+     * @tparam Args Argument types.
      * @param args Function call arguments.
      * @return The result of the function call (depends on the callable and the arguments).
      */
     template <typename... Args>
     auto operator()(Args const &...args) const {
-      return _call(std::make_index_sequence<sizeof...(As)>{}, args...);
-    }
-
-    /**
-     * @brief Subscript operator.
-     *
-     * @details The argument (usually a 1-dimensional index) is passed to all the nda::Array objects stored in the tuple
-     * and the results are then passed to the callable object.
-     *
-     * If the argument is a range, a new lazy function call expression is returned.
-     *
-     * @tparam Arg Argument types.
-     * @param arg Subscript argument.
-     * @return The result of the subscript operation (depends on the callable and the arguments).
-     */
-    template <typename Arg>
-    auto operator[](Arg const &arg) const {
-      return _call_bra(std::make_index_sequence<sizeof...(As)>{}, arg);
+      return (*this)[args...];
     }
 
     // FIXME copy needed for the && case only. Overload ?

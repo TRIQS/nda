@@ -53,18 +53,32 @@ namespace nda {
     A a;
 
     /**
-     * @brief Function call operator.
+     * @brief Subscript operator.
      *
      * @details Forwards the arguments to the nda::Array operand and negates the result.
      *
      * @tparam Args Types of the arguments.
-     * @param args Function call arguments.
-     * @return If the result of the forwarded function call is another nda::Array, a new lazy expression is returned.
+     * @param args Subscript arguments.
+     * @return If the result of the forwarded subscript is another nda::Array, a new lazy expression is returned.
      * Otherwise the result is negated and returned.
      */
     template <typename... Args>
+    auto operator[](Args &&...args) const {
+      return -a[std::forward<Args>(args)...];
+    }
+
+    /**
+     * @brief Function call operator.
+     *
+     * @details Forwards to the subscript operator.
+     *
+     * @tparam Args Types of the arguments.
+     * @param args Function call arguments.
+     * @return Result of the corresponding subscript operation.
+     */
+    template <typename... Args>
     auto operator()(Args &&...args) const {
-      return -a(std::forward<Args>(args)...);
+      return (*this)[std::forward<Args>(args)...];
     }
 
     /**
@@ -157,38 +171,38 @@ namespace nda {
     }
 
     /**
-     * @brief Function call operator.
+     * @brief Subscript operator.
      *
      * @details Forwards the arguments to the nda::Array operands and performs the binary operation.
      *
      * @tparam Args Types of the arguments.
-     * @param args Function call arguments.
-     * @return If the result of the forwarded function calls contains another nda::Array, a new lazy expression is
+     * @param args Subscript arguments.
+     * @return If the result of the forwarded subscript operations contains another nda::Array, a new lazy expression is
      * returned. Otherwise the result of the binary operation is returned.
      */
     template <typename... Args>
-    auto operator()(Args const &...args) const {
+    auto operator[](Args const &...args) const {
       // addition
       if constexpr (OP == '+') {
         if constexpr (l_is_scalar) {
           // lhs is a scalar
           if constexpr (algebra == 'M')
             // rhs is a matrix
-            return (std::equal_to{}(args...) ? l + r(args...) : r(args...));
+            return (std::equal_to{}(args...) ? l + r[args...] : r[args...]);
           else
             // rhs is an array
-            return l + r(args...);
+            return l + r[args...];
         } else if constexpr (r_is_scalar) {
           // rhs is a scalar
           if constexpr (algebra == 'M')
             // lhs is a matrix
-            return (std::equal_to{}(args...) ? l(args...) + r : l(args...));
+            return (std::equal_to{}(args...) ? l[args...] + r : l[args...]);
           else
             // lhs is an array
-            return l(args...) + r;
+            return l[args...] + r;
         } else
           // both are arrays or matrices
-          return l(args...) + r(args...);
+          return l[args...] + r[args...];
       }
 
       // subtraction
@@ -197,35 +211,35 @@ namespace nda {
           // lhs is a scalar
           if constexpr (algebra == 'M')
             // rhs is a matrix
-            return (std::equal_to{}(args...) ? l - r(args...) : -r(args...));
+            return (std::equal_to{}(args...) ? l - r[args...] : -r[args...]);
           else
             // rhs is an array
-            return l - r(args...);
+            return l - r[args...];
         } else if constexpr (r_is_scalar) {
           // rhs is a scalar
           if constexpr (algebra == 'M')
             // lhs is a matrix
-            return (std::equal_to{}(args...) ? l(args...) - r : l(args...));
+            return (std::equal_to{}(args...) ? l[args...] - r : l[args...]);
           else
             // lhs is an array
-            return l(args...) - r;
+            return l[args...] - r;
         } else
           // both are arrays or matrices
-          return l(args...) - r(args...);
+          return l[args...] - r[args...];
       }
 
       // multiplication
       if constexpr (OP == '*') {
         if constexpr (l_is_scalar)
           // lhs is a scalar
-          return l * r(args...);
+          return l * r[args...];
         else if constexpr (r_is_scalar)
           // rhs is a scalar
-          return l(args...) * r;
+          return l[args...] * r;
         else {
           // both are arrays (matrix product is not supported here)
           static_assert(algebra != 'M', "Error in nda::expr: Matrix algebra not supported");
-          return l(args...) * r(args...);
+          return l[args...] * r[args...];
         }
       }
 
@@ -234,31 +248,30 @@ namespace nda {
         if constexpr (l_is_scalar) {
           // lhs is a scalar
           static_assert(algebra != 'M', "Error in nda::expr: Matrix algebra not supported");
-          return l / r(args...);
+          return l / r[args...];
         } else if constexpr (r_is_scalar)
           // rhs is a scalar
-          return l(args...) / r;
+          return l[args...] / r;
         else {
           // both are arrays (matrix division is not supported here)
           static_assert(algebra != 'M', "Error in nda::expr: Matrix algebra not supported");
-          return l(args...) / r(args...);
+          return l[args...] / r[args...];
         }
       }
     }
 
     /**
-     * @brief Subscript operator.
+     * @brief Function call operator.
      *
-     * @details Simply forwards the argument to the function call operator.
+     * @details Forwards to the subscript operator.
      *
-     * @tparam Arg Type of the argument.
-     * @param arg Subscript argument.
-     * @return Result of the corresponding function call.
+     * @tparam Args Types of the arguments.
+     * @param args Function call arguments.
+     * @return Result of the corresponding subscript operation.
      */
-    template <typename Arg>
-    auto operator[](Arg &&arg) const {
-      static_assert(get_rank<expr> == 1, "Error in nda::expr: Subscript operator only available for expressions of rank 1");
-      return operator()(std::forward<Arg>(arg));
+    template <typename... Args>
+    auto operator()(Args const &...args) const {
+      return (*this)[args...];
     }
   };
 

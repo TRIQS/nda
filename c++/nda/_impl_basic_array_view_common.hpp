@@ -159,7 +159,7 @@ static constexpr bool has_no_boundcheck = true;
 
 public:
 /**
- * @brief Implementation of the function call operator.
+ * @brief Implementation of the subscript operator.
  *
  * @details This function is an implementation detail and should be private. Since the Green's function library in
  * TRIQS uses this function, it is kept public (for now).
@@ -167,15 +167,15 @@ public:
  * @tparam ResultAlgebra Algebra of the resulting view/array.
  * @tparam SelfIsRvalue True if the view/array is an rvalue.
  * @tparam Self Type of the calling view/array.
- * @tparam T Types of the arguments.
+ * @tparam Ts Types of the arguments.
  *
- * @param self Calling view.
+ * @param self Calling view/array.
  * @param idxs Multi-dimensional index consisting of `long`, `nda::range`, `nda::range::all_t`, nda::ellipsis or lazy
  * arguments.
- * @return Result of the function call depending on the given arguments and type of the view/array.
+ * @return Result of the subscript operation depending on the given arguments and type of the view/array.
  */
 template <char ResultAlgebra, bool SelfIsRvalue, typename Self, typename... Ts>
-FORCEINLINE static decltype(auto) call(Self &&self, Ts const &...idxs) noexcept(has_no_boundcheck) {
+FORCEINLINE static decltype(auto) subscript(Self &&self, Ts const &...idxs) noexcept(has_no_boundcheck) {
   // resulting value type
   using r_v_t = std::conditional_t<std::is_const_v<std::remove_reference_t<Self>>, ValueType const, ValueType>;
 
@@ -219,9 +219,10 @@ FORCEINLINE static decltype(auto) call(Self &&self, Ts const &...idxs) noexcept(
 
 public:
 /**
- * @brief Function call operator to access the view/array.
+ * @brief Subscript operator to access the view/array.
  *
- * @details Depending on the type of the calling object and the given arguments, this function call does the following:
+ * @details Depending on the type of the calling object and the given arguments, this subscript operation does the
+ * following:
  * - If any of the arguments is lazy, an nda::clef::expr with the nda::clef::tags::function tag is returned.
  * - If no arguments are given, a full view of the calling object is returned:
  *   - If the calling object itself or its value type is const, a view with a const value type is returned.
@@ -234,6 +235,39 @@ public:
  * the calling object. The algebra of the slice is the same as well, except if a 1-dimensional slice of a matrix is
  * taken. In this case, the algebra is changed to 'V'.
  *
+ * @tparam Ts Types of the arguments.
+ * @param idxs Multi-dimensional index consisting of `long`, `nda::range`, `nda::range::all_t`, nda::ellipsis or lazy
+ * arguments.
+ * @return Result of the subscript operation depending on the given arguments and type of the view/array.
+ */
+template <typename... Ts>
+FORCEINLINE decltype(auto) operator[](Ts const &...idxs) const & noexcept(has_no_boundcheck) {
+  static_assert((rank == -1) or (sizeof...(Ts) == rank) or (sizeof...(Ts) == 0) or (ellipsis_is_present<Ts...> and (sizeof...(Ts) <= rank + 1)),
+                "Error in array/view: Incorrect number of parameters in subscript operator");
+  return subscript<Algebra, false>(*this, idxs...);
+}
+
+/// Non-const overload of `nda::basic_array_view::operator[](Ts const &...) const &`.
+template <typename... Ts>
+FORCEINLINE decltype(auto) operator[](Ts const &...idxs) & noexcept(has_no_boundcheck) {
+  static_assert((rank == -1) or (sizeof...(Ts) == rank) or (sizeof...(Ts) == 0) or (ellipsis_is_present<Ts...> and (sizeof...(Ts) <= rank + 1)),
+                "Error in array/view: Incorrect number of parameters in subscript operator");
+  return subscript<Algebra, false>(*this, idxs...);
+}
+
+/// Rvalue overload of `nda::basic_array_view::operator[](Ts const &...) const &`.
+template <typename... Ts>
+FORCEINLINE decltype(auto) operator[](Ts const &...idxs) && noexcept(has_no_boundcheck) {
+  static_assert((rank == -1) or (sizeof...(Ts) == rank) or (sizeof...(Ts) == 0) or (ellipsis_is_present<Ts...> and (sizeof...(Ts) <= rank + 1)),
+                "Error in array/view: Incorrect number of parameters in subscript operator");
+  return subscript<Algebra, true>(*this, idxs...);
+}
+
+/**
+ * @brief Function call operator to access the view/array.
+ *
+ * @details Forwards to the subscript operator. See `nda::basic_array_view::operator[]` for details.
+ *
  * @tparam Ts Types of the function arguments.
  * @param idxs Multi-dimensional index consisting of `long`, `nda::range`, `nda::range::all_t`, nda::ellipsis or lazy
  * arguments.
@@ -241,62 +275,19 @@ public:
  */
 template <typename... Ts>
 FORCEINLINE decltype(auto) operator()(Ts const &...idxs) const & noexcept(has_no_boundcheck) {
-  static_assert((rank == -1) or (sizeof...(Ts) == rank) or (sizeof...(Ts) == 0) or (ellipsis_is_present<Ts...> and (sizeof...(Ts) <= rank + 1)),
-                "Error in array/view: Incorrect number of parameters in call operator");
-  return call<Algebra, false>(*this, idxs...);
+  return (*this)[idxs...];
 }
 
 /// Non-const overload of `nda::basic_array_view::operator()(Ts const &...) const &`.
 template <typename... Ts>
 FORCEINLINE decltype(auto) operator()(Ts const &...idxs) & noexcept(has_no_boundcheck) {
-  static_assert((rank == -1) or (sizeof...(Ts) == rank) or (sizeof...(Ts) == 0) or (ellipsis_is_present<Ts...> and (sizeof...(Ts) <= rank + 1)),
-                "Error in array/view: Incorrect number of parameters in call operator");
-  return call<Algebra, false>(*this, idxs...);
+  return (*this)[idxs...];
 }
 
 /// Rvalue overload of `nda::basic_array_view::operator()(Ts const &...) const &`.
 template <typename... Ts>
 FORCEINLINE decltype(auto) operator()(Ts const &...idxs) && noexcept(has_no_boundcheck) {
-  static_assert((rank == -1) or (sizeof...(Ts) == rank) or (sizeof...(Ts) == 0) or (ellipsis_is_present<Ts...> and (sizeof...(Ts) <= rank + 1)),
-                "Error in array/view: Incorrect number of parameters in call operator");
-  return call<Algebra, true>(*this, idxs...);
-}
-
-/**
- * @brief Subscript operator to access the 1-dimensional view/array.
- *
- * @details Depending on the type of the calling object and the given argument, this subscript operation does the
- * following:
- * - If the argument is lazy, an nda::clef::expr with the nda::clef::tags::function tag is returned.
- * - If the argument is convertible to `long`, a single element is accessed:
- *   - If the calling object is a view or an lvalue, a (const) reference to the element is returned.
- *   - Otherwise, a copy of the element is returned.
- * - Otherwise a slice of the calling object is returned with the same value type, algebra and accessor and owning
- * policies as the calling object.
- *
- * @tparam T Type of the argument.
- * @param idx 1-dimensional index that is either a `long`, `nda::range`, `nda::range::all_t`, nda::ellipsis or a lazy
- * argument.
- * @return Result of the subscript operation depending on the given argument and type of the view/array.
- */
-template <typename T>
-decltype(auto) operator[](T const &idx) const & noexcept(has_no_boundcheck) {
-  static_assert((rank == 1), "Error in array/view: Subscript operator is only available for rank 1 views/arrays in C++17/20");
-  return call<Algebra, false>(*this, idx);
-}
-
-/// Non-const overload of `nda::basic_array_view::operator[](T const &) const &`.
-template <typename T>
-decltype(auto) operator[](T const &x) & noexcept(has_no_boundcheck) {
-  static_assert((rank == 1), "Error in array/view: Subscript operator is only available for rank 1 views/arrays in C++17/20");
-  return call<Algebra, false>(*this, x);
-}
-
-/// Rvalue overload of `nda::basic_array_view::operator[](T const &) const &`.
-template <typename T>
-decltype(auto) operator[](T const &x) && noexcept(has_no_boundcheck) {
-  static_assert((rank == 1), "Error in array/view: Subscript operator is only available for rank 1 views/arrays in C++17/20");
-  return call<Algebra, true>(*this, x);
+  return std::move(*this)[idxs...];
 }
 
 /// Rank of the nda::array_iterator for the view/array.
