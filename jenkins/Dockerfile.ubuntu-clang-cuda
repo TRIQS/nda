@@ -1,0 +1,65 @@
+FROM docker.io/nvidia/cuda:13.3.1-devel-ubuntu26.04
+ENV LLVM=21
+
+# This platform includes dependencies for building docs
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+      clang-${LLVM} \
+      cmake \
+      g++ \
+      gfortran \
+      git \
+      vim \
+      wget \
+      lldb-${LLVM} \
+      clang-format-${LLVM} \
+      hdf5-tools \
+      libboost-dev \
+      libclang-${LLVM}-dev \
+      libcutensor2 \
+      libcutensor-dev \
+      libc++-${LLVM}-dev \
+      libc++abi-${LLVM}-dev \
+      libomp-${LLVM}-dev \
+      libzstd-dev \
+      libfftw3-dev \
+      libgfortran5 \
+      libgmp-dev \
+      libhdf5-dev \
+      libopenblas-dev \
+      doxygen \
+      pandoc \
+      python3-clang-${LLVM} \
+      python3-dev \
+      python3-mako \
+      python3-matplotlib \
+      python3-mpi4py \
+      python3-numpy \
+      python3-numpydoc \
+      python3-pip \
+      python3-scipy \
+      python3-ipython \
+      python3-sphinx \
+      python3-sphinx-rtd-theme \
+      python3-nbsphinx \
+      python3-myst-parser \
+      python3-linkify-it
+
+ENV PYTHON_VERSION=3.14 \
+    CC=clang-${LLVM} CXX=clang++-${LLVM} CXXFLAGS="-stdlib=libc++"
+RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${LLVM} 60 --slave /usr/bin/clang++ clang++ /usr/bin/clang++-${LLVM} --slave /usr/bin/clang-cpp clang-cpp /usr/bin/clang-cpp-${LLVM}
+
+# The mpi version in the preconfigured repositories is not cuda aware
+ARG OPENMPI_VERSION=4.1.8
+RUN wget -q https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-${OPENMPI_VERSION}.tar.bz2 \
+ && tar xf openmpi-${OPENMPI_VERSION}.tar.bz2 \
+ && cd openmpi-${OPENMPI_VERSION} \
+ && ./configure --prefix=/opt/openmpi \
+      --with-cuda=/usr/local/cuda \
+      --without-ucx \
+      --without-verbs \
+      --without-fortran \
+      --enable-orterun-prefix-by-default \
+ && make -j"$(nproc)" && make install \
+ && cd / && rm -rf openmpi-${OPENMPI_VERSION}* \
+ && echo /opt/openmpi/lib > /etc/ld.so.conf.d/openmpi.conf && ldconfig
+ENV PATH=/opt/openmpi/bin:${PATH}

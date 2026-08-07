@@ -23,6 +23,7 @@ def mounts = [:]
 
 def runBuild = { String platform, String prefix, List<String> envs ->
   def macos = platform.startsWith("macos-")
+  def cuda = platform.endsWith("-cuda")
   def regen = regenPlatforms.contains(platform)
   def buildDir = "$WORKSPACE_TMP/build"
   /* install real branches in a fixed predictable place so apps can find them */
@@ -83,6 +84,8 @@ def runBuild = { String platform, String prefix, List<String> envs ->
     }
     /* nda defaults PythonSupport OFF; enable it so the python bindings and converter tests are built */
     def args = '-DPythonSupport=ON' + (regen ? ' -DUpdate_Python_Bindings=ON' : '')
+    if cuda
+      args += '-DCudaSupport=ON -DCutensorSupport=ON -DTblisSupport=ON'
     if (platform == documentationPlatform)
       args += ' -DBuild_Documentation=ON'
     else if (platform == "sanitize")
@@ -110,9 +113,13 @@ def platforms = [:]
 
 /****************** linux builds (in docker) */
 /* Each platform must have a corresponding Dockerfile.PLATFORM in jenkins/ */
-def dockerPlatforms = ["ubuntu-clang", "ubuntu-gcc", "ubuntu-intel", "sanitize"]
+def dockerPlatforms = ["ubuntu-clang", "ubuntu-gcc", "ubuntu-intel", "sanitize", "ubuntu-clang-cuda"]
 for (int i = 0; i < dockerPlatforms.size(); i++) {
   def platform = dockerPlatforms[i]
+  def numGPUs = 0
+  if (platform.endsWith("-cuda")) {
+    numGPUs = 1
+  }
   platforms[platform] = { ->
     stage(platform) {
       timeout(time: 1, unit: 'HOURS') {
@@ -120,6 +127,7 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
           context: 'jenkins',
           dockerfile: "Dockerfile.$platform",
           devShm: true,
+          gpus: numGPUs,
           mounts: mounts) {
           runBuild(platform, env.WORKSPACE_TMP, [])
         }
