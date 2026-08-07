@@ -241,7 +241,10 @@ void test_elementwise_trinary() {
     auto D4_d = nda::to_device(nda::array<T, 2>::zeros({3, 4}));
     device::elementwise_trinary(alpha, {A4_d, unary_op::CONJ}, "ij", beta, {B4_d, unary_op::CONJ}, "ij", gamma, C4_d, "ij", D4_d, binary_op::SUM,
                                 binary_op::PROD);
-    EXPECT_ARRAY_NEAR(nda::to_host(D4_d), (alpha * nda::conj(A4_h) + beta * nda::conj(B4_h)) * gamma * C4_h, fp_tol<T>);
+    auto exp4 = nda::make_regular((alpha * nda::conj(A4_h) + beta * nda::conj(B4_h)) * gamma * C4_h);
+    // alpha * beta * gamma inflates these values to ~70, where the absolute fp_tol is under 2 ULP
+    auto tol4 = 10 * std::numeric_limits<nda::remove_complex_t<T>>::epsilon() * max_element(abs(exp4));
+    EXPECT_ARRAY_NEAR(nda::to_host(D4_d), exp4, tol4);
   } else {
     // in-place: C_ji = (alpha * (-A_ij) + beta * sqrt(B_ij)) * gamma * sin(C_ji)
     auto A4_h = nda::array<T, 2>::rand({3, 4});
