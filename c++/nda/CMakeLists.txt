@@ -25,6 +25,11 @@ target_include_directories(${PROJECT_NAME}_c SYSTEM INTERFACE $<INSTALL_INTERFAC
 target_link_directories(${PROJECT_NAME}_c PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/c++>)
 target_link_directories(${PROJECT_NAME}_c INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_FULL_LIBDIR}>)
 target_compile_options(${PROJECT_NAME}_c PUBLIC $<$<CXX_COMPILER_ID:IntelLLVM>:-fno-finite-math-only>)
+# Our own definitions are never interposed at runtime, so let the compiler call
+# them directly instead of through the PLT. ELF only, Mach-O has no preemption.
+target_compile_options(${PROJECT_NAME}_c PRIVATE
+  $<$<AND:$<PLATFORM_ID:Linux>,$<CXX_COMPILER_ID:GNU,Clang,IntelLLVM>>:-fno-semantic-interposition>
+)
 target_compile_definitions(${PROJECT_NAME}_c PUBLIC
 				NDA_GIT_HASH=${PROJECT_GIT_HASH}
 				$<$<CONFIG:Debug>:NDA_DEBUG>
