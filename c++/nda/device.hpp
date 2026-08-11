@@ -126,10 +126,51 @@ namespace nda {
   }
 
   /**
+   * @brief Type alias to map a scalar type to its CUDA representation.
+   * @details Maps `std::complex<float>` to `cuComplex` and `std::complex<double>` to `cuDoubleComplex`, and
+   * leaves all other types unchanged.
+   * @tparam T Scalar type.
+   */
+  template <typename T>
+  using cuda_scalar_t = std::conditional_t<std::is_same_v<T, std::complex<float>>, cuComplex,
+                                           std::conditional_t<std::is_same_v<T, std::complex<double>>, cuDoubleComplex, T>>;
+
+  /**
+   * @brief Over-aligned copy of a scalar that is handed to a CUDA library by address.
+   *
+   * @details CUDA declares `cuComplex` and `cuDoubleComplex` with an alignment of 8 and 16 bytes, while
+   * `std::complex<float>` and `std::complex<double>` only guarantee 4 and 8. cuBLAS and cuTENSOR read
+   * host-side scalars with aligned SSE loads, so taking the address of a `std::complex` lvalue and passing
+   * it on may fault. This wrapper holds a copy with the alignment those libraries expect and converts to a
+   * pointer to it.
+   *
+   * Pass a temporary, e.g. `cublasZscal(..., cuscalar(alpha), ...)`: it lives until the end of the
+   * full-expression and therefore for the duration of the call.
+   *
+   * @tparam T Scalar type.
+   */
+  template <typename T>
+  struct alignas(16) cuscalar {
+    /// Copy of the scalar in its CUDA representation.
+    cuda_scalar_t<T> value;
+
+    /// Construct from a scalar of type `T`.
+    explicit cuscalar(T x) {
+      if constexpr (is_complex_v<T>)
+        value = cucplx(x);
+      else
+        value = x;
+    }
+
+    /// Implicit conversion to a pointer to the wrapped value.
+    operator cuda_scalar_t<T> const *() const { return &value; } // NOLINT (implicit conversion is the point)
+  };
+
+  /**
    * @brief Cast a pointer to a `std::complex<T>` to a pointer to the equivalent CUDA type.
-   * 
-   * @details It casts 
-   * - `std::complex<float>*` to `cuComplex*` and 
+   *
+   * @details It casts
+   * - `std::complex<float>*` to `cuComplex*` and
    * - `std::complex<double>*` to `cuDoubleComplex*`.
    *
    * @tparam T nda::FloatOrDouble type.
