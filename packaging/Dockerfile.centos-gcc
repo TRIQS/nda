@@ -5,15 +5,12 @@ RUN dnf -y install dnf-plugins-core epel-release && \
     dnf -y update && \
     dnf -y install \
       blas-devel \
-      boost-devel \
       cmake3 \
-      fftw-devel \
       gcc-c++ \
       gcc-gfortran \
       git \
       vim \
       lldb \
-      gmp-devel \
       hdf5-devel \
       lapack-devel \
       make \

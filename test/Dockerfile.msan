@@ -9,11 +9,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
       gfortran \
       git \
       libblas-dev \
-      libboost-all-dev \
       libclang-${LLVM_MAJOR_VERSION}-dev \
-      libfftw3-dev \
       libgfortran3 \
-      libgmp-dev \
       zlib1g-dev \
       intel-mkl \
       python-clang-${LLVM_MAJOR_VERSION} \

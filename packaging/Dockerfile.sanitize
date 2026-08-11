@@ -12,14 +12,11 @@ RUN apt-get update && apt-get install -y lsb-release wget software-properties-co
       vim \
       lldb-${LLVM} \
       hdf5-tools \
-      libboost-dev \
       libclang-${LLVM}-dev \
       libc++-${LLVM}-dev \
       libc++abi-${LLVM}-dev \
       libomp-${LLVM}-dev \
-      libfftw3-dev \
       libgfortran5 \
-      libgmp-dev \
       libhdf5-dev \
       libopenblas-dev \
       libopenmpi-dev \

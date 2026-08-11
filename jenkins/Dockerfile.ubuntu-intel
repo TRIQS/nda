@@ -8,13 +8,10 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
       vim \
       lldb-${LLVM} \
       hdf5-tools \
-      libboost-dev \
       libclang-${LLVM}-dev \
       libc++-${LLVM}-dev \
       libc++abi-${LLVM}-dev \
       libzstd-dev \
-      libfftw3-dev \
-      libgmp-dev \
       libhdf5-dev \
       python3-clang-${LLVM} \
       python3-dev \

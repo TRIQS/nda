@@ -17,9 +17,7 @@ RUN apt-get update && apt-get install -y lsb-release wget software-properties-co
       hdf5-tools \
       libclang-${LLVM}-dev \
       libomp-${LLVM}-dev \
-      libfftw3-dev \
       libgfortran5 \
-      libgmp-dev \
       libssl-dev \
       ninja-build \
       pkg-config \
