@@ -78,13 +78,12 @@ namespace nda::tensor::device {
       }
     }
 
-    // Find the pointer alignment for a given pointer, capped at 256.
+    // Largest power-of-two divisor of the pointer address, capped at 256 (cudaMalloc default alignment).
+    // Capping the shift count also covers p == nullptr, where countr_zero returns the full width.
     template <typename T>
-    auto find_alignment(T *p) {
+    std::uint32_t find_alignment(T *p) {
       auto const x = reinterpret_cast<std::uintptr_t>(p); // NOLINT (reinterpret_cast is necessary here)
-      // largest power-of-two divisor of the address, capped at 256 (cudaMalloc default alignment)
-      std::uintptr_t alignment = std::uintptr_t(1) << std::countr_zero(x);
-      return static_cast<std::uint32_t>(std::min(alignment, std::uintptr_t(256)));
+      return std::uint32_t{1} << std::min(std::countr_zero(x), 8);
     }
 
     // Convert an index string to a vector of int32_t mode labels for cuTENSOR.
@@ -214,7 +213,7 @@ namespace nda::tensor::device {
       auto plan     = create_plan(op_desc, pref, ws_limit);
 
       // execute permutation
-      cutensor_error_check(cutensorPermute(handle, plan, &alpha, A.data, B.data, nullptr /*stream*/), "cutensorPermute");
+      cutensor_error_check(cutensorPermute(handle, plan, cuscalar(alpha), A.data, B.data, nullptr /*stream*/), "cutensorPermute");
 
       // synchronize
       cuda_device_sync(synchronize, "cutensorPermute");
@@ -256,8 +255,9 @@ namespace nda::tensor::device {
       auto plan     = create_plan(op_desc, pref, ws_limit);
 
       // execute elementwise binary
-      cutensor_error_check(cutensorElementwiseBinaryExecute(handle, plan, &alpha, A.data, &gamma, C.data, D.data, nullptr /*stream*/),
-                           "cutensorElementwiseBinaryExecute");
+      cutensor_error_check(
+         cutensorElementwiseBinaryExecute(handle, plan, cuscalar(alpha), A.data, cuscalar(gamma), C.data, D.data, nullptr /*stream*/),
+         "cutensorElementwiseBinaryExecute");
 
       // synchronize
       cuda_device_sync(synchronize, "cutensorElementwiseBinaryExecute");
@@ -303,7 +303,8 @@ namespace nda::tensor::device {
       auto plan     = create_plan(op_desc, pref, ws_limit);
 
       // execute elementwise trinary
-      cutensor_error_check(cutensorElementwiseTrinaryExecute(handle, plan, &alpha, A.data, &beta, B.data, &gamma, C.data, D.data, nullptr /*stream*/),
+      cutensor_error_check(cutensorElementwiseTrinaryExecute(handle, plan, cuscalar(alpha), A.data, cuscalar(beta), B.data, cuscalar(gamma), C.data,
+                                                             D.data, nullptr /*stream*/),
                            "cutensorElementwiseTrinaryExecute");
 
       // synchronize
@@ -358,8 +359,9 @@ namespace nda::tensor::device {
       if (ws_size > 0) { device_error_check(cudaMalloc(&workspace, ws_size), "cudaMalloc"); }
 
       // execute reduction
-      cutensor_error_check(cutensorReduce(handle, plan, &alpha, A.data, &beta, C.data, D.data, workspace, ws_size, nullptr /*stream*/),
-                           "cutensorReduce");
+      cutensor_error_check(
+         cutensorReduce(handle, plan, cuscalar(alpha), A.data, cuscalar(beta), C.data, D.data, workspace, ws_size, nullptr /*stream*/),
+         "cutensorReduce");
 
       // synchronize
       cuda_device_sync(synchronize, "cutensorReduce");
@@ -416,8 +418,9 @@ namespace nda::tensor::device {
       if (ws_size > 0) { device_error_check(cudaMalloc(&workspace, ws_size), "cudaMalloc"); }
 
       // execute contraction
-      cutensor_error_check(cutensorContract(handle, plan, &alpha, A.data, B.data, &beta, C.data, D.data, workspace, ws_size, nullptr /*stream*/),
-                           "cutensorContract");
+      cutensor_error_check(
+         cutensorContract(handle, plan, cuscalar(alpha), A.data, B.data, cuscalar(beta), C.data, D.data, workspace, ws_size, nullptr /*stream*/),
+         "cutensorContract");
 
       // synchronize
       cuda_device_sync(synchronize, "cutensorContract");

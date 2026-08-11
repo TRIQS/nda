@@ -152,11 +152,11 @@ namespace nda::blas::device {
   // axpy
   void axpy(int n, float alpha, const float *x, int incx, float *y, int incy) { cublasSaxpy(get_handle(), n, &alpha, x, incx, y, incy); }
   void axpy(int n, std::complex<float> alpha, const std::complex<float> *x, int incx, std::complex<float> *y, int incy) {
-    CUBLAS_CHECK(cublasCaxpy, n, cucplx(&alpha), cucplx(x), incx, cucplx(y), incy);
+    CUBLAS_CHECK(cublasCaxpy, n, cuscalar(alpha), cucplx(x), incx, cucplx(y), incy);
   }
   void axpy(int n, double alpha, const double *x, int incx, double *y, int incy) { cublasDaxpy(get_handle(), n, &alpha, x, incx, y, incy); }
   void axpy(int n, std::complex<double> alpha, const std::complex<double> *x, int incx, std::complex<double> *y, int incy) {
-    CUBLAS_CHECK(cublasZaxpy, n, cucplx(&alpha), cucplx(x), incx, cucplx(y), incy);
+    CUBLAS_CHECK(cublasZaxpy, n, cuscalar(alpha), cucplx(x), incx, cucplx(y), incy);
   }
 
   // copy
@@ -207,7 +207,7 @@ namespace nda::blas::device {
   }
   void gemm(char op_a, char op_b, int m, int n, int k, std::complex<float> alpha, const std::complex<float> *a, int lda, const std::complex<float> *b,
             int ldb, std::complex<float> beta, std::complex<float> *c, int ldc) {
-    CUBLAS_CHECK(cublasCgemm, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, cucplx(&alpha), cucplx(a), lda, cucplx(b), ldb, cucplx(&beta),
+    CUBLAS_CHECK(cublasCgemm, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, cuscalar(alpha), cucplx(a), lda, cucplx(b), ldb, cuscalar(beta),
                  cucplx(c), ldc);
   }
   void gemm(char op_a, char op_b, int m, int n, int k, double alpha, const double *a, int lda, const double *b, int ldb, double beta, double *c,
@@ -216,7 +216,7 @@ namespace nda::blas::device {
   }
   void gemm(char op_a, char op_b, int m, int n, int k, std::complex<double> alpha, const std::complex<double> *a, int lda,
             const std::complex<double> *b, int ldb, std::complex<double> beta, std::complex<double> *c, int ldc) {
-    CUBLAS_CHECK(cublasZgemm, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, cucplx(&alpha), cucplx(a), lda, cucplx(b), ldb, cucplx(&beta),
+    CUBLAS_CHECK(cublasZgemm, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, cuscalar(alpha), cucplx(a), lda, cucplx(b), ldb, cuscalar(beta),
                  cucplx(c), ldc);
   }
 
@@ -227,8 +227,8 @@ namespace nda::blas::device {
   }
   void gemm_batch(char op_a, char op_b, int m, int n, int k, std::complex<float> alpha, const std::complex<float> **a, int lda,
                   const std::complex<float> **b, int ldb, std::complex<float> beta, std::complex<float> **c, int ldc, int batch_count) {
-    CUBLAS_CHECK(cublasCgemmBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, cucplx(&alpha), cucplx(a), lda, cucplx(b), ldb, cucplx(&beta),
-                 cucplx(c), ldc, batch_count);
+    CUBLAS_CHECK(cublasCgemmBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, cuscalar(alpha), cucplx(a), lda, cucplx(b), ldb,
+                 cuscalar(beta), cucplx(c), ldc, batch_count);
   }
   void gemm_batch(char op_a, char op_b, int m, int n, int k, double alpha, const double **a, int lda, const double **b, int ldb, double beta,
                   double **c, int ldc, int batch_count) {
@@ -236,8 +236,8 @@ namespace nda::blas::device {
   }
   void gemm_batch(char op_a, char op_b, int m, int n, int k, std::complex<double> alpha, const std::complex<double> **a, int lda,
                   const std::complex<double> **b, int ldb, std::complex<double> beta, std::complex<double> **c, int ldc, int batch_count) {
-    CUBLAS_CHECK(cublasZgemmBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, cucplx(&alpha), cucplx(a), lda, cucplx(b), ldb, cucplx(&beta),
-                 cucplx(c), ldc, batch_count);
+    CUBLAS_CHECK(cublasZgemmBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, cuscalar(alpha), cucplx(a), lda, cucplx(b), ldb,
+                 cuscalar(beta), cucplx(c), ldc, batch_count);
   }
 
   // gemm_vbatch
@@ -267,8 +267,8 @@ namespace nda::blas::device {
   void gemm_batch_strided(char op_a, char op_b, int m, int n, int k, std::complex<float> alpha, const std::complex<float> *a, int lda, int stride_a,
                           const std::complex<float> *b, int ldb, int stride_b, std::complex<float> beta, std::complex<float> *c, int ldc,
                           int stride_c, int batch_count) {
-    CUBLAS_CHECK(cublasCgemmStridedBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, cucplx(&alpha), cucplx(a), lda, stride_a, cucplx(b),
-                 ldb, stride_b, cucplx(&beta), cucplx(c), ldc, stride_c, batch_count);
+    CUBLAS_CHECK(cublasCgemmStridedBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, cuscalar(alpha), cucplx(a), lda, stride_a, cucplx(b),
+                 ldb, stride_b, cuscalar(beta), cucplx(c), ldc, stride_c, batch_count);
   }
   void gemm_batch_strided(char op_a, char op_b, int m, int n, int k, double alpha, const double *a, int lda, int stride_a, const double *b, int ldb,
                           int stride_b, double beta, double *c, int ldc, int stride_c, int batch_count) {
@@ -278,8 +278,8 @@ namespace nda::blas::device {
   void gemm_batch_strided(char op_a, char op_b, int m, int n, int k, std::complex<double> alpha, const std::complex<double> *a, int lda, int stride_a,
                           const std::complex<double> *b, int ldb, int stride_b, std::complex<double> beta, std::complex<double> *c, int ldc,
                           int stride_c, int batch_count) {
-    CUBLAS_CHECK(cublasZgemmStridedBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, cucplx(&alpha), cucplx(a), lda, stride_a, cucplx(b),
-                 ldb, stride_b, cucplx(&beta), cucplx(c), ldc, stride_c, batch_count);
+    CUBLAS_CHECK(cublasZgemmStridedBatched, get_cublas_op(op_a), get_cublas_op(op_b), m, n, k, cuscalar(alpha), cucplx(a), lda, stride_a, cucplx(b),
+                 ldb, stride_b, cuscalar(beta), cucplx(c), ldc, stride_c, batch_count);
   }
 
   // gemv
@@ -288,14 +288,14 @@ namespace nda::blas::device {
   }
   void gemv(char op, int m, int n, std::complex<float> alpha, const std::complex<float> *a, int lda, const std::complex<float> *x, int incx,
             std::complex<float> beta, std::complex<float> *y, int incy) {
-    CUBLAS_CHECK(cublasCgemv, get_cublas_op(op), m, n, cucplx(&alpha), cucplx(a), lda, cucplx(x), incx, cucplx(&beta), cucplx(y), incy);
+    CUBLAS_CHECK(cublasCgemv, get_cublas_op(op), m, n, cuscalar(alpha), cucplx(a), lda, cucplx(x), incx, cuscalar(beta), cucplx(y), incy);
   }
   void gemv(char op, int m, int n, double alpha, const double *a, int lda, const double *x, int incx, double beta, double *y, int incy) {
     CUBLAS_CHECK(cublasDgemv, get_cublas_op(op), m, n, &alpha, a, lda, x, incx, &beta, y, incy);
   }
   void gemv(char op, int m, int n, std::complex<double> alpha, const std::complex<double> *a, int lda, const std::complex<double> *x, int incx,
             std::complex<double> beta, std::complex<double> *y, int incy) {
-    CUBLAS_CHECK(cublasZgemv, get_cublas_op(op), m, n, cucplx(&alpha), cucplx(a), lda, cucplx(x), incx, cucplx(&beta), cucplx(y), incy);
+    CUBLAS_CHECK(cublasZgemv, get_cublas_op(op), m, n, cuscalar(alpha), cucplx(a), lda, cucplx(x), incx, cuscalar(beta), cucplx(y), incy);
   }
 
   // ger and gerc
@@ -304,29 +304,29 @@ namespace nda::blas::device {
   }
   void ger(int m, int n, std::complex<float> alpha, const std::complex<float> *x, int incx, const std::complex<float> *y, int incy,
            std::complex<float> *a, int lda) {
-    CUBLAS_CHECK(cublasCgeru, m, n, cucplx(&alpha), cucplx(x), incx, cucplx(y), incy, cucplx(a), lda);
+    CUBLAS_CHECK(cublasCgeru, m, n, cuscalar(alpha), cucplx(x), incx, cucplx(y), incy, cucplx(a), lda);
   }
   void gerc(int m, int n, std::complex<float> alpha, const std::complex<float> *x, int incx, const std::complex<float> *y, int incy,
             std::complex<float> *a, int lda) {
-    CUBLAS_CHECK(cublasCgerc, m, n, cucplx(&alpha), cucplx(x), incx, cucplx(y), incy, cucplx(a), lda);
+    CUBLAS_CHECK(cublasCgerc, m, n, cuscalar(alpha), cucplx(x), incx, cucplx(y), incy, cucplx(a), lda);
   }
   void ger(int m, int n, double alpha, const double *x, int incx, const double *y, int incy, double *a, int lda) {
     CUBLAS_CHECK(cublasDger, m, n, &alpha, x, incx, y, incy, a, lda);
   }
   void ger(int m, int n, std::complex<double> alpha, const std::complex<double> *x, int incx, const std::complex<double> *y, int incy,
            std::complex<double> *a, int lda) {
-    CUBLAS_CHECK(cublasZgeru, m, n, cucplx(&alpha), cucplx(x), incx, cucplx(y), incy, cucplx(a), lda);
+    CUBLAS_CHECK(cublasZgeru, m, n, cuscalar(alpha), cucplx(x), incx, cucplx(y), incy, cucplx(a), lda);
   }
   void gerc(int m, int n, std::complex<double> alpha, const std::complex<double> *x, int incx, const std::complex<double> *y, int incy,
             std::complex<double> *a, int lda) {
-    CUBLAS_CHECK(cublasZgerc, m, n, cucplx(&alpha), cucplx(x), incx, cucplx(y), incy, cucplx(a), lda);
+    CUBLAS_CHECK(cublasZgerc, m, n, cuscalar(alpha), cucplx(x), incx, cucplx(y), incy, cucplx(a), lda);
   }
 
   // scal
   void scal(int m, float alpha, float *x, int incx) { CUBLAS_CHECK(cublasSscal, m, &alpha, x, incx); }
-  void scal(int m, std::complex<float> alpha, std::complex<float> *x, int incx) { CUBLAS_CHECK(cublasCscal, m, cucplx(&alpha), cucplx(x), incx); }
+  void scal(int m, std::complex<float> alpha, std::complex<float> *x, int incx) { CUBLAS_CHECK(cublasCscal, m, cuscalar(alpha), cucplx(x), incx); }
   void scal(int m, double alpha, double *x, int incx) { CUBLAS_CHECK(cublasDscal, m, &alpha, x, incx); }
-  void scal(int m, std::complex<double> alpha, std::complex<double> *x, int incx) { CUBLAS_CHECK(cublasZscal, m, cucplx(&alpha), cucplx(x), incx); }
+  void scal(int m, std::complex<double> alpha, std::complex<double> *x, int incx) { CUBLAS_CHECK(cublasZscal, m, cuscalar(alpha), cucplx(x), incx); }
 
   // swap
   void swap(int n, float *x, int incx, float *y, int incy) { CUBLAS_CHECK(cublasSswap, n, x, incx, y, incy); } // NOLINT (this is a BLAS swap)
