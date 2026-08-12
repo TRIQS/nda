@@ -34,8 +34,10 @@ namespace nda::tensor {
   namespace detail {
 
     /// Slice `arr` on the compile-time axis `Axis` at index `i`, padding the other axes with `range::all`.
-    template <int Axis, int Rank>
-    decltype(auto) slice_axis(auto &&arr, long i) {
+    // `typename A` rather than `auto &&arr`: cudafe++ emits the malformed `template <int Axis, int Rank, >` for an
+    // abbreviated function template whose body holds a lambda with an explicit template parameter list.
+    template <int Axis, int Rank, typename A>
+    decltype(auto) slice_axis(A &&arr, long i) {
       return [&]<size_t... Before, size_t... After>(std::index_sequence<Before...>, std::index_sequence<After...>) -> decltype(auto) {
         return arr(((void)Before, ::nda::range::all)..., i, ((void)After, ::nda::range::all)...);
       }(std::make_index_sequence<Axis>{}, std::make_index_sequence<Rank - Axis - 1>{});
