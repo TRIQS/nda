@@ -184,7 +184,7 @@ namespace nda {
       return permuted_indices_view<encode(nda::permutations::reverse_identity<get_rank<A>>())>(std::forward<A>(a));
     } else { // expr_call
       static_assert(std::tuple_size_v<decltype(a.a)> == 1, "Error in nda::transpose: Cannot transpose expr_call with more than one array argument");
-      return map(a.f)(transpose(std::get<0>(std::forward<A>(a).a)));
+      return map(a.f)(transpose(std::forward<A>(a).operand()));
     }
   }
 

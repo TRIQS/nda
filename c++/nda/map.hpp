@@ -84,10 +84,19 @@ namespace nda {
     /// Callable object of the expression.
     F f;
 
-    /// Tuple containing the nda::Array arguments.
+    /**
+     * @brief Tuple containing the nda::Array arguments.
+     *
+     * @details Lvalue operands are stored by reference, so reading this member directly can hand out a writable
+     * operand even from a const expression. Access it through expr_call::operand instead, which propagates the
+     * constness of the expression object.
+     */
     std::tuple<As...> a;
 
     private:
+    // The const member functions below read expr_call::a directly: expr_call::operand would const-qualify the
+    // operands, so that e.g. slicing would yield an expression over const views.
+
     // Implementation of the function call operator.
     template <size_t... Is, typename... Args>
     [[gnu::always_inline]] [[nodiscard]] auto _call(std::index_sequence<Is...>, Args const &...args) const {
@@ -145,13 +154,33 @@ namespace nda {
      * @brief Get the shape of the nda::Array objects.
      * @return `std::array<long, Rank>` object specifying the shape of each nda::Array object.
      */
-    [[nodiscard]] auto shape() const { return std::get<0>(a).shape(); }
+    [[nodiscard]] auto shape() const { return operand().shape(); }
 
     /**
      * @brief Get the total size of the nda::Array objects.
      * @return Number of elements contained in each nda::Array object.
      */
-    [[nodiscard]] long size() const { return std::get<0>(a).size(); }
+    [[nodiscard]] long size() const { return operand().size(); }
+
+    /**
+     * @brief Get one of the nda::Array arguments of the expression.
+     *
+     * @details The returned reference carries the constness of the expression object, i.e. a const expression never
+     * hands out a writable operand.
+     *
+     * @tparam I Index of the argument in the tuple expr_call::a.
+     * @return Reference to the I-th nda::Array argument.
+     */
+    template <size_t I = 0>
+    [[nodiscard]] auto &operand() {
+      return std::get<I>(a);
+    }
+
+    /// Const overload of expr_call::operand.
+    template <size_t I = 0>
+    [[nodiscard]] auto const &operand() const {
+      return std::get<I>(a);
+    }
   };
 
   /**

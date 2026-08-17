@@ -255,6 +255,39 @@ TEST(NDA, BLASGemmBatch) {
   test_gemm_batch_layouts<std::complex<double>, false>();
 }
 
+// Test the batched gemm routine with batches of lazy conjugate expressions.
+template <typename T>
+void test_gemm_batch_conj() {
+  int const batch_count = 4;
+  long const m = 16, k = 12, n = 8;
+
+  // C is in F_layout so that gemm_batch takes the direct path instead of recursing through the transposed batches,
+  // and the conjugate expressions consequently need the opposite (C) layout
+  std::vector<nda::matrix<T, C_layout>> mat_A, mat_B;
+  std::vector<nda::matrix<T, F_layout>> vec_C, exp_C;
+  for ([[maybe_unused]] auto i : nda::range(batch_count)) {
+    mat_A.push_back(nda::matrix<T, C_layout>::rand({m, k}));
+    mat_B.push_back(nda::matrix<T, C_layout>::rand({k, n}));
+    vec_C.push_back(nda::matrix<T, F_layout>::zeros({m, n}));
+    exp_C.push_back(nda::matrix<T, F_layout>::zeros({m, n}));
+    nda::blas::gemm(1.0, nda::conj(mat_A.back()), nda::conj(mat_B.back()), 0.0, exp_C.back());
+  }
+
+  // the batches bind their matrices as lvalues, i.e. the expressions store references instead of copies
+  std::vector<decltype(nda::conj(mat_A[0]))> vec_A;
+  std::vector<decltype(nda::conj(mat_B[0]))> vec_B;
+  for (auto &a : mat_A) vec_A.push_back(nda::conj(a));
+  for (auto &b : mat_B) vec_B.push_back(nda::conj(b));
+
+  nda::blas::gemm_batch(1.0, vec_A, vec_B, 0.0, vec_C);
+  for (auto i : nda::range(batch_count)) EXPECT_ARRAY_NEAR(vec_C[i], exp_C[i], fp_tol<T>);
+}
+
+TEST(NDA, BLASGemmBatchConj) {
+  test_gemm_batch_conj<std::complex<float>>();
+  test_gemm_batch_conj<std::complex<double>>();
+}
+
 TEST(NDA, BLASGemmVbatch) {
   test_gemm_batch_layouts<float, true>();
   test_gemm_batch_layouts<std::complex<float>, true>();

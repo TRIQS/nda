@@ -9,6 +9,7 @@
 #include <nda/nda.hpp>
 
 #include <complex>
+#include <concepts>
 
 using namespace std::complex_literals;
 using nda::C_layout, nda::F_layout;
@@ -1054,4 +1055,25 @@ TEST(NDA, TensorSetOnHost) {
   test_set<std::complex<float>, Host>();
   test_set<double, Host>();
   test_set<std::complex<double>, Host>();
+}
+
+// Test that a tensor_view built from a conjugate lazy expression follows the constness of the expression.
+TEST(NDA, TensorViewOfConjExprConstness) {
+  using namespace nda::tensor;
+  using T = std::complex<double>;
+
+  auto A        = nda::array<T, 2>{3, 4};
+  auto e        = nda::conj(A);
+  auto const ce = nda::conj(A);
+
+  // a non-const conj expression is still usable as a mutable tensor operand, a const one is read-only
+  static_assert(std::same_as<decltype(tensor_view(e)), tensor_view<T>>);
+  static_assert(std::same_as<decltype(tensor_view(ce)), const_tensor_view<T>>);
+  static_assert(!std::constructible_from<tensor_view<T>, decltype(ce) &>);
+
+  // in either case the view points at A without copying
+  EXPECT_EQ(tensor_view(e).data, A.data());
+  EXPECT_EQ(tensor_view(ce).data, A.data());
+  EXPECT_EQ(tensor_view(e).op, unary_op::CONJ);
+  EXPECT_EQ(tensor_view(ce).op, unary_op::CONJ);
 }
