@@ -21,7 +21,6 @@
 #include "../traits.hpp"
 
 #include <complex>
-#include <tuple>
 #include <type_traits>
 #include <utility>
 
@@ -59,6 +58,9 @@ namespace nda::blas_lapack {
    * @brief Get the underlying array of a conjugate lazy expression or return the array itself in case it is an
    * nda::MemoryArray.
    *
+   * @details The returned array carries the constness of the expression object, i.e. a const conjugate expression can
+   * only ever be a read-only BLAS/tensor operand, while a non-const one can also serve as a destination.
+   *
    * @tparam A nda::Array type.
    * @param a Conjugate expression or array/view.
    * @return nda::MemoryArray object.
@@ -67,7 +69,7 @@ namespace nda::blas_lapack {
     requires(MemoryArray<A> or is_conj_array_expr<A>)
   MemoryArray decltype(auto) get_array(A &&a) {
     if constexpr (is_conj_array_expr<A>) {
-      return std::get<0>(std::forward<A>(a).a);
+      return std::forward<A>(a).operand();
     } else {
       return std::forward<A>(a);
     }
@@ -78,7 +80,7 @@ namespace nda::blas_lapack {
     requires((MemoryArray<As> or is_conj_array_expr<As>) and ...)
   static constexpr bool has_F_layout = ([]<typename A>() constexpr {
     if constexpr (is_conj_array_expr<A>)
-      return has_F_layout<decltype(std::get<0>(std::declval<A>().a))>;
+      return has_F_layout<decltype(std::declval<A>().operand())>;
     else
       return std::remove_cvref_t<A>::is_stride_order_Fortran();
   }.template operator()<As>() and ...);
@@ -88,7 +90,7 @@ namespace nda::blas_lapack {
     requires((MemoryArray<As> or is_conj_array_expr<As>) and ...)
   static constexpr bool has_C_layout = ([]<typename A>() constexpr {
     if constexpr (is_conj_array_expr<A>)
-      return has_C_layout<decltype(std::get<0>(std::declval<A>().a))>;
+      return has_C_layout<decltype(std::declval<A>().operand())>;
     else
       return std::remove_cvref_t<A>::is_stride_order_C();
   }.template operator()<As>() and ...);

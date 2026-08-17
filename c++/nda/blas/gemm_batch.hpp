@@ -49,9 +49,9 @@ namespace nda::blas {
     auto get_ptr_vector(auto &&v) {
       EXPECTS(std::ranges::all_of(v, [&v](auto &A) { return is_vbatch or A.shape() == v[0].shape(); }));
       EXPECTS(std::ranges::all_of(v, [](auto &A) { return get_array(A).indexmap().min_stride() == 1; }));
-      using ptr_t = std::remove_reference_t<decltype(get_first_element(v[0]))> *;
+      using ptr_t = decltype(get_array(v[0]).data());
       auto v_ptrs = nda::vector<ptr_t, heap<vec_addr_spc>>(v.size());
-      std::transform(v.begin(), v.end(), v_ptrs.begin(), [](auto &z) { return get_array(z).data(); });
+      std::ranges::transform(v, v_ptrs.begin(), [](auto &z) { return get_array(z).data(); });
       return v_ptrs;
     }
 
@@ -248,8 +248,8 @@ namespace nda::blas {
       };
 
       // get underlying array in case it is given as a conjugate expression
-      auto arr_a = get_array(a);
-      auto arr_b = get_array(b);
+      auto &&arr_a = get_array(a);
+      auto &&arr_b = get_array(b);
 
       // check the dimensions of the input/output arrays/views
       auto const [nb_a, m_a, k_a, ld_a, s_a] = array_info(arr_a);

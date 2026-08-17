@@ -206,6 +206,43 @@ TEST(NDA, CUBLASGemmBatch) {
   test_gemm_batch_layouts<std::complex<double>, false>();
 }
 
+// Test the CUBLAS gemm_batch function with batches of lazy conjugate expressions.
+template <typename T, nda::mem::AddressSpace AS>
+void test_gemm_batch_conj() {
+  int const batch_count = 4;
+  long const m = 16, k = 12, n = 8;
+
+  // C is in F_layout so that gemm_batch takes the direct path instead of recursing through the transposed batches,
+  // and the conjugate expressions consequently need the opposite (C) layout
+  std::vector<nda::matrix<T, C_layout, nda::heap<AS>>> mat_A, mat_B;
+  std::vector<nda::matrix<T, F_layout, nda::heap<AS>>> vec_C;
+  std::vector<nda::matrix<T, F_layout>> exp_C;
+  for ([[maybe_unused]] auto i : nda::range(batch_count)) {
+    auto A = nda::matrix<T, C_layout>::rand({m, k});
+    auto B = nda::matrix<T, C_layout>::rand({k, n});
+    mat_A.push_back(A);
+    mat_B.push_back(B);
+    vec_C.push_back(nda::matrix<T, F_layout, nda::heap<AS>>::zeros({m, n}));
+    exp_C.push_back(nda::matrix<T, F_layout>::zeros({m, n}));
+    nda::blas::gemm(1.0, nda::conj(A), nda::conj(B), 0.0, exp_C.back());
+  }
+
+  // the batches bind their matrices as lvalues, i.e. the expressions store references instead of copies
+  std::vector<decltype(nda::conj(mat_A[0]))> vec_A;
+  std::vector<decltype(nda::conj(mat_B[0]))> vec_B;
+  for (auto &a : mat_A) vec_A.push_back(nda::conj(a));
+  for (auto &b : mat_B) vec_B.push_back(nda::conj(b));
+
+  nda::blas::gemm_batch(1.0, vec_A, vec_B, 0.0, vec_C);
+  for (auto i : nda::range(batch_count)) EXPECT_ARRAY_NEAR(nda::to_host(vec_C[i]), exp_C[i], fp_tol<T>);
+}
+
+TEST(NDA, CUBLASGemmBatchConj) {
+  test_gemm_batch_conj<std::complex<float>, Device>();
+  test_gemm_batch_conj<std::complex<double>, Device>();
+  test_gemm_batch_conj<std::complex<double>, Unified>();
+}
+
 TEST(NDA, CUBLASGemmVBatch) {
   test_gemm_batch_layouts<float, true>();
   test_gemm_batch_layouts<double, true>();
