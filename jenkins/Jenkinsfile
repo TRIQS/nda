@@ -66,10 +66,11 @@ def runBuild = { String platform, String prefix, List<String> envs ->
     if (regen) {
       dir("clair") {
         /* Build and install clair so that clair-c2py is available for Python binding regeneration.
+         * Track the clair 0.9.x release branch to stay in sync with the pinned c2py 0.9.x.
          * Unset CPLUS_INCLUDE_PATH / CXXFLAGS below so that platform settings (e.g. -stdlib=libc++)
          * do not leak into the clair build and mix libc++ headers with libstdc++ linkage. */
         checkout scmGit(userRemoteConfigs: [[url: 'https://github.com/flatironinstitute/clair']],
-          branches: [[name: 'refs/heads/unstable']])
+          branches: [[name: 'refs/heads/0.9.x']])
       }
       dir("$WORKSPACE_TMP/clair") {
         sh """#!/bin/sh -ex
