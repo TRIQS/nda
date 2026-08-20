@@ -17,9 +17,14 @@ set(@PROJECT_NAME@_ROOT @CMAKE_INSTALL_PREFIX@ CACHE STRING "@PROJECT_NAME@ root
 # Find OpenMP
 find_package(OpenMP REQUIRED COMPONENTS CXX)
 
-# Find CUDAToolkit
+# Find the CUDA libraries the same way they were found at build time
 if(@CudaSupport@)
-  find_package(CUDAToolkit REQUIRED)
+  if(@NVHPC_FOUND@)
+    find_package(NVHPC REQUIRED COMPONENTS CUDA MATH CONFIG PATHS "@NVHPC_DIR@")
+  else()
+    # Also provides Threads::Threads, needed by a static cutensor
+    find_package(CUDAToolkit REQUIRED)
+  endif()
 endif()
 
 # Disable the by default enabled fast math functions for intel compilers

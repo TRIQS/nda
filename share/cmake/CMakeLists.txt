@@ -1,3 +1,10 @@
+# Was the NVHPC SDK used for the CUDA libraries at build time?
+if(NVHPC_DIR)
+  set(NVHPC_FOUND TRUE)
+else()
+  set(NVHPC_FOUND FALSE)
+endif()
+
 configure_file(${PROJECT_NAME}-config.cmake.in ${PROJECT_NAME}-config.cmake @ONLY)
 configure_file(${PROJECT_NAME}-config-version.cmake.in ${PROJECT_NAME}-config-version.cmake @ONLY)
 install(
