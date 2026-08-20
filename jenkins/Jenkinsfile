@@ -5,6 +5,9 @@ def documentationPlatform = ""
 /* Platforms that regenerate the Python bindings via clair-c2py.
    All others use the default (OFF) from c2py. */
 def regenPlatforms = ["ubuntu-clang"]
+/* Extra buildPod options for the cuda platforms. a100 because CUDA 13 dropped Volta,
+   which rules out the V100s in the GPU pool. */
+def gpuPod = [gpus: 1, gpuType: 'a100']
 /* whether to keep and publish the results */
 def keepInstall = false // disabled on jenkins-new: !env.BRANCH_NAME.startsWith("PR-")
 
@@ -29,7 +32,8 @@ def runBuild = { String platform, String prefix, List<String> envs ->
   def installDir = keepInstall ? "$prefix/install/$JOB_NAME/$platform" : "$WORKSPACE_TMP/install"
   envs += [
     "OPENBLAS_NUM_THREADS=1",
-    "MKL_NUM_THREADS=1"]
+    "MKL_NUM_THREADS=1",
+    "TBLIS_NUM_THREADS=1"]
   if (macos) {
     dir(installDir) {
       deleteDir()
@@ -87,6 +91,10 @@ def runBuild = { String platform, String prefix, List<String> envs ->
       args += ' -DBuild_Documentation=ON'
     else if (platform == "sanitize")
       args += ' -DASAN=ON -DUBSAN=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo'
+    else if (platform.endsWith("-cuda"))
+      /* BLIS templates its config.mk through perl, which eats the '@' of Jenkins'
+         "<workspace>@tmp" build dir, so fetch it somewhere @-free. */
+      args += " -DCudaSupport=ON -DCutensorSupport=ON -DTblisSupport=ON -DFETCHCONTENT_BASE_DIR=/tmp/deps-$platform"
     dir(buildDir) {
       sh """#!/bin/sh -ex
         cmake $WORKSPACE -DCMAKE_INSTALL_PREFIX=$installDir $args
@@ -110,17 +118,18 @@ def platforms = [:]
 
 /****************** linux builds (in docker) */
 /* Each platform must have a corresponding Dockerfile.PLATFORM in jenkins/ */
-def dockerPlatforms = ["ubuntu-clang", "ubuntu-gcc", "ubuntu-intel", "sanitize"]
+def dockerPlatforms = ["ubuntu-clang", "ubuntu-gcc", "ubuntu-intel", "sanitize",
+                       "ubuntu-clang-cuda", "ubuntu-gcc-cuda"]
 for (int i = 0; i < dockerPlatforms.size(); i++) {
   def platform = dockerPlatforms[i]
   platforms[platform] = { ->
     stage(platform) {
       timeout(time: 1, unit: 'HOURS') {
-        buildPod(tag: platform,
-          context: 'jenkins',
-          dockerfile: "Dockerfile.$platform",
-          devShm: true,
-          mounts: mounts) {
+        buildPod([tag: platform,
+                  context: 'jenkins',
+                  dockerfile: "Dockerfile.$platform",
+                  devShm: true,
+                  mounts: mounts] + (platform.endsWith("-cuda") ? gpuPod : [:])) {
           runBuild(platform, env.WORKSPACE_TMP, [])
         }
       }

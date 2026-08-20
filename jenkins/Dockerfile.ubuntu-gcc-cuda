@@ -1,0 +1,37 @@
+# The GPU CI image, gcc flavour. Everything above the compiler ENV is byte-identical to
+# Dockerfile.ubuntu-clang-cuda so that both images share the cached toolkit and cuTENSOR layers.
+# nda has no .cu sources: the toolkit is here for headers and the libraries nda_c links against.
+FROM docker.io/nvidia/cuda:13.3.1-devel-ubuntu26.04
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+      cmake \
+      g++ \
+      gfortran \
+      git \
+      hdf5-tools \
+      libgfortran5 \
+      libhdf5-dev \
+      libopenblas-dev \
+      libopenmpi-dev \
+      openmpi-bin \
+      openmpi-common \
+      python3-dev \
+      python3-mako \
+      python3-numpy \
+      python3-scipy \
+      wget \
+      xz-utils
+
+# From the redist tarball because NVIDIA's ubuntu2604 apt repo carries no cuTENSOR yet. Never pin
+# below 2.4.0: that is where cuTENSOR stopped tolerating under-aligned host scalars, the regression
+# this image exists to catch. ldconfig, not LD_LIBRARY_PATH, since ctest runs the binaries directly.
+ARG CUTENSOR_VERSION=2.7.0.5
+RUN mkdir -p /opt/cutensor \
+ && wget -qO- https://developer.download.nvidia.com/compute/cutensor/redist/libcutensor/linux-x86_64/libcutensor-linux-x86_64-${CUTENSOR_VERSION}_cuda13-archive.tar.xz \
+    | tar xJ -C /opt/cutensor --strip-components=1 \
+ && echo /opt/cutensor/lib > /etc/ld.so.conf.d/cutensor.conf && ldconfig
+
+ENV Cutensor_ROOT=/opt/cutensor \
+    PYTHON_VERSION=3.14
+
+ENV CC=gcc CXX=g++
