@@ -194,6 +194,7 @@ namespace nda {
    * @return If an array/view is given, return its first element. Otherwise, return the given scalar.
    */
   template <typename A>
+    requires(is_scalar_v<A> or requires { std::declval<A const>().shape(); })
   decltype(auto) get_first_element(A &&a) {
     if constexpr (is_scalar_v<A>) {
       return std::forward<A>(a);
