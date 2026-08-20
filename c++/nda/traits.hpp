@@ -98,7 +98,7 @@ namespace nda {
 
   /**
    * @brief Trait that removes `std::complex` from a type and exposes its underlying value type.
-   * @details In case the given type is not a `std::complex`, the type itself is exposed.
+   * @details In case the given type is not a `std::complex`, the type itself is exposed. Cvref qualifiers are stripped.
    * @tparam T Type to remove `std::complex` from.
    */
   template <typename T>
@@ -111,6 +111,18 @@ namespace nda {
   struct remove_complex<std::complex<T>> {
     using type = T;
   };
+
+  // Specialization of nda::remove_complex for cvref types.
+  template <typename T>
+    requires(!std::is_same_v<T, std::remove_cvref_t<T>>)
+  struct remove_complex<T> : remove_complex<std::remove_cvref_t<T>> {};
+
+  /**
+   * @brief Alias template for the nested `type` in nda::remove_complex.
+   * @tparam T Type to remove `std::complex` from.
+   */
+  template <typename T>
+  using remove_complex_t = typename remove_complex<T>::type;
 
   /** @} */
 

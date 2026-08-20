@@ -55,6 +55,11 @@ TEST(NDA, TraitsGeneral) {
   static_assert(nda::is_blas_lapack_v<float>);
   static_assert(nda::is_blas_lapack_v<std::complex<float>>);
   static_assert(not nda::is_blas_lapack_v<long>);
+
+  static_assert(std::is_same_v<nda::remove_complex_t<std::complex<double>>, double>);
+  static_assert(std::is_same_v<nda::remove_complex_t<std::complex<float> const &>, float>);
+  static_assert(std::is_same_v<nda::remove_complex_t<double>, double>);
+  static_assert(std::is_same_v<nda::remove_complex_t<int const &>, int>);
 }
 
 TEST(NDA, TraitsNDASpecific) {
