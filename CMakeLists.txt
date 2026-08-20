@@ -80,6 +80,9 @@ endif()
 option(CudaSupport "Build with Cuda support" OFF)
 option(CutensorSupport "Build with cuTENSOR support" OFF)
 option(MagmaSupport "Build with Magma support" OFF)
+if(CutensorSupport AND NOT CudaSupport)
+  message(FATAL_ERROR "CutensorSupport requires CudaSupport, please configure with -DCudaSupport=ON")
+endif()
 
 # ############
 # Global Compilation Settings
