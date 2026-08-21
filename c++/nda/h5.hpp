@@ -35,6 +35,11 @@
 
 namespace nda {
 
+  // template <typename T>
+  // concept IsH5NativeOrCompound = ::h5::is_h5_compound<T> and requires {
+  //   { h5::detail::hid_t_of<T>() } -> std::convertible_to<h5::hid_t>;
+  // };
+
   /**
    * @addtogroup av_hdf5
    * @{
@@ -125,7 +130,7 @@ namespace nda {
     if constexpr (std::is_same_v<nda::get_value_t<A>, std::string>) {
       // 1-dimensional array/view of strings
       h5_write(g, name, detail::to_char_buf(a));
-    } else if constexpr (is_scalar_v<typename A::value_type>) {
+    } else if constexpr (is_scalar_v<typename A::value_type> or ::h5::is_h5_compound<typename A::value_type>) {
       // n-dimensional array/view of scalars
       // make a copy if the array/view is not in C-order and write the copy
       if (not a.indexmap().is_stride_order_C()) {
@@ -308,7 +313,7 @@ namespace nda {
       h5::char_buf cb;
       h5_read(g, name, cb);
       detail::from_char_buf(cb, a);
-    } else if constexpr (is_scalar_v<typename A::value_type>) {
+    } else if constexpr (is_scalar_v<typename A::value_type> or ::h5::is_h5_compound<typename A::value_type>) {
       // n-dimensional array/view of scalars
       // read into a temporary array if the array/view is not in C-order and copy the elements
       if (not a.indexmap().is_stride_order_C()) {
