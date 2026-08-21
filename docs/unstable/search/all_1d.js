@@ -27,7 +27,7 @@ var searchData=
   ['slice_20from_20an_20existing_20dataset_24',['Reading a slice from an existing dataset',['../ex5.html#ex5_p4',1,'']]],
   ['slice_20of_20an_20array_20view_25',['Creating a slice of an array/view',['../ex4.html#ex4_p3',1,'']]],
   ['slice_20of_20an_20existing_20dataset_26',['Writing to a slice of an existing dataset',['../ex5.html#ex5_p3',1,'']]],
-  ['slice_5faxis_27',['slice_axis',['../assign_8hpp.html#a15191fc2af831df3280a231c649fa1b9',1,'nda::tensor::detail']]],
+  ['slice_5faxis_27',['slice_axis',['../assign_8hpp.html#a21f8d84ea4114c705720bb295cd14e0a',1,'nda::tensor::detail']]],
   ['slice_5fidx_5fmap_28',['slice_idx_map',['../group__layout__idx.html#gaffa39bcf1ff54379177de0063a310b93',1,'nda::slice_static']]],
   ['slice_5fstatic_2ehpp_29',['slice_static.hpp',['../slice__static_8hpp.html',1,'']]],
   ['slices_30',['slices',['../ex4.html',1,'Example 4: Views and slices'],['../ex4.html#ex4_p6',1,'Operating on views/slices'],['../ex1.html#ex1_p7',1,'Working with slices']]],
