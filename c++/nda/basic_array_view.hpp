@@ -416,6 +416,7 @@ namespace nda {
                          default_accessor, borrowed<>>;
 
   template <std::ranges::contiguous_range R>
+    requires(not MemoryArray<R>)
   basic_array_view(R &r) -> basic_array_view<std::conditional_t<std::is_const_v<R>, const typename R::value_type, typename R::value_type>, 1,
                                              C_layout, 'V', default_accessor, borrowed<>>;
 

@@ -15,6 +15,7 @@
 #include <array>
 #include <cstddef>
 #include <iterator>
+#include <type_traits>
 
 namespace nda {
 
@@ -199,8 +200,10 @@ namespace nda {
    * @tparam T Type of the elements in the array (can be const).
    * @tparam Pointer Type of the pointer used to access the elements in the array (might be restricted depending on the
    * accessor).
+   * @tparam Contiguous Whether the iterator traverses a contiguous chunk of memory (only relevant for the rank-1
+   * specialization, where it makes the iterator a <a href="https://en.cppreference.com/w/cpp/iterator/contiguous_iterator">std::contiguous_iterator</a>).
    */
-  template <int Rank, typename T, typename Pointer>
+  template <int Rank, typename T, typename Pointer, bool Contiguous = false>
   class array_iterator {
     // Pointer to the data (to the first element).
     T *data = nullptr;
@@ -300,14 +303,19 @@ namespace nda {
   /**
    * @brief Specialization of nda::array_iterator for 1-dimensional grids.
    *
-   * @details It is a <a href="https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator">LegacyRandomAccessIterator</a>.
+   * @details It is a <a href="https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator">LegacyRandomAccessIterator</a>
+   * and a C++20 <a href="https://en.cppreference.com/w/cpp/iterator/random_access_iterator">std::random_access_iterator</a>.
+   * If `Contiguous` is true (i.e. the underlying data is a contiguous chunk of memory with unit stride), it is in
+   * addition a <a href="https://en.cppreference.com/w/cpp/iterator/contiguous_iterator">std::contiguous_iterator</a>,
+   * so that the corresponding array/view models `std::ranges::contiguous_range`.
    *
    * @tparam T Type of the elements in the array (can be const).
    * @tparam Pointer Type of the pointer used to access the elements in the array (might be restricted
    * depending on the accessor).
+   * @tparam Contiguous Whether the iterator traverses a contiguous chunk of memory with unit stride.
    */
-  template <typename T, typename Pointer>
-  class array_iterator<1, T, Pointer> {
+  template <typename T, typename Pointer, bool Contiguous>
+  class array_iterator<1, T, Pointer, Contiguous> {
     // Pointer to the data.
     T *data = nullptr;
 
@@ -321,11 +329,15 @@ namespace nda {
     detail::grid_iterator<1> iter;
 
     public:
+    /// Iterator concept. A `std::contiguous_iterator_tag` for contiguous data, a `std::random_access_iterator_tag`
+    /// otherwise.
+    using iterator_concept = std::conditional_t<Contiguous, std::contiguous_iterator_tag, std::random_access_iterator_tag>;
+
     /// Iterator category.
     using iterator_category = std::random_access_iterator_tag;
 
-    /// Value type.
-    using value_type = T;
+    /// Value type (cv-unqualified, as required by the standard iterator concepts).
+    using value_type = std::remove_cv_t<T>;
 
     /// Difference type.
     using difference_type = std::ptrdiff_t;
@@ -365,9 +377,9 @@ namespace nda {
 
     /**
      * @brief Member access operator.
-     * @return Reference to the element at the position of the iterator.
+     * @return Pointer to the element at the position of the iterator.
      */
-    T &operator->() const { return operator*(); }
+    [[nodiscard]] T *operator->() const { return &(operator*()); }
 
     /**
      * @brief Prefix increment operator.
@@ -485,7 +497,7 @@ namespace nda {
      * @param n Number of times to increment the iterator before dereferencing it.
      * @return Reference to the element at the position of the incremented iterator.
      */
-    [[nodiscard]] T &operator[](std::ptrdiff_t n) { return ((Pointer)data)[*(iter + n)]; }
+    [[nodiscard]] T &operator[](std::ptrdiff_t n) const { return ((Pointer)data)[*(iter + n)]; }
 
     // FIXME C++20 ? with <=> operator
     /**
