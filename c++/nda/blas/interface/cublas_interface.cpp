@@ -150,21 +150,21 @@ namespace nda::blas::device {
   } // namespace
 
   // axpy
-  void axpy(int n, float alpha, const float *x, int incx, float *y, int incy) { cublasSaxpy(get_handle(), n, &alpha, x, incx, y, incy); }
+  void axpy(int n, float alpha, const float *x, int incx, float *y, int incy) { CUBLAS_CHECK(cublasSaxpy, n, &alpha, x, incx, y, incy); }
   void axpy(int n, std::complex<float> alpha, const std::complex<float> *x, int incx, std::complex<float> *y, int incy) {
     CUBLAS_CHECK(cublasCaxpy, n, cuscalar(alpha), cucplx(x), incx, cucplx(y), incy);
   }
-  void axpy(int n, double alpha, const double *x, int incx, double *y, int incy) { cublasDaxpy(get_handle(), n, &alpha, x, incx, y, incy); }
+  void axpy(int n, double alpha, const double *x, int incx, double *y, int incy) { CUBLAS_CHECK(cublasDaxpy, n, &alpha, x, incx, y, incy); }
   void axpy(int n, std::complex<double> alpha, const std::complex<double> *x, int incx, std::complex<double> *y, int incy) {
     CUBLAS_CHECK(cublasZaxpy, n, cuscalar(alpha), cucplx(x), incx, cucplx(y), incy);
   }
 
   // copy
-  void copy(int n, const float *x, int incx, float *y, int incy) { cublasScopy(get_handle(), n, x, incx, y, incy); }
+  void copy(int n, const float *x, int incx, float *y, int incy) { CUBLAS_CHECK(cublasScopy, n, x, incx, y, incy); }
   void copy(int n, const std::complex<float> *x, int incx, std::complex<float> *y, int incy) {
     CUBLAS_CHECK(cublasCcopy, n, cucplx(x), incx, cucplx(y), incy);
   }
-  void copy(int n, const double *x, int incx, double *y, int incy) { cublasDcopy(get_handle(), n, x, incx, y, incy); }
+  void copy(int n, const double *x, int incx, double *y, int incy) { CUBLAS_CHECK(cublasDcopy, n, x, incx, y, incy); }
   void copy(int n, const std::complex<double> *x, int incx, std::complex<double> *y, int incy) {
     CUBLAS_CHECK(cublasZcopy, n, cucplx(x), incx, cucplx(y), incy);
   }
