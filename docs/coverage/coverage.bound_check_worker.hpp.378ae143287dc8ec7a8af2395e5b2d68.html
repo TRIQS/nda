@@ -117,7 +117,7 @@
   </div>
   <div class="Box-row Box-row--focus-gray py-2 d-flex">
     <div role="gridcell" class="color-fg-muted flex-auto min-width-0 col-md-2"><a href="#l36">nda::detail::bound_check_worker::check_current_dim(long) (nda/layout/bound_check_worker.hpp:36)</a>    </div>
-    <div role="gridcell" class="color-fg-muted flex-auto min-width-0 d-flex flex-justify-end flex-wrap flex-items-baseline" data-sort="20718958">called 20718958 times</div>
+    <div role="gridcell" class="color-fg-muted flex-auto min-width-0 d-flex flex-justify-end flex-wrap flex-items-baseline" data-sort="20735358">called 20735358 times</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">100.0%</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">100.0%</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">100.0%</div>
@@ -929,7 +929,7 @@
   </div>
   <div class="Box-row Box-row--focus-gray py-2 d-flex">
     <div role="gridcell" class="color-fg-muted flex-auto min-width-0 col-md-2"><a href="#l93">void nda::assert_in_bounds&lt;long, long&gt;(int, long const*, long const&amp;, long const&amp;) (nda/layout/bound_check_worker.hpp:93)</a>    </div>
-    <div role="gridcell" class="color-fg-muted flex-auto min-width-0 d-flex flex-justify-end flex-wrap flex-items-baseline" data-sort="1805017">called 1805017 times</div>
+    <div role="gridcell" class="color-fg-muted flex-auto min-width-0 d-flex flex-justify-end flex-wrap flex-items-baseline" data-sort="1813209">called 1813209 times</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">50.0%</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">7.1%</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">26.0%</div>
@@ -1055,7 +1055,7 @@
   </div>
   <div class="Box-row Box-row--focus-gray py-2 d-flex">
     <div role="gridcell" class="color-fg-muted flex-auto min-width-0 col-md-2"><a href="#l93">void nda::assert_in_bounds&lt;unsigned long, unsigned long&gt;(int, long const*, unsigned long const&amp;, unsigned long const&amp;) (nda/layout/bound_check_worker.hpp:93)</a>    </div>
-    <div role="gridcell" class="color-fg-muted flex-auto min-width-0 d-flex flex-justify-end flex-wrap flex-items-baseline" data-sort="3649">called 3649 times</div>
+    <div role="gridcell" class="color-fg-muted flex-auto min-width-0 d-flex flex-justify-end flex-wrap flex-items-baseline" data-sort="3657">called 3657 times</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">50.0%</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">7.1%</div>
     <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">26.0%</div>
@@ -1344,7 +1344,7 @@
         <td class="lineno"><a id="l36" href="#l36">36</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">20718958</td>
+        <td class="linecount coveredLine show_coveredLine">20735358</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">check_current_dim</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">idx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
       </tr>
       <tr class="source-line">
@@ -1353,28 +1353,28 @@
           <details class="linebranchDetails">
             <summary class="linebranchSummary">4/4</summary>
             <div class="linebranchContents">
-              <div class="takenBranch">&check; Branch 0 taken 20718954 times.</div>
+              <div class="takenBranch">&check; Branch 0 taken 20735354 times.</div>
               <div class="takenBranch">&check; Branch 1 taken 4 times.</div>
               <div class="takenBranch">&check; Branch 2 taken 10 times.</div>
-              <div class="takenBranch">&check; Branch 3 taken 20718944 times.</div>
+              <div class="takenBranch">&check; Branch 3 taken 20735344 times.</div>
             </div>
           </details>
         </td>
-        <td class="linecount coveredLine show_coveredLine">20718958</td>
+        <td class="linecount coveredLine show_coveredLine">20735358</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">idx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="p">(</span><span class="n">idx</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">lengths</span><span class="p">[</span><span class="n">N</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">error_code</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1ul</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="p">}</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l38" href="#l38">38</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">20718958</td>
+        <td class="linecount coveredLine show_coveredLine">20735358</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">      </span><span class="o">++</span><span class="n">N</span><span class="p">;</span></td>
       </tr>
       <tr class="source-line">
         <td class="lineno"><a id="l39" href="#l39">39</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">20718958</td>
+        <td class="linecount coveredLine show_coveredLine">20735358</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="p">}</span></td>
       </tr>
       <tr class="source-line">
@@ -1786,7 +1786,7 @@
         <td class="lineno"><a id="l93" href="#l93">93</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">18168360</td>
+        <td class="linecount coveredLine show_coveredLine">18176560</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">assert_in_bounds</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="n">lengths</span><span class="p">,</span><span class="w"> </span><span class="n">Args</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="p">...</span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
       </tr>
       <tr class="source-line">
@@ -1800,7 +1800,7 @@
         <td class="lineno"><a id="l95" href="#l95">95</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">18168360</td>
+        <td class="linecount coveredLine show_coveredLine">18176560</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="n">detail</span><span class="o">::</span><span class="n">bound_check_worker</span><span class="w"> </span><span class="n">w</span><span class="p">{</span><span class="n">lengths</span><span class="p">};</span></td>
       </tr>
       <tr class="source-line">
@@ -1821,7 +1821,7 @@
         <td class="lineno"><a id="l98" href="#l98">98</a></td>
         <td class="linebranch">
         </td>
-        <td class="linecount coveredLine show_coveredLine">18168360</td>
+        <td class="linecount coveredLine show_coveredLine">18176560</td>
         <td class="src  coveredLine show_coveredLine"><span class="w">    </span><span class="n">w</span><span class="p">.</span><span class="n">ellipsis_loss</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">sizeof</span><span class="p">...(</span><span class="n">Args</span><span class="p">);</span></td>
       </tr>
       <tr class="source-line">
@@ -1969,7 +1969,7 @@
             </div>
           </details>
         </td>
-        <td class="linecount partialCoveredLine show_partialCoveredLine">18168360</td>
+        <td class="linecount partialCoveredLine show_partialCoveredLine">18176560</td>
         <td class="src  partialCoveredLine show_partialCoveredLine"><span class="w">    </span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">check_current_dim</span><span class="p">(</span><span class="n">args</span><span class="p">),</span><span class="w"> </span><span class="p">...);</span></td>
       </tr>
       <tr class="source-line">
@@ -2335,7 +2335,7 @@
               <div class="takenBranch">&check; Branch 0 taken 266571 times.</div>
               <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
               <div class="functionName">void nda::assert_in_bounds&lt;long, long&gt;(int, long const*, long const&amp;, long const&amp;):</div>
-              <div class="takenBranch">&check; Branch 0 taken 1805017 times.</div>
+              <div class="takenBranch">&check; Branch 0 taken 1813209 times.</div>
               <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
               <div class="functionName">void nda::assert_in_bounds&lt;long, nda::ellipsis&gt;(int, long const*, long const&amp;, nda::ellipsis const&amp;):</div>
               <div class="takenBranch">&check; Branch 0 taken 1806 times.</div>
@@ -2389,7 +2389,7 @@
               <div class="takenBranch">&check; Branch 0 taken 225 times.</div>
               <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
               <div class="functionName">void nda::assert_in_bounds&lt;unsigned long, unsigned long&gt;(int, long const*, unsigned long const&amp;, unsigned long const&amp;):</div>
-              <div class="takenBranch">&check; Branch 0 taken 3649 times.</div>
+              <div class="takenBranch">&check; Branch 0 taken 3657 times.</div>
               <div class="notTakenBranch">&cross; Branch 1 not taken.</div>
               <div class="functionName">void nda::assert_in_bounds&lt;unsigned long&gt;(int, long const*, unsigned long const&amp;):</div>
               <div class="takenBranch">&check; Branch 0 taken 1072 times.</div>
@@ -2397,7 +2397,7 @@
             </div>
           </details>
         </td>
-        <td class="linecount partialCoveredLine show_partialCoveredLine">36336704</td>
+        <td class="linecount partialCoveredLine show_partialCoveredLine">36353104</td>
         <td class="src  partialCoveredLine show_partialCoveredLine"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">w</span><span class="p">.</span><span class="n">error_code</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span></td>
       </tr>
       <tr class="source-line">
@@ -4579,7 +4579,7 @@
         <hr class="block-separator"/>
         <footer class="text-center">
           Created using <a href="http://gcovr.com/en/8.6">GCOVR (Version 8.6)</a>
-          at 2026-08-07 18:08:28
+          at 2026-08-21 01:29:55
         </footer>
       </div>
     </div>
