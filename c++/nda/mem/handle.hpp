@@ -17,6 +17,7 @@
 #include "../macros.hpp"
 
 #include <array>
+#include <concepts>
 #include <memory>
 #include <type_traits>
 #include <utility>
@@ -750,7 +751,7 @@ namespace nda::mem {
     // Pointer to the start of the actual data.
     T *_data = nullptr;
 
-    // Size of the data (number of T elements). Invariant: size > 0 iif data != 0.
+    // Number of T elements from _data to the end of the memory block. Invariant: data == nullptr implies size == 0.
     size_t _size = 0;
 
     // Type of the memory block, i.e. a pointer to the data and its size.
@@ -783,15 +784,33 @@ namespace nda::mem {
     /**
      * @brief Construct a shared handle from an nda::mem::handle_heap.
      *
+     * @details The ownership of the memory block is shared between the new handle and the source handle: the reference
+     * count is incremented and the source handle does not free the memory anymore when it is destroyed.
+     *
+     * @tparam U Value type of the source handle (`T` or `std::remove_const_t<T>`).
      * @tparam A nda::mem::Allocator type of the source handle.
      * @param h Source handle.
      */
-    template <Allocator A>
-    handle_shared(handle_heap<T, A> const &h) noexcept
-      requires(A::address_space == address_space)
-       : _data(h.data()), _size(h.size()) {
+    template <typename U, Allocator A>
+      requires(A::address_space == address_space and std::same_as<std::remove_const_t<T>, U>)
+    handle_shared(handle_heap<U, A> const &h) noexcept : _data(h.data()), _size(h.size()) {
       if (not h.is_null()) sptr = h.get_sptr();
     }
+
+    /**
+     * @brief Construct a shared handle from another shared handle and an optional offset.
+     *
+     * @details The new handle shares the ownership of the memory block with the source handle, i.e. the reference
+     * count is incremented. Its data pointer is shifted by the given offset and its size is reduced accordingly.
+     *
+     * @tparam U Value type of the source handle (`T` or `std::remove_const_t<T>`).
+     * @param h Source handle.
+     * @param offset Pointer offset from the start of the data (in number of elements).
+     */
+    template <typename U>
+      requires(std::same_as<std::remove_const_t<T>, std::remove_const_t<U>> and (std::is_const_v<T> or not std::is_const_v<U>))
+    handle_shared(handle_shared<U, AdrSp> const &h, long offset = 0) noexcept
+       : _data(h.data() + offset), _size(h.size() - offset), sptr(h.get_sptr()) {}
 
     /**
      * @brief Subscript operator to access the data.
@@ -816,7 +835,7 @@ namespace nda::mem {
     [[nodiscard]] bool is_null() const noexcept {
 #ifdef NDA_DEBUG
       // Check the Invariants in Debug Mode
-      EXPECTS((_data == nullptr) == (_size == 0));
+      EXPECTS(_data != nullptr or _size == 0);
 #endif
       return _data == nullptr;
     }
@@ -828,6 +847,12 @@ namespace nda::mem {
     [[nodiscard]] long refcount() const noexcept { return sptr.use_count(); }
 
     /**
+     * @brief Get the shared pointer to the memory block.
+     * @return A copy of the shared pointer stored in the current handle.
+     */
+    [[nodiscard]] std::shared_ptr<void> get_sptr() const noexcept { return sptr; }
+
+    /**
      * @brief Get a pointer to the stored data.
      * @return Pointer to the start of the handled memory.
      */
@@ -835,7 +860,7 @@ namespace nda::mem {
 
     /**
      * @brief Get the size of the handle.
-     * @return Number of elements of type `T` in the handled memory.
+     * @return Number of elements of type `T` from data() to the end of the handled memory block.
      */
     [[nodiscard]] long size() const noexcept { return _size; }
   };

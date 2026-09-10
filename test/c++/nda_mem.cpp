@@ -462,4 +462,43 @@ TEST(NDA, MemoryHandleShared) {
   mem::handle_shared<int> s2{h};
   s = s2;
   EXPECT_EQ(s.refcount(), 3);
+
+  // offset constructor shares the ownership and shifts the data pointer
+  mem::handle_shared<int> s3{s, 3};
+  EXPECT_EQ(s3.data(), s.data() + 3);
+  EXPECT_EQ(s3.size(), 7);
+  EXPECT_EQ(s3.refcount(), 4);
+  EXPECT_EQ(s.refcount(), 4);
+
+  // conversion to a const value type
+  mem::handle_shared<int const> cs{h};
+  EXPECT_EQ(cs.data(), h.data());
+  EXPECT_EQ(cs.size(), 10);
+  EXPECT_EQ(cs.refcount(), 5);
+  mem::handle_shared<int const> cs2{s3, 2};
+  EXPECT_EQ(cs2.data(), s.data() + 5);
+  EXPECT_EQ(cs2.size(), 5);
+  EXPECT_EQ(cs2.refcount(), 6);
+  static_assert(not std::is_constructible_v<mem::handle_shared<int>, mem::handle_shared<int const> const &>);
+
+  // an empty trailing slice is not null
+  mem::handle_shared<int> s4{s, 10};
+  EXPECT_EQ(s4.size(), 0);
+  EXPECT_FALSE(s4.is_null());
+}
+
+TEST(NDA, MemoryHandleSharedLifetime) {
+  // the memory block outlives the heap handle as long as a shared handle refers to it
+  mem::handle_shared<int> keep;
+  {
+    mem::handle_heap<int> h{10};
+    for (int i = 0; i < 10; ++i) h[i] = i * 42;
+    mem::handle_shared<int> s{h};
+    keep = mem::handle_shared<int>{s, 1};
+    EXPECT_EQ(keep.refcount(), 3);
+  }
+  EXPECT_EQ(keep.refcount(), 1);
+  EXPECT_EQ(keep.size(), 9);
+  EXPECT_EQ(keep[0], 42);
+  EXPECT_EQ(keep[8], 9 * 42);
 }

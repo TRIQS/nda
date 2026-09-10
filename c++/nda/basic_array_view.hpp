@@ -15,6 +15,7 @@
 #include "./concepts.hpp"
 #include "./declarations.hpp"
 #include "./device.hpp"
+#include "./expr_indexed.hpp"
 #include "./iterators.hpp"
 #include "./layout/for_each.hpp"
 #include "./layout/idx_map.hpp"

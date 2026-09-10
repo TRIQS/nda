@@ -30,6 +30,7 @@
 #include "./declarations.hpp"
 #include "./device.hpp"
 #include "./exceptions.hpp"
+#include "./expr_indexed.hpp"
 #include "./group_indices.hpp"
 #include "./iterators.hpp"
 #include "./layout_transforms.hpp"
