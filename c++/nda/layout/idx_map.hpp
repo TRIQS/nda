@@ -13,6 +13,7 @@
 #include "./permutation.hpp"
 #include "./range.hpp"
 #include "./slice_static.hpp"
+#include "../concepts.hpp"
 #include "../macros.hpp"
 #include "../traits.hpp"
 
@@ -118,12 +119,12 @@ namespace nda {
 
     /// Alias template to check if type `T` can be used to access a single element.
     template <typename T>
-    static constexpr int argument_is_allowed_for_call = std::is_constructible_v<long, T>;
+    static constexpr int argument_is_allowed_for_call = IndexType<T>;
 
     /// Alias template to check if type `T` can be used to either access a single element or a slice of elements.
     template <typename T>
     static constexpr int argument_is_allowed_for_call_or_slice =
-       std::is_same_v<range, T> or std::is_same_v<range::all_t, T> or std::is_same_v<ellipsis, T> or std::is_constructible_v<long, T>;
+       std::is_same_v<range, T> or std::is_same_v<range::all_t, T> or std::is_same_v<ellipsis, T> or IndexType<T>;
 
     protected:
     /// Number of dynamic dimensions/extents.
@@ -485,7 +486,7 @@ namespace nda {
     /**
      * @brief Function call operator to map a given multi-dimensional index to a linear index.
      *
-     * @details All arguments are either convertible to type `long` or are of type nda::ellipsis. The number of
+     * @details All arguments are either nda::IndexType objects or of type nda::ellipsis. The number of
      * non-ellipsis arguments must be equal to the rank of the map and there must be at most one nda::ellipsis. If an
      * nda::ellipsis is present, it is skipped and does not influence the result.
      *

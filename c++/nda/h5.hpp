@@ -180,7 +180,7 @@ namespace nda {
     }(std::index_sequence_for<IRs...>{});
 
     // number of integers in the slice parameters
-    static constexpr auto integer_count = (std::integral<IRs> + ... + 0);
+    static constexpr auto integer_count = (IndexType<IRs> + ... + 0);
 
     // number of nda::range and nda::range::all_t objects in the slice parameters
     static constexpr auto range_count = size_of_slice - integer_count - ellipsis_count;
@@ -206,7 +206,7 @@ namespace nda {
       (
          [&]<typename IR>(size_t n, IR const &ir) mutable {
            if (n > ellipsis_position) n += (ellipsis_width - 1);
-           if constexpr (std::integral<IR>) {
+           if constexpr (IndexType<IR>) {
              slab.offset[n] = ir;
              slab.count[n]  = 1;
            } else if constexpr (std::is_same_v<IR, nda::ellipsis>) {
