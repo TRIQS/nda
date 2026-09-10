@@ -157,6 +157,11 @@ static constexpr bool has_no_boundcheck = false;
 static constexpr bool has_no_boundcheck = true;
 #endif
 
+// Constexpr variable that is true if a call with the given arguments cannot throw: bounds checking is disabled and no
+// argument is an nda::IndexContainer (advanced indexing allocates).
+template <typename... Ts>
+static constexpr bool call_is_noexcept = has_no_boundcheck and not(IndexContainer<Ts> or ...);
+
 public:
 /**
  * @brief Implementation of the function call operator.
@@ -175,7 +180,7 @@ public:
  * @return Result of the function call depending on the given arguments and type of the view/array.
  */
 template <char ResultAlgebra, bool SelfIsRvalue, typename Self, typename... Ts>
-FORCEINLINE static decltype(auto) call(Self &&self, Ts const &...idxs) noexcept(has_no_boundcheck) {
+FORCEINLINE static decltype(auto) call(Self &&self, Ts const &...idxs) noexcept(call_is_noexcept<Ts...>) {
   // resulting value type
   using r_v_t = std::conditional_t<std::is_const_v<std::remove_reference_t<Self>>, ValueType const, ValueType>;
 
@@ -186,6 +191,13 @@ FORCEINLINE static decltype(auto) call(Self &&self, Ts const &...idxs) noexcept(
   } else if constexpr (sizeof...(Ts) == 0) {
     // if no arguments are given, a full view is returned
     return basic_array_view<r_v_t, Rank, LayoutPolicy, Algebra, AccessorPolicy, OwningPolicy>{self.lay, self.sto};
+  } else if constexpr ((IndexContainer<Ts> or ...)) {
+    // if any argument is an IndexContainer, return an expr_indexed for advanced indexing
+    static constexpr auto indexed_dims = detail::indexed_dims_of<Rank, Ts...>();
+    auto view                          = self(detail::make_view_arg_for_indexed(idxs)...);
+    // if the calling object is a temporary, the expression stores a copy of the sliced data instead of a view
+    using v_t = std::conditional_t<SelfIsRvalue, typename decltype(view)::regular_type, decltype(view)>;
+    return expr_indexed<v_t, indexed_dims>{v_t{view}, detail::make_idx_lists(idxs...)};
   } else {
     // otherwise we check the arguments and either access a single element or make a slice
     static_assert(((layout_t::template argument_is_allowed_for_call_or_slice<Ts> + ...) > 0),
@@ -240,7 +252,7 @@ public:
  * @return Result of the function call depending on the given arguments and type of the view/array.
  */
 template <typename... Ts>
-FORCEINLINE decltype(auto) operator()(Ts const &...idxs) const & noexcept(has_no_boundcheck) {
+FORCEINLINE decltype(auto) operator()(Ts const &...idxs) const & noexcept(call_is_noexcept<Ts...>) {
   static_assert((rank == -1) or (sizeof...(Ts) == rank) or (sizeof...(Ts) == 0) or (ellipsis_is_present<Ts...> and (sizeof...(Ts) <= rank + 1)),
                 "Error in array/view: Incorrect number of parameters in call operator");
   return call<Algebra, false>(*this, idxs...);
@@ -248,7 +260,7 @@ FORCEINLINE decltype(auto) operator()(Ts const &...idxs) const & noexcept(has_no
 
 /// Non-const overload of `nda::basic_array_view::operator()(Ts const &...) const &`.
 template <typename... Ts>
-FORCEINLINE decltype(auto) operator()(Ts const &...idxs) & noexcept(has_no_boundcheck) {
+FORCEINLINE decltype(auto) operator()(Ts const &...idxs) & noexcept(call_is_noexcept<Ts...>) {
   static_assert((rank == -1) or (sizeof...(Ts) == rank) or (sizeof...(Ts) == 0) or (ellipsis_is_present<Ts...> and (sizeof...(Ts) <= rank + 1)),
                 "Error in array/view: Incorrect number of parameters in call operator");
   return call<Algebra, false>(*this, idxs...);
@@ -256,7 +268,7 @@ FORCEINLINE decltype(auto) operator()(Ts const &...idxs) & noexcept(has_no_bound
 
 /// Rvalue overload of `nda::basic_array_view::operator()(Ts const &...) const &`.
 template <typename... Ts>
-FORCEINLINE decltype(auto) operator()(Ts const &...idxs) && noexcept(has_no_boundcheck) {
+FORCEINLINE decltype(auto) operator()(Ts const &...idxs) && noexcept(call_is_noexcept<Ts...>) {
   static_assert((rank == -1) or (sizeof...(Ts) == rank) or (sizeof...(Ts) == 0) or (ellipsis_is_present<Ts...> and (sizeof...(Ts) <= rank + 1)),
                 "Error in array/view: Incorrect number of parameters in call operator");
   return call<Algebra, true>(*this, idxs...);
@@ -280,21 +292,21 @@ FORCEINLINE decltype(auto) operator()(Ts const &...idxs) && noexcept(has_no_boun
  * @return Result of the subscript operation depending on the given argument and type of the view/array.
  */
 template <typename T>
-decltype(auto) operator[](T const &idx) const & noexcept(has_no_boundcheck) {
+decltype(auto) operator[](T const &idx) const & noexcept(call_is_noexcept<T>) {
   static_assert((rank == 1), "Error in array/view: Subscript operator is only available for rank 1 views/arrays in C++17/20");
   return call<Algebra, false>(*this, idx);
 }
 
 /// Non-const overload of `nda::basic_array_view::operator[](T const &) const &`.
 template <typename T>
-decltype(auto) operator[](T const &x) & noexcept(has_no_boundcheck) {
+decltype(auto) operator[](T const &x) & noexcept(call_is_noexcept<T>) {
   static_assert((rank == 1), "Error in array/view: Subscript operator is only available for rank 1 views/arrays in C++17/20");
   return call<Algebra, false>(*this, x);
 }
 
 /// Rvalue overload of `nda::basic_array_view::operator[](T const &) const &`.
 template <typename T>
-decltype(auto) operator[](T const &x) && noexcept(has_no_boundcheck) {
+decltype(auto) operator[](T const &x) && noexcept(call_is_noexcept<T>) {
   static_assert((rank == 1), "Error in array/view: Subscript operator is only available for rank 1 views/arrays in C++17/20");
   return call<Algebra, true>(*this, x);
 }

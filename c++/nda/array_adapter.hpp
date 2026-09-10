@@ -71,8 +71,8 @@ namespace nda {
      * @param is Rest of the arguments.
      */
     template <typename... Ints>
+      requires((std::is_convertible_v<Ints, long> and ...))
     auto operator()(long i0, Ints... is) const {
-      static_assert((std::is_convertible_v<Ints, long> and ...), "Error in nda::array_adapter: Arguments must be convertible to long");
       return f(i0, is...);
     }
   };
