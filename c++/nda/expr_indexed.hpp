@@ -120,8 +120,10 @@ namespace nda {
    * selected elements may not be contiguous in memory.
    *
    * The expression stores:
-   * - A view of the source array (with any range-based slicing already applied), or a copy of the sliced array if the
-   *   source was an rvalue
+   * - The source array with any range-based slicing already applied. For lvalue arrays and for views this is a
+   *   borrowed view. For rvalue arrays with heap storage it is a view with an nda::shared owning policy that takes over
+   *   the memory of the temporary (no copy). Only for rvalue arrays with other storage (e.g. stack or SSO) it is a copy
+   *   of the sliced array.
    * - One index list (`std::vector<long>`) per indexed dimension, copied from the index containers
    *
    * Example usage:
@@ -132,7 +134,8 @@ namespace nda {
    * nda::array<double, 2> result = expr;        // Materializes the expression
    * @endcode
    *
-   * @tparam A Type of the internal array: a `basic_array_view`, or a `basic_array` if the source was an rvalue.
+   * @tparam A Type of the internal array: a `basic_array_view` with a borrowed or shared owning policy, or a
+   * `basic_array` if the source was an rvalue with non-heap storage.
    * @tparam IndexedDims `std::array<int, N>` with the dimensions of the array indexed by the containers.
    */
   template <typename A, auto IndexedDims>

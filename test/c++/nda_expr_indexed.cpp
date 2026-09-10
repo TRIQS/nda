@@ -883,17 +883,88 @@ TEST(ExprIndexed, MakeRegularAndCTAD) {
 TEST(ExprIndexed, RvalueArray) {
   std::vector<long> indices = {1, 3};
   auto e                    = make_arr2()(indices, nda::range::all);
-  static_assert(nda::is_regular_v<decltype(e.a)>);
+
+  // the expression owns the memory of the temporary through a shared view
+  static_assert(nda::is_view_v<decltype(e.a)>);
+  static_assert(std::is_same_v<typename decltype(e.a)::owning_policy_t, nda::shared>);
+  EXPECT_EQ(e.a.storage().refcount(), 1);
 
   nda::array<double, 2> r = e;
   EXPECT_EQ(r.shape(), (std::array<long, 2>{2, 4}));
   EXPECT_EQ(r(0, 2), 12.0);
   EXPECT_EQ(r(1, 2), 32.0);
 
+  // slicing does not copy either
   auto e2 = make_arr2()(nda::range(1, 4), indices);
+  static_assert(std::is_same_v<typename decltype(e2.a)::owning_policy_t, nda::shared>);
+  EXPECT_EQ(e2.a.storage().refcount(), 1);
+  EXPECT_EQ(e2.a.storage().size(), 20 - 4);
   EXPECT_EQ(e2.shape(), (std::array<long, 2>{3, 2}));
   EXPECT_EQ(e2(0, 0), 11.0);
   EXPECT_EQ(e2(2, 1), 33.0);
+}
+
+TEST(ExprIndexed, RvalueArraySharedLifetime) {
+  std::vector<long> indices = {1, 3};
+  auto e                    = make_arr2()(indices, nda::range::all);
+
+  auto e_copy = e;
+  EXPECT_EQ(e.a.storage().refcount(), 2);
+
+  // slicing the shared view keeps it shared
+  auto row = e.a(1, nda::range::all);
+  static_assert(std::is_same_v<typename decltype(row)::owning_policy_t, nda::shared>);
+  EXPECT_EQ(row.storage().refcount(), 3);
+
+  {
+    auto tmp  = std::move(e);
+    auto tmp2 = std::move(e_copy);
+  }
+  EXPECT_EQ(row.storage().refcount(), 1);
+  EXPECT_EQ_ARRAY(row, (nda::array<double, 1>{10, 11, 12, 13}));
+}
+
+TEST(ExprIndexed, RvalueArrayWriteThroughShared) {
+  std::vector<long> indices = {1, 3};
+  auto e                    = make_arr2()(indices, nda::range::all);
+  auto e2                   = e;
+  EXPECT_EQ(e2(0, 1), 11.0);
+  e = 0.0;
+  EXPECT_EQ(e2(0, 1), 0.0);
+  EXPECT_EQ(e2(1, 3), 0.0);
+}
+
+TEST(ExprIndexed, RvalueStackArrayCopies) {
+  auto make_stack = []() {
+    nda::stack_array<double, 5, 4> arr;
+    for (long i = 0; i < 5; ++i)
+      for (long j = 0; j < 4; ++j) arr(i, j) = static_cast<double>(i * 10 + j);
+    return arr;
+  };
+  std::vector<long> indices = {1, 3};
+  auto e                    = make_stack()(indices, nda::range::all);
+  static_assert(nda::is_regular_v<decltype(e.a)>);
+  EXPECT_EQ(e.shape(), (std::array<long, 2>{2, 4}));
+  EXPECT_EQ(e(0, 2), 12.0);
+  EXPECT_EQ(e(1, 2), 32.0);
+
+  auto e2 = make_stack()(nda::range(1, 4), indices);
+  static_assert(nda::is_regular_v<decltype(e2.a)>);
+  EXPECT_EQ(e2(0, 0), 11.0);
+  EXPECT_EQ(e2(2, 1), 33.0);
+}
+
+TEST(ExprIndexed, RvalueViewStaysBorrowed) {
+  auto arr                  = make_arr2();
+  std::vector<long> indices = {1, 3};
+  auto e                    = arr()(indices, nda::range::all);
+  static_assert(nda::is_view_v<decltype(e.a)>);
+  static_assert(std::is_same_v<typename decltype(e.a)::owning_policy_t, nda::borrowed<>>);
+
+  e = 0.0;
+  EXPECT_EQ(arr(1, 0), 0.0);
+  EXPECT_EQ(arr(3, 3), 0.0);
+  EXPECT_EQ(arr(2, 0), 20.0);
 }
 
 // ============================================================

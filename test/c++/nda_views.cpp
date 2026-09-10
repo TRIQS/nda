@@ -162,6 +162,32 @@ TEST(NDA, SharedView) {
   EXPECT_EQ_ARRAY(A_v, A);
 }
 
+TEST(NDA, SharedViewSlice) {
+  using v_t  = nda::basic_array_view<double, 2, nda::C_layout, 'A', nda::default_accessor, nda::shared>;
+  using sv_t = nda::basic_array_view<double, 1, nda::C_stride_layout, 'A', nda::default_accessor, nda::shared>;
+  using cv_t = nda::basic_array_view<double const, 2, nda::C_layout, 'A', nda::default_accessor, nda::shared>;
+
+  nda::array<double, 2> A(2, 3);
+  for (int i = 0; i < 2; ++i)
+    for (int j = 0; j < 3; ++j) A(i, j) = i * 8.1 + 2.31 * j;
+
+  // a slice of a shared view keeps the memory alive after the array and the full view are gone
+  sv_t row;
+  cv_t A_cv;
+  {
+    auto B   = A;
+    auto B_v = v_t{B};
+    row.rebind(B_v(1, nda::range::all));
+    A_cv.rebind(cv_t{B_v});
+    EXPECT_EQ(row.storage().refcount(), 4);
+  }
+  static_assert(std::is_same_v<typename sv_t::storage_t, nda::mem::handle_shared<double, nda::mem::Host>>);
+  EXPECT_EQ(row.storage().refcount(), 2);
+  EXPECT_EQ(row.storage().size(), 3);
+  EXPECT_EQ_ARRAY(row, A(1, nda::range::all));
+  EXPECT_EQ_ARRAY(A_cv, A);
+}
+
 TEST(NDA, ConstView) {
   nda::array<long, 2> A(2, 3);
   A() = 98;

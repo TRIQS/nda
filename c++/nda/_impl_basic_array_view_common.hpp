@@ -162,6 +162,12 @@ static constexpr bool has_no_boundcheck = true;
 template <typename... Ts>
 static constexpr bool call_is_noexcept = has_no_boundcheck and not(IndexContainer<Ts> or ...);
 
+// Constexpr variable that is true if the storage can hand its ownership to an nda::mem::handle_shared (heap storage on
+// host).
+static constexpr bool storage_is_shareable = storage_t::address_space == mem::Host and requires(storage_t const &s) {
+  { s.get_sptr() } -> std::same_as<std::shared_ptr<void>>;
+};
+
 public:
 /**
  * @brief Implementation of the function call operator.
@@ -194,10 +200,19 @@ FORCEINLINE static decltype(auto) call(Self &&self, Ts const &...idxs) noexcept(
   } else if constexpr ((IndexContainer<Ts> or ...)) {
     // if any argument is an IndexContainer, return an expr_indexed for advanced indexing
     static constexpr auto indexed_dims = detail::indexed_dims_of<Rank, Ts...>();
-    auto view                          = self(detail::make_view_arg_for_indexed(idxs)...);
-    // if the calling object is a temporary, the expression stores a copy of the sliced data instead of a view
-    using v_t = std::conditional_t<SelfIsRvalue, typename decltype(view)::regular_type, decltype(view)>;
-    return expr_indexed<v_t, indexed_dims>{v_t{view}, detail::make_idx_lists(idxs...)};
+    if constexpr (SelfIsRvalue and not is_view and storage_is_shareable) {
+      // rvalue heap array: share the ownership of the storage with a view and slice that view (re-enters call() with
+      // OwningPolicy = shared and yields a sliced shared view, no copy)
+      using shared_view_t = basic_array_view<r_v_t, Rank, LayoutPolicy, Algebra, AccessorPolicy, shared>;
+      auto sv             = shared_view_t{self.lay, typename shared_view_t::storage_t{self.sto}};
+      auto view           = sv(detail::make_view_arg_for_indexed(idxs)...);
+      return expr_indexed<decltype(view), indexed_dims>{std::move(view), detail::make_idx_lists(idxs...)};
+    } else {
+      auto view = self(detail::make_view_arg_for_indexed(idxs)...);
+      // rvalue stack/SSO arrays store a copy of the sliced data, everything else a view
+      using v_t = std::conditional_t<SelfIsRvalue and not is_view, typename decltype(view)::regular_type, decltype(view)>;
+      return expr_indexed<v_t, indexed_dims>{v_t{view}, detail::make_idx_lists(idxs...)};
+    }
   } else {
     // otherwise we check the arguments and either access a single element or make a slice
     static_assert(((layout_t::template argument_is_allowed_for_call_or_slice<Ts> + ...) > 0),
@@ -238,6 +253,8 @@ public:
  * - If no arguments are given, a full view of the calling object is returned:
  *   - If the calling object itself or its value type is const, a view with a const value type is returned.
  *   - Otherwise, a view with a non-const value type is returned.
+ * - If any of the arguments is an nda::IndexContainer, an nda::expr_indexed is returned (see there for the ownership
+ * semantics).
  * - If the number of arguments is equal to the rank of the calling object and all arguments are convertible to `long`,
  * a single element is accessed:
  *   - If the calling object is a view or an lvalue, a (const) reference to the element is returned.
