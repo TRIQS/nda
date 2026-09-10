@@ -38,10 +38,6 @@ namespace nda {
     template <typename... Args>
     constexpr size_t n_idx_containers = (size_t{0} + ... + static_cast<size_t>(IndexContainer<Args>));
 
-    // Is the argument a single index (same criterion as nda::slice_static)?
-    template <typename T>
-    constexpr bool is_long_arg = std::is_constructible_v<long, T>;
-
     // Is the argument an ellipsis?
     template <typename T>
     constexpr bool is_ellipsis_arg = std::same_as<T, ellipsis>;
@@ -60,7 +56,7 @@ namespace nda {
     // removes it.
     template <int Rank, typename... Args>
     constexpr std::array<int, Rank> new_dim_of_n() {
-      constexpr std::array<bool, sizeof...(Args)> is_long = {is_long_arg<Args>...};
+      constexpr std::array<bool, sizeof...(Args)> is_long = {IndexType<Args>...};
       auto result                                         = std::array<int, Rank>{};
       for (int n = 0, p = 0; n < Rank; ++n) result[n] = is_long[arg_pos<Rank, Args...>(n)] ? -1 : p++;
       return result;
@@ -79,7 +75,7 @@ namespace nda {
 
     // Do the arguments access an element or slice an object of rank Rank: ranges, range::all, ellipsis or longs?
     template <int Rank, typename... Args>
-    constexpr bool is_call_or_slice = ((is_range_or_ellipsis<Args> or is_long_arg<Args>) and ...)
+    constexpr bool is_call_or_slice = ((is_range_or_ellipsis<Args> or IndexType<Args>) and ...)
        and (sizeof...(Args) == Rank or (ellipsis_is_present<Args...> and sizeof...(Args) <= Rank + 1));
 
     // Replace index containers with range::all for view construction.
@@ -278,7 +274,7 @@ namespace nda {
       // the dimension, an ellipsis becomes range::all, a range on an indexed dimension is applied to the index list
       // instead (below) and everything else is forwarded.
       auto array_arg = [&]<int D, typename Arg>(Arg const &arg) {
-        if constexpr (detail::is_long_arg<Arg>) {
+        if constexpr (IndexType<Arg>) {
           return self.template resolve_index<D>(arg);
         } else if constexpr (has_idx_list(D) or detail::is_ellipsis_arg<Arg>) {
           return range::all;

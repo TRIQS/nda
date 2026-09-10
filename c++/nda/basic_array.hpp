@@ -200,7 +200,7 @@ namespace nda {
     /**
      * @brief Construct an array with the given dimensions.
      *
-     * @details The integer type must be convertible to long and there must be exactly `Rank` arguments. It depends on
+     * @details The integer types must be `std::integral` and there must be exactly `Rank` arguments. It depends on
      * the value type and the container policy whether the data is initialized with zeros or not.
      *
      * @tparam Ints Integer types.

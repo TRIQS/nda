@@ -215,10 +215,11 @@ FORCEINLINE static decltype(auto) call(Self &&self, Ts const &...idxs) noexcept(
     }
   } else {
     // otherwise we check the arguments and either access a single element or make a slice
-    static_assert(((layout_t::template argument_is_allowed_for_call_or_slice<Ts> + ...) > 0),
-                  "Error in array/view: Slice arguments must be convertible to range, ellipsis, or long (or string if the layout permits it)");
+    static_assert(
+       ((layout_t::template argument_is_allowed_for_call_or_slice<Ts> + ...) > 0),
+       "Error in array/view: Slice arguments must be an nda::IndexType, range, ellipsis or range::all_t (or string if the layout permits it)");
 
-    // number of arguments convertible to long
+    // number of nda::IndexType arguments
     static constexpr int n_args_long = (layout_t::template argument_is_allowed_for_call<Ts> + ...);
 
     if constexpr (n_args_long == rank) {
@@ -255,8 +256,8 @@ public:
  *   - Otherwise, a view with a non-const value type is returned.
  * - If any of the arguments is an nda::IndexContainer, an nda::expr_indexed is returned (see there for the ownership
  * semantics).
- * - If the number of arguments is equal to the rank of the calling object and all arguments are convertible to `long`,
- * a single element is accessed:
+ * - If the number of arguments is equal to the rank of the calling object and all arguments are nda::IndexType
+ * objects, a single element is accessed:
  *   - If the calling object is a view or an lvalue, a (const) reference to the element is returned.
  *   - Otherwise, a copy of the element is returned.
  * - Otherwise a slice of the calling object is returned with the same value type and accessor and owning policies as
@@ -297,7 +298,7 @@ FORCEINLINE decltype(auto) operator()(Ts const &...idxs) && noexcept(call_is_noe
  * @details Depending on the type of the calling object and the given argument, this subscript operation does the
  * following:
  * - If the argument is lazy, an nda::clef::expr with the nda::clef::tags::function tag is returned.
- * - If the argument is convertible to `long`, a single element is accessed:
+ * - If the argument is an nda::IndexType, a single element is accessed:
  *   - If the calling object is a view or an lvalue, a (const) reference to the element is returned.
  *   - Otherwise, a copy of the element is returned.
  * - Otherwise a slice of the calling object is returned with the same value type, algebra and accessor and owning

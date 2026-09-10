@@ -11,6 +11,7 @@
 #pragma once
 
 #include "./range.hpp"
+#include "../concepts.hpp"
 #include "../macros.hpp"
 #include "../stdutil/array.hpp"
 #include "../traits.hpp"
@@ -274,7 +275,7 @@ namespace nda::slice_static {
       static constexpr std::array<int, P> new_stride_order = slice_stride_order(IdxMap::stride_order, n_of_p);
 
       // compile-time layout properties of the resulting index map
-      static constexpr bool has_only_rangeall_and_long = ((std::is_constructible_v<long, Args> or std::is_base_of_v<range::all_t, Args>) and ...);
+      static constexpr bool has_only_rangeall_and_long = ((IndexType<Args> or std::is_base_of_v<range::all_t, Args>) and ...);
       static constexpr layout_prop_e li =
          slice_layout_prop(P, has_only_rangeall_and_long, args_is_rangeall, IdxMap::stride_order, IdxMap::layout_prop, e_pos, e_len);
 
@@ -289,10 +290,11 @@ namespace nda::slice_static {
   /**
    * @brief Determine the resulting nda::idx_map when taking a slice of a given nda::idx_map.
    *
-   * @details Let `n_args` be the number of given `long`, `nda::range`, `nda::range::all_t` or nda::ellipsis arguments.
+   * @details Let `n_args` be the number of given nda::IndexType, `nda::range`, `nda::range::all_t` or nda::ellipsis
+   * arguments.
    *
    * The rank ``R'`` of the resulting slice is determined by the rank `R` of the original nda::idx_map and the number
-   * `n_long` of `long` arguments, i.e. ``R' = R - n_long``.
+   * `n_long` of nda::IndexType arguments, i.e. ``R' = R - n_long``.
    *
    * The number of allowed nda::ellipsis objects is restricted to at most one. If an nda::ellipsis object is present and
    * `n_args <= R`, the ellipsis is expanded in terms of `nda::range::all_t` objects to cover the remaining
@@ -307,14 +309,14 @@ namespace nda::slice_static {
    * @tparam LP Layout properties of the original nda::idx_map.
    * @tparam Args Given argument types.
    * @param idxm Original nda::idx_map.
-   * @param args Arguments consisting of `long`, `nda::range`, `nda::range::all_t` or nda::ellipsis objects.
+   * @param args Arguments consisting of nda::IndexType, `nda::range`, `nda::range::all_t` or nda::ellipsis objects.
    * @return Resulting nda::idx_map of the slice.
    */
   template <int R, uint64_t SE, uint64_t SO, layout_prop_e LP, typename... Args>
   FORCEINLINE decltype(auto) slice_idx_map(idx_map<R, SE, SO, LP> const &idxm, Args const &...args) {
     // number of ellipsis and long arguments
     static constexpr int n_args_ellipsis = ((std::is_same_v<Args, ellipsis>)+...);
-    static constexpr int n_args_long     = (std::is_constructible_v<long, Args> + ...);
+    static constexpr int n_args_long     = (IndexType<Args> + ...);
 
     // compile time checks
     static_assert(n_args_ellipsis <= 1, "Error in nda::slice_static::slice_idx_map: At most one ellipsis argument is allowed");

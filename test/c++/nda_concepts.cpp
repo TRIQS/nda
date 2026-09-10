@@ -8,6 +8,7 @@
 #include <nda/concepts.hpp>
 #include <nda/nda.hpp>
 
+#include <cstdint>
 #include <memory>
 #include <vector>
 
@@ -51,6 +52,25 @@ TEST(NDA, ConceptsGeneral) {
   static_assert(nda::FloatOrDouble<double>);
   static_assert(not nda::FloatOrDouble<int>);
   static_assert(not nda::FloatOrDouble<std::complex<double>>);
+}
+
+enum unscoped_enum { e0, e1 };
+
+TEST(NDA, ConceptsIndexType) {
+  static_assert(nda::IndexType<int>);
+  static_assert(nda::IndexType<long>);
+  static_assert(nda::IndexType<size_t>);
+  static_assert(nda::IndexType<unsigned>);
+  static_assert(nda::IndexType<int8_t>);
+
+  static_assert(not nda::IndexType<bool>);
+  static_assert(not nda::IndexType<char>);
+  static_assert(not nda::IndexType<char32_t>);
+  static_assert(not nda::IndexType<double>);
+  static_assert(not nda::IndexType<nda::range>);
+  static_assert(not nda::IndexType<nda::range::all_t>);
+  static_assert(not nda::IndexType<nda::ellipsis>);
+  static_assert(not nda::IndexType<unscoped_enum>);
 }
 
 TEST(NDA, ConceptsNDASpecific) {

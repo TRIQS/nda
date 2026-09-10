@@ -323,13 +323,16 @@ namespace nda {
   template <typename A, typename U>
   concept HasValueTypeConstructibleFrom = Array<A> and (std::is_constructible_v<U, get_value_t<A>>);
 
-  namespace detail {
-
-    // Integer type usable as an array index: excludes bool and character types.
-    template <typename T>
-    concept IndexInteger = std::integral<T> and not is_any_of<T, bool, char, wchar_t, char8_t, char16_t, char32_t>;
-
-  } // namespace detail
+  /**
+   * @brief Check if a given type can be used as a single index into an nda array.
+   *
+   * @details Integral types except `bool` and the character types. Note that `nda::range`, `nda::range::all_t` and
+   * nda::ellipsis are not index types.
+   *
+   * @tparam T Type to check.
+   */
+  template <typename T>
+  concept IndexType = std::integral<T> and not is_any_of<T, bool, char, wchar_t, char8_t, char16_t, char32_t>;
 
   /**
    * @brief Check if a given type is an index container for advanced array indexing.
@@ -347,7 +350,7 @@ namespace nda {
    * @tparam T Type to check.
    */
   template <typename T>
-  concept IndexContainer = std::ranges::sized_range<T> and detail::IndexInteger<std::ranges::range_value_t<T>> and not std::same_as<T, itertools::range>
+  concept IndexContainer = std::ranges::sized_range<T> and IndexType<std::ranges::range_value_t<T>> and not std::same_as<T, itertools::range>
      and (not Array<T> or get_rank<T> == 1);
 
   /** @} */

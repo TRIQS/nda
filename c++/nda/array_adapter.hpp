@@ -66,12 +66,12 @@ namespace nda {
     /**
      * @brief Function call operator simply forwards the arguments to the callable object.
      *
-     * @tparam Ints Integer types (convertible to long).
+     * @tparam Ints nda::IndexType types.
      * @param i0 First argument.
      * @param is Rest of the arguments.
      */
     template <typename... Ints>
-      requires((std::is_convertible_v<Ints, long> and ...))
+      requires((IndexType<Ints> and ...))
     auto operator()(long i0, Ints... is) const {
       return f(i0, is...);
     }
