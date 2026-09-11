@@ -29,13 +29,11 @@ struct op_frob_norm : op_defaults {
 using namespace nda_bench;
 
 NDA_BENCHMARK(op_sum, "sum", array_input<2>, array_input<2>)
-NDA_BENCHMARK(op_sum, "sum", matrix_input<>, matrix_input<>)
 
 // A + B must sit at ~1.0, or the running product overflows to +inf within a few hundred
 // elements (f32 by ~128 multiplications) and the benchmark times infinity arithmetic.
 NDA_BENCHMARK(op_prod, "product", array_input<2, 'A', nda::C_layout, nda_bench::product_band>,
               array_input<2, 'A', nda::C_layout, nda_bench::product_band>)
-NDA_BENCHMARK(op_prod, "product", matrix_input<nda::C_layout, nda_bench::product_band>, matrix_input<nda::C_layout, nda_bench::product_band>)
 
 NDA_BENCHMARK(op_max_elem, "max_element", array_input<2>, array_input<2>)
 
