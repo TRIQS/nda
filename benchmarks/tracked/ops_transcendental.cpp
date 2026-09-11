@@ -3,63 +3,72 @@
 // SPDX-License-Identifier: Apache-2.0
 // See LICENSE in the root of this distribution for details.
 
-
 #include "./bench_ops.hpp"
+using namespace nda_bench;
 
-struct op_no_matrix : nda_bench::op_defaults {
+struct op_no_matrix : op_defaults {
   static constexpr bool supports_matrix = false;
 };
 
 struct op_exp : op_no_matrix {
-  template <typename Arr> static decltype(auto) op(Arr const &A) { return exp(A); }
+  static decltype(auto) op(auto const &A) { return exp(A); }
 };
 struct op_log : op_no_matrix {
-  template <typename Arr> static decltype(auto) op(Arr const &A) { return log(A); }
+  static decltype(auto) op(auto const &A) { return log(A); }
 };
 struct op_sqrt : op_no_matrix {
-  template <typename Arr> static decltype(auto) op(Arr const &A) { return sqrt(A); }
+  static decltype(auto) op(auto const &A) { return sqrt(A); }
 };
 struct op_sin : op_no_matrix {
-  template <typename Arr> static decltype(auto) op(Arr const &A) { return sin(A); }
+  static decltype(auto) op(auto const &A) { return sin(A); }
 };
 struct op_cos : op_no_matrix {
-  template <typename Arr> static decltype(auto) op(Arr const &A) { return cos(A); }
+  static decltype(auto) op(auto const &A) { return cos(A); }
 };
 struct op_tan : op_no_matrix {
-  template <typename Arr> static decltype(auto) op(Arr const &A) { return tan(A); }
+  static decltype(auto) op(auto const &A) { return tan(A); }
 };
 struct op_sinh : op_no_matrix {
-  template <typename Arr> static decltype(auto) op(Arr const &A) { return sinh(A); }
+  static decltype(auto) op(auto const &A) { return sinh(A); }
 };
 struct op_cosh : op_no_matrix {
-  template <typename Arr> static decltype(auto) op(Arr const &A) { return cosh(A); }
+  static decltype(auto) op(auto const &A) { return cosh(A); }
 };
 struct op_tanh : op_no_matrix {
-  template <typename Arr> static decltype(auto) op(Arr const &A) { return tanh(A); }
+  static decltype(auto) op(auto const &A) { return tanh(A); }
 };
 struct op_asin : op_no_matrix {
-  template <typename Arr> static decltype(auto) op(Arr const &A) { return asin(A); }
-  // domain is [-1,1]: the default [1,2) range would return NaN for every element
-  static constexpr nda_bench::input_range inputs = {.scale = 2.0, .offset = -1.0};
+  static decltype(auto) op(auto const &A) { return asin(A); }
 };
 struct op_acos : op_no_matrix {
-  template <typename Arr> static decltype(auto) op(Arr const &A) { return acos(A); }
-  // domain is [-1,1]: the default [1,2) range would return NaN for every element
-  static constexpr nda_bench::input_range inputs = {.scale = 2.0, .offset = -1.0};
+  static decltype(auto) op(auto const &A) { return acos(A); }
 };
 struct op_atan : op_no_matrix {
-  template <typename Arr> static decltype(auto) op(Arr const &A) { return atan(A); }
+  static decltype(auto) op(auto const &A) { return atan(A); }
 };
 
-NDA_BENCHMARK_ALL_TYPES(op_exp, "exp")
-NDA_BENCHMARK_ALL_TYPES(op_log, "log")
-NDA_BENCHMARK_ALL_TYPES(op_sqrt, "sqrt")
-NDA_BENCHMARK_ALL_TYPES(op_sin, "sin")
-NDA_BENCHMARK_ALL_TYPES(op_cos, "cos")
-NDA_BENCHMARK_ALL_TYPES(op_tan, "tan")
-NDA_BENCHMARK_ALL_TYPES(op_sinh, "sinh")
-NDA_BENCHMARK_ALL_TYPES(op_cosh, "cosh")
-NDA_BENCHMARK_ALL_TYPES(op_tanh, "tanh")
-NDA_BENCHMARK_ALL_TYPES(op_asin, "asin")
-NDA_BENCHMARK_ALL_TYPES(op_acos, "acos")
-NDA_BENCHMARK_ALL_TYPES(op_atan, "atan")
+NDA_BENCHMARK(op_exp, "exp", array_input<2>)
+
+NDA_BENCHMARK(op_log, "log", array_input<2>)
+
+NDA_BENCHMARK(op_sqrt, "sqrt", array_input<2>)
+
+NDA_BENCHMARK(op_sin, "sin", array_input<2>)
+
+NDA_BENCHMARK(op_cos, "cos", array_input<2>)
+
+NDA_BENCHMARK(op_tan, "tan", array_input<2>)
+
+NDA_BENCHMARK(op_sinh, "sinh", array_input<2>)
+
+NDA_BENCHMARK(op_cosh, "cosh", array_input<2>)
+
+NDA_BENCHMARK(op_tanh, "tanh", array_input<2>)
+
+// domain is [-1,1]: the default [1,2) range would return NaN for every element
+NDA_BENCHMARK(op_asin, "asin", array_input<2, 'A', nda::C_layout, nda_bench::signed_band>)
+
+// domain is [-1,1]: the default [1,2) range would return NaN for every element
+NDA_BENCHMARK(op_acos, "acos", array_input<2, 'A', nda::C_layout, nda_bench::signed_band>)
+
+NDA_BENCHMARK(op_atan, "atan", array_input<2>)

@@ -10,44 +10,86 @@
 
 #include "./bench_ops.hpp"
 
-using nda_bench::op_defaults;
+using namespace nda_bench;
 
 struct op_neg : op_defaults {
-  template <typename Arr> static decltype(auto) op(Arr const &A) { return -A; }
+  static decltype(auto) op(auto const &A) { return -A; }
 };
 struct op_add : op_defaults {
-  template <typename Arr> static decltype(auto) op(Arr const &A, Arr const &B) { return A + B; }
+  static decltype(auto) op(auto const &A, auto const &B) { return A + B; }
 };
 struct op_sub : op_defaults {
-  template <typename Arr> static decltype(auto) op(Arr const &A, Arr const &B) { return A - B; }
+  static decltype(auto) op(auto const &A, auto const &B) { return A - B; }
 };
 struct op_mul : op_defaults {
-  template <typename Arr> static decltype(auto) op(Arr const &A, Arr const &B) { return A * B; }
+  static auto result_shape(auto const &A, auto const &B) { return nda_bench::product_shape(A, B); }
+  static decltype(auto) op(auto const &A, auto const &B) { return A * B; }
 };
 struct op_div : op_defaults {
-  template <typename Arr> static decltype(auto) op(Arr const &A, Arr const &B) { return A / B; }
+  static auto result_shape(auto const &A, auto const &B) { return nda_bench::product_shape(A, B); }
+  static decltype(auto) op(auto const &A, auto const &B) { return A / B; }
 };
-// Elementwise product like mul on a2/a3, but routed through map() rather than expr; on m2
-// it stays elementwise while mul dispatches to gemm.
 struct op_hadamard : op_defaults {
-  template <typename Arr> static decltype(auto) op(Arr const &A, Arr const &B) { return hadamard(A, B); }
+  static decltype(auto) op(auto const &A, auto const &B) { return hadamard(A, B); }
 };
 struct op_fma : op_defaults {
-  template <typename Arr> static decltype(auto) op(Arr const &A, Arr const &B, Arr const &C) { return A * B + C; }
+  static auto result_shape(auto const &A, auto const &B, auto const &C) {
+    if constexpr (nda::Scalar<std::remove_cvref_t<decltype(A)>> && nda::Scalar<std::remove_cvref_t<decltype(B)>>) {
+      return C.shape();
+    } else {
+      return nda_bench::product_shape(A, B);
+    }
+  }
+  static decltype(auto) op(auto const &A, auto const &B, auto const &C) { return A * B + C; }
 };
 struct op_fms : op_defaults {
-  template <typename Arr> static decltype(auto) op(Arr const &A, Arr const &B, Arr const &C) { return A * B - C; }
+  static auto result_shape(auto const &A, auto const &B, auto const &C) {
+    if constexpr (nda::Scalar<std::remove_cvref_t<decltype(A)>> && nda::Scalar<std::remove_cvref_t<decltype(B)>>) {
+      return C.shape();
+    } else {
+      return nda_bench::product_shape(A, B);
+    }
+  }
+  static decltype(auto) op(auto const &A, auto const &B, auto const &C) { return A * B - C; }
 };
 struct op_addsub : op_defaults {
-  template <typename Arr> static decltype(auto) op(Arr const &A, Arr const &B, Arr const &C) { return A + B - C; }
+  static decltype(auto) op(auto const &A, auto const &B, auto const &C) { return A + B - C; }
 };
 
-NDA_BENCHMARK_ALL_TYPES(op_neg, "neg")
-NDA_BENCHMARK_ALL_TYPES(op_add, "add")
-NDA_BENCHMARK_ALL_TYPES(op_sub, "sub")
-NDA_BENCHMARK_ALL_TYPES(op_mul, "mul")
-NDA_BENCHMARK_ALL_TYPES(op_div, "div")
-NDA_BENCHMARK_ALL_TYPES(op_hadamard, "hadamard")
-NDA_BENCHMARK_ALL_TYPES(op_fma, "fma")
-NDA_BENCHMARK_ALL_TYPES(op_fms, "fms")
-NDA_BENCHMARK_ALL_TYPES(op_addsub, "addsub")
+NDA_BENCHMARK(op_neg, "neg", array_input<2>)
+
+NDA_BENCHMARK(op_add, "add", array_input<2>, array_input<2>)
+NDA_BENCHMARK(op_add, "add", matrix_input<>, scalar_input<>)
+NDA_BENCHMARK(op_add, "add", array_input<2>, scalar_input<>)
+NDA_BENCHMARK(op_add, "add", row_slice<matrix_input<>>, row_slice<matrix_input<>>)
+NDA_BENCHMARK(op_add, "add", col_slice<matrix_input<>>, col_slice<matrix_input<>>)
+NDA_BENCHMARK(op_add, "add", row_slice<array_input<2>>, scalar_input<>)
+NDA_BENCHMARK(op_add, "add", vector_input<>, vector_input<>)
+
+NDA_BENCHMARK(op_sub, "sub", array_input<2>, array_input<2>)
+NDA_BENCHMARK(op_sub, "sub", vector_input<>, vector_input<>)
+
+NDA_BENCHMARK(op_mul, "mul", array_input<2>, array_input<2>)
+NDA_BENCHMARK(op_mul, "mul", matrix_input<>, matrix_input<>)
+NDA_BENCHMARK(op_mul, "mul", matrix_input<>, vector_input<>)
+NDA_BENCHMARK(op_mul, "mul", vector_input<>, scalar_input<>)
+NDA_BENCHMARK(op_mul, "mul", matrix_input<>, scalar_input<>)
+
+NDA_BENCHMARK(op_div, "div", array_input<2, 'A', nda::C_layout, signed_band>, array_input<2, 'A', nda::C_layout, positive_band>)
+NDA_BENCHMARK(op_div, "div", matrix_input<>, matrix_input<>)
+NDA_BENCHMARK(op_div, "div", vector_input<>, scalar_input<>)
+NDA_BENCHMARK(op_div, "div", matrix_input<>, scalar_input<>)
+
+NDA_BENCHMARK(op_hadamard, "hadamard", array_input<2>, array_input<2>)
+
+NDA_BENCHMARK(op_fma, "fma", array_input<2>, array_input<2>, array_input<2>)
+NDA_BENCHMARK(op_fma, "fma", matrix_input<>, matrix_input<>, matrix_input<>)
+NDA_BENCHMARK(op_fma, "fma", matrix_input<>, scalar_input<>, matrix_input<>)
+NDA_BENCHMARK(op_fma, "fma", matrix_input<>, vector_input<>, vector_input<>)
+NDA_BENCHMARK(op_fma, "fma", scalar_input<>, vector_input<>, vector_input<>)
+
+NDA_BENCHMARK(op_fms, "fms", array_input<2>, array_input<2>, array_input<2>)
+NDA_BENCHMARK(op_fms, "fms", matrix_input<>, matrix_input<>, matrix_input<>)
+NDA_BENCHMARK(op_fms, "fms", matrix_input<>, vector_input<>, vector_input<>)
+
+NDA_BENCHMARK(op_addsub, "addsub", array_input<2>, array_input<2>, array_input<2>)
