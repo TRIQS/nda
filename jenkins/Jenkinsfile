@@ -113,6 +113,19 @@ def runBuild = { String platform, String prefix, List<String> envs ->
   }
 }
 
+def runBenchmarkTest = {
+  stage('benchmark test') {
+    dir('benchmark-results') {
+      deleteDir()
+    }
+    try {
+      sh 'sh tools/benchmarks/run-benchmarks.sh'
+    } finally {
+      archiveArtifacts artifacts: 'benchmark-results/**', allowEmptyArchive: true
+    }
+  }
+}
+
 /* map of all builds to run, populated below */
 def platforms = [:]
 
@@ -155,6 +168,19 @@ for (int i = 0; i < macosPlatforms.size(); i++) {
 /****************** wrap-up */
 catchError {
   parallel platforms
+
+  if (currentBuild.currentResult == 'SUCCESS' && env.CHANGE_ID && env.CHANGE_TARGET == 'unstable') {
+    timeout(time: 2, unit: 'HOURS') {
+      // The GCC image is ready after the build matrix; reserve a new node for benchmarks.
+      runPod(tag: 'ubuntu-gcc', cpus: 8, memory: '32Gi', exclusive: true) {
+        checkout scm
+        withEnv(['PARALLEL=8', 'OMP_NUM_THREADS=1', 'OPENBLAS_NUM_THREADS=1',
+                 'MKL_NUM_THREADS=1', 'TBLIS_NUM_THREADS=1']) {
+          runBenchmarkTest()
+        }
+      }
+    }
+  }
 
   if (keepInstall) {
     /* Publish results */
