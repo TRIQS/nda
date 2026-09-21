@@ -47,28 +47,28 @@ struct op_atan : op_no_matrix {
   static decltype(auto) op(auto const &A) { return atan(A); }
 };
 
-NDA_BENCHMARK(op_exp, "exp", array_input<2>)
+NDA_BENCHMARK(op_exp, "exp", types<double, std::complex<double>>, array_input<2>)
 
-NDA_BENCHMARK(op_log, "log", array_input<2>)
+NDA_BENCHMARK(op_log, "log", types<double, std::complex<double>>, array_input<2>)
 
-NDA_BENCHMARK(op_sqrt, "sqrt", array_input<2>)
+NDA_BENCHMARK(op_sqrt, "sqrt", types<double, std::complex<double>>, array_input<2>)
 
-NDA_BENCHMARK(op_sin, "sin", array_input<2>)
+NDA_BENCHMARK(op_sin, "sin", types<double, std::complex<double>>, array_input<2>)
 
-NDA_BENCHMARK(op_cos, "cos", array_input<2>)
+NDA_BENCHMARK(op_cos, "cos", types<double, std::complex<double>>, array_input<2>)
 
-NDA_BENCHMARK(op_tan, "tan", array_input<2>)
+NDA_BENCHMARK(op_tan, "tan", types<double, std::complex<double>>, array_input<2>)
 
-NDA_BENCHMARK(op_sinh, "sinh", array_input<2>)
+NDA_BENCHMARK(op_sinh, "sinh", types<double, std::complex<double>>, array_input<2>)
 
-NDA_BENCHMARK(op_cosh, "cosh", array_input<2>)
+NDA_BENCHMARK(op_cosh, "cosh", types<double, std::complex<double>>, array_input<2>)
 
-NDA_BENCHMARK(op_tanh, "tanh", array_input<2>)
-
-// domain is [-1,1]: the default [1,2) range would return NaN for every element
-NDA_BENCHMARK(op_asin, "asin", array_input<2, 'A', nda::C_layout, nda_bench::signed_band>)
+NDA_BENCHMARK(op_tanh, "tanh", types<double, std::complex<double>>, array_input<2>)
 
 // domain is [-1,1]: the default [1,2) range would return NaN for every element
-NDA_BENCHMARK(op_acos, "acos", array_input<2, 'A', nda::C_layout, nda_bench::signed_band>)
+NDA_BENCHMARK(op_asin, "asin", types<double, std::complex<double>>, array_input<2, 'A', nda::C_layout, nda_bench::signed_band>)
 
-NDA_BENCHMARK(op_atan, "atan", array_input<2>)
+// domain is [-1,1]: the default [1,2) range would return NaN for every element
+NDA_BENCHMARK(op_acos, "acos", types<double, std::complex<double>>, array_input<2, 'A', nda::C_layout, nda_bench::signed_band>)
+
+NDA_BENCHMARK(op_atan, "atan", types<double, std::complex<double>>, array_input<2>)

@@ -8,6 +8,8 @@
 #include "./benchmark_concepts.hpp"
 #include <nda/nda.hpp>
 #include <array>
+#include <complex>
+#include <concepts>
 #include <cstdint>
 #include <random>
 #include <stdexcept>
@@ -19,39 +21,30 @@
 namespace nda_bench {
   // Tag used in the benchmark name.
   template <typename ValueType>
-  struct type_tag;
-
-  template <>
-  struct type_tag<float> {
-    static constexpr std::string_view name = "f32";
-  };
-
-  template <>
-  struct type_tag<double> {
-    static constexpr std::string_view name = "f64";
-  };
-
-  template <>
-  struct type_tag<std::complex<float>> {
-    static constexpr std::string_view name = "c64";
-  };
-
-  template <>
-  struct type_tag<std::complex<double>> {
-    static constexpr std::string_view name = "c128";
-  };
+  consteval std::string_view type_tag() {
+    if constexpr (std::same_as<ValueType, float>) {
+      return "f32";
+    } else if constexpr (std::same_as<ValueType, double>) {
+      return "f64";
+    } else if constexpr (std::same_as<ValueType, std::complex<float>>) {
+      return "c64";
+    } else if constexpr (std::same_as<ValueType, std::complex<double>>) {
+      return "c128";
+    } else {
+      return "Unknown";
+    }
+  }
 
   template <typename Layout>
-  struct layout_tag;
-
-  template <>
-  struct layout_tag<nda::C_layout> {
-    static constexpr std::string_view name = "C_layout";
-  };
-  template <>
-  struct layout_tag<nda::F_layout> {
-    static constexpr std::string_view name = "F_layout";
-  };
+  consteval std::string_view layout_tag() {
+    if constexpr (std::same_as<Layout, nda::C_layout>) {
+      return "C_layout";
+    } else if constexpr (std::same_as<Layout, nda::F_layout>) {
+      return "F_layout";
+    } else {
+      return "Unknown";
+    }
+  }
 
   // Each input selects bounds for the range its expression needs.
   // The default keeps values away from zero so division, log and sqrt
@@ -113,7 +106,7 @@ namespace nda_bench {
 
     template <typename ValueType>
     static std::string id() {
-      return std::string(name) + std::to_string(Rank) + "_" + std::string(layout_tag<Layout>::name);
+      return std::string(name) + std::to_string(Rank) + "_" + std::string(layout_tag<Layout>());
     }
 
     template <typename ValueType>

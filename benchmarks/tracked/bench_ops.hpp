@@ -16,12 +16,33 @@
 #include <tuple>
 #include <type_traits>
 #include <utility>
+#include <vector>
 
 namespace nda_bench {
 
-  inline constexpr std::int64_t min_dim = 4; // dimension along every axis
+  // Explicit value types for one registration; every operand uses the same type.
+  template <typename... Ts>
+  struct types {
+    private:
+    template <typename T>
+    static constexpr std::size_t count = (std::size_t{0} + ... + std::size_t{std::same_as<T, Ts>});
+
+    static constexpr bool supported =
+       ((std::same_as<Ts, float> || std::same_as<Ts, double> || std::same_as<Ts, std::complex<float>> || std::same_as<Ts, std::complex<double>>)
+        && ...);
+    static constexpr bool unique = ((count<Ts> == 1) && ...);
+
+    public:
+    static_assert(sizeof...(Ts) > 0, "Select at least one benchmark value type");
+    static_assert(supported, "Supported benchmark types: float, double, std::complex<float>, std::complex<double>");
+    static_assert(unique, "Benchmark value types must not contain duplicates");
+
+    using tuple_type = std::tuple<Ts...>;
+  };
+
+  inline constexpr std::int64_t min_dim = 16; // dimension along every axis
   // The sweep caps each owning operand, including unexposed slice elements.
-  inline constexpr std::int64_t max_elements = std::int64_t{1} << 24;
+  inline constexpr std::int64_t max_elements = std::int64_t{1} << 22;
   static_assert(min_dim > 0 && min_dim < max_elements);
 
   template <typename LHS, typename RHS>
@@ -138,7 +159,7 @@ namespace nda_bench {
 
     template <typename ValueType, BenchmarkInput<ValueType>... Inputs>
     void custom_range(benchmark::Benchmark *b) {
-      for (std::int64_t N = min_dim; ((Inputs::template storage_size<ValueType>(N) <= max_elements) && ...); N *= 2) { b->Arg(N); }
+      for (std::int64_t N = min_dim; ((Inputs::template storage_size<ValueType>(N) <= max_elements) && ...); N *= 4) { b->Arg(N); }
     }
 
     template <typename ValueType, typename Operation, BenchmarkInput<ValueType> Input>
@@ -164,21 +185,28 @@ namespace nda_bench {
                     "Benchmark input type, rank, or algebra is unsupported by this operation");
       std::string shapes;
       ((shapes += (shapes.empty() ? "" : ",") + Inputs::template id<ValueType>()), ...);
-      auto name = std::string(type_tag<ValueType>::name) + "/" + shapes + "/" + op_name;
+      auto name = std::string(type_tag<ValueType>()) + "/" + shapes + "/" + op_name;
       benchmark::RegisterBenchmark(name, &run_benchmark<ValueType, Operation, Inputs...>)
          ->Apply(custom_range<ValueType, Inputs...>)
+         ->ComputeStatistics("min", [](std::vector<double> const &v) { return *std::min_element(v.begin(), v.end()); })
          ->Unit(benchmark::kMicrosecond);
     }
 
-    template <typename Operation, typename... Inputs>
+    template <typename Operation, typename ValueTypes, typename... Inputs>
     struct input_registrar {
+      using selected_types = typename ValueTypes::tuple_type;
+
+      template <typename ValueType>
+      static void register_type(std::string const &name) {
+        constexpr bool supported = (supports_input<ValueType, Operation, Inputs>() && ...);
+        static_assert(supported, "Selected benchmark type, rank, or algebra is unsupported by this operation");
+        if constexpr (supported) { register_case<ValueType, Operation, Inputs...>(name); }
+      }
+
       input_registrar(std::string const &name) {
-        register_case<float, Operation, Inputs...>(name);
-        register_case<double, Operation, Inputs...>(name);
-        if constexpr (Operation::supports_complex) {
-          register_case<std::complex<float>, Operation, Inputs...>(name);
-          register_case<std::complex<double>, Operation, Inputs...>(name);
-        }
+        [&]<std::size_t... I>(std::index_sequence<I...>) {
+          (register_type<std::tuple_element_t<I, selected_types>>(name), ...);
+        }(std::make_index_sequence<std::tuple_size_v<selected_types>>{});
       }
     };
 
@@ -189,5 +217,7 @@ namespace nda_bench {
 // then JOIN_IMPL pastes it into the unique registration variable name.
 #define NDA_BENCH_JOIN_IMPL(A, B) A##B
 #define NDA_BENCH_JOIN(A, B) NDA_BENCH_JOIN_IMPL(A, B)
+// Usage: NDA_BENCHMARK(op, "name", types<float, double>, input, ...).
+// Keep the type list in __VA_ARGS__ so its template commas pass through intact.
 #define NDA_BENCHMARK(OP_TYPE, NAME, ...)                                                                                                            \
   static ::nda_bench::detail::input_registrar<OP_TYPE, __VA_ARGS__> NDA_BENCH_JOIN(input_registrar_, __COUNTER__)(NAME);
