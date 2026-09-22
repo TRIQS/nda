@@ -4,9 +4,7 @@ import statistics
 
 
 def check_comparable(baseline, candidate):
-    # Dependency revisions are recorded in each side's provenance but not required to
-    # match: the script shares them across arms in CI, and a PR that changes a pin is
-    # measuring that change.
+    # Each build resolves dependencies independently; changed pins are part of the comparison.
     if baseline['harness_sha256'] != candidate['harness_sha256']:
         raise ValueError('The two builds have different harness_sha256')
     for key in ('vendor', 'version', 'build_type', 'effective_flags'):
@@ -21,10 +19,12 @@ def analyze(rounds, expected_rounds, threshold):
         return {'status': 'incomplete'}
     ratios = [pair['samples']['baseline']['cpu_time_ns'] /
               pair['samples']['candidate']['cpu_time_ns'] for pair in rounds]
-    changes = [100 * (1 / ratio - 1) for ratio in ratios]
+    # One estimate, in the measured unit; the percentage is derived from it. A median of
+    # six averages the middle pair, and mean(1/x) != 1/mean(x), so a separately computed
+    # median of the changes would disagree with this one.
     ratio = statistics.median(ratios)
-    change = statistics.median(changes)
-    low, high = min(changes), max(changes)
+    change = 100 * (1 / ratio - 1)
+    low, high = 100 * (1 / max(ratios) - 1), 100 * (1 / min(ratios) - 1)
     if low <= 0 <= high:
         status = 'inconclusive'
     elif low > 0 and change >= threshold:
