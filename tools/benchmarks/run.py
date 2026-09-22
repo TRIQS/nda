@@ -5,8 +5,8 @@ Runs every ops_* binary, writes one Google Benchmark JSON per binary, and record
 wall time, case counts, build provenance and machine description in summary.json.
 The purpose is to find out what a full sweep costs before wiring it into Jenkins.
 
-Use --cpu N for sequential pinning, or --workers 4 for parallel execution on
-distinct physical cores with local NUMA memory binding (Linux with numactl).
+Workers automatically use distinct allowed physical cores with local NUMA memory
+binding on Linux with numactl, including when --workers 1 is specified.
 """
 
 from __future__ import annotations
@@ -98,6 +98,15 @@ def run_text(cmd, **kw) -> str:
 # machine description
 
 
+def scaling_governor(cpu: int | None) -> str | None:
+    if cpu is None:
+        return None
+    try:
+        return Path(f"/sys/devices/system/cpu/cpu{cpu}/cpufreq/scaling_governor").read_text().strip() or None
+    except OSError:
+        return None
+
+
 def describe_cpu_ram() -> dict:
     info = {
         "system": platform.system(),
@@ -134,10 +143,6 @@ def describe_cpu_ram() -> dict:
                 continue
             # lscpu prints caches as "512 KiB"; store bytes so the column is numeric.
             info[field] = to_bytes(value) if field.endswith("_bytes") else value.strip()
-        gov = Path("/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor")
-        if gov.exists():
-            info["scaling_governor"] = gov.read_text().strip()
-
     elif platform.system() == "Darwin":
         for key, field, cast in [
             ("machdep.cpu.brand_string", "cpu_model", str),
@@ -165,9 +170,6 @@ def describe_cpu_ram() -> dict:
                      or run_text(["sysctl", "-n", f"hw.{key}"]))
             if value:
                 info[field] = int(value)
-
-    if hasattr(os, "sched_getaffinity"):
-        info["affinity"] = sorted(os.sched_getaffinity(0))
 
     if ram := info.get("ram_bytes"):
         info["ram_gib"] = round(ram / 2**30, 1)
@@ -241,9 +243,17 @@ def describe_provenance(repo_root: Path, build_dir: Path) -> dict:
 # pinning
 
 
-def parallel_placements(workers: int) -> list[dict]:
-    if platform.system() != "Linux" or not shutil.which("numactl"):
-        raise ValueError("Parallel measurement requires Linux and numactl")
+def worker_placements(workers: int) -> list[dict]:
+    linux = platform.system() == "Linux"
+    numa = linux and shutil.which("numactl")
+    cpu_only = linux and shutil.which("taskset")
+    if not numa and not cpu_only:
+        if workers > 1:
+            raise ValueError("Parallel measurement requires Linux and numactl or taskset")
+        print("warning: CPU pinning is unavailable; running unpinned", file=sys.stderr)
+        return [{"cpu": None, "numa_node": None, "pin_command": []}]
+    if not numa:
+        print("warning: numactl is unavailable; pinning CPUs without memory binding", file=sys.stderr)
     status = Path("/proc/self/status").read_text()
     allowed = re.search(r"^Mems_allowed_list:\s*(.+)$", status, re.MULTILINE)
     if not allowed:
@@ -273,31 +283,12 @@ def parallel_placements(workers: int) -> list[dict]:
         for node in sorted(by_node):
             if by_node[node] and len(placements) < workers:
                 cpu = by_node[node].pop(0)
-                placements.append({"cpu": cpu, "numa_node": node,
-                                   "pin_command": ["numactl", f"--physcpubind={cpu}", f"--membind={node}"]})
+                command = (["numactl", f"--physcpubind={cpu}", f"--membind={node}"]
+                           if numa else ["taskset", "-c", str(cpu)])
+                placements.append({"cpu": cpu, "numa_node": node if numa else None, "pin_command": command})
         if not any(by_node.values()) and len(placements) < workers:
             raise ValueError(f"Need {workers} distinct allowed physical cores with local memory")
     return placements
-
-
-def pin_prefix(cpu: int | None) -> list[str]:
-    if cpu is None:
-        return []
-    if shutil.which("numactl"):
-        node = None
-        for line in run_text(["numactl", "--hardware"]).splitlines():
-            match = re.match(r"^node (\d+) cpus: (.*)$", line)
-            if match and str(cpu) in match.group(2).split():
-                node = match.group(1)
-                break
-        if node is not None:
-            return ["numactl", f"--physcpubind={cpu}", f"--membind={node}"]
-        print(f"warning: no NUMA node found for cpu {cpu}; memory not bound", file=sys.stderr)
-        return ["numactl", f"--physcpubind={cpu}"]
-    if shutil.which("taskset"):
-        print("warning: numactl not found; pinning CPU but not memory", file=sys.stderr)
-        return ["taskset", "-c", str(cpu)]
-    sys.exit(f"error: --cpu {cpu} given but neither numactl nor taskset is available")
 
 
 # counting
@@ -373,17 +364,13 @@ def main() -> int:
                         help="--benchmark_min_time, e.g. 0.1s or 100x (default: GB's own)")
     parser.add_argument("--filter", default=None,
                         help="--benchmark_filter regex; a leading - excludes")
-    parser.add_argument("--cpu", type=int, default=None,
-                        help="pin to this logical CPU via numactl/taskset")
-    parser.add_argument("--workers", type=int, default=1,
-                        help="parallel binaries on distinct physical cores with NUMA binding (default: 1)")
+    parser.add_argument("--workers", type=int, required=True,
+                        help="number of workers on distinct physical cores with NUMA binding")
     parser.add_argument("--count-only", action="store_true",
                         help="report counts without running anything")
     args = parser.parse_args()
     if args.workers < 1 or args.repetitions < 1:
         parser.error("workers and repetitions must be positive")
-    if args.workers > 1 and args.cpu is not None:
-        parser.error("--cpu is for sequential runs; --workers selects distinct cores automatically")
     args.bindir = args.bindir.resolve()
 
     if args.outdir is None:
@@ -407,8 +394,9 @@ def main() -> int:
     gb_min_time = [f"--benchmark_min_time={args.min_time}"] if args.min_time else []
     workers = min(args.workers, len(binaries))
     try:
-        placements = parallel_placements(workers) if args.workers > 1 else [
-            {"cpu": args.cpu, "numa_node": None, "pin_command": pin_prefix(args.cpu)}]
+        placements = worker_placements(workers)
+        for placement in placements:
+            placement["scaling_governor"] = scaling_governor(placement["cpu"])
         if not args.count_only:
             for placement in placements:
                 if placement["pin_command"]:
@@ -490,9 +478,8 @@ def main() -> int:
             "min_time": args.min_time,
             "filter": args.filter,
             "pinned": all(p["pin_command"] for p in placements),
-            "pin_command": placements[0]["pin_command"] if workers == 1 else None,
             "workers": workers,
-            "worker_placements": placements,
+            "worker_placements": [{k: v for k, v in p.items() if k != "pin_command"} for p in placements],
             "bindir": str(args.bindir),
         },
         "machine": describe_cpu_ram(),
@@ -500,7 +487,7 @@ def main() -> int:
         "provenance": describe_provenance(repo_root, build_dir),
         "threads": threads,
         "totals": totals | {"binaries": len(binaries), "wall_seconds": total_secs},
-        "binaries": entries,
+        "binaries": [{k: v for k, v in entry.items() if k != "pin_command"} for entry in entries],
     }
     (args.outdir / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
 
