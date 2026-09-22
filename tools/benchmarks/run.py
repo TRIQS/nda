@@ -44,8 +44,6 @@ def main() -> int:
                         help="--benchmark_filter regex; a leading - excludes")
     parser.add_argument("--workers", type=int, required=True,
                         help="number of workers on distinct physical cores with NUMA binding")
-    parser.add_argument("--count-only", action="store_true",
-                        help="report counts without running anything")
     args = parser.parse_args()
     if args.workers < 1 or args.repetitions < 1:
         parser.error("workers and repetitions must be positive")
@@ -76,16 +74,13 @@ def main() -> int:
 
     document = metadata.create_metadata({
         'repetitions': args.repetitions, 'min_time': args.min_time, 'filter': args.filter,
-        'workers': args.workers, 'rounds': 1, 'repetition_statistic': None,
-        'warmup_invocations_per_side': 0, 'threshold_percent': None,
-        'timeout_seconds': None, 'count_only': args.count_only,
+        'workers': args.workers,
     })
 
     workers = min(args.workers, len(selected))
     try:
         placements = placement.worker_placements(workers)
-        if not args.count_only:
-            placement.validate_placements(placements)
+        placement.validate_placements(placements)
     except (ValueError, OSError, subprocess.CalledProcessError) as exc:
         parser.error(f"CPU/NUMA binding failed: {exc}")
 
@@ -109,21 +104,18 @@ def main() -> int:
         totals['cases'] += selected_entry['cases']
         totals['families'] += selected_entry['families']
         worker = placements[len(entries) % workers]
-        entry = selected_entry | worker | {'wall_seconds': None, 'exit_code': None, 'status': None}
+        entry = selected_entry | worker
         entries.append(entry)
-        if args.count_only:
-            print(f"{entry['name']:<22} {entry['families']:5d} families  {entry['cases']:5d} cases  (not run)")
 
     document['totals'] = totals | {'binaries': len(entries), 'wall_seconds': None}
     document['binaries'] = [placement.public_metadata(entry) for entry in entries]
     common.write_json(args.outdir / 'metadata.json', document)
-    results = {'binaries': [] if args.count_only else [
+    results = {'binaries': [
         {'name': entry['name'], 'exit_code': None} for entry in entries]}
     result_indices = {entry['name']: i for i, entry in enumerate(entries)}
     checkpoint_lock = threading.Lock()
-    if not args.count_only:
-        common.write_json(results_path, results)
-        log_output = common.output_logger(args.outdir / 'output.log')
+    common.write_json(results_path, results)
+    log_output = common.output_logger(args.outdir / 'output.log')
 
     def run_binary(entry):
         binary = args.bindir / entry["name"]
@@ -132,14 +124,13 @@ def main() -> int:
         execution = common.execute(
             binary, prefix=entry['pin_command'], pattern=args.filter,
             repetitions=args.repetitions, min_time=args.min_time,
-            stem=binary.name, cases=entry['cases'], log_output=log_output, log_label=binary.name)
+            cases=entry['cases'], log_output=log_output, log_label=binary.name)
         code = execution.get('exit_code')
         failed = code != 0 or bool(execution.get('error'))
         secs = round(execution["wall_seconds"], 3)
 
         print(f"{binary.name:<22} {secs:8.1f}s" + ("" if not failed
                                  else f"  FAILED (exit {code}, see output.log)"))
-        entry.update(wall_seconds=secs, exit_code=code, status='failed' if failed else 'complete')
         with checkpoint_lock:
             if metadata.record_context(document['builds']['current'], binary.name, execution):
                 common.write_json(args.outdir / 'metadata.json', document)
@@ -151,19 +142,17 @@ def main() -> int:
             run_binary(entry)
 
     suite_start = time.perf_counter()
-    if not args.count_only:
-        with ThreadPoolExecutor(max_workers=workers) as executor:
-            list(executor.map(run_worker, [entries[i::workers] for i in range(workers)]))
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        list(executor.map(run_worker, [entries[i::workers] for i in range(workers)]))
 
     total_secs = round(time.perf_counter() - suite_start, 3)
 
     document['finished_at'] = common.timestamp()
     document['totals'] = totals | {'binaries': len(entries), 'wall_seconds': total_secs}
-    document['binaries'] = [placement.public_metadata(entry) for entry in entries]
     common.write_json(args.outdir / 'metadata.json', document)
-    reporting.print_run_summary(document, results, args.outdir, count_only=args.count_only)
+    reporting.print_run_summary(document, results, args.outdir)
 
-    return 0 if all(e['status'] in ('complete', None) for e in entries) else 1
+    return 0 if all(e.get('exit_code') == 0 and not e.get('error') for e in results['binaries']) else 1
 
 
 if __name__ == "__main__":

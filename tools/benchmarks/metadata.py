@@ -197,9 +197,6 @@ def describe_provenance(repo_root: Path, build_dir: Path) -> dict:
     info = {
         "commit": git("rev-parse", "HEAD"),
         "branch": git("rev-parse", "--abbrev-ref", "HEAD"),
-        # Tree hash of the benchmark sources: changes exactly when a definition changes,
-        # so comparisons across a boundary can be rejected from the data alone.
-        "suite_tree_sha": git("rev-parse", "HEAD:benchmarks/tracked"),
     }
     deps = {}
     for src in sorted((build_dir / "deps").glob("*_src")):
@@ -235,10 +232,10 @@ def describe_build(build):
     }
 
 
-def create_metadata(settings):
+def create_metadata(settings: dict) -> dict:
     return {
         'started_at': common.timestamp(), 'finished_at': None,
-        'settings': settings | {'pinned': False, 'worker_placements': []},
+        'settings': dict(settings),
         'ci': {'url': os.environ.get('BUILD_URL'), 'repository': os.environ.get('GIT_URL'),
                'pr': os.environ.get('CHANGE_ID'), 'baseline_branch': os.environ.get('CHANGE_TARGET'),
                'candidate_branch': os.environ.get('CHANGE_BRANCH')},

@@ -20,12 +20,16 @@ def scaling_governor(cpu: int | None) -> str | None:
         return None
 
 
+def unpinned_workers(workers: int) -> list[dict]:
+    print('warning: running unpinned; workers may share CPUs and performance comparisons may be noisy', file=sys.stderr)
+    return [{"cpu": None, "numa_node": None, "pin_command": [], "scaling_governor": None} for _ in range(workers)]
+
+
 def worker_placements(workers: int) -> list[dict]:
     if platform.system() != "Linux":
         if workers > 1:
             raise ValueError("Parallel measurement requires Linux and numactl")
-        print("warning: CPU pinning is unavailable; running unpinned", file=sys.stderr)
-        return [{"cpu": None, "numa_node": None, "pin_command": [], "scaling_governor": None}]
+        return unpinned_workers(workers)
     if not shutil.which("numactl"):
         raise ValueError("Linux measurement requires numactl for CPU and NUMA memory binding")
     status = Path("/proc/self/status").read_text()

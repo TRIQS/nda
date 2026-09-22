@@ -80,12 +80,12 @@ def output_logger(path):
     return append
 
 
-def execute(binary, *, prefix, pattern, repetitions, min_time, stem, cases, log_output, log_label, timeout=None):
+def execute(binary, *, prefix, pattern, repetitions, min_time, cases, log_output, log_label, timeout=None):
     """Keep measurements in JSON and append console diagnostics to output.log."""
     with tempfile.TemporaryDirectory(prefix='nda-benchmark-') as temporary:
         folder = Path(temporary)
-        output = folder / f'{stem}.json'
-        log = folder / f'{stem}.log'
+        output = folder / 'result.json'
+        log = folder / 'output.log'
         command = [*prefix, str(binary), f'--benchmark_out={output}',
                    '--benchmark_out_format=json', f'--benchmark_repetitions={repetitions}']
         if min_time:

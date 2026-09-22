@@ -3,7 +3,7 @@
 import common
 
 
-def print_run_summary(summary, results, outdir, *, count_only=False):
+def print_run_summary(summary, results, outdir):
     totals = summary["totals"]
     settings = summary["settings"]
     workers = settings["workers"]
@@ -12,9 +12,6 @@ def print_run_summary(summary, results, outdir, *, count_only=False):
     print(f"cases      {totals['cases']}   (registered cases, one per size)")
     print(f"wall       {total_secs}s at {settings['repetitions']} repetition(s)")
     print(f"results    {outdir}")
-
-    if count_only:
-        return
 
     # GB reports only its final timed run per case; the gap to the wall clock is mostly
     # GB's own iteration-count search (it tries 1, 10, 100 ... and discards each trial),

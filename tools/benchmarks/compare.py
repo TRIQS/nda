@@ -6,7 +6,6 @@ from __future__ import annotations
 import argparse
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
-import copy
 import math
 from pathlib import Path
 import re
@@ -22,11 +21,11 @@ import placement
 import reporting
 
 
-def measure(binary, name, prefix, stem, min_time, timeout, repetitions, log_output):
+def measure(binary, name, prefix, label, min_time, timeout, repetitions, log_output):
     result = common.execute(
         binary, prefix=prefix, pattern=f'^{re.escape(name)}$', repetitions=repetitions,
-        min_time=min_time, stem=stem, cases=1, timeout=timeout,
-        log_output=log_output, log_label=f'{binary.name}: {name}: {stem}')
+        min_time=min_time, cases=1, timeout=timeout,
+        log_output=log_output, log_label=f'{binary.name}: {name}: {label}')
     if 'benchmark' in result:
         try:
             timings = []
@@ -36,29 +35,23 @@ def measure(binary, name, prefix, stem, min_time, timeout, repetitions, log_outp
                 if row.get('run_name', row['name']) != name:
                     raise ValueError(f'Expected exactly {name}, got {row["name"]}')
                 timings.append(row['cpu_time'] * common.NANOSECONDS[row['time_unit']])
-            if not all(math.isfinite(value) and value > 0 for value in timings):
-                raise ValueError('Invalid normalized CPU time')
             result['cpu_time_ns'] = min(timings)
         except ValueError as exc:
             result['error'] = str(exc)
     return result
 
 
-def compare_case(key, binaries, worker, args, checkpoint, log_output, record_context):
+def compare_case(key, binaries, worker, args, log_output):
     suite, name = key
     result = {'suite': suite, 'name': name,
-              'placement': placement.public_metadata(worker),
               'warmups': {}, 'rounds': [], 'analysis': {'status': 'incomplete'}}
 
-    def invoke(side, stem):
-        sample = measure(binaries[side][key], name, worker['pin_command'], stem,
-                         args.min_time, args.timeout, args.repetitions, log_output)
-        record_context(side, suite, sample)
-        return sample
+    def invoke(side, label):
+        return measure(binaries[side][key], name, worker['pin_command'], label,
+                       args.min_time, args.timeout, args.repetitions, log_output)
 
     for side in ('candidate', 'baseline'):
         result['warmups'][side] = invoke(side, f'warmup-{side}')
-        checkpoint(result)
     if not any(sample.get('error') for sample in result['warmups'].values()):
         for index in range(args.rounds):
             order = ['candidate', 'baseline'] if index % 2 == 0 else ['baseline', 'candidate']
@@ -66,16 +59,13 @@ def compare_case(key, binaries, worker, args, checkpoint, log_output, record_con
             for side in order:
                 pair['samples'][side] = invoke(side, f'round-{index + 1}-{side}')
             result['rounds'].append(pair)
-            checkpoint(result)
             if any(sample.get('error') for sample in pair['samples'].values()):
                 break
     result['analysis'] = analysis.analyze(result['rounds'], args.rounds, args.threshold)
-    checkpoint(result)
     case_analysis = result['analysis']
     ratio = f"{case_analysis['median_ratio']:.4f}x" if 'median_ratio' in case_analysis else 'unavailable'
     print(f'{suite}: {name}: {ratio} ({case_analysis["status"]})', flush=True)
     return result
-
 
 
 def main(argv=None):
@@ -88,7 +78,8 @@ def main(argv=None):
                         help='Google Benchmark repetitions per invocation; use their minimum CPU time')
     parser.add_argument('--min-time', default='0.1s')
     parser.add_argument('--filter')
-    parser.add_argument('--workers', type=int, required=True)
+    parser.add_argument('--workers', type=int, required=True, help='number of cases measured in parallel on distinct cores')
+    parser.add_argument('--no-pin', action='store_true', help='disable CPU/NUMA pinning for local testing')
     parser.add_argument('--threshold', type=float, default=5.0, help='practical slowdown/improvement threshold in percent')
     parser.add_argument('--timeout', type=float, help='optional wall-time limit per invocation, in seconds')
     args = parser.parse_args(argv)
@@ -112,11 +103,9 @@ def main(argv=None):
         'repetitions': args.repetitions, 'min_time': args.min_time, 'filter': args.filter,
         'workers': args.workers, 'rounds': args.rounds, 'repetition_statistic': 'min',
         'warmup_invocations_per_side': 1, 'threshold_percent': args.threshold,
-        'timeout_seconds': args.timeout, 'count_only': False,
+        'timeout_seconds': args.timeout,
     })
     manifest = {'coverage': {}, 'counts': {}, 'cases': []}
-    common.write_json(metadata_path, document)
-    common.write_json(manifest_path, manifest)
     log_output = common.output_logger(args.outdir / 'output.log')
     measurement_start = None
     outcome = 'failed'
@@ -124,7 +113,6 @@ def main(argv=None):
         builds = {'baseline': args.baseline_build.resolve(), 'candidate': args.candidate_build.resolve()}
         for side, build in builds.items():
             document['builds'][side] = metadata.describe_build(build)
-        common.write_json(metadata_path, document)
         analysis.check_comparable(document['builds']['baseline'], document['builds']['candidate'])
         binaries = {side: common.discover_cases(build / 'benchmarks/tracked', args.filter) for side, build in builds.items()}
         matched_cases = sorted(binaries['baseline'].keys() & binaries['candidate'].keys())
@@ -138,48 +126,49 @@ def main(argv=None):
                                 'common': len(matched_cases), 'unmatched': len(missing)}
         if not matched_cases:
             raise ValueError('No matching benchmark cases in the two builds')
-        # Keep each binary on a fixed worker for all its cases and both revisions.
         suites = sorted({suite for suite, _ in matched_cases})
-        workers = min(args.workers, len(suites))
-        placements = placement.worker_placements(workers)
+        workers = min(args.workers, len(matched_cases))
+        placements = placement.unpinned_workers(workers) if args.no_pin else placement.worker_placements(workers)
         placement.validate_placements(placements)
         metadata.record_placements(document, placements)
-        for index, suite in enumerate(suites):
+        for suite in suites:
             names = [name for binary, name in matched_cases if binary == suite]
             cases, families, ops = common.case_counts(names)
-            document['binaries'].append({'name': suite, 'cases': cases, 'families': families, 'ops': ops,
-                **placement.public_metadata(placements[index % workers]),
-                'wall_seconds': None, 'status': 'incomplete'})
+            document['binaries'].append({'name': suite, 'cases': cases, 'families': families, 'ops': ops})
         document['totals'].update(cases=len(matched_cases), binaries=len(suites),
                                   families=sum(b['families'] for b in document['binaries']))
-        common.write_json(metadata_path, document)
-        measurement_start = time.perf_counter()
         case_indices = {key: len(missing) + i for i, key in enumerate(matched_cases)}
-        manifest['cases'].extend({'suite': suite, 'name': name, 'analysis': {'status': 'incomplete'}}
-                                 for suite, name in matched_cases)
+        manifest['cases'].extend({'suite': suite, 'name': name, 'worker_index': index % workers,
+                                  'analysis': {'status': 'incomplete'}}
+                                 for index, (suite, name) in enumerate(matched_cases))
+        manifest['counts'] = dict(Counter(case['analysis']['status'] for case in manifest['cases']))
+        common.write_json(metadata_path, document)
         common.write_json(manifest_path, manifest)
         checkpoint_lock = threading.Lock()
-
-        def record_context(side, suite, sample):
-            with checkpoint_lock:
-                if metadata.record_context(document['builds'][side], suite, sample):
-                    common.write_json(metadata_path, document)
+        measurement_start = time.perf_counter()
 
         def checkpoint(case):
-            # Workers keep mutating their local case; only snapshots enter the shared file.
+            # Only finished cases enter the manifest; serialize shared context and file updates.
             with checkpoint_lock:
-                manifest['cases'][case_indices[case['suite'], case['name']]] = copy.deepcopy(case)
+                context_added = False
+                for samples in [case['warmups']] + [pair['samples'] for pair in case['rounds']]:
+                    for side, sample in samples.items():
+                        context_added |= metadata.record_context(document['builds'][side], case['suite'], sample)
+                if context_added:
+                    common.write_json(metadata_path, document)
+                manifest['cases'][case_indices[case['suite'], case['name']]] = case
+                manifest['counts'] = dict(Counter(case['analysis']['status'] for case in manifest['cases']))
                 common.write_json(manifest_path, manifest)
 
         def run_worker(index):
-            assigned = set(suites[index::workers])
-            for key in matched_cases:
-                if key[0] in assigned:
-                    compare_case(key, binaries, placements[index], args, checkpoint, log_output, record_context)
+            # Keep both sides and all rounds of a case on the same worker.
+            for key in matched_cases[index::workers]:
+                case = compare_case(key, binaries, placements[index], args, log_output)
+                case['worker_index'] = index
+                checkpoint(case)
 
         with ThreadPoolExecutor(max_workers=workers) as executor:
             list(executor.map(run_worker, range(workers)))
-        manifest['counts'] = dict(Counter(case['analysis']['status'] for case in manifest['cases']))
         outcome = 'incomplete' if manifest['counts'].get('incomplete') else 'complete'
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as exc:
         manifest['error'] = str(exc)
@@ -188,12 +177,6 @@ def main(argv=None):
     document['finished_at'] = common.timestamp()
     if measurement_start is not None:
         document['totals']['wall_seconds'] = round(time.perf_counter() - measurement_start, 3)
-    for binary in document['binaries']:
-        cases = [case for case in manifest['cases'] if case['suite'] == binary['name']]
-        samples = [sample for case in cases for group in [case.get('warmups', {})] +
-                   [pair['samples'] for pair in case.get('rounds', [])] for sample in group.values()]
-        binary['wall_seconds'] = round(sum(sample['wall_seconds'] for sample in samples), 3)
-        binary['status'] = 'incomplete' if any(case['analysis']['status'] == 'incomplete' for case in cases) else 'complete'
     common.write_json(metadata_path, document)
     common.write_json(manifest_path, manifest)
     reporting.write_comparison_report(args.outdir / 'comparison.md', manifest, document)
