@@ -83,10 +83,11 @@ def describe_cpu_ram() -> dict:
         "release": platform.release(),
         "machine": platform.machine(),
         "hostname": platform.node(),
-        "logical_cpus": os.cpu_count(),
+        "available_logical_cpus": os.cpu_count(),
     }
 
     if platform.system() == "Linux":
+        info['available_logical_cpus'] = len(os.sched_getaffinity(0))
         for line in Path("/proc/cpuinfo").read_text().splitlines():
             if line.startswith("model name"):
                 info["cpu_model"] = line.split(":", 1)[1].strip()
@@ -106,13 +107,16 @@ def describe_cpu_ram() -> dict:
         if not read_sysfs_caches(info):
             wanted.update({"L1d cache": "l1d_cache_bytes", "L1i cache": "l1i_cache_bytes",
                            "L2 cache": "l2_cache_bytes", "L3 cache": "l3_cache_bytes"})
-        for line in run_text(["lscpu"]).splitlines():
+        for line in run_text(["lscpu"], env=os.environ | {'LC_ALL': 'C'}).splitlines():
             key, _, value = line.partition(":")
             field = wanted.get(key.strip())
             if not field:
                 continue
-            # lscpu prints caches as "512 KiB"; store bytes so the column is numeric.
-            info[field] = to_bytes(value) if field.endswith("_bytes") else value.strip()
+            try:
+                info[field] = (to_bytes(value) if field.endswith('_bytes') else
+                               float(value) if field == 'cpu_max_mhz' else int(value))
+            except ValueError:
+                pass
     elif platform.system() == "Darwin":
         for key, field, cast in [
             ("machdep.cpu.brand_string", "cpu_model", str),
@@ -141,8 +145,6 @@ def describe_cpu_ram() -> dict:
             if value:
                 info[field] = int(value)
 
-    if ram := info.get("ram_bytes"):
-        info["ram_gib"] = round(ram / 2**30, 1)
     return info
 
 
@@ -219,33 +221,24 @@ def describe_build(build):
     source = Path(cache['CMAKE_HOME_DIRECTORY'])
     harness = sorted((source / 'benchmarks/tracked').glob('*.hpp'))
     harness += sorted((source / 'benchmarks/tracked').glob('*.cpp'))
-    harness += [source / 'benchmarks/bench_common.hpp', source / 'benchmarks/CMakeLists.txt']
+    harness += [source / 'benchmarks/CMakeLists.txt']
     digest = hashlib.sha256()
     for path in harness:
         digest.update(str(path.relative_to(source)).encode() + b'\0')
         digest.update(path.read_bytes() + b'\0')
     return {
-        **build_record(build),
+        'build': str(build), 'bindir': str(build / 'benchmarks/tracked'),
         'compiler': describe_compiler(build, cache),
         'provenance': describe_provenance(source, build),
         'harness_sha256': digest.hexdigest(),
+        'benchmark_contexts': {},
     }
 
 
-def create_metadata(args):
-    comparison = hasattr(args, 'rounds')
+def create_metadata(settings):
     return {
         'started_at': common.timestamp(), 'finished_at': None,
-        'settings': {
-            'repetitions': args.repetitions, 'min_time': args.min_time, 'filter': args.filter,
-            'workers': args.workers, 'pinned': False, 'worker_placements': [],
-            'rounds': args.rounds if comparison else 1,
-            'repetition_statistic': 'min' if comparison else None,
-            'warmup_invocations_per_side': 1 if comparison else 0,
-            'threshold_percent': args.threshold if comparison else None,
-            'timeout_seconds': args.timeout if comparison else None,
-            'count_only': getattr(args, 'count_only', False),
-        },
+        'settings': settings | {'pinned': False, 'worker_placements': []},
         'ci': {'url': os.environ.get('BUILD_URL'), 'repository': os.environ.get('GIT_URL'),
                'pr': os.environ.get('CHANGE_ID'), 'baseline_branch': os.environ.get('CHANGE_TARGET'),
                'candidate_branch': os.environ.get('CHANGE_BRANCH')},
@@ -260,6 +253,21 @@ def record_placements(document, workers):
                                worker_placements=[placement.public_metadata(w) for w in workers])
 
 
-def build_record(build, *, ref=None, commit=None):
-    return {'build': str(build), 'bindir': str(build / 'benchmarks/tracked'),
-            'ref': ref, 'compiler': {}, 'provenance': {'commit': commit}, 'harness_sha256': None}
+def record_context(build, binary, result):
+    """Store shared context once; invocation context contains overrides and removals."""
+    document = result.get('benchmark', {})
+    if 'context' not in document:
+        return False
+    context = document.pop('context')
+    contexts = build['benchmark_contexts']
+    added = binary not in contexts
+    if added:
+        contexts[binary] = {key: value for key, value in context.items() if key not in ('date', 'load_avg')}
+    shared = contexts[binary]
+    overrides = {key: value for key, value in context.items() if key not in shared or value != shared[key]}
+    if overrides:
+        document['context'] = overrides
+    removed = sorted(shared.keys() - context.keys())
+    if removed:
+        document['context_removed'] = removed
+    return added

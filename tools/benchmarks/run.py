@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Pilot runner for the tracked nda benchmarks.
+"""Run the tracked nda benchmarks from one existing build.
 
 Runs every benchmark binary in the tracked build directory, collects its results in benchmarks.json, and records
 wall time, case counts, build provenance and machine description in metadata.json.
-The purpose is to find out what a full sweep costs before wiring it into Jenkins.
 
 Workers automatically use distinct allowed physical cores with local NUMA memory
 binding on Linux with numactl, including when --workers 1 is specified.
@@ -62,15 +61,27 @@ def main() -> int:
     binaries = common.find_binaries(args.bindir)
     if not binaries:
         sys.exit(f"error: no executable benchmark binaries in {args.bindir}")
+    selected = []
+    for binary in binaries:
+        cases, families, ops = common.case_counts(common.list_cases(binary, args.filter))
+        if cases:
+            selected.append({'name': binary.name, 'cases': cases, 'families': families, 'ops': ops})
+    if not selected:
+        parser.error('No benchmark cases match the selected filter')
 
     args.outdir.mkdir(parents=True, exist_ok=True)
     results_path = args.outdir / 'benchmarks.json'
     if any((args.outdir / name).exists() for name in ('benchmarks.json', 'metadata.json', 'output.log')):
         parser.error('Use a fresh output directory for each run')
 
-    document = metadata.create_metadata(args)
+    document = metadata.create_metadata({
+        'repetitions': args.repetitions, 'min_time': args.min_time, 'filter': args.filter,
+        'workers': args.workers, 'rounds': 1, 'repetition_statistic': None,
+        'warmup_invocations_per_side': 0, 'threshold_percent': None,
+        'timeout_seconds': None, 'count_only': args.count_only,
+    })
 
-    workers = min(args.workers, len(binaries))
+    workers = min(args.workers, len(selected))
     try:
         placements = placement.worker_placements(workers)
         if not args.count_only:
@@ -91,25 +102,19 @@ def main() -> int:
     print(f"workers      {workers}")
     for i, worker in enumerate(placements):
         print(f"worker {i}     {' '.join(worker['pin_command']) or '<none>'}")
-    print(f"binaries     {len(binaries)}\n")
+    print(f"binaries     {len(selected)}\n")
 
     entries, totals = [], {"families": 0, "cases": 0}
-    for binary in binaries:
-        cases, families, ops = common.count_cases(binary, args.filter)
-        totals["cases"] += cases
-        totals["families"] += families
-
+    for selected_entry in selected:
+        totals['cases'] += selected_entry['cases']
+        totals['families'] += selected_entry['families']
         worker = placements[len(entries) % workers]
-        entry = {"name": binary.name, "families": families, "cases": cases, "ops": ops, **worker}
-
+        entry = selected_entry | worker | {'wall_seconds': None, 'exit_code': None, 'status': None}
+        entries.append(entry)
         if args.count_only:
-            print(f"{binary.name:<22} {families:5d} families  {cases:5d} cases  (not run)")
-            entries.append(entry | {"wall_seconds": None, "exit_code": None, "json": None})
-            continue
+            print(f"{entry['name']:<22} {entry['families']:5d} families  {entry['cases']:5d} cases  (not run)")
 
-        entries.append(entry | {'wall_seconds': None, 'exit_code': None, 'json': results_path.name})
-
-    document['totals'] = totals | {'binaries': len(binaries), 'wall_seconds': None}
+    document['totals'] = totals | {'binaries': len(entries), 'wall_seconds': None}
     document['binaries'] = [placement.public_metadata(entry) for entry in entries]
     common.write_json(args.outdir / 'metadata.json', document)
     results = {'binaries': [] if args.count_only else [
@@ -128,15 +133,16 @@ def main() -> int:
             binary, prefix=entry['pin_command'], pattern=args.filter,
             repetitions=args.repetitions, min_time=args.min_time,
             stem=binary.name, cases=entry['cases'], log_output=log_output, log_label=binary.name)
-        code = execution.get('exit_code', 1)
-        if execution.get('error'):
-            code = code or 1
+        code = execution.get('exit_code')
+        failed = code != 0 or bool(execution.get('error'))
         secs = round(execution["wall_seconds"], 3)
 
-        print(f"{binary.name:<22} {secs:8.1f}s" + ("" if code == 0
+        print(f"{binary.name:<22} {secs:8.1f}s" + ("" if not failed
                                  else f"  FAILED (exit {code}, see output.log)"))
-        entry.update(wall_seconds=secs, exit_code=code)
+        entry.update(wall_seconds=secs, exit_code=code, status='failed' if failed else 'complete')
         with checkpoint_lock:
+            if metadata.record_context(document['builds']['current'], binary.name, execution):
+                common.write_json(args.outdir / 'metadata.json', document)
             results['binaries'][result_indices[binary.name]] = {'name': binary.name, **execution}
             common.write_json(results_path, results)
 
@@ -152,12 +158,12 @@ def main() -> int:
     total_secs = round(time.perf_counter() - suite_start, 3)
 
     document['finished_at'] = common.timestamp()
-    document['totals'] = totals | {'binaries': len(binaries), 'wall_seconds': total_secs}
+    document['totals'] = totals | {'binaries': len(entries), 'wall_seconds': total_secs}
     document['binaries'] = [placement.public_metadata(entry) for entry in entries]
     common.write_json(args.outdir / 'metadata.json', document)
     reporting.print_run_summary(document, results, args.outdir, count_only=args.count_only)
 
-    return 0 if all(e["exit_code"] in (0, None) for e in entries) else 1
+    return 0 if all(e['status'] in ('complete', None) for e in entries) else 1
 
 
 if __name__ == "__main__":

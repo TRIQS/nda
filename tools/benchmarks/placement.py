@@ -21,16 +21,13 @@ def scaling_governor(cpu: int | None) -> str | None:
 
 
 def worker_placements(workers: int) -> list[dict]:
-    linux = platform.system() == "Linux"
-    numa = linux and shutil.which("numactl")
-    cpu_only = linux and shutil.which("taskset")
-    if not numa and not cpu_only:
+    if platform.system() != "Linux":
         if workers > 1:
-            raise ValueError("Parallel measurement requires Linux and numactl or taskset")
+            raise ValueError("Parallel measurement requires Linux and numactl")
         print("warning: CPU pinning is unavailable; running unpinned", file=sys.stderr)
         return [{"cpu": None, "numa_node": None, "pin_command": [], "scaling_governor": None}]
-    if not numa:
-        print("warning: numactl is unavailable; pinning CPUs without memory binding", file=sys.stderr)
+    if not shutil.which("numactl"):
+        raise ValueError("Linux measurement requires numactl for CPU and NUMA memory binding")
     status = Path("/proc/self/status").read_text()
     allowed = re.search(r"^Mems_allowed_list:\s*(.+)$", status, re.MULTILINE)
     if not allowed:
@@ -60,9 +57,8 @@ def worker_placements(workers: int) -> list[dict]:
         for node in sorted(by_node):
             if by_node[node] and len(placements) < workers:
                 cpu = by_node[node].pop(0)
-                command = (["numactl", f"--physcpubind={cpu}", f"--membind={node}"]
-                           if numa else ["taskset", "-c", str(cpu)])
-                placements.append({"cpu": cpu, "numa_node": node if numa else None, "pin_command": command,
+                command = ["numactl", f"--physcpubind={cpu}", f"--membind={node}"]
+                placements.append({"cpu": cpu, "numa_node": node, "pin_command": command,
                                    "scaling_governor": scaling_governor(cpu)})
         if not any(by_node.values()) and len(placements) < workers:
             raise ValueError(f"Need {workers} distinct allowed physical cores with local memory")

@@ -7,6 +7,7 @@ import json
 import math
 import os
 import re
+import shlex
 import subprocess
 import tempfile
 import threading
@@ -55,7 +56,7 @@ def read_result(path: Path, cases: int, repetitions: int) -> dict:
         if repetition in observed or repetition not in range(repetitions):
             raise ValueError(f"Invalid or duplicate repetition: {row}")
         observed.add(repetition)
-    if cases == 0 or len(counts) != cases or any(len(indices) != repetitions for indices in counts.values()):
+    if len(counts) != cases or any(len(indices) != repetitions for indices in counts.values()):
         raise ValueError(f"Expected {cases} nonempty cases with {repetitions} repetitions in {path.name}")
 
     return result
@@ -91,7 +92,7 @@ def execute(binary, *, prefix, pattern, repetitions, min_time, stem, cases, log_
             command.append(f'--benchmark_min_time={min_time}')
         if pattern:
             command.append(f'--benchmark_filter={pattern}')
-        result = {'started_at': timestamp(), 'command': command}
+        result = {'started_at': timestamp()}
         start = time.monotonic()
         try:
             with log.open('wb') as stream:
@@ -108,20 +109,13 @@ def execute(binary, *, prefix, pattern, repetitions, min_time, stem, cases, log_
             diagnostics += '\nUnvalidated benchmark JSON:\n' + output.read_text(errors='replace')
         if result.get('error'):
             diagnostics += '\nError: ' + result['error']
-        log_output(log_label, f"Started: {result['started_at']}\nFinished: {result['finished_at']}\n{diagnostics}")
+        log_output(log_label, f"Command: {shlex.join(command)}\nStarted: {result['started_at']}\n"
+                   f"Finished: {result['finished_at']}\n{diagnostics}")
         return result
 
 
-def count_cases(binary: Path, pattern: str | None) -> tuple[int, int, int]:
-    """Ask the binary's own registry, so counts cannot drift from what runs.
-
-    A registered name looks like  f64/A2_C_layout,A2_C_layout/add/64
-    Stripping the trailing /<N> collapses the size sweep into one family.
-    """
-    return case_counts(list_cases(binary, pattern))
-
-
 def case_counts(names):
+    """Collapse names such as f64/A2_C_layout,A2_C_layout/add/64 by removing /<N>."""
     families = {re.sub(r"/\d+$", "", name) for name in names}
     ops = {family.rsplit("/", 1)[-1] for family in families}
     return len(names), len(families), len(ops)
