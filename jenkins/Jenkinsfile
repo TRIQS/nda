@@ -119,7 +119,8 @@ def runBenchmarkTest = {
       deleteDir()
     }
     try {
-      sh 'sh tools/benchmarks/run-benchmarks.sh'
+      // Temporary suite test: unstable has no tracked benchmarks; compare two builds of this SHA at 1/2/4 workers.
+      sh 'sh tools/benchmarks/test-compare-benchmarks.sh'
     } finally {
       archiveArtifacts artifacts: 'benchmark-results/**', allowEmptyArchive: true
     }
@@ -171,11 +172,12 @@ catchError {
   parallel platforms.subMap(['ubuntu-gcc'])
 
   if (currentBuild.currentResult == 'SUCCESS' && env.CHANGE_ID && env.CHANGE_TARGET == 'unstable') {
-    timeout(time: 2, unit: 'HOURS') {
+    timeout(time: 4, unit: 'HOURS') {
       // The GCC image is ready after the build matrix; reserve a new node for benchmarks.
       runPod(tag: 'ubuntu-gcc', cpus: 16, memory: '32Gi', exclusive: true) {
         checkout scm
-        withEnv(['PARALLEL=16', 'BENCHMARK_WORKERS=1 2 4', 'OMP_NUM_THREADS=1', 'OPENBLAS_NUM_THREADS=1',
+        withEnv(['PARALLEL=16', 'BENCHMARK_WORKERS=1 2 4', 'BENCHMARK_REPETITIONS=5', 'BENCHMARK_MIN_TIME=0.1s',
+                 'OMP_NUM_THREADS=1', 'OPENBLAS_NUM_THREADS=1',
                  'MKL_NUM_THREADS=1', 'TBLIS_NUM_THREADS=1']) {
           runBenchmarkTest()
         }

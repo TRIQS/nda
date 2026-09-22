@@ -1,0 +1,205 @@
+#!/usr/bin/env python3
+"""Compare two built NDA benchmark suites in alternating paired rounds."""
+
+from __future__ import annotations
+
+import argparse
+from collections import Counter
+from concurrent.futures import ThreadPoolExecutor
+import copy
+import math
+from pathlib import Path
+import re
+import subprocess
+import sys
+import threading
+import time
+
+import analysis
+import common
+import metadata
+import placement
+import reporting
+
+
+def measure(binary, name, prefix, stem, min_time, timeout, repetitions, log_output):
+    result = common.execute(
+        binary, prefix=prefix, pattern=f'^{re.escape(name)}$', repetitions=repetitions,
+        min_time=min_time, stem=stem, cases=1, timeout=timeout,
+        log_output=log_output, log_label=f'{binary.name}: {name}: {stem}')
+    if 'benchmark' in result:
+        try:
+            timings = []
+            for row in result['benchmark']['benchmarks']:
+                if row.get('run_type') != 'iteration':
+                    continue
+                if row.get('run_name', row['name']) != name:
+                    raise ValueError(f'Expected exactly {name}, got {row["name"]}')
+                timings.append(row['cpu_time'] * common.NANOSECONDS[row['time_unit']])
+            if not all(math.isfinite(value) and value > 0 for value in timings):
+                raise ValueError('Invalid normalized CPU time')
+            result['cpu_time_ns'] = min(timings)
+        except ValueError as exc:
+            result['error'] = str(exc)
+    return result
+
+
+def compare_case(key, binaries, worker, args, checkpoint, log_output, record_context):
+    suite, name = key
+    result = {'suite': suite, 'name': name,
+              'placement': placement.public_metadata(worker),
+              'warmups': {}, 'rounds': [], 'analysis': {'status': 'incomplete'}}
+
+    def invoke(side, stem):
+        sample = measure(binaries[side][key], name, worker['pin_command'], stem,
+                         args.min_time, args.timeout, args.repetitions, log_output)
+        record_context(side, suite, sample)
+        return sample
+
+    for side in ('candidate', 'baseline'):
+        result['warmups'][side] = invoke(side, f'warmup-{side}')
+        checkpoint(result)
+    if not any(sample.get('error') for sample in result['warmups'].values()):
+        for index in range(args.rounds):
+            order = ['candidate', 'baseline'] if index % 2 == 0 else ['baseline', 'candidate']
+            pair = {'round': index + 1, 'order': order, 'samples': {}}
+            for side in order:
+                pair['samples'][side] = invoke(side, f'round-{index + 1}-{side}')
+            result['rounds'].append(pair)
+            checkpoint(result)
+            if any(sample.get('error') for sample in pair['samples'].values()):
+                break
+    result['analysis'] = analysis.analyze(result['rounds'], args.rounds, args.threshold)
+    checkpoint(result)
+    case_analysis = result['analysis']
+    ratio = f"{case_analysis['median_ratio']:.4f}x" if 'median_ratio' in case_analysis else 'unavailable'
+    print(f'{suite}: {name}: {ratio} ({case_analysis["status"]})', flush=True)
+    return result
+
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--baseline-build', type=Path, required=True)
+    parser.add_argument('--candidate-build', type=Path, required=True)
+    parser.add_argument('--outdir', type=Path, required=True)
+    parser.add_argument('--rounds', type=int, default=6)
+    parser.add_argument('--repetitions', type=int, default=1,
+                        help='Google Benchmark repetitions per invocation; use their minimum CPU time')
+    parser.add_argument('--min-time', default='0.1s')
+    parser.add_argument('--filter')
+    parser.add_argument('--workers', type=int, required=True)
+    parser.add_argument('--threshold', type=float, default=5.0, help='practical slowdown/improvement threshold in percent')
+    parser.add_argument('--timeout', type=float, help='optional wall-time limit per invocation, in seconds')
+    args = parser.parse_args(argv)
+    if args.rounds < 2 or args.rounds % 2:
+        parser.error('--rounds must be positive and even (default: 6)')
+    if args.workers < 1:
+        parser.error('--workers must be positive')
+    if args.repetitions < 1:
+        parser.error('--repetitions must be positive')
+    if not math.isfinite(args.threshold) or args.threshold <= 0:
+        parser.error('--threshold must be finite and positive')
+    if args.timeout is not None and (not math.isfinite(args.timeout) or args.timeout <= 0):
+        parser.error('--timeout must be finite and positive')
+    args.outdir = args.outdir.resolve()
+    args.outdir.mkdir(parents=True, exist_ok=True)
+    manifest_path = args.outdir / 'comparison.json'
+    metadata_path = args.outdir / 'metadata.json'
+    if any((args.outdir / name).exists() for name in ('comparison.json', 'metadata.json', 'output.log', 'cases')):
+        parser.error('Use a fresh output directory for each comparison')
+    document = metadata.create_metadata({
+        'repetitions': args.repetitions, 'min_time': args.min_time, 'filter': args.filter,
+        'workers': args.workers, 'rounds': args.rounds, 'repetition_statistic': 'min',
+        'warmup_invocations_per_side': 1, 'threshold_percent': args.threshold,
+        'timeout_seconds': args.timeout, 'count_only': False,
+    })
+    manifest = {'coverage': {}, 'counts': {}, 'cases': []}
+    common.write_json(metadata_path, document)
+    common.write_json(manifest_path, manifest)
+    log_output = common.output_logger(args.outdir / 'output.log')
+    measurement_start = None
+    outcome = 'failed'
+    try:
+        builds = {'baseline': args.baseline_build.resolve(), 'candidate': args.candidate_build.resolve()}
+        for side, build in builds.items():
+            document['builds'][side] = metadata.describe_build(build)
+        common.write_json(metadata_path, document)
+        analysis.check_comparable(document['builds']['baseline'], document['builds']['candidate'])
+        binaries = {side: common.discover_cases(build / 'benchmarks/tracked', args.filter) for side, build in builds.items()}
+        matched_cases = sorted(binaries['baseline'].keys() & binaries['candidate'].keys())
+        missing = []
+        for side, status in (('candidate', 'added'), ('baseline', 'removed')):
+            other = 'candidate' if side == 'baseline' else 'baseline'
+            for suite, name in sorted(binaries[side].keys() - binaries[other].keys()):
+                missing.append({'suite': suite, 'name': name, 'analysis': {'status': status}})
+        manifest['cases'] = missing
+        manifest['coverage'] = {'baseline': len(binaries['baseline']), 'candidate': len(binaries['candidate']),
+                                'common': len(matched_cases), 'unmatched': len(missing)}
+        if not matched_cases:
+            raise ValueError('No matching benchmark cases in the two builds')
+        # Keep each binary on a fixed worker for all its cases and both revisions.
+        suites = sorted({suite for suite, _ in matched_cases})
+        workers = min(args.workers, len(suites))
+        placements = placement.worker_placements(workers)
+        placement.validate_placements(placements)
+        metadata.record_placements(document, placements)
+        for index, suite in enumerate(suites):
+            names = [name for binary, name in matched_cases if binary == suite]
+            cases, families, ops = common.case_counts(names)
+            document['binaries'].append({'name': suite, 'cases': cases, 'families': families, 'ops': ops,
+                **placement.public_metadata(placements[index % workers]),
+                'wall_seconds': None, 'status': 'incomplete'})
+        document['totals'].update(cases=len(matched_cases), binaries=len(suites),
+                                  families=sum(b['families'] for b in document['binaries']))
+        common.write_json(metadata_path, document)
+        measurement_start = time.perf_counter()
+        case_indices = {key: len(missing) + i for i, key in enumerate(matched_cases)}
+        manifest['cases'].extend({'suite': suite, 'name': name, 'analysis': {'status': 'incomplete'}}
+                                 for suite, name in matched_cases)
+        common.write_json(manifest_path, manifest)
+        checkpoint_lock = threading.Lock()
+
+        def record_context(side, suite, sample):
+            with checkpoint_lock:
+                if metadata.record_context(document['builds'][side], suite, sample):
+                    common.write_json(metadata_path, document)
+
+        def checkpoint(case):
+            # Workers keep mutating their local case; only snapshots enter the shared file.
+            with checkpoint_lock:
+                manifest['cases'][case_indices[case['suite'], case['name']]] = copy.deepcopy(case)
+                common.write_json(manifest_path, manifest)
+
+        def run_worker(index):
+            assigned = set(suites[index::workers])
+            for key in matched_cases:
+                if key[0] in assigned:
+                    compare_case(key, binaries, placements[index], args, checkpoint, log_output, record_context)
+
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            list(executor.map(run_worker, range(workers)))
+        manifest['counts'] = dict(Counter(case['analysis']['status'] for case in manifest['cases']))
+        outcome = 'incomplete' if manifest['counts'].get('incomplete') else 'complete'
+    except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as exc:
+        manifest['error'] = str(exc)
+        log_output('Comparison failed', str(exc))
+        print(f'Comparison failed: {exc}', file=sys.stderr)
+    document['finished_at'] = common.timestamp()
+    if measurement_start is not None:
+        document['totals']['wall_seconds'] = round(time.perf_counter() - measurement_start, 3)
+    for binary in document['binaries']:
+        cases = [case for case in manifest['cases'] if case['suite'] == binary['name']]
+        samples = [sample for case in cases for group in [case.get('warmups', {})] +
+                   [pair['samples'] for pair in case.get('rounds', [])] for sample in group.values()]
+        binary['wall_seconds'] = round(sum(sample['wall_seconds'] for sample in samples), 3)
+        binary['status'] = 'incomplete' if any(case['analysis']['status'] == 'incomplete' for case in cases) else 'complete'
+    common.write_json(metadata_path, document)
+    common.write_json(manifest_path, manifest)
+    reporting.write_comparison_report(args.outdir / 'comparison.md', manifest, document)
+    print(f'Results: {manifest_path}', flush=True)
+    return 0 if outcome == 'complete' else 1
+
+
+if __name__ == '__main__':
+    sys.exit(main())
