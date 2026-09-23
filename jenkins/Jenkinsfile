@@ -174,10 +174,10 @@ catchError(catchInterruptions: false) {
   if (currentBuild.currentResult == 'SUCCESS' && env.CHANGE_ID && env.CHANGE_TARGET == 'unstable') {
     timeout(time: 4, unit: 'HOURS') {
       // The GCC image is ready after the build matrix; reserve a new node for benchmarks.
-      // 16 workers need 16 distinct physical cores; the pod's CPUs come in SMT pairs.
-      runPod(tag: 'ubuntu-gcc', cpus: 32, memory: '64Gi', exclusive: true) {
+      // Hyperthreading is disabled on the benchmark node, so each CPU is a distinct physical core.
+      runPod(tag: 'ubuntu-gcc', cpus: 24, memory: '64Gi', exclusive: true) {
         checkout scm
-        withEnv(['PARALLEL=32', 'BENCHMARK_WORKERS=16', 'BENCHMARK_REPETITIONS=1', 'BENCHMARK_MIN_TIME=0.1s',
+        withEnv(['PARALLEL=24', 'BENCHMARK_WORKERS=20', 'BENCHMARK_REPETITIONS=5', 'BENCHMARK_MIN_TIME=0.1s',
                  'OMP_NUM_THREADS=1', 'OPENBLAS_NUM_THREADS=1',
                  'MKL_NUM_THREADS=1', 'TBLIS_NUM_THREADS=1']) {
           runBenchmarkTest()
