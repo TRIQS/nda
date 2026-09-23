@@ -35,7 +35,9 @@ def write_comparison_report(path, manifest, metadata):
     lines += ['', 'Ratio = baseline / candidate latency; 1.00x is equal, greater than 1 is faster.',
               'Bands are observed min/max ranges, not confidence intervals. Signals do not fail CI.',
               f'Each invocation uses the minimum CPU time of {metadata["settings"]["repetitions"]} Google Benchmark repetition(s).',
-              f'Rounds: {metadata["settings"]["rounds"]}; threshold: {metadata["settings"]["threshold_percent"]:g}%.', '']
+              f'Rounds: {metadata["settings"]["rounds"]}; paired t cutoff: {metadata["settings"]["threshold_t"]:g}; '
+              f'min improvement: {metadata["settings"]["min_improvement_percent"]:g}% of baseline; '
+              f'too noisy above {metadata["settings"]["max_noise_percent"]:g}% per-round cv.', '']
     if manifest.get('error'):
         lines += [f'Error: {manifest["error"]}', '']
     lines += ['| Suite | Case | Median ratio | Observed range | Status |', '|---|---|---:|---:|---|']

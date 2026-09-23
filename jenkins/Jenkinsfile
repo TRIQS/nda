@@ -12,7 +12,7 @@ def gpuPod = [gpus: 1, gpuType: 'a100']
 def keepInstall = false // disabled on jenkins-new: !env.BRANCH_NAME.startsWith("PR-")
 
 properties([
-  disableConcurrentBuilds(),
+  disableConcurrentBuilds(abortPrevious: true),
   buildDiscarder(logRotator(numToKeepStr: '10', daysToKeepStr: '30')),
   pipelineTriggers(keepInstall ? [
     upstream(
@@ -100,7 +100,7 @@ def runBuild = { String platform, String prefix, List<String> envs ->
         cmake $WORKSPACE -DCMAKE_INSTALL_PREFIX=$installDir $args
         make -j\$PARALLEL || make -j1 VERBOSE=1
       """
-      catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+      catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE', catchInterruptions: false) {
         try {
           sh "make test CTEST_OUTPUT_ON_FAILURE=1"
         } catch (exc) {
@@ -119,7 +119,7 @@ def runBenchmarkTest = {
       deleteDir()
     }
     try {
-      // Temporary suite test: unstable has no tracked benchmarks; compare two builds of this SHA at 1/2/4 workers.
+      // Temporary suite test: unstable has no tracked benchmarks; compare two builds of this SHA.
       sh 'sh tools/benchmarks/test-compare-benchmarks.sh'
     } finally {
       archiveArtifacts artifacts: 'benchmark-results/**', allowEmptyArchive: true
@@ -167,16 +167,17 @@ for (int i = 0; i < macosPlatforms.size(); i++) {
 }
 
 /****************** wrap-up */
-catchError {
+catchError(catchInterruptions: false) {
   // Temporarily build and run tests only on ubuntu-gcc.
   parallel platforms.subMap(['ubuntu-gcc'])
 
   if (currentBuild.currentResult == 'SUCCESS' && env.CHANGE_ID && env.CHANGE_TARGET == 'unstable') {
     timeout(time: 4, unit: 'HOURS') {
       // The GCC image is ready after the build matrix; reserve a new node for benchmarks.
-      runPod(tag: 'ubuntu-gcc', cpus: 16, memory: '32Gi', exclusive: true) {
+      // 16 workers need 16 distinct physical cores; the pod's CPUs come in SMT pairs.
+      runPod(tag: 'ubuntu-gcc', cpus: 32, memory: '64Gi', exclusive: true) {
         checkout scm
-        withEnv(['PARALLEL=16', 'BENCHMARK_WORKERS=1 2 4', 'BENCHMARK_REPETITIONS=5', 'BENCHMARK_MIN_TIME=0.1s',
+        withEnv(['PARALLEL=32', 'BENCHMARK_WORKERS=16', 'BENCHMARK_REPETITIONS=1', 'BENCHMARK_MIN_TIME=0.1s',
                  'OMP_NUM_THREADS=1', 'OPENBLAS_NUM_THREADS=1',
                  'MKL_NUM_THREADS=1', 'TBLIS_NUM_THREADS=1']) {
           runBenchmarkTest()

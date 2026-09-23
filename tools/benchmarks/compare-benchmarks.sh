@@ -42,6 +42,6 @@ set --
 python3 "$WORKSPACE/tools/benchmarks/compare.py" \
   --baseline-build "$root/baseline-build" --candidate-build "$root/candidate-build" \
   --outdir "$WORKSPACE/benchmark-results" \
-  --workers "${BENCHMARK_WORKERS:?Set BENCHMARK_WORKERS}" --rounds 6 \
+  --workers "${BENCHMARK_WORKERS:?Set BENCHMARK_WORKERS}" --rounds 6 --threshold 3 --min-improvement 5 --max-noise 20 \
   --min-time "${BENCHMARK_MIN_TIME:?Set BENCHMARK_MIN_TIME}" \
   --repetitions "${BENCHMARK_REPETITIONS:?Set BENCHMARK_REPETITIONS}" "$@"

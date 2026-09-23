@@ -2,6 +2,8 @@
 
 import statistics
 
+import rules
+
 
 def check_comparable(baseline, candidate):
     # Each build resolves dependencies independently; changed pins are part of the comparison.
@@ -12,33 +14,36 @@ def check_comparable(baseline, candidate):
             raise ValueError(f'The two builds have different compiler {key}')
 
 
-def analyze(rounds, expected_rounds, threshold):
+def analyze(rounds, expected_rounds, threshold, min_improvement, max_noise):
+    """Descriptive paired statistics plus the status decided by rules.paired_t.
+
+    A side whose per-round coefficient of variation exceeds max_noise percent makes the
+    case too_noisy before the rule runs: the launches disagree too much to decide either way.
+    """
     if len(rounds) != expected_rounds or any(
             set(pair['samples']) != {'baseline', 'candidate'} or
             any(sample.get('error') for sample in pair['samples'].values()) for pair in rounds):
         return {'status': 'incomplete'}
-    ratios = [pair['samples']['baseline']['cpu_time_ns'] /
-              pair['samples']['candidate']['cpu_time_ns'] for pair in rounds]
+    baseline = [pair['samples']['baseline']['cpu_time_ns'] for pair in rounds]
+    candidate = [pair['samples']['candidate']['cpu_time_ns'] for pair in rounds]
+    ratios = [b / c for b, c in zip(baseline, candidate)]
     # One estimate, in the measured unit; the percentage is derived from it. A median of
     # six averages the middle pair, and mean(1/x) != 1/mean(x), so a separately computed
     # median of the changes would disagree with this one.
     ratio = statistics.median(ratios)
-    change = 100 * (1 / ratio - 1)
-    low, high = 100 * (1 / max(ratios) - 1), 100 * (1 / min(ratios) - 1)
-    if low <= 0 <= high:
-        status = 'inconclusive'
-    elif low > 0 and change >= threshold:
-        status = 'regression_signal'
-    elif high < 0 and change <= -threshold:
-        status = 'improvement_signal'
+    noise = {'baseline': rules.noise_percent(baseline), 'candidate': rules.noise_percent(candidate)}
+    if max(noise.values()) > max_noise:
+        verdict = {'status': 'too_noisy', 'max_noise_percent': max_noise}
     else:
-        status = 'below_threshold'
+        verdict = rules.paired_t(baseline, candidate, threshold, min_improvement)
     return {
-        'status': status,
+        'status': verdict['status'],
         'median_ratio': ratio,
         'ratio_range': [min(ratios), max(ratios)],
-        'median_change_percent': change,
-        'change_percent_range': [low, high],
-        'baseline_median_ns': statistics.median(pair['samples']['baseline']['cpu_time_ns'] for pair in rounds),
-        'candidate_median_ns': statistics.median(pair['samples']['candidate']['cpu_time_ns'] for pair in rounds),
+        'median_change_percent': 100 * (1 / ratio - 1),
+        'change_percent_range': [100 * (1 / max(ratios) - 1), 100 * (1 / min(ratios) - 1)],
+        'baseline_median_ns': statistics.median(baseline),
+        'candidate_median_ns': statistics.median(candidate),
+        'noise_percent': noise,
+        'verdict': verdict,
     }

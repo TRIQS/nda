@@ -19,6 +19,7 @@ import common
 import metadata
 import placement
 import reporting
+import rules
 
 
 def measure(binary, name, prefix, label, min_time, timeout, repetitions, log_output):
@@ -61,7 +62,8 @@ def compare_case(key, binaries, worker, args, log_output):
             result['rounds'].append(pair)
             if any(sample.get('error') for sample in pair['samples'].values()):
                 break
-    result['analysis'] = analysis.analyze(result['rounds'], args.rounds, args.threshold)
+    result['analysis'] = analysis.analyze(result['rounds'], args.rounds, args.threshold,
+                                          args.min_improvement, args.max_noise)
     case_analysis = result['analysis']
     ratio = f"{case_analysis['median_ratio']:.4f}x" if 'median_ratio' in case_analysis else 'unavailable'
     print(f'{suite}: {name}: {ratio} ({case_analysis["status"]})', flush=True)
@@ -80,7 +82,12 @@ def main(argv=None):
     parser.add_argument('--filter')
     parser.add_argument('--workers', type=int, required=True, help='number of cases measured in parallel on distinct cores')
     parser.add_argument('--no-pin', action='store_true', help='disable CPU/NUMA pinning for local testing')
-    parser.add_argument('--threshold', type=float, default=5.0, help='practical slowdown/improvement threshold in percent')
+    parser.add_argument('--threshold', type=float, default=rules.DEFAULT_THRESHOLD,
+                        help='cutoff on the paired t statistic of the per-round differences')
+    parser.add_argument('--min-improvement', type=float, default=rules.DEFAULT_MIN_IMPROVEMENT,
+                        help='required change as a percentage of the baseline mean before a signal')
+    parser.add_argument('--max-noise', type=float, default=rules.DEFAULT_MAX_NOISE,
+                        help='a side whose per-round cv exceeds this percentage makes the case too_noisy')
     parser.add_argument('--timeout', type=float, help='optional wall-time limit per invocation, in seconds')
     args = parser.parse_args(argv)
     if args.rounds < 2 or args.rounds % 2:
@@ -91,6 +98,10 @@ def main(argv=None):
         parser.error('--repetitions must be positive')
     if not math.isfinite(args.threshold) or args.threshold <= 0:
         parser.error('--threshold must be finite and positive')
+    if not math.isfinite(args.min_improvement) or args.min_improvement < 0:
+        parser.error('--min-improvement must be finite and nonnegative')
+    if not math.isfinite(args.max_noise) or args.max_noise <= 0:
+        parser.error('--max-noise must be finite and positive')
     if args.timeout is not None and (not math.isfinite(args.timeout) or args.timeout <= 0):
         parser.error('--timeout must be finite and positive')
     args.outdir = args.outdir.resolve()
@@ -102,7 +113,8 @@ def main(argv=None):
     document = metadata.create_metadata({
         'repetitions': args.repetitions, 'min_time': args.min_time, 'filter': args.filter,
         'workers': args.workers, 'rounds': args.rounds, 'repetition_statistic': 'min',
-        'warmup_invocations_per_side': 1, 'threshold_percent': args.threshold,
+        'warmup_invocations_per_side': 1, 'rule': 'paired_t', 'threshold_t': args.threshold,
+        'min_improvement_percent': args.min_improvement, 'max_noise_percent': args.max_noise,
         'timeout_seconds': args.timeout,
     })
     manifest = {'coverage': {}, 'counts': {}, 'cases': []}

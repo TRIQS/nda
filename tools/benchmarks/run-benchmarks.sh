@@ -10,5 +10,5 @@ for workers in $worker_counts; do
   python3 "$WORKSPACE/tools/benchmarks/run.py" \
     --bindir "$WORKSPACE_TMP/build/benchmarks/tracked" \
     --outdir "$WORKSPACE/benchmark-results/workers-$workers" \
-    --workers "$workers" --repetitions 5 --min-time 0.1s
+    --workers "$workers" --repetitions 3 --min-time 0.1s
 done

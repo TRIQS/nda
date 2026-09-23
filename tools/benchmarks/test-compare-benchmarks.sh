@@ -25,6 +25,6 @@ for workers in $worker_counts; do
   python3 "$WORKSPACE/tools/benchmarks/compare.py" \
     --baseline-build "$root/baseline-build" --candidate-build "$root/candidate-build" \
     --outdir "$WORKSPACE/benchmark-results/workers-$workers" \
-    --workers "$workers" --rounds 6 \
+    --workers "$workers" --rounds 6 --threshold 3 --min-improvement 5 --max-noise 20 \
     --repetitions "$repetitions" --min-time "$min_time" "$@"
 done
