@@ -228,7 +228,6 @@ def describe_build(build):
         'compiler': describe_compiler(build, cache),
         'provenance': describe_provenance(source, build),
         'harness_sha256': digest.hexdigest(),
-        'benchmark_contexts': {},
     }
 
 
@@ -239,32 +238,27 @@ def create_metadata(settings: dict) -> dict:
         'ci': {'url': os.environ.get('BUILD_URL'), 'repository': os.environ.get('GIT_URL'),
                'pr': os.environ.get('CHANGE_ID'), 'baseline_branch': os.environ.get('CHANGE_TARGET'),
                'candidate_branch': os.environ.get('CHANGE_BRANCH')},
-        'machine': describe_cpu_ram(), 'threads': thread_settings(), 'builds': {},
+        'machine': describe_cpu_ram(), 'threads': thread_settings(), 'benchmark_context': None, 'builds': {},
         'totals': {'families': 0, 'cases': 0, 'binaries': 0, 'wall_seconds': None},
         'binaries': [],
     }
 
 
 def record_placements(document, workers):
-    document['settings'].update(workers=len(workers), pinned=all(w['pin_command'] for w in workers),
-                               worker_placements=[placement.public_metadata(w) for w in workers])
+    pinned = all(w['pin_command'] for w in workers)
+    # Unpinned workers have no placement to describe; listing one null entry per worker says nothing.
+    document['settings'].update(workers=len(workers), pinned=pinned,
+                               worker_placements=[placement.public_metadata(w) for w in workers] if pinned else [])
 
 
-def record_context(build, binary, result):
-    """Store shared context once; invocation context contains overrides and removals."""
-    document = result.get('benchmark', {})
-    if 'context' not in document:
+def record_context(document, result):
+    """Store the Google Benchmark context once per run and drop it from every invocation.
+
+    date and load_avg change every launch and executable names the binary, so they are dropped.
+    """
+    context = result.get('benchmark', {}).pop('context', None)
+    if context is None or document['benchmark_context'] is not None:
         return False
-    context = document.pop('context')
-    contexts = build['benchmark_contexts']
-    added = binary not in contexts
-    if added:
-        contexts[binary] = {key: value for key, value in context.items() if key not in ('date', 'load_avg')}
-    shared = contexts[binary]
-    overrides = {key: value for key, value in context.items() if key not in shared or value != shared[key]}
-    if overrides:
-        document['context'] = overrides
-    removed = sorted(shared.keys() - context.keys())
-    if removed:
-        document['context_removed'] = removed
-    return added
+    document['benchmark_context'] = {key: value for key, value in context.items()
+                                     if key not in ('date', 'load_avg', 'executable')}
+    return True

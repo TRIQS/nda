@@ -1,13 +1,13 @@
-"""Paired decision rule that turns per-round timings into a status.
+"""Decision rules that turn per-round timings into a status.
 
-The rule takes two equally long lists of CPU times in nanoseconds, one per side,
+A rule takes two equally long lists of CPU times in nanoseconds, one per side,
 where entry i of both lists comes from round i. It returns a dict with at least
 'status' from STATUSES; the evidence goes next to it. Descriptive statistics and
 the shared noise gate live in analysis.py.
 
 Run as a script to re-score an existing comparison.json with other parameters:
 
-    python3 rules.py --threshold 3 --min-improvement 5 --max-noise 20 path/to/comparison.json
+    python3 rules.py --rule paired_t --threshold 3 --min-improvement 5 --max-noise 20 path/to/comparison.json
 """
 
 from __future__ import annotations
@@ -83,12 +83,60 @@ def paired_t(baseline, candidate, threshold=DEFAULT_THRESHOLD, min_improvement=D
                      'regression_t_statistic': t_reverse, 'regression_p_value': float(reverse.pvalue)}
 
 
+def welch_t(baseline, candidate, threshold=DEFAULT_THRESHOLD, min_improvement=DEFAULT_MIN_IMPROVEMENT):
+    """Fixed cutoff on Welch's unequal-variance t statistic of the two sides (scipy ttest_ind).
+
+    The sides are treated as independent samples: the standard error is
+    sqrt(var(baseline) / n + var(candidate) / n), with Welch-Satterthwaite degrees of
+    freedom (about 2 * (rounds - 1) when both sides are equally noisy), so drift shared by
+    the two launches of a round is not cancelled. The margin and the one-sided tests in
+    each direction are the same as for paired_t, and threshold is again a fixed cutoff:
+    with more degrees of freedom t > 3 is a stricter level than it is for paired_t.
+    """
+    from scipy import stats
+
+    if not (math.isfinite(threshold) and threshold > 0):
+        raise ValueError('threshold must be finite and positive')
+    if not (math.isfinite(min_improvement) and min_improvement >= 0):
+        raise ValueError('min_improvement must be finite and nonnegative')
+    if len(baseline) != len(candidate) or len(baseline) < 2:
+        raise ValueError('welch_t needs at least two rounds with both sides')
+    rounds = len(baseline)
+    required_ns = min_improvement / 100 * statistics.mean(baseline)
+    improvement = statistics.mean(baseline) - statistics.mean(candidate)
+    variances = [statistics.variance(side) / rounds for side in (baseline, candidate)]
+    se_diff = math.sqrt(sum(variances))
+    result = {'status': 'indeterminate', 'improvement_ns': improvement, 'se_diff': se_diff, 'df': None,
+              't_statistic': None, 'p_value': None, 'regression_t_statistic': None, 'regression_p_value': None,
+              'threshold_t': threshold, 'min_improvement_percent': min_improvement, 'min_improvement_ns': required_ns}
+    if se_diff == 0:
+        return result
+    # Computed directly rather than with ttest_ind, which warns on nearly identical samples.
+    df = sum(variances) ** 2 / sum(v ** 2 / (rounds - 1) for v in variances)
+    t_forward, t_reverse = (improvement - required_ns) / se_diff, (-improvement - required_ns) / se_diff
+    if not all(math.isfinite(v) for v in (t_forward, t_reverse, df)):
+        raise ValueError('nonfinite intermediate result')
+    if t_forward > threshold:
+        status = 'improvement_signal'
+    elif t_reverse > threshold:
+        status = 'regression_signal'
+    else:
+        status = 'inconclusive'
+    return result | {'status': status, 'df': df,
+                     't_statistic': t_forward, 'p_value': float(stats.t.sf(t_forward, df)),
+                     'regression_t_statistic': t_reverse, 'regression_p_value': float(stats.t.sf(t_reverse, df))}
+
+
+RULES = {'paired_t': paired_t, 'welch_t': welch_t}
+
+
 def main(argv=None):
     import analysis
 
     parser = argparse.ArgumentParser(description='Re-score an existing comparison.json with other rule parameters.')
     parser.add_argument('comparison', type=Path)
-    parser.add_argument('--threshold', type=float, default=DEFAULT_THRESHOLD, help='cutoff on the paired t statistic')
+    parser.add_argument('--rule', choices=sorted(RULES), default='paired_t')
+    parser.add_argument('--threshold', type=float, default=DEFAULT_THRESHOLD, help='cutoff on the t statistic')
     parser.add_argument('--min-improvement', type=float, default=DEFAULT_MIN_IMPROVEMENT,
                         help='required change as a percentage of the baseline mean before a signal')
     parser.add_argument('--max-noise', type=float, default=DEFAULT_MAX_NOISE,
@@ -102,11 +150,12 @@ def main(argv=None):
         if case['analysis']['status'] in ('added', 'removed', 'incomplete') or not rounds:
             counts[case['analysis']['status']] += 1
             continue
-        verdict = analysis.analyze(rounds, len(rounds), args.threshold, args.min_improvement, args.max_noise)
+        verdict = analysis.analyze(rounds, len(rounds), args.threshold, args.min_improvement, args.max_noise,
+                                   args.rule)
         counts[verdict['status']] += 1
         if verdict['status'] != 'inconclusive':
             listed.append((case['suite'], case['name'], verdict))
-    print(f'paired_t threshold={args.threshold:g} min_improvement={args.min_improvement:g}% '
+    print(f'{args.rule} threshold={args.threshold:g} min_improvement={args.min_improvement:g}% '
           f'max_noise={args.max_noise:g}%: ' + ', '.join(f'{n} {status}' for status, n in sorted(counts.items())))
     if args.list:
         for suite, name, verdict in listed:

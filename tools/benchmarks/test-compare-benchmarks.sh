@@ -3,7 +3,6 @@
 set -eu
 
 worker_counts=${BENCHMARK_WORKERS:?Set BENCHMARK_WORKERS explicitly}
-repetitions=${BENCHMARK_REPETITIONS:?Set BENCHMARK_REPETITIONS explicitly}
 min_time=${BENCHMARK_MIN_TIME:?Set BENCHMARK_MIN_TIME explicitly}
 sha=$(git -C "$WORKSPACE" rev-parse --verify 'HEAD^{commit}')
 mkdir -p "$WORKSPACE_TMP"
@@ -25,6 +24,6 @@ for workers in $worker_counts; do
   python3 "$WORKSPACE/tools/benchmarks/compare.py" \
     --baseline-build "$root/baseline-build" --candidate-build "$root/candidate-build" \
     --outdir "$WORKSPACE/benchmark-results/workers-$workers" \
-    --workers "$workers" --rounds 6 --threshold 3 --min-improvement 5 --max-noise 20 \
-    --repetitions "$repetitions" --min-time "$min_time" "$@"
+    --workers "$workers" --rounds 6 --threshold 3 --min-improvement 5 --max-noise 20 --max-retries 3 --retry-factor 1.5 --min-warmup-time 0.1 \
+    --repetitions 1 --min-time "$min_time" "$@"
 done

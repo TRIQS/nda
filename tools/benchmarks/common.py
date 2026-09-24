@@ -80,7 +80,8 @@ def output_logger(path):
     return append
 
 
-def execute(binary, *, prefix, pattern, repetitions, min_time, cases, log_output, log_label, timeout=None):
+def execute(binary, *, prefix, pattern, repetitions, min_time, cases, log_output, log_label, timeout=None,
+            min_warmup_time=None):
     """Keep measurements in JSON and append console diagnostics to output.log."""
     with tempfile.TemporaryDirectory(prefix='nda-benchmark-') as temporary:
         folder = Path(temporary)
@@ -90,6 +91,8 @@ def execute(binary, *, prefix, pattern, repetitions, min_time, cases, log_output
                    '--benchmark_out_format=json', f'--benchmark_repetitions={repetitions}']
         if min_time:
             command.append(f'--benchmark_min_time={min_time}')
+        if min_warmup_time:
+            command.append(f'--benchmark_min_warmup_time={min_warmup_time:g}')
         if pattern:
             command.append(f'--benchmark_filter={pattern}')
         result = {'started_at': timestamp()}

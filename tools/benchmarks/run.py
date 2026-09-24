@@ -81,6 +81,7 @@ def main() -> int:
     try:
         placements = placement.worker_placements(workers)
         placement.validate_placements(placements)
+        workers = len(placements)
     except (ValueError, OSError, subprocess.CalledProcessError) as exc:
         parser.error(f"CPU/NUMA binding failed: {exc}")
 
@@ -132,7 +133,7 @@ def main() -> int:
         print(f"{binary.name:<22} {secs:8.1f}s" + ("" if not failed
                                  else f"  FAILED (exit {code}, see output.log)"))
         with checkpoint_lock:
-            if metadata.record_context(document['builds']['current'], binary.name, execution):
+            if metadata.record_context(document, execution):
                 common.write_json(args.outdir / 'metadata.json', document)
             results['binaries'][result_indices[binary.name]] = {'name': binary.name, **execution}
             common.write_json(results_path, results)

@@ -35,9 +35,15 @@ def write_comparison_report(path, manifest, metadata):
     lines += ['', 'Ratio = baseline / candidate latency; 1.00x is equal, greater than 1 is faster.',
               'Bands are observed min/max ranges, not confidence intervals. Signals do not fail CI.',
               f'Each invocation uses the minimum CPU time of {metadata["settings"]["repetitions"]} Google Benchmark repetition(s).',
-              f'Rounds: {metadata["settings"]["rounds"]}; paired t cutoff: {metadata["settings"]["threshold_t"]:g}; '
+              f'Rounds: {metadata["settings"]["rounds"]}; {metadata["settings"].get("rule", "paired_t")} cutoff: {metadata["settings"]["threshold_t"]:g}; '
               f'min improvement: {metadata["settings"]["min_improvement_percent"]:g}% of baseline; '
-              f'too noisy above {metadata["settings"]["max_noise_percent"]:g}% per-round cv.', '']
+              f'too noisy above {metadata["settings"]["max_noise_percent"]:g}% per-round cv.']
+    if max_retries := metadata['settings'].get('max_retries'):
+        retried = [case for case in manifest['cases'] if case.get('attempt', 1) > 1]
+        still_noisy = sum(case['analysis']['status'] == 'too_noisy' for case in retried)
+        lines.append(f'Too noisy cases are measured again up to {max_retries} time(s), warmups included: '
+                     f'{len(retried)} retried, {len(retried) - still_noisy} recovered. Only the last attempt is kept.')
+    lines.append('')
     if manifest.get('error'):
         lines += [f'Error: {manifest["error"]}', '']
     lines += ['| Suite | Case | Median ratio | Observed range | Status |', '|---|---|---:|---:|---|']
@@ -48,5 +54,6 @@ def write_comparison_report(path, manifest, metadata):
             ratio = f'{analysis["median_ratio"]:.4f}x'
             band = '–'.join(f'{v:.4f}x' for v in analysis['ratio_range'])
         name = case['name'].replace('|', '\\|')
-        lines.append(f'| {case["suite"]} | {name} | {ratio} | {band} | {analysis["status"]} |')
+        status = analysis['status'] + (f' (attempt {case["attempt"]})' if case.get('attempt', 1) > 1 else '')
+        lines.append(f'| {case["suite"]} | {name} | {ratio} | {band} | {status} |')
     path.write_text('\n'.join(lines) + '\n')

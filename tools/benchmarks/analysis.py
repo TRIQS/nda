@@ -14,8 +14,8 @@ def check_comparable(baseline, candidate):
             raise ValueError(f'The two builds have different compiler {key}')
 
 
-def analyze(rounds, expected_rounds, threshold, min_improvement, max_noise):
-    """Descriptive paired statistics plus the status decided by rules.paired_t.
+def analyze(rounds, expected_rounds, threshold, min_improvement, max_noise, rule='paired_t'):
+    """Descriptive paired statistics plus the status decided by the named rule in rules.RULES.
 
     A side whose per-round coefficient of variation exceeds max_noise percent makes the
     case too_noisy before the rule runs: the launches disagree too much to decide either way.
@@ -35,7 +35,7 @@ def analyze(rounds, expected_rounds, threshold, min_improvement, max_noise):
     if max(noise.values()) > max_noise:
         verdict = {'status': 'too_noisy', 'max_noise_percent': max_noise}
     else:
-        verdict = rules.paired_t(baseline, candidate, threshold, min_improvement)
+        verdict = rules.RULES[rule](baseline, candidate, threshold, min_improvement)
     return {
         'status': verdict['status'],
         'median_ratio': ratio,

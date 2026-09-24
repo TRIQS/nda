@@ -65,7 +65,11 @@ def worker_placements(workers: int) -> list[dict]:
                 placements.append({"cpu": cpu, "numa_node": node, "pin_command": command,
                                    "scaling_governor": scaling_governor(cpu)})
         if not any(by_node.values()) and len(placements) < workers:
-            raise ValueError(f"Need {workers} distinct allowed physical cores with local memory")
+            if not placements:
+                raise ValueError("No allowed physical core with local memory to pin a worker to")
+            print(f"warning: only {len(placements)} distinct allowed physical cores with local memory; "
+                  f"using {len(placements)} pinned workers instead of {workers}", file=sys.stderr)
+            break
     return placements
 
 

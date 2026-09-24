@@ -22,10 +22,10 @@ import reporting
 import rules
 
 
-def measure(binary, name, prefix, label, min_time, timeout, repetitions, log_output):
+def measure(binary, name, prefix, label, min_time, min_warmup_time, timeout, repetitions, log_output):
     result = common.execute(
         binary, prefix=prefix, pattern=f'^{re.escape(name)}$', repetitions=repetitions,
-        min_time=min_time, cases=1, timeout=timeout,
+        min_time=min_time, min_warmup_time=min_warmup_time, cases=1, timeout=timeout,
         log_output=log_output, log_label=f'{binary.name}: {name}: {label}')
     if 'benchmark' in result:
         try:
@@ -42,28 +42,45 @@ def measure(binary, name, prefix, label, min_time, timeout, repetitions, log_out
     return result
 
 
+def attempt_rounds(rounds, factor, number):
+    """Rounds of attempt number (1-based): rounds * factor^(number - 1), rounded up to even."""
+    return 2 * math.ceil(rounds * factor ** (number - 1) / 2)
+
+
 def compare_case(key, binaries, worker, args, log_output):
     suite, name = key
-    result = {'suite': suite, 'name': name,
-              'warmups': {}, 'rounds': [], 'analysis': {'status': 'incomplete'}}
 
-    def invoke(side, label):
-        return measure(binaries[side][key], name, worker['pin_command'], label,
-                       args.min_time, args.timeout, args.repetitions, log_output)
+    def attempt(number):
+        # Every invocation of every attempt is logged; only the returned attempt is kept.
+        rounds = attempt_rounds(args.rounds, args.retry_factor, number)
+        result = {'suite': suite, 'name': name, 'attempt': number,
+                  'warmups': {}, 'rounds': [], 'analysis': {'status': 'incomplete'}}
 
-    for side in ('candidate', 'baseline'):
-        result['warmups'][side] = invoke(side, f'warmup-{side}')
-    if not any(sample.get('error') for sample in result['warmups'].values()):
-        for index in range(args.rounds):
-            order = ['candidate', 'baseline'] if index % 2 == 0 else ['baseline', 'candidate']
-            pair = {'round': index + 1, 'order': order, 'samples': {}}
-            for side in order:
-                pair['samples'][side] = invoke(side, f'round-{index + 1}-{side}')
-            result['rounds'].append(pair)
-            if any(sample.get('error') for sample in pair['samples'].values()):
-                break
-    result['analysis'] = analysis.analyze(result['rounds'], args.rounds, args.threshold,
-                                          args.min_improvement, args.max_noise)
+        def invoke(side, label):
+            return measure(binaries[side][key], name, worker['pin_command'], f'attempt-{number}-{label}',
+                           args.min_time, args.min_warmup_time, args.timeout, args.repetitions, log_output)
+
+        for side in ('candidate', 'baseline'):
+            result['warmups'][side] = invoke(side, f'warmup-{side}')
+        if not any(sample.get('error') for sample in result['warmups'].values()):
+            for index in range(rounds):
+                order = ['candidate', 'baseline'] if index % 2 == 0 else ['baseline', 'candidate']
+                pair = {'round': index + 1, 'order': order, 'samples': {}}
+                for side in order:
+                    pair['samples'][side] = invoke(side, f'round-{index + 1}-{side}')
+                result['rounds'].append(pair)
+                if any(sample.get('error') for sample in pair['samples'].values()):
+                    break
+        result['analysis'] = analysis.analyze(result['rounds'], rounds, args.threshold,
+                                              args.min_improvement, args.max_noise, args.rule)
+        return result
+
+    # A too_noisy attempt is measured again from its warmups, with retry_factor times more rounds;
+    # stopping at the first attempt that passes the noise gate keeps the gate direction-neutral.
+    result = attempt(1)
+    while result['analysis']['status'] == 'too_noisy' and result['attempt'] <= args.max_retries:
+        print(f'{suite}: {name}: too_noisy, retrying ({result["attempt"]}/{args.max_retries})', flush=True)
+        result = attempt(result['attempt'] + 1)
     case_analysis = result['analysis']
     ratio = f"{case_analysis['median_ratio']:.4f}x" if 'median_ratio' in case_analysis else 'unavailable'
     print(f'{suite}: {name}: {ratio} ({case_analysis["status"]})', flush=True)
@@ -79,15 +96,23 @@ def main(argv=None):
     parser.add_argument('--repetitions', type=int, default=1,
                         help='Google Benchmark repetitions per invocation; use their minimum CPU time')
     parser.add_argument('--min-time', default='0.1s')
+    parser.add_argument('--min-warmup-time', type=float, default=0.0,
+                        help='seconds of discarded warm-up inside each invocation before its first repetition')
     parser.add_argument('--filter')
     parser.add_argument('--workers', type=int, required=True, help='number of cases measured in parallel on distinct cores')
     parser.add_argument('--no-pin', action='store_true', help='disable CPU/NUMA pinning for local testing')
+    parser.add_argument('--rule', choices=sorted(rules.RULES), default='paired_t',
+                        help='paired_t tests the per-round differences; welch_t treats the sides as independent samples')
     parser.add_argument('--threshold', type=float, default=rules.DEFAULT_THRESHOLD,
-                        help='cutoff on the paired t statistic of the per-round differences')
+                        help='cutoff on the t statistic')
     parser.add_argument('--min-improvement', type=float, default=rules.DEFAULT_MIN_IMPROVEMENT,
                         help='required change as a percentage of the baseline mean before a signal')
     parser.add_argument('--max-noise', type=float, default=rules.DEFAULT_MAX_NOISE,
                         help='a side whose per-round cv exceeds this percentage makes the case too_noisy')
+    parser.add_argument('--max-retries', type=int, default=0,
+                        help='measure a too_noisy case again, warmups included, up to this many times')
+    parser.add_argument('--retry-factor', type=float, default=1.0,
+                        help='each retry uses this many times the rounds of the previous attempt, rounded up to even')
     parser.add_argument('--timeout', type=float, help='optional wall-time limit per invocation, in seconds')
     args = parser.parse_args(argv)
     if args.rounds < 2 or args.rounds % 2:
@@ -96,6 +121,12 @@ def main(argv=None):
         parser.error('--workers must be positive')
     if args.repetitions < 1:
         parser.error('--repetitions must be positive')
+    if not math.isfinite(args.min_warmup_time) or args.min_warmup_time < 0:
+        parser.error('--min-warmup-time must be finite and nonnegative')
+    if args.max_retries < 0:
+        parser.error('--max-retries must be nonnegative')
+    if not math.isfinite(args.retry_factor) or args.retry_factor < 1:
+        parser.error('--retry-factor must be finite and at least 1')
     if not math.isfinite(args.threshold) or args.threshold <= 0:
         parser.error('--threshold must be finite and positive')
     if not math.isfinite(args.min_improvement) or args.min_improvement < 0:
@@ -111,10 +142,13 @@ def main(argv=None):
     if any((args.outdir / name).exists() for name in ('comparison.json', 'metadata.json', 'output.log', 'cases')):
         parser.error('Use a fresh output directory for each comparison')
     document = metadata.create_metadata({
-        'repetitions': args.repetitions, 'min_time': args.min_time, 'filter': args.filter,
+        'repetitions': args.repetitions, 'min_time': args.min_time, 'min_warmup_time': args.min_warmup_time,
+        'filter': args.filter,
         'workers': args.workers, 'rounds': args.rounds, 'repetition_statistic': 'min',
-        'warmup_invocations_per_side': 1, 'rule': 'paired_t', 'threshold_t': args.threshold,
+        'warmup_invocations_per_side': 1, 'rule': args.rule, 'threshold_t': args.threshold,
         'min_improvement_percent': args.min_improvement, 'max_noise_percent': args.max_noise,
+        'max_retries': args.max_retries, 'retry_factor': args.retry_factor,
+        'retry_rounds': [attempt_rounds(args.rounds, args.retry_factor, n) for n in range(1, args.max_retries + 2)],
         'timeout_seconds': args.timeout,
     })
     manifest = {'coverage': {}, 'counts': {}, 'cases': []}
@@ -142,6 +176,7 @@ def main(argv=None):
         workers = min(args.workers, len(matched_cases))
         placements = placement.unpinned_workers(workers) if args.no_pin else placement.worker_placements(workers)
         placement.validate_placements(placements)
+        workers = len(placements)
         metadata.record_placements(document, placements)
         for suite in suites:
             names = [name for binary, name in matched_cases if binary == suite]
@@ -164,8 +199,8 @@ def main(argv=None):
             with checkpoint_lock:
                 context_added = False
                 for samples in [case['warmups']] + [pair['samples'] for pair in case['rounds']]:
-                    for side, sample in samples.items():
-                        context_added |= metadata.record_context(document['builds'][side], case['suite'], sample)
+                    for sample in samples.values():
+                        context_added |= metadata.record_context(document, sample)
                 if context_added:
                     common.write_json(metadata_path, document)
                 manifest['cases'][case_indices[case['suite'], case['name']]] = case
