@@ -12,7 +12,7 @@ def gpuPod = [gpus: 1, gpuType: 'a100']
 def keepInstall = false // disabled on jenkins-new: !env.BRANCH_NAME.startsWith("PR-")
 
 properties([
-  disableConcurrentBuilds(),
+  disableConcurrentBuilds(abortPrevious: true),
   buildDiscarder(logRotator(numToKeepStr: '10', daysToKeepStr: '30')),
   pipelineTriggers(keepInstall ? [
     upstream(
@@ -100,7 +100,7 @@ def runBuild = { String platform, String prefix, List<String> envs ->
         cmake $WORKSPACE -DCMAKE_INSTALL_PREFIX=$installDir $args
         make -j\$PARALLEL || make -j1 VERBOSE=1
       """
-      catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+      catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE', catchInterruptions: false) {
         try {
           sh "make test CTEST_OUTPUT_ON_FAILURE=1"
         } catch (exc) {
@@ -109,6 +109,20 @@ def runBuild = { String platform, String prefix, List<String> envs ->
         }
       }
       sh "make install"
+    }
+  }
+}
+
+def runBenchmarkTest = {
+  stage('benchmark test') {
+    dir('benchmark-results') {
+      deleteDir()
+    }
+    try {
+      // Temporary suite test: unstable has no tracked benchmarks; compare two builds of this SHA.
+      sh 'sh tools/benchmarks/test-compare-benchmarks.sh'
+    } finally {
+      archiveArtifacts artifacts: 'benchmark-results/**', allowEmptyArchive: true
     }
   }
 }
@@ -153,8 +167,24 @@ for (int i = 0; i < macosPlatforms.size(); i++) {
 }
 
 /****************** wrap-up */
-catchError {
-  parallel platforms
+catchError(catchInterruptions: false) {
+  // Temporarily build and run tests only on ubuntu-gcc.
+  parallel platforms.subMap(['ubuntu-gcc'])
+
+  if (currentBuild.currentResult == 'SUCCESS' && env.CHANGE_ID && env.CHANGE_TARGET == 'unstable') {
+    timeout(time: 4, unit: 'HOURS') {
+      // The GCC image is ready after the build matrix; reserve a new node for benchmarks.
+      // Hyperthreading is disabled on the benchmark node, so each CPU is a distinct physical core.
+      runPod(tag: 'ubuntu-gcc', cpus: 24, memory: '64Gi', exclusive: true) {
+        checkout scm
+        withEnv(['PARALLEL=24', 'BENCHMARK_WORKERS=20', 'BENCHMARK_REPETITIONS=5', 'BENCHMARK_MIN_TIME=0.1s',
+                 'OMP_NUM_THREADS=1', 'OPENBLAS_NUM_THREADS=1',
+                 'MKL_NUM_THREADS=1', 'TBLIS_NUM_THREADS=1']) {
+          runBenchmarkTest()
+        }
+      }
+    }
+  }
 
   if (keepInstall) {
     /* Publish results */
