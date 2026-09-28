@@ -35,7 +35,8 @@ def write_comparison_report(path, manifest, metadata):
     lines += ['', 'Ratio = baseline / candidate latency; 1.00x is equal, greater than 1 is faster.',
               'Bands are observed min/max ranges, not confidence intervals. Signals do not fail CI.',
               f'Each invocation uses the minimum CPU time of {metadata["settings"]["repetitions"]} Google Benchmark repetition(s).',
-              f'Rounds: {metadata["settings"]["rounds"]}; {metadata["settings"].get("rule", "paired_t")} cutoff: {metadata["settings"]["threshold_t"]:g}; '
+              f'Rounds: {metadata["settings"]["rounds"]}; rule {metadata["settings"].get("rule", "paired_t")} at one-sided '
+              f'false-positive rate {100 * metadata["settings"]["alpha"]:g}% per direction; '
               f'min improvement: {metadata["settings"]["min_improvement_percent"]:g}% of baseline; '
               f'too noisy above {metadata["settings"]["max_noise_percent"]:g}% per-round cv.']
     if max_retries := metadata['settings'].get('max_retries'):

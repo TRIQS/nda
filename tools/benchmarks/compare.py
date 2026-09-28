@@ -71,7 +71,7 @@ def compare_case(key, binaries, worker, args, log_output):
                 result['rounds'].append(pair)
                 if any(sample.get('error') for sample in pair['samples'].values()):
                     break
-        result['analysis'] = analysis.analyze(result['rounds'], rounds, args.threshold,
+        result['analysis'] = analysis.analyze(result['rounds'], rounds, args.alpha,
                                               args.min_improvement, args.max_noise, args.rule)
         return result
 
@@ -103,8 +103,8 @@ def main(argv=None):
     parser.add_argument('--no-pin', action='store_true', help='disable CPU/NUMA pinning for local testing')
     parser.add_argument('--rule', choices=sorted(rules.RULES), default='paired_t',
                         help='paired_t tests the per-round differences; welch_t treats the sides as independent samples')
-    parser.add_argument('--threshold', type=float, default=rules.DEFAULT_THRESHOLD,
-                        help='cutoff on the t statistic')
+    parser.add_argument('--alpha', type=float, default=rules.DEFAULT_ALPHA,
+                        help='one-sided false-positive rate per direction; the t cutoff follows from the degrees of freedom')
     parser.add_argument('--min-improvement', type=float, default=rules.DEFAULT_MIN_IMPROVEMENT,
                         help='required change as a percentage of the baseline mean before a signal')
     parser.add_argument('--max-noise', type=float, default=rules.DEFAULT_MAX_NOISE,
@@ -127,8 +127,8 @@ def main(argv=None):
         parser.error('--max-retries must be nonnegative')
     if not math.isfinite(args.retry_factor) or args.retry_factor < 1:
         parser.error('--retry-factor must be finite and at least 1')
-    if not math.isfinite(args.threshold) or args.threshold <= 0:
-        parser.error('--threshold must be finite and positive')
+    if not math.isfinite(args.alpha) or not 0 < args.alpha < 0.5:
+        parser.error('--alpha must be strictly between 0 and 0.5')
     if not math.isfinite(args.min_improvement) or args.min_improvement < 0:
         parser.error('--min-improvement must be finite and nonnegative')
     if not math.isfinite(args.max_noise) or args.max_noise <= 0:
@@ -145,7 +145,7 @@ def main(argv=None):
         'repetitions': args.repetitions, 'min_time': args.min_time, 'min_warmup_time': args.min_warmup_time,
         'filter': args.filter,
         'workers': args.workers, 'rounds': args.rounds, 'repetition_statistic': 'min',
-        'warmup_invocations_per_side': 1, 'rule': args.rule, 'threshold_t': args.threshold,
+        'warmup_invocations_per_side': 1, 'rule': args.rule, 'alpha': args.alpha,
         'min_improvement_percent': args.min_improvement, 'max_noise_percent': args.max_noise,
         'max_retries': args.max_retries, 'retry_factor': args.retry_factor,
         'retry_rounds': [attempt_rounds(args.rounds, args.retry_factor, n) for n in range(1, args.max_retries + 2)],
