@@ -26,12 +26,20 @@ def print_run_summary(summary, results, outdir):
               f"iteration search and input generation)")
 
 
+def _fmt_setting(value):
+    return 'unset' if value in (None, '') else f'`{value}`'
+
+
 def write_comparison_report(path, manifest, metadata):
     lines = ['# NDA paired benchmark comparison', '']
     if counts := manifest.get('counts'):
         lines += ['Cases: ' + ', '.join(f'{n} {status}' for status, n in sorted(counts.items())), '']
     for side, build in metadata['builds'].items():
         lines.append(f'{side.title()}: `{build["provenance"]["commit"]}`')
+    if differences := metadata.get('build_differences'):
+        lines += ['', 'The two sides were configured differently, so the ratios include the effect of these changes '
+                  '(`benchmark_tracked` preset variables and resulting compiler flags):']
+        lines += [f'- `{d["name"]}`: baseline {_fmt_setting(d["baseline"])}, candidate {_fmt_setting(d["candidate"])}' for d in differences]
     lines += ['', 'Ratio = baseline / candidate latency; 1.00x is equal, greater than 1 is faster.',
               'Bands are observed min/max ranges, not confidence intervals. Signals do not fail CI.',
               f'Each invocation uses the minimum CPU time of {metadata["settings"]["repetitions"]} Google Benchmark repetition(s).',

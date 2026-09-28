@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import platform
 import re
@@ -228,7 +229,20 @@ def describe_build(build):
         'compiler': describe_compiler(build, cache),
         'provenance': describe_provenance(source, build),
         'harness_sha256': digest.hexdigest(),
+        'preset': read_preset(source),
     }
+
+
+PRESET = 'benchmark_tracked'  # the configure preset build-benchmarks.sh uses
+
+
+def read_preset(source: Path) -> dict:
+    """Cache variables of the benchmark_tracked preset in source/CMakePresets.json, macros unexpanded."""
+    presets = json.loads((source / 'CMakePresets.json').read_text())['configurePresets']
+    preset = next(p for p in presets if p['name'] == PRESET)
+    if 'inherits' in preset:  # the inherited variables would silently go uncompared
+        raise ValueError(f'{PRESET} inherits other presets; read_preset only reads its own cacheVariables')
+    return preset['cacheVariables']
 
 
 def create_metadata(settings: dict) -> dict:

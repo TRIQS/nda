@@ -27,8 +27,11 @@ checkout() {  # checkout <side> <sha>: a fresh clone of the workspace at that co
 checkout candidate "$candidate"
 checkout baseline "$baseline"
 # Both revisions compile the candidate's benchmark harness against their own headers.
+# Each is configured with its own benchmark_tracked preset; comparison.md lists any difference.
+# A baseline that predates CMakePresets.json borrows the candidate's.
 rm -rf "$root/baseline-source/benchmarks"
 cp -R "$root/candidate-source/benchmarks" "$root/baseline-source/benchmarks"
+[ -f "$root/baseline-source/CMakePresets.json" ] || cp "$root/candidate-source/CMakePresets.json" "$root/baseline-source/"
 
 # Each side resolves its own dependencies from its own deps/CMakeLists.txt, so a PR that
 # changes a pin is measured with that change. The two sides' dependency commits are

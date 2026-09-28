@@ -6,12 +6,23 @@ import rules
 
 
 def check_comparable(baseline, candidate):
-    # Each build resolves dependencies independently; changed pins are part of the comparison.
+    """Raise when the two builds cannot be compared, else return how their configurations differ.
+
+    Each side is configured with its own benchmark_tracked preset, so a changed preset or
+    compiler flag is part of the comparison, like a changed dependency pin; the report lists it.
+    """
     if baseline['harness_sha256'] != candidate['harness_sha256']:
         raise ValueError('The two builds have different harness_sha256')
-    for key in ('vendor', 'version', 'build_type', 'effective_flags'):
-        if baseline['compiler'].get(key) != candidate['compiler'].get(key):
+    for key in ('vendor', 'version'):
+        if baseline['compiler'][key] != candidate['compiler'][key]:
             raise ValueError(f'The two builds have different compiler {key}')
+    presets = baseline['preset'], candidate['preset']
+    differences = [{'name': name, 'baseline': presets[0].get(name), 'candidate': presets[1].get(name)}
+                   for name in sorted(presets[0].keys() | presets[1].keys()) if presets[0].get(name) != presets[1].get(name)]
+    flags = baseline['compiler']['effective_flags'], candidate['compiler']['effective_flags']
+    if flags[0] != flags[1]:
+        differences.append({'name': 'effective compiler flags', 'baseline': flags[0], 'candidate': flags[1]})
+    return differences
 
 
 def analyze(rounds, expected_rounds, alpha, min_improvement, max_noise, rule='paired_t'):

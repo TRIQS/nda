@@ -159,7 +159,7 @@ def main(argv=None):
         builds = {'baseline': args.baseline_build.resolve(), 'candidate': args.candidate_build.resolve()}
         for side, build in builds.items():
             document['builds'][side] = metadata.describe_build(build)
-        analysis.check_comparable(document['builds']['baseline'], document['builds']['candidate'])
+        document['build_differences'] = analysis.check_comparable(document['builds']['baseline'], document['builds']['candidate'])
         binaries = {side: common.discover_cases(build / 'benchmarks/tracked', args.filter) for side, build in builds.items()}
         matched_cases = sorted(binaries['baseline'].keys() & binaries['candidate'].keys())
         missing = []
