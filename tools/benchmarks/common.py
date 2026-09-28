@@ -49,7 +49,7 @@ def output_logger(path):
     return append
 
 
-def execute(binary, *, prefix, pattern, repetitions, min_time, min_warmup_time, timeout, log_output, log_label):
+def execute(binary, *, prefix, pattern, repetitions, min_time, min_warmup_time, log_output, log_label):
     """Keep measurements in JSON and append console diagnostics to output.log."""
     with tempfile.TemporaryDirectory(prefix='nda-benchmark-') as temporary:
         output = Path(temporary) / 'result.json'
@@ -61,7 +61,7 @@ def execute(binary, *, prefix, pattern, repetitions, min_time, min_warmup_time, 
         start = time.monotonic()
         try:
             with log.open('wb') as stream:
-                process = subprocess.run(command, stdout=stream, stderr=subprocess.STDOUT, timeout=timeout)
+                process = subprocess.run(command, stdout=stream, stderr=subprocess.STDOUT)
             result['exit_code'] = process.returncode
             if process.returncode:
                 raise ValueError(f'Process exited with {process.returncode}; see output.log')
@@ -69,7 +69,7 @@ def execute(binary, *, prefix, pattern, repetitions, min_time, min_warmup_time, 
             if failed := [row for row in benchmark['benchmarks'] if row.get('error_occurred')]:
                 raise ValueError(f'Benchmark reported an error: {failed[0]}')
             result['benchmark'] = benchmark
-        except (OSError, ValueError, subprocess.TimeoutExpired) as exc:
+        except (OSError, ValueError) as exc:
             result['error'] = str(exc)
         result.update(finished_at=timestamp(), wall_seconds=time.monotonic() - start)
         diagnostics = log.read_text(errors='replace')

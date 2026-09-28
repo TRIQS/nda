@@ -40,8 +40,17 @@ def worker_placements(workers: int) -> list[dict]:
         by_node.setdefault(node, []).append(cpu)
 
     # Round-robin nodes; never assign two SMT siblings to different workers.
-    queues = [[(cpu, node) for cpu in by_node[node]] for node in sorted(by_node)]
-    order = [pair for column in itertools.zip_longest(*queues) for pair in column if pair]
+    queues = []
+    for node in sorted(by_node):
+        queue = []
+        for cpu in by_node[node]:
+            queue.append((cpu, node))
+        queues.append(queue)
+    order = []
+    for column in itertools.zip_longest(*queues):  # the first CPU of each node, then the second, ...
+        for pair in column:
+            if pair:  # zip_longest pads the shorter queues with None
+                order.append(pair)
     if len(order) < workers:
         print(f"warning: only {len(order)} distinct allowed physical cores with local memory; "
               f"using {len(order)} pinned workers instead of {workers}", file=sys.stderr)

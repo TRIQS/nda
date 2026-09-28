@@ -22,10 +22,10 @@ import reporting
 import rules
 
 
-def measure(binary, name, prefix, label, min_time, min_warmup_time, timeout, repetitions, log_output):
+def measure(binary, name, prefix, label, min_time, min_warmup_time, repetitions, log_output):
     result = common.execute(
         binary, prefix=prefix, pattern=f'^{re.escape(name)}$', repetitions=repetitions,
-        min_time=min_time, min_warmup_time=min_warmup_time, timeout=timeout,
+        min_time=min_time, min_warmup_time=min_warmup_time,
         log_output=log_output, log_label=f'{binary.name}: {name}: {label}')
     if 'benchmark' in result:
         result['cpu_time_ns'] = min(row['cpu_time'] * common.NANOSECONDS[row['time_unit']]
@@ -49,7 +49,7 @@ def compare_case(key, binaries, worker, args, log_output):
 
         def invoke(side, label):
             return measure(binaries[side][key], name, worker['pin_command'], f'attempt-{number}-{label}',
-                           args.min_time, args.min_warmup_time, args.timeout, args.repetitions, log_output)
+                           args.min_time, args.min_warmup_time, args.repetitions, log_output)
 
         for side in ('candidate', 'baseline'):
             result['warmups'][side] = invoke(side, f'warmup-{side}')
@@ -102,7 +102,6 @@ def main(argv=None):
                         help='measure a too_noisy case again, warmups included, up to this many times')
     parser.add_argument('--retry-factor', type=float, default=1.0,
                         help='each retry uses this many times the rounds of the previous attempt, rounded up to even')
-    parser.add_argument('--timeout', type=float, help='optional wall-time limit per invocation, in seconds')
     args = parser.parse_args(argv)
     if args.rounds < 2 or args.rounds % 2:
         parser.error('--rounds must be positive and even (default: 6)')
@@ -123,7 +122,6 @@ def main(argv=None):
         'min_improvement_percent': args.min_improvement, 'max_noise_percent': args.max_noise,
         'max_retries': args.max_retries, 'retry_factor': args.retry_factor,
         'retry_rounds': [attempt_rounds(args.rounds, args.retry_factor, n) for n in range(1, args.max_retries + 2)],
-        'timeout_seconds': args.timeout,
     })
     manifest = {'coverage': {}, 'counts': {}, 'cases': []}
     log_output = common.output_logger(args.outdir / 'output.log')
