@@ -13,69 +13,11 @@ from pathlib import Path
 import common
 import placement
 
-_SIZE_SUFFIX = {"K": 2**10, "KI": 2**10, "M": 2**20, "MI": 2**20, "G": 2**30, "GI": 2**30}
-
-
-def count_cpu_list(text: str) -> int:
-    """Count CPUs in a sysfs list such as "0-3" or "0,64"."""
-    total = 0
-    for part in (text or "").split(","):
-        if "-" in part:
-            lo, _, hi = part.partition("-")
-            total += int(hi) - int(lo) + 1
-        elif part.strip():
-            total += 1
-    return total
-
-
-def read_sysfs_caches(info: dict) -> bool:
-    """Per-core cache sizes from sysfs. lscpu reports the machine-wide total for each
-    level, so its L1d on a 64-core host is 64 times the figure macOS reports; sysfs
-    gives the per-core size directly and keeps the two platforms comparable."""
-    root = Path("/sys/devices/system/cpu/cpu0/cache")
-    if not root.is_dir():
-        return False
-    fields = {("1", "Data"): "l1d_cache_bytes", ("1", "Instruction"): "l1i_cache_bytes",
-              ("2", "Unified"): "l2_cache_bytes", ("3", "Unified"): "l3_cache_bytes"}
-    found = False
-    for index in sorted(root.glob("index*")):
-        try:
-            level = (index / "level").read_text().strip()
-            kind = (index / "type").read_text().strip()
-            size = to_bytes((index / "size").read_text().strip())
-        except OSError:
-            continue
-        field = fields.get((level, kind))
-        if not field or not size:
-            continue
-        info[field] = size
-        found = True
-        if field == "l2_cache_bytes":
-            shared = (index / "shared_cpu_list")
-            if shared.exists():
-                info["cpus_per_l2"] = count_cpu_list(shared.read_text().strip())
-        line = index / "coherency_line_size"
-        if line.exists() and "cache_line_bytes" not in info:
-            info["cache_line_bytes"] = int(line.read_text().strip())
-    return found
-
-
-def to_bytes(text: str) -> int | None:
-    """Parse a size such as "512 KiB" or "12 MiB", as lscpu reports caches."""
-    match = re.match(r"^\s*([\d.]+)\s*([KMG]i?)?B?\s*$", text or "", re.IGNORECASE)
-    if not match:
-        return None
-    value = float(match.group(1))
-    return int(value * _SIZE_SUFFIX.get((match.group(2) or "").upper(), 1))
+PRESET = 'benchmark_tracked'  # the configure preset build-benchmarks.sh uses
 
 
 def run_text(cmd, **kw) -> str:
-    """Capture stdout, returning "" on any failure. For best-effort probes only."""
-    try:
-        out = subprocess.run(cmd, capture_output=True, text=True, timeout=30, **kw)
-        return out.stdout.strip()
-    except (OSError, subprocess.SubprocessError):
-        return ""
+    return subprocess.run(cmd, capture_output=True, text=True, check=True, **kw).stdout.strip()
 
 
 def describe_cpu_ram() -> dict:
@@ -84,127 +26,68 @@ def describe_cpu_ram() -> dict:
         "release": platform.release(),
         "machine": platform.machine(),
         "hostname": platform.node(),
-        "available_logical_cpus": os.cpu_count(),
+        "available_logical_cpus": len(os.sched_getaffinity(0)),
     }
-
-    if platform.system() == "Linux":
-        info['available_logical_cpus'] = len(os.sched_getaffinity(0))
-        for line in Path("/proc/cpuinfo").read_text().splitlines():
-            if line.startswith("model name"):
-                info["cpu_model"] = line.split(":", 1)[1].strip()
-                break
-        for line in Path("/proc/meminfo").read_text().splitlines():
-            if line.startswith("MemTotal"):
-                info["ram_bytes"] = int(line.split()[1]) * 1024
-                break
-        # lscpu adds topology and cache sizes, which matter for interpreting the sweep.
-        wanted = {
-            "Socket(s)": "sockets",
-            "Core(s) per socket": "cores_per_socket",
-            "Thread(s) per core": "threads_per_core",
-            "NUMA node(s)": "numa_nodes",
-            "CPU max MHz": "cpu_max_mhz",
-        }
-        if not read_sysfs_caches(info):
-            wanted.update({"L1d cache": "l1d_cache_bytes", "L1i cache": "l1i_cache_bytes",
-                           "L2 cache": "l2_cache_bytes", "L3 cache": "l3_cache_bytes"})
-        for line in run_text(["lscpu"], env=os.environ | {'LC_ALL': 'C'}).splitlines():
-            key, _, value = line.partition(":")
-            field = wanted.get(key.strip())
-            if not field:
-                continue
-            try:
-                info[field] = (to_bytes(value) if field.endswith('_bytes') else
-                               float(value) if field == 'cpu_max_mhz' else int(value))
-            except ValueError:
-                pass
-    elif platform.system() == "Darwin":
-        for key, field, cast in [
-            ("machdep.cpu.brand_string", "cpu_model", str),
-            ("hw.memsize", "ram_bytes", int),
-            ("hw.physicalcpu", "physical_cpus", int),
-            ("hw.cachelinesize", "cache_line_bytes", int),
-        ]:
-            value = run_text(["sysctl", "-n", key])
-            if value:
-                try:
-                    info[field] = cast(value)
-                except ValueError:
-                    pass
-
-        # Report the performance cores. On Apple Silicon the bare hw.l1dcachesize and
-        # hw.l2cachesize sysctls give the efficiency-core caches, but benchmarks run at
-        # default quality of service on the performance cores. hw.perflevel0 is the
-        # fastest core type; the fallback covers homogeneous Macs, which have no perflevels.
-        for key, field in (("l1dcachesize", "l1d_cache_bytes"),
-                           ("l1icachesize", "l1i_cache_bytes"),
-                           ("l2cachesize", "l2_cache_bytes"),
-                           ("l3cachesize", "l3_cache_bytes"),
-                           ("cpusperl2", "cpus_per_l2")):
-            value = (run_text(["sysctl", "-n", f"hw.perflevel0.{key}"])
-                     or run_text(["sysctl", "-n", f"hw.{key}"]))
-            if value:
-                info[field] = int(value)
-
+    for line in Path("/proc/cpuinfo").read_text().splitlines():
+        if line.startswith("model name"):
+            info["cpu_model"] = line.split(":", 1)[1].strip()
+            break
+    for line in Path("/proc/meminfo").read_text().splitlines():
+        if line.startswith("MemTotal"):
+            info["ram_bytes"] = int(line.split()[1]) * 1024
+            break
+    # lscpu adds topology and cache sizes, which matter for interpreting the results.
+    wanted = {"Socket(s)": ("sockets", int), "Core(s) per socket": ("cores_per_socket", int),
+              "Thread(s) per core": ("threads_per_core", int), "NUMA node(s)": ("numa_nodes", int),
+              "CPU max MHz": ("cpu_max_mhz", float)}
+    for line in run_text(["lscpu"], env=os.environ | {'LC_ALL': 'C'}).splitlines():
+        key, _, value = line.partition(":")
+        if key.strip() in wanted:
+            field, cast = wanted[key.strip()]
+            info[field] = cast(value)
+    # The summary above gives each cache level summed over all cores; --caches gives one instance.
+    for line in run_text(["lscpu", "--bytes", "--caches=NAME,ONE-SIZE,COHERENCY-SIZE"]).splitlines()[1:]:
+        name, size, line_size = line.split()
+        info[f"{name.lower()}_cache_bytes"] = int(size)
+        info["cache_line_bytes"] = int(line_size)
     return info
 
 
 def read_cmake_cache(build_dir: Path) -> dict:
-    cache = build_dir / "CMakeCache.txt"
-    if not cache.exists():
-        return {}
-    entries = {}
-    for line in cache.read_text(errors="replace").splitlines():
-        match = re.match(r"^([A-Za-z0-9_\-]+):[A-Z]+=(.*)$", line)
-        if match:
-            entries[match.group(1)] = match.group(2)
-    return entries
+    text = (build_dir / "CMakeCache.txt").read_text(errors="replace")
+    return dict(re.findall(r"^([A-Za-z0-9_\-]+):[A-Z]+=(.*)$", text, re.MULTILINE))
 
 
 def describe_compiler(build_dir: Path, cache: dict) -> dict:
-    # CMAKE_CXX_FLAGS is empty in a default nda build: -O3 -DNDEBUG lives in
+    # CMAKE_CXX_FLAGS holds only the preset's flags: -O3 -DNDEBUG lives in
     # CMAKE_CXX_FLAGS_RELEASE and -g in CMAKE_CXX_FLAGS_DEBUG. Recording only the former
     # would make a Debug and a Release build indistinguishable.
-    build_type = cache.get("CMAKE_BUILD_TYPE") or ""
-    base = cache.get("CMAKE_CXX_FLAGS") or ""
-    config = cache.get(f"CMAKE_CXX_FLAGS_{build_type.upper()}") or "" if build_type else ""
-    info = {
-        "build_type": build_type or None,
+    build_type = cache["CMAKE_BUILD_TYPE"]
+    base, config = cache["CMAKE_CXX_FLAGS"], cache[f"CMAKE_CXX_FLAGS_{build_type.upper()}"]
+    # CMake records the vendor and version it detected; trust that over reparsing.
+    detected = sorted(build_dir.glob("CMakeFiles/*/CMakeCXXCompiler.cmake"))[0].read_text()
+    return {
+        "build_type": build_type,
         "cxx_flags": base,
         "cxx_flags_config": config,
         "effective_flags": " ".join(f for f in (base, config) if f),
-        "path": cache.get("CMAKE_CXX_COMPILER"),
+        "path": cache["CMAKE_CXX_COMPILER"],
+        "vendor": re.search(r'set\(CMAKE_CXX_COMPILER_ID "([^"]*)"\)', detected)[1],
+        "version": re.search(r'set\(CMAKE_CXX_COMPILER_VERSION "([^"]*)"\)', detected)[1],
+        "banner": run_text([cache["CMAKE_CXX_COMPILER"], "--version"]).splitlines()[0],
     }
-    # CMake records the vendor and version it detected; trust that over reparsing.
-    for path in sorted(build_dir.glob("CMakeFiles/*/CMakeCXXCompiler.cmake")):
-        text = path.read_text(errors="replace")
-        for key, field in [("CMAKE_CXX_COMPILER_ID", "vendor"),
-                           ("CMAKE_CXX_COMPILER_VERSION", "version")]:
-            match = re.search(rf'set\({key} "([^"]*)"\)', text)
-            if match:
-                info[field] = match.group(1)
-        break
-    if info["path"] and Path(info["path"]).exists():
-        banner = run_text([info["path"], "--version"])
-        if banner:
-            info["banner"] = banner.splitlines()[0]
-    return info
 
 
 def describe_provenance(repo_root: Path, build_dir: Path) -> dict:
     def git(*args, cwd=repo_root):
-        return run_text(["git", *args], cwd=str(cwd)) or None
+        return run_text(["git", *args], cwd=cwd)
 
-    info = {
+    return {
         "commit": git("rev-parse", "HEAD"),
         "branch": git("rev-parse", "--abbrev-ref", "HEAD"),
+        "dependency_shas": {src.name.removesuffix("_src"): git("rev-parse", "HEAD", cwd=src)
+                            for src in sorted((build_dir / "deps").glob("*_src"))},
     }
-    deps = {}
-    for src in sorted((build_dir / "deps").glob("*_src")):
-        if (sha := git("rev-parse", "HEAD", cwd=src)):
-            deps[src.name.removesuffix("_src")] = sha
-    info["dependency_shas"] = deps
-    return info
 
 
 def thread_settings() -> dict:
@@ -214,8 +97,6 @@ def thread_settings() -> dict:
 
 def describe_build(build):
     cache = read_cmake_cache(build)
-    if not cache.get('CMAKE_HOME_DIRECTORY'):
-        raise ValueError(f'No CMake source directory recorded in {build}')
     source = Path(cache['CMAKE_HOME_DIRECTORY'])
     harness = sorted((source / 'benchmarks/tracked').glob('*.hpp'))
     harness += sorted((source / 'benchmarks/tracked').glob('*.cpp'))
@@ -231,9 +112,6 @@ def describe_build(build):
         'harness_sha256': digest.hexdigest(),
         'preset': read_preset(source),
     }
-
-
-PRESET = 'benchmark_tracked'  # the configure preset build-benchmarks.sh uses
 
 
 def read_preset(source: Path) -> dict:

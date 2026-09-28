@@ -1,10 +1,9 @@
-"""Google Benchmark discovery, execution, JSON validation, and timing units."""
+"""Google Benchmark discovery, execution, and timing units."""
 
 from __future__ import annotations
 
 from datetime import datetime, timezone
 import json
-import math
 import os
 import re
 import shlex
@@ -39,38 +38,8 @@ def list_cases(binary, pattern=None):
     return [name.strip() for name in output.stdout.splitlines() if name.strip()]
 
 
-def read_result(path: Path, cases: int, repetitions: int) -> dict:
-    result = json.loads(path.read_text())
-    counts = {}
-    for row in result["benchmarks"]:
-        if row.get("error_occurred"):
-            raise ValueError(f"Benchmark reported an error: {row}")
-        if row.get("run_type") != "iteration":
-            continue
-        if row["time_unit"] not in NANOSECONDS or not all(
-                math.isfinite(row[key]) and row[key] > 0 for key in ("cpu_time", "real_time")):
-            raise ValueError(f"Invalid benchmark timing: {row}")
-        name = row.get("run_name", row["name"])
-        repetition = row.get("repetition_index", 0)
-        observed = counts.setdefault(name, set())
-        if repetition in observed or repetition not in range(repetitions):
-            raise ValueError(f"Invalid or duplicate repetition: {row}")
-        observed.add(repetition)
-    if len(counts) != cases or any(len(indices) != repetitions for indices in counts.values()):
-        raise ValueError(f"Expected {cases} nonempty cases with {repetitions} repetitions in {path.name}")
-
-    return result
-
-
-def measured_seconds(document: dict) -> float:
-    """Sum timed-loop totals, excluding Google Benchmark aggregate rows."""
-    return sum(row['real_time'] * row['iterations'] * NANOSECONDS[row['time_unit']] / 1e9
-               for row in document.get('benchmarks', []) if row.get('run_type') == 'iteration')
-
-
 def output_logger(path):
     """Append complete invocation sections without interleaving parallel workers."""
-    path.touch(exist_ok=False)
     lock = threading.Lock()
 
     def append(label, text):
@@ -80,21 +49,14 @@ def output_logger(path):
     return append
 
 
-def execute(binary, *, prefix, pattern, repetitions, min_time, cases, log_output, log_label, timeout=None,
-            min_warmup_time=None):
+def execute(binary, *, prefix, pattern, repetitions, min_time, min_warmup_time, timeout, log_output, log_label):
     """Keep measurements in JSON and append console diagnostics to output.log."""
     with tempfile.TemporaryDirectory(prefix='nda-benchmark-') as temporary:
-        folder = Path(temporary)
-        output = folder / 'result.json'
-        log = folder / 'output.log'
-        command = [*prefix, str(binary), f'--benchmark_out={output}',
-                   '--benchmark_out_format=json', f'--benchmark_repetitions={repetitions}']
-        if min_time:
-            command.append(f'--benchmark_min_time={min_time}')
-        if min_warmup_time:
-            command.append(f'--benchmark_min_warmup_time={min_warmup_time:g}')
-        if pattern:
-            command.append(f'--benchmark_filter={pattern}')
+        output = Path(temporary) / 'result.json'
+        log = Path(temporary) / 'output.log'
+        command = [*prefix, str(binary), f'--benchmark_out={output}', '--benchmark_out_format=json',
+                   f'--benchmark_repetitions={repetitions}', f'--benchmark_min_time={min_time}',
+                   f'--benchmark_min_warmup_time={min_warmup_time:g}', f'--benchmark_filter={pattern}']
         result = {'started_at': timestamp()}
         start = time.monotonic()
         try:
@@ -103,13 +65,14 @@ def execute(binary, *, prefix, pattern, repetitions, min_time, cases, log_output
             result['exit_code'] = process.returncode
             if process.returncode:
                 raise ValueError(f'Process exited with {process.returncode}; see output.log')
-            result['benchmark'] = read_result(output, cases, repetitions)
-        except (OSError, ValueError, KeyError, TypeError, subprocess.TimeoutExpired) as exc:
+            benchmark = json.loads(output.read_text())
+            if failed := [row for row in benchmark['benchmarks'] if row.get('error_occurred')]:
+                raise ValueError(f'Benchmark reported an error: {failed[0]}')
+            result['benchmark'] = benchmark
+        except (OSError, ValueError, subprocess.TimeoutExpired) as exc:
             result['error'] = str(exc)
         result.update(finished_at=timestamp(), wall_seconds=time.monotonic() - start)
-        diagnostics = log.read_text(errors='replace') if log.exists() else ''
-        if 'benchmark' not in result and output.exists():
-            diagnostics += '\nUnvalidated benchmark JSON:\n' + output.read_text(errors='replace')
+        diagnostics = log.read_text(errors='replace')
         if result.get('error'):
             diagnostics += '\nError: ' + result['error']
         log_output(log_label, f"Command: {shlex.join(command)}\nStarted: {result['started_at']}\n"
@@ -125,6 +88,7 @@ def case_counts(names):
 
 
 def discover_cases(bindir, pattern=None):
+    # Google Benchmark accepts a name registered twice and runs both under one ^name$ filter.
     cases = {}
     for binary in find_binaries(bindir):
         for name in list_cases(binary, pattern):

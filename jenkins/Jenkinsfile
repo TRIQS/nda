@@ -177,9 +177,7 @@ catchError(catchInterruptions: false) {
       // Hyperthreading is disabled on the benchmark node, so each CPU is a distinct physical core.
       runPod(tag: 'ubuntu-gcc', cpus: 24, memory: '64Gi', exclusive: true) {
         checkout scm
-        withEnv(['PARALLEL=24', 'BENCHMARK_WORKERS=20', 'BENCHMARK_MIN_TIME=0.2s',
-                 'OMP_NUM_THREADS=1', 'OPENBLAS_NUM_THREADS=1',
-                 'MKL_NUM_THREADS=1', 'TBLIS_NUM_THREADS=1']) {
+        withEnv(['BENCHMARK_WORKERS=20']) {
           runBenchmarkTest()
         }
       }

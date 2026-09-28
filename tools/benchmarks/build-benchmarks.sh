@@ -2,7 +2,7 @@
 # build-benchmarks.sh <source-dir> <build-dir>
 # Configure nda with the benchmark_tracked preset from CMakePresets.json and build one
 # target per benchmarks/tracked/*.cpp, matching what benchmarks/CMakeLists.txt globs.
-# Shared by run-benchmarks.sh and compare-benchmarks.sh.
+# Shared by compare-benchmarks.sh and test-compare-benchmarks.sh.
 set -eu
 source=$1
 build=$2
@@ -12,4 +12,4 @@ set --
 for file in "$source"/benchmarks/tracked/*.cpp; do
   set -- "$@" "$(basename "$file" .cpp)"
 done
-cmake --build "$build" --parallel "${PARALLEL:?Set PARALLEL}" --target "$@"
+cmake --build "$build" --parallel "$(nproc)" --target "$@"

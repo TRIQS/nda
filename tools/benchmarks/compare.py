@@ -25,20 +25,11 @@ import rules
 def measure(binary, name, prefix, label, min_time, min_warmup_time, timeout, repetitions, log_output):
     result = common.execute(
         binary, prefix=prefix, pattern=f'^{re.escape(name)}$', repetitions=repetitions,
-        min_time=min_time, min_warmup_time=min_warmup_time, cases=1, timeout=timeout,
+        min_time=min_time, min_warmup_time=min_warmup_time, timeout=timeout,
         log_output=log_output, log_label=f'{binary.name}: {name}: {label}')
     if 'benchmark' in result:
-        try:
-            timings = []
-            for row in result['benchmark']['benchmarks']:
-                if row.get('run_type') != 'iteration':
-                    continue
-                if row.get('run_name', row['name']) != name:
-                    raise ValueError(f'Expected exactly {name}, got {row["name"]}')
-                timings.append(row['cpu_time'] * common.NANOSECONDS[row['time_unit']])
-            result['cpu_time_ns'] = min(timings)
-        except ValueError as exc:
-            result['error'] = str(exc)
+        result['cpu_time_ns'] = min(row['cpu_time'] * common.NANOSECONDS[row['time_unit']]
+                                    for row in result['benchmark']['benchmarks'] if row['run_type'] == 'iteration')
     return result
 
 
@@ -72,7 +63,7 @@ def compare_case(key, binaries, worker, args, log_output):
                 if any(sample.get('error') for sample in pair['samples'].values()):
                     break
         result['analysis'] = analysis.analyze(result['rounds'], rounds, args.alpha,
-                                              args.min_improvement, args.max_noise, args.rule)
+                                              args.min_improvement, args.max_noise)
         return result
 
     # A too_noisy attempt is measured again from its warmups, with retry_factor times more rounds;
@@ -101,8 +92,6 @@ def main(argv=None):
     parser.add_argument('--filter')
     parser.add_argument('--workers', type=int, required=True, help='number of cases measured in parallel on distinct cores')
     parser.add_argument('--no-pin', action='store_true', help='disable CPU/NUMA pinning for local testing')
-    parser.add_argument('--rule', choices=sorted(rules.RULES), default='paired_t',
-                        help='paired_t tests the per-round differences; welch_t treats the sides as independent samples')
     parser.add_argument('--alpha', type=float, default=rules.DEFAULT_ALPHA,
                         help='one-sided false-positive rate per direction; the t cutoff follows from the degrees of freedom')
     parser.add_argument('--min-improvement', type=float, default=rules.DEFAULT_MIN_IMPROVEMENT,
@@ -119,22 +108,7 @@ def main(argv=None):
         parser.error('--rounds must be positive and even (default: 6)')
     if args.workers < 1:
         parser.error('--workers must be positive')
-    if args.repetitions < 1:
-        parser.error('--repetitions must be positive')
-    if not math.isfinite(args.min_warmup_time) or args.min_warmup_time < 0:
-        parser.error('--min-warmup-time must be finite and nonnegative')
-    if args.max_retries < 0:
-        parser.error('--max-retries must be nonnegative')
-    if not math.isfinite(args.retry_factor) or args.retry_factor < 1:
-        parser.error('--retry-factor must be finite and at least 1')
-    if not math.isfinite(args.alpha) or not 0 < args.alpha < 0.5:
-        parser.error('--alpha must be strictly between 0 and 0.5')
-    if not math.isfinite(args.min_improvement) or args.min_improvement < 0:
-        parser.error('--min-improvement must be finite and nonnegative')
-    if not math.isfinite(args.max_noise) or args.max_noise <= 0:
-        parser.error('--max-noise must be finite and positive')
-    if args.timeout is not None and (not math.isfinite(args.timeout) or args.timeout <= 0):
-        parser.error('--timeout must be finite and positive')
+    rules.check_parameters(args.alpha, args.min_improvement)
     args.outdir = args.outdir.resolve()
     args.outdir.mkdir(parents=True, exist_ok=True)
     manifest_path = args.outdir / 'comparison.json'
@@ -145,7 +119,7 @@ def main(argv=None):
         'repetitions': args.repetitions, 'min_time': args.min_time, 'min_warmup_time': args.min_warmup_time,
         'filter': args.filter,
         'workers': args.workers, 'rounds': args.rounds, 'repetition_statistic': 'min',
-        'warmup_invocations_per_side': 1, 'rule': args.rule, 'alpha': args.alpha,
+        'warmup_invocations_per_side': 1, 'alpha': args.alpha,
         'min_improvement_percent': args.min_improvement, 'max_noise_percent': args.max_noise,
         'max_retries': args.max_retries, 'retry_factor': args.retry_factor,
         'retry_rounds': [attempt_rounds(args.rounds, args.retry_factor, n) for n in range(1, args.max_retries + 2)],
@@ -153,7 +127,7 @@ def main(argv=None):
     })
     manifest = {'coverage': {}, 'counts': {}, 'cases': []}
     log_output = common.output_logger(args.outdir / 'output.log')
-    measurement_start = None
+    start = time.perf_counter()
     outcome = 'failed'
     try:
         builds = {'baseline': args.baseline_build.resolve(), 'candidate': args.candidate_build.resolve()}
@@ -175,7 +149,6 @@ def main(argv=None):
         suites = sorted({suite for suite, _ in matched_cases})
         workers = min(args.workers, len(matched_cases))
         placements = placement.unpinned_workers(workers) if args.no_pin else placement.worker_placements(workers)
-        placement.validate_placements(placements)
         workers = len(placements)
         metadata.record_placements(document, placements)
         for suite in suites:
@@ -192,7 +165,6 @@ def main(argv=None):
         common.write_json(metadata_path, document)
         common.write_json(manifest_path, manifest)
         checkpoint_lock = threading.Lock()
-        measurement_start = time.perf_counter()
 
         def checkpoint(case):
             # Only finished cases enter the manifest; serialize shared context and file updates.
@@ -217,13 +189,12 @@ def main(argv=None):
         with ThreadPoolExecutor(max_workers=workers) as executor:
             list(executor.map(run_worker, range(workers)))
         outcome = 'incomplete' if manifest['counts'].get('incomplete') else 'complete'
-    except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as exc:
+    except (OSError, ValueError, subprocess.SubprocessError) as exc:
         manifest['error'] = str(exc)
         log_output('Comparison failed', str(exc))
         print(f'Comparison failed: {exc}', file=sys.stderr)
     document['finished_at'] = common.timestamp()
-    if measurement_start is not None:
-        document['totals']['wall_seconds'] = round(time.perf_counter() - measurement_start, 3)
+    document['totals']['wall_seconds'] = round(time.perf_counter() - start, 3)
     common.write_json(metadata_path, document)
     common.write_json(manifest_path, manifest)
     reporting.write_comparison_report(args.outdir / 'comparison.md', manifest, document)

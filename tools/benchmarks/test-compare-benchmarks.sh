@@ -3,7 +3,8 @@
 set -eu
 
 worker_counts=${BENCHMARK_WORKERS:?Set BENCHMARK_WORKERS explicitly}
-min_time=${BENCHMARK_MIN_TIME:?Set BENCHMARK_MIN_TIME explicitly}
+# Single-threaded measurements: the workers already measure one case per core in parallel.
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 TBLIS_NUM_THREADS=1
 sha=$(git -C "$WORKSPACE" rev-parse --verify 'HEAD^{commit}')
 mkdir -p "$WORKSPACE_TMP"
 root=$(mktemp -d "$WORKSPACE_TMP/benchmark-self-comparison.XXXXXX")
@@ -25,5 +26,5 @@ for workers in $worker_counts; do
     --baseline-build "$root/baseline-build" --candidate-build "$root/candidate-build" \
     --outdir "$WORKSPACE/benchmark-results/workers-$workers" \
     --workers "$workers" --rounds 12 --alpha 0.001 --min-improvement 5 --max-noise 20 --max-retries 0 --min-warmup-time 0.1 \
-    --repetitions 1 --min-time "$min_time" "$@"
+    --repetitions 1 --min-time 0.2s "$@"
 done

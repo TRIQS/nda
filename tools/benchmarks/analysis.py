@@ -25,15 +25,13 @@ def check_comparable(baseline, candidate):
     return differences
 
 
-def analyze(rounds, expected_rounds, alpha, min_improvement, max_noise, rule='paired_t'):
-    """Descriptive paired statistics plus the status decided by the named rule in rules.RULES.
+def analyze(rounds, expected_rounds, alpha, min_improvement, max_noise):
+    """Descriptive paired statistics plus the status decided by rules.paired_t.
 
     A side whose per-round coefficient of variation exceeds max_noise percent makes the
-    case too_noisy before the rule runs: the launches disagree too much to decide either way.
+    case too_noisy before the test runs: the launches disagree too much to decide either way.
     """
-    if len(rounds) != expected_rounds or any(
-            set(pair['samples']) != {'baseline', 'candidate'} or
-            any(sample.get('error') for sample in pair['samples'].values()) for pair in rounds):
+    if len(rounds) != expected_rounds or any(sample.get('error') for pair in rounds for sample in pair['samples'].values()):
         return {'status': 'incomplete'}
     baseline = [pair['samples']['baseline']['cpu_time_ns'] for pair in rounds]
     candidate = [pair['samples']['candidate']['cpu_time_ns'] for pair in rounds]
@@ -46,7 +44,7 @@ def analyze(rounds, expected_rounds, alpha, min_improvement, max_noise, rule='pa
     if max(noise.values()) > max_noise:
         verdict = {'status': 'too_noisy', 'max_noise_percent': max_noise}
     else:
-        verdict = rules.RULES[rule](baseline, candidate, alpha, min_improvement)
+        verdict = rules.paired_t(baseline, candidate, alpha, min_improvement)
     return {
         'status': verdict['status'],
         'median_ratio': ratio,

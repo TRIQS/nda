@@ -1,29 +1,4 @@
-"""Console summaries and Markdown comparison reports."""
-
-import common
-
-
-def print_run_summary(summary, results, outdir):
-    totals = summary["totals"]
-    settings = summary["settings"]
-    workers = settings["workers"]
-    total_secs = totals["wall_seconds"]
-    print(f"\nfamilies   {totals['families']}   (distinct benchmarks, size sweep collapsed)")
-    print(f"cases      {totals['cases']}   (registered cases, one per size)")
-    print(f"wall       {total_secs}s at {settings['repetitions']} repetition(s)")
-    print(f"results    {outdir}")
-
-    # GB reports only its final timed run per case; the gap to the wall clock is mostly
-    # GB's own iteration-count search (it tries 1, 10, 100 ... and discards each trial),
-    # plus input generation, which only matters at the largest size.
-    measured = sum(common.measured_seconds(entry.get('benchmark', {}))
-                   for entry in results['binaries'] if not entry.get('error') and entry.get('exit_code') == 0)
-    if workers > 1:
-        print(f"measured   {measured:.1f}s summed across parallel workers (not a fraction of wall time)")
-    elif measured and total_secs:
-        print(f"measured   {measured:.1f}s in timed loops "
-              f"({100 * measured / total_secs:.0f}% of wall; the rest is GB's "
-              f"iteration search and input generation)")
+"""Markdown comparison reports."""
 
 
 def _fmt_setting(value):
@@ -43,7 +18,7 @@ def write_comparison_report(path, manifest, metadata):
     lines += ['', 'Ratio = baseline / candidate latency; 1.00x is equal, greater than 1 is faster.',
               'Bands are observed min/max ranges, not confidence intervals. Signals do not fail CI.',
               f'Each invocation uses the minimum CPU time of {metadata["settings"]["repetitions"]} Google Benchmark repetition(s).',
-              f'Rounds: {metadata["settings"]["rounds"]}; rule {metadata["settings"].get("rule", "paired_t")} at one-sided '
+              f'Rounds: {metadata["settings"]["rounds"]}; paired t-test at one-sided '
               f'false-positive rate {100 * metadata["settings"]["alpha"]:g}% per direction; '
               f'min improvement: {metadata["settings"]["min_improvement_percent"]:g}% of baseline; '
               f'too noisy above {metadata["settings"]["max_noise_percent"]:g}% per-round cv.']

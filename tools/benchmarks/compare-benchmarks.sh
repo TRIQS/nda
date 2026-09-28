@@ -6,6 +6,8 @@
 # target branch tip) and CHANGE_ID (candidate, the PR head). Local: BASELINE_REF and
 # CANDIDATE_REF (default HEAD).
 set -eu
+# Single-threaded measurements: the workers already measure one case per core in parallel.
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 TBLIS_NUM_THREADS=1
 cd "$WORKSPACE"
 
 if [ -n "${CHANGE_ID:-}" ]; then
@@ -46,4 +48,4 @@ python3 "$WORKSPACE/tools/benchmarks/compare.py" \
   --baseline-build "$root/baseline-build" --candidate-build "$root/candidate-build" \
   --outdir "$WORKSPACE/benchmark-results" \
   --workers "${BENCHMARK_WORKERS:?Set BENCHMARK_WORKERS}" --rounds 12 --alpha 0.001 --min-improvement 5 --max-noise 20 --max-retries 0 --min-warmup-time 0.1 \
-  --min-time "${BENCHMARK_MIN_TIME:?Set BENCHMARK_MIN_TIME}" --repetitions 1 "$@"
+  --min-time 0.2s --repetitions 1 "$@"

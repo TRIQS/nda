@@ -1,22 +1,18 @@
-"""Automatic worker CPU selection, NUMA binding, and binding validation."""
+"""Automatic worker CPU selection and NUMA binding (Linux)."""
 
 from __future__ import annotations
 
+import itertools
 import os
-import platform
 import re
-import shutil
-import subprocess
 import sys
 from pathlib import Path
 
 
-def scaling_governor(cpu: int | None) -> str | None:
-    if cpu is None:
-        return None
+def scaling_governor(cpu: int) -> str | None:
     try:
-        return Path(f"/sys/devices/system/cpu/cpu{cpu}/cpufreq/scaling_governor").read_text().strip() or None
-    except OSError:
+        return Path(f"/sys/devices/system/cpu/cpu{cpu}/cpufreq/scaling_governor").read_text().strip()
+    except OSError:  # no cpufreq driver, e.g. in a virtual machine
         return None
 
 
@@ -26,19 +22,10 @@ def unpinned_workers(workers: int) -> list[dict]:
 
 
 def worker_placements(workers: int) -> list[dict]:
-    if platform.system() != "Linux":
-        if workers > 1:
-            raise ValueError("Parallel measurement requires Linux and numactl")
-        return unpinned_workers(workers)
-    if not shutil.which("numactl"):
-        raise ValueError("Linux measurement requires numactl for CPU and NUMA memory binding")
-    status = Path("/proc/self/status").read_text()
-    allowed = re.search(r"^Mems_allowed_list:\s*(.+)$", status, re.MULTILINE)
-    if not allowed:
-        raise ValueError("Cannot determine allowed NUMA memory nodes")
+    allowed = re.search(r"^Mems_allowed_list:\s*(.+)$", Path("/proc/self/status").read_text(), re.MULTILINE)[1]
     memory_nodes = set()
-    for part in allowed[1].split(","):
-        lo, _, hi = part.strip().partition("-")
+    for part in allowed.split(","):
+        lo, _, hi = part.partition("-")
         memory_nodes.update(range(int(lo), int(hi or lo) + 1))
 
     by_node, seen = {}, set()
@@ -46,38 +33,20 @@ def worker_placements(workers: int) -> list[dict]:
         root = Path(f"/sys/devices/system/cpu/cpu{cpu}")
         core = tuple(int((root / "topology" / key).read_text())
                      for key in ("physical_package_id", "core_id"))
-        nodes = sorted(root.glob("node[0-9]*"))
-        if len(nodes) != 1:
-            raise ValueError(f"Cannot determine NUMA node for CPU {cpu}")
-        node = int(nodes[0].name[4:])
+        node = int(next(root.glob("node[0-9]*")).name[4:])
         if core in seen or node not in memory_nodes:
             continue
         seen.add(core)
         by_node.setdefault(node, []).append(cpu)
 
     # Round-robin nodes; never assign two SMT siblings to different workers.
-    placements = []
-    while len(placements) < workers:
-        for node in sorted(by_node):
-            if by_node[node] and len(placements) < workers:
-                cpu = by_node[node].pop(0)
-                command = ["numactl", f"--physcpubind={cpu}", f"--membind={node}"]
-                placements.append({"cpu": cpu, "numa_node": node, "pin_command": command,
-                                   "scaling_governor": scaling_governor(cpu)})
-        if not any(by_node.values()) and len(placements) < workers:
-            if not placements:
-                raise ValueError("No allowed physical core with local memory to pin a worker to")
-            print(f"warning: only {len(placements)} distinct allowed physical cores with local memory; "
-                  f"using {len(placements)} pinned workers instead of {workers}", file=sys.stderr)
-            break
-    return placements
-
-
-def validate_placements(placements):
-    for worker in placements:
-        if worker["pin_command"]:
-            subprocess.run([*worker["pin_command"], sys.executable, "-c",
-                            f"import os; assert os.sched_getaffinity(0) == {{{worker['cpu']}}}"], check=True)
+    queues = [[(cpu, node) for cpu in by_node[node]] for node in sorted(by_node)]
+    order = [pair for column in itertools.zip_longest(*queues) for pair in column if pair]
+    if len(order) < workers:
+        print(f"warning: only {len(order)} distinct allowed physical cores with local memory; "
+              f"using {len(order)} pinned workers instead of {workers}", file=sys.stderr)
+    return [{"cpu": cpu, "numa_node": node, "pin_command": ["numactl", f"--physcpubind={cpu}", f"--membind={node}"],
+             "scaling_governor": scaling_governor(cpu)} for cpu, node in order[:workers]]
 
 
 def public_metadata(record):
