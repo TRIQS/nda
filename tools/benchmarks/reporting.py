@@ -129,21 +129,34 @@ def write_comparison_report(path, manifest, metadata):
     logs = {(c['suite'], c['name']): -math.log(c['analysis']['median_ratio']) for c in measured}
     by_status = {s: [c for c in cases if c['analysis']['status'] == s]
                  for s in ('regression_signal', 'improvement_signal', 'inconclusive', 'too_noisy', 'incomplete', 'added', 'removed')}
-    builds = metadata['builds']
-    short = {side: b['provenance']['commit'][:10] for side, b in builds.items()}
-    branch = {side: '' if b['provenance']['branch'] == 'HEAD' else f' ({b["provenance"]["branch"]})' for side, b in builds.items()}
-    machine = metadata['machine']
+    builds = metadata['builds']  # a side is missing when its build could not be described
+    ci = metadata['ci']
 
-    L = [f'## Benchmark comparison: candidate `{short["candidate"]}`{branch["candidate"]} vs baseline `{short["baseline"]}`{branch["baseline"]}', '']
-    if manifest.get('error'):
-        L += [f'**Comparison failed: {manifest["error"]}**', '']
+    def label(side):
+        if side not in builds:
+            return '(not built)'
+        prov = builds[side]['provenance']
+        name = ci.get(f'{side}_branch') or ('' if prov['branch'] == 'HEAD' else prov['branch'])
+        pr = f'PR #{ci["pr"]}, ' if side == 'candidate' and ci.get('pr') else ''
+        return f'{name} ({pr}`{prov["commit"][:10]}`)' if name else f'`{prov["commit"][:10]}`'
+
+    machine = metadata['machine']
+    L = [f'## Benchmark comparison: candidate {label("candidate")} vs baseline {label("baseline")}', '']
+    only = []
+    for status, side in (('added', 'candidate'), ('removed', 'baseline')):
+        if by_status[status]:
+            only += _details(f'{len(by_status[status])} cases only in the {side} build (not compared)',
+                             ['| Suite | Case |', '|:--|:--|'] + [f'| {c["suite"]} | {c["name"]} |' for c in by_status[status]])
+    if manifest.get('error'):  # nothing was measured: say why and stop
+        path.write_text('\n'.join(L + [f'**Comparison failed: {manifest["error"]}**', ''] + only) + '\n')
+        return
     overall = _median_speedup(list(logs.values())) if logs else 'n/a'
     L += [f'**{len(by_status["regression_signal"])} regressions, {len(by_status["improvement_signal"])} improvements, '
           f'{len(by_status["inconclusive"])} unchanged, {len(by_status["too_noisy"])} too noisy** out of {len(cases)} cases; '
           f'median case {overall}.', '']
-    extra = {k: len(v) for k, v in by_status.items() if k in ('incomplete', 'added', 'removed') and v}
-    if extra:
-        L += ['Also: ' + ', '.join(f'{n} {k}' for k, n in extra.items()) + '.', '']
+    if by_status['incomplete']:
+        L += [f'{len(by_status["incomplete"])} cases incomplete (a launch failed; see output.log).', '']
+    L += only
     if differences := metadata.get('build_differences'):
         L += ['**The two sides were built differently**, so the speedups include the effect of these changes '
               '(`benchmark_tracked` preset variables, resulting compiler flags, benchmark sources):', '']
@@ -209,7 +222,7 @@ def write_comparison_report(path, manifest, metadata):
         env.append('- **Note**: the two sides resolved different dependency commits (see above).')
     ci = metadata['ci']
     if ci['url']:
-        env.append(f'- **CI**: [{ci["url"]}]({ci["url"]}), PR {ci["pr"]}, `{ci["baseline_branch"]}` <- `{ci["candidate_branch"]}`.')
+        env.append(f'- **CI**: [{ci["url"]}]({ci["url"]}).')
     env.append(f'- **Run**: started {metadata["started_at"]}, finished {metadata["finished_at"]}.')
     L += _details('Environment and build', env)
 

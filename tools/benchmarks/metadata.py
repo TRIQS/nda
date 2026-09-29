@@ -127,9 +127,11 @@ def create_metadata(settings: dict) -> dict:
     return {
         'started_at': common.timestamp(), 'finished_at': None,
         'settings': dict(settings),
+        # Jenkins PR build: CHANGE_* ; local compare-benchmarks.sh: BASELINE_REF / CANDIDATE_REF.
         'ci': {'url': os.environ.get('BUILD_URL'), 'repository': os.environ.get('GIT_URL'),
-               'pr': os.environ.get('CHANGE_ID'), 'baseline_branch': os.environ.get('CHANGE_TARGET'),
-               'candidate_branch': os.environ.get('CHANGE_BRANCH')},
+               'pr': os.environ.get('CHANGE_ID'),
+               'baseline_branch': os.environ.get('CHANGE_TARGET') or os.environ.get('BASELINE_REF'),
+               'candidate_branch': os.environ.get('CHANGE_BRANCH') or os.environ.get('CANDIDATE_REF')},
         'machine': describe_cpu_ram(), 'threads': thread_settings(), 'benchmark_context': None, 'builds': {},
         'totals': {'families': 0, 'cases': 0, 'binaries': 0, 'wall_seconds': None},
         'binaries': [],

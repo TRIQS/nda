@@ -143,7 +143,8 @@ def main(argv=None):
         manifest['coverage'] = {'baseline': len(binaries['baseline']), 'candidate': len(binaries['candidate']),
                                 'common': len(matched_cases), 'unmatched': len(missing)}
         if not matched_cases:
-            raise ValueError('No matching benchmark cases in the two builds')
+            raise ValueError(f'No benchmark case is present in both builds (baseline build: {len(binaries["baseline"])} cases, '
+                             f'candidate build: {len(binaries["candidate"])})')
         suites = sorted({suite for suite, _ in matched_cases})
         workers = min(args.workers, len(matched_cases))
         placements = placement.unpinned_workers(workers) if args.no_pin else placement.worker_placements(workers)
