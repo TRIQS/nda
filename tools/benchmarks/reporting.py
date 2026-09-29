@@ -119,6 +119,17 @@ def _group_section(title, key, cases):
     return _details(f'<b>{title}</b>', table)
 
 
+COMMENT_LIMIT = 65000  # GitHub allows 65,536 characters per comment; leave room for a footer added by CI
+
+
+def _splice(lines, block, replacement):
+    """lines with the contiguous sub-list block replaced by replacement."""
+    for i in range(len(lines) - len(block) + 1):
+        if lines[i:i + len(block)] == block:
+            return lines[:i] + replacement + lines[i + len(block):]
+    return lines
+
+
 def write_comparison_report(path, manifest, metadata):
     """comparison.md for the pull-request comment: headline, regressions, foldable groupings, folded detail.
     Kept under GitHub's 65,536-character comment limit by listing each case once, in the folded 'All cases' table."""
@@ -185,8 +196,9 @@ def write_comparison_report(path, manifest, metadata):
     # everything else, folded
     order = {'regression_signal': 0, 'too_noisy': 1, 'improvement_signal': 2, 'inconclusive': 3}
     by_verdict = sorted(cases, key=lambda c: (order.get(c['analysis']['status'], 4), c['analysis'].get('median_ratio', 1)))
-    L += _details(f'All {len(cases)} cases (regressions, too noisy, improvements, then no change; each by speedup)',
-                  CASE_COLS + [_case_row(c) for c in by_verdict])
+    all_cases = _details(f'All {len(cases)} cases (regressions, too noisy, improvements, then no change; each by speedup)',
+                         CASE_COLS + [_case_row(c) for c in by_verdict])
+    L += all_cases
 
     method = [
         f'- Each revision builds its own tracked benchmarks with its own `benchmark_tracked` preset (see Environment); each case present on both sides is measured on one pinned physical core, '
@@ -226,4 +238,8 @@ def write_comparison_report(path, manifest, metadata):
     env.append(f'- **Run**: started {metadata["started_at"]}, finished {metadata["finished_at"]}.')
     L += _details('Environment and build', env)
 
-    path.write_text('\n'.join(L) + '\n')
+    text = '\n'.join(L) + '\n'
+    if len(text) > COMMENT_LIMIT:  # the per-case table is the only part that grows with the suite
+        note = [f'The table of all {len(cases)} cases is left out to fit the comment size limit; see `comparison.json` in the build artifacts.', '']
+        text = '\n'.join(_splice(L, all_cases, note)) + '\n'
+    path.write_text(text)
