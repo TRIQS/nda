@@ -4,14 +4,14 @@ import math
 import statistics
 
 
-# --- case structure: what a case name says about the case, used to group the report -----------------------------
+# case structure: what a case name says about the case, used to group the report
 
 def case_factors(suite, name):
     """Attributes parsed from a case's suite and name, e.g. ('ops_mapped', 'c128/A2_C_layout,S/max/64')."""
     value_type, operands, op, size = name.split('/')
     kinds = operands.split(',')
     return {
-        'suite': suite.removeprefix('ops_'),  # arithmetic, mapped, reductions, transcendental: the operation class
+        'suite': suite.removeprefix('ops_'),  # arithmetic, mapped, reductions, math: the operation class
         'op': op,
         'complex': value_type == 'c128',
         'N': int(size),
@@ -140,9 +140,7 @@ def write_comparison_report(path, manifest, metadata):
     overall = _median_speedup(list(logs.values())) if logs else 'n/a'
     L += [f'**{len(by_status["regression_signal"])} regressions, {len(by_status["improvement_signal"])} improvements, '
           f'{len(by_status["inconclusive"])} unchanged, {len(by_status["too_noisy"])} too noisy** out of {len(cases)} cases; '
-          f'median case {overall}; '
-          f'wall time {metadata["totals"]["wall_seconds"]:.0f} s on {settings["workers"]} '
-          f'{"pinned" if settings.get("pinned") else "unpinned"} workers.', '']
+          f'median case {overall}.', '']
     extra = {k: len(v) for k, v in by_status.items() if k in ('incomplete', 'added', 'removed') and v}
     if extra:
         L += ['Also: ' + ', '.join(f'{n} {k}' for k, n in extra.items()) + '.', '']
@@ -150,15 +148,14 @@ def write_comparison_report(path, manifest, metadata):
         L += ['**The two sides were configured differently**, so the speedups include the effect of these changes '
               '(`benchmark_tracked` preset variables and resulting compiler flags):', '']
         L += [f'- `{d["name"]}`: baseline {_fmt_setting(d["baseline"])}, candidate {_fmt_setting(d["candidate"])}' for d in differences] + ['']
-    L += [f'Speedup = candidate speed / baseline speed (2x: the candidate runs twice as fast; 0.67x: at two thirds of the baseline speed, '
-          f'a regression), median over rounds ± its standard error. A signal needs a change beyond {floor:g}% of the baseline at a '
+    L += [f'Speedup = candidate speed / baseline speed, median over rounds ± its standard error. A signal needs a change beyond {floor:g}% of the baseline at a '
           f'one-sided false-positive rate of {100 * settings["alpha"]:g}%. Signals do not fail CI.', '']
 
     # signals first, folded but with the counts in the summary line
     regressions = sorted(by_status['regression_signal'], key=lambda c: c['analysis']['median_ratio'])
     improvements = sorted(by_status['improvement_signal'], key=lambda c: -c['analysis']['median_ratio'])
     if regressions:
-        L += _details(f'<b>{len(regressions)} regressions</b> (slowest first)', CASE_COLS + [_case_row(c) for c in regressions], open_=len(regressions) <= 15)
+        L += _details(f'<b>{len(regressions)} regressions</b> (slowest first)', CASE_COLS + [_case_row(c) for c in regressions])
     if improvements:
         L += _details(f'<b>{len(improvements)} improvements</b> (fastest first)', CASE_COLS + [_case_row(c) for c in improvements])
     if by_status['too_noisy']:
@@ -202,8 +199,7 @@ def write_comparison_report(path, manifest, metadata):
            + (f'; governor {", ".join(sorted({p["scaling_governor"] for p in settings["worker_placements"] if p["scaling_governor"]}) or ["unknown"])}' if settings.get('pinned') else '')
            + '.',
            f'- **Workers**: {settings["workers"]} {"pinned to distinct physical cores with local NUMA memory" if settings.get("pinned") else "unpinned"}'
-           + (f' (CPUs {", ".join(str(p["cpu"]) for p in settings["worker_placements"])})' if settings.get('pinned') else '') + '.',
-           f'- **Thread environment**: ' + ', '.join(f'{k}={v if v is not None else "unset"}' for k, v in metadata['threads'].items()) + '.']
+           + (f' (CPUs {", ".join(str(p["cpu"]) for p in settings["worker_placements"])})' if settings.get('pinned') else '') + '.']
     for side in ('baseline', 'candidate'):
         b = builds[side]; c = b['compiler']; prov = b['provenance']
         env.append(f'- **{side.title()}**: commit `{prov["commit"]}` ({prov["branch"]})'
