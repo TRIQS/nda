@@ -6,6 +6,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
       cmake \
       g++ \
       gfortran \
+      gh \
       git \
       numactl \
       vim \

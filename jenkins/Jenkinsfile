@@ -118,11 +118,25 @@ def runBenchmarkTest = {
     dir('benchmark-results') {
       deleteDir()
     }
-    try {
-      // Temporary suite test: unstable has no tracked benchmarks; compare two builds of this SHA.
-      sh 'sh tools/benchmarks/test-compare-benchmarks.sh'
-    } finally {
-      archiveArtifacts artifacts: 'benchmark-results/**', allowEmptyArchive: true
+    /* Benchmarks never block a PR: a build or measurement failure (a baseline without tracked
+       benchmarks, say) marks the stage unstable and leaves the build result alone. */
+    catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE', catchInterruptions: false) {
+      try {
+        // Temporary suite test: unstable has no tracked benchmarks; compare two builds of this SHA.
+        sh 'sh tools/benchmarks/test-compare-benchmarks.sh'
+      } finally {
+        archiveArtifacts artifacts: 'benchmark-results/**', allowEmptyArchive: true
+      }
+    }
+  }
+}
+
+/* Post comparison.md as a new comment on the PR after every benchmark run. */
+def postBenchmarkComment = {
+  stage('benchmark comment') {
+    withCredentials([usernamePassword(credentialsId: 'github-jenkins',
+                                      usernameVariable: 'GH_USER', passwordVariable: 'GH_TOKEN')]) {
+      sh 'gh pr comment "$CHANGE_ID" --repo TRIQS/nda --body-file benchmark-results/comparison.md'
     }
   }
 }
@@ -171,8 +185,8 @@ catchError(catchInterruptions: false) {
   // Temporarily build and run tests only on ubuntu-gcc.
   parallel platforms.subMap(['ubuntu-gcc'])
 
-  if (currentBuild.currentResult == 'SUCCESS' && env.CHANGE_ID && env.CHANGE_TARGET == 'unstable') {
-    timeout(time: 4, unit: 'HOURS') {
+  if (currentBuild.currentResult == 'SUCCESS' && env.CHANGE_ID) {
+    timeout(time: 1, unit: 'HOURS') {
       // The GCC image is ready after the build matrix; reserve a new node for benchmarks.
       // Hyperthreading is disabled on the benchmark node, so each CPU is a distinct physical core.
       runPod(tag: 'ubuntu-gcc', cpus: 24, memory: '64Gi', exclusive: true) {
@@ -180,6 +194,8 @@ catchError(catchInterruptions: false) {
         withEnv(['BENCHMARK_WORKERS=20']) {
           runBenchmarkTest()
         }
+        if (fileExists('benchmark-results/comparison.md'))
+          postBenchmarkComment()
       }
     }
   }
