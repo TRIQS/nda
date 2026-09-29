@@ -145,8 +145,8 @@ def write_comparison_report(path, manifest, metadata):
     if extra:
         L += ['Also: ' + ', '.join(f'{n} {k}' for k, n in extra.items()) + '.', '']
     if differences := metadata.get('build_differences'):
-        L += ['**The two sides were configured differently**, so the speedups include the effect of these changes '
-              '(`benchmark_tracked` preset variables and resulting compiler flags):', '']
+        L += ['**The two sides were built differently**, so the speedups include the effect of these changes '
+              '(`benchmark_tracked` preset variables, resulting compiler flags, benchmark sources):', '']
         L += [f'- `{d["name"]}`: baseline {_fmt_setting(d["baseline"])}, candidate {_fmt_setting(d["candidate"])}' for d in differences] + ['']
     L += [f'Speedup = candidate speed / baseline speed, median over rounds ± its standard error. A signal needs a change beyond {floor:g}% of the baseline at a '
           f'one-sided false-positive rate of {100 * settings["alpha"]:g}%. Signals do not fail CI.', '']
@@ -176,7 +176,7 @@ def write_comparison_report(path, manifest, metadata):
                   CASE_COLS + [_case_row(c) for c in by_verdict])
 
     method = [
-        f'- Each revision is built with its own `benchmark_tracked` preset and the candidate\'s benchmark harness (see Environment), and each tracked benchmark case is measured on one pinned physical core, '
+        f'- Each revision builds its own tracked benchmarks with its own `benchmark_tracked` preset (see Environment); each case present on both sides is measured on one pinned physical core, '
         f'with both sides launched as separate processes in **{settings["rounds"]} alternating rounds** (candidate first in odd rounds, baseline first in even rounds).',
         f'- Each launch runs Google Benchmark with a {settings["min_warmup_time"]} s in-process warm-up (discarded) and then times the case for at least '
         f'`{settings["min_time"]}`; with {settings["repetitions"]} repetition(s) per launch the {settings["repetition_statistic"]} CPU time is the launch\'s value. '

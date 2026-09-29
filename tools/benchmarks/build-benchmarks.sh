@@ -10,6 +10,6 @@ build=$2
 cmake --preset benchmark_tracked -S "$source" -B "$build" -DCMAKE_INSTALL_PREFIX="$build/install"
 set --
 for file in "$source"/benchmarks/tracked/*.cpp; do
-  set -- "$@" "$(basename "$file" .cpp)"
+  [ -e "$file" ] && set -- "$@" "$(basename "$file" .cpp)"
 done
-cmake --build "$build" --parallel "$(nproc)" --target "$@"
+[ $# -eq 0 ] || cmake --build "$build" --parallel "$(nproc)" --target "$@"

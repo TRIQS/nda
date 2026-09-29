@@ -8,11 +8,10 @@ import rules
 def check_comparable(baseline, candidate):
     """Raise when the two builds cannot be compared, else return how their configurations differ.
 
-    Each side is configured with its own benchmark_tracked preset, so a changed preset or
-    compiler flag is part of the comparison, like a changed dependency pin; the report lists it.
+    Each side builds its own tracked benchmarks with its own benchmark_tracked preset, so a changed
+    benchmark source, preset or compiler flag is part of the comparison, like a changed dependency
+    pin; the report lists it.
     """
-    if baseline['harness_sha256'] != candidate['harness_sha256']:
-        raise ValueError('The two builds have different harness_sha256')
     for key in ('vendor', 'version'):
         if baseline['compiler'][key] != candidate['compiler'][key]:
             raise ValueError(f'The two builds have different compiler {key}')
@@ -22,6 +21,9 @@ def check_comparable(baseline, candidate):
     flags = baseline['compiler']['effective_flags'], candidate['compiler']['effective_flags']
     if flags[0] != flags[1]:
         differences.append({'name': 'effective compiler flags', 'baseline': flags[0], 'candidate': flags[1]})
+    if baseline['harness_sha256'] != candidate['harness_sha256']:
+        differences.append({'name': 'benchmark sources (benchmarks/tracked, sha256)',
+                            'baseline': baseline['harness_sha256'][:12], 'candidate': candidate['harness_sha256'][:12]})
     return differences
 
 
