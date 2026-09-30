@@ -12,7 +12,7 @@ def gpuPod = [gpus: 1, gpuType: 'a100']
 def keepInstall = false // disabled on jenkins-new: !env.BRANCH_NAME.startsWith("PR-")
 
 properties([
-  disableConcurrentBuilds(),
+  disableConcurrentBuilds(abortPrevious: true),
   buildDiscarder(logRotator(numToKeepStr: '10', daysToKeepStr: '30')),
   pipelineTriggers(keepInstall ? [
     upstream(
@@ -100,7 +100,7 @@ def runBuild = { String platform, String prefix, List<String> envs ->
         cmake $WORKSPACE -DCMAKE_INSTALL_PREFIX=$installDir $args
         make -j\$PARALLEL || make -j1 VERBOSE=1
       """
-      catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+      catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE', catchInterruptions: false) {
         try {
           sh "make test CTEST_OUTPUT_ON_FAILURE=1"
         } catch (exc) {
@@ -109,6 +109,40 @@ def runBuild = { String platform, String prefix, List<String> envs ->
         }
       }
       sh "make install"
+    }
+  }
+}
+
+def runBenchmarkTest = {
+  stage('benchmark test') {
+    dir('benchmark-results') {
+      deleteDir()
+    }
+    /* Benchmarks never block a PR: a build or measurement failure (a baseline without tracked
+       benchmarks, say) marks the stage unstable and leaves the build result alone. */
+    catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE', catchInterruptions: false) {
+      try {
+        // Temporary suite test: unstable has no tracked benchmarks; compare two builds of this SHA.
+        sh 'sh tools/benchmarks/test-compare-benchmarks.sh'
+        sh 'python3 tools/benchmarks/charts.py benchmark-results'
+      } finally {
+        archiveArtifacts artifacts: 'benchmark-results/**', allowEmptyArchive: true
+      }
+    }
+  }
+}
+
+/* Post comparison.md and charts.md (if drawn) as two PR comments, edited on later runs.
+   The images live on refs/benchmarks/pr-<n> (latest run only), as finufft's plots do. */
+def postBenchmarkComment = {
+  stage('benchmark comment') {
+    withCredentials([usernamePassword(credentialsId: 'github-jenkins',
+                                      usernameVariable: 'GH_USER', passwordVariable: 'GH_TOKEN')]) {
+      sh 'sh tools/benchmarks/post-comment.sh comparison benchmark-results/comparison.md'
+      if (fileExists('benchmark-results/charts.md')) {
+        sh 'sh tools/benchmarks/push-charts.sh benchmark-results'
+        sh 'sh tools/benchmarks/post-comment.sh charts benchmark-results/charts.md'
+      }
     }
   }
 }
@@ -153,8 +187,24 @@ for (int i = 0; i < macosPlatforms.size(); i++) {
 }
 
 /****************** wrap-up */
-catchError {
-  parallel platforms
+catchError(catchInterruptions: false) {
+  // Temporarily build and run tests only on ubuntu-gcc.
+  parallel platforms.subMap(['ubuntu-gcc'])
+
+  if (currentBuild.currentResult == 'SUCCESS' && env.CHANGE_ID) {
+    timeout(time: 1, unit: 'HOURS') {
+      // The GCC image is ready after the build matrix; reserve a new node for benchmarks.
+      // Hyperthreading is disabled on the benchmark node, so each CPU is a distinct physical core.
+      runPod(tag: 'ubuntu-gcc', cpus: 24, memory: '64Gi', exclusive: true) {
+        checkout scm
+        withEnv(['BENCHMARK_WORKERS=20']) {
+          runBenchmarkTest()
+        }
+        if (fileExists('benchmark-results/comparison.md'))
+          postBenchmarkComment()
+      }
+    }
+  }
 
   if (keepInstall) {
     /* Publish results */
