@@ -7,7 +7,8 @@ set -eu
 source=$1
 build=$2
 
-cmake --preset benchmark_tracked -S "$source" -B "$build" -DCMAKE_INSTALL_PREFIX="$build/install"
+# compile_commands.json lets compare.py record the flags the benchmarks were really compiled with.
+cmake --preset benchmark_tracked -S "$source" -B "$build" -DCMAKE_INSTALL_PREFIX="$build/install" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 set --
 for file in "$source"/benchmarks/tracked/*.cpp; do
   [ -e "$file" ] && set -- "$@" "$(basename "$file" .cpp)"

@@ -20,10 +20,21 @@ def check_comparable(baseline, candidate):
                    for name in sorted(presets[0].keys() | presets[1].keys()) if presets[0].get(name) != presets[1].get(name)]
     flags = baseline['compiler']['effective_flags'], candidate['compiler']['effective_flags']
     if flags[0] != flags[1]:
-        differences.append({'name': 'effective compiler flags', 'baseline': flags[0], 'candidate': flags[1]})
+        differences.append({'name': 'compiler flags', 'baseline': flags[0], 'candidate': flags[1]})
+    defines = [set(side['compiler']['defines']) for side in (baseline, candidate)]
+    if defines[0] != defines[1]:
+        differences.append({'name': 'compile definitions', 'baseline': ' '.join(sorted(defines[0] - defines[1])) or None,
+                            'candidate': ' '.join(sorted(defines[1] - defines[0])) or None})
     if baseline['harness_sha256'] != candidate['harness_sha256']:
-        differences.append({'name': 'benchmark sources (benchmarks/tracked, sha256)',
-                            'baseline': baseline['harness_sha256'][:12], 'candidate': candidate['harness_sha256'][:12]})
+        files = baseline['harness_files'], candidate['harness_files']
+        short = lambda f: f.removeprefix('benchmarks/tracked/')
+        parts = []
+        for label, names in (('changed', [f for f in files[0] if f in files[1] and files[0][f] != files[1][f]]),
+                             ('only in baseline', [f for f in files[0] if f not in files[1]]),
+                             ('only in candidate', [f for f in files[1] if f not in files[0]])):
+            if names:
+                parts.append(f'{label} {", ".join(short(f) for f in sorted(names))}')
+        differences.append({'name': 'benchmark sources', 'detail': '; '.join(parts)})
     return differences
 
 
@@ -38,9 +49,6 @@ def analyze(rounds, expected_rounds, alpha, min_improvement, max_noise):
     baseline = [pair['samples']['baseline']['cpu_time_ns'] for pair in rounds]
     candidate = [pair['samples']['candidate']['cpu_time_ns'] for pair in rounds]
     ratios = [b / c for b, c in zip(baseline, candidate)]
-    # One estimate, in the measured unit; the percentage is derived from it. A median of
-    # six averages the middle pair, and mean(1/x) != 1/mean(x), so a separately computed
-    # median of the changes would disagree with this one.
     ratio = statistics.median(ratios)
     noise = {'baseline': rules.noise_percent(baseline), 'candidate': rules.noise_percent(candidate)}
     if max(noise.values()) > max_noise:

@@ -34,12 +34,12 @@ def worker_placements(workers: int) -> list[dict]:
         core = tuple(int((root / "topology" / key).read_text())
                      for key in ("physical_package_id", "core_id"))
         node = int(next(root.glob("node[0-9]*")).name[4:])
-        if core in seen or node not in memory_nodes:
+        if core in seen or node not in memory_nodes:  # one CPU per physical core, with local memory
             continue
         seen.add(core)
         by_node.setdefault(node, []).append(cpu)
 
-    # Round-robin nodes; never assign two SMT siblings to different workers.
+    # Round-robin over the nodes.
     queues = []
     for node in sorted(by_node):
         queue = []

@@ -1,4 +1,4 @@
-"""Google Benchmark discovery, execution, and timing units."""
+"""Google Benchmark discovery, execution, case names, and timing units."""
 
 from __future__ import annotations
 
@@ -78,6 +78,38 @@ def execute(binary, *, prefix, pattern, repetitions, min_time, min_warmup_time, 
         log_output(log_label, f"Command: {shlex.join(command)}\nStarted: {result['started_at']}\n"
                    f"Finished: {result['finished_at']}\n{diagnostics}")
         return result
+
+
+# The C++ type behind each value-type tag of nda_bench::type_tag (benchmarks/tracked/bench_inputs.hpp). The order is
+# the one reports and charts use; a tag missing here still works, shown under its tag after the listed ones.
+VALUE_TYPES = {'f64': 'double', 'c128': 'complex<double>', 'f32': 'float', 'c64': 'complex<float>'}
+
+
+def value_type_label(tag):
+    """'double (f64)' for a listed tag, the tag itself otherwise."""
+    return f'{VALUE_TYPES[tag]} ({tag})' if tag in VALUE_TYPES else tag
+
+
+def value_type_key(tag):
+    """Sort key: the order of VALUE_TYPES, then unlisted tags alphabetically."""
+    return (list(VALUE_TYPES).index(tag), '') if tag in VALUE_TYPES else (len(VALUE_TYPES), tag)
+
+
+def case_factors(suite, name):
+    """Attributes parsed from a case's suite and name, e.g. ('ops_arithmetic', 'c128/A2_C_layout,S/mul/64')."""
+    value_type, operands, op, size = name.split('/')
+    kinds = operands.split(',')
+    return {
+        'suite': suite.removeprefix('ops_'),  # arithmetic, mapped, reductions, math: the operation class
+        'op': op,
+        'value_type': value_type,
+        'N': int(size),
+        # short form for the chart titles, e.g. 'M2 sliced, M2 sliced' (charts.md explains 'sliced')
+        'operands': operands.replace('_C_layout', '').replace('.slice(axis=0,start=0,step=2)', ' sliced').replace(',', ', '),
+        'matrix': any(k.startswith(('M2', 'V1')) for k in kinds),
+        'scalar': 'S' in kinds,
+        'strided': 'slice' in operands,
+    }
 
 
 def case_counts(names):

@@ -166,7 +166,7 @@ def main(argv=None):
         checkpoint_lock = threading.Lock()
 
         def checkpoint(case):
-            # Only finished cases enter the manifest; serialize shared context and file updates.
+            # Replace the case's placeholder; one worker at a time.
             with checkpoint_lock:
                 context_added = False
                 for samples in [case['warmups']] + [pair['samples'] for pair in case['rounds']]:

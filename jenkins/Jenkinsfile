@@ -124,6 +124,7 @@ def runBenchmarkTest = {
       try {
         // Temporary suite test: unstable has no tracked benchmarks; compare two builds of this SHA.
         sh 'sh tools/benchmarks/test-compare-benchmarks.sh'
+        sh 'python3 tools/benchmarks/charts.py benchmark-results'
       } finally {
         archiveArtifacts artifacts: 'benchmark-results/**', allowEmptyArchive: true
       }
@@ -131,12 +132,17 @@ def runBenchmarkTest = {
   }
 }
 
-/* Post comparison.md as a new comment on the PR after every benchmark run. */
+/* Post comparison.md and charts.md (if drawn) as two PR comments, edited on later runs.
+   The images live on refs/benchmarks/pr-<n> (latest run only), as finufft's plots do. */
 def postBenchmarkComment = {
   stage('benchmark comment') {
     withCredentials([usernamePassword(credentialsId: 'github-jenkins',
                                       usernameVariable: 'GH_USER', passwordVariable: 'GH_TOKEN')]) {
-      sh 'gh pr comment "$CHANGE_ID" --repo TRIQS/nda --body-file benchmark-results/comparison.md'
+      sh 'sh tools/benchmarks/post-comment.sh comparison benchmark-results/comparison.md'
+      if (fileExists('benchmark-results/charts.md')) {
+        sh 'sh tools/benchmarks/push-charts.sh benchmark-results'
+        sh 'sh tools/benchmarks/post-comment.sh charts benchmark-results/charts.md'
+      }
     }
   }
 }

@@ -19,7 +19,9 @@
 #include <utility>
 
 namespace nda_bench {
-  // Tag used in the benchmark name.
+  // Tag used in the benchmark name. The Python tools read it back from the case names: a new tag
+  // also needs its C++ type in VALUE_TYPES in tools/benchmarks/common.py (the report's groupings
+  // and the charts' legend name value types by it).
   template <typename ValueType>
   consteval std::string_view type_tag() {
     if constexpr (std::same_as<ValueType, float>) {
