@@ -80,6 +80,19 @@ def execute(binary, *, prefix, pattern, repetitions, min_time, min_warmup_time, 
         return result
 
 
+def measure(binary, name, prefix, label, min_time, min_warmup_time, repetitions, log_output):
+    """One launch of one case: execute() with the name as an anchored filter, plus 'cpu_time_ns', the minimum
+    CPU time per iteration over the launch's repetitions, when the launch succeeded."""
+    result = execute(
+        binary, prefix=prefix, pattern=f'^{re.escape(name)}$', repetitions=repetitions,
+        min_time=min_time, min_warmup_time=min_warmup_time,
+        log_output=log_output, log_label=f'{binary.name}: {name}: {label}')
+    if 'benchmark' in result:
+        result['cpu_time_ns'] = min(row['cpu_time'] * NANOSECONDS[row['time_unit']]
+                                    for row in result['benchmark']['benchmarks'] if row['run_type'] == 'iteration')
+    return result
+
+
 # The C++ type behind each value-type tag of nda_bench::type_tag (benchmarks/tracked/bench_inputs.hpp). The order is
 # the one reports and charts use; a tag missing here still works, shown under its tag after the listed ones.
 VALUE_TYPES = {'f64': 'double', 'c128': 'complex<double>', 'f32': 'float', 'c64': 'complex<float>'}
@@ -104,7 +117,7 @@ def case_factors(suite, name):
         'op': op,
         'value_type': value_type,
         'N': int(size),
-        # short form for the chart titles, e.g. 'M2 sliced, M2 sliced' (charts.md explains 'sliced')
+        # short form for the chart titles, e.g. 'M2 sliced, M2 sliced'
         'operands': operands.replace('_C_layout', '').replace('.slice(axis=0,start=0,step=2)', ' sliced').replace(',', ', '),
         'matrix': any(k.startswith(('M2', 'V1')) for k in kinds),
         'scalar': 'S' in kinds,

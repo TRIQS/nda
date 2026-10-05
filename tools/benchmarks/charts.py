@@ -135,8 +135,6 @@ def main(argv=None):
     page = [f'## Benchmark charts: candidate {candidate} vs baseline {baseline}', '',
             'Median speedup (baseline time / candidate time) per value type and size N, ± standard error; '
             f'grey band = no change (within {100 * floor:g}%).', '']
-    if any('sliced' in operands for cases in suites.values() for _, operands, _, _ in cases):
-        page += ['"sliced" = a view of every 2nd row of the matrix.', '']
     for suite, cases in sorted(suites.items()):
         path = results / f'benchmark-{suite}.png'
         draw_suite(path, suite, cases, styles, title, floor)

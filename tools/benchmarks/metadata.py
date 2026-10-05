@@ -147,9 +147,9 @@ def linked_libraries(build_dir: Path) -> dict:
     return {name: resolved[name] for name in needed if not TOOLCHAIN_LIBRARIES.match(name)}
 
 
-def describe_build(build):
-    cache = read_cmake_cache(build)
-    source = Path(cache['CMAKE_HOME_DIRECTORY'])
+def harness_digest(source: Path) -> tuple[str, dict]:
+    """sha256 over the benchmark harness of a source tree (benchmarks/tracked/*.hpp, *.cpp and benchmarks/CMakeLists.txt,
+    paths and contents) and the per-file short digests that name what differs between two trees."""
     harness = sorted((source / 'benchmarks/tracked').glob('*.hpp'))
     harness += sorted((source / 'benchmarks/tracked').glob('*.cpp'))
     harness += [source / 'benchmarks/CMakeLists.txt']
@@ -159,13 +159,20 @@ def describe_build(build):
         digest.update(str(path.relative_to(source)).encode() + b'\0')
         digest.update(path.read_bytes() + b'\0')
         files[str(path.relative_to(source))] = hashlib.sha256(path.read_bytes()).hexdigest()[:12]
+    return digest.hexdigest(), files
+
+
+def describe_build(build):
+    cache = read_cmake_cache(build)
+    source = Path(cache['CMAKE_HOME_DIRECTORY'])
+    digest, files = harness_digest(source)
     return {
         'build': str(build), 'bindir': str(build / 'benchmarks/tracked'),
         'compiler': describe_compiler(build, cache),
         'provenance': describe_provenance(source, build),
         'linked_libraries': linked_libraries(build),
-        'harness_sha256': digest.hexdigest(),
-        'harness_files': files,  # per-file digests, to name what differs between two builds
+        'harness_sha256': digest,
+        'harness_files': files,
         'preset': read_preset(source),
     }
 

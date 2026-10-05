@@ -8,7 +8,6 @@ from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 import math
 from pathlib import Path
-import re
 import subprocess
 import sys
 import threading
@@ -20,17 +19,6 @@ import metadata
 import placement
 import reporting
 import rules
-
-
-def measure(binary, name, prefix, label, min_time, min_warmup_time, repetitions, log_output):
-    result = common.execute(
-        binary, prefix=prefix, pattern=f'^{re.escape(name)}$', repetitions=repetitions,
-        min_time=min_time, min_warmup_time=min_warmup_time,
-        log_output=log_output, log_label=f'{binary.name}: {name}: {label}')
-    if 'benchmark' in result:
-        result['cpu_time_ns'] = min(row['cpu_time'] * common.NANOSECONDS[row['time_unit']]
-                                    for row in result['benchmark']['benchmarks'] if row['run_type'] == 'iteration')
-    return result
 
 
 def attempt_rounds(rounds, factor, number):
@@ -48,8 +36,8 @@ def compare_case(key, binaries, worker, args, log_output):
                   'warmups': {}, 'rounds': [], 'analysis': {'status': 'incomplete'}}
 
         def invoke(side, label):
-            return measure(binaries[side][key], name, worker['pin_command'], f'attempt-{number}-{label}',
-                           args.min_time, args.min_warmup_time, args.repetitions, log_output)
+            return common.measure(binaries[side][key], name, worker['pin_command'], f'attempt-{number}-{label}',
+                                  args.min_time, args.min_warmup_time, args.repetitions, log_output)
 
         for side in ('candidate', 'baseline'):
             result['warmups'][side] = invoke(side, f'warmup-{side}')

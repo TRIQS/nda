@@ -21,8 +21,9 @@ def unpinned_workers(workers: int) -> list[dict]:
     return [{"cpu": None, "numa_node": None, "pin_command": [], "scaling_governor": None} for _ in range(workers)]
 
 
-def worker_placements(workers: int) -> list[dict]:
-    allowed = re.search(r"^Mems_allowed_list:\s*(.+)$", Path("/proc/self/status").read_text(), re.MULTILINE)[1]
+def worker_placements(workers: int | None = None) -> list[dict]:
+    """One pinned worker per distinct allowed physical core with local memory, at most workers of them (None: all)."""
+    allowed =re.search(r"^Mems_allowed_list:\s*(.+)$", Path("/proc/self/status").read_text(), re.MULTILINE)[1]
     memory_nodes = set()
     for part in allowed.split(","):
         lo, _, hi = part.partition("-")
@@ -51,7 +52,9 @@ def worker_placements(workers: int) -> list[dict]:
         for pair in column:
             if pair:  # zip_longest pads the shorter queues with None
                 order.append(pair)
-    if len(order) < workers:
+    if workers is None:
+        workers = len(order)
+    elif len(order) < workers:
         print(f"warning: only {len(order)} distinct allowed physical cores with local memory; "
               f"using {len(order)} pinned workers instead of {workers}", file=sys.stderr)
     return [{"cpu": cpu, "numa_node": node, "pin_command": ["numactl", f"--physcpubind={cpu}", f"--membind={node}"],
