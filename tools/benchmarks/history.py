@@ -131,7 +131,7 @@ def measure_case(key, binaries, worker, args, log_output):
 
     def compare(baseline, candidate):  # the two-sided view analysis.analyze expects, paired within each round
         pairs = [{'samples': {'baseline': r['samples'][baseline], 'candidate': r['samples'][candidate]}} for r in result['rounds']]
-        return analysis.analyze(pairs, args.rounds, args.alpha, args.min_improvement, args.max_noise)
+        return analysis.analyze(pairs, args.rounds, args.alpha, args.min_improvement, args.max_noise, args.outlier_sigma)
 
     times = {sha: [r['samples'][sha].get('cpu_time_ns') for r in result['rounds']] for sha in launched}
     measured = [sha for sha in launched if None not in times[sha]]
@@ -177,11 +177,13 @@ def main(argv=None):
     parser.add_argument('--alpha', type=float, default=rules.DEFAULT_ALPHA, help='one-sided false-positive rate of the paired tests')
     parser.add_argument('--min-improvement', type=float, default=rules.DEFAULT_MIN_IMPROVEMENT, help='percent change a signal needs')
     parser.add_argument('--max-noise', type=float, default=rules.DEFAULT_MAX_NOISE, help='cv percent above which a commit is too noisy')
+    parser.add_argument('--outlier-sigma', type=float, default=rules.DEFAULT_OUTLIER_SIGMA,
+                        help='drop rounds this many robust sigmas from a commit\'s median (0: keep all)')
     parser.add_argument('--outdir', type=Path, help='results directory (default: history-results/<start>..<end>)')
     args = parser.parse_args(argv)
     if args.rounds < 2 or args.rounds % 2:
         parser.error('--rounds must be even and at least 2')
-    rules.check_parameters(args.alpha, args.min_improvement)
+    rules.check_parameters(args.alpha, args.min_improvement, args.outlier_sigma)
 
     commits = commit_range(args.start, args.end)
     outdir = (args.outdir or Path('history-results') / f'{commits[0]["short"]}..{commits[-1]["short"]}').resolve()
@@ -193,7 +195,8 @@ def main(argv=None):
 
     settings = {'repetitions': 1, 'min_time': args.min_time, 'min_warmup_time': args.min_warmup_time, 'filter': args.filter,
                 'rounds': args.rounds, 'repetition_statistic': 'min', 'warmup_invocations_per_commit': 1,
-                'alpha': args.alpha, 'min_improvement_percent': args.min_improvement, 'max_noise_percent': args.max_noise}
+                'alpha': args.alpha, 'min_improvement_percent': args.min_improvement, 'max_noise_percent': args.max_noise,
+                'outlier_sigma': args.outlier_sigma}
     document = metadata.create_metadata(settings)
     history = {'range': {'start': commits[0]['sha'], 'end': commits[-1]['sha']},
                'commits': commits, 'settings': settings, 'cases': []}

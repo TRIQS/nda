@@ -7,7 +7,7 @@ noise gate live in analysis.py.
 
 Run as a script to re-score an existing comparison.json with other parameters:
 
-    python3 rules.py --alpha 0.001 --min-improvement 5 --max-noise 20 path/to/comparison.json
+    python3 rules.py --alpha 0.001 --min-improvement 5 --max-noise 20 --outlier-sigma 10 path/to/comparison.json
 """
 
 from __future__ import annotations
@@ -26,6 +26,7 @@ STATUSES = ('inconclusive', 'regression_signal', 'improvement_signal', 'too_nois
 DEFAULT_ALPHA = 0.001
 DEFAULT_MIN_IMPROVEMENT = 5.0
 DEFAULT_MAX_NOISE = 20.0
+DEFAULT_OUTLIER_SIGMA = 10.0
 
 
 def noise_percent(values):
@@ -33,12 +34,14 @@ def noise_percent(values):
     return 100 * statistics.stdev(values) / statistics.mean(values)
 
 
-def check_parameters(alpha, min_improvement):
+def check_parameters(alpha, min_improvement, outlier_sigma=0.0):
     """Reject the parameters that would give wrong verdicts instead of an error."""
     if not 0 < alpha < 0.5:
         raise ValueError('alpha must be a one-sided false-positive rate strictly between 0 and 0.5')
     if not min_improvement >= 0:
         raise ValueError('min_improvement must be nonnegative')
+    if not outlier_sigma >= 0:
+        raise ValueError('outlier_sigma must be nonnegative')
 
 
 def paired_t(baseline, candidate, alpha=DEFAULT_ALPHA, min_improvement=DEFAULT_MIN_IMPROVEMENT):
@@ -85,21 +88,25 @@ def main(argv=None):
                         help='required change as a percentage of the baseline mean before a signal')
     parser.add_argument('--max-noise', type=float, default=DEFAULT_MAX_NOISE,
                         help='a side whose per-round cv exceeds this percentage makes the case too_noisy')
+    parser.add_argument('--outlier-sigma', type=float, default=DEFAULT_OUTLIER_SIGMA,
+                        help='drop rounds this many robust sigmas from a side\'s median (0: keep all)')
     parser.add_argument('--list', action='store_true', help='print every case that is not inconclusive')
     args = parser.parse_args(argv)
-    check_parameters(args.alpha, args.min_improvement)
+    check_parameters(args.alpha, args.min_improvement, args.outlier_sigma)
     manifest = json.loads(args.comparison.read_text())
     counts, listed = Counter(), []
     for case in manifest['cases']:
         if case['analysis']['status'] in ('added', 'removed', 'incomplete'):
             counts[case['analysis']['status']] += 1
             continue
-        verdict = analysis.analyze(case['rounds'], len(case['rounds']), args.alpha, args.min_improvement, args.max_noise)
+        verdict = analysis.analyze(case['rounds'], len(case['rounds']), args.alpha, args.min_improvement, args.max_noise,
+                                   args.outlier_sigma)
         counts[verdict['status']] += 1
         if verdict['status'] != 'inconclusive':
             listed.append((case['suite'], case['name'], verdict))
     print(f'paired_t alpha={100 * args.alpha:g}% min_improvement={args.min_improvement:g}% '
-          f'max_noise={args.max_noise:g}%: ' + ', '.join(f'{n} {status}' for status, n in sorted(counts.items())))
+          f'max_noise={args.max_noise:g}% outlier_sigma={args.outlier_sigma:g}: '
+          + ', '.join(f'{n} {status}' for status, n in sorted(counts.items())))
     if args.list:
         for suite, name, verdict in listed:
             t_statistic = verdict['verdict'].get('t_statistic')

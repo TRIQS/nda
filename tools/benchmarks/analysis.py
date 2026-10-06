@@ -4,6 +4,8 @@ import statistics
 
 import rules
 
+MAD_TO_SIGMA = 1.4826  # 1 / Phi^-1(0.75): scales the MAD to the standard deviation for normal data
+
 
 def check_comparable(baseline, candidate):
     """Raise when the two builds cannot be compared, else return how their configurations differ.
@@ -38,14 +40,35 @@ def check_comparable(baseline, candidate):
     return differences
 
 
-def analyze(rounds, expected_rounds, alpha, min_improvement, max_noise):
+def outlier_rounds(rounds, sigma):
+    """Indices of rounds where either side is sigma robust sigmas (MAD-based) from its median.
+
+    None when sigma is 0, a side's MAD is 0, or more than half the rounds would go.
+    """
+    if not sigma:
+        return []
+    bad = set()
+    for side in ('baseline', 'candidate'):
+        times = [pair['samples'][side]['cpu_time_ns'] for pair in rounds]
+        median = statistics.median(times)
+        spread = MAD_TO_SIGMA * statistics.median(abs(t - median) for t in times)
+        if spread:
+            bad |= {i for i, t in enumerate(times) if abs(t - median) >= sigma * spread}
+    return sorted(bad) if 2 * len(bad) <= len(rounds) else []
+
+
+def analyze(rounds, expected_rounds, alpha, min_improvement, max_noise, outlier_sigma=0.0):
     """Descriptive paired statistics plus the status decided by rules.paired_t.
 
+    Outlier rounds (see outlier_rounds) are left out and listed in 'dropped_rounds'.
     A side whose per-round coefficient of variation exceeds max_noise percent makes the
     case too_noisy before the test runs: the launches disagree too much to decide either way.
     """
     if len(rounds) != expected_rounds or any(sample.get('error') for pair in rounds for sample in pair['samples'].values()):
         return {'status': 'incomplete'}
+    dropped = outlier_rounds(rounds, outlier_sigma)
+    dropped_rounds = [rounds[i].get('round', i + 1) for i in dropped]
+    rounds = [pair for i, pair in enumerate(rounds) if i not in dropped]
     baseline = [pair['samples']['baseline']['cpu_time_ns'] for pair in rounds]
     candidate = [pair['samples']['candidate']['cpu_time_ns'] for pair in rounds]
     ratios = [b / c for b, c in zip(baseline, candidate)]
@@ -64,5 +87,6 @@ def analyze(rounds, expected_rounds, alpha, min_improvement, max_noise):
         'baseline_median_ns': statistics.median(baseline),
         'candidate_median_ns': statistics.median(candidate),
         'noise_percent': noise,
+        'dropped_rounds': dropped_rounds,
         'verdict': verdict,
     }

@@ -42,8 +42,9 @@ def speedups(manifest):
     for case in manifest['cases']:
         if 'median_ratio' not in case['analysis']:  # incomplete, added or removed: nothing to draw
             continue
+        dropped = set(case['analysis'].get('dropped_rounds', ()))  # outlier rounds
         logs = [math.log(r['samples']['baseline']['cpu_time_ns'] / r['samples']['candidate']['cpu_time_ns'])
-                for r in case['rounds']]
+                for r in case['rounds'] if r['round'] not in dropped]
         f = common.case_factors(case['suite'], case['name'])
         suites.setdefault(f['suite'], {})[(f['op'], f['operands'], f['value_type'], f['N'])] = (
             case['analysis']['median_ratio'], statistics.stdev(logs) / math.sqrt(len(logs)))

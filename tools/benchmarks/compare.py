@@ -51,7 +51,7 @@ def compare_case(key, binaries, worker, args, log_output):
                 if any(sample.get('error') for sample in pair['samples'].values()):
                     break
         result['analysis'] = analysis.analyze(result['rounds'], rounds, args.alpha,
-                                              args.min_improvement, args.max_noise)
+                                              args.min_improvement, args.max_noise, args.outlier_sigma)
         return result
 
     # A too_noisy attempt is measured again from its warmups, with retry_factor times more rounds;
@@ -86,6 +86,8 @@ def main(argv=None):
                         help='required change as a percentage of the baseline mean before a signal')
     parser.add_argument('--max-noise', type=float, default=rules.DEFAULT_MAX_NOISE,
                         help='a side whose per-round cv exceeds this percentage makes the case too_noisy')
+    parser.add_argument('--outlier-sigma', type=float, default=rules.DEFAULT_OUTLIER_SIGMA,
+                        help='drop rounds this many robust sigmas from a side\'s median (default: %(default)g; 0: keep all)')
     parser.add_argument('--max-retries', type=int, default=0,
                         help='measure a too_noisy case again, warmups included, up to this many times')
     parser.add_argument('--retry-factor', type=float, default=1.0,
@@ -95,7 +97,7 @@ def main(argv=None):
         parser.error('--rounds must be positive and even (default: 6)')
     if args.workers < 1:
         parser.error('--workers must be positive')
-    rules.check_parameters(args.alpha, args.min_improvement)
+    rules.check_parameters(args.alpha, args.min_improvement, args.outlier_sigma)
     args.outdir = args.outdir.resolve()
     args.outdir.mkdir(parents=True, exist_ok=True)
     manifest_path = args.outdir / 'comparison.json'
@@ -108,6 +110,7 @@ def main(argv=None):
         'workers': args.workers, 'rounds': args.rounds, 'repetition_statistic': 'min',
         'warmup_invocations_per_side': 1, 'alpha': args.alpha,
         'min_improvement_percent': args.min_improvement, 'max_noise_percent': args.max_noise,
+        'outlier_sigma': args.outlier_sigma,
         'max_retries': args.max_retries, 'retry_factor': args.retry_factor,
         'retry_rounds': [attempt_rounds(args.rounds, args.retry_factor, n) for n in range(1, args.max_retries + 2)],
     })

@@ -40,7 +40,9 @@ def _speedup(case):
     analysis = case['analysis']
     if 'median_ratio' not in analysis:
         return None
-    logs = [math.log(r['samples']['baseline']['cpu_time_ns'] / r['samples']['candidate']['cpu_time_ns']) for r in case['rounds']]
+    dropped = set(analysis.get('dropped_rounds', ()))  # outlier rounds
+    logs = [math.log(r['samples']['baseline']['cpu_time_ns'] / r['samples']['candidate']['cpu_time_ns'])
+            for r in case['rounds'] if r['round'] not in dropped]
     speedup = analysis['median_ratio']
     pm = speedup * (math.exp(statistics.stdev(logs) / math.sqrt(len(logs))) - 1)
     return speedup, pm
@@ -174,6 +176,10 @@ def write_comparison_report(path, manifest, metadata):
               for d in differences] + ['']
     L += [f'Speedup = candidate speed / baseline speed, median over rounds ± its standard error. A signal needs a change beyond {floor:g}% of the baseline at a '
           f'one-sided false-positive rate of {100 * settings["alpha"]:g}%. Signals do not fail CI.', '']
+    if sigma := settings.get('outlier_sigma'):
+        hit = [c for c in measured if c['analysis'].get('dropped_rounds')]
+        L += [f'Outlier rounds (>= {sigma:g} robust sigmas) left out: '
+              f'{sum(len(c["analysis"]["dropped_rounds"]) for c in hit)} rounds in {len(hit)} cases.', '']
 
     # signals first, folded but with the counts in the summary line
     regressions = sorted(by_status['regression_signal'], key=lambda c: c['analysis']['median_ratio'])
@@ -207,6 +213,8 @@ def write_comparison_report(path, manifest, metadata):
         f'- A launch discards {settings["min_warmup_time"]} s of warm-up, then times the case for at least {settings["min_time"]}; '
         f'Google Benchmark\'s CPU time per iteration is the launch\'s value'
         + (f' (the minimum over {reps} repetitions)' if reps > 1 else '') + '. One extra warm-up launch per side is discarded.',
+    ] + ([f'- **Outlier rounds**: a round where either side is {settings["outlier_sigma"]:g} or more robust standard deviations '
+          '(1.4826 x median absolute deviation) from its median is left out.'] if settings.get('outlier_sigma') else []) + [
         f'- **Speedup** is the median over rounds of baseline time / candidate time.',
         f'- **Regression / improvement**: a paired t-test on the per-round differences finds the candidate slower / faster by more than '
         f'{floor:g}% of the baseline, one-sided at a {100 * settings["alpha"]:g}% false-positive rate.',

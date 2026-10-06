@@ -23,5 +23,5 @@ set --
 python3 "$WORKSPACE/tools/benchmarks/compare.py" \
   --baseline-build "$root/baseline-build" --candidate-build "$root/candidate-build" \
   --outdir "$WORKSPACE/benchmark-results" \
-  --workers "${BENCHMARK_WORKERS:?Set BENCHMARK_WORKERS}" --rounds 12 --alpha 0.001 --min-improvement 5 --max-noise 20 --max-retries 0 --min-warmup-time 0.1 \
+  --workers "${BENCHMARK_WORKERS:?Set BENCHMARK_WORKERS}" --rounds 12 --alpha 0.001 --min-improvement 5 --max-noise 20 --outlier-sigma 10 --max-retries 0 --min-warmup-time 0.1 \
   --repetitions 1 --min-time 0.2s "$@"
