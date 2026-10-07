@@ -7,6 +7,7 @@ import argparse
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 import math
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -70,15 +71,16 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--baseline-build', type=Path, required=True)
     parser.add_argument('--candidate-build', type=Path, required=True)
-    parser.add_argument('--outdir', type=Path, required=True)
-    parser.add_argument('--rounds', type=int, default=6)
+    parser.add_argument('--outdir', type=Path, default=Path('benchmark-results'))
+    parser.add_argument('--rounds', type=int, default=12)
     parser.add_argument('--repetitions', type=int, default=1,
                         help='Google Benchmark repetitions per invocation; use their minimum CPU time')
-    parser.add_argument('--min-time', default='0.1s')
-    parser.add_argument('--min-warmup-time', type=float, default=0.0,
+    parser.add_argument('--min-time', default='0.2s')
+    parser.add_argument('--min-warmup-time', type=float, default=0.1,
                         help='seconds of discarded warm-up inside each invocation before its first repetition')
     parser.add_argument('--filter')
-    parser.add_argument('--workers', type=int, required=True, help='number of cases measured in parallel on distinct cores')
+    parser.add_argument('--workers', type=int,
+                        help='number of cases measured in parallel on distinct cores (default: all physical cores)')
     parser.add_argument('--no-pin', action='store_true', help='disable CPU/NUMA pinning for local testing')
     parser.add_argument('--alpha', type=float, default=rules.DEFAULT_ALPHA,
                         help='one-sided false-positive rate per direction; the t cutoff follows from the degrees of freedom')
@@ -94,8 +96,8 @@ def main(argv=None):
                         help='each retry uses this many times the rounds of the previous attempt, rounded up to even')
     args = parser.parse_args(argv)
     if args.rounds < 2 or args.rounds % 2:
-        parser.error('--rounds must be positive and even (default: 6)')
-    if args.workers < 1:
+        parser.error('--rounds must be positive and even (default: 12)')
+    if args.workers is not None and args.workers < 1:
         parser.error('--workers must be positive')
     rules.check_parameters(args.alpha, args.min_improvement, args.outlier_sigma)
     args.outdir = args.outdir.resolve()
@@ -137,8 +139,9 @@ def main(argv=None):
             raise ValueError(f'No benchmark case is present in both builds (baseline build: {len(binaries["baseline"])} cases, '
                              f'candidate build: {len(binaries["candidate"])})')
         suites = sorted({suite for suite, _ in matched_cases})
-        workers = min(args.workers, len(matched_cases))
-        placements = placement.unpinned_workers(workers) if args.no_pin else placement.worker_placements(workers)
+        workers = args.workers and min(args.workers, len(matched_cases))  # None: one per physical core
+        placements = (placement.unpinned_workers(workers or min(os.cpu_count(), len(matched_cases))) if args.no_pin
+                      else placement.worker_placements(workers)[:len(matched_cases)])
         workers = len(placements)
         metadata.record_placements(document, placements)
         for suite in suites:
