@@ -18,9 +18,6 @@ GROUPINGS = [  # (title, key(factors), row order(factors) or None for most regre
     ('By suite (operation class)', lambda f: f['suite'], None),
     ('By operand kind', _operand, None),
     ('By size N', lambda f: f"N={f['N']}", lambda f: f['N']),
-    ('By value type and suite', lambda f: f"{f['value_type']} {f['suite']}", None),
-    ('By value type and size', lambda f: f"{f['value_type']} N={f['N']}", lambda f: (common.value_type_key(f['value_type']), f['N'])),
-    ('By suite and size', lambda f: f"{f['suite']} N={f['N']}", lambda f: (f['suite'], f['N'])),
 ]
 
 
@@ -56,18 +53,17 @@ def _fmt_speedup_pm(sp):
     return f'{speedup:.{digits}f}x ± {pm:.{digits}f}'
 
 
-STATUS_LABEL = {'regression_signal': 'regression', 'improvement_signal': 'improvement', 'inconclusive': 'no change',
-                'too_noisy': 'too noisy', 'incomplete': 'incomplete', 'added': 'added', 'removed': 'removed'}
-CASE_COLS = ['| Suite | Case | Speedup (candidate speed / baseline speed) | Status |', '|:--|:--|--:|:--|']
+CASE_COLS = ['| Suite | Case | Speedup (candidate speed / baseline speed) |', '|:--|:--|--:|']
+
+
+def _case_cells(case):
+    """Suite and case name for the tables, without the ops_ prefix and the layout tags."""
+    name = re.sub(r'_[A-Z]_layout', '', case['name']).replace('|', '\\|')
+    return f'| {case["suite"].removeprefix("ops_")} | {name} |'
 
 
 def _case_row(case):
-    analysis = case['analysis']
-    name = case['name'].replace('|', '\\|')
-    status = STATUS_LABEL[analysis['status']]
-    if analysis['status'] == 'too_noisy':
-        status += f', cv {max(analysis["noise_percent"].values()):.0f}%'
-    return f'| {case["suite"]} | {name} | {_fmt_speedup_pm(_speedup(case))} | {status} |'
+    return f'{_case_cells(case)} {_fmt_speedup_pm(_speedup(case))} |'
 
 
 REPOSITORY = 'https://github.com/TRIQS/nda'  # PR commits are shown under the target repository too
@@ -133,7 +129,7 @@ COMMENT_LIMIT = 65000  # GitHub's limit is 65,536; post-comment.sh adds a marker
 
 
 def write_comparison_report(path, manifest, metadata):
-    """comparison.md for the PR comment. 'All cases' is left out above COMMENT_LIMIT."""
+    """comparison.md for the PR comment. Above COMMENT_LIMIT the unchanged, then the improvements list is left out."""
     settings = metadata['settings']
     floor = settings['min_improvement_percent']
     # suite, then the name without its size, then N as a number: a string sort puts /1024 before /16
@@ -158,7 +154,7 @@ def write_comparison_report(path, manifest, metadata):
     for status, side in (('added', 'candidate'), ('removed', 'baseline')):
         if by_status[status]:
             only += _details(f'{len(by_status[status])} cases only in the {side} build (not compared)',
-                             ['| Suite | Case |', '|:--|:--|'] + [f'| {c["suite"]} | {c["name"]} |' for c in by_status[status]])
+                             ['| Suite | Case |', '|:--|:--|'] + [_case_cells(c) for c in by_status[status]])
     if manifest.get('error'):  # nothing was measured: say why and stop
         path.write_text('\n'.join(L + [f'**Comparison failed: {manifest["error"]}**', ''] + only) + '\n')
         return
@@ -176,18 +172,21 @@ def write_comparison_report(path, manifest, metadata):
               for d in differences] + ['']
     L += [f'Speedup = candidate speed / baseline speed, median over rounds ± its standard error. A signal needs a change beyond {floor:g}% of the baseline at a '
           f'one-sided false-positive rate of {100 * settings["alpha"]:g}%. Signals do not fail CI.', '']
-    if sigma := settings.get('outlier_sigma'):
-        hit = [c for c in measured if c['analysis'].get('dropped_rounds')]
-        L += [f'Outlier rounds (>= {sigma:g} robust sigmas) left out: '
-              f'{sum(len(c["analysis"]["dropped_rounds"]) for c in hit)} rounds in {len(hit)} cases.', '']
 
-    # signals first, folded but with the counts in the summary line
+    # one folded list per verdict, with the count in the summary line
     regressions = sorted(by_status['regression_signal'], key=lambda c: c['analysis']['median_ratio'])
     improvements = sorted(by_status['improvement_signal'], key=lambda c: -c['analysis']['median_ratio'])
+    unchanged = sorted(by_status['inconclusive'], key=lambda c: c['analysis']['median_ratio'])
+    optional = {}  # lists that may be left out for the size limit; L holds a (key,) placeholder for each
     if regressions:
         L += _details(f'<b>{len(regressions)} regressions</b> (slowest first)', CASE_COLS + [_case_row(c) for c in regressions])
     if improvements:
-        L += _details(f'<b>{len(improvements)} improvements</b> (fastest first)', CASE_COLS + [_case_row(c) for c in improvements])
+        optional['improvements'] = _details(f'<b>{len(improvements)} improvements</b> (fastest first)',
+                                            CASE_COLS + [_case_row(c) for c in improvements])
+        L.append(('improvements',))
+    if unchanged:
+        optional['unchanged'] = _details(f'<b>{len(unchanged)} unchanged</b> (slowest first)', CASE_COLS + [_case_row(c) for c in unchanged])
+        L.append(('unchanged',))
     if by_status['too_noisy']:
         L += _details(f'<b>{len(by_status["too_noisy"])} too noisy</b> (a side\'s per-round cv exceeded {settings["max_noise_percent"]:g}%; no verdict)',
                       CASE_COLS + [_case_row(c) for c in by_status['too_noisy']])
@@ -197,13 +196,6 @@ def write_comparison_report(path, manifest, metadata):
         L += ['### Where the changes are', '']
         for title, key, row_order in GROUPINGS:
             L += _group_section(title, key, measured, row_order)
-    # everything else, folded
-    order = {'regression_signal': 0, 'too_noisy': 1, 'improvement_signal': 2, 'inconclusive': 3}
-    by_verdict = sorted(cases, key=lambda c: (order.get(c['analysis']['status'], 4), c['analysis'].get('median_ratio', 1)))
-    all_cases = _details(f'All {len(cases)} cases (regressions, too noisy, improvements, then no change; each by speedup)',
-                         CASE_COLS + [_case_row(c) for c in by_verdict])
-    all_cases_at = len(L)
-    L += all_cases
 
     reps = settings['repetitions']
     method = [
@@ -214,7 +206,9 @@ def write_comparison_report(path, manifest, metadata):
         f'Google Benchmark\'s CPU time per iteration is the launch\'s value'
         + (f' (the minimum over {reps} repetitions)' if reps > 1 else '') + '. One extra warm-up launch per side is discarded.',
     ] + ([f'- **Outlier rounds**: a round where either side is {settings["outlier_sigma"]:g} or more robust standard deviations '
-          '(1.4826 x median absolute deviation) from its median is left out.'] if settings.get('outlier_sigma') else []) + [
+          '(1.4826 x median absolute deviation) from its median is left out: '
+          f'{sum(len(c["analysis"].get("dropped_rounds", [])) for c in measured)} of {sum(len(c["rounds"]) for c in measured)} rounds.']
+         if settings.get('outlier_sigma') else []) + [
         f'- **Speedup** is the median over rounds of baseline time / candidate time.',
         f'- **Regression / improvement**: a paired t-test on the per-round differences finds the candidate slower / faster by more than '
         f'{floor:g}% of the baseline, one-sided at a {100 * settings["alpha"]:g}% false-positive rate.',
@@ -259,8 +253,10 @@ def write_comparison_report(path, manifest, metadata):
         env.append(f'- **CI**: [{ci["url"]}]({ci["url"]}).')
     L += _details('Environment and build', env)
 
-    text = '\n'.join(L) + '\n'
-    if len(text) > COMMENT_LIMIT:  # the per-case table is the only part that grows with the suite
-        note = [f'The table of all {len(cases)} cases is left out to fit the comment size limit; see `comparison.json` in the build artifacts.', '']
-        text = '\n'.join(L[:all_cases_at] + note + L[all_cases_at + len(all_cases):]) + '\n'
-    path.write_text(text)
+    def render():
+        return '\n'.join(line for x in L for line in (optional[x[0]] if isinstance(x, tuple) else [x])) + '\n'
+    for key in ('unchanged', 'improvements'):  # the case lists grow with the suite
+        if key in optional and len(render()) > COMMENT_LIMIT:
+            optional[key] = [f'The {key} list is left out to fit the comment size limit; '
+                             'see `comparison.json` in the build artifacts.', '']
+    path.write_text(render())
