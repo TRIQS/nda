@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include "./benchmark_concepts.hpp"
 #include <nda/nda.hpp>
 #include <array>
 #include <complex>
@@ -94,7 +93,7 @@ namespace nda_bench {
     return array_elements(x) * static_cast<std::int64_t>(sizeof(nda::get_value_t<OperandType>));
   }
 
-  template <std::int32_t Rank, char Algebra = 'A', typename Layout = nda::C_layout, InputBand Band = positive_band>
+  template <std::int32_t Rank, char Algebra = 'A', typename Layout = nda::C_layout, typename Band = positive_band>
   struct array_input {
     static_assert(Rank > 0 && (Algebra == 'A' || (Algebra == 'M' && Rank == 2) || (Algebra == 'V' && Rank == 1)),
                   "Input rank must be positive; algebra must be A, M (rank 2), or V (rank 1)");
@@ -133,13 +132,13 @@ namespace nda_bench {
     }
   };
 
-  template <typename Layout = nda::C_layout, InputBand Band = positive_band>
+  template <typename Layout = nda::C_layout, typename Band = positive_band>
   using matrix_input = array_input<2, 'M', Layout, Band>;
 
-  template <typename Layout = nda::C_layout, InputBand Band = positive_band>
+  template <typename Layout = nda::C_layout, typename Band = positive_band>
   using vector_input = array_input<1, 'V', Layout, Band>;
 
-  template <InputBand Band = positive_band>
+  template <typename Band = positive_band>
   struct scalar_input {
     static constexpr std::string_view name = "S";
 

@@ -43,21 +43,21 @@ struct op_min : op_defaults {
 
 using namespace nda_bench;
 
-NDA_BENCHMARK(op_pow, "pow", types<double, std::complex<double>>, array_input<2>)
+NDA_BENCHMARK(op_pow, "pow", types_double, array_input<2>)
 
-NDA_BENCHMARK(op_conj, "conj", types<double, std::complex<double>>, array_input<2>)
+NDA_BENCHMARK(op_conj, "conj", types_double, array_input<2>)
 
-NDA_BENCHMARK(op_abs, "abs", types<double, std::complex<double>>, array_input<2>)
+NDA_BENCHMARK(op_abs, "abs", types_double, array_input<2>)
 
 NDA_BENCHMARK(op_imag, "imag", types<std::complex<double>>, array_input<2>)
 
 NDA_BENCHMARK(op_real, "real", types<std::complex<double>>, array_input<2>)
 
-NDA_BENCHMARK(op_abs2, "abs2", types<double, std::complex<double>>, array_input<2>)
+NDA_BENCHMARK(op_abs2, "abs2", types_double, array_input<2>)
 
 NDA_BENCHMARK(op_floor, "floor", types<double>, array_input<2>)
 
-NDA_BENCHMARK(op_isnan, "isnan", types<double, std::complex<double>>, array_input<2>)
+NDA_BENCHMARK(op_isnan, "isnan", types_double, array_input<2>)
 
 NDA_BENCHMARK(op_max, "max", types<double>, array_input<2>, array_input<2>)
 

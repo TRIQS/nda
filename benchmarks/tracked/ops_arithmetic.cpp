@@ -53,29 +53,29 @@ struct op_addsub : op_defaults {
   static decltype(auto) op(auto const &A, auto const &B, auto const &C) { return A + B - C; }
 };
 
-NDA_BENCHMARK(op_neg, "neg", types<double, std::complex<double>>, array_input<2>)
+NDA_BENCHMARK(op_neg, "neg", types_double, array_input<2>)
 
-NDA_BENCHMARK(op_add, "add", types<double, std::complex<double>>, array_input<2>, array_input<2>)
-NDA_BENCHMARK(op_add, "add", types<double, std::complex<double>>, matrix_input<>, scalar_input<>)
-NDA_BENCHMARK(op_add, "add", types<double, std::complex<double>>, array_input<2>, scalar_input<>)
-NDA_BENCHMARK(op_add, "add", types<double, std::complex<double>>, row_slice<matrix_input<>>, row_slice<matrix_input<>>)
+NDA_BENCHMARK(op_add, "add", types_double, array_input<2>, array_input<2>)
+NDA_BENCHMARK(op_add, "add", types_double, matrix_input<>, scalar_input<>)
+NDA_BENCHMARK(op_add, "add", types_double, array_input<2>, scalar_input<>)
+NDA_BENCHMARK(op_add, "add", types_double, row_slice<matrix_input<>>, row_slice<matrix_input<>>)
 
-NDA_BENCHMARK(op_mul, "mul", types<double, std::complex<double>>, array_input<2>, array_input<2>)
-NDA_BENCHMARK(op_mul, "mul", types<double, std::complex<double>>, matrix_input<>, matrix_input<>)
-NDA_BENCHMARK(op_mul, "mul", types<double, std::complex<double>>, matrix_input<>, vector_input<>)
-NDA_BENCHMARK(op_mul, "mul", types<double, std::complex<double>>, matrix_input<>, scalar_input<>)
+NDA_BENCHMARK(op_mul, "mul", types_double, array_input<2>, array_input<2>)
+NDA_BENCHMARK(op_mul, "mul", types_double, matrix_input<>, matrix_input<>)
+NDA_BENCHMARK(op_mul, "mul", types_double, matrix_input<>, vector_input<>)
+NDA_BENCHMARK(op_mul, "mul", types_double, matrix_input<>, scalar_input<>)
 
-NDA_BENCHMARK(op_div, "div", types<double, std::complex<double>>, array_input<2, 'A', nda::C_layout, signed_band>,
+NDA_BENCHMARK(op_div, "div", types_double, array_input<2, 'A', nda::C_layout, signed_band>,
               array_input<2, 'A', nda::C_layout, positive_band>)
-NDA_BENCHMARK(op_div, "div", types<double, std::complex<double>>, matrix_input<>, matrix_input<>)
-NDA_BENCHMARK(op_div, "div", types<double, std::complex<double>>, matrix_input<>, scalar_input<>)
+NDA_BENCHMARK(op_div, "div", types_double, matrix_input<>, matrix_input<>)
+NDA_BENCHMARK(op_div, "div", types_double, matrix_input<>, scalar_input<>)
 
-NDA_BENCHMARK(op_hadamard, "hadamard", types<double, std::complex<double>>, array_input<2>, array_input<2>)
+NDA_BENCHMARK(op_hadamard, "hadamard", types_double, array_input<2>, array_input<2>)
 
-NDA_BENCHMARK(op_fma, "fma", types<double, std::complex<double>>, array_input<2>, array_input<2>, array_input<2>)
-NDA_BENCHMARK(op_fma, "fma", types<double, std::complex<double>>, matrix_input<>, matrix_input<>, matrix_input<>)
-NDA_BENCHMARK(op_fma, "fma", types<double, std::complex<double>>, matrix_input<>, scalar_input<>, matrix_input<>)
+NDA_BENCHMARK(op_fma, "fma", types_double, array_input<2>, array_input<2>, array_input<2>)
+NDA_BENCHMARK(op_fma, "fma", types_double, matrix_input<>, matrix_input<>, matrix_input<>)
+NDA_BENCHMARK(op_fma, "fma", types_double, matrix_input<>, scalar_input<>, matrix_input<>)
 
-NDA_BENCHMARK(op_fms, "fms", types<double, std::complex<double>>, array_input<2>, array_input<2>, array_input<2>)
+NDA_BENCHMARK(op_fms, "fms", types_double, array_input<2>, array_input<2>, array_input<2>)
 
-NDA_BENCHMARK(op_addsub, "addsub", types<double, std::complex<double>>, array_input<2>, array_input<2>, array_input<2>)
+NDA_BENCHMARK(op_addsub, "addsub", types_double, array_input<2>, array_input<2>, array_input<2>)

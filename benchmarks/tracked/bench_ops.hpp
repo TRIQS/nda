@@ -6,12 +6,14 @@
 #pragma once
 
 #include "./bench_inputs.hpp"
-#include "./benchmark_concepts.hpp"
 #include <benchmark/benchmark.h>
 #include <algorithm>
 #include <array>
+#include <cmath>
+#include <concepts>
 #include <cstddef>
 #include <cstdint>
+#include <random>
 #include <string>
 #include <tuple>
 #include <type_traits>
@@ -39,6 +41,12 @@ namespace nda_bench {
 
     using tuple_type = std::tuple<Ts...>;
   };
+
+  using types_real    = types<float, double>;
+  using types_complex = types<std::complex<float>, std::complex<double>>;
+  using types_single  = types<float, std::complex<float>>;
+  using types_double  = types<double, std::complex<double>>;
+  using types_all     = types<float, double, std::complex<float>, std::complex<double>>;
 
   inline constexpr std::int64_t min_dim = 16; // dimension along every axis
   // The sweep caps each owning operand, including unexposed slice elements.
@@ -80,7 +88,7 @@ namespace nda_bench {
   namespace detail {
 
     // Build the operand tuple from storage, preserving references and slice views.
-    template <typename ValueType, BenchmarkInput<ValueType>... Inputs>
+    template <typename ValueType, typename... Inputs>
     auto make_operands(std::tuple<typename Inputs::template storage_type<ValueType>...> &storage) {
       return [&]<std::size_t... I>(std::index_sequence<I...>) {
         return std::tuple<decltype(Inputs::get(std::get<I>(storage)))...>{Inputs::get(std::get<I>(storage))...};
@@ -90,9 +98,6 @@ namespace nda_bench {
     // Unpack the operand tuple and call the operation, preserving its return type.
     template <typename Operation, typename... OperandTypes>
     decltype(auto) invoke_op(std::tuple<OperandTypes...> const &operands) {
-      static_assert(
-         BenchmarkOperation<Operation, OperandTypes...>,
-         "Benchmark operations must provide constexpr bool support flags, op returning an array or scalar, and result_shape for these operands");
       return std::apply([](auto const &...args) -> decltype(auto) { return Operation::op(args...); }, operands);
     }
 
@@ -112,11 +117,8 @@ namespace nda_bench {
       return stats;
     }
 
-    template <typename ValueType, typename Operation, BenchmarkInput<ValueType>... Inputs>
+    template <typename ValueType, typename Operation, typename... Inputs>
     void run_benchmark(benchmark::State &state) {
-      static_assert(
-         BenchmarkOperation<Operation, decltype(Inputs::get(std::declval<typename Inputs::template storage_type<ValueType> &>()))...>,
-         "Benchmark operations must provide constexpr bool support flags, op returning an array or scalar, and result_shape for these operands");
       static_assert(sizeof...(Inputs) > 0, "A benchmark needs at least one input descriptor");
       std::int64_t const N = state.range(0);
       std::mt19937_64 rng{42};
@@ -126,29 +128,39 @@ namespace nda_bench {
       const auto operands = make_operands<ValueType, Inputs...>(storage);
       auto stats          = measure_inputs(operands);
 
-      using ReturnType = decltype(invoke_op<Operation>(operands));
-      using ResultType = std::remove_cvref_t<ReturnType>;
-
-      // The result value type differs from ValueType for abs2 (always double), pow (promotes), isnan
-      // (bool) and abs/real/imag on complex (real). Zero when the result is a scalar.
-      if constexpr (nda::Array<ResultType> && (std::is_reference_v<ReturnType> || !nda::is_regular_v<ResultType>)) {
-        // Shape discovery must not execute eager subexpressions such as matrix A * B + C.
-        auto shape = std::apply([](auto const &...args) { return Operation::result_shape(args...); }, operands);
-        nda::get_regular_t<ResultType> R(shape);
-        R.as_array_view() = nda::get_value_t<ResultType>{}; // fault the pages in before the clock starts
+      if constexpr (requires { Operation::target; }) {
+        // out starts as a copy of operand `target` and is not reset between calls.
+        nda::get_regular_t<std::remove_cvref_t<std::tuple_element_t<Operation::target, decltype(operands)>>> R(std::get<Operation::target>(operands));
         for (auto s : state) {
-          // View assignment reuses storage, including for borrowed results.
-          R() = invoke_op<Operation>(operands);
+          std::apply([&R](auto const &...args) { Operation::op(R, args...); }, operands);
           benchmark::DoNotOptimize(R);
         }
         stats.bytes += logical_bytes(R);
       } else {
-        ResultType R{};
-        for (auto s : state) {
-          R = invoke_op<Operation>(operands);
-          benchmark::DoNotOptimize(R);
+        using ReturnType = decltype(invoke_op<Operation>(operands));
+        using ResultType = std::remove_cvref_t<ReturnType>;
+
+        // The result value type differs from ValueType for abs2 (always double), pow (promotes), isnan
+        // (bool) and abs/real/imag on complex (real). Zero when the result is a scalar.
+        if constexpr (nda::Array<ResultType> && (std::is_reference_v<ReturnType> || !nda::is_regular_v<ResultType>)) {
+          // Shape discovery must not execute eager subexpressions such as matrix A * B + C.
+          auto shape = std::apply([](auto const &...args) { return Operation::result_shape(args...); }, operands);
+          nda::get_regular_t<ResultType> R(shape);
+          R.as_array_view() = nda::get_value_t<ResultType>{}; // fault the pages in before the clock starts
+          for (auto s : state) {
+            // View assignment reuses storage, including for borrowed results.
+            R() = invoke_op<Operation>(operands);
+            benchmark::DoNotOptimize(R);
+          }
+          stats.bytes += logical_bytes(R);
+        } else {
+          ResultType R{};
+          for (auto s : state) {
+            R = invoke_op<Operation>(operands);
+            benchmark::DoNotOptimize(R);
+          }
+          stats.bytes += logical_bytes(R);
         }
-        stats.bytes += logical_bytes(R);
       }
 
       state.SetItemsProcessed(state.iterations() * stats.input_elements);
@@ -157,12 +169,12 @@ namespace nda_bench {
       state.counters["bytesize"]         = stats.bytes;
     }
 
-    template <typename ValueType, BenchmarkInput<ValueType>... Inputs>
+    template <typename ValueType, typename... Inputs>
     void custom_range(benchmark::Benchmark *b) {
       for (std::int64_t N = min_dim; ((Inputs::template storage_size<ValueType>(N) <= max_elements) && ...); N *= 4) { b->Arg(N); }
     }
 
-    template <typename ValueType, typename Operation, BenchmarkInput<ValueType> Input>
+    template <typename ValueType, typename Operation, typename Input>
     constexpr bool supports_input() {
       using OperandType = std::remove_cvref_t<decltype(Input::get(std::declval<typename Input::template storage_type<ValueType> &>()))>;
       if constexpr (nda::is_complex_v<nda::get_value_t<OperandType>> && !Operation::supports_complex) {
@@ -176,11 +188,8 @@ namespace nda_bench {
     }
 
     // Name grammar <type>/<shape>/<op>, with the dimension appended by google-benchmark.
-    template <typename ValueType, typename Operation, BenchmarkInput<ValueType>... Inputs>
+    template <typename ValueType, typename Operation, typename... Inputs>
     void register_case(std::string const &op_name) {
-      static_assert(
-         BenchmarkOperation<Operation, decltype(Inputs::get(std::declval<typename Inputs::template storage_type<ValueType> &>()))...>,
-         "Benchmark operations must provide constexpr bool support flags, op returning an array or scalar, and result_shape for these operands");
       static_assert((supports_input<ValueType, Operation, Inputs>() && ...),
                     "Benchmark input type, rank, or algebra is unsupported by this operation");
       std::string shapes;
@@ -217,7 +226,6 @@ namespace nda_bench {
 // then JOIN_IMPL pastes it into the unique registration variable name.
 #define NDA_BENCH_JOIN_IMPL(A, B) A##B
 #define NDA_BENCH_JOIN(A, B) NDA_BENCH_JOIN_IMPL(A, B)
-// Usage: NDA_BENCHMARK(op, "name", types<float, double>, input, ...).
 // Keep the type list in __VA_ARGS__ so its template commas pass through intact.
 #define NDA_BENCHMARK(OP_TYPE, NAME, ...)                                                                                                            \
   static ::nda_bench::detail::input_registrar<OP_TYPE, __VA_ARGS__> NDA_BENCH_JOIN(input_registrar_, __COUNTER__)(NAME);
