@@ -18,6 +18,7 @@ STEP = {'regression_signal': ('#c8321e', 'regression'), 'improvement_signal': ('
 LABEL = {'regression_signal': 'regression', 'improvement_signal': 'improvement', 'inconclusive': '', 'too_noisy': 'too noisy',
          'incomplete': 'incomplete'}
 SPEEDUPS = (0.25, 0.4, 0.5, 0.67, 0.8, 0.9, 0.95, 1, 1.05, 1.1, 1.25, 1.5, 2, 3, 4, 6, 8)
+MAX_WIDTH = 12  # inches (1680 px at 140 dpi): the panels wrap into rows so a chart needs no horizontal scrolling
 
 
 def families(cases):
@@ -64,17 +65,20 @@ def draw_panel(ax, case, commits, settings, title, first_column, last_column):
             ax.plot(position[sha], stats[sha]['median_ns'] / 1000, 'o', ms=5.5, mfc=charts.SURFACE, mec=charts.INK, zorder=5)
     for commit in commits:
         if commit['sha'] not in measured:
-            label = {'failed': 'build failed', 'skipped': 'no preset'}.get(commit.get('build')) \
-                or stats.get(commit['sha'], {}).get('status', 'case absent')
             ax.plot(position[commit['sha']], lo, marker='x', color=charts.MUTED, ms=6, clip_on=False, zorder=5)
+            if commit.get('build') == 'skipped':
+                continue
+            label = 'build failed' if commit.get('build') == 'failed' else stats.get(commit['sha'], {}).get('status', 'case absent')
             ax.annotate(label.replace('_', ' '), (position[commit['sha']], lo), xytext=(0, 5), textcoords='offset points',
                         rotation=90, ha='center', va='bottom', fontsize=6, color=charts.MUTED)
     ax.set_ylim(lo, hi)
     ax.set_xlim(-0.6, len(commits) - 0.4)
     ax.set_xticks(range(len(commits)))
-    # the committer date only where it changes: commits rebased together share one, and it orders the chain
-    dates = [c['date'] if i == 0 or c['date'] != commits[i - 1]['date'] else '' for i, c in enumerate(commits)]
-    ax.set_xticklabels([f"{c['short']}\n{d}" for c, d in zip(commits, dates)], fontsize=6)
+    ax.set_xticklabels([c['short'] for c in commits], fontsize=6, rotation=-45, ha='left', rotation_mode='anchor')
+    top = ax.secondary_xaxis('top')
+    top.set_xticks(range(len(commits)))
+    top.set_xticklabels([c['date'] for c in commits], fontsize=6, rotation=45, ha='left', rotation_mode='anchor')
+    top.tick_params(axis='x', length=2, colors=charts.MUTED)
     ax.grid(axis='x', visible=False)
     ax.tick_params(axis='y', labelsize=6.5)
     if first_column:
@@ -94,43 +98,46 @@ def draw_panel(ax, case, commits, settings, title, first_column, last_column):
 
 
 def draw_family(path, family, panels, commits, settings):
-    """One figure per family: rows = value types, columns = sizes N, each panel one case's history. A factor shared by
-    every panel (the only value type, the only N) is named in the title; a panel is titled with what varies."""
+    """One figure per family, one panel per case's history: by value type, then size N, in as many columns as fit
+    MAX_WIDTH. A factor shared by every panel (the only value type, the only N) is named in the title; a panel is titled
+    with what varies."""
     plt = charts.pyplot()
     suite, op, _ = family
     value_types = sorted({vt for vt, _ in panels}, key=common.value_type_key)
     sizes = sorted({n for _, n in panels})
     operands = common.case_factors(*[(c['suite'], c['name']) for c in panels.values()][0])['operands']
-    width = max(3.2, 0.42 * len(commits) + 1.6)  # room for one two-line tick label per commit
-    fig, axes = plt.subplots(len(value_types), len(sizes), figsize=(width * len(sizes) + 0.6, 2.8 * len(value_types)), squeeze=False)
-    for row, vt in enumerate(value_types):
-        for column, n in enumerate(sizes):
-            ax = axes[row, column]
-            if (vt, n) not in panels:
-                ax.axis('off')
-                continue
-            varying = [common.value_type_label(vt)] * (len(value_types) > 1) + [f'N = {n}'] * (len(sizes) > 1)
-            draw_panel(ax, panels[vt, n], commits, settings, ', '.join(varying),
-                       first_column=column == 0, last_column=column == len(sizes) - 1)
+    order = [(vt, n) for vt in value_types for n in sizes if (vt, n) in panels]
+    width = max(3.2, 0.22 * len(commits) + 1.4)  # room for one tilted hash per commit
+    ncol = max(1, min(len(order), int((MAX_WIDTH - 0.6) // width)))
+    nrow = -(-len(order) // ncol)
+    fig, axes = plt.subplots(nrow, ncol, figsize=(width * ncol + 0.6, 3.1 * nrow), squeeze=False)
+    for ax in axes.flat[len(order):]:
+        ax.axis('off')
+    for index, (vt, n) in enumerate(order):
+        column = index % ncol
+        varying = [common.value_type_label(vt)] * (len(value_types) > 1) + [f'N = {n}'] * (len(sizes) > 1)
+        draw_panel(axes.flat[index], panels[vt, n], commits, settings, ', '.join(varying),
+                   first_column=column == 0, last_column=column == ncol - 1 or index == len(order) - 1)
     floor = settings['min_improvement_percent']
     # The title, the subtitle and the legend are measured and the figure is extended by what they need: a narrow figure
     # (few sizes) wraps the texts and stacks the legend entries, a wide one lays everything out in a line.
     shared = [common.value_type_label(value_types[0])] * (len(value_types) == 1) + [f'N = {sizes[0]}'] * (len(sizes) == 1)
     title = ', '.join(part.replace(' ', '\u00a0') for part in [f'{suite}: {op}({operands})'] + shared)  # breaks only at the commas
     title = wrap_to_width(fig, title, 0.98 * fig.get_figwidth(), fontsize=11, fontweight='bold')
-    subtitle = wrap_to_width(fig, f"{settings['rounds']} launches per commit, {settings['min_time']} each; median ± s.e.; "
-                             f"grey = within {floor:g}% of the first commit", 0.98 * fig.get_figwidth(), fontsize=7.5)
+    subtitle = wrap_to_width(fig, f"grey = within {floor:g}% of the first commit", 0.98 * fig.get_figwidth(), fontsize=7.5)
     handles = [plt.Line2D([], [], color=colour, lw=2.4, label=f'{label} vs previous commit') for colour, label in STEP.values()]
     handles.append(plt.Line2D([], [], marker='o', ls='', ms=5.5, mfc=charts.SURFACE, mec=charts.INK, label='too noisy for a verdict'))
-    legend_height = fit_legend(fig, handles, 7.5)
+    handles.append(plt.Line2D([], [], marker='x', ls='', ms=6, color=charts.MUTED, label='not measured (skipped, build failed or case absent)'))
+    legend, legend_height = fit_legend(fig, handles, 7.5)
     subtitle_top = 0.29 + 0.183 * (title.count('\n') + 1)  # inches from the top: below the title's lines
-    top = subtitle_top + 0.125 * (subtitle.count('\n') + 1) + 0.15  # the subtitle's lines and a gap above the panels
-    bottom = legend_height + 0.1
-    height = fig.get_figheight() + top + bottom
+    legend_top = subtitle_top + 0.125 * (subtitle.count('\n') + 1) + 0.05  # below the subtitle's lines
+    top = legend_top + legend_height + 0.15  # and a gap above the panels
+    height = fig.get_figheight() + top + 0.1
     fig.set_figheight(height)
     fig.suptitle(title, x=0.01, y=1 - 0.3 / height, ha='left', fontsize=11, fontweight='bold', in_layout=False)  # the rect has its room
     fig.text(0.01, 1 - subtitle_top / height, subtitle, va='top', fontsize=7.5, color=charts.INK2)
-    fig.tight_layout(rect=(0, bottom / height, 1, 1 - top / height))
+    legend.set_bbox_to_anchor((0.005, 1 - legend_top / height), transform=fig.transFigure)
+    fig.tight_layout(rect=(0, 0.1 / height, 1, 1 - top / height))
     fig.savefig(path, dpi=140)
     plt.close(fig)
 
@@ -153,13 +160,12 @@ def wrap_to_width(fig, text, width, **font):
 
 
 def fit_legend(fig, handles, fontsize):
-    """A figure legend in the lower left corner with as many columns as fit the figure's width: its height in inches."""
     renderer = fig.canvas.get_renderer()
     for columns in range(len(handles), 0, -1):
-        legend = fig.legend(handles=handles, frameon=False, loc='lower left', ncol=columns, fontsize=fontsize)
+        legend = fig.legend(handles=handles, frameon=False, loc='upper left', ncol=columns, fontsize=fontsize)
         extent = legend.get_window_extent(renderer)
         if extent.width <= fig.get_figwidth() * fig.dpi or columns == 1:
-            return extent.height / fig.dpi
+            return legend, extent.height / fig.dpi
         legend.remove()
 
 
