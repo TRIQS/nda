@@ -107,10 +107,10 @@ def draw_suite(path, suite, cases, styles, title, floor):
     for ax in axes[:, 0]:
         ax.set_ylabel('speedup (log)')
     handles = [plt.Rectangle((0, 0), 1, 1, color=styles[vt][0], label=styles[vt][1]) for vt in value_types]
-    fig.legend(handles=handles, frameon=False, loc='lower right', ncol=len(handles), fontsize=9)
-    fig.suptitle(f'{title}, suite {suite}: one panel per operation and operand kind; x = N. '
-                 'Bars = median speedup over rounds, whiskers = ± s.e.', x=0.01, ha='left', fontsize=10, fontweight='bold')
-    fig.tight_layout(rect=(0, 0.03, 1, 0.95))
+    height = fig.get_figheight()  # title, then the legend below it, top left; offsets in inches
+    fig.suptitle(f'{title}, Benchmark: {suite}', x=0.01, y=1 - 0.1 / height, ha='left', va='top', fontsize=10, fontweight='bold')
+    fig.legend(handles=handles, frameon=False, loc='upper left', bbox_to_anchor=(0.005, 1 - 0.32 / height), ncol=len(handles), fontsize=9)
+    fig.tight_layout(rect=(0, 0, 1, 1 - 0.65 / height))
     fig.savefig(path, dpi=140)
     plt.close(fig)
 
