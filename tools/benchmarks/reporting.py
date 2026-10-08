@@ -21,9 +21,8 @@ GROUPINGS = [  # (title, key(factors), row order(factors) or None for most regre
 ]
 
 
-def _median_speedup(logs):
-    """Median speedup (candidate speed / baseline speed) from log(candidate time / baseline time) values."""
-    x = math.exp(-statistics.median(logs))
+def _speedup_words(x):
+    """A speedup (candidate speed / baseline speed) as 'Nx faster', 'Nx slower' or 'Nx (no change)'."""
     return f'{x:.2f}x faster' if x >= 1.05 else f'{1 / x:.2f}x slower' if x <= 1 / 1.05 else f'{x:.2f}x (no change)'
 
 
@@ -104,24 +103,24 @@ def _group_section(title, key, cases, row_order=None):
     def order(g):
         if row_order:
             return row_order(factors[g])
-        # most regressions first, then the slowest median: what needs a look comes to the top
+        # most regressions first, then the slowest geometric mean: what needs a look comes to the top
         cs = groups[g]
         sps = [c['analysis']['median_ratio'] for c in cs]
-        return (-sum(c['analysis']['status'] == 'regression_signal' for c in cs), statistics.median(sps), str(g))
+        return (-sum(c['analysis']['status'] == 'regression_signal' for c in cs), statistics.geometric_mean(sps), str(g))
 
     def counts(cs):
         n = {k: sum(c['analysis']['status'] == k for c in cs) for k in ('regression_signal', 'improvement_signal', 'inconclusive', 'too_noisy')}
         return n
 
-    table = ['| group | cases | median speedup | range (slowest .. fastest) | regressions | improvements | no change | too noisy |',
+    table = ['| group | cases | geo-mean speedup | range (slowest .. fastest) | regressions | improvements | no change | too noisy |',
              '|:--|--:|:--|:--|--:|--:|--:|--:|']
     for g in sorted(groups, key=order):
         cs = groups[g]
         sps = [c['analysis']['median_ratio'] for c in cs]
         n = counts(cs)
-        med = f'{statistics.median(sps):.2f}x'
+        geo = f'{statistics.geometric_mean(sps):.2f}x'
         rng = f'{min(sps):.2f}x .. {max(sps):.2f}x'
-        table.append(f'| {g} | {len(cs)} | {med} | {rng} | {n["regression_signal"]} | {n["improvement_signal"]} | {n["inconclusive"]} | {n["too_noisy"]} |')
+        table.append(f'| {g} | {len(cs)} | {geo} | {rng} | {n["regression_signal"]} | {n["improvement_signal"]} | {n["inconclusive"]} | {n["too_noisy"]} |')
     return _details(f'<b>{title}</b>', table)
 
 
@@ -158,10 +157,10 @@ def write_comparison_report(path, manifest, metadata):
     if manifest.get('error'):  # nothing was measured: say why and stop
         path.write_text('\n'.join(L + [f'**Comparison failed: {manifest["error"]}**', ''] + only) + '\n')
         return
-    overall = _median_speedup(list(logs.values())) if logs else 'n/a'
+    overall = f'geometric mean {_speedup_words(math.exp(-statistics.fmean(logs.values())))}' if logs else 'no measured cases'
     L += [f'**{len(by_status["regression_signal"])} regressions, {len(by_status["improvement_signal"])} improvements, '
           f'{len(by_status["inconclusive"])} unchanged, {len(by_status["too_noisy"])} too noisy** out of {len(cases)} cases; '
-          f'median case {overall}.', '']
+          f'{overall}.', '']
     if by_status['incomplete']:
         L += [f'{len(by_status["incomplete"])} cases incomplete (a launch failed; see output.log).', '']
     L += only
