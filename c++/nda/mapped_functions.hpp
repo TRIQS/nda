@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <cmath>
 #include <complex>
+#include <type_traits>
 #include <utility>
 
 namespace nda {
@@ -49,14 +50,19 @@ namespace nda {
       }
     }
 
-    // Get the squared absolute value of a double.
-    inline double abs2(double x) { return x * x; }
+    // Get the squared absolute value with the return type of std::norm.
+    template <Scalar S>
+    auto abs2(S x) { return std::norm(x); }
 
-    // Get the squared absolute value of a std::complex<double>.
-    inline double abs2(std::complex<double> z) { return (conj(z) * z).real(); }
-
-    // Check if a std::complex<double> is NaN.
-    inline bool isnan(std::complex<double> const &z) { return std::isnan(z.real()) or std::isnan(z.imag()); }
+    // Check if a scalar or either component of a complex scalar is NaN.
+    template <Scalar S>
+    bool isnan(S const &x) {
+      if constexpr (is_complex_v<S>) {
+        return std::isnan(x.real()) or std::isnan(x.imag());
+      } else {
+        return std::isnan(x);
+      }
+    }
 
     // Functor for nda::detail::conj.
     struct conj_f {
@@ -69,15 +75,19 @@ namespace nda {
    * @brief Function pow for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
    *
    * @tparam A nda::ArrayOrScalar type.
+   * @tparam S nda::Scalar exponent type.
    * @param a nda::ArrayOrScalar object.
    * @param p Exponent value.
    * @return A lazy nda::expr_call object (nda::Array) or the result of `std::pow` applied to the object (nda::Scalar).
    */
-  template <ArrayOrScalar A>
-  auto pow(A &&a, double p) {
+  template <ArrayOrScalar A, Scalar S>
+  auto pow(A &&a, S p) {
     return nda::map([p](auto const &x) {
-      using std::pow;
-      return pow(x, p);
+      if constexpr (Scalar<decltype(x)>) {
+        return std::pow(x, p);
+      } else {
+        return nda::pow(x, p);
+      }
     })(std::forward<A>(a));
   }
 
@@ -103,16 +113,21 @@ namespace nda {
    * 
    * @tparam A nda::ArrayOrScalar type.
    * @param a nda::ArrayOrScalar object.
-   * @return A lazy nda::expr_call object (nda::Array) or the result of \f$ 1.0 / x \f$ applied to the object 
-   * (nda::Scalar).
+   * @return A lazy nda::expr_call object (nda::Array) or the result of dividing one by the scalar.
+   * Floating-point inputs retain their precision; integer inputs produce a double.
    */
   template <ArrayOrScalar A>
   auto reciprocal(A &&a) {
     return nda::map([](auto const &x) {
       if constexpr (Scalar<decltype(x)>) {
-        return 1.0 / x;
+        using real_t = remove_complex_t<decltype(x)>;
+        if constexpr (std::is_floating_point_v<real_t>) {
+          return real_t{1} / x;
+        } else {
+          return 1.0 / x;
+        }
       } else {
-        return reciprocal(x);
+        return nda::reciprocal(x);
       }
     })(std::forward<A>(a));
   }
