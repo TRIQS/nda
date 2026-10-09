@@ -14,7 +14,7 @@
 #include "../basic_functions.hpp"
 #include "../blas/dot.hpp"
 #include "../concepts.hpp"
-#include "../mapped_functions.hxx"
+#include "../mapped_functions.hpp"
 #include "../traits.hpp"
 
 #include <cmath>

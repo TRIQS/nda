@@ -15,7 +15,6 @@
 #include "./tools.hpp"
 #include "../exceptions.hpp"
 #include "../mapped_functions.hpp"
-#include "../mapped_functions.hxx"
 #include "../mem/address_space.hpp"
 #include "../traits.hpp"
 

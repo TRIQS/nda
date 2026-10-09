@@ -38,7 +38,6 @@
 #include "./macros.hpp"
 #include "./map.hpp"
 #include "./mapped_functions.hpp"
-#include "./mapped_functions.hxx"
 #include "./matrix_functions.hpp"
 #include "./mem.hpp"
 #include "./print.hpp"

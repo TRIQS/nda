@@ -20,7 +20,6 @@
 #include "../layout/policies.hpp"
 #include "../macros.hpp"
 #include "../mapped_functions.hpp"
-#include "../mapped_functions.hxx"
 #include "../mem/address_space.hpp"
 #include "../mem/policies.hpp"
 #include "../traits.hpp"
