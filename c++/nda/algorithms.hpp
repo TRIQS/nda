@@ -16,6 +16,7 @@
 #include "./layout/range.hpp"
 #include "./macros.hpp"
 #include "./map.hpp"
+#include "./mapped_functions.hxx"
 #include "./traits.hpp"
 
 #include <algorithm>
@@ -151,24 +152,6 @@ namespace nda {
   }
 
   /**
-   * @ingroup av_math
-   * @brief Calculate the Frobenius norm of a 2-dimensional array.
-   *
-   * @tparam A nda::ArrayOfRank<2> type.
-   * @param a Array object.
-   * @return Frobenius norm of the array/matrix.
-   */
-  template <ArrayOfRank<2> A>
-  double frobenius_norm(A const &a) {
-    return std::sqrt(fold(
-       [](double r, auto const &x) -> double {
-         auto ab = std::abs(x);
-         return r + ab * ab;
-       },
-       a, double(0)));
-  }
-
-  /**
    * @brief Sum all the elements of an nda::Array object.
    *
    * @tparam A nda::Array type.
@@ -184,6 +167,22 @@ namespace nda {
     } else { // Array<Value>
       return fold(std::plus<>{}, a, Value::zeros(get_first_element(a).shape()));
     }
+  }
+
+  /**
+   * @ingroup av_math
+   * @brief Calculate the Frobenius norm of a 2-dimensional array.
+   *
+   * @details It takes the square root of the sum of squared absolute values. The result has the precision of
+   * nda::abs2 (e.g. float for float and std::complex<float> arrays, double for integer arrays).
+   *
+   * @tparam A nda::ArrayOfRank<2> type.
+   * @param a Array object.
+   * @return Frobenius norm of the array/matrix.
+   */
+  template <ArrayOfRank<2> A>
+  auto frobenius_norm(A const &a) {
+    return std::sqrt(sum(abs2(a)));
   }
 
   /**
