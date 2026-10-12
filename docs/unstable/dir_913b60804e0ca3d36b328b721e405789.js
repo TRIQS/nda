@@ -35,7 +35,6 @@ var dir_913b60804e0ca3d36b328b721e405789 =
     [ "macros.hpp", "macros_8hpp.html", null ],
     [ "map.hpp", "map_8hpp.html", "map_8hpp" ],
     [ "mapped_functions.hpp", "mapped__functions_8hpp.html", "mapped__functions_8hpp" ],
-    [ "mapped_functions.hxx", "mapped__functions_8hxx.html", "mapped__functions_8hxx" ],
     [ "matrix_functions.hpp", "matrix__functions_8hpp.html", "matrix__functions_8hpp" ],
     [ "mem.hpp", "mem_8hpp.html", null ],
     [ "mpi.hpp", "mpi_8hpp.html", null ],

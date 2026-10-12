@@ -262,7 +262,7 @@ var NAVTREEINDEX =
 [
 "__impl__basic__array__view__common_8hpp_source.html",
 "group__clef__autoassign.html",
-"structnda_1_1sso.html"
+"structnda_1_1tensor_1_1tensor__view.html"
 ];
 
 const SYNCONMSG = 'click to disable panel synchronization';
