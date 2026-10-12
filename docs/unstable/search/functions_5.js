@@ -7,7 +7,7 @@ var searchData=
   ['for_5feach_4',['for_each',['../group__layout__utils.html#ga3cad3c1ccde2290cf1f53ee627e54bf6',1,'nda']]],
   ['for_5feach_5fstatic_5',['for_each_static',['../group__layout__utils.html#ga4af3418db6d33f5f6463330620cf7dee',1,'nda']]],
   ['free_6',['free',['../group__mem__utils.html#gaf1e86f1f528f277d3ed2c126566b27b3',1,'nda::mem']]],
-  ['frobenius_5fnorm_7',['frobenius_norm',['../group__av__math.html#gab90a57511cc6f90cad3207acd73be60b',1,'nda']]],
+  ['frobenius_5fnorm_7',['frobenius_norm',['../group__av__math.html#gac86b6ca466789b16e63268f8892c42a8',1,'nda']]],
   ['front_5fappend_8',['front_append',['../group__utils__std.html#ga24a9f36c1abf3c7ee8af26e64cd2e5a2',1,'nda::stdutil']]],
   ['front_5fmpop_9',['front_mpop',['../group__utils__std.html#ga1713c401cce73d9b3a70256e867f16d0',1,'nda::stdutil']]],
   ['front_5fpop_10',['front_pop',['../group__utils__std.html#gade66f148c03d164b13c2cadf191d9715',1,'nda::stdutil']]]

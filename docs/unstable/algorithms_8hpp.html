@@ -130,6 +130,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('algorithms_8hp
 <code>#include &quot;<a class="el" href="range_8hpp_source.html">./layout/range.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="macros_8hpp_source.html">./macros.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="map_8hpp_source.html">./map.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="mapped__functions_8hpp_source.html">./mapped_functions.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="traits_8hpp_source.html">./traits.hpp</a>&quot;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;array&gt;</code><br />
@@ -162,9 +163,9 @@ template&lt;Array A, typename F&gt; </td></tr>
 <tr class="memitem:ga1ede47af1aafba0c08346ce98c767b7e" id="r_ga1ede47af1aafba0c08346ce98c767b7e"><td class="memTemplParams" colspan="2">template&lt;Array A, typename F, typename R&gt; </td></tr>
 <tr class="memitem:ga1ede47af1aafba0c08346ce98c767b7e template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__av__algs.html#ga1ede47af1aafba0c08346ce98c767b7e">nda::fold</a> (F f, A const &amp;a, R r)</td></tr>
 <tr class="memdesc:ga1ede47af1aafba0c08346ce98c767b7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a fold operation on the given <a class="el" href="conceptnda_1_1_array.html" title="Check if a given type satisfies the array concept.">nda::Array</a> object.  <br /></td></tr>
-<tr class="memitem:gab90a57511cc6f90cad3207acd73be60b" id="r_gab90a57511cc6f90cad3207acd73be60b"><td class="memTemplParams" colspan="2">template&lt;ArrayOfRank&lt; 2 &gt; A&gt; </td></tr>
-<tr class="memitem:gab90a57511cc6f90cad3207acd73be60b template"><td class="memItemLeft">double&#160;</td><td class="memItemRight"><a class="el" href="group__av__math.html#gab90a57511cc6f90cad3207acd73be60b">nda::frobenius_norm</a> (A const &amp;a)</td></tr>
-<tr class="memdesc:gab90a57511cc6f90cad3207acd73be60b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the Frobenius norm of a 2-dimensional array.  <br /></td></tr>
+<tr class="memitem:gac86b6ca466789b16e63268f8892c42a8" id="r_gac86b6ca466789b16e63268f8892c42a8"><td class="memTemplParams" colspan="2">template&lt;ArrayOfRank&lt; 2 &gt; A&gt; </td></tr>
+<tr class="memitem:gac86b6ca466789b16e63268f8892c42a8 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__av__math.html#gac86b6ca466789b16e63268f8892c42a8">nda::frobenius_norm</a> (A const &amp;a)</td></tr>
+<tr class="memdesc:gac86b6ca466789b16e63268f8892c42a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the Frobenius norm of a 2-dimensional array.  <br /></td></tr>
 <tr class="memitem:ga9ee51842bd47f09b28d6d36cdf289b62" id="r_ga9ee51842bd47f09b28d6d36cdf289b62"><td class="memTemplParams" colspan="2">template&lt;Array A, Array B&gt; <br />
 requires (<a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">nda::get_rank</a>&lt;A&gt; == <a class="el" href="group__av__utils.html#ga7277dc5070c1ad04d29465da947e444e">nda::get_rank</a>&lt;B&gt;)</td></tr>
 <tr class="memitem:ga9ee51842bd47f09b28d6d36cdf289b62 template"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="el" href="group__av__algs.html#ga9ee51842bd47f09b28d6d36cdf289b62">nda::hadamard</a> (A &amp;&amp;a, B &amp;&amp;b)</td></tr>

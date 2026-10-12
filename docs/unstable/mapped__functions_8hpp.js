@@ -15,7 +15,7 @@ var mapped__functions_8hpp =
     [ "nda::log", "group__av__math.html#ga2e2be1e44930b308c3b366ae5a3a5e38", null ],
     [ "nda::max", "group__av__math.html#gad4adce242cbf197036123b5375cbc356", null ],
     [ "nda::min", "group__av__math.html#ga9e96dcd41ecefd5f0a1f514bbfe6c792", null ],
-    [ "nda::pow", "group__av__math.html#ga6900d4319e73e27201a65f96d082289f", null ],
+    [ "nda::pow", "group__av__math.html#ga0b709fa1110a9315aa2cc73af28c0acf", null ],
     [ "nda::real", "group__av__math.html#ga801930e88ab85629067870e91ab9f97f", null ],
     [ "nda::reciprocal", "group__av__math.html#gac5e6cabd373fe6b872c6c0d7fa9803c1", null ],
     [ "nda::sin", "group__av__math.html#ga2d09be1cbff6c0061abb54763bf92bd1", null ],

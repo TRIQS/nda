@@ -4,7 +4,7 @@ var algorithms_8hpp =
     [ "nda::any", "group__av__algs.html#ga70f4415b815978d94a661d7483567e57", null ],
     [ "nda::fold", "group__av__algs.html#ga66519bf80315973770c266a4d10eb054", null ],
     [ "nda::fold", "group__av__algs.html#ga1ede47af1aafba0c08346ce98c767b7e", null ],
-    [ "nda::frobenius_norm", "group__av__math.html#gab90a57511cc6f90cad3207acd73be60b", null ],
+    [ "nda::frobenius_norm", "group__av__math.html#gac86b6ca466789b16e63268f8892c42a8", null ],
     [ "nda::hadamard", "group__av__algs.html#ga9ee51842bd47f09b28d6d36cdf289b62", null ],
     [ "nda::hadamard", "group__av__algs.html#gac201e48555bdb773ad45706882e787b5", null ],
     [ "nda::hadamard", "group__av__algs.html#gad8886854a020e7b28b63a96d6087485d", null ],

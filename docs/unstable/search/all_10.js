@@ -20,7 +20,7 @@ var searchData=
   ['fortran_5fstride_5forder_17',['Fortran_stride_order',['../group__layout__idx.html#gacbe79593d45a6dcf8cb0bb8a22543408',1,'nda']]],
   ['fp_5ftype_18',['fp_type',['../classnda_1_1lapack_1_1gelss__worker.html#a9bff93362b09f836327b1cf8c3cc2b56',1,'nda::lapack::gelss_worker']]],
   ['free_19',['free',['../group__mem__utils.html#gaf1e86f1f528f277d3ed2c126566b27b3',1,'nda::mem']]],
-  ['frobenius_5fnorm_20',['frobenius_norm',['../group__av__math.html#gab90a57511cc6f90cad3207acd73be60b',1,'nda']]],
+  ['frobenius_5fnorm_20',['frobenius_norm',['../group__av__math.html#gac86b6ca466789b16e63268f8892c42a8',1,'nda']]],
   ['from_20an_20existing_20dataset_21',['Reading a slice from an existing dataset',['../ex5.html#ex5_p4',1,'']]],
   ['from_20an_20nda_3a_3aarray_22',['Constructing an array from an nda::Array',['../ex2.html#ex2_p5',1,'']]],
   ['from_20its_20data_23',['Constructing an array from its data',['../ex2.html#ex2_p4',1,'']]],
