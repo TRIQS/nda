@@ -172,6 +172,9 @@
  * [[1,4]
  *  [9,16]]
  * ```
+ *
+ * All functions also accept scalars. For the `<cmath>` functions, the scalar overloads are the `std` ones, while
+ * nda::conj, nda::real, nda::imag, nda::abs2, nda::reciprocal, nda::max and nda::min provide their own.
  */
 
 /**

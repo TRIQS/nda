@@ -10,6 +10,9 @@
 
 #include <algorithm>
 #include <array>
+#include <cmath>
+#include <complex>
+#include <type_traits>
 
 // Multiply an m-by-m matrix A by an m-by-n-by-p tensor B, combining the last two indices of B.
 nda::array<double, 3> arraymult(nda::matrix<double, nda::F_layout> a, nda::array<double, 3, nda::F_layout> b) {
@@ -175,4 +178,73 @@ TEST(NDA, LayoutAfterReshapeIssue) {
   check(B);
   nda::array<int, 3, nda::basic_layout<0, nda::encode(std::array{1, 2, 0}), nda::layout_prop_e::contiguous>> C(2, 2, 2);
   check(C);
+}
+
+// Unqualified scalar math calls with `using namespace nda` (as done in cppdlr) were ambiguous: libc++ declares generic
+// templates like `pow(A1, A2)` and `sqrt(Integral)` in the global namespace (and libstdc++ in std), which tied with the
+// nda function templates. The checks cover every mapped function with a std counterpart, plus their array overloads.
+using namespace nda;
+
+TEST(NDA, ScalarMathLookupIssue) {
+  // The scalar overloads of the <cmath> family in nda are the std ones (using-declarations), with the std result types.
+  static_assert(std::is_same_v<decltype(nda::pow(2.0f, 3.0f)), float>);
+  static_assert(std::is_same_v<decltype(nda::pow(2.0f, 3)), double>);
+  static_assert(std::is_same_v<decltype(nda::pow(std::complex<double>{}, 2)), std::complex<double>>);
+  static_assert(std::is_same_v<decltype(nda::sqrt(5.0f)), float>);
+  static_assert(std::is_same_v<decltype(nda::abs(-3)), int>);
+  static_assert(std::is_same_v<decltype(nda::isnan(1)), bool>);
+
+  int j    = 1;
+  long l   = 1;
+  float f  = 0.5f;
+  double d = 0.5;
+  std::complex<double> z{0.5, 0.25};
+  auto x = nda::vector<double>{0.5, 0.25};
+
+  // Compare an unqualified call with the std one for real scalars and the array overload.
+  auto check_real = [&](auto nda_f, auto std_f) {
+    EXPECT_EQ(nda_f(j), std_f(j));
+    EXPECT_EQ(nda_f(l), std_f(l));
+    EXPECT_EQ(nda_f(f), std_f(f));
+    EXPECT_EQ(nda_f(d), std_f(d));
+    EXPECT_ARRAY_NEAR(nda::vector<double>{nda_f(x)}, (nda::vector<double>{std_f(x(0)), std_f(x(1))}));
+  };
+
+  // Same as check_real and also for complex scalars.
+  auto check = [&](auto nda_f, auto std_f) {
+    check_real(nda_f, std_f);
+    EXPECT_EQ(nda_f(z), std_f(z));
+  };
+
+  EXPECT_EQ(pow(-1, j), std::pow(-1, j));
+  EXPECT_EQ(pow(j, 2), std::pow(j, 2));
+  EXPECT_EQ(pow(j, 2.0), std::pow(j, 2.0));
+  EXPECT_EQ(pow(f, 2), std::pow(f, 2));
+  EXPECT_EQ(pow(f, f), std::pow(f, f));
+  EXPECT_EQ(pow(d, 2), std::pow(d, 2));
+  EXPECT_EQ(pow(d, 2.0), std::pow(d, 2.0));
+  EXPECT_EQ(pow(x(1), 2), std::pow(x(1), 2));
+  EXPECT_EQ(pow(z, 2), std::pow(z, 2));
+  EXPECT_EQ(pow(z, 0.5), std::pow(z, 0.5));
+  EXPECT_EQ(pow(d, z), std::pow(d, z));
+  EXPECT_ARRAY_NEAR(nda::vector<double>{pow(x, 2)}, (nda::vector<double>{0.25, 0.0625}));
+  EXPECT_EQ(abs(-1), std::abs(-1));
+  EXPECT_FALSE(isnan(j));
+  EXPECT_FALSE(isnan(f));
+  EXPECT_FALSE(isnan(d));
+  EXPECT_FALSE(isnan(z));
+  check([](auto const &a) { return abs(a); }, [](auto const &a) { return std::abs(a); });
+  check_real([](auto const &a) { return floor(a); }, [](auto const &a) { return std::floor(a); });
+  check([](auto const &a) { return exp(a); }, [](auto const &a) { return std::exp(a); });
+  check([](auto const &a) { return cos(a); }, [](auto const &a) { return std::cos(a); });
+  check([](auto const &a) { return sin(a); }, [](auto const &a) { return std::sin(a); });
+  check([](auto const &a) { return tan(a); }, [](auto const &a) { return std::tan(a); });
+  check([](auto const &a) { return cosh(a); }, [](auto const &a) { return std::cosh(a); });
+  check([](auto const &a) { return sinh(a); }, [](auto const &a) { return std::sinh(a); });
+  check([](auto const &a) { return tanh(a); }, [](auto const &a) { return std::tanh(a); });
+  check([](auto const &a) { return acos(a); }, [](auto const &a) { return std::acos(a); });
+  check([](auto const &a) { return asin(a); }, [](auto const &a) { return std::asin(a); });
+  check([](auto const &a) { return atan(a); }, [](auto const &a) { return std::atan(a); });
+  check([](auto const &a) { return log(a); }, [](auto const &a) { return std::log(a); });
+  check([](auto const &a) { return sqrt(a); }, [](auto const &a) { return std::sqrt(a); });
 }
