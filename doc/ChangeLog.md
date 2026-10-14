@@ -42,6 +42,7 @@ Find below an itemized list of changes in this release.
 * Fix issue with nda::reshape/nda::flatten for arbitrary layouts and change the default shape/strides of nda::idx_map
 * Add device implementations for `fill`, `fill_n`, `fill2D`, `fill_with_scalar`, `assign_from_scalar` and make them C++20-compatible
 * Make mapped functions work with nda::Array as well as nda::Scalar objects
+* Use the `std` overloads for scalar mapped math functions and restrict the nda templates to arrays, fixing ambiguous unqualified scalar calls with `using namespace nda` on libc++
 * Add empty braces to the `EXPECTS`, `ASSERT` and `ENSURES` macros
 * Update the h5 interface to match changes in the h5 library and simplify nda/h5.hpp
 * Update the MPI routines, move C-style MPI routines into the public namespace, add mpi/utils.hpp and extensive tests
