@@ -96,9 +96,7 @@ namespace nda {
    */
   template <Array A, Scalar S>
   auto pow(A &&a, S p) {
-    return nda::map([p](auto const &x) {
-      return pow(x, p);
-    })(std::forward<A>(a));
+    return nda::map([p](auto const &x) { return pow(x, p); })(std::forward<A>(a));
   }
 
   /**
@@ -193,11 +191,8 @@ namespace nda {
   /// \param a nda::Array object.
   /// \return A lazy nda::expr_call object.
   template <Array A>
-  auto abs(A &&a)  {
-    return nda::map(
-       [](auto const &x) {
-         return abs(x);
-       })(std::forward<A>(a));
+  auto abs(A &&a) {
+    return nda::map([](auto const &x) { return abs(x); })(std::forward<A>(a));
   }
 
   /// \brief Function imag for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
@@ -206,12 +201,11 @@ namespace nda {
   /// \param a nda::ArrayOrScalar object.
   /// \return A lazy nda::expr_call object (nda::Array) or the result of `std::imag` applied to the object (nda::Scalar).
   template <ArrayOrScalar A>
-  auto imag(A &&a)  {
-    return nda::map(
-       [](auto const &x) {
-         using std::imag;
-         return imag(x);
-       })(std::forward<A>(a));
+  auto imag(A &&a) {
+    return nda::map([](auto const &x) {
+      using std::imag;
+      return imag(x);
+    })(std::forward<A>(a));
   }
 
 #ifdef NDA_DOXYGEN
@@ -227,11 +221,8 @@ namespace nda {
   /// \param a nda::Array object.
   /// \return A lazy nda::expr_call object.
   template <Array A>
-  auto floor(A &&a)  {
-    return nda::map(
-       [](auto const &x) {
-         return floor(x);
-       })(std::forward<A>(a));
+  auto floor(A &&a) {
+    return nda::map([](auto const &x) { return floor(x); })(std::forward<A>(a));
   }
 
   /// \brief Function real for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
@@ -241,8 +232,7 @@ namespace nda {
   /// \return A lazy nda::expr_call object (nda::Array) or the result of `nda::detail::real` applied to the object (nda::Scalar).
   template <ArrayOrScalar A>
   auto real(A &&a) {
-    return nda::map(
-       [](auto const &x) {return detail::real(x); })(std::forward<A>(a));
+    return nda::map([](auto const &x) { return detail::real(x); })(std::forward<A>(a));
   }
 
   /// \brief Function abs2 for nda::ArrayOrScalar types (lazy and coefficient-wise for nda::Array types).
@@ -252,8 +242,7 @@ namespace nda {
   /// \return A lazy nda::expr_call object (nda::Array) or the result of `nda::detail::abs2` applied to the object (nda::Scalar).
   template <ArrayOrScalar A>
   auto abs2(A &&a) {
-    return nda::map(
-       [](auto const &x) {return detail::abs2(x); })(std::forward<A>(a));
+    return nda::map([](auto const &x) { return detail::abs2(x); })(std::forward<A>(a));
   }
 
 #ifdef NDA_DOXYGEN
@@ -276,8 +265,7 @@ namespace nda {
   template <typename A>
     requires(Array<A> || is_complex_v<A>)
   auto isnan(A &&a) {
-    return nda::map(
-       [](auto const &x) {return detail::isnan(x); })(std::forward<A>(a));
+    return nda::map([](auto const &x) { return detail::isnan(x); })(std::forward<A>(a));
   }
 
 #ifdef NDA_DOXYGEN
@@ -293,11 +281,10 @@ namespace nda {
   /// \param a nda::Array object.
   /// \return A lazy nda::expr_call object.
   template <Array A>
-  auto exp(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         return exp(x);
-       })(std::forward<A>(a));
+  auto exp(A &&a)
+    requires(get_algebra<A> != 'M')
+  {
+    return nda::map([](auto const &x) { return exp(x); })(std::forward<A>(a));
   }
 
 #ifdef NDA_DOXYGEN
@@ -313,11 +300,10 @@ namespace nda {
   /// \param a nda::Array object.
   /// \return A lazy nda::expr_call object.
   template <Array A>
-  auto cos(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         return cos(x);
-       })(std::forward<A>(a));
+  auto cos(A &&a)
+    requires(get_algebra<A> != 'M')
+  {
+    return nda::map([](auto const &x) { return cos(x); })(std::forward<A>(a));
   }
 
 #ifdef NDA_DOXYGEN
@@ -333,11 +319,10 @@ namespace nda {
   /// \param a nda::Array object.
   /// \return A lazy nda::expr_call object.
   template <Array A>
-  auto sin(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         return sin(x);
-       })(std::forward<A>(a));
+  auto sin(A &&a)
+    requires(get_algebra<A> != 'M')
+  {
+    return nda::map([](auto const &x) { return sin(x); })(std::forward<A>(a));
   }
 
 #ifdef NDA_DOXYGEN
@@ -353,11 +338,10 @@ namespace nda {
   /// \param a nda::Array object.
   /// \return A lazy nda::expr_call object.
   template <Array A>
-  auto tan(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         return tan(x);
-       })(std::forward<A>(a));
+  auto tan(A &&a)
+    requires(get_algebra<A> != 'M')
+  {
+    return nda::map([](auto const &x) { return tan(x); })(std::forward<A>(a));
   }
 
 #ifdef NDA_DOXYGEN
@@ -373,11 +357,10 @@ namespace nda {
   /// \param a nda::Array object.
   /// \return A lazy nda::expr_call object.
   template <Array A>
-  auto cosh(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         return cosh(x);
-       })(std::forward<A>(a));
+  auto cosh(A &&a)
+    requires(get_algebra<A> != 'M')
+  {
+    return nda::map([](auto const &x) { return cosh(x); })(std::forward<A>(a));
   }
 
 #ifdef NDA_DOXYGEN
@@ -393,11 +376,10 @@ namespace nda {
   /// \param a nda::Array object.
   /// \return A lazy nda::expr_call object.
   template <Array A>
-  auto sinh(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         return sinh(x);
-       })(std::forward<A>(a));
+  auto sinh(A &&a)
+    requires(get_algebra<A> != 'M')
+  {
+    return nda::map([](auto const &x) { return sinh(x); })(std::forward<A>(a));
   }
 
 #ifdef NDA_DOXYGEN
@@ -413,11 +395,10 @@ namespace nda {
   /// \param a nda::Array object.
   /// \return A lazy nda::expr_call object.
   template <Array A>
-  auto tanh(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         return tanh(x);
-       })(std::forward<A>(a));
+  auto tanh(A &&a)
+    requires(get_algebra<A> != 'M')
+  {
+    return nda::map([](auto const &x) { return tanh(x); })(std::forward<A>(a));
   }
 
 #ifdef NDA_DOXYGEN
@@ -433,11 +414,10 @@ namespace nda {
   /// \param a nda::Array object.
   /// \return A lazy nda::expr_call object.
   template <Array A>
-  auto acos(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         return acos(x);
-       })(std::forward<A>(a));
+  auto acos(A &&a)
+    requires(get_algebra<A> != 'M')
+  {
+    return nda::map([](auto const &x) { return acos(x); })(std::forward<A>(a));
   }
 
 #ifdef NDA_DOXYGEN
@@ -453,11 +433,10 @@ namespace nda {
   /// \param a nda::Array object.
   /// \return A lazy nda::expr_call object.
   template <Array A>
-  auto asin(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         return asin(x);
-       })(std::forward<A>(a));
+  auto asin(A &&a)
+    requires(get_algebra<A> != 'M')
+  {
+    return nda::map([](auto const &x) { return asin(x); })(std::forward<A>(a));
   }
 
 #ifdef NDA_DOXYGEN
@@ -473,11 +452,10 @@ namespace nda {
   /// \param a nda::Array object.
   /// \return A lazy nda::expr_call object.
   template <Array A>
-  auto atan(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         return atan(x);
-       })(std::forward<A>(a));
+  auto atan(A &&a)
+    requires(get_algebra<A> != 'M')
+  {
+    return nda::map([](auto const &x) { return atan(x); })(std::forward<A>(a));
   }
 
 #ifdef NDA_DOXYGEN
@@ -493,11 +471,10 @@ namespace nda {
   /// \param a nda::Array object.
   /// \return A lazy nda::expr_call object.
   template <Array A>
-  auto log(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         return log(x);
-       })(std::forward<A>(a));
+  auto log(A &&a)
+    requires(get_algebra<A> != 'M')
+  {
+    return nda::map([](auto const &x) { return log(x); })(std::forward<A>(a));
   }
 
 #ifdef NDA_DOXYGEN
@@ -513,11 +490,10 @@ namespace nda {
   /// \param a nda::Array object.
   /// \return A lazy nda::expr_call object.
   template <Array A>
-  auto sqrt(A &&a) requires(get_algebra<A> != 'M') {
-    return nda::map(
-       [](auto const &x) {
-         return sqrt(x);
-       })(std::forward<A>(a));
+  auto sqrt(A &&a)
+    requires(get_algebra<A> != 'M')
+  {
+    return nda::map([](auto const &x) { return sqrt(x); })(std::forward<A>(a));
   }
 
   /** @} */
